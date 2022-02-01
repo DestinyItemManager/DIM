@@ -90,12 +90,14 @@ export const MIN_LO_ITEM_ENERGY = 7;
 
 // Temporary until API types are in
 export enum AssumeArmorMasterwork {
-  Legendary = 1,
+  None = 1,
+  Legendary,
   All,
 }
 
 // Temporary until API types are in
 export enum LockArmorEnergyType {
-  Masterworked = 1,
+  None = 1,
+  Masterworked,
   All,
 }

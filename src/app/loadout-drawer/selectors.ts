@@ -1,8 +1,10 @@
 import {
   Loadout as DimApiLoadout,
   LoadoutItem as DimApiLoadoutItem,
+  UpgradeSpendTier,
 } from '@destinyitemmanager/dim-api-types';
 import { currentProfileSelector } from 'app/dim-api/selectors';
+import { AssumeArmorMasterwork, LockArmorEnergyType } from 'app/loadout-builder/types';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import _ from 'lodash';
@@ -29,15 +31,66 @@ export const previousLoadoutSelector = (state: RootState, storeId: string): Load
  * storage format to the old loadout format.
  */
 function convertDimApiLoadoutToLoadout(loadout: DimApiLoadout): Loadout {
-  const { equipped, unequipped, clearSpace, ...rest } = loadout;
+  const { equipped, unequipped, clearSpace, parameters, ...rest } = loadout;
   return {
     ...rest,
+    parameters: migrateUpgradeSpendTierAndLockItemEnergy(parameters),
     clearSpace: clearSpace || false,
     items: [
       ...equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
       ...unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false)),
     ],
   };
+}
+
+function migrateUpgradeSpendTierAndLockItemEnergy(parameters: DimApiLoadout['parameters']): {
+  assumeArmorMasterwork: AssumeArmorMasterwork;
+  lockArmorEnergyType: LockArmorEnergyType;
+} {
+  const migrated = { ...parameters };
+  const { upgradeSpendTier, lockItemEnergyType } = migrated;
+
+  delete migrated.upgradeSpendTier;
+  delete migrated.lockItemEnergyType;
+
+  switch (upgradeSpendTier) {
+    case UpgradeSpendTier.AscendantShards:
+      return {
+        ...migrated,
+        assumeArmorMasterwork: AssumeArmorMasterwork.All,
+        lockArmorEnergyType: lockItemEnergyType
+          ? LockArmorEnergyType.All
+          : LockArmorEnergyType.None,
+      };
+    case UpgradeSpendTier.AscendantShardsNotExotic:
+      return {
+        ...migrated,
+        assumeArmorMasterwork: AssumeArmorMasterwork.Legendary,
+        lockArmorEnergyType: lockItemEnergyType
+          ? LockArmorEnergyType.All
+          : LockArmorEnergyType.None,
+      };
+    case UpgradeSpendTier.AscendantShardsNotMasterworked:
+      return {
+        ...migrated,
+        assumeArmorMasterwork: AssumeArmorMasterwork.All,
+        lockArmorEnergyType: lockItemEnergyType
+          ? LockArmorEnergyType.All
+          : LockArmorEnergyType.Masterworked,
+      };
+    case UpgradeSpendTier.AscendantShardsLockEnergyType:
+    case UpgradeSpendTier.EnhancementPrisms:
+    case UpgradeSpendTier.LegendaryShards:
+    case UpgradeSpendTier.Nothing:
+    default:
+      return {
+        ...migrated,
+        assumeArmorMasterwork: AssumeArmorMasterwork.None,
+        lockArmorEnergyType: lockItemEnergyType
+          ? LockArmorEnergyType.All
+          : LockArmorEnergyType.None,
+      };
+  }
 }
 
 /**

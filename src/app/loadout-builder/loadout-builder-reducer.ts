@@ -28,10 +28,7 @@ import {
 } from './types';
 
 export interface LoadoutBuilderState {
-  loadoutParameters: LoadoutParameters & {
-    assumeArmorMasterwork?: AssumeArmorMasterwork;
-    lockArmorEnergyType?: LockArmorEnergyType;
-  };
+  loadoutParameters: LoadoutParameters;
   // TODO: also fold statOrder, statFilters into loadoutParameters
   statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
   statFilters: Readonly<StatFilters>;
