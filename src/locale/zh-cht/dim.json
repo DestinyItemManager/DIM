@@ -4,7 +4,8 @@
     "ConfirmTitle": "確認操作",
     "Error": "Error changing mods or perks",
     "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
-    "FailedToken": "無權限更換物品"
+    "FailedToken": "無權限更換物品",
+    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
     "ErrorLoadInventory": "無法加載你的《命運 {{version}}》角色和庫存",
@@ -140,7 +141,8 @@
     "Desc_male": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有空位。",
     "Desc_male_plural": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有 {{count}} 個空位。",
     "Desc_plural": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有 {{count}} 個空位。",
-    "FarmingMode": "收集模式（騰出空間）",
+    "FarmingMode": "Farming Mode",
+    "FarmingModeNote": "(maintain space for drops)",
     "MakeRoom": {
       "Desc": "DIM將從{{store}} 上移動記憶水晶與微光幣物品到保險庫或其它角色上，以防止有物品被寄送到郵政官處。",
       "Desc_female": "DIM將從{{store}} 上移動記憶水晶與微光幣物品到保險庫或其它角色上，以防止有物品被寄送到郵政官處。",
@@ -288,6 +290,7 @@
   },
   "General": {
     "ClickForDetails": "點擊查看詳情",
+    "Confirm": "Confirm?",
     "UserGuideLink": "使用說明"
   },
   "Header": {
@@ -540,7 +543,6 @@
     "Classified": "你的某些物品是隱藏的，因此不能用於到最大光等的計算之中。",
     "ClearSpace": "移除其他裝備",
     "ClearingSpace": "Moving other items away",
-    "ConfirmDelete": "你確認要刪除'{{name}}'?",
     "Create": "創建配裝",
     "CurrentlyEquipped": "當前裝備",
     "Deequip": "De-equipping items from other characters",
@@ -601,9 +603,8 @@
     "PullFromPostmasterNotification_male_plural": "正在從郵政官處取回{{count}} 項物品至{{store}}.",
     "PullFromPostmasterNotification_plural": "正在從郵政官處取回{{count}} 項物品至{{store}}.",
     "PullFromPostmasterPopupTitle": "從郵政官處取回物品",
-    "PullMakeSpace": "空格",
     "Random": "隨機",
-    "Randomize": "隨機搭配",
+    "Randomize": "Randomize Loadout",
     "RandomizePrompt": "確定要將你的武器、護甲和機靈隨機搭配嗎？",
     "RandomizeSearch": "從搜索結果隨機選取",
     "RandomizeSearchPrompt": "從「{{query}}」的搜索結果隨機配裝？",
@@ -623,7 +624,7 @@
     "UnassignedModError": "Mod didn't fit on your current armor",
     "UnassignedMods": "未分配的模組",
     "VendorsCannotEquip": "您沒有這些項目。點擊來選擇一個替換或點擊 X 來刪除：",
-    "WeaponsOnly": "武器"
+    "WeaponsOnly": "Weapons Only"
   },
   "Manifest": {
     "Download": "正在從 Bungie 下載最新的命運信息數據庫...",
@@ -833,7 +834,7 @@
     "InventoryColumns": "物品欄顯示寬度",
     "InventoryColumnsMobile": "行動裝置物品欄顯示寬度",
     "InventoryColumnsMobileLine2": "將自動調整物品大小以適配當前設置",
-    "InventoryNumberOfSpacesToClear": "啟用收集模式（騰出空間）時要騰出的空位數量",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
     "Items": "物品顯示",
     "Language": "語言",
     "LoadoutSort": "Loadout order:",
@@ -847,8 +848,8 @@
     "SetSort": "物品排序方式:",
     "Settings": "設置",
     "ShowNewItems": "Show a red dot on new items",
-    "SingleCharacter": "只顯示當前角色",
-    "SingleCharacterExplanation": "DIM 將只顯示最近遊玩的角色。其他角色的物品將和保險庫顯示在一起。",
+    "SingleCharacter": "Single-Character View",
+    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
     "SizeItem": "物品顯示大小",
     "SortByAmmoType": "彈藥類型",
     "SortByAmount": "堆疊大小",

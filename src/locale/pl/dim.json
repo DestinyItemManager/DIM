@@ -4,7 +4,8 @@
     "ConfirmTitle": "Potwierdź działanie",
     "Error": "Błąd podczas zmiany modyfikacji lub perków",
     "ErrorMessage": "Nie mogliśmy włożyć {{plug}} w {{item}}.\n\n{{error}}",
-    "FailedToken": "Nie można uzyskać pozwolenia na zmianę elementu"
+    "FailedToken": "Nie można uzyskać pozwolenia na zmianę elementu",
+    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
     "ErrorLoadInventory": "Nie można załadować Twoich postaci Destiny {{version}} oraz ekwipunku",
@@ -140,7 +141,8 @@
     "Desc_male": "DIM przenosi Engramowe i Migotowe przedmioty z {{store}} do schowka i zostawia jedno miejsce wolne na dany typ przedmiotu aby nic nie poszło do Kuriera.",
     "Desc_male_plural": "DIM przenosi Engramowe i Migotowe przedmioty z {{store}} do schowka i zostawia {{count}} miejsc wolnych na dany typ przedmiotu aby nic nie poszło do Kuriera.",
     "Desc_plural": "DIM przenosi Engramowe i Migotowe przedmioty z {{store}} do schowka i zostawia {{count}} miejsc wolnych na dany typ przedmiotu aby nic nie poszło do Kuriera.",
-    "FarmingMode": "Tryb farmienia (rób miejsce)",
+    "FarmingMode": "Farming Mode",
+    "FarmingModeNote": "(maintain space for drops)",
     "MakeRoom": {
       "Desc": "DIM przenosi tylko Engramowe i Migotowe przedmioty z {{store}} do schowka albo do innych postaci aby nic nie poszło do Kuriera.",
       "Desc_female": "DIM przenosi tylko Engramowe i Migotowe przedmioty z {{store}} do schowka albo do innych postaci aby nic nie poszło do Kuriera.",
@@ -288,6 +290,7 @@
   },
   "General": {
     "ClickForDetails": "Kliknij po szczegóły",
+    "Confirm": "Confirm?",
     "UserGuideLink": "Przewodnik użytkownika"
   },
   "Header": {
@@ -540,7 +543,6 @@
     "Classified": "Niektóre z twoich przedmiotów są sklasyfikowane i nie mogą być uwzględnione przy kalkulacji maksymalnej mocy.",
     "ClearSpace": "Odsuń inne przedmioty",
     "ClearingSpace": "Moving other items away",
-    "ConfirmDelete": "Czy na pewno chcesz usunąć '{{name}}'?",
     "Create": "Utwórz Uzbrojenie",
     "CurrentlyEquipped": "Aktualnie założone",
     "Deequip": "De-equipping items from other characters",
@@ -601,9 +603,8 @@
     "PullFromPostmasterNotification_male_plural": "Zbieranie {{count}} przedmiotów od Kuriera do {{store}}.",
     "PullFromPostmasterNotification_plural": "Zbieranie {{count}} przedmiotów od Kuriera do {{store}}.",
     "PullFromPostmasterPopupTitle": "Odbierz od Kuriera",
-    "PullMakeSpace": "Przestrzeń",
     "Random": "Losowy",
-    "Randomize": "Losuj",
+    "Randomize": "Randomize Loadout",
     "RandomizePrompt": "Losować twoją założoną broń, zbroję i ducha?",
     "RandomizeSearch": "Losowo z Wyszukiwania",
     "RandomizeSearchPrompt": "Wylosuj wyposażone przedmioty z wyszukania \"{{query}}\"?",
@@ -623,7 +624,7 @@
     "UnassignedModError": "Mod didn't fit on your current armor",
     "UnassignedMods": "Nieprzypisane Modyfikacje",
     "VendorsCannotEquip": "Nie masz tych przedmiotów. Naciśnij, aby wybrać zamiennik lub kliknij X, aby usunąć:",
-    "WeaponsOnly": "Broń"
+    "WeaponsOnly": "Weapons Only"
   },
   "Manifest": {
     "Download": "Pobieranie najnowszej bazy danych informacji Destiny od Bungie...",
@@ -833,7 +834,7 @@
     "InventoryColumns": "Szerokość ekwipunku postaci",
     "InventoryColumnsMobile": "Szerokość ekwipunku postaci na mobilnym trybie portretowym",
     "InventoryColumnsMobileLine2": "Elementy zostaną przeskalowane, aby uwzględnić nowe ustawienie",
-    "InventoryNumberOfSpacesToClear": "Ilość pustych miejsc do stworzenia podczas korzystania z trybu farmienia (rób miejsce)",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
     "Items": "Wyświetlanie przedmiotu",
     "Language": "Język",
     "LoadoutSort": "Kolejność uzbrojenia:",
@@ -847,8 +848,8 @@
     "SetSort": "Sortuj produkty według:",
     "Settings": "Ustawienia",
     "ShowNewItems": "Pokaż czerwoną kropkę na nowych przedmiotach",
-    "SingleCharacter": "Pokaż tylko aktualną postać",
-    "SingleCharacterExplanation": "DIM ukryje wszystkie oprócz ostatnio używanej postaci. Ekwipunki tych postaci będą traktowane jak by były w schowku.",
+    "SingleCharacter": "Single-Character View",
+    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
     "SizeItem": "Rozmiar elementu",
     "SortByAmmoType": "Rodzaj amunicji",
     "SortByAmount": "Rozmiar stosu",

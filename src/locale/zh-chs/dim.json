@@ -4,7 +4,8 @@
     "ConfirmTitle": "确认操作",
     "Error": "更改模组或特性时出错",
     "ErrorMessage": "我们无法将{{plug}}装备到{{item}}。\n\n{{error}}",
-    "FailedToken": "无权限更换物品"
+    "FailedToken": "无权限更换物品",
+    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
     "ErrorLoadInventory": "无法加载你的《命运 {{version}}》角色和库存",
@@ -140,7 +141,8 @@
     "Desc_male": "为防止有物品被寄送到邮政官处，DIM 正将 {{store}} 上的记忆水晶和微光物品移动到保险库，并确保每个物品种类都留有空位。",
     "Desc_male_plural": "为防止有物品被寄送到邮政官处，DIM 正将 {{store}} 上的记忆水晶和微光物品移动到保险库，并确保每个物品种类都留有 {{count}} 个空位。",
     "Desc_plural": "为防止有物品被寄送到邮政官处，DIM 正将 {{store}} 上的记忆水晶和微光物品移动到保险库，并确保每个物品种类都留有 {{count}} 个空位。",
-    "FarmingMode": "收集模式（腾出空间）",
+    "FarmingMode": "收集模式",
+    "FarmingModeNote": "（为掉落物留出空间）",
     "MakeRoom": {
       "Desc": "DIM将从{{store}} 上移动记忆水晶与微光币物品到保险库或其它角色上，以防止有物品被寄送到邮政官处。",
       "Desc_female": "DIM将从{{store}} 上移动记忆水晶与微光币物品到保险库或其它角色上，以防止有物品被寄送到邮政官处。",
@@ -288,6 +290,7 @@
   },
   "General": {
     "ClickForDetails": "点击查看详情",
+    "Confirm": "确认？",
     "UserGuideLink": "用户指南"
   },
   "Header": {
@@ -540,7 +543,6 @@
     "Classified": "你的某些物品是隐藏的，因此不能用于到最大光等的计算之中。",
     "ClearSpace": "移除其他装备",
     "ClearingSpace": "正在移走其他物品",
-    "ConfirmDelete": "你确认要删除'{{name}}'?",
     "Create": "创建配装",
     "CurrentlyEquipped": "当前装备",
     "Deequip": "正在从其他角色取回物品",
@@ -601,9 +603,8 @@
     "PullFromPostmasterNotification_male_plural": "正在从邮政官处取回{{count}} 项物品至{{store}}.",
     "PullFromPostmasterNotification_plural": "正在从邮政官处取回{{count}} 项物品至{{store}}.",
     "PullFromPostmasterPopupTitle": "从邮政官处取回物品",
-    "PullMakeSpace": "空格",
     "Random": "随机",
-    "Randomize": "随机搭配",
+    "Randomize": "随机配装",
     "RandomizePrompt": "确定要将你的武器、护甲和机灵随机搭配吗？",
     "RandomizeSearch": "从搜索结果随机选取",
     "RandomizeSearchPrompt": "从“{{query}}”的搜索结果随机配装？",
@@ -623,7 +624,7 @@
     "UnassignedModError": "模组不适合你当前的护甲",
     "UnassignedMods": "未分配的模组",
     "VendorsCannotEquip": "您没有这些项目。点击来选择一个替换或点击 X 来删除：",
-    "WeaponsOnly": "武器"
+    "WeaponsOnly": "仅限武器"
   },
   "Manifest": {
     "Download": "正在从 Bungie 下载最新的命运信息数据库...",
@@ -833,7 +834,7 @@
     "InventoryColumns": "物品栏显示宽度",
     "InventoryColumnsMobile": "移动端物品栏显示宽度",
     "InventoryColumnsMobileLine2": "将自动调整物品大小以适配当前设置",
-    "InventoryNumberOfSpacesToClear": "启用收集模式（腾出空间）时要腾出的空位数量",
+    "InventoryNumberOfSpacesToClear": "启用收集模式时要留出的空位数量",
     "Items": "物品显示",
     "Language": "语言",
     "LoadoutSort": "配装顺序：",
@@ -847,8 +848,8 @@
     "SetSort": "物品排序方式:",
     "Settings": "设置",
     "ShowNewItems": "在新物品上显示红点",
-    "SingleCharacter": "只显示当前角色",
-    "SingleCharacterExplanation": "DIM 将只显示最近游玩的角色。其他角色的物品将和保险库显示在一起。",
+    "SingleCharacter": "Single-Character View",
+    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
     "SizeItem": "物品显示大小",
     "SortByAmmoType": "弹药类型",
     "SortByAmount": "堆叠大小",
@@ -880,7 +881,7 @@
       "Transmat": "应用传送效果"
     },
     "ListStyle": "按列表显示特性",
-    "Search": "Search names or descriptions",
+    "Search": "搜索名称或说明",
     "Select": {
       "Ability": "预览技能",
       "Aspect": "预览星相",

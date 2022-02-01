@@ -4,7 +4,8 @@
     "ConfirmTitle": "작업 확인",
     "Error": "개조 부품이나 특성 교체 실패",
     "ErrorMessage": "{{item}}에 {{plug}}을(를) 장착할 수 없습니다.\n\n{{error}}",
-    "FailedToken": "아이템을 변경할 권한이 없음"
+    "FailedToken": "아이템을 변경할 권한이 없음",
+    "IrreversiblePlugging": "{{plug}}을(를) 소지하고 있지 않으므로 덮어쓰지 않습니다."
   },
   "Accounts": {
     "ErrorLoadInventory": "데스티니 {{version}} 캐릭터와 소지품 불러오기 실패",
@@ -140,7 +141,8 @@
     "Desc_male": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고로 옮기고 아이템 종류별로 1개의 빈 공간을 확보하고 있습니다.",
     "Desc_male_plural": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고로 옮기고 아이템 종류별로 {{count}}개의 빈 공간을 확보하고 있습니다.",
     "Desc_plural": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고로 옮기고 아이템 종류별로 {{count}}개의 빈 공간을 확보하고 있습니다.",
-    "FarmingMode": "파밍 모드 (빈 공간 생성)",
+    "FarmingMode": "파밍 모드",
+    "FarmingModeNote": "(획득할 아이템을 위해 공간 관리)",
     "MakeRoom": {
       "Desc": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고나 다른 캐릭터에게 이동시키고 있습니다.",
       "Desc_female": "DIM이 우편 담당자에게 아이템이 보내지는 것을 막기 위해 {{store}}의 엔그램과 미광체 아이템을 금고나 다른 캐릭터에게 이동시키고 있습니다.",
@@ -288,6 +290,7 @@
   },
   "General": {
     "ClickForDetails": "자세한 내용은 클릭",
+    "Confirm": "확인?",
     "UserGuideLink": "사용 설명서"
   },
   "Header": {
@@ -540,7 +543,6 @@
     "Classified": "당신의 아이템중 몇몇은 기밀 상태라서 최대 파워 계산에는 포함 될 수가 없습니다.",
     "ClearSpace": "다른 아이템 이동",
     "ClearingSpace": "다른 아이템 이동 중",
-    "ConfirmDelete": "'{{name}}'을(를) 삭제하시겠습니까?",
     "Create": "로드아웃 생성",
     "CurrentlyEquipped": "현재 장착됨",
     "Deequip": "다른 캐릭터의 아이템 장착 해제 중",
@@ -601,9 +603,8 @@
     "PullFromPostmasterNotification_male_plural": "{{count}}개의 아이템을 우편 담당자에게서 {{store}}에게 이동하였습니다.",
     "PullFromPostmasterNotification_plural": "{{count}}개의 아이템을 우편 담당자에게서 {{store}}에게 이동하였습니다.",
     "PullFromPostmasterPopupTitle": "우편 담당자에게서 가져오기",
-    "PullMakeSpace": "공간",
     "Random": "무작위",
-    "Randomize": "무작위",
+    "Randomize": "무작위 로드아웃",
     "RandomizePrompt": "장착된 무기, 방어구, 고스트를 무작위로 설정하시겠습니까?",
     "RandomizeSearch": "검색 결과에서 무작위화",
     "RandomizeSearchPrompt": "\"{{query}}\"로 검색된 결과에서 무작위로 장착하시겠습니까?",
@@ -623,7 +624,7 @@
     "UnassignedModError": "개조 부품이 현재 방어구에 맞지 않음",
     "UnassignedMods": "할당되지 않은 개조 부품",
     "VendorsCannotEquip": "이 아이템을 소유하고 있지 않습니다. 클릭하여 대체품을 선택하거나 X를 눌러 삭제합니다:",
-    "WeaponsOnly": "무기"
+    "WeaponsOnly": "무기만"
   },
   "Manifest": {
     "Download": "Bungie에서 최신 데스티니 정보 데이터베이스 다운로드하는 중...",
@@ -833,7 +834,7 @@
     "InventoryColumns": "캐릭터 소지품 너비",
     "InventoryColumnsMobile": "모바일 세로 모드에서의 캐릭터 소지품 폭",
     "InventoryColumnsMobileLine2": "새 설정에 맞추기 위해 아이템의 크기가 조절될 것입니다.",
-    "InventoryNumberOfSpacesToClear": "파밍 모드를 사용할 때 만들 빈 공간의 수 (빈 공간 생성)",
+    "InventoryNumberOfSpacesToClear": "파밍 모드를 사용할 때 만들 빈 공간의 수",
     "Items": "아이템 표시",
     "Language": "언어",
     "LoadoutSort": "로드아웃 순서:",
@@ -847,8 +848,8 @@
     "SetSort": "아이템 정렬 방법:",
     "Settings": "설정",
     "ShowNewItems": "새 아이템에 빨간색 점 표시",
-    "SingleCharacter": "현재 캐릭터만 표시",
-    "SingleCharacterExplanation": "DIM이 가장 최근에 플레이한 캐릭터를 제외한 모든 캐릭터를 숨깁니다. 숨겨진 캐릭터의 소지품은 창고에 있는 것으로 표시됩니다.",
+    "SingleCharacter": "단일 캐릭터 보기",
+    "SingleCharacterExplanation": "DIM에서 가장 최근에 플레이한 캐릭터만 표시합니다.\n숨겨진 캐릭터가 소지한 아이템은 현재 캐릭터가 사용할 수 있는 경우 금고에 표시됩니다.\n다른 직업의 아이템은 완전히 숨겨집니다.",
     "SizeItem": "아이템 크기",
     "SortByAmmoType": "탄약 유형",
     "SortByAmount": "수량",

@@ -11,6 +11,7 @@ import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, faCalculator } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
+import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -32,6 +33,7 @@ const categoryStyles = {
 export default function LoadoutItemCategorySection({
   category,
   subclass,
+  storeId,
   items,
   savedMods,
   modsByBucket,
@@ -41,6 +43,7 @@ export default function LoadoutItemCategorySection({
 }: {
   category: string;
   subclass?: DimLoadoutItem;
+  storeId?: string;
   items?: DimItem[];
   savedMods: PluggableInventoryItemDefinition[];
   modsByBucket: {
@@ -78,6 +81,7 @@ export default function LoadoutItemCategorySection({
           {bucketOrder.map((bucket) => (
             <ItemBucket
               key={bucket.hash}
+              storeId={storeId}
               bucketHash={bucket.hash}
               items={itemsByBucket[bucket.hash]}
               equippedItemIds={equippedItemIds}
@@ -120,11 +124,13 @@ function OptimizerButton({ loadout }: { loadout: Loadout }) {
 
 function ItemBucket({
   bucketHash,
+  storeId,
   items,
   equippedItemIds,
   modsForBucket,
 }: {
   bucketHash: number;
+  storeId?: string;
   items: DimItem[];
   equippedItemIds: Set<string>;
   modsForBucket: number[];
@@ -156,7 +162,9 @@ function ItemBucket({
                 )}
               </ItemPopupTrigger>
             ))}
-            {index === 0 && showFashion && <FashionMods modsForBucket={modsForBucket} />}
+            {index === 0 && showFashion && (
+              <FashionMods modsForBucket={modsForBucket} storeId={storeId} />
+            )}
           </div>
         ) : (
           index === 0 && (
@@ -166,7 +174,7 @@ function ItemBucket({
             >
               <BucketPlaceholder bucketHash={bucketHash} />
               {/* TODO: show empty placeholder for bucket type? */}
-              {showFashion && <FashionMods modsForBucket={modsForBucket} />}
+              {showFashion && <FashionMods modsForBucket={modsForBucket} storeId={storeId} />}
             </div>
           )
         )
@@ -176,9 +184,11 @@ function ItemBucket({
 }
 
 // TODO: Consolidate with the one in FashionDrawer
-function FashionMods({ modsForBucket }: { modsForBucket: number[] }) {
+function FashionMods({ modsForBucket, storeId }: { modsForBucket: number[]; storeId?: string }) {
   const defs = useD2Definitions()!;
-  const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector);
+  const unlockedPlugSetItems = useSelector((state: RootState) =>
+    unlockedPlugSetItemsSelector(state, storeId)
+  );
   const isShader = (m: number) =>
     defs.InventoryItem.get(m)?.plug?.plugCategoryHash === PlugCategoryHashes.Shader;
   const shader = modsForBucket.find(isShader);
