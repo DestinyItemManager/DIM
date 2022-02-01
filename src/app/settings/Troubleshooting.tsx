@@ -33,7 +33,7 @@ export function TroubleshootingSettings() {
 
     try {
       await dispatch(importMockProfileResponse(files[0]));
-      dispatch(loadStores());
+      await dispatch(loadStores());
       alert('succeeded');
     } catch (e) {
       alert(e.message);
@@ -46,16 +46,17 @@ export function TroubleshootingSettings() {
         <button type="button" className="dim-button" onClick={saveProfileResponse}>
           {t('Settings.ExportProfile')}
         </button>
+
+        {$DIM_FLAVOR === 'dev' && (
+          <p>
+            <FileUpload
+              title="Upload Profile Response JSON"
+              accept=".json"
+              onDrop={importMockProfile}
+            />
+          </p>
+        )}
       </div>
-      {$DIM_FLAVOR === 'dev' && (
-        <div className="setting">
-          <FileUpload
-            title="Upload Profile Response JSON"
-            accept=".json"
-            onDrop={importMockProfile}
-          />
-        </div>
-      )}
     </section>
   );
 }
@@ -63,6 +64,15 @@ export function TroubleshootingSettings() {
 function importMockProfileResponse(file: File): ThunkResult {
   return async (dispatch) => {
     const fileText = await file.text();
-    dispatch(setMockProfileResponse(fileText));
+    let profileResponse = JSON.parse(fileText);
+    // if it's a full copy of the bnet Response wrapper, unwrap it
+    if (profileResponse?.Response?.profileInventory) {
+      profileResponse = profileResponse.Response;
+    }
+    // if it doesn't look like it has what we need, throw
+    if (!profileResponse?.profileInventory) {
+      throw 'uploaded profile response looks invalid';
+    }
+    dispatch(setMockProfileResponse(JSON.stringify(profileResponse)));
   };
 }
