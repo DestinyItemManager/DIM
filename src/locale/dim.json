@@ -473,6 +473,11 @@
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
     "AssumeMasterwork": "Assume Masterwork",
+    "AssumeMasterworkOptions": {
+      "All": "All armor will use masterworked stats and will have an energy level or 10.",
+      "Legendary": "Legendary armor will use masterworked stats and will have an energy level or 10.",
+      "None": "All armor will use their current stats and will have a minimum energy level of 7."
+    },
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
@@ -486,6 +491,11 @@
     "Filter": "Filters",
     "Legendary": "Legendary",
     "LockElement": "Lock Element",
+    "LockElementOptions": {
+      "All": "Armor element type will be locked to it's current value for all armor.",
+      "Masterworked": "Armor element type will be locked for already masterworked armor.",
+      "None": "Armor element type will be changed as needed to fit the selected mods."
+    },
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
     "Masterworked": "Masterworked",

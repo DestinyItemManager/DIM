@@ -523,6 +523,11 @@
     "AscendantShardNotExoticDetails": "For Legendary items, the Optimizer will assume masterwork stat bonuses and energy level. {{elementLockDescription}}\n\nFor Exotic items at {{energyLevel}} or below, the Optimizer will assume {{energyLevel}} energy and will swap element as needed to assign mods. Exotics will use their current stats.\n\nCurrently masterworked Legendary items and Exotics above {{energyLevel}} energy will use their existing element.",
     "AscendantShardNotMasterworkedDetails": "For all items, the Optimizer will assume masterworked stat bonuses and energy level. {{elementLockDescription}}\n\nCurrently masterworked items will use their existing element.",
     "AssumeMasterwork": "Assume Masterwork",
+    "AssumeMasterworkOptions": {
+      "None": "All armor will use their current stats and will have a minimum energy level of 7.",
+      "Legendary": "Legendary armor will use masterworked stats and will have an energy level or 10.",
+      "All": "All armor will use masterworked stats and will have an energy level or 10."
+    },
     "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",
     "ChooseAlternate": "Choose another item with the same stats:",
     "ChooseAlternateTitle": "Choose another item",
@@ -545,6 +550,11 @@
     "LimitedCombos": "You have {{combosWithoutCaps, number}} possible armor combinations, but DIM only looked at the {{combos, number}} highest stat combos to keep your browser from crashing. Select some perks, use a search, or dismantle old armor to reduce the number of combos. Pinning general or seasonal mods increases the number of combos.",
     "LockEquipped": "Pin equipped",
     "LockElement": "Lock Element",
+    "LockElementOptions": {
+      "None": "Armor element type will be changed as needed to fit the selected mods.",
+      "Masterworked": "Armor element type will be locked for already masterworked armor.",
+      "All": "Armor element type will be locked to it's current value for all armor."
+    },
     "LockItem": "Pin item",
     "LockPerk": "Select perk",
     "Masterworked": "Masterworked",
