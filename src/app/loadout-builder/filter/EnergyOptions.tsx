@@ -43,7 +43,6 @@ const RadioSetting = React.memo(function RadioSetting({
 
 function RadioButton({ label, tooltip, name, selected, onClick }: Option & { name: string }) {
   return (
-    // <PressTip className={styles.button} tooltip={tooltip}>
     <PressTip
       tooltip={tooltip}
       elementType="label"
@@ -54,7 +53,6 @@ function RadioButton({ label, tooltip, name, selected, onClick }: Option & { nam
       <input type="radio" name={name} checked={selected} onClick={onClick} />
       {label}
     </PressTip>
-    // </PressTip>
   );
 }
 
