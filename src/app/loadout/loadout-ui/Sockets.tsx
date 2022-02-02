@@ -83,7 +83,6 @@ function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
       {modsAndWhitelist.map(({ plugDef, whitelist }, index) => (
         <Mod
           key={index}
-          gridColumn={(index % 2) + 1}
           plugDef={plugDef}
           onClick={onSocketClick ? () => onSocketClick(plugDef, whitelist) : undefined}
         />

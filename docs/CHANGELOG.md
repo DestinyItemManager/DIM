@@ -1,6 +1,7 @@
 ## Next
 
 * Masterwork picker now only shows higher tiers of the current masterwork and full masterworks compatible with the weapon type.
+* Mods in the Loadout Optimizer and Show Mod Assignment screens are displayed in a row on mobile, to better use screen space.
 
 ## 7.3.0 <span class="changelog-date">(2022-01-30)</span>
 

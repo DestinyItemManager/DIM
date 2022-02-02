@@ -2,12 +2,23 @@
 
 .lockedItems {
   display: grid;
+  grid-template-columns: repeat(2, auto);
   gap: 2px;
+  @include phone-portrait {
+    grid-template-columns: repeat(5, auto);
+  }
+  --item-icon-size: var(--item-size);
+  @include phone-portrait {
+    --item-icon-size: calc(((var(--item-size) + ((var(--item-size) / 5) + 4px)) / 1.4) - 1px);
+  }
+  :global(.item) {
+    --item-size: var(--item-icon-size);
+  }
 }
 
 .small {
   --item-icon-size: calc(((var(--item-size) + ((var(--item-size) / 5) + 4px)) / 2) - 1px);
-  :global(.item) {
-    --item-size: var(--item-icon-size);
+  @include phone-portrait {
+    --item-icon-size: calc(((var(--item-size) + ((var(--item-size) / 5) + 4px)) / 1.4) - 1px);
   }
 }
