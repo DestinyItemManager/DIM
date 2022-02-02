@@ -100,9 +100,9 @@ const D1_MATERIAL_SORT_ORDER = [
 
 // Bucket IDs that'll never be sorted.
 const ITEM_SORT_DENYLIST = new Set([
-  D1BucketHashes.Bounties, // Bounties (D1)
-  BucketHashes.Engrams, // Mission (D1)
-  D1BucketHashes.Quests, // Quests (D1)
+  D1BucketHashes.Bounties,
+  D1BucketHashes.Missions,
+  D1BucketHashes.Quests,
 ]);
 
 export const acquisitionRecencyComparator = reverseComparator(

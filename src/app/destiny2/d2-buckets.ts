@@ -42,7 +42,7 @@ const bucketToTypeRaw = {
   [BucketHashes.Vehicle]: 'Vehicle',
   [BucketHashes.Consumables]: 'Consumables',
   [BucketHashes.General]: 'General',
-  [BucketHashes.Emotes_Invisible]: 'Emotes',
+  [BucketHashes.Emotes_Equippable]: 'Emotes',
   [BucketHashes.Quests]: 'Pursuits',
   [BucketHashes.SeasonalArtifact]: 'SeasonalArtifacts',
   [BucketHashes.Finishers]: 'Finishers',

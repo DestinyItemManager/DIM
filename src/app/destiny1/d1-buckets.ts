@@ -17,7 +17,7 @@ const bucketToTypeRaw = {
   [BucketHashes.LegArmor]: 'Leg',
   [BucketHashes.LostItems]: 'LostItems',
   [BucketHashes.Ships]: 'Ship',
-  [BucketHashes.Engrams]: 'Missions', // Yes, engrams (D1) and missions (D1) have the same hash
+  [D1BucketHashes.Missions]: 'Missions',
   [D1BucketHashes.Artifact]: 'Artifact',
   [BucketHashes.PowerWeapons]: 'Heavy',
   [BucketHashes.SpecialOrders]: 'SpecialOrders',

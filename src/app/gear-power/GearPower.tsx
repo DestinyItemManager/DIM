@@ -23,7 +23,7 @@ const bucketClassNames: Partial<Record<BucketHashes, string>> = {
   [BucketHashes.Gauntlets]: styles.gauntlets,
   [BucketHashes.ChestArmor]: styles.chest,
   [BucketHashes.LegArmor]: styles.leg,
-  [BucketHashes.Subclass]: styles.classItem,
+  [BucketHashes.ClassArmor]: styles.classItem,
 };
 
 export default function GearPower() {
