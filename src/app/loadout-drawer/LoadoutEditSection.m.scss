@@ -1,0 +1,18 @@
+.section {
+  //border: 1px solid #ccc;
+  padding: 8px 16px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 8px;
+  margin-right: -8px;
+  > h3 {
+    margin: 0;
+    padding: 0;
+    flex: 1;
+  }
+}

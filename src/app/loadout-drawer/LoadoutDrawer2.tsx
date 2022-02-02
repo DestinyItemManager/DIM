@@ -1,7 +1,6 @@
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { getStore } from 'app/inventory/stores-helpers';
-import LoadoutView from 'app/loadout/LoadoutView';
 import { useDefinitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -25,6 +24,7 @@ import styles from './LoadoutDrawer2.m.scss';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
+import LoadoutEdit from './LoadoutEdit';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 // TODO: break out a container from the actual loadout drawer so we can lazy load the drawer
@@ -202,7 +202,7 @@ export default function LoadoutDrawer2() {
             <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
           </button>
         </div>
-        <LoadoutView store={store} loadout={loadout} actionButtons={[]} />
+        <LoadoutEdit store={store} loadout={loadout} />
         <div className={styles.inputGroup}>
           <CheckButton
             checked={loadout.classType === DestinyClass.Unknown}
