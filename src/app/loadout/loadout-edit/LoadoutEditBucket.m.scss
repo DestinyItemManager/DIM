@@ -1,5 +1,7 @@
 @import '../../variables.scss';
 
+// TODO: Dedupe with LoadoutItemCategorySection
+
 .itemCategory {
   display: flex;
   flex-direction: column;
@@ -71,17 +73,4 @@
 
 .missingItem {
   opacity: 0.3;
-}
-
-.placeholder {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.5);
-  width: 100%;
-  height: var(--item-size);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  @include phone-portrait {
-    display: none;
-  }
 }

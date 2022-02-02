@@ -10,6 +10,7 @@ import warlock from 'destiny-icons/general/class_warlock.svg';
 import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
 import ghost from 'destiny-icons/general/ghost.svg';
 import powerWeapon from 'destiny-icons/general/power_weapon.svg';
+import sparrow from 'destiny-icons/vehicles/sparrow.svg';
 import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
 import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
@@ -63,6 +64,7 @@ export const itemCategoryIcons: { [itemCategoryHash: number]: string } = {
   [ItemCategoryHashes.Titan]: titan,
   [ItemCategoryHashes.Warlock]: warlock,
   [ItemCategoryHashes.Ghost]: ghost,
+  [ItemCategoryHashes.Sparrows]: sparrow,
 } as const;
 
 /** A mapping from bucket hash to item category */
@@ -76,4 +78,5 @@ export const bucketHashToItemCategoryHash = {
   [BucketHashes.LegArmor]: ItemCategoryHashes.Legs,
   [BucketHashes.ClassArmor]: ItemCategoryHashes.ClassItems,
   [BucketHashes.Ghost]: ItemCategoryHashes.Ghost,
+  [BucketHashes.Vehicle]: ItemCategoryHashes.Sparrows,
 } as const;

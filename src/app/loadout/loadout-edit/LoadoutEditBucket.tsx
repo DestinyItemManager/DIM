@@ -1,4 +1,3 @@
-import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
@@ -11,14 +10,15 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { BucketPlaceholder } from './BucketPlaceholder';
-import { FashionMods } from './FashionMods';
-import styles from './LoadoutItemCategorySection.m.scss';
-import LoadoutParametersDisplay from './LoadoutParametersDisplay';
-import { OptimizerButton } from './OptimizerButton';
+import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
+import { FashionMods } from '../loadout-ui/FashionMods';
+import LoadoutParametersDisplay from '../loadout-ui/LoadoutParametersDisplay';
+import { OptimizerButton } from '../loadout-ui/OptimizerButton';
+import styles from './LoadoutEditBucket.m.scss';
 
 const categoryStyles = {
   Weapons: styles.categoryWeapons,
@@ -26,7 +26,7 @@ const categoryStyles = {
   General: styles.categoryGeneral,
 };
 
-export default function LoadoutItemCategorySection({
+export default function LoadoutEditBucket({
   category,
   subclass,
   storeId,
@@ -56,9 +56,8 @@ export default function LoadoutItemCategorySection({
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]
-      : _.sortBy(
-          Object.keys(itemsByBucket).map((bucketHash) => buckets.byHash[parseInt(bucketHash, 10)]),
-          (bucket) => buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash)
+      : [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships, BucketHashes.Vehicle].map(
+          (h) => buckets.byHash[h]
         );
   const equippedItems =
     items?.filter((i) => equippedItemIds.has(i.id) && i.owner !== 'unknown') ?? [];
@@ -72,27 +71,19 @@ export default function LoadoutItemCategorySection({
 
   return (
     <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
-      {items || hasFashion ? (
-        <div className={styles.itemsInCategory}>
-          {bucketOrder.map((bucket) => (
-            <ItemBucket
-              key={bucket.hash}
-              storeId={storeId}
-              bucketHash={bucket.hash}
-              items={itemsByBucket[bucket.hash]}
-              equippedItemIds={equippedItemIds}
-              modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
-            />
-          ))}
-        </div>
-      ) : (
-        <>
-          <div className={clsx(styles.placeholder, `category-${category}`)}>
-            {t(`Bucket.${category}`, { contextList: 'buckets' })}
-          </div>
-        </>
-      )}
-      {items && isArmor && (
+      <div className={styles.itemsInCategory}>
+        {bucketOrder.map((bucket) => (
+          <ItemBucket
+            key={bucket.hash}
+            storeId={storeId}
+            bucketHash={bucket.hash}
+            items={itemsByBucket[bucket.hash]}
+            equippedItemIds={equippedItemIds}
+            modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
+          />
+        ))}
+      </div>
+      {isArmor && (
         <>
           {equippedItems.length === 5 && (
             <div className="stat-bars destiny2">
@@ -128,8 +119,6 @@ function ItemBucket({
   );
 
   const showFashion = LockableBucketHashes.includes(bucketHash);
-
-  // TODO: should these be draggable? so you can drag them into other loadouts?
 
   return (
     <div className={clsx(styles.itemBucket, { [styles.showFashion]: showFashion })}>

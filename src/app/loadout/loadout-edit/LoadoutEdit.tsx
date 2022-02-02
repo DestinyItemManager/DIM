@@ -1,6 +1,7 @@
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import LoadoutItemCategorySection from 'app/loadout/loadout-ui/LoadoutItemCategorySection';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import LoadoutSubclassSection from 'app/loadout/loadout-ui/LoadoutSubclassSection';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
@@ -8,9 +9,8 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Loadout } from './loadout-types';
-import { getLight, getModsFromLoadout } from './loadout-utils';
 import styles from './LoadoutEdit.m.scss';
+import LoadoutEditBucket from './LoadoutEditBucket';
 import LoadoutEditSection from './LoadoutEditSection';
 
 export default function LoadoutEdit({ loadout, store }: { loadout: Loadout; store: DimStore }) {
@@ -61,7 +61,7 @@ export default function LoadoutEdit({ loadout, store }: { loadout: Loadout; stor
             throw new Error('Function not implemented.');
           }}
         >
-          <LoadoutItemCategorySection
+          <LoadoutEditBucket
             category={category}
             subclass={subclass}
             storeId={store.id}

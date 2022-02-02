@@ -14,6 +14,7 @@ import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
 import '../inventory/Stores.scss';
+import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
 import { deleteLoadout, updateLoadout } from './actions';
 import { stateReducer } from './loadout-drawer-reducer';
 import './loadout-drawer.scss';
@@ -24,7 +25,6 @@ import styles from './LoadoutDrawer2.m.scss';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
-import LoadoutEdit from './LoadoutEdit';
 
 // TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
 // TODO: break out a container from the actual loadout drawer so we can lazy load the drawer
@@ -184,7 +184,13 @@ export default function LoadoutDrawer2() {
   };
 
   return (
-    <Sheet onClose={close} header={header} footer={footer} disabled={showingItemPicker}>
+    <Sheet
+      onClose={close}
+      header={header}
+      footer={footer}
+      disabled={showingItemPicker}
+      allowClickThrough
+    >
       <LoadoutDrawerDropTarget onDroppedItem={onAddItem} className={styles.body}>
         <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
           <summary>{t('MovePopup.Notes')}</summary>
