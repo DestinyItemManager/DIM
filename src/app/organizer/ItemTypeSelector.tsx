@@ -127,7 +127,7 @@ const d2SelectionTree: ItemCategoryTreeNode = {
         {
           id: 'fusionrifle',
           itemCategoryHash: ItemCategoryHashes.FusionRifle,
-          subCategories: [energy, power],
+          subCategories: [kinetic, energy, power],
           terminal: true,
         },
         {
@@ -178,7 +178,7 @@ const d2SelectionTree: ItemCategoryTreeNode = {
         {
           id: 'linearfusionrifle',
           itemCategoryHash: ItemCategoryHashes.LinearFusionRifles,
-          subCategories: [kinetic, power],
+          subCategories: [kinetic, energy, power],
           terminal: true,
         },
       ],
