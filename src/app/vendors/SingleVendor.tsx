@@ -16,12 +16,7 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import Countdown from '../dim-ui/Countdown';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import {
-  bucketsSelector,
-  ownedItemsSelector,
-  profileResponseSelector,
-  storesSelector,
-} from '../inventory/selectors';
+import { bucketsSelector, profileResponseSelector, storesSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh-events';
@@ -52,10 +47,9 @@ interface StoreProps {
   };
 }
 
-function mapStateToProps(state: RootState) {
+function mapStateToProps(state: RootState): StoreProps {
   return {
     stores: storesSelector(state),
-    ownedItemHashes: ownedItemsSelector(state),
     buckets: bucketsSelector(state),
     profileResponse: profileResponseSelector(state),
     vendors: vendorsByCharacterSelector(state),
