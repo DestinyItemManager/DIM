@@ -87,7 +87,7 @@ export default function LoadoutEdit({ loadout, store }: { loadout: Loadout; stor
           loadout={loadout}
           storeId={store.id}
           savedMods={savedMods}
-          onPickMod={() => console.log('pick mod')}
+          onUpdateMods={(mods) => console.log('pick mod', mods)}
         />
       </LoadoutEditSection>
     </div>

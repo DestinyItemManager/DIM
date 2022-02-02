@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import ModAssignmentDrawer from '../mod-assignment-drawer/ModAssignmentDrawer';
 import { createGetModRenderKey } from '../mod-utils';
+import ModPicker from '../ModPicker';
 import styles from './LoadoutMods.m.scss';
 import PlugDef from './PlugDef';
 
@@ -23,18 +24,19 @@ export default memo(function LoadoutMods({
   savedMods,
   storeId,
   hideShowModPlacements,
-  onPickMod,
+  onUpdateMods,
 }: {
   loadout: Loadout;
   savedMods: PluggableInventoryItemDefinition[];
   storeId: string;
   hideShowModPlacements?: boolean;
   /** If present, show an "Add Mod" button */
-  onPickMod?(): void;
+  onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
+  const [showModPicker, setShowModPicker] = useState(false);
 
   const unlockedPlugSetItems = useSelector((state: RootState) =>
     unlockedPlugSetItemsSelector(state, storeId)
@@ -42,8 +44,9 @@ export default memo(function LoadoutMods({
 
   // TODO: filter down by usable mods?
   // TODO: Hide the "Add Mod" button when no more mods can fit
+  // TODO: turn the mod assignment drawer into a super mod editor?
 
-  if (savedMods.length === 0 && !onPickMods) {
+  if (savedMods.length === 0 && !onUpdateMods) {
     return !isPhonePortrait ? (
       <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
     ) : null;
@@ -65,18 +68,18 @@ export default memo(function LoadoutMods({
             plug={mod}
           />
         ))}
-        {onPickMods && (
+        {onUpdateMods && (
           <button
             className={styles.pickModButton}
             type="button"
             title={t('Loadout.PickMods')}
-            onClick={() => onPickMods()}
+            onClick={() => setShowModPicker(true)}
           >
             <AppIcon icon={addIcon} />
           </button>
         )}
       </div>
-      {!hideShowModPlacements && savedMods.length > 0 && (
+      {!hideShowModPlacements && (
         <button
           className={styles.showModPlacementButton}
           type="button"
@@ -89,8 +92,19 @@ export default memo(function LoadoutMods({
         ReactDOM.createPortal(
           <ModAssignmentDrawer
             loadout={loadout}
-            onPickMods={onPickMods}
+            onUpdateMods={onUpdateMods}
             onClose={() => setShowModAssignmentDrawer(false)}
+          />,
+          document.body
+        )}
+      {onUpdateMods &&
+        showModPicker &&
+        ReactDOM.createPortal(
+          <ModPicker
+            classType={loadout.classType}
+            lockedMods={savedMods}
+            onAccept={onUpdateMods}
+            onClose={() => setShowModPicker(false)}
           />,
           document.body
         )}
