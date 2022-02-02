@@ -171,7 +171,7 @@ export default function WishListSettings() {
         )}
       </div>
 
-      {wishListSource && (
+      {numWishListRolls > 0 && (
         <div className="setting">
           <div className="horizontal">
             <label>
