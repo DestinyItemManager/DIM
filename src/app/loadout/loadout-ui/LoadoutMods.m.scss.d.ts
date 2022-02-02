@@ -5,6 +5,7 @@ interface CssExports {
   'mods': string;
   'modsGrid': string;
   'modsPlaceholder': string;
+  'pickModButton': string;
   'showModPlacementButton': string;
 }
 export const cssExports: CssExports;

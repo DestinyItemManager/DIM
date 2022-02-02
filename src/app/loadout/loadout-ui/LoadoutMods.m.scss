@@ -30,3 +30,15 @@
 .missingItem {
   opacity: 0.3;
 }
+
+.pickModButton {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  color: #999;
+  border: 1px solid white;
+  height: var(--item-icon-size);
+  width: var(--item-icon-size);
+
+  &:hover {
+    color: white;
+  }
+}

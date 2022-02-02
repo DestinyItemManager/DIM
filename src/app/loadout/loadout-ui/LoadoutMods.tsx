@@ -3,6 +3,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
+import { addIcon, AppIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
@@ -22,11 +23,14 @@ export default memo(function LoadoutMods({
   savedMods,
   storeId,
   hideShowModPlacements,
+  onPickMod,
 }: {
   loadout: Loadout;
   savedMods: PluggableInventoryItemDefinition[];
   storeId: string;
   hideShowModPlacements?: boolean;
+  /** If present, show an "Add Mod" button */
+  onPickMod?(): void;
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
@@ -37,8 +41,9 @@ export default memo(function LoadoutMods({
   );
 
   // TODO: filter down by usable mods?
+  // TODO: Hide the "Add Mod" button when no more mods can fit
 
-  if (savedMods.length === 0) {
+  if (savedMods.length === 0 && !onPickMods) {
     return !isPhonePortrait ? (
       <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
     ) : null;
@@ -60,8 +65,18 @@ export default memo(function LoadoutMods({
             plug={mod}
           />
         ))}
+        {onPickMods && (
+          <button
+            className={styles.pickModButton}
+            type="button"
+            title={t('Loadout.PickMods')}
+            onClick={() => onPickMods()}
+          >
+            <AppIcon icon={addIcon} />
+          </button>
+        )}
       </div>
-      {!hideShowModPlacements && (
+      {!hideShowModPlacements && savedMods.length > 0 && (
         <button
           className={styles.showModPlacementButton}
           type="button"
@@ -74,6 +89,7 @@ export default memo(function LoadoutMods({
         ReactDOM.createPortal(
           <ModAssignmentDrawer
             loadout={loadout}
+            onPickMods={onPickMods}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,
           document.body
