@@ -35,6 +35,7 @@ import {
   vendorsByCharacterSelector,
 } from './selectors';
 import Vendor from './Vendor';
+import styles from './Vendors.m.scss';
 import VendorsMenu from './VendorsMenu';
 
 interface ProvidedProps {
@@ -155,13 +156,15 @@ function Vendors({ stores, searchQuery, filterItems, vendors, dispatch, account 
           />
         )}
         {selectedStore && (
-          <CheckButton
-            name="filter-to-unacquired"
-            checked={filterToUnacquired}
-            onChange={setFilterToUnacquired}
-          >
-            {t('Vendors.FilterToUnacquired')}
-          </CheckButton>
+          <div className={styles.buttons}>
+            <CheckButton
+              name="filter-to-unacquired"
+              checked={filterToUnacquired}
+              onChange={setFilterToUnacquired}
+            >
+              {t('Vendors.FilterToUnacquired')}
+            </CheckButton>
+          </div>
         )}
         {!isPhonePortrait && vendorGroups && <VendorsMenu groups={vendorGroups} />}
       </PageWithMenu.Menu>
