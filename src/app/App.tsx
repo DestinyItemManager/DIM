@@ -1,8 +1,7 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import { set } from 'idb-keyval';
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router';
 import styles from './App.m.scss';
@@ -20,13 +19,11 @@ import About from './shell/About';
 import AccountRedirectRoute from './shell/AccountRedirectRoute';
 import DefaultAccount from './shell/DefaultAccount';
 import Destiny from './shell/Destiny';
-import ErrorPanel from './shell/ErrorPanel';
 import GATracker from './shell/GATracker';
 import Header from './shell/Header';
 import Privacy from './shell/Privacy';
 import ScrollToTop from './shell/ScrollToTop';
 import SneakyUpdates from './shell/SneakyUpdates';
-import { errorLog } from './utils/log';
 
 const WhatsNew = React.lazy(
   () => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
@@ -47,19 +44,6 @@ export default function App() {
   const charColMobile = useSelector(settingSelector('charColMobile'));
   const needsLogin = useSelector((state: RootState) => state.accounts.needsLogin);
   const needsDeveloper = useSelector((state: RootState) => state.accounts.needsDeveloper);
-  const storageWorks = useStorageTest();
-
-  if (!storageWorks) {
-    return (
-      <div className="dim-page">
-        <ErrorPanel
-          title={t('Help.NoStorage')}
-          fallbackMessage={t('Help.NoStorageMessage')}
-          showTwitters={true}
-        />
-      </div>
-    );
-  }
 
   return (
     <div
@@ -139,25 +123,4 @@ export default function App() {
       </ClickOutsideRoot>
     </div>
   );
-}
-
-/** Test that localStorage and IndexedDB work */
-function useStorageTest() {
-  const [storageWorks, setStorageWorks] = useState(true);
-  useEffect(() => {
-    (async () => {
-      try {
-        localStorage.setItem('test', 'true');
-        if (!window.indexedDB) {
-          throw new Error('IndexedDB not available');
-        }
-        await set('idb-test', true);
-      } catch (e) {
-        errorLog('storage', 'Failed Storage Test', e);
-        setStorageWorks(false);
-      }
-    })();
-  }, []);
-
-  return storageWorks;
 }

@@ -4,7 +4,8 @@
     "ConfirmTitle": "Confirm Action",
     "Error": "Error changing mods or perks",
     "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
-    "FailedToken": "Couldn't get permission to change item"
+    "FailedToken": "Couldn't get permission to change item",
+    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
@@ -848,8 +849,8 @@
     "SetSort": "Sort items by:",
     "Settings": "Settings",
     "ShowNewItems": "Show a red dot on new items",
-    "SingleCharacter": "Only show current character",
-    "SingleCharacterExplanation": "DIM will hide all but the most recently played character. Those characters' inventories will appear as if they were in the vault.",
+    "SingleCharacter": "Single-Character View",
+    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
     "SizeItem": "Item size",
     "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Stack Size",

@@ -7,6 +7,7 @@ $control-color: rgba(255, 255, 255, 0.5);
   left: 0;
   right: 0;
   position: fixed;
+  will-change: transform;
   backface-visibility: hidden;
   z-index: 12;
   bottom: 0;

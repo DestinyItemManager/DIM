@@ -6,10 +6,12 @@ import { t } from 'app/i18next-t';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
+import { isValidMasterworkStat } from 'app/inventory/store/masterwork';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { collectionsVisibleShadersSelector } from 'app/records/selectors';
+import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { SearchInput } from 'app/search/SearchInput';
 import { RootState } from 'app/store/types';
@@ -19,6 +21,7 @@ import {
   DestinyEnergyType,
   DestinyItemPlug,
   DestinyItemPlugBase,
+  PlugUiStyles,
   SocketPlugSources,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -64,7 +67,8 @@ function mapStateToProps() {
     }
   );
 
-  /** Build a set of items that should be shown even if locked. If undefined, show all.
+  /**
+   * Build a set of items that should be shown even if locked. If undefined, show all.
    * This is a heuristic only, which is why the defensive approach is to never hide unlocked
    * plugs.
    */
@@ -171,9 +175,10 @@ function SocketDetails({
   onPlugSelected,
 }: Props) {
   const defs = useD2Definitions()!;
-  const initialPlug = socket.plugged?.plugDef;
+  const plugged = socket.plugged?.plugDef;
+  const actuallyPlugged = (socket.actuallyPlugged || socket.plugged)?.plugDef;
   const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
-    initialPlug || null
+    plugged || null
   );
   const [query, setQuery] = useState('');
   const language = useSelector(languageSelector);
@@ -235,6 +240,29 @@ function SocketDetails({
         i.plug.energyCost.energyType === DestinyEnergyType.Any
     );
 
+  if (socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash) {
+    const matchesMasterwork = (plugOption: PluggableInventoryItemDefinition) => {
+      // Full masterwork plugs have the plugStyle set to Masterwork
+      if (
+        plugOption.plug.plugStyle === PlugUiStyles.Masterwork &&
+        isValidMasterworkStat(
+          defs,
+          defs.InventoryItem.get(item.hash),
+          plugOption.investmentStats[0]?.statTypeHash
+        )
+      ) {
+        return true;
+      }
+
+      return (
+        plugOption.plug.plugCategoryHash === actuallyPlugged?.plug.plugCategoryHash &&
+        plugOption.investmentStats[0]?.value > actuallyPlugged.investmentStats[0]?.value
+      );
+    };
+
+    mods = mods.filter(matchesMasterwork);
+  }
+
   const requiresEnergy = mods.some((i) => i.plug.energyCost?.energyCost);
 
   mods = mods
@@ -250,9 +278,19 @@ function SocketDetails({
       )
     );
 
-  if (initialPlug) {
-    mods = mods.filter((m) => m.hash !== initialPlug.hash);
-    mods.unshift(initialPlug);
+  if (socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash) {
+    // Higher-tier versions of the current MW first, then the others
+    mods = mods.sort(
+      chainComparator(
+        compareBy((i) => i.plug.plugCategoryHash !== actuallyPlugged?.plug.plugCategoryHash),
+        compareBy((i) => i.investmentStats[0]?.value)
+      )
+    );
+  }
+
+  if (plugged) {
+    mods = mods.filter((m) => m.hash !== plugged.hash);
+    mods.unshift(plugged);
   }
 
   const initialItem =

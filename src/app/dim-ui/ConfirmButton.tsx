@@ -16,9 +16,10 @@ export function ConfirmButton({
   danger,
   /** this will be executed once the users confirms the action */
   onClick,
+  className,
   /** button content. confine this to 1 text line and 1 line-height */
   children,
-}: React.PropsWithChildren<{ danger?: boolean; onClick: () => void }>) {
+}: React.PropsWithChildren<{ danger?: boolean; onClick: () => void; className?: string }>) {
   // controls whether the button is in "ask for confirmation" state
   const [confirmMode, setConfirmMode] = useState(false);
 
@@ -44,7 +45,7 @@ export function ConfirmButton({
     <button
       key="save"
       type="button"
-      className={clsx('dim-button', styles.confirmButton, {
+      className={clsx('dim-button', className, styles.confirmButton, {
         [styles.confirmMode]: confirmMode,
         danger,
       })}

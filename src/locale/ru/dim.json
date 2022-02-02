@@ -4,7 +4,8 @@
     "ConfirmTitle": "Подтверждение",
     "Error": "Ошибка при изменении модов или перков",
     "ErrorMessage": "Мы не смогли экипировать {{plug}} в {{item}}.\n\n{{error}}",
-    "FailedToken": "Не удалось получить разрешение на изменение предмета"
+    "FailedToken": "Не удалось получить разрешение на изменение предмета",
+    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
     "ErrorLoadInventory": "Невозможно загрузить персонажей и инвентарь Destiny {{version}}",
@@ -140,7 +141,8 @@
     "Desc_male": "DIM поддерживает доступное место для Энграмм и Блеска у {{store}} в хранилище и удерживает одно открытое место для каждого типа предмета, чтобы новые не отправлялись Почтмейстеру.",
     "Desc_male_plural": "DIM поддерживает доступное место для Энграмм и Блеска у {{store}} в хранилище и удерживает {{count}} открытых мест для каждого типа предмета, чтобы новые не отправлялись Почтмейстеру.",
     "Desc_plural": "DIM поддерживает доступное место для Энграмм и Блеска у {{store}} в хранилище и удерживает {{count}} открытых мест для каждого типа предмета, чтобы новые не отправлялись Почтмейстеру.",
-    "FarmingMode": "Режим Фарма (держать место для лута)",
+    "FarmingMode": "Режим фарма",
+    "FarmingModeNote": "(maintain space for drops)",
     "MakeRoom": {
       "Desc": "DIM поддерживает доступное место для Энграмм и Блеска у {{store}}, чтобы новые не отправлялись Почтмейстеру. Предметы отправляются в Хранилище или другим персонажам.",
       "Desc_female": "DIM поддерживает доступное место для Энграмм и Блеска у {{store}}, чтобы новые не отправлялись Почтмейстеру. Предметы отправляются в Хранилище или другим персонажам.",
@@ -288,6 +290,7 @@
   },
   "General": {
     "ClickForDetails": "Подробнее...",
+    "Confirm": "Подтвердить?",
     "UserGuideLink": "Руководство"
   },
   "Header": {
@@ -540,7 +543,6 @@
     "Classified": "Некоторые ваши предметы секретны, и не могут быть включены в расчет максимально возможной Силы.",
     "ClearSpace": "Переместить другие предметы",
     "ClearingSpace": "Перемещение других предметов",
-    "ConfirmDelete": "Уверены, что хотите удалить {{name}}?",
     "Create": "Набор",
     "CurrentlyEquipped": "В настоящее время экипировано",
     "Deequip": "Снятие экипировки с предметов других персонажей",
@@ -601,9 +603,8 @@
     "PullFromPostmasterNotification_male_plural": "Получение {{count}} предметов почтмейстера в {{store}}.",
     "PullFromPostmasterNotification_plural": "Получение {{count}} предметов почтмейстера в {{store}}.",
     "PullFromPostmasterPopupTitle": "Забираем у Почтмейстера",
-    "PullMakeSpace": "Место",
     "Random": "Случайно",
-    "Randomize": "Рандомизировать",
+    "Randomize": "Рандомизировать снаряжение",
     "RandomizePrompt": "Рандомизировать экипированные оружия, броню и Призрака?",
     "RandomizeSearch": "Случайно на основе Поиска",
     "RandomizeSearchPrompt": "Надеть случайные предметы из результатов поискового запроса \"{{query}}\"?",
@@ -623,7 +624,7 @@
     "UnassignedModError": "Мод не поместился на вашей текущей броне",
     "UnassignedMods": "Неназначенные моды",
     "VendorsCannotEquip": "Предметы не найдены. ЛКМ для выбора предмета на замену или Х для очистки:",
-    "WeaponsOnly": "Оружие"
+    "WeaponsOnly": "Только оружие"
   },
   "Manifest": {
     "Download": "Загрузка последней базы данных Destiny с Bungie.net...",
@@ -833,7 +834,7 @@
     "InventoryColumns": "Ширина инвентарей",
     "InventoryColumnsMobile": "Ширина [в предметах] столбца персонажа в мобильной портретной ориентации",
     "InventoryColumnsMobileLine2": "Предметы будут пересчитаны чтобы удовлетворять условия новой настройки",
-    "InventoryNumberOfSpacesToClear": "Количество пустых мест при использовании режима Фарма (освободить место)",
+    "InventoryNumberOfSpacesToClear": "Количество пустых мест, которые нужно оставить при использовании режима Фарма",
     "Items": "Предметы",
     "Language": "Язык",
     "LoadoutSort": "Порядок наборов:",
@@ -847,8 +848,8 @@
     "SetSort": "Порядок Сортировки предметов:",
     "Settings": "Настройки",
     "ShowNewItems": "Показывать красную точку на новых предметах",
-    "SingleCharacter": "Только активный персонаж",
-    "SingleCharacterExplanation": "DIM скроет персонажей, кроме последнего активного. Предметы в инвентарях скрытых персонажей добавятся к блоку Хранилища.",
+    "SingleCharacter": "Single-Character View",
+    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
     "SizeItem": "Размер предмета",
     "SortByAmmoType": "Тип боеприпасов",
     "SortByAmount": "Количество",

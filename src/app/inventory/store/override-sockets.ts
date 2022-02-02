@@ -38,20 +38,24 @@ export function applySocketOverrides(
     let plugOptions: DimPlug[] = s.plugOptions.map((p) => ({ ...p, stats: null }));
 
     if (override && s.plugged?.plugDef.hash !== override) {
-      let newPlug = plugOptions.find((p) => p.plugDef.hash === override);
-      if (!newPlug && !s.isPerk) {
+      let newPlug, actuallyPlugged;
+
+      if (s.isPerk) {
+        newPlug = plugOptions.find((p) => p.plugDef.hash === override);
+        actuallyPlugged = plugOptions.find((p) => p.plugDef.hash === s.plugged?.plugDef.hash);
+      } else {
         // This is likely a mod selection!
         const createdPlug = buildDefinedPlug(defs, override);
         if (createdPlug) {
           newPlug = createdPlug;
+          // Mod sockets' plugOptions only ever
+          // contain the currently plugged item
+          actuallyPlugged = plugOptions.find((p) => p.plugDef.hash === s.plugged?.plugDef.hash);
           plugOptions = [newPlug];
         }
       }
 
       if (newPlug) {
-        // Back up the real plug here
-        const actuallyPlugged = plugOptions.find((p) => p.plugDef.hash === s.plugged?.plugDef.hash);
-
         return {
           ...s,
           actuallyPlugged,

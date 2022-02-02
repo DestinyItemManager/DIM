@@ -226,7 +226,7 @@ function LoadoutRow({
     }
 
     return actionButtons;
-  }, [dispatch, equippable, loadout, saved, store]);
+  }, [account.membershipId, dispatch, equippable, loadout, saved, store]);
 
   return (
     <LoadoutView
