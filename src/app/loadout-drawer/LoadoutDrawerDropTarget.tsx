@@ -14,8 +14,8 @@ export const bucketTypesSelector = createSelector(
   storesSelector,
   (buckets, stores) =>
     buckets
-      ? Object.keys(buckets.byType).flatMap((bucketType) =>
-          stores.flatMap((store) => [bucketType, `${store.id}-${bucketType}`])
+      ? Object.values(buckets.byType).flatMap((bucket) =>
+          stores.flatMap((store) => [bucket.hash.toString(), `${store.id}-${bucket.hash}`])
         )
       : emptyArray<string>()
 );

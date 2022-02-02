@@ -2,8 +2,10 @@ import ArmorySheet from 'app/armory/ArmorySheet';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import { DamageType, DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import heavy from 'destiny-icons/general/ammo_heavy.svg';
 import primary from 'destiny-icons/general/ammo_primary.svg';
 import special from 'destiny-icons/general/ammo_special.svg';
@@ -104,9 +106,9 @@ export function ItemTypeName({ item, className }: { item: DimItem; className?: s
   const classType =
     (item.classType !== DestinyClass.Unknown &&
       // These already include the class name
-      item.type !== 'ClassItem' &&
-      item.type !== 'Artifact' &&
-      item.type !== 'Class' &&
+      item.bucket.hash !== BucketHashes.ClassArmor &&
+      item.bucket.hash !== D1BucketHashes.Artifact &&
+      item.bucket.hash !== BucketHashes.Subclass &&
       !item.classified &&
       item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1)) ||
     '';

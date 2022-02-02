@@ -2,10 +2,8 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { ArmorStats, LockableBucketHash } from '../types';
 
 export interface ProcessItem {
-  bucketHash: number;
   id: string;
   hash: number;
-  type: string;
   name: string;
   isExotic: boolean;
   energy?: {

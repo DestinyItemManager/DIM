@@ -130,7 +130,7 @@ export function mapDimItemToProcessItem(
   lockItemEnergyType: boolean,
   modsForSlot?: PluggableInventoryItemDefinition[]
 ): ProcessItem {
-  const { bucket, id, hash, type, name, isExotic, power, stats: dimItemStats, energy } = dimItem;
+  const { id, hash, name, isExotic, power, stats: dimItemStats, energy } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
   const capacity = upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, dimItem);
@@ -163,10 +163,8 @@ export function mapDimItemToProcessItem(
   }
 
   return {
-    bucketHash: bucket.hash,
     id,
     hash,
-    type,
     name,
     isExotic,
     power,

@@ -6,6 +6,7 @@ import {
   DestinyProfileResponse,
   ItemLocation,
 } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import produce, { Draft, original } from 'immer';
 import _ from 'lodash';
 import { Reducer } from 'redux';
@@ -195,7 +196,8 @@ function updateCharacters(state: InventoryState, characters: actions.CharacterIn
 }
 
 /** Can an item be marked as new? */
-const canBeNew = (item: DimItem) => item.equipment && item.id !== '0' && item.type !== 'Class';
+const canBeNew = (item: DimItem) =>
+  item.equipment && item.id !== '0' && item.bucket.hash !== BucketHashes.Subclass;
 
 /**
  * Given an old inventory, a new inventory, and all the items that were previously marked as new,

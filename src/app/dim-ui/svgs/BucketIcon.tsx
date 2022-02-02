@@ -1,5 +1,5 @@
-import type { DimBucketType } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
+import { BucketHashes } from 'data/d2/generated-enums';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';
@@ -12,16 +12,16 @@ import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import React from 'react';
 import BungieImage from '../BungieImage';
 
-const bucketIcons: { [key in DimBucketType]?: string } = {
-  KineticSlot: dmgKinetic,
-  Energy: energyWeapon,
-  Power: powerWeapon,
-  Helmet: helmet,
-  Gauntlets: gauntlets,
-  Chest: chest,
-  Leg: legs,
-  ClassItem: classItem,
-  Ghost: ghost,
+const bucketIcons = {
+  [BucketHashes.KineticWeapons]: dmgKinetic,
+  [BucketHashes.EnergyWeapons]: energyWeapon,
+  [BucketHashes.PowerWeapons]: powerWeapon,
+  [BucketHashes.Helmet]: helmet,
+  [BucketHashes.Gauntlets]: gauntlets,
+  [BucketHashes.ChestArmor]: chest,
+  [BucketHashes.LegArmor]: legs,
+  [BucketHashes.ClassArmor]: classItem,
+  [BucketHashes.Ghost]: ghost,
 };
 
 export type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> & {
@@ -31,7 +31,7 @@ export type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> & {
 /** given an item, returns an img. ideally an svg img icon for the item's bucket */
 export default function BucketIcon(props: BucketIconProps) {
   const { item, ...otherProps } = props;
-  const svg = bucketIcons[item.type];
+  const svg = bucketIcons[item.bucket.hash];
   return svg ? (
     <img src={svg} {...otherProps} />
   ) : (

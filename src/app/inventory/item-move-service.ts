@@ -53,11 +53,11 @@ import {
 } from './stores-helpers';
 
 /**
- * You can reserve a number of each type of item in each store.
+ * You can reserve a number of spaces in each BucketHash in each store.
  */
 export interface MoveReservations {
   [storeId: string]: {
-    [type: string]: number;
+    [type: number]: number;
   };
 }
 
@@ -244,7 +244,7 @@ export function equipItems(
         if (i.equippingLabel) {
           const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
           // If we aren't already equipping into that slot...
-          if (otherExotic && !items.find((i) => i.type === otherExotic.type)) {
+          if (otherExotic && !items.find((i) => i.bucket.hash === otherExotic.bucket.hash)) {
             const similarItem = getSimilarItem(getStores(), otherExotic, {
               excludeExotic: true,
               exclusions,
@@ -488,7 +488,8 @@ function getOtherExoticThatNeedsDequipping(item: DimItem, store: DimStore): DimI
 }
 
 interface MoveContext {
-  originalItemType: string;
+  /** Bucket hash */
+  originalItemType: number;
   excludes: Pick<DimItem, 'id' | 'hash'>[];
   spaceLeft(s: DimStore, i: DimItem): number;
 }
@@ -720,11 +721,15 @@ function canMoveToStore(
     function spaceLeftWithReservations(s: DimStore, i: DimItem) {
       let left = spaceLeftForItem(s, i, storesSelector(getState()));
       // minus any reservations
-      if (reservations[s.id]?.[i.type]) {
-        left -= reservations[s.id][i.type];
+      if (reservations[s.id]?.[i.bucket.hash]) {
+        left -= reservations[s.id][i.bucket.hash];
       }
       // but not counting the original item that's moving
-      if (s.id === item.owner && i.type === item.type && !item.location.inPostmaster) {
+      if (
+        s.id === item.owner &&
+        i.bucket.hash === item.bucket.hash &&
+        !item.location.inPostmaster
+      ) {
         left--;
       }
       return Math.max(0, left);
@@ -767,11 +772,11 @@ function canMoveToStore(
     } else {
       // Move aside one of the items that's in the way
       const moveContext: MoveContext = {
-        originalItemType: item.type,
+        originalItemType: item.bucket.hash,
         excludes,
         spaceLeft(s, i) {
           let left = spaceLeftWithReservations(s, i);
-          if (i.type === this.originalItemType && storeReservations[s.id]) {
+          if (i.bucket.hash === this.originalItemType && storeReservations[s.id]) {
             left -= storeReservations[s.id];
           }
           return Math.max(0, left);
@@ -1046,7 +1051,7 @@ export function sortMoveAsideCandidatesForStore(
       // Try our hardest never to unequip something
       compareBy((i) => !i.equipped),
       // prefer same type over everything
-      compareBy((i) => item && i.type === item.type),
+      compareBy((i) => item && i.bucket.hash === item.bucket.hash),
       // or at least same category
       compareBy((i) => item && i.bucket.sort === item.bucket.sort),
       // Always prefer keeping something that was manually moved where it is

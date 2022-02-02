@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { D1_StatHashes } from 'app/search/d1-known-values';
+import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
@@ -11,6 +11,7 @@ import {
   DestinyDisplayPropertiesDefinition,
 } from 'bungie-api-ts/destiny2';
 import missingSources from 'data/d1/missing_sources.json';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions, DefinitionTable } from '../../destiny1/d1-definitions';
@@ -224,6 +225,8 @@ function makeItem(
         case 138197802:
           currentBucket = buckets.byType.Artifact;
           break;
+        default:
+          break;
       }
     } else {
       currentBucket = normalBucket;
@@ -288,13 +291,14 @@ function makeItem(
     ammoType: getAmmoType(itemType),
     sourceHashes: itemDef.sourceHashes,
     lockable:
-      normalBucket.type !== 'Class' &&
+      normalBucket.hash !== BucketHashes.Subclass &&
       ((currentBucket.inPostmaster && item.isEquipment) ||
         currentBucket.inWeapons ||
         item.lockable),
     trackable: Boolean(
       currentBucket.inProgress &&
-        (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)
+        (currentBucket.hash === D1BucketHashes.Bounties ||
+          currentBucket.hash === D1BucketHashes.Quests)
     ),
     tracked: item.state === 2,
     locked: item.locked,

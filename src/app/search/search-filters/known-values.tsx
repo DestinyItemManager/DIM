@@ -134,7 +134,7 @@ const knownValuesFilters: FilterDefinition[] = [
   {
     keywords: 'cosmetic',
     description: tl('Filter.Cosmetic'),
-    filter: () => (item) => cosmeticTypes.includes(item.type),
+    filter: () => (item) => cosmeticTypes.includes(item.bucket.hash),
   },
   {
     keywords: ['light', 'haslight', 'haspower'],

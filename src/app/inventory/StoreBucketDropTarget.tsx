@@ -37,7 +37,9 @@ export default function StoreBucketDropTarget({
     { isOver: Boolean; canDrop: boolean }
   >(
     () => ({
-      accept: bucket.inPostmaster ? [] : [bucket.type!, `${storeId}-${bucket.type!}`, 'postmaster'],
+      accept: bucket.inPostmaster
+        ? []
+        : [bucket.hash.toString(), `${storeId}-${bucket.hash}`, 'postmaster'],
       collect: (monitor) => ({ isOver: monitor.isOver(), canDrop: monitor.canDrop() }),
       drop: (item) => dispatch(dropItem(item, storeId, Boolean(equip))),
       canDrop: (item) => {
