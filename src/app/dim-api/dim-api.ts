@@ -3,6 +3,9 @@ import {
   DestinyVersion,
   ExportResponse,
   ImportResponse,
+  Loadout,
+  LoadoutShareRequest,
+  LoadoutShareResponse,
   PlatformInfoResponse,
   ProfileResponse,
   ProfileUpdate,
@@ -71,6 +74,19 @@ export async function postUpdates(
     body: request,
   });
   return response.results;
+}
+
+export async function createLoadoutShare(platformMembershipId: string, loadout: Loadout) {
+  const request: LoadoutShareRequest = {
+    platformMembershipId,
+    loadout,
+  };
+  const response = await authenticatedApi<LoadoutShareResponse>({
+    url: '/loadout_share',
+    method: 'POST',
+    body: request,
+  });
+  return response.shareUrl;
 }
 
 export async function deleteAllData() {
