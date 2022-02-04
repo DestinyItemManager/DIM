@@ -17,14 +17,6 @@
   align-items: flex-start;
 }
 
-.checked {
-  background-color: $orange !important;
-  color: black !important;
-  > img {
-    filter: none !important;
-  }
-}
-
 .button {
   composes: dim-button from global;
   margin: 2px;
@@ -33,7 +25,8 @@
     margin-left: 0 !important;
   }
   &:hover,
-  &:active {
+  &:active,
+  &.checked {
     background-color: $orange;
     color: black;
     > img {
