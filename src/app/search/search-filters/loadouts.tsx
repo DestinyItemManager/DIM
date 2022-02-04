@@ -14,14 +14,14 @@ const loadoutFilters: FilterDefinition[] = [
         .map((l) => 'inloadout:' + quoteFilterString(l.name.toLowerCase())),
 
     description: tl('Filter.InLoadout'),
-    filter: ({ filterValue, loadouts }) => {
+    filter: ({ keyword, filterValue, loadouts }) => {
       // the default search:
       // is:inloadout
       let selectedLoadouts = loadouts;
 
       // a search like
       // inloadout:"loadout name here"
-      if (filterValue !== 'inloadout') {
+      if (keyword !== 'is') {
         selectedLoadouts = loadouts.filter((l) => l.name.toLowerCase() === filterValue);
       }
 

@@ -21,10 +21,15 @@ import { loadoutsSelector } from '../loadout-drawer/selectors';
 import { querySelector } from '../shell/selectors';
 import { wishListFunctionSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { FilterContext, ItemFilter } from './filter-types';
+import {
+  canonicalFilterFormats,
+  FilterContext,
+  FilterDefinition,
+  ItemFilter,
+} from './filter-types';
 import { parseQuery, QueryAST } from './query-parser';
 import { SearchConfig, searchConfigSelector } from './search-config';
-import { parseAndValidateQuery } from './search-utils';
+import { parseAndValidateQuery, rangeStringToComparator } from './search-utils';
 
 //
 // Selectors
@@ -139,23 +144,50 @@ function makeSearchFilterFactory(
           return (item) => !fn(item);
         }
         case 'filter': {
-          let filterName = ast.type;
+          const filterName = ast.type;
           const filterValue = ast.args;
 
           // "is:" filters are slightly special cased
           if (filterName === 'is') {
-            filterName = filterValue;
-          }
-
-          const filterDef = filters[filterName];
-          if (filterDef) {
-            // Each filter knows how to generate a standalone item filter function
-            try {
-              return filterDef.filter({ filterValue, ...filterContext });
-            } catch (e) {
-              // TODO: mark invalid - fill out what didn't make sense and where it was in the string
-              errorLog('search', 'Invalid query term', filterName, filterValue, e);
-              return () => true;
+            const filterDef = filters[filterValue];
+            if (filterDef && canonicalFilterFormats(filterDef.format).some((f) => f === 'simple')) {
+              try {
+                return filterDef.filter({ keyword: filterName, filterValue, ...filterContext });
+              } catch (e) {
+                // An `is` filter really shouldn't throw an error on filter construction...
+                errorLog(
+                  'search',
+                  'internal error: simple is filter threw exception?',
+                  filterName,
+                  filterValue,
+                  e
+                );
+                return () => true;
+              }
+            }
+          } else {
+            const filterDef = filters[filterName];
+            if (filterDef) {
+              const matchedFilter = matchFilter(filterDef, filterName, filterValue);
+              if (matchedFilter) {
+                try {
+                  return matchedFilter(filterContext);
+                } catch (e) {
+                  // This shouldn't happen because it means validation wouldn't catch it, but
+                  // not the end of the world...
+                  errorLog(
+                    'search',
+                    'internal error: filter construction threw exception',
+                    filterName,
+                    filterValue,
+                    e
+                  );
+                  return () => true;
+                }
+              } else {
+                // TODO: mark invalid - fill out what didn't make sense and where it was in the string
+                return () => true;
+              }
             }
           }
 
@@ -169,4 +201,67 @@ function makeSearchFilterFactory(
 
     return transformAST(parsedQuery);
   };
+}
+
+/** Matches a non-`is` filter syntax and returns a way to actually create the matched filter function. */
+export function matchFilter(
+  filterDef: FilterDefinition,
+  keyword: string,
+  filterValue: string
+): ((args: FilterContext) => ItemFilter) | undefined {
+  for (const format of canonicalFilterFormats(filterDef.format)) {
+    switch (format) {
+      case 'simple': {
+        break;
+      }
+      case 'query': {
+        if (filterDef.suggestions!.includes(filterValue)) {
+          return (filterContext) =>
+            filterDef.filter({
+              keyword,
+              filterValue,
+              ...filterContext,
+            });
+        } else {
+          break;
+        }
+      }
+      case 'freeform': {
+        return (filterContext) => filterDef.filter({ keyword, filterValue, ...filterContext });
+      }
+      case 'range': {
+        try {
+          const compare = rangeStringToComparator(filterValue, filterDef.overload);
+          return (filterContext) =>
+            filterDef.filter({
+              keyword,
+              filterValue: '',
+              compare,
+              ...filterContext,
+            });
+        } catch {
+          break;
+        }
+      }
+      case 'stat': {
+        const [stat, rangeString] = filterValue.split(':', 2);
+        try {
+          const compare = rangeStringToComparator(rangeString, filterDef.overload);
+          if (!filterDef.validateStat || filterDef.validateStat(stat)) {
+            return (filterContext) =>
+              filterDef.filter({
+                keyword,
+                filterValue: stat,
+                compare,
+                ...filterContext,
+              });
+          }
+        } catch {
+          break;
+        }
+      }
+      case 'custom':
+        break;
+    }
+  }
 }

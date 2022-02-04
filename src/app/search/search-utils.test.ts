@@ -13,7 +13,7 @@ describe('generateSuggestionsForFilter', () => {
     ['query', 'a', ['b', 'c']],
     ['stat', 'a', ['b', 'c']],
     ['range', 'a', undefined],
-    ['rangeoverload', 'a', ['b', 'c']],
+    ['range', 'a', ['b', 'c']],
     ['freeform', 'a', ['b', 'c']],
     [undefined, ['a'], undefined],
     ['stat', 'stat', allStatNames],

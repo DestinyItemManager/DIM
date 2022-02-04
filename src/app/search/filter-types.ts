@@ -55,7 +55,6 @@ export interface SuggestionsContext {
  * * `query`: `[keyword]:[suggestion]`
  * * `freeform`: `[keyword]:[literallyanything]`
  * * `range`: `[keyword]:op?[number]`
- * * `rangeoverload`: `[keyword]:op?([number]|[suggestion])`
  * * `stat`:  `[keyword]:[suggestion]:op?[number]`
  */
 export type FilterFormat =
@@ -63,7 +62,6 @@ export type FilterFormat =
   | 'query'
   | 'freeform'
   | 'range'
-  | 'rangeoverload'
   | 'stat'
   | 'custom';
 
@@ -72,6 +70,18 @@ export function canonicalFilterFormats(format: FilterDefinition['format']): Filt
     return ['simple'];
   }
   return Array.isArray(format) ? format : [format];
+}
+
+export interface FilterArgs {
+  /** the matched left-hand-side */
+  keyword: string;
+  /**
+   * if matching a simple filter, this is the keyword. otherwise,
+   * this is the thing right next to the keyword
+   */
+  filterValue: string;
+  /** the generated comparator if this is a range or stat filter */
+  compare?: (value: number) => boolean;
 }
 
 /**
@@ -97,7 +107,8 @@ export interface FilterDefinition {
    * What kind of query this is, used to help generate suggestions.
    * Leave unset for `simple`, specify one, or specify multiple formats,
    * as long as their usage of `suggestions` doesn't clash.
-   * `query`, `rangeoverload`, and `stat` use `suggestions`.
+   * `query` and `stat` use `suggestions`. Also try to avoid mixing
+   * overloads and `query` because their parse might be ambiguous.
    */
   format?: FilterFormat | FilterFormat[];
 
@@ -119,12 +130,23 @@ export interface FilterDefinition {
    * filter function will be generated once, at the point where the overall
    * query is parsed.
    */
-  filter: (args: { filterValue: string } & FilterContext) => ItemFilter;
+  filter: (args: FilterArgs & FilterContext) => ItemFilter;
 
   /**
-   * A list of suggested keywords, depending on the format.
+   * For queries, the only valid values. For freeform filters, suggested values.
+   * For stat filters, suggested stats.
    */
   suggestions?: string[];
+
+  /**
+   * For range-like filters, a mapping of strings to numbers (like season names or power cap aliases)
+   */
+  overload?: { [key: string]: number };
+
+  /**
+   * For stat filters, check whether this is a valid stat name or combination.
+   */
+  validateStat?: (stat: string) => boolean;
 
   /**
    * A custom function used to generate (additional) suggestions.

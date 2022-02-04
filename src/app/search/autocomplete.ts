@@ -168,7 +168,7 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
 const caretEndRegex = /([\s)]|$)/;
 
 // most times, insist on at least 3 typed characters, but for #, start suggesting immediately
-const lastWordRegex = /(\b[\w:"']{3,}|#\w*)$/;
+const lastWordRegex = /(\b[\w:"'&<=>+]{3,}|#\w*)$/;
 // matches a string that seems to end with a closing, not opening, quote
 const closingQuoteRegex = /\w["']$/;
 

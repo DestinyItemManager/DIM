@@ -69,7 +69,11 @@ export function buildSearchConfig(
       }
       allApplicableFilters.push(filter);
       const filterKeywords = Array.isArray(filter.keywords) ? filter.keywords : [filter.keywords];
+
       for (const keyword of filterKeywords) {
+        if ($DIM_FLAVOR === 'test' && keyword in allFiltersByKeyword) {
+          throw new Error(`filter clash in '${keyword}'`);
+        }
         allFiltersByKeyword[keyword] = filter;
       }
     }

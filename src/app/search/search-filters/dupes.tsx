@@ -10,7 +10,6 @@ import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { armorStats, DEFAULT_SHADER } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
-import { rangeStringToComparator } from './range-numeric';
 
 const notableTags = ['favorite', 'keep'];
 
@@ -159,12 +158,11 @@ const dupeFilters: FilterDefinition[] = [
     keywords: 'count',
     description: tl('Filter.DupeCount'),
     format: 'range',
-    filter: ({ allItems, filterValue }) => {
-      const compare = rangeStringToComparator(filterValue);
+    filter: ({ allItems, compare }) => {
       const duplicates = computeDupes(allItems);
       return (item) => {
         const dupeId = makeDupeID(item);
-        return compare(duplicates[dupeId]?.length ?? 0);
+        return compare!(duplicates[dupeId]?.length ?? 0);
       };
     },
   },

@@ -1,4 +1,4 @@
-import { rangeStringToComparator } from './range-numeric';
+import { rangeStringToComparator } from '../search-utils';
 
 describe('rangeStringToComparator', () => {
   const cases: [input: string, reference: number, result: boolean][] = [

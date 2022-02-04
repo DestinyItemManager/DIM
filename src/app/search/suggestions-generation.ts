@@ -46,13 +46,12 @@ function makeSuggestionsContext(
   };
 }
 
-const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
+const operators = ['<', '>', '<=', '>=']; // TODO: remove >=, <=?
 
 /**
- * Generates all the possible suggested keywords for the given filter
- *
- * Accepts partial filters with as little as just a "keywords" property,
- * if you want to generate some keywords without a full valid filter
+ * Generates all the possible suggested keywords for the given filter,
+ * followed by the operators that should be grouped in a single help
+ * line.
  */
 export function generateSuggestionsForFilter(
   filterDefinition: Pick<FilterDefinition, 'keywords' | 'suggestions' | 'format' | 'deprecated'>
@@ -68,8 +67,16 @@ export function generateSuggestionsForFilter(
   );
 }
 
+/**
+ * Generates all the possible suggested keywords for the given filter,
+ * followed by the operators that should be grouped in a single help
+ * line.
+ */
 export function generateGroupedSuggestionsForFilter(
-  filterDefinition: Pick<FilterDefinition, 'keywords' | 'suggestions' | 'format' | 'deprecated'>,
+  filterDefinition: Pick<
+    FilterDefinition,
+    'keywords' | 'suggestions' | 'format' | 'deprecated' | 'overload'
+  >,
   forHelp?: boolean
 ): { keyword: string; ops?: string[] }[] {
   if (filterDefinition.deprecated) {
@@ -121,10 +128,11 @@ export function generateGroupedSuggestionsForFilter(
         break;
       case 'range':
         allSuggestions.push(...expandOps([thisFilterKeywords], operators));
-        break;
-      case 'rangeoverload':
-        allSuggestions.push(...expandOps([thisFilterKeywords], operators));
-        allSuggestions.push(...expandFlat([thisFilterKeywords, filterSuggestions]));
+        if (filterDefinition.overload) {
+          allSuggestions.push(
+            ...expandFlat([thisFilterKeywords, Object.keys(filterDefinition.overload)])
+          );
+        }
         break;
       case 'stat':
         // stat lists aren't exhaustive
