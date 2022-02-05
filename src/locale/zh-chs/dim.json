@@ -5,7 +5,7 @@
     "Error": "更改模组或特性时出错",
     "ErrorMessage": "我们无法将{{plug}}装备到{{item}}。\n\n{{error}}",
     "FailedToken": "无权限更换物品",
-    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
+    "IrreversiblePlugging": "你不拥有{{plug}}，所以我们不会覆盖它。"
   },
   "Accounts": {
     "ErrorLoadInventory": "无法加载你的《命运 {{version}}》角色和库存",
@@ -516,6 +516,7 @@
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
     "ShareBuild": "分享配装设置",
+    "ShareBuildTitle": "配装优化器设置",
     "ShareBuildWithNotes": "带备注分享",
     "SpeedReport": "在 {{time}} 秒内生成了 {{combos, number}} 个组合",
     "StatTierIgnoreOption": "忽略",
@@ -848,8 +849,8 @@
     "SetSort": "物品排序方式:",
     "Settings": "设置",
     "ShowNewItems": "在新物品上显示红点",
-    "SingleCharacter": "Single-Character View",
-    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
+    "SingleCharacter": "单角色视图",
+    "SingleCharacterExplanation": "DIM 将只显示最近一次游玩的角色。\n如果隐藏的角色持有当前角色可用的物品，它们会被显示在保险库里。\n其他职业独有的物品会被完全隐藏。",
     "SizeItem": "物品显示大小",
     "SortByAmmoType": "弹药类型",
     "SortByAmount": "堆叠大小",

@@ -516,6 +516,7 @@
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
     "ShareBuild": "Compartir Configuración de la Equipación",
+    "ShareBuildTitle": "Configuración del Optimizador de Equipaciones",
     "ShareBuildWithNotes": "Compartir Con Notas",
     "SpeedReport": "Se generaron {{combos, number}} combinaciones en {{time}} segundos",
     "StatTierIgnoreOption": "Ignorar",

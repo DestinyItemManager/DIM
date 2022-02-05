@@ -516,6 +516,7 @@
     "SelectMax": "- Maks. -",
     "SelectMin": "- Min. -",
     "ShareBuild": "Udostępnij ustawienia zestawu",
+    "ShareBuildTitle": "Loadout Optimizer Settings",
     "ShareBuildWithNotes": "Udostępni z notatkami",
     "SpeedReport": "Wygenerowano {{combos, number}} kombinacje w {{time}} sekund",
     "StatTierIgnoreOption": "Zignoruj",

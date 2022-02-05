@@ -141,8 +141,8 @@
     "Desc_male": "DIM está movendo engramas e consumíveis do {{store}} para o Cofre, mantendo um único espaço livre por tipo de item para prevenir que algo vá para o Chefe do Correio.",
     "Desc_male_plural": "DIM está movendo engramas e consumíveis do {{store}} para o Cofre, mantendo {{count}} espaços livres por tipo de item para prevenir que algo vá para o Chefe do Correio.",
     "Desc_plural": "DIM está movendo engramas e consumíveis do {{store}} para o Cofre, mantendo {{count}} espaços livres por tipo de item para prevenir que algo vá para o Chefe do Correio.",
-    "FarmingMode": "Farming Mode",
-    "FarmingModeNote": "(maintain space for drops)",
+    "FarmingMode": "Modo Farm",
+    "FarmingModeNote": "(mantém espaço livre para drops)",
     "MakeRoom": {
       "Desc": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
       "Desc_female": "O DIM está movendo apenas engramas e consumíveis da {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
@@ -516,6 +516,7 @@
     "SelectMax": "- Máx -",
     "SelectMin": "- Mín -",
     "ShareBuild": "Compartilhar esta configuração",
+    "ShareBuildTitle": "Configurações do Otimizador de Set",
     "ShareBuildWithNotes": "Compartilhar Com Anotações",
     "SpeedReport": "Gerou {{combos, number}} combinações em {{time}} segundos",
     "StatTierIgnoreOption": "Ignorar",
@@ -604,7 +605,7 @@
     "PullFromPostmasterNotification_plural": "Movido {{count}} itens do Chefe do Correio para seu {{store}}.",
     "PullFromPostmasterPopupTitle": "Resgatar do Chefe do Correio",
     "Random": "Aleatória",
-    "Randomize": "Randomize Loadout",
+    "Randomize": "Set Aleatório",
     "RandomizePrompt": "Randomizar suas armas, armaduras e fantasma equipados?",
     "RandomizeSearch": "Tornar aleatório a partir da busca",
     "RandomizeSearchPrompt": "Tornar aleatório seus itens equipados a partir da busca \"{{query}}\"?",
@@ -624,7 +625,7 @@
     "UnassignedModError": "Mod incompatível com a armadura atual",
     "UnassignedMods": "Mods não Atribuídos",
     "VendorsCannotEquip": "Você não tem esses itens. Toque para pegar um substituto ou clique no X para remover:",
-    "WeaponsOnly": "Weapons Only"
+    "WeaponsOnly": "Somente Armas"
   },
   "Manifest": {
     "Download": "Baixando últimas informações da Bungie referentes à base de dados de Destiny...",
@@ -834,7 +835,7 @@
     "InventoryColumns": "Largura do inventário de personagem",
     "InventoryColumnsMobile": "Tamanho do inventário do personagem em dispositivos móveis em modo retrato",
     "InventoryColumnsMobileLine2": "Os itens serão redimensionados para acomodar a nova configuração",
-    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
+    "InventoryNumberOfSpacesToClear": "Número de espaços vagos a serem criados quando se usa o Modo de Farm",
     "Items": "Exibição dos Itens",
     "Language": "Idioma",
     "LoadoutSort": "Ordenação de Sets:",
