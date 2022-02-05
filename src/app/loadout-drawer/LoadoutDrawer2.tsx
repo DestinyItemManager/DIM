@@ -151,7 +151,19 @@ export default function LoadoutDrawer2() {
   const handleNameChanged = (name: string) =>
     stateDispatch({ type: 'update', loadout: { ...loadout, name } });
 
-  const header = <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />;
+  const header = (
+    <div>
+      <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />
+      <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
+        <summary>{t('MovePopup.Notes')}</summary>
+        <textarea
+          onChange={handleNotesChanged}
+          value={loadout.notes}
+          placeholder={t('Loadouts.NotesPlaceholder')}
+        />
+      </details>
+    </div>
+  );
 
   const footer = (
     <LoadoutDrawerFooter
@@ -192,24 +204,14 @@ export default function LoadoutDrawer2() {
       allowClickThrough
     >
       <LoadoutDrawerDropTarget onDroppedItem={onAddItem} className={styles.body}>
-        <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
-          <summary>{t('MovePopup.Notes')}</summary>
-          <textarea
-            onChange={handleNotesChanged}
-            value={loadout.notes}
-            placeholder={t('Loadouts.NotesPlaceholder')}
-          />
-        </details>
-        <div>
+        <LoadoutEdit store={store} loadout={loadout} />
+        <div className={styles.inputGroup}>
           <button type="button" className="dim-button loadout-add">
             <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
           </button>
           <button type="button" className="dim-button loadout-add">
             <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
           </button>
-        </div>
-        <LoadoutEdit store={store} loadout={loadout} />
-        <div className={styles.inputGroup}>
           <CheckButton
             checked={loadout.classType === DestinyClass.Unknown}
             onChange={toggleAnyClass}
