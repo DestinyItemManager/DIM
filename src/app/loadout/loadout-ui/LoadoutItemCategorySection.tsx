@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
@@ -140,17 +141,19 @@ function ItemBucket({
             key={index}
           >
             {items.map((item) => (
-              <ItemPopupTrigger item={item} key={item.id}>
-                {(ref, onClick) => (
-                  <div
-                    className={clsx({
-                      [styles.missingItem]: item.owner === 'unknown',
-                    })}
-                  >
-                    <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
-                  </div>
-                )}
-              </ItemPopupTrigger>
+              <DraggableInventoryItem item={item} key={item.id}>
+                <ItemPopupTrigger item={item}>
+                  {(ref, onClick) => (
+                    <div
+                      className={clsx({
+                        [styles.missingItem]: item.owner === 'unknown',
+                      })}
+                    >
+                      <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+                    </div>
+                  )}
+                </ItemPopupTrigger>
+              </DraggableInventoryItem>
             ))}
             {index === 0 && showFashion && (
               <FashionMods modsForBucket={modsForBucket} storeId={storeId} />
