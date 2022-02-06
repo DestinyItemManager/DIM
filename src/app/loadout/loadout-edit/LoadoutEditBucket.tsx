@@ -1,4 +1,6 @@
+import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
@@ -35,7 +37,9 @@ export default function LoadoutEditBucket({
   modsByBucket,
   equippedItemIds,
   loadout,
-  hideOptimizeArmor,
+  onClickPlaceholder,
+  onClickWarnItem,
+  onRemoveItem,
 }: {
   category: string;
   subclass?: DimLoadoutItem;
@@ -47,7 +51,9 @@ export default function LoadoutEditBucket({
   };
   equippedItemIds: Set<string>;
   loadout: Loadout;
-  hideOptimizeArmor?: boolean;
+  onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
+  onClickWarnItem: (item: DimItem) => void;
+  onRemoveItem: (item: DimItem) => void;
 }) {
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
@@ -75,11 +81,20 @@ export default function LoadoutEditBucket({
         {bucketOrder.map((bucket) => (
           <ItemBucket
             key={bucket.hash}
-            storeId={storeId}
-            bucketHash={bucket.hash}
+            bucket={bucket}
             items={itemsByBucket[bucket.hash]}
             equippedItemIds={equippedItemIds}
-            modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
+            onClickPlaceholder={onClickPlaceholder}
+            onClickWarnItem={onClickWarnItem}
+            onRemoveItem={onRemoveItem}
+            equippedContent={
+              isArmor && (
+                <FashionMods
+                  modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
+                  storeId={storeId}
+                />
+              )
+            }
           />
         ))}
       </div>
@@ -94,7 +109,7 @@ export default function LoadoutEditBucket({
             </div>
           )}
           {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
-          {!hideOptimizeArmor && <OptimizerButton loadout={loadout} />}
+          <OptimizerButton loadout={loadout} />
         </>
       )}
     </div>
@@ -102,23 +117,32 @@ export default function LoadoutEditBucket({
 }
 
 function ItemBucket({
-  bucketHash,
-  storeId,
+  bucket,
   items,
   equippedItemIds,
-  modsForBucket,
+  equippedContent,
+  onClickPlaceholder,
+  onClickWarnItem,
+  onRemoveItem,
 }: {
-  bucketHash: number;
-  storeId?: string;
+  bucket: InventoryBucket;
   items: DimItem[];
   equippedItemIds: Set<string>;
-  modsForBucket: number[];
+  equippedContent?: React.ReactNode;
+  onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
+  onClickWarnItem: (item: DimItem) => void;
+  onRemoveItem: (item: DimItem) => void;
 }) {
+  const bucketHash = bucket.hash;
   const [equipped, unequipped] = _.partition(items, (i) =>
     i.owner === 'unknown' ? i.equipped : equippedItemIds.has(i.id)
   );
 
   const showFashion = LockableBucketHashes.includes(bucketHash);
+
+  const handlePlaceholderClick = () => onClickPlaceholder({ bucket });
+
+  // TODO: plumb through API from context??
 
   return (
     <div className={clsx(styles.itemBucket, { [styles.showFashion]: showFashion })}>
@@ -129,21 +153,26 @@ function ItemBucket({
             key={index}
           >
             {items.map((item) => (
-              <ItemPopupTrigger item={item} key={item.id}>
-                {(ref, onClick) => (
-                  <div
-                    className={clsx({
-                      [styles.missingItem]: item.owner === 'unknown',
-                    })}
-                  >
-                    <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
-                  </div>
-                )}
-              </ItemPopupTrigger>
+              <ClosableContainer
+                key={item.id}
+                className={clsx({
+                  [styles.missingItem]: item.owner === 'unknown',
+                })}
+                onClose={() => onRemoveItem(item)}
+                showCloseIconOnHover
+              >
+                <ItemPopupTrigger item={item}>
+                  {(ref, onClick) => (
+                    <ConnectedInventoryItem
+                      item={item}
+                      innerRef={ref}
+                      onClick={item.owner === 'unknown' ? () => onClickWarnItem(item) : onClick}
+                    />
+                  )}
+                </ItemPopupTrigger>
+              </ClosableContainer>
             ))}
-            {index === 0 && showFashion && (
-              <FashionMods modsForBucket={modsForBucket} storeId={storeId} />
-            )}
+            {index === 0 && equippedContent}
           </div>
         ) : (
           index === 0 && (
@@ -151,9 +180,8 @@ function ItemBucket({
               className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
               key={index}
             >
-              <BucketPlaceholder bucketHash={bucketHash} onClick={() => console.log('click')} />
-              {/* TODO: show empty placeholder for bucket type? */}
-              {showFashion && <FashionMods modsForBucket={modsForBucket} storeId={storeId} />}
+              <BucketPlaceholder bucketHash={bucketHash} onClick={handlePlaceholderClick} />
+              {equippedContent}
             </div>
           )
         )

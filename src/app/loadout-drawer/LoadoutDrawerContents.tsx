@@ -212,7 +212,7 @@ export default function LoadoutDrawerContents({
   );
 }
 
-async function pickLoadoutItem(
+export async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
   add: (params: { item: DimItem }) => void,

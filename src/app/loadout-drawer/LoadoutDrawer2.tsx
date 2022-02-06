@@ -1,10 +1,13 @@
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { getStore } from 'app/inventory/stores-helpers';
+import { showItemPicker } from 'app/item-picker/item-picker';
 import { useDefinitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -22,6 +25,7 @@ import { addItem$, editLoadout$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
 import { Loadout } from './loadout-types';
 import styles from './LoadoutDrawer2.m.scss';
+import { pickLoadoutItem } from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
@@ -84,6 +88,8 @@ export default function LoadoutDrawer2() {
     () => getItemsFromLoadoutItems(loadoutItems, defs, buckets, allItems),
     [defs, buckets, loadoutItems, allItems]
   );
+
+  console.log({ items });
 
   const onAddItem = useCallback(
     (item: DimItem, e?: MouseEvent | React.MouseEvent, equip?: boolean) =>
@@ -151,6 +157,56 @@ export default function LoadoutDrawer2() {
   const handleNameChanged = (name: string) =>
     stateDispatch({ type: 'update', loadout: { ...loadout, name } });
 
+  const handleRemoveItem = (item: DimItem, e?: React.MouseEvent) =>
+    stateDispatch({ type: 'removeItem', item, shift: Boolean(e?.shiftKey), items });
+
+  /** Prompt the user to select a replacement for a missing item. */
+  const fixWarnItem = async (warnItem: DimItem) => {
+    const loadoutClassType = loadout?.classType;
+
+    setShowingItemPicker(true);
+    try {
+      const { item } = await showItemPicker({
+        filterItems: (item: DimItem) =>
+          item.hash === warnItem.hash &&
+          itemCanBeInLoadout(item) &&
+          (!loadout ||
+            loadout.classType === DestinyClass.Unknown ||
+            item.classType === loadoutClassType ||
+            item.classType === DestinyClass.Unknown),
+        prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
+
+        // don't show information related to selected perks so we don't give the impression
+        // that we will update perk selections when applying the loadout
+        ignoreSelectedPerks: true,
+      });
+
+      onAddItem(item);
+      handleRemoveItem(warnItem);
+    } catch (e) {
+    } finally {
+      setShowingItemPicker(false);
+    }
+  };
+
+  const setClearSpace = (clearSpace: boolean) => {
+    handleUpdateLoadout({
+      ...loadout,
+      clearSpace,
+    });
+  };
+
+  const toggleAnyClass = (checked: boolean) => {
+    handleUpdateLoadout({
+      ...loadout,
+      classType: checked ? DestinyClass.Unknown : store.classType,
+    });
+  };
+
+  const handleClickPlaceholder = ({ bucket }: { bucket: InventoryBucket }) => {
+    pickLoadoutItem(loadout, bucket, ({ item }) => onAddItem(item), setShowingItemPicker);
+  };
+
   const header = (
     <div>
       <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />
@@ -180,20 +236,7 @@ export default function LoadoutDrawer2() {
   // TODO: contextual buttons!
   // TODO: borders?
   // TODO: does notes belong here, or in the header?
-
-  const setClearSpace = (clearSpace: boolean) => {
-    handleUpdateLoadout({
-      ...loadout,
-      clearSpace,
-    });
-  };
-
-  const toggleAnyClass = (checked: boolean) => {
-    handleUpdateLoadout({
-      ...loadout,
-      classType: checked ? DestinyClass.Unknown : store.classType,
-    });
-  };
+  // TODO: undo/redo stack?
 
   return (
     <Sheet
@@ -204,7 +247,14 @@ export default function LoadoutDrawer2() {
       allowClickThrough
     >
       <LoadoutDrawerDropTarget onDroppedItem={onAddItem} className={styles.body}>
-        <LoadoutEdit store={store} loadout={loadout} />
+        <LoadoutEdit
+          store={store}
+          loadout={loadout}
+          stateDispatch={stateDispatch}
+          onClickPlaceholder={handleClickPlaceholder}
+          onClickWarnItem={fixWarnItem}
+          onRemoveItem={handleRemoveItem}
+        />
         <div className={styles.inputGroup}>
           <button type="button" className="dim-button loadout-add">
             <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}

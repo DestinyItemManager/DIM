@@ -38,7 +38,7 @@ export default function LoadoutDrawerDropTarget({
       canDrop: itemCanBeInLoadout,
       collect: (monitor) => ({ isOver: monitor.isOver() && monitor.canDrop() }),
     }),
-    [bucketTypes]
+    [bucketTypes, onDroppedItem]
   );
 
   return (
