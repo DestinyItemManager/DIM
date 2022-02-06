@@ -14,10 +14,10 @@ import {
   fillLoadoutFromUnequipped,
 } from 'app/loadout-drawer/LoadoutDrawerContents';
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
-import LoadoutSubclassSection from 'app/loadout/loadout-ui/LoadoutSubclassSection';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -26,6 +26,7 @@ import { useSelector } from 'react-redux';
 import styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
 import LoadoutEditSection from './LoadoutEditSection';
+import LoadoutEditSubclass from './LoadoutEditSubclass';
 
 export default function LoadoutEdit({
   loadout,
@@ -61,7 +62,11 @@ export default function LoadoutEdit({
 
   const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
 
-  const showPower = categories.Weapons?.length === 3 && categories.Armor?.length === 5;
+  const isEquipped = (i: DimItem) =>
+    Boolean(i.owner !== 'unknown' && i.power && equippedItemIds.has(i.id));
+  const showPower =
+    count(categories.Weapons ?? [], isEquipped) === 3 &&
+    count(categories.Armor ?? [], isEquipped) === 5;
   const power = showPower
     ? Math.floor(getLight(store, [...categories.Weapons, ...categories.Armor]))
     : 0;
@@ -125,7 +130,7 @@ export default function LoadoutEdit({
             throw new Error('Function not implemented.');
           }}
         >
-          <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
+          <LoadoutEditSubclass defs={defs} subclass={subclass} power={power} />
         </LoadoutEditSection>
       )}
       {(anyClass ? ['Weapons', 'General'] : ['Weapons', 'Armor', 'General']).map((category) => (
@@ -153,7 +158,7 @@ export default function LoadoutEdit({
                 loadout={loadout}
                 storeId={store.id}
                 subclass={subclass}
-                items={items}
+                items={categories[category]}
                 savedMods={savedMods}
                 equippedItemIds={equippedItemIds}
                 onModsByBucketUpdated={onModsByBucketUpdated}

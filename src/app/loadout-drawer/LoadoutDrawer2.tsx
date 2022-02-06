@@ -19,7 +19,7 @@ import { DimItem } from '../inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
 import '../inventory/Stores.scss';
 import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
-import { deleteLoadout } from './actions';
+import { deleteLoadout, updateLoadout } from './actions';
 import { stateReducer } from './loadout-drawer-reducer';
 import './loadout-drawer.scss';
 import { addItem$, editLoadout$ } from './loadout-events';
@@ -195,10 +195,6 @@ export default function LoadoutDrawer2() {
     } finally {
       setShowingItemPicker(false);
     }
-  };
-
-  const handleUpdateLoadout = (loadout: Loadout) => {
-    stateDispatch({ type: 'update', loadout });
   };
 
   const setClearSpace = (clearSpace: boolean) => {

@@ -120,18 +120,20 @@ export function ArmorExtras({
   const defs = useD2Definitions()!;
   const equippedItems =
     items?.filter((i) => equippedItemIds.has(i.id) && i.owner !== 'unknown') ?? [];
+
   return (
     <>
       {equippedItems.length === 5 && (
         <div className="stat-bars destiny2">
           <LoadoutStats
+            showTier
             stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, savedMods)}
             characterClass={loadout.classType}
           />
         </div>
       )}
+      {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
       <div className={styles.buttons}>
-        {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
         <FashionButton
           loadout={loadout}
           items={items ?? emptyArray()}

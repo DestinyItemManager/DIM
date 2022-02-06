@@ -12,6 +12,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -88,7 +89,11 @@ export default function LoadoutView({
 
   const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
 
-  const showPower = categories.Weapons?.length === 3 && categories.Armor?.length === 5;
+  const isEquipped = (i: DimItem) =>
+    Boolean(i.owner !== 'unknown' && i.power && equippedItemIds.has(i.id));
+  const showPower =
+    count(categories.Weapons ?? [], isEquipped) === 3 &&
+    count(categories.Armor ?? [], isEquipped) === 5;
   const power = showPower
     ? Math.floor(getLight(store, [...categories.Weapons, ...categories.Armor]))
     : 0;
