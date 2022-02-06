@@ -9,6 +9,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -18,14 +19,18 @@ import { DimItem } from '../inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
 import '../inventory/Stores.scss';
 import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
-import { deleteLoadout, updateLoadout } from './actions';
+import { deleteLoadout } from './actions';
 import { stateReducer } from './loadout-drawer-reducer';
 import './loadout-drawer.scss';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
 import { Loadout } from './loadout-types';
 import styles from './LoadoutDrawer2.m.scss';
-import { pickLoadoutItem } from './LoadoutDrawerContents';
+import {
+  fillLoadoutFromEquipped,
+  fillLoadoutFromUnequipped,
+  pickLoadoutItem,
+} from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
@@ -88,8 +93,7 @@ export default function LoadoutDrawer2() {
     () => getItemsFromLoadoutItems(loadoutItems, defs, buckets, allItems),
     [defs, buckets, loadoutItems, allItems]
   );
-
-  console.log({ items });
+  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
 
   const onAddItem = useCallback(
     (item: DimItem, e?: MouseEvent | React.MouseEvent, equip?: boolean) =>
@@ -193,6 +197,10 @@ export default function LoadoutDrawer2() {
     }
   };
 
+  const handleUpdateLoadout = (loadout: Loadout) => {
+    stateDispatch({ type: 'update', loadout });
+  };
+
   const setClearSpace = (clearSpace: boolean) => {
     handleUpdateLoadout({
       ...loadout,
@@ -241,6 +249,7 @@ export default function LoadoutDrawer2() {
   // TODO: does notes belong here, or in the header?
   // TODO: undo/redo stack?
   // TODO: remove armor/subclass from any-class loadouts on save
+  // TODO: build and publish a "loadouts API" via context
 
   return (
     <Sheet
@@ -260,10 +269,24 @@ export default function LoadoutDrawer2() {
           onRemoveItem={handleRemoveItem}
         />
         <div className={styles.inputGroup}>
-          <button type="button" className="dim-button loadout-add">
+          <button
+            type="button"
+            className="dim-button loadout-add"
+            onClick={() =>
+              fillLoadoutFromEquipped(loadout, itemsByBucket, store, handleUpdateLoadout)
+            }
+          >
             <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
           </button>
-          <button type="button" className="dim-button loadout-add">
+          <button
+            type="button"
+            className="dim-button loadout-add"
+            onClick={() =>
+              fillLoadoutFromUnequipped(loadout, store, ({ item }) =>
+                onAddItem(item, undefined, false)
+              )
+            }
+          >
             <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
           </button>
           <CheckButton
