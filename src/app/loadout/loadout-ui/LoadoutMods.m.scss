@@ -38,6 +38,10 @@
   height: var(--item-icon-size);
   width: var(--item-icon-size);
 
+  &:focus {
+    border-color: $orange;
+  }
+
   &:hover {
     color: white;
   }

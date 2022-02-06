@@ -151,7 +151,7 @@ function ItemBucket({
               className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
               key={index}
             >
-              <BucketPlaceholder bucketHash={bucketHash} />
+              <BucketPlaceholder bucketHash={bucketHash} onClick={() => console.log('click')} />
               {/* TODO: show empty placeholder for bucket type? */}
               {showFashion && <FashionMods modsForBucket={modsForBucket} storeId={storeId} />}
             </div>
