@@ -238,9 +238,9 @@ export default function LoadoutDrawer2() {
   // TODO: actually make this editable
   // TODO: how to choose equipped/unequipped
   // TODO: contextual buttons!
-  // TODO: borders?
   // TODO: does notes belong here, or in the header?
   // TODO: undo/redo stack?
+  // TODO: remove armor/subclass from any-class loadouts on save
 
   return (
     <Sheet

@@ -18,6 +18,7 @@ import LoadoutSubclassSection from 'app/loadout/loadout-ui/LoadoutSubclassSectio
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useCallback, useMemo } from 'react';
@@ -108,19 +109,23 @@ export default function LoadoutEdit({
     stateDispatch({ type: 'updateMods', mods });
   };
 
+  const anyClass = loadout.classType === DestinyClass.Unknown;
+
   // TODO: i18n the category title
   return (
     <div className={styles.contents}>
-      <LoadoutEditSection
-        title="Subclass"
-        onClear={handleClearSubclass}
-        onFillFromEquipped={function (): void {
-          throw new Error('Function not implemented.');
-        }}
-      >
-        <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
-      </LoadoutEditSection>
-      {['Weapons', 'Armor', 'General'].map((category) => (
+      {!anyClass && (
+        <LoadoutEditSection
+          title="Subclass"
+          onClear={handleClearSubclass}
+          onFillFromEquipped={function (): void {
+            throw new Error('Function not implemented.');
+          }}
+        >
+          <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
+        </LoadoutEditSection>
+      )}
+      {(anyClass ? ['Weapons', 'General'] : ['Weapons', 'Armor', 'General']).map((category) => (
         <LoadoutEditSection
           key={category}
           title={category}

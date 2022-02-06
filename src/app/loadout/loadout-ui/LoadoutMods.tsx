@@ -45,6 +45,7 @@ export default memo(function LoadoutMods({
   // TODO: filter down by usable mods?
   // TODO: Hide the "Add Mod" button when no more mods can fit
   // TODO: turn the mod assignment drawer into a super mod editor?
+  // TODO: let these be dragged and dropped into the loadout editor
 
   if (savedMods.length === 0 && !onUpdateMods) {
     return !isPhonePortrait ? (
