@@ -24,7 +24,7 @@ import _ from 'lodash';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './LoadoutEdit.m.scss';
-import LoadoutEditBucket from './LoadoutEditBucket';
+import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
 import LoadoutEditSection from './LoadoutEditSection';
 
 export default function LoadoutEdit({
@@ -140,18 +140,26 @@ export default function LoadoutEdit({
         >
           <LoadoutEditBucket
             category={category}
-            subclass={subclass}
             storeId={store.id}
             items={categories[category]}
-            savedMods={savedMods}
             modsByBucket={modsByBucket}
             equippedItemIds={equippedItemIds}
-            loadout={loadout}
             onClickPlaceholder={onClickPlaceholder}
             onClickWarnItem={onClickWarnItem}
             onRemoveItem={onRemoveItem}
-            onModsByBucketUpdated={onModsByBucketUpdated}
-          />
+          >
+            {category === 'Armor' && (
+              <ArmorExtras
+                loadout={loadout}
+                storeId={store.id}
+                subclass={subclass}
+                items={items}
+                savedMods={savedMods}
+                equippedItemIds={equippedItemIds}
+                onModsByBucketUpdated={onModsByBucketUpdated}
+              />
+            )}
+          </LoadoutEditBucket>
         </LoadoutEditSection>
       ))}
       <LoadoutEditSection

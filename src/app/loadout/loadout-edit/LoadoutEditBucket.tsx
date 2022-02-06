@@ -35,35 +35,27 @@ const categoryStyles = {
 
 export default function LoadoutEditBucket({
   category,
-  subclass,
   storeId,
   items,
-  savedMods,
   modsByBucket,
   equippedItemIds,
-  loadout,
   onClickPlaceholder,
   onClickWarnItem,
   onRemoveItem,
-  onModsByBucketUpdated,
   children,
 }: {
   category: string;
-  subclass?: DimLoadoutItem;
   storeId: string;
   items?: DimItem[];
-  savedMods: PluggableInventoryItemDefinition[];
   modsByBucket: {
     [bucketHash: number]: number[];
   };
   equippedItemIds: Set<string>;
-  loadout: Loadout;
   onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
   onClickWarnItem: (item: DimItem) => void;
   onRemoveItem: (item: DimItem) => void;
-  onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
+  children?: React.ReactNode;
 }) {
-  const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
   const isPhonePortrait = useIsPhonePortrait();
@@ -73,9 +65,6 @@ export default function LoadoutEditBucket({
       : [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships, BucketHashes.Vehicle].map(
           (h) => buckets.byHash[h]
         );
-  const equippedItems =
-    items?.filter((i) => equippedItemIds.has(i.id) && i.owner !== 'unknown') ?? [];
-
   const isArmor = category === 'Armor';
   const hasFashion = isArmor && !_.isEmpty(modsByBucket);
 
@@ -84,7 +73,7 @@ export default function LoadoutEditBucket({
   }
 
   return (
-    <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
+    <div className={clsx(styles.itemCategory, categoryStyles[category])}>
       <div className={styles.itemsInCategory}>
         {bucketOrder.map((bucket) => (
           <ItemBucket
@@ -106,29 +95,52 @@ export default function LoadoutEditBucket({
           />
         ))}
       </div>
-      {isArmor && (
-        <>
-          {equippedItems.length === 5 && (
-            <div className="stat-bars destiny2">
-              <LoadoutStats
-                stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, savedMods)}
-                characterClass={loadout.classType}
-              />
-            </div>
-          )}
-          <div className={styles.buttons}>
-            {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
-            <FashionButton
-              loadout={loadout}
-              items={items ?? emptyArray()}
-              storeId={storeId}
-              onModsByBucketUpdated={onModsByBucketUpdated}
-            />
-            <OptimizerButton loadout={loadout} />
-          </div>
-        </>
-      )}
+      {children}
     </div>
+  );
+}
+
+export function ArmorExtras({
+  loadout,
+  storeId,
+  subclass,
+  savedMods,
+  items,
+  equippedItemIds,
+  onModsByBucketUpdated,
+}: {
+  loadout: Loadout;
+  storeId: string;
+  subclass?: DimLoadoutItem;
+  savedMods: PluggableInventoryItemDefinition[];
+  items?: DimItem[];
+  equippedItemIds: Set<string>;
+  onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
+}) {
+  const defs = useD2Definitions()!;
+  const equippedItems =
+    items?.filter((i) => equippedItemIds.has(i.id) && i.owner !== 'unknown') ?? [];
+  return (
+    <>
+      {equippedItems.length === 5 && (
+        <div className="stat-bars destiny2">
+          <LoadoutStats
+            stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, savedMods)}
+            characterClass={loadout.classType}
+          />
+        </div>
+      )}
+      <div className={styles.buttons}>
+        {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
+        <FashionButton
+          loadout={loadout}
+          items={items ?? emptyArray()}
+          storeId={storeId}
+          onModsByBucketUpdated={onModsByBucketUpdated}
+        />
+        <OptimizerButton loadout={loadout} />
+      </div>
+    </>
   );
 }
 
