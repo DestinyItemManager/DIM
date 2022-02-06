@@ -74,3 +74,10 @@
 .missingItem {
   opacity: 0.3;
 }
+
+.buttons {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 4px 0;
+  @include horizontal-space-children(4px);
+}

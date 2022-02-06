@@ -109,6 +109,9 @@ export default function LoadoutEdit({
     stateDispatch({ type: 'updateMods', mods });
   };
 
+  const onModsByBucketUpdated = (modsByBucket) =>
+    stateDispatch({ type: 'updateModsByBucket', modsByBucket });
+
   const anyClass = loadout.classType === DestinyClass.Unknown;
 
   // TODO: i18n the category title
@@ -147,6 +150,7 @@ export default function LoadoutEdit({
             onClickPlaceholder={onClickPlaceholder}
             onClickWarnItem={onClickWarnItem}
             onRemoveItem={onRemoveItem}
+            onModsByBucketUpdated={onModsByBucketUpdated}
           />
         </LoadoutEditSection>
       ))}

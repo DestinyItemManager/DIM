@@ -1,4 +1,6 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
+import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -8,14 +10,17 @@ import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { AppIcon, faTshirt } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
+import FashionDrawer from '../fashion/FashionDrawer';
 import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
 import { FashionMods } from '../loadout-ui/FashionMods';
 import LoadoutParametersDisplay from '../loadout-ui/LoadoutParametersDisplay';
@@ -40,10 +45,12 @@ export default function LoadoutEditBucket({
   onClickPlaceholder,
   onClickWarnItem,
   onRemoveItem,
+  onModsByBucketUpdated,
+  children,
 }: {
   category: string;
   subclass?: DimLoadoutItem;
-  storeId?: string;
+  storeId: string;
   items?: DimItem[];
   savedMods: PluggableInventoryItemDefinition[];
   modsByBucket: {
@@ -54,6 +61,7 @@ export default function LoadoutEditBucket({
   onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
   onClickWarnItem: (item: DimItem) => void;
   onRemoveItem: (item: DimItem) => void;
+  onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
 }) {
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
@@ -108,8 +116,16 @@ export default function LoadoutEditBucket({
               />
             </div>
           )}
-          {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
-          <OptimizerButton loadout={loadout} />
+          <div className={styles.buttons}>
+            {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
+            <FashionButton
+              loadout={loadout}
+              items={items ?? emptyArray()}
+              storeId={storeId}
+              onModsByBucketUpdated={onModsByBucketUpdated}
+            />
+            <OptimizerButton loadout={loadout} />
+          </div>
         </>
       )}
     </div>
@@ -194,5 +210,42 @@ function ItemBucket({
         )
       )}
     </div>
+  );
+}
+
+export function FashionButton({
+  loadout,
+  items,
+  storeId,
+  onModsByBucketUpdated,
+}: {
+  loadout: Loadout;
+  items: DimLoadoutItem[];
+  storeId: string;
+  onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
+}) {
+  const [showFashionDrawer, setShowFashionDrawer] = useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setShowFashionDrawer(true)}
+        className="dim-button loadout-add"
+      >
+        <AppIcon icon={faTshirt} /> {t('Loadouts.Fashion')}
+      </button>
+      {showFashionDrawer &&
+        ReactDOM.createPortal(
+          <FashionDrawer
+            loadout={loadout}
+            items={items}
+            storeId={storeId}
+            onModsByBucketUpdated={onModsByBucketUpdated}
+            onClose={() => setShowFashionDrawer(false)}
+          />,
+          document.body
+        )}
+    </>
   );
 }
