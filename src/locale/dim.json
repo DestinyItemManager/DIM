@@ -628,6 +628,7 @@
     "SubclassOptions": "{{subclass}} options",
     "SubclassOptionsSearch": "Search {{subclass}} options",
     "Succeeded": "Loadout succeeded",
+    "SyncFromEquipped": "Sync from equipped",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedModError": "Mod didn't fit on your current armor",
     "UnassignedMods": "Unassigned Mods",

@@ -4,7 +4,11 @@ import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
+import {
+  extractArmorModHashes,
+  getLight,
+  getModsFromLoadout,
+} from 'app/loadout-drawer/loadout-utils';
 import {
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
@@ -13,6 +17,8 @@ import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import LoadoutSubclassSection from 'app/loadout/loadout-ui/LoadoutSubclassSection';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -68,9 +74,16 @@ export default function LoadoutEdit({
   const handleClearCategory = (category: string) => {
     // TODO: do these all in one action
     for (const item of items.concat(warnitems)) {
-      if (item.bucket.sort === category) {
+      if (item.bucket.sort === category && item.bucket.hash !== BucketHashes.Subclass) {
         stateDispatch({ type: 'removeItem', item, items, shift: false });
       }
+    }
+  };
+
+  const handleClearSubclass = () => {
+    // TODO: do these all in one action
+    if (subclass) {
+      stateDispatch({ type: 'removeItem', item: subclass, items, shift: false });
     }
   };
 
@@ -84,14 +97,23 @@ export default function LoadoutEdit({
     [items, stateDispatch]
   );
 
+  const handleSyncModsFromEquipped = () => {
+    const mods: number[] = [];
+    const equippedArmor = store.items.filter(
+      (item) => item.equipped && itemCanBeInLoadout(item) && item.bucket.sort === 'Armor'
+    );
+    for (const item of equippedArmor) {
+      mods.push(...extractArmorModHashes(item));
+    }
+    stateDispatch({ type: 'updateMods', mods });
+  };
+
   // TODO: i18n the category title
   return (
     <div className={styles.contents}>
       <LoadoutEditSection
         title="Subclass"
-        onClear={function (): void {
-          throw new Error('Function not implemented.');
-        }}
+        onClear={handleClearSubclass}
         onFillFromEquipped={function (): void {
           throw new Error('Function not implemented.');
         }}
@@ -127,9 +149,7 @@ export default function LoadoutEdit({
         title="Mods"
         className={styles.mods}
         onClear={handleClearMods}
-        onFillFromEquipped={function (): void {
-          throw new Error('Function not implemented.');
-        }}
+        onSyncFromEquipped={handleSyncModsFromEquipped}
       >
         <LoadoutMods
           loadout={loadout}

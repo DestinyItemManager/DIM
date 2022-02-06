@@ -12,28 +12,43 @@ export default function LoadoutEditSection({
   className,
   onClear,
   onFillFromEquipped,
+  onSyncFromEquipped,
   onFillFromInventory,
 }: {
   title: string;
   children: React.ReactNode;
   className?: string;
   onClear(): void;
-  onFillFromEquipped(): void;
+  onFillFromEquipped?(): void;
+  onSyncFromEquipped?(): void;
   onFillFromInventory?(): void;
 }) {
   const options: Option[] = _.compact([
-    {
-      key: 'addFromEquipped',
-      onSelected: onFillFromEquipped,
-      content: (
-        <>
-          <AppIcon icon={downloadIcon} /> {t('Loadouts.FillFromEquipped')}
-        </>
-      ),
-    },
+    onFillFromEquipped
+      ? {
+          key: 'fillFromEquipped',
+          onSelected: onFillFromEquipped,
+          content: (
+            <>
+              <AppIcon icon={downloadIcon} /> {t('Loadouts.FillFromEquipped')}
+            </>
+          ),
+        }
+      : undefined,
+    onSyncFromEquipped
+      ? {
+          key: 'syncFromEquipped',
+          onSelected: onSyncFromEquipped,
+          content: (
+            <>
+              <AppIcon icon={downloadIcon} /> {t('Loadouts.SyncFromEquipped')}
+            </>
+          ),
+        }
+      : undefined,
     onFillFromInventory
       ? {
-          key: 'addFromInventory',
+          key: 'fillFromInventory',
           onSelected: onFillFromInventory,
           content: (
             <>
@@ -57,7 +72,7 @@ export default function LoadoutEditSection({
     <div className={clsx(styles.section, className)}>
       <div className={styles.header}>
         <h3>{title}</h3>
-        <Dropdown kebab options={options} />
+        <Dropdown kebab options={options} placement="bottom-end" />
       </div>
       {children}
     </div>

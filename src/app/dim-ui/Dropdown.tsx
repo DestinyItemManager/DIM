@@ -1,3 +1,4 @@
+import { Placement } from '@popperjs/core';
 import { kebabIcon, moveDownIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
@@ -29,6 +30,7 @@ interface Props {
   options: Option[];
   offset?: number;
   fixed?: boolean;
+  placement?: Placement;
 }
 
 function isDropdownOption(option: Option): option is DropdownOption {
@@ -51,6 +53,7 @@ export default function Dropdown({
   options: items,
   offset,
   fixed,
+  placement = 'bottom-start',
 }: Props) {
   const { isOpen, getToggleButtonProps, getMenuProps, highlightedIndex, getItemProps } = useSelect({
     items,
@@ -63,7 +66,7 @@ export default function Dropdown({
   usePopper({
     contents: menuRef,
     reference: buttonRef,
-    placement: 'bottom-start',
+    placement,
     offset,
     fixed,
   });

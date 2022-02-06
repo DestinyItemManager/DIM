@@ -31,6 +31,8 @@ export function getItemsAndSubclassFromLoadout(
 ): [items: DimLoadoutItem[], subclass: DimLoadoutItem | undefined, warnitems: DimLoadoutItem[]] {
   const [items, warnitems] = getItemsFromLoadoutItems(loadoutItems, defs, buckets, allItems);
   let subclass: DimLoadoutItem | undefined;
+
+  // TODO: this logic is undocumented and doesn't make sense. Why do we find the item again? Did we mean to look through `store.items`?
   for (const storeItem of items) {
     if (storeItem.bucket.hash === BucketHashes.Subclass) {
       const loadoutItem = items.find((loadoutItem) => loadoutItem.hash === storeItem.hash);

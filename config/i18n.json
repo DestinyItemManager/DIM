@@ -686,6 +686,7 @@
     "ShowModPlacement": "Show Mod Placement",
     "SubclassOptions": "{{subclass}} options",
     "SubclassOptionsSearch": "Search {{subclass}} options",
+    "SyncFromEquipped": "Sync from equipped",
     "FillFromEquipped": "Fill from equipped",
     "FillFromInventory": "Fill from inventory",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
