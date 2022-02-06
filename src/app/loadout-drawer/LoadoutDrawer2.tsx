@@ -168,13 +168,17 @@ export default function LoadoutDrawer2() {
     try {
       const { item } = await showItemPicker({
         filterItems: (item: DimItem) =>
-          item.hash === warnItem.hash &&
+          (warnItem.bucket.inArmor
+            ? item.bucket.hash === warnItem.bucket.hash
+            : item.hash === warnItem.hash) &&
           itemCanBeInLoadout(item) &&
           (!loadout ||
             loadout.classType === DestinyClass.Unknown ||
             item.classType === loadoutClassType ||
             item.classType === DestinyClass.Unknown),
-        prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
+        prompt: t('Loadouts.FindAnother', {
+          name: warnItem.bucket.inArmor ? warnItem.bucket.name : warnItem.name,
+        }),
 
         // don't show information related to selected perks so we don't give the impression
         // that we will update perk selections when applying the loadout

@@ -227,6 +227,8 @@ function addItem(
     equipped: false,
   };
 
+  // TODO: maybe we should just switch back to storing loadout items in memory by bucket
+
   // Other items of the same type (as DimItem)
   const typeInventory = items.filter((i) => i.bucket.hash === item.bucket.hash);
   const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);

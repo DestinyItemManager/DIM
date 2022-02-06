@@ -143,6 +143,10 @@ function ItemBucket({
   const handlePlaceholderClick = () => onClickPlaceholder({ bucket });
 
   // TODO: plumb through API from context??
+  // TODO: expose a menu item for adding more items?
+  // TODO: add-unequipped button?
+  // T0DO: customize buttons in item popup?
+  // TODO: draggable items?
 
   return (
     <div className={clsx(styles.itemBucket, { [styles.showFashion]: showFashion })}>
@@ -155,19 +159,22 @@ function ItemBucket({
             {items.map((item) => (
               <ClosableContainer
                 key={item.id}
-                className={clsx({
-                  [styles.missingItem]: item.owner === 'unknown',
-                })}
                 onClose={() => onRemoveItem(item)}
                 showCloseIconOnHover
               >
                 <ItemPopupTrigger item={item}>
                   {(ref, onClick) => (
-                    <ConnectedInventoryItem
-                      item={item}
-                      innerRef={ref}
-                      onClick={item.owner === 'unknown' ? () => onClickWarnItem(item) : onClick}
-                    />
+                    <div
+                      className={clsx({
+                        [styles.missingItem]: item.owner === 'unknown',
+                      })}
+                    >
+                      <ConnectedInventoryItem
+                        item={item}
+                        innerRef={ref}
+                        onClick={item.owner === 'unknown' ? () => onClickWarnItem(item) : onClick}
+                      />
+                    </div>
                   )}
                 </ItemPopupTrigger>
               </ClosableContainer>

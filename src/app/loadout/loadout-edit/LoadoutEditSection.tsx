@@ -11,33 +11,33 @@ export default function LoadoutEditSection({
   children,
   className,
   onClear,
-  onAddFromEquipped,
-  onAddFromInventory,
+  onFillFromEquipped,
+  onFillFromInventory,
 }: {
   title: string;
   children: React.ReactNode;
   className?: string;
   onClear(): void;
-  onAddFromEquipped(): void;
-  onAddFromInventory?(): void;
+  onFillFromEquipped(): void;
+  onFillFromInventory?(): void;
 }) {
   const options: Option[] = _.compact([
     {
       key: 'addFromEquipped',
-      onSelected: onAddFromEquipped,
+      onSelected: onFillFromEquipped,
       content: (
         <>
-          <AppIcon icon={downloadIcon} /> {t('Loadouts.SyncFromEquipped')}
+          <AppIcon icon={downloadIcon} /> {t('Loadouts.FillFromEquipped')}
         </>
       ),
     },
-    onAddFromInventory
+    onFillFromInventory
       ? {
           key: 'addFromInventory',
-          onSelected: onAddFromInventory,
+          onSelected: onFillFromInventory,
           content: (
             <>
-              <AppIcon icon={downloadIcon} /> {t('Loadouts.SyncFromInventory')}
+              <AppIcon icon={downloadIcon} /> {t('Loadouts.FillFromInventory')}
             </>
           ),
         }

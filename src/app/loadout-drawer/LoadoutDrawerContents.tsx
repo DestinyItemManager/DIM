@@ -289,11 +289,12 @@ async function pickLoadoutSubclass(
   onShowItemPicker(false);
 }
 
-function fillLoadoutFromEquipped(
+export function fillLoadoutFromEquipped(
   loadout: Loadout,
   itemsByBucket: { [bucketId: string]: DimItem[] },
   dimStore: DimStore,
-  onUpdateLoadout: (loadout: Loadout) => void
+  onUpdateLoadout: (loadout: Loadout) => void,
+  category?: string
 ) {
   if (!loadout) {
     return;
@@ -301,7 +302,9 @@ function fillLoadoutFromEquipped(
 
   const newEquippedItems = dimStore.items.filter(
     (item) =>
-      item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash)
+      item.equipped &&
+      itemCanBeInLoadout(item) &&
+      (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash))
   );
 
   const hasEquippedInBucket = (bucket: InventoryBucket) =>
@@ -362,10 +365,11 @@ function fillLoadoutFromEquipped(
   onUpdateLoadout(newLoadout);
 }
 
-async function fillLoadoutFromUnequipped(
+export async function fillLoadoutFromUnequipped(
   loadout: Loadout,
   dimStore: DimStore,
-  add: (params: { item: DimItem; equip?: boolean }) => void
+  add: (params: { item: DimItem; equip?: boolean }) => void,
+  category?: string
 ) {
   if (!loadout) {
     return;
@@ -376,10 +380,11 @@ async function fillLoadoutFromUnequipped(
       !item.location.inPostmaster &&
       item.bucket.hash !== BucketHashes.Subclass &&
       itemCanBeInLoadout(item) &&
-      fromEquippedTypes.includes(item.bucket.hash) &&
+      (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)) &&
       !item.equipped
   );
 
+  // TODO: this isn't right - `items` isn't being updated after each add
   for (const item of items) {
     add({ item, equip: false });
   }

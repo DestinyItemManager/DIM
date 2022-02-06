@@ -5,12 +5,16 @@ import { DimStore } from 'app/inventory/store-types';
 import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
+import {
+  fillLoadoutFromEquipped,
+  fillLoadoutFromUnequipped,
+} from 'app/loadout-drawer/LoadoutDrawerContents';
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import LoadoutSubclassSection from 'app/loadout/loadout-ui/LoadoutSubclassSection';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
 import _ from 'lodash';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket from './LoadoutEditBucket';
@@ -41,6 +45,8 @@ export default function LoadoutEdit({
     [loadout.items, defs, buckets, allItems, store]
   );
 
+  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
+
   const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
   // TODO: filter down by usable mods?
   const modsByBucket = loadout.parameters?.modsByBucket ?? {};
@@ -59,6 +65,25 @@ export default function LoadoutEdit({
     handleUpdateModHashes(newMods.map((mod) => mod.hash));
   const handleClearMods = () => handleUpdateMods([]);
 
+  const handleClearCategory = (category: string) => {
+    // TODO: do these all in one action
+    for (const item of items.concat(warnitems)) {
+      if (item.bucket.sort === category) {
+        stateDispatch({ type: 'removeItem', item, items, shift: false });
+      }
+    }
+  };
+
+  const updateLoadout = (loadout: Loadout) => {
+    stateDispatch({ type: 'update', loadout });
+  };
+
+  const onAddItem = useCallback(
+    ({ item, equip }: { item: DimItem; equip?: boolean }) =>
+      stateDispatch({ type: 'addItem', item, shift: false, items, equip }),
+    [items, stateDispatch]
+  );
+
   // TODO: i18n the category title
   return (
     <div className={styles.contents}>
@@ -67,7 +92,7 @@ export default function LoadoutEdit({
         onClear={function (): void {
           throw new Error('Function not implemented.');
         }}
-        onAddFromEquipped={function (): void {
+        onFillFromEquipped={function (): void {
           throw new Error('Function not implemented.');
         }}
       >
@@ -77,12 +102,11 @@ export default function LoadoutEdit({
         <LoadoutEditSection
           key={category}
           title={category}
-          onClear={function (): void {
-            throw new Error('Function not implemented.');
-          }}
-          onAddFromEquipped={function (): void {
-            throw new Error('Function not implemented.');
-          }}
+          onClear={() => handleClearCategory(category)}
+          onFillFromEquipped={() =>
+            fillLoadoutFromEquipped(loadout, itemsByBucket, store, updateLoadout, category)
+          }
+          onFillFromInventory={() => fillLoadoutFromUnequipped(loadout, store, onAddItem, category)}
         >
           <LoadoutEditBucket
             category={category}
@@ -103,7 +127,7 @@ export default function LoadoutEdit({
         title="Mods"
         className={styles.mods}
         onClear={handleClearMods}
-        onAddFromEquipped={function (): void {
+        onFillFromEquipped={function (): void {
           throw new Error('Function not implemented.');
         }}
       >
