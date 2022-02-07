@@ -1,5 +1,7 @@
 ## Next
 
+* Collect Postmaster now requires an additional click to confirm.
+
 ## 7.4.0 <span class="changelog-date">(2022-02-06)</span>
 
 * Masterwork picker now only shows higher tiers of the current masterwork and full masterworks compatible with the weapon type.
