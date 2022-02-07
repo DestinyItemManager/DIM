@@ -2,6 +2,7 @@
 
 * Masterwork picker now only shows higher tiers of the current masterwork and full masterworks compatible with the weapon type.
 * Sharing a build from the Loadouts page or Loadout Optimizer now uses our dim.gg links which are easier to share and show a preview.
+* If you prefer reduced motion (in your operating system preferences), sheets like the compare and loadout dialogs now appear and disappear instantly.
 
 ## 7.3.0 <span class="changelog-date">(2022-01-30)</span>
 
