@@ -33,14 +33,12 @@ export function PullFromPostmaster({ store }: { store: DimStore }) {
   };
 
   return (
-    <div className={styles.button}>
-      <ConfirmButton onClick={onClick}>
-        <div className={styles.buttonContents}>
-          <AppIcon spinning={working} icon={working ? refreshIcon : sendIcon} />
-          <span className={styles.badge}>{numPullablePostmasterItems}</span>
-          <span>{t('Loadouts.PullFromPostmaster')}</span>
-        </div>
-      </ConfirmButton>
-    </div>
+    <ConfirmButton className={styles.button} onClick={onClick}>
+      <div className={styles.buttonContents}>
+        <AppIcon spinning={working} icon={working ? refreshIcon : sendIcon} />
+        <span className={styles.badge}>{numPullablePostmasterItems}</span>
+        <span>{t('Loadouts.PullFromPostmaster')}</span>
+      </div>
+    </ConfirmButton>
   );
 }
