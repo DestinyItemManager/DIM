@@ -2,6 +2,7 @@ import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import {
@@ -21,8 +22,10 @@ import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
+import SubclassPlugDrawer from '../SubclassPlugDrawer';
 import styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
 import LoadoutEditSection from './LoadoutEditSection';
@@ -46,6 +49,7 @@ export default function LoadoutEdit({
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
+  const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
 
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(
@@ -114,12 +118,25 @@ export default function LoadoutEdit({
     stateDispatch({ type: 'updateMods', mods });
   };
 
-  const onModsByBucketUpdated = (modsByBucket) =>
-    stateDispatch({ type: 'updateModsByBucket', modsByBucket });
+  const onModsByBucketUpdated = (
+    modsByBucket:
+      | {
+          [bucketHash: number]: number[];
+        }
+      | undefined
+  ) => stateDispatch({ type: 'updateModsByBucket', modsByBucket });
+
+  const handleApplySocketOverrides = useCallback(
+    (item: DimItem, socketOverrides: SocketOverrides) => {
+      stateDispatch({ type: 'applySocketOverrides', item, socketOverrides });
+    },
+    [stateDispatch]
+  );
 
   const anyClass = loadout.classType === DestinyClass.Unknown;
 
   // TODO: i18n the category title
+  // TODO: dedupe styles/code
   return (
     <div className={styles.contents}>
       {!anyClass && (
@@ -130,7 +147,31 @@ export default function LoadoutEdit({
             throw new Error('Function not implemented.');
           }}
         >
-          <LoadoutEditSubclass defs={defs} subclass={subclass} power={power} />
+          <LoadoutEditSubclass
+            defs={defs}
+            subclass={subclass}
+            power={power}
+            onRemove={() => console.log('remove')}
+          />
+          {subclass &&
+            (subclass.sockets ? (
+              <button type="button" className="dim-button" onClick={() => setPlugDrawerOpen(true)}>
+                Edit Subclass
+              </button>
+            ) : (
+              <div>Sorry, light subclasses don't work</div>
+            ))}
+          {plugDrawerOpen &&
+            subclass &&
+            ReactDOM.createPortal(
+              <SubclassPlugDrawer
+                subclass={subclass}
+                socketOverrides={subclass.socketOverrides ?? {}}
+                onClose={() => setPlugDrawerOpen(false)}
+                onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
+              />,
+              document.body
+            )}
         </LoadoutEditSection>
       )}
       {(anyClass ? ['Weapons', 'General'] : ['Weapons', 'Armor', 'General']).map((category) => (

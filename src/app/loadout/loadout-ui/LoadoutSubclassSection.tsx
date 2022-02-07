@@ -13,6 +13,34 @@ import { createGetModRenderKey } from '../mod-utils';
 import styles from './LoadoutSubclassSection.m.scss';
 import PlugDef from './PlugDef';
 
+export function getSubclassPlugs(
+  defs: D2ManifestDefinitions,
+  subclass: DimLoadoutItem | undefined
+) {
+  const plugs: PluggableInventoryItemDefinition[] = [];
+
+  if (subclass?.sockets?.categories) {
+    for (const category of subclass.sockets.categories) {
+      const showInitial =
+        category.category.hash !== SocketCategoryHashes.Aspects &&
+        category.category.hash !== SocketCategoryHashes.Fragments;
+      const sockets = getSocketsByIndexes(subclass.sockets, category.socketIndexes);
+
+      for (const socket of sockets) {
+        const override = subclass.socketOverrides?.[socket.socketIndex];
+        const initial = socket.socketDefinition.singleInitialItemHash;
+        const hash = override || (showInitial && initial);
+        const plug = hash && defs.InventoryItem.get(hash);
+        if (plug && isPluggableItem(plug)) {
+          plugs.push(plug);
+        }
+      }
+    }
+  }
+
+  return plugs;
+}
+
 /** The subclass section used in the loadouts page and drawer */
 export default function LoadoutSubclassSection({
   defs,
@@ -24,30 +52,7 @@ export default function LoadoutSubclassSection({
   power: number;
 }) {
   const getModRenderKey = createGetModRenderKey();
-  const plugs = useMemo(() => {
-    const plugs: PluggableInventoryItemDefinition[] = [];
-
-    if (subclass?.sockets?.categories) {
-      for (const category of subclass.sockets.categories) {
-        const showInitial =
-          category.category.hash !== SocketCategoryHashes.Aspects &&
-          category.category.hash !== SocketCategoryHashes.Fragments;
-        const sockets = getSocketsByIndexes(subclass.sockets, category.socketIndexes);
-
-        for (const socket of sockets) {
-          const override = subclass.socketOverrides?.[socket.socketIndex];
-          const initial = socket.socketDefinition.singleInitialItemHash;
-          const hash = override || (showInitial && initial);
-          const plug = hash && defs.InventoryItem.get(hash);
-          if (plug && isPluggableItem(plug)) {
-            plugs.push(plug);
-          }
-        }
-      }
-    }
-
-    return plugs;
-  }, [subclass, defs]);
+  const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);
 
   return (
     <div className={styles.subclassContainer}>
