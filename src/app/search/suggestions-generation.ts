@@ -10,7 +10,7 @@ import {
   itemInfosSelector,
 } from '../inventory/selectors';
 import { loadoutsSelector } from '../loadout-drawer/selectors';
-import { FilterDefinition, SuggestionsContext } from './filter-types';
+import { canonicalFilterFormats, FilterDefinition, SuggestionsContext } from './filter-types';
 
 //
 // Selectors
@@ -55,7 +55,8 @@ const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
  * if you want to generate some keywords without a full valid filter
  */
 export function generateSuggestionsForFilter(
-  filterDefinition: Pick<FilterDefinition, 'keywords' | 'suggestions' | 'format' | 'deprecated'>
+  filterDefinition: Pick<FilterDefinition, 'keywords' | 'suggestions' | 'format' | 'deprecated'>,
+  forHelp?: boolean
 ) {
   if (filterDefinition.deprecated) {
     return [];
@@ -64,26 +65,46 @@ export function generateSuggestionsForFilter(
   const { suggestions, keywords } = filterDefinition;
   const thisFilterKeywords = Array.isArray(keywords) ? keywords : [keywords];
 
-  const nestedSuggestions = suggestions === undefined ? [] : [suggestions];
+  const filterSuggestions = suggestions === undefined ? [] : suggestions;
 
-  switch (filterDefinition.format) {
-    case 'query':
-      return expandStringCombinations([thisFilterKeywords, ...nestedSuggestions]);
-    case 'freeform':
-      return expandStringCombinations([thisFilterKeywords, []]);
-    case 'range':
-      return expandStringCombinations([thisFilterKeywords, ...nestedSuggestions, operators]);
-    case 'rangeoverload':
-      return [
-        ...expandStringCombinations([thisFilterKeywords, operators]),
-        ...expandStringCombinations([thisFilterKeywords, ...nestedSuggestions]),
-      ];
-    case 'custom':
-      return [];
-    default:
-      // Pass minDepth 1 to not generate "is:" and "not:" suggestions
-      return expandStringCombinations([['is', 'not'], thisFilterKeywords], 1);
+  const allSuggestions = [];
+
+  for (const format of canonicalFilterFormats(filterDefinition.format)) {
+    switch (format) {
+      case 'simple':
+        // Pass minDepth 1 to not generate "is:" and "not:" suggestions. Only generate `is:` for filters help
+        allSuggestions.push(
+          ...expandStringCombinations([forHelp ? ['is'] : ['is', 'not'], thisFilterKeywords], 1)
+        );
+        break;
+      case 'query':
+        // `query` is exhaustive, so only include keyword: for autocompletion, not filters help
+        allSuggestions.push(
+          ...expandStringCombinations([thisFilterKeywords, filterSuggestions], forHelp ? 1 : 0)
+        );
+        break;
+      case 'freeform':
+        allSuggestions.push(...expandStringCombinations([thisFilterKeywords, []]));
+        break;
+      case 'range':
+        allSuggestions.push(...expandStringCombinations([thisFilterKeywords, operators]));
+        break;
+      case 'rangeoverload':
+        allSuggestions.push(...expandStringCombinations([thisFilterKeywords, operators]));
+        allSuggestions.push(...expandStringCombinations([thisFilterKeywords, filterSuggestions]));
+        break;
+      case 'stat':
+        // stat lists aren't exhaustive
+        allSuggestions.push(
+          ...expandStringCombinations([thisFilterKeywords, filterSuggestions, operators])
+        );
+        break;
+      case 'custom':
+        break;
+    }
   }
+
+  return allSuggestions;
 }
 
 /**
