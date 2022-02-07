@@ -48,13 +48,11 @@ export function TroubleshootingSettings() {
         </button>
 
         {$DIM_FLAVOR === 'dev' && (
-          <p>
-            <FileUpload
-              title="Upload Profile Response JSON"
-              accept=".json"
-              onDrop={importMockProfile}
-            />
-          </p>
+          <FileUpload
+            title="Upload Profile Response JSON"
+            accept=".json"
+            onDrop={importMockProfile}
+          />
         )}
       </div>
     </section>
