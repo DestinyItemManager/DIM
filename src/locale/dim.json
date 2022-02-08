@@ -543,6 +543,7 @@
     "ArmorMods": "Armor Mods",
     "AssumeMaxWeapons": "Assuming max power level weapons",
     "Before": "Before '{{name}}'",
+    "CannotCustomizeSubclass": "Light subclasses cannot be configured",
     "ChooseItem": "Add {{name}}",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ClearSection": "Remove all",

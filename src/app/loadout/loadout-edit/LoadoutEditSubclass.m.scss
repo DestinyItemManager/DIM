@@ -45,3 +45,9 @@
   composes: placeholder from '../loadout-ui/LoadoutItemCategorySection.m.scss';
   width: calc(3 * var(--item-icon-size) + var(--item-margin) + #{$item-border-width}) !important;
 }
+
+.classButton {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  height: 100%;
+  width: 100%;
+}

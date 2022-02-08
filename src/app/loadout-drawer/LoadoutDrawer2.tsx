@@ -30,6 +30,7 @@ import {
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
   pickLoadoutItem,
+  pickLoadoutSubclass,
 } from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
@@ -214,6 +215,13 @@ export default function LoadoutDrawer2() {
   const handleClickPlaceholder = ({ bucket }: { bucket: InventoryBucket }) => {
     pickLoadoutItem(loadout, bucket, ({ item }) => onAddItem(item), setShowingItemPicker);
   };
+  const handleClickSubclass = (subclass: DimItem | undefined) =>
+    pickLoadoutSubclass(
+      loadout,
+      subclass ? [subclass] : [],
+      ({ item }) => onAddItem(item),
+      setShowingItemPicker
+    );
 
   const header = (
     <div>
@@ -262,6 +270,7 @@ export default function LoadoutDrawer2() {
           stateDispatch={stateDispatch}
           onClickPlaceholder={handleClickPlaceholder}
           onClickWarnItem={fixWarnItem}
+          onClickSubclass={handleClickSubclass}
           onRemoveItem={handleRemoveItem}
         />
         <div className={styles.inputGroup}>

@@ -1,3 +1,4 @@
+import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
@@ -13,6 +14,7 @@ import {
 import {
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
+  setLoadoutSubclassFromEquipped,
 } from 'app/loadout-drawer/LoadoutDrawerContents';
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
@@ -35,6 +37,7 @@ export default function LoadoutEdit({
   loadout,
   store,
   stateDispatch,
+  onClickSubclass,
   onClickPlaceholder,
   onClickWarnItem,
   onRemoveItem,
@@ -42,6 +45,7 @@ export default function LoadoutEdit({
   loadout: Loadout;
   store: DimStore;
   stateDispatch: React.Dispatch<Action>;
+  onClickSubclass: (subclass: DimItem | undefined) => void;
   onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
   onClickWarnItem: (item: DimItem) => void;
   onRemoveItem: (item: DimItem) => void;
@@ -143,24 +147,32 @@ export default function LoadoutEdit({
         <LoadoutEditSection
           title="Subclass"
           onClear={handleClearSubclass}
-          onFillFromEquipped={function (): void {
-            throw new Error('Function not implemented.');
-          }}
+          onFillFromEquipped={() =>
+            setLoadoutSubclassFromEquipped(loadout, subclass, store, updateLoadout)
+          }
         >
           <LoadoutEditSubclass
             defs={defs}
             subclass={subclass}
             power={power}
-            onRemove={() => console.log('remove')}
+            onRemove={handleClearSubclass}
+            onPick={() => onClickSubclass(subclass)}
           />
-          {subclass &&
-            (subclass.sockets ? (
-              <button type="button" className="dim-button" onClick={() => setPlugDrawerOpen(true)}>
-                Edit Subclass
-              </button>
-            ) : (
-              <div>Sorry, light subclasses don't work</div>
-            ))}
+          {subclass && (
+            <div className={styles.buttons}>
+              {subclass.sockets ? (
+                <button
+                  type="button"
+                  className="dim-button"
+                  onClick={() => setPlugDrawerOpen(true)}
+                >
+                  {t('LB.SelectSubclassOptions')}
+                </button>
+              ) : (
+                <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
+              )}
+            </div>
+          )}
           {plugDrawerOpen &&
             subclass &&
             ReactDOM.createPortal(
