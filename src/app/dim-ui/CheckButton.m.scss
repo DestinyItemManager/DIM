@@ -16,10 +16,6 @@
     margin-left: 6px;
   }
 
-  @include phone-portrait {
-    margin: 8px var(--inventory-column-padding) 0 var(--inventory-column-padding);
-  }
-
   // Don't do hover
   &:hover,
   &:active {
