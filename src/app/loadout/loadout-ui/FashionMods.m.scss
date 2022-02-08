@@ -1,0 +1,30 @@
+@import '../../variables.scss';
+
+// TODO: dedupe with LoadoutItemCategorySection
+
+.items {
+  display: grid;
+  gap: 2px;
+  grid-template-columns: 1fr 1fr;
+  min-height: unset !important;
+}
+
+.unequipped {
+  composes: sub-bucket from global;
+  width: 100%;
+  padding: 0;
+  --item-icon-size: calc(0.5 * var(--item-size) - 2px);
+  :global(.item) {
+    --item-size: var(--item-icon-size);
+  }
+}
+
+.fashion {
+  :global(.item) {
+    height: unset !important;
+  }
+}
+
+.missingItem {
+  opacity: 0.3;
+}

@@ -42,6 +42,6 @@
 }
 
 .modsPlaceholder {
-  composes: placeholder from '../LoadoutView.m.scss';
+  composes: placeholder from './LoadoutItemCategorySection.m.scss';
   width: calc(3 * var(--item-icon-size) + var(--item-margin) + #{$item-border-width}) !important;
 }

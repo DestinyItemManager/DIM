@@ -5,7 +5,6 @@ interface CssExports {
   'categoryGeneral': string;
   'categoryWeapons': string;
   'equipped': string;
-  'fashion': string;
   'itemBucket': string;
   'itemCategory': string;
   'items': string;

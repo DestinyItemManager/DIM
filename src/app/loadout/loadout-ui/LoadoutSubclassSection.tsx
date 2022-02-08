@@ -10,8 +10,37 @@ import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import { createGetModRenderKey } from '../mod-utils';
+import { EmptyClassItem } from './EmptySubclass';
 import styles from './LoadoutSubclassSection.m.scss';
 import PlugDef from './PlugDef';
+
+export function getSubclassPlugs(
+  defs: D2ManifestDefinitions,
+  subclass: DimLoadoutItem | undefined
+) {
+  const plugs: PluggableInventoryItemDefinition[] = [];
+
+  if (subclass?.sockets?.categories) {
+    for (const category of subclass.sockets.categories) {
+      const showInitial =
+        category.category.hash !== SocketCategoryHashes.Aspects &&
+        category.category.hash !== SocketCategoryHashes.Fragments;
+      const sockets = getSocketsByIndexes(subclass.sockets, category.socketIndexes);
+
+      for (const socket of sockets) {
+        const override = subclass.socketOverrides?.[socket.socketIndex];
+        const initial = socket.socketDefinition.singleInitialItemHash;
+        const hash = override || (showInitial && initial);
+        const plug = hash && defs.InventoryItem.get(hash);
+        if (plug && isPluggableItem(plug)) {
+          plugs.push(plug);
+        }
+      }
+    }
+  }
+
+  return plugs;
+}
 
 /** The subclass section used in the loadouts page and drawer */
 export default function LoadoutSubclassSection({
@@ -24,30 +53,7 @@ export default function LoadoutSubclassSection({
   power: number;
 }) {
   const getModRenderKey = createGetModRenderKey();
-  const plugs = useMemo(() => {
-    const plugs: PluggableInventoryItemDefinition[] = [];
-
-    if (subclass?.sockets?.categories) {
-      for (const category of subclass.sockets.categories) {
-        const showInitial =
-          category.category.hash !== SocketCategoryHashes.Aspects &&
-          category.category.hash !== SocketCategoryHashes.Fragments;
-        const sockets = getSocketsByIndexes(subclass.sockets, category.socketIndexes);
-
-        for (const socket of sockets) {
-          const override = subclass.socketOverrides?.[socket.socketIndex];
-          const initial = socket.socketDefinition.singleInitialItemHash;
-          const hash = override || (showInitial && initial);
-          const plug = hash && defs.InventoryItem.get(hash);
-          if (plug && isPluggableItem(plug)) {
-            plugs.push(plug);
-          }
-        }
-      }
-    }
-
-    return plugs;
-  }, [subclass, defs]);
+  const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);
 
   return (
     <div className={styles.subclassContainer}>
@@ -85,22 +91,5 @@ export default function LoadoutSubclassSection({
         <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
       )}
     </div>
-  );
-}
-
-function EmptyClassItem() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-      <rect
-        transform="rotate(-45)"
-        y="17.470564"
-        x="-16.470564"
-        height="32.941124"
-        width="32.941124"
-        fill="rgba(255, 255, 255, 0.05)"
-        strokeWidth="1"
-        strokeMiterlimit="4"
-      />
-    </svg>
   );
 }
