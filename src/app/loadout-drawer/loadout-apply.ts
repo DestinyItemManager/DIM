@@ -655,7 +655,6 @@ function getLoadoutItem(
       BucketHashes.Emblems,
       BucketHashes.Emotes_Invisible,
       BucketHashes.Emotes_Equippable,
-      BucketHashes.Ships,
       D1BucketHashes.Horn,
     ].includes(item.bucket.hash)
   ) {

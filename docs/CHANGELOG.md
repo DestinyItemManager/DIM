@@ -1,6 +1,7 @@
 ## Next
 
 * Collect Postmaster now requires an additional click to confirm.
+* Transferring ships via search query should now reliably transfer all selected items.
 
 ## 7.4.0 <span class="changelog-date">(2022-02-06)</span>
 
