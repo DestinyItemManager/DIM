@@ -32,22 +32,24 @@
 .items {
   display: grid;
   gap: 2px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   min-height: unset !important;
+  justify-content: center;
 }
 
 .equipped {
   composes: sub-bucket from global;
   width: 100%;
   padding: 0;
-  grid-template-columns: 1fr;
 }
 
 .unequipped {
   composes: sub-bucket from global;
   width: 100%;
   padding: 0;
-  --item-icon-size: calc(0.5 * var(--item-size) - 2px);
+  gap: 4px;
+  --item-icon-size: calc(var(--item-size) - 6px);
+  grid-template-columns: var(--item-icon-size);
   :global(.item) {
     --item-size: var(--item-icon-size);
   }
