@@ -1,7 +1,7 @@
 ## Next
 
 * Collect Postmaster now requires an additional click to confirm.
-* Armor stats on loadouts shows total stat tier.
+* Loadout armor stat tiers now include the total tier.
 
 ## 7.4.0 <span class="changelog-date">(2022-02-06)</span>
 
