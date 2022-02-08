@@ -22,9 +22,11 @@ export const bucketTypesSelector = createSelector(
 
 export default function LoadoutDrawerDropTarget({
   children,
+  className,
   onDroppedItem,
 }: {
   children?: React.ReactNode;
+  className?: string;
   onDroppedItem(item: DimItem): void;
 }) {
   const bucketTypes = useSelector(bucketTypesSelector);
@@ -36,12 +38,12 @@ export default function LoadoutDrawerDropTarget({
       canDrop: itemCanBeInLoadout,
       collect: (monitor) => ({ isOver: monitor.isOver() && monitor.canDrop() }),
     }),
-    [bucketTypes]
+    [bucketTypes, onDroppedItem]
   );
 
   return (
     <div
-      className={clsx({
+      className={clsx(className, {
         [styles.over]: isOver,
       })}
       ref={dropRef}

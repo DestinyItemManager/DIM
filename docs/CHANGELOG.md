@@ -1,6 +1,7 @@
 ## Next
 
 * Collect Postmaster now requires an additional click to confirm.
+* You can drag items from existing loadouts in the Loadouts page into the loadout editor - use it to grab a couple of your favorite pieces from another loadout!g
 
 ## 7.4.0 <span class="changelog-date">(2022-02-06)</span>
 
