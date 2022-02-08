@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function EmptyClassItem({ border }: { border?: boolean }) {
+export default function EmptySubclass({ border }: { border?: boolean }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
       <rect
