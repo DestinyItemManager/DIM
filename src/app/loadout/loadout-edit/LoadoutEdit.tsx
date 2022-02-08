@@ -145,7 +145,7 @@ export default function LoadoutEdit({
     <div className={styles.contents}>
       {!anyClass && (
         <LoadoutEditSection
-          title="Subclass"
+          title={t('Bucket.Class')}
           onClear={handleClearSubclass}
           onFillFromEquipped={() =>
             setLoadoutSubclassFromEquipped(loadout, subclass, store, updateLoadout)

@@ -5,12 +5,15 @@
 }
 
 .notes {
-  margin-top: 4px;
+  margin-top: 8px;
+  font-size: 14px;
 
   summary {
     font-weight: bold;
-    margin-bottom: 4px;
     cursor: pointer;
+  }
+  &[open] summary {
+    margin-bottom: 4px;
   }
 }
 

@@ -247,10 +247,8 @@ export default function LoadoutDrawer2() {
   );
 
   // TODO: minimize for better dragging/picking?
-  // TODO: actually make this editable
   // TODO: how to choose equipped/unequipped
   // TODO: contextual buttons!
-  // TODO: does notes belong here, or in the header?
   // TODO: undo/redo stack?
   // TODO: remove armor/subclass from any-class loadouts on save
   // TODO: build and publish a "loadouts API" via context
