@@ -9,6 +9,7 @@ interface CssExports {
   'nonActiveStat': string;
   'statSegment': string;
   'statSegmentContainer': string;
+  'tier': string;
   'tierLightContainer': string;
   'tierLightSegment': string;
 }

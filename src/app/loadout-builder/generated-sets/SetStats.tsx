@@ -45,20 +45,16 @@ function SetStats({
   return (
     <div className={clsx(styles.container, className)}>
       <div className={styles.tierLightContainer}>
-        <span className={styles.tierLightSegment}>
-          <b>
-            {t('LoadoutBuilder.TierNumber', {
-              tier: enabledTier,
-            })}
-          </b>
+        <span className={clsx(styles.tier, styles.tierLightSegment)}>
+          {t('LoadoutBuilder.TierNumber', {
+            tier: enabledTier,
+          })}
         </span>
         {enabledTier !== totalTier && (
-          <span className={styles.nonActiveStat}>
-            <b>
-              {` (${t('LoadoutBuilder.TierNumber', {
-                tier: totalTier,
-              })})`}
-            </b>
+          <span className={clsx(styles.tier, styles.nonActiveStat)}>
+            {` (${t('LoadoutBuilder.TierNumber', {
+              tier: totalTier,
+            })})`}
           </span>
         )}
         <span className={styles.light}>
@@ -115,15 +111,13 @@ function Stat({
       })}
     >
       <span
-        className={clsx({
+        className={clsx(styles.tier, {
           [styles.halfTierValue]: isActive && remEuclid(value, 10) >= 5,
         })}
       >
-        <b>
-          {t('LoadoutBuilder.TierNumber', {
-            tier: statTierWithHalf(value),
-          })}
-        </b>
+        {t('LoadoutBuilder.TierNumber', {
+          tier: statTierWithHalf(value),
+        })}
       </span>
       <BungieImage src={stat.displayProperties.icon} /> {stat.displayProperties.name}
     </span>
