@@ -189,7 +189,7 @@ export default function LoadoutEdit({
       {(anyClass ? ['Weapons', 'General'] : ['Weapons', 'Armor', 'General']).map((category) => (
         <LoadoutEditSection
           key={category}
-          title={category}
+          title={t(`Bucket.${category}`, { contextList: 'buckets' })}
           onClear={() => handleClearCategory(category)}
           onFillFromEquipped={() =>
             fillLoadoutFromEquipped(loadout, itemsByBucket, store, updateLoadout, category)
@@ -221,7 +221,7 @@ export default function LoadoutEdit({
         </LoadoutEditSection>
       ))}
       <LoadoutEditSection
-        title="Mods"
+        title={t('Loadouts.Mods')}
         className={styles.mods}
         onClear={handleClearMods}
         onSyncFromEquipped={handleSyncModsFromEquipped}

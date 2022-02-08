@@ -73,7 +73,7 @@ export default memo(function LoadoutMods({
           <button
             className={styles.pickModButton}
             type="button"
-            title={t('Loadout.PickMods')}
+            title={t('Loadouts.PickMods')}
             onClick={() => setShowModPicker(true)}
           >
             <AppIcon icon={addIcon} />
