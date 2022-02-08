@@ -102,6 +102,7 @@ export default function LoadoutItemCategorySection({
           {equippedItems.length === 5 && (
             <div className="stat-bars destiny2">
               <LoadoutStats
+                showTier
                 stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, savedMods)}
                 characterClass={loadout.classType}
               />
