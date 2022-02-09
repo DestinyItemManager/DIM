@@ -525,9 +525,9 @@
     "AscendantShardNotMasterworkedDetails": "For all items, the Optimizer will assume masterworked stat bonuses and energy level. {{elementLockDescription}}\n\nCurrently masterworked items will use their existing element.",
     "AssumeMasterwork": "Assume Masterwork",
     "AssumeMasterworkOptions": {
-      "None": "All armor will use their current stats and will have a minimum energy level of 7.",
+      "All": "All armor will use masterworked stats and will have an energy level of 10.",
       "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
-      "All": "All armor will use masterworked stats and will have an energy level of 10."
+      "None": "All armor will use its current stats and will have a minimum energy level of 7."
     },
     "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",
     "ChooseAlternate": "Choose another item with the same stats:",
@@ -552,9 +552,9 @@
     "LockEquipped": "Pin equipped",
     "LockElement": "Lock Element",
     "LockElementOptions": {
-      "None": "Armor element type will be changed as needed to fit the selected mods.",
-      "Masterworked": "Armor element type will be locked for already masterworked armor.",
-      "All": "Armor element type will be locked to its current value for all armor."
+      "All": "All armor will be locked to its current element.",
+      "Masterworked": "Armor will be locked to its current element if it's already masterworked.",
+      "None": "Armor element will be changed as needed to fit the selected mods."
     },
     "LockItem": "Pin item",
     "LockPerk": "Select perk",
