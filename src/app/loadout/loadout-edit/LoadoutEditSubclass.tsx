@@ -6,7 +6,7 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import React, { useMemo } from 'react';
-import { EmptyClassItem } from '../loadout-ui/EmptySubclass';
+import EmptySubclass from '../loadout-ui/EmptySubclass';
 import { getSubclassPlugs } from '../loadout-ui/LoadoutSubclassSection';
 import PlugDef from '../loadout-ui/PlugDef';
 import { createGetModRenderKey } from '../mod-utils';
@@ -49,7 +49,7 @@ export default function LoadoutEditSubclass({
           </ClosableContainer>
         ) : (
           <button className={styles.classButton} type="button" onClick={onPick}>
-            <EmptyClassItem border />
+            <EmptySubclass border />
           </button>
         )}
         {power !== 0 && (
