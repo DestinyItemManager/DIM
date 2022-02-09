@@ -1,9 +1,9 @@
+import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import React, { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { AssumeArmorMasterwork, LockArmorEnergyType } from '../types';
 import styles from './EnergyOptions.m.scss';
 
 interface Option {

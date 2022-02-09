@@ -1,3 +1,4 @@
+import { LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
@@ -12,7 +13,6 @@ import {
   ItemsByBucket,
   LockableBucketHash,
   LockableBucketHashes,
-  LockArmorEnergyType,
   LOCKED_EXOTIC_NO_EXOTIC,
   PinnedItems,
 } from './types';

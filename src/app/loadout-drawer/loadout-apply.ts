@@ -1,3 +1,4 @@
+import { LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
@@ -22,7 +23,7 @@ import {
   getVault,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
-import { LockableBucketHashes, LockArmorEnergyType } from 'app/loadout-builder/types';
+import { LockableBucketHashes } from 'app/loadout-builder/types';
 import {
   createPluggingStrategy,
   fitMostMods,

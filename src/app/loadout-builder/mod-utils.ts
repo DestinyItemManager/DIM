@@ -1,7 +1,7 @@
+import { LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { LockArmorEnergyType } from '../loadout-builder/types';
 /**
  * Checks that:
  *   1. The armour piece is Armour 2.0

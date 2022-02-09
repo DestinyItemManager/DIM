@@ -1,4 +1,9 @@
-import { defaultLoadoutParameters, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import {
+  AssumeArmorMasterwork,
+  defaultLoadoutParameters,
+  LoadoutParameters,
+  LockArmorEnergyType,
+} from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -19,10 +24,8 @@ import { statFiltersFromLoadoutParamaters, statOrderFromLoadoutParameters } from
 import {
   ArmorSet,
   ArmorStatHashes,
-  AssumeArmorMasterwork,
   ExcludedItems,
   LockableBucketHashes,
-  LockArmorEnergyType,
   PinnedItems,
   StatFilters,
 } from './types';

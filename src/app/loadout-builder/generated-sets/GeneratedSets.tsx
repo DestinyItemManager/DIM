@@ -1,4 +1,8 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import {
+  AssumeArmorMasterwork,
+  LoadoutParameters,
+  LockArmorEnergyType,
+} from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
@@ -16,7 +20,7 @@ import React, {
 import { List, WindowScroller } from 'react-virtualized';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet, AssumeArmorMasterwork, LockArmorEnergyType, PinnedItems } from '../types';
+import { ArmorSet, PinnedItems } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 

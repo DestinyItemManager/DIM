@@ -1,5 +1,5 @@
+import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
-import { AssumeArmorMasterwork, LockArmorEnergyType } from 'app/loadout-builder/types';
 
 /** Gets the max energy allowed from the passed in UpgradeSpendTier */
 export function calculateAssumedItemEnergy(

@@ -87,17 +87,3 @@ export const LOCKED_EXOTIC_ANY_EXOTIC = -2;
  * The minimum armour energy value used in the LO Builder
  */
 export const MIN_LO_ITEM_ENERGY = 7;
-
-// Temporary until API types are in
-export enum AssumeArmorMasterwork {
-  None = 1,
-  Legendary,
-  All,
-}
-
-// Temporary until API types are in
-export enum LockArmorEnergyType {
-  None = 1,
-  Masterworked,
-  All,
-}

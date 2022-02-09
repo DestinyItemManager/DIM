@@ -1,9 +1,10 @@
+import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import 'cross-fetch/polyfill';
 import { getTestDefinitions, getTestStores } from '../../../testing/test-utils';
-import { AssumeArmorMasterwork, LockArmorEnergyType, MIN_LO_ITEM_ENERGY } from '../types';
+import { MIN_LO_ITEM_ENERGY } from '../types';
 import { mapDimItemToProcessItem } from './mappers';
 
 describe('lo process mappers', () => {

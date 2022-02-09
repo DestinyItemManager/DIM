@@ -1,3 +1,4 @@
+import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -25,15 +26,7 @@ import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { StatsSet } from '../process-worker/stats-set';
 import { ProcessItemsByBucket } from '../process-worker/types';
-import {
-  ArmorSet,
-  AssumeArmorMasterwork,
-  ItemsByBucket,
-  LockArmorEnergyType,
-  MIN_LO_ITEM_ENERGY,
-  StatFilters,
-  StatRanges,
-} from '../types';
+import { ArmorSet, ItemsByBucket, MIN_LO_ITEM_ENERGY, StatFilters, StatRanges } from '../types';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,

@@ -1,3 +1,4 @@
+import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { calculateAssumedItemEnergy, isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
 import { MAX_ARMOR_ENERGY_CAPACITY, modsWithConditionalStats } from 'app/search/d2-known-values';
@@ -16,13 +17,7 @@ import {
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import {
-  ArmorSet,
-  ArmorStats,
-  AssumeArmorMasterwork,
-  LockArmorEnergyType,
-  MIN_LO_ITEM_ENERGY,
-} from '../types';
+import { ArmorSet, ArmorStats, MIN_LO_ITEM_ENERGY } from '../types';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
