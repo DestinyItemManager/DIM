@@ -6,8 +6,8 @@ import { isQuotable, quoteFilterString } from './freeform';
 const loadoutFilters: FilterDefinition[] = [
   {
     keywords: 'inloadout',
+    format: ['simple', 'freeform'],
 
-    // excluding a "format" property causes autogeneration of the simple "is" and "not" stems
     suggestionsGenerator: ({ loadouts }) =>
       loadouts
         ?.filter((l) => isQuotable(l.name))

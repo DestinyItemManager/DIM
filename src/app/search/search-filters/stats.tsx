@@ -19,7 +19,7 @@ const statFilters: FilterDefinition[] = [
     keywords: 'stat',
     // t('Filter.StatsExtras')
     description: tl('Filter.Stats'),
-    format: 'range',
+    format: 'stat',
     suggestions: allStatNames,
     filter: ({ filterValue }) => statFilterFromString(filterValue),
   },
@@ -27,7 +27,7 @@ const statFilters: FilterDefinition[] = [
     keywords: 'basestat',
     // t('Filter.StatsExtras')
     description: tl('Filter.StatsBase'),
-    format: 'range',
+    format: 'stat',
     suggestions: searchableArmorStatNames,
     filter: ({ filterValue }) => statFilterFromString(filterValue, true),
   },
