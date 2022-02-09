@@ -33,10 +33,6 @@
       color: #eee;
       display: block;
       text-decoration: none;
-      margin-bottom: 4px;
-      &:last-child {
-        margin-bottom: 0;
-      }
     }
     a:hover {
       text-decoration: underline;
@@ -56,4 +52,21 @@
 
 .search {
   margin: 8px 0 !important;
+}
+
+.entry {
+  display: flex;
+
+  div {
+    display: flex;
+  }
+
+  margin-bottom: 4px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .separator {
+    opacity: 0.5;
+  }
 }

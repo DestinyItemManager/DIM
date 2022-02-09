@@ -2,6 +2,7 @@
 
 * Collect Postmaster now requires an additional click to confirm.
 * Transferring ships via search query should now reliably transfer all selected items.
+* Filters Help now groups stat comparison operators for a more compact page.
 * On the Loadouts page, you can now drag existing items on the page, into the current Loadout Editor, just like you can on the Inventory page. Use it to grab a couple of your favorite pieces from another loadout!
 * Loadout armor stat tiers now include the total tier.
 * Changed the Loadout Optimizer's Armor Upgrade options for Assume Masterwork and Lock Element options. All armor will now have an assumed minimum energy capacity of 7. The new settings have the following options,
