@@ -4,24 +4,24 @@ import { useDrop } from 'react-dnd';
 import { DimItem } from '../../inventory/item-types';
 
 interface Props {
-  bucketType: string;
+  bucketHash: number;
   children?: React.ReactNode;
   onItemLocked(lockedItem: DimItem): void;
 }
 
-export default function LoadoutBucketDropTarget({ bucketType, children, onItemLocked }: Props) {
+export default function LoadoutBucketDropTarget({ bucketHash, children, onItemLocked }: Props) {
   const [{ isOver, canDrop }, dropRef] = useDrop<
     DimItem,
     unknown,
     { isOver: Boolean; canDrop: boolean }
   >(
     () => ({
-      accept: bucketType,
+      accept: bucketHash.toString(),
       collect: (monitor) => ({ isOver: monitor.isOver(), canDrop: monitor.canDrop() }),
       drop: onItemLocked,
-      canDrop: (item) => item.bucket.type === bucketType,
+      canDrop: (item) => item.bucket.hash === bucketHash,
     }),
-    [bucketType, onItemLocked]
+    [bucketHash, onItemLocked]
   );
   return (
     <div

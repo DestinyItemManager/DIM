@@ -1,6 +1,7 @@
 import { isiOSBrowser } from 'app/utils/browsers';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
+import { useReducedMotion } from 'framer-motion';
 import _ from 'lodash';
 import React, {
   createContext,
@@ -111,6 +112,8 @@ export default function Sheet({
   allowClickThrough,
   onClose,
 }: Props) {
+  const reducedMotion = Boolean(useReducedMotion());
+
   // This component basically doesn't render - it works entirely through setSpring and useDrag.
   // As a result, our "state" is in refs.
   // Is this currently closing?
@@ -152,6 +155,7 @@ export default function Sheet({
     from: { transform: `translateY(${window.innerHeight}px)` },
     to: { transform: `translateY(0px)` },
     config: spring,
+    immediate: reducedMotion,
     onRest,
   }));
 
@@ -160,16 +164,19 @@ export default function Sheet({
    * outer callback when the animation is done.
    */
   const handleClose = useCallback(
-    (e?) => {
+    (e?, dragDismiss?: boolean) => {
       if (disabled) {
         return;
       }
       e?.preventDefault();
       closing.current = true;
       // Animate offscreen
-      setSpring({ to: { transform: `translateY(${height()}px)` } });
+      setSpring({
+        immediate: reducedMotion && !dragDismiss,
+        to: { transform: `translateY(${height()}px)` },
+      });
     },
-    [setSpring, disabled]
+    [setSpring, disabled, reducedMotion]
   );
 
   // Handle global escape key
@@ -192,7 +199,7 @@ export default function Sheet({
     // Detect if the gesture ended with a high velocity, or with the sheet more than
     // dismissAmount percent of the way down - if so, consider it a close gesture.
     if (last && (movement[1] > (height() || 0) * dismissAmount || vxvy[1] > dismissVelocity)) {
-      handleClose();
+      handleClose(undefined, true);
     }
   });
 

@@ -18,8 +18,8 @@ export default function DraggableInventoryItem({ children, item }: Props) {
       type: item.location.inPostmaster
         ? 'postmaster'
         : item.notransfer
-        ? `${item.owner}-${item.bucket.type}`
-        : item.bucket.type!,
+        ? `${item.owner}-${item.bucket.hash}`
+        : item.bucket.hash.toString(),
       item: () => {
         hideItemPopup();
 

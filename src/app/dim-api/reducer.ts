@@ -5,12 +5,12 @@ import {
   ItemAnnotation,
   ItemHashTag,
   Loadout,
-  LoadoutItem,
   ProfileUpdateResult,
   Search,
   TagValue,
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { recentSearchComparator } from 'app/search/autocomplete';
 import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
 import { searchConfigSelector } from 'app/search/search-config';
@@ -26,10 +26,7 @@ import _ from 'lodash';
 import { ActionType, getType } from 'typesafe-actions';
 import * as inventoryActions from '../inventory/actions';
 import * as loadoutActions from '../loadout-drawer/actions';
-import {
-  Loadout as DimLoadout,
-  LoadoutItem as DimLoadoutItem,
-} from '../loadout-drawer/loadout-types';
+import { Loadout as DimLoadout } from '../loadout-drawer/loadout-types';
 import * as settingsActions from '../settings/actions';
 import { initialSettingsState, Settings } from '../settings/initial-settings';
 import { DeleteLoadoutUpdateWithRollback, ProfileUpdateWithRollback } from './api-types';
@@ -1188,45 +1185,6 @@ export function parseProfileKey(profileKey: string): [string, DestinyVersion] {
     throw new Error("Profile key didn't match expected format");
   }
   return [match[1], parseInt(match[2], 10) as DestinyVersion];
-}
-
-/**
- * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. These functions convert
- * back and forth.
- */
-function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
-  const { items, name, clearSpace, ...rest } = dimLoadout;
-  const equipped = items.filter((i) => i.equipped).map(convertDimLoadoutItemToLoadoutItem);
-  const unequipped = items.filter((i) => !i.equipped).map(convertDimLoadoutItemToLoadoutItem);
-
-  const loadout: Loadout = {
-    ...rest,
-    name: name.trim(),
-    clearSpace: clearSpace || false,
-    equipped,
-    unequipped,
-    lastUpdatedAt: Date.now(),
-  };
-  if (!loadout.notes) {
-    delete loadout.notes;
-  }
-  return loadout;
-}
-
-function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
-  const result: LoadoutItem = {
-    hash: item.hash,
-  };
-  if (item.id && item.id !== '0') {
-    result.id = item.id;
-  }
-  if (item.amount > 1) {
-    result.amount = item.amount;
-  }
-  if (item.socketOverrides) {
-    result.socketOverrides = item.socketOverrides;
-  }
-  return result;
 }
 
 function ensureProfile(draft: Draft<DimApiState>, profileKey: string) {

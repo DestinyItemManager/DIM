@@ -516,6 +516,7 @@
     "SelectMax": "- 最大 -",
     "SelectMin": "- 最小 -",
     "ShareBuild": "ビルド設定を共有",
+    "ShareBuildTitle": "ロードアウト最適化の設定",
     "ShareBuildWithNotes": "メモで共有する",
     "SpeedReport": "{{time}} 秒で生成された {{combos, number}} の組み合わせ",
     "StatTierIgnoreOption": "無視",

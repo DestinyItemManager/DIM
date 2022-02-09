@@ -2,11 +2,11 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
 import { locateItem } from 'app/inventory/locate-item';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
@@ -15,15 +15,15 @@ import { allItemsSelector, storesSelector } from '../inventory/selectors';
 import { showGearPower$ } from './gear-power';
 import styles from './GearPower.m.scss';
 
-const bucketClassNames: Partial<Record<DimItem['type'], string>> = {
-  KineticSlot: styles.kinetic,
-  Energy: styles.energy,
-  Power: styles.power,
-  Helmet: styles.helmet,
-  Gauntlets: styles.gauntlets,
-  Chest: styles.chest,
-  Leg: styles.leg,
-  ClassItem: styles.classItem,
+const bucketClassNames: Partial<Record<BucketHashes, string>> = {
+  [BucketHashes.KineticWeapons]: styles.kinetic,
+  [BucketHashes.EnergyWeapons]: styles.energy,
+  [BucketHashes.PowerWeapons]: styles.power,
+  [BucketHashes.Helmet]: styles.helmet,
+  [BucketHashes.Gauntlets]: styles.gauntlets,
+  [BucketHashes.ChestArmor]: styles.chest,
+  [BucketHashes.LegArmor]: styles.leg,
+  [BucketHashes.ClassArmor]: styles.classItem,
 };
 
 export default function GearPower() {
@@ -65,7 +65,7 @@ export default function GearPower() {
             const diffClass =
               powerDiff > 0 ? styles.positive : powerDiff < 0 ? styles.negative : styles.neutral;
             return (
-              <div key={i.id} className={clsx(bucketClassNames[i.type], styles.gearItem)}>
+              <div key={i.id} className={clsx(bucketClassNames[i.bucket.hash], styles.gearItem)}>
                 <div onClick={() => locateItem(i)}>
                   <BungieImage src={i.icon} className={styles.itemImage} />
                 </div>

@@ -2,6 +2,8 @@
 // this file has non-programatically decided information
 // hashes, names, & enums, hand-crafted and chosen by us
 
+import { BucketHashes } from 'data/d2/generated-enums';
+
 //
 // STATS KNOWN VALUES
 //
@@ -37,6 +39,17 @@ export const D1ItemCategoryHashes = {
   sidearm: 14,
   sword: 54,
 };
+
+export const enum D1BucketHashes {
+  Artifact = 434908299,
+  RecordBook = 2987185182,
+  RecordBookLegacy = 549485690,
+  Missions = BucketHashes.Engrams, // D1 missions are D2 engrams
+  Quests = 1801258597,
+  Bounties = 2197472680,
+  Shader = 2973005342,
+  Horn = 3796357825,
+}
 
 //
 // OTHER STUFF

@@ -1,5 +1,6 @@
-import { D1_StatHashes } from 'app/search/d1-known-values';
+import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D1Item } from '../../inventory/item-types';
 import { D1Store, DimStore } from '../../inventory/store-types';
@@ -306,13 +307,19 @@ export function loadBucket(currentStore: DimStore, stores: D1Store[]): ItemBucke
 
 function getBuckets(items: D1Item[]): ItemBucket {
   return {
-    Helmet: items.filter((item) => item.type === 'Helmet').map(normalizeStats),
-    Gauntlets: items.filter((item) => item.type === 'Gauntlets').map(normalizeStats),
-    Chest: items.filter((item) => item.type === 'Chest').map(normalizeStats),
-    Leg: items.filter((item) => item.type === 'Leg').map(normalizeStats),
-    ClassItem: items.filter((item) => item.type === 'ClassItem').map(normalizeStats),
-    Artifact: items.filter((item) => item.type === 'Artifact').map(normalizeStats),
-    Ghost: items.filter((item) => item.type === 'Ghost').map(normalizeStats),
+    Helmet: items.filter((item) => item.bucket.hash === BucketHashes.Helmet).map(normalizeStats),
+    Gauntlets: items
+      .filter((item) => item.bucket.hash === BucketHashes.Gauntlets)
+      .map(normalizeStats),
+    Chest: items.filter((item) => item.bucket.hash === BucketHashes.ChestArmor).map(normalizeStats),
+    Leg: items.filter((item) => item.bucket.hash === BucketHashes.LegArmor).map(normalizeStats),
+    ClassItem: items
+      .filter((item) => item.bucket.hash === BucketHashes.ClassArmor)
+      .map(normalizeStats),
+    Artifact: items
+      .filter((item) => item.bucket.hash === D1BucketHashes.Artifact)
+      .map(normalizeStats),
+    Ghost: items.filter((item) => item.bucket.hash === BucketHashes.Ghost).map(normalizeStats),
   };
 }
 

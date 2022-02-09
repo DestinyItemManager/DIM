@@ -135,7 +135,7 @@ export function mapDimItemToProcessItem({
   lockArmorEnergyType: LockArmorEnergyType | undefined;
   modsForSlot?: PluggableInventoryItemDefinition[];
 }): ProcessItem {
-  const { bucket, id, hash, type, name, isExotic, power, stats: dimItemStats, energy } = dimItem;
+  const { id, hash, name, isExotic, power, stats: dimItemStats, energy } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
   const capacity = calculateAssumedItemEnergy(dimItem, assumeArmorMasterwork, MIN_LO_ITEM_ENERGY);
@@ -165,10 +165,8 @@ export function mapDimItemToProcessItem({
   }
 
   return {
-    bucketHash: bucket.hash,
     id,
     hash,
-    type,
     name,
     isExotic,
     power,

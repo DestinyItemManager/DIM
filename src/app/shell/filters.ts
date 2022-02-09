@@ -1,5 +1,6 @@
 import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { getSeason } from 'app/inventory/store/season';
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import { isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -99,9 +100,9 @@ const D1_MATERIAL_SORT_ORDER = [
 
 // Bucket IDs that'll never be sorted.
 const ITEM_SORT_DENYLIST = new Set([
-  2197472680, // Bounties (D1)
-  375726501, // Mission (D1)
-  1801258597, // Quests (D1)
+  D1BucketHashes.Bounties,
+  D1BucketHashes.Missions,
+  D1BucketHashes.Quests,
 ]);
 
 export const acquisitionRecencyComparator = reverseComparator(

@@ -31,6 +31,7 @@ import {
 import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import { d2ManifestSelector, destiny2CoreSettingsSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
@@ -43,7 +44,7 @@ import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import { getSocketByIndex, getSocketsByIndexes, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
@@ -647,7 +648,16 @@ function getLoadoutItem(
   if (!item) {
     return null;
   }
-  if (['Class', 'Shader', 'Emblem', 'Emote', 'Ship', 'Horn'].includes(item.type)) {
+  if (
+    [
+      BucketHashes.Subclass,
+      BucketHashes.Shaders,
+      BucketHashes.Emblems,
+      BucketHashes.Emotes_Invisible,
+      BucketHashes.Emotes_Equippable,
+      D1BucketHashes.Horn,
+    ].includes(item.bucket.hash)
+  ) {
     // Same character first
     item =
       store.items.find((i) => i.hash === loadoutItem.hash) ||
@@ -676,7 +686,7 @@ function clearSpaceAfterLoadout(
 
   for (const [bucketId, loadoutItems] of Object.entries(itemsByType)) {
     // Exclude a handful of buckets from being cleared out
-    if (['Consumable', 'Consumables', 'Material'].includes(loadoutItems[0].bucket.type!)) {
+    if ([BucketHashes.Consumables, BucketHashes.Materials].includes(loadoutItems[0].bucket.hash)) {
       continue;
     }
     let numUnequippedLoadoutItems = 0;
@@ -705,7 +715,7 @@ function clearSpaceAfterLoadout(
     }
 
     // Reserve enough space to only leave the loadout items
-    reservations[store.id][loadoutItems[0].bucket.type!] =
+    reservations[store.id][loadoutItems[0].bucket.hash] =
       loadoutItems[0].bucket.capacity - numUnequippedLoadoutItems;
   }
 

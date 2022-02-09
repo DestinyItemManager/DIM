@@ -5,7 +5,7 @@
     "Error": "Ошибка при изменении модов или перков",
     "ErrorMessage": "Мы не смогли экипировать {{plug}} в {{item}}.\n\n{{error}}",
     "FailedToken": "Не удалось получить разрешение на изменение предмета",
-    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
+    "IrreversiblePlugging": "У вас нет {{plug}}, поэтому мы не будем его заменять."
   },
   "Accounts": {
     "ErrorLoadInventory": "Невозможно загрузить персонажей и инвентарь Destiny {{version}}",
@@ -142,7 +142,7 @@
     "Desc_male_plural": "DIM поддерживает доступное место для Энграмм и Блеска у {{store}} в хранилище и удерживает {{count}} открытых мест для каждого типа предмета, чтобы новые не отправлялись Почтмейстеру.",
     "Desc_plural": "DIM поддерживает доступное место для Энграмм и Блеска у {{store}} в хранилище и удерживает {{count}} открытых мест для каждого типа предмета, чтобы новые не отправлялись Почтмейстеру.",
     "FarmingMode": "Режим фарма",
-    "FarmingModeNote": "(maintain space for drops)",
+    "FarmingModeNote": "(сохраняет место для выпадений предметов)",
     "MakeRoom": {
       "Desc": "DIM поддерживает доступное место для Энграмм и Блеска у {{store}}, чтобы новые не отправлялись Почтмейстеру. Предметы отправляются в Хранилище или другим персонажам.",
       "Desc_female": "DIM поддерживает доступное место для Энграмм и Блеска у {{store}}, чтобы новые не отправлялись Почтмейстеру. Предметы отправляются в Хранилище или другим персонажам.",
@@ -516,6 +516,7 @@
     "SelectMax": "- Макс. -",
     "SelectMin": "- Мин. -",
     "ShareBuild": "Поделиться настройками набора",
+    "ShareBuildTitle": "Настройки конструктора наборов",
     "ShareBuildWithNotes": "Поделиться с заметкой",
     "SpeedReport": "Сгенерировано {{combos, number}} комбинаций за {{time}} секунд",
     "StatTierIgnoreOption": "Не учитывать",
@@ -848,8 +849,8 @@
     "SetSort": "Порядок Сортировки предметов:",
     "Settings": "Настройки",
     "ShowNewItems": "Показывать красную точку на новых предметах",
-    "SingleCharacter": "Single-Character View",
-    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
+    "SingleCharacter": "Просмотр одного персонажа",
+    "SingleCharacterExplanation": "DIM будет отображать только последний сыгранный вами персонаж.\nПредметы принадлежащие скрытым персонажам будут отображаться в хранилище, если они могут быть использованы текущим персонажем.\nДругие классовые предметы полностью скрыты.",
     "SizeItem": "Размер предмета",
     "SortByAmmoType": "Тип боеприпасов",
     "SortByAmount": "Количество",

@@ -14,17 +14,19 @@ export const bucketTypesSelector = createSelector(
   storesSelector,
   (buckets, stores) =>
     buckets
-      ? Object.keys(buckets.byType).flatMap((bucketType) =>
-          stores.flatMap((store) => [bucketType, `${store.id}-${bucketType}`])
+      ? Object.values(buckets.byType).flatMap((bucket) =>
+          stores.flatMap((store) => [bucket.hash.toString(), `${store.id}-${bucket.hash}`])
         )
       : emptyArray<string>()
 );
 
 export default function LoadoutDrawerDropTarget({
   children,
+  className,
   onDroppedItem,
 }: {
   children?: React.ReactNode;
+  className?: string;
   onDroppedItem(item: DimItem): void;
 }) {
   const bucketTypes = useSelector(bucketTypesSelector);
@@ -36,12 +38,12 @@ export default function LoadoutDrawerDropTarget({
       canDrop: itemCanBeInLoadout,
       collect: (monitor) => ({ isOver: monitor.isOver() && monitor.canDrop() }),
     }),
-    [bucketTypes]
+    [bucketTypes, onDroppedItem]
   );
 
   return (
     <div
-      className={clsx({
+      className={clsx(className, {
         [styles.over]: isOver,
       })}
       ref={dropRef}

@@ -50,6 +50,31 @@ export interface SuggestionsContext {
 // TODO: FilterCategory
 
 /**
+ * The syntax this filter accepts.
+ * * `simple`: `is:[keyword]` and `not:[keyword]`
+ * * `query`: `[keyword]:[suggestion]`
+ * * `freeform`: `[keyword]:[literallyanything]`
+ * * `range`: `[keyword]:op?[number]`
+ * * `rangeoverload`: `[keyword]:op?([number]|[suggestion])`
+ * * `stat`:  `[keyword]:[suggestion]:op?[number]`
+ */
+export type FilterFormat =
+  | 'simple'
+  | 'query'
+  | 'freeform'
+  | 'range'
+  | 'rangeoverload'
+  | 'stat'
+  | 'custom';
+
+export function canonicalFilterFormats(format: FilterDefinition['format']): FilterFormat[] {
+  if (!format) {
+    return ['simple'];
+  }
+  return Array.isArray(format) ? format : [format];
+}
+
+/**
  * A definition of a filter or closely related group of filters. This is
  * self-contained and can be used for both autocomplete and for building up the
  * filter expression itself. We can also use it to drive filter help and filter
@@ -70,20 +95,11 @@ export interface FilterDefinition {
 
   /**
    * What kind of query this is, used to help generate suggestions.
-   *
-   * `undefined` - a simple 'is/not' filter. the filter itself knows everything it's looking for
-   *
-   * `query` - a starting stem and a pre-known value, like "tag:keep". a filterValue will be involved and will match a string we expect
-   *
-   * `freeform` - a starting stem and a freeform value. the filterValue will be some arbitrary string we test against other strings
-   *
-   * `range` - a starting stem and a mathlike string afterward like <=5
-   *
-   * `rangeoverload` - a starting stem like "masterwork" and then either a mathlike string or a word
-   *
-   * `custom` - suppresses automated suggestion generation so suggestionsGenerator is the only source of suggestions
+   * Leave unset for `simple`, specify one, or specify multiple formats,
+   * as long as their usage of `suggestions` doesn't clash.
+   * `query`, `rangeoverload`, and `stat` use `suggestions`.
    */
-  format?: 'query' | 'freeform' | 'range' | 'rangeoverload' | 'custom';
+  format?: FilterFormat | FilterFormat[];
 
   /** destinyVersion - 1 or 2, or if a filter applies to both, undefined */
   destinyVersion?: 1 | 2;
@@ -106,12 +122,13 @@ export interface FilterDefinition {
   filter: (args: { filterValue: string } & FilterContext) => ItemFilter;
 
   /**
-   * A list of suggested keywords for filters that can take a freeform filter value.
+   * A list of suggested keywords, depending on the format.
    */
   suggestions?: string[];
 
   /**
-   * A custom function used to generate (additional) suggestions
+   * A custom function used to generate (additional) suggestions.
+   * This should only be necessary for freeform or custom formats.
    */
   suggestionsGenerator?: (args: SuggestionsContext) => string[] | undefined;
 

@@ -31,7 +31,7 @@ function getItemsInListByCategory({
     if (bucket.hash === BucketHashes.SeasonalArtifact) {
       return;
     }
-    const item = items.find((item) => bucket.type === item.type);
+    const item = items.find((item) => bucket.hash === item.bucket.hash);
     if (item) {
       if (!item.stats) {
         return;
@@ -78,7 +78,7 @@ export function GeneratedLoadoutStats({
     const maxPowerItems = maxLightItemSet(allItems, characterClass).unrestricted;
     const maxWeapons = _.compact(
       weaponItems.missingBuckets.map(
-        (bucket) => maxPowerItems.find((item) => bucket.type === item.type)!
+        (bucket) => maxPowerItems.find((item) => bucket.hash === item.bucket.hash)!
       )
     );
     weaponItems.itemSet.push(...maxWeapons);

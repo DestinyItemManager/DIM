@@ -116,7 +116,7 @@ export default function LoadoutDrawerContents({
   );
   const subclassBucket = buckets.byType.Class;
 
-  const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.type!));
+  const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.hash));
 
   const { subclassItems, subclassSocketOverrides } = useMemo(() => {
     const subclassSocketOverrides: SocketOverridesForItems = {};
@@ -151,7 +151,7 @@ export default function LoadoutDrawerContents({
         </a>
         {showSubclassButton && (
           <a
-            key={subclassBucket.type}
+            key={subclassBucket.hash}
             onClick={() => pickLoadoutSubclass(loadout, subclassItems, add, onShowItemPicker)}
             className="dim-button loadout-add"
           >
@@ -161,7 +161,7 @@ export default function LoadoutDrawerContents({
         {typesWithoutItems.length > 0 &&
           typesWithoutItems.map((bucket) => (
             <a
-              key={bucket.type}
+              key={bucket.hash}
               onClick={() => pickLoadoutItem(loadout, bucket, add, onShowItemPicker)}
               className="dim-button loadout-add"
             >
@@ -179,9 +179,9 @@ export default function LoadoutDrawerContents({
       </div>
       <div className="loadout-added-items">
         {typesWithItems.map((bucket) =>
-          bucket.type === 'Class' ? null : (
+          bucket.hash === BucketHashes.Subclass ? null : (
             <LoadoutDrawerBucket
-              key={bucket.type}
+              key={bucket.hash}
               bucket={bucket}
               loadoutItems={loadout.items}
               items={itemsByBucket[bucket.hash] || []}
@@ -259,10 +259,12 @@ async function pickLoadoutSubclass(
     loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
 
   const loadoutHasSubclassForClass = (item: DimItem) =>
-    savedSubclasses.some((s) => item.bucket.type === 'Class' && s.classType === item.classType);
+    savedSubclasses.some(
+      (s) => item.bucket.hash === BucketHashes.Subclass && s.classType === item.classType
+    );
 
   const subclassItemFilter = (item: DimItem) =>
-    item.bucket.type === 'Class' &&
+    item.bucket.hash === BucketHashes.Subclass &&
     (!loadout ||
       loadout.classType === DestinyClass.Unknown ||
       item.classType === loadoutClassType) &&
@@ -298,7 +300,8 @@ function fillLoadoutFromEquipped(
   }
 
   const newEquippedItems = dimStore.items.filter(
-    (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
+    (item) =>
+      item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash)
   );
 
   const hasEquippedInBucket = (bucket: InventoryBucket) =>
@@ -371,9 +374,9 @@ async function fillLoadoutFromUnequipped(
   const items = dimStore.items.filter(
     (item) =>
       !item.location.inPostmaster &&
-      item.bucket.type !== 'Class' &&
+      item.bucket.hash !== BucketHashes.Subclass &&
       itemCanBeInLoadout(item) &&
-      fromEquippedTypes.includes(item.type) &&
+      fromEquippedTypes.includes(item.bucket.hash) &&
       !item.equipped
   );
 

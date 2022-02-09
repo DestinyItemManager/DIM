@@ -1,6 +1,18 @@
 ## Next
 
+* Collect Postmaster now requires an additional click to confirm.
+* Transferring ships via search query should now reliably transfer all selected items.
+* On the Loadouts page, you can now drag existing items on the page, into the current Loadout Editor, just like you can on the Inventory page. Use it to grab a couple of your favorite pieces from another loadout!
+* Loadout armor stat tiers now include the total tier.
+
+## 7.4.0 <span class="changelog-date">(2022-02-06)</span>
+
 * Masterwork picker now only shows higher tiers of the current masterwork and full masterworks compatible with the weapon type.
+* Sharing a build from the Loadouts page or Loadout Optimizer now uses our dim.gg links which are easier to share and show a preview.
+* If you prefer reduced motion (in your operating system preferences), sheets like the compare and loadout dialogs now appear and disappear instantly.
+* Clearer feedback when uploading a wishlist file.
+* Expanded Organizer categories to account for Fusions and LFRs in unusual weapon slots.
+* Visual fixes for Organizer categories and Vendor page toggles.
 
 ## 7.3.0 <span class="changelog-date">(2022-01-30)</span>
 

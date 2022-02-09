@@ -23,7 +23,7 @@ import {
   DictionaryComponentResponse,
   SingleComponentResponse,
 } from 'bungie-api-ts/destiny2';
-import { StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
@@ -313,7 +313,7 @@ export function buildStores(
   const hasClassified = allItems.some(
     (i) =>
       i.classified &&
-      (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+      (i.location.inWeapons || i.location.inArmor || i.bucket.hash === BucketHashes.Ghost)
   );
 
   for (const s of stores) {
@@ -368,7 +368,7 @@ function processCharacter(
     for (const i of profileInventory) {
       const bucket = buckets.byHash[i.bucketHash];
       // items that can be stored in a vault
-      if (bucket && (bucket.vaultBucket || bucket.type === 'SpecialOrders')) {
+      if (bucket && (bucket.vaultBucket || bucket.hash === BucketHashes.SpecialOrders)) {
         items.push(i);
       }
     }
@@ -406,7 +406,7 @@ function processVault(
   for (const i of profileInventory) {
     const bucket = buckets.byHash[i.bucketHash];
     // items that cannot be stored in the vault, and are therefore *in* a vault
-    if (bucket && !bucket.vaultBucket && bucket.type !== 'SpecialOrders') {
+    if (bucket && !bucket.vaultBucket && bucket.hash !== BucketHashes.SpecialOrders) {
       items.push(i);
     }
   }

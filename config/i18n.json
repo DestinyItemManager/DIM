@@ -514,6 +514,7 @@
   "LoadoutBuilder": {
     "CopiedBuild": "Copied build settings URL to clipboard",
     "ShareBuild": "Share Build Settings",
+    "ShareBuildTitle": "Loadout Optimizer Settings",
     "ShareBuildWithNotes": "Share With Notes",
     "AddHalfTierMods": "Add +5 Mods",
     "All": "All",
@@ -671,6 +672,7 @@
     "NoTokens": "No reputation items are available to transfer.",
     "OnlyItems": "Only equippable items, materials, and consumables can be added to a loadout.",
     "OpenInOptimizer": "Optimize Armor",
+    "PickMods": "Add armor mods",
     "PullFromPostmaster": "Collect Postmaster",
     "PullFromPostmasterNotification": "Pulling 1 Postmaster item to {{store}}.",
     "PullFromPostmasterNotification_female": "Pulling 1 Postmaster item to {{store}}.",

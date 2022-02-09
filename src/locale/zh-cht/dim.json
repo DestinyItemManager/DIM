@@ -516,6 +516,7 @@
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
     "ShareBuild": "分享配裝設置",
+    "ShareBuildTitle": "Loadout Optimizer Settings",
     "ShareBuildWithNotes": "帶備註分享",
     "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatTierIgnoreOption": "忽略",

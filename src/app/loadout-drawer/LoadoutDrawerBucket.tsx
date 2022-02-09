@@ -1,4 +1,5 @@
 import { itemSortOrderSelector } from 'app/settings/item-sort';
+import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -27,10 +28,6 @@ export default function LoadoutDrawerBucket({
   remove(item: DimItem, e: React.MouseEvent): void;
 }) {
   const itemSortOrder = useSelector(itemSortOrderSelector);
-  if (!bucket.type) {
-    return null;
-  }
-
   const equippedItems = sortItems(
     items.filter((i) =>
       loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && li.equipped)
@@ -51,7 +48,11 @@ export default function LoadoutDrawerBucket({
       {equippedItems.length > 0 || unequippedItems.length > 0 ? (
         <>
           <div className="loadout-bucket-name">{bucket.name}</div>
-          <div className={`loadout-bucket-items bucket-${bucket.type}`}>
+          <div
+            className={clsx('loadout-bucket-items', {
+              'bucket-Class': bucket.hash === BucketHashes.Subclass,
+            })}
+          >
             <div className="sub-bucket equipped">
               <div className="equipped-item">
                 {equippedItems.length > 0 ? (
@@ -66,16 +67,17 @@ export default function LoadoutDrawerBucket({
                 )}
               </div>
             </div>
-            {(equippedItems.length > 0 || unequippedItems.length > 0) && bucket.type !== 'Class' && (
-              <div className="sub-bucket">
-                {unequippedItems.map((item) => (
-                  <LoadoutDrawerItem key={item.index} item={item} equip={equip} remove={remove} />
-                ))}
-                {equippedItems.length > 0 && unequippedItems.length < capacity - 1 && (
-                  <AddButton onClick={() => pickLoadoutItem(bucket)} />
-                )}
-              </div>
-            )}
+            {(equippedItems.length > 0 || unequippedItems.length > 0) &&
+              bucket.hash !== BucketHashes.Subclass && (
+                <div className="sub-bucket">
+                  {unequippedItems.map((item) => (
+                    <LoadoutDrawerItem key={item.index} item={item} equip={equip} remove={remove} />
+                  ))}
+                  {equippedItems.length > 0 && unequippedItems.length < capacity - 1 && (
+                    <AddButton onClick={() => pickLoadoutItem(bucket)} />
+                  )}
+                </div>
+              )}
           </div>
         </>
       ) : (

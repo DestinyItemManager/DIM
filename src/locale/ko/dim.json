@@ -516,6 +516,7 @@
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
     "ShareBuild": "빌드 설정 공유",
+    "ShareBuildTitle": "로드아웃 최적화 설정",
     "ShareBuildWithNotes": "메모와 함께 공유",
     "SpeedReport": "{{time}}초 만에 {{combos, number}}개의 조합 생성됨",
     "StatTierIgnoreOption": "무시",

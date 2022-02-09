@@ -1,5 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`generateSuggestionsForFilter full suggestions for filter format '[ 'range', 'query' ]', keyword 'energycapacity' with suggestions [
+  'any',    'arc',
+  'solar',  'void',
+  'ghost',  'subclass',
+  'stasis'
+] 1`] = `
+Array [
+  "energycapacity:",
+  "energycapacity:<",
+  "energycapacity:>",
+  "energycapacity:<=",
+  "energycapacity:>=",
+  "energycapacity:",
+  "energycapacity:any",
+  "energycapacity:arc",
+  "energycapacity:solar",
+  "energycapacity:void",
+  "energycapacity:ghost",
+  "energycapacity:subclass",
+  "energycapacity:stasis",
+]
+`;
+
 exports[`generateSuggestionsForFilter full suggestions for filter format 'freeform', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
 Array [
   "a:",
@@ -56,7 +79,30 @@ Array [
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'range', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
+exports[`generateSuggestionsForFilter full suggestions for filter format 'range', keyword 'a' with suggestions undefined 1`] = `
+Array [
+  "a:",
+  "a:<",
+  "a:>",
+  "a:<=",
+  "a:>=",
+]
+`;
+
+exports[`generateSuggestionsForFilter full suggestions for filter format 'rangeoverload', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
+Array [
+  "a:",
+  "a:<",
+  "a:>",
+  "a:<=",
+  "a:>=",
+  "a:",
+  "a:b",
+  "a:c",
+]
+`;
+
+exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
 Array [
   "a:",
   "a:b:",
@@ -72,17 +118,7 @@ Array [
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'range', keyword 'a' with suggestions undefined 1`] = `
-Array [
-  "a:",
-  "a:<",
-  "a:>",
-  "a:<=",
-  "a:>=",
-]
-`;
-
-exports[`generateSuggestionsForFilter full suggestions for filter format 'range', keyword 'stat' with suggestions [
+exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'stat' with suggestions [
   'rpm',             'rof',
   'charge',          'impact',
   'handling',        'range',
@@ -262,42 +298,6 @@ Array [
   "stat:total:>=",
   "stat:custom:>=",
   "stat:any:>=",
-]
-`;
-
-exports[`generateSuggestionsForFilter full suggestions for filter format 'rangeoverload', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
-Array [
-  "a:",
-  "a:<",
-  "a:>",
-  "a:<=",
-  "a:>=",
-  "a:",
-  "a:b",
-  "a:c",
-]
-`;
-
-exports[`generateSuggestionsForFilter full suggestions for filter format 'rangeoverload', keyword 'energycapacity' with suggestions [
-  'any',    'arc',
-  'solar',  'void',
-  'ghost',  'subclass',
-  'stasis'
-] 1`] = `
-Array [
-  "energycapacity:",
-  "energycapacity:<",
-  "energycapacity:>",
-  "energycapacity:<=",
-  "energycapacity:>=",
-  "energycapacity:",
-  "energycapacity:any",
-  "energycapacity:arc",
-  "energycapacity:solar",
-  "energycapacity:void",
-  "energycapacity:ghost",
-  "energycapacity:subclass",
-  "energycapacity:stasis",
 ]
 `;
 

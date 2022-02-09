@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "7.3.0",
+  "version": "7.4.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "private": true,
@@ -84,7 +84,6 @@
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-dnd-multi-backend": "^6.0.0",
     "@types/react-dom": "^17.0.0",
-    "@types/react-redux": "^7.0.3",
     "@types/react-test-renderer": "^17.0.1",
     "@types/react-transition-group": "^4.2.0",
     "@types/react-virtualized": "^9.21.1",

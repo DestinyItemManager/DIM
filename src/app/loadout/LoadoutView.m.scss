@@ -33,19 +33,6 @@
   }
 }
 
-.placeholder {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.5);
-  width: 100%;
-  height: var(--item-size);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  @include phone-portrait {
-    display: none;
-  }
-}
-
 .missingItems {
   text-transform: none;
   font-size: 12px;
@@ -74,37 +61,7 @@
   margin-right: 8px;
 }
 
-.mods {
-  flex: 1;
-}
-
-.modsGrid {
-  --item-icon-size: calc(0.8 * var(--item-size));
-  min-width: calc(5 * var(--item-icon-size) + 4 * var(--item-margin));
-  display: grid;
-  grid-template-columns: repeat(auto-fill, var(--item-icon-size));
-  gap: 4px;
-  align-content: flex-start;
-  align-items: flex-start;
-  :global(.item) {
-    --item-size: var(--item-icon-size);
-  }
-}
-
-.showModPlacementButton {
-  margin-top: 8px;
-}
-
-.modsPlaceholder {
-  composes: placeholder;
-  flex: 1;
-}
-
 .loadoutNotes {
   margin: 4px 0;
   white-space: pre-wrap;
-}
-
-.missingItem {
-  opacity: 0.3;
 }

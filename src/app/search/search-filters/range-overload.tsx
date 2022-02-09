@@ -6,7 +6,6 @@ import seasonTags from 'data/d2/season-tags.json';
 import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { allStatNames, statHashByName } from '../search-filter-values';
-import { generateSuggestionsForFilter } from '../suggestions-generation';
 import { rangeStringToComparator } from './range-numeric';
 
 /** matches a filterValue that's probably a math check */
@@ -37,16 +36,13 @@ const powerCapKeywords = ['pinnaclecap'];
 // this word might become a number like arrival ====> 11,
 // then be processed normally in a number check
 
-// or the word might be checked differently than the number, like
-// masterwork:handling is a completely different test from masterwork:>7
 const overloadedRangeFilters: FilterDefinition[] = [
   {
     keywords: 'masterwork',
     description: tl('Filter.Masterwork'),
-    format: 'rangeoverload',
+    format: ['simple', 'query', 'range'],
     destinyVersion: 2,
     suggestions: allStatNames,
-    suggestionsGenerator: () => generateSuggestionsForFilter({ keywords: 'masterwork' }),
     filter: ({ filterValue }) => {
       // the "is:masterwork" case
       if (filterValue === 'masterwork') {
@@ -70,7 +66,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
   {
     keywords: 'energycapacity',
     description: tl('Filter.Energy'),
-    format: 'rangeoverload',
+    format: ['range', 'query'],
     destinyVersion: 2,
     suggestions: energyCapacityTypeNames,
     filter: ({ filterValue }) => {

@@ -1,4 +1,6 @@
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import { DimItem } from '../../inventory/item-types';
@@ -16,7 +18,15 @@ export default function ExcludeItemsDropTarget({ className, children, onExcluded
     { isOver: Boolean; canDrop: boolean }
   >(
     () => ({
-      accept: ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'],
+      accept: [
+        BucketHashes.Helmet,
+        BucketHashes.Gauntlets,
+        BucketHashes.ChestArmor,
+        BucketHashes.LegArmor,
+        BucketHashes.ClassArmor,
+        D1BucketHashes.Artifact,
+        BucketHashes.Ghost,
+      ].map((h) => h.toString()),
       collect: (monitor) => ({ isOver: monitor.isOver(), canDrop: monitor.canDrop() }),
       drop: onExcluded,
     }),

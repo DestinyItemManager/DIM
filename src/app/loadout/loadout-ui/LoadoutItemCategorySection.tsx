@@ -1,28 +1,25 @@
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { bucketsSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
+import { bucketsSelector } from 'app/inventory/selectors';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
-import { AppIcon, faCalculator } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
-import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import clsx from 'clsx';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { BucketPlaceholder } from './BucketPlaceholder';
+import { FashionMods } from './FashionMods';
 import styles from './LoadoutItemCategorySection.m.scss';
 import LoadoutParametersDisplay from './LoadoutParametersDisplay';
-import PlugDef from './PlugDef';
+import { OptimizerButton } from './OptimizerButton';
 
 const categoryStyles = {
   Weapons: styles.categoryWeapons,
@@ -101,6 +98,7 @@ export default function LoadoutItemCategorySection({
           {equippedItems.length === 5 && (
             <div className="stat-bars destiny2">
               <LoadoutStats
+                showTier
                 stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, savedMods)}
                 characterClass={loadout.classType}
               />
@@ -111,14 +109,6 @@ export default function LoadoutItemCategorySection({
         </>
       )}
     </div>
-  );
-}
-
-function OptimizerButton({ loadout }: { loadout: Loadout }) {
-  return (
-    <Link className="dim-button" to="../optimizer" state={{ loadout }}>
-      <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
-    </Link>
   );
 }
 
@@ -150,17 +140,19 @@ function ItemBucket({
             key={index}
           >
             {items.map((item) => (
-              <ItemPopupTrigger item={item} key={item.id}>
-                {(ref, onClick) => (
-                  <div
-                    className={clsx({
-                      [styles.missingItem]: item.owner === 'unknown',
-                    })}
-                  >
-                    <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
-                  </div>
-                )}
-              </ItemPopupTrigger>
+              <DraggableInventoryItem item={item} key={item.id}>
+                <ItemPopupTrigger item={item}>
+                  {(ref, onClick) => (
+                    <div
+                      className={clsx({
+                        [styles.missingItem]: item.owner === 'unknown',
+                      })}
+                    >
+                      <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+                    </div>
+                  )}
+                </ItemPopupTrigger>
+              </DraggableInventoryItem>
             ))}
             {index === 0 && showFashion && (
               <FashionMods modsForBucket={modsForBucket} storeId={storeId} />
@@ -179,43 +171,6 @@ function ItemBucket({
           )
         )
       )}
-    </div>
-  );
-}
-
-// TODO: Consolidate with the one in FashionDrawer
-function FashionMods({ modsForBucket, storeId }: { modsForBucket: number[]; storeId?: string }) {
-  const defs = useD2Definitions()!;
-  const unlockedPlugSetItems = useSelector((state: RootState) =>
-    unlockedPlugSetItemsSelector(state, storeId)
-  );
-  const isShader = (m: number) =>
-    defs.InventoryItem.get(m)?.plug?.plugCategoryHash === PlugCategoryHashes.Shader;
-  const shader = modsForBucket.find(isShader);
-  const ornament = modsForBucket.find((m) => !isShader(m));
-
-  const shaderItem = shader ? defs.InventoryItem.get(shader) : undefined;
-  const ornamentItem = ornament ? defs.InventoryItem.get(ornament) : undefined;
-
-  const defaultShader = defs.InventoryItem.get(DEFAULT_SHADER);
-  const defaultOrnament = defs.InventoryItem.get(DEFAULT_ORNAMENTS[2]);
-
-  const canSlotShader =
-    shader !== undefined && (shader === DEFAULT_SHADER || unlockedPlugSetItems.has(shader));
-  const canSlotOrnament =
-    ornament !== undefined &&
-    (DEFAULT_ORNAMENTS.includes(ornament) || unlockedPlugSetItems.has(ornament));
-
-  return (
-    <div className={clsx(styles.items, styles.unequipped, styles.fashion)}>
-      <PlugDef
-        className={clsx({ [styles.missingItem]: !canSlotShader })}
-        plug={(shaderItem ?? defaultShader) as PluggableInventoryItemDefinition}
-      />
-      <PlugDef
-        className={clsx({ [styles.missingItem]: !canSlotOrnament })}
-        plug={(ornamentItem ?? defaultOrnament) as PluggableInventoryItemDefinition}
-      />
     </div>
   );
 }
