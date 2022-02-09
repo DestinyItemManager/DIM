@@ -232,8 +232,8 @@ export const D2SeasonInfo = {
   },
   16: {
     DLCName: 'Witch Queen',
-    seasonName: 'Season of [REDACTED]',
-    seasonTag: 'wq',
+    seasonName: 'Season of the Risen',
+    seasonTag: 'risen',
     season: 16,
     maxLevel: 50,
     powerFloor: 1350,
