@@ -3,6 +3,7 @@ import PressTip from 'app/dim-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
 import { t } from 'app/i18next-t';
 import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
+import { statTier } from 'app/loadout-builder/utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -18,11 +19,19 @@ interface CharacterStatProps {
   }[];
   storeId?: string;
   className?: string;
+  showTier?: boolean;
 }
 
-function CharacterStat({ stats, storeId, className }: CharacterStatProps) {
+function CharacterStat({ stats, storeId, className, showTier }: CharacterStatProps) {
   return (
     <div className={clsx('stat-row', className)}>
+      {showTier && (
+        <div className="stat tier">
+          {t('LoadoutBuilder.TierNumber', {
+            tier: _.sumBy(stats, (s) => statTier(s.stat.value)),
+          })}
+        </div>
+      )}
       {stats.map(({ stat, tooltip }) => {
         // if this is the "max gear power" stat (hash -3),
         // add in an onClick and an extra class
@@ -95,11 +104,13 @@ export function LoadoutStats({
   stats,
   storeId,
   characterClass,
+  showTier,
 }: {
   stats: DimStore['stats'];
   /** Store is optional because in the loadout drawer we don't have a specific store */
   storeId?: string;
   characterClass: DestinyClass; // this can be DestinyClass.Unknown
+  showTier?: boolean;
 }) {
   const statInfos = armorStats
     .map((h) => stats[h])
@@ -108,5 +119,5 @@ export function LoadoutStats({
       tooltip: <StatTooltip stat={stat} characterClass={characterClass} />,
     }));
 
-  return <CharacterStat stats={statInfos} storeId={storeId} />;
+  return <CharacterStat showTier={showTier} stats={statInfos} storeId={storeId} />;
 }
