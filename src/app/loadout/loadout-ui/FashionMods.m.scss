@@ -1,30 +1,21 @@
 @import '../../variables.scss';
 
-// TODO: dedupe with LoadoutItemCategorySection
+// TODO: use reexported classes from LoadoutItemCategorySection instead of composes
 
 .items {
-  display: grid;
-  gap: 2px;
-  grid-template-columns: 1fr 1fr;
-  min-height: unset !important;
+  composes: items from './LoadoutItemCategorySection.m.scss';
 }
 
 .unequipped {
-  composes: sub-bucket from global;
-  width: 100%;
-  padding: 0;
-  --item-icon-size: calc(0.5 * var(--item-size) - 2px);
-  :global(.item) {
-    --item-size: var(--item-icon-size);
-  }
+  composes: unequipped from './LoadoutItemCategorySection.m.scss';
+}
+
+.missingItem {
+  composes: missingItem from './LoadoutItemCategorySection.m.scss';
 }
 
 .fashion {
   :global(.item) {
     height: unset !important;
   }
-}
-
-.missingItem {
-  opacity: 0.3;
 }

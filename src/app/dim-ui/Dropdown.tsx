@@ -53,7 +53,7 @@ export default function Dropdown({
   options: items,
   offset,
   fixed,
-  placement = 'bottom-start',
+  placement = kebab ? 'bottom-end' : 'bottom-start',
 }: Props) {
   const { isOpen, getToggleButtonProps, getMenuProps, highlightedIndex, getItemProps } = useSelect({
     items,

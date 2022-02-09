@@ -10,7 +10,7 @@ import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import { createGetModRenderKey } from '../mod-utils';
-import { EmptyClassItem } from './EmptySubclass';
+import EmptySubclass from './EmptySubclass';
 import styles from './LoadoutSubclassSection.m.scss';
 import PlugDef from './PlugDef';
 
@@ -72,7 +72,7 @@ export default function LoadoutSubclassSection({
             )}
           </ItemPopupTrigger>
         ) : (
-          <EmptyClassItem />
+          <EmptySubclass />
         )}
         {power !== 0 && (
           <div className={styles.power}>
