@@ -526,8 +526,8 @@
     "AssumeMasterwork": "Assume Masterwork",
     "AssumeMasterworkOptions": {
       "None": "All armor will use their current stats and will have a minimum energy level of 7.",
-      "Legendary": "Legendary armor will use masterworked stats and will have an energy level or 10.",
-      "All": "All armor will use masterworked stats and will have an energy level or 10."
+      "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
+      "All": "All armor will use masterworked stats and will have an energy level of 10."
     },
     "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",
     "ChooseAlternate": "Choose another item with the same stats:",
@@ -554,7 +554,7 @@
     "LockElementOptions": {
       "None": "Armor element type will be changed as needed to fit the selected mods.",
       "Masterworked": "Armor element type will be locked for already masterworked armor.",
-      "All": "Armor element type will be locked to it's current value for all armor."
+      "All": "Armor element type will be locked to its current value for all armor."
     },
     "LockItem": "Pin item",
     "LockPerk": "Select perk",
