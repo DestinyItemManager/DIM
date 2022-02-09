@@ -554,7 +554,7 @@
     "LockElementOptions": {
       "None": "Armor element type will be changed as needed to fit the selected mods.",
       "Masterworked": "Armor element type will be locked for already masterworked armor.",
-      "All": "Armor element type will be locked to it's current value for all armor."
+      "All": "Armor element type will be locked to its current value for all armor."
     },
     "LockItem": "Pin item",
     "LockPerk": "Select perk",
