@@ -4,6 +4,15 @@
 * Transferring ships via search query should now reliably transfer all selected items.
 * On the Loadouts page, you can now drag existing items on the page, into the current Loadout Editor, just like you can on the Inventory page. Use it to grab a couple of your favorite pieces from another loadout!
 * Loadout armor stat tiers now include the total tier.
+* Changed the Loadout Optimizer's Armor Upgrade options for Assume Masterwork and Lock Element options. All armor will now have an assumed minimum energy capacity of 7. The new settings have the following options,
+  * Assumed Masterwork
+    * None - Armor will use their current stats.
+    * Legendary - Only legendary armor will have assumed masterwork stats and energy capacity
+    * All - Legendary and exotic armor will have masterwork stats and energy capacity
+  * Lock Element
+    * None - No armor will have its element locked
+    * Masterworked - Only armor that is already masterworked will have their element locked
+    * All - All armor will have element locked
 
 ## 7.4.0 <span class="changelog-date">(2022-02-06)</span>
 

@@ -1,4 +1,3 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import 'cross-fetch/polyfill';
@@ -96,44 +95,39 @@ describe('process-utils', () => {
     for (const store of stores) {
       for (const storeItem of store.items) {
         if (!helmet && isArmor2Helmet(storeItem)) {
-          helmet = mapDimItemToProcessItem(
-            defs,
-            storeItem,
-            UpgradeSpendTier.EnhancementPrisms,
-            false
-          );
+          helmet = mapDimItemToProcessItem({
+            dimItem: storeItem,
+            assumeArmorMasterwork: undefined,
+            lockArmorEnergyType: undefined,
+          });
         }
         if (!arms && isArmor2Arms(storeItem)) {
-          arms = mapDimItemToProcessItem(
-            defs,
-            storeItem,
-            UpgradeSpendTier.EnhancementPrisms,
-            false
-          );
+          arms = mapDimItemToProcessItem({
+            dimItem: storeItem,
+            assumeArmorMasterwork: undefined,
+            lockArmorEnergyType: undefined,
+          });
         }
         if (!chest && isArmor2Chest(storeItem)) {
-          chest = mapDimItemToProcessItem(
-            defs,
-            storeItem,
-            UpgradeSpendTier.EnhancementPrisms,
-            false
-          );
+          chest = mapDimItemToProcessItem({
+            dimItem: storeItem,
+            assumeArmorMasterwork: undefined,
+            lockArmorEnergyType: undefined,
+          });
         }
         if (!legs && isArmor2Legs(storeItem)) {
-          legs = mapDimItemToProcessItem(
-            defs,
-            storeItem,
-            UpgradeSpendTier.EnhancementPrisms,
-            false
-          );
+          legs = mapDimItemToProcessItem({
+            dimItem: storeItem,
+            assumeArmorMasterwork: undefined,
+            lockArmorEnergyType: undefined,
+          });
         }
         if (!classItem && isArmor2ClassItem(storeItem)) {
-          classItem = mapDimItemToProcessItem(
-            defs,
-            storeItem,
-            UpgradeSpendTier.EnhancementPrisms,
-            false
-          );
+          classItem = mapDimItemToProcessItem({
+            dimItem: storeItem,
+            assumeArmorMasterwork: undefined,
+            lockArmorEnergyType: undefined,
+          });
         }
 
         if (helmet && arms && chest && legs && classItem) {
@@ -179,7 +173,7 @@ describe('process-utils', () => {
 
   it('can fit five general mods', () => {
     const modifiedItems = items.map((item) =>
-      modifyItem({ item, energyVal: generalMod.energy!.val })
+      modifyItem({ item, energyVal: item.energy!.capacity - generalMod.energy!.val })
     );
     const generalModPerms = generateProcessModPermutations(generalMods);
     expect(canTakeSlotIndependentMods(generalModPerms, [[]], [[]], modifiedItems)).toBe(true);
@@ -192,7 +186,10 @@ describe('process-utils', () => {
         modifyItem({
           item,
           energyType: generalMod.energy!.type,
-          energyVal: itemIndex === i ? generalMod.energy!.val : generalMod.energy!.val + 1,
+          energyVal:
+            itemIndex === i
+              ? item.energy!.capacity - generalMod.energy!.val
+              : item.energy!.capacity,
         })
       );
       const combatModPerms = generateProcessModPermutations([combatMod]);
@@ -208,7 +205,7 @@ describe('process-utils', () => {
       modifyItem({
         item,
         energyType: combatMod.energy!.type,
-        energyVal: combatMod.energy!.val,
+        energyVal: item.energy!.capacity - combatMod.energy!.val,
         compatibleModSeasons: [tag],
       })
     );
@@ -226,7 +223,7 @@ describe('process-utils', () => {
         modifyItem({
           item,
           energyType: combatMod.energy!.type,
-          energyVal: combatMod.energy!.val,
+          energyVal: item.energy!.capacity - combatMod.energy!.val,
           compatibleModSeasons: i === itemIndex ? [combatMod.tag!] : [],
         })
       );
@@ -243,7 +240,7 @@ describe('process-utils', () => {
       modifyItem({
         item,
         energyType: activityMod.energy!.type,
-        energyVal: activityMod.energy!.val,
+        energyVal: item.energy!.capacity - activityMod.energy!.val,
         compatibleModSeasons: [tag],
       })
     );
@@ -261,7 +258,7 @@ describe('process-utils', () => {
         modifyItem({
           item,
           energyType: combatMod.energy!.type,
-          energyVal: combatMod.energy!.val,
+          energyVal: item.energy!.capacity - combatMod.energy!.val,
           compatibleModSeasons: i === itemIndex ? [activityMod.tag!] : [],
         })
       );

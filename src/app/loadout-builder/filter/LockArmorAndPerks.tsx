@@ -1,4 +1,3 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -22,7 +21,6 @@ import { isLoadoutBuilderItem, pickSubclass } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
-import ArmorUpgradePicker, { SelectedArmorUpgrade } from './ArmorUpgradePicker';
 import ExoticArmorChoice from './ExoticArmorChoice';
 import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
@@ -33,8 +31,6 @@ interface Props {
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
   lockedMods: PluggableInventoryItemDefinition[];
-  upgradeSpendTier: UpgradeSpendTier;
-  lockItemEnergyType: boolean;
   subclass?: DimLoadoutItem;
   lockedExoticHash?: number;
   searchFilter: ItemFilter;
@@ -49,15 +45,12 @@ export default memo(function LockArmorAndPerks({
   pinnedItems,
   excludedItems,
   lockedMods,
-  upgradeSpendTier,
-  lockItemEnergyType,
   subclass,
   lockedExoticHash,
   searchFilter,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
-  const [showArmorUpgradePicker, setShowArmorUpgradePicker] = useState(false);
   const [showSubclassOptionsPicker, setShowSubclassOptionsPicker] = useState(false);
   const defs = useD2Definitions()!;
   const isPhonePortrait = useIsPhonePortrait();
@@ -257,22 +250,6 @@ export default memo(function LockArmorAndPerks({
           </ol>
         </div>
       )}
-      <div className={styles.area}>
-        <SelectedArmorUpgrade
-          defs={defs}
-          upgradeSpendTier={upgradeSpendTier}
-          lockItemEnergyType={lockItemEnergyType}
-        />
-        <div className={styles.buttons}>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => setShowArmorUpgradePicker(true)}
-          >
-            {t('LoadoutBuilder.SelectArmorUpgrade')}
-          </button>
-        </div>
-      </div>
       {/* Pinned items */}
       <LoadoutBucketDropTarget className={styles.area} onItemLocked={pinItem}>
         {Boolean(allPinnedItems.length) && (
@@ -313,21 +290,6 @@ export default memo(function LockArmorAndPerks({
             classType={selectedStore.classType}
             onSelected={(exotic) => lbDispatch({ type: 'lockExotic', lockedExoticHash: exotic })}
             onClose={() => setShowExoticPicker(false)}
-          />,
-          document.body
-        )}
-      {showArmorUpgradePicker &&
-        ReactDom.createPortal(
-          <ArmorUpgradePicker
-            currentUpgradeSpendTier={upgradeSpendTier}
-            lockItemEnergyType={lockItemEnergyType}
-            onLockItemEnergyTypeChanged={(checked) =>
-              lbDispatch({ type: 'lockItemEnergyTypeChanged', lockItemEnergyType: checked })
-            }
-            onUpgradeSpendTierChanged={(upgradeSpendTier) =>
-              lbDispatch({ type: 'upgradeSpendTierChanged', upgradeSpendTier })
-            }
-            onClose={() => setShowArmorUpgradePicker(false)}
           />,
           document.body
         )}

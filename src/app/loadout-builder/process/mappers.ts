@@ -1,11 +1,7 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import {
-  canSwapEnergyFromUpgradeSpendTier,
-  upgradeSpendTierToMaxEnergy,
-} from 'app/loadout/armor-upgrade-utils';
+import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
+import { calculateAssumedItemEnergy, isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
-import { modsWithConditionalStats } from 'app/search/d2-known-values';
+import { MAX_ARMOR_ENERGY_CAPACITY, modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
 import {
   DestinyClass,
@@ -21,7 +17,7 @@ import {
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import { ArmorSet, ArmorStats } from '../types';
+import { ArmorSet, ArmorStats, MIN_LO_ITEM_ENERGY } from '../types';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
@@ -123,22 +119,26 @@ export function getTotalModStatChanges(
   return totals;
 }
 
-export function mapDimItemToProcessItem(
-  defs: D2ManifestDefinitions,
-  dimItem: DimItem,
-  upgradeSpendTier: UpgradeSpendTier,
-  lockItemEnergyType: boolean,
-  modsForSlot?: PluggableInventoryItemDefinition[]
-): ProcessItem {
+export function mapDimItemToProcessItem({
+  dimItem,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
+  modsForSlot,
+}: {
+  dimItem: DimItem;
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
+  modsForSlot?: PluggableInventoryItemDefinition[];
+}): ProcessItem {
   const { id, hash, name, isExotic, power, stats: dimItemStats, energy } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
-  const capacity = upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, dimItem);
+  const capacity = calculateAssumedItemEnergy(dimItem, assumeArmorMasterwork, MIN_LO_ITEM_ENERGY);
 
   if (dimItemStats) {
     for (const { statHash, base } of dimItemStats) {
       let value = base;
-      if (capacity === 10) {
+      if (capacity === MAX_ARMOR_ENERGY_CAPACITY) {
         value += 2;
       }
       statMap[statHash] = value;
@@ -155,10 +155,7 @@ export function mapDimItemToProcessItem(
     (mod) => mod.plug.energyCost?.energyType !== DestinyEnergyType.Any
   )?.plug.energyCost?.energyType;
 
-  if (
-    !energyType &&
-    canSwapEnergyFromUpgradeSpendTier(defs, upgradeSpendTier, dimItem, lockItemEnergyType)
-  ) {
+  if (!energyType && !isArmorEnergyLocked(dimItem, lockArmorEnergyType)) {
     energyType = DestinyEnergyType.Any;
   }
 

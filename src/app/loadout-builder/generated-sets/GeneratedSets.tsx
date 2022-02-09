@@ -1,4 +1,8 @@
-import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import {
+  AssumeArmorMasterwork,
+  LoadoutParameters,
+  LockArmorEnergyType,
+} from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
@@ -76,8 +80,8 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  upgradeSpendTier: UpgradeSpendTier;
-  lockItemEnergyType: boolean;
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
   notes?: string;
 }
 
@@ -96,8 +100,8 @@ export default memo(function GeneratedSets({
   lbDispatch,
   params,
   halfTierMods,
-  upgradeSpendTier,
-  lockItemEnergyType,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
   notes,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
@@ -156,8 +160,8 @@ export default memo(function GeneratedSets({
           loadouts={loadouts}
           params={params}
           halfTierMods={halfTierMods}
-          upgradeSpendTier={upgradeSpendTier}
-          lockItemEnergyType={lockItemEnergyType}
+          assumeArmorMasterwork={assumeArmorMasterwork}
+          lockArmorEnergyType={lockArmorEnergyType}
           notes={notes}
         />
       ) : sets.length > 0 ? (
@@ -187,8 +191,8 @@ export default memo(function GeneratedSets({
                   loadouts={loadouts}
                   params={params}
                   halfTierMods={halfTierMods}
-                  upgradeSpendTier={upgradeSpendTier}
-                  lockItemEnergyType={lockItemEnergyType}
+                  assumeArmorMasterwork={assumeArmorMasterwork}
+                  lockArmorEnergyType={lockArmorEnergyType}
                   notes={notes}
                 />
               )}
