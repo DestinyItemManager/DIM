@@ -594,6 +594,7 @@
     "NotificationTitle": "Loadout: {{name}}",
     "OnlyItems": "Only equippable items, materials, and consumables can be added to a loadout.",
     "OpenInOptimizer": "Optimize Armor",
+    "PickMods": "Add armor mods",
     "PullFromPostmaster": "Collect Postmaster",
     "PullFromPostmasterError": "Unable to pull from Postmaster: {{error}}.",
     "PullFromPostmasterGeneralError": "Unable to pull all items from Postmaster.",

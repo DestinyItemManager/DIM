@@ -51,12 +51,6 @@
   }
 }
 
-.fashion {
-  :global(.item) {
-    height: unset !important;
-  }
-}
-
 .showFashion {
   .equipped {
     :global(.item) {
@@ -80,5 +74,14 @@
 }
 
 .placeholder {
-  composes: placeholder from '../LoadoutView.m.scss';
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
+  width: 100%;
+  height: var(--item-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include phone-portrait {
+    display: none;
+  }
 }

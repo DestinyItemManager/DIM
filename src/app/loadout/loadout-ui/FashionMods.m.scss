@@ -1,0 +1,21 @@
+@import '../../variables.scss';
+
+// TODO: use reexported classes from LoadoutItemCategorySection instead of composes
+
+.items {
+  composes: items from './LoadoutItemCategorySection.m.scss';
+}
+
+.unequipped {
+  composes: unequipped from './LoadoutItemCategorySection.m.scss';
+}
+
+.missingItem {
+  composes: missingItem from './LoadoutItemCategorySection.m.scss';
+}
+
+.fashion {
+  :global(.item) {
+    height: unset !important;
+  }
+}
