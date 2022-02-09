@@ -1,6 +1,7 @@
 ## Next
 
 * Collect Postmaster now requires an additional click to confirm.
+* Transferring ships via search query should now reliably transfer all selected items.
 * On the Loadouts page, you can now drag existing items on the page, into the current Loadout Editor, just like you can on the Inventory page. Use it to grab a couple of your favorite pieces from another loadout!
 * Loadout armor stat tiers now include the total tier.
 
