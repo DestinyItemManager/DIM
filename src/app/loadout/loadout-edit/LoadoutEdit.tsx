@@ -23,10 +23,12 @@ import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
+import produce from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
+import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisplay';
 import SubclassPlugDrawer from '../SubclassPlugDrawer';
 import styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
@@ -137,6 +139,22 @@ export default function LoadoutEdit({
     [stateDispatch]
   );
 
+  const handleClearLoadoutParameters = () => {
+    const newLoadout = produce(loadout, (draft) => {
+      if (draft.parameters) {
+        delete draft.parameters.assumeArmorMasterwork;
+        delete draft.parameters.exoticArmorHash;
+        delete draft.parameters.lockArmorEnergyType;
+        delete draft.parameters.query;
+        delete draft.parameters.statConstraints;
+        delete draft.parameters.upgradeSpendTier;
+        delete draft.parameters.lockArmorEnergyType;
+        delete draft.parameters.autoStatMods;
+      }
+    });
+    updateLoadout(newLoadout);
+  };
+
   const anyClass = loadout.classType === DestinyClass.Unknown;
 
   // TODO: i18n the category title
@@ -195,6 +213,11 @@ export default function LoadoutEdit({
             fillLoadoutFromEquipped(loadout, itemsByBucket, store, updateLoadout, category)
           }
           onFillFromInventory={() => fillLoadoutFromUnequipped(loadout, store, onAddItem, category)}
+          onClearLoadutParameters={
+            category === 'Armor' && hasVisibleLoadoutParameters(loadout.parameters)
+              ? handleClearLoadoutParameters
+              : undefined
+          }
         >
           <LoadoutEditBucket
             category={category}

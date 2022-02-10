@@ -543,6 +543,7 @@
     "CannotCustomizeSubclass": "Light subclasses cannot be configured",
     "ChooseItem": "Add {{name}}",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
+    "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
     "ClearSection": "Remove all",
     "ClearSpace": "Move other items away",
     "ClearingSpace": "Moving other items away",
