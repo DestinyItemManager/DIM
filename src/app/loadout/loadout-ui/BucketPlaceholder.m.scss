@@ -2,7 +2,7 @@
 
 .empty {
   width: var(--item-size);
-  height: calc(var(--item-size) + #{$badge-height} - #{3 * $item-border-width});
+  height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
   border: 1px solid #ddd;
 }
 
