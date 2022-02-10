@@ -2,7 +2,6 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
@@ -191,24 +190,22 @@ function ItemBucket({
                 onClose={() => onRemoveItem(item)}
                 showCloseIconOnHover
               >
-                <DraggableInventoryItem item={item}>
-                  <ItemPopupTrigger item={item}>
-                    {(ref, onClick) => (
-                      <div
-                        className={clsx({
-                          [styles.missingItem]: item.owner === 'unknown',
-                        })}
-                      >
-                        <ConnectedInventoryItem
-                          item={item}
-                          innerRef={ref}
-                          onClick={item.owner === 'unknown' ? () => onClickWarnItem(item) : onClick}
-                          onDoubleClick={() => onToggleEquipped(item)}
-                        />
-                      </div>
-                    )}
-                  </ItemPopupTrigger>
-                </DraggableInventoryItem>
+                <ItemPopupTrigger item={item}>
+                  {(ref, onClick) => (
+                    <div
+                      className={clsx({
+                        [styles.missingItem]: item.owner === 'unknown',
+                      })}
+                    >
+                      <ConnectedInventoryItem
+                        item={item}
+                        innerRef={ref}
+                        onClick={item.owner === 'unknown' ? () => onClickWarnItem(item) : onClick}
+                        onDoubleClick={() => onToggleEquipped(item)}
+                      />
+                    </div>
+                  )}
+                </ItemPopupTrigger>
               </ClosableContainer>
             ))}
             {index === 0 && equippedContent}
