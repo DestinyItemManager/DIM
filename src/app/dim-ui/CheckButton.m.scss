@@ -9,6 +9,10 @@
   box-sizing: border-box;
   padding: 2px 4px 2px 10px;
 
+  @include phone-portrait {
+    padding: 6px 10px 6px 16px;
+  }
+
   > *:nth-last-child(n + 2) {
     margin-right: auto;
   }

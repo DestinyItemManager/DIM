@@ -24,6 +24,9 @@
   }
 }
 
+// This "fixes" a weird bug where you can't hover over the options because there
+// are buttons/items below it. To solve it we just turn off events for those
+// items entirely.
 .dragOver {
   pointer-events: none;
 }

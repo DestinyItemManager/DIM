@@ -1,4 +1,5 @@
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
+import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { getClass } from 'app/inventory/store/character-utils';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
@@ -76,40 +77,39 @@ export default function LoadoutDrawerFooter({
     <div className={styles.loadoutOptions}>
       {clashingLoadoutWarning && <div>{clashingLoadoutWarning}</div>}
       <form onSubmit={onSaveLoadout}>
-        <div className={styles.inputGroup}>
+        <button
+          className="dim-button"
+          type="submit"
+          disabled={saveDisabled}
+          title={clashingLoadoutWarning}
+        >
+          {isNew ? t('Loadouts.Save') : t('Loadouts.Update')}
+        </button>
+        {showSaveAsNew && (
           <button
             className="dim-button"
-            type="submit"
-            disabled={saveDisabled}
-            title={clashingLoadoutWarning}
+            onClick={(e) => onSaveLoadout(e, true)}
+            type="button"
+            title={
+              clashingLoadout
+                ? clashingLoadout.classType !== DestinyClass.Unknown
+                  ? t('Loadouts.AlreadyExistsClass', {
+                      className: getClass(clashingLoadout.classType),
+                    })
+                  : t('Loadouts.AlreadyExistsGlobal')
+                : t('Loadouts.SaveAsNewTooltip')
+            }
+            disabled={saveAsNewDisabled}
           >
-            {isNew ? t('Loadouts.Save') : t('Loadouts.Update')}
+            {t('Loadouts.SaveAsNew')}
           </button>
-          {showSaveAsNew && (
-            <button
-              className="dim-button"
-              onClick={(e) => onSaveLoadout(e, true)}
-              type="button"
-              title={
-                clashingLoadout
-                  ? clashingLoadout.classType !== DestinyClass.Unknown
-                    ? t('Loadouts.AlreadyExistsClass', {
-                        className: getClass(clashingLoadout.classType),
-                      })
-                    : t('Loadouts.AlreadyExistsGlobal')
-                  : t('Loadouts.SaveAsNewTooltip')
-              }
-              disabled={saveAsNewDisabled}
-            >
-              {t('Loadouts.SaveAsNew')}
-            </button>
-          )}
-          {!isNew && (
-            <ConfirmButton key="delete" danger onClick={onDeleteLoadout}>
-              <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
-            </ConfirmButton>
-          )}
-        </div>
+        )}
+        {!isNew && (
+          <ConfirmButton key="delete" danger onClick={onDeleteLoadout}>
+            <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
+          </ConfirmButton>
+        )}
+        <UserGuideLink topic="Loadouts" />
       </form>
     </div>
   );

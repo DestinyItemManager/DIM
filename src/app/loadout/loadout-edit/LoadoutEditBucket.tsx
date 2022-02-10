@@ -12,7 +12,6 @@ import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, faTshirt } from 'app/shell/icons';
-import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import clsx from 'clsx';
@@ -61,7 +60,6 @@ export default function LoadoutEditBucket({
 }) {
   const buckets = useSelector(bucketsSelector)!;
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
-  const isPhonePortrait = useIsPhonePortrait();
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]
@@ -69,11 +67,6 @@ export default function LoadoutEditBucket({
           (h) => buckets.byHash[h]
         );
   const isArmor = category === 'Armor';
-  const hasFashion = isArmor && !_.isEmpty(modsByBucket);
-
-  if (isPhonePortrait && !items && !hasFashion) {
-    return null;
-  }
 
   return (
     <div className={clsx(styles.itemCategory, categoryStyles[category])}>
