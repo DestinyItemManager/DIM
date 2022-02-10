@@ -139,6 +139,10 @@ export default function LoadoutEdit({
     [stateDispatch]
   );
 
+  const handleToggleEquipped = (item: DimItem) => {
+    stateDispatch({ type: 'equipItem', item, items });
+  };
+
   const handleClearLoadoutParameters = () => {
     const newLoadout = produce(loadout, (draft) => {
       if (draft.parameters) {
@@ -227,6 +231,7 @@ export default function LoadoutEdit({
             onClickPlaceholder={onClickPlaceholder}
             onClickWarnItem={onClickWarnItem}
             onRemoveItem={onRemoveItem}
+            onToggleEquipped={handleToggleEquipped}
           >
             {category === 'Armor' && (
               <ArmorExtras

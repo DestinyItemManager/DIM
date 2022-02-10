@@ -42,6 +42,7 @@ export default function LoadoutEditBucket({
   onClickPlaceholder,
   onClickWarnItem,
   onRemoveItem,
+  onToggleEquipped,
   children,
 }: {
   category: string;
@@ -53,6 +54,7 @@ export default function LoadoutEditBucket({
   equippedItemIds: Set<string>;
   onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
   onClickWarnItem: (item: DimItem) => void;
+  onToggleEquipped: (item: DimItem) => void;
   onRemoveItem: (item: DimItem) => void;
   children?: React.ReactNode;
 }) {
@@ -84,6 +86,7 @@ export default function LoadoutEditBucket({
             onClickPlaceholder={onClickPlaceholder}
             onClickWarnItem={onClickWarnItem}
             onRemoveItem={onRemoveItem}
+            onToggleEquipped={onToggleEquipped}
             equippedContent={
               isArmor && (
                 <FashionMods
@@ -154,6 +157,7 @@ function ItemBucket({
   onClickPlaceholder,
   onClickWarnItem,
   onRemoveItem,
+  onToggleEquipped,
 }: {
   bucket: InventoryBucket;
   items: DimItem[];
@@ -162,6 +166,7 @@ function ItemBucket({
   onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
   onClickWarnItem: (item: DimItem) => void;
   onRemoveItem: (item: DimItem) => void;
+  onToggleEquipped: (item: DimItem) => void;
 }) {
   const bucketHash = bucket.hash;
   const [equipped, unequipped] = _.partition(items, (i) =>
@@ -203,6 +208,7 @@ function ItemBucket({
                         item={item}
                         innerRef={ref}
                         onClick={item.owner === 'unknown' ? () => onClickWarnItem(item) : onClick}
+                        onDoubleClick={() => onToggleEquipped(item)}
                       />
                     </div>
                   )}
