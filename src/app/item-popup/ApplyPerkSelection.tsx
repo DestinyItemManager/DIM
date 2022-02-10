@@ -32,12 +32,7 @@ export default function ApplyPerkSelection({
   const wishListSocketChanges: { socket: DimSocket; plugHash: number }[] = [];
   for (const socket of item.sockets.allSockets) {
     // Find wishlist perks that aren't selected
-    if (
-      wishlistRoll &&
-      !wishlistRoll.isUndesirable &&
-      socket.isPerk &&
-      socket.plugOptions.length > 1
-    ) {
+    if (wishlistRoll?.isDesirable() && socket.isPerk && socket.plugOptions.length > 1) {
       const wishlistPlug = socket.plugOptions.find((p) =>
         wishlistRoll.wishListPerks.has(p.plugDef.hash)
       );

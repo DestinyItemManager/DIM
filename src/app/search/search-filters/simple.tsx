@@ -4,6 +4,14 @@ import { isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { FilterDefinition } from '../filter-types';
 
+export function isWeapon(item: DimItem): boolean {
+  return (
+    item.bucket?.sort === 'Weapons' &&
+    item.bucket.hash !== BucketHashes.SeasonalArtifact &&
+    item.bucket.hash !== BucketHashes.Subclass
+  );
+}
+
 // simple checks against check an attribute found on DimItem
 const simpleFilters: FilterDefinition[] = [
   {
@@ -15,10 +23,7 @@ const simpleFilters: FilterDefinition[] = [
   {
     keywords: 'weapon',
     description: tl('Filter.Weapon'),
-    filter: () => (item) =>
-      item.bucket?.sort === 'Weapons' &&
-      item.bucket.hash !== BucketHashes.SeasonalArtifact &&
-      item.bucket.hash !== BucketHashes.Subclass,
+    filter: () => (item) => isWeapon(item),
   },
   {
     keywords: 'armor',

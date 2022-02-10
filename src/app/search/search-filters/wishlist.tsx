@@ -1,6 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { InventoryWishListRoll } from 'app/wishlists/wishlists';
+import { InventoryWishListRoll, UiWishListRoll } from 'app/wishlists/wishlists';
 import { FilterDefinition } from '../filter-types';
 import { checkIfIsDupe, computeDupes, makeDupeID } from './dupes';
 
@@ -9,7 +9,15 @@ const checkIfIsWishlist = (
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined
 ) => {
   const roll = wishListFunction(item);
-  return roll && !roll.isUndesirable;
+  return roll?.roll === UiWishListRoll.Good;
+};
+
+const checkIfIsWishlistUnknown = (
+  item: DimItem,
+  wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined
+) => {
+  const roll = wishListFunction(item);
+  return roll?.roll === UiWishListRoll.Unknown;
 };
 
 const wishlistFilters: FilterDefinition[] = [
@@ -51,7 +59,15 @@ const wishlistFilters: FilterDefinition[] = [
     filter:
       ({ wishListFunction }) =>
       (item) =>
-        wishListFunction(item)?.isUndesirable,
+        wishListFunction(item)?.roll === UiWishListRoll.Bad,
+  },
+  {
+    keywords: 'wishlistunknown',
+    description: tl('Filter.WishlistUnknown'),
+    filter:
+      ({ wishListFunction }) =>
+      (item) =>
+        checkIfIsWishlistUnknown(item, wishListFunction),
   },
 ];
 

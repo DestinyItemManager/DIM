@@ -1,32 +1,50 @@
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import { DimItem, DimPlug } from '../inventory/item-types';
+import { isWeapon } from '../search/search-filters/simple';
 import { DimWishList, WishListRoll } from './types';
 
 export const enum UiWishListRoll {
-  Good = 1,
+  Unknown = 0,
+  Neutral,
+  Good,
   Bad,
 }
 
 export function toUiWishListRoll(
   inventoryWishListRoll?: InventoryWishListRoll
 ): UiWishListRoll | undefined {
-  if (!inventoryWishListRoll) {
-    return undefined;
+  const roll: UiWishListRoll | undefined = inventoryWishListRoll?.roll;
+  if (roll === UiWishListRoll.Good || roll === UiWishListRoll.Bad) {
+    return roll;
   }
-  return inventoryWishListRoll.isUndesirable ? UiWishListRoll.Bad : UiWishListRoll.Good;
+  return undefined;
 }
 
 /**
- * An inventory wish list roll - for an item instance ID, is the item known to be on the wish list?
+ * An inventory wish list roll - for an item instance ID, is the item known to the wish list?
+ * If it is known to wish list, is this item matched to wish list?
  * If it is on the wish list, what perks are responsible for it being there?
  */
-export interface InventoryWishListRoll {
+export class InventoryWishListRoll {
   /** What perks did the curator pick for the item? */
   wishListPerks: Set<number>;
   /** What notes (if any) did the curator make for this item + roll? */
   notes: string | undefined;
-  /** Is this an undesirable roll? */
-  isUndesirable?: boolean;
+  /** What type of roll is this? */
+  roll: UiWishListRoll;
+
+  isDesirable(): boolean {
+    return this.roll === UiWishListRoll.Good;
+  }
+  isUndesirable(): boolean {
+    return this.roll === UiWishListRoll.Bad;
+  }
+
+  constructor(perks: Set<number>, roll: UiWishListRoll, notes: string | undefined) {
+    this.wishListPerks = perks;
+    this.roll = roll;
+    this.notes = notes;
+  }
 }
 
 /**
@@ -130,11 +148,12 @@ function allDesiredPerksExist(item: DimItem, wishListRoll: WishListRoll): boolea
   );
 }
 
+const EmptyRoll = new InventoryWishListRoll(new Set<number>(), UiWishListRoll.Unknown, undefined);
 /** Get the InventoryWishListRoll for this item. */
 export function getInventoryWishListRoll(
   item: DimItem,
   wishListRolls: { [itemHash: number]: WishListRoll[] }
-): InventoryWishListRoll | undefined {
+): InventoryWishListRoll {
   if (
     !$featureFlags.wishLists ||
     !wishListRolls ||
@@ -143,12 +162,14 @@ export function getInventoryWishListRoll(
     !item.sockets ||
     item.id === '0'
   ) {
-    return undefined;
+    return EmptyRoll;
   }
 
+  let hasWishListRolls = false;
   let matchingWishListRoll: WishListRoll | undefined;
   // It could be under the item hash, the wildcard, or any of the item's categories
   for (const hash of [item.hash, DimWishList.WildcardItemId, ...item.itemCategoryHashes]) {
+    hasWishListRolls = wishListRolls[hash] ? true : hasWishListRolls;
     matchingWishListRoll = wishListRolls[hash]?.find((cr) => allDesiredPerksExist(item, cr));
     if (matchingWishListRoll) {
       break;
@@ -156,12 +177,16 @@ export function getInventoryWishListRoll(
   }
 
   if (matchingWishListRoll) {
-    return {
-      wishListPerks: getWishListPlugs(item, matchingWishListRoll),
-      notes: matchingWishListRoll.notes,
-      isUndesirable: matchingWishListRoll.isUndesirable,
-    };
+    return new InventoryWishListRoll(
+      getWishListPlugs(item, matchingWishListRoll),
+      matchingWishListRoll.isUndesirable ? UiWishListRoll.Bad : UiWishListRoll.Good,
+      matchingWishListRoll.notes
+    );
+  } else {
+    return new InventoryWishListRoll(
+      new Set<number>(),
+      isWeapon(item) && hasWishListRolls ? UiWishListRoll.Neutral : UiWishListRoll.Unknown,
+      undefined
+    );
   }
-
-  return undefined;
 }

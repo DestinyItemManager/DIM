@@ -51,13 +51,14 @@ export default function ItemPopupBody({
       title: (
         <span className="popup-tab-title">
           {t('MovePopup.TriageTab')}
-          {tab === ItemPopupTab.Overview && wishlistRoll && (
-            <AppIcon
-              className="thumbs-up"
-              icon={thumbsUpIcon}
-              title={t('WishListRoll.BestRatedTip')}
-            />
-          )}
+          {tab === ItemPopupTab.Overview &&
+            (wishlistRoll?.isDesirable() || wishlistRoll?.isUndesirable()) && (
+              <AppIcon
+                className="thumbs-up"
+                icon={thumbsUpIcon}
+                title={t('WishListRoll.BestRatedTip')}
+              />
+            )}
         </span>
       ),
       component: <ItemTriage item={item} />,
