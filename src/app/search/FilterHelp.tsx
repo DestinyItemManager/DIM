@@ -78,16 +78,7 @@ function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   const dispatch = useDispatch();
   const additionalSuggestions = filter.suggestionsGenerator?.({}) ?? [];
   const suggestions = Array.from(
-    new Set(
-      [...generateSuggestionsForFilter(filter), ...additionalSuggestions].filter(
-        (s) =>
-          !s.startsWith('not:') &&
-          (filter.format === 'freeform' ||
-            filter.format === 'range' ||
-            filter.format === 'rangeoverload' ||
-            !s.endsWith(':'))
-      )
-    )
+    new Set([...generateSuggestionsForFilter(filter, true), ...additionalSuggestions])
   );
   const localDesc = Array.isArray(filter.description)
     ? t(...filter.description)

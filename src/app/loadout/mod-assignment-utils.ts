@@ -1,4 +1,4 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
@@ -23,7 +23,7 @@ import {
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { upgradeSpendTierToMaxEnergy } from './armor-upgrade-utils';
+import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
 import { generateModPermutations } from './mod-permutations';
 import {
   activityModPlugCategoryHashes,
@@ -61,15 +61,21 @@ interface ModAssignments {
  * - bucket specific (gauntlets-only, etc), and
  * - bucket independent (intellect mod, charged w/ light, etc)
  */
-export function fitMostMods(
+export function fitMostMods({
+  items,
+  plannedMods,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
+  minItemEnergy,
+}: {
   /** a set (i.e. helmet, arms, etc) of items that we are trying to assign mods to */
-  items: DimItem[],
+  items: DimItem[];
   /** mods we are trying to place on the items */
-  plannedMods: PluggableInventoryItemDefinition[],
-  defs: D2ManifestDefinitions,
-  upgradeSpendTier = UpgradeSpendTier.Nothing,
-  lockItemEnergyType = true
-): {
+  plannedMods: PluggableInventoryItemDefinition[];
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
+  minItemEnergy: number;
+}): {
   itemModAssignments: {
     [itemInstanceId: string]: PluggableInventoryItemDefinition[];
   };
@@ -124,14 +130,13 @@ export function fitMostMods(
 
       if (targetItem) {
         if (
-          isBucketSpecificModValid(
-            defs,
-            upgradeSpendTier,
-            lockItemEnergyType,
-            targetItem,
-            plannedMod,
-            bucketSpecificAssignments[targetItem.id].assigned
-          )
+          isBucketSpecificModValid({
+            assumeArmorMasterwork,
+            lockArmorEnergyType,
+            item: targetItem,
+            mod: plannedMod,
+            assignedMods: bucketSpecificAssignments[targetItem.id].assigned,
+          })
         ) {
           bucketSpecificAssignments[targetItem.id].assigned.push(plannedMod);
         } else {
@@ -147,13 +152,13 @@ export function fitMostMods(
   const itemEnergies = _.mapValues(
     _.keyBy(items, (item) => item.id),
     (item) =>
-      buildItemEnergy(
-        defs,
+      buildItemEnergy({
         item,
-        bucketSpecificAssignments[item.id].assigned,
-        upgradeSpendTier,
-        lockItemEnergyType
-      )
+        assignedMods: bucketSpecificAssignments[item.id].assigned,
+        assumeArmorMasterwork,
+        lockArmorEnergyType,
+        minItemEnergy,
+      })
   );
 
   const generalModPermutations = generateModPermutations(generalMods);
@@ -503,25 +508,30 @@ export function createPluggingStrategy(
   return operationSet;
 }
 /** given conditions and assigned mods, can this mod be placed on this armor item? */
-function isBucketSpecificModValid(
-  defs: D2ManifestDefinitions,
-  upgradeSpendTier: UpgradeSpendTier,
-  lockItemEnergyType: boolean,
-  item: DimItem,
-  mod: PluggableInventoryItemDefinition,
+function isBucketSpecificModValid({
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
+  item,
+  mod,
+  assignedMods,
+}: {
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
+  item: DimItem;
+  mod: PluggableInventoryItemDefinition;
   /** mods that are already assigned to this item */
-  assignedMods: PluggableInventoryItemDefinition[]
-) {
+  assignedMods: PluggableInventoryItemDefinition[];
+}) {
   // given spending rules, what we can assume this item's energy is
-  const itemEnergyCapacity = upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item);
-  // given spending/element rules & current assignments, what element is this armor?
-  const itemEnergyType = getItemEnergyType(
-    defs,
-    item,
-    upgradeSpendTier,
-    lockItemEnergyType,
-    assignedMods
+  const itemEnergyCapacity = Math.max(
+    item.energy?.energyCapacity || 1,
+    assumeArmorMasterwork === AssumeArmorMasterwork.All ||
+      (!item.isExotic && assumeArmorMasterwork === AssumeArmorMasterwork.Legendary)
+      ? 10
+      : 0
   );
+  // given spending/element rules & current assignments, what element is this armor?
+  const itemEnergyType = getItemEnergyType(item, lockArmorEnergyType, assignedMods);
 
   // how many armor energy points are already used
   const energyUsed = _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
@@ -656,19 +666,25 @@ function isPlugActive(
   }
 }
 
-function buildItemEnergy(
-  defs: D2ManifestDefinitions,
-  item: DimItem,
-  assignedMods: PluggableInventoryItemDefinition[],
-  upgradeSpendTier: UpgradeSpendTier,
-  lockItemEnergyType: boolean
-): ItemEnergy {
+function buildItemEnergy({
+  item,
+  assignedMods,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
+  minItemEnergy,
+}: {
+  item: DimItem;
+  assignedMods: PluggableInventoryItemDefinition[];
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
+  minItemEnergy: number;
+}): ItemEnergy {
   return {
     used: _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0),
     originalCapacity: item.energy?.energyCapacity || 0,
-    derivedCapacity: upgradeSpendTierToMaxEnergy(defs, upgradeSpendTier, item),
+    derivedCapacity: calculateAssumedItemEnergy(item, assumeArmorMasterwork, minItemEnergy),
     originalType: item.energy?.energyType || DestinyEnergyType.Any,
-    derivedType: getItemEnergyType(defs, item, upgradeSpendTier, lockItemEnergyType, assignedMods),
+    derivedType: getItemEnergyType(item, lockArmorEnergyType, assignedMods),
   };
 }
 

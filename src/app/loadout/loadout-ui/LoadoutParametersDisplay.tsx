@@ -1,7 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { SelectedArmorUpgrade } from 'app/loadout-builder/filter/ArmorUpgradePicker';
 import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, searchIcon } from 'app/shell/icons';
@@ -13,14 +12,13 @@ export function hasVisibleLoadoutParameters(params: LoadoutParameters | undefine
     params &&
     (params.query ||
       params.exoticArmorHash ||
-      params.upgradeSpendTier !== undefined ||
       params.statConstraints?.some((s) => s.maxTier !== undefined || s.minTier !== undefined))
   );
 }
 
 export default function LoadoutParametersDisplay({ params }: { params: LoadoutParameters }) {
   const defs = useD2Definitions()!;
-  const { query, exoticArmorHash, upgradeSpendTier, statConstraints, lockItemEnergyType } = params;
+  const { query, exoticArmorHash, statConstraints } = params;
   const show = hasVisibleLoadoutParameters(params);
   if (!show) {
     return null;
@@ -37,15 +35,6 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
       {exoticArmorHash && (
         <div className={styles.loExotic}>
           <ExoticArmorChoice lockedExoticHash={exoticArmorHash} />
-        </div>
-      )}
-      {upgradeSpendTier !== undefined && (
-        <div className={styles.loSpendTier}>
-          <SelectedArmorUpgrade
-            defs={defs}
-            upgradeSpendTier={upgradeSpendTier}
-            lockItemEnergyType={lockItemEnergyType ?? false}
-          />
         </div>
       )}
       {statConstraints && (

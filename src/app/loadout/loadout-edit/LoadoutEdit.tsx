@@ -148,7 +148,6 @@ export default function LoadoutEdit({
         delete draft.parameters.query;
         delete draft.parameters.statConstraints;
         delete draft.parameters.upgradeSpendTier;
-        delete draft.parameters.lockArmorEnergyType;
         delete draft.parameters.autoStatMods;
       }
     });

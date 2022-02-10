@@ -1,7 +1,8 @@
 import {
+  AssumeArmorMasterwork,
   defaultLoadoutParameters,
   LoadoutParameters,
-  UpgradeSpendTier,
+  LockArmorEnergyType,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
@@ -155,11 +156,6 @@ const lbStateInit = ({
 
   const statOrder = statOrderFromLoadoutParameters(loadoutParams);
   const statFilters = statFiltersFromLoadoutParamaters(loadoutParams);
-  // We need to handle the deprecated case
-  loadoutParams.upgradeSpendTier =
-    loadoutParams.upgradeSpendTier === UpgradeSpendTier.AscendantShardsLockEnergyType
-      ? UpgradeSpendTier.Nothing
-      : loadoutParams.upgradeSpendTier!;
 
   return {
     loadoutParameters: loadoutParams,
@@ -180,19 +176,16 @@ export type LoadoutBuilderAction =
   | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
   | { type: 'sortOrderChanged'; sortOrder: LoadoutBuilderState['statOrder'] }
   | {
-      type: 'lockItemEnergyTypeChanged';
-      lockItemEnergyType: boolean;
+      type: 'assumeArmorMasterworkChanged';
+      assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
     }
-  | { type: 'upgradeSpendTierChanged'; upgradeSpendTier: UpgradeSpendTier }
+  | { type: 'lockArmorEnergyTypeChanged'; lockArmorEnergyType: LockArmorEnergyType | undefined }
   | { type: 'pinItem'; item: DimItem }
   | { type: 'setPinnedItems'; items: DimItem[] }
   | { type: 'unpinItem'; item: DimItem }
   | { type: 'excludeItem'; item: DimItem }
   | { type: 'unexcludeItem'; item: DimItem }
-  | {
-      type: 'lockedModsChanged';
-      lockedMods: PluggableInventoryItemDefinition[];
-    }
+  | { type: 'lockedModsChanged'; lockedMods: PluggableInventoryItemDefinition[] }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'updateSubclass'; item: DimItem }
@@ -302,22 +295,18 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
           statOrder: action.sortOrder,
         };
       }
-      case 'lockItemEnergyTypeChanged': {
+      case 'assumeArmorMasterworkChanged': {
+        const { assumeArmorMasterwork } = action;
         return {
           ...state,
-          loadoutParameters: {
-            ...state.loadoutParameters,
-            lockItemEnergyType: action.lockItemEnergyType,
-          },
+          loadoutParameters: { ...state.loadoutParameters, assumeArmorMasterwork },
         };
       }
-      case 'upgradeSpendTierChanged': {
+      case 'lockArmorEnergyTypeChanged': {
+        const { lockArmorEnergyType } = action;
         return {
           ...state,
-          loadoutParameters: {
-            ...state.loadoutParameters,
-            upgradeSpendTier: action.upgradeSpendTier,
-          },
+          loadoutParameters: { ...state.loadoutParameters, lockArmorEnergyType },
         };
       }
       case 'addGeneralMods': {

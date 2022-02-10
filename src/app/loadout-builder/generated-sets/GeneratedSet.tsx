@@ -1,15 +1,18 @@
-import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import {
+  AssumeArmorMasterwork,
+  LoadoutParameters,
+  LockArmorEnergyType,
+} from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
-import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
 import React, { Dispatch, useMemo } from 'react';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet, ArmorStatHashes, PinnedItems } from '../types';
+import { ArmorSet, ArmorStatHashes, MIN_LO_ITEM_ENERGY, PinnedItems } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
@@ -31,8 +34,8 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  upgradeSpendTier: UpgradeSpendTier;
-  lockItemEnergyType: boolean;
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
 }
 
 /**
@@ -54,10 +57,9 @@ function GeneratedSet({
   lbDispatch,
   params,
   halfTierMods,
-  upgradeSpendTier,
-  lockItemEnergyType,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
 }: Props) {
-  const defs = useD2Definitions()!;
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
     loadout.parameters = params;
@@ -81,15 +83,15 @@ function GeneratedSet({
   }
 
   const itemModAssignments = useMemo(() => {
-    const { itemModAssignments } = fitMostMods(
-      displayedItems,
-      lockedMods,
-      defs,
-      upgradeSpendTier,
-      lockItemEnergyType
-    );
+    const { itemModAssignments } = fitMostMods({
+      items: displayedItems,
+      plannedMods: lockedMods,
+      assumeArmorMasterwork,
+      lockArmorEnergyType,
+      minItemEnergy: MIN_LO_ITEM_ENERGY,
+    });
     return itemModAssignments;
-  }, [defs, displayedItems, lockItemEnergyType, lockedMods, upgradeSpendTier]);
+  }, [displayedItems, lockedMods, assumeArmorMasterwork, lockArmorEnergyType]);
 
   if (set.armor.some((items) => !items.length)) {
     errorLog('loadout optimizer', 'No valid sets!');

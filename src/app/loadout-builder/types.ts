@@ -83,3 +83,7 @@ export const LOCKED_EXOTIC_NO_EXOTIC = -1;
  * Special value for lockedExoticHash indicating the user would like an exotic, but doesn't care which one.
  */
 export const LOCKED_EXOTIC_ANY_EXOTIC = -2;
+/**
+ * The minimum armour energy value used in the LO Builder
+ */
+export const MIN_LO_ITEM_ENERGY = 7;

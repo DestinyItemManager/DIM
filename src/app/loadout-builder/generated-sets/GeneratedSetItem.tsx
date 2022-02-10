@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -57,14 +58,22 @@ function EnergySwap({
   return (
     <div className={clsx(styles.energySwapContainer, { [styles.energyHidden]: noEnergyChange })}>
       <div className={styles.energyValue}>
-        <div className={clsx({ [styles.masterworked]: armorEnergyCapacity === 10 })}>
+        <div
+          className={clsx({
+            [styles.masterworked]: armorEnergyCapacity === MAX_ARMOR_ENERGY_CAPACITY,
+          })}
+        >
           {armorEnergyCapacity}
         </div>
         <BungieImage className={styles.energyIcon} src={armorEnergy.displayProperties.icon} />
       </div>
       <div className={styles.arrow}>➜</div>
       <div className={styles.energyValue}>
-        <div className={clsx({ [styles.masterworked]: resultingEnergyCapacity === 10 })}>
+        <div
+          className={clsx({
+            [styles.masterworked]: resultingEnergyCapacity === MAX_ARMOR_ENERGY_CAPACITY,
+          })}
+        >
           {resultingEnergyCapacity}
         </div>
         <BungieImage className={styles.energyIcon} src={resultingEnergy.displayProperties.icon} />

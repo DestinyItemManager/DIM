@@ -1,4 +1,4 @@
-import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createLoadoutShare } from 'app/dim-api/dim-api';
 import { savedLoadoutParametersSelector } from 'app/dim-api/selectors';
@@ -38,6 +38,7 @@ import { allItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import ModPicker from '../loadout/ModPicker';
+import EnergyOptions from './filter/EnergyOptions';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import TierSelect from './filter/TierSelect';
 import CompareDrawer from './generated-sets/CompareDrawer';
@@ -194,8 +195,6 @@ function LoadoutBuilder({
   ] = useLbState(stores, preloadedLoadout, initialClassType, initialLoadoutParameters, defs);
   const isPhonePortrait = useIsPhonePortrait();
 
-  const lockItemEnergyType = Boolean(loadoutParameters.lockItemEnergyType);
-  const upgradeSpendTier = loadoutParameters.upgradeSpendTier ?? UpgradeSpendTier.Nothing;
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
 
   const lockedMods = useMemo(
@@ -221,8 +220,8 @@ function LoadoutBuilder({
       ),
       // Only keep a few parameters
       'statConstraints',
-      'upgradeSpendTier',
-      'lockItemEnergyType'
+      'assumeArmorMasterwork',
+      'lockArmorEnergyType'
     );
 
     setSetting('loParameters', newSavedLoadoutParams);
@@ -254,17 +253,16 @@ function LoadoutBuilder({
 
   const filteredItems = useMemo(
     () =>
-      filterItems(
+      filterItems({
         defs,
-        characterItems,
+        items: characterItems,
         pinnedItems,
         excludedItems,
         lockedMods,
         lockedExoticHash,
-        upgradeSpendTier,
-        lockItemEnergyType,
-        searchFilter
-      ),
+        lockArmorEnergyType: loadoutParameters.lockArmorEnergyType,
+        searchFilter,
+      }),
     [
       defs,
       characterItems,
@@ -272,8 +270,7 @@ function LoadoutBuilder({
       excludedItems,
       lockedMods,
       lockedExoticHash,
-      upgradeSpendTier,
-      lockItemEnergyType,
+      loadoutParameters.lockArmorEnergyType,
       searchFilter,
     ]
   );
@@ -284,8 +281,8 @@ function LoadoutBuilder({
     filteredItems,
     lockedMods,
     subclass,
-    upgradeSpendTier,
-    lockItemEnergyType,
+    assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork,
+    lockArmorEnergyType: loadoutParameters.lockArmorEnergyType,
     statOrder,
     statFilters,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
@@ -356,13 +353,16 @@ function LoadoutBuilder({
         }
         onStatOrderChanged={(sortOrder) => lbDispatch({ type: 'sortOrderChanged', sortOrder })}
       />
+      <EnergyOptions
+        assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
+        lockArmorEnergyType={loadoutParameters.lockArmorEnergyType}
+        lbDispatch={lbDispatch}
+      />
       <LockArmorAndPerks
         selectedStore={selectedStore}
         pinnedItems={pinnedItems}
         excludedItems={excludedItems}
         lockedMods={lockedMods}
-        upgradeSpendTier={upgradeSpendTier}
-        lockItemEnergyType={lockItemEnergyType}
         subclass={subclass}
         lockedExoticHash={lockedExoticHash}
         searchFilter={searchFilter}
@@ -474,8 +474,8 @@ function LoadoutBuilder({
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
-            upgradeSpendTier={upgradeSpendTier}
-            lockItemEnergyType={lockItemEnergyType}
+            assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
+            lockArmorEnergyType={loadoutParameters.lockArmorEnergyType}
             notes={notes}
           />
         )}
