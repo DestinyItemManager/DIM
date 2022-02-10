@@ -50,7 +50,7 @@
   gap: 4px;
   --item-icon-size: calc(var(--item-size) - 6px);
   grid-template-columns: var(--item-icon-size);
-  :global(.item) {
+  > * {
     --item-size: var(--item-icon-size);
   }
 }

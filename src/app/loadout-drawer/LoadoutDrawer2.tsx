@@ -252,6 +252,7 @@ export default function LoadoutDrawer2() {
   // TODO: undo/redo stack?
   // TODO: remove armor/subclass from any-class loadouts on save
   // TODO: build and publish a "loadouts API" via context
+  // TODO: only accept dropped items that fit in this class (and exclude subclass/armor for global loadouts)
 
   return (
     <Sheet

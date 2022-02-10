@@ -3,7 +3,7 @@ import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
-import { useDrop } from 'react-dnd';
+import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { DimItem } from '../inventory/item-types';
@@ -31,14 +31,17 @@ export default function LoadoutDrawerDropTarget({
 }: {
   children?: React.ReactNode;
   className?: string;
-  onDroppedItem(item: DimItem): void;
+  onDroppedItem(item: DimItem, e?: React.MouseEvent, equip?: boolean): void;
 }) {
   const bucketTypes = useSelector(bucketTypesSelector);
 
   const [{ isOver }, dropRef] = useDrop<DimItem, unknown, { isOver: boolean }>(
     () => ({
       accept: bucketTypes,
-      drop: onDroppedItem,
+      drop: (item: DimItem, monitor: DropTargetMonitor<DimItem, { equipped: boolean }>) => {
+        const result = monitor.getDropResult();
+        onDroppedItem(item, undefined, result?.equipped);
+      },
       canDrop: itemCanBeInLoadout,
       collect: (monitor) => ({ isOver: monitor.isOver() && monitor.canDrop() }),
     }),

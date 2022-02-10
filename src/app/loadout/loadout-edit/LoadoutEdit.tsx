@@ -32,6 +32,7 @@ import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisp
 import SubclassPlugDrawer from '../SubclassPlugDrawer';
 import styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
+import LoadoutEditBucketDropTarget from './LoadoutEditBucketDropTarget';
 import LoadoutEditSection from './LoadoutEditSection';
 import LoadoutEditSubclass from './LoadoutEditSubclass';
 
@@ -222,29 +223,31 @@ export default function LoadoutEdit({
               : undefined
           }
         >
-          <LoadoutEditBucket
-            category={category}
-            storeId={store.id}
-            items={categories[category]}
-            modsByBucket={modsByBucket}
-            equippedItemIds={equippedItemIds}
-            onClickPlaceholder={onClickPlaceholder}
-            onClickWarnItem={onClickWarnItem}
-            onRemoveItem={onRemoveItem}
-            onToggleEquipped={handleToggleEquipped}
-          >
-            {category === 'Armor' && (
-              <ArmorExtras
-                loadout={loadout}
-                storeId={store.id}
-                subclass={subclass}
-                items={categories[category]}
-                savedMods={savedMods}
-                equippedItemIds={equippedItemIds}
-                onModsByBucketUpdated={onModsByBucketUpdated}
-              />
-            )}
-          </LoadoutEditBucket>
+          <LoadoutEditBucketDropTarget category={category}>
+            <LoadoutEditBucket
+              category={category}
+              storeId={store.id}
+              items={categories[category]}
+              modsByBucket={modsByBucket}
+              equippedItemIds={equippedItemIds}
+              onClickPlaceholder={onClickPlaceholder}
+              onClickWarnItem={onClickWarnItem}
+              onRemoveItem={onRemoveItem}
+              onToggleEquipped={handleToggleEquipped}
+            >
+              {category === 'Armor' && (
+                <ArmorExtras
+                  loadout={loadout}
+                  storeId={store.id}
+                  subclass={subclass}
+                  items={categories[category]}
+                  savedMods={savedMods}
+                  equippedItemIds={equippedItemIds}
+                  onModsByBucketUpdated={onModsByBucketUpdated}
+                />
+              )}
+            </LoadoutEditBucket>
+          </LoadoutEditBucketDropTarget>
         </LoadoutEditSection>
       ))}
       <LoadoutEditSection
