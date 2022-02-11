@@ -51,19 +51,7 @@ Array [
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within query for |season:>outl| with caret at position 12 1`] = `
-Array [
-  Object {
-    "helpText": undefined,
-    "highlightRange": Array [
-      8,
-      21,
-    ],
-    "query": "season:>season:outlaw",
-    "type": 3,
-  },
-]
-`;
+exports[`autocompleteTermSuggestions autocomplete within query for |season:>outl| with caret at position 12 1`] = `Array []`;
 
 exports[`filterComplete autocomplete terms for |is:b| 1`] = `
 Array [
