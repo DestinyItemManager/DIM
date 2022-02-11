@@ -14,6 +14,15 @@
     * Masterworked - Only armor that is already masterworked will have their element locked
     * All - All armor will have element locked
 
+### Beta Only
+
+* We're testing a brand new Loadout Editor. Check it out from the character menu or the Loadouts page.
+  * The layout mirrors the Loadout page's new design which has clear areas for different types of items. Each section also has a menu of additional actions like re-syncing from your currently equipped items, or clearing out a whole section.
+  * As part of this change, we're removing support for "multi-class" loadouts. Loadouts will either be tied to one class, or can be toggled to "Any Class". "Any Class" loadouts cannot contain Subclass, Armor, or Fashion. If you edit an existing "Any Class" loadout and save it, those items will be removed unless you turn off "Any Class".
+  * Double-click items to toggle between equipped and unequipped instead of single clicking. We'll be continuing to improve how you choose items and specify whether they're equipped in the future.
+  * With this new design we have space to add even more loadout editing tools over the next few seasons.
+  * The new Loadout Editor is not available for D1.
+
 ## 7.4.0 <span class="changelog-date">(2022-02-06)</span>
 
 * Masterwork picker now only shows higher tiers of the current masterwork and full masterworks compatible with the weapon type.
