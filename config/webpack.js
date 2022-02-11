@@ -320,6 +320,17 @@ module.exports = (env) => {
           date: new Date(buildTime).toString(),
           splash,
         },
+        minify: env.dev
+          ? false
+          : {
+              collapseWhitespace: true,
+              keepClosingSlash: true,
+              removeComments: false,
+              removeRedundantAttributes: true,
+              removeScriptTypeAttributes: true,
+              removeStyleLinkTypeAttributes: true,
+              useShortDoctype: true,
+            },
       }),
 
       new HtmlWebpackPlugin({
