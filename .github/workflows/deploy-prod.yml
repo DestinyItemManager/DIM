@@ -70,14 +70,19 @@ jobs:
           WEB_OAUTH_CLIENT_ID: ${{ secrets.PROD_OAUTH_CLIENT_ID }}
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.PROD_OAUTH_CLIENT_SECRET }}
           DIM_API_KEY: ${{ secrets.PROD_DIM_API_KEY }}
-          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
-          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_PATH: app.destinyitemmanager.com
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           # Use the dim-release-bot token rather than the default
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           PATCH: ${{ github.event.inputs.patch }}
+
+      - name: Purge CloudFlare cache
+        run: ./build/purge-cloudflare.sh
+        env:
+          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          APP_DOMAIN: app.destinyitemmanager.com
 
       - name: Publish Sentry release
         run: ./build/sentry-release-prod.sh
