@@ -2,6 +2,7 @@ const webpack = require('webpack');
 
 const path = require('path');
 const fs = require('fs');
+const zlib = require('zlib');
 const { execSync } = require('child_process');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -21,6 +22,7 @@ const marked = require('marked');
 const renderer = new marked.Renderer();
 const _ = require('lodash');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
@@ -419,23 +421,6 @@ module.exports = (env) => {
     ],
   };
 
-  if (!env.dev) {
-    config.plugins.push(
-      new CopyWebpackPlugin({
-        patterns: [
-          {
-            from: `./config/.well-known/android-config${env.release ? '' : '.beta'}.json`,
-            to: '.well-known/assetlinks.json',
-          },
-          {
-            from: `./config/.well-known/apple-config.json`,
-            to: '.well-known/apple-app-site-association',
-          },
-        ],
-      })
-    );
-  }
-
   if (env.dev) {
     // In dev we use babel to compile TS, and fork off a separate typechecker
     config.plugins.push(
@@ -464,6 +449,19 @@ module.exports = (env) => {
   } else {
     // env.beta and env.release
     config.plugins.push(
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: `./config/.well-known/android-config${env.release ? '' : '.beta'}.json`,
+            to: '.well-known/assetlinks.json',
+          },
+          {
+            from: `./config/.well-known/apple-config.json`,
+            to: '.well-known/apple-app-site-association',
+          },
+        ],
+      }),
+
       new CleanWebpackPlugin({
         cleanOnceBeforeBuildPatterns: ['node_modules/.cache'],
       }),
@@ -491,6 +489,25 @@ module.exports = (env) => {
         swDest: 'service-worker.js',
       })
     );
+
+    // Skip brotli compression for PR builds
+    if (!process.env.PR_BUILD) {
+      config.plugins.push(
+        // Brotli-compress all assets. We used to gzip too but everything supports brotli now
+        new CompressionPlugin({
+          filename: '[path][base].br',
+          algorithm: 'brotliCompress',
+          exclude: /data\/d1\/manifests/,
+          test: /\.js$|\.css$|\.html$|\.json$|\.map$|\.ttf$|\.eot$|\.svg$|\.wasm$/,
+          compressionOptions: {
+            params: {
+              [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+            },
+          },
+          minRatio: 1,
+        })
+      );
+    }
   }
 
   return config;

@@ -1,6 +1,3 @@
-const child_process = require("child_process");
-const fs = require("fs");
-
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
 
@@ -40,75 +37,18 @@ module.exports = function(grunt) {
         }
       }
     },
-
-    precompress: {
-      web: {
-        src: "dist/**/*.{js,html,css,json,map,ttf,eot,svg,wasm}"
-      }
-    },
-
   });
 
   grunt.loadNpmTasks('grunt-rsync');
 
-  grunt.registerMultiTask(
-    'precompress',
-    'Create gzip and brotli versions of web assets',
-    function() {
-      const done = this.async();
-      const promises = [];
-      this.filesSrc.forEach(function(file) {
-        if (!fs.existsSync(file+".gz")) {
-          promises.push(new Promise(function(resolve, reject) {
-            child_process.exec("gzip -c --no-name " + file + " > " + file + ".gz", function(error, stdout, stderr) {
-              if (error) {
-                grunt.log.writeln("gzip " + file + " => error: " + stdout + stderr);
-                reject(error);
-              } else {
-                grunt.log.writeln("gzip " + file + " => success");
-                resolve();
-              }
-            });
-          }));
-        }
-
-
-        if (!fs.existsSync(file+".br")) {
-          const brotli = process.env.BROTLI || 'brotli/brotli';
-          const brotliArgs = [file];
-
-          promises.push(new Promise(function(resolve, reject) {
-            child_process.execFile(brotli, brotliArgs, function(error, stdout, stderr) {
-              if (error) {
-                grunt.log.writeln("brotli " + file + " => error: " + stdout + stderr);
-                reject(error);
-              } else {
-                grunt.log.writeln("brotli " + file + " => success");
-                resolve();
-              }
-            });
-          }).then(function() {
-            return new Promise(function(resolve, reject) {
-              fs.chmod(file + ".br", 0644, resolve);
-            });
-          }));
-        }
-      });
-
-      Promise.all(promises).then(done);
-    }
-  );
-
   grunt.registerTask('publish_beta', [
     'log_beta_version',
-    'precompress',
     'rsync:app_content',
     'rsync:app_html'
   ]);
 
   grunt.registerTask('publish_release', [
     'log_release_version',
-    'precompress',
     'rsync:app_content',
     'rsync:app_html'
   ]);

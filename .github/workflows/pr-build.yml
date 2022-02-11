@@ -42,6 +42,7 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
             ${{ runner.os }}-${{ env.cache-name }}-
 
+      # TODO: is this cache helpful?
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -57,6 +58,7 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
             ${{ runner.os }}-${{ env.cache-name }}-
 
+      # TODO: Gnu parallel for test/check
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
@@ -68,23 +70,8 @@ jobs:
           find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
           yarn lintcached:eslint
 
-
-      - name: Generate Packtracker ENV vars
-        env:
-            BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
-            COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
-        shell: bash
-        run: |
-          echo "$(git log --all --decorate --oneline --graph -n 10)";
-          echo "PT_BRANCH=$BRANCH_NAME" >> $GITHUB_ENV;
-          echo "PT_COMMIT=$COMMIT_SHA" >> $GITHUB_ENV;
-          echo "PT_AUTHOR=$(git log --format="%aE" -n 1 $COMMIT_SHA)" >> $GITHUB_ENV;
-          echo "PT_MESSAGE=$(git log --format="%B" -n 1 $COMMIT_SHA | tr '\r\n' ' ' | tr '\n' ' ')" >> $GITHUB_ENV;
-          echo "PT_COMMITTED_AT=$(git log --format="%ct" -n 1 $COMMIT_SHA)" >> $GITHUB_ENV;
-          echo "PT_PRIOR_COMMIT=$(git rev-parse $COMMIT_SHA^)" >> $GITHUB_ENV;
-
-
-
       # We set the default packtracker ENV vars
       - name: Build beta
         run: yarn build:beta
+        env:
+          PR_BUILD: true

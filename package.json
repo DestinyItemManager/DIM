@@ -101,6 +101,7 @@
     "babel-plugin-transform-imports": "^2.0.0",
     "browserslist": "^4.0.0",
     "clean-webpack-plugin": "^4.0.0",
+    "compression-webpack-plugin": "^9.2.0",
     "content-security-policy-builder": "^2.0.0",
     "copy-webpack-plugin": "^10.0.0",
     "cross-env": "^7.0.0",
