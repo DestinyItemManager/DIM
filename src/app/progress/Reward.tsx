@@ -29,6 +29,11 @@ const engrams = {
     cap: PowerCap.Powerful,
     bonus: 3,
   },
+  // Powerful Legacy
+  2246571627: {
+    cap: PowerCap.Powerful,
+    bonus: 3,
+  },
   // Tier 2
   3114385606: {
     cap: PowerCap.Powerful,
@@ -67,7 +72,7 @@ export function Reward({
   );
 }
 
-function getEngramPowerBonus(item: DestinyInventoryItemDefinition, maxPower?: number) {
+export function getEngramPowerBonus(item: DestinyInventoryItemDefinition, maxPower?: number) {
   const engramInfo: {
     cap: PowerCap;
     bonus: number;
