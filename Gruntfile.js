@@ -1,11 +1,5 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
-
-  // We start the github build number from 1,000,000 so we don't get clashes with travis build numbers.
-  const buildNumber = parseInt(process.env.GITHUB_RUN_NUMBER) + 1_000_000;
-
-  var betaVersion = `${pkg.version.toString()}.${buildNumber}`;
-
   grunt.initConfig({
     pkg: pkg,
 
@@ -42,22 +36,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-rsync');
 
   grunt.registerTask('publish_beta', [
-    'log_beta_version',
     'rsync:app_content',
     'rsync:app_html'
   ]);
 
   grunt.registerTask('publish_release', [
-    'log_release_version',
     'rsync:app_content',
     'rsync:app_html'
   ]);
-
-  grunt.registerTask('log_beta_version', function() {
-    grunt.log.ok("New Beta version is " + betaVersion);
-  });
-
-  grunt.registerTask('log_release_version', function() {
-    grunt.log.ok("New production version is " + pkg.version);
-  });
 };

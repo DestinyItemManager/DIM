@@ -54,6 +54,9 @@ module.exports = (env) => {
   if (env.beta && buildNumber) {
     version += `.${buildNumber}`;
   }
+  if (!env.dev) {
+    console.log('Building DIM version ' + version);
+  }
 
   const buildTime = Date.now();
 
