@@ -62,8 +62,11 @@ jobs:
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
 
+      - name: Check Syntax
+        run: yarn syntax
+
       - name: Deploy
-        run: npx grunt publish_beta
+        run: ./build/rsync-deploy.sh
         env:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_PATH: beta.destinyitemmanager.com

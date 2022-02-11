@@ -1,7 +1,5 @@
 name: PR Build
 
-# While this is intended for PR's we are using a push event as
-# packtracker needs to be run on every push.
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -18,7 +16,7 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 3 # So packtracker can get the previous commit
+          fetch-depth: 3 # So sentry can get the previous commit
 
       - name: Cache node_modules
         uses: actions/cache@v2

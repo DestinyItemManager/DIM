@@ -25,7 +25,9 @@ git commit -m"$VERSION"
 git tag "v$VERSION"
 
 # build and release using SSH keys
-yarn publish:release
+yarn build:release
+yarn syntax
+./build/rsync-deploy.sh
 
 # push tags and changes
 git push --tags origin master:master
