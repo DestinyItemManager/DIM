@@ -7,11 +7,11 @@ import { compareBy } from 'app/utils/comparators';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
+import { getEngramPowerBonus } from './engrams';
 import { milestoneToItems } from './milestone-items';
 import styles from './Milestones.m.scss';
 import Pursuit from './Pursuit';
 import { sortPursuits } from './Pursuits';
-import { getEngramPowerBonus } from './Reward';
 import SeasonalRank from './SeasonalRank';
 import { getCharacterProgressions } from './selectors';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
@@ -47,8 +47,7 @@ export default function Milestones({
 
   const milestonesByPower = _.groupBy(milestoneItems, (m) => {
     for (const reward of m.pursuit?.rewards ?? []) {
-      const rewardItem = defs.InventoryItem.get(reward.itemHash);
-      const powerBonus = getEngramPowerBonus(rewardItem, store?.stats.maxGearPower?.value);
+      const powerBonus = getEngramPowerBonus(reward.itemHash, store?.stats.maxGearPower?.value);
       return powerBonus;
     }
   });
