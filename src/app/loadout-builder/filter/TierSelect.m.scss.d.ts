@@ -8,6 +8,8 @@ interface CssExports {
   'minimum': string;
   'range': string;
   'row': string;
+  'statDisplayInfo': string;
+  'statName': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

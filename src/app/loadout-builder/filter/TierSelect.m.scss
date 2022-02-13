@@ -67,11 +67,21 @@
     grid-area: name;
     height: 100%;
     display: flex;
+    overflow: hidden;
+
     > span {
       display: flex;
       flex-direction: row;
       align-items: center;
       white-space: nowrap;
+    }
+  }
+
+  .statDisplayInfo {
+    overflow: hidden;
+    .statName {
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
