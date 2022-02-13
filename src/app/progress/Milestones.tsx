@@ -1,11 +1,15 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { compareBy } from 'app/utils/comparators';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
+import { getEngramPowerBonus } from './engrams';
 import { milestoneToItems } from './milestone-items';
+import styles from './Milestones.m.scss';
 import Pursuit from './Pursuit';
 import { sortPursuits } from './Pursuits';
 import SeasonalRank from './SeasonalRank';
@@ -41,28 +45,52 @@ export default function Milestones({
     (m) => m.milestoneHash
   ).flatMap((milestone) => milestoneToItems(milestone, defs, buckets, store));
 
+  const milestonesByPower = _.groupBy(milestoneItems, (m) => {
+    for (const reward of m.pursuit?.rewards ?? []) {
+      const powerBonus = getEngramPowerBonus(reward.itemHash, store?.stats.maxGearPower?.value);
+      return powerBonus;
+    }
+  });
+
+  const sortPowerBonus = compareBy(
+    (powerBonus: string) => -(powerBonus === 'undefined' ? -1 : parseInt(powerBonus, 10))
+  );
+
   return (
-    <div className="progress-for-character">
+    <>
       {characterProgressions && (
-        <SeasonalRank
-          store={store}
-          characterProgressions={characterProgressions}
-          season={season}
-          seasonPass={seasonPass}
-          profileInfo={profileInfo}
-        />
+        <div className="progress-for-character">
+          <SeasonalRank
+            store={store}
+            characterProgressions={characterProgressions}
+            season={season}
+            seasonPass={seasonPass}
+            profileInfo={profileInfo}
+          />
+          <WellRestedPerkIcon
+            progressions={characterProgressions}
+            season={season}
+            seasonPass={seasonPass}
+          />
+        </div>
       )}
-      {characterProgressions && (
-        <WellRestedPerkIcon
-          progressions={characterProgressions}
-          season={season}
-          seasonPass={seasonPass}
-        />
-      )}
-      {milestoneItems.sort(sortPursuits).map((item) => (
-        <Pursuit key={item.hash} item={item} />
-      ))}
-    </div>
+      {Object.keys(milestonesByPower)
+        .sort(sortPowerBonus)
+        .map((powerBonus) => (
+          <div key={powerBonus}>
+            <h2 className={styles.header}>
+              {powerBonus === 'undefined'
+                ? t('Progress.PowerBonusHeaderUndefined')
+                : t('Progress.PowerBonusHeader', { powerBonus })}
+            </h2>
+            <div className="progress-for-character">
+              {milestonesByPower[powerBonus].sort(sortPursuits).map((item) => (
+                <Pursuit key={item.hash} item={item} />
+              ))}
+            </div>
+          </div>
+        ))}
+    </>
   );
 }
 
