@@ -168,7 +168,7 @@ export function fitMostMods({
 
   for (const activityPermutation of activityModPermutations) {
     for (const combatPermutation of combatModPermutations) {
-      modLoop: for (const generalPermutation of generalModPermutations) {
+      for (const generalPermutation of generalModPermutations) {
         let unassignedModCount = 0;
         const assignments: ModAssignments = {};
 
@@ -210,7 +210,7 @@ export function fitMostMods({
           }
 
           if (unassignedModCount + unassigned.length > assignmentUnassignedModCount) {
-            continue modLoop;
+            break;
           }
 
           unassignedModCount += unassigned.length;
