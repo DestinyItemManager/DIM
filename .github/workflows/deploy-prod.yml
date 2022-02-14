@@ -66,7 +66,7 @@ jobs:
         run: ./build/rsync-deploy.sh
         env:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_PATH: beta.destinyitemmanager.com
+          REMOTE_PATH: app.destinyitemmanager.com
 
       - name: Purge CloudFlare cache
         run: ./build/purge-cloudflare.sh
