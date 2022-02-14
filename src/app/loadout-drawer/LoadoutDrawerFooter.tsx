@@ -76,7 +76,7 @@ export default function LoadoutDrawerFooter({
   return (
     <div className={styles.loadoutOptions}>
       {clashingLoadoutWarning && <div>{clashingLoadoutWarning}</div>}
-      <form onSubmit={onSaveLoadout}>
+      <form onSubmit={(e) => onSaveLoadout(e, isNew)}>
         <button
           className="dim-button"
           type="submit"
