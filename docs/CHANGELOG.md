@@ -1,5 +1,7 @@
 ## Next
 
+## 7.5.0 <span class="changelog-date">(2022-02-13)</span>
+
 * Collect Postmaster now requires an additional click to confirm.
 * Transferring ships via search query should now reliably transfer all selected items.
 * Filters Help now groups stat comparison operators for a more compact page.
