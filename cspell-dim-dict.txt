@@ -76,7 +76,6 @@ Karn
 keyi18n
 KHTML
 klass
-latinise
 lightgg
 lngs
 loadout
@@ -151,7 +150,6 @@ upgradeiOS
 uuidv4
 Variks
 vaultofglass
-voca
 vpadding
 vthorn
 vxvy

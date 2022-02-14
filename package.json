@@ -219,7 +219,6 @@
     "use-subscription": "^1.5.1",
     "uuid": "^8.0.0",
     "valid-url": "^1.0.9",
-    "voca": "^1.4.0",
     "workbox-cacheable-response": "^6.1.0",
     "workbox-core": "^6.1.0",
     "workbox-expiration": "^6.1.0",
