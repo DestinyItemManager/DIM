@@ -882,6 +882,8 @@
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "PercentPrestige": "{{pct}}% to reset",
+    "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
+    "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "Progress",
     "QuestExpired": "Expired",
     "QuestExpires": "Expires in ",

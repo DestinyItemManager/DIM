@@ -133,6 +133,7 @@ export function fitMostMods({
           isBucketSpecificModValid({
             assumeArmorMasterwork,
             lockArmorEnergyType,
+            minItemEnergy,
             item: targetItem,
             mod: plannedMod,
             assignedMods: bucketSpecificAssignments[targetItem.id].assigned,
@@ -167,7 +168,7 @@ export function fitMostMods({
 
   for (const activityPermutation of activityModPermutations) {
     for (const combatPermutation of combatModPermutations) {
-      modLoop: for (const generalPermutation of generalModPermutations) {
+      for (const generalPermutation of generalModPermutations) {
         let unassignedModCount = 0;
         const assignments: ModAssignments = {};
 
@@ -209,7 +210,7 @@ export function fitMostMods({
           }
 
           if (unassignedModCount + unassigned.length > assignmentUnassignedModCount) {
-            continue modLoop;
+            break;
           }
 
           unassignedModCount += unassigned.length;
@@ -511,25 +512,21 @@ export function createPluggingStrategy(
 function isBucketSpecificModValid({
   assumeArmorMasterwork,
   lockArmorEnergyType,
+  minItemEnergy,
   item,
   mod,
   assignedMods,
 }: {
   assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
   lockArmorEnergyType: LockArmorEnergyType | undefined;
+  minItemEnergy: number;
   item: DimItem;
   mod: PluggableInventoryItemDefinition;
   /** mods that are already assigned to this item */
   assignedMods: PluggableInventoryItemDefinition[];
 }) {
   // given spending rules, what we can assume this item's energy is
-  const itemEnergyCapacity = Math.max(
-    item.energy?.energyCapacity || 1,
-    assumeArmorMasterwork === AssumeArmorMasterwork.All ||
-      (!item.isExotic && assumeArmorMasterwork === AssumeArmorMasterwork.Legendary)
-      ? 10
-      : 0
-  );
+  const itemEnergyCapacity = calculateAssumedItemEnergy(item, assumeArmorMasterwork, minItemEnergy);
   // given spending/element rules & current assignments, what element is this armor?
   const itemEnergyType = getItemEnergyType(item, lockArmorEnergyType, assignedMods);
 

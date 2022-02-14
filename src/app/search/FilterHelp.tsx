@@ -8,7 +8,7 @@ import { FilterDefinition } from './filter-types';
 import styles from './FilterHelp.m.scss';
 import { searchConfigSelector } from './search-config';
 import { SearchInput } from './SearchInput';
-import { generateSuggestionsForFilter } from './suggestions-generation';
+import { generateGroupedSuggestionsForFilter } from './suggestions-generation';
 
 function keywordsString(keywords: string | string[]) {
   if (Array.isArray(keywords)) {
@@ -78,7 +78,10 @@ function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   const dispatch = useDispatch();
   const additionalSuggestions = filter.suggestionsGenerator?.({}) ?? [];
   const suggestions = Array.from(
-    new Set([...generateSuggestionsForFilter(filter, true), ...additionalSuggestions])
+    new Set([
+      ...generateGroupedSuggestionsForFilter(filter, true),
+      ...additionalSuggestions.map((keyword) => ({ keyword, ops: undefined })),
+    ])
   );
   const localDesc = Array.isArray(filter.description)
     ? t(...filter.description)
@@ -92,10 +95,23 @@ function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   return (
     <tr>
       <td>
-        {suggestions.map((k) => (
-          <a key={k} href="." onClick={(e) => applySuggestion(e, k)}>
-            {k}
-          </a>
+        {suggestions.map((k, i) => (
+          <div key={i} className={clsx(styles.entry)}>
+            <a href="." onClick={(e) => applySuggestion(e, k.keyword)}>
+              {k.ops ? `${k.keyword}` : k.keyword}
+            </a>
+            {k.ops?.map((op, j) => {
+              const x = `${k.keyword}${op}`;
+              return (
+                <div key={j}>
+                  <span className={clsx(styles.separator)}>| </span>
+                  <a href="." onClick={(e) => applySuggestion(e, x)}>
+                    {op}
+                  </a>
+                </div>
+              );
+            })}
+          </div>
         ))}
       </td>
       <td>{localDesc}</td>

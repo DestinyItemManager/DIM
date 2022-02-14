@@ -72,12 +72,22 @@ export default function TierSelect({
                 index={index}
                 className={styles.row}
                 name={
-                  <span className={clsx({ [styles.ignored]: stats[statHash].ignored })}>
+                  <span
+                    className={clsx(
+                      { [styles.ignored]: stats[statHash].ignored },
+                      styles.statDisplayInfo
+                    )}
+                  >
                     <BungieImage
                       className={styles.iconStat}
                       src={statDefs[statHash].displayProperties.icon}
                     />
-                    {statDefs[statHash].displayProperties.name}
+                    <span
+                      className={styles.statName}
+                      title={statDefs[statHash].displayProperties.name}
+                    >
+                      {statDefs[statHash].displayProperties.name}
+                    </span>
                   </span>
                 }
               >

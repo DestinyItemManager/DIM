@@ -793,6 +793,8 @@
     "Milestones": "Milestones & Challenges",
     "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% to reset",
+    "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
+    "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "Progress",
     "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
     "QuestExpired": "Expired",
