@@ -9,10 +9,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2 # So sentry can get the previous commit
+
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: 16.x
+          cache: yarn
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -20,21 +25,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           name: dim.rsa
           known_hosts: ${{ secrets.REMOTE_HOST }}
-
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 2 # So packtracker can get the previous commit
-
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node_modules
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
-            ${{ runner.os }}-${{ env.cache-name }}-
 
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
@@ -67,5 +57,3 @@ jobs:
         run: ./build/sentry-release.sh
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-
-

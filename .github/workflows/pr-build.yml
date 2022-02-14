@@ -8,26 +8,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
-
       - uses: actions/checkout@v2
         with:
           fetch-depth: 3 # So sentry can get the previous commit
 
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node_modules
+      - name: Setup Node
+        uses: actions/setup-node@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
-            ${{ runner.os }}-${{ env.cache-name }}-
+          node-version: 16.x
+          cache: yarn
 
       - name: Cache eslint
         uses: actions/cache@v2
