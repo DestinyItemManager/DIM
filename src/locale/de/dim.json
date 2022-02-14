@@ -785,6 +785,8 @@
     "Milestones": "Meilensteine & Herausforderungen",
     "NoTrackedTriumph": "Du verfolgst keine Triumphe. Verfolge einen im Spiel oder so vielen wie du möchtest in DIM.",
     "PercentPrestige": "{{pct}}% vor Zurücksetzung",
+    "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
+    "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "Fortschritt",
     "QueryFilteredTrackedTriumphs": "Keiner deiner verfolgten Triumphe entsprach der Suche",
     "QuestExpired": "Abgelaufen",

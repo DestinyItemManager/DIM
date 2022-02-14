@@ -474,8 +474,8 @@
     "AnyExoticDescription": "Le build doit contenir un exotique, mais n'importe quel exotique fera l'affaire.",
     "AssumeMasterwork": "Considérer pièce maîtresse",
     "AssumeMasterworkOptions": {
-      "All": "All armor will use masterworked stats and will have an energy level of 10.",
-      "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
+      "All": "Toutes les armures utiliseront leurs stats de pièce maîtresse et auront un niveau d'énergie de 10.",
+      "Legendary": "Les armures légendaires utiliseront leurs stats de pièce maîtresse et auront un niveau d'énergie de 10.",
       "None": "Toutes les armures utiliseront leurs stats actuelles et auront un niveau d'énergie minimum de 7."
     },
     "ChooseAlternateTitle": "Choisissez un autre objet",
@@ -785,6 +785,8 @@
     "Milestones": "Jalons & Défis",
     "NoTrackedTriumph": "Vous ne suivez pas de triomphes. Suivez en un dans le jeu, ou autant que vous voulez sur DIM.",
     "PercentPrestige": "{{pct}}% du rang maximum",
+    "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
+    "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "Progression",
     "QueryFilteredTrackedTriumphs": "Aucun de vos triomphes suivis ne correspond à la recherche",
     "QuestExpired": "Expiré",

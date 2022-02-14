@@ -785,6 +785,8 @@
     "Milestones": "マイルストーンと挑戦",
     "NoTrackedTriumph": "追跡中の勝利の道のりはありませんでした。ゲーム内で1つを追跡するか、DIMで好きなだけ追跡してください。",
     "PercentPrestige": "リセットまで{{pct}}％達成",
+    "PowerBonusHeader": "+{{powerBonus}} パワーボーナス",
+    "PowerBonusHeaderUndefined": "その他の報酬",
     "Progress": "進行状況",
     "QueryFilteredTrackedTriumphs": "検索結果に、追跡中の勝利の道のりはありませんでした。",
     "QuestExpired": "期限切れ",

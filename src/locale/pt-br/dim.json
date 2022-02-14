@@ -785,6 +785,8 @@
     "Milestones": "Marcos e Desafios",
     "NoTrackedTriumph": "Você não está rastreando nenhum triunfo. Selecione um através do jogo ou quantos você quiser aqui no DIM.",
     "PercentPrestige": "{{pct}}% para resetar",
+    "PowerBonusHeader": "Recompensas poderosas +{{powerBonus}}",
+    "PowerBonusHeaderUndefined": "Outras recompensas",
     "Progress": "Progresso",
     "QueryFilteredTrackedTriumphs": "Nenhum dos triunfos que você está rastreando coincidiram com a pesquisa",
     "QuestExpired": "Expirado",

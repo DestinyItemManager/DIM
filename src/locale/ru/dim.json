@@ -785,6 +785,8 @@
     "Milestones": "Испытания",
     "NoTrackedTriumph": "Нет Отслеживаемых Триумфов. Отслеживайте один в игре, или сколько угодно в DIM.",
     "PercentPrestige": "{{pct}}% обнуления",
+    "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
+    "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "Чек-Лист",
     "QueryFilteredTrackedTriumphs": "Нет Отслеживаемых триумфов удовлетворяющих условиям поиска",
     "QuestExpired": "Просрочен",

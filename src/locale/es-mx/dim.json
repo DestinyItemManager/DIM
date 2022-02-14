@@ -785,6 +785,8 @@
     "Milestones": "Hazañas & Desafíos",
     "NoTrackedTriumph": "No tienes triunfos para seguir. Selecciona uno en el juego, o tantos como quieras en DIM.",
     "PercentPrestige": "{{pct}}% progreso para el reinicio",
+    "PowerBonusHeader": "Recompensas De Poder +{{powerBonus}}",
+    "PowerBonusHeaderUndefined": "Otras Recompensas",
     "Progress": "Progreso",
     "QueryFilteredTrackedTriumphs": "Ninguno de tus triunfos ha seguir coincidió con la búsqueda",
     "QuestExpired": "Caducado",

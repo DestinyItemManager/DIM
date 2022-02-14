@@ -785,6 +785,8 @@
     "Milestones": "里程碑和挑戰",
     "NoTrackedTriumph": "你沒有正在跟蹤的成就。在遊戲中跟蹤一個，或在 DIM 中跟蹤任意數目。",
     "PercentPrestige": "重置百分比{{pct}}%",
+    "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
+    "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "進度",
     "QueryFilteredTrackedTriumphs": "你正在追蹤的成就均不匹配此搜索",
     "QuestExpired": "已過期",

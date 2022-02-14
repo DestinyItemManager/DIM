@@ -785,6 +785,8 @@
     "Milestones": "Pietre miliari & Sfide",
     "NoTrackedTriumph": "Non stai seguendo nessun trionfo. Seguine uno in gioco, oppure tutti quelli che vuoi su DIM.",
     "PercentPrestige": "{{pct}}% al reset",
+    "PowerBonusHeader": "Ricompense +{{powerBonus}} Potere",
+    "PowerBonusHeaderUndefined": "Altre Ricompense",
     "Progress": "Avanzamento",
     "QueryFilteredTrackedTriumphs": "Nessuno dei tuoi trionfi seguiti corrisponde alla ricerca",
     "QuestExpired": "Scaduta",

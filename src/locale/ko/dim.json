@@ -785,6 +785,8 @@
     "Milestones": "이정표 & 도전",
     "NoTrackedTriumph": "추적 중인 업적이 없습니다. 게임 내에서 1개를 추적하거나 DIM에서 원하는 만큼 추적하세요.",
     "PercentPrestige": "초기화까지 {{pct}}%",
+    "PowerBonusHeader": "+{{powerBonus}} 전투력 보상",
+    "PowerBonusHeaderUndefined": "다른 보상",
     "Progress": "진척도",
     "QueryFilteredTrackedTriumphs": "검색된 추적 중인 업적이 없습니다.",
     "QuestExpired": "만료됨",

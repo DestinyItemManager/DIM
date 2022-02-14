@@ -785,6 +785,8 @@
     "Milestones": "Kamienie milowe i wyzwania",
     "NoTrackedTriumph": "Nie masz żadnych śledzonych triumfów. Śledź jednego w grze lub tyle, ile chcesz w DIM.",
     "PercentPrestige": "{{pct}}% do resetu",
+    "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
+    "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "Postęp",
     "QueryFilteredTrackedTriumphs": "Żaden z Twoich śledzonych triumfów nie pasował do wyszukania",
     "QuestExpired": "Wygasło",
