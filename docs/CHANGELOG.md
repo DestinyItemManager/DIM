@@ -1,5 +1,7 @@
 ## Next
 
+* `inloadout:` filter now matches partial loadout names -- use `inloadout:"pvp"` for items in loadouts where "pvp" is in the loadout's name.
+
 ### Beta Only
 
 * We're testing a brand new Loadout Editor. Check it out from the character menu or the Loadouts page.
