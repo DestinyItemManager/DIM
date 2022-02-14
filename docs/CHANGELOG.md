@@ -1,5 +1,7 @@
 ## Next
 
+## 7.5.1 <span class="changelog-date">(2022-02-14)</span>
+
 ### Beta Only
 
 * We're testing a brand new Loadout Editor. Check it out from the character menu or the Loadouts page.
