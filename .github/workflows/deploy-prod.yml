@@ -52,12 +52,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           PATCH: ${{ github.event.inputs.patch }}
 
-      - name: Deploy
-        run: ./build/rsync-deploy.sh
-        env:
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_PATH: app.destinyitemmanager.com
-
       - name: Purge CloudFlare cache
         run: ./build/purge-cloudflare.sh
         env:
