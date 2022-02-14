@@ -262,7 +262,7 @@ module.exports = (env) => {
           include: /src(\/|\\)locale/,
           type: 'asset/resource',
           generator: {
-            filename: '[name]-[contenthash:6].[ext]',
+            filename: '[name]-[contenthash:6][ext]',
           },
         },
         {
