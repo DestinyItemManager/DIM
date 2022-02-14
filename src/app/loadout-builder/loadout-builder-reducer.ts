@@ -262,6 +262,11 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
         const existingExcluded = state.excludedItems[bucketHash] ?? [];
         return {
           ...state,
+          // Also unpin items in this bucket
+          pinnedItems: {
+            ...state.pinnedItems,
+            [bucketHash]: undefined,
+          },
           excludedItems: {
             ...state.excludedItems,
             [bucketHash]: [...existingExcluded, item],
