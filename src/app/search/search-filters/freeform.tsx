@@ -5,7 +5,6 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
-import latinise from 'voca/latinise';
 import { FilterDefinition } from '../filter-types';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
@@ -18,6 +17,11 @@ function escapeRegExp(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+/** Remove diacritics from string */
+function latinize(s: string) {
+  return s.normalize('NFD').replace(/\p{Diacritic}/gu, '');
+}
+
 /** Make a Regexp that searches starting at a word boundary */
 export function startWordRegexp(s: string, language: string) {
   // Only some languages effectively use the \b regex word boundary
@@ -26,7 +30,7 @@ export function startWordRegexp(s: string, language: string) {
 
 /** returns input string toLower, and stripped of accents if it's a latin language */
 const plainString = (s: string, language: string): string =>
-  (isLatinBased(language) ? latinise(s) : s).toLowerCase();
+  (isLatinBased(language) ? latinize(s) : s).toLowerCase();
 
 const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);
 const getPerkNamesFromManifest = _.once((allItems: DestinyInventoryItemDefinition[]) => {
