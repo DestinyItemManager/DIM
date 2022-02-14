@@ -20,7 +20,7 @@
 // The wrapper for draggable items. Global because it's referenced by other styles.
 :global(.item-drag-container) {
   contain: layout paint style;
-  cursor: pointer;
+  cursor: grab;
   box-sizing: border-box;
   width: var(--item-size);
 

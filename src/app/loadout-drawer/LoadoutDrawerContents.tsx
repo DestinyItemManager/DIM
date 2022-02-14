@@ -120,17 +120,15 @@ export default function LoadoutDrawerContents({
 
   const { subclassItems, subclassSocketOverrides } = useMemo(() => {
     const subclassSocketOverrides: SocketOverridesForItems = {};
-    const subclassBucket = buckets.byType.Class;
-    const subclassItems: DimItem[] =
-      (subclassBucket?.hash && itemsByBucket[subclassBucket.hash]) || [];
+    const subclassItems = itemsByBucket[BucketHashes.Subclass] ?? [];
 
     for (const item of loadout.items) {
       if (subclassItems.some((subclass) => subclass.id === item.id)) {
         subclassSocketOverrides[item.id] = item.socketOverrides || {};
       }
     }
-    return { subclassSocketOverrides, subclassBucket, subclassItems };
-  }, [buckets.byType.Class, itemsByBucket, loadout.items]);
+    return { subclassSocketOverrides, subclassItems };
+  }, [itemsByBucket, loadout.items]);
 
   const showSubclassButton =
     !loadout ||
@@ -212,7 +210,7 @@ export default function LoadoutDrawerContents({
   );
 }
 
-async function pickLoadoutItem(
+export async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
   add: (params: { item: DimItem }) => void,
@@ -248,7 +246,7 @@ async function pickLoadoutItem(
   }
 }
 
-async function pickLoadoutSubclass(
+export async function pickLoadoutSubclass(
   loadout: Loadout,
   savedSubclasses: DimItem[],
   add: (params: { item: DimItem; socketOverrides?: SocketOverrides }) => void,
@@ -289,9 +287,10 @@ async function pickLoadoutSubclass(
   onShowItemPicker(false);
 }
 
-function fillLoadoutFromEquipped(
+/** Replace the loadout's subclass with the currently equipped subclass */
+export function setLoadoutSubclassFromEquipped(
   loadout: Loadout,
-  itemsByBucket: { [bucketId: string]: DimItem[] },
+  existingSubclass: DimItem | undefined,
   dimStore: DimStore,
   onUpdateLoadout: (loadout: Loadout) => void
 ) {
@@ -299,9 +298,51 @@ function fillLoadoutFromEquipped(
     return;
   }
 
+  const newSubclass = dimStore.items.find(
+    (item) =>
+      item.equipped && itemCanBeInLoadout(item) && item.bucket.hash === BucketHashes.Subclass
+  );
+
+  if (!newSubclass) {
+    return;
+  }
+
+  const newLoadoutItem: LoadoutItem = {
+    id: newSubclass.id,
+    hash: newSubclass.hash,
+    equipped: true,
+    amount: 1,
+    socketOverrides: createSocketOverridesFromEquipped(newSubclass),
+  };
+
+  const newLoadout = {
+    ...loadout,
+    items: [...loadout.items.filter((i) => existingSubclass?.hash !== i.hash), newLoadoutItem],
+  };
+
+  onUpdateLoadout(newLoadout);
+}
+
+export function fillLoadoutFromEquipped(
+  loadout: Loadout,
+  itemsByBucket: { [bucketId: string]: DimItem[] },
+  dimStore: DimStore,
+  onUpdateLoadout: (loadout: Loadout) => void,
+  category?: string
+) {
+  if (!loadout) {
+    return;
+  }
+
   const newEquippedItems = dimStore.items.filter(
     (item) =>
-      item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash)
+      item.equipped &&
+      itemCanBeInLoadout(item) &&
+      (category
+        ? category === 'subclass'
+          ? item.bucket.hash === BucketHashes.Subclass
+          : item.bucket.sort === category
+        : fromEquippedTypes.includes(item.bucket.hash))
   );
 
   const hasEquippedInBucket = (bucket: InventoryBucket) =>
@@ -362,10 +403,11 @@ function fillLoadoutFromEquipped(
   onUpdateLoadout(newLoadout);
 }
 
-async function fillLoadoutFromUnequipped(
+export async function fillLoadoutFromUnequipped(
   loadout: Loadout,
   dimStore: DimStore,
-  add: (params: { item: DimItem; equip?: boolean }) => void
+  add: (params: { item: DimItem; equip?: boolean }) => void,
+  category?: string
 ) {
   if (!loadout) {
     return;
@@ -376,10 +418,11 @@ async function fillLoadoutFromUnequipped(
       !item.location.inPostmaster &&
       item.bucket.hash !== BucketHashes.Subclass &&
       itemCanBeInLoadout(item) &&
-      fromEquippedTypes.includes(item.bucket.hash) &&
+      (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)) &&
       !item.equipped
   );
 
+  // TODO: this isn't right - `items` isn't being updated after each add
   for (const item of items) {
     add({ item, equip: false });
   }

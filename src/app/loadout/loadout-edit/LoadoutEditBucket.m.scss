@@ -1,0 +1,85 @@
+@import '../../variables.scss';
+
+// TODO: Dedupe with LoadoutItemCategorySection
+
+.itemCategory {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include vertical-space-children(var(--item-margin));
+
+  :global(.stat-row) {
+    justify-content: space-between;
+  }
+
+  :global(.stat-bars) {
+    margin-top: 0;
+  }
+}
+
+.itemsInCategory {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-size));
+  gap: var(--item-margin);
+  width: 100%;
+}
+
+.itemBucket {
+  width: var(--item-size);
+  @include vertical-space-children(var(--item-margin));
+}
+
+.items {
+  display: grid;
+  gap: 2px;
+  grid-template-columns: 1fr;
+  min-height: unset !important;
+  justify-content: center;
+}
+
+.equipped {
+  composes: sub-bucket from global;
+  width: 100%;
+  padding: 0;
+}
+
+.unequipped {
+  composes: sub-bucket from global;
+  width: 100%;
+  padding: 0;
+  gap: 4px;
+  --item-icon-size: calc(var(--item-size) - 6px);
+  grid-template-columns: var(--item-icon-size);
+  > * {
+    --item-size: var(--item-icon-size);
+  }
+}
+
+.showFashion {
+  .equipped {
+    :global(.item) {
+      height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
+    }
+  }
+}
+
+.categoryWeapons {
+  width: calc(3 * var(--item-size) + 2 * var(--item-margin));
+}
+.categoryArmor {
+  width: calc(5 * var(--item-size) + 4 * var(--item-margin));
+}
+.categoryGeneral {
+  width: calc(2 * var(--item-size) + 1 * var(--item-margin));
+}
+
+.missingItem {
+  opacity: 0.3;
+}
+
+.buttons {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 4px 0;
+  @include horizontal-space-children(4px);
+}

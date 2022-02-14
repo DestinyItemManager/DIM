@@ -1,0 +1,53 @@
+@import '../../variables';
+
+.subclassContainer {
+  --item-icon-size: calc(0.8 * var(--item-size));
+  composes: flexRow from '../../dim-ui/common.m.scss';
+}
+
+.subclass {
+  width: var(--item-size);
+  min-width: var(--item-size);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: var(--item-margin);
+  @include vertical-space-children(var(--item-margin));
+}
+
+.power {
+  display: inline;
+  color: $gold;
+  flex: inherit;
+  font-size: 12px;
+  letter-spacing: normal;
+  svg {
+    margin-right: 2px;
+    font-size: 10px;
+  }
+}
+
+.subclassMods {
+  --item-icon-size: calc(0.8 * var(--item-size));
+  width: calc(3 * var(--item-icon-size) + 2 * var(--item-margin));
+  margin-right: calc(-1 * var(--item-margin) + #{$item-border-width});
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-icon-size));
+  gap: 4px;
+  align-content: flex-start;
+  align-items: flex-start;
+  :global(.item) {
+    --item-size: var(--item-icon-size);
+  }
+}
+
+.modsPlaceholder {
+  composes: placeholder from '../loadout-ui/LoadoutItemCategorySection.m.scss';
+  width: calc(3 * var(--item-icon-size) + var(--item-margin) + #{$item-border-width}) !important;
+}
+
+.classButton {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  height: 100%;
+  width: 100%;
+}

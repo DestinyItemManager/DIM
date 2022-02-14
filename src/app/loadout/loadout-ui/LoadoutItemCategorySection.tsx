@@ -131,6 +131,8 @@ function ItemBucket({
 
   const showFashion = LockableBucketHashes.includes(bucketHash);
 
+  // TODO: should these be draggable? so you can drag them into other loadouts?
+
   return (
     <div className={clsx(styles.itemBucket, { [styles.showFashion]: showFashion })}>
       {[equipped, unequipped].map((items, index) =>
