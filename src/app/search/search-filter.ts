@@ -73,7 +73,7 @@ export const validateQuerySelector = createSelector(
 );
 
 function makeSearchFilterFactory(
-  { filters }: SearchConfig,
+  { isFilters, kvFilters }: SearchConfig,
   stores: DimStore[],
   allItems: DimItem[],
   currentStore: DimStore,
@@ -139,15 +139,12 @@ function makeSearchFilterFactory(
           return (item) => !fn(item);
         }
         case 'filter': {
-          let filterName = ast.type;
+          const filterName = ast.type;
           const filterValue = ast.args;
 
           // "is:" filters are slightly special cased
-          if (filterName === 'is') {
-            filterName = filterValue;
-          }
+          const filterDef = filterName === 'is' ? isFilters[filterValue] : kvFilters[filterName];
 
-          const filterDef = filters[filterName];
           if (filterDef) {
             // Each filter knows how to generate a standalone item filter function
             try {
