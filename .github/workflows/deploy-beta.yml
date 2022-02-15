@@ -32,10 +32,7 @@ jobs:
 
       - name: Bump release version (beta)
         id: bump_version
-        uses: christian-draeger/increment-semantic-version@1.0.2
-        with:
-          current-version: ${{ steps.package-version.outputs.current-version }}
-          version-fragment: 'beta'
+        run: echo '::set-output name=next-version::${{ steps.package-version.outputs.current-version }}.${{ github.run_number }}'
 
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
