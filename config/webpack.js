@@ -48,12 +48,8 @@ module.exports = (env) => {
     }
   });
 
-  let version = packageJson.version.toString();
-  // We start the github build number from 1,000,000 so we don't get clashes with travis build numbers.
-  const buildNumber = parseInt(process.env.GITHUB_RUN_NUMBER) + 1_000_000;
-  if (env.beta && buildNumber) {
-    version += `.${buildNumber}`;
-  }
+  let version = env.VERSION;
+
   if (!env.dev) {
     console.log('Building DIM version ' + version);
   }

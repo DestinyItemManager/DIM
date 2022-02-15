@@ -46,6 +46,7 @@ jobs:
       - name: Build
         run: yarn build:beta
         env:
+          VERSION: ${{ steps.bump_version.outputs.next-version }}
           WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
           WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}

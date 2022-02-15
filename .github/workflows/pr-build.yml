@@ -29,6 +29,20 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
             ${{ runner.os }}-${{ env.cache-name }}-
 
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@master
+
+      - name: Bump release version (beta)
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.package-version.outputs.current-version }}
+          version-fragment: 'beta'
+
+      - name: Echo Version
+        run: echo ${{ steps.bump_version.outputs.next-version }}
+
       # TODO: Gnu parallel for test/check
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
@@ -46,3 +60,4 @@ jobs:
         run: yarn build:beta
         env:
           PR_BUILD: true
+          VERSION: ${{ steps.bump_version.outputs.next-version }}
