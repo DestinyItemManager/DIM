@@ -48,7 +48,7 @@ module.exports = (env) => {
     }
   });
 
-  let version = env.version;
+  let version = JSON.stringify(process.env.VERSION);
 
   if (!env.dev) {
     console.log('Building DIM version ' + version);
