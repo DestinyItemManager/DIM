@@ -35,12 +35,36 @@ jobs:
           name: dim.rsa
           known_hosts: ${{ secrets.REMOTE_HOST }}
 
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@master
+
+      - name: Bump release version (feature)
+        if: ${{ !github.event.inputs.patch }}
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.package-version.outputs.current-version }}
+          version-fragment: 'feature'
+
+      - name: Bump release version (patch)
+        if: ${{ github.event.inputs.patch }}
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.package-version.outputs.current-version }}
+          version-fragment: 'bug'
+
+      - name: Echo Version
+        run: echo ${{ steps.bump_version.outputs.next-version }}
+
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
       - name: Build and deploy
         run: ./build/deploy-prod.sh
         env:
+          VERSION: ${{ steps.bump_version.outputs.next-version }}
           WEB_API_KEY: ${{ secrets.PROD_API_KEY }}
           WEB_OAUTH_CLIENT_ID: ${{ secrets.PROD_OAUTH_CLIENT_ID }}
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.PROD_OAUTH_CLIENT_SECRET }}
@@ -50,7 +74,6 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           # Use the dim-release-bot token rather than the default
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          PATCH: ${{ github.event.inputs.patch }}
 
       - name: Purge CloudFlare cache
         run: ./build/purge-cloudflare.sh
@@ -62,4 +85,5 @@ jobs:
       - name: Publish Sentry release
         run: ./build/sentry-release-prod.sh
         env:
+          VERSION: ${{ steps.bump_version.outputs.next-version }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

@@ -3,14 +3,6 @@
 git config --global user.email "destinyitemmanager@gmail.com"
 git config --global user.name "DIM Release Bot"
 
-# bump version (creates tag and version commit)
-
-if [ "$PATCH" = "true" ]; then
-    VERSION=$(npm --no-git-tag-version version patch | sed 's/^v//')
-else
-    VERSION=$(npm --no-git-tag-version version minor | sed 's/^v//')
-fi
-
 awk '/## Next/{flag=1;next}/##/{flag=0}flag' docs/CHANGELOG.md >release-notes.txt
 
 # update changelog
