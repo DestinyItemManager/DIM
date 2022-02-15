@@ -37,9 +37,6 @@ jobs:
           current-version: ${{ steps.package-version.outputs.current-version }}
           version-fragment: 'beta'
 
-      - name: Echo Version
-        run: echo ${{ steps.bump_version.outputs.next-version }}
-
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
