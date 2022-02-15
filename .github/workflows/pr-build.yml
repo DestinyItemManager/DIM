@@ -31,7 +31,7 @@ jobs:
 
       - name: get-npm-version
         id: package-version
-        uses: martinbeentjes/npm-get-version-action@master
+        uses: martinbeentjes/npm-get-version-action@v1.1.0
 
       - name: Bump release version (beta)
         id: bump_version
