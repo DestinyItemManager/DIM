@@ -32,7 +32,8 @@
     "dead-code": "ts-prune -s '*.test.ts?' | grep -v cssExports | grep -v 'used in module'",
     "bcu": "run-s bcu:*",
     "bcu:build": "node src/build-browsercheck-utils.js",
-    "bcu:pretty": "prettier --write src/browsercheck-utils.js"
+    "bcu:pretty": "prettier --write src/browsercheck-utils.js",
+    "test-and-lint": "run-p test lintcached"
   },
   "husky": {
     "hooks": {

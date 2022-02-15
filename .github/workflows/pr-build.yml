@@ -29,15 +29,11 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
             ${{ runner.os }}-${{ env.cache-name }}-
 
-      # TODO: Gnu parallel for test/check
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Test
-        run: yarn test
-
-      - name: Lint check
-        run: yarn lintcached:eslint
+      - name: Test & Lint
+        run: yarn test-and-lint
 
       # We set the default packtracker ENV vars
       - name: Build beta
