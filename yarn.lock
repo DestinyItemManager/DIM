@@ -1384,15 +1384,25 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.2.tgz#830beaec4b4091a9e9398ac50f865ddea52186b9"
   integrity sha512-92FRmppjjqz29VMJ2dn+xdyXZBrMlE42AV6Kq6BwjWV7CNUW1hs2FtxSNLQE+gJhaZ6AAmYuO9y8dshhcBl7vA==
 
-"@react-dnd/asap@^4.0.0":
+"@react-dnd/asap@4.0.0", "@react-dnd/asap@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@react-dnd/asap/-/asap-4.0.0.tgz#b300eeed83e9801f51bd66b0337c9a6f04548651"
   integrity sha512-0XhqJSc6pPoNnf8DhdsPHtUhRzZALVzYMTzRwV4VI6DJNJ/5xxfL9OQUwb8IH5/2x7lSf7nAZrnzUD+16VyOVQ==
+
+"@react-dnd/invariant@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@react-dnd/invariant/-/invariant-3.0.0.tgz#ea55db612b8be3284e87b67f1a1567595cd4c386"
+  integrity sha512-keberJRIqPX15IK3SWS/iO1t/kGETiL1oczKrDitAaMnQ+kpHf81l3MrRmFjvfqcnApE+izEvwM6GsyoIcpsVA==
 
 "@react-dnd/invariant@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@react-dnd/invariant/-/invariant-2.0.0.tgz#09d2e81cd39e0e767d7da62df9325860f24e517e"
   integrity sha512-xL4RCQBCBDJ+GRwKTFhGUW8GXa4yoDfJrPbLblc3U09ciS+9ZJXJ3Qrcs/x2IODOdIE5kQxvMmE2UKyqUictUw==
+
+"@react-dnd/shallowequal@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@react-dnd/shallowequal/-/shallowequal-3.0.0.tgz#ccfe1d6eead7591b4cebf6d7fec7150eb4de1962"
+  integrity sha512-1ELWQdJB2UrCXTKK5cCD9uGLLIwECLIEdttKA255owdpchtXohIjZBTlFJszwYi2ZKe2Do+QvUzsGyGCMNwbdw==
 
 "@react-dnd/shallowequal@^2.0.0":
   version "2.0.0"
@@ -4013,13 +4023,13 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
-dnd-core@14.0.1:
-  version "14.0.1"
-  resolved "https://registry.yarnpkg.com/dnd-core/-/dnd-core-14.0.1.tgz#76d000e41c494983210fb20a48b835f81a203c2e"
-  integrity sha512-+PVS2VPTgKFPYWo3vAFEA8WPbTf7/xo43TifH9G8S1KqnrQu0o77A3unrF5yOugy4mIz7K5wAVFHUcha7wsz6A==
+dnd-core@15.1.1:
+  version "15.1.1"
+  resolved "https://registry.yarnpkg.com/dnd-core/-/dnd-core-15.1.1.tgz#b4dce2d892be2a7c9ca32ffdd545350be8d52f4f"
+  integrity sha512-Mtj/Sltcx7stVXzeDg4g7roTe/AmzRuIf/FYOxX6F8gULbY54w066BlErBOzQfn9RIJ3gAYLGX7wvVvoBSq7ig==
   dependencies:
-    "@react-dnd/asap" "^4.0.0"
-    "@react-dnd/invariant" "^2.0.0"
+    "@react-dnd/asap" "4.0.0"
+    "@react-dnd/invariant" "3.0.0"
     redux "^4.1.1"
 
 dnd-core@^10.0.2:
@@ -8489,12 +8499,12 @@ react-beautiful-dnd@^13.0.0:
     redux "^4.0.4"
     use-memo-one "^1.1.1"
 
-react-dnd-html5-backend@^14.0.0:
-  version "14.1.0"
-  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-14.1.0.tgz#b35a3a0c16dd3a2bfb5eb7ec62cf0c2cace8b62f"
-  integrity sha512-6ONeqEC3XKVf4eVmMTe0oPds+c5B9Foyj8p/ZKLb7kL2qh9COYxiBHv3szd6gztqi/efkmriywLUVlPotqoJyw==
+react-dnd-html5-backend@^15.1.2:
+  version "15.1.2"
+  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-15.1.2.tgz#85e2c5ad57e87190495756f68f44fd89299062fb"
+  integrity sha512-mem9QbutUF+aA2YC1y47G3ECjnYV/sCYKSnu5Jd7cbg3fLMPAwbnTf/JayYdnCH5l3eg9akD9dQt+cD0UdF8QQ==
   dependencies:
-    dnd-core "14.0.1"
+    dnd-core "15.1.1"
 
 react-dnd-multi-backend@^6.0.2:
   version "6.0.2"
@@ -8520,13 +8530,13 @@ react-dnd-touch-backend@^10.0.2:
     "@react-dnd/invariant" "^2.0.0"
     dnd-core "^10.0.2"
 
-react-dnd-touch-backend@^14.0.0:
-  version "14.1.1"
-  resolved "https://registry.yarnpkg.com/react-dnd-touch-backend/-/react-dnd-touch-backend-14.1.1.tgz#d8875ef1cf8dcbf1741a4e03dd5b147c4fbda5e4"
-  integrity sha512-ITmfzn3fJrkUBiVLO6aJZcnu7T8C+GfwZitFryGsXKn5wYcUv+oQBeh9FYcMychmVbDdeUCfvEtTk9O+DKmAaw==
+react-dnd-touch-backend@^15.1.1:
+  version "15.1.1"
+  resolved "https://registry.yarnpkg.com/react-dnd-touch-backend/-/react-dnd-touch-backend-15.1.1.tgz#c51b2d765eb88219a228cb93131744c834c3e633"
+  integrity sha512-3OuPGvt5iCy+UnwL8tLaTH6KZWu71JOoxyUhMTgjJFF08SnAqROydgLIGz6JXiIGjkBGLq8j/rkSvO7jr7050A==
   dependencies:
-    "@react-dnd/invariant" "^2.0.0"
-    dnd-core "14.0.1"
+    "@react-dnd/invariant" "3.0.0"
+    dnd-core "15.1.1"
 
 react-dnd@^10.0.2:
   version "10.0.2"
@@ -8538,14 +8548,14 @@ react-dnd@^10.0.2:
     dnd-core "^10.0.2"
     hoist-non-react-statics "^3.3.0"
 
-react-dnd@^14.0.1:
-  version "14.0.5"
-  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-14.0.5.tgz#ecf264e220ae62e35634d9b941502f3fca0185ed"
-  integrity sha512-9i1jSgbyVw0ELlEVt/NkCUkxy1hmhJOkePoCH713u75vzHGyXhPDm28oLfc2NMSBjZRM1Y+wRjHXJT3sPrTy+A==
+react-dnd@^15.1.1:
+  version "15.1.1"
+  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-15.1.1.tgz#feb233200cb372ea6382b511baac6cc52a0068dc"
+  integrity sha512-QLrHtPU08U4c5zop0ANeqrHXaQw2EWLMn8DQoN6/e4eSN/UbB84P49/80Qg0MEF29VLB5vikSoiFh9N8ASNmpQ==
   dependencies:
-    "@react-dnd/invariant" "^2.0.0"
-    "@react-dnd/shallowequal" "^2.0.0"
-    dnd-core "14.0.1"
+    "@react-dnd/invariant" "3.0.0"
+    "@react-dnd/shallowequal" "3.0.0"
+    dnd-core "15.1.1"
     fast-deep-equal "^3.1.3"
     hoist-non-react-statics "^3.3.2"
 
@@ -8558,10 +8568,10 @@ react-dom@^17.0.1:
     object-assign "^4.1.1"
     scheduler "^0.20.2"
 
-react-dropzone@^11.0.1:
-  version "11.7.1"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-11.7.1.tgz#3851bb75b26af0bf1b17ce1449fd980e643b9356"
-  integrity sha512-zxCMwhfPy1olUEbw3FLNPLhAm/HnaYH5aELIEglRbqabizKAdHs0h+WuyOpmA+v1JXn0++fpQDdNfUagWt5hJQ==
+react-dropzone@^12.0.4:
+  version "12.0.4"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-12.0.4.tgz#b88eeaa2c7118f7fd042404682b17a1d466f2fcf"
+  integrity sha512-fcqHEYe1MzAghU6/Hz86lHDlBNsA+lO48nAcm7/wA+kIzwS6uuJbUG33tBZjksj7GAZ1iUQ6NHwjUURPmSGang==
   dependencies:
     attr-accept "^2.2.2"
     file-selector "^0.4.0"
@@ -9772,10 +9782,10 @@ style-value-types@5.0.0:
     hey-listen "^1.0.8"
     tslib "^2.1.0"
 
-stylelint-config-css-modules@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/stylelint-config-css-modules/-/stylelint-config-css-modules-2.3.0.tgz#bf79aaae09ca9fdac37fdd518d1a40a779aa0767"
-  integrity sha512-nSxwaJMv9wBrTAi+O4qXubyi1AR9eB36tJpY0uaFhKgEc3fwWGUzUK1Edl8AQHAoU7wmUeKtsuYjblyRP/V7rw==
+stylelint-config-css-modules@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/stylelint-config-css-modules/-/stylelint-config-css-modules-3.0.0.tgz#441bdca77d2ca3cb978524134fdfeb8f51c236ee"
+  integrity sha512-NDvOK4M98r6XGZyYLEwd+1LSqVm8ReXERbdppnhRy25QzuGcjgYvBNA1v/BxeMXq8DCljg0h4uEbQy+av/37JQ==
 
 stylelint-config-prettier@^9.0.3:
   version "9.0.3"
@@ -10203,10 +10213,10 @@ ts-prune@^0.10.0:
     "true-myth" "^4.1.0"
     ts-morph "^13.0.1"
 
-ts-unused-exports@^7.0.3:
-  version "7.0.3"
-  resolved "https://registry.yarnpkg.com/ts-unused-exports/-/ts-unused-exports-7.0.3.tgz#37a06d103d9d5b8619807dbd50d89f698e8cebf1"
-  integrity sha512-D0VdTiTfrmZM7tViQEMuzG0+giU5z5crn4vjK+f1dnxTKcNx23Vc2lpMgd1vP3lYrwnvJofZmCnvEuJ7XUeV2Q==
+ts-unused-exports@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/ts-unused-exports/-/ts-unused-exports-8.0.0.tgz#6dd15ff26286e0b7e5663cda3b98c77ea6f3ffe7"
+  integrity sha512-gylHFyJqC80PSb4zy35KTckykEW1vmKjnOHjBeX9iKBo4b/SzqQIcXXbYSuif4YMgNm6ewFF62VM1C9z0bGZPw==
   dependencies:
     chalk "^4.0.0"
     tsconfig-paths "^3.9.0"

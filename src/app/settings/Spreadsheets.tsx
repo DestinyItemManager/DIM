@@ -66,7 +66,7 @@ export default function Spreadsheets() {
         </div>
       </div>
       <div className="setting">
-        <FileUpload title={t('Settings.CsvImport')} accept=".csv" onDrop={importCsv} />
+        <FileUpload title={t('Settings.CsvImport')} accept="text/csv" onDrop={importCsv} />
       </div>
     </section>
   );
