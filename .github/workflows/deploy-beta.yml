@@ -30,9 +30,15 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.1.0
 
+      - name: build number
+        env:
+          RUN_NUM: ${{ github.run_number }}
+        run: |
+          echo "build_number=$(($RUN_NUM+1000000))" >> $GITHUB_ENV
+
       - name: Bump release version (beta)
         id: bump_version
-        run: echo '::set-output name=next-version::${{ steps.package-version.outputs.current-version }}.${{ github.run_number }}'
+        run: echo '::set-output name=next-version::${{ steps.package-version.outputs.current-version }}.${{ env.build_number }}'
 
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
