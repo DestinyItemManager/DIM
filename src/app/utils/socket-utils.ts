@@ -47,7 +47,7 @@ export function isWeaponMasterworkSocket(socket: DimSocket) {
 }
 
 /** whether a socket is an armor mod socket. i.e. those grey things. not perks, not reusables, not shaders */
-export function isArmorModSocket(socket: DimSocket) {
+function isArmorModSocket(socket: DimSocket) {
   return socket.plugged && isArmor2Mod(socket.plugged.plugDef);
 }
 
@@ -102,10 +102,7 @@ export function getFirstSocketByCategoryHash(
   return sockets.allSockets.find((s) => s.socketIndex === socketIndex);
 }
 
-export function getSocketsByPlugCategoryIdentifier(
-  sockets: DimSockets,
-  plugCategoryIdentifier: string
-) {
+function getSocketsByPlugCategoryIdentifier(sockets: DimSockets, plugCategoryIdentifier: string) {
   return sockets.allSockets.find((socket) =>
     socket.plugged?.plugDef.plug.plugCategoryIdentifier.includes(plugCategoryIdentifier)
   );

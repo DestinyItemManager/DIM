@@ -24,7 +24,7 @@ import './Sheet.scss';
  * sheets are shown, where each sheet is wired to its parent so that each child
  * disables and re-enables its parent automatically.
  */
-export const SheetDisabledContext = createContext<(shown: boolean) => void>(() => {
+const SheetDisabledContext = createContext<(shown: boolean) => void>(() => {
   // No-op
 });
 

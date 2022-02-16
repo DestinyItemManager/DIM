@@ -82,7 +82,7 @@ export function buildSockets(
 /**
  * Build sockets that come from the live instance.
  */
-export function buildInstancedSockets(
+function buildInstancedSockets(
   defs: D2ManifestDefinitions,
   itemDef: DestinyInventoryItemDefinition,
   item: DestinyItemComponent,

@@ -134,10 +134,7 @@ export function DefItemIcon({
 /**
  * given a mod definition or hash, returns destructurable energy cost information
  */
-export function getModCostInfo(
-  mod: DestinyInventoryItemDefinition | number,
-  defs: D2ManifestDefinitions
-) {
+function getModCostInfo(mod: DestinyInventoryItemDefinition | number, defs: D2ManifestDefinitions) {
   const modCostInfo: {
     energyCost?: number;
     energyCostElement?: DestinyEnergyTypeDefinition;

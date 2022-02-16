@@ -175,7 +175,7 @@ export default function SeasonalRank({
 /**
  * Does the player own the current season pass?
  */
-export function ownCurrentSeasonPass(seasonHashes: number[], currentSeasonHash?: number) {
+function ownCurrentSeasonPass(seasonHashes: number[], currentSeasonHash?: number) {
   if (!currentSeasonHash || !seasonHashes) {
     return false;
   }

@@ -71,7 +71,7 @@ export default function Links({ item }: { item: DimItem }) {
   );
 }
 
-export function destinyDBLink(item: DimItem) {
+function destinyDBLink(item: DimItem) {
   const DimItem = item;
   let perkQueryString = '';
 
