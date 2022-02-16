@@ -250,6 +250,8 @@ export default function Sheet({
 
           <div
             className="sheet-container"
+            onPointerDown={dragHandleDown}
+            onPointerUp={dragHandleUp}
             onMouseDown={dragHandleDown}
             onMouseUp={dragHandleUp}
             onTouchStart={dragHandleDown}
