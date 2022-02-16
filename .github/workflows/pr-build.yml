@@ -40,16 +40,12 @@ jobs:
           echo "VERSION=${{ steps.package-version.outputs.current-version }}.$(($RUN_NUM+1000000))" >> $GITHUB_ENV
 
       # TODO: Gnu parallel for test/check
+
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Test
-        run: yarn test
-
-      - name: Lint check
-        run: |
-          find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
-          yarn lintcached:eslint
+      - name: Test & Lint
+        run: yarn test-and-lint
 
       - name: Build beta
         run: yarn build:beta
