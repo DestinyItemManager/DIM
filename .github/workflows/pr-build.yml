@@ -49,7 +49,6 @@ jobs:
           find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
           yarn lintcached:eslint
 
-      # We set the default packtracker ENV vars
       - name: Build beta
         run: yarn build:beta
         env:
