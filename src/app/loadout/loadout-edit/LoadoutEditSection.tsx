@@ -14,7 +14,7 @@ export default function LoadoutEditSection({
   onFillFromEquipped,
   onSyncFromEquipped,
   onFillFromInventory,
-  onClearLoadutParameters,
+  onClearLoadoutParameters,
 }: {
   title: string;
   children: React.ReactNode;
@@ -23,7 +23,7 @@ export default function LoadoutEditSection({
   onFillFromEquipped?(): void;
   onSyncFromEquipped?(): void;
   onFillFromInventory?(): void;
-  onClearLoadutParameters?(): void;
+  onClearLoadoutParameters?(): void;
 }) {
   const options: Option[] = _.compact([
     onFillFromEquipped
@@ -68,10 +68,10 @@ export default function LoadoutEditSection({
         </>
       ),
     },
-    onClearLoadutParameters
+    onClearLoadoutParameters
       ? {
           key: 'clearLoadoutParameters',
-          onSelected: onClearLoadutParameters,
+          onSelected: onClearLoadoutParameters,
           content: (
             <>
               <AppIcon icon={clearIcon} /> {t('Loadouts.ClearLoadoutParameters')}
