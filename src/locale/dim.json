@@ -634,7 +634,7 @@
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedModError": "Mod didn't fit on your current armor",
     "UnassignedMods": "Unassigned Mods",
-    "Update": "Update",
+    "Update": "Save Changes",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
     "WeaponsOnly": "Weapons Only"
   },

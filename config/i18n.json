@@ -721,7 +721,7 @@
     "ClearingSpace": "Moving other items away",
     "Succeeded": "Loadout succeeded",
     "Failed": "Loadout failed to apply completely",
-    "Update": "Update"
+    "Update": "Save Changes"
   },
   "Manifest": {
     "Download": "Downloading latest Destiny info database from Bungie...",
