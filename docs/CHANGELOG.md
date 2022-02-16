@@ -9,6 +9,7 @@
   * As part of this change, we're removing support for "multi-class" loadouts. Loadouts will either be tied to one class, or can be toggled to "Any Class". "Any Class" loadouts cannot contain Subclass, Armor, or Fashion. If you edit an existing "Any Class" loadout and save it, those items will be removed unless you turn off "Any Class".
   * Double-click items to toggle between equipped and unequipped instead of single clicking. We'll be continuing to improve how you choose items and specify whether they're equipped in the future.
   * With this new design we have space to add even more loadout editing tools over the next few seasons.
+  * The loadout editor stays open if you navigate to the Inventory or Loadouts screen while it's already open.
   * The new Loadout Editor is not available for D1.
 
 ## 7.5.0 <span class="changelog-date">(2022-02-13)</span>
