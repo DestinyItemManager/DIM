@@ -30,15 +30,11 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.1.0
 
-      - name: build number
+      - name: Bump release version (beta)
         env:
           RUN_NUM: ${{ github.run_number }}
         run: |
-          echo "build_number=$(($RUN_NUM+1000000))" >> $GITHUB_ENV
-
-      - name: Bump release version (beta)
-        id: bump_version
-        run: echo '::set-output name=next-version::${{ steps.package-version.outputs.current-version }}.${{ env.build_number }}'
+          echo "VERSION=${{ steps.package-version.outputs.current-version }}.$(($RUN_NUM+1000000))" >> $GITHUB_ENV
 
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
@@ -46,7 +42,6 @@ jobs:
       - name: Build
         run: yarn build:beta
         env:
-          VERSION: ${{ steps.bump_version.outputs.next-version }}
           WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
           WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
@@ -71,5 +66,4 @@ jobs:
       - name: Publish Sentry release
         run: ./build/sentry-release.sh
         env:
-          VERSION: ${{ steps.bump_version.outputs.next-version }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

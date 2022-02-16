@@ -33,14 +33,11 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.1.0
 
+      - name: Bump release version (beta)
         env:
           RUN_NUM: ${{ github.run_number }}
         run: |
-          echo "build_number=$(($RUN_NUM+1000000))" >> $GITHUB_ENV
-
-      - name: Bump release version (beta)
-        id: bump_version
-        run: echo '::set-output name=next-version::${{ steps.package-version.outputs.current-version }}.${{ env.build_number }}'
+          echo "VERSION=${{ steps.package-version.outputs.current-version }}.$(($RUN_NUM+1000000))" >> $GITHUB_ENV
 
       # TODO: Gnu parallel for test/check
       - name: Install
@@ -58,4 +55,3 @@ jobs:
         run: yarn build:beta
         env:
           PR_BUILD: true
-          VERSION: ${{ steps.bump_version.outputs.next-version }}

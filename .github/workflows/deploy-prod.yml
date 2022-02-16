@@ -46,13 +46,16 @@ jobs:
           current-version: ${{ steps.package-version.outputs.current-version }}
           version-fragment: ${{ (!github.event.inputs.patch && 'feature') || 'bug' }}
 
+      - name: set version
+        run: |
+          echo "VERSION=${{ steps.bump_version.outputs.next-version }}" >> $GITHUB_ENV
+
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
       - name: Build and deploy
         run: ./build/deploy-prod.sh
         env:
-          VERSION: ${{ steps.bump_version.outputs.next-version }}
           WEB_API_KEY: ${{ secrets.PROD_API_KEY }}
           WEB_OAUTH_CLIENT_ID: ${{ secrets.PROD_OAUTH_CLIENT_ID }}
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.PROD_OAUTH_CLIENT_SECRET }}
@@ -73,5 +76,4 @@ jobs:
       - name: Publish Sentry release
         run: ./build/sentry-release.sh
         env:
-          VERSION: ${{ steps.bump_version.outputs.next-version }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
