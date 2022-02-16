@@ -223,7 +223,7 @@ export default function LoadoutEdit({
               : undefined
           }
         >
-          <LoadoutEditBucketDropTarget category={category}>
+          <LoadoutEditBucketDropTarget category={category} classType={loadout.classType}>
             <LoadoutEditBucket
               category={category}
               storeId={store.id}
