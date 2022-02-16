@@ -67,7 +67,12 @@ jobs:
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
           APP_DOMAIN: beta.destinyitemmanager.com
 
-      - name: Publish Sentry release
-        run: ./build/sentry-release.sh
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: destiny-item-manager
+          SENTRY_PROJECT: dim
+        with:
+          environment: beta
+          version: ${{ env.VERSION }}
