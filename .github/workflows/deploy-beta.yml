@@ -30,6 +30,10 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.1.0
 
+      - name: set beta
+        run: |
+          echo "build_level='beta'" >> $GITHUB_ENV
+
       - name: Bump release version (beta)
         env:
           RUN_NUM: ${{ github.run_number }}

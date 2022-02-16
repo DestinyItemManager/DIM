@@ -39,12 +39,22 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.1.0
 
+      - name: set feature
+        if: ${{ !github.event.inputs.patch }}
+        run: |
+          echo "build_level='feature'" >> $GITHUB_ENV
+
+      - name: set bug
+        if: ${{ github.event.inputs.patch }}
+        run: |
+          echo "build_level='bug'" >> $GITHUB_ENV
+
       - name: Bump release version
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
           current-version: ${{ steps.package-version.outputs.current-version }}
-          version-fragment: ${{ (!github.event.inputs.patch && 'feature') || 'bug' }}
+          version-fragment: ${{ env.build_level }}
 
       - name: set version
         run: |
