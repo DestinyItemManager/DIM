@@ -2273,6 +2273,18 @@
     "@typescript-eslint/types" "5.12.0"
     eslint-visitor-keys "^3.0.0"
 
+"@use-gesture/core@10.2.6":
+  version "10.2.6"
+  resolved "https://registry.yarnpkg.com/@use-gesture/core/-/core-10.2.6.tgz#12bdab107501798334ae28a6d193ef6ccd7a8930"
+  integrity sha512-+GpVSEoCLv1OeZ+qgAV+tLUKit1LKgKO3PgIiEVZqNr4A/YTXzbC1unlThpfzwyj5Dx22UxHDh0UfgRrQ9Lb1w==
+
+"@use-gesture/react@^10.2.6":
+  version "10.2.6"
+  resolved "https://registry.yarnpkg.com/@use-gesture/react/-/react-10.2.6.tgz#9ff0bdc2675d8a1520189e62b232800f852150ed"
+  integrity sha512-s/QDhKvsQVaSNq1ljRBMR2PWRkOp9BmoI+kgZR1DsHUSp5XDORtU33D5TZfJoWnD5X3E9SmePikPl66dDaEeDA==
+  dependencies:
+    "@use-gesture/core" "10.2.6"
+
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.11.1.tgz#2bfd767eae1a6996f432ff7e8d7fc75679c0b6a7"
@@ -8752,11 +8764,6 @@ react-twitter-widgets@^1.7.1:
   integrity sha512-K7MAREhkKJxrhoiNWricKs1O++NyElnVpcplLzZ67gDrmeIsD3E4TUzlt0/nTZAHPOPPc86V4kEd4KIg4de7cQ==
   dependencies:
     loadjs "^4.2.0"
-
-react-use-gesture@^9.1.3:
-  version "9.1.3"
-  resolved "https://registry.yarnpkg.com/react-use-gesture/-/react-use-gesture-9.1.3.tgz#92bd143e4f58e69bd424514a5bfccba2a1d62ec0"
-  integrity sha512-CdqA2SmS/fj3kkS2W8ZU8wjTbVBAIwDWaRprX7OKaj7HlGwBasGEFggmk5qNklknqk9zK/h8D355bEJFTpqEMg==
 
 react-virtualized@^9.21.0:
   version "9.22.3"
