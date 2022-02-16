@@ -71,7 +71,7 @@ jobs:
           APP_DOMAIN: app.destinyitemmanager.com
 
       - name: Publish Sentry release
-        run: ./build/sentry-release-prod.sh
+        run: ./build/sentry-release.sh
         env:
           VERSION: ${{ steps.bump_version.outputs.next-version }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
