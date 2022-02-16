@@ -59,6 +59,7 @@ export type Action =
   /** Make an item that's already in the loadout equipped */
   | { type: 'equipItem'; item: DimItem; items: DimItem[] }
   | { type: 'updateMods'; mods: number[] }
+  | { type: 'changeClearMods'; enabled: boolean }
   | { type: 'removeMod'; hash: number }
   | { type: 'openModPicker'; query?: string }
   | { type: 'closeModPicker' }
@@ -170,6 +171,23 @@ export function stateReducer(state: State, action: Action): State {
               parameters: {
                 ...loadout.parameters,
                 mods,
+              },
+            },
+          }
+        : state;
+    }
+
+    case 'changeClearMods': {
+      const { loadout } = state;
+      const { enabled } = action;
+      return loadout
+        ? {
+            ...state,
+            loadout: {
+              ...loadout,
+              parameters: {
+                ...loadout.parameters,
+                clearMods: enabled,
               },
             },
           }

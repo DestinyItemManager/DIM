@@ -548,6 +548,7 @@
     "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
     "ClearSection": "Remove all",
     "ClearSpace": "Move other items away",
+    "ClearUnsetMods": "Remove other mods",
     "ClearingSpace": "Moving other items away",
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
