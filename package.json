@@ -14,7 +14,7 @@
     "lint:prettier": "prettier src/**/*.{js,ts,tsx,scss,html} --check",
     "lint:stylelint": "stylelint src/**/*.scss",
     "lintcached": "run-p lintcached:*",
-    "lintcached:eslint": "yarn lint:eslint --cache --cache-location .eslintcache",
+    "lintcached:eslint": "yarn lint:eslint --cache --cache-location .eslintcache --cache-strategy content",
     "fix": "run-s fix:*",
     "fix:eslint": "yarn lint:eslint --fix",
     "fix:json": "jsonsort src/locale",
@@ -32,7 +32,8 @@
     "dead-code": "ts-prune -s '*.test.ts?' | grep -v cssExports | grep -v 'used in module'",
     "bcu": "run-s bcu:*",
     "bcu:build": "node src/build-browsercheck-utils.js",
-    "bcu:pretty": "prettier --write src/browsercheck-utils.js"
+    "bcu:pretty": "prettier --write src/browsercheck-utils.js",
+    "test-and-lint": "run-p test lintcached"
   },
   "husky": {
     "hooks": {
