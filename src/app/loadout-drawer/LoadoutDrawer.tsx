@@ -227,6 +227,7 @@ export default function LoadoutDrawer() {
       <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
       <LoadoutDrawerOptions
         loadout={loadout}
+        storeId={storeId}
         showClass={showClass}
         isNew={isNew}
         onUpdateMods={onUpdateMods}
