@@ -41,4 +41,4 @@ jobs:
 
       - name: Fail the Build
         if: steps.data.outputs.porcelain
-        uses: cutenode/action-always-fail@v1.0.0
+        run: exit 1
