@@ -41,4 +41,7 @@ jobs:
 
       - name: Fail the Build
         if: steps.data.outputs.porcelain
-        run: exit 1
+        uses: actions/github-script@v3
+        with:
+          script: |
+              core.setFailed('Please run `yarn i18n`')
