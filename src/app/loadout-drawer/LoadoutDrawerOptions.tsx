@@ -39,8 +39,8 @@ export default function LoadoutDrawerOptions({
   saveAsNew,
   deleteLoadout,
 }: {
-  loadout?: Readonly<Loadout>;
-  storeId?: string;
+  loadout: Readonly<Loadout> | undefined;
+  storeId: string | undefined;
   showClass: boolean;
   isNew: boolean;
   onUpdateMods(mods: PluggableInventoryItemDefinition[]): void;
