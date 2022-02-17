@@ -251,7 +251,7 @@ export default function LoadoutDrawer() {
     <Sheet onClose={close} header={header} disabled={showingItemPicker}>
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
-          <LoadoutDrawerDropTarget onDroppedItem={onDroppedItem}>
+          <LoadoutDrawerDropTarget onDroppedItem={onDroppedItem} classType={loadout.classType}>
             {warnitems.length > 0 && (
               <div className="loadout-contents">
                 <p>
