@@ -1082,7 +1082,7 @@
     "UpdateExternalSource": "Update Wish List Source",
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
-    "WishListNotes": "Wish List Notes: {{notes}} "
+    "WishListNotes": "Wish List Notes: {{notes}}"
   },
   "no-space": "",
   "wrong-level": ""
