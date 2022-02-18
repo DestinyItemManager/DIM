@@ -1,0 +1,40 @@
+@import '../variables.scss';
+
+.perks {
+  display: flex;
+  flex-flow: column;
+  margin: 4px 0;
+
+  border-left: 2px solid #888;
+  padding-left: 3px;
+
+  > div {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+  }
+
+  img {
+    height: 24px;
+    width: 24px;
+  }
+}
+
+.perkSelected {
+  font-weight: bold;
+}
+
+.notes {
+  margin-left: 4px;
+}
+
+.note {
+  margin-left: 2px;
+}
+
+.stats {
+  margin: 4px 0 0 0;
+  :global(.stat) {
+    line-height: 12px;
+  }
+}

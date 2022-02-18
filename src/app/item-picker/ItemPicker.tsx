@@ -105,6 +105,7 @@ function ItemPicker({
               <ConnectedInventoryItem
                 item={item}
                 onClick={() => onItemSelectedFn(item, onClose)}
+                includeTooltip
                 ignoreSelectedPerks={ignoreSelectedPerks}
               />
               {item.bucket.hash === BucketHashes.Subclass && (

@@ -30,6 +30,10 @@ interface Props {
    */
   tooltip: React.ReactNode | (() => React.ReactNode);
   /**
+   * Whether the presstip should react to events or not.
+   */
+  disabled?: boolean;
+  /**
    * The children of this component define the content that will trigger the tooltip.
    */
   children?: React.ReactNode;
@@ -41,6 +45,7 @@ interface Props {
 
 type ControlProps = Props &
   React.HTMLAttributes<HTMLDivElement> & {
+    events: React.HTMLAttributes<HTMLDivElement>;
     open: boolean;
     triggerRef: React.RefObject<HTMLDivElement>;
   };
@@ -65,10 +70,12 @@ type ControlProps = Props &
 function Control({
   tooltip,
   open,
+  disabled,
   triggerRef,
   children,
   elementType: Component = 'div',
   className,
+  events,
   ...rest
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
@@ -94,8 +101,10 @@ function Control({
   // TODO: or use framer motion layout animations?
   return (
     <Component ref={triggerRef} className={clsx(styles.control, className)} {...rest}>
-      {children}
+      <div {...events}>{children}</div>
       {open &&
+        !disabled &&
+        tooltip &&
         ReactDOM.createPortal(
           <div className={styles.tooltip} ref={tooltipContents}>
             <div className={styles.content}>{_.isFunction(tooltip) ? tooltip() : tooltip}</div>
@@ -142,14 +151,19 @@ function PressTip(props: Props) {
     timer.current = 0;
   }, []);
 
-  const hover = useCallback((e: React.MouseEvent | React.TouchEvent | TouchEvent) => {
-    e.preventDefault();
-    clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => {
-      setOpen(true);
-    }, hoverDelay);
-    touchStartTime.current = performance.now();
-  }, []);
+  const hover = useCallback(
+    (e: React.MouseEvent | React.TouchEvent | TouchEvent) => {
+      if (!props.disabled) {
+        e.preventDefault();
+        clearTimeout(timer.current);
+        timer.current = window.setTimeout(() => {
+          setOpen(true);
+        }, hoverDelay);
+        touchStartTime.current = performance.now();
+      }
+    },
+    [props.disabled]
+  );
 
   // Stop the hover timer when the component unmounts
   useEffect(() => () => clearTimeout(timer.current), []);
@@ -181,12 +195,12 @@ function PressTip(props: Props) {
         onClick: absorbClick,
       }
     : {
-        onMouseEnter: hover,
+        onMouseOver: hover,
         onMouseUp: closeToolTip,
         onMouseLeave: closeToolTip,
       };
 
-  return <Control open={open} triggerRef={ref} {...events} {...props} />;
+  return <Control open={open} triggerRef={ref} events={events} {...props} />;
 }
 
 export default PressTip;

@@ -229,15 +229,23 @@ export default function InfusionFinder() {
       <div className="infusionControls">
         <div className="infuseTopRow">
           <div className="infusionEquation">
-            {effectiveTarget ? <ConnectedInventoryItem item={effectiveTarget} /> : missingItem}
+            {effectiveTarget ? (
+              <ConnectedInventoryItem item={effectiveTarget} includeTooltip />
+            ) : (
+              missingItem
+            )}
             <div className="icon">
               <AppIcon icon={plusIcon} />
             </div>
-            {effectiveSource ? <ConnectedInventoryItem item={effectiveSource} /> : missingItem}
+            {effectiveSource ? (
+              <ConnectedInventoryItem item={effectiveSource} includeTooltip />
+            ) : (
+              missingItem
+            )}
             <div className="icon">
               <AppIcon icon={faEquals} />
             </div>
-            {result ? <ConnectedInventoryItem item={result} /> : missingItem}
+            {result ? <ConnectedInventoryItem item={result} includeTooltip /> : missingItem}
           </div>
           <div className="infuseActions">
             <button type="button" className="dim-button" onClick={switchDirection}>
@@ -269,7 +277,7 @@ export default function InfusionFinder() {
       className={clsx({ 'infuse-selected': item === target })}
       onClick={() => selectItem(item)}
     >
-      <ConnectedInventoryItem item={item} />
+      <ConnectedInventoryItem includeTooltip item={item} />
     </div>
   );
 

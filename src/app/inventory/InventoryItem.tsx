@@ -1,3 +1,4 @@
+import PressTip from 'app/dim-ui/PressTip';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
@@ -10,6 +11,7 @@ import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
 import { DimItem } from './item-types';
 import ItemIcon from './ItemIcon';
+import { DimItemTooltip } from './ItemTooltip';
 import NewItemIndicator from './NewItemIndicator';
 import { selectedSubclassPath } from './subclass';
 import TagIcon from './TagIcon';
@@ -29,6 +31,8 @@ interface Props {
   wishlistRoll?: InventoryWishListRoll;
   /** Don't show information that relates to currently selected perks (only used for subclasses currently) */
   ignoreSelectedPerks?: boolean;
+  /** Show a tooltip summarizing the item for when a click on the item has other effects than bringing up item popup */
+  includeTooltip?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   /** TODO: item locked needs to be passed in */
   onClick?(e: React.MouseEvent): void;
@@ -44,6 +48,7 @@ export default function InventoryItem({
   notes,
   searchHidden,
   wishlistRoll,
+  includeTooltip,
   ignoreSelectedPerks,
   onClick,
   onShiftClick,
@@ -116,16 +121,23 @@ export default function InventoryItem({
     );
   }, [isNew, item, notes, subclassPath, tag, wishlistRoll]);
 
-  return (
+  const tooltip = includeTooltip ?? false;
+  const inner = (
     <div
       id={id || item.index}
       onClick={enhancedOnClick}
       onDoubleClick={onDoubleClick}
-      title={`${item.name}\n${subtitle}`}
+      title={!tooltip ? `${item.name}\n${subtitle}` : undefined}
       className={itemStyles}
       ref={innerRef}
     >
       {contents}
     </div>
+  );
+
+  return (
+    <PressTip disabled={!tooltip} tooltip={() => <DimItemTooltip item={item} />}>
+      {inner}
+    </PressTip>
   );
 }

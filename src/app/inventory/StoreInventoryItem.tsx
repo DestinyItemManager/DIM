@@ -1,5 +1,7 @@
+import { compareOpenSelector } from 'app/compare/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 import DraggableInventoryItem from './DraggableInventoryItem';
 import { DimItem } from './item-types';
@@ -15,6 +17,7 @@ interface Props {
  */
 export default function StoreInventoryItem({ item }: Props) {
   const dispatch = useThunkDispatch();
+  const compareOpen = useSelector(compareOpenSelector);
   const doubleClicked = (e: React.MouseEvent) => {
     dispatch(moveItemToCurrentStore(item, e));
   };
@@ -27,6 +30,7 @@ export default function StoreInventoryItem({ item }: Props) {
             item={item}
             allowFilter={true}
             innerRef={ref}
+            includeTooltip={compareOpen}
             onClick={onClick}
             onDoubleClick={doubleClicked}
             // for only StoreInventoryItems (the main inventory page)
