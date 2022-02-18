@@ -1,5 +1,7 @@
 ## Next
 
+* You can now change the Aeon sect mod through the item popup.
+
 ## 7.5.1 <span class="changelog-date">(2022-02-14)</span>
 
 ### Beta Only

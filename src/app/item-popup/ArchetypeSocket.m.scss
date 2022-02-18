@@ -1,18 +1,20 @@
 .mod {
   margin-top: calc(4 / 50 * var(--item-size));
-  margin-right: 2px;
+  margin-right: 7px;
   .minimal &,
   .isWeapons & {
     margin-top: 0;
     margin-right: 0;
   }
 
+  :global(.item-socket) {
+    padding: 4px;
+  }
+
   img {
     width: calc(24 / 50 * var(--item-size));
     height: calc(24 / 50 * var(--item-size));
     transform: scale(1.4);
-    margin-right: 7px;
-    margin-left: 2px;
 
     .minimal & {
       width: 16px !important;
@@ -26,6 +28,7 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: flex-start;
   padding: 6px 10px;
+  margin-bottom: 4px;
   background-color: #333;
   width: 100%;
   border-bottom: none;
