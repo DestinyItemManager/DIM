@@ -93,6 +93,7 @@ export default memo(function LoadoutMods({
         ReactDOM.createPortal(
           <ModAssignmentDrawer
             loadout={loadout}
+            storeId={storeId}
             onUpdateMods={onUpdateMods}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,
@@ -103,6 +104,7 @@ export default memo(function LoadoutMods({
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}
+            owner={storeId}
             lockedMods={savedMods}
             onAccept={onUpdateMods}
             onClose={() => setShowModPicker(false)}
