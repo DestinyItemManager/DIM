@@ -45,6 +45,11 @@ $commonBg: #366f42;
   border-color: $masterwork-border-color;
 }
 
+// Masterwork item image
+.crafted {
+  border-color: $crafted-border-color;
+}
+
 // Completed items or capped stackables image
 .complete {
   border-color: $gold;
@@ -114,4 +119,13 @@ $commonBg: #366f42;
   text {
     fill: white;
   }
+}
+
+.highlightedObjective {
+  position: absolute;
+  display: block;
+  width: calc((var(--item-size) + 1px) / 2) !important;
+  height: calc((var(--item-size) + 1px) / 2) !important;
+  right: 0;
+  top: calc(var(--item-size) - ((var(--item-size) + 1px) / 2) - 1px);
 }

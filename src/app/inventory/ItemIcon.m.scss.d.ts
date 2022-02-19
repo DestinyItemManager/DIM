@@ -5,10 +5,12 @@ interface CssExports {
   'borderless': string;
   'common': string;
   'complete': string;
+  'crafted': string;
   'energyCost': string;
   'energyCostOverlay': string;
   'exotic': string;
   'exoticMasterwork': string;
+  'highlightedObjective': string;
   'iconOverlay': string;
   'legendary': string;
   'masterwork': string;
