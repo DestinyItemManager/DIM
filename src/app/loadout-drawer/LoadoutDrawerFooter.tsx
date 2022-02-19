@@ -62,6 +62,7 @@ export default function LoadoutDrawerFooter({
     (!loadout.items.length &&
       // Allow mod only loadouts
       !loadout.parameters?.mods?.length &&
+      !loadout.parameters?.clearMods &&
       // Allow fashion only loadouts
       _.isEmpty(loadout.parameters?.modsByBucket));
 

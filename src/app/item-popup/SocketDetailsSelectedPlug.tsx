@@ -47,6 +47,7 @@ const whitelistPlugCategoryToLocKey = {
 };
 
 const socketCategoryToLocKey = {
+  [SocketCategoryHashes.Super]: 'Super',
   [SocketCategoryHashes.Abilities]: 'Ability',
   [SocketCategoryHashes.Aspects]: 'Aspect',
   [SocketCategoryHashes.Fragments]: 'Fragment',

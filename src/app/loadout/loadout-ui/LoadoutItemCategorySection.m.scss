@@ -69,10 +69,6 @@
   width: calc(2 * var(--item-size) + 1 * var(--item-margin));
 }
 
-.missingItem {
-  opacity: 0.3;
-}
-
 .placeholder {
   background: rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.5);

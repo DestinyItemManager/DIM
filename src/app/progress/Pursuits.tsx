@@ -69,7 +69,7 @@ export default function Pursuits({ store }: { store: DimStore }) {
   );
 }
 
-export function PursuitsGroup({
+function PursuitsGroup({
   store,
   pursuits,
   hideDescriptions,
