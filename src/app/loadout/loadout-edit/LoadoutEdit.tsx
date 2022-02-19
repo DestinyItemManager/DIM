@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
@@ -54,6 +54,7 @@ export default function LoadoutEdit({
   onRemoveItem: (item: DimItem) => void;
 }) {
   const defs = useD2Definitions()!;
+  const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
@@ -110,8 +111,8 @@ export default function LoadoutEdit({
 
   const onAddItem = useCallback(
     ({ item, equip }: { item: DimItem; equip?: boolean }) =>
-      stateDispatch({ type: 'addItem', item, shift: false, items, equip }),
-    [items, stateDispatch]
+      stateDispatch({ type: 'addItem', item, stores, shift: false, items, equip }),
+    [items, stores, stateDispatch]
   );
 
   const handleSyncModsFromEquipped = () => {
