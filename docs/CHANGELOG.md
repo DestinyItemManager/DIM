@@ -6,6 +6,7 @@
 * You can now change the Aeon sect mod through the item popup.
 * You can now edit your equipped Emotes from DIM. You can't add them to loadouts... yet.
 * There's a good chance craftable items will display correctly in DIM. No promises though.
+* Fix issue where Loadout Optimizer armor upgrade settings were not being migrated from existing loadouts.
 
 ## 7.5.1 <span class="changelog-date">(2022-02-14)</span>
 
