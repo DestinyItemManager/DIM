@@ -21,8 +21,9 @@ const loadoutFilters: FilterDefinition[] = [
 
       // a search like
       // inloadout:"loadout name here"
+      // inloadout:"pvp" (for all loadouts with pvp in their name)
       if (filterValue !== 'inloadout') {
-        selectedLoadouts = loadouts.filter((l) => l.name.toLowerCase() === filterValue);
+        selectedLoadouts = loadouts.filter((l) => l.name.toLowerCase().includes(filterValue));
       }
 
       const loadoutItemIds = collectItemsInLoadouts(selectedLoadouts);

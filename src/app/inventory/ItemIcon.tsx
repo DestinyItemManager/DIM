@@ -8,8 +8,9 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import pursuitComplete from 'images/highlightedObjective.svg';
 import React from 'react';
-import { DimItem } from './item-types';
+import { DimItem, PluggableInventoryItemDefinition } from './item-types';
 import styles from './ItemIcon.m.scss';
 
 const itemTierStyles = {
@@ -27,7 +28,16 @@ const itemTierStyles = {
  *
  * This renders just a fragment - it always needs to be rendered inside another div with class "item".
  */
-export default function ItemIcon({ item, className }: { item: DimItem; className?: string }) {
+export default function ItemIcon({
+  item,
+  ornament,
+  className,
+}: {
+  item: DimItem;
+  /** overrides the item's real/current appearance, with an intended ornament, i.e. for loadout fashion */
+  ornament?: PluggableInventoryItemDefinition;
+  className?: string;
+}) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
   const borderless =
     (item?.destinyVersion === 2 &&
@@ -38,12 +48,17 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless,
     [styles.masterwork]: item.masterwork,
+    [styles.crafted]: item.crafted,
     [itemTierStyles[item.tier]]: !borderless && !item.plug,
   });
 
   return (
     <>
-      <BungieImage src={item.icon} className={itemImageStyles} alt="" />
+      <BungieImage
+        src={ornament?.displayProperties.icon || item.icon}
+        className={itemImageStyles}
+        alt=""
+      />
       {item.masterwork && (
         <div
           className={clsx(styles.masterworkOverlay, { [styles.exoticMasterwork]: item.isExotic })}
@@ -66,6 +81,9 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
             </text>
           </svg>
         </>
+      )}
+      {item.highlightedObjective && (
+        <img className={styles.highlightedObjective} src={pursuitComplete} />
       )}
     </>
   );

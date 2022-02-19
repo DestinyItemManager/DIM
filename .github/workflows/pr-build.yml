@@ -3,6 +3,8 @@ name: PR Build
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    paths-ignore:
+      - 'docs/**'
 
 # Ensures that only one deploy task per branch/environment will run at a time.
 concurrency:

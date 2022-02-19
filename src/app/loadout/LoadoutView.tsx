@@ -31,22 +31,13 @@ export function getItemsAndSubclassFromLoadout(
   allItems: DimItem[]
 ): [items: DimLoadoutItem[], subclass: DimLoadoutItem | undefined, warnitems: DimLoadoutItem[]] {
   const [items, warnitems] = getItemsFromLoadoutItems(loadoutItems, defs, buckets, allItems);
-  let subclass: DimLoadoutItem | undefined;
+  const subclass = items.find((item) => item.bucket.hash === BucketHashes.Subclass);
 
-  // TODO: this logic is undocumented and doesn't make sense. Why do we find the item again? Did we mean to look through `store.items`?
-  for (const storeItem of items) {
-    if (storeItem.bucket.hash === BucketHashes.Subclass) {
-      const loadoutItem = items.find((loadoutItem) => loadoutItem.hash === storeItem.hash);
-      if (loadoutItem) {
-        subclass = { ...storeItem, socketOverrides: loadoutItem.socketOverrides };
-        break;
-      }
-    }
-  }
   let equippableItems = items.filter((i) => itemCanBeEquippedBy(i, store, true));
   if (subclass) {
-    equippableItems = equippableItems.filter((i) => i.hash !== subclass!.hash);
+    equippableItems = equippableItems.filter((i) => i.hash !== subclass.hash);
   }
+
   return [equippableItems, subclass, warnitems];
 }
 

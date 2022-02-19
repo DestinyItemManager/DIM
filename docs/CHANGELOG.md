@@ -1,6 +1,14 @@
 ## Next
 
 * Fix applying D1 loadouts.
+* `inloadout:` filter now matches partial loadout names -- use `inloadout:"pvp"` for items in loadouts where "pvp" is in the loadout's name.
+* Fashion is now applied to items in a loadout.
+* You can now change the Aeon sect mod through the item popup.
+* You can now edit your equipped Emotes from DIM. You can't add them to loadouts... yet.
+* There's a good chance craftable items will display correctly in DIM. No promises though.
+* Fix issue where Loadout Optimizer armor upgrade settings were not being migrated from existing loadouts.
+* Clan Banners are no longer shown in DIM.
+* Weapon compare sheet now includes a button to compare with other legendary weapons of the same category, excluding exotics.
 
 ### Beta Only
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import Collectible from './Collectible';
+import Craftable from './Craftable';
 import Metrics from './Metrics';
 import { DimPresentationNodeLeaf } from './presentation-nodes';
 import Record from './Record';
@@ -33,6 +34,7 @@ export default function PresentationNodeLeaf({
           ))}
         </div>
       )}
+
       {node.records && node.records.length > 0 && (
         <div className="records">
           {node.records.map((record) => {
@@ -51,7 +53,16 @@ export default function PresentationNodeLeaf({
           })}
         </div>
       )}
+
       {node.metrics && node.metrics.length > 0 && <Metrics metrics={node.metrics} />}
+
+      {node.craftables && node.craftables.length > 0 && (
+        <div className="collectibles">
+          {node.craftables.map((craftable) => (
+            <Craftable key={craftable.item.hash} craftable={craftable} />
+          ))}
+        </div>
+      )}
     </>
   );
 }
