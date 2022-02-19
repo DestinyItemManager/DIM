@@ -9,6 +9,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import produce from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -22,7 +23,7 @@ import { deleteLoadout, updateLoadout } from './actions';
 import { stateReducer } from './loadout-drawer-reducer';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
-import { Loadout } from './loadout-types';
+import { DimLoadoutItem, Loadout } from './loadout-types';
 import styles from './LoadoutDrawer2.m.scss';
 import {
   fillLoadoutFromEquipped,
@@ -143,6 +144,8 @@ export default function LoadoutDrawer2() {
         name: `${loadoutToSave.name} ${new Date().toLocaleString()}`,
       };
     }
+
+    loadoutToSave = filterLoadoutToAllowedItems(loadoutToSave, items);
 
     dispatch(updateLoadout(loadoutToSave));
     close();
@@ -317,4 +320,31 @@ export default function LoadoutDrawer2() {
       </LoadoutDrawerDropTarget>
     </Sheet>
   );
+}
+
+/**
+ * Remove items and settings that don't match the loadout's class type.
+ */
+function filterLoadoutToAllowedItems(
+  loadoutToSave: Readonly<Loadout>,
+  items: DimLoadoutItem[]
+): Readonly<Loadout> {
+  return produce(loadoutToSave, (loadout) => {
+    // Filter out items that don't fit the class type
+    loadout.items = loadout.items.filter((loadoutItem) => {
+      const item = items.find((i) => i.hash === loadoutItem.hash && i.id === loadoutItem.id);
+      return (
+        item && (item.classType === DestinyClass.Unknown || item.classType === loadout.classType)
+      );
+    });
+
+    if (loadout.classType === DestinyClass.Unknown && loadout.parameters) {
+      // Remove fashion and non-mod loadout parameters from Any Class loadouts
+      if (loadout.parameters.mods?.length) {
+        loadout.parameters = { mods: loadout.parameters.mods };
+      } else {
+        delete loadout.parameters;
+      }
+    }
+  });
 }
