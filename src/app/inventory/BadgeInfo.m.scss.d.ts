@@ -4,6 +4,7 @@ interface CssExports {
   'arc': string;
   'badge': string;
   'capped': string;
+  'crafted': string;
   'energyCapacity': string;
   'energyCapacityIcon': string;
   'engram': string;
