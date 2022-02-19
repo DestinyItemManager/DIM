@@ -193,7 +193,10 @@ function getPlugsForSubclass(
             maxSelectable: socketGroup.length,
             defaultPlug,
             selectionType:
-              category.category.hash === SocketCategoryHashes.Abilities ? 'single' : 'multi',
+              category.category.hash === SocketCategoryHashes.Abilities ||
+              category.category.hash === SocketCategoryHashes.Super
+                ? 'single'
+                : 'multi',
           };
 
           // TODO (ryan) use itemsForCharacterOrProfilePlugSet, atm there will be no difference

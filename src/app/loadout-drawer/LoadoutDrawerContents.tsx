@@ -5,7 +5,7 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { pickSubclass } from 'app/loadout/item-utils';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
-import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { getSocketsByCategoryHash, getSocketsByCategoryHashes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
@@ -273,12 +273,16 @@ export async function pickLoadoutSubclass(
   onShowItemPicker(true);
   const item = await pickSubclass(subclassItemFilter);
   if (item) {
-    const abilitySockets =
-      item.sockets && getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.Abilities);
+    const abilityAndSuperSockets =
+      item.sockets &&
+      getSocketsByCategoryHashes(item.sockets, [
+        SocketCategoryHashes.Abilities,
+        SocketCategoryHashes.Super,
+      ]);
     let socketOverrides: SocketOverrides | undefined;
-    if (abilitySockets) {
+    if (abilityAndSuperSockets) {
       socketOverrides = {};
-      for (const socket of abilitySockets) {
+      for (const socket of abilityAndSuperSockets) {
         socketOverrides[socket.socketIndex] = socket.socketDefinition.singleInitialItemHash;
       }
     }

@@ -31,17 +31,6 @@ export function sortProcessModsOrItems(a: SortParam, b: SortParam) {
   return -1;
 }
 
-export function stringifyModPermutation(perm: (ProcessMod | null)[]) {
-  let permString = '';
-  for (const modOrNull of perm) {
-    if (modOrNull) {
-      permString += `(${modOrNull.energy?.type},${modOrNull.energy?.val},${modOrNull.tag || ''})`;
-    }
-    permString += ',';
-  }
-  return permString;
-}
-
 function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[]) {
   let arcCount = 0;
   let solarCount = 0;

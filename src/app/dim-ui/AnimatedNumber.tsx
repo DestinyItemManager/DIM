@@ -11,7 +11,5 @@ const spring = {
  */
 export default function AnimatedNumber({ value }: { value: number }) {
   const animatedValue = useSpring<{ val: number }>({ val: value, config: spring });
-  return (
-    <animated.span>{animatedValue.val.interpolate((val: number) => Math.floor(val))}</animated.span>
-  );
+  return <animated.span>{animatedValue.val.to((val: number) => Math.floor(val))}</animated.span>;
 }

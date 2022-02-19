@@ -66,6 +66,7 @@ module.exports = {
           'Aspect',
           'Projection',
           'Transmat',
+          'Super',
         ],
         fallback: false,
         separator: false,

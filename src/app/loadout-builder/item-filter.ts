@@ -1,14 +1,14 @@
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
+import { calculateAssumedItemEnergy, isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
 import { bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
 import { ItemFilter } from 'app/search/filter-types';
 import { compareBy } from 'app/utils/comparators';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { doEnergiesMatch } from './mod-utils';
 import {
   ExcludedItems,
   ItemsByBucket,
@@ -116,6 +116,25 @@ function matchedLockedModEnergy(
     return true;
   }
   return lockedMods.every((mod) => doEnergiesMatch(mod, item, lockArmorEnergyType));
+}
+
+/**
+ * Checks that:
+ *   1. The armour piece is Armour 2.0
+ *   2. The mod matches the Armour energy OR the mod has the any Energy type
+ */
+function doEnergiesMatch(
+  mod: PluggableInventoryItemDefinition,
+  item: DimItem,
+  lockArmorEnergyType: LockArmorEnergyType | undefined
+) {
+  return (
+    item.energy &&
+    (!mod.plug.energyCost ||
+      mod.plug.energyCost.energyType === DestinyEnergyType.Any ||
+      mod.plug.energyCost.energyType === item.energy.energyType ||
+      !isArmorEnergyLocked(item, lockArmorEnergyType))
+  );
 }
 
 /**

@@ -1,5 +1,5 @@
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import React from 'react';
+import React, { useCallback } from 'react';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 import DraggableInventoryItem from './DraggableInventoryItem';
 import { DimItem } from './item-types';
@@ -15,9 +15,10 @@ interface Props {
  */
 export default function StoreInventoryItem({ item }: Props) {
   const dispatch = useThunkDispatch();
-  const doubleClicked = (e: React.MouseEvent) => {
-    dispatch(moveItemToCurrentStore(item, e));
-  };
+  const doubleClicked = useCallback(
+    (e: React.MouseEvent) => dispatch(moveItemToCurrentStore(item, e)),
+    [dispatch, item]
+  );
 
   return (
     <DraggableInventoryItem item={item}>

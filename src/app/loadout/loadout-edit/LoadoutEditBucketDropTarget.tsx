@@ -1,24 +1,13 @@
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
-import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
 import { DropTargetHookSpec, useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
-import { createSelector } from 'reselect';
 import styles from './LoadoutEditBucketDropTarget.m.scss';
-
-export const bucketTypesSelector = createSelector(
-  bucketsSelector,
-  storesSelector,
-  (buckets, stores) =>
-    buckets
-      ? Object.values(buckets.byType).flatMap((bucket) =>
-          stores.flatMap((store) => [bucket.hash.toString(), `${store.id}-${bucket.hash}`])
-        )
-      : emptyArray<string>()
-);
 
 /**
  * Provides two drop areas (only while dragging) - one for "Equipped" and one for "Unequipped".
@@ -28,9 +17,11 @@ export const bucketTypesSelector = createSelector(
 export default function LoadoutEditBucketDropTarget({
   children,
   category,
+  classType,
 }: {
   category: string;
   children?: React.ReactNode;
+  classType: DestinyClass;
 }) {
   const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
@@ -43,15 +34,15 @@ export default function LoadoutEditBucketDropTarget({
       { isOver: boolean; canDrop: boolean }
     > => ({
       accept: [
-        'postmaster',
         ...buckets.byCategory[category].flatMap((bucket) => [
           bucket.hash.toString(),
           ...stores.flatMap((store) => `${store.id}-${bucket.hash}`),
         ]),
       ],
       drop: () => ({ equipped }),
-      // TODO: only accept items that fit in the loadout's class
-      canDrop: itemCanBeInLoadout,
+      canDrop: (i) =>
+        itemCanBeInLoadout(i) &&
+        (i.classType === DestinyClass.Unknown || classType === i.classType),
       collect: (monitor) => ({
         isOver: monitor.isOver() && monitor.canDrop(),
         canDrop: monitor.canDrop(),
@@ -78,7 +69,7 @@ export default function LoadoutEditBucketDropTarget({
             })}
             ref={equippedRef}
           >
-            Equipped
+            {t('Loadouts.Equipped')}
           </div>
           <div
             className={clsx({
@@ -86,7 +77,7 @@ export default function LoadoutEditBucketDropTarget({
             })}
             ref={unequippedRef}
           >
-            Unequipped
+            {t('Loadouts.Unequipped')}
           </div>
         </div>
       )}

@@ -1,3 +1,4 @@
+import { useDrag } from '@use-gesture/react';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
@@ -13,7 +14,6 @@ import React, {
   useState,
 } from 'react';
 import { animated, config, SpringConfig, useSpring } from 'react-spring';
-import { useDrag } from 'react-use-gesture';
 import { AppIcon, disabledIcon } from '../shell/icons';
 import { PressTipRoot } from './PressTip';
 import styles from './Sheet.m.scss';
@@ -24,7 +24,7 @@ import './Sheet.scss';
  * sheets are shown, where each sheet is wired to its parent so that each child
  * disables and re-enables its parent automatically.
  */
-export const SheetDisabledContext = createContext<(shown: boolean) => void>(() => {
+const SheetDisabledContext = createContext<(shown: boolean) => void>(() => {
   // No-op
 });
 
@@ -171,7 +171,7 @@ export default function Sheet({
       e?.preventDefault();
       closing.current = true;
       // Animate offscreen
-      setSpring({
+      setSpring.start({
         immediate: reducedMotion && !dragDismiss,
         to: { transform: `translateY(${height()}px)` },
       });
@@ -183,7 +183,7 @@ export default function Sheet({
   useGlobalEscapeKey(handleClose);
 
   // This handles all drag interaction. The callback is called without re-render.
-  const bindDrag = useDrag(({ event, active, movement, vxvy, last, cancel }) => {
+  const bindDrag = useDrag(({ event, active, movement, velocity, last, cancel }) => {
     event?.stopPropagation();
 
     // If we haven't enabled dragging, cancel the gesture
@@ -194,11 +194,11 @@ export default function Sheet({
     // How far down should we be positioned?
     const yDelta = active ? Math.max(0, movement[1]) : 0;
     // Set immediate (no animation) if we're in a gesture, so it follows your finger precisely
-    setSpring({ immediate: active, to: { transform: `translateY(${yDelta}px)` } });
+    setSpring.start({ immediate: active, to: { transform: `translateY(${yDelta}px)` } });
 
     // Detect if the gesture ended with a high velocity, or with the sheet more than
     // dismissAmount percent of the way down - if so, consider it a close gesture.
-    if (last && (movement[1] > (height() || 0) * dismissAmount || vxvy[1] > dismissVelocity)) {
+    if (last && (movement[1] > (height() || 0) * dismissAmount || velocity[1] > dismissVelocity)) {
       handleClose(undefined, true);
     }
   });
@@ -250,6 +250,8 @@ export default function Sheet({
 
           <div
             className="sheet-container"
+            onPointerDown={dragHandleDown}
+            onPointerUp={dragHandleUp}
             onMouseDown={dragHandleDown}
             onMouseUp={dragHandleUp}
             onTouchStart={dragHandleDown}

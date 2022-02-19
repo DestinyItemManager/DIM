@@ -21,7 +21,7 @@ export const makeDupeID = (item: DimItem) =>
 
 // so, duplicate detection has gotten complicated in season 8. same items can have different hashes.
 // we use enough values to ensure this item is intended to be the same, as the index for looking up dupes
-export const makeSeasonalDupeID = (item: DimItem) =>
+const makeSeasonalDupeID = (item: DimItem) =>
   (item.classified && `${item.hash}`) ||
   `${item.name}${item.classType}${item.tier}item.collectibleHash}${item.powerCap}${getSeason(
     item
@@ -83,7 +83,7 @@ export const computeDupes = (allItems: DimItem[]) => computeDupesByIdFn(allItems
 /**
  * A memoized function to find a map of duplicate items using the makeSeasonalDupeID function.
  */
-export const computeSeasonalDupes = (allItems: DimItem[]) =>
+const computeSeasonalDupes = (allItems: DimItem[]) =>
   computeDupesByIdFn(allItems, makeSeasonalDupeID);
 
 const dupeFilters: FilterDefinition[] = [

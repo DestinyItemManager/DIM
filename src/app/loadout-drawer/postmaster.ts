@@ -121,7 +121,7 @@ export function postmasterAlmostFull(store: DimStore) {
   return postmasterSpaceLeft(store) < 6; // I think you can get 6 drops at once in some activities
 }
 
-export function postmasterSpaceLeft(store: DimStore) {
+function postmasterSpaceLeft(store: DimStore) {
   return Math.max(0, POSTMASTER_SIZE - totalPostmasterItems(store));
 }
 export function postmasterSpaceUsed(store: DimStore) {

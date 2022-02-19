@@ -36,11 +36,8 @@ import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
 
-// TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
+// TODO: Consider moving editLoadout/addItemToLoadout into Redux (actions + state)
 // TODO: break out a container from the actual loadout drawer so we can lazy load the drawer
-
-/** Is the loadout drawer currently open? */
-export let loadoutDialogOpen = false;
 
 /**
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit
@@ -64,10 +61,6 @@ export default function LoadoutDrawer2() {
     },
     showFashionDrawer: false,
   });
-
-  // TODO: move to a container?
-  // Sync this global variable with our actual state. TODO: move to redux
-  loadoutDialogOpen = Boolean(loadout);
 
   // The loadout to edit comes in from the editLoadout$ observable
   useEventBusListener(
@@ -117,7 +110,12 @@ export default function LoadoutDrawer2() {
 
   // Close the sheet on navigation
   const { pathname } = useLocation();
-  useEffect(close, [pathname]);
+  useEffect(() => {
+    // Don't close if moving to the inventory or loadouts screen
+    if (!pathname.endsWith('inventory') && !pathname.endsWith('loadouts')) {
+      close();
+    }
+  }, [pathname]);
 
   const handleSaveLoadout = (e: React.MouseEvent, saveAsNew?: boolean) => {
     e.preventDefault();
@@ -252,7 +250,6 @@ export default function LoadoutDrawer2() {
   // TODO: undo/redo stack?
   // TODO: remove armor/subclass from any-class loadouts on save
   // TODO: build and publish a "loadouts API" via context
-  // TODO: only accept dropped items that fit in this class (and exclude subclass/armor for global loadouts)
 
   return (
     <Sheet
@@ -262,7 +259,11 @@ export default function LoadoutDrawer2() {
       disabled={showingItemPicker}
       allowClickThrough
     >
-      <LoadoutDrawerDropTarget onDroppedItem={onAddItem} className={styles.body}>
+      <LoadoutDrawerDropTarget
+        onDroppedItem={onAddItem}
+        classType={loadout.classType}
+        className={styles.body}
+      >
         <LoadoutEdit
           store={store}
           loadout={loadout}

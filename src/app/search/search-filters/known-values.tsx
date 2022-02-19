@@ -137,7 +137,7 @@ const knownValuesFilters: FilterDefinition[] = [
     filter: () => (item) => cosmeticTypes.includes(item.bucket.hash),
   },
   {
-    keywords: ['light', 'haslight', 'haspower'],
+    keywords: ['haslight', 'haspower'],
     description: tl('Filter.ContributePower'),
     filter: () => (item) => item.power > 0,
   },

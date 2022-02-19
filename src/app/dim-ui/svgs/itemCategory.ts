@@ -4,11 +4,7 @@ import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';
 import gauntlets from 'destiny-icons/armor_types/gloves.svg';
 import helmet from 'destiny-icons/armor_types/helmet.svg';
-import hunter from 'destiny-icons/general/class_hunter.svg';
-import titan from 'destiny-icons/general/class_titan.svg';
-import warlock from 'destiny-icons/general/class_warlock.svg';
 import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
-import ghost from 'destiny-icons/general/ghost.svg';
 import powerWeapon from 'destiny-icons/general/power_weapon.svg';
 import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
 import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
@@ -29,7 +25,7 @@ import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg';
 import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 
-export const weaponTypeSvgByCategoryHash = {
+const weaponTypeSvgByCategoryHash = {
   5: autoRifle,
   6: handCannon,
   7: pulseRifle,
@@ -49,31 +45,19 @@ export const weaponTypeSvgByCategoryHash = {
   3317538576: bow,
 };
 
-export const weaponSlotSvgByCategoryHash = {
+const weaponSlotSvgByCategoryHash = {
   2: dmgKinetic,
   3: energyWeapon,
   4: powerWeapon,
 };
 
-export const armorSlotSvgByCategoryHash = {
+const armorSlotSvgByCategoryHash = {
   45: helmet,
   46: gauntlets,
   47: chest,
   48: legs,
   49: classItem,
 };
-
-export const armorClassSvgByCategoryHash = {
-  23: hunter,
-  22: titan,
-  21: warlock,
-};
-
-export const cosmeticSvgByCategoryHash = {
-  39: ghost,
-};
-
-export const consumableSvgByCategoryHash = {};
 
 /** an SVG of the weapon's type, if determinable */
 export function getWeaponTypeSvgIcon(item: DimItem) {
