@@ -153,7 +153,7 @@ function makeRoomForD1Items(store: D1Store, cancelToken: CancelToken): ThunkResu
 
 // Ensure that there's {{inventoryClearSpaces}} number of open space(s) in each category that could
 // hold an item, so they don't go to the postmaster.
-export function makeRoomForItemsInBuckets(
+function makeRoomForItemsInBuckets(
   stores: DimStore[],
   store: DimStore,
   makeRoomBuckets: InventoryBucket[],

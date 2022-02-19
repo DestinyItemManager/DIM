@@ -5,7 +5,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
 import { Settings } from 'app/settings/initial-settings';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { armorStats, DEFAULT_SHADER } from '../d2-known-values';
@@ -21,7 +21,7 @@ export const makeDupeID = (item: DimItem) =>
 
 // so, duplicate detection has gotten complicated in season 8. same items can have different hashes.
 // we use enough values to ensure this item is intended to be the same, as the index for looking up dupes
-export const makeSeasonalDupeID = (item: DimItem) =>
+const makeSeasonalDupeID = (item: DimItem) =>
   (item.classified && `${item.hash}`) ||
   `${item.name}${item.classType}${item.tier}item.collectibleHash}${item.powerCap}${getSeason(
     item
@@ -83,7 +83,7 @@ export const computeDupes = (allItems: DimItem[]) => computeDupesByIdFn(allItems
 /**
  * A memoized function to find a map of duplicate items using the makeSeasonalDupeID function.
  */
-export const computeSeasonalDupes = (allItems: DimItem[]) =>
+const computeSeasonalDupes = (allItems: DimItem[]) =>
   computeDupesByIdFn(allItems, makeSeasonalDupeID);
 
 const dupeFilters: FilterDefinition[] = [
@@ -197,7 +197,6 @@ export function checkIfIsDupe(
 ) {
   return (
     duplicates[dupeId]?.length > 1 &&
-    !item.itemCategoryHashes.includes(ItemCategoryHashes.ClanBanner) &&
     item.hash !== DEFAULT_SHADER &&
     item.bucket.hash !== BucketHashes.SeasonalArtifact
   );

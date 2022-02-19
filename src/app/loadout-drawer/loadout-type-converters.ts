@@ -116,7 +116,7 @@ export function convertDimApiLoadoutToLoadout(loadout: Loadout): DimLoadout {
 /**
  * Converts DimApiLoadoutItem to real loadout items.
  */
-export function convertDimApiLoadoutItemToLoadoutItem(
+function convertDimApiLoadoutItemToLoadoutItem(
   item: LoadoutItem,
   equipped: boolean
 ): DimLoadoutItem {

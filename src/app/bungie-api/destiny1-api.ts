@@ -92,7 +92,7 @@ function getDestinyInventories(platform: DestinyAccount, characters: any[]) {
   return Promise.all(promises);
 }
 
-export function getDestinyProgression(platform: DestinyAccount, characters: any[]) {
+function getDestinyProgression(platform: DestinyAccount, characters: any[]) {
   const promises = characters.map(async (character) => {
     const response = await authenticatedHttpClient(
       bungieApiQuery(
@@ -110,7 +110,7 @@ export function getDestinyProgression(platform: DestinyAccount, characters: any[
   return Promise.all(promises);
 }
 
-export function getDestinyAdvisors(platform: DestinyAccount, characters: any[]) {
+function getDestinyAdvisors(platform: DestinyAccount, characters: any[]) {
   const promises = characters.map(async (character) => {
     const response = await authenticatedHttpClient(
       bungieApiQuery(

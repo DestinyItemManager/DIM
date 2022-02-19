@@ -12,9 +12,9 @@ export const D2Categories: {
     'Emblems',
     'Ships',
     'Vehicle',
+    'Emotes',
     'Finishers',
     'SeasonalArtifacts',
-    'ClanBanners',
   ],
   Inventory: ['Consumables', 'Modifications'],
 };

@@ -228,7 +228,7 @@ function getStringsFromDisplayPropertiesMap<T extends { name: string; descriptio
 }
 
 /** includes name and description unless you set the arg2 flag */
-export function getStringsFromAllSockets(item: DimItem, includeDescription = true) {
+function getStringsFromAllSockets(item: DimItem, includeDescription = true) {
   return (
     item.sockets?.allSockets.flatMap((socket) => {
       const plugAndPerkDisplay = socket.plugOptions.map((plug) => [

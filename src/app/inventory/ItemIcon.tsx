@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import pursuitComplete from 'images/highlightedObjective.svg';
 import React from 'react';
-import { DimItem } from './item-types';
+import { DimItem, PluggableInventoryItemDefinition } from './item-types';
 import styles from './ItemIcon.m.scss';
 
 const itemTierStyles = {
@@ -28,7 +28,16 @@ const itemTierStyles = {
  *
  * This renders just a fragment - it always needs to be rendered inside another div with class "item".
  */
-export default function ItemIcon({ item, className }: { item: DimItem; className?: string }) {
+export default function ItemIcon({
+  item,
+  ornament,
+  className,
+}: {
+  item: DimItem;
+  /** overrides the item's real/current appearance, with an intended ornament, i.e. for loadout fashion */
+  ornament?: PluggableInventoryItemDefinition;
+  className?: string;
+}) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
   const borderless =
     (item?.destinyVersion === 2 &&
@@ -45,7 +54,11 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
 
   return (
     <>
-      <BungieImage src={item.icon} className={itemImageStyles} alt="" />
+      <BungieImage
+        src={ornament?.displayProperties.icon || item.icon}
+        className={itemImageStyles}
+        alt=""
+      />
       {item.masterwork && (
         <div
           className={clsx(styles.masterworkOverlay, { [styles.exoticMasterwork]: item.isExotic })}
@@ -139,10 +152,7 @@ export function DefItemIcon({
 /**
  * given a mod definition or hash, returns destructurable energy cost information
  */
-export function getModCostInfo(
-  mod: DestinyInventoryItemDefinition | number,
-  defs: D2ManifestDefinitions
-) {
+function getModCostInfo(mod: DestinyInventoryItemDefinition | number, defs: D2ManifestDefinitions) {
   const modCostInfo: {
     energyCost?: number;
     energyCostElement?: DestinyEnergyTypeDefinition;

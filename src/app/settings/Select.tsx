@@ -38,7 +38,3 @@ export function mapToOptions(map: { [key: string]: string }) {
     value: key,
   }));
 }
-
-export function listToOptions(list: string[]) {
-  return list.map((value) => ({ value }));
-}
