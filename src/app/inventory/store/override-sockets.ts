@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
 import produce from 'immer';
 import _ from 'lodash';
@@ -60,7 +61,11 @@ export function applySocketOverrides(
       if (newPlug) {
         // If this is an ornament, override the item's icon as well
         if (newPlug.plugDef.plug.plugCategoryIdentifier.includes('skins')) {
-          icon = newPlug.plugDef.displayProperties.icon;
+          if (DEFAULT_ORNAMENTS.includes(newPlug.plugDef.hash)) {
+            icon = defs.InventoryItem.get(item.hash).displayProperties.icon;
+          } else {
+            icon = newPlug.plugDef.displayProperties.icon;
+          }
         }
         return {
           ...s,
