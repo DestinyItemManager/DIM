@@ -72,6 +72,15 @@ export default memo(function LoadoutMods({
             })}
             key={getModRenderKey(mod)}
             plug={mod}
+            onClose={
+              onUpdateMods &&
+              (() => {
+                const firstIndex = savedMods.findIndex((savedMod) => savedMod.hash === mod.hash);
+                const newMods = [...savedMods];
+                newMods.splice(firstIndex, 1);
+                onUpdateMods(newMods);
+              })
+            }
           />
         ))}
         {onUpdateMods && (

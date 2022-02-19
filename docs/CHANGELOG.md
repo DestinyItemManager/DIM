@@ -2,6 +2,11 @@
 
 * Fix applying D1 loadouts.
 
+### Beta Only
+
+* Loadout Editor
+  * Allow removal of a single mod through the editor display.
+
 ## 7.5.1 <span class="changelog-date">(2022-02-14)</span>
 
 ### Beta Only
