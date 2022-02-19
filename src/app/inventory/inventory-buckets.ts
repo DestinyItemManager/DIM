@@ -25,7 +25,13 @@ export interface InventoryBucket {
 }
 
 /** The major toplevel sections of the inventory. "Progress" is only in D1. */
-export type D2BucketCategory = 'Postmaster' | 'Weapons' | 'Armor' | 'General' | 'Inventory';
+export type D2BucketCategory =
+  | 'Postmaster'
+  | 'Weapons'
+  | 'Armor'
+  | 'Class'
+  | 'General'
+  | 'Inventory';
 export type D1BucketCategory = 'Postmaster' | 'Weapons' | 'Armor' | 'General' | 'Progress';
 export type DimBucketType = D2BucketTypes | D2AdditionalBucketTypes | D1BucketTypes;
 

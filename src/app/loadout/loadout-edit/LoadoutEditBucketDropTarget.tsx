@@ -18,10 +18,12 @@ export default function LoadoutEditBucketDropTarget({
   children,
   category,
   classType,
+  equippedOnly,
 }: {
   category: string;
   children?: React.ReactNode;
   classType: DestinyClass;
+  equippedOnly?: boolean;
 }) {
   const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
@@ -71,14 +73,16 @@ export default function LoadoutEditBucketDropTarget({
           >
             {t('Loadouts.Equipped')}
           </div>
-          <div
-            className={clsx({
-              [styles.over]: isOverUnequipped,
-            })}
-            ref={unequippedRef}
-          >
-            {t('Loadouts.Unequipped')}
-          </div>
+          {!equippedOnly && (
+            <div
+              className={clsx({
+                [styles.over]: isOverUnequipped,
+              })}
+              ref={unequippedRef}
+            >
+              {t('Loadouts.Unequipped')}
+            </div>
+          )}
         </div>
       )}
       <div className={clsx({ [styles.dragOver]: canDropEquipped || canDropUnequipped })}>

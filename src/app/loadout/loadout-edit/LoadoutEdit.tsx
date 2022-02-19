@@ -179,39 +179,45 @@ export default function LoadoutEdit({
             setLoadoutSubclassFromEquipped(loadout, subclass, store, updateLoadout)
           }
         >
-          <LoadoutEditSubclass
-            defs={defs}
-            subclass={subclass}
-            power={power}
-            onRemove={handleClearSubclass}
-            onPick={() => onClickSubclass(subclass)}
-          />
-          {subclass && (
-            <div className={styles.buttons}>
-              {subclass.sockets ? (
-                <button
-                  type="button"
-                  className="dim-button"
-                  onClick={() => setPlugDrawerOpen(true)}
-                >
-                  {t('LB.SelectSubclassOptions')}
-                </button>
-              ) : (
-                <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
-              )}
-            </div>
-          )}
-          {plugDrawerOpen &&
-            subclass &&
-            ReactDOM.createPortal(
-              <SubclassPlugDrawer
-                subclass={subclass}
-                socketOverrides={subclass.socketOverrides ?? {}}
-                onClose={() => setPlugDrawerOpen(false)}
-                onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
-              />,
-              document.body
+          <LoadoutEditBucketDropTarget
+            category="Class"
+            classType={loadout.classType}
+            equippedOnly={true}
+          >
+            <LoadoutEditSubclass
+              defs={defs}
+              subclass={subclass}
+              power={power}
+              onRemove={handleClearSubclass}
+              onPick={() => onClickSubclass(subclass)}
+            />
+            {subclass && (
+              <div className={styles.buttons}>
+                {subclass.sockets ? (
+                  <button
+                    type="button"
+                    className="dim-button"
+                    onClick={() => setPlugDrawerOpen(true)}
+                  >
+                    {t('LB.SelectSubclassOptions')}
+                  </button>
+                ) : (
+                  <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
+                )}
+              </div>
             )}
+            {plugDrawerOpen &&
+              subclass &&
+              ReactDOM.createPortal(
+                <SubclassPlugDrawer
+                  subclass={subclass}
+                  socketOverrides={subclass.socketOverrides ?? {}}
+                  onClose={() => setPlugDrawerOpen(false)}
+                  onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
+                />,
+                document.body
+              )}
+          </LoadoutEditBucketDropTarget>
         </LoadoutEditSection>
       )}
       {(anyClass ? ['Weapons', 'General'] : ['Weapons', 'Armor', 'General']).map((category) => (

@@ -41,6 +41,7 @@ export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Emblems,
 ];
 
+// TODO (ryan) why is this a thing? Weapons doesn't contain either of these
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots
 const gearSlotOrder: DimItem['type'][] = [
