@@ -217,13 +217,13 @@ function makeItem(
     if (itemDef.classified && itemDef.itemTypeName === 'Unknown') {
       switch (currentBucket.hash) {
         case 4046403665:
-          currentBucket = buckets.byType.Heavy;
+          currentBucket = buckets.byHash[BucketHashes.PowerWeapons];
           break;
         case 3003523923:
-          currentBucket = buckets.byType.ClassItem;
+          currentBucket = buckets.byHash[BucketHashes.ClassArmor];
           break;
         case 138197802:
-          currentBucket = buckets.byType.Artifact;
+          currentBucket = buckets.byHash[D1BucketHashes.Artifact];
           break;
         default:
           break;

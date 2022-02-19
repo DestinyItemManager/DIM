@@ -72,7 +72,6 @@ _.forIn(D1Categories, (bucketHashes, category: D1BucketCategory) => {
 export function getBuckets(defs: D1ManifestDefinitions) {
   const buckets: InventoryBuckets = {
     byHash: {},
-    byType: {},
     byCategory: {},
     unknown: {
       description: 'Unknown items. DIM needs a manifest update.',
@@ -105,9 +104,6 @@ export function getBuckets(defs: D1ManifestDefinitions) {
         type,
         sort,
       };
-      if (bucket.type) {
-        buckets.byType[bucket.type] = bucket;
-      }
       if (sort) {
         // Add an easy helper property like "inPostmaster"
         bucket[`in${sort}`] = true;
