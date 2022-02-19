@@ -10,6 +10,11 @@
 * Clan Banners are no longer shown in DIM.
 * Weapon compare sheet now includes a button to compare with other legendary weapons of the same category, excluding exotics.
 
+### Beta Only
+
+* Loadout Editor
+  * Allow removal of a single mod through the editor display.
+
 ## 7.5.1 <span class="changelog-date">(2022-02-14)</span>
 
 ### Beta Only
