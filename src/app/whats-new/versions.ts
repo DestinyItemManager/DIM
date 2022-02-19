@@ -55,7 +55,7 @@ function splitVersion(version: string): number[] {
   return version.split('.').map((s) => parseInt(s, 10));
 }
 
-export function compareVersions(version1: string, version2: string) {
+function compareVersions(version1: string, version2: string) {
   const v1 = splitVersion(version1);
   const v2 = splitVersion(version2);
 

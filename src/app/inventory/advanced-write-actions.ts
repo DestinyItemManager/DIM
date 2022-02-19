@@ -265,7 +265,7 @@ function refreshItemAfterAWA(changes: DestinyItemChangeResponse): ThunkResult {
  *
  * @param item The item is optional unless the type is DismantleGroupA, but it's best to pass it when possible.
  */
-export async function getAwaToken(
+async function getAwaToken(
   account: DestinyAccount,
   action: AwaType,
   storeId: string,

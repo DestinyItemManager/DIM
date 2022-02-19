@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
  *
  * negative durations are treated as 0
  */
-export function durationFromMs(ms: number) {
+function durationFromMs(ms: number) {
   ms = Math.floor(Math.max(0, ms));
   const days = Math.floor(ms / 86400000); // 86400000 ms per day
   ms %= 86400000; // ms now has full days taken out

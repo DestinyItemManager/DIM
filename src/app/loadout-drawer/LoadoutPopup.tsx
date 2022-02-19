@@ -336,7 +336,7 @@ export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(LoadoutPo
 /**
  * Filter a loadout down to only the equipped items in the loadout.
  */
-export function filterLoadoutToEquipped(loadout: Loadout) {
+function filterLoadoutToEquipped(loadout: Loadout) {
   return {
     ...loadout,
     items: loadout.items.filter((i) => i.equipped),

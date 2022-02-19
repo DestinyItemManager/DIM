@@ -726,11 +726,7 @@ function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnerg
 }
 
 /** Artifice Armor won't be properly detected unless defs are passed in */
-export function isAssigningToDefault(
-  item: DimItem,
-  assignment: Assignment,
-  defs: D2ManifestDefinitions
-) {
+function isAssigningToDefault(item: DimItem, assignment: Assignment, defs: D2ManifestDefinitions) {
   const socket = item.sockets && getSocketByIndex(item.sockets, assignment.socketIndex);
   if (!socket) {
     warnLog(

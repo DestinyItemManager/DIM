@@ -327,7 +327,7 @@ function toMetrics(
   );
 }
 
-export function getRecordComponent(
+function getRecordComponent(
   recordDef: DestinyRecordDefinition,
   profileResponse: DestinyProfileResponse
 ): DestinyRecordComponent | undefined {
@@ -355,7 +355,7 @@ export function getCollectibleState(
     : profileResponse.profileCollectibles?.data?.collectibles[collectibleDef.hash]?.state;
 }
 
-export function getMetricComponent(
+function getMetricComponent(
   metricDef: DestinyMetricDefinition,
   profileResponse: DestinyProfileResponse
 ): DestinyMetricComponent | undefined {
