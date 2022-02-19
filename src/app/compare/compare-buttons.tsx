@@ -156,6 +156,16 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
 
+    // above but also has to be legendary
+    exampleItem.destinyVersion === 2 &&
+      exampleItem.tier === 'Legendary' && {
+        buttonLabel: [
+          <BungieImage key="rarity" src={rarityIcons.Legendary} />,
+          <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
+        ],
+        query: 'is:legendary',
+      },
+
     // above, but also matching intrinsic (rpm+impact..... ish)
     {
       buttonLabel: [
