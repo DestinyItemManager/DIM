@@ -111,24 +111,53 @@ export function stateReducer(state: State, action: Action): State {
         return state;
       }
 
-      const owner =
-        item.owner === 'vault' ? getCurrentStore(stores)! : getStore(stores, item.owner)!;
-      const classType = item.classType === DestinyClass.Unknown ? owner.classType : item.classType;
+      if (loadout) {
+        if (item.classType !== DestinyClass.Unknown && loadout.classType !== item.classType) {
+          showNotification({
+            type: 'warning',
+            title: t('Loadouts.ClassTypeMismatch', { className: item.classTypeNameLocalized }),
+          });
+          return state;
+        }
+        const draftLoadout = addItem(loadout, item, shift, items, equip, socketOverrides);
+        return {
+          ...state,
+          loadout: draftLoadout,
+        };
+      } else {
+        // If we don't have a loadout, this action was invoked via the "+ Loadout" button in item actions
+        let owner: DimStore =
+          item.owner === 'vault' ? getCurrentStore(stores)! : getStore(stores, item.owner)!;
 
-      // Check whether this addItem happened without a loadout being edited,
-      // which can happen from item popup action buttons.
-      const [addToLoadout, isNew] = loadout
-        ? [loadout, state.isNew]
-        : [newLoadout('', [], classType), true];
+        if (item.classType !== DestinyClass.Unknown && item.classType !== owner.classType) {
+          const matchingStore = stores.find((s) => s.classType === item.classType);
+          if (!matchingStore) {
+            showNotification({
+              type: 'warning',
+              title: t('Loadouts.ClassTypeMissing', { className: item.classTypeNameLocalized }),
+            });
+            return state;
+          }
+          owner = matchingStore;
+        }
 
-      const draftLoadout = addItem(addToLoadout, item, shift, items, equip, socketOverrides);
-
-      return {
-        ...state,
-        loadout: draftLoadout,
-        storeId: owner.id,
-        isNew,
-      };
+        const classType =
+          item.classType === DestinyClass.Unknown ? owner.classType : item.classType;
+        const draftLoadout = addItem(
+          newLoadout('', [], classType),
+          item,
+          shift,
+          items,
+          equip,
+          socketOverrides
+        );
+        return {
+          ...state,
+          loadout: draftLoadout,
+          storeId: owner.id,
+          isNew: true,
+        };
+      }
     }
 
     case 'removeItem': {
