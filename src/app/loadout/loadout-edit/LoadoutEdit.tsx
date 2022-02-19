@@ -14,6 +14,7 @@ import {
 import {
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
+  getUnequippedItemsForLoadout,
   setLoadoutSubclassFromEquipped,
 } from 'app/loadout-drawer/LoadoutDrawerContents';
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
@@ -222,6 +223,7 @@ export default function LoadoutEdit({
           onFillFromEquipped={() =>
             fillLoadoutFromEquipped(loadout, itemsByBucket, store, updateLoadout, category)
           }
+          fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
           onFillFromInventory={() => fillLoadoutFromUnequipped(loadout, store, onAddItem, category)}
           onClearLoadoutParameters={
             category === 'Armor' && hasVisibleLoadoutParameters(loadout.parameters)
