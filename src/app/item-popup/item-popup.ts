@@ -17,6 +17,9 @@ export interface ItemPopupExtraInfo {
   owned?: boolean;
   acquired?: boolean;
   mod?: boolean;
+  // markers for craftable items
+  allPlugsReqsAreMet?: boolean;
+  craftingReqsAreMet?: boolean;
 }
 
 export function showItemPopup(
