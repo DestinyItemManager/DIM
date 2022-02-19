@@ -8,7 +8,7 @@ import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo from './BadgeInfo';
 import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
-import { DimItem } from './item-types';
+import { DimItem, PluggableInventoryItemDefinition } from './item-types';
 import ItemIcon from './ItemIcon';
 import NewItemIndicator from './NewItemIndicator';
 import { selectedSubclassPath } from './subclass';
@@ -30,6 +30,7 @@ interface Props {
   /** Don't show information that relates to currently selected perks (only used for subclasses currently) */
   ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
+  ornament?: PluggableInventoryItemDefinition;
   /** TODO: item locked needs to be passed in */
   onClick?(e: React.MouseEvent): void;
   onShiftClick?(e: React.MouseEvent): void;
@@ -49,6 +50,7 @@ export default function InventoryItem({
   onShiftClick,
   onDoubleClick,
   innerRef,
+  ornament,
 }: Props) {
   let enhancedOnClick = onClick;
   if (onShiftClick) {
@@ -97,7 +99,7 @@ export default function InventoryItem({
             <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
           </div>
         )}
-        <ItemIcon item={item} />
+        <ItemIcon item={item} ornament={ornament} />
         <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
         {(tag || item.locked || notes) && (
           <div className={styles.icons}>
@@ -114,7 +116,7 @@ export default function InventoryItem({
         {isNew && <NewItemIndicator />}
       </>
     );
-  }, [isNew, item, notes, subclassPath, tag, wishlistRoll]);
+  }, [isNew, item, notes, ornament, subclassPath, tag, wishlistRoll]);
 
   return (
     <div
