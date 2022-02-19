@@ -14,6 +14,7 @@ import {
 import {
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
+  getUnequippedItemsForLoadout,
   setLoadoutSubclassFromEquipped,
 } from 'app/loadout-drawer/LoadoutDrawerContents';
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
@@ -68,7 +69,9 @@ export default function LoadoutEdit({
 
   const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
   // TODO: filter down by usable mods?
-  const modsByBucket = loadout.parameters?.modsByBucket ?? {};
+  const modsByBucket: {
+    [bucketHash: number]: number[] | undefined;
+  } = loadout.parameters?.modsByBucket ?? {};
   const clearUnsetMods = loadout.parameters?.clearMods;
 
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
@@ -222,6 +225,7 @@ export default function LoadoutEdit({
           onFillFromEquipped={() =>
             fillLoadoutFromEquipped(loadout, itemsByBucket, store, updateLoadout, category)
           }
+          fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
           onFillFromInventory={() => fillLoadoutFromUnequipped(loadout, store, onAddItem, category)}
           onClearLoadoutParameters={
             category === 'Armor' && hasVisibleLoadoutParameters(loadout.parameters)

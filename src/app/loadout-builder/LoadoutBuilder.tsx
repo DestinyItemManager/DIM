@@ -261,6 +261,7 @@ function LoadoutBuilder({
         lockedMods,
         lockedExoticHash,
         lockArmorEnergyType: loadoutParameters.lockArmorEnergyType,
+        assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork,
         searchFilter,
       }),
     [
@@ -271,6 +272,7 @@ function LoadoutBuilder({
       lockedMods,
       lockedExoticHash,
       loadoutParameters.lockArmorEnergyType,
+      loadoutParameters.assumeArmorMasterwork,
       searchFilter,
     ]
   );

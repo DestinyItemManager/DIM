@@ -89,6 +89,14 @@ export function getSocketsByCategoryHash(
   return getSocketsByIndexes(sockets, category.socketIndexes);
 }
 
+/** Find all sockets on the item that belong to the given category hash */
+export function getSocketsByCategoryHashes(
+  sockets: DimSockets | null,
+  categoryHashes: SocketCategoryHashes[]
+) {
+  return categoryHashes.flatMap((categoryHash) => getSocketsByCategoryHash(sockets, categoryHash));
+}
+
 /** Special case of getSocketsByCategoryHash that returns the first (presumably only) socket that matches the category hash */
 export function getFirstSocketByCategoryHash(
   sockets: DimSockets,

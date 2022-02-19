@@ -1,8 +1,6 @@
 import { t } from 'app/i18next-t';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
@@ -17,6 +15,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from './BucketPlaceholder';
 import { FashionMods } from './FashionMods';
+import ItemWithFashion from './ItemWithFashion';
 import styles from './LoadoutItemCategorySection.m.scss';
 import LoadoutParametersDisplay from './LoadoutParametersDisplay';
 import { OptimizerButton } from './OptimizerButton';
@@ -142,18 +141,12 @@ function ItemBucket({
             key={index}
           >
             {items.map((item) => (
-              <DraggableInventoryItem item={item} key={item.id}>
-                <ItemPopupTrigger item={item}>
-                  {(ref, onClick) => (
-                    <div
-                      className={clsx({
-                        [styles.missingItem]: item.owner === 'unknown',
-                      })}
-                    >
-                      <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
-                    </div>
-                  )}
-                </ItemPopupTrigger>
+              <DraggableInventoryItem key={item.id} item={item}>
+                <ItemWithFashion
+                  item={item}
+                  applyFashion={showFashion && index === 0}
+                  modsForBucket={modsForBucket}
+                />
               </DraggableInventoryItem>
             ))}
             {index === 0 && showFashion && (

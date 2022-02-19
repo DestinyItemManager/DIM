@@ -43,6 +43,8 @@ const itemSubTypeToItemCategoryHash: { [key in DestinyItemSubType]: number } = {
   [DestinyItemSubType.SubmachineGun]: 3954685534,
   [DestinyItemSubType.TraceRifle]: 2489664120,
   [DestinyItemSubType.Bow]: 3317538576,
+  // TODO: Fill this in when the manifest gets released
+  [DestinyItemSubType.Glaive]: 0,
 };
 
 /**

@@ -21,7 +21,6 @@ export function getSeason(item: DimItem): number {
 
   if (
     item.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
-    item.itemCategoryHashes.includes(ItemCategoryHashes.ClanBanner) ||
     item.itemCategoryHashes.includes(ItemCategoryHashes.Dummies) ||
     item.itemCategoryHashes.length === 0
   ) {

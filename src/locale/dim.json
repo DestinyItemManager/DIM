@@ -895,6 +895,7 @@
       "Ornament": "Apply Ornament",
       "Projection": "Apply Ghost Projection",
       "Shader": "Apply Shader",
+      "Super": "",
       "Transmat": "Apply Transmat Effect"
     },
     "ListStyle": "Display perks as a list",
@@ -907,6 +908,7 @@
       "Ornament": "Preview Ornament",
       "Projection": "Preview Ghost Projection",
       "Shader": "Preview Shader",
+      "Super": "Preview Super",
       "Transmat": "Preview Transmat Effect"
     },
     "SelectWishlistPerks": "Preview Wishlist Perks"
