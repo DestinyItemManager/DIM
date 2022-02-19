@@ -72,7 +72,11 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
       {exoticArmorPerkSocket && (
         <ArchetypeRow minimal={minimal}>
           {exoticArmorPerkSocket?.plugged && (
-            <ArchetypeSocket archetypeSocket={exoticArmorPerkSocket} item={item}>
+            <ArchetypeSocket
+              archetypeSocket={exoticArmorPerkSocket}
+              item={item}
+              onClick={handleSocketClick}
+            >
               {!minimal && (
                 <div className={styles.exoticDescription}>
                   <RichDestinyText

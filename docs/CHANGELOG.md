@@ -2,6 +2,7 @@
 
 * Fix applying D1 loadouts.
 * Fashion is now applied to items in a loadout.
+* You can now change the Aeon sect mod through the item popup.
 
 ## 7.5.1 <span class="changelog-date">(2022-02-14)</span>
 
