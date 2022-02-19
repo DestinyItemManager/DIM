@@ -345,7 +345,7 @@ export function fillLoadoutFromEquipped(
       (category
         ? category === 'subclass'
           ? item.bucket.hash === BucketHashes.Subclass
-          : item.bucket.sort === category
+          : item.bucket.sort === category && item.bucket.hash !== BucketHashes.Subclass
         : fromEquippedTypes.includes(item.bucket.hash))
   );
 
