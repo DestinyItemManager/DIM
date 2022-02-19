@@ -62,10 +62,10 @@ const sortToVault = {
   General: 138197802,
 };
 
-const typeToSort: { [type: string]: D1BucketCategory } = {};
-_.forIn(D1Categories, (types, category: D1BucketCategory) => {
-  types.forEach((type) => {
-    typeToSort[type] = category;
+const bucketHashToSort: { [bucketHash: number]: D1BucketCategory } = {};
+_.forIn(D1Categories, (bucketHashes, category: D1BucketCategory) => {
+  bucketHashes.forEach((bucketHash) => {
+    bucketHashToSort[bucketHash] = category;
   });
 });
 
@@ -93,12 +93,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
   _.forIn(defs.InventoryBucket, (def: any) => {
     if (def.enabled) {
       const type = bucketToType[def.hash];
-      let sort: D1BucketCategory | undefined;
-      if (type) {
-        sort = typeToSort[type];
-      } else if (vaultTypes[def.hash]) {
-        sort = vaultTypes[def.hash];
-      }
+      const sort = bucketHashToSort[def.hash] ?? vaultTypes[def.hash];
       const bucket: InventoryBucket = {
         description: def.bucketDescription,
         name: def.bucketName,
@@ -107,7 +102,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
         capacity: def.itemCount,
         accountWide: false,
         category: BucketCategory.Item,
-        type: bucketToType[def.hash],
+        type,
         sort,
       };
       if (bucket.type) {
@@ -125,8 +120,10 @@ export function getBuckets(defs: D1ManifestDefinitions) {
       bucket.vaultBucket = buckets.byHash[sortToVault[bucket.sort]];
     }
   });
-  _.forIn(D1Categories, (types, category) => {
-    buckets.byCategory[category] = _.compact(types.map((type) => buckets.byType[type]));
+  _.forIn(D1Categories, (bucketHashes, category) => {
+    buckets.byCategory[category] = _.compact(
+      bucketHashes.map((bucketHash) => buckets.byHash[bucketHash])
+    );
   });
   return buckets;
 }
