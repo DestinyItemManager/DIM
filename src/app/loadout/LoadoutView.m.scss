@@ -49,6 +49,7 @@
   display: flex;
   flex-flow: row wrap;
   margin-top: 10px;
+  min-height: 16px;
   @include flex-gap(24px);
   @include phone-portrait {
     @include flex-gap(12px);
