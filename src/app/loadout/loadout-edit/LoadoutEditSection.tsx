@@ -13,6 +13,7 @@ export default function LoadoutEditSection({
   onClear,
   onFillFromEquipped,
   onSyncFromEquipped,
+  fillFromInventoryCount,
   onFillFromInventory,
   onClearLoadoutParameters,
 }: {
@@ -22,6 +23,7 @@ export default function LoadoutEditSection({
   onClear(): void;
   onFillFromEquipped?(): void;
   onSyncFromEquipped?(): void;
+  fillFromInventoryCount?: number;
   onFillFromInventory?(): void;
   onClearLoadoutParameters?(): void;
 }) {
@@ -55,6 +57,7 @@ export default function LoadoutEditSection({
           content: (
             <>
               <AppIcon icon={downloadIcon} /> {t('Loadouts.FillFromInventory')}
+              {fillFromInventoryCount !== undefined && ` (${fillFromInventoryCount})`}
             </>
           ),
         }
