@@ -26,7 +26,7 @@ export function ConfirmButton({
   // controls whether the button is ready to submit the requested function
   // (available 100ms after "ask for confirmation" state)
   const [confirmReady, setConfirmReady] = useState(false);
-
+  const childrenContent = React.useRef<HTMLDivElement>(null);
   const onClickAction =
     confirmMode && confirmReady
       ? () => {
@@ -45,6 +45,7 @@ export function ConfirmButton({
     <button
       key="save"
       type="button"
+      title={childrenContent.current?.innerText}
       className={clsx('dim-button', className, styles.confirmButton, {
         [styles.confirmMode]: confirmMode,
         danger,
@@ -55,7 +56,7 @@ export function ConfirmButton({
         setConfirmReady(false);
       }}
     >
-      <div>{children}</div>
+      <div ref={childrenContent}>{children}</div>
       <div>{t('General.Confirm')}</div>
     </button>
   );
