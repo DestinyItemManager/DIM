@@ -30,6 +30,7 @@ interface Props {
   /** Don't show information that relates to currently selected perks (only used for subclasses currently) */
   ignoreSelectedPerks?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
+  /** overrides the item's real/current appearance, with an intended ornament, i.e. for loadout fashion */
   ornament?: PluggableInventoryItemDefinition;
   /** TODO: item locked needs to be passed in */
   onClick?(e: React.MouseEvent): void;
