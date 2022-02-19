@@ -999,7 +999,7 @@
       "Aspect": "Preview Aspect",
       "Transmat": "Preview Transmat Effect",
       "Projection": "Preview Ghost Projection",
-      "Super": "Super"
+      "Super": "Preview Super"
     },
     "ListStyle": "Display perks as a list",
     "GridStyle": "Display perks as a grid"
