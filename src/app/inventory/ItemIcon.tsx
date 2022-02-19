@@ -33,6 +33,7 @@ export default function ItemIcon({
   className,
 }: {
   item: DimItem;
+  /** overrides the item's real/current appearance, with an intended ornament, i.e. for loadout fashion */
   ornament?: PluggableInventoryItemDefinition;
   className?: string;
 }) {
