@@ -187,7 +187,11 @@ export function itemCanBeEquippedByStoreId(
 /** Could this be added to a loadout? */
 export function itemCanBeInLoadout(item: DimItem): boolean {
   return (
-    item.equipment ||
+    (item.equipment &&
+      // These are equippable and transferable but can't be in loadouts
+      item.bucket.hash !== BucketHashes.Finishers &&
+      item.bucket.hash !== BucketHashes.Emotes_Invisible &&
+      item.bucket.hash !== BucketHashes.ClanBanners) ||
     (item.destinyVersion === 1 &&
       (item.bucket.hash === BucketHashes.Consumables ||
         // D1 had a "Material" type
