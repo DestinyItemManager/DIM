@@ -34,6 +34,7 @@ export default function PresentationNodeSearchResults({
             {!sr.collectibles &&
               !sr.records &&
               !sr.metrics &&
+              !sr.craftables &&
               (() => {
                 const node = sr.path[sr.path.length - 1];
                 return node.childPresentationNodes ? (
