@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { D2BucketCategory, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -131,7 +131,7 @@ export default function LoadoutView({
             {(!isPhonePortrait || subclass) && (
               <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
             )}
-            {['Weapons', 'Armor', 'General'].map((category) => (
+            {['Weapons', 'Armor', 'General'].map((category: D2BucketCategory) => (
               <LoadoutItemCategorySection
                 key={category}
                 category={category}
