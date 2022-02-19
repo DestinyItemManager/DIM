@@ -1,6 +1,7 @@
 ## Next
 
 * Fix applying D1 loadouts.
+* Fix issue where Loadout Optimizer armor upgrade settings were not being migrated from existing loadouts.
 
 ## 7.5.1 <span class="changelog-date">(2022-02-14)</span>
 
