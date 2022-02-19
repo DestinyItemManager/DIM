@@ -21,6 +21,7 @@ interface ProvidedProps {
   onShiftClick?(e: React.MouseEvent): void;
   onDoubleClick?(e: React.MouseEvent): void;
   dimArchived?: boolean;
+  /** overrides the item's real/current appearance, with an intended ornament, i.e. for loadout fashion */
   ornament?: PluggableInventoryItemDefinition;
 }
 
