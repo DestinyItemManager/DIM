@@ -17,11 +17,9 @@ import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
-import '../inventory/Stores.scss';
 import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
 import { deleteLoadout, updateLoadout } from './actions';
 import { stateReducer } from './loadout-drawer-reducer';
-import './loadout-drawer.scss';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
 import { Loadout } from './loadout-types';
@@ -98,8 +96,15 @@ export default function LoadoutDrawer2() {
 
   const onAddItem = useCallback(
     (item: DimItem, e?: MouseEvent | React.MouseEvent, equip?: boolean) =>
-      stateDispatch({ type: 'addItem', item, shift: Boolean(e?.shiftKey), items, equip }),
-    [items]
+      stateDispatch({
+        type: 'addItem',
+        item,
+        shift: Boolean(e?.shiftKey),
+        items,
+        equip,
+        stores,
+      }),
+    [items, stores]
   );
 
   /**
@@ -283,7 +288,7 @@ export default function LoadoutDrawer2() {
         <div className={styles.inputGroup}>
           <button
             type="button"
-            className="dim-button loadout-add"
+            className="dim-button"
             onClick={() =>
               fillLoadoutFromEquipped(loadout, itemsByBucket, store, handleUpdateLoadout)
             }
@@ -292,7 +297,7 @@ export default function LoadoutDrawer2() {
           </button>
           <button
             type="button"
-            className="dim-button loadout-add"
+            className="dim-button"
             onClick={() =>
               fillLoadoutFromUnequipped(loadout, store, ({ item }) =>
                 onAddItem(item, undefined, false)

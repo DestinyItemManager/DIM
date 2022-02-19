@@ -1,10 +1,13 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
+import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
@@ -50,6 +53,7 @@ export type Action =
       items: DimItem[];
       equip?: boolean;
       socketOverrides?: SocketOverrides;
+      stores: DimStore[];
     }
   /** Applies socket overrides to the supplied item */
   | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
@@ -100,24 +104,29 @@ export function stateReducer(state: State, action: Action): State {
 
     case 'addItem': {
       const { loadout } = state;
-      const { item, shift, items, equip, socketOverrides } = action;
+      const { item, shift, items, equip, socketOverrides, stores } = action;
 
       if (!itemCanBeInLoadout(item)) {
         showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
         return state;
       }
 
+      const owner =
+        item.owner === 'vault' ? getCurrentStore(stores)! : getStore(stores, item.owner)!;
+      const classType = item.classType === DestinyClass.Unknown ? owner.classType : item.classType;
+
       // Check whether this addItem happened without a loadout being edited,
       // which can happen from item popup action buttons.
       const [addToLoadout, isNew] = loadout
         ? [loadout, state.isNew]
-        : [newLoadout('', [], item.classType), true];
+        : [newLoadout('', [], classType), true];
 
       const draftLoadout = addItem(addToLoadout, item, shift, items, equip, socketOverrides);
 
       return {
         ...state,
         loadout: draftLoadout,
+        storeId: owner.id,
         isNew,
       };
     }
