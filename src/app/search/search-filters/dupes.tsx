@@ -5,7 +5,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
 import { Settings } from 'app/settings/initial-settings';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { armorStats, DEFAULT_SHADER } from '../d2-known-values';
@@ -197,7 +197,6 @@ export function checkIfIsDupe(
 ) {
   return (
     duplicates[dupeId]?.length > 1 &&
-    !item.itemCategoryHashes.includes(ItemCategoryHashes.ClanBanner) &&
     item.hash !== DEFAULT_SHADER &&
     item.bucket.hash !== BucketHashes.SeasonalArtifact
   );

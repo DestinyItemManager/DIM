@@ -7,14 +7,6 @@ export const D2Categories: {
   Weapons: ['KineticSlot', 'Energy', 'Power'],
   Armor: ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem'],
   Class: ['Class'],
-  General: [
-    'Ghost',
-    'Emblems',
-    'Ships',
-    'Vehicle',
-    'Finishers',
-    'SeasonalArtifacts',
-    'ClanBanners',
-  ],
+  General: ['Ghost', 'Emblems', 'Ships', 'Vehicle', 'Finishers', 'SeasonalArtifacts'],
   Inventory: ['Consumables', 'Modifications'],
 };

@@ -1,6 +1,7 @@
 ## Next
 
 * Fix applying D1 loadouts.
+* Fashion is now applied to items in a loadout.
 
 ### Beta Only
 
