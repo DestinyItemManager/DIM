@@ -19,11 +19,7 @@ const faCalculator = 'fas fa-calculator';
 const faCheck = 'fas fa-check';
 const faCheckCircle = 'fas fa-check-circle';
 const faCheckCircleRegular = 'far fa-check-circle';
-const faChevronCircleUp = 'fas fa-chevron-circle-up';
-const faChevronCircleDown = 'fas fa-chevron-circle-down';
-const faCircleRegular = 'far fa-circle';
 const faCog = 'fas fa-cog';
-const faCopy = 'fas fa-copy';
 const faDownload = 'fas fa-file-export';
 const faEnvelope = 'fas fa-envelope';
 const faEraser = 'fas fa-eraser';
@@ -41,16 +37,12 @@ const faAngleDoubleRight = 'fas fa-angle-double-right';
 const faPlusCircle = 'fas fa-plus-circle';
 const faPlusSquare = 'fas fa-plus-square';
 const faQuestionCircle = 'far fa-question-circle';
-const faRestore = 'fas fa-trash-restore';
-const faSave = 'fas fa-save';
 const faSearch = 'fas fa-search';
-const faSignInAlt = 'fas fa-sign-in-alt';
 const faSignOutAlt = 'fas fa-sign-out-alt';
 const faChevronDown = 'fas fa-chevron-down';
 const faChevronUp = 'fas fa-chevron-up';
 const faShoppingCart = 'fas fa-shopping-cart';
 const faStar = 'fas fa-star';
-const faStarHalfAlt = 'fas fa-star-half-alt';
 const faStarOutline = 'far fa-star';
 const faSync = 'fas fa-sync';
 const faTable = 'fas fa-table';
@@ -58,9 +50,7 @@ const faTag = 'fas fa-tag';
 const faList = 'fas fa-list';
 const faGrid = 'fas fa-th';
 const faThumbsUp = 'fas fa-thumbs-up';
-const faThumbsUpRegular = 'far fa-thumbs-up';
 const faThumbsDown = 'fas fa-thumbs-down';
-const faThumbsDownRegular = 'far fa-thumbs-down';
 const faTimes = 'fas fa-times';
 const faTimesCircle = 'fas fa-times-circle';
 const faTrashAlt = 'far fa-trash-alt';
@@ -76,13 +66,8 @@ const faEquals = 'fas fa-equals';
 const faEllipsisV = 'fas fa-ellipsis-v';
 const faArrowCircleDown = 'fas fa-arrow-circle-down';
 const faExclamationCircle = 'fas fa-exclamation-circle';
-const faMinus = 'fas fa-minus';
 const faCaretUp = 'fas fa-caret-up';
 const faClock = 'far fa-clock';
-const faCircle = 'far fa-circle';
-const faClone = 'far fa-clone';
-const faFlag = 'far fa-flag';
-const faPenSquare = 'fas fa-pen-square';
 const faExclamationTriangle = 'fas fa-exclamation-triangle';
 const faTshirt = 'fas fa-tshirt';
 const faExternalLinkAlt = 'fas fa-external-link-alt';
@@ -91,7 +76,6 @@ const faBookmark = 'far fa-bookmark';
 const faBalanceScaleLeft = 'fas fa-balance-scale-left';
 const faGripVertical = 'fas fa-grip-vertical';
 const faThumbtack = 'fas fa-thumbtack';
-const faInfoCircle = 'fas fa-info-circle';
 
 const faXbox = 'fab fa-xbox';
 const faPlayStation = 'fab fa-playstation';
@@ -119,15 +103,9 @@ export {
   faBalanceScaleLeft as compareIcon,
   faCheck,
   faCheckCircle as enabledIcon,
-  faCheckCircle as redeemedIcon,
-  faCheckCircleRegular as completedIcon,
   faCheckCircleRegular as unselectedCheckIcon,
-  faChevronCircleDown as openDropdownIcon,
-  faChevronCircleUp,
   faShoppingCart as shoppingCart,
-  faCircleRegular as uncompletedIcon,
   faCog as settingsIcon,
-  faCopy as copyIcon,
   faDownload as downloadIcon,
   faEllipsisV as kebabIcon,
   faEnvelope as sendIcon,
@@ -145,30 +123,23 @@ export {
   faAngleDoubleRight as minimizeIcon,
   faPlusCircle as addIcon,
   faQuestionCircle as helpIcon,
-  faSave as saveIcon,
   faSearch as searchIcon,
-  faSignInAlt as signInIcon,
   faSignOutAlt as signOutIcon,
   faChevronDown as moveDownIcon,
   faChevronUp as moveUpIcon,
-  faRestore as restoreIcon,
   faStar as starIcon,
-  faStarHalfAlt as halfStarIcon,
   faStarOutline as starOutlineIcon,
   faSync as refreshIcon,
   faTable as spreadsheetIcon,
   faTag as tagIcon,
   faThumbsUp as thumbsUpIcon,
-  faThumbsUpRegular,
   faThumbsDown as thumbsDownIcon,
-  faThumbsDownRegular,
   faTimes as closeIcon,
   faTimesCircle as disabledIcon,
   faTimesCircle,
   faTrashAlt as deleteIcon,
   faTwitter as twitterIcon,
   faUndo as undoIcon,
-  faUpload as revisionsIcon,
   faUpload as uploadIcon,
   faHeart as heartIcon,
   faGlobe as globeIcon,
@@ -185,17 +156,11 @@ export {
   faCheckCircle,
   faCaretDown,
   faCaretUp,
-  faMinus,
   faClock,
-  faCircle,
-  faClone,
-  faFlag,
-  faPenSquare,
   faExclamationTriangle,
   faTshirt,
   faGripVertical as dragHandleIcon,
   faExternalLinkAlt,
-  faInfoCircle,
   faXbox,
   faPlayStation,
   faSteam,

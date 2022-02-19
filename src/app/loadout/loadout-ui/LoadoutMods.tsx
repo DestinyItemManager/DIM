@@ -1,3 +1,4 @@
+import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
@@ -23,15 +24,19 @@ export default memo(function LoadoutMods({
   loadout,
   savedMods,
   storeId,
+  clearUnsetMods,
   hideShowModPlacements,
   onUpdateMods,
+  onClearUnsetModsChanged,
 }: {
   loadout: Loadout;
   savedMods: PluggableInventoryItemDefinition[];
   storeId: string;
   hideShowModPlacements?: boolean;
+  clearUnsetMods?: boolean;
   /** If present, show an "Add Mod" button */
   onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
+  onClearUnsetModsChanged?(checked: boolean): void;
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
@@ -80,19 +85,33 @@ export default memo(function LoadoutMods({
           </button>
         )}
       </div>
-      {!hideShowModPlacements && (
-        <button
-          className={styles.showModPlacementButton}
-          type="button"
-          onClick={() => setShowModAssignmentDrawer(true)}
-        >
-          {t('Loadouts.ShowModPlacement')}
-        </button>
+      {(!hideShowModPlacements || onClearUnsetModsChanged) && (
+        <div className={styles.buttons}>
+          {!hideShowModPlacements && (
+            <button
+              className="dim-button"
+              type="button"
+              onClick={() => setShowModAssignmentDrawer(true)}
+            >
+              {t('Loadouts.ShowModPlacement')}
+            </button>
+          )}
+          {onClearUnsetModsChanged && (
+            <CheckButton
+              name="clearUnsetMods"
+              checked={Boolean(clearUnsetMods)}
+              onChange={onClearUnsetModsChanged}
+            >
+              {t('Loadouts.ClearUnsetMods')}
+            </CheckButton>
+          )}
+        </div>
       )}
       {showModAssignmentDrawer &&
         ReactDOM.createPortal(
           <ModAssignmentDrawer
             loadout={loadout}
+            storeId={storeId}
             onUpdateMods={onUpdateMods}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,
@@ -103,6 +122,7 @@ export default memo(function LoadoutMods({
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}
+            owner={storeId}
             lockedMods={savedMods}
             onAccept={onUpdateMods}
             onClose={() => setShowModPicker(false)}

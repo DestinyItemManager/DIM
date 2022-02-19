@@ -2,6 +2,10 @@
 
 .body {
   padding: 10px;
+  max-height: 35vh;
+  @include phone-portrait {
+    max-height: unset;
+  }
 }
 
 .notes {

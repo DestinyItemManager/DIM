@@ -28,7 +28,6 @@ const bucketToTypeRaw = {
   [BucketHashes.Materials]: 'Materials',
   [BucketHashes.Ghost]: 'Ghost',
   [BucketHashes.Emblems]: 'Emblems',
-  [BucketHashes.ClanBanners]: 'ClanBanners',
   [BucketHashes.ChestArmor]: 'Chest',
   [BucketHashes.LegArmor]: 'Leg',
   [BucketHashes.LostItems]: 'LostItems',

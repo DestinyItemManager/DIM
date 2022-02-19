@@ -77,7 +77,8 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
         if (
           socket.plugged &&
           (socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash ||
-            category.category.hash === SocketCategoryHashes.Abilities)
+            category.category.hash === SocketCategoryHashes.Abilities ||
+            category.category.hash === SocketCategoryHashes.Super)
         ) {
           socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
         }

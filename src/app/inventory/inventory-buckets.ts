@@ -12,6 +12,9 @@ export interface InventoryBucket {
   readonly category: BucketCategory;
   readonly type?: DimBucketType;
   readonly sort?: D2BucketCategory | D1BucketCategory | 'Unknown';
+  /**
+   * The corresponding vault bucket where these items would go if they were placed in the vault.
+   */
   vaultBucket?: InventoryBucket;
   // TODO: how to handle inPostmaster, etc? should probably be a function
   inPostmaster?: boolean;

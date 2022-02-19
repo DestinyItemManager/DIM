@@ -1,7 +1,18 @@
 .confirmButton {
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+
+  & div,
+  & span {
+    text-overflow: ellipsis;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
   & > div {
     transition: height 0.5s ease-in 0.5s;
-    overflow-y: hidden;
+    overflow: hidden;
 
     &:nth-child(1) {
       height: 16px;

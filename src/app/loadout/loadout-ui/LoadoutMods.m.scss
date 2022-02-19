@@ -17,11 +17,6 @@
   }
 }
 
-.showModPlacementButton {
-  composes: dim-button from global;
-  margin-top: 8px;
-}
-
 .modsPlaceholder {
   composes: placeholder from './LoadoutItemCategorySection.m.scss';
   flex: 1;
@@ -45,4 +40,11 @@
   &:hover {
     color: white;
   }
+}
+
+.buttons {
+  display: flex;
+  flex-flow: row wrap;
+  margin-top: 8px;
+  @include flex-gap(4px);
 }

@@ -14,6 +14,7 @@ import {
 import {
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
+  getUnequippedItemsForLoadout,
   setLoadoutSubclassFromEquipped,
 } from 'app/loadout-drawer/LoadoutDrawerContents';
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
@@ -68,7 +69,11 @@ export default function LoadoutEdit({
 
   const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
   // TODO: filter down by usable mods?
-  const modsByBucket = loadout.parameters?.modsByBucket ?? {};
+  const modsByBucket: {
+    [bucketHash: number]: number[] | undefined;
+  } = loadout.parameters?.modsByBucket ?? {};
+  const clearUnsetMods = loadout.parameters?.clearMods;
+
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
 
   const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
@@ -144,6 +149,10 @@ export default function LoadoutEdit({
     stateDispatch({ type: 'equipItem', item, items });
   };
 
+  const handleClearUnsetModsChanged = (enabled: boolean) => {
+    stateDispatch({ type: 'changeClearMods', enabled });
+  };
+
   const handleClearLoadoutParameters = () => {
     const newLoadout = produce(loadout, (draft) => {
       if (draft.parameters) {
@@ -216,6 +225,7 @@ export default function LoadoutEdit({
           onFillFromEquipped={() =>
             fillLoadoutFromEquipped(loadout, itemsByBucket, store, updateLoadout, category)
           }
+          fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
           onFillFromInventory={() => fillLoadoutFromUnequipped(loadout, store, onAddItem, category)}
           onClearLoadoutParameters={
             category === 'Armor' && hasVisibleLoadoutParameters(loadout.parameters)
@@ -223,7 +233,7 @@ export default function LoadoutEdit({
               : undefined
           }
         >
-          <LoadoutEditBucketDropTarget category={category}>
+          <LoadoutEditBucketDropTarget category={category} classType={loadout.classType}>
             <LoadoutEditBucket
               category={category}
               storeId={store.id}
@@ -261,6 +271,8 @@ export default function LoadoutEdit({
           storeId={store.id}
           savedMods={savedMods}
           onUpdateMods={handleUpdateMods}
+          clearUnsetMods={clearUnsetMods}
+          onClearUnsetModsChanged={handleClearUnsetModsChanged}
         />
       </LoadoutEditSection>
     </div>
