@@ -8,7 +8,7 @@ import { addIcon, AppIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import React, { memo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import ModAssignmentDrawer from '../mod-assignment-drawer/ModAssignmentDrawer';
@@ -62,7 +62,7 @@ export default memo(function LoadoutMods({
     <div className={styles.mods}>
       <div className={styles.modsGrid}>
         {savedMods.map((mod) => (
-          <PlugDef
+          <LoadoutMod
             className={clsx({
               [styles.missingItem]: !(
                 unlockedPlugSetItems.has(mod.hash) ||
@@ -71,16 +71,9 @@ export default memo(function LoadoutMods({
               ),
             })}
             key={getModRenderKey(mod)}
-            plug={mod}
-            onClose={
-              onUpdateMods &&
-              (() => {
-                const firstIndex = savedMods.findIndex((savedMod) => savedMod.hash === mod.hash);
-                const newMods = [...savedMods];
-                newMods.splice(firstIndex, 1);
-                onUpdateMods(newMods);
-              })
-            }
+            mod={mod}
+            savedMods={savedMods}
+            onUpdateMods={onUpdateMods}
           />
         ))}
         {onUpdateMods && (
@@ -141,3 +134,30 @@ export default memo(function LoadoutMods({
     </div>
   );
 });
+
+function LoadoutMod({
+  mod,
+  savedMods,
+  className,
+  onUpdateMods,
+}: {
+  mod: PluggableInventoryItemDefinition;
+  savedMods: PluggableInventoryItemDefinition[];
+  className: string;
+  onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
+}) {
+  // We need this to be undefined if `onUpdateMods` is not present as the presence of the onClose
+  // callback determines whether the close icon is displayed on hover
+  const onClose = useMemo(
+    () =>
+      onUpdateMods &&
+      (() => {
+        const firstIndex = savedMods.findIndex((savedMod) => savedMod.hash === mod.hash);
+        const newMods = [...savedMods];
+        newMods.splice(firstIndex, 1);
+        onUpdateMods(newMods);
+      }),
+    [mod.hash, onUpdateMods, savedMods]
+  );
+  return <PlugDef className={className} plug={mod} onClose={onClose} />;
+}
