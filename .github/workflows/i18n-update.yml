@@ -1,8 +1,8 @@
 name: i18n-update
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  push:
+    branches: [master]
     paths:
       - 'config/i18n.json'
       - 'src/locale/dim.json'
@@ -15,6 +15,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 3
+          token: ${{ secrets.I18N_PAT }}
 
       - name: Setup Node
         uses: actions/setup-node@v2
@@ -32,16 +33,7 @@ jobs:
         id: data
         run: echo ::set-output name=porcelain::"$(git status --porcelain)"
 
-      - name: Please run `yarn i18n`
+      - uses: stefanzweifel/git-auto-commit-action@v4
         if: steps.data.outputs.porcelain
-        uses: github-actions-up-and-running/pr-comment@v1.0.1
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          message: Please run `yarn i18n`
-
-      - name: Fail the Build
-        if: steps.data.outputs.porcelain
-        uses: actions/github-script@v3
-        with:
-          script: |
-              core.setFailed('Please run `yarn i18n`')
+          commit_message: Apply i18n updates
