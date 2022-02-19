@@ -53,10 +53,12 @@ function Header({
 
 export default function ModAssignmentDrawer({
   loadout,
+  storeId,
   onUpdateMods,
   onClose,
 }: {
   loadout: Loadout;
+  storeId: string | undefined;
   onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
@@ -182,6 +184,7 @@ export default function ModAssignmentDrawer({
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}
+            owner={storeId}
             lockedMods={mods}
             plugCategoryHashWhitelist={plugCategoryHashWhitelist}
             onAccept={onUpdateMods}

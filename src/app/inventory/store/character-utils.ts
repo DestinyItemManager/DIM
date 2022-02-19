@@ -160,7 +160,7 @@ export function getCharacterStatsData(
 }
 
 // following code is from https://github.com/DestinyTrialsReport
-export function getAbilityCooldown(subclass: number, ability: string, tier: number) {
+function getAbilityCooldown(subclass: number, ability: string, tier: number) {
   switch (ability) {
     case 'STAT_INTELLECT':
       switch (subclass) {

@@ -217,13 +217,13 @@ export default function LoadoutEdit({
             fillLoadoutFromEquipped(loadout, itemsByBucket, store, updateLoadout, category)
           }
           onFillFromInventory={() => fillLoadoutFromUnequipped(loadout, store, onAddItem, category)}
-          onClearLoadutParameters={
+          onClearLoadoutParameters={
             category === 'Armor' && hasVisibleLoadoutParameters(loadout.parameters)
               ? handleClearLoadoutParameters
               : undefined
           }
         >
-          <LoadoutEditBucketDropTarget category={category}>
+          <LoadoutEditBucketDropTarget category={category} classType={loadout.classType}>
             <LoadoutEditBucket
               category={category}
               storeId={store.id}
