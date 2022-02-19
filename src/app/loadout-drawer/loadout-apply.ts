@@ -852,7 +852,8 @@ function applySocketOverrides(
             // aspects and fragments return a 500
             if (
               modHash === undefined &&
-              category.category.hash === SocketCategoryHashes.Abilities
+              (category.category.hash === SocketCategoryHashes.Abilities ||
+                category.category.hash === SocketCategoryHashes.Super)
             ) {
               modHash = getDefaultPlugHash(socket, defs);
             }
