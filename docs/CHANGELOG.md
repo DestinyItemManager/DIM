@@ -3,6 +3,7 @@
 * Fix applying D1 loadouts.
 * Fashion is now applied to items in a loadout.
 * You can now change the Aeon sect mod through the item popup.
+* You can now edit your equipped Emotes from DIM. You can't add them to loadouts... yet.
 
 ## 7.5.1 <span class="changelog-date">(2022-02-14)</span>
 
