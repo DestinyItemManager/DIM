@@ -69,7 +69,9 @@ export default function LoadoutEdit({
 
   const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
   // TODO: filter down by usable mods?
-  const modsByBucket = loadout.parameters?.modsByBucket ?? {};
+  const modsByBucket: {
+    [bucketHash: number]: number[] | undefined;
+  } = loadout.parameters?.modsByBucket ?? {};
   const clearUnsetMods = loadout.parameters?.clearMods;
 
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
