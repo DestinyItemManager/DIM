@@ -15,6 +15,7 @@ import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { D2SeasonInfo } from 'data/d2/d2-season-info';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { ReactNode, useMemo } from 'react';
@@ -53,6 +54,15 @@ export function getItemsAndSubclassFromLoadout(
   }
 
   return [items, subclass, warnitems];
+}
+
+function findSeason(date: Date) {
+  for (const season of Object.values(D2SeasonInfo).reverse()) {
+    const seasonDate = new Date(`${season.releaseDate}T${season.resetTime}`);
+    if (seasonDate.getTime() < date.getTime()) {
+      return season;
+    }
+  }
 }
 
 /**
@@ -107,6 +117,8 @@ export default function LoadoutView({
     ? Math.floor(getLight(store, [...categories.Weapons, ...categories.Armor]))
     : 0;
 
+  // TODO: auto icons for fashion, weapon/armor/mods?
+
   return (
     <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
@@ -122,6 +134,13 @@ export default function LoadoutView({
             </span>
           )}
         </h2>
+        {loadout.createdAt !== undefined && loadout.lastUpdatedAt !== undefined && (
+          <div>
+            {findSeason(new Date(loadout.createdAt))?.seasonName}
+            {new Date(loadout.createdAt).toLocaleDateString()}{' '}
+            {new Date(loadout.lastUpdatedAt).toLocaleDateString()}
+          </div>
+        )}
         <div className={styles.actions}>{actionButtons}</div>
       </div>
       {loadout.notes && <div className={styles.loadoutNotes}>{loadout.notes}</div>}
