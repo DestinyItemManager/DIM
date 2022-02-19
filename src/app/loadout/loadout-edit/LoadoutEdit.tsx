@@ -180,7 +180,7 @@ export default function LoadoutEdit({
           }
         >
           <LoadoutEditBucketDropTarget
-            category="Class"
+            category="Subclass"
             classType={loadout.classType}
             equippedOnly={true}
           >

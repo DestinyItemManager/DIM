@@ -6,7 +6,6 @@ export const D2Categories: {
   Postmaster: ['Engrams', 'LostItems', 'Messages', 'SpecialOrders'],
   Weapons: ['KineticSlot', 'Energy', 'Power'],
   Armor: ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem'],
-  Class: ['Class'],
-  General: ['Ghost', 'Emblems', 'Ships', 'Vehicle', 'Finishers', 'SeasonalArtifacts'],
+  General: ['Class', 'Ghost', 'Emblems', 'Ships', 'Vehicle', 'Finishers', 'SeasonalArtifacts'],
   Inventory: ['Consumables', 'Modifications'],
 };
