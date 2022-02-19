@@ -121,7 +121,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
     }
   });
   _.forIn(buckets.byHash, (bucket: InventoryBucket) => {
-    if (bucket.sort && sortToVault[bucket.sort]) {
+    if (bucket.sort && sortToVault[bucket.sort] && sortToVault[bucket.sort] !== bucket.hash) {
       bucket.vaultBucket = buckets.byHash[sortToVault[bucket.sort]];
     }
   });
