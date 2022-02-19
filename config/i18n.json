@@ -628,6 +628,7 @@
     "ClearSection": "Remove all",
     "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
     "ClearSpace": "Move other items away",
+    "ClearUnsetMods": "Remove other mods",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
@@ -636,6 +637,7 @@
     "EditBrief": "Edit",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
+    "Equipped": "Equipped",
     "Fashion": "Choose fashion",
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
@@ -710,6 +712,7 @@
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedMods": "Unassigned Mods",
     "UnassignedModError": "Mod didn't fit on your current armor",
+    "Unequipped": "Unequipped",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
     "WeaponsOnly": "Weapons Only",
     "NotStarted": "Waiting for other actions",
@@ -721,7 +724,7 @@
     "ClearingSpace": "Moving other items away",
     "Succeeded": "Loadout succeeded",
     "Failed": "Loadout failed to apply completely",
-    "Update": "Update"
+    "Update": "Save Changes"
   },
   "Manifest": {
     "Download": "Downloading latest Destiny info database from Bungie...",

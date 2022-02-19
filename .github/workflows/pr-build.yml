@@ -4,30 +4,24 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+# Ensures that only one deploy task per branch/environment will run at a time.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
-
       - uses: actions/checkout@v2
         with:
           fetch-depth: 3 # So sentry can get the previous commit
 
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node_modules
+      - name: Setup Node
+        uses: actions/setup-node@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
-            ${{ runner.os }}-${{ env.cache-name }}-
+          node-version: 16.x
+          cache: yarn
 
       - name: Cache eslint
         uses: actions/cache@v2
@@ -40,17 +34,11 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
             ${{ runner.os }}-${{ env.cache-name }}-
 
-      # TODO: Gnu parallel for test/check
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Test
-        run: yarn test
-
-      - name: Lint check
-        run: |
-          find . -type d -name "node_modules" -prune -o -type f -iregex '.*.ts\|.*.js\|.*.tsx\|.*.jsx' -exec ./build/set-mtime-to-md5.sh {} \;
-          yarn lintcached:eslint
+      - name: Test & Lint
+        run: yarn test-and-lint
 
       # We set the default packtracker ENV vars
       - name: Build beta

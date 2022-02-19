@@ -13,7 +13,7 @@ interface Props {
 let dragTimeout: number | null = null;
 
 export default function DraggableInventoryItem({ children, item }: Props) {
-  const [_collected, dragRef] = useDrag<DimItem, unknown, unknown>(
+  const [_collected, dragRef] = useDrag<DimItem>(
     () => ({
       type: item.location.inPostmaster
         ? 'postmaster'

@@ -384,7 +384,7 @@ function getValueColors(value: number): [string, string] {
   return [`hsl(${hue}, 100%, 8%)`, `hsl(${hue}, 100%, ${light}%)`];
 }
 
-export function getSimilarItems(
+function getSimilarItems(
   exampleItem: DimItem,
   allItems: DimItem[],
   filterFactory: (query: string) => ItemFilter
@@ -451,7 +451,7 @@ const notabilityThreshold = 0.8;
 /**
  * returns an entry for each notable stat found on the seed item
  */
-export function getNotableStats(
+function getNotableStats(
   exampleItem: DimItem,
   customTotalStatsByClass: StatHashListsKeyedByDestinyClass,
   allItems: DimItem[]

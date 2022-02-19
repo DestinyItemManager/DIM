@@ -221,14 +221,12 @@ export function autocompleteTermSuggestions(
 
 function findFilter(term: string, searchConfig: SearchConfig) {
   const parts = term.split(':');
-  let filterName = parts[0];
+  const filterName = parts[0];
   const filterValue = parts[1];
   // "is:" filters are slightly special cased
-  if (filterName === 'is') {
-    filterName = filterValue;
-  }
-
-  return searchConfig.filters[filterName];
+  return filterName === 'is'
+    ? searchConfig.isFilters[filterValue]
+    : searchConfig.kvFilters[filterName];
 }
 
 // these filters might include quotes, so we search for two text segments to ignore quotes & colon
@@ -273,7 +271,7 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
     // and "stat" matches "stat:" and "basestat:"
     const matchType = !mustStartWith && typedToLower.includes(':') ? 'startsWith' : 'includes';
 
-    let suggestions = searchConfig.keywords
+    let suggestions = searchConfig.suggestions
       .filter((word) => word.startsWith(mustStartWith) && word[matchType](typedToLower))
       .filter(filterLowPrioritySuggestions);
 

@@ -26,7 +26,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
-const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6].[ext]';
+const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
 const packageJson = require('../package.json');
 
@@ -262,7 +262,7 @@ module.exports = (env) => {
           include: /src(\/|\\)locale/,
           type: 'asset/resource',
           generator: {
-            filename: '[name]-[contenthash:6].[ext]',
+            filename: '[name]-[contenthash:6][ext]',
           },
         },
         {

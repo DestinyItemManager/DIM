@@ -24,9 +24,11 @@ git add -u
 git commit -m"$VERSION"
 git tag "v$VERSION"
 
-# build and release using SSH keys
+# build and check
 yarn build:release
 yarn syntax
+
+# rsync the files onto the remote host using SSH keys
 ./build/rsync-deploy.sh
 
 # push tags and changes

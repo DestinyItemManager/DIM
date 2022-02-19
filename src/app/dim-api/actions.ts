@@ -108,7 +108,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
 /**
  * Load global API configuration from the server. This doesn't even require the user to be logged in.
  */
-export function loadGlobalSettings(): ThunkResult {
+function loadGlobalSettings(): ThunkResult {
   return async (dispatch, getState) => {
     // TODO: better to use a state machine (UNLOADED => LOADING => LOADED)
     if (!getState().dimApi.globalSettingsLoaded) {
@@ -252,7 +252,7 @@ let flushUpdatesBackoff = 0;
 /**
  * Process the queue of updates by sending them to the server
  */
-export function flushUpdates(): ThunkResult {
+function flushUpdates(): ThunkResult {
   return async (dispatch, getState) => {
     let dimApiState = getState().dimApi;
 
@@ -325,7 +325,7 @@ export function flushUpdates(): ThunkResult {
   };
 }
 
-export function loadProfileFromIndexedDB(): ThunkResult {
+function loadProfileFromIndexedDB(): ThunkResult {
   return async (dispatch, getState) => {
     // If we already got it from the server, don't bother
     if (getState().dimApi.profileLoaded || getState().dimApi.profileLoadedFromIndexedDb) {

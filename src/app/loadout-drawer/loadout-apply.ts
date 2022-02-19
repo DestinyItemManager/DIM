@@ -501,8 +501,9 @@ function doApplyLoadout(
         );
       }
 
+      const clearMods = Boolean(loadout.parameters?.clearMods);
       // Apply any mods in the loadout. These apply to the current equipped items, not just loadout items!
-      if (modsToApply.length || !_.isEmpty(modsByBucketToApply)) {
+      if (modsToApply.length || !_.isEmpty(modsByBucketToApply) || clearMods) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ApplyMods));
         infoLog('loadout mods', 'Mods to apply', modsToApply);
         await dispatch(
@@ -512,7 +513,8 @@ function doApplyLoadout(
             modsToApply,
             modsByBucketToApply,
             setLoadoutState,
-            cancelToken
+            cancelToken,
+            Boolean(loadout.parameters?.clearMods)
           )
         );
         const { modStates } = getLoadoutState();
@@ -951,7 +953,10 @@ function applyLoadoutMods(
     const mods = modHashes.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
 
     // Early exit - if all the mods are already there, nothing to do
-    if (allModsAreAlreadyApplied(armor, modHashes, modsByBucket)) {
+    if (
+      !clearUnassignedSocketsPerItem &&
+      allModsAreAlreadyApplied(armor, modHashes, modsByBucket)
+    ) {
       infoLog('loadout mods', 'all mods are already there. loadout already applied');
       setLoadoutState((state) => ({
         ...state,

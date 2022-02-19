@@ -143,7 +143,7 @@ export function toVendor(
   };
 }
 
-export function getVendorItems(
+function getVendorItems(
   account: DestinyAccount,
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,

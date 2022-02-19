@@ -168,7 +168,7 @@ export function fitMostMods({
 
   for (const activityPermutation of activityModPermutations) {
     for (const combatPermutation of combatModPermutations) {
-      for (const generalPermutation of generalModPermutations) {
+      modLoop: for (const generalPermutation of generalModPermutations) {
         let unassignedModCount = 0;
         const assignments: ModAssignments = {};
 
@@ -210,7 +210,7 @@ export function fitMostMods({
           }
 
           if (unassignedModCount + unassigned.length > assignmentUnassignedModCount) {
-            break;
+            continue modLoop;
           }
 
           unassignedModCount += unassigned.length;
@@ -726,11 +726,7 @@ function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnerg
 }
 
 /** Artifice Armor won't be properly detected unless defs are passed in */
-export function isAssigningToDefault(
-  item: DimItem,
-  assignment: Assignment,
-  defs: D2ManifestDefinitions
-) {
+function isAssigningToDefault(item: DimItem, assignment: Assignment, defs: D2ManifestDefinitions) {
   const socket = item.sockets && getSocketByIndex(item.sockets, assignment.socketIndex);
   if (!socket) {
     warnLog(

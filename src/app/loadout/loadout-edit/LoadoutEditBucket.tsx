@@ -226,7 +226,7 @@ function ItemBucket({
   );
 }
 
-export function FashionButton({
+function FashionButton({
   loadout,
   items,
   storeId,
