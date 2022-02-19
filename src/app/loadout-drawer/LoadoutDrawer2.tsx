@@ -36,11 +36,8 @@ import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
 
-// TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
+// TODO: Consider moving editLoadout/addItemToLoadout into Redux (actions + state)
 // TODO: break out a container from the actual loadout drawer so we can lazy load the drawer
-
-/** Is the loadout drawer currently open? */
-export let loadoutDialogOpen = false;
 
 /**
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit
@@ -64,10 +61,6 @@ export default function LoadoutDrawer2() {
     },
     showFashionDrawer: false,
   });
-
-  // TODO: move to a container?
-  // Sync this global variable with our actual state. TODO: move to redux
-  loadoutDialogOpen = Boolean(loadout);
 
   // The loadout to edit comes in from the editLoadout$ observable
   useEventBusListener(
