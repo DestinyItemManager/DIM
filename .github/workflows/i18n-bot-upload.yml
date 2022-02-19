@@ -30,10 +30,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: i18n-diff
+        id: i18n-diff
+        uses: technote-space/get-diff-action@v4
+        with:
+          PATTERNS: |
+            src/locale/dim.json
+
       - name: Discord notification
+        if: (steps.i18n-diff.outputs.insertions > 0)
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_I18N_WEBHOOK }}
           # DISCORD_EMBEDS: ${{ toJSON(secrets.DISCORD_EMBEDS) }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "<@&622449489008918548> - New translations have been added to crowdin. https://crowdin.com/project/destiny-item-manager"
+          args: "<@&622449489008918548> - ${{ steps.i18n-diff.outputs.insertions }} translations have been added/changed to crowdin. https://crowdin.com/project/destiny-item-manager"
