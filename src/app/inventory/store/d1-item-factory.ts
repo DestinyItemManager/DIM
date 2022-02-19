@@ -324,6 +324,8 @@ function makeItem(
     canPullFromPostmaster: false,
     uniqueStack: false,
     masterwork: false,
+    crafted: false,
+    highlightedObjective: false,
     missingSockets: false,
     energy: null,
     powerCap: null,

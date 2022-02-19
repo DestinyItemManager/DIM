@@ -544,6 +544,8 @@
     "Before": "Before '{{name}}'",
     "CannotCustomizeSubclass": "Light subclasses cannot be configured",
     "ChooseItem": "Add {{name}}",
+    "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
+    "ClassTypeMissing": "You do not have a {{className}} to create a loadout for",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
     "ClearSection": "Remove all",

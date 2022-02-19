@@ -175,6 +175,10 @@ export interface DimItem {
   power: number;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;
+  /** Is this crafted? (D2 only) */
+  crafted: boolean;
+  /** Does this have a highlighted (crafting) objective? (D2 Only) */
+  highlightedObjective: boolean;
   /** What percent complete is this item (considers XP and objectives). */
   percentComplete: number;
   /** The talent grid, used for D1 perks and D1/D2 subclass grids. */
