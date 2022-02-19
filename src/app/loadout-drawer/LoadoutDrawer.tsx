@@ -17,7 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { allItemsSelector, bucketsSelector } from '../inventory/selectors';
+import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
 import '../inventory/Stores.scss';
 import { showItemPicker } from '../item-picker/item-picker';
 import { deleteLoadout, updateLoadout } from './actions';
@@ -44,6 +44,7 @@ export default function LoadoutDrawer() {
   const defs = useDefinitions()!;
 
   const allItems = useSelector(allItemsSelector);
+  const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
   const [showingItemPicker, setShowingItemPicker] = useState(false);
 
@@ -99,8 +100,9 @@ export default function LoadoutDrawer() {
         items,
         equip,
         socketOverrides,
+        stores,
       }),
-    [items]
+    [items, stores]
   );
 
   const onApplySocketOverrides = useCallback((item: DimItem, socketOverrides: SocketOverrides) => {
