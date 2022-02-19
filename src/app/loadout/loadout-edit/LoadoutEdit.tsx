@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
@@ -14,6 +14,7 @@ import {
 import {
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
+  getUnequippedItemsForLoadout,
   setLoadoutSubclassFromEquipped,
 } from 'app/loadout-drawer/LoadoutDrawerContents';
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
@@ -54,6 +55,7 @@ export default function LoadoutEdit({
   onRemoveItem: (item: DimItem) => void;
 }) {
   const defs = useD2Definitions()!;
+  const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
@@ -68,7 +70,9 @@ export default function LoadoutEdit({
 
   const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
   // TODO: filter down by usable mods?
-  const modsByBucket = loadout.parameters?.modsByBucket ?? {};
+  const modsByBucket: {
+    [bucketHash: number]: number[] | undefined;
+  } = loadout.parameters?.modsByBucket ?? {};
   const clearUnsetMods = loadout.parameters?.clearMods;
 
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
@@ -112,8 +116,8 @@ export default function LoadoutEdit({
 
   const onAddItem = useCallback(
     ({ item, equip }: { item: DimItem; equip?: boolean }) =>
-      stateDispatch({ type: 'addItem', item, shift: false, items, equip }),
-    [items, stateDispatch]
+      stateDispatch({ type: 'addItem', item, stores, shift: false, items, equip }),
+    [items, stores, stateDispatch]
   );
 
   const handleSyncModsFromEquipped = () => {
@@ -228,6 +232,7 @@ export default function LoadoutEdit({
           onFillFromEquipped={() =>
             fillLoadoutFromEquipped(loadout, itemsByBucket, store, updateLoadout, category)
           }
+          fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
           onFillFromInventory={() => fillLoadoutFromUnequipped(loadout, store, onAddItem, category)}
           onClearLoadoutParameters={
             category === 'Armor' && hasVisibleLoadoutParameters(loadout.parameters)

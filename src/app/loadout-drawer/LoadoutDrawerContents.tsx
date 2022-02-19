@@ -419,7 +419,20 @@ export async function fillLoadoutFromUnequipped(
     return;
   }
 
-  const items = dimStore.items.filter(
+  const items = getUnequippedItemsForLoadout(dimStore, category);
+
+  // TODO: this isn't right - `items` isn't being updated after each add
+  for (const item of items) {
+    add({ item, equip: false });
+  }
+}
+
+/**
+ * filter for items that are in a character's "pockets" but not equipped,
+ * and can be added to a loadout
+ */
+export function getUnequippedItemsForLoadout(dimStore: DimStore, category?: string) {
+  return dimStore.items.filter(
     (item) =>
       !item.location.inPostmaster &&
       item.bucket.hash !== BucketHashes.Subclass &&
@@ -427,9 +440,4 @@ export async function fillLoadoutFromUnequipped(
       (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)) &&
       !item.equipped
   );
-
-  // TODO: this isn't right - `items` isn't being updated after each add
-  for (const item of items) {
-    add({ item, equip: false });
-  }
 }

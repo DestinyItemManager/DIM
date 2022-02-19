@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './ConfirmButton.m.scss';
 
 /**
@@ -26,7 +26,18 @@ export function ConfirmButton({
   // controls whether the button is ready to submit the requested function
   // (available 100ms after "ask for confirmation" state)
   const [confirmReady, setConfirmReady] = useState(false);
-  const childrenContent = React.useRef<HTMLDivElement>(null);
+
+  const [contentHeight, setContentHeight] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(0);
+
+  const containerRef = React.useRef<HTMLButtonElement>(null);
+  const childrenRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setContentHeight(childrenRef.current?.offsetHeight || 0);
+    setContainerHeight(containerRef.current?.offsetHeight || 0);
+  }, []);
+
   const onClickAction =
     confirmMode && confirmReady
       ? () => {
@@ -45,19 +56,22 @@ export function ConfirmButton({
     <button
       key="save"
       type="button"
-      title={childrenContent.current?.innerText}
       className={clsx('dim-button', className, styles.confirmButton, {
         [styles.confirmMode]: confirmMode,
         danger,
       })}
+      ref={containerRef}
       onClick={onClickAction}
       onMouseLeave={() => {
         setConfirmMode(false);
         setConfirmReady(false);
       }}
+      style={{ height: containerHeight || 'auto' }}
     >
-      <div ref={childrenContent}>{children}</div>
-      <div>{t('General.Confirm')}</div>
+      <div style={{ height: confirmMode ? 0 : contentHeight || 'auto' }} ref={childrenRef}>
+        {children}
+      </div>
+      <div style={{ height: confirmMode ? contentHeight : 0 }}>{t('General.Confirm')}</div>
     </button>
   );
 }

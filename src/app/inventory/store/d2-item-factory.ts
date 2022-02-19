@@ -432,6 +432,8 @@ export function makeItem(
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),
     masterwork: Boolean(item.state & ItemState.Masterwork) && itemType !== 'Class',
+    crafted: Boolean(item.state & ItemState.Crafted),
+    highlightedObjective: Boolean(item.state & ItemState.HighlightedObjective),
     classified: Boolean(itemDef.redacted),
     isEngram,
     loreHash: itemDef.loreHash,

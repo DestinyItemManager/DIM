@@ -4,12 +4,14 @@ import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { getArmorExoticPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
+import EmoteSockets from './EmoteSockets';
 import './ItemSockets.scss';
 import styles from './ItemSocketsGeneral.m.scss';
 import Socket from './Socket';
@@ -44,6 +46,9 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
   }
 
   const exoticArmorPerkSocket = getArmorExoticPerkSocket(item);
+  const emoteWheelCategory = item.sockets.categories.find(
+    (c) => c.category.hash === SocketCategoryHashes.Emotes
+  );
 
   let categories = item.sockets.categories.filter(
     (c) =>
@@ -52,6 +57,8 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
       c.socketIndexes.some((s) => s !== exoticArmorPerkSocket?.socketIndex) &&
       // hide if this is the energy slot. it's already displayed in ItemDetails
       c.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter &&
+      // hide if this is the emote wheel because we show it separately
+      c.category.hash !== SocketCategoryHashes.Emotes &&
       // Hidden sockets for intrinsic armor stats
       c.category.uiCategoryStyle !== 2251952357
   );
@@ -72,7 +79,11 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
       {exoticArmorPerkSocket && (
         <ArchetypeRow minimal={minimal}>
           {exoticArmorPerkSocket?.plugged && (
-            <ArchetypeSocket archetypeSocket={exoticArmorPerkSocket} item={item}>
+            <ArchetypeSocket
+              archetypeSocket={exoticArmorPerkSocket}
+              item={item}
+              onClick={handleSocketClick}
+            >
               {!minimal && (
                 <div className={styles.exoticDescription}>
                   <RichDestinyText
@@ -83,6 +94,14 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
             </ArchetypeSocket>
           )}
         </ArchetypeRow>
+      )}
+      {emoteWheelCategory && (
+        <EmoteSockets
+          item={item}
+          itemDef={defs.InventoryItem.get(item.hash)}
+          sockets={emoteWheelCategory.socketIndexes.map((s) => item.sockets!.allSockets[s])}
+          onClick={handleSocketClick}
+        />
       )}
       {categories.map((category) => (
         <div

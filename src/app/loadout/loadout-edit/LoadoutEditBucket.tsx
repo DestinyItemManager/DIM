@@ -47,7 +47,7 @@ export default function LoadoutEditBucket({
   storeId: string;
   items?: DimItem[];
   modsByBucket: {
-    [bucketHash: number]: number[];
+    [bucketHash: number]: number[] | undefined;
   };
   equippedItemIds: Set<string>;
   onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
@@ -75,7 +75,7 @@ export default function LoadoutEditBucket({
             bucket={bucket}
             items={itemsByBucket[bucket.hash]}
             equippedItemIds={equippedItemIds}
-            modsForBucket={modsByBucket[bucket.hash]}
+            modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
             onClickPlaceholder={onClickPlaceholder}
             onClickWarnItem={onClickWarnItem}
             onRemoveItem={onRemoveItem}

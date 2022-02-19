@@ -261,6 +261,8 @@ function makeFakePursuitItem(
     tracked: false,
     locked: false,
     masterwork: false,
+    crafted: false,
+    highlightedObjective: false,
     classified: false,
     isEngram: false,
     percentComplete: 0, // filled in later

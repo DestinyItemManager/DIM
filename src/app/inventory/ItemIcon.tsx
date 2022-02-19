@@ -8,6 +8,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import pursuitComplete from 'images/highlightedObjective.svg';
 import React from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from './item-types';
 import styles from './ItemIcon.m.scss';
@@ -47,6 +48,7 @@ export default function ItemIcon({
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless,
     [styles.masterwork]: item.masterwork,
+    [styles.crafted]: item.crafted,
     [itemTierStyles[item.tier]]: !borderless && !item.plug,
   });
 
@@ -79,6 +81,9 @@ export default function ItemIcon({
             </text>
           </svg>
         </>
+      )}
+      {item.highlightedObjective && (
+        <img className={styles.highlightedObjective} src={pursuitComplete} />
       )}
     </>
   );

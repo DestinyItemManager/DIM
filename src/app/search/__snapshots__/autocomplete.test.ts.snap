@@ -70,6 +70,7 @@ exports[`filterComplete autocomplete terms for |ote| 1`] = `
 Array [
   "notes:",
   "is:hasnotes",
+  "is:emotes",
 ]
 `;
 
