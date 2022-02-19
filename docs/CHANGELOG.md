@@ -1,6 +1,7 @@
 ## Next
 
 * Fix applying D1 loadouts.
+* `inloadout:` filter now matches partial loadout names -- use `inloadout:"pvp"` for items in loadouts where "pvp" is in the loadout's name.
 * Fashion is now applied to items in a loadout.
 * You can now change the Aeon sect mod through the item popup.
 * You can now edit your equipped Emotes from DIM. You can't add them to loadouts... yet.
