@@ -27,6 +27,8 @@ export function applySocketOverrides(
     return item;
   }
 
+  let icon = item.icon;
+
   const sockets = item.sockets.allSockets.map((s): DimSocket => {
     const override = socketOverrides[s.socketIndex];
 
@@ -56,6 +58,10 @@ export function applySocketOverrides(
       }
 
       if (newPlug) {
+        // If this is an ornament, override the item's icon as well
+        if (newPlug.plugDef.plug.plugCategoryIdentifier.includes('skins')) {
+          icon = newPlug.plugDef.displayProperties.icon;
+        }
         return {
           ...s,
           actuallyPlugged,
@@ -84,6 +90,7 @@ export function applySocketOverrides(
 
   const updatedItem: DimItem = {
     ...item,
+    icon,
     sockets: {
       ...item.sockets,
       allSockets: sockets,

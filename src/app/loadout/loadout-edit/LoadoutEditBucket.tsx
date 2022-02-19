@@ -153,7 +153,7 @@ function ItemBucket({
   onToggleEquipped,
 }: {
   bucket: InventoryBucket;
-  items: DimItem[];
+  items: DimLoadoutItem[];
   equippedItemIds: Set<string>;
   equippedContent?: React.ReactNode;
   onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
@@ -190,7 +190,7 @@ function ItemBucket({
                 onClose={() => onRemoveItem(item)}
                 showCloseIconOnHover
               >
-                <ItemPopupTrigger item={item}>
+                <ItemPopupTrigger item={item} extraData={{ socketOverrides: item.socketOverrides }}>
                   {(ref, onClick) => (
                     <div
                       className={clsx({
