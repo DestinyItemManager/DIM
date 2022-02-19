@@ -19,6 +19,8 @@ export interface ItemPopupExtraInfo {
   acquired?: boolean;
   mod?: boolean;
   socketOverrides?: SocketOverrides;
+  allPlugsReqsAreMet?: boolean;
+  craftingReqsAreMet?: boolean;
 }
 
 export function showItemPopup(
