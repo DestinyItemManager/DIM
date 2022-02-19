@@ -15,7 +15,6 @@ export const D2Categories: {
     'Emotes',
     'Finishers',
     'SeasonalArtifacts',
-    'ClanBanners',
   ],
   Inventory: ['Consumables', 'Modifications'],
 };

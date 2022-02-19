@@ -1,4 +1,4 @@
-import { DimItem, DimSocket } from 'app/inventory/item-types';
+import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import clsx from 'clsx';
 import React from 'react';
 import styles from './ArchetypeSocket.m.scss';
@@ -11,10 +11,12 @@ export default function ArchetypeSocket({
   archetypeSocket,
   item,
   children,
+  onClick,
 }: {
   archetypeSocket?: DimSocket;
   item: DimItem;
   children?: React.ReactNode;
+  onClick?(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
 }) {
   if (!archetypeSocket?.plugged) {
     return null;
@@ -23,7 +25,12 @@ export default function ArchetypeSocket({
   return (
     <>
       <div className={styles.mod}>
-        <Socket key={archetypeSocket.socketIndex} item={item} socket={archetypeSocket} />
+        <Socket
+          key={archetypeSocket.socketIndex}
+          item={item}
+          socket={archetypeSocket}
+          onClick={onClick}
+        />
       </div>
       <div className={styles.info}>
         <div className={styles.name}>{archetypeSocket.plugged.plugDef.displayProperties.name}</div>
