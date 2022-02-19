@@ -117,7 +117,12 @@ export default function LoadoutDrawer2() {
 
   // Close the sheet on navigation
   const { pathname } = useLocation();
-  useEffect(close, [pathname]);
+  useEffect(() => {
+    // Don't close if moving to the inventory or loadouts screen
+    if (!pathname.endsWith('inventory') && !pathname.endsWith('loadouts')) {
+      close();
+    }
+  }, [pathname]);
 
   const handleSaveLoadout = (e: React.MouseEvent, saveAsNew?: boolean) => {
     e.preventDefault();
