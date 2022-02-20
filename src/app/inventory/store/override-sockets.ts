@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
 import produce from 'immer';
 import _ from 'lodash';
@@ -26,6 +27,8 @@ export function applySocketOverrides(
   if (!socketOverrides || _.isEmpty(socketOverrides) || !item.sockets) {
     return item;
   }
+
+  let icon = item.icon;
 
   const sockets = item.sockets.allSockets.map((s): DimSocket => {
     const override = socketOverrides[s.socketIndex];
@@ -56,6 +59,14 @@ export function applySocketOverrides(
       }
 
       if (newPlug) {
+        // If this is an ornament, override the item's icon as well
+        if (newPlug.plugDef.plug.plugCategoryIdentifier.includes('skins')) {
+          if (DEFAULT_ORNAMENTS.includes(newPlug.plugDef.hash)) {
+            icon = defs.InventoryItem.get(item.hash).displayProperties.icon;
+          } else {
+            icon = newPlug.plugDef.displayProperties.icon;
+          }
+        }
         return {
           ...s,
           actuallyPlugged,
@@ -84,6 +95,7 @@ export function applySocketOverrides(
 
   const updatedItem: DimItem = {
     ...item,
+    icon,
     sockets: {
       ...item.sockets,
       allSockets: sockets,

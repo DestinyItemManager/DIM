@@ -2,6 +2,8 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { applySocketOverrides } from 'app/inventory/store/override-sockets';
+import { useD2Definitions } from 'app/manifest/selectors';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -20,6 +22,7 @@ interface Props {
  */
 export default function ItemPopupContainer({ boundarySelector }: Props) {
   const stores = useSelector(sortedStoresSelector);
+  const defs = useD2Definitions();
 
   const currentItem = useSubscription(showItemPopup$);
 
@@ -33,7 +36,11 @@ export default function ItemPopupContainer({ boundarySelector }: Props) {
   useHotkey('esc', t('Hotkey.ClearDialog'), onClose);
 
   // Try to find an updated version of the item!
-  const item = currentItem?.item && maybeFindItem(currentItem.item, stores);
+  let item = currentItem?.item && maybeFindItem(currentItem.item, stores);
+  // Apply socket overrides to customize the item (e.g. from a loadout)
+  if (item && defs && currentItem?.extraInfo?.socketOverrides) {
+    item = applySocketOverrides(defs, item, currentItem.extraInfo.socketOverrides);
+  }
 
   if (!currentItem || !item) {
     return null;
