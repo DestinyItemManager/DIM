@@ -353,6 +353,8 @@ export function extractArmorModHashes(item: DimItem) {
 
 export function findItem(allItems: DimItem[], loadoutItem: LoadoutItem): DimItem | undefined {
   // TODO: so inefficient to look through all items over and over again
+  // TODO: figure out which items *should* be instanced and which shouldn't so we can omit item IDs in shared loadouts\
+  // TODO: maybe some things like subclasses, emblems, ships, etc can just match by hash. Anything that's not random rolled actually!
   for (const item of allItems) {
     if (
       (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) ||

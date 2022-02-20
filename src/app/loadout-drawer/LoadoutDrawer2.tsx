@@ -1,19 +1,22 @@
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
-import { getStore } from 'app/inventory/stores-helpers';
+import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
+import { warnMissingClass } from 'app/loadout-builder/loadout-builder-reducer';
 import { useDefinitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { deepEqual } from 'fast-equals';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
+import { createSelector } from 'reselect';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
@@ -23,6 +26,7 @@ import { deleteLoadout, updateLoadout } from './actions';
 import { stateReducer } from './loadout-drawer-reducer';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
+import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
 import { DimLoadoutItem, Loadout } from './loadout-types';
 import styles from './LoadoutDrawer2.m.scss';
 import {
@@ -38,6 +42,22 @@ import LoadoutDrawerHeader from './LoadoutDrawerHeader';
 // TODO: Consider moving editLoadout/addItemToLoadout into Redux (actions + state)
 // TODO: break out a container from the actual loadout drawer so we can lazy load the drawer
 
+const storeIdsByClassTypeSelector = createSelector(
+  storesSelector,
+  (stores) =>
+    stores.reduce<{ [classType: number]: string }>((memo, s) => {
+      if (!s.isVault && !memo[s.classType]) {
+        memo[s.classType] = s.id;
+      }
+      return memo;
+    }, {}),
+  {
+    memoizeOptions: {
+      resultEqualityCheck: deepEqual,
+    },
+  }
+);
+
 /**
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit
  * loadouts from this interface.
@@ -46,6 +66,7 @@ export default function LoadoutDrawer2() {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
 
+  const { search: queryString } = useLocation();
   const stores = useSelector(storesSelector);
   const allItems = useSelector(allItemsSelector);
   const buckets = useSelector(bucketsSelector)!;
@@ -74,6 +95,42 @@ export default function LoadoutDrawer2() {
       });
     }, [])
   );
+
+  const currentStoreId = getCurrentStore(stores)?.id;
+  const storeIdsByClassType = useSelector(storeIdsByClassTypeSelector);
+
+  // Load in a full loadout specified in the URL
+  useEffect(() => {
+    if (!stores.length || !defs?.isDestiny2()) {
+      return;
+    }
+    const searchParams = new URLSearchParams(queryString);
+    const loadoutJSON = searchParams.get('loadout');
+    if (loadoutJSON) {
+      const parsedLoadout = convertDimApiLoadoutToLoadout(JSON.parse(loadoutJSON));
+      if (parsedLoadout) {
+        const storeId =
+          parsedLoadout.classType === DestinyClass.Unknown
+            ? currentStoreId
+            : storeIdsByClassType[parsedLoadout.classType];
+
+        if (!storeId) {
+          warnMissingClass(parsedLoadout.classType, defs);
+          return;
+        }
+
+        parsedLoadout.id = uuidv4();
+
+        stateDispatch({
+          type: 'editLoadout',
+          loadout: parsedLoadout,
+          storeId,
+          showClass: false,
+          isNew: true,
+        });
+      }
+    }
+  }, [defs, queryString, currentStoreId, storeIdsByClassType, stores.length]);
 
   const loadoutItems = loadout?.items;
 

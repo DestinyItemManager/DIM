@@ -46,7 +46,7 @@ export interface LoadoutBuilderState {
   compareSet?: ArmorSet;
 }
 
-function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefinitions) {
+export function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefinitions) {
   const missingClassName = Object.values(defs.Class).find((c) => c.classType === classType)!
     .displayProperties.name;
 
