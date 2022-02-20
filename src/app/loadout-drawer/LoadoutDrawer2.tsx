@@ -1,3 +1,5 @@
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -145,7 +147,7 @@ export default function LoadoutDrawer2() {
       };
     }
 
-    loadoutToSave = filterLoadoutToAllowedItems(loadoutToSave, items);
+    loadoutToSave = filterLoadoutToAllowedItems(defs, loadoutToSave, items);
 
     dispatch(updateLoadout(loadoutToSave));
     close();
@@ -326,6 +328,7 @@ export default function LoadoutDrawer2() {
  * Remove items and settings that don't match the loadout's class type.
  */
 function filterLoadoutToAllowedItems(
+  defs: D2ManifestDefinitions | D1ManifestDefinitions,
   loadoutToSave: Readonly<Loadout>,
   items: DimLoadoutItem[]
 ): Readonly<Loadout> {
@@ -333,9 +336,11 @@ function filterLoadoutToAllowedItems(
     // Filter out items that don't fit the class type
     loadout.items = loadout.items.filter((loadoutItem) => {
       const item = items.find((i) => i.hash === loadoutItem.hash && i.id === loadoutItem.id);
-      return (
-        item && (item.classType === DestinyClass.Unknown || item.classType === loadout.classType)
-      );
+      // If an item isn't found, load up its definition to figure out the class type
+      const classType: DestinyClass | undefined = item
+        ? item.classType
+        : defs.InventoryItem.get(loadoutItem.hash)?.classType;
+      return classType && (classType === DestinyClass.Unknown || classType === loadout.classType);
     });
 
     if (loadout.classType === DestinyClass.Unknown && loadout.parameters) {
