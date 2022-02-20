@@ -183,6 +183,7 @@ function ItemBucket({
   const addUnequipped = showAddUnequipped && (
     <button
       type="button"
+      key="addbutton"
       className={styles.addButton}
       onClick={() => handlePlaceholderClick(false)}
       title={t('Loadouts.AddUnequippedItems')}
