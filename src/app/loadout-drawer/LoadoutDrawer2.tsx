@@ -25,7 +25,7 @@ import { deleteLoadout, updateLoadout } from './actions';
 import { stateReducer } from './loadout-drawer-reducer';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
-import { DimLoadoutItem, Loadout } from './loadout-types';
+import { Loadout } from './loadout-types';
 import styles from './LoadoutDrawer2.m.scss';
 import {
   fillLoadoutFromEquipped,
@@ -147,7 +147,7 @@ export default function LoadoutDrawer2() {
       };
     }
 
-    loadoutToSave = filterLoadoutToAllowedItems(defs, loadoutToSave, items);
+    loadoutToSave = filterLoadoutToAllowedItems(defs, loadoutToSave);
 
     dispatch(updateLoadout(loadoutToSave));
     close();
@@ -329,18 +329,16 @@ export default function LoadoutDrawer2() {
  */
 function filterLoadoutToAllowedItems(
   defs: D2ManifestDefinitions | D1ManifestDefinitions,
-  loadoutToSave: Readonly<Loadout>,
-  items: DimLoadoutItem[]
+  loadoutToSave: Readonly<Loadout>
 ): Readonly<Loadout> {
   return produce(loadoutToSave, (loadout) => {
     // Filter out items that don't fit the class type
     loadout.items = loadout.items.filter((loadoutItem) => {
-      const item = items.find((i) => i.hash === loadoutItem.hash && i.id === loadoutItem.id);
-      // If an item isn't found, load up its definition to figure out the class type
-      const classType: DestinyClass | undefined = item
-        ? item.classType
-        : defs.InventoryItem.get(loadoutItem.hash)?.classType;
-      return classType && (classType === DestinyClass.Unknown || classType === loadout.classType);
+      const classType = defs.InventoryItem.get(loadoutItem.hash)?.classType;
+      return (
+        classType !== undefined &&
+        (classType === DestinyClass.Unknown || classType === loadout.classType)
+      );
     });
 
     if (loadout.classType === DestinyClass.Unknown && loadout.parameters) {
