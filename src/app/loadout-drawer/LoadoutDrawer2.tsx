@@ -112,8 +112,6 @@ export default function LoadoutDrawer2() {
             showClass: false,
             isNew: true,
           });
-          // Clear the loadout
-          navigate(pathname, { replace: true });
         }
       } catch (e) {
         showNotification({
@@ -122,6 +120,8 @@ export default function LoadoutDrawer2() {
           body: t('Loadouts.BadLoadoutShareBody', { error: e.message }),
         });
       }
+      // Clear the loadout
+      navigate(pathname, { replace: true });
     }
   }, [defs, queryString, navigate, pathname, stores]);
 

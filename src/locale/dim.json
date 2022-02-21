@@ -541,6 +541,8 @@
     "ApplySearch": "Transfer search \"{{query}}\"",
     "ArmorMods": "Armor Mods",
     "AssumeMaxWeapons": "Assuming max power level weapons",
+    "BadLoadoutShare": "Unable to load shared loadout",
+    "BadLoadoutShareBody": "The loadout you're trying to load is invalid: {{error}}",
     "Before": "Before '{{name}}'",
     "CannotCustomizeSubclass": "Light subclasses cannot be configured",
     "ChooseItem": "Add {{name}}",
