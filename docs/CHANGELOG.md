@@ -5,10 +5,20 @@
 * If your loadout includes ornaments, items are shown as if they had the loadout applied in the loadout page and loadout editor.
 * You can now change the Aeon sect mod through the item popup.
 * You can now edit your equipped Emotes from DIM. You can't add them to loadouts... yet.
-* There's a good chance craftable items will display correctly in DIM. No promises though.
 * Fix issue where Loadout Optimizer armor upgrade settings were not being migrated from existing loadouts.
 * Clan Banners are no longer shown in DIM.
 * Weapon compare sheet now includes a button to compare with other legendary weapons of the same category, excluding exotics.
+* Armor in collections now displays its collections stat roll.
+* Fix issues with button text wrapping in some languages.
+* Fix potential element blurriness in Edge browser.
+* Fix for Loadout Optimizer suggesting armor with insufficient energy.
+* Fix a clash between `power:1234` and `is:power` filters.
+* Loadout Optimizer is not a little more thorough in preventing an item from being both pinned and excluded.
+
+### Witch Queen updates
+
+* There's a good chance crafted items will display correctly in DIM. No promises though.
+* Prepare Records page for a new section featuring craftable items.
 
 ### Beta Only
 
