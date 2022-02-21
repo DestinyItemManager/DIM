@@ -1,5 +1,6 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
+import ItemIcon from 'app/inventory/ItemIcon';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import FashionDrawer from 'app/loadout/fashion/FashionDrawer';
 import ModPicker from 'app/loadout/ModPicker';
@@ -15,7 +16,6 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
-import InventoryItem from '../inventory/InventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
 import '../inventory/Stores.scss';
@@ -257,9 +257,13 @@ export default function LoadoutDrawer() {
                 </p>
                 <div className="loadout-warn-items">
                   {warnitems.map((item) => (
-                    <div key={item.index} className="loadout-item">
+                    <div
+                      key={item.index}
+                      className="loadout-item"
+                      onClick={() => fixWarnItem(item)}
+                    >
                       <ClosableContainer onClose={() => onRemoveItem(item)}>
-                        <InventoryItem item={item} onClick={() => fixWarnItem(item)} />
+                        <ItemIcon item={item} />
                       </ClosableContainer>
                     </div>
                   ))}
