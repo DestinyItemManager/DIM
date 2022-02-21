@@ -4,6 +4,7 @@ import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { DropTargetHookSpec, useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
@@ -18,10 +19,12 @@ export default function LoadoutEditBucketDropTarget({
   children,
   category,
   classType,
+  equippedOnly,
 }: {
   category: string;
   children?: React.ReactNode;
   classType: DestinyClass;
+  equippedOnly?: boolean;
 }) {
   const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
@@ -33,12 +36,20 @@ export default function LoadoutEditBucketDropTarget({
       { equipped: boolean },
       { isOver: boolean; canDrop: boolean }
     > => ({
-      accept: [
-        ...buckets.byCategory[category].flatMap((bucket) => [
-          bucket.hash.toString(),
-          ...stores.flatMap((store) => `${store.id}-${bucket.hash}`),
-        ]),
-      ],
+      accept:
+        category === 'Subclass'
+          ? [
+              BucketHashes.Subclass.toString(),
+              ...stores.flatMap((store) => `${store.id}-${BucketHashes.Subclass}`),
+            ]
+          : [
+              ...buckets.byCategory[category]
+                .filter((b) => b.hash !== BucketHashes.Subclass)
+                .flatMap((bucket) => [
+                  bucket.hash.toString(),
+                  ...stores.flatMap((store) => `${store.id}-${bucket.hash}`),
+                ]),
+            ],
       drop: () => ({ equipped }),
       canDrop: (i) =>
         itemCanBeInLoadout(i) &&
@@ -71,14 +82,16 @@ export default function LoadoutEditBucketDropTarget({
           >
             {t('Loadouts.Equipped')}
           </div>
-          <div
-            className={clsx({
-              [styles.over]: isOverUnequipped,
-            })}
-            ref={unequippedRef}
-          >
-            {t('Loadouts.Unequipped')}
-          </div>
+          {!equippedOnly && (
+            <div
+              className={clsx({
+                [styles.over]: isOverUnequipped,
+              })}
+              ref={unequippedRef}
+            >
+              {t('Loadouts.Unequipped')}
+            </div>
+          )}
         </div>
       )}
       <div className={clsx({ [styles.dragOver]: canDropEquipped || canDropUnequipped })}>

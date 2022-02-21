@@ -332,6 +332,8 @@ export function fillLoadoutFromEquipped(
   itemsByBucket: { [bucketId: string]: DimItem[] },
   dimStore: DimStore,
   onUpdateLoadout: (loadout: Loadout) => void,
+  // This is a bit dangerous as it is only used from the new loadout edit drawer and
+  // has special handling that would break the old loadout drawer
   category?: string
 ) {
   if (!loadout) {
@@ -343,8 +345,8 @@ export function fillLoadoutFromEquipped(
       item.equipped &&
       itemCanBeInLoadout(item) &&
       (category
-        ? category === 'subclass'
-          ? item.bucket.hash === BucketHashes.Subclass
+        ? category === 'General'
+          ? item.bucket.hash !== BucketHashes.Subclass && item.bucket.sort === category
           : item.bucket.sort === category
         : fromEquippedTypes.includes(item.bucket.hash))
   );

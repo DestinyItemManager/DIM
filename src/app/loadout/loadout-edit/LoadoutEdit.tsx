@@ -20,6 +20,7 @@ import {
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { emptyObject } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -60,19 +61,21 @@ export default function LoadoutEdit({
   const allItems = useSelector(allItemsSelector);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
 
+  // TODO: filter down by usable mods?
+  const modsByBucket: {
+    [bucketHash: number]: number[] | undefined;
+  } = loadout.parameters?.modsByBucket ?? emptyObject();
+
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(
-    () => getItemsAndSubclassFromLoadout(loadout.items, store, defs, buckets, allItems),
-    [loadout.items, defs, buckets, allItems, store]
+    () =>
+      getItemsAndSubclassFromLoadout(loadout.items, store, defs, buckets, allItems, modsByBucket),
+    [loadout.items, defs, buckets, allItems, store, modsByBucket]
   );
 
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
 
   const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
-  // TODO: filter down by usable mods?
-  const modsByBucket: {
-    [bucketHash: number]: number[] | undefined;
-  } = loadout.parameters?.modsByBucket ?? {};
   const clearUnsetMods = loadout.parameters?.clearMods;
 
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
@@ -183,39 +186,45 @@ export default function LoadoutEdit({
             setLoadoutSubclassFromEquipped(loadout, subclass, store, updateLoadout)
           }
         >
-          <LoadoutEditSubclass
-            defs={defs}
-            subclass={subclass}
-            power={power}
-            onRemove={handleClearSubclass}
-            onPick={() => onClickSubclass(subclass)}
-          />
-          {subclass && (
-            <div className={styles.buttons}>
-              {subclass.sockets ? (
-                <button
-                  type="button"
-                  className="dim-button"
-                  onClick={() => setPlugDrawerOpen(true)}
-                >
-                  {t('LB.SelectSubclassOptions')}
-                </button>
-              ) : (
-                <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
-              )}
-            </div>
-          )}
-          {plugDrawerOpen &&
-            subclass &&
-            ReactDOM.createPortal(
-              <SubclassPlugDrawer
-                subclass={subclass}
-                socketOverrides={subclass.socketOverrides ?? {}}
-                onClose={() => setPlugDrawerOpen(false)}
-                onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
-              />,
-              document.body
+          <LoadoutEditBucketDropTarget
+            category="Subclass"
+            classType={loadout.classType}
+            equippedOnly={true}
+          >
+            <LoadoutEditSubclass
+              defs={defs}
+              subclass={subclass}
+              power={power}
+              onRemove={handleClearSubclass}
+              onPick={() => onClickSubclass(subclass)}
+            />
+            {subclass && (
+              <div className={styles.buttons}>
+                {subclass.sockets ? (
+                  <button
+                    type="button"
+                    className="dim-button"
+                    onClick={() => setPlugDrawerOpen(true)}
+                  >
+                    {t('LB.SelectSubclassOptions')}
+                  </button>
+                ) : (
+                  <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
+                )}
+              </div>
             )}
+            {plugDrawerOpen &&
+              subclass &&
+              ReactDOM.createPortal(
+                <SubclassPlugDrawer
+                  subclass={subclass}
+                  socketOverrides={subclass.socketOverrides ?? {}}
+                  onClose={() => setPlugDrawerOpen(false)}
+                  onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
+                />,
+                document.body
+              )}
+          </LoadoutEditBucketDropTarget>
         </LoadoutEditSection>
       )}
       {(anyClass ? ['Weapons', 'General'] : ['Weapons', 'Armor', 'General']).map((category) => (

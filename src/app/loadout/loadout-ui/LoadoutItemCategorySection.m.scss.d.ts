@@ -9,6 +9,7 @@ interface CssExports {
   'itemCategory': string;
   'items': string;
   'itemsInCategory': string;
+  'missingItem': string;
   'placeholder': string;
   'showFashion': string;
   'unequipped': string;

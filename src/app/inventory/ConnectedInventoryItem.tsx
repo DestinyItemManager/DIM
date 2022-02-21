@@ -7,7 +7,7 @@ import { wishListSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { getNotes, getTag, TagValue } from './dim-item-info';
 import InventoryItem from './InventoryItem';
-import { DimItem, PluggableInventoryItemDefinition } from './item-types';
+import { DimItem } from './item-types';
 import { isNewSelector, itemHashTagsSelector, itemInfosSelector } from './selectors';
 
 // Props provided from parents
@@ -21,8 +21,6 @@ interface ProvidedProps {
   onShiftClick?(e: React.MouseEvent): void;
   onDoubleClick?(e: React.MouseEvent): void;
   dimArchived?: boolean;
-  /** overrides the item's real/current appearance, with an intended ornament, i.e. for loadout fashion */
-  ornament?: PluggableInventoryItemDefinition;
 }
 
 // Props from Redux via mapStateToProps
@@ -74,7 +72,6 @@ function ConnectedInventoryItem({
   searchHidden,
   ignoreSelectedPerks,
   innerRef,
-  ornament,
 }: Props) {
   return (
     <InventoryItem
@@ -90,7 +87,6 @@ function ConnectedInventoryItem({
       searchHidden={searchHidden}
       ignoreSelectedPerks={ignoreSelectedPerks}
       innerRef={innerRef}
-      ornament={ornament}
     />
   );
 }
