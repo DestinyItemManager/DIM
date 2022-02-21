@@ -2,7 +2,7 @@ import { Loadout as DimApiLoadout } from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 
 export interface LoadoutItem {
-  id: string;
+  id?: string;
   hash: number;
   amount: number;
   equipped: boolean;

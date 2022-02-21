@@ -37,6 +37,7 @@ export function getItemsAndSubclassFromLoadout(
   const [items, warnitems] = getItemsFromLoadoutItems(
     loadoutItems,
     defs,
+    store.id,
     buckets,
     allItems,
     modsByBucket

@@ -102,7 +102,7 @@ function migrateUpgradeSpendTierAndLockItemEnergy(parameters: DimLoadout['parame
  * storage format to the old loadout format.
  */
 export function convertDimApiLoadoutToLoadout(loadout: Loadout): DimLoadout {
-  const { equipped, unequipped, clearSpace, parameters, ...rest } = loadout;
+  const { equipped = [], unequipped = [], clearSpace, parameters, ...rest } = loadout;
   return {
     ...rest,
     parameters: migrateUpgradeSpendTierAndLockItemEnergy(parameters),
@@ -122,7 +122,7 @@ function convertDimApiLoadoutItemToLoadoutItem(
   equipped: boolean
 ): DimLoadoutItem {
   return {
-    id: item.id || '0',
+    id: item.id,
     hash: item.hash,
     amount: item.amount || 1,
     socketOverrides: item.socketOverrides,

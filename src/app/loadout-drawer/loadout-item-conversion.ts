@@ -16,12 +16,13 @@ import { findItem } from './loadout-utils';
 export function getItemsFromLoadoutItems(
   loadoutItems: LoadoutItem[] | undefined,
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  storeId: string | undefined,
   buckets: InventoryBuckets,
   allItems: DimItem[],
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
   }
-): [DimLoadoutItem[], DimLoadoutItem[]] {
+): [items: DimLoadoutItem[], warnitems: DimLoadoutItem[]] {
   if (!loadoutItems) {
     return [emptyArray(), emptyArray()];
   }
@@ -29,7 +30,7 @@ export function getItemsFromLoadoutItems(
   const items: DimLoadoutItem[] = [];
   const warnitems: DimLoadoutItem[] = [];
   for (const loadoutItem of loadoutItems) {
-    const item = findItem(allItems, loadoutItem);
+    const item = findItem(defs, allItems, storeId, loadoutItem);
     if (item) {
       // If there are any mods for this item's bucket, and the item is equipped, add them to socket overrides
       const modsForBucket =
@@ -60,7 +61,9 @@ export function getItemsFromLoadoutItems(
           } as DimLoadoutItem);
         fakeItem.equipped = loadoutItem.equipped;
         fakeItem.socketOverrides = loadoutItem.socketOverrides;
-        fakeItem.id = loadoutItem.id;
+        // Items from shared loadouts may come in with no ID
+        fakeItem.id =
+          loadoutItem.id ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString();
         warnitems.push(fakeItem);
       }
     }

@@ -15,7 +15,7 @@ import {
   getSocketsByCategoryHash,
   getSocketsByIndexes,
 } from 'app/utils/socket-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
@@ -351,24 +351,47 @@ export function extractArmorModHashes(item: DimItem) {
   );
 }
 
-export function findItem(allItems: DimItem[], loadoutItem: LoadoutItem): DimItem | undefined {
-  // TODO: so inefficient to look through all items over and over again
-  // TODO: figure out which items *should* be instanced and which shouldn't so we can omit item IDs in shared loadouts\
-  // TODO: maybe some things like subclasses, emblems, ships, etc can just match by hash. Anything that's not random rolled actually!
-  for (const item of allItems) {
-    if (
-      (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) ||
-      ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash)
-    ) {
-      return item;
-    }
+export function findItem(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  allItems: DimItem[],
+  storeId: string | undefined,
+  loadoutItem: LoadoutItem
+): DimItem | undefined {
+  const def = defs.InventoryItem.get(loadoutItem.hash) as DestinyInventoryItemDefinition & {
+    // D1 definitions use this toplevel "instanced" field
+    instanced: boolean;
+  };
+
+  // Instanced items match by ID, uninstanced match by hash. It'd actually be
+  // nice to use "is random rolled or configurable" here instead but that's hard
+  // to determine.
+  // TODO: this might be nice to add to DimItem
+  const instanced =
+    (def.instanced || def.inventory?.isInstanceItem) &&
+    // Subclasses are technically instanced but should be matched by hash
+    def.inventory?.bucketTypeHash !== BucketHashes.Subclass;
+
+  // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
+  if (instanced) {
+    return allItems.find((item) => item.id === loadoutItem.id);
   }
-  return undefined;
+
+  // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
+  const candidates = allItems.filter((item) => item.hash === loadoutItem.hash);
+  return (
+    (storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined) ??
+    candidates[0]
+  );
 }
 
-export function isMissingItems(allItems: DimItem[], loadout: Loadout): boolean {
+export function isMissingItems(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  allItems: DimItem[],
+  storeId: string,
+  loadout: Loadout
+): boolean {
   for (const loadoutItem of loadout.items) {
-    const item = findItem(allItems, loadoutItem);
+    const item = findItem(defs, allItems, storeId, loadoutItem);
     if (!item) {
       return true;
     }
