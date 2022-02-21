@@ -15,7 +15,7 @@
 * Fix potential element blurriness in Edge browser.
 * Fix for Loadout Optimizer suggesting armor with insufficient energy.
 * Fix a clash between `power:1234` and `is:power` filters.
-* Loadout Optimizer is not a little more thorough in preventing an item from being both pinned and excluded.
+* Loadout Optimizer is now a little more thorough in preventing an item from being both pinned and excluded.
 
 ### Witch Queen updates
 

@@ -229,15 +229,26 @@ function getStringsFromDisplayPropertiesMap<T extends { name: string; descriptio
 
 /** includes name and description unless you set the arg2 flag */
 function getStringsFromAllSockets(item: DimItem, includeDescription = true) {
-  return (
-    item.sockets?.allSockets.flatMap((socket) => {
+  const results: string[] = [];
+  if (item.sockets) {
+    for (const socket of item.sockets.allSockets) {
       const plugAndPerkDisplay = socket.plugOptions.map((plug) => [
         plug.plugDef.displayProperties,
         plug.perks.map((perk) => perk.displayProperties),
       ]);
-      return getStringsFromDisplayPropertiesMap(plugAndPerkDisplay.flat(2), includeDescription);
-    }) || []
-  );
+      results.push(
+        ...getStringsFromDisplayPropertiesMap(plugAndPerkDisplay.flat(2), includeDescription)
+      );
+      // include tooltips from the plugged item
+      if (socket.plugged?.plugDef.tooltipNotifications) {
+        for (const t of socket.plugged.plugDef.tooltipNotifications) {
+          results.push(t.displayString);
+        }
+      }
+    }
+  }
+
+  return results;
 }
 
 // we can't properly quote a search string if it contains both ' and ", so.. we use this
