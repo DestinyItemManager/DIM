@@ -173,9 +173,6 @@ function doApplyLoadout(
 
       // Trim down the list of items to only those that could be equipped by the store we're sending to.
       const applicableLoadoutItems = loadout.items.filter((loadoutItem) => {
-        if (!loadoutItem.id) {
-          return false;
-        }
         const item = getLoadoutItem(loadoutItem, store, getStores());
         // Don't filter if they're going to the vault
         return (

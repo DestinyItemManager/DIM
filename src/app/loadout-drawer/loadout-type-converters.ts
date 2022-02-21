@@ -122,7 +122,7 @@ function convertDimApiLoadoutItemToLoadoutItem(
   equipped: boolean
 ): DimLoadoutItem {
   return {
-    id: item.id,
+    id: item.id || '0',
     hash: item.hash,
     amount: item.amount || 1,
     socketOverrides: item.socketOverrides,

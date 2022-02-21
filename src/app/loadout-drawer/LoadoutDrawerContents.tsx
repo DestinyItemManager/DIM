@@ -123,7 +123,7 @@ export default function LoadoutDrawerContents({
     const subclassItems = itemsByBucket[BucketHashes.Subclass] ?? [];
 
     for (const item of loadout.items) {
-      if (item.id && subclassItems.some((subclass) => subclass.id === item.id)) {
+      if (subclassItems.some((subclass) => subclass.id === item.id)) {
         subclassSocketOverrides[item.id] = item.socketOverrides || {};
       }
     }

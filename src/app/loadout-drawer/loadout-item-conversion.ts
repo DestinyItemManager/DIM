@@ -61,9 +61,7 @@ export function getItemsFromLoadoutItems(
           } as DimLoadoutItem);
         fakeItem.equipped = loadoutItem.equipped;
         fakeItem.socketOverrides = loadoutItem.socketOverrides;
-        // Items from shared loadouts may come in with no ID
-        fakeItem.id =
-          loadoutItem.id ?? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString();
+        fakeItem.id = loadoutItem.id;
         warnitems.push(fakeItem);
       }
     }

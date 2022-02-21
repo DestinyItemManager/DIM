@@ -65,7 +65,7 @@ export interface MoveReservations {
  * Minimum specification to identify an item that should be excluded from some consideration.
  */
 export interface Exclusion {
-  id?: string;
+  id: string;
   hash: number;
 }
 
