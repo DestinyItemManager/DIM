@@ -1,3 +1,5 @@
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -23,7 +25,7 @@ import { deleteLoadout, updateLoadout } from './actions';
 import { stateReducer } from './loadout-drawer-reducer';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
-import { DimLoadoutItem, Loadout } from './loadout-types';
+import { Loadout } from './loadout-types';
 import styles from './LoadoutDrawer2.m.scss';
 import {
   fillLoadoutFromEquipped,
@@ -145,7 +147,7 @@ export default function LoadoutDrawer2() {
       };
     }
 
-    loadoutToSave = filterLoadoutToAllowedItems(loadoutToSave, items);
+    loadoutToSave = filterLoadoutToAllowedItems(defs, loadoutToSave);
 
     dispatch(updateLoadout(loadoutToSave));
     close();
@@ -218,8 +220,19 @@ export default function LoadoutDrawer2() {
     });
   };
 
-  const handleClickPlaceholder = ({ bucket }: { bucket: InventoryBucket }) => {
-    pickLoadoutItem(loadout, bucket, ({ item }) => onAddItem(item), setShowingItemPicker);
+  const handleClickPlaceholder = ({
+    bucket,
+    equip,
+  }: {
+    bucket: InventoryBucket;
+    equip: boolean;
+  }) => {
+    pickLoadoutItem(
+      loadout,
+      bucket,
+      ({ item }) => onAddItem(item, undefined, equip),
+      setShowingItemPicker
+    );
   };
   const handleClickSubclass = (subclass: DimItem | undefined) =>
     pickLoadoutSubclass(
@@ -289,7 +302,7 @@ export default function LoadoutDrawer2() {
               fillLoadoutFromEquipped(loadout, itemsByBucket, store, handleUpdateLoadout)
             }
           >
-            <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
+            <AppIcon icon={addIcon} /> {t('Loadouts.FillFromEquipped')}
           </button>
           <button
             type="button"
@@ -300,7 +313,7 @@ export default function LoadoutDrawer2() {
               )
             }
           >
-            <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
+            <AppIcon icon={addIcon} /> {t('Loadouts.FillFromInventory')}
           </button>
           <CheckButton
             checked={loadout.classType === DestinyClass.Unknown}
@@ -326,15 +339,16 @@ export default function LoadoutDrawer2() {
  * Remove items and settings that don't match the loadout's class type.
  */
 function filterLoadoutToAllowedItems(
-  loadoutToSave: Readonly<Loadout>,
-  items: DimLoadoutItem[]
+  defs: D2ManifestDefinitions | D1ManifestDefinitions,
+  loadoutToSave: Readonly<Loadout>
 ): Readonly<Loadout> {
   return produce(loadoutToSave, (loadout) => {
     // Filter out items that don't fit the class type
     loadout.items = loadout.items.filter((loadoutItem) => {
-      const item = items.find((i) => i.hash === loadoutItem.hash && i.id === loadoutItem.id);
+      const classType = defs.InventoryItem.get(loadoutItem.hash)?.classType;
       return (
-        item && (item.classType === DestinyClass.Unknown || item.classType === loadout.classType)
+        classType !== undefined &&
+        (classType === DestinyClass.Unknown || classType === loadout.classType)
       );
     });
 

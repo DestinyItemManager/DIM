@@ -51,7 +51,7 @@ export default function LoadoutEdit({
   store: DimStore;
   stateDispatch: React.Dispatch<Action>;
   onClickSubclass: (subclass: DimItem | undefined) => void;
-  onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
+  onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
   onClickWarnItem: (item: DimItem) => void;
   onRemoveItem: (item: DimItem) => void;
 }) {
