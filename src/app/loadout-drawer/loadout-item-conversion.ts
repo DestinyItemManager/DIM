@@ -7,7 +7,7 @@ import { emptyArray } from 'app/utils/empty';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { DimItem } from '../inventory/item-types';
 import { DimLoadoutItem, LoadoutItem } from './loadout-types';
-import { findItem } from './loadout-utils';
+import { findItemForLoadout } from './loadout-utils';
 
 /**
  * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
@@ -30,7 +30,7 @@ export function getItemsFromLoadoutItems(
   const items: DimLoadoutItem[] = [];
   const warnitems: DimLoadoutItem[] = [];
   for (const loadoutItem of loadoutItems) {
-    const item = findItem(defs, allItems, storeId, loadoutItem);
+    const item = findItemForLoadout(defs, allItems, storeId, loadoutItem);
     if (item) {
       // If there are any mods for this item's bucket, and the item is equipped, add them to socket overrides
       const modsForBucket =

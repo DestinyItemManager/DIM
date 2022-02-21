@@ -127,7 +127,7 @@ const toD2DamageType = _.memoize(
 );
 
 /**
- * Process a single raw item into a DIM item.s
+ * Process a single raw item into a DIM item.
  * @param defs the manifest definitions
  * @param buckets the bucket definitions
  * @param previousItems a set of item IDs representing the previous store's items

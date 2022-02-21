@@ -46,7 +46,6 @@ import {
   amountOfItem,
   findItemsByBucket,
   getCurrentStore,
-  getItemAcrossStores,
   getStore,
   getVault,
   spaceLeftForItem,
@@ -125,6 +124,28 @@ function updateItemModel(
     const stores = storesSelector(getState());
     return getItemAcrossStores(stores, item) || item;
   };
+}
+
+/**
+ * Find an item among all stores that matches the params provided.
+ */
+function getItemAcrossStores<Item extends DimItem, Store extends DimStore<Item>>(
+  stores: Store[],
+  params: DimItem
+) {
+  for (const store of stores) {
+    for (const item of store.items) {
+      if (
+        params.id === item.id &&
+        params.hash === item.hash &&
+        params.notransfer === item.notransfer &&
+        params.amount === item.amount
+      ) {
+        return item;
+      }
+    }
+  }
+  return undefined;
 }
 
 /**

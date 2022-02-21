@@ -351,7 +351,10 @@ export function extractArmorModHashes(item: DimItem) {
   );
 }
 
-export function findItem(
+/**
+ * Given a loadout item specification, find the corresponding inventory item we should use.
+ */
+export function findItemForLoadout(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   allItems: DimItem[],
   storeId: string | undefined,
@@ -360,16 +363,25 @@ export function findItem(
   const def = defs.InventoryItem.get(loadoutItem.hash) as DestinyInventoryItemDefinition & {
     // D1 definitions use this toplevel "instanced" field
     instanced: boolean;
+    bucketTypeHash: number;
   };
 
   // Instanced items match by ID, uninstanced match by hash. It'd actually be
   // nice to use "is random rolled or configurable" here instead but that's hard
   // to determine.
   // TODO: this might be nice to add to DimItem
+  const bucketHash = def.bucketTypeHash || def.inventory?.bucketTypeHash || 0;
   const instanced =
     (def.instanced || def.inventory?.isInstanceItem) &&
-    // Subclasses are technically instanced but should be matched by hash
-    def.inventory?.bucketTypeHash !== BucketHashes.Subclass;
+    // Subclasses and some other types are technically instanced but should be matched by hash
+    ![
+      BucketHashes.Subclass,
+      BucketHashes.Shaders,
+      BucketHashes.Emblems,
+      BucketHashes.Emotes_Invisible,
+      BucketHashes.Emotes_Equippable,
+      D1BucketHashes.Horn,
+    ].includes(bucketHash);
 
   // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
   if (instanced) {
@@ -391,7 +403,7 @@ export function isMissingItems(
   loadout: Loadout
 ): boolean {
   for (const loadoutItem of loadout.items) {
-    const item = findItem(defs, allItems, storeId, loadoutItem);
+    const item = findItemForLoadout(defs, allItems, storeId, loadoutItem);
     if (!item) {
       return true;
     }

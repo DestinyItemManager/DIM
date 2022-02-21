@@ -9,8 +9,9 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpers';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
+import { findItemForLoadout } from 'app/loadout-drawer/loadout-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
@@ -110,7 +111,8 @@ const lbStateInit = ({
       // TODO: instead of locking items, show the loadout fixed at the top to compare against and leave all items free
       for (const loadoutItem of preloadedLoadout.items) {
         if (loadoutItem.equipped) {
-          const item = getItemAcrossStores(stores, loadoutItem);
+          const allItems = stores.flatMap((s) => s.items);
+          const item = findItemForLoadout(defs, allItems, selectedStoreId, loadoutItem);
           if (item && isLoadoutBuilderItem(item)) {
             pinnedItems[item.bucket.hash] = item;
           } else if (item && item.bucket.hash === BucketHashes.Subclass && item.sockets) {

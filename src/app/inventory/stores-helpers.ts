@@ -46,34 +46,6 @@ const itemsByBucket = weakMemoize((store: DimStore) =>
 export const findItemsByBucket = (store: DimStore, bucketId: number): DimItem[] =>
   itemsByBucket(store)[bucketId] ?? emptyArray();
 
-/**
- * Find an item among all stores that matches the params provided.
- */
-export function getItemAcrossStores<Item extends DimItem, Store extends DimStore<Item>>(
-  stores: Store[],
-  params: {
-    id?: string;
-    hash?: number;
-    notransfer?: boolean;
-    amount?: number;
-  }
-) {
-  const predicate = (i: DimItem) =>
-    (params.id === undefined || params.id === i.id) &&
-    (params.hash === undefined || params.hash === i.hash) &&
-    (params.notransfer === undefined || params.notransfer === i.notransfer) &&
-    (params.amount === undefined || params.amount === i.amount);
-
-  for (const store of stores) {
-    for (const item of store.items) {
-      if (predicate(item)) {
-        return item;
-      }
-    }
-  }
-  return undefined;
-}
-
 /** Get the bonus power from the Seasonal Artifact */
 export function getArtifactBonus(store: DimStore) {
   const artifact = findItemsByBucket(store, BucketHashes.SeasonalArtifact).find((i) => i.equipped);
