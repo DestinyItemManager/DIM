@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -9,7 +10,7 @@ import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conver
 import { DimLoadoutItem, Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
+import { AppIcon, faExclamationTriangle, faTshirt } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -119,6 +120,13 @@ export default function LoadoutView({
 
   // TODO: auto icons for fashion, weapon/armor/mods?
 
+  const createdAt = loadout.createdAt ? new Date(loadout.createdAt) : undefined;
+  const seasonNum = createdAt ? findSeason(createdAt)?.season : undefined;
+  const season = seasonNum
+    ? Object.values(defs.Season.getAll()).find((s) => s.seasonNumber === seasonNum)
+    : undefined;
+  const hasFashion = loadout.parameters?.modsByBucket;
+
   return (
     <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
@@ -126,6 +134,8 @@ export default function LoadoutView({
           {loadout.classType === DestinyClass.Unknown && (
             <ClassIcon className={styles.classIcon} classType={loadout.classType} />
           )}
+          {season && <BungieImage className={styles.season} src={season.displayProperties.icon} />}
+          {hasFashion && <AppIcon icon={faTshirt} />}
           {loadout.name}
           {warnitems.length > 0 && (
             <span className={styles.missingItems}>
