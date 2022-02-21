@@ -83,3 +83,11 @@
   margin: 4px 0;
   @include horizontal-space-children(4px);
 }
+
+.addButton {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  composes: pull-item-button from global;
+  color: currentColor;
+  width: 100%;
+  padding: 0 0 4px 0;
+}
