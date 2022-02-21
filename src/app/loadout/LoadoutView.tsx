@@ -91,7 +91,9 @@ export default function LoadoutView({
 
   const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
 
-  const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
+  const equippedItemIds = new Set(
+    _.compact(loadout.items.filter((i) => i.equipped).map((i) => i.id))
+  );
 
   const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
 

@@ -5,6 +5,7 @@ import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions'
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
   equipItems,
+  Exclusion,
   executeMoveItem,
   getSimilarItem,
   MoveReservations,
@@ -172,6 +173,9 @@ function doApplyLoadout(
 
       // Trim down the list of items to only those that could be equipped by the store we're sending to.
       const applicableLoadoutItems = loadout.items.filter((loadoutItem) => {
+        if (!loadoutItem.id) {
+          return false;
+        }
         const item = getLoadoutItem(loadoutItem, store, getStores());
         // Don't filter if they're going to the vault
         return (
@@ -559,7 +563,7 @@ function doApplyLoadout(
 function applyLoadoutItem(
   storeId: string,
   loadoutItem: LoadoutItem,
-  excludes: { id: string; hash: number }[],
+  excludes: Exclusion[],
   cancelToken: CancelToken
 ): ThunkResult {
   return async (dispatch, getState) => {

@@ -62,6 +62,14 @@ export interface MoveReservations {
 }
 
 /**
+ * Minimum specification to identify an item that should be excluded from some consideration.
+ */
+export interface Exclusion {
+  id?: string;
+  hash: number;
+}
+
+/**
  * Lock/unlock or track/untrack an item.
  */
 export function setItemLockState(
@@ -129,7 +137,7 @@ export function getSimilarItem(
     exclusions,
     excludeExotic = false,
   }: {
-    exclusions?: Pick<DimItem, 'id' | 'hash'>[];
+    exclusions?: Exclusion[];
     excludeExotic?: boolean;
   } = {}
 ): DimItem | null {
@@ -164,7 +172,7 @@ export function getSimilarItem(
 function searchForSimilarItem(
   item: DimItem,
   store: DimStore,
-  exclusions: Pick<DimItem, 'id' | 'hash'>[] | undefined,
+  exclusions: Exclusion[] | undefined,
   target: DimStore,
   excludeExotic: boolean
 ): DimItem | null {
@@ -490,7 +498,7 @@ function getOtherExoticThatNeedsDequipping(item: DimItem, store: DimStore): DimI
 interface MoveContext {
   /** Bucket hash */
   originalItemType: number;
-  excludes: Pick<DimItem, 'id' | 'hash'>[];
+  excludes: Exclusion[];
   spaceLeft(s: DimStore, i: DimItem): number;
 }
 
@@ -709,7 +717,7 @@ function canMoveToStore(
   store: DimStore,
   amount: number,
   options: {
-    excludes: Pick<DimItem, 'id' | 'hash'>[];
+    excludes: Exclusion[];
     reservations: MoveReservations;
     numRetries?: number;
     cancelToken: CancelToken;
@@ -883,7 +891,7 @@ function isValidTransfer(
   store: DimStore,
   item: DimItem,
   amount: number,
-  excludes: Pick<DimItem, 'id' | 'hash'>[],
+  excludes: Exclusion[],
   reservations: MoveReservations,
   cancelToken: CancelToken
 ): ThunkResult<boolean> {
@@ -926,7 +934,7 @@ export function executeMoveItem(
   }: {
     equip?: boolean;
     amount?: number;
-    excludes?: Pick<DimItem, 'id' | 'hash'>[];
+    excludes?: Exclusion[];
     reservations?: MoveReservations;
     cancelToken?: CancelToken;
   }
