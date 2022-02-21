@@ -11,7 +11,7 @@ export function DestinyTooltipText({ item }: { item: DimItem }) {
   }
   return (
     <>
-      {item.tooltipNotifications?.map((tip) => (
+      {item.tooltipNotifications.map((tip) => (
         <div
           key={tip.displayString}
           className={clsx('quest-expiration item-details', {
