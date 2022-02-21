@@ -11,6 +11,7 @@ import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -28,9 +29,18 @@ export function getItemsAndSubclassFromLoadout(
   store: DimStore,
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
-  allItems: DimItem[]
+  allItems: DimItem[],
+  modsByBucket?: {
+    [bucketHash: number]: number[] | undefined;
+  }
 ): [items: DimLoadoutItem[], subclass: DimLoadoutItem | undefined, warnitems: DimLoadoutItem[]] {
-  const [items, warnitems] = getItemsFromLoadoutItems(loadoutItems, defs, buckets, allItems);
+  const [items, warnitems] = getItemsFromLoadoutItems(
+    loadoutItems,
+    defs,
+    buckets,
+    allItems,
+    modsByBucket
+  );
   const subclass = items.find((item) => item.bucket.hash === BucketHashes.Subclass);
 
   let equippableItems = items.filter((i) => itemCanBeEquippedBy(i, store, true));
@@ -66,16 +76,20 @@ export default function LoadoutView({
   const allItems = useSelector(allItemsSelector);
   const isPhonePortrait = useIsPhonePortrait();
 
+  // TODO: filter down by usable mods?
+  const modsByBucket: {
+    [bucketHash: number]: number[];
+  } = loadout.parameters?.modsByBucket ?? emptyObject();
+
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(
-    () => getItemsAndSubclassFromLoadout(loadout.items, store, defs, buckets, allItems),
-    [loadout.items, defs, buckets, allItems, store]
+    () =>
+      getItemsAndSubclassFromLoadout(loadout.items, store, defs, buckets, allItems, modsByBucket),
+    [loadout.items, defs, buckets, allItems, store, modsByBucket]
   );
 
   const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
 
-  // TODO: filter down by usable mods?
-  const modsByBucket = loadout.parameters?.modsByBucket ?? {};
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
 
   const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
