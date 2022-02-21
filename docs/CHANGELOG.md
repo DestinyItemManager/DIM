@@ -1,5 +1,7 @@
 ## Next
 
+## 7.6.0 <span class="changelog-date">(2022-02-21)</span>
+
 * Fix applying D1 loadouts.
 * `inloadout:` filter now matches partial loadout names -- use `inloadout:"pvp"` for items in loadouts where "pvp" is in the loadout's name.
 * If your loadout includes ornaments, items are shown as if they had the loadout applied in the loadout page and loadout editor.
