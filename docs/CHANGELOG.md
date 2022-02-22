@@ -1,5 +1,7 @@
 ## Next
 
+* Increased the strings we search through when filtering by mods/perks.
+
 ## 7.6.0 <span class="changelog-date">(2022-02-21)</span>
 
 * Fix applying D1 loadouts.
