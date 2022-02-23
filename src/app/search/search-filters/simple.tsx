@@ -83,6 +83,11 @@ const simpleFilters: FilterDefinition[] = [
     description: tl('Filter.IsSunset'),
     filter: () => isSunset,
   },
+  {
+    keywords: 'crafted',
+    description: tl('Filter.IsCrafted'),
+    filter: () => (item) => item.crafted,
+  },
 ];
 
 export default simpleFilters;
