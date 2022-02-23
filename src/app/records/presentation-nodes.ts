@@ -418,7 +418,7 @@ function getRecordComponent(
 }
 
 function getCraftableInfo(itemHash: number, profileResponse: DestinyProfileResponse) {
-  if (!profileResponse.characterCraftables.data) {
+  if (!profileResponse.characterCraftables?.data) {
     return;
   }
   const id = Object.keys(profileResponse.characterCraftables.data)[0];

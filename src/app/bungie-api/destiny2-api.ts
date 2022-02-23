@@ -98,6 +98,7 @@ export function getStores(
     DestinyComponentType.Metrics,
     DestinyComponentType.StringVariables,
     DestinyComponentType.ProfileProgression,
+    DestinyComponentType.Craftables,
   ];
 
   return getProfile(platform, ...(components || defaultComponents));
