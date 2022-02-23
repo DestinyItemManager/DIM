@@ -542,7 +542,7 @@
     "ArmorMods": "護甲模組",
     "AssumeMaxWeapons": "假設最大光等武器",
     "Before": "撤銷 '{{name}}'",
-    "CannotCustomizeSubclass": "Light subclasses cannot be configured",
+    "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "添加 {{name}}",
     "Classified": "你的某些物品是隱藏的，因此不能用於到最大光等的計算之中。",
     "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
