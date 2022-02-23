@@ -542,7 +542,7 @@
     "ArmorMods": "Modyfikacje pancerza",
     "AssumeMaxWeapons": "Zakładając, że bronie mają maksymalny poziom mocy",
     "Before": "Przed '{{name}}'",
-    "CannotCustomizeSubclass": "This subclass cannot be configured",
+    "CannotCustomizeSubclass": "Light subclasses cannot be configured",
     "ChooseItem": "Dodaj {{name}}",
     "Classified": "Niektóre z twoich przedmiotów są sklasyfikowane i nie mogą być uwzględnione przy kalkulacji maksymalnej mocy.",
     "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
