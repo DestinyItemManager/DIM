@@ -218,6 +218,7 @@
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
+    "IsCrafted": "Shows weapons that have been crafted.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "Leveling": {

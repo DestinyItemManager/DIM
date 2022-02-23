@@ -31,6 +31,7 @@ import ItemSockets from './ItemSockets';
 import ItemStats from './ItemStats';
 import ItemTalentGrid from './ItemTalentGrid';
 import MetricCategories from './MetricCategories';
+import ShapedItemDetails from './ShapedItemDetails';
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
@@ -128,6 +129,8 @@ export default function ItemDetails({
           ))}
         </div>
       )}
+
+      <ShapedItemDetails item={item} />
 
       {defs && item.objectives && (
         <div className="item-details">

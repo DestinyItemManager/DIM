@@ -68,7 +68,10 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
     .reverse()
     .flatMap((c) =>
       getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
-        (s) => !s.isPerk && s !== archetypeSocket
+        (s) =>
+          !s.isPerk &&
+          s !== archetypeSocket &&
+          s.plugged?.plugDef.plug.plugCategoryIdentifier !== 'crafting.plugs.frame_identifiers'
       )
     );
 

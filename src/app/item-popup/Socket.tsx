@@ -22,6 +22,9 @@ export default function Socket({
   if (!socket.plugOptions.length) {
     return null;
   }
+  if (!socket.plugged?.plugDef.displayProperties.icon) {
+    return null;
+  }
   return (
     <div
       className={clsx('item-socket', {

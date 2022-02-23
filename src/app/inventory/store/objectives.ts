@@ -57,9 +57,11 @@ export function isBooleanObjective(
   completionValue: number
 ) {
   return (
-    objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
-    (completionValue === 1 &&
-      (!objectiveDef.allowOvercompletion || !objectiveDef.showValueOnComplete))
+    // exempting things with a uiStyle, rules out the various new crafting objectives introduced with witch queen
+    !objectiveDef.uiStyle &&
+    (objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
+      (completionValue === 1 &&
+        (!objectiveDef.allowOvercompletion || !objectiveDef.showValueOnComplete)))
   );
 }
 
