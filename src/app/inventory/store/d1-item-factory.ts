@@ -320,6 +320,7 @@ function makeItem(
     infusionFuel: false,
     perks: null,
     masterworkInfo: null,
+    craftedInfo: null,
     infusionQuality: null,
     canPullFromPostmaster: false,
     uniqueStack: false,

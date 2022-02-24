@@ -1,6 +1,8 @@
 ## Next
 
 * Increased the strings we search through when filtering by mods/perks.
+* Crafted weapons' levels and level progress are now shown on the item popup.
+* Added an `is:crafted` filter.
 
 ## 7.6.0 <span class="changelog-date">(2022-02-21)</span>
 

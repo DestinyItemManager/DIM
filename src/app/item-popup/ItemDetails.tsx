@@ -1,5 +1,6 @@
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
+import { WeaponCraftedInfo } from 'app/dim-ui/WeaponCraftedInfo';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { isTrialsPassage } from 'app/inventory/store/objectives';
@@ -52,6 +53,7 @@ export default function ItemDetails({
   const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
 
   const killTrackerInfo = getItemKillTrackerInfo(item);
+
   return (
     <div className="item-details-body">
       {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
@@ -82,6 +84,10 @@ export default function ItemDetails({
             availableMetricCategoryNodeHashes={item.availableMetricCategoryNodeHashes}
           />
         </div>
+      )}
+
+      {item.crafted && item.craftedInfo && defs.isDestiny2() && (
+        <WeaponCraftedInfo craftInfo={item.craftedInfo} className="crafted-progess" />
       )}
 
       {killTrackerInfo && defs.isDestiny2() && (

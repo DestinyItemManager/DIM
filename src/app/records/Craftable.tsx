@@ -7,13 +7,13 @@ interface Props {
 }
 
 export default function Craftable({ craftable }: Props) {
-  const { item, allPlugsReqsAreMet, craftingReqsAreMet } = craftable;
+  const { item, canCraftAllPlugs, canCraftThis } = craftable;
 
   return (
     <VendorItemDisplay
       item={item}
-      unavailable={!allPlugsReqsAreMet}
-      extraData={{ allPlugsReqsAreMet, craftingReqsAreMet }}
+      unavailable={!canCraftThis}
+      extraData={{ canCraftAllPlugs, canCraftThis }}
     />
   );
 }

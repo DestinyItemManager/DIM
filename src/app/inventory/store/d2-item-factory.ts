@@ -35,6 +35,7 @@ import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem, DimPerk } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';
+import { buildCraftedInfo } from './crafted';
 import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives } from './objectives';
@@ -476,6 +477,7 @@ export function makeItem(
     sockets: null,
     perks: null,
     masterworkInfo: null,
+    craftedInfo: null,
     infusionQuality: null,
     tooltipNotifications,
   };
@@ -641,6 +643,9 @@ export function makeItem(
     );
     reportException('MasterworkInfo', e, { itemHash: item.itemHash });
   }
+
+  // Crafted
+  createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
 
   try {
     buildPursuitInfo(createdItem, item, itemDef);
