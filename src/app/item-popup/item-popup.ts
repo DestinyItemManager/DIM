@@ -19,8 +19,10 @@ export interface ItemPopupExtraInfo {
   acquired?: boolean;
   mod?: boolean;
   socketOverrides?: SocketOverrides;
-  allPlugsReqsAreMet?: boolean;
-  craftingReqsAreMet?: boolean;
+  // whether you can make this item at all
+  canCraftThis?: boolean;
+  // if you completely leveled up the item, it can be crafted with any of its perks. impressive.
+  canCraftAllPlugs?: boolean;
 }
 
 export function showItemPopup(
