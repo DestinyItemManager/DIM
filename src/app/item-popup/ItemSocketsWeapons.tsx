@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { craftedSocketCategoryHash } from 'app/inventory/store/crafted';
 import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
@@ -65,11 +66,18 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
   );
   // Iterate in reverse category order so cosmetic mods are at the front
   const mods = [...item.sockets.categories]
+    .filter((c) => c.category.hash !== craftedSocketCategoryHash)
     .reverse()
     .flatMap((c) =>
       getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
         (s) => !s.isPerk && s !== archetypeSocket
       )
+    )
+    .filter(
+      (socket) =>
+        // Hack: dummy deepsight plugs with no name can be ignored
+        socket.plugged?.plugDef.displayProperties.name ||
+        socket.socketDefinition.socketTypeHash !== 1085237186
     );
 
   const keyStats =

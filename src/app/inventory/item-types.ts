@@ -199,6 +199,8 @@ export interface DimItem {
   energy: DestinyItemInstanceEnergy | null;
   /** If this item is a masterwork, this will include information about its masterwork properties. */
   masterworkInfo: DimMasterwork | null;
+  /** If this item is crafted, this includes info about its crafting properties. */
+  craftedInfo: DimCrafted | null;
   /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The state of this item in the user's D2 Collection */
@@ -237,6 +239,15 @@ export interface DimMasterwork {
     /** How much the stat is enhanced by this masterwork. */
     value?: number;
   }[];
+}
+
+export interface DimCrafted {
+  /** The level of this crafted weapon */
+  level?: number;
+  /** 0-1 progress to the next level */
+  progress?: number;
+  /** when this weapon was crafted, UTC epoch milliseconds timestamp */
+  dateCrafted?: number;
 }
 
 export interface DimStat {

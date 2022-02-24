@@ -82,6 +82,19 @@
   }
 }
 
+.crafted-progess {
+  padding: 4px 10px 4px;
+  background: #333;
+
+  .objective-progress {
+    background: #222;
+  }
+
+  .objective-progress-bar {
+    background-color: $crafted-border-color;
+  }
+}
+
 .item-perks {
   margin: 5px 10px;
 }
