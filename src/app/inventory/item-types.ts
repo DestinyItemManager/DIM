@@ -246,7 +246,7 @@ export interface DimCrafted {
   level?: number;
   /** 0-1 progress to the next level */
   progress?: number;
-  /** when this weapon was crafted, unix epoch timestamp */
+  /** when this weapon was crafted, UTC epoch milliseconds timestamp */
   dateCrafted?: number;
 }
 

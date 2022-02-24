@@ -23,7 +23,7 @@ export function WeaponCraftedInfo({
       <div className="objective-progress">
         <div className="objective-progress-bar" style={progressBarStyle} />
         <div className="objective-description">
-          {t('MovePopup.WeaponLevel')} {craftInfo.level}
+          {t('MovePopup.WeaponLevel', { level: craftInfo.level })}
         </div>
         <div className="objective-text">{pct}</div>
       </div>

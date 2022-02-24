@@ -43,7 +43,7 @@ function getCraftingInfo(defs: D2ManifestDefinitions, objectives: DestinyObjecti
             ? objective.progress / objective.completionValue
             : undefined;
       } else if (def.uiStyle === DestinyObjectiveUiStyle.CraftingWeaponTimestamp) {
-        dateCrafted = objective.progress;
+        dateCrafted = objective.progress ? objective.progress * 1000 : undefined;
       }
     }
   }

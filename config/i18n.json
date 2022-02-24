@@ -806,7 +806,7 @@
     },
     "TriageTab": "Triage",
     "Vault": "Vault",
-    "WeaponLevel": "Weapon Lv."
+    "WeaponLevel": "Weapon Level {{level}}"
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
