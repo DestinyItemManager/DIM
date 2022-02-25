@@ -3,6 +3,7 @@
 * Increased the strings we search through when filtering by mods/perks.
 * Crafted weapons' levels and level progress are now shown on the item popup.
 * Added `is:crafted` and `is:deepsight` filters.
+* Crafting materials are now included in the currency counter. Tap and hold, or hover, the consumables count in the vault header to check them.
 
 ## 7.6.0 <span class="changelog-date">(2022-02-21)</span>
 
