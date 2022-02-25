@@ -111,6 +111,8 @@ export const materialsSelector = (state: RootState) =>
 /** The actual raw profile response from the Bungie.net profile API */
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
+// this list of crafting mats contains the StringVariables hash that finds how many the player owns
+// unfortunately, this is basically the only reasonable option
 const craftingMatsTable: [
   lookupTable: 'InventoryItem' | 'Objective',
   lookupHash: number,
@@ -123,6 +125,7 @@ const craftingMatsTable: [
   ['InventoryItem', 3491404510, 2747150405],
 ];
 
+/** returns name/icon/amount for a hard-coded list of crafting materials */
 export const craftingMaterialCountsSelector = createSelector(
   d2ManifestSelector,
   profileResponseSelector,
