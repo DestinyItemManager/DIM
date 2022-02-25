@@ -4,7 +4,7 @@ import { currentProfileSelector, settingsSelector } from 'app/dim-api/selectors'
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { universalOrnamentPlugSetHashes } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
-import { emptyArray, emptyObject, emptySet } from 'app/utils/empty';
+import { emptyObject, emptySet } from 'app/utils/empty';
 import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -111,63 +111,40 @@ export const materialsSelector = (state: RootState) =>
 /** The actual raw profile response from the Bungie.net profile API */
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
-/** returns the highest of any characters' currency counts keyed by currency. this is used for crafting mats */
-export const allCharactersCombinedCurrenciesSelector = (state: RootState) => {
-  const results: { [currencyHash: string]: number } = {};
-
-  const characterCurrenciesByChar = state.inventory.profileResponse?.characterCurrencyLookups?.data;
-
-  for (const charId in characterCurrenciesByChar) {
-    for (const currencyHash in characterCurrenciesByChar[charId].itemQuantities) {
-      results[currencyHash] ??= 0;
-      results[currencyHash] = Math.max(
-        results[currencyHash],
-        characterCurrenciesByChar[charId].itemQuantities[currencyHash]
-      );
-    }
-  }
-
-  return results;
-};
-
-/** a list of crafting mat item hashes */
-const craftingMaterialDefsSelector = createSelector(d2ManifestSelector, (defs) => {
-  if (!defs) {
-    return emptyArray<number>();
-  }
-
-  return Object.values(defs.InventoryItem.getAll())
-    .filter(
-      // to-do: replace with an enum
-      (i) => i.plug?.plugCategoryIdentifier === 'crafting.plugs.weapons.mods.extractors'
-    )
-    .map((i) => i.hash);
-});
+const craftingMatsTable: [
+  lookupTable: 'InventoryItem' | 'Objective',
+  lookupHash: number,
+  countHash: number
+][] = [
+  ['Objective', 2215515945, 2829303739],
+  ['Objective', 2215515947, 1238436609],
+  ['Objective', 2215515946, 1178490630],
+  ['Objective', 2215515944, 2653558736],
+  ['InventoryItem', 3491404510, 2747150405],
+];
 
 export const craftingMaterialCountsSelector = createSelector(
+  d2ManifestSelector,
   profileResponseSelector,
-  craftingMaterialDefsSelector,
-  (profileResponse, craftingMatHashes) => {
-    const plugs = profileResponse?.profilePlugSets.data?.plugs;
-    const results: { [materialHash: string]: number } = {};
+  (defs, profileResponse) => {
+    const numbersLookup = profileResponse?.profileStringVariables?.data?.integerValuesByHash;
+    const results: [name: string, icon: string, count: number][] = [];
 
-    for (const k in plugs) {
-      // all keys in js are strings. DestinyPlugSetsComponent.plugs is poorly typed.
-      const plugList = plugs[k as unknown as number];
-      for (const plug of plugList) {
-        if (plug.plugObjectives) {
-          for (const objective of plug.plugObjectives) {
-            // ok this is a weird jump. we use an objective hash to look up an item.
-            // related things in destiny sometimes share the same hash across different defs components.
-            // carfting materials are one of these things
-            if (craftingMatHashes.includes(objective.objectiveHash)) {
-              results[objective.objectiveHash] = objective.progress || 0;
-            }
+    if (defs && numbersLookup) {
+      for (const [lookupTable, lookupHash, countHash] of craftingMatsTable) {
+        const def = defs[lookupTable].get(lookupHash);
+
+        if (def) {
+          const icon = def.displayProperties.icon;
+          const name =
+            'progressDescription' in def ? def.progressDescription : def.displayProperties.name;
+          const count = numbersLookup[countHash];
+          if (icon && name && count !== undefined) {
+            results.push([name, icon, count]);
           }
         }
       }
     }
-
     return results;
   }
 );
