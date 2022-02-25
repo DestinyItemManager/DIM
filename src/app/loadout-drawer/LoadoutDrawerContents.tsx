@@ -276,7 +276,8 @@ export async function pickLoadoutSubclass(
     const abilityAndSuperSockets =
       item.sockets &&
       getSocketsByCategoryHashes(item.sockets, [
-        SocketCategoryHashes.Abilities,
+        SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+        SocketCategoryHashes.Abilities_Abilities_LightSubclass,
         SocketCategoryHashes.Super,
       ]);
     let socketOverrides: SocketOverrides | undefined;

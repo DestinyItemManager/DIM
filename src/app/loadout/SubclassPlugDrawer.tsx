@@ -193,7 +193,8 @@ function getPlugsForSubclass(
             maxSelectable: socketGroup.length,
             defaultPlug,
             selectionType:
-              category.category.hash === SocketCategoryHashes.Abilities ||
+              category.category.hash === SocketCategoryHashes.Abilities_Abilities_DarkSubclass ||
+              category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
               category.category.hash === SocketCategoryHashes.Super
                 ? 'single'
                 : 'multi',

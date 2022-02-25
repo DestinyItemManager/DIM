@@ -115,7 +115,8 @@ const lbStateInit = ({
             pinnedItems[item.bucket.hash] = item;
           } else if (item && item.bucket.hash === BucketHashes.Subclass && item.sockets) {
             const abilityAndSuperSockets = getSocketsByCategoryHashes(item.sockets, [
-              SocketCategoryHashes.Abilities,
+              SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+              SocketCategoryHashes.Abilities_Abilities_LightSubclass,
               SocketCategoryHashes.Super,
             ]);
             const socketOverridesForLO = { ...loadoutItem.socketOverrides };
@@ -368,7 +369,8 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
       case 'updateSubclass': {
         const { item } = action;
         const abilityAndSuperSockets = getSocketsByCategoryHashes(item.sockets, [
-          SocketCategoryHashes.Abilities,
+          SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+          SocketCategoryHashes.Abilities_Abilities_LightSubclass,
           SocketCategoryHashes.Super,
         ]);
         const defaultAbilityOverrides: SocketOverrides = {};
@@ -396,7 +398,8 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
 
         const { plug } = action;
         const abilityAndSuperSockets = getSocketsByCategoryHashes(state.subclass.sockets, [
-          SocketCategoryHashes.Abilities,
+          SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+          SocketCategoryHashes.Abilities_Abilities_LightSubclass,
           SocketCategoryHashes.Super,
         ]);
         const newSocketOverrides = { ...state.subclass?.socketOverrides };
