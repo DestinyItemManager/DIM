@@ -113,16 +113,12 @@ export const profileResponseSelector = (state: RootState) => state.inventory.pro
 
 // this list of crafting mats contains the StringVariables hash that finds how many the player owns
 // unfortunately, this is basically the only reasonable option
-const craftingMatsTable: [
-  lookupTable: 'InventoryItem' | 'Objective',
-  lookupHash: number,
-  countHash: number
-][] = [
-  ['Objective', 2215515945, 2829303739],
-  ['Objective', 2215515947, 1238436609],
-  ['Objective', 2215515946, 1178490630],
-  ['Objective', 2215515944, 2653558736],
-  ['InventoryItem', 3491404510, 2747150405],
+const craftingMatsTable: [lookupHash: number, countHash: number][] = [
+  [163842161, 2829303739],
+  [163842163, 1238436609],
+  [163842162, 1178490630],
+  [163842160, 2653558736],
+  [3491404510, 2747150405],
 ];
 
 /** returns name/icon/amount for a hard-coded list of crafting materials */
@@ -134,13 +130,11 @@ export const craftingMaterialCountsSelector = createSelector(
     const results: [name: string, icon: string, count: number][] = [];
 
     if (defs && numbersLookup) {
-      for (const [lookupTable, lookupHash, countHash] of craftingMatsTable) {
-        const def = defs[lookupTable].get(lookupHash);
+      for (const [lookupHash, countHash] of craftingMatsTable) {
+        const def = defs.InventoryItem.get(lookupHash);
 
         if (def) {
-          const icon = def.displayProperties.icon;
-          const name =
-            'progressDescription' in def ? def.progressDescription : def.displayProperties.name;
+          const { icon, name } = def.displayProperties;
           const count = numbersLookup[countHash];
           if (icon && name && count !== undefined) {
             results.push([name, icon, count]);
