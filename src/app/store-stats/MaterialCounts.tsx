@@ -47,6 +47,9 @@ export function MaterialCounts() {
             )}
             {matgroup.map((h) => {
               const items = materials[h];
+              if (!items) {
+                return null;
+              }
               const amount = items.reduce((total, i) => total + i.amount, 0);
               const item = items[0];
               const materialName = item.name;
