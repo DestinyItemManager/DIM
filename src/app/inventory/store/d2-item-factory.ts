@@ -107,7 +107,11 @@ export function processItems(
 
       const bucketDef = defs.InventoryBucket[item.bucketHash];
       // if it's a named, non-invisible bucket, it may be a problem that the item wasn't generated
-      if (bucketDef.category !== BucketCategory.Invisible && bucketDef.displayProperties.name) {
+      if (
+        bucketDef &&
+        bucketDef.category !== BucketCategory.Invisible &&
+        bucketDef.displayProperties.name
+      ) {
         owner.hadErrors = true;
       }
     }
