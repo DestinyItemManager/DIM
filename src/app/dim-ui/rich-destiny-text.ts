@@ -10,7 +10,7 @@ const glyphInfos: [exampleReplacement: StringsNeedingReplacement, codepoint: Fon
   ['[Void]', FontGlyphs.void], // 
   ['[Solar]', FontGlyphs.thermal], // 
   ['[Stasis]', FontGlyphs.stasis], // 
-  ['[Kill]', FontGlyphs.environment_hazard], // 
+  // ['[Kill]', FontGlyphs.environment_hazard], // 
   // Precision
   ['[Headshot]', FontGlyphs.headshot], // 
   // Abilities
@@ -50,7 +50,7 @@ const glyphInfos: [exampleReplacement: StringsNeedingReplacement, codepoint: Fon
   ['[Shield-Piercing]', FontGlyphs.combat_role_pierce], // 
   ['[Stagger]', FontGlyphs.combat_role_stagger], // 
   // New Items
-  ['[Currency]', FontGlyphs.UniFFFD_001], // 
+  // ['[Currency]', FontGlyphs.UniFFFD_001], // 
 
   // Supers - these are unused right now
   // ['[Titan: Sentinel Super]', FontGlyphs.void_titan_super], // 
