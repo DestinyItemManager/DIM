@@ -7,7 +7,7 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
@@ -32,7 +32,7 @@ function Header({
 }: {
   defs: D2ManifestDefinitions;
   loadout: Loadout;
-  subclass: LoadoutItem | undefined;
+  subclass: DimLoadoutItem | undefined;
   armor: DimItem[];
   mods: PluggableInventoryItemDefinition[];
 }) {
@@ -53,10 +53,12 @@ function Header({
 
 export default function ModAssignmentDrawer({
   loadout,
+  storeId,
   onUpdateMods,
   onClose,
 }: {
   loadout: Loadout;
+  storeId: string | undefined;
   onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
@@ -182,6 +184,7 @@ export default function ModAssignmentDrawer({
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}
+            owner={storeId}
             lockedMods={mods}
             plugCategoryHashWhitelist={plugCategoryHashWhitelist}
             onAccept={onUpdateMods}

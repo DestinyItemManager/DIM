@@ -2,6 +2,7 @@ const webpack = require('webpack');
 
 const path = require('path');
 const fs = require('fs');
+const zlib = require('zlib');
 const { execSync } = require('child_process');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -21,10 +22,11 @@ const marked = require('marked');
 const renderer = new marked.Renderer();
 const _ = require('lodash');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
-const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6].[ext]';
+const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
 const packageJson = require('../package.json');
 
@@ -51,6 +53,9 @@ module.exports = (env) => {
   const buildNumber = parseInt(process.env.GITHUB_RUN_NUMBER) + 1_000_000;
   if (env.beta && buildNumber) {
     version += `.${buildNumber}`;
+  }
+  if (!env.dev) {
+    console.log('Building DIM version ' + version);
   }
 
   const buildTime = Date.now();
@@ -257,7 +262,7 @@ module.exports = (env) => {
           include: /src(\/|\\)locale/,
           type: 'asset/resource',
           generator: {
-            filename: '[name]-[contenthash:6].[ext]',
+            filename: '[name]-[contenthash:6][ext]',
           },
         },
         {
@@ -320,6 +325,17 @@ module.exports = (env) => {
           date: new Date(buildTime).toString(),
           splash,
         },
+        minify: env.dev
+          ? false
+          : {
+              collapseWhitespace: true,
+              keepClosingSlash: true,
+              removeComments: false,
+              removeRedundantAttributes: true,
+              removeScriptTypeAttributes: true,
+              removeStyleLinkTypeAttributes: true,
+              useShortDoctype: true,
+            },
       }),
 
       new HtmlWebpackPlugin({
@@ -396,7 +412,7 @@ module.exports = (env) => {
         // Item feed sidebar
         '$featureFlags.itemFeed': JSON.stringify(!env.release),
         // Loadout edit drawer v2
-        '$featureFlags.loadoutDrawerV2': JSON.stringify(false),
+        '$featureFlags.loadoutDrawerV2': JSON.stringify(!env.release),
       }),
 
       new LodashModuleReplacementPlugin({
@@ -407,23 +423,6 @@ module.exports = (env) => {
       }),
     ],
   };
-
-  if (!env.dev) {
-    config.plugins.push(
-      new CopyWebpackPlugin({
-        patterns: [
-          {
-            from: `./config/.well-known/android-config${env.release ? '' : '.beta'}.json`,
-            to: '.well-known/assetlinks.json',
-          },
-          {
-            from: `./config/.well-known/apple-config.json`,
-            to: '.well-known/apple-app-site-association',
-          },
-        ],
-      })
-    );
-  }
 
   if (env.dev) {
     // In dev we use babel to compile TS, and fork off a separate typechecker
@@ -453,6 +452,19 @@ module.exports = (env) => {
   } else {
     // env.beta and env.release
     config.plugins.push(
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: `./config/.well-known/android-config${env.release ? '' : '.beta'}.json`,
+            to: '.well-known/assetlinks.json',
+          },
+          {
+            from: `./config/.well-known/apple-config.json`,
+            to: '.well-known/apple-app-site-association',
+          },
+        ],
+      }),
+
       new CleanWebpackPlugin({
         cleanOnceBeforeBuildPatterns: ['node_modules/.cache'],
       }),
@@ -480,6 +492,25 @@ module.exports = (env) => {
         swDest: 'service-worker.js',
       })
     );
+
+    // Skip brotli compression for PR builds
+    if (!process.env.PR_BUILD) {
+      config.plugins.push(
+        // Brotli-compress all assets. We used to gzip too but everything supports brotli now
+        new CompressionPlugin({
+          filename: '[path][base].br',
+          algorithm: 'brotliCompress',
+          exclude: /data\/d1\/manifests/,
+          test: /\.js$|\.css$|\.html$|\.json$|\.map$|\.ttf$|\.eot$|\.svg$|\.wasm$/,
+          compressionOptions: {
+            params: {
+              [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+            },
+          },
+          minRatio: 1,
+        })
+      );
+    }
   }
 
   return config;

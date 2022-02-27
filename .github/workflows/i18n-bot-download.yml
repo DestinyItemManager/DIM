@@ -8,42 +8,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
-
       - name: Checkout DIM
         uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.I18N_PAT }}
 
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node_modules
+      - name: Setup Node
+        uses: actions/setup-node@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
-            ${{ runner.os }}-${{ env.cache-name }}-
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Cache yarn
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-yarn
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
-            ${{ runner.os }}-${{ env.cache-name }}-
+          node-version: 16.x
+          cache: yarn
 
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline

@@ -159,7 +159,6 @@ const socketFilters: FilterDefinition[] = [
         )
       ),
   },
-
   {
     keywords: 'holdsmod',
     description: tl('Filter.HoldsMod'),
@@ -177,6 +176,27 @@ const socketFilters: FilterDefinition[] = [
           (compatibleModTags && (filterValue === 'any' || compatibleModTags.includes(filterValue)))
         );
       },
+  },
+  {
+    keywords: 'deepsight',
+    description: tl('Filter.Deepsight'),
+    format: 'simple',
+    destinyVersion: 2,
+    filter: () => (item: DimItem) =>
+      Boolean(
+        item.bucket.inWeapons &&
+          item.sockets?.allSockets.find((s) => {
+            const plugDef = s.plugged?.plugDef;
+            return (
+              plugDef &&
+              // must be a deepsight resonance extractor plug
+              // to-do: use an PCH enum for this
+              plugDef.plug.plugCategoryIdentifier === 'crafting.plugs.weapons.mods.memories' &&
+              // but not the objectiveless stub used to blank out that socket
+              plugDef.objectives
+            );
+          })
+      ),
   },
 ];
 

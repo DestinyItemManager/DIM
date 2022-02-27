@@ -195,6 +195,7 @@
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
     "DamageType": "Shows items based on their damage type.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials.",
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
@@ -213,6 +214,7 @@
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
+    "IsCrafted": "Shows weapons that have been crafted.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
@@ -477,7 +479,7 @@
     "AssumeMasterworkOptions": {
       "All": "All armor will use masterworked stats and will have an energy level of 10.",
       "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
-      "None": "All armor will use their current stats and will have a minimum energy level of 7."
+      "None": "All armor will use its current stats and will have a minimum energy level of 7."
     },
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
@@ -493,9 +495,9 @@
     "Legendary": "Legendary",
     "LockElement": "Lock Element",
     "LockElementOptions": {
-      "All": "Armor element type will be locked to it's current value for all armor.",
-      "Masterworked": "Armor element type will be locked for already masterworked armor.",
-      "None": "Armor element type will be changed as needed to fit the selected mods."
+      "All": "All armor will be locked to its current element.",
+      "Masterworked": "Armor will be locked to its current element if it's already masterworked.",
+      "None": "Armor element will be changed as needed to fit the selected mods."
     },
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
@@ -534,7 +536,7 @@
     "AddEquippedItems": "Add Equipped",
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
-    "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
+    "AlreadyExistsClass": "",
     "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
     "Apply": "Apply",
@@ -543,9 +545,15 @@
     "ArmorMods": "Armor Mods",
     "AssumeMaxWeapons": "Assuming max power level weapons",
     "Before": "Before '{{name}}'",
+    "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "Add {{name}}",
+    "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
+    "ClassTypeMissing": "You do not have a {{className}} to create a loadout for",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
+    "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
+    "ClearSection": "Remove all",
     "ClearSpace": "Move other items away",
+    "ClearUnsetMods": "Remove other mods",
     "ClearingSpace": "Moving other items away",
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
@@ -556,8 +564,11 @@
     "EquipItems": "Equipping items",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
+    "Equipped": "Equipped",
     "Failed": "Loadout failed to apply completely",
     "Fashion": "Choose fashion",
+    "FillFromEquipped": "Fill in using equipped",
+    "FillFromInventory": "Fill in using non-equipped",
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
     "FromEquipped": "Equipped",
@@ -616,7 +627,8 @@
     "RandomizeWeapons": "Randomize your equipped weapons?",
     "RestoreAllItems": "All Items",
     "Save": "Save",
-    "SaveAsNew": "Save New",
+    "SaveAsNew": "Save as New",
+    "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
     "SaveLoadout": "Save Loadout",
     "ShowModPlacement": "Show Mod Placement",
     "SocketOverrides": "Changing subclass options",
@@ -625,9 +637,12 @@
     "SubclassOptions": "{{subclass}} options",
     "SubclassOptionsSearch": "Search {{subclass}} options",
     "Succeeded": "Loadout succeeded",
+    "SyncFromEquipped": "Sync from equipped",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedModError": "Mod didn't fit on your current armor",
     "UnassignedMods": "Unassigned Mods",
+    "Unequipped": "Unequipped",
+    "Update": "Save Changes",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
     "WeaponsOnly": "Weapons Only"
   },
@@ -700,7 +715,8 @@
       "Untracked": "Untracked"
     },
     "TriageTab": "Triage",
-    "Vault": "Vault"
+    "Vault": "Vault",
+    "WeaponLevel": "Weapon Level {{level}}"
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
@@ -786,6 +802,8 @@
     "Milestones": "Milestones & Challenges",
     "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% to reset",
+    "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
+    "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "Progress",
     "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
     "QuestExpired": "Expired",
@@ -883,6 +901,7 @@
       "Ornament": "Apply Ornament",
       "Projection": "Apply Ghost Projection",
       "Shader": "Apply Shader",
+      "Super": "",
       "Transmat": "Apply Transmat Effect"
     },
     "ListStyle": "Display perks as a list",
@@ -895,6 +914,7 @@
       "Ornament": "Preview Ornament",
       "Projection": "Preview Ghost Projection",
       "Shader": "Preview Shader",
+      "Super": "Preview Super",
       "Transmat": "Preview Transmat Effect"
     },
     "SelectWishlistPerks": "Preview Wishlist Perks"

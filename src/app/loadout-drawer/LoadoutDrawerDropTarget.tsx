@@ -1,9 +1,10 @@
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
-import { useDrop } from 'react-dnd';
+import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { DimItem } from '../inventory/item-types';
@@ -14,28 +15,39 @@ export const bucketTypesSelector = createSelector(
   storesSelector,
   (buckets, stores) =>
     buckets
-      ? Object.values(buckets.byType).flatMap((bucket) =>
-          stores.flatMap((store) => [bucket.hash.toString(), `${store.id}-${bucket.hash}`])
-        )
+      ? [
+          'postmaster',
+          ...Object.values(buckets.byType).flatMap((bucket) => [
+            bucket.hash.toString(),
+            ...stores.flatMap((store) => `${store.id}-${bucket.hash}`),
+          ]),
+        ]
       : emptyArray<string>()
 );
 
 export default function LoadoutDrawerDropTarget({
   children,
   className,
+  classType,
   onDroppedItem,
 }: {
   children?: React.ReactNode;
   className?: string;
-  onDroppedItem(item: DimItem): void;
+  classType: DestinyClass;
+  onDroppedItem(item: DimItem, e?: React.MouseEvent, equip?: boolean): void;
 }) {
   const bucketTypes = useSelector(bucketTypesSelector);
 
   const [{ isOver }, dropRef] = useDrop<DimItem, unknown, { isOver: boolean }>(
     () => ({
       accept: bucketTypes,
-      drop: onDroppedItem,
-      canDrop: itemCanBeInLoadout,
+      drop: (item: DimItem, monitor: DropTargetMonitor<DimItem, { equipped: boolean }>) => {
+        const result = monitor.getDropResult();
+        onDroppedItem(item, undefined, result?.equipped);
+      },
+      canDrop: (i) =>
+        itemCanBeInLoadout(i) &&
+        (i.classType === DestinyClass.Unknown || classType === i.classType),
       collect: (monitor) => ({ isOver: monitor.isOver() && monitor.canDrop() }),
     }),
     [bucketTypes, onDroppedItem]

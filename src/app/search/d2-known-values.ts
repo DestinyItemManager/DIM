@@ -1,4 +1,4 @@
-import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import {
   BreakerTypeHashes,
   BucketHashes,
@@ -246,16 +246,6 @@ export const energyNamesByEnum: Record<DestinyEnergyType, string> = {
 
 export const energyCapacityTypeNames = Object.values(energyNamesByEnum);
 
-export const damageNamesByEnum: Record<DamageType, string | null> = {
-  [DamageType.None]: null,
-  [DamageType.Kinetic]: 'kinetic',
-  [DamageType.Arc]: 'arc',
-  [DamageType.Thermal]: 'solar',
-  [DamageType.Void]: 'void',
-  [DamageType.Raid]: 'raid',
-  [DamageType.Stasis]: 'stasis',
-};
-
 export const breakerTypes = {
   barrier: BreakerTypeHashes.ShieldPiercing,
   antibarrier: BreakerTypeHashes.ShieldPiercing,
@@ -271,10 +261,5 @@ export const modsWithConditionalStats = {
   radiantLight: 2979815167,
   chargeHarvester: 2263321587,
   elementalCapacitor: 3511092054,
-} as const;
-
-export const UpgradeMaterialHashes = {
-  legendaryShard: 1022552290,
-  enhancementPrism: 4257549984,
-  ascendantShard: 4257549985,
+  echoOfPersistence: 2272984671,
 } as const;

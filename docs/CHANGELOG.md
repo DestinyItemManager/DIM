@@ -1,7 +1,57 @@
 ## Next
 
+* Increased the strings we search through when filtering by mods/perks.
+* Crafted weapons' levels and level progress are now shown on the item popup.
+* Added `is:crafted` and `is:deepsight` filters.
+* Crafting materials are now included in the currency counter. Tap and hold, or hover, the consumables count in the vault header to check them.
+
+## 7.6.0 <span class="changelog-date">(2022-02-21)</span>
+
+* Fix applying D1 loadouts.
+* `inloadout:` filter now matches partial loadout names -- use `inloadout:"pvp"` for items in loadouts where "pvp" is in the loadout's name.
+* If your loadout includes ornaments, items are shown as if they had the loadout applied in the loadout page and loadout editor.
+* You can now change the Aeon sect mod through the item popup.
+* You can now edit your equipped Emotes from DIM. You can't add them to loadouts... yet.
+* Fix issue where Loadout Optimizer armor upgrade settings were not being migrated from existing loadouts.
+* Clan Banners are no longer shown in DIM.
+* Weapon compare sheet now includes a button to compare with other legendary weapons of the same category, excluding exotics.
+* Armor in collections now displays its collections stat roll.
+* Fix issues with button text wrapping in some languages.
+* Fix potential element blurriness in Edge browser.
+* Fix for Loadout Optimizer suggesting armor with insufficient energy.
+* Fix a clash between `power:1234` and `is:power` filters.
+* Loadout Optimizer is now a little more thorough in preventing an item from being both pinned and excluded.
+
+### Witch Queen updates
+
+* There's a good chance crafted items will display correctly in DIM. No promises though.
+* Prepare Records page for a new section featuring craftable items.
+
+### Beta Only
+
+* Loadout Editor
+  * Fix issue where subclasses were counted as general items when dropping into a loadout or filling general from equipped.
+  * Allow removal of a single mod through the editor display.
+
+## 7.5.1 <span class="changelog-date">(2022-02-14)</span>
+
+### Beta Only
+
+* We're testing a brand new Loadout Editor. Check it out from the character menu or the Loadouts page.
+  * The layout mirrors the Loadout page's new design which has clear areas for different types of items. Each section also has a menu of additional actions like re-syncing from your currently equipped items, or clearing out a whole section.
+  * As part of this change, we're removing support for "multi-class" loadouts. Loadouts will either be tied to one class, or can be toggled to "Any Class". "Any Class" loadouts cannot contain Subclass, Armor, or Fashion. If you edit an existing "Any Class" loadout and save it, those items will be removed unless you turn off "Any Class".
+  * Double-click items to toggle between equipped and unequipped instead of single clicking. We'll be continuing to improve how you choose items and specify whether they're equipped in the future.
+  * A new setting allows you to clear out all other mods from your armor when applying a loadout. This works even if you've chosen no mods in your loadout, so you can make a "Reset mods" loadout.
+  * With this new design we have space to add even more loadout editing tools over the next few seasons.
+  * The loadout editor stays open if you navigate to the Inventory or Loadouts screen while it's already open.
+  * The new Loadout Editor is not available for D1.
+
+## 7.5.0 <span class="changelog-date">(2022-02-13)</span>
+
 * Collect Postmaster now requires an additional click to confirm.
 * Transferring ships via search query should now reliably transfer all selected items.
+* Filters Help now groups stat comparison operators for a more compact page.
+* Milestones are grouped by how much power bonus their rewards can provide.
 * On the Loadouts page, you can now drag existing items on the page, into the current Loadout Editor, just like you can on the Inventory page. Use it to grab a couple of your favorite pieces from another loadout!
 * Loadout armor stat tiers now include the total tier.
 * Changed the Loadout Optimizer's Armor Upgrade options for Assume Masterwork and Lock Element options. All armor will now have an assumed minimum energy capacity of 7. The new settings have the following options,

@@ -7,14 +7,19 @@ import { AppIcon, searchIcon } from 'app/shell/icons';
 import React from 'react';
 import styles from './LoadoutParametersDisplay.m.scss';
 
+export function hasVisibleLoadoutParameters(params: LoadoutParameters | undefined) {
+  return (
+    params &&
+    (params.query ||
+      params.exoticArmorHash ||
+      params.statConstraints?.some((s) => s.maxTier !== undefined || s.minTier !== undefined))
+  );
+}
+
 export default function LoadoutParametersDisplay({ params }: { params: LoadoutParameters }) {
   const defs = useD2Definitions()!;
   const { query, exoticArmorHash, statConstraints } = params;
-  const show =
-    params.query ||
-    params.exoticArmorHash ||
-    params.upgradeSpendTier !== undefined ||
-    params.statConstraints?.some((s) => s.maxTier !== undefined || s.minTier !== undefined);
+  const show = hasVisibleLoadoutParameters(params);
   if (!show) {
     return null;
   }

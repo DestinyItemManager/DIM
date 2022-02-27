@@ -252,7 +252,11 @@ export default function Destiny() {
           <Route path="*" element={<Navigate to="inventory" />} />
         </Routes>
       </div>
-      {$featureFlags.loadoutDrawerV2 ? <LoadoutDrawer2 /> : <LoadoutDrawer />}
+      {$featureFlags.loadoutDrawerV2 && account.destinyVersion === 2 ? (
+        <LoadoutDrawer2 />
+      ) : (
+        <LoadoutDrawer />
+      )}
       <Compare />
       <Farming />
       <InfusionFinder />

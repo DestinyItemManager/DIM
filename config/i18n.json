@@ -200,6 +200,7 @@
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Shows items based on their damage type.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials.",
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
@@ -217,6 +218,7 @@
     "HasOrnament": "Shows items that have an ornament applied.",
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
+    "IsCrafted": "Shows weapons that have been crafted.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
@@ -526,9 +528,9 @@
     "AscendantShardNotMasterworkedDetails": "For all items, the Optimizer will assume masterworked stat bonuses and energy level. {{elementLockDescription}}\n\nCurrently masterworked items will use their existing element.",
     "AssumeMasterwork": "Assume Masterwork",
     "AssumeMasterworkOptions": {
-      "None": "All armor will use their current stats and will have a minimum energy level of 7.",
+      "All": "All armor will use masterworked stats and will have an energy level of 10.",
       "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
-      "All": "All armor will use masterworked stats and will have an energy level of 10."
+      "None": "All armor will use its current stats and will have a minimum energy level of 7."
     },
     "BadPerk": "A perk that \"slightly\" modifies isn't the best option.",
     "ChooseAlternate": "Choose another item with the same stats:",
@@ -553,9 +555,9 @@
     "LockEquipped": "Pin equipped",
     "LockElement": "Lock Element",
     "LockElementOptions": {
-      "None": "Armor element type will be changed as needed to fit the selected mods.",
-      "Masterworked": "Armor element type will be locked for already masterworked armor.",
-      "All": "Armor element type will be locked to its current value for all armor."
+      "All": "All armor will be locked to its current element.",
+      "Masterworked": "Armor will be locked to its current element if it's already masterworked.",
+      "None": "Armor element will be changed as needed to fit the selected mods."
     },
     "LockItem": "Pin item",
     "LockPerk": "Select perk",
@@ -614,7 +616,7 @@
     "AddEquippedItems": "Add Equipped",
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
-    "AlreadyExistsClass": "A loadout with this name already exists for your {{className}}.",
+    "AlreadyExists": "A loadout with this name already exists for your {{className}}.",
     "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
     "AppliedAuto": "Automatic Loadout Builder",
@@ -623,9 +625,15 @@
     "ArmorMods": "Armor Mods",
     "AssumeMaxWeapons": "Assuming max power level weapons",
     "Before": "Before '{{name}}'",
+    "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "Add {{name}}",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
+    "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
+    "ClassTypeMissing": "You do not have a {{className}} to create a loadout for",
+    "ClearSection": "Remove all",
+    "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
     "ClearSpace": "Move other items away",
+    "ClearUnsetMods": "Remove other mods",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
@@ -634,6 +642,7 @@
     "EditBrief": "Edit",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
+    "Equipped": "Equipped",
     "Fashion": "Choose fashion",
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
@@ -695,15 +704,20 @@
     "RestoreAllItems": "All Items",
     "Save": "Save",
     "SaveLoadout": "Save Loadout",
-    "SaveAsNew": "Save New",
+    "SaveAsNew": "Save as New",
+    "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
     "SortByName": "Sort by name",
     "SortByEditTime": "Sort by last edited",
     "ShowModPlacement": "Show Mod Placement",
     "SubclassOptions": "{{subclass}} options",
     "SubclassOptionsSearch": "Search {{subclass}} options",
+    "SyncFromEquipped": "Sync from equipped",
+    "FillFromEquipped": "Fill in using equipped",
+    "FillFromInventory": "Fill in using non-equipped",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedMods": "Unassigned Mods",
     "UnassignedModError": "Mod didn't fit on your current armor",
+    "Unequipped": "Unequipped",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
     "WeaponsOnly": "Weapons Only",
     "NotStarted": "Waiting for other actions",
@@ -714,7 +728,8 @@
     "ApplyMods": "Applying mods",
     "ClearingSpace": "Moving other items away",
     "Succeeded": "Loadout succeeded",
-    "Failed": "Loadout failed to apply completely"
+    "Failed": "Loadout failed to apply completely",
+    "Update": "Save Changes"
   },
   "Manifest": {
     "Download": "Downloading latest Destiny info database from Bungie...",
@@ -792,7 +807,8 @@
       "Untracked": "Untracked"
     },
     "TriageTab": "Triage",
-    "Vault": "Vault"
+    "Vault": "Vault",
+    "WeaponLevel": "Weapon Level {{level}}"
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
@@ -875,6 +891,8 @@
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "PercentPrestige": "{{pct}}% to reset",
+    "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
+    "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "Progress",
     "QuestExpired": "Expired",
     "QuestExpires": "Expires in ",
@@ -987,7 +1005,8 @@
       "Fragment": "Preview Fragment",
       "Aspect": "Preview Aspect",
       "Transmat": "Preview Transmat Effect",
-      "Projection": "Preview Ghost Projection"
+      "Projection": "Preview Ghost Projection",
+      "Super": "Preview Super"
     },
     "ListStyle": "Display perks as a list",
     "GridStyle": "Display perks as a grid"

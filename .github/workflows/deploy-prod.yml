@@ -16,10 +16,17 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2 # So sentry can get the previous commit
+          # Use the dim-release-bot token rather than the default
+          token: ${{ secrets.GH_TOKEN }}
+
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: 16.x
+          cache: yarn
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -27,38 +34,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           name: dim.rsa
           known_hosts: ${{ secrets.REMOTE_HOST }}
-
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 2 # So packtracker can get the previous commit
-          # Use the dim-release-bot token rather than the default
-          token: ${{ secrets.GH_TOKEN }}
-
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node_modules
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
-            ${{ runner.os }}-${{ env.cache-name }}-
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Cache yarn
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-yarn
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
-            ${{ runner.os }}-${{ env.cache-name }}-
 
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
@@ -70,14 +45,19 @@ jobs:
           WEB_OAUTH_CLIENT_ID: ${{ secrets.PROD_OAUTH_CLIENT_ID }}
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.PROD_OAUTH_CLIENT_SECRET }}
           DIM_API_KEY: ${{ secrets.PROD_DIM_API_KEY }}
-          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
-          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_PATH: app.destinyitemmanager.com
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           # Use the dim-release-bot token rather than the default
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           PATCH: ${{ github.event.inputs.patch }}
+
+      - name: Purge CloudFlare cache
+        run: ./build/purge-cloudflare.sh
+        env:
+          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          APP_DOMAIN: app.destinyitemmanager.com
 
       - name: Publish Sentry release
         run: ./build/sentry-release-prod.sh

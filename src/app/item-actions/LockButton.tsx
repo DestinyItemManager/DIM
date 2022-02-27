@@ -88,7 +88,7 @@ export default function LockButton({ type, item, children }: Props) {
   );
 }
 
-export function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
+function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
   const data = { itemType: item.typeName };
   return (
     (type === 'lock'

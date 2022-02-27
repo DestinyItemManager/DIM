@@ -147,6 +147,7 @@ export default function Records({ account }: Props) {
         {nodeHashes
           .map((h) => defs.PresentationNode.get(h))
           .map((nodeDef) => (
+            // console.log(nodeDef)
             <section key={nodeDef.hash} id={`p_${nodeDef.hash}`}>
               <CollapsibleTitle
                 title={overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name}

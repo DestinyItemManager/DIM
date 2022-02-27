@@ -30,6 +30,7 @@ const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
 
 export default function LoadoutDrawerOptions({
   loadout,
+  storeId,
   showClass,
   isNew,
   onUpdateMods,
@@ -38,7 +39,8 @@ export default function LoadoutDrawerOptions({
   saveAsNew,
   deleteLoadout,
 }: {
-  loadout?: Readonly<Loadout>;
+  loadout: Readonly<Loadout> | undefined;
+  storeId: string | undefined;
   showClass: boolean;
   isNew: boolean;
   onUpdateMods(mods: PluggableInventoryItemDefinition[]): void;
@@ -214,6 +216,7 @@ export default function LoadoutDrawerOptions({
         ReactDOM.createPortal(
           <ModAssignmentDrawer
             loadout={loadout}
+            storeId={storeId}
             onUpdateMods={onUpdateMods}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,

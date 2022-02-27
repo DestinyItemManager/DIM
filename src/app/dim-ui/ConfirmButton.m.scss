@@ -1,35 +1,42 @@
 .confirmButton {
-  & > div {
-    transition: height 0.5s ease-in 0.5s;
-    overflow-y: hidden;
+  overflow: hidden;
+  max-width: 100%;
 
-    &:nth-child(1) {
-      height: 16px;
-    }
-    &:nth-child(2) {
-      height: 0px;
-    }
+  // keep flexed things from trying to extend past the edges
+  & div,
+  & span {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  // applies to both the children container and the "confirm" message container
+  & > div {
+    // while transitioning out of confirm mode, linger the message, then sweep it away slowly
+    transition: height 0.5s ease-in 0.5s;
+    overflow: hidden;
+  }
+
+  // applies to just the "confirm" message container
+  & > div:nth-child(2) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &.confirmMode {
-    color: white !important;
-    &[class~='danger'] {
-      &:hover {
-        background-color: #aa2222 !important;
-      }
+    // as elements transition into confirm mode, snap confirm message into place quickly
+    & > div {
+      transition: height 0.1s;
     }
+    color: white !important;
 
     &:hover {
       background-color: #af7d27 !important;
     }
 
-    & > div {
-      transition: height 0.1s;
-      &:nth-child(1) {
-        height: 0px;
-      }
-      &:nth-child(2) {
-        height: 16px;
+    &[class~='danger'] {
+      &:hover {
+        background-color: #aa2222 !important;
       }
     }
   }

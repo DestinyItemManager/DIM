@@ -66,6 +66,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
         [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
         [styles.capped]: isCapped,
         [styles.masterwork]: item.masterwork,
+        [styles.crafted]: item.crafted,
         [styles.engram]: item.isEngram,
       })}
     >
