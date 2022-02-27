@@ -168,7 +168,10 @@ export default function FashionDrawer({
         const cosmeticSockets = item.sockets
           ? getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics)
           : [];
-        return [bucketHash, _.compact(cosmeticSockets.map((s) => s.plugged?.plugDef.hash))];
+        return [
+          bucketHash,
+          _.compact(cosmeticSockets.map((s) => (s.actuallyPlugged || s.plugged)?.plugDef.hash)),
+        ];
       })
     );
 

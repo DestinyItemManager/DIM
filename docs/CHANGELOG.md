@@ -4,6 +4,7 @@
 * Crafted weapons' levels and level progress are now shown on the item popup.
 * Added `is:crafted` and `is:deepsight` filters.
 * Crafting materials are now included in the currency counter. Tap and hold, or hover, the consumables count in the vault header to check them.
+* Fixed a bug where "Use Equipped" would not update fashion in existing loadout.
 
 ## 7.6.0 <span class="changelog-date">(2022-02-21)</span>
 
