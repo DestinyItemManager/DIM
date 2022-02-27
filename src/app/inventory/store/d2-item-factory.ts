@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
-import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
+import { THE_FORBIDDEN_BUCKET, uniqueEquipBuckets } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { errorLog, warnLog } from 'app/utils/log';
 import {
@@ -422,8 +422,8 @@ export function makeItem(
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
     equipped: Boolean(instanceDef?.isEquipped),
-    equipment:
-      Boolean(itemDef.equippingBlock) && normalBucket.hash !== BucketHashes.SeasonalArtifact, // TODO: this has a ton of good info for the item move logic
+    // TODO: equippingBlock has a ton of good info for the item move logic
+    equipment: Boolean(itemDef.equippingBlock) && !uniqueEquipBuckets.includes(normalBucket.hash),
     equippingLabel: itemDef.equippingBlock?.uniqueLabel,
     complete: false,
     amount: item.quantity || 1,
