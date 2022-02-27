@@ -21,7 +21,7 @@ const DISPLAYED_PLUG_STATS = [StatHashes.AspectEnergyCapacity];
 type PlugSetWithDefaultPlug = PlugSet & { defaultPlug: PluggableInventoryItemDefinition };
 
 /**
- * A customized PlugDrawer for showing mod choices for mod-style subclasses (currently only Stasis).
+ * A customized PlugDrawer for showing mod choices for mod-style subclasses (subclasses 3.0, the first of which was Stasis).
  */
 export default function SubclassPlugDrawer({
   subclass,

@@ -261,4 +261,5 @@ export const modsWithConditionalStats = {
   radiantLight: 2979815167,
   chargeHarvester: 2263321587,
   elementalCapacitor: 3511092054,
+  echoOfPersistence: 2272984671,
 } as const;

@@ -2,7 +2,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
-import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { RootState } from 'app/store/types';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -26,7 +26,7 @@ export function useEquippedLoadoutArmorAndSubclass(loadout: Loadout) {
       const equippedLoadoutItems = loadout.items.filter((item) => item.equipped);
       const allItems = allItemsSelector(state);
       const loadoutDimItems: DimItem[] = [];
-      let subclass: LoadoutItem | undefined;
+      let subclass: DimLoadoutItem | undefined;
 
       // TODO: if there's not an item in one of the slots, pick the current equipped!
       for (const item of allItems) {
@@ -36,7 +36,12 @@ export function useEquippedLoadoutArmorAndSubclass(loadout: Loadout) {
         ) {
           loadoutDimItems.push(item);
         } else if (item.bucket.hash === BucketHashes.Subclass) {
-          subclass = equippedLoadoutItems.find((loadoutItem) => loadoutItem.id === item.id);
+          const loadoutItem = equippedLoadoutItems.find(
+            (loadoutItem) => loadoutItem.id === item.id
+          );
+          if (loadoutItem) {
+            subclass = { ...item, socketOverrides: loadoutItem.socketOverrides };
+          }
         }
       }
 
