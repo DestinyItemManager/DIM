@@ -347,7 +347,7 @@ export function makeItem(
   const tooltipNotifications = (item.tooltipNotificationIndexes ?? [])
     .map((i) => itemDef.tooltipNotifications[i])
     // a temporary filter because as of witch queen, all tooltips are set to "on"
-    .filter((t) => t.displayStyle !== 'ui_display_style_info');
+    .filter((t) => t && t.displayStyle !== 'ui_display_style_info');
 
   // null out falsy values like a blank string for a url
   const iconOverlay =
