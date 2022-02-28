@@ -1,4 +1,3 @@
-import { currentAccountSelector } from 'app/accounts/selectors';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -14,7 +13,6 @@ import { produce } from 'immer';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { DestinyAccount } from '../../accounts/destiny-account';
 import CharacterSelect from '../../dim-ui/CharacterSelect';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../../dim-ui/ErrorBoundary';
@@ -50,7 +48,6 @@ import {
 } from './utils';
 
 interface StoreProps {
-  account: DestinyAccount;
   stores: D1Store[];
   buckets?: InventoryBuckets;
   defs?: D1ManifestDefinitions;
@@ -60,7 +57,6 @@ type Props = StoreProps & ThunkDispatchProp;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
-    account: currentAccountSelector(state)!,
     buckets: bucketsSelector(state),
     stores: storesSelector(state) as D1Store[],
     defs: d1ManifestSelector(state),
