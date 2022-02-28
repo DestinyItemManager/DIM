@@ -195,6 +195,7 @@
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
     "DamageType": "Shows items based on their damage type.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials.",
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
@@ -213,6 +214,7 @@
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
+    "IsCrafted": "Shows weapons that have been crafted.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
@@ -544,7 +546,7 @@
     "BadLoadoutShare": "Unable to load shared loadout",
     "BadLoadoutShareBody": "The loadout you're trying to load is invalid: {{error}}",
     "Before": "Before '{{name}}'",
-    "CannotCustomizeSubclass": "Light subclasses cannot be configured",
+    "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "Add {{name}}",
     "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
     "ClassTypeMissing": "You do not have a {{className}} to create a loadout for",
@@ -715,7 +717,8 @@
       "Untracked": "Untracked"
     },
     "TriageTab": "Triage",
-    "Vault": "Vault"
+    "Vault": "Vault",
+    "WeaponLevel": "Weapon Level {{level}}"
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",

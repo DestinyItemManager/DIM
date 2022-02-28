@@ -660,7 +660,7 @@ function TableRow({
   onRowClick(
     row: Row,
     column: ColumnDefinition
-  ): ((event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>) => void) | undefined;
+  ): ((event: React.MouseEvent<HTMLTableCellElement>) => void) | undefined;
 }) {
   return (
     <>

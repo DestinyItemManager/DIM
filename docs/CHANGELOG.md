@@ -1,14 +1,36 @@
 ## Next
 
+* Removed D2Gunsmith link from the item details popup while they work on revamping the site for all the new changes.
+
+## 7.7.0 <span class="changelog-date">(2022-02-28)</span>
+
+* Increased the strings we search through when filtering by mods/perks.
+* Crafted weapons' levels and level progress are now shown on the item popup.
+* Added `is:crafted` and `is:deepsight` filters.
+* Crafting materials are now included in the currency counter. Tap and hold, or hover, the consumables count in the vault header to check them.
+* Fixed a bug where "Use Equipped" would not update fashion in existing loadout.
+
+## 7.6.0 <span class="changelog-date">(2022-02-21)</span>
+
 * Fix applying D1 loadouts.
 * `inloadout:` filter now matches partial loadout names -- use `inloadout:"pvp"` for items in loadouts where "pvp" is in the loadout's name.
 * If your loadout includes ornaments, items are shown as if they had the loadout applied in the loadout page and loadout editor.
 * You can now change the Aeon sect mod through the item popup.
 * You can now edit your equipped Emotes from DIM. You can't add them to loadouts... yet.
-* There's a good chance craftable items will display correctly in DIM. No promises though.
 * Fix issue where Loadout Optimizer armor upgrade settings were not being migrated from existing loadouts.
 * Clan Banners are no longer shown in DIM.
 * Weapon compare sheet now includes a button to compare with other legendary weapons of the same category, excluding exotics.
+* Armor in collections now displays its collections stat roll.
+* Fix issues with button text wrapping in some languages.
+* Fix potential element blurriness in Edge browser.
+* Fix for Loadout Optimizer suggesting armor with insufficient energy.
+* Fix a clash between `power:1234` and `is:power` filters.
+* Loadout Optimizer is now a little more thorough in preventing an item from being both pinned and excluded.
+
+### Witch Queen updates
+
+* There's a good chance crafted items will display correctly in DIM. No promises though.
+* Prepare Records page for a new section featuring craftable items.
 
 ### Beta Only
 

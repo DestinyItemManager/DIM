@@ -35,6 +35,7 @@ import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem, DimPerk } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';
+import { buildCraftedInfo } from './crafted';
 import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives } from './objectives';
@@ -106,7 +107,11 @@ export function processItems(
 
       const bucketDef = defs.InventoryBucket[item.bucketHash];
       // if it's a named, non-invisible bucket, it may be a problem that the item wasn't generated
-      if (bucketDef.category !== BucketCategory.Invisible && bucketDef.displayProperties.name) {
+      if (
+        bucketDef &&
+        bucketDef.category !== BucketCategory.Invisible &&
+        bucketDef.displayProperties.name
+      ) {
         owner.hadErrors = true;
       }
     }
@@ -339,6 +344,11 @@ export function makeItem(
 
   const hiddenOverlay = itemDef.iconWatermark;
 
+  const tooltipNotifications = (item.tooltipNotificationIndexes ?? [])
+    .map((i) => itemDef.tooltipNotifications[i])
+    // a temporary filter because as of witch queen, all tooltips are set to "on"
+    .filter((t) => t && t.displayStyle !== 'ui_display_style_info');
+
   // null out falsy values like a blank string for a url
   const iconOverlay =
     (item.versionNumber !== undefined &&
@@ -471,7 +481,9 @@ export function makeItem(
     sockets: null,
     perks: null,
     masterworkInfo: null,
+    craftedInfo: null,
     infusionQuality: null,
+    tooltipNotifications,
   };
 
   // *able
@@ -636,6 +648,9 @@ export function makeItem(
     reportException('MasterworkInfo', e, { itemHash: item.itemHash });
   }
 
+  // Crafted
+  createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
+
   try {
     buildPursuitInfo(createdItem, item, itemDef);
   } catch (e) {
@@ -648,24 +663,6 @@ export function makeItem(
   }
 
   createdItem.index = createItemIndex(createdItem);
-
-  // Some items have multiple tooltips, but the item.tooltipNotificationIndexes property that
-  // should tell us which to show is missing: https://github.com/Bungie-net/api/issues/1419
-  if (
-    itemDef.tooltipNotifications?.length === 1 &&
-    itemDef.tooltipNotifications[0].displayString.length
-  ) {
-    createdItem.tooltipNotifications = itemDef.tooltipNotifications
-      .filter((t) =>
-        // displayString is never actually set in the definitions, so we hijack it to set our own. If this contains
-        // numbers it's probably a seasonal expiration notice. All the other tooltips are kind of junk right now.
-        /\d+/.test(t.displayString)
-      )
-      .map((t) => ({
-        displayString: t.displayString,
-        displayStyle: 'seasonal-expiration',
-      }));
-  }
 
   return createdItem;
 }

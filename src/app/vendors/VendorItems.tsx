@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import spiderMats from 'data/d2/spider-mats.json';
+import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -105,9 +105,9 @@ export default function VendorItems({
   }
 
   // add all traded planetmats if this vendor is the spider
-  if (vendor?.component?.vendorHash === VENDORS.SPIDER) {
+  if (vendor?.component?.vendorHash === VENDORS.RAHOOL) {
     currencies = _.uniqBy(
-      [...spiderMats.map((h) => defs.InventoryItem.get(h)), ...currencies],
+      [...rahoolMats.map((h) => defs.InventoryItem.get(h)), ...currencies],
       (i) => i.hash
     );
   }

@@ -2,6 +2,7 @@
   composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: center;
   width: 100%;
+  position: relative;
 
   span {
     margin-left: 8px;

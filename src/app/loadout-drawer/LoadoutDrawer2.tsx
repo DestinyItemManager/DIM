@@ -279,8 +279,19 @@ export default function LoadoutDrawer2() {
     });
   };
 
-  const handleClickPlaceholder = ({ bucket }: { bucket: InventoryBucket }) => {
-    pickLoadoutItem(loadout, bucket, ({ item }) => onAddItem(item), setShowingItemPicker);
+  const handleClickPlaceholder = ({
+    bucket,
+    equip,
+  }: {
+    bucket: InventoryBucket;
+    equip: boolean;
+  }) => {
+    pickLoadoutItem(
+      loadout,
+      bucket,
+      ({ item }) => onAddItem(item, undefined, equip),
+      setShowingItemPicker
+    );
   };
   const handleClickSubclass = (subclass: DimItem | undefined) =>
     pickLoadoutSubclass(
@@ -350,7 +361,7 @@ export default function LoadoutDrawer2() {
               fillLoadoutFromEquipped(loadout, itemsByBucket, store, handleUpdateLoadout)
             }
           >
-            <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
+            <AppIcon icon={addIcon} /> {t('Loadouts.FillFromEquipped')}
           </button>
           <button
             type="button"
@@ -361,7 +372,7 @@ export default function LoadoutDrawer2() {
               )
             }
           >
-            <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
+            <AppIcon icon={addIcon} /> {t('Loadouts.FillFromInventory')}
           </button>
           <CheckButton
             checked={loadout.classType === DestinyClass.Unknown}

@@ -200,6 +200,7 @@
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Shows items based on their damage type.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials.",
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
@@ -217,6 +218,7 @@
     "HasOrnament": "Shows items that have an ornament applied.",
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
+    "IsCrafted": "Shows weapons that have been crafted.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
@@ -624,7 +626,7 @@
     "BadLoadoutShare": "Unable to load shared loadout",
     "BadLoadoutShareBody": "The loadout you're trying to load is invalid: {{error}}",
     "Before": "Before '{{name}}'",
-    "CannotCustomizeSubclass": "Light subclasses cannot be configured",
+    "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "Add {{name}}",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
@@ -807,7 +809,8 @@
       "Untracked": "Untracked"
     },
     "TriageTab": "Triage",
-    "Vault": "Vault"
+    "Vault": "Vault",
+    "WeaponLevel": "Weapon Level {{level}}"
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",

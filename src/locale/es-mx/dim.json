@@ -195,6 +195,7 @@
     "CurrentClass": "Muestra objetos que sean equipables en el personaje conectado en estos momentos.",
     "CustomStatLower": "Muestra armadura cuyas estadísticas son estrictamente más bajas que cualquier otra del mismo tipo de armadura, solo tomando en cuenta las estadísticas de la lista total de estadísticas personalizadas de esa clase.",
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
+    "Deepsight": "Mostrar armas con Resonancia de Visión Profunda, que pueden ser armonizadas en materiales.",
     "Description": "Descripción",
     "Dupe": "Muestra objetos duplicados, incluyendo reincidencias",
     "DupeCount": "Objetos que tienen el número especificado de duplicados.",
@@ -213,6 +214,7 @@
     "InLoadout": "Muestra objetos que están incluidos en cualquier equipamiento.",
     "Infusable": "Muestra objetos que pueden ser infundidos.",
     "InfusionFodder": "Muestra objetos que podrían ser infundidos en versiones más bajas de poder del mismo objeto sólo por lumen.",
+    "IsCrafted": "Mostrar armas que han sido fabricadas.",
     "IsSunset": "Muestra objetos que han sido jubilados y que ya no se pueden infundir a la potencia máxima.",
     "ItemHash": "Muestra los objetos con un hash de objeto de inventario obtenido. Para usuarios avanzados.",
     "ItemId": "Muestra el objeto con un ID de inventario obtenido. Para usuarios avanzados.",
@@ -542,13 +544,15 @@
     "ArmorMods": "Mods de Armadura",
     "AssumeMaxWeapons": "Asumiendo armas de nivel máximo de poder",
     "Before": "Antes '{{name}}'",
-    "CannotCustomizeSubclass": "Las subclases de luz no pueden ser configuradas",
+    "CannotCustomizeSubclass": "Esta subclase no puede ser configurada",
     "ChooseItem": "Añadir {{name}}",
+    "ClassTypeMismatch": "Un objeto de {{className}} no puede ser añadido a esta equipación",
+    "ClassTypeMissing": "No tienes un {{className}} para el cual crear una equipación",
     "Classified": "Algunos de tus objetos son clasificados y no pueden ser incluidos en el cálculo de Poder máximo.",
     "ClearLoadoutParameters": "Eliminar configuración del Optimizador de Equipaciones",
     "ClearSection": "Quitar todo",
     "ClearSpace": "Quitar objetos no usados",
-    "ClearUnsetMods": "Quitar otros modificadores",
+    "ClearUnsetMods": "Quitar otros mods",
     "ClearingSpace": "Moviendo otros objetos",
     "Create": "Crear equipación",
     "CurrentlyEquipped": "Equipado en estos momentos",
@@ -710,7 +714,8 @@
       "Untracked": "Sin Seguimiento"
     },
     "TriageTab": "Triaje",
-    "Vault": "Depósito"
+    "Vault": "Depósito",
+    "WeaponLevel": "Nivel de arma {{level}}"
   },
   "Notes": {
     "Error": "¡Error! Máximo 120 caracteres por notas.",

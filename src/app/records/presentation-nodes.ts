@@ -7,6 +7,7 @@ import { count } from 'app/utils/util';
 import {
   DestinyCollectibleDefinition,
   DestinyCollectibleState,
+  DestinyCraftableComponent,
   DestinyDisplayPropertiesDefinition,
   DestinyMetricComponent,
   DestinyMetricDefinition,
@@ -57,8 +58,8 @@ export interface DimCollectible {
 export interface DimCraftable {
   // to-do: determine what interesting information we can share about a craftable
   item: DimItem;
-  craftingReqsAreMet: boolean;
-  allPlugsReqsAreMet: boolean;
+  canCraftThis: boolean;
+  canCraftAllPlugs: boolean;
 }
 
 export interface DimPresentationNodeSearchResult extends DimPresentationNodeLeaf {
@@ -117,15 +118,14 @@ export function toPresentationNodeTree(
     );
     const visible = craftables.length;
 
-    const acquired = count(craftables, (c) =>
-      Boolean(c.allPlugsReqsAreMet && c.craftingReqsAreMet)
-    );
+    const acquired = count(craftables, (c) => c.canCraftThis);
 
     // add an entry for self and return
     return {
       nodeDef: presentationNodeDef,
       visible,
       acquired,
+      craftables,
     };
   } else if (presentationNodeDef.children.metrics?.length) {
     const metrics = toMetrics(defs, profileResponse, presentationNodeDef.children.metrics);
@@ -373,12 +373,12 @@ export function toCraftable(
     return;
   }
 
-  const craftingReqsAreMet = info.failedRequirementIndexes.length === 0;
-  const allPlugsReqsAreMet = info.sockets.every((s) =>
+  const canCraftThis = info.failedRequirementIndexes.length === 0;
+  const canCraftAllPlugs = info.sockets.every((s) =>
     s.plugs.every((p) => p.failedRequirementIndexes.length === 0)
   );
 
-  return { item, craftingReqsAreMet, allPlugsReqsAreMet };
+  return { item, canCraftThis, canCraftAllPlugs };
 }
 
 function toMetrics(
@@ -394,7 +394,7 @@ function toMetrics(
       }
       const metric = getMetricComponent(metricDef, profileResponse);
 
-      if (!metric || metric.invisible) {
+      if (!metric || metric.invisible || metricDef.redacted) {
         return null;
       }
 
@@ -418,12 +418,15 @@ function getRecordComponent(
 }
 
 function getCraftableInfo(itemHash: number, profileResponse: DestinyProfileResponse) {
-  if (!profileResponse.characterCraftables.data) {
+  if (!profileResponse.characterCraftables?.data) {
     return;
   }
-  const id = Object.keys(profileResponse.characterCraftables.data)[0];
+  const allCharCraftables: (DestinyCraftableComponent | undefined)[] = Object.values(
+    profileResponse.characterCraftables.data
+  ).map((d) => d.craftables[itemHash]);
 
-  return profileResponse.characterCraftables.data[id].craftables[itemHash];
+  // try to find a character on whom this item is visible
+  return allCharCraftables.find((c) => c?.visible === true) ?? allCharCraftables[0];
 }
 
 export function getCollectibleState(

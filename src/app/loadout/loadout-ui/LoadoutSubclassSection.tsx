@@ -29,7 +29,9 @@ export function getSubclassPlugs(
 
       for (const socket of sockets) {
         const override = subclass.socketOverrides?.[socket.socketIndex];
-        const initial = socket.socketDefinition.singleInitialItemHash;
+        // Void grenades do not have a singleInitialItemHash
+        const initial =
+          socket.socketDefinition.singleInitialItemHash || socket.plugSet!.plugs[0].plugDef.hash;
         const hash = override || (showInitial && initial);
         const plug = hash && defs.InventoryItem.get(hash);
         if (plug && isPluggableItem(plug)) {

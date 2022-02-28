@@ -143,7 +143,8 @@ export default memo(function LockArmorAndPerks({
       const socketIndex = parseInt(socketIndexString, 10);
       const socket = getSocketByIndex(subclass.sockets, socketIndex);
       const abilityAndSuperSockets = getSocketsByCategoryHashes(subclass.sockets, [
-        SocketCategoryHashes.Abilities,
+        SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+        SocketCategoryHashes.Abilities_Abilities_LightSubclass,
         SocketCategoryHashes.Super,
       ]);
 

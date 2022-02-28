@@ -22,13 +22,9 @@ const missingSources: { [key: string]: number[] } = {
     3706457515, // Songbreaker Grips
   ],
   banshee: [
-    583723938, // Fusion Rifle Loader
-    583723939, // Linear Fusion Rifle Targeting
-    583723940, // Shotgun Dexterity
-    583723941, // Sword Scavenger
-    739655784, // Auto Rifle Loader
-    739655787, // Shotgun Ammo Finder
-    739655788, // Sidearm Dexterity
+    288409041, // Rocket Launcher Scavenger
+    288409046, // Hand Cannon Targeting
+    2119661523, // Auto Rifle Loader
   ],
   battlegrounds: [],
   blackarmory: [],
@@ -471,7 +467,9 @@ const missingSources: { [key: string]: number[] } = {
   ],
   cayde6: [],
   cipher: [],
-  compass: [],
+  compass: [
+    288409047, // Melee Wellmaker
+  ],
   contact: [],
   crownofsorrow: [
     17280095, // Shadow's Strides
@@ -1341,13 +1339,9 @@ const missingSources: { [key: string]: number[] } = {
     4177973942, // Vest of Transcendence
   ],
   gunsmith: [
-    583723938, // Fusion Rifle Loader
-    583723939, // Linear Fusion Rifle Targeting
-    583723940, // Shotgun Dexterity
-    583723941, // Sword Scavenger
-    739655784, // Auto Rifle Loader
-    739655787, // Shotgun Ammo Finder
-    739655788, // Sidearm Dexterity
+    288409041, // Rocket Launcher Scavenger
+    288409046, // Hand Cannon Targeting
+    2119661523, // Auto Rifle Loader
   ],
   harbinger: [],
   ikora: [
@@ -1684,7 +1678,6 @@ const missingSources: { [key: string]: number[] } = {
     548907748, // Devastation Complex
     553373026, // Tangled Web Hood
     554000115, // Thorium Holt Bond
-    583723943, // Hands-On
     597618504, // Insight Vikti Hood
     629469344, // Heiro Camo
     629482101, // Dead End Cure 2.1
@@ -2651,7 +2644,9 @@ const missingSources: { [key: string]: number[] } = {
   umbral: [],
   vexoffensive: [],
   vog: [],
-  wartable: [],
+  wartable: [
+    2119661524, // Font of Might
+  ],
   wrathborn: [],
   zavala: [
     24244626, // Mark of Shelter

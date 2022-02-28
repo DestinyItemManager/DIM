@@ -5,9 +5,15 @@ import xpIcon from '../../images/xpIcon.svg';
 import styles from './ArtifactXP.m.scss';
 const formatter = new Intl.NumberFormat();
 
-export function ArtifactXP(characterProgress: DestinyCharacterProgressionComponent | undefined) {
+export function ArtifactXP(
+  characterProgress: DestinyCharacterProgressionComponent | undefined,
+  bonusPowerProgressionHash: number | undefined
+) {
+  if (!bonusPowerProgressionHash) {
+    return;
+  }
   const artifactProgress =
-    characterProgress?.progressions[243419342] ?? // to-do: this is not a fixed hash
+    characterProgress?.progressions[bonusPowerProgressionHash] ??
     ({} as { progressToNextLevel: undefined; nextLevelAt: undefined; level: undefined });
   const { progressToNextLevel, nextLevelAt, level } = artifactProgress;
 

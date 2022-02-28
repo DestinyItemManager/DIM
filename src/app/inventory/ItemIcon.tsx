@@ -150,8 +150,12 @@ function getModCostInfo(mod: DestinyInventoryItemDefinition | number, defs: D2Ma
     mod = defs.InventoryItem.get(mod);
   }
 
-  // hide cost for Stasis fragments as these are currently always set to 1
-  if (mod?.plug && mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedStasisTrinkets) {
+  // hide cost for Subclass 3.0 fragments as these are currently always set to 1
+  if (
+    mod?.plug &&
+    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedStasisTrinkets &&
+    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedVoidFragments
+  ) {
     modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
 
     if (mod.plug.energyCost?.energyTypeHash) {

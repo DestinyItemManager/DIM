@@ -8,10 +8,12 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
-import { findItemForLoadout } from 'app/loadout-drawer/loadout-utils';
+import {
+  createSubclassDefaultSocketOverrides,
+  findItemForLoadout,
+} from 'app/loadout-drawer/loadout-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
@@ -116,20 +118,13 @@ const lbStateInit = ({
           if (item && isLoadoutBuilderItem(item)) {
             pinnedItems[item.bucket.hash] = item;
           } else if (item && item.bucket.hash === BucketHashes.Subclass && item.sockets) {
-            const abilityAndSuperSockets = getSocketsByCategoryHashes(item.sockets, [
-              SocketCategoryHashes.Abilities,
-              SocketCategoryHashes.Super,
-            ]);
-            const socketOverridesForLO = { ...loadoutItem.socketOverrides };
-
             // In LO we populate the default ability plugs because in game you cannot unselect all abilities.
-            for (const socket of abilityAndSuperSockets) {
-              if (!socketOverridesForLO[socket.socketIndex]) {
-                socketOverridesForLO[socket.socketIndex] =
-                  socket.socketDefinition.singleInitialItemHash;
-              }
-            }
-            subclass = { ...item, socketOverrides: loadoutItem.socketOverrides };
+            const socketOverridesForLO = {
+              ...createSubclassDefaultSocketOverrides(item),
+              ...loadoutItem.socketOverrides,
+            };
+
+            subclass = { ...item, socketOverrides: socketOverridesForLO };
           }
         }
       }
@@ -369,16 +364,11 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
       }
       case 'updateSubclass': {
         const { item } = action;
-        const abilityAndSuperSockets = getSocketsByCategoryHashes(item.sockets, [
-          SocketCategoryHashes.Abilities,
-          SocketCategoryHashes.Super,
-        ]);
-        const defaultAbilityOverrides: SocketOverrides = {};
-        for (const socket of abilityAndSuperSockets) {
-          defaultAbilityOverrides[socket.socketIndex] =
-            socket.socketDefinition.singleInitialItemHash;
-        }
-        return { ...state, subclass: { ...item, socketOverrides: defaultAbilityOverrides } };
+
+        return {
+          ...state,
+          subclass: { ...item, socketOverrides: createSubclassDefaultSocketOverrides(item) },
+        };
       }
       case 'removeSubclass': {
         return { ...state, subclass: undefined };
@@ -398,7 +388,8 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
 
         const { plug } = action;
         const abilityAndSuperSockets = getSocketsByCategoryHashes(state.subclass.sockets, [
-          SocketCategoryHashes.Abilities,
+          SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+          SocketCategoryHashes.Abilities_Abilities_LightSubclass,
           SocketCategoryHashes.Super,
         ]);
         const newSocketOverrides = { ...state.subclass?.socketOverrides };

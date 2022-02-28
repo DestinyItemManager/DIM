@@ -195,6 +195,7 @@
     "CurrentClass": "顯示當前登錄的守護者可裝備的物品。",
     "CustomStatLower": "顯示相比其他同類別護甲而言屬性全面更低的護甲，但只考慮對應職業的自定義屬性總和里的屬性。",
     "DamageType": "按照傷害類型顯示.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials.",
     "Description": "描述",
     "Dupe": "顯示重複的物品，包含不同賽季版本",
     "DupeCount": "擁有指定重複數量的物品。",
@@ -213,6 +214,7 @@
     "InLoadout": "顯示已被用於配裝的物品.",
     "Infusable": "顯示可以灌注的物品.",
     "InfusionFodder": "顯示可用於灌注同類物品且只消耗微光的物品。",
+    "IsCrafted": "Shows weapons that have been crafted.",
     "IsSunset": "顯示已退環境且不能再被灌注到光等上限的物品。",
     "ItemHash": "顯示具有給定物品 hash 的物品。此為高級用戶選項。",
     "ItemId": "顯示具有給定物品 ID 的物品。此為高級用戶選項。",
@@ -542,8 +544,10 @@
     "ArmorMods": "護甲模組",
     "AssumeMaxWeapons": "假設最大光等武器",
     "Before": "撤銷 '{{name}}'",
-    "CannotCustomizeSubclass": "Light subclasses cannot be configured",
+    "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "添加 {{name}}",
+    "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
+    "ClassTypeMissing": "You do not have a {{className}} to create a loadout for",
     "Classified": "你的某些物品是隱藏的，因此不能用於到最大光等的計算之中。",
     "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
     "ClearSection": "Remove all",
@@ -710,7 +714,8 @@
       "Untracked": "未跟蹤"
     },
     "TriageTab": "分類",
-    "Vault": "保險庫"
+    "Vault": "保險庫",
+    "WeaponLevel": "Weapon Level {{level}}"
   },
   "Notes": {
     "Error": "錯誤! 備註不能超過120個字元.",
