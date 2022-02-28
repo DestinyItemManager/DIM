@@ -3,9 +3,11 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
-import { getStore } from 'app/inventory/stores-helpers';
+import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
+import { warnMissingClass } from 'app/loadout-builder/loadout-builder-reducer';
 import { useDefinitions } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -15,7 +17,7 @@ import produce from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
@@ -25,6 +27,7 @@ import { deleteLoadout, updateLoadout } from './actions';
 import { stateReducer } from './loadout-drawer-reducer';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
+import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
 import { Loadout } from './loadout-types';
 import styles from './LoadoutDrawer2.m.scss';
 import {
@@ -48,6 +51,8 @@ export default function LoadoutDrawer2() {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
 
+  const navigate = useNavigate();
+  const { search: queryString, pathname } = useLocation();
   const stores = useSelector(storesSelector);
   const allItems = useSelector(allItemsSelector);
   const buckets = useSelector(bucketsSelector)!;
@@ -77,6 +82,61 @@ export default function LoadoutDrawer2() {
     }, [])
   );
 
+  // Load in a full loadout specified in the URL
+  useEffect(() => {
+    if (!stores.length || !defs?.isDestiny2()) {
+      return;
+    }
+    const searchParams = new URLSearchParams(queryString);
+    const loadoutJSON = searchParams.get('loadout');
+    if (loadoutJSON) {
+      try {
+        const parsedLoadout = convertDimApiLoadoutToLoadout(JSON.parse(loadoutJSON));
+        if (parsedLoadout) {
+          const storeId =
+            parsedLoadout.classType === DestinyClass.Unknown
+              ? getCurrentStore(stores)?.id
+              : stores.find((s) => s.classType === parsedLoadout.classType)?.id;
+
+          if (!storeId) {
+            warnMissingClass(parsedLoadout.classType, defs);
+            return;
+          }
+
+          parsedLoadout.id = uuidv4();
+          parsedLoadout.items = parsedLoadout.items.map((item) => ({
+            ...item,
+            id:
+              item.id === '0'
+                ? // We don't save consumables in D2 loadouts, but we may omit ids in shared loadouts
+                  // (because they'll never match someone else's inventory). So
+                  // instead, pick a random ID. It's possible these will
+                  // conflict with something already in the user's inventory but
+                  // it's not likely.
+                  Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString()
+                : item.id,
+          }));
+
+          stateDispatch({
+            type: 'editLoadout',
+            loadout: parsedLoadout,
+            storeId,
+            showClass: false,
+            isNew: true,
+          });
+        }
+      } catch (e) {
+        showNotification({
+          type: 'error',
+          title: t('Loadouts.BadLoadoutShare'),
+          body: t('Loadouts.BadLoadoutShareBody', { error: e.message }),
+        });
+      }
+      // Clear the loadout
+      navigate(pathname, { replace: true });
+    }
+  }, [defs, queryString, navigate, pathname, stores]);
+
   const loadoutItems = loadout?.items;
 
   const store = storeId
@@ -85,8 +145,8 @@ export default function LoadoutDrawer2() {
 
   // Turn loadout items into real DimItems
   const [items] = useMemo(
-    () => getItemsFromLoadoutItems(loadoutItems, defs, buckets, allItems),
-    [defs, buckets, loadoutItems, allItems]
+    () => getItemsFromLoadoutItems(loadoutItems, defs, store?.id, buckets, allItems),
+    [loadoutItems, defs, store?.id, buckets, allItems]
   );
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
 
@@ -117,7 +177,6 @@ export default function LoadoutDrawer2() {
   };
 
   // Close the sheet on navigation
-  const { pathname } = useLocation();
   useEffect(() => {
     // Don't close if moving to the inventory or loadouts screen
     if (!pathname.endsWith('inventory') && !pathname.endsWith('loadouts')) {

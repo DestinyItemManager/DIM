@@ -433,7 +433,11 @@ function applySocketOverrides(
   socketOverrides: SocketOverrides
 ) {
   return produce(loadout, (draftLoadout) => {
-    const loadoutItem = draftLoadout.items.find((li) => li.id === item.id);
+    let loadoutItem = draftLoadout.items.find((li) => li.id === item.id);
+    // TODO: right now socketOverrides are only really used for subclasses, so we can match by hash
+    if (!loadoutItem) {
+      loadoutItem = draftLoadout.items.find((li) => li.hash === item.hash);
+    }
     if (loadoutItem) {
       loadoutItem.socketOverrides = socketOverrides;
     }
