@@ -200,6 +200,8 @@ export default function Header() {
         to: `${path}/organizer`,
         text: t('Organizer.Organizer'),
       },
+      account.destinyVersion === 2 &&
+        isPhonePortrait && { to: `${path}/item-feed`, text: t('ItemFeed.Description') },
       account.destinyVersion === 1 && {
         to: `${path}/record-books`,
         text: t('RecordBooks.RecordBooks'),

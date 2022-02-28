@@ -1,6 +1,7 @@
 ## Next
 
 * Removed D2Gunsmith link from the item details popup while they work on revamping the site for all the new changes.
+* The Item Feed is available on both desktop and mobile. It shows your gear in the order it dropped, and gives you quick controls to tag incoming loot. Click on the item tile to get the full item popup.
 
 ## 7.7.0 <span class="changelog-date">(2022-02-28)</span>
 
