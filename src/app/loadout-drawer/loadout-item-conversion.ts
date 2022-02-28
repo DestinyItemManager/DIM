@@ -30,6 +30,7 @@ export function getItemsFromLoadoutItems(
   const items: DimLoadoutItem[] = [];
   const warnitems: DimLoadoutItem[] = [];
   for (const loadoutItem of loadoutItems) {
+    // TODO: filter down to the class type of the loadout
     const item = findItemForLoadout(defs, allItems, storeId, loadoutItem);
     if (item) {
       // If there are any mods for this item's bucket, and the item is equipped, add them to socket overrides

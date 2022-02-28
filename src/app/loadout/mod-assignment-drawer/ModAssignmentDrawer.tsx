@@ -65,7 +65,7 @@ export default function ModAssignmentDrawer({
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 
   const defs = useD2Definitions()!;
-  const { armor, subclass } = useEquippedLoadoutArmorAndSubclass(loadout);
+  const { armor, subclass } = useEquippedLoadoutArmorAndSubclass(loadout, storeId);
   const getModRenderKey = createGetModRenderKey();
 
   const [itemModAssignments, unassignedMods, mods] = useMemo(() => {
