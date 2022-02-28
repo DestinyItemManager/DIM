@@ -499,7 +499,7 @@ function ItemTable({
             onMoveSelectedItems={onMoveSelectedItems}
           />
           <UserGuideLink topic="Organizer" />
-          <Dropzone onDrop={importCsv} accept="text/csv">
+          <Dropzone onDrop={importCsv} accept=".csv" useFsAccessApi={false}>
             {({ getRootProps, getInputProps }) => (
               <div {...getRootProps()} className={styles.importButton}>
                 <input {...getInputProps()} />
