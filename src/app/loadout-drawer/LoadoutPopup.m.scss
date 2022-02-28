@@ -59,8 +59,16 @@
     text-decoration: none;
   }
 
+  form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 35px;
+  }
+
   > span,
-  a {
+  a,
+  form {
     &:first-child {
       flex: 1;
       padding: 0 10px;
@@ -78,6 +86,18 @@
         }
       }
     }
+  }
+
+  input[type='text'] {
+    border: none;
+    color: white;
+    outline: none;
+    flex: 1;
+    width: 0;
+    padding: 7px;
+    background: #313233;
+    border-radius: 4px;
+    box-sizing: border-box;
   }
 
   &:hover,
