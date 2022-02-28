@@ -42,7 +42,12 @@
   },
   "settings": {
     "react": {
-      "version": "detect"
+      "version": "detect",
+      "linkComponents": [
+        // Components used as alternatives to <a> for linking, eg. <Link to={ url } />
+        { "name": "Link", "linkAttribute": "to" },
+        { "name": "NavLink", "linkAttribute": "to" }
+      ]
     }
   },
   "plugins": [
@@ -108,6 +113,7 @@
     "react/jsx-no-constructed-context-values": "error",
     "react/jsx-pascal-case": "error",
     "react/jsx-curly-brace-presence": ["error", "never"],
+    "react/jsx-key": ["error", { "checkFragmentShorthand": true }],
     "jsx-a11y/aria-props": "error",
     "jsx-a11y/aria-proptypes": "error",
     "jsx-a11y/aria-role": "error",
