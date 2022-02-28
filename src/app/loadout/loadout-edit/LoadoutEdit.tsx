@@ -78,6 +78,8 @@ export default function LoadoutEdit({
   const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
   const clearUnsetMods = loadout.parameters?.clearMods;
 
+  // TODO: This is basically wrong, because the DIM items may have different IDs than the loadout item. We need to
+  // process the loadout items into pairs of [LoadoutItem, DimItem] instead.
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
 
   const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
