@@ -112,8 +112,12 @@
     "react/no-unsafe": "error",
     "react/jsx-no-constructed-context-values": "error",
     "react/jsx-pascal-case": "error",
-    "react/jsx-curly-brace-presence": ["error", "never"],
-    "react/jsx-key": ["error", { "checkFragmentShorthand": true }],
+    "react/jsx-curly-brace-presence": [
+      "error",
+      { "props": "never", "children": "never", "propElementValues": "always" }
+    ],
+    "react/iframe-missing-sandbox": "error",
+    "react/jsx-key": ["error", { "checkFragmentShorthand": true, "warnOnDuplicates": true }],
     "jsx-a11y/aria-props": "error",
     "jsx-a11y/aria-proptypes": "error",
     "jsx-a11y/aria-role": "error",
