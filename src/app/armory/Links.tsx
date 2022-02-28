@@ -3,14 +3,10 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import { DimItem } from 'app/inventory/item-types';
 import { LoreLink } from 'app/item-popup/ItemDescription';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { getSocketsWithStyle, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import destinysets from 'images/destinysets.svg';
 import destinytracker from 'images/destinytracker.png';
 import logo from 'images/dimlogo.svg';
-import gunsmith from 'images/gunsmith.png';
 import lightgg from 'images/lightgg.png';
-import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './Links.m.scss';
@@ -30,12 +26,6 @@ const links = [
   },
   { name: 'DestinyTracker', icon: destinytracker, link: destinyDBLink },
   {
-    name: 'Gunsmith',
-    icon: gunsmith,
-    link: (item: DimItem) =>
-      `https://d2gunsmith.com/w/${item.hash}?s=${buildGunsmithSockets(item)}`,
-  },
-  {
     name: 'data.destinysets.com',
     icon: destinysets,
     link: (item: DimItem, language: string) =>
@@ -49,19 +39,17 @@ export default function Links({ item }: { item: DimItem }) {
   const isPhonePortrait = useIsPhonePortrait();
   return (
     <ul className={styles.links}>
-      {links
-        .filter((l) => l.name !== 'Gunsmith' || item.bucket.inWeapons)
-        .map(
-          ({ link, name, icon, hideOnPhone }) =>
-            !(isPhonePortrait && hideOnPhone) && (
-              <li key={name}>
-                <ExternalLink href={link(item, language)}>
-                  <img src={icon} height={16} width={16} />
-                  {name}
-                </ExternalLink>
-              </li>
-            )
-        )}
+      {links.map(
+        ({ link, name, icon, hideOnPhone }) =>
+          !(isPhonePortrait && hideOnPhone) && (
+            <li key={name}>
+              <ExternalLink href={link(item, language)}>
+                <img src={icon} height={16} width={16} />
+                {name}
+              </ExternalLink>
+            </li>
+          )
+      )}
       {item.loreHash && (
         <li>
           <LoreLink loreHash={item.loreHash} />
@@ -104,31 +92,4 @@ function buildSocketParam(item: DimItem): string {
   }
 
   return perkValues.join(',');
-}
-
-/**
- * D2Gunsmith's socket format is: [...<first four perks, padded out if necessary, masterwork, weapon mod].join(',')
- */
-function buildGunsmithSockets(item: DimItem) {
-  if (item.sockets) {
-    const perkValues: number[] = [0, 0, 0, 0];
-    const perks = getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.Reusable);
-    perks.unshift(); // remove the archetype perk
-    let i = 0;
-    for (const perk of _.take(perks, 4)) {
-      perkValues[i] = perk.plugged?.plugDef.hash ?? 0;
-      i++;
-    }
-    const masterwork = item.sockets.allSockets.find(isWeaponMasterworkSocket);
-    perkValues[4] = masterwork?.plugged?.plugDef.hash ?? 0;
-    // I dunno how to find weapon mod, it's usually the last non-masterwork non-plug socket
-    const weaponMod = Array.from(item.sockets.allSockets)
-      .reverse()
-      .find((s) => s !== masterwork && !s.isPerk);
-    perkValues[5] = weaponMod?.plugged?.plugDef.hash ?? 0;
-
-    return perkValues.join(',');
-  }
-
-  return '';
 }
