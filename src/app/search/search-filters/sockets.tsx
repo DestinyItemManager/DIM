@@ -200,21 +200,18 @@ const socketFilters: FilterDefinition[] = [
 
 export default socketFilters;
 
-function isDeepsight(item: DimItem, checkComplete: Boolean | null = null) {
+function isDeepsight(item: DimItem, checkComplete?: Boolean) {
   return Boolean(
     item.bucket.inWeapons &&
       item.sockets?.allSockets.find((s) => {
         const plugDef = s.plugged?.plugDef;
-        const completed = s.plugged?.plugObjectives[0]?.complete;
-        const status = checkComplete === null ? true : checkComplete ? completed : !completed; // always true for null, checkComplete XNOR completed
-        return (
+        const isDeepsight =
           plugDef &&
-          // must be a deepsight resonance extractor plug
           plugDef.plug.plugCategoryHash === PlugCategoryHashes.CraftingPlugsWeaponsModsMemories &&
-          // but not the objectiveless stub used to blank out that socket
-          plugDef.objectives &&
-          status
-        );
+          plugDef.objectives;
+        const completed = isDeepsight && s.plugged?.plugObjectives[0]?.complete;
+        const status = checkComplete === undefined ? true : checkComplete ? completed : !completed;
+        return isDeepsight && status;
       })
   );
 }
