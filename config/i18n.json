@@ -201,7 +201,7 @@
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Shows items based on their damage type.",
     "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials.",
-    "DeepsightComplete": "Shows weapons with Deepsight Resonance, which have been completed.",
+    "DeepsightComplete": "Shows weapons with Deepsight Resonance and their current status.",
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
