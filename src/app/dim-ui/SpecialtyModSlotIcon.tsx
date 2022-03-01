@@ -1,7 +1,7 @@
 import { bungieBackgroundStyle, bungieBackgroundStyleAdvanced } from 'app/dim-ui/BungieImage';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { getInterestingSocketMetadatas, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
+import { getInterestingSockets, getSpecialtySockets } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
 import PressTip from './PressTip';
@@ -19,17 +19,20 @@ export function SpecialtyModSlotIcon({
   excludeStandardD2ModSockets,
 }: ModSlotIconProps & { excludeStandardD2ModSockets?: boolean }) {
   const defs = useD2Definitions()!;
-  const modMetadatas = (
-    excludeStandardD2ModSockets ? getInterestingSocketMetadatas : getSpecialtySocketMetadatas
+  const interestingSockets = (
+    excludeStandardD2ModSockets ? getInterestingSockets : getSpecialtySockets
   )(item);
 
-  if (!modMetadatas) {
+  if (!interestingSockets) {
     return null;
   }
   return (
     <>
-      {modMetadatas.map((m) => {
-        const emptySlotItem = defs.InventoryItem.get(m.emptyModSocketHash);
+      {interestingSockets.map((m) => {
+        if (!m.emptyPlugItemHash) {
+          return null;
+        }
+        const emptySlotItem = defs.InventoryItem.get(m.emptyPlugItemHash);
         return (
           <PressTip tooltip={emptySlotItem.itemTypeDisplayName} key={emptySlotItem.hash}>
             <div

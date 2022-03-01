@@ -9,10 +9,6 @@ export interface ModSocketMetadata {
   socketTypeHashes: number[];
   /** mod items have a plugCategoryHash. this mod slot can hold these plugCategoryHashes */
   compatiblePlugCategoryHashes: number[];
-  /** this helps us look up the "empty socket" definition, for its icon & name */
-  emptyModSocketHash: number;
-  /** so you can look these entries up if all you're given is an "Empty Mod Slot" plug item */
-  emptyModSocketHashes: number[];
 }
 
 const legacyCompatibleTags = [
@@ -74,71 +70,48 @@ const legacySocketTypeHashes = [
   3267328333, // arrivals
 ];
 
-const legacyEmptyModSocketHashes = [
-  720857, // forge
-  2357307006, // dawn
-  2620967748, // undying
-  2655746324, // worthy
-  4153634494, // arrivals
-  4106547009, // opulent
-];
-
 const modSocketMetadata: ModSocketMetadata[] = [
   {
     slotTag: 'legacy',
     compatibleModTags: legacyCompatibleTags,
     socketTypeHashes: legacySocketTypeHashes,
     compatiblePlugCategoryHashes: legacyCompatiblePlugCategoryHashes,
-    emptyModSocketHashes: legacyEmptyModSocketHashes,
-    emptyModSocketHash: 4153634494, // the arrivals icon. i don't know.
   },
   {
     slotTag: 'lastwish',
     compatibleModTags: ['lastwish'],
     socketTypeHashes: [1444083081],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsSeasonOutlaw],
-    emptyModSocketHashes: [1679876242],
-    emptyModSocketHash: 1679876242, // ARGH, this is the wrong image in the game/manifest
   },
   {
     slotTag: 'gardenofsalvation',
     compatibleModTags: ['gardenofsalvation'],
     socketTypeHashes: [1764679361],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidGarden],
-    emptyModSocketHashes: [706611068],
-    emptyModSocketHash: 706611068,
   },
   {
     slotTag: 'deepstonecrypt',
     compatibleModTags: ['deepstonecrypt'],
     socketTypeHashes: [1269555732],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidDescent],
-    emptyModSocketHashes: [4055462131],
-    emptyModSocketHash: 4055462131,
   },
   {
     slotTag: 'vaultofglass',
     compatibleModTags: ['vaultofglass'],
     socketTypeHashes: [3372624220],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV520],
-    emptyModSocketHashes: [3738398030],
-    emptyModSocketHash: 3738398030,
   },
   {
     slotTag: 'combatstyle',
     compatibleModTags: ['chargedwithlight', 'warmindcell', 'combat'],
     socketTypeHashes: [2955889001],
     compatiblePlugCategoryHashes: combatCompatiblePlugCategoryHashes,
-    emptyModSocketHashes: [2493100093],
-    emptyModSocketHash: 2493100093,
   },
   {
     slotTag: 'nightmare',
     compatibleModTags: ['nightmare'],
     socketTypeHashes: [2701840022],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsSeasonMaverick],
-    emptyModSocketHashes: [1180997867],
-    emptyModSocketHash: 1180997867,
   },
 ];
 

@@ -643,15 +643,15 @@ function isPlugActive(
       bucketSpecificAssignments.some(
         (m) => m.hash !== mod.hash && m.plug.energyCost?.energyType === DestinyEnergyType.Arc
       ) ||
-      bucketIndependentAssignmentsForItem.some(
-        (m) => m.hash !== mod.hash && m.plug.energyCost?.energyType === DestinyEnergyType.Arc
-      ) ||
-      allMods?.some(
-        (plugDef) =>
-          plugDef !== mod &&
-          modTypeTagByPlugCategoryHash[plugDef.plug.plugCategoryHash] === 'chargedwithlight' &&
-          plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
-      )
+        bucketIndependentAssignmentsForItem.some(
+          (m) => m.hash !== mod.hash && m.plug.energyCost?.energyType === DestinyEnergyType.Arc
+        ) ||
+        allMods?.some(
+          (plugDef) =>
+            plugDef !== mod &&
+            modTypeTagByPlugCategoryHash[plugDef.plug.plugCategoryHash] === 'chargedwithlight' &&
+            plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
+        )
     );
   }
 }

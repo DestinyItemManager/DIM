@@ -360,8 +360,8 @@ function buildPlug(
 
   const failReasons = plug.enableFailIndexes
     ? _.compact(
-      plug.enableFailIndexes.map((index) => plugDef.plug!.enabledRules[index]?.failureMessage)
-    ).join('\n')
+        plug.enableFailIndexes.map((index) => plugDef.plug!.enabledRules[index]?.failureMessage)
+      ).join('\n')
     : '';
 
   return {
@@ -451,7 +451,7 @@ function findEmptyPlug(
   socket: DestinyItemSocketEntryDefinition,
   socketType: DestinySocketTypeDefinition,
   plugSet: DimPlugSet | undefined,
-  reusablePlugs?: DestinyItemPlugBase[],
+  reusablePlugs?: DestinyItemPlugBase[]
 ) {
   // First, perform some filtering so we don't repeatedly search through very large plug sets
   // like armor 2.0 stat plug sets, masterwork sets, or armor energy sets.
@@ -476,21 +476,26 @@ function findEmptyPlug(
     return undefined;
   }
 
+  // Check sources in decreasing order of assumed reliability:
+  // When the live API response tells us about a certain empty plug, that's
+  // probably the most correct. PlugSets are usually better than the
+  // socket.reusablePlugs, but sometimes there's an empty option not present in the PlugSet.
+  // FIXME #7793: reusablePlugItems is thrown away when there's a PlugSet.
   const isDefault = (p: number) => emptyPlugHashes.includes(p);
   const empty =
-    socket.reusablePlugItems.map((p) => p.plugItemHash).find(isDefault) ||
+    reusablePlugs?.map((p) => p.plugItemHash).find(isDefault) ||
     plugSet?.plugs.map((p) => p.plugDef.hash).find(isDefault) ||
-    reusablePlugs?.map((p) => p.plugItemHash).find(isDefault);
+    socket.reusablePlugItems.map((p) => p.plugItemHash).find(isDefault);
 
-  /**
-   * Falling back on singleInitialItemHash is the conservative choice:
-   * 1. Before this function existed, we used singleInitialItemHash all the
-   *    time and it only broke in specific situations, so we might as well
-   *    continue using it when we didn't find a better plug before.
-   * 2. D2AI may miss some sockets and we'd like to fix these when they cause
-   *    problems, otherwise it's a lot of maintaining a list for definitions
-   *    that don't really cause problems otherwise.
-   */
+  // Falling back on singleInitialItemHash is the conservative choice:
+  // 1. Before this function existed, we used singleInitialItemHash all the
+  //    time and it only broke in specific situations, so we might as well
+  //    continue using it when we didn't find a better plug before.
+  // 2. D2AI may miss some sockets and we'd like to fix these when they cause
+  //    problems, otherwise it's a lot of maintaining a list for definitions
+  //    that don't really cause problems otherwise.
+  //
+  // If there's a very good reason to assume a socket can't be emptied, filter it above.
   return empty ? empty : socket.singleInitialItemHash || undefined;
 }
 

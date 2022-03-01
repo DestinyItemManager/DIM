@@ -16,11 +16,7 @@ import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import {
-  emptySpecialtySocketHashes,
-  isPlugStatActive,
-  itemIsInstanced,
-} from 'app/utils/item-utils';
+import { isPlugStatActive, itemIsInstanced, specialtySocketTypeHashes } from 'app/utils/item-utils';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -217,9 +213,10 @@ export default function SocketDetailsSelectedPlug({
       <div className={styles.modDescription}>
         <h3>
           {plug.displayProperties.name}
-          {emptySpecialtySocketHashes.includes(plug.hash) && (
-            <> &mdash; {plug.itemTypeDisplayName}</>
-          )}
+          {plug.hash === socket.emptyPlugItemHash &&
+            specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash) && (
+              <> &mdash; {plug.itemTypeDisplayName}</>
+            )}
         </h3>
         {plugPerkDescriptions.length
           ? plugPerkDescriptions.map((desc, idx) => <div key={idx}>{desc}</div>)

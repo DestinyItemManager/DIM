@@ -188,8 +188,10 @@ function getPlugsForSubclass(
     for (const socketGroup of Object.values(socketsGroupedBySetHash)) {
       if (socketGroup.length) {
         const firstSocket = socketGroup[0];
+        // Void grenades do not have a singleInitialItemHash
         const defaultPlugHash = isAbilityLikeSocket
-          ? firstSocket.socketDefinition.singleInitialItemHash
+          ? firstSocket.socketDefinition.singleInitialItemHash ||
+            firstSocket.plugSet!.plugs[0].plugDef.hash
           : firstSocket.emptyPlugItemHash;
         const defaultPlug = defaultPlugHash ? defs.InventoryItem.get(defaultPlugHash) : undefined;
         if (firstSocket.plugSet && profileResponse && isPluggableItem(defaultPlug)) {

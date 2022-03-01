@@ -50,7 +50,7 @@ export const modSlotTags = modSocketMetadata.map((m) => m.slotTag);
 export const modTypeTags = [...new Set(modSocketMetadata.flatMap((m) => m.compatibleModTags))];
 
 // kind of silly but we are using a list of known mod hashes to identify specialty mod slots below
-const specialtySocketTypeHashes = modSocketMetadata.flatMap(
+export const specialtySocketTypeHashes = modSocketMetadata.flatMap(
   (modMetadata) => modMetadata.socketTypeHashes
 );
 
@@ -58,12 +58,8 @@ const specialtyModPlugCategoryHashes = modSocketMetadata.flatMap(
   (modMetadata) => modMetadata.compatiblePlugCategoryHashes
 );
 
-export const emptySpecialtySocketHashes = modSocketMetadata.map(
-  (modMetadata) => modMetadata.emptyModSocketHash
-);
-
 /** verifies an item is d2 armor and has one or more specialty mod sockets, which are returned */
-const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
+export const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
   if (item?.bucket.inArmor) {
     const specialtySockets = item.sockets?.allSockets.filter((socket) =>
       specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
@@ -82,18 +78,32 @@ export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[]
     )
   );
 
+export const getInterestingSockets = (item?: DimItem): DimSocket[] | undefined => {
+  if (item?.bucket.inArmor) {
+    const interestingSockets = item.sockets?.allSockets.filter((socket) => {
+      const specialtyMetadata = modMetadataBySocketTypeHash[socket.socketDefinition.socketTypeHash];
+      return (
+        specialtyMetadata &&
+        specialtyMetadata.slotTag !== 'legacy' &&
+        specialtyMetadata.slotTag !== 'combatstyle'
+      );
+    });
+    if (interestingSockets?.length) {
+      return interestingSockets;
+    }
+  }
+};
+
 /**
  * combat and legacy slots are boring now. everything has them.
  * this focuses on narrower stuff: raid & nightmare mod
  */
-export const getInterestingSocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
-  const specialtySockets = getSpecialtySocketMetadatas(item)?.filter(
-    (m) => m.slotTag !== 'legacy' && m.slotTag !== 'combatstyle'
+export const getInterestingSocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined =>
+  _.compact(
+    getInterestingSockets(item)?.map(
+      (s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash]
+    )
   );
-  if (specialtySockets?.length) {
-    return specialtySockets;
-  }
-};
 
 /**
  * returns mod type tag if the plugCategoryHash (from a mod definition's .plug) is known

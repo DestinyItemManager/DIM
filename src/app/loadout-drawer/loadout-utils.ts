@@ -139,10 +139,10 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
   for (const item of items.filter((i) => i.bucket.inArmor)) {
     const plugs = item.sockets
       ? _.compact(
-        getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics).map(
-          (s) => s.plugged?.plugDef.hash
+          getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics).map(
+            (s) => s.plugged?.plugDef.hash
+          )
         )
-      )
       : [];
     if (plugs.length) {
       modsByBucket[item.bucket.hash] = plugs;
@@ -187,9 +187,9 @@ export function getLight(store: DimStore, items: DimItem[]): number {
         (memo, item) =>
           memo +
           item.power *
-          (itemWeight[
-            item.bucket.hash === BucketHashes.ClassArmor ? 'General' : item.bucket.sort!
-          ] || 1),
+            (itemWeight[
+              item.bucket.hash === BucketHashes.ClassArmor ? 'General' : item.bucket.sort!
+            ] || 1),
         0
       ) / itemWeightDenominator;
 
