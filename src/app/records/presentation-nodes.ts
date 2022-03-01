@@ -394,7 +394,7 @@ function toMetrics(
       }
       const metric = getMetricComponent(metricDef, profileResponse);
 
-      if (!metric || metric.invisible) {
+      if (!metric || metric.invisible || metricDef.redacted) {
         return null;
       }
 

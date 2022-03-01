@@ -10,12 +10,12 @@ export default function FileUpload({
   title,
   onDrop,
 }: {
-  accept?: string;
+  accept?: DropzoneOptions['accept'];
   title: string;
   onDrop: DropzoneOptions['onDrop'];
 }) {
   return (
-    <Dropzone onDrop={onDrop} accept={accept}>
+    <Dropzone onDrop={onDrop} accept={accept} useFsAccessApi={false}>
       {({ getRootProps, getInputProps, isDragActive }) => (
         <div
           {...getRootProps()}

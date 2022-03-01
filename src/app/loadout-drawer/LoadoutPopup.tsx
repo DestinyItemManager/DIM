@@ -7,6 +7,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector, hasClassifiedSelector } from 'app/inventory/selectors';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
+import { useDefinitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { plainString } from 'app/search/search-filters/freeform';
 import { LoadoutSort } from 'app/settings/initial-settings';
@@ -112,7 +113,7 @@ function LoadoutPopup({
   dispatch,
 }: Props) {
   // For the most part we don't need to memoize this - this menu is destroyed when closed
-
+  const defs = useDefinitions()!;
   const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
   const language = useSelector(languageSelector);
   const [loadoutQuery, setLoadoutQuery] = useState('');
@@ -326,7 +327,7 @@ function LoadoutPopup({
               {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
                 <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
               )}
-              {isMissingItems(allItems, loadout) && (
+              {isMissingItems(defs, allItems, dimStore.id, loadout) && (
                 <AppIcon
                   className={styles.warningIcon}
                   icon={faExclamationTriangle}

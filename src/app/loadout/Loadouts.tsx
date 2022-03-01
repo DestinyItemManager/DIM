@@ -211,7 +211,7 @@ function LoadoutRow({
     if (loadout.parameters && !_.isEmpty(loadout.parameters)) {
       actionButtons.push(
         <button key="share" type="button" className="dim-button" onClick={shareBuild}>
-          {t('LoadoutBuilder.ShareBuild')}
+          {t('Loadouts.ShareLoadout')}
         </button>
       );
     }
