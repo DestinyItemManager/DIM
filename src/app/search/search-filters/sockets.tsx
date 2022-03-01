@@ -7,7 +7,7 @@ import {
   modTypeTags,
 } from 'app/utils/item-utils';
 import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import {
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
@@ -215,8 +215,7 @@ function isDeepsight(item: DimItem, checkComplete: Boolean | null = null) {
         return (
           plugDef &&
           // must be a deepsight resonance extractor plug
-          // to-do: use an PCH enum for this
-          plugDef.plug.plugCategoryIdentifier === 'crafting.plugs.weapons.mods.memories' &&
+          plugDef.plug.plugCategoryHash === PlugCategoryHashes.CraftingPlugsWeaponsModsMemories &&
           // but not the objectiveless stub used to blank out that socket
           plugDef.objectives &&
           complete
