@@ -92,8 +92,14 @@ export function ItemTriage({ item }: { item: DimItem }) {
           title="Wishlists"
           sectionId="triage-wishlist"
           defaultCollapsed={false}
-          extra={wishlistItem ? <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> : '–'}
-          disabled={!wishlistItem}
+          extra={
+            wishlistItem && !(wishlistItem?.isUndesirable || wishlistItem?.isUnknown) ? (
+              <AppIcon className="thumbs-up" icon={thumbsUpIcon} />
+            ) : (
+              '–'
+            )
+          }
+          disabled={!wishlistItem || wishlistItem?.isUnknown}
         >
           {wishlistItem?.notes?.length && (
             <ExpandableTextBlock linesWhenClosed={3} className={popupStyles.description}>

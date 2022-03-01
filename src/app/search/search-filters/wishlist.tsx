@@ -9,7 +9,15 @@ const checkIfIsWishlist = (
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined
 ) => {
   const roll = wishListFunction(item);
-  return roll && !roll.isUndesirable;
+  return roll && !roll.isUndesirable && !roll.isUnknown;
+};
+
+const checkIfIsWishlistUnknown = (
+  item: DimItem,
+  wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined
+) => {
+  const roll = wishListFunction(item);
+  return roll?.isUnknown;
 };
 
 const wishlistFilters: FilterDefinition[] = [
@@ -52,6 +60,14 @@ const wishlistFilters: FilterDefinition[] = [
       ({ wishListFunction }) =>
       (item) =>
         wishListFunction(item)?.isUndesirable,
+  },
+  {
+    keywords: 'wishlistunknown',
+    description: tl('Filter.WishlistUnknown'),
+    filter:
+      ({ wishListFunction }) =>
+      (item) =>
+        checkIfIsWishlistUnknown(item, wishListFunction),
   },
 ];
 

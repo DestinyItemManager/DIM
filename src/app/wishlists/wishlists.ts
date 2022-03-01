@@ -10,7 +10,7 @@ export const enum UiWishListRoll {
 export function toUiWishListRoll(
   inventoryWishListRoll?: InventoryWishListRoll
 ): UiWishListRoll | undefined {
-  if (!inventoryWishListRoll) {
+  if (!inventoryWishListRoll || inventoryWishListRoll.isUnknown) {
     return undefined;
   }
   return inventoryWishListRoll.isUndesirable ? UiWishListRoll.Bad : UiWishListRoll.Good;
@@ -27,6 +27,8 @@ export interface InventoryWishListRoll {
   notes: string | undefined;
   /** Is this an undesirable roll? */
   isUndesirable?: boolean;
+  /** Is this an unknown roll? */
+  isUnknown?: boolean;
 }
 
 /**
@@ -67,7 +69,7 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
 
 /** Is the plug's hash included in the recommended perks from the wish list roll? */
 function isWishListPlug(plug: DimPlug, wishListRoll: WishListRoll): boolean {
-  return wishListRoll.recommendedPerks.has(plug.plugDef.hash);
+  return wishListRoll?.recommendedPerks.has(plug.plugDef.hash);
 }
 
 /** Get all of the plugs for this item that match the wish list roll. */
@@ -146,9 +148,11 @@ export function getInventoryWishListRoll(
     return undefined;
   }
 
+  let hasWishListRolls = false;
   let matchingWishListRoll: WishListRoll | undefined;
   // It could be under the item hash, the wildcard, or any of the item's categories
   for (const hash of [item.hash, DimWishList.WildcardItemId, ...item.itemCategoryHashes]) {
+    hasWishListRolls = wishListRolls[hash] ? true : hasWishListRolls;
     matchingWishListRoll = wishListRolls[hash]?.find((cr) => allDesiredPerksExist(item, cr));
     if (matchingWishListRoll) {
       break;
@@ -161,6 +165,15 @@ export function getInventoryWishListRoll(
       notes: matchingWishListRoll.notes,
       isUndesirable: matchingWishListRoll.isUndesirable,
     };
+  } else {
+    if (!hasWishListRolls && item.ammoType > 0) {
+      return {
+        wishListPerks: new Set<number>(),
+        notes: '',
+        isUndesirable: false,
+        isUnknown: true,
+      };
+    }
   }
 
   return undefined;

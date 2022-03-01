@@ -35,6 +35,7 @@ export default function ApplyPerkSelection({
     if (
       wishlistRoll &&
       !wishlistRoll.isUndesirable &&
+      !wishlistRoll.isUnknown &&
       socket.isPerk &&
       socket.plugOptions.length > 1
     ) {
