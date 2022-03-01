@@ -1,4 +1,4 @@
-import { settingSelector } from 'app/dim-api/selectors';
+import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
@@ -9,12 +9,13 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
 import { useDefinitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
+import { plainString } from 'app/search/search-filters/freeform';
 import { LoadoutSort } from 'app/settings/initial-settings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { connect, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createSelector } from 'reselect';
 import { DimStore } from '../inventory/store-types';
@@ -114,6 +115,8 @@ function LoadoutPopup({
   // For the most part we don't need to memoize this - this menu is destroyed when closed
   const defs = useDefinitions()!;
   const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
+  const language = useSelector(languageSelector);
+  const [loadoutQuery, setLoadoutQuery] = useState('');
 
   const makeNewLoadout = () =>
     editLoadout(newLoadout('', [], dimStore.classType), dimStore.id, { isNew: true });
@@ -183,6 +186,19 @@ function LoadoutPopup({
 
   const onStartFarming = () => dispatch(startFarming(dimStore.id));
 
+  const totalLoadouts = loadouts.length;
+
+  const loadoutQueryPlain = plainString(loadoutQuery, language);
+  const filteredLoadouts = loadoutQuery
+    ? loadouts.filter(
+        (loadout) =>
+          plainString(loadout.name, language).includes(loadoutQueryPlain) ||
+          (loadout.notes && plainString(loadout.name, language).includes(loadoutQueryPlain))
+      )
+    : loadouts;
+
+  const blockPropagation = (e: React.MouseEvent) => e.stopPropagation();
+
   return (
     <div className={styles.content} onClick={onClick} role="menu">
       <ul className={styles.list}>
@@ -222,13 +238,15 @@ function LoadoutPopup({
           </li>
         )}
 
-        <li className={styles.menuItem}>
-          <Link to="../loadouts">
-            <AppIcon icon={faList} />
-            <span>{t('Loadouts.ManageLoadouts')}</span>
-          </Link>
-          <AppIcon icon={rightArrowIcon} className={styles.note} />
-        </li>
+        {dimStore.destinyVersion === 2 && (
+          <li className={styles.menuItem}>
+            <Link to="../loadouts">
+              <AppIcon icon={faList} />
+              <span>{t('Loadouts.ManageLoadouts')}</span>
+            </Link>
+            <AppIcon icon={rightArrowIcon} className={styles.note} />
+          </li>
+        )}
 
         <li className={styles.menuItem}>
           <span onClick={makeNewLoadout}>
@@ -284,7 +302,23 @@ function LoadoutPopup({
           </>
         )}
 
-        {loadouts.map((loadout) => (
+        {totalLoadouts >= 10 && (
+          <li className={styles.menuItem}>
+            <form>
+              <AppIcon icon={searchIcon} />
+              <input
+                type="text"
+                autoFocus
+                placeholder={t('Header.FilterHelpLoadouts')}
+                onClick={blockPropagation}
+                value={loadoutQuery}
+                onChange={(e) => setLoadoutQuery(e.target.value)}
+              />
+            </form>
+          </li>
+        )}
+
+        {filteredLoadouts.map((loadout) => (
           <li key={loadout.id} className={styles.menuItem}>
             <span
               title={loadout.notes ? loadout.notes : loadout.name}
@@ -312,7 +346,7 @@ function LoadoutPopup({
           </li>
         ))}
 
-        {!dimStore.isVault && (
+        {!dimStore.isVault && !loadoutQuery && (
           <li className={styles.menuItem}>
             <span onClick={applyRandomLoadout}>
               <AppIcon icon={faRandom} />

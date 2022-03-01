@@ -9,6 +9,7 @@ import MainSearchBarActions from './MainSearchBarActions';
 import MainSearchBarMenu from './MainSearchBarMenu';
 import './search-filter.scss';
 import SearchBar, { SearchFilterRef } from './SearchBar';
+import { SearchInput } from './SearchInput';
 
 /**
  * The main search filter that's in the header.
@@ -62,7 +63,9 @@ export function SearchFilter(
   const extras = useMemo(() => <MainSearchBarActions key="actions" />, []);
   const menu = useMemo(() => <MainSearchBarMenu key="actions-menu" />, []);
 
-  return (
+  const itemSearch = !onLoadouts;
+
+  return itemSearch ? (
     <SearchBar
       ref={ref}
       onQueryChanged={onQueryChanged}
@@ -75,6 +78,8 @@ export function SearchFilter(
     >
       {extras}
     </SearchBar>
+  ) : (
+    <SearchInput onQueryChanged={onQueryChanged} placeholder={placeholder} query={searchQuery} />
   );
 }
 
