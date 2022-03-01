@@ -8,7 +8,7 @@ import { allItemsSelector, bucketsSelector, hasClassifiedSelector } from 'app/in
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
 import { ItemFilter } from 'app/search/filter-types';
-import { startWordRegexp } from 'app/search/search-filters/freeform';
+import { plainString } from 'app/search/search-filters/freeform';
 import { LoadoutSort } from 'app/settings/initial-settings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -116,7 +116,6 @@ function LoadoutPopup({
   const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
   const language = useSelector(languageSelector);
   const [loadoutQuery, setLoadoutQuery] = useState('');
-  const searchRegexp = startWordRegexp(loadoutQuery, language);
 
   const makeNewLoadout = () =>
     editLoadout(newLoadout('', [], dimStore.classType), dimStore.id, { isNew: true });
@@ -188,10 +187,12 @@ function LoadoutPopup({
 
   const totalLoadouts = loadouts.length;
 
+  const loadoutQueryPlain = plainString(loadoutQuery, language);
   const filteredLoadouts = loadoutQuery
     ? loadouts.filter(
         (loadout) =>
-          searchRegexp.test(loadout.name) || (loadout.notes && searchRegexp.test(loadout.notes))
+          plainString(loadout.name, language).includes(loadoutQueryPlain) ||
+          (loadout.notes && plainString(loadout.name, language).includes(loadoutQueryPlain))
       )
     : loadouts;
 

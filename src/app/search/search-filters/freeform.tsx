@@ -29,7 +29,8 @@ export function startWordRegexp(s: string, language: string) {
 }
 
 /** returns input string toLower, and stripped of accents if it's a latin language */
-const plainString = (s: string, language: string): string => latinize(s, language).toLowerCase();
+export const plainString = (s: string, language: string): string =>
+  latinize(s, language).toLowerCase();
 
 const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);
 const getPerkNamesFromManifest = _.once((allItems: DestinyInventoryItemDefinition[]) => {

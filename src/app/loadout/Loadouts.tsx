@@ -18,7 +18,7 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { startWordRegexp } from 'app/search/search-filters/freeform';
+import { plainString } from 'app/search/search-filters/freeform';
 import { useSetting } from 'app/settings/hooks';
 import { LoadoutSort } from 'app/settings/initial-settings';
 import { addIcon, AppIcon, deleteIcon, faCalculator } from 'app/shell/icons';
@@ -60,8 +60,6 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const query = useSelector(querySelector);
   const language = useSelector(languageSelector);
 
-  const searchRegexp = startWordRegexp(query, language);
-
   const savedLoadouts = useMemo(
     () =>
       _.sortBy(
@@ -81,11 +79,12 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     [selectedStore]
   );
 
+  const loadoutQueryPlain = plainString(query, language);
   const loadouts = [currentLoadout, ...savedLoadouts].filter(
     (loadout) =>
       !query ||
-      searchRegexp.test(loadout.name) ||
-      (loadout.notes && searchRegexp.test(loadout.notes))
+      plainString(loadout.name, language).includes(loadoutQueryPlain) ||
+      (loadout.notes && plainString(loadout.name, language).includes(loadoutQueryPlain))
   );
 
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
