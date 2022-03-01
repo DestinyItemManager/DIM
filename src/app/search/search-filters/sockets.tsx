@@ -198,6 +198,28 @@ const socketFilters: FilterDefinition[] = [
           })
       ),
   },
+  {
+    keywords: 'deepsightcomplete',
+    description: tl('Filter.DeepsightComplete'),
+    format: 'simple',
+    destinyVersion: 2,
+    filter: () => (item: DimItem) =>
+      Boolean(
+        item.bucket.inWeapons &&
+          item.sockets?.allSockets.find((s) => {
+            const plugDef = s.plugged?.plugDef;
+            const complete = s.plugged?.plugObjectives[0]?.complete;
+            return (
+              plugDef &&
+              // must be a deepsight resonance extractor plug
+              // to-do: use an PCH enum for this
+              plugDef.plug.plugCategoryIdentifier === 'crafting.plugs.weapons.mods.memories' &&
+              // but not the objectiveless stub used to blank out that socket
+              complete
+            );
+          })
+      ),
+  },
 ];
 
 export default socketFilters;

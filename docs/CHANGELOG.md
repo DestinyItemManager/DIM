@@ -1,6 +1,7 @@
 ## Next
 
 * Removed D2Gunsmith link from the item details popup while they work on revamping the site for all the new changes.
+* Added `is:deepsightcomplete` filter.
 
 ## 7.7.0 <span class="changelog-date">(2022-02-28)</span>
 
