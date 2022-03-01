@@ -180,13 +180,6 @@ const socketFilters: FilterDefinition[] = [
   {
     keywords: 'deepsight',
     description: tl('Filter.Deepsight'),
-    format: 'simple',
-    destinyVersion: 2,
-    filter: () => (item: DimItem) => isDeepsight(item),
-  },
-  {
-    keywords: 'deepsight',
-    description: tl('Filter.DeepsightComplete'),
     format: ['simple', 'query'],
     destinyVersion: 2,
     suggestions: ['complete', 'incomplete'],
