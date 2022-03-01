@@ -77,8 +77,8 @@ Karn
 keyi18n
 KHTML
 klass
-lightgg
 LFRs
+lightgg
 lngs
 loadout
 lowlines
@@ -115,8 +115,8 @@ Reddit
 reforgeable
 regen
 reimplemented
-reusables
 reqs
+reusables
 rsync
 ryanr
 Scroller
@@ -134,6 +134,7 @@ tehdaw
 tshirt
 Tyra
 unacquired
+Uncollectible
 unequip
 unequippable
 unexclude
@@ -144,7 +145,6 @@ unly
 unmount
 unmounts
 unparse
-Uncollectible
 unselectable
 unspaced
 untrack
@@ -161,6 +161,7 @@ wayyyyy
 wotm
 wrathofthemachine
 Xbox
+XNOR
 xpcomplete
 xpincomplete
 Xur
