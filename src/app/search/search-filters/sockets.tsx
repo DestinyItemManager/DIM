@@ -205,19 +205,15 @@ function isDeepsight(item: DimItem, checkComplete: Boolean | null = null) {
     item.bucket.inWeapons &&
       item.sockets?.allSockets.find((s) => {
         const plugDef = s.plugged?.plugDef;
-        const complete = // always true for null, checkcomplete XNOR complete
-          checkComplete === null
-            ? true
-            : checkComplete
-            ? s.plugged?.plugObjectives[0]?.complete
-            : !s.plugged?.plugObjectives[0]?.complete;
+        const completed = s.plugged?.plugObjectives[0]?.complete;
+        const status = checkComplete === null ? true : checkComplete ? completed : !completed; // always true for null, checkComplete XNOR completed
         return (
           plugDef &&
           // must be a deepsight resonance extractor plug
           plugDef.plug.plugCategoryHash === PlugCategoryHashes.CraftingPlugsWeaponsModsMemories &&
           // but not the objectiveless stub used to blank out that socket
           plugDef.objectives &&
-          complete
+          status
         );
       })
   );
