@@ -168,6 +168,7 @@ export interface DimItem {
    */
   primaryStat:
     | (DestinyStat & {
+        // TODO: get rid of this
         stat: DestinyStatDefinition;
       })
     | null;

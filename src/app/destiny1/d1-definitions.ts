@@ -3,6 +3,15 @@ import { reportException } from 'app/utils/exceptions';
 import { HashLookupFailure, ManifestDefinitions } from '../destiny2/definitions';
 import { setD1Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/d1-manifest-service';
+import {
+  D1ClassDefinition,
+  D1DamageTypeDefinition,
+  D1InventoryItemDefinition,
+  D1ObjectiveDefinition,
+  D1ProgressionDefinition,
+  D1StatDefinition,
+  D1TalentGridDefinition,
+} from './d1-manifest-types';
 
 const lazyTables = [
   'InventoryItem',
@@ -30,12 +39,12 @@ export interface DefinitionTable<T> {
 
 // D1 types don't exist yet
 export interface D1ManifestDefinitions extends ManifestDefinitions {
-  InventoryItem: DefinitionTable<any>;
-  Objective: DefinitionTable<any>;
+  InventoryItem: DefinitionTable<D1InventoryItemDefinition>;
+  Objective: DefinitionTable<D1ObjectiveDefinition>;
   SandboxPerk: DefinitionTable<any>;
-  Stat: DefinitionTable<any>;
-  TalentGrid: DefinitionTable<any>;
-  Progression: DefinitionTable<any>;
+  Stat: DefinitionTable<D1StatDefinition>;
+  TalentGrid: DefinitionTable<D1TalentGridDefinition>;
+  Progression: DefinitionTable<D1ProgressionDefinition>;
   Record: DefinitionTable<any>;
   ItemCategory: DefinitionTable<any>;
   VendorCategory: DefinitionTable<any>;
@@ -44,10 +53,10 @@ export interface D1ManifestDefinitions extends ManifestDefinitions {
   ScriptedSkull: DefinitionTable<any>;
   Activity: DefinitionTable<any>;
   ActivityType: DefinitionTable<any>;
-  DamageType: DefinitionTable<any>;
+  DamageType: DefinitionTable<D1DamageTypeDefinition>;
 
   InventoryBucket: { [hash: number]: any };
-  Class: { [hash: number]: any };
+  Class: { [hash: number]: D1ClassDefinition };
   Race: { [hash: number]: any };
   Faction: { [hash: number]: any };
   Vendor: { [hash: number]: any };
