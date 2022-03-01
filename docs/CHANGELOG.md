@@ -1,6 +1,6 @@
 ## Next
 
-When you have 10 or more loadouts, a search box will appear in the loadout dropdown allowing you to search loadouts in the same way you can on the Loadouts page.
+When you have 10 or more loadouts, a search box will appear in the Inventory page loadout dropdown, allowing you to search names just like on the Loadouts page.
 
 ## 7.7.0 <span class="changelog-date">(2022-02-28)</span>
 

@@ -306,6 +306,7 @@ function LoadoutPopup({
               <AppIcon icon={searchIcon} />
               <input
                 type="text"
+                autoFocus
                 placeholder={t('Header.FilterHelpLoadouts')}
                 onClick={blockPropagation}
                 value={loadoutQuery}
