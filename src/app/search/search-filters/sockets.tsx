@@ -190,10 +190,10 @@ const socketFilters: FilterDefinition[] = [
           return isDeepsight(item);
         }
         if (filterValue === 'complete') {
-          return isDeepsightComplete(item);
+          return isDeepsight(item, true);
         }
         if (filterValue === 'incomplete') {
-          return isDeepsight(item) && !isDeepsightComplete(item);
+          return isDeepsight(item, false);
         }
       },
   },
@@ -201,29 +201,14 @@ const socketFilters: FilterDefinition[] = [
 
 export default socketFilters;
 
-function isDeepsight(item: DimItem) {
+function isDeepsight(item: DimItem, checkComplete: Boolean | null = null) {
   return Boolean(
     item.bucket.inWeapons &&
       item.sockets?.allSockets.find((s) => {
         const plugDef = s.plugged?.plugDef;
-        return (
-          plugDef &&
-          // must be a deepsight resonance extractor plug
-          // to-do: use an PCH enum for this
-          plugDef.plug.plugCategoryIdentifier === 'crafting.plugs.weapons.mods.memories' &&
-          // but not the objectiveless stub used to blank out that socket
-          plugDef.objectives
-        );
-      })
-  );
-}
-
-function isDeepsightComplete(item: DimItem) {
-  return Boolean(
-    item.bucket.inWeapons &&
-      item.sockets?.allSockets.find((s) => {
-        const plugDef = s.plugged?.plugDef;
-        const complete = s.plugged?.plugObjectives[0]?.complete;
+        const complete = checkComplete
+          ? s.plugged?.plugObjectives[0]?.complete
+          : !s.plugged?.plugObjectives[0]?.complete;
         return (
           plugDef &&
           // must be a deepsight resonance extractor plug
