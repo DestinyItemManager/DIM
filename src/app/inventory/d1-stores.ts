@@ -1,6 +1,7 @@
 import { handleAuthErrors } from 'app/accounts/actions';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { D1ItemComponent } from 'app/destiny1/d1-manifest-types';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import _ from 'lodash';
@@ -135,7 +136,7 @@ function processStore(
   }
 
   let store: D1Store;
-  let rawItems: any[];
+  let rawItems: D1ItemComponent[];
   if (raw.id === 'vault') {
     const result = makeVault(raw);
     store = result.store;

@@ -1,3 +1,4 @@
+import { D1ItemComponent } from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import vaultBackground from 'images/vault-background.svg';
@@ -33,10 +34,11 @@ export function makeCharacter(
   mostRecentLastPlayed: Date
 ): {
   store: D1Store;
-  items: any[];
+  items: D1ItemComponent[];
 } {
   const character = raw.character.base;
   const race = defs.Race[character.characterBase.raceHash];
+  const klass = defs.Class[character.characterBase.classHash];
   let genderRace = '';
   let className = '';
   let raceName = '';
@@ -47,13 +49,13 @@ export function makeCharacter(
     genderName = 'male';
     genderRace = race.raceNameMale;
     raceName = race.raceNameMale;
-    className = defs.Class[character.characterBase.classHash].classNameMale;
+    className = klass.classNameMale;
   } else {
     gender = 'female';
     genderName = 'female';
     genderRace = race.raceNameFemale;
     raceName = race.raceNameFemale;
-    className = defs.Class[character.characterBase.classHash].classNameFemale;
+    className = klass.classNameFemale;
   }
 
   const lastPlayed = new Date(character.characterBase.dateLastPlayed);
@@ -125,7 +127,7 @@ export function makeCharacter(
 
 export function makeVault(raw: { data: { buckets: any } }): {
   store: D1Store;
-  items: any[];
+  items: D1ItemComponent[];
 } {
   const store: D1Store = {
     destinyVersion: 1,

@@ -1,4 +1,4 @@
-import { D1ObjectiveDefinition } from 'app/destiny1/d1-manifest-types';
+import { D1ObjectiveDefinition, D1ObjectiveProgress } from 'app/destiny1/d1-manifest-types';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import {
@@ -24,7 +24,7 @@ export default function Objective({
   suppressObjectiveDescription,
   isTrialsPassage,
 }: {
-  objective: DestinyObjectiveProgress;
+  objective: DestinyObjectiveProgress | D1ObjectiveProgress;
   suppressObjectiveDescription?: boolean;
   isTrialsPassage?: boolean;
 }) {
@@ -43,11 +43,9 @@ export default function Objective({
 
   // These two are to support D1 objectives
   const completionValue =
-    objective.completionValue !== undefined
-      ? objective.completionValue
-      : objectiveDef.completionValue;
+    'completionValue' in objective ? objective.completionValue : objectiveDef.completionValue;
 
-  const complete = objective.complete || (objective as any).isComplete;
+  const complete = 'complete' in objective ? objective.complete : objective.isComplete;
 
   const progressDescription =
     // D1 display description
@@ -74,7 +72,7 @@ export default function Objective({
   const isBoolean = isBooleanObjective(objectiveDef, completionValue);
   const showAsCounter = isTrialsPassage && isRoundsWonObjective(objective.objectiveHash);
   const passageFlawed =
-    isTrialsPassage && isFlawlessObjective(objective.objectiveHash) && !objective.complete;
+    isTrialsPassage && isFlawlessObjective(objective.objectiveHash) && !complete;
 
   const classes = clsx('objective-row', {
     'objective-complete': complete && !showAsCounter,

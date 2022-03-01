@@ -66,7 +66,7 @@ export function processItems(
       // dummies and invisible items are not a big deal
       const bucketDef = defs.InventoryBucket[item.bucket];
       // if it's a named, non-invisible bucket, it may be a problem that the item wasn't generated
-      if (bucketDef.category !== BucketCategory.Invisible && bucketDef.displayProperties.name) {
+      if (bucketDef.category !== BucketCategory.Invisible && bucketDef.bucketName) {
         owner.hadErrors = true;
       }
     }
@@ -364,7 +364,16 @@ function makeItem(
     errorLog('d1-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
   }
 
-  createdItem.objectives = item.objectives?.length > 0 ? item.objectives : null;
+  createdItem.objectives =
+    item.objectives?.length > 0
+      ? item.objectives.map((o) => ({
+          objectiveHash: o.objectiveHash,
+          complete: o.isComplete,
+          progress: o.progress,
+          completionValue: defs.Objective.get(o.objectiveHash).completionValue,
+          visible: true,
+        }))
+      : null;
 
   if (createdItem.talentGrid && createdItem.infusable) {
     try {

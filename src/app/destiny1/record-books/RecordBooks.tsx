@@ -16,6 +16,7 @@ import { D1Store } from '../../inventory/store-types';
 import Objective from '../../progress/Objective';
 import { count } from '../../utils/util';
 import { D1ManifestDefinitions } from '../d1-definitions';
+import { D1RecordBook, D1RecordComponent } from '../d1-manifest-types';
 import './record-books.scss';
 
 interface Props {
@@ -23,7 +24,7 @@ interface Props {
 }
 
 interface RecordBook {
-  hash: string;
+  hash: number;
   name: string;
   recordCount: number;
   completedCount: number;
@@ -71,7 +72,10 @@ export default function RecordBooks({ account }: Props) {
   // extra info in Trials cards in Store service, and it's more
   // efficient to just fish the info out of there.
 
-  const processRecordBook = (defs: D1ManifestDefinitions, rawRecordBook: any): RecordBook => {
+  const processRecordBook = (
+    defs: D1ManifestDefinitions,
+    rawRecordBook: D1RecordBook
+  ): RecordBook => {
     // TODO: rewards are in "spotlights"
     // TODO: rank
 
@@ -90,9 +94,8 @@ export default function RecordBooks({ account }: Props) {
       percentComplete: undefined as number | undefined,
     };
 
-    const processRecord = (defs: D1ManifestDefinitions, record: any) => {
+    const processRecord = (defs: D1ManifestDefinitions, record: D1RecordComponent) => {
       const recordDef = defs.Record.get(record.recordHash);
-
       return {
         hash: record.recordHash,
         icon: recordDef.icon,
