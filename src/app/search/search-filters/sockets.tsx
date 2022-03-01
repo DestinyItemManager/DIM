@@ -186,14 +186,13 @@ const socketFilters: FilterDefinition[] = [
     filter:
       ({ filterValue }) =>
       (item: DimItem) => {
-        if (filterValue === 'deepsight') {
-          return isDeepsight(item);
-        }
-        if (filterValue === 'complete') {
-          return isDeepsight(item, true);
-        }
-        if (filterValue === 'incomplete') {
-          return isDeepsight(item, false);
+        switch (filterValue) {
+          case 'deepsight':
+            return isDeepsight(item);
+          case 'complete':
+            return isDeepsight(item, true);
+          case 'incomplete':
+            return isDeepsight(item, false);
         }
       },
   },
@@ -206,7 +205,7 @@ function isDeepsight(item: DimItem, checkComplete: Boolean | null = null) {
     item.bucket.inWeapons &&
       item.sockets?.allSockets.find((s) => {
         const plugDef = s.plugged?.plugDef;
-        const complete =
+        const complete = // always true for null, checkcomplete XNOR complete
           checkComplete === null
             ? true
             : checkComplete
