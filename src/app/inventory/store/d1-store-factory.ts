@@ -1,4 +1,8 @@
-import { D1ItemComponent } from 'app/destiny1/d1-manifest-types';
+import {
+  D1CharacterResponse,
+  D1ItemComponent,
+  D1VaultResponse,
+} from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import vaultBackground from 'images/vault-background.svg';
@@ -25,11 +29,7 @@ const progressionMeta = {
 };
 
 export function makeCharacter(
-  raw: {
-    character: { base: any; progression: { progressions: never[] }; advisors: any };
-    id: any;
-    data: { buckets: any };
-  },
+  raw: D1CharacterResponse,
   defs: D1ManifestDefinitions,
   mostRecentLastPlayed: Date
 ): {
@@ -101,22 +101,24 @@ export function makeCharacter(
     hadErrors: false,
   };
 
-  let items: any[] = [];
-
-  const bucketize = (pail: any) => {
-    _.forIn(pail.items, (item: any) => {
-      item.bucket = pail.bucketHash;
-    });
-
-    items = items.concat(pail.items);
-  };
-
-  _.forIn(raw.data.buckets, (bucket: any) => {
-    _.forIn(bucket, bucketize);
-  });
+  let items: D1ItemComponent[] = [];
+  for (const buckets of Object.values(raw.data.buckets)) {
+    for (const bucket of buckets) {
+      for (const item of bucket.items) {
+        item.bucket = bucket.bucketHash;
+      }
+      items = items.concat(bucket.items);
+    }
+  }
 
   if (_.has(character.inventory.buckets, 'Invisible')) {
-    _.forIn(character.inventory.buckets.Invisible, bucketize);
+    const buckets = character.inventory.buckets.Invisible;
+    for (const bucket of buckets) {
+      for (const item of bucket.items) {
+        item.bucket = bucket.bucketHash;
+      }
+      items = items.concat(bucket.items);
+    }
   }
 
   return {
@@ -125,7 +127,7 @@ export function makeCharacter(
   };
 }
 
-export function makeVault(raw: { data: { buckets: any } }): {
+export function makeVault(raw: D1VaultResponse): {
   store: D1Store;
   items: D1ItemComponent[];
 } {
@@ -154,15 +156,14 @@ export function makeVault(raw: { data: { buckets: any } }): {
     hadErrors: false,
   };
 
-  let items: any[] = [];
+  let items: D1ItemComponent[] = [];
 
-  _.forIn(raw.data.buckets, (bucket: any) => {
-    _.forIn(bucket.items, (item: any) => {
+  for (const bucket of raw.data.buckets) {
+    for (const item of bucket.items) {
       item.bucket = bucket.bucketHash;
-    });
-
+    }
     items = items.concat(bucket.items);
-  });
+  }
 
   return {
     store,

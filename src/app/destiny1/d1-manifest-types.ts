@@ -2,6 +2,7 @@ import {
   BungieMembershipType,
   DamageType,
   DestinyClass,
+  DestinyGender,
   DestinyInventoryItemStatDefinition,
   DestinyItemQuantity,
   DestinyItemSubType,
@@ -669,4 +670,69 @@ export interface D1VendorDefinition {
   hash: number;
   index: number;
   redacted: boolean;
+}
+
+export interface D1CharacterResponse {
+  character: {
+    base: {
+      backgroundPath: string;
+      baseCharacterLevel: number;
+      characterBase: {
+        membershipId: string;
+        membershipType: BungieMembershipType;
+        classType: DestinyClass;
+        characterId: string;
+        dateLastPlayed: string;
+        minutesPlayedThisSession: string;
+        minutesPlayedTotal: string;
+        powerLevel: number;
+        raceHash: number;
+        genderHash: number;
+        genderType: DestinyGender;
+        classHash: number;
+        currentActivityHash: number;
+        lastCompletedStoryHash: number;
+        stats: {
+          [statLabel: string]: D1Stat;
+        };
+        grimoireScore: number;
+        peerView: { equipment: { itemHash: number }[] };
+      };
+      characterLevel: number;
+      emblemHash: number;
+      emblemPath: string;
+      isPrestigeLevel: false;
+      levelProgression: {
+        dailyProgress: number;
+        weeklyProgress: number;
+        currentProgress: number;
+        level: number;
+        step: number;
+      };
+      percentToNextLevel: number;
+      inventory: {
+        buckets: {
+          Currency: { items: D1ItemComponent[]; bucketHash: number }[];
+          Invisible: { items: D1ItemComponent[]; bucketHash: number }[];
+          Item: { items: D1ItemComponent[]; bucketHash: number }[];
+        };
+        currencies: { itemHash: number; value: number }[];
+      };
+    };
+    progression: { progressions: never[] };
+    advisors: any;
+  };
+  id: string;
+  data: {
+    buckets: { [key: string]: { items: D1ItemComponent[]; bucketHash: number }[] };
+    currencies: { itemHash: number; value: number }[];
+  };
+}
+
+export interface D1VaultResponse {
+  id: 'vault';
+  data: {
+    buckets: { items: D1ItemComponent[]; bucketHash: number }[];
+    currencies: { itemHash: number; value: number }[];
+  };
 }
