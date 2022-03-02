@@ -191,6 +191,16 @@ export const armorBuckets = {
   classitem: BucketHashes.ClassArmor,
 };
 
+// these aren't really normal equipment,
+// like you can have 1 equipped but it's glued to the character.
+// this array is used to prevent them from
+// having normal equipment sidecar buttons
+export const uniqueEquipBuckets = [
+  BucketHashes.SeasonalArtifact,
+  BucketHashes.Emotes_Invisible,
+  BucketHashes.Finishers,
+];
+
 //
 // PRESENTATION NODE KNOWN VALUES
 //

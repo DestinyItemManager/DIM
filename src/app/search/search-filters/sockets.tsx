@@ -7,7 +7,7 @@ import {
   modTypeTags,
 } from 'app/utils/item-utils';
 import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import {
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
@@ -180,24 +180,38 @@ const socketFilters: FilterDefinition[] = [
   {
     keywords: 'deepsight',
     description: tl('Filter.Deepsight'),
-    format: 'simple',
+    format: ['simple', 'query'],
     destinyVersion: 2,
-    filter: () => (item: DimItem) =>
-      Boolean(
-        item.bucket.inWeapons &&
-          item.sockets?.allSockets.find((s) => {
-            const plugDef = s.plugged?.plugDef;
-            return (
-              plugDef &&
-              // must be a deepsight resonance extractor plug
-              // to-do: use an PCH enum for this
-              plugDef.plug.plugCategoryIdentifier === 'crafting.plugs.weapons.mods.memories' &&
-              // but not the objectiveless stub used to blank out that socket
-              plugDef.objectives
-            );
-          })
-      ),
+    suggestions: ['complete', 'incomplete'],
+    filter:
+      ({ filterValue }) =>
+      (item: DimItem) => {
+        switch (filterValue) {
+          case 'deepsight':
+            return isDeepsight(item);
+          case 'complete':
+            return isDeepsight(item, true);
+          case 'incomplete':
+            return isDeepsight(item, false);
+        }
+      },
   },
 ];
 
 export default socketFilters;
+
+function isDeepsight(item: DimItem, checkComplete?: Boolean) {
+  return Boolean(
+    item.bucket.inWeapons &&
+      item.sockets?.allSockets.find((s) => {
+        const plugDef = s.plugged?.plugDef;
+        const isDeepsight =
+          plugDef &&
+          plugDef.plug.plugCategoryHash === PlugCategoryHashes.CraftingPlugsWeaponsModsMemories &&
+          plugDef.objectives;
+        const completed = isDeepsight && s.plugged?.plugObjectives[0]?.complete;
+        const status = checkComplete === undefined ? true : checkComplete ? completed : !completed;
+        return isDeepsight && status;
+      })
+  );
+}

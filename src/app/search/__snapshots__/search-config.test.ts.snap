@@ -128,6 +128,7 @@ Array [
   "basestat",
   "breaker",
   "count",
+  "deepsight",
   "description",
   "energycapacity",
   "hash",
