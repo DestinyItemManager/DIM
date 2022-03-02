@@ -3,6 +3,7 @@ import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
 import ArmoryPage from 'app/armory/ArmoryPage';
 import Compare from 'app/compare/Compare';
+import LoadoutDrawer from 'app/destiny1/loadout-drawer/LoadoutDrawer';
 import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
@@ -12,9 +13,8 @@ import InfusionFinder from 'app/infuse/InfusionFinder';
 import { storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import ItemFeedPage from 'app/item-feed/ItemFeedPage';
-import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
-import LoadoutDrawer2 from 'app/loadout-drawer/LoadoutDrawer2';
-import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
+import LoadoutDrawer2 from 'app/loadout/loadout-edit/LoadoutDrawer2';
+import { totalPostmasterItems } from 'app/loadout/postmaster';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import { setAppBadge } from 'app/utils/app-badge';
@@ -66,7 +66,7 @@ const Activities = React.lazy(
 );
 const Records = React.lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
 const Loadouts = React.lazy(
-  () => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts')
+  () => import(/* webpackChunkName: "loadouts" */ 'app/loadout/loadouts-page/Loadouts')
 );
 
 /**

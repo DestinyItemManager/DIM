@@ -1,7 +1,7 @@
 import { tl } from 'app/i18next-t';
 import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { maxLightItemSet, maxStatLoadout } from 'app/loadout-drawer/auto-loadouts';
+import { maxLightItemSet, maxStatLoadout } from 'app/loadout/auto-loadouts';
 import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 import {

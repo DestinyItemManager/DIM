@@ -4,7 +4,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { pullablePostmasterItems, pullFromPostmaster } from '../loadout-drawer/postmaster';
+import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmaster';
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
 import { queueAction } from '../utils/action-queue';
 import styles from './PullFromPostmaster.m.scss';

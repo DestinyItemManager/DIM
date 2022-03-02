@@ -24,7 +24,7 @@ import { InventoryBucket } from '../inventory/inventory-buckets';
 import { MoveReservations, sortMoveAsideCandidatesForStore } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
 import { D1Store, DimStore } from '../inventory/store-types';
-import { clearItemsOffCharacter } from '../loadout-drawer/loadout-apply';
+import { clearItemsOffCharacter } from '../loadout/loadout-apply';
 import * as actions from './basic-actions';
 import { farmingInterruptedSelector, farmingStoreSelector } from './selectors';
 

@@ -5,8 +5,8 @@ import {
   LoadoutItemState,
   LoadoutModState,
   LoadoutSocketOverrideState,
-} from 'app/loadout-drawer/loadout-apply-state';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+} from 'app/loadout/loadout-apply-state';
+import { Loadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { NotificationError, NotifyInput } from 'app/notifications/notifications';
 import {

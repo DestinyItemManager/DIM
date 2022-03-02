@@ -9,7 +9,7 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import SocketDetails from 'app/item-popup/SocketDetails';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
-import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
@@ -27,8 +27,8 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
-import PlugDef from '../loadout-ui/PlugDef';
+import { BucketPlaceholder } from '../loadouts-page/BucketPlaceholder';
+import PlugDef from '../loadouts-page/PlugDef';
 import styles from './FashionDrawer.m.scss';
 
 interface PickPlugState {

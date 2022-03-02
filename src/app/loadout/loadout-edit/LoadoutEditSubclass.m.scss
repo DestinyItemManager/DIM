@@ -42,7 +42,7 @@
 }
 
 .modsPlaceholder {
-  composes: placeholder from '../loadout-ui/LoadoutItemCategorySection.m.scss';
+  composes: placeholder from '../loadouts-page/LoadoutItemCategorySection.m.scss';
   width: calc(3 * var(--item-icon-size) + var(--item-margin) + #{$item-border-width}) !important;
 }
 

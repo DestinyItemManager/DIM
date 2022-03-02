@@ -1,4 +1,4 @@
-import { bucketTypesSelector } from 'app/loadout-drawer/LoadoutDrawerDropTarget';
+import { bucketTypesSelector } from 'app/loadout/loadout-edit/LoadoutDrawerDropTarget';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';

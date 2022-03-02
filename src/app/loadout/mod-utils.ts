@@ -9,7 +9,7 @@ import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
-import { isArmorEnergyLocked } from './armor-upgrade-utils';
+import { isArmorEnergyLocked } from '../loadout-builder/armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
 
 /** The plug category hashes that belong to the 5th mod slot, such as raid and nightmare mods. */

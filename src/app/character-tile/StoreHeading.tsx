@@ -5,7 +5,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { DimStore } from '../inventory/store-types';
-import LoadoutPopup from '../loadout-drawer/LoadoutPopup';
+import LoadoutPopup from '../loadout/loadout-menu/LoadoutPopup';
 import { AppIcon, kebabIcon } from '../shell/icons';
 import CharacterHeaderXPBar from './CharacterHeaderXP';
 import CharacterTile from './CharacterTile';

@@ -1,0 +1,36 @@
+@import '../../variables.scss';
+
+.loadoutName {
+  font-size: 18px;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  max-width: 50em;
+
+  svg,
+  :global(.app-icon) {
+    margin-right: 8px;
+  }
+}
+
+.dimInput {
+  padding-left: 5px;
+  height: 23px;
+  background: rgb(46, 46, 46);
+  border: none;
+  border-bottom: 1px solid #555;
+  color: white;
+  width: 100%;
+  font-size: 18px;
+
+  @include phone-portrait {
+    height: 32px;
+  }
+
+  &:hover,
+  &:focus {
+    background: black;
+    outline: none;
+    border-bottom: 1px solid $orange;
+  }
+}

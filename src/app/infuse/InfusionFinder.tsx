@@ -1,7 +1,7 @@
 import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
-import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { applyLoadout } from 'app/loadout/loadout-apply';
+import { LoadoutItem } from 'app/loadout/loadout-types';
 import SearchBar from 'app/search/SearchBar';
 import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -17,7 +17,7 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector, currentStoreSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
-import { convertToLoadoutItem, newLoadout } from '../loadout-drawer/loadout-utils';
+import { convertToLoadoutItem, newLoadout } from '../loadout/loadout-utils';
 import { showNotification } from '../notifications/notifications';
 import { filterFactorySelector } from '../search/search-filter';
 import { AppIcon, faArrowCircleDown, faEquals, faRandom, helpIcon, plusIcon } from '../shell/icons';

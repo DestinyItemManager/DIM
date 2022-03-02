@@ -1,0 +1,191 @@
+@import '../../variables.scss';
+
+.loadout-drawer {
+  max-height: calc(var(--viewport-height) - var(--header-height) - 16px);
+  @include phone-portrait {
+    @include max-sheet-height;
+  }
+  .dim-stats {
+    display: block;
+    width: 300px;
+    opacity: 0.3;
+
+    &.complete {
+      opacity: 1;
+    }
+  }
+}
+
+.loadout-drawer-header {
+  width: 100%;
+
+  .stat-bars.destiny2 {
+    cursor: default;
+    max-width: 280px;
+    flex-direction: row;
+    opacity: 1;
+  }
+  .power {
+    color: $gold;
+    flex: inherit;
+    margin-right: 20px;
+    svg {
+      vertical-align: top;
+      margin-top: 4px;
+      font-size: 0.5em;
+    }
+  }
+  .stat-row {
+    justify-content: space-between;
+  }
+}
+
+.loadout-equip-help {
+  border: 1px solid #333;
+  background-color: #f00;
+  margin: 0 2px;
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+}
+
+.loadout-item {
+  position: relative;
+
+  // TODO: uhh gotta deal with this
+  .close {
+    right: 2px;
+  }
+}
+
+.loadout-item-class-icon {
+  box-sizing: border-box;
+  width: calc(var(--item-size) / 4) !important;
+  height: calc(var(--item-size) / 4) !important;
+  font-size: calc(var(--item-size) * 0.71);
+  color: white;
+  position: absolute;
+  z-index: 1;
+  left: 1px;
+  bottom: 1px;
+  display: block;
+}
+
+.warning-icon {
+  color: yellow;
+}
+
+.loadout-warn-items {
+  display: flex;
+  flex-direction: row;
+  @include horizontal-space-children(4px);
+}
+
+.loadout-contents {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  padding: 0 10px;
+}
+
+.loadout-add-types {
+  display: flex;
+  flex-flow: row wrap;
+  .loadout-add {
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+}
+
+.loadout-added-items {
+  display: flex;
+  flex-flow: row wrap;
+  min-height: calc(var(--item-size) + 4px);
+  margin-top: 4px;
+  @include phone-portrait {
+    flex-flow: column nowrap;
+  }
+}
+
+// TODO: css grid?
+.loadout-bucket {
+  width: 100%;
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+  margin-right: 16px;
+  @include phone-portrait {
+    margin-right: 0;
+  }
+  flex-direction: column;
+  flex: 0;
+
+  .loadout-bucket-name {
+    text-transform: uppercase;
+    font-size: 13px;
+  }
+
+  .equipped {
+    .item {
+      margin: 0;
+    }
+  }
+
+  .loadout-bucket-items {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    /* prettier-ignore */
+    max-width: calc(
+      #{$equipped-item-total-outset} +
+      var(--character-column-width)
+    ); // ↑ fit 1 equipped + 3-5 items
+
+    /* prettier-ignore */
+    min-width: calc(
+      #{$equipped-item-total-outset} +
+      2 * (var(--item-size) + var(--item-margin))
+    ); // ↑ fit at least 1 equipped + 1 unequipped item
+
+    width: max-content;
+    @include phone-portrait {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    &.bucket-Class {
+      min-width: 0;
+    }
+
+    .equipped {
+      padding-bottom: 8px;
+    }
+  }
+
+  .pull-item-button {
+    box-sizing: border-box;
+    width: calc(var(--item-size) / 2);
+    height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    text-decoration: none;
+  }
+
+  .loadout-add {
+    white-space: nowrap;
+  }
+
+  .sub-bucket {
+    flex: 1;
+    display: flex;
+    flex-flow: row wrap;
+  }
+  .sub-bucket.equipped {
+    flex: 0;
+    .loadout-item {
+      margin: 0;
+    }
+  }
+}

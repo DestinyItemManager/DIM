@@ -3,13 +3,13 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem } from 'app/loadout/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import React, { useMemo } from 'react';
-import EmptySubclass from '../loadout-ui/EmptySubclass';
-import { getSubclassPlugs } from '../loadout-ui/LoadoutSubclassSection';
-import PlugDef from '../loadout-ui/PlugDef';
+import EmptySubclass from '../loadouts-page/EmptySubclass';
+import { getSubclassPlugs } from '../loadouts-page/LoadoutSubclassSection';
+import PlugDef from '../loadouts-page/PlugDef';
 import { createGetModRenderKey } from '../mod-utils';
 import styles from './LoadoutEditSubclass.m.scss';
 

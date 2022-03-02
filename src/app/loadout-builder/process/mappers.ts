@@ -1,5 +1,8 @@
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
-import { calculateAssumedItemEnergy, isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
+import {
+  calculateAssumedItemEnergy,
+  isArmorEnergyLocked,
+} from 'app/loadout-builder/armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
 import { MAX_ARMOR_ENERGY_CAPACITY, modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';

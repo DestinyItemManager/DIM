@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout/loadout-types';
 import { FilterDefinition } from '../filter-types';
 import { isQuotable, quoteFilterString } from './freeform';
 

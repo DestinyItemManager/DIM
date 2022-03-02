@@ -1,14 +1,14 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
+import { applyLoadout } from 'app/loadout/loadout-apply';
+import { DimLoadoutItem, Loadout } from 'app/loadout/loadout-types';
+import { convertToLoadoutItem, newLoadout } from 'app/loadout/loadout-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch } from 'react';
 import { useDispatch } from 'react-redux';
 import { DimStore } from '../../inventory/store-types';
-import { convertToLoadoutItem, newLoadout } from '../../loadout-drawer/loadout-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet } from '../types';
 import { statTier } from '../utils';

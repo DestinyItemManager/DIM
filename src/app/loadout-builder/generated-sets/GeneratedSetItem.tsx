@@ -1,7 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
-import Sockets from 'app/loadout/loadout-ui/Sockets';
+import Sockets from 'app/loadout/loadouts-page/Sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';

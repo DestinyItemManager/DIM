@@ -1,0 +1,68 @@
+@import '../../variables.scss';
+
+.loadout {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  margin-bottom: 10px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.title {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+
+  h2 {
+    flex: 1;
+    display: block;
+    margin: 0 !important;
+  }
+
+  @include phone-portrait {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.actions {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  flex-flow: row wrap;
+  @include flex-gap(4px);
+  @include phone-portrait {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+}
+
+.missingItems {
+  text-transform: none;
+  font-size: 12px;
+  letter-spacing: normal;
+  margin-left: 1em;
+  color: #ccc;
+
+  :global(.app-icon) {
+    margin-right: 0.5em;
+  }
+}
+
+.contents {
+  display: flex;
+  flex-flow: row wrap;
+  margin-top: 10px;
+  min-height: 16px;
+  @include flex-gap(24px);
+  @include phone-portrait {
+    @include flex-gap(12px);
+  }
+}
+
+.classIcon {
+  width: 16px !important;
+  height: 16px !important;
+  margin-right: 8px;
+}
+
+.loadoutNotes {
+  margin: 4px 0;
+  white-space: pre-wrap;
+}

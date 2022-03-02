@@ -4,8 +4,8 @@ import {
   LockArmorEnergyType,
 } from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
+import { editLoadout } from 'app/loadout/loadout-events';
+import { DimLoadoutItem, Loadout } from 'app/loadout/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';

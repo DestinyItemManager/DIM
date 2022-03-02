@@ -1,4 +1,4 @@
-import { postmasterAlmostFull } from 'app/loadout-drawer/postmaster';
+import { postmasterAlmostFull } from 'app/loadout/postmaster';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';

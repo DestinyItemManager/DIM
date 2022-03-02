@@ -1,0 +1,30 @@
+@import '../../variables.scss';
+
+.container {
+  flex: 1;
+  padding: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+}
+
+.light {
+  float: right;
+
+  :global(.app-icon) & {
+    font-size: 10px;
+    vertical-align: -0.125em;
+    margin-right: 2px !important;
+  }
+
+  &::before {
+    display: none;
+  }
+
+  .yellowInlineSvg {
+    height: 16px;
+    width: 16px;
+    filter: invert(83%) sepia(64%) saturate(452%) hue-rotate(348deg) brightness(100%) contrast(93%);
+    vertical-align: text-bottom;
+  }
+}

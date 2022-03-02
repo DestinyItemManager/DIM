@@ -1,7 +1,10 @@
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { calculateAssumedItemEnergy, isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
+import {
+  calculateAssumedItemEnergy,
+  isArmorEnergyLocked,
+} from 'app/loadout-builder/armor-upgrade-utils';
 import { bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
 import { ItemFilter } from 'app/search/filter-types';
 import { compareBy } from 'app/utils/comparators';

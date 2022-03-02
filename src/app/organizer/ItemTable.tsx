@@ -21,10 +21,10 @@ import {
   applySocketOverrides,
   useSocketOverridesForItems,
 } from 'app/inventory/store/override-sockets';
-import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { applyLoadout } from 'app/loadout/loadout-apply';
+import { Loadout } from 'app/loadout/loadout-types';
+import { convertToLoadoutItem, newLoadout } from 'app/loadout/loadout-utils';
+import { loadoutsSelector } from 'app/loadout/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSettingAction } from 'app/settings/actions';

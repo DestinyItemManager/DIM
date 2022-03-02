@@ -7,8 +7,8 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
-import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
-import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
+import { DimLoadoutItem, Loadout } from 'app/loadout/loadout-types';
+import { getLoadoutStats } from 'app/loadout/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
@@ -20,10 +20,10 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import FashionDrawer from '../fashion/FashionDrawer';
-import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
-import { FashionMods } from '../loadout-ui/FashionMods';
-import LoadoutParametersDisplay from '../loadout-ui/LoadoutParametersDisplay';
-import { OptimizerButton } from '../loadout-ui/OptimizerButton';
+import { BucketPlaceholder } from '../loadouts-page/BucketPlaceholder';
+import { FashionMods } from '../loadouts-page/FashionMods';
+import LoadoutParametersDisplay from '../loadouts-page/LoadoutParametersDisplay';
+import { OptimizerButton } from '../loadouts-page/OptimizerButton';
 import styles from './LoadoutEditBucket.m.scss';
 
 const categoryStyles = {

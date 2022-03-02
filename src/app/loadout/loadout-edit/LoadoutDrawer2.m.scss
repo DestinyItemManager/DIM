@@ -1,0 +1,30 @@
+@import '../../variables.scss';
+
+.body {
+  padding: 10px;
+  max-height: 35vh;
+  @include phone-portrait {
+    max-height: unset;
+  }
+}
+
+.notes {
+  margin-top: 8px;
+  font-size: 14px;
+
+  summary {
+    font-weight: bold;
+    cursor: pointer;
+  }
+  &[open] summary {
+    margin-bottom: 4px;
+  }
+}
+
+// Group together buttons so they don't wrap onto different lines
+.inputGroup {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  @include flex-gap(4px);
+}
