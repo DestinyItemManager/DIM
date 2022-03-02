@@ -13,7 +13,7 @@ interface Props {
 let dragTimeout: number | null = null;
 
 export default function DraggableInventoryItem({ children, item }: Props) {
-  const [_collected, dragRef] = useDrag<DimItem>(
+  const [{ canDrag }, dragRef] = useDrag<DimItem, unknown, { canDrag: boolean }>(
     () => ({
       type: item.location.inPostmaster
         ? 'postmaster'
@@ -41,11 +41,15 @@ export default function DraggableInventoryItem({ children, item }: Props) {
         (!item.location.inPostmaster || item.destinyVersion === 2) && item.notransfer
           ? item.equipment
           : item.equipment || item.bucket.hasTransferDestination,
+      collect: (monitor) => ({ canDrag: monitor.canDrag() }),
     }),
     [item]
   );
   return (
-    <div ref={dragRef} className={clsx('item-drag-container', `item-type-${item.type}`)}>
+    <div
+      ref={dragRef}
+      className={clsx('item-drag-container', `item-type-${item.type}`, { 'cant-drag': !canDrag })}
+    >
       {children}
     </div>
   );
