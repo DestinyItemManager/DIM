@@ -67,10 +67,6 @@ export function amountOfItem(store: DimStore, item: { hash: number }) {
  * stackables, this is in stacks, not individual pieces.
  */
 export function capacityForItem(store: DimStore, item: DimItem) {
-  if (!item.bucket) {
-    throw new Error("item needs a 'bucket' field");
-  }
-
   if (store.isVault) {
     const vaultBucket = item.bucket.vaultBucket;
     return vaultBucket ? vaultBucket.capacity : 0;
@@ -88,12 +84,17 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
 }
 
 export interface SpaceLeft {
-  // The space definitely available.
+  /** The space definitely available. For stackables this is in individual pieces, not stacks. */
   guaranteed: number;
-  // Whether there's maybe a way space could be made for more than the guaranteed.
+  /** Whether there's maybe a way space could be made for more than the guaranteed. */
   couldMakeSpace: boolean;
 }
 
+/**
+ * Determine how much space there may be for an item being moved into a target
+ * store - this figures out both how much open space there is, and whether we
+ * could make space by moving things to the vault.
+ */
 export function potentialSpaceLeftForItem(
   store: DimStore,
   item: DimItem,
@@ -107,13 +108,11 @@ export function potentialSpaceLeftForItem(
       return { guaranteed: 0, couldMakeSpace: false };
     }
     const vaultBucket = item.bucket.vaultBucket;
+    // In the vault, all items are together in one big bucket, so we look at how much space that bucket has open
     occupiedStacks = item.bucket.vaultBucket
       ? count(store.items, (i) => Boolean(i.bucket.vaultBucket?.hash === vaultBucket.hash))
       : 0;
   } else {
-    if (!item.bucket) {
-      return { guaranteed: 0, couldMakeSpace: false };
-    }
     // Account-wide buckets (mods, etc) are only on the first character
     if (item.bucket.accountWide && !store.current) {
       return { guaranteed: 0, couldMakeSpace: false };
