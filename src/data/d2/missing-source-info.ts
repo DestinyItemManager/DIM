@@ -923,6 +923,7 @@ const missingSources: { [key: string]: number[] } = {
     3973359167, // Wildwood Mask
     4051755349, // Wildwood Boots
   ],
+  enclave: [],
   eow: [
     239489770, // Bond of Sekris
     253344425, // Mask of Feltroc
@@ -1119,6 +1120,7 @@ const missingSources: { [key: string]: number[] } = {
     3947596543, // Green Dawning Lanterns
     4059030097, // Winterhart Mask
   ],
+  evidenceboard: [],
   exoticcipher: [],
   fwc: [
     680327840, // Simulator Greaves
@@ -1976,6 +1978,7 @@ const missingSources: { [key: string]: number[] } = {
   limited: [
     2683682447, // Traitor's Fate
   ],
+  lost: [],
   lostsectors: [],
   mars: [],
   menagerie: [
@@ -2089,6 +2092,7 @@ const missingSources: { [key: string]: number[] } = {
   presage: [],
   prestige: [],
   prophecy: [],
+  psiops: [],
   raid: [
     4968701, // Greaves of the Great Hunt
     11974904, // Greaves of Ascendancy
@@ -2604,6 +2608,7 @@ const missingSources: { [key: string]: number[] } = {
     4167605324, // Scatterhorn Robe
     4245441464, // Scorned Baron Robes
   ],
+  throneworld: [],
   titan: [
     1701005142, // Songbreaker Gloves
     2486041713, // Songbreaker Gauntlets
@@ -2647,6 +2652,7 @@ const missingSources: { [key: string]: number[] } = {
   wartable: [
     2119661524, // Font of Might
   ],
+  wellspring: [],
   wrathborn: [],
   zavala: [
     24244626, // Mark of Shelter
