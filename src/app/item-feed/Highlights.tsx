@@ -17,7 +17,7 @@ import styles from './Highlights.m.scss';
 export default function Highlights({ item }: { item: DimItem }) {
   if (item.bucket.sort === 'Weapons' && item.sockets) {
     const perkSockets = item.sockets.allSockets.filter((s) => s.isPerk && !isKillTrackerSocket(s));
-    const archetype = getWeaponArchetype(item)?.displayProperties.name;
+    const archetype = !item.isExotic && getWeaponArchetype(item)?.displayProperties.name;
 
     return (
       <div>
