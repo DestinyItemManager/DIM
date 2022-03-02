@@ -410,7 +410,7 @@ module.exports = (env) => {
         // Ability cooldowns in stats tooltips
         '$featureFlags.abilityCooldowns': JSON.stringify(false),
         // Item feed sidebar
-        '$featureFlags.itemFeed': JSON.stringify(!env.release),
+        '$featureFlags.itemFeed': JSON.stringify(true),
         // Loadout edit drawer v2
         '$featureFlags.loadoutDrawerV2': JSON.stringify(!env.release),
       }),

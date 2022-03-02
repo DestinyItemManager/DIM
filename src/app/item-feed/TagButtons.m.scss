@@ -1,0 +1,6 @@
+@import '../variables.scss';
+
+.tagButton {
+  composes: dim-button from global;
+  margin-right: 4px;
+}
