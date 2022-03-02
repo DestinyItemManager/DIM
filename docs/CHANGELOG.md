@@ -8,6 +8,7 @@
 * Added `deepsight:complete` and `deepsight:incomplete` filters.
 * Added `is:craftable` filter.
 * Season of the Risen War Table Upgrades are now in the right order and show their acquired status.
+* Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
 
 ## 7.7.0 <span class="changelog-date">(2022-02-28)</span>
 
