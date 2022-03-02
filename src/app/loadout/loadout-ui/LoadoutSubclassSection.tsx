@@ -7,6 +7,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
+import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import { createGetModRenderKey } from '../mod-utils';
@@ -59,7 +60,11 @@ export default function LoadoutSubclassSection({
 
   return (
     <div className={styles.subclassContainer}>
-      <div className={styles.subclass}>
+      <div
+        className={clsx(styles.subclass, {
+          [styles.missingItem]: subclass?.owner === 'unknown',
+        })}
+      >
         {subclass ? (
           <ItemPopupTrigger item={subclass}>
             {(ref, onClick) => (

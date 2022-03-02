@@ -1,6 +1,7 @@
 ## Next
 
 * When you have 10 or more loadouts, a search box will appear in the Inventory page loadout dropdown, allowing you to search names just like on the Loadouts page.
+* Old loadouts with void subclasses in them will upgrade automatically to the new version with fragments and aspects, instead of telling you the loadout is missing an item.
 * Removed D2Gunsmith link from the item details popup while they work on revamping the site for all the new changes.
 * The Item Feed is available on both desktop and mobile. It shows your gear in the order it dropped, and gives you quick controls to tag incoming loot. Click on the item tile to get the full item popup.
 * Added `deepsight:complete` and `deepsight:incomplete` filters.
