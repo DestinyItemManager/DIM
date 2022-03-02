@@ -12,6 +12,7 @@ import { ItemFilter } from 'app/search/filter-types';
 import { plainString } from 'app/search/search-filters/freeform';
 import { LoadoutSort } from 'app/settings/initial-settings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { isiOSBrowser } from 'app/utils/browsers';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { useState } from 'react';
@@ -36,7 +37,7 @@ import {
   sendIcon,
   undoIcon,
 } from '../shell/icons';
-import { querySelector } from '../shell/selectors';
+import { querySelector, useIsPhonePortrait } from '../shell/selectors';
 import { queueAction } from '../utils/action-queue';
 import {
   gatherEngramsLoadout,
@@ -114,6 +115,7 @@ function LoadoutPopup({
 }: Props) {
   // For the most part we don't need to memoize this - this menu is destroyed when closed
   const defs = useDefinitions()!;
+  const isPhonePortrait = useIsPhonePortrait();
   const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
   const language = useSelector(languageSelector);
   const [loadoutQuery, setLoadoutQuery] = useState('');
@@ -198,6 +200,9 @@ function LoadoutPopup({
     : loadouts;
 
   const blockPropagation = (e: React.MouseEvent) => e.stopPropagation();
+
+  // On iOS at least, focusing the keyboard pushes the content off the screen
+  const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
 
   return (
     <div className={styles.content} onClick={onClick} role="menu">
@@ -308,7 +313,7 @@ function LoadoutPopup({
               <AppIcon icon={searchIcon} />
               <input
                 type="text"
-                autoFocus
+                autoFocus={nativeAutoFocus}
                 placeholder={t('Header.FilterHelpLoadouts')}
                 onClick={blockPropagation}
                 value={loadoutQuery}
