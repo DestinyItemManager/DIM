@@ -7,6 +7,7 @@
 * Tagging an item from the Item Feed also marks it as not-new.
 * Added `deepsight:complete` and `deepsight:incomplete` filters.
 * Added `is:craftable` filter.
+* Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
 
 ## 7.7.0 <span class="changelog-date">(2022-02-28)</span>
 
