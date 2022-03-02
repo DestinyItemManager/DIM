@@ -27,7 +27,6 @@ export const D2Categories: {
     BucketHashes.Emotes_Invisible,
     BucketHashes.Finishers,
     BucketHashes.SeasonalArtifact,
-    BucketHashes.ClanBanners,
   ],
   Inventory: [BucketHashes.Consumables, BucketHashes.Modifications],
 };
