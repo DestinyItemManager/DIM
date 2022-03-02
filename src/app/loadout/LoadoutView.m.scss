@@ -21,6 +21,10 @@
     flex-direction: column;
     align-items: flex-start;
   }
+
+  :global(.app-icon) {
+    font-size: 12px;
+  }
 }
 
 .actions {

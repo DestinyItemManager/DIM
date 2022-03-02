@@ -189,6 +189,7 @@ export default function LoadoutDrawer() {
     const newLoadout = {
       ...loadout,
       id: uuidv4(), // Let it be a new ID
+      createdAt: Date.now(),
     };
     onSaveLoadout(e, newLoadout);
   };
