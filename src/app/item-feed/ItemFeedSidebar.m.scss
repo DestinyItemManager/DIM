@@ -26,6 +26,10 @@
   &::-webkit-scrollbar {
     display: none;
   }
+
+  > div {
+    background-color: black;
+  }
 }
 
 .trayButton {
@@ -48,67 +52,5 @@
 
   :global(.app-icon) {
     margin-left: 2px;
-  }
-}
-
-.item {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  margin: 8px 0 16px 0;
-  background-color: black;
-  will-change: auto;
-  transform-origin: calc(var(--item-size) / 2) calc(var(--item-size) / 2);
-}
-
-.info {
-  margin-left: 8px;
-}
-
-.title {
-  text-transform: uppercase;
-  font-weight: 600;
-  font-family: Helvetica, Arial, sans-serif;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.type {
-  > * {
-    display: inline;
-  }
-}
-
-.classIcon {
-  margin-left: 4px;
-}
-
-.perks {
-  display: flex;
-  flex-flow: column;
-  margin: 4px 0;
-
-  > div > div {
-    display: flex;
-    flex-flow: row;
-    align-items: center;
-  }
-
-  img {
-    height: 24px;
-    width: 24px;
-  }
-}
-
-.tagButton {
-  composes: dim-button from global;
-  margin-right: 4px;
-}
-
-.stats {
-  margin: 4px 0 0 0;
-  :global(.stat-row) {
-    margin-bottom: 8px;
-  }
-  :global(.stat) {
-    line-height: 8px;
   }
 }
