@@ -34,7 +34,7 @@ export function getItemsAndSubclassFromLoadout(
     [bucketHash: number]: number[] | undefined;
   }
 ): [items: DimLoadoutItem[], subclass: DimLoadoutItem | undefined, warnitems: DimLoadoutItem[]] {
-  const [items, warnitems] = getItemsFromLoadoutItems(
+  let [items, warnitems] = getItemsFromLoadoutItems(
     loadoutItems,
     defs,
     store.id,
@@ -42,14 +42,17 @@ export function getItemsAndSubclassFromLoadout(
     allItems,
     modsByBucket
   );
-  const subclass = items.find((item) => item.bucket.hash === BucketHashes.Subclass);
+  const subclass = items
+    .concat(warnitems)
+    .find((item) => item.bucket.hash === BucketHashes.Subclass);
 
-  let equippableItems = items.filter((i) => itemCanBeEquippedBy(i, store, true));
+  items = items.filter((i) => itemCanBeEquippedBy(i, store, true));
   if (subclass) {
-    equippableItems = equippableItems.filter((i) => i.hash !== subclass.hash);
+    items = items.filter((i) => i.hash !== subclass.hash);
+    warnitems = warnitems.filter((i) => i.hash !== subclass.hash);
   }
 
-  return [equippableItems, subclass, warnitems];
+  return [items, subclass, warnitems];
 }
 
 /**

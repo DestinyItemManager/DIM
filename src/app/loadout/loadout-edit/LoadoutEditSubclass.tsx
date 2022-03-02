@@ -5,6 +5,7 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
+import clsx from 'clsx';
 import React, { useMemo } from 'react';
 import EmptySubclass from '../loadout-ui/EmptySubclass';
 import { getSubclassPlugs } from '../loadout-ui/LoadoutSubclassSection';
@@ -33,7 +34,13 @@ export default function LoadoutEditSubclass({
     <div className={styles.subclassContainer}>
       <div className={styles.subclass}>
         {subclass ? (
-          <ClosableContainer onClose={onRemove} showCloseIconOnHover>
+          <ClosableContainer
+            onClose={onRemove}
+            showCloseIconOnHover
+            className={clsx({
+              [styles.missingItem]: subclass?.owner === 'unknown',
+            })}
+          >
             <ItemPopupTrigger item={subclass}>
               {(ref, onClick) => (
                 <ConnectedInventoryItem
