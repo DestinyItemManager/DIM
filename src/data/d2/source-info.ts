@@ -200,7 +200,9 @@ const D2Sources: {
   compass: {
     itemHashes: [],
     sourceHashes: [
+      164083100, // Source: Display of Supremacy, Weekly Challenge
       2939318890, // Source: Wayfinder's Compass
+      3100439379, // Source: Mission Exorcism
     ],
     searchString: [],
   },
@@ -491,6 +493,14 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  enclave: {
+    itemHashes: [],
+    sourceHashes: [
+      1309588429, // Source: Complete the "Chief Investigator" Triumph
+      2055289873, // Source: "The Evidence Board" Exotic quest
+    ],
+    searchString: [],
+  },
   eow: {
     itemHashes: [],
     sourceHashes: [
@@ -558,6 +568,14 @@ const D2Sources: {
       860688654, // Source: Eververse
       2882367429, // Source: Eververse\nComplete the "Vault of Glass" raid to unlock this in Eververse.
       4036739795, // Source: Bright Engrams.
+    ],
+    searchString: [],
+  },
+  evidenceboard: {
+    itemHashes: [],
+    sourceHashes: [
+      1309588429, // Source: Complete the "Chief Investigator" Triumph
+      2055289873, // Source: "The Evidence Board" Exotic quest
     ],
     searchString: [],
   },
@@ -735,6 +753,14 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  lost: {
+    itemHashes: [],
+    sourceHashes: [
+      164083100, // Source: Display of Supremacy, Weekly Challenge
+      3094114967, // Source: Season of the Lost ritual playlists
+    ],
+    searchString: [],
+  },
   lostsectors: {
     itemHashes: [],
     sourceHashes: [
@@ -890,6 +916,13 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       506073192, // Source: Season of Arrivals dungeon.
+    ],
+    searchString: [],
+  },
+  psiops: {
+    itemHashes: [],
+    sourceHashes: [
+      2075569025, // PsiOps
     ],
     searchString: [],
   },
@@ -1116,6 +1149,15 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  throneworld: {
+    itemHashes: [],
+    sourceHashes: [
+      1141831282, // Source: "Of Queens and Worms" Exotic quest
+      1823766625, // Source: "Vox Obscura" Exotic quest
+      3954922099, // Source: Found by exploring the Throne World
+    ],
+    searchString: [],
+  },
   titan: {
     itemHashes: [],
     sourceHashes: [
@@ -1231,8 +1273,23 @@ const D2Sources: {
   wartable: {
     itemHashes: [],
     sourceHashes: [
+      450719423, // Source: Season of the Risen
+      2363489105, // Source: Season of the Risen Vendor or Triumphs
       2653840925, // Source: Challenger's Proving VII Quest
+      3563833902, // Source: Season of the Risen Triumphs
       4079816474, // Source: War Table
+    ],
+    searchString: [],
+  },
+  wellspring: {
+    itemHashes: [],
+    sourceHashes: [
+      82267399, // Source: Complete the "Warden of the Spring" Triumph
+      502279466, // Source: Wellspring boss Vezuul, Lightflayer
+      2917218318, // Source: Wellspring boss Golmag, Warden of the Spring
+      3359853911, // Source: Wellspring boss Zeerik, Lightflayer
+      3411812408, // Source: Complete the "All the Spring's Riches" Triumph
+      3450213291, // Source: Wellspring boss Bor'gong, Warden of the Spring
     ],
     searchString: [],
   },
