@@ -26,6 +26,7 @@ import {
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
+import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
@@ -338,6 +339,11 @@ export function isPlugStatActive(
   }
   if (masterworksWithCondStats.includes(plugHash)) {
     return adeptWeaponHashes.includes(item.hash);
+  }
+  if (enhancedIntrinsics.has(plugHash)) {
+    // Crafted weapons get bonus stats from enhanced intrinsics at Level 20+.
+    // The number 20 isn't in the definitions, so just hardcoding it here.
+    return (item.craftedInfo?.level || 0) >= 20;
   }
   return true;
 }

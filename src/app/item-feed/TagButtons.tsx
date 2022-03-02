@@ -1,4 +1,4 @@
-import { setItemTag } from 'app/inventory/actions';
+import { clearNewItem, setItemTag } from 'app/inventory/actions';
 import { tagConfig, TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon } from 'app/shell/icons';
@@ -24,6 +24,7 @@ export default function TagButtons({ item, tag }: { item: DimItem; tag: TagValue
         tag,
       })
     );
+    dispatch(clearNewItem(item.id));
   };
 
   return (

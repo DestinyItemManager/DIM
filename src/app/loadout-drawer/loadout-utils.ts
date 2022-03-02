@@ -378,6 +378,20 @@ export function extractArmorModHashes(item: DimItem) {
 }
 
 /**
+ * Some items have been replaced with equivalent new items. So far that's been
+ * true of the "Light 2.0" subclasses which are an entirely different item from
+ * the old one. When loading loadouts we'd like to just use the new version.
+ */
+const oldToNewItems = {
+  // Nightstalker subclass
+  3225959819: 2453351420,
+  // Voidwalker subclass
+  3887892656: 2849050827,
+  // Sentinel subclass
+  3382391785: 2842471112,
+};
+
+/**
  * Given a loadout item specification, find the corresponding inventory item we should use.
  */
 export function findItemForLoadout(
@@ -386,7 +400,9 @@ export function findItemForLoadout(
   storeId: string | undefined,
   loadoutItem: LoadoutItem
 ): DimItem | undefined {
-  const def = defs.InventoryItem.get(loadoutItem.hash) as DestinyInventoryItemDefinition & {
+  const hash = oldToNewItems[loadoutItem.hash] ?? loadoutItem.hash;
+
+  const def = defs.InventoryItem.get(hash) as DestinyInventoryItemDefinition & {
     // D1 definitions use this toplevel "instanced" field
     instanced: boolean;
     bucketTypeHash: number;
@@ -415,7 +431,7 @@ export function findItemForLoadout(
   }
 
   // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
-  const candidates = allItems.filter((item) => item.hash === loadoutItem.hash);
+  const candidates = allItems.filter((item) => item.hash === hash);
   return (
     (storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined) ??
     candidates[0]
