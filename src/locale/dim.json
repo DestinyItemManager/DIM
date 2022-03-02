@@ -191,6 +191,7 @@
     "Combine": "Filters can be combined or grouped with parentheses, \"or\" and \"and\" to narrow down your search, for example \"{{example}}\".",
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "Cosmetic": "Shows items that are flair or cosmetic.",
+    "Craftable": "Shows items that are craftable.",
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
