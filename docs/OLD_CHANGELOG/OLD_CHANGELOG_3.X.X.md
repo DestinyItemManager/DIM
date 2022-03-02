@@ -1,6 +1,6 @@
-## Next CHANGELOG
+## v4 CHANGELOG
 
-Next CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_4.X.X.md)
+* v4 CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_4.X.X.md)
 
 ## 3.17.1
 

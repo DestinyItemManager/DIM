@@ -1,6 +1,6 @@
-## Next CHANGELOG
+## v6 CHANGELOG
 
-Next CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_6.X.X.md)
+* v6 CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_6.X.X.md)
 
 ## 5.74.0 <span className="changelog-date">(2020-03-15)</span>
 
@@ -708,6 +708,6 @@ Next CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_6.X.X.md)
 * Update titles on item popups to display closer to what's in game.
 * Added community curations (a way to look for god rolls).
 
-## Previous CHANGELOG
+## v4 CHANGELOG
 
-Previous CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_4.X.X.md)
+* v4 CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_4.X.X.md)

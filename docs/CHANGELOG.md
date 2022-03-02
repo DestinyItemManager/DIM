@@ -19,6 +19,8 @@
 * When provided multiple wish lists, Settings page now shows info about all loaded wish lists, not just the first one.
 * Compare Drawer should no longer refuse valid requests to add an item to comparison.
 
-## Previous CHANGELOG
+## v6 CHANGELOG
 
-Previous CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_6.X.X.md)
+* v6 CHANGELOG available [here](https://github.com/DestinyItemManager/DIM/blob/master/docs/OLD_CHANGELOG/OLD_CHANGELOG_6.X.X.md)
+
+

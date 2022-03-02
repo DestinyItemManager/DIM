@@ -1,6 +1,6 @@
-## Current CHANGELOG
+## v7 CHANGELOG
 
-Current CHANGELOG available [here](/docs/CHANGELOG.md)
+* v7 CHANGELOG available [here](/docs/CHANGELOG.md)
 
 ## 6.99.1 <span class="changelog-date">(2022-01-10)</span>
 
@@ -1271,6 +1271,6 @@ Current CHANGELOG available [here](/docs/CHANGELOG.md)
 * Show how much of each material you have next to Spider's vendor info.
 * Updated privacy policy with DIM Sync info.
 
-## Previous CHANGELOG
+## v5 CHANGELOG
 
-Previous CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_5.X.X.md)
+* v5 CHANGELOG available [here](/docs/OLD_CHANGELOG/OLD_CHANGELOG_5.X.X.md)
