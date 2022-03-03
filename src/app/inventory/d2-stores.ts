@@ -4,12 +4,21 @@ import { handleAuthErrors } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { getCharacters as d1GetCharacters } from 'app/bungie-api/destiny1-api';
+import { getCharacters, getStores } from 'app/bungie-api/destiny2-api';
+import { bungieErrorToaster } from 'app/bungie-api/error-toaster';
+import { D2ManifestDefinitions, getDefinitions } from 'app/destiny2/d2-definitions';
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
+import { getLight } from 'app/loadout/loadout-utils';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { getCharacterProgressions } from 'app/progress/selectors';
+import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
+import { reportException } from 'app/utils/exceptions';
 import { errorLog, timer } from 'app/utils/log';
 import {
   DestinyCharacterComponent,
@@ -24,18 +33,9 @@ import {
   SingleComponentResponse,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
+import xpIcon from 'images/xpIcon.svg';
 import _ from 'lodash';
-import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
-import xpIcon from '../../images/xpIcon.svg';
-import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
-import { getCharacters, getStores } from '../bungie-api/destiny2-api';
-import { bungieErrorToaster } from '../bungie-api/error-toaster';
-import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
-import { bungieNetPath } from '../dim-ui/BungieImage';
-import { getLight } from '../loadout/loadout-utils';
-import { showNotification } from '../notifications/notifications';
-import { loadingTracker } from '../shell/loading-tracker';
-import { reportException } from '../utils/exceptions';
 import { CharacterInfo, charactersUpdated, error, loadNewItems, update } from './actions';
 import { ArtifactXP } from './ArtifactXP';
 import { cleanInfos } from './dim-item-info';

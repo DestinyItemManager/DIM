@@ -2,6 +2,7 @@ import ArmorySheet from 'app/armory/ArmorySheet';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { DamageType, DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -11,7 +12,6 @@ import primary from 'destiny-icons/general/ammo-primary.svg';
 import special from 'destiny-icons/general/ammo-special.svg';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { DimItem } from '../inventory/item-types';
 import styles from './ItemPopupHeader.m.scss';
 
 const tierClassName = {

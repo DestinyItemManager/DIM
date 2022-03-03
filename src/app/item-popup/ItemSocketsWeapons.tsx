@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import { craftedSocketCategoryHash } from 'app/inventory/store/crafted';
 import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -10,6 +11,7 @@ import {
   getSocketsByIndexes,
   getWeaponArchetypeSocket,
 } from 'app/utils/socket-utils';
+import { wishListSelector } from 'app/wishlists/selectors';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -17,8 +19,6 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
-import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import ItemPerksList from './ItemPerksList';
 import './ItemSockets.scss';

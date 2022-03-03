@@ -1,13 +1,13 @@
 import { getNotes, getTag, TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { isNewSelector, itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import { searchFilterSelector } from 'app/search/search-filter';
 import { RootState } from 'app/store/types';
+import { wishListSelector } from 'app/wishlists/selectors';
+import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { searchFilterSelector } from '../search/search-filter';
-import { wishListSelector } from '../wishlists/selectors';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
 import InventoryItem from './InventoryItem';
 
 // Props provided from parents

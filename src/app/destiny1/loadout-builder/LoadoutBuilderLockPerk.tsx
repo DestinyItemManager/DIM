@@ -1,11 +1,11 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
+import { D1GridNode, DimItem } from 'app/inventory/item-types';
 import { bucketsSelector } from 'app/inventory/selectors';
+import { AppIcon, plusIcon } from 'app/shell/icons';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import BungieImage from '../../dim-ui/BungieImage';
-import { D1GridNode, DimItem } from '../../inventory/item-types';
-import { AppIcon, plusIcon } from '../../shell/icons';
 import LoadoutBucketDropTarget from './LoadoutBuilderDropTarget';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import LoadoutBuilderLocksDialog from './LoadoutBuilderLocksDialog';

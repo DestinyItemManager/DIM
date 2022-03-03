@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
+import { preventNaN } from 'app/utils/util';
 import _ from 'lodash';
 import React from 'react';
-import { preventNaN } from '../utils/util';
 import styles from './ItemMoveAmount.m.scss';
 
 /** An editor for selecting how much of a stackable item you want. */

@@ -1,3 +1,4 @@
+import StoreHeading from 'app/character-tile/StoreHeading';
 import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -11,7 +12,6 @@ import StoreStats from 'app/store-stats/StoreStats';
 import { useEventBusListener } from 'app/utils/hooks';
 import clsx from 'clsx';
 import React from 'react';
-import StoreHeading from '../character-tile/StoreHeading';
 import D1ReputationSection from './D1ReputationSection';
 import styles from './DesktopStores.m.scss';
 import HeaderShadowDiv from './HeaderShadowDiv';

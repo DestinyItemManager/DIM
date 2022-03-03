@@ -1,3 +1,6 @@
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import CircleProgress from 'app/dim-ui/CircleProgress';
+import DiamondProgress from 'app/dim-ui/DiamondProgress';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
   DestinyFactionDefinition,
@@ -5,9 +8,6 @@ import {
   DestinyVendorComponent,
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
-import { bungieNetPath } from '../dim-ui/BungieImage';
-import CircleProgress from '../dim-ui/CircleProgress';
-import DiamondProgress from '../dim-ui/DiamondProgress';
 import styles from './FactionIcon.m.scss';
 
 export default function FactionIcon(props: {

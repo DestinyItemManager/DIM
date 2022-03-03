@@ -1,6 +1,10 @@
 import { t } from 'app/i18next-t';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { executeMoveItem, MoveReservations } from 'app/inventory/item-move-service';
+import { DimItem } from 'app/inventory/item-types';
 import { postmasterNotification } from 'app/inventory/MoveNotifications';
 import { storesSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
 import {
   capacityForItem,
   findItemsByBucket,
@@ -8,17 +12,13 @@ import {
   potentialSpaceLeftForItem,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
+import { showNotification } from 'app/notifications/notifications';
 import { ThunkResult } from 'app/store/types';
 import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { executeMoveItem, MoveReservations } from '../inventory/item-move-service';
-import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
-import { showNotification } from '../notifications/notifications';
 
 export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets): ThunkResult {
   return async (dispatch) => {

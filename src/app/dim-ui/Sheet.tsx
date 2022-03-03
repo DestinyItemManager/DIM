@@ -1,4 +1,5 @@
 import { useDrag } from '@use-gesture/react';
+import { AppIcon, disabledIcon } from 'app/shell/icons';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
@@ -14,7 +15,6 @@ import React, {
   useState,
 } from 'react';
 import { animated, config, SpringConfig, useSpring } from 'react-spring';
-import { AppIcon, disabledIcon } from '../shell/icons';
 import { PressTipRoot } from './PressTip';
 import styles from './Sheet.m.scss';
 import './Sheet.scss';

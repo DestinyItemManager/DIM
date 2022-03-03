@@ -3,16 +3,12 @@ import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { t } from 'app/i18next-t';
 import { setItemNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
+import { isTagValue, itemTagSelectorList, TagValue } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
 import { storesSortedByImportanceSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { itemMoveLoadout } from 'app/loadout/auto-loadouts';
 import { applyLoadout } from 'app/loadout/loadout-apply';
-import { useIsPhonePortrait } from 'app/shell/selectors';
-import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { isTagValue, itemTagSelectorList, TagValue } from '../../inventory/dim-item-info';
-import { DimItem } from '../../inventory/item-types';
 import {
   AppIcon,
   clearIcon,
@@ -20,8 +16,12 @@ import {
   lockIcon,
   stickyNoteIcon,
   unlockedIcon,
-} from '../../shell/icons';
-import { loadingTracker } from '../../shell/loading-tracker';
+} from 'app/shell/icons';
+import { loadingTracker } from 'app/shell/loading-tracker';
+import { useIsPhonePortrait } from 'app/shell/selectors';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import styles from './ItemActionsDropdown.m.scss';
 
 interface Props {

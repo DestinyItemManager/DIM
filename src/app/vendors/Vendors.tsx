@@ -1,13 +1,20 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CheckButton from 'app/dim-ui/CheckButton';
+import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
+import { sortedStoresSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
+import { loadingTracker } from 'app/shell/loading-tracker';
+import { refresh$ } from 'app/shell/refresh-events';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -15,13 +22,6 @@ import { DestinyCurrenciesComponent } from 'bungie-api-ts/destiny2';
 import { motion, PanInfo } from 'framer-motion';
 import React, { useCallback, useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
-import { DestinyAccount } from '../accounts/destiny-account';
-import CharacterSelect from '../dim-ui/CharacterSelect';
-import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { sortedStoresSelector } from '../inventory/selectors';
-import { DimStore } from '../inventory/store-types';
-import { loadingTracker } from '../shell/loading-tracker';
-import { refresh$ } from '../shell/refresh-events';
 import { loadAllVendors } from './actions';
 import {
   D2VendorGroup,

@@ -1,17 +1,20 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
+import { getBuckets as getBucketsD1 } from 'app/destiny1/d1-buckets';
+import { getBuckets as getBucketsD2 } from 'app/destiny2/d2-buckets';
 import { currentProfileSelector, settingsSelector } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { universalOrnamentPlugSetHashes } from 'app/search/d2-known-values';
+import {
+  characterSortImportanceSelector,
+  characterSortSelector,
+} from 'app/settings/character-sort';
 import { RootState } from 'app/store/types';
 import { emptyObject, emptySet } from 'app/utils/empty';
 import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
-import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
-import { characterSortImportanceSelector, characterSortSelector } from '../settings/character-sort';
 import { getTag, ItemInfos } from './dim-item-info';
 import { DimItem } from './item-types';
 import { collectNotesHashtags } from './note-hashtags';

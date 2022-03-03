@@ -1,9 +1,9 @@
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { t } from 'app/i18next-t';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import _ from 'lodash';
-import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import { D1Progression, D1Store, DimStore } from '../store-types';
 import { getCharacterStatsData } from './character-utils';
 

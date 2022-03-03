@@ -1,11 +1,11 @@
+import { removeToken } from 'app/bungie-api/oauth-tokens';
 import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
+import { loadingTracker } from 'app/shell/loading-tracker';
 import { del, get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
 import _ from 'lodash';
-import { removeToken } from '../bungie-api/oauth-tokens';
-import { loadingTracker } from '../shell/loading-tracker';
 import * as actions from './actions';
 import { getBungieAccount } from './bungie-account';
 import {

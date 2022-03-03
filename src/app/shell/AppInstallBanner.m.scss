@@ -1,5 +1,5 @@
 .banner {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   align-items: center;
   > *:first-child {
     flex: 1;
@@ -14,7 +14,7 @@
 }
 
 .hideButton {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from 'app/dim-ui/common.m.scss';
   margin-left: 16px;
   color: white;
 }

@@ -33,7 +33,7 @@
 }
 
 .trayButton {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from 'app/dim-ui/common.m.scss';
   transform: rotate(-90deg);
   background: black;
   position: absolute;

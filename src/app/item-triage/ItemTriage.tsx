@@ -13,7 +13,9 @@ import {
 } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getArmorSlotSvgIcon, getWeaponTypeSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
+import popupStyles from 'app/item-popup/ItemDescription.m.scss';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { editLoadout } from 'app/loadout/loadout-events';
 import { loadoutsSelector } from 'app/loadout/selectors';
@@ -38,9 +40,6 @@ import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { DimItem } from '../inventory/item-types';
-// eslint-disable-next-line css-modules/no-unused-class
-import popupStyles from '../item-popup/ItemDescription.m.scss';
 import styles from './ItemTriage.m.scss';
 
 /** whether an item's popup should contain the triage tab */

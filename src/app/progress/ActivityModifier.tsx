@@ -1,7 +1,7 @@
+import BungieImage from 'app/dim-ui/BungieImage';
+import PressTip from 'app/dim-ui/PressTip';
 import { useD2Definitions } from 'app/manifest/selectors';
 import React from 'react';
-import BungieImage from '../dim-ui/BungieImage';
-import PressTip from '../dim-ui/PressTip';
 import './ActivityModifier.scss';
 
 export function ActivityModifier({ modifierHash }: { modifierHash: number }) {

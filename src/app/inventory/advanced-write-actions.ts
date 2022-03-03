@@ -1,8 +1,12 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { authenticatedHttpClient } from 'app/bungie-api/bungie-service-helper';
+import { requestAdvancedWriteActionToken } from 'app/bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { get, set } from 'app/storage/idb-keyval';
@@ -22,10 +26,6 @@ import {
   insertSocketPlugFree,
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { authenticatedHttpClient } from '../bungie-api/bungie-service-helper';
-import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
-import { showNotification } from '../notifications/notifications';
 import { awaItemChanged } from './actions';
 import { DimItem, DimSocket } from './item-types';
 import {

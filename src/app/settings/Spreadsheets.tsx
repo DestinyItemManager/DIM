@@ -2,11 +2,11 @@ import FileUpload from 'app/dim-ui/FileUpload';
 import { t } from 'app/i18next-t';
 import { storesLoadedSelector } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
+import { AppIcon, spreadsheetIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { AppIcon, spreadsheetIcon } from '../shell/icons';
 
 export default function Spreadsheets() {
   const dispatch = useThunkDispatch();

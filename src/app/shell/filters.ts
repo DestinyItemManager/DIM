@@ -1,13 +1,13 @@
+import { getTag, tagConfig } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
 import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { getSeason } from 'app/inventory/store/season';
 import { D1BucketHashes } from 'app/search/d1-known-values';
+import store from 'app/store/store';
+import { chainComparator, Comparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { getTag, tagConfig } from '../inventory/dim-item-info';
-import { DimItem } from '../inventory/item-types';
-import store from '../store/store';
-import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 // This file defines filters for DIM that may be shared among
 // different parts of DIM.
 

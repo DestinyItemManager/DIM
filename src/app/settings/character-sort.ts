@@ -1,8 +1,8 @@
 import { settingsSelector } from 'app/dim-api/selectors';
+import { DimStore } from 'app/inventory/store-types';
 import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { DimStore } from '../inventory/store-types';
 
 export const characterOrderSelector = (state: RootState) => settingsSelector(state).characterOrder;
 const customCharacterSortSelector = (state: RootState) =>

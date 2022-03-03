@@ -1,7 +1,9 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
+import Sheet from 'app/dim-ui/Sheet';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
+import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { locateItem } from 'app/item/locate-item';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { getLight } from 'app/loadout/loadout-utils';
@@ -10,8 +12,6 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
-import Sheet from '../dim-ui/Sheet';
-import { allItemsSelector, storesSelector } from '../inventory/selectors';
 import { showGearPower$ } from './gear-power';
 import styles from './GearPower.m.scss';
 

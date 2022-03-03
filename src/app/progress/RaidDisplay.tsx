@@ -1,3 +1,4 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
   ARMSMASTER_ACTIVITY_MODIFIER,
@@ -8,7 +9,6 @@ import {
   DestinyMilestoneChallengeActivity,
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
-import BungieImage from '../dim-ui/BungieImage';
 import { ActivityModifier } from './ActivityModifier';
 import CompletionCheckbox from './CompletionCheckbox';
 import LoadoutRequirementModifier from './LoadoutRequirementModifier';

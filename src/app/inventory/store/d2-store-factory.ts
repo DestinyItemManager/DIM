@@ -1,10 +1,10 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { armorStats } from 'app/search/d2-known-values';
 import { DestinyCharacterComponent, DestinyClass, DestinyGender } from 'bungie-api-ts/destiny2';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
-import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
-import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { DimCharacterStat, DimStore } from '../store-types';
 
 /**

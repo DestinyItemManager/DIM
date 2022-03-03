@@ -1,11 +1,11 @@
 import { collapsedSelector } from 'app/dim-api/selectors';
+import { toggleCollapsedSection } from 'app/settings/actions';
+import { AppIcon, collapseIcon, expandIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { toggleCollapsedSection } from '../settings/actions';
-import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import './CollapsibleTitle.scss';
 
 interface Props {

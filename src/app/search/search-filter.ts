@@ -1,12 +1,7 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
-import { Settings } from 'app/settings/initial-settings';
-import { RootState } from 'app/store/types';
-import { errorLog } from 'app/utils/log';
-import _ from 'lodash';
-import { createSelector } from 'reselect';
-import { ItemInfos } from '../inventory/dim-item-info';
-import { DimItem } from '../inventory/item-types';
+import { ItemInfos } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
   currentStoreSelector,
@@ -14,13 +9,18 @@ import {
   itemHashTagsSelector,
   itemInfosSelector,
   sortedStoresSelector,
-} from '../inventory/selectors';
-import { DimStore } from '../inventory/store-types';
-import { Loadout } from '../loadout/loadout-types';
-import { loadoutsSelector } from '../loadout/selectors';
-import { querySelector } from '../shell/selectors';
-import { wishListFunctionSelector } from '../wishlists/selectors';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
+} from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import { Loadout } from 'app/loadout/loadout-types';
+import { loadoutsSelector } from 'app/loadout/selectors';
+import { Settings } from 'app/settings/initial-settings';
+import { querySelector } from 'app/shell/selectors';
+import { RootState } from 'app/store/types';
+import { errorLog } from 'app/utils/log';
+import { wishListFunctionSelector } from 'app/wishlists/selectors';
+import { InventoryWishListRoll } from 'app/wishlists/wishlists';
+import _ from 'lodash';
+import { createSelector } from 'reselect';
 import { FilterContext, ItemFilter } from './filter-types';
 import { parseQuery, QueryAST } from './query-parser';
 import { SearchConfig, searchConfigSelector } from './search-config';

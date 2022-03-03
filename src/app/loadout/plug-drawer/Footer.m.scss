@@ -1,12 +1,12 @@
 @import '../../variables.scss';
 
 .footer {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   align-items: center;
 }
 
 .selectedPlugs {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   flex: 1;
   align-items: center;
   overflow: auto;

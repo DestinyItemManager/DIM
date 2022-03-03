@@ -9,6 +9,7 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { DimLoadoutItem, Loadout } from 'app/loadout/loadout-types';
 import {
   createSubclassDefaultSocketOverrides,
@@ -22,7 +23,6 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useReducer } from 'react';
-import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import { statFiltersFromLoadoutParamaters, statOrderFromLoadoutParameters } from './loadout-params';
 import {
   ArmorSet,

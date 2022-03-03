@@ -14,7 +14,7 @@
 }
 
 .buttons {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
 }
 
 .button {

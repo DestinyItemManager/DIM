@@ -1,3 +1,4 @@
+import { getManifest as d2GetManifest } from 'app/bungie-api/destiny2-api';
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definitions';
 import { buildStores } from 'app/inventory/d2-stores';
@@ -8,7 +9,6 @@ import { F_OK } from 'constants';
 import fs from 'fs/promises';
 import _ from 'lodash';
 import path from 'path';
-import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
 import profile from './data/profile-2021-05-28.json';
 
 /**

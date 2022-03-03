@@ -2,12 +2,8 @@ import { trackTriumph } from 'app/dim-api/basic-actions';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { setItemLockState } from 'app/inventory/item-move-service';
+import { DimItem } from 'app/inventory/item-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
-import React, { useState } from 'react';
-import { DimItem } from '../../inventory/item-types';
 import {
   AppIcon,
   lockIcon,
@@ -16,7 +12,11 @@ import {
   trackedIcon,
   unlockedIcon,
   unTrackedIcon,
-} from '../../shell/icons';
+} from 'app/shell/icons';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
+import React, { useState } from 'react';
 import ActionButton from './ActionButton';
 import styles from './LockButton.m.scss';
 

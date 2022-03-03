@@ -1,10 +1,10 @@
 import { addCompareItem } from 'app/compare/actions';
 import { compareOpenSelector } from 'app/compare/selectors';
+import { clearNewItem } from 'app/inventory/actions';
+import { DimItem } from 'app/inventory/item-types';
 import { ThunkResult } from 'app/store/types';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { clearNewItem } from '../inventory/actions';
-import { DimItem } from '../inventory/item-types';
 import { hideItemPopup, ItemPopupExtraInfo, showItemPopup, showItemPopup$ } from './item-popup';
 
 interface Props {

@@ -1,12 +1,12 @@
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
+import { AppIcon, signOutIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { AppIcon, signOutIcon } from '../shell/icons';
 import Account from './Account';
 import styles from './MenuAccounts.m.scss';
 import { logOut } from './platforms';

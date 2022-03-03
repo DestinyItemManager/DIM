@@ -1,13 +1,13 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { currenciesSelector, storesSelector } from 'app/inventory/selectors';
+import { D1Store } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { DestinyAccount } from '../../accounts/destiny-account';
-import { D1Store } from '../../inventory/store-types';
 import D1Vendor from './D1Vendor';
 import styles from './D1Vendors.m.scss';
 import { countCurrencies, loadVendors, Vendor } from './vendor.service';

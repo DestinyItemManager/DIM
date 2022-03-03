@@ -1,8 +1,8 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
 import type { StringsNeedingReplacement } from 'data/d2/objective-richTexts';
 import richTextManifestExamples from 'data/d2/objective-richTexts';
 import _ from 'lodash';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 
 const glyphInfos: [exampleReplacement: StringsNeedingReplacement, codepoint: FontGlyphs][] = [
   // Damage Types

@@ -1,10 +1,10 @@
 import { getToken } from 'app/bungie-api/oauth-tokens';
+import ExternalLink from 'app/dim-ui/ExternalLink';
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
+import logo from 'images/logo-light.svg';
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../../images/logo-light.svg';
-import ExternalLink from '../dim-ui/ExternalLink';
 import styles from './About.m.scss';
 import {
   AppIcon,

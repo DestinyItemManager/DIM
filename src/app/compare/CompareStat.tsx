@@ -1,11 +1,11 @@
 import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
+import { D1Stat, DimItem } from 'app/inventory/item-types';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
+import { getColor, percent } from 'app/shell/filters';
 import { StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import { D1Stat, DimItem } from '../inventory/item-types';
-import { getColor, percent } from '../shell/filters';
 import { MinimalStat, StatInfo } from './Compare';
 import styles from './CompareStat.m.scss';
 

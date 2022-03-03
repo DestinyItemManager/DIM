@@ -1,7 +1,7 @@
+import { DimItem } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { infoLog } from 'app/utils/log';
 import { Observable } from 'app/utils/observable';
-import { DimItem } from '../inventory/item-types';
 
 export const showItemPopup$ = new Observable<
   | {

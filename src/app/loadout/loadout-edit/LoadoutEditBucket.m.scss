@@ -85,7 +85,7 @@
 }
 
 .addButton {
-  composes: resetButton from '../../dim-ui/common.m.scss';
+  composes: resetButton from 'app/dim-ui/common.m.scss';
   composes: pull-item-button from global;
   color: currentColor;
   width: 100%;

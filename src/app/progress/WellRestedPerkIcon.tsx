@@ -1,3 +1,5 @@
+import BungieImage from 'app/dim-ui/BungieImage';
+import { isWellRested } from 'app/inventory/store/well-rested';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { WELL_RESTED_PERK } from 'app/search/d2-known-values';
 import {
@@ -6,8 +8,6 @@ import {
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
-import BungieImage from '../dim-ui/BungieImage';
-import { isWellRested } from '../inventory/store/well-rested';
 
 export default function WellRestedPerkIcon({
   progressions,

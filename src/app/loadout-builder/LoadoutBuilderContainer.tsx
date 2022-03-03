@@ -1,6 +1,9 @@
 import { defaultLoadoutParameters, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import { savedLoadoutParametersSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
+import { sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { Loadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -9,9 +12,6 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { savedLoadoutParametersSelector } from '../dim-api/selectors';
-import { sortedStoresSelector } from '../inventory/selectors';
 import LoadoutBuilder from './LoadoutBuilder';
 
 interface Props {

@@ -1,15 +1,15 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import { Loadout } from 'app/loadout/loadout-types';
-import { d2ManifestSelector } from 'app/manifest/selectors';
-import { createSelector } from 'reselect';
 import {
   allItemsSelector,
   allNotesHashtagsSelector,
   itemInfosSelector,
-} from '../inventory/selectors';
-import { loadoutsSelector } from '../loadout/selectors';
+} from 'app/inventory/selectors';
+import { Loadout } from 'app/loadout/loadout-types';
+import { loadoutsSelector } from 'app/loadout/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
+import { createSelector } from 'reselect';
 import { canonicalFilterFormats, FilterDefinition, SuggestionsContext } from './filter-types';
 
 //

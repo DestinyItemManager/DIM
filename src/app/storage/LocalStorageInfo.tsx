@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
+import { percent } from 'app/shell/filters';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
-import { percent } from '../shell/filters';
 import styles from './LocalStorageInfo.m.scss';
 import './storage.scss';
 

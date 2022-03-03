@@ -1,3 +1,4 @@
+import { oauthClientId } from 'app/bungie-api/bungie-api-utils';
 import CheckButton from 'app/dim-ui/CheckButton';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
@@ -6,7 +7,6 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import styles from './Login.m.scss';
 
 const dimApiHelpLink = 'https://destinyitemmanager.fandom.com/wiki/DIM_Sync';

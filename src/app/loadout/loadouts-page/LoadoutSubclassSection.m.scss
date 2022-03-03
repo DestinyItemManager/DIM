@@ -2,7 +2,7 @@
 
 .subclassContainer {
   --item-icon-size: calc(0.8 * var(--item-size));
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
 }
 
 .subclass {

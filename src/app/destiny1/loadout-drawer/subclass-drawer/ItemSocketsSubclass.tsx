@@ -4,6 +4,7 @@ import { DimItem, DimSocket, DimSocketCategory } from 'app/inventory/item-types'
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import Socket from 'app/item-popup/Socket';
+import SubclassPlugDrawer from 'app/loadout/loadout-edit/SubclassPlugDrawer';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getSocketsByCategoryHash, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
@@ -11,7 +12,6 @@ import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import SubclassPlugDrawer from '../../../loadout/loadout-edit/SubclassPlugDrawer';
 import styles from './ItemSocketsSubclass.m.scss';
 
 interface Props {

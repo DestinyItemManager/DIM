@@ -7,6 +7,19 @@ import Sheet from 'app/dim-ui/Sheet';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { toggleSearchResults } from 'app/shell/actions';
+import {
+  AppIcon,
+  closeIcon,
+  disabledIcon,
+  faClock,
+  helpIcon,
+  moveDownIcon,
+  moveUpIcon,
+  searchIcon,
+  starIcon,
+  starOutlineIcon,
+  unTrackedIcon,
+} from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isiOSBrowser } from 'app/utils/browsers';
@@ -27,19 +40,6 @@ import React, {
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import {
-  AppIcon,
-  closeIcon,
-  disabledIcon,
-  faClock,
-  helpIcon,
-  moveDownIcon,
-  moveUpIcon,
-  searchIcon,
-  starIcon,
-  starOutlineIcon,
-  unTrackedIcon,
-} from '../shell/icons';
 import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
 import HighlightedText from './HighlightedText';
 import { canonicalizeQuery, parseQuery } from './query-parser';

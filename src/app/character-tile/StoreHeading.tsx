@@ -1,12 +1,12 @@
+import ClickOutside from 'app/dim-ui/ClickOutside';
 import { t } from 'app/i18next-t';
+import { DimStore } from 'app/inventory/store-types';
 import { isD1Store } from 'app/inventory/stores-helpers';
+import LoadoutPopup from 'app/loadout/loadout-menu/LoadoutPopup';
+import { AppIcon, kebabIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import React, { useCallback, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import ClickOutside from '../dim-ui/ClickOutside';
-import { DimStore } from '../inventory/store-types';
-import LoadoutPopup from '../loadout/loadout-menu/LoadoutPopup';
-import { AppIcon, kebabIcon } from '../shell/icons';
 import CharacterHeaderXPBar from './CharacterHeaderXP';
 import CharacterTile from './CharacterTile';
 import './StoreHeading.scss';

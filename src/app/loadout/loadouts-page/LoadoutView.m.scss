@@ -1,14 +1,14 @@
 @import '../../variables.scss';
 
 .loadout {
-  composes: flexColumn from '../../dim-ui/common.m.scss';
+  composes: flexColumn from 'app/dim-ui/common.m.scss';
   margin-bottom: 10px;
   padding: 15px;
   background: rgba(0, 0, 0, 0.25);
 }
 
 .title {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   align-items: center;
 
   h2 {
@@ -24,7 +24,7 @@
 }
 
 .actions {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   flex-flow: row wrap;
   @include flex-gap(4px);
   @include phone-portrait {

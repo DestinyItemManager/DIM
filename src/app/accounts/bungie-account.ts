@@ -1,4 +1,4 @@
-import { getToken } from '../bungie-api/oauth-tokens';
+import { getToken } from 'app/bungie-api/oauth-tokens';
 
 /**
  * A Bungie account is an account on Bungie.net, which is associated

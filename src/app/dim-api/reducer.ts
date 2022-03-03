@@ -10,11 +10,16 @@ import {
   TagValue,
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import * as inventoryActions from 'app/inventory/actions';
+import * as loadoutActions from 'app/loadout/actions';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout/loadout-type-converters';
+import { Loadout as DimLoadout } from 'app/loadout/loadout-types';
 import { recentSearchComparator } from 'app/search/autocomplete';
 import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
 import { searchConfigSelector } from 'app/search/search-config';
 import { validateQuery } from 'app/search/search-utils';
+import * as settingsActions from 'app/settings/actions';
+import { initialSettingsState, Settings } from 'app/settings/initial-settings';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
@@ -24,11 +29,6 @@ import { deepEqual } from 'fast-equals';
 import produce, { Draft } from 'immer';
 import _ from 'lodash';
 import { ActionType, getType } from 'typesafe-actions';
-import * as inventoryActions from '../inventory/actions';
-import * as loadoutActions from '../loadout/actions';
-import { Loadout as DimLoadout } from '../loadout/loadout-types';
-import * as settingsActions from '../settings/actions';
-import { initialSettingsState, Settings } from '../settings/initial-settings';
 import { DeleteLoadoutUpdateWithRollback, ProfileUpdateWithRollback } from './api-types';
 import * as actions from './basic-actions';
 import { makeProfileKey, makeProfileKeyFromAccount } from './selectors';

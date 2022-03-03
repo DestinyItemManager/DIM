@@ -1,5 +1,5 @@
+import { AppIcon, helpIcon } from 'app/shell/icons';
 import React from 'react';
-import { AppIcon, helpIcon } from '../shell/icons';
 import ExternalLink from './ExternalLink';
 import styles from './HelpLink.m.scss';
 

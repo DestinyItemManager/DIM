@@ -1,3 +1,4 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemPopupExtraInfo } from 'app/item-popup/item-popup';
 import ItemPopupTrigger from 'app/item-popup/ItemPopupTrigger';
@@ -9,7 +10,6 @@ import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import BungieImage from '../dim-ui/BungieImage';
 import Cost from './Cost';
 import { VendorItem } from './vendor-item';
 import styles from './VendorItem.m.scss';

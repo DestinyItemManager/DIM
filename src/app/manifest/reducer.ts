@@ -1,9 +1,9 @@
+import type { AccountsAction } from 'app/accounts/reducer';
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core/interfaces';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
-import type { AccountsAction } from '../accounts/reducer';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import * as actions from './actions';
 
 export interface ManifestState {

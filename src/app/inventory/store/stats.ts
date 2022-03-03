@@ -3,8 +3,10 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import reduxStore from 'app/store/store';
 import { compareBy } from 'app/utils/comparators';
 import { isPlugStatActive } from 'app/utils/item-utils';
+import { socketContainsIntrinsicPlug } from 'app/utils/socket-utils';
 import {
   DestinyClass,
   DestinyDisplayPropertiesDefinition,
@@ -18,8 +20,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import reduxStore from '../../store/store';
-import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
 import { DimItem, DimPlug, DimSocket, DimStat } from '../item-types';
 
 /**

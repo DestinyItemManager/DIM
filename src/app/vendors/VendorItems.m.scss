@@ -53,7 +53,7 @@
 }
 
 .vendorItems {
-  composes: flexWrap from '../dim-ui/common.m.scss';
+  composes: flexWrap from 'app/dim-ui/common.m.scss';
 
   :global(.item) {
     cursor: pointer;

@@ -38,7 +38,7 @@
 }
 
 .openButton {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from 'app/dim-ui/common.m.scss';
   display: inline-block;
   margin-left: 5px;
   color: #999;
@@ -46,7 +46,7 @@
 }
 
 .menuItem {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   align-items: flex-start;
   padding: 6px 9px 6px 9px;
 
@@ -64,7 +64,7 @@
 }
 
 .deleteIcon {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from 'app/dim-ui/common.m.scss';
   font-size: 10px !important;
   margin-top: 4px;
   color: #999;

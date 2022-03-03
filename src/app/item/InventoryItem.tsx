@@ -1,12 +1,12 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
+import { percent } from 'app/shell/filters';
+import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from 'app/shell/icons';
+import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
-import BungieImage from '../dim-ui/BungieImage';
-import { percent } from '../shell/filters';
-import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo from './BadgeInfo';
 import styles from './InventoryItem.m.scss';
 import ItemIcon from './ItemIcon';

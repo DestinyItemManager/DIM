@@ -1,5 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
+import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import {
   applySocketOverrides,
   useSocketOverridesForItems,
@@ -15,6 +17,7 @@ import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
+import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -23,9 +26,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
-import Sheet from '../dim-ui/Sheet';
-import { DimItem } from '../inventory/item-types';
-import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
 import styles from './Compare.m.scss';
 import './compare.scss';

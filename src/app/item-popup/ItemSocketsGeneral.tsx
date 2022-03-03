@@ -1,15 +1,15 @@
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { getArmorExoticPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
+import { wishListSelector } from 'app/wishlists/selectors';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
-import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import EmoteSockets from './EmoteSockets';
 import './ItemSockets.scss';

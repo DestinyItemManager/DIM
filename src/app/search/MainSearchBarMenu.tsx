@@ -1,3 +1,4 @@
+import { DimItem } from 'app/inventory/item-types';
 import ItemActionsDropdown from 'app/item-popup/item-actions/ItemActionsDropdown';
 import { querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
@@ -5,7 +6,6 @@ import { motion } from 'framer-motion';
 import React from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
-import { DimItem } from '../inventory/item-types';
 import { filteredItemsSelector, validateQuerySelector } from './search-filter';
 import './search-filter.scss';
 

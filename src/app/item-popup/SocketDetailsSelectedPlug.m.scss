@@ -1,7 +1,7 @@
 @import '../variables.scss';
 
 .selectedPlug {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   min-height: calc(var(--item-size) + 20px);
   display: grid;
   grid-template-columns: var(--item-size) 1fr;
@@ -32,13 +32,13 @@
 }
 
 .modIcon {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from 'app/dim-ui/common.m.scss';
   align-items: center;
   grid-area: mod;
 }
 
 .modDescription {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from 'app/dim-ui/common.m.scss';
   grid-area: desc;
   h3 {
     font-weight: bold;
@@ -57,7 +57,7 @@
 }
 
 .material {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   align-items: center;
   margin-top: 4px;
   font-size: 10px;

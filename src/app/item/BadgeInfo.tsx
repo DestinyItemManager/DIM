@@ -1,5 +1,7 @@
+import ElementIcon from 'app/dim-ui/ElementIcon';
 import { itemNoteSelector } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
+import { getColor } from 'app/shell/filters';
 import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
@@ -7,8 +9,6 @@ import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import ElementIcon from '../dim-ui/ElementIcon';
-import { getColor } from '../shell/filters';
 import styles from './BadgeInfo.m.scss';
 import RatingIcon from './RatingIcon';
 

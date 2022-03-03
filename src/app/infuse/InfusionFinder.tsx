@@ -1,27 +1,34 @@
 import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
+import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector, currentStoreSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
 import ConnectedInventoryItem from 'app/item/ConnectedInventoryItem';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { LoadoutItem } from 'app/loadout/loadout-types';
+import { convertToLoadoutItem, newLoadout } from 'app/loadout/loadout-utils';
+import { showNotification } from 'app/notifications/notifications';
+import { filterFactorySelector } from 'app/search/search-filter';
 import SearchBar from 'app/search/SearchBar';
 import { useSetting } from 'app/settings/hooks';
+import {
+  AppIcon,
+  faArrowCircleDown,
+  faEquals,
+  faRandom,
+  helpIcon,
+  plusIcon,
+} from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DimThunkDispatch } from 'app/store/types';
+import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { useEventBusListener } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import Sheet from '../dim-ui/Sheet';
-import { DimItem } from '../inventory/item-types';
-import { allItemsSelector, currentStoreSelector } from '../inventory/selectors';
-import { DimStore } from '../inventory/store-types';
-import { convertToLoadoutItem, newLoadout } from '../loadout/loadout-utils';
-import { showNotification } from '../notifications/notifications';
-import { filterFactorySelector } from '../search/search-filter';
-import { AppIcon, faArrowCircleDown, faEquals, faRandom, helpIcon, plusIcon } from '../shell/icons';
-import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { showInfuse$ } from './infuse';
 import './InfusionFinder.scss';
 

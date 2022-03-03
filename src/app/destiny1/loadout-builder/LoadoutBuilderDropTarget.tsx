@@ -1,7 +1,7 @@
+import { DimItem } from 'app/inventory/item-types';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import { DimItem } from '../../inventory/item-types';
 
 interface Props {
   bucketHash: number;

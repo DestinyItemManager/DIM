@@ -1,6 +1,6 @@
+import { AppIcon, thumbsDownIcon, thumbsUpIcon } from 'app/shell/icons';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
 import React from 'react';
-import { AppIcon, thumbsDownIcon, thumbsUpIcon } from '../shell/icons';
 import styles from './RatingIcon.m.scss';
 
 export default function RatingIcon({ uiWishListRoll }: { uiWishListRoll: UiWishListRoll }) {

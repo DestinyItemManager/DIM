@@ -1,7 +1,12 @@
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import type { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import type { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { getArtifactBonus } from 'app/inventory/stores-helpers';
+import { maxLightItemSet } from 'app/loadout/auto-loadouts';
+import type { DimLoadoutItem, Loadout } from 'app/loadout/loadout-types';
+import { getLight, getLoadoutStats } from 'app/loadout/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { powerActionIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
@@ -10,11 +15,6 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import type { InventoryBuckets } from '../../inventory/inventory-buckets';
-import type { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
-import { maxLightItemSet } from '../../loadout/auto-loadouts';
-import type { DimLoadoutItem, Loadout } from '../../loadout/loadout-types';
-import { getLight, getLoadoutStats } from '../../loadout/loadout-utils';
 
 function getItemsInListByCategory({
   buckets,

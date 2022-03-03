@@ -2,14 +2,14 @@ import { collapsedSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { postmasterAlmostFull, postmasterSpaceUsed, POSTMASTER_SIZE } from 'app/loadout/postmaster';
+import { toggleCollapsedSection } from 'app/settings/actions';
+import { AppIcon, collapseIcon, expandIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import '../dim-ui/CollapsibleTitle.scss';
-import { toggleCollapsedSection } from '../settings/actions';
-import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import './InventoryCollapsibleTitle.scss';
 
 interface Props {

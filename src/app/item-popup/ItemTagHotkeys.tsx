@@ -1,14 +1,14 @@
+import { Hotkey } from 'app/hotkeys/hotkeys';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
+import { setItemHashTag, setItemTag } from 'app/inventory/actions';
+import { itemTagList } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
 import { tagSelector } from 'app/inventory/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptyArray } from 'app/utils/empty';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import { useSelector } from 'react-redux';
-import { Hotkey } from '../hotkeys/hotkeys';
-import { setItemHashTag, setItemTag } from '../inventory/actions';
-import { itemTagList } from '../inventory/dim-item-info';
-import { DimItem } from '../inventory/item-types';
 
 interface Props {
   item: DimItem;

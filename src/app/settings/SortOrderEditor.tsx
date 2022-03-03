@@ -1,7 +1,3 @@
-import clsx from 'clsx';
-import _ from 'lodash';
-import React from 'react';
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import {
   AppIcon,
   dragHandleIcon,
@@ -9,7 +5,11 @@ import {
   moveDownIcon,
   moveUpIcon,
   unselectedCheckIcon,
-} from '../shell/icons';
+} from 'app/shell/icons';
+import clsx from 'clsx';
+import _ from 'lodash';
+import React from 'react';
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import './SortOrderEditor.scss';
 
 export interface SortProperty {

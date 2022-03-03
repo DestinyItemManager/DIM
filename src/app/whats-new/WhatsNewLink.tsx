@@ -1,12 +1,12 @@
 import { t } from 'app/i18next-t';
+import { dimNeedsUpdate$, reloadDIM } from 'app/register-service-worker';
+import { AppIcon, updateIcon } from 'app/shell/icons';
 import { bungieAlertsSelector } from 'app/shell/selectors';
 import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { useSubscription } from 'use-subscription';
-import { dimNeedsUpdate$, reloadDIM } from '../register-service-worker';
-import { AppIcon, updateIcon } from '../shell/icons';
 import { GlobalAlertLevelsToToastLevels } from './BungieAlerts';
 import { DimVersions } from './versions';
 import styles from './WhatsNewLink.m.scss';

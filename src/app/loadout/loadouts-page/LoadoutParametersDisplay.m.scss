@@ -6,14 +6,14 @@
 }
 
 .loStats {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   align-items: center;
   width: 100%;
   @include horizontal-space-children(8px);
 }
 
 .loStat {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   align-items: center;
   font-weight: bold;
   font-size: 11px;

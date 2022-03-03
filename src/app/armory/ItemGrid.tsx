@@ -2,11 +2,11 @@
  * A simple item grid that manages its own item popup separate from the global popup. Useful for showing items within a sheet.
  */
 
+import { DimItem } from 'app/inventory/item-types';
 import ItemPopup from 'app/item-popup/ItemPopup';
 import ConnectedInventoryItem from 'app/item/ConnectedInventoryItem';
 import React, { useCallback, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { DimItem } from '../inventory/item-types';
 
 interface PopupState {
   item: DimItem;

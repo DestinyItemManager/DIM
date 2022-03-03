@@ -6,7 +6,7 @@
 }
 
 .title {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   color: rgb(255, 255, 255);
   font-size: 16px;
   text-transform: uppercase;

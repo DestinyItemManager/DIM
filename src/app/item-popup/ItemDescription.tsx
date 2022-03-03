@@ -4,9 +4,9 @@ import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { wishListSelector } from 'app/wishlists/selectors';
+import ishtarLogo from 'images/ishtar-collective.svg';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import ishtarLogo from '../../images/ishtar-collective.svg';
 import styles from './ItemDescription.m.scss';
 import NotesArea from './NotesArea';
 

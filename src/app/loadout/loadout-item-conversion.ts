@@ -1,11 +1,11 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { DimItem } from 'app/inventory/item-types';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import { emptyArray } from 'app/utils/empty';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
-import { DimItem } from '../inventory/item-types';
 import { DimLoadoutItem, LoadoutItem } from './loadout-types';
 import { findItemForLoadout } from './loadout-utils';
 

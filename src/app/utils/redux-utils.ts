@@ -1,5 +1,5 @@
+import store from 'app/store/store';
 import { RootState } from 'app/store/types';
-import store from '../store/store';
 
 /**
  * Add an observer to a Redux store. Whenever the data selected by the selector parameter

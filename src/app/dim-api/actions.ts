@@ -1,9 +1,16 @@
 import { DeleteAllResponse } from '@destinyitemmanager/dim-api-types';
 import { needsDeveloper } from 'app/accounts/actions';
 import { compareAccounts } from 'app/accounts/destiny-account';
+import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
+import {
+  deleteAllData,
+  getDimApiProfile,
+  getGlobalSettings,
+  postUpdates,
+} from 'app/dim-api/dim-api';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { initialSettingsState, Settings } from 'app/settings/initial-settings';
@@ -12,19 +19,12 @@ import { refresh$ } from 'app/shell/refresh-events';
 import { get, set } from 'app/storage/idb-keyval';
 import { RootState, ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
+import { observeStore } from 'app/utils/redux-utils';
 import { delay } from 'app/utils/util';
 import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { getPlatforms } from '../accounts/platforms';
-import {
-  deleteAllData,
-  getDimApiProfile,
-  getGlobalSettings,
-  postUpdates,
-} from '../dim-api/dim-api';
-import { observeStore } from '../utils/redux-utils';
 import { promptForApiPermission } from './api-permission-prompt';
 import { ProfileUpdateWithRollback } from './api-types';
 import {

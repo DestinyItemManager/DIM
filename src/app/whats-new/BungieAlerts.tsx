@@ -1,8 +1,8 @@
+import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import { bungieAlertsSelector } from 'app/shell/selectors';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import ExternalLink from '../dim-ui/ExternalLink';
 import './BungieAlerts.scss';
 
 // http://destinydevs.github.io/BungieNetPlatform/docs/Enums

@@ -1,4 +1,5 @@
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import {
   calculateAssumedItemEnergy,
   isArmorEnergyLocked,
@@ -6,6 +7,7 @@ import {
 import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
 import { MAX_ARMOR_ENERGY_CAPACITY, modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
+import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import {
   DestinyClass,
   DestinyEnergyType,
@@ -14,11 +16,6 @@ import {
 import { StatHashes } from 'data/d2/generated-enums';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
-import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
-import {
-  getModTypeTagByPlugCategoryHash,
-  getSpecialtySocketMetadatas,
-} from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
 import { ArmorSet, ArmorStats, MIN_LO_ITEM_ENERGY } from '../types';
 

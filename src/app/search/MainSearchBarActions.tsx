@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { toggleSearchResults } from 'app/shell/actions';
 import { AppIcon, faList } from 'app/shell/icons';
 import { querySelector, searchResultsOpenSelector } from 'app/shell/selectors';
@@ -8,7 +9,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
-import { DimItem } from '../inventory/item-types';
 import styles from './MainSearchBarActions.m.scss';
 import { filteredItemsSelector, validateQuerySelector } from './search-filter';
 import './search-filter.scss';

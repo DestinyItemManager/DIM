@@ -1,17 +1,17 @@
 import { settingSelector } from 'app/dim-api/selectors';
+import FileUpload from 'app/dim-ui/FileUpload';
+import HelpLink from 'app/dim-ui/HelpLink';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { clearWishLists } from 'app/wishlists/actions';
+import { wishListsLastFetchedSelector, wishListsSelector } from 'app/wishlists/selectors';
 import { fetchWishList, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
 import { toWishList } from 'app/wishlists/wishlist-file';
 import React, { useEffect, useState } from 'react';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import { isUri } from 'valid-url';
-import FileUpload from '../dim-ui/FileUpload';
-import HelpLink from '../dim-ui/HelpLink';
-import { clearWishLists } from '../wishlists/actions';
-import { wishListsLastFetchedSelector, wishListsSelector } from '../wishlists/selectors';
 
 // config/content-security-policy.js must be edited alongside this list
 export const wishListAllowedPrefixes = [

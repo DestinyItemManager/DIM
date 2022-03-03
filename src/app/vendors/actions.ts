@@ -1,11 +1,11 @@
 import { XurLocation, XurLocationResponse } from '@d2api/d2api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { getVendors as getVendorsApi } from 'app/bungie-api/destiny2-api';
 import { VENDORS } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
 import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import { createAction } from 'typesafe-actions';
-import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
 
 export const loadedAll = createAction('vendors/LOADED_ALL')<{
   characterId: string;

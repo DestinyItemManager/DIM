@@ -1,7 +1,7 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { DestinyObjectiveDefinition } from 'bungie-api-ts/destiny2';
 import React from 'react';
-import BungieImage from '../dim-ui/BungieImage';
 
 export default function ObjectiveDescription({
   progressDescription,

@@ -18,7 +18,7 @@
 }
 
 .twitterLinks {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   flex-wrap: wrap;
   @include horizontal-space-children(8px);
   gap: 8px 0;

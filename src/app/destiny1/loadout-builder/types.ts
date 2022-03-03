@@ -1,6 +1,6 @@
+import { D1GridNode, D1Item } from 'app/inventory/item-types';
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { D1GridNode, D1Item } from '../../inventory/item-types';
 
 export interface D1ItemWithNormalStats extends D1Item {
   normalStats?: {

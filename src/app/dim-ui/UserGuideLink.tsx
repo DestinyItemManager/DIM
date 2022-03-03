@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
+import { AppIcon, helpIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import React from 'react';
-import { AppIcon, helpIcon } from '../shell/icons';
 import ExternalLink from './ExternalLink';
 
 /**

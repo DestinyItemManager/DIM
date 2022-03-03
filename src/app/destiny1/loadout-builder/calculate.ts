@@ -1,10 +1,10 @@
+import { D1Item } from 'app/inventory/item-types';
+import { D1Store } from 'app/inventory/store-types';
 import { infoLog } from 'app/utils/log';
 import disciplineIcon from 'images/discipline.png';
 import intellectIcon from 'images/intellect.png';
 import strengthIcon from 'images/strength.png';
 import _ from 'lodash';
-import { D1Item } from '../../inventory/item-types';
-import { D1Store } from '../../inventory/store-types';
 import {
   ArmorSet,
   ArmorTypes,

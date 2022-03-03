@@ -1,8 +1,15 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import CheckButton from 'app/dim-ui/CheckButton';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
+import {
+  bucketsSelector,
+  ownedItemsSelector,
+  profileResponseSelector,
+} from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
@@ -13,13 +20,6 @@ import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { DestinyAccount } from '../accounts/destiny-account';
-import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import {
-  bucketsSelector,
-  ownedItemsSelector,
-  profileResponseSelector,
-} from '../inventory/selectors';
 import PresentationNodeRoot from './PresentationNodeRoot';
 import styles from './Records.m.scss';
 

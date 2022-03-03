@@ -2,7 +2,7 @@
 
 .buttons {
   composes: item-details from global;
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   @include horizontal-space-children(8px);
 }
 

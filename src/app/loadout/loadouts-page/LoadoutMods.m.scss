@@ -27,7 +27,7 @@
 }
 
 .pickModButton {
-  composes: resetButton from '../../dim-ui/common.m.scss';
+  composes: resetButton from 'app/dim-ui/common.m.scss';
   color: #999;
   border: 1px solid white;
   height: var(--item-icon-size);

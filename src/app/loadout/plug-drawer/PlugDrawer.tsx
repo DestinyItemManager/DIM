@@ -1,4 +1,5 @@
 import { languageSelector } from 'app/dim-api/selectors';
+import Sheet from 'app/dim-ui/Sheet';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { createPlugSearchPredicate } from 'app/search/plug-search';
@@ -10,7 +11,6 @@ import { produce } from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import Footer from './Footer';
 import PlugSection, { PlugSet } from './PlugSection';

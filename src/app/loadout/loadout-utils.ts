@@ -1,6 +1,8 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
@@ -20,8 +22,6 @@ import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/dest
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import { D2Categories } from '../destiny2/d2-bucket-categories';
-import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { DimLoadoutItem, Loadout, LoadoutItem } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics

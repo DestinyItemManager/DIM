@@ -1,9 +1,9 @@
+import { DimItem } from 'app/inventory/item-types';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import { DimItem } from '../../inventory/item-types';
 
 interface Props {
   className?: string;

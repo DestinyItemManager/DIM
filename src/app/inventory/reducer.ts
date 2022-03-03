@@ -1,3 +1,5 @@
+import { setCurrentAccount } from 'app/accounts/actions';
+import type { AccountsAction } from 'app/accounts/reducer';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { warnLog } from 'app/utils/log';
 import {
@@ -11,8 +13,6 @@ import produce, { Draft, original } from 'immer';
 import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
-import { setCurrentAccount } from '../accounts/actions';
-import type { AccountsAction } from '../accounts/reducer';
 import * as actions from './actions';
 import { mergeCollectibles } from './d2-stores';
 import { InventoryBuckets } from './inventory-buckets';

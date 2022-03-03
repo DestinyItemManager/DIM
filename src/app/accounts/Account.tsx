@@ -1,6 +1,6 @@
+import { AppIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import React from 'react';
-import { AppIcon } from '../shell/icons';
 import styles from './Account.m.scss';
 import { DestinyAccount, PLATFORM_ICONS } from './destiny-account';
 

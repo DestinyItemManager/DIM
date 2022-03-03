@@ -1,5 +1,5 @@
 .exoticArmorChoice {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   align-items: center;
   width: 100%;
   position: relative;

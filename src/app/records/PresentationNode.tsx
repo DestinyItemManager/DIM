@@ -1,14 +1,14 @@
 import { settingSelector } from 'app/dim-api/selectors';
+import BungieImage from 'app/dim-ui/BungieImage';
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { percent } from 'app/shell/filters';
+import { AppIcon, collapseIcon, expandIcon } from 'app/shell/icons';
 import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { deepEqual } from 'fast-equals';
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import BungieImage from '../dim-ui/BungieImage';
-import { percent } from '../shell/filters';
-import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import { DimPresentationNode } from './presentation-nodes';
 import './PresentationNode.scss';
 import PresentationNodeLeaf from './PresentationNodeLeaf';

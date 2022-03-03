@@ -4,13 +4,13 @@ import {
   LockArmorEnergyType,
 } from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
 import { editLoadout } from 'app/loadout/loadout-events';
 import { DimLoadoutItem, Loadout } from 'app/loadout/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
 import React, { Dispatch, useMemo } from 'react';
-import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet, ArmorStatHashes, MIN_LO_ITEM_ENERGY, PinnedItems } from '../types';
 import { getPower } from '../utils';

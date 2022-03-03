@@ -1,10 +1,10 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ALL_TRAIT } from 'app/search/d2-known-values';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import masterworkOverlay from 'images/masterwork-metric.png';
 import React from 'react';
-import BungieImage from '../dim-ui/BungieImage';
 import styles from './MetricBanner.m.scss';
 
 interface Props {

@@ -1,9 +1,9 @@
 import { getBungieNetSettings } from 'app/bungie-api/bungie-core-api';
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ThunkResult } from 'app/store/types';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { createAction } from 'typesafe-actions';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 
 export const setD2Manifest = createAction('manifest/D2')<D2ManifestDefinitions>();
 export const setD1Manifest = createAction('manifest/D1')<D1ManifestDefinitions>();

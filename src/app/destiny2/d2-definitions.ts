@@ -1,4 +1,6 @@
 import { generateConversionTable } from 'app/dim-ui/rich-destiny-text';
+import { setD2Manifest } from 'app/manifest/actions';
+import { getManifest } from 'app/manifest/manifest-service-json';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { reportException } from 'app/utils/exceptions';
@@ -44,8 +46,6 @@ import {
   DestinyVendorGroupDefinition,
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import { setD2Manifest } from '../manifest/actions';
-import { getManifest } from '../manifest/manifest-service-json';
 import { HashLookupFailure, ManifestDefinitions } from './definitions';
 
 const lazyTables = [

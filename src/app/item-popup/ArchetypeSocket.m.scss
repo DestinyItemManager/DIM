@@ -25,7 +25,7 @@
 }
 
 .row {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   align-items: flex-start;
   padding: 6px 10px;
   margin-bottom: 4px;

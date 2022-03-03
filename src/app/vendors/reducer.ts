@@ -1,9 +1,9 @@
 import { XurLocation } from '@d2api/d2api-types';
+import { setCurrentAccount } from 'app/accounts/actions';
+import type { AccountsAction } from 'app/accounts/reducer';
 import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
-import { setCurrentAccount } from '../accounts/actions';
-import type { AccountsAction } from '../accounts/reducer';
 import * as actions from './actions';
 
 // TODO: This may really belong in InventoryState

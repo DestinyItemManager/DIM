@@ -1,9 +1,9 @@
+import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import PressTip from 'app/dim-ui/PressTip';
+import { D1GridNode, DimGridNode, DimItem } from 'app/inventory/item-types';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { memo } from 'react';
-import { bungieNetPath } from '../dim-ui/BungieImage';
-import PressTip from '../dim-ui/PressTip';
-import { D1GridNode, DimGridNode, DimItem } from '../inventory/item-types';
 import './ItemTalentGrid.scss';
 
 interface ProvidedProps {

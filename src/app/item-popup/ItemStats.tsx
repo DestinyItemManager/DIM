@@ -1,7 +1,7 @@
+import { DimItem, DimStat } from 'app/inventory/item-types';
 import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React from 'react';
-import { DimItem, DimStat } from '../inventory/item-types';
 import ItemStat, { D1QualitySummaryStat, isD1Stat } from './ItemStat';
 import styles from './ItemStats.m.scss';
 

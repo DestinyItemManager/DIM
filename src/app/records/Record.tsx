@@ -1,8 +1,11 @@
 import { trackTriumph } from 'app/dim-api/basic-actions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
+import BungieImage from 'app/dim-ui/BungieImage';
+import ExternalLink from 'app/dim-ui/ExternalLink';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
+import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
 import { percent } from 'app/shell/filters';
 import { RootState } from 'app/store/types';
@@ -17,14 +20,11 @@ import {
 import clsx from 'clsx';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
+import ishtarIcon from 'images/ishtar-collective.svg';
 import trackedIcon from 'images/trackedIcon.svg';
 import _ from 'lodash';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ishtarIcon from '../../images/ishtar-collective.svg';
-import BungieImage from '../dim-ui/BungieImage';
-import ExternalLink from '../dim-ui/ExternalLink';
-import Objective from '../progress/Objective';
 import { DimRecord } from './presentation-nodes';
 import styles from './Record.m.scss';
 

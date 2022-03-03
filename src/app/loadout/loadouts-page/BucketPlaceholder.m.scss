@@ -17,7 +17,7 @@
 }
 
 .clickable {
-  composes: resetButton from '../../dim-ui/common.m.scss';
+  composes: resetButton from 'app/dim-ui/common.m.scss';
   &:focus {
     border-color: $orange;
   }

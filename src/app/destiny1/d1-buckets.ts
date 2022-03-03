@@ -1,13 +1,13 @@
-import { D1BucketHashes } from 'app/search/d1-known-values';
-import { BucketCategory } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import type {
   D1BucketCategory,
   DimBucketType,
   InventoryBucket,
   InventoryBuckets,
-} from '../inventory/inventory-buckets';
+} from 'app/inventory/inventory-buckets';
+import { D1BucketHashes } from 'app/search/d1-known-values';
+import { BucketCategory } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import { D1Categories } from './d1-bucket-categories';
 import type { D1ManifestDefinitions } from './d1-definitions';
 

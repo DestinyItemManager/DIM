@@ -1,5 +1,5 @@
-import { setPhonePortrait } from '../shell/actions';
-import store from '../store/store';
+import { setPhonePortrait } from 'app/shell/actions';
+import store from 'app/store/store';
 
 // This seems like a good breakpoint for portrait based on https://material.io/devices/
 // We can't use orientation:portrait because Android Chrome messes up when the keyboard is shown: https://www.chromestatus.com/feature/5656077370654720

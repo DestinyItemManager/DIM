@@ -1,5 +1,9 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
 import { DimError } from 'app/utils/dim-error';
+import { reportException } from 'app/utils/exceptions';
 import { errorLog } from 'app/utils/log';
 import {
   AwaAuthorizationResult,
@@ -32,10 +36,6 @@ import {
   transferItem,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
-import { reportException } from '../utils/exceptions';
 import {
   authenticatedHttpClient,
   handleUniquenessViolation,

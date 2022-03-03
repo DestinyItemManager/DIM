@@ -1,3 +1,4 @@
+import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { useDynamicStringReplacer } from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -5,7 +6,6 @@ import { DestinyProgression } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
-import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import CompletionCheckbox from './CompletionCheckbox';
 import styles from './CrucibleRank.m.scss';
 

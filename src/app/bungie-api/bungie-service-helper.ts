@@ -1,12 +1,12 @@
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
 import { showNotification } from 'app/notifications/notifications';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 import _ from 'lodash';
-import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
 import { fetchWithBungieOAuth } from './authenticated-fetch';
 import { API_KEY } from './bungie-api-utils';
 import {

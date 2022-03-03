@@ -1,14 +1,14 @@
 import { XurLocation } from '@d2api/d2api-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import BungieImage from 'app/dim-ui/BungieImage';
+import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import Countdown from 'app/dim-ui/Countdown';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import BungieImage from '../dim-ui/BungieImage';
-import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
-import Countdown from '../dim-ui/Countdown';
 import { D2Vendor } from './d2-vendors';
 import styles from './Vendor.m.scss';
 import VendorItems from './VendorItems';

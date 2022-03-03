@@ -1,9 +1,9 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import { ownedItemsSelector } from 'app/inventory/selectors';
+import styles from 'app/vendors/VendorItems.m.scss';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import BungieImage from '../../dim-ui/BungieImage';
-import styles from '../../vendors/VendorItems.m.scss';
 import D1VendorItem from './D1VendorItem';
 import { Vendor, VendorCost } from './vendor.service';
 

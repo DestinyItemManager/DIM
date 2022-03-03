@@ -1,5 +1,8 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { Vendor } from 'app/destiny1/vendors/vendor.service';
 import { t } from 'app/i18next-t';
+import { D1Item, DimItem } from 'app/inventory/item-types';
+import { D1Store } from 'app/inventory/store-types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import {
@@ -8,9 +11,6 @@ import {
   ServerResponse,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { DestinyAccount } from '../accounts/destiny-account';
-import { D1Item, DimItem } from '../inventory/item-types';
-import { D1Store } from '../inventory/store-types';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 import { authenticatedHttpClient, handleUniquenessViolation } from './bungie-service-helper';
 

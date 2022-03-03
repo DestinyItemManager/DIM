@@ -1,5 +1,5 @@
 .path {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   list-style: none;
   padding: 0;
   margin: 16px 0 0 0;

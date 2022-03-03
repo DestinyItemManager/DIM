@@ -1,15 +1,15 @@
+import { accounts } from 'app/accounts/reducer';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { compare } from 'app/compare/reducer';
+import { dimApi, DimApiState, initialState as dimApiInitialState } from 'app/dim-api/reducer';
+import { farming } from 'app/farming/reducer';
+import { inventory } from 'app/inventory/reducer';
+import { loadouts } from 'app/loadout/reducer';
+import { manifest } from 'app/manifest/reducer';
+import { shell } from 'app/shell/reducer';
 import { vendors } from 'app/vendors/reducer';
+import { wishLists } from 'app/wishlists/reducer';
 import { combineReducers, Reducer } from 'redux';
-import { accounts } from '../accounts/reducer';
-import { compare } from '../compare/reducer';
-import { dimApi, DimApiState, initialState as dimApiInitialState } from '../dim-api/reducer';
-import { farming } from '../farming/reducer';
-import { inventory } from '../inventory/reducer';
-import { loadouts } from '../loadout/reducer';
-import { manifest } from '../manifest/reducer';
-import { shell } from '../shell/reducer';
-import { wishLists } from '../wishlists/reducer';
 import { RootState } from './types';
 
 const reducer: Reducer<RootState> = (state, action) => {

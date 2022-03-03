@@ -1,7 +1,7 @@
 @import '../variables.scss';
 
 .guide {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   flex-wrap: wrap;
   margin: 8px 0;
   @include phone-portrait {
@@ -10,7 +10,7 @@
 }
 
 .pill {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   align-items: center;
   background: rgba(0, 0, 0, 0.4);
   border-radius: 12px;

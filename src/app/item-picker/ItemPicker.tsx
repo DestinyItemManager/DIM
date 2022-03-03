@@ -1,20 +1,20 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector } from 'app/inventory/selectors';
 import ConnectedInventoryItem from 'app/item/ConnectedInventoryItem';
 import { ItemFilter } from 'app/search/filter-types';
+import { filterFactorySelector } from 'app/search/search-filter';
 import SearchBar from 'app/search/SearchBar';
+import { itemSortOrderSelector } from 'app/settings/item-sort';
+import { sortItems } from 'app/shell/filters';
 import { RootState } from 'app/store/types';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { createSelector } from 'reselect';
-import Sheet from '../dim-ui/Sheet';
-import { DimItem } from '../inventory/item-types';
-import { allItemsSelector } from '../inventory/selectors';
-import { filterFactorySelector } from '../search/search-filter';
-import { itemSortOrderSelector } from '../settings/item-sort';
-import { sortItems } from '../shell/filters';
 import { ItemPickerState } from './item-picker';
 import './ItemPicker.scss';
 

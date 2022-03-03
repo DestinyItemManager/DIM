@@ -1,6 +1,6 @@
+import HelpLink from 'app/dim-ui/HelpLink';
 import Switch from 'app/dim-ui/Switch';
 import React from 'react';
-import HelpLink from '../dim-ui/HelpLink';
 import { Settings } from './initial-settings';
 
 export default function Checkbox({

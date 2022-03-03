@@ -1,11 +1,11 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { refresh$ } from 'app/shell/refresh-events';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { queueAction } from 'app/utils/action-queue';
 import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyComponentType } from 'bungie-api-ts/destiny2';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { queueAction } from '../../utils/action-queue';
 import { loadStores as d1LoadStores } from '../d1-stores';
 import { loadStores as d2LoadStores } from '../d2-stores';
 import { storesLoadedSelector } from '../selectors';

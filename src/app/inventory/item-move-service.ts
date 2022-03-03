@@ -1,8 +1,22 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import {
+  equip as d1equip,
+  equipItems as d1EquipItems,
+  setItemState as d1SetItemState,
+  transfer as d1Transfer,
+} from 'app/bungie-api/destiny1-api';
+import {
+  equip as d2equip,
+  equipItems as d2EquipItems,
+  setLockState as d2SetLockState,
+  setTrackedState as d2SetTrackedState,
+  transfer as d2Transfer,
+} from 'app/bungie-api/destiny2-api';
 import { t } from 'app/i18next-t';
 import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken, neverCanceled } from 'app/utils/cancel';
+import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
@@ -12,20 +26,6 @@ import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import {
-  equip as d1equip,
-  equipItems as d1EquipItems,
-  setItemState as d1SetItemState,
-  transfer as d1Transfer,
-} from '../bungie-api/destiny1-api';
-import {
-  equip as d2equip,
-  equipItems as d2EquipItems,
-  setLockState as d2SetLockState,
-  setTrackedState as d2SetTrackedState,
-  transfer as d2Transfer,
-} from '../bungie-api/destiny2-api';
-import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { itemLockStateChanged, itemMoved } from './actions';
 import {
   characterDisplacePriority,

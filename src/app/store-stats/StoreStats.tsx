@@ -1,8 +1,8 @@
 import type { DimStore } from 'app/inventory/store-types';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { LoadoutStats, PowerFormula } from 'app/store-stats/CharacterStats';
 import clsx from 'clsx';
 import React from 'react';
-import { LoadoutStats, PowerFormula } from '../store-stats/CharacterStats';
 import AccountCurrencies from './AccountCurrencies';
 import D1CharacterStats from './D1CharacterStats';
 import styles from './StoreStats.m.scss';

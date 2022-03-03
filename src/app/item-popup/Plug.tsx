@@ -1,15 +1,15 @@
+import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { DefItemIcon } from 'app/item/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
+import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import PressTip from '../dim-ui/PressTip';
-import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
 import './ItemSockets.scss';
 import { DimPlugTooltip } from './PlugTooltip';
 

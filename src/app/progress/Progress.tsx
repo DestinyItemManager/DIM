@@ -1,7 +1,11 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
+import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
@@ -21,10 +25,6 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { motion, PanInfo } from 'framer-motion';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { DestinyAccount } from '../accounts/destiny-account';
-import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
-import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import '../records/PresentationNode.scss';
 import Milestones from './Milestones';
 import './progress.scss';

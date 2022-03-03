@@ -1,5 +1,6 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import Sockets from 'app/loadout/loadouts-page/Sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -10,7 +11,6 @@ import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch } from 'react';
-import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import styles from './GeneratedSetItem.m.scss';

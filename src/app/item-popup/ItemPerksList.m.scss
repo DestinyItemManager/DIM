@@ -6,7 +6,7 @@
 }
 
 .socket {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   align-items: flex-start;
   border-bottom: 1px solid #333;
   padding: 6px 10px;
@@ -22,7 +22,7 @@
 }
 
 .plug {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from 'app/dim-ui/common.m.scss';
   align-items: flex-start;
   margin-right: 1em;
   cursor: pointer;
@@ -73,7 +73,7 @@
 }
 
 .perkInfo {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from 'app/dim-ui/common.m.scss';
   align-items: flex-start;
   margin-left: 6px;
   white-space: pre-wrap;

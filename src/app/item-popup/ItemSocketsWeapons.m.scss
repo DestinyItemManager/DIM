@@ -20,7 +20,7 @@
 }
 
 .displayStyleButton {
-  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: resetButton from 'app/dim-ui/common.m.scss';
   position: absolute;
   right: 10px;
   top: 8px;

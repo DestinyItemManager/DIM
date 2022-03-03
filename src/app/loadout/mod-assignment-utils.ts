@@ -1,6 +1,7 @@
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { calculateAssumedItemEnergy } from 'app/loadout-builder/armor-upgrade-utils';
 import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
 import {
   armor2PlugCategoryHashesByName,
@@ -23,7 +24,6 @@ import {
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { calculateAssumedItemEnergy } from '../loadout-builder/armor-upgrade-utils';
 import { generateModPermutations } from './mod-permutations';
 import {
   activityModPlugCategoryHashes,

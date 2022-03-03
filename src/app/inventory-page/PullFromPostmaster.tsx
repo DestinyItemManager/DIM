@@ -2,13 +2,13 @@ import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { pullablePostmasterItems, pullFromPostmaster } from 'app/loadout/postmaster';
+import { AppIcon, refreshIcon, sendIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
+import { queueAction } from 'app/utils/action-queue';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmaster';
-import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
-import { queueAction } from '../utils/action-queue';
 import styles from './PullFromPostmaster.m.scss';
 
 export function PullFromPostmaster({ store }: { store: DimStore }) {

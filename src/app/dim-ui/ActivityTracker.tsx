@@ -1,4 +1,7 @@
+import { isDragging$ } from 'app/item/drag-events';
 import { dimNeedsUpdate$, reloadDIM } from 'app/register-service-worker';
+import { loadingTracker } from 'app/shell/loading-tracker';
+import { refresh as triggerRefresh, refresh$ } from 'app/shell/refresh-events';
 import { hasSearchQuerySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -6,9 +9,6 @@ import { EventBus } from 'app/utils/observable';
 import { useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { isDragging$ } from '../item/drag-events';
-import { loadingTracker } from '../shell/loading-tracker';
-import { refresh as triggerRefresh, refresh$ } from '../shell/refresh-events';
 
 const globalSettingsSelector = (state: RootState) => state.dimApi.globalSettings;
 
