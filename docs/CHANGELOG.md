@@ -4,7 +4,8 @@
 * Old loadouts with void subclasses in them will upgrade automatically to the new version with fragments and aspects, instead of telling you the loadout is missing an item.
 * Removed D2Gunsmith link from the item details popup while they work on revamping the site for all the new changes.
 * The Item Feed is available on both desktop and mobile. It shows your gear in the order it dropped, and gives you quick controls to tag incoming loot. Click on the item tile to get the full item popup.
-* Tagging an item from the Item Feed also marks it as not-new.
+  * Item Feed also got better at identifying relevant weapon perks.
+  * Tagging an item from the Item Feed also marks it as not-new.
 * Added `deepsight:complete` and `deepsight:incomplete` filters.
 * Added `is:craftable` filter.
 * Season of the Risen War Table Upgrades are now in the right order and show their acquired status.
