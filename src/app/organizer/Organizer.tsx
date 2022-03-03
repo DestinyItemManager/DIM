@@ -85,6 +85,7 @@ export default function Organizer({ account }: Props) {
     firstRender.current = false;
 
     // We only want to do this when the search query changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   const onSelection = (selection: ItemCategoryTreeNode[]) => {

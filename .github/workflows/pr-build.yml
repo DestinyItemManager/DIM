@@ -48,8 +48,12 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Test
-        run: yarn test
+      - name: Jest Annotations & Coverage
+        uses: mattallty/jest-github-action@v1.0.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          coverage-comment: false
 
   lint:
     runs-on: ubuntu-latest
