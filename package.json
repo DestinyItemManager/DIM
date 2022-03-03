@@ -34,8 +34,7 @@
     "dead-code": "ts-unused-exports tsconfig.json --allowUnusedTypes --allowUnusedEnums --showLineNumber | grep -v cssExports",
     "bcu": "run-s bcu:*",
     "bcu:build": "node src/build-browsercheck-utils.js",
-    "bcu:pretty": "prettier --write src/browsercheck-utils.js",
-    "test-and-lint": "run-p test lintcached"
+    "bcu:pretty": "prettier --write src/browsercheck-utils.js"
   },
   "husky": {
     "hooks": {
