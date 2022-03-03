@@ -41,6 +41,14 @@
       "pre-commit": "pretty-quick --staged"
     }
   },
+  "bundlewatch": {
+    "files": [
+      {
+        "path": "dist/*.js",
+        "maxSize": "100kB"
+      }
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/DestinyItemManager/DIM.git"
@@ -101,6 +109,7 @@
     "babel-plugin-optimize-clsx": "^2.5.0",
     "babel-plugin-transform-imports": "^2.0.0",
     "browserslist": "^4.0.0",
+    "bundlewatch": "^0.3.3",
     "clean-webpack-plugin": "^4.0.0",
     "compression-webpack-plugin": "^9.2.0",
     "content-security-policy-builder": "^2.0.0",
