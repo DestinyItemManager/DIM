@@ -8,6 +8,7 @@
   * Tagging an item from the Item Feed also marks it as not-new.
 * Added `deepsight:complete` and `deepsight:incomplete` filters.
 * Added `is:craftable` filter.
+* Added `is:wishlistunknown` filter which highlights items that have no rolls in the currently loaded wishlist.
 * Season of the Risen War Table Upgrades are now in the right order and show their acquired status.
 * Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
 * We have brand new Loadout Editor! Check it out from the character menu or the Loadouts page.

@@ -10,7 +10,7 @@ export const wishListsSelector = (state: RootState) => state.wishLists;
 export const wishListsLastFetchedSelector = (state: RootState) =>
   wishListsSelector(state).lastFetched;
 
-const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
+export const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
   _.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash)
 );
 
