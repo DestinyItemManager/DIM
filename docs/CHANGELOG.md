@@ -1,14 +1,13 @@
 ## Next
 
-* Fix applying D1 loadouts.
-* `inloadout:` filter now matches partial loadout names -- use `inloadout:"pvp"` for items in loadouts where "pvp" is in the loadout's name.
-* Fashion is now applied to items in a loadout.
-* You can now change the Aeon sect mod through the item popup.
-* You can now edit your equipped Emotes from DIM. You can't add them to loadouts... yet.
-* There's a good chance craftable items will display correctly in DIM. No promises though.
-* Fix issue where Loadout Optimizer armor upgrade settings were not being migrated from existing loadouts.
-* Clan Banners are no longer shown in DIM.
-* Weapon compare sheet now includes a button to compare with other legendary weapons of the same category, excluding exotics.
+* When you have 10 or more loadouts, a search box will appear in the Inventory page loadout dropdown, allowing you to search names just like on the Loadouts page.
+* Old loadouts with void subclasses in them will upgrade automatically to the new version with fragments and aspects, instead of telling you the loadout is missing an item.
+* Removed D2Gunsmith link from the item details popup while they work on revamping the site for all the new changes.
+* The Item Feed is available on both desktop and mobile. It shows your gear in the order it dropped, and gives you quick controls to tag incoming loot. Click on the item tile to get the full item popup.
+* Tagging an item from the Item Feed also marks it as not-new.
+* Added `deepsight:complete` and `deepsight:incomplete` filters.
+* Added `is:craftable` filter.
+* Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
 * We have brand new Loadout Editor! Check it out from the character menu or the Loadouts page.
   * The layout mirrors the Loadout page's new design which has clear areas for different types of items. Each section also has a menu of additional actions like re-syncing from your currently equipped items, or clearing out a whole section.
   * As part of this change, we're removing support for "multi-class" loadouts. Loadouts will either be tied to one class, or can be toggled to "Any Class". "Any Class" loadouts cannot contain Subclass, Armor, or Fashion. If you edit an existing "Any Class" loadout and save it, those items will be removed unless you turn off "Any Class".
@@ -17,6 +16,42 @@
   * With this new design we have space to add even more loadout editing tools over the next few seasons.
   * The loadout editor stays open if you navigate to the Inventory or Loadouts screen while it's already open.
   * The new Loadout Editor is not available for D1.
+
+## 7.7.0 <span class="changelog-date">(2022-02-28)</span>
+
+* Increased the strings we search through when filtering by mods/perks.
+* Crafted weapons' levels and level progress are now shown on the item popup.
+* Added `is:crafted` and `is:deepsight` filters.
+* Crafting materials are now included in the currency counter. Tap and hold, or hover, the consumables count in the vault header to check them.
+* Fixed a bug where "Use Equipped" would not update fashion in existing loadout.
+
+## 7.6.0 <span class="changelog-date">(2022-02-21)</span>
+
+* Fix applying D1 loadouts.
+* `inloadout:` filter now matches partial loadout names -- use `inloadout:"pvp"` for items in loadouts where "pvp" is in the loadout's name.
+* If your loadout includes ornaments, items are shown as if they had the loadout applied in the loadout page and loadout editor.
+* You can now change the Aeon sect mod through the item popup.
+* You can now edit your equipped Emotes from DIM. You can't add them to loadouts... yet.
+* Fix issue where Loadout Optimizer armor upgrade settings were not being migrated from existing loadouts.
+* Clan Banners are no longer shown in DIM.
+* Weapon compare sheet now includes a button to compare with other legendary weapons of the same category, excluding exotics.
+* Armor in collections now displays its collections stat roll.
+* Fix issues with button text wrapping in some languages.
+* Fix potential element blurriness in Edge browser.
+* Fix for Loadout Optimizer suggesting armor with insufficient energy.
+* Fix a clash between `power:1234` and `is:power` filters.
+* Loadout Optimizer is now a little more thorough in preventing an item from being both pinned and excluded.
+
+### Witch Queen updates
+
+* There's a good chance crafted items will display correctly in DIM. No promises though.
+* Prepare Records page for a new section featuring craftable items.
+
+### Beta Only
+
+* Loadout Editor
+  * Fix issue where subclasses were counted as general items when dropping into a loadout or filling general from equipped.
+  * Allow removal of a single mod through the editor display.
 
 ## 7.5.1 <span class="changelog-date">(2022-02-14)</span>
 

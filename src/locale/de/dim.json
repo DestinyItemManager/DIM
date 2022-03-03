@@ -195,6 +195,7 @@
     "CurrentClass": "Zeigt Gegenstände an, die auf dem derzeit eingeloggten Hüter ausrüstbar sind.",
     "CustomStatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs, wobei nur die Werte in der benutzerdefinierten Statistik-Gesamtliste dieser Klasse berücksichtigt werden.",
     "DamageType": "Zeigt Gegenstände basierend auf deren Schadenstyp.",
+    "Deepsight": "Zeigt Waffen mit Tiefensicht-Resonanz, die auf Materialien abgestimmt werden können.",
     "Description": "Beschreibung",
     "Dupe": "Zeigt doppelte Gegenstände, einschließlich Neuveröffentlichungen",
     "DupeCount": "Gegenstände, die die angegebene Anzahl an Duplikaten haben.",
@@ -213,6 +214,7 @@
     "InLoadout": "Zeigt Gegenstände, welche in einer Ausrüstung verwendet werden.",
     "Infusable": "Zeigt Gegenstände, die infundiert werden können.",
     "InfusionFodder": "Zeigt Gegenstände, die für Glimmer, in einen gleichen Gegenstand, mit nicht so viel Power, infundiert werden können.",
+    "IsCrafted": "Zeigt Waffen, die hergestellt wurden.",
     "IsSunset": "Zeigt Gegenstände die gesunsetted sind und nicht mehr auf das maximale Powerlevel infundiert werden können.",
     "ItemHash": "Zeigt die Items mit dem angegebenen Inventar-Item Hash. Für fortgeschrittene Benutzer.",
     "ItemId": "Zeigt das Item mit der angegebenen Inventar-Item-ID. Für fortgeschrittene Benutzer.",
@@ -542,8 +544,10 @@
     "ArmorMods": "Rüstungs-Mods",
     "AssumeMaxWeapons": "Annahme von Waffen mit maximalem Powerlevel",
     "Before": "Bevor '{{name}}'",
-    "CannotCustomizeSubclass": "Die Konfiguration eines Licht-Fokus kann nicht angepasst werden",
+    "CannotCustomizeSubclass": "Diese Unterklasse kann nicht konfiguriert werden",
     "ChooseItem": "{{name}} hinzufügen",
+    "ClassTypeMismatch": "Ein {{className}}-Gegenstand kann dieser Ausrüstung nicht hinzugefügt werden",
+    "ClassTypeMissing": "Du besitzt keinen {{className}}, für den du eine Ausrüstung erstellen könntest",
     "Classified": "Einige deiner Gegenstände sind klassifiziert und können nicht in die Max-Power-Berechnung einbezogen werden.",
     "ClearLoadoutParameters": "Ausrüstungs-Optimierer-Einstellungen entfernen",
     "ClearSection": "Alle entfernen",
@@ -710,7 +714,8 @@
       "Untracked": "Unverfolgt"
     },
     "TriageTab": "Vorselektieren",
-    "Vault": "Tresor"
+    "Vault": "Tresor",
+    "WeaponLevel": "Waffen-Level {{level}}"
   },
   "Notes": {
     "Error": "Fehler! Max 120 Zeichen für Notizen.",

@@ -191,6 +191,16 @@ export const armorBuckets = {
   classitem: BucketHashes.ClassArmor,
 };
 
+// these aren't really normal equipment,
+// like you can have 1 equipped but it's glued to the character.
+// this array is used to prevent them from
+// having normal equipment sidecar buttons
+export const uniqueEquipBuckets = [
+  BucketHashes.SeasonalArtifact,
+  BucketHashes.Emotes_Invisible,
+  BucketHashes.Finishers,
+];
+
 //
 // PRESENTATION NODE KNOWN VALUES
 //
@@ -261,4 +271,5 @@ export const modsWithConditionalStats = {
   radiantLight: 2979815167,
   chargeHarvester: 2263321587,
   elementalCapacitor: 3511092054,
+  echoOfPersistence: 2272984671,
 } as const;

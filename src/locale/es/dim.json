@@ -195,6 +195,7 @@
     "CurrentClass": "Muestra objetos que sean equipables en el personaje actualmente conectado.",
     "CustomStatLower": "Muestra armadura cuyas estadísticas son estríctamente más bajas que cualquier otra del mismo del mismo tipo de armadura, tomando cuenta sólo las estadísticas en es lista total de estadísticas personalizadas.",
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
+    "Deepsight": "Mostrar armas con Resonancia de Visión Profunda, que pueden ser armonizadas en materiales.",
     "Description": "Descripción",
     "Dupe": "Muestra objetos duplicados, incluyendo reincidencias",
     "DupeCount": "Objetos que tienen el número especificado de duplicados.",
@@ -213,6 +214,7 @@
     "InLoadout": "Muestra objetos que estén incluidos en cualquier equipamiento.",
     "Infusable": "Muestra objetos que pueden ser infundidos.",
     "InfusionFodder": "Muestra objetos que podrían ser infundidos en versiones más bajas de poder del mismo objeto sólo por lumen.",
+    "IsCrafted": "Mostrar armas que han sido fabricadas.",
     "IsSunset": "Muestra objetos que han sido caducados y ya no pueden ser infundidos al poder máximo.",
     "ItemHash": "Muestra los objetos con un hash de objeto de inventario obtenido. Para usuarios avanzados.",
     "ItemId": "Muestra el objeto con un ID de inventario obtenido. Para usuarios avanzados.",
@@ -542,8 +544,10 @@
     "ArmorMods": "Modificadores de Armadura",
     "AssumeMaxWeapons": "Asumiendo armas al nivel máximo de poder",
     "Before": "Antes '{{name}}'",
-    "CannotCustomizeSubclass": "Las subclases de luz no pueden ser configuradas",
+    "CannotCustomizeSubclass": "Esta subclase no puede ser configurada",
     "ChooseItem": "Añadir {{name}}",
+    "ClassTypeMismatch": "Un objeto de {{className}} no puede ser añadido a esta equipación",
+    "ClassTypeMissing": "No tienes un {{className}} para el que crear una equipación",
     "Classified": "Algunos de tus items son \"Clasificados\", y no pueden ser incluidos en el cálculo de luz máxima.",
     "ClearLoadoutParameters": "Eliminar configuración del Optimizador de Equipaciones",
     "ClearSection": "Quitar todo",
@@ -710,7 +714,8 @@
       "Untracked": "No seguido"
     },
     "TriageTab": "Triaje",
-    "Vault": "Depósito"
+    "Vault": "Depósito",
+    "WeaponLevel": "Nivel de arma {{level}}"
   },
   "Notes": {
     "Error": "¡Error! Máximo 120 caracteres por notas.",

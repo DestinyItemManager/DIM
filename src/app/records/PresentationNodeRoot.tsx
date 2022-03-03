@@ -61,6 +61,7 @@ export default function PresentationNodeRoot({
     () => toPresentationNodeTree(defs, buckets, profileResponse, presentationNodeHash),
     [defs, buckets, profileResponse, presentationNodeHash]
   );
+  // console.log(nodeTree);
 
   if (!nodeTree) {
     return null;

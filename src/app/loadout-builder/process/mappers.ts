@@ -64,8 +64,11 @@ export function isModStatActive(
           chargedWithLightPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
       )
     );
-  } else if (plugHash === modsWithConditionalStats.chargeHarvester) {
-    // Charge Harvester
+  } else if (
+    plugHash === modsWithConditionalStats.chargeHarvester ||
+    plugHash === modsWithConditionalStats.echoOfPersistence
+  ) {
+    // "-10 to the stat that governs your class ability recharge"
     return (
       (characterClass === DestinyClass.Hunter && stat.statTypeHash === StatHashes.Mobility) ||
       (characterClass === DestinyClass.Titan && stat.statTypeHash === StatHashes.Resilience) ||

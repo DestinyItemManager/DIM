@@ -20,6 +20,7 @@ import {
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { emptyObject } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -50,7 +51,7 @@ export default function LoadoutEdit({
   store: DimStore;
   stateDispatch: React.Dispatch<Action>;
   onClickSubclass: (subclass: DimItem | undefined) => void;
-  onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
+  onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
   onClickWarnItem: (item: DimItem) => void;
   onRemoveItem: (item: DimItem) => void;
 }) {
@@ -60,21 +61,25 @@ export default function LoadoutEdit({
   const allItems = useSelector(allItemsSelector);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
 
+  // TODO: filter down by usable mods?
+  const modsByBucket: {
+    [bucketHash: number]: number[] | undefined;
+  } = loadout.parameters?.modsByBucket ?? emptyObject();
+
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(
-    () => getItemsAndSubclassFromLoadout(loadout.items, store, defs, buckets, allItems),
-    [loadout.items, defs, buckets, allItems, store]
+    () =>
+      getItemsAndSubclassFromLoadout(loadout.items, store, defs, buckets, allItems, modsByBucket),
+    [loadout.items, defs, buckets, allItems, store, modsByBucket]
   );
 
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
 
   const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
-  // TODO: filter down by usable mods?
-  const modsByBucket: {
-    [bucketHash: number]: number[] | undefined;
-  } = loadout.parameters?.modsByBucket ?? {};
   const clearUnsetMods = loadout.parameters?.clearMods;
 
+  // TODO: This is basically wrong, because the DIM items may have different IDs than the loadout item. We need to
+  // process the loadout items into pairs of [LoadoutItem, DimItem] instead.
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
 
   const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);

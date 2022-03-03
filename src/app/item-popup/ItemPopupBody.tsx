@@ -1,3 +1,4 @@
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { doShowTriage, ItemTriage } from 'app/item-triage/ItemTriage';
 import { AppIcon, thumbsUpIcon } from 'app/shell/icons';
@@ -74,7 +75,7 @@ export default function ItemPopupBody({
         (failureString) =>
           failureString.length > 0 && (
             <div className="item-details failure-reason" key={failureString}>
-              {failureString}
+              <RichDestinyText text={failureString} ownerId={item.owner} />
             </div>
           )
       )}

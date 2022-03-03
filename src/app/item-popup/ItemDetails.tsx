@@ -1,5 +1,6 @@
+import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import { WeaponCraftedInfo } from 'app/dim-ui/WeaponCraftedInfo';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { isTrialsPassage } from 'app/inventory/store/objectives';
@@ -11,7 +12,6 @@ import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
 import { RootState } from 'app/store/types';
 import { getItemKillTrackerInfo } from 'app/utils/item-utils';
-import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
@@ -21,7 +21,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
 import { DimItem } from '../inventory/item-types';
-import { AppIcon, faCheck, faClock } from '../shell/icons';
+import { AppIcon, faCheck } from '../shell/icons';
 import ApplyPerkSelection from './ApplyPerkSelection';
 import EmblemPreview from './EmblemPreview';
 import EnergyMeter from './EnergyMeter';
@@ -53,6 +53,7 @@ export default function ItemDetails({
   const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
 
   const killTrackerInfo = getItemKillTrackerInfo(item);
+
   return (
     <div className="item-details-body">
       {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
@@ -83,6 +84,10 @@ export default function ItemDetails({
             availableMetricCategoryNodeHashes={item.availableMetricCategoryNodeHashes}
           />
         </div>
+      )}
+
+      {item.crafted && item.craftedInfo && defs.isDestiny2() && (
+        <WeaponCraftedInfo craftInfo={item.craftedInfo} className="crafted-progess" />
       )}
 
       {killTrackerInfo && defs.isDestiny2() && (
@@ -202,18 +207,7 @@ export default function ItemDetails({
       )}
 
       <ItemExpiration item={item} />
-
-      {item.tooltipNotifications?.map((tip) => (
-        <div
-          key={tip.displayString}
-          className={clsx('quest-expiration item-details', {
-            'seasonal-expiration': tip.displayStyle === 'seasonal-expiration',
-          })}
-        >
-          {tip.displayStyle === 'seasonal-expiration' && <AppIcon icon={faClock} />}
-          <RichDestinyText text={tip.displayString} ownerId={item.owner} />
-        </div>
-      ))}
+      <DestinyTooltipText item={item} />
     </div>
   );
 }

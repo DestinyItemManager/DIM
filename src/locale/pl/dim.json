@@ -195,6 +195,7 @@
     "CurrentClass": "Pokazuje przedmioty, które można założyć na aktualnie zalogowanym strażniku.",
     "CustomStatLower": "Pokazuje zbroję, której statystyki są niższe niż inna tego samego typu zbroi, tylko biorąc pod uwagę statystyki na liście niestandardowych sum statystyk dla tej klasy.",
     "DamageType": "Pokazuje przedmioty na podstawie rodzaju obrażeń.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials.",
     "Description": "Opis",
     "Dupe": "Pokazuje zduplikowane przedmioty, włącznie z powtórzeniami",
     "DupeCount": "Przedmioty, które mają określoną liczbę duplikatów.",
@@ -213,6 +214,7 @@
     "InLoadout": "Pokaż przedmioty zawarte w dowolnym uzbrojeniu.",
     "Infusable": "Pokaż przedmioty, które można nasycić.",
     "InfusionFodder": "Pokazuje przedmioty, które mogą być użyte do nasycenia przedmiotu tego samego typu o niższej mocy tylko za migot.",
+    "IsCrafted": "Shows weapons that have been crafted.",
     "IsSunset": "Pokazuje przedmioty, które zostały przedawnione i nie mogą być już nasycone do maksymalnej mocy.",
     "ItemHash": "Pokazuje przedmioty z podanym hashem elementu ekwipunku. Dla zaawansowanych użytkowników.",
     "ItemId": "Pokazuje przedmiot z podanym ID elementu ekwipunku. Dla zaawansowanych użytkowników.",
@@ -542,8 +544,10 @@
     "ArmorMods": "Modyfikacje pancerza",
     "AssumeMaxWeapons": "Zakładając, że bronie mają maksymalny poziom mocy",
     "Before": "Przed '{{name}}'",
-    "CannotCustomizeSubclass": "Light subclasses cannot be configured",
+    "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "Dodaj {{name}}",
+    "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
+    "ClassTypeMissing": "You do not have a {{className}} to create a loadout for",
     "Classified": "Niektóre z twoich przedmiotów są sklasyfikowane i nie mogą być uwzględnione przy kalkulacji maksymalnej mocy.",
     "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
     "ClearSection": "Remove all",
@@ -710,7 +714,8 @@
       "Untracked": "Nieśledzone"
     },
     "TriageTab": "Triaż",
-    "Vault": "Schowek"
+    "Vault": "Schowek",
+    "WeaponLevel": "Weapon Level {{level}}"
   },
   "Notes": {
     "Error": "Błąd! Max 120 znaków na notatki.",

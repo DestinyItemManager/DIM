@@ -7,7 +7,7 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
@@ -32,7 +32,7 @@ function Header({
 }: {
   defs: D2ManifestDefinitions;
   loadout: Loadout;
-  subclass: LoadoutItem | undefined;
+  subclass: DimLoadoutItem | undefined;
   armor: DimItem[];
   mods: PluggableInventoryItemDefinition[];
 }) {
@@ -65,7 +65,7 @@ export default function ModAssignmentDrawer({
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 
   const defs = useD2Definitions()!;
-  const { armor, subclass } = useEquippedLoadoutArmorAndSubclass(loadout);
+  const { armor, subclass } = useEquippedLoadoutArmorAndSubclass(loadout, storeId);
   const getModRenderKey = createGetModRenderKey();
 
   const [itemModAssignments, unassignedMods, mods] = useMemo(() => {

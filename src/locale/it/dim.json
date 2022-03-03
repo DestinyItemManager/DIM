@@ -195,6 +195,7 @@
     "CurrentClass": "Mostra tutti gli oggetti che sono equipaggiabili sul Guardiano attualmente in uso.",
     "CustomStatLower": "Mostra le armature le cui statistiche sono rigorosamente più basse di un'altra dello stesso tipo, considerando soltanto il tipo di statistica di classe specificata.",
     "DamageType": "Mostra gli oggetti basandosi sul tipo di danno.",
+    "Deepsight": "Mostra le armi con Vista Profonda, che possono essere armonizzate per materiali.",
     "Description": "Descrizione",
     "Dupe": "Mostra gli oggetti duplicati, compresi quelli ri-emessi",
     "DupeCount": "Oggetti che hanno un numero specifico di duplicati.",
@@ -213,6 +214,7 @@
     "InLoadout": "Mostra gli oggetti che sono inclusi in qualsiasi loadout.",
     "Infusable": "Mostra gli oggetti che possono essere infusi.",
     "InfusionFodder": "Mostra gli oggetti che potrebbero essere infusi in versioni con Potere più basso dello stesso oggetto usando solo lumen.",
+    "IsCrafted": "Mostra le armi che sono state create.",
     "IsSunset": "Mostra gli oggetti che sono stati resi obsoleti e non possono essere infusi al livello massimo di Potere.",
     "ItemHash": "Mostra gli oggetti con l'hash dell'oggetti dell'inventario specificato. Per utenti avanzati.",
     "ItemId": "Mostra gli oggetti con l'ID dell'oggetto dell'inventario specificato. Per utenti avanzati.",
@@ -542,8 +544,10 @@
     "ArmorMods": "Modifiche Armatura",
     "AssumeMaxWeapons": "Presupponendo armi al massimo livello di Potere",
     "Before": "Prima '{{name}}'",
-    "CannotCustomizeSubclass": "Le sottoclassi di Luce non possono essere configurate",
+    "CannotCustomizeSubclass": "Questa sottoclasse non può essere configurata",
     "ChooseItem": "Aggiungi {{name}}",
+    "ClassTypeMismatch": "Un oggetto per {{className}} non può essere aggiunto a questo loadout",
+    "ClassTypeMissing": "Non hai un oggetto da {{className}} per il quale creare un loadout",
     "Classified": "Alcuni dei tuoi oggetti sono nascosti, e non possono essere usati nel calcolo per il massimo Potere.",
     "ClearLoadoutParameters": "Rimuovi impostazioni Ottimizzatore Loadout",
     "ClearSection": "Rimuovi tutto",
@@ -710,7 +714,8 @@
       "Untracked": "Non seguito"
     },
     "TriageTab": "Triage",
-    "Vault": "Deposito"
+    "Vault": "Deposito",
+    "WeaponLevel": "Livello Arma {{level}}"
   },
   "Notes": {
     "Error": "Errore! Massimo 120 caratteri per nota.",

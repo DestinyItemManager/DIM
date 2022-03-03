@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "7.5.1",
+  "version": "7.7.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "private": true,
@@ -15,6 +15,8 @@
     "lint:stylelint": "stylelint src/**/*.scss",
     "lintcached": "run-p lintcached:*",
     "lintcached:eslint": "yarn lint:eslint --cache --cache-location .eslintcache --cache-strategy content",
+    "lint-report": "yarn lint:eslint --output-file eslint_report.json --format json",
+    "lint-report:cached": "yarn lintcached:eslint --output-file eslint_report.json --format json",
     "fix": "run-s fix:*",
     "fix:eslint": "yarn lint:eslint --fix",
     "fix:json": "jsonsort src/locale",
@@ -32,8 +34,7 @@
     "dead-code": "ts-unused-exports tsconfig.json --allowUnusedTypes --allowUnusedEnums --showLineNumber | grep -v cssExports",
     "bcu": "run-s bcu:*",
     "bcu:build": "node src/build-browsercheck-utils.js",
-    "bcu:pretty": "prettier --write src/browsercheck-utils.js",
-    "test-and-lint": "run-p test lintcached"
+    "bcu:pretty": "prettier --write src/browsercheck-utils.js"
   },
   "husky": {
     "hooks": {
@@ -91,7 +92,7 @@
     "@types/uuid": "^8.0.0",
     "@types/valid-url": "^1.0.2",
     "@types/webpack-env": "^1.15.2",
-    "@typescript-eslint/eslint-plugin": "~5.11.0",
+    "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.0.0",
     "autoprefixer": "^10.0.0",
     "babel-jest": "^27.0.6",
@@ -115,7 +116,7 @@
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-lodash": "^7.1.0",
     "eslint-plugin-radar": "^0.2.1",
-    "eslint-plugin-react": "^7.27.1",
+    "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "eslint-plugin-react-redux": "^4.0.0",
     "fork-ts-checker-notifier-webpack-plugin": "^5.0.0",
@@ -166,8 +167,8 @@
     "@babel/runtime": "^7.1.2",
     "@d2api/d2api-types": "^1.0.2",
     "@destinyitemmanager/dim-api-types": "^1.0.0",
-    "@fortawesome/fontawesome-free": "5.15.4",
-    "@fortawesome/fontawesome-svg-core": "1.2.36",
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/react-fontawesome": "^0.1.8",
     "@popperjs/core": "^2.2.1",
     "@react-hook/resize-observer": "^1.2.0",

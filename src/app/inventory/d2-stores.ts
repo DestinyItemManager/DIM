@@ -317,7 +317,14 @@ export function buildStores(
   );
 
   for (const s of stores) {
-    updateBasePower(allItems, s, defs, hasClassified, characterProgress);
+    updateBasePower(
+      allItems,
+      s,
+      defs,
+      hasClassified,
+      characterProgress,
+      profileInfo.profileProgression?.data?.seasonalArtifact.powerBonusProgression.progressionHash
+    );
   }
 
   return stores;
@@ -443,7 +450,8 @@ function updateBasePower(
   store: DimStore,
   defs: D2ManifestDefinitions,
   hasClassified: boolean,
-  characterProgress: DestinyCharacterProgressionComponent | undefined
+  characterProgress: DestinyCharacterProgressionComponent | undefined,
+  bonusPowerProgressionHash: number | undefined
 ) {
   if (!store.isVault) {
     const def = defs.Stat.get(StatHashes.Power);
@@ -473,7 +481,7 @@ function updateBasePower(
       name: t('Stats.PowerModifier'),
       hasClassified: false,
       description: '',
-      richTooltip: ArtifactXP(characterProgress),
+      richTooltip: ArtifactXP(characterProgress, bonusPowerProgressionHash),
       value: artifactPower,
       icon: xpIcon,
     };

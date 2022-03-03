@@ -25,7 +25,48 @@ jobs:
           node-version: 16.x
           cache: yarn
 
-      - name: Cache eslint
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
+
+      # We set the default packtracker ENV vars
+      - name: Build beta
+        run: yarn build:beta
+        env:
+          PR_BUILD: true
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
+
+      - name: Jest Annotations & Coverage
+        uses: mattallty/jest-github-action@v1.0.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          coverage-comment: false
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Cache ESLint
         uses: actions/cache@v2
         env:
           cache-name: cache-eslint
@@ -39,11 +80,14 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Test & Lint
-        run: yarn test-and-lint
+      - name: Save ESLint Report JSON
+        run: yarn lint-report:cached
+        continue-on-error: true
 
-      # We set the default packtracker ENV vars
-      - name: Build beta
-        run: yarn build:beta
-        env:
-          PR_BUILD: true
+      - name: Annotate ESLint Results
+        uses: ataylorme/eslint-annotate-action@1.2.0
+        continue-on-error: true
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          report-json: "eslint_report.json"
+          fail-on-warning: true

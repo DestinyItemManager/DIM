@@ -152,6 +152,7 @@ const D2Sources: {
       13912404, // Source: Unlock your Arc subclass.
       100617404, // Requires Titan Class
       286427063, // Source: Fallen Empire campaign.
+      409652252, // Source: The Witch Queen campaign
       569214265, // Source: Earned over the course of the Red War campaign.
       677167936, // Source: Complete the campaign as a Warlock.
       736336644, // Source: "A Spark of Hope" quest.
@@ -199,7 +200,9 @@ const D2Sources: {
   compass: {
     itemHashes: [],
     sourceHashes: [
+      164083100, // Source: Display of Supremacy, Weekly Challenge
       2939318890, // Source: Wayfinder's Compass
+      3100439379, // Source: Mission Exorcism
     ],
     searchString: [],
   },
@@ -256,6 +259,7 @@ const D2Sources: {
       2915991372, // Source: Crucible
       3020288414, // Source: Crucible
       3226099405, // Source: Crucible Seasonal Ritual Rank Reward
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
       3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
       3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
@@ -440,6 +444,7 @@ const D2Sources: {
       2601524261, // Source: Complete this reward's associated Gambit quest.
       2843045413, // Source: Gambit
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
       3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
       3422985544, // Source: Complete this reward's associated Gambit quest.
       3494247523, // Source: Complete the "Season 8: Keepin' On" quest.
@@ -488,6 +493,14 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  enclave: {
+    itemHashes: [],
+    sourceHashes: [
+      1309588429, // Source: Complete the "Chief Investigator" Triumph
+      2055289873, // Source: "The Evidence Board" Exotic quest
+    ],
+    searchString: [],
+  },
   eow: {
     itemHashes: [],
     sourceHashes: [
@@ -510,9 +523,9 @@ const D2Sources: {
       286427063, // Source: Fallen Empire campaign.
       1148859274, // Source: Found exploring Europa.
       1492981395, // Source: "The Stasis Prototype" quest.
-      2171520631, // Source: Lost Lament
+      2171520631, // Source: "Lost Lament" Exotic quest.
       3125456997, // Source: Europan Tour.
-      3965815470, // Source: Rare drop from elected difficulty Empire Hunts.
+      3965815470, // Source: Rare drop from higher difficulty Empire Hunts.
     ],
     searchString: [],
   },
@@ -532,6 +545,7 @@ const D2Sources: {
       1462687159, // Reached level 5 in the Ages of Triumph record book.
       1677921161, // Source: Festival of the Lost 2018.
       1919933822, // Source: Festival of the Lost 2020.
+      2006303146, // Source: Guardian Games 2022
       2011810450, // Source: Season 13 Guardian Games
       2187511136, // Source: Earned during the seasonal Revelry event.
       2502262376, // Source: Earned during the seasonal Crimson Days event.
@@ -554,6 +568,14 @@ const D2Sources: {
       860688654, // Source: Eververse
       2882367429, // Source: Eververse\nComplete the "Vault of Glass" raid to unlock this in Eververse.
       4036739795, // Source: Bright Engrams.
+    ],
+    searchString: [],
+  },
+  evidenceboard: {
+    itemHashes: [],
+    sourceHashes: [
+      1309588429, // Source: Complete the "Chief Investigator" Triumph
+      2055289873, // Source: "The Evidence Board" Exotic quest
     ],
     searchString: [],
   },
@@ -599,6 +621,7 @@ const D2Sources: {
       2601524261, // Source: Complete this reward's associated Gambit quest.
       2843045413, // Source: Gambit
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
       3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
       3422985544, // Source: Complete this reward's associated Gambit quest.
       3494247523, // Source: Complete the "Season 8: Keepin' On" quest.
@@ -730,6 +753,14 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  lost: {
+    itemHashes: [],
+    sourceHashes: [
+      164083100, // Source: Display of Supremacy, Weekly Challenge
+      3094114967, // Source: Season of the Lost ritual playlists
+    ],
+    searchString: [],
+  },
   lostsectors: {
     itemHashes: [],
     sourceHashes: [
@@ -819,6 +850,7 @@ const D2Sources: {
       860666126, // Source: Nightfall
       1175566043, // Source: Complete Nightfall strike "A Garden World."
       1581680964, // Source: Complete Nightfall strike "Tree of Probabilities."
+      1596489410, // Source: Season of the Risen Nightfall Grandmaster
       1618699950, // Source: Season of the Lost Nightfall Grandmaster
       1749037998, // Source: Nightfall
       1850609592, // Source: Nightfall
@@ -884,6 +916,13 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       506073192, // Source: Season of Arrivals dungeon.
+    ],
+    searchString: [],
+  },
+  psiops: {
+    itemHashes: [],
+    sourceHashes: [
+      2075569025, // PsiOps
     ],
     searchString: [],
   },
@@ -1033,6 +1072,7 @@ const D2Sources: {
       2915991372, // Source: Crucible
       3020288414, // Source: Crucible
       3226099405, // Source: Crucible Seasonal Ritual Rank Reward
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
       3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
       3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
@@ -1081,6 +1121,7 @@ const D2Sources: {
       2317365255, // Source: Complete the "A Loud Racket" quest.
       2335095658, // Source: Strikes.
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
       3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
     ],
     searchString: [],
@@ -1105,6 +1146,15 @@ const D2Sources: {
       1771326504, // Source: Complete activities and earn rank-up packages on the Tangled Shore.
       2805208672, // Source: Complete Nightfall strike "The Hollowed Lair."
       4140654910, // Source: Eliminate all Barons on the Tangled Shore.
+    ],
+    searchString: [],
+  },
+  throneworld: {
+    itemHashes: [],
+    sourceHashes: [
+      1141831282, // Source: "Of Queens and Worms" Exotic quest
+      1823766625, // Source: "Vox Obscura" Exotic quest
+      3954922099, // Source: Found by exploring the Throne World
     ],
     searchString: [],
   },
@@ -1223,8 +1273,23 @@ const D2Sources: {
   wartable: {
     itemHashes: [],
     sourceHashes: [
+      450719423, // Source: Season of the Risen
+      2363489105, // Source: Season of the Risen Vendor or Triumphs
       2653840925, // Source: Challenger's Proving VII Quest
+      3563833902, // Source: Season of the Risen Triumphs
       4079816474, // Source: War Table
+    ],
+    searchString: [],
+  },
+  wellspring: {
+    itemHashes: [],
+    sourceHashes: [
+      82267399, // Source: Complete the "Warden of the Spring" Triumph
+      502279466, // Source: Wellspring boss Vezuul, Lightflayer
+      2917218318, // Source: Wellspring boss Golmag, Warden of the Spring
+      3359853911, // Source: Wellspring boss Zeerik, Lightflayer
+      3411812408, // Source: Complete the "All the Spring's Riches" Triumph
+      3450213291, // Source: Wellspring boss Bor'gong, Warden of the Spring
     ],
     searchString: [],
   },
@@ -1282,6 +1347,7 @@ const D2Sources: {
       2317365255, // Source: Complete the "A Loud Racket" quest.
       2335095658, // Source: Strikes.
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
       3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
     ],
     searchString: [],

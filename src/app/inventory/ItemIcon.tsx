@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import pursuitComplete from 'images/highlightedObjective.svg';
 import React from 'react';
-import { DimItem, PluggableInventoryItemDefinition } from './item-types';
+import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
 
 const itemTierStyles = {
@@ -28,16 +28,7 @@ const itemTierStyles = {
  *
  * This renders just a fragment - it always needs to be rendered inside another div with class "item".
  */
-export default function ItemIcon({
-  item,
-  ornament,
-  className,
-}: {
-  item: DimItem;
-  /** overrides the item's real/current appearance, with an intended ornament, i.e. for loadout fashion */
-  ornament?: PluggableInventoryItemDefinition;
-  className?: string;
-}) {
+export default function ItemIcon({ item, className }: { item: DimItem; className?: string }) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
   const borderless =
     (item?.destinyVersion === 2 &&
@@ -54,11 +45,7 @@ export default function ItemIcon({
 
   return (
     <>
-      <BungieImage
-        src={ornament?.displayProperties.icon || item.icon}
-        className={itemImageStyles}
-        alt=""
-      />
+      <BungieImage src={item.icon} className={itemImageStyles} alt="" />
       {item.masterwork && (
         <div
           className={clsx(styles.masterworkOverlay, { [styles.exoticMasterwork]: item.isExotic })}
@@ -163,8 +150,12 @@ function getModCostInfo(mod: DestinyInventoryItemDefinition | number, defs: D2Ma
     mod = defs.InventoryItem.get(mod);
   }
 
-  // hide cost for Stasis fragments as these are currently always set to 1
-  if (mod?.plug && mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedStasisTrinkets) {
+  // hide cost for Subclass 3.0 fragments as these are currently always set to 1
+  if (
+    mod?.plug &&
+    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedStasisTrinkets &&
+    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedVoidFragments
+  ) {
     modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
 
     if (mod.plug.energyCost?.energyTypeHash) {

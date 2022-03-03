@@ -160,6 +160,7 @@ function useOnlineRefresh() {
 function useVisibilityRefresh() {
   const { refreshProfileOnVisible } = useSelector(globalSettingsSelector);
   const hasSearchQuery = useSelector(hasSearchQuerySelector);
+
   useEffect(() => {
     const visibilityHandler = () => {
       if (!document.hidden) {
@@ -176,4 +177,16 @@ function useVisibilityRefresh() {
       document.removeEventListener('visibilitychange', visibilityHandler);
     };
   }, [hasSearchQuery, refreshProfileOnVisible]);
+
+  // Also directly subscribe to dimNeedsUpdate so we'll refresh in the background
+  useEffect(
+    () =>
+      dimNeedsUpdate$.subscribe((needsUpdate) => {
+        if (needsUpdate && !hasSearchQuery) {
+          // Sneaky updates - if DIM is hidden and needs an update, do the update.
+          reloadDIM();
+        }
+      }),
+    [hasSearchQuery]
+  );
 }

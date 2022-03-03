@@ -195,6 +195,7 @@
     "CurrentClass": "現在ログインしているガーディアンが装備可能なアイテムを表示します。",
     "CustomStatLower": "そのクラスのカスタム ステータス トータル リストのステータスのみを考慮して、同じタイプの他の防具よりも厳密に低いステータスを持つ防具を表示します。",
     "DamageType": "ダメージタイプ別にアイテムを表示",
+    "Deepsight": "素材によって形成できるディープサイト共振武器を表示します。",
     "Description": "説明",
     "Dupe": "再発行を含み、重複するアイテムを表示。",
     "DupeCount": "指定された数の重複があるアイテム。",
@@ -213,6 +214,7 @@
     "InLoadout": "装備品に含まれるアイテムを表示",
     "Infusable": "融合可能なアイテムを表示",
     "InfusionFodder": "グリマーだけで同じアイテムの低いパワーに融合できるアイテムを表示",
+    "IsCrafted": "クラフトされた武器を表示",
     "IsSunset": "リタイアし、最大パワーとして融合が出来なくなったアイテムを表示。",
     "ItemHash": "与えられた保管庫アイテムハッシュを持つアイテムを表示。上級ユーザー向け。",
     "ItemId": "与えられた保管庫アイテム ID を持つアイテムを表示。上級ユーザー向け。",
@@ -542,13 +544,15 @@
     "ArmorMods": "防具の Mod",
     "AssumeMaxWeapons": "最大パワーレベルの武器を仮定する",
     "Before": "前 '{{name}}'",
-    "CannotCustomizeSubclass": "光のサブクラスは設定できません",
+    "CannotCustomizeSubclass": "このサブクラスは設定することができません",
     "ChooseItem": "{{name}} を追加します。",
+    "ClassTypeMismatch": "{{className}} アイテムはこのロードアウトに追加できません",
+    "ClassTypeMissing": "ロードアウトを作成する為の {{className}} がありません",
     "Classified": "一部のアイテムは分類されており、最大出力の計算に含めることはできません。",
     "ClearLoadoutParameters": "ロードアウトの設定を削除",
     "ClearSection": "すべて削除",
     "ClearSpace": "他のアイテムを移動する",
-    "ClearUnsetMods": "Remove other mods",
+    "ClearUnsetMods": "他の MOD を削除",
     "ClearingSpace": "他のアイテムを移動する",
     "Create": "ロードアウトを作成",
     "CurrentlyEquipped": "現在装備中",
@@ -637,7 +641,7 @@
     "UnassignedModError": "Modが現在のアーマーに適用できませんでした",
     "UnassignedMods": "割り当てられていない Mod",
     "Unequipped": "装備解除中",
-    "Update": "Save Changes",
+    "Update": "変更を保存",
     "VendorsCannotEquip": "これらのアイテムはありません。タップして交換を選択するか、Xをクリックして削除します。",
     "WeaponsOnly": "武器のみ"
   },
@@ -710,7 +714,8 @@
       "Untracked": "追跡をやめる"
     },
     "TriageTab": "トリアージ",
-    "Vault": "保管庫"
+    "Vault": "保管庫",
+    "WeaponLevel": "武器レベル {{level}}"
   },
   "Notes": {
     "Error": "エラー！ノートは120文字が上限です。",
@@ -908,7 +913,7 @@
       "Ornament": "装飾をプレビュー",
       "Projection": "ゴーストのプロジェクションをプレビュー",
       "Shader": "シェーダーをプレビュー",
-      "Super": "Preview Super",
+      "Super": "スーパーをプレビュー",
       "Transmat": "トランスマット効果をプレビュー"
     },
     "SelectWishlistPerks": "お気に入りパークのプレビュー"

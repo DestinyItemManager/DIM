@@ -1,3 +1,4 @@
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { infoLog } from 'app/utils/log';
 import { Observable } from 'app/utils/observable';
 import { DimItem } from '../inventory/item-types';
@@ -17,9 +18,11 @@ export interface ItemPopupExtraInfo {
   owned?: boolean;
   acquired?: boolean;
   mod?: boolean;
-  // markers for craftable items
-  allPlugsReqsAreMet?: boolean;
-  craftingReqsAreMet?: boolean;
+  socketOverrides?: SocketOverrides;
+  // whether you can make this item at all
+  canCraftThis?: boolean;
+  // if you completely leveled up the item, it can be crafted with any of its perks. impressive.
+  canCraftAllPlugs?: boolean;
 }
 
 export function showItemPopup(

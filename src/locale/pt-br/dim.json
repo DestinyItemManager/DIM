@@ -195,6 +195,7 @@
     "CurrentClass": "Exibe itens que podem ser equipados no guardião que está jogando atualmente.",
     "CustomStatLower": "Exibe as armaduras nas quais seus atributos são necessariamente menores que as outras do mesmo tipo, levando em conta somente os atributos da lista personalizada de atributos daquela classe.",
     "DamageType": "Mostra itens baseado no seu tipo de dano.",
+    "Deepsight": "Mostra armas com Ressonância Visão Penetrante, que podem ser sintonizadas para materiais.",
     "Description": "Descrição",
     "Dupe": "Exibe itens duplicados, incluindo revisões",
     "DupeCount": "Itens que tenham o número especificado de duplicatas.",
@@ -213,6 +214,7 @@
     "InLoadout": "Mostra itens que estão incluídos em qualquer tipo de set pré-configurado.",
     "Infusable": "Mostra itens que podem ser infundidos.",
     "InfusionFodder": "Exibe itens que podem ser infundidos em versões de menor poder do mesmo item usando apenas lúmen.",
+    "IsCrafted": "Mostra armas que foram criadas.",
     "IsSunset": "Exibe itens que tiveram o poder limitado e que não podem mais ser infundidos ao poder máximo.",
     "ItemHash": "Exibe itens com determinado hash de inventário de item. Para usuários avançados.",
     "ItemId": "Exibe o item com determinado ID de inventário de item. Para usuários avançados.",
@@ -542,8 +544,10 @@
     "ArmorMods": "Mods de Armadura",
     "AssumeMaxWeapons": "Assumindo o nível máximo de poder das armas",
     "Before": "Antes de '{{name}}'",
-    "CannotCustomizeSubclass": "Subclasses de luz não podem ser configuradas",
+    "CannotCustomizeSubclass": "Esta subclasse não pode ser configurada",
     "ChooseItem": "Adicionar {{name}}",
+    "ClassTypeMismatch": "Um item de {{className}} não pode ser adicionado neste set",
+    "ClassTypeMissing": "Você não possui um {{className}} para criar um set para ele",
     "Classified": "Alguns de seus itens são secretos e não podem ser incluídos no cálculo do Poder máximo.",
     "ClearLoadoutParameters": "Remover configurações do Otimizador de Set",
     "ClearSection": "Remover todas",
@@ -637,7 +641,7 @@
     "UnassignedModError": "Mod incompatível com a armadura atual",
     "UnassignedMods": "Mods não Atribuídos",
     "Unequipped": "Não Equipado",
-    "Update": "Salvar alterações",
+    "Update": "Salvar Alterações",
     "VendorsCannotEquip": "Você não tem esses itens. Toque para pegar um substituto ou clique no X para remover:",
     "WeaponsOnly": "Somente Armas"
   },
@@ -710,7 +714,8 @@
       "Untracked": "Não rastreado"
     },
     "TriageTab": "Triagem",
-    "Vault": "Cofre"
+    "Vault": "Cofre",
+    "WeaponLevel": "Nível da Arma {{level}}"
   },
   "Notes": {
     "Error": "Erro! Anotações devem ter até 120 caracteres.",
@@ -908,7 +913,7 @@
       "Ornament": "Pré-visualizar Ornamento",
       "Projection": "Pré-visualizar Projeção de Fantasma",
       "Shader": "Pré-visualizar Tonalizador",
-      "Super": "Preview Super",
+      "Super": "Pré-visualizar Super",
       "Transmat": "Pré-visualizar Efeito de Transmaterialização"
     },
     "SelectWishlistPerks": "Pré-visualizar lista de desejos de perks"

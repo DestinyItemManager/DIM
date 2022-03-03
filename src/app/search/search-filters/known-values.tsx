@@ -4,6 +4,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
+import craftableHashes from 'data/d2/craftable-hashes.json';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
@@ -166,6 +167,11 @@ const knownValuesFilters: FilterDefinition[] = [
     description: tl('Filter.PinnacleReward'),
     destinyVersion: 2,
     filter: () => (item) => item.pursuit?.rewards.some((r) => pinnacleSources.includes(r.itemHash)),
+  },
+  {
+    keywords: ['craftable'],
+    description: tl('Filter.Craftable'),
+    filter: () => (item) => craftableHashes.includes(item.hash),
   },
   {
     keywords: 'source',
