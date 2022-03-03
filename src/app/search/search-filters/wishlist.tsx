@@ -57,6 +57,15 @@ const wishlistFilters: FilterDefinition[] = [
       (item) =>
         wishListFunction(item)?.isUndesirable,
   },
+  {
+    keywords: 'wishlistunknown',
+    destinyVersion: 2,
+    description: tl('Filter.WishlistUnknown'),
+    filter:
+      ({ wishListsByHash }) =>
+      (item) =>
+        !(item.hash in wishListsByHash),
+  },
 ];
 
 export default wishlistFilters;
