@@ -163,7 +163,7 @@ function PressTip(props: Props) {
   // Prevent clicks if the tooltip has been pressed long enough to show a tip
   const absorbClick = useCallback(
     (e: React.MouseEvent | React.TouchEvent | React.FocusEvent | React.PointerEvent) => {
-      if (timer.current && performance.now() - touchStartTime.current > hoverDelay) {
+      if (performance.now() - touchStartTime.current > hoverDelay) {
         e.stopPropagation();
       }
     },
