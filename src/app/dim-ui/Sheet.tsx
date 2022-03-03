@@ -198,7 +198,11 @@ export default function Sheet({
 
     // Detect if the gesture ended with a high velocity, or with the sheet more than
     // dismissAmount percent of the way down - if so, consider it a close gesture.
-    if (last && (movement[1] > (height() || 0) * dismissAmount || velocity[1] > dismissVelocity)) {
+    if (
+      last &&
+      (movement[1] > (height() || 0) * dismissAmount ||
+        velocity[1] * Math.sign(movement[1]) > dismissVelocity)
+    ) {
       handleClose(undefined, true);
     }
   });
