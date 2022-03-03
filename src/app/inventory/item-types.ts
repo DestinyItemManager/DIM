@@ -21,6 +21,7 @@ import {
   DestinyStatDefinition,
 } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from './inventory-buckets';
+import { DimResonantElementTag } from './store/deepsight';
 
 /** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
 export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common' | 'Unknown' | 'Currency';
@@ -252,13 +253,18 @@ export interface DimCrafted {
   dateCrafted?: number;
 }
 
+export interface DimResonantElement {
+  tag: DimResonantElementTag;
+  icon: string;
+  name: string;
+}
 export interface DimDeepsight {
   /** Whether the weapon is ready for resonant material extraction */
   complete: boolean;
   /** 0-1 progress until the weapon is attuned */
   progress: number;
-  /** Objective hashes for resonant elements that can be extracted from this weapon once attuned */
-  resonantElementObjectiveHashes: number[];
+  /** A collection of Resonant Elements that can be extracted from this weapon once attuned */
+  resonantElements: DimResonantElement[];
 }
 
 export interface DimStat {

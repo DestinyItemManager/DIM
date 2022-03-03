@@ -654,7 +654,7 @@ export function makeItem(
   createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
 
   // Deepsight Resonance
-  createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
+  createdItem.deepsightInfo = buildDeepsightInfo(createdItem, defs);
 
   try {
     buildPursuitInfo(createdItem, item, itemDef);
