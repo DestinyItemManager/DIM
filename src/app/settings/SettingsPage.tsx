@@ -445,6 +445,14 @@ export default function SettingsPage() {
             )}
             <div className="setting">
               <Checkbox
+                label={t('Settings.HidePullFromPostmaster')}
+                name="hidePullFromPostmaster"
+                value={settings.hidePullFromPostmaster}
+                onChange={onCheckChange}
+              />
+            </div>
+            <div className="setting">
+              <Checkbox
                 label={t('Settings.BadgePostmaster')}
                 name="badgePostmaster"
                 value={settings.badgePostmaster}
