@@ -84,8 +84,7 @@ export default function Plug({
 
 /**
  * a perk circle and its associated thumbs up or lack thereof.
- * this belongs inside an element with a css position,
- * and appropriate classes to set the color of its .perk-circle-background
+ * this belongs inside an element with a css position, so thumbs up can position itself.
  */
 export function PerkCircleWithTooltip({
   item,
