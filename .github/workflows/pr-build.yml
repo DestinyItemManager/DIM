@@ -60,40 +60,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: yarn
-
-      - name: Cache ESLint
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-eslint
-        with:
-          path: ~/.eslintcache
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
-            ${{ runner.os }}-${{ env.cache-name }}-
-
-      - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
-
-      - name: Save Code Linting Report JSON
-        run: yarn lint-report:cached
-        # Continue to the next step even if this fails
-        continue-on-error: true
-
-      - name: Annotate Code Linting Results
-        uses: ataylorme/eslint-annotate-action@1.2.0
-        continue-on-error: true
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          report-json: "eslint_report.json"
-
-      - name: Upload ESLint report
-        uses: actions/upload-artifact@v2
-        with:
-          name: eslint_report.json
-          path: eslint_report.json
+      - name : ESLint Annotate
+        uses : Maggi64/eslint-plus-action@master
