@@ -104,8 +104,8 @@
   font-size: 8px !important;
   .socket-container & {
     position: absolute;
-    top: -6px;
-    right: -8px;
+    top: -4px;
+    right: -5px;
     filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
   }
 }
@@ -128,19 +128,16 @@
 }
 
 .item-socket-category-Reusable .socket-container.notIntrinsic {
-  border: 1px solid #888;
-  border-radius: 50%;
-  background-color: #4887ba;
   padding: calc(2 / 50 * var(--item-size));
   margin-bottom: 6px;
   &:last-child {
     margin-bottom: 0;
   }
 
-  img {
+  svg {
     border: none;
-    width: calc(24 / 50 * var(--item-size));
-    height: calc(24 / 50 * var(--item-size));
+    width: calc(28 / 50 * var(--item-size));
+    height: calc(28 / 50 * var(--item-size));
   }
 
   @include phone-portrait {
@@ -151,23 +148,7 @@
     }
   }
 
-  &.notChosen {
-    background-color: transparent;
-  }
-
   &.selectable {
     cursor: pointer;
-  }
-
-  &.selected {
-    background-color: $orange;
-  }
-
-  &.notSelected {
-    background-color: #4887ba80;
-  }
-
-  &.cannotRoll {
-    background-color: #ba594880;
   }
 }

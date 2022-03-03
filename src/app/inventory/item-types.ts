@@ -431,6 +431,8 @@ export interface DimSocket {
   hasRandomizedPlugItems: boolean;
   /** Is this socket a perk? Anything else is at least sorta mod-like. TODO: should this be an enum? */
   isPerk: boolean;
+  /** Is this socket reusable? This is a notably different behavior and UI in Destiny, displayed in circles rather than squares */
+  isReusable: boolean;
   /** Deep information about this socket, including what types of things can be inserted into it. TODO: do we need all of this? */
   socketDefinition: DestinyItemSocketEntryDefinition;
 }

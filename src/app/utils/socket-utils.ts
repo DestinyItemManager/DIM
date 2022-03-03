@@ -1,9 +1,14 @@
 import {
   DimItem,
+  DimPlug,
   DimSocketCategory,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import {
+  DestinyInventoryItemDefinition,
+  DestinySocketCategoryStyle,
+  TierType,
+} from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimSocket, DimSockets } from '../inventory/item-types';
@@ -168,4 +173,9 @@ export function plugFitsIntoSocket(socket: DimSocket, plugHash: number) {
     // incorrect for quite a few blue-quality items because DIM throws away the data.
     socket.reusablePlugItems?.some((p) => p.plugItemHash === plugHash)
   );
+}
+
+export function isEnhancedPerk(perk: DimPlug | DestinyInventoryItemDefinition) {
+  const plugDef = 'plugDef' in perk ? perk.plugDef : perk;
+  return plugDef.inventory!.tierType === TierType.Common;
 }

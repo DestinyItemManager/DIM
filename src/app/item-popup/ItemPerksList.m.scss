@@ -24,7 +24,7 @@
 .plug {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: flex-start;
-  margin-right: 1em;
+  margin-right: 0.7em;
   cursor: pointer;
 
   &:last-child {
@@ -38,36 +38,25 @@
   }
 }
 
-.perkIcon {
+.perkIconWrapper {
   grid-area: icon;
   align-self: flex-start;
   position: relative;
-  width: calc(24 / 50 * var(--item-size));
-  height: calc(24 / 50 * var(--item-size));
+
   display: block;
-  border: 1px solid white;
-  border-radius: 50%;
   padding: 1px;
   flex-shrink: 0;
 
-  img {
-    height: 100%;
-    width: 100%;
+  svg {
+    display: block;
+    width: calc(28 / 50 * var(--item-size));
+    height: calc(28 / 50 * var(--item-size));
   }
 
-  .selected & {
-    background-color: $orange;
-  }
-  .plugged & {
-    background-color: #4887ba;
-  }
-  .cannotRoll & {
-    background-color: #ba594880;
-  }
   :global(.thumbs-up) {
     position: absolute;
-    top: -6px;
-    right: -8px;
+    top: -4px;
+    right: -5px;
     filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
   }
 }
