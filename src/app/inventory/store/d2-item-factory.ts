@@ -36,6 +36,7 @@ import { DimItem, DimPerk } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';
 import { buildCraftedInfo } from './crafted';
+import { buildDeepsightInfo } from './deepsight';
 import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives } from './objectives';
@@ -482,6 +483,7 @@ export function makeItem(
     perks: null,
     masterworkInfo: null,
     craftedInfo: null,
+    deepsightInfo: null,
     infusionQuality: null,
     tooltipNotifications,
   };
@@ -650,6 +652,9 @@ export function makeItem(
 
   // Crafted
   createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
+
+  // Deepsight Resonance
+  createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
 
   try {
     buildPursuitInfo(createdItem, item, itemDef);

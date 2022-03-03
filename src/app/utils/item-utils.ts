@@ -14,7 +14,6 @@ import {
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
   modsWithConditionalStats,
-  resonantElementObjectiveHashes,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
 import modSocketMetadata, {
@@ -28,7 +27,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
 import { objectifyArray } from './util';
@@ -348,54 +347,6 @@ export function isPlugStatActive(
   }
   return true;
 }
-
-export type DeepsightResonance = {
-  /** Whether the weapon is ready for resonant material extraction */
-  complete: boolean;
-  /** 0-1 progress until the weapon is attuned */
-  progress: number;
-  /** Objective hashes for resonant elements that can be extracted from this weapon once attuned */
-  resonantElementObjectiveHashes: number[];
-};
-
-/** returns a weapon's Deepsight Resonance info */
-export const getDeepsightInfo = (item: DimItem): DeepsightResonance | undefined => {
-  const sockets = item.sockets?.allSockets;
-  if (item.bucket.inWeapons && sockets) {
-    for (const socket of sockets) {
-      const insertedPlug = socket.plugged;
-      if (
-        insertedPlug &&
-        insertedPlug.plugDef.plug.plugCategoryHash ===
-          PlugCategoryHashes.CraftingPlugsWeaponsModsMemories &&
-        insertedPlug.plugDef.objectives
-      ) {
-        let complete = false;
-        let progress = 0;
-
-        const attunementObjective = insertedPlug.plugObjectives[0];
-        if (attunementObjective) {
-          complete = attunementObjective.complete;
-          if (attunementObjective.progress) {
-            progress = attunementObjective.progress / attunementObjective.completionValue;
-          }
-        }
-
-        const itemObjectiveHashes = sockets.flatMap((s) =>
-          s.plugOptions.flatMap((p) => p.plugObjectives.map((o) => o.objectiveHash))
-        );
-        return {
-          complete,
-          progress,
-          resonantElementObjectiveHashes: _.intersection(
-            itemObjectiveHashes,
-            resonantElementObjectiveHashes
-          ),
-        };
-      }
-    }
-  }
-};
 
 /**
  * Is this item a Destiny 1 item? Use this when you want the item to

@@ -1,7 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import {
-  getDeepsightInfo,
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
   modSlotTags,
@@ -189,23 +188,22 @@ const socketFilters: FilterDefinition[] = [
     filter:
       ({ filterValue }) =>
       (item: DimItem) => {
-        const deepsightInfo = getDeepsightInfo(item);
-        if (!deepsightInfo) {
+        if (!item.deepsightInfo) {
           return false;
         }
 
         if (resonantElementNames.includes(filterValue)) {
           const filterElementHash = resonantElementObjectiveHashesByName[filterValue];
-          return deepsightInfo.resonantElementObjectiveHashes.includes(filterElementHash);
+          return item.deepsightInfo.resonantElementObjectiveHashes.includes(filterElementHash);
         }
 
         switch (filterValue) {
           case 'deepsight':
             return true;
           case 'complete':
-            return deepsightInfo.complete;
+            return item.deepsightInfo.complete;
           case 'incomplete':
-            return !deepsightInfo.complete;
+            return !item.deepsightInfo.complete;
         }
       },
   },
