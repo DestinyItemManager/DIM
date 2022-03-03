@@ -28,11 +28,13 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      # We set the default packtracker ENV vars
       - name: Build beta
         run: yarn build:beta
         env:
           PR_BUILD: true
+
+      - name: bundlewatch.io
+        run: yarn bundlewatch
 
   test:
     runs-on: ubuntu-latest
