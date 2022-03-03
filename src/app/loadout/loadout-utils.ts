@@ -22,7 +22,7 @@ import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/dest
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import { DimLoadoutItem, Loadout, LoadoutItem } from './loadout-types';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics
 export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
@@ -207,7 +207,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
 export function getLoadoutStats(
   defs: D2ManifestDefinitions,
   classType: DestinyClass,
-  subclass: DimLoadoutItem | undefined,
+  subclass: ResolvedLoadoutItem | undefined,
   armor: DimItem[],
   mods: PluggableInventoryItemDefinition[]
 ) {
@@ -231,13 +231,14 @@ export function getLoadoutStats(
   });
 
   // Add stats that come from the subclass fragments
-  if (subclass?.socketOverrides) {
-    for (const plugHash of Object.values(subclass.socketOverrides)) {
+  // TODO: Now that we apply socket overrides when we resolve items, do we need to do this calculation?
+  if (subclass?.loadoutItem.socketOverrides) {
+    for (const plugHash of Object.values(subclass.loadoutItem.socketOverrides)) {
       const plug = defs.InventoryItem.get(plugHash);
       for (const stat of plug.investmentStats) {
         if (
           stat.statTypeHash in stats &&
-          isPlugStatActive(subclass, plugHash, stat.statTypeHash, stat.isConditionallyActive)
+          isPlugStatActive(subclass.item, plugHash, stat.statTypeHash, stat.isConditionallyActive)
         ) {
           stats[stat.statTypeHash].value += stat.value;
         }
@@ -355,7 +356,7 @@ export function backupLoadout(store: DimStore, name: string): Loadout {
 export function convertToLoadoutItem(
   item: Pick<LoadoutItem, 'id' | 'hash' | 'amount' | 'socketOverrides'>,
   equip: boolean
-) {
+): LoadoutItem {
   return {
     id: item.id,
     hash: item.hash,

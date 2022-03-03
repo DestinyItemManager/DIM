@@ -5,7 +5,7 @@ import ItemPopupTrigger from 'app/item-popup/ItemPopupTrigger';
 import ConnectedInventoryItem from 'app/item/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/item/DraggableInventoryItem';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
-import { DimLoadoutItem, Loadout } from 'app/loadout/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { getLoadoutStats } from 'app/loadout/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
@@ -34,25 +34,23 @@ export default function LoadoutItemCategorySection({
   items,
   savedMods,
   modsByBucket,
-  equippedItemIds,
   loadout,
   hideOptimizeArmor,
 }: {
   category: string;
-  subclass?: DimLoadoutItem;
+  subclass?: ResolvedLoadoutItem;
   storeId?: string;
-  items?: DimLoadoutItem[];
+  items?: ResolvedLoadoutItem[];
   savedMods: PluggableInventoryItemDefinition[];
   modsByBucket: {
     [bucketHash: number]: number[];
   };
-  equippedItemIds: Set<string>;
   loadout: Loadout;
   hideOptimizeArmor?: boolean;
 }) {
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
-  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
+  const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
   const isPhonePortrait = useIsPhonePortrait();
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
@@ -62,7 +60,7 @@ export default function LoadoutItemCategorySection({
           (bucket) => buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash)
         );
   const equippedItems =
-    items?.filter((i) => equippedItemIds.has(i.id) && i.owner !== 'unknown') ?? [];
+    items?.filter((li) => li.loadoutItem.equip && !li.missing).map((li) => li.item) ?? [];
 
   const isArmor = category === 'Armor';
   const hasFashion = isArmor && !_.isEmpty(modsByBucket);
@@ -81,7 +79,6 @@ export default function LoadoutItemCategorySection({
               storeId={storeId}
               bucketHash={bucket.hash}
               items={itemsByBucket[bucket.hash]}
-              equippedItemIds={equippedItemIds}
               modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
             />
           ))}
@@ -116,18 +113,14 @@ function ItemBucket({
   bucketHash,
   storeId,
   items,
-  equippedItemIds,
   modsForBucket,
 }: {
   bucketHash: number;
   storeId?: string;
-  items: DimLoadoutItem[];
-  equippedItemIds: Set<string>;
+  items: ResolvedLoadoutItem[];
   modsForBucket: number[];
 }) {
-  const [equipped, unequipped] = _.partition(items, (i) =>
-    i.owner === 'unknown' ? i.equipped : equippedItemIds.has(i.id)
-  );
+  const [equipped, unequipped] = _.partition(items, (li) => li.loadoutItem.equip);
 
   const showFashion = LockableBucketHashes.includes(bucketHash);
 
@@ -141,9 +134,12 @@ function ItemBucket({
             className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
             key={index}
           >
-            {items.map((item) => (
+            {items.map(({ item, loadoutItem }) => (
               <DraggableInventoryItem item={item} key={item.id}>
-                <ItemPopupTrigger item={item} extraData={{ socketOverrides: item.socketOverrides }}>
+                <ItemPopupTrigger
+                  item={item}
+                  extraData={{ socketOverrides: loadoutItem.socketOverrides }}
+                >
                   {(ref, onClick) => (
                     <div
                       className={clsx({

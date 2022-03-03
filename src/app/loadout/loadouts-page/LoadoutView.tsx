@@ -6,7 +6,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getItemsFromLoadoutItems } from 'app/loadout/loadout-item-conversion';
-import { DimLoadoutItem, Loadout, LoadoutItem } from 'app/loadout/loadout-types';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { getLight, getModsFromLoadout } from 'app/loadout/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
@@ -33,7 +33,11 @@ export function getItemsAndSubclassFromLoadout(
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
   }
-): [items: DimLoadoutItem[], subclass: DimLoadoutItem | undefined, warnitems: DimLoadoutItem[]] {
+): [
+  items: ResolvedLoadoutItem[],
+  subclass: ResolvedLoadoutItem | undefined,
+  warnitems: ResolvedLoadoutItem[]
+] {
   let [items, warnitems] = getItemsFromLoadoutItems(
     loadoutItems,
     defs,
@@ -44,12 +48,12 @@ export function getItemsAndSubclassFromLoadout(
   );
   const subclass = items
     .concat(warnitems)
-    .find((item) => item.bucket.hash === BucketHashes.Subclass);
+    .find((li) => li.item.bucket.hash === BucketHashes.Subclass);
 
-  items = items.filter((i) => itemCanBeEquippedBy(i, store, true));
+  items = items.filter((li) => itemCanBeEquippedBy(li.item, store, true));
   if (subclass) {
-    items = items.filter((i) => i.hash !== subclass.hash);
-    warnitems = warnitems.filter((i) => i.hash !== subclass.hash);
+    items = items.filter((li) => li.item.hash !== subclass.item.hash);
+    warnitems = warnitems.filter((li) => li.item.hash !== subclass.item.hash);
   }
 
   return [items, subclass, warnitems];
@@ -94,18 +98,8 @@ export default function LoadoutView({
 
   const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
 
-  const equippedItemIds = new Set(loadout.items.filter((i) => i.equip).map((i) => i.id));
-
-  const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
-
-  const isEquipped = (i: DimItem) =>
-    Boolean(i.owner !== 'unknown' && i.power && equippedItemIds.has(i.id));
-  const showPower =
-    count(categories.Weapons ?? [], isEquipped) === 3 &&
-    count(categories.Armor ?? [], isEquipped) === 5;
-  const power = showPower
-    ? Math.floor(getLight(store, [...categories.Weapons, ...categories.Armor]))
-    : 0;
+  const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
+  const power = loadoutPower(store, categories);
 
   return (
     <div className={styles.loadout} id={loadout.id}>
@@ -140,7 +134,6 @@ export default function LoadoutView({
                 items={categories[category]}
                 savedMods={savedMods}
                 modsByBucket={modsByBucket}
-                equippedItemIds={equippedItemIds}
                 loadout={loadout}
                 hideOptimizeArmor={hideOptimizeArmor}
               />
@@ -156,4 +149,22 @@ export default function LoadoutView({
       </div>
     </div>
   );
+}
+
+export function loadoutPower(store: DimStore, categories: _.Dictionary<ResolvedLoadoutItem[]>) {
+  const isEquipped = (li: ResolvedLoadoutItem) =>
+    Boolean(!li.missing && li.item.power && li.loadoutItem.equip);
+  const showPower =
+    count(categories.Weapons ?? [], isEquipped) === 3 &&
+    count(categories.Armor ?? [], isEquipped) === 5;
+  const power = showPower
+    ? Math.floor(
+        getLight(
+          store,
+          [...categories.Weapons, ...categories.Armor].map((li) => li.item)
+        )
+      )
+    : 0;
+
+  return power;
 }

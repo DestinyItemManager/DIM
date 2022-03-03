@@ -5,7 +5,7 @@ import type { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/it
 import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { getArtifactBonus } from 'app/inventory/stores-helpers';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
-import type { DimLoadoutItem, Loadout } from 'app/loadout/loadout-types';
+import type { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { getLight, getLoadoutStats } from 'app/loadout/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { powerActionIcon } from 'app/shell/icons';
@@ -50,7 +50,7 @@ export function GeneratedLoadoutStats({
   loadout,
   savedMods,
 }: {
-  items: DimLoadoutItem[];
+  items: ResolvedLoadoutItem[];
   loadout: Loadout;
   savedMods: PluggableInventoryItemDefinition[];
 }) {
@@ -64,13 +64,21 @@ export function GeneratedLoadoutStats({
     return null;
   }
 
-  const armorItems = getItemsInListByCategory({ buckets, category: 'Armor', items });
+  const armorItems = getItemsInListByCategory({
+    buckets,
+    category: 'Armor',
+    items: items.map((li) => li.item),
+  });
   if (armorItems.missingBuckets.length) {
     // If any armor types are missing, don't compute stats or power levels.
     return null;
   }
 
-  const weaponItems = getItemsInListByCategory({ buckets, category: 'Weapons', items });
+  const weaponItems = getItemsInListByCategory({
+    buckets,
+    category: 'Weapons',
+    items: items.map((li) => li.item),
+  });
   if (weaponItems.missingBuckets) {
     // If any weapon types are missing, fill them in with max weapons to assume light level
     const characterClass =
@@ -85,7 +93,7 @@ export function GeneratedLoadoutStats({
   }
 
   const equippedSubclass = items.find(
-    (item) =>
+    ({ item }) =>
       item.equipped &&
       item.bucket.hash === BucketHashes.Subclass &&
       // TODO (ryan) this should probably be based off the selected store for loadouts

@@ -6,7 +6,7 @@ import {
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { DimLoadoutItem, Loadout } from 'app/loadout/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import React, {
@@ -71,7 +71,7 @@ function getMeasureSet(sets: readonly ArmorSet[]) {
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
-  subclass: DimLoadoutItem | undefined;
+  subclass: ResolvedLoadoutItem | undefined;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
   statOrder: number[];

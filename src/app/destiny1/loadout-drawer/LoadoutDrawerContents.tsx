@@ -11,7 +11,7 @@ import { SocketOverrides, SocketOverridesForItems } from 'app/inventory/store/ov
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { pickSubclass } from 'app/loadout/item-utils';
-import { Loadout, LoadoutItem } from 'app/loadout/loadout-types';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import {
   createSocketOverridesFromEquipped,
   createSubclassDefaultSocketOverrides,
@@ -79,7 +79,7 @@ export default function LoadoutDrawerContents({
   loadout: Loadout;
   savedMods: PluggableInventoryItemDefinition[];
   buckets: InventoryBuckets;
-  items: DimItem[];
+  items: ResolvedLoadoutItem[];
   equip(item: DimItem, e: React.MouseEvent): void;
   remove(item: DimItem, e: React.MouseEvent): void;
   add(params: { item: DimItem; equip?: boolean; socketOverrides?: SocketOverrides }): void;
@@ -91,7 +91,7 @@ export default function LoadoutDrawerContents({
   onApplySocketOverrides(item: DimItem, socketOverrides: SocketOverrides): void;
 }) {
   const stores = useSelector(storesSelector);
-  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
+  const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
 
   // The store to use for "fill from equipped/unequipped"
   const dimStore = storeId
@@ -102,7 +102,12 @@ export default function LoadoutDrawerContents({
 
   function doFillLoadoutFromEquipped(e: React.MouseEvent) {
     e.preventDefault();
-    fillLoadoutFromEquipped(loadout, itemsByBucket, dimStore, onUpdateLoadout);
+    fillLoadoutFromEquipped(
+      loadout,
+      items.map((li) => li.item),
+      dimStore,
+      onUpdateLoadout
+    );
   }
   function doFillLoadOutFromUnequipped(e: React.MouseEvent) {
     e.preventDefault();
@@ -124,7 +129,7 @@ export default function LoadoutDrawerContents({
     const subclassItems = itemsByBucket[BucketHashes.Subclass] ?? [];
 
     for (const item of loadout.items) {
-      if (subclassItems.some((subclass) => subclass.id === item.id)) {
+      if (subclassItems.some((subclass) => subclass.item.id === item.id)) {
         subclassSocketOverrides[item.id] = item.socketOverrides || {};
       }
     }
@@ -135,7 +140,7 @@ export default function LoadoutDrawerContents({
     !loadout ||
     loadout.classType === DestinyClass.Unknown ||
     !subclassItems.length ||
-    subclassItems.every((i) => i.classType !== loadout.classType);
+    subclassItems.every((li) => li.item.classType !== loadout.classType);
 
   return (
     <>
@@ -151,7 +156,14 @@ export default function LoadoutDrawerContents({
         {showSubclassButton && (
           <a
             key={subclassBucket.hash}
-            onClick={() => pickLoadoutSubclass(loadout, subclassItems, add, onShowItemPicker)}
+            onClick={() =>
+              pickLoadoutSubclass(
+                loadout,
+                subclassItems.map((li) => li.item),
+                add,
+                onShowItemPicker
+              )
+            }
             className="dim-button loadout-add"
           >
             <AppIcon icon={addIcon} /> {subclassBucket.name}
@@ -182,7 +194,6 @@ export default function LoadoutDrawerContents({
             <LoadoutDrawerBucket
               key={bucket.hash}
               bucket={bucket}
-              loadoutItems={loadout.items}
               items={itemsByBucket[bucket.hash] || []}
               pickLoadoutItem={(bucket) => pickLoadoutItem(loadout, bucket, add, onShowItemPicker)}
               equip={equip}
@@ -194,9 +205,9 @@ export default function LoadoutDrawerContents({
       {subclassItems.length > 0 &&
         subclassItems.map((subclass) => (
           <Subclass
-            key={subclass.hash}
-            subclass={subclass}
-            socketOverrides={subclassSocketOverrides[subclass.id]}
+            key={subclass.item.hash}
+            subclass={subclass.item}
+            socketOverrides={subclassSocketOverrides[subclass.item.id]}
             equip={equip}
             remove={remove}
             onApplySocketOverrides={onApplySocketOverrides}
@@ -322,7 +333,7 @@ export function setLoadoutSubclassFromEquipped(
 
 export function fillLoadoutFromEquipped(
   loadout: Loadout,
-  itemsByBucket: { [bucketId: string]: DimItem[] },
+  items: DimItem[],
   dimStore: DimStore,
   onUpdateLoadout: (loadout: Loadout) => void,
   // This is a bit dangerous as it is only used from the new loadout edit drawer and
@@ -332,6 +343,7 @@ export function fillLoadoutFromEquipped(
   if (!loadout) {
     return;
   }
+  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
 
   const newEquippedItems = dimStore.items.filter(
     (item) =>

@@ -6,7 +6,7 @@ import {
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { editLoadout } from 'app/loadout/loadout-events';
-import { DimLoadoutItem, Loadout } from 'app/loadout/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
@@ -21,7 +21,7 @@ import SetStats from './SetStats';
 
 interface Props {
   set: ArmorSet;
-  subclass: DimLoadoutItem | undefined;
+  subclass: ResolvedLoadoutItem | undefined;
   notes?: string;
   selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];

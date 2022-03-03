@@ -256,7 +256,7 @@ export default function LoadoutDrawer() {
                   {t('Loadouts.VendorsCannotEquip')}
                 </p>
                 <div className="loadout-warn-items">
-                  {warnitems.map((item) => (
+                  {warnitems.map(({ item }) => (
                     <div
                       key={item.index}
                       className="loadout-item"

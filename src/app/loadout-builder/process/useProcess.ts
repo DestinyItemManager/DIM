@@ -8,7 +8,7 @@ import {
   calculateAssumedItemEnergy,
   isArmorEnergyLocked,
 } from 'app/loadout-builder/armor-upgrade-utils';
-import { DimLoadoutItem } from 'app/loadout/loadout-types';
+import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { activityModPlugCategoryHashes, bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
 import {
   armor2PlugCategoryHashesByName,
@@ -68,7 +68,7 @@ export function useProcess({
   selectedStore: DimStore;
   filteredItems: ItemsByBucket;
   lockedMods: PluggableInventoryItemDefinition[];
-  subclass: DimLoadoutItem | undefined;
+  subclass: ResolvedLoadoutItem | undefined;
   assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
   lockArmorEnergyType: LockArmorEnergyType | undefined;
   statOrder: number[];
@@ -172,8 +172,8 @@ export function useProcess({
       mods.map(mapArmor2ModToProcessMod)
     );
 
-    const subclassPlugs = subclass?.socketOverrides
-      ? Object.values(subclass.socketOverrides)
+    const subclassPlugs = subclass?.loadoutItem.socketOverrides
+      ? Object.values(subclass.loadoutItem.socketOverrides)
           .map((hash) => defs.InventoryItem.get(hash))
           .filter(isPluggableItem)
       : emptyArray<PluggableInventoryItemDefinition>();
@@ -225,7 +225,7 @@ export function useProcess({
     statOrder,
     anyExotic,
     disabledDueToMaintenance,
-    subclass?.socketOverrides,
+    subclass?.loadoutItem.socketOverrides,
     assumeArmorMasterwork,
     lockArmorEnergyType,
   ]);

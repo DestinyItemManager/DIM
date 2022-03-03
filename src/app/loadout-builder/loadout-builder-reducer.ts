@@ -10,7 +10,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
-import { DimLoadoutItem, Loadout } from 'app/loadout/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import {
   createSubclassDefaultSocketOverrides,
   findItemForLoadout,
@@ -41,7 +41,7 @@ export interface LoadoutBuilderState {
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
   selectedStoreId?: string;
-  subclass?: DimLoadoutItem;
+  subclass?: ResolvedLoadoutItem;
   modPicker: {
     open: boolean;
     plugCategoryHashWhitelist?: number[];
@@ -87,7 +87,7 @@ const lbStateInit = ({
   let selectedStoreId = (matchingClass ?? getCurrentStore(stores)!).id;
 
   let loadoutParams = initialLoadoutParameters;
-  let subclass: DimLoadoutItem | undefined;
+  let subclass: ResolvedLoadoutItem | undefined;
 
   if (stores.length && preloadedLoadout) {
     let loadoutStore = getCurrentStore(stores);
@@ -117,14 +117,17 @@ const lbStateInit = ({
           const item = findItemForLoadout(defs, allItems, selectedStoreId, loadoutItem);
           if (item && isLoadoutBuilderItem(item)) {
             pinnedItems[item.bucket.hash] = item;
-          } else if (item && item.bucket.hash === BucketHashes.Subclass && item.sockets) {
+          } else if (item?.bucket.hash === BucketHashes.Subclass && item.sockets) {
             // In LO we populate the default ability plugs because in game you cannot unselect all abilities.
             const socketOverridesForLO = {
               ...createSubclassDefaultSocketOverrides(item),
               ...loadoutItem.socketOverrides,
             };
 
-            subclass = { ...item, socketOverrides: socketOverridesForLO };
+            subclass = {
+              item,
+              loadoutItem: { ...loadoutItem, socketOverrides: socketOverridesForLO },
+            };
           }
         }
       }
@@ -367,7 +370,16 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
 
         return {
           ...state,
-          subclass: { ...item, socketOverrides: createSubclassDefaultSocketOverrides(item) },
+          subclass: {
+            item,
+            loadoutItem: {
+              id: item.id,
+              hash: item.hash,
+              equip: true,
+              amount: 1,
+              socketOverrides: createSubclassDefaultSocketOverrides(item),
+            },
+          },
         };
       }
       case 'removeSubclass': {
@@ -379,7 +391,13 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
         }
 
         const { socketOverrides } = action;
-        return { ...state, subclass: { ...state.subclass, socketOverrides } };
+        return {
+          ...state,
+          subclass: {
+            ...state.subclass,
+            loadoutItem: { ...state.subclass.loadoutItem, socketOverrides },
+          },
+        };
       }
       case 'removeSingleSubclassSocketOverride': {
         if (!state.subclass) {
@@ -387,12 +405,12 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
         }
 
         const { plug } = action;
-        const abilityAndSuperSockets = getSocketsByCategoryHashes(state.subclass.sockets, [
+        const abilityAndSuperSockets = getSocketsByCategoryHashes(state.subclass.item.sockets, [
           SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
           SocketCategoryHashes.Abilities_Abilities_LightSubclass,
           SocketCategoryHashes.Super,
         ]);
-        const newSocketOverrides = { ...state.subclass?.socketOverrides };
+        const newSocketOverrides = { ...state.subclass?.loadoutItem.socketOverrides };
         let socketIndexToRemove: number | undefined;
 
         // Find the socket index to remove the plug from.
@@ -423,9 +441,12 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
           ...state,
           subclass: {
             ...state.subclass,
-            socketOverrides: Object.keys(newSocketOverrides).length
-              ? newSocketOverrides
-              : undefined,
+            loadoutItem: {
+              ...state.subclass.loadoutItem,
+              socketOverrides: Object.keys(newSocketOverrides).length
+                ? newSocketOverrides
+                : undefined,
+            },
           },
         };
       }

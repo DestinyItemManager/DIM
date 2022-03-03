@@ -6,7 +6,7 @@ import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import { emptyArray } from 'app/utils/empty';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
-import { DimLoadoutItem, LoadoutItem } from './loadout-types';
+import { LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
 import { findItemForLoadout } from './loadout-utils';
 
 /**
@@ -22,13 +22,13 @@ export function getItemsFromLoadoutItems(
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
   }
-): [items: DimLoadoutItem[], warnitems: DimLoadoutItem[]] {
+): [items: ResolvedLoadoutItem[], warnitems: ResolvedLoadoutItem[]] {
   if (!loadoutItems) {
     return [emptyArray(), emptyArray()];
   }
 
-  const items: DimLoadoutItem[] = [];
-  const warnitems: DimLoadoutItem[] = [];
+  const items: ResolvedLoadoutItem[] = [];
+  const warnitems: ResolvedLoadoutItem[] = [];
   for (const loadoutItem of loadoutItems) {
     // TODO: filter down to the class type of the loadout
     const item = findItemForLoadout(defs, allItems, storeId, loadoutItem);
@@ -49,21 +49,28 @@ export function getItemsFromLoadoutItems(
       // Apply socket overrides so the item appears as it should be configured in the loadout
       const overriddenItem = defs.isDestiny2() ? applySocketOverrides(defs, item, overrides) : item;
 
-      items.push({ ...overriddenItem, socketOverrides: overrides });
+      items.push({
+        item: overriddenItem,
+        // TODO: Should we keep the original socket overrides here, somewhere? There's a difference between "effective socket overrides" and "socket overrides to save"
+        loadoutItem:
+          overrides === loadoutItem.socketOverrides
+            ? loadoutItem
+            : { ...loadoutItem, socketOverrides: overrides },
+      });
     } else {
       const itemDef = defs.InventoryItem.get(loadoutItem.hash);
       if (itemDef) {
-        const fakeItem: DimLoadoutItem =
+        const fakeItem: DimItem =
           (defs.isDestiny2() && makeFakeItem(defs, buckets, undefined, loadoutItem.hash)) ||
+          // TODO: would be great to have a D1 version of makeFakeItem
           ({
-            ...loadoutItem,
+            id: loadoutItem.id,
+            hash: loadoutItem.hash,
             icon: itemDef.displayProperties?.icon || itemDef.icon,
             name: itemDef.displayProperties?.name || itemDef.itemName,
-          } as DimLoadoutItem);
-        fakeItem.equipped = loadoutItem.equip;
-        fakeItem.socketOverrides = loadoutItem.socketOverrides;
+          } as DimItem);
         fakeItem.id = loadoutItem.id;
-        warnitems.push(fakeItem);
+        warnitems.push({ item: fakeItem, loadoutItem, missing: true });
       }
     }
   }
