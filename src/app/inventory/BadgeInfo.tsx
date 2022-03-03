@@ -1,4 +1,4 @@
-import { getDeepsightInfo, isD1Item } from 'app/utils/item-utils';
+import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -60,14 +60,13 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
     (item.element &&
       (item.element.enumValue === DamageType.Arc || item.element.enumValue === DamageType.Void));
 
-  const deepsightInfo = getDeepsightInfo(item);
   return (
     <div
       className={clsx(styles.badge, {
         [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
         [styles.capped]: isCapped,
         [styles.masterwork]: item.masterwork,
-        [styles.deepsight]: deepsightInfo,
+        [styles.deepsight]: item.deepsightInfo,
         [styles.engram]: item.isEngram,
       })}
     >
