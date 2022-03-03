@@ -23,16 +23,16 @@ export function validateQuery(query: QueryAST, searchConfig: SearchConfig): bool
   }
   switch (query.op) {
     case 'filter': {
-      let filterName = query.type;
+      const filterName = query.type;
       const filterValue = query.args;
 
       // "is:" filters are slightly special cased
       if (filterName === 'is') {
-        filterName = filterValue;
+        return Boolean(searchConfig.isFilters[filterValue]);
+      } else {
+        // TODO: validate that filterValue is correct
+        return Boolean(searchConfig.kvFilters[filterName]);
       }
-
-      // TODO: validate that filterValue is correct
-      return Boolean(searchConfig.filters[filterName]);
     }
     case 'not':
       return validateQuery(query.operand, searchConfig);

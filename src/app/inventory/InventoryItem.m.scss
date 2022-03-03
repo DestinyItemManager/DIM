@@ -3,7 +3,8 @@
 // Items hidden by search.
 .searchHidden {
   opacity: 0.2;
-  transform: scale(0.75);
+  // TODO: Testing whether scale transform triggers slow sheet animations: https://github.com/DestinyItemManager/DIM/issues/7458
+  // transform: scale(0.75);
 }
 
 // The top-level item container. Global because it's referenced by other styles.
@@ -19,9 +20,12 @@
 // The wrapper for draggable items. Global because it's referenced by other styles.
 :global(.item-drag-container) {
   contain: layout paint style;
-  cursor: pointer;
   box-sizing: border-box;
   width: var(--item-size);
+  cursor: grab;
+  &:global(.cant-drag) {
+    cursor: pointer;
+  }
 
   &:hover {
     @include draggable-hover-border;

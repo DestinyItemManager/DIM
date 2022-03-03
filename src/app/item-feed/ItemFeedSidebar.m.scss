@@ -1,0 +1,56 @@
+@import '../variables.scss';
+
+.trayContainer {
+  position: sticky;
+  @include below-header;
+  height: calc(var(--viewport-height) - var(--header-height));
+  z-index: 10;
+  box-sizing: border-box;
+  width: 0;
+}
+
+.expanded {
+  transform: translate(calc(-1 * var(--sidebar-size)), 0);
+}
+
+.sideTray {
+  background-color: black;
+  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: var(--sidebar-size);
+  height: 100%;
+  box-sizing: border-box;
+
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > div {
+    background-color: black;
+  }
+}
+
+.trayButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  transform: rotate(-90deg);
+  background: black;
+  position: absolute;
+  right: 100%;
+  color: white;
+  padding: 8px;
+  top: -25px;
+  transform-origin: bottom right;
+  white-space: nowrap;
+  font-size: 16px;
+
+  &:hover {
+    color: black;
+    background-color: $orange;
+  }
+
+  :global(.app-icon) {
+    margin-left: 2px;
+  }
+}

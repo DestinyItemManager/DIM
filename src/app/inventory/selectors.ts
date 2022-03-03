@@ -1,9 +1,13 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { currentProfileSelector, settingsSelector } from 'app/dim-api/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
+import { universalOrnamentPlugSetHashes } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import { emptyObject, emptySet } from 'app/utils/empty';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
@@ -36,11 +40,7 @@ export const bucketsSelector = createSelector(
 /** Bucket hashes for buckets that we actually show on the inventory page. */
 export const displayableBucketHashesSelector = createSelector(bucketsSelector, (buckets) =>
   buckets
-    ? new Set(
-        Object.keys(buckets.byCategory).flatMap((category) =>
-          buckets.byCategory[category].map((b) => b.hash)
-        )
-      )
+    ? new Set(Object.values(buckets.byCategory).flatMap((buckets) => buckets.map((b) => b.hash)))
     : emptySet<number>()
 );
 
@@ -100,31 +100,174 @@ export const materialsSelector = (state: RootState) =>
   allItemsSelector(state).filter(
     (i) =>
       i.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
-      i.itemCategoryHashes.includes(ItemCategoryHashes.ReputationTokens)
+      i.itemCategoryHashes.includes(ItemCategoryHashes.ReputationTokens) ||
+      i.hash === 3702027555 // Spoils of Conquest do not have item category hashes
   );
 
 /** The actual raw profile response from the Bungie.net profile API */
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
-/** A set containing all the hashes of owned items. */
-export const ownedItemsSelector = createSelector(
+// this list of crafting mats contains the StringVariables hash that finds how many the player owns
+// unfortunately, this is basically the only reasonable option
+const craftingMatsTable: [lookupHash: number, countHash: number][] = [
+  [163842161, 2829303739],
+  [163842163, 1238436609],
+  [163842162, 1178490630],
+  [163842160, 2653558736],
+  [3491404510, 2747150405],
+];
+
+/** returns name/icon/amount for a hard-coded list of crafting materials */
+export const craftingMaterialCountsSelector = createSelector(
+  d2ManifestSelector,
   profileResponseSelector,
-  allItemsSelector,
-  (profileResponse, allItems) => {
-    const ownedItemHashes = new Set<number>();
-    for (const item of allItems) {
-      ownedItemHashes.add(item.hash);
-    }
-    if (profileResponse?.profilePlugSets?.data) {
-      for (const plugSet of Object.values(profileResponse.profilePlugSets.data.plugs)) {
-        for (const plug of plugSet) {
-          if (plug.canInsert) {
-            ownedItemHashes.add(plug.plugItemHash);
+  (defs, profileResponse) => {
+    const numbersLookup = profileResponse?.profileStringVariables?.data?.integerValuesByHash;
+    const results: [name: string, icon: string, count: number][] = [];
+
+    if (defs && numbersLookup) {
+      for (const [lookupHash, countHash] of craftingMatsTable) {
+        const def = defs.InventoryItem.get(lookupHash);
+
+        if (def) {
+          const { icon, name } = def.displayProperties;
+          const count = numbersLookup[countHash];
+          if (icon && name && count !== undefined) {
+            results.push([name, icon, count]);
           }
         }
       }
     }
-    return ownedItemHashes;
+    return results;
+  }
+);
+
+const STORE_SPECIFIC_OWNERSHIP_BUCKETS = [
+  // Emblems cannot be transferred between characters and if one character owns an emblem,
+  // other characters don't really own it. Also affects vendor claimability.
+  BucketHashes.Emblems,
+  // Quests and bounties are character-specific.
+  BucketHashes.Quests,
+];
+
+/**
+ * Sets of items considered "owned" for checkmark purposes, some
+ * account-scoped, some character-scoped.
+ *
+ * Most items are considered owned from the view of a character if
+ * they're in any bucket because they can be transferred or are in
+ * the consumables bucket, but for quests and bounties, it's necessary
+ * to see whether the current character has them.
+ */
+export interface OwnedItemsInfo {
+  accountWideOwned: Set<number>;
+  storeSpecificOwned: {
+    [key: string]: Set<number>;
+  };
+}
+
+/**
+ * Sets containing all the hashes of owned items, globally and from the
+ * view of individual characters. Excludes plugs, see
+ * ownedUncollectiblePlugsSelector for those.
+ */
+export const ownedItemsSelector = createSelector(allItemsSelector, (allItems) => {
+  const accountWideOwned = new Set<number>();
+  const storeSpecificOwned = {};
+  for (const item of allItems) {
+    if (STORE_SPECIFIC_OWNERSHIP_BUCKETS.includes(item.bucket.hash)) {
+      if (!storeSpecificOwned[item.owner]) {
+        storeSpecificOwned[item.owner] = new Set();
+      }
+      storeSpecificOwned[item.owner].add(item.hash);
+    } else {
+      accountWideOwned.add(item.hash);
+    }
+  }
+
+  return { accountWideOwned, storeSpecificOwned };
+});
+
+/**
+ * Sets containing all the hashes of owned uncollectible plug items,
+ * e.g. emotes and ghost projections. These plug items do not appear
+ * in collections, so we use plug availability from the profile response
+ * to mark them as "owned". Plugs where the associated item has a
+ * collectibleHash will never be included.
+ */
+export const ownedUncollectiblePlugsSelector = createSelector(
+  d2ManifestSelector,
+  profileResponseSelector,
+  (defs, profileResponse) => {
+    const accountWideOwned = new Set<number>();
+    const storeSpecificOwned = {};
+
+    if (defs && profileResponse) {
+      const processPlugSet = (
+        plugs: { [key: number]: DestinyItemPlug[] },
+        insertInto: Set<number>
+      ) => {
+        _.forIn(plugs, (plugSet) => {
+          for (const plug of plugSet) {
+            if (plug.enabled && !defs.InventoryItem.get(plug.plugItemHash).collectibleHash) {
+              insertInto.add(plug.plugItemHash);
+            }
+          }
+        });
+      };
+
+      if (profileResponse.profilePlugSets?.data) {
+        processPlugSet(profileResponse.profilePlugSets.data.plugs, accountWideOwned);
+      }
+
+      if (profileResponse.characterPlugSets?.data) {
+        for (const [storeId, plugSetData] of Object.entries(
+          profileResponse.characterPlugSets.data
+        )) {
+          if (!storeSpecificOwned[storeId]) {
+            storeSpecificOwned[storeId] = new Set();
+          }
+          processPlugSet(plugSetData.plugs, storeSpecificOwned[storeId]);
+        }
+      }
+    }
+
+    return { accountWideOwned, storeSpecificOwned };
+  }
+);
+
+/** A set containing all the hashes of unlocked PlugSet items (mods, shaders, ornaments, etc) for the given character. */
+// TODO: reconcile with other owned/unlocked selectors
+export const unlockedPlugSetItemsSelector = createSelector(
+  (_state: RootState, characterId?: string) => characterId,
+  profileResponseSelector,
+  (characterId, profileResponse) => {
+    const unlockedPlugs = new Set<number>();
+    if (profileResponse?.profilePlugSets.data?.plugs) {
+      for (const plugSetHashStr in profileResponse.profilePlugSets.data.plugs) {
+        const plugSetHash = parseInt(plugSetHashStr, 10);
+        const plugs = profileResponse.profilePlugSets.data.plugs[plugSetHash];
+        for (const plugSetItem of plugs) {
+          const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
+          if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
+            unlockedPlugs.add(plugSetItem.plugItemHash);
+          }
+        }
+      }
+    }
+    if (characterId && profileResponse?.characterPlugSets.data?.[characterId]?.plugs) {
+      for (const plugSetHashStr in profileResponse.characterPlugSets.data[characterId].plugs) {
+        const plugSetHash = parseInt(plugSetHashStr, 10);
+        const plugs = profileResponse.characterPlugSets.data[characterId].plugs[plugSetHash];
+        for (const plugSetItem of plugs) {
+          const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
+          if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
+            unlockedPlugs.add(plugSetItem.plugItemHash);
+          }
+        }
+      }
+    }
+    return unlockedPlugs;
   }
 );
 
@@ -158,7 +301,7 @@ export const hasClassifiedSelector = createSelector(allItemsSelector, (allItems)
   allItems.some(
     (i) =>
       i.classified &&
-      (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+      (i.location.inWeapons || i.location.inArmor || i.bucket.hash === BucketHashes.Ghost)
   )
 );
 

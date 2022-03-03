@@ -46,19 +46,26 @@ import {
   amountOfItem,
   findItemsByBucket,
   getCurrentStore,
-  getItemAcrossStores,
   getStore,
   getVault,
   spaceLeftForItem,
 } from './stores-helpers';
 
 /**
- * You can reserve a number of each type of item in each store.
+ * You can reserve a number of spaces in each BucketHash in each store.
  */
 export interface MoveReservations {
   [storeId: string]: {
-    [type: string]: number;
+    [type: number]: number;
   };
+}
+
+/**
+ * Minimum specification to identify an item that should be excluded from some consideration.
+ */
+export interface Exclusion {
+  id: string;
+  hash: number;
 }
 
 /**
@@ -120,6 +127,28 @@ function updateItemModel(
 }
 
 /**
+ * Find an item among all stores that matches the params provided.
+ */
+function getItemAcrossStores<Item extends DimItem, Store extends DimStore<Item>>(
+  stores: Store[],
+  params: DimItem
+) {
+  for (const store of stores) {
+    for (const item of store.items) {
+      if (
+        params.id === item.id &&
+        params.hash === item.hash &&
+        params.notransfer === item.notransfer &&
+        params.amount === item.amount
+      ) {
+        return item;
+      }
+    }
+  }
+  return undefined;
+}
+
+/**
  * Finds an item similar to "item" which can be equipped on the item's owner in order to move "item".
  */
 export function getSimilarItem(
@@ -129,7 +158,7 @@ export function getSimilarItem(
     exclusions,
     excludeExotic = false,
   }: {
-    exclusions?: Pick<DimItem, 'id' | 'hash'>[];
+    exclusions?: Exclusion[];
     excludeExotic?: boolean;
   } = {}
 ): DimItem | null {
@@ -164,7 +193,7 @@ export function getSimilarItem(
 function searchForSimilarItem(
   item: DimItem,
   store: DimStore,
-  exclusions: Pick<DimItem, 'id' | 'hash'>[] | undefined,
+  exclusions: Exclusion[] | undefined,
   target: DimStore,
   excludeExotic: boolean
 ): DimItem | null {
@@ -244,7 +273,7 @@ export function equipItems(
         if (i.equippingLabel) {
           const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
           // If we aren't already equipping into that slot...
-          if (otherExotic && !items.find((i) => i.type === otherExotic.type)) {
+          if (otherExotic && !items.find((i) => i.bucket.hash === otherExotic.bucket.hash)) {
             const similarItem = getSimilarItem(getStores(), otherExotic, {
               excludeExotic: true,
               exclusions,
@@ -488,8 +517,9 @@ function getOtherExoticThatNeedsDequipping(item: DimItem, store: DimStore): DimI
 }
 
 interface MoveContext {
-  originalItemType: string;
-  excludes: Pick<DimItem, 'id' | 'hash'>[];
+  /** Bucket hash */
+  originalItemType: number;
+  excludes: Exclusion[];
   spaceLeft(s: DimStore, i: DimItem): number;
 }
 
@@ -566,7 +596,7 @@ function chooseMoveAsideItem(
     throw new DimError(
       'no-space',
       t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
-    );
+    ).withError(new DimError('ItemService.NotEnoughRoomGeneral'));
   }
 
   // Find any stackable that could be combined with another stack
@@ -685,7 +715,7 @@ function chooseMoveAsideItem(
     throw new DimError(
       'no-space',
       t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
-    );
+    ).withError(new DimError('ItemService.NotEnoughRoomGeneral'));
   }
 
   return moveAsideCandidate;
@@ -708,7 +738,7 @@ function canMoveToStore(
   store: DimStore,
   amount: number,
   options: {
-    excludes: Pick<DimItem, 'id' | 'hash'>[];
+    excludes: Exclusion[];
     reservations: MoveReservations;
     numRetries?: number;
     cancelToken: CancelToken;
@@ -720,11 +750,15 @@ function canMoveToStore(
     function spaceLeftWithReservations(s: DimStore, i: DimItem) {
       let left = spaceLeftForItem(s, i, storesSelector(getState()));
       // minus any reservations
-      if (reservations[s.id]?.[i.type]) {
-        left -= reservations[s.id][i.type];
+      if (reservations[s.id]?.[i.bucket.hash]) {
+        left -= reservations[s.id][i.bucket.hash];
       }
       // but not counting the original item that's moving
-      if (s.id === item.owner && i.type === item.type && !item.location.inPostmaster) {
+      if (
+        s.id === item.owner &&
+        i.bucket.hash === item.bucket.hash &&
+        !item.location.inPostmaster
+      ) {
         left--;
       }
       return Math.max(0, left);
@@ -767,11 +801,11 @@ function canMoveToStore(
     } else {
       // Move aside one of the items that's in the way
       const moveContext: MoveContext = {
-        originalItemType: item.type,
+        originalItemType: item.bucket.hash,
         excludes,
         spaceLeft(s, i) {
           let left = spaceLeftWithReservations(s, i);
-          if (i.type === this.originalItemType && storeReservations[s.id]) {
+          if (i.bucket.hash === this.originalItemType && storeReservations[s.id]) {
             left -= storeReservations[s.id];
           }
           return Math.max(0, left);
@@ -779,10 +813,10 @@ function canMoveToStore(
       };
 
       // Move starting from the vault (which is always last)
-      const moves = Object.entries(movesNeeded)
+      const [sourceStoreId] = Object.entries(movesNeeded)
         .reverse()
         .find(([_storeId, moveAmount]) => moveAmount > 0)!;
-      const moveAsideSource = getStore(stores, moves[0])!;
+      const moveAsideSource = getStore(stores, sourceStoreId)!;
       const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(
         getState,
         moveAsideSource,
@@ -878,7 +912,7 @@ function isValidTransfer(
   store: DimStore,
   item: DimItem,
   amount: number,
-  excludes: Pick<DimItem, 'id' | 'hash'>[],
+  excludes: Exclusion[],
   reservations: MoveReservations,
   cancelToken: CancelToken
 ): ThunkResult<boolean> {
@@ -921,7 +955,7 @@ export function executeMoveItem(
   }: {
     equip?: boolean;
     amount?: number;
-    excludes?: Pick<DimItem, 'id' | 'hash'>[];
+    excludes?: Exclusion[];
     reservations?: MoveReservations;
     cancelToken?: CancelToken;
   }
@@ -1046,7 +1080,7 @@ export function sortMoveAsideCandidatesForStore(
       // Try our hardest never to unequip something
       compareBy((i) => !i.equipped),
       // prefer same type over everything
-      compareBy((i) => item && i.type === item.type),
+      compareBy((i) => item && i.bucket.hash === item.bucket.hash),
       // or at least same category
       compareBy((i) => item && i.bucket.sort === item.bucket.sort),
       // Always prefer keeping something that was manually moved where it is

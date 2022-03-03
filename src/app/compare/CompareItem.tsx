@@ -6,16 +6,19 @@ import { moveItemTo } from 'app/inventory/move-item';
 import { currentStoreSelector } from 'app/inventory/selectors';
 import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import clsx from 'clsx';
+import _ from 'lodash';
 import React, { useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import ItemSockets from '../item-popup/ItemSockets';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
-import { AppIcon, faArrowCircleDown, searchIcon } from '../shell/icons';
+import { AppIcon, faArrowCircleDown, searchIcon, shoppingCart } from '../shell/icons';
 import { StatInfo } from './Compare';
 import styles from './CompareItem.m.scss';
 import CompareStat from './CompareStat';
@@ -48,23 +51,33 @@ export default function CompareItem({
     dispatch(moveItemTo(item, currentStore, false));
   }, [currentStore, dispatch, item]);
 
+  const { pathname } = useLocation();
+  const isFindable = !item.vendor && pathname.endsWith('/inventory');
+
   const itemHeader = useMemo(
     () => (
       <div ref={headerRef}>
         <div className={styles.header}>
-          <ActionButton title={t('Hotkey.Pull')} onClick={pullItem}>
-            <AppIcon icon={faArrowCircleDown} />
-          </ActionButton>
-          <LockActionButton item={item} />
-          <TagActionButton item={item} label={false} hideKeys={true} />
+          {item.vendor ? (
+            <VendorItemWarning item={item} />
+          ) : (
+            <ActionButton title={t('Hotkey.Pull')} onClick={pullItem}>
+              <AppIcon icon={faArrowCircleDown} />
+            </ActionButton>
+          )}
+          {item.lockable ? <LockActionButton item={item} /> : <div />}
+          {item.taggable ? <TagActionButton item={item} label={false} hideKeys={true} /> : <div />}
           <div className={styles.close} onClick={() => remove(item)} role="button" tabIndex={0} />
         </div>
         <div
-          className={clsx(styles.itemName, { [styles.initialItem]: isInitialItem })}
-          title={isInitialItem ? t('Compare.InitialItem') : undefined}
+          className={clsx(styles.itemName, {
+            [styles.initialItem]: isInitialItem,
+            [styles.isFindable]: isFindable,
+          })}
           onClick={() => itemClick(item)}
         >
-          {item.name} <AppIcon icon={searchIcon} />
+          <span title={isInitialItem ? t('Compare.InitialItem') : undefined}>{item.name}</span>{' '}
+          {isFindable && <AppIcon icon={searchIcon} />}
         </div>
         <ItemPopupTrigger item={item} noCompare={true}>
           {(ref, onClick) => (
@@ -77,7 +90,7 @@ export default function CompareItem({
         </ItemPopupTrigger>
       </div>
     ),
-    [isInitialItem, item, itemClick, pullItem, remove, itemNotes]
+    [isInitialItem, item, itemClick, pullItem, remove, itemNotes, isFindable]
   );
 
   return (
@@ -99,4 +112,27 @@ export default function CompareItem({
       {item.sockets && <ItemSockets item={item} minimal={true} onPlugClicked={onPlugClicked} />}
     </div>
   );
+}
+
+function VendorItemWarning({ item }: { item: DimItem }) {
+  const defs = useD2Definitions()!;
+  return item.vendor ? (
+    <PressTip
+      elementType="span"
+      tooltip={() => {
+        const vendorName = defs.Vendor.get(item.vendor!.vendorHash).displayProperties.name;
+        return (
+          <>
+            {t('Compare.IsVendorItem')}
+            <br />
+            {t('Compare.SoldBy', { vendorName })}
+          </>
+        );
+      }}
+    >
+      <ActionButton onClick={_.noop} disabled title={t('Hotkey.Pull')}>
+        <AppIcon icon={shoppingCart} />
+      </ActionButton>
+    </PressTip>
+  ) : null;
 }

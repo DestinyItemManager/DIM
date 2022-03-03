@@ -1,3 +1,4 @@
+import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
@@ -5,6 +6,7 @@ import { getClass } from 'app/inventory/store/character-utils';
 import ModAssignmentDrawer from 'app/loadout/mod-assignment-drawer/ModAssignmentDrawer';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -12,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createSelector } from 'reselect';
 import { Loadout } from './loadout-types';
+import styles from './LoadoutDrawerOptions.m.scss';
 import { loadoutsSelector } from './selectors';
 
 const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
@@ -27,6 +30,7 @@ const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
 
 export default function LoadoutDrawerOptions({
   loadout,
+  storeId,
   showClass,
   isNew,
   onUpdateMods,
@@ -35,14 +39,15 @@ export default function LoadoutDrawerOptions({
   saveAsNew,
   deleteLoadout,
 }: {
-  loadout?: Readonly<Loadout>;
+  loadout: Readonly<Loadout> | undefined;
+  storeId: string | undefined;
   showClass: boolean;
   isNew: boolean;
   onUpdateMods(mods: PluggableInventoryItemDefinition[]): void;
   updateLoadout(loadout: Loadout): void;
   saveLoadout(e: React.FormEvent): void;
   saveAsNew(e: React.MouseEvent): void;
-  deleteLoadout(e: React.MouseEvent): void;
+  deleteLoadout(): void;
 }) {
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
   const classTypeOptions = useSelector(classTypeOptionsSelector);
@@ -88,7 +93,9 @@ export default function LoadoutDrawerOptions({
 
   const saveDisabled =
     !loadout.name.length ||
-    (!loadout.items.length && !loadout.parameters?.mods?.length) ||
+    (!loadout.items.length &&
+      !loadout.parameters?.mods?.length &&
+      _.isEmpty(loadout.parameters?.modsByBucket)) ||
     // There's an existing loadout with the same name & class and it's not the loadout we are currently editing
     Boolean(clashingLoadout && clashingLoadout.id !== loadout.id);
 
@@ -105,11 +112,11 @@ export default function LoadoutDrawerOptions({
   };
 
   return (
-    <div className="loadout-options">
+    <div className={styles.loadoutOptions}>
       <form onSubmit={saveLoadout}>
-        <div className="input-group loadout-name">
+        <div className={clsx(styles.inputGroup, styles.loadoutName)}>
           <input
-            className="dim-input"
+            className={styles.dimInput}
             name="name"
             onChange={setName}
             minLength={1}
@@ -129,7 +136,7 @@ export default function LoadoutDrawerOptions({
             </select>
           )}
         </div>
-        <div className="input-group">
+        <div className={styles.inputGroup}>
           <button className="dim-button" type="submit" disabled={saveDisabled}>
             {t('Loadouts.Save')}
           </button>
@@ -154,21 +161,16 @@ export default function LoadoutDrawerOptions({
           )}
         </div>
         {!isNew && (
-          <div className="input-group">
-            <button
-              className="dim-button danger"
-              onClick={deleteLoadout}
-              type="button"
-              title={t('Loadouts.Delete')}
-            >
-              <AppIcon icon={deleteIcon} /> {t('Loadouts.Delete')}
-            </button>
+          <div className={styles.inputGroup}>
+            <ConfirmButton key="delete" danger onClick={deleteLoadout}>
+              <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
+            </ConfirmButton>
           </div>
         )}
         {loadout.notes === undefined && (
-          <div className="input-group">
+          <div className={styles.inputGroup}>
             <button
-              className="dim-button danger"
+              className="dim-button"
               onClick={addNotes}
               type="button"
               title={t('Loadouts.AddNotes')}
@@ -178,7 +180,7 @@ export default function LoadoutDrawerOptions({
           </div>
         )}
         {Boolean(loadout.parameters?.mods?.length) && (
-          <div className="input-group">
+          <div className={styles.inputGroup}>
             <button
               className="dim-button"
               type="button"
@@ -189,12 +191,12 @@ export default function LoadoutDrawerOptions({
             </button>
           </div>
         )}
-        <div className="input-group">
+        <div className={styles.inputGroup}>
           <Link className="dim-button" to="optimizer" state={{ loadout }}>
             {t('Loadouts.OpenInOptimizer')}
           </Link>
         </div>
-        <div className="input-group">
+        <div className={styles.inputGroup}>
           <label>
             <input type="checkbox" checked={Boolean(loadout.clearSpace)} onChange={setClearSpace} />{' '}
             {t('Loadouts.ClearSpace')}
@@ -202,7 +204,7 @@ export default function LoadoutDrawerOptions({
         </div>
       </form>
       {clashingLoadout && clashingLoadout.id !== loadout.id && (
-        <div className="dim-already-exists">
+        <div>
           {clashingLoadout.classType !== DestinyClass.Unknown
             ? t('Loadouts.AlreadyExistsClass', {
                 className: getClass(clashingLoadout.classType),
@@ -214,6 +216,7 @@ export default function LoadoutDrawerOptions({
         ReactDOM.createPortal(
           <ModAssignmentDrawer
             loadout={loadout}
+            storeId={storeId}
             onUpdateMods={onUpdateMods}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,

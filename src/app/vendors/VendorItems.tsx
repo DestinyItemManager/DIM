@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import spiderMats from 'data/d2/spider-mats.json';
+import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -18,21 +18,41 @@ function vendorItemIndex(item: VendorItem) {
   return item.key;
 }
 
-function itemSort(category: string) {
+// Fix for ada-1 bounties ... https://github.com/Bungie-net/api/issues/1522
+// changes their sort to match the game
+const transmogBountyOrder = [
+  1455474223, // Vanguard
+  3675595381, // Crucible
+  2259349108, // Gambit
+  4187422269, // Destination
+  171866827, // Raid/Dungeon
+];
+
+function itemSort(vendorHash: number, category: string) {
   if (category === 'category.rank_rewards_seasonal') {
     return chainComparator<VendorItem>(
       compareBy((item) => item.item?.tier),
       compareBy(vendorItemIndex)
     );
   } else if (category === 'category_bounties') {
-    return chainComparator<VendorItem>(
-      compareBy((item) => item.item?.typeName),
-      compareBy(vendorItemIndex)
-    );
+    if (vendorHash === VENDORS.ADA_TRANSMOG) {
+      return compareBy<VendorItem>(
+        (item) => item.item?.hash && transmogBountyOrder.indexOf(item.item.hash)
+      );
+    } else {
+      return chainComparator<VendorItem>(
+        compareBy((item) => item.item?.typeName),
+        compareBy(vendorItemIndex)
+      );
+    }
   } else if (category === 'category_weapon') {
     return chainComparator<VendorItem>(compareBy((item) => item.item?.itemCategoryHashes[0]));
   } else if (category.startsWith('category_tier')) {
     return undefined;
+  } else if (vendorHash === VENDORS.WAR_TABLE_UPGRADES_RISEN) {
+    // Purchasing an upgrade from the vendor swaps it out with a different item
+    // 10 positions later in the array.
+    return compareBy<VendorItem>((item) => item.key - (item.owned ? 10 : 0));
   } else {
     return chainComparator<VendorItem>(compareBy(vendorItemIndex));
   }
@@ -61,6 +81,11 @@ export default function VendorItems({
   characterId: string;
 }) {
   const defs = useD2Definitions()!;
+
+  if (!vendor.items.length) {
+    return <div className={styles.vendorContents}>{t('Vendors.NoItems')}</div>;
+  }
+
   const itemsByCategory = _.groupBy(vendor.items, (item: VendorItem) => item.displayCategoryIndex);
 
   const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
@@ -84,9 +109,9 @@ export default function VendorItems({
   }
 
   // add all traded planetmats if this vendor is the spider
-  if (vendor?.component?.vendorHash === VENDORS.SPIDER) {
+  if (vendor?.component?.vendorHash === VENDORS.RAHOOL) {
     currencies = _.uniqBy(
-      [...spiderMats.map((h) => defs.InventoryItem.get(h)), ...currencies],
+      [...rahoolMats.map((h) => defs.InventoryItem.get(h)), ...currencies],
       (i) => i.hash
     );
   }
@@ -148,14 +173,19 @@ export default function VendorItems({
                 </h3>
                 <div className={styles.vendorItems}>
                   {items
-                    .sort(itemSort(vendor.def.displayCategories[categoryIndex]?.identifier))
+                    .sort(
+                      itemSort(
+                        vendor.def.hash,
+                        vendor.def.displayCategories[categoryIndex]?.identifier
+                      )
+                    )
                     .map(
                       (item) =>
                         item.item && (
                           <VendorItemComponent
                             key={item.key}
                             item={item}
-                            owned={Boolean(ownedItemHashes?.has(item.item.hash))}
+                            owned={Boolean(ownedItemHashes?.has(item.item.hash) || item.owned)}
                             characterId={characterId}
                           />
                         )

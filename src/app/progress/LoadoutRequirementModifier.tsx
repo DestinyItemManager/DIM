@@ -3,6 +3,7 @@ import PressTip from 'app/dim-ui/PressTip';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ARMSMASTER_ACTIVITY_MODIFIER } from 'app/search/d2-known-values';
 import { DestinyItemSubType, DestinyMilestoneChallengeActivity } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import './ActivityModifier.scss';
 
@@ -24,25 +25,27 @@ const itemSubTypeToItemCategoryHash: { [key in DestinyItemSubType]: number } = {
   [DestinyItemSubType.ClassArmor]: 17,
   [DestinyItemSubType.DummyRepeatableBounty]: 17,
   // END useless types
-  [DestinyItemSubType.AutoRifle]: 5,
-  [DestinyItemSubType.Shotgun]: 11,
-  [DestinyItemSubType.Machinegun]: 12,
-  [DestinyItemSubType.HandCannon]: 6,
-  [DestinyItemSubType.RocketLauncher]: 13,
-  [DestinyItemSubType.FusionRifle]: 9,
-  [DestinyItemSubType.SniperRifle]: 10,
-  [DestinyItemSubType.PulseRifle]: 7,
-  [DestinyItemSubType.ScoutRifle]: 8,
-  [DestinyItemSubType.Sidearm]: 14,
-  [DestinyItemSubType.Sword]: 54,
-  [DestinyItemSubType.Mask]: 0,
-  [DestinyItemSubType.Shader]: 0,
-  [DestinyItemSubType.Ornament]: 0,
-  [DestinyItemSubType.FusionRifleLine]: 1504945536,
-  [DestinyItemSubType.GrenadeLauncher]: 153950757,
-  [DestinyItemSubType.SubmachineGun]: 3954685534,
-  [DestinyItemSubType.TraceRifle]: 2489664120,
-  [DestinyItemSubType.Bow]: 3317538576,
+  [DestinyItemSubType.AutoRifle]: ItemCategoryHashes.AutoRifle,
+  [DestinyItemSubType.Shotgun]: ItemCategoryHashes.Shotgun,
+  [DestinyItemSubType.Machinegun]: ItemCategoryHashes.MachineGun,
+  [DestinyItemSubType.HandCannon]: ItemCategoryHashes.HandCannon,
+  [DestinyItemSubType.RocketLauncher]: ItemCategoryHashes.RocketLauncher,
+  [DestinyItemSubType.FusionRifle]: ItemCategoryHashes.FusionRifle,
+  [DestinyItemSubType.SniperRifle]: ItemCategoryHashes.SniperRifle,
+  [DestinyItemSubType.PulseRifle]: ItemCategoryHashes.PulseRifle,
+  [DestinyItemSubType.ScoutRifle]: ItemCategoryHashes.ScoutRifle,
+  [DestinyItemSubType.Sidearm]: ItemCategoryHashes.Sidearm,
+  [DestinyItemSubType.Sword]: ItemCategoryHashes.Sword,
+  [DestinyItemSubType.Mask]: ItemCategoryHashes.Mask,
+  [DestinyItemSubType.Shader]: ItemCategoryHashes.Shaders,
+  [DestinyItemSubType.Ornament]: ItemCategoryHashes.Mods_Ornament,
+  [DestinyItemSubType.FusionRifleLine]: ItemCategoryHashes.LinearFusionRifles,
+  [DestinyItemSubType.GrenadeLauncher]: ItemCategoryHashes.GrenadeLaunchers,
+  [DestinyItemSubType.SubmachineGun]: ItemCategoryHashes.SubmachineGuns,
+  [DestinyItemSubType.TraceRifle]: ItemCategoryHashes.TraceRifles,
+  [DestinyItemSubType.Bow]: ItemCategoryHashes.Bows,
+  // TODO: Fill this in when the manifest gets released
+  [DestinyItemSubType.Glaive]: 0,
 };
 
 /**

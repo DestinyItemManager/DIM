@@ -1,0 +1,21 @@
+@import '../../variables.scss';
+
+.contents {
+  display: flex;
+  flex-flow: row wrap;
+  @include flex-gap(12px, $marginBottom: 10px);
+  @include phone-portrait {
+    @include flex-gap(12px, $marginBottom: 10px);
+  }
+}
+
+.mods {
+  flex: 1;
+}
+
+.buttons {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 10px auto;
+  @include horizontal-space-children(4px);
+}

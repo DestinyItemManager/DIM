@@ -46,34 +46,6 @@ const itemsByBucket = weakMemoize((store: DimStore) =>
 export const findItemsByBucket = (store: DimStore, bucketId: number): DimItem[] =>
   itemsByBucket(store)[bucketId] ?? emptyArray();
 
-/**
- * Find an item among all stores that matches the params provided.
- */
-export function getItemAcrossStores<Item extends DimItem, Store extends DimStore<Item>>(
-  stores: Store[],
-  params: {
-    id?: string;
-    hash?: number;
-    notransfer?: boolean;
-    amount?: number;
-  }
-) {
-  const predicate = (i: DimItem) =>
-    (params.id === undefined || params.id === i.id) &&
-    (params.hash === undefined || params.hash === i.hash) &&
-    (params.notransfer === undefined || params.notransfer === i.notransfer) &&
-    (params.amount === undefined || params.amount === i.amount);
-
-  for (const store of stores) {
-    for (const item of store.items) {
-      if (predicate(item)) {
-        return item;
-      }
-    }
-  }
-  return undefined;
-}
-
 /** Get the bonus power from the Seasonal Artifact */
 export function getArtifactBonus(store: DimStore) {
   const artifact = findItemsByBucket(store, BucketHashes.SeasonalArtifact).find((i) => i.equipped);
@@ -95,10 +67,6 @@ export function amountOfItem(store: DimStore, item: { hash: number }) {
  * stackables, this is in stacks, not individual pieces.
  */
 export function capacityForItem(store: DimStore, item: DimItem) {
-  if (!item.bucket) {
-    throw new Error("item needs a 'bucket' field");
-  }
-
   if (store.isVault) {
     const vaultBucket = item.bucket.vaultBucket;
     return vaultBucket ? vaultBucket.capacity : 0;
@@ -116,21 +84,22 @@ export function spaceLeftForItem(store: DimStore, item: DimItem, stores: DimStor
 }
 
 export interface SpaceLeft {
-  // The space definitely available.
+  /** The space definitely available. For stackables this is in individual pieces, not stacks. */
   guaranteed: number;
-  // Whether there's maybe a way space could be made for more than the guaranteed.
+  /** Whether there's maybe a way space could be made for more than the guaranteed. */
   couldMakeSpace: boolean;
 }
 
+/**
+ * Determine how much space there may be for an item being moved into a target
+ * store - this figures out both how much open space there is, and whether we
+ * could make space by moving things to the vault.
+ */
 export function potentialSpaceLeftForItem(
   store: DimStore,
   item: DimItem,
   stores: DimStore[]
 ): SpaceLeft {
-  if (!item.type) {
-    throw new Error("item needs a 'type' field");
-  }
-
   // Calculate how many full stacks (slots, where multiple items in a stack
   // count as 1) are occupied in the bucket this item would go into.
   let occupiedStacks = 0;
@@ -139,13 +108,11 @@ export function potentialSpaceLeftForItem(
       return { guaranteed: 0, couldMakeSpace: false };
     }
     const vaultBucket = item.bucket.vaultBucket;
+    // In the vault, all items are together in one big bucket, so we look at how much space that bucket has open
     occupiedStacks = item.bucket.vaultBucket
       ? count(store.items, (i) => Boolean(i.bucket.vaultBucket?.hash === vaultBucket.hash))
       : 0;
   } else {
-    if (!item.bucket) {
-      return { guaranteed: 0, couldMakeSpace: false };
-    }
     // Account-wide buckets (mods, etc) are only on the first character
     if (item.bucket.accountWide && !store.current) {
       return { guaranteed: 0, couldMakeSpace: false };

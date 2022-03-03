@@ -5,7 +5,6 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
-import latinise from 'voca/latinise';
 import { FilterDefinition } from '../filter-types';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
@@ -18,6 +17,11 @@ function escapeRegExp(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+/** Remove diacritics from latin-based string */
+function latinize(s: string, language: string) {
+  return isLatinBased(language) ? s.normalize('NFD').replace(/\p{Diacritic}/gu, '') : s;
+}
+
 /** Make a Regexp that searches starting at a word boundary */
 export function startWordRegexp(s: string, language: string) {
   // Only some languages effectively use the \b regex word boundary
@@ -25,8 +29,8 @@ export function startWordRegexp(s: string, language: string) {
 }
 
 /** returns input string toLower, and stripped of accents if it's a latin language */
-const plainString = (s: string, language: string): string =>
-  (isLatinBased(language) ? latinise(s) : s).toLowerCase();
+export const plainString = (s: string, language: string): string =>
+  latinize(s, language).toLowerCase();
 
 const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);
 const getPerkNamesFromManifest = _.once((allItems: DestinyInventoryItemDefinition[]) => {
@@ -225,16 +229,27 @@ function getStringsFromDisplayPropertiesMap<T extends { name: string; descriptio
 }
 
 /** includes name and description unless you set the arg2 flag */
-export function getStringsFromAllSockets(item: DimItem, includeDescription = true) {
-  return (
-    item.sockets?.allSockets.flatMap((socket) => {
+function getStringsFromAllSockets(item: DimItem, includeDescription = true) {
+  const results: string[] = [];
+  if (item.sockets) {
+    for (const socket of item.sockets.allSockets) {
       const plugAndPerkDisplay = socket.plugOptions.map((plug) => [
         plug.plugDef.displayProperties,
         plug.perks.map((perk) => perk.displayProperties),
       ]);
-      return getStringsFromDisplayPropertiesMap(plugAndPerkDisplay.flat(2), includeDescription);
-    }) || []
-  );
+      results.push(
+        ...getStringsFromDisplayPropertiesMap(plugAndPerkDisplay.flat(2), includeDescription)
+      );
+      // include tooltips from the plugged item
+      if (socket.plugged?.plugDef.tooltipNotifications) {
+        for (const t of socket.plugged.plugDef.tooltipNotifications) {
+          results.push(t.displayString);
+        }
+      }
+    }
+  }
+
+  return results;
 }
 
 // we can't properly quote a search string if it contains both ' and ", so.. we use this

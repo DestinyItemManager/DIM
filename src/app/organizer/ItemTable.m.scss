@@ -39,8 +39,8 @@ $content-cells: 5;
     flex-direction: row;
     align-items: center;
     position: sticky;
-    left: 4px;
-    width: 98vw;
+    left: calc(4px + env(safe-area-inset-left));
+    width: calc(98vw - env(safe-area-inset-left) - env(safe-area-inset-right));
     @include horizontal-space-children(4px);
   }
 }
@@ -99,7 +99,7 @@ $content-cells: 5;
   padding-left: 8px !important;
   padding-right: 2px !important;
   min-width: 20px;
-  left: 0;
+  left: env(safe-area-inset-left);
   position: sticky;
   top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
   &.header {
@@ -144,7 +144,7 @@ $content-cells: 5;
 .icon {
   padding-top: 4px !important;
   min-width: calc(var(--item-size) * 0.75);
-  left: 30px;
+  left: calc(30px + env(safe-area-inset-left));
   position: sticky;
   top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
   &.header {
@@ -247,7 +247,9 @@ $content-cells: 5;
   }
 }
 
-.stat-2715839340 {
+// Recoil circle
+.stat-2715839340,
+.base-2715839340 {
   svg {
     circle {
       fill: black;

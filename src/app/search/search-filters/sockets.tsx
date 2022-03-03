@@ -7,7 +7,7 @@ import {
   modTypeTags,
 } from 'app/utils/item-utils';
 import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import {
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
@@ -159,7 +159,6 @@ const socketFilters: FilterDefinition[] = [
         )
       ),
   },
-
   {
     keywords: 'holdsmod',
     description: tl('Filter.HoldsMod'),
@@ -178,6 +177,41 @@ const socketFilters: FilterDefinition[] = [
         );
       },
   },
+  {
+    keywords: 'deepsight',
+    description: tl('Filter.Deepsight'),
+    format: ['simple', 'query'],
+    destinyVersion: 2,
+    suggestions: ['complete', 'incomplete'],
+    filter:
+      ({ filterValue }) =>
+      (item: DimItem) => {
+        switch (filterValue) {
+          case 'deepsight':
+            return isDeepsight(item);
+          case 'complete':
+            return isDeepsight(item, true);
+          case 'incomplete':
+            return isDeepsight(item, false);
+        }
+      },
+  },
 ];
 
 export default socketFilters;
+
+function isDeepsight(item: DimItem, checkComplete?: Boolean) {
+  return Boolean(
+    item.bucket.inWeapons &&
+      item.sockets?.allSockets.find((s) => {
+        const plugDef = s.plugged?.plugDef;
+        const isDeepsight =
+          plugDef &&
+          plugDef.plug.plugCategoryHash === PlugCategoryHashes.CraftingPlugsWeaponsModsMemories &&
+          plugDef.objectives;
+        const completed = isDeepsight && s.plugged?.plugObjectives[0]?.complete;
+        const status = checkComplete === undefined ? true : checkComplete ? completed : !completed;
+        return isDeepsight && status;
+      })
+  );
+}

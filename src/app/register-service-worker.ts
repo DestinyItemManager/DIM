@@ -24,16 +24,19 @@ export const dimNeedsUpdate$ = new Observable<boolean>(false);
  * It will attempt to update the service worker before reporting that DIM needs update.
  */
 // TODO: Move this state into Redux?
+
+let currentVersion = $DIM_VERSION;
+
 (async () => {
   await delay(10 * 1000);
-  const interval = setInterval(async () => {
+  setInterval(async () => {
     try {
       const serverVersion = await getServerVersion();
-      if (isNewVersion(serverVersion, $DIM_VERSION)) {
+      if (isNewVersion(serverVersion, currentVersion)) {
         const updated = await updateServiceWorker();
         if (updated) {
+          currentVersion = serverVersion;
           dimNeedsUpdate$.next(true);
-          clearInterval(interval);
         }
       }
     } catch (e) {

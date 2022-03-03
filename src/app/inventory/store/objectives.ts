@@ -1,3 +1,4 @@
+import { D1ObjectiveDefinition } from 'app/destiny1/d1-manifest-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   DestinyInventoryItemDefinition,
@@ -7,6 +8,7 @@ import {
   DestinyObjectiveProgress,
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
+import trialsHashes from 'data/d2/d2-trials-objectives.json';
 
 /**
  * These are the utilities that deal with figuring out Objectives for items.
@@ -52,12 +54,37 @@ export function buildObjectives(
 }
 
 export function isBooleanObjective(
-  objectiveDef: DestinyObjectiveDefinition,
+  objectiveDef: DestinyObjectiveDefinition | D1ObjectiveDefinition,
   completionValue: number
 ) {
   return (
     objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
     (completionValue === 1 &&
-      (!objectiveDef.allowOvercompletion || !objectiveDef.showValueOnComplete))
+      (!('allowOvercompletion' in objectiveDef) ||
+        !objectiveDef.allowOvercompletion ||
+        !objectiveDef.showValueOnComplete))
   );
+}
+
+export function isTrialsPassage(itemHash: number) {
+  return trialsHashes.passages.includes(itemHash);
+}
+
+/**
+ * Checks if the trials passage is flawless
+ */
+export function isFlawlessPassage(objectives: DestinyObjectiveProgress[] | null) {
+  return objectives?.some((obj) => isFlawlessObjective(obj.objectiveHash) && obj.complete);
+}
+
+export function isFlawlessObjective(objectiveHash: number) {
+  return trialsHashes.objectives[objectiveHash] === 'Flawless';
+}
+
+export function isWinsObjective(objectiveHash: number) {
+  return trialsHashes.objectives[objectiveHash] === 'Wins';
+}
+
+export function isRoundsWonObjective(objectiveHash: number) {
+  return trialsHashes.objectives[objectiveHash] === 'Rounds Won';
 }

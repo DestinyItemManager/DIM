@@ -1,0 +1,48 @@
+@import '../../variables.scss';
+
+.loParams {
+  max-width: 100%;
+  @include vertical-space-children(4px);
+}
+
+.loStats {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+  width: 100%;
+  @include horizontal-space-children(8px);
+}
+
+.loStat {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+  font-weight: bold;
+  font-size: 11px;
+
+  img {
+    height: 14px;
+    width: 14px;
+    margin-right: 2px;
+  }
+}
+
+.loExotic {
+  --item-size: 17px;
+  span {
+    margin-left: 4px;
+  }
+}
+
+.loQuery {
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 4em;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  :global(.app-icon) {
+    margin-left: 3px;
+    margin-right: 6px;
+  }
+}

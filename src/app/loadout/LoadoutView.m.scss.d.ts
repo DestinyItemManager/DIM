@@ -7,11 +7,6 @@ interface CssExports {
   'loadout': string;
   'loadoutNotes': string;
   'missingItems': string;
-  'mods': string;
-  'modsGrid': string;
-  'modsPlaceholder': string;
-  'placeholder': string;
-  'showModPlacementButton': string;
   'title': string;
 }
 export const cssExports: CssExports;

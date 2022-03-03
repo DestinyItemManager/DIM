@@ -3,7 +3,7 @@
 .loadout {
   composes: flexColumn from '../dim-ui/common.m.scss';
   margin-bottom: 10px;
-  padding: 20px;
+  padding: 15px;
   background: rgba(0, 0, 0, 0.25);
 }
 
@@ -26,21 +26,11 @@
 .actions {
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-flow: row wrap;
-  @include horizontal-space-children(4px);
+  @include flex-gap(4px);
   @include phone-portrait {
     margin-top: 16px;
     margin-bottom: 16px;
   }
-}
-
-.placeholder {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.5);
-  width: 100%;
-  height: var(--item-size);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .missingItems {
@@ -56,42 +46,20 @@
 }
 
 .contents {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  gap: calc(4 * var(--item-margin));
-  flex-wrap: wrap;
+  display: flex;
+  flex-flow: row wrap;
   margin-top: 10px;
+  min-height: 16px;
+  @include flex-gap(24px);
+  @include phone-portrait {
+    @include flex-gap(12px);
+  }
 }
 
 .classIcon {
   width: 16px !important;
   height: 16px !important;
   margin-right: 8px;
-}
-
-.mods {
-  flex: 1;
-}
-
-.modsGrid {
-  --item-icon-size: calc(0.8 * var(--item-size));
-  min-width: calc(5 * var(--item-icon-size) + 4 * var(--item-margin));
-  display: grid;
-  grid-template-columns: repeat(auto-fill, var(--item-icon-size));
-  gap: 4px;
-  align-content: flex-start;
-  align-items: flex-start;
-  :global(.item) {
-    --item-size: var(--item-icon-size);
-  }
-}
-
-.showModPlacementButton {
-  margin-top: 8px;
-}
-
-.modsPlaceholder {
-  composes: placeholder;
-  flex: 1;
 }
 
 .loadoutNotes {

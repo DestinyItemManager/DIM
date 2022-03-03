@@ -16,6 +16,7 @@ module.exports = {
     $DIM_FLAVOR: 'test',
     $DIM_WEB_API_KEY: 'xxx',
     $DIM_API_KEY: 'xxx',
+    $DIM_VERSION: '1.0.0',
     $featureFlags: {
       dimApi: true,
     },

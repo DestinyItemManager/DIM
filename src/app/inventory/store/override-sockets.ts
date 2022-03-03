@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
 import produce from 'immer';
 import _ from 'lodash';
@@ -27,6 +28,8 @@ export function applySocketOverrides(
     return item;
   }
 
+  let icon = item.icon;
+
   const sockets = item.sockets.allSockets.map((s): DimSocket => {
     const override = socketOverrides[s.socketIndex];
 
@@ -38,20 +41,32 @@ export function applySocketOverrides(
     let plugOptions: DimPlug[] = s.plugOptions.map((p) => ({ ...p, stats: null }));
 
     if (override && s.plugged?.plugDef.hash !== override) {
-      let newPlug = plugOptions.find((p) => p.plugDef.hash === override);
-      if (!newPlug && !s.isPerk) {
+      let newPlug, actuallyPlugged;
+
+      if (s.isPerk) {
+        newPlug = plugOptions.find((p) => p.plugDef.hash === override);
+        actuallyPlugged = plugOptions.find((p) => p.plugDef.hash === s.plugged?.plugDef.hash);
+      } else {
         // This is likely a mod selection!
         const createdPlug = buildDefinedPlug(defs, override);
         if (createdPlug) {
           newPlug = createdPlug;
+          // Mod sockets' plugOptions only ever
+          // contain the currently plugged item
+          actuallyPlugged = plugOptions.find((p) => p.plugDef.hash === s.plugged?.plugDef.hash);
           plugOptions = [newPlug];
         }
       }
 
       if (newPlug) {
-        // Back up the real plug here
-        const actuallyPlugged = plugOptions.find((p) => p.plugDef.hash === s.plugged?.plugDef.hash);
-
+        // If this is an ornament, override the item's icon as well
+        if (newPlug.plugDef.plug.plugCategoryIdentifier.includes('skins')) {
+          if (DEFAULT_ORNAMENTS.includes(newPlug.plugDef.hash)) {
+            icon = defs.InventoryItem.get(item.hash).displayProperties.icon;
+          } else {
+            icon = newPlug.plugDef.displayProperties.icon;
+          }
+        }
         return {
           ...s,
           actuallyPlugged,
@@ -80,6 +95,7 @@ export function applySocketOverrides(
 
   const updatedItem: DimItem = {
     ...item,
+    icon,
     sockets: {
       ...item.sockets,
       allSockets: sockets,

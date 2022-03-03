@@ -10,7 +10,7 @@ import {
   itemInfosSelector,
 } from '../inventory/selectors';
 import { loadoutsSelector } from '../loadout-drawer/selectors';
-import { FilterDefinition, SuggestionsContext } from './filter-types';
+import { canonicalFilterFormats, FilterDefinition, SuggestionsContext } from './filter-types';
 
 //
 // Selectors
@@ -57,6 +57,21 @@ const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
 export function generateSuggestionsForFilter(
   filterDefinition: Pick<FilterDefinition, 'keywords' | 'suggestions' | 'format' | 'deprecated'>
 ) {
+  return generateGroupedSuggestionsForFilter(filterDefinition, false).flatMap(
+    ({ keyword, ops }) => {
+      if (ops) {
+        return [keyword].concat(ops.map((op) => `${keyword}${op}`));
+      } else {
+        return [keyword];
+      }
+    }
+  );
+}
+
+export function generateGroupedSuggestionsForFilter(
+  filterDefinition: Pick<FilterDefinition, 'keywords' | 'suggestions' | 'format' | 'deprecated'>,
+  forHelp?: boolean
+): { keyword: string; ops?: string[] }[] {
   if (filterDefinition.deprecated) {
     return [];
   }
@@ -64,38 +79,76 @@ export function generateSuggestionsForFilter(
   const { suggestions, keywords } = filterDefinition;
   const thisFilterKeywords = Array.isArray(keywords) ? keywords : [keywords];
 
-  const nestedSuggestions = suggestions === undefined ? [] : [suggestions];
+  const filterSuggestions = suggestions === undefined ? [] : suggestions;
 
-  switch (filterDefinition.format) {
-    case 'query':
-      return expandStringCombinations([thisFilterKeywords, ...nestedSuggestions]);
-    case 'freeform':
-      return expandStringCombinations([thisFilterKeywords, []]);
-    case 'range':
-      return expandStringCombinations([thisFilterKeywords, ...nestedSuggestions, operators]);
-    case 'rangeoverload':
-      return [
-        ...expandStringCombinations([thisFilterKeywords, operators]),
-        ...expandStringCombinations([thisFilterKeywords, ...nestedSuggestions]),
-      ];
-    case 'custom':
-      return [];
-    default:
-      // Pass minDepth 1 to not generate "is:" and "not:" suggestions
-      return expandStringCombinations([['is', 'not'], thisFilterKeywords], 1);
+  const allSuggestions = [];
+
+  const expandFlat = (stringGroups: string[][], minDepth = 0) =>
+    expandStringCombinations(stringGroups)
+      .slice(minDepth)
+      .flat()
+      .map((s) => ({ keyword: s }));
+
+  // We delay expanding ops because ops on their own expand the filters list significantly.
+  // For autocompletion `generateSuggestionsForFilter` above expands the ops, but the filters
+  // help has some special display to group the operator variants.
+  const expandOps = (stringGroups: string[][], ops: string[]) => {
+    const combinations = expandStringCombinations([...stringGroups, []]);
+    const partialSuggestions = combinations
+      .slice(0, stringGroups.length - 1)
+      .flat()
+      .map((s) => ({ keyword: s }));
+    const opSuggestions = combinations[stringGroups.length - 1].map((s) => ({ keyword: s, ops }));
+    return partialSuggestions.concat(opSuggestions);
+  };
+
+  for (const format of canonicalFilterFormats(filterDefinition.format)) {
+    switch (format) {
+      case 'simple':
+        // Pass minDepth 1 to not generate "is:" and "not:" suggestions. Only generate `is:` for filters help
+        allSuggestions.push(
+          ...expandFlat([forHelp ? ['is'] : ['is', 'not'], thisFilterKeywords], 1)
+        );
+        break;
+      case 'query':
+        // `query` is exhaustive, so only include keyword: for autocompletion, not filters help
+        allSuggestions.push(
+          ...expandFlat([thisFilterKeywords, filterSuggestions], forHelp ? 1 : 0)
+        );
+        break;
+      case 'freeform':
+        allSuggestions.push(...expandFlat([thisFilterKeywords, []]));
+        break;
+      case 'range':
+        allSuggestions.push(...expandOps([thisFilterKeywords], operators));
+        break;
+      case 'rangeoverload':
+        allSuggestions.push(...expandOps([thisFilterKeywords], operators));
+        allSuggestions.push(...expandFlat([thisFilterKeywords, filterSuggestions]));
+        break;
+      case 'stat':
+        // stat lists aren't exhaustive
+        allSuggestions.push(...expandOps([thisFilterKeywords, filterSuggestions], operators));
+        break;
+      case 'custom':
+        break;
+    }
   }
+
+  return allSuggestions;
 }
 
 /**
- * loops through collections of strings (filter segments), generating combinations
+ * loops through collections of strings (filter segments),
+ * generating combinations grouped by number of segments
  *
  * for example, with
  * `[ [a], [b,c], [d,e] ]`
  * as an input, this generates
  *
- * `[ a:, a:b:, a:c:, a:b:d, a:b:e, a:c:d, a:c:e ]`
+ * `[ [a:], [a:b:, a:c:], [a:b:d, a:b:e, a:c:d, a:c:e] ]`
  */
-function expandStringCombinations(stringGroups: string[][], minDepth = 0) {
+function expandStringCombinations(stringGroups: string[][]) {
   const results: string[][] = [];
   for (let i = 0; i < stringGroups.length; i++) {
     const stringGroup = stringGroups[i];
@@ -110,5 +163,5 @@ function expandStringCombinations(stringGroups: string[][], minDepth = 0) {
     );
     results.push(newResults);
   }
-  return results.slice(minDepth).flat();
+  return results;
 }

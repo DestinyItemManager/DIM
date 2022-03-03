@@ -10,25 +10,24 @@ import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyCollectibleComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useCallback, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import Countdown from '../dim-ui/Countdown';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import {
-  bucketsSelector,
-  ownedItemsSelector,
-  profileResponseSelector,
-  storesSelector,
-} from '../inventory/selectors';
+import { bucketsSelector, profileResponseSelector, storesSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh-events';
 import { loadAllVendors } from './actions';
 import { toVendor } from './d2-vendors';
 import type { VendorsState } from './reducer';
-import { mergedCollectiblesSelector, vendorsByCharacterSelector } from './selectors';
+import {
+  mergedCollectiblesSelector,
+  ownedVendorItemsSelector,
+  vendorsByCharacterSelector,
+} from './selectors';
 import styles from './SingleVendor.m.scss';
 import { VendorLocation } from './Vendor';
 import VendorItems from './VendorItems';
@@ -40,7 +39,6 @@ interface ProvidedProps {
 interface StoreProps {
   stores: DimStore[];
   buckets?: InventoryBuckets;
-  ownedItemHashes: Set<number>;
   profileResponse?: DestinyProfileResponse;
   vendors: VendorsState['vendorsByCharacter'];
   defs?: D2ManifestDefinitions;
@@ -49,10 +47,9 @@ interface StoreProps {
   };
 }
 
-function mapStateToProps(state: RootState) {
+function mapStateToProps(state: RootState): StoreProps {
   return {
     stores: storesSelector(state),
-    ownedItemHashes: ownedItemsSelector(state),
     buckets: bucketsSelector(state),
     profileResponse: profileResponseSelector(state),
     vendors: vendorsByCharacterSelector(state),
@@ -70,7 +67,6 @@ function SingleVendor({
   account,
   stores,
   buckets,
-  ownedItemHashes,
   profileResponse,
   dispatch,
   vendors,
@@ -89,6 +85,8 @@ function SingleVendor({
   if (!characterId) {
     throw new Error('no characters chosen or found to use for vendor API call');
   }
+
+  const ownedItemHashes = useSelector(ownedVendorItemsSelector(characterId));
 
   const vendorData = characterId ? vendors[characterId] : undefined;
   const vendorResponse = vendorData?.vendorsResponse;
@@ -175,8 +173,9 @@ function SingleVendor({
     // search for the associated item. this is way harder than it should be, but we have what we are given
     const seasonHash = profileResponse?.profile.data?.currentSeasonHash;
     const artifactDisplay = Object.values(defs.InventoryItem.getAll()).find(
-      //     it belongs to the current season,                         and looks like an artifact
-      (i) => i.seasonHash === seasonHash && i.inventory!.stackUniqueLabel.includes('.artifacts.')
+      (i) =>
+        // belongs to the current season,                         and looks like an artifact
+        i.seasonHash === seasonHash && /\.artifacts?\./.test(i.inventory!.stackUniqueLabel ?? '')
     )?.displayProperties;
     if (artifactDisplay) {
       displayName = artifactDisplay.name;

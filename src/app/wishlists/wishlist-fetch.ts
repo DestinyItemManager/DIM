@@ -4,9 +4,9 @@ import { showNotification } from 'app/notifications/notifications';
 import { setSettingAction } from 'app/settings/actions';
 import { settingsReady } from 'app/settings/settings';
 import { isValidWishListUrlDomain, wishListAllowedPrefixes } from 'app/settings/WishListSettings';
+import { get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
-import { get } from 'idb-keyval';
 import { loadWishLists, touchWishLists } from './actions';
 import type { WishListsState } from './reducer';
 import { wishListsSelector } from './selectors';
@@ -103,7 +103,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       return;
     }
 
-    const wishListAndInfo = toWishList(wishListTexts.join('\n'));
+    const wishListAndInfo = toWishList(...wishListTexts);
     wishListAndInfo.source = wishlistToFetch;
 
     const existingWishLists = wishListsSelector(getState());

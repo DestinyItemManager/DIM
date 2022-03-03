@@ -23,6 +23,7 @@ export type ItemPickerState = ItemPickerOptions & {
 };
 
 export const showItemPicker$ = new EventBus<ItemPickerState | undefined>();
+export const hideItemPicker$ = new EventBus<void>();
 
 /**
  * Show an item picker UI, optionally filtered to a specific set of items. When an item
@@ -33,4 +34,8 @@ export function showItemPicker(options: ItemPickerOptions): Promise<ItemSelectRe
   return new Promise((resolve, reject) => {
     showItemPicker$.next({ ...options, onItemSelected: resolve, onCancel: reject });
   });
+}
+
+export function hideItemPicker(): void {
+  hideItemPicker$.next();
 }

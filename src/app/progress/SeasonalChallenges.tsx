@@ -24,7 +24,7 @@ import Pursuit, { showPursuitAsExpired } from './Pursuit';
 
 const defaultExpirationDate = new Date(8640000000000000);
 
-export const sortPursuits = chainComparator(
+const sortPursuits = chainComparator(
   compareBy(showPursuitAsExpired),
   compareBy((item) => !item.tracked),
   compareBy((item) => item.complete),

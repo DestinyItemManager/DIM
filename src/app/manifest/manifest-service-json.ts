@@ -1,6 +1,7 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
+import { del, get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
@@ -14,7 +15,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
-import { del, get, set } from 'idb-keyval';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';

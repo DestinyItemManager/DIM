@@ -71,6 +71,7 @@ module.exports = function csp(env) {
       'https://platform.twitter.com/',
       'https://opencollective.com',
     ],
+    prefetchSrc: [SELF],
     objectSrc: SELF,
     // Web app manifest
     manifestSrc: SELF,

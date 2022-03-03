@@ -19,7 +19,7 @@ const statFilters: FilterDefinition[] = [
     keywords: 'stat',
     // t('Filter.StatsExtras')
     description: tl('Filter.Stats'),
-    format: 'range',
+    format: 'stat',
     suggestions: allStatNames,
     filter: ({ filterValue }) => statFilterFromString(filterValue),
   },
@@ -27,7 +27,7 @@ const statFilters: FilterDefinition[] = [
     keywords: 'basestat',
     // t('Filter.StatsExtras')
     description: tl('Filter.StatsBase'),
-    format: 'range',
+    format: 'stat',
     suggestions: searchableArmorStatNames,
     filter: ({ filterValue }) => statFilterFromString(filterValue, true),
   },
@@ -56,8 +56,9 @@ const statFilters: FilterDefinition[] = [
     suggestions: searchableArmorStatNames,
     destinyVersion: 2,
     filter: ({ filterValue, allItems }) => {
-      const highestStatsPerSlot = gatherHighestStats(allItems);
-      return (item: DimItem) => checkIfStatMatchesMaxValue(highestStatsPerSlot, item, filterValue);
+      const highestStatsPerSlotPerTier = gatherHighestStats(allItems);
+      return (item: DimItem) =>
+        checkIfStatMatchesMaxValue(highestStatsPerSlotPerTier, item, filterValue);
     },
   },
   {
@@ -67,9 +68,9 @@ const statFilters: FilterDefinition[] = [
     suggestions: searchableArmorStatNames,
     destinyVersion: 2,
     filter: ({ filterValue, allItems }) => {
-      const highestStatsPerSlot = gatherHighestStats(allItems);
+      const highestStatsPerSlotPerTier = gatherHighestStats(allItems);
       return (item: DimItem) =>
-        checkIfStatMatchesMaxValue(highestStatsPerSlot, item, filterValue, true);
+        checkIfStatMatchesMaxValue(highestStatsPerSlotPerTier, item, filterValue, true);
     },
   },
   {
@@ -220,9 +221,10 @@ function findMaxStatLoadout(stores: DimStore[], allItems: DimItem[], statName: s
   );
 }
 
-interface MaxValuesDict {
-  [slotName: string]: { [statHash: string]: { value: number; base: number } };
-}
+type MaxValuesDict = Record<
+  'all' | 'nonexotic',
+  { [slotName: string]: { [statHash: string]: { value: number; base: number } } }
+>;
 
 /** given our known max stat dict, see if this item and stat are among the max stat havers */
 function checkIfStatMatchesMaxValue(
@@ -237,8 +239,9 @@ function checkIfStatMatchesMaxValue(
   }
   const statHashes: number[] = statName === 'any' ? armorStatHashes : [statHashByName[statName]];
   const byWhichValue = byBaseValue ? 'base' : 'value';
+  const useWhichMaxes = item.isExotic ? 'all' : 'nonexotic';
   const itemSlot = `${item.classType}${item.type}`;
-  const maxStatsForSlot = maxStatValues[itemSlot];
+  const maxStatsForSlot = maxStatValues[useWhichMaxes][itemSlot];
   const matchingStats = item.stats?.filter(
     (s) =>
       statHashes.includes(s.statHash) &&
@@ -248,7 +251,7 @@ function checkIfStatMatchesMaxValue(
 }
 
 function gatherHighestStats(allItems: DimItem[]) {
-  const maxStatValues: MaxValuesDict = {};
+  const maxStatValues: MaxValuesDict = { all: {}, nonexotic: {} };
 
   for (const i of allItems) {
     // we only want armor with stats
@@ -257,15 +260,19 @@ function gatherHighestStats(allItems: DimItem[]) {
     }
 
     const itemSlot = `${i.classType}${i.type}`;
-    const thisSlotMaxes = (maxStatValues[itemSlot] ??= {});
+    // if this is an exotic item, update overall maxes, but don't ruin the curve for the nonexotic maxes
+    const itemTiers: ('all' | 'nonexotic')[] = i.isExotic ? ['all'] : ['all', 'nonexotic'];
+    const thisSlotMaxGroups = itemTiers.map((t) => (maxStatValues[t][itemSlot] ??= {}));
 
     for (const stat of i.stats) {
-      const thisSlotThisStatMaxes = (thisSlotMaxes[stat.statHash] ??= {
-        value: 0,
-        base: 0,
-      });
-      thisSlotThisStatMaxes.value = Math.max(thisSlotThisStatMaxes.value, stat.value);
-      thisSlotThisStatMaxes.base = Math.max(thisSlotThisStatMaxes.base, stat.base);
+      for (const thisSlotMaxes of thisSlotMaxGroups) {
+        const thisSlotThisStatMaxes = (thisSlotMaxes[stat.statHash] ??= {
+          value: 0,
+          base: 0,
+        });
+        thisSlotThisStatMaxes.value = Math.max(thisSlotThisStatMaxes.value, stat.value);
+        thisSlotThisStatMaxes.base = Math.max(thisSlotThisStatMaxes.base, stat.base);
+      }
     }
   }
   return maxStatValues;

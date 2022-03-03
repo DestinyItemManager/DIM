@@ -9,6 +9,7 @@ import MainSearchBarActions from './MainSearchBarActions';
 import MainSearchBarMenu from './MainSearchBarMenu';
 import './search-filter.scss';
 import SearchBar, { SearchFilterRef } from './SearchBar';
+import { SearchInput } from './SearchInput';
 
 /**
  * The main search filter that's in the header.
@@ -31,7 +32,10 @@ export function SearchFilter(
   const location = useLocation();
 
   const dispatch = useThunkDispatch();
-  const onQueryChanged = (query: string) => dispatch(setSearchQuery(query, false));
+  const onQueryChanged = useCallback(
+    (query: string) => dispatch(setSearchQuery(query, false)),
+    [dispatch]
+  );
 
   // We don't have access to the selected store so we'd match multiple characters' worth.
   // Just suppress the count for now
@@ -59,7 +63,9 @@ export function SearchFilter(
   const extras = useMemo(() => <MainSearchBarActions key="actions" />, []);
   const menu = useMemo(() => <MainSearchBarMenu key="actions-menu" />, []);
 
-  return (
+  const itemSearch = !onLoadouts;
+
+  return itemSearch ? (
     <SearchBar
       ref={ref}
       onQueryChanged={onQueryChanged}
@@ -72,6 +78,8 @@ export function SearchFilter(
     >
       {extras}
     </SearchBar>
+  ) : (
+    <SearchInput onQueryChanged={onQueryChanged} placeholder={placeholder} query={searchQuery} />
   );
 }
 

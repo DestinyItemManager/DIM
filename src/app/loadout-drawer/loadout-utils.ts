@@ -1,60 +1,57 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { t } from 'app/i18next-t';
-import { DimBucketType } from 'app/inventory/inventory-buckets';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats } from 'app/search/d2-known-values';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
+import {
+  getFirstSocketByCategoryHash,
+  getSocketsByCategoryHash,
+  getSocketsByCategoryHashes,
+  getSocketsByIndexes,
+} from 'app/utils/socket-utils';
+import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { Loadout, LoadoutItem } from './loadout-types';
+import { DimLoadoutItem, Loadout, LoadoutItem } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics
-export const fromEquippedTypes: DimBucketType[] = [
-  'Class',
-  'KineticSlot',
-  'Energy',
-  'Power',
-  'Primary',
-  'Special',
-  'Heavy',
-  'Helmet',
-  'Gauntlets',
-  'Chest',
-  'Leg',
-  'ClassItem',
-  'Artifact',
-  'Ghost',
-  'Ships',
-  'Vehicle',
-  'Emblems',
+export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
+  BucketHashes.Subclass,
+  BucketHashes.KineticWeapons,
+  BucketHashes.EnergyWeapons,
+  BucketHashes.PowerWeapons,
+  BucketHashes.Helmet,
+  BucketHashes.Gauntlets,
+  BucketHashes.ChestArmor,
+  BucketHashes.LegArmor,
+  BucketHashes.ClassArmor,
+  D1BucketHashes.Artifact,
+  BucketHashes.Ghost,
+  BucketHashes.Ships,
+  BucketHashes.Vehicle,
+  BucketHashes.Emblems,
 ];
 
-const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots
-const gearSlotOrder: DimItem['type'][] = [
-  ...D2Categories.Weapons.filter((t) => !excludeGearSlots.includes(t)),
-  ...D2Categories.Armor,
-];
+const gearSlotOrder: BucketHashes[] = [...D2Categories.Weapons, ...D2Categories.Armor];
 
 /**
  * Creates a new loadout, with all of the items equipped and the items inserted mods saved.
  */
-export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
+export function newLoadout(name: string, items: LoadoutItem[], classType?: DestinyClass): Loadout {
   return {
     id: uuidv4(),
-    classType: DestinyClass.Unknown,
+    classType: classType ?? DestinyClass.Unknown,
     name,
     items,
     clearSpace: false,
@@ -63,20 +60,51 @@ export function newLoadout(name: string, items: LoadoutItem[]): Loadout {
 
 /**
  * Create a socket overrides structure from the item's currently plugged sockets.
+ * This will ignore all default plugs except for abilities where the default values
+ * will be included.
  */
-function createSocketOverridesFromEquipped(item: DimItem) {
-  const socketOverrides: SocketOverrides = {};
-  for (const socket of item.sockets?.allSockets || []) {
-    // If the socket is plugged and we plug isn't the initial plug we apply the overrides
-    // to the loadout.
-    if (
-      socket.plugged &&
-      socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash
-    ) {
-      socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
+export function createSocketOverridesFromEquipped(item: DimItem) {
+  if (item.sockets) {
+    const socketOverrides: SocketOverrides = {};
+    for (const category of item.sockets.categories) {
+      const sockets = getSocketsByIndexes(item.sockets, category.socketIndexes);
+      for (const socket of sockets) {
+        // Add currently plugged, if it is an ability we include the initial item
+        // otherwise we ignore them, this stops us showing/saving empty socket plugs
+        if (
+          socket.plugged &&
+          (socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash ||
+            category.category.hash === SocketCategoryHashes.Abilities_Abilities_DarkSubclass ||
+            category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
+            category.category.hash === SocketCategoryHashes.Super)
+        ) {
+          socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
+        }
+      }
     }
+    return socketOverrides;
   }
-  return socketOverrides;
+}
+
+/**
+ * Create the socket overrides that this subclass should start with for loadout purposes.
+ */
+export function createSubclassDefaultSocketOverrides(item: DimItem) {
+  if (item.bucket.hash === BucketHashes.Subclass && item.sockets) {
+    const socketOverrides: SocketOverrides = {};
+    const abilityAndSuperSockets = getSocketsByCategoryHashes(item.sockets, [
+      SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+      SocketCategoryHashes.Abilities_Abilities_LightSubclass,
+      SocketCategoryHashes.Super,
+    ]);
+
+    for (const socket of abilityAndSuperSockets) {
+      // HACK: Void grenades do not have a singleInitialItemHash
+      socketOverrides[socket.socketIndex] =
+        socket.socketDefinition.singleInitialItemHash || socket.plugSet!.plugs[0].plugDef.hash;
+    }
+    return socketOverrides;
+  }
 }
 
 /**
@@ -84,25 +112,43 @@ function createSocketOverridesFromEquipped(item: DimItem) {
  */
 export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
   const items = dimStore.items.filter(
-    (item) => item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.type)
+    (item) =>
+      item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash)
   );
-  const loadout = newLoadout(
-    name,
-    items.map((i) => {
-      const item = convertToLoadoutItem(i, true);
-      if (i.bucket.hash === BucketHashes.Subclass) {
-        item.socketOverrides = createSocketOverridesFromEquipped(i);
-      }
-      return item;
-    })
-  );
+  const loadoutItems = items.map((i) => {
+    const item = convertToLoadoutItem(i, true);
+    if (i.bucket.hash === BucketHashes.Subclass) {
+      item.socketOverrides = createSocketOverridesFromEquipped(i);
+    }
+    return item;
+  });
+  const loadout = newLoadout(name, loadoutItems, dimStore.classType);
   const mods = items.flatMap((i) => extractArmorModHashes(i));
   if (mods.length) {
     loadout.parameters = {
       mods,
     };
   }
-  loadout.classType = dimStore.classType;
+  // Save "fashion" mods for equipped items
+  const modsByBucket = {};
+  for (const item of items.filter((i) => i.bucket.inArmor)) {
+    const plugs = item.sockets
+      ? _.compact(
+          getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics).map(
+            (s) => s.plugged?.plugDef.hash
+          )
+        )
+      : [];
+    if (plugs.length) {
+      modsByBucket[item.bucket.hash] = plugs;
+    }
+  }
+  if (!_.isEmpty(modsByBucket)) {
+    loadout.parameters = {
+      ...loadout.parameters,
+      modsByBucket,
+    };
+  }
   return loadout;
 }
 
@@ -125,7 +171,9 @@ export function getLight(store: DimStore, items: DimItem[]): number {
 
     const itemWeightDenominator = items.reduce(
       (memo, item) =>
-        memo + (itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!] || 0),
+        memo +
+        (itemWeight[item.bucket.hash === BucketHashes.ClassArmor ? 'General' : item.bucket.sort!] ||
+          0),
       0
     );
 
@@ -133,7 +181,10 @@ export function getLight(store: DimStore, items: DimItem[]): number {
       items.reduce(
         (memo, item) =>
           memo +
-          item.power * (itemWeight[item.type === 'ClassItem' ? 'General' : item.bucket.sort!] || 1),
+          item.power *
+            (itemWeight[
+              item.bucket.hash === BucketHashes.ClassArmor ? 'General' : item.bucket.sort!
+            ] || 1),
         0
       ) / itemWeightDenominator;
 
@@ -151,7 +202,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
 export function getLoadoutStats(
   defs: D2ManifestDefinitions,
   classType: DestinyClass,
-  subclass: LoadoutItem | undefined,
+  subclass: DimLoadoutItem | undefined,
   armor: DimItem[],
   mods: PluggableInventoryItemDefinition[]
 ) {
@@ -179,7 +230,10 @@ export function getLoadoutStats(
     for (const plugHash of Object.values(subclass.socketOverrides)) {
       const plug = defs.InventoryItem.get(plugHash);
       for (const stat of plug.investmentStats) {
-        if (stat.statTypeHash in stats) {
+        if (
+          stat.statTypeHash in stats &&
+          isPlugStatActive(subclass, plugHash, stat.statTypeHash, stat.isConditionallyActive)
+        ) {
           stats[stat.statTypeHash].value += stat.value;
         }
       }
@@ -203,16 +257,16 @@ export function optimalItemSet(
   applicableItems: DimItem[],
   bestItemFn: (item: DimItem) => number
 ): Record<'equippable' | 'unrestricted', DimItem[]> {
-  const itemsByType = _.groupBy(applicableItems, (i) => i.type);
+  const itemsByType = _.groupBy(applicableItems, (i) => i.bucket.hash);
 
   // Pick the best item
   let items = _.mapValues(itemsByType, (items) => _.maxBy(items, bestItemFn)!);
-  const unrestricted = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.type));
+  const unrestricted = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.bucket.hash));
 
   // Solve for the case where our optimizer decided to equip two exotics
   const getLabel = (i: DimItem) => i.equippingLabel;
   // All items that share an equipping label, grouped by label
-  const overlaps = _.groupBy(Object.values(items).filter(getLabel), getLabel);
+  const overlaps = _.groupBy(unrestricted.filter(getLabel), getLabel);
   _.forIn(overlaps, (overlappingItems) => {
     if (overlappingItems.length <= 1) {
       return;
@@ -228,9 +282,9 @@ export function optimalItemSet(
       for (const otherItem of otherItems) {
         // Note: we could look for items that just don't have the *same* equippingLabel but
         // that may fail if there are ever mutual-exclusion items beyond exotics.
-        const nonExotics = itemsByType[otherItem.type].filter((i) => !i.equippingLabel);
+        const nonExotics = itemsByType[otherItem.bucket.hash].filter((i) => !i.equippingLabel);
         if (nonExotics.length) {
-          option[otherItem.type] = _.maxBy(nonExotics, bestItemFn)!;
+          option[otherItem.bucket.hash] = _.maxBy(nonExotics, bestItemFn)!;
         } else {
           // this option isn't usable because we couldn't swap this exotic for any non-exotic
           optionValid = false;
@@ -249,7 +303,7 @@ export function optimalItemSet(
     }
   });
 
-  const equippable = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.type));
+  const equippable = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.bucket.hash));
 
   return { equippable, unrestricted };
 }
@@ -318,42 +372,80 @@ export function extractArmorModHashes(item: DimItem) {
   );
 }
 
-export function findItem(allItems: DimItem[], loadoutItem: LoadoutItem): DimItem | undefined {
-  for (const item of allItems) {
-    if (
-      (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) ||
-      ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash)
-    ) {
-      return item;
-    }
+/**
+ * Some items have been replaced with equivalent new items. So far that's been
+ * true of the "Light 2.0" subclasses which are an entirely different item from
+ * the old one. When loading loadouts we'd like to just use the new version.
+ */
+const oldToNewItems = {
+  // Nightstalker subclass
+  3225959819: 2453351420,
+  // Voidwalker subclass
+  3887892656: 2849050827,
+  // Sentinel subclass
+  3382391785: 2842471112,
+};
+
+/**
+ * Given a loadout item specification, find the corresponding inventory item we should use.
+ */
+export function findItemForLoadout(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  allItems: DimItem[],
+  storeId: string | undefined,
+  loadoutItem: LoadoutItem
+): DimItem | undefined {
+  const hash = oldToNewItems[loadoutItem.hash] ?? loadoutItem.hash;
+
+  const def = defs.InventoryItem.get(hash) as DestinyInventoryItemDefinition & {
+    // D1 definitions use this toplevel "instanced" field
+    instanced: boolean;
+    bucketTypeHash: number;
+  };
+
+  // Instanced items match by ID, uninstanced match by hash. It'd actually be
+  // nice to use "is random rolled or configurable" here instead but that's hard
+  // to determine.
+  // TODO: this might be nice to add to DimItem
+  const bucketHash = def.bucketTypeHash || def.inventory?.bucketTypeHash || 0;
+  const instanced =
+    (def.instanced || def.inventory?.isInstanceItem) &&
+    // Subclasses and some other types are technically instanced but should be matched by hash
+    ![
+      BucketHashes.Subclass,
+      BucketHashes.Shaders,
+      BucketHashes.Emblems,
+      BucketHashes.Emotes_Invisible,
+      BucketHashes.Emotes_Equippable,
+      D1BucketHashes.Horn,
+    ].includes(bucketHash);
+
+  // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
+  if (instanced) {
+    return allItems.find((item) => item.id === loadoutItem.id);
   }
-  return undefined;
+
+  // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
+  const candidates = allItems.filter((item) => item.hash === hash);
+  return (
+    (storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined) ??
+    candidates[0]
+  );
 }
 
-export function isMissingItems(allItems: DimItem[], loadout: Loadout): boolean {
+export function isMissingItems(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  allItems: DimItem[],
+  storeId: string,
+  loadout: Loadout
+): boolean {
   for (const loadoutItem of loadout.items) {
-    const item = findItem(allItems, loadoutItem);
+    const item = findItemForLoadout(defs, allItems, storeId, loadoutItem);
     if (!item) {
       return true;
     }
   }
   return false;
-}
-
-/**
- * Returns a Loadout object containing currently equipped items
- * @deprecated
- */
-export function loadoutFromEquipped(store: DimStore): Loadout {
-  const items = store.items.filter((item) => item.equipped && itemCanBeInLoadout(item));
-
-  const loadout = newLoadout(
-    t('Loadouts.CurrentlyEquipped'),
-    items.map((i) => convertToLoadoutItem(i, true))
-  );
-  loadout.classType = store.classType;
-
-  return loadout;
 }
 
 /** Returns a set of PluggableInventoryItemDefinition's grouped by plugCategoryHash. */

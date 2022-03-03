@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
 import { RootState } from 'app/store/types';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { connect, MapStateToProps } from 'react-redux';
@@ -27,7 +28,7 @@ interface StoreProps {
   filters(query: string): ItemFilter;
 }
 
-function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState> {
+function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps> {
   const filteredItemsSelector = createSelector(
     allItemsSelector,
     (_state: RootState, ownProps: ProvidedProps) => ownProps.filterItems,
@@ -106,7 +107,7 @@ function ItemPicker({
                 onClick={() => onItemSelectedFn(item, onClose)}
                 ignoreSelectedPerks={ignoreSelectedPerks}
               />
-              {item.type === 'Class' && (
+              {item.bucket.hash === BucketHashes.Subclass && (
                 <ClassIcon classType={item.classType} className="item-picker-item-class-icon" />
               )}
             </div>
@@ -117,4 +118,4 @@ function ItemPicker({
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(ItemPicker);
+export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(ItemPicker);

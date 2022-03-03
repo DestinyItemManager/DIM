@@ -1,3 +1,4 @@
+import { LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { EnergyIncrements } from 'app/dim-ui/EnergyIncrements';
 import PressTip from 'app/dim-ui/PressTip';
@@ -6,7 +7,7 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
@@ -16,7 +17,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
-import { getCheapestModAssignments } from '../mod-assignment-utils';
+import { fitMostMods } from '../mod-assignment-utils';
 import { createGetModRenderKey } from '../mod-utils';
 import ModPicker from '../ModPicker';
 import styles from './ModAssignmentDrawer.m.scss';
@@ -31,7 +32,7 @@ function Header({
 }: {
   defs: D2ManifestDefinitions;
   loadout: Loadout;
-  subclass: LoadoutItem | undefined;
+  subclass: DimLoadoutItem | undefined;
   armor: DimItem[];
   mods: PluggableInventoryItemDefinition[];
 }) {
@@ -52,17 +53,19 @@ function Header({
 
 export default function ModAssignmentDrawer({
   loadout,
+  storeId,
   onUpdateMods,
   onClose,
 }: {
   loadout: Loadout;
+  storeId: string | undefined;
   onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 
   const defs = useD2Definitions()!;
-  const { armor, subclass } = useEquippedLoadoutArmorAndSubclass(loadout);
+  const { armor, subclass } = useEquippedLoadoutArmorAndSubclass(loadout, storeId);
   const getModRenderKey = createGetModRenderKey();
 
   const [itemModAssignments, unassignedMods, mods] = useMemo(() => {
@@ -72,7 +75,13 @@ export default function ModAssignmentDrawer({
         .map((hash) => defs.InventoryItem.get(hash))
         .filter(isPluggableItem);
     }
-    const { itemModAssignments, unassignedMods } = getCheapestModAssignments(armor, mods, defs);
+    const { itemModAssignments, unassignedMods } = fitMostMods({
+      items: armor,
+      plannedMods: mods,
+      assumeArmorMasterwork: undefined,
+      lockArmorEnergyType: LockArmorEnergyType.All,
+      minItemEnergy: 1,
+    });
 
     return [itemModAssignments, unassignedMods, mods];
   }, [defs, armor, loadout.parameters?.mods]);
@@ -175,6 +184,7 @@ export default function ModAssignmentDrawer({
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}
+            owner={storeId}
             lockedMods={mods}
             plugCategoryHashWhitelist={plugCategoryHashWhitelist}
             onAccept={onUpdateMods}

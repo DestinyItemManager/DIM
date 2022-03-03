@@ -1,5 +1,7 @@
 import useResizeObserver from '@react-hook/resize-observer';
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import _ from 'lodash';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { Subscription, useSubscription } from 'use-subscription';
 import { EventBus, Observable } from './observable';
 
 /**
@@ -77,4 +79,25 @@ export function useLocalStorage<T>(
     window.localStorage.setItem(key, JSON.stringify(valueToStore));
   };
   return [storedValue, setValue];
+}
+
+export function useThrottledSubscription<T>(observable: Observable<T>, delay: number) {
+  const throttledObservable: Subscription<T> = useMemo(
+    () => ({
+      getCurrentValue() {
+        return observable.getCurrentValue();
+      },
+      subscribe(callback: () => void) {
+        const throttled = _.throttle(callback, delay);
+        const unsubscribe = observable.subscribe(throttled);
+        return () => {
+          unsubscribe();
+          throttled.cancel();
+        };
+      },
+    }),
+    [observable, delay]
+  );
+  const value = useSubscription(throttledObservable);
+  return value;
 }

@@ -1,7 +1,11 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
+import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
+import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
+import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { mergedCollectiblesSelector } from 'app/vendors/selectors';
@@ -12,18 +16,24 @@ import {
   AwaUserSelection,
   DestinyInventoryItemDefinition,
   DestinyItemChangeResponse,
+  DestinyProfileResponse,
   DestinySocketArrayType,
   insertSocketPlug,
   insertSocketPlugFree,
 } from 'bungie-api-ts/destiny2';
-import { get, set } from 'idb-keyval';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { authenticatedHttpClient } from '../bungie-api/bungie-service-helper';
 import { requestAdvancedWriteActionToken } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
 import { awaItemChanged } from './actions';
 import { DimItem, DimSocket } from './item-types';
-import { currentStoreSelector, d2BucketsSelector, storesSelector } from './selectors';
+import {
+  currentStoreSelector,
+  d2BucketsSelector,
+  profileResponseSelector,
+  storesSelector,
+} from './selectors';
 import { makeItemSingle } from './store/d2-item-factory';
 
 let awaCache: {
@@ -58,8 +68,9 @@ function canInsertForFree(
 ) {
   const { insertPlugFreeProtectedPlugItemHashes, insertPlugFreeBlockedSocketTypeHashes } =
     destiny2CoreSettings;
+  const pluggedDef = (socket.actuallyPlugged || socket.plugged)?.plugDef;
   if (
-    (insertPlugFreeProtectedPlugItemHashes || []).includes(plugItemHash) ||
+    (pluggedDef && (insertPlugFreeProtectedPlugItemHashes || []).includes(pluggedDef.hash)) ||
     (insertPlugFreeBlockedSocketTypeHashes || []).includes(socket.socketDefinition.socketTypeHash)
   ) {
     return false;
@@ -77,9 +88,47 @@ function canInsertForFree(
     // And have no cost to insert
     !hasInsertionCost(defs, plug) &&
     // And the current plug didn't cost anything (can't replace a non-free mod with a free one)
-    (!socket.plugged || !hasInsertionCost(defs, socket.plugged.plugDef));
+    (!pluggedDef || !hasInsertionCost(defs, pluggedDef));
 
   return free;
+}
+
+/**
+ * Check whether the currently contained item is a shader that the user won't
+ * be able to plug back in and should thus be left alone.
+ *
+ * Shaders can be overwritten even if they're not yet unlocked, so
+ * save people's Cobalt Clash shaders here.
+ * https://github.com/Bungie-net/api/issues/1580
+ */
+function checkIrreversiblePlugging(
+  socket: DimSocket,
+  storeId: string,
+  profileResponse?: DestinyProfileResponse
+) {
+  const plugged = socket.actuallyPlugged || socket.plugged;
+  if (
+    plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders) &&
+    plugged.plugDef.hash !== DEFAULT_SHADER &&
+    // For some reason the default armor ornament is marked as a shader?
+    !DEFAULT_ORNAMENTS.includes(plugged.plugDef.hash)
+  ) {
+    const plugSetHash = socket.socketDefinition.reusablePlugSetHash;
+    const profileUnlocked =
+      plugSetHash &&
+      profileResponse &&
+      unlockedItemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, storeId).has(
+        plugged.plugDef.hash
+      );
+    const itemUnlocked = socket.reusablePlugItems?.some(
+      (p) => p.enabled && p.plugItemHash === plugged.plugDef.hash
+    );
+
+    if (!profileUnlocked && !itemUnlocked) {
+      return { protected: true, plug: plugged };
+    }
+  }
+  return { protected: false };
 }
 
 /**
@@ -88,13 +137,19 @@ function canInsertForFree(
 export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: number): ThunkResult {
   return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
+    const defs = d2ManifestSelector(getState())!;
+    const coreSettings = getState().manifest.destiny2CoreSettings!;
 
-    const free = canInsertForFree(
-      socket,
-      plugItemHash,
-      getState().manifest.destiny2CoreSettings!,
-      d2ManifestSelector(getState())!
-    );
+    // This is a special case for transmog ornaments - you can't apply a
+    // transmog ornament to the same item it was created with. So instead we
+    // swap at the last minute to applying the default ornament which should
+    // match the appearance that the user wanted.
+    if (plugItemHash === item.hash) {
+      const defaultPlugHash = getDefaultPlugHash(socket, defs);
+      plugItemHash = defaultPlugHash ?? plugItemHash;
+    }
+
+    const free = canInsertForFree(socket, plugItemHash, coreSettings, defs);
 
     // TODO: if applying to the vault, choose a character that has the mod unlocked rather than current store
     // look at all plugsets on all characters to find one that's unlocked?
@@ -105,6 +160,19 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
     // The API requires either the ID of the character that owns the item, or
     // the current character ID if the item is in the vault.
     const storeId = item.owner === 'vault' ? currentStoreSelector(getState())!.id : item.owner;
+
+    const irreversiblePlugCheck = checkIrreversiblePlugging(
+      socket,
+      storeId,
+      profileResponseSelector(getState())
+    );
+    if (irreversiblePlugCheck.protected && irreversiblePlugCheck.plug) {
+      throw new DimError(
+        t('AWA.IrreversiblePlugging', {
+          plug: irreversiblePlugCheck.plug.plugDef.displayProperties.name,
+        })
+      );
+    }
 
     const insertFn = free ? awaInsertSocketPlugFree : awaInsertSocketPlug;
     const response = await insertFn(account, storeId, item, socket, plugItemHash);
@@ -122,9 +190,6 @@ async function awaInsertSocketPlugFree(
   socket: DimSocket,
   plugItemHash: number
 ) {
-  if (item.hash === plugItemHash) {
-    throw new DimError('AWA.SelfInsertion');
-  }
   return insertSocketPlugFree(authenticatedHttpClient, {
     itemId: item.id,
     plug: {
@@ -200,7 +265,7 @@ function refreshItemAfterAWA(changes: DestinyItemChangeResponse): ThunkResult {
  *
  * @param item The item is optional unless the type is DismantleGroupA, but it's best to pass it when possible.
  */
-export async function getAwaToken(
+async function getAwaToken(
   account: DestinyAccount,
   action: AwaType,
   storeId: string,

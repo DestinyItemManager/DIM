@@ -26,6 +26,8 @@ declare const $featureFlags: {
   abilityCooldowns: boolean;
   /** Item feed sidebar */
   itemFeed: boolean;
+  /** Loadout edit drawer v2 */
+  loadoutDrawerV2: boolean;
 };
 
 declare function ga(...params: string[]);
@@ -126,9 +128,4 @@ declare module 'file-loader?*' {
 declare module '*dim.json' {
   const value: string;
   export default value;
-}
-
-declare module 'voca/latinise' {
-  const latinise: (subject?: string) => string;
-  export default latinise;
 }

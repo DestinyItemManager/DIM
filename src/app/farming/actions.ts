@@ -11,7 +11,7 @@ import {
   getVault,
   isD1Store,
 } from 'app/inventory/stores-helpers';
-import { supplies } from 'app/search/d1-known-values';
+import { D1BucketHashes, supplies } from 'app/search/d1-known-values';
 import { refresh } from 'app/shell/refresh-events';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
@@ -38,7 +38,7 @@ const makeRoomTypes = [
   BucketHashes.ChestArmor,
   BucketHashes.LegArmor,
   BucketHashes.ClassArmor,
-  434908299, // Artifact
+  D1BucketHashes.Artifact,
   BucketHashes.Ghost,
   BucketHashes.Consumables,
   BucketHashes.Materials,
@@ -114,7 +114,7 @@ function makeRoomForItems(store: DimStore, cancelToken: CancelToken): ThunkResul
   };
 }
 
-/// D1 Stuff ///
+// D1 Stuff
 
 function farmD1(store: D1Store, cancelToken: CancelToken): ThunkResult {
   return async (dispatch, getState) => {
@@ -153,7 +153,7 @@ function makeRoomForD1Items(store: D1Store, cancelToken: CancelToken): ThunkResu
 
 // Ensure that there's {{inventoryClearSpaces}} number of open space(s) in each category that could
 // hold an item, so they don't go to the postmaster.
-export function makeRoomForItemsInBuckets(
+function makeRoomForItemsInBuckets(
   stores: DimStore[],
   store: DimStore,
   makeRoomBuckets: InventoryBucket[],
@@ -206,7 +206,7 @@ function moveItemsToVault(
   // reserve one space in the active character
   reservations[store.id] = {};
   makeRoomBuckets.forEach((bucket) => {
-    reservations[store.id][bucket.type!] = 1;
+    reservations[store.id][bucket.hash] = 1;
   });
 
   return clearItemsOffCharacter(store, items, cancelToken, reservations);

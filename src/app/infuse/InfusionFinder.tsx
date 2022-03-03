@@ -298,7 +298,7 @@ function isInfusable(target: DimItem, source: DimItem) {
   }
 
   if (source.destinyVersion === 1 && target.destinyVersion === 1) {
-    return source.type === target.type && target.power < source.power;
+    return source.bucket.hash === target.bucket.hash && target.power < source.power;
   }
 
   return (

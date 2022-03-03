@@ -50,17 +50,21 @@ export const shell: Reducer<ShellState, ShellAction> = (
         ...state,
         isPhonePortrait: action.payload,
       };
-    case getType(actions.setSearchQuery):
-      return {
-        ...state,
-        searchQuery: action.payload.query,
-        searchQueryVersion: action.payload.updateVersion
-          ? state.searchQueryVersion + 1
-          : state.searchQueryVersion,
-        searchResultsOpen:
-          state.searchResultsOpen ||
-          Boolean(state.isPhonePortrait && !state.searchQuery && action.payload.query),
-      };
+    case getType(actions.setSearchQuery): {
+      const { query, updateVersion } = action.payload;
+      return query !== state.searchQuery
+        ? {
+            ...state,
+            searchQuery: query,
+            searchQueryVersion: updateVersion
+              ? state.searchQueryVersion + 1
+              : state.searchQueryVersion,
+            searchResultsOpen:
+              state.searchResultsOpen ||
+              Boolean(state.isPhonePortrait && !state.searchQuery && query),
+          }
+        : state;
+    }
 
     case getType(actions.toggleSearchQueryComponent): {
       const existingQuery = state.searchQuery;

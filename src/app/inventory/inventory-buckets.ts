@@ -12,6 +12,9 @@ export interface InventoryBucket {
   readonly category: BucketCategory;
   readonly type?: DimBucketType;
   readonly sort?: D2BucketCategory | D1BucketCategory | 'Unknown';
+  /**
+   * The corresponding vault bucket where these items would go if they were placed in the vault.
+   */
   vaultBucket?: InventoryBucket;
   // TODO: how to handle inPostmaster, etc? should probably be a function
   inPostmaster?: boolean;
@@ -28,7 +31,6 @@ export type DimBucketType = D2BucketTypes | D2AdditionalBucketTypes | D1BucketTy
 
 export interface InventoryBuckets {
   byHash: { [hash: number]: InventoryBucket };
-  byType: { [type: string]: InventoryBucket };
   byCategory: { [category: string]: InventoryBucket[] };
   unknown: InventoryBucket; // TODO: get rid of this?
   setHasUnknown(): void;

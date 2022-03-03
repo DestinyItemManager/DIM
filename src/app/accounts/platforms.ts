@@ -1,8 +1,8 @@
 import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
+import { del, get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
-import { del, get } from 'idb-keyval';
 import _ from 'lodash';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { loadingTracker } from '../shell/loading-tracker';

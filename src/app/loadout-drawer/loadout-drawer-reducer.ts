@@ -1,9 +1,16 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
+import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
+import _ from 'lodash';
 import { Loadout, LoadoutItem } from './loadout-types';
 import { newLoadout } from './loadout-utils';
 
@@ -22,6 +29,7 @@ export interface State {
     /** An initial query to be passed to the mod picker, this will filter the mods shown. */
     query?: string;
   };
+  showFashionDrawer: boolean;
 }
 
 export type Action =
@@ -38,17 +46,28 @@ export type Action =
   /** Replace the current loadout with an updated one */
   | { type: 'update'; loadout: Loadout }
   /** Add an item to the loadout */
-  | { type: 'addItem'; item: DimItem; shift: boolean; items: DimItem[]; equip?: boolean }
+  | {
+      type: 'addItem';
+      item: DimItem;
+      shift: boolean;
+      items: DimItem[];
+      equip?: boolean;
+      socketOverrides?: SocketOverrides;
+      stores: DimStore[];
+    }
   /** Applies socket overrides to the supplied item */
   | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
+  | { type: 'updateModsByBucket'; modsByBucket: LoadoutParameters['modsByBucket'] }
   /** Remove an item from the loadout */
   | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
   | { type: 'equipItem'; item: DimItem; items: DimItem[] }
   | { type: 'updateMods'; mods: number[] }
+  | { type: 'changeClearMods'; enabled: boolean }
   | { type: 'removeMod'; hash: number }
   | { type: 'openModPicker'; query?: string }
-  | { type: 'closeModPicker' };
+  | { type: 'closeModPicker' }
+  | { type: 'toggleFashionDrawer'; show: boolean };
 
 /**
  * All state for this component is managed through this reducer and the Actions above.
@@ -63,6 +82,7 @@ export function stateReducer(state: State, action: Action): State {
         modPicker: {
           show: false,
         },
+        showFashionDrawer: false,
       };
 
     case 'editLoadout': {
@@ -85,22 +105,60 @@ export function stateReducer(state: State, action: Action): State {
 
     case 'addItem': {
       const { loadout } = state;
-      const { item, shift, items, equip } = action;
+      const { item, shift, items, equip, socketOverrides, stores } = action;
 
       if (!itemCanBeInLoadout(item)) {
         showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
         return state;
       }
 
-      // Check whether this addItem happened without a loadout being edited,
-      // which can happen from item popup action buttons.
-      const [addToLoadout, isNew] = loadout ? [loadout, state.isNew] : [newLoadout('', []), true];
+      if (loadout) {
+        if (item.classType !== DestinyClass.Unknown && loadout.classType !== item.classType) {
+          showNotification({
+            type: 'warning',
+            title: t('Loadouts.ClassTypeMismatch', { className: item.classTypeNameLocalized }),
+          });
+          return state;
+        }
+        const draftLoadout = addItem(loadout, item, shift, items, equip, socketOverrides);
+        return {
+          ...state,
+          loadout: draftLoadout,
+        };
+      } else {
+        // If we don't have a loadout, this action was invoked via the "+ Loadout" button in item actions
+        let owner: DimStore =
+          item.owner === 'vault' ? getCurrentStore(stores)! : getStore(stores, item.owner)!;
 
-      return {
-        ...state,
-        loadout: addItem(addToLoadout, item, shift, items, equip),
-        isNew,
-      };
+        if (item.classType !== DestinyClass.Unknown && item.classType !== owner.classType) {
+          const matchingStore = stores.find((s) => s.classType === item.classType);
+          if (!matchingStore) {
+            showNotification({
+              type: 'warning',
+              title: t('Loadouts.ClassTypeMissing', { className: item.classTypeNameLocalized }),
+            });
+            return state;
+          }
+          owner = matchingStore;
+        }
+
+        const classType =
+          item.classType === DestinyClass.Unknown ? owner.classType : item.classType;
+        const draftLoadout = addItem(
+          newLoadout('', [], classType),
+          item,
+          shift,
+          items,
+          equip,
+          socketOverrides
+        );
+        return {
+          ...state,
+          loadout: draftLoadout,
+          storeId: owner.id,
+          isNew: true,
+        };
+      }
     }
 
     case 'removeItem': {
@@ -123,6 +181,23 @@ export function stateReducer(state: State, action: Action): State {
         : state;
     }
 
+    case 'updateModsByBucket': {
+      const { loadout } = state;
+      const { modsByBucket } = action;
+      return loadout
+        ? {
+            ...state,
+            loadout: {
+              ...loadout,
+              parameters: {
+                ...loadout.parameters,
+                modsByBucket: _.isEmpty(modsByBucket) ? undefined : modsByBucket,
+              },
+            },
+          }
+        : state;
+    }
+
     case 'updateMods': {
       const { loadout } = state;
       const { mods } = action;
@@ -134,6 +209,23 @@ export function stateReducer(state: State, action: Action): State {
               parameters: {
                 ...loadout.parameters,
                 mods,
+              },
+            },
+          }
+        : state;
+    }
+
+    case 'changeClearMods': {
+      const { loadout } = state;
+      const { enabled } = action;
+      return loadout
+        ? {
+            ...state,
+            loadout: {
+              ...loadout,
+              parameters: {
+                ...loadout.parameters,
+                clearMods: enabled,
               },
             },
           }
@@ -167,6 +259,9 @@ export function stateReducer(state: State, action: Action): State {
     case 'closeModPicker': {
       return { ...state, modPicker: { show: false } };
     }
+
+    case 'toggleFashionDrawer':
+      return { ...state, showFashionDrawer: action.show };
   }
 }
 
@@ -178,7 +273,8 @@ function addItem(
   item: DimItem,
   shift: boolean,
   items: DimItem[],
-  equip?: boolean
+  equip?: boolean,
+  socketOverrides?: SocketOverrides
 ): Loadout {
   const loadoutItem: LoadoutItem = {
     id: item.id,
@@ -187,8 +283,10 @@ function addItem(
     equipped: false,
   };
 
+  // TODO: maybe we should just switch back to storing loadout items in memory by bucket
+
   // Other items of the same type (as DimItem)
-  const typeInventory = items.filter((i) => i.type === item.type);
+  const typeInventory = items.filter((i) => i.bucket.hash === item.bucket.hash);
   const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);
   const maxSlots = item.bucket.capacity;
 
@@ -207,9 +305,9 @@ function addItem(
         }
 
         // Only allow one subclass to be present per class (to allow for making a loadout that specifies a subclass for each class)
-        if (item.type === 'Class') {
+        if (item.bucket.hash === BucketHashes.Subclass) {
           const conflictingItem = items.find(
-            (i) => i.type === item.type && i.classType === item.classType
+            (i) => i.bucket.hash === item.bucket.hash && i.classType === item.classType
           );
           if (conflictingItem) {
             draftLoadout.items = draftLoadout.items.filter((i) => i.id !== conflictingItem.id);
@@ -217,7 +315,27 @@ function addItem(
           loadoutItem.equipped = true;
         }
 
+        if (socketOverrides) {
+          loadoutItem.socketOverrides = socketOverrides;
+        }
+
         draftLoadout.items.push(loadoutItem);
+
+        // If adding a new armor item, remove any fashion mods (shader/ornament) that couldn't be slotted
+        if (
+          item.bucket.inArmor &&
+          loadoutItem.equipped &&
+          draftLoadout.parameters?.modsByBucket?.[item.bucket.hash]?.length
+        ) {
+          const cosmeticSockets = getSocketsByCategoryHash(
+            item.sockets,
+            SocketCategoryHashes.ArmorCosmetics
+          );
+          draftLoadout.parameters.modsByBucket[item.bucket.hash] =
+            draftLoadout.parameters.modsByBucket[item.bucket.hash].filter((plugHash) =>
+              cosmeticSockets.some((s) => s.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash))
+            );
+        }
       } else {
         showNotification({
           type: 'warning',
@@ -227,7 +345,6 @@ function addItem(
     } else if (item.maxStackSize > 1) {
       const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
       dupe.amount += increment;
-      // TODO: handle stack splits
     }
   });
 }
@@ -258,7 +375,7 @@ function removeItem(
     }
 
     if (loadoutItem.equipped) {
-      const typeInventory = items.filter((i) => i.type === item.type);
+      const typeInventory = items.filter((i) => i.bucket.hash === item.bucket.hash);
       const nextInLine =
         typeInventory.length > 0 &&
         draftLoadout.items.find(
@@ -280,7 +397,7 @@ function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) 
       draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
 
     // Classes are always equipped
-    if (item.type === 'Class') {
+    if (item.bucket.hash === BucketHashes.Subclass) {
       return;
     }
 
@@ -295,7 +412,7 @@ function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) 
           .filter(
             (i) =>
               // Others in this slot
-              i.type === item.type ||
+              i.bucket.hash === item.bucket.hash ||
               // Other exotics
               (item.equippingLabel && i.equippingLabel === item.equippingLabel)
           )
@@ -316,7 +433,11 @@ function applySocketOverrides(
   socketOverrides: SocketOverrides
 ) {
   return produce(loadout, (draftLoadout) => {
-    const loadoutItem = draftLoadout.items.find((li) => li.id === item.id);
+    let loadoutItem = draftLoadout.items.find((li) => li.id === item.id);
+    // TODO: right now socketOverrides are only really used for subclasses, so we can match by hash
+    if (!loadoutItem) {
+      loadoutItem = draftLoadout.items.find((li) => li.hash === item.hash);
+    }
     if (loadoutItem) {
       loadoutItem.socketOverrides = socketOverrides;
     }

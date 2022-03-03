@@ -34,14 +34,7 @@ export interface D2Vendor {
   currencies: DestinyInventoryItemDefinition[];
 }
 
-const vendorOrder = [
-  VENDORS.SPIDER,
-  VENDORS.EVERVERSE,
-  VENDORS.BENEDICT,
-  VENDORS.BANSHEE,
-  VENDORS.DRIFTER,
-  VENDORS.ADA,
-];
+const vendorOrder = [VENDORS.SPIDER, VENDORS.ADA_TRANSMOG, VENDORS.BANSHEE, VENDORS.EVERVERSE];
 
 export function toVendorGroups(
   vendorsResponse: DestinyVendorsResponse,
@@ -64,19 +57,21 @@ export function toVendorGroups(
         def: groupDef,
         vendors: _.sortBy(
           _.compact(
-            group.vendorHashes.map((vendorHash) =>
-              toVendor(
-                vendorHash,
-                defs,
-                buckets,
-                vendorsResponse.vendors.data?.[vendorHash],
-                account,
-                characterId,
-                vendorsResponse.itemComponents[vendorHash],
-                vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-                mergedCollectibles
+            group.vendorHashes
+              .map((vendorHash) =>
+                toVendor(
+                  vendorHash,
+                  defs,
+                  buckets,
+                  vendorsResponse.vendors.data?.[vendorHash],
+                  account,
+                  characterId,
+                  vendorsResponse.itemComponents[vendorHash],
+                  vendorsResponse.sales.data?.[vendorHash]?.saleItems,
+                  mergedCollectibles
+                )
               )
-            )
+              .filter((vendor) => vendor?.items.length)
           ),
           (v) => {
             const index = vendorOrder.indexOf(v.def.hash);
@@ -120,9 +115,6 @@ export function toVendor(
     sales,
     mergedCollectibles
   );
-  if (!vendorItems.length) {
-    return undefined;
-  }
 
   const destinationDef = vendor?.vendorLocationIndex
     ? defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash)
@@ -151,7 +143,7 @@ export function toVendor(
   };
 }
 
-export function getVendorItems(
+function getVendorItems(
   account: DestinyAccount,
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,

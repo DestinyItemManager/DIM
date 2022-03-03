@@ -11,7 +11,9 @@ import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
 import { storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import ItemFeedPage from 'app/item-feed/ItemFeedPage';
 import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
+import LoadoutDrawer2 from 'app/loadout-drawer/LoadoutDrawer2';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -167,7 +169,7 @@ export default function Destiny() {
 
   if (!account) {
     if (pathname.includes('/armory/')) {
-      return <Navigate to={pathname.replace(/\/\d+\/d2/, '') + search} />;
+      return <Navigate to={pathname.replace(/\/\d+\/d2/, '') + search} replace />;
     } else {
       return accountsLoaded ? (
         <div className="dim-page">
@@ -242,6 +244,9 @@ export default function Destiny() {
           {account.destinyVersion === 2 && (
             <Route path="armory/:itemHash" element={<ArmoryPage account={account} />} />
           )}
+          {account.destinyVersion === 2 && (
+            <Route path="item-feed" element={<ItemFeedPage account={account} />} />
+          )}
           {account.destinyVersion === 1 && (
             <Route path="record-books" element={<RecordBooks account={account} />} />
           )}
@@ -251,7 +256,11 @@ export default function Destiny() {
           <Route path="*" element={<Navigate to="inventory" />} />
         </Routes>
       </div>
-      <LoadoutDrawer />
+      {$featureFlags.loadoutDrawerV2 && account.destinyVersion === 2 ? (
+        <LoadoutDrawer2 />
+      ) : (
+        <LoadoutDrawer />
+      )}
       <Compare />
       <Farming />
       <InfusionFinder />

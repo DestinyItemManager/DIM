@@ -1,13 +1,13 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import {
   DestinyColor,
   DestinyItemChangeResponse,
   DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
-import { get } from 'idb-keyval';
 import { createAction } from 'typesafe-actions';
 import { TagValue } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
@@ -139,3 +139,6 @@ export const setItemHashNote = createAction('tag_notes/SET_HASH_NOTE')<{
 
 /** Clear out tags and notes for items that no longer exist. Argument is the list of inventory item IDs to remove. */
 export const tagCleanup = createAction('tag_notes/CLEANUP')<string[]>();
+
+/** input a mock profile API response */
+export const setMockProfileResponse = createAction('inventory/MOCK_PROFILE')<string>();

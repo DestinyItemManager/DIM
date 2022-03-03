@@ -1,4 +1,4 @@
-import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import {
   BreakerTypeHashes,
   BucketHashes,
@@ -27,28 +27,11 @@ export const DEFAULT_SHADER = 4248210736; // InventoryItem "Default Shader"
 /** the default glow InventoryItem in every empty glow slot */
 export const DEFAULT_GLOW = 3807544519; // InventoryItem "Remove Armor Glow"
 
-/** the default empty ghost projection in ghost projection slots */
-export const DEFAULT_PROJECTION = 2426387438;
-
-/** the default transmat effect in ship transmat effect slots */
-export const DEFAULT_TRANSMAT = 1390587439;
-
 /** An array of default ornament hashes */
 export const DEFAULT_ORNAMENTS: number[] = [
-  2931483505, // InventoryItem "Default Ornament"
-  1959648454, // InventoryItem "Default Ornament"
-  702981643, // InventoryItem "Default Ornament"
-];
-
-/** the default empty fragment for Subclasses 2.0 */
-export const DEFAULT_FRAGMENT = 3251563851;
-
-// TODO: Is there a way to recognize these without hardcoding every 2.0 subclass?
-/** the default empty aspects for Subclasses 2.0 */
-export const DEFAULT_ASPECTS: number[] = [
-  321296654, // Stasis Titan
-  3819991001, // Stasis Warlock
-  1715180370, // Stasis Hunter
+  2931483505, // InventoryItem "Default Ornament" Restores your weapon to its default appearance.
+  1959648454, // InventoryItem "Default Ornament" Restores your weapon to its default appearance.
+  702981643, // InventoryItem "Default Ornament" Restores your armor to its default appearance.
 ];
 
 /** if a socket contains these, consider it empty */
@@ -82,6 +65,13 @@ export const killTrackerObjectivesByHash: Record<number, 'pvp' | 'pve' | undefin
   2285418970: undefined, //
 };
 export const killTrackerSocketTypeHash = 1282012138;
+
+export const weaponMasterworkY2SocketTypeHash = 2218962841;
+
+export const universalOrnamentPlugSetHashes: number[] = [
+  26360131, 71785814, 709078552, 1133647128, 1323117612, 1742798175, 2093871133, 2203626505,
+  2425516788, 2568801218, 2733810650, 3024995628, 3479876793, 4014441445, 4178224051,
+];
 
 //
 // STATS KNOWN VALUES
@@ -201,11 +191,22 @@ export const armorBuckets = {
   classitem: BucketHashes.ClassArmor,
 };
 
+// these aren't really normal equipment,
+// like you can have 1 equipped but it's glued to the character.
+// this array is used to prevent them from
+// having normal equipment sidecar buttons
+export const uniqueEquipBuckets = [
+  BucketHashes.SeasonalArtifact,
+  BucketHashes.Emotes_Invisible,
+  BucketHashes.Finishers,
+];
+
 //
 // PRESENTATION NODE KNOWN VALUES
 //
 
 export const RAID_NODE = 4025982223;
+export const SHADER_NODE = 1516796296;
 
 //
 // MISC KNOWN HASHES / ENUMS
@@ -229,11 +230,13 @@ export const VENDORS = {
   BENEDICT: 1265988377,
   BANSHEE: 672118013,
   DRIFTER: 248695599,
-  ADA: 2917531897,
+  ADA_FORGE: 2917531897,
+  ADA_TRANSMOG: 350061650,
   /** rahool. we override how his vendor FakeItems are displayed */
   RAHOOL: 2255782930,
   VAULT: 1037843411,
   XUR: 2190858386,
+  WAR_TABLE_UPGRADES_RISEN: 3950870173,
 };
 
 /** used to snag the icon for display */
@@ -254,16 +257,6 @@ export const energyNamesByEnum: Record<DestinyEnergyType, string> = {
 
 export const energyCapacityTypeNames = Object.values(energyNamesByEnum);
 
-export const damageNamesByEnum: Record<DamageType, string | null> = {
-  [DamageType.None]: null,
-  [DamageType.Kinetic]: 'kinetic',
-  [DamageType.Arc]: 'arc',
-  [DamageType.Thermal]: 'solar',
-  [DamageType.Void]: 'void',
-  [DamageType.Raid]: 'raid',
-  [DamageType.Stasis]: 'stasis',
-};
-
 export const breakerTypes = {
   barrier: BreakerTypeHashes.ShieldPiercing,
   antibarrier: BreakerTypeHashes.ShieldPiercing,
@@ -279,10 +272,5 @@ export const modsWithConditionalStats = {
   radiantLight: 2979815167,
   chargeHarvester: 2263321587,
   elementalCapacitor: 3511092054,
-} as const;
-
-export const UpgradeMaterialHashes = {
-  legendaryShard: 1022552290,
-  enhancementPrism: 4257549984,
-  ascendantShard: 4257549985,
+  echoOfPersistence: 2272984671,
 } as const;

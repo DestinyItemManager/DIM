@@ -1,4 +1,8 @@
-import { LoadoutParameters, UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
+import {
+  AssumeArmorMasterwork,
+  LoadoutParameters,
+  LockArmorEnergyType,
+} from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
@@ -76,8 +80,8 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  upgradeSpendTier: UpgradeSpendTier;
-  lockItemEnergyType: boolean;
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
   notes?: string;
 }
 
@@ -96,8 +100,8 @@ export default memo(function GeneratedSets({
   lbDispatch,
   params,
   halfTierMods,
-  upgradeSpendTier,
-  lockItemEnergyType,
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
   notes,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
@@ -109,6 +113,13 @@ export default memo(function GeneratedSets({
 
   const measureSet = useMemo(() => getMeasureSet(sets), [sets]);
 
+  // Trigger height measurement again when needed
+  useLayoutEffect(() => {
+    setRowSize({ rowHeight: 0, rowWidth: 0 });
+    // Sets may gain extra perks,
+    // mod locks add "change element" hints above items.
+  }, [sets, lockedMods]);
+
   useLayoutEffect(() => {
     if (measureSetRef.current) {
       setRowSize({
@@ -116,7 +127,7 @@ export default memo(function GeneratedSets({
         rowWidth: measureSetRef.current.clientWidth,
       });
     }
-    // We need to include sets in the dependencies for this hook to fire correctly
+    // Include sets to recover after no sets were found and rowHeight stayed 0
   }, [rowHeight, sets]);
 
   useEffect(() => {
@@ -149,8 +160,8 @@ export default memo(function GeneratedSets({
           loadouts={loadouts}
           params={params}
           halfTierMods={halfTierMods}
-          upgradeSpendTier={upgradeSpendTier}
-          lockItemEnergyType={lockItemEnergyType}
+          assumeArmorMasterwork={assumeArmorMasterwork}
+          lockArmorEnergyType={lockArmorEnergyType}
           notes={notes}
         />
       ) : sets.length > 0 ? (
@@ -180,8 +191,8 @@ export default memo(function GeneratedSets({
                   loadouts={loadouts}
                   params={params}
                   halfTierMods={halfTierMods}
-                  upgradeSpendTier={upgradeSpendTier}
-                  lockItemEnergyType={lockItemEnergyType}
+                  assumeArmorMasterwork={assumeArmorMasterwork}
+                  lockArmorEnergyType={lockArmorEnergyType}
                   notes={notes}
                 />
               )}

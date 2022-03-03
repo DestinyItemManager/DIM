@@ -168,6 +168,7 @@ export interface DimItem {
    */
   primaryStat:
     | (DestinyStat & {
+        // TODO: get rid of this
         stat: DestinyStatDefinition;
       })
     | null;
@@ -175,6 +176,10 @@ export interface DimItem {
   power: number;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;
+  /** Is this crafted? (D2 only) */
+  crafted: boolean;
+  /** Does this have a highlighted (crafting) objective? (D2 Only) */
+  highlightedObjective: boolean;
   /** What percent complete is this item (considers XP and objectives). */
   percentComplete: number;
   /** The talent grid, used for D1 perks and D1/D2 subclass grids. */
@@ -195,6 +200,8 @@ export interface DimItem {
   energy: DestinyItemInstanceEnergy | null;
   /** If this item is a masterwork, this will include information about its masterwork properties. */
   masterworkInfo: DimMasterwork | null;
+  /** If this item is crafted, this includes info about its crafting properties. */
+  craftedInfo: DimCrafted | null;
   /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The state of this item in the user's D2 Collection */
@@ -233,6 +240,15 @@ export interface DimMasterwork {
     /** How much the stat is enhanced by this masterwork. */
     value?: number;
   }[];
+}
+
+export interface DimCrafted {
+  /** The level of this crafted weapon */
+  level?: number;
+  /** 0-1 progress to the next level */
+  progress?: number;
+  /** when this weapon was crafted, UTC epoch milliseconds timestamp */
+  dateCrafted?: number;
 }
 
 export interface DimStat {
@@ -352,33 +368,33 @@ export interface PluggableInventoryItemDefinition extends DestinyInventoryItemDe
  */
 export interface DimPlug {
   /** The InventoryItem definition associated with this plug. */
-  plugDef: PluggableInventoryItemDefinition;
+  readonly plugDef: PluggableInventoryItemDefinition;
   /** Perks associated with the use of this plug. TODO: load on demand? */
-  perks: DestinySandboxPerkDefinition[];
+  readonly perks: DestinySandboxPerkDefinition[];
   /** Objectives associated with this plug, usually used to unlock it. */
-  plugObjectives: DestinyObjectiveProgress[];
+  readonly plugObjectives: DestinyObjectiveProgress[];
   /** Is the plug enabled? For example, some perks only activate on certain planets. */
-  enabled: boolean;
+  readonly enabled: boolean;
   /** If not enabled, this is the localized reasons why, as a single string. */
-  enableFailReasons: string;
+  readonly enableFailReasons: string;
   /** Stats this plug modifies. If present, it's a map from the stat hash to the amount the stat is modified. */
-  stats: {
+  readonly stats: {
     [statHash: number]: number;
   } | null;
   /** This plug is one of the random roll options but the current version of this item cannot roll this perk. */
-  cannotCurrentlyRoll?: boolean;
+  readonly cannotCurrentlyRoll?: boolean;
 }
 
 export interface DimPlugSet {
   /** The hash that links to a DestinyPlugSetDefinition. */
-  hash: number;
+  readonly hash: number;
   /**
    * A list of built DimPlugs that are found in the plugSet.
    * This plugs included encompass everything that can be plugged into the socket whether it
    * is available to the character or not. You should filter this list down based on the plugs
    * available to the profile/character.
    */
-  plugs: DimPlug[];
+  readonly plugs: DimPlug[];
 }
 
 export interface DimSocket {

@@ -23,7 +23,7 @@ import {
   DictionaryComponentResponse,
   SingleComponentResponse,
 } from 'bungie-api-ts/destiny2';
-import { StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
@@ -179,10 +179,14 @@ function loadStoresData(
       // TODO: if we've already loaded profile recently, don't load it again
 
       try {
+        const { mockProfileData, readOnly } = getState().inventory;
+
         const [defs, , profileInfo] = await Promise.all([
           dispatch(getDefinitions())!,
           dispatch(loadNewItems(account)),
-          getStores(account, components),
+          mockProfileData
+            ? (JSON.parse(mockProfileData) as DestinyProfileResponse)
+            : getStores(account, components),
         ]);
 
         // If we switched account since starting this, give up
@@ -198,6 +202,18 @@ function loadStoresData(
 
         const buckets = d2BucketsSelector(getState())!;
         const stores = buildStores(defs, buckets, profileInfo, transaction);
+
+        if (readOnly) {
+          for (const store of stores) {
+            store.hadErrors = true;
+            for (const item of store.items) {
+              item.lockable = false;
+              item.trackable = false;
+              item.notransfer = true;
+              item.taggable = false;
+            }
+          }
+        }
 
         const currencies = processCurrencies(profileInfo, defs);
 
@@ -297,11 +313,18 @@ export function buildStores(
   const hasClassified = allItems.some(
     (i) =>
       i.classified &&
-      (i.location.sort === 'Weapons' || i.location.sort === 'Armor' || i.type === 'Ghost')
+      (i.location.inWeapons || i.location.inArmor || i.bucket.hash === BucketHashes.Ghost)
   );
 
   for (const s of stores) {
-    updateBasePower(allItems, s, defs, hasClassified, characterProgress);
+    updateBasePower(
+      allItems,
+      s,
+      defs,
+      hasClassified,
+      characterProgress,
+      profileInfo.profileProgression?.data?.seasonalArtifact.powerBonusProgression.progressionHash
+    );
   }
 
   return stores;
@@ -352,7 +375,7 @@ function processCharacter(
     for (const i of profileInventory) {
       const bucket = buckets.byHash[i.bucketHash];
       // items that can be stored in a vault
-      if (bucket && (bucket.vaultBucket || bucket.type === 'SpecialOrders')) {
+      if (bucket && (bucket.vaultBucket || bucket.hash === BucketHashes.SpecialOrders)) {
         items.push(i);
       }
     }
@@ -390,7 +413,7 @@ function processVault(
   for (const i of profileInventory) {
     const bucket = buckets.byHash[i.bucketHash];
     // items that cannot be stored in the vault, and are therefore *in* a vault
-    if (bucket && !bucket.vaultBucket && bucket.type !== 'SpecialOrders') {
+    if (bucket && !bucket.vaultBucket && bucket.hash !== BucketHashes.SpecialOrders) {
       items.push(i);
     }
   }
@@ -427,7 +450,8 @@ function updateBasePower(
   store: DimStore,
   defs: D2ManifestDefinitions,
   hasClassified: boolean,
-  characterProgress: DestinyCharacterProgressionComponent | undefined
+  characterProgress: DestinyCharacterProgressionComponent | undefined,
+  bonusPowerProgressionHash: number | undefined
 ) {
   if (!store.isVault) {
     const def = defs.Stat.get(StatHashes.Power);
@@ -457,7 +481,7 @@ function updateBasePower(
       name: t('Stats.PowerModifier'),
       hasClassified: false,
       description: '',
-      richTooltip: ArtifactXP(characterProgress),
+      richTooltip: ArtifactXP(characterProgress, bonusPowerProgressionHash),
       value: artifactPower,
       icon: xpIcon,
     };

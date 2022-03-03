@@ -1,0 +1,50 @@
+@import '../../variables.scss';
+
+.mods {
+  flex: 1;
+}
+
+.modsGrid {
+  --item-icon-size: calc(0.8 * var(--item-size));
+  min-width: calc(5 * var(--item-icon-size) + 4 * var(--item-margin));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-icon-size));
+  gap: 4px;
+  align-content: flex-start;
+  align-items: flex-start;
+  :global(.item) {
+    --item-size: var(--item-icon-size);
+  }
+}
+
+.modsPlaceholder {
+  composes: placeholder from './LoadoutItemCategorySection.m.scss';
+  flex: 1;
+}
+
+.missingItem {
+  opacity: 0.3;
+}
+
+.pickModButton {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  color: #999;
+  border: 1px solid white;
+  height: var(--item-icon-size);
+  width: var(--item-icon-size);
+
+  &:focus {
+    border-color: $orange;
+  }
+
+  &:hover {
+    color: white;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-flow: row wrap;
+  margin-top: 8px;
+  @include flex-gap(4px);
+}

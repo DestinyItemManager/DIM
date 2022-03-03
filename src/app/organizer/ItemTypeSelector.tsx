@@ -127,7 +127,7 @@ const d2SelectionTree: ItemCategoryTreeNode = {
         {
           id: 'fusionrifle',
           itemCategoryHash: ItemCategoryHashes.FusionRifle,
-          subCategories: [energy, power],
+          subCategories: [kinetic, energy, power],
           terminal: true,
         },
         {
@@ -178,7 +178,14 @@ const d2SelectionTree: ItemCategoryTreeNode = {
         {
           id: 'linearfusionrifle',
           itemCategoryHash: ItemCategoryHashes.LinearFusionRifles,
-          subCategories: [kinetic, power],
+          subCategories: [kinetic, energy, power],
+          terminal: true,
+        },
+        {
+          id: 'glaive',
+          // TODO: glaive item category hash
+          itemCategoryHash: 0,
+          subCategories: [kinetic, energy, power],
           terminal: true,
         },
       ],
@@ -322,6 +329,12 @@ export function getSelectionTree(destinyVersion: DestinyVersion) {
   return destinyVersion === 2 ? d2SelectionTree : d1SelectionTree;
 }
 
+const armorTopLevelCatHashes = [
+  ItemCategoryHashes.Hunter,
+  ItemCategoryHashes.Titan,
+  ItemCategoryHashes.Warlock,
+];
+
 /**
  * This component offers a means for narrowing down your selection to a single item type
  * (hunter helmets, hand cannons, etc.) for the Organizer table.
@@ -354,6 +367,13 @@ export default function ItemTypeSelector({
             <div key={depth} className={styles.level}>
               {currentSelection.subCategories?.map((subCategory) => {
                 const categoryHashList = [...upstreamCategories, subCategory.itemCategoryHash];
+
+                // a top level class-specific category implies armor
+                if (armorTopLevelCatHashes.some((h) => categoryHashList.includes(h))) {
+                  categoryHashList.push(ItemCategoryHashes.Armor);
+                }
+
+                const itemCategory = defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash));
                 return (
                   <label
                     key={subCategory.itemCategoryHash}
@@ -372,9 +392,9 @@ export default function ItemTypeSelector({
                     {itemCategoryIcons[subCategory.itemCategoryHash] && (
                       <img src={itemCategoryIcons[subCategory.itemCategoryHash]} />
                     )}
-                    {defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash)).displayProperties
-                      ?.name ||
-                      defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash)).title}{' '}
+                    {'displayProperties' in itemCategory
+                      ? itemCategory.displayProperties.name
+                      : itemCategory.title}{' '}
                     <span className={styles.buttonItemCount}>
                       (
                       {

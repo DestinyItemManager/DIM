@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FilterDefinition } from './filter-types';
 import styles from './FilterHelp.m.scss';
 import { searchConfigSelector } from './search-config';
-import { generateSuggestionsForFilter } from './suggestions-generation';
+import { SearchInput } from './SearchInput';
+import { generateGroupedSuggestionsForFilter } from './suggestions-generation';
 
 function keywordsString(keywords: string | string[]) {
   if (Array.isArray(keywords)) {
@@ -19,9 +20,6 @@ function keywordsString(keywords: string | string[]) {
 export default function FilterHelp() {
   const searchConfig = useSelector(searchConfigSelector);
   const [search, setSearch] = useState('');
-
-  const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setSearch(event.target.value);
 
   const searchLower = search.toLowerCase();
   const filters = search
@@ -51,17 +49,11 @@ export default function FilterHelp() {
           {t('Filter.Negate', { notexample: '-is:tagged', notexample2: 'not is:tagged' })}{' '}
           <a href="/search-history">{t('SearchHistory.Link')}</a>
         </p>
-        <div className={clsx(styles.search, 'search-filter')} role="search">
-          <input
-            className="filter-input"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
+        <div className={clsx(styles.search)}>
+          <SearchInput
+            query={search}
+            onQueryChanged={setSearch}
             placeholder={t('Filter.SearchPrompt')}
-            type="text"
-            name="filter"
-            value={search}
-            onChange={onSearchChange}
           />
         </div>
         <table>
@@ -86,22 +78,16 @@ function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   const dispatch = useDispatch();
   const additionalSuggestions = filter.suggestionsGenerator?.({}) ?? [];
   const suggestions = Array.from(
-    new Set(
-      [...generateSuggestionsForFilter(filter), ...additionalSuggestions].filter(
-        (s) =>
-          !s.startsWith('not:') &&
-          (filter.format === 'freeform' ||
-            filter.format === 'range' ||
-            filter.format === 'rangeoverload' ||
-            !s.endsWith(':'))
-      )
-    )
+    new Set([
+      ...generateGroupedSuggestionsForFilter(filter, true),
+      ...additionalSuggestions.map((keyword) => ({ keyword, ops: undefined })),
+    ])
   );
   const localDesc = Array.isArray(filter.description)
     ? t(...filter.description)
     : t(filter.description);
 
-  const applySuggestion = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, k: string) => {
+  const applySuggestion = (e: React.MouseEvent<HTMLAnchorElement>, k: string) => {
     e.preventDefault();
     dispatch(toggleSearchQueryComponent(k));
   };
@@ -109,10 +95,23 @@ function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   return (
     <tr>
       <td>
-        {suggestions.map((k) => (
-          <a key={k} href="." onClick={(e) => applySuggestion(e, k)}>
-            {k}
-          </a>
+        {suggestions.map((k, i) => (
+          <div key={i} className={clsx(styles.entry)}>
+            <a href="." onClick={(e) => applySuggestion(e, k.keyword)}>
+              {k.ops ? `${k.keyword}` : k.keyword}
+            </a>
+            {k.ops?.map((op, j) => {
+              const x = `${k.keyword}${op}`;
+              return (
+                <div key={j}>
+                  <span className={clsx(styles.separator)}>| </span>
+                  <a href="." onClick={(e) => applySuggestion(e, x)}>
+                    {op}
+                  </a>
+                </div>
+              );
+            })}
+          </div>
         ))}
       </td>
       <td>{localDesc}</td>

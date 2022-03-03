@@ -1,5 +1,6 @@
 import { DamageType } from 'bungie-api-ts/destiny2';
-import { D1LightStats } from './d1-known-values';
+import { BucketHashes } from 'data/d2/generated-enums';
+import { D1BucketHashes, D1LightStats } from './d1-known-values';
 import {
   armorStats,
   CUSTOM_TOTAL_STAT_HASH,
@@ -61,19 +62,15 @@ export const allStatNames = [...Object.keys(statHashByName), 'any'];
 
 export const lightStats = [...D2LightStats, ...D1LightStats];
 
-/** compare against DimItem.type in EN */
-export const cosmeticTypes = [
-  'Shader',
-  'Ornaments',
-  'Modifications',
-  'Emote',
-  'Emotes',
-  'Emblem',
-  'Emblems',
-  'Vehicle',
-  'Horn',
-  'Ship',
-  'Ships',
-  'ClanBanners',
-  'Finishers',
+/** compare against DimItem.bucket.hash */
+export const cosmeticTypes: (BucketHashes | D1BucketHashes)[] = [
+  BucketHashes.Shaders,
+  BucketHashes.Modifications,
+  BucketHashes.Emotes_Equippable,
+  BucketHashes.Emotes_Invisible,
+  BucketHashes.Emblems,
+  BucketHashes.Vehicle,
+  D1BucketHashes.Horn,
+  BucketHashes.Ships,
+  BucketHashes.Finishers,
 ];

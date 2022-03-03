@@ -5,6 +5,7 @@ import { setItemLockState } from 'app/inventory/item-move-service';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
 import { DimItem } from '../inventory/item-types';
 import {
@@ -62,10 +63,10 @@ export default function LockButton({ type, item, children }: Props) {
   const icon =
     type === 'lock'
       ? item.locked
-        ? item.type === 'Finishers'
+        ? item.bucket.hash === BucketHashes.Finishers
           ? starIcon
           : lockIcon
-        : item.type === 'Finishers'
+        : item.bucket.hash === BucketHashes.Finishers
         ? starOutlineIcon
         : unlockedIcon
       : item.tracked
@@ -87,15 +88,15 @@ export default function LockButton({ type, item, children }: Props) {
   );
 }
 
-export function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
+function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
   const data = { itemType: item.typeName };
   return (
     (type === 'lock'
       ? !item.locked
-        ? item.type === 'Finishers'
+        ? item.bucket.hash === BucketHashes.Finishers
           ? t('MovePopup.FavoriteUnFavorite.Favorite', data)
           : t('MovePopup.LockUnlock.Lock', data)
-        : item.type === 'Finishers'
+        : item.bucket.hash === BucketHashes.Finishers
         ? t('MovePopup.FavoriteUnFavorite.Unfavorite', data)
         : t('MovePopup.LockUnlock.Unlock', data)
       : !item.tracked

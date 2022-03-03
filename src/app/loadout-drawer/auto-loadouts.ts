@@ -1,7 +1,8 @@
 import { t } from 'app/i18next-t';
-import type { DimBucketType } from 'app/inventory/inventory-buckets';
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -67,9 +68,9 @@ export function maxLightLoadout(allItems: DimItem[], store: DimStore): Loadout {
   const { equippable } = maxLightItemSet(allItems, store);
   const maxLightLoadout = newLoadout(
     store.destinyVersion === 2 ? t('Loadouts.MaximizePower') : t('Loadouts.MaximizeLight'),
-    equippable.map((i) => convertToLoadoutItem(i, true))
+    equippable.map((i) => convertToLoadoutItem(i, true)),
+    store.classType
   );
-  maxLightLoadout.classType = store.classType;
   return maxLightLoadout;
 }
 
@@ -166,7 +167,7 @@ export function gatherEngramsLoadout(
   }
 
   const itemsByType = _.mapValues(
-    _.groupBy(engrams, (e) => e.type),
+    _.groupBy(engrams, (e) => e.bucket.hash),
     (items) => {
       // Sort exotic engrams to the end so they don't crowd out other types
       const sortedItems = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
@@ -191,7 +192,7 @@ export function itemMoveLoadout(items: DimItem[], store: DimStore): Loadout {
   items = addUpStackables(items);
 
   const itemsByType = _.mapValues(
-    _.groupBy(items, (i) => i.type),
+    _.groupBy(items, (i) => i.bucket.hash),
     (items) => limitToBucketSize(items, store.isVault)
   );
 
@@ -234,21 +235,18 @@ function addUpStackables(items: DimItem[]) {
   });
 }
 
-const randomLoadoutTypes = new Set<DimBucketType>([
-  'Class',
-  'Primary',
-  'Special',
-  'Heavy',
-  'KineticSlot',
-  'Energy',
-  'Power',
-  'Helmet',
-  'Gauntlets',
-  'Chest',
-  'Leg',
-  'ClassItem',
-  'Artifact',
-  'Ghost',
+const randomLoadoutTypes = new Set<BucketHashes | D1BucketHashes>([
+  BucketHashes.Subclass,
+  BucketHashes.KineticWeapons,
+  BucketHashes.EnergyWeapons,
+  BucketHashes.PowerWeapons,
+  BucketHashes.Helmet,
+  BucketHashes.Gauntlets,
+  BucketHashes.ChestArmor,
+  BucketHashes.LegArmor,
+  BucketHashes.ClassArmor,
+  D1BucketHashes.Artifact,
+  BucketHashes.Ghost,
 ]);
 
 /**
@@ -257,7 +255,7 @@ const randomLoadoutTypes = new Set<DimBucketType>([
 export function randomLoadout(store: DimStore, allItems: DimItem[], filter: ItemFilter) {
   // Any item equippable by this character in the given types
   const applicableItems = allItems.filter(
-    (i) => randomLoadoutTypes.has(i.type) && itemCanBeEquippedBy(i, store) && filter(i)
+    (i) => randomLoadoutTypes.has(i.bucket.hash) && itemCanBeEquippedBy(i, store) && filter(i)
   );
 
   // Use "random" as the value function

@@ -207,8 +207,14 @@ function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Pr
     [hiddenSelectedMods, onAccept]
   );
 
+  // Ensure the plug drawer is reset when selecting a different
+  // set of plugSets so that it shows the correct mods and chooses
+  // a correct height for the sheet.
+  const plugSetsKey = plugSets.map((p) => p.plugSetHash).toString();
+
   return (
     <PlugDrawer
+      key={plugSetsKey}
       title={t('LB.ChooseAMod')}
       searchPlaceholder={t('LB.SearchAMod')}
       acceptButtonText={t('LB.SelectMods')}
@@ -224,7 +230,7 @@ function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Pr
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(ModPicker);
+export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(ModPicker);
 
 /**
  * Determine whether an armor mod can still be selected, given that the `selected` mods have already been selected.

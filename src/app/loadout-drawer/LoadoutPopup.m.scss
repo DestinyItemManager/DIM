@@ -3,12 +3,7 @@
 // Used in StoreHeading.tsx
 :global(.loadout-menu) {
   position: absolute;
-  /* prettier-ignore */
-  width: calc(
-    #{$equipped-item-total-outset} +
-    var(--character-column-width) -
-    var(--item-margin)
-  );
+  width: 300px;
   box-sizing: border-box;
   max-height: calc(var(--viewport-height) - var(--header-height) - #{62px + 16px});
   overflow: auto;
@@ -20,34 +15,20 @@
 
   @include visible-scrollbars;
 
-  @include phone-portrait {
-    // TODO: use visual viewport API / dropdown class
-    max-height: 60vh;
-  }
-
   [role='button'] {
     outline: none;
   }
 
+  // The phone layout version
   :global(.detached) & {
     position: fixed;
     top: calc(54px + var(--header-height));
     z-index: 1000;
-    max-height: calc(var(--viewport-height) - 120px - var(--header-height));
-
-    max-width: calc(100% - 100px);
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 0 5px;
-
-    @include phone-portrait {
-      width: 100vw;
-      max-width: none;
-      padding: 0;
-      max-height: calc(
-        var(--viewport-height) - 54px - var(--header-height) - env(safe-area-inset-bottom)
-      );
-    }
+    width: 100vw;
+    padding: 0;
+    max-height: calc(
+      var(--viewport-height) - 54px - var(--header-height) - env(safe-area-inset-bottom)
+    );
   }
 }
 
@@ -78,8 +59,16 @@
     text-decoration: none;
   }
 
+  form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 35px;
+  }
+
   > span,
-  a {
+  a,
+  form {
     &:first-child {
       flex: 1;
       padding: 0 10px;
@@ -99,6 +88,19 @@
     }
   }
 
+  input[type='text'] {
+    border: none;
+    color: white;
+    outline: none;
+    flex: 1;
+    width: 0;
+    padding: 7px;
+    margin-left: 4px;
+    background: #313233;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
   &:hover,
   a:hover {
     background-color: $orange;
@@ -111,47 +113,46 @@
   > span:not(:first-child) {
     margin: 6px 4px 6px 4px;
     padding: 0 6px;
-    border-radius: 4px;
-    text-align: center;
-    color: #888;
-    background-color: #222;
     display: flex;
     align-items: center;
+    text-align: center;
     @include phone-portrait {
       margin: 4px 4px 4px 2px;
-    }
-    /* stylelint-disable-next-line no-descending-specificity */
-    :global(.app-icon) {
-      font-size: 13px;
-      @include phone-portrait {
-        font-size: 15px;
-      }
-    }
-    &:hover {
-      background-color: $blue;
-      color: #222;
     }
   }
 }
 
+.altButton {
+  border-radius: 4px;
+  color: #888;
+  background-color: #222;
+  /* stylelint-disable-next-line no-descending-specificity */
+  :global(.app-icon) {
+    font-size: 13px;
+    @include phone-portrait {
+      font-size: 15px;
+    }
+  }
+  &:hover {
+    background-color: $blue;
+    color: #222;
+  }
+}
+
 .loadoutTypeIcon {
-  color: #666;
+  color: #999;
 }
 
 .warningIcon {
   color: yellow;
-}
-
-.badge {
-  border-radius: 50%;
-  border-radius: 10px;
-  background: $orange;
-  padding: 0 4px;
-  color: black;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .content {
   background-color: #3a4150;
   color: #e4e4e4;
+}
+
+.note {
+  color: #888;
 }

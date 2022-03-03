@@ -35,9 +35,9 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
 
     const loadout = newLoadout(
       '',
-      items.map((i) => convertToLoadoutItem(i, true))
+      items.map((i) => convertToLoadoutItem(i, true)),
+      store.classType
     );
-    loadout.classType = store.classType;
     return loadout;
   };
 

@@ -1,8 +1,7 @@
-import { UpgradeSpendTier } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { showItemPicker } from 'app/item-picker/item-picker';
+import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
 import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { createGetModRenderKey, getDefaultPlugHash } from 'app/loadout/mod-utils';
@@ -13,16 +12,15 @@ import { AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
-import { getSocketByIndex, getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { getSocketByIndex, getSocketsByCategoryHashes } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { Dispatch, memo, useCallback, useMemo, useState } from 'react';
+import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import ReactDom from 'react-dom';
 import { isLoadoutBuilderItem, pickSubclass } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
-import ArmorUpgradePicker, { SelectedArmorUpgrade } from './ArmorUpgradePicker';
 import ExoticArmorChoice from './ExoticArmorChoice';
 import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
@@ -33,8 +31,6 @@ interface Props {
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
   lockedMods: PluggableInventoryItemDefinition[];
-  upgradeSpendTier: UpgradeSpendTier;
-  lockItemEnergyType: boolean;
   subclass?: DimLoadoutItem;
   lockedExoticHash?: number;
   searchFilter: ItemFilter;
@@ -49,19 +45,17 @@ export default memo(function LockArmorAndPerks({
   pinnedItems,
   excludedItems,
   lockedMods,
-  upgradeSpendTier,
-  lockItemEnergyType,
   subclass,
   lockedExoticHash,
   searchFilter,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
-  const [showArmorUpgradePicker, setShowArmorUpgradePicker] = useState(false);
   const [showSubclassOptionsPicker, setShowSubclassOptionsPicker] = useState(false);
   const defs = useD2Definitions()!;
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
+  useEffect(() => hideItemPicker(), [selectedStore.classType]);
 
   /**
    * Lock currently equipped items on a character
@@ -148,10 +142,11 @@ export default memo(function LockArmorAndPerks({
     for (const socketIndexString of Object.keys(subclass?.socketOverrides)) {
       const socketIndex = parseInt(socketIndexString, 10);
       const socket = getSocketByIndex(subclass.sockets, socketIndex);
-      const abilitySockets = getSocketsByCategoryHash(
-        subclass.sockets,
-        SocketCategoryHashes.Abilities
-      );
+      const abilityAndSuperSockets = getSocketsByCategoryHashes(subclass.sockets, [
+        SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+        SocketCategoryHashes.Abilities_Abilities_LightSubclass,
+        SocketCategoryHashes.Super,
+      ]);
 
       const overridePlug = defs.InventoryItem.get(
         subclass.socketOverrides[socketIndex]
@@ -160,7 +155,7 @@ export default memo(function LockArmorAndPerks({
       const isDefaultAbility = Boolean(
         socket &&
           getDefaultPlugHash(socket, defs) === overridePlug.hash &&
-          abilitySockets.includes(socket)
+          abilityAndSuperSockets.includes(socket)
       );
 
       rtn.push({ plug: overridePlug, isDefaultAbility });
@@ -256,22 +251,6 @@ export default memo(function LockArmorAndPerks({
           </ol>
         </div>
       )}
-      <div className={styles.area}>
-        <SelectedArmorUpgrade
-          defs={defs}
-          upgradeSpendTier={upgradeSpendTier}
-          lockItemEnergyType={lockItemEnergyType}
-        />
-        <div className={styles.buttons}>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => setShowArmorUpgradePicker(true)}
-          >
-            {t('LoadoutBuilder.SelectArmorUpgrade')}
-          </button>
-        </div>
-      </div>
       {/* Pinned items */}
       <LoadoutBucketDropTarget className={styles.area} onItemLocked={pinItem}>
         {Boolean(allPinnedItems.length) && (
@@ -312,21 +291,6 @@ export default memo(function LockArmorAndPerks({
             classType={selectedStore.classType}
             onSelected={(exotic) => lbDispatch({ type: 'lockExotic', lockedExoticHash: exotic })}
             onClose={() => setShowExoticPicker(false)}
-          />,
-          document.body
-        )}
-      {showArmorUpgradePicker &&
-        ReactDom.createPortal(
-          <ArmorUpgradePicker
-            currentUpgradeSpendTier={upgradeSpendTier}
-            lockItemEnergyType={lockItemEnergyType}
-            onLockItemEnergyTypeChanged={(checked) =>
-              lbDispatch({ type: 'lockItemEnergyTypeChanged', lockItemEnergyType: checked })
-            }
-            onUpgradeSpendTierChanged={(upgradeSpendTier) =>
-              lbDispatch({ type: 'upgradeSpendTierChanged', upgradeSpendTier })
-            }
-            onClose={() => setShowArmorUpgradePicker(false)}
           />,
           document.body
         )}

@@ -34,6 +34,7 @@ import Select, { mapToOptions } from './Select';
 import './settings.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
+import { TroubleshootingSettings } from './Troubleshooting';
 
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
@@ -85,6 +86,7 @@ export default function SettingsPage() {
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(currentAccount);
   const setSetting = useSetSetting();
+
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
       errorLog('settings', new Error('You need to have a name on the form input'));
@@ -491,6 +493,10 @@ export default function SettingsPage() {
           </ErrorBoundary>
 
           <Spreadsheets />
+
+          {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
+            <TroubleshootingSettings />
+          )}
         </form>
       </PageWithMenu.Contents>
     </PageWithMenu>

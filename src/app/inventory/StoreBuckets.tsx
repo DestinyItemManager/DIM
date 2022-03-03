@@ -1,5 +1,6 @@
 import { postmasterAlmostFull } from 'app/loadout-drawer/postmaster';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { InventoryBucket } from './inventory-buckets';
 import { PullFromPostmaster } from './PullFromPostmaster';
@@ -27,7 +28,7 @@ export function StoreBuckets({
 
   // Don't show buckets with no items
   if (
-    (!bucket.accountWide || bucket.type === 'SpecialOrders') &&
+    (!bucket.accountWide || bucket.hash === BucketHashes.SpecialOrders) &&
     !stores.some((s) => findItemsByBucket(s, bucket.hash).length > 0)
   ) {
     return null;
@@ -65,7 +66,7 @@ export function StoreBuckets({
         {(!store.isVault || bucket.vaultBucket) && (
           <StoreBucket bucket={bucket} store={store} singleCharacter={singleCharacter} />
         )}
-        {bucket.type === 'LostItems' &&
+        {bucket.hash === BucketHashes.LostItems &&
           store.destinyVersion === 2 &&
           findItemsByBucket(store, bucket.hash).length > 0 && <PullFromPostmaster store={store} />}
       </div>

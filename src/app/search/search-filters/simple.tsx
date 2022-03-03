@@ -1,6 +1,7 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { isSunset } from 'app/utils/item-utils';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { FilterDefinition } from '../filter-types';
 
 // simple checks against check an attribute found on DimItem
@@ -16,8 +17,8 @@ const simpleFilters: FilterDefinition[] = [
     description: tl('Filter.Weapon'),
     filter: () => (item) =>
       item.bucket?.sort === 'Weapons' &&
-      item.bucket.type !== 'SeasonalArtifacts' &&
-      item.bucket.type !== 'Class',
+      item.bucket.hash !== BucketHashes.SeasonalArtifact &&
+      item.bucket.hash !== BucketHashes.Subclass,
   },
   {
     keywords: 'armor',
@@ -79,8 +80,15 @@ const simpleFilters: FilterDefinition[] = [
   },
   {
     keywords: 'sunset',
+    destinyVersion: 2,
     description: tl('Filter.IsSunset'),
     filter: () => isSunset,
+  },
+  {
+    keywords: ['crafted', 'shaped'],
+    destinyVersion: 2,
+    description: tl('Filter.IsCrafted'),
+    filter: () => (item) => item.crafted,
   },
 ];
 

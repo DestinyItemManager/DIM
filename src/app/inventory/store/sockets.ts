@@ -82,7 +82,7 @@ export function buildSockets(
 /**
  * Build sockets that come from the live instance.
  */
-export function buildInstancedSockets(
+function buildInstancedSockets(
   defs: D2ManifestDefinitions,
   itemDef: DestinyInventoryItemDefinition,
   item: DestinyItemComponent,
@@ -224,8 +224,7 @@ function buildDefinedSocket(
         for (const reusablePlug of plugSet.reusablePlugItems) {
           const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
           if (built) {
-            built.cannotCurrentlyRoll = !reusablePlug.currentlyCanRoll;
-            reusablePlugs.push(built);
+            reusablePlugs.push({ ...built, cannotCurrentlyRoll: !reusablePlug.currentlyCanRoll });
           }
         }
       }
@@ -237,18 +236,20 @@ function buildDefinedSocket(
         const plugs: {
           [plugItemHash: number]: DestinyItemSocketEntryPlugItemRandomizedDefinition;
         } = {};
-        for (const reusablePlug of plugSet.reusablePlugItems) {
-          const existing = plugs[reusablePlug.plugItemHash];
-          if (!existing || (!existing.currentlyCanRoll && reusablePlug.currentlyCanRoll)) {
-            plugs[reusablePlug.plugItemHash] = reusablePlug;
+        for (const randomPlug of plugSet.reusablePlugItems) {
+          const existing = plugs[randomPlug.plugItemHash];
+          if (!existing || (!existing.currentlyCanRoll && randomPlug.currentlyCanRoll)) {
+            plugs[randomPlug.plugItemHash] = randomPlug;
           }
         }
 
-        for (const reusablePlug of Object.values(plugs)) {
-          const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
-          if (built) {
-            built.cannotCurrentlyRoll = !reusablePlug.currentlyCanRoll;
-            reusablePlugs.push(built);
+        for (const randomPlug of Object.values(plugs)) {
+          const built = buildCachedDefinedPlug(defs, randomPlug.plugItemHash);
+          // we don't want "stat roll" plugs to count as reusablePlugs, but they're almost
+          // indistinguishable from exotic intrinsic armor perks, so we stop them here based
+          // on the fact that they have no name
+          if (built?.plugDef.displayProperties.name) {
+            reusablePlugs.push({ ...built, cannotCurrentlyRoll: !randomPlug.currentlyCanRoll });
           }
         }
       }
@@ -535,10 +536,17 @@ function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): 
   const cachedValue = definedPlugCache[plugHash];
   // The result of buildDefinedPlug can be null, we still consider that a cached value.
   if (cachedValue !== undefined) {
-    return cachedValue;
+    // We mutate cannotCurrentlyRoll and attach stats in this module so we need to spread the object
+    // We also run DimItems through immer in the store, which means these get frozen. This essentially
+    // unfreezes it in that situation. It only seems to be an issue for fake items in loadouts.
+    // TODO (ryan) lets fine a way around this
+    return cachedValue ? { ...cachedValue } : null;
   }
 
   const plug = buildDefinedPlug(defs, plugHash);
   definedPlugCache[plugHash] = plug;
-  return plug;
+
+  // We mutate cannotCurrentlyRoll and attach stats in this module so we need to spread the object
+  // TODO (ryan) lets fine a way around this
+  return plug ? { ...plug } : null;
 }

@@ -1,29 +1,29 @@
 import {
+  AssumeArmorMasterwork,
   defaultLoadoutParameters,
   LoadoutParameters,
-  UpgradeSpendTier,
+  LockArmorEnergyType,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import { getCurrentStore, getItemAcrossStores } from 'app/inventory/stores-helpers';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
+import {
+  createSubclassDefaultSocketOverrides,
+  findItemForLoadout,
+} from 'app/loadout-drawer/loadout-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
-import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { getSocketsByCategoryHashes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useReducer } from 'react';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
-import {
-  lockedModsFromLoadoutParameters,
-  statFiltersFromLoadoutParamaters,
-  statOrderFromLoadoutParameters,
-} from './loadout-params';
+import { statFiltersFromLoadoutParamaters, statOrderFromLoadoutParameters } from './loadout-params';
 import {
   ArmorSet,
   ArmorStatHashes,
@@ -34,16 +34,14 @@ import {
 } from './types';
 
 export interface LoadoutBuilderState {
+  loadoutParameters: LoadoutParameters;
+  // TODO: also fold statOrder, statFilters into loadoutParameters
   statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
-  upgradeSpendTier: UpgradeSpendTier;
-  lockItemEnergyType: boolean;
+  statFilters: Readonly<StatFilters>;
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
-  lockedMods: PluggableInventoryItemDefinition[];
-  lockedExoticHash?: number;
   selectedStoreId?: string;
   subclass?: DimLoadoutItem;
-  statFilters: Readonly<StatFilters>;
   modPicker: {
     open: boolean;
     plugCategoryHashWhitelist?: number[];
@@ -51,7 +49,7 @@ export interface LoadoutBuilderState {
   compareSet?: ArmorSet;
 }
 
-function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefinitions) {
+export function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefinitions) {
   const missingClassName = Object.values(defs.Class).find((c) => c.classType === classType)!
     .displayProperties.name;
 
@@ -115,24 +113,18 @@ const lbStateInit = ({
       // TODO: instead of locking items, show the loadout fixed at the top to compare against and leave all items free
       for (const loadoutItem of preloadedLoadout.items) {
         if (loadoutItem.equipped) {
-          const item = getItemAcrossStores(stores, loadoutItem);
+          const allItems = stores.flatMap((s) => s.items);
+          const item = findItemForLoadout(defs, allItems, selectedStoreId, loadoutItem);
           if (item && isLoadoutBuilderItem(item)) {
             pinnedItems[item.bucket.hash] = item;
           } else if (item && item.bucket.hash === BucketHashes.Subclass && item.sockets) {
-            const abilitySockets = getSocketsByCategoryHash(
-              item.sockets,
-              SocketCategoryHashes.Abilities
-            );
-            const socketOverridesForLO = { ...loadoutItem.socketOverrides };
-
             // In LO we populate the default ability plugs because in game you cannot unselect all abilities.
-            for (const socket of abilitySockets) {
-              if (!socketOverridesForLO[socket.socketIndex]) {
-                socketOverridesForLO[socket.socketIndex] =
-                  socket.socketDefinition.singleInitialItemHash;
-              }
-            }
-            subclass = { ...item, socketOverrides: loadoutItem.socketOverrides };
+            const socketOverridesForLO = {
+              ...createSubclassDefaultSocketOverrides(item),
+              ...loadoutItem.socketOverrides,
+            };
+
+            subclass = { ...item, socketOverrides: socketOverridesForLO };
           }
         }
       }
@@ -161,24 +153,13 @@ const lbStateInit = ({
 
   const statOrder = statOrderFromLoadoutParameters(loadoutParams);
   const statFilters = statFiltersFromLoadoutParamaters(loadoutParams);
-  const lockedMods = lockedModsFromLoadoutParameters(loadoutParams, defs);
-  const lockItemEnergyType = Boolean(loadoutParams?.lockItemEnergyType);
-  // We need to handle the deprecated case
-  const upgradeSpendTier =
-    loadoutParams.upgradeSpendTier === UpgradeSpendTier.AscendantShardsLockEnergyType
-      ? UpgradeSpendTier.Nothing
-      : loadoutParams.upgradeSpendTier!;
-  const lockedExoticHash = loadoutParams.exoticArmorHash;
 
   return {
-    lockItemEnergyType,
-    upgradeSpendTier,
+    loadoutParameters: loadoutParams,
     statOrder,
     pinnedItems,
     excludedItems: emptyObject(),
     statFilters,
-    lockedMods,
-    lockedExoticHash,
     subclass,
     selectedStoreId,
     modPicker: {
@@ -192,19 +173,16 @@ export type LoadoutBuilderAction =
   | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
   | { type: 'sortOrderChanged'; sortOrder: LoadoutBuilderState['statOrder'] }
   | {
-      type: 'lockItemEnergyTypeChanged';
-      lockItemEnergyType: LoadoutBuilderState['lockItemEnergyType'];
+      type: 'assumeArmorMasterworkChanged';
+      assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
     }
-  | { type: 'upgradeSpendTierChanged'; upgradeSpendTier: LoadoutBuilderState['upgradeSpendTier'] }
+  | { type: 'lockArmorEnergyTypeChanged'; lockArmorEnergyType: LockArmorEnergyType | undefined }
   | { type: 'pinItem'; item: DimItem }
   | { type: 'setPinnedItems'; items: DimItem[] }
   | { type: 'unpinItem'; item: DimItem }
   | { type: 'excludeItem'; item: DimItem }
   | { type: 'unexcludeItem'; item: DimItem }
-  | {
-      type: 'lockedModsChanged';
-      lockedMods: PluggableInventoryItemDefinition[];
-    }
+  | { type: 'lockedModsChanged'; lockedMods: PluggableInventoryItemDefinition[] }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'updateSubclass'; item: DimItem }
@@ -219,238 +197,273 @@ export type LoadoutBuilderAction =
   | { type: 'closeCompareDrawer' };
 
 // TODO: Move more logic inside the reducer
-function lbStateReducer(
-  state: LoadoutBuilderState,
-  action: LoadoutBuilderAction
-): LoadoutBuilderState {
-  switch (action.type) {
-    case 'changeCharacter':
-      return {
-        ...state,
-        selectedStoreId: action.storeId,
-        pinnedItems: {},
-        excludedItems: {},
-        lockedExoticHash: undefined,
-      };
-    case 'statFiltersChanged':
-      return { ...state, statFilters: action.statFilters };
-    case 'pinItem': {
-      const { item } = action;
-      const bucketHash = item.bucket.hash;
-      return {
-        ...state,
-        // Remove any previously locked item in that bucket and add this one
-        pinnedItems: {
-          ...state.pinnedItems,
-          [bucketHash]: item,
-        },
-        // Locking an item clears excluded items in this bucket
-        excludedItems: {
-          ...state.excludedItems,
-          [bucketHash]: undefined,
-        },
-      };
-    }
-    case 'setPinnedItems': {
-      const { items } = action;
-      return {
-        ...state,
-        pinnedItems: _.keyBy(items, (i) => i.bucket.hash),
-        excludedItems: {},
-      };
-    }
-    case 'unpinItem': {
-      const { item } = action;
-      const bucketHash = item.bucket.hash;
-      return {
-        ...state,
-        pinnedItems: {
-          ...state.pinnedItems,
-          [bucketHash]: undefined,
-        },
-      };
-    }
-    case 'excludeItem': {
-      const { item } = action;
-      const bucketHash = item.bucket.hash;
-      if (state.excludedItems[bucketHash]?.some((i) => i.id === item.id)) {
-        return state; // item's already there
+function lbStateReducer(defs: D2ManifestDefinitions) {
+  return (state: LoadoutBuilderState, action: LoadoutBuilderAction): LoadoutBuilderState => {
+    switch (action.type) {
+      case 'changeCharacter':
+        return {
+          ...state,
+          selectedStoreId: action.storeId,
+          pinnedItems: {},
+          excludedItems: {},
+          loadoutParameters: {
+            ...state.loadoutParameters,
+            exoticArmorHash: undefined,
+          },
+          subclass: undefined,
+        };
+      case 'statFiltersChanged':
+        return { ...state, statFilters: action.statFilters };
+      case 'pinItem': {
+        const { item } = action;
+        const bucketHash = item.bucket.hash;
+        return {
+          ...state,
+          // Remove any previously locked item in that bucket and add this one
+          pinnedItems: {
+            ...state.pinnedItems,
+            [bucketHash]: item,
+          },
+          // Locking an item clears excluded items in this bucket
+          excludedItems: {
+            ...state.excludedItems,
+            [bucketHash]: undefined,
+          },
+        };
       }
-      const existingExcluded = state.excludedItems[bucketHash] ?? [];
-      return {
-        ...state,
-        excludedItems: {
-          ...state.excludedItems,
-          [bucketHash]: [...existingExcluded, item],
-        },
-      };
-    }
-    case 'unexcludeItem': {
-      const { item } = action;
-      const bucketHash = item.bucket.hash;
-      const newExcluded = (state.excludedItems[bucketHash] ?? []).filter((i) => i.id !== item.id);
-      return {
-        ...state,
-        excludedItems: {
-          ...state.excludedItems,
-          [bucketHash]: newExcluded.length > 0 ? newExcluded : undefined,
-        },
-      };
-    }
-    case 'lockedModsChanged': {
-      return {
-        ...state,
-        lockedMods: action.lockedMods,
-      };
-    }
-    case 'sortOrderChanged': {
-      return {
-        ...state,
-        statOrder: action.sortOrder,
-      };
-    }
-    case 'lockItemEnergyTypeChanged': {
-      return {
-        ...state,
-        lockItemEnergyType: action.lockItemEnergyType,
-      };
-    }
-    case 'upgradeSpendTierChanged': {
-      return {
-        ...state,
-        upgradeSpendTier: action.upgradeSpendTier,
-      };
-    }
-    case 'addGeneralMods': {
-      let currentGeneralModsCount = state.lockedMods.filter(
-        (mod) => mod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general
-      ).length;
-
-      const newMods = [...state.lockedMods];
-      const failures: string[] = [];
-
-      for (const mod of action.mods) {
-        if (currentGeneralModsCount < 5) {
-          newMods.push(mod);
-          currentGeneralModsCount++;
-        } else {
-          failures.push(mod.displayProperties.name);
+      case 'setPinnedItems': {
+        const { items } = action;
+        return {
+          ...state,
+          pinnedItems: _.keyBy(items, (i) => i.bucket.hash),
+          excludedItems: {},
+        };
+      }
+      case 'unpinItem': {
+        const { item } = action;
+        const bucketHash = item.bucket.hash;
+        return {
+          ...state,
+          pinnedItems: {
+            ...state.pinnedItems,
+            [bucketHash]: undefined,
+          },
+        };
+      }
+      case 'excludeItem': {
+        const { item } = action;
+        const bucketHash = item.bucket.hash;
+        if (state.excludedItems[bucketHash]?.some((i) => i.id === item.id)) {
+          return state; // item's already there
         }
+        const existingExcluded = state.excludedItems[bucketHash] ?? [];
+        return {
+          ...state,
+          // Also unpin items in this bucket
+          pinnedItems: {
+            ...state.pinnedItems,
+            [bucketHash]: undefined,
+          },
+          excludedItems: {
+            ...state.excludedItems,
+            [bucketHash]: [...existingExcluded, item],
+          },
+        };
       }
-
-      if (failures.length) {
-        showNotification({
-          title: t('LoadoutBuilder.UnableToAddAllMods'),
-          body: t('LoadoutBuilder.UnableToAddAllModsBody', { mods: failures.join(', ') }),
-          type: 'warning',
-        });
+      case 'unexcludeItem': {
+        const { item } = action;
+        const bucketHash = item.bucket.hash;
+        const newExcluded = (state.excludedItems[bucketHash] ?? []).filter((i) => i.id !== item.id);
+        return {
+          ...state,
+          excludedItems: {
+            ...state.excludedItems,
+            [bucketHash]: newExcluded.length > 0 ? newExcluded : undefined,
+          },
+        };
       }
-
-      return {
-        ...state,
-        lockedMods: newMods,
-      };
-    }
-    case 'removeLockedMod': {
-      const indexToRemove = state.lockedMods.findIndex((mod) => mod.hash === action.mod.hash);
-      const newMods = [...state.lockedMods];
-      newMods.splice(indexToRemove, 1);
-
-      return {
-        ...state,
-        lockedMods: newMods,
-      };
-    }
-    case 'updateSubclass': {
-      const { item } = action;
-      const abilitySockets = getSocketsByCategoryHash(
-        item.sockets!,
-        SocketCategoryHashes.Abilities
-      );
-      const defaultAbilityOverrides: SocketOverrides = {};
-      for (const socket of abilitySockets) {
-        defaultAbilityOverrides[socket.socketIndex] = socket.socketDefinition.singleInitialItemHash;
+      case 'lockedModsChanged': {
+        return {
+          ...state,
+          loadoutParameters: {
+            ...state.loadoutParameters,
+            mods: action.lockedMods.map((m) => m.hash),
+          },
+        };
       }
-      return { ...state, subclass: { ...item, socketOverrides: defaultAbilityOverrides } };
-    }
-    case 'removeSubclass': {
-      return { ...state, subclass: undefined };
-    }
-    case 'updateSubclassSocketOverrides': {
-      if (!state.subclass) {
-        return state;
+      case 'sortOrderChanged': {
+        return {
+          ...state,
+          statOrder: action.sortOrder,
+        };
       }
-
-      const { socketOverrides } = action;
-      return { ...state, subclass: { ...state.subclass, socketOverrides } };
-    }
-    case 'removeSingleSubclassSocketOverride': {
-      if (!state.subclass) {
-        return state;
+      case 'assumeArmorMasterworkChanged': {
+        const { assumeArmorMasterwork } = action;
+        return {
+          ...state,
+          loadoutParameters: { ...state.loadoutParameters, assumeArmorMasterwork },
+        };
       }
+      case 'lockArmorEnergyTypeChanged': {
+        const { lockArmorEnergyType } = action;
+        return {
+          ...state,
+          loadoutParameters: { ...state.loadoutParameters, lockArmorEnergyType },
+        };
+      }
+      case 'addGeneralMods': {
+        const newMods = [...(state.loadoutParameters.mods ?? [])];
+        let currentGeneralModsCount =
+          newMods.filter(
+            (mod) =>
+              defs.InventoryItem.get(mod)?.plug?.plugCategoryHash ===
+              armor2PlugCategoryHashesByName.general
+          ).length ?? 0;
 
-      const { plug } = action;
-      const abilitySockets = getSocketsByCategoryHash(
-        state.subclass.sockets!,
-        SocketCategoryHashes.Abilities
-      );
-      const newSocketOverrides = { ...state.subclass?.socketOverrides };
-      let socketIndexToRemove: number | undefined;
+        const failures: string[] = [];
 
-      // Find the socket index to remove the plug from.
-      for (const socketIndexString of Object.keys(newSocketOverrides)) {
-        const socketIndex = parseInt(socketIndexString, 10);
-        const overridePlugHash = newSocketOverrides[socketIndex];
-        if (overridePlugHash === plug.hash) {
-          socketIndexToRemove = socketIndex;
-          break;
+        for (const mod of action.mods) {
+          if (currentGeneralModsCount < 5) {
+            newMods.push(mod.hash);
+            currentGeneralModsCount++;
+          } else {
+            failures.push(mod.displayProperties.name);
+          }
         }
-      }
 
-      // If we are removing from an ability socket, find the socket so we can
-      // show the default plug instead
-      const abilitySocketRemovingFrom = abilitySockets.find(
-        (socket) => socket.socketIndex === socketIndexToRemove
-      );
+        if (failures.length) {
+          showNotification({
+            title: t('LoadoutBuilder.UnableToAddAllMods'),
+            body: t('LoadoutBuilder.UnableToAddAllModsBody', { mods: failures.join(', ') }),
+            type: 'warning',
+          });
+        }
 
-      if (socketIndexToRemove !== undefined && abilitySocketRemovingFrom) {
-        // If this is an ability socket, replace with the default plug hash
-        newSocketOverrides[socketIndexToRemove] =
-          abilitySocketRemovingFrom.socketDefinition.singleInitialItemHash;
-      } else if (socketIndexToRemove) {
-        // If its not an ability we just remove it from the overrides
-        delete newSocketOverrides[socketIndexToRemove];
+        return {
+          ...state,
+          loadoutParameters: {
+            ...state.loadoutParameters,
+            mods: newMods,
+          },
+        };
       }
-      return {
-        ...state,
-        subclass: {
-          ...state.subclass,
-          socketOverrides: Object.keys(newSocketOverrides).length ? newSocketOverrides : undefined,
-        },
-      };
+      case 'removeLockedMod': {
+        const newMods = [...(state.loadoutParameters.mods ?? [])];
+        const indexToRemove = newMods.findIndex((mod) => mod === action.mod.hash);
+        if (indexToRemove >= 0) {
+          newMods.splice(indexToRemove, 1);
+        }
+
+        return {
+          ...state,
+          loadoutParameters: {
+            ...state.loadoutParameters,
+            mods: newMods,
+          },
+        };
+      }
+      case 'updateSubclass': {
+        const { item } = action;
+
+        return {
+          ...state,
+          subclass: { ...item, socketOverrides: createSubclassDefaultSocketOverrides(item) },
+        };
+      }
+      case 'removeSubclass': {
+        return { ...state, subclass: undefined };
+      }
+      case 'updateSubclassSocketOverrides': {
+        if (!state.subclass) {
+          return state;
+        }
+
+        const { socketOverrides } = action;
+        return { ...state, subclass: { ...state.subclass, socketOverrides } };
+      }
+      case 'removeSingleSubclassSocketOverride': {
+        if (!state.subclass) {
+          return state;
+        }
+
+        const { plug } = action;
+        const abilityAndSuperSockets = getSocketsByCategoryHashes(state.subclass.sockets, [
+          SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+          SocketCategoryHashes.Abilities_Abilities_LightSubclass,
+          SocketCategoryHashes.Super,
+        ]);
+        const newSocketOverrides = { ...state.subclass?.socketOverrides };
+        let socketIndexToRemove: number | undefined;
+
+        // Find the socket index to remove the plug from.
+        for (const socketIndexString of Object.keys(newSocketOverrides)) {
+          const socketIndex = parseInt(socketIndexString, 10);
+          const overridePlugHash = newSocketOverrides[socketIndex];
+          if (overridePlugHash === plug.hash) {
+            socketIndexToRemove = socketIndex;
+            break;
+          }
+        }
+
+        // If we are removing from an ability/super socket, find the socket so we can
+        // show the default plug instead
+        const abilitySocketRemovingFrom = abilityAndSuperSockets.find(
+          (socket) => socket.socketIndex === socketIndexToRemove
+        );
+
+        if (socketIndexToRemove !== undefined && abilitySocketRemovingFrom) {
+          // If this is an ability socket, replace with the default plug hash
+          newSocketOverrides[socketIndexToRemove] =
+            abilitySocketRemovingFrom.socketDefinition.singleInitialItemHash;
+        } else if (socketIndexToRemove) {
+          // If its not an ability we just remove it from the overrides
+          delete newSocketOverrides[socketIndexToRemove];
+        }
+        return {
+          ...state,
+          subclass: {
+            ...state.subclass,
+            socketOverrides: Object.keys(newSocketOverrides).length
+              ? newSocketOverrides
+              : undefined,
+          },
+        };
+      }
+      case 'lockExotic': {
+        const { lockedExoticHash } = action;
+        return {
+          ...state,
+          loadoutParameters: {
+            ...state.loadoutParameters,
+            exoticArmorHash: lockedExoticHash,
+          },
+        };
+      }
+      case 'removeLockedExotic': {
+        return {
+          ...state,
+          loadoutParameters: {
+            ...state.loadoutParameters,
+            exoticArmorHash: undefined,
+          },
+        };
+      }
+      case 'openModPicker':
+        return {
+          ...state,
+          modPicker: {
+            open: true,
+            plugCategoryHashWhitelist: action.plugCategoryHashWhitelist,
+          },
+        };
+      case 'closeModPicker':
+        return { ...state, modPicker: { open: false } };
+      case 'openCompareDrawer':
+        return { ...state, compareSet: action.set };
+      case 'closeCompareDrawer':
+        return { ...state, compareSet: undefined };
     }
-    case 'lockExotic': {
-      const { lockedExoticHash } = action;
-      return { ...state, lockedExoticHash };
-    }
-    case 'removeLockedExotic': {
-      return { ...state, lockedExoticHash: undefined };
-    }
-    case 'openModPicker':
-      return {
-        ...state,
-        modPicker: {
-          open: true,
-          plugCategoryHashWhitelist: action.plugCategoryHashWhitelist,
-        },
-      };
-    case 'closeModPicker':
-      return { ...state, modPicker: { open: false } };
-    case 'openCompareDrawer':
-      return { ...state, compareSet: action.set };
-    case 'closeCompareDrawer':
-      return { ...state, compareSet: undefined };
-  }
+  };
 }
 
 export function useLbState(
@@ -461,7 +474,7 @@ export function useLbState(
   defs: D2ManifestDefinitions
 ) {
   return useReducer(
-    lbStateReducer,
+    lbStateReducer(defs),
     { stores, preloadedLoadout, initialLoadoutParameters, defs, classType },
     lbStateInit
   );

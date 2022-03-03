@@ -3,7 +3,6 @@
 .subclassContainer {
   --item-icon-size: calc(0.8 * var(--item-size));
   composes: flexRow from '../../dim-ui/common.m.scss';
-  width: calc(var(--item-icon-size) + 3 * var(--item-icon-size) + 2 * var(--item-margin));
 }
 
 .subclass {
@@ -30,7 +29,8 @@
 
 .subclassMods {
   --item-icon-size: calc(0.8 * var(--item-size));
-  min-width: calc(3 * var(--item-icon-size) + 2 * var(--item-margin));
+  width: calc(3 * var(--item-icon-size) + 2 * var(--item-margin));
+  margin-right: calc(-1 * var(--item-margin) + #{$item-border-width});
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-icon-size));
   gap: 4px;
@@ -42,6 +42,10 @@
 }
 
 .modsPlaceholder {
-  composes: placeholder from '../Loadouts.m.scss';
-  flex: 1;
+  composes: placeholder from './LoadoutItemCategorySection.m.scss';
+  width: calc(3 * var(--item-icon-size) + var(--item-margin) + #{$item-border-width}) !important;
+}
+
+.missingItem {
+  opacity: 0.3;
 }

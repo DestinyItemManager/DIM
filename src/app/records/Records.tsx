@@ -20,8 +20,8 @@ import {
   ownedItemsSelector,
   profileResponseSelector,
 } from '../inventory/selectors';
-import './collections.scss';
 import PresentationNodeRoot from './PresentationNodeRoot';
+import styles from './Records.m.scss';
 
 interface Props {
   account: DestinyAccount;
@@ -88,11 +88,10 @@ export default function Records({ account }: Props) {
     ? Object.keys(destiny2CoreSettings)
         .filter((k) => k.includes('RootNode'))
         .map((k) => destiny2CoreSettings[k] as number)
-        .filter((n) => !profileHashes.includes(n))
     : [];
 
   // We put the hashes we know about from profile first
-  const nodeHashes = [...profileHashes, ...otherHashes];
+  const nodeHashes = _.uniq([...profileHashes, ...otherHashes]);
 
   const menuItems = [
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
@@ -119,7 +118,7 @@ export default function Records({ account }: Props) {
             ))}
           </div>
         )}
-        <div className="presentationNodeOptions">
+        <div className={styles.presentationNodeOptions}>
           <CheckButton
             name="hide-completed"
             checked={completedRecordsHidden}
@@ -137,7 +136,7 @@ export default function Records({ account }: Props) {
         </div>
       </PageWithMenu.Menu>
 
-      <PageWithMenu.Contents className="collections-page">
+      <PageWithMenu.Contents className={styles.page}>
         <section id="trackedTriumphs">
           <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
             <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
@@ -148,6 +147,7 @@ export default function Records({ account }: Props) {
         {nodeHashes
           .map((h) => defs.PresentationNode.get(h))
           .map((nodeDef) => (
+            // console.log(nodeDef)
             <section key={nodeDef.hash} id={`p_${nodeDef.hash}`}>
               <CollapsibleTitle
                 title={overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name}
@@ -158,7 +158,7 @@ export default function Records({ account }: Props) {
                     presentationNodeHash={nodeDef.hash}
                     profileResponse={profileResponse}
                     buckets={buckets}
-                    ownedItemHashes={ownedItemHashes}
+                    ownedItemHashes={ownedItemHashes.accountWideOwned}
                     openedPresentationHash={presentationNodeHash}
                     searchQuery={searchQuery}
                     searchFilter={searchFilter}

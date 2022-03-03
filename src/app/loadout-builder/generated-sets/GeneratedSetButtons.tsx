@@ -113,8 +113,7 @@ function createLoadout(
     items.push(convertToLoadoutItem(subclass, true));
   }
 
-  const loadout = newLoadout(t('Loadouts.Generated', data), items);
-  loadout.classType = classType;
+  const loadout = newLoadout(t('Loadouts.Generated', data), items, classType);
   loadout.notes = notes;
   loadout.parameters = params;
   return loadout;

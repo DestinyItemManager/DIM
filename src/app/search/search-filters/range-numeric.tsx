@@ -1,7 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { getItemKillTrackerInfo, getItemYear } from 'app/utils/item-utils';
 import { FilterDefinition } from '../filter-types';
-import { generateSuggestionsForFilter } from '../suggestions-generation';
 
 const rangeStringRegex = /^([<=>]{0,2})(\d+(?:\.\d+)?)$/;
 
@@ -54,6 +53,7 @@ const simpleRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: 'level',
+    destinyVersion: 1,
     description: tl('Filter.RequiredLevel'),
     format: 'range',
     filter: ({ filterValue }) => {
@@ -64,11 +64,9 @@ const simpleRangeFilters: FilterDefinition[] = [
   {
     keywords: 'kills',
     description: tl('Filter.MasterworkKills'),
-    format: 'range',
+    format: ['range', 'stat'],
     destinyVersion: 2,
     suggestions: ['pve', 'pvp'],
-    suggestionsGenerator: () =>
-      generateSuggestionsForFilter({ keywords: 'kills', format: 'range' }),
     filter: ({ filterValue }) => {
       const parts = filterValue.split(':');
       const [count, ...[activityType, shouldntExist]] = [parts.pop(), ...parts];

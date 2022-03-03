@@ -1,6 +1,5 @@
 48klocs
 ARGH
-asscended
 bhollis
 bois
 brotli
@@ -52,6 +51,7 @@ gardenofsalvation
 gjallarhorn
 gstatic
 Hadium
+ICHs
 iihavetoes
 Ikora
 immer
@@ -77,7 +77,7 @@ Karn
 keyi18n
 KHTML
 klass
-latinise
+LFRs
 lightgg
 lngs
 loadout
@@ -107,6 +107,7 @@ Português
 Rahool
 rbpage
 reacquirable
+React's
 reauth
 recalc
 recents
@@ -114,6 +115,7 @@ Reddit
 reforgeable
 regen
 reimplemented
+reqs
 reusables
 rsync
 ryanr
@@ -121,6 +123,7 @@ Scroller
 Shaxx
 shouldnt
 showxp
+Spawnfx
 stackable
 SVGs
 swappable
@@ -131,8 +134,7 @@ tehdaw
 tshirt
 Tyra
 unacquired
-unasscended
-unassended
+Uncollectible
 unequip
 unequippable
 unexclude
@@ -141,6 +143,7 @@ UniFFFD
 uninstanced
 unly
 unmount
+unmounts
 unparse
 unselectable
 unspaced
@@ -150,7 +153,6 @@ upgradeiOS
 uuidv4
 Variks
 vaultofglass
-voca
 vpadding
 vthorn
 vxvy
@@ -159,6 +161,7 @@ wayyyyy
 wotm
 wrathofthemachine
 Xbox
+XNOR
 xpcomplete
 xpincomplete
 Xur

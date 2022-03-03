@@ -1,6 +1,11 @@
+import { D1ObjectiveDefinition, D1ObjectiveProgress } from 'app/destiny1/d1-manifest-types';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
-import { isBooleanObjective } from 'app/inventory/store/objectives';
+import {
+  isBooleanObjective,
+  isFlawlessObjective,
+  isRoundsWonObjective,
+} from 'app/inventory/store/objectives';
 import { useDefinitions } from 'app/manifest/selectors';
 import { timerDurationFromMs } from 'app/utils/time';
 import {
@@ -17,16 +22,19 @@ import ObjectiveDescription from './ObjectiveDescription';
 export default function Objective({
   objective,
   suppressObjectiveDescription,
+  isTrialsPassage,
 }: {
-  objective: DestinyObjectiveProgress;
+  objective: DestinyObjectiveProgress | D1ObjectiveProgress;
   suppressObjectiveDescription?: boolean;
+  isTrialsPassage?: boolean;
 }) {
   const defs = useDefinitions()!;
-  const objectiveDef = defs.Objective.get(objective.objectiveHash) as DestinyObjectiveDefinition;
+  const objectiveDef = defs.Objective.get(objective.objectiveHash);
 
   const progress = objective.progress || 0;
 
   if (
+    'minimumVisibilityThreshold' in objectiveDef &&
     objectiveDef.minimumVisibilityThreshold > 0 &&
     progress < objectiveDef.minimumVisibilityThreshold
   ) {
@@ -35,16 +43,16 @@ export default function Objective({
 
   // These two are to support D1 objectives
   const completionValue =
-    objective.completionValue !== undefined
-      ? objective.completionValue
-      : objectiveDef.completionValue;
+    'completionValue' in objective ? objective.completionValue : objectiveDef.completionValue;
 
-  const complete = objective.complete || (objective as any).isComplete;
+  const complete = 'complete' in objective ? objective.complete : objective.isComplete;
 
   const progressDescription =
     // D1 display description
-    (objectiveDef as any).displayDescription ||
-    (!suppressObjectiveDescription && objectiveDef.progressDescription) ||
+    ('displayDescription' in objectiveDef && objectiveDef.displayDescription) ||
+    (!suppressObjectiveDescription &&
+      'progressDescription' in objectiveDef &&
+      objectiveDef.progressDescription) ||
     (complete ? t('Objectives.Complete') : t('Objectives.Incomplete'));
 
   if (objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Integer) {
@@ -62,10 +70,14 @@ export default function Objective({
   }
 
   const isBoolean = isBooleanObjective(objectiveDef, completionValue);
+  const showAsCounter = isTrialsPassage && isRoundsWonObjective(objective.objectiveHash);
+  const passageFlawed =
+    isTrialsPassage && isFlawlessObjective(objective.objectiveHash) && !complete;
 
   const classes = clsx('objective-row', {
-    'objective-complete': complete,
+    'objective-complete': complete && !showAsCounter,
     'objective-boolean': isBoolean,
+    'passage-flawed': passageFlawed,
   });
 
   const progressBarStyle = {
@@ -76,7 +88,7 @@ export default function Objective({
 
   return (
     <div className={classes}>
-      <div className="objective-checkbox" />
+      {!showAsCounter && <div className="objective-checkbox" />}
       <div className="objective-progress">
         {!isBoolean && <div className="objective-progress-bar" style={progressBarStyle} />}
         <div className="objective-description">
@@ -92,6 +104,7 @@ export default function Objective({
           </div>
         )}
       </div>
+      {showAsCounter && <div className="objective-counter">{progress}</div>}
     </div>
   );
 }
@@ -101,14 +114,15 @@ export function ObjectiveValue({
   progress,
   completionValue = 0,
 }: {
-  objectiveDef: DestinyObjectiveDefinition | undefined;
+  objectiveDef: DestinyObjectiveDefinition | D1ObjectiveDefinition | undefined;
   progress: number;
   completionValue?: number;
 }) {
   const valueStyle = objectiveDef
     ? (progress < completionValue
-        ? objectiveDef.inProgressValueStyle
-        : objectiveDef.completedValueStyle) ?? objectiveDef.valueStyle
+        ? 'inProgressValueStyle' in objectiveDef && objectiveDef.inProgressValueStyle
+        : 'completedValueStyle' in objectiveDef && objectiveDef.completedValueStyle) ??
+      objectiveDef.valueStyle
     : DestinyUnlockValueUIStyle.Automatic;
 
   // TODO: pips
@@ -138,7 +152,11 @@ export function ObjectiveValue({
   }
 
   // Default
-  return completionValue === 0 || (objectiveDef?.allowOvercompletion && completionValue === 1) ? (
+  return completionValue === 0 ||
+    (objectiveDef &&
+      'allowOvercompletion' in objectiveDef &&
+      objectiveDef.allowOvercompletion &&
+      completionValue === 1) ? (
     <>{progress.toLocaleString()}</>
   ) : (
     <>

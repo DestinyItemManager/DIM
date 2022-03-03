@@ -5,11 +5,9 @@
   white-space: nowrap;
   overflow-x: scroll;
   overflow-y: hidden;
-  touch-action: pan-x;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   contain: content;
 }

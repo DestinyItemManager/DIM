@@ -1,6 +1,6 @@
-First, thank you for contributing to DIM! We're a community-driven project and we appreciate improvements large and small.
+First, thank you for contributing to DIM! We're a community-driven project and we appreciate improvements, large and small.
 
-Here are some tips to make sure your pull request can be merged smoothly:
+Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 
 1. If you want to add a feature or make some change to DIM, consider [filing an issue](https://github.com/DestinyItemManager/DIM/issues/new) describing your idea first. This will give the DIM community a chance to discuss the idea, offer suggestions and pointers, and make sure what you're thinking of fits with the style and direction of DIM. If you want a more free-form chat, [join our Discord](https://discordapp.com/invite/UK2GWC7).
 1. Resist the temptation to change more than one thing in your PR. Keeping PRs focused on a single change makes them much easier to review and accept. If you want to change multiple things, or clean up/refactor the code, make a new branch and submit those changes as a separate PR.
@@ -32,7 +32,19 @@ Here are some tips to make sure your pull request can be merged smoothly:
 
 ### Clone the repo
 
-    git clone https://github.com/DestinyItemManager/DIM.git
+To locally **run a copy** of DIM, you can simply clone the code repository:
+```sh
+git clone https://github.com/DestinyItemManager/DIM.git
+```
+
+To **contribute changes to the project**, you'll want to:
+
+1. Fork DIM to make your own copy of the repository
+1. Edit the local files
+1. Commit and push your code changes to your fork
+1. Create a Pull Request, allowing DIM maintainers to accept and merge your changes
+
+More detailed information on these steps is [here](https://docs.github.com/en/get-started/quickstart/contributing-to-projects).
 
 ### Get your own API key:
 
@@ -49,8 +61,6 @@ Here are some tips to make sure your pull request can be merged smoothly:
 
 * Run `yarn install`
 * Run `yarn start`
-
-*Note:* on Windows, when running `yarn install`, the Git Bash shell may fail to fetch all necessary packages even when run as Admin ([details](https://github.com/DestinyItemManager/DIM/issues/2487)). If that's the case, simply use cmd as Admin instead.
 
 ### Enter API Credentials
 

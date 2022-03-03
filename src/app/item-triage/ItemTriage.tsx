@@ -35,6 +35,7 @@ import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/utils/socket-u
 import { wishListSelector } from 'app/wishlists/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
@@ -48,8 +49,8 @@ export function doShowTriage(item: DimItem) {
     item.destinyVersion === 2 &&
     (item.bucket.inArmor ||
       (item.bucket.sort === 'Weapons' &&
-        item.bucket.type !== 'SeasonalArtifacts' &&
-        item.bucket.type !== 'Class'))
+        item.bucket.hash !== BucketHashes.SeasonalArtifact &&
+        item.bucket.hash !== BucketHashes.Subclass))
   );
 }
 
@@ -383,7 +384,7 @@ function getValueColors(value: number): [string, string] {
   return [`hsl(${hue}, 100%, 8%)`, `hsl(${hue}, 100%, ${light}%)`];
 }
 
-export function getSimilarItems(
+function getSimilarItems(
   exampleItem: DimItem,
   allItems: DimItem[],
   filterFactory: (query: string) => ItemFilter
@@ -450,7 +451,7 @@ const notabilityThreshold = 0.8;
 /**
  * returns an entry for each notable stat found on the seed item
  */
-export function getNotableStats(
+function getNotableStats(
   exampleItem: DimItem,
   customTotalStatsByClass: StatHashListsKeyedByDestinyClass,
   allItems: DimItem[]

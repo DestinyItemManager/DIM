@@ -1,6 +1,6 @@
 import { emptySet } from 'app/utils/empty';
 import { timer, warnLog } from 'app/utils/log';
-import { DimWishList, WishListAndInfo, WishListRoll } from './types';
+import { DimWishList, WishListAndInfo, WishListInfo, WishListRoll } from './types';
 
 /**
  * The title should follow the following format:
@@ -19,54 +19,65 @@ const notesLabel = '//notes:';
 
 /**
  * Extracts rolls, title, and description from the meat of
- * a wish list text file.
+ * one or more wish list text files, deduplicating within
+ * and between lists.
  */
-export function toWishList(fileText: string): WishListAndInfo {
+export function toWishList(...fileTexts: string[]): WishListAndInfo {
   const stopTimer = timer('Parse wish list');
   try {
     const wishList: WishListAndInfo = {
       wishListRolls: [],
-      title: undefined,
-      description: undefined,
+      infos: [],
     };
 
-    let blockNotes: string | undefined = undefined;
     const seen = new Set<string>();
-    let dupes = 0;
 
-    const lines = fileText.split('\n');
-    for (const line of lines) {
-      if (line.startsWith(notesLabel)) {
-        blockNotes = parseBlockNoteLine(line);
-      } else if (line.length === 0 || line.startsWith('//')) {
-        // Empty lines and comments reset the block note
-        blockNotes = undefined;
-      } else if (!wishList.title && line.startsWith(titleLabel)) {
-        wishList.title = line.slice(titleLabel.length);
-      } else if (!wishList.description && line.startsWith(descriptionLabel)) {
-        wishList.description = line.slice(descriptionLabel.length);
-      } else {
-        const roll =
-          toDimWishListRoll(line, blockNotes) ||
-          toBansheeWishListRoll(line, blockNotes) ||
-          toDtrWishListRoll(line, blockNotes);
+    for (const fileText of fileTexts) {
+      const info: WishListInfo = {
+        title: undefined,
+        description: undefined,
+        numRolls: 0,
+      };
+      let dupes = 0;
 
-        if (roll) {
-          const rollHash = `${roll.itemHash};${roll.isExpertMode};${sortedSetToString(
-            roll.recommendedPerks
-          )}`;
-          if (!seen.has(rollHash)) {
-            seen.add(rollHash);
-            wishList.wishListRolls.push(roll);
-          } else {
-            dupes++;
+      let blockNotes: string | undefined = undefined;
+
+      const lines = fileText.split('\n');
+      for (const line of lines) {
+        if (line.startsWith(notesLabel)) {
+          blockNotes = parseBlockNoteLine(line);
+        } else if (line.length === 0 || line.startsWith('//')) {
+          // Empty lines and comments reset the block note
+          blockNotes = undefined;
+        } else if (!info.title && line.startsWith(titleLabel)) {
+          info.title = line.slice(titleLabel.length);
+        } else if (!info.description && line.startsWith(descriptionLabel)) {
+          info.description = line.slice(descriptionLabel.length);
+        } else {
+          const roll =
+            toDimWishListRoll(line, blockNotes) ||
+            toBansheeWishListRoll(line, blockNotes) ||
+            toDtrWishListRoll(line, blockNotes);
+
+          if (roll) {
+            const rollHash = `${roll.itemHash};${roll.isExpertMode};${sortedSetToString(
+              roll.recommendedPerks
+            )}`;
+            if (!seen.has(rollHash)) {
+              seen.add(rollHash);
+              wishList.wishListRolls.push(roll);
+              info.numRolls++;
+            } else {
+              dupes++;
+            }
           }
         }
       }
-    }
 
-    if (dupes > 0) {
-      warnLog('wishlist', 'Discarded', dupes, 'duplicate rolls from wish list');
+      if (dupes > 0) {
+        warnLog('wishlist', 'Discarded', dupes, 'duplicate rolls from wish list');
+      }
+      wishList.infos.push(info);
     }
     return wishList;
   } finally {

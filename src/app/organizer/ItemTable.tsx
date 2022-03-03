@@ -499,7 +499,7 @@ function ItemTable({
             onMoveSelectedItems={onMoveSelectedItems}
           />
           <UserGuideLink topic="Organizer" />
-          <Dropzone onDrop={importCsv} accept=".csv">
+          <Dropzone onDrop={importCsv} accept=".csv" useFsAccessApi={false}>
             {({ getRootProps, getInputProps }) => (
               <div {...getRootProps()} className={styles.importButton}>
                 <input {...getInputProps()} />
@@ -660,7 +660,7 @@ function TableRow({
   onRowClick(
     row: Row,
     column: ColumnDefinition
-  ): ((event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>) => void) | undefined;
+  ): ((event: React.MouseEvent<HTMLTableCellElement>) => void) | undefined;
 }) {
   return (
     <>

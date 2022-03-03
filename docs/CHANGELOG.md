@@ -1,6 +1,155 @@
 ## Next
 
+* When you have 10 or more loadouts, a search box will appear in the Inventory page loadout dropdown, allowing you to search names just like on the Loadouts page.
+* Old loadouts with void subclasses in them will upgrade automatically to the new version with fragments and aspects, instead of telling you the loadout is missing an item.
+* Removed D2Gunsmith link from the item details popup while they work on revamping the site for all the new changes.
+* The Item Feed is available on both desktop and mobile. It shows your gear in the order it dropped, and gives you quick controls to tag incoming loot. Click on the item tile to get the full item popup.
+  * Item Feed also got better at identifying relevant weapon perks.
+  * Tagging an item from the Item Feed also marks it as not-new.
+* Added `deepsight:complete` and `deepsight:incomplete` filters.
+* Added `is:craftable` filter.
+* Added `is:wishlistunknown` filter which highlights items that have no rolls in the currently loaded wishlist.
+* Removed the `level:` filter from D2 as equip required level no longer matters.
+* Season of the Risen War Table Upgrades are now in the right order and show their acquired status.
+* Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
+* We have brand new Loadout Editor! Check it out from the character menu or the Loadouts page.
+  * The layout mirrors the Loadout page's new design which has clear areas for different types of items. Each section also has a menu of additional actions like re-syncing from your currently equipped items, or clearing out a whole section.
+  * As part of this change, we're removing support for "multi-class" loadouts. Loadouts will either be tied to one class, or can be toggled to "Any Class". "Any Class" loadouts cannot contain Subclass, Armor, or Fashion. If you edit an existing "Any Class" loadout and save it, those items will be removed unless you turn off "Any Class".
+  * Double-click items to toggle between equipped and unequipped instead of single clicking. We'll be continuing to improve how you choose items and specify whether they're equipped in the future.
+  * A new setting allows you to clear out all other mods from your armor when applying a loadout. This works even if you've chosen no mods in your loadout, so you can make a "Reset mods" loadout.
+  * With this new design we have space to add even more loadout editing tools over the next few seasons.
+  * The loadout editor stays open if you navigate to the Inventory or Loadouts screen while it's already open.
+  * The new Loadout Editor is not available for D1.
+
+## 7.7.0 <span class="changelog-date">(2022-02-28)</span>
+
+* Increased the strings we search through when filtering by mods/perks.
+* Crafted weapons' levels and level progress are now shown on the item popup.
+* Added `is:crafted` and `is:deepsight` filters.
+* Crafting materials are now included in the currency counter. Tap and hold, or hover, the consumables count in the vault header to check them.
+* Fixed a bug where "Use Equipped" would not update fashion in existing loadout.
+
+## 7.6.0 <span class="changelog-date">(2022-02-21)</span>
+
+* Fix applying D1 loadouts.
+* `inloadout:` filter now matches partial loadout names -- use `inloadout:"pvp"` for items in loadouts where "pvp" is in the loadout's name.
+* If your loadout includes ornaments, items are shown as if they had the loadout applied in the loadout page and loadout editor.
+* You can now change the Aeon sect mod through the item popup.
+* You can now edit your equipped Emotes from DIM. You can't add them to loadouts... yet.
+* Fix issue where Loadout Optimizer armor upgrade settings were not being migrated from existing loadouts.
+* Clan Banners are no longer shown in DIM.
+* Weapon compare sheet now includes a button to compare with other legendary weapons of the same category, excluding exotics.
+* Armor in collections now displays its collections stat roll.
+* Fix issues with button text wrapping in some languages.
+* Fix potential element blurriness in Edge browser.
+* Fix for Loadout Optimizer suggesting armor with insufficient energy.
+* Fix a clash between `power:1234` and `is:power` filters.
+* Loadout Optimizer is now a little more thorough in preventing an item from being both pinned and excluded.
+
+### Witch Queen updates
+
+* There's a good chance crafted items will display correctly in DIM. No promises though.
+* Prepare Records page for a new section featuring craftable items.
+
+### Beta Only
+
+* Loadout Editor
+  * Fix issue where subclasses were counted as general items when dropping into a loadout or filling general from equipped.
+  * Allow removal of a single mod through the editor display.
+
+## 7.5.1 <span class="changelog-date">(2022-02-14)</span>
+
+### Beta Only
+
+* We're testing a brand new Loadout Editor. Check it out from the character menu or the Loadouts page.
+  * The layout mirrors the Loadout page's new design which has clear areas for different types of items. Each section also has a menu of additional actions like re-syncing from your currently equipped items, or clearing out a whole section.
+  * As part of this change, we're removing support for "multi-class" loadouts. Loadouts will either be tied to one class, or can be toggled to "Any Class". "Any Class" loadouts cannot contain Subclass, Armor, or Fashion. If you edit an existing "Any Class" loadout and save it, those items will be removed unless you turn off "Any Class".
+  * Double-click items to toggle between equipped and unequipped instead of single clicking. We'll be continuing to improve how you choose items and specify whether they're equipped in the future.
+  * A new setting allows you to clear out all other mods from your armor when applying a loadout. This works even if you've chosen no mods in your loadout, so you can make a "Reset mods" loadout.
+  * With this new design we have space to add even more loadout editing tools over the next few seasons.
+  * The loadout editor stays open if you navigate to the Inventory or Loadouts screen while it's already open.
+  * The new Loadout Editor is not available for D1.
+
+## 7.5.0 <span class="changelog-date">(2022-02-13)</span>
+
+* Collect Postmaster now requires an additional click to confirm.
+* Transferring ships via search query should now reliably transfer all selected items.
+* Filters Help now groups stat comparison operators for a more compact page.
+* Milestones are grouped by how much power bonus their rewards can provide.
+* On the Loadouts page, you can now drag existing items on the page, into the current Loadout Editor, just like you can on the Inventory page. Use it to grab a couple of your favorite pieces from another loadout!
+* Loadout armor stat tiers now include the total tier.
+* Changed the Loadout Optimizer's Armor Upgrade options for Assume Masterwork and Lock Element options. All armor will now have an assumed minimum energy capacity of 7. The new settings have the following options,
+  * Assumed Masterwork
+    * None - Armor will use their current stats.
+    * Legendary - Only legendary armor will have assumed masterwork stats and energy capacity
+    * All - Legendary and exotic armor will have masterwork stats and energy capacity
+  * Lock Element
+    * None - No armor will have its element locked
+    * Masterworked - Only armor that is already masterworked will have their element locked
+    * All - All armor will have element locked
+
+## 7.4.0 <span class="changelog-date">(2022-02-06)</span>
+
+* Masterwork picker now only shows higher tiers of the current masterwork and full masterworks compatible with the weapon type.
+* Sharing a build from the Loadouts page or Loadout Optimizer now uses our dim.gg links which are easier to share and show a preview.
+* If you prefer reduced motion (in your operating system preferences), sheets like the compare and loadout dialogs now appear and disappear instantly.
+* Clearer feedback when uploading a wishlist file.
+* Expanded Organizer categories to account for Fusions and LFRs in unusual weapon slots.
+* Visual fixes for Organizer categories and Vendor page toggles.
+
+## 7.3.0 <span class="changelog-date">(2022-01-30)</span>
+
+* Organizer drill-down buttons now show a more accurate armor count.
+* Delete Loadout button now looks more warning-ish, and asks for confirmation without using a popup.
+* DIM will now try to recover from a state where the browser has a corrupted storage database.
+* DIM will now try to avoid overwriting shaders you don't own and thus couldn't apply back.
+* Removing subclass from loadout will now enable "Add Equipped" button.
+* "Add Equipped" button will no longer cause multiple items in the same slot to be listed as equipped.
+* Widened and reorganized the Loadouts menu.
+  * Pull from Postmaster (and its lesser known cousin, Make room for Postmaster) are removed in favor of the button next to your Postmaster items.
+  * Randomize loadout is now at the end of the list of loadouts.
+
+## 7.2.0 <span class="changelog-date">(2022-01-23)</span>
+
+* Weapons CSV download now includes a Zoom stat column.
+* Shaders, ornaments, and mods can now be searched in their choosers.
+* Trials passages now show the number of rounds won and the progress of completion is now tied to the number of wins.
+
+## 7.1.0 <span class="changelog-date">(2022-01-16)</span>
+
+* Applying a loadout *without* fashion will no longer remove shaders and ornaments from your armor.
+* The shader picker now filters invalid shaders more consistently and won't call shaders "mods".
+* Fixed Records page sometimes duplicating Triumphs or Seals section while missing Collections.
+* When provided multiple wish lists, Settings page now shows info about all loaded wish lists, not just the first one.
+* Compare Drawer should no longer refuse valid requests to add an item to comparison.
+
+## 6.99.1 <span class="changelog-date">(2022-01-10)</span>
+
+* The Loadouts page is a bit cleaner and more compact in the mobile view.
+* You can once again click within the Compare sheet to close an item popup.
+* Loadouts don't fail when they contain an ornament that can't be slotted into the current armor.
+* Sharing loadout builds includes fashion.
+
+## 6.99.0 <span class="changelog-date">(2022-01-09)</span>
+
+* You can now add Fashion (shaders and ornaments) to loadouts. Creating a loadout from equipped automatically adds in the current shaders and ornaments, and you can edit them manually from the Loadouts editor.
+* Fixed an issue where the progress bar for exotic weapons were clipping into other page elements.
+* Fixed an issue that could make moving searches containing stacks of items to fail.
+* Added Spoils of Conquest to the currencies hover menu.
+* Fixed an issue where the Loadout Optimizer would let you pin items from other classes.
+* Fixed an issue where the universal ornament picker would show too many ornaments as unlocked.
+* Shader picker now hides unavailable, unobtainable shaders.
+* "Preview Artifact Contents" in artifact popup now shows unlocked mods from the perspective of the owning character, not the current character.
+* Creating a loadout now defaults the class to whichever character you had selected.
+
+## 6.98.0 <span class="changelog-date">(2022-01-02)</span>
+
 * Consumables can now be pulled from postmasters other than the active character's.
+* Vendors page now correctly recognizes owned bounties per character and is more accurate about mods ownership.
+* Fixed an issue that could make moving searches containing stacks of items to fail.
+* Fixes for display on iPhones with rounded corners and a notch.
+* Transmog Ornaments menu now correctly shows whether ornament has been unlocked or not.
+* Happy New Year
 
 ## 6.97.3 <span class="changelog-date">(2021-12-30)</span>
 

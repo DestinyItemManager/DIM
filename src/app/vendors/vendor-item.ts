@@ -7,6 +7,7 @@ import {
   DestinyItemSocketEntryPlugItemDefinition,
   DestinyVendorDefinition,
   DestinyVendorItemDefinition,
+  DestinyVendorItemState,
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -113,6 +114,7 @@ export class VendorItem {
   readonly displayProperties: DestinyDisplayPropertiesDefinition;
   readonly borderless: boolean;
   readonly displayTile: boolean;
+  readonly owned: boolean;
   readonly canBeSold: boolean;
   readonly displayCategoryIndex?: number;
   readonly costs: DestinyItemQuantity[];
@@ -126,7 +128,7 @@ export class VendorItem {
     vendorHash: number,
     vendorItemDef?: DestinyVendorItemDefinition,
     saleItem?: DestinyVendorSaleItemComponent,
-    // TODO: this'll be useful for showing the move-popup details
+    // TODO: this will be useful for showing the move-popup details
     itemComponents?: DestinyItemComponentSetOfint32,
     mergedCollectibles?: {
       [hash: number]: DestinyCollectibleComponent;
@@ -143,17 +145,12 @@ export class VendorItem {
     this.displayProperties = inventoryItem.displayProperties;
     this.borderless = Boolean(inventoryItem.uiItemDisplayStyle);
     this.displayTile = inventoryItem.uiItemDisplayStyle === 'ui_display_style_set_container';
+    this.owned = Boolean((saleItem?.augments || 0) & DestinyVendorItemState.Owned);
     this.canBeSold = !saleItem || saleItem.failureIndexes.length === 0;
     this.displayCategoryIndex = vendorItemDef ? vendorItemDef.displayCategoryIndex : undefined;
     this.costs = saleItem?.costs || [];
     if (inventoryItem.preview?.previewVendorHash) {
       this.previewVendorHash = inventoryItem.preview.previewVendorHash;
-    }
-
-    // Fix for ada-1 bounties ... https://github.com/Bungie-net/api/issues/1522
-    // changes their sort to match the game
-    if (itemHash === 3675595381 || itemHash === 171866827) {
-      this.key = itemHash === 3675595381 ? 1 : 4;
     }
 
     this.item = makeFakeItem(
@@ -177,6 +174,9 @@ export class VendorItem {
       // if this is sold by a vendor, add vendor information
       if (saleItem && characterId) {
         this.item.vendor = { vendorHash, saleIndex: saleItem.vendorItemIndex, characterId };
+        if (this.item.equipment) {
+          this.item.comparable = true;
+        }
       }
     }
 

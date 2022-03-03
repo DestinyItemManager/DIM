@@ -1,0 +1,29 @@
+@import '../../variables.scss';
+
+.empty {
+  width: var(--item-size);
+  height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
+  border: 1px solid #ddd;
+}
+
+.placeholder {
+  composes: item from global;
+  opacity: 0.3;
+  object-fit: contain;
+  filter: invert(1);
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+}
+
+.clickable {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  &:focus {
+    border-color: $orange;
+  }
+  .placeholder {
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

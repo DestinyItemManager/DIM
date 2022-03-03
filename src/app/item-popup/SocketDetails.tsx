@@ -1,12 +1,19 @@
+import { languageSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import Sheet from 'app/dim-ui/Sheet';
+import { t } from 'app/i18next-t';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
+import { isValidMasterworkStat } from 'app/inventory/store/masterwork';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
+import { collectionsVisibleShadersSelector } from 'app/records/selectors';
+import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
+import { createPlugSearchPredicate } from 'app/search/plug-search';
+import { SearchInput } from 'app/search/SearchInput';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
@@ -14,11 +21,13 @@ import {
   DestinyEnergyType,
   DestinyItemPlug,
   DestinyItemPlugBase,
+  PlugUiStyles,
   SocketPlugSources,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import React, { useState } from 'react';
+import { connect, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import '../inventory/StoreBucket.scss';
 import styles from './SocketDetails.m.scss';
@@ -36,6 +45,8 @@ interface ProvidedProps {
 interface StoreProps {
   inventoryPlugs: Set<number>;
   unlockedPlugs: Set<number>;
+  /** if not undefined, hide locked plugs not in this set */
+  shownLockedPlugs?: Set<number>;
 }
 
 function mapStateToProps() {
@@ -53,6 +64,24 @@ function mapStateToProps() {
         return emptySet<number>();
       }
       return unlockedItemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, owner);
+    }
+  );
+
+  /**
+   * Build a set of items that should be shown even if locked. If undefined, show all.
+   * This is a heuristic only, which is why the defensive approach is to never hide unlocked
+   * plugs.
+   */
+  const shownLockedPlugsSelector = createSelector(
+    d2ManifestSelector,
+    collectionsVisibleShadersSelector,
+    (_state: RootState, { socket }: ProvidedProps) => socket.socketDefinition,
+    (defs, visibleShaders, socketDef) => {
+      const socketType = defs?.SocketType.get(socketDef.socketTypeHash);
+      if (socketType?.plugWhitelist.some((p) => p.categoryHash === PlugCategoryHashes.Shader)) {
+        return visibleShaders;
+      }
+      return undefined;
     }
   );
 
@@ -77,7 +106,11 @@ function mapStateToProps() {
       const plugAllowList = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
       for (const item of allItems) {
         const itemDef = defs!.InventoryItem.get(item.hash);
-        if (itemDef.plug && plugAllowList.has(itemDef.plug.plugCategoryHash)) {
+        if (
+          itemDef.plug &&
+          plugAllowList.has(itemDef.plug.plugCategoryHash) &&
+          item.location.hash === BucketHashes.Modifications
+        ) {
           modHashes.add(item.hash);
         }
       }
@@ -89,6 +122,7 @@ function mapStateToProps() {
   return (state: RootState, props: ProvidedProps): StoreProps => ({
     inventoryPlugs: inventoryPlugs(state, props),
     unlockedPlugs: unlockedPlugsSelector(state, props),
+    shownLockedPlugs: shownLockedPlugsSelector(state, props),
   });
 }
 
@@ -100,7 +134,7 @@ type Props = ProvidedProps & StoreProps;
  * that a similar mod is already inserted. Unfortunately these only have a message, which varies
  * based on region, and no hash or id.
  */
-export function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
+function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
   return plug.canInsert || plug.insertFailIndexes.length;
 }
 
@@ -135,15 +169,19 @@ function SocketDetails({
   socket,
   unlockedPlugs,
   inventoryPlugs,
+  shownLockedPlugs,
   allowInsertPlug,
   onClose,
   onPlugSelected,
 }: Props) {
   const defs = useD2Definitions()!;
-  const initialPlug = socket.plugged?.plugDef;
+  const plugged = socket.plugged?.plugDef;
+  const actuallyPlugged = (socket.actuallyPlugged || socket.plugged)?.plugDef;
   const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
-    initialPlug || null
+    plugged || null
   );
+  const [query, setQuery] = useState('');
+  const language = useSelector(languageSelector);
 
   const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
   const socketCategory = defs.SocketCategory.get(socketType.socketCategoryHash);
@@ -191,15 +229,45 @@ function SocketDetails({
   const unlocked = (i: PluggableInventoryItemDefinition) =>
     i.hash === initialPlugHash || unlockedPlugs.has(i.hash) || otherUnlockedPlugs.has(i.hash);
 
+  const searchFilter = createPlugSearchPredicate(query, language, defs);
+
   let mods = Array.from(modHashes, (h) => defs.InventoryItem.get(h))
+    .filter(isPluggableItem)
     .filter(
       (i) =>
-        !i.plug ||
         !i.plug.energyCost ||
         (energyType && i.plug.energyCost.energyTypeHash === energyType.hash) ||
         i.plug.energyCost.energyType === DestinyEnergyType.Any
-    )
-    .filter(isPluggableItem)
+    );
+
+  if (socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash) {
+    const matchesMasterwork = (plugOption: PluggableInventoryItemDefinition) => {
+      // Full masterwork plugs have the plugStyle set to Masterwork
+      if (
+        plugOption.plug.plugStyle === PlugUiStyles.Masterwork &&
+        isValidMasterworkStat(
+          defs,
+          defs.InventoryItem.get(item.hash),
+          plugOption.investmentStats[0]?.statTypeHash
+        )
+      ) {
+        return true;
+      }
+
+      return (
+        plugOption.plug.plugCategoryHash === actuallyPlugged?.plug.plugCategoryHash &&
+        plugOption.investmentStats[0]?.value > actuallyPlugged.investmentStats[0]?.value
+      );
+    };
+
+    mods = mods.filter(matchesMasterwork);
+  }
+
+  const requiresEnergy = mods.some((i) => i.plug.energyCost?.energyCost);
+
+  mods = mods
+    .filter(searchFilter)
+    .filter((i) => unlocked(i) || !shownLockedPlugs || shownLockedPlugs.has(i.hash))
     .sort(
       chainComparator(
         compareBy((i) => i.hash !== initialPlugHash),
@@ -210,38 +278,50 @@ function SocketDetails({
       )
     );
 
-  if (initialPlug) {
-    mods = mods.filter((m) => m.hash !== initialPlug.hash);
-    mods.unshift(initialPlug);
+  if (socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash) {
+    // Higher-tier versions of the current MW first, then the others
+    mods = mods.sort(
+      chainComparator(
+        compareBy((i) => i.plug.plugCategoryHash !== actuallyPlugged?.plug.plugCategoryHash),
+        compareBy((i) => i.investmentStats[0]?.value)
+      )
+    );
   }
 
-  const requiresEnergy = mods.some((i) => i.plug?.energyCost?.energyCost);
+  if (plugged) {
+    mods = mods.filter((m) => m.hash !== plugged.hash);
+    mods.unshift(plugged);
+  }
+
   const initialItem =
     socket.socketDefinition.singleInitialItemHash > 0 &&
     defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
-  const header = (
-    <h1>
-      {initialItem && (
-        <BungieImage
-          className={styles.categoryIcon}
-          src={initialItem.displayProperties.icon}
-          alt=""
-        />
-      )}
-      {requiresEnergy && energyType && (
-        <ElementIcon className={styles.energyElement} element={energyType} />
-      )}
-      <div>{socketCategory.displayProperties.name}</div>
-    </h1>
-  );
 
-  const modListRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (modListRef.current) {
-      const firstElement = modListRef.current.querySelector("[tabIndex='0']")!;
-      (firstElement as HTMLInputElement)?.focus();
-    }
-  }, []);
+  const header = (
+    <div>
+      <h1>
+        {initialItem && (
+          <BungieImage
+            className={styles.categoryIcon}
+            src={initialItem.displayProperties.icon}
+            alt=""
+          />
+        )}
+        {requiresEnergy && energyType && (
+          <ElementIcon className={styles.energyElement} element={energyType} />
+        )}
+        <div>{socketCategory.displayProperties.name}</div>
+      </h1>
+      <div className="item-picker-search">
+        <SearchInput
+          query={query}
+          onQueryChanged={setQuery}
+          placeholder={t('Sockets.Search')}
+          autoFocus
+        />
+      </div>
+    </div>
+  );
 
   const footer =
     selectedPlug &&
@@ -267,7 +347,7 @@ function SocketDetails({
       footer={footer}
       sheetClassName={styles.socketDetailsSheet}
     >
-      <div ref={modListRef} className={clsx('sub-bucket', styles.modList)}>
+      <div className={clsx('sub-bucket', styles.modList)}>
         {mods.map((mod) => (
           <SocketDetailsMod
             key={mod.hash}
@@ -284,4 +364,4 @@ function SocketDetails({
   );
 }
 
-export default connect<StoreProps>(mapStateToProps)(SocketDetails);
+export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(SocketDetails);

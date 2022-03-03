@@ -121,7 +121,7 @@ export function postmasterAlmostFull(store: DimStore) {
   return postmasterSpaceLeft(store) < 6; // I think you can get 6 drops at once in some activities
 }
 
-export function postmasterSpaceLeft(store: DimStore) {
+function postmasterSpaceLeft(store: DimStore) {
   return Math.max(0, POSTMASTER_SIZE - totalPostmasterItems(store));
 }
 export function postmasterSpaceUsed(store: DimStore) {
@@ -225,7 +225,7 @@ function moveItemsToVault(
   return async (dispatch, getState) => {
     const reservations: MoveReservations = {};
     // reserve space for all move-asides
-    reservations[store.id] = _.countBy(items, (i) => i.type);
+    reservations[store.id] = _.countBy(items, (i) => i.bucket.hash);
 
     for (const item of items) {
       const stores = storesSelector(getState());

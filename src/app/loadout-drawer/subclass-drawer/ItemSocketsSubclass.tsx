@@ -73,7 +73,7 @@ function SocketCategory({
 
   if (isFragment) {
     const aspects = _.compact(
-      getSocketsByCategoryHash(subclass.sockets!, SocketCategoryHashes.Aspects).map(
+      getSocketsByCategoryHash(subclass.sockets, SocketCategoryHashes.Aspects).map(
         (socket) => socket.plugged?.plugDef
       )
     );

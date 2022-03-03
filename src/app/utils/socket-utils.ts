@@ -47,7 +47,7 @@ export function isWeaponMasterworkSocket(socket: DimSocket) {
 }
 
 /** whether a socket is an armor mod socket. i.e. those grey things. not perks, not reusables, not shaders */
-export function isArmorModSocket(socket: DimSocket) {
+function isArmorModSocket(socket: DimSocket) {
   return socket.plugged && isArmor2Mod(socket.plugged.plugDef);
 }
 
@@ -78,12 +78,23 @@ export function getSocketByIndex(sockets: DimSockets, socketIndex: number) {
 }
 
 /** Find all sockets on the item that belong to the given category hash */
-export function getSocketsByCategoryHash(sockets: DimSockets, categoryHash: SocketCategoryHashes) {
+export function getSocketsByCategoryHash(
+  sockets: DimSockets | null,
+  categoryHash: SocketCategoryHashes
+) {
   const category = sockets?.categories.find((c) => c.category.hash === categoryHash);
-  if (!category) {
+  if (!category || !sockets) {
     return [];
   }
   return getSocketsByIndexes(sockets, category.socketIndexes);
+}
+
+/** Find all sockets on the item that belong to the given category hash */
+export function getSocketsByCategoryHashes(
+  sockets: DimSockets | null,
+  categoryHashes: SocketCategoryHashes[]
+) {
+  return categoryHashes.flatMap((categoryHash) => getSocketsByCategoryHash(sockets, categoryHash));
 }
 
 /** Special case of getSocketsByCategoryHash that returns the first (presumably only) socket that matches the category hash */
@@ -99,10 +110,7 @@ export function getFirstSocketByCategoryHash(
   return sockets.allSockets.find((s) => s.socketIndex === socketIndex);
 }
 
-export function getSocketsByPlugCategoryIdentifier(
-  sockets: DimSockets,
-  plugCategoryIdentifier: string
-) {
+function getSocketsByPlugCategoryIdentifier(sockets: DimSockets, plugCategoryIdentifier: string) {
   return sockets.allSockets.find((socket) =>
     socket.plugged?.plugDef.plug.plugCategoryIdentifier.includes(plugCategoryIdentifier)
   );
@@ -144,4 +152,20 @@ export function getArmorExoticPerkSocket(item: DimItem): DimSocket | undefined {
  */
 export function socketContainsIntrinsicPlug(socket: DimSocket) {
   return socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics;
+}
+
+/**
+ * Is this one of the plugs that could possibly fit into this socket? This does not
+ * check whether the plug is enabled or unlocked - only that it appears in the list of
+ * possible plugs.
+ */
+export function plugFitsIntoSocket(socket: DimSocket, plugHash: number) {
+  return (
+    socket.socketDefinition.singleInitialItemHash === plugHash ||
+    socket.plugSet?.plugs.some((dimPlug) => dimPlug.plugDef.hash === plugHash) ||
+    // TODO(#7793): This should use reusablePlugItems on the socket def
+    // because the check should operate on static definitions. This is still
+    // incorrect for quite a few blue-quality items because DIM throws away the data.
+    socket.reusablePlugItems?.some((p) => p.plugItemHash === plugHash)
+  );
 }

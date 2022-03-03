@@ -16,7 +16,7 @@ export default function Checkbox({
   title?: string;
   helpLink?: string;
   name: keyof Settings;
-  onChange(checked: boolean, name: string): void;
+  onChange: (checked: boolean, name: keyof Settings) => void;
 }) {
   return (
     <div className="setting horizontal">

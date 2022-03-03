@@ -1,5 +1,6 @@
 import { VENDORS } from 'app/search/d2-known-values';
 import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import type {
   D2BucketCategory,
@@ -12,39 +13,39 @@ import { D2ManifestDefinitions } from './d2-definitions';
 
 // A mapping from the bucket hash to DIM item types
 const bucketToTypeRaw = {
-  2465295065: 'Energy',
-  2689798304: 'UpgradePoint',
-  2689798305: 'StrangeCoin',
-  2689798308: 'Glimmer',
-  2689798309: 'Legendary Shards',
-  2689798310: 'Silver',
-  2689798311: 'Bright Dust',
-  3161908920: 'Messages',
-  3284755031: 'Class',
-  3313201758: 'Modifications',
-  3448274439: 'Helmet',
-  3551918588: 'Gauntlets',
-  3865314626: 'Materials',
-  4023194814: 'Ghost',
-  4274335291: 'Emblems',
-  4292445962: 'ClanBanners',
-  14239492: 'Chest',
-  20886954: 'Leg',
-  215593132: 'LostItems',
-  284967655: 'Ships',
-  375726501: 'Engrams',
-  953998645: 'Power',
-  1269569095: 'Auras',
-  1367666825: 'SpecialOrders',
-  1498876634: 'KineticSlot',
-  1585787867: 'ClassItem',
-  2025709351: 'Vehicle',
-  1469714392: 'Consumables',
-  138197802: 'General',
-  1107761855: 'Emotes',
-  1345459588: 'Pursuits',
-  1506418338: 'SeasonalArtifacts',
-  3683254069: 'Finishers',
+  [BucketHashes.EnergyWeapons]: 'Energy',
+  [BucketHashes.UpgradePoint]: 'UpgradePoint',
+  [BucketHashes.StrangeCoin]: 'StrangeCoin',
+  [BucketHashes.Glimmer]: 'Glimmer',
+  [BucketHashes.LegendaryShards]: 'Legendary Shards',
+  [BucketHashes.Silver]: 'Silver',
+  [BucketHashes.BrightDust]: 'Bright Dust',
+  [BucketHashes.Messages]: 'Messages',
+  [BucketHashes.Subclass]: 'Class',
+  [BucketHashes.Modifications]: 'Modifications',
+  [BucketHashes.Helmet]: 'Helmet',
+  [BucketHashes.Gauntlets]: 'Gauntlets',
+  [BucketHashes.Materials]: 'Materials',
+  [BucketHashes.Ghost]: 'Ghost',
+  [BucketHashes.Emblems]: 'Emblems',
+  [BucketHashes.ChestArmor]: 'Chest',
+  [BucketHashes.LegArmor]: 'Leg',
+  [BucketHashes.LostItems]: 'LostItems',
+  [BucketHashes.Ships]: 'Ships',
+  [BucketHashes.Engrams]: 'Engrams',
+  [BucketHashes.PowerWeapons]: 'Power',
+  [BucketHashes.Auras]: 'Auras',
+  [BucketHashes.SpecialOrders]: 'SpecialOrders',
+  [BucketHashes.KineticWeapons]: 'KineticSlot',
+  [BucketHashes.ClassArmor]: 'ClassItem',
+  [BucketHashes.Vehicle]: 'Vehicle',
+  [BucketHashes.Consumables]: 'Consumables',
+  [BucketHashes.General]: 'General',
+  [BucketHashes.Emotes_Invisible]: 'Emotes',
+  [BucketHashes.Quests]: 'Pursuits',
+  [BucketHashes.SeasonalArtifact]: 'SeasonalArtifacts',
+  [BucketHashes.Finishers]: 'Finishers',
+  [BucketHashes.ClanBanners]: 'ClanBanner',
 } as const;
 
 export type D2BucketTypes = typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw];
@@ -53,21 +54,20 @@ export type D2BucketTypes = typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw]
 export type D2AdditionalBucketTypes = 'Milestone' | 'Unknown';
 
 // A mapping from the bucket hash to DIM item types
-const bucketToType: {
+export const bucketToType: {
   [hash: number]: DimBucketType | undefined;
 } = bucketToTypeRaw;
 
-const typeToSort: { [type: string]: D2BucketCategory } = {};
-_.forIn(D2Categories, (types, category: D2BucketCategory) => {
-  types.forEach((type) => {
-    typeToSort[type] = category;
+const bucketHashToSort: { [bucketHash: number]: D2BucketCategory } = {};
+_.forIn(D2Categories, (bucketHashes, category: D2BucketCategory) => {
+  bucketHashes.forEach((bucketHash) => {
+    bucketHashToSort[bucketHash] = category;
   });
 });
 
 export function getBuckets(defs: D2ManifestDefinitions) {
   const buckets: InventoryBuckets = {
     byHash: {},
-    byType: {},
     byCategory: {},
     unknown: {
       description: 'Unknown items. DIM needs a manifest update.',
@@ -87,10 +87,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
   };
   _.forIn(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
     const type = bucketToType[def.hash];
-    let sort: D2BucketCategory | undefined;
-    if (type) {
-      sort = typeToSort[type];
-    }
+    const sort = bucketHashToSort[def.hash];
     const bucket: InventoryBucket = {
       description: def.displayProperties.description,
       name: def.displayProperties.name,
@@ -102,9 +99,6 @@ export function getBuckets(defs: D2ManifestDefinitions) {
       type,
       sort,
     };
-    if (bucket.type) {
-      buckets.byType[bucket.type] = bucket;
-    }
     // Add an easy helper property like "inPostmaster"
     if (bucket.sort) {
       bucket[`in${bucket.sort}`] = true;
@@ -120,8 +114,10 @@ export function getBuckets(defs: D2ManifestDefinitions) {
       bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];
     }
   });
-  _.forIn(D2Categories, (types, category) => {
-    buckets.byCategory[category] = _.compact(types.map((type) => buckets.byType[type]));
+  _.forIn(D2Categories, (bucketHashes, category) => {
+    buckets.byCategory[category] = _.compact(
+      bucketHashes.map((bucketHash) => buckets.byHash[bucketHash])
+    );
   });
   return buckets;
 }

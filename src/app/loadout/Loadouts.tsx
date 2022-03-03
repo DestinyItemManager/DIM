@@ -1,6 +1,8 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { createLoadoutShare } from 'app/dim-api/dim-api';
 import { languageSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
+import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
@@ -11,14 +13,15 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { startWordRegexp } from 'app/search/search-filters/freeform';
+import { plainString } from 'app/search/search-filters/freeform';
 import { useSetting } from 'app/settings/hooks';
 import { LoadoutSort } from 'app/settings/initial-settings';
-import { addIcon, AppIcon, faCalculator } from 'app/shell/icons';
+import { addIcon, AppIcon, deleteIcon, faCalculator } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { copyString } from 'app/utils/util';
@@ -42,10 +45,10 @@ export default function LoadoutsContainer({ account }: { account: DestinyAccount
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
-  return <Loadouts />;
+  return <Loadouts account={account} />;
 }
 
-function Loadouts() {
+function Loadouts({ account }: { account: DestinyAccount }) {
   const stores = useSelector(sortedStoresSelector);
   const currentStore = getCurrentStore(stores)!;
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore.id);
@@ -56,8 +59,6 @@ function Loadouts() {
   const isPhonePortrait = useIsPhonePortrait();
   const query = useSelector(querySelector);
   const language = useSelector(languageSelector);
-
-  const searchRegexp = startWordRegexp(query, language);
 
   const savedLoadouts = useMemo(
     () =>
@@ -78,18 +79,18 @@ function Loadouts() {
     [selectedStore]
   );
 
+  const loadoutQueryPlain = plainString(query, language);
   const loadouts = [currentLoadout, ...savedLoadouts].filter(
     (loadout) =>
       !query ||
-      searchRegexp.test(loadout.name) ||
-      (loadout.notes && searchRegexp.test(loadout.notes))
+      plainString(loadout.name, language).includes(loadoutQueryPlain) ||
+      (loadout.notes && plainString(loadout.name, language).includes(loadoutQueryPlain))
   );
 
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
   const handleNewLoadout = () => {
-    const loadout = newLoadout('', []);
-    loadout.classType = selectedStore.classType;
+    const loadout = newLoadout('', [], selectedStore.classType);
     editLoadout(loadout, selectedStore.id, { isNew: true });
   };
 
@@ -148,6 +149,7 @@ function Loadouts() {
             store={selectedStore}
             saved={savedLoadoutIds.has(loadout.id)}
             equippable={loadout !== currentLoadout}
+            account={account}
           />
         ))}
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
@@ -161,32 +163,25 @@ function LoadoutRow({
   store,
   saved,
   equippable,
+  account,
 }: {
   loadout: Loadout;
   store: DimStore;
   saved: boolean;
   equippable: boolean;
+  account: DestinyAccount;
 }) {
   const dispatch = useThunkDispatch();
 
   const actionButtons = useMemo(() => {
-    const handleDeleteClick = (loadout: Loadout) => {
-      if (confirm(t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
-        dispatch(deleteLoadout(loadout.id));
-      }
-    };
-
-    const shareBuild = () => {
-      const p: Record<string, string> = {
-        class: loadout.classType.toString(),
-        p: JSON.stringify(loadout.parameters),
-      };
-      if (loadout.notes) {
-        p.n = loadout.notes;
-      }
-      const urlParams = new URLSearchParams(p);
-      const url = `${location.origin}/optimizer?${urlParams}`;
-      copyString(url);
+    const handleDeleteClick = (loadout: Loadout) => dispatch(deleteLoadout(loadout.id));
+    const shareBuild = async () => {
+      // TODO: cache these a bit locally so you can hammer the button without creating a bunch of links
+      const shareUrl = await createLoadoutShare(
+        account.membershipId,
+        convertDimLoadoutToApiLoadout(loadout)
+      );
+      copyString(shareUrl);
       showNotification({
         type: 'success',
         title: t('LoadoutBuilder.CopiedBuild'),
@@ -216,26 +211,28 @@ function LoadoutRow({
     if (loadout.parameters && !_.isEmpty(loadout.parameters)) {
       actionButtons.push(
         <button key="share" type="button" className="dim-button" onClick={shareBuild}>
-          {t('LoadoutBuilder.ShareBuild')}
+          {t('Loadouts.ShareLoadout')}
         </button>
       );
     }
 
     if (saved) {
       actionButtons.push(
-        <button
-          key="save"
-          type="button"
-          className="dim-button"
-          onClick={() => handleDeleteClick(loadout)}
-        >
-          {t('Loadouts.Delete')}
-        </button>
+        <ConfirmButton key="delete" danger onClick={() => handleDeleteClick(loadout)}>
+          <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
+        </ConfirmButton>
       );
     }
 
     return actionButtons;
-  }, [dispatch, equippable, loadout, saved, store]);
+  }, [account.membershipId, dispatch, equippable, loadout, saved, store]);
 
-  return <LoadoutView loadout={loadout} store={store} actionButtons={actionButtons} />;
+  return (
+    <LoadoutView
+      loadout={loadout}
+      store={store}
+      actionButtons={actionButtons}
+      hideShowModPlacements={!equippable}
+    />
+  );
 }

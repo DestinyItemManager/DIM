@@ -1,5 +1,7 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
+import { D1BucketHashes } from 'app/search/d1-known-values';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
 import { D1GridNode, DimItem } from '../../inventory/item-types';
@@ -19,6 +21,16 @@ interface Props {
   onPerkLocked(perk: D1GridNode, type: ArmorTypes, $event: React.MouseEvent): void;
   onItemLocked(item: DimItem): void;
 }
+
+const typeToHash: { [key in ArmorTypes]: BucketHashes | D1BucketHashes } = {
+  Helmet: BucketHashes.Helmet,
+  Gauntlets: BucketHashes.Gauntlets,
+  Chest: BucketHashes.ChestArmor,
+  Leg: BucketHashes.LegArmor,
+  ClassItem: BucketHashes.ClassArmor,
+  Ghost: BucketHashes.Ghost,
+  Artifact: D1BucketHashes.Artifact,
+};
 
 export default function LoadoutBuilderLockPerk({
   type,
@@ -45,7 +57,7 @@ export default function LoadoutBuilderLockPerk({
 
   return (
     <div className="locked-item">
-      <LoadoutBucketDropTarget bucketType={type} onItemLocked={onItemLocked}>
+      <LoadoutBucketDropTarget bucketHash={typeToHash[type]} onItemLocked={onItemLocked}>
         {lockeditem === null ? (
           <div className="empty-item">
             <div className="perk-addition" onClick={addPerkClicked}>

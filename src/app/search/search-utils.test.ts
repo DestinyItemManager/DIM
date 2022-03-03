@@ -11,20 +11,20 @@ describe('generateSuggestionsForFilter', () => {
   ][] = [
     [undefined, ['a', 'b', 'c'], undefined],
     ['query', 'a', ['b', 'c']],
-    ['range', 'a', ['b', 'c']],
+    ['stat', 'a', ['b', 'c']],
     ['range', 'a', undefined],
     ['rangeoverload', 'a', ['b', 'c']],
     ['freeform', 'a', ['b', 'c']],
     [undefined, ['a'], undefined],
-    ['range', 'stat', allStatNames],
+    ['stat', 'stat', allStatNames],
     ['query', 'maxstatvalue', searchableArmorStatNames],
     ['query', 'maxstatvalue', searchableArmorStatNames],
-    ['rangeoverload', 'energycapacity', energyCapacityTypeNames],
+    [['range', 'query'], 'energycapacity', energyCapacityTypeNames],
   ];
 
   test.each(cases)(
     "full suggestions for filter format '%s', keyword '%s' with suggestions %s",
-    (format: FilterDefinition['format'], keywords: string, suggestions?: string[]) => {
+    (format: FilterDefinition['format'], keywords: string | string[], suggestions?: string[]) => {
       const candidates = generateSuggestionsForFilter({
         format,
         keywords,
