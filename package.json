@@ -47,7 +47,8 @@
         "path": "dist/*.js",
         "maxSize": "120kB"
       }
-    ]
+    ],
+    "normalizeFilenames": "^.+?(\\-[0-9a-f]{15}.+?)\\.\\w+$"
   },
   "repository": {
     "type": "git",
