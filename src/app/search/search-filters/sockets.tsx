@@ -1,7 +1,7 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { resonantElementTags } from 'app/inventory/store/deepsight';
 import {
-  getDeepsightInfo,
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
   modSlotTags,
@@ -14,8 +14,6 @@ import {
   DEFAULT_ORNAMENTS,
   DEFAULT_SHADER,
   emptySocketHashes,
-  resonantElementNames,
-  resonantElementObjectiveHashesByName,
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 
@@ -185,27 +183,25 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.Deepsight'),
     format: ['simple', 'query'],
     destinyVersion: 2,
-    suggestions: resonantElementNames.concat(['complete', 'incomplete']),
+    suggestions: resonantElementTags.concat(['complete', 'incomplete']),
     filter:
       ({ filterValue }) =>
       (item: DimItem) => {
-        const deepsightInfo = getDeepsightInfo(item);
-        if (!deepsightInfo) {
+        if (!item.deepsightInfo) {
           return false;
         }
 
-        if (resonantElementNames.includes(filterValue)) {
-          const filterElementHash = resonantElementObjectiveHashesByName[filterValue];
-          return deepsightInfo.resonantElementObjectiveHashes.includes(filterElementHash);
+        if (resonantElementTags.includes(filterValue)) {
+          return item.deepsightInfo.resonantElements.some((e) => e.tag === filterValue);
         }
 
         switch (filterValue) {
           case 'deepsight':
             return true;
           case 'complete':
-            return deepsightInfo.complete;
+            return item.deepsightInfo.complete;
           case 'incomplete':
-            return !deepsightInfo.complete;
+            return !item.deepsightInfo.complete;
         }
       },
   },

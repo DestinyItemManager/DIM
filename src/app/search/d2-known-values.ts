@@ -73,17 +73,6 @@ export const universalOrnamentPlugSetHashes: number[] = [
   2425516788, 2568801218, 2733810650, 3024995628, 3479876793, 4014441445, 4178224051,
 ];
 
-export const resonantElementObjectiveHashesByName: Record<string, number> = {
-  ruinous: 2215515944,
-  adroit: 2215515945,
-  mutable: 2215515946,
-  energetic: 2215515947,
-};
-export const resonantElementObjectiveHashes: number[] = Object.values(
-  resonantElementObjectiveHashesByName
-);
-export const resonantElementNames: string[] = Object.keys(resonantElementObjectiveHashesByName);
-
 //
 // STATS KNOWN VALUES
 //
