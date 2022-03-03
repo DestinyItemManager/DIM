@@ -5,7 +5,7 @@ import { storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
-import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { fromEquippedTypes } from 'app/loadout-drawer/loadout-utils';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { addIcon, AppIcon } from 'app/shell/icons';
@@ -56,7 +56,7 @@ export default function LoadoutDrawerContents({
   storeId?: string;
   loadout: Loadout;
   buckets: InventoryBuckets;
-  items: DimItem[];
+  items: ResolvedLoadoutItem[];
   equip(item: DimItem, e: React.MouseEvent): void;
   remove(item: DimItem, e: React.MouseEvent): void;
   add(item: DimItem, equip?: boolean): void;
@@ -64,7 +64,6 @@ export default function LoadoutDrawerContents({
   onShowItemPicker(shown: boolean): void;
 }) {
   const stores = useSelector(storesSelector);
-  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
 
   // The store to use for "fill from equipped/unequipped"
   const dimStore = storeId
@@ -74,10 +73,16 @@ export default function LoadoutDrawerContents({
       getCurrentStore(stores)!;
 
   const doFillLoadoutFromEquipped = () =>
-    fillLoadoutFromEquipped(loadout, itemsByBucket, dimStore, onUpdateLoadout);
+    fillLoadoutFromEquipped(
+      loadout,
+      items.map((li) => li.item),
+      dimStore,
+      onUpdateLoadout
+    );
   const doFillLoadOutFromUnequipped = () => fillLoadoutFromUnequipped(loadout, dimStore, add);
 
   const availableTypes = _.compact(loadoutTypes.map((h) => buckets.byHash[h]));
+  const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
 
   const [typesWithItems, typesWithoutItems] = _.partition(
     availableTypes,
@@ -121,7 +126,6 @@ export default function LoadoutDrawerContents({
           <LoadoutDrawerBucket
             key={bucket.hash}
             bucket={bucket}
-            loadoutItems={loadout.items}
             items={itemsByBucket[bucket.hash] || []}
             pickLoadoutItem={(bucket) => pickLoadoutItem(loadout, bucket, add, onShowItemPicker)}
             equip={equip}
@@ -171,13 +175,14 @@ async function pickLoadoutItem(
 
 function fillLoadoutFromEquipped(
   loadout: Loadout,
-  itemsByBucket: { [bucketId: string]: DimItem[] },
+  items: DimItem[],
   dimStore: DimStore,
   onUpdateLoadout: (loadout: Loadout) => void
 ) {
   if (!loadout) {
     return;
   }
+  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
 
   const newEquippedItems = dimStore.items.filter(
     (item) =>

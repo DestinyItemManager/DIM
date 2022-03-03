@@ -1,14 +1,14 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch } from 'react';
 import { useDispatch } from 'react-redux';
-import { DimStore } from '../../inventory/store-types';
-import { convertToLoadoutItem, newLoadout } from '../../loadout-drawer/loadout-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet } from '../types';
 import { statTier } from '../utils';
@@ -30,7 +30,7 @@ export default function GeneratedSetButtons({
 }: {
   store: DimStore;
   set: ArmorSet;
-  subclass: DimLoadoutItem | undefined;
+  subclass: ResolvedLoadoutItem | undefined;
   notes?: string;
   params: LoadoutParameters;
   canCompareLoadouts: boolean;
@@ -100,7 +100,7 @@ export default function GeneratedSetButtons({
 function createLoadout(
   classType: DestinyClass,
   set: ArmorSet,
-  subclass: DimLoadoutItem | undefined,
+  subclass: ResolvedLoadoutItem | undefined,
   params: LoadoutParameters,
   notes?: string
 ): Loadout {
@@ -110,7 +110,7 @@ function createLoadout(
   const items = set.armor.map((items) => convertToLoadoutItem(items[0], true));
 
   if (subclass) {
-    items.push(convertToLoadoutItem(subclass, true));
+    items.push(subclass.loadoutItem);
   }
 
   const loadout = newLoadout(t('Loadouts.Generated', data), items, classType);

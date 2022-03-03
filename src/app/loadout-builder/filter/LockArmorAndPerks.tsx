@@ -2,7 +2,8 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
-import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { isLoadoutBuilderItem, pickSubclass } from 'app/loadout/item-utils';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { createGetModRenderKey, getDefaultPlugHash } from 'app/loadout/mod-utils';
 import SubclassPlugDrawer from 'app/loadout/SubclassPlugDrawer';
@@ -17,7 +18,6 @@ import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import ReactDom from 'react-dom';
-import { isLoadoutBuilderItem, pickSubclass } from '../../loadout/item-utils';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
@@ -31,7 +31,7 @@ interface Props {
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
   lockedMods: PluggableInventoryItemDefinition[];
-  subclass?: DimLoadoutItem;
+  subclass?: ResolvedLoadoutItem;
   lockedExoticHash?: number;
   searchFilter: ItemFilter;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -133,23 +133,23 @@ export default memo(function LockArmorAndPerks({
     plug: PluggableInventoryItemDefinition;
     isDefaultAbility: boolean;
   }[] = useMemo(() => {
-    if (!subclass?.socketOverrides || !subclass.sockets) {
+    if (!subclass?.loadoutItem.socketOverrides || !subclass.item.sockets) {
       return emptyArray();
     }
 
     const rtn: { plug: PluggableInventoryItemDefinition; isDefaultAbility: boolean }[] = [];
 
-    for (const socketIndexString of Object.keys(subclass?.socketOverrides)) {
+    for (const socketIndexString of Object.keys(subclass?.loadoutItem.socketOverrides)) {
       const socketIndex = parseInt(socketIndexString, 10);
-      const socket = getSocketByIndex(subclass.sockets, socketIndex);
-      const abilityAndSuperSockets = getSocketsByCategoryHashes(subclass.sockets, [
+      const socket = getSocketByIndex(subclass.item.sockets, socketIndex);
+      const abilityAndSuperSockets = getSocketsByCategoryHashes(subclass.item.sockets, [
         SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
         SocketCategoryHashes.Abilities_Abilities_LightSubclass,
         SocketCategoryHashes.Super,
       ]);
 
       const overridePlug = defs.InventoryItem.get(
-        subclass.socketOverrides[socketIndex]
+        subclass.loadoutItem.socketOverrides[socketIndex]
       ) as PluggableInventoryItemDefinition;
 
       const isDefaultAbility = Boolean(
@@ -162,7 +162,7 @@ export default memo(function LockArmorAndPerks({
     }
 
     return rtn;
-  }, [defs, subclass?.socketOverrides, subclass?.sockets]);
+  }, [defs, subclass?.loadoutItem.socketOverrides, subclass?.item.sockets]);
 
   return (
     <>
@@ -213,7 +213,7 @@ export default memo(function LockArmorAndPerks({
         {subclass && (
           <div className={styles.itemGrid}>
             <LockedItem
-              lockedItem={subclass}
+              lockedItem={subclass.item}
               onRemove={() => lbDispatch({ type: 'removeSubclass' })}
             />
             {socketOverridePlugs.map(({ plug, isDefaultAbility }) => (
@@ -298,8 +298,8 @@ export default memo(function LockArmorAndPerks({
         subclass &&
         ReactDom.createPortal(
           <SubclassPlugDrawer
-            subclass={subclass}
-            socketOverrides={subclass.socketOverrides || emptyObject()}
+            subclass={subclass.item}
+            socketOverrides={subclass.loadoutItem.socketOverrides || emptyObject()}
             onAccept={(socketOverrides) =>
               lbDispatch({ type: 'updateSubclassSocketOverrides', socketOverrides })
             }

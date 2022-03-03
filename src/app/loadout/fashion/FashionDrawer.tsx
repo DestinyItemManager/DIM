@@ -9,7 +9,7 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import SocketDetails from 'app/item-popup/SocketDetails';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
-import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
@@ -46,7 +46,7 @@ export default function FashionDrawer({
 }: {
   loadout: Loadout;
   storeId?: string;
-  items: DimLoadoutItem[];
+  items: ResolvedLoadoutItem[];
   onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
   onClose: () => void;
 }) {
@@ -57,17 +57,15 @@ export default function FashionDrawer({
   const isPhonePortrait = useIsPhonePortrait();
   const [pickPlug, setPickPlug] = useState<PickPlugState>();
   const allItems = useSelector(allItemsSelector);
-
-  const equippedIds = new Set([...loadout.items.filter((i) => i.equip).map((i) => i.id)]);
   const armor = items.filter(
-    (i) => equippedIds.has(i.id) && LockableBucketHashes.includes(i.bucket.hash)
+    (li) => li.loadoutItem.equip && LockableBucketHashes.includes(li.item.bucket.hash)
   );
 
   const classType = loadout.classType;
 
-  const armorItemsByBucketHash: { [bucketHash: number]: DimItem } = _.keyBy(
+  const armorItemsByBucketHash: { [bucketHash: number]: ResolvedLoadoutItem | undefined } = _.keyBy(
     armor,
-    (i) => i.bucket.hash
+    (li) => li.item.bucket.hash
   );
 
   // The items we'll use to determine what sockets are available on each item. Either the equipped item from
@@ -81,7 +79,7 @@ export default function FashionDrawer({
 
       // TODO: is this really the best way to do this? we just default to the equipped item, but that may be an exotic
       const exampleItem =
-        armorItemsByBucketHash[bucketHash] ??
+        armorItemsByBucketHash[bucketHash]?.item ??
         // Try to find a legendary example
         allItems.find(
           (i) => i.tier === 'Legendary' && looksFashionable(i) && getFashionSockets(i).length > 1
@@ -158,14 +156,14 @@ export default function FashionDrawer({
       LockableBucketHashes.map((bucketHash) => {
         // Either the item that's in the loadout, or whatever's equipped
         const item =
-          armorItemsByBucketHash[bucketHash] ??
+          armorItemsByBucketHash[bucketHash]?.item ??
           allItems.find(
             (i) =>
               i.bucket.hash === bucketHash &&
               i.equipped &&
               (storeId ? i.owner === storeId : i.classType === classType)
           );
-        const cosmeticSockets = item.sockets
+        const cosmeticSockets = item?.sockets
           ? getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics)
           : [];
         return [
@@ -417,7 +415,7 @@ function FashionItem({
   onPickPlug,
   onRemovePlug,
 }: {
-  item?: DimLoadoutItem;
+  item?: ResolvedLoadoutItem;
   exampleItem?: DimItem;
   bucketHash: number;
   mods?: number[];

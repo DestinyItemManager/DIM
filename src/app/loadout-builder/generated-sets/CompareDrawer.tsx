@@ -6,7 +6,7 @@ import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { DimLoadoutItem, Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
 import LoadoutView from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -26,7 +26,7 @@ interface Props {
   selectedStore: DimStore;
   loadouts: Loadout[];
   initialLoadoutId?: string;
-  subclass: DimLoadoutItem | undefined;
+  subclass: ResolvedLoadoutItem | undefined;
   classType: DestinyClass;
   params: LoadoutParameters;
   notes?: string;
@@ -51,26 +51,27 @@ function chooseInitialLoadout(
 
 function createLoadoutUsingLOItems(
   setItems: DimItem[],
-  subclass: DimLoadoutItem | undefined,
+  subclass: ResolvedLoadoutItem | undefined,
   loadout: Loadout | undefined,
-  loadoutItems: DimItem[],
-  loadoutSubclass: DimLoadoutItem | undefined,
+  loadoutItems: ResolvedLoadoutItem[],
+  loadoutSubclass: ResolvedLoadoutItem | undefined,
   params: LoadoutParameters,
   notes: string | undefined
 ) {
   return produce(loadout, (draftLoadout) => {
     if (draftLoadout) {
-      const newItems: LoadoutItem[] = setItems.map((item) => convertToLoadoutItem(item, true));
+      const newItems = setItems.map((item) => convertToLoadoutItem(item, true));
 
       if (subclass) {
-        newItems.push(convertToLoadoutItem(subclass, true));
+        newItems.push(subclass.loadoutItem);
       }
 
       for (const item of draftLoadout.items) {
-        const dimItem = loadoutItems.find((i) => i.id === item.id);
+        const existingLoadoutItem = loadoutItems.find((i) => i.item.id === item.id);
         const hasBeenReplaced =
-          (dimItem && setItems.some((i) => i.bucket.hash === dimItem.bucket.hash)) ||
-          (subclass && item.id === loadoutSubclass?.id);
+          (existingLoadoutItem &&
+            setItems.some((i) => i.bucket.hash === existingLoadoutItem.item.bucket.hash)) ||
+          (subclass && item.id === loadoutSubclass?.item.id);
         if (!hasBeenReplaced) {
           newItems.push(item);
         }
@@ -118,11 +119,11 @@ export default function CompareDrawer({
       allItems
     );
     const loadoutItems = _.sortBy(
-      items.filter((item) => LockableBucketHashes.includes(item.bucket.hash)),
-      (item) => LockableBucketHashes.indexOf(item.bucket.hash)
+      items.filter(({ item }) => LockableBucketHashes.includes(item.bucket.hash)),
+      ({ item }) => LockableBucketHashes.indexOf(item.bucket.hash)
     );
     const loadoutSubclass = items.find(
-      (item) => item.bucket.hash === BucketHashes.Subclass && item.classType === classType
+      ({ item }) => item.bucket.hash === BucketHashes.Subclass && item.classType === classType
     );
     return { loadoutItems, loadoutSubclass };
   }, [selectedLoadout?.items, defs, selectedStore.id, buckets, allItems, classType]);

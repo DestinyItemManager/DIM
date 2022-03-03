@@ -7,7 +7,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
-import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTshirt } from 'app/shell/icons';
@@ -37,7 +37,6 @@ export default function LoadoutEditBucket({
   storeId,
   items,
   modsByBucket,
-  equippedItemIds,
   onClickPlaceholder,
   onClickWarnItem,
   onRemoveItem,
@@ -46,11 +45,10 @@ export default function LoadoutEditBucket({
 }: {
   category: D2BucketCategory;
   storeId: string;
-  items?: DimItem[];
+  items?: ResolvedLoadoutItem[];
   modsByBucket: {
     [bucketHash: number]: number[] | undefined;
   };
-  equippedItemIds: Set<string>;
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
   onClickWarnItem: (item: DimItem) => void;
   onToggleEquipped: (item: DimItem) => void;
@@ -58,7 +56,7 @@ export default function LoadoutEditBucket({
   children?: React.ReactNode;
 }) {
   const buckets = useSelector(bucketsSelector)!;
-  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
+  const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]
@@ -75,7 +73,6 @@ export default function LoadoutEditBucket({
             key={bucket.hash}
             bucket={bucket}
             items={itemsByBucket[bucket.hash]}
-            equippedItemIds={equippedItemIds}
             onClickPlaceholder={onClickPlaceholder}
             onClickWarnItem={onClickWarnItem}
             onRemoveItem={onRemoveItem}
@@ -102,20 +99,18 @@ export function ArmorExtras({
   subclass,
   savedMods,
   items,
-  equippedItemIds,
   onModsByBucketUpdated,
 }: {
   loadout: Loadout;
   storeId: string;
-  subclass?: DimLoadoutItem;
+  subclass?: ResolvedLoadoutItem;
   savedMods: PluggableInventoryItemDefinition[];
-  items?: DimItem[];
-  equippedItemIds: Set<string>;
+  items?: ResolvedLoadoutItem[];
   onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
 }) {
   const defs = useD2Definitions()!;
   const equippedItems =
-    items?.filter((i) => equippedItemIds.has(i.id) && i.owner !== 'unknown') ?? [];
+    items?.filter((li) => li.loadoutItem.equip && !li.missing).map((li) => li.item) ?? [];
 
   return (
     <>
@@ -145,7 +140,6 @@ export function ArmorExtras({
 function ItemBucket({
   bucket,
   items,
-  equippedItemIds,
   equippedContent,
   onClickPlaceholder,
   onClickWarnItem,
@@ -153,8 +147,7 @@ function ItemBucket({
   onToggleEquipped,
 }: {
   bucket: InventoryBucket;
-  items: DimLoadoutItem[];
-  equippedItemIds: Set<string>;
+  items: ResolvedLoadoutItem[];
   equippedContent?: React.ReactNode;
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
   onClickWarnItem: (item: DimItem) => void;
@@ -162,9 +155,7 @@ function ItemBucket({
   onToggleEquipped: (item: DimItem) => void;
 }) {
   const bucketHash = bucket.hash;
-  const [equipped, unequipped] = _.partition(items, (i) =>
-    i.owner === 'unknown' ? i.equipped : equippedItemIds.has(i.id)
-  );
+  const [equipped, unequipped] = _.partition(items, (li) => li.loadoutItem.equip);
 
   const showFashion = LockableBucketHashes.includes(bucketHash);
 
@@ -198,23 +189,26 @@ function ItemBucket({
             className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
             key={index}
           >
-            {items.map((item) => (
+            {items.map(({ item, loadoutItem, missing }) => (
               <ClosableContainer
                 key={item.id}
                 onClose={() => onRemoveItem(item)}
                 showCloseIconOnHover
               >
-                <ItemPopupTrigger item={item} extraData={{ socketOverrides: item.socketOverrides }}>
+                <ItemPopupTrigger
+                  item={item}
+                  extraData={{ socketOverrides: loadoutItem.socketOverrides }}
+                >
                   {(ref, onClick) => (
                     <div
                       className={clsx({
-                        [styles.missingItem]: item.owner === 'unknown',
+                        [styles.missingItem]: missing,
                       })}
                     >
                       <ConnectedInventoryItem
                         item={item}
                         innerRef={ref}
-                        onClick={item.owner === 'unknown' ? () => onClickWarnItem(item) : onClick}
+                        onClick={missing ? () => onClickWarnItem(item) : onClick}
                         onDoubleClick={() => onToggleEquipped(item)}
                       />
                     </div>
@@ -250,7 +244,7 @@ function FashionButton({
   onModsByBucketUpdated,
 }: {
   loadout: Loadout;
-  items: DimLoadoutItem[];
+  items: ResolvedLoadoutItem[];
   storeId: string;
   onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
 }) {
