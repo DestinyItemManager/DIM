@@ -280,7 +280,7 @@ function addItem(
     id: item.id,
     hash: item.hash,
     amount: Math.min(item.amount, shift ? 5 : 1),
-    equipped: false,
+    equip: false,
   };
 
   // TODO: maybe we should just switch back to storing loadout items in memory by bucket
@@ -296,11 +296,11 @@ function addItem(
 
     if (!dupe) {
       if (typeInventory.length < maxSlots) {
-        loadoutItem.equipped =
+        loadoutItem.equip =
           equip !== undefined ? equip : item.equipment && typeInventory.length === 0;
-        if (loadoutItem.equipped) {
+        if (loadoutItem.equip) {
           for (const otherItem of typeInventory) {
-            findItem(otherItem).equipped = false;
+            findItem(otherItem).equip = false;
           }
         }
 
@@ -312,7 +312,7 @@ function addItem(
           if (conflictingItem) {
             draftLoadout.items = draftLoadout.items.filter((i) => i.id !== conflictingItem.id);
           }
-          loadoutItem.equipped = true;
+          loadoutItem.equip = true;
         }
 
         if (socketOverrides) {
@@ -324,7 +324,7 @@ function addItem(
         // If adding a new armor item, remove any fashion mods (shader/ornament) that couldn't be slotted
         if (
           item.bucket.inArmor &&
-          loadoutItem.equipped &&
+          loadoutItem.equip &&
           draftLoadout.parameters?.modsByBucket?.[item.bucket.hash]?.length
         ) {
           const cosmeticSockets = getSocketsByCategoryHash(
@@ -374,7 +374,7 @@ function removeItem(
       );
     }
 
-    if (loadoutItem.equipped) {
+    if (loadoutItem.equip) {
       const typeInventory = items.filter((i) => i.bucket.hash === item.bucket.hash);
       const nextInLine =
         typeInventory.length > 0 &&
@@ -382,7 +382,7 @@ function removeItem(
           (i) => i.id === typeInventory[0].id && i.hash === typeInventory[0].hash
         );
       if (nextInLine) {
-        nextInLine.equipped = true;
+        nextInLine.equip = true;
       }
     }
   });
@@ -403,9 +403,9 @@ function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) 
 
     const loadoutItem = findItem(item);
     if (item.equipment) {
-      if (loadoutItem.equipped) {
+      if (loadoutItem.equip) {
         // It's equipped, mark it unequipped
-        loadoutItem.equipped = false;
+        loadoutItem.equip = false;
       } else {
         // It's unequipped - mark all the other items and conflicting exotics unequipped, then mark this equipped
         items
@@ -418,10 +418,10 @@ function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) 
           )
           .map(findItem)
           .forEach((i) => {
-            i.equipped = false;
+            i.equip = false;
           });
 
-        loadoutItem.equipped = true;
+        loadoutItem.equip = true;
       }
     }
   });

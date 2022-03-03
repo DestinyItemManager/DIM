@@ -58,7 +58,7 @@ export default function FashionDrawer({
   const [pickPlug, setPickPlug] = useState<PickPlugState>();
   const allItems = useSelector(allItemsSelector);
 
-  const equippedIds = new Set([...loadout.items.filter((i) => i.equipped).map((i) => i.id)]);
+  const equippedIds = new Set([...loadout.items.filter((i) => i.equip).map((i) => i.id)]);
   const armor = items.filter(
     (i) => equippedIds.has(i.id) && LockableBucketHashes.includes(i.bucket.hash)
   );

@@ -30,13 +30,13 @@ export default function LoadoutDrawerBucket({
   const itemSortOrder = useSelector(itemSortOrderSelector);
   const equippedItems = sortItems(
     items.filter((i) =>
-      loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && li.equipped)
+      loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && li.equip)
     ),
     itemSortOrder
   );
   const unequippedItems = sortItems(
     items.filter((i) =>
-      loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && !li.equipped)
+      loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && !li.equip)
     ),
     itemSortOrder
   );

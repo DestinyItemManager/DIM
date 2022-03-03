@@ -41,7 +41,7 @@ export function useEquippedLoadoutArmorAndSubclass(
       const modsByBucket = loadout.parameters?.modsByBucket;
 
       const [loadoutItems] = getItemsFromLoadoutItems(
-        loadout.items.filter((i) => i.equipped),
+        loadout.items.filter((i) => i.equip),
         defs,
         storeId,
         buckets,

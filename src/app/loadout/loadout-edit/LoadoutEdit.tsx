@@ -81,7 +81,7 @@ export default function LoadoutEdit({
 
   // TODO: This is basically wrong, because the DIM items may have different IDs than the loadout item. We need to
   // process the loadout items into pairs of [LoadoutItem, DimItem] instead.
-  const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
+  const equippedItemIds = new Set(loadout.items.filter((i) => i.equip).map((i) => i.id));
 
   const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
 
@@ -388,7 +388,7 @@ export function setLoadoutSubclassFromEquipped(
   const newLoadoutItem: LoadoutItem = {
     id: newSubclass.id,
     hash: newSubclass.hash,
-    equipped: true,
+    equip: true,
     amount: 1,
     socketOverrides: createSocketOverridesFromEquipped(newSubclass),
   };
@@ -430,7 +430,7 @@ export function fillLoadoutFromEquipped(
       (bucketItem) =>
         loadout.items.find(
           (loadoutItem) => bucketItem.hash === loadoutItem.hash && bucketItem.id === loadoutItem.id
-        )?.equipped
+        )?.equip
     );
 
   const newLoadout = produce(loadout, (draftLoadout) => {
@@ -440,7 +440,7 @@ export function fillLoadoutFromEquipped(
         const loadoutItem: LoadoutItem = {
           id: item.id,
           hash: item.hash,
-          equipped: true,
+          equip: true,
           amount: 1,
         };
         if (item.bucket.hash === BucketHashes.Subclass) {

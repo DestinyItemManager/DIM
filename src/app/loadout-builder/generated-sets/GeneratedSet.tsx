@@ -72,7 +72,7 @@ function GeneratedSet({
   let displayedItems: DimItem[] = set.armor.map((items) => items[0]);
 
   for (const loadout of loadouts) {
-    const equippedLoadoutItems = loadout.items.filter((item) => item.equipped);
+    const equippedLoadoutItems = loadout.items.filter((item) => item.equip);
     const allSetItems = set.armor.flat();
     const intersection = _.intersectionBy(allSetItems, equippedLoadoutItems, (item) => item.id);
     if (intersection.length === set.armor.length) {

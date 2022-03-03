@@ -109,7 +109,7 @@ export default function CompareDrawer({
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const { loadoutItems, loadoutSubclass } = useMemo(() => {
-    const equippedItems = selectedLoadout?.items.filter((item) => item.equipped);
+    const equippedItems = selectedLoadout?.items.filter((item) => item.equip);
     const [items] = getItemsFromLoadoutItems(
       equippedItems,
       defs,
