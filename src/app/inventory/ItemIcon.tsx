@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage, { bungieBackgroundStyle, bungieNetPath } from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { getDeepsightInfo } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import {
   DestinyEnergyTypeDefinition,
@@ -35,6 +36,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       (item.bucket.hash === BucketHashes.Subclass ||
         item.itemCategoryHashes.includes(ItemCategoryHashes.Packages))) ||
     item.isEngram;
+  const deepsightInfo = getDeepsightInfo(item);
   const itemImageStyles = clsx('item-img', className, {
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless,
@@ -69,7 +71,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           </svg>
         </>
       )}
-      {item.highlightedObjective && (
+      {item.highlightedObjective && (!deepsightInfo || deepsightInfo.complete) && (
         <img className={styles.highlightedObjective} src={pursuitComplete} />
       )}
     </>
