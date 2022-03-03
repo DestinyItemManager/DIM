@@ -1,5 +1,6 @@
 ## Next
 
+* The "Pull From Postmaster" button no longer requires a second tap to confirm. For those who dislike this button, it may be removed entirely via a setting in the Settings page.
 * When you have 10 or more loadouts, a search box will appear in the Inventory page loadout dropdown, allowing you to search names just like on the Loadouts page.
 * Old loadouts with void subclasses in them will upgrade automatically to the new version with fragments and aspects, instead of telling you the loadout is missing an item.
 * Removed D2Gunsmith link from the item details popup while they work on revamping the site for all the new changes.

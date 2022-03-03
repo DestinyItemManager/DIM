@@ -1,4 +1,4 @@
-import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
+import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -14,10 +14,11 @@ import { DimStore } from './store-types';
 export function PullFromPostmaster({ store }: { store: DimStore }) {
   const [working, setWorking] = useState(false);
   const dispatch = useThunkDispatch();
+  const hidePullFromPostmaster = useSelector(settingSelector('hidePullFromPostmaster'));
   const numPullablePostmasterItems = useSelector(
     (state: RootState) => pullablePostmasterItems(store, storesSelector(state)).length
   );
-  if (numPullablePostmasterItems === 0) {
+  if (hidePullFromPostmaster || numPullablePostmasterItems === 0) {
     return null;
   }
 
@@ -33,12 +34,10 @@ export function PullFromPostmaster({ store }: { store: DimStore }) {
   };
 
   return (
-    <ConfirmButton className={styles.button} onClick={onClick}>
-      <div className={styles.buttonContents}>
-        <AppIcon spinning={working} icon={working ? refreshIcon : sendIcon} />
-        <span className={styles.badge}>{numPullablePostmasterItems}</span>
-        <span>{t('Loadouts.PullFromPostmaster')}</span>
-      </div>
-    </ConfirmButton>
+    <button type="button" className={styles.button} onClick={onClick}>
+      <AppIcon spinning={working} icon={working ? refreshIcon : sendIcon} />
+      <span className={styles.badge}>{numPullablePostmasterItems}</span>
+      <span>{t('Loadouts.PullFromPostmaster')}</span>
+    </button>
   );
 }
