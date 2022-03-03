@@ -31,6 +31,7 @@
     "jest.config.js",
     "package.json",
     "tsconfig.json",
-    "yarn.lock"
+    "yarn.lock",
+    ".gitignore"
   ]
 }
