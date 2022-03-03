@@ -365,6 +365,8 @@ export default function ItemTypeSelector({
                 if (armorTopLevelCatHashes.some((h) => categoryHashList.includes(h))) {
                   categoryHashList.push(ItemCategoryHashes.Armor);
                 }
+
+                const itemCategory = defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash));
                 return (
                   <label
                     key={subCategory.itemCategoryHash}
@@ -383,9 +385,9 @@ export default function ItemTypeSelector({
                     {itemCategoryIcons[subCategory.itemCategoryHash] && (
                       <img src={itemCategoryIcons[subCategory.itemCategoryHash]} />
                     )}
-                    {defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash)).displayProperties
-                      ?.name ||
-                      defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash)).title}{' '}
+                    {'displayProperties' in itemCategory
+                      ? itemCategory.displayProperties.name
+                      : itemCategory.title}{' '}
                     <span className={styles.buttonItemCount}>
                       (
                       {

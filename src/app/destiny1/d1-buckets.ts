@@ -90,7 +90,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
       this.byType[this.unknown.type] = this.unknown;
     },
   };
-  _.forIn(defs.InventoryBucket, (def: any) => {
+  _.forIn(defs.InventoryBucket, (def) => {
     if (def.enabled) {
       const type = bucketToType[def.hash];
       let sort: D1BucketCategory | undefined;

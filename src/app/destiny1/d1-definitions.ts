@@ -3,11 +3,29 @@ import { reportException } from 'app/utils/exceptions';
 import { HashLookupFailure, ManifestDefinitions } from '../destiny2/definitions';
 import { setD1Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/d1-manifest-service';
+import {
+  D1ActivityDefinition,
+  D1ActivityTypeDefinition,
+  D1ClassDefinition,
+  D1DamageTypeDefinition,
+  D1FactionDefinition,
+  D1InventoryBucketDefinition,
+  D1InventoryItemDefinition,
+  D1ItemCategoryDefinition,
+  D1ObjectiveDefinition,
+  D1ProgressionDefinition,
+  D1RaceDefinition,
+  D1RecordBookDefinition,
+  D1RecordDefinition,
+  D1StatDefinition,
+  D1TalentGridDefinition,
+  D1VendorCategoryDefinition,
+  D1VendorDefinition,
+} from './d1-manifest-types';
 
 const lazyTables = [
   'InventoryItem',
   'Objective',
-  'SandboxPerk',
   'Stat',
   'TalentGrid',
   'Progression',
@@ -15,8 +33,6 @@ const lazyTables = [
   'ItemCategory',
   'VendorCategory',
   'RecordBook',
-  'ActivityCategory',
-  'ScriptedSkull',
   'Activity',
   'ActivityType',
   'DamageType',
@@ -30,27 +46,24 @@ export interface DefinitionTable<T> {
 
 // D1 types don't exist yet
 export interface D1ManifestDefinitions extends ManifestDefinitions {
-  InventoryItem: DefinitionTable<any>;
-  Objective: DefinitionTable<any>;
-  SandboxPerk: DefinitionTable<any>;
-  Stat: DefinitionTable<any>;
-  TalentGrid: DefinitionTable<any>;
-  Progression: DefinitionTable<any>;
-  Record: DefinitionTable<any>;
-  ItemCategory: DefinitionTable<any>;
-  VendorCategory: DefinitionTable<any>;
-  RecordBook: DefinitionTable<any>;
-  ActivityCategory: DefinitionTable<any>;
-  ScriptedSkull: DefinitionTable<any>;
-  Activity: DefinitionTable<any>;
-  ActivityType: DefinitionTable<any>;
-  DamageType: DefinitionTable<any>;
+  InventoryItem: DefinitionTable<D1InventoryItemDefinition>;
+  Objective: DefinitionTable<D1ObjectiveDefinition>;
+  Stat: DefinitionTable<D1StatDefinition>;
+  TalentGrid: DefinitionTable<D1TalentGridDefinition>;
+  Progression: DefinitionTable<D1ProgressionDefinition>;
+  Record: DefinitionTable<D1RecordDefinition>;
+  ItemCategory: DefinitionTable<D1ItemCategoryDefinition>;
+  VendorCategory: DefinitionTable<D1VendorCategoryDefinition>;
+  RecordBook: DefinitionTable<D1RecordBookDefinition>;
+  Activity: DefinitionTable<D1ActivityDefinition>;
+  ActivityType: DefinitionTable<D1ActivityTypeDefinition>;
+  DamageType: DefinitionTable<D1DamageTypeDefinition>;
 
-  InventoryBucket: { [hash: number]: any };
-  Class: { [hash: number]: any };
-  Race: { [hash: number]: any };
-  Faction: { [hash: number]: any };
-  Vendor: { [hash: number]: any };
+  InventoryBucket: { [hash: number]: D1InventoryBucketDefinition };
+  Class: { [hash: number]: D1ClassDefinition };
+  Race: { [hash: number]: D1RaceDefinition };
+  Faction: { [hash: number]: D1FactionDefinition };
+  Vendor: { [hash: number]: D1VendorDefinition };
 }
 
 /**
