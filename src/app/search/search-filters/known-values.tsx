@@ -171,6 +171,7 @@ const knownValuesFilters: FilterDefinition[] = [
   {
     keywords: ['craftable'],
     description: tl('Filter.Craftable'),
+    destinyVersion: 2,
     filter: () => (item) => craftableHashes.includes(item.hash),
   },
   {
