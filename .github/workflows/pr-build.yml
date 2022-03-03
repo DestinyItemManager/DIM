@@ -25,6 +25,43 @@ jobs:
           node-version: 16.x
           cache: yarn
 
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
+
+      # We set the default packtracker ENV vars
+      - name: Build beta
+        run: yarn build:beta
+        env:
+          PR_BUILD: true
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
+
+      - name: Test
+        run: yarn test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
       - name: Cache eslint
         uses: actions/cache@v2
         env:
@@ -39,11 +76,5 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Test & Lint
-        run: yarn test-and-lint
-
-      # We set the default packtracker ENV vars
-      - name: Build beta
-        run: yarn build:beta
-        env:
-          PR_BUILD: true
+      - name: Lint
+        run: yarn lintcached
