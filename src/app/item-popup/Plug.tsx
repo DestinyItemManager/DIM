@@ -13,7 +13,7 @@ import PressTip from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import './ItemSockets.scss';
-import './Plug.scss';
+import styles from './Plug.m.scss';
 import { DimPlugTooltip } from './PlugTooltip';
 
 export default function Plug({
@@ -98,7 +98,6 @@ export function PerkCircleWithTooltip({
   wishlistRoll?: InventoryWishListRoll;
 }) {
   const plugged = plug === socketInfo.plugged;
-
   // Another plug was selected by the user
   const notSelected = socketInfo.actuallyPlugged && !plugged && plug === socketInfo.actuallyPlugged;
   // This has been selected by the user but isn't the original plugged item
@@ -109,7 +108,13 @@ export function PerkCircleWithTooltip({
   return (
     <>
       <PressTip tooltip={tooltip}>
-        <PerkCircle plug={plug} {...{ plugged, notSelected, selected, cannotRoll }} />
+        <PerkCircle
+          plug={plug}
+          plugged={plugged}
+          notSelected={notSelected}
+          selected={selected}
+          cannotRoll={cannotRoll}
+        />
       </PressTip>
       {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
         <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t('WishListRoll.BestRatedTip')} />
@@ -129,15 +134,23 @@ type PlugStatuses = {
 function PerkCircle({
   plug,
   className,
-  ...plugStatuses
+  plugged,
+  selected,
+  cannotRoll,
+  notSelected,
 }: {
   plug: DimPlug;
   className?: string;
 } & PlugStatuses) {
   const enhanced = isEnhancedPerk(plug);
-  const statusClasses = clsx(plugStatuses);
+  const statusClasses = clsx({
+    [styles.plugged]: plugged,
+    [styles.selected]: selected,
+    [styles.cannotRoll]: cannotRoll,
+    [styles.notSelected]: notSelected,
+  });
   return (
-    <svg viewBox="0 0 100 100" width="100" height="100" className={clsx(className, 'perkCircle')}>
+    <svg viewBox="0 0 100 100" width="100" height="100" className={className}>
       <defs>
         <linearGradient id="mw" x1="0" x2="0" y1="0" y2="1">
           <stop stopColor="transparent" offset="20%" />

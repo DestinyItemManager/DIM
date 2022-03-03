@@ -429,9 +429,12 @@ export interface DimSocket {
   reusablePlugItems?: DestinyItemPlugBase[];
   /** Does the socket contain randomized plug items? */
   hasRandomizedPlugItems: boolean;
-  /** Is this socket a perk? Anything else is at least sorta mod-like. TODO: should this be an enum? */
+  /**
+   * Is this socket a perk? This includes sockets marked Reusable, Unlockable, and LargePerk.
+   * This might be widely synonymous with isReusable, but seems like it's being used for things other than display style logic.
+   */
   isPerk: boolean;
-  /** Is this socket reusable? This is a notably different behavior and UI in Destiny, displayed in circles rather than squares */
+  /** Is this socket reusable? This is a notably different behavior and UI in Destiny, displayed in circles rather than squares. */
   isReusable: boolean;
   /** Deep information about this socket, including what types of things can be inserted into it. TODO: do we need all of this? */
   socketDefinition: DestinyItemSocketEntryDefinition;
