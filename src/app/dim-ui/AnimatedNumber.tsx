@@ -1,10 +1,10 @@
-import { animate, Spring, useMotionValue } from 'framer-motion';
+import { animate, Tween, useMotionValue } from 'framer-motion';
 import React, { useEffect, useRef } from 'react';
 
-const spring: Spring = {
-  type: 'spring',
+const spring: Tween = {
+  type: 'tween',
   duration: 0.3,
-  bounce: 0,
+  ease: 'easeOut',
 };
 
 /**
