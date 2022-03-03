@@ -5,7 +5,7 @@ interface CssExports {
   'borderless': string;
   'common': string;
   'complete': string;
-  'crafted': string;
+  'deepsight': string;
   'energyCost': string;
   'energyCostOverlay': string;
   'exotic': string;

@@ -41,7 +41,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless,
     [styles.masterwork]: item.masterwork,
-    [styles.crafted]: item.crafted,
+    [styles.deepsight]: deepsightInfo,
     [itemTierStyles[item.tier]]: !borderless && !item.plug,
   });
 
