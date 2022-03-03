@@ -36,7 +36,7 @@ jobs:
       - name: bundlewatch.io
         run: yarn bundlewatch
         env:
-          githubAccessToken: ${{ secrets.GITHUB_TOKEN }}
+          BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
   test:
     runs-on: ubuntu-latest
