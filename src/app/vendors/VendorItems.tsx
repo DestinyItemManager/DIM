@@ -49,6 +49,10 @@ function itemSort(vendorHash: number, category: string) {
     return chainComparator<VendorItem>(compareBy((item) => item.item?.itemCategoryHashes[0]));
   } else if (category.startsWith('category_tier')) {
     return undefined;
+  } else if (vendorHash === VENDORS.WAR_TABLE_UPGRADES_RISEN) {
+    // Purchasing an upgrade from the vendor swaps it out with a different item
+    // 10 positions later in the array.
+    return compareBy<VendorItem>((item) => item.key - (item.owned ? 10 : 0));
   } else {
     return chainComparator<VendorItem>(compareBy(vendorItemIndex));
   }
@@ -181,7 +185,7 @@ export default function VendorItems({
                           <VendorItemComponent
                             key={item.key}
                             item={item}
-                            owned={Boolean(ownedItemHashes?.has(item.item.hash))}
+                            owned={Boolean(ownedItemHashes?.has(item.item.hash) || item.owned)}
                             characterId={characterId}
                           />
                         )
