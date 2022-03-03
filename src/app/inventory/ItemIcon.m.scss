@@ -40,11 +40,10 @@ $commonBg: #366f42;
   }
 }
 
-// Masterwork item image
+// Alternate border styles
 .masterwork {
   border-color: $masterwork-border-color;
 }
-
 .deepsight {
   border-color: $deepsight-border-color;
 }
@@ -59,8 +58,8 @@ $commonBg: #366f42;
   border-color: transparent;
 }
 
-// The overlay image for masterworks
-.masterworkOverlay {
+// The overlay image for masterworks and Deepsight weapons
+.backgroundOverlay {
   box-sizing: border-box;
   top: $item-border-width;
   left: $item-border-width;
@@ -72,11 +71,19 @@ $commonBg: #366f42;
   background-position: center;
   background-size: calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90))
     calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90));
-
+}
+.legendaryMasterwork {
   background-image: url('../../images/masterwork.png');
 }
 .exoticMasterwork {
   background-image: url('../../images/exotic-masterwork.png');
+}
+.deepsightBorder {
+  background-image: url('../../images/deepsight.png');
+
+  &.legendaryMasterwork {
+    background-image: url('../../images/masterwork.png'), url('../../images/deepsight.png');
+  }
 }
 
 .iconOverlay {

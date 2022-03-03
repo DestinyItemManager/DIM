@@ -48,15 +48,19 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   return (
     <>
       <BungieImage src={item.icon} className={itemImageStyles} alt="" />
-      {item.masterwork && (
-        <div
-          className={clsx(styles.masterworkOverlay, { [styles.exoticMasterwork]: item.isExotic })}
-        />
-      )}
       {item.iconOverlay && (
         <div className={styles.iconOverlay}>
           <BungieImage src={item.iconOverlay} />
         </div>
+      )}
+      {(item.masterwork || deepsightInfo) && (
+        <div
+          className={clsx(styles.backgroundOverlay, {
+            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic,
+            [styles.exoticMasterwork]: item.masterwork && item.isExotic,
+            [styles.deepsightBorder]: deepsightInfo,
+          })}
+        />
       )}
       {item.plug?.costElementIcon && (
         <>
