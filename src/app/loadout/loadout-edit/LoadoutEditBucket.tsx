@@ -2,7 +2,7 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
@@ -44,7 +44,7 @@ export default function LoadoutEditBucket({
   onToggleEquipped,
   children,
 }: {
-  category: string;
+  category: D2BucketCategory;
   storeId: string;
   items?: DimItem[];
   modsByBucket: {

@@ -1,8 +1,8 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
-import { bucketsSelector } from 'app/inventory/selectors';
+import { D1BucketHashes } from 'app/search/d1-known-values';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import BungieImage from '../../dim-ui/BungieImage';
 import { D1GridNode, DimItem } from '../../inventory/item-types';
 import { AppIcon, plusIcon } from '../../shell/icons';
@@ -22,6 +22,16 @@ interface Props {
   onItemLocked(item: DimItem): void;
 }
 
+const typeToHash: { [key in ArmorTypes]: BucketHashes | D1BucketHashes } = {
+  Helmet: BucketHashes.Helmet,
+  Gauntlets: BucketHashes.Gauntlets,
+  Chest: BucketHashes.ChestArmor,
+  Leg: BucketHashes.LegArmor,
+  ClassItem: BucketHashes.ClassArmor,
+  Ghost: BucketHashes.Ghost,
+  Artifact: D1BucketHashes.Artifact,
+};
+
 export default function LoadoutBuilderLockPerk({
   type,
   lockeditem,
@@ -33,7 +43,6 @@ export default function LoadoutBuilderLockPerk({
   onItemLocked,
 }: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const buckets = useSelector(bucketsSelector)!;
 
   const closeDialog = () => setDialogOpen(false);
   const addPerkClicked = () => setDialogOpen(true);
@@ -48,7 +57,7 @@ export default function LoadoutBuilderLockPerk({
 
   return (
     <div className="locked-item">
-      <LoadoutBucketDropTarget bucketHash={buckets.byType[type].hash} onItemLocked={onItemLocked}>
+      <LoadoutBucketDropTarget bucketHash={typeToHash[type]} onItemLocked={onItemLocked}>
         {lockeditem === null ? (
           <div className="empty-item">
             <div className="perk-addition" onClick={addPerkClicked}>
