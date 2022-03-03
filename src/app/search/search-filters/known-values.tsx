@@ -1,4 +1,5 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
+import { bucketToType } from 'app/destiny2/d2-buckets';
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getEvent } from 'app/inventory/store/season';
@@ -68,7 +69,13 @@ export const classFilter: FilterDefinition = {
 export const itemTypeFilter: FilterDefinition = {
   keywords: Object.values(D2Categories) // stuff like Engrams, Kinetic, Gauntlets, Emblems, Finishers, Modifications
     .flat()
-    .map((v) => v.toLowerCase()),
+    .map((v) => {
+      const type = bucketToType[v];
+      if (!type && $DIM_FLAVOR === 'dev') {
+        throw new Error(`You forgot to map a string type name for bucket hash ${v}`);
+      }
+      return type!.toLowerCase();
+    }),
   description: tl('Filter.ArmorCategory'), // or 'Filter.WeaponClass'
   filter:
     ({ filterValue }) =>
@@ -171,6 +178,7 @@ const knownValuesFilters: FilterDefinition[] = [
   {
     keywords: ['craftable'],
     description: tl('Filter.Craftable'),
+    destinyVersion: 2,
     filter: () => (item) => craftableHashes.includes(item.hash),
   },
   {

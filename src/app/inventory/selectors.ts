@@ -40,11 +40,7 @@ export const bucketsSelector = createSelector(
 /** Bucket hashes for buckets that we actually show on the inventory page. */
 export const displayableBucketHashesSelector = createSelector(bucketsSelector, (buckets) =>
   buckets
-    ? new Set(
-        Object.keys(buckets.byCategory).flatMap((category) =>
-          buckets.byCategory[category].map((b) => b.hash)
-        )
-      )
+    ? new Set(Object.values(buckets.byCategory).flatMap((buckets) => buckets.map((b) => b.hash)))
     : emptySet<number>()
 );
 

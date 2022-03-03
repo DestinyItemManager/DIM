@@ -181,6 +181,13 @@ const d2SelectionTree: ItemCategoryTreeNode = {
           subCategories: [kinetic, energy, power],
           terminal: true,
         },
+        {
+          id: 'glaive',
+          // TODO: glaive item category hash
+          itemCategoryHash: 0,
+          subCategories: [kinetic, energy, power],
+          terminal: true,
+        },
       ],
     },
     {

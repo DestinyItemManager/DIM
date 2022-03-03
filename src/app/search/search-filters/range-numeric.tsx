@@ -53,6 +53,7 @@ const simpleRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: 'level',
+    destinyVersion: 1,
     description: tl('Filter.RequiredLevel'),
     format: 'range',
     filter: ({ filterValue }) => {

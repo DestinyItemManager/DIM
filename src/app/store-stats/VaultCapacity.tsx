@@ -47,7 +47,7 @@ interface VaultCounts {
 function computeVaultCounts(activeStore: DimStore, vault: DimStore, buckets: InventoryBuckets) {
   const vaultCounts: VaultCounts = {};
 
-  for (const bucket of Object.values(buckets.byType)) {
+  for (const bucket of Object.values(buckets.byHash)) {
     // If this bucket can have items placed in the vault, count up how many of
     // that type are in the vault.
     if (bucket.vaultBucket) {

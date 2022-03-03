@@ -3,6 +3,7 @@ import { storesSelector } from 'app/inventory/selectors';
 import { SocketOverrides, SocketOverridesForItems } from 'app/inventory/store/override-sockets';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { pickSubclass } from 'app/loadout/item-utils';
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
@@ -12,11 +13,7 @@ import produce from 'immer';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import type {
-  DimBucketType,
-  InventoryBucket,
-  InventoryBuckets,
-} from '../inventory/inventory-buckets';
+import type { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { showItemPicker } from '../item-picker/item-picker';
@@ -32,31 +29,26 @@ import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 import SavedMods from './SavedMods';
 import { Subclass } from './subclass-drawer/Subclass';
 
-const loadoutTypes: DimBucketType[] = [
-  'Primary',
-  'Special',
-  'Heavy',
-  'KineticSlot',
-  'Energy',
-  'Power',
-  'Helmet',
-  'Gauntlets',
-  'Chest',
-  'Leg',
-  'ClassItem',
-  'Class',
-  'Artifact',
-  'Ghost',
-  'Consumable',
-  'Material',
-  'Emblem',
-  'Emblems',
-  'Shader',
-  'Emote',
-  'Ship',
-  'Ships',
-  'Vehicle',
-  'Horn',
+const loadoutTypes: (BucketHashes | D1BucketHashes)[] = [
+  BucketHashes.KineticWeapons,
+  BucketHashes.EnergyWeapons,
+  BucketHashes.PowerWeapons,
+  BucketHashes.Helmet,
+  BucketHashes.Gauntlets,
+  BucketHashes.ChestArmor,
+  BucketHashes.LegArmor,
+  BucketHashes.ClassArmor,
+  D1BucketHashes.Artifact,
+  BucketHashes.Ghost,
+  BucketHashes.Consumables,
+  BucketHashes.Materials,
+  BucketHashes.Emblems,
+  D1BucketHashes.Shader,
+  BucketHashes.Emotes_Invisible,
+  BucketHashes.Emotes_Equippable,
+  BucketHashes.Ships,
+  BucketHashes.Vehicle,
+  D1BucketHashes.Horn,
 ];
 
 export default function LoadoutDrawerContents({
@@ -109,13 +101,13 @@ export default function LoadoutDrawerContents({
     fillLoadoutFromUnequipped(loadout, dimStore, add);
   }
 
-  const availableTypes = _.compact(loadoutTypes.map((type) => buckets.byType[type]));
+  const availableTypes = _.compact(loadoutTypes.map((h) => buckets.byHash[h]));
 
   const [typesWithItems, typesWithoutItems] = _.partition(
     availableTypes,
-    (bucket) => bucket.hash && itemsByBucket[bucket.hash] && itemsByBucket[bucket.hash].length
+    (bucket) => bucket.hash && itemsByBucket[bucket.hash]?.length
   );
-  const subclassBucket = buckets.byType.Class;
+  const subclassBucket = buckets.byHash[BucketHashes.Subclass];
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.hash));
 
