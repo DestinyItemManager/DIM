@@ -60,6 +60,12 @@ export function getItemsFromLoadoutItems(
             icon: 'displayProperties' in itemDef ? itemDef.displayProperties?.icon : itemDef.icon,
             name:
               'displayProperties' in itemDef ? itemDef.displayProperties?.name : itemDef.itemName,
+            bucket:
+              buckets.byHash[
+                'bucketTypeHash' in itemDef
+                  ? itemDef.bucketTypeHash
+                  : itemDef.inventory!.bucketTypeHash
+              ],
           } as DimLoadoutItem);
         fakeItem.equipped = loadoutItem.equipped;
         fakeItem.socketOverrides = loadoutItem.socketOverrides;
