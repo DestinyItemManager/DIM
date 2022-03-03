@@ -1,10 +1,13 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
+import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
@@ -50,6 +53,7 @@ export type Action =
       items: DimItem[];
       equip?: boolean;
       socketOverrides?: SocketOverrides;
+      stores: DimStore[];
     }
   /** Applies socket overrides to the supplied item */
   | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
@@ -59,6 +63,7 @@ export type Action =
   /** Make an item that's already in the loadout equipped */
   | { type: 'equipItem'; item: DimItem; items: DimItem[] }
   | { type: 'updateMods'; mods: number[] }
+  | { type: 'changeClearMods'; enabled: boolean }
   | { type: 'removeMod'; hash: number }
   | { type: 'openModPicker'; query?: string }
   | { type: 'closeModPicker' }
@@ -100,26 +105,60 @@ export function stateReducer(state: State, action: Action): State {
 
     case 'addItem': {
       const { loadout } = state;
-      const { item, shift, items, equip, socketOverrides } = action;
+      const { item, shift, items, equip, socketOverrides, stores } = action;
 
       if (!itemCanBeInLoadout(item)) {
         showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
         return state;
       }
 
-      // Check whether this addItem happened without a loadout being edited,
-      // which can happen from item popup action buttons.
-      const [addToLoadout, isNew] = loadout
-        ? [loadout, state.isNew]
-        : [newLoadout('', [], item.classType), true];
+      if (loadout) {
+        if (item.classType !== DestinyClass.Unknown && loadout.classType !== item.classType) {
+          showNotification({
+            type: 'warning',
+            title: t('Loadouts.ClassTypeMismatch', { className: item.classTypeNameLocalized }),
+          });
+          return state;
+        }
+        const draftLoadout = addItem(loadout, item, shift, items, equip, socketOverrides);
+        return {
+          ...state,
+          loadout: draftLoadout,
+        };
+      } else {
+        // If we don't have a loadout, this action was invoked via the "+ Loadout" button in item actions
+        let owner: DimStore =
+          item.owner === 'vault' ? getCurrentStore(stores)! : getStore(stores, item.owner)!;
 
-      const draftLoadout = addItem(addToLoadout, item, shift, items, equip, socketOverrides);
+        if (item.classType !== DestinyClass.Unknown && item.classType !== owner.classType) {
+          const matchingStore = stores.find((s) => s.classType === item.classType);
+          if (!matchingStore) {
+            showNotification({
+              type: 'warning',
+              title: t('Loadouts.ClassTypeMissing', { className: item.classTypeNameLocalized }),
+            });
+            return state;
+          }
+          owner = matchingStore;
+        }
 
-      return {
-        ...state,
-        loadout: draftLoadout,
-        isNew,
-      };
+        const classType =
+          item.classType === DestinyClass.Unknown ? owner.classType : item.classType;
+        const draftLoadout = addItem(
+          newLoadout('', [], classType),
+          item,
+          shift,
+          items,
+          equip,
+          socketOverrides
+        );
+        return {
+          ...state,
+          loadout: draftLoadout,
+          storeId: owner.id,
+          isNew: true,
+        };
+      }
     }
 
     case 'removeItem': {
@@ -170,6 +209,23 @@ export function stateReducer(state: State, action: Action): State {
               parameters: {
                 ...loadout.parameters,
                 mods,
+              },
+            },
+          }
+        : state;
+    }
+
+    case 'changeClearMods': {
+      const { loadout } = state;
+      const { enabled } = action;
+      return loadout
+        ? {
+            ...state,
+            loadout: {
+              ...loadout,
+              parameters: {
+                ...loadout.parameters,
+                clearMods: enabled,
               },
             },
           }
@@ -377,7 +433,11 @@ function applySocketOverrides(
   socketOverrides: SocketOverrides
 ) {
   return produce(loadout, (draftLoadout) => {
-    const loadoutItem = draftLoadout.items.find((li) => li.id === item.id);
+    let loadoutItem = draftLoadout.items.find((li) => li.id === item.id);
+    // TODO: right now socketOverrides are only really used for subclasses, so we can match by hash
+    if (!loadoutItem) {
+      loadoutItem = draftLoadout.items.find((li) => li.hash === item.hash);
+    }
     if (loadoutItem) {
       loadoutItem.socketOverrides = socketOverrides;
     }

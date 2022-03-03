@@ -24,7 +24,7 @@ const bucketIcons = {
   [BucketHashes.Ghost]: ghost,
 };
 
-export type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> & {
+type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   item: DimItem;
 };
 

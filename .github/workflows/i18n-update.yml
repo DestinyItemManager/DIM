@@ -1,41 +1,39 @@
 name: i18n-update
 
 on:
-  pull_request:
-    paths:
-      - 'config/i18n.json'
   push:
-    branches:
-      - "master"
+    branches: [master]
     paths:
       - 'config/i18n.json'
+      - 'src/locale/dim.json'
 
 jobs:
   i18n-update:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: ${{ github.head_ref }}
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 3
+          token: ${{ secrets.I18N_PAT }}
 
-    - name: Cache node_modules
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-node_modules
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
-        restore-keys: |
-          ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('yarn.lock')}}
-          ${{ runner.os }}-${{ env.cache-name }}-
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
 
-    - name: Install
-      run: yarn install --frozen-lockfile --prefer-offline
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
 
-    - name: yarn i18n
-      run: yarn i18n
+      - name: yarn i18n
+        run: yarn i18n
 
-    - uses: stefanzweifel/git-auto-commit-action@v4
-      with:
-        commit_message: Apply i18n updates
+      - name: Check for new files
+        id: data
+        run: echo ::set-output name=porcelain::"$(git status --porcelain)"
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        if: steps.data.outputs.porcelain
+        with:
+          commit_message: Apply i18n updates

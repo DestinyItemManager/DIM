@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
@@ -14,11 +14,13 @@ import {
 import {
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
+  getUnequippedItemsForLoadout,
   setLoadoutSubclassFromEquipped,
 } from 'app/loadout-drawer/LoadoutDrawerContents';
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { emptyObject } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -49,26 +51,35 @@ export default function LoadoutEdit({
   store: DimStore;
   stateDispatch: React.Dispatch<Action>;
   onClickSubclass: (subclass: DimItem | undefined) => void;
-  onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
+  onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
   onClickWarnItem: (item: DimItem) => void;
   onRemoveItem: (item: DimItem) => void;
 }) {
   const defs = useD2Definitions()!;
+  const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
 
+  // TODO: filter down by usable mods?
+  const modsByBucket: {
+    [bucketHash: number]: number[] | undefined;
+  } = loadout.parameters?.modsByBucket ?? emptyObject();
+
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(
-    () => getItemsAndSubclassFromLoadout(loadout.items, store, defs, buckets, allItems),
-    [loadout.items, defs, buckets, allItems, store]
+    () =>
+      getItemsAndSubclassFromLoadout(loadout.items, store, defs, buckets, allItems, modsByBucket),
+    [loadout.items, defs, buckets, allItems, store, modsByBucket]
   );
 
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
 
   const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
-  // TODO: filter down by usable mods?
-  const modsByBucket = loadout.parameters?.modsByBucket ?? {};
+  const clearUnsetMods = loadout.parameters?.clearMods;
+
+  // TODO: This is basically wrong, because the DIM items may have different IDs than the loadout item. We need to
+  // process the loadout items into pairs of [LoadoutItem, DimItem] instead.
   const equippedItemIds = new Set(loadout.items.filter((i) => i.equipped).map((i) => i.id));
 
   const categories = _.groupBy(items.concat(warnitems), (i) => i.bucket.sort);
@@ -110,8 +121,8 @@ export default function LoadoutEdit({
 
   const onAddItem = useCallback(
     ({ item, equip }: { item: DimItem; equip?: boolean }) =>
-      stateDispatch({ type: 'addItem', item, shift: false, items, equip }),
-    [items, stateDispatch]
+      stateDispatch({ type: 'addItem', item, stores, shift: false, items, equip }),
+    [items, stores, stateDispatch]
   );
 
   const handleSyncModsFromEquipped = () => {
@@ -144,6 +155,10 @@ export default function LoadoutEdit({
     stateDispatch({ type: 'equipItem', item, items });
   };
 
+  const handleClearUnsetModsChanged = (enabled: boolean) => {
+    stateDispatch({ type: 'changeClearMods', enabled });
+  };
+
   const handleClearLoadoutParameters = () => {
     const newLoadout = produce(loadout, (draft) => {
       if (draft.parameters) {
@@ -173,39 +188,45 @@ export default function LoadoutEdit({
             setLoadoutSubclassFromEquipped(loadout, subclass, store, updateLoadout)
           }
         >
-          <LoadoutEditSubclass
-            defs={defs}
-            subclass={subclass}
-            power={power}
-            onRemove={handleClearSubclass}
-            onPick={() => onClickSubclass(subclass)}
-          />
-          {subclass && (
-            <div className={styles.buttons}>
-              {subclass.sockets ? (
-                <button
-                  type="button"
-                  className="dim-button"
-                  onClick={() => setPlugDrawerOpen(true)}
-                >
-                  {t('LB.SelectSubclassOptions')}
-                </button>
-              ) : (
-                <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
-              )}
-            </div>
-          )}
-          {plugDrawerOpen &&
-            subclass &&
-            ReactDOM.createPortal(
-              <SubclassPlugDrawer
-                subclass={subclass}
-                socketOverrides={subclass.socketOverrides ?? {}}
-                onClose={() => setPlugDrawerOpen(false)}
-                onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
-              />,
-              document.body
+          <LoadoutEditBucketDropTarget
+            category="Subclass"
+            classType={loadout.classType}
+            equippedOnly={true}
+          >
+            <LoadoutEditSubclass
+              defs={defs}
+              subclass={subclass}
+              power={power}
+              onRemove={handleClearSubclass}
+              onPick={() => onClickSubclass(subclass)}
+            />
+            {subclass && (
+              <div className={styles.buttons}>
+                {subclass.sockets ? (
+                  <button
+                    type="button"
+                    className="dim-button"
+                    onClick={() => setPlugDrawerOpen(true)}
+                  >
+                    {t('LB.SelectSubclassOptions')}
+                  </button>
+                ) : (
+                  <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
+                )}
+              </div>
             )}
+            {plugDrawerOpen &&
+              subclass &&
+              ReactDOM.createPortal(
+                <SubclassPlugDrawer
+                  subclass={subclass}
+                  socketOverrides={subclass.socketOverrides ?? {}}
+                  onClose={() => setPlugDrawerOpen(false)}
+                  onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
+                />,
+                document.body
+              )}
+          </LoadoutEditBucketDropTarget>
         </LoadoutEditSection>
       )}
       {(anyClass ? ['Weapons', 'General'] : ['Weapons', 'Armor', 'General']).map((category) => (
@@ -216,14 +237,15 @@ export default function LoadoutEdit({
           onFillFromEquipped={() =>
             fillLoadoutFromEquipped(loadout, itemsByBucket, store, updateLoadout, category)
           }
+          fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
           onFillFromInventory={() => fillLoadoutFromUnequipped(loadout, store, onAddItem, category)}
-          onClearLoadutParameters={
+          onClearLoadoutParameters={
             category === 'Armor' && hasVisibleLoadoutParameters(loadout.parameters)
               ? handleClearLoadoutParameters
               : undefined
           }
         >
-          <LoadoutEditBucketDropTarget category={category}>
+          <LoadoutEditBucketDropTarget category={category} classType={loadout.classType}>
             <LoadoutEditBucket
               category={category}
               storeId={store.id}
@@ -261,6 +283,8 @@ export default function LoadoutEdit({
           storeId={store.id}
           savedMods={savedMods}
           onUpdateMods={handleUpdateMods}
+          clearUnsetMods={clearUnsetMods}
+          onClearUnsetModsChanged={handleClearUnsetModsChanged}
         />
       </LoadoutEditSection>
     </div>

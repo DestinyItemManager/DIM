@@ -7,10 +7,12 @@ import { count } from 'app/utils/util';
 import {
   DestinyCollectibleDefinition,
   DestinyCollectibleState,
+  DestinyCraftableComponent,
   DestinyDisplayPropertiesDefinition,
   DestinyMetricComponent,
   DestinyMetricDefinition,
   DestinyPresentationNodeCollectibleChildEntry,
+  DestinyPresentationNodeCraftableChildEntry,
   DestinyPresentationNodeDefinition,
   DestinyPresentationNodeMetricChildEntry,
   DestinyPresentationNodeRecordChildEntry,
@@ -26,6 +28,7 @@ export interface DimPresentationNodeLeaf {
   records?: DimRecord[];
   collectibles?: DimCollectible[];
   metrics?: DimMetric[];
+  craftables?: DimCraftable[];
 }
 
 export interface DimPresentationNode extends DimPresentationNodeLeaf {
@@ -50,6 +53,13 @@ export interface DimCollectible {
   state: DestinyCollectibleState;
   collectibleDef: DestinyCollectibleDefinition;
   item: DimItem;
+}
+
+export interface DimCraftable {
+  // to-do: determine what interesting information we can share about a craftable
+  item: DimItem;
+  canCraftThis: boolean;
+  canCraftAllPlugs: boolean;
 }
 
 export interface DimPresentationNodeSearchResult extends DimPresentationNodeLeaf {
@@ -98,6 +108,24 @@ export function toPresentationNodeTree(
       visible,
       acquired,
       records,
+    };
+  } else if (buckets && presentationNodeDef.children.craftables?.length) {
+    const craftables = toCraftables(
+      defs,
+      buckets,
+      profileResponse,
+      presentationNodeDef.children.craftables
+    );
+    const visible = craftables.length;
+
+    const acquired = count(craftables, (c) => c.canCraftThis);
+
+    // add an entry for self and return
+    return {
+      nodeDef: presentationNodeDef,
+      visible,
+      acquired,
+      craftables,
     };
   } else if (presentationNodeDef.children.metrics?.length) {
     const metrics = toMetrics(defs, profileResponse, presentationNodeDef.children.metrics);
@@ -215,6 +243,19 @@ export function filterPresentationNodesToSearch(
       : [];
   }
 
+  if (node.craftables) {
+    const craftables = node.craftables.filter((c) => filterItems(c.item));
+
+    return craftables.length
+      ? [
+          {
+            path: [...path, node],
+            craftables,
+          },
+        ]
+      : [];
+  }
+
   return [];
 }
 
@@ -302,6 +343,44 @@ export function toRecord(
   };
 }
 
+function toCraftables(
+  defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
+  profileResponse: DestinyProfileResponse,
+  craftableChildren: DestinyPresentationNodeCraftableChildEntry[]
+): DimCraftable[] {
+  return _.compact(
+    _.sortBy(craftableChildren, (c) => c.nodeDisplayPriority).map((c) =>
+      toCraftable(defs, buckets, profileResponse, c.craftableItemHash)
+    )
+  );
+}
+
+export function toCraftable(
+  defs: D2ManifestDefinitions,
+  buckets: InventoryBuckets,
+  profileResponse: DestinyProfileResponse,
+  itemHash: number
+): DimCraftable | undefined {
+  const item = makeFakeItem(defs, buckets, profileResponse.itemComponents, itemHash);
+
+  if (!item) {
+    return;
+  }
+
+  const info = getCraftableInfo(item.hash, profileResponse);
+  if (!info?.visible) {
+    return;
+  }
+
+  const canCraftThis = info.failedRequirementIndexes.length === 0;
+  const canCraftAllPlugs = info.sockets.every((s) =>
+    s.plugs.every((p) => p.failedRequirementIndexes.length === 0)
+  );
+
+  return { item, canCraftThis, canCraftAllPlugs };
+}
+
 function toMetrics(
   defs: D2ManifestDefinitions,
   profileResponse: DestinyProfileResponse,
@@ -315,7 +394,7 @@ function toMetrics(
       }
       const metric = getMetricComponent(metricDef, profileResponse);
 
-      if (!metric || metric.invisible) {
+      if (!metric || metric.invisible || metricDef.redacted) {
         return null;
       }
 
@@ -327,7 +406,7 @@ function toMetrics(
   );
 }
 
-export function getRecordComponent(
+function getRecordComponent(
   recordDef: DestinyRecordDefinition,
   profileResponse: DestinyProfileResponse
 ): DestinyRecordComponent | undefined {
@@ -336,6 +415,18 @@ export function getRecordComponent(
       ? Object.values(profileResponse.characterRecords.data)[0].records[recordDef.hash]
       : undefined
     : profileResponse.profileRecords?.data?.records[recordDef.hash];
+}
+
+function getCraftableInfo(itemHash: number, profileResponse: DestinyProfileResponse) {
+  if (!profileResponse.characterCraftables?.data) {
+    return;
+  }
+  const allCharCraftables: (DestinyCraftableComponent | undefined)[] = Object.values(
+    profileResponse.characterCraftables.data
+  ).map((d) => d.craftables[itemHash]);
+
+  // try to find a character on whom this item is visible
+  return allCharCraftables.find((c) => c?.visible === true) ?? allCharCraftables[0];
 }
 
 export function getCollectibleState(
@@ -355,7 +446,7 @@ export function getCollectibleState(
     : profileResponse.profileCollectibles?.data?.collectibles[collectibleDef.hash]?.state;
 }
 
-export function getMetricComponent(
+function getMetricComponent(
   metricDef: DestinyMetricDefinition,
   profileResponse: DestinyProfileResponse
 ): DestinyMetricComponent | undefined {

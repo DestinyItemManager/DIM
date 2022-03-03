@@ -7,6 +7,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
+import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import { createGetModRenderKey } from '../mod-utils';
@@ -29,7 +30,9 @@ export function getSubclassPlugs(
 
       for (const socket of sockets) {
         const override = subclass.socketOverrides?.[socket.socketIndex];
-        const initial = socket.socketDefinition.singleInitialItemHash;
+        // Void grenades do not have a singleInitialItemHash
+        const initial =
+          socket.socketDefinition.singleInitialItemHash || socket.plugSet!.plugs[0].plugDef.hash;
         const hash = override || (showInitial && initial);
         const plug = hash && defs.InventoryItem.get(hash);
         if (plug && isPluggableItem(plug)) {
@@ -57,7 +60,11 @@ export default function LoadoutSubclassSection({
 
   return (
     <div className={styles.subclassContainer}>
-      <div className={styles.subclass}>
+      <div
+        className={clsx(styles.subclass, {
+          [styles.missingItem]: subclass?.owner === 'unknown',
+        })}
+      >
         {subclass ? (
           <ItemPopupTrigger item={subclass}>
             {(ref, onClick) => (

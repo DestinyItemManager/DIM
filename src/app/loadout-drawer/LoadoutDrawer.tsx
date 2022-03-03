@@ -1,5 +1,6 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
+import ItemIcon from 'app/inventory/ItemIcon';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import FashionDrawer from 'app/loadout/fashion/FashionDrawer';
 import ModPicker from 'app/loadout/ModPicker';
@@ -15,9 +16,8 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
-import InventoryItem from '../inventory/InventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { allItemsSelector, bucketsSelector } from '../inventory/selectors';
+import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
 import '../inventory/Stores.scss';
 import { showItemPicker } from '../item-picker/item-picker';
 import { deleteLoadout, updateLoadout } from './actions';
@@ -32,11 +32,8 @@ import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
 
-// TODO: Consider moving editLoadout/addItemToLoadout/loadoutDialogOpen into Redux (actions + state)
+// TODO: Consider moving editLoadout/addItemToLoadout into Redux (actions + state)
 // TODO: break out a container from the actual loadout drawer so we can lazy load the drawer
-
-/** Is the loadout drawer currently open? */
-export let loadoutDialogOpen = false;
 
 /**
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit
@@ -47,6 +44,7 @@ export default function LoadoutDrawer() {
   const defs = useDefinitions()!;
 
   const allItems = useSelector(allItemsSelector);
+  const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
   const [showingItemPicker, setShowingItemPicker] = useState(false);
 
@@ -60,9 +58,6 @@ export default function LoadoutDrawer() {
       },
       showFashionDrawer: false,
     });
-
-  // Sync this global variable with our actual state. TODO: move to redux
-  loadoutDialogOpen = Boolean(loadout);
 
   // The loadout to edit comes in from the editLoadout$ observable
   useEventBusListener(
@@ -82,8 +77,8 @@ export default function LoadoutDrawer() {
 
   // Turn loadout items into real DimItems
   const [items, warnitems] = useMemo(
-    () => getItemsFromLoadoutItems(loadoutItems, defs, buckets, allItems),
-    [defs, buckets, loadoutItems, allItems]
+    () => getItemsFromLoadoutItems(loadoutItems, defs, storeId, buckets, allItems),
+    [loadoutItems, defs, storeId, buckets, allItems]
   );
 
   const onAddItem = useCallback(
@@ -105,8 +100,9 @@ export default function LoadoutDrawer() {
         items,
         equip,
         socketOverrides,
+        stores,
       }),
-    [items]
+    [items, stores]
   );
 
   const onApplySocketOverrides = useCallback((item: DimItem, socketOverrides: SocketOverrides) => {
@@ -227,6 +223,7 @@ export default function LoadoutDrawer() {
       <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
       <LoadoutDrawerOptions
         loadout={loadout}
+        storeId={storeId}
         showClass={showClass}
         isNew={isNew}
         onUpdateMods={onUpdateMods}
@@ -251,7 +248,7 @@ export default function LoadoutDrawer() {
     <Sheet onClose={close} header={header} disabled={showingItemPicker}>
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
-          <LoadoutDrawerDropTarget onDroppedItem={onDroppedItem}>
+          <LoadoutDrawerDropTarget onDroppedItem={onDroppedItem} classType={loadout.classType}>
             {warnitems.length > 0 && (
               <div className="loadout-contents">
                 <p>
@@ -260,9 +257,13 @@ export default function LoadoutDrawer() {
                 </p>
                 <div className="loadout-warn-items">
                   {warnitems.map((item) => (
-                    <div key={item.index} className="loadout-item">
+                    <div
+                      key={item.index}
+                      className="loadout-item"
+                      onClick={() => fixWarnItem(item)}
+                    >
                       <ClosableContainer onClose={() => onRemoveItem(item)}>
-                        <InventoryItem item={item} onClick={() => fixWarnItem(item)} />
+                        <ItemIcon item={item} />
                       </ClosableContainer>
                     </div>
                   ))}

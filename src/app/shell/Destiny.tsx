@@ -11,6 +11,7 @@ import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
 import { storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import ItemFeedPage from 'app/item-feed/ItemFeedPage';
 import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
 import LoadoutDrawer2 from 'app/loadout-drawer/LoadoutDrawer2';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
@@ -242,6 +243,9 @@ export default function Destiny() {
           />
           {account.destinyVersion === 2 && (
             <Route path="armory/:itemHash" element={<ArmoryPage account={account} />} />
+          )}
+          {account.destinyVersion === 2 && (
+            <Route path="item-feed" element={<ItemFeedPage account={account} />} />
           )}
           {account.destinyVersion === 1 && (
             <Route path="record-books" element={<RecordBooks account={account} />} />

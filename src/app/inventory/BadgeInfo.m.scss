@@ -63,7 +63,14 @@
 }
 
 .masterwork {
-  background-color: #eade8b;
+  background-color: $masterwork-border-color;
+}
+
+.crafted {
+  border-bottom: 1px solid $crafted-border-color;
+  border-left: 1px solid $crafted-border-color;
+  border-right: 1px solid $crafted-border-color;
+  padding: 0 1px;
 }
 
 .energyCapacity {

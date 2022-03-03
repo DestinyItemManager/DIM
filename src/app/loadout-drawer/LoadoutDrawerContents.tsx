@@ -24,6 +24,7 @@ import { addIcon, AppIcon, faTshirt } from '../shell/icons';
 import { Loadout, LoadoutItem } from './loadout-types';
 import {
   createSocketOverridesFromEquipped,
+  createSubclassDefaultSocketOverrides,
   extractArmorModHashes,
   fromEquippedTypes,
 } from './loadout-utils';
@@ -273,15 +274,11 @@ export async function pickLoadoutSubclass(
   onShowItemPicker(true);
   const item = await pickSubclass(subclassItemFilter);
   if (item) {
-    const abilitySockets =
-      item.sockets && getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.Abilities);
     let socketOverrides: SocketOverrides | undefined;
-    if (abilitySockets) {
-      socketOverrides = {};
-      for (const socket of abilitySockets) {
-        socketOverrides[socket.socketIndex] = socket.socketDefinition.singleInitialItemHash;
-      }
+    if (item.bucket.hash === BucketHashes.Subclass) {
+      socketOverrides = createSubclassDefaultSocketOverrides(item);
     }
+
     add({ item, socketOverrides });
   }
   onShowItemPicker(false);
@@ -328,6 +325,8 @@ export function fillLoadoutFromEquipped(
   itemsByBucket: { [bucketId: string]: DimItem[] },
   dimStore: DimStore,
   onUpdateLoadout: (loadout: Loadout) => void,
+  // This is a bit dangerous as it is only used from the new loadout edit drawer and
+  // has special handling that would break the old loadout drawer
   category?: string
 ) {
   if (!loadout) {
@@ -339,8 +338,8 @@ export function fillLoadoutFromEquipped(
       item.equipped &&
       itemCanBeInLoadout(item) &&
       (category
-        ? category === 'subclass'
-          ? item.bucket.hash === BucketHashes.Subclass
+        ? category === 'General'
+          ? item.bucket.hash !== BucketHashes.Subclass && item.bucket.sort === category
           : item.bucket.sort === category
         : fromEquippedTypes.includes(item.bucket.hash))
   );
@@ -413,7 +412,20 @@ export async function fillLoadoutFromUnequipped(
     return;
   }
 
-  const items = dimStore.items.filter(
+  const items = getUnequippedItemsForLoadout(dimStore, category);
+
+  // TODO: this isn't right - `items` isn't being updated after each add
+  for (const item of items) {
+    add({ item, equip: false });
+  }
+}
+
+/**
+ * filter for items that are in a character's "pockets" but not equipped,
+ * and can be added to a loadout
+ */
+export function getUnequippedItemsForLoadout(dimStore: DimStore, category?: string) {
+  return dimStore.items.filter(
     (item) =>
       !item.location.inPostmaster &&
       item.bucket.hash !== BucketHashes.Subclass &&
@@ -421,9 +433,4 @@ export async function fillLoadoutFromUnequipped(
       (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)) &&
       !item.equipped
   );
-
-  // TODO: this isn't right - `items` isn't being updated after each add
-  for (const item of items) {
-    add({ item, equip: false });
-  }
 }

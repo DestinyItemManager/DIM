@@ -175,6 +175,10 @@ export interface DimItem {
   power: number;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;
+  /** Is this crafted? (D2 only) */
+  crafted: boolean;
+  /** Does this have a highlighted (crafting) objective? (D2 Only) */
+  highlightedObjective: boolean;
   /** What percent complete is this item (considers XP and objectives). */
   percentComplete: number;
   /** The talent grid, used for D1 perks and D1/D2 subclass grids. */
@@ -195,6 +199,8 @@ export interface DimItem {
   energy: DestinyItemInstanceEnergy | null;
   /** If this item is a masterwork, this will include information about its masterwork properties. */
   masterworkInfo: DimMasterwork | null;
+  /** If this item is crafted, this includes info about its crafting properties. */
+  craftedInfo: DimCrafted | null;
   /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The state of this item in the user's D2 Collection */
@@ -233,6 +239,15 @@ export interface DimMasterwork {
     /** How much the stat is enhanced by this masterwork. */
     value?: number;
   }[];
+}
+
+export interface DimCrafted {
+  /** The level of this crafted weapon */
+  level?: number;
+  /** 0-1 progress to the next level */
+  progress?: number;
+  /** when this weapon was crafted, UTC epoch milliseconds timestamp */
+  dateCrafted?: number;
 }
 
 export interface DimStat {

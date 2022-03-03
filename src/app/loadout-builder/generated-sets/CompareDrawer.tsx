@@ -110,7 +110,13 @@ export default function CompareDrawer({
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const { loadoutItems, loadoutSubclass } = useMemo(() => {
     const equippedItems = selectedLoadout?.items.filter((item) => item.equipped);
-    const [items] = getItemsFromLoadoutItems(equippedItems, defs, buckets, allItems);
+    const [items] = getItemsFromLoadoutItems(
+      equippedItems,
+      defs,
+      selectedStore.id,
+      buckets,
+      allItems
+    );
     const loadoutItems = _.sortBy(
       items.filter((item) => LockableBucketHashes.includes(item.bucket.hash)),
       (item) => LockableBucketHashes.indexOf(item.bucket.hash)
@@ -119,7 +125,7 @@ export default function CompareDrawer({
       (item) => item.bucket.hash === BucketHashes.Subclass && item.classType === classType
     );
     return { loadoutItems, loadoutSubclass };
-  }, [selectedLoadout?.items, defs, buckets, allItems, classType]);
+  }, [selectedLoadout?.items, defs, selectedStore.id, buckets, allItems, classType]);
 
   if (!set) {
     return null;

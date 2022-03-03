@@ -47,7 +47,9 @@ const whitelistPlugCategoryToLocKey = {
 };
 
 const socketCategoryToLocKey = {
-  [SocketCategoryHashes.Abilities]: 'Ability',
+  [SocketCategoryHashes.Super]: 'Super',
+  [SocketCategoryHashes.Abilities_Abilities_DarkSubclass]: 'Ability',
+  [SocketCategoryHashes.Abilities_Abilities_LightSubclass]: 'Ability',
   [SocketCategoryHashes.Aspects]: 'Aspect',
   [SocketCategoryHashes.Fragments]: 'Fragment',
 };
@@ -102,8 +104,9 @@ export default function SocketDetailsSelectedPlug({
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const destiny2CoreSettings = useSelector(destiny2CoreSettingsSelector)!;
-  const selectedPlugPerk =
-    Boolean(plug.perks?.length) && defs.SandboxPerk.get(plug.perks[0].perkHash);
+  const plugPerkDescriptions = _.compact(
+    plug.perks?.map((p) => defs.SandboxPerk.get(p.perkHash)?.displayProperties.description)
+  );
 
   const materialRequirementSet =
     (plug.plug.insertionMaterialRequirementHash &&
@@ -218,11 +221,9 @@ export default function SocketDetailsSelectedPlug({
             <> &mdash; {plug.itemTypeDisplayName}</>
           )}
         </h3>
-        {selectedPlugPerk ? (
-          <div>{selectedPlugPerk.displayProperties.description}</div>
-        ) : (
-          plug.displayProperties.description && <div>{plug.displayProperties.description}</div>
-        )}
+        {plugPerkDescriptions.length
+          ? plugPerkDescriptions.map((desc, idx) => <div key={idx}>{desc}</div>)
+          : plug.displayProperties.description && <div>{plug.displayProperties.description}</div>}
         {sourceString && <div>{sourceString}</div>}
       </div>
       {stats.length > 0 && (

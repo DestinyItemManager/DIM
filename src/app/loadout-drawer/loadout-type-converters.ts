@@ -102,9 +102,10 @@ function migrateUpgradeSpendTierAndLockItemEnergy(parameters: DimLoadout['parame
  * storage format to the old loadout format.
  */
 export function convertDimApiLoadoutToLoadout(loadout: Loadout): DimLoadout {
-  const { equipped, unequipped, clearSpace, ...rest } = loadout;
+  const { equipped = [], unequipped = [], clearSpace, parameters, ...rest } = loadout;
   return {
     ...rest,
+    parameters: migrateUpgradeSpendTierAndLockItemEnergy(parameters),
     clearSpace: clearSpace || false,
     items: [
       ...equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
@@ -116,7 +117,7 @@ export function convertDimApiLoadoutToLoadout(loadout: Loadout): DimLoadout {
 /**
  * Converts DimApiLoadoutItem to real loadout items.
  */
-export function convertDimApiLoadoutItemToLoadoutItem(
+function convertDimApiLoadoutItemToLoadoutItem(
   item: LoadoutItem,
   equipped: boolean
 ): DimLoadoutItem {

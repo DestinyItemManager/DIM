@@ -9,19 +9,20 @@ import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats } from 'app/search/d2-known-values';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
   getFirstSocketByCategoryHash,
   getSocketsByCategoryHash,
+  getSocketsByCategoryHashes,
   getSocketsByIndexes,
 } from 'app/utils/socket-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { Loadout, LoadoutItem } from './loadout-types';
+import { DimLoadoutItem, Loadout, LoadoutItem } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics
 export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
@@ -41,6 +42,7 @@ export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Emblems,
 ];
 
+// TODO (ryan) why is this a thing? Weapons doesn't contain either of these
 const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots
 const gearSlotOrder: DimItem['type'][] = [
@@ -77,11 +79,34 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
         if (
           socket.plugged &&
           (socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash ||
-            category.category.hash === SocketCategoryHashes.Abilities)
+            category.category.hash === SocketCategoryHashes.Abilities_Abilities_DarkSubclass ||
+            category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
+            category.category.hash === SocketCategoryHashes.Super)
         ) {
           socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
         }
       }
+    }
+    return socketOverrides;
+  }
+}
+
+/**
+ * Create the socket overrides that this subclass should start with for loadout purposes.
+ */
+export function createSubclassDefaultSocketOverrides(item: DimItem) {
+  if (item.bucket.hash === BucketHashes.Subclass && item.sockets) {
+    const socketOverrides: SocketOverrides = {};
+    const abilityAndSuperSockets = getSocketsByCategoryHashes(item.sockets, [
+      SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+      SocketCategoryHashes.Abilities_Abilities_LightSubclass,
+      SocketCategoryHashes.Super,
+    ]);
+
+    for (const socket of abilityAndSuperSockets) {
+      // HACK: Void grenades do not have a singleInitialItemHash
+      socketOverrides[socket.socketIndex] =
+        socket.socketDefinition.singleInitialItemHash || socket.plugSet!.plugs[0].plugDef.hash;
     }
     return socketOverrides;
   }
@@ -182,7 +207,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
 export function getLoadoutStats(
   defs: D2ManifestDefinitions,
   classType: DestinyClass,
-  subclass: LoadoutItem | undefined,
+  subclass: DimLoadoutItem | undefined,
   armor: DimItem[],
   mods: PluggableInventoryItemDefinition[]
 ) {
@@ -210,7 +235,10 @@ export function getLoadoutStats(
     for (const plugHash of Object.values(subclass.socketOverrides)) {
       const plug = defs.InventoryItem.get(plugHash);
       for (const stat of plug.investmentStats) {
-        if (stat.statTypeHash in stats) {
+        if (
+          stat.statTypeHash in stats &&
+          isPlugStatActive(subclass, plugHash, stat.statTypeHash, stat.isConditionallyActive)
+        ) {
           stats[stat.statTypeHash].value += stat.value;
         }
       }
@@ -349,22 +377,75 @@ export function extractArmorModHashes(item: DimItem) {
   );
 }
 
-export function findItem(allItems: DimItem[], loadoutItem: LoadoutItem): DimItem | undefined {
-  // TODO: so inefficient to look through all items over and over again
-  for (const item of allItems) {
-    if (
-      (loadoutItem.id && loadoutItem.id !== '0' && loadoutItem.id === item.id) ||
-      ((!loadoutItem.id || loadoutItem.id === '0') && loadoutItem.hash === item.hash)
-    ) {
-      return item;
-    }
+/**
+ * Some items have been replaced with equivalent new items. So far that's been
+ * true of the "Light 2.0" subclasses which are an entirely different item from
+ * the old one. When loading loadouts we'd like to just use the new version.
+ */
+const oldToNewItems = {
+  // Nightstalker subclass
+  3225959819: 2453351420,
+  // Voidwalker subclass
+  3887892656: 2849050827,
+  // Sentinel subclass
+  3382391785: 2842471112,
+};
+
+/**
+ * Given a loadout item specification, find the corresponding inventory item we should use.
+ */
+export function findItemForLoadout(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  allItems: DimItem[],
+  storeId: string | undefined,
+  loadoutItem: LoadoutItem
+): DimItem | undefined {
+  const hash = oldToNewItems[loadoutItem.hash] ?? loadoutItem.hash;
+
+  const def = defs.InventoryItem.get(hash) as DestinyInventoryItemDefinition & {
+    // D1 definitions use this toplevel "instanced" field
+    instanced: boolean;
+    bucketTypeHash: number;
+  };
+
+  // Instanced items match by ID, uninstanced match by hash. It'd actually be
+  // nice to use "is random rolled or configurable" here instead but that's hard
+  // to determine.
+  // TODO: this might be nice to add to DimItem
+  const bucketHash = def.bucketTypeHash || def.inventory?.bucketTypeHash || 0;
+  const instanced =
+    (def.instanced || def.inventory?.isInstanceItem) &&
+    // Subclasses and some other types are technically instanced but should be matched by hash
+    ![
+      BucketHashes.Subclass,
+      BucketHashes.Shaders,
+      BucketHashes.Emblems,
+      BucketHashes.Emotes_Invisible,
+      BucketHashes.Emotes_Equippable,
+      D1BucketHashes.Horn,
+    ].includes(bucketHash);
+
+  // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
+  if (instanced) {
+    return allItems.find((item) => item.id === loadoutItem.id);
   }
-  return undefined;
+
+  // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
+  const candidates = allItems.filter((item) => item.hash === hash);
+  return (
+    (storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined) ??
+    candidates[0]
+  );
 }
 
-export function isMissingItems(allItems: DimItem[], loadout: Loadout): boolean {
+export function isMissingItems(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  allItems: DimItem[],
+  storeId: string,
+  loadout: Loadout
+): boolean {
   for (const loadoutItem of loadout.items) {
-    const item = findItem(allItems, loadoutItem);
+    const item = findItemForLoadout(defs, allItems, storeId, loadoutItem);
     if (!item) {
       return true;
     }

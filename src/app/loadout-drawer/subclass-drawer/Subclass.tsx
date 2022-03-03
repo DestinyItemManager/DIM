@@ -15,8 +15,8 @@ export function Subclass({
 }: {
   subclass: DimItem;
   socketOverrides: SocketOverrides;
-  equip(item: DimItem, e: React.MouseEvent<Element, MouseEvent>): void;
-  remove(item: DimItem, e: React.MouseEvent<Element, MouseEvent>): void;
+  equip(item: DimItem, e: React.MouseEvent): void;
+  remove(item: DimItem, e: React.MouseEvent): void;
   onApplySocketOverrides(item: DimItem, socketOverrides: SocketOverrides): void;
 }) {
   const defs = useD2Definitions();

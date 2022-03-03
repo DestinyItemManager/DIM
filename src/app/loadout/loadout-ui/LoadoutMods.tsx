@@ -1,3 +1,4 @@
+import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
@@ -7,7 +8,7 @@ import { addIcon, AppIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import React, { memo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import ModAssignmentDrawer from '../mod-assignment-drawer/ModAssignmentDrawer';
@@ -23,15 +24,19 @@ export default memo(function LoadoutMods({
   loadout,
   savedMods,
   storeId,
+  clearUnsetMods,
   hideShowModPlacements,
   onUpdateMods,
+  onClearUnsetModsChanged,
 }: {
   loadout: Loadout;
   savedMods: PluggableInventoryItemDefinition[];
   storeId: string;
   hideShowModPlacements?: boolean;
+  clearUnsetMods?: boolean;
   /** If present, show an "Add Mod" button */
   onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
+  onClearUnsetModsChanged?(checked: boolean): void;
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
@@ -57,7 +62,7 @@ export default memo(function LoadoutMods({
     <div className={styles.mods}>
       <div className={styles.modsGrid}>
         {savedMods.map((mod) => (
-          <PlugDef
+          <LoadoutMod
             className={clsx({
               [styles.missingItem]: !(
                 unlockedPlugSetItems.has(mod.hash) ||
@@ -66,7 +71,9 @@ export default memo(function LoadoutMods({
               ),
             })}
             key={getModRenderKey(mod)}
-            plug={mod}
+            mod={mod}
+            savedMods={savedMods}
+            onUpdateMods={onUpdateMods}
           />
         ))}
         {onUpdateMods && (
@@ -80,19 +87,33 @@ export default memo(function LoadoutMods({
           </button>
         )}
       </div>
-      {!hideShowModPlacements && (
-        <button
-          className={styles.showModPlacementButton}
-          type="button"
-          onClick={() => setShowModAssignmentDrawer(true)}
-        >
-          {t('Loadouts.ShowModPlacement')}
-        </button>
+      {(!hideShowModPlacements || onClearUnsetModsChanged) && (
+        <div className={styles.buttons}>
+          {!hideShowModPlacements && (
+            <button
+              className="dim-button"
+              type="button"
+              onClick={() => setShowModAssignmentDrawer(true)}
+            >
+              {t('Loadouts.ShowModPlacement')}
+            </button>
+          )}
+          {onClearUnsetModsChanged && (
+            <CheckButton
+              name="clearUnsetMods"
+              checked={Boolean(clearUnsetMods)}
+              onChange={onClearUnsetModsChanged}
+            >
+              {t('Loadouts.ClearUnsetMods')}
+            </CheckButton>
+          )}
+        </div>
       )}
       {showModAssignmentDrawer &&
         ReactDOM.createPortal(
           <ModAssignmentDrawer
             loadout={loadout}
+            storeId={storeId}
             onUpdateMods={onUpdateMods}
             onClose={() => setShowModAssignmentDrawer(false)}
           />,
@@ -103,6 +124,7 @@ export default memo(function LoadoutMods({
         ReactDOM.createPortal(
           <ModPicker
             classType={loadout.classType}
+            owner={storeId}
             lockedMods={savedMods}
             onAccept={onUpdateMods}
             onClose={() => setShowModPicker(false)}
@@ -112,3 +134,30 @@ export default memo(function LoadoutMods({
     </div>
   );
 });
+
+function LoadoutMod({
+  mod,
+  savedMods,
+  className,
+  onUpdateMods,
+}: {
+  mod: PluggableInventoryItemDefinition;
+  savedMods: PluggableInventoryItemDefinition[];
+  className: string;
+  onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
+}) {
+  // We need this to be undefined if `onUpdateMods` is not present as the presence of the onClose
+  // callback determines whether the close icon is displayed on hover
+  const onClose = useMemo(
+    () =>
+      onUpdateMods &&
+      (() => {
+        const firstIndex = savedMods.findIndex((savedMod) => savedMod.hash === mod.hash);
+        const newMods = [...savedMods];
+        newMods.splice(firstIndex, 1);
+        onUpdateMods(newMods);
+      }),
+    [mod.hash, onUpdateMods, savedMods]
+  );
+  return <PlugDef className={className} plug={mod} onClose={onClose} />;
+}

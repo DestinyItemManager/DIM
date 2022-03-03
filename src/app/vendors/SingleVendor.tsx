@@ -173,8 +173,9 @@ function SingleVendor({
     // search for the associated item. this is way harder than it should be, but we have what we are given
     const seasonHash = profileResponse?.profile.data?.currentSeasonHash;
     const artifactDisplay = Object.values(defs.InventoryItem.getAll()).find(
-      //     it belongs to the current season,                         and looks like an artifact
-      (i) => i.seasonHash === seasonHash && i.inventory!.stackUniqueLabel.includes('.artifacts.')
+      (i) =>
+        // belongs to the current season,                         and looks like an artifact
+        i.seasonHash === seasonHash && /\.artifacts?\./.test(i.inventory!.stackUniqueLabel ?? '')
     )?.displayProperties;
     if (artifactDisplay) {
       displayName = artifactDisplay.name;
