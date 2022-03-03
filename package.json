@@ -48,7 +48,7 @@
         "maxSize": "720kB"
       }
     ],
-    "normalizeFilenames": "^^.+?(\\-[0-9a-f]{5}.+?)\\.\\w+$"
+    "normalizeFilenames": "^.+?(\\-[0-9a-f]{5}.+?)\\.\\w+$"
   },
   "repository": {
     "type": "git",
