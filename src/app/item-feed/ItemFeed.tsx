@@ -1,11 +1,11 @@
 import CheckButton from 'app/dim-ui/CheckButton';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { getTag, TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { allItemsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import ItemPopupTrigger from 'app/item-popup/ItemPopupTrigger';
+import ConnectedInventoryItem from 'app/item/ConnectedInventoryItem';
 import { useSetting } from 'app/settings/hooks';
 import { acquisitionRecencyComparator } from 'app/shell/filters';
 import { DestinyClass } from 'bungie-api-ts/destiny2';

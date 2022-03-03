@@ -1,12 +1,12 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
+import 'app/inventory-page/Stores.scss';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import ItemIcon from 'app/inventory/ItemIcon';
 import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import 'app/inventory/Stores.scss';
 import { showItemPicker } from 'app/item-picker/item-picker';
+import ItemIcon from 'app/item/ItemIcon';
 import { deleteLoadout, updateLoadout } from 'app/loadout/actions';
 import FashionDrawer from 'app/loadout/fashion/FashionDrawer';
 import { stateReducer } from 'app/loadout/loadout-drawer-reducer';

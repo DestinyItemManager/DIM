@@ -1,3 +1,6 @@
+import { getNotes, getTag, TagValue } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
+import { isNewSelector, itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/types';
 import _ from 'lodash';
 import React from 'react';
@@ -5,10 +8,7 @@ import { connect } from 'react-redux';
 import { searchFilterSelector } from '../search/search-filter';
 import { wishListSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { getNotes, getTag, TagValue } from './dim-item-info';
 import InventoryItem from './InventoryItem';
-import { DimItem } from './item-types';
-import { isNewSelector, itemHashTagsSelector, itemInfosSelector } from './selectors';
 
 // Props provided from parents
 interface ProvidedProps {

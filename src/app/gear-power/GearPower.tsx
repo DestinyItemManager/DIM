@@ -2,7 +2,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
-import { locateItem } from 'app/inventory/locate-item';
+import { locateItem } from 'app/item/locate-item';
 import { maxLightItemSet } from 'app/loadout/auto-loadouts';
 import { getLight } from 'app/loadout/loadout-utils';
 import clsx from 'clsx';

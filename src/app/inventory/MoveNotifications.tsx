@@ -1,4 +1,6 @@
 import { t, tl } from 'app/i18next-t';
+import ConnectedInventoryItem from 'app/item/ConnectedInventoryItem';
+import ItemIcon, { DefItemIcon } from 'app/item/ItemIcon';
 import {
   LoadoutApplyPhase,
   LoadoutApplyState,
@@ -22,9 +24,7 @@ import { Observable } from 'app/utils/observable';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import ConnectedInventoryItem from './ConnectedInventoryItem';
 import { DimItem } from './item-types';
-import ItemIcon, { DefItemIcon } from './ItemIcon';
 import styles from './MoveNotifications.m.scss';
 import { DimStore } from './store-types';
 

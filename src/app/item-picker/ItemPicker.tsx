@@ -1,5 +1,6 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
+import ConnectedInventoryItem from 'app/item/ConnectedInventoryItem';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
 import { RootState } from 'app/store/types';
@@ -9,7 +10,6 @@ import React, { useMemo, useState } from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../dim-ui/Sheet';
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
 import { filterFactorySelector } from '../search/search-filter';

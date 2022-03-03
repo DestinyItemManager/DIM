@@ -1,3 +1,5 @@
+import { itemNoteSelector } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
 import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
@@ -8,8 +10,6 @@ import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
 import { getColor } from '../shell/filters';
 import styles from './BadgeInfo.m.scss';
-import { itemNoteSelector } from './dim-item-info';
-import { DimItem } from './item-types';
 import RatingIcon from './RatingIcon';
 
 const energyTypeStyles: Record<DestinyEnergyType, string> = {

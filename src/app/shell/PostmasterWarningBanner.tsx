@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { PullFromPostmaster } from 'app/inventory/PullFromPostmaster';
+import { PullFromPostmaster } from 'app/inventory-page/PullFromPostmaster';
 import { currentStoreSelector } from 'app/inventory/selectors';
 import { postmasterAlmostFull, postmasterSpaceUsed, POSTMASTER_SIZE } from 'app/loadout/postmaster';
 import clsx from 'clsx';

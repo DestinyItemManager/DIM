@@ -5,8 +5,8 @@ import { DimItem } from 'app/inventory/item-types';
 import { consolidate, distribute } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
-import ActionButton from 'app/item-actions/ActionButton';
-import LockButton from 'app/item-actions/LockButton';
+import ActionButton from 'app/item-popup/item-actions/ActionButton';
+import LockButton from 'app/item-popup/item-actions/LockButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
 import ItemTagSelector from 'app/item-popup/ItemTagSelector';
@@ -14,11 +14,11 @@ import { addItemToLoadout } from 'app/loadout/loadout-events';
 import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
+import arrowsIn from 'images/arrows-in.png';
+import arrowsOut from 'images/arrows-out.png';
+import d2Infuse from 'images/d2infuse.png';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import arrowsIn from '../../images/arrows-in.png';
-import arrowsOut from '../../images/arrows-out.png';
-import d2Infuse from '../../images/d2infuse.png';
 import styles from './ActionButtons.m.scss';
 
 interface ActionButtonProps {

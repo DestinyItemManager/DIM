@@ -1,5 +1,6 @@
 import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
+import ConnectedInventoryItem from 'app/item/ConnectedInventoryItem';
 import { applyLoadout } from 'app/loadout/loadout-apply';
 import { LoadoutItem } from 'app/loadout/loadout-types';
 import SearchBar from 'app/search/SearchBar';
@@ -13,7 +14,6 @@ import React, { useCallback, useEffect, useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector, currentStoreSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';

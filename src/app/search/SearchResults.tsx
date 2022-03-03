@@ -1,8 +1,8 @@
 import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import { t } from 'app/i18next-t';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import ItemPopupTrigger from 'app/item-popup/ItemPopupTrigger';
+import ConnectedInventoryItem from 'app/item/ConnectedInventoryItem';
+import DraggableInventoryItem from 'app/item/DraggableInventoryItem';
 import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';

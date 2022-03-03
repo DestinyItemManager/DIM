@@ -3,14 +3,9 @@ import { compareOpenSelector } from 'app/compare/selectors';
 import { ThunkResult } from 'app/store/types';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-  hideItemPopup,
-  ItemPopupExtraInfo,
-  showItemPopup,
-  showItemPopup$,
-} from '../item-popup/item-popup';
-import { clearNewItem } from './actions';
-import { DimItem } from './item-types';
+import { clearNewItem } from '../inventory/actions';
+import { DimItem } from '../inventory/item-types';
+import { hideItemPopup, ItemPopupExtraInfo, showItemPopup, showItemPopup$ } from './item-popup';
 
 interface Props {
   item: DimItem;

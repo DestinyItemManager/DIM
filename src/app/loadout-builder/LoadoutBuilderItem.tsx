@@ -1,8 +1,8 @@
+import { DimItem } from 'app/inventory/item-types';
+import ItemPopupTrigger from 'app/item-popup/ItemPopupTrigger';
+import ConnectedInventoryItem from 'app/item/ConnectedInventoryItem';
+import DraggableInventoryItem from 'app/item/DraggableInventoryItem';
 import React from 'react';
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
-import DraggableInventoryItem from '../inventory/DraggableInventoryItem';
-import { DimItem } from '../inventory/item-types';
-import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 
 /**
  * A draggable item from an armor set. Shift-clicking will exclude the item.

@@ -1,5 +1,7 @@
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
+import { storesSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import React, { useState } from 'react';
@@ -8,8 +10,6 @@ import { pullablePostmasterItems, pullFromPostmaster } from '../loadout/postmast
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
 import { queueAction } from '../utils/action-queue';
 import styles from './PullFromPostmaster.m.scss';
-import { storesSelector } from './selectors';
-import { DimStore } from './store-types';
 
 export function PullFromPostmaster({ store }: { store: DimStore }) {
   const [working, setWorking] = useState(false);

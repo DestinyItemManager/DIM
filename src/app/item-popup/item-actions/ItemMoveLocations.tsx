@@ -5,7 +5,7 @@ import { moveItemTo } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getStore, getVault } from 'app/inventory/stores-helpers';
-import ActionButton from 'app/item-actions/ActionButton';
+import ActionButton from 'app/item-popup/item-actions/ActionButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemActionsModel, StoreButtonInfo } from 'app/item-popup/item-popup-actions';
 import ItemMoveAmount from 'app/item-popup/ItemMoveAmount';

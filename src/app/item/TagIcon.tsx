@@ -1,7 +1,7 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { itemTagList, TagValue } from 'app/inventory/dim-item-info';
 import { AppIcon } from 'app/shell/icons';
 import React from 'react';
-import { itemTagList, TagValue } from './dim-item-info';
 
 const tagIcons: { [tag: string]: string | IconDefinition | undefined } = {};
 itemTagList.forEach((tag) => {

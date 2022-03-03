@@ -1,11 +1,11 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { locateItem } from 'app/inventory/locate-item';
 import {
   applySocketOverrides,
   useSocketOverridesForItems,
 } from 'app/inventory/store/override-sockets';
 import { recoilValue } from 'app/item-popup/RecoilStat';
+import { locateItem } from 'app/item/locate-item';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { statLabels } from 'app/organizer/Columns';
 import Checkbox from 'app/settings/Checkbox';

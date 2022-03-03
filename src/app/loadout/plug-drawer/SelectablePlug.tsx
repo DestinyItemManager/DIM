@@ -1,8 +1,8 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { StatValue } from 'app/item-popup/PlugTooltip';
+import { DefItemIcon } from 'app/item/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';

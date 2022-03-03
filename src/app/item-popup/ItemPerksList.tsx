@@ -1,6 +1,6 @@
 import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { DefItemIcon } from 'app/item/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';

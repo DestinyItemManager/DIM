@@ -7,7 +7,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from '../../inventory/item-types';
 import {
   AppIcon,
   lockIcon,
@@ -16,7 +16,7 @@ import {
   trackedIcon,
   unlockedIcon,
   unTrackedIcon,
-} from '../shell/icons';
+} from '../../shell/icons';
 import ActionButton from './ActionButton';
 import styles from './LockButton.m.scss';
 

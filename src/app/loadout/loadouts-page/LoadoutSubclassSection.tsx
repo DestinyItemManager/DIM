@@ -1,9 +1,9 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import ItemPopupTrigger from 'app/item-popup/ItemPopupTrigger';
+import ConnectedInventoryItem from 'app/item/ConnectedInventoryItem';
 import { DimLoadoutItem } from 'app/loadout/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';

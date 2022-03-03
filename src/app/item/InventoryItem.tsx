@@ -1,3 +1,5 @@
+import { TagValue } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
@@ -6,9 +8,7 @@ import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo from './BadgeInfo';
-import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
-import { DimItem } from './item-types';
 import ItemIcon from './ItemIcon';
 import NewItemIndicator from './NewItemIndicator';
 import { selectedSubclassPath } from './subclass';

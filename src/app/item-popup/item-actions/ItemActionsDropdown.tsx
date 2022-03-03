@@ -11,8 +11,8 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { isTagValue, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
-import { DimItem } from '../inventory/item-types';
+import { isTagValue, itemTagSelectorList, TagValue } from '../../inventory/dim-item-info';
+import { DimItem } from '../../inventory/item-types';
 import {
   AppIcon,
   clearIcon,
@@ -20,8 +20,8 @@ import {
   lockIcon,
   stickyNoteIcon,
   unlockedIcon,
-} from '../shell/icons';
-import { loadingTracker } from '../shell/loading-tracker';
+} from '../../shell/icons';
+import { loadingTracker } from '../../shell/loading-tracker';
 import styles from './ItemActionsDropdown.m.scss';
 
 interface Props {

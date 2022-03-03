@@ -1,5 +1,5 @@
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { DefItemIcon } from 'app/item/ItemIcon';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';

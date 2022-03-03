@@ -5,7 +5,6 @@ import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
-import ItemIcon from 'app/inventory/ItemIcon';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import {
@@ -20,6 +19,7 @@ import { AmmoIcon, ItemTypeName } from 'app/item-popup/ItemPopupHeader';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import ItemStats from 'app/item-popup/ItemStats';
 import MetricCategories from 'app/item-popup/MetricCategories';
+import ItemIcon from 'app/item/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';

@@ -1,4 +1,4 @@
-import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
+import ItemActionsDropdown from 'app/item-popup/item-actions/ItemActionsDropdown';
 import { querySelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { motion } from 'framer-motion';

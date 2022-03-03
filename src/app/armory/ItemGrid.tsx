@@ -3,9 +3,9 @@
  */
 
 import ItemPopup from 'app/item-popup/ItemPopup';
+import ConnectedInventoryItem from 'app/item/ConnectedInventoryItem';
 import React, { useCallback, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 
 interface PopupState {
