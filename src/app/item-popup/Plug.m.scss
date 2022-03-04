@@ -1,5 +1,9 @@
 @import '../variables.scss';
 
+.none {
+  fill: transparent;
+}
+
 // Another plug was selected by the user
 .notSelected {
   fill: #4887ba80;

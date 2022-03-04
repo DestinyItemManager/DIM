@@ -159,12 +159,13 @@ function PerkCircle({
   className?: string;
 } & PlugStatuses) {
   const enhanced = isEnhancedPerk(plug);
-  const statusClasses = clsx({
-    [styles.plugged]: plugged,
-    [styles.selected]: selected,
-    [styles.cannotRoll]: cannotRoll,
-    [styles.notSelected]: notSelected,
-  });
+  const statusClasses =
+    clsx({
+      [styles.plugged]: plugged,
+      [styles.selected]: selected,
+      [styles.cannotRoll]: cannotRoll,
+      [styles.notSelected]: notSelected,
+    }) || styles.none;
   return (
     <svg viewBox="0 0 100 100" width="100" height="100" className={className}>
       <defs>
