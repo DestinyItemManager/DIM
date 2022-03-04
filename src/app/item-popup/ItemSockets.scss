@@ -119,7 +119,7 @@
     border: 1px solid #888;
   }
 
-  img {
+  svg {
     -webkit-touch-callout: none;
     width: calc(32 / 50 * var(--item-size));
     height: calc(32 / 50 * var(--item-size));
@@ -142,7 +142,7 @@
 
   @include phone-portrait {
     padding: 2px;
-    img {
+    svg {
       width: 32px;
       height: 32px;
     }
