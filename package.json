@@ -49,7 +49,10 @@
         "compression": "brotli"
       }
     ],
-    "normalizeFilenames": "^.+?((-[0-9a-f]{6})?(-[0-9a-f]{16})?).js$"
+    "normalizeFilenames": "^.+?((-[0-9a-f]{6})?(-[0-9a-f]{16})?).js$",
+    "ci": {
+      "githubAccessToken": "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"
+    }
   },
   "repository": {
     "type": "git",

@@ -52,9 +52,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           PATCH: ${{ github.event.inputs.patch }}
 
-      - name: Set BundleWatch token
-        run: echo "BUNDLEWATCH_GITHUB_TOKEN=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" >> $GITHUB_ENV
-
       - name: Update Bundlewatch
         run: yarn bundlewatch
 
