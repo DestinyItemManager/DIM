@@ -176,9 +176,9 @@ export function LoadoutActionButton({
     return null;
   }
 
-  const addToLoadout = (e: React.MouseEvent) => {
+  const addToLoadout = () => {
     hideItemPopup();
-    addItemToLoadout(item, e);
+    addItemToLoadout(item);
   };
 
   return (

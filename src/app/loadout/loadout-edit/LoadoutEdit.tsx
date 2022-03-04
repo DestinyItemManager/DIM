@@ -101,7 +101,7 @@ export default function LoadoutEdit({
     // TODO: do these all in one action
     for (const item of items.concat(warnitems)) {
       if (item.bucket.sort === category && item.bucket.hash !== BucketHashes.Subclass) {
-        stateDispatch({ type: 'removeItem', item, items, shift: false });
+        stateDispatch({ type: 'removeItem', item, items });
       }
     }
   };
@@ -109,17 +109,15 @@ export default function LoadoutEdit({
   const handleClearSubclass = () => {
     // TODO: do these all in one action
     if (subclass) {
-      stateDispatch({ type: 'removeItem', item: subclass, items, shift: false });
+      stateDispatch({ type: 'removeItem', item: subclass, items });
     }
   };
 
-  const updateLoadout = (loadout: Loadout) => {
-    stateDispatch({ type: 'update', loadout });
-  };
+  const updateLoadout = (loadout: Loadout) => stateDispatch({ type: 'update', loadout });
 
   const onAddItem = useCallback(
-    ({ item, equip }: { item: DimItem; equip?: boolean }) =>
-      stateDispatch({ type: 'addItem', item, stores, shift: false, items, equip }),
+    (item: DimItem, equip?: boolean) =>
+      stateDispatch({ type: 'addItem', item, stores, items, equip }),
     [items, stores, stateDispatch]
   );
 
@@ -414,7 +412,7 @@ export function fillLoadoutFromEquipped(
 export async function fillLoadoutFromUnequipped(
   loadout: Loadout,
   dimStore: DimStore,
-  add: (params: { item: DimItem; equip?: boolean }) => void,
+  add: (item: DimItem, equip?: boolean) => void,
   category?: string
 ) {
   if (!loadout) {
@@ -425,7 +423,7 @@ export async function fillLoadoutFromUnequipped(
 
   // TODO: this isn't right - `items` isn't being updated after each add
   for (const item of items) {
-    add({ item, equip: false });
+    add(item, false);
   }
 }
 

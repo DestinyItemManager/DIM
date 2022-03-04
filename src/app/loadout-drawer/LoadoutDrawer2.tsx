@@ -148,11 +148,10 @@ export default function LoadoutDrawer2() {
   const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
 
   const onAddItem = useCallback(
-    (item: DimItem, e?: MouseEvent | React.MouseEvent, equip?: boolean) =>
+    (item: DimItem, equip?: boolean) =>
       stateDispatch({
         type: 'addItem',
         item,
-        shift: Boolean(e?.shiftKey),
         items,
         equip,
         stores,
@@ -163,10 +162,7 @@ export default function LoadoutDrawer2() {
   /**
    * If an item comes in on the addItem$ observable, add it.
    */
-  useEventBusListener(
-    addItem$,
-    useCallback(({ item, clickEvent }) => onAddItem(item, clickEvent), [onAddItem])
-  );
+  useEventBusListener(addItem$, onAddItem);
 
   const close = () => {
     stateDispatch({ type: 'reset' });
@@ -226,8 +222,7 @@ export default function LoadoutDrawer2() {
   const handleNameChanged = (name: string) =>
     stateDispatch({ type: 'update', loadout: { ...loadout, name } });
 
-  const handleRemoveItem = (item: DimItem, e?: React.MouseEvent) =>
-    stateDispatch({ type: 'removeItem', item, shift: Boolean(e?.shiftKey), items });
+  const handleRemoveItem = (item: DimItem) => stateDispatch({ type: 'removeItem', item, items });
 
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (warnItem: DimItem) => {
@@ -283,12 +278,7 @@ export default function LoadoutDrawer2() {
     bucket: InventoryBucket;
     equip: boolean;
   }) => {
-    pickLoadoutItem(
-      loadout,
-      bucket,
-      ({ item }) => onAddItem(item, undefined, equip),
-      setShowingItemPicker
-    );
+    pickLoadoutItem(loadout, bucket, (item) => onAddItem(item, equip), setShowingItemPicker);
   };
   const handleClickSubclass = (subclass: DimItem | undefined) =>
     pickLoadoutSubclass(
@@ -363,11 +353,7 @@ export default function LoadoutDrawer2() {
           <button
             type="button"
             className="dim-button"
-            onClick={() =>
-              fillLoadoutFromUnequipped(loadout, store, ({ item }) =>
-                onAddItem(item, undefined, false)
-              )
-            }
+            onClick={() => fillLoadoutFromUnequipped(loadout, store, onAddItem)}
           >
             <AppIcon icon={addIcon} /> {t('Loadouts.FillFromInventory')}
           </button>
@@ -422,7 +408,7 @@ function filterLoadoutToAllowedItems(
 async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
-  add: (params: { item: DimItem }) => void,
+  add: (item: DimItem) => void,
   onShowItemPicker: (shown: boolean) => void
 ) {
   const loadoutClassType = loadout?.classType;
@@ -448,7 +434,7 @@ async function pickLoadoutItem(
       ignoreSelectedPerks: true,
     });
 
-    add({ item });
+    add(item);
   } catch (e) {
   } finally {
     onShowItemPicker(false);

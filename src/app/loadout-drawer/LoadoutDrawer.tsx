@@ -68,11 +68,10 @@ export default function LoadoutDrawer() {
   );
 
   const onAddItem = useCallback(
-    ({ item, e, equip }: { item: DimItem; e?: MouseEvent | React.MouseEvent; equip?: boolean }) =>
+    (item: DimItem, equip?: boolean) =>
       stateDispatch({
         type: 'addItem',
         item,
-        shift: Boolean(e?.shiftKey),
         items,
         equip,
         stores,
@@ -82,7 +81,7 @@ export default function LoadoutDrawer() {
 
   const onRemoveItem = (item: DimItem, e?: React.MouseEvent) => {
     e?.stopPropagation();
-    stateDispatch({ type: 'removeItem', item, shift: Boolean(e?.shiftKey), items });
+    stateDispatch({ type: 'removeItem', item, items });
   };
 
   const onEquipItem = (item: DimItem) => stateDispatch({ type: 'equipItem', item, items });
@@ -90,10 +89,7 @@ export default function LoadoutDrawer() {
   /**
    * If an item comes in on the addItem$ rx observable, add it.
    */
-  useEventBusListener(
-    addItem$,
-    useCallback(({ item, clickEvent }) => onAddItem({ item, e: clickEvent }), [onAddItem])
-  );
+  useEventBusListener(addItem$, onAddItem);
 
   const close = () => {
     stateDispatch({ type: 'reset' });
@@ -125,7 +121,7 @@ export default function LoadoutDrawer() {
         ignoreSelectedPerks: true,
       });
 
-      onAddItem({ item });
+      onAddItem(item);
       onRemoveItem(warnItem);
     } catch (e) {
     } finally {
@@ -166,8 +162,6 @@ export default function LoadoutDrawer() {
     onSaveLoadout(e, newLoadout);
   };
 
-  const onDroppedItem = useCallback((item) => onAddItem({ item }), [onAddItem]);
-
   if (!loadout) {
     return null;
   }
@@ -207,7 +201,7 @@ export default function LoadoutDrawer() {
     <Sheet onClose={close} header={header} disabled={showingItemPicker}>
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
-          <LoadoutDrawerDropTarget onDroppedItem={onDroppedItem} classType={loadout.classType}>
+          <LoadoutDrawerDropTarget onDroppedItem={onAddItem} classType={loadout.classType}>
             {warnitems.length > 0 && (
               <div className="loadout-contents">
                 <p>
