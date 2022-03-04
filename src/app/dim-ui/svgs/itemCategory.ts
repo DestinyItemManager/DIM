@@ -1,4 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';
@@ -11,6 +12,7 @@ import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
 import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg';
+import glaive from 'destiny-icons/weapons/glaive.svg';
 import gLauncher_special from 'destiny-icons/weapons/grenade_launcher-field_forged.svg';
 import gLauncher from 'destiny-icons/weapons/grenade_launcher.svg';
 import handCannon from 'destiny-icons/weapons/hand_cannon.svg';
@@ -26,37 +28,39 @@ import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 
 const weaponTypeSvgByCategoryHash = {
-  5: autoRifle,
-  6: handCannon,
-  7: pulseRifle,
-  8: scoutRifle,
-  9: fusionRifle,
-  10: sniperRifle,
-  11: shotgun,
-  12: machinegun,
-  13: rLauncher,
-  14: sidearm,
-  54: sword,
-  153950757: gLauncher,
-  [-153950757]: gLauncher_special,
-  2489664120: traceRifle,
-  1504945536: lFusionRifle,
-  3954685534: smg,
-  3317538576: bow,
+  [ItemCategoryHashes.AutoRifle]: autoRifle,
+  [ItemCategoryHashes.HandCannon]: handCannon,
+  [ItemCategoryHashes.PulseRifle]: pulseRifle,
+  [ItemCategoryHashes.ScoutRifle]: scoutRifle,
+  [ItemCategoryHashes.FusionRifle]: fusionRifle,
+  [ItemCategoryHashes.SniperRifle]: sniperRifle,
+  [ItemCategoryHashes.Shotgun]: shotgun,
+  [ItemCategoryHashes.MachineGun]: machinegun,
+  [ItemCategoryHashes.RocketLauncher]: rLauncher,
+  [ItemCategoryHashes.Sidearm]: sidearm,
+  [ItemCategoryHashes.Sword]: sword,
+  [ItemCategoryHashes.GrenadeLaunchers]: gLauncher,
+  [-ItemCategoryHashes.GrenadeLaunchers]: gLauncher_special,
+  [ItemCategoryHashes.TraceRifles]: traceRifle,
+  [ItemCategoryHashes.LinearFusionRifles]: lFusionRifle,
+  [ItemCategoryHashes.SubmachineGuns]: smg,
+  [ItemCategoryHashes.Bows]: bow,
+  // TODO: Update when Bungie releases Glaive ICH
+  [ItemCategoryHashes.Glaives]: glaive,
 };
 
 const weaponSlotSvgByCategoryHash = {
-  2: dmgKinetic,
-  3: energyWeapon,
-  4: powerWeapon,
+  [ItemCategoryHashes.KineticWeapon]: dmgKinetic,
+  [ItemCategoryHashes.EnergyWeapon]: energyWeapon,
+  [ItemCategoryHashes.PowerWeapon]: powerWeapon,
 };
 
 const armorSlotSvgByCategoryHash = {
-  45: helmet,
-  46: gauntlets,
-  47: chest,
-  48: legs,
-  49: classItem,
+  [ItemCategoryHashes.Helmets]: helmet,
+  [ItemCategoryHashes.Arms]: gauntlets,
+  [ItemCategoryHashes.Chest]: chest,
+  [ItemCategoryHashes.Legs]: legs,
+  [ItemCategoryHashes.ClassItems]: classItem,
 };
 
 /** an SVG of the weapon's type, if determinable */
