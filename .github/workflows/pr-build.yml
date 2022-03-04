@@ -33,10 +33,10 @@ jobs:
         env:
           PR_BUILD: true
 
-      - name: bundlewatch.io
-        run: yarn bundlewatch
-        env:
-          BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
+      - name: Bundlewatch Check
+        uses: jackyef/bundlewatch-gh-action@0.2.0
+        with:
+          bundlewatch-github-token: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
   test:
     runs-on: ubuntu-latest

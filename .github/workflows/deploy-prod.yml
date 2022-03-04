@@ -52,10 +52,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           PATCH: ${{ github.event.inputs.patch }}
 
-      - name: bundlewatch.io
-        run: yarn bundlewatch
-        env:
-          BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
+      - name: Update Bundlewatch
+        uses: jackyef/bundlewatch-gh-action@0.2.0
+        with:
+          bundlewatch-github-token: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
       - name: Purge CloudFlare cache
         run: ./build/purge-cloudflare.sh
