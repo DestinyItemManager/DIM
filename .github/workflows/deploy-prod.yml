@@ -53,7 +53,7 @@ jobs:
           PATCH: ${{ github.event.inputs.patch }}
 
       - name: Update Bundlewatch
-        run: yarn bundlewatch
+        run: yarn bw
 
       - name: Purge CloudFlare cache
         run: ./build/purge-cloudflare.sh

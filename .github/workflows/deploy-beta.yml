@@ -43,7 +43,7 @@ jobs:
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
 
       - name: Update Bundlewatch
-        run: yarn bundlewatch
+        run: yarn bw
 
       - name: Check Syntax
         run: yarn syntax
