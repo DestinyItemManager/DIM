@@ -788,6 +788,7 @@ export const enum ItemCategoryHashes {
   GhostModsPerks = 4176831154,
   GhostModsProjections = 1404791674,
   GhostModsTrackers = 1826038950,
+  Glaives = -7777777,
   GrenadeLaunchers = 153950757,
   HandCannon = 6,
   Helmets = 45,
