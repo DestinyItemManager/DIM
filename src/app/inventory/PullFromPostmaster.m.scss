@@ -7,14 +7,18 @@
   padding: 0 4px;
   color: black;
   font-size: 9px;
+  transition: all 150ms ease-out;
 }
 
 .button {
+  composes: dim-button from global;
   align-self: center;
-}
-
-.buttonContents {
-  align-items: center;
   display: inline-flex;
+  align-items: center;
   @include horizontal-space-children(4px);
+
+  &:hover .badge {
+    background-color: black;
+    color: $orange;
+  }
 }

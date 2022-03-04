@@ -17,6 +17,8 @@ export interface Settings extends DimApiSettings {
   loadoutSort: LoadoutSort;
   itemFeedHideTagged: boolean;
   itemFeedExpanded: boolean;
+  /** Pull from postmaster is an irreversible action and some people don't want to accidentally hit it. */
+  hidePullFromPostmaster: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -27,4 +29,5 @@ export const initialSettingsState: Settings = {
   loadoutSort: LoadoutSort.ByEditTime,
   itemFeedHideTagged: true,
   itemFeedExpanded: false,
+  hidePullFromPostmaster: false,
 };

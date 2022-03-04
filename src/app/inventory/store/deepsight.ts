@@ -1,16 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { resonantElementTagsByObjectiveHash } from 'data/d2/crafting-resonant-elements';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { DimDeepsight, DimItem, DimResonantElement, DimSocket } from '../item-types';
 
-const resonantElementTagsByObjectiveHash: Record<number, string> = {
-  2215515944: 'ruinous',
-  2215515945: 'adroit',
-  2215515946: 'mutable',
-  2215515947: 'energetic',
-
-  // todo: add an entry for Drowned Elements once these are un-redacted
-  // ???: 'drowned'
-} as const;
 export type DimResonantElementTag =
   typeof resonantElementTagsByObjectiveHash[keyof typeof resonantElementTagsByObjectiveHash];
 export const resonantElementTags: DimResonantElementTag[] = Object.values(

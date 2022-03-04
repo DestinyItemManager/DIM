@@ -289,6 +289,7 @@
     "Wishlist": "Shows items that match your wish list.",
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "WishlistNotes": "Shows wish listed items whose notes match the search.",
+    "WishlistUnknown": "Shows items with no roll recommendations in the loaded wish lists.",
     "Year": "Shows items from which year of Destiny they appeared in."
   },
   "General": {
@@ -856,6 +857,7 @@
     "ExportSS": "Inventory spreadsheets",
     "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
     "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
+    "HidePullFromPostmaster": "Hide the \"Pull From Postmaster\" button",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",

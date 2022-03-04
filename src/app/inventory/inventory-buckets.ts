@@ -31,7 +31,6 @@ export type DimBucketType = D2BucketTypes | D2AdditionalBucketTypes | D1BucketTy
 
 export interface InventoryBuckets {
   byHash: { [hash: number]: InventoryBucket };
-  byType: { [type: string]: InventoryBucket };
   byCategory: { [category: string]: InventoryBucket[] };
   unknown: InventoryBucket; // TODO: get rid of this?
   setHasUnknown(): void;

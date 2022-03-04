@@ -1,6 +1,7 @@
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
+import { D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
@@ -38,7 +39,7 @@ export default function LoadoutItemCategorySection({
   loadout,
   hideOptimizeArmor,
 }: {
-  category: string;
+  category: D2BucketCategory;
   subclass?: DimLoadoutItem;
   storeId?: string;
   items?: DimLoadoutItem[];

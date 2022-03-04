@@ -42,13 +42,8 @@ export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Emblems,
 ];
 
-// TODO (ryan) why is this a thing? Weapons doesn't contain either of these
-const excludeGearSlots = ['Class', 'SeasonalArtifacts'];
 // order to display a list of all 8 gear slots
-const gearSlotOrder: DimItem['type'][] = [
-  ...D2Categories.Weapons.filter((t) => !excludeGearSlots.includes(t)),
-  ...D2Categories.Armor,
-];
+const gearSlotOrder: BucketHashes[] = [...D2Categories.Weapons, ...D2Categories.Armor];
 
 /**
  * Creates a new loadout, with all of the items equipped and the items inserted mods saved.
@@ -266,7 +261,7 @@ export function optimalItemSet(
 
   // Pick the best item
   let items = _.mapValues(itemsByType, (items) => _.maxBy(items, bestItemFn)!);
-  const unrestricted = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.type));
+  const unrestricted = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.bucket.hash));
 
   // Solve for the case where our optimizer decided to equip two exotics
   const getLabel = (i: DimItem) => i.equippingLabel;
@@ -308,7 +303,7 @@ export function optimalItemSet(
     }
   });
 
-  const equippable = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.type));
+  const equippable = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.bucket.hash));
 
   return { equippable, unrestricted };
 }
