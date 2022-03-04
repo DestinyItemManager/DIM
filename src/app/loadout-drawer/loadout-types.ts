@@ -5,7 +5,8 @@ export interface LoadoutItem {
   id: string;
   hash: number;
   amount: number;
-  equipped: boolean;
+  /** Whether or not the item should be equipped when the loadout is applied. */
+  equip: boolean;
   /**
    * A map of socketIndex's to item hashes for plugs that override the current items plugs in
    * the loadout.

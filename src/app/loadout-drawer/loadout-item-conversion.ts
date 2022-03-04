@@ -37,7 +37,7 @@ export function getItemsFromLoadoutItems(
     if (item) {
       // If there are any mods for this item's bucket, and the item is equipped, add them to socket overrides
       const modsForBucket =
-        loadoutItem.equipped && modsByBucket ? modsByBucket[item.bucket.hash] ?? [] : [];
+        loadoutItem.equip && modsByBucket ? modsByBucket[item.bucket.hash] ?? [] : [];
 
       let overrides = loadoutItem.socketOverrides;
 
@@ -57,7 +57,7 @@ export function getItemsFromLoadoutItems(
         ? makeFakeItem(defs, buckets, undefined, loadoutItem.hash)
         : makeFakeD1Item(defs, buckets, loadoutItem.hash);
       if (fakeItem) {
-        fakeItem.equipped = loadoutItem.equipped;
+        fakeItem.equipped = loadoutItem.equip;
         fakeItem.socketOverrides = loadoutItem.socketOverrides;
         fakeItem.id = loadoutItem.id;
         warnitems.push(fakeItem);

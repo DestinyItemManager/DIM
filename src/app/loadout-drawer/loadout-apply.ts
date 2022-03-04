@@ -241,7 +241,7 @@ function doApplyLoadout(
             const item = getLoadoutItem(loadoutItem)!;
             state.itemStates[item.index] = {
               item,
-              equip: loadoutItem.equipped,
+              equip: loadoutItem.equip,
               state: LoadoutItemState.Pending,
             };
           }
@@ -288,7 +288,7 @@ function doApplyLoadout(
               item.location.inPostmaster ||
               // Needs to be equipped. Stuff not marked "equip" doesn't
               // necessarily mean to de-equip it.
-              (loadoutItem.equipped && !item.equipped) ||
+              (loadoutItem.equip && !item.equipped) ||
               // We always try to move consumable stacks because their logic is complicated
               (loadoutItem.amount && loadoutItem.amount > 1));
 
@@ -309,16 +309,16 @@ function doApplyLoadout(
       // The vault can't equip items, so set equipped to false
       if (store.isVault) {
         for (const loadoutItem of loadoutItemsToMove) {
-          loadoutItem.equipped = false;
+          loadoutItem.equip = false;
         }
       }
 
-      let itemsToEquip = loadoutItemsToMove.filter((i) => i.equipped);
+      let itemsToEquip = loadoutItemsToMove.filter((i) => i.equip);
       // If we need to equip many items at once, we'll use a single bulk-equip later
       if (itemsToEquip.length > 1) {
         // TODO: just set a bulkEquip flag
         itemsToEquip.forEach((i) => {
-          i.equipped = false;
+          i.equip = false;
         });
       }
 
@@ -645,7 +645,7 @@ function applyLoadoutItem(
       // Normal items get a straightforward move
       await dispatch(
         executeMoveItem(item, store, {
-          equip: loadoutItem.equipped,
+          equip: loadoutItem.equip,
           amount: item.amount,
           excludes,
           cancelToken,
@@ -918,7 +918,7 @@ function applyLoadoutMods(
     // item in the loadout, use the current equipped item (whatever it is)
     // instead.
     const currentEquippedArmor = store.items.filter((i) => i.bucket.inArmor && i.equipped);
-    const equippedLoadoutItems = loadoutItems.filter((item) => item.equipped);
+    const equippedLoadoutItems = loadoutItems.filter((item) => item.equip);
     const loadoutDimItems: DimItem[] = [];
     for (const loadoutItem of loadoutItems) {
       const item = getLoadoutItem(loadoutItem);

@@ -13,8 +13,8 @@ import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from './loadout-
  */
 export function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
   const { items, name, clearSpace, parameters, ...rest } = dimLoadout;
-  const equipped = items.filter((i) => i.equipped).map(convertDimLoadoutItemToLoadoutItem);
-  const unequipped = items.filter((i) => !i.equipped).map(convertDimLoadoutItemToLoadoutItem);
+  const equipped = items.filter((i) => i.equip).map(convertDimLoadoutItemToLoadoutItem);
+  const unequipped = items.filter((i) => !i.equip).map(convertDimLoadoutItemToLoadoutItem);
 
   const loadout: Loadout = {
     ...rest,
@@ -126,6 +126,6 @@ function convertDimApiLoadoutItemToLoadoutItem(
     hash: item.hash,
     amount: item.amount || 1,
     socketOverrides: item.socketOverrides,
-    equipped,
+    equip: equipped,
   };
 }

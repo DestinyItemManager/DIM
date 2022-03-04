@@ -347,13 +347,16 @@ export function backupLoadout(store: DimStore, name: string): Loadout {
 /**
  * Converts DimItem or other LoadoutItem-like objects to real loadout items.
  */
-export function convertToLoadoutItem(item: LoadoutItem, equipped: boolean) {
+export function convertToLoadoutItem(
+  item: Pick<LoadoutItem, 'id' | 'hash' | 'amount' | 'socketOverrides'>,
+  equip: boolean
+) {
   return {
     id: item.id,
     hash: item.hash,
     amount: item.amount,
     socketOverrides: item.socketOverrides,
-    equipped,
+    equip,
   };
 }
 

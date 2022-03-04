@@ -344,7 +344,7 @@ async function transferItems(
         id: '0',
         hash: 937555249,
         amount: 2,
-        equipped: false,
+        equip: false,
       });
     } else if (target.bucket.sort === 'Weapons') {
       // Weapon Parts
@@ -352,7 +352,7 @@ async function transferItems(
         id: '0',
         hash: 1898539128,
         amount: 10,
-        equipped: false,
+        equip: false,
       });
     } else {
       // Armor Materials
@@ -360,7 +360,7 @@ async function transferItems(
         id: '0',
         hash: 1542293174,
         amount: 10,
-        equipped: false,
+        equip: false,
       });
     }
     if (source.isExotic) {
@@ -369,7 +369,7 @@ async function transferItems(
         id: '0',
         hash: 452597397,
         amount: 1,
-        equipped: false,
+        equip: false,
       });
     }
   }
