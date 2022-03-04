@@ -1,14 +1,27 @@
 ## Next
 
+* The "Pull From Postmaster" button no longer requires a second tap to confirm. For those who dislike this button, it may be removed entirely via a setting in the Settings page.
 * When you have 10 or more loadouts, a search box will appear in the Inventory page loadout dropdown, allowing you to search names just like on the Loadouts page.
 * Old loadouts with void subclasses in them will upgrade automatically to the new version with fragments and aspects, instead of telling you the loadout is missing an item.
 * Removed D2Gunsmith link from the item details popup while they work on revamping the site for all the new changes.
 * The Item Feed is available on both desktop and mobile. It shows your gear in the order it dropped, and gives you quick controls to tag incoming loot. Click on the item tile to get the full item popup.
-* Tagging an item from the Item Feed also marks it as not-new.
+  * Item Feed also got better at identifying relevant weapon perks.
+  * Tagging an item from the Item Feed also marks it as not-new.
 * Added `deepsight:complete` and `deepsight:incomplete` filters.
 * Added `is:craftable` filter.
+* Added `is:wishlistunknown` filter which highlights items that have no rolls in the currently loaded wishlist.
+* Removed the `level:` filter from D2 as equip required level no longer matters.
+* Season of the Risen War Table Upgrades are now in the right order and show their acquired status.
 * Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
 * Added `deepsight:ruinous`, `deepsight:adroit`, `deepsight:mutable` and `deepsight:energetic` filters to identify Deepsight Resonance weapons that allow extraction of a specific Resonant Element.
+* We have brand new Loadout Editor! Check it out from the character menu or the Loadouts page.
+  * The layout mirrors the Loadout page's new design which has clear areas for different types of items. Each section also has a menu of additional actions like re-syncing from your currently equipped items, or clearing out a whole section.
+  * As part of this change, we're removing support for "multi-class" loadouts. Loadouts will either be tied to one class, or can be toggled to "Any Class". "Any Class" loadouts cannot contain Subclass, Armor, or Fashion. If you edit an existing "Any Class" loadout and save it, those items will be removed unless you turn off "Any Class".
+  * Double-click items to toggle between equipped and unequipped instead of single clicking. We'll be continuing to improve how you choose items and specify whether they're equipped in the future.
+  * A new setting allows you to clear out all other mods from your armor when applying a loadout. This works even if you've chosen no mods in your loadout, so you can make a "Reset mods" loadout.
+  * With this new design we have space to add even more loadout editing tools over the next few seasons.
+  * The loadout editor stays open if you navigate to the Inventory or Loadouts screen while it's already open.
+  * The new Loadout Editor is not available for D1.
 
 ## 7.7.0 <span class="changelog-date">(2022-02-28)</span>
 

@@ -1,9 +1,13 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import {
+  D1ActivityComponent,
+  D1FactionDefinition,
+  D1RecordBook,
+} from 'app/destiny1/d1-manifest-types';
+import {
   DestinyClass,
   DestinyColor,
   DestinyDisplayPropertiesDefinition,
-  DestinyFactionDefinition,
   DestinyProgression,
 } from 'bungie-api-ts/destiny2';
 import React from 'react';
@@ -112,10 +116,7 @@ export interface DimCharacterStat {
 
 export interface D1Progression extends DestinyProgression {
   /** The faction definition associated with this progress. */
-  faction: DestinyFactionDefinition & {
-    factionName: string;
-    factionIcon: string;
-  };
+  faction: D1FactionDefinition;
   order: number;
 }
 
@@ -127,7 +128,7 @@ export interface D1Store extends DimStore<D1Item> {
 
   // TODO: shape?
   advisors: {
-    recordBooks?: any;
-    activities?: any;
+    recordBooks?: D1RecordBook[];
+    activities?: { [activityId: string]: D1ActivityComponent };
   };
 }

@@ -1,3 +1,4 @@
+import { D1ObjectiveDefinition } from 'app/destiny1/d1-manifest-types';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { DestinyObjectiveDefinition } from 'bungie-api-ts/destiny2';
 import React from 'react';
@@ -8,13 +9,16 @@ export default function ObjectiveDescription({
   objectiveDef,
 }: {
   progressDescription: string;
-  objectiveDef?: DestinyObjectiveDefinition;
+  objectiveDef?: DestinyObjectiveDefinition | D1ObjectiveDefinition;
 }) {
+  const icon =
+    objectiveDef && 'displayProperties' in objectiveDef && objectiveDef.displayProperties.hasIcon
+      ? objectiveDef.displayProperties.icon
+      : undefined;
+
   return (
     <div className="objective-description">
-      {objectiveDef?.displayProperties.hasIcon && (
-        <BungieImage src={objectiveDef.displayProperties.icon} />
-      )}
+      {icon && <BungieImage src={icon} />}
       <RichDestinyText text={progressDescription} />
     </div>
   );

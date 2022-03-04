@@ -1,8 +1,14 @@
 import { handleAuthErrors } from 'app/accounts/actions';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import {
+  D1CharacterResponse,
+  D1ItemComponent,
+  D1VaultResponse,
+} from 'app/destiny1/d1-manifest-types';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
+import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { getStores } from '../bungie-api/destiny1-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
@@ -90,23 +96,21 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
   };
 }
 
-function processCurrencies(rawStores: any[], defs: D1ManifestDefinitions) {
+function processCurrencies(rawStores: D1CharacterResponse[], defs: D1ManifestDefinitions) {
   try {
-    return rawStores[0].character.base.inventory.currencies.map(
-      (c: { itemHash: number; value: any }) => {
-        const itemDef = defs.InventoryItem.get(c.itemHash);
-        return {
-          itemHash: c.itemHash,
-          quantity: c.value,
-          displayProperties: {
-            name: itemDef.itemName,
-            description: itemDef.itemDescription,
-            icon: itemDef.icon,
-            hasIcon: Boolean(itemDef.icon),
-          },
-        };
-      }
-    );
+    return rawStores[0].character.base.inventory.currencies.map((c) => {
+      const itemDef = defs.InventoryItem.get(c.itemHash);
+      return {
+        itemHash: c.itemHash,
+        quantity: c.value,
+        displayProperties: {
+          name: itemDef.itemName,
+          description: itemDef.itemDescription,
+          icon: itemDef.icon,
+          hasIcon: Boolean(itemDef.icon),
+        } as DestinyDisplayPropertiesDefinition,
+      };
+    });
   } catch (e) {
     infoLog('d1-stores', 'error processing currencies', e);
   }
@@ -117,15 +121,7 @@ function processCurrencies(rawStores: any[], defs: D1ManifestDefinitions) {
  * Process a single store from its raw form to a DIM store, with all the items.
  */
 function processStore(
-  raw: {
-    id: string;
-    data: { buckets: any };
-    character: {
-      base: any;
-      progression: { progressions: never[] };
-      advisors: any;
-    };
-  },
+  raw: D1CharacterResponse | D1VaultResponse,
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets,
   lastPlayedDate: Date
@@ -135,13 +131,13 @@ function processStore(
   }
 
   let store: D1Store;
-  let rawItems: any[];
+  let rawItems: D1ItemComponent[];
   if (raw.id === 'vault') {
-    const result = makeVault(raw);
+    const result = makeVault(raw as D1VaultResponse);
     store = result.store;
     rawItems = result.items;
   } else {
-    const result = makeCharacter(raw, defs, lastPlayedDate);
+    const result = makeCharacter(raw as D1CharacterResponse, defs, lastPlayedDate);
     store = result.store;
     rawItems = result.items;
   }

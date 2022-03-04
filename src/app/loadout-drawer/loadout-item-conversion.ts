@@ -57,8 +57,15 @@ export function getItemsFromLoadoutItems(
           (defs.isDestiny2() && makeFakeItem(defs, buckets, undefined, loadoutItem.hash)) ||
           ({
             ...loadoutItem,
-            icon: itemDef.displayProperties?.icon || itemDef.icon,
-            name: itemDef.displayProperties?.name || itemDef.itemName,
+            icon: 'displayProperties' in itemDef ? itemDef.displayProperties?.icon : itemDef.icon,
+            name:
+              'displayProperties' in itemDef ? itemDef.displayProperties?.name : itemDef.itemName,
+            bucket:
+              buckets.byHash[
+                'bucketTypeHash' in itemDef
+                  ? itemDef.bucketTypeHash
+                  : itemDef.inventory!.bucketTypeHash
+              ],
           } as DimLoadoutItem);
         fakeItem.equipped = loadoutItem.equipped;
         fakeItem.socketOverrides = loadoutItem.socketOverrides;
