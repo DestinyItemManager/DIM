@@ -33,7 +33,81 @@ jobs:
         env:
           PR_BUILD: true
 
-      - name: bundlewatch.io
-        run: yarn bundlewatch
+      - name: Bundlewatch Check
+        uses: jackyef/bundlewatch-gh-action@0.2.0
+        with:
+          bundlewatch-github-token: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: GitHub Slug Action
+        uses: rlespinasse/github-slug-action@4.0.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
+
+      - name: Jest Annotations & Coverage
+        if: ${{ env.GITHUB_REPOSITORY_OWNER_PART == 'DestinyItemManager' }}
+        uses: mattallty/jest-github-action@v1.0.3
         env:
-          BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          coverage-comment: false
+
+      - name: Jest Test
+        if: ${{ env.GITHUB_REPOSITORY_OWNER_PART != 'DestinyItemManager' }}
+        run: yarn test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: GitHub Slug Action
+        uses: rlespinasse/github-slug-action@4.0.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Cache ESLint
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-eslint
+        with:
+          path: ~/.eslintcache
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
+            ${{ runner.os }}-${{ env.cache-name }}-
+
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
+
+      - name: Save ESLint Report JSON
+        run: yarn lint-report:cached
+        continue-on-error: true
+
+      - name: Annotate ESLint Results
+        if: ${{ env.GITHUB_REPOSITORY_OWNER_PART == 'DestinyItemManager' }}
+        uses: ataylorme/eslint-annotate-action@1.2.0
+        continue-on-error: true
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          report-json: "eslint_report.json"
+          fail-on-warning: true
+
+      - name: ESLint
+        if: ${{ env.GITHUB_REPOSITORY_OWNER_PART != 'DestinyItemManager' }}
+        run: yarn lintcached
