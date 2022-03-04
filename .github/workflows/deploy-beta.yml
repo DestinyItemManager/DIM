@@ -42,10 +42,11 @@ jobs:
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
 
+      - name: Set BundleWatch token
+        run: echo "BUNDLEWATCH_GITHUB_TOKEN=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" >> $GITHUB_ENV
+
       - name: Update Bundlewatch
-        uses: jackyef/bundlewatch-gh-action@0.2.0
-        with:
-          bundlewatch-github-token: "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"
+        run: yarn bundlewatch
 
       - name: Check Syntax
         run: yarn syntax

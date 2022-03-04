@@ -45,10 +45,11 @@
     "files": [
       {
         "path": "dist/*.js",
-        "maxSize": "720kB"
+        "maxSize": "512kB",
+        "compression": "brotli"
       }
     ],
-    "normalizeFilenames": "^.+?(\\-[0-9a-f]{5}.+?)\\.\\w+$"
+    "normalizeFilenames": "^.+?((-[0-9a-f]{6})?(-[0-9a-f]{16})?).js$"
   },
   "repository": {
     "type": "git",
@@ -109,6 +110,7 @@
     "babel-plugin-lodash": "^3.3.2",
     "babel-plugin-optimize-clsx": "^2.5.0",
     "babel-plugin-transform-imports": "^2.0.0",
+    "brotli-size": "^4.0.0",
     "browserslist": "^4.0.0",
     "bundlewatch": "^0.3.3",
     "clean-webpack-plugin": "^4.0.0",
