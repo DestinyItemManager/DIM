@@ -65,7 +65,7 @@ const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | undefined = 
 export function ArmorSlotSpecificModSocketIcon({ item, className, lowRes }: ModSlotIconProps) {
   const defs = useD2Definitions()!;
   const foundSocket = getArmorSlotSpecificModSocket(item);
-  // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+
   const emptySocketHash = foundSocket && foundSocket.socketDefinition.singleInitialItemHash;
   const emptySocketIcon = emptySocketHash && defs.InventoryItem.get(emptySocketHash);
   return emptySocketIcon ? (
