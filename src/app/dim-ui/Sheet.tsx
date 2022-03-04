@@ -183,32 +183,29 @@ export default function Sheet({
   useGlobalEscapeKey(handleClose);
 
   // This handles all drag interaction. The callback is called without re-render.
-  const bindDrag = useDrag(
-    ({ event, active, movement, velocity, last, cancel }) => {
-      event?.stopPropagation();
+  const bindDrag = useDrag(({ event, active, movement, velocity, last, cancel }) => {
+    event?.stopPropagation();
 
-      // If we haven't enabled dragging, cancel the gesture
-      if (!last && cancel && !dragging.current) {
-        cancel();
-      }
+    // If we haven't enabled dragging, cancel the gesture
+    if (!last && cancel && !dragging.current) {
+      cancel();
+    }
 
-      // How far down should we be positioned?
-      const yDelta = active ? Math.max(0, movement[1]) : 0;
-      // Set immediate (no animation) if we're in a gesture, so it follows your finger precisely
-      setSpring.start({ immediate: active, to: { transform: `translateY(${yDelta}px)` } });
+    // How far down should we be positioned?
+    const yDelta = active ? Math.max(0, movement[1]) : 0;
+    // Set immediate (no animation) if we're in a gesture, so it follows your finger precisely
+    setSpring.start({ immediate: active, to: { transform: `translateY(${yDelta}px)` } });
 
-      // Detect if the gesture ended with a high velocity, or with the sheet more than
-      // dismissAmount percent of the way down - if so, consider it a close gesture.
-      if (
-        last &&
-        (movement[1] > (height() || 0) * dismissAmount ||
-          velocity[1] * Math.sign(movement[1]) > dismissVelocity)
-      ) {
-        handleClose(undefined, true);
-      }
-    },
-    { preventScroll: false }
-  );
+    // Detect if the gesture ended with a high velocity, or with the sheet more than
+    // dismissAmount percent of the way down - if so, consider it a close gesture.
+    if (
+      last &&
+      (movement[1] > (height() || 0) * dismissAmount ||
+        velocity[1] * Math.sign(movement[1]) > dismissVelocity)
+    ) {
+      handleClose(undefined, true);
+    }
+  });
 
   // Determine when to drag. Drags if the touch falls in the header, or if the contents
   // are scrolled all the way to the top.
@@ -237,7 +234,7 @@ export default function Sheet({
       <PressTipRoot.Provider value={sheet}>
         <animated.div
           {...bindDrag()}
-          style={{ ...springProps, touchAction: 'pan-x', zIndex }}
+          style={{ ...springProps, touchAction: 'none', zIndex }}
           className={clsx('sheet', sheetClassName, { [styles.sheetDisabled]: disabled })}
           ref={sheet}
           role="dialog"

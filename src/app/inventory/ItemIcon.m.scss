@@ -127,4 +127,5 @@ $commonBg: #366f42;
   height: calc((var(--item-size) + 1px) / 2) !important;
   right: 0;
   top: calc(var(--item-size) - ((var(--item-size) + 1px) / 2) - 1px);
+  pointer-events: none;
 }

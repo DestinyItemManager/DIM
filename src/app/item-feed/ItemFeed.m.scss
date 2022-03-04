@@ -2,6 +2,7 @@
 
 .item {
   composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: flex-start;
   margin: 8px 0 16px 0;
   will-change: auto;
   transform-origin: calc(var(--item-size) / 2) calc(var(--item-size) / 2);

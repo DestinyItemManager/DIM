@@ -13,11 +13,16 @@ import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
 import {
   BucketCategory,
+  DamageType,
   DestinyAmmunitionType,
   DestinyClass,
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
   DestinyStatCategory,
+  ItemBindStatus,
+  ItemLocation,
+  ItemState,
+  TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import missingSources from 'data/d1/missing_sources.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -27,7 +32,7 @@ import { D1ManifestDefinitions, DefinitionTable } from '../../destiny1/d1-defini
 import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D1GridNode, D1Item, D1Stat, D1TalentGrid } from '../item-types';
-import { D1Store } from '../store-types';
+import { D1Store, DimStore } from '../store-types';
 import { getQualityRating } from './armor-quality';
 import { getBonus } from './character-utils';
 import { createItemIndex } from './item-index';
@@ -106,6 +111,50 @@ const toD2DamageType = _.memoize(
     }
 );
 
+export function makeFakeItem(
+  defs: D1ManifestDefinitions,
+  buckets: InventoryBuckets,
+  itemHash: number,
+  itemInstanceId = '0'
+) {
+  return makeItem(
+    defs,
+    buckets,
+    {
+      itemHash,
+      itemInstanceId,
+      bindStatus: ItemBindStatus.NotBound,
+      location: ItemLocation.Vendor,
+      transferStatus: TransferStatuses.NotTransferrable,
+      lockable: false,
+      state: ItemState.None,
+      isEquipped: false,
+      itemLevel: 0,
+      stackSize: 1,
+      qualityLevel: 0,
+      canEquip: false,
+      equipRequiredLevel: 0,
+      unlockFlagHashRequiredToEquip: 0,
+      stats: [],
+      cannotEquipReason: 0,
+      damageType: DamageType.None,
+      damageTypeHash: 0,
+      damageTypeNodeIndex: 0,
+      damageTypeStepIndex: 0,
+      talentGridHash: 0,
+      nodes: [],
+      useCustomDyes: false,
+      isEquipment: false,
+      isGridComplete: false,
+      perks: [],
+      locked: false,
+      objectives: [],
+      bucket: 0,
+    },
+    undefined
+  );
+}
+
 /**
  * Process a single raw item into a DIM item.
  * @param defs the manifest definitions
@@ -119,7 +168,7 @@ function makeItem(
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets,
   item: D1ItemComponent,
-  owner: D1Store
+  owner: DimStore | undefined
 ) {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   // Missing definition?
@@ -220,7 +269,7 @@ function makeItem(
   }
 
   const createdItem: D1Item = {
-    owner: owner.id,
+    owner: owner?.id || 'unknown',
     // figure out what year this item is probably from
     destinyVersion: 1,
     // The bucket the item is currently in
@@ -376,7 +425,7 @@ function makeItem(
         }))
       : null;
 
-  if (createdItem.talentGrid && createdItem.infusable) {
+  if (createdItem.talentGrid && createdItem.infusable && item.primaryStat) {
     try {
       createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
     } catch (e) {
@@ -694,6 +743,7 @@ function buildStats(
         const primaryStatDef = item.primaryStat && statDefs.get(item.primaryStat.statHash);
 
         if (
+          item.primaryStat &&
           primaryStatDef?.statIdentifier === 'STAT_DEFENSE' &&
           ((identifier === 'STAT_INTELLECT' &&
             armorNodes.find((n) => n.hash === 1034209669 /* Increase Intellect */)) ||

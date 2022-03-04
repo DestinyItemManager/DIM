@@ -1,0 +1,22 @@
+@import '../variables.scss';
+
+.none {
+  fill: transparent;
+}
+
+// Another plug was selected by the user
+.notSelected {
+  fill: #4887ba80;
+}
+
+.plugged {
+  fill: #4887ba;
+}
+// This has been selected by the user but isn't the original plugged item
+.selected {
+  fill: $orange;
+}
+
+.cannotRoll {
+  fill: #ba594880;
+}

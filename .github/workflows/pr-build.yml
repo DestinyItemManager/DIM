@@ -33,10 +33,11 @@ jobs:
         env:
           PR_BUILD: true
 
-      - name: bundlewatch.io
+      - name: Set BundleWatch token
+        run: echo "BUNDLEWATCH_GITHUB_TOKEN=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" >> $GITHUB_ENV
+
+      - name: Bundlewatch Check
         run: yarn bundlewatch
-        env:
-          BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
   test:
     runs-on: ubuntu-latest
@@ -53,16 +54,24 @@ jobs:
         run: yarn install --frozen-lockfile --prefer-offline
 
       - name: Jest Annotations & Coverage
+        if: github.event.pull_request.head.repo.full_name == github.repository
         uses: mattallty/jest-github-action@v1.0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           coverage-comment: false
 
+      - name: Jest Test
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        run: yarn test
+
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: GitHub Slug Action
+        uses: rlespinasse/github-slug-action@4.0.0
 
       - name: Setup Node
         uses: actions/setup-node@v2
@@ -89,9 +98,14 @@ jobs:
         continue-on-error: true
 
       - name: Annotate ESLint Results
+        if: github.event.pull_request.head.repo.full_name == github.repository
         uses: ataylorme/eslint-annotate-action@1.2.0
         continue-on-error: true
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           report-json: "eslint_report.json"
           fail-on-warning: true
+
+      - name: ESLint
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        run: yarn lintcached
