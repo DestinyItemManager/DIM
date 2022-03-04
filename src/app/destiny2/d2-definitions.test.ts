@@ -1,5 +1,5 @@
 import 'cross-fetch/polyfill';
-import { getTestDefinitions } from '../../testing/test-utils';
+import { getTestDefinitions } from 'testing/test-utils';
 import { D2ManifestDefinitions } from './d2-definitions';
 
 let defs: D2ManifestDefinitions;

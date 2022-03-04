@@ -295,6 +295,9 @@ module.exports = (env) => {
         app: path.resolve('./src/app/'),
         data: path.resolve('./src/data/'),
         images: path.resolve('./src/images/'),
+        locale: path.resolve('./src/locale/'),
+        testing: path.resolve('./src/testing/'),
+        docs: path.resolve('./docs/'),
         'destiny-icons': path.resolve('./destiny-icons/'),
       },
 

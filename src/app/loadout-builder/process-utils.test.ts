@@ -11,8 +11,8 @@ import {
   isArmor2Helmet,
   isArmor2Legs,
   recoveryModHash,
-} from '../../testing/test-item-utils';
-import { getTestDefinitions, getTestStores } from '../../testing/test-utils';
+} from 'testing/test-item-utils';
+import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import {
   canTakeSlotIndependentMods,
   generateProcessModPermutations,

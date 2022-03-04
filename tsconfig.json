@@ -24,6 +24,9 @@
       "data/*": ["src/data/*"],
       "images/*": ["src/images/*"],
       "destiny-icons/*": ["destiny-icons/*"],
+      "locale/*": ["locale/*"],
+      "testing/*": ["src/testing/*"],
+      "docs/*": ["docs/*"],
       "*.css": ["config/css-stub.js"]
     }
   },
