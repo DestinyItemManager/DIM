@@ -82,7 +82,7 @@ $commonBg: #366f42;
   background-image: url('../../images/deepsight.png');
 
   &.legendaryMasterwork {
-    background-image: url('../../images/masterwork.png'), url('../../images/deepsight.png');
+    background-image: url('../../images/deepsight.png'), url('../../images/masterwork.png');
   }
 }
 
