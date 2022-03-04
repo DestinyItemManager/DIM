@@ -26,8 +26,6 @@ declare const $featureFlags: {
   abilityCooldowns: boolean;
   /** Item feed sidebar */
   itemFeed: boolean;
-  /** Loadout edit drawer v2 */
-  loadoutDrawerV2: boolean;
 };
 
 declare function ga(...params: string[]);

@@ -1,9 +1,6 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ItemIcon from 'app/inventory/ItemIcon';
-import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import FashionDrawer from 'app/loadout/fashion/FashionDrawer';
-import ModPicker from 'app/loadout/ModPicker';
 import { useDefinitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -11,33 +8,27 @@ import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
-import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
+import { DimItem } from '../inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
 import '../inventory/Stores.scss';
 import { showItemPicker } from '../item-picker/item-picker';
 import { deleteLoadout, updateLoadout } from './actions';
-import { GeneratedLoadoutStats } from './GeneratedLoadoutStats';
 import { stateReducer } from './loadout-drawer-reducer';
 import './loadout-drawer.scss';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
 import { Loadout } from './loadout-types';
-import { getModsFromLoadout } from './loadout-utils';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
 
-// TODO: Consider moving editLoadout/addItemToLoadout into Redux (actions + state)
-// TODO: break out a container from the actual loadout drawer so we can lazy load the drawer
-
 /**
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit
- * loadouts from this interface.
+ * loadouts from this interface. This one is only used for D1, see LoadoutDrawer2 for D2's new loadout editor.
  */
 export default function LoadoutDrawer() {
   const dispatch = useThunkDispatch();
@@ -49,15 +40,10 @@ export default function LoadoutDrawer() {
   const [showingItemPicker, setShowingItemPicker] = useState(false);
 
   // All state and the state of the loadout is managed through this reducer
-  const [{ loadout, showClass, storeId, isNew, modPicker, showFashionDrawer }, stateDispatch] =
-    useReducer(stateReducer, {
-      showClass: true,
-      isNew: false,
-      modPicker: {
-        show: false,
-      },
-      showFashionDrawer: false,
-    });
+  const [{ loadout, showClass, storeId, isNew }, stateDispatch] = useReducer(stateReducer, {
+    showClass: true,
+    isNew: false,
+  });
 
   // The loadout to edit comes in from the editLoadout$ observable
   useEventBusListener(
@@ -82,35 +68,22 @@ export default function LoadoutDrawer() {
   );
 
   const onAddItem = useCallback(
-    ({
-      item,
-      e,
-      equip,
-      socketOverrides,
-    }: {
-      item: DimItem;
-      e?: MouseEvent | React.MouseEvent;
-      equip?: boolean;
-      socketOverrides?: SocketOverrides;
-    }) =>
+    ({ item, e, equip }: { item: DimItem; e?: MouseEvent | React.MouseEvent; equip?: boolean }) =>
       stateDispatch({
         type: 'addItem',
         item,
         shift: Boolean(e?.shiftKey),
         items,
         equip,
-        socketOverrides,
         stores,
       }),
     [items, stores]
   );
 
-  const onApplySocketOverrides = useCallback((item: DimItem, socketOverrides: SocketOverrides) => {
-    stateDispatch({ type: 'applySocketOverrides', item, socketOverrides });
-  }, []);
-
-  const onRemoveItem = (item: DimItem, e?: React.MouseEvent) =>
+  const onRemoveItem = (item: DimItem, e?: React.MouseEvent) => {
+    e?.stopPropagation();
     stateDispatch({ type: 'removeItem', item, shift: Boolean(e?.shiftKey), items });
+  };
 
   const onEquipItem = (item: DimItem) => stateDispatch({ type: 'equipItem', item, items });
 
@@ -204,17 +177,6 @@ export default function LoadoutDrawer() {
     close();
   };
 
-  const savedMods = getModsFromLoadout(defs, loadout);
-
-  /** Updates the loadout replacing it's current mods with all the mods in newMods. */
-  const onUpdateModHashes = (mods: number[]) => stateDispatch({ type: 'updateMods', mods });
-  const onUpdateMods = (newMods: PluggableInventoryItemDefinition[]) =>
-    onUpdateModHashes(newMods.map((mod) => mod.hash));
-
-  /** Removes a single mod from the loadout with the supplied itemHash. */
-  const removeModByHash = (itemHash: number) =>
-    stateDispatch({ type: 'removeMod', hash: itemHash });
-
   const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
     stateDispatch({ type: 'update', loadout: { ...loadout, notes: e.target.value } });
 
@@ -223,10 +185,8 @@ export default function LoadoutDrawer() {
       <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
       <LoadoutDrawerOptions
         loadout={loadout}
-        storeId={storeId}
         showClass={showClass}
         isNew={isNew}
-        onUpdateMods={onUpdateMods}
         updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
         saveLoadout={isNew ? saveAsNew : onSaveLoadout}
         saveAsNew={saveAsNew}
@@ -240,7 +200,6 @@ export default function LoadoutDrawer() {
           maxLength={2048}
         />
       )}
-      <GeneratedLoadoutStats items={items} loadout={loadout} savedMods={savedMods} />
     </div>
   );
 
@@ -257,12 +216,8 @@ export default function LoadoutDrawer() {
                 </p>
                 <div className="loadout-warn-items">
                   {warnitems.map((item) => (
-                    <div
-                      key={item.index}
-                      className="loadout-item"
-                      onClick={() => fixWarnItem(item)}
-                    >
-                      <ClosableContainer onClose={() => onRemoveItem(item)}>
+                    <div key={item.id} className="loadout-item" onClick={() => fixWarnItem(item)}>
+                      <ClosableContainer onClose={(e) => onRemoveItem(item, e)}>
                         <ItemIcon item={item} />
                       </ClosableContainer>
                     </div>
@@ -274,54 +229,18 @@ export default function LoadoutDrawer() {
               <LoadoutDrawerContents
                 storeId={storeId}
                 loadout={loadout}
-                savedMods={savedMods}
                 items={items}
                 buckets={buckets}
                 equip={onEquipItem}
                 remove={onRemoveItem}
                 add={onAddItem}
                 onUpdateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
-                onOpenModPicker={(query?: string) =>
-                  stateDispatch({ type: 'openModPicker', query })
-                }
                 onShowItemPicker={setShowingItemPicker}
-                onOpenFashionDrawer={() =>
-                  stateDispatch({ type: 'toggleFashionDrawer', show: true })
-                }
-                removeModByHash={removeModByHash}
-                onApplySocketOverrides={onApplySocketOverrides}
               />
             </div>
           </LoadoutDrawerDropTarget>
         </div>
       </div>
-      {modPicker.show &&
-        defs.isDestiny2() &&
-        ReactDOM.createPortal(
-          <ModPicker
-            owner={storeId}
-            classType={loadout.classType}
-            lockedMods={savedMods}
-            initialQuery={modPicker.query}
-            onAccept={onUpdateMods}
-            onClose={() => stateDispatch({ type: 'closeModPicker' })}
-          />,
-          document.body
-        )}
-      {showFashionDrawer &&
-        defs.isDestiny2() &&
-        ReactDOM.createPortal(
-          <FashionDrawer
-            loadout={loadout}
-            items={items}
-            storeId={storeId}
-            onModsByBucketUpdated={(modsByBucket) =>
-              stateDispatch({ type: 'updateModsByBucket', modsByBucket })
-            }
-            onClose={() => stateDispatch({ type: 'toggleFashionDrawer', show: false })}
-          />,
-          document.body
-        )}
     </Sheet>
   );
 }

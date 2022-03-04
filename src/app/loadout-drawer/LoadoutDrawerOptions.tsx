@@ -1,17 +1,13 @@
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { getClass } from 'app/inventory/store/character-utils';
-import ModAssignmentDrawer from 'app/loadout/mod-assignment-drawer/ModAssignmentDrawer';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { createSelector } from 'reselect';
 import { Loadout } from './loadout-types';
 import styles from './LoadoutDrawerOptions.m.scss';
@@ -30,26 +26,21 @@ const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
 
 export default function LoadoutDrawerOptions({
   loadout,
-  storeId,
   showClass,
   isNew,
-  onUpdateMods,
   updateLoadout,
   saveLoadout,
   saveAsNew,
   deleteLoadout,
 }: {
   loadout: Readonly<Loadout> | undefined;
-  storeId: string | undefined;
   showClass: boolean;
   isNew: boolean;
-  onUpdateMods(mods: PluggableInventoryItemDefinition[]): void;
   updateLoadout(loadout: Loadout): void;
   saveLoadout(e: React.FormEvent): void;
   saveAsNew(e: React.MouseEvent): void;
   deleteLoadout(): void;
 }) {
-  const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
   const classTypeOptions = useSelector(classTypeOptionsSelector);
 
   const loadouts = useSelector(loadoutsSelector);
@@ -179,23 +170,6 @@ export default function LoadoutDrawerOptions({
             </button>
           </div>
         )}
-        {Boolean(loadout.parameters?.mods?.length) && (
-          <div className={styles.inputGroup}>
-            <button
-              className="dim-button"
-              type="button"
-              title="Assign Mods"
-              onClick={() => setShowModAssignmentDrawer(true)}
-            >
-              {t('Loadouts.ShowModPlacement')}
-            </button>
-          </div>
-        )}
-        <div className={styles.inputGroup}>
-          <Link className="dim-button" to="optimizer" state={{ loadout }}>
-            {t('Loadouts.OpenInOptimizer')}
-          </Link>
-        </div>
         <div className={styles.inputGroup}>
           <label>
             <input type="checkbox" checked={Boolean(loadout.clearSpace)} onChange={setClearSpace} />{' '}
@@ -212,16 +186,6 @@ export default function LoadoutDrawerOptions({
             : t('Loadouts.AlreadyExistsGlobal')}
         </div>
       )}
-      {showModAssignmentDrawer &&
-        ReactDOM.createPortal(
-          <ModAssignmentDrawer
-            loadout={loadout}
-            storeId={storeId}
-            onUpdateMods={onUpdateMods}
-            onClose={() => setShowModAssignmentDrawer(false)}
-          />,
-          document.body
-        )}
     </div>
   );
 }

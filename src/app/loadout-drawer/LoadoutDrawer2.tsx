@@ -3,9 +3,11 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { warnMissingClass } from 'app/loadout-builder/loadout-builder-reducer';
+import { pickSubclass } from 'app/loadout/item-utils';
 import { useDefinitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { addIcon, AppIcon } from 'app/shell/icons';
@@ -13,6 +15,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
@@ -22,20 +25,18 @@ import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
-import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
+import LoadoutEdit, {
+  fillLoadoutFromEquipped,
+  fillLoadoutFromUnequipped,
+} from '../loadout/loadout-edit/LoadoutEdit';
 import { deleteLoadout, updateLoadout } from './actions';
 import { stateReducer } from './loadout-drawer-reducer';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
 import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
 import { Loadout } from './loadout-types';
+import { createSubclassDefaultSocketOverrides } from './loadout-utils';
 import styles from './LoadoutDrawer2.m.scss';
-import {
-  fillLoadoutFromEquipped,
-  fillLoadoutFromUnequipped,
-  pickLoadoutItem,
-  pickLoadoutSubclass,
-} from './LoadoutDrawerContents';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
@@ -62,10 +63,6 @@ export default function LoadoutDrawer2() {
   const [{ loadout, storeId, isNew }, stateDispatch] = useReducer(stateReducer, {
     showClass: true,
     isNew: false,
-    modPicker: {
-      show: false,
-    },
-    showFashionDrawer: false,
   });
 
   // The loadout to edit comes in from the editLoadout$ observable
@@ -420,4 +417,77 @@ function filterLoadoutToAllowedItems(
       }
     }
   });
+}
+
+async function pickLoadoutItem(
+  loadout: Loadout,
+  bucket: InventoryBucket,
+  add: (params: { item: DimItem }) => void,
+  onShowItemPicker: (shown: boolean) => void
+) {
+  const loadoutClassType = loadout?.classType;
+  function loadoutHasItem(item: DimItem) {
+    return loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
+  }
+
+  onShowItemPicker(true);
+  try {
+    const { item } = await showItemPicker({
+      filterItems: (item: DimItem) =>
+        item.bucket.hash === bucket.hash &&
+        (!loadout ||
+          loadout.classType === DestinyClass.Unknown ||
+          item.classType === loadoutClassType ||
+          item.classType === DestinyClass.Unknown) &&
+        itemCanBeInLoadout(item) &&
+        !loadoutHasItem(item),
+      prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
+
+      // don't show information related to selected perks so we don't give the impression
+      // that we will update perk selections when applying the loadout
+      ignoreSelectedPerks: true,
+    });
+
+    add({ item });
+  } catch (e) {
+  } finally {
+    onShowItemPicker(false);
+  }
+}
+
+async function pickLoadoutSubclass(
+  loadout: Loadout,
+  savedSubclasses: DimItem[],
+  add: (params: { item: DimItem; socketOverrides?: SocketOverrides }) => void,
+  onShowItemPicker: (shown: boolean) => void
+) {
+  const loadoutClassType = loadout?.classType;
+  const loadoutHasItem = (item: DimItem) =>
+    loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
+
+  const loadoutHasSubclassForClass = (item: DimItem) =>
+    savedSubclasses.some(
+      (s) => item.bucket.hash === BucketHashes.Subclass && s.classType === item.classType
+    );
+
+  const subclassItemFilter = (item: DimItem) =>
+    item.bucket.hash === BucketHashes.Subclass &&
+    (!loadout ||
+      loadout.classType === DestinyClass.Unknown ||
+      item.classType === loadoutClassType) &&
+    itemCanBeInLoadout(item) &&
+    !loadoutHasSubclassForClass(item) &&
+    !loadoutHasItem(item);
+
+  onShowItemPicker(true);
+  const item = await pickSubclass(subclassItemFilter);
+  if (item) {
+    let socketOverrides: SocketOverrides | undefined;
+    if (item.bucket.hash === BucketHashes.Subclass) {
+      socketOverrides = createSubclassDefaultSocketOverrides(item);
+    }
+
+    add({ item, socketOverrides });
+  }
+  onShowItemPicker(false);
 }
