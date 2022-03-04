@@ -1,5 +1,10 @@
 @import '../variables.scss';
 
+// Another plug was selected by the user
+.notSelected {
+  fill: #4887ba80;
+}
+
 .plugged {
   fill: #4887ba;
 }
@@ -7,10 +12,7 @@
 .selected {
   fill: $orange;
 }
+
 .cannotRoll {
   fill: #ba594880;
-}
-// Another plug was selected by the user
-.notSelected {
-  fill: #4887ba80;
 }

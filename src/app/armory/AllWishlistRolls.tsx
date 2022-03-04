@@ -10,6 +10,11 @@ import styles from './AllWishlistRolls.m.scss';
 
 /**
  * List out all the known wishlist rolls for a given item.
+ *
+ * This is currently only used with a fake definitions-built item,
+ * that has every perk available in each perk socket
+ * (with some overrides to set some as "plugged", when spawned from a real item).
+ * This would render much weirder if it were fed an owned inventory item.
  */
 export default function AllWishlistRolls({ item }: { item: DimItem }) {
   const wishlistRolls = useSelector(wishListRollsForItemHashSelector(item.hash));

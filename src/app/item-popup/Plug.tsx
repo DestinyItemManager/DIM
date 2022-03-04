@@ -23,6 +23,10 @@ export default function Plug({
   wishlistRoll,
   hasMenu,
   onClick,
+  plugged,
+  selected,
+  cannotRoll,
+  notSelected,
 }: {
   plug: DimPlug;
   item: DimItem;
@@ -30,7 +34,7 @@ export default function Plug({
   wishlistRoll?: InventoryWishListRoll;
   hasMenu: boolean;
   onClick?(plug: DimPlug): void;
-}) {
+} & PlugStatuses) {
   const defs = useD2Definitions()!;
 
   // TODO: Do this with SVG to make it scale better!
@@ -65,6 +69,10 @@ export default function Plug({
           plug={plug}
           wishlistRoll={wishlistRoll}
           socketInfo={socketInfo}
+          plugged={plugged}
+          selected={selected}
+          cannotRoll={cannotRoll}
+          notSelected={notSelected}
         />
       ) : (
         <>
@@ -84,25 +92,33 @@ export default function Plug({
 
 /**
  * a perk circle and its associated thumbs up or lack thereof.
- * this belongs inside an element with a css position, so thumbs up can position itself.
+ * if a wishlistRoll is included, this must be inside an element
+ * with a css position, so thumbs up can position itself.
+ *
+ * if plug status overrides aren't provided,
+ * this determines them using socketInfo
  */
 export function PerkCircleWithTooltip({
   item,
   plug,
   socketInfo,
   wishlistRoll,
+  plugged,
+  selected,
+  cannotRoll,
+  notSelected,
 }: {
   item: DimItem;
   plug: DimPlug;
   socketInfo: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
-}) {
-  const plugged = plug === socketInfo.plugged;
+} & PlugStatuses) {
+  plugged ??= plug === socketInfo.plugged;
   // Another plug was selected by the user
-  const notSelected = socketInfo.actuallyPlugged && !plugged && plug === socketInfo.actuallyPlugged;
+  notSelected ??= socketInfo.actuallyPlugged && !plugged && plug === socketInfo.actuallyPlugged;
   // This has been selected by the user but isn't the original plugged item
-  const selected = socketInfo.actuallyPlugged && plugged;
-  const cannotRoll = plug.cannotCurrentlyRoll;
+  selected ??= socketInfo.actuallyPlugged && plugged;
+  cannotRoll ??= plug.cannotCurrentlyRoll;
 
   const tooltip = () => <DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />;
   return (
