@@ -1,18 +1,18 @@
 import i18next from 'i18next';
 import HttpApi from 'i18next-http-backend';
-import de from '../locale/de/dim.json';
-import en from '../locale/dim.json';
-import esMX from '../locale/es-mx/dim.json';
-import es from '../locale/es/dim.json';
-import fr from '../locale/fr/dim.json';
-import it from '../locale/it/dim.json';
-import ja from '../locale/ja/dim.json';
-import ko from '../locale/ko/dim.json';
-import pl from '../locale/pl/dim.json';
-import ptBR from '../locale/pt-br/dim.json';
-import ru from '../locale/ru/dim.json';
-import zhCHS from '../locale/zh-chs/dim.json';
-import zhCHT from '../locale/zh-cht/dim.json';
+import de from 'locale/de/dim.json';
+import en from 'locale/dim.json';
+import esMX from 'locale/es-mx/dim.json';
+import es from 'locale/es/dim.json';
+import fr from 'locale/fr/dim.json';
+import it from 'locale/it/dim.json';
+import ja from 'locale/ja/dim.json';
+import ko from 'locale/ko/dim.json';
+import pl from 'locale/pl/dim.json';
+import ptBR from 'locale/pt-br/dim.json';
+import ru from 'locale/ru/dim.json';
+import zhCHS from 'locale/zh-chs/dim.json';
+import zhCHT from 'locale/zh-cht/dim.json';
 import { humanBytes } from './storage/human-bytes';
 
 // Try to pick a nice default language
