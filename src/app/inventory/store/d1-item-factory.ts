@@ -425,7 +425,7 @@ function makeItem(
         }))
       : null;
 
-  if (createdItem.talentGrid && createdItem.infusable) {
+  if (createdItem.talentGrid && createdItem.infusable && item.primaryStat) {
     try {
       createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
     } catch (e) {
@@ -743,6 +743,7 @@ function buildStats(
         const primaryStatDef = item.primaryStat && statDefs.get(item.primaryStat.statHash);
 
         if (
+          item.primaryStat &&
           primaryStatDef?.statIdentifier === 'STAT_DEFENSE' &&
           ((identifier === 'STAT_INTELLECT' &&
             armorNodes.find((n) => n.hash === 1034209669 /* Increase Intellect */)) ||
