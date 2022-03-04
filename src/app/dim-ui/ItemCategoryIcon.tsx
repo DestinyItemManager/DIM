@@ -1,5 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
 import clsx from 'clsx';
+import kineticSlot from 'images/kinetic-slot.svg';
 import React from 'react';
 import styles from './ItemCategoryIcon.m.scss';
 import PressTip from './PressTip';
@@ -17,10 +18,19 @@ export function ArmorSlotIcon({ item, className }: { item: DimItem; className?: 
   );
 }
 
+// don't invert these. they're perfect as-is.
+const imagesToLeaveAlone = [kineticSlot];
+
 export function WeaponSlotIcon({ item, className }: { item: DimItem; className?: string }) {
+  const slotIcon = getWeaponSlotSvgIcon(item)!;
   return (
     <PressTip elementType="span" tooltip={item.bucket.name}>
-      <img src={getWeaponSlotSvgIcon(item)} className={clsx(styles.itemCategoryIcon, className)} />
+      <img
+        src={slotIcon}
+        className={clsx(styles.itemCategoryIcon, className, {
+          [styles.dontInvert]: imagesToLeaveAlone.includes(slotIcon),
+        })}
+      />
     </PressTip>
   );
 }

@@ -14,7 +14,7 @@ import React from 'react';
 import styles from './CompareButtons.m.scss';
 
 /** A definition for a button on the top of the compare too, which can be clicked to show the given items. */
-export interface CompareButton {
+interface CompareButton {
   buttonLabel: React.ReactNode[];
   /** The query that results in this list of items */
   query: string;
