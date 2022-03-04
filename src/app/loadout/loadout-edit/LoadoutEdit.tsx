@@ -5,26 +5,24 @@ import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import {
+  createSocketOverridesFromEquipped,
   extractArmorModHashes,
+  fromEquippedTypes,
   getLight,
   getModsFromLoadout,
 } from 'app/loadout-drawer/loadout-utils';
-import {
-  fillLoadoutFromEquipped,
-  fillLoadoutFromUnequipped,
-  getUnequippedItemsForLoadout,
-  setLoadoutSubclassFromEquipped,
-} from 'app/loadout-drawer/LoadoutDrawerContents';
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { infoLog } from 'app/utils/log';
+import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -292,5 +290,156 @@ export default function LoadoutEdit({
         />
       </LoadoutEditSection>
     </div>
+  );
+}
+
+/** Replace the loadout's subclass with the currently equipped subclass */
+function setLoadoutSubclassFromEquipped(
+  loadout: Loadout,
+  existingSubclass: DimItem | undefined,
+  dimStore: DimStore,
+  onUpdateLoadout: (loadout: Loadout) => void
+) {
+  if (!loadout) {
+    return;
+  }
+
+  const newSubclass = dimStore.items.find(
+    (item) =>
+      item.equipped && itemCanBeInLoadout(item) && item.bucket.hash === BucketHashes.Subclass
+  );
+
+  if (!newSubclass) {
+    return;
+  }
+
+  const newLoadoutItem: LoadoutItem = {
+    id: newSubclass.id,
+    hash: newSubclass.hash,
+    equipped: true,
+    amount: 1,
+    socketOverrides: createSocketOverridesFromEquipped(newSubclass),
+  };
+
+  const newLoadout = {
+    ...loadout,
+    items: [...loadout.items.filter((i) => existingSubclass?.hash !== i.hash), newLoadoutItem],
+  };
+
+  onUpdateLoadout(newLoadout);
+}
+
+export function fillLoadoutFromEquipped(
+  loadout: Loadout,
+  itemsByBucket: { [bucketId: string]: DimItem[] },
+  dimStore: DimStore,
+  onUpdateLoadout: (loadout: Loadout) => void,
+  // This is a bit dangerous as it is only used from the new loadout edit drawer and
+  // has special handling that would break the old loadout drawer
+  category?: string
+) {
+  if (!loadout) {
+    return;
+  }
+
+  const newEquippedItems = dimStore.items.filter(
+    (item) =>
+      item.equipped &&
+      itemCanBeInLoadout(item) &&
+      (category
+        ? category === 'General'
+          ? item.bucket.hash !== BucketHashes.Subclass && item.bucket.sort === category
+          : item.bucket.sort === category
+        : fromEquippedTypes.includes(item.bucket.hash))
+  );
+
+  const hasEquippedInBucket = (bucket: InventoryBucket) =>
+    itemsByBucket[bucket.hash]?.some(
+      (bucketItem) =>
+        loadout.items.find(
+          (loadoutItem) => bucketItem.hash === loadoutItem.hash && bucketItem.id === loadoutItem.id
+        )?.equipped
+    );
+
+  const newLoadout = produce(loadout, (draftLoadout) => {
+    const mods: number[] = [];
+    for (const item of newEquippedItems) {
+      if (!hasEquippedInBucket(item.bucket)) {
+        const loadoutItem: LoadoutItem = {
+          id: item.id,
+          hash: item.hash,
+          equipped: true,
+          amount: 1,
+        };
+        if (item.bucket.hash === BucketHashes.Subclass) {
+          loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
+        }
+        draftLoadout.items.push(loadoutItem);
+        mods.push(...extractArmorModHashes(item));
+      } else {
+        infoLog('loadout', 'Skipping', item, { itemsByBucket, bucketId: item.bucket.hash });
+      }
+    }
+    if (mods.length && (loadout.parameters?.mods ?? []).length === 0) {
+      draftLoadout.parameters = {
+        ...draftLoadout.parameters,
+        mods,
+      };
+    }
+    // Save "fashion" mods for equipped items
+    const modsByBucket = {};
+    for (const item of newEquippedItems.filter((i) => i.bucket.inArmor)) {
+      const plugs = item.sockets
+        ? _.compact(
+            getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics).map(
+              (s) => s.plugged?.plugDef.hash
+            )
+          )
+        : [];
+      if (plugs.length) {
+        modsByBucket[item.bucket.hash] = plugs;
+      }
+    }
+    if (!_.isEmpty(modsByBucket)) {
+      draftLoadout.parameters = {
+        ...draftLoadout.parameters,
+        modsByBucket,
+      };
+    }
+  });
+
+  onUpdateLoadout(newLoadout);
+}
+
+export async function fillLoadoutFromUnequipped(
+  loadout: Loadout,
+  dimStore: DimStore,
+  add: (params: { item: DimItem; equip?: boolean }) => void,
+  category?: string
+) {
+  if (!loadout) {
+    return;
+  }
+
+  const items = getUnequippedItemsForLoadout(dimStore, category);
+
+  // TODO: this isn't right - `items` isn't being updated after each add
+  for (const item of items) {
+    add({ item, equip: false });
+  }
+}
+
+/**
+ * filter for items that are in a character's "pockets" but not equipped,
+ * and can be added to a loadout
+ */
+function getUnequippedItemsForLoadout(dimStore: DimStore, category?: string) {
+  return dimStore.items.filter(
+    (item) =>
+      !item.location.inPostmaster &&
+      item.bucket.hash !== BucketHashes.Subclass &&
+      itemCanBeInLoadout(item) &&
+      (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)) &&
+      !item.equipped
   );
 }
