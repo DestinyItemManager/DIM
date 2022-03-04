@@ -9,7 +9,7 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: flex-start;
   border-bottom: 1px solid #333;
-  padding: 6px 10px;
+  padding: 4px 8px;
   flex-wrap: wrap;
 
   &:first-child {
@@ -49,8 +49,8 @@
 
   svg {
     display: block;
-    width: calc(28 / 50 * var(--item-size));
-    height: calc(28 / 50 * var(--item-size));
+    width: calc(30 / 50 * var(--item-size));
+    height: calc(30 / 50 * var(--item-size));
   }
 
   :global(.thumbs-up) {

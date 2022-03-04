@@ -129,15 +129,15 @@
 
 .item-socket-category-Reusable .socket-container.notIntrinsic {
   padding: calc(2 / 50 * var(--item-size));
-  margin-bottom: 6px;
+  margin-bottom: 1px;
   &:last-child {
     margin-bottom: 0;
   }
 
   svg {
     border: none;
-    width: calc(28 / 50 * var(--item-size));
-    height: calc(28 / 50 * var(--item-size));
+    width: calc(32 / 50 * var(--item-size));
+    height: calc(32 / 50 * var(--item-size));
   }
 
   @include phone-portrait {
