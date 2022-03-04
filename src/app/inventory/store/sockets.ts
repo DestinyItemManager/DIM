@@ -211,6 +211,8 @@ function buildDefinedSocket(
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Unlockable ||
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.LargePerk;
 
+  const isReusable = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable;
+
   // The currently equipped plug, if any
   const reusablePlugs: DimPlug[] = [];
 
@@ -307,6 +309,7 @@ function buildDefinedSocket(
     hasRandomizedPlugItems:
       Boolean(socketDef.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets,
     isPerk,
+    isReusable,
     socketDefinition: socketDef,
   };
 }
@@ -439,6 +442,8 @@ function buildSocket(
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Unlockable ||
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.LargePerk;
 
+  const isReusable = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable;
+
   // The currently equipped plug, if any.
   const plugged = buildPlug(defs, socket, socketDef, plugObjectivesData);
   // TODO: not sure if this should always be included!
@@ -491,6 +496,7 @@ function buildSocket(
     hasRandomizedPlugItems,
     reusablePlugItems: reusablePlugs,
     isPerk,
+    isReusable,
     socketDefinition: socketDef,
   };
 }

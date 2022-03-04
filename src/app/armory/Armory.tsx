@@ -40,6 +40,7 @@ export default function Armory({
   sockets,
 }: {
   itemHash: number;
+  // this is used to pass a real DimItem's current "plugged" plugs, into the fake DimItem that Armory creates
   sockets?: SocketOverrides;
 }) {
   const dispatch = useThunkDispatch();
