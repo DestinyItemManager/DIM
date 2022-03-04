@@ -52,6 +52,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           PATCH: ${{ github.event.inputs.patch }}
 
+      - name: Update BundleWatch
+        run: yarn bundlewatch
+
       - name: Purge CloudFlare cache
         run: ./build/purge-cloudflare.sh
         env:

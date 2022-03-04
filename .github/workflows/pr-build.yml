@@ -33,6 +33,9 @@ jobs:
         env:
           PR_BUILD: true
 
+      - name: BundleWatch Status
+        run: yarn bundlewatch
+
   test:
     runs-on: ubuntu-latest
     steps:
