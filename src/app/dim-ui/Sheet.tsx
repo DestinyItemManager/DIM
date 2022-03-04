@@ -201,7 +201,8 @@ export default function Sheet({
       // dismissAmount percent of the way down - if so, consider it a close gesture.
       if (
         last &&
-        (movement[1] > (height() || 0) * dismissAmount || velocity[1] > dismissVelocity)
+        (movement[1] > (height() || 0) * dismissAmount ||
+          velocity[1] * Math.sign(movement[1]) > dismissVelocity)
       ) {
         handleClose(undefined, true);
       }
