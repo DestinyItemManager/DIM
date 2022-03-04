@@ -10,7 +10,6 @@ import powerWeapon from 'destiny-icons/general/power_weapon.svg';
 import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
 import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
-import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg';
 import glaive from 'destiny-icons/weapons/glaive.svg';
 import gLauncher_special from 'destiny-icons/weapons/grenade_launcher-field_forged.svg';
@@ -26,6 +25,7 @@ import smg from 'destiny-icons/weapons/smg.svg';
 import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg';
 import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
+import kineticSlot from 'images/kinetic-slot.svg';
 
 const weaponTypeSvgByCategoryHash = {
   [ItemCategoryHashes.AutoRifle]: autoRifle,
@@ -50,7 +50,7 @@ const weaponTypeSvgByCategoryHash = {
 };
 
 const weaponSlotSvgByCategoryHash = {
-  [ItemCategoryHashes.KineticWeapon]: dmgKinetic,
+  [ItemCategoryHashes.KineticWeapon]: kineticSlot,
   [ItemCategoryHashes.EnergyWeapon]: energyWeapon,
   [ItemCategoryHashes.PowerWeapon]: powerWeapon,
 };
