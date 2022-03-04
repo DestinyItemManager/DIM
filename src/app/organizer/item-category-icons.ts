@@ -18,6 +18,7 @@ import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
 import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg';
+import glaive from 'destiny-icons/weapons/glaive.svg';
 import gLauncherFF from 'destiny-icons/weapons/grenade_launcher-field_forged.svg';
 import gLauncher from 'destiny-icons/weapons/grenade_launcher.svg';
 import handCannon from 'destiny-icons/weapons/hand_cannon.svg';
@@ -69,6 +70,8 @@ export const itemCategoryIcons: { [itemCategoryHash: number]: string } = {
   [ItemCategoryHashes.Sparrows]: sparrow,
   [ItemCategoryHashes.Ships]: ship,
   [ItemCategoryHashes.Emblems]: emblem,
+  // TODO: Update when Bungie releases Glaive ICH
+  [ItemCategoryHashes.Glaives]: glaive,
 } as const;
 
 /** A mapping from bucket hash to item category */

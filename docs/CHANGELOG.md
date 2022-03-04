@@ -21,6 +21,7 @@
   * With this new design we have space to add even more loadout editing tools over the next few seasons.
   * The loadout editor stays open if you navigate to the Inventory or Loadouts screen while it's already open.
   * The new Loadout Editor is not available for D1.
+* Glaives now show up in search `is:glaive` and the Organizer View.
 
 ## 7.7.0 <span class="changelog-date">(2022-02-28)</span>
 

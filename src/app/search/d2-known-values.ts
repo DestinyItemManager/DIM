@@ -133,12 +133,14 @@ export const swordStatsByName = {
 /** D2 has these item types but D1 doesn't */
 export const D2ItemCategoryHashesByName = {
   grenadelauncher: ItemCategoryHashes.GrenadeLaunchers,
-  specialgrenadelauncher: -153950757,
+  specialgrenadelauncher: -ItemCategoryHashes.GrenadeLaunchers,
   tracerifle: ItemCategoryHashes.TraceRifles,
   linearfusionrifle: ItemCategoryHashes.LinearFusionRifles,
   submachine: ItemCategoryHashes.SubmachineGuns,
   smg: ItemCategoryHashes.SubmachineGuns,
   bow: ItemCategoryHashes.Bows,
+  // TODO: Update when Bungie releases Glaive ICH
+  glaive: ItemCategoryHashes.Glaives,
   transmat: ItemCategoryHashes.ShipModsTransmatEffects,
   weaponmod: ItemCategoryHashes.WeaponMods,
   armormod: ItemCategoryHashes.ArmorMods,

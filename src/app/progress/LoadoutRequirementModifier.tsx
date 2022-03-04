@@ -44,8 +44,8 @@ const itemSubTypeToItemCategoryHash: { [key in DestinyItemSubType]: number } = {
   [DestinyItemSubType.SubmachineGun]: ItemCategoryHashes.SubmachineGuns,
   [DestinyItemSubType.TraceRifle]: ItemCategoryHashes.TraceRifles,
   [DestinyItemSubType.Bow]: ItemCategoryHashes.Bows,
-  // TODO: Fill this in when the manifest gets released
-  [DestinyItemSubType.Glaive]: 0,
+  // TODO: Update when Bungie releases Glaive ICH
+  [DestinyItemSubType.Glaive]: ItemCategoryHashes.Glaives,
 };
 
 /**
@@ -53,9 +53,9 @@ const itemSubTypeToItemCategoryHash: { [key in DestinyItemSubType]: number } = {
  * so we don't have to load the EquipmentSlot definitions.
  */
 const equipmentSlotHashToItemCategoryHash = {
-  1498876634: 2, // Kinetic
-  2465295065: 3, // Energy
-  953998645: 4, // Power
+  1498876634: ItemCategoryHashes.KineticWeapon,
+  2465295065: ItemCategoryHashes.EnergyWeapon,
+  953998645: ItemCategoryHashes.PowerWeapon,
 };
 
 /**
