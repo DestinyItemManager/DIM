@@ -7,6 +7,7 @@
 * The Item Feed is available on both desktop and mobile. It shows your gear in the order it dropped, and gives you quick controls to tag incoming loot. Click on the item tile to get the full item popup.
   * Item Feed also got better at identifying relevant weapon perks.
   * Tagging an item from the Item Feed also marks it as not-new.
+  * Items can be dragged out of the feed into inventory (or the loadout editor).
 * Added `deepsight:complete` and `deepsight:incomplete` filters.
 * Added `is:craftable` filter.
 * Added `is:wishlistunknown` filter which highlights items that have no rolls in the currently loaded wishlist.

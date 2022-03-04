@@ -3,11 +3,13 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { getTag, TagValue } from 'app/inventory/dim-item-info';
+import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { allItemsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { acquisitionRecencyComparator } from 'app/shell/filters';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { AnimatePresence, motion, Spring } from 'framer-motion';
 import _ from 'lodash';
@@ -25,6 +27,12 @@ const spring: Spring = {
 };
 
 const Item = memo(function Item({ item, tag }: { item: DimItem; tag: TagValue | undefined }) {
+  const isPhonePortrait = useIsPhonePortrait();
+  const itemIcon = (
+    <ItemPopupTrigger item={item}>
+      {(ref, onClick) => <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />}
+    </ItemPopupTrigger>
+  );
   return (
     <motion.div
       className={styles.item}
@@ -33,9 +41,11 @@ const Item = memo(function Item({ item, tag }: { item: DimItem; tag: TagValue | 
       animate={{ scale: 1, opacity: 1 }}
       transition={spring}
     >
-      <ItemPopupTrigger item={item}>
-        {(ref, onClick) => <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />}
-      </ItemPopupTrigger>
+      {isPhonePortrait ? (
+        itemIcon
+      ) : (
+        <DraggableInventoryItem item={item}>{itemIcon}</DraggableInventoryItem>
+      )}
       <div className={styles.info}>
         <div className={styles.title}>
           {item.name}
