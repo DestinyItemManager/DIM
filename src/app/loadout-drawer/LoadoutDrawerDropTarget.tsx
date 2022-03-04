@@ -17,7 +17,8 @@ export const bucketTypesSelector = createSelector(
     buckets
       ? [
           'postmaster',
-          ...Object.values(buckets.byType).flatMap((bucket) => [
+          // TODO: we don't really need every possible bucket right?
+          ...Object.values(buckets.byHash).flatMap((bucket) => [
             bucket.hash.toString(),
             ...stores.flatMap((store) => `${store.id}-${bucket.hash}`),
           ]),

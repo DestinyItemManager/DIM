@@ -57,6 +57,7 @@
   @include phone-portrait {
     // Full-width, single column
     grid-template-columns: 1fr;
+    padding-right: 0;
 
     .bucket-label {
       opacity: 0.8;

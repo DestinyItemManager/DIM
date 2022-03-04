@@ -236,6 +236,7 @@ export const VENDORS = {
   RAHOOL: 2255782930,
   VAULT: 1037843411,
   XUR: 2190858386,
+  WAR_TABLE_UPGRADES_RISEN: 3950870173,
 };
 
 /** used to snag the icon for display */

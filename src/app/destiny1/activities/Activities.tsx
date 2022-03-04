@@ -3,7 +3,6 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
-import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -16,6 +15,7 @@ import { sortedStoresSelector } from '../../inventory/selectors';
 import { D1Store } from '../../inventory/store-types';
 import { AppIcon, starIcon } from '../../shell/icons';
 import { D1ManifestDefinitions } from '../d1-definitions';
+import { D1ActivityComponent, D1ActivityTier, D1ObjectiveProgress } from '../d1-manifest-types';
 import './activities.scss';
 
 interface Skull {
@@ -46,7 +46,7 @@ interface ActivityTier {
     id: string;
     icon: string;
     steps: { complete: boolean }[];
-    objectives: DestinyObjectiveProgress[];
+    objectives: D1ObjectiveProgress[];
   }[];
 }
 
@@ -68,14 +68,14 @@ export default function Activities({ account }: Props) {
     defs: D1ManifestDefinitions,
     activityId: string,
     stores: D1Store[],
-    tier: any,
+    tier: D1ActivityTier,
     index: number
   ): ActivityTier => {
     const tierDef = defs.Activity.get(tier.activityHash);
 
     const name =
       tier.activityData.recommendedLight === 390
-        ? 390
+        ? '390'
         : tier.tierDisplayName
         ? t(`Activities.${tier.tierDisplayName}`, { contextList: 'difficulty' })
         : tierDef.activityName;
@@ -84,14 +84,14 @@ export default function Activities({ account }: Props) {
       activityId === 'heroicstrike'
         ? []
         : stores.map((store) => {
-            let steps = store.advisors.activities[activityId].activityTiers[index].steps;
+            const activity = store.advisors.activities![activityId];
+            let steps = activity.activityTiers[index].steps;
 
             if (!steps) {
-              steps = [store.advisors.activities[activityId].activityTiers[index].completion];
+              steps = [activity.activityTiers[index].completion];
             }
 
-            const objectives: DestinyObjectiveProgress[] =
-              store.advisors.activities[activityId].extended?.objectives || [];
+            const objectives = activity.extended?.objectives || [];
 
             return {
               name: store.name,
@@ -115,7 +115,7 @@ export default function Activities({ account }: Props) {
   const processActivities = (
     defs: D1ManifestDefinitions,
     stores: D1Store[],
-    rawActivity: any
+    rawActivity: D1ActivityComponent
   ): Activity => {
     const def = defs.Activity.get(rawActivity.display.activityHash);
     const activity = {
@@ -150,8 +150,7 @@ export default function Activities({ account }: Props) {
     if (activity.skulls) {
       activity.skulls = activity.skulls.flat();
     }
-
-    activity.tiers = rawActivity.activityTiers.map((r: any, i: number) =>
+    activity.tiers = rawActivity.activityTiers.map((r, i) =>
       processActivity(defs, rawActivity.identifier, stores, r, i)
     );
 
@@ -169,7 +168,7 @@ export default function Activities({ account }: Props) {
       'elderchallenge',
     ];
 
-    const rawActivities = Object.values(stores[0].advisors.activities).filter(
+    const rawActivities = Object.values(stores[0].advisors.activities!).filter(
       (a: any) => a.activityTiers && allowList.includes(a.identifier)
     );
     const activities = _.sortBy(rawActivities, (a: any) => {
@@ -179,7 +178,7 @@ export default function Activities({ account }: Props) {
 
     activities.forEach((a) => {
       a.tiers.forEach((t) => {
-        if (t.hash === stores[0].advisors.activities.weeklyfeaturedraid.display.activityHash) {
+        if (t.hash === stores[0].advisors.activities!.weeklyfeaturedraid.display.activityHash) {
           a.featured = true;
           t.name = t.hash === 1387993552 ? '390' : t.name;
         }

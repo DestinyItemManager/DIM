@@ -416,7 +416,7 @@ function downloadWeapons(
       Tier: item.tier,
       Type: item.typeName,
       Source: source(item),
-      Category: item.bucket.type,
+      Category: item.type,
       Element: item.element?.displayProperties.name,
       [item.destinyVersion === 1 ? 'Light' : 'Power']: item.power,
     };

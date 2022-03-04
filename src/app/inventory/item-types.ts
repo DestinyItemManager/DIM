@@ -21,6 +21,7 @@ import {
   DestinyStatDefinition,
 } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from './inventory-buckets';
+import { DimResonantElementTag } from './store/deepsight';
 
 /** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
 export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common' | 'Unknown' | 'Currency';
@@ -168,6 +169,7 @@ export interface DimItem {
    */
   primaryStat:
     | (DestinyStat & {
+        // TODO: get rid of this
         stat: DestinyStatDefinition;
       })
     | null;
@@ -201,6 +203,8 @@ export interface DimItem {
   masterworkInfo: DimMasterwork | null;
   /** If this item is crafted, this includes info about its crafting properties. */
   craftedInfo: DimCrafted | null;
+  /** If this item has Deepsight Resonance, this includes info about its Deepsight properties. */
+  deepsightInfo: DimDeepsight | null;
   /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The state of this item in the user's D2 Collection */
@@ -248,6 +252,20 @@ export interface DimCrafted {
   progress?: number;
   /** when this weapon was crafted, UTC epoch milliseconds timestamp */
   dateCrafted?: number;
+}
+
+export interface DimResonantElement {
+  tag: DimResonantElementTag;
+  icon: string;
+  name: string;
+}
+export interface DimDeepsight {
+  /** Whether the weapon is ready for resonant material extraction */
+  complete: boolean;
+  /** 0-1 progress until the weapon is attuned */
+  progress: number;
+  /** A collection of Resonant Elements that can be extracted from this weapon once attuned */
+  resonantElements: DimResonantElement[];
 }
 
 export interface DimStat {

@@ -16,6 +16,7 @@ const wishlistFilters: FilterDefinition[] = [
   {
     keywords: 'wishlist',
     description: tl('Filter.Wishlist'),
+    destinyVersion: 2,
     filter:
       ({ wishListFunction }) =>
       (item) =>
@@ -24,6 +25,7 @@ const wishlistFilters: FilterDefinition[] = [
   {
     keywords: 'wishlistdupe',
     description: tl('Filter.WishlistDupe'),
+    destinyVersion: 2,
     filter: ({ wishListFunction, allItems }) => {
       const duplicates = computeDupes(allItems);
       return (item) => {
@@ -40,6 +42,7 @@ const wishlistFilters: FilterDefinition[] = [
     keywords: 'wishlistnotes',
     description: tl('Filter.WishlistNotes'),
     format: 'freeform',
+    destinyVersion: 2,
     filter:
       ({ wishListFunction, filterValue }) =>
       (item) =>
@@ -48,10 +51,20 @@ const wishlistFilters: FilterDefinition[] = [
   {
     keywords: 'trashlist',
     description: tl('Filter.Trashlist'),
+    destinyVersion: 2,
     filter:
       ({ wishListFunction }) =>
       (item) =>
         wishListFunction(item)?.isUndesirable,
+  },
+  {
+    keywords: 'wishlistunknown',
+    destinyVersion: 2,
+    description: tl('Filter.WishlistUnknown'),
+    filter:
+      ({ wishListsByHash }) =>
+      (item) =>
+        !(item.hash in wishListsByHash),
   },
 ];
 

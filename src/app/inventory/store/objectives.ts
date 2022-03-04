@@ -1,3 +1,4 @@
+import { D1ObjectiveDefinition } from 'app/destiny1/d1-manifest-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   DestinyInventoryItemDefinition,
@@ -53,13 +54,15 @@ export function buildObjectives(
 }
 
 export function isBooleanObjective(
-  objectiveDef: DestinyObjectiveDefinition,
+  objectiveDef: DestinyObjectiveDefinition | D1ObjectiveDefinition,
   completionValue: number
 ) {
   return (
     objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
     (completionValue === 1 &&
-      (!objectiveDef.allowOvercompletion || !objectiveDef.showValueOnComplete))
+      (!('allowOvercompletion' in objectiveDef) ||
+        !objectiveDef.allowOvercompletion ||
+        !objectiveDef.showValueOnComplete))
   );
 }
 

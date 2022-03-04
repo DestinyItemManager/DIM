@@ -9,6 +9,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import _ from 'lodash';
 import React from 'react';
@@ -211,7 +212,15 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     const i18nItemNames: { [key: string]: string } = _.zipObject(
       ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'],
-      [45, 46, 47, 48, 49, 38, 39].map((key) => defs.ItemCategory.get(key).title)
+      [
+        ItemCategoryHashes.Helmets,
+        ItemCategoryHashes.Arms,
+        ItemCategoryHashes.Chest,
+        ItemCategoryHashes.Legs,
+        ItemCategoryHashes.ClassItems,
+        38,
+        ItemCategoryHashes.Ghost,
+      ].map((key) => defs.ItemCategory.get(key).title)
     );
 
     // Armor of each type on a particular character

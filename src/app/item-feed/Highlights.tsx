@@ -4,10 +4,9 @@ import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { ItemTypeName } from 'app/item-popup/ItemPopupHeader';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
-import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getWeaponArchetype } from 'app/utils/socket-utils';
 import clsx from 'clsx';
-import _ from 'lodash';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import styles from './Highlights.m.scss';
 
@@ -16,7 +15,10 @@ import styles from './Highlights.m.scss';
  */
 export default function Highlights({ item }: { item: DimItem }) {
   if (item.bucket.sort === 'Weapons' && item.sockets) {
-    const perkSockets = item.sockets.allSockets.filter((s) => s.isPerk && !isKillTrackerSocket(s));
+    // Don't ask me why Traits are called "Frames" but it does work.
+    const perkSockets = item.sockets.allSockets.filter(
+      (s) => s.isPerk && s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames
+    );
     const archetype = !item.isExotic && getWeaponArchetype(item)?.displayProperties.name;
 
     return (
@@ -26,7 +28,7 @@ export default function Highlights({ item }: { item: DimItem }) {
           <ItemTypeName item={item} />
         </span>
         <div className={styles.perks}>
-          {_.takeRight(perkSockets, 2)
+          {perkSockets
             .flatMap((s) => s.plugOptions)
             .map((p) => (
               <div key={p.plugDef.hash}>
