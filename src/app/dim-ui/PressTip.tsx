@@ -107,6 +107,7 @@ function Control({
   );
 }
 
+const isPointerEvents = 'onpointerdown' in window;
 const isTouch = 'ontouchstart' in window;
 const hoverDelay = isTouch ? 300 : 100;
 
@@ -142,38 +143,54 @@ function PressTip(props: Props) {
     timer.current = 0;
   }, []);
 
-  const hover = useCallback((e: React.MouseEvent | React.TouchEvent | TouchEvent) => {
-    e.preventDefault();
-    clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => {
-      setOpen(true);
-    }, hoverDelay);
-    touchStartTime.current = performance.now();
-  }, []);
+  const hover = useCallback(
+    (
+      e: React.MouseEvent | React.TouchEvent | TouchEvent | React.FocusEvent | React.PointerEvent
+    ) => {
+      e.preventDefault();
+      clearTimeout(timer.current);
+      timer.current = window.setTimeout(() => {
+        setOpen(true);
+      }, hoverDelay);
+      touchStartTime.current = performance.now();
+    },
+    []
+  );
 
   // Stop the hover timer when the component unmounts
   useEffect(() => () => clearTimeout(timer.current), []);
 
   // Prevent clicks if the tooltip has been pressed long enough to show a tip
-  const absorbClick = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (timer.current && performance.now() - touchStartTime.current > hoverDelay) {
-      e.stopPropagation();
-    }
-  }, []);
+  const absorbClick = useCallback(
+    (e: React.MouseEvent | React.TouchEvent | React.FocusEvent | React.PointerEvent) => {
+      if (performance.now() - touchStartTime.current > hoverDelay) {
+        e.stopPropagation();
+      }
+    },
+    []
+  );
 
   // A combination of React's global event handling strategy and a Safari bug in touch handling
   // means that relying on binding onTouchStart directly will fail to fire touchstart if this
   // element has been scrolled within a position: fixed element - like we frequently do in Sheets.
   useEffect(() => {
     // It's important that this be a passive event handler
-    if (isTouch && ref.current) {
+    if (!isPointerEvents && isTouch && ref.current) {
       const triggerElement = ref.current;
       triggerElement.addEventListener('touchstart', hover, { passive: true });
       return () => triggerElement.removeEventListener('touchstart', hover);
     }
   }, [hover]);
 
-  const events = isTouch
+  const events = isPointerEvents
+    ? {
+        onPointerOver: hover,
+        onPointerDown: hover,
+        onPointerLeave: closeToolTip,
+        onPointerUp: closeToolTip,
+        onClick: absorbClick,
+      }
+    : isTouch
     ? {
         // onTouchStart is handled specially above
         onTouchEnd: closeToolTip,
