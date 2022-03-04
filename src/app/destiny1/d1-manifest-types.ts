@@ -61,7 +61,7 @@ export interface D1ItemComponent {
   stackSize: number;
   qualityLevel: number;
   stats: D1Stat[];
-  primaryStat: D1Stat;
+  primaryStat?: D1Stat;
   canEquip: boolean;
   equipRequiredLevel: number;
   unlockFlagHashRequiredToEquip: number;
@@ -70,7 +70,7 @@ export interface D1ItemComponent {
   damageTypeHash: number;
   damageTypeNodeIndex: number;
   damageTypeStepIndex: number;
-  progression: {
+  progression?: {
     dailyProgress: number;
     weeklyProgress: number;
     currentProgress: number;

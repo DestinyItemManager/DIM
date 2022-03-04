@@ -109,8 +109,10 @@ export default function LoadoutDrawer() {
     stateDispatch({ type: 'applySocketOverrides', item, socketOverrides });
   }, []);
 
-  const onRemoveItem = (item: DimItem, e?: React.MouseEvent) =>
+  const onRemoveItem = (item: DimItem, e?: React.MouseEvent) => {
+    e?.stopPropagation();
     stateDispatch({ type: 'removeItem', item, shift: Boolean(e?.shiftKey), items });
+  };
 
   const onEquipItem = (item: DimItem) => stateDispatch({ type: 'equipItem', item, items });
 
@@ -262,7 +264,7 @@ export default function LoadoutDrawer() {
                       className="loadout-item"
                       onClick={() => fixWarnItem(item)}
                     >
-                      <ClosableContainer onClose={() => onRemoveItem(item)}>
+                      <ClosableContainer onClose={(e) => onRemoveItem(item, e)}>
                         <ItemIcon item={item} />
                       </ClosableContainer>
                     </div>
