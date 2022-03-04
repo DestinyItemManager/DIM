@@ -1,7 +1,14 @@
 import { t } from 'app/i18next-t';
+import type { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { DimItem } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { showItemPicker } from 'app/item-picker/item-picker';
+import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { fromEquippedTypes } from 'app/loadout-drawer/loadout-utils';
 import { D1BucketHashes } from 'app/search/d1-known-values';
+import { addIcon, AppIcon } from 'app/shell/icons';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -10,13 +17,6 @@ import produce from 'immer';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import type { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
-import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
-import { showItemPicker } from '../item-picker/item-picker';
-import { addIcon, AppIcon } from '../shell/icons';
-import { Loadout, LoadoutItem } from './loadout-types';
-import { fromEquippedTypes } from './loadout-utils';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
 
 const loadoutTypes: (BucketHashes | D1BucketHashes)[] = [

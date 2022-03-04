@@ -2,6 +2,8 @@ import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { getClass } from 'app/inventory/store/character-utils';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -9,9 +11,7 @@ import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { Loadout } from './loadout-types';
 import styles from './LoadoutDrawerOptions.m.scss';
-import { loadoutsSelector } from './selectors';
 
 const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
   const classTypeValues: {
