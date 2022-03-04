@@ -34,13 +34,22 @@
     "dead-code": "ts-unused-exports tsconfig.json --allowUnusedTypes --allowUnusedEnums --showLineNumber | grep -v cssExports",
     "bcu": "run-s bcu:*",
     "bcu:build": "node src/build-browsercheck-utils.js",
-    "bcu:pretty": "prettier --write src/browsercheck-utils.js",
-    "bw": "bundlewatch --config config/.bundlewatch.config.js"
+    "bcu:pretty": "prettier --write src/browsercheck-utils.js"
   },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"
     }
+  },
+  "bundlewatch": {
+    "files": [
+      {
+        "path": "dist/*.js",
+        "maxSize": "512kB",
+        "compression": "brotli"
+      }
+    ],
+    "normalizeFilenames": "^.+?((-[0-9a-f]{6})?(-[0-9a-f]{16})?).js$"
   },
   "repository": {
     "type": "git",
