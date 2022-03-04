@@ -3,7 +3,7 @@ import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import shapedIcon from 'images/shaped.svg';
+import shapedIcon from 'images/shaped.png';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
