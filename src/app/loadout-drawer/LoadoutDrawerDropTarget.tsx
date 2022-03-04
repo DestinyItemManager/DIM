@@ -35,7 +35,7 @@ export default function LoadoutDrawerDropTarget({
   children?: React.ReactNode;
   className?: string;
   classType: DestinyClass;
-  onDroppedItem(item: DimItem, e?: React.MouseEvent, equip?: boolean): void;
+  onDroppedItem(item: DimItem, equip?: boolean): void;
 }) {
   const bucketTypes = useSelector(bucketTypesSelector);
 
@@ -44,7 +44,7 @@ export default function LoadoutDrawerDropTarget({
       accept: bucketTypes,
       drop: (item: DimItem, monitor: DropTargetMonitor<DimItem, { equipped: boolean }>) => {
         const result = monitor.getDropResult();
-        onDroppedItem(item, undefined, result?.equipped);
+        onDroppedItem(item, result?.equipped);
       },
       canDrop: (i) =>
         itemCanBeInLoadout(i) &&

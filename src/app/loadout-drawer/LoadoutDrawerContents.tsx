@@ -1,6 +1,5 @@
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
-import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -60,7 +59,7 @@ export default function LoadoutDrawerContents({
   items: DimItem[];
   equip(item: DimItem, e: React.MouseEvent): void;
   remove(item: DimItem, e: React.MouseEvent): void;
-  add(params: { item: DimItem; equip?: boolean; socketOverrides?: SocketOverrides }): void;
+  add(item: DimItem, equip?: boolean): void;
   onUpdateLoadout(loadout: Loadout): void;
   onShowItemPicker(shown: boolean): void;
 }) {
@@ -137,7 +136,7 @@ export default function LoadoutDrawerContents({
 async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
-  add: (params: { item: DimItem }) => void,
+  add: (item: DimItem) => void,
   onShowItemPicker: (shown: boolean) => void
 ) {
   const loadoutClassType = loadout?.classType;
@@ -163,7 +162,7 @@ async function pickLoadoutItem(
       ignoreSelectedPerks: true,
     });
 
-    add({ item });
+    add(item);
   } catch (e) {
   } finally {
     onShowItemPicker(false);
@@ -215,7 +214,7 @@ function fillLoadoutFromEquipped(
 async function fillLoadoutFromUnequipped(
   loadout: Loadout,
   dimStore: DimStore,
-  add: (params: { item: DimItem; equip?: boolean }) => void,
+  add: (item: DimItem, equip?: boolean) => void,
   category?: string
 ) {
   if (!loadout) {
@@ -226,7 +225,7 @@ async function fillLoadoutFromUnequipped(
 
   // TODO: this isn't right - `items` isn't being updated after each add
   for (const item of items) {
-    add({ item, equip: false });
+    add(item, false);
   }
 }
 

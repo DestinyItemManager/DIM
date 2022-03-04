@@ -43,7 +43,6 @@ export type Action =
   | {
       type: 'addItem';
       item: DimItem;
-      shift: boolean;
       items: DimItem[];
       equip?: boolean;
       socketOverrides?: SocketOverrides;
@@ -53,7 +52,7 @@ export type Action =
   | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
   | { type: 'updateModsByBucket'; modsByBucket: LoadoutParameters['modsByBucket'] }
   /** Remove an item from the loadout */
-  | { type: 'removeItem'; item: DimItem; shift: boolean; items: DimItem[] }
+  | { type: 'removeItem'; item: DimItem; items: DimItem[] }
   /** Make an item that's already in the loadout equipped */
   | { type: 'equipItem'; item: DimItem; items: DimItem[] }
   | { type: 'updateMods'; mods: number[] }
@@ -92,7 +91,7 @@ export function stateReducer(state: State, action: Action): State {
 
     case 'addItem': {
       const { loadout } = state;
-      const { item, shift, items, equip, socketOverrides, stores } = action;
+      const { item, items, equip, socketOverrides, stores } = action;
 
       if (!itemCanBeInLoadout(item)) {
         showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
@@ -107,7 +106,7 @@ export function stateReducer(state: State, action: Action): State {
           });
           return state;
         }
-        const draftLoadout = addItem(loadout, item, shift, items, equip, socketOverrides);
+        const draftLoadout = addItem(loadout, item, items, equip, socketOverrides);
         return {
           ...state,
           loadout: draftLoadout,
@@ -134,7 +133,6 @@ export function stateReducer(state: State, action: Action): State {
         const draftLoadout = addItem(
           newLoadout('', [], classType),
           item,
-          shift,
           items,
           equip,
           socketOverrides
@@ -150,8 +148,8 @@ export function stateReducer(state: State, action: Action): State {
 
     case 'removeItem': {
       const { loadout } = state;
-      const { item, shift, items } = action;
-      return loadout ? { ...state, loadout: removeItem(loadout, item, shift, items) } : state;
+      const { item, items } = action;
+      return loadout ? { ...state, loadout: removeItem(loadout, item, items) } : state;
     }
 
     case 'equipItem': {
@@ -245,7 +243,6 @@ export function stateReducer(state: State, action: Action): State {
   function addItem(
     loadout: Readonly<Loadout>,
     item: DimItem,
-    shift: boolean,
     items: DimItem[],
     equip?: boolean,
     socketOverrides?: SocketOverrides
@@ -253,7 +250,7 @@ export function stateReducer(state: State, action: Action): State {
     const loadoutItem: LoadoutItem = {
       id: item.id,
       hash: item.hash,
-      amount: Math.min(item.amount, shift ? 5 : 1),
+      amount: 1,
       equipped: false,
     };
 
@@ -328,12 +325,7 @@ export function stateReducer(state: State, action: Action): State {
   /**
    * Produce a new Loadout with the given item removed from the original loadout.
    */
-  function removeItem(
-    loadout: Readonly<Loadout>,
-    item: DimItem,
-    shift: boolean,
-    items: DimItem[]
-  ): Loadout {
+  function removeItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]): Loadout {
     return produce(loadout, (draftLoadout) => {
       const loadoutItem = draftLoadout.items.find((i) => i.hash === item.hash && i.id === item.id);
 
@@ -341,9 +333,8 @@ export function stateReducer(state: State, action: Action): State {
         return;
       }
 
-      const decrement = shift ? 5 : 1;
       loadoutItem.amount ||= 1;
-      loadoutItem.amount -= decrement;
+      loadoutItem.amount--;
       if (loadoutItem.amount <= 0) {
         draftLoadout.items = draftLoadout.items.filter(
           (i) => !(i.hash === item.hash && i.id === item.id)
