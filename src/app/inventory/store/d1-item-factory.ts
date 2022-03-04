@@ -295,6 +295,7 @@ function makeItem(
     perks: null,
     masterworkInfo: null,
     craftedInfo: null,
+    deepsightInfo: null,
     infusionQuality: null,
     canPullFromPostmaster: false,
     uniqueStack: false,

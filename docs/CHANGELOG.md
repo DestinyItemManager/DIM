@@ -13,6 +13,7 @@
 * Removed the `level:` filter from D2 as equip required level no longer matters.
 * Season of the Risen War Table Upgrades are now in the right order and show their acquired status.
 * Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
+* Added `deepsight:ruinous`, `deepsight:adroit`, `deepsight:mutable` and `deepsight:energetic` filters to identify Deepsight Resonance weapons that allow extraction of a specific Resonant Element.
 * We have brand new Loadout Editor! Check it out from the character menu or the Loadouts page.
   * The layout mirrors the Loadout page's new design which has clear areas for different types of items. Each section also has a menu of additional actions like re-syncing from your currently equipped items, or clearing out a whole section.
   * As part of this change, we're removing support for "multi-class" loadouts. Loadouts will either be tied to one class, or can be toggled to "Any Class". "Any Class" loadouts cannot contain Subclass, Armor, or Fashion. If you edit an existing "Any Class" loadout and save it, those items will be removed unless you turn off "Any Class".
