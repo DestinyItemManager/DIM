@@ -109,7 +109,8 @@ function Control({
 
 const isPointerEvents = 'onpointerdown' in window;
 const isTouch = 'ontouchstart' in window;
-const hoverDelay = isTouch ? 300 : 100;
+const hoverable = window.matchMedia('(hover: hover)').matches;
+const hoverDelay = hoverable ? 100 : 300;
 
 /**
  * A "press tip" is a tooltip that can be shown by pressing on an element, or via hover.
@@ -183,21 +184,31 @@ function PressTip(props: Props) {
   }, [hover]);
 
   const events = isPointerEvents
-    ? {
-        onPointerOver: hover,
-        onPointerDown: hover,
-        onPointerLeave: closeToolTip,
-        onPointerUp: closeToolTip,
-        onClick: absorbClick,
-      }
+    ? hoverable
+      ? // Mouse/hoverpen based devices with pointer events
+        {
+          onPointerOver: hover,
+          onPointerLeave: closeToolTip,
+          onPointerUp: closeToolTip,
+        }
+      : // Touch-based devices with pointer events
+        {
+          onPointerOver: hover,
+          onPointerDown: hover,
+          onPointerLeave: closeToolTip,
+          onPointerUp: closeToolTip,
+          onClick: absorbClick,
+        }
     : isTouch
-    ? {
+    ? // Touch-based devices without pointer events
+      {
         // onTouchStart is handled specially above
         onTouchEnd: closeToolTip,
         onTouchCancel: closeToolTip,
         onClick: absorbClick,
       }
-    : {
+    : // Mouse based devices without pointer events
+      {
         onMouseEnter: hover,
         onMouseUp: closeToolTip,
         onMouseLeave: closeToolTip,
