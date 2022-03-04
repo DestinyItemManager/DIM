@@ -109,7 +109,7 @@ function Control({
 
 const isPointerEvents = 'onpointerdown' in window;
 const isTouch = 'ontouchstart' in window;
-const hoverable = window.matchMedia('(hover: hover)').matches;
+const hoverable = window.matchMedia?.('(hover: hover)').matches;
 const hoverDelay = hoverable ? 100 : 300;
 
 /**
