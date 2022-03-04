@@ -52,7 +52,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           PATCH: ${{ github.event.inputs.patch }}
 
-      - name: Update BundleWatch
+      - name: Update Bundlewatch
         run: yarn bundlewatch
 
       - name: Purge CloudFlare cache

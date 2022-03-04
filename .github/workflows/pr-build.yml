@@ -33,7 +33,7 @@ jobs:
         env:
           PR_BUILD: true
 
-      - name: BundleWatch Status
+      - name: BundleWatch Check
         run: yarn bundlewatch
 
   test:

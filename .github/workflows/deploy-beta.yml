@@ -42,7 +42,7 @@ jobs:
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
 
-      - name: Update BundleWatch
+      - name: Update Bundlewatch
         run: yarn bundlewatch
 
       - name: Check Syntax
