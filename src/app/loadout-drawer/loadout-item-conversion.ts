@@ -1,9 +1,11 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { makeFakeItem as makeFakeD1Item } from 'app/inventory/store/d1-item-factory';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import { emptyArray } from 'app/utils/empty';
+import { warnLog } from 'app/utils/log';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { DimItem } from '../inventory/item-types';
 import { DimLoadoutItem, LoadoutItem } from './loadout-types';
@@ -51,26 +53,16 @@ export function getItemsFromLoadoutItems(
 
       items.push({ ...overriddenItem, socketOverrides: overrides });
     } else {
-      const itemDef = defs.InventoryItem.get(loadoutItem.hash);
-      if (itemDef) {
-        const fakeItem: DimLoadoutItem =
-          (defs.isDestiny2() && makeFakeItem(defs, buckets, undefined, loadoutItem.hash)) ||
-          ({
-            ...loadoutItem,
-            icon: 'displayProperties' in itemDef ? itemDef.displayProperties?.icon : itemDef.icon,
-            name:
-              'displayProperties' in itemDef ? itemDef.displayProperties?.name : itemDef.itemName,
-            bucket:
-              buckets.byHash[
-                'bucketTypeHash' in itemDef
-                  ? itemDef.bucketTypeHash
-                  : itemDef.inventory!.bucketTypeHash
-              ],
-          } as DimLoadoutItem);
+      const fakeItem: DimLoadoutItem | null = defs.isDestiny2()
+        ? makeFakeItem(defs, buckets, undefined, loadoutItem.hash)
+        : makeFakeD1Item(defs, buckets, loadoutItem.hash);
+      if (fakeItem) {
         fakeItem.equipped = loadoutItem.equipped;
         fakeItem.socketOverrides = loadoutItem.socketOverrides;
         fakeItem.id = loadoutItem.id;
         warnitems.push(fakeItem);
+      } else {
+        warnLog('loadout', "Couldn't create fake warn item for", loadoutItem);
       }
     }
   }
