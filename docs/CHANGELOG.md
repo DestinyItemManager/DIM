@@ -7,6 +7,7 @@
 * Removed the `level:` filter for D2 accounts, as Guardians no longer have a Level and items no longer require one.
 * Season of the Risen War Table Upgrades are now in the right order and show their acquired status.
 * Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
+* Loadout Optimizer now correctly takes Echo of Persistence's class-specific stat reductions into account when generating sets.
 * The "Kinetic Slot" icon in Compare sheet now looks different from the "Kinetic Damage" icon.
 
 ### Features
