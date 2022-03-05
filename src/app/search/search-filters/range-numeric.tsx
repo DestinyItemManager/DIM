@@ -92,15 +92,15 @@ const simpleRangeFilters: FilterDefinition[] = [
     description: tl('Filter.WeaponLevel'),
     format: 'range',
     destinyVersion: 2,
-    filter:
-      ({ filterValue }) =>
-      (item) => {
+    filter: ({ filterValue }) => {
+      const compareTo = rangeStringToComparator(filterValue);
+      return (item) => {
         if (!item.craftedInfo) {
           return false;
         }
-        const compareTo = rangeStringToComparator(filterValue);
         return compareTo(item.craftedInfo.level || 0);
-      },
+      };
+    },
   },
 ];
 
