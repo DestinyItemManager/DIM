@@ -112,7 +112,7 @@ const lbStateInit = ({
       selectedStoreId = loadoutStore.id;
       // TODO: instead of locking items, show the loadout fixed at the top to compare against and leave all items free
       for (const loadoutItem of preloadedLoadout.items) {
-        if (loadoutItem.equipped) {
+        if (loadoutItem.equip) {
           const allItems = stores.flatMap((s) => s.items);
           const item = findItemForLoadout(defs, allItems, selectedStoreId, loadoutItem);
           if (item && isLoadoutBuilderItem(item)) {
@@ -136,7 +136,7 @@ const lbStateInit = ({
 
       if (!loadoutParams.exoticArmorHash) {
         const equippedExotic = preloadedLoadout.items
-          .filter((li) => li.equipped)
+          .filter((li) => li.equip)
           .map((li) => defs.InventoryItem.get(li.hash))
           .find(
             (i) =>

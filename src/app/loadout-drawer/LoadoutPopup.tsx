@@ -379,6 +379,6 @@ export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(LoadoutPo
 function filterLoadoutToEquipped(loadout: Loadout) {
   return {
     ...loadout,
-    items: loadout.items.filter((i) => i.equipped),
+    items: loadout.items.filter((i) => i.equip),
   };
 }

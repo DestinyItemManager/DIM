@@ -251,7 +251,7 @@ export function stateReducer(state: State, action: Action): State {
       id: item.id,
       hash: item.hash,
       amount: 1,
-      equipped: false,
+      equip: false,
     };
 
     // TODO: maybe we should just switch back to storing loadout items in memory by bucket
@@ -267,11 +267,11 @@ export function stateReducer(state: State, action: Action): State {
 
       if (!dupe) {
         if (typeInventory.length < maxSlots) {
-          loadoutItem.equipped =
+          loadoutItem.equip =
             equip !== undefined ? equip : item.equipment && typeInventory.length === 0;
-          if (loadoutItem.equipped) {
+          if (loadoutItem.equip) {
             for (const otherItem of typeInventory) {
-              findItem(otherItem).equipped = false;
+              findItem(otherItem).equip = false;
             }
           }
 
@@ -283,7 +283,7 @@ export function stateReducer(state: State, action: Action): State {
             if (conflictingItem) {
               draftLoadout.items = draftLoadout.items.filter((i) => i.id !== conflictingItem.id);
             }
-            loadoutItem.equipped = true;
+            loadoutItem.equip = true;
           }
 
           if (socketOverrides) {
@@ -295,7 +295,7 @@ export function stateReducer(state: State, action: Action): State {
           // If adding a new armor item, remove any fashion mods (shader/ornament) that couldn't be slotted
           if (
             item.bucket.inArmor &&
-            loadoutItem.equipped &&
+            loadoutItem.equip &&
             draftLoadout.parameters?.modsByBucket?.[item.bucket.hash]?.length
           ) {
             const cosmeticSockets = getSocketsByCategoryHash(
@@ -341,7 +341,7 @@ export function stateReducer(state: State, action: Action): State {
         );
       }
 
-      if (loadoutItem.equipped) {
+      if (loadoutItem.equip) {
         const typeInventory = items.filter((i) => i.bucket.hash === item.bucket.hash);
         const nextInLine =
           typeInventory.length > 0 &&
@@ -349,7 +349,7 @@ export function stateReducer(state: State, action: Action): State {
             (i) => i.id === typeInventory[0].id && i.hash === typeInventory[0].hash
           );
         if (nextInLine) {
-          nextInLine.equipped = true;
+          nextInLine.equip = true;
         }
       }
     });
@@ -370,9 +370,9 @@ export function stateReducer(state: State, action: Action): State {
 
       const loadoutItem = findItem(item);
       if (item.equipment) {
-        if (loadoutItem.equipped) {
+        if (loadoutItem.equip) {
           // It's equipped, mark it unequipped
-          loadoutItem.equipped = false;
+          loadoutItem.equip = false;
         } else {
           // It's unequipped - mark all the other items and conflicting exotics unequipped, then mark this equipped
           items
@@ -385,10 +385,10 @@ export function stateReducer(state: State, action: Action): State {
             )
             .map(findItem)
             .forEach((i) => {
-              i.equipped = false;
+              i.equip = false;
             });
 
-          loadoutItem.equipped = true;
+          loadoutItem.equip = true;
         }
       }
     });

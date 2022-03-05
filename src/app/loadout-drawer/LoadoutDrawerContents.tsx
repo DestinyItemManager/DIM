@@ -189,7 +189,7 @@ function fillLoadoutFromEquipped(
       (bucketItem) =>
         loadout.items.find(
           (loadoutItem) => bucketItem.hash === loadoutItem.hash && bucketItem.id === loadoutItem.id
-        )?.equipped
+        )?.equip
     );
 
   const newLoadout = produce(loadout, (draftLoadout) => {
@@ -198,7 +198,7 @@ function fillLoadoutFromEquipped(
         const loadoutItem: LoadoutItem = {
           id: item.id,
           hash: item.hash,
-          equipped: true,
+          equip: true,
           amount: 1,
         };
         draftLoadout.items.push(loadoutItem);
