@@ -191,6 +191,7 @@
     "Combine": "Les filtres peuvent être combinés ou groupés avec des parenthèses, \"or\" et \"and\" pour affiner votre recherche, par exemple \"{{example}}\".",
     "ContributePower": "Affiche les objets qui ont de la puissance et qui peuvent contribuer à votre niveau de puissance.",
     "Cosmetic": "Affiche les objets de style ou cosmétiques.",
+    "Craftable": "Affiche les objets pouvant être fabriqués.",
     "Curated": "Affiche les objets qui ont des statistiques et attributs présélectionnés.",
     "CurrentClass": "Affiche les objets qui peuvent être équipés sur le personnage actuellement connecté.",
     "CustomStatLower": "Affiche les armures dont les statistiques sont strictement plus basses que celles d'une autre armure du même type, en ne prenant en compte que les statistiques dans le total de statistiques personnalisé de cette classe.",
@@ -284,10 +285,12 @@
     "UnlockAllSuccess": "{{num}} objets déverrouillés",
     "Vendor": "L'objet est disponible auprès d'un marchand spécifique.",
     "Weapon": "Affiche les objets étant des armes.",
+    "WeaponLevel": "Shows weapons based on their Weapon Level.",
     "WeaponType": "Affiche les armes selon leur type d'arme.",
     "Wishlist": "Affiche les objets présents dans votre liste de souhaits.",
     "WishlistDupe": "Affiche les doublons quand au moins un des doublons est dans votre liste de souhaits.",
     "WishlistNotes": "Affiche les éléments de la liste de souhait dont les notes correspondent à la recherche.",
+    "WishlistUnknown": "Affiche les objets sans aucune recommandation dans les listes de souhaits chargées.",
     "Year": "Affiche les objets selon l'année à laquelle ils sont apparus."
   },
   "General": {
@@ -541,8 +544,8 @@
     "Apply": "Appliquer",
     "ApplyMods": "Ajout des mods",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
-    "ArmorMods": "Mods d'armure",
-    "AssumeMaxWeapons": "Supposer armes au niveau de puissance maximum",
+    "BadLoadoutShare": "Impossible de charger l'arsenal partagé",
+    "BadLoadoutShareBody": "L'arsenal que vous essayez de charger est invalide: {{error}}",
     "Before": "Avant '{{name}}'",
     "CannotCustomizeSubclass": "Cette doctrine ne peut pas être configurée",
     "ChooseItem": "Ajouter {{name}}",
@@ -629,6 +632,7 @@
     "SaveAsNew": "Sauvegarder comme nouveau",
     "SaveAsNewTooltip": "Garder l'arsenal original et enregistrer celui-ci comme un nouvel arsenal",
     "SaveLoadout": "Sauvegarder l'arsenal",
+    "ShareLoadout": "Partager l'arsenal",
     "ShowModPlacement": "Afficher le placement des mods",
     "SocketOverrides": "Changement des options de doctrine",
     "SortByEditTime": "Trier par dernière modification",
@@ -715,7 +719,7 @@
     },
     "TriageTab": "Triage",
     "Vault": "Coffre",
-    "WeaponLevel": "Arme de niveau {{level}}"
+    "WeaponLevel": "Niveau d'arme {{level}}"
   },
   "Notes": {
     "Error": "Erreur! Max 120 caractères pour les notes.",
@@ -852,6 +856,7 @@
     "ExportSS": "Tableur de l'inventaire",
     "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
     "ExportSSNoStores": "Vous devez charger votre inventaire une première fois avant de cliquer sur ce bouton.",
+    "HidePullFromPostmaster": "Hide the \"Pull From Postmaster\" button",
     "Inventory": "Affichage de l'inventaire",
     "InventoryColumns": "Nombre de colonne d'inventaire de personnage",
     "InventoryColumnsMobile": "Longueur de l'inventaire du personnage sur téléphone en mode portrait",

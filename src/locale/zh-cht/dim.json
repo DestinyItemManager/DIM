@@ -2,10 +2,10 @@
   "AWA": {
     "ConfirmDescription": "請使用\"命運2同伴應用\"授予DIM修改您物品的許可權。",
     "ConfirmTitle": "確認操作",
-    "Error": "Error changing mods or perks",
-    "ErrorMessage": "We couldn't equip {{plug}} into {{item}}.\n\n{{error}}",
+    "Error": "更改模組或特性時出錯",
+    "ErrorMessage": "我們無法將{{plug}} 裝備到{{item}}。\n\n\n{{error}}",
     "FailedToken": "無權限更換物品",
-    "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
+    "IrreversiblePlugging": "不擁有{{plug}}，所以我們不會覆蓋它。"
   },
   "Accounts": {
     "ErrorLoadInventory": "無法加載你的《命運 {{version}}》角色和庫存",
@@ -37,12 +37,12 @@
     "YourItems": "你的物品"
   },
   "Browsercheck": {
-    "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work."
+    "Steam": "這個頁面似乎是在Steam的瀏覽器裏打開的。 因為Steam瀏覽器的功能和資源限制，DIM可能會出現問題。 我們無法為此提供支援。",
+    "Unsupported": "DIM團隊不支持使用此瀏覽器。 DIM可能部分或完全不可用。"
   },
   "Bucket": {
     "Armor": "防具",
-    "Class": "Subclass",
+    "Class": "子職業",
     "General": "雜項",
     "Ghost": "機靈",
     "Inventory": "庫存",
@@ -58,8 +58,8 @@
   },
   "BungieService": {
     "AppNotPermitted": "DIM 沒有權限執行此操作。",
-    "DestinyCannotPerformActionAtThisLocation": "You cannot equip items or change mods while in an activity. Try heading to orbit or a social area. This is a limitation of the Bungie.net API, not DIM.",
-    "DestinyItemUnequippable": "You cannot equip this item. If this character's last activity locked their equipment, try logging into the character again.",
+    "DestinyCannotPerformActionAtThisLocation": "你不能在活動中裝備物品或更換模組。 回到軌道或前往社交區域再試試看。 這是Bungie. net API而不是DIM的限制。",
+    "DestinyItemUnequippable": "你不能裝備此物品。 如果此角色的上一場活動鎖定了其裝備，請嘗試重新登入此角色。",
     "DestinyLegacyPlatform": "目前Bungie的服務出現了一個Bug，如果您在上一代主機上遊玩過Destiny1，那麼DIM將無法載入您的Destiny2帳號資訊。Bungie將很快修復這個Bug。但是，直到Bug修復完成前，您必須在目前世代主機上遊玩Destiny1以便DIM能讀取您的帳號資訊。",
     "DevVersion": "您是否正在運行DIM的開發版本？您必須先將您的Chrome擴展與Bungie.net關聯。",
     "Difficulties": "Bungie.net目前存在問題。",
@@ -92,8 +92,8 @@
       "Unmatched": "此物品和要比較的物品類別不同。"
     },
     "InitialItem": "比較工具從這個物品啟動",
-    "IsVendorItem": "This item is not owned. This is in a vendor's inventory and may be for sale.",
-    "SoldBy": "Sold by: {{vendorName}}",
+    "IsVendorItem": "你不擁有此物品。 它在一比特商人的庫存裏，可能可以購買。",
+    "SoldBy": "售於：{{vendorName}}",
     "SwipeAdvice": "使用雙指滾動"
   },
   "Cooldown": {
@@ -118,8 +118,8 @@
   },
   "EnergyMeter": {
     "Energy": "能量",
-    "Unused": "Unused",
-    "Used": "Used"
+    "Unused": "未使用",
+    "Used": "已使用"
   },
   "ErrorBoundary": {
     "Title": "發生了一些錯誤"
@@ -141,8 +141,8 @@
     "Desc_male": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有空位。",
     "Desc_male_plural": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有 {{count}} 個空位。",
     "Desc_plural": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有 {{count}} 個空位。",
-    "FarmingMode": "Farming Mode",
-    "FarmingModeNote": "(maintain space for drops)",
+    "FarmingMode": "收集模式",
+    "FarmingModeNote": "(為掉落物留出空間)",
     "MakeRoom": {
       "Desc": "DIM將從{{store}} 上移動記憶水晶與微光幣物品到保險庫或其它角色上，以防止有物品被寄送到郵政官處。",
       "Desc_female": "DIM將從{{store}} 上移動記憶水晶與微光幣物品到保險庫或其它角色上，以防止有物品被寄送到郵政官處。",
@@ -156,20 +156,20 @@
     "Vault": "會將物品移到保險庫來騰出空間。"
   },
   "FashionDrawer": {
-    "Accept": "Save fashion",
-    "ClearOrnaments": "Clear Ornaments",
-    "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
-    "ClearShaders": "Clear Shaders",
-    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
-    "NoPreference": "No preference - this socket won't be changed",
-    "Reset": "Clear fashion",
-    "Sync": "Sync",
-    "SyncOrnaments": "Sync Ornaments",
-    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
-    "SyncShaders": "Sync Shaders",
-    "SyncShadersTitle": "Use the same shader on all items",
-    "Title": "Choose shaders and ornaments",
-    "UseEquipped": "Use equipped fashion"
+    "Accept": "保存外貌",
+    "ClearOrnaments": "清除皮膚",
+    "ClearOrnamentsTitle": "將所有皮膚重置為“無偏好”",
+    "ClearShaders": "清除著色器",
+    "ClearShadersTitle": "將所有著色器重置為“無偏好”",
+    "NoPreference": "無偏好-不會更改此插槽",
+    "Reset": "清除外貌",
+    "Sync": "同步",
+    "SyncOrnaments": "同步皮膚",
+    "SyncOrnamentsTitle": "如整套皮膚已解鎖，則應用到所有物品",
+    "SyncShaders": "同步著色器",
+    "SyncShadersTitle": "為所有物品應用同一著色器",
+    "Title": "選擇著色器和皮膚",
+    "UseEquipped": "使用已裝備的外貌"
   },
   "FileUpload": {
     "Instructions": "選擇或拖拽檔案"
@@ -191,11 +191,12 @@
     "Combine": "可以用括號來組合過濾器，或用「or」和「and」來進一步篩選你的搜索，例如「{{example}}」。",
     "ContributePower": "顯示擁有光等的物品.",
     "Cosmetic": "顯示飾品或裝飾物品。",
+    "Craftable": "Shows items that are craftable.",
     "Curated": "顯示擁有指定特性的物品。",
     "CurrentClass": "顯示當前登錄的守護者可裝備的物品。",
     "CustomStatLower": "顯示相比其他同類別護甲而言屬性全面更低的護甲，但只考慮對應職業的自定義屬性總和里的屬性。",
     "DamageType": "按照傷害類型顯示.",
-    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials.",
+    "Deepsight": "顯示帶有深視共振的武器，可用於選取資料。",
     "Description": "描述",
     "Dupe": "顯示重複的物品，包含不同賽季版本",
     "DupeCount": "擁有指定重複數量的物品。",
@@ -214,7 +215,7 @@
     "InLoadout": "顯示已被用於配裝的物品.",
     "Infusable": "顯示可以灌注的物品.",
     "InfusionFodder": "顯示可用於灌注同類物品且只消耗微光的物品。",
-    "IsCrafted": "Shows weapons that have been crafted.",
+    "IsCrafted": "顯示製作獲取的武器。",
     "IsSunset": "顯示已退環境且不能再被灌注到光等上限的物品。",
     "ItemHash": "顯示具有給定物品 hash 的物品。此為高級用戶選項。",
     "ItemId": "顯示具有給定物品 ID 的物品。此為高級用戶選項。",
@@ -261,13 +262,13 @@
     "SearchPrompt": "搜索可用的過濾器命令",
     "Season": "按照物品推出季度顯示.",
     "SeasonalDupe": "顯示重複物品，不包括同一物品在不同賽季的版本。",
-    "StackFull": "Show items which are at-capacity for their stack (Enhancement Cores, Strange Coins, Gunsmith Materials etc)",
+    "StackFull": "顯示堆疊已滿的物品 (强化覈心、奇异硬幣、槍匠資料等)",
     "StackLevel": "根據堆疊數量來顯示物品.",
     "Stackable": "顯示可以堆疊的物品(合成彈藥,奇怪硬幣等)",
     "StatLower": "顯示相比其他同類別護甲而言屬性全面更低的護甲。",
-    "Stats": "Shows items based on a specific stat value. $t(Filter.StatsExtras)",
-    "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. $t(Filter.StatsExtras)",
-    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + or & symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats.",
+    "Stats": "按某個屬性值顯示物品。$t(Filter.StatsExtras)",
+    "StatsBase": "按基礎屬性值篩選護甲，不包含附加模組或大師傑作内容。$t(Filter.StatsExtras)",
+    "StatsExtras": "要想相加多個内容，可用+或&號連接内容名稱。 要想按某一内容在物品整體内容中的排名來匹配，可使用highest，secondhighest，thirdhighest等特殊關鍵字。",
     "StatsLoadout": "針對特定屬性, 篩選出最大化數值的一系列裝備",
     "StatsMax": "針對特定屬性, 篩選出最大化數值的一系列裝備. 包括那些最高屬性值物品",
     "Tags": {
@@ -284,15 +285,17 @@
     "UnlockAllSuccess": "已經解鎖{{num}} 物品",
     "Vendor": "物品可從特定的商販獲得。",
     "Weapon": "顯示武器物品。",
+    "WeaponLevel": "Shows weapons based on their Weapon Level.",
     "WeaponType": "按照武器類型顯示.",
     "Wishlist": "顯示你願望單中的物品",
     "WishlistDupe": "顯示有至少一個複製品在你願望單中的物品堆疊",
     "WishlistNotes": "顯示與搜索相匹配的願望清單物品",
+    "WishlistUnknown": "Shows items with no roll recommendations in the loaded wish lists.",
     "Year": "按照物品推出年份顯示."
   },
   "General": {
     "ClickForDetails": "點擊查看詳情",
-    "Confirm": "Confirm?",
+    "Confirm": "確認？",
     "UserGuideLink": "使用說明"
   },
   "Header": {
@@ -304,7 +307,7 @@
     "DeleteSearch": "刪除搜索",
     "FilterHelp": "搜索項目/特性，{{example}} 等",
     "FilterHelpBrief": "搜索物品",
-    "FilterHelpLoadouts": "Search loadout names and notes",
+    "FilterHelpLoadouts": "蒐索配裝名稱和備註",
     "FilterHelpMenuItem": "過濾器幫助...",
     "FilterHelpOptimizer": "從配裝里過濾護甲：{{example}}",
     "FilterHelpProgress": "搜索里程碑和懸賞",
@@ -317,7 +320,7 @@
     "Inventory": "背包",
     "IosPwaPrompt": "在 Safari 中，輕觸分享圖標（位於屏幕底部中央），並選擇「添加到主屏幕」。",
     "KeyboardShortcuts": "鍵盤快捷鍵",
-    "LaunchDIMAlone": "Separate Window",
+    "LaunchDIMAlone": "獨立視窗",
     "Menu": "菜單",
     "Refresh": "刷新命運數據 [R]",
     "ReloadApp": "重新載入應用",
@@ -361,8 +364,8 @@
     "TransferItems": "轉移"
   },
   "ItemFeed": {
-    "Description": "Item Feed",
-    "HideTagged": "Hide Tagged"
+    "Description": "物品流",
+    "HideTagged": "隱藏已標記的物品"
   },
   "ItemMove": {
     "Consolidate": "合併{{name}}",
@@ -389,7 +392,7 @@
     "Deequip": "無法找到另一個物品來卸下{{itemname}}",
     "ExoticError": "無法裝備“{{itemname}}”，因為在{{slot}} 欄位中無法裝備異域物品。（{{error}}）",
     "NotEnoughRoom": "我們無法在{{store}} 上移動物品, 來為{{itemname}} 騰出空間",
-    "NotEnoughRoomGeneral": "There's not enough room to move this item.",
+    "NotEnoughRoomGeneral": "沒有足够的空間來移動此物品。",
     "OnlyEquippedClassLevel": "該物品僅可以裝備在{{class}} 上，且至少大於{{level}} 級。",
     "OnlyEquippedLevel": "該物品僅可以裝備在至少{{level}} 級的角色上。",
     "PostmasterAlmostFull": "接近全滿了!({{number}}/{{postmasterSize}})",
@@ -455,8 +458,8 @@
     "SearchAnExotic": "搜索異域裝備或描述",
     "SelectExotic": "選擇異域裝備",
     "SelectMods": "選擇模組",
-    "SelectSubclass": "Select subclass",
-    "SelectSubclassOptions": "Customize subclass",
+    "SelectSubclass": "選擇子職業",
+    "SelectSubclassOptions": "自定義子職業",
     "ShowAllConfigs": "顯示所有配置",
     "ShowConfigs": "顯示配置",
     "ShowGear": "{{class}} 防具",
@@ -471,14 +474,14 @@
   },
   "LoadoutBuilder": {
     "AddHalfTierMods": "添加 +5 模組",
-    "All": "All",
+    "All": "全部",
     "AnyExotic": "任何異域獎勵",
     "AnyExoticDescription": "組合里必須有任意異域裝備。",
-    "AssumeMasterwork": "Assume Masterwork",
+    "AssumeMasterwork": "假定大師傑作",
     "AssumeMasterworkOptions": {
-      "All": "All armor will use masterworked stats and will have an energy level of 10.",
-      "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
-      "None": "All armor will use its current stats and will have a minimum energy level of 7."
+      "All": "所有護甲會使用大師之作内容和10點能量等級。",
+      "Legendary": "傳說護甲會使用大師杰作内容和10點能量等級。",
+      "None": "所有護甲會使用大師之作內容和10點能量等級。"
     },
     "ChooseAlternateTitle": "選擇另一個物品",
     "CompareLoadout": "對比配裝",
@@ -491,10 +494,10 @@
     "ExistingLoadout": "已有配裝",
     "ExoticSpecialCategory": "特殊",
     "Filter": "過濾",
-    "Legendary": "Legendary",
+    "Legendary": "传说",
     "LockElement": "鎖定元素",
     "LockElementOptions": {
-      "All": "All armor will be locked to its current element.",
+      "All": "所有護甲將被鎖定為當前元素。",
       "Masterworked": "Armor will be locked to its current element if it's already masterworked.",
       "None": "Armor element will be changed as needed to fit the selected mods."
     },
@@ -541,8 +544,8 @@
     "Apply": "Apply",
     "ApplyMods": "Applying mods",
     "ApplySearch": "轉移搜索 \"{{query}}\"",
-    "ArmorMods": "護甲模組",
-    "AssumeMaxWeapons": "假設最大光等武器",
+    "BadLoadoutShare": "Unable to load shared loadout",
+    "BadLoadoutShareBody": "The loadout you're trying to load is invalid: {{error}}",
     "Before": "撤銷 '{{name}}'",
     "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "添加 {{name}}",
@@ -629,21 +632,22 @@
     "SaveAsNew": "Save as New",
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
     "SaveLoadout": "Save Loadout",
+    "ShareLoadout": "Share Loadout",
     "ShowModPlacement": "顯示模組位置",
     "SocketOverrides": "Changing subclass options",
     "SortByEditTime": "Sort by last edited",
     "SortByName": "Sort by name",
-    "SubclassOptions": "{{subclass}} options",
-    "SubclassOptionsSearch": "Search {{subclass}} options",
-    "Succeeded": "Loadout succeeded",
-    "SyncFromEquipped": "Sync from equipped",
+    "SubclassOptions": "{{subclass}} 選項",
+    "SubclassOptionsSearch": "搜索{{subclass}} 選項",
+    "Succeeded": "配裝成功",
+    "SyncFromEquipped": "同步已裝備物品",
     "TooManyRequested": "你有{{total}} 個{{itemname}}, 但完成配裝需要{{requested}} 個. 我們已經處理所有已擁有的",
-    "UnassignedModError": "Mod didn't fit on your current armor",
+    "UnassignedModError": "模組不適合你當前的護甲",
     "UnassignedMods": "未分配的模組",
-    "Unequipped": "Unequipped",
-    "Update": "Save Changes",
+    "Unequipped": "未裝備",
+    "Update": "保存更改",
     "VendorsCannotEquip": "您沒有這些項目。點擊來選擇一個替換或點擊 X 來刪除：",
-    "WeaponsOnly": "Weapons Only"
+    "WeaponsOnly": "僅限武器"
   },
   "Manifest": {
     "Download": "正在從 Bungie 下載最新的命運信息數據庫...",
@@ -667,7 +671,7 @@
   },
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
-    "AcquiredMod": "This mod is unlocked in collections.",
+    "AcquiredMod": "此模組已在收藏中解鎖。",
     "AddNote": "添加備註",
     "AddToLoadout": "配裝",
     "All": "全部",
@@ -677,10 +681,10 @@
     "DistributeEvenly": "均勻分配",
     "Equip": "裝備",
     "FavoriteUnFavorite": {
-      "Favorite": "Favorite {{itemType}}",
-      "Favorited": "Favorited",
-      "Unfavorite": "Unfavorite {{itemType}}",
-      "Unfavorited": "Unfavorited"
+      "Favorite": "收藏{{itemType}}",
+      "Favorited": "已收藏",
+      "Unfavorite": "取消收藏{{itemType}}",
+      "Unfavorited": "已取消收藏"
     },
     "Infuse": "灌注",
     "LockUnlock": {
@@ -715,15 +719,15 @@
     },
     "TriageTab": "分類",
     "Vault": "保險庫",
-    "WeaponLevel": "Weapon Level {{level}}"
+    "WeaponLevel": "武器等级{{level}}"
   },
   "Notes": {
     "Error": "錯誤! 備註不能超過120個字元.",
     "Help": "為該物品添加備註"
   },
   "Notification": {
-    "Cancel": "Cancel",
-    "OK": "Dismiss"
+    "Cancel": "取消",
+    "OK": "關閉"
   },
   "Objectives": {
     "Complete": "已完成",
@@ -801,8 +805,8 @@
     "Milestones": "里程碑和挑戰",
     "NoTrackedTriumph": "你沒有正在跟蹤的成就。在遊戲中跟蹤一個，或在 DIM 中跟蹤任意數目。",
     "PercentPrestige": "重置百分比{{pct}}%",
-    "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
-    "PowerBonusHeaderUndefined": "Other Rewards",
+    "PowerBonusHeader": "+{{powerBonus}} 光等獎勵",
+    "PowerBonusHeaderUndefined": "其他獎勵",
     "Progress": "進度",
     "QueryFilteredTrackedTriumphs": "你正在追蹤的成就均不匹配此搜索",
     "QuestExpired": "已過期",
@@ -825,7 +829,7 @@
   },
   "SearchHistory": {
     "Date": "最近使用",
-    "DeleteAll": "Delete all non-starred searches",
+    "DeleteAll": "删除所有未加星標的搜索",
     "Description": "這些是你過去和保存的搜索。你可以在這裡刪除它們。",
     "Link": "查看和編輯搜索歷史",
     "Query": "搜索​​​​",
@@ -845,33 +849,34 @@
     "CustomStatDesc": "選擇護甲屬性來自定義在物品彈窗、管理器和對比中顯示的屬性總和。用 stat:custom:>=30 來搜索。",
     "Data": "試算表",
     "DefaultItemSizeNote": "50 px 的物品大小看起來最清晰, 而不會模糊物品圖片或文本。",
-    "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool or organizer to evaluate related items.",
+    "DontForgetDupes": "别忘了，你可以搜索 is:dupe 来快速找到重复的物品，也可以用对比工具或管理器来比较相关物品。",
     "EnableAdvancedStats": "在裝備上顯示品質指數(D1)",
     "ExpandSingleCharacter": "顯示所有角色",
-    "ExportProfile": "Export API profile response",
+    "ExportProfile": "匯出API返回的帳戶資料",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下載您物品的 CSV 列表, 可以在您選擇的試算表應用程式中輕鬆查看。",
     "ExportSSNoStores": "請在刷新一次庫存後點擊此按鈕",
+    "HidePullFromPostmaster": "Hide the \"Pull From Postmaster\" button",
     "Inventory": "物品欄顯示模式",
     "InventoryColumns": "物品欄顯示寬度",
     "InventoryColumnsMobile": "行動裝置物品欄顯示寬度",
     "InventoryColumnsMobileLine2": "將自動調整物品大小以適配當前設置",
-    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
+    "InventoryNumberOfSpacesToClear": "啟用收集模式時要留出的空位數量",
     "Items": "物品顯示",
     "Language": "語言",
-    "LoadoutSort": "Loadout order:",
+    "LoadoutSort": "配裝順序：",
     "LogOut": "註銷",
     "Masterworked": "已為大師傑作",
-    "PerkDisplay": "Perk display in item popup",
-    "PerkGrid": "Grid",
-    "PerkList": "List",
+    "PerkDisplay": "物品彈窗裏的特性顯示",
+    "PerkGrid": "網格",
+    "PerkList": "清單",
     "ReloadDIM": "刷新頁面 [F5] 以完成語言切換",
     "ResetToDefault": "重置",
     "SetSort": "物品排序方式:",
     "Settings": "設置",
-    "ShowNewItems": "Show a red dot on new items",
-    "SingleCharacter": "Single-Character View",
-    "SingleCharacterExplanation": "DIM will show only the most recently played character.\nItems held by hidden characters will appear in the vault, if they can be used by the current character.\nItems specific to other classes will be hidden entirely.",
+    "ShowNewItems": "在新物品上顯示紅點",
+    "SingleCharacter": "單角色視圖",
+    "SingleCharacterExplanation": "DIM將只顯示最近一次遊玩的角色。\n\n如果隱藏的角色持有當前角色可用的物品，它們會被顯示在保險庫裏。\n\n其他職業獨有的物品會被完全隱藏。",
     "SizeItem": "物品顯示大小",
     "SortByAmmoType": "彈藥類型",
     "SortByAmount": "堆疊大小",
@@ -893,28 +898,28 @@
     "ApplyPerks": "應用特性",
     "GridStyle": "按網格顯示特性",
     "Insert": {
-      "Ability": "Equip Ability",
-      "Aspect": "Insert Aspect",
-      "Fragment": "Insert Fragment",
-      "Mod": "Insert Mod",
-      "Ornament": "Apply Ornament",
-      "Projection": "Apply Ghost Projection",
-      "Shader": "Apply Shader",
+      "Ability": "裝備技能",
+      "Aspect": "插入星相",
+      "Fragment": "插入碎片",
+      "Mod": "插入模組",
+      "Ornament": "應用皮膚",
+      "Projection": "應用機靈投影",
+      "Shader": "應用著色器",
       "Super": "",
-      "Transmat": "Apply Transmat Effect"
+      "Transmat": "應用傳送效果"
     },
     "ListStyle": "按列表顯示特性",
-    "Search": "Search names or descriptions",
+    "Search": "搜索名稱或說明",
     "Select": {
-      "Ability": "Preview Ability",
-      "Aspect": "Preview Aspect",
-      "Fragment": "Preview Fragment",
-      "Mod": "Preview Mod",
-      "Ornament": "Preview Ornament",
-      "Projection": "Preview Ghost Projection",
-      "Shader": "Preview Shader",
-      "Super": "Preview Super",
-      "Transmat": "Preview Transmat Effect"
+      "Ability": "預覽技能",
+      "Aspect": "預覽星相",
+      "Fragment": "預覽碎片",
+      "Mod": "預覽模組",
+      "Ornament": "預覽皮膚",
+      "Projection": "預覽機靈投影",
+      "Shader": "預覽著色器",
+      "Super": "预览超能",
+      "Transmat": "預覽傳送效果"
     },
     "SelectWishlistPerks": "預覽願望單特性"
   },
@@ -1013,7 +1018,7 @@
     "Collections": "收藏品",
     "Engram": "獎勵記憶水晶",
     "FilterToUnacquired": "僅顯示未收集物品",
-    "NoItems": "This Vendor is currently not offering any items.",
+    "NoItems": "此商人現時沒有提供任何物品。",
     "Vendors": "商販"
   },
   "Views": {
@@ -1088,7 +1093,7 @@
     "LastUpdated": "最後更新於 {{lastUpdatedDate}} {{lastUpdatedTime}}",
     "Num": "在您的願望單中有{{num, number}} 個物品",
     "PreMadeFiles": "使用預製願望清單",
-    "Untitled": "Untitled Wish List",
+    "Untitled": "未命名的願望清單",
     "UpdateExternalSource": "更新願望清單來源",
     "Voltron": "voltron（默認）",
     "VoltronDescription": "voltron 是來自 Mercules904 和 pandapaxxy 的 PvE 和 PvP 願望清單特性表，並會自動更新。這是我們的默認列表。",
