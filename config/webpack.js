@@ -326,6 +326,10 @@ module.exports = (env) => {
           entrypoints: true,
           chunks: true,
           modules: true,
+          excludeAssets: [
+            /data\/d1\/manifests\/d1-manifest-..(-br)?.json(.br|.gz)?/,
+            /webpack-stats.json/,
+          ],
         },
       }),
 
