@@ -32,6 +32,7 @@
 * Old loadouts containing void subclasses will upgrade automatically to the new Void 3.0 version, instead of telling you the loadout is missing an item.
 * Enhanced perks are now visually distinct in the Item Popup.
 * The Organizer page now includes a selector for Glaives.
+* Glaives now show their Shield Duration stat.
 * New search filters:
   * `deepsight:complete` and `deepsight:incomplete` to check the status of weapons' Deepsight attunement.
   * `deepsight:ruinous`, `deepsight:adroit`, `deepsight:mutable` and `deepsight:energetic` to identify Deepsight Resonance weapons that can provide specific Resonant Elements.

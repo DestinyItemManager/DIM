@@ -109,6 +109,7 @@ export const D2WeaponStatHashByName = {
   magazine: StatHashes.Magazine,
   aimassist: StatHashes.AimAssistance,
   equipspeed: StatHashes.Handling,
+  shieldduration: StatHashes.ShieldDuration,
   velocity: StatHashes.Velocity,
   blastradius: StatHashes.BlastRadius,
   recoildirection: StatHashes.RecoilDirection,
