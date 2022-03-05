@@ -182,7 +182,7 @@ function useVisibilityRefresh() {
   useEffect(
     () =>
       dimNeedsUpdate$.subscribe((needsUpdate) => {
-        if (needsUpdate && !hasSearchQuery) {
+        if (needsUpdate && !hasSearchQuery && document.hidden) {
           // Sneaky updates - if DIM is hidden and needs an update, do the update.
           reloadDIM();
         }
