@@ -296,6 +296,7 @@
     "UnlockAllSuccess": "Unlocked {{num}} items",
     "Vendor": "Item is available from a specific vendor.",
     "WeaponType": "Shows weapons based on their weapon type.",
+    "WeaponLevel": "Shows weapons based on their Weapon Level.",
     "Wishlist": "Shows items that match your wish list.",
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "WishlistNotes": "Shows wish listed items whose notes match the search.",
