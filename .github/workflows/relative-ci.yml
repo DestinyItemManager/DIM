@@ -1,0 +1,17 @@
+name: RelativeCI
+
+on:
+  workflow_run:
+    workflows: ["PR Build", "Deploy Beta", "Deploy Prod"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send webpack stats to RelativeCI
+        uses: relative-ci/agent-action@v2
+        with:
+          key: ${{ secrets.RELATIVE_CI_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}

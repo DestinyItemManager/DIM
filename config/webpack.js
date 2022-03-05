@@ -25,6 +25,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const CompressionPlugin = require('compression-webpack-plugin');
 
 const NotifyPlugin = require('notify-webpack-plugin');
+const { StatsWriterPlugin } = require('webpack-stats-plugin');
 
 const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
@@ -313,6 +314,16 @@ module.exports = (env) => {
       new MiniCssExtractPlugin({
         filename: env.dev ? '[name]-[contenthash].css' : '[name]-[contenthash:6].css',
         chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:6].css',
+      }),
+
+      new StatsWriterPlugin({
+        filename: '../webpack-stats.json',
+        stats: {
+          assets: true,
+          entrypoints: true,
+          chunks: true,
+          modules: true,
+        },
       }),
 
       new HtmlWebpackPlugin({
