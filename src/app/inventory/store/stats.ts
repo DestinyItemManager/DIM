@@ -52,6 +52,7 @@ export const statAllowList = [
   StatHashes.SwingSpeed,
   StatHashes.Impact,
   StatHashes.Range,
+  StatHashes.ShieldDuration,
   StatHashes.GuardEfficiency,
   StatHashes.GuardResistance,
   StatHashes.Accuracy,
