@@ -144,7 +144,7 @@ export default function PlugDrawer({
   /** Filter the plugs from each plugSet based on the query. This can leave plugSets with zero plugs */
   const queryFilteredPlugSets = useMemo(() => {
     if (!query.length) {
-      return plugSets;
+      return Array.from(plugSets);
     }
 
     const searchFilter = createPlugSearchPredicate(query, language, defs);
