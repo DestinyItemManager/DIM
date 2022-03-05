@@ -146,7 +146,11 @@ type PlugStatuses = {
   notSelected?: boolean;
 };
 
-/** an encircled perk image */
+/**
+ * an encircled perk image.
+ * this has a global classname .perk-circle available so parents can define how big sockets should be
+ *
+ */
 function PerkCircle({
   plug,
   className,
@@ -167,7 +171,7 @@ function PerkCircle({
       [styles.notSelected]: notSelected,
     }) || styles.none;
   return (
-    <svg viewBox="0 0 100 100" width="100" height="100" className={className}>
+    <svg viewBox="0 0 100 100" width="100" height="100" className={clsx(className, 'perk-circle')}>
       <defs>
         <linearGradient id="mw" x1="0" x2="0" y1="0" y2="1">
           <stop stopColor="transparent" offset="20%" />

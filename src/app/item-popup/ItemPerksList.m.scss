@@ -23,7 +23,7 @@
 
 .plug {
   composes: flexRow from '../dim-ui/common.m.scss';
-  align-items: flex-start;
+  align-items: center;
   margin-right: 0.7em;
   cursor: pointer;
 
@@ -34,7 +34,7 @@
   h2 {
     font-size: 12px;
     line-height: 12px;
-    margin: calc((24 / 50 * var(--item-size) + 4px) / 2 - 6px) 0 4px 0;
+    margin: 0;
   }
 }
 
