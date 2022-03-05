@@ -37,11 +37,20 @@ jobs:
           PATTERNS: |
             src/locale/dim.json
 
-      - name: Discord notification
-        if: (steps.i18n-diff.outputs.insertions > 0)
+      - name: Discord notification (>1)
+        if: (steps.i18n-diff.outputs.insertions > 1)
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_I18N_WEBHOOK }}
-          # DISCORD_EMBEDS: ${{ toJSON(secrets.DISCORD_EMBEDS) }}
+          DISCORD_EMBEDS: '[{"title":"DIM - crowdin", "color": F37422, "url": "https://crowdin.com/project/destiny-item-manager","description": "${{ steps.i18n-diff.outputs.insertions }} translations have been added or changed on crowdin."  }]'
         uses: Ilshidur/action-discord@master
         with:
-          args: "<@&622449489008918548> - ${{ steps.i18n-diff.outputs.insertions }} translations have been added/changed on crowdin. https://crowdin.com/project/destiny-item-manager"
+          args: "<@&622449489008918548>"
+
+      - name: Discord notification (1)
+        if: (steps.i18n-diff.outputs.insertions = 1)
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_I18N_WEBHOOK }}
+          DISCORD_EMBEDS: '[{"title":"DIM - crowdin", "color": F37422, "url": "https://crowdin.com/project/destiny-item-manager","description": "${{ steps.i18n-diff.outputs.insertions }} translation has been added or changed on crowdin."  }]'
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "<@&622449489008918548>"
