@@ -87,6 +87,21 @@ const simpleRangeFilters: FilterDefinition[] = [
       };
     },
   },
+  {
+    keywords: 'weaponlevel',
+    description: tl('Filter.WeaponLevel'),
+    format: 'range',
+    destinyVersion: 2,
+    filter: ({ filterValue }) => {
+      const compareTo = rangeStringToComparator(filterValue);
+      return (item) => {
+        if (!item.craftedInfo) {
+          return false;
+        }
+        return compareTo(item.craftedInfo.level || 0);
+      };
+    },
+  },
 ];
 
 export default simpleRangeFilters;
