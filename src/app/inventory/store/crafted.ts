@@ -6,6 +6,9 @@ import { DimCrafted, DimItem, DimSocket } from '../item-types';
 /** the socket category containing the single socket with weapon crafting objectives */
 export const craftedSocketCategoryHash = 3583996951;
 
+/** the socket category containing the Mementos */
+export const mementoSocketCategoryHash = 3201856887;
+
 export function buildCraftedInfo(item: DimItem, defs: D2ManifestDefinitions): DimCrafted | null {
   const craftedSocket = getCraftedSocket(item);
   if (!craftedSocket) {
