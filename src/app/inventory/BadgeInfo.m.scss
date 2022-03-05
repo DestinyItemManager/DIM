@@ -33,9 +33,14 @@
   padding: 0 4px;
 }
 
-.wishlistRoll {
+.summaryIcon {
   display: flex;
   flex: 1;
+}
+
+.shapedIcon {
+  width: calc((8 / 50) * var(--item-size));
+  height: calc((8 / 50) * var(--item-size));
 }
 
 .quality {
@@ -66,10 +71,10 @@
   background-color: $masterwork-border-color;
 }
 
-.crafted {
-  border-bottom: 1px solid $crafted-border-color;
-  border-left: 1px solid $crafted-border-color;
-  border-right: 1px solid $crafted-border-color;
+.deepsight {
+  border-bottom: 1px solid $deepsight-border-color;
+  border-left: 1px solid $deepsight-border-color;
+  border-right: 1px solid $deepsight-border-color;
   padding: 0 1px;
 }
 

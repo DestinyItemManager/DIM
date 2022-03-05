@@ -39,22 +39,26 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless,
     [styles.masterwork]: item.masterwork,
-    [styles.crafted]: item.crafted,
+    [styles.deepsight]: item.deepsightInfo,
     [itemTierStyles[item.tier]]: !borderless && !item.plug,
   });
 
   return (
     <>
       <BungieImage src={item.icon} className={itemImageStyles} alt="" />
-      {item.masterwork && (
-        <div
-          className={clsx(styles.masterworkOverlay, { [styles.exoticMasterwork]: item.isExotic })}
-        />
-      )}
       {item.iconOverlay && (
         <div className={styles.iconOverlay}>
           <BungieImage src={item.iconOverlay} />
         </div>
+      )}
+      {(item.masterwork || item.deepsightInfo) && (
+        <div
+          className={clsx(styles.backgroundOverlay, {
+            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic,
+            [styles.exoticMasterwork]: item.masterwork && item.isExotic,
+            [styles.deepsightBorder]: item.deepsightInfo,
+          })}
+        />
       )}
       {item.plug?.costElementIcon && (
         <>
@@ -69,7 +73,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           </svg>
         </>
       )}
-      {item.highlightedObjective && (
+      {item.highlightedObjective && (!item.deepsightInfo || item.deepsightInfo.complete) && (
         <img className={styles.highlightedObjective} src={pursuitComplete} />
       )}
     </>
