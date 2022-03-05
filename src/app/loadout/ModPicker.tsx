@@ -210,7 +210,10 @@ function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Pr
   // Ensure the plug drawer is reset when selecting a different
   // set of plugSets so that it shows the correct mods and chooses
   // a correct height for the sheet.
-  const plugSetsKey = plugSets.map((p) => p.plugSetHash).toString();
+  const plugSetsKey = plugSets
+    .map((p) => p.plugSetHash)
+    .sort()
+    .toString();
 
   return (
     <PlugDrawer
