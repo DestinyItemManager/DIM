@@ -18,3 +18,4 @@ yarn-error.log
 manifest-cache
 Heap.*
 eslint_report.json
+webpack-stats.json

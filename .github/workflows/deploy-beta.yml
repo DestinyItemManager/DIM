@@ -42,11 +42,11 @@ jobs:
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
 
-      - name: Set BundleWatch token
-        run: echo "BUNDLEWATCH_GITHUB_TOKEN=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" >> $GITHUB_ENV
-
-      - name: Update Bundlewatch
-        run: yarn bundlewatch
+      # Upload webpack-stats.json to use on relative-ci.yaml workflow
+      - name: Upload webpack stats artifact
+        uses: relative-ci/agent-upload-artifact-action@v1
+        with:
+          webpackStatsFile: ./webpack-stats.json
 
       - name: Check Syntax
         run: yarn syntax
