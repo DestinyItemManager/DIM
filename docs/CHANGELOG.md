@@ -1,20 +1,22 @@
 ## Next
 
+### Changes
+
 * The "Pull From Postmaster" button no longer requires a second tap to confirm. For those who dislike this button, it may be removed entirely via a setting in the Settings page.
-* When you have 10 or more loadouts, a search box will appear in the Inventory page loadout dropdown, allowing you to search names just like on the Loadouts page.
-* Old loadouts with void subclasses in them will upgrade automatically to the new version with fragments and aspects, instead of telling you the loadout is missing an item.
 * Removed D2Gunsmith link from the item details popup while they work on revamping the site for all the new changes.
+* Removed the `level:` filter for D2 accounts, as Guardians no longer have a Level and items no longer require one.
+* Season of the Risen War Table Upgrades are now in the right order and show their acquired status.
+* Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
+* The "Kinetic Slot" icon in Compare sheet now looks different from the "Kinetic Damage" icon.
+
+### Features
+
+* `is:wishlistunknown` highlights items that have no rolls in the currently loaded wishlist.
+* When you have 10 or more loadouts, a search box will appear in the Inventory page loadout dropdown, allowing you to search names just like on the Loadouts page.
 * The Item Feed is available on both desktop and mobile. It shows your gear in the order it dropped, and gives you quick controls to tag incoming loot. Click on the item tile to get the full item popup.
   * Item Feed also got better at identifying relevant weapon perks.
   * Tagging an item from the Item Feed also marks it as not-new.
-  * Items can be dragged out of the feed into inventory (or the loadout editor).
-* Added `deepsight:complete` and `deepsight:incomplete` filters.
-* Added `is:craftable` filter.
-* Added `is:wishlistunknown` filter which highlights items that have no rolls in the currently loaded wishlist.
-* Removed the `level:` filter from D2 as equip required level no longer matters.
-* Season of the Risen War Table Upgrades are now in the right order and show their acquired status.
-* Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
-* Added `deepsight:ruinous`, `deepsight:adroit`, `deepsight:mutable` and `deepsight:energetic` filters to identify Deepsight Resonance weapons that allow extraction of a specific Resonant Element.
+  * Items can be dragged out of the feed into inventory locations (or into the loadout editor).
 * We have brand new Loadout Editor! Check it out from the character menu or the Loadouts page.
   * The layout mirrors the Loadout page's new design which has clear areas for different types of items. Each section also has a menu of additional actions like re-syncing from your currently equipped items, or clearing out a whole section.
   * As part of this change, we're removing support for "multi-class" loadouts. Loadouts will either be tied to one class, or can be toggled to "Any Class". "Any Class" loadouts cannot contain Subclass, Armor, or Fashion. If you edit an existing "Any Class" loadout and save it, those items will be removed unless you turn off "Any Class".
@@ -23,7 +25,19 @@
   * With this new design we have space to add even more loadout editing tools over the next few seasons.
   * The loadout editor stays open if you navigate to the Inventory or Loadouts screen while it's already open.
   * The new Loadout Editor is not available for D1.
-* Glaives now show up in search `is:glaive` and the Organizer View.
+
+### Witch Queen updates
+
+* Crafted and Deepsight weapons are now more in line with how they look in-game.
+* Old loadouts containing void subclasses will upgrade automatically to the new Void 3.0 version, instead of telling you the loadout is missing an item.
+* Enhanced perks are now visually distinct in the Item Popup.
+* The Organizer page now includes a selector for Glaives.
+* New search filters:
+  * `deepsight:complete` and `deepsight:incomplete` to check the status of weapons' Deepsight attunement.
+  * `deepsight:ruinous`, `deepsight:adroit`, `deepsight:mutable` and `deepsight:energetic` to identify Deepsight Resonance weapons that can provide specific Resonant Elements.
+  * `is:craftable` for any weapons which could be crafted at the Relic.
+  * `weaponlevel:` to filter by a crafted weapon's level.
+  * `is:glaive` ... finds Glaives!
 
 ## 7.7.0 <span class="changelog-date">(2022-02-28)</span>
 
