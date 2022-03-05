@@ -1,4 +1,4 @@
-# Run this workflow whenever dim.json has keys updated and you have updated the keys in the other i18n files as well
+# Run this workflow whenever en.json has keys updated and you have updated the keys in the other i18n files as well
 # Does not notify #i18n in discord
 name: i18n upload all (manual only)
 on:
@@ -11,23 +11,20 @@ jobs:
       - name: Checkout DIM
         uses: actions/checkout@v2
 
-      - name: Sort dim.json
-        run: dimJSON="$(jq -S . src/locale/dim.json)" && echo "${dimJSON}" > src/locale/dim.json
-
-      - name: sort locale dim.json
+      - name: sort locale ${lang}.json
         run: |
-          allLocales=("de" "es" "es-mx" "fr" "it" "ja" "ko" "pl" "pt-br" "ru" "zh-chs" "zh-cht")
+          allLocales=("en" "de" "es" "esMX" "fr" "it" "ja" "ko" "pl" "ptBR" "ru" "zhCHS" "zhCHT")
           for lang in ${allLocales[@]}; do
-            jq -S . src/locale/$lang/dim.json > src/locale/$lang/dim_sorted.json && mv src/locale/$lang/dim_sorted.json src/locale/$lang/dim.json
+            jq -S . src/locale/$lang.json > src/locale/sorted_$lang.json && mv src/locale/sorted_$lang.json src/locale/$lang.json
           done
 
-      - name: Upload updated dim.json to crowdin
+      - name: Upload updated ${lang}.json to crowdin
         uses: crowdin/github-action@1.0.4
         with:
           upload_sources: true
           upload_translations: true
-          source: src/locale/dim.json
-          translation: src/locale/%android_code%/dim.json
+          source: src/en.json
+          translation: src/locale/%android_code%.json
           project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
           token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
         env:
