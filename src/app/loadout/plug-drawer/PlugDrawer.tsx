@@ -4,6 +4,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { SearchInput } from 'app/search/SearchInput';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { isiOSBrowser } from 'app/utils/browsers';
 import { Comparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { produce } from 'immer';
@@ -188,6 +189,9 @@ export default function PlugDrawer({
     />
   );
 
+  // On iOS at least, focusing the keyboard pushes the content off the screen
+  const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
+
   const header = (
     <div>
       <h1>{title}</h1>
@@ -196,7 +200,7 @@ export default function PlugDrawer({
           query={query}
           onQueryChanged={setQuery}
           placeholder={searchPlaceholder}
-          autoFocus
+          autoFocus={nativeAutoFocus}
         />
       </div>
     </div>
