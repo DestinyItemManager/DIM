@@ -8,7 +8,7 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
+import { getLoadoutStats, singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
@@ -162,12 +162,11 @@ function ItemBucket({
   const handlePlaceholderClick = (equip: boolean) => onClickPlaceholder({ bucket, equip });
 
   // TODO: plumb through API from context??
-  // TODO: expose a menu item for adding more items?
-  // TODO: add-unequipped button?
   // T0DO: customize buttons in item popup?
   // TODO: draggable items?
 
-  const showAddUnequipped = equipped.length > 0 && unequipped.length < bucket.capacity - 1;
+  const maxSlots = singularBucketHashes.includes(bucket.hash) ? 1 : bucket.capacity;
+  const showAddUnequipped = equipped.length > 0 && unequipped.length < maxSlots - 1;
 
   const addUnequipped = showAddUnequipped && (
     <button

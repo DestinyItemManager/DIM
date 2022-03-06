@@ -12,6 +12,7 @@ import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
+import { singularBucketHashes } from './loadout-utils';
 
 export interface State {
   loadout: Readonly<Loadout>;
@@ -24,9 +25,11 @@ export type Action =
   | {
       type: 'addItem';
       item: DimItem;
-      items: ResolvedLoadoutItem[];
+      /**
+       * True or false if the item should definitely be equipped or not
+       * equipped, undefined to accept a default based on what's already there
+       */
       equip?: boolean;
-      socketOverrides?: SocketOverrides;
     }
   /** Applies socket overrides to the supplied item */
   | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
@@ -42,7 +45,7 @@ export type Action =
 /**
  * All state for this component is managed through this reducer and the Actions above.
  */
-export function stateReducer(_defs: D2ManifestDefinitions | D1ManifestDefinitions) {
+export function stateReducer(defs: D2ManifestDefinitions | D1ManifestDefinitions) {
   return (state: State, action: Action): State => {
     switch (action.type) {
       case 'update':
@@ -53,7 +56,7 @@ export function stateReducer(_defs: D2ManifestDefinitions | D1ManifestDefinition
 
       case 'addItem': {
         const { loadout } = state;
-        const { item, items, equip, socketOverrides } = action;
+        const { item, equip } = action;
 
         if (!itemCanBeInLoadout(item)) {
           showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
@@ -67,7 +70,7 @@ export function stateReducer(_defs: D2ManifestDefinitions | D1ManifestDefinition
           });
           return state;
         }
-        const draftLoadout = addItem(loadout, item, items, equip, socketOverrides);
+        const draftLoadout = addItem(defs, loadout, item, equip);
         return {
           ...state,
           loadout: draftLoadout,
@@ -173,11 +176,10 @@ export function stateReducer(_defs: D2ManifestDefinitions | D1ManifestDefinition
  * Produce a new loadout that adds a new item to the given loadout.
  */
 function addItem(
+  defs: D2ManifestDefinitions | D1ManifestDefinitions,
   loadout: Readonly<Loadout>,
   item: DimItem,
-  items: ResolvedLoadoutItem[],
-  equip?: boolean,
-  socketOverrides?: SocketOverrides
+  equip?: boolean
 ): Loadout {
   const loadoutItem: LoadoutItem = {
     id: item.id,
@@ -186,68 +188,69 @@ function addItem(
     equip: false,
   };
 
-  // TODO: maybe we should just switch back to storing loadout items in memory by bucket
+  // TODO: We really want to be operating against the resolved items, right? Should we re-resolve them here, or what?
+  //       If we don't, we may not properly detect a dupe?
 
-  // Other items of the same type (as DimItem)
-  const typeInventory = items.filter((li) => li.item.bucket.hash === item.bucket.hash);
-  const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);
-  const maxSlots = item.bucket.capacity;
+  // We only allow one subclass, and it must be equipped. Same with a couple other things.
+  const singular = singularBucketHashes.includes(item.bucket.hash);
+  const maxSlots = singular ? 1 : item.bucket.capacity;
 
   return produce(loadout, (draftLoadout) => {
-    const findItem = ({ loadoutItem }: ResolvedLoadoutItem) =>
-      draftLoadout.items.find((i) => i.id === loadoutItem.id && i.hash === loadoutItem.hash)!;
-
-    if (!dupe) {
-      if (typeInventory.length < maxSlots) {
-        loadoutItem.equip =
-          equip !== undefined ? equip : item.equipment && typeInventory.length === 0;
-        if (loadoutItem.equip) {
-          for (const otherItem of typeInventory) {
-            findItem(otherItem).equip = false;
-          }
-        }
-
-        // Only allow one subclass to be present per class (to allow for making a loadout that specifies a subclass for each class)
-        if (item.bucket.hash === BucketHashes.Subclass) {
-          const conflictingItem = items.find(
-            (li) => li.item.bucket.hash === item.bucket.hash && li.item.classType === item.classType
-          );
-          if (conflictingItem) {
-            draftLoadout.items = draftLoadout.items.filter((i) => i.id !== conflictingItem.item.id);
-          }
-          loadoutItem.equip = true;
-        }
-
-        if (socketOverrides) {
-          loadoutItem.socketOverrides = socketOverrides;
-        }
-
-        draftLoadout.items.push(loadoutItem);
-
-        // If adding a new armor item, remove any fashion mods (shader/ornament) that couldn't be slotted
-        if (
-          item.bucket.inArmor &&
-          loadoutItem.equip &&
-          draftLoadout.parameters?.modsByBucket?.[item.bucket.hash]?.length
-        ) {
-          const cosmeticSockets = getSocketsByCategoryHash(
-            item.sockets,
-            SocketCategoryHashes.ArmorCosmetics
-          );
-          draftLoadout.parameters.modsByBucket[item.bucket.hash] =
-            draftLoadout.parameters.modsByBucket[item.bucket.hash].filter((plugHash) =>
-              cosmeticSockets.some((s) => s.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash))
-            );
-        }
-      } else {
-        showNotification({
-          type: 'warning',
-          title: t('Loadouts.MaxSlots', { slots: maxSlots }),
-        });
+    // If this item is already in the loadout, find it via its id/hash.
+    const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);
+    if (dupe) {
+      if (item.maxStackSize > 1) {
+        // The item is already here but we'd like to add more of it (only D1 loadouts hold stackables)
+        const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
+        dupe.amount += increment;
       }
-    } else if (item.maxStackSize > 1) {
-      const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
-      dupe.amount += increment;
+      // Otherwise just bail and don't modify the loadout
+      return;
+    }
+
+    const typeInventory = loadoutItemsInBucket(defs, draftLoadout, item.bucket.hash);
+
+    if (typeInventory.length >= maxSlots) {
+      // We're already full
+      showNotification({
+        type: 'warning',
+        title: t('Loadouts.MaxSlots', { slots: maxSlots }),
+      });
+      return;
+    }
+
+    // Set equip based on either explicit argument, or if it's the first item of this type
+    loadoutItem.equip = equip !== undefined ? equip : item.equipment && typeInventory.length === 0;
+    // Reset all other items of this type to not be equipped
+    if (loadoutItem.equip) {
+      for (const otherItem of typeInventory) {
+        otherItem.equip = false;
+      }
+    }
+
+    if (singular) {
+      // Remove all others (there really should be at most one) and force equipped
+      draftLoadout.items = draftLoadout.items.filter((li) => !typeInventory.includes(li));
+      loadoutItem.equip = true;
+    }
+
+    draftLoadout.items.push(loadoutItem);
+
+    // If adding a new armor item, remove any fashion mods (shader/ornament) that couldn't be slotted
+    if (
+      item.bucket.inArmor &&
+      loadoutItem.equip &&
+      draftLoadout.parameters?.modsByBucket?.[item.bucket.hash]?.length
+    ) {
+      const cosmeticSockets = getSocketsByCategoryHash(
+        item.sockets,
+        SocketCategoryHashes.ArmorCosmetics
+      );
+      draftLoadout.parameters.modsByBucket[item.bucket.hash] = draftLoadout.parameters.modsByBucket[
+        item.bucket.hash
+      ].filter((plugHash) =>
+        cosmeticSockets.some((s) => s.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash))
+      );
     }
   });
 }
@@ -349,5 +352,18 @@ function applySocketOverrides(
     if (loadoutItem) {
       loadoutItem.socketOverrides = socketOverrides;
     }
+  });
+}
+
+function loadoutItemsInBucket(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  loadout: Loadout,
+  searchBucketHash: number
+) {
+  return loadout.items.filter((li) => {
+    const def = defs.InventoryItem.get(li.hash);
+    const bucketHash =
+      def && ('bucketTypeHash' in def ? def.bucketTypeHash : def.inventory?.bucketTypeHash);
+    return bucketHash && bucketHash === searchBucketHash;
   });
 }

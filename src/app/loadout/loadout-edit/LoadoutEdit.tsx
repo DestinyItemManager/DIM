@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
@@ -52,7 +52,6 @@ export default function LoadoutEdit({
   onRemoveItem: (item: DimItem) => void;
 }) {
   const defs = useD2Definitions()!;
-  const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
@@ -99,11 +98,8 @@ export default function LoadoutEdit({
 
   const updateLoadout = (loadout: Loadout) => stateDispatch({ type: 'update', loadout });
 
-  const onAddItem = useCallback(
-    (item: DimItem, equip?: boolean) =>
-      stateDispatch({ type: 'addItem', item, stores, items, equip }),
-    [items, stores, stateDispatch]
-  );
+  const onAddItem = (item: DimItem, equip?: boolean) =>
+    stateDispatch({ type: 'addItem', item, equip });
 
   const handleSyncModsFromEquipped = () => {
     const mods: number[] = [];
@@ -410,8 +406,6 @@ export async function fillLoadoutFromUnequipped(
   }
 
   const items = getUnequippedItemsForLoadout(dimStore, category);
-
-  // TODO: this isn't right - `items` isn't being updated after each add
   for (const item of items) {
     add(item, false);
   }

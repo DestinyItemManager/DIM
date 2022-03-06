@@ -93,10 +93,9 @@ export default function LoadoutDrawer2({
       stateDispatch({
         type: 'addItem',
         item,
-        items,
         equip,
       }),
-    [items]
+    []
   );
 
   /**

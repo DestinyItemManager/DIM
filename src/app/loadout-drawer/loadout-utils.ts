@@ -42,6 +42,16 @@ export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Emblems,
 ];
 
+/**
+ * Buckets where the item should be treated as "singular" in a loadout - where
+ * it can only have a single item and that item must be equipped.
+ */
+export const singularBucketHashes = [
+  BucketHashes.Subclass,
+  BucketHashes.Emblems,
+  BucketHashes.Emotes_Invisible,
+];
+
 // order to display a list of all 8 gear slots
 const gearSlotOrder: BucketHashes[] = [...D2Categories.Weapons, ...D2Categories.Armor];
 

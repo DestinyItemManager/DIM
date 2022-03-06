@@ -73,10 +73,9 @@ export default function LoadoutDrawer({
       stateDispatch({
         type: 'addItem',
         item,
-        items,
         equip,
       }),
-    [items]
+    []
   );
 
   const onRemoveItem = (item: DimItem, e?: React.MouseEvent) => {
