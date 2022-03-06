@@ -245,6 +245,49 @@ const socketFilters: FilterDefinition[] = [
         );
     },
   },
+  {
+    keywords: 'catalyst',
+    description: tl('Filter.Catalyst'),
+    format: ['query'],
+    destinyVersion: 2,
+    suggestions: ['complete', 'incomplete', 'missing'],
+    filter:
+      ({ filterValue }) =>
+      (item: DimItem) => {
+        switch (filterValue) {
+          case 'complete':
+            return (
+              item.equippingLabel === 'exotic_weapon' &&
+              (item.masterworkInfo || !emptyCatalystSocket(item)) &&
+              item.masterwork
+            );
+          case 'incomplete':
+            return (
+              item.equippingLabel === 'exotic_weapon' &&
+              (item.masterworkInfo || emptyCatalystSocket(item)) &&
+              !item.masterwork
+            );
+          case 'missing':
+            return (
+              item.equippingLabel === 'exotic_weapon' &&
+              (!item.masterworkInfo || emptyCatalystSocket(item))
+            );
+          default:
+            return false;
+        }
+      },
+  },
 ];
+
+function emptyCatalystSocket(item: DimItem) {
+  return item.sockets?.allSockets.some((socket) =>
+    Boolean(
+      socket.plugged &&
+        !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
+        socket.plugged.plugDef.plug &&
+        socket.plugged.plugDef.plug.plugCategoryIdentifier.match(/v400.empty.exotic.masterwork/)
+    )
+  );
+}
 
 export default socketFilters;
