@@ -1,11 +1,11 @@
-# This workflow runs whenever dim.json is updated on the master branch
+# This workflow runs whenever locale/en.json is updated on the master branch
 # It updates crowdin with new translation strings
 # and notifies the #i18n @i18n in Discord of the new translations.
 name: i18n upload bot
 on:
   push:
     paths:
-      - "src/locale/dim.json"
+      - "src/locale/en.json"
     branches: [master]
 
 jobs:
@@ -15,16 +15,16 @@ jobs:
       - name: Checkout DIM
         uses: actions/checkout@v2
 
-      - name: Sort dim.json
-        run: dimJSON="$(jq -S . src/locale/dim.json)" && echo "${dimJSON}" > src/locale/dim.json
+      - name: Sort en.json
+        run: dimJSON="$(jq -S . src/locale/en.json)" && echo "${dimJSON}" > src/locale/en.json
 
-      - name: Upload updated dim.json to crowdin
+      - name: Upload updated en.json to crowdin
         uses: crowdin/github-action@1.0.4
         with:
           upload_sources: true
           upload_translations: false
-          source: src/locale/dim.json
-          translation: src/locale/%android_code%/dim.json
+          source: src/locale/en.json
+          translation: src/locale/%android_code%.json
           project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
           token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
         env:
@@ -35,7 +35,7 @@ jobs:
         uses: technote-space/get-diff-action@v4
         with:
           PATTERNS: |
-            src/locale/dim.json
+            src/locale/en.json
 
       - name: Discord notification (>1)
         if: (steps.i18n-diff.outputs.insertions > 1)

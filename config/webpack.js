@@ -328,6 +328,7 @@ module.exports = (env) => {
           modules: true,
           excludeAssets: [
             /data\/d1\/manifests\/d1-manifest-..(-br)?.json(.br|.gz)?/,
+            /^(?!en).+.json/,
             /webpack-stats.json/,
           ],
         },

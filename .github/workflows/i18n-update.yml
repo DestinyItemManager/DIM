@@ -5,7 +5,7 @@ on:
     branches: [master]
     paths:
       - 'config/i18n.json'
-      - 'src/locale/dim.json'
+      - 'src/locale/en.json'
 
 jobs:
   i18n-update:

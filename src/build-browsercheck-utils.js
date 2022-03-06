@@ -1,18 +1,18 @@
 const fs = require('fs');
 
-const de = require('./locale/de/dim.json');
-const en = require('./locale/dim.json');
-const esMX = require('./locale/es-mx/dim.json');
-const es = require('./locale/es/dim.json');
-const fr = require('./locale/fr/dim.json');
-const it = require('./locale/it/dim.json');
-const ja = require('./locale/ja/dim.json');
-const ko = require('./locale/ko/dim.json');
-const pl = require('./locale/pl/dim.json');
-const ptBR = require('./locale/pt-br/dim.json');
-const ru = require('./locale/ru/dim.json');
-const zhCHS = require('./locale/zh-chs/dim.json');
-const zhCHT = require('./locale/zh-cht/dim.json');
+const de = require('./locale/de.json');
+const en = require('./locale/en.json');
+const esMX = require('./locale/esMX.json');
+const es = require('./locale/es.json');
+const fr = require('./locale/fr.json');
+const it = require('./locale/it.json');
+const ja = require('./locale/ja.json');
+const ko = require('./locale/ko.json');
+const pl = require('./locale/pl.json');
+const ptBR = require('./locale/ptBR.json');
+const ru = require('./locale/ru.json');
+const zhCHS = require('./locale/zhCHS.json');
+const zhCHT = require('./locale/zhCHT.json');
 
 function getI18nKey(key) {
   let key1 = key.split('.')[0];
