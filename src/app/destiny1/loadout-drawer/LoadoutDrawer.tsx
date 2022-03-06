@@ -3,12 +3,12 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import ItemIcon from 'app/inventory/ItemIcon';
-import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import 'app/inventory/Stores.scss';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { deleteLoadout, updateLoadout } from 'app/loadout-drawer/actions';
 import { stateReducer } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { addItem$, editLoadout$ } from 'app/loadout-drawer/loadout-events';
+import { addItem$ } from 'app/loadout-drawer/loadout-events';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import LoadoutDrawerDropTarget from 'app/loadout-drawer/LoadoutDrawerDropTarget';
@@ -30,34 +30,35 @@ import LoadoutDrawerOptions from './LoadoutDrawerOptions';
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit
  * loadouts from this interface. This one is only used for D1, see LoadoutDrawer2 for D2's new loadout editor.
  */
-export default function LoadoutDrawer() {
+export default function LoadoutDrawer({
+  initialLoadout,
+  storeId,
+  isNew,
+  showClass,
+  onClose,
+}: {
+  initialLoadout: Loadout;
+  /**
+   * The store that provides context to how this loadout is being edited from.
+   * The store this edit session was launched from. This is to help pick which
+   * mods are enabled, which subclass items to show, etc. Defaults to current store.
+   */
+  storeId?: string;
+  isNew: boolean;
+  showClass: boolean;
+  onClose(): void;
+}) {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
 
   const allItems = useSelector(allItemsSelector);
-  const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
   const [showingItemPicker, setShowingItemPicker] = useState(false);
 
   // All state and the state of the loadout is managed through this reducer
-  const [{ loadout, showClass, storeId, isNew }, stateDispatch] = useReducer(stateReducer, {
-    showClass: true,
-    isNew: false,
+  const [{ loadout }, stateDispatch] = useReducer(stateReducer(defs), {
+    loadout: initialLoadout,
   });
-
-  // The loadout to edit comes in from the editLoadout$ observable
-  useEventBusListener(
-    editLoadout$,
-    useCallback(({ loadout, storeId, showClass, isNew }) => {
-      stateDispatch({
-        type: 'editLoadout',
-        loadout,
-        storeId,
-        showClass: Boolean(showClass),
-        isNew: Boolean(isNew),
-      });
-    }, [])
-  );
 
   const loadoutItems = loadout?.items;
 
@@ -74,9 +75,8 @@ export default function LoadoutDrawer() {
         item,
         items,
         equip,
-        stores,
       }),
-    [items, stores]
+    [items]
   );
 
   const onRemoveItem = (item: DimItem, e?: React.MouseEvent) => {
@@ -87,18 +87,13 @@ export default function LoadoutDrawer() {
   const onEquipItem = (item: DimItem) => stateDispatch({ type: 'equipItem', item, items });
 
   /**
-   * If an item comes in on the addItem$ rx observable, add it.
+   * If an item comes in on the addItem$ observable, add it.
    */
   useEventBusListener(addItem$, onAddItem);
 
-  const close = () => {
-    stateDispatch({ type: 'reset' });
-    setShowingItemPicker(false);
-  };
-
   // Close the sheet on navigation
   const { pathname } = useLocation();
-  useEffect(close, [pathname]);
+  useEffect(onClose, [pathname, onClose]);
 
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (warnItem: DimItem) => {

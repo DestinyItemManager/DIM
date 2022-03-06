@@ -3,7 +3,6 @@ import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
 import ArmoryPage from 'app/armory/ArmoryPage';
 import Compare from 'app/compare/Compare';
-import LoadoutDrawer from 'app/destiny1/loadout-drawer/LoadoutDrawer';
 import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
@@ -13,7 +12,7 @@ import InfusionFinder from 'app/infuse/InfusionFinder';
 import { storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import ItemFeedPage from 'app/item-feed/ItemFeedPage';
-import LoadoutDrawer2 from 'app/loadout-drawer/LoadoutDrawer2';
+import LoadoutDrawerContainer from 'app/loadout-drawer/LoadoutDrawerContainer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -176,7 +175,6 @@ export default function Destiny() {
           <ErrorPanel
             title={t('Accounts.MissingTitle')}
             fallbackMessage={t('Accounts.MissingDescription')}
-            showTwitters={true}
           />
         </div>
       ) : (
@@ -256,7 +254,7 @@ export default function Destiny() {
           <Route path="*" element={<Navigate to="inventory" />} />
         </Routes>
       </div>
-      {account.destinyVersion === 2 ? <LoadoutDrawer2 /> : <LoadoutDrawer />}
+      <LoadoutDrawerContainer account={account} />
       <Compare />
       <Farming />
       <InfusionFinder />
