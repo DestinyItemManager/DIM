@@ -30,7 +30,7 @@ import { deleteLoadout, updateLoadout } from './actions';
 import { stateReducer } from './loadout-drawer-reducer';
 import { addItem$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
-import { Loadout } from './loadout-types';
+import { Loadout, ResolvedLoadoutItem } from './loadout-types';
 import { createSubclassDefaultSocketOverrides } from './loadout-utils';
 import styles from './LoadoutDrawer2.m.scss';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
@@ -156,11 +156,13 @@ export default function LoadoutDrawer2({
   const handleNameChanged = (name: string) =>
     stateDispatch({ type: 'update', loadout: { ...loadout, name } });
 
-  const handleRemoveItem = (item: DimItem) => stateDispatch({ type: 'removeItem', item, items });
+  const handleRemoveItem = (li: ResolvedLoadoutItem) =>
+    stateDispatch({ type: 'removeItem', loadoutItem: li.loadoutItem });
 
   /** Prompt the user to select a replacement for a missing item. */
-  const fixWarnItem = async (warnItem: DimItem) => {
+  const fixWarnItem = async (li: ResolvedLoadoutItem) => {
     const loadoutClassType = loadout?.classType;
+    const warnItem = li.item;
 
     setShowingItemPicker(true);
     try {
@@ -184,7 +186,7 @@ export default function LoadoutDrawer2({
       });
 
       onAddItem(item);
-      handleRemoveItem(warnItem);
+      handleRemoveItem(li);
     } catch (e) {
     } finally {
       setShowingItemPicker(false);
@@ -274,7 +276,6 @@ export default function LoadoutDrawer2({
           onClickPlaceholder={handleClickPlaceholder}
           onClickWarnItem={fixWarnItem}
           onClickSubclass={handleClickSubclass}
-          onRemoveItem={handleRemoveItem}
         />
         <div className={styles.inputGroup}>
           <button

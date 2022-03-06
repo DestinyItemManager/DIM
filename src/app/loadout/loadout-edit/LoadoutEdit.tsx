@@ -5,7 +5,7 @@ import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import {
   createSocketOverridesFromEquipped,
   extractArmorModHashes,
@@ -41,15 +41,13 @@ export default function LoadoutEdit({
   onClickSubclass,
   onClickPlaceholder,
   onClickWarnItem,
-  onRemoveItem,
 }: {
   loadout: Loadout;
   store: DimStore;
   stateDispatch: React.Dispatch<Action>;
   onClickSubclass: (subclass: DimItem | undefined) => void;
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
-  onClickWarnItem: (item: DimItem) => void;
-  onRemoveItem: (item: DimItem) => void;
+  onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
 }) {
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
@@ -84,17 +82,15 @@ export default function LoadoutEdit({
     // TODO: do these all in one action
     for (const li of items.concat(warnitems)) {
       if (li.item.bucket.sort === category && li.item.bucket.hash !== BucketHashes.Subclass) {
-        stateDispatch({ type: 'removeItem', item: li.item, items });
+        stateDispatch({ type: 'removeItem', loadoutItem: li.loadoutItem });
       }
     }
   };
 
-  const handleClearSubclass = () => {
-    // TODO: do these all in one action
-    if (subclass) {
-      stateDispatch({ type: 'removeItem', item: subclass.item, items });
-    }
-  };
+  const onRemoveItem = (li: ResolvedLoadoutItem) =>
+    stateDispatch({ type: 'removeItem', loadoutItem: li.loadoutItem });
+
+  const handleClearSubclass = () => subclass && onRemoveItem(subclass);
 
   const updateLoadout = (loadout: Loadout) => stateDispatch({ type: 'update', loadout });
 
@@ -311,8 +307,10 @@ function setLoadoutSubclassFromEquipped(
   onUpdateLoadout(newLoadout);
 }
 
+// TODO: push into reducer
 export function fillLoadoutFromEquipped(
   loadout: Loadout,
+  // TODO: knock this out?
   items: DimItem[],
   dimStore: DimStore,
   onUpdateLoadout: (loadout: Loadout) => void,
@@ -395,6 +393,7 @@ export function fillLoadoutFromEquipped(
   onUpdateLoadout(newLoadout);
 }
 
+// TODO: push into reducer?
 export async function fillLoadoutFromUnequipped(
   loadout: Loadout,
   dimStore: DimStore,

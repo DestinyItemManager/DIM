@@ -35,7 +35,7 @@ export type Action =
   | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
   | { type: 'updateModsByBucket'; modsByBucket: LoadoutParameters['modsByBucket'] }
   /** Remove an item from the loadout */
-  | { type: 'removeItem'; item: DimItem; items: ResolvedLoadoutItem[] }
+  | { type: 'removeItem'; loadoutItem: LoadoutItem }
   /** Make an item that's already in the loadout equipped */
   | { type: 'equipItem'; item: DimItem; items: ResolvedLoadoutItem[] }
   | { type: 'updateMods'; mods: number[] }
@@ -79,8 +79,8 @@ export function stateReducer(defs: D2ManifestDefinitions | D1ManifestDefinitions
 
       case 'removeItem': {
         const { loadout } = state;
-        const { item, items } = action;
-        return loadout ? { ...state, loadout: removeItem(loadout, item, items) } : state;
+        const { loadoutItem } = action;
+        return loadout ? { ...state, loadout: removeItem(defs, loadout, loadoutItem) } : state;
       }
 
       case 'equipItem': {
@@ -259,34 +259,35 @@ function addItem(
  * Produce a new Loadout with the given item removed from the original loadout.
  */
 function removeItem(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadout: Readonly<Loadout>,
-  item: DimItem,
-  items: ResolvedLoadoutItem[]
+  searchLoadoutItem: LoadoutItem
 ): Loadout {
   return produce(loadout, (draftLoadout) => {
-    const loadoutItem = draftLoadout.items.find((i) => i.hash === item.hash && i.id === item.id);
+    // We can't just look it up by identity since Immer wraps objects in a proxy
+    // TODO: it might be nice if we just assigned a unique ID to every loadout item just for in-memory ops like deleting
+    const loadoutItemIndex = draftLoadout.items.findIndex(
+      (i) => i.hash === searchLoadoutItem.hash && i.id === searchLoadoutItem.id
+    );
 
-    if (!loadoutItem) {
+    if (loadoutItemIndex === -1) {
       return;
     }
+    const loadoutItem = draftLoadout.items[loadoutItemIndex];
 
-    const decrement = 1;
     loadoutItem.amount ||= 1;
-    loadoutItem.amount -= decrement;
+    loadoutItem.amount--;
     if (loadoutItem.amount <= 0) {
-      draftLoadout.items = draftLoadout.items.filter(
-        (i) => !(i.hash === item.hash && i.id === item.id)
-      );
+      draftLoadout.items.splice(loadoutItemIndex, 1);
     }
 
+    // If we removed an equipped item, equip the first unequipped item
     if (loadoutItem.equip) {
-      const typeInventory = items.filter((li) => li.item.bucket.hash === item.bucket.hash);
+      const bucketHash = getBucketHashFromItemHash(defs, loadoutItem.hash);
+      const typeInventory = bucketHash ? loadoutItemsInBucket(defs, draftLoadout, bucketHash) : [];
+      // Here we can use identity because typeInventory is all proxies
       const nextInLine =
-        typeInventory.length > 0 &&
-        draftLoadout.items.find(
-          (i) =>
-            i.id === typeInventory[0].loadoutItem.id && i.hash === typeInventory[0].loadoutItem.hash
-        );
+        typeInventory.length > 0 && draftLoadout.items.find((i) => i === typeInventory[0]);
       if (nextInLine) {
         nextInLine.equip = true;
       }
@@ -361,9 +362,15 @@ function loadoutItemsInBucket(
   searchBucketHash: number
 ) {
   return loadout.items.filter((li) => {
-    const def = defs.InventoryItem.get(li.hash);
-    const bucketHash =
-      def && ('bucketTypeHash' in def ? def.bucketTypeHash : def.inventory?.bucketTypeHash);
+    const bucketHash = getBucketHashFromItemHash(defs, li.hash);
     return bucketHash && bucketHash === searchBucketHash;
   });
+}
+
+function getBucketHashFromItemHash(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  itemHash: number
+) {
+  const def = defs.InventoryItem.get(itemHash);
+  return def && ('bucketTypeHash' in def ? def.bucketTypeHash : def.inventory?.bucketTypeHash);
 }

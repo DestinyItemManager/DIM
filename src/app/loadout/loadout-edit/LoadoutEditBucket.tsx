@@ -50,9 +50,9 @@ export default function LoadoutEditBucket({
     [bucketHash: number]: number[] | undefined;
   };
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
-  onClickWarnItem: (item: DimItem) => void;
+  onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
   onToggleEquipped: (item: DimItem) => void;
-  onRemoveItem: (item: DimItem) => void;
+  onRemoveItem: (resolvedItem: ResolvedLoadoutItem) => void;
   children?: React.ReactNode;
 }) {
   const buckets = useSelector(bucketsSelector)!;
@@ -150,8 +150,8 @@ function ItemBucket({
   items: ResolvedLoadoutItem[];
   equippedContent?: React.ReactNode;
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
-  onClickWarnItem: (item: DimItem) => void;
-  onRemoveItem: (item: DimItem) => void;
+  onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
+  onRemoveItem: (resolvedItem: ResolvedLoadoutItem) => void;
   onToggleEquipped: (item: DimItem) => void;
 }) {
   const bucketHash = bucket.hash;
@@ -188,27 +188,27 @@ function ItemBucket({
             className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
             key={index}
           >
-            {items.map(({ item, loadoutItem, missing }) => (
+            {items.map((li) => (
               <ClosableContainer
-                key={item.id}
-                onClose={() => onRemoveItem(item)}
+                key={li.item.id}
+                onClose={() => onRemoveItem(li)}
                 showCloseIconOnHover
               >
                 <ItemPopupTrigger
-                  item={item}
-                  extraData={{ socketOverrides: loadoutItem.socketOverrides }}
+                  item={li.item}
+                  extraData={{ socketOverrides: li.loadoutItem.socketOverrides }}
                 >
                   {(ref, onClick) => (
                     <div
                       className={clsx({
-                        [styles.missingItem]: missing,
+                        [styles.missingItem]: li.missing,
                       })}
                     >
                       <ConnectedInventoryItem
-                        item={item}
+                        item={li.item}
                         innerRef={ref}
-                        onClick={missing ? () => onClickWarnItem(item) : onClick}
-                        onDoubleClick={() => onToggleEquipped(item)}
+                        onClick={li.missing ? () => onClickWarnItem(li) : onClick}
+                        onDoubleClick={() => onToggleEquipped(li.item)}
                       />
                     </div>
                   )}

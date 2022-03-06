@@ -10,7 +10,7 @@ import { deleteLoadout, updateLoadout } from 'app/loadout-drawer/actions';
 import { stateReducer } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { addItem$ } from 'app/loadout-drawer/loadout-events';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import LoadoutDrawerDropTarget from 'app/loadout-drawer/LoadoutDrawerDropTarget';
 import { useDefinitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
@@ -78,9 +78,9 @@ export default function LoadoutDrawer({
     []
   );
 
-  const onRemoveItem = (item: DimItem, e?: React.MouseEvent) => {
+  const onRemoveItem = (li: ResolvedLoadoutItem, e?: React.MouseEvent) => {
     e?.stopPropagation();
-    stateDispatch({ type: 'removeItem', item, items });
+    stateDispatch({ type: 'removeItem', loadoutItem: li.loadoutItem });
   };
 
   const onEquipItem = (item: DimItem) => stateDispatch({ type: 'equipItem', item, items });
@@ -95,8 +95,9 @@ export default function LoadoutDrawer({
   useEffect(onClose, [pathname, onClose]);
 
   /** Prompt the user to select a replacement for a missing item. */
-  const fixWarnItem = async (warnItem: DimItem) => {
+  const fixWarnItem = async (li: ResolvedLoadoutItem) => {
     const loadoutClassType = loadout?.classType;
+    const warnItem = li.item;
 
     setShowingItemPicker(true);
     try {
@@ -116,7 +117,7 @@ export default function LoadoutDrawer({
       });
 
       onAddItem(item);
-      onRemoveItem(warnItem);
+      onRemoveItem(li);
     } catch (e) {
     } finally {
       setShowingItemPicker(false);
@@ -203,10 +204,10 @@ export default function LoadoutDrawer({
                   {t('Loadouts.VendorsCannotEquip')}
                 </p>
                 <div className="loadout-warn-items">
-                  {warnitems.map(({ item }) => (
-                    <div key={item.id} className="loadout-item" onClick={() => fixWarnItem(item)}>
-                      <ClosableContainer onClose={(e) => onRemoveItem(item, e)}>
-                        <ItemIcon item={item} />
+                  {warnitems.map((li) => (
+                    <div key={li.item.id} className="loadout-item" onClick={() => fixWarnItem(li)}>
+                      <ClosableContainer onClose={(e) => onRemoveItem(li, e)}>
+                        <ItemIcon item={li.item} />
                       </ClosableContainer>
                     </div>
                   ))}
