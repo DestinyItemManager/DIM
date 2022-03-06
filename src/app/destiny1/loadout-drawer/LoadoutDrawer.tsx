@@ -1,6 +1,17 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
+import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import ItemIcon from 'app/inventory/ItemIcon';
+import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
+import 'app/inventory/Stores.scss';
+import { showItemPicker } from 'app/item-picker/item-picker';
+import { deleteLoadout, updateLoadout } from 'app/loadout-drawer/actions';
+import { stateReducer } from 'app/loadout-drawer/loadout-drawer-reducer';
+import { addItem$, editLoadout$ } from 'app/loadout-drawer/loadout-events';
+import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import LoadoutDrawerDropTarget from 'app/loadout-drawer/LoadoutDrawerDropTarget';
 import { useDefinitions } from 'app/manifest/selectors';
 import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -11,19 +22,8 @@ import React, { useCallback, useEffect, useMemo, useReducer, useState } from 're
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
-import Sheet from '../dim-ui/Sheet';
-import { DimItem } from '../inventory/item-types';
-import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
-import '../inventory/Stores.scss';
-import { showItemPicker } from '../item-picker/item-picker';
-import { deleteLoadout, updateLoadout } from './actions';
-import { stateReducer } from './loadout-drawer-reducer';
 import './loadout-drawer.scss';
-import { addItem$, editLoadout$ } from './loadout-events';
-import { getItemsFromLoadoutItems } from './loadout-item-conversion';
-import { Loadout } from './loadout-types';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
-import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
 
 /**

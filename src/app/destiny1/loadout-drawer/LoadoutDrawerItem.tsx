@@ -1,9 +1,9 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import { DimItem } from 'app/inventory/item-types';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import { DimItem } from '../inventory/item-types';
 
 export default function LoadoutDrawerItem({
   item,

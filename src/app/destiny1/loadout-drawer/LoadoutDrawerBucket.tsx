@@ -1,14 +1,14 @@
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { DimItem } from 'app/inventory/item-types';
+import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { itemSortOrderSelector } from 'app/settings/item-sort';
+import { sortItems } from 'app/shell/filters';
+import { addIcon, AppIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { InventoryBucket } from '../inventory/inventory-buckets';
-import { DimItem } from '../inventory/item-types';
-import { sortItems } from '../shell/filters';
-import { addIcon, AppIcon } from '../shell/icons';
 import { AddButton } from './Buttons';
-import { LoadoutItem } from './loadout-types';
 import styles from './LoadoutDrawerBucket.m.scss';
 import LoadoutDrawerItem from './LoadoutDrawerItem';
 
