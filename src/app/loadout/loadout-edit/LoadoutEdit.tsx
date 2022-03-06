@@ -82,13 +82,13 @@ export default function LoadoutEdit({
     // TODO: do these all in one action
     for (const li of items.concat(warnitems)) {
       if (li.item.bucket.sort === category && li.item.bucket.hash !== BucketHashes.Subclass) {
-        stateDispatch({ type: 'removeItem', loadoutItem: li.loadoutItem });
+        stateDispatch({ type: 'removeItem', resolvedItem: li });
       }
     }
   };
 
-  const onRemoveItem = (li: ResolvedLoadoutItem) =>
-    stateDispatch({ type: 'removeItem', loadoutItem: li.loadoutItem });
+  const onRemoveItem = (resolvedItem: ResolvedLoadoutItem) =>
+    stateDispatch({ type: 'removeItem', resolvedItem });
 
   const handleClearSubclass = () => subclass && onRemoveItem(subclass);
 
@@ -123,8 +123,8 @@ export default function LoadoutEdit({
     [stateDispatch]
   );
 
-  const handleToggleEquipped = (item: DimItem) => {
-    stateDispatch({ type: 'equipItem', item, items });
+  const handleToggleEquipped = (resolvedItem: ResolvedLoadoutItem) => {
+    stateDispatch({ type: 'equipItem', resolvedItem });
   };
 
   const handleClearUnsetModsChanged = (enabled: boolean) => {

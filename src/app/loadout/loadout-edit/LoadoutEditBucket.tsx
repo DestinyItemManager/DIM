@@ -3,7 +3,7 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
@@ -51,7 +51,7 @@ export default function LoadoutEditBucket({
   };
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
   onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
-  onToggleEquipped: (item: DimItem) => void;
+  onToggleEquipped: (resolvedItem: ResolvedLoadoutItem) => void;
   onRemoveItem: (resolvedItem: ResolvedLoadoutItem) => void;
   children?: React.ReactNode;
 }) {
@@ -152,7 +152,7 @@ function ItemBucket({
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
   onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
   onRemoveItem: (resolvedItem: ResolvedLoadoutItem) => void;
-  onToggleEquipped: (item: DimItem) => void;
+  onToggleEquipped: (resolvedItem: ResolvedLoadoutItem) => void;
 }) {
   const bucketHash = bucket.hash;
   const [equipped, unequipped] = _.partition(items, (li) => li.loadoutItem.equip);
@@ -208,7 +208,7 @@ function ItemBucket({
                         item={li.item}
                         innerRef={ref}
                         onClick={li.missing ? () => onClickWarnItem(li) : onClick}
-                        onDoubleClick={() => onToggleEquipped(li.item)}
+                        onDoubleClick={() => onToggleEquipped(li)}
                       />
                     </div>
                   )}

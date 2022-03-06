@@ -156,8 +156,8 @@ export default function LoadoutDrawer2({
   const handleNameChanged = (name: string) =>
     stateDispatch({ type: 'update', loadout: { ...loadout, name } });
 
-  const handleRemoveItem = (li: ResolvedLoadoutItem) =>
-    stateDispatch({ type: 'removeItem', loadoutItem: li.loadoutItem });
+  const handleRemoveItem = (resolvedItem: ResolvedLoadoutItem) =>
+    stateDispatch({ type: 'removeItem', resolvedItem });
 
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (li: ResolvedLoadoutItem) => {

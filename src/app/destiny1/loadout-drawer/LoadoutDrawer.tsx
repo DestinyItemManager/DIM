@@ -78,12 +78,13 @@ export default function LoadoutDrawer({
     []
   );
 
-  const onRemoveItem = (li: ResolvedLoadoutItem, e?: React.MouseEvent) => {
+  const onRemoveItem = (resolvedItem: ResolvedLoadoutItem, e?: React.MouseEvent) => {
     e?.stopPropagation();
-    stateDispatch({ type: 'removeItem', loadoutItem: li.loadoutItem });
+    stateDispatch({ type: 'removeItem', resolvedItem });
   };
 
-  const onEquipItem = (item: DimItem) => stateDispatch({ type: 'equipItem', item, items });
+  const onEquipItem = (resolvedItem: ResolvedLoadoutItem) =>
+    stateDispatch({ type: 'equipItem', resolvedItem });
 
   /**
    * If an item comes in on the addItem$ observable, add it.

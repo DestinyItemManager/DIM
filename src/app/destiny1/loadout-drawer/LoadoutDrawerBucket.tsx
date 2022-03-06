@@ -1,5 +1,4 @@
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import clsx from 'clsx';
@@ -20,7 +19,7 @@ export default function LoadoutDrawerBucket({
   bucket: InventoryBucket;
   items: ResolvedLoadoutItem[];
   pickLoadoutItem(bucket: InventoryBucket): void;
-  equip(item: DimItem, e: React.MouseEvent): void;
+  equip(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
   remove(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
 }) {
   const [equippedItems, unequippedItems] = _.partition(items, (li) => li.loadoutItem.equip);

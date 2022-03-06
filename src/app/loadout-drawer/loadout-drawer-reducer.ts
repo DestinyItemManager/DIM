@@ -7,8 +7,8 @@ import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
+import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
@@ -35,9 +35,9 @@ export type Action =
   | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
   | { type: 'updateModsByBucket'; modsByBucket: LoadoutParameters['modsByBucket'] }
   /** Remove an item from the loadout */
-  | { type: 'removeItem'; loadoutItem: LoadoutItem }
+  | { type: 'removeItem'; resolvedItem: ResolvedLoadoutItem }
   /** Make an item that's already in the loadout equipped */
-  | { type: 'equipItem'; item: DimItem; items: ResolvedLoadoutItem[] }
+  | { type: 'equipItem'; resolvedItem: ResolvedLoadoutItem }
   | { type: 'updateMods'; mods: number[] }
   | { type: 'changeClearMods'; enabled: boolean }
   | { type: 'removeMod'; hash: number };
@@ -79,14 +79,14 @@ export function stateReducer(defs: D2ManifestDefinitions | D1ManifestDefinitions
 
       case 'removeItem': {
         const { loadout } = state;
-        const { loadoutItem } = action;
-        return loadout ? { ...state, loadout: removeItem(defs, loadout, loadoutItem) } : state;
+        const { resolvedItem } = action;
+        return loadout ? { ...state, loadout: removeItem(defs, loadout, resolvedItem) } : state;
       }
 
       case 'equipItem': {
         const { loadout } = state;
-        const { item, items } = action;
-        return loadout ? { ...state, loadout: equipItem(loadout, item, items) } : state;
+        const { resolvedItem } = action;
+        return loadout ? { ...state, loadout: equipItem(defs, loadout, resolvedItem) } : state;
       }
 
       case 'applySocketOverrides': {
@@ -261,7 +261,7 @@ function addItem(
 function removeItem(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadout: Readonly<Loadout>,
-  searchLoadoutItem: LoadoutItem
+  { item, loadoutItem: searchLoadoutItem }: ResolvedLoadoutItem
 ): Loadout {
   return produce(loadout, (draftLoadout) => {
     // We can't just look it up by identity since Immer wraps objects in a proxy
@@ -283,7 +283,7 @@ function removeItem(
 
     // If we removed an equipped item, equip the first unequipped item
     if (loadoutItem.equip) {
-      const bucketHash = getBucketHashFromItemHash(defs, loadoutItem.hash);
+      const bucketHash = item.bucket.hash;
       const typeInventory = bucketHash ? loadoutItemsInBucket(defs, draftLoadout, bucketHash) : [];
       // Here we can use identity because typeInventory is all proxies
       const nextInLine =
@@ -298,41 +298,58 @@ function removeItem(
 /**
  * Produce a new loadout with the given item switched to being equipped (or unequipped if it's already equipped).
  */
-function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: ResolvedLoadoutItem[]) {
+function equipItem(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  loadout: Readonly<Loadout>,
+  { item, loadoutItem: searchLoadoutItem }: ResolvedLoadoutItem
+) {
   return produce(loadout, (draftLoadout) => {
-    const findItem = (item: DimItem) =>
-      draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
-
-    // Classes are always equipped
-    if (item.bucket.hash === BucketHashes.Subclass) {
+    // Subclasses and some others are always equipped
+    if (singularBucketHashes.includes(item.bucket.hash)) {
       return;
     }
 
-    const loadoutItem = findItem(item);
+    // We can't just look it up by identity since Immer wraps objects in a proxy
+    // TODO: it might be nice if we just assigned a unique ID to every loadout item just for in-memory ops like deleting
+    const loadoutItemIndex = draftLoadout.items.findIndex(
+      (i) => i.hash === searchLoadoutItem.hash && i.id === searchLoadoutItem.id
+    );
+
+    if (loadoutItemIndex === -1) {
+      return;
+    }
+    const loadoutItem = draftLoadout.items[loadoutItemIndex];
+
     if (item.equipment) {
       if (loadoutItem.equip) {
         // It's equipped, mark it unequipped
         loadoutItem.equip = false;
       } else {
-        // It's unequipped - mark all the other items and conflicting exotics unequipped, then mark this equipped
-        items
-          .filter(
-            (li) =>
-              // Others in this slot
-              li.item.bucket.hash === item.bucket.hash ||
-              // Other exotics
-              (item.equippingLabel && li.item.equippingLabel === item.equippingLabel)
-          )
-          .map(
-            ({ loadoutItem }) =>
-              draftLoadout.items.find(
-                (i) => i.id === loadoutItem.id && i.hash === loadoutItem.hash
-              )!
-          )
-          .forEach((i) => {
-            i.equip = false;
-          });
+        // It's unequipped - mark all the other items in the same bucket, and conflicting exotics, as unequippped unequipped, then mark this equipped
+        for (const li of draftLoadout.items) {
+          const itemDef = defs.InventoryItem.get(li.hash);
+          const bucketHash =
+            itemDef &&
+            ('bucketTypeHash' in itemDef
+              ? itemDef.bucketTypeHash
+              : itemDef.inventory?.bucketTypeHash);
 
+          const equippingLabel =
+            itemDef && 'tierType' in itemDef
+              ? itemDef.tierType === TierType.Exotic
+                ? itemDef.itemType.toString()
+                : undefined
+              : itemDef.equippingBlock?.uniqueLabel;
+
+          // Others in this slot
+          if (
+            bucketHash === item.bucket.hash ||
+            // Other exotics
+            (item.equippingLabel && equippingLabel === item.equippingLabel)
+          ) {
+            li.equip = false;
+          }
+        }
         loadoutItem.equip = true;
       }
     }
