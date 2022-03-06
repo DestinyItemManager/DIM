@@ -3,6 +3,7 @@
 # and notifies the #i18n @i18n in Discord of the new translations.
 name: i18n upload bot
 on:
+  workflow_dispatch:
   push:
     paths:
       - "src/locale/en.json"
@@ -19,7 +20,7 @@ jobs:
         run: dimJSON="$(jq -S . src/locale/en.json)" && echo "${dimJSON}" > src/locale/en.json
 
       - name: Upload updated en.json to crowdin
-        uses: crowdin/github-action@1.0.4
+        uses: crowdin/github-action@1.4.7
         with:
           upload_sources: true
           upload_translations: false

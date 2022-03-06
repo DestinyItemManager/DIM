@@ -19,7 +19,7 @@ jobs:
           done
 
       - name: Upload updated ${lang}.json to crowdin
-        uses: crowdin/github-action@1.0.4
+        uses: crowdin/github-action@1.4.7
         with:
           upload_sources: true
           upload_translations: true

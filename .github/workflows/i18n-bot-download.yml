@@ -24,7 +24,7 @@ jobs:
         run: yarn install --frozen-lockfile --prefer-offline
 
       - name: Download updated i18n files
-        uses: crowdin/github-action@1.0.4
+        uses: crowdin/github-action@1.4.7
         with:
           upload_sources: false
           upload_translations: false
