@@ -32,7 +32,11 @@ export type Action =
       equip?: boolean;
     }
   /** Applies socket overrides to the supplied item */
-  | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
+  | {
+      type: 'applySocketOverrides';
+      resolvedItem: ResolvedLoadoutItem;
+      socketOverrides: SocketOverrides;
+    }
   | { type: 'updateModsByBucket'; modsByBucket: LoadoutParameters['modsByBucket'] }
   /** Remove an item from the loadout */
   | { type: 'removeItem'; resolvedItem: ResolvedLoadoutItem }
@@ -91,9 +95,9 @@ export function stateReducer(defs: D2ManifestDefinitions | D1ManifestDefinitions
 
       case 'applySocketOverrides': {
         const { loadout } = state;
-        const { item, socketOverrides } = action;
+        const { resolvedItem, socketOverrides } = action;
         return loadout
-          ? { ...state, loadout: applySocketOverrides(loadout, item, socketOverrides) }
+          ? { ...state, loadout: applySocketOverrides(loadout, resolvedItem, socketOverrides) }
           : state;
       }
 
@@ -358,14 +362,14 @@ function equipItem(
 
 function applySocketOverrides(
   loadout: Readonly<Loadout>,
-  item: DimItem,
+  { loadoutItem: searchLoadoutItem }: ResolvedLoadoutItem,
   socketOverrides: SocketOverrides
 ) {
   return produce(loadout, (draftLoadout) => {
-    let loadoutItem = draftLoadout.items.find((li) => li.id === item.id);
+    let loadoutItem = draftLoadout.items.find((li) => li.id === searchLoadoutItem.id);
     // TODO: right now socketOverrides are only really used for subclasses, so we can match by hash
     if (!loadoutItem) {
-      loadoutItem = draftLoadout.items.find((li) => li.hash === item.hash);
+      loadoutItem = draftLoadout.items.find((li) => li.hash === searchLoadoutItem.hash);
     }
     if (loadoutItem) {
       loadoutItem.socketOverrides = socketOverrides;

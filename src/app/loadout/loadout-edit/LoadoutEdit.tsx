@@ -117,8 +117,8 @@ export default function LoadoutEdit({
   ) => stateDispatch({ type: 'updateModsByBucket', modsByBucket });
 
   const handleApplySocketOverrides = useCallback(
-    (item: DimItem, socketOverrides: SocketOverrides) => {
-      stateDispatch({ type: 'applySocketOverrides', item, socketOverrides });
+    (resolvedItem: ResolvedLoadoutItem, socketOverrides: SocketOverrides) => {
+      stateDispatch({ type: 'applySocketOverrides', resolvedItem, socketOverrides });
     },
     [stateDispatch]
   );
@@ -194,7 +194,7 @@ export default function LoadoutEdit({
                   subclass={subclass.item}
                   socketOverrides={subclass.loadoutItem.socketOverrides ?? {}}
                   onClose={() => setPlugDrawerOpen(false)}
-                  onAccept={(overrides) => handleApplySocketOverrides(subclass.item, overrides)}
+                  onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
                 />,
                 document.body
               )}
