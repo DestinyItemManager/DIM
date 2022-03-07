@@ -1,3 +1,4 @@
+import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
 import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
 import { THE_FORBIDDEN_BUCKET, uniqueEquipBuckets } from 'app/search/d2-known-values';
@@ -26,7 +27,7 @@ import {
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import extendedICH from 'data/d2/extended-ich.json';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
@@ -43,7 +44,6 @@ import { buildObjectives } from './objectives';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
-
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
 
@@ -310,16 +310,36 @@ export function makeItem(
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
 
-  const primaryStat: DimItem['primaryStat'] =
-    !instanceDef?.primaryStat || itemDef.stats?.disablePrimaryStatDisplay || itemType === 'Class'
-      ? null
-      : {
-          ...instanceDef.primaryStat,
-          stat: defs.Stat.get(instanceDef.primaryStat.statHash),
-          value: isEngram
-            ? (instanceDef?.itemLevel ?? 0) * 10 + (instanceDef?.quality ?? 0)
-            : instanceDef.primaryStat.value,
-        };
+  let primaryStat: DimItem['primaryStat'] = null;
+  if (
+    instanceDef?.primaryStat &&
+    itemType !== 'Class' &&
+    !itemDef.stats?.disablePrimaryStatDisplay
+  ) {
+    primaryStat = {
+      ...instanceDef.primaryStat,
+      stat: defs.Stat.get(instanceDef.primaryStat.statHash),
+      value: instanceDef.primaryStat.value,
+    };
+  }
+
+  if (
+    // engrams have a weird primary stat but their quality has their PL
+    isEngram ||
+    // classified items have no Stats, but their quality has their PL
+    (!primaryStat &&
+      itemDef.redacted &&
+      instanceDef.itemLevel &&
+      instanceDef.quality !== undefined &&
+      (D2Categories.Weapons.includes(item.bucketHash) ||
+        D2Categories.Armor.includes(item.bucketHash)))
+  ) {
+    primaryStat = {
+      stat: defs.Stat.get(StatHashes.Power),
+      statHash: StatHashes.Power,
+      value: (instanceDef?.itemLevel ?? 0) * 10 + (instanceDef?.quality ?? 0),
+    };
+  }
 
   // if a damageType isn't found, use the item's energy capacity element instead
   const element =
