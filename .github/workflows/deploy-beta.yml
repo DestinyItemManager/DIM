@@ -73,12 +73,13 @@ jobs:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_PATH: beta.destinyitemmanager.com
 
-      - name: Purge CloudFlare cache
-        run: ./build/purge-cloudflare.sh
+      - name: Cloudflare Purge Cache
+        uses: jakejarvis/cloudflare-purge-action@v0.3.0
         env:
+          CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE }}
           CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
-          APP_DOMAIN: beta.destinyitemmanager.com
+          PURGE_URLS: '["https://beta.destinyitemmanager.com", "https://beta.destinyitemmanager.com/index.html", "https://beta.destinyitemmanager.com/version.json", "https://beta.destinyitemmanager.com/service-worker.js", "https://beta.destinyitemmanager.com/return.html", "https://beta.destinyitemmanager.com/.well-known/assetlinks.json", "https://beta.destinyitemmanager.com/.well-known/apple-app-site-association", "https://beta.destinyitemmanager.com/manifest-webapp-6-2018.json", "https://beta.destinyitemmanager.com/manifest-webapp-6-2018-ios.json"]'
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1

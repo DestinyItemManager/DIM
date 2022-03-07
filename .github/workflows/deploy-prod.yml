@@ -76,12 +76,13 @@ jobs:
           # Use the dim-release-bot token rather than the default
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
-      - name: Purge CloudFlare cache
-        run: ./build/purge-cloudflare.sh
+      - name: Cloudflare Purge Cache
+        uses: jakejarvis/cloudflare-purge-action@v0.3.0
         env:
+          CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE }}
           CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
-          APP_DOMAIN: app.destinyitemmanager.com
+          PURGE_URLS: '["https://app.destinyitemmanager.com", "https://app.destinyitemmanager.com/index.html", "https://app.destinyitemmanager.com/version.json", "https://app.destinyitemmanager.com/service-worker.js", "https://app.destinyitemmanager.com/return.html", "https://app.destinyitemmanager.com/.well-known/assetlinks.json", "https://app.destinyitemmanager.com/.well-known/apple-app-site-association", "https://app.destinyitemmanager.com/manifest-webapp-6-2018.json", "https://app.destinyitemmanager.com/manifest-webapp-6-2018-ios.json"]'
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1
