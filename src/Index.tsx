@@ -42,6 +42,8 @@ const i18nPromise = initi18n();
   // Block on testing that we can use LocalStorage and IDB, before everything starts trying to use it
   const storageWorks = await storageTest();
   if (!storageWorks) {
+    // Make sure localization is loaded
+    await i18nPromise;
     ReactDOM.render(<StorageBroken />, document.getElementById('app'));
     return;
   }

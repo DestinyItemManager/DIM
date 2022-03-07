@@ -46,7 +46,6 @@ import {
   amountOfItem,
   findItemsByBucket,
   getCurrentStore,
-  getItemAcrossStores,
   getStore,
   getVault,
   spaceLeftForItem,
@@ -59,6 +58,14 @@ export interface MoveReservations {
   [storeId: string]: {
     [type: number]: number;
   };
+}
+
+/**
+ * Minimum specification to identify an item that should be excluded from some consideration.
+ */
+export interface Exclusion {
+  id: string;
+  hash: number;
 }
 
 /**
@@ -120,6 +127,28 @@ function updateItemModel(
 }
 
 /**
+ * Find an item among all stores that matches the params provided.
+ */
+function getItemAcrossStores<Item extends DimItem, Store extends DimStore<Item>>(
+  stores: Store[],
+  params: DimItem
+) {
+  for (const store of stores) {
+    for (const item of store.items) {
+      if (
+        params.id === item.id &&
+        params.hash === item.hash &&
+        params.notransfer === item.notransfer &&
+        params.amount === item.amount
+      ) {
+        return item;
+      }
+    }
+  }
+  return undefined;
+}
+
+/**
  * Finds an item similar to "item" which can be equipped on the item's owner in order to move "item".
  */
 export function getSimilarItem(
@@ -129,7 +158,7 @@ export function getSimilarItem(
     exclusions,
     excludeExotic = false,
   }: {
-    exclusions?: Pick<DimItem, 'id' | 'hash'>[];
+    exclusions?: Exclusion[];
     excludeExotic?: boolean;
   } = {}
 ): DimItem | null {
@@ -164,7 +193,7 @@ export function getSimilarItem(
 function searchForSimilarItem(
   item: DimItem,
   store: DimStore,
-  exclusions: Pick<DimItem, 'id' | 'hash'>[] | undefined,
+  exclusions: Exclusion[] | undefined,
   target: DimStore,
   excludeExotic: boolean
 ): DimItem | null {
@@ -490,7 +519,7 @@ function getOtherExoticThatNeedsDequipping(item: DimItem, store: DimStore): DimI
 interface MoveContext {
   /** Bucket hash */
   originalItemType: number;
-  excludes: Pick<DimItem, 'id' | 'hash'>[];
+  excludes: Exclusion[];
   spaceLeft(s: DimStore, i: DimItem): number;
 }
 
@@ -709,7 +738,7 @@ function canMoveToStore(
   store: DimStore,
   amount: number,
   options: {
-    excludes: Pick<DimItem, 'id' | 'hash'>[];
+    excludes: Exclusion[];
     reservations: MoveReservations;
     numRetries?: number;
     cancelToken: CancelToken;
@@ -784,10 +813,10 @@ function canMoveToStore(
       };
 
       // Move starting from the vault (which is always last)
-      const moves = Object.entries(movesNeeded)
+      const [sourceStoreId] = Object.entries(movesNeeded)
         .reverse()
         .find(([_storeId, moveAmount]) => moveAmount > 0)!;
-      const moveAsideSource = getStore(stores, moves[0])!;
+      const moveAsideSource = getStore(stores, sourceStoreId)!;
       const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(
         getState,
         moveAsideSource,
@@ -883,7 +912,7 @@ function isValidTransfer(
   store: DimStore,
   item: DimItem,
   amount: number,
-  excludes: Pick<DimItem, 'id' | 'hash'>[],
+  excludes: Exclusion[],
   reservations: MoveReservations,
   cancelToken: CancelToken
 ): ThunkResult<boolean> {
@@ -926,7 +955,7 @@ export function executeMoveItem(
   }: {
     equip?: boolean;
     amount?: number;
-    excludes?: Pick<DimItem, 'id' | 'hash'>[];
+    excludes?: Exclusion[];
     reservations?: MoveReservations;
     cancelToken?: CancelToken;
   }

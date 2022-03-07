@@ -404,7 +404,7 @@ async function processVendor(
 
   const items = processItems(
     { id: null } as any,
-    saleItems.map((i) => i.item),
+    saleItems.map((i) => i.item) as any[],
     defs,
     buckets
   );

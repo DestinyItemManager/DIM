@@ -24,28 +24,25 @@ jobs:
         run: yarn install --frozen-lockfile --prefer-offline
 
       - name: Download updated i18n files
-        uses: crowdin/github-action@1.0.4
+        uses: crowdin/github-action@1.4.7
         with:
           upload_sources: false
           upload_translations: false
           download_translations: true
           create_pull_request: false
           push_translations: false
-          source: src/locale/dim.json
-          translation: src/locale/%android_code%/dim.json
+          source: src/locale/en.json
+          translation: src/locale/%android_code%.json
           project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
           token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: sort dim.json
-        run: jq -S . src/locale/dim.json > src/locale/dim_sorted.json && mv src/locale/dim_sorted.json src/locale/dim.json
-
-      - name: sort locale dim.json
+      - name: sort locale ${lang}.json
         run: |
-          allLocales=("de" "es" "es-mx" "fr" "it" "ja" "ko" "pl" "pt-br" "ru" "zh-chs" "zh-cht")
+          allLocales=("en" "de" "es" "esMX" "fr" "it" "ja" "ko" "pl" "ptBR" "ru" "zhCHS" "zhCHT")
           for lang in ${allLocales[@]}; do
-            jq -S . src/locale/$lang/dim.json > src/locale/$lang/dim_sorted.json && mv src/locale/$lang/dim_sorted.json src/locale/$lang/dim.json
+            jq -S . src/locale/$lang.json > src/locale/sorted_$lang.json && mv src/locale/sorted_$lang.json src/locale/$lang.json
           done
 
       - name: build browsercheck utils

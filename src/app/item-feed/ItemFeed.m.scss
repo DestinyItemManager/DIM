@@ -1,0 +1,25 @@
+@import '../variables.scss';
+
+.item {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: flex-start;
+  margin: 8px 0 16px 0;
+  will-change: auto;
+  transform-origin: calc(var(--item-size) / 2) calc(var(--item-size) / 2);
+}
+
+.info {
+  margin-left: 8px;
+}
+
+.title {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: Helvetica, Arial, sans-serif;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.classIcon {
+  margin-left: 4px;
+}

@@ -5,6 +5,11 @@ on:
     branches:
       - master
 
+# Ensures that only one deploy task per branch/environment will run at a time.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -50,6 +55,12 @@ jobs:
           WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
+
+      # Upload webpack-stats.json to use on relative-ci.yaml workflow
+      - name: Upload webpack stats artifact
+        uses: relative-ci/agent-upload-artifact-action@v1
+        with:
+          webpackStatsFile: ./webpack-stats.json
 
       - name: Check Syntax
         run: yarn syntax

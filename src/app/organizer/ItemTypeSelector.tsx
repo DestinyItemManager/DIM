@@ -181,6 +181,13 @@ const d2SelectionTree: ItemCategoryTreeNode = {
           subCategories: [kinetic, energy, power],
           terminal: true,
         },
+        {
+          // TODO: Update when Bungie releases Glaive ICH
+          id: 'glaive',
+          itemCategoryHash: ItemCategoryHashes.Glaives,
+          subCategories: [energy],
+          terminal: true,
+        },
       ],
     },
     {
@@ -365,6 +372,35 @@ export default function ItemTypeSelector({
                 if (armorTopLevelCatHashes.some((h) => categoryHashList.includes(h))) {
                   categoryHashList.push(ItemCategoryHashes.Armor);
                 }
+
+                // TODO: Update when Bungie releases Glaive ICH
+                const itemCategory =
+                  subCategory.itemCategoryHash !== -7777777
+                    ? defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash))
+                    : {
+                        displayProperties: {
+                          description: 'Pointy end that way!!!',
+                          name: 'Glaive',
+                          hasIcon: false,
+                        },
+                        visible: false,
+                        deprecated: false,
+                        shortTitle: 'Glaive',
+                        itemTypeRegex: '.*_glaive',
+                        grantDestinyBreakerType: 0,
+                        grantDestinyItemType: 0,
+                        grantDestinySubType: 0,
+                        grantDestinyClass: 3,
+                        groupedCategoryHashes: [],
+                        isPlug: false,
+                        parentCategoryHashes: [],
+                        groupCategoryOnly: false,
+                        hash: 7777777,
+                        index: 55,
+                        redacted: false,
+                        blacklisted: false,
+                      };
+
                 return (
                   <label
                     key={subCategory.itemCategoryHash}
@@ -383,9 +419,9 @@ export default function ItemTypeSelector({
                     {itemCategoryIcons[subCategory.itemCategoryHash] && (
                       <img src={itemCategoryIcons[subCategory.itemCategoryHash]} />
                     )}
-                    {defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash)).displayProperties
-                      ?.name ||
-                      defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash)).title}{' '}
+                    {'displayProperties' in itemCategory
+                      ? itemCategory.displayProperties.name
+                      : itemCategory.title}{' '}
                     <span className={styles.buttonItemCount}>
                       (
                       {

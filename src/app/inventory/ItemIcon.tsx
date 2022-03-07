@@ -8,6 +8,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import pursuitComplete from 'images/highlightedObjective.svg';
 import React from 'react';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
@@ -38,21 +39,26 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless,
     [styles.masterwork]: item.masterwork,
+    [styles.deepsight]: item.deepsightInfo,
     [itemTierStyles[item.tier]]: !borderless && !item.plug,
   });
 
   return (
     <>
       <BungieImage src={item.icon} className={itemImageStyles} alt="" />
-      {item.masterwork && (
-        <div
-          className={clsx(styles.masterworkOverlay, { [styles.exoticMasterwork]: item.isExotic })}
-        />
-      )}
       {item.iconOverlay && (
         <div className={styles.iconOverlay}>
           <BungieImage src={item.iconOverlay} />
         </div>
+      )}
+      {(item.masterwork || item.deepsightInfo) && (
+        <div
+          className={clsx(styles.backgroundOverlay, {
+            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic,
+            [styles.exoticMasterwork]: item.masterwork && item.isExotic,
+            [styles.deepsightBorder]: item.deepsightInfo,
+          })}
+        />
       )}
       {item.plug?.costElementIcon && (
         <>
@@ -66,6 +72,9 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
             </text>
           </svg>
         </>
+      )}
+      {item.highlightedObjective && (!item.deepsightInfo || item.deepsightInfo.complete) && (
+        <img className={styles.highlightedObjective} src={pursuitComplete} />
       )}
     </>
   );
@@ -134,10 +143,7 @@ export function DefItemIcon({
 /**
  * given a mod definition or hash, returns destructurable energy cost information
  */
-export function getModCostInfo(
-  mod: DestinyInventoryItemDefinition | number,
-  defs: D2ManifestDefinitions
-) {
+function getModCostInfo(mod: DestinyInventoryItemDefinition | number, defs: D2ManifestDefinitions) {
   const modCostInfo: {
     energyCost?: number;
     energyCostElement?: DestinyEnergyTypeDefinition;
@@ -148,8 +154,12 @@ export function getModCostInfo(
     mod = defs.InventoryItem.get(mod);
   }
 
-  // hide cost for Stasis fragments as these are currently always set to 1
-  if (mod?.plug && mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedStasisTrinkets) {
+  // hide cost for Subclass 3.0 fragments as these are currently always set to 1
+  if (
+    mod?.plug &&
+    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedStasisTrinkets &&
+    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedVoidFragments
+  ) {
     modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
 
     if (mod.plug.energyCost?.energyTypeHash) {

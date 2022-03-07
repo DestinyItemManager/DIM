@@ -87,7 +87,7 @@ function FilterExplanation({ filter }: { filter: FilterDefinition }) {
     ? t(...filter.description)
     : t(filter.description);
 
-  const applySuggestion = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, k: string) => {
+  const applySuggestion = (e: React.MouseEvent<HTMLAnchorElement>, k: string) => {
     e.preventDefault();
     dispatch(toggleSearchQueryComponent(k));
   };

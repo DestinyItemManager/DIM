@@ -3,6 +3,7 @@ import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
 import ArmoryPage from 'app/armory/ArmoryPage';
 import Compare from 'app/compare/Compare';
+import LoadoutDrawer from 'app/destiny1/loadout-drawer/LoadoutDrawer';
 import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
@@ -11,7 +12,7 @@ import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
 import { storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import LoadoutDrawer from 'app/loadout-drawer/LoadoutDrawer';
+import ItemFeedPage from 'app/item-feed/ItemFeedPage';
 import LoadoutDrawer2 from 'app/loadout-drawer/LoadoutDrawer2';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -243,6 +244,9 @@ export default function Destiny() {
           {account.destinyVersion === 2 && (
             <Route path="armory/:itemHash" element={<ArmoryPage account={account} />} />
           )}
+          {account.destinyVersion === 2 && (
+            <Route path="item-feed" element={<ItemFeedPage account={account} />} />
+          )}
           {account.destinyVersion === 1 && (
             <Route path="record-books" element={<RecordBooks account={account} />} />
           )}
@@ -252,11 +256,7 @@ export default function Destiny() {
           <Route path="*" element={<Navigate to="inventory" />} />
         </Routes>
       </div>
-      {$featureFlags.loadoutDrawerV2 && account.destinyVersion === 2 ? (
-        <LoadoutDrawer2 />
-      ) : (
-        <LoadoutDrawer />
-      )}
+      {account.destinyVersion === 2 ? <LoadoutDrawer2 /> : <LoadoutDrawer />}
       <Compare />
       <Farming />
       <InfusionFinder />

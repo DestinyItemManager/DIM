@@ -14,7 +14,7 @@ module.exports = {
     defaultLng: 'en',
     resource: {
       loadPath: 'config/i18n.json',
-      savePath: 'src/locale/dim.json',
+      savePath: 'src/locale/en.json',
       jsonIndent: 2,
       lineEnding: '\n',
     },
@@ -66,6 +66,7 @@ module.exports = {
           'Aspect',
           'Projection',
           'Transmat',
+          'Super',
         ],
         fallback: false,
         separator: false,

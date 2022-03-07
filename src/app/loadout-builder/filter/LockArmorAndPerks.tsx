@@ -12,7 +12,7 @@ import { AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
-import { getSocketByIndex, getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { getSocketByIndex, getSocketsByCategoryHashes } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
@@ -142,10 +142,11 @@ export default memo(function LockArmorAndPerks({
     for (const socketIndexString of Object.keys(subclass?.socketOverrides)) {
       const socketIndex = parseInt(socketIndexString, 10);
       const socket = getSocketByIndex(subclass.sockets, socketIndex);
-      const abilitySockets = getSocketsByCategoryHash(
-        subclass.sockets,
-        SocketCategoryHashes.Abilities
-      );
+      const abilityAndSuperSockets = getSocketsByCategoryHashes(subclass.sockets, [
+        SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+        SocketCategoryHashes.Abilities_Abilities_LightSubclass,
+        SocketCategoryHashes.Super,
+      ]);
 
       const overridePlug = defs.InventoryItem.get(
         subclass.socketOverrides[socketIndex]
@@ -154,7 +155,7 @@ export default memo(function LockArmorAndPerks({
       const isDefaultAbility = Boolean(
         socket &&
           getDefaultPlugHash(socket, defs) === overridePlug.hash &&
-          abilitySockets.includes(socket)
+          abilityAndSuperSockets.includes(socket)
       );
 
       rtn.push({ plug: overridePlug, isDefaultAbility });

@@ -80,8 +80,15 @@ const simpleFilters: FilterDefinition[] = [
   },
   {
     keywords: 'sunset',
+    destinyVersion: 2,
     description: tl('Filter.IsSunset'),
     filter: () => isSunset,
+  },
+  {
+    keywords: ['crafted', 'shaped'],
+    destinyVersion: 2,
+    description: tl('Filter.IsCrafted'),
+    filter: () => (item) => item.crafted,
   },
 ];
 

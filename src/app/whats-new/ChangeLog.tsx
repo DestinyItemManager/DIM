@@ -1,5 +1,5 @@
+import changelog from 'docs/CHANGELOG.md';
 import React, { useEffect } from 'react';
-import changelog from '../../../docs/CHANGELOG.md';
 import './ChangeLog.scss';
 import { DimVersions } from './versions';
 

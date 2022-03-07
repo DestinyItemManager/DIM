@@ -28,7 +28,7 @@ interface StoreProps {
   filters(query: string): ItemFilter;
 }
 
-function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps, RootState> {
+function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps> {
   const filteredItemsSelector = createSelector(
     allItemsSelector,
     (_state: RootState, ownProps: ProvidedProps) => ownProps.filterItems,

@@ -207,8 +207,17 @@ function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Pr
     [hiddenSelectedMods, onAccept]
   );
 
+  // Ensure the plug drawer is reset when selecting a different
+  // set of plugSets so that it shows the correct mods and chooses
+  // a correct height for the sheet.
+  const plugSetsKey = plugSets
+    .map((p) => p.plugSetHash)
+    .sort()
+    .toString();
+
   return (
     <PlugDrawer
+      key={plugSetsKey}
       title={t('LB.ChooseAMod')}
       searchPlaceholder={t('LB.SearchAMod')}
       acceptButtonText={t('LB.SelectMods')}

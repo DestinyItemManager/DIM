@@ -21,7 +21,7 @@ const DISPLAYED_PLUG_STATS = [StatHashes.AspectEnergyCapacity];
 type PlugSetWithDefaultPlug = PlugSet & { defaultPlug: PluggableInventoryItemDefinition };
 
 /**
- * A customized PlugDrawer for showing mod choices for mod-style subclasses (currently only Stasis).
+ * A customized PlugDrawer for showing mod choices for mod-style subclasses (subclasses 3.0, the first of which was Stasis).
  */
 export default function SubclassPlugDrawer({
   subclass,
@@ -193,7 +193,11 @@ function getPlugsForSubclass(
             maxSelectable: socketGroup.length,
             defaultPlug,
             selectionType:
-              category.category.hash === SocketCategoryHashes.Abilities ? 'single' : 'multi',
+              category.category.hash === SocketCategoryHashes.Abilities_Abilities_DarkSubclass ||
+              category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
+              category.category.hash === SocketCategoryHashes.Super
+                ? 'single'
+                : 'multi',
           };
 
           // TODO (ryan) use itemsForCharacterOrProfilePlugSet, atm there will be no difference

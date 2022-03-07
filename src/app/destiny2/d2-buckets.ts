@@ -28,7 +28,6 @@ const bucketToTypeRaw = {
   [BucketHashes.Materials]: 'Materials',
   [BucketHashes.Ghost]: 'Ghost',
   [BucketHashes.Emblems]: 'Emblems',
-  [BucketHashes.ClanBanners]: 'ClanBanners',
   [BucketHashes.ChestArmor]: 'Chest',
   [BucketHashes.LegArmor]: 'Leg',
   [BucketHashes.LostItems]: 'LostItems',
@@ -42,10 +41,11 @@ const bucketToTypeRaw = {
   [BucketHashes.Vehicle]: 'Vehicle',
   [BucketHashes.Consumables]: 'Consumables',
   [BucketHashes.General]: 'General',
-  [BucketHashes.Emotes_Equippable]: 'Emotes',
+  [BucketHashes.Emotes_Invisible]: 'Emotes',
   [BucketHashes.Quests]: 'Pursuits',
   [BucketHashes.SeasonalArtifact]: 'SeasonalArtifacts',
   [BucketHashes.Finishers]: 'Finishers',
+  [BucketHashes.ClanBanners]: 'ClanBanner',
 } as const;
 
 export type D2BucketTypes = typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw];
@@ -54,21 +54,20 @@ export type D2BucketTypes = typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw]
 export type D2AdditionalBucketTypes = 'Milestone' | 'Unknown';
 
 // A mapping from the bucket hash to DIM item types
-const bucketToType: {
+export const bucketToType: {
   [hash: number]: DimBucketType | undefined;
 } = bucketToTypeRaw;
 
-const typeToSort: { [type: string]: D2BucketCategory } = {};
-_.forIn(D2Categories, (types, category: D2BucketCategory) => {
-  types.forEach((type) => {
-    typeToSort[type] = category;
+const bucketHashToSort: { [bucketHash: number]: D2BucketCategory } = {};
+_.forIn(D2Categories, (bucketHashes, category: D2BucketCategory) => {
+  bucketHashes.forEach((bucketHash) => {
+    bucketHashToSort[bucketHash] = category;
   });
 });
 
 export function getBuckets(defs: D2ManifestDefinitions) {
   const buckets: InventoryBuckets = {
     byHash: {},
-    byType: {},
     byCategory: {},
     unknown: {
       description: 'Unknown items. DIM needs a manifest update.',
@@ -88,10 +87,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
   };
   _.forIn(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
     const type = bucketToType[def.hash];
-    let sort: D2BucketCategory | undefined;
-    if (type) {
-      sort = typeToSort[type];
-    }
+    const sort = bucketHashToSort[def.hash];
     const bucket: InventoryBucket = {
       description: def.displayProperties.description,
       name: def.displayProperties.name,
@@ -103,9 +99,6 @@ export function getBuckets(defs: D2ManifestDefinitions) {
       type,
       sort,
     };
-    if (bucket.type) {
-      buckets.byType[bucket.type] = bucket;
-    }
     // Add an easy helper property like "inPostmaster"
     if (bucket.sort) {
       bucket[`in${bucket.sort}`] = true;
@@ -121,8 +114,10 @@ export function getBuckets(defs: D2ManifestDefinitions) {
       bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];
     }
   });
-  _.forIn(D2Categories, (types, category) => {
-    buckets.byCategory[category] = _.compact(types.map((type) => buckets.byType[type]));
+  _.forIn(D2Categories, (bucketHashes, category) => {
+    buckets.byCategory[category] = _.compact(
+      bucketHashes.map((bucketHash) => buckets.byHash[bucketHash])
+    );
   });
   return buckets;
 }

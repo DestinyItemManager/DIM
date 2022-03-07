@@ -21,6 +21,7 @@ import {
   DestinyStatDefinition,
 } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from './inventory-buckets';
+import { DimResonantElementTag } from './store/deepsight';
 
 /** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
 export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common' | 'Unknown' | 'Currency';
@@ -168,6 +169,7 @@ export interface DimItem {
    */
   primaryStat:
     | (DestinyStat & {
+        // TODO: get rid of this
         stat: DestinyStatDefinition;
       })
     | null;
@@ -175,6 +177,10 @@ export interface DimItem {
   power: number;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;
+  /** Is this crafted? (D2 only) */
+  crafted: boolean;
+  /** Does this have a highlighted (crafting) objective? (D2 Only) */
+  highlightedObjective: boolean;
   /** What percent complete is this item (considers XP and objectives). */
   percentComplete: number;
   /** The talent grid, used for D1 perks and D1/D2 subclass grids. */
@@ -195,6 +201,10 @@ export interface DimItem {
   energy: DestinyItemInstanceEnergy | null;
   /** If this item is a masterwork, this will include information about its masterwork properties. */
   masterworkInfo: DimMasterwork | null;
+  /** If this item is crafted, this includes info about its crafting properties. */
+  craftedInfo: DimCrafted | null;
+  /** If this item has Deepsight Resonance, this includes info about its Deepsight properties. */
+  deepsightInfo: DimDeepsight | null;
   /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The state of this item in the user's D2 Collection */
@@ -233,6 +243,29 @@ export interface DimMasterwork {
     /** How much the stat is enhanced by this masterwork. */
     value?: number;
   }[];
+}
+
+export interface DimCrafted {
+  /** The level of this crafted weapon */
+  level?: number;
+  /** 0-1 progress to the next level */
+  progress?: number;
+  /** when this weapon was crafted, UTC epoch milliseconds timestamp */
+  dateCrafted?: number;
+}
+
+export interface DimResonantElement {
+  tag: DimResonantElementTag;
+  icon: string;
+  name: string;
+}
+export interface DimDeepsight {
+  /** Whether the weapon is ready for resonant material extraction */
+  complete: boolean;
+  /** 0-1 progress until the weapon is attuned */
+  progress: number;
+  /** A collection of Resonant Elements that can be extracted from this weapon once attuned */
+  resonantElements: DimResonantElement[];
 }
 
 export interface DimStat {
@@ -414,8 +447,13 @@ export interface DimSocket {
   reusablePlugItems?: DestinyItemPlugBase[];
   /** Does the socket contain randomized plug items? */
   hasRandomizedPlugItems: boolean;
-  /** Is this socket a perk? Anything else is at least sorta mod-like. TODO: should this be an enum? */
+  /**
+   * Is this socket a perk? This includes sockets marked Reusable, Unlockable, and LargePerk.
+   * This might be widely synonymous with isReusable, but seems like it's being used for things other than display style logic.
+   */
   isPerk: boolean;
+  /** Is this socket reusable? This is a notably different behavior and UI in Destiny, displayed in circles rather than squares. */
+  isReusable: boolean;
   /** Deep information about this socket, including what types of things can be inserted into it. TODO: do we need all of this? */
   socketDefinition: DestinyItemSocketEntryDefinition;
 }

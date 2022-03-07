@@ -1,9 +1,11 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
+import { bucketToType } from 'app/destiny2/d2-buckets';
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
+import craftableHashes from 'data/d2/craftable-hashes.json';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
@@ -67,7 +69,13 @@ export const classFilter: FilterDefinition = {
 export const itemTypeFilter: FilterDefinition = {
   keywords: Object.values(D2Categories) // stuff like Engrams, Kinetic, Gauntlets, Emblems, Finishers, Modifications
     .flat()
-    .map((v) => v.toLowerCase()),
+    .map((v) => {
+      const type = bucketToType[v];
+      if (!type && $DIM_FLAVOR === 'dev') {
+        throw new Error(`You forgot to map a string type name for bucket hash ${v}`);
+      }
+      return type!.toLowerCase();
+    }),
   description: tl('Filter.ArmorCategory'), // or 'Filter.WeaponClass'
   filter:
     ({ filterValue }) =>
@@ -137,7 +145,7 @@ const knownValuesFilters: FilterDefinition[] = [
     filter: () => (item) => cosmeticTypes.includes(item.bucket.hash),
   },
   {
-    keywords: ['light', 'haslight', 'haspower'],
+    keywords: ['haslight', 'haspower'],
     description: tl('Filter.ContributePower'),
     filter: () => (item) => item.power > 0,
   },
@@ -166,6 +174,12 @@ const knownValuesFilters: FilterDefinition[] = [
     description: tl('Filter.PinnacleReward'),
     destinyVersion: 2,
     filter: () => (item) => item.pursuit?.rewards.some((r) => pinnacleSources.includes(r.itemHash)),
+  },
+  {
+    keywords: ['craftable'],
+    description: tl('Filter.Craftable'),
+    destinyVersion: 2,
+    filter: () => (item) => craftableHashes.includes(item.hash),
   },
   {
     keywords: 'source',

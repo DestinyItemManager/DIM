@@ -1,19 +1,15 @@
-import PressTip from 'app/dim-ui/PressTip';
-import { t } from 'app/i18next-t';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { thumbsUpIcon } from 'app/shell/icons';
-import AppIcon from 'app/shell/icons/AppIcon';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
-import { default as React, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import styles from './ItemPerksList.m.scss';
 import './ItemSockets.scss';
+import { PerkCircleWithTooltip } from './Plug';
 import { DimPlugTooltip } from './PlugTooltip';
 
 interface Props {
@@ -123,28 +119,18 @@ function PerkPlug({
     <div
       key={plug.plugDef.hash}
       className={clsx(styles.plug, {
-        [styles.plugged]: socketInfo.actuallyPlugged
-          ? plug === socketInfo.actuallyPlugged
-          : plug === socketInfo.plugged,
         [styles.disabled]: !plug.enabled,
         [styles.selected]: selected,
-        [styles.cannotRoll]: plug.cannotCurrentlyRoll,
       })}
       onClick={perkSelected}
     >
-      <div className={styles.perkIcon}>
-        <PressTip
-          tooltip={() => <DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}
-        >
-          <DefItemIcon itemDef={plug.plugDef} borderless={true} />
-        </PressTip>
-        {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
-          <AppIcon
-            className="thumbs-up"
-            icon={thumbsUpIcon}
-            title={t('WishListRoll.BestRatedTip')}
-          />
-        )}
+      <div className={styles.perkIconWrapper}>
+        <PerkCircleWithTooltip
+          item={item}
+          plug={plug}
+          wishlistRoll={wishlistRoll}
+          socketInfo={socketInfo}
+        />
       </div>
       {selectedPerk ? (
         <div className={styles.perkInfo}>

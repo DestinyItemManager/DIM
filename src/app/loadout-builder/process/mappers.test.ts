@@ -3,7 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import 'cross-fetch/polyfill';
-import { getTestDefinitions, getTestStores } from '../../../testing/test-utils';
+import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { MIN_LO_ITEM_ENERGY } from '../types';
 import { mapDimItemToProcessItem } from './mappers';
 

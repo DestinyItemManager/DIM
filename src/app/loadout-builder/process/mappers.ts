@@ -64,8 +64,11 @@ export function isModStatActive(
           chargedWithLightPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
       )
     );
-  } else if (plugHash === modsWithConditionalStats.chargeHarvester) {
-    // Charge Harvester
+  } else if (
+    plugHash === modsWithConditionalStats.chargeHarvester ||
+    plugHash === modsWithConditionalStats.echoOfPersistence
+  ) {
+    // "-10 to the stat that governs your class ability recharge"
     return (
       (characterClass === DestinyClass.Hunter && stat.statTypeHash === StatHashes.Mobility) ||
       (characterClass === DestinyClass.Titan && stat.statTypeHash === StatHashes.Resilience) ||
@@ -95,22 +98,12 @@ export function getTotalModStatChanges(
     [StatHashes.Strength]: 0,
   };
 
-  for (const mod of lockedMods) {
+  for (const mod of lockedMods.concat(subclassPlugs)) {
     for (const stat of mod.investmentStats) {
       if (
         stat.statTypeHash in totals &&
         isModStatActive(characterClass, mod.hash, stat, lockedMods)
       ) {
-        totals[stat.statTypeHash] += stat.value;
-      }
-    }
-  }
-
-  // Purposely handling stats of subclasses differently as they currently don't have conditionals
-  // that I am aware of.
-  for (const plug of subclassPlugs) {
-    for (const stat of plug.investmentStats) {
-      if (stat.statTypeHash in totals) {
         totals[stat.statTypeHash] += stat.value;
       }
     }

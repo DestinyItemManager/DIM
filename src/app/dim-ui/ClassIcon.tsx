@@ -1,5 +1,4 @@
-import { AppIcon, globeIcon } from 'app/shell/icons';
-import { dimHunterIcon, dimTitanIcon, dimWarlockIcon } from 'app/shell/icons/custom';
+import { AppIcon, globeIcon, hunterIcon, titanIcon, warlockIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import hunter from 'destiny-icons/general/class_hunter_proportional.svg';
 import titan from 'destiny-icons/general/class_titan_proportional.svg';
@@ -7,9 +6,9 @@ import warlock from 'destiny-icons/general/class_warlock_proportional.svg';
 import React from 'react';
 
 const classIcons = {
-  [DestinyClass.Hunter]: dimHunterIcon,
-  [DestinyClass.Titan]: dimTitanIcon,
-  [DestinyClass.Warlock]: dimWarlockIcon,
+  [DestinyClass.Hunter]: hunterIcon,
+  [DestinyClass.Titan]: titanIcon,
+  [DestinyClass.Warlock]: warlockIcon,
   [DestinyClass.Unknown]: globeIcon,
 } as const;
 

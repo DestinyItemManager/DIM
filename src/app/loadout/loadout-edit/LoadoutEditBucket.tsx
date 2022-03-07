@@ -2,7 +2,7 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
@@ -10,7 +10,7 @@ import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, faTshirt } from 'app/shell/icons';
+import { addIcon, AppIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import clsx from 'clsx';
@@ -44,14 +44,14 @@ export default function LoadoutEditBucket({
   onToggleEquipped,
   children,
 }: {
-  category: string;
+  category: D2BucketCategory;
   storeId: string;
   items?: DimItem[];
   modsByBucket: {
-    [bucketHash: number]: number[];
+    [bucketHash: number]: number[] | undefined;
   };
   equippedItemIds: Set<string>;
-  onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
+  onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
   onClickWarnItem: (item: DimItem) => void;
   onToggleEquipped: (item: DimItem) => void;
   onRemoveItem: (item: DimItem) => void;
@@ -153,10 +153,10 @@ function ItemBucket({
   onToggleEquipped,
 }: {
   bucket: InventoryBucket;
-  items: DimItem[];
+  items: DimLoadoutItem[];
   equippedItemIds: Set<string>;
   equippedContent?: React.ReactNode;
-  onClickPlaceholder: (params: { bucket: InventoryBucket }) => void;
+  onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
   onClickWarnItem: (item: DimItem) => void;
   onRemoveItem: (item: DimItem) => void;
   onToggleEquipped: (item: DimItem) => void;
@@ -168,13 +168,27 @@ function ItemBucket({
 
   const showFashion = LockableBucketHashes.includes(bucketHash);
 
-  const handlePlaceholderClick = () => onClickPlaceholder({ bucket });
+  const handlePlaceholderClick = (equip: boolean) => onClickPlaceholder({ bucket, equip });
 
   // TODO: plumb through API from context??
   // TODO: expose a menu item for adding more items?
   // TODO: add-unequipped button?
   // T0DO: customize buttons in item popup?
   // TODO: draggable items?
+
+  const showAddUnequipped = equipped.length > 0 && unequipped.length < bucket.capacity - 1;
+
+  const addUnequipped = showAddUnequipped && (
+    <button
+      type="button"
+      key="addbutton"
+      className={styles.addButton}
+      onClick={() => handlePlaceholderClick(false)}
+      title={t('Loadouts.AddUnequippedItems')}
+    >
+      <AppIcon icon={addIcon} />
+    </button>
+  );
 
   return (
     <div className={clsx(styles.itemBucket, { [styles.showFashion]: showFashion })}>
@@ -190,7 +204,7 @@ function ItemBucket({
                 onClose={() => onRemoveItem(item)}
                 showCloseIconOnHover
               >
-                <ItemPopupTrigger item={item}>
+                <ItemPopupTrigger item={item} extraData={{ socketOverrides: item.socketOverrides }}>
                   {(ref, onClick) => (
                     <div
                       className={clsx({
@@ -208,25 +222,28 @@ function ItemBucket({
                 </ItemPopupTrigger>
               </ClosableContainer>
             ))}
-            {index === 0 && equippedContent}
+            {index === 0 ? equippedContent : addUnequipped}
+          </div>
+        ) : index === 0 ? (
+          <div
+            className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
+            key={index}
+          >
+            <BucketPlaceholder
+              bucketHash={bucketHash}
+              onClick={() => handlePlaceholderClick(true)}
+            />
+            {equippedContent}
           </div>
         ) : (
-          index === 0 && (
-            <div
-              className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
-              key={index}
-            >
-              <BucketPlaceholder bucketHash={bucketHash} onClick={handlePlaceholderClick} />
-              {equippedContent}
-            </div>
-          )
+          addUnequipped
         )
       )}
     </div>
   );
 }
 
-export function FashionButton({
+function FashionButton({
   loadout,
   items,
   storeId,

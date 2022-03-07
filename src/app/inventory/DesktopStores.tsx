@@ -2,7 +2,7 @@ import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
 import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
-import ItemFeed from 'app/progress/ItemFeed';
+import ItemFeedSidebar from 'app/item-feed/ItemFeedSidebar';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import StoreStats from 'app/store-stats/StoreStats';
@@ -91,7 +91,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
           hidePostmaster={false}
         />
       </div>
-      {$featureFlags.itemFeed && <ItemFeed />}
+      {$featureFlags.itemFeed && <ItemFeedSidebar />}
     </div>
   );
 }

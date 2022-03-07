@@ -18,7 +18,7 @@ import {
   DestinyObjectiveProgress,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 
 export function milestoneToItems(
@@ -226,13 +226,14 @@ function makeFakePursuitItem(
   typeName: string,
   store: DimStore
 ): DimItem {
+  const bucket = buckets.byHash[BucketHashes.Quests];
   return {
     // figure out what year this item is probably from
     destinyVersion: 2,
     // The bucket the item is currently in
-    location: buckets.byType.Pursuits,
+    location: bucket,
     // The bucket the item normally resides in (even though it may be in the vault/postmaster)
-    bucket: buckets.byType.Pursuits,
+    bucket: bucket,
     hash,
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: 'Milestone',
@@ -261,6 +262,8 @@ function makeFakePursuitItem(
     tracked: false,
     locked: false,
     masterwork: false,
+    crafted: false,
+    highlightedObjective: false,
     classified: false,
     isEngram: false,
     percentComplete: 0, // filled in later
@@ -281,6 +284,8 @@ function makeFakePursuitItem(
     sockets: null,
     perks: null,
     masterworkInfo: null,
+    craftedInfo: null,
+    deepsightInfo: null,
     infusionQuality: null,
     owner: store.id,
     uniqueStack: false,

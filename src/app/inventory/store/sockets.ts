@@ -82,7 +82,7 @@ export function buildSockets(
 /**
  * Build sockets that come from the live instance.
  */
-export function buildInstancedSockets(
+function buildInstancedSockets(
   defs: D2ManifestDefinitions,
   itemDef: DestinyInventoryItemDefinition,
   item: DestinyItemComponent,
@@ -211,6 +211,8 @@ function buildDefinedSocket(
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Unlockable ||
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.LargePerk;
 
+  const isReusable = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable;
+
   // The currently equipped plug, if any
   const reusablePlugs: DimPlug[] = [];
 
@@ -236,17 +238,20 @@ function buildDefinedSocket(
         const plugs: {
           [plugItemHash: number]: DestinyItemSocketEntryPlugItemRandomizedDefinition;
         } = {};
-        for (const reusablePlug of plugSet.reusablePlugItems) {
-          const existing = plugs[reusablePlug.plugItemHash];
-          if (!existing || (!existing.currentlyCanRoll && reusablePlug.currentlyCanRoll)) {
-            plugs[reusablePlug.plugItemHash] = reusablePlug;
+        for (const randomPlug of plugSet.reusablePlugItems) {
+          const existing = plugs[randomPlug.plugItemHash];
+          if (!existing || (!existing.currentlyCanRoll && randomPlug.currentlyCanRoll)) {
+            plugs[randomPlug.plugItemHash] = randomPlug;
           }
         }
 
-        for (const reusablePlug of Object.values(plugs)) {
-          const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
-          if (built) {
-            reusablePlugs.push({ ...built, cannotCurrentlyRoll: !reusablePlug.currentlyCanRoll });
+        for (const randomPlug of Object.values(plugs)) {
+          const built = buildCachedDefinedPlug(defs, randomPlug.plugItemHash);
+          // we don't want "stat roll" plugs to count as reusablePlugs, but they're almost
+          // indistinguishable from exotic intrinsic armor perks, so we stop them here based
+          // on the fact that they have no name
+          if (built?.plugDef.displayProperties.name) {
+            reusablePlugs.push({ ...built, cannotCurrentlyRoll: !randomPlug.currentlyCanRoll });
           }
         }
       }
@@ -304,6 +309,7 @@ function buildDefinedSocket(
     hasRandomizedPlugItems:
       Boolean(socketDef.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets,
     isPerk,
+    isReusable,
     socketDefinition: socketDef,
   };
 }
@@ -436,6 +442,8 @@ function buildSocket(
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Unlockable ||
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.LargePerk;
 
+  const isReusable = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable;
+
   // The currently equipped plug, if any.
   const plugged = buildPlug(defs, socket, socketDef, plugObjectivesData);
   // TODO: not sure if this should always be included!
@@ -488,6 +496,7 @@ function buildSocket(
     hasRandomizedPlugItems,
     reusablePlugItems: reusablePlugs,
     isPerk,
+    isReusable,
     socketDefinition: socketDef,
   };
 }

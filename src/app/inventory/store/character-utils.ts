@@ -1,4 +1,5 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { D1CharacterResponse } from 'app/destiny1/d1-manifest-types';
 import { warnLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -107,10 +108,7 @@ const stats = [
  */
 export function getCharacterStatsData(
   defs: D1ManifestDefinitions,
-  data: {
-    stats: { [x: string]: { statHash: number; value: number } | undefined };
-    peerView: { equipment: { itemHash: number }[] };
-  }
+  data: D1CharacterResponse['character']['base']['characterBase']
 ) {
   const ret: { [statHash: string]: DimCharacterStat } = {};
   stats.forEach((statId) => {
@@ -160,7 +158,7 @@ export function getCharacterStatsData(
 }
 
 // following code is from https://github.com/DestinyTrialsReport
-export function getAbilityCooldown(subclass: number, ability: string, tier: number) {
+function getAbilityCooldown(subclass: number, ability: string, tier: number) {
   switch (ability) {
     case 'STAT_INTELLECT':
       switch (subclass) {

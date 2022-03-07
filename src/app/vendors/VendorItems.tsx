@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import spiderMats from 'data/d2/spider-mats.json';
+import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -49,6 +49,10 @@ function itemSort(vendorHash: number, category: string) {
     return chainComparator<VendorItem>(compareBy((item) => item.item?.itemCategoryHashes[0]));
   } else if (category.startsWith('category_tier')) {
     return undefined;
+  } else if (vendorHash === VENDORS.WAR_TABLE_UPGRADES_RISEN) {
+    // Purchasing an upgrade from the vendor swaps it out with a different item
+    // 10 positions later in the array.
+    return compareBy<VendorItem>((item) => item.key - (item.owned ? 10 : 0));
   } else {
     return chainComparator<VendorItem>(compareBy(vendorItemIndex));
   }
@@ -105,9 +109,9 @@ export default function VendorItems({
   }
 
   // add all traded planetmats if this vendor is the spider
-  if (vendor?.component?.vendorHash === VENDORS.SPIDER) {
+  if (vendor?.component?.vendorHash === VENDORS.RAHOOL) {
     currencies = _.uniqBy(
-      [...spiderMats.map((h) => defs.InventoryItem.get(h)), ...currencies],
+      [...rahoolMats.map((h) => defs.InventoryItem.get(h)), ...currencies],
       (i) => i.hash
     );
   }
@@ -181,7 +185,7 @@ export default function VendorItems({
                           <VendorItemComponent
                             key={item.key}
                             item={item}
-                            owned={Boolean(ownedItemHashes?.has(item.item.hash))}
+                            owned={Boolean(ownedItemHashes?.has(item.item.hash) || item.owned)}
                             characterId={characterId}
                           />
                         )

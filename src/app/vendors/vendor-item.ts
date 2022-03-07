@@ -7,6 +7,7 @@ import {
   DestinyItemSocketEntryPlugItemDefinition,
   DestinyVendorDefinition,
   DestinyVendorItemDefinition,
+  DestinyVendorItemState,
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -113,6 +114,7 @@ export class VendorItem {
   readonly displayProperties: DestinyDisplayPropertiesDefinition;
   readonly borderless: boolean;
   readonly displayTile: boolean;
+  readonly owned: boolean;
   readonly canBeSold: boolean;
   readonly displayCategoryIndex?: number;
   readonly costs: DestinyItemQuantity[];
@@ -143,6 +145,7 @@ export class VendorItem {
     this.displayProperties = inventoryItem.displayProperties;
     this.borderless = Boolean(inventoryItem.uiItemDisplayStyle);
     this.displayTile = inventoryItem.uiItemDisplayStyle === 'ui_display_style_set_container';
+    this.owned = Boolean((saleItem?.augments || 0) & DestinyVendorItemState.Owned);
     this.canBeSold = !saleItem || saleItem.failureIndexes.length === 0;
     this.displayCategoryIndex = vendorItemDef ? vendorItemDef.displayCategoryIndex : undefined;
     this.costs = saleItem?.costs || [];

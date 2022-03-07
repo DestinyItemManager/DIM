@@ -3,6 +3,7 @@ import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { RootState } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
+import { WishListRoll } from 'app/wishlists/types';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { ItemInfos } from '../inventory/dim-item-info';
@@ -19,7 +20,7 @@ import { DimStore } from '../inventory/store-types';
 import { Loadout } from '../loadout-drawer/loadout-types';
 import { loadoutsSelector } from '../loadout-drawer/selectors';
 import { querySelector } from '../shell/selectors';
-import { wishListFunctionSelector } from '../wishlists/selectors';
+import { wishListFunctionSelector, wishListsByHashSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { FilterContext, ItemFilter } from './filter-types';
 import { parseQuery, QueryAST } from './query-parser';
@@ -42,6 +43,7 @@ export const filterFactorySelector = createSelector(
   currentStoreSelector,
   loadoutsSelector,
   wishListFunctionSelector,
+  wishListsByHashSelector,
   (state: RootState) => state.inventory.newItems,
   itemInfosSelector,
   itemHashTagsSelector,
@@ -73,12 +75,13 @@ export const validateQuerySelector = createSelector(
 );
 
 function makeSearchFilterFactory(
-  { filters }: SearchConfig,
+  { isFilters, kvFilters }: SearchConfig,
   stores: DimStore[],
   allItems: DimItem[],
   currentStore: DimStore,
   loadouts: Loadout[],
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined,
+  wishListsByHash: _.Dictionary<WishListRoll[]>,
   newItems: Set<string>,
   itemInfos: ItemInfos,
   itemHashTags: {
@@ -98,6 +101,7 @@ function makeSearchFilterFactory(
     itemHashTags,
     language,
     customStats,
+    wishListsByHash,
   };
 
   return (query: string): ItemFilter => {
@@ -139,15 +143,12 @@ function makeSearchFilterFactory(
           return (item) => !fn(item);
         }
         case 'filter': {
-          let filterName = ast.type;
+          const filterName = ast.type;
           const filterValue = ast.args;
 
           // "is:" filters are slightly special cased
-          if (filterName === 'is') {
-            filterName = filterValue;
-          }
+          const filterDef = filterName === 'is' ? isFilters[filterValue] : kvFilters[filterName];
 
-          const filterDef = filters[filterName];
           if (filterDef) {
             // Each filter knows how to generate a standalone item filter function
             try {

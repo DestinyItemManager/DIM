@@ -72,6 +72,5 @@ export const cosmeticTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Vehicle,
   D1BucketHashes.Horn,
   BucketHashes.Ships,
-  BucketHashes.ClanBanners,
   BucketHashes.Finishers,
 ];

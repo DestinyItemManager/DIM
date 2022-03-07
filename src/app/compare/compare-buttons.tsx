@@ -14,7 +14,7 @@ import React from 'react';
 import styles from './CompareButtons.m.scss';
 
 /** A definition for a button on the top of the compare too, which can be clicked to show the given items. */
-export interface CompareButton {
+interface CompareButton {
   buttonLabel: React.ReactNode[];
   /** The query that results in this list of items */
   query: string;
@@ -155,6 +155,16 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
       buttonLabel: [<WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
+
+    // above but also has to be legendary
+    exampleItem.destinyVersion === 2 &&
+      exampleItem.tier === 'Legendary' && {
+        buttonLabel: [
+          <BungieImage key="rarity" src={rarityIcons.Legendary} />,
+          <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
+        ],
+        query: 'is:legendary',
+      },
 
     // above, but also matching intrinsic (rpm+impact..... ish)
     {

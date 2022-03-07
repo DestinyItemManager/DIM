@@ -53,6 +53,7 @@ const simpleRangeFilters: FilterDefinition[] = [
   },
   {
     keywords: 'level',
+    destinyVersion: 1,
     description: tl('Filter.RequiredLevel'),
     format: 'range',
     filter: ({ filterValue }) => {
@@ -83,6 +84,21 @@ const simpleRangeFilters: FilterDefinition[] = [
             (!activityType || activityType === killTrackerInfo.type) &&
             numberComparisonFunction(killTrackerInfo.count)
         );
+      };
+    },
+  },
+  {
+    keywords: 'weaponlevel',
+    description: tl('Filter.WeaponLevel'),
+    format: 'range',
+    destinyVersion: 2,
+    filter: ({ filterValue }) => {
+      const compareTo = rangeStringToComparator(filterValue);
+      return (item) => {
+        if (!item.craftedInfo) {
+          return false;
+        }
+        return compareTo(item.craftedInfo.level || 0);
       };
     },
   },

@@ -28,7 +28,7 @@ const factionsByHash = {
 };
 
 /** What faction is this character aligned with (by equipping that faction's badge)? */
-export function factionAlignment(store: DimStore): string | null {
+function factionAlignment(store: DimStore): string | null {
   const badge = findItemsByBucket(store, 375726501).find((i) => factionBadges[i.hash]);
   if (!badge) {
     return null;

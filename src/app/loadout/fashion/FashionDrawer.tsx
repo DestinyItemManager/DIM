@@ -58,7 +58,7 @@ export default function FashionDrawer({
   const [pickPlug, setPickPlug] = useState<PickPlugState>();
   const allItems = useSelector(allItemsSelector);
 
-  const equippedIds = new Set([...loadout.items.filter((i) => i.equipped).map((i) => i.id)]);
+  const equippedIds = new Set([...loadout.items.filter((i) => i.equip).map((i) => i.id)]);
   const armor = items.filter(
     (i) => equippedIds.has(i.id) && LockableBucketHashes.includes(i.bucket.hash)
   );
@@ -168,7 +168,10 @@ export default function FashionDrawer({
         const cosmeticSockets = item.sockets
           ? getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics)
           : [];
-        return [bucketHash, _.compact(cosmeticSockets.map((s) => s.plugged?.plugDef.hash))];
+        return [
+          bucketHash,
+          _.compact(cosmeticSockets.map((s) => (s.actuallyPlugged || s.plugged)?.plugDef.hash)),
+        ];
       })
     );
 

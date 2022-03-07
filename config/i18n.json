@@ -197,9 +197,11 @@
     "Class": "Shows items based on their class affinity.",
     "Combine": "Filters can be combined or grouped with parentheses, \"or\" and \"and\" to narrow down your search, for example \"{{example}}\".",
     "ContributePower": "Shows items that have power and can contribute to your power level.",
+    "Craftable": "Shows items that are craftable.",
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Shows items based on their damage type.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials.",
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
@@ -217,6 +219,7 @@
     "HasOrnament": "Shows items that have an ornament applied.",
     "InLoadout": "Shows items that are included in any loadout.",
     "Infusable": "Shows items that can be infused.",
+    "IsCrafted": "Shows weapons that have been crafted.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
@@ -293,9 +296,11 @@
     "UnlockAllSuccess": "Unlocked {{num}} items",
     "Vendor": "Item is available from a specific vendor.",
     "WeaponType": "Shows weapons based on their weapon type.",
+    "WeaponLevel": "Shows weapons based on their Weapon Level.",
     "Wishlist": "Shows items that match your wish list.",
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "WishlistNotes": "Shows wish listed items whose notes match the search.",
+    "WishlistUnknown": "Shows items with no roll recommendations in the loaded wish lists.",
     "Year": "Shows items from which year of Destiny they appeared in."
   },
   "General": {
@@ -621,13 +626,18 @@
     "ApplySearch": "Transfer search \"{{query}}\"",
     "ArmorMods": "Armor Mods",
     "AssumeMaxWeapons": "Assuming max power level weapons",
+    "BadLoadoutShare": "Unable to load shared loadout",
+    "BadLoadoutShareBody": "The loadout you're trying to load is invalid: {{error}}",
     "Before": "Before '{{name}}'",
-    "CannotCustomizeSubclass": "Light subclasses cannot be configured",
+    "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "Add {{name}}",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
+    "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
+    "ClassTypeMissing": "You do not have a {{className}} to create a loadout for",
     "ClearSection": "Remove all",
     "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
     "ClearSpace": "Move other items away",
+    "ClearUnsetMods": "Remove other mods",
     "ConfirmDelete": "Are you sure you want to delete '{{name}}'?",
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
@@ -636,6 +646,7 @@
     "EditBrief": "Edit",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
+    "Equipped": "Equipped",
     "Fashion": "Choose fashion",
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
@@ -701,6 +712,7 @@
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
     "SortByName": "Sort by name",
     "SortByEditTime": "Sort by last edited",
+    "ShareLoadout": "Share Loadout",
     "ShowModPlacement": "Show Mod Placement",
     "SubclassOptions": "{{subclass}} options",
     "SubclassOptionsSearch": "Search {{subclass}} options",
@@ -710,6 +722,7 @@
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedMods": "Unassigned Mods",
     "UnassignedModError": "Mod didn't fit on your current armor",
+    "Unequipped": "Unequipped",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
     "WeaponsOnly": "Weapons Only",
     "NotStarted": "Waiting for other actions",
@@ -721,7 +734,7 @@
     "ClearingSpace": "Moving other items away",
     "Succeeded": "Loadout succeeded",
     "Failed": "Loadout failed to apply completely",
-    "Update": "Update"
+    "Update": "Save Changes"
   },
   "Manifest": {
     "Download": "Downloading latest Destiny info database from Bungie...",
@@ -799,7 +812,8 @@
       "Untracked": "Untracked"
     },
     "TriageTab": "Triage",
-    "Vault": "Vault"
+    "Vault": "Vault",
+    "WeaponLevel": "Weapon Level {{level}}"
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
@@ -935,6 +949,7 @@
     "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
     "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
     "General": "General",
+    "HidePullFromPostmaster": "Hide the \"Pull From Postmaster\" button",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
@@ -996,7 +1011,8 @@
       "Fragment": "Preview Fragment",
       "Aspect": "Preview Aspect",
       "Transmat": "Preview Transmat Effect",
-      "Projection": "Preview Ghost Projection"
+      "Projection": "Preview Ghost Projection",
+      "Super": "Preview Super"
     },
     "ListStyle": "Display perks as a list",
     "GridStyle": "Display perks as a grid"

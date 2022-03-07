@@ -10,7 +10,7 @@ interface Option {
   label: string;
   tooltip: string;
   selected: boolean;
-  onClick(): void;
+  onChange(): void;
 }
 
 const RadioSetting = React.memo(function RadioSetting({
@@ -26,13 +26,13 @@ const RadioSetting = React.memo(function RadioSetting({
     <div className={styles.settingGroup}>
       <div className={styles.title}>{label}</div>
       <div className={styles.buttons}>
-        {options.map(({ label, selected, tooltip, onClick }) => (
+        {options.map(({ label, selected, tooltip, onChange }) => (
           <RadioButton
             key={label}
             label={label}
             tooltip={tooltip}
             selected={selected}
-            onClick={onClick}
+            onChange={onChange}
             name={name}
           />
         ))}
@@ -41,7 +41,7 @@ const RadioSetting = React.memo(function RadioSetting({
   );
 });
 
-function RadioButton({ label, tooltip, name, selected, onClick }: Option & { name: string }) {
+function RadioButton({ label, tooltip, name, selected, onChange }: Option & { name: string }) {
   return (
     <PressTip
       tooltip={tooltip}
@@ -50,7 +50,7 @@ function RadioButton({ label, tooltip, name, selected, onClick }: Option & { nam
         [styles.selected]: selected,
       })}
     >
-      <input type="radio" name={name} checked={selected} onClick={onClick} />
+      <input type="radio" name={name} checked={selected} onChange={onChange} />
       {label}
     </PressTip>
   );
@@ -71,7 +71,7 @@ export default function EnergyOptions({
         label: t('LoadoutBuilder.None'),
         tooltip: t('LoadoutBuilder.LockElementOptions.None'),
         selected: !lockArmorEnergyType,
-        onClick: () => {
+        onChange: () => {
           if (lockArmorEnergyType) {
             lbDispatch({
               type: 'lockArmorEnergyTypeChanged',
@@ -84,7 +84,7 @@ export default function EnergyOptions({
         label: t('LoadoutBuilder.Masterworked'),
         tooltip: t('LoadoutBuilder.LockElementOptions.Masterworked'),
         selected: lockArmorEnergyType === LockArmorEnergyType.Masterworked,
-        onClick: () => {
+        onChange: () => {
           if (lockArmorEnergyType !== LockArmorEnergyType.Masterworked) {
             lbDispatch({
               type: 'lockArmorEnergyTypeChanged',
@@ -97,7 +97,7 @@ export default function EnergyOptions({
         label: t('LoadoutBuilder.All'),
         tooltip: t('LoadoutBuilder.LockElementOptions.All'),
         selected: lockArmorEnergyType === LockArmorEnergyType.All,
-        onClick: () => {
+        onChange: () => {
           if (lockArmorEnergyType !== LockArmorEnergyType.All) {
             lbDispatch({
               type: 'lockArmorEnergyTypeChanged',
@@ -116,7 +116,7 @@ export default function EnergyOptions({
         label: t('LoadoutBuilder.None'),
         tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.None'),
         selected: !assumeArmorMasterwork,
-        onClick: () => {
+        onChange: () => {
           if (assumeArmorMasterwork) {
             lbDispatch({
               type: 'assumeArmorMasterworkChanged',
@@ -129,7 +129,7 @@ export default function EnergyOptions({
         label: t('LoadoutBuilder.Legendary'),
         tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.Legendary'),
         selected: assumeArmorMasterwork === AssumeArmorMasterwork.Legendary,
-        onClick: () => {
+        onChange: () => {
           if (assumeArmorMasterwork !== AssumeArmorMasterwork.Legendary) {
             lbDispatch({
               type: 'assumeArmorMasterworkChanged',
@@ -142,7 +142,7 @@ export default function EnergyOptions({
         label: t('LoadoutBuilder.All'),
         tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.All'),
         selected: assumeArmorMasterwork === AssumeArmorMasterwork.All,
-        onClick: () => {
+        onChange: () => {
           if (assumeArmorMasterwork !== AssumeArmorMasterwork.All) {
             lbDispatch({
               type: 'assumeArmorMasterworkChanged',

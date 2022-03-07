@@ -8,10 +8,7 @@ export const editLoadout$ = new EventBus<{
   isNew?: boolean;
   storeId: string;
 }>();
-export const addItem$ = new EventBus<{
-  item: DimItem;
-  clickEvent: MouseEvent | React.MouseEvent;
-}>();
+export const addItem$ = new EventBus<DimItem>();
 
 /**
  * Start editing a loadout.
@@ -32,9 +29,6 @@ export function editLoadout(
 /**
  * Add an item to the loadout we're currently editing. This is driven by clicks in Inventory.
  */
-export function addItemToLoadout(item: DimItem, $event: MouseEvent | React.MouseEvent) {
-  addItem$.next({
-    item,
-    clickEvent: $event,
-  });
+export function addItemToLoadout(item: DimItem) {
+  addItem$.next(item);
 }

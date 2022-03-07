@@ -134,7 +134,7 @@ type Props = ProvidedProps & StoreProps;
  * that a similar mod is already inserted. Unfortunately these only have a message, which varies
  * based on region, and no hash or id.
  */
-export function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
+function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
   return plug.canInsert || plug.insertFailIndexes.length;
 }
 

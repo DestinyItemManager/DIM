@@ -1,4 +1,4 @@
-import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import {
   BreakerTypeHashes,
   BucketHashes,
@@ -109,6 +109,7 @@ export const D2WeaponStatHashByName = {
   magazine: StatHashes.Magazine,
   aimassist: StatHashes.AimAssistance,
   equipspeed: StatHashes.Handling,
+  shieldduration: StatHashes.ShieldDuration,
   velocity: StatHashes.Velocity,
   blastradius: StatHashes.BlastRadius,
   recoildirection: StatHashes.RecoilDirection,
@@ -133,12 +134,14 @@ export const swordStatsByName = {
 /** D2 has these item types but D1 doesn't */
 export const D2ItemCategoryHashesByName = {
   grenadelauncher: ItemCategoryHashes.GrenadeLaunchers,
-  specialgrenadelauncher: -153950757,
+  specialgrenadelauncher: -ItemCategoryHashes.GrenadeLaunchers,
   tracerifle: ItemCategoryHashes.TraceRifles,
   linearfusionrifle: ItemCategoryHashes.LinearFusionRifles,
   submachine: ItemCategoryHashes.SubmachineGuns,
   smg: ItemCategoryHashes.SubmachineGuns,
   bow: ItemCategoryHashes.Bows,
+  // TODO: Update when Bungie releases Glaive ICH
+  glaive: ItemCategoryHashes.Glaives,
   transmat: ItemCategoryHashes.ShipModsTransmatEffects,
   weaponmod: ItemCategoryHashes.WeaponMods,
   armormod: ItemCategoryHashes.ArmorMods,
@@ -191,6 +194,16 @@ export const armorBuckets = {
   classitem: BucketHashes.ClassArmor,
 };
 
+// these aren't really normal equipment,
+// like you can have 1 equipped but it's glued to the character.
+// this array is used to prevent them from
+// having normal equipment sidecar buttons
+export const uniqueEquipBuckets = [
+  BucketHashes.SeasonalArtifact,
+  BucketHashes.Emotes_Invisible,
+  BucketHashes.Finishers,
+];
+
 //
 // PRESENTATION NODE KNOWN VALUES
 //
@@ -226,6 +239,7 @@ export const VENDORS = {
   RAHOOL: 2255782930,
   VAULT: 1037843411,
   XUR: 2190858386,
+  WAR_TABLE_UPGRADES_RISEN: 3950870173,
 };
 
 /** used to snag the icon for display */
@@ -246,16 +260,6 @@ export const energyNamesByEnum: Record<DestinyEnergyType, string> = {
 
 export const energyCapacityTypeNames = Object.values(energyNamesByEnum);
 
-export const damageNamesByEnum: Record<DamageType, string | null> = {
-  [DamageType.None]: null,
-  [DamageType.Kinetic]: 'kinetic',
-  [DamageType.Arc]: 'arc',
-  [DamageType.Thermal]: 'solar',
-  [DamageType.Void]: 'void',
-  [DamageType.Raid]: 'raid',
-  [DamageType.Stasis]: 'stasis',
-};
-
 export const breakerTypes = {
   barrier: BreakerTypeHashes.ShieldPiercing,
   antibarrier: BreakerTypeHashes.ShieldPiercing,
@@ -271,10 +275,5 @@ export const modsWithConditionalStats = {
   radiantLight: 2979815167,
   chargeHarvester: 2263321587,
   elementalCapacitor: 3511092054,
-} as const;
-
-export const UpgradeMaterialHashes = {
-  legendaryShard: 1022552290,
-  enhancementPrism: 4257549984,
-  ascendantShard: 4257549985,
+  echoOfPersistence: 2272984671,
 } as const;

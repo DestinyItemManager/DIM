@@ -3,6 +3,7 @@ import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
+import shapedIcon from 'images/shaped.png';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
@@ -33,7 +34,6 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const isBounty = Boolean(!item.primaryStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   const isGeneric = !isBounty && !isStackable;
-  const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
 
   const hideBadge = Boolean(
     item.location.hash === BucketHashes.Subclass ||
@@ -60,12 +60,20 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
     (item.element &&
       (item.element.enumValue === DamageType.Arc || item.element.enumValue === DamageType.Void));
 
+  const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
+  const summaryIcon = item.crafted ? (
+    <img className={styles.shapedIcon} src={shapedIcon} />
+  ) : (
+    wishlistRollIcon && <RatingIcon uiWishListRoll={wishlistRollIcon} />
+  );
+
   return (
     <div
       className={clsx(styles.badge, {
         [styles.fullstack]: isStackable && item.amount === item.maxStackSize,
         [styles.capped]: isCapped,
         [styles.masterwork]: item.masterwork,
+        [styles.deepsight]: item.deepsightInfo,
         [styles.engram]: item.isEngram,
       })}
     >
@@ -74,15 +82,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
           {item.quality.min}%
         </div>
       )}
-      {wishlistRollIcon && (
-        <div
-          className={clsx({
-            [styles.wishlistRoll]: wishlistRollIcon,
-          })}
-        >
-          <RatingIcon uiWishListRoll={wishlistRollIcon} />
-        </div>
-      )}
+      {summaryIcon && <div className={styles.summaryIcon}>{summaryIcon}</div>}
       {item.energy ? (
         <span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
           {item.energy.energyCapacity}

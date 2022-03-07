@@ -53,7 +53,7 @@ const armorSlotSpecificPlugCategoryIdentifier =
   /enhancements\.v2_(head|arms|chest|legs|class_item)/i;
 
 /** verifies an item is d2 armor and has an armor slot specific mod socket, which is returned */
-export const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | undefined = (item) =>
+const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | undefined = (item) =>
   (item.bucket.inArmor &&
     item.sockets?.allSockets.find((socket) =>
       socket.plugged?.plugDef.plug.plugCategoryIdentifier.match(
@@ -61,10 +61,6 @@ export const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | undef
       )
     )) ||
   undefined;
-
-/** this returns a string for easy printing purposes. '' if not found */
-export const getArmorSlotSpecificModSocketDisplayName: (item: DimItem) => string = (item) =>
-  getArmorSlotSpecificModSocket(item)?.plugged?.plugDef.itemTypeDisplayName || '';
 
 export function ArmorSlotSpecificModSocketIcon({ item, className, lowRes }: ModSlotIconProps) {
   const defs = useD2Definitions()!;

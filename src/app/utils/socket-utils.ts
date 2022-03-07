@@ -1,9 +1,14 @@
 import {
   DimItem,
+  DimPlug,
   DimSocketCategory,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import {
+  DestinyInventoryItemDefinition,
+  DestinySocketCategoryStyle,
+  TierType,
+} from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimSocket, DimSockets } from '../inventory/item-types';
@@ -47,7 +52,7 @@ export function isWeaponMasterworkSocket(socket: DimSocket) {
 }
 
 /** whether a socket is an armor mod socket. i.e. those grey things. not perks, not reusables, not shaders */
-export function isArmorModSocket(socket: DimSocket) {
+function isArmorModSocket(socket: DimSocket) {
   return socket.plugged && isArmor2Mod(socket.plugged.plugDef);
 }
 
@@ -89,6 +94,14 @@ export function getSocketsByCategoryHash(
   return getSocketsByIndexes(sockets, category.socketIndexes);
 }
 
+/** Find all sockets on the item that belong to the given category hash */
+export function getSocketsByCategoryHashes(
+  sockets: DimSockets | null,
+  categoryHashes: SocketCategoryHashes[]
+) {
+  return categoryHashes.flatMap((categoryHash) => getSocketsByCategoryHash(sockets, categoryHash));
+}
+
 /** Special case of getSocketsByCategoryHash that returns the first (presumably only) socket that matches the category hash */
 export function getFirstSocketByCategoryHash(
   sockets: DimSockets,
@@ -102,10 +115,7 @@ export function getFirstSocketByCategoryHash(
   return sockets.allSockets.find((s) => s.socketIndex === socketIndex);
 }
 
-export function getSocketsByPlugCategoryIdentifier(
-  sockets: DimSockets,
-  plugCategoryIdentifier: string
-) {
+function getSocketsByPlugCategoryIdentifier(sockets: DimSockets, plugCategoryIdentifier: string) {
   return sockets.allSockets.find((socket) =>
     socket.plugged?.plugDef.plug.plugCategoryIdentifier.includes(plugCategoryIdentifier)
   );
@@ -163,4 +173,9 @@ export function plugFitsIntoSocket(socket: DimSocket, plugHash: number) {
     // incorrect for quite a few blue-quality items because DIM throws away the data.
     socket.reusablePlugItems?.some((p) => p.plugItemHash === plugHash)
   );
+}
+
+export function isEnhancedPerk(perk: DimPlug | DestinyInventoryItemDefinition) {
+  const plugDef = 'plugDef' in perk ? perk.plugDef : perk;
+  return plugDef.inventory!.tierType === TierType.Common;
 }

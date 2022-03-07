@@ -1,7 +1,8 @@
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { D2BucketCategory } from 'app/inventory/inventory-buckets';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
@@ -38,10 +39,10 @@ export default function LoadoutItemCategorySection({
   loadout,
   hideOptimizeArmor,
 }: {
-  category: string;
+  category: D2BucketCategory;
   subclass?: DimLoadoutItem;
   storeId?: string;
-  items?: DimItem[];
+  items?: DimLoadoutItem[];
   savedMods: PluggableInventoryItemDefinition[];
   modsByBucket: {
     [bucketHash: number]: number[];
@@ -121,7 +122,7 @@ function ItemBucket({
 }: {
   bucketHash: number;
   storeId?: string;
-  items: DimItem[];
+  items: DimLoadoutItem[];
   equippedItemIds: Set<string>;
   modsForBucket: number[];
 }) {
@@ -143,7 +144,7 @@ function ItemBucket({
           >
             {items.map((item) => (
               <DraggableInventoryItem item={item} key={item.id}>
-                <ItemPopupTrigger item={item}>
+                <ItemPopupTrigger item={item} extraData={{ socketOverrides: item.socketOverrides }}>
                   {(ref, onClick) => (
                     <div
                       className={clsx({

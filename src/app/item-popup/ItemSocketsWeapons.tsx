@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { craftedSocketCategoryHash, mementoSocketCategoryHash } from 'app/inventory/store/crafted';
 import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
@@ -63,14 +64,21 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
       c.socketIndexes.length &&
       getSocketByIndex(item.sockets!, c.socketIndexes[0])?.isPerk
   );
+
+  const excludedSocketCategoryHashes = item.crafted
+    ? [craftedSocketCategoryHash]
+    : [mementoSocketCategoryHash];
+
   // Iterate in reverse category order so cosmetic mods are at the front
   const mods = [...item.sockets.categories]
+    .filter((c) => !excludedSocketCategoryHashes.includes(c.category.hash))
     .reverse()
     .flatMap((c) =>
       getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
         (s) => !s.isPerk && s !== archetypeSocket
       )
-    );
+    )
+    .filter((socket) => socket.plugged?.plugDef.displayProperties.name);
 
   const keyStats =
     item.stats &&

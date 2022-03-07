@@ -13,8 +13,8 @@ import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from './loadout-
  */
 export function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
   const { items, name, clearSpace, parameters, ...rest } = dimLoadout;
-  const equipped = items.filter((i) => i.equipped).map(convertDimLoadoutItemToLoadoutItem);
-  const unequipped = items.filter((i) => !i.equipped).map(convertDimLoadoutItemToLoadoutItem);
+  const equipped = items.filter((i) => i.equip).map(convertDimLoadoutItemToLoadoutItem);
+  const unequipped = items.filter((i) => !i.equip).map(convertDimLoadoutItemToLoadoutItem);
 
   const loadout: Loadout = {
     ...rest,
@@ -102,9 +102,10 @@ function migrateUpgradeSpendTierAndLockItemEnergy(parameters: DimLoadout['parame
  * storage format to the old loadout format.
  */
 export function convertDimApiLoadoutToLoadout(loadout: Loadout): DimLoadout {
-  const { equipped, unequipped, clearSpace, ...rest } = loadout;
+  const { equipped = [], unequipped = [], clearSpace, parameters, ...rest } = loadout;
   return {
     ...rest,
+    parameters: migrateUpgradeSpendTierAndLockItemEnergy(parameters),
     clearSpace: clearSpace || false,
     items: [
       ...equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
@@ -116,7 +117,7 @@ export function convertDimApiLoadoutToLoadout(loadout: Loadout): DimLoadout {
 /**
  * Converts DimApiLoadoutItem to real loadout items.
  */
-export function convertDimApiLoadoutItemToLoadoutItem(
+function convertDimApiLoadoutItemToLoadoutItem(
   item: LoadoutItem,
   equipped: boolean
 ): DimLoadoutItem {
@@ -125,6 +126,6 @@ export function convertDimApiLoadoutItemToLoadoutItem(
     hash: item.hash,
     amount: item.amount || 1,
     socketOverrides: item.socketOverrides,
-    equipped,
+    equip: equipped,
   };
 }

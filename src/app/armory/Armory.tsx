@@ -1,6 +1,7 @@
 import ItemGrid from 'app/armory/ItemGrid';
 import { addCompareItem } from 'app/compare/actions';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
@@ -22,11 +23,10 @@ import MetricCategories from 'app/item-popup/MetricCategories';
 import { useD2Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
-import { AppIcon, compareIcon, faClock } from 'app/shell/icons';
+import { AppIcon, compareIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getItemYear } from 'app/utils/item-utils';
-import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -40,6 +40,7 @@ export default function Armory({
   sockets,
 }: {
   itemHash: number;
+  // this is used to pass a real DimItem's current "plugged" plugs, into the fake DimItem that Armory creates
   sockets?: SocketOverrides;
 }) {
   const dispatch = useThunkDispatch();
@@ -131,17 +132,7 @@ export default function Armory({
               </div>
             )}
           </div>
-          {item.tooltipNotifications?.map((tip) => (
-            <div
-              key={tip.displayString}
-              className={clsx('quest-expiration item-details', {
-                'seasonal-expiration': tip.displayStyle === 'seasonal-expiration',
-              })}
-            >
-              {tip.displayStyle === 'seasonal-expiration' && <AppIcon icon={faClock} />}
-              {tip.displayString}
-            </div>
-          ))}
+          <DestinyTooltipText item={item} />
           {item.classified && <div>{t('ItemService.Classified2')}</div>}
           {collectible?.sourceString && <div>{collectible?.sourceString}</div>}
           {item.description && (

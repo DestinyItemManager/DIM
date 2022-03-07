@@ -1,7 +1,7 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { createSelector } from 'reselect';
-import { FilterDefinition, SuggestionsContext } from './filter-types';
+import { canonicalFilterFormats, FilterDefinition, SuggestionsContext } from './filter-types';
 import advancedFilters from './search-filters/advanced';
 import d1Filters from './search-filters/d1-filters';
 import dupeFilters from './search-filters/dupes';
@@ -47,8 +47,11 @@ export const searchConfigSelector = createSelector(
 
 export interface SearchConfig {
   allFilters: FilterDefinition[];
-  filters: Record<string, FilterDefinition>;
-  keywords: string[];
+  /* `is:keyword` filters */
+  isFilters: Record<string, FilterDefinition>;
+  /* `keyword:value` filters */
+  kvFilters: Record<string, FilterDefinition>;
+  suggestions: string[];
 }
 
 /** Builds an object that describes the available search keywords and filter definitions. */
@@ -56,28 +59,49 @@ export function buildSearchConfig(
   destinyVersion: DestinyVersion,
   suggestionsContext: SuggestionsContext = {}
 ): SearchConfig {
-  const keywords = new Set<string>();
-  const allFiltersByKeyword: Record<string, FilterDefinition> = {};
+  const suggestions = new Set<string>();
+  const isFilters: Record<string, FilterDefinition> = {};
+  const kvFilters: Record<string, FilterDefinition> = {};
   const allApplicableFilters: FilterDefinition[] = [];
   for (const filter of allFilters) {
     if (!filter.destinyVersion || filter.destinyVersion === destinyVersion) {
-      for (const keyword of generateSuggestionsForFilter(filter)) {
-        keywords.add(keyword);
+      for (const suggestion of generateSuggestionsForFilter(filter)) {
+        suggestions.add(suggestion);
       }
-      for (const keyword of filter.suggestionsGenerator?.(suggestionsContext) ?? []) {
-        keywords.add(keyword);
+      for (const suggestion of filter.suggestionsGenerator?.(suggestionsContext) ?? []) {
+        suggestions.add(suggestion);
       }
       allApplicableFilters.push(filter);
       const filterKeywords = Array.isArray(filter.keywords) ? filter.keywords : [filter.keywords];
+      const filterFormats = canonicalFilterFormats(filter.format);
+      const hasSimple = filterFormats.some((f) => f === 'simple');
+      const hasKv = filterFormats.some((f) => f !== 'simple');
+
       for (const keyword of filterKeywords) {
-        allFiltersByKeyword[keyword] = filter;
+        if (hasSimple) {
+          if ($DIM_FLAVOR === 'test' && isFilters[keyword]) {
+            throw new Error(
+              `Conflicting is:${keyword} filter -- only the last inserted filter will work.`
+            );
+          }
+          isFilters[keyword] = filter;
+        }
+        if (hasKv) {
+          if ($DIM_FLAVOR === 'test' && kvFilters[keyword]) {
+            throw new Error(
+              `Conflicting ${keyword}:value filter -- only the last inserted filter will work.`
+            );
+          }
+          kvFilters[keyword] = filter;
+        }
       }
     }
   }
 
   return {
     allFilters: allApplicableFilters,
-    keywords: Array.from(keywords),
-    filters: allFiltersByKeyword,
+    suggestions: Array.from(suggestions),
+    isFilters,
+    kvFilters,
   };
 }

@@ -25,6 +25,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const CompressionPlugin = require('compression-webpack-plugin');
 
 const NotifyPlugin = require('notify-webpack-plugin');
+const { StatsWriterPlugin } = require('webpack-stats-plugin');
 
 const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
@@ -291,6 +292,9 @@ module.exports = (env) => {
         app: path.resolve('./src/app/'),
         data: path.resolve('./src/data/'),
         images: path.resolve('./src/images/'),
+        locale: path.resolve('./src/locale/'),
+        testing: path.resolve('./src/testing/'),
+        docs: path.resolve('./docs/'),
         'destiny-icons': path.resolve('./destiny-icons/'),
       },
 
@@ -309,6 +313,21 @@ module.exports = (env) => {
       new MiniCssExtractPlugin({
         filename: env.dev ? '[name]-[contenthash].css' : '[name]-[contenthash:6].css',
         chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:6].css',
+      }),
+
+      new StatsWriterPlugin({
+        filename: '../webpack-stats.json',
+        stats: {
+          assets: true,
+          entrypoints: true,
+          chunks: true,
+          modules: true,
+          excludeAssets: [
+            /data\/d1\/manifests\/d1-manifest-..(-br)?.json(.br|.gz)?/,
+            /^(?!en).+.json/,
+            /webpack-stats.json/,
+          ],
+        },
       }),
 
       new HtmlWebpackPlugin({
@@ -406,9 +425,7 @@ module.exports = (env) => {
         // Ability cooldowns in stats tooltips
         '$featureFlags.abilityCooldowns': JSON.stringify(false),
         // Item feed sidebar
-        '$featureFlags.itemFeed': JSON.stringify(!env.release),
-        // Loadout edit drawer v2
-        '$featureFlags.loadoutDrawerV2': JSON.stringify(!env.release),
+        '$featureFlags.itemFeed': JSON.stringify(true),
       }),
 
       new LodashModuleReplacementPlugin({

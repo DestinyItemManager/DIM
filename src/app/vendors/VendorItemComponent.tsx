@@ -82,6 +82,7 @@ export function VendorItemDisplay({
   extraData,
   children,
 }: {
+  /** i.e. greyed out */
   unavailable?: boolean;
   owned?: boolean;
   acquired?: boolean;
