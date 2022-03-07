@@ -254,7 +254,19 @@ const socketFilters: FilterDefinition[] = [
     filter:
       ({ filterValue }) =>
       (item: DimItem) => {
+        // TODO: Generate via d2ai
+        const exoticsWithoutCatalysts = [
+          4068264807, 204878059, 3413860062, 3973202132, 3856705927, 1364093401, 2415517654,
+          814876684, 542203595, 14194600, 2535142413, 2603483885, 3524313097, 1665952087,
+          4103414242, 417164956, 3824106094, 1852863732, 2812324400, 2694576561, 1395261499,
+          3325463374, 3487253372, 2376481550, 2044500762, 2069224589, 370712896,
+        ];
+
         if (item.equippingLabel !== 'exotic_weapon') {
+          return false;
+        }
+
+        if (exoticsWithoutCatalysts.includes(item.hash)) {
           return false;
         }
 
@@ -262,9 +274,9 @@ const socketFilters: FilterDefinition[] = [
           case 'complete':
             return !emptyCatalystSocket(item) && item.masterwork;
           case 'incomplete':
-            return emptyCatalystSocket(item) || !item.masterwork;
+            return !emptyCatalystSocket(item) && !item.masterwork;
           case 'missing':
-            return emptyCatalystSocket(item) && !item.masterwork;
+            return emptyCatalystSocket(item);
           default:
             return false;
         }
@@ -275,10 +287,7 @@ const socketFilters: FilterDefinition[] = [
 function emptyCatalystSocket(item: DimItem) {
   return item.sockets?.allSockets.some((socket) =>
     Boolean(
-      socket.plugged &&
-        !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
-        socket.plugged.plugDef.plug &&
-        socket.plugged.plugDef.plug.plugCategoryIdentifier.match(/v400.empty.exotic.masterwork/)
+      socket.plugged?.plugDef.plug?.plugCategoryIdentifier.match(/v400.empty.exotic.masterwork/)
     )
   );
 }
