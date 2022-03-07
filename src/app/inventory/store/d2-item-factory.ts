@@ -444,7 +444,11 @@ export function makeItem(
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
     equipped: Boolean(instanceDef?.isEquipped),
     // TODO: equippingBlock has a ton of good info for the item move logic
-    equipment: Boolean(itemDef.equippingBlock) && !uniqueEquipBuckets.includes(normalBucket.hash),
+    equipment:
+      (itemDef.equippingBlock ||
+        // redacted items seem to have a correct boolean but no detailed equipping block info
+        (itemDef.redacted && itemDef.equippable)) &&
+      !uniqueEquipBuckets.includes(normalBucket.hash),
     equippingLabel: itemDef.equippingBlock?.uniqueLabel,
     complete: false,
     amount: item.quantity || 1,

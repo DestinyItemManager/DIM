@@ -149,14 +149,7 @@ export function itemCanBeEquippedBy(
   }
 
   return (
-    item.equipment &&
-    // For the right class
-    (item.classType === DestinyClass.Unknown || item.classType === store.classType) &&
-    // nothing we are too low-level to equip
-    item.equipRequiredLevel <= store.level &&
-    // can be moved or is already here
-    (!item.notransfer || item.owner === store.id) &&
-    (allowPostmaster || !item.location.inPostmaster) &&
+    itemCanBeEquippedByStoreId(item, store.id, store.classType, allowPostmaster) &&
     (isD1Item(item) ? factionItemAligns(store, item) : true)
   );
 }
@@ -165,15 +158,22 @@ export function itemCanBeEquippedBy(
 export function itemCanBeEquippedByStoreId(
   item: DimItem,
   storeId: string,
-  storeClassType: DestinyClass
+  storeClassType: DestinyClass,
+  allowPostmaster = false
 ): boolean {
-  return (
+  return Boolean(
     item.equipment &&
-    // For the right class
-    (item.classType === DestinyClass.Unknown || item.classType === storeClassType) &&
-    // can be moved or is already here
-    (!item.notransfer || item.owner === storeId) &&
-    !item.location.inPostmaster
+      (item.classified
+        ? // we can't trust the classType of redacted items! they're all marked titan.
+          // let's assume classified weapons are all-class
+          item.bucket.inWeapons ||
+          // if it's equipped by this store, it's obviously equippable to this store!
+          (item.owner === storeId && item.equipped)
+        : // For the right class
+          item.classType === DestinyClass.Unknown || item.classType === storeClassType) &&
+      // can be moved or is already here
+      (!item.notransfer || item.owner === storeId) &&
+      (allowPostmaster || !item.location.inPostmaster)
   );
 }
 
