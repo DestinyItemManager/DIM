@@ -63,18 +63,40 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Build and deploy
-        run: ./build/deploy-prod.sh
+      - name: Generate release notes
+        run: awk '/## Next/{flag=1;next}/##/{flag=0}flag' docs/CHANGELOG.md >release-notes.txt
+
+      - name: Update CHANGELOG.md
+        run: perl -i'' -pe"s/^## Next/## Next\n\n## $VERSION $OPENSPAN($DATE)$CLOSESPAN/" docs/CHANGELOG.md
         env:
-          WEB_API_KEY: ${{ secrets.PROD_API_KEY }}
-          WEB_OAUTH_CLIENT_ID: ${{ secrets.PROD_OAUTH_CLIENT_ID }}
-          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.PROD_OAUTH_CLIENT_SECRET }}
-          DIM_API_KEY: ${{ secrets.PROD_DIM_API_KEY }}
+          OPENSPAN: '\<span class="changelog-date"\>'
+          CLOSESPAN: '\<\/span\>'
+          DATE: $(TZ="America/Los_Angeles" date +"%Y-%m-%d")
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v8
+        with:
+          author_name: DIM Release Bot
+          author_email: destinyitemmanager@gmail.com
+          message: ${{ env.VERSION }}
+          tag: v${{ env.VERSION }}
+
+      - name: Build Release
+        run: yarn build:release
+
+      - name: Check Release
+        run: yarn syntax
+
+      - name: ./build/rsync-deploy.sh
+        run: ./build/rsync-deploy.sh
+        env:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_PATH: app.destinyitemmanager.com
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          # Use the dim-release-bot token rather than the default
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release-notes.txt
 
       - name: Purge CloudFlare cache
         run: ./build/purge-cloudflare.sh
