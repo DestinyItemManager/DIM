@@ -241,6 +241,7 @@ export function makeItem(
   }
 ): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
+  /** DESPITE TYPESCRIPT DISCARDING THE `| undefined`, THIS MAY NOT EXIST */
   const instanceDef: Partial<DestinyItemInstanceComponent> | undefined =
     item.itemInstanceId && itemComponents?.instances.data
       ? itemComponents.instances.data[item.itemInstanceId]
@@ -329,7 +330,7 @@ export function makeItem(
     // classified items have no Stats, but their quality has their PL
     (!primaryStat &&
       itemDef.redacted &&
-      instanceDef.itemLevel &&
+      instanceDef?.itemLevel &&
       instanceDef.quality !== undefined &&
       (D2Categories.Weapons.includes(item.bucketHash) ||
         D2Categories.Armor.includes(item.bucketHash)))
