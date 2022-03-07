@@ -254,17 +254,17 @@ const socketFilters: FilterDefinition[] = [
     filter:
       ({ filterValue }) =>
       (item: DimItem) => {
-        if (item.equippingLabel === 'exotic_weapon') {
+        if (item.equippingLabel !== 'exotic_weapon') {
           return false;
         }
 
         switch (filterValue) {
           case 'complete':
-            return (item.masterworkInfo || !emptyCatalystSocket(item)) && item.masterwork;
+            return !emptyCatalystSocket(item) && item.masterwork;
           case 'incomplete':
-            return (item.masterworkInfo || emptyCatalystSocket(item)) && !item.masterwork;
+            return emptyCatalystSocket(item) || !item.masterwork;
           case 'missing':
-            return !item.masterworkInfo || emptyCatalystSocket(item);
+            return emptyCatalystSocket(item) && !item.masterwork;
           default:
             return false;
         }
