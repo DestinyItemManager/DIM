@@ -1,5 +1,7 @@
 ## Next
 
+## 7.8.0 <span class="changelog-date">(2022-03-06)</span>
+
 ### Changes
 
 * The "Pull From Postmaster" button no longer requires a second tap to confirm. For those who dislike this button, it may be removed entirely via a setting in the Settings page.
