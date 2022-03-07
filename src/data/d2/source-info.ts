@@ -922,7 +922,10 @@ const D2Sources: {
   psiops: {
     itemHashes: [],
     sourceHashes: [
+      450719423, // Source: Season of the Risen
       2075569025, // PsiOps
+      2363489105, // Source: Season of the Risen Vendor or Triumphs
+      3563833902, // Source: Season of the Risen Triumphs
     ],
     searchString: [],
   },
@@ -1273,10 +1276,7 @@ const D2Sources: {
   wartable: {
     itemHashes: [],
     sourceHashes: [
-      450719423, // Source: Season of the Risen
-      2363489105, // Source: Season of the Risen Vendor or Triumphs
       2653840925, // Source: Challenger's Proving VII Quest
-      3563833902, // Source: Season of the Risen Triumphs
       4079816474, // Source: War Table
     ],
     searchString: [],
