@@ -241,11 +241,10 @@ export function makeItem(
   }
 ): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
-  /** DESPITE TYPESCRIPT DISCARDING THE `| undefined`, THIS MAY NOT EXIST */
-  const instanceDef: Partial<DestinyItemInstanceComponent> | undefined =
-    item.itemInstanceId && itemComponents?.instances.data
-      ? itemComponents.instances.data[item.itemInstanceId]
-      : {};
+
+  const itemInstanceData: Partial<DestinyItemInstanceComponent> =
+    itemComponents?.instances.data?.[item.itemInstanceId ?? ''] ?? {};
+
   // Missing definition?
   if (!itemDef) {
     warnMissingDefinition();
@@ -256,7 +255,7 @@ export function makeItem(
     warnLog(
       'd2-stores',
       'Missing Item Definition:\n\n',
-      { item, itemDef, instanceDef },
+      { item, itemDef, itemInstanceData },
       '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.'
     );
   }
@@ -313,14 +312,14 @@ export function makeItem(
 
   let primaryStat: DimItem['primaryStat'] = null;
   if (
-    instanceDef?.primaryStat &&
+    itemInstanceData.primaryStat &&
     itemType !== 'Class' &&
     !itemDef.stats?.disablePrimaryStatDisplay
   ) {
     primaryStat = {
-      ...instanceDef.primaryStat,
-      stat: defs.Stat.get(instanceDef.primaryStat.statHash),
-      value: instanceDef.primaryStat.value,
+      ...itemInstanceData.primaryStat,
+      stat: defs.Stat.get(itemInstanceData.primaryStat.statHash),
+      value: itemInstanceData.primaryStat.value,
     };
   }
 
@@ -330,26 +329,26 @@ export function makeItem(
     // classified items have no Stats, but their quality has their PL
     (!primaryStat &&
       itemDef.redacted &&
-      instanceDef?.itemLevel &&
-      instanceDef.quality !== undefined &&
+      itemInstanceData.itemLevel &&
+      itemInstanceData.quality !== undefined &&
       (D2Categories.Weapons.includes(item.bucketHash) ||
         D2Categories.Armor.includes(item.bucketHash)))
   ) {
     primaryStat = {
       stat: defs.Stat.get(StatHashes.Power),
       statHash: StatHashes.Power,
-      value: (instanceDef?.itemLevel ?? 0) * 10 + (instanceDef?.quality ?? 0),
+      value: (itemInstanceData.itemLevel ?? 0) * 10 + (itemInstanceData.quality ?? 0),
     };
   }
 
   // if a damageType isn't found, use the item's energy capacity element instead
   const element =
-    (instanceDef?.damageTypeHash !== undefined &&
-      defs.DamageType.get(instanceDef.damageTypeHash)) ||
+    (itemInstanceData.damageTypeHash !== undefined &&
+      defs.DamageType.get(itemInstanceData.damageTypeHash)) ||
     (itemDef.defaultDamageTypeHash !== undefined &&
       defs.DamageType.get(itemDef.defaultDamageTypeHash)) ||
-    (instanceDef?.energy?.energyTypeHash !== undefined &&
-      defs.EnergyType.get(instanceDef.energy.energyTypeHash)) ||
+    (itemInstanceData.energy?.energyTypeHash !== undefined &&
+      defs.EnergyType.get(itemInstanceData.energy.energyTypeHash)) ||
     null;
 
   const powerCapHash =
@@ -443,7 +442,7 @@ export function makeItem(
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
-    equipped: Boolean(instanceDef?.isEquipped),
+    equipped: Boolean(itemInstanceData.isEquipped),
     // TODO: equippingBlock has a ton of good info for the item move logic
     equipment: Boolean(itemDef.equippingBlock) && !uniqueEquipBuckets.includes(normalBucket.hash),
     equippingLabel: itemDef.equippingBlock?.uniqueLabel,
@@ -451,13 +450,13 @@ export function makeItem(
     amount: item.quantity || 1,
     primaryStat: primaryStat,
     typeName,
-    equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,
+    equipRequiredLevel: itemInstanceData.equipRequiredLevel ?? 0,
     maxStackSize: Math.max(itemDef.inventory!.maxStackSize, 1),
     uniqueStack: Boolean(itemDef.inventory!.stackUniqueLabel?.length),
     classType: itemDef.classType, // 0: titan, 1: hunter, 2: warlock, 3: any
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     element,
-    energy: instanceDef?.energy ?? null,
+    energy: itemInstanceData.energy ?? null,
     powerCap,
     lockable: itemType !== 'Finishers' ? item.lockable : true,
     trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),
