@@ -56,11 +56,13 @@ jobs:
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
 
-      # Upload webpack-stats.json to use on relative-ci.yaml workflow
-      - name: Upload webpack stats artifact
-        uses: relative-ci/agent-upload-artifact-action@v1
+      # Send webpack stats and build information to RelativeCI
+      - name: Send webpack stats to RelativeCI
+        uses: relative-ci/agent-action@v2
         with:
           webpackStatsFile: ./webpack-stats.json
+          key: ${{ secrets.RELATIVE_CI_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check Syntax
         run: yarn syntax
