@@ -1,6 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage, { bungieBackgroundStyle, bungieNetPath } from 'app/dim-ui/BungieImage';
+import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { d2MissingIcon } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
 import {
   DestinyEnergyTypeDefinition,
@@ -35,17 +37,23 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       (item.bucket.hash === BucketHashes.Subclass ||
         item.itemCategoryHashes.includes(ItemCategoryHashes.Packages))) ||
     item.isEngram;
+  const useClassifiedPlaceholder = item.icon === d2MissingIcon && item.classified;
   const itemImageStyles = clsx('item-img', className, {
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless,
     [styles.masterwork]: item.masterwork,
     [styles.deepsight]: item.deepsightInfo,
+    [styles.bucketIcon]: useClassifiedPlaceholder,
     [itemTierStyles[item.tier]]: !borderless && !item.plug,
   });
 
   return (
     <>
-      <BungieImage src={item.icon} className={itemImageStyles} alt="" />
+      {useClassifiedPlaceholder ? (
+        <BucketIcon item={item} className={itemImageStyles} />
+      ) : (
+        <BungieImage src={item.icon} className={itemImageStyles} alt="" />
+      )}
       {item.iconOverlay && (
         <div className={styles.iconOverlay}>
           <BungieImage src={item.iconOverlay} />

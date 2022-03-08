@@ -136,3 +136,8 @@ $commonBg: #366f42;
   top: calc(var(--item-size) - ((var(--item-size) + 1px) / 2) - 1px);
   pointer-events: none;
 }
+
+.bucketIcon {
+  filter: invert(1);
+  border-color: #222;
+}

@@ -4,6 +4,7 @@ interface CssExports {
   'backgroundOverlay': string;
   'basic': string;
   'borderless': string;
+  'bucketIcon': string;
   'common': string;
   'complete': string;
   'deepsight': string;

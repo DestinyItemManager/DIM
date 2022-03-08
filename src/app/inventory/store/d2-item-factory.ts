@@ -1,7 +1,11 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
 import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
-import { THE_FORBIDDEN_BUCKET, uniqueEquipBuckets } from 'app/search/d2-known-values';
+import {
+  d2MissingIcon,
+  THE_FORBIDDEN_BUCKET,
+  uniqueEquipBuckets,
+} from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { errorLog, warnLog } from 'app/utils/log';
 import {
@@ -431,10 +435,7 @@ export function makeItem(
     isExotic: tiers[itemDef.inventory!.tierType] === 'Exotic',
     name,
     description: displayProperties.description,
-    icon:
-      overrideStyleItem?.displayProperties.icon ||
-      displayProperties.icon ||
-      '/img/misc/missing_icon_d2.png',
+    icon: overrideStyleItem?.displayProperties.icon || displayProperties.icon || d2MissingIcon,
     hiddenOverlay,
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || itemDef.screenshot,
