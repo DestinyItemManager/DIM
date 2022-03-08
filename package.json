@@ -35,7 +35,7 @@
     "bcu": "run-s bcu:*",
     "bcu:build": "node src/build-browsercheck-utils.js",
     "bcu:pretty": "prettier --write src/browsercheck-utils.js",
-    "fa-subset": "node src/fa-subset.mjs"
+    "fa-subset": "node src/fa-subset.mjs && node src/fa-rename.js"
   },
   "husky": {
     "hooks": {
