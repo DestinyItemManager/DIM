@@ -23,9 +23,9 @@
     "fix:stylelint": "yarn lint:stylelint --fix",
     "fix:prettier": "yarn lint:prettier --write",
     "bundle": "webpack --config ./config/webpack.js",
-    "build:release": "yarn -s bundle --env=release --node-env=production && yarn fa-subset",
-    "build:beta": "yarn -s bundle --env=beta --node-env=production && yarn fa-subset",
-    "build:dev": "yarn -s bundle --env=dev && yarn fa-subset",
+    "build:release": "yarn -s bundle --env=release --node-env=production",
+    "build:beta": "yarn -s bundle --env=beta --node-env=production",
+    "build:dev": "yarn -s bundle --env=dev",
     "i18n": "i18next-scanner",
     "watch": "yarn -s build:dev --watch",
     "start": "webpack serve --config ./config/webpack.js --env=dev",
@@ -35,7 +35,7 @@
     "bcu": "run-s bcu:*",
     "bcu:build": "node src/build-browsercheck-utils.js",
     "bcu:pretty": "prettier --write src/browsercheck-utils.js",
-    "fa-subset": "node src/fa-subset.mjs && node src/fa-rename.js"
+    "fa-subset": "node src/fa-subset.mjs"
   },
   "husky": {
     "hooks": {

@@ -66,5 +66,5 @@ fontawesomeSubset(
     ],
     brands: ['twitter', 'xbox', 'playstation', 'youtube', 'discord', 'github', 'reddit'],
   },
-  'dist/static'
+  'src/data/webfonts'
 );
