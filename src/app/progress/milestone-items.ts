@@ -4,6 +4,7 @@ import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { DimRecord } from 'app/records/presentation-nodes';
+import { d2MissingIcon } from 'app/search/d2-known-values';
 import {
   DestinyAmmunitionType,
   DestinyClass,
@@ -242,7 +243,7 @@ function makeFakePursuitItem(
     isExotic: false,
     name: displayProperties.name,
     description: displayProperties.description,
-    icon: displayProperties.icon || '/img/misc/missing_icon_d2.png',
+    icon: displayProperties.icon || d2MissingIcon,
     notransfer: true,
     canPullFromPostmaster: false,
     id: '0', // zero for non-instanced is legacy hack

@@ -11,6 +11,8 @@ import {
 // this file has non-programatically decided information
 // hashes, names, & enums, hand-crafted and chosen by us
 
+export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
+
 //
 // GAME MECHANICS KNOWN VALUES
 //
