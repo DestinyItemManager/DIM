@@ -419,6 +419,18 @@ export function makeItem(
     }
   }
 
+  // we cannot trust the claimed class of redacted items. they all say Titan
+  const classType = itemDef.redacted
+    ? normalBucket.inArmor
+      ? instanceDef?.isEquipped && owner
+        ? // equipped armor gets marked as that character's class
+          owner.classType
+        : // unequipped armor gets marked "no class"
+          -1
+      : // other items are marked "any class"
+        DestinyClass.Unknown
+    : itemDef.classType;
+
   const createdItem: DimItem = {
     owner: owner?.id || 'unknown',
     // figure out what year this item is probably from
@@ -459,7 +471,7 @@ export function makeItem(
     equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,
     maxStackSize: Math.max(itemDef.inventory!.maxStackSize, 1),
     uniqueStack: Boolean(itemDef.inventory!.stackUniqueLabel?.length),
-    classType: itemDef.classType, // 0: titan, 1: hunter, 2: warlock, 3: any
+    classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     element,
     energy: instanceDef?.energy ?? null,

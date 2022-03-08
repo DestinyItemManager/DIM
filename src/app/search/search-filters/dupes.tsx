@@ -206,7 +206,8 @@ function computeStatDupeLower(
   allItems: DimItem[],
   customStats: Settings['customTotalStatsByClass'] = {}
 ) {
-  const armor = allItems.filter((i) => i.bucket.inArmor);
+  // disregard no-class armor
+  const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== -1);
 
   // Group by class and armor type. Also, compare exotics with each other, not the general pool.
   const grouped = Object.values(
