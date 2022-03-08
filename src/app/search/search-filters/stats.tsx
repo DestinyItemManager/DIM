@@ -288,7 +288,11 @@ function maxPowerKey(item: DimItem) {
 
 function calculateMaxPowerPerBucket(allItems: DimItem[]) {
   return _.mapValues(
-    _.groupBy(allItems, (i) => maxPowerKey(i)),
+    _.groupBy(
+      // disregard no-class armor
+      allItems.filter((i) => i.classType !== -1),
+      (i) => maxPowerKey(i)
+    ),
     (items) => _.maxBy(items, (i) => i.power)?.power ?? 0
   );
 }
