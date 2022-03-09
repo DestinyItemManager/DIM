@@ -470,6 +470,7 @@ const D2Sources: {
     sourceHashes: [
       210885364, // Source: Flawless completion of Presage Exotic Quest on Master difficulty.
       506073192, // Source: Season of Arrivals dungeon.
+      675740011, // Source: "Grasp of Avarice" Dungeon
       1745960977, // Source: Pit of Heresy
       2745272818, // Source: Presage Exotic Quest
       2856954949, // Source: "Let Loose Thy Talons" Exotic quest.
@@ -649,6 +650,13 @@ const D2Sources: {
     ],
     sourceHashes: [
       1491707941, // Source: "Garden of Salvation" raid.
+    ],
+    searchString: [],
+  },
+  grasp: {
+    itemHashes: [],
+    sourceHashes: [
+      675740011, // Source: "Grasp of Avarice" Dungeon
     ],
     searchString: [],
   },
@@ -944,6 +952,7 @@ const D2Sources: {
       654652973, // Guide 25 Last Wish encounters
       707740602, // Guide 10 Last Wish encounters
       866530798, // Source: Not a Scratch.
+      1007078046, // Source: Vow of the Disciple raid
       1405897559, // Source: "Deep Stone Crypt" raid.
       1483048674, // Source: Complete the "Scourge of the Past" raid.
       1491707941, // Source: "Garden of Salvation" raid.
@@ -1270,6 +1279,13 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       2065138144, // Source: Venus Raid
+    ],
+    searchString: [],
+  },
+  vow: {
+    itemHashes: [],
+    sourceHashes: [
+      1007078046, // Source: Vow of the Disciple raid
     ],
     searchString: [],
   },

@@ -1340,6 +1340,7 @@ const missingSources: { [key: string]: number[] } = {
     3939809874, // Plate of Transcendence
     4177973942, // Vest of Transcendence
   ],
+  grasp: [],
   gunsmith: [
     288409041, // Rocket Launcher Scavenger
     288409046, // Hand Cannon Targeting
@@ -2649,6 +2650,7 @@ const missingSources: { [key: string]: number[] } = {
   umbral: [],
   vexoffensive: [],
   vog: [],
+  vow: [],
   wartable: [
     2119661524, // Font of Might
   ],

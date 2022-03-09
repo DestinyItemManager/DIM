@@ -142,7 +142,6 @@ export const D2ItemCategoryHashesByName = {
   submachine: ItemCategoryHashes.SubmachineGuns,
   smg: ItemCategoryHashes.SubmachineGuns,
   bow: ItemCategoryHashes.Bows,
-  // TODO: Update when Bungie releases Glaive ICH
   glaive: ItemCategoryHashes.Glaives,
   transmat: ItemCategoryHashes.ShipModsTransmatEffects,
   weaponmod: ItemCategoryHashes.WeaponMods,
