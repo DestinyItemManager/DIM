@@ -7,6 +7,8 @@ import { DimItem } from 'app/inventory/item-types';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { allNotesHashtagsSelector } from 'app/inventory/selectors';
 import { AppIcon, editIcon } from 'app/shell/icons';
+import { useIsPhonePortrait } from 'app/shell/selectors';
+import { isiOSBrowser } from 'app/utils/browsers';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -72,6 +74,8 @@ function NotesEditor({
   item: DimItem;
   setNotesOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const isPhonePortrait = useIsPhonePortrait();
+
   // track what's in the text field and warn people if it's too long
   const [liveNotes, setLiveNotes] = useState(notes ?? '');
   const onNotesUpdated = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -167,12 +171,15 @@ function NotesEditor({
     }
   }, [textArea, tags]);
 
+  // On iOS at least, focusing the keyboard pushes the content off the screen
+  const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
+
   return (
     <form name="notes">
       <textarea
         ref={textArea}
         name="data"
-        autoFocus={true}
+        autoFocus={nativeAutoFocus}
         placeholder={t('Notes.Help')}
         maxLength={maxLength}
         value={liveNotes}
