@@ -182,7 +182,6 @@ const d2SelectionTree: ItemCategoryTreeNode = {
           terminal: true,
         },
         {
-          // TODO: Update when Bungie releases Glaive ICH
           id: 'glaive',
           itemCategoryHash: ItemCategoryHashes.Glaives,
           subCategories: [energy],
@@ -373,33 +372,7 @@ export default function ItemTypeSelector({
                   categoryHashList.push(ItemCategoryHashes.Armor);
                 }
 
-                // TODO: Update when Bungie releases Glaive ICH
-                const itemCategory =
-                  subCategory.itemCategoryHash !== -7777777
-                    ? defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash))
-                    : {
-                        displayProperties: {
-                          description: 'Pointy end that way!!!',
-                          name: 'Glaive',
-                          hasIcon: false,
-                        },
-                        visible: false,
-                        deprecated: false,
-                        shortTitle: 'Glaive',
-                        itemTypeRegex: '.*_glaive',
-                        grantDestinyBreakerType: 0,
-                        grantDestinyItemType: 0,
-                        grantDestinySubType: 0,
-                        grantDestinyClass: 3,
-                        groupedCategoryHashes: [],
-                        isPlug: false,
-                        parentCategoryHashes: [],
-                        groupCategoryOnly: false,
-                        hash: 7777777,
-                        index: 55,
-                        redacted: false,
-                        blacklisted: false,
-                      };
+                const itemCategory = defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash));
 
                 return (
                   <label

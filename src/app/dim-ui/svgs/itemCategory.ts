@@ -45,7 +45,6 @@ const weaponTypeSvgByCategoryHash = {
   [ItemCategoryHashes.LinearFusionRifles]: lFusionRifle,
   [ItemCategoryHashes.SubmachineGuns]: smg,
   [ItemCategoryHashes.Bows]: bow,
-  // TODO: Update when Bungie releases Glaive ICH
   [ItemCategoryHashes.Glaives]: glaive,
 };
 

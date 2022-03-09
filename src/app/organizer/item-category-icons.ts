@@ -70,7 +70,6 @@ export const itemCategoryIcons: { [itemCategoryHash: number]: string } = {
   [ItemCategoryHashes.Sparrows]: sparrow,
   [ItemCategoryHashes.Ships]: ship,
   [ItemCategoryHashes.Emblems]: emblem,
-  // TODO: Update when Bungie releases Glaive ICH
   [ItemCategoryHashes.Glaives]: glaive,
 } as const;
 
