@@ -183,6 +183,14 @@ function PerkCircle({
         <circle cx="50" cy="50" r="46" fill="white" />
       </mask>
       <circle cx="50" cy="50" r="48" className={statusClasses} />
+
+      {enhanced && (
+        <>
+          <rect x="0" y="0" width="100" height="100" fill="url(#mw)" mask="url(#mask)" />
+          <rect x="5" y="0" width="6" height="100" fill="#eade8b" mask="url(#mask)" />
+        </>
+      )}
+
       <image
         href={bungieNetPath(plug.plugDef.displayProperties.icon)}
         x="10"
@@ -191,13 +199,6 @@ function PerkCircle({
         height="80"
         mask="url(#mask)"
       />
-
-      {enhanced && (
-        <>
-          <rect x="0" y="0" width="100" height="100" fill="url(#mw)" mask="url(#mask)" />
-          <rect x="5" y="0" width="6" height="100" fill="#eade8b" mask="url(#mask)" />
-        </>
-      )}
 
       <circle cx="50" cy="50" r="46" stroke="white" fill="transparent" strokeWidth="2" />
       {enhanced && <path d="M5,50 l0,-24 l-6,0 l9,-16 l9,16 l-6,0 l0,24 z" fill="#eade8b" />}
