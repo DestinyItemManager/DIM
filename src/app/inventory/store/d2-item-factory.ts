@@ -421,7 +421,7 @@ export function makeItem(
   // we cannot trust the claimed class of redacted items. they all say Titan
   const classType = itemDef.redacted
     ? normalBucket.inArmor
-      ? instanceDef?.isEquipped && owner
+      ? itemInstanceData?.isEquipped && owner
         ? // equipped armor gets marked as that character's class
           owner.classType
         : // unequipped armor gets marked "no class"
