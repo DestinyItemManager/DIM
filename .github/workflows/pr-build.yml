@@ -67,6 +67,7 @@ jobs:
 
       - name: Jest Test
         run: yarn jest --json --outputFile="jest.results.json"
+        continue-on-error: true
 
       - uses: actions/upload-artifact@v3
         with:
