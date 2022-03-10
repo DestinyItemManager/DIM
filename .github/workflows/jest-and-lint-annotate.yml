@@ -1,4 +1,4 @@
-name: Jest & Lint Annotate
+name: Jest & ESLint Annotate
 
 on:
   workflow_run:
@@ -10,8 +10,11 @@ jobs:
   jest:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v3
+      - name: Download jest results
+        uses: dawidd6/action-download-artifact@v2
         with:
+          workflow: "PR Build"
+          workflow_conclusion: completed
           name: jest-results
 
       - name: Jest Annotations & Coverage
@@ -25,8 +28,11 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v3
+      - name: Download ESLint results
+        uses: dawidd6/action-download-artifact@v2
         with:
+          workflow: "PR Build"
+          workflow_conclusion: completed
           name: eslint-results
 
       - name: Annotate ESLint Results
