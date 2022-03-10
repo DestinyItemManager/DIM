@@ -24,7 +24,6 @@ jobs:
     if: needs.haslabel.outputs.relative-ci
     steps:
       - name: Send webpack stats to RelativeCI
-        if: steps.haslabel.outputs.labeled-relative-ci
         uses: relative-ci/agent-action@v2
         with:
           key: ${{ secrets.RELATIVE_CI_KEY }}
