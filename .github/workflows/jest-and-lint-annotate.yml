@@ -7,24 +7,31 @@ on:
       - completed
 
 jobs:
-  wait:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Wait 30 seconds
-        run: |
-          sleep 30
-
   jest:
-    needs: wait
     runs-on: ubuntu-latest
     steps:
-      - uses: hmarr/debug-action@v2
-      - name: Download jest results
-        uses: dawidd6/action-download-artifact@v2.17.0
+      - name: 'Download jest-results artifact'
+        uses: actions/github-script@v3.1.0
         with:
-          workflow: "PR Test & Lint"
-          name: jest-results
-
+          script: |
+            var artifacts = await github.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: ${{github.event.workflow_run.id }},
+            });
+            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "jest-results"
+            })[0];
+            var download = await github.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            var fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/jest-results.zip', Buffer.from(download.data));
+      - run: unzip jest-results.zip
+      
       - name: Jest Annotations & Coverage
         uses: mattallty/jest-github-action@v1.0.3
         env:
@@ -34,16 +41,30 @@ jobs:
           test-command: "echo done"
 
   lint:
-    needs: wait
     runs-on: ubuntu-latest
     steps:
-      - uses: hmarr/debug-action@v2
-      - name: Download ESLint results
-        uses: dawidd6/action-download-artifact@v2.17.0
+      - name: 'Download eslint-results artifact'
+        uses: actions/github-script@v3.1.0
         with:
-          workflow: "PR Test & Lint"
-          name: eslint-results
-
+          script: |
+            var artifacts = await github.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: ${{github.event.workflow_run.id }},
+            });
+            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "eslint-results"
+            })[0];
+            var download = await github.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            var fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/eslint-results.zip', Buffer.from(download.data));
+      - run: unzip eslint-results.zip
+      
       - name: Annotate ESLint Results
         uses: ataylorme/eslint-annotate-action@1.2.0
         continue-on-error: true
