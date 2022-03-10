@@ -78,9 +78,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: GitHub Slug Action
-        uses: rlespinasse/github-slug-action@4.0.0
-
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
