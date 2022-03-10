@@ -15,7 +15,6 @@ jobs:
           name: jest-results
 
       - name: Jest Annotations & Coverage
-        if: github.event.pull_request.head.repo.full_name == github.repository
         uses: mattallty/jest-github-action@v1.0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -31,7 +30,6 @@ jobs:
           name: eslint-results
 
       - name: Annotate ESLint Results
-        if: github.event.pull_request.head.repo.full_name == github.repository
         uses: ataylorme/eslint-annotate-action@1.2.0
         continue-on-error: true
         with:
