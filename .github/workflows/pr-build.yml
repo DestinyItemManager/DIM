@@ -52,7 +52,6 @@ jobs:
           webpackStatsFile: ./webpack-stats.json
 
   test:
-    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -66,17 +65,13 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Jest Annotations & Coverage
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        uses: mattallty/jest-github-action@v1.0.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          coverage-comment: false
-
       - name: Jest Test
-        if: github.event.pull_request.head.repo.full_name != github.repository
-        run: yarn test
+        run: yarn jest --json --outputFile="jest.results.json"
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: jest-results
+          path: jest.results.json
 
   lint:
     runs-on: ubuntu-latest
@@ -110,15 +105,7 @@ jobs:
         run: yarn lint-report:cached
         continue-on-error: true
 
-      - name: Annotate ESLint Results
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        uses: ataylorme/eslint-annotate-action@1.2.0
-        continue-on-error: true
+      - uses: actions/upload-artifact@v3
         with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          report-json: "eslint_report.json"
-          fail-on-warning: true
-
-      - name: ESLint
-        if: github.event.pull_request.head.repo.full_name != github.repository
-        run: yarn lintcached
+          name: eslint-results
+          path: eslint.results.json

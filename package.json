@@ -16,7 +16,7 @@
     "lintcached": "run-p lintcached:*",
     "lintcached:eslint": "yarn lint:eslint --cache --cache-location .eslintcache --cache-strategy content",
     "lint-report": "yarn lint:eslint --output-file eslint_report.json --format json",
-    "lint-report:cached": "yarn lintcached:eslint --output-file eslint_report.json --format json",
+    "lint-report:cached": "yarn lintcached:eslint --output-file eslint.results.json --format json",
     "fix": "run-s fix:*",
     "fix:eslint": "yarn lint:eslint --fix",
     "fix:json": "jsonsort src/locale",
