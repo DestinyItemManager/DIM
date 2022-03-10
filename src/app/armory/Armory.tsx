@@ -37,11 +37,15 @@ import Links from './Links';
 
 export default function Armory({
   itemHash,
-  sockets,
+  realItemSockets,
+  realAvailablePlugHashes,
 }: {
   itemHash: number;
   // this is used to pass a real DimItem's current "plugged" plugs, into the fake DimItem that Armory creates
-  sockets?: SocketOverrides;
+  realItemSockets?: SocketOverrides;
+  // non-plugged, but available, plugs, from the real item this was spawned from.
+  // used to mark sockets as available
+  realAvailablePlugHashes?: number[];
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
@@ -65,7 +69,7 @@ export default function Armory({
   // We apply socket overrides *twice* - once to set the original sockets, then to apply the user's chosen overrides
   const item = applySocketOverrides(
     defs,
-    applySocketOverrides(defs, itemWithoutSockets, sockets),
+    applySocketOverrides(defs, itemWithoutSockets, realItemSockets),
     socketOverrides
   );
 
@@ -236,7 +240,7 @@ export default function Armory({
           <ItemGrid items={storeItems} noLink />
         </>
       )}
-      <AllWishlistRolls item={item} />
+      <AllWishlistRolls item={item} realAvailablePlugHashes={realAvailablePlugHashes} />
     </div>
   );
 }

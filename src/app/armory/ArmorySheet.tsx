@@ -6,7 +6,7 @@ import Armory from './Armory';
 import styles from './ArmorySheet.m.scss';
 
 export default function ArmorySheet({ item, onClose }: { item: DimItem; onClose(): void }) {
-  const sockets = useMemo(
+  const realItemSockets = useMemo(
     () =>
       item.sockets
         ? Object.fromEntries(
@@ -17,11 +17,19 @@ export default function ArmorySheet({ item, onClose }: { item: DimItem; onClose(
         : {},
     [item.sockets]
   );
+  const realAvailablePlugHashes = useMemo(
+    () => item.sockets?.allSockets.flatMap((s) => s.plugOptions.map((p) => p.plugDef.hash)) ?? [],
+    [item.sockets]
+  );
 
   return (
     <Sheet onClose={onClose} sheetClassName={styles.sheet}>
       <ClickOutsideRoot>
-        <Armory itemHash={item.hash} sockets={sockets} />
+        <Armory
+          itemHash={item.hash}
+          realItemSockets={realItemSockets}
+          realAvailablePlugHashes={realAvailablePlugHashes}
+        />
       </ClickOutsideRoot>
     </Sheet>
   );

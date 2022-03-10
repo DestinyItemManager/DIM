@@ -16,7 +16,15 @@ import styles from './AllWishlistRolls.m.scss';
  * (with some overrides to set some as "plugged", when spawned from a real item).
  * This would render much weirder if it were fed an owned inventory item.
  */
-export default function AllWishlistRolls({ item }: { item: DimItem }) {
+export default function AllWishlistRolls({
+  item,
+  realAvailablePlugHashes,
+}: {
+  item: DimItem;
+  // non-plugged, but available, plugs, from the real item this was spawned from.
+  // used to mark sockets as available
+  realAvailablePlugHashes?: number[];
+}) {
   const wishlistRolls = useSelector(wishListRollsForItemHashSelector(item.hash));
   const [goodRolls, badRolls] = _.partition(wishlistRolls, (r) => !r.isUndesirable);
 
@@ -25,20 +33,38 @@ export default function AllWishlistRolls({ item }: { item: DimItem }) {
       {goodRolls.length > 0 && (
         <>
           <h2>{t('Armory.WishlistedRolls', { count: goodRolls.length })}</h2>
-          <WishlistRolls item={item} wishlistRolls={goodRolls} />
+          <WishlistRolls
+            item={item}
+            wishlistRolls={goodRolls}
+            realAvailablePlugHashes={realAvailablePlugHashes}
+          />
         </>
       )}
       {badRolls.length > 0 && (
         <>
           <h2>{t('Armory.TrashlistedRolls', { count: badRolls.length })}</h2>
-          <WishlistRolls item={item} wishlistRolls={badRolls} />
+          <WishlistRolls
+            item={item}
+            wishlistRolls={badRolls}
+            realAvailablePlugHashes={realAvailablePlugHashes}
+          />
         </>
       )}
     </>
   );
 }
 
-function WishlistRolls({ wishlistRolls, item }: { wishlistRolls: WishListRoll[]; item: DimItem }) {
+function WishlistRolls({
+  wishlistRolls,
+  item,
+  realAvailablePlugHashes,
+}: {
+  wishlistRolls: WishListRoll[];
+  item: DimItem;
+  // non-plugged, but available, plugs, from the real item this was spawned from.
+  // used to mark sockets as available
+  realAvailablePlugHashes?: number[];
+}) {
   const groupedWishlistRolls = _.groupBy(wishlistRolls, (r) => r.notes || t('Armory.NoNotes'));
 
   // TODO: group by making a tree of least cardinality -> most?
@@ -65,6 +91,7 @@ function WishlistRolls({ wishlistRolls, item }: { wishlistRolls: WishListRoll[];
                         item={item}
                         socketInfo={socket}
                         hasMenu={false}
+                        notSelected={realAvailablePlugHashes?.includes(plug.plugDef.hash)}
                       />
                     )
                   );
