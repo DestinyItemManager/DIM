@@ -26,15 +26,23 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Jest Test
+      - name: Jest Test (Forked)
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        run: yarn jest
+
+      - name: Jest Test (Non-Forked)
+        if: github.event.pull_request.head.repo.full_name == github.repository
         run: yarn jest --json --outputFile="jest.results.json"
         continue-on-error: true
 
-      - uses: actions/upload-artifact@v3
+      - name: Jest Annotations & Coverage (Non-Forked)
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: mattallty/jest-github-action@v1.0.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: jest-results
-          path: jest.results.json
-          retention-days: 1
+          coverage-comment: false
+          test-command: "echo done"
 
   lint:
     runs-on: ubuntu-latest
@@ -61,12 +69,20 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Save ESLint Report JSON
+      - name: ESLint (Forked)
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        run: yarn lint:cached
+
+      - name: Save ESLint Report JSON (Non-Forked)
+        if: github.event.pull_request.head.repo.full_name == github.repository
         run: yarn lint-report:cached
         continue-on-error: true
 
-      - uses: actions/upload-artifact@v3
+      - name: Annotate ESLint Results
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: ataylorme/eslint-annotate-action@1.2.0
+        continue-on-error: true
         with:
-          name: eslint-results
-          path: eslint.results.json
-          retention-days: 1
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          report-json: "eslint.results.json"
+          fail-on-warning: true
