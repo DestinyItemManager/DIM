@@ -11,10 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download jest results
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.17.0
         with:
           workflow: "PR Build"
-          workflow_conclusion: completed
           name: jest-results
 
       - name: Jest Annotations & Coverage
@@ -29,10 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download ESLint results
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.17.0
         with:
           workflow: "PR Build"
-          workflow_conclusion: completed
           name: eslint-results
 
       - name: Annotate ESLint Results
