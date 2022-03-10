@@ -1,0 +1,72 @@
+name: PR Test & Lint
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - 'docs/**'
+
+# Ensures that only one deploy task per branch/environment will run at a time.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
+
+      - name: Jest Test
+        run: yarn jest --json --outputFile="jest.results.json"
+        continue-on-error: true
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: jest-results
+          path: jest.results.json
+          retention-days: 1
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Cache ESLint
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-eslint
+        with:
+          path: ~/.eslintcache
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
+            ${{ runner.os }}-${{ env.cache-name }}-
+
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
+
+      - name: Save ESLint Report JSON
+        run: yarn lint-report:cached
+        continue-on-error: true
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: eslint-results
+          path: eslint.results.json
+          retention-days: 1

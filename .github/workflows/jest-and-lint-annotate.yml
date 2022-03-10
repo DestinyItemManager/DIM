@@ -2,19 +2,26 @@ name: Jest & ESLint Annotate
 
 on:
   workflow_run:
-    workflows: ["PR Build"]
+    workflows: ["PR Test & Lint"]
     types:
       - completed
 
 jobs:
+  wait:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait 30 seconds
+        run: |
+          sleep 30
+
   jest:
+    needs: wait
     runs-on: ubuntu-latest
     steps:
       - name: Download jest results
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.17.0
         with:
-          workflow: "PR Build"
-          workflow_conclusion: completed
+          workflow: "PR Test & Lint"
           name: jest-results
 
       - name: Jest Annotations & Coverage
@@ -26,13 +33,13 @@ jobs:
           test-command: "echo done"
 
   lint:
+    needs: wait
     runs-on: ubuntu-latest
     steps:
       - name: Download ESLint results
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.17.0
         with:
-          workflow: "PR Build"
-          workflow_conclusion: completed
+          workflow: "PR Test & Lint"
           name: eslint-results
 
       - name: Annotate ESLint Results

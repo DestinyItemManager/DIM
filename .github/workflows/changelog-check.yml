@@ -4,7 +4,7 @@ on:
     types: [assigned, opened, synchronize, reopened, labeled, unlabeled]
     paths-ignore:
       - 'docs/**'
-      - 'workflows/**'
+      - '.github/workflows/**'
 
 jobs:
   changelog:
