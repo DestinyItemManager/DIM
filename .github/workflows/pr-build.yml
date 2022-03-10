@@ -16,14 +16,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 3 # So sentry can get the previous commit
 
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
           node-version: 16.x
           cache: yarn
+
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
 
       - name: get-npm-version
         id: package-version
@@ -37,9 +38,6 @@ jobs:
         run: |
           echo "VERSION=${{ steps.package-version.outputs.current-version }}.${{ github.run_number }}" >> $GITHUB_ENV
 
-      - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
-
       - name: Build beta
         run: yarn build:beta
         env:
@@ -50,62 +48,3 @@ jobs:
         uses: relative-ci/agent-upload-artifact-action@v1
         with:
           retentionDays: 5
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: yarn
-
-      - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
-
-      - name: Jest Test
-        run: yarn jest --json --outputFile="jest.results.json"
-        continue-on-error: true
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: jest-results
-          path: jest.results.json
-          retention-days: 1
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: yarn
-
-      - name: Cache ESLint
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-eslint
-        with:
-          path: ~/.eslintcache
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
-            ${{ runner.os }}-${{ env.cache-name }}-
-
-      - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
-
-      - name: Save ESLint Report JSON
-        run: yarn lint-report:cached
-        continue-on-error: true
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: eslint-results
-          path: eslint.results.json
-          retention-days: 1

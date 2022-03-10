@@ -2,7 +2,7 @@ name: Jest & ESLint Annotate
 
 on:
   workflow_run:
-    workflows: ["PR Build"]
+    workflows: ["PR Test & Lint"]
     types:
       - completed
 
@@ -21,7 +21,7 @@ jobs:
       - name: Download jest results
         uses: dawidd6/action-download-artifact@v2.17.0
         with:
-          workflow: "PR Build"
+          workflow: "PR Test & Lint"
           name: jest-results
 
       - name: Jest Annotations & Coverage
@@ -39,7 +39,7 @@ jobs:
       - name: Download ESLint results
         uses: dawidd6/action-download-artifact@v2.17.0
         with:
-          workflow: "PR Build"
+          workflow: "PR Test & Lint"
           name: eslint-results
 
       - name: Annotate ESLint Results
