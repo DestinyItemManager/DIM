@@ -5,6 +5,7 @@ on:
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/**'
+      - 'src/data/**' # Ignore d2ai updates
 
 jobs:
   changelog:
