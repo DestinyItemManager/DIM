@@ -36,11 +36,12 @@ export function MaterialCounts() {
             {/* tack on a special section when we hit the crafting mats group */}
             {matgroup.includes(353704689) && (
               <>
-                {craftingMaterialCounts.map(([name, icon, count]) => (
+                {craftingMaterialCounts.map(([name, icon, count, max]) => (
                   <React.Fragment key={name}>
-                    <span className={styles.amount}>{count.toLocaleString()}</span>
+                    <span className={styles.matName}>{name}</span>
                     <BungieImage src={icon} />
-                    <span>{name}</span>
+                    <span className={styles.amount}>{count.toLocaleString()}</span>
+                    <span className={styles.capacity}>/ {max.toLocaleString()}</span>
                   </React.Fragment>
                 ))}
               </>
@@ -53,6 +54,7 @@ export function MaterialCounts() {
               const amount = items.reduce((total, i) => total + i.amount, 0);
               const item = items[0];
               const materialName = item.name;
+              const max = item.uniqueStack ? item.maxStackSize : false;
               const icon = item.icon;
 
               if (amount === undefined) {
@@ -61,9 +63,10 @@ export function MaterialCounts() {
 
               return (
                 <React.Fragment key={h}>
-                  <span className={styles.amount}>{amount.toLocaleString()}</span>
+                  <span className={styles.matName}>{materialName}</span>
                   <BungieImage src={icon} />
-                  <span>{materialName}</span>
+                  <span className={styles.amount}>{amount.toLocaleString()}</span>
+                  <span className={styles.capacity}>/ {max || '∞'}</span>
                 </React.Fragment>
               );
             })}

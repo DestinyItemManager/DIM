@@ -114,17 +114,22 @@ export const craftingMaterialCountsSelector = createSelector(
   profileResponseSelector,
   (defs, profileResponse) => {
     const numbersLookup = profileResponse?.profileStringVariables?.data?.integerValuesByHash;
-    const results: [name: string, icon: string, count: number][] = [];
+    const results: [name: string, icon: string, count: number, max: number][] = [];
 
     if (defs && numbersLookup) {
-      for (const { materialHash, currentCountHash } of resonantMaterialStringVarHashes) {
+      for (const {
+        materialHash,
+        currentCountHash,
+        maxCapacityHash,
+      } of resonantMaterialStringVarHashes) {
         const def = defs.InventoryItem.get(materialHash);
 
         if (def) {
           const { icon, name } = def.displayProperties;
-          const count = numbersLookup[currentCountHash];
+          const count = numbersLookup[currentCountHash] ?? 0;
+          const max = numbersLookup[maxCapacityHash] ?? 0;
           if (icon && name && count !== undefined) {
-            results.push([name, icon, count]);
+            results.push([name, icon, count, max]);
           }
         }
       }

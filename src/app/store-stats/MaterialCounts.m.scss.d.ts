@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'amount': string;
+  'capacity': string;
+  'matName': string;
   'materialCounts': string;
   'spanGrid': string;
 }

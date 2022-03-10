@@ -2,7 +2,7 @@
   display: grid;
   margin: auto;
   width: fit-content;
-  grid-template-columns: max-content max-content max-content;
+  grid-template-columns: max-content max-content max-content max-content;
   gap: 2px 6px;
   align-items: center;
 
@@ -15,8 +15,14 @@
     font-weight: bold;
     font-variant-numeric: tabular-nums;
   }
+  .capacity {
+    color: #bbb;
+  }
+  .matName {
+    text-align: right;
+  }
   .spanGrid {
-    grid-column-end: span 3;
+    grid-column-end: span 4;
     hr {
       margin: 3px;
     }
