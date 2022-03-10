@@ -7,7 +7,15 @@ on:
       - completed
 
 jobs:
+  wait:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait 30 seconds
+        run: |
+          sleep 30
+
   jest:
+    needs: wait
     runs-on: ubuntu-latest
     steps:
       - name: Download jest results
@@ -25,6 +33,7 @@ jobs:
           test-command: "echo done"
 
   lint:
+    needs: wait
     runs-on: ubuntu-latest
     steps:
       - name: Download ESLint results
