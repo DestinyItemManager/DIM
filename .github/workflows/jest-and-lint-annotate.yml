@@ -1,0 +1,40 @@
+name: Jest & Lint Annotate
+
+on:
+  workflow_run:
+    workflows: ["PR Build"]
+    types:
+      - completed
+
+jobs:
+  jest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: jest-results
+
+      - name: Jest Annotations & Coverage
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: mattallty/jest-github-action@v1.0.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          coverage-comment: false
+          test-command: "echo done"
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: eslint-results
+
+      - name: Annotate ESLint Results
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: ataylorme/eslint-annotate-action@1.2.0
+        continue-on-error: true
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          report-json: "eslint.results.json"
+          fail-on-warning: true
