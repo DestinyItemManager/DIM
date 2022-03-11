@@ -1,5 +1,7 @@
 ## Next
 
+* Assume armor masterwork and lock armor energy options will now be saved correctly when saving a loadout from the Loadout Optimizer and loaded correctly when Optimizing Armor.
+
 ## 7.8.0 <span class="changelog-date">(2022-03-06)</span>
 
 ### Changes
