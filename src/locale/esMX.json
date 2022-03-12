@@ -290,7 +290,7 @@
     "Wishlist": "Muestra objetos que coincidan con tu lista de deseos.",
     "WishlistDupe": "Muestra objetos duplicados donde al menos uno de los duplicados esté en tu lista de deseos.",
     "WishlistNotes": "Muestra objetos de la lista de deseos cuyas notas coincidan con la búsqueda.",
-    "WishlistUnknown": "Muestra objetos sin recomendaciones de tiradas en las listas de deseos cargadas.",
+    "WishlistUnknown": "Muestra objetos sin recomendaciones de rolls en las listas de deseos cargadas.",
     "Year": "Muestra los objetos según el año de aparición en Destiny."
   },
   "General": {
