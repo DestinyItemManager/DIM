@@ -1,11 +1,12 @@
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
-import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { itemSortOrderSelector } from 'app/settings/item-sort';
 import { sortItems } from 'app/shell/filters';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { AddButton } from './Buttons';
@@ -14,30 +15,25 @@ import LoadoutDrawerItem from './LoadoutDrawerItem';
 
 export default function LoadoutDrawerBucket({
   bucket,
-  loadoutItems,
   items,
   pickLoadoutItem,
   equip,
   remove,
 }: {
   bucket: InventoryBucket;
-  loadoutItems: LoadoutItem[];
-  items: DimItem[];
+  items: ResolvedLoadoutItem[];
   pickLoadoutItem(bucket: InventoryBucket): void;
   equip(item: DimItem, e: React.MouseEvent): void;
   remove(item: DimItem, e: React.MouseEvent): void;
 }) {
   const itemSortOrder = useSelector(itemSortOrderSelector);
+  const [equippedUnsorted, unequippedUnsorted] = _.partition(items, (li) => li.loadoutItem.equip);
   const equippedItems = sortItems(
-    items.filter((i) =>
-      loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && li.equip)
-    ),
+    equippedUnsorted.map((li) => li.item),
     itemSortOrder
   );
   const unequippedItems = sortItems(
-    items.filter((i) =>
-      loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && !li.equip)
-    ),
+    unequippedUnsorted.map((li) => li.item),
     itemSortOrder
   );
   // Only allow one emblem

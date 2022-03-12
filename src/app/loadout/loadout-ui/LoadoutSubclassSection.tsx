@@ -4,7 +4,7 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import clsx from 'clsx';
@@ -17,19 +17,19 @@ import PlugDef from './PlugDef';
 
 export function getSubclassPlugs(
   defs: D2ManifestDefinitions,
-  subclass: DimLoadoutItem | undefined
+  subclass: ResolvedLoadoutItem | undefined
 ) {
   const plugs: PluggableInventoryItemDefinition[] = [];
 
-  if (subclass?.sockets?.categories) {
-    for (const category of subclass.sockets.categories) {
+  if (subclass?.item.sockets?.categories) {
+    for (const category of subclass.item.sockets.categories) {
       const showInitial =
         category.category.hash !== SocketCategoryHashes.Aspects &&
         category.category.hash !== SocketCategoryHashes.Fragments;
-      const sockets = getSocketsByIndexes(subclass.sockets, category.socketIndexes);
+      const sockets = getSocketsByIndexes(subclass.item.sockets, category.socketIndexes);
 
       for (const socket of sockets) {
-        const override = subclass.socketOverrides?.[socket.socketIndex];
+        const override = subclass.loadoutItem.socketOverrides?.[socket.socketIndex];
         // Void grenades do not have a singleInitialItemHash
         const initial =
           socket.socketDefinition.singleInitialItemHash || socket.plugSet!.plugs[0].plugDef.hash;
@@ -52,7 +52,7 @@ export default function LoadoutSubclassSection({
   power,
 }: {
   defs: D2ManifestDefinitions;
-  subclass?: DimLoadoutItem;
+  subclass?: ResolvedLoadoutItem;
   power: number;
 }) {
   const getModRenderKey = createGetModRenderKey();
@@ -62,18 +62,18 @@ export default function LoadoutSubclassSection({
     <div className={styles.subclassContainer}>
       <div
         className={clsx(styles.subclass, {
-          [styles.missingItem]: subclass?.owner === 'unknown',
+          [styles.missingItem]: subclass?.missing,
         })}
       >
         {subclass ? (
-          <ItemPopupTrigger item={subclass}>
+          <ItemPopupTrigger item={subclass.item}>
             {(ref, onClick) => (
               <ConnectedInventoryItem
                 innerRef={ref}
                 // Disable the popup when plugs are available as we are showing
                 // plugs in the loadout and they may be different to the popup
                 onClick={plugs.length ? undefined : onClick}
-                item={subclass}
+                item={subclass.item}
                 ignoreSelectedPerks
               />
             )}
