@@ -250,46 +250,26 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.Catalyst'),
     format: ['query'],
     destinyVersion: 2,
-    suggestions: ['complete', 'incomplete', 'missing'],
+    suggestions: ['complete', 'incomplete', 'all'],
     filter:
       ({ filterValue }) =>
       (item: DimItem) => {
-        // TODO: Generate via d2ai
-        const exoticsWithoutCatalysts = [
-          4068264807, 204878059, 3413860062, 3973202132, 3856705927, 1364093401, 2415517654,
-          814876684, 542203595, 14194600, 2535142413, 2603483885, 3524313097, 1665952087,
-          4103414242, 417164956, 3824106094, 1852863732, 2812324400, 2694576561, 1395261499,
-          3325463374, 3487253372, 2376481550, 2044500762, 2069224589, 370712896,
-        ];
-
-        if (item.equippingLabel !== 'exotic_weapon') {
-          return false;
-        }
-
-        if (exoticsWithoutCatalysts.includes(item.hash)) {
+        if (!item.catalystInfo) {
           return false;
         }
 
         switch (filterValue) {
+          case 'all':
+            return true;
           case 'complete':
-            return !emptyCatalystSocket(item) && item.masterwork;
+            return item.catalystInfo?.complete;
           case 'incomplete':
-            return !emptyCatalystSocket(item) && !item.masterwork;
-          case 'missing':
-            return emptyCatalystSocket(item);
+            return !item.catalystInfo?.complete;
           default:
             return false;
         }
       },
   },
 ];
-
-function emptyCatalystSocket(item: DimItem) {
-  return item.sockets?.allSockets.some((socket) =>
-    Boolean(
-      socket.plugged?.plugDef.plug?.plugCategoryIdentifier.match(/v400.empty.exotic.masterwork/)
-    )
-  );
-}
 
 export default socketFilters;

@@ -48,7 +48,7 @@ import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
-import { DimItem } from '../item-types';
+import { DimCatalyst, DimItem } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';
 import { buildCraftedInfo } from './crafted';
@@ -634,6 +634,9 @@ export function makeItem(
   // Deepsight Resonance
   createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
 
+  // Catalyst
+  createdItem.catalystInfo = buildCatalystInfo(createdItem, itemDef);
+
   try {
     createdItem.stats = buildStats(defs, createdItem, itemDef);
   } catch (e) {
@@ -815,4 +818,41 @@ function buildPursuitInfo(
       questStepsTotal: itemDef.setData.itemList.length,
     };
   }
+}
+
+function buildCatalystInfo(
+  createdItem: DimItem,
+  itemDef: DestinyInventoryItemDefinition
+): DimCatalyst | undefined {
+  if (createdItem.equippingLabel !== 'exotic_weapon') {
+    return undefined;
+  }
+
+  // TODO: Generate via d2ai
+  const exoticsWithoutCatalysts = [
+    4068264807, 204878059, 3413860062, 3973202132, 3856705927, 1364093401, 2415517654, 814876684,
+    542203595, 14194600, 2535142413, 2603483885, 3524313097, 1665952087, 4103414242, 417164956,
+    3824106094, 1852863732, 2812324400, 2694576561, 1395261499, 3325463374, 3487253372, 2376481550,
+    2044500762, 2069224589, 370712896, 2399110176,
+  ];
+
+  if (exoticsWithoutCatalysts.includes(createdItem.hash)) {
+    return undefined;
+  }
+
+  const catalystSocket = Boolean(
+    itemDef.sockets?.socketEntries.filter((s) => s.singleInitialItemHash === 1498917124)
+  );
+
+  const objectives = itemDef.objectives?.objectiveHashes ? itemDef.objectives.objectiveHashes : [];
+
+  if (objectives.length === 0 && !catalystSocket) {
+    return undefined;
+  }
+
+  const complete = Boolean(createdItem.masterwork);
+
+  // const progress = 0;
+
+  return { hasCatalyst: true, complete: complete };
 }
