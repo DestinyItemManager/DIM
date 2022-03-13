@@ -121,8 +121,8 @@ export function processItems(
         reportException('setting store hadErrors', new Error('setting store hadErrors'), {
           itemHash: item.itemHash,
           hasDefinition: Boolean(itemDef),
-          hasName: Boolean(itemDef.displayProperties.name),
-          hasQuestLineName: Boolean(itemDef.setData?.questLineName),
+          hasName: Boolean(itemDef?.displayProperties.name),
+          hasQuestLineName: Boolean(itemDef?.setData?.questLineName),
           bucketName: bucketDef.displayProperties.name,
         });
         owner.hadErrors = true;
@@ -291,11 +291,21 @@ export function makeItem(
 
   // they aren't transferrable, and stop existing if removed from the vault, so they won't
   // interfere with the 50 consumables bucket limit.
-  const needsShaderFix = itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders);
+  const needsShaderFix =
+    itemDef.inventory!.bucketTypeHash === THE_FORBIDDEN_BUCKET &&
+    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders);
+  // The same thing can happen with mods!
+  const needsModsFix =
+    itemDef.inventory!.bucketTypeHash === THE_FORBIDDEN_BUCKET &&
+    item.bucketHash === BucketHashes.Modifications;
 
   // this is where the item would go normally (if not vaulted/postmastered).
   // it is stored in DimItem.bucket
-  const normalBucketHash = needsShaderFix ? 1469714392 : itemDef.inventory!.bucketTypeHash;
+  const normalBucketHash = needsShaderFix
+    ? BucketHashes.Consumables
+    : needsModsFix
+    ? BucketHashes.Modifications
+    : itemDef.inventory!.bucketTypeHash;
   let normalBucket = buckets.byHash[normalBucketHash];
 
   // this is where the item IS, right now.
