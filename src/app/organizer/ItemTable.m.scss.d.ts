@@ -38,6 +38,7 @@ interface CssExports {
   'sorter': string;
   'stat2715839340': string;
   'statValue': string;
+  'stats': string;
   'table': string;
   'tag': string;
   'toolbar': string;

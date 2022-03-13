@@ -73,6 +73,10 @@ $content-cells: 5;
     width: 16px;
     vertical-align: bottom;
   }
+
+  &.stats {
+    text-align: right;
+  }
 }
 
 .sorter {
@@ -297,6 +301,7 @@ $modslotSize: 30px;
 
 // The numeric value of the stat
 .statValue {
+  text-align: right !important;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   > svg {

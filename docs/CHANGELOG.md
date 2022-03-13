@@ -1,7 +1,8 @@
 ## Next
+
 ## 7.8.1 <span class="changelog-date">(2022-03-12)</span>
 
-* Fix organizer statValue text-align
+* Fix organizer stats header alignment
 
 ## 7.8.0 <span class="changelog-date">(2022-03-06)</span>
 
