@@ -67,21 +67,11 @@ jobs:
       - name: Check Syntax
         run: yarn syntax
 
-      - name: Rsync to Server (Stage 1)
-        uses: easingthemes/ssh-deploy@v2.1.1
+      - name: Rsync to Server
+        run: ./build/rsync-deploy.sh
         env:
             SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
             SOURCE: "dist/"
-            REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-            REMOTE_USER: ${{ secrets.REMOTE_USER }}
-            TARGET: beta.destinyitemmanager.com
-            EXCLUDE: "*.html, *.html.br, service-worker.js, service-worker.js.br, version.json, version.json.br"
-
-      - name: Rsync to Server (Stage 2)
-        uses: easingthemes/ssh-deploy@v2.1.1
-        env:
-            SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-            SOURCE: "dist/*.html, dist/*.html.br, dist/service-worker.js, dist/service-worker.js.br, dist/version.json, dist/version.json.br"
             REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
             REMOTE_USER: ${{ secrets.REMOTE_USER }}
             TARGET: beta.destinyitemmanager.com
