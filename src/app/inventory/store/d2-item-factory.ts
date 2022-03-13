@@ -35,6 +35,7 @@ import {
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
+import exoticsWithoutCatalysts from 'data/d2/exotics-without-catalysts.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import {
   BucketHashes,
@@ -827,14 +828,6 @@ function buildCatalystInfo(
   if (createdItem.equippingLabel !== 'exotic_weapon') {
     return undefined;
   }
-
-  // TODO: Generate via d2ai
-  const exoticsWithoutCatalysts = [
-    4068264807, 204878059, 3413860062, 3973202132, 3856705927, 1364093401, 2415517654, 814876684,
-    542203595, 14194600, 2535142413, 2603483885, 3524313097, 1665952087, 4103414242, 417164956,
-    3824106094, 1852863732, 2812324400, 2694576561, 1395261499, 3325463374, 3487253372, 2376481550,
-    2044500762, 2069224589, 370712896, 2399110176,
-  ];
 
   if (exoticsWithoutCatalysts.includes(createdItem.hash)) {
     return undefined;
