@@ -11,7 +11,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
-import { Loadout, LoadoutItem } from './loadout-types';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
 import { newLoadout } from './loadout-utils';
 
 export interface State {
@@ -43,7 +43,7 @@ export type Action =
   | {
       type: 'addItem';
       item: DimItem;
-      items: DimItem[];
+      items: ResolvedLoadoutItem[];
       equip?: boolean;
       socketOverrides?: SocketOverrides;
       stores: DimStore[];
@@ -52,9 +52,9 @@ export type Action =
   | { type: 'applySocketOverrides'; item: DimItem; socketOverrides: SocketOverrides }
   | { type: 'updateModsByBucket'; modsByBucket: LoadoutParameters['modsByBucket'] }
   /** Remove an item from the loadout */
-  | { type: 'removeItem'; item: DimItem; items: DimItem[] }
+  | { type: 'removeItem'; item: DimItem; items: ResolvedLoadoutItem[] }
   /** Make an item that's already in the loadout equipped */
-  | { type: 'equipItem'; item: DimItem; items: DimItem[] }
+  | { type: 'equipItem'; item: DimItem; items: ResolvedLoadoutItem[] }
   | { type: 'updateMods'; mods: number[] }
   | { type: 'changeClearMods'; enabled: boolean }
   | { type: 'removeMod'; hash: number };
@@ -243,7 +243,7 @@ export function stateReducer(state: State, action: Action): State {
   function addItem(
     loadout: Readonly<Loadout>,
     item: DimItem,
-    items: DimItem[],
+    items: ResolvedLoadoutItem[],
     equip?: boolean,
     socketOverrides?: SocketOverrides
   ): Loadout {
@@ -257,13 +257,13 @@ export function stateReducer(state: State, action: Action): State {
     // TODO: maybe we should just switch back to storing loadout items in memory by bucket
 
     // Other items of the same type (as DimItem)
-    const typeInventory = items.filter((i) => i.bucket.hash === item.bucket.hash);
+    const typeInventory = items.filter((li) => li.item.bucket.hash === item.bucket.hash);
     const dupe = loadout.items.find((i) => i.hash === item.hash && i.id === item.id);
     const maxSlots = item.bucket.capacity;
 
     return produce(loadout, (draftLoadout) => {
-      const findItem = (item: DimItem) =>
-        draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
+      const findItem = ({ loadoutItem }: ResolvedLoadoutItem) =>
+        draftLoadout.items.find((i) => i.id === loadoutItem.id && i.hash === loadoutItem.hash)!;
 
       if (!dupe) {
         if (typeInventory.length < maxSlots) {
@@ -278,10 +278,13 @@ export function stateReducer(state: State, action: Action): State {
           // Only allow one subclass to be present per class (to allow for making a loadout that specifies a subclass for each class)
           if (item.bucket.hash === BucketHashes.Subclass) {
             const conflictingItem = items.find(
-              (i) => i.bucket.hash === item.bucket.hash && i.classType === item.classType
+              (li) =>
+                li.item.bucket.hash === item.bucket.hash && li.item.classType === item.classType
             );
             if (conflictingItem) {
-              draftLoadout.items = draftLoadout.items.filter((i) => i.id !== conflictingItem.id);
+              draftLoadout.items = draftLoadout.items.filter(
+                (i) => i.id !== conflictingItem.item.id
+              );
             }
             loadoutItem.equip = true;
           }
@@ -321,78 +324,89 @@ export function stateReducer(state: State, action: Action): State {
       }
     });
   }
+}
 
-  /**
-   * Produce a new Loadout with the given item removed from the original loadout.
-   */
-  function removeItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]): Loadout {
-    return produce(loadout, (draftLoadout) => {
-      const loadoutItem = draftLoadout.items.find((i) => i.hash === item.hash && i.id === item.id);
+/**
+ * Produce a new Loadout with the given item removed from the original loadout.
+ */
+function removeItem(
+  loadout: Readonly<Loadout>,
+  item: DimItem,
+  items: ResolvedLoadoutItem[]
+): Loadout {
+  return produce(loadout, (draftLoadout) => {
+    const loadoutItem = draftLoadout.items.find((i) => i.hash === item.hash && i.id === item.id);
 
-      if (!loadoutItem) {
-        return;
-      }
+    if (!loadoutItem) {
+      return;
+    }
 
-      loadoutItem.amount ||= 1;
-      loadoutItem.amount--;
-      if (loadoutItem.amount <= 0) {
-        draftLoadout.items = draftLoadout.items.filter(
-          (i) => !(i.hash === item.hash && i.id === item.id)
+    const decrement = 1;
+    loadoutItem.amount ||= 1;
+    loadoutItem.amount -= decrement;
+    if (loadoutItem.amount <= 0) {
+      draftLoadout.items = draftLoadout.items.filter(
+        (i) => !(i.hash === item.hash && i.id === item.id)
+      );
+    }
+
+    if (loadoutItem.equip) {
+      const typeInventory = items.filter((li) => li.item.bucket.hash === item.bucket.hash);
+      const nextInLine =
+        typeInventory.length > 0 &&
+        draftLoadout.items.find(
+          (i) =>
+            i.id === typeInventory[0].loadoutItem.id && i.hash === typeInventory[0].loadoutItem.hash
         );
+      if (nextInLine) {
+        nextInLine.equip = true;
       }
+    }
+  });
+}
 
+/**
+ * Produce a new loadout with the given item switched to being equipped (or unequipped if it's already equipped).
+ */
+function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: ResolvedLoadoutItem[]) {
+  return produce(loadout, (draftLoadout) => {
+    const findItem = (item: DimItem) =>
+      draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
+
+    // Classes are always equipped
+    if (item.bucket.hash === BucketHashes.Subclass) {
+      return;
+    }
+
+    const loadoutItem = findItem(item);
+    if (item.equipment) {
       if (loadoutItem.equip) {
-        const typeInventory = items.filter((i) => i.bucket.hash === item.bucket.hash);
-        const nextInLine =
-          typeInventory.length > 0 &&
-          draftLoadout.items.find(
-            (i) => i.id === typeInventory[0].id && i.hash === typeInventory[0].hash
-          );
-        if (nextInLine) {
-          nextInLine.equip = true;
-        }
+        // It's equipped, mark it unequipped
+        loadoutItem.equip = false;
+      } else {
+        // It's unequipped - mark all the other items and conflicting exotics unequipped, then mark this equipped
+        items
+          .filter(
+            (li) =>
+              // Others in this slot
+              li.item.bucket.hash === item.bucket.hash ||
+              // Other exotics
+              (item.equippingLabel && li.item.equippingLabel === item.equippingLabel)
+          )
+          .map(
+            ({ loadoutItem }) =>
+              draftLoadout.items.find(
+                (i) => i.id === loadoutItem.id && i.hash === loadoutItem.hash
+              )!
+          )
+          .forEach((i) => {
+            i.equip = false;
+          });
+
+        loadoutItem.equip = true;
       }
-    });
-  }
-
-  /**
-   * Produce a new loadout with the given item switched to being equipped (or unequipped if it's already equipped).
-   */
-  function equipItem(loadout: Readonly<Loadout>, item: DimItem, items: DimItem[]) {
-    return produce(loadout, (draftLoadout) => {
-      const findItem = (item: DimItem) =>
-        draftLoadout.items.find((i) => i.id === item.id && i.hash === item.hash)!;
-
-      // Classes are always equipped
-      if (item.bucket.hash === BucketHashes.Subclass) {
-        return;
-      }
-
-      const loadoutItem = findItem(item);
-      if (item.equipment) {
-        if (loadoutItem.equip) {
-          // It's equipped, mark it unequipped
-          loadoutItem.equip = false;
-        } else {
-          // It's unequipped - mark all the other items and conflicting exotics unequipped, then mark this equipped
-          items
-            .filter(
-              (i) =>
-                // Others in this slot
-                i.bucket.hash === item.bucket.hash ||
-                // Other exotics
-                (item.equippingLabel && i.equippingLabel === item.equippingLabel)
-            )
-            .map(findItem)
-            .forEach((i) => {
-              i.equip = false;
-            });
-
-          loadoutItem.equip = true;
-        }
-      }
-    });
-  }
+    }
+  });
 }
 
 function applySocketOverrides(

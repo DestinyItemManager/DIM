@@ -47,15 +47,20 @@ function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
   return result;
 }
 
-function migrateUpgradeSpendTierAndLockItemEnergy(parameters: DimLoadout['parameters']): {
-  assumeArmorMasterwork: AssumeArmorMasterwork;
-  lockArmorEnergyType: LockArmorEnergyType;
-} {
+function migrateUpgradeSpendTierAndLockItemEnergy(
+  parameters: DimLoadout['parameters']
+): DimLoadout['parameters'] {
   const migrated = { ...parameters };
-  const { upgradeSpendTier, lockItemEnergyType } = migrated;
+  const { upgradeSpendTier, lockItemEnergyType, assumeArmorMasterwork, lockArmorEnergyType } =
+    migrated;
 
   delete migrated.upgradeSpendTier;
   delete migrated.lockItemEnergyType;
+  delete migrated.assumeMasterworked;
+
+  if (assumeArmorMasterwork || lockArmorEnergyType) {
+    return migrated;
+  }
 
   switch (upgradeSpendTier) {
     case UpgradeSpendTier.AscendantShards:

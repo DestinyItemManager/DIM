@@ -17,7 +17,6 @@ import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
-import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
@@ -145,7 +144,6 @@ export default function LoadoutDrawer2() {
     () => getItemsFromLoadoutItems(loadoutItems, defs, store?.id, buckets, allItems),
     [loadoutItems, defs, store?.id, buckets, allItems]
   );
-  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
 
   const onAddItem = useCallback(
     (item: DimItem, equip?: boolean) =>
@@ -345,7 +343,12 @@ export default function LoadoutDrawer2() {
             type="button"
             className="dim-button"
             onClick={() =>
-              fillLoadoutFromEquipped(loadout, itemsByBucket, store, handleUpdateLoadout)
+              fillLoadoutFromEquipped(
+                loadout,
+                items.map((li) => li.item),
+                store,
+                handleUpdateLoadout
+              )
             }
           >
             <AppIcon icon={addIcon} /> {t('Loadouts.FillFromEquipped')}

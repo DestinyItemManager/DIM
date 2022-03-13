@@ -391,6 +391,7 @@ module.exports = (env) => {
           { from: `./icons/${env.name}/` },
           { from: `./icons/splash`, to: 'splash/' },
           { from: './src/safari-pinned-tab.svg' },
+          { from: './src/data/webfonts', to: 'static' },
         ],
       }),
 

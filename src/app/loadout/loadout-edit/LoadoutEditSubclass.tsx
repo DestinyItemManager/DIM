@@ -3,7 +3,7 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { DimLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import React, { useMemo } from 'react';
@@ -22,7 +22,7 @@ export default function LoadoutEditSubclass({
   onPick,
 }: {
   defs: D2ManifestDefinitions;
-  subclass?: DimLoadoutItem;
+  subclass?: ResolvedLoadoutItem;
   power: number;
   onRemove(): void;
   onPick(): void;
@@ -38,17 +38,17 @@ export default function LoadoutEditSubclass({
             onClose={onRemove}
             showCloseIconOnHover
             className={clsx({
-              [styles.missingItem]: subclass?.owner === 'unknown',
+              [styles.missingItem]: subclass?.missing,
             })}
           >
-            <ItemPopupTrigger item={subclass}>
+            <ItemPopupTrigger item={subclass.item}>
               {(ref, onClick) => (
                 <ConnectedInventoryItem
                   innerRef={ref}
                   // Disable the popup when plugs are available as we are showing
                   // plugs in the loadout and they may be different to the popup
                   onClick={plugs.length ? undefined : onClick}
-                  item={subclass}
+                  item={subclass.item}
                   ignoreSelectedPerks
                 />
               )}

@@ -209,7 +209,7 @@ export default function LoadoutDrawer() {
                   {t('Loadouts.VendorsCannotEquip')}
                 </p>
                 <div className="loadout-warn-items">
-                  {warnitems.map((item) => (
+                  {warnitems.map(({ item }) => (
                     <div key={item.id} className="loadout-item" onClick={() => fixWarnItem(item)}>
                       <ClosableContainer onClose={(e) => onRemoveItem(item, e)}>
                         <ItemIcon item={item} />

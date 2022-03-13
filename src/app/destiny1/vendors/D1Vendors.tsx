@@ -28,10 +28,12 @@ export default function D1Vendors({ account }: { account: DestinyAccount }) {
 
   useEffect(() => {
     (async () => {
-      const vendors = await dispatch(loadVendors());
-      setVendors(vendors);
+      if (stores.length) {
+        const vendors = await dispatch(loadVendors());
+        setVendors(vendors);
+      }
     })();
-  }, [stores, dispatch]);
+  }, [stores.length, dispatch]);
 
   if (!vendors || !stores.length) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
