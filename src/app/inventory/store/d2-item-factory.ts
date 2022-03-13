@@ -117,6 +117,14 @@ export function processItems(
         bucketDef.category !== BucketCategory.Invisible &&
         bucketDef.displayProperties.name
       ) {
+        const itemDef = defs.InventoryItem.get(item.itemHash);
+        reportException('setting store hadErrors', new Error('setting store hadErrors'), {
+          itemHash: item.itemHash,
+          hasDefinition: Boolean(itemDef),
+          hasName: Boolean(itemDef.displayProperties.name),
+          hasQuestLineName: Boolean(itemDef.setData?.questLineName),
+          bucketName: bucketDef.displayProperties.name,
+        });
         owner.hadErrors = true;
       }
     }
