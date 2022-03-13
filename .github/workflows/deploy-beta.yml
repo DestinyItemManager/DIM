@@ -11,81 +11,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 2 # So sentry can get the previous commit
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: yarn
-
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          name: dim.rsa
-          known_hosts: ${{ secrets.REMOTE_HOST }}
-
-      - name: get-npm-version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.1.0
-
-      - name: set beta
-        run: |
-          echo "build_level='beta'" >> $GITHUB_ENV
-
-      - name: Bump release version (beta)
-        env:
-          RUN_NUM: ${{ github.run_number }}
-        run: |
-          echo "VERSION=${{ steps.package-version.outputs.current-version }}.$(($RUN_NUM+1000000))" >> $GITHUB_ENV
-
-      - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
-
-      - name: Build
-        run: yarn build:beta
-        env:
-          WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
-          WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
-          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
-          DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
-
-      # Send webpack stats and build information to RelativeCI
-      - name: Send webpack stats to RelativeCI
-        uses: relative-ci/agent-action@v2
-        with:
-          webpackStatsFile: ./webpack-stats.json
-          key: ${{ secrets.RELATIVE_CI_KEY }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check Syntax
-        run: yarn syntax
-
-      - name: Deploy
-        run: ./build/rsync-deploy.sh
-        env:
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_PATH: beta.destinyitemmanager.com
-
-      - name: Purge CloudFlare cache
-        run: ./build/purge-cloudflare.sh
-        env:
-          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
-          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
-          APP_DOMAIN: beta.destinyitemmanager.com
-
-      - name: Create Sentry release
-        uses: getsentry/action-release@v1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: destiny-item-manager
-          SENTRY_PROJECT: dim
-        with:
-          environment: beta
-          version: ${{ env.VERSION }}
+  deploy-beta:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      flavor: beta
+      patch: false
+      APP_DOMAIN: beta.destinyitemmanager.com

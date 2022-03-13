@@ -1,0 +1,140 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      flavor:
+        required: true
+        type: string
+      patch:
+        required: true
+        type: boolean
+      APP_DOMAIN:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2 # So sentry can get the previous commit
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: dim.rsa
+          known_hosts: ${{ secrets.REMOTE_HOST }}
+
+      - name: Get Current Version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.1.0
+
+      - name: Set Flavor
+        run: |
+          echo "build_level='${{ inputs.flavor }}'" >> $GITHUB_ENV
+
+      - name: Bug Patch?
+        if: ${{ inputs.patch }}
+        run: |
+          echo "build_level='bug'" >> $GITHUB_ENV
+
+      - name: Get New Release Version
+        if: ${{ inputs.flavor === 'release' }}
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.package-version.outputs.current-version }}
+          version-fragment: ${{ env.build_level }}
+
+      - name: Set Release Version
+        if: ${{ inputs.flavor === 'release' }}
+        run: |
+          echo "VERSION=${{ steps.bump_version.outputs.next-version }}" >> $GITHUB_ENV
+
+      - name: Set Beta Version
+        if: ${{ inputs.flavor === beta }}
+        env:
+          RUN_NUM: ${{ github.run_number }}
+        run: |
+          echo "VERSION=${{ steps.package-version.outputs.current-version }}.$(($RUN_NUM+1000000))" >> $GITHUB_ENV
+
+      - name: Generate release notes
+        if: ${{ inputs.flavor === 'release' }}
+        run: awk '/## Next/{flag=1;next}/##/{flag=0}flag' docs/CHANGELOG.md >release-notes.txt
+
+      - name: Update CHANGELOG.md
+        if: ${{ inputs.flavor === 'release' }}
+        run: perl -i'' -pe"s/^## Next/## Next\n\n## $VERSION $OPENSPAN($DATE)$CLOSESPAN/" docs/CHANGELOG.md
+        env:
+          OPENSPAN: '\<span class="changelog-date"\>'
+          CLOSESPAN: '\<\/span\>'
+          DATE: $(TZ="America/Los_Angeles" date +"%Y-%m-%d")
+
+      - name: Commit CHANGELOG.md
+        if: ${{ inputs.flavor === 'release' }}
+        uses: EndBug/add-and-commit@v8
+        with:
+          author_name: DIM Release Bot
+          author_email: destinyitemmanager@gmail.com
+          message: ${{ env.VERSION }}
+          tag: v${{ env.VERSION }}
+
+      - name: Install
+        run: yarn install --frozen-lockfile --prefer-offline
+
+      - name: Build
+        run: yarn build:${{ inputs.flavor }}
+        env:
+          WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
+          WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
+          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
+          DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
+
+      - name: Check Syntax
+        run: yarn syntax
+
+      - name: Send webpack stats to RelativeCI
+        if: ${{ inputs.flavor === 'beta' }}
+        uses: relative-ci/agent-action@v2
+        with:
+          webpackStatsFile: ./webpack-stats.json
+          key: ${{ secrets.RELATIVE_CI_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy
+        run: ./build/rsync-deploy.sh
+        env:
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_PATH: ${{ inputs.APP_DOMAIN }}
+
+      - name: Release
+        if: ${{ inputs.flavor === 'release' }}
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release-notes.txt
+
+      - name: Purge CloudFlare cache
+        run: ./build/purge-cloudflare.sh
+        env:
+          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          APP_DOMAIN: ${{ inputs.APP_DOMAIN }}
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: destiny-item-manager
+          SENTRY_PROJECT: dim
+        with:
+          environment: ${{ inputs.flavor }}
+          version: ${{ env.VERSION }}
