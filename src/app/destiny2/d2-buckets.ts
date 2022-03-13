@@ -82,7 +82,6 @@ export function getBuckets(defs: D2ManifestDefinitions) {
     },
     setHasUnknown() {
       this.byCategory[this.unknown.sort] = [this.unknown];
-      this.byType[this.unknown.type] = this.unknown;
     },
   };
   _.forIn(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
