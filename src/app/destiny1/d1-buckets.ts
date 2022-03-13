@@ -86,7 +86,6 @@ export function getBuckets(defs: D1ManifestDefinitions) {
     },
     setHasUnknown() {
       this.byCategory[this.unknown.sort] = [this.unknown];
-      this.byType[this.unknown.type] = this.unknown;
     },
   };
   _.forIn(defs.InventoryBucket, (def) => {
