@@ -67,11 +67,14 @@ jobs:
       - name: Check Syntax
         run: yarn syntax
 
-      - name: Deploy
-        run: ./build/rsync-deploy.sh
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@v2.1.1
         env:
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_PATH: beta.destinyitemmanager.com
+            SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+            SOURCE: "dist/"
+            REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+            REMOTE_USER: ${{ secrets.REMOTE_USER }}
+            TARGET: beta.destinyitemmanager.com
 
       - name: Purge CloudFlare cache
         run: ./build/purge-cloudflare.sh
