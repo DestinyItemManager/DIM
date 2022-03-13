@@ -30,6 +30,7 @@ export type Action =
        * equipped, undefined to accept a default based on what's already there
        */
       equip?: boolean;
+      socketOverrides?: SocketOverrides;
     }
   /** Applies socket overrides to the supplied item */
   | {
@@ -60,7 +61,7 @@ export function stateReducer(defs: D2ManifestDefinitions | D1ManifestDefinitions
 
       case 'addItem': {
         const { loadout } = state;
-        const { item, equip } = action;
+        const { item, equip, socketOverrides } = action;
 
         if (!itemCanBeInLoadout(item)) {
           showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
@@ -74,7 +75,7 @@ export function stateReducer(defs: D2ManifestDefinitions | D1ManifestDefinitions
           });
           return state;
         }
-        const draftLoadout = addItem(defs, loadout, item, equip);
+        const draftLoadout = addItem(defs, loadout, item, equip, socketOverrides);
         return {
           ...state,
           loadout: draftLoadout,
@@ -183,7 +184,8 @@ function addItem(
   defs: D2ManifestDefinitions | D1ManifestDefinitions,
   loadout: Readonly<Loadout>,
   item: DimItem,
-  equip?: boolean
+  equip?: boolean,
+  socketOverrides?: SocketOverrides
 ): Loadout {
   const loadoutItem: LoadoutItem = {
     id: item.id,
@@ -191,6 +193,9 @@ function addItem(
     amount: 1,
     equip: false,
   };
+  if (socketOverrides) {
+    loadoutItem.socketOverrides = socketOverrides;
+  }
 
   // TODO: We really want to be operating against the resolved items, right? Should we re-resolve them here, or what?
   //       If we don't, we may not properly detect a dupe?

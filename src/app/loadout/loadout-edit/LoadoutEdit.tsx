@@ -148,7 +148,6 @@ export default function LoadoutEdit({
 
   const anyClass = loadout.classType === DestinyClass.Unknown;
 
-  // TODO: i18n the category title
   // TODO: dedupe styles/code
   return (
     <div className={styles.contents}>

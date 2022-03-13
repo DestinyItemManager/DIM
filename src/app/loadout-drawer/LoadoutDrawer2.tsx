@@ -89,11 +89,12 @@ export default function LoadoutDrawer2({
   );
 
   const onAddItem = useCallback(
-    (item: DimItem, equip?: boolean) =>
+    (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) =>
       stateDispatch({
         type: 'addItem',
         item,
         equip,
+        socketOverrides,
       }),
     []
   );
@@ -217,13 +218,8 @@ export default function LoadoutDrawer2({
     pickLoadoutItem(loadout, bucket, (item) => onAddItem(item, equip), setShowingItemPicker);
   };
 
-  const handleClickSubclass = (subclass: DimItem | undefined) =>
-    pickLoadoutSubclass(
-      loadout,
-      subclass ? [subclass] : [],
-      ({ item }) => onAddItem(item),
-      setShowingItemPicker
-    );
+  const handleClickSubclass = () =>
+    pickLoadoutSubclass(loadout, storeId, onAddItem, setShowingItemPicker);
 
   const header = (
     <div>
@@ -253,8 +249,7 @@ export default function LoadoutDrawer2({
   // TODO: how to choose equipped/unequipped
   // TODO: contextual buttons!
   // TODO: undo/redo stack?
-  // TODO: remove armor/subclass from any-class loadouts on save
-  // TODO: build and publish a "loadouts API" via context
+  // TODO: build and publish a "loadouts API" via context?
 
   return (
     <Sheet
@@ -385,37 +380,24 @@ async function pickLoadoutItem(
 
 async function pickLoadoutSubclass(
   loadout: Loadout,
-  savedSubclasses: DimItem[],
-  add: (params: { item: DimItem; socketOverrides?: SocketOverrides }) => void,
+  storeId: string | undefined,
+  add: (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) => void,
   onShowItemPicker: (shown: boolean) => void
 ) {
-  const loadoutClassType = loadout?.classType;
-  const loadoutHasItem = (item: DimItem) =>
-    loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
-
-  const loadoutHasSubclassForClass = (item: DimItem) =>
-    savedSubclasses.some(
-      (s) => item.bucket.hash === BucketHashes.Subclass && s.classType === item.classType
-    );
+  const loadoutClassType = loadout.classType;
+  const loadoutHasItem = (item: DimItem) => loadout.items.some((i) => i.hash === item.hash);
 
   const subclassItemFilter = (item: DimItem) =>
     item.bucket.hash === BucketHashes.Subclass &&
-    (!loadout ||
-      loadout.classType === DestinyClass.Unknown ||
-      item.classType === loadoutClassType) &&
+    item.classType === loadoutClassType &&
+    (!storeId || item.owner === storeId) &&
     itemCanBeInLoadout(item) &&
-    !loadoutHasSubclassForClass(item) &&
     !loadoutHasItem(item);
 
   onShowItemPicker(true);
   const item = await pickSubclass(subclassItemFilter);
   if (item) {
-    let socketOverrides: SocketOverrides | undefined;
-    if (item.bucket.hash === BucketHashes.Subclass) {
-      socketOverrides = createSubclassDefaultSocketOverrides(item);
-    }
-
-    add({ item, socketOverrides });
+    add(item, undefined, createSubclassDefaultSocketOverrides(item));
   }
   onShowItemPicker(false);
 }
