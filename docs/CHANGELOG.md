@@ -1,7 +1,13 @@
 ## Next
 
 * Assume armor masterwork and lock armor energy options will now be saved correctly when saving a loadout from the Loadout Optimizer and loaded correctly when Optimizing Armor.
-* Legacy mods that are in the vault now show up in DIM (and take up space). Please delete them to free up space!
+* Obsolete consumable mods hidden in the Vault are now detected. They should show up on the Inventory page, and DIM should count vault space more accurately.
+* Prevent iOS from popping up the keyboard automatically so often.
+* Prevent crafting socket from showing up in the Armory.
+* Clearer, prettier Enhanced Perk icons.
+* Raid crafting materials are now included in the currency counter. Tap and hold, or hover, the consumables count in the vault header to check them.
+* Many fixes for how classified items show up, and how they count toward the power level of each Guardian class. Can't see these fixes now, but maybe next time there's a new Raid.
+* New search support for `source:vow` (Vow of the Disciple) and `source:grasp` (Grasp of Avarice).
 
 ## 7.8.0 <span class="changelog-date">(2022-03-06)</span>
 
