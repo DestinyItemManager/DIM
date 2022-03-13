@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 import { addItem$, editLoadout$ } from './loadout-events';
+import { generateMissingLoadoutItemId } from './loadout-item-conversion';
 import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
 import { Loadout } from './loadout-types';
 import { newLoadout } from './loadout-utils';
@@ -129,10 +130,8 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
               item.id === '0'
                 ? // We don't save consumables in D2 loadouts, but we may omit ids in shared loadouts
                   // (because they'll never match someone else's inventory). So
-                  // instead, pick a random ID. It's possible these will
-                  // conflict with something already in the user's inventory but
-                  // it's not likely.
-                  Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString()
+                  // instead, pick an ID.
+                  generateMissingLoadoutItemId()
                 : item.id,
           }));
 
