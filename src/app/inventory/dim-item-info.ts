@@ -2,6 +2,7 @@ import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { tl } from 'app/i18next-t';
 import { RootState, ThunkResult } from 'app/store/types';
+import { reportException } from 'app/utils/exceptions';
 import { itemIsInstanced } from 'app/utils/item-utils';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
@@ -121,6 +122,11 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
   return async (dispatch, getState) => {
     if (!stores.length || stores.some((s) => s.items.length === 0 || s.hadErrors)) {
       // don't accidentally wipe out notes
+      reportException('Skipping cleanInfos', new Error('Skipping cleanInfos'), {
+        stores: stores.length,
+        storeSizes: stores.map((s) => s.items.length),
+        storeErrors: stores.map((s) => s.hadErrors),
+      });
       return;
     }
 
