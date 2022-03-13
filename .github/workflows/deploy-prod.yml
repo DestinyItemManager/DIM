@@ -14,6 +14,8 @@ on:
 
 jobs:
   deploy:
+    env:
+      APP_DOMAIN: app.destinyitemmanager.com
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -82,7 +84,7 @@ jobs:
           CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE }}
           CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
-          PURGE_URLS: '["https://app.destinyitemmanager.com", "https://app.destinyitemmanager.com/index.html", "https://app.destinyitemmanager.com/version.json", "https://app.destinyitemmanager.com/service-worker.js", "https://app.destinyitemmanager.com/return.html", "https://app.destinyitemmanager.com/.well-known/assetlinks.json", "https://app.destinyitemmanager.com/.well-known/apple-app-site-association", "https://app.destinyitemmanager.com/manifest-webapp-6-2018.json", "https://app.destinyitemmanager.com/manifest-webapp-6-2018-ios.json"]'
+          PURGE_URLS: '["https://${{ env.APP_DOMAIN }}", "https://${{ env.APP_DOMAIN }}/index.html", "https://${{ env.APP_DOMAIN }}/version.json", "https://${{ env.APP_DOMAIN }}/service-worker.js", "https://${{ env.APP_DOMAIN }}/return.html", "https://${{ env.APP_DOMAIN }}/.well-known/assetlinks.json", "https://${{ env.APP_DOMAIN }}/.well-known/apple-app-site-association", "https://${{ env.APP_DOMAIN }}/manifest-webapp-6-2018.json", "https://${{ env.APP_DOMAIN }}/manifest-webapp-6-2018-ios.json"]'
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1
