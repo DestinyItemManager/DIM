@@ -1,6 +1,7 @@
 ## Next
 
 * Assume armor masterwork and lock armor energy options will now be saved correctly when saving a loadout from the Loadout Optimizer and loaded correctly when Optimizing Armor.
+* Legacy mods that are in the vault now show up in DIM (and take up space). Please delete them to free up space!
 
 ## 7.8.0 <span class="changelog-date">(2022-03-06)</span>
 
