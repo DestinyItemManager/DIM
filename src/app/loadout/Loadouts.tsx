@@ -84,7 +84,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     (loadout) =>
       !query ||
       plainString(loadout.name, language).includes(loadoutQueryPlain) ||
-      (loadout.notes && plainString(loadout.name, language).includes(loadoutQueryPlain))
+      (loadout.notes && plainString(loadout.notes, language).includes(loadoutQueryPlain))
   );
 
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));

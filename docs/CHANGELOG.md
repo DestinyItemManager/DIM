@@ -1,4 +1,5 @@
 ## Next
+* Fixed loadout search filter to include notes
 
 ## 7.8.2 <span class="changelog-date">(2022-03-14)</span>
 
