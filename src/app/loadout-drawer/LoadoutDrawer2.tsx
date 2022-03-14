@@ -101,7 +101,7 @@ export default function LoadoutDrawer2({
    */
   useEventBusListener(addItem$, onAddItem);
 
-  const handleSaveLoadout = (e: React.FormEvent, close: () => void, saveAsNew?: boolean) => {
+  const handleSaveLoadout = (e: React.FormEvent, close: () => void, saveAsNew: boolean) => {
     e.preventDefault();
     if (!loadout) {
       return;
@@ -229,7 +229,7 @@ export default function LoadoutDrawer2({
     <LoadoutDrawerFooter
       loadout={loadout}
       isNew={isNew}
-      onSaveLoadout={(e) => handleSaveLoadout(e, onClose)}
+      onSaveLoadout={(e, saveAsNew) => handleSaveLoadout(e, onClose, saveAsNew)}
       onDeleteLoadout={() => handleDeleteLoadout(onClose)}
     />
   );
