@@ -1,21 +1,36 @@
-name: Deploy Prod
+name: Deploy (app.destinyitemmanager.com)
 
 on:
-  workflow_dispatch:
-    inputs:
-      patch:
-        description: 'Should this be a patch release?'
-        required: true
-        default: 'true'
   schedule:
     # Deploy at 5pm Sunday PST, which is 1am Monday UTC
     # * is a special character in YAML so you have to quote this string
     - cron:  '0 1 * * 1'
+  workflow_dispatch:
+    inputs:
+      patch:
+        description: 'Should this be a patch release?'
+        type: boolean
+        required: true
+        default: true
 
 jobs:
-  deploy-beta:
-    uses: ./.github/workflows/deploy.yml
-    with:
-      flavor: release
-      APP_DOMAIN: app.destinyitemmanager.com
-      patch: ${{ inputs.patch }}
+  deploy-prod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup and Install
+        uses: ./.github/workflows/setup-and-install.yml
+
+      - name: Versioning
+        uses: ./.github/workflows/versioning.yml
+        with:
+          flavor: release
+          patch: inputs.patch
+
+      - name: Generate Release Notes
+        uses: ./.github/workflows/generate-release-notes.yml
+
+      - name: Build and Deploy
+        uses: ./.github/workflows/build-and-deploy.yml
+        with:
+          APP_DOMAIN: app.destinyitemmanager.com
+          flavor: release

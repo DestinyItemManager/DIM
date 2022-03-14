@@ -1,0 +1,26 @@
+name: Generate Release Notes
+
+on:
+  workflow_call:
+
+jobs:
+  release-notes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate release notes
+        run: awk '/## Next/{flag=1;next}/##/{flag=0}flag' docs/CHANGELOG.md >release-notes.txt
+
+      - name: Update CHANGELOG.md
+        run: perl -i'' -pe"s/^## Next/## Next\n\n## $VERSION $OPENSPAN($DATE)$CLOSESPAN/" docs/CHANGELOG.md
+        env:
+          OPENSPAN: '\<span class="changelog-date"\>'
+          CLOSESPAN: '\<\/span\>'
+          DATE: $(TZ="America/Los_Angeles" date +"%Y-%m-%d")
+
+      - name: Commit CHANGELOG.md
+        uses: EndBug/add-and-commit@v8
+        with:
+          author_name: DIM Release Bot
+          author_email: destinyitemmanager@gmail.com
+          message: ${{ env.VERSION }}
+          tag: v${{ env.VERSION }}

@@ -1,0 +1,38 @@
+name: Versioning
+
+on:
+  workflow_call:
+    inputs:
+      patch:
+        required: true
+        type: boolean
+        default: true
+      flavor:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Current Version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.1.0
+
+      - name: Set Release Version Info
+        run: |
+          echo "build_level=${{ (inputs.patch && bug) || inputs.flavor }}" >> $GITHUB_ENV
+
+      - name: Get New Release Version
+        if: ${{ inputs.flavor === release }}
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.package-version.outputs.current-version }}
+          version-fragment: ${{ env.build_level }}
+
+      - name: Set Release Version
+        env:
+          RUN_NUM: ${{ github.run_number }}
+        run: |
+          echo "VERSION=${{ steps.bump_version.outputs.next-version || steps.package-version.outputs.current-version.$(($RUN_NUM+1000000)) }}" >> $GITHUB_ENV

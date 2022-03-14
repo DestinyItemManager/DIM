@@ -1,5 +1,4 @@
-name: Deploy Beta
-
+name: Deploy (beta.destinyitemmanager.com)
 on:
   push:
     branches:
@@ -12,8 +11,19 @@ concurrency:
 
 jobs:
   deploy-beta:
-    uses: ./.github/workflows/deploy.yml
-    with:
-      flavor: beta
-      patch: false
-      APP_DOMAIN: beta.destinyitemmanager.com
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup and Install
+        uses: ./.github/workflows/setup-and-install.yml
+
+      - name: Versioning
+        uses: ./.github/workflows/versioning.yml
+        with:
+          flavor: beta
+          patch: false
+
+      - name: Build and Deploy
+        uses: ./.github/workflows/build-and-deploy.yml
+        with:
+          APP_DOMAIN: beta.destinyitemmanager.com
+          flavor: beta

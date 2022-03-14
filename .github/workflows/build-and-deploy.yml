@@ -1,0 +1,63 @@
+name: Build and Deploy (${{ inputs.flavor }})
+
+on:
+  workflow_call:
+    inputs:
+      flavor:
+        required: true
+        type: string
+      APP_DOMAIN:
+        required: true
+        type: string
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: yarn build:${{ inputs.flavor }}
+        env:
+          WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
+          WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
+          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
+          DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
+
+      - name: Check Syntax
+        run: yarn syntax
+
+      - name: Send webpack stats to RelativeCI
+        if: ${{ inputs.flavor === beta }}
+        uses: relative-ci/agent-action@v2
+        with:
+          webpackStatsFile: ./webpack-stats.json
+          key: ${{ secrets.RELATIVE_CI_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy
+        run: ./build/rsync-deploy.sh
+        env:
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_PATH: ${{ inputs.APP_DOMAIN }}
+
+      - name: Release
+        if: ${{ inputs.flavor === release }}
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release-notes.txt
+
+      - name: Purge CloudFlare cache
+        run: ./build/purge-cloudflare.sh
+        env:
+          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          APP_DOMAIN: ${{ inputs.APP_DOMAIN }}
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: destiny-item-manager
+          SENTRY_PROJECT: dim
+        with:
+          environment: ${{ inputs.flavor }}
+          version: ${{ env.VERSION }}
