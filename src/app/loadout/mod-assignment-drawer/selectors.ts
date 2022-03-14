@@ -1,3 +1,4 @@
+import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
@@ -22,11 +23,9 @@ import { shallowEqual, useSelector } from 'react-redux';
 export function useEquippedLoadoutArmorAndSubclass(
   loadout: Loadout,
   storeId: string | undefined
-): { armor: ResolvedLoadoutItem[]; subclass: ResolvedLoadoutItem | undefined } {
+): { armor: DimItem[]; subclass: ResolvedLoadoutItem | undefined } {
   const loadoutItemSelector = useCallback(
-    (
-      state: RootState
-    ): { armor: ResolvedLoadoutItem[]; subclass: ResolvedLoadoutItem | undefined } => {
+    (state: RootState): { armor: DimItem[]; subclass: ResolvedLoadoutItem | undefined } => {
       const stores = sortedStoresSelector(state);
       const currentStore = getCurrentStore(stores)!;
       const storeToHydrateFrom = storeId
@@ -60,7 +59,7 @@ export function useEquippedLoadoutArmorAndSubclass(
       const armor = _.compact(
         LockableBucketHashes.map(
           (bucketHash) =>
-            loadoutItemsByBucket[bucketHash] ??
+            loadoutItemsByBucket[bucketHash]?.item ??
             currentlyEquippedArmor.find((item) => item.bucket.hash === bucketHash)
         )
       );

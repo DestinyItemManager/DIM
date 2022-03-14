@@ -67,7 +67,6 @@ export default function ModAssignmentDrawer({
   const defs = useD2Definitions()!;
   const { armor, subclass } = useEquippedLoadoutArmorAndSubclass(loadout, storeId);
   const getModRenderKey = createGetModRenderKey();
-  const armorItems = useMemo(() => armor.map((li) => li.item), [armor]);
 
   const [itemModAssignments, unassignedMods, mods] = useMemo(() => {
     let mods: PluggableInventoryItemDefinition[] = [];
@@ -77,7 +76,7 @@ export default function ModAssignmentDrawer({
         .filter(isPluggableItem);
     }
     const { itemModAssignments, unassignedMods } = fitMostMods({
-      items: armorItems,
+      items: armor,
       plannedMods: mods,
       assumeArmorMasterwork: undefined,
       lockArmorEnergyType: LockArmorEnergyType.All,
@@ -85,7 +84,7 @@ export default function ModAssignmentDrawer({
     });
 
     return [itemModAssignments, unassignedMods, mods];
-  }, [defs, loadout.parameters?.mods, armorItems]);
+  }, [defs, loadout.parameters?.mods, armor]);
 
   const onSocketClick = useCallback(
     (plugDef: PluggableInventoryItemDefinition, plugCategoryHashWhitelist: number[]) => {
@@ -117,7 +116,7 @@ export default function ModAssignmentDrawer({
             defs={defs}
             loadout={loadout}
             subclass={subclass}
-            armor={armorItems}
+            armor={armor}
             mods={flatAssigned}
           />
         }
@@ -126,7 +125,7 @@ export default function ModAssignmentDrawer({
       >
         <div className={styles.container}>
           <div className={styles.assigned}>
-            {armorItems.map((item) => {
+            {armor.map((item) => {
               const energyUsed = _.sumBy(
                 itemModAssignments[item.id],
                 (m) => m.plug.energyCost?.energyCost || 0
