@@ -20,10 +20,10 @@ jobs:
           fetch-depth: 3
 
       - name: Setup and Install
-        uses: ./.github/workflows/setup-and-install.yml
+        uses: DestinyItemManager/DIM/.github/workflows/setup-and-install.yml
 
       - name: Versioning
-        uses: ./.github/workflows/versioning.yml
+        uses: DestinyItemManager/DIM/.github/workflows/versioning.yml
         with:
           flavor: beta
           patch: false

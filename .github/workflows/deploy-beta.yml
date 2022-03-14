@@ -18,16 +18,30 @@ jobs:
           fetch-depth: 2
 
       - name: Setup and Install
-        uses: ./.github/workflows/setup-and-install.yml
+        uses: DestinyItemManager/DIM/.github/workflows/setup-and-install.yml
+        with:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
 
       - name: Versioning
-        uses: ./.github/workflows/versioning.yml
+        uses: DestinyItemManager/DIM/.github/workflows/versioning.yml
         with:
           flavor: beta
           patch: false
 
       - name: Build and Deploy
-        uses: ./.github/workflows/build-and-deploy.yml
+        uses: DestinyItemManager/DIM/.github/workflows/build-and-deploy.yml
         with:
           APP_DOMAIN: beta.destinyitemmanager.com
           flavor: beta
+          WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
+          WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
+          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}
+          DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
+          RELATIVE_CI_KEY: ${{ secrets.RELATIVE_CI_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
+          CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

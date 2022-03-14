@@ -2,6 +2,9 @@ name: Setup and Install
 
 on:
   workflow_call:
+    secrets:
+      SSH_KEY:
+      REMOTE_HOST:
 
 jobs:
   deploy:
