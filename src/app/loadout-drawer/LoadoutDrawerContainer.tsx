@@ -40,7 +40,9 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
   const [initialLoadout, setInitialLoadout] =
     useState<{ loadout: Loadout; storeId?: string; showClass: boolean; isNew: boolean }>();
 
-  const handleDrawerClose = () => setInitialLoadout(undefined);
+  const handleDrawerClose = useCallback(() => {
+    setInitialLoadout(undefined);
+  }, []);
 
   // The loadout to edit comes in from the editLoadout$ observable
   useEventBusListener(
@@ -153,6 +155,15 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
       navigate(pathname, { replace: true });
     }
   }, [defs, queryString, navigate, pathname, stores]);
+
+  // Close the loadout on navigation
+  // TODO: prompt for saving?
+  useEffect(() => {
+    // Don't close if moving to the inventory or loadouts screen
+    if (!pathname.endsWith('inventory') && !pathname.endsWith('loadouts')) {
+      handleDrawerClose();
+    }
+  }, [handleDrawerClose, pathname]);
 
   if (initialLoadout) {
     return account.destinyVersion === 2 ? (

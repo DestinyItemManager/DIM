@@ -15,9 +15,8 @@ import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useCallback, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
@@ -64,8 +63,6 @@ export default function LoadoutDrawer2({
 }) {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
-
-  const { pathname } = useLocation();
   const stores = useSelector(storesSelector);
   const allItems = useSelector(allItemsSelector);
   const buckets = useSelector(bucketsSelector)!;
@@ -104,15 +101,7 @@ export default function LoadoutDrawer2({
    */
   useEventBusListener(addItem$, onAddItem);
 
-  // Close the sheet on navigation
-  useEffect(() => {
-    // Don't close if moving to the inventory or loadouts screen
-    if (!pathname.endsWith('inventory') && !pathname.endsWith('loadouts')) {
-      onClose();
-    }
-  }, [onClose, pathname]);
-
-  const handleSaveLoadout = (e: React.MouseEvent, saveAsNew?: boolean) => {
+  const handleSaveLoadout = (e: React.FormEvent, close: () => void, saveAsNew?: boolean) => {
     e.preventDefault();
     if (!loadout) {
       return;
@@ -144,7 +133,7 @@ export default function LoadoutDrawer2({
     return null;
   }
 
-  const handleDeleteLoadout = () => {
+  const handleDeleteLoadout = (close: () => void) => {
     dispatch(deleteLoadout(loadout.id));
     close();
   };
@@ -236,12 +225,12 @@ export default function LoadoutDrawer2({
   );
 
   // TODO: use this on the old loadout editor?
-  const footer = (
+  const footer = ({ onClose }: { onClose(): void }) => (
     <LoadoutDrawerFooter
       loadout={loadout}
       isNew={isNew}
-      onSaveLoadout={handleSaveLoadout}
-      onDeleteLoadout={handleDeleteLoadout}
+      onSaveLoadout={(e) => handleSaveLoadout(e, onClose)}
+      onDeleteLoadout={() => handleDeleteLoadout(onClose)}
     />
   );
 
