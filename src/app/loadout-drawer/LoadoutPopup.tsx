@@ -195,7 +195,7 @@ function LoadoutPopup({
     ? loadouts.filter(
         (loadout) =>
           plainString(loadout.name, language).includes(loadoutQueryPlain) ||
-          (loadout.notes && plainString(loadout.name, language).includes(loadoutQueryPlain))
+          (loadout.notes && plainString(loadout.notes, language).includes(loadoutQueryPlain))
       )
     : loadouts;
 
