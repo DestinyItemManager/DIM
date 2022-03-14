@@ -1,7 +1,7 @@
 ## Next
 
 * Assume armor masterwork and lock armor energy options will now be saved correctly when saving a loadout from the Loadout Optimizer and loaded correctly when Optimizing Armor.
-* Obsolete consumable shaders hidden in the Vault are now detected. They should show up on the Inventory page, and DIM should count vault space more accurately.
+* Obsolete consumable mods hidden in the Vault are now detected. They should show up on the Inventory page, and DIM should count vault space more accurately.
 * Prevent iOS from popping up the keyboard automatically so often.
 * Prevent crafting socket from showing up in the Armory.
 * Clearer, prettier Enhanced Perk icons.
