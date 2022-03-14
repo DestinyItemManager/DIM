@@ -1,6 +1,7 @@
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
+import { singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -53,7 +54,8 @@ export default function LoadoutEditBucketDropTarget({
       drop: () => ({ equipped }),
       canDrop: (i) =>
         itemCanBeInLoadout(i) &&
-        (i.classType === DestinyClass.Unknown || classType === i.classType),
+        (i.classType === DestinyClass.Unknown || classType === i.classType) &&
+        (equipped || !singularBucketHashes.includes(i.bucket.hash)),
       collect: (monitor) => ({
         isOver: monitor.isOver() && monitor.canDrop(),
         canDrop: monitor.canDrop(),
@@ -74,15 +76,17 @@ export default function LoadoutEditBucketDropTarget({
     <>
       {(canDropEquipped || canDropUnequipped) && (
         <div className={styles.options}>
-          <div
-            className={clsx({
-              [styles.over]: isOverEquipped,
-            })}
-            ref={equippedRef}
-          >
-            {t('Loadouts.Equipped')}
-          </div>
-          {!equippedOnly && (
+          {canDropEquipped && (
+            <div
+              className={clsx({
+                [styles.over]: isOverEquipped,
+              })}
+              ref={equippedRef}
+            >
+              {t('Loadouts.Equipped')}
+            </div>
+          )}
+          {!equippedOnly && canDropUnequipped && (
             <div
               className={clsx({
                 [styles.over]: isOverUnequipped,

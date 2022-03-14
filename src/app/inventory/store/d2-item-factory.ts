@@ -1,6 +1,11 @@
+import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
 import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
-import { THE_FORBIDDEN_BUCKET, uniqueEquipBuckets } from 'app/search/d2-known-values';
+import {
+  d2MissingIcon,
+  THE_FORBIDDEN_BUCKET,
+  uniqueEquipBuckets,
+} from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { errorLog, warnLog } from 'app/utils/log';
 import {
@@ -26,7 +31,7 @@ import {
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import extendedICH from 'data/d2/extended-ich.json';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
@@ -43,7 +48,6 @@ import { buildObjectives } from './objectives';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
-
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
 
@@ -113,6 +117,16 @@ export function processItems(
         bucketDef.category !== BucketCategory.Invisible &&
         bucketDef.displayProperties.name
       ) {
+        const itemDef = defs.InventoryItem.get(item.itemHash);
+        reportException('setting store hadErrors', new Error('setting store hadErrors'), {
+          itemHash: item.itemHash,
+          hasDefinition: Boolean(itemDef),
+          hasName: Boolean(itemDef?.displayProperties.name),
+          hasQuestLineName: Boolean(itemDef?.setData?.questLineName),
+          itemBucketHash: item.bucketHash,
+          defBucketHash: itemDef?.inventory?.bucketTypeHash,
+          bucketName: bucketDef.displayProperties.name,
+        });
         owner.hadErrors = true;
       }
     }
@@ -241,10 +255,10 @@ export function makeItem(
   }
 ): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
-  const instanceDef: Partial<DestinyItemInstanceComponent> | undefined =
-    item.itemInstanceId && itemComponents?.instances.data
-      ? itemComponents.instances.data[item.itemInstanceId]
-      : {};
+
+  const itemInstanceData: Partial<DestinyItemInstanceComponent> =
+    itemComponents?.instances.data?.[item.itemInstanceId ?? ''] ?? {};
+
   // Missing definition?
   if (!itemDef) {
     warnMissingDefinition();
@@ -255,7 +269,7 @@ export function makeItem(
     warnLog(
       'd2-stores',
       'Missing Item Definition:\n\n',
-      { item, itemDef, instanceDef },
+      { item, itemDef, itemInstanceData },
       '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.'
     );
   }
@@ -279,11 +293,21 @@ export function makeItem(
 
   // they aren't transferrable, and stop existing if removed from the vault, so they won't
   // interfere with the 50 consumables bucket limit.
-  const needsShaderFix = itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders);
+  const needsShaderFix =
+    itemDef.inventory!.bucketTypeHash === THE_FORBIDDEN_BUCKET &&
+    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders);
+  // The same thing can happen with mods!
+  const needsModsFix =
+    itemDef.inventory!.bucketTypeHash === THE_FORBIDDEN_BUCKET &&
+    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Mods_Mod);
 
   // this is where the item would go normally (if not vaulted/postmastered).
   // it is stored in DimItem.bucket
-  const normalBucketHash = needsShaderFix ? 1469714392 : itemDef.inventory!.bucketTypeHash;
+  const normalBucketHash = needsShaderFix
+    ? BucketHashes.Consumables
+    : needsModsFix
+    ? BucketHashes.Modifications
+    : itemDef.inventory!.bucketTypeHash;
   let normalBucket = buckets.byHash[normalBucketHash];
 
   // this is where the item IS, right now.
@@ -310,25 +334,45 @@ export function makeItem(
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
 
-  const primaryStat: DimItem['primaryStat'] =
-    !instanceDef?.primaryStat || itemDef.stats?.disablePrimaryStatDisplay || itemType === 'Class'
-      ? null
-      : {
-          ...instanceDef.primaryStat,
-          stat: defs.Stat.get(instanceDef.primaryStat.statHash),
-          value: isEngram
-            ? (instanceDef?.itemLevel ?? 0) * 10 + (instanceDef?.quality ?? 0)
-            : instanceDef.primaryStat.value,
-        };
+  let primaryStat: DimItem['primaryStat'] = null;
+  if (
+    itemInstanceData.primaryStat &&
+    itemType !== 'Class' &&
+    !itemDef.stats?.disablePrimaryStatDisplay
+  ) {
+    primaryStat = {
+      ...itemInstanceData.primaryStat,
+      stat: defs.Stat.get(itemInstanceData.primaryStat.statHash),
+      value: itemInstanceData.primaryStat.value,
+    };
+  }
+
+  if (
+    // engrams have a weird primary stat but their quality has their PL
+    isEngram ||
+    // classified items have no Stats, but their quality has their PL
+    (!primaryStat &&
+      itemDef.redacted &&
+      itemInstanceData.itemLevel &&
+      itemInstanceData.quality !== undefined &&
+      (D2Categories.Weapons.includes(item.bucketHash) ||
+        D2Categories.Armor.includes(item.bucketHash)))
+  ) {
+    primaryStat = {
+      stat: defs.Stat.get(StatHashes.Power),
+      statHash: StatHashes.Power,
+      value: (itemInstanceData.itemLevel ?? 0) * 10 + (itemInstanceData.quality ?? 0),
+    };
+  }
 
   // if a damageType isn't found, use the item's energy capacity element instead
   const element =
-    (instanceDef?.damageTypeHash !== undefined &&
-      defs.DamageType.get(instanceDef.damageTypeHash)) ||
+    (itemInstanceData.damageTypeHash !== undefined &&
+      defs.DamageType.get(itemInstanceData.damageTypeHash)) ||
     (itemDef.defaultDamageTypeHash !== undefined &&
       defs.DamageType.get(itemDef.defaultDamageTypeHash)) ||
-    (instanceDef?.energy?.energyTypeHash !== undefined &&
-      defs.EnergyType.get(instanceDef.energy.energyTypeHash)) ||
+    (itemInstanceData.energy?.energyTypeHash !== undefined &&
+      defs.EnergyType.get(itemInstanceData.energy.energyTypeHash)) ||
     null;
 
   const powerCapHash =
@@ -346,7 +390,10 @@ export function makeItem(
   const hiddenOverlay = itemDef.iconWatermark;
 
   const tooltipNotifications = (item.tooltipNotificationIndexes ?? [])
-    .map((i) => itemDef.tooltipNotifications[i])
+    // why the optional chain? well, somehow, an item can return tooltipNotificationIndexes,
+    // but have no tooltipNotifications in its def
+    .map((i) => itemDef.tooltipNotifications?.[i])
+    .filter(Boolean)
     // a temporary filter because as of witch queen, all tooltips are set to "on"
     .filter((t) => t && t.displayStyle !== 'ui_display_style_info');
 
@@ -394,6 +441,18 @@ export function makeItem(
     }
   }
 
+  // we cannot trust the claimed class of redacted items. they all say Titan
+  const classType = itemDef.redacted
+    ? normalBucket.inArmor
+      ? itemInstanceData?.isEquipped && owner
+        ? // equipped armor gets marked as that character's class
+          owner.classType
+        : // unequipped armor gets marked "no class"
+          -1
+      : // other items are marked "any class"
+        DestinyClass.Unknown
+    : itemDef.classType;
+
   const createdItem: DimItem = {
     owner: owner?.id || 'unknown',
     // figure out what year this item is probably from
@@ -410,10 +469,7 @@ export function makeItem(
     isExotic: tiers[itemDef.inventory!.tierType] === 'Exotic',
     name,
     description: displayProperties.description,
-    icon:
-      overrideStyleItem?.displayProperties.icon ||
-      displayProperties.icon ||
-      '/img/misc/missing_icon_d2.png',
+    icon: overrideStyleItem?.displayProperties.icon || displayProperties.icon || d2MissingIcon,
     hiddenOverlay,
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || itemDef.screenshot,
@@ -422,21 +478,25 @@ export function makeItem(
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
-    equipped: Boolean(instanceDef?.isEquipped),
+    equipped: Boolean(itemInstanceData.isEquipped),
     // TODO: equippingBlock has a ton of good info for the item move logic
-    equipment: Boolean(itemDef.equippingBlock) && !uniqueEquipBuckets.includes(normalBucket.hash),
+    equipment:
+      (itemDef.equippingBlock ||
+        // redacted items seem to have a correct boolean but no detailed equipping block info
+        (itemDef.redacted && itemDef.equippable)) &&
+      !uniqueEquipBuckets.includes(normalBucket.hash),
     equippingLabel: itemDef.equippingBlock?.uniqueLabel,
     complete: false,
     amount: item.quantity || 1,
     primaryStat: primaryStat,
     typeName,
-    equipRequiredLevel: instanceDef?.equipRequiredLevel ?? 0,
+    equipRequiredLevel: itemInstanceData.equipRequiredLevel ?? 0,
     maxStackSize: Math.max(itemDef.inventory!.maxStackSize, 1),
     uniqueStack: Boolean(itemDef.inventory!.stackUniqueLabel?.length),
-    classType: itemDef.classType, // 0: titan, 1: hunter, 2: warlock, 3: any
+    classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     element,
-    energy: instanceDef?.energy ?? null,
+    energy: itemInstanceData.energy ?? null,
     powerCap,
     lockable: itemType !== 'Finishers' ? item.lockable : true,
     trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),

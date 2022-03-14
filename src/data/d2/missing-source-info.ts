@@ -1340,6 +1340,7 @@ const missingSources: { [key: string]: number[] } = {
     3939809874, // Plate of Transcendence
     4177973942, // Vest of Transcendence
   ],
+  grasp: [],
   gunsmith: [
     288409041, // Rocket Launcher Scavenger
     288409046, // Hand Cannon Targeting
@@ -1655,6 +1656,7 @@ const missingSources: { [key: string]: number[] } = {
     160388292, // Kerak Type 2
     265279665, // Clandestine Maneuvers
     269552461, // Road Complex AA1
+    288409042, // Glaive Dexterity
     308026950, // Road Complex AA1
     311394919, // Insight Unyielding Greaves
     316000947, // Dead End Cure 2.1
@@ -1776,6 +1778,7 @@ const missingSources: { [key: string]: number[] } = {
     2092750352, // Tangled Web Strides
     2111956477, // Insight Rover Boots
     2112821379, // Insight Unyielding Helm
+    2119661521, // Glaive Scavenger
     2148295091, // Tangled Web Helm
     2151378428, // Tangled Web Greaves
     2159363321, // Be Thy Guide
@@ -2649,6 +2652,7 @@ const missingSources: { [key: string]: number[] } = {
   umbral: [],
   vexoffensive: [],
   vog: [],
+  vow: [],
   wartable: [
     2119661524, // Font of Might
   ],

@@ -4,10 +4,12 @@ on:
     types: [assigned, opened, synchronize, reopened, labeled, unlabeled]
     paths-ignore:
       - 'docs/**'
-      - 'workflows/**'
+      - '.github/workflows/**'
+      - 'src/data/**' # Ignore d2ai updates
 
 jobs:
   changelog:
+      if: github.event.pull_request.draft == false
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2

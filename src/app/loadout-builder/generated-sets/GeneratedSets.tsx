@@ -5,7 +5,8 @@ import {
 } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
+import { DimStore } from 'app/inventory/store-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import React, {
@@ -18,7 +19,6 @@ import React, {
   useState,
 } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
-import { DimStore } from '../../inventory/store-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet, PinnedItems } from '../types';
 import GeneratedSet from './GeneratedSet';
@@ -71,7 +71,7 @@ function getMeasureSet(sets: readonly ArmorSet[]) {
 interface Props {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
-  subclass: DimLoadoutItem | undefined;
+  subclass: ResolvedLoadoutItem | undefined;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
   statOrder: number[];

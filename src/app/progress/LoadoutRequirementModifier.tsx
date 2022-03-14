@@ -44,7 +44,6 @@ const itemSubTypeToItemCategoryHash: { [key in DestinyItemSubType]: number } = {
   [DestinyItemSubType.SubmachineGun]: ItemCategoryHashes.SubmachineGuns,
   [DestinyItemSubType.TraceRifle]: ItemCategoryHashes.TraceRifles,
   [DestinyItemSubType.Bow]: ItemCategoryHashes.Bows,
-  // TODO: Update when Bungie releases Glaive ICH
   [DestinyItemSubType.Glaive]: ItemCategoryHashes.Glaives,
 };
 

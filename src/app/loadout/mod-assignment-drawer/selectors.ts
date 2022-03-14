@@ -2,7 +2,7 @@ import { allItemsSelector, bucketsSelector, sortedStoresSelector } from 'app/inv
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { DimLoadoutItem, Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -22,9 +22,11 @@ import { shallowEqual, useSelector } from 'react-redux';
 export function useEquippedLoadoutArmorAndSubclass(
   loadout: Loadout,
   storeId: string | undefined
-): { armor: DimLoadoutItem[]; subclass: DimLoadoutItem | undefined } {
+): { armor: ResolvedLoadoutItem[]; subclass: ResolvedLoadoutItem | undefined } {
   const loadoutItemSelector = useCallback(
-    (state: RootState): { armor: DimLoadoutItem[]; subclass: DimLoadoutItem | undefined } => {
+    (
+      state: RootState
+    ): { armor: ResolvedLoadoutItem[]; subclass: ResolvedLoadoutItem | undefined } => {
       const stores = sortedStoresSelector(state);
       const currentStore = getCurrentStore(stores)!;
       const storeToHydrateFrom = storeId
@@ -50,8 +52,8 @@ export function useEquippedLoadoutArmorAndSubclass(
       );
 
       const loadoutItemsByBucket = _.keyBy(
-        loadoutItems.filter((i) => i.classType === classType),
-        (i) => i.bucket.hash
+        loadoutItems.filter((i) => i.item.classType === classType),
+        (i) => i.item.bucket.hash
       );
 
       const subclass = loadoutItemsByBucket[BucketHashes.Subclass];

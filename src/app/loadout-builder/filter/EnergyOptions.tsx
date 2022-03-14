@@ -70,12 +70,12 @@ export default function EnergyOptions({
       {
         label: t('LoadoutBuilder.None'),
         tooltip: t('LoadoutBuilder.LockElementOptions.None'),
-        selected: !lockArmorEnergyType,
+        selected: !lockArmorEnergyType || lockArmorEnergyType === LockArmorEnergyType.None,
         onChange: () => {
-          if (lockArmorEnergyType) {
+          if (lockArmorEnergyType && lockArmorEnergyType !== LockArmorEnergyType.None) {
             lbDispatch({
               type: 'lockArmorEnergyTypeChanged',
-              lockArmorEnergyType: undefined,
+              lockArmorEnergyType: LockArmorEnergyType.None,
             });
           }
         },
@@ -115,12 +115,12 @@ export default function EnergyOptions({
       {
         label: t('LoadoutBuilder.None'),
         tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.None'),
-        selected: !assumeArmorMasterwork,
+        selected: !assumeArmorMasterwork || assumeArmorMasterwork === AssumeArmorMasterwork.None,
         onChange: () => {
-          if (assumeArmorMasterwork) {
+          if (assumeArmorMasterwork && assumeArmorMasterwork !== AssumeArmorMasterwork.None) {
             lbDispatch({
               type: 'assumeArmorMasterworkChanged',
-              assumeArmorMasterwork: undefined,
+              assumeArmorMasterwork: AssumeArmorMasterwork.None,
             });
           }
         },

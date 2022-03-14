@@ -285,7 +285,7 @@
     "UnlockAllSuccess": "アンロックした {{num}} アイテム",
     "Vendor": "アイテムは特定のベンダーから入手できます。",
     "Weapon": "武器であるアイテムを表示。",
-    "WeaponLevel": "Shows weapons based on their Weapon Level.",
+    "WeaponLevel": "武器レベルに基づいて武器を表示",
     "WeaponType": "武器の種類を基に表示",
     "Wishlist": "ウィッシュリストに一致するアイテムを表示します。",
     "WishlistDupe": "1つでもウィッシュリストに登録されていれば重複しているアイテムを表示",

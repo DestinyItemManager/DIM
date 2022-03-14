@@ -16,7 +16,7 @@
     "lintcached": "run-p lintcached:*",
     "lintcached:eslint": "yarn lint:eslint --cache --cache-location .eslintcache --cache-strategy content",
     "lint-report": "yarn lint:eslint --output-file eslint_report.json --format json",
-    "lint-report:cached": "yarn lintcached:eslint --output-file eslint_report.json --format json",
+    "lint-report:cached": "yarn lintcached:eslint --output-file eslint.results.json --format json",
     "fix": "run-s fix:*",
     "fix:eslint": "yarn lint:eslint --fix",
     "fix:json": "jsonsort src/locale",
@@ -34,7 +34,8 @@
     "dead-code": "ts-unused-exports tsconfig.json --allowUnusedTypes --allowUnusedEnums --showLineNumber | grep -v cssExports",
     "bcu": "run-s bcu:*",
     "bcu:build": "node src/build-browsercheck-utils.js",
-    "bcu:pretty": "prettier --write src/browsercheck-utils.js"
+    "bcu:pretty": "prettier --write src/browsercheck-utils.js",
+    "fa-subset": "node src/fa-subset.mjs"
   },
   "husky": {
     "hooks": {
@@ -118,6 +119,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "eslint-plugin-react-redux": "^4.0.0",
+    "fontawesome-subset": "^3.0.0",
     "fork-ts-checker-notifier-webpack-plugin": "^5.0.0",
     "fork-ts-checker-webpack-plugin": "^6.0.1",
     "generate-json-webpack-plugin": "^2.0.0",

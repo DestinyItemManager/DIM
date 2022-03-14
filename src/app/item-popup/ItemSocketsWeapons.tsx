@@ -65,9 +65,10 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
       getSocketByIndex(item.sockets!, c.socketIndexes[0])?.isPerk
   );
 
-  const excludedSocketCategoryHashes = item.crafted
-    ? [craftedSocketCategoryHash]
-    : [mementoSocketCategoryHash];
+  const excludedSocketCategoryHashes = [
+    craftedSocketCategoryHash,
+    !item.crafted && mementoSocketCategoryHash,
+  ];
 
   // Iterate in reverse category order so cosmetic mods are at the front
   const mods = [...item.sockets.categories]

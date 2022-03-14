@@ -8,8 +8,13 @@ import { emptyArray } from 'app/utils/empty';
 import { warnLog } from 'app/utils/log';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { DimItem } from '../inventory/item-types';
-import { DimLoadoutItem, LoadoutItem } from './loadout-types';
+import { LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
 import { findItemForLoadout } from './loadout-utils';
+
+let missingLoadoutItemId = 1;
+export function generateMissingLoadoutItemId() {
+  return `loadoutitem-${missingLoadoutItemId++}`;
+}
 
 /**
  * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
@@ -24,13 +29,13 @@ export function getItemsFromLoadoutItems(
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
   }
-): [items: DimLoadoutItem[], warnitems: DimLoadoutItem[]] {
+): [items: ResolvedLoadoutItem[], warnitems: ResolvedLoadoutItem[]] {
   if (!loadoutItems) {
     return [emptyArray(), emptyArray()];
   }
 
-  const items: DimLoadoutItem[] = [];
-  const warnitems: DimLoadoutItem[] = [];
+  const items: ResolvedLoadoutItem[] = [];
+  const warnitems: ResolvedLoadoutItem[] = [];
   for (const loadoutItem of loadoutItems) {
     // TODO: filter down to the class type of the loadout
     const item = findItemForLoadout(defs, allItems, storeId, loadoutItem);
@@ -51,16 +56,21 @@ export function getItemsFromLoadoutItems(
       // Apply socket overrides so the item appears as it should be configured in the loadout
       const overriddenItem = defs.isDestiny2() ? applySocketOverrides(defs, item, overrides) : item;
 
-      items.push({ ...overriddenItem, socketOverrides: overrides });
+      items.push({
+        item: overriddenItem,
+        // TODO: Should we keep the original socket overrides here, somewhere? There's a difference between "effective socket overrides" and "socket overrides to save"
+        loadoutItem:
+          overrides === loadoutItem.socketOverrides
+            ? loadoutItem
+            : { ...loadoutItem, socketOverrides: overrides },
+      });
     } else {
-      const fakeItem: DimLoadoutItem | null = defs.isDestiny2()
+      const fakeItem: DimItem | null = defs.isDestiny2()
         ? makeFakeItem(defs, buckets, undefined, loadoutItem.hash)
         : makeFakeD1Item(defs, buckets, loadoutItem.hash);
       if (fakeItem) {
-        fakeItem.equipped = loadoutItem.equip;
-        fakeItem.socketOverrides = loadoutItem.socketOverrides;
-        fakeItem.id = loadoutItem.id;
-        warnitems.push(fakeItem);
+        fakeItem.id = generateMissingLoadoutItemId();
+        warnitems.push({ item: fakeItem, loadoutItem, missing: true });
       } else {
         warnLog('loadout', "Couldn't create fake warn item for", loadoutItem);
       }

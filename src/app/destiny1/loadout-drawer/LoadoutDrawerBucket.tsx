@@ -1,47 +1,35 @@
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
-import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { itemSortOrderSelector } from 'app/settings/item-sort';
-import { sortItems } from 'app/shell/filters';
+import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { AddButton } from './Buttons';
 import styles from './LoadoutDrawerBucket.m.scss';
 import LoadoutDrawerItem from './LoadoutDrawerItem';
 
 export default function LoadoutDrawerBucket({
   bucket,
-  loadoutItems,
   items,
   pickLoadoutItem,
   equip,
   remove,
 }: {
   bucket: InventoryBucket;
-  loadoutItems: LoadoutItem[];
-  items: DimItem[];
+  items: ResolvedLoadoutItem[];
   pickLoadoutItem(bucket: InventoryBucket): void;
-  equip(item: DimItem, e: React.MouseEvent): void;
-  remove(item: DimItem, e: React.MouseEvent): void;
+  equip(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
+  remove(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
 }) {
-  const itemSortOrder = useSelector(itemSortOrderSelector);
-  const equippedItems = sortItems(
-    items.filter((i) =>
-      loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && li.equip)
-    ),
-    itemSortOrder
-  );
-  const unequippedItems = sortItems(
-    items.filter((i) =>
-      loadoutItems.some((li) => li.id === i.id && li.hash === i.hash && !li.equip)
-    ),
-    itemSortOrder
-  );
+  const [equippedItems, unequippedItems] = _.partition(items, (li) => li.loadoutItem.equip);
+
   // Only allow one emblem
   const capacity = bucket.hash === BucketHashes.Emblems ? 1 : bucket.capacity;
+
+  const mapItem = (li: ResolvedLoadoutItem) => (
+    <LoadoutDrawerItem key={li.item.index} resolvedLoadoutItem={li} equip={equip} remove={remove} />
+  );
 
   return (
     <div className="loadout-bucket">
@@ -56,9 +44,7 @@ export default function LoadoutDrawerBucket({
             <div className="sub-bucket equipped">
               <div className="equipped-item">
                 {equippedItems.length > 0 ? (
-                  equippedItems.map((item) => (
-                    <LoadoutDrawerItem key={item.index} item={item} equip={equip} remove={remove} />
-                  ))
+                  equippedItems.map(mapItem)
                 ) : (
                   <AddButton
                     className={styles.equippedAddButton}
@@ -70,9 +56,7 @@ export default function LoadoutDrawerBucket({
             {(equippedItems.length > 0 || unequippedItems.length > 0) &&
               bucket.hash !== BucketHashes.Subclass && (
                 <div className="sub-bucket">
-                  {unequippedItems.map((item) => (
-                    <LoadoutDrawerItem key={item.index} item={item} equip={equip} remove={remove} />
-                  ))}
+                  {unequippedItems.map(mapItem)}
                   {equippedItems.length > 0 && unequippedItems.length < capacity - 1 && (
                     <AddButton onClick={() => pickLoadoutItem(bucket)} />
                   )}

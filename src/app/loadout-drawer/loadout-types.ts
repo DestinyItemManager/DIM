@@ -21,15 +21,29 @@ export type Loadout = Omit<DimApiLoadout, 'equipped' | 'unequipped'> & {
 };
 
 /**
- * This merges data from DimItem and LoadoutItem so we don't need to pass both objects around as
- * a pair.
+ * Once we resolve a loadout item specifier to an actual item in inventory, we
+ * can pass them around together. This represents the pair of the loadout item
+ * specifier and the item in inventory (or fake placeholder item) that goes
+ * along with it.
  */
-export interface DimLoadoutItem extends DimItem {
+export interface ResolvedLoadoutItem {
   /**
-   * A map of socketIndex's to item hashes for plugs that override the current items plugs in
-   * the loadout.
+   * The actual item in inventory, wherever it is. This item will have any
+   * socketOverrides and fashion from the loadoutItem applied to it.
+   *
+   * Note: Don't use the `equipped` property of this item - use `loadoutItem.equip` instead!
    */
-  socketOverrides?: { [socketIndex: number]: number };
+  readonly item: DimItem;
+  /**
+   * The original loadout item specifier which says what we want to do with
+   * this item in the loadout. Note that this loadoutItem may not have the same
+   * id or even hash as the resolved item!
+   */
+  // TODO: remove this in favor of just equip/socketOverrides/amount?
+  readonly loadoutItem: LoadoutItem;
+
+  /** This item wasn't found in inventory. This means `item` is a fake placeholder. */
+  readonly missing?: boolean;
 }
 
 /** represents a single mod, and where to place it (on a non-specific item) */

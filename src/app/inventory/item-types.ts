@@ -96,8 +96,11 @@ export interface DimItem {
   maxStackSize: number;
   /** Is this stack unique (one per account, sometimes two if you can move to vault)? */
   uniqueStack: boolean;
-  /** The class this item is restricted to. Unknown means it can be used by any class. */
-  classType: DestinyClass;
+  /**
+   * The class this item is restricted to. DestinyClass.Unknown means it can be used by any class.
+   * -1 is for classified armor, which, until proven otherwise, can't be equipped by any class.
+   * */
+  classType: DestinyClass | -1;
   /** The localized name of the class this item is restricted to. */
   classTypeNameLocalized: string;
   /** Whether this item can be locked. */
