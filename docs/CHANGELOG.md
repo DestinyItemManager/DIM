@@ -1,5 +1,7 @@
 ## Next
 
+## 7.8.1 <span class="changelog-date">(2022-03-14)</span>
+
 * Fixed D1 loadout editor not appearing.
 * Fixed loadout editor not disappearing after saving/deleting.
 
