@@ -7,7 +7,7 @@
 * Clearer, prettier Enhanced Perk icons.
 * Raid crafting materials are now included in the currency counter. Tap and hold, or hover, the consumables count in the vault header to check them.
 * Many fixes for how classified items show up, and how they count toward the power level of each Guardian class. Can't see these fixes now, but maybe next time there's a new Raid.
-* New search support for `source:vow` (Vow of the Disciple) and `source:grasp` (Grasp of Avarice).
+* New search support for `source:vow` (Vow of the Disciple) and `source:grasp` (Grasp of Avarice) and `season:16`.
 
 ## 7.8.0 <span class="changelog-date">(2022-03-06)</span>
 
