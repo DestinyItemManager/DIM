@@ -1,3 +1,4 @@
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import { t, tl } from 'app/i18next-t';
 import {
   LoadoutApplyPhase,
@@ -9,13 +10,7 @@ import {
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { NotificationError, NotifyInput } from 'app/notifications/notifications';
-import {
-  AppIcon,
-  faCheckCircle,
-  faExclamationCircle,
-  faExclamationTriangle,
-  refreshIcon,
-} from 'app/shell/icons';
+import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/shell/icons';
 import { DimError } from 'app/utils/dim-error';
 import { useThrottledSubscription } from 'app/utils/hooks';
 import { Observable } from 'app/utils/observable';
@@ -132,7 +127,7 @@ function ApplyLoadoutProgressBody({
       </div>
       {equipNotPossible && (
         <div className={styles.warning}>
-          <AppIcon className={styles.warningIcon} icon={faExclamationTriangle} />
+          <AlertIcon className={styles.warningIcon} />
           {t('BungieService.DestinyCannotPerformActionAtThisLocation')}
         </div>
       )}

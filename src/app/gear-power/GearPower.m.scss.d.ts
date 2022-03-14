@@ -19,6 +19,7 @@ interface CssExports {
   'leg': string;
   'negative': string;
   'neutral': string;
+  'notes': string;
   'positive': string;
   'power': string;
   'statMeta': string;

@@ -43,7 +43,7 @@ import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { ItemPowerSet } from './ItemPowerSet';
 import { d2BucketsSelector, storesSelector } from './selectors';
-import { DimStore } from './store-types';
+import { DimCharacterStat, DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
@@ -310,18 +310,11 @@ export function buildStores(
 
   const characterProgress = getCharacterProgressions(profileInfo);
 
-  const hasClassified = allItems.some(
-    (i) =>
-      i.classified &&
-      (i.location.inWeapons || i.location.inArmor || i.bucket.hash === BucketHashes.Ghost)
-  );
-
   for (const s of stores) {
     updateBasePower(
       allItems,
       s,
       defs,
-      hasClassified,
       characterProgress,
       profileInfo.profileProgression?.data?.seasonalArtifact.powerBonusProgression.progressionHash
     );
@@ -449,27 +442,44 @@ function updateBasePower(
   allItems: DimItem[],
   store: DimStore,
   defs: D2ManifestDefinitions,
-  hasClassified: boolean,
   characterProgress: DestinyCharacterProgressionComponent | undefined,
   bonusPowerProgressionHash: number | undefined
 ) {
   if (!store.isVault) {
     const def = defs.Stat.get(StatHashes.Power);
     const { equippable, unrestricted } = maxLightItemSet(allItems, store);
+
+    // ALL WEAPONS count toward your drops. armor on another character doesn't count.
+    // (maybe just because it's on a different class? who knows. can't test.)
+    const dropPowerItemSet = maxLightItemSet(
+      allItems.filter((i) => i.bucket.inWeapons || i.owner === 'vault' || i.owner === store.id),
+      store
+    ).unrestricted;
+    const dropPowerLevel = getLight(store, dropPowerItemSet);
+
     const unrestrictedMaxGearPower = getLight(store, unrestricted);
     const unrestrictedPowerFloor = Math.floor(unrestrictedMaxGearPower);
     const equippableMaxGearPower = getLight(store, equippable);
 
-    const differentEquippableMaxGearPower =
-      (unrestrictedMaxGearPower !== equippableMaxGearPower && equippableMaxGearPower) || undefined;
+    const statProblems: DimCharacterStat['statProblems'] = {};
+
+    statProblems.notEquippable = unrestrictedMaxGearPower !== equippableMaxGearPower;
+    statProblems.notOnStore = dropPowerLevel !== unrestrictedMaxGearPower;
+
+    statProblems.hasClassified = allItems.some(
+      (i) =>
+        i.classified &&
+        (i.location.inWeapons ||
+          i.location.inArmor ||
+          (i.power && i.bucket.hash === BucketHashes.Ghost))
+    );
 
     store.stats.maxGearPower = {
       hash: -3,
       name: t('Stats.MaxGearPowerAll'),
       // used to be t('Stats.MaxGearPower'), a translation i don't want to lose yet
-      hasClassified,
+      statProblems,
       description: '',
-      differentEquippableMaxGearPower,
       richTooltip: ItemPowerSet(unrestricted, unrestrictedPowerFloor),
       value: unrestrictedMaxGearPower,
       icon: helmetIcon,
@@ -479,7 +489,6 @@ function updateBasePower(
     store.stats.powerModifier = {
       hash: -2,
       name: t('Stats.PowerModifier'),
-      hasClassified: false,
       description: '',
       richTooltip: ArtifactXP(characterProgress, bonusPowerProgressionHash),
       value: artifactPower,
@@ -489,7 +498,7 @@ function updateBasePower(
     store.stats.maxTotalPower = {
       hash: -1,
       name: t('Stats.MaxTotalPower'),
-      hasClassified,
+      statProblems,
       description: '',
       value: unrestrictedMaxGearPower + artifactPower,
       icon: bungieNetPath(def.displayProperties.icon),

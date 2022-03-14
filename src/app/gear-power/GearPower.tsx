@@ -1,10 +1,13 @@
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
+import { SetFilterButton } from 'app/dim-ui/SetFilterButton';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
+import { classFilter } from 'app/search/search-filters/known-values';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -55,6 +58,11 @@ export default function GearPower() {
       </div>
     </div>
   );
+
+  const exampleItem = equippable.find((i) => i.classType === selectedStore.classType);
+  const classFilterString = exampleItem && classFilter.fromItem!(exampleItem);
+  const maxItemsSearchString = classFilterString && `${classFilterString} is:maxpower`;
+
   return (
     <Sheet onClose={reset} header={header} sheetClassName={styles.gearPowerSheet}>
       <div className={styles.gearPowerSheetContent}>
@@ -83,6 +91,17 @@ export default function GearPower() {
             );
           })}
         </div>
+        {selectedStore.stats.maxGearPower?.statProblems?.notOnStore && (
+          <div className={styles.notes}>
+            <AlertIcon /> {t('Loadouts.OnWrongCharacterWarning')}
+            {maxItemsSearchString && (
+              <p>
+                <SetFilterButton filter={maxItemsSearchString} />{' '}
+                {t('Loadouts.OnWrongCharacterAdvice')}
+              </p>
+            )}
+          </div>
+        )}
         {maxBasePower !== equippableMaxBasePower && (
           <>
             <div className={styles.footNote}>* {t('Loadouts.EquippableDifferent1')}</div>
