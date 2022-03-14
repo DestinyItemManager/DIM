@@ -24,7 +24,7 @@ jobs:
         uses: ./.github/workflows/versioning.yml
         with:
           flavor: release
-          patch: inputs.patch
+          patch: ${{ inputs.patch }}
 
       - name: Generate Release Notes
         uses: ./.github/workflows/generate-release-notes.yml

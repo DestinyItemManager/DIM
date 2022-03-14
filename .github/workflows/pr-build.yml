@@ -15,37 +15,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Setup and Install
+        uses: ./.github/workflows/setup-and-install.yml
+
+      - name: Versioning
+        uses: ./.github/workflows/versioning.yml
         with:
-          fetch-depth: 3 # So sentry can get the previous commit
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: yarn
-
-      - name: get-npm-version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.1.0
-
-      - name: set beta
-        run: |
-          echo "build_level='beta'" >> $GITHUB_ENV
-
-      - name: Bump release version (beta)
-        run: |
-          echo "VERSION=${{ steps.package-version.outputs.current-version }}.${{ github.run_number }}" >> $GITHUB_ENV
-
-      - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+          flavor: beta
+          patch: false
 
       - name: Build beta
         run: yarn build:beta
         env:
           PR_BUILD: true
 
-      # Upload webpack-stats.json to use on relative-ci.yaml workflow
       - name: Upload webpack stats artifact
         uses: relative-ci/agent-upload-artifact-action@v1
         with:
@@ -54,16 +37,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: yarn
-
-      - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+      - name: Setup and Install
+        uses: ./.github/workflows/setup-and-install.yml
 
       - name: Jest Annotations & Coverage
         if: github.event.pull_request.head.repo.full_name == github.repository
@@ -80,30 +55,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: GitHub Slug Action
-        uses: rlespinasse/github-slug-action@4.0.0
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: yarn
-
-      - name: Cache ESLint
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-eslint
-        with:
-          path: ~/.eslintcache
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
-            ${{ runner.os }}-${{ env.cache-name }}-
-
-      - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+      - name: Setup and Install
+        uses: ./.github/workflows/setup-and-install.yml
 
       - name: Save ESLint Report JSON
         run: yarn lint-report:cached
