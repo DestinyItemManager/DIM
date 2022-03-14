@@ -18,9 +18,8 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useCallback, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 import './loadout-drawer.scss';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
@@ -91,10 +90,6 @@ export default function LoadoutDrawer({
    */
   useEventBusListener(addItem$, onAddItem);
 
-  // Close the sheet on navigation
-  const { pathname } = useLocation();
-  useEffect(onClose, [pathname, onClose]);
-
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (li: ResolvedLoadoutItem) => {
     const loadoutClassType = loadout?.classType;
@@ -126,8 +121,9 @@ export default function LoadoutDrawer({
   };
 
   const onSaveLoadout = (
-    e: React.MouseEvent,
-    loadoutToSave: Readonly<Loadout> | undefined = loadout
+    e: React.FormEvent,
+    loadoutToSave: Readonly<Loadout> | undefined = loadout,
+    close: () => void
   ) => {
     e.preventDefault();
     if (!loadoutToSave) {
@@ -145,7 +141,7 @@ export default function LoadoutDrawer({
     close();
   };
 
-  const saveAsNew = (e: React.MouseEvent) => {
+  const saveAsNew = (e: React.FormEvent, close: () => void) => {
     e.preventDefault();
 
     if (!loadout) {
@@ -155,7 +151,7 @@ export default function LoadoutDrawer({
       ...loadout,
       id: uuidv4(), // Let it be a new ID
     };
-    onSaveLoadout(e, newLoadout);
+    onSaveLoadout(e, newLoadout, close);
   };
 
   if (!loadout) {
@@ -170,7 +166,7 @@ export default function LoadoutDrawer({
   const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
     stateDispatch({ type: 'update', loadout: { ...loadout, notes: e.target.value } });
 
-  const header = (
+  const header = ({ onClose }: { onClose(): void }) => (
     <div className="loadout-drawer-header">
       <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
       <LoadoutDrawerOptions
@@ -178,8 +174,8 @@ export default function LoadoutDrawer({
         showClass={showClass}
         isNew={isNew}
         updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
-        saveLoadout={isNew ? saveAsNew : onSaveLoadout}
-        saveAsNew={saveAsNew}
+        saveLoadout={(e) => (isNew ? saveAsNew(e, onClose) : onSaveLoadout(e, loadout, onClose))}
+        saveAsNew={(e) => saveAsNew(e, onClose)}
         deleteLoadout={onDeleteLoadout}
       />
       {loadout.notes !== undefined && (
@@ -194,7 +190,7 @@ export default function LoadoutDrawer({
   );
 
   return (
-    <Sheet onClose={close} header={header} disabled={showingItemPicker}>
+    <Sheet onClose={onClose} header={header} disabled={showingItemPicker}>
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
           <LoadoutDrawerDropTarget onDroppedItem={onAddItem} classType={loadout.classType}>
