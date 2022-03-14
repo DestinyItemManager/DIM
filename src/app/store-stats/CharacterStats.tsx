@@ -54,6 +54,7 @@ function CharacterStat({ stats, storeId, className, showTier }: CharacterStatPro
             >
               <img src={stat.icon} alt={stat.name} />
               <div>
+                {/* if stat.hash is negative, this is one of our custom stats */}
                 {stat.hash < 0 ? (
                   <span className="powerStat">
                     <FractionalPowerLevel power={stat.value} />
@@ -93,13 +94,11 @@ export function PowerFormula({ stats, storeId }: { stats: DimStore['stats']; sto
           <hr />
           <div className="richTooltipWrapper">
             {stat.richTooltip}
-            {stat.statProblems?.notEquippable ||
-              (stat.statProblems?.notOnStore && (
-                <div className="tooltipFootnote">
-                  {stat.statProblems?.notOnStore ? <AlertIcon /> : '*'}{' '}
-                  {t('General.ClickForDetails')}
-                </div>
-              ))}
+            {(stat.statProblems?.notEquippable || stat.statProblems?.notOnStore) && (
+              <div className="tooltipFootnote">
+                {stat.statProblems?.notOnStore ? <AlertIcon /> : '*'} {t('General.ClickForDetails')}
+              </div>
+            )}
           </div>
         </>
       )}
