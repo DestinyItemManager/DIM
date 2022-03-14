@@ -1,5 +1,7 @@
 ## Next
 
+## 7.8.1 <span class="changelog-date">(2022-03-13)</span>
+
 * Assume armor masterwork and lock armor energy options will now be saved correctly when saving a loadout from the Loadout Optimizer and loaded correctly when Optimizing Armor.
 * Obsolete consumable mods hidden in the Vault are now detected. They should show up on the Inventory page, and DIM should count vault space more accurately.
 * Prevent iOS from popping up the keyboard automatically so often.
