@@ -61,6 +61,11 @@ jobs:
         run: |
           echo "VERSION=${{ steps.bump_version.outputs.next-version }}" >> $GITHUB_ENV
 
+      - name: Update Version in package.json
+        uses: reedyuk/npm-version@1.1.1
+        with:
+          version: ${{ env.VERSION }}
+
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
