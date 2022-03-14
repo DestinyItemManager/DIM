@@ -5,8 +5,9 @@ on:
     inputs:
       patch:
         description: 'Should this be a patch release?'
+        type: boolean
         required: true
-        default: 'true'
+        default: true
   schedule:
     # Deploy at 5pm Sunday PST, which is 1am Monday UTC
     # * is a special character in YAML so you have to quote this string
