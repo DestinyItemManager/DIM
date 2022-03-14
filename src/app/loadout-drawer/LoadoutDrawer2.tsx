@@ -4,12 +4,10 @@ import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
-import { warnMissingClass } from 'app/loadout-builder/loadout-builder-reducer';
 import { pickSubclass } from 'app/loadout/item-utils';
 import { useDefinitions } from 'app/manifest/selectors';
-import { showNotification } from 'app/notifications/notifications';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -19,7 +17,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
@@ -30,10 +28,9 @@ import LoadoutEdit, {
 } from '../loadout/loadout-edit/LoadoutEdit';
 import { deleteLoadout, updateLoadout } from './actions';
 import { stateReducer } from './loadout-drawer-reducer';
-import { addItem$, editLoadout$ } from './loadout-events';
+import { addItem$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
-import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
-import { Loadout } from './loadout-types';
+import { Loadout, ResolvedLoadoutItem } from './loadout-types';
 import { createSubclassDefaultSocketOverrides } from './loadout-utils';
 import styles from './LoadoutDrawer2.m.scss';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
@@ -46,92 +43,38 @@ import LoadoutDrawerHeader from './LoadoutDrawerHeader';
 /**
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit
  * loadouts from this interface.
+ *
+ * This component will always be launched after defs/stores are loaded.
  */
-export default function LoadoutDrawer2() {
+export default function LoadoutDrawer2({
+  initialLoadout,
+  storeId,
+  isNew,
+  onClose,
+}: {
+  initialLoadout: Loadout;
+  /**
+   * The store that provides context to how this loadout is being edited from.
+   * The store this edit session was launched from. This is to help pick which
+   * mods are enabled, which subclass items to show, etc. Defaults to current store.
+   */
+  storeId?: string;
+  isNew: boolean;
+  onClose(): void;
+}) {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
 
-  const navigate = useNavigate();
-  const { search: queryString, pathname } = useLocation();
+  const { pathname } = useLocation();
   const stores = useSelector(storesSelector);
   const allItems = useSelector(allItemsSelector);
   const buckets = useSelector(bucketsSelector)!;
   const [showingItemPicker, setShowingItemPicker] = useState(false);
 
   // All state and the state of the loadout is managed through this reducer
-  const [{ loadout, storeId, isNew }, stateDispatch] = useReducer(stateReducer, {
-    showClass: true,
-    isNew: false,
+  const [{ loadout }, stateDispatch] = useReducer(stateReducer(defs), {
+    loadout: initialLoadout,
   });
-
-  // The loadout to edit comes in from the editLoadout$ observable
-  useEventBusListener(
-    editLoadout$,
-    useCallback(({ loadout, storeId, showClass, isNew }) => {
-      stateDispatch({
-        type: 'editLoadout',
-        loadout,
-        storeId,
-        showClass: Boolean(showClass),
-        isNew: Boolean(isNew),
-      });
-    }, [])
-  );
-
-  // Load in a full loadout specified in the URL
-  useEffect(() => {
-    if (!stores.length || !defs?.isDestiny2()) {
-      return;
-    }
-    const searchParams = new URLSearchParams(queryString);
-    const loadoutJSON = searchParams.get('loadout');
-    if (loadoutJSON) {
-      try {
-        const parsedLoadout = convertDimApiLoadoutToLoadout(JSON.parse(loadoutJSON));
-        if (parsedLoadout) {
-          const storeId =
-            parsedLoadout.classType === DestinyClass.Unknown
-              ? getCurrentStore(stores)?.id
-              : stores.find((s) => s.classType === parsedLoadout.classType)?.id;
-
-          if (!storeId) {
-            warnMissingClass(parsedLoadout.classType, defs);
-            return;
-          }
-
-          parsedLoadout.id = uuidv4();
-          parsedLoadout.items = parsedLoadout.items.map((item) => ({
-            ...item,
-            id:
-              item.id === '0'
-                ? // We don't save consumables in D2 loadouts, but we may omit ids in shared loadouts
-                  // (because they'll never match someone else's inventory). So
-                  // instead, pick a random ID. It's possible these will
-                  // conflict with something already in the user's inventory but
-                  // it's not likely.
-                  Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString()
-                : item.id,
-          }));
-
-          stateDispatch({
-            type: 'editLoadout',
-            loadout: parsedLoadout,
-            storeId,
-            showClass: false,
-            isNew: true,
-          });
-        }
-      } catch (e) {
-        showNotification({
-          type: 'error',
-          title: t('Loadouts.BadLoadoutShare'),
-          body: t('Loadouts.BadLoadoutShareBody', { error: e.message }),
-        });
-      }
-      // Clear the loadout
-      navigate(pathname, { replace: true });
-    }
-  }, [defs, queryString, navigate, pathname, stores]);
 
   const loadoutItems = loadout?.items;
 
@@ -146,15 +89,14 @@ export default function LoadoutDrawer2() {
   );
 
   const onAddItem = useCallback(
-    (item: DimItem, equip?: boolean) =>
+    (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) =>
       stateDispatch({
         type: 'addItem',
         item,
-        items,
         equip,
-        stores,
+        socketOverrides,
       }),
-    [items, stores]
+    []
   );
 
   /**
@@ -162,18 +104,13 @@ export default function LoadoutDrawer2() {
    */
   useEventBusListener(addItem$, onAddItem);
 
-  const close = () => {
-    stateDispatch({ type: 'reset' });
-    setShowingItemPicker(false);
-  };
-
   // Close the sheet on navigation
   useEffect(() => {
     // Don't close if moving to the inventory or loadouts screen
     if (!pathname.endsWith('inventory') && !pathname.endsWith('loadouts')) {
-      close();
+      onClose();
     }
-  }, [pathname]);
+  }, [onClose, pathname]);
 
   const handleSaveLoadout = (e: React.MouseEvent, saveAsNew?: boolean) => {
     e.preventDefault();
@@ -220,11 +157,13 @@ export default function LoadoutDrawer2() {
   const handleNameChanged = (name: string) =>
     stateDispatch({ type: 'update', loadout: { ...loadout, name } });
 
-  const handleRemoveItem = (item: DimItem) => stateDispatch({ type: 'removeItem', item, items });
+  const handleRemoveItem = (resolvedItem: ResolvedLoadoutItem) =>
+    stateDispatch({ type: 'removeItem', resolvedItem });
 
   /** Prompt the user to select a replacement for a missing item. */
-  const fixWarnItem = async (warnItem: DimItem) => {
+  const fixWarnItem = async (li: ResolvedLoadoutItem) => {
     const loadoutClassType = loadout?.classType;
+    const warnItem = li.item;
 
     setShowingItemPicker(true);
     try {
@@ -248,7 +187,7 @@ export default function LoadoutDrawer2() {
       });
 
       onAddItem(item);
-      handleRemoveItem(warnItem);
+      handleRemoveItem(li);
     } catch (e) {
     } finally {
       setShowingItemPicker(false);
@@ -278,13 +217,9 @@ export default function LoadoutDrawer2() {
   }) => {
     pickLoadoutItem(loadout, bucket, (item) => onAddItem(item, equip), setShowingItemPicker);
   };
-  const handleClickSubclass = (subclass: DimItem | undefined) =>
-    pickLoadoutSubclass(
-      loadout,
-      subclass ? [subclass] : [],
-      ({ item }) => onAddItem(item),
-      setShowingItemPicker
-    );
+
+  const handleClickSubclass = () =>
+    pickLoadoutSubclass(loadout, storeId, onAddItem, setShowingItemPicker);
 
   const header = (
     <div>
@@ -300,6 +235,7 @@ export default function LoadoutDrawer2() {
     </div>
   );
 
+  // TODO: use this on the old loadout editor?
   const footer = (
     <LoadoutDrawerFooter
       loadout={loadout}
@@ -313,12 +249,11 @@ export default function LoadoutDrawer2() {
   // TODO: how to choose equipped/unequipped
   // TODO: contextual buttons!
   // TODO: undo/redo stack?
-  // TODO: remove armor/subclass from any-class loadouts on save
-  // TODO: build and publish a "loadouts API" via context
+  // TODO: build and publish a "loadouts API" via context?
 
   return (
     <Sheet
-      onClose={close}
+      onClose={onClose}
       header={header}
       footer={footer}
       disabled={showingItemPicker}
@@ -336,7 +271,6 @@ export default function LoadoutDrawer2() {
           onClickPlaceholder={handleClickPlaceholder}
           onClickWarnItem={fixWarnItem}
           onClickSubclass={handleClickSubclass}
-          onRemoveItem={handleRemoveItem}
         />
         <div className={styles.inputGroup}>
           <button
@@ -446,37 +380,24 @@ async function pickLoadoutItem(
 
 async function pickLoadoutSubclass(
   loadout: Loadout,
-  savedSubclasses: DimItem[],
-  add: (params: { item: DimItem; socketOverrides?: SocketOverrides }) => void,
+  storeId: string | undefined,
+  add: (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) => void,
   onShowItemPicker: (shown: boolean) => void
 ) {
-  const loadoutClassType = loadout?.classType;
-  const loadoutHasItem = (item: DimItem) =>
-    loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
-
-  const loadoutHasSubclassForClass = (item: DimItem) =>
-    savedSubclasses.some(
-      (s) => item.bucket.hash === BucketHashes.Subclass && s.classType === item.classType
-    );
+  const loadoutClassType = loadout.classType;
+  const loadoutHasItem = (item: DimItem) => loadout.items.some((i) => i.hash === item.hash);
 
   const subclassItemFilter = (item: DimItem) =>
     item.bucket.hash === BucketHashes.Subclass &&
-    (!loadout ||
-      loadout.classType === DestinyClass.Unknown ||
-      item.classType === loadoutClassType) &&
+    item.classType === loadoutClassType &&
+    (!storeId || item.owner === storeId) &&
     itemCanBeInLoadout(item) &&
-    !loadoutHasSubclassForClass(item) &&
     !loadoutHasItem(item);
 
   onShowItemPicker(true);
   const item = await pickSubclass(subclassItemFilter);
   if (item) {
-    let socketOverrides: SocketOverrides | undefined;
-    if (item.bucket.hash === BucketHashes.Subclass) {
-      socketOverrides = createSubclassDefaultSocketOverrides(item);
-    }
-
-    add({ item, socketOverrides });
+    add(item, undefined, createSubclassDefaultSocketOverrides(item));
   }
   onShowItemPicker(false);
 }

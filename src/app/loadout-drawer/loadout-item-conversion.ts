@@ -11,6 +11,11 @@ import { DimItem } from '../inventory/item-types';
 import { LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
 import { findItemForLoadout } from './loadout-utils';
 
+let missingLoadoutItemId = 1;
+export function generateMissingLoadoutItemId() {
+  return `loadoutitem-${missingLoadoutItemId++}`;
+}
+
 /**
  * Turn the loadout's items into real DIM items. Any that don't exist in inventory anymore
  * are returned as warnitems.
@@ -64,7 +69,8 @@ export function getItemsFromLoadoutItems(
         ? makeFakeItem(defs, buckets, undefined, loadoutItem.hash)
         : makeFakeD1Item(defs, buckets, loadoutItem.hash);
       if (fakeItem) {
-        warnitems.push({ item: fakeItem, loadoutItem });
+        fakeItem.id = generateMissingLoadoutItemId();
+        warnitems.push({ item: fakeItem, loadoutItem, missing: true });
       } else {
         warnLog('loadout', "Couldn't create fake warn item for", loadoutItem);
       }

@@ -57,8 +57,8 @@ export default function LoadoutDrawerContents({
   loadout: Loadout;
   buckets: InventoryBuckets;
   items: ResolvedLoadoutItem[];
-  equip(item: DimItem, e: React.MouseEvent): void;
-  remove(item: DimItem, e: React.MouseEvent): void;
+  equip(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
+  remove(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
   add(item: DimItem, equip?: boolean): void;
   onUpdateLoadout(loadout: Loadout): void;
   onShowItemPicker(shown: boolean): void;
