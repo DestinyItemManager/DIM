@@ -45,12 +45,13 @@ jobs:
         with:
           files: release-notes.txt
 
-      - name: Purge CloudFlare cache
-        run: ./build/purge-cloudflare.sh
+      - name: Purge Cloudflare Cache
+        uses: jakejarvis/cloudflare-purge-action@v0.3.0
         env:
+          CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE }}
           CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
-          APP_DOMAIN: ${{ inputs.APP_DOMAIN }}
+          PURGE_URLS: '["https://${{ inputs.APP_DOMAIN }}", "https://${{ inputs.APP_DOMAIN }}/index.html", "https://${{ inputs.APP_DOMAIN }}/version.json", "https://${{ inputs.APP_DOMAIN }}/service-worker.js", "https://${{ inputs.APP_DOMAIN }}/return.html", "https://${{ inputs.APP_DOMAIN }}/.well-known/assetlinks.json", "https://${{ inputs.APP_DOMAIN }}/.well-known/apple-app-site-association", "https://${{ inputs.APP_DOMAIN }}/manifest-webapp-6-2018.json", "https://${{ inputs.APP_DOMAIN }}/manifest-webapp-6-2018-ios.json"]'
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1
