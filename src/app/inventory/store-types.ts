@@ -100,11 +100,17 @@ export interface DimCharacterStat {
 
   /** The localized description of the stat. */
   description: string;
-  /** Whether this stat is inaccurate because it relies on classified items (like base power). */
-  hasClassified?: boolean;
 
-  /** maxGearPower (hash `-3`) may have this. if it's set, it's the *equippable* max power (instead of all items' combined max) */
-  differentEquippableMaxGearPower?: number;
+  /** maxGearPower (statHash -3) and maxTotalPower (-1) can come with various caveats */
+  statProblems?: {
+    /** this stat may be inaccurate because it relies on classified items */
+    hasClassified?: boolean;
+    /** mutually excluded exotics are included in the max possible power */
+    notEquippable?: boolean;
+    /** this character is in danger of dropping at a worse Power Level! another character is holding their best item(s) */
+    notOnStore?: boolean;
+  };
+
   /** additional rich content available to display in a stat's tooltip */
   richTooltip?: React.ReactChild;
 

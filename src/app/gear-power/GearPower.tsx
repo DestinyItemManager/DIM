@@ -1,3 +1,4 @@
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
@@ -88,6 +89,11 @@ export default function GearPower() {
             <div className={styles.footNote}>* {t('Loadouts.EquippableDifferent1')}</div>
             <div className={styles.footNote}>{t('Loadouts.EquippableDifferent2')}</div>
           </>
+        )}
+        {selectedStore.stats.maxGearPower?.statProblems?.notOnStore && (
+          <div className={styles.footNote}>
+            <AlertIcon /> {t('Loadouts.OnWrongCharacterWarning')}
+          </div>
         )}
       </div>
     </Sheet>

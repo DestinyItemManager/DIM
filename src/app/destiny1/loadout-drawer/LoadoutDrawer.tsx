@@ -1,3 +1,4 @@
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
@@ -13,7 +14,6 @@ import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conver
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import LoadoutDrawerDropTarget from 'app/loadout-drawer/LoadoutDrawerDropTarget';
 import { useDefinitions } from 'app/manifest/selectors';
-import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -201,7 +201,7 @@ export default function LoadoutDrawer({
             {warnitems.length > 0 && (
               <div className="loadout-contents">
                 <p>
-                  <AppIcon className="warning-icon" icon={faExclamationTriangle} />
+                  <AlertIcon />
                   {t('Loadouts.VendorsCannotEquip')}
                 </p>
                 <div className="loadout-warn-items">

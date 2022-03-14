@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import { D2BucketCategory, InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -9,7 +10,6 @@ import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conver
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -111,7 +111,7 @@ export default function LoadoutView({
           {loadout.name}
           {warnitems.length > 0 && (
             <span className={styles.missingItems}>
-              <AppIcon className="warning-icon" icon={faExclamationTriangle} />
+              <AlertIcon />
               {t('Loadouts.MissingItemsWarning')}
             </span>
           )}

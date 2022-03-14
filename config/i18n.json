@@ -685,6 +685,7 @@
     "NotificationTitle": "Loadout: {{name}}",
     "NoTokens": "No reputation items are available to transfer.",
     "OnlyItems": "Only equippable items, materials, and consumables can be added to a loadout.",
+    "OnWrongCharacterWarning": "This character's most powerful armor is on another character. To count toward the Power of drops, powerful, and pinnacle rewards, armor must be on this character or in the Vault.",
     "OpenInOptimizer": "Optimize Armor",
     "PickMods": "Add armor mods",
     "PullFromPostmaster": "Collect Postmaster",
