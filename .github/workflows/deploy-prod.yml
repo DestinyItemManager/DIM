@@ -42,12 +42,12 @@ jobs:
       - name: set feature
         if: ${{ !github.event.inputs.patch }}
         run: |
-          echo "build_level='feature'" >> $GITHUB_ENV
+          echo "build_level=feature" >> $GITHUB_ENV
 
       - name: set bug
         if: ${{ github.event.inputs.patch }}
         run: |
-          echo "build_level='bug'" >> $GITHUB_ENV
+          echo "build_level=bug" >> $GITHUB_ENV
 
       - name: Bump release version
         id: bump_version
