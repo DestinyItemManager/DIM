@@ -10,7 +10,6 @@ import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
-import { isD1Item } from 'app/utils/item-utils';
 import { errorLog, timer } from 'app/utils/log';
 import {
   DestinyCharacterComponent,
@@ -472,7 +471,7 @@ function updateBasePower(
         i.classified &&
         (i.location.inWeapons ||
           i.location.inArmor ||
-          (isD1Item(i) && i.bucket.hash === BucketHashes.Ghost))
+          (i.power && i.bucket.hash === BucketHashes.Ghost))
     );
 
     store.stats.maxGearPower = {

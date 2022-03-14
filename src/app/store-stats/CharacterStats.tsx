@@ -82,13 +82,7 @@ export function PowerFormula({ stats, storeId }: { stats: DimStore['stats']; sto
   const powerTooltip = (stat: DimCharacterStat): React.ReactNode => (
     <>
       {stat.name}
-      {stat.statProblems?.hasClassified && (
-        <>
-          <br />
-          <br />
-          {t('Loadouts.Classified')}
-        </>
-      )}
+      {stat.statProblems?.hasClassified && `\n\n${t('Loadouts.Classified')}`}
       {stat.richTooltip && (
         <>
           <hr />

@@ -95,12 +95,10 @@ export default function GearPower() {
           <div className={styles.notes}>
             <AlertIcon /> {t('Loadouts.OnWrongCharacterWarning')}
             {maxItemsSearchString && (
-              <>
-                <br />
-                <br />
+              <p>
                 <SetFilterButton filter={maxItemsSearchString} />{' '}
                 {t('Loadouts.OnWrongCharacterAdvice')}
-              </>
+              </p>
             )}
           </div>
         )}
