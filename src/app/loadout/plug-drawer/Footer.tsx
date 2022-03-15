@@ -4,10 +4,11 @@ import React from 'react';
 import PlugDef from '../loadout-ui/PlugDef';
 import { createGetModRenderKey } from '../mod-utils';
 import styles from './Footer.m.scss';
+import { PlugSet } from './types';
 
 interface Props {
   isPhonePortrait: boolean;
-  selected: { plug: PluggableInventoryItemDefinition; selectionType: 'multi' | 'single' }[];
+  plugSets: PlugSet[];
   acceptButtonText: string;
   onSubmit(event: React.FormEvent | KeyboardEvent): void;
   handlePlugSelected(plug: PluggableInventoryItemDefinition): void;
@@ -15,7 +16,7 @@ interface Props {
 
 export default function Footer({
   isPhonePortrait,
-  selected,
+  plugSets,
   acceptButtonText,
   onSubmit,
   handlePlugSelected,
@@ -32,13 +33,17 @@ export default function Footer({
         </button>
       </div>
       <div className={styles.selectedPlugs}>
-        {selected.map((s) => (
-          <PlugDef
-            key={getModRenderKey(s.plug)}
-            plug={s.plug}
-            onClose={s.selectionType === 'multi' ? () => handlePlugSelected(s.plug) : undefined}
-          />
-        ))}
+        {plugSets.flatMap((plugSet) =>
+          plugSet.selected.map((plug) => (
+            <PlugDef
+              key={getModRenderKey(plug)}
+              plug={plug}
+              onClose={
+                plugSet.selectionType === 'multi' ? () => handlePlugSelected(plug) : undefined
+              }
+            />
+          ))
+        )}
       </div>
     </div>
   );

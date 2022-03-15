@@ -5,16 +5,15 @@ import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { SearchInput } from 'app/search/SearchInput';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
-import { Comparator, compareBy } from 'app/utils/comparators';
-import { emptyArray } from 'app/utils/empty';
+import { Comparator } from 'app/utils/comparators';
 import { produce } from 'immer';
-import _ from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import Footer from './Footer';
-import PlugSection, { PlugSet } from './PlugSection';
+import PlugSection from './PlugSection';
+import { PlugSet } from './types';
 
 interface Props {
   /**
@@ -23,12 +22,6 @@ interface Props {
    * drawer are the union of plugs from these plug sets.
    */
   plugSets: PlugSet[];
-  /**
-   * Plugs that have been selected or "locked" by the user already. These must
-   * be a subset of the plugs in plugSets otherwise unknown plugs will be
-   * discarded on accept.
-   */
-  initiallySelected: PluggableInventoryItemDefinition[];
   /** A restricted list of stat hashes to display for each plug. If not specified, no stats will be shown. */
   displayedStatHashes?: number[];
   /** Title of the sheet, displayed in the header. */
@@ -62,7 +55,6 @@ interface Props {
  */
 export default function PlugDrawer({
   plugSets,
-  initiallySelected,
   displayedStatHashes,
   title,
   searchPlaceholder,
@@ -77,8 +69,10 @@ export default function PlugDrawer({
   const defs = useD2Definitions()!;
   const language = useSelector(languageSelector);
   const [query, setQuery] = useState(initialQuery || '');
-  const [selected, setSelected] = useState(() =>
-    assignPlugsToPlugSets(plugSets, initiallySelected)
+  const [internalPlugSets, setInternalPlugSets] = useState(() =>
+    plugSets
+      .map((plugSet) => ({ ...plugSet, plugs: plugSet.plugs.sort(sortPlugs) }))
+      .sort(sortPlugGroups)
   );
   const isPhonePortrait = useIsPhonePortrait();
 
@@ -88,15 +82,22 @@ export default function PlugDrawer({
       plug: PluggableInventoryItemDefinition,
       selectionType: 'multi' | 'single'
     ) => {
-      setSelected(
+      setInternalPlugSets(
         produce((draft) => {
-          const currentlySelected = draft[plugSetHash] || [];
-          const selectedPlugs = selectionType === 'multi' ? currentlySelected : [];
-          selectedPlugs.push(plug);
-          if (sortPlugs) {
-            selectedPlugs.sort(sortPlugs);
+          const draftPlugSet = draft.find((plugSet) => plugSet.plugSetHash === plugSetHash);
+          if (!draftPlugSet) {
+            return;
           }
-          draft[plugSetHash] = selectedPlugs;
+
+          if (selectionType === 'single') {
+            draftPlugSet.selected = [plug];
+          } else {
+            draftPlugSet.selected.push(plug);
+          }
+
+          if (sortPlugs) {
+            draftPlugSet.selected.sort(sortPlugs);
+          }
         })
       );
     },
@@ -105,15 +106,18 @@ export default function PlugDrawer({
 
   const handlePlugRemoved = useCallback(
     (plugSetHash: number, plug: PluggableInventoryItemDefinition) => {
-      setSelected(
-        produce((plugsByPlugSetHash) => {
-          // Since we know which plugset this plug was in, remove it from that set
-          const selectedPlugs = plugsByPlugSetHash[plugSetHash];
-          if (selectedPlugs) {
-            const firstIndex = selectedPlugs.findIndex((selected) => selected.hash === plug.hash);
-            if (firstIndex >= 0) {
-              selectedPlugs.splice(firstIndex, 1);
-            }
+      setInternalPlugSets(
+        produce((draft) => {
+          const draftPlugSet = draft.find((plugSet) => plugSet.plugSetHash === plugSetHash);
+          if (!draftPlugSet) {
+            return;
+          }
+
+          const firstIndex = draftPlugSet.selected.findIndex(
+            (selected) => selected.hash === plug.hash
+          );
+          if (firstIndex >= 0) {
+            draftPlugSet.selected.splice(firstIndex, 1);
           }
         })
       );
@@ -122,13 +126,15 @@ export default function PlugDrawer({
   );
 
   const handlePlugRemovedFromFooter = useCallback((plug: PluggableInventoryItemDefinition) => {
-    setSelected(
-      produce((plugsByPlugSetHash) => {
+    setInternalPlugSets(
+      produce((draft) => {
         // Remove the first plug matching this hash that we find in any plug set
-        for (const selectedPlugs of _.compact(Object.values(plugsByPlugSetHash))) {
-          const firstIndex = selectedPlugs.findIndex((selected) => selected.hash === plug.hash);
+        for (const draftPlugSet of draft) {
+          const firstIndex = draftPlugSet.selected.findIndex(
+            (selected) => selected.hash === plug.hash
+          );
           if (firstIndex >= 0) {
-            selectedPlugs?.splice(firstIndex, 1);
+            draftPlugSet.selected.splice(firstIndex, 1);
             return;
           }
         }
@@ -138,50 +144,36 @@ export default function PlugDrawer({
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    onAccept(_.compact(Object.values(selected).flat()));
+    onAccept(internalPlugSets.flatMap((plugSet) => plugSet.selected));
     onClose();
   };
 
   /** Filter the plugs from each plugSet based on the query. This can leave plugSets with zero plugs */
   const queryFilteredPlugSets = useMemo(() => {
     if (!query.length) {
-      return Array.from(plugSets);
+      return Array.from(internalPlugSets);
     }
 
     const searchFilter = createPlugSearchPredicate(query, language, defs);
 
-    return plugSets.map((plugSet) => ({
+    return internalPlugSets.map((plugSet) => ({
       ...plugSet,
       plugs: plugSet.plugs.filter(searchFilter),
     }));
-  }, [query, plugSets, defs, language]);
+  }, [query, internalPlugSets, defs, language]);
 
-  if (sortPlugGroups) {
-    queryFilteredPlugSets.sort(sortPlugGroups);
-  }
-
-  // Flatten out the plugs and sort so the footer has a predictable order
-  const flatSelectedPlugs = _.compact(Object.values(selected).flat());
-  if (sortPlugs) {
-    flatSelectedPlugs.sort(sortPlugs);
-  }
-
-  const footerPlugs = useMemo(
-    () =>
-      flatSelectedPlugs.map((plug) => ({
+  const handleIsPlugSelectable = useCallback(
+    (plug) =>
+      isPlugSelectable(
         plug,
-        // We decorate each plug with its selection type so we can handle removal appropriately in the footer
-        // This allows us to preserve the sort order
-        selectionType:
-          plugSets.find((set) => set.plugs.some((p) => p.hash === plug.hash))?.selectionType ||
-          'multi',
-      })),
-    [flatSelectedPlugs, plugSets]
+        internalPlugSets.flatMap((plugSet) => plugSet.selected)
+      ),
+    [internalPlugSets, isPlugSelectable]
   );
 
   const footer = ({ onClose }: { onClose(): void }) => (
     <Footer
-      selected={footerPlugs}
+      plugSets={internalPlugSets}
       isPhonePortrait={isPhonePortrait}
       acceptButtonText={acceptButtonText}
       onSubmit={(e) => onSubmit(e, onClose)}
@@ -218,60 +210,12 @@ export default function PlugDrawer({
         <PlugSection
           key={plugSet.plugSetHash}
           plugSet={plugSet}
-          selectedPlugs={selected[plugSet.plugSetHash] ?? emptyArray()}
           displayedStatHashes={displayedStatHashes}
-          isPlugSelectable={(plug) => isPlugSelectable(plug, flatSelectedPlugs)}
+          isPlugSelectable={handleIsPlugSelectable}
           onPlugSelected={handlePlugSelected}
           onPlugRemoved={handlePlugRemoved}
-          sortPlugs={sortPlugs}
         />
       ))}
     </Sheet>
   );
-}
-
-/**
- * A map of plugSetHashes to the selected plugs for that plugSetHash.
- */
-type PlugsByPlugSetHash = {
-  [plugSetHash: number]: PluggableInventoryItemDefinition[] | undefined;
-};
-
-/**
- * This creates the internally used state for the selected plugs.
- *
- * We need to associate each selected plug with a plugSetHash to correctly handle artificer
- * sockets. The plugsets that they can take are a subset of the bucket specific sockets
- * plugsets on an item, specifically they are just the artifact mods.
- *
- * To do this we create a map from plugSet to a list of plugs selected. This ensure that when
- * a user selects a plug from the artificer set, it won't appear to the user that a plug was
- * selected from the bucket specific set.
- */
-function assignPlugsToPlugSets(
-  plugSets: PlugSet[],
-  initiallySelected: PluggableInventoryItemDefinition[]
-) {
-  const plugsByPlugSetHash: PlugsByPlugSetHash = {};
-
-  for (const plug of initiallySelected) {
-    // Find all the possible sets this plug could go in and sort them so the set with the
-    // smallest number of options is first. Because artificer armor has a socket that is a
-    // subset of the normal slot specific sockets, this ensure we will fill it with plugs
-    // first.
-    const possibleSets = plugSets
-      .filter((set) => set.plugs.some((p) => p.hash === plug.hash))
-      .sort(compareBy((set) => set.plugs.length));
-
-    for (const set of possibleSets) {
-      const selectedForPlugSet = plugsByPlugSetHash[set.plugSetHash] || [];
-      if (selectedForPlugSet.length < set.maxSelectable) {
-        selectedForPlugSet.push(plug);
-        plugsByPlugSetHash[set.plugSetHash] = selectedForPlugSet;
-        break;
-      }
-    }
-  }
-
-  return plugsByPlugSetHash;
 }
