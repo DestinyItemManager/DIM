@@ -3,6 +3,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
+import type { ItemTierName } from 'app/search/d2-known-values';
 import { DamageType, DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -14,7 +15,7 @@ import ReactDOM from 'react-dom';
 import { DimItem } from '../inventory/item-types';
 import styles from './ItemPopupHeader.m.scss';
 
-const tierClassName = {
+const tierClassName: Partial<Record<ItemTierName, string>> = {
   Common: styles.common,
   Uncommon: styles.uncommon,
   Rare: styles.rare,

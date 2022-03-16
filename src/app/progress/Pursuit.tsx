@@ -6,7 +6,7 @@ import { isBooleanObjective } from 'app/inventory/store/objectives';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { percent } from 'app/shell/filters';
+import { percent } from 'app/shell/formatters';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import React from 'react';

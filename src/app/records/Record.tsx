@@ -4,7 +4,7 @@ import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { Reward } from 'app/progress/Reward';
-import { percent } from 'app/shell/filters';
+import { percent } from 'app/shell/formatters';
 import { RootState } from 'app/store/types';
 import {
   DestinyItemQuantity,
