@@ -1,10 +1,10 @@
 import { t } from 'app/i18next-t';
 import { D1ProgressionHashes } from 'app/search/d1-known-values';
+import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import React from 'react';
 import PressTip from '../dim-ui/PressTip';
 import { D1Store } from '../inventory/store-types';
-import { percent } from '../shell/filters';
 import styles from './CharacterHeaderXP.m.scss';
 
 function getLevelBar(store: D1Store) {

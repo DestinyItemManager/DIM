@@ -7,6 +7,7 @@ import {
   isRoundsWonObjective,
 } from 'app/inventory/store/objectives';
 import { useDefinitions } from 'app/manifest/selectors';
+import { percent } from 'app/shell/formatters';
 import { timerDurationFromMs } from 'app/utils/time';
 import {
   DestinyObjectiveDefinition,
@@ -16,7 +17,6 @@ import {
 import clsx from 'clsx';
 import React from 'react';
 import '../item-popup/ItemObjectives.scss';
-import { percent } from '../shell/filters';
 import ObjectiveDescription from './ObjectiveDescription';
 
 export default function Objective({

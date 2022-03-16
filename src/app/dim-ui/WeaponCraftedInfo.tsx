@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { DimCrafted } from 'app/inventory/item-types';
-import { percent } from 'app/shell/filters';
+import { percent } from 'app/shell/formatters';
 import React from 'react';
 
 /**

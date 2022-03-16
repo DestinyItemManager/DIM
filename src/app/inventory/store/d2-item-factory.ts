@@ -2,6 +2,7 @@ import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
 import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
 import {
+  D2ItemTiers,
   d2MissingIcon,
   THE_FORBIDDEN_BUCKET,
   uniqueEquipBuckets,
@@ -48,8 +49,6 @@ import { buildObjectives } from './objectives';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
-// Maps tierType to tierTypeName in English
-const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
 
 const collectiblesByItemHash = _.once(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
@@ -465,8 +464,8 @@ export function makeItem(
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
     itemCategoryHashes: itemDef.itemCategoryHashes || [], // see defs.ItemCategory
-    tier: tiers[itemDef.inventory!.tierType] || 'Common',
-    isExotic: tiers[itemDef.inventory!.tierType] === 'Exotic',
+    tier: D2ItemTiers[itemDef.inventory!.tierType] || 'Common',
+    isExotic: D2ItemTiers[itemDef.inventory!.tierType] === 'Exotic',
     name,
     description: displayProperties.description,
     icon: overrideStyleItem?.displayProperties.icon || displayProperties.icon || d2MissingIcon,

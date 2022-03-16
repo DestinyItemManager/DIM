@@ -3,13 +3,13 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { sortItems } from 'app/shell/item-comparators';
 import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import { itemSortOrderSelector } from '../settings/item-sort';
-import { sortItems } from '../shell/filters';
 import styles from './SearchResults.m.scss';
 
 /**
