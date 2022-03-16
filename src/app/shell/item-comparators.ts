@@ -128,6 +128,12 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   acquisitionRecency: acquisitionRecencyComparator,
   element: compareBy((item: DimItem) => item.element?.enumValue ?? Number.MAX_SAFE_INTEGER),
   masterworked: compareBy((item: DimItem) => (item.masterwork ? 0 : 1)),
+  crafted: compareBy((item: DimItem) => (item.crafted ? 0 : 1)),
+  deepsight: compareBy((item: DimItem) =>
+    // deepsight incomplete -> deepsight complete -> no deepsight
+    // in order of "needs addressing"? ish?
+    item.deepsightInfo ? (item.deepsightInfo.complete ? 2 : 1) : 3
+  ),
   default: () => 0,
 };
 
