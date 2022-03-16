@@ -1,0 +1,13 @@
+.setFilterButton {
+  display: inline-block;
+  cursor: pointer;
+  color: #888;
+  background-color: #222;
+  padding: 0 6px;
+  border-radius: 4px;
+  text-align: center;
+  &:hover {
+    background-color: #68a0b7;
+    color: #222;
+  }
+}

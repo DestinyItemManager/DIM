@@ -1,3 +1,4 @@
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import PressTip from 'app/dim-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
@@ -53,6 +54,7 @@ function CharacterStat({ stats, storeId, className, showTier }: CharacterStatPro
             >
               <img src={stat.icon} alt={stat.name} />
               <div>
+                {/* if stat.hash is negative, this is one of our custom stats */}
                 {stat.hash < 0 ? (
                   <span className="powerStat">
                     <FractionalPowerLevel power={stat.value} />
@@ -60,8 +62,12 @@ function CharacterStat({ stats, storeId, className, showTier }: CharacterStatPro
                 ) : (
                   stat.value
                 )}
-                {(stat.hasClassified || stat.differentEquippableMaxGearPower) && (
-                  <sup className="asterisk">*</sup>
+                {stat.statProblems?.notOnStore && stat.hash === -3 ? (
+                  <AlertIcon className="warningIcon" />
+                ) : (
+                  (stat.statProblems?.hasClassified || stat.statProblems?.notEquippable) && (
+                    <sup className="asterisk">*</sup>
+                  )
                 )}
               </div>
             </div>
@@ -75,14 +81,17 @@ function CharacterStat({ stats, storeId, className, showTier }: CharacterStatPro
 export function PowerFormula({ stats, storeId }: { stats: DimStore['stats']; storeId?: string }) {
   const powerTooltip = (stat: DimCharacterStat): React.ReactNode => (
     <>
-      {`${stat.name}${stat.hasClassified ? `\n\n${t('Loadouts.Classified')}` : ''}`}
+      {stat.name}
+      {stat.statProblems?.hasClassified && `\n\n${t('Loadouts.Classified')}`}
       {stat.richTooltip && (
         <>
           <hr />
           <div className="richTooltipWrapper">
             {stat.richTooltip}
-            {stat.differentEquippableMaxGearPower && (
-              <div className="tooltipFootnote">* {t('General.ClickForDetails')}</div>
+            {(stat.statProblems?.notEquippable || stat.statProblems?.notOnStore) && (
+              <div className="tooltipFootnote">
+                {stat.statProblems?.notOnStore ? <AlertIcon /> : '*'} {t('General.ClickForDetails')}
+              </div>
             )}
           </div>
         </>

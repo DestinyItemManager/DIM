@@ -5,8 +5,9 @@ on:
     inputs:
       patch:
         description: 'Should this be a patch release?'
+        type: boolean
         required: true
-        default: 'true'
+        default: true
   schedule:
     # Deploy at 5pm Sunday PST, which is 1am Monday UTC
     # * is a special character in YAML so you have to quote this string
@@ -42,12 +43,12 @@ jobs:
       - name: set feature
         if: ${{ !github.event.inputs.patch }}
         run: |
-          echo "build_level='feature'" >> $GITHUB_ENV
+          echo "build_level=feature" >> $GITHUB_ENV
 
       - name: set bug
         if: ${{ github.event.inputs.patch }}
         run: |
-          echo "build_level='bug'" >> $GITHUB_ENV
+          echo "build_level=bug" >> $GITHUB_ENV
 
       - name: Bump release version
         id: bump_version
@@ -59,6 +60,11 @@ jobs:
       - name: set version
         run: |
           echo "VERSION=${{ steps.bump_version.outputs.next-version }}" >> $GITHUB_ENV
+
+      - name: Update Version in package.json
+        uses: reedyuk/npm-version@1.1.1
+        with:
+          version: ${{ env.VERSION }}
 
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline

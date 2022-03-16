@@ -41,7 +41,7 @@ export default function LoadoutDrawerFooter({
 }: {
   loadout: Readonly<Loadout>;
   isNew: boolean;
-  onSaveLoadout(e: React.FormEvent, saveAsNew?: boolean): void;
+  onSaveLoadout(e: React.FormEvent, saveAsNew: boolean): void;
   onDeleteLoadout(): void;
 }) {
   const clashingLoadout = useSelector(clashingLoadoutSelector(loadout));

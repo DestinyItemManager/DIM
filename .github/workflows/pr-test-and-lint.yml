@@ -71,7 +71,7 @@ jobs:
 
       - name: ESLint (Forked)
         if: github.event.pull_request.head.repo.full_name != github.repository
-        run: yarn lint:cached
+        run: yarn lintcached
 
       - name: Save ESLint Report JSON (Non-Forked)
         if: github.event.pull_request.head.repo.full_name == github.repository

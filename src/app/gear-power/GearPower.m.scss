@@ -134,9 +134,12 @@
     }
   }
 
+  .notes {
+    max-width: 400px;
+  }
   .footNote {
     margin: 10px auto 0;
-    opacity: 0.7;
+    color: #999;
     max-width: 400px;
   }
 }

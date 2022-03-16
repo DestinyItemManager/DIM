@@ -3,12 +3,12 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
+import { getLoadoutStats, singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
@@ -50,9 +50,9 @@ export default function LoadoutEditBucket({
     [bucketHash: number]: number[] | undefined;
   };
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
-  onClickWarnItem: (item: DimItem) => void;
-  onToggleEquipped: (item: DimItem) => void;
-  onRemoveItem: (item: DimItem) => void;
+  onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
+  onToggleEquipped: (resolvedItem: ResolvedLoadoutItem) => void;
+  onRemoveItem: (resolvedItem: ResolvedLoadoutItem) => void;
   children?: React.ReactNode;
 }) {
   const buckets = useSelector(bucketsSelector)!;
@@ -150,9 +150,9 @@ function ItemBucket({
   items: ResolvedLoadoutItem[];
   equippedContent?: React.ReactNode;
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
-  onClickWarnItem: (item: DimItem) => void;
-  onRemoveItem: (item: DimItem) => void;
-  onToggleEquipped: (item: DimItem) => void;
+  onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
+  onRemoveItem: (resolvedItem: ResolvedLoadoutItem) => void;
+  onToggleEquipped: (resolvedItem: ResolvedLoadoutItem) => void;
 }) {
   const bucketHash = bucket.hash;
   const [equipped, unequipped] = _.partition(items, (li) => li.loadoutItem.equip);
@@ -162,12 +162,11 @@ function ItemBucket({
   const handlePlaceholderClick = (equip: boolean) => onClickPlaceholder({ bucket, equip });
 
   // TODO: plumb through API from context??
-  // TODO: expose a menu item for adding more items?
-  // TODO: add-unequipped button?
   // T0DO: customize buttons in item popup?
   // TODO: draggable items?
 
-  const showAddUnequipped = equipped.length > 0 && unequipped.length < bucket.capacity - 1;
+  const maxSlots = singularBucketHashes.includes(bucket.hash) ? 1 : bucket.capacity;
+  const showAddUnequipped = equipped.length > 0 && unequipped.length < maxSlots - 1;
 
   const addUnequipped = showAddUnequipped && (
     <button
@@ -189,27 +188,27 @@ function ItemBucket({
             className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
             key={index}
           >
-            {items.map(({ item, loadoutItem, missing }) => (
+            {items.map((li) => (
               <ClosableContainer
-                key={item.id}
-                onClose={() => onRemoveItem(item)}
+                key={li.item.id}
+                onClose={() => onRemoveItem(li)}
                 showCloseIconOnHover
               >
                 <ItemPopupTrigger
-                  item={item}
-                  extraData={{ socketOverrides: loadoutItem.socketOverrides }}
+                  item={li.item}
+                  extraData={{ socketOverrides: li.loadoutItem.socketOverrides }}
                 >
                   {(ref, onClick) => (
                     <div
                       className={clsx({
-                        [styles.missingItem]: missing,
+                        [styles.missingItem]: li.missing,
                       })}
                     >
                       <ConnectedInventoryItem
-                        item={item}
+                        item={li.item}
                         innerRef={ref}
-                        onClick={missing ? () => onClickWarnItem(item) : onClick}
-                        onDoubleClick={() => onToggleEquipped(item)}
+                        onClick={li.missing ? () => onClickWarnItem(li) : onClick}
+                        onDoubleClick={() => onToggleEquipped(li)}
                       />
                     </div>
                   )}

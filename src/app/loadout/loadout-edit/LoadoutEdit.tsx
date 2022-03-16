@@ -1,11 +1,11 @@
 import { t } from 'app/i18next-t';
 import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import {
   createSocketOverridesFromEquipped,
   extractArmorModHashes,
@@ -41,18 +41,15 @@ export default function LoadoutEdit({
   onClickSubclass,
   onClickPlaceholder,
   onClickWarnItem,
-  onRemoveItem,
 }: {
   loadout: Loadout;
   store: DimStore;
   stateDispatch: React.Dispatch<Action>;
   onClickSubclass: (subclass: DimItem | undefined) => void;
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
-  onClickWarnItem: (item: DimItem) => void;
-  onRemoveItem: (item: DimItem) => void;
+  onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
 }) {
   const defs = useD2Definitions()!;
-  const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
@@ -85,25 +82,20 @@ export default function LoadoutEdit({
     // TODO: do these all in one action
     for (const li of items.concat(warnitems)) {
       if (li.item.bucket.sort === category && li.item.bucket.hash !== BucketHashes.Subclass) {
-        stateDispatch({ type: 'removeItem', item: li.item, items });
+        stateDispatch({ type: 'removeItem', resolvedItem: li });
       }
     }
   };
 
-  const handleClearSubclass = () => {
-    // TODO: do these all in one action
-    if (subclass) {
-      stateDispatch({ type: 'removeItem', item: subclass.item, items });
-    }
-  };
+  const onRemoveItem = (resolvedItem: ResolvedLoadoutItem) =>
+    stateDispatch({ type: 'removeItem', resolvedItem });
+
+  const handleClearSubclass = () => subclass && onRemoveItem(subclass);
 
   const updateLoadout = (loadout: Loadout) => stateDispatch({ type: 'update', loadout });
 
-  const onAddItem = useCallback(
-    (item: DimItem, equip?: boolean) =>
-      stateDispatch({ type: 'addItem', item, stores, items, equip }),
-    [items, stores, stateDispatch]
-  );
+  const onAddItem = (item: DimItem, equip?: boolean) =>
+    stateDispatch({ type: 'addItem', item, equip });
 
   const handleSyncModsFromEquipped = () => {
     const mods: number[] = [];
@@ -125,14 +117,14 @@ export default function LoadoutEdit({
   ) => stateDispatch({ type: 'updateModsByBucket', modsByBucket });
 
   const handleApplySocketOverrides = useCallback(
-    (item: DimItem, socketOverrides: SocketOverrides) => {
-      stateDispatch({ type: 'applySocketOverrides', item, socketOverrides });
+    (resolvedItem: ResolvedLoadoutItem, socketOverrides: SocketOverrides) => {
+      stateDispatch({ type: 'applySocketOverrides', resolvedItem, socketOverrides });
     },
     [stateDispatch]
   );
 
-  const handleToggleEquipped = (item: DimItem) => {
-    stateDispatch({ type: 'equipItem', item, items });
+  const handleToggleEquipped = (resolvedItem: ResolvedLoadoutItem) => {
+    stateDispatch({ type: 'equipItem', resolvedItem });
   };
 
   const handleClearUnsetModsChanged = (enabled: boolean) => {
@@ -156,7 +148,6 @@ export default function LoadoutEdit({
 
   const anyClass = loadout.classType === DestinyClass.Unknown;
 
-  // TODO: i18n the category title
   // TODO: dedupe styles/code
   return (
     <div className={styles.contents}>
@@ -202,7 +193,7 @@ export default function LoadoutEdit({
                   subclass={subclass.item}
                   socketOverrides={subclass.loadoutItem.socketOverrides ?? {}}
                   onClose={() => setPlugDrawerOpen(false)}
-                  onAccept={(overrides) => handleApplySocketOverrides(subclass.item, overrides)}
+                  onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
                 />,
                 document.body
               )}
@@ -315,8 +306,10 @@ function setLoadoutSubclassFromEquipped(
   onUpdateLoadout(newLoadout);
 }
 
+// TODO: push into reducer
 export function fillLoadoutFromEquipped(
   loadout: Loadout,
+  // TODO: knock this out?
   items: DimItem[],
   dimStore: DimStore,
   onUpdateLoadout: (loadout: Loadout) => void,
@@ -399,6 +392,7 @@ export function fillLoadoutFromEquipped(
   onUpdateLoadout(newLoadout);
 }
 
+// TODO: push into reducer?
 export async function fillLoadoutFromUnequipped(
   loadout: Loadout,
   dimStore: DimStore,
@@ -410,8 +404,6 @@ export async function fillLoadoutFromUnequipped(
   }
 
   const items = getUnequippedItemsForLoadout(dimStore, category);
-
-  // TODO: this isn't right - `items` isn't being updated after each add
   for (const item of items) {
     add(item, false);
   }

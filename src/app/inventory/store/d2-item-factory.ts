@@ -123,6 +123,8 @@ export function processItems(
           hasDefinition: Boolean(itemDef),
           hasName: Boolean(itemDef?.displayProperties.name),
           hasQuestLineName: Boolean(itemDef?.setData?.questLineName),
+          itemBucketHash: item.bucketHash,
+          defBucketHash: itemDef?.inventory?.bucketTypeHash,
           bucketName: bucketDef.displayProperties.name,
         });
         owner.hadErrors = true;
@@ -297,7 +299,7 @@ export function makeItem(
   // The same thing can happen with mods!
   const needsModsFix =
     itemDef.inventory!.bucketTypeHash === THE_FORBIDDEN_BUCKET &&
-    item.bucketHash === BucketHashes.Modifications;
+    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Mods_Mod);
 
   // this is where the item would go normally (if not vaulted/postmastered).
   // it is stored in DimItem.bucket

@@ -1,26 +1,25 @@
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import ItemIcon from 'app/inventory/ItemIcon';
-import { allItemsSelector, bucketsSelector, storesSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import 'app/inventory/Stores.scss';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { deleteLoadout, updateLoadout } from 'app/loadout-drawer/actions';
 import { stateReducer } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { addItem$, editLoadout$ } from 'app/loadout-drawer/loadout-events';
+import { addItem$ } from 'app/loadout-drawer/loadout-events';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import LoadoutDrawerDropTarget from 'app/loadout-drawer/LoadoutDrawerDropTarget';
 import { useDefinitions } from 'app/manifest/selectors';
-import { AppIcon, faExclamationTriangle } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useCallback, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 import './loadout-drawer.scss';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
@@ -30,34 +29,35 @@ import LoadoutDrawerOptions from './LoadoutDrawerOptions';
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit
  * loadouts from this interface. This one is only used for D1, see LoadoutDrawer2 for D2's new loadout editor.
  */
-export default function LoadoutDrawer() {
+export default function LoadoutDrawer({
+  initialLoadout,
+  storeId,
+  isNew,
+  showClass,
+  onClose,
+}: {
+  initialLoadout: Loadout;
+  /**
+   * The store that provides context to how this loadout is being edited from.
+   * The store this edit session was launched from. This is to help pick which
+   * mods are enabled, which subclass items to show, etc. Defaults to current store.
+   */
+  storeId?: string;
+  isNew: boolean;
+  showClass: boolean;
+  onClose(): void;
+}) {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
 
   const allItems = useSelector(allItemsSelector);
-  const stores = useSelector(storesSelector);
   const buckets = useSelector(bucketsSelector)!;
   const [showingItemPicker, setShowingItemPicker] = useState(false);
 
   // All state and the state of the loadout is managed through this reducer
-  const [{ loadout, showClass, storeId, isNew }, stateDispatch] = useReducer(stateReducer, {
-    showClass: true,
-    isNew: false,
+  const [{ loadout }, stateDispatch] = useReducer(stateReducer(defs), {
+    loadout: initialLoadout,
   });
-
-  // The loadout to edit comes in from the editLoadout$ observable
-  useEventBusListener(
-    editLoadout$,
-    useCallback(({ loadout, storeId, showClass, isNew }) => {
-      stateDispatch({
-        type: 'editLoadout',
-        loadout,
-        storeId,
-        showClass: Boolean(showClass),
-        isNew: Boolean(isNew),
-      });
-    }, [])
-  );
 
   const loadoutItems = loadout?.items;
 
@@ -72,37 +72,28 @@ export default function LoadoutDrawer() {
       stateDispatch({
         type: 'addItem',
         item,
-        items,
         equip,
-        stores,
       }),
-    [items, stores]
+    []
   );
 
-  const onRemoveItem = (item: DimItem, e?: React.MouseEvent) => {
+  const onRemoveItem = (resolvedItem: ResolvedLoadoutItem, e?: React.MouseEvent) => {
     e?.stopPropagation();
-    stateDispatch({ type: 'removeItem', item, items });
+    stateDispatch({ type: 'removeItem', resolvedItem });
   };
 
-  const onEquipItem = (item: DimItem) => stateDispatch({ type: 'equipItem', item, items });
+  const onEquipItem = (resolvedItem: ResolvedLoadoutItem) =>
+    stateDispatch({ type: 'equipItem', resolvedItem });
 
   /**
-   * If an item comes in on the addItem$ rx observable, add it.
+   * If an item comes in on the addItem$ observable, add it.
    */
   useEventBusListener(addItem$, onAddItem);
 
-  const close = () => {
-    stateDispatch({ type: 'reset' });
-    setShowingItemPicker(false);
-  };
-
-  // Close the sheet on navigation
-  const { pathname } = useLocation();
-  useEffect(close, [pathname]);
-
   /** Prompt the user to select a replacement for a missing item. */
-  const fixWarnItem = async (warnItem: DimItem) => {
+  const fixWarnItem = async (li: ResolvedLoadoutItem) => {
     const loadoutClassType = loadout?.classType;
+    const warnItem = li.item;
 
     setShowingItemPicker(true);
     try {
@@ -122,7 +113,7 @@ export default function LoadoutDrawer() {
       });
 
       onAddItem(item);
-      onRemoveItem(warnItem);
+      onRemoveItem(li);
     } catch (e) {
     } finally {
       setShowingItemPicker(false);
@@ -130,8 +121,9 @@ export default function LoadoutDrawer() {
   };
 
   const onSaveLoadout = (
-    e: React.MouseEvent,
-    loadoutToSave: Readonly<Loadout> | undefined = loadout
+    e: React.FormEvent,
+    loadoutToSave: Readonly<Loadout> | undefined = loadout,
+    close: () => void
   ) => {
     e.preventDefault();
     if (!loadoutToSave) {
@@ -149,7 +141,7 @@ export default function LoadoutDrawer() {
     close();
   };
 
-  const saveAsNew = (e: React.MouseEvent) => {
+  const saveAsNew = (e: React.FormEvent, close: () => void) => {
     e.preventDefault();
 
     if (!loadout) {
@@ -159,7 +151,7 @@ export default function LoadoutDrawer() {
       ...loadout,
       id: uuidv4(), // Let it be a new ID
     };
-    onSaveLoadout(e, newLoadout);
+    onSaveLoadout(e, newLoadout, close);
   };
 
   if (!loadout) {
@@ -174,7 +166,7 @@ export default function LoadoutDrawer() {
   const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
     stateDispatch({ type: 'update', loadout: { ...loadout, notes: e.target.value } });
 
-  const header = (
+  const header = ({ onClose }: { onClose(): void }) => (
     <div className="loadout-drawer-header">
       <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
       <LoadoutDrawerOptions
@@ -182,8 +174,8 @@ export default function LoadoutDrawer() {
         showClass={showClass}
         isNew={isNew}
         updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
-        saveLoadout={isNew ? saveAsNew : onSaveLoadout}
-        saveAsNew={saveAsNew}
+        saveLoadout={(e) => (isNew ? saveAsNew(e, onClose) : onSaveLoadout(e, loadout, onClose))}
+        saveAsNew={(e) => saveAsNew(e, onClose)}
         deleteLoadout={onDeleteLoadout}
       />
       {loadout.notes !== undefined && (
@@ -198,21 +190,21 @@ export default function LoadoutDrawer() {
   );
 
   return (
-    <Sheet onClose={close} header={header} disabled={showingItemPicker}>
+    <Sheet onClose={onClose} header={header} disabled={showingItemPicker}>
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
           <LoadoutDrawerDropTarget onDroppedItem={onAddItem} classType={loadout.classType}>
             {warnitems.length > 0 && (
               <div className="loadout-contents">
                 <p>
-                  <AppIcon className="warning-icon" icon={faExclamationTriangle} />
+                  <AlertIcon />
                   {t('Loadouts.VendorsCannotEquip')}
                 </p>
                 <div className="loadout-warn-items">
-                  {warnitems.map(({ item }) => (
-                    <div key={item.id} className="loadout-item" onClick={() => fixWarnItem(item)}>
-                      <ClosableContainer onClose={(e) => onRemoveItem(item, e)}>
-                        <ItemIcon item={item} />
+                  {warnitems.map((li) => (
+                    <div key={li.item.id} className="loadout-item" onClick={() => fixWarnItem(li)}>
+                      <ClosableContainer onClose={(e) => onRemoveItem(li, e)}>
+                        <ItemIcon item={li.item} />
                       </ClosableContainer>
                     </div>
                   ))}

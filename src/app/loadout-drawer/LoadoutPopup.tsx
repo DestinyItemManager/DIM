@@ -1,4 +1,5 @@
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
@@ -28,7 +29,6 @@ import {
   banIcon,
   editIcon,
   engramIcon,
-  faExclamationTriangle,
   faList,
   faRandom,
   levellingIcon,
@@ -195,7 +195,7 @@ function LoadoutPopup({
     ? loadouts.filter(
         (loadout) =>
           plainString(loadout.name, language).includes(loadoutQueryPlain) ||
-          (loadout.notes && plainString(loadout.name, language).includes(loadoutQueryPlain))
+          (loadout.notes && plainString(loadout.notes, language).includes(loadoutQueryPlain))
       )
     : loadouts;
 
@@ -333,9 +333,8 @@ function LoadoutPopup({
                 <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
               )}
               {isMissingItems(defs, allItems, dimStore.id, loadout) && (
-                <AppIcon
+                <AlertIcon
                   className={styles.warningIcon}
-                  icon={faExclamationTriangle}
                   title={t('Loadouts.MissingItemsWarning')}
                 />
               )}
