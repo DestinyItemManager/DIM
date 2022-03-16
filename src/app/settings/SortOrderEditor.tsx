@@ -153,7 +153,9 @@ function SortEditorItem(props: { index: number; item: SortProperty }) {
           <span title="Toggle Forward/Reversed" className="sort-button direction-toggle">
             <AppIcon
               icon={item.reversed ? maximizeIcon : minimizeIcon}
-              className={item.reversed ? 'sort-reverse' : 'sort-forward'}
+              className={
+                item.enabled ? (item.reversed ? 'sort-reverse' : 'sort-forward') : undefined
+              }
             />
           </span>
         </div>
