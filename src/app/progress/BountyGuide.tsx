@@ -6,6 +6,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { itemCategoryIcons } from 'app/organizer/item-category-icons';
+import { useSetting } from 'app/settings/hooks';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
@@ -65,6 +66,7 @@ export default function BountyGuide({
 }) {
   const defs = useD2Definitions()!;
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const [showCompletedBountiesCount] = useSetting('progressBountiesCompletedCountShow');
 
   const pullItemCategory = async (e: React.MouseEvent, itemCategory: number) => {
     e.stopPropagation();
@@ -94,7 +96,7 @@ export default function BountyGuide({
     const expired = i.pursuit?.expirationDate
       ? i.pursuit.expirationDate.getTime() < Date.now()
       : false;
-    if (!expired || i.complete) {
+    if (showCompletedBountiesCount ? !expired || i.complete : !expired && !i.complete) {
       const info = pursuitsInfo[i.hash];
       if (info) {
         for (const key in info) {
@@ -107,16 +109,15 @@ export default function BountyGuide({
     }
   }
 
-  const flattened: { type: DefType; value: number; bounties: DimItem[], completes: DimItem[] }[] = Object.entries(
-    mapped
-  ).flatMap(([type, mapping]: [DefType, { [key: number]: DimItem[] }]) =>
-    Object.entries(mapping).map(([value, bounties]) => ({
-      type,
-      value: parseInt(value, 10),
-      bounties : bounties.filter((item)=> !item.complete),
-      completes: bounties.filter((item)=> item.complete)
-    }))
-  );
+  const flattened: { type: DefType; value: number; bounties: DimItem[]; completes: DimItem[] }[] =
+    Object.entries(mapped).flatMap(([type, mapping]: [DefType, { [key: number]: DimItem[] }]) =>
+      Object.entries(mapping).map(([value, bounties]) => ({
+        type,
+        value: parseInt(value, 10),
+        bounties: showCompletedBountiesCount ? bounties.filter((item) => !item.complete) : bounties,
+        completes: showCompletedBountiesCount ? bounties.filter((item) => item.complete) : [],
+      }))
+    );
 
   if (flattened.length === 0) {
     return null;
@@ -229,7 +230,9 @@ export default function BountyGuide({
                 }
               })()}
               <span className={styles.count}>({bounties.length})</span>
-              <span className={styles.count}>({completes.length})</span>
+              {showCompletedBountiesCount && (
+                <span className={styles.count}>({completes.length})</span>
+              )}
               {type === 'ItemCategory' && (
                 <span
                   className={styles.pullItem}

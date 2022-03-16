@@ -872,6 +872,8 @@
     "PerkDisplay": "Perk display in item popup",
     "PerkGrid": "Grid",
     "PerkList": "List",
+    "Progress": "Progress Display",
+    "ProgressBountiesCompletedCountShow": "Show completed bounties count",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
     "SetSort": "Sort items by:",

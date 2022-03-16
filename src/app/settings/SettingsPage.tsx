@@ -361,6 +361,18 @@ export default function SettingsPage() {
             )}
           </section>
 
+          <section id="progress">
+            <h2>{t('Settings.Progress')}</h2>
+            <div className="setting">
+              <Checkbox
+                label={t('Settings.ProgressBountiesCompletedCountShow')}
+                name="progressBountiesCompletedCountShow"
+                value={settings.progressBountiesCompletedCountShow}
+                onChange={onCheckChange}
+              />
+            </div>
+          </section>
+
           <section id="inventory">
             <h2>{t('Settings.Inventory')}</h2>
             <div className="setting">
