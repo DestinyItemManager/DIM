@@ -537,7 +537,9 @@ function ItemTable({
       {filteredColumns.map((column: ColumnDefinition) => (
         <div
           key={column.id}
-          className={clsx(styles[column.id], styles.header)}
+          className={clsx(styles[column.id], styles.header, {
+            [styles.stats]: ['stats', 'baseStats'].includes(column.columnGroup?.id ?? ''),
+          })}
           role="columnheader"
           aria-sort="none"
         >

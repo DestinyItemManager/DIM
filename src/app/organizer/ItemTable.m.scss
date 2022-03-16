@@ -73,6 +73,10 @@ $content-cells: 5;
     width: 16px;
     vertical-align: bottom;
   }
+
+  &.stats {
+    text-align: right;
+  }
 }
 
 .sorter {

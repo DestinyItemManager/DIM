@@ -1,6 +1,9 @@
 ## Next
 
+* Fix organizer stats header alignment
+
 ## 7.8.3 <span class="changelog-date">(2022-03-15)</span>
+
 * Fixed loadout search filter to include notes
 
 ## 7.8.2 <span class="changelog-date">(2022-03-14)</span>
