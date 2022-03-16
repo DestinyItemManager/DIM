@@ -27,7 +27,7 @@ export default function ArmoryPage({ account }: { account: DestinyAccount }) {
 
   return (
     <div className="dim-page">
-      <Armory key={itemHash} itemHash={itemHash} sockets={sockets} />
+      <Armory key={itemHash} itemHash={itemHash} realItemSockets={sockets} />
     </div>
   );
 }
