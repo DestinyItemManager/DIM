@@ -29,7 +29,7 @@ import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
 import { useSetSetting } from './hooks';
 import { LoadoutSort, Settings } from './initial-settings';
-import { itemSortOrder } from './item-sort';
+import { itemSortSettings } from './item-sort';
 import Select, { mapToOptions } from './Select';
 import './settings.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
@@ -151,6 +151,10 @@ export default function SettingsPage() {
       'itemSortOrderCustom',
       sortOrder.filter((o) => o.enabled).map((o) => o.id)
     );
+    setSetting(
+      'itemSortReversals',
+      sortOrder.filter((o) => o.reversed).map((o) => o.id)
+    );
   };
 
   const characterSortOrderChanged = (order: string[]) => {
@@ -192,7 +196,7 @@ export default function SettingsPage() {
   }));
   vaultColOptions.unshift({ value: 999, name: t('Settings.ColumnSizeAuto') });
 
-  const sortOrder = itemSortOrder(settings);
+  const sortSettings = itemSortSettings(settings);
 
   const itemSortCustom = _.sortBy(
     _.map(
@@ -200,11 +204,12 @@ export default function SettingsPage() {
       (displayName, id): SortProperty => ({
         id,
         displayName,
-        enabled: sortOrder.includes(id),
+        enabled: sortSettings.sortOrder.includes(id),
+        reversed: sortSettings.sortReversals.includes(id),
       })
     ),
     (o) => {
-      const index = sortOrder.indexOf(o.id);
+      const index = sortSettings.sortOrder.indexOf(o.id);
       return index >= 0 ? index : 999;
     }
   );
