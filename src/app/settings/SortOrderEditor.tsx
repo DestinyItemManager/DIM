@@ -6,6 +6,8 @@ import {
   AppIcon,
   dragHandleIcon,
   enabledIcon,
+  maximizeIcon,
+  minimizeIcon,
   moveDownIcon,
   moveUpIcon,
   unselectedCheckIcon,
@@ -16,7 +18,7 @@ export interface SortProperty {
   readonly id: string;
   readonly displayName: string;
   readonly enabled: boolean;
-  // TODO, should we support up/down?
+  readonly reversed: boolean;
 }
 
 const SortEditorItemList = React.memo(({ order }: { order: SortProperty[] }) => (
@@ -61,9 +63,9 @@ export default function SortOrderEditor({
     moveItem(result.source.index, result.destination.index, true);
   };
 
-  const toggleItem = (index: number) => {
+  const toggleItem = (index: number, prop: 'enabled' | 'reversed') => {
     const orderArr = Array.from(order);
-    orderArr[index] = { ...orderArr[index], enabled: !orderArr[index].enabled };
+    orderArr[index] = { ...orderArr[index], [prop]: !orderArr[index][prop] };
     onSortOrderChanged(orderArr);
   };
 
@@ -82,7 +84,11 @@ export default function SortOrderEditor({
     } else if (target.classList.contains('sort-toggle')) {
       e.preventDefault();
       const index = getIndex();
-      toggleItem(index);
+      toggleItem(index, 'enabled');
+    } else if (target.classList.contains('direction-toggle')) {
+      e.preventDefault();
+      const index = getIndex();
+      toggleItem(index, 'reversed');
     }
   };
 
@@ -143,6 +149,12 @@ function SortEditorItem(props: { index: number; item: SortProperty }) {
           </span>
           <span className="sort-button sort-toggle">
             <AppIcon icon={item.enabled ? enabledIcon : unselectedCheckIcon} />
+          </span>
+          <span title="Toggle Forward/Reversed" className="sort-button direction-toggle">
+            <AppIcon
+              icon={item.reversed ? maximizeIcon : minimizeIcon}
+              className={item.reversed ? 'sort-reverse' : 'sort-forward'}
+            />
           </span>
         </div>
       )}

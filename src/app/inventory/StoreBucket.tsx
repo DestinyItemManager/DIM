@@ -14,7 +14,7 @@ import { shallowEqual } from 'fast-equals';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
-import { itemSortOrderSelector } from '../settings/item-sort';
+import { itemSortSettingsSelector } from '../settings/item-sort';
 import { addIcon, AppIcon } from '../shell/icons';
 import { InventoryBucket } from './inventory-buckets';
 import { DimItem } from './item-types';
@@ -42,7 +42,10 @@ interface StoreProps {
   storeClassType: DestinyClass;
   isVault: boolean;
   items: DimItem[];
-  itemSortOrder: string[];
+  itemSortSettings: {
+    sortOrder: string[];
+    sortReversals: string[];
+  };
   storeClassList: DestinyClass[];
   characterOrder: string;
 }
@@ -98,7 +101,7 @@ function mapStateToProps() {
       storeClassType: store.classType,
       isVault: store.isVault,
       items: internItems(items),
-      itemSortOrder: itemSortOrderSelector(state),
+      itemSortSettings: itemSortSettingsSelector(state),
       // We only need this property when this is a vault armor bucket
       storeClassList:
         store.isVault && bucket.inArmor
@@ -116,7 +119,7 @@ type Props = ProvidedProps & StoreProps;
  */
 function StoreBucket({
   items,
-  itemSortOrder,
+  itemSortSettings,
   bucket,
   storeId,
   destinyVersion,
@@ -152,7 +155,7 @@ function StoreBucket({
         {classTypeOrder.map((classType) => (
           <React.Fragment key={classType}>
             <ClassIcon classType={classType} className="armor-class-icon" />
-            {sortItems(itemsByClass[classType], itemSortOrder).map((item) => (
+            {sortItems(itemsByClass[classType], itemSortSettings).map((item) => (
               <StoreInventoryItem key={item.index} item={item} />
             ))}
           </React.Fragment>
@@ -163,10 +166,10 @@ function StoreBucket({
 
   const equippedItem = isVault ? undefined : items.find((i) => i.equipped);
   const unequippedItems = isVault
-    ? sortItems(items, itemSortOrder)
+    ? sortItems(items, itemSortSettings)
     : sortItems(
         items.filter((i) => !i.equipped),
-        itemSortOrder
+        itemSortSettings
       );
 
   return (
