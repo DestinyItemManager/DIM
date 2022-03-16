@@ -94,7 +94,7 @@ export default function BountyGuide({
     const expired = i.pursuit?.expirationDate
       ? i.pursuit.expirationDate.getTime() < Date.now()
       : false;
-    if (!i.complete && !expired) {
+    if (!expired || i.complete) {
       const info = pursuitsInfo[i.hash];
       if (info) {
         for (const key in info) {
@@ -107,13 +107,14 @@ export default function BountyGuide({
     }
   }
 
-  const flattened: { type: DefType; value: number; bounties: DimItem[] }[] = Object.entries(
+  const flattened: { type: DefType; value: number; bounties: DimItem[], completes: DimItem[] }[] = Object.entries(
     mapped
   ).flatMap(([type, mapping]: [DefType, { [key: number]: DimItem[] }]) =>
     Object.entries(mapping).map(([value, bounties]) => ({
       type,
       value: parseInt(value, 10),
-      bounties,
+      bounties : bounties.filter((item)=> !item.complete),
+      completes: bounties.filter((item)=> item.complete)
     }))
   );
 
@@ -148,7 +149,7 @@ export default function BountyGuide({
   return (
     <div className={styles.guide} onClick={clearSelection}>
       {flattened.map(
-        ({ type, value, bounties }) =>
+        ({ type, value, bounties, completes }) =>
           !skipTypes?.includes(type) && (
             <div
               key={type + value}
@@ -228,6 +229,7 @@ export default function BountyGuide({
                 }
               })()}
               <span className={styles.count}>({bounties.length})</span>
+              <span className={styles.count}>({completes.length})</span>
               {type === 'ItemCategory' && (
                 <span
                   className={styles.pullItem}
