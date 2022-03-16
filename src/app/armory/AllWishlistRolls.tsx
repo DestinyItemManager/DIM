@@ -21,8 +21,10 @@ export default function AllWishlistRolls({
   realAvailablePlugHashes,
 }: {
   item: DimItem;
-  // non-plugged, but available, plugs, from the real item this was spawned from.
-  // used to mark sockets as available
+  /**
+   * non-plugged, but available, plugs, from the real item this was spawned from.
+   * used to mark sockets as available
+   */
   realAvailablePlugHashes?: number[];
 }) {
   const wishlistRolls = useSelector(wishListRollsForItemHashSelector(item.hash));
@@ -61,8 +63,10 @@ function WishlistRolls({
 }: {
   wishlistRolls: WishListRoll[];
   item: DimItem;
-  // non-plugged, but available, plugs, from the real item this was spawned from.
-  // used to mark sockets as available
+  /**
+   * non-plugged, but available, plugs, from the real item this was spawned from.
+   * used to mark sockets as available
+   */
   realAvailablePlugHashes?: number[];
 }) {
   const groupedWishlistRolls = _.groupBy(wishlistRolls, (r) => r.notes || t('Armory.NoNotes'));

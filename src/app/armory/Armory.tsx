@@ -41,10 +41,12 @@ export default function Armory({
   realAvailablePlugHashes,
 }: {
   itemHash: number;
-  // this is used to pass a real DimItem's current "plugged" plugs, into the fake DimItem that Armory creates
+  /** this is used to pass a real DimItem's current "plugged" plugs, into the fake DimItem that Armory creates */
   realItemSockets?: SocketOverrides;
-  // non-plugged, but available, plugs, from the real item this was spawned from.
-  // used to mark sockets as available
+  /**
+   * non-plugged, but available, plugs, from the real item this was spawned from.
+   * used to mark sockets as available
+   */
   realAvailablePlugHashes?: number[];
 }) {
   const dispatch = useThunkDispatch();
