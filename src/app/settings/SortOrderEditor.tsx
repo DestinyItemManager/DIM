@@ -1,3 +1,4 @@
+import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -150,7 +151,7 @@ function SortEditorItem(props: { index: number; item: SortProperty }) {
           <span className="sort-button sort-toggle">
             <AppIcon icon={item.enabled ? enabledIcon : unselectedCheckIcon} />
           </span>
-          <span title="Toggle Forward/Reversed" className="sort-button direction-toggle">
+          <span title={t('Settings.ReverseSort')} className="sort-button direction-toggle">
             <AppIcon
               icon={item.reversed ? maximizeIcon : minimizeIcon}
               className={
