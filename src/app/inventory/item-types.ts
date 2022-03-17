@@ -1,4 +1,5 @@
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import type { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import type { ItemTierName } from 'app/search/d2-known-values';
 import {
   DestinyAmmunitionType,
   DestinyBreakerTypeDefinition,
@@ -22,9 +23,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from './inventory-buckets';
 import { DimResonantElementTag } from './store/deepsight';
-
-/** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
-export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common' | 'Unknown' | 'Currency';
 
 /**
  * A generic DIM item, representing almost anything. This completely represents any D2 item, and most D1 items,
@@ -57,7 +55,7 @@ export interface DimItem {
   /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
   itemCategoryHashes: number[];
   /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). */
-  tier: Tier;
+  tier: ItemTierName;
   /** Is this an Exotic item? */
   isExotic: boolean;
   /** If this came from a vendor (instead of character inventory), this houses enough information to re-identify the item. */

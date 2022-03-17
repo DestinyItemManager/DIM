@@ -6,7 +6,7 @@ import {
   isTrialsPassage,
 } from 'app/inventory/store/objectives';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { percent } from 'app/shell/filters';
+import { percent } from 'app/shell/formatters';
 import { count } from 'app/utils/util';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';

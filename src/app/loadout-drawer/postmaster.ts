@@ -8,6 +8,7 @@ import {
   potentialSpaceLeftForItem,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
+import type { ItemTierName } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
@@ -19,6 +20,17 @@ import { executeMoveItem, MoveReservations } from '../inventory/item-move-servic
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
+
+// weight "move an item aside" options, according to their rarity
+const moveAsideWeighting: Record<ItemTierName, number> = {
+  Legendary: 4,
+  Rare: 3,
+  Uncommon: 2,
+  Common: 1,
+  Exotic: 0,
+  Currency: 0,
+  Unknown: 0,
+};
 
 export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets): ThunkResult {
   return async (dispatch) => {
@@ -42,15 +54,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
           const candidates = _.sortBy(
             items.filter((i) => !i.equipped && !i.notransfer),
             (i) => {
-              let value = {
-                Common: 0,
-                Uncommon: 1,
-                Rare: 2,
-                Legendary: 3,
-                Exotic: 4,
-                Currency: 5,
-                Unknown: 6,
-              }[i.tier];
+              let value = moveAsideWeighting[i.tier];
               // And low-stat
               value += i.power / 1000;
               return value;

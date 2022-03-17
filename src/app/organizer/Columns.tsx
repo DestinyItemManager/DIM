@@ -27,7 +27,7 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { statHashByName } from 'app/search/search-filter-values';
 import { quoteFilterString } from 'app/search/search-filters/freeform';
-import { getColor, percent } from 'app/shell/filters';
+import { getColor, percent } from 'app/shell/formatters';
 import {
   AppIcon,
   faCheck,

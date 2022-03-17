@@ -1,13 +1,13 @@
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { doShowTriage, ItemTriage } from 'app/item-triage/ItemTriage';
+import { percent } from 'app/shell/formatters';
 import { AppIcon, thumbsUpIcon } from 'app/shell/icons';
 import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
-import { percent } from '../shell/filters';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemDetails from './ItemDetails';
 import './ItemPopupBody.scss';

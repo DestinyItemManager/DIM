@@ -8,7 +8,7 @@ import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { allItemsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { useSetting } from 'app/settings/hooks';
-import { acquisitionRecencyComparator } from 'app/shell/filters';
+import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { AnimatePresence, motion, Spring } from 'framer-motion';

@@ -2,6 +2,7 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
+import { sortItems } from 'app/shell/item-comparators';
 import { RootState } from 'app/store/types';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -14,7 +15,6 @@ import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
 import { filterFactorySelector } from '../search/search-filter';
 import { itemSortOrderSelector } from '../settings/item-sort';
-import { sortItems } from '../shell/filters';
 import { ItemPickerState } from './item-picker';
 import './ItemPicker.scss';
 

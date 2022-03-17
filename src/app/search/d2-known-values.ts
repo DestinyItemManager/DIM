@@ -1,4 +1,4 @@
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { DestinyEnergyType, TierType } from 'bungie-api-ts/destiny2';
 import {
   BreakerTypeHashes,
   BucketHashes,
@@ -258,6 +258,31 @@ export const energyNamesByEnum: Record<DestinyEnergyType, string> = {
   [DestinyEnergyType.Subclass]: 'subclass',
   [DestinyEnergyType.Stasis]: 'stasis',
 };
+
+/**
+ * Maps TierType to tierTypeName in English and vice versa.
+ * The Bungie.net version of this enum is not representative of real game strings.
+ */
+// A manually constructed bi-directional enum,
+// because the `enum` keyword unfortunately returns type `string`.
+export const D2ItemTiers = {
+  Unknown: TierType.Unknown,
+  [TierType.Unknown]: 'Unknown',
+  Currency: TierType.Currency,
+  [TierType.Currency]: 'Currency',
+  Common: TierType.Basic,
+  [TierType.Basic]: 'Common',
+  Uncommon: TierType.Common,
+  [TierType.Common]: 'Uncommon',
+  Rare: TierType.Rare,
+  [TierType.Rare]: 'Rare',
+  Legendary: TierType.Superior,
+  [TierType.Superior]: 'Legendary',
+  Exotic: TierType.Exotic,
+  [TierType.Exotic]: 'Exotic',
+} as const;
+
+export type ItemTierName = keyof typeof D2ItemTiers & string;
 
 export const energyCapacityTypeNames = Object.values(energyNamesByEnum);
 
