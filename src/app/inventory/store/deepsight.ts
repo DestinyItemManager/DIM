@@ -8,6 +8,9 @@ export type DimResonantElementTag =
 export const resonantElementTags: DimResonantElementTag[] = Object.values(
   resonantElementTagsByObjectiveHash
 );
+export const resonantElementObjectiveHashes = Object.keys(resonantElementTagsByObjectiveHash).map(
+  (objectiveHashStr) => parseInt(objectiveHashStr, 10)
+);
 
 export function buildDeepsightInfo(
   item: DimItem,
