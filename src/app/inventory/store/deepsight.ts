@@ -52,7 +52,7 @@ function getResonantElements(item: DimItem, defs: D2ManifestDefinitions): DimRes
             if (def) {
               results.push({
                 tag: elementTag,
-                icon: def.displayProperties?.icon,
+                icon: def.displayProperties?.iconSequences[0]?.frames[1],
                 name: def.progressDescription,
               });
             }
