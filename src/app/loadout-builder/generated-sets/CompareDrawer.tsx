@@ -1,13 +1,13 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { updateLoadout } from 'app/loadout-drawer/actions';
-import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
+import { convertToLoadoutItem, findItemForLoadout } from 'app/loadout-drawer/loadout-utils';
 import LoadoutView from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -15,7 +15,6 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
-import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ArmorSet, LockableBucketHashes } from '../types';
@@ -50,11 +49,12 @@ function chooseInitialLoadout(
 }
 
 function createLoadoutUsingLOItems(
+  defs: D2ManifestDefinitions,
+  allItems: DimItem[],
+  storeId: string | undefined,
   setItems: DimItem[],
   subclass: ResolvedLoadoutItem | undefined,
   loadout: Loadout | undefined,
-  loadoutArmor: ResolvedLoadoutItem[],
-  loadoutSubclass: ResolvedLoadoutItem | undefined,
   params: LoadoutParameters,
   notes: string | undefined
 ) {
@@ -67,13 +67,15 @@ function createLoadoutUsingLOItems(
       }
 
       for (const item of draftLoadout.items) {
-        // Accessing id is safe: Armor is always instanced
-        const existingLoadoutItem = loadoutArmor.find((i) => i.item.id === item.id);
+        const existingLoadoutItem = findItemForLoadout(defs, allItems, storeId, item);
         const hasBeenReplaced =
-          (existingLoadoutItem &&
-            setItems.some((i) => i.bucket.hash === existingLoadoutItem.item.bucket.hash)) ||
-          // TODO: This fails to overwrite a migrated or received subclass!
-          (subclass && item.id === loadoutSubclass?.item.id);
+          // An item is replaced if the item actually resolves to something and
+          // something else is equipped in its position, the item itself exists
+          // anywhere in the loadout (pockets) or we replace the subclass
+          existingLoadoutItem &&
+          ((item.equip && LockableBucketHashes.includes(existingLoadoutItem.bucket.hash)) ||
+            setItems.some((i) => i.id === existingLoadoutItem?.id) ||
+            (subclass && existingLoadoutItem?.bucket.hash === BucketHashes.Subclass));
         if (!hasBeenReplaced) {
           newItems.push(item);
         }
@@ -99,7 +101,6 @@ export default function CompareDrawer({
 }: Props) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
-  const buckets = useSelector(bucketsSelector)!;
   const useableLoadouts = loadouts.filter((l) => l.classType === classType);
 
   const setItems = set.armor.map((items) => items[0]);
@@ -111,38 +112,24 @@ export default function CompareDrawer({
   const allItems = useSelector(allItemsSelector);
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
-  const { loadoutItems: loadoutArmor, loadoutSubclass } = useMemo(() => {
-    const equippedItems = selectedLoadout?.items.filter((item) => item.equip);
-    const [items] = getItemsFromLoadoutItems(
-      equippedItems,
-      defs,
-      selectedStore.id,
-      buckets,
-      allItems
-    );
-    const loadoutItems = _.sortBy(
-      items.filter(({ item }) => LockableBucketHashes.includes(item.bucket.hash)),
-      ({ item }) => LockableBucketHashes.indexOf(item.bucket.hash)
-    );
-    const loadoutSubclass = items.find(
-      ({ item }) => item.bucket.hash === BucketHashes.Subclass && item.classType === classType
-    );
-    return { loadoutItems, loadoutSubclass };
-  }, [selectedLoadout?.items, defs, selectedStore.id, buckets, allItems, classType]);
+  const generatedLoadout = useMemo(
+    () =>
+      createLoadoutUsingLOItems(
+        defs,
+        allItems,
+        selectedStore.id,
+        setItems,
+        subclass,
+        selectedLoadout,
+        params,
+        notes
+      ),
+    [allItems, defs, notes, params, selectedLoadout, selectedStore.id, setItems, subclass]
+  );
 
   if (!set) {
     return null;
   }
-
-  const generatedLoadout = createLoadoutUsingLOItems(
-    setItems,
-    subclass,
-    selectedLoadout,
-    loadoutArmor,
-    loadoutSubclass,
-    params,
-    notes
-  );
 
   const onSaveLoadout = (e: React.MouseEvent) => {
     e.preventDefault();

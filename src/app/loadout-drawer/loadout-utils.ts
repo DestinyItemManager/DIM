@@ -456,7 +456,7 @@ export function findSameLoadoutItemIndex(
   loadoutItems: LoadoutItem[],
   loadoutItem: Pick<LoadoutItem, 'hash' | 'id'>
 ) {
-  const info = getResolutionInfo(defs, loadoutItem.hash);
+  const info = getResolutionInfo(defs, loadoutItem.hash)!;
 
   return loadoutItems.findIndex((i) => {
     const newHash = oldToNewItems[i.hash] ?? i.hash;
@@ -474,6 +474,10 @@ export function findItemForLoadout(
   loadoutItem: LoadoutItem
 ): DimItem | undefined {
   const info = getResolutionInfo(defs, loadoutItem.hash);
+
+  if (!info) {
+    return;
+  }
 
   // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
   if (info.instanced) {
