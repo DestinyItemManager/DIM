@@ -14,7 +14,7 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
 import { filterFactorySelector } from '../search/search-filter';
-import { itemSortOrderSelector } from '../settings/item-sort';
+import { itemSortSettingsSelector } from '../settings/item-sort';
 import { ItemPickerState } from './item-picker';
 import './ItemPicker.scss';
 
@@ -24,7 +24,10 @@ type ProvidedProps = ItemPickerState & {
 
 interface StoreProps {
   allItems: DimItem[];
-  itemSortOrder: string[];
+  itemSortSettings: {
+    sortOrder: string[];
+    sortReversals: string[];
+  };
   filters(query: string): ItemFilter;
 }
 
@@ -38,7 +41,7 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps> {
   return (state, ownProps) => ({
     allItems: filteredItemsSelector(state, ownProps),
     filters: filterFactorySelector(state),
-    itemSortOrder: itemSortOrderSelector(state),
+    itemSortSettings: itemSortSettingsSelector(state),
   });
 }
 
@@ -48,7 +51,7 @@ function ItemPicker({
   allItems,
   prompt,
   filters,
-  itemSortOrder,
+  itemSortSettings,
   sortBy,
   uniqueBy,
   ignoreSelectedPerks,
@@ -79,7 +82,7 @@ function ItemPicker({
 
   const filter = useMemo(() => filters(query), [filters, query]);
   const items = useMemo(() => {
-    let items = sortItems(allItems.filter(filter), itemSortOrder);
+    let items = sortItems(allItems.filter(filter), itemSortSettings);
     if (sortBy) {
       items = _.sortBy(items, sortBy);
     }
@@ -87,7 +90,7 @@ function ItemPicker({
       items = _.uniqBy(items, uniqueBy);
     }
     return items;
-  }, [allItems, filter, itemSortOrder, sortBy, uniqueBy]);
+  }, [allItems, filter, itemSortSettings, sortBy, uniqueBy]);
 
   // TODO: have compact and "list" views
   // TODO: long press for item popup

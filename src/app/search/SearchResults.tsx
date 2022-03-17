@@ -9,7 +9,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
-import { itemSortOrderSelector } from '../settings/item-sort';
+import { itemSortSettingsSelector } from '../settings/item-sort';
 import styles from './SearchResults.m.scss';
 
 /**
@@ -17,7 +17,7 @@ import styles from './SearchResults.m.scss';
  * on mobile, and as a sheet when you hit "enter" on desktop.
  */
 export default function SearchResults({ items, onClose }: { items: DimItem[]; onClose(): void }) {
-  const itemSortOrder = useSelector(itemSortOrderSelector);
+  const itemSortSettings = useSelector(itemSortSettingsSelector);
 
   const header = (
     <div>
@@ -36,7 +36,7 @@ export default function SearchResults({ items, onClose }: { items: DimItem[]; on
     >
       <ClickOutsideRoot>
         <div className={clsx('sub-bucket', styles.contents)}>
-          {sortItems(items, itemSortOrder).map((item) => (
+          {sortItems(items, itemSortSettings).map((item) => (
             <DraggableInventoryItem key={item.index} item={item}>
               <ItemPopupTrigger item={item} key={item.index}>
                 {(ref, onClick) => (
