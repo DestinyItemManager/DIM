@@ -415,9 +415,9 @@ const matchByHash = [
 
 function getResolutionInfo(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  loadoutItem: LoadoutItem
+  loadoutItemHash: number
 ) {
-  const hash = oldToNewItems[loadoutItem.hash] ?? loadoutItem.hash;
+  const hash = oldToNewItems[loadoutItemHash] ?? loadoutItemHash;
 
   const def = defs.InventoryItem.get(hash) as
     | undefined
@@ -454,9 +454,9 @@ function getResolutionInfo(
 export function findSameLoadoutItemIndex(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadoutItems: LoadoutItem[],
-  loadoutItem: LoadoutItem
+  loadoutItem: Pick<LoadoutItem, 'hash' | 'id'>
 ) {
-  const info = getResolutionInfo(defs, loadoutItem);
+  const info = getResolutionInfo(defs, loadoutItem.hash);
 
   return loadoutItems.findIndex((i) => {
     const newHash = oldToNewItems[i.hash] ?? i.hash;
@@ -473,7 +473,7 @@ export function findItemForLoadout(
   storeId: string | undefined,
   loadoutItem: LoadoutItem
 ): DimItem | undefined {
-  const info = getResolutionInfo(defs, loadoutItem);
+  const info = getResolutionInfo(defs, loadoutItem.hash);
 
   // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
   if (info.instanced) {

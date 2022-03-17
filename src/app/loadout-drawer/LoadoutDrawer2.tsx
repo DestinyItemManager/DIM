@@ -30,7 +30,7 @@ import { stateReducer } from './loadout-drawer-reducer';
 import { addItem$ } from './loadout-events';
 import { getItemsFromLoadoutItems } from './loadout-item-conversion';
 import { Loadout, ResolvedLoadoutItem } from './loadout-types';
-import { createSubclassDefaultSocketOverrides } from './loadout-utils';
+import { createSubclassDefaultSocketOverrides, findSameLoadoutItemIndex } from './loadout-utils';
 import styles from './LoadoutDrawer2.m.scss';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
@@ -204,7 +204,7 @@ export default function LoadoutDrawer2({
     bucket: InventoryBucket;
     equip: boolean;
   }) => {
-    pickLoadoutItem(loadout, bucket, (item) => onAddItem(item, equip), setShowingItemPicker);
+    pickLoadoutItem(defs, loadout, bucket, (item) => onAddItem(item, equip), setShowingItemPicker);
   };
 
   const handleClickSubclass = () =>
@@ -265,14 +265,7 @@ export default function LoadoutDrawer2({
           <button
             type="button"
             className="dim-button"
-            onClick={() =>
-              fillLoadoutFromEquipped(
-                loadout,
-                items.map((li) => li.item),
-                store,
-                handleUpdateLoadout
-              )
-            }
+            onClick={() => fillLoadoutFromEquipped(loadout, items, store, handleUpdateLoadout)}
           >
             <AppIcon icon={addIcon} /> {t('Loadouts.FillFromEquipped')}
           </button>
@@ -332,15 +325,15 @@ function filterLoadoutToAllowedItems(
 }
 
 async function pickLoadoutItem(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadout: Loadout,
   bucket: InventoryBucket,
   add: (item: DimItem) => void,
   onShowItemPicker: (shown: boolean) => void
 ) {
   const loadoutClassType = loadout?.classType;
-  function loadoutHasItem(item: DimItem) {
-    return loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
-  }
+  const loadoutHasItem = (item: DimItem) =>
+    findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
 
   onShowItemPicker(true);
   try {

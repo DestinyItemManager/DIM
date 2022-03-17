@@ -207,13 +207,7 @@ export default function LoadoutEdit({
             title={t(`Bucket.${category}`, { contextList: 'buckets' })}
             onClear={() => handleClearCategory(category)}
             onFillFromEquipped={() =>
-              fillLoadoutFromEquipped(
-                loadout,
-                items.map((li) => li.item),
-                store,
-                updateLoadout,
-                category
-              )
+              fillLoadoutFromEquipped(loadout, items, store, updateLoadout, category)
             }
             fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
             onFillFromInventory={() =>
@@ -310,7 +304,7 @@ function setLoadoutSubclassFromEquipped(
 export function fillLoadoutFromEquipped(
   loadout: Loadout,
   // TODO: knock this out?
-  items: DimItem[],
+  items: ResolvedLoadoutItem[],
   dimStore: DimStore,
   onUpdateLoadout: (loadout: Loadout) => void,
   // This is a bit dangerous as it is only used from the new loadout edit drawer and
@@ -321,7 +315,7 @@ export function fillLoadoutFromEquipped(
     return;
   }
 
-  const itemsByBucket = _.groupBy(items, (li) => li.bucket.hash);
+  const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
 
   const newEquippedItems = dimStore.items.filter(
     (item) =>
@@ -335,12 +329,7 @@ export function fillLoadoutFromEquipped(
   );
 
   const hasEquippedInBucket = (bucket: InventoryBucket) =>
-    itemsByBucket[bucket.hash]?.some(
-      (bucketItem) =>
-        loadout.items.find(
-          (loadoutItem) => bucketItem.hash === loadoutItem.hash && bucketItem.id === loadoutItem.id
-        )?.equip
-    );
+    itemsByBucket[bucket.hash]?.some((bucketItem) => bucketItem.loadoutItem.equip);
 
   const newLoadout = produce(loadout, (draftLoadout) => {
     const mods: number[] = [];

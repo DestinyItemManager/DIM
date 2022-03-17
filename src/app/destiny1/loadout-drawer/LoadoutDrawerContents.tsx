@@ -73,12 +73,7 @@ export default function LoadoutDrawerContents({
       getCurrentStore(stores)!;
 
   const doFillLoadoutFromEquipped = () =>
-    fillLoadoutFromEquipped(
-      loadout,
-      items.map((li) => li.item),
-      dimStore,
-      onUpdateLoadout
-    );
+    fillLoadoutFromEquipped(loadout, items, dimStore, onUpdateLoadout);
   const doFillLoadOutFromUnequipped = () => fillLoadoutFromUnequipped(loadout, dimStore, add);
 
   const availableTypes = _.compact(loadoutTypes.map((h) => buckets.byHash[h]));
@@ -145,6 +140,8 @@ async function pickLoadoutItem(
 ) {
   const loadoutClassType = loadout?.classType;
   function loadoutHasItem(item: DimItem) {
+    // TODO: Accessing id is not safe because we resolve emblems.
+    // Should we use the definitions here too?
     return loadout?.items.some((i) => i.id === item.id && i.hash === item.hash);
   }
 
@@ -175,14 +172,14 @@ async function pickLoadoutItem(
 
 function fillLoadoutFromEquipped(
   loadout: Loadout,
-  items: DimItem[],
+  items: ResolvedLoadoutItem[],
   dimStore: DimStore,
   onUpdateLoadout: (loadout: Loadout) => void
 ) {
   if (!loadout) {
     return;
   }
-  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
+  const itemsByBucket = _.groupBy(items, (i) => i.item.bucket.hash);
 
   const newEquippedItems = dimStore.items.filter(
     (item) =>
@@ -190,12 +187,7 @@ function fillLoadoutFromEquipped(
   );
 
   const hasEquippedInBucket = (bucket: InventoryBucket) =>
-    itemsByBucket[bucket.hash]?.some(
-      (bucketItem) =>
-        loadout.items.find(
-          (loadoutItem) => bucketItem.hash === loadoutItem.hash && bucketItem.id === loadoutItem.id
-        )?.equip
-    );
+    itemsByBucket[bucket.hash]?.some((bucketItem) => bucketItem.loadoutItem.equip);
 
   const newLoadout = produce(loadout, (draftLoadout) => {
     for (const item of newEquippedItems) {

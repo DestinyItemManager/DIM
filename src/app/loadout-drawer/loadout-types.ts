@@ -2,7 +2,16 @@ import { Loadout as DimApiLoadout } from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 
 export interface LoadoutItem {
+  /**
+   * The item's id. There's no guarantee that the item this resolves to
+   * actually has that id (subclasses, emblems, ...) so avoid accessing
+   * it unless you know you're only looking at instanced items.
+   */
   id: string;
+  /**
+   * The item's hash. There's also no guarantee that the resolved item
+   * has this hash because we have migration from subclasses to their 3.0 form.
+   */
   hash: number;
   amount: number;
   /** Whether or not the item should be equipped when the loadout is applied. */

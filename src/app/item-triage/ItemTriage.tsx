@@ -83,6 +83,7 @@ export function ItemTriage({ item }: { item: DimItem }) {
   // we rely on factorCombosLabels and itemFactors having the same number of elements,
   // because they are check the same factors
   const factorCombosLabels = getItemFactorComboDisplays(item);
+  // Accessing id is safe: ItemTriage is only weapons and armor (see above)
   const inLoadouts = loadouts.filter((l) => l.items.some((i) => i.id === item.id));
 
   return (

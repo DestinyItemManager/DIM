@@ -534,6 +534,7 @@ export function getColumns(
       header: t('Organizer.Columns.Loadouts'),
       value: () => 0,
       cell: (_val, item) => {
+        // Accessing id is safe: Organizer is only weapons and armor
         const inloadouts = loadouts.filter((l) => l.items.some((i) => i.id === item.id));
         return (
           inloadouts.length > 0 &&

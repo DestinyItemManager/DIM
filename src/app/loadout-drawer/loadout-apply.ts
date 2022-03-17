@@ -412,6 +412,7 @@ function doApplyLoadout(
                   state.itemStates[initialItem.index].state =
                     // If we're doing a bulk equip later, set to MovedPendingEquip
                     itemsToEquip.length > 1 &&
+                    // TODO: The actual item may have a different ID, so we erroneously consider those items equipped!
                     itemsToEquip.some((loadoutItem) => loadoutItem.id === updatedItem.id)
                       ? LoadoutItemState.MovedPendingEquip
                       : LoadoutItemState.Succeeded;
@@ -453,6 +454,7 @@ function doApplyLoadout(
           (s) => s.equip && s.state === LoadoutItemState.MovedPendingEquip
         );
         // Use the bulk equipAll API to equip all at once.
+        // TODO: The actual item may have a different ID, so we fail to find the item here!
         itemsToEquip = itemsToEquip.filter((i) =>
           successfulItems.some((si) => si.item.id === i.id)
         );
@@ -918,14 +920,10 @@ function applyLoadoutMods(
     // item in the loadout, use the current equipped item (whatever it is)
     // instead.
     const currentEquippedArmor = store.items.filter((i) => i.bucket.inArmor && i.equipped);
-    const equippedLoadoutItems = loadoutItems.filter((item) => item.equip);
     const loadoutDimItems: DimItem[] = [];
     for (const loadoutItem of loadoutItems) {
       const item = getLoadoutItem(loadoutItem);
-      if (
-        item?.bucket.inArmor &&
-        equippedLoadoutItems.some((loadoutItem) => loadoutItem.id === item.id)
-      ) {
+      if (item?.bucket.inArmor && loadoutItem.equip) {
         loadoutDimItems.push(item);
       }
     }

@@ -53,7 +53,7 @@ function createLoadoutUsingLOItems(
   setItems: DimItem[],
   subclass: ResolvedLoadoutItem | undefined,
   loadout: Loadout | undefined,
-  loadoutItems: ResolvedLoadoutItem[],
+  loadoutArmor: ResolvedLoadoutItem[],
   loadoutSubclass: ResolvedLoadoutItem | undefined,
   params: LoadoutParameters,
   notes: string | undefined
@@ -67,10 +67,12 @@ function createLoadoutUsingLOItems(
       }
 
       for (const item of draftLoadout.items) {
-        const existingLoadoutItem = loadoutItems.find((i) => i.item.id === item.id);
+        // Accessing id is safe: Armor is always instanced
+        const existingLoadoutItem = loadoutArmor.find((i) => i.item.id === item.id);
         const hasBeenReplaced =
           (existingLoadoutItem &&
             setItems.some((i) => i.bucket.hash === existingLoadoutItem.item.bucket.hash)) ||
+          // TODO: This fails to overwrite a migrated or received subclass!
           (subclass && item.id === loadoutSubclass?.item.id);
         if (!hasBeenReplaced) {
           newItems.push(item);
@@ -109,7 +111,7 @@ export default function CompareDrawer({
   const allItems = useSelector(allItemsSelector);
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
-  const { loadoutItems, loadoutSubclass } = useMemo(() => {
+  const { loadoutItems: loadoutArmor, loadoutSubclass } = useMemo(() => {
     const equippedItems = selectedLoadout?.items.filter((item) => item.equip);
     const [items] = getItemsFromLoadoutItems(
       equippedItems,
@@ -136,7 +138,7 @@ export default function CompareDrawer({
     setItems,
     subclass,
     selectedLoadout,
-    loadoutItems,
+    loadoutArmor,
     loadoutSubclass,
     params,
     notes
