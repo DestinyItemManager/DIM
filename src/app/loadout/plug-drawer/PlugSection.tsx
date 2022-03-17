@@ -84,7 +84,12 @@ export default function PlugSection({
   return (
     <>
       {Object.entries(plugsGroupedByModType).map(([groupName, plugs]) => {
-        const header = groupName + (headerSuffix ? ` (${headerSuffix})` : '');
+        let header = groupName;
+        if (!header && headerSuffix) {
+          header = headerSuffix;
+        } else if (headerSuffix) {
+          header += ` (${headerSuffix})`;
+        }
 
         return (
           <div key={header} className={styles.bucket}>

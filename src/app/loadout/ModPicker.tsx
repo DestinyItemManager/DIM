@@ -14,6 +14,7 @@ import {
 } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
+import { modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -86,7 +87,7 @@ function mapStateToProps() {
       }
 
       // We need the name of the Artifice armor perk to show in one of the headers
-      const artificeString = defs?.InventoryItem.get(3727270518)?.displayProperties.name;
+      const artificeString = defs.InventoryItem.get(3727270518)?.displayProperties.name;
 
       // Look at every armor item and see what sockets it has
       for (const item of allItems) {
@@ -159,6 +160,18 @@ function mapStateToProps() {
               selectionType: 'multi',
               plugs,
             };
+
+            if (!plugs[0].itemTypeDisplayName) {
+              const activityHash =
+                modMetadataByPlugCategoryHash[plugs[0].plug.plugCategoryHash]
+                  ?.modGroupNameOverrideActivityHash;
+              if (activityHash) {
+                const activityName = defs.Activity.get(activityHash).displayProperties.name;
+                if (activityName) {
+                  plugSets[plugSetHash].headerSuffix = activityName;
+                }
+              }
+            }
 
             // Artificer armor has a single extra slot that can take slot-specific mods. Give it a special header
             if (
