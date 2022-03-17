@@ -30,12 +30,15 @@ export function buildDeepsightInfo(
 
 function getResonanceSocket(item: DimItem): DimSocket | undefined {
   if (item.bucket.inWeapons && item.sockets) {
-    return item.sockets.allSockets.find(
-      (s) =>
-        s.plugged?.plugDef.plug.plugCategoryHash ===
-          PlugCategoryHashes.CraftingPlugsWeaponsModsMemories && s.plugged?.plugDef.objectives
-    );
+    return item.sockets.allSockets.find(isDeepsightResonanceSocket);
   }
+}
+
+export function isDeepsightResonanceSocket(socket: DimSocket): boolean {
+  return Boolean(
+    socket.plugged?.plugDef.plug.plugCategoryHash ===
+      PlugCategoryHashes.CraftingPlugsWeaponsModsMemories && socket.plugged?.plugDef.objectives
+  );
 }
 
 function getResonantElements(item: DimItem, defs: D2ManifestDefinitions): DimResonantElement[] {
