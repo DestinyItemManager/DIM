@@ -13,6 +13,8 @@ export interface ModSocketMetadata {
   emptyModSocketHash: number;
   /** so you can look these entries up if all you're given is an "Empty Mod Slot" plug item */
   emptyModSocketHashes: number[];
+  /** the year is 2022. the raid is Vow of the Disciple. bungie forgot to give raid mods a itemTypeDisplayName. let's use this Activity name instead. */
+  modGroupNameOverrideActivityHash?: number;
 }
 
 const legacyCompatibleTags = [
@@ -132,6 +134,7 @@ const modSocketMetadata: ModSocketMetadata[] = [
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV600],
     emptyModSocketHashes: [2447143568],
     emptyModSocketHash: 2447143568,
+    modGroupNameOverrideActivityHash: 2906950631, // Activity "Vow of the Disciple"
   },
   {
     slotTag: 'combatstyle',

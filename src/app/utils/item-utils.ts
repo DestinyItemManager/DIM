@@ -45,6 +45,13 @@ export const getItemDamageShortName = (item: DimItem): string | undefined =>
 
 const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTypeHashes');
 
+// this has weird collisions but good enough for looking up mods with limited PCH compatibility, like raid slots
+// it can be used to find what mod metadata a plugged item belongs to
+export const modMetadataByPlugCategoryHash = objectifyArray(
+  modSocketMetadata,
+  'compatiblePlugCategoryHashes'
+);
+
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
 export const modSlotTags = modSocketMetadata.map((m) => m.slotTag);
 export const modTypeTags = [...new Set(modSocketMetadata.flatMap((m) => m.compatibleModTags))];
