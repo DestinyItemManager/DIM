@@ -47,15 +47,18 @@ export function isDeepsightResonanceSocket(socket: DimSocket): boolean {
 function getResonantElements(item: DimItem, defs: D2ManifestDefinitions): DimResonantElement[] {
   const results: DimResonantElement[] = [];
 
+  const existingElementTags: string[] = [];
+
   const sockets = item.sockets?.allSockets;
   if (sockets) {
     for (const socket of sockets) {
       for (const plug of socket.plugOptions) {
         for (const objective of plug.plugObjectives) {
           const elementTag = resonantElementTagsByObjectiveHash[objective.objectiveHash];
-          if (elementTag) {
+          if (elementTag && !existingElementTags.includes(elementTag)) {
             const def = defs.Objective.get(objective.objectiveHash);
             if (def) {
+              existingElementTags.push(elementTag);
               results.push({
                 tag: elementTag,
                 icon: def.displayProperties?.iconSequences[0]?.frames[1],
