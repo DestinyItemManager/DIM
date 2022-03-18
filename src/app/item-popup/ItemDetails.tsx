@@ -92,7 +92,7 @@ export default function ItemDetails({
       )}
 
       {item.deepsightInfo && defs.isDestiny2() && (
-        <WeaponDeepsightInfo deepsightInfo={item.deepsightInfo} className="deepsight-progress" />
+        <WeaponDeepsightInfo deepsightInfo={item.deepsightInfo} />
       )}
 
       {killTrackerInfo && defs.isDestiny2() && (
