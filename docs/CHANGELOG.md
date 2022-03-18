@@ -1,6 +1,7 @@
 ## Next
 
 * Fix organizer stats header alignment
+* Added Vow of the Disciple raid mods to Loadout Optimizer and search filters.
 
 ## 7.8.3 <span class="changelog-date">(2022-03-15)</span>
 

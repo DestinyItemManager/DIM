@@ -1,36 +1,18 @@
+import { DimItem } from 'app/inventory/item-types';
 import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { getSeason } from 'app/inventory/store/season';
 import { D1BucketHashes } from 'app/search/d1-known-values';
+import { D2ItemTiers } from 'app/search/d2-known-values';
 import { isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTag, tagConfig } from '../inventory/dim-item-info';
-import { DimItem } from '../inventory/item-types';
 import store from '../store/store';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
-// This file defines filters for DIM that may be shared among
-// different parts of DIM.
 
-export function percent(val: number): string {
-  return `${Math.min(100, Math.floor(100 * val))}%`;
-}
-
-function rarity(item: DimItem) {
-  switch (item.tier) {
-    case 'Exotic':
-      return 0;
-    case 'Legendary':
-      return 1;
-    case 'Rare':
-      return 2;
-    case 'Uncommon':
-      return 3;
-    case 'Common':
-      return 4;
-    default:
-      return 5;
-  }
-}
+export const acquisitionRecencyComparator = reverseComparator(
+  compareBy((item: DimItem) => item.id.padStart(20, '0'))
+);
 
 const D1_CONSUMABLE_SORT_ORDER = [
   1043138475, // black-wax-idol
@@ -105,14 +87,10 @@ const ITEM_SORT_DENYLIST = new Set([
   D1BucketHashes.Quests,
 ]);
 
-export const acquisitionRecencyComparator = reverseComparator(
-  compareBy((item: DimItem) => item.id.padStart(20, '0'))
-);
-
 // TODO: pass in state
 const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   typeName: compareBy((item: DimItem) => item.typeName),
-  rarity: compareBy(rarity),
+  rarity: reverseComparator(compareBy((item: DimItem) => D2ItemTiers[item.tier])),
   primStat: reverseComparator(compareBy((item: DimItem) => item.primaryStat?.value ?? 0)),
   basePower: reverseComparator(compareBy((item: DimItem) => item.power)),
   // This only sorts by D1 item quality
@@ -216,27 +194,4 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
     ...['archive', ...itemSortOrder].map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default)
   );
   return items.sort(comparator);
-}
-
-/**
- * A filter that will heatmap-color a background according to a percentage.
- */
-export function getColor(value: number, property = 'background-color') {
-  let color = 0;
-  if (value < 0) {
-    return { [property]: 'white' };
-  } else if (value <= 85) {
-    color = 0;
-  } else if (value <= 90) {
-    color = 20;
-  } else if (value <= 95) {
-    color = 60;
-  } else if (value <= 99) {
-    color = 120;
-  } else if (value >= 100) {
-    color = 190;
-  }
-  return {
-    [property]: `hsla(${color},65%,50%, 1)`,
-  };
 }

@@ -411,11 +411,18 @@ export function findItemForLoadout(
 ): DimItem | undefined {
   const hash = oldToNewItems[loadoutItem.hash] ?? loadoutItem.hash;
 
-  const def = defs.InventoryItem.get(hash) as DestinyInventoryItemDefinition & {
-    // D1 definitions use this toplevel "instanced" field
-    instanced: boolean;
-    bucketTypeHash: number;
-  };
+  const def = defs.InventoryItem.get(hash) as
+    | undefined
+    | (DestinyInventoryItemDefinition & {
+        // D1 definitions use this toplevel "instanced" field
+        instanced: boolean;
+        bucketTypeHash: number;
+      });
+
+  // in this world, there are no guarantees
+  if (!def) {
+    return;
+  }
 
   // Instanced items match by ID, uninstanced match by hash. It'd actually be
   // nice to use "is random rolled or configurable" here instead but that's hard

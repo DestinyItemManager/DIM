@@ -1,4 +1,4 @@
-import { percent } from 'app/shell/filters';
+import { percent } from 'app/shell/formatters';
 import { DestinyCharacterProgressionComponent } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import xpIcon from '../../images/xpIcon.svg';

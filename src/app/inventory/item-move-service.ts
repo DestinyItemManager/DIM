@@ -1,6 +1,7 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
+import type { ItemTierName } from 'app/search/d2-known-values';
 import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken, neverCanceled } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
@@ -184,6 +185,17 @@ export function getSimilarItem(
   return result;
 }
 
+// weight "find a replacement item" options, according to their rarity
+const replacementWeighting: Record<ItemTierName, number> = {
+  Legendary: 4,
+  Rare: 3,
+  Uncommon: 2,
+  Common: 1,
+  Exotic: 0,
+  Currency: 0,
+  Unknown: 0,
+};
+
 /**
  * Find an item in store like "item", excluding the exclusions, to be equipped
  * on target.
@@ -220,15 +232,7 @@ function searchForSimilarItem(
 
   // TODO: unify this value function w/ the others!
   const sortedCandidates = _.sortBy(candidates, (i) => {
-    let value = {
-      Legendary: 4,
-      Rare: 3,
-      Uncommon: 2,
-      Common: 1,
-      Exotic: 0,
-      Currency: 0,
-      Unknown: 0,
-    }[i.tier];
+    let value = replacementWeighting[i.tier];
     if (item.isExotic && i.isExotic) {
       value += 5;
     }
@@ -1048,6 +1052,17 @@ export function executeMoveItem(
   };
 }
 
+// weight "move an item aside" options, according to their rarity
+const moveAsideWeighting: Record<ItemTierName, number> = {
+  Unknown: 0,
+  Currency: 0,
+  Common: 0,
+  Uncommon: 1,
+  Rare: 2,
+  Legendary: 4,
+  Exotic: 3,
+};
+
 /**
  * Sort a list of items to determine a prioritized order for which should be moved from fromStore
  * assuming they'll end up in targetStore.
@@ -1063,14 +1078,6 @@ export function sortMoveAsideCandidatesForStore(
   /** The item we're trying to make space for. May be missing. */
   item?: DimItem
 ) {
-  const tierValue = {
-    Common: 0,
-    Uncommon: 1,
-    Rare: 2,
-    Legendary: 4,
-    Exotic: 3,
-  };
-
   // A sort for items to use for ranking *which item to move*
   // aside. The highest ranked items are the most likely to be moved.
   // Note that this is reversed, so higher values (including true over false)
@@ -1099,7 +1106,9 @@ export function sortMoveAsideCandidatesForStore(
         );
       }),
       // Prefer moving lower-tier into the vault and higher tier out
-      compareBy((i) => (fromStore.isVault ? tierValue[i.tier] : -tierValue[i.tier])),
+      compareBy((i) =>
+        fromStore.isVault ? moveAsideWeighting[i.tier] : -moveAsideWeighting[i.tier]
+      ),
       // Prefer keeping higher-stat items on characters
       compareBy(
         (i) =>

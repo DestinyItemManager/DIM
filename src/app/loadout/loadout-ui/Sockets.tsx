@@ -1,6 +1,7 @@
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { modTypeTagByPlugCategoryHash } from 'app/search/specialty-modslots';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -69,7 +70,10 @@ function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
       toSave &&
       isPluggableItem(toSave) &&
       !undesirablePlugs.includes(toSave.plug.plugCategoryHash) &&
-      toSave.itemTypeDisplayName // account for plugs that look exotic-ish but are nothings
+      // account for plugs that look exotic-ish but are nothings
+      // but always include specialty mod slots, Vow mods don't have
+      // an itemTypeDisplayName https://github.com/Bungie-net/api/issues/1620
+      (toSave.itemTypeDisplayName || modTypeTagByPlugCategoryHash[toSave.plug.plugCategoryHash])
     ) {
       modsAndWhitelist.push({
         plugDef: toSave,
