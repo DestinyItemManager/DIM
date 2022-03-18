@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { DimDeepsight } from 'app/inventory/item-types';
-import { percent } from 'app/shell/filters';
+import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import React from 'react';
 import BungieImage from './BungieImage';
