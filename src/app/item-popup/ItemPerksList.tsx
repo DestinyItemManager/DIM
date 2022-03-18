@@ -71,6 +71,10 @@ function PerkSocket({
   selectedPerk?: { socketIndex: number; perkHash: number };
   onPerkSelected(socketInfo: DimSocket, plug: DimPlug): void;
 }) {
+  if (!socket.plugOptions.length) {
+    return null;
+  }
+
   return (
     <div className={styles.socket}>
       {socket.plugOptions.map((plug) => (
