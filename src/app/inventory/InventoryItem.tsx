@@ -1,8 +1,8 @@
+import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
-import { percent } from '../shell/filters';
 import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo from './BadgeInfo';

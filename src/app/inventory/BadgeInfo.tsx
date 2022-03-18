@@ -1,3 +1,4 @@
+import { getColor } from 'app/shell/formatters';
 import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
@@ -7,7 +8,6 @@ import shapedIcon from 'images/shaped.png';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
-import { getColor } from '../shell/filters';
 import styles from './BadgeInfo.m.scss';
 import { itemNoteSelector } from './dim-item-info';
 import { DimItem } from './item-types';

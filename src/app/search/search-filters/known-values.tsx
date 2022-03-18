@@ -13,6 +13,7 @@ import { D1ItemCategoryHashes } from '../d1-known-values';
 import {
   breakerTypes,
   D2ItemCategoryHashesByName,
+  ItemTierName,
   pinnacleSources,
   powerfulSources,
 } from '../d2-known-values';
@@ -21,7 +22,7 @@ import { cosmeticTypes, damageTypeNames } from '../search-filter-values';
 
 // filters relying on curated known values (class names, rarities, elements)
 
-const tierMap = {
+const tierMap: NodeJS.Dict<ItemTierName> = {
   white: 'Common',
   green: 'Uncommon',
   blue: 'Rare',
@@ -33,6 +34,7 @@ const tierMap = {
   legendary: 'Legendary',
   exotic: 'Exotic',
 };
+
 const d2AmmoTypes = {
   primary: DestinyAmmunitionType.Primary,
   special: DestinyAmmunitionType.Special,
@@ -123,11 +125,11 @@ const knownValuesFilters: FilterDefinition[] = [
     ],
     description: tl('Filter.RarityTier'),
     filter: ({ filterValue }) => {
-      filterValue = tierMap[filterValue];
-      if (!filterValue) {
+      const tierName = tierMap[filterValue];
+      if (!tierName) {
         throw new Error('Unknown rarity type ' + filterValue);
       }
-      return (item) => item.tier === filterValue;
+      return (item) => item.tier === tierName;
     },
   },
   {

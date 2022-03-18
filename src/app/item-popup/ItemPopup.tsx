@@ -5,6 +5,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
+import type { ItemTierName } from 'app/search/d2-known-values';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import clsx from 'clsx';
 import React, { useMemo, useRef, useState } from 'react';
@@ -17,7 +18,7 @@ import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import ItemPopupHeader from './ItemPopupHeader';
 import ItemTagHotkeys from './ItemTagHotkeys';
 
-const tierClasses: { [key in DimItem['tier']]: string } = {
+const tierClasses: Record<ItemTierName, string> = {
   Exotic: styles.exotic,
   Legendary: styles.legendary,
   Rare: styles.rare,
