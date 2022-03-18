@@ -172,7 +172,7 @@ function mapStateToProps() {
               if (activityHash) {
                 const activityName = defs.Activity.get(activityHash).displayProperties.name;
                 if (activityName) {
-                  plugSets[plugSetHash].headerSuffix = activityName;
+                  plugSetsByHash[plugSetHash].headerSuffix = activityName;
                 }
               }
             }

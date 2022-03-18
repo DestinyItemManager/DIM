@@ -71,7 +71,7 @@ export default function PlugDrawer({
   const [query, setQuery] = useState(initialQuery || '');
   const [internalPlugSets, setInternalPlugSets] = useState(() =>
     plugSets
-      .map((plugSet) => ({ ...plugSet, plugs: plugSet.plugs.sort(sortPlugs) }))
+      .map((plugSet) => ({ ...plugSet, plugs: Array.from(plugSet.plugs).sort(sortPlugs) }))
       .sort(sortPlugGroups)
   );
   const isPhonePortrait = useIsPhonePortrait();
