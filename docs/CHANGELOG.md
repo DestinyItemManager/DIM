@@ -2,7 +2,7 @@
 
 * Fix organizer stats header alignment
 * Added Vow of the Disciple raid mods to Loadout Optimizer and search filters.
-* Deepsight weapons' attunement progress and extractable Resonant Elements are now shown on the item popup.
+* Deepsight weapons' attunement progress is now shown on the item popup. Tap and hold, or hover the progress bar to see extractable Resonant Elements.
 
 ## 7.8.3 <span class="changelog-date">(2022-03-15)</span>
 
