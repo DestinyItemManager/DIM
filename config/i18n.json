@@ -815,7 +815,8 @@
     },
     "TriageTab": "Triage",
     "Vault": "Vault",
-    "WeaponLevel": "Weapon Level {{level}}"
+    "WeaponLevel": "Weapon Level {{level}}",
+    "AttunementProgress": "Attunement Progress"
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",

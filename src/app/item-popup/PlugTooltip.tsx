@@ -1,6 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
+import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { statAllowList } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
@@ -119,6 +120,11 @@ export function PlugTooltip({
     );
   }
 
+  // filter out plug objectives related to Resonant Elements
+  const filteredPlugObjectives = plugObjectives?.filter(
+    (o) => !resonantElementObjectiveHashes.includes(o.objectiveHash)
+  );
+
   return (
     <>
       <h2>{def.displayProperties.name}</h2>
@@ -148,9 +154,9 @@ export function PlugTooltip({
           ))}
         </div>
       )}
-      {defs && plugObjectives && plugObjectives.length > 0 && (
+      {defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
         <div className="plug-objectives">
-          {plugObjectives.map((objective) => (
+          {filteredPlugObjectives.map((objective) => (
             <Objective key={objective.objectiveHash} objective={objective} />
           ))}
         </div>
