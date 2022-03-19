@@ -1,5 +1,9 @@
 ## Next
 
+* When loading your inventory, DIM now alerts you if your items might be misplaced, affecting your drops' Power Level.
+* New inventory sorting options. Check [Settings](/settings) to view and rearrange your sort strategy.
+  * Reverse the order of any individual sorting method.
+  * Sort items by whether they are crafted, and whether they have Deepsight Attunement available.
 * Fix organizer stats header alignment
 * Added Vow of the Disciple raid mods to Loadout Optimizer and search filters.
 * Deepsight weapons' attunement progress is now shown on the item popup. Tap and hold, or hover the progress bar to see extractable Resonant Elements.
