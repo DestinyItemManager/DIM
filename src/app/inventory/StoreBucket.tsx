@@ -14,7 +14,7 @@ import { shallowEqual } from 'fast-equals';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
-import { itemSortSettingsSelector } from '../settings/item-sort';
+import { ItemSortSettings, itemSortSettingsSelector } from '../settings/item-sort';
 import { addIcon, AppIcon } from '../shell/icons';
 import { InventoryBucket } from './inventory-buckets';
 import { DimItem } from './item-types';
@@ -42,10 +42,7 @@ interface StoreProps {
   storeClassType: DestinyClass;
   isVault: boolean;
   items: DimItem[];
-  itemSortSettings: {
-    sortOrder: string[];
-    sortReversals: string[];
-  };
+  itemSortSettings: ItemSortSettings;
   storeClassList: DestinyClass[];
   characterOrder: string;
 }

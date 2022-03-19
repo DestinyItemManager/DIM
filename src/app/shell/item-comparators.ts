@@ -3,6 +3,7 @@ import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors
 import { getSeason } from 'app/inventory/store/season';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
+import { ItemSortSettings } from 'app/settings/item-sort';
 import { isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -134,13 +135,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
 /**
  * Sort items according to the user's preferences (via the sort parameter).
  */
-export function sortItems(
-  items: DimItem[],
-  itemSortSettings: {
-    sortOrder: string[];
-    sortReversals: string[];
-  }
-) {
+export function sortItems(items: DimItem[], itemSortSettings: ItemSortSettings) {
   if (!items.length) {
     return items;
   }

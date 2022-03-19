@@ -14,7 +14,7 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
 import { filterFactorySelector } from '../search/search-filter';
-import { itemSortSettingsSelector } from '../settings/item-sort';
+import { ItemSortSettings, itemSortSettingsSelector } from '../settings/item-sort';
 import { ItemPickerState } from './item-picker';
 import './ItemPicker.scss';
 
@@ -24,10 +24,7 @@ type ProvidedProps = ItemPickerState & {
 
 interface StoreProps {
   allItems: DimItem[];
-  itemSortSettings: {
-    sortOrder: string[];
-    sortReversals: string[];
-  };
+  itemSortSettings: ItemSortSettings;
   filters(query: string): ItemFilter;
 }
 
