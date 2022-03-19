@@ -233,11 +233,14 @@ export async function downloadManifestComponents(
     .map(async (table) => {
       let response: Response | null = null;
       let error = null;
+      let body: any = null;
 
       for (const query of cacheBusterStrings) {
         try {
           response = await fetch(`https://www.bungie.net${components[table]}${query}`);
           if (response.ok) {
+            // Sometimes the file is found, but isn't parseable as JSON
+            body = response.json();
             break;
           }
           error ??= response;
@@ -245,7 +248,9 @@ export async function downloadManifestComponents(
           error ??= e;
         }
       }
-      const body = await (response?.ok ? response.json() : Promise.reject(error));
+      if (!body && error) {
+        throw error;
+      }
       manifest[table] = tableTrimmers[table] ? tableTrimmers[table](body) : body;
     });
 
