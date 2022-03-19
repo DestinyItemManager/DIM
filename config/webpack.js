@@ -521,7 +521,7 @@ module.exports = (env) => {
               [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
             },
           },
-          minRatio: 1,
+          minRatio: Infinity,
         })
       );
     }
