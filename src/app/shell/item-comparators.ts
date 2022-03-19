@@ -3,6 +3,7 @@ import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors
 import { getSeason } from 'app/inventory/store/season';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
+import { ItemSortSettings } from 'app/settings/item-sort';
 import { isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -134,7 +135,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
 /**
  * Sort items according to the user's preferences (via the sort parameter).
  */
-export function sortItems(items: DimItem[], itemSortOrder: string[]) {
+export function sortItems(items: DimItem[], itemSortSettings: ItemSortSettings) {
   if (!items.length) {
     return items;
   }
@@ -155,7 +156,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
     specificSortOrder = D1_MATERIAL_SORT_ORDER;
   }
 
-  if (specificSortOrder.length > 0 && !itemSortOrder.includes('rarity')) {
+  if (specificSortOrder.length > 0 && !itemSortSettings.sortOrder.includes('rarity')) {
     items = _.sortBy(items, (item) => {
       const ix = specificSortOrder.indexOf(item.hash);
       return ix === -1 ? 999 : ix;
@@ -166,7 +167,7 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
   // Re-sort mods
   if (itemLocationId === BucketHashes.Modifications) {
     const comparators = [ITEM_COMPARATORS.typeName, ITEM_COMPARATORS.name];
-    if (itemSortOrder.includes('rarity')) {
+    if (itemSortSettings.sortOrder.includes('rarity')) {
       comparators.unshift(ITEM_COMPARATORS.rarity);
     }
     return items.sort(chainComparator(...comparators));
@@ -191,7 +192,16 @@ export function sortItems(items: DimItem[], itemSortOrder: string[]) {
 
   // always sort by archive first
   const comparator = chainComparator(
-    ...['archive', ...itemSortOrder].map((o) => ITEM_COMPARATORS[o] || ITEM_COMPARATORS.default)
+    ...['archive', ...itemSortSettings.sortOrder].map((comparatorName) => {
+      const comparator = ITEM_COMPARATORS[comparatorName];
+      if (!comparator) {
+        return ITEM_COMPARATORS.default;
+      }
+
+      return itemSortSettings.sortReversals.includes(comparatorName)
+        ? reverseComparator(comparator)
+        : comparator;
+    })
   );
   return items.sort(comparator);
 }

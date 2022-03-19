@@ -875,6 +875,7 @@
     "PerkList": "List",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
+    "ReverseSort": "Toggle forward/reverse sort",
     "SetSort": "Sort items by:",
     "Settings": "Settings",
     "ShowNewItems": "Show a red dot on new items",
