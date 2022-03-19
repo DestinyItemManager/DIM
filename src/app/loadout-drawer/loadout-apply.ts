@@ -33,7 +33,6 @@ import {
   fitMostMods,
   pickPlugPositions,
 } from 'app/loadout/mod-assignment-utils';
-import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import {
   d2ManifestSelector,
   destiny2CoreSettingsSelector,
@@ -843,7 +842,7 @@ function applySocketOverrides(
                 category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
                 category.category.hash === SocketCategoryHashes.Super)
             ) {
-              modHash = getDefaultPlugHash(socket, defs);
+              modHash = socket.socketDefinition.singleInitialItemHash;
             }
             if (modHash) {
               const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
@@ -1022,7 +1021,7 @@ function applyLoadoutMods(
         }
       }
 
-      const pluggingSteps = createPluggingStrategy(item, assignments, defs);
+      const pluggingSteps = createPluggingStrategy(item, assignments);
       const assignmentSequence = pluggingSteps.filter((assignment) => assignment.required);
       infoLog('loadout mods', 'Applying', assignmentSequence, 'to', item.name);
       if (assignmentSequence) {
@@ -1126,7 +1125,7 @@ function equipModsToItem(
       // match the appearance that the user wanted. We'll still report as if we
       // applied the ornament.
       if (mod.hash === item.hash) {
-        const defaultPlugHash = getDefaultPlugHash(socket, defs);
+        const defaultPlugHash = socket.emptyPlugItemHash;
         if (defaultPlugHash) {
           mod = (defs.InventoryItem.get(defaultPlugHash) ??
             mod) as PluggableInventoryItemDefinition;

@@ -433,7 +433,8 @@ export interface DimSocket {
    * The displayable/searchable list of potential plug choices for this socket.
    * For perks, this is all the potential perks in the perk column.
    * Otherwise, it'll just be the inserted plug for mods, shaders, etc.
-   * Look at TODO to figure out the full list of possible plugs for this socket.
+   * Look at the plugSet and the socketDefinition's reusablePlugItems for
+   * items that could fit into this socket.
    */
   plugOptions: DimPlug[];
   /**
@@ -468,6 +469,17 @@ export interface DimSocket {
 
   /** Plug hashes in this item visible in the collections roll, if this is a perk */
   curatedRoll: number[] | null;
+  /**
+   * The plug item hash used to reset this plug to an empty default plug.
+   * This is a heuristic improvement over singleInitialItemHash, but it's
+   * entirely possible that this contains a value even when there isn't really
+   * an empty plug. We do our best to leave this unset for sockets without
+   * a meaningful empty plug (abilities, perks, intrinsics, ...), but this should
+   * only be relied upon when you have a good reason to assume it exists.
+   * If you rely on this, you can cheat and assume that this is always available --
+   * for blues, runtime info seems to be missing the empty shader entirely.
+   */
+  emptyPlugItemHash?: number;
   /** Reusable plug items from runtime info, for the plug viewer. */
   reusablePlugItems?: DestinyItemPlugBase[];
   /** Does the socket contain randomized plug items? */

@@ -4,7 +4,6 @@ import { DimItem, DimPlugSet, PluggableInventoryItemDefinition } from 'app/inven
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import { PlugSet } from 'app/loadout/plug-drawer/types';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -178,7 +177,17 @@ function getPlugsForSubclass(
     for (const socketGroup of Object.values(socketsGroupedBySetHash)) {
       if (socketGroup.length) {
         const firstSocket = socketGroup[0];
-        const defaultPlugHash = getDefaultPlugHash(firstSocket, defs);
+
+        const isAbilityLikeSocket =
+          category.category.hash === SocketCategoryHashes.Abilities_Abilities_DarkSubclass ||
+          category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
+          category.category.hash === SocketCategoryHashes.Super;
+
+        // Void grenades do not have a singleInitialItemHash
+        const defaultPlugHash = isAbilityLikeSocket
+          ? firstSocket.socketDefinition.singleInitialItemHash ||
+            firstSocket.plugSet!.plugs[0].plugDef.hash
+          : firstSocket.emptyPlugItemHash;
         const defaultPlug = defaultPlugHash ? defs.InventoryItem.get(defaultPlugHash) : undefined;
         if (firstSocket.plugSet && profileResponse && isPluggableItem(defaultPlug)) {
           const plugSet: PlugSetWithDefaultPlug = {
@@ -187,12 +196,7 @@ function getPlugsForSubclass(
             plugSetHash: firstSocket.plugSet.hash,
             maxSelectable: socketGroup.length,
             defaultPlug,
-            selectionType:
-              category.category.hash === SocketCategoryHashes.Abilities_Abilities_DarkSubclass ||
-              category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
-              category.category.hash === SocketCategoryHashes.Super
-                ? 'single'
-                : 'multi',
+            selectionType: isAbilityLikeSocket ? 'single' : 'multi',
           };
 
           // TODO (ryan) use itemsForCharacterOrProfilePlugSet, atm there will be no difference
