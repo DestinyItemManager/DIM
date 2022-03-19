@@ -18,7 +18,7 @@ import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
-import { getSocketsByCategoryHashes } from 'app/utils/socket-utils';
+import { getDefaultPlugChoiceHash, getSocketsByCategoryHashes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -432,7 +432,7 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
         if (socketIndexToRemove !== undefined && abilitySocketRemovingFrom) {
           // If this is an ability socket, replace with the default plug hash
           newSocketOverrides[socketIndexToRemove] =
-            abilitySocketRemovingFrom.socketDefinition.singleInitialItemHash;
+            getDefaultPlugChoiceHash(abilitySocketRemovingFrom)!;
         } else if (socketIndexToRemove) {
           // If its not an ability we just remove it from the overrides
           delete newSocketOverrides[socketIndexToRemove];

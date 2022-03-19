@@ -11,6 +11,7 @@ import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
+  getDefaultPlugChoiceHash,
   getFirstSocketByCategoryHash,
   getSocketsByCategoryHash,
   getSocketsByCategoryHashes,
@@ -110,9 +111,7 @@ export function createSubclassDefaultSocketOverrides(item: DimItem) {
     ]);
 
     for (const socket of abilityAndSuperSockets) {
-      // HACK: Void grenades do not have a singleInitialItemHash
-      socketOverrides[socket.socketIndex] =
-        socket.socketDefinition.singleInitialItemHash || socket.plugSet!.plugs[0].plugDef.hash;
+      socketOverrides[socket.socketIndex] = getDefaultPlugChoiceHash(socket)!;
     }
     return socketOverrides;
   }

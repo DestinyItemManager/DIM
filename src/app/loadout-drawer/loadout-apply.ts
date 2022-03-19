@@ -48,7 +48,12 @@ import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
-import { getSocketByIndex, getSocketsByIndexes, plugFitsIntoSocket } from 'app/utils/socket-utils';
+import {
+  getDefaultPlugChoiceHash,
+  getSocketByIndex,
+  getSocketsByIndexes,
+  plugFitsIntoSocket,
+} from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -842,7 +847,7 @@ function applySocketOverrides(
                 category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
                 category.category.hash === SocketCategoryHashes.Super)
             ) {
-              modHash = socket.socketDefinition.singleInitialItemHash;
+              modHash = getDefaultPlugChoiceHash(socket)!;
             }
             if (modHash) {
               const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;

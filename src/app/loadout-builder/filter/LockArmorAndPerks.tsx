@@ -5,7 +5,7 @@ import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { isLoadoutBuilderItem, pickSubclass } from 'app/loadout/item-utils';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
-import { createGetModRenderKey, getDefaultPlugHash } from 'app/loadout/mod-utils';
+import { createGetModRenderKey } from 'app/loadout/mod-utils';
 import SubclassPlugDrawer from 'app/loadout/SubclassPlugDrawer';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
@@ -13,7 +13,11 @@ import { AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
-import { getSocketByIndex, getSocketsByCategoryHashes } from 'app/utils/socket-utils';
+import {
+  getDefaultPlugChoiceHash,
+  getSocketByIndex,
+  getSocketsByCategoryHashes,
+} from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
@@ -154,7 +158,7 @@ export default memo(function LockArmorAndPerks({
 
       const isDefaultAbility = Boolean(
         socket &&
-          getDefaultPlugHash(socket, defs) === overridePlug.hash &&
+          getDefaultPlugChoiceHash(socket) === overridePlug.hash &&
           abilityAndSuperSockets.includes(socket)
       );
 

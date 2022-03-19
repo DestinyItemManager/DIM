@@ -8,7 +8,7 @@ import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import { PlugSet } from 'app/loadout/plug-drawer/types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { compareBy } from 'app/utils/comparators';
-import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { getDefaultPlugChoiceHash, getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -183,10 +183,8 @@ function getPlugsForSubclass(
           category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
           category.category.hash === SocketCategoryHashes.Super;
 
-        // Void grenades do not have a singleInitialItemHash
         const defaultPlugHash = isAbilityLikeSocket
-          ? firstSocket.socketDefinition.singleInitialItemHash ||
-            firstSocket.plugSet!.plugs[0].plugDef.hash
+          ? getDefaultPlugChoiceHash(firstSocket)
           : firstSocket.emptyPlugItemHash;
         const defaultPlug = defaultPlugHash ? defs.InventoryItem.get(defaultPlugHash) : undefined;
         if (firstSocket.plugSet && profileResponse && isPluggableItem(defaultPlug)) {
