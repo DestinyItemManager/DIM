@@ -885,6 +885,8 @@
     "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Stack Size",
     "SortByClassType": "Required Class",
+    "SortByCrafted": "Crafted",
+    "SortByDeepsight": "Deepsight",
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Armor Quality (D1)",

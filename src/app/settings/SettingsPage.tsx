@@ -179,6 +179,8 @@ export default function SettingsPage() {
     acquisitionRecency: t('Settings.SortByRecent'),
     element: t('Organizer.Columns.Element'),
     masterworked: t('Settings.Masterworked'),
+    crafted: t('Settings.SortByCrafted'),
+    deepsight: t('Settings.SortByDeepsight'),
     // archetype: 'Archetype'
   };
 

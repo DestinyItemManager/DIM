@@ -90,9 +90,13 @@ const ITEM_SORT_DENYLIST = new Set([
 
 // TODO: pass in state
 const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
+  // A -> Z
   typeName: compareBy((item: DimItem) => item.typeName),
+  // exotic -> common
   rarity: reverseComparator(compareBy((item: DimItem) => D2ItemTiers[item.tier])),
+  // high -> low
   primStat: reverseComparator(compareBy((item: DimItem) => item.primaryStat?.value ?? 0)),
+  // high -> low
   basePower: reverseComparator(compareBy((item: DimItem) => item.power)),
   // This only sorts by D1 item quality
   rating: reverseComparator(
@@ -103,10 +107,15 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
       return undefined;
     })
   ),
+  // Titan -> Hunter -> Warlock -> Unknown
   classType: compareBy((item: DimItem) => item.classType),
+  // None -> Primary -> Special -> Heavy -> Unknown
   ammoType: compareBy((item: DimItem) => item.ammoType),
+  // A -> Z
   name: compareBy((item: DimItem) => item.name),
+  // lots -> few
   amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
+  // see tagConfig
   tag: compareBy((item: DimItem) => {
     const tag = getTag(
       item,
@@ -115,20 +124,33 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     );
     return tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000;
   }),
+  // recent season -> old season
   season: reverseComparator(
     chainComparator(
       compareBy((item: DimItem) => (item.destinyVersion === 2 ? getSeason(item) : 0)),
       compareBy((item: DimItem) => item.iconOverlay ?? '')
     )
   ),
+  // sunset -> not sunset
   sunset: compareBy(isSunset),
+  // not archive -> archive
   archive: compareBy((item: DimItem) => {
     const tag = getTag(item, itemInfosSelector(store.getState()));
     return tag === 'archive';
   }),
+  // new -> old
   acquisitionRecency: acquisitionRecencyComparator,
+  // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
   element: compareBy((item: DimItem) => item.element?.enumValue ?? Number.MAX_SAFE_INTEGER),
+  // masterwork -> not masterwork
   masterworked: compareBy((item: DimItem) => (item.masterwork ? 0 : 1)),
+  // crafted -> not crafted
+  crafted: compareBy((item: DimItem) => (item.crafted ? 0 : 1)),
+  // deepsight incomplete -> deepsight complete -> no deepsight
+  // in order of "needs addressing"? ish?
+  deepsight: compareBy((item: DimItem) =>
+    item.deepsightInfo ? (item.deepsightInfo.complete ? 2 : 1) : 3
+  ),
   default: () => 0,
 };
 
