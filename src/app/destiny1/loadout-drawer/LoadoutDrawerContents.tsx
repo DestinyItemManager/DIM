@@ -2,18 +2,16 @@ import { t } from 'app/i18next-t';
 import type { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
-import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { fromEquippedTypes } from 'app/loadout-drawer/loadout-utils';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { infoLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import produce from 'immer';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -50,17 +48,17 @@ export default function LoadoutDrawerContents({
   equip,
   remove,
   add,
-  onUpdateLoadout,
+  stateDispatch,
   onShowItemPicker,
 }: {
   storeId?: string;
   loadout: Loadout;
   buckets: InventoryBuckets;
   items: ResolvedLoadoutItem[];
+  stateDispatch: React.Dispatch<Action>;
   equip(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
   remove(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
   add(item: DimItem, equip?: boolean): void;
-  onUpdateLoadout(loadout: Loadout): void;
   onShowItemPicker(shown: boolean): void;
 }) {
   const stores = useSelector(storesSelector);
@@ -73,13 +71,10 @@ export default function LoadoutDrawerContents({
       getCurrentStore(stores)!;
 
   const doFillLoadoutFromEquipped = () =>
-    fillLoadoutFromEquipped(
-      loadout,
-      items.map((li) => li.item),
-      dimStore,
-      onUpdateLoadout
-    );
-  const doFillLoadOutFromUnequipped = () => fillLoadoutFromUnequipped(loadout, dimStore, add);
+    stateDispatch({ type: 'fillLoadoutFromEquipped', store: dimStore });
+
+  const doFillLoadOutFromUnequipped = () =>
+    stateDispatch({ type: 'fillLoadoutFromUnequipped', store: dimStore });
 
   const availableTypes = _.compact(loadoutTypes.map((h) => buckets.byHash[h]));
   const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
@@ -171,80 +166,4 @@ async function pickLoadoutItem(
   } finally {
     onShowItemPicker(false);
   }
-}
-
-function fillLoadoutFromEquipped(
-  loadout: Loadout,
-  items: DimItem[],
-  dimStore: DimStore,
-  onUpdateLoadout: (loadout: Loadout) => void
-) {
-  if (!loadout) {
-    return;
-  }
-  const itemsByBucket = _.groupBy(items, (i) => i.bucket.hash);
-
-  const newEquippedItems = dimStore.items.filter(
-    (item) =>
-      item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash)
-  );
-
-  const hasEquippedInBucket = (bucket: InventoryBucket) =>
-    itemsByBucket[bucket.hash]?.some(
-      (bucketItem) =>
-        loadout.items.find(
-          (loadoutItem) => bucketItem.hash === loadoutItem.hash && bucketItem.id === loadoutItem.id
-        )?.equip
-    );
-
-  const newLoadout = produce(loadout, (draftLoadout) => {
-    for (const item of newEquippedItems) {
-      if (!hasEquippedInBucket(item.bucket)) {
-        const loadoutItem: LoadoutItem = {
-          id: item.id,
-          hash: item.hash,
-          equip: true,
-          amount: 1,
-        };
-        draftLoadout.items.push(loadoutItem);
-      } else {
-        infoLog('loadout', 'Skipping', item, { itemsByBucket, bucketId: item.bucket.hash });
-      }
-    }
-  });
-
-  onUpdateLoadout(newLoadout);
-}
-
-async function fillLoadoutFromUnequipped(
-  loadout: Loadout,
-  dimStore: DimStore,
-  add: (item: DimItem, equip?: boolean) => void,
-  category?: string
-) {
-  if (!loadout) {
-    return;
-  }
-
-  const items = getUnequippedItemsForLoadout(dimStore, category);
-
-  // TODO: this isn't right - `items` isn't being updated after each add
-  for (const item of items) {
-    add(item, false);
-  }
-}
-
-/**
- * filter for items that are in a character's "pockets" but not equipped,
- * and can be added to a loadout
- */
-function getUnequippedItemsForLoadout(dimStore: DimStore, category?: string) {
-  return dimStore.items.filter(
-    (item) =>
-      !item.location.inPostmaster &&
-      item.bucket.hash !== BucketHashes.Subclass &&
-      itemCanBeInLoadout(item) &&
-      (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)) &&
-      !item.equipped
-  );
 }

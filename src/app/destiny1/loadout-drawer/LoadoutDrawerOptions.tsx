@@ -2,6 +2,7 @@ import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { getClass } from 'app/inventory/store/character-utils';
+import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
@@ -28,7 +29,7 @@ export default function LoadoutDrawerOptions({
   loadout,
   showClass,
   isNew,
-  updateLoadout,
+  stateDispatch,
   saveLoadout,
   saveAsNew,
   deleteLoadout,
@@ -36,7 +37,7 @@ export default function LoadoutDrawerOptions({
   loadout: Readonly<Loadout> | undefined;
   showClass: boolean;
   isNew: boolean;
-  updateLoadout(loadout: Loadout): void;
+  stateDispatch: React.Dispatch<Action>;
   saveLoadout(e: React.FormEvent): void;
   saveAsNew(e: React.MouseEvent): void;
   deleteLoadout(): void;
@@ -59,26 +60,16 @@ export default function LoadoutDrawerOptions({
         loadout.classType === DestinyClass.Unknown)
   );
 
-  const setName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateLoadout({
-      ...loadout,
-      name: e.target.value,
-    });
-  };
+  const setName = (e: React.ChangeEvent<HTMLInputElement>) =>
+    stateDispatch({ type: 'setName', name: e.target.value });
 
-  const setClassType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateLoadout({
-      ...loadout,
-      classType: parseInt(e.target.value, 10),
-    });
-  };
+  const setClassType = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    stateDispatch({ type: 'setClassType', classType: parseInt(e.target.value, 10) });
 
-  const setClearSpace = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateLoadout({
-      ...loadout,
-      clearSpace: e.target.checked,
-    });
-  };
+  const setClearSpace = (e: React.ChangeEvent<HTMLInputElement>) =>
+    stateDispatch({ type: 'setClearSpace', clearSpace: e.target.checked });
+
+  const addNotes = () => stateDispatch({ type: 'setNotes', notes: '' });
 
   // TODO: make the link to loadout optimizer bring the currently equipped items along in route state
 
@@ -94,13 +85,6 @@ export default function LoadoutDrawerOptions({
     saveDisabled ||
     // There's an existing loadout with the same name & class
     Boolean(clashingLoadout);
-
-  const addNotes = () => {
-    updateLoadout({
-      ...loadout,
-      notes: '',
-    });
-  };
 
   return (
     <div className={styles.loadoutOptions}>
