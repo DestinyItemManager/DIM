@@ -614,27 +614,28 @@ function setClearSpace(clearSpace: boolean): LoadoutUpdateFunction {
   });
 }
 
+export function setLoadoutParameters(params: Partial<LoadoutParameters>): LoadoutUpdateFunction {
+  return (loadout) => ({
+    ...loadout,
+    parameters: { ...loadout.parameters, ...params },
+  });
+}
+
 /**
  * Replace the mods in this loadout with all the mods currently on this character's equipped armor.
  */
 export function syncModsFromEquipped(store: DimStore): LoadoutUpdateFunction {
-  return (loadout) => {
-    const mods: number[] = [];
-    const equippedArmor = store.items.filter(
-      (item) => item.equipped && itemCanBeInLoadout(item) && item.bucket.sort === 'Armor'
-    );
-    for (const item of equippedArmor) {
-      mods.push(...extractArmorModHashes(item));
-    }
+  const mods: number[] = [];
+  const equippedArmor = store.items.filter(
+    (item) => item.equipped && itemCanBeInLoadout(item) && item.bucket.sort === 'Armor'
+  );
+  for (const item of equippedArmor) {
+    mods.push(...extractArmorModHashes(item));
+  }
 
-    return {
-      ...loadout,
-      parameters: {
-        ...loadout.parameters,
-        mods,
-      },
-    };
-  };
+  return setLoadoutParameters({
+    mods,
+  });
 }
 
 export function clearBucketCategory(
@@ -672,42 +673,22 @@ export function clearMods(): LoadoutUpdateFunction {
   });
 }
 
-/* TODO:
-const LoadoutParametersUpdateFunction = ()
-
-function updateLoadoutParameters() {
-
-}
-*/
-
 export function changeClearMods(enabled: boolean): LoadoutUpdateFunction {
-  return (loadout) => ({
-    ...loadout,
-    parameters: {
-      ...loadout.parameters,
-      clearMods: enabled,
-    },
+  return setLoadoutParameters({
+    clearMods: enabled,
   });
 }
 
 export function updateMods(mods: number[]): LoadoutUpdateFunction {
-  return (loadout) => ({
-    ...loadout,
-    parameters: {
-      ...loadout.parameters,
-      mods,
-    },
+  return setLoadoutParameters({
+    mods,
   });
 }
 
 export function updateModsByBucket(
   modsByBucket: { [bucketHash: number]: number[] } | undefined
 ): LoadoutUpdateFunction {
-  return (loadout) => ({
-    ...loadout,
-    parameters: {
-      ...loadout.parameters,
-      modsByBucket: _.isEmpty(modsByBucket) ? undefined : modsByBucket,
-    },
+  return setLoadoutParameters({
+    modsByBucket: _.isEmpty(modsByBucket) ? undefined : modsByBucket,
   });
 }
