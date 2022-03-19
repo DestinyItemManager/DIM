@@ -1,3 +1,4 @@
+import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createLoadoutShare } from 'app/dim-api/dim-api';
 import { languageSelector } from 'app/dim-api/selectors';
@@ -20,7 +21,6 @@ import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { plainString } from 'app/search/search-filters/freeform';
 import { useSetting } from 'app/settings/hooks';
-import { LoadoutSort } from 'app/settings/initial-settings';
 import { addIcon, AppIcon, deleteIcon, faCalculator } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
