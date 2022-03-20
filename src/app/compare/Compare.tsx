@@ -19,12 +19,12 @@ import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import Sheet from '../dim-ui/Sheet';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, DimSocket } from '../inventory/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
 import styles from './Compare.m.scss';
@@ -180,21 +180,15 @@ export default function Compare() {
 
   const items = useMemo(
     () => (
-      <div className={styles.items}>
-        {sortedComparisonItems.map((item) => (
-          <CompareItem
-            item={item}
-            key={item.id}
-            stats={allStats}
-            itemClick={locateItem}
-            remove={remove}
-            setHighlight={isTouch ? undefined : setHighlight}
-            onPlugClicked={onPlugClicked}
-            compareBaseStats={doCompareBaseStats}
-            isInitialItem={session?.initialItemId === item.id}
-          />
-        ))}
-      </div>
+      <CompareItems
+        items={sortedComparisonItems}
+        allStats={allStats}
+        remove={remove}
+        setHighlight={isTouch ? undefined : setHighlight}
+        onPlugClicked={onPlugClicked}
+        doCompareBaseStats={doCompareBaseStats}
+        initialItemId={session?.initialItemId}
+      />
     ),
     [
       allStats,
@@ -268,6 +262,71 @@ export default function Compare() {
         </div>
       </div>
     </Sheet>
+  );
+}
+
+function CompareItems({
+  items,
+  doCompareBaseStats,
+  allStats,
+  remove,
+  setHighlight,
+  onPlugClicked,
+  initialItemId,
+}: {
+  initialItemId: string | undefined;
+  doCompareBaseStats: boolean;
+  items: DimItem[];
+  allStats: StatInfo[];
+  remove: (item: DimItem) => void;
+  setHighlight?: React.Dispatch<React.SetStateAction<string | number | undefined>>;
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const clientRef = useRef<number>();
+  const scrollRef = useRef<number>();
+  const handleTouchStart = useCallback((e: PointerEvent) => {
+    console.log('handle', e.type);
+    // e.stopPropagation();
+    // e.preventDefault();
+    clientRef.current = e.clientX;
+    scrollRef.current = ref.current!.scrollLeft;
+    ref.current!.setPointerCapture(e.pointerId);
+  }, []);
+  const handleTouchEnd = useCallback((e: PointerEvent) => {
+    console.log('handle', e.type);
+    clientRef.current = undefined;
+    scrollRef.current = undefined;
+  }, []);
+  const handleTouchMove = useCallback((e: PointerEvent) => {
+    console.log('handle', e.type, e.clientX, scrollRef.current, clientRef.current);
+    // e.stopPropagation();
+    // e.preventDefault();
+    ref.current!.scrollLeft = scrollRef.current! - (e.clientX - clientRef.current!);
+  }, []);
+  return (
+    <div
+      ref={ref}
+      className={styles.items}
+      onPointerDown={handleTouchStart}
+      onPointerMove={handleTouchMove}
+      onPointerUp={handleTouchEnd}
+      onPointerCancel={handleTouchEnd}
+    >
+      {items.map((item) => (
+        <CompareItem
+          item={item}
+          key={item.id}
+          stats={allStats}
+          itemClick={locateItem}
+          remove={remove}
+          setHighlight={setHighlight}
+          onPlugClicked={onPlugClicked}
+          compareBaseStats={doCompareBaseStats}
+          isInitialItem={initialItemId === item.id}
+        />
+      ))}
+    </div>
   );
 }
 
