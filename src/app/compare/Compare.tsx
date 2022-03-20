@@ -12,9 +12,7 @@ import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
-import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { isiOSBrowser } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -68,7 +66,6 @@ export default function Compare() {
   const session = useSelector(compareSessionSelector);
   const rawCompareItems = useSelector(compareItemsSelector(session?.vendorCharacterId));
   const organizerLink = useSelector(compareOrganizerLinkSelector);
-  const isPhonePortrait = useIsPhonePortrait();
 
   /** The stat row to highlight */
   const [highlight, setHighlight] = useState<string | number>();
@@ -254,9 +251,6 @@ export default function Compare() {
                 {stat.id === highlight && <div className={styles.highlightBar} />}
               </div>
             ))}
-            {isPhonePortrait && isiOSBrowser() && (
-              <div className={styles.swipeAdvice}>{t('Compare.SwipeAdvice')}</div>
-            )}
           </div>
           {items}
         </div>
@@ -282,34 +276,37 @@ function CompareItems({
   setHighlight?: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
+  // This uses pointer events to directly set the scroll position based on
+  // dragging the items. This works around an iOS bug around nested draggables,
+  // but also is kinda nice on desktop. I wasn't able to get it to do an
+  // inertial animation after releasing.
+
   const ref = useRef<HTMLDivElement>(null);
-  const clientRef = useRef<number>();
-  const scrollRef = useRef<number>();
-  const handleTouchStart = useCallback((e: PointerEvent) => {
-    console.log('handle', e.type);
-    // e.stopPropagation();
-    // e.preventDefault();
-    clientRef.current = e.clientX;
-    scrollRef.current = ref.current!.scrollLeft;
+  const dragStateRef = useRef<{ scrollPosition: number; pointerDownPosition: number }>();
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    dragStateRef.current = {
+      pointerDownPosition: e.clientX,
+      scrollPosition: ref.current!.scrollLeft,
+    };
     ref.current!.setPointerCapture(e.pointerId);
   }, []);
-  const handleTouchEnd = useCallback((e: PointerEvent) => {
-    console.log('handle', e.type);
-    clientRef.current = undefined;
-    scrollRef.current = undefined;
+  const handleTouchEnd = useCallback((e: React.PointerEvent) => {
+    dragStateRef.current = undefined;
+    ref.current!.releasePointerCapture(e.pointerId);
   }, []);
-  const handleTouchMove = useCallback((e: PointerEvent) => {
-    console.log('handle', e.type, e.clientX, scrollRef.current, clientRef.current);
-    // e.stopPropagation();
-    // e.preventDefault();
-    ref.current!.scrollLeft = scrollRef.current! - (e.clientX - clientRef.current!);
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (dragStateRef.current !== undefined) {
+      const { scrollPosition, pointerDownPosition } = dragStateRef.current;
+      ref.current!.scrollLeft = scrollPosition - (e.clientX - pointerDownPosition);
+    }
   }, []);
+
   return (
     <div
       ref={ref}
       className={styles.items}
-      onPointerDown={handleTouchStart}
-      onPointerMove={handleTouchMove}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
       onPointerUp={handleTouchEnd}
       onPointerCancel={handleTouchEnd}
     >

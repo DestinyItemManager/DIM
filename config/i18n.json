@@ -99,8 +99,7 @@
     "Error": {
       "Unmatched": "This item doesn't match the type of items being compared."
     },
-    "Splits": "Compare similar splits ({{quantity}})",
-    "SwipeAdvice": "Use two fingers to scroll"
+    "Splits": "Compare similar splits ({{quantity}})"
   },
   "Cooldown": {
     "Grenade": "Grenade cooldown: {{cooldown}}",
