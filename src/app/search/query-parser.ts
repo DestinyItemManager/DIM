@@ -25,6 +25,7 @@
  * describe their relationship.
  */
 export type QueryAST = (AndOp | OrOp | NotOp | FilterOp | NoOp) & {
+  title?: string;
   error?: Error;
 };
 
@@ -383,6 +384,18 @@ export function* lexer(query: string): Generator<Token> {
 }
 
 /**
+ * Quote a string if it's needed.
+ *
+ * @example
+ *
+ * quote("foo bar") => "\"foo bar\""
+ * quote("foobar") => "foobar"
+ */
+function quote(arg: string) {
+  return /[\s()]/.test(arg) ? `"${arg}"` : arg;
+}
+
+/**
  * Build a standardized version of the query as a string. This is useful for deduping queries.
  * Example: 'is:weapon and is:sniperrifle or not is:armor and modslot:arrival' =>
  *          '(-is:armor modslot:arrival) or (is:sniperrifle is:weapon)'
@@ -390,9 +403,7 @@ export function* lexer(query: string): Generator<Token> {
 export function canonicalizeQuery(query: QueryAST, depth = 0): string {
   switch (query.op) {
     case 'filter':
-      return query.type === 'keyword'
-        ? `${/\s/.test(query.args) ? `"${query.args}"` : query.args}`
-        : `${query.type}:${/\s/.test(query.args) ? `"${query.args}"` : query.args}`;
+      return query.type === 'keyword' ? quote(query.args) : `${query.type}:${quote(query.args)}`;
     case 'not':
       return `-${canonicalizeQuery(query.operand, depth + 1)}`;
     case 'and':

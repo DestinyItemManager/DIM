@@ -98,6 +98,7 @@ const canonicalize = [
   ],
   ['( power:>1000 and -modslot:arrival ) ', 'power:>1000 -modslot:arrival'],
   ['food fight', 'food and fight'],
+  ['inloadout:"----<()>fast"', 'inloadout:"----<()>fast"'],
 ];
 
 test.each(cases)('parse |%s|', (query) => {
