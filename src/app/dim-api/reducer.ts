@@ -12,9 +12,8 @@ import {
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { recentSearchComparator } from 'app/search/autocomplete';
-import { parseQuery } from 'app/search/query-parser';
 import { searchConfigSelector } from 'app/search/search-config';
-import { parseAndValidateQuery, validateQuery } from 'app/search/search-utils';
+import { parseAndValidateQuery } from 'app/search/search-utils';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
@@ -1145,16 +1144,8 @@ function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccou
       continue;
     }
 
-    try {
-      const ast = parseQuery(search.query);
-      if (
-        !validateQuery(ast, searchConfigs) ||
-        ast.op === 'noop' ||
-        (ast.op === 'filter' && ast.type === 'keyword')
-      ) {
-        deleteSearch(draft, account.destinyVersion, search.query);
-      }
-    } catch (e) {
+    const { saveInHistory } = parseAndValidateQuery(search.query, searchConfigs);
+    if (!saveInHistory) {
       deleteSearch(draft, account.destinyVersion, search.query);
     }
   }
