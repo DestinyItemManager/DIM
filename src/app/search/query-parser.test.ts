@@ -99,6 +99,12 @@ const canonicalize = [
   ['( power:>1000 and -modslot:arrival ) ', 'power:>1000 -modslot:arrival'],
   ['food fight', 'food and fight'],
   ['inloadout:"----<()>fast"', 'inloadout:"----<()>fast"'],
+  ['perkname:"foobar"', 'perkname:foobar'],
+  ["perkname:'foo bar'", 'perkname:"foo bar"'],
+  ['perkname:"foobar"', 'perkname:foobar'],
+  ["perkname:'foo\"bar'", "perkname:'foo\"bar'"],
+  ['perkname:"foo\\"bar"', "perkname:'foo\"bar'"],
+  ["perkname:'foo\\\"ba\\'r'", "perkname:'foo\"ba\\'r'"],
 ];
 
 test.each(cases)('parse |%s|', (query) => {

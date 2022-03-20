@@ -251,11 +251,6 @@ function isSameOp<T extends 'and' | 'or'>(binOp: T, op: QueryAST): op is AndOp |
 type NoArgTokenType = '(' | ')' | 'not' | 'or' | 'and' | 'implicit_and';
 export type Token = [NoArgTokenType] | ['filter', string, string];
 
-// Two different kind of quotes
-const quoteRegexes = {
-  '"': /.*?"/y,
-  "'": /.*?'/y,
-};
 // Parens: `(` can be followed by whitespace, while `)` can be preceded by it
 const parens = /(\(\s*|\s*\))/y;
 // A `-` followed by any amount of whitespace is the same as "not"
@@ -326,14 +321,34 @@ export function* lexer(query: string): Generator<Token> {
    * Consume and return the contents of a quoted string.
    */
   const consumeString = (startingQuoteChar: string) => {
+    const initial = i;
     // Quoted string
     consume(startingQuoteChar);
-    if ((match = extract(quoteRegexes[startingQuoteChar])) !== undefined) {
-      // Slice off the last character
-      return match.slice(0, match.length - 1);
-    } else {
-      throw new Error('Unterminated quotes: |' + query.slice(i) + '| ' + i);
+    let str = '';
+    while (i < query.length) {
+      const char = query[i];
+      consume(char);
+      // Handle character escapes e.g. \", \', \\
+      if (char === '\\') {
+        if (i < query.length) {
+          const escaped = query[i];
+          if (escaped === '"' || escaped === "'" || escaped === '\\') {
+            str += escaped;
+            consume(escaped);
+          } else {
+            throw new Error('Unrecognized escape sequence \\' + escaped);
+          }
+        } else {
+          str = str + char;
+        }
+      } else if (char === startingQuoteChar) {
+        return str;
+      } else {
+        str = str + char;
+      }
     }
+
+    throw new Error('Unterminated quotes: |' + query.slice(initial) + '| ' + initial);
   };
 
   while (i < query.length) {
@@ -388,11 +403,14 @@ export function* lexer(query: string): Generator<Token> {
  *
  * @example
  *
- * quote("foo bar") => "\"foo bar\""
- * quote("foobar") => "foobar"
+ * quoteFilterString("foo bar") => "\"foo bar\""
+ * quoteFilterString("foobar") => "foobar"
+ * quoteFilterString("foo\"bar") => foobar"
  */
-function quote(arg: string) {
-  return /[\s()]/.test(arg) ? `"${arg}"` : arg;
+export function quoteFilterString(arg: string) {
+  const quoteChar = arg.includes('"') ? "'" : '"';
+  arg = arg.replaceAll(quoteChar, `\\${quoteChar}`);
+  return /[\s()"']/.test(arg) ? `${quoteChar}${arg}${quoteChar}` : arg;
 }
 
 /**
@@ -403,7 +421,9 @@ function quote(arg: string) {
 export function canonicalizeQuery(query: QueryAST, depth = 0): string {
   switch (query.op) {
     case 'filter':
-      return query.type === 'keyword' ? quote(query.args) : `${query.type}:${quote(query.args)}`;
+      return query.type === 'keyword'
+        ? quoteFilterString(query.args)
+        : `${query.type}:${quoteFilterString(query.args)}`;
     case 'not':
       return `-${canonicalizeQuery(query.operand, depth + 1)}`;
     case 'and':

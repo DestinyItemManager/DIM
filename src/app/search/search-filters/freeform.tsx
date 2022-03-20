@@ -6,6 +6,7 @@ import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums'
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { FilterDefinition } from '../filter-types';
+import { quoteFilterString } from '../query-parser';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
 const isLatinBased = memoizeOne((language: string) =>
@@ -250,14 +251,4 @@ function getStringsFromAllSockets(item: DimItem, includeDescription = true) {
   }
 
   return results;
-}
-
-// we can't properly quote a search string if it contains both ' and ", so.. we use this
-// to filter them out. small caveat there for the future "WHY DOESN'T THIS WORK" user
-export function isQuotable(s: string) {
-  return !(s.includes(`'`) && s.includes(`"`));
-}
-
-export function quoteFilterString(s: string) {
-  return s.includes(`"`) ? `'${s}'` : `"${s}"`;
 }
