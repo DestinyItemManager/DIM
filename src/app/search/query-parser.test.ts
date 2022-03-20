@@ -55,6 +55,12 @@ const cases = [
   ['not (forgotten)'],
   ['not "forgotten"'],
   ['gnawing hunger'],
+  // Comments
+  ['/* My cool search */ is:armor'],
+  ['  /* My cool search */\n is:armor'],
+  [
+    '/* My cool search */ (/* armor */ is:armor and is:blue) or (/*weapons*/ is:weapon and perkname:"Kill Clip")',
+  ],
 ];
 
 // Each of these asserts that the first query is the same as the second query once parsed
@@ -98,6 +104,11 @@ const canonicalize = [
   ],
   ['( power:>1000 and -modslot:arrival ) ', 'power:>1000 -modslot:arrival'],
   ['food fight', 'food and fight'],
+  ['/* My cool search   */\n is:armor', '/* my cool search */ is:armor'],
+  [
+    '/* My cool search */ (/* armor */ is:armor and is:blue) or (/*weapons*/ is:weapon and perkname:"Kill Clip")',
+    '/* my cool search */ (is:armor is:blue) or (is:weapon perkname:"kill clip")',
+  ],
 ];
 
 test.each(cases)('parse |%s|', (query) => {
