@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { craftedSocketCategoryHash, mementoSocketCategoryHash } from 'app/inventory/store/crafted';
+import { isDeepsightResonanceSocket } from 'app/inventory/store/deepsight';
 import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
@@ -79,7 +80,10 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
         (s) => !s.isPerk && s !== archetypeSocket
       )
     )
-    .filter((socket) => socket.plugged?.plugDef.displayProperties.name);
+    .filter(
+      (socket) =>
+        socket.plugged?.plugDef.displayProperties.name && !isDeepsightResonanceSocket(socket)
+    );
 
   const keyStats =
     item.stats &&

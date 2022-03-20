@@ -8,6 +8,9 @@ export type DimResonantElementTag =
 export const resonantElementTags: DimResonantElementTag[] = Object.values(
   resonantElementTagsByObjectiveHash
 );
+export const resonantElementObjectiveHashes = Object.keys(resonantElementTagsByObjectiveHash).map(
+  (objectiveHashStr) => parseInt(objectiveHashStr, 10)
+);
 
 export function buildDeepsightInfo(
   item: DimItem,
@@ -30,16 +33,21 @@ export function buildDeepsightInfo(
 
 function getResonanceSocket(item: DimItem): DimSocket | undefined {
   if (item.bucket.inWeapons && item.sockets) {
-    return item.sockets.allSockets.find(
-      (s) =>
-        s.plugged?.plugDef.plug.plugCategoryHash ===
-          PlugCategoryHashes.CraftingPlugsWeaponsModsMemories && s.plugged?.plugDef.objectives
-    );
+    return item.sockets.allSockets.find(isDeepsightResonanceSocket);
   }
+}
+
+export function isDeepsightResonanceSocket(socket: DimSocket): boolean {
+  return Boolean(
+    socket.plugged?.plugDef.plug.plugCategoryHash ===
+      PlugCategoryHashes.CraftingPlugsWeaponsModsMemories && socket.plugged?.plugDef.objectives
+  );
 }
 
 function getResonantElements(item: DimItem, defs: D2ManifestDefinitions): DimResonantElement[] {
   const results: DimResonantElement[] = [];
+
+  const existingElementTags: string[] = [];
 
   const sockets = item.sockets?.allSockets;
   if (sockets) {
@@ -47,12 +55,13 @@ function getResonantElements(item: DimItem, defs: D2ManifestDefinitions): DimRes
       for (const plug of socket.plugOptions) {
         for (const objective of plug.plugObjectives) {
           const elementTag = resonantElementTagsByObjectiveHash[objective.objectiveHash];
-          if (elementTag) {
+          if (elementTag && !existingElementTags.includes(elementTag)) {
             const def = defs.Objective.get(objective.objectiveHash);
             if (def) {
+              existingElementTags.push(elementTag);
               results.push({
                 tag: elementTag,
-                icon: def.displayProperties?.icon,
+                icon: def.displayProperties?.iconSequences[0]?.frames[1],
                 name: def.progressDescription,
               });
             }

@@ -815,7 +815,8 @@
     },
     "TriageTab": "Triage",
     "Vault": "Vault",
-    "WeaponLevel": "Weapon Level {{level}}"
+    "WeaponLevel": "Weapon Level {{level}}",
+    "AttunementProgress": "Attunement Progress"
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
@@ -970,6 +971,7 @@
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
+    "ReverseSort": "Toggle forward/reverse sort",
     "SetSort": "Sort items by:",
     "Settings": "Settings",
     "ShowNewItems": "Show a red dot on new items",
@@ -980,6 +982,8 @@
     "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Stack Size",
     "SortByClassType": "Required Class",
+    "SortByCrafted": "Crafted (D2)",
+    "SortByDeepsight": "Deepsight (D2)",
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Armor Quality (D1)",
