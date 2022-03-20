@@ -27,6 +27,10 @@ export function parseAndValidateQuery(
         // don't save "trivial" single-keyword filters
         saveInHistory = false;
       }
+      // Some sites have people save big lists of item IDs. Even if these aren't too long, don't save them automatically
+      if (ast.op === 'or' && ast.operands.every((op) => op.op === 'filter' && op.type === 'id')) {
+        saveInHistory = false;
+      }
       canonical = canonicalizeQuery(ast);
       saveable = canonical.length <= 2048;
     }
