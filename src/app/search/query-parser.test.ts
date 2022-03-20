@@ -1,4 +1,4 @@
-import { canonicalizeQuery, lexer, parseQuery, Token } from './query-parser';
+import { canonicalizeQuery, lexer, parseQuery, quoteFilterString, Token } from './query-parser';
 
 // To update the snapshots, run:
 // npx jest --updateSnapshot src/app/search/query-parser.test.ts
@@ -107,6 +107,16 @@ const canonicalize = [
   ["perkname:'foo\\\"ba\\'r'", "perkname:'foo\"ba\\'r'"],
 ];
 
+// Test that we can quote a string, parse it back as part of a search, and get the original string
+const quotes = [
+  ['foobar'],
+  ['Foo\\bar'],
+  ['My cool loadout'],
+  ['My "cool" loadout'],
+  ['My "cool" loadout\'s little brother'],
+  ['My "cool" load\\out\'s little brother'],
+];
+
 test.each(cases)('parse |%s|', (query) => {
   // Test just the lexer
   const tokens: Token[] = [];
@@ -129,4 +139,14 @@ test.each(equivalentSearches)('|%s| is equivalent to |%s|', (firstQuery, secondQ
 test.each(canonicalize)('|%s| is canonically |%s|', (query, canonical) => {
   const canonicalized = canonicalizeQuery(parseQuery(query));
   expect(canonicalized).toEqual(canonical);
+});
+
+test.each(quotes)('|%s| quoting roundtrip', (str) => {
+  const quoted = quoteFilterString(str);
+  const ast = parseQuery(`name:${quoted}`);
+  if (ast.op === 'filter') {
+    expect(ast.args).toEqual(str.toLowerCase());
+  } else {
+    throw new Error(`Failed: ${quoted}`);
+  }
 });

@@ -407,9 +407,15 @@ export function* lexer(query: string): Generator<Token> {
  * quoteFilterString("foo\"bar") => foobar"
  */
 export function quoteFilterString(arg: string) {
-  const quoteChar = arg.includes('"') ? "'" : '"';
-  arg = arg.replaceAll(quoteChar, `\\${quoteChar}`);
-  return /[\s()"']/.test(arg) ? `${quoteChar}${arg}${quoteChar}` : arg;
+  const requiresQuotes = /[\s()"']/.test(arg);
+  if (requiresQuotes) {
+    const quoteChar = arg.includes('"') ? "'" : '"';
+    arg = arg.replaceAll('\\', '\\\\');
+    arg = arg.replaceAll(quoteChar, `\\${quoteChar}`);
+    return `${quoteChar}${arg}${quoteChar}`;
+  } else {
+    return arg;
+  }
 }
 
 /**
