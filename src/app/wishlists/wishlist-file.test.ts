@@ -24,6 +24,20 @@ const autoUpgradeCases: [wishlist: string, results: WishListRoll[]][] = [
     [
       {
         itemHash: -69420,
+        recommendedPerks: new Set([2610012052, 4104185692]),
+        notes: 'Golden Tricorn / Frenzy',
+        isExpertMode: true,
+        isUndesirable: false,
+      },
+      {
+        itemHash: -69420,
+        recommendedPerks: new Set([4104185692, 4290541820]),
+        notes: 'Golden Tricorn / Frenzy',
+        isExpertMode: true,
+        isUndesirable: false,
+      },
+      {
+        itemHash: -69420,
         recommendedPerks: new Set([4290541820, 3007133316]),
         notes: 'Golden Tricorn / Frenzy',
         isExpertMode: true,
@@ -36,20 +50,6 @@ const autoUpgradeCases: [wishlist: string, results: WishListRoll[]][] = [
         isExpertMode: true,
         isUndesirable: false,
       },
-      {
-        itemHash: -69420,
-        recommendedPerks: new Set([4290541820, 4104185692]),
-        notes: 'Golden Tricorn / Frenzy',
-        isExpertMode: true,
-        isUndesirable: false,
-      },
-      {
-        itemHash: -69420,
-        recommendedPerks: new Set([2610012052, 4104185692]),
-        notes: 'Golden Tricorn / Frenzy',
-        isExpertMode: true,
-        isUndesirable: false,
-      },
     ],
   ],
 ];
@@ -57,5 +57,5 @@ const autoUpgradeCases: [wishlist: string, results: WishListRoll[]][] = [
 test.each(autoUpgradeCases)('parse wishlist line with enhanced trait: %s', (wishlist, result) => {
   const allRolls = toWishList(wishlist).wishListRolls;
   console.log({ allRolls });
-  // expect(toWishList(wishlist).wishListRolls).toStrictEqual(result);
+  expect(toWishList(wishlist).wishListRolls).toStrictEqual(result);
 });

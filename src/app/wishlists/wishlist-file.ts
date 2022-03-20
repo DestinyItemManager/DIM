@@ -1,5 +1,5 @@
 import { emptySet } from 'app/utils/empty';
-import { timer } from 'app/utils/log';
+import { timer, warnLog } from 'app/utils/log';
 import D2EnhancedTraits from 'data/d2/trait-to-enhanced-trait.json';
 import { DimWishList, WishListAndInfo, WishListInfo, WishListRoll } from './types';
 
@@ -80,9 +80,9 @@ export function toWishList(...fileTexts: string[]): WishListAndInfo {
         }
       }
 
-      // if (dupes > 0) {
-      //   warnLog('wishlist', 'Discarded', dupes, 'duplicate rolls from wish list');
-      // }
+      if (dupes > 0) {
+        warnLog('wishlist', 'Discarded', dupes, 'duplicate rolls from wish list');
+      }
       wishList.infos.push(info);
     }
     return wishList;
@@ -94,33 +94,46 @@ export function toWishList(...fileTexts: string[]): WishListAndInfo {
 function autoUpgradeRoll(roll: WishListRoll): WishListRoll[] {
   const allRolls: WishListRoll[] = [];
 
-  let enhancedRoll = getEnhancedRoll(roll);
-
-  while (enhancedRoll !== null) {
-    allRolls.push(enhancedRoll);
-    enhancedRoll = getEnhancedRoll(enhancedRoll);
-  }
-
   allRolls.push(roll);
-  return allRolls;
-}
 
-function getEnhancedRoll(roll: WishListRoll): WishListRoll | null {
-  let upgradeRoll: WishListRoll | null = null;
+  roll.recommendedPerks.forEach((perk) => {
+    const enhancedRoll = getEnhancedRoll(roll, perk);
 
-  roll.recommendedPerks.forEach((p) => {
-    const enhancedPerk = D2EnhancedTraits[p];
+    if (enhancedRoll) {
+      allRolls.push(enhancedRoll);
 
-    if (!upgradeRoll && enhancedPerk && !isNaN(enhancedPerk)) {
-      const cloneRoll = { ...roll };
-      cloneRoll.recommendedPerks.delete(p);
-      cloneRoll.recommendedPerks.add(enhancedPerk);
+      enhancedRoll.recommendedPerks.forEach((ePerk) => {
+        const innerEnhancedRoll = getEnhancedRoll(enhancedRoll, ePerk);
 
-      upgradeRoll = cloneRoll;
+        if (innerEnhancedRoll) {
+          allRolls.push(innerEnhancedRoll);
+        }
+      });
     }
   });
 
-  return upgradeRoll;
+  return allRolls;
+}
+
+function getEnhancedRoll(roll: WishListRoll, perkToCheck: number): WishListRoll | null {
+  const enhancedPerk = D2EnhancedTraits[perkToCheck];
+
+  if (enhancedPerk && !isNaN(enhancedPerk)) {
+    const cloneRoll = {
+      itemHash: roll.itemHash,
+      recommendedPerks: new Set(roll.recommendedPerks),
+      isExpertMode: roll.isExpertMode,
+      isUndesirable: roll.isUndesirable,
+      notes: roll.notes,
+    };
+
+    cloneRoll.recommendedPerks.delete(perkToCheck);
+    cloneRoll.recommendedPerks.add(enhancedPerk);
+
+    return cloneRoll;
+  }
+
+  return null;
 }
 
 function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
