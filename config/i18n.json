@@ -964,6 +964,8 @@
     "Masterworked": "Masterworked",
     "PerkDisplay": "Perk display in item popup",
     "PerkList": "List",
+    "Progress": "Progress Display",
+    "ProgressBountiesCompletedCountShow": "Show completed bounties count",
     "PerkGrid": "Grid",
     "Ratings": "Ratings",
     "ReloadDIM": "Reload DIM to finish switching language",
