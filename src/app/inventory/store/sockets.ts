@@ -377,8 +377,8 @@ function buildPlug(
 
   const failReasons = plug.enableFailIndexes
     ? _.compact(
-        plug.enableFailIndexes.map((index) => plugDef.plug!.enabledRules[index]?.failureMessage)
-      ).join('\n')
+      plug.enableFailIndexes.map((index) => plugDef.plug!.enabledRules[index]?.failureMessage)
+    ).join('\n')
     : '';
 
   return {
@@ -430,6 +430,10 @@ function addPlugOption(
   }
 }
 
+function isKnownEmptyPlugItemHash(plugItemHash: number) {
+  return emptyPlugHashes.has(plugItemHash);
+}
+
 // These socket categories never have any empty-able sockets.
 const noDefaultSocketCategoryHashes: SocketCategoryHashes[] = [
   SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
@@ -470,8 +474,9 @@ function findEmptyPlug(
   plugSet: DimPlugSet | undefined,
   reusablePlugs?: DestinyItemPlugBase[]
 ) {
-  // First, perform some filtering so we don't repeatedly search through very large plug sets
-  // like armor 2.0 stat plug sets, masterwork sets, or armor energy sets.
+  // First, perform some filtering, both for efficiency and to explicitly
+  // leave emptyPlugItemHash set to undefined for sockets that never have
+  // an empty plug, like abilities etc.
 
   if (noDefaultSocketCategoryHashes.includes(socketType.socketCategoryHash)) {
     return undefined;
@@ -493,16 +498,17 @@ function findEmptyPlug(
     return undefined;
   }
 
-  // Check sources in decreasing order of assumed reliability:
-  // When the live API response tells us about a certain empty plug, that's
-  // probably the most correct. PlugSets are usually better than the
-  // socket.reusablePlugs, but sometimes there's an empty option not present in the PlugSet.
-  // FIXME #7793: reusablePlugItems is thrown away when there's a PlugSet.
-  const isDefault = (p: number) => emptyPlugHashes.has(p);
+  // Sometimes the empty plug is a regular plug set entry, sometimes it's one
+  // of the reusablePlugItems. However, reusablePlugItems is thrown away when
+  // there's a PlugSet, so we check the live API response reusablePlugs instead
+  // if available. This is insufficient for shaders on blue items because
+  // neither the API response nor the plugSet have the empty shader.
+  // FIXME #7793: Retain socket.reusablePlugItems when it has unique items
+  // and evaluate whether checking live API response is still necessary
   const empty =
-    reusablePlugs?.map((p) => p.plugItemHash).find(isDefault) ||
-    plugSet?.plugs.map((p) => p.plugDef.hash).find(isDefault) ||
-    socket.reusablePlugItems.map((p) => p.plugItemHash).find(isDefault);
+    reusablePlugs?.map((p) => p.plugItemHash).find(isKnownEmptyPlugItemHash) ||
+    plugSet?.precomputedEmptyPlugItemHash ||
+    socket.reusablePlugItems.map((p) => p.plugItemHash).find(isKnownEmptyPlugItemHash);
 
   // Falling back to singleInitialItemHash is the conservative choice:
   // 1. Before this function existed, we used singleInitialItemHash all the
@@ -513,7 +519,7 @@ function findEmptyPlug(
   //    the filters above or the D2AI list when something breaks.
   //
   // If there's a very good reason to assume a socket can't be emptied, filter it above.
-  return empty ? empty : socket.singleInitialItemHash || undefined;
+  return empty ?? (socket.singleInitialItemHash || undefined);
 }
 
 /**
@@ -639,7 +645,13 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
     }
   }
 
-  const dimPlugSet: DimPlugSet = { plugs, hash: plugSetHash };
+  const dimPlugSet: DimPlugSet = {
+    plugs,
+    hash: plugSetHash,
+    precomputedEmptyPlugItemHash: defPlugSet.reusablePlugItems
+      .map((p) => p.plugItemHash)
+      .find(isKnownEmptyPlugItemHash),
+  };
   reusablePlugSetCache[plugSetHash] = dimPlugSet;
 
   return dimPlugSet;

@@ -414,6 +414,11 @@ export interface DimPlugSet {
    * available to the profile/character.
    */
   readonly plugs: DimPlug[];
+  /**
+   * The cached empty plug item hash from this plugSet. You really
+   * want to access DimSocket.emptyPlugItemHash instead!
+   */
+  readonly precomputedEmptyPlugItemHash?: number;
 }
 
 export interface DimSocket {
