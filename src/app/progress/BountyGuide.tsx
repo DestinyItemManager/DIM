@@ -229,10 +229,10 @@ export default function BountyGuide({
                     );
                 }
               })()}
-              <span className={styles.count}>({bounties.length})</span>
-              {showCompletedBountiesCount && (
-                <span className={styles.count}>({completes.length})</span>
-              )}
+              <span className={styles.count}>
+                ({bounties.length}
+                {showCompletedBountiesCount && `/${completes.length}`})
+              </span>
               {type === 'ItemCategory' && (
                 <span
                   className={styles.pullItem}
