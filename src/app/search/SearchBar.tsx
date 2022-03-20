@@ -77,7 +77,7 @@ interface ProvidedProps {
 
 interface StoreProps {
   recentSearches: Search[];
-  validateQuery: (query: string) => boolean;
+  validateQuery: ReturnType<typeof validateQuerySelector>;
   autocompleter: (query: string, caretIndex: number, recentSearches: Search[]) => SearchItem[];
 }
 
@@ -215,7 +215,7 @@ function SearchBar(
     [onQueryChanged]
   );
 
-  const valid = validateQuery(liveQuery);
+  const { valid, saveable } = validateQuery(liveQuery);
 
   const lastBlurQuery = useRef<string>();
   const onBlur = () => {
@@ -410,7 +410,7 @@ function SearchBar(
         <AnimatePresence>
           {children}
 
-          {liveQuery.length > 0 && valid && (
+          {liveQuery.length > 0 && saveable && (
             <motion.button
               layout
               exit={{ scale: 0 }}

@@ -12,9 +12,9 @@ import {
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { recentSearchComparator } from 'app/search/autocomplete';
-import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
+import { parseQuery } from 'app/search/query-parser';
 import { searchConfigSelector } from 'app/search/search-config';
-import { validateQuery } from 'app/search/search-utils';
+import { parseAndValidateQuery, validateQuery } from 'app/search/search-utils';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
@@ -1015,21 +1015,12 @@ function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: s
   const searchConfigs = searchConfigSelector(stubSearchRootState(account));
 
   // Canonicalize the query so we always save it the same way
-  try {
-    const ast = parseQuery(query);
-    if (!validateQuery(ast, searchConfigs)) {
-      errorLog('saveSearch', 'Query not valid - not saving', query);
-      return;
-    }
-    if (ast.op === 'noop' || (ast.op === 'filter' && ast.type === 'keyword')) {
-      // don't save "trivial" single-keyword filters
-      return;
-    }
-    query = canonicalizeQuery(ast);
-  } catch (e) {
-    errorLog('searchUsed', 'Query not parseable - not saving', query, e);
+  const { canonical, saveInHistory } = parseAndValidateQuery(query, searchConfigs);
+  if (!saveInHistory) {
+    errorLog('searchUsed', 'Query not eligible to be saved in history', query);
     return;
   }
+  query = canonical;
 
   const updateAction: ProfileUpdateWithRollback = {
     action: 'search',
@@ -1082,17 +1073,12 @@ function saveSearch(
   const searchConfigs = searchConfigSelector(stubSearchRootState(account));
 
   // Canonicalize the query so we always save it the same way
-  try {
-    const ast = parseQuery(query);
-    if (!validateQuery(ast, searchConfigs)) {
-      errorLog('saveSearch', 'Query not valid - not saving', query);
-      return;
-    }
-    query = canonicalizeQuery(ast);
-  } catch (e) {
-    errorLog('saveSearch', 'Query not parseable - not saving', query, e);
+  const { canonical, saveable } = parseAndValidateQuery(query, searchConfigs);
+  if (!saveable) {
+    errorLog('searchUsed', 'Query not eligible to be saved', query);
     return;
   }
+  query = canonical;
 
   const updateAction: ProfileUpdateWithRollback = {
     action: 'save_search',

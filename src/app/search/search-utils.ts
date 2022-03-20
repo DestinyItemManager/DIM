@@ -1,17 +1,44 @@
-import { parseQuery, QueryAST } from './query-parser';
+import { canonicalizeQuery, parseQuery, QueryAST } from './query-parser';
 import { SearchConfig } from './search-config';
 
-export function parseAndValidateQuery(query: string, searchConfig: SearchConfig) {
+export function parseAndValidateQuery(
+  query: string,
+  searchConfig: SearchConfig
+): {
+  /** Is the query valid at all? */
+  valid: boolean;
+  /** Can the user save this query? */
+  saveable: boolean;
+  /** Should we automatically save this in search history? */
+  saveInHistory: boolean;
+  /** The canonicalized version of the query */
+  canonical: string;
+} {
   let valid = true;
+  let saveable = true;
+  let saveInHistory = true;
+  let canonical = query;
   try {
     const ast = parseQuery(query);
     if (!validateQuery(ast, searchConfig)) {
       valid = false;
+    } else {
+      if (ast.op === 'noop' || (ast.op === 'filter' && ast.type === 'keyword')) {
+        // don't save "trivial" single-keyword filters
+        saveInHistory = false;
+      }
+      canonical = canonicalizeQuery(ast);
+      saveable = canonical.length <= 2048;
     }
   } catch (e) {
     valid = false;
   }
-  return valid;
+  return {
+    valid,
+    saveable: valid && saveable,
+    saveInHistory: valid && saveable && saveInHistory,
+    canonical,
+  };
 }
 
 /**
