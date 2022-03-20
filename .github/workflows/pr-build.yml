@@ -43,31 +43,9 @@ jobs:
         env:
           PR_BUILD: true
 
-      # Upload webpack-stats.json to use on relative-ci.yaml workflow
-      - name: Upload webpack stats artifact
-        uses: relative-ci/agent-upload-artifact-action@v1
-        with:
-          retentionDays: 5
-
-  haslabel:
-    runs-on: ubuntu-latest
-    needs: build
-    outputs:
-      relative-ci: ${{ steps.haslabel.outputs.labeled-relative-ci }}
-    steps:
-      - name: Labeled to relative-ci
-        id: haslabel
-        uses: DanielTamkin/HasLabel@v1.0.4
-        with:
-          contains: 'relative-ci'
-
-  relative-ci:
-    runs-on: ubuntu-latest
-    needs: haslabel
-    if: needs.haslabel.outputs.relative-ci
-    steps:
       - name: Send webpack stats to RelativeCI
         uses: relative-ci/agent-action@v2
         with:
+          webpackStatsFile: ./webpack-stats.json
           key: ${{ secrets.RELATIVE_CI_KEY }}
           token: ${{ secrets.GITHUB_TOKEN }}
