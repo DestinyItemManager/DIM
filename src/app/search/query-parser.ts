@@ -25,7 +25,6 @@
  * describe their relationship.
  */
 export type QueryAST = (AndOp | OrOp | NotOp | FilterOp | NoOp) & {
-  title?: string;
   error?: Error;
 };
 
