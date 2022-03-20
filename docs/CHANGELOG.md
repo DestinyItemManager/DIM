@@ -4,6 +4,7 @@
 * Added Vow of the Disciple raid mods to Loadout Optimizer and search filters.
 * Deepsight weapons' attunement progress is now shown on the item popup. Tap and hold, or hover the progress bar to see extractable Resonant Elements.
 * Fixed some weird spacing in the item popup perk list when a gun could but doesn't have an origin perk.
+* The Progress page properly distinguishes between +1 and +2 pinnacles.
 
 ## 7.8.3 <span class="changelog-date">(2022-03-15)</span>
 

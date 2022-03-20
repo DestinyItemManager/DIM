@@ -45,10 +45,23 @@ const engrams = {
   },
 };
 
+// Milestone hashes for milestones that reward +1 pinnacles instead of +2
+const plusOnePinnacles = [
+  3448738070, // Weekly Gambit Challenge
+  1437935813, // Weekly Vanguard Strikes
+  3312774044, // Crucible Playlist Challenge
+  3603098564, // Clan Rewards (Hawthorne's 5,000 clan XP challenge)
+];
+
 /**
  * How much above the player's current max power will this reward drop?
  */
-export function getEngramPowerBonus(itemHash: number, maxPower?: number) {
+export function getEngramPowerBonus(itemHash: number, maxPower?: number, parentItemHash?: number) {
+  // Hawthorne's Clan Rewards gives out a +1 pinnacle even though it's listed as a powerful
+  if (parentItemHash === 3603098564) {
+    itemHash = 73143230;
+  }
+
   const engramInfo: {
     cap: PowerCap;
     bonus: number;
@@ -65,8 +78,12 @@ export function getEngramPowerBonus(itemHash: number, maxPower?: number) {
     // Powerful engrams can't go above the powerful cap
     return _.clamp(powerfulCap - maxPower, 0, engramInfo.bonus);
   } else if (engramInfo.cap === PowerCap.Pinnacle) {
+    const pinnacleBonus = parentItemHash && plusOnePinnacles.includes(parentItemHash) ? 1 : 2;
     // Once you're at or above the powerful cap, pinnacles only give +2, up to the hard cap
-    const pinnacleCap = Math.min(season.pinnacleCap, Math.max(maxPower, powerfulCap) + 2);
+    const pinnacleCap = Math.min(
+      season.pinnacleCap,
+      Math.max(maxPower, powerfulCap) + pinnacleBonus
+    );
     return _.clamp(pinnacleCap - maxPower, 0, engramInfo.bonus);
   }
 }
