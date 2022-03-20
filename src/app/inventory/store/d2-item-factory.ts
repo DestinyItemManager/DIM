@@ -274,6 +274,11 @@ export function makeItem(
   }
 
   if (!(itemDef.displayProperties.name || itemDef.setData?.questLineName)) {
+    // https://github.com/Bungie-net/api/issues/1626
+    if (item.itemHash === 3752071771) {
+      // This happens only in the French manifest, for this one item. Just overwrite the definition.
+      (itemDef.displayProperties as any).name = 'Le Flow, le Métal';
+    }
     return null;
   }
 

@@ -43,8 +43,9 @@ jobs:
         env:
           PR_BUILD: true
 
-      # Upload webpack-stats.json to use on relative-ci.yaml workflow
-      - name: Upload webpack stats artifact
-        uses: relative-ci/agent-upload-artifact-action@v1
+      - name: Send webpack stats to RelativeCI
+        uses: relative-ci/agent-action@v2
         with:
-          retentionDays: 5
+          webpackStatsFile: ./webpack-stats.json
+          key: ${{ secrets.RELATIVE_CI_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}

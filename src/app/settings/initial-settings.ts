@@ -20,6 +20,8 @@ export interface Settings extends DimApiSettings {
   progressBountiesCompletedCountShow: boolean;
   /** Pull from postmaster is an irreversible action and some people don't want to accidentally hit it. */
   hidePullFromPostmaster: boolean;
+  /** supplements itemSortOrderCustom by allowing each sort to be reversed */
+  itemSortReversals: string[];
 }
 
 export const initialSettingsState: Settings = {
@@ -32,4 +34,5 @@ export const initialSettingsState: Settings = {
   itemFeedExpanded: false,
   progressBountiesCompletedCountShow: false,
   hidePullFromPostmaster: false,
+  itemSortReversals: [],
 };

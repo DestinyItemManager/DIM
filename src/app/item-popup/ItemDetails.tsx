@@ -1,6 +1,7 @@
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { WeaponCraftedInfo } from 'app/dim-ui/WeaponCraftedInfo';
+import { WeaponDeepsightInfo } from 'app/dim-ui/WeaponDeepsightInfo';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { isTrialsPassage } from 'app/inventory/store/objectives';
@@ -87,7 +88,11 @@ export default function ItemDetails({
       )}
 
       {item.crafted && item.craftedInfo && defs.isDestiny2() && (
-        <WeaponCraftedInfo craftInfo={item.craftedInfo} className="crafted-progess" />
+        <WeaponCraftedInfo craftInfo={item.craftedInfo} className="crafted-progress" />
+      )}
+
+      {item.deepsightInfo && defs.isDestiny2() && (
+        <WeaponDeepsightInfo deepsightInfo={item.deepsightInfo} />
       )}
 
       {killTrackerInfo && defs.isDestiny2() && (
