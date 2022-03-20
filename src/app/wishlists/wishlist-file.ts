@@ -1,5 +1,6 @@
 import { emptySet } from 'app/utils/empty';
-import { timer, warnLog } from 'app/utils/log';
+import { timer } from 'app/utils/log';
+import D2EnhancedTraits from 'data/d2/trait-to-enhanced-trait.json';
 import { DimWishList, WishListAndInfo, WishListInfo, WishListRoll } from './types';
 
 /**
@@ -54,35 +55,72 @@ export function toWishList(...fileTexts: string[]): WishListAndInfo {
         } else if (!info.description && line.startsWith(descriptionLabel)) {
           info.description = line.slice(descriptionLabel.length);
         } else {
-          const roll =
+          const suppliedRoll =
             toDimWishListRoll(line, blockNotes) ||
             toBansheeWishListRoll(line, blockNotes) ||
             toDtrWishListRoll(line, blockNotes);
 
-          if (roll) {
-            const rollHash = `${roll.itemHash};${roll.isExpertMode};${sortedSetToString(
-              roll.recommendedPerks
-            )}`;
-            if (!seen.has(rollHash)) {
-              seen.add(rollHash);
-              wishList.wishListRolls.push(roll);
-              info.numRolls++;
-            } else {
-              dupes++;
-            }
+          if (suppliedRoll) {
+            const rolls = autoUpgradeRoll(suppliedRoll);
+
+            rolls.forEach((roll) => {
+              const rollHash = `${roll.itemHash};${roll.isExpertMode};${sortedSetToString(
+                roll.recommendedPerks
+              )}`;
+
+              if (!seen.has(rollHash)) {
+                seen.add(rollHash);
+                wishList.wishListRolls.push(roll);
+                info.numRolls++;
+              } else {
+                dupes++;
+              }
+            });
           }
         }
       }
 
-      if (dupes > 0) {
-        warnLog('wishlist', 'Discarded', dupes, 'duplicate rolls from wish list');
-      }
+      // if (dupes > 0) {
+      //   warnLog('wishlist', 'Discarded', dupes, 'duplicate rolls from wish list');
+      // }
       wishList.infos.push(info);
     }
     return wishList;
   } finally {
     stopTimer();
   }
+}
+
+function autoUpgradeRoll(roll: WishListRoll): WishListRoll[] {
+  const allRolls: WishListRoll[] = [];
+
+  let enhancedRoll = getEnhancedRoll(roll);
+
+  while (enhancedRoll !== null) {
+    allRolls.push(enhancedRoll);
+    enhancedRoll = getEnhancedRoll(enhancedRoll);
+  }
+
+  allRolls.push(roll);
+  return allRolls;
+}
+
+function getEnhancedRoll(roll: WishListRoll): WishListRoll | null {
+  let upgradeRoll: WishListRoll | null = null;
+
+  roll.recommendedPerks.forEach((p) => {
+    const enhancedPerk = D2EnhancedTraits[p];
+
+    if (!upgradeRoll && enhancedPerk && !isNaN(enhancedPerk)) {
+      const cloneRoll = { ...roll };
+      cloneRoll.recommendedPerks.delete(p);
+      cloneRoll.recommendedPerks.add(enhancedPerk);
+
+      upgradeRoll = cloneRoll;
+    }
+  });
+
+  return upgradeRoll;
 }
 
 function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
