@@ -47,7 +47,11 @@ export default function Milestones({
 
   const milestonesByPower = _.groupBy(milestoneItems, (m) => {
     for (const reward of m.pursuit?.rewards ?? []) {
-      const powerBonus = getEngramPowerBonus(reward.itemHash, store?.stats.maxGearPower?.value);
+      const powerBonus = getEngramPowerBonus(
+        reward.itemHash,
+        store?.stats.maxGearPower?.value,
+        m.hash
+      );
       return powerBonus;
     }
   });

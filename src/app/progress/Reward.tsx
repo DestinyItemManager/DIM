@@ -10,16 +10,23 @@ import styles from './Reward.m.scss';
 export function Reward({
   reward,
   store,
+  itemHash,
 }: {
   reward: DestinyItemQuantity;
   // If provided, will help make engram bonuses more accurate
   store?: DimStore;
+  // If provided, will help make engram bonuses more accurate
+  itemHash?: number;
 }) {
   const defs = useD2Definitions()!;
   const rewardItem = defs.InventoryItem.get(reward.itemHash);
   const rewardDisplay = rewardItem.displayProperties;
 
-  const powerBonus = getEngramPowerBonus(rewardItem.hash, store?.stats.maxGearPower?.value);
+  const powerBonus = getEngramPowerBonus(
+    rewardItem.hash,
+    store?.stats.maxGearPower?.value,
+    itemHash
+  );
 
   return (
     <div className={styles.reward}>

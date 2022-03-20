@@ -168,7 +168,7 @@ export default function ItemDetails({
         <div className="item-details">
           <div>{t('MovePopup.Rewards')}</div>
           {item.pursuit.rewards.map((reward) => (
-            <Reward key={reward.itemHash} reward={reward} store={ownerStore} />
+            <Reward key={reward.itemHash} reward={reward} store={ownerStore} itemHash={item.hash} />
           ))}
         </div>
       )}
