@@ -9,6 +9,7 @@ import {
   executeMoveItem,
   getSimilarItem,
   MoveReservations,
+  MoveSession,
 } from 'app/inventory/item-move-service';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { updateManualMoveTimestamp } from 'app/inventory/manual-moves';
@@ -168,6 +169,8 @@ function doApplyLoadout(
     /** Find a real item corresponding to this loadout item */
     const getLoadoutItem = (loadoutItem: LoadoutItem) =>
       findItemForLoadout(defs, allItemsSelector(getState()), store.id, loadoutItem);
+
+    const moveSession: MoveSession = { currentStoreWasFull: false };
 
     try {
       // Back up the current state as an "undo" loadout
@@ -351,7 +354,13 @@ function doApplyLoadout(
           );
           try {
             const result = await dispatch(
-              equipItems(getStore(getStores(), owner)!, itemsToEquip, cancelToken)
+              equipItems(
+                getStore(getStores(), owner)!,
+                itemsToEquip,
+                cancelToken,
+                applicableLoadoutItems,
+                moveSession
+              )
             );
             // Bulk equip can partially fail
             setLoadoutState(
@@ -458,7 +467,9 @@ function doApplyLoadout(
         );
         const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i)));
         try {
-          const result = await dispatch(equipItems(store, realItemsToEquip, cancelToken));
+          const result = await dispatch(
+            equipItems(store, realItemsToEquip, cancelToken, [], moveSession)
+          );
           // Bulk equip can partially fail
           setLoadoutState(
             produce((state) => {
@@ -665,9 +676,10 @@ function clearSpaceAfterLoadout(
 ): ThunkResult {
   const itemsByType = _.groupBy(items, (i) => i.bucket.hash);
 
-  const reservations: MoveReservations = {};
-  // reserve one space in the active character
-  reservations[store.id] = {};
+  const reservations: MoveReservations = {
+    // reserve one space in the active character
+    [store.id]: {},
+  };
 
   const itemsToRemove: DimItem[] = [];
 

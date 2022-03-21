@@ -16,7 +16,7 @@ import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { executeMoveItem, MoveReservations } from '../inventory/item-move-service';
+import { executeMoveItem, MoveReservations, MoveSession } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
@@ -166,6 +166,7 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
 
     const promise = (async () => {
       let succeeded = 0;
+      const moveSession: MoveSession = { currentStoreWasFull: false };
 
       for (const item of items) {
         let amount = item.amount;
@@ -181,7 +182,9 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
         }
 
         try {
-          await dispatch(executeMoveItem(item, store, { equip: false, amount, cancelToken }));
+          await dispatch(
+            executeMoveItem(item, store, { equip: false, amount, cancelToken }, moveSession)
+          );
           succeeded++;
         } catch (e) {
           if (e instanceof CanceledError) {
@@ -228,6 +231,7 @@ function moveItemsToVault(
 ): ThunkResult {
   return async (dispatch, getState) => {
     const reservations: MoveReservations = {};
+    const moveSession: MoveSession = { currentStoreWasFull: false };
     // reserve space for all move-asides
     reservations[store.id] = _.countBy(items, (i) => i.bucket.hash);
 
@@ -245,25 +249,35 @@ function moveItemsToVault(
 
         if (otherStoresWithSpace.length) {
           await dispatch(
-            executeMoveItem(item, otherStoresWithSpace[0], {
-              equip: false,
-              amount: item.amount,
-              excludes: items,
-              reservations,
-              cancelToken,
-            })
+            executeMoveItem(
+              item,
+              otherStoresWithSpace[0],
+              {
+                equip: false,
+                amount: item.amount,
+                excludes: items,
+                reservations,
+                cancelToken,
+              },
+              moveSession
+            )
           );
           continue;
         }
       }
       await dispatch(
-        executeMoveItem(item, vault, {
-          equip: false,
-          amount: item.amount,
-          excludes: items,
-          reservations,
-          cancelToken,
-        })
+        executeMoveItem(
+          item,
+          vault,
+          {
+            equip: false,
+            amount: item.amount,
+            excludes: items,
+            reservations,
+            cancelToken,
+          },
+          moveSession
+        )
       );
     }
   };
