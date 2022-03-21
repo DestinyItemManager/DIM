@@ -75,7 +75,7 @@ export function toWishList(...fileTexts: string[]): WishListAndInfo {
               } else {
                 dupes++;
               }
-            });
+            }
           }
         }
       }
@@ -91,6 +91,13 @@ export function toWishList(...fileTexts: string[]): WishListAndInfo {
   }
 }
 
+/**
+ * Automatically "upgrades" a roll - craftable weapons include enhanced
+ * perks, and we do not expect users to know that there's an enhanced
+ * Overflow that exists alongside Overflow.
+ * This transforms the roll they asked for into potentially a number of
+ * rolls (and includes enhanced versions of the perks they requested).
+ */
 function autoUpgradeRoll(roll: WishListRoll): WishListRoll[] {
   const allRolls: WishListRoll[] = [];
 
