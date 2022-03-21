@@ -1,5 +1,9 @@
 ## Next
 
+* Wish lists automatically look for enhanced versions of requested perks.
+
+## 7.9.0 <span class="changelog-date">(2022-03-20)</span>
+
 * When loading your inventory, DIM now alerts you if your items might be misplaced, affecting your drops' Power Level.
 * New inventory sorting options. Check [Settings](/settings) to view and rearrange your sort strategy.
   * Reverse the order of any individual sorting method.
@@ -8,7 +12,7 @@
 * Added Vow of the Disciple raid mods to Loadout Optimizer and search filters.
 * Deepsight weapons' attunement progress is now shown on the item popup. Tap and hold, or hover the progress bar to see extractable Resonant Elements.
 * Fixed some weird spacing in the item popup perk list when a gun could but doesn't have an origin perk.
-* Wish lists automatically look for enhanced versions of requested perks.
+* The Progress page properly distinguishes between +1 and +2 pinnacles.
 
 ## 7.8.3 <span class="changelog-date">(2022-03-15)</span>
 
