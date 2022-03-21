@@ -978,7 +978,15 @@ export function executeMoveItem(
     // catch any errors. If we find out that the store is full through this
     // probe, don't try again for a while.
     const timeSinceCurrentStoreWasReallyFull = Date.now() - lastTimeCurrentStoreWasReallyFull;
-    if (source.isVault && target.current && timeSinceCurrentStoreWasReallyFull > 5000) {
+    if (
+      // Either pulling from the vault,
+      (source.isVault ||
+        // or pulling from the postmaster
+        (item.location.inPostmaster && (source.id === target.id || item.bucket.accountWide))) &&
+      // To the current character
+      target.current &&
+      timeSinceCurrentStoreWasReallyFull > 5000
+    ) {
       try {
         infoLog('move', 'Try blind move of', item.name, 'to', target.name);
         return await dispatch(moveToStore(item, target, cancelToken, equip, amount));
