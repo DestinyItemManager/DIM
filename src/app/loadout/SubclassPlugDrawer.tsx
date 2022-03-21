@@ -8,7 +8,7 @@ import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import { PlugSet } from 'app/loadout/plug-drawer/types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { compareBy } from 'app/utils/comparators';
-import { getDefaultPlugChoiceHash, getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { getDefaultAbilityChoiceHash, getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -184,7 +184,7 @@ function getPlugsForSubclass(
           category.category.hash === SocketCategoryHashes.Super;
 
         const defaultPlugHash = isAbilityLikeSocket
-          ? getDefaultPlugChoiceHash(firstSocket)
+          ? getDefaultAbilityChoiceHash(firstSocket)
           : firstSocket.emptyPlugItemHash;
         const defaultPlug = defaultPlugHash ? defs.InventoryItem.get(defaultPlugHash) : undefined;
         if (firstSocket.plugSet && profileResponse && isPluggableItem(defaultPlug)) {

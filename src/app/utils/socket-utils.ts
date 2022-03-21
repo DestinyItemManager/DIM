@@ -170,18 +170,16 @@ export function plugFitsIntoSocket(socket: DimSocket, plugHash: number) {
 }
 
 /**
- * For a "choice socket" (a socket where all options are equivalent and
- * there's no empty option), like Subclass supers or abilities, or the
- * Aeon cult plugs, find whatever should be equipped as a default.
+ * Abilities and supers are "choice sockets", there might be a default
+ * but it's not really a meaningful empty or reset option.
+ * Still, this can be a useful to initialize user selections.
  */
-export function getDefaultPlugChoiceHash(socket: DimSocket) {
-  if (socket.plugged && !socket.emptyPlugItemHash) {
-    const { singleInitialItemHash } = socket.socketDefinition;
-    return singleInitialItemHash
-      ? singleInitialItemHash
-      : // Some sockets like Void 3.0 grenades don't have a singleInitialItemHash
-        socket.plugSet?.plugs[0]?.plugDef.hash;
-  }
+export function getDefaultAbilityChoiceHash(socket: DimSocket) {
+  const { singleInitialItemHash } = socket.socketDefinition;
+  return singleInitialItemHash
+    ? singleInitialItemHash
+    : // Some sockets like Void 3.0 grenades don't have a singleInitialItemHash
+      socket.plugSet!.plugs[0]!.plugDef.hash;
 }
 
 export function isEnhancedPerk(perk: DimPlug | DestinyInventoryItemDefinition) {

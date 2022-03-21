@@ -14,7 +14,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
-  getDefaultPlugChoiceHash,
+  getDefaultAbilityChoiceHash,
   getSocketByIndex,
   getSocketsByCategoryHashes,
 } from 'app/utils/socket-utils';
@@ -158,7 +158,7 @@ export default memo(function LockArmorAndPerks({
 
       const isDefaultAbility = Boolean(
         socket &&
-          getDefaultPlugChoiceHash(socket) === overridePlug.hash &&
+          getDefaultAbilityChoiceHash(socket) === overridePlug.hash &&
           abilityAndSuperSockets.includes(socket)
       );
 

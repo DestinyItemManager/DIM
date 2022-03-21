@@ -11,7 +11,7 @@ import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
-  getDefaultPlugChoiceHash,
+  getDefaultAbilityChoiceHash,
   getFirstSocketByCategoryHash,
   getSocketsByCategoryHash,
   getSocketsByCategoryHashes,
@@ -111,7 +111,7 @@ export function createSubclassDefaultSocketOverrides(item: DimItem) {
     ]);
 
     for (const socket of abilityAndSuperSockets) {
-      socketOverrides[socket.socketIndex] = getDefaultPlugChoiceHash(socket)!;
+      socketOverrides[socket.socketIndex] = getDefaultAbilityChoiceHash(socket);
     }
     return socketOverrides;
   }

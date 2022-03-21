@@ -49,7 +49,7 @@ import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import {
-  getDefaultPlugChoiceHash,
+  getDefaultAbilityChoiceHash,
   getSocketByIndex,
   getSocketsByIndexes,
   plugFitsIntoSocket,
@@ -847,7 +847,7 @@ function applySocketOverrides(
                 category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
                 category.category.hash === SocketCategoryHashes.Super)
             ) {
-              modHash = getDefaultPlugChoiceHash(socket)!;
+              modHash = getDefaultAbilityChoiceHash(socket);
             }
             if (modHash) {
               const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
