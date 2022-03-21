@@ -63,7 +63,7 @@ export function toWishList(...fileTexts: string[]): WishListAndInfo {
           if (suppliedRoll) {
             const rolls = autoUpgradeRoll(suppliedRoll);
 
-            rolls.forEach((roll) => {
+            for (const roll of rolls) {
               const rollHash = `${roll.itemHash};${roll.isExpertMode};${sortedSetToString(
                 roll.recommendedPerks
               )}`;
