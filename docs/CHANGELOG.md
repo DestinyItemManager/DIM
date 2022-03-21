@@ -1,5 +1,8 @@
 ## Next
 
+* Fixed loadouts with Void 3.0 subclasses accidentally including empty fragment or aspect sockets.
+* Fixed loadouts failing to remove mods from some armor or inadvertantly changing the Aeon sect mod.
+
 ## 7.10.0 <span class="changelog-date">(2022-03-27)</span>
 
 * Dragging horizontally on items in Compare will scroll the list - even on iOS.
