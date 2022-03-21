@@ -1,5 +1,7 @@
 ## Next
 
+## 7.9.0 <span class="changelog-date">(2022-03-20)</span>
+
 * When loading your inventory, DIM now alerts you if your items might be misplaced, affecting your drops' Power Level.
 * New inventory sorting options. Check [Settings](/settings) to view and rearrange your sort strategy.
   * Reverse the order of any individual sorting method.
