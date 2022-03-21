@@ -55,7 +55,5 @@ const autoUpgradeCases: [wishlist: string, results: WishListRoll[]][] = [
 ];
 
 test.each(autoUpgradeCases)('parse wishlist line with enhanced trait: %s', (wishlist, result) => {
-  const allRolls = toWishList(wishlist).wishListRolls;
-  console.log({ allRolls });
   expect(toWishList(wishlist).wishListRolls).toStrictEqual(result);
 });
