@@ -120,11 +120,8 @@ function getEnhancedRoll(roll: WishListRoll, perkToCheck: number): WishListRoll 
 
   if (enhancedPerk && !isNaN(enhancedPerk)) {
     const cloneRoll = {
-      itemHash: roll.itemHash,
+      ...roll,
       recommendedPerks: new Set(roll.recommendedPerks),
-      isExpertMode: roll.isExpertMode,
-      isUndesirable: roll.isUndesirable,
-      notes: roll.notes,
     };
 
     cloneRoll.recommendedPerks.delete(perkToCheck);
