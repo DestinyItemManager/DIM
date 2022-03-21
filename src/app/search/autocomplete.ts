@@ -222,7 +222,7 @@ export function autocompleteTermSuggestions(
 function findFilter(term: string, searchConfig: SearchConfig) {
   const parts = term.split(':');
   const filterName = parts[0];
-  const filterValue = parts[1];
+  const filterValue = parts[1].toLowerCase();
   // "is:" filters are slightly special cased
   return filterName === 'is'
     ? searchConfig.isFilters[filterValue]

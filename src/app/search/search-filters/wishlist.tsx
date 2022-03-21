@@ -43,10 +43,10 @@ const wishlistFilters: FilterDefinition[] = [
     description: tl('Filter.WishlistNotes'),
     format: 'freeform',
     destinyVersion: 2,
-    filter:
-      ({ wishListFunction, filterValue }) =>
-      (item) =>
-        wishListFunction(item)?.notes?.toLocaleLowerCase().includes(filterValue),
+    filter: ({ wishListFunction, filterValue }) => {
+      filterValue = filterValue.toLocaleLowerCase();
+      return (item) => wishListFunction(item)?.notes?.toLocaleLowerCase().includes(filterValue);
+    },
   },
   {
     keywords: 'trashlist',

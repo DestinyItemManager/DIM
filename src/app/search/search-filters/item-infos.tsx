@@ -17,10 +17,10 @@ const itemInfosFilters: FilterDefinition[] = [
     description: tl('Filter.Tags.Tag'),
     format: 'query',
     suggestions: itemTagSelectorList.map((tag) => tag.type ?? 'none'),
-    filter:
-      ({ filterValue, itemInfos, itemHashTags }) =>
-      (item) =>
-        (getTag(item, itemInfos, itemHashTags) || 'none') === filterValue,
+    filter: ({ filterValue, itemInfos, itemHashTags }) => {
+      filterValue = filterValue.toLowerCase();
+      return (item) => (getTag(item, itemInfos, itemHashTags) || 'none') === filterValue;
+    },
   },
   {
     keywords: 'hasnotes',

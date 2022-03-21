@@ -69,6 +69,7 @@ const statFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: ({ filterValue, allItems }) => {
       const highestStatsPerSlotPerTier = gatherHighestStats(allItems);
+      filterValue = filterValue.toLowerCase();
       return (item: DimItem) =>
         checkIfStatMatchesMaxValue(highestStatsPerSlotPerTier, item, filterValue, true);
     },
@@ -117,7 +118,7 @@ function statFilterFromString(
   filterValue: string,
   byBaseValue = false
 ): (item: DimItem) => boolean {
-  const [statNames, statValue, shouldntExist] = filterValue.split(':');
+  const [statNames, statValue, shouldntExist] = filterValue.toLowerCase().split(':');
 
   // we are looking for, at most, 3 colon-separated sections in the overall text:
   // stat                   mobility                    >=5
@@ -215,7 +216,7 @@ function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value') {
 }
 
 function findMaxStatLoadout(stores: DimStore[], allItems: DimItem[], statName: string) {
-  const maxStatHash = statHashByName[statName];
+  const maxStatHash = statHashByName[statName.toLowerCase()];
   return stores.flatMap((store) =>
     maxStatLoadout(maxStatHash, allItems, store).items.map((i) => i.id)
   );

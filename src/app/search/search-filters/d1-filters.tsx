@@ -9,6 +9,7 @@ import {
   vendorHashes,
 } from '../d1-known-values';
 import { FilterDefinition } from '../filter-types';
+import { plainString } from './freeform';
 import { rangeStringToComparator } from './range-numeric';
 
 // these just check an attribute found on DimItem
@@ -70,10 +71,11 @@ const d1Filters: FilterDefinition[] = [
     keywords: ['tracked', 'untracked'],
     description: tl('Filter.Tracked'),
     destinyVersion: 1,
-    filter:
-      ({ filterValue }) =>
-      (item: D1Item) =>
-        item.trackable && (filterValue === 'tracked' ? item.tracked : !item.tracked),
+    filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
+      return (item: D1Item) =>
+        item.trackable && (filterValue === 'tracked' ? item.tracked : !item.tracked);
+    },
   },
   {
     keywords: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
@@ -91,20 +93,21 @@ const d1Filters: FilterDefinition[] = [
     keywords: ['intellect', 'discipline', 'strength'],
     description: tl('Filter.NamedStat'),
     destinyVersion: 1,
-    filter:
-      ({ filterValue }) =>
-      (item: D1Item) =>
+    filter: ({ filterValue, language }) => {
+      filterValue = plainString(filterValue, language);
+      return (item: D1Item) =>
         item.stats?.some((s) =>
-          Boolean(s.displayProperties.name.toLowerCase() === filterValue && s.value > 0)
-        ),
+          Boolean(plainString(s.displayProperties.name, language) === filterValue && s.value > 0)
+        );
+    },
   },
   {
     keywords: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
     description: tl('Filter.Glimmer'),
     destinyVersion: 1,
-    filter:
-      ({ filterValue }) =>
-      (item: D1Item) => {
+    filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
+      return (item: D1Item) => {
         switch (filterValue) {
           case 'glimmerboost':
             return boosts.includes(item.hash);
@@ -114,15 +117,16 @@ const d1Filters: FilterDefinition[] = [
             return boosts.includes(item.hash) || supplies.includes(item.hash);
         }
         return false;
-      },
+      };
+    },
   },
   {
     keywords: ['ornamentable', 'ornamentmissing', 'ornamentunlocked'],
     description: tl('Filter.Ornament'),
     destinyVersion: 1,
-    filter:
-      ({ filterValue }) =>
-      (item: D1Item) => {
+    filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
+      return (item: D1Item) => {
         const complete = item.talentGrid?.nodes.some((n) => n.ornament);
         const missing = item.talentGrid?.nodes.some((n) => !n.ornament);
 
@@ -133,7 +137,8 @@ const d1Filters: FilterDefinition[] = [
         } else {
           return complete || missing;
         }
-      },
+      };
+    },
   },
   {
     keywords: ['quality', 'percentage'],
@@ -169,9 +174,9 @@ const d1Filters: FilterDefinition[] = [
     ],
     description: tl('Filter.Vendor'),
     destinyVersion: 1,
-    filter:
-      ({ filterValue }) =>
-      (item: D1Item) => {
+    filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
+      return (item: D1Item) => {
         const restricted = vendorHashes.restricted[filterValue];
         const required = vendorHashes.required[filterValue];
         const match = (vendorHash: number) => item.sourceHashes.includes(vendorHash);
@@ -180,7 +185,8 @@ const d1Filters: FilterDefinition[] = [
         } else {
           return required?.some(match);
         }
-      },
+      };
+    },
   },
   {
     keywords: [
@@ -204,9 +210,9 @@ const d1Filters: FilterDefinition[] = [
     ],
     description: tl('Filter.Release'),
     destinyVersion: 1,
-    filter:
-      ({ filterValue }) =>
-      (item: D1Item) => {
+    filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
+      return (item: D1Item) => {
         if (filterValue === 'vanilla') {
           return getItemYear(item) === 1;
         } else if (D1ActivityHashes.restricted[filterValue]) {
@@ -223,7 +229,8 @@ const d1Filters: FilterDefinition[] = [
             item.sourceHashes.includes(sourceHash)
           );
         }
-      },
+      };
+    },
   },
 ];
 

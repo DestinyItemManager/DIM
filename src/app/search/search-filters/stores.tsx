@@ -10,6 +10,7 @@ const locationFilters: FilterDefinition[] = [
     keywords: ['inleftchar', 'inmiddlechar', 'inrightchar'],
     description: tl('Filter.Location'),
     filter: ({ filterValue, stores }) => {
+      filterValue = filterValue.toLowerCase();
       let storeIndex = 0;
 
       switch (filterValue) {

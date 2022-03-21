@@ -28,7 +28,7 @@ export function validateQuery(query: QueryAST, searchConfig: SearchConfig): bool
 
       // "is:" filters are slightly special cased
       if (filterName === 'is') {
-        return Boolean(searchConfig.isFilters[filterValue]);
+        return Boolean(searchConfig.isFilters[filterValue.toLowerCase()]);
       } else {
         // TODO: validate that filterValue is correct
         return Boolean(searchConfig.kvFilters[filterName]);

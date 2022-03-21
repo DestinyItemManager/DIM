@@ -263,7 +263,7 @@ const negation = /-\s*/y;
 // `not` can't be preceded by whitespace because that whitespace is an implicit `and`.
 const booleanKeywords = /(not|\s+or|\s+and)\s+/y;
 // Filter names like is:, stat:, etc
-const filterName = /[a-z]+:/y;
+const filterName = /[A-Za-z]+:/y;
 // Arguments to filters are pretty unconstrained
 const filterArgs = /[^\s()]+/y;
 // Words without quotes are basically any non-whitespace that doesn't terminate a group
@@ -279,7 +279,7 @@ const whitespace = /\s+/y;
  * ["filter", "is", "blue"], ["implicit_and"], ["not"], ["filter", "is", "maxpower"]
  */
 export function* lexer(query: string): Generator<Token> {
-  query = query.trim().toLowerCase();
+  query = query.trim();
 
   // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
   query = query.replace(/[\u2018-\u201A]/g, "'");
@@ -353,7 +353,7 @@ export function* lexer(query: string): Generator<Token> {
       yield [match.trim() as NoArgTokenType];
     } else if ((match = extract(filterName)) !== undefined) {
       // Keyword searches - is:, stat:discipline:, etc
-      const keyword = match.slice(0, match.length - 1);
+      const keyword = match.slice(0, match.length - 1).toLowerCase();
       const nextChar = query[i];
 
       let args = '';

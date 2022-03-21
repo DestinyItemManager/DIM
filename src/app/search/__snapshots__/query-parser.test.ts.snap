@@ -4693,7 +4693,7 @@ Array [
 
 exports[`parse |name:"Gahlran's Right Hand"|: ast 1`] = `
 Object {
-  "args": "gahlran's right hand",
+  "args": "Gahlran's Right Hand",
   "op": "filter",
   "type": "name",
 }
@@ -4704,14 +4704,14 @@ Array [
   Array [
     "filter",
     "name",
-    "gahlran's right hand",
+    "Gahlran's Right Hand",
   ],
 ]
 `;
 
 exports[`parse |name:"Hard Light"|: ast 1`] = `
 Object {
-  "args": "hard light",
+  "args": "Hard Light",
   "op": "filter",
   "type": "name",
 }
@@ -4722,14 +4722,14 @@ Array [
   Array [
     "filter",
     "name",
-    "hard light",
+    "Hard Light",
   ],
 ]
 `;
 
 exports[`parse |name:'Hard Light'|: ast 1`] = `
 Object {
-  "args": "hard light",
+  "args": "Hard Light",
   "op": "filter",
   "type": "name",
 }
@@ -4740,7 +4740,7 @@ Array [
   Array [
     "filter",
     "name",
-    "hard light",
+    "Hard Light",
   ],
 ]
 `;

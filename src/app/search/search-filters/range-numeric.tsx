@@ -68,7 +68,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     destinyVersion: 2,
     suggestions: ['pve', 'pvp'],
     filter: ({ filterValue }) => {
-      const parts = filterValue.split(':');
+      const parts = filterValue.toLowerCase().split(':');
       const [count, ...[activityType, shouldntExist]] = [parts.pop(), ...parts];
 
       if (shouldntExist) {

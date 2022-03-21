@@ -15,6 +15,7 @@ const loadoutFilters: FilterDefinition[] = [
 
     description: tl('Filter.InLoadout'),
     filter: ({ filterValue, loadouts }) => {
+      filterValue = filterValue.toLowerCase();
       // the default search:
       // is:inloadout
       let selectedLoadouts = loadouts;

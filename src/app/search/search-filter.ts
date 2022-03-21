@@ -105,7 +105,7 @@ function makeSearchFilterFactory(
   };
 
   return (query: string): ItemFilter => {
-    query = query.trim().toLowerCase();
+    query = query.trim();
     if (!query.length) {
       // By default, show anything that doesn't have the archive tag
       return _.stubTrue;
@@ -144,9 +144,12 @@ function makeSearchFilterFactory(
         }
         case 'filter': {
           const filterName = ast.type;
-          const filterValue = ast.args;
+          let filterValue = ast.args;
 
           // "is:" filters are slightly special cased
+          if (filterName === 'is') {
+            filterValue = filterValue.toLowerCase();
+          }
           const filterDef = filterName === 'is' ? isFilters[filterValue] : kvFilters[filterName];
 
           if (filterDef) {

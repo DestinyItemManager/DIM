@@ -50,10 +50,10 @@ const itemCategoryHashesByName: { [key: string]: number } = {
 export const damageFilter: FilterDefinition = {
   keywords: damageTypeNames,
   description: tl('Filter.DamageType'),
-  filter:
-    ({ filterValue }) =>
-    (item) =>
-      getItemDamageShortName(item) === filterValue,
+  filter: ({ filterValue }) => {
+    filterValue = filterValue.toLowerCase();
+    return (item) => getItemDamageShortName(item) === filterValue;
+  },
   fromItem: (item) => `is:${getItemDamageShortName(item)}`,
 };
 
@@ -61,7 +61,7 @@ export const classFilter: FilterDefinition = {
   keywords: ['titan', 'hunter', 'warlock'],
   description: tl('Filter.Class'),
   filter: ({ filterValue }) => {
-    const classType = classes.indexOf(filterValue);
+    const classType = classes.indexOf(filterValue.toLowerCase());
     return (item) => !item.classified && item.classType === classType;
   },
   fromItem: (item) =>
@@ -79,10 +79,10 @@ export const itemTypeFilter: FilterDefinition = {
       return type!.toLowerCase();
     }),
   description: tl('Filter.ArmorCategory'), // or 'Filter.WeaponClass'
-  filter:
-    ({ filterValue }) =>
-    (item) =>
-      item.type.toLowerCase() === filterValue,
+  filter: ({ filterValue }) => {
+    filterValue = filterValue.toLowerCase();
+    return (item) => item.type.toLowerCase() === filterValue;
+  },
   fromItem: (item) => `is:${item.type.toLowerCase()}`,
 };
 
@@ -90,7 +90,7 @@ export const itemCategoryFilter: FilterDefinition = {
   keywords: Object.keys(itemCategoryHashesByName),
   description: tl('Filter.WeaponType'),
   filter: ({ filterValue }) => {
-    const categoryHash = itemCategoryHashesByName[filterValue.replace(/\s/g, '')];
+    const categoryHash = itemCategoryHashesByName[filterValue.toLowerCase().replace(/\s/g, '')];
     if (!categoryHash) {
       throw new Error('Unknown weapon type ' + filterValue);
     }
@@ -125,7 +125,7 @@ const knownValuesFilters: FilterDefinition[] = [
     ],
     description: tl('Filter.RarityTier'),
     filter: ({ filterValue }) => {
-      const tierName = tierMap[filterValue];
+      const tierName = tierMap[filterValue.toLowerCase()];
       if (!tierName) {
         throw new Error('Unknown rarity type ' + filterValue);
       }
@@ -137,7 +137,7 @@ const knownValuesFilters: FilterDefinition[] = [
     description: tl('Filter.AmmoType'),
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      const ammoType = d2AmmoTypes[filterValue];
+      const ammoType = d2AmmoTypes[filterValue.toLowerCase()];
       return (item: DimItem) => item.ammoType === ammoType;
     },
   },
@@ -158,7 +158,7 @@ const knownValuesFilters: FilterDefinition[] = [
     suggestions: Object.keys(breakerTypes),
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      const breakerType = breakerTypes[filterValue];
+      const breakerType = breakerTypes[filterValue.toLowerCase()];
       if (!breakerType) {
         throw new Error('Unknown breaker type ' + breakerType);
       }
@@ -190,6 +190,7 @@ const knownValuesFilters: FilterDefinition[] = [
     suggestions: [...Object.keys(D2Sources), ...Object.keys(D2EventPredicateLookup)],
     destinyVersion: 2,
     filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
       if (D2Sources[filterValue]) {
         const sourceInfo = D2Sources[filterValue];
         const missingSource = missingSources[filterValue];

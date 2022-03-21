@@ -44,6 +44,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     destinyVersion: 2,
     suggestions: allStatNames,
     filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
       // the "is:masterwork" case
       if (filterValue === 'masterwork') {
         return (item) => item.masterwork;
@@ -70,6 +71,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     destinyVersion: 2,
     suggestions: energyCapacityTypeNames,
     filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
       if (mathCheck.test(filterValue)) {
         const numberComparisonFunction = rangeStringToComparator(filterValue);
         return (item: DimItem) =>
@@ -86,6 +88,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     destinyVersion: 2,
     suggestions: seasonTagNames,
     filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
       filterValue = replaceSeasonTagWithNumber(filterValue);
       const compareTo = rangeStringToComparator(filterValue);
       return (item: DimItem) => compareTo(getSeason(item));
@@ -98,6 +101,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     format: 'rangeoverload',
     suggestions: powerLevelKeywords,
     filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
       filterValue = replacePowerLevelKeyword(filterValue);
       const compareTo = rangeStringToComparator(filterValue);
       return (item) => Boolean(item.power && compareTo(item.power));
@@ -111,6 +115,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     suggestions: powerCapKeywords,
     destinyVersion: 2,
     filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
       filterValue = replacePowerLevelKeyword(filterValue);
       const compareTo = rangeStringToComparator(filterValue);
       return (item) =>

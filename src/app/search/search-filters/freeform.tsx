@@ -82,9 +82,7 @@ export const nameFilter: FilterDefinition = {
       const allItemNames = getUniqueItemNamesFromManifest(
         Object.values(d2Manifest.InventoryItem.getAll())
       );
-      return _.uniq([...myItemNames, ...allItemNames]).map(
-        (s) => `name:${quoteFilterString(s.toLowerCase())}`
-      );
+      return _.uniq([...myItemNames, ...allItemNames]).map((s) => `name:${quoteFilterString(s)}`);
     }
   },
   filter: ({ filterValue, language }) => {
@@ -150,7 +148,7 @@ const freeformFilters: FilterDefinition[] = [
         );
         // favor items we actually own
         return _.uniq([...myPerkNames, ...allPerkNames]).map(
-          (s) => `perkname:${quoteFilterString(s.toLowerCase())}`
+          (s) => `perkname:${quoteFilterString(s)}`
         );
       }
     },

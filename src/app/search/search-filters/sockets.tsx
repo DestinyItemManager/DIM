@@ -23,9 +23,9 @@ export const modslotFilter: FilterDefinition = {
   format: 'query',
   suggestions: modSlotTags.concat(['any', 'none', 'activity']),
   destinyVersion: 2,
-  filter:
-    ({ filterValue }) =>
-    (item: DimItem) => {
+  filter: ({ filterValue }) => {
+    filterValue = filterValue.toLowerCase();
+    return (item: DimItem) => {
       const metadatas =
         filterValue === 'activity'
           ? getInterestingSocketMetadatas(item)
@@ -40,7 +40,8 @@ export const modslotFilter: FilterDefinition = {
             filterValue === 'activity' ||
             modSocketTags.includes(filterValue)))
       );
-    },
+    };
+  },
   fromItem: (item) => {
     const modSocketTags =
       getInterestingSocketMetadatas(item)?.map((m) => `modslot:${m.slotTag}`) ?? [];
@@ -166,9 +167,9 @@ const socketFilters: FilterDefinition[] = [
     format: 'query',
     suggestions: modTypeTags.concat(['any', 'none']),
     destinyVersion: 2,
-    filter:
-      ({ filterValue }) =>
-      (item: DimItem) => {
+    filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
+      return (item: DimItem) => {
         const compatibleModTags = getSpecialtySocketMetadatas(item)?.flatMap(
           (m) => m.compatibleModTags
         );
@@ -176,7 +177,8 @@ const socketFilters: FilterDefinition[] = [
           (filterValue === 'none' && !compatibleModTags) ||
           (compatibleModTags && (filterValue === 'any' || compatibleModTags.includes(filterValue)))
         );
-      },
+      };
+    },
   },
   {
     keywords: 'deepsight',
@@ -184,9 +186,9 @@ const socketFilters: FilterDefinition[] = [
     format: ['simple', 'query'],
     destinyVersion: 2,
     suggestions: resonantElementTags.concat(['complete', 'incomplete']),
-    filter:
-      ({ filterValue }) =>
-      (item: DimItem) => {
+    filter: ({ filterValue }) => {
+      filterValue = filterValue.toLowerCase();
+      return (item: DimItem) => {
         if (!item.deepsightInfo) {
           return false;
         }
@@ -203,7 +205,8 @@ const socketFilters: FilterDefinition[] = [
           case 'incomplete':
             return !item.deepsightInfo.complete;
         }
-      },
+      };
+    },
   },
 ];
 
