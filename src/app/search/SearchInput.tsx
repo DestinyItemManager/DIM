@@ -2,7 +2,7 @@ import { searchIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
 /**
  * A styled text input without fancy features like autocompletion or de-bouncing.
@@ -22,18 +22,10 @@ export function SearchInput({
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
 
-  const filterInput = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (autoFocus && !nativeAutoFocus && filterInput.current) {
-      filterInput.current.focus();
-    }
-  }, [autoFocus, nativeAutoFocus, filterInput]);
-
   return (
     <div className="search-filter" role="search">
       <AppIcon icon={searchIcon} className="search-bar-icon" />
       <input
-        ref={filterInput}
         className="filter-input"
         autoComplete="off"
         autoCorrect="off"
