@@ -47,13 +47,13 @@ jobs:
         id: build_pipeline
         uses: technote-space/get-diff-action@v4
         with:
-          FILES: |
+          PATTERNS: |
             package.json
             yarn.lock
-            webpack.js
+            config/webpack.js
 
       - name: Send webpack stats to RelativeCI
-        if: (steps.build_pipeline.outputs.insertions >= 1)
+        if: (steps.build_pipeline.outputs.insertions > 0)
         uses: relative-ci/agent-action@v2
         with:
           webpackStatsFile: ./webpack-stats.json
