@@ -393,6 +393,7 @@ const D2Sources: {
       2985242208, // Source: Earned from a charity promotion.
       3173463761, // Source: Earned as a pre-order bonus.
       3212282221, // Source: Forsaken Annual Pass
+      3672287903, // Source: The Witch Queen Digital Deluxe Edition
       4069355515, // Source: Handed out at US events in 2019.
       4166998204, // Source: Earned as a pre-order bonus.
     ],
@@ -756,6 +757,7 @@ const D2Sources: {
       2985242208, // Source: Earned from a charity promotion.
       3173463761, // Source: Earned as a pre-order bonus.
       3212282221, // Source: Forsaken Annual Pass
+      3672287903, // Source: The Witch Queen Digital Deluxe Edition
       4069355515, // Source: Handed out at US events in 2019.
       4166998204, // Source: Earned as a pre-order bonus.
     ],
