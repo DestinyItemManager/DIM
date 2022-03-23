@@ -43,7 +43,17 @@ jobs:
         env:
           PR_BUILD: true
 
+      - name: Check for updates to build pipeline
+        shell: pwsh
+        id: build_pipeline
+        run: |
+          $diff = git diff --name-only HEAD^ HEAD
+          $SourceDiff = $diff | Where-Object { $_ -match 'package.json' -or $_ -match 'yarn.lock' -or $_ -match 'webpack.js' }
+          $HasDiff = $SourceDiff.Length -gt 0
+          Write-Host "::set-output name=changed::$HasDiff"
+
       - name: Send webpack stats to RelativeCI
+        if: steps.build_pipeline.outputs.changed == 'True'
         uses: relative-ci/agent-action@v2
         with:
           webpackStatsFile: ./webpack-stats.json
