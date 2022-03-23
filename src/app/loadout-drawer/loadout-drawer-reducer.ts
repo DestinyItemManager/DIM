@@ -334,7 +334,7 @@ function equipItem(
         // It's equipped, mark it unequipped
         loadoutItem.equip = false;
       } else {
-        // It's unequipped - mark all the other items in the same bucket, and conflicting exotics, as unequippped unequipped, then mark this equipped
+        // It's unequipped - mark all the other items in the same bucket, and conflicting exotics, as unequipped unequipped, then mark this equipped
         for (const li of draftLoadout.items) {
           const itemDef = defs.InventoryItem.get(li.hash);
           const bucketHash =
