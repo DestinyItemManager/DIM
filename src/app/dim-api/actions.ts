@@ -128,7 +128,8 @@ function loadGlobalSettings(): ThunkResult {
  * Double the wait time, starting with 30 seconds, until we reach 5 minutes.
  */
 function getBackoffWaitTime(backoff: number) {
-  return Math.min(5 * 60 * 1000, Math.random() * Math.pow(2, backoff) * 15000);
+  // Don't wait less than 10 seconds or more than 10 minutes
+  return Math.max(10_000, Math.min(10 * 60 * 1000, Math.random() * Math.pow(2, backoff) * 15_000));
 }
 
 // Backoff multiplier
