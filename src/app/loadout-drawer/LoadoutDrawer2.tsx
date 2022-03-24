@@ -4,7 +4,7 @@ import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import { getStore } from 'app/inventory/stores-helpers';
+import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { pickSubclass } from 'app/loadout/item-utils';
 import { useDefinitions } from 'app/manifest/selectors';
@@ -77,7 +77,8 @@ export default function LoadoutDrawer2({
 
   const store = storeId
     ? getStore(stores, storeId)
-    : stores.find((s) => !s.isVault && s.classType === loadout?.classType);
+    : stores.find((s) => !s.isVault && s.classType === loadout?.classType) ??
+      getCurrentStore(stores);
 
   // Turn loadout items into real DimItems
   const [items] = useMemo(
