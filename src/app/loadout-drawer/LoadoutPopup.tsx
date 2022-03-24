@@ -1,3 +1,4 @@
+import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -11,7 +12,6 @@ import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
 import { useDefinitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { plainString } from 'app/search/search-filters/freeform';
-import { LoadoutSort } from 'app/settings/initial-settings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
