@@ -138,6 +138,11 @@ const baseImagesByDamageType: Partial<Record<DamageType, string>> = {
   [DamageType.Thermal]: subclassSolar,
   [DamageType.Void]: subclassVoid,
 };
+
+/*
+These alternate base images are preferred for Subclass 3.0 as they account for the subtle gradient background
+that the super icons include.
+*/
 const altBaseImagesByDamageType: Partial<Record<DamageType, string>> = {
   [DamageType.Void]: subclassVoidAlt,
 };
