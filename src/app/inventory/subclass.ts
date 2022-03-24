@@ -3,6 +3,7 @@ import { DamageType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import subclassArc from 'images/subclass-arc.png';
 import subclassSolar from 'images/subclass-solar.png';
+import subclassVoidAlt from 'images/subclass-void-alt.png';
 import subclassVoid from 'images/subclass-void.png';
 import { DimItem } from './item-types';
 
@@ -15,14 +16,14 @@ interface V2SubclassPathInfo {
   nodeHash: number;
   superIconNodeHash: number;
 }
-interface V2SubclassInfo {
+interface V2SubclassInfo extends CommonSubclassInfo {
   isV3: false;
   paths: Record<SubclassPath, V2SubclassPathInfo>;
 }
-interface V3SubclassInfo {
+interface V3SubclassInfo extends CommonSubclassInfo {
   isV3: true;
 }
-type SubclassInfo = CommonSubclassInfo & (V2SubclassInfo | V3SubclassInfo);
+type SubclassInfo = V2SubclassInfo | V3SubclassInfo;
 
 function v2Subclass(
   dmg: DamageType,
@@ -137,6 +138,9 @@ const baseImagesByDamageType: Partial<Record<DamageType, string>> = {
   [DamageType.Thermal]: subclassSolar,
   [DamageType.Void]: subclassVoid,
 };
+const altBaseImagesByDamageType: Partial<Record<DamageType, string>> = {
+  [DamageType.Void]: subclassVoidAlt,
+};
 
 interface SubclassIconInfo {
   base: string;
@@ -149,39 +153,20 @@ export function getSubclassIconInfo(
 ): SubclassIconInfo | undefined {
   const info = subclassInfoByHash[item.hash];
   if (info) {
-    const base = baseImagesByDamageType[info.damageType];
-    if (base) {
-      if (info.isV3) {
-        const superIcon = getV3SubclassSuperIcon(item);
-        if (superIcon) {
-          return {
-            base,
-            super: superIcon,
-          };
-        }
-      } else if (!ignoreSelectedPerks) {
-        const v2Info = getV2SubclassIconInfo(item, info);
-        if (v2Info) {
-          return {
-            base,
-            ...v2Info,
-          };
-        }
-      }
-    }
+    return info.isV3
+      ? getV3SubclassIconInfo(item, info)
+      : ignoreSelectedPerks
+      ? undefined
+      : getV2SubclassIconInfo(item, info);
   }
 }
 
 function getV2SubclassIconInfo(
   item: DimItem,
   subclassInfo: V2SubclassInfo
-):
-  | {
-      path: SubclassPath;
-      super: string;
-    }
-  | undefined {
-  if (item.talentGrid) {
+): SubclassIconInfo | undefined {
+  const base = baseImagesByDamageType[subclassInfo.damageType];
+  if (base && item.talentGrid) {
     for (const path of Object.keys(subclassInfo.paths) as SubclassPath[]) {
       const pathInfo: V2SubclassPathInfo = subclassInfo.paths[path];
       const pathNode = item.talentGrid.nodes.find(
@@ -191,6 +176,7 @@ function getV2SubclassIconInfo(
         const superNode = item.talentGrid.nodes.find((n) => n.hash === pathInfo.superIconNodeHash);
         if (superNode) {
           return {
+            base,
             path,
             super: superNode.icon,
           };
@@ -200,9 +186,21 @@ function getV2SubclassIconInfo(
   }
 }
 
-function getV3SubclassSuperIcon(item: DimItem): string | undefined {
-  if (item.sockets) {
+function getV3SubclassIconInfo(
+  item: DimItem,
+  subclassInfo: V3SubclassInfo
+): SubclassIconInfo | undefined {
+  const base =
+    altBaseImagesByDamageType[subclassInfo.damageType] ??
+    baseImagesByDamageType[subclassInfo.damageType];
+  if (base && item.sockets) {
     const superSocket = getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.Super);
-    return superSocket?.plugged?.plugDef?.displayProperties?.icon;
+    const superIcon = superSocket?.plugged?.plugDef?.displayProperties?.icon;
+    if (superIcon) {
+      return {
+        base,
+        super: superIcon,
+      };
+    }
   }
 }
