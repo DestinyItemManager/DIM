@@ -27,7 +27,7 @@ function mapStateToProps(state: RootState): StoreProps {
   const searchQuery = querySelector(state);
   return {
     searchQuery,
-    queryValid: validateQuerySelector(state)(searchQuery),
+    queryValid: validateQuerySelector(state)(searchQuery).valid,
     filteredItems: filteredItemsSelector(state),
     searchResultsOpen: searchResultsOpenSelector(state),
   };
