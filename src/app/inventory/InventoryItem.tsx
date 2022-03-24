@@ -1,6 +1,6 @@
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
@@ -69,6 +69,7 @@ export default function InventoryItem({
     null;
   const itemStyles = clsx('item', {
     [styles.searchHidden]: searchHidden,
+    [styles.subclass]: item.itemCategoryHashes.includes(ItemCategoryHashes.Subclasses),
     [styles.subclassPathTop]: subclassPath?.position === 'top',
     [styles.subclassPathMiddle]: subclassPath?.position === 'middle',
     [styles.subclassPathBottom]: subclassPath?.position === 'bottom',
@@ -83,7 +84,7 @@ export default function InventoryItem({
         <>
           <img src={subclassPath.base} className={clsx('item-img', styles.subclassBase)} alt="" />
           {subclassPath.super && (
-            <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
+            <BungieImage src={subclassPath.super} className={styles.subclassSuperIcon} alt="" />
           )}
         </>
       );
