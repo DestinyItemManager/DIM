@@ -81,7 +81,8 @@ export default function Plug({
       ) : (
         <>
           <PressTip tooltip={tooltip}>{contents}</PressTip>
-          {/* wait, is this ↓ reachable?? wishlists probably only apply to isReusable type sockets */}
+          {/* is this ↓ reachable?? wishlists mainly apply to isReusable type sockets.
+              they can detect masterworks, but no thumbs up appears on that socket */}
           {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
             <AppIcon
               className="thumbs-up"
