@@ -6,6 +6,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isEnhancedPerk } from 'app/utils/socket-utils';
+import { DestinyPlugItemCraftingRequirements } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -23,6 +24,7 @@ export default function Plug({
   wishlistRoll,
   hasMenu,
   onClick,
+  craftingData,
   plugged,
   selected,
   cannotRoll,
@@ -34,6 +36,7 @@ export default function Plug({
   wishlistRoll?: InventoryWishListRoll;
   hasMenu: boolean;
   onClick?(plug: DimPlug): void;
+  craftingData?: DestinyPlugItemCraftingRequirements;
 } & PlugStatuses) {
   const defs = useD2Definitions()!;
 
@@ -73,10 +76,12 @@ export default function Plug({
           selected={selected}
           cannotRoll={cannotRoll}
           notSelected={notSelected}
+          craftingData={craftingData}
         />
       ) : (
         <>
           <PressTip tooltip={tooltip}>{contents}</PressTip>
+          {/* wait, is this ↓ reachable?? wishlists probably only apply to isReusable type sockets */}
           {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
             <AppIcon
               className="thumbs-up"
@@ -107,11 +112,13 @@ export function PerkCircleWithTooltip({
   selected,
   cannotRoll,
   notSelected,
+  craftingData,
 }: {
   item: DimItem;
   plug: DimPlug;
   socketInfo: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
+  craftingData?: DestinyPlugItemCraftingRequirements;
 } & PlugStatuses) {
   plugged ??= plug === socketInfo.plugged;
   // Another plug was selected by the user
@@ -120,7 +127,14 @@ export function PerkCircleWithTooltip({
   selected ??= socketInfo.actuallyPlugged && plugged;
   cannotRoll ??= plug.cannotCurrentlyRoll;
 
-  const tooltip = () => <DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />;
+  const tooltip = () => (
+    <DimPlugTooltip
+      item={item}
+      plug={plug}
+      wishlistRoll={wishlistRoll}
+      craftingData={craftingData}
+    />
+  );
   return (
     <>
       <PressTip tooltip={tooltip}>

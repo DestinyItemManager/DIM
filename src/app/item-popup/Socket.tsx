@@ -1,4 +1,5 @@
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
+import { compareBy } from 'app/utils/comparators';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import React from 'react';
@@ -22,13 +23,24 @@ export default function Socket({
   if (!socket.plugOptions.length) {
     return null;
   }
+  let plugOptions = socket.plugOptions;
+
+  // if this is a crafted item's plugset, sort plugs by their required level.
+  // TO-DO: the order is correct in the original plugset def,
+  // we should address whatever is changing plug order in DIM
+  if (socket.craftingData) {
+    plugOptions = [...plugOptions].sort(
+      compareBy((p) => socket.craftingData![p.plugDef.hash]?.requiredLevel ?? 0)
+    );
+  }
+
   return (
     <div
       className={clsx('item-socket', {
         hasMenu,
       })}
     >
-      {socket.plugOptions.map((plug) => (
+      {plugOptions.map((plug) => (
         <Plug
           key={plug.plugDef.hash}
           plug={plug}
@@ -37,6 +49,7 @@ export default function Socket({
           wishlistRoll={wishlistRoll}
           hasMenu={hasMenu}
           onClick={onClick && (() => onClick(item, socket, plug, hasMenu))}
+          craftingData={socket.craftingData?.[plug.plugDef.hash]}
         />
       ))}
     </div>
