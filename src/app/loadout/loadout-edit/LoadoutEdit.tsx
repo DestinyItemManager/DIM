@@ -90,8 +90,8 @@ export default function LoadoutEdit({
   const handleClearLoadoutParameters = () => stateDispatch({ type: 'clearLoadoutParameters' });
   const handleFillSubclassFromEquipped = () =>
     stateDispatch({ type: 'setLoadoutSubclassFromEquipped', store });
-  const handleFillLoadoutFromEquipped = () =>
-    stateDispatch({ type: 'fillLoadoutFromUnequipped', store });
+  const handleFillCategoryFromUnequipped = (category: string) =>
+    stateDispatch({ type: 'fillLoadoutFromUnequipped', store, category });
   const handleFillCategoryFromEquipped = (category: string) =>
     stateDispatch({ type: 'fillLoadoutFromEquipped', store, category });
   const handleClearMods = () => stateDispatch({ type: 'clearMods' });
@@ -158,7 +158,7 @@ export default function LoadoutEdit({
             onClear={() => handleClearCategory(category)}
             onFillFromEquipped={() => handleFillCategoryFromEquipped(category)}
             fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
-            onFillFromInventory={handleFillLoadoutFromEquipped}
+            onFillFromInventory={() => handleFillCategoryFromUnequipped(category)}
             onClearLoadoutParameters={
               category === 'Armor' && hasVisibleLoadoutParameters(loadout.parameters)
                 ? handleClearLoadoutParameters

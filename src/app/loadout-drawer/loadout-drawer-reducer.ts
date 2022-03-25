@@ -657,9 +657,10 @@ export function clearBuckets(
     items: loadout.items.filter((i) => {
       const bucketHash = getBucketHashFromItemHash(defs, i.hash);
 
-      return (
+      return !(
         bucketHash &&
-        // Subclasses are in "general" but shouldn't be cleared when we clear subclass
+        // Subclasses are in "general" but shouldn't be cleared when we
+        // clear general -- there's an explicit clearSubclass
         bucketHash !== BucketHashes.Subclass &&
         bucketHashes.includes(bucketHash)
       );
