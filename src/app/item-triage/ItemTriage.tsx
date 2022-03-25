@@ -12,7 +12,7 @@ import { allItemsSelector } from 'app/inventory/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemPopupTab } from 'app/item-popup/ItemPopupBody';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { loadoutToSearchString } from 'app/search/search-filters/loadouts';
 import { AppIcon, compareIcon, editIcon, thumbsUpIcon } from 'app/shell/icons';
@@ -50,8 +50,8 @@ export function doShowTriage(item: DimItem) {
  */
 export function TriageTabToggle({ currentTab, item }: { currentTab: ItemPopupTab; item: DimItem }) {
   const wishlistRoll = useSelector(wishListSelector(item));
-  const loadouts = useSelector(loadoutsSelector);
-  const isInLoadout = loadouts.some((l) => l.items.some((i) => i.id === item.id));
+  const loadoutsByItem = useSelector(loadoutsByItemSelector);
+  const isInLoadout = Boolean(loadoutsByItem[item.id]);
 
   return (
     <span className="popup-tab-title">
@@ -114,8 +114,8 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
 }
 
 function LoadoutsTriageSection({ item }: { item: DimItem }) {
-  const loadouts = useSelector(loadoutsSelector);
-  const inLoadouts = loadouts.filter((l) => l.items.some((i) => i.id === item.id));
+  const loadoutsByItem = useSelector(loadoutsByItemSelector);
+  const inLoadouts = loadoutsByItem[item.id] || [];
 
   return (
     <CollapsibleTitle
@@ -133,15 +133,15 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
       <ul className={styles.loadoutList}>
         {inLoadouts.map((l) => {
           const edit = () => {
-            editLoadout(l, 'vault', {
+            editLoadout(l.loadout, 'vault', {
               isNew: false,
             });
             hideItemPopup();
           };
           return (
-            <li className={styles.loadoutRow} key={l.id}>
-              <ClassIcon classType={l.classType} className={styles.inlineIcon} />
-              <span className={styles.loadoutName}>{l.name}</span>
+            <li className={styles.loadoutRow} key={l.loadout.id}>
+              <ClassIcon classType={l.loadout.classType} className={styles.inlineIcon} />
+              <span className={styles.loadoutName}>{l.loadout.name}</span>
               <span className={styles.controls}>
                 <a
                   onClick={edit}
@@ -150,7 +150,7 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
                 >
                   <AppIcon icon={editIcon} />
                 </a>
-                <SetFilterButton filter={loadoutToSearchString(l)} />
+                <SetFilterButton filter={loadoutToSearchString(l.loadout)} />
               </span>
             </li>
           );

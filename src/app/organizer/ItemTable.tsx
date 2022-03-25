@@ -22,9 +22,8 @@ import {
   useSocketOverridesForItems,
 } from 'app/inventory/store/override-sockets';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSettingAction } from 'app/settings/actions';
@@ -83,7 +82,7 @@ interface StoreProps {
   hasWishList: boolean;
   enabledColumns: string[];
   customTotalStatsByClass: StatHashListsKeyedByDestinyClass;
-  loadouts: Loadout[];
+  loadoutsByItem: LoadoutsByItem;
   newItems: Set<string>;
   destinyVersion: DestinyVersion;
 }
@@ -119,7 +118,7 @@ function mapStateToProps() {
       hasWishList: hasWishListSelector(state),
       enabledColumns: settingsSelector(state)[columnSetting(itemType)],
       customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
-      loadouts: loadoutsSelector(state),
+      loadoutsByItem: loadoutsByItemSelector(state),
       newItems: newItemsSelector(state),
       destinyVersion: destinyVersionSelector(state),
     };
@@ -139,7 +138,7 @@ function ItemTable({
   stores,
   enabledColumns,
   customTotalStatsByClass,
-  loadouts,
+  loadoutsByItem,
   newItems,
   destinyVersion,
   dispatch,
@@ -213,7 +212,7 @@ function ItemTable({
         wishList,
         hasWishList,
         customStatTotal,
-        loadouts,
+        loadoutsByItem,
         newItems,
         destinyVersion,
         onPlugClicked
@@ -226,7 +225,7 @@ function ItemTable({
       itemInfos,
       customStatTotal,
       classIfAny,
-      loadouts,
+      loadoutsByItem,
       newItems,
       destinyVersion,
       onPlugClicked,

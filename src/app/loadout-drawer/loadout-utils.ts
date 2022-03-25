@@ -413,7 +413,7 @@ const matchByHash = [
  * Figure out how a LoadoutItem with a given hash should be resolved:
  * By hash or by id, and by which hash.
  */
-function getResolutionInfo(
+export function getResolutionInfo(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadoutItemHash: number
 ) {
@@ -482,8 +482,16 @@ export function findItemForLoadout(
     return allItems.find((item) => item.id === loadoutItem.id);
   }
 
+  return getUninstancedLoadoutItem(allItems, info.hash, storeId);
+}
+
+export function getUninstancedLoadoutItem(
+  allItems: DimItem[],
+  hash: number,
+  storeId: string | undefined
+) {
   // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
-  const candidates = allItems.filter((item) => item.hash === info.hash);
+  const candidates = allItems.filter((item) => item.hash === hash);
   const onCurrent =
     storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined;
   return onCurrent ?? (candidates[0]?.notransfer ? undefined : candidates[0]);

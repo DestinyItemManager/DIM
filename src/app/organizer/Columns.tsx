@@ -23,7 +23,7 @@ import { ItemStatValue } from 'app/item-popup/ItemStat';
 import NotesArea from 'app/item-popup/NotesArea';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
@@ -100,7 +100,7 @@ export function getColumns(
   wishList: (item: DimItem) => InventoryWishListRoll | undefined,
   hasWishList: boolean,
   customTotalStat: number[],
-  loadouts: Loadout[],
+  loadoutsByItem: LoadoutsByItem,
   newItems: Set<string>,
   destinyVersion: DestinyVersion,
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void
@@ -536,11 +536,11 @@ export function getColumns(
       header: t('Organizer.Columns.Loadouts'),
       value: () => 0,
       cell: (_val, item) => {
-        // Accessing id is safe: Organizer is only weapons and armor
-        const inloadouts = loadouts.filter((l) => l.items.some((i) => i.id === item.id));
+        const inloadouts = loadoutsByItem[item.id];
         return (
+          inloadouts &&
           inloadouts.length > 0 &&
-          inloadouts.map((loadout) => <div key={loadout.id}>{loadout.name}</div>)
+          inloadouts.map((l) => <div key={l.loadout.id}>{l.loadout.name}</div>)
         );
       },
       noSort: true,
