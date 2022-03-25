@@ -4,6 +4,7 @@ import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { v3SubclassHashesByV2SubclassHash } from 'app/inventory/subclass';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
@@ -392,12 +393,7 @@ export function extractArmorModHashes(item: DimItem) {
  * the old one. When loading loadouts we'd like to just use the new version.
  */
 const oldToNewItems = {
-  // Nightstalker subclass
-  3225959819: 2453351420,
-  // Voidwalker subclass
-  3887892656: 2849050827,
-  // Sentinel subclass
-  3382391785: 2842471112,
+  ...v3SubclassHashesByV2SubclassHash,
 };
 
 /**
