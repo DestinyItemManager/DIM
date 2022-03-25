@@ -3,6 +3,8 @@ import { DamageType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import subclassArc from 'images/subclass-arc.png';
 import subclassSolar from 'images/subclass-solar.png';
+import subclassStasisAlt from 'images/subclass-stasis-alt.png';
+import subclassStasis from 'images/subclass-stasis.png';
 import subclassVoidAlt from 'images/subclass-void-alt.png';
 import subclassVoid from 'images/subclass-void.png';
 import { DimItem } from './item-types';
@@ -169,6 +171,7 @@ const baseImagesByDamageType: Partial<Record<DamageType, string>> = {
   [DamageType.Arc]: subclassArc,
   [DamageType.Thermal]: subclassSolar,
   [DamageType.Void]: subclassVoid,
+  [DamageType.Stasis]: subclassStasis,
 };
 
 /*
@@ -177,6 +180,7 @@ that the super icons include.
 */
 const altBaseImagesByDamageType: Partial<Record<DamageType, string>> = {
   [DamageType.Void]: subclassVoidAlt,
+  [DamageType.Stasis]: subclassStasisAlt,
 };
 
 interface SubclassIconInfo {
