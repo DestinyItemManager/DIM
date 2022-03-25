@@ -37,6 +37,8 @@ function collectItemsInLoadouts(loadouts: Loadout[]) {
   for (const loadout of loadouts) {
     for (const item of loadout.items) {
       if (item.id && item.id !== '0') {
+        // TODO: This very inconsistently matches subclasses and emblems
+        // because they have complicated resolution logic.
         loadoutItemIds.add(item.id);
       }
     }

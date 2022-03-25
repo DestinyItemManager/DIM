@@ -217,6 +217,8 @@ function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value') {
 function findMaxStatLoadout(stores: DimStore[], allItems: DimItem[], statName: string) {
   const maxStatHash = statHashByName[statName];
   return stores.flatMap((store) =>
+    // Accessing id is safe: maxStatLoadout only includes items with a power level,
+    // i.e. only weapons and armor and those are instanced.
     maxStatLoadout(maxStatHash, allItems, store).items.map((i) => i.id)
   );
 }

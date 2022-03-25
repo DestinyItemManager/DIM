@@ -951,14 +951,10 @@ function applyLoadoutMods(
     // item in the loadout, use the current equipped item (whatever it is)
     // instead.
     const currentEquippedArmor = store.items.filter((i) => i.bucket.inArmor && i.equipped);
-    const equippedLoadoutItems = loadoutItems.filter((item) => item.equip);
     const loadoutDimItems: DimItem[] = [];
     for (const loadoutItem of loadoutItems) {
       const item = getLoadoutItem(loadoutItem);
-      if (
-        item?.bucket.inArmor &&
-        equippedLoadoutItems.some((loadoutItem) => loadoutItem.id === item.id)
-      ) {
+      if (item?.bucket.inArmor && loadoutItem.equip) {
         loadoutDimItems.push(item);
       }
     }
