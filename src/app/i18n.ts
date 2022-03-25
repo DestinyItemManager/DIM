@@ -15,27 +15,28 @@ import zhCHS from 'locale/zhCHS.json';
 import zhCHT from 'locale/zhCHT.json';
 import { humanBytes } from './storage/human-bytes';
 
-const PLURAL_OVERRIDES = ['ja', 'pl', 'ru', 'ko', 'zh-cht', 'zh-chs'];
-const DIM_LANGS = [
-  'de',
-  'en',
-  'es',
-  'es-mx',
-  'fr',
-  'it',
-  'ja',
-  'pl',
-  'pt-br',
-  'ru',
-  'ko',
-  'zh-cht',
-  'zh-chs',
-];
+export const DIM_LANG_INFOS = {
+  de: { pluralOveride: false, latinBased: true, path: de },
+  en: { pluralOveride: false, latinBased: true, path: en },
+  es: { pluralOveride: false, latinBased: true, path: es },
+  'es-mx': { pluralOveride: false, latinBased: true, path: esMX },
+  fr: { pluralOveride: false, latinBased: true, path: fr },
+  it: { pluralOveride: false, latinBased: true, path: it },
+  ja: { pluralOveride: true, latinBased: false, path: ja },
+  pl: { pluralOveride: true, latinBased: true, path: pl },
+  'pt-br': { pluralOveride: false, latinBased: true, path: ptBR },
+  ru: { pluralOveride: true, latinBased: false, path: ru },
+  ko: { pluralOveride: true, latinBased: false, path: ko },
+  'zh-cht': { pluralOveride: true, latinBased: false, path: zhCHT },
+  'zh-chs': { pluralOveride: true, latinBased: false, path: zhCHS },
+};
+
+const DIM_LANGS = Object.keys(DIM_LANG_INFOS);
 
 // Try to pick a nice default language
 export function defaultLanguage(): string {
   const storedLanguage = localStorage.getItem('dimLanguage');
-  if (storedLanguage && DIM_LANGS.includes(storedLanguage)) {
+  if (storedLanguage && DIM_LANG_INFOS[storedLanguage]) {
     return storedLanguage;
   }
   const browserLang = (window.navigator.language || 'en').toLowerCase();
@@ -72,21 +73,7 @@ export function initi18n(): Promise<unknown> {
         },
         backend: {
           loadPath([lng]: string[]) {
-            const path = {
-              en,
-              it,
-              de,
-              fr,
-              es,
-              'es-mx': esMX,
-              ja,
-              'pt-br': ptBR,
-              pl,
-              ru,
-              ko,
-              'zh-cht': zhCHT,
-              'zh-chs': zhCHS,
-            }[lng] as unknown as string;
+            const path = DIM_LANG_INFOS[lng]?.path as string;
             if (!path) {
               throw new Error(`unsupported language ${lng}`);
             }
@@ -103,7 +90,7 @@ export function initi18n(): Promise<unknown> {
         }
       }
     );
-    if (PLURAL_OVERRIDES.includes(lang)) {
+    if (DIM_LANG_INFOS[lang]?.pluralOveride) {
       i18next.services.pluralResolver.addRule(lang, i18next.services.pluralResolver.getRule('en'));
     }
   });
