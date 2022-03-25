@@ -15,24 +15,25 @@ import zhCHS from 'locale/zhCHS.json';
 import zhCHT from 'locale/zhCHT.json';
 import { humanBytes } from './storage/human-bytes';
 
+const PLURAL_OVERRIDES = ['ja', 'pl', 'ru', 'ko', 'zh-cht', 'zh-chs'];
+const DIM_LANGS = [
+  'de',
+  'en',
+  'es',
+  'es-mx',
+  'fr',
+  'it',
+  'ja',
+  'pl',
+  'pt-br',
+  'ru',
+  'ko',
+  'zh-cht',
+  'zh-chs',
+];
+
 // Try to pick a nice default language
 export function defaultLanguage(): string {
-  const DIM_LANGS = [
-    'de',
-    'en',
-    'es',
-    'es-mx',
-    'fr',
-    'it',
-    'ja',
-    'pl',
-    'pt-br',
-    'ru',
-    'ko',
-    'zh-cht',
-    'zh-chs',
-  ];
-
   const storedLanguage = localStorage.getItem('dimLanguage');
   if (storedLanguage && DIM_LANGS.includes(storedLanguage)) {
     return storedLanguage;
@@ -42,14 +43,16 @@ export function defaultLanguage(): string {
 }
 
 export function initi18n(): Promise<unknown> {
+  const lang = defaultLanguage();
   return new Promise((resolve, reject) => {
     // See https://github.com/i18next/i18next
     i18next.use(HttpApi).init(
       {
         initImmediate: true,
         debug: $DIM_FLAVOR === 'dev',
-        lng: defaultLanguage(),
+        lng: lang,
         fallbackLng: 'en',
+        supportedLngs: DIM_LANGS,
         lowerCaseLng: true,
         load: 'currentOnly',
         interpolation: {
@@ -100,5 +103,8 @@ export function initi18n(): Promise<unknown> {
         }
       }
     );
+    if (PLURAL_OVERRIDES.includes(lang)) {
+      i18next.services.pluralResolver.addRule(lang, i18next.services.pluralResolver.getRule('en'));
+    }
   });
 }
