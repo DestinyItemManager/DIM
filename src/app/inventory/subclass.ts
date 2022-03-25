@@ -29,21 +29,16 @@ type SubclassInfo = V2SubclassInfo | V3SubclassInfo;
 
 function v2Subclass(
   dmg: DamageType,
-  topPathNodeHash: number,
-  middlePathNodeHash: number,
-  bottomPathNodeHash: number,
-  superIconNodeHash: number,
-  altSuperIconNodeHash: number
+  paths: Record<SubclassPath, V2SubclassPathInfo>
 ): SubclassInfo {
   return {
     damageType: dmg,
     isV3: false,
-    paths: {
-      top: { nodeHash: topPathNodeHash, superIconNodeHash },
-      middle: { nodeHash: middlePathNodeHash, superIconNodeHash: altSuperIconNodeHash },
-      bottom: { nodeHash: bottomPathNodeHash, superIconNodeHash },
-    },
+    paths,
   };
+}
+function subclassPath(nodeHash: number, superIconNodeHash: number): V2SubclassPathInfo {
+  return { nodeHash, superIconNodeHash };
 }
 function v3Subclass(dmg: DamageType): SubclassInfo {
   return {
@@ -77,86 +72,59 @@ const superIconNodeHashes = {
 
 const subclassInfoByHash: Record<number, SubclassInfo> = {
   // Arcstrider (v2)
-  1334959255: v2Subclass(
-    DamageType.Arc,
-    1690891826,
-    3006627468,
-    313617030,
-    superIconNodeHashes.arcStaff,
-    superIconNodeHashes.whirlwindGuard
-  ),
+  1334959255: v2Subclass(DamageType.Arc, {
+    top: subclassPath(1690891826, superIconNodeHashes.arcStaff),
+    middle: subclassPath(3006627468, superIconNodeHashes.whirlwindGuard),
+    bottom: subclassPath(313617030, superIconNodeHashes.arcStaff),
+  }),
   // Striker (v2)
-  2958378809: v2Subclass(
-    DamageType.Arc,
-    4099943028,
-    2795355746,
-    4293830764,
-    superIconNodeHashes.fistsOfHavoc,
-    superIconNodeHashes.thundercrash
-  ),
+  2958378809: v2Subclass(DamageType.Arc, {
+    top: subclassPath(4099943028, superIconNodeHashes.fistsOfHavoc),
+    middle: subclassPath(2795355746, superIconNodeHashes.thundercrash),
+    bottom: subclassPath(4293830764, superIconNodeHashes.fistsOfHavoc),
+  }),
   // Stormcaller (v2)
-  1751782730: v2Subclass(
-    DamageType.Arc,
-    487158888,
-    3882393894,
-    3297679786,
-    superIconNodeHashes.stormtrance,
-    superIconNodeHashes.chaosReach
-  ),
+  1751782730: v2Subclass(DamageType.Arc, {
+    top: subclassPath(487158888, superIconNodeHashes.stormtrance),
+    middle: subclassPath(3882393894, superIconNodeHashes.chaosReach),
+    bottom: subclassPath(3297679786, superIconNodeHashes.stormtrance),
+  }),
   // Gunslinger (v2)
-  3635991036: v2Subclass(
-    DamageType.Thermal,
-    2242504056,
-    1590824323,
-    2805396803,
-    superIconNodeHashes.goldenGun,
-    superIconNodeHashes.bladeBarrage
-  ),
+  3635991036: v2Subclass(DamageType.Thermal, {
+    top: subclassPath(2242504056, superIconNodeHashes.goldenGun),
+    middle: subclassPath(1590824323, superIconNodeHashes.bladeBarrage),
+    bottom: subclassPath(2805396803, superIconNodeHashes.goldenGun),
+  }),
   // Sunbreaker (v2)
-  3105935002: v2Subclass(
-    DamageType.Thermal,
-    3928207649,
-    1323416107,
-    1236431642,
-    superIconNodeHashes.hammerOfSol,
-    superIconNodeHashes.burningMaul
-  ),
+  3105935002: v2Subclass(DamageType.Thermal, {
+    top: subclassPath(3928207649, superIconNodeHashes.hammerOfSol),
+    middle: subclassPath(1323416107, superIconNodeHashes.burningMaul),
+    bottom: subclassPath(1236431642, superIconNodeHashes.hammerOfSol),
+  }),
   // Dawnblade (v2)
-  3481861797: v2Subclass(
-    DamageType.Thermal,
-    1893159641,
-    935376049,
-    966868917,
-    superIconNodeHashes.daybreak,
-    superIconNodeHashes.wellOfRadiance
-  ),
+  3481861797: v2Subclass(DamageType.Thermal, {
+    top: subclassPath(1893159641, superIconNodeHashes.daybreak),
+    middle: subclassPath(935376049, superIconNodeHashes.wellOfRadiance),
+    bottom: subclassPath(966868917, superIconNodeHashes.daybreak),
+  }),
   // Nightstalker (v2)
-  3225959819: v2Subclass(
-    DamageType.Void,
-    277476372,
-    499823166,
-    4025960910,
-    superIconNodeHashes.shadowshot,
-    superIconNodeHashes.spectralBlades
-  ),
+  3225959819: v2Subclass(DamageType.Void, {
+    top: subclassPath(277476372, superIconNodeHashes.shadowshot),
+    middle: subclassPath(499823166, superIconNodeHashes.spectralBlades),
+    bottom: subclassPath(4025960910, superIconNodeHashes.shadowshot),
+  }),
   // Sentinel (v2)
-  3382391785: v2Subclass(
-    DamageType.Void,
-    3806272138,
-    3504292102,
-    1347995538,
-    superIconNodeHashes.sentinelShield,
-    superIconNodeHashes.bannerShield
-  ),
+  3382391785: v2Subclass(DamageType.Void, {
+    top: subclassPath(3806272138, superIconNodeHashes.sentinelShield),
+    middle: subclassPath(3504292102, superIconNodeHashes.bannerShield),
+    bottom: subclassPath(1347995538, superIconNodeHashes.sentinelShield),
+  }),
   // Voidwalker (v2)
-  3887892656: v2Subclass(
-    DamageType.Void,
-    2718724912,
-    194702279,
-    1389184794,
-    superIconNodeHashes.novaBomb,
-    superIconNodeHashes.novaWarp
-  ),
+  3887892656: v2Subclass(DamageType.Void, {
+    top: subclassPath(2718724912, superIconNodeHashes.novaBomb),
+    middle: subclassPath(194702279, superIconNodeHashes.novaWarp),
+    bottom: subclassPath(1389184794, superIconNodeHashes.novaBomb),
+  }),
 
   // Subclass 3.0
   873720784: v3Subclass(DamageType.Stasis), // Revenant (v3)
