@@ -1,3 +1,4 @@
+import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -85,7 +86,7 @@ function mapStateToProps() {
             loadout.classType === DestinyClass.Unknown ||
             loadout.classType === dimStore.classType
         ),
-        loadoutSort === 0 ? (l) => -(l.lastUpdatedAt ?? 0) : (l) => l.name
+        loadoutSort === LoadoutSort.ByEditTime ? (l) => -(l.lastUpdatedAt ?? 0) : (l) => l.name
       )
   );
 
