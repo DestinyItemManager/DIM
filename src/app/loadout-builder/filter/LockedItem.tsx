@@ -23,7 +23,12 @@ export default function LockedItem({
       <DraggableInventoryItem item={lockedItem}>
         <ItemPopupTrigger item={lockedItem}>
           {(ref, onClick) => (
-            <ConnectedInventoryItem item={lockedItem} onClick={onClick} innerRef={ref} />
+            <ConnectedInventoryItem
+              item={lockedItem}
+              onClick={onClick}
+              innerRef={ref}
+              ignoreSelectedMods={true}
+            />
           )}
         </ItemPopupTrigger>
       </DraggableInventoryItem>

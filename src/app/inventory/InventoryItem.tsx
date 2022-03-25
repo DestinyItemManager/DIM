@@ -27,8 +27,10 @@ interface Props {
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
   wishlistRoll?: InventoryWishListRoll;
-  /** Don't show information that relates to currently selected perks (only used for subclasses currently) */
+  /** Don't show information that relates to currently selected perks (only used for V2 subclasses currently) */
   ignoreSelectedPerks?: boolean;
+  /** Don't show information that relates to currently selected mods (only used for V3 subclasses currently) */
+  ignoreSelectedMods?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   /** TODO: item locked needs to be passed in */
   onClick?(e: React.MouseEvent): void;
@@ -45,6 +47,7 @@ export default function InventoryItem({
   searchHidden,
   wishlistRoll,
   ignoreSelectedPerks,
+  ignoreSelectedMods,
   onClick,
   onShiftClick,
   onDoubleClick,
@@ -63,7 +66,9 @@ export default function InventoryItem({
 
   const isSubclass =
     item?.destinyVersion === 2 && item.itemCategoryHashes.includes(ItemCategoryHashes.Subclasses);
-  const subclassIconInfo = isSubclass ? getSubclassIconInfo(item, ignoreSelectedPerks) : null;
+  const subclassIconInfo = isSubclass
+    ? getSubclassIconInfo(item, ignoreSelectedPerks, ignoreSelectedMods)
+    : null;
   const itemStyles = clsx('item', {
     [styles.searchHidden]: searchHidden,
     [styles.subclass]: isSubclass,

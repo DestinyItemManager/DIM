@@ -16,6 +16,7 @@ interface ProvidedProps {
   id?: string; // defaults to item.index - id is typically used for `itemPop`
   allowFilter?: boolean;
   ignoreSelectedPerks?: boolean;
+  ignoreSelectedMods?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   onClick?(e: React.MouseEvent): void;
   onShiftClick?(e: React.MouseEvent): void;
@@ -71,6 +72,7 @@ function ConnectedInventoryItem({
   onDoubleClick,
   searchHidden,
   ignoreSelectedPerks,
+  ignoreSelectedMods,
   innerRef,
 }: Props) {
   return (
@@ -86,6 +88,7 @@ function ConnectedInventoryItem({
       onDoubleClick={onDoubleClick}
       searchHidden={searchHidden}
       ignoreSelectedPerks={ignoreSelectedPerks}
+      ignoreSelectedMods={ignoreSelectedMods}
       innerRef={innerRef}
     />
   );
