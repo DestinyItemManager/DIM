@@ -49,7 +49,6 @@ export default function Socket({
           wishlistRoll={wishlistRoll}
           hasMenu={hasMenu}
           onClick={onClick && (() => onClick(item, socket, plug, hasMenu))}
-          craftingData={socket.craftingData?.[plug.plugDef.hash]}
         />
       ))}
     </div>

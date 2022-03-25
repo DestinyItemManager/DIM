@@ -6,7 +6,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isEnhancedPerk } from 'app/utils/socket-utils';
-import { DestinyPlugItemCraftingRequirements } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -24,7 +23,6 @@ export default function Plug({
   wishlistRoll,
   hasMenu,
   onClick,
-  craftingData,
   plugged,
   selected,
   cannotRoll,
@@ -36,7 +34,6 @@ export default function Plug({
   wishlistRoll?: InventoryWishListRoll;
   hasMenu: boolean;
   onClick?(plug: DimPlug): void;
-  craftingData?: DestinyPlugItemCraftingRequirements;
 } & PlugStatuses) {
   const defs = useD2Definitions()!;
 
@@ -76,7 +73,6 @@ export default function Plug({
           selected={selected}
           cannotRoll={cannotRoll}
           notSelected={notSelected}
-          craftingData={craftingData}
         />
       ) : (
         <>
@@ -113,13 +109,11 @@ export function PerkCircleWithTooltip({
   selected,
   cannotRoll,
   notSelected,
-  craftingData,
 }: {
   item: DimItem;
   plug: DimPlug;
   socketInfo: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
-  craftingData?: DestinyPlugItemCraftingRequirements;
 } & PlugStatuses) {
   plugged ??= plug === socketInfo.plugged;
   // Another plug was selected by the user
@@ -133,7 +127,7 @@ export function PerkCircleWithTooltip({
       item={item}
       plug={plug}
       wishlistRoll={wishlistRoll}
-      craftingData={craftingData}
+      craftingData={socketInfo.craftingData?.[plug.plugDef.hash]}
     />
   );
   return (
