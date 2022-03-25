@@ -16,22 +16,22 @@ import zhCHT from 'locale/zhCHT.json';
 import { humanBytes } from './storage/human-bytes';
 
 export const DIM_LANG_INFOS = {
-  de: { pluralOveride: false, latinBased: true, path: de },
-  en: { pluralOveride: false, latinBased: true, path: en },
-  es: { pluralOveride: false, latinBased: true, path: es },
-  'es-mx': { pluralOveride: false, latinBased: true, path: esMX },
-  fr: { pluralOveride: false, latinBased: true, path: fr },
-  it: { pluralOveride: false, latinBased: true, path: it },
-  ja: { pluralOveride: true, latinBased: false, path: ja },
-  pl: { pluralOveride: true, latinBased: true, path: pl },
-  'pt-br': { pluralOveride: false, latinBased: true, path: ptBR },
-  ru: { pluralOveride: true, latinBased: false, path: ru },
-  ko: { pluralOveride: true, latinBased: false, path: ko },
-  'zh-cht': { pluralOveride: true, latinBased: false, path: zhCHT },
-  'zh-chs': { pluralOveride: true, latinBased: false, path: zhCHS },
+  de: { pluralOveride: false, latinBased: true },
+  en: { pluralOveride: false, latinBased: true },
+  es: { pluralOveride: false, latinBased: true },
+  fr: { pluralOveride: false, latinBased: true },
+  it: { pluralOveride: false, latinBased: true },
+  ja: { pluralOveride: true, latinBased: false },
+  pl: { pluralOveride: true, latinBased: true },
+  ru: { pluralOveride: true, latinBased: false },
+  ko: { pluralOveride: true, latinBased: false },
+  esMX: { pluralOveride: false, latinBased: true },
+  ptBR: { pluralOveride: false, latinBased: true },
+  zhCHT: { pluralOveride: true, latinBased: false },
+  zhCHS: { pluralOveride: true, latinBased: false },
 };
 
-const DIM_LANGS = Object.keys(DIM_LANG_INFOS);
+export const DIM_LANGS = Object.keys(DIM_LANG_INFOS);
 
 // Try to pick a nice default language
 export function defaultLanguage(): string {
@@ -53,8 +53,7 @@ export function initi18n(): Promise<unknown> {
         debug: $DIM_FLAVOR === 'dev',
         lng: lang,
         fallbackLng: 'en',
-        supportedLngs: DIM_LANGS,
-        lowerCaseLng: true,
+        supportedLngs: validLocales(),
         load: 'currentOnly',
         interpolation: {
           escapeValue: false,
@@ -73,7 +72,7 @@ export function initi18n(): Promise<unknown> {
         },
         backend: {
           loadPath([lng]: string[]) {
-            const path = DIM_LANG_INFOS[lng]?.path as string;
+            const path = getLanguagePath(lng);
             if (!path) {
               throw new Error(`unsupported language ${lng}`);
             }
@@ -94,4 +93,35 @@ export function initi18n(): Promise<unknown> {
       i18next.services.pluralResolver.addRule(lang, i18next.services.pluralResolver.getRule('en'));
     }
   });
+}
+
+function getLanguagePath(language: string) {
+  const languagePath = {
+    de: de,
+    en: en,
+    es: es,
+    fr: fr,
+    it: it,
+    ja: ja,
+    pl: pl,
+    ru: ru,
+    ko: ko,
+    esMX: esMX,
+    ptBR: ptBR,
+    zhCHT: zhCHT,
+    zhCHS: zhCHS,
+  };
+
+  return languagePath[language] as string;
+}
+
+function validLocales() {
+  return DIM_LANGS.map((lang) => {
+    const language = lang.substring(0, 2);
+    let locale = '';
+    if (lang.length > 2) {
+      locale = `-${lang.substring(2, lang.length)}`; // esMX -> es-MX
+    }
+    return `${language}${locale}`;
+  }).sort();
 }
