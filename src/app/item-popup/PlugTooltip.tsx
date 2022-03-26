@@ -11,6 +11,7 @@ import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DestinyInventoryItemDefinition,
   DestinyObjectiveProgress,
+  DestinyPlugItemCraftingRequirements,
   DestinySandboxPerkDefinition,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -25,11 +26,13 @@ export function DimPlugTooltip({
   plug,
   wishlistRoll,
   hidePlugSubtype,
+  craftingData,
 }: {
   item: DimItem;
   plug: DimPlug;
   wishlistRoll?: InventoryWishListRoll;
   hidePlugSubtype?: boolean;
+  craftingData?: DestinyPlugItemCraftingRequirements;
 }) {
   // TODO: show insertion costs
 
@@ -72,6 +75,7 @@ export function DimPlugTooltip({
       cannotCurrentlyRoll={plug.cannotCurrentlyRoll}
       wishListTip={wishListTip}
       hidePlugSubtype={hidePlugSubtype}
+      craftingData={craftingData}
     />
   );
 }
@@ -94,6 +98,7 @@ export function PlugTooltip({
   cannotCurrentlyRoll,
   wishListTip,
   hidePlugSubtype,
+  craftingData,
 }: {
   def: DestinyInventoryItemDefinition;
   perks?: DestinySandboxPerkDefinition[];
@@ -103,6 +108,7 @@ export function PlugTooltip({
   cannotCurrentlyRoll?: boolean;
   wishListTip?: string;
   hidePlugSubtype?: boolean;
+  craftingData?: DestinyPlugItemCraftingRequirements;
 }) {
   const defs = useD2Definitions();
   const sourceString =
@@ -162,6 +168,31 @@ export function PlugTooltip({
         </div>
       )}
       {enableFailReasons && <p>{enableFailReasons}</p>}
+      {craftingData && (
+        <>
+          {craftingData.unlockRequirements.map((r) => (
+            <p key={r.failureDescription}>
+              <b>{r.failureDescription}</b>
+            </p>
+          ))}
+          {defs &&
+            craftingData.materialRequirementHashes.length &&
+            craftingData.materialRequirementHashes.flatMap((h) => {
+              const materialRequirement = defs?.MaterialRequirementSet.get(h).materials;
+              return materialRequirement.map((m) => {
+                if (!m.countIsConstant || m.omitFromRequirements) {
+                  return null;
+                }
+                const itemName = defs.InventoryItem.get(m.itemHash).displayProperties.name;
+                return (
+                  <div key={`${m.itemHash}-${m.count}`}>
+                    <b>{m.count}</b> {itemName}
+                  </div>
+                );
+              });
+            })}
+        </>
+      )}
       {cannotCurrentlyRoll && <p>{t('MovePopup.CannotCurrentlyRoll')}</p>}
       {wishListTip && (
         <p>
