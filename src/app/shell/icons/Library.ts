@@ -9,6 +9,8 @@ import {
   stadiaIcon,
 } from './custom';
 
+// https://fontawesome.com/v5/search
+
 const faArchive = 'fas fa-archive';
 const faArrowCircleUp = 'fas fa-arrow-circle-up';
 const faArrowRight = 'fas fa-arrow-right';
@@ -20,6 +22,7 @@ const faCheck = 'fas fa-check';
 const faCheckCircle = 'fas fa-check-circle';
 const faCheckCircleRegular = 'far fa-check-circle';
 const faCog = 'fas fa-cog';
+const faCopy = 'fas fa-copy';
 const faDownload = 'fas fa-file-export';
 const faEnvelope = 'fas fa-envelope';
 const faEraser = 'fas fa-eraser';
@@ -41,6 +44,7 @@ const faSearch = 'fas fa-search';
 const faSignOutAlt = 'fas fa-sign-out-alt';
 const faChevronDown = 'fas fa-chevron-down';
 const faChevronUp = 'fas fa-chevron-up';
+const faShare = 'fas fa-share';
 const faShoppingCart = 'fas fa-shopping-cart';
 const faStar = 'fas fa-star';
 const faStarOutline = 'far fa-star';
@@ -106,6 +110,7 @@ export {
   faCheckCircleRegular as unselectedCheckIcon,
   faShoppingCart as shoppingCart,
   faCog as settingsIcon,
+  faCopy as copyIcon,
   faDownload as downloadIcon,
   faEllipsisV as kebabIcon,
   faEnvelope as sendIcon,
@@ -127,6 +132,7 @@ export {
   faSignOutAlt as signOutIcon,
   faChevronDown as moveDownIcon,
   faChevronUp as moveUpIcon,
+  faShare as shareIcon,
   faStar as starIcon,
   faStarOutline as starOutlineIcon,
   faSync as refreshIcon,
