@@ -58,6 +58,8 @@ import {
  * move-asides), or it may encompass an entire loadout application.
  */
 export interface MoveSession {
+  /** Keep track of which buckets we tried to blindly move to but were actually full */
+  bucketsFullOnCurrentStore: Set<number>;
   currentStoreWasFull: boolean;
   // a record of moves?: whatever[];
   // something to prevent infinite moves?
@@ -66,6 +68,13 @@ export interface MoveSession {
   // reservations?: MoveReservations;
   // TODO: definitely include the cancel token here
   // cancelToken: CancelToken;
+}
+
+export function createMoveSession(): MoveSession {
+  return {
+    bucketsFullOnCurrentStore: new Set(),
+    currentStoreWasFull: false,
+  };
 }
 
 /**
@@ -1005,7 +1014,7 @@ export function executeMoveItem(
     reservations?: MoveReservations;
     cancelToken: CancelToken;
   },
-  session: MoveSession = { currentStoreWasFull: false }
+  session: MoveSession = createMoveSession()
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
@@ -1027,7 +1036,7 @@ export function executeMoveItem(
         (item.location.inPostmaster && (source.id === target.id || item.bucket.accountWide))) &&
       // To the current character
       target.current &&
-      !session.currentStoreWasFull
+      !session.bucketsFullOnCurrentStore.has(item.bucket.hash)
     ) {
       try {
         infoLog('move', 'Try blind move of', item.name, 'to', target.name);
@@ -1046,7 +1055,7 @@ export function executeMoveItem(
             target.name,
             'but the bucket is really full'
           );
-          session.currentStoreWasFull = true;
+          session.bucketsFullOnCurrentStore.add(item.bucket.hash);
         } else {
           if (e instanceof DimError) {
             console.log('failed, ', e.bungieErrorCode());
