@@ -10,7 +10,7 @@ import ErrorPanel from 'app/shell/ErrorPanel';
 import { copyIcon, shareIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { copyString, count } from 'app/utils/util';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './LoadoutShareSheet.m.scss';
 
 // Cache shares to loadouts weakly, to cut down on creating shares
@@ -69,12 +69,7 @@ export default function LoadoutShareSheet({
     closeSheet();
   };
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (shareUrl && inputRef.current) {
-      inputRef.current.select();
-    }
-  }, [shareUrl]);
+  const handleFocusUrl = (e: React.FocusEvent<HTMLInputElement>) => e.target.select();
 
   const canShare = 'canShare' in navigator && navigator.canShare({ url: shareUrl });
 
@@ -120,7 +115,7 @@ export default function LoadoutShareSheet({
               </div>
               <div className={styles.fields}>
                 <input
-                  ref={inputRef}
+                  onFocus={handleFocusUrl}
                   value={shareUrl ?? ''}
                   placeholder={t('Loadouts.Share.Placeholder')}
                   readOnly
