@@ -19,24 +19,24 @@ export const DIM_LANG_INFOS = {
   de: { pluralOveride: false, latinBased: true },
   en: { pluralOveride: false, latinBased: true },
   es: { pluralOveride: false, latinBased: true },
+  'es-mx': { pluralOveride: false, latinBased: true },
   fr: { pluralOveride: false, latinBased: true },
   it: { pluralOveride: false, latinBased: true },
   ja: { pluralOveride: true, latinBased: false },
-  pl: { pluralOveride: true, latinBased: true },
-  ru: { pluralOveride: true, latinBased: false },
   ko: { pluralOveride: true, latinBased: false },
-  esMX: { pluralOveride: false, latinBased: true },
-  ptBR: { pluralOveride: false, latinBased: true },
-  zhCHT: { pluralOveride: true, latinBased: false },
-  zhCHS: { pluralOveride: true, latinBased: false },
+  pl: { pluralOveride: true, latinBased: true },
+  'pt-br': { pluralOveride: false, latinBased: true },
+  ru: { pluralOveride: true, latinBased: false },
+  'zh-chs': { pluralOveride: true, latinBased: false },
+  'zh-cht': { pluralOveride: true, latinBased: false },
 };
 
-export const DIM_LANGS = Object.keys(DIM_LANG_INFOS);
+const DIM_LANGS = Object.keys(DIM_LANG_INFOS);
 
 // Try to pick a nice default language
 export function defaultLanguage(): string {
   const storedLanguage = localStorage.getItem('dimLanguage');
-  if (storedLanguage && DIM_LANG_INFOS[storedLanguage]) {
+  if (storedLanguage && DIM_LANGS.includes(storedLanguage)) {
     return storedLanguage;
   }
   const browserLang = (window.navigator.language || 'en').toLowerCase();
@@ -53,7 +53,8 @@ export function initi18n(): Promise<unknown> {
         debug: $DIM_FLAVOR === 'dev',
         lng: lang,
         fallbackLng: 'en',
-        supportedLngs: validLocales(),
+        lowerCaseLng: true,
+        supportedLngs: DIM_LANGS,
         load: 'currentOnly',
         interpolation: {
           escapeValue: false,
@@ -72,7 +73,21 @@ export function initi18n(): Promise<unknown> {
         },
         backend: {
           loadPath([lng]: string[]) {
-            const path = getLanguagePath(lng);
+            const path = {
+              de,
+              en,
+              es,
+              'es-mx': esMX,
+              fr,
+              it,
+              ja,
+              ko,
+              pl,
+              'pt-br': ptBR,
+              ru,
+              'zh-chs': zhCHS,
+              'zh-cht': zhCHT,
+            }[lng] as unknown as string;
             if (!path) {
               throw new Error(`unsupported language ${lng}`);
             }
@@ -93,35 +108,4 @@ export function initi18n(): Promise<unknown> {
       i18next.services.pluralResolver.addRule(lang, i18next.services.pluralResolver.getRule('en'));
     }
   });
-}
-
-function getLanguagePath(language: string) {
-  const languagePath = {
-    de: de,
-    en: en,
-    es: es,
-    fr: fr,
-    it: it,
-    ja: ja,
-    pl: pl,
-    ru: ru,
-    ko: ko,
-    esMX: esMX,
-    ptBR: ptBR,
-    zhCHT: zhCHT,
-    zhCHS: zhCHS,
-  };
-
-  return languagePath[language] as string;
-}
-
-function validLocales() {
-  return DIM_LANGS.map((lang) => {
-    const language = lang.substring(0, 2);
-    let locale = '';
-    if (lang.length > 2) {
-      locale = `-${lang.substring(2, lang.length)}`; // esMX -> es-MX
-    }
-    return `${language}${locale}`;
-  }).sort();
 }
