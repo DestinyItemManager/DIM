@@ -26,5 +26,5 @@ export default function AnimatedNumber({ value }: { value: number }) {
     return controls.stop;
   }, [val, value]);
 
-  return <span ref={ref}>{Math.floor(value).toLocaleString()}</span>;
+  return <span ref={ref}>{Math.floor(value)}</span>;
 }
