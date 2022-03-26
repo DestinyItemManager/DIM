@@ -1,5 +1,6 @@
 ## Next
 
+* Dragging horizontally on items in Compare will scroll the list - even on iOS.
 * Mobile users can now access Material Counts under the banner dropdown of the Vault inventory page.
 * In the Armory and Collection views, craftable weapons now show their required Weapon Level in their tooltip.
 * Searches that can't be saved (because they're too long, or invalid) won't show a save ⭐️ button.
