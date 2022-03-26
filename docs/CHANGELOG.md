@@ -1,5 +1,7 @@
 ## Next
 
+* Mobile users can now access Material Counts under the banner dropdown of the Vault inventory page.
+* In the Armory and Collection views, craftable weapons now show their required Weapon Level in their tooltip.
 * Searches that can't be saved (because they're too long, or invalid) won't show a save ⭐️ button.
 * DIM should no longer get visually mangled by Android's auto-dark-mode.
 * Search filters can contain comments. Only the top level comment gets saved. e.g. `/* My Cool Search */ is:handcannon perkname:firefly`.
