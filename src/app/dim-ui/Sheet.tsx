@@ -1,5 +1,5 @@
 import { useDrag } from '@use-gesture/react';
-import { isiOSBrowser } from 'app/utils/browsers';
+import { isEventFromFirefoxScrollbar, isiOSBrowser } from 'app/utils/browsers';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import { useReducedMotion } from 'framer-motion';
@@ -185,6 +185,10 @@ export default function Sheet({
   // This handles all drag interaction. The callback is called without re-render.
   const bindDrag = useDrag(({ event, active, movement, velocity, last, cancel }) => {
     event?.stopPropagation();
+
+    if (isEventFromFirefoxScrollbar(event as any)) {
+      cancel();
+    }
 
     // If we haven't enabled dragging, cancel the gesture
     if (!last && cancel && !dragging.current) {

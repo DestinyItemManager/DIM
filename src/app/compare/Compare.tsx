@@ -13,6 +13,7 @@ import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { isEventFromFirefoxScrollbar } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -284,13 +285,17 @@ function CompareItems({
   const ref = useRef<HTMLDivElement>(null);
   const dragStateRef = useRef<{ scrollPosition: number; pointerDownPosition: number }>();
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    if (isEventFromFirefoxScrollbar(e)) {
+      return;
+    }
+
     dragStateRef.current = {
       pointerDownPosition: e.clientX,
       scrollPosition: ref.current!.scrollLeft,
     };
     ref.current!.setPointerCapture(e.pointerId);
   }, []);
-  const handleTouchEnd = useCallback((e: React.PointerEvent) => {
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
     dragStateRef.current = undefined;
     ref.current!.releasePointerCapture(e.pointerId);
   }, []);
@@ -307,8 +312,8 @@ function CompareItems({
       className={styles.items}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
-      onPointerUp={handleTouchEnd}
-      onPointerCancel={handleTouchEnd}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
     >
       {items.map((item) => (
         <CompareItem
