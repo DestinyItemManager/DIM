@@ -666,7 +666,7 @@
     "MakeRoomDone_male_plural": "Finished making room for {{count}} Postmaster items by moving {{movedNum}} items off of {{store}}.",
     "MakeRoomError": "Unable to make room for all Postmaster items: {{error}}.",
     "ManageLoadouts": "Manage Loadouts",
-    "MaxSlots": "You can only have {{slots}} of that kind of item in a loadout.",
+    "MaxSlots": "You can only have {{slots}} {{bucketName}} in a loadout.",
     "MaximizeLight": "Max Light",
     "MaximizePower": "Max Power",
     "MaximizeStat": "Maximize Stat",
