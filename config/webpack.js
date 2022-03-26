@@ -446,21 +446,25 @@ module.exports = (env) => {
       })
     );
 
-    config.plugins.push(
-      new WebpackNotifierPlugin({
-        title: 'DIM',
-        excludeWarnings: false,
-        alwaysNotify: true,
-        contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
-      })
-    );
-    config.plugins.push(
-      new ForkTsCheckerNotifierWebpackPlugin({
-        title: 'DIM TypeScript',
-        excludeWarnings: false,
-        contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
-      })
-    );
+    if (process.env.SNORETOAST_DISABLE) {
+      console.log("Disabling build notifications as 'SNORETOAST_DISABLE' was defined");
+    } else {
+      config.plugins.push(
+        new WebpackNotifierPlugin({
+          title: 'DIM',
+          excludeWarnings: false,
+          alwaysNotify: true,
+          contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
+        })
+      );
+      config.plugins.push(
+        new ForkTsCheckerNotifierWebpackPlugin({
+          title: 'DIM TypeScript',
+          excludeWarnings: false,
+          contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
+        })
+      );
+    }
 
     config.plugins.push(new ReactRefreshWebpackPlugin({ overlay: false }));
   } else {
