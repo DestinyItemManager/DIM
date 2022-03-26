@@ -166,11 +166,13 @@ module.exports = (env) => {
               maxSize: 5 * 1024, // only inline if less than 5kb
             },
           },
-          use: [
-            {
-              loader: 'svgo-loader',
-            },
-          ],
+          use: env.dev
+            ? []
+            : [
+                {
+                  loader: 'svgo-loader',
+                },
+              ],
         },
         {
           test: /\.(jpg|gif|png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
@@ -315,21 +317,6 @@ module.exports = (env) => {
         chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:6].css',
       }),
 
-      new StatsWriterPlugin({
-        filename: '../webpack-stats.json',
-        stats: {
-          assets: true,
-          entrypoints: true,
-          chunks: true,
-          modules: true,
-          excludeAssets: [
-            /data\/d1\/manifests\/d1-manifest-..(-br)?.json(.br|.gz)?/,
-            /^(?!en).+.json/,
-            /webpack-stats.json/,
-          ],
-        },
-      }),
-
       new HtmlWebpackPlugin({
         inject: true,
         filename: 'index.html',
@@ -470,6 +457,21 @@ module.exports = (env) => {
   } else {
     // env.beta and env.release
     config.plugins.push(
+      new StatsWriterPlugin({
+        filename: '../webpack-stats.json',
+        stats: {
+          assets: true,
+          entrypoints: true,
+          chunks: true,
+          modules: true,
+          excludeAssets: [
+            /data\/d1\/manifests\/d1-manifest-..(-br)?.json(.br|.gz)?/,
+            /^(?!en).+.json/,
+            /webpack-stats.json/,
+          ],
+        },
+      }),
+
       new CopyWebpackPlugin({
         patterns: [
           {
