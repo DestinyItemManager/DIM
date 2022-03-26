@@ -76,7 +76,8 @@
       text-overflow: ellipsis;
       white-space: nowrap !important;
       line-height: 35px;
-      :global(.app-icon) {
+      :global(.app-icon),
+      img {
         width: 12px;
         margin-right: 5px;
         text-align: center;
@@ -84,6 +85,9 @@
           width: 14px;
           margin-right: 8px;
         }
+      }
+      > img:first-child {
+        filter: invert(1);
       }
     }
   }
@@ -107,6 +111,9 @@
     color: black !important;
     > span:first-child > :global(.app-icon) {
       color: black !important;
+    }
+    > span:first-child > img:first-child {
+      filter: none;
     }
   }
 

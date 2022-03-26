@@ -216,6 +216,17 @@ function buildDefinedSocket(
   // The currently equipped plug, if any
   const reusablePlugs: DimPlug[] = [];
 
+  const craftingData: NonNullable<DimSocket['craftingData']> = {};
+  function addCraftingReqs(plugEntry: DestinyItemSocketEntryPlugItemRandomizedDefinition) {
+    if (
+      plugEntry.craftingRequirements &&
+      (plugEntry.craftingRequirements.materialRequirementHashes.length ||
+        plugEntry.craftingRequirements.unlockRequirements.length)
+    ) {
+      craftingData[plugEntry.plugItemHash] = plugEntry.craftingRequirements;
+    }
+  }
+
   // We only build a larger list of plug options if this is a perk socket, since users would
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
   // we will only populate plugOptions with the currently inserted plug.
@@ -227,6 +238,7 @@ function buildDefinedSocket(
           const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
           if (built) {
             reusablePlugs.push({ ...built, cannotCurrentlyRoll: !reusablePlug.currentlyCanRoll });
+            addCraftingReqs(reusablePlug);
           }
         }
       }
@@ -252,6 +264,7 @@ function buildDefinedSocket(
           // on the fact that they have no name
           if (built?.plugDef.displayProperties.name) {
             reusablePlugs.push({ ...built, cannotCurrentlyRoll: !randomPlug.currentlyCanRoll });
+            addCraftingReqs(randomPlug);
           }
         }
       }
@@ -311,6 +324,7 @@ function buildDefinedSocket(
     isPerk,
     isReusable,
     socketDefinition: socketDef,
+    craftingData: Object.keys(craftingData).length ? craftingData : undefined,
   };
 }
 
@@ -522,14 +536,14 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
 
   const plugs: DimPlug[] = [];
   const defPlugSet = defs.PlugSet.get(plugSetHash);
-  for (const def of defPlugSet.reusablePlugItems) {
-    const plug = buildCachedDefinedPlug(defs, def.plugItemHash);
+  for (const plugEntry of defPlugSet.reusablePlugItems) {
+    const plug = buildCachedDefinedPlug(defs, plugEntry.plugItemHash);
     if (plug) {
       plugs.push(plug);
     }
   }
 
-  const dimPlugSet = { plugs, hash: plugSetHash };
+  const dimPlugSet: DimPlugSet = { plugs, hash: plugSetHash };
   reusablePlugSetCache[plugSetHash] = dimPlugSet;
 
   return dimPlugSet;
@@ -545,7 +559,7 @@ function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): 
     // We mutate cannotCurrentlyRoll and attach stats in this module so we need to spread the object
     // We also run DimItems through immer in the store, which means these get frozen. This essentially
     // unfreezes it in that situation. It only seems to be an issue for fake items in loadouts.
-    // TODO (ryan) lets fine a way around this
+    // TODO (ryan) lets find a way around this
     return cachedValue ? { ...cachedValue } : null;
   }
 
@@ -553,6 +567,6 @@ function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): 
   definedPlugCache[plugHash] = plug;
 
   // We mutate cannotCurrentlyRoll and attach stats in this module so we need to spread the object
-  // TODO (ryan) lets fine a way around this
+  // TODO (ryan) lets find a way around this
   return plug ? { ...plug } : null;
 }

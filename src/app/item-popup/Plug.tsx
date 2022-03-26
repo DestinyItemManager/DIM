@@ -77,6 +77,8 @@ export default function Plug({
       ) : (
         <>
           <PressTip tooltip={tooltip}>{contents}</PressTip>
+          {/* is this ↓ reachable?? wishlists mainly apply to isReusable type sockets.
+              they can detect masterworks, but no thumbs up appears on that socket */}
           {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
             <AppIcon
               className="thumbs-up"
@@ -120,7 +122,14 @@ export function PerkCircleWithTooltip({
   selected ??= socketInfo.actuallyPlugged && plugged;
   cannotRoll ??= plug.cannotCurrentlyRoll;
 
-  const tooltip = () => <DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />;
+  const tooltip = () => (
+    <DimPlugTooltip
+      item={item}
+      plug={plug}
+      wishlistRoll={wishlistRoll}
+      craftingData={socketInfo.craftingData?.[plug.plugDef.hash]}
+    />
+  );
   return (
     <>
       <PressTip tooltip={tooltip}>

@@ -26,6 +26,7 @@
  */
 export type QueryAST = (AndOp | OrOp | NotOp | FilterOp | NoOp) & {
   error?: Error;
+  comment?: string;
 };
 
 /** If ALL of of the operands are true, this resolves to true. There may be any number of operands. */
@@ -179,6 +180,14 @@ export function parseQuery(query: string): QueryAST {
         }
         return result;
       }
+      case 'comment': {
+        const comment = token[1];
+        const next = parseAtom(tokens);
+        return {
+          ...next,
+          comment: comment,
+        };
+      }
       default:
         throw new Error('Unexpected token type, looking for an atom: ' + token + ', ' + query);
     }
@@ -215,10 +224,15 @@ export function parseQuery(query: string): QueryAST {
         if (isSameOp(operator.op, ast)) {
           ast.operands.push(rhs);
         } else {
+          const title = ast.comment;
+          delete ast.comment;
           ast = {
             op: operator.op,
             operands: isSameOp(operator.op, rhs) ? [ast, ...rhs.operands] : [ast, rhs],
           };
+          if (title) {
+            ast.comment = title;
+          }
         }
       }
     } catch (e) {
@@ -248,7 +262,7 @@ function isSameOp<T extends 'and' | 'or'>(binOp: T, op: QueryAST): op is AndOp |
 
 // Lexer token types
 type NoArgTokenType = '(' | ')' | 'not' | 'or' | 'and' | 'implicit_and';
-export type Token = [NoArgTokenType] | ['filter', string, string];
+export type Token = [NoArgTokenType] | ['filter', string, string] | ['comment', string];
 
 // Two different kind of quotes
 const quoteRegexes = {
@@ -270,6 +284,7 @@ const filterArgs = /[^\s()]+/y;
 const bareWords = /[^\s)]+/y;
 // Whitespace that doesn't match anything else is an implicit `and`
 const whitespace = /\s+/y;
+const comment = /\/\*(.*?)\*\/\s*/y;
 
 /**
  * The lexer yields a series of tokens representing the linear structure of the search query.
@@ -315,7 +330,7 @@ export function* lexer(query: string): Generator<Token> {
       const result = match[0];
       if (result.length > 0) {
         consume(result);
-        return result;
+        return match.length > 1 ? match[1] : result;
       }
     }
     return undefined;
@@ -351,6 +366,8 @@ export function* lexer(query: string): Generator<Token> {
     } else if ((match = extract(booleanKeywords)) !== undefined) {
       // boolean keywords
       yield [match.trim() as NoArgTokenType];
+    } else if ((match = extract(comment)) !== undefined) {
+      yield ['comment', match.trim()];
     } else if ((match = extract(filterName)) !== undefined) {
       // Keyword searches - is:, stat:discipline:, etc
       const keyword = match.slice(0, match.length - 1);
@@ -388,26 +405,35 @@ export function* lexer(query: string): Generator<Token> {
  *          '(-is:armor modslot:arrival) or (is:sniperrifle is:weapon)'
  */
 export function canonicalizeQuery(query: QueryAST, depth = 0): string {
-  switch (query.op) {
-    case 'filter':
-      return query.type === 'keyword'
-        ? `${/\s/.test(query.args) ? `"${query.args}"` : query.args}`
-        : `${query.type}:${/\s/.test(query.args) ? `"${query.args}"` : query.args}`;
-    case 'not':
-      return `-${canonicalizeQuery(query.operand, depth + 1)}`;
-    case 'and':
-    case 'or': {
-      const joinedOperands = query.operands
-        .map((q) => canonicalizeQuery(q, depth + 1))
-        .join(
-          query.op === 'and' &&
-            !query.operands.some((op) => op.op === 'filter' && op.type === 'keyword')
-            ? ' '
-            : ` ${query.op} `
-        );
-      return depth === 0 ? joinedOperands : `(${joinedOperands})`;
+  const result = (() => {
+    switch (query.op) {
+      case 'filter':
+        return query.type === 'keyword'
+          ? `${/\s/.test(query.args) ? `"${query.args}"` : query.args}`
+          : `${query.type}:${/\s/.test(query.args) ? `"${query.args}"` : query.args}`;
+      case 'not':
+        return `-${canonicalizeQuery(query.operand, depth + 1)}`;
+      case 'and':
+      case 'or': {
+        const joinedOperands = query.operands
+          .map((q) => canonicalizeQuery(q, depth + 1))
+          .join(
+            query.op === 'and' &&
+              !query.operands.some((op) => op.op === 'filter' && op.type === 'keyword')
+              ? ' '
+              : ` ${query.op} `
+          );
+        return depth === 0 ? joinedOperands : `(${joinedOperands})`;
+      }
+      case 'noop':
+        return '';
     }
-    case 'noop':
-      return '';
+  })();
+
+  // Only preserve the top-level comment
+  if (query.comment && depth === 0) {
+    return `/* ${query.comment} */ ${result}`;
   }
+
+  return result;
 }

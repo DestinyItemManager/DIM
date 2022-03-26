@@ -488,3 +488,18 @@ export function getModsFromLoadout(
 
   return mods.sort(sortMods);
 }
+
+/**
+ * filter for items that are in a character's "pockets" but not equipped,
+ * and can be added to a loadout
+ */
+export function getUnequippedItemsForLoadout(dimStore: DimStore, category?: string) {
+  return dimStore.items.filter(
+    (item) =>
+      !item.location.inPostmaster &&
+      item.bucket.hash !== BucketHashes.Subclass &&
+      itemCanBeInLoadout(item) &&
+      (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)) &&
+      !item.equipped
+  );
+}

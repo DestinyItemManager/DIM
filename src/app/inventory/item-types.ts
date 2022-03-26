@@ -16,6 +16,7 @@ import {
   DestinyItemSocketEntryDefinition,
   DestinyItemTooltipNotification,
   DestinyObjectiveProgress,
+  DestinyPlugItemCraftingRequirements,
   DestinySandboxPerkDefinition,
   DestinySocketCategoryDefinition,
   DestinyStat,
@@ -442,6 +443,29 @@ export interface DimSocket {
    * based on the plugs available to the profile/character.
    */
   plugSet?: DimPlugSet;
+
+  // "Why not just determine craftingData at the plug level?" you ask.
+  // Well, we cache/de-dupe plugs on a per-hash basis, so the
+  // DimPlug for Demolitionist should always be a reference the same object.
+
+  // Additional metadata about Demolitionist, that's only applicable when
+  // it's inside this socket, should live with the socket.
+
+  // yes, the de-dupe thing is not strictly true, due to cannotCurrentlyRoll property...
+  // but that's its own mess that needs cleanup. cannotCurrentlyRoll could definitely be
+  // determined at runtime. there are *very* few places it's needed.
+  // a good TO-DO for later.
+
+  /**
+   * If populated, this socket seems to belong to a crafted weapon.
+   *
+   * For rendering purposes, the child plugs in this socket's plugOptions
+   * ought to share a little more about their material/level requirements.
+   *
+   * This property holds that metadata, keyed by plugHash.
+   */
+  craftingData?: { [plugHash: number]: DestinyPlugItemCraftingRequirements | undefined };
+
   /** Plug hashes in this item visible in the collections roll, if this is a perk */
   curatedRoll: number[] | null;
   /** Reusable plug items from runtime info, for the plug viewer. */
