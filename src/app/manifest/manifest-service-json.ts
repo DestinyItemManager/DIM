@@ -233,14 +233,14 @@ export async function downloadManifestComponents(
     .map(async (table) => {
       let response: Response | null = null;
       let error = null;
-      let body: any = null;
+      let body = null;
 
       for (const query of cacheBusterStrings) {
         try {
           response = await fetch(`https://www.bungie.net${components[table]}${query}`);
           if (response.ok) {
             // Sometimes the file is found, but isn't parseable as JSON
-            body = response.json();
+            body = await response.json();
             break;
           }
           error ??= response;
