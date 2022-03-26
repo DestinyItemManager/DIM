@@ -179,6 +179,7 @@ body {
   font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
   font-size: 12px;
   line-height: calc(16 / 12);
+  accent-color: $orange;
   // Disable drag and drop so we can use our polyfill
   -webkit-user-drag: none;
 }
