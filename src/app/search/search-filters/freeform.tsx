@@ -1,16 +1,14 @@
+import { DIM_LANG_INFOS } from 'app/i18n';
 import { tl } from 'app/i18next-t';
 import { getNotes } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import memoizeOne from 'memoize-one';
 import { FilterDefinition } from '../filter-types';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
-const isLatinBased = memoizeOne((language: string) =>
-  ['de', 'en', 'es', 'es-mx', 'fr', 'it', 'pl', 'pt-br'].includes(language)
-);
+const isLatinBased = (language: string) => DIM_LANG_INFOS[language].latinBased;
 
 /** escape special characters for a regex */
 function escapeRegExp(s: string) {
