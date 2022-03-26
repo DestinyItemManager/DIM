@@ -16,19 +16,19 @@ import zhCHT from 'locale/zhCHT.json';
 import { humanBytes } from './storage/human-bytes';
 
 export const DIM_LANG_INFOS = {
-  de: { pluralOveride: false, latinBased: true },
-  en: { pluralOveride: false, latinBased: true },
-  es: { pluralOveride: false, latinBased: true },
-  'es-mx': { pluralOveride: false, latinBased: true },
-  fr: { pluralOveride: false, latinBased: true },
-  it: { pluralOveride: false, latinBased: true },
-  ja: { pluralOveride: true, latinBased: false },
-  ko: { pluralOveride: true, latinBased: false },
-  pl: { pluralOveride: true, latinBased: true },
-  'pt-br': { pluralOveride: false, latinBased: true },
-  ru: { pluralOveride: true, latinBased: false },
-  'zh-chs': { pluralOveride: true, latinBased: false },
-  'zh-cht': { pluralOveride: true, latinBased: false },
+  de: { pluralOverride: false, latinBased: true },
+  en: { pluralOverride: false, latinBased: true },
+  es: { pluralOverride: false, latinBased: true },
+  'es-mx': { pluralOverride: false, latinBased: true },
+  fr: { pluralOverride: false, latinBased: true },
+  it: { pluralOverride: false, latinBased: true },
+  ja: { pluralOverride: true, latinBased: false },
+  ko: { pluralOverride: true, latinBased: false },
+  pl: { pluralOverride: true, latinBased: true },
+  'pt-br': { pluralOverride: false, latinBased: true },
+  ru: { pluralOverride: true, latinBased: false },
+  'zh-chs': { pluralOverride: true, latinBased: false },
+  'zh-cht': { pluralOverride: true, latinBased: false },
 };
 
 const DIM_LANGS = Object.keys(DIM_LANG_INFOS);
@@ -104,7 +104,7 @@ export function initi18n(): Promise<unknown> {
         }
       }
     );
-    if (DIM_LANG_INFOS[lang]?.pluralOveride) {
+    if (DIM_LANG_INFOS[lang]?.pluralOverride) {
       i18next.services.pluralResolver.addRule(lang, i18next.services.pluralResolver.getRule('en'));
     }
   });
