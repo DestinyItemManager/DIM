@@ -15,7 +15,7 @@ import { queueAction } from '../utils/action-queue';
 import { reportException } from '../utils/exceptions';
 import { updateCharacters } from './d2-stores';
 import { InventoryBucket } from './inventory-buckets';
-import { createMoveSession, executeMoveItem } from './item-move-service';
+import { checkForOverFill, createMoveSession, executeMoveItem } from './item-move-service';
 import { DimItem } from './item-types';
 import { updateManualMoveTimestamp } from './manual-moves';
 import { moveItemNotification } from './MoveNotifications';
@@ -126,7 +126,13 @@ export function moveItemTo(
 
       const movePromise = queueAction(() =>
         loadingTracker.addPromise(
-          dispatch(executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession))
+          (async () => {
+            const result = await dispatch(
+              executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession)
+            );
+            dispatch(checkForOverFill());
+            return result;
+          })()
         )
       );
       showNotification(moveItemNotification(item, store, movePromise, cancel));

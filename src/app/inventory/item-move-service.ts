@@ -2,6 +2,7 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import type { ItemTierName } from 'app/search/d2-known-values';
+import { refresh } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
@@ -38,6 +39,7 @@ import {
 import { DimItem } from './item-types';
 import { getLastManuallyMoved } from './manual-moves';
 import {
+  bucketsSelector,
   currentStoreSelector,
   itemHashTagsSelector,
   itemInfosSelector,
@@ -1083,7 +1085,6 @@ export function executeMoveItem(
       item = await dispatch(moveToStore(item, target, equip, amount, session));
     }
 
-    // TODO: track "depth" and trigger a refresh if a store was overfilled
     return item;
   };
 }
@@ -1156,4 +1157,30 @@ export function sortMoveAsideCandidatesForStore(
   // Sort all candidates
   moveAsideCandidates.sort(itemValueComparator);
   return moveAsideCandidates;
+}
+
+/**
+ * Check if any bucket has "overfilled" and trigger a refresh if so.
+ */
+export function checkForOverFill(): ThunkResult {
+  return async (_dispatch, getState) => {
+    const stores = storesSelector(getState());
+    const buckets = bucketsSelector(getState())!;
+
+    const anyOverflow = (() => {
+      for (const store of stores) {
+        const countByBucket = _.countBy(store.items, (i) => i.bucket.hash);
+        for (const [bucketHashStr, amount] of Object.entries(countByBucket)) {
+          if (amount > buckets.byHash[parseInt(bucketHashStr, 10)].capacity) {
+            return true;
+          }
+        }
+      }
+      return false;
+    })();
+
+    if (anyOverflow) {
+      refresh();
+    }
+  };
 }
