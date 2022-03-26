@@ -10,11 +10,13 @@ import { allItemsSelector, bucketsSelector, hasClassifiedSelector } from 'app/in
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
 import { useDefinitions } from 'app/manifest/selectors';
+import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { ItemFilter } from 'app/search/filter-types';
 import { plainString } from 'app/search/search-filters/freeform';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
@@ -224,6 +226,15 @@ function LoadoutPopup({
         </li>
       )}
       <ul className={styles.list}>
+        {!filteringLoadouts && dimStore.isVault && isPhonePortrait && (
+          <li className={styles.menuItem}>
+            <span onClick={showMaterialCount}>
+              <img src={consumablesIcon} />
+              <span>{t('Header.MaterialCounts')}</span>
+            </span>
+          </li>
+        )}
+
         {!filteringLoadouts && query.length > 0 && (
           <li className={styles.menuItem}>
             <span onClick={applySearchLoadout}>
