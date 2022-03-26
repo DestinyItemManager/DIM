@@ -74,7 +74,9 @@ export default function LoadoutSubclassSection({
                 // plugs in the loadout and they may be different to the popup
                 onClick={plugs.length ? undefined : onClick}
                 item={subclass.item}
-                ignoreSelectedPerks
+                // don't show the selected Super ability on V2 subclasses so we don't give the impression that
+                // we will change the subclass path when applying the loadout
+                selectedSuperDisplay="v3SubclassesOnly"
               />
             )}
           </ItemPopupTrigger>

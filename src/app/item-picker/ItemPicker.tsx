@@ -51,7 +51,7 @@ function ItemPicker({
   itemSortSettings,
   sortBy,
   uniqueBy,
-  ignoreSelectedPerks,
+  selectedSuperDisplay,
   onItemSelected,
   onCancel,
   onSheetClosed,
@@ -105,7 +105,7 @@ function ItemPicker({
               <ConnectedInventoryItem
                 item={item}
                 onClick={() => onItemSelectedFn(item, onClose)}
-                ignoreSelectedPerks={ignoreSelectedPerks}
+                selectedSuperDisplay={selectedSuperDisplay}
               />
               {item.bucket.hash === BucketHashes.Subclass && (
                 <ClassIcon classType={item.classType} className="item-picker-item-class-icon" />

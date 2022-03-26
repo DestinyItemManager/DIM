@@ -27,7 +27,9 @@ export default function LockedItem({
               item={lockedItem}
               onClick={onClick}
               innerRef={ref}
-              ignoreSelectedMods={true}
+              // don't show the selected Super ability on subclasses because we aren't applying socket overrides
+              // to locked subclasses based on what is selected using 'Customize subclass'
+              selectedSuperDisplay="disabled"
             />
           )}
         </ItemPopupTrigger>

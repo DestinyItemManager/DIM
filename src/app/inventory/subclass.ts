@@ -184,15 +184,14 @@ interface SubclassIconInfo {
 }
 export function getSubclassIconInfo(
   item: DimItem,
-  ignoreSelectedPerks?: boolean,
-  ignoreSelectedMods?: boolean
+  onlyShowSuperForV3Subclasses: boolean
 ): SubclassIconInfo | undefined {
   const info = subclassInfoByHash[item.hash];
   if (info) {
     if (info.isV3) {
-      return ignoreSelectedMods ? undefined : getV3SubclassIconInfo(item, info);
-    } else {
-      return ignoreSelectedPerks ? undefined : getV2SubclassIconInfo(item, info);
+      return getV3SubclassIconInfo(item, info);
+    } else if (!onlyShowSuperForV3Subclasses) {
+      return getV2SubclassIconInfo(item, info);
     }
   }
 }
