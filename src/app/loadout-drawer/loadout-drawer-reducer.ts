@@ -9,6 +9,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -234,9 +235,10 @@ export function addItem(
 
     if (typeInventory.length >= maxSlots) {
       // We're already full
+      errorLog('loadouts', "Can't add", item);
       showNotification({
         type: 'warning',
-        title: t('Loadouts.MaxSlots', { slots: maxSlots }),
+        title: t('Loadouts.MaxSlots', { slots: maxSlots, bucketName: item.bucket.name }),
       });
       return;
     }

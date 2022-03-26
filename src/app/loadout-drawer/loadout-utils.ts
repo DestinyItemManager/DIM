@@ -497,7 +497,7 @@ export function getUnequippedItemsForLoadout(dimStore: DimStore, category?: stri
   return dimStore.items.filter(
     (item) =>
       !item.location.inPostmaster &&
-      item.bucket.hash !== BucketHashes.Subclass &&
+      !singularBucketHashes.includes(item.bucket.hash) &&
       itemCanBeInLoadout(item) &&
       (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)) &&
       !item.equipped
