@@ -21,7 +21,11 @@ import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { InventoryBucket } from '../inventory/inventory-buckets';
-import { MoveReservations, sortMoveAsideCandidatesForStore } from '../inventory/item-move-service';
+import {
+  createMoveSession,
+  MoveReservations,
+  sortMoveAsideCandidatesForStore,
+} from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
 import { D1Store, DimStore } from '../inventory/store-types';
 import { clearItemsOffCharacter } from '../loadout-drawer/loadout-apply';
@@ -209,5 +213,5 @@ function moveItemsToVault(
     reservations[store.id][bucket.hash] = 1;
   });
 
-  return clearItemsOffCharacter(store, items, cancelToken, reservations);
+  return clearItemsOffCharacter(store, items, createMoveSession(cancelToken), reservations);
 }

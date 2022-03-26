@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
+  createMoveSession,
   equipItems,
   Exclusion,
   executeMoveItem,
@@ -170,7 +171,7 @@ function doApplyLoadout(
     const getLoadoutItem = (loadoutItem: LoadoutItem) =>
       findItemForLoadout(defs, allItemsSelector(getState()), store.id, loadoutItem);
 
-    const moveSession: MoveSession = { currentStoreWasFull: false };
+    const moveSession = createMoveSession(cancelToken);
 
     try {
       // Back up the current state as an "undo" loadout
@@ -357,7 +358,6 @@ function doApplyLoadout(
               equipItems(
                 getStore(getStores(), owner)!,
                 itemsToEquip,
-                cancelToken,
                 applicableLoadoutItems,
                 moveSession
               )
@@ -409,7 +409,7 @@ function doApplyLoadout(
               loadoutItem,
               getLoadoutItem,
               applicableLoadoutItems,
-              cancelToken
+              moveSession
             )
           );
           const updatedItem = getLoadoutItem(loadoutItem);
@@ -467,9 +467,7 @@ function doApplyLoadout(
         );
         const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i)));
         try {
-          const result = await dispatch(
-            equipItems(store, realItemsToEquip, cancelToken, [], moveSession)
-          );
+          const result = await dispatch(equipItems(store, realItemsToEquip, [], moveSession));
           // Bulk equip can partially fail
           setLoadoutState(
             produce((state) => {
@@ -561,7 +559,7 @@ function doApplyLoadout(
           clearSpaceAfterLoadout(
             getTargetStore(),
             applicableLoadoutItems.map((i) => getLoadoutItem(i)!),
-            cancelToken
+            moveSession
           )
         );
       }
@@ -588,7 +586,7 @@ function applyLoadoutItem(
   loadoutItem: LoadoutItem,
   getLoadoutItem: (loadoutItem: LoadoutItem) => DimItem | undefined,
   excludes: Exclusion[],
-  cancelToken: CancelToken
+  moveSession: MoveSession
 ): ThunkResult {
   return async (dispatch, getState) => {
     // The store and its items may change as we move things - make sure we're always looking at the latest version
@@ -643,24 +641,32 @@ function applyLoadoutItem(
           totalAmount += amountToMove;
 
           await dispatch(
-            executeMoveItem(sourceItem, store, {
-              equip: false,
-              amount: amountToMove,
-              excludes,
-              cancelToken,
-            })
+            executeMoveItem(
+              sourceItem,
+              store,
+              {
+                equip: false,
+                amount: amountToMove,
+                excludes,
+              },
+              moveSession
+            )
           );
         }
       }
     } else {
       // Normal items get a straightforward move
       await dispatch(
-        executeMoveItem(item, store, {
-          equip: loadoutItem.equip,
-          amount: item.amount,
-          excludes,
-          cancelToken,
-        })
+        executeMoveItem(
+          item,
+          store,
+          {
+            equip: loadoutItem.equip,
+            amount: item.amount,
+            excludes,
+          },
+          moveSession
+        )
       );
     }
   };
@@ -672,7 +678,7 @@ function applyLoadoutItem(
 function clearSpaceAfterLoadout(
   store: DimStore,
   items: DimItem[],
-  cancelToken: CancelToken
+  moveSession: MoveSession
 ): ThunkResult {
   const itemsByType = _.groupBy(items, (i) => i.bucket.hash);
 
@@ -718,7 +724,7 @@ function clearSpaceAfterLoadout(
       loadoutItems[0].bucket.capacity - numUnequippedLoadoutItems;
   }
 
-  return clearItemsOffCharacter(store, itemsToRemove, cancelToken, reservations);
+  return clearItemsOffCharacter(store, itemsToRemove, moveSession, reservations);
 }
 
 /**
@@ -729,7 +735,7 @@ function clearSpaceAfterLoadout(
 export function clearItemsOffCharacter(
   store: DimStore,
   items: DimItem[],
-  cancelToken: CancelToken,
+  moveSession: MoveSession,
   reservations: MoveReservations
 ): ThunkResult {
   return async (dispatch, getState) => {
@@ -762,13 +768,17 @@ export function clearItemsOffCharacter(
               );
             }
             await dispatch(
-              executeMoveItem(item, otherStoresWithSpace[0], {
-                equip: false,
-                amount: item.amount,
-                excludes: items,
-                reservations,
-                cancelToken,
-              })
+              executeMoveItem(
+                item,
+                otherStoresWithSpace[0],
+                {
+                  equip: false,
+                  amount: item.amount,
+                  excludes: items,
+                  reservations,
+                },
+                moveSession
+              )
             );
             continue;
           } else if (vaultSpaceLeft === 0) {
@@ -790,13 +800,17 @@ export function clearItemsOffCharacter(
           );
         }
         await dispatch(
-          executeMoveItem(item, vault, {
-            equip: false,
-            amount: item.amount,
-            excludes: items,
-            reservations,
-            cancelToken,
-          })
+          executeMoveItem(
+            item,
+            vault,
+            {
+              equip: false,
+              amount: item.amount,
+              excludes: items,
+              reservations,
+            },
+            moveSession
+          )
         );
       } catch (e) {
         if (e instanceof CanceledError) {

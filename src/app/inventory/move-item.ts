@@ -15,7 +15,7 @@ import { queueAction } from '../utils/action-queue';
 import { reportException } from '../utils/exceptions';
 import { updateCharacters } from './d2-stores';
 import { InventoryBucket } from './inventory-buckets';
-import { executeMoveItem, MoveSession } from './item-move-service';
+import { createMoveSession, executeMoveItem } from './item-move-service';
 import { DimItem } from './item-types';
 import { updateManualMoveTimestamp } from './manual-moves';
 import { moveItemNotification } from './MoveNotifications';
@@ -122,10 +122,11 @@ export function moveItemTo(
       updateManualMoveTimestamp(item);
 
       const [cancelToken, cancel] = withCancel();
+      const moveSession = createMoveSession(cancelToken);
 
       const movePromise = queueAction(() =>
         loadingTracker.addPromise(
-          dispatch(executeMoveItem(item, store, { equip, amount: moveAmount, cancelToken }))
+          dispatch(executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession))
         )
       );
       showNotification(moveItemNotification(item, store, movePromise, cancel));
@@ -173,7 +174,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
           const stores = storesSelector(getState());
           const characters = stores.filter((s) => !s.isVault);
           const vault = getVault(stores)!;
-          const moveSession: MoveSession = { currentStoreWasFull: false };
+          const moveSession = createMoveSession(neverCanceled);
 
           try {
             for (const s of characters) {
@@ -184,14 +185,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
               );
               if (item) {
                 const amount = amountOfItem(s, actionableItem);
-                await dispatch(
-                  executeMoveItem(
-                    item,
-                    vault,
-                    { equip: false, amount, cancelToken: neverCanceled },
-                    moveSession
-                  )
-                );
+                await dispatch(executeMoveItem(item, vault, { equip: false, amount }, moveSession));
               }
             }
 
@@ -203,14 +197,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
               );
               if (item) {
                 const amount = amountOfItem(vault, actionableItem);
-                await dispatch(
-                  executeMoveItem(
-                    item,
-                    store,
-                    { equip: false, amount, cancelToken: neverCanceled },
-                    moveSession
-                  )
-                );
+                await dispatch(executeMoveItem(item, store, { equip: false, amount }, moveSession));
               }
             }
             const data = { name: actionableItem.name, store: store.name };
@@ -247,7 +234,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
         (async () => {
           // Sort vault to the end
           const stores = _.sortBy(storesSelector(getState()), (s) => (s.id === 'vault' ? 2 : 1));
-          const moveSession: MoveSession = { currentStoreWasFull: false };
+          const moveSession = createMoveSession(neverCanceled);
 
           let total = 0;
           const amounts = stores.map((store) => {
@@ -298,7 +285,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
                 executeMoveItem(
                   item,
                   move.target,
-                  { equip: false, amount: move.amount, cancelToken: neverCanceled },
+                  { equip: false, amount: move.amount },
                   moveSession
                 )
               );
