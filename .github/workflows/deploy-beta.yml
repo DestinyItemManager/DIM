@@ -11,7 +11,43 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get Pull Request Number
+        id: pr
+        run: echo "::set-output name=pull_request_number::$(gh pr view --json number -q .number || echo "")"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update CHANGELOG_NEXT.md
+        if: steps.pr.outputs.pull_request_number !== ""
+        run: |
+          cat ./changes/${{ steps.pr.outputs.pull_request_number }}.md >> ./docs/CHANGELOG_NEXT.md
+          rm ./changes/${{ steps.pr.outputs.pull_request_number }}.md
+
+      - name: Check for updates to CHANGELOG_NEXT.md
+        id: changelog_check
+        uses: technote-space/get-diff-action@v4
+        with:
+          PATTERNS: |
+            CHANGELOG_NEXT.md
+
+      - name: Commit files
+        if: (steps.changelog_check.outputs.insertions > 0)
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Update CHANGELOG_NEXT.md
+          commit_user_name: DIM CHANGELOG Bot
+          commit_user_email: destinyitemmanager@gmail.com
+          commit_author: DIM CHANGELOG Bot <destinyitemmanager@gmail.com>
+
   deploy:
+    needs: changelog
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
