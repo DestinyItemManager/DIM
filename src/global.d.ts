@@ -83,6 +83,11 @@ declare module '*/CHANGELOG.md' {
   export default value;
 }
 
+declare module '*/CHANGELOG_NEXT.md' {
+  const value: string;
+  export default value;
+}
+
 declare module '*.jpg' {
   const value: string;
   export default value;

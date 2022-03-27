@@ -1,4 +1,5 @@
 import changelog from 'docs/CHANGELOG.md';
+import changelogNext from 'docs/CHANGELOG_NEXT.md';
 import React, { useEffect } from 'react';
 import './ChangeLog.scss';
 import { DimVersions } from './versions';
@@ -14,6 +15,7 @@ export default function ChangeLog() {
   return (
     <>
       <h1>DIM Changes</h1>
+      <Markdown>{changelogNext}</Markdown>
       <Markdown>{changelog}</Markdown>
     </>
   );
