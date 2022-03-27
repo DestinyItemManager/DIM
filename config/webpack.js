@@ -269,7 +269,7 @@ module.exports = (env) => {
           test: /\.wasm/,
         },
         {
-          test: /CHANGELOG\.md$/,
+          test: /CHANGELOG(_NEXT)?\.md$/,
           use: [
             {
               loader: 'html-loader',
