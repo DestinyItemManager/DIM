@@ -1,0 +1,39 @@
+name: Verify CHANGELOG.md Updated
+on:
+  pull_request:
+    types: [assigned, opened, synchronize, reopened, labeled, unlabeled]
+    paths-ignore:
+      - 'docs/**'
+      - '.github/workflows/**'
+      - 'src/data/**' # Ignore d2ai updates
+
+jobs:
+  changelog:
+      if: github.event.pull_request.draft == false
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+
+        - name: Check for updates to CHANGELOG.md
+          id: changelog_check
+          uses: technote-space/get-diff-action@v4
+          with:
+            PATTERNS: |
+              CHANGELOG.md
+
+        - name: No CHANGELOG.md Update
+          if: (steps.changelog_check.outputs.insertions == 0)
+          uses: christianvuerings/add-labels@v1
+          with:
+            labels: |
+              no changelog
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: CHANGELOG.md Updated
+          if: (steps.changelog_check.outputs.insertions > 0)
+          uses: mondeja/remove-labels-gh-action@v1
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            labels: |
+              no changelog
