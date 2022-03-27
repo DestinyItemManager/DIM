@@ -165,6 +165,8 @@ function doApplyLoadout(
 
     // TODO: use a Map to cache results from getLoadoutItem, reset between asyncs?
 
+    // TODO: use ResolvedLoadoutItem!
+
     /** Find a real item corresponding to this loadout item */
     const getLoadoutItem = (loadoutItem: LoadoutItem) =>
       findItemForLoadout(defs, allItemsSelector(getState()), store.id, loadoutItem);
@@ -411,8 +413,7 @@ function doApplyLoadout(
                 if (state.itemStates[initialItem.index]) {
                   state.itemStates[initialItem.index].state =
                     // If we're doing a bulk equip later, set to MovedPendingEquip
-                    itemsToEquip.length > 1 &&
-                    itemsToEquip.some((loadoutItem) => loadoutItem.id === updatedItem.id)
+                    itemsToEquip.length > 1 && itemsToEquip.some((li) => loadoutItem.id === li.id)
                       ? LoadoutItemState.MovedPendingEquip
                       : LoadoutItemState.Succeeded;
                 }
@@ -454,7 +455,7 @@ function doApplyLoadout(
         );
         // Use the bulk equipAll API to equip all at once.
         itemsToEquip = itemsToEquip.filter((i) =>
-          successfulItems.some((si) => si.item.id === i.id)
+          successfulItems.some((si) => si.item.id === getLoadoutItem(i)?.id)
         );
         const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i)));
         try {
