@@ -1,9 +1,11 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
+import Highlights from 'app/item-feed/Highlights';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
 import { sortItems } from 'app/shell/item-comparators';
 import { RootState } from 'app/store/types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
@@ -16,6 +18,7 @@ import { allItemsSelector } from '../inventory/selectors';
 import { filterFactorySelector } from '../search/search-filter';
 import { ItemSortSettings, itemSortSettingsSelector } from '../settings/item-sort';
 import { ItemPickerState } from './item-picker';
+import styles from './ItemPicker.m.scss';
 import './ItemPicker.scss';
 
 type ProvidedProps = ItemPickerState & {
@@ -99,22 +102,50 @@ function ItemPicker({
       freezeInitialHeight={true}
     >
       {({ onClose }) => (
-        <div className="sub-bucket">
+        <div className={styles.itemGrid}>
           {items.map((item) => (
-            <div key={item.index} className="item-picker-item">
-              <ConnectedInventoryItem
-                item={item}
-                onClick={() => onItemSelectedFn(item, onClose)}
-                ignoreSelectedPerks={ignoreSelectedPerks}
-              />
-              {item.bucket.hash === BucketHashes.Subclass && (
-                <ClassIcon classType={item.classType} className="item-picker-item-class-icon" />
-              )}
-            </div>
+            <ItemPickerItem
+              key={item.index}
+              item={item}
+              ignoreSelectedPerks={ignoreSelectedPerks}
+              onClick={() => onItemSelectedFn(item, onClose)}
+            />
           ))}
         </div>
       )}
     </Sheet>
+  );
+}
+
+function ItemPickerItem({
+  item,
+  ignoreSelectedPerks,
+  onClick,
+}: {
+  item: DimItem;
+  ignoreSelectedPerks?: boolean;
+  onClick(): void;
+}) {
+  return (
+    <div className={styles.itemPickerItem}>
+      <ConnectedInventoryItem
+        item={item}
+        onClick={onClick}
+        ignoreSelectedPerks={ignoreSelectedPerks}
+      />
+      {item.bucket.hash === BucketHashes.Subclass && (
+        <ClassIcon classType={item.classType} className={styles.classIcon} />
+      )}
+      <div className={styles.info}>
+        <div className={styles.title}>
+          {item.name}
+          {item.classType !== DestinyClass.Unknown && (
+            <ClassIcon classType={item.classType} className={styles.titleClassIcon} />
+          )}
+        </div>
+        <Highlights item={item} />
+      </div>
+    </div>
   );
 }
 

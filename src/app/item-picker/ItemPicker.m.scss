@@ -1,0 +1,81 @@
+@import '../variables.scss';
+
+// These classes are used in item-picker, mod-picker, exotic-picker and search results
+
+:global(.item-picker) {
+  :global(.sheet-contents) > div {
+    padding: 8px;
+  }
+  :global(.item) {
+    cursor: pointer;
+  }
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+:global(.item-picker-search) {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  :global(.search-filter) {
+    flex: 1;
+    margin-left: 0;
+    min-width: 0;
+  }
+}
+
+.itemGrid {
+  min-height: var(--item-size);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--item-margin);
+  align-content: flex-start;
+  align-items: flex-start;
+  padding: 4px 0 calc(var(--item-margin) + 4px) 0;
+  position: relative;
+}
+
+.itemPickerItem {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  padding: 8px 8px 4px 8px;
+  background: rgba(255, 255, 255, 0.1);
+  align-self: stretch;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 1px solid transparent;
+  &:hover,
+  &:focus-visible {
+    border: 1px solid $orange;
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.classIcon {
+  box-sizing: border-box;
+  width: calc(var(--item-size) / 4) !important;
+  height: calc(var(--item-size) / 4) !important;
+  font-size: calc(var(--item-size) * 0.71);
+  color: white;
+  position: absolute;
+  z-index: 1;
+  left: 1px;
+  bottom: 1px;
+  display: block;
+}
+
+.info {
+  margin-left: 8px;
+}
+
+.title {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: Helvetica, Arial, sans-serif;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.titleClassIcon {
+  margin-left: 4px;
+}
