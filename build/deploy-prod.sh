@@ -3,7 +3,10 @@
 git config --global user.email "destinyitemmanager@gmail.com"
 git config --global user.name "DIM Release Bot"
 
-awk '/## Next/{flag=1;next}/##/{flag=0}flag' docs/CHANGELOG.md >release-notes.txt
+cat docs/CHANGELOG_NEXT.md docs/CHANGELOG.md >docs/CHANGELOG_TEMP.md              ## Merge CHANGELOG's
+mv docs/CHANGELOG_TEMP.md docs/CHANGELOG.md                                       ## Merge CHANGELOG's
+cat '## Next\n\n*' >docs/CHANGELOG_NEXT.md                                        ## Reset CHANGELOG_NEXT
+awk '/## Next/{flag=1;next}/##/{flag=0}flag' docs/CHANGELOG.md >release-notes.txt ## Generate release-notes.txt
 
 # update changelog
 OPENSPAN='\<span class="changelog-date"\>'
