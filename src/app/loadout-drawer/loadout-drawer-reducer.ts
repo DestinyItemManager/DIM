@@ -24,9 +24,6 @@ import {
   singularBucketHashes,
 } from './loadout-utils';
 
-// TODO: should this really be a reducer, or just a series of functions that produce a new loadout coupled w/ a setLoadout function? General loadout manipulation library would be useful...
-// Each function should return a (loadout: Loadout) => Loadout
-
 /*
  * This module contains functions for mutating loadouts. Each exported function
  * should return a LoadoutUpdateFunction so it can be used directly in useState
@@ -49,148 +46,6 @@ import {
  * setLoadout(addItem(defs, item))
  */
 export type LoadoutUpdateFunction = (loadout: Loadout) => Loadout;
-
-export interface State {
-  loadout: Readonly<Loadout>;
-}
-
-export type Action =
-  /** Add an item to the loadout */
-  | {
-      type: 'addItem';
-      item: DimItem;
-      /**
-       * True or false if the item should definitely be equipped or not
-       * equipped, undefined to accept a default based on what's already there
-       */
-      equip?: boolean;
-      socketOverrides?: SocketOverrides;
-    }
-  // | { type: 'replaceItem' } // add+remove? remove+add? doesn't need to respect type limits?
-  /** Applies socket overrides to the supplied item */
-  | {
-      type: 'applySocketOverrides';
-      resolvedItem: ResolvedLoadoutItem;
-      socketOverrides: SocketOverrides;
-    }
-  | { type: 'updateModsByBucket'; modsByBucket: LoadoutParameters['modsByBucket'] }
-  /** Remove an item from the loadout */
-  | { type: 'removeItem'; resolvedItem: ResolvedLoadoutItem }
-  /** Make an item that's already in the loadout equipped */
-  | { type: 'equipItem'; resolvedItem: ResolvedLoadoutItem }
-  | { type: 'updateMods'; mods: number[] }
-  | { type: 'changeClearMods'; enabled: boolean }
-  | { type: 'removeMod'; hash: number }
-  | { type: 'clearLoadoutParameters' }
-  | { type: 'clearMods' }
-  | { type: 'setLoadoutSubclassFromEquipped'; store: DimStore }
-  | { type: 'fillLoadoutFromEquipped'; store: DimStore; category?: string }
-  | { type: 'fillLoadoutFromUnequipped'; store: DimStore; category?: string }
-  | { type: 'setNotes'; notes: string | undefined }
-  | { type: 'setName'; name: string }
-  | { type: 'setClassType'; classType: DestinyClass }
-  | { type: 'setClearSpace'; clearSpace: boolean }
-  | { type: 'clearCategory'; category: string }
-  | { type: 'clearSubclass' }
-  | { type: 'syncModsFromEquipped'; store: DimStore };
-
-/**
- * All state for this component is managed through this reducer and the Actions above.
- */
-export function stateReducer(defs: D2ManifestDefinitions | D1ManifestDefinitions) {
-  return (state: State, action: Action): State => {
-    const setLoadout = (updater: LoadoutUpdateFunction) => ({
-      ...state,
-      loadout: updater(state.loadout),
-    });
-
-    switch (action.type) {
-      case 'addItem': {
-        const { loadout } = state;
-        const { item, equip, socketOverrides } = action;
-
-        if (!itemCanBeInLoadout(item)) {
-          showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
-          return state;
-        }
-
-        if (item.classType !== DestinyClass.Unknown && loadout.classType !== item.classType) {
-          showNotification({
-            type: 'warning',
-            title: t('Loadouts.ClassTypeMismatch', { className: item.classTypeNameLocalized }),
-          });
-          return state;
-        }
-        return setLoadout(addItem(defs, item, equip, socketOverrides));
-      }
-
-      case 'removeItem':
-        return setLoadout(removeItem(defs, action.resolvedItem));
-
-      case 'equipItem':
-        return setLoadout(equipItem(defs, action.resolvedItem));
-
-      case 'applySocketOverrides':
-        return setLoadout(applySocketOverrides(action.resolvedItem, action.socketOverrides));
-
-      case 'updateModsByBucket':
-        return setLoadout(updateModsByBucket(action.modsByBucket));
-
-      case 'updateMods':
-        return setLoadout(updateMods(action.mods));
-
-      case 'changeClearMods':
-        return setLoadout(changeClearMods(action.enabled));
-
-      case 'removeMod':
-        return setLoadout(removeMod(action.hash));
-
-      case 'clearLoadoutParameters':
-        return setLoadout(clearLoadoutParameters());
-
-      case 'setLoadoutSubclassFromEquipped': {
-        if (!defs.isDestiny2()) {
-          return state;
-        }
-        return setLoadout(setLoadoutSubclassFromEquipped(defs, action.store));
-      }
-
-      case 'fillLoadoutFromEquipped':
-        return setLoadout(fillLoadoutFromEquipped(defs, action.store, action.category));
-
-      case 'fillLoadoutFromUnequipped':
-        return setLoadout(fillLoadoutFromUnequipped(defs, action.store, action.category));
-
-      case 'setNotes':
-        return setLoadout(setNotes(action.notes));
-
-      case 'setClassType':
-        return setLoadout(setClassType(action.classType));
-
-      case 'setClearSpace':
-        return setLoadout(setClearSpace(action.clearSpace));
-
-      case 'setName':
-        return setLoadout(setName(action.name));
-
-      case 'clearSubclass': {
-        if (!defs.isDestiny2()) {
-          return state;
-        }
-        return setLoadout(clearSubclass(defs));
-      }
-
-      case 'syncModsFromEquipped':
-        return setLoadout(syncModsFromEquipped(action.store));
-
-      case 'clearCategory':
-        return setLoadout(clearBucketCategory(defs, action.category));
-
-      case 'clearMods':
-        return setLoadout(clearMods());
-    }
-  };
-}
 
 /**
  * Produce a new loadout that adds a new item to the given loadout.
@@ -219,6 +74,19 @@ export function addItem(
   const maxSlots = singular ? 1 : item.bucket.capacity;
 
   return produce((draftLoadout) => {
+    if (!itemCanBeInLoadout(item)) {
+      showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
+      return;
+    }
+
+    if (item.classType !== DestinyClass.Unknown && draftLoadout.classType !== item.classType) {
+      showNotification({
+        type: 'warning',
+        title: t('Loadouts.ClassTypeMismatch', { className: item.classTypeNameLocalized }),
+      });
+      return;
+    }
+
     // If this item is already in the loadout, find it via its id/hash.
     const dupe = draftLoadout.items.find((i) => i.hash === item.hash && i.id === item.id);
     if (dupe) {
@@ -602,14 +470,14 @@ export function setNotes(notes: string | undefined): LoadoutUpdateFunction {
   });
 }
 
-function setClassType(classType: DestinyClass): LoadoutUpdateFunction {
+export function setClassType(classType: DestinyClass): LoadoutUpdateFunction {
   return (loadout) => ({
     ...loadout,
     classType,
   });
 }
 
-function setClearSpace(clearSpace: boolean): LoadoutUpdateFunction {
+export function setClearSpace(clearSpace: boolean): LoadoutUpdateFunction {
   return (loadout) => ({
     ...loadout,
     clearSpace,

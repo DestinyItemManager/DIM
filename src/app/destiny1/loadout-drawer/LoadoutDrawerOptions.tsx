@@ -2,7 +2,13 @@ import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import { storesSelector } from 'app/inventory/selectors';
 import { getClass } from 'app/inventory/store/character-utils';
-import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
+import {
+  LoadoutUpdateFunction,
+  setClassType,
+  setClearSpace,
+  setName,
+  setNotes,
+} from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
@@ -29,7 +35,7 @@ export default function LoadoutDrawerOptions({
   loadout,
   showClass,
   isNew,
-  stateDispatch,
+  setLoadout,
   saveLoadout,
   saveAsNew,
   deleteLoadout,
@@ -37,7 +43,7 @@ export default function LoadoutDrawerOptions({
   loadout: Readonly<Loadout> | undefined;
   showClass: boolean;
   isNew: boolean;
-  stateDispatch: React.Dispatch<Action>;
+  setLoadout: (updater: LoadoutUpdateFunction) => void;
   saveLoadout(e: React.FormEvent): void;
   saveAsNew(e: React.MouseEvent): void;
   deleteLoadout(): void;
@@ -60,16 +66,16 @@ export default function LoadoutDrawerOptions({
         loadout.classType === DestinyClass.Unknown)
   );
 
-  const setName = (e: React.ChangeEvent<HTMLInputElement>) =>
-    stateDispatch({ type: 'setName', name: e.target.value });
+  const handleSetName = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setLoadout(setName(e.target.value));
 
-  const setClassType = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    stateDispatch({ type: 'setClassType', classType: parseInt(e.target.value, 10) });
+  const handleSetClassType = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    setLoadout(setClassType(parseInt(e.target.value, 10)));
 
-  const setClearSpace = (e: React.ChangeEvent<HTMLInputElement>) =>
-    stateDispatch({ type: 'setClearSpace', clearSpace: e.target.checked });
+  const handleSetClearSpace = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setLoadout(setClearSpace(e.target.checked));
 
-  const addNotes = () => stateDispatch({ type: 'setNotes', notes: '' });
+  const addNotes = () => setLoadout(setNotes(''));
 
   // TODO: make the link to loadout optimizer bring the currently equipped items along in route state
 
@@ -93,7 +99,7 @@ export default function LoadoutDrawerOptions({
           <input
             className={styles.dimInput}
             name="name"
-            onChange={setName}
+            onChange={handleSetName}
             minLength={1}
             maxLength={50}
             required={true}
@@ -102,7 +108,7 @@ export default function LoadoutDrawerOptions({
             placeholder={t('Loadouts.LoadoutName')}
           />
           {showClass && (
-            <select name="classType" onChange={setClassType} value={loadout.classType}>
+            <select name="classType" onChange={handleSetClassType} value={loadout.classType}>
               {classTypeOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -156,7 +162,11 @@ export default function LoadoutDrawerOptions({
         )}
         <div className={styles.inputGroup}>
           <label>
-            <input type="checkbox" checked={Boolean(loadout.clearSpace)} onChange={setClearSpace} />{' '}
+            <input
+              type="checkbox"
+              checked={Boolean(loadout.clearSpace)}
+              onChange={handleSetClearSpace}
+            />{' '}
             {t('Loadouts.ClearSpace')}
           </label>
         </div>
