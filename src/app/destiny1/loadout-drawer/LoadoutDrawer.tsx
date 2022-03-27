@@ -18,6 +18,7 @@ import { addItem$ } from 'app/loadout-drawer/loadout-events';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import LoadoutDrawerDropTarget from 'app/loadout-drawer/LoadoutDrawerDropTarget';
+import LoadoutDrawerFooter from 'app/loadout-drawer/LoadoutDrawerFooter';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -149,26 +150,18 @@ export default function LoadoutDrawer({
     return null;
   }
 
-  const onDeleteLoadout = () => {
+  const onDeleteLoadout = (onClose: () => void) => {
     dispatch(deleteLoadout(loadout.id));
-    close();
+    onClose();
   };
 
   const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
     setLoadout(setNotes(e.target.value));
 
-  const header = ({ onClose }: { onClose(): void }) => (
+  const header = (
     <div className="loadout-drawer-header">
       <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
-      <LoadoutDrawerOptions
-        loadout={loadout}
-        showClass={showClass}
-        isNew={isNew}
-        setLoadout={setLoadout}
-        saveLoadout={(e) => (isNew ? saveAsNew(e, onClose) : onSaveLoadout(e, loadout, onClose))}
-        saveAsNew={(e) => saveAsNew(e, onClose)}
-        deleteLoadout={onDeleteLoadout}
-      />
+      <LoadoutDrawerOptions loadout={loadout} showClass={showClass} setLoadout={setLoadout} />
       {loadout.notes !== undefined && (
         <textarea
           onChange={handleNotesChanged}
@@ -180,8 +173,19 @@ export default function LoadoutDrawer({
     </div>
   );
 
+  const footer = ({ onClose }: { onClose(): void }) => (
+    <LoadoutDrawerFooter
+      loadout={loadout}
+      isNew={isNew}
+      onSaveLoadout={(e, isNew) =>
+        isNew ? saveAsNew(e, onClose) : onSaveLoadout(e, loadout, onClose)
+      }
+      onDeleteLoadout={() => onDeleteLoadout(onClose)}
+    />
+  );
+
   return (
-    <Sheet onClose={onClose} header={header} disabled={showingItemPicker}>
+    <Sheet onClose={onClose} header={header} footer={footer} disabled={showingItemPicker}>
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
           <LoadoutDrawerDropTarget onDroppedItem={onAddItem} classType={loadout.classType}>

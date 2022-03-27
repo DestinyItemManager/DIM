@@ -206,7 +206,6 @@ export default function LoadoutDrawer2({
     </div>
   );
 
-  // TODO: use this on the old loadout editor?
   const footer = ({ onClose }: { onClose(): void }) => (
     <LoadoutDrawerFooter
       loadout={loadout}
