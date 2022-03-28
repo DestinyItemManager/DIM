@@ -1,7 +1,6 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
@@ -145,7 +144,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
     // swap at the last minute to applying the default ornament which should
     // match the appearance that the user wanted.
     if (plugItemHash === item.hash) {
-      const defaultPlugHash = getDefaultPlugHash(socket, defs);
+      const defaultPlugHash = socket.emptyPlugItemHash;
       plugItemHash = defaultPlugHash ?? plugItemHash;
     }
 

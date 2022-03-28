@@ -510,7 +510,7 @@ function FashionSocket({
   const handleOrnamentClick = socket && (() => onPickPlug({ item: exampleItem, socket }));
   const canSlotOrnament =
     plugHash !== undefined &&
-    (plugHash === socket?.socketDefinition.singleInitialItemHash ||
+    (plugHash === socket?.emptyPlugItemHash ||
       (unlockedPlugSetItems.has(plugHash) &&
         socket?.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash)) ||
       socket?.reusablePlugItems?.some((p) => p.plugItemHash === plugHash && p.enabled));
