@@ -1,5 +1,7 @@
 ## Next
 
+## 7.10.0 <span class="changelog-date">(2022-03-27)</span>
+
 * Dragging horizontally on items in Compare will scroll the list - even on iOS.
 * Mobile users can now access Material Counts under the banner dropdown of the Vault inventory page.
 * In the Armory and Collection views, craftable weapons now show their required Weapon Level in their tooltip.
