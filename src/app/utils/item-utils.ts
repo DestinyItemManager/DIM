@@ -310,7 +310,10 @@ export function isPlugStatActive(
     return true;
   }
 
-  if (plugHash === modsWithConditionalStats.elementalCapacitor) {
+  if (
+    plugHash === modsWithConditionalStats.elementalCapacitor ||
+    plugHash === modsWithConditionalStats.enhancedElementalCapacitor
+  ) {
     return false;
   }
 
