@@ -1,5 +1,6 @@
 ## Next
 
+* Fynch rank is now showing the correct number on the Vendors page.
 * Dragging horizontally on items in Compare will scroll the list - even on iOS.
 * Mobile users can now access Material Counts under the banner dropdown of the Vault inventory page.
 * In the Armory and Collection views, craftable weapons now show their required Weapon Level in their tooltip.
