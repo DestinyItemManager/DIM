@@ -33,7 +33,6 @@ import {
   fitMostMods,
   pickPlugPositions,
 } from 'app/loadout/mod-assignment-utils';
-import { getDefaultPlugHash } from 'app/loadout/mod-utils';
 import {
   d2ManifestSelector,
   destiny2CoreSettingsSelector,
@@ -49,7 +48,12 @@ import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
-import { getSocketByIndex, getSocketsByIndexes, plugFitsIntoSocket } from 'app/utils/socket-utils';
+import {
+  getDefaultAbilityChoiceHash,
+  getSocketByIndex,
+  getSocketsByIndexes,
+  plugFitsIntoSocket,
+} from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -164,6 +168,8 @@ function doApplyLoadout(
     const getTargetStore = () => getStore(getStores(), store.id)!;
 
     // TODO: use a Map to cache results from getLoadoutItem, reset between asyncs?
+
+    // TODO: use ResolvedLoadoutItem!
 
     /** Find a real item corresponding to this loadout item */
     const getLoadoutItem = (loadoutItem: LoadoutItem) =>
@@ -411,8 +417,7 @@ function doApplyLoadout(
                 if (state.itemStates[initialItem.index]) {
                   state.itemStates[initialItem.index].state =
                     // If we're doing a bulk equip later, set to MovedPendingEquip
-                    itemsToEquip.length > 1 &&
-                    itemsToEquip.some((loadoutItem) => loadoutItem.id === updatedItem.id)
+                    itemsToEquip.length > 1 && itemsToEquip.some((li) => loadoutItem.id === li.id)
                       ? LoadoutItemState.MovedPendingEquip
                       : LoadoutItemState.Succeeded;
                 }
@@ -454,7 +459,7 @@ function doApplyLoadout(
         );
         // Use the bulk equipAll API to equip all at once.
         itemsToEquip = itemsToEquip.filter((i) =>
-          successfulItems.some((si) => si.item.id === i.id)
+          successfulItems.some((si) => si.item.id === getLoadoutItem(i)?.id)
         );
         const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i)));
         try {
@@ -842,7 +847,7 @@ function applySocketOverrides(
                 category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
                 category.category.hash === SocketCategoryHashes.Super)
             ) {
-              modHash = getDefaultPlugHash(socket, defs);
+              modHash = getDefaultAbilityChoiceHash(socket);
             }
             if (modHash) {
               const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
@@ -1021,7 +1026,7 @@ function applyLoadoutMods(
         }
       }
 
-      const pluggingSteps = createPluggingStrategy(item, assignments, defs);
+      const pluggingSteps = createPluggingStrategy(item, assignments);
       const assignmentSequence = pluggingSteps.filter((assignment) => assignment.required);
       infoLog('loadout mods', 'Applying', assignmentSequence, 'to', item.name);
       if (assignmentSequence) {
@@ -1125,7 +1130,7 @@ function equipModsToItem(
       // match the appearance that the user wanted. We'll still report as if we
       // applied the ornament.
       if (mod.hash === item.hash) {
-        const defaultPlugHash = getDefaultPlugHash(socket, defs);
+        const defaultPlugHash = socket.emptyPlugItemHash;
         if (defaultPlugHash) {
           mod = (defs.InventoryItem.get(defaultPlugHash) ??
             mod) as PluggableInventoryItemDefinition;
