@@ -302,4 +302,5 @@ export const modsWithConditionalStats = {
   chargeHarvester: 2263321587,
   elementalCapacitor: 3511092054,
   echoOfPersistence: 2272984671,
+  enhancedElementalCapacitor: 711234314,
 } as const;
