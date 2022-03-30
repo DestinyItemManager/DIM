@@ -1,5 +1,6 @@
 ## Next
 
+* Fynch rank is now showing the correct number on the Vendors page.
 * Fixed loadouts with Void 3.0 subclasses accidentally including empty fragment or aspect sockets.
 * Fixed loadouts failing to remove mods from some armor or inadvertantly changing the Aeon sect mod.
 
