@@ -82,6 +82,7 @@ module.exports = (env) => {
     devServer: env.dev
       ? {
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
+          allowedHosts: 'all',
           server: {
             type: 'https',
             options: {
