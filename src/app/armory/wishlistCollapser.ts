@@ -2,19 +2,13 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { WishListRoll } from 'app/wishlists/types';
 import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 
 const enhancedToPerk = _.mapValues(_.invert(perkToEnhanced), Number);
 
-const FRAME_SLOT_ICH = 3708671066;
-const INTRINSIC_SLOT_ICH = 2237038328;
-// const WEAPON_PERKS_SOCKET_CATEGORY = 4241085061;
-// const NO_HASH = -99999999;
-
 type Roll = {
-  /** rampage, outlaw, etc. object keyed by socket hash */
-  primaryPerksMap: Record<number, number>;
   /** rampage, outlaw, etc. */
   primaryPerksList: number[];
   /** fast access to primaryPerks keys */
@@ -26,8 +20,6 @@ type Roll = {
 
   /** barrels, magazines, etc. object keyed by socket hash */
   secondaryPerksMap: Record<number, number>;
-  /** barrels, magazines, etc */
-  secondaryPerksList: number[];
   /** fast access to secondaryPerks keys */
   secondarySocketIndices: number[];
   /** string to quickly measure secondaryPerks equality */
@@ -56,10 +48,6 @@ export function consolidateRollsForOneWeapon(
       (h) => isMajorPerk(defs.InventoryItem.get(h))
     );
 
-    const primaryPerksMap: Record<number, number> = {};
-    for (const h of primaryPerksList) {
-      primaryPerksMap[socketIndexByPerkHash[h]] = h;
-    }
     // important sorting to generate comparably join()ed strings
     primaryPerksList.sort((a, b) => socketIndexByPerkHash[a] - socketIndexByPerkHash[b]);
     const primarySocketIndices = primaryPerksList.map((h) => socketIndexByPerkHash[h]);
@@ -68,19 +56,17 @@ export function consolidateRollsForOneWeapon(
     for (const h of secondaryPerksList) {
       secondaryPerksMap[socketIndexByPerkHash[h]] = h;
     }
+
     // important sorting to generate comparably join()ed strings
     secondaryPerksList.sort((a, b) => socketIndexByPerkHash[a] - socketIndexByPerkHash[b]);
     const secondarySocketIndices = secondaryPerksList.map((h) => socketIndexByPerkHash[h]);
 
     return {
-      primaryPerksMap,
       primaryPerksList,
       primarySocketIndices,
       primaryPerkIdentifier: primaryPerksList.join(),
       primaryPerkIdentifierNormalized: primaryPerksList.map(normalizePerkKey).join(),
-
       secondaryPerksMap,
-      secondaryPerksList,
       secondarySocketIndices,
       secondaryPerkIdentifier: secondaryPerksList.join(),
     };
@@ -167,8 +153,8 @@ function isMajorPerk(item?: DestinyInventoryItemDefinition) {
   return (
     item &&
     (item.inventory!.tierType === TierType.Common ||
-      item.itemCategoryHashes?.includes(FRAME_SLOT_ICH) ||
-      item.itemCategoryHashes?.includes(INTRINSIC_SLOT_ICH))
+      item.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsFrame) ||
+      item.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsIntrinsic))
   );
 }
 

@@ -111,9 +111,10 @@ function WishlistRolls({
                 );
 
                 // i.e.
-                //  [[drop mag, appended mag], [extended barrel, smallbore]]
-                // [[drop mag, appended mag], [extended barrel, smallbore]]
-
+                // [
+                //   [[drop mag], [smallbore, extended barrel]],
+                //   [[tac mag], [rifled barrel, extended barrel]]
+                // ]
                 const consolidatedSecondaries = consolidateSecondaryPerks(cr.rolls);
 
                 return consolidatedSecondaries.map((secondaryBundle) => {
