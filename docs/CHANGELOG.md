@@ -1,8 +1,10 @@
 ## Next
 
+* Wishlist combinations now collapse themselves into manageable groups in the Armory view.
+* Enhanced Elemental Capacitor no longer adds all its stat bonuses to weapons on which it's selected.
 * Fynch rank is now showing the correct number on the Vendors page.
 * Fixed loadouts with Void 3.0 subclasses accidentally including empty fragment or aspect sockets.
-* Fixed loadouts failing to remove mods from some armor or inadvertantly changing the Aeon sect mod.
+* Fixed loadouts failing to remove mods from some armor or inadvertently changing the Aeon sect mod.
 
 ## 7.10.0 <span class="changelog-date">(2022-03-27)</span>
 
