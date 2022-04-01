@@ -164,7 +164,7 @@ export default function LoadoutDrawer({
   };
 
   const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
-    stateDispatch({ type: 'update', loadout: { ...loadout, notes: e.target.value } });
+    stateDispatch({ type: 'setNotes', notes: e.target.value });
 
   const header = ({ onClose }: { onClose(): void }) => (
     <div className="loadout-drawer-header">
@@ -173,7 +173,7 @@ export default function LoadoutDrawer({
         loadout={loadout}
         showClass={showClass}
         isNew={isNew}
-        updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
+        stateDispatch={stateDispatch}
         saveLoadout={(e) => (isNew ? saveAsNew(e, onClose) : onSaveLoadout(e, loadout, onClose))}
         saveAsNew={(e) => saveAsNew(e, onClose)}
         deleteLoadout={onDeleteLoadout}
@@ -220,7 +220,7 @@ export default function LoadoutDrawer({
                 equip={onEquipItem}
                 remove={onRemoveItem}
                 add={onAddItem}
-                onUpdateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
+                stateDispatch={stateDispatch}
                 onShowItemPicker={setShowingItemPicker}
               />
             </div>

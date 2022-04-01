@@ -27,7 +27,7 @@ import { isLoadoutBuilderItem } from './item-utils';
 import { knownModPlugCategoryHashes, slotSpecificPlugCategoryHashes } from './known-values';
 import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
-import { PlugSet } from './plug-drawer/PlugSection';
+import { PlugSet } from './plug-drawer/types';
 
 /** Raid, combat and legacy mods can have up to 5 selected. */
 const MAX_SLOT_INDEPENDENT_MODS = 5;
@@ -71,6 +71,7 @@ function mapStateToProps() {
     (_state: RootState, props: ProvidedProps) => props.classType,
     (_state: RootState, props: ProvidedProps) => props.owner,
     (_state: RootState, props: ProvidedProps) => props.plugCategoryHashWhitelist,
+    (_state: RootState, props: ProvidedProps) => props.lockedMods,
     currentStoreSelector,
     (
       profileResponse,
@@ -79,9 +80,10 @@ function mapStateToProps() {
       classType,
       owner,
       plugCategoryHashWhitelist,
+      lockedMods,
       currentStore
     ): PlugSet[] => {
-      const plugSets: { [plugSetHash: number]: PlugSet } = {};
+      const plugSetsByHash: { [plugSetHash: number]: PlugSet } = {};
       if (!profileResponse || !defs) {
         return emptyArray();
       }
@@ -153,12 +155,13 @@ function mapStateToProps() {
             ? sockets.length
             : MAX_SLOT_INDEPENDENT_MODS;
 
-          if (plugs.length && !plugSets[plugSetHash]) {
-            plugSets[plugSetHash] = {
+          if (plugs.length && !plugSetsByHash[plugSetHash]) {
+            plugSetsByHash[plugSetHash] = {
               plugSetHash,
               maxSelectable,
               selectionType: 'multi',
               plugs,
+              selected: [],
             };
 
             // use an activity name, if one is available, for mods with no item type display name
@@ -169,7 +172,7 @@ function mapStateToProps() {
               if (activityHash) {
                 const activityName = defs.Activity.get(activityHash).displayProperties.name;
                 if (activityName) {
-                  plugSets[plugSetHash].headerSuffix = activityName;
+                  plugSetsByHash[plugSetHash].headerSuffix = activityName;
                 }
               }
             }
@@ -179,14 +182,34 @@ function mapStateToProps() {
               maxSelectable === 1 &&
               armor2PlugCategoryHashes.includes(plugs[0].plug.plugCategoryHash)
             ) {
-              plugSets[plugSetHash].headerSuffix = artificeString;
+              plugSetsByHash[plugSetHash].headerSuffix = artificeString;
             }
-          } else if (plugs.length && plugSets[plugSetHash].maxSelectable < sockets.length) {
-            plugSets[plugSetHash].maxSelectable = sockets.length;
+          } else if (plugs.length && plugSetsByHash[plugSetHash].maxSelectable < sockets.length) {
+            plugSetsByHash[plugSetHash].maxSelectable = sockets.length;
           }
         }
       }
-      return Object.values(plugSets);
+
+      const plugSets = Object.values(plugSetsByHash);
+
+      // Now we populate the plugsets with their corresponding plugs.
+      // Due to artificer plugsets being a subset of the corresponding bucket specific plugsets
+      // we sort the plugsets in reverse by length to ensure we use artificer sockets first.
+      plugSets.sort((a, b) => b.plugs.length - a.plugs.length);
+      for (const initiallySelected of lockedMods) {
+        const possiblePlugSets = plugSets.filter((set) =>
+          set.plugs.some((plug) => plug.hash === initiallySelected.hash)
+        );
+
+        for (const possiblePlugSet of possiblePlugSets) {
+          if (possiblePlugSet.selected.length < possiblePlugSet.maxSelectable) {
+            possiblePlugSet.selected.push(initiallySelected);
+            break;
+          }
+        }
+      }
+
+      return plugSets;
     }
   );
   return (state: RootState, props: ProvidedProps): StoreProps => ({
@@ -205,7 +228,7 @@ function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Pr
   // picker (based on plugCategoryHashWhitelist) and ones that will not. The
   // ones that won't (hidden mods) are still part of the locked mods set and
   // shouldn't be wiped out when the selection of visible mods changes!
-  const [visibleSelectedMods, hiddenSelectedMods] = useMemo(
+  const [_visibleSelectedMods, hiddenSelectedMods] = useMemo(
     () =>
       _.partition(lockedMods, (mod) =>
         plugSets.some((plugSet) => plugSet.plugs.some((plug) => plug.hash === mod.hash))
@@ -237,7 +260,6 @@ function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Pr
       acceptButtonText={t('LB.SelectMods')}
       initialQuery={initialQuery}
       plugSets={plugSets}
-      initiallySelected={visibleSelectedMods}
       isPlugSelectable={isModSelectable}
       sortPlugGroups={sortModPickerPlugGroups}
       sortPlugs={sortMods}

@@ -1,12 +1,38 @@
 {
   "version": "0.2",
   "language": "en",
-  "dictionaries": ["workspace"],
+  "dictionaries": [
+    "workspace",
+    "workspace-bungie-names",
+    "workspace-usernames",
+    "workspace-programming"
+  ],
   "dictionaryDefinitions": [
     {
       "name": "workspace",
-      "path": "./cspell-dim-dict.txt",
+      "path": "./config/cspell/dim-dict.txt",
       "description": "DIM Workspace Dictionary",
+      "addWords": true,
+      "scope": "workspace"
+    },
+    {
+      "name": "workspace-bungie-names",
+      "path": "./config/cspell/bungie-dict.txt",
+      "description": "DIM Workspace Dictionary - Bungie",
+      "addWords": true,
+      "scope": "workspace"
+    },
+    {
+      "name": "workspace-usernames",
+      "path": "./config/cspell/dim-username-dict.txt",
+      "description": "DIM Workspace Dictionary - Usernames",
+      "addWords": true,
+      "scope": "workspace"
+    },
+    {
+      "name": "workspace-programming",
+      "path": "./config/cspell/programming-dict.txt",
+      "description": "DIM Workspace Dictionary - Programming Syntax",
       "addWords": true,
       "scope": "workspace"
     }
@@ -17,12 +43,15 @@
     ".vscode/extensions.json",
     ".github/workflows/**",
     "node_modules/",
+    "dist/",
+    "icons/",
     "manifest-cache/",
     "destiny-icons/**",
     "icons/build_icons.js",
     "config/content-security-policy.js",
     "src/browsercheck-utils.js",
     "src/data/",
+    "src/images/",
     "src/locale/de.json",
     "src/locale/es.json",
     "src/locale/esMX.json",
@@ -43,6 +72,8 @@
     "package.json",
     "tsconfig.json",
     "yarn.lock",
-    ".gitignore"
+    ".gitignore",
+    "webpack-stats.json",
+    ".stylelintrc"
   ]
 }

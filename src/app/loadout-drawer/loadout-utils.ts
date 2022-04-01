@@ -11,10 +11,12 @@ import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
+  getDefaultAbilityChoiceHash,
   getFirstSocketByCategoryHash,
   getSocketsByCategoryHash,
   getSocketsByCategoryHashes,
   getSocketsByIndexes,
+  plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -79,14 +81,14 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
     for (const category of item.sockets.categories) {
       const sockets = getSocketsByIndexes(item.sockets, category.socketIndexes);
       for (const socket of sockets) {
-        // Add currently plugged, if it is an ability we include the initial item
-        // otherwise we ignore them, this stops us showing/saving empty socket plugs
+        // Add currently plugged, unless it's the empty option. Abilities and Supers
+        // explicitly don't have an emptyPlugItemHash.
         if (
           socket.plugged &&
-          (socket.plugged.plugDef.hash !== socket.socketDefinition.singleInitialItemHash ||
-            category.category.hash === SocketCategoryHashes.Abilities_Abilities_DarkSubclass ||
-            category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
-            category.category.hash === SocketCategoryHashes.Super)
+          // Only save them if they're valid plug options though, otherwise
+          // we'd save the empty stasis sockets that Void 3.0 spawns with
+          plugFitsIntoSocket(socket, socket.plugged.plugDef.hash) &&
+          socket.plugged.plugDef.hash !== socket.emptyPlugItemHash
         ) {
           socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
         }
@@ -109,9 +111,7 @@ export function createSubclassDefaultSocketOverrides(item: DimItem) {
     ]);
 
     for (const socket of abilityAndSuperSockets) {
-      // HACK: Void grenades do not have a singleInitialItemHash
-      socketOverrides[socket.socketIndex] =
-        socket.socketDefinition.singleInitialItemHash || socket.plugSet!.plugs[0].plugDef.hash;
+      socketOverrides[socket.socketIndex] = getDefaultAbilityChoiceHash(socket);
     }
     return socketOverrides;
   }
@@ -487,4 +487,19 @@ export function getModsFromLoadout(
   }
 
   return mods.sort(sortMods);
+}
+
+/**
+ * filter for items that are in a character's "pockets" but not equipped,
+ * and can be added to a loadout
+ */
+export function getUnequippedItemsForLoadout(dimStore: DimStore, category?: string) {
+  return dimStore.items.filter(
+    (item) =>
+      !item.location.inPostmaster &&
+      !singularBucketHashes.includes(item.bucket.hash) &&
+      itemCanBeInLoadout(item) &&
+      (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)) &&
+      !item.equipped
+  );
 }

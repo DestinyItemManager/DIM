@@ -94,6 +94,8 @@
     "prefer-promise-reject-errors": "error",
     "require-atomic-updates": "off",
     "class-methods-use-this": ["error", { "exceptMethods": ["render"] }],
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
     "react/no-unescaped-entities": "off",
     "react/jsx-no-target-blank": "off",
     "react/display-name": "off",

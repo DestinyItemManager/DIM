@@ -43,7 +43,17 @@ jobs:
         env:
           PR_BUILD: true
 
+      - name: Check for updates to build pipeline
+        id: build_pipeline
+        uses: technote-space/get-diff-action@v4
+        with:
+          PATTERNS: |
+            package.json
+            yarn.lock
+            config/webpack.js
+
       - name: Send webpack stats to RelativeCI
+        if: (steps.build_pipeline.outputs.insertions > 0)
         uses: relative-ci/agent-action@v2
         with:
           webpackStatsFile: ./webpack-stats.json

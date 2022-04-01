@@ -29,6 +29,7 @@ export function SpecialtyModSlotIcon({
   return (
     <>
       {modMetadatas.map((m) => {
+        // TODO: Why not look this up through emptyPlugItemHash?
         const emptySlotItem = defs.InventoryItem.get(m.emptyModSocketHash);
         return (
           <PressTip tooltip={emptySlotItem.itemTypeDisplayName} key={emptySlotItem.hash}>
@@ -66,7 +67,7 @@ export function ArmorSlotSpecificModSocketIcon({ item, className, lowRes }: ModS
   const defs = useD2Definitions()!;
   const foundSocket = getArmorSlotSpecificModSocket(item);
   // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-  const emptySocketHash = foundSocket && foundSocket.socketDefinition.singleInitialItemHash;
+  const emptySocketHash = foundSocket && foundSocket.emptyPlugItemHash;
   const emptySocketIcon = emptySocketHash && defs.InventoryItem.get(emptySocketHash);
   return emptySocketIcon ? (
     <PressTip elementType="span" tooltip={emptySocketIcon.itemTypeDisplayName}>

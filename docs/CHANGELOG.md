@@ -1,5 +1,29 @@
 ## Next
 
+* Wishlist combinations now collapse themselves into manageable groups in the Armory view.
+* Enhanced Elemental Capacitor no longer adds all its stat bonuses to weapons on which it's selected.
+* Fynch rank is now showing the correct number on the Vendors page.
+* Fixed loadouts with Void 3.0 subclasses accidentally including empty fragment or aspect sockets.
+* Fixed loadouts failing to remove mods from some armor or inadvertently changing the Aeon sect mod.
+
+## 7.10.0 <span class="changelog-date">(2022-03-27)</span>
+
+* Dragging horizontally on items in Compare will scroll the list - even on iOS.
+* Mobile users can now access Material Counts under the banner dropdown of the Vault inventory page.
+* In the Armory and Collection views, craftable weapons now show their required Weapon Level in their tooltip.
+* DIM should no longer get visually mangled by Android's auto-dark-mode.
+* Fixed an incorrect item count in non-English inventory searches.
+* Try a little harder to re-fetch item definitions data, if Bungie.net sends back an invalid response.
+* Searches that can't be saved (because they're too long, or invalid) won't show a save ⭐️ button.
+* Search filters can contain comments. Only the top level comment gets saved. e.g. `/* My Cool Search */ is:handcannon perkname:firefly`.
+* Loadouts
+  * The loadout search field has been moved to the top of the loadout menu, which should prevent iOS from going crazy. Filtering loadouts hides the other buttons as well.
+  * Sharing a loadout now shows an explanation of what's being shared.
+  * Fixed the loadout drawer not opening when "+ Create Loadout" is selected from the vault.
+  * Fixed "Fill from Equipped" going a little overboard on what it tried to add to the loadout, and spamming notifications.
+
+## 7.9.0 <span class="changelog-date">(2022-03-20)</span>
+
 * When loading your inventory, DIM now alerts you if your items might be misplaced, affecting your drops' Power Level.
 * New inventory sorting options. Check [Settings](/settings) to view and rearrange your sort strategy.
   * Reverse the order of any individual sorting method.
