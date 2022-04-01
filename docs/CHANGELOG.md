@@ -5,6 +5,9 @@
 * Fynch rank is now showing the correct number on the Vendors page.
 * Fixed loadouts with Void 3.0 subclasses accidentally including empty fragment or aspect sockets.
 * Fixed loadouts failing to remove mods from some armor or inadvertently changing the Aeon sect mod.
+* Invalid search terms no longer cause the entire search to match every item.
+* Searches do better with quoted strings, and allow for escaping quotes in strings (e.g. `"My \"Cool\" Loadout"`)
+* Item moves are better about allowing a move if you really have space on a character, even if DIM hasn't refreshed its view of inventory. That said, DIM will always work best when its view of your inventory is up to date, so continue to refresh data after deleting items in game. DIM will now refresh automatically if we "overfill" a bucket because clearly we're out of date in that circumstance.
 
 ## 7.10.0 <span class="changelog-date">(2022-03-27)</span>
 
