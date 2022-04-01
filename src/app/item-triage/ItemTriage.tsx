@@ -18,8 +18,9 @@ import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { ItemFilter } from 'app/search/filter-types';
+import { quoteFilterString } from 'app/search/query-parser';
 import { filterFactorySelector } from 'app/search/search-filter';
-import { nameFilter, quoteFilterString } from 'app/search/search-filters/freeform';
+import { nameFilter } from 'app/search/search-filters/freeform';
 import {
   classFilter,
   damageFilter,

@@ -1,7 +1,7 @@
 import { tl } from 'app/i18next-t';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { FilterDefinition } from '../filter-types';
-import { isQuotable, quoteFilterString } from './freeform';
+import { quoteFilterString } from '../query-parser';
 
 const loadoutFilters: FilterDefinition[] = [
   {
@@ -9,9 +9,7 @@ const loadoutFilters: FilterDefinition[] = [
     format: ['simple', 'freeform'],
 
     suggestionsGenerator: ({ loadouts }) =>
-      loadouts
-        ?.filter((l) => isQuotable(l.name))
-        .map((l) => 'inloadout:' + quoteFilterString(l.name.toLowerCase())),
+      loadouts?.map((l) => 'inloadout:' + quoteFilterString(l.name.toLowerCase())),
 
     description: tl('Filter.InLoadout'),
     filter: ({ filterValue, loadouts }) => {

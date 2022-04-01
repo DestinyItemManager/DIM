@@ -377,8 +377,8 @@ function buildPlug(
 
   const failReasons = plug.enableFailIndexes
     ? _.compact(
-      plug.enableFailIndexes.map((index) => plugDef.plug!.enabledRules[index]?.failureMessage)
-    ).join('\n')
+        plug.enableFailIndexes.map((index) => plugDef.plug!.enabledRules[index]?.failureMessage)
+      ).join('\n')
     : '';
 
   return {

@@ -25,8 +25,8 @@ import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
-import { quoteFilterString } from 'app/search/search-filters/freeform';
 import { getColor, percent } from 'app/shell/formatters';
 import {
   AppIcon,
