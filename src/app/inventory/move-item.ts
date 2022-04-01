@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
-import { CanceledError, withCancel } from 'app/utils/cancel';
+import { CanceledError, neverCanceled, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
@@ -15,7 +15,7 @@ import { queueAction } from '../utils/action-queue';
 import { reportException } from '../utils/exceptions';
 import { updateCharacters } from './d2-stores';
 import { InventoryBucket } from './inventory-buckets';
-import { executeMoveItem } from './item-move-service';
+import { checkForOverFill, createMoveSession, executeMoveItem } from './item-move-service';
 import { DimItem } from './item-types';
 import { updateManualMoveTimestamp } from './manual-moves';
 import { moveItemNotification } from './MoveNotifications';
@@ -122,10 +122,17 @@ export function moveItemTo(
       updateManualMoveTimestamp(item);
 
       const [cancelToken, cancel] = withCancel();
+      const moveSession = createMoveSession(cancelToken);
 
       const movePromise = queueAction(() =>
         loadingTracker.addPromise(
-          dispatch(executeMoveItem(item, store, { equip, amount: moveAmount, cancelToken }))
+          (async () => {
+            const result = await dispatch(
+              executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession)
+            );
+            dispatch(checkForOverFill());
+            return result;
+          })()
         )
       );
       showNotification(moveItemNotification(item, store, movePromise, cancel));
@@ -173,6 +180,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
           const stores = storesSelector(getState());
           const characters = stores.filter((s) => !s.isVault);
           const vault = getVault(stores)!;
+          const moveSession = createMoveSession(neverCanceled);
 
           try {
             for (const s of characters) {
@@ -183,7 +191,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
               );
               if (item) {
                 const amount = amountOfItem(s, actionableItem);
-                await dispatch(executeMoveItem(item, vault, { equip: false, amount }));
+                await dispatch(executeMoveItem(item, vault, { equip: false, amount }, moveSession));
               }
             }
 
@@ -195,7 +203,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
               );
               if (item) {
                 const amount = amountOfItem(vault, actionableItem);
-                await dispatch(executeMoveItem(item, store, { equip: false, amount }));
+                await dispatch(executeMoveItem(item, store, { equip: false, amount }, moveSession));
               }
             }
             const data = { name: actionableItem.name, store: store.name };
@@ -232,6 +240,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
         (async () => {
           // Sort vault to the end
           const stores = _.sortBy(storesSelector(getState()), (s) => (s.id === 'vault' ? 2 : 1));
+          const moveSession = createMoveSession(neverCanceled);
 
           let total = 0;
           const amounts = stores.map((store) => {
@@ -279,7 +288,12 @@ export function distribute(actionableItem: DimItem): ThunkResult {
             for (const move of moves) {
               const item = move.source.items.find((i) => i.hash === actionableItem.hash)!;
               await dispatch(
-                executeMoveItem(item, move.target, { equip: false, amount: move.amount })
+                executeMoveItem(
+                  item,
+                  move.target,
+                  { equip: false, amount: move.amount },
+                  moveSession
+                )
               );
             }
           }
