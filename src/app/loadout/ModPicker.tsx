@@ -18,14 +18,18 @@ import { modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
-import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import React, { useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { isLoadoutBuilderItem } from './item-utils';
 import { knownModPlugCategoryHashes, slotSpecificPlugCategoryHashes } from './known-values';
-import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
+import {
+  activityModPlugCategoryHashes,
+  isInsertableArmor2Mod,
+  sortModGroups,
+  sortMods,
+} from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
 import { PlugSet } from './plug-drawer/types';
 
@@ -288,10 +292,10 @@ function isModSelectable(
   if (isSlotSpecificCategory || plugCategoryHash === armor2PlugCategoryHashesByName.general) {
     // General and slot-specific mods just match to the same category hash
     associatedLockedMods = selected.filter((mod) => mod.plug.plugCategoryHash === plugCategoryHash);
-  } else if (raidModPlugCategoryHashes.includes(plugCategoryHash)) {
-    // Raid mods match to any other raid mod, since a single armor piece can only have one raid mod slot
+  } else if (activityModPlugCategoryHashes.includes(plugCategoryHash)) {
+    // Activity mods match to any other activity mod, since a single armor piece can only have one activity mod slot
     associatedLockedMods = selected.filter((mod) =>
-      raidModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
+      activityModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
     );
   } else {
     // This is some unknown/unmapped mod slot, match all other unknown mod slots
