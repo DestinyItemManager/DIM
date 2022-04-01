@@ -386,6 +386,11 @@ export function pickPlugPositions(
   // For each remaining armor mod socket that won't have mods assigned,
   // allow it to be returned to its default (usually "Empty Mod Socket").
   for (const socket of existingModSockets) {
+    if (!socket.plugged) {
+      // Avoid trying to plug something into unavailable sockets,
+      // like artifice mod sockets on non-artifice armor instances.
+      continue;
+    }
     const defaultModHash = socket.emptyPlugItemHash;
     const mod =
       defaultModHash &&
