@@ -1,12 +1,17 @@
 import { t } from 'app/i18next-t';
-import type { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
+import type { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
-import { storesSelector } from 'app/inventory/selectors';
+import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
-import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
+import {
+  fillLoadoutFromEquipped,
+  fillLoadoutFromUnequipped,
+  LoadoutUpdateFunction,
+} from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { fromEquippedTypes } from 'app/loadout-drawer/loadout-utils';
+import { useD1Definitions } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -43,24 +48,24 @@ const loadoutTypes: (BucketHashes | D1BucketHashes)[] = [
 export default function LoadoutDrawerContents({
   storeId,
   loadout,
-  buckets,
   items,
   equip,
   remove,
   add,
-  stateDispatch,
+  setLoadout,
   onShowItemPicker,
 }: {
   storeId?: string;
   loadout: Loadout;
-  buckets: InventoryBuckets;
   items: ResolvedLoadoutItem[];
-  stateDispatch: React.Dispatch<Action>;
+  setLoadout: (updater: LoadoutUpdateFunction) => void;
   equip(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
   remove(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
   add(item: DimItem, equip?: boolean): void;
   onShowItemPicker(shown: boolean): void;
 }) {
+  const defs = useD1Definitions()!;
+  const buckets = useSelector(bucketsSelector)!;
   const stores = useSelector(storesSelector);
 
   // The store to use for "fill from equipped/unequipped"
@@ -70,11 +75,9 @@ export default function LoadoutDrawerContents({
         stores.find((s) => s.classType === loadout.classType)) ||
       getCurrentStore(stores)!;
 
-  const doFillLoadoutFromEquipped = () =>
-    stateDispatch({ type: 'fillLoadoutFromEquipped', store: dimStore });
+  const doFillLoadoutFromEquipped = () => setLoadout(fillLoadoutFromEquipped(defs, dimStore));
 
-  const doFillLoadOutFromUnequipped = () =>
-    stateDispatch({ type: 'fillLoadoutFromUnequipped', store: dimStore });
+  const doFillLoadOutFromUnequipped = () => setLoadout(fillLoadoutFromUnequipped(defs, dimStore));
 
   const availableTypes = _.compact(loadoutTypes.map((h) => buckets.byHash[h]));
   const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);

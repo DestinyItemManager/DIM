@@ -1,10 +1,27 @@
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import { Action } from 'app/loadout-drawer/loadout-drawer-reducer';
+import {
+  applySocketOverrides,
+  changeClearMods,
+  clearBucketCategory,
+  clearLoadoutParameters,
+  clearMods,
+  clearSubclass,
+  equipItem,
+  fillLoadoutFromEquipped,
+  fillLoadoutFromUnequipped,
+  LoadoutUpdateFunction,
+  removeItem,
+  setLoadoutSubclassFromEquipped,
+  syncModsFromEquipped,
+  updateMods,
+  updateModsByBucket,
+} from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getModsFromLoadout, getUnequippedItemsForLoadout } from 'app/loadout-drawer/loadout-utils';
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
@@ -13,7 +30,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisplay';
@@ -27,14 +44,14 @@ import LoadoutEditSubclass from './LoadoutEditSubclass';
 export default function LoadoutEdit({
   loadout,
   store,
-  stateDispatch,
+  setLoadout,
   onClickSubclass,
   onClickPlaceholder,
   onClickWarnItem,
 }: {
   loadout: Loadout;
   store: DimStore;
-  stateDispatch: React.Dispatch<Action>;
+  setLoadout: (updater: LoadoutUpdateFunction) => void;
   onClickSubclass: (subclass: DimItem | undefined) => void;
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
   onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
@@ -62,43 +79,40 @@ export default function LoadoutEdit({
   const power = loadoutPower(store, categories);
   const anyClass = loadout.classType === DestinyClass.Unknown;
 
-  /** Updates the loadout replacing it's current mods with all the mods in newMods. */
+  // Some helpers that bind our updater functions to the current environment
+  function withUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
+    return (...args: T) => setLoadout(fn(...args));
+  }
+  function withDefsUpdater<T extends unknown[]>(
+    fn: (defs: D1ManifestDefinitions | D2ManifestDefinitions, ...args: T) => LoadoutUpdateFunction
+  ) {
+    return (...args: T) => setLoadout(fn(defs, ...args));
+  }
+  function withDefsStoreUpdater<T extends unknown[]>(
+    fn: (
+      defs: D1ManifestDefinitions | D2ManifestDefinitions,
+      store: DimStore,
+      ...args: T
+    ) => LoadoutUpdateFunction
+  ) {
+    return (...args: T) => setLoadout(fn(defs, store, ...args));
+  }
+
   const handleUpdateMods = (newMods: PluggableInventoryItemDefinition[]) =>
-    stateDispatch({ type: 'updateMods', mods: newMods.map((mod) => mod.hash) });
-  const handleClearCategory = (category: string) =>
-    stateDispatch({
-      type: 'clearCategory',
-      category,
-    });
-  const onModsByBucketUpdated = (
-    modsByBucket:
-      | {
-          [bucketHash: number]: number[];
-        }
-      | undefined
-  ) => stateDispatch({ type: 'updateModsByBucket', modsByBucket });
-  const handleApplySocketOverrides = useCallback(
-    (resolvedItem: ResolvedLoadoutItem, socketOverrides: SocketOverrides) => {
-      stateDispatch({ type: 'applySocketOverrides', resolvedItem, socketOverrides });
-    },
-    [stateDispatch]
-  );
-  const handleToggleEquipped = (resolvedItem: ResolvedLoadoutItem) =>
-    stateDispatch({ type: 'equipItem', resolvedItem });
-  const handleClearUnsetModsChanged = (enabled: boolean) =>
-    stateDispatch({ type: 'changeClearMods', enabled });
-  const handleClearLoadoutParameters = () => stateDispatch({ type: 'clearLoadoutParameters' });
-  const handleFillSubclassFromEquipped = () =>
-    stateDispatch({ type: 'setLoadoutSubclassFromEquipped', store });
-  const handleFillCategoryFromUnequipped = (category: string) =>
-    stateDispatch({ type: 'fillLoadoutFromUnequipped', store, category });
-  const handleFillCategoryFromEquipped = (category: string) =>
-    stateDispatch({ type: 'fillLoadoutFromEquipped', store, category });
-  const handleClearMods = () => stateDispatch({ type: 'clearMods' });
-  const onRemoveItem = (resolvedItem: ResolvedLoadoutItem) =>
-    stateDispatch({ type: 'removeItem', resolvedItem });
-  const handleClearSubclass = () => stateDispatch({ type: 'clearSubclass' });
-  const handleSyncModsFromEquipped = () => stateDispatch({ type: 'syncModsFromEquipped', store });
+    setLoadout(updateMods(newMods.map((mod) => mod.hash)));
+  const handleClearCategory = withDefsUpdater(clearBucketCategory);
+  const handleModsByBucketUpdated = withUpdater(updateModsByBucket);
+  const handleApplySocketOverrides = withUpdater(applySocketOverrides);
+  const handleToggleEquipped = withDefsUpdater(equipItem);
+  const handleClearUnsetModsChanged = withUpdater(changeClearMods);
+  const handleClearLoadoutParameters = withUpdater(clearLoadoutParameters);
+  const handleFillSubclassFromEquipped = withDefsStoreUpdater(setLoadoutSubclassFromEquipped);
+  const handleFillCategoryFromUnequipped = withDefsStoreUpdater(fillLoadoutFromUnequipped);
+  const handleFillCategoryFromEquipped = withDefsStoreUpdater(fillLoadoutFromEquipped);
+  const handleClearMods = withUpdater(clearMods);
+  const onRemoveItem = withDefsUpdater(removeItem);
+  const handleClearSubclass = withDefsUpdater(clearSubclass);
+  const handleSyncModsFromEquipped = () => setLoadout(syncModsFromEquipped(store));
 
   // TODO: dedupe styles/code
   return (
@@ -183,7 +197,7 @@ export default function LoadoutEdit({
                     subclass={subclass}
                     items={categories[category]}
                     savedMods={savedMods}
-                    onModsByBucketUpdated={onModsByBucketUpdated}
+                    onModsByBucketUpdated={handleModsByBucketUpdated}
                   />
                 )}
               </LoadoutEditBucket>
