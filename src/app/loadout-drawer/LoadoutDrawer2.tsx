@@ -199,6 +199,7 @@ export default function LoadoutDrawer2({
         <textarea
           onChange={handleNotesChanged}
           value={loadout.notes}
+          maxLength={2048}
           placeholder={t('Loadouts.NotesPlaceholder')}
         />
       </details>
