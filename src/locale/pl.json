@@ -591,7 +591,7 @@
     "MakeRoomDone_plural": "Ukończono robienie miejsca dla {{count}} przedmiotów od Kuriera przenosząc {{movedNum}} przedmiotów z {{store}}.",
     "MakeRoomError": "Nie można zrobić miejsca dla każdego przedmiotu od Kuriera: {{error}}.",
     "ManageLoadouts": "Zarządzaj uzbrojeniami",
-    "MaxSlots": "Możesz mieć tylko {{slots}} przedmiotów takiego typu w uzbrojeniu.",
+    "MaxSlots": "You can only have {{slots}} {{bucketName}} in a loadout.",
     "MaximizeLight": "Maksymalizuj Światło",
     "MaximizePower": "Maksymalizuj Moc",
     "MaximizeStat": "Maksymalizuj statysktykę",
