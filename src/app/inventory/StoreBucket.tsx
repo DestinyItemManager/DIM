@@ -13,7 +13,7 @@ import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import { shallowEqual } from 'fast-equals';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedComponent } from 'react-redux';
 import { ItemSortSettings, itemSortSettingsSelector } from '../settings/item-sort';
 import { addIcon, AppIcon } from '../shell/icons';
 import { InventoryBucket } from './inventory-buckets';
@@ -215,4 +215,21 @@ function StoreBucket({
   );
 }
 
-export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(StoreBucket);
+export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(
+  StoreBucket
+) as ConnectedComponent<
+  typeof StoreBucket,
+  Omit<
+    ProvidedProps & StoreProps,
+    | 'destinyVersion'
+    | 'storeId'
+    | 'storeName'
+    | 'storeClassType'
+    | 'isVault'
+    | 'items'
+    | 'itemSortSettings'
+    | 'storeClassList'
+    | 'characterOrder'
+  > &
+    ProvidedProps
+>;

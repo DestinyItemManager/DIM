@@ -9,11 +9,12 @@ import ActionButton from 'app/item-actions/ActionButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemActionsModel, StoreButtonInfo } from 'app/item-popup/item-popup-actions';
 import ItemMoveAmount from 'app/item-popup/ItemMoveAmount';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styles from './ItemMoveLocations.m.scss';
 
 type MoveSubmit = (store: DimStore, equip?: boolean, moveAmount?: number) => void;
@@ -35,7 +36,7 @@ export default function ItemMoveLocations({
   // barring a user selection, default to moving the whole stack of this item
   const [amount, setAmount] = useState(item.amount);
   const itemOwner = getStore(stores, item.owner);
-  const dispatch = useDispatch();
+  const dispatch = useThunkDispatch();
 
   const submitMoveTo = (store: DimStore, equip = false, moveAmount = amount) => {
     dispatch(moveItemTo(item, store, equip, moveAmount));

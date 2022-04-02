@@ -5,10 +5,10 @@ import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch } from 'react';
-import { useDispatch } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet } from '../types';
 import { statTier } from '../utils';
@@ -38,7 +38,7 @@ export default function GeneratedSetButtons({
   onLoadoutSet(loadout: Loadout): void;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
-  const dispatch = useDispatch();
+  const dispatch = useThunkDispatch();
 
   // Opens the loadout menu for the generated set
   const openLoadout = () => {

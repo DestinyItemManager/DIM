@@ -35,7 +35,7 @@ function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps> {
     (allitems, filterItems) => (filterItems ? allitems.filter(filterItems) : allitems)
   );
 
-  return (state, ownProps) => ({
+  return (state: RootState, ownProps) => ({
     allItems: filteredItemsSelector(state, ownProps),
     filters: filterFactorySelector(state),
     itemSortSettings: itemSortSettingsSelector(state),

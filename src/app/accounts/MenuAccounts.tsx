@@ -12,11 +12,11 @@ import styles from './MenuAccounts.m.scss';
 import { logOut } from './platforms';
 import { accountsSelector, currentAccountSelector } from './selectors';
 
-interface Props {
+export default function MenuAccounts({
+  closeDropdown,
+}: {
   closeDropdown(e: React.MouseEvent<HTMLDivElement>): void;
-}
-
-export default function MenuAccounts({ closeDropdown }: Props) {
+}) {
   const dispatch = useThunkDispatch();
   const currentAccount = useSelector(currentAccountSelector);
   const accounts = useSelector(accountsSelector);

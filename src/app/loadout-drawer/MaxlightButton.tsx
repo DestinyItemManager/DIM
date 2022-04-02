@@ -4,10 +4,10 @@ import { DimStore } from 'app/inventory/store-types';
 import { getArtifactBonus } from 'app/inventory/stores-helpers';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import xpIcon from 'images/xpIcon.svg';
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import PressTip from '../dim-ui/PressTip';
 import { AppIcon, powerActionIcon, powerIndicatorIcon } from '../shell/icons';
 import { maxLightItemSet, maxLightLoadout } from './auto-loadouts';
@@ -21,7 +21,7 @@ interface Props {
 }
 
 export default function MaxlightButton({ allItems, dimStore, hasClassified, hideIcon }: Props) {
-  const dispatch = useDispatch();
+  const dispatch = useThunkDispatch();
 
   const maxLight = getLight(dimStore, maxLightItemSet(allItems, dimStore).equippable);
   const artifactLight = getArtifactBonus(dimStore);

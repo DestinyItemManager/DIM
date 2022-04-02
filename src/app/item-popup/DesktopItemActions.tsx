@@ -10,10 +10,11 @@ import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useLayoutEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styles from './DesktopItemActions.m.scss';
 import { ItemActionsModel } from './item-popup-actions';
 
@@ -27,7 +28,7 @@ export default function DesktopItemActions({
   actionsModel: ItemActionsModel;
 }) {
   const stores = useSelector(sortedStoresSelector);
-  const dispatch = useDispatch();
+  const dispatch = useThunkDispatch();
   const [sidecarCollapsed, setSidecarCollapsed] = useSetting('sidecarCollapsed');
 
   const toggleSidecar = () => setSidecarCollapsed(!sidecarCollapsed);
