@@ -51,7 +51,6 @@ function ItemPicker({
   itemSortSettings,
   sortBy,
   uniqueBy,
-  selectedSuperDisplay,
   onItemSelected,
   onCancel,
   onSheetClosed,
@@ -105,7 +104,9 @@ function ItemPicker({
               <ConnectedInventoryItem
                 item={item}
                 onClick={() => onItemSelectedFn(item, onClose)}
-                selectedSuperDisplay={selectedSuperDisplay}
+                // don't show the selected Super ability on subclasses in the item picker because the active Super
+                // ability is never relevant in the context that item picker is used
+                selectedSuperDisplay="disabled"
               />
               {item.bucket.hash === BucketHashes.Subclass && (
                 <ClassIcon classType={item.classType} className="item-picker-item-class-icon" />

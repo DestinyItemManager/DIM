@@ -28,10 +28,6 @@ export async function pickSubclass(filterItems: (item: DimItem) => boolean) {
       // the appropriate store at render time
       uniqueBy: (item) => item.hash,
       prompt: t('Loadouts.ChooseItem', { name: t('Bucket.Class') }),
-
-      // don't show the selected Super ability on subclasses at this point because the user will configure their
-      // desired Super ability later
-      selectedSuperDisplay: 'disabled',
     });
 
     return item;

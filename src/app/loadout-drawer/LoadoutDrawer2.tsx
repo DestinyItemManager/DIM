@@ -169,10 +169,6 @@ export default function LoadoutDrawer2({
         prompt: t('Loadouts.FindAnother', {
           name: warnItem.bucket.inArmor ? warnItem.bucket.name : warnItem.name,
         }),
-
-        // don't show the selected Super ability on V2 subclasses so we don't give the impression that we will
-        // change the subclass path when applying the loadout
-        selectedSuperDisplay: 'v3SubclassesOnly',
       });
 
       onAddItem(item);
@@ -354,10 +350,6 @@ async function pickLoadoutItem(
         itemCanBeInLoadout(item) &&
         !loadoutHasItem(item),
       prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
-
-      // don't show the selected Super ability on V2 subclasses so we don't give the impression that we will
-      // change the subclass path when applying the loadout
-      selectedSuperDisplay: 'v3SubclassesOnly',
     });
 
     add(item);

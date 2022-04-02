@@ -4,8 +4,6 @@ import { DimItem } from '../inventory/item-types';
 export interface ItemPickerOptions {
   /** Override the default "Choose an Item" prompt. */
   prompt?: string;
-  /** Show the selected Super ability on subclasses? */
-  selectedSuperDisplay?: 'enabled' | 'disabled' | 'v3SubclassesOnly';
   /** Optionally restrict items to a particular subset. */
   filterItems?(item: DimItem): boolean;
   /** An extra sort function that items will be sorted by (beyond the default sort chosen by the user)  */
