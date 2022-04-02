@@ -6,7 +6,7 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 
-const enhancedToPerk = _.mapValues(_.invert(perkToEnhanced), Number);
+export const enhancedToPerk = _.mapValues(_.invert(perkToEnhanced), Number);
 
 type Roll = {
   /** rampage, outlaw, etc. */
