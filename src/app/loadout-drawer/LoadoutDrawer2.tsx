@@ -4,7 +4,7 @@ import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import { getStore } from 'app/inventory/stores-helpers';
+import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { pickSubclass } from 'app/loadout/item-utils';
 import { useDefinitions } from 'app/manifest/selectors';
@@ -15,20 +15,26 @@ import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
-import React, { useCallback, useMemo, useReducer, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
-import { allItemsSelector, bucketsSelector, storesSelector } from '../inventory/selectors';
-import LoadoutEdit, {
+import { storesSelector } from '../inventory/selectors';
+import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
+import { deleteLoadout, updateLoadout } from './actions';
+import {
+  addItem,
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
-} from '../loadout/loadout-edit/LoadoutEdit';
-import { deleteLoadout, updateLoadout } from './actions';
-import { stateReducer } from './loadout-drawer-reducer';
+  LoadoutUpdateFunction,
+  removeItem,
+  setClassType,
+  setClearSpace,
+  setName,
+  setNotes,
+} from './loadout-drawer-reducer';
 import { addItem$ } from './loadout-events';
-import { getItemsFromLoadoutItems } from './loadout-item-conversion';
 import { Loadout, ResolvedLoadoutItem } from './loadout-types';
 import { createSubclassDefaultSocketOverrides } from './loadout-utils';
 import styles from './LoadoutDrawer2.m.scss';
@@ -64,36 +70,27 @@ export default function LoadoutDrawer2({
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
   const stores = useSelector(storesSelector);
-  const allItems = useSelector(allItemsSelector);
-  const buckets = useSelector(bucketsSelector)!;
   const [showingItemPicker, setShowingItemPicker] = useState(false);
+  const [loadout, setLoadout] = useState(initialLoadout);
 
-  // All state and the state of the loadout is managed through this reducer
-  const [{ loadout }, stateDispatch] = useReducer(stateReducer(defs), {
-    loadout: initialLoadout,
-  });
-
-  const loadoutItems = loadout?.items;
+  function withUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
+    return (...args: T) => setLoadout(fn(...args));
+  }
+  function withDefsUpdater<T extends unknown[]>(
+    fn: (defs: D1ManifestDefinitions | D2ManifestDefinitions, ...args: T) => LoadoutUpdateFunction
+  ) {
+    return (...args: T) => setLoadout(fn(defs, ...args));
+  }
 
   const store = storeId
     ? getStore(stores, storeId)
-    : stores.find((s) => !s.isVault && s.classType === loadout?.classType);
-
-  // Turn loadout items into real DimItems
-  const [items] = useMemo(
-    () => getItemsFromLoadoutItems(loadoutItems, defs, store?.id, buckets, allItems),
-    [loadoutItems, defs, store?.id, buckets, allItems]
-  );
+    : stores.find((s) => !s.isVault && s.classType === loadout?.classType) ??
+      getCurrentStore(stores);
 
   const onAddItem = useCallback(
     (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) =>
-      stateDispatch({
-        type: 'addItem',
-        item,
-        equip,
-        socketOverrides,
-      }),
-    []
+      setLoadout(addItem(defs, item, equip, socketOverrides)),
+    [defs]
   );
 
   /**
@@ -133,21 +130,17 @@ export default function LoadoutDrawer2({
     return null;
   }
 
-  const handleDeleteLoadout = (close: () => void) => {
-    dispatch(deleteLoadout(loadout.id));
-    close();
+  const handleClickPlaceholder = ({
+    bucket,
+    equip,
+  }: {
+    bucket: InventoryBucket;
+    equip: boolean;
+  }) => {
+    pickLoadoutItem(loadout, bucket, (item) => onAddItem(item, equip), setShowingItemPicker);
   };
 
-  const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
-    stateDispatch({ type: 'update', loadout: { ...loadout, notes: e.target.value } });
-
-  const handleUpdateLoadout = (loadout: Loadout) => stateDispatch({ type: 'update', loadout });
-
-  const handleNameChanged = (name: string) =>
-    stateDispatch({ type: 'update', loadout: { ...loadout, name } });
-
-  const handleRemoveItem = (resolvedItem: ResolvedLoadoutItem) =>
-    stateDispatch({ type: 'removeItem', resolvedItem });
+  const handleRemoveItem = withDefsUpdater(removeItem);
 
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (li: ResolvedLoadoutItem) => {
@@ -179,32 +172,24 @@ export default function LoadoutDrawer2({
     }
   };
 
-  const setClearSpace = (clearSpace: boolean) => {
-    handleUpdateLoadout({
-      ...loadout,
-      clearSpace,
-    });
-  };
-
-  const toggleAnyClass = (checked: boolean) => {
-    handleUpdateLoadout({
-      ...loadout,
-      classType: checked ? DestinyClass.Unknown : store.classType,
-    });
-  };
-
-  const handleClickPlaceholder = ({
-    bucket,
-    equip,
-  }: {
-    bucket: InventoryBucket;
-    equip: boolean;
-  }) => {
-    pickLoadoutItem(loadout, bucket, (item) => onAddItem(item, equip), setShowingItemPicker);
-  };
-
   const handleClickSubclass = () =>
     pickLoadoutSubclass(loadout, storeId, onAddItem, setShowingItemPicker);
+
+  const handleDeleteLoadout = (close: () => void) => {
+    dispatch(deleteLoadout(loadout.id));
+    close();
+  };
+
+  const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
+    setLoadout(setNotes(e.target.value));
+  const handleNameChanged = withUpdater(setName);
+  const handleFillLoadoutFromEquipped = () => setLoadout(fillLoadoutFromEquipped(defs, store));
+  const handleFillLoadoutFromUnequipped = () => setLoadout(fillLoadoutFromUnequipped(defs, store));
+
+  const handleSetClearSpace = withUpdater(setClearSpace);
+
+  const toggleAnyClass = (checked: boolean) =>
+    setLoadout(setClassType(checked ? DestinyClass.Unknown : store.classType));
 
   const header = (
     <div>
@@ -252,31 +237,16 @@ export default function LoadoutDrawer2({
         <LoadoutEdit
           store={store}
           loadout={loadout}
-          stateDispatch={stateDispatch}
+          setLoadout={setLoadout}
           onClickPlaceholder={handleClickPlaceholder}
           onClickWarnItem={fixWarnItem}
           onClickSubclass={handleClickSubclass}
         />
         <div className={styles.inputGroup}>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() =>
-              fillLoadoutFromEquipped(
-                loadout,
-                items.map((li) => li.item),
-                store,
-                handleUpdateLoadout
-              )
-            }
-          >
+          <button type="button" className="dim-button" onClick={handleFillLoadoutFromEquipped}>
             <AppIcon icon={addIcon} /> {t('Loadouts.FillFromEquipped')}
           </button>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => fillLoadoutFromUnequipped(loadout, store, onAddItem)}
-          >
+          <button type="button" className="dim-button" onClick={handleFillLoadoutFromUnequipped}>
             <AppIcon icon={addIcon} /> {t('Loadouts.FillFromInventory')}
           </button>
           <CheckButton
@@ -289,7 +259,7 @@ export default function LoadoutDrawer2({
           <CheckButton
             name="clearSpace"
             checked={Boolean(loadout.clearSpace)}
-            onChange={setClearSpace}
+            onChange={handleSetClearSpace}
           >
             {t('Loadouts.ClearSpace')}
           </CheckButton>

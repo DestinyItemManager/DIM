@@ -49,7 +49,7 @@ module.exports = (env) => {
     }
   });
 
-  let version = process.env.VERSION;
+  let version = env.dev ? packageJson.version.toString() : process.env.VERSION;
 
   if (!env.dev) {
     console.log('Building DIM version ' + version);
@@ -82,6 +82,7 @@ module.exports = (env) => {
     devServer: env.dev
       ? {
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
+          allowedHosts: 'all',
           server: {
             type: 'https',
             options: {
@@ -166,11 +167,13 @@ module.exports = (env) => {
               maxSize: 5 * 1024, // only inline if less than 5kb
             },
           },
-          use: [
-            {
-              loader: 'svgo-loader',
-            },
-          ],
+          use: env.dev
+            ? []
+            : [
+                {
+                  loader: 'svgo-loader',
+                },
+              ],
         },
         {
           test: /\.(jpg|gif|png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
@@ -315,21 +318,6 @@ module.exports = (env) => {
         chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:6].css',
       }),
 
-      new StatsWriterPlugin({
-        filename: '../webpack-stats.json',
-        stats: {
-          assets: true,
-          entrypoints: true,
-          chunks: true,
-          modules: true,
-          excludeAssets: [
-            /data\/d1\/manifests\/d1-manifest-..(-br)?.json(.br|.gz)?/,
-            /^(?!en).+.json/,
-            /webpack-stats.json/,
-          ],
-        },
-      }),
-
       new HtmlWebpackPlugin({
         inject: true,
         filename: 'index.html',
@@ -446,26 +434,45 @@ module.exports = (env) => {
       })
     );
 
-    config.plugins.push(
-      new WebpackNotifierPlugin({
-        title: 'DIM',
-        excludeWarnings: false,
-        alwaysNotify: true,
-        contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
-      })
-    );
-    config.plugins.push(
-      new ForkTsCheckerNotifierWebpackPlugin({
-        title: 'DIM TypeScript',
-        excludeWarnings: false,
-        contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
-      })
-    );
+    if (process.env.SNORETOAST_DISABLE) {
+      console.log("Disabling build notifications as 'SNORETOAST_DISABLE' was defined");
+    } else {
+      config.plugins.push(
+        new WebpackNotifierPlugin({
+          title: 'DIM',
+          excludeWarnings: false,
+          alwaysNotify: true,
+          contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
+        })
+      );
+      config.plugins.push(
+        new ForkTsCheckerNotifierWebpackPlugin({
+          title: 'DIM TypeScript',
+          excludeWarnings: false,
+          contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
+        })
+      );
+    }
 
     config.plugins.push(new ReactRefreshWebpackPlugin({ overlay: false }));
   } else {
     // env.beta and env.release
     config.plugins.push(
+      new StatsWriterPlugin({
+        filename: '../webpack-stats.json',
+        stats: {
+          assets: true,
+          entrypoints: true,
+          chunks: true,
+          modules: true,
+          excludeAssets: [
+            /data\/d1\/manifests\/d1-manifest-..(-br)?.json(.br|.gz)?/,
+            /^(?!en).+.json/,
+            /webpack-stats.json/,
+          ],
+        },
+      }),
+
       new CopyWebpackPlugin({
         patterns: [
           {

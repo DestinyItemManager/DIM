@@ -1,0 +1,30 @@
+@import '../../variables';
+
+.sheet {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.body {
+  padding: 10px;
+}
+
+.fields {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
+
+  > input {
+    flex: 1;
+    font-size: 14px;
+  }
+
+  button {
+    align-self: center;
+  }
+}

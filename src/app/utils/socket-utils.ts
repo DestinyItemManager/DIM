@@ -58,18 +58,12 @@ function isArmorModSocket(socket: DimSocket) {
 
 /** isModSocket and contains its default plug */
 export function isEmptyArmorModSocket(socket: DimSocket) {
-  return (
-    isArmorModSocket(socket) &&
-    socket.socketDefinition.singleInitialItemHash === socket.plugged?.plugDef.hash
-  );
+  return isArmorModSocket(socket) && socket.emptyPlugItemHash === socket.plugged?.plugDef.hash;
 }
 
 /** isModSocket and contains something other than its default plug */
 export function isUsedArmorModSocket(socket: DimSocket) {
-  return (
-    isArmorModSocket(socket) &&
-    socket.socketDefinition.singleInitialItemHash !== socket.plugged?.plugDef.hash
-  );
+  return isArmorModSocket(socket) && socket.emptyPlugItemHash !== socket.plugged?.plugDef.hash;
 }
 
 /** Given an item and a list of socketIndexes, find all the sockets that match those indices, in the order the indexes were provided */
@@ -166,13 +160,26 @@ export function socketContainsIntrinsicPlug(socket: DimSocket) {
  */
 export function plugFitsIntoSocket(socket: DimSocket, plugHash: number) {
   return (
-    socket.socketDefinition.singleInitialItemHash === plugHash ||
+    socket.emptyPlugItemHash === plugHash ||
     socket.plugSet?.plugs.some((dimPlug) => dimPlug.plugDef.hash === plugHash) ||
     // TODO(#7793): This should use reusablePlugItems on the socket def
     // because the check should operate on static definitions. This is still
     // incorrect for quite a few blue-quality items because DIM throws away the data.
     socket.reusablePlugItems?.some((p) => p.plugItemHash === plugHash)
   );
+}
+
+/**
+ * Abilities and supers are "choice sockets", there might be a default
+ * but it's not really a meaningful empty or reset option.
+ * Still, this can be a useful to initialize user selections.
+ */
+export function getDefaultAbilityChoiceHash(socket: DimSocket) {
+  const { singleInitialItemHash } = socket.socketDefinition;
+  return singleInitialItemHash
+    ? singleInitialItemHash
+    : // Some sockets like Void 3.0 grenades don't have a singleInitialItemHash
+      socket.plugSet!.plugs[0]!.plugDef.hash;
 }
 
 export function isEnhancedPerk(perk: DimPlug | DestinyInventoryItemDefinition) {

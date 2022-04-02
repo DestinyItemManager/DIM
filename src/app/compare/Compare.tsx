@@ -12,19 +12,18 @@ import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
-import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { isiOSBrowser } from 'app/utils/browsers';
+import { isEventFromFirefoxScrollbar } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import Sheet from '../dim-ui/Sheet';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, DimSocket } from '../inventory/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
 import styles from './Compare.m.scss';
@@ -68,7 +67,6 @@ export default function Compare() {
   const session = useSelector(compareSessionSelector);
   const rawCompareItems = useSelector(compareItemsSelector(session?.vendorCharacterId));
   const organizerLink = useSelector(compareOrganizerLinkSelector);
-  const isPhonePortrait = useIsPhonePortrait();
 
   /** The stat row to highlight */
   const [highlight, setHighlight] = useState<string | number>();
@@ -180,21 +178,15 @@ export default function Compare() {
 
   const items = useMemo(
     () => (
-      <div className={styles.items}>
-        {sortedComparisonItems.map((item) => (
-          <CompareItem
-            item={item}
-            key={item.id}
-            stats={allStats}
-            itemClick={locateItem}
-            remove={remove}
-            setHighlight={isTouch ? undefined : setHighlight}
-            onPlugClicked={onPlugClicked}
-            compareBaseStats={doCompareBaseStats}
-            isInitialItem={session?.initialItemId === item.id}
-          />
-        ))}
-      </div>
+      <CompareItems
+        items={sortedComparisonItems}
+        allStats={allStats}
+        remove={remove}
+        setHighlight={isTouch ? undefined : setHighlight}
+        onPlugClicked={onPlugClicked}
+        doCompareBaseStats={doCompareBaseStats}
+        initialItemId={session?.initialItemId}
+      />
     ),
     [
       allStats,
@@ -260,14 +252,83 @@ export default function Compare() {
                 {stat.id === highlight && <div className={styles.highlightBar} />}
               </div>
             ))}
-            {isPhonePortrait && isiOSBrowser() && (
-              <div className={styles.swipeAdvice}>{t('Compare.SwipeAdvice')}</div>
-            )}
           </div>
           {items}
         </div>
       </div>
     </Sheet>
+  );
+}
+
+function CompareItems({
+  items,
+  doCompareBaseStats,
+  allStats,
+  remove,
+  setHighlight,
+  onPlugClicked,
+  initialItemId,
+}: {
+  initialItemId: string | undefined;
+  doCompareBaseStats: boolean;
+  items: DimItem[];
+  allStats: StatInfo[];
+  remove: (item: DimItem) => void;
+  setHighlight?: React.Dispatch<React.SetStateAction<string | number | undefined>>;
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
+}) {
+  // This uses pointer events to directly set the scroll position based on
+  // dragging the items. This works around an iOS bug around nested draggables,
+  // but also is kinda nice on desktop. I wasn't able to get it to do an
+  // inertial animation after releasing.
+
+  const ref = useRef<HTMLDivElement>(null);
+  const dragStateRef = useRef<{ scrollPosition: number; pointerDownPosition: number }>();
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    if (isEventFromFirefoxScrollbar(e)) {
+      return;
+    }
+
+    dragStateRef.current = {
+      pointerDownPosition: e.clientX,
+      scrollPosition: ref.current!.scrollLeft,
+    };
+    ref.current!.setPointerCapture(e.pointerId);
+  }, []);
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
+    dragStateRef.current = undefined;
+    ref.current!.releasePointerCapture(e.pointerId);
+  }, []);
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (dragStateRef.current !== undefined) {
+      const { scrollPosition, pointerDownPosition } = dragStateRef.current;
+      ref.current!.scrollLeft = scrollPosition - (e.clientX - pointerDownPosition);
+    }
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={styles.items}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+    >
+      {items.map((item) => (
+        <CompareItem
+          item={item}
+          key={item.id}
+          stats={allStats}
+          itemClick={locateItem}
+          remove={remove}
+          setHighlight={setHighlight}
+          onPlugClicked={onPlugClicked}
+          compareBaseStats={doCompareBaseStats}
+          isInitialItem={initialItemId === item.id}
+        />
+      ))}
+    </div>
   );
 }
 

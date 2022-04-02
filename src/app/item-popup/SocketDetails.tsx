@@ -17,13 +17,7 @@ import { SearchInput } from 'app/search/SearchInput';
 import { RootState } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
-import {
-  DestinyEnergyType,
-  DestinyItemPlug,
-  DestinyItemPlugBase,
-  PlugUiStyles,
-  SocketPlugSources,
-} from 'bungie-api-ts/destiny2';
+import { DestinyEnergyType, PlugUiStyles, SocketPlugSources } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
@@ -128,16 +122,6 @@ function mapStateToProps() {
 
 type Props = ProvidedProps & StoreProps;
 
-/**
- * This is needed because canInsert is false if an items socket already contains the plug. In this
- * event insertFailIndexes will contain an index that comes from the Plug Definitions, indicating
- * that a similar mod is already inserted. Unfortunately these only have a message, which varies
- * based on region, and no hash or id.
- */
-function plugIsInsertable(plug: DestinyItemPlug | DestinyItemPlugBase) {
-  return plug.canInsert || plug.insertFailIndexes.length;
-}
-
 export const SocketDetailsMod = React.memo(
   ({
     itemDef,
@@ -193,20 +177,14 @@ function SocketDetails({
     otherUnlockedPlugs.add(modHash);
   }
 
-  const initialPlugHash = socket.socketDefinition.singleInitialItemHash;
-  if (initialPlugHash) {
-    modHashes.add(initialPlugHash);
+  if (socket.emptyPlugItemHash) {
+    modHashes.add(socket.emptyPlugItemHash);
   }
 
-  if (
-    socket.socketDefinition.plugSources & SocketPlugSources.ReusablePlugItems &&
-    socket.reusablePlugItems?.length
-  ) {
+  if (socket.reusablePlugItems) {
     for (const plugItem of socket.reusablePlugItems) {
       modHashes.add(plugItem.plugItemHash);
-      if (plugIsInsertable(plugItem)) {
-        otherUnlockedPlugs.add(plugItem.plugItemHash);
-      }
+      otherUnlockedPlugs.add(plugItem.plugItemHash);
     }
   }
 
@@ -227,7 +205,9 @@ function SocketDetails({
 
   // Is this plug available to use?
   const unlocked = (i: PluggableInventoryItemDefinition) =>
-    i.hash === initialPlugHash || unlockedPlugs.has(i.hash) || otherUnlockedPlugs.has(i.hash);
+    i.hash === socket.emptyPlugItemHash ||
+    unlockedPlugs.has(i.hash) ||
+    otherUnlockedPlugs.has(i.hash);
 
   const searchFilter = createPlugSearchPredicate(query, language, defs);
 
@@ -270,7 +250,7 @@ function SocketDetails({
     .filter((i) => unlocked(i) || !shownLockedPlugs || shownLockedPlugs.has(i.hash))
     .sort(
       chainComparator(
-        compareBy((i) => i.hash !== initialPlugHash),
+        compareBy((i) => i.hash !== socket.emptyPlugItemHash),
         reverseComparator(compareBy(unlocked)),
         compareBy((i) => i.plug?.energyCost?.energyCost),
         compareBy((i) => -i.inventory!.tierType),
@@ -293,17 +273,17 @@ function SocketDetails({
     mods.unshift(plugged);
   }
 
-  const initialItem =
-    socket.socketDefinition.singleInitialItemHash > 0 &&
-    defs.InventoryItem.get(socket.socketDefinition.singleInitialItemHash);
+  const socketIconDef =
+    (socket.emptyPlugItemHash && defs.InventoryItem.get(socket.emptyPlugItemHash)) ||
+    socket.plugged?.plugDef;
 
   const header = (
     <div>
       <h1>
-        {initialItem && (
+        {socketIconDef && (
           <BungieImage
             className={styles.categoryIcon}
-            src={initialItem.displayProperties.icon}
+            src={socketIconDef.displayProperties.icon}
             alt=""
           />
         )}

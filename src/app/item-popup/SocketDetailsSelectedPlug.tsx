@@ -217,6 +217,7 @@ export default function SocketDetailsSelectedPlug({
       <div className={styles.modDescription}>
         <h3>
           {plug.displayProperties.name}
+          {/* TODO: Use emptyPlugItemHash here? */}
           {emptySpecialtySocketHashes.includes(plug.hash) && (
             <> &mdash; {plug.itemTypeDisplayName}</>
           )}

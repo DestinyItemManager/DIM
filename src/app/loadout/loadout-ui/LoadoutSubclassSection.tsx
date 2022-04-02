@@ -6,7 +6,7 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
-import { getSocketsByIndexes } from 'app/utils/socket-utils';
+import { getDefaultAbilityChoiceHash, getSocketsByIndexes } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
@@ -30,9 +30,7 @@ export function getSubclassPlugs(
 
       for (const socket of sockets) {
         const override = subclass.loadoutItem.socketOverrides?.[socket.socketIndex];
-        // Void grenades do not have a singleInitialItemHash
-        const initial =
-          socket.socketDefinition.singleInitialItemHash || socket.plugSet!.plugs[0].plugDef.hash;
+        const initial = getDefaultAbilityChoiceHash(socket);
         const hash = override || (showInitial && initial);
         const plug = hash && defs.InventoryItem.get(hash);
         if (plug && isPluggableItem(plug)) {

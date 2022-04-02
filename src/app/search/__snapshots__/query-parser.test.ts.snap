@@ -3180,6 +3180,31 @@ Array [
 ]
 `;
 
+exports[`parse |  /* My cool search */
+ is:armor|: ast 1`] = `
+Object {
+  "args": "armor",
+  "comment": "my cool search",
+  "op": "filter",
+  "type": "is",
+}
+`;
+
+exports[`parse |  /* My cool search */
+ is:armor|: lexer 1`] = `
+Array [
+  Array [
+    "comment",
+    "my cool search",
+  ],
+  Array [
+    "filter",
+    "is",
+    "armor",
+  ],
+]
+`;
+
 exports[`parse |"grenade launcher reserves"|: ast 1`] = `
 Object {
   "args": "grenade launcher reserves",
@@ -3584,6 +3609,127 @@ Array [
   ],
   Array [
     ")",
+  ],
+]
+`;
+
+exports[`parse |/* My cool search */ (/* armor */ is:armor and is:blue) or (/*weapons*/ is:weapon and perkname:"Kill Clip")|: ast 1`] = `
+Object {
+  "comment": "my cool search",
+  "op": "or",
+  "operands": Array [
+    Object {
+      "op": "and",
+      "operands": Array [
+        Object {
+          "args": "armor",
+          "op": "filter",
+          "type": "is",
+        },
+        Object {
+          "args": "blue",
+          "op": "filter",
+          "type": "is",
+        },
+      ],
+    },
+    Object {
+      "comment": "weapons",
+      "op": "and",
+      "operands": Array [
+        Object {
+          "args": "weapon",
+          "op": "filter",
+          "type": "is",
+        },
+        Object {
+          "args": "kill clip",
+          "op": "filter",
+          "type": "perkname",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`parse |/* My cool search */ (/* armor */ is:armor and is:blue) or (/*weapons*/ is:weapon and perkname:"Kill Clip")|: lexer 1`] = `
+Array [
+  Array [
+    "comment",
+    "my cool search",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "comment",
+    "armor",
+  ],
+  Array [
+    "filter",
+    "is",
+    "armor",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "filter",
+    "is",
+    "blue",
+  ],
+  Array [
+    ")",
+  ],
+  Array [
+    "or",
+  ],
+  Array [
+    "(",
+  ],
+  Array [
+    "comment",
+    "weapons",
+  ],
+  Array [
+    "filter",
+    "is",
+    "weapon",
+  ],
+  Array [
+    "and",
+  ],
+  Array [
+    "filter",
+    "perkname",
+    "kill clip",
+  ],
+  Array [
+    ")",
+  ],
+]
+`;
+
+exports[`parse |/* My cool search */ is:armor|: ast 1`] = `
+Object {
+  "args": "armor",
+  "comment": "my cool search",
+  "op": "filter",
+  "type": "is",
+}
+`;
+
+exports[`parse |/* My cool search */ is:armor|: lexer 1`] = `
+Array [
+  Array [
+    "comment",
+    "my cool search",
+  ],
+  Array [
+    "filter",
+    "is",
+    "armor",
   ],
 ]
 `;

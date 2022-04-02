@@ -15,6 +15,10 @@
   width: var(--item-size);
   // searchHidden will adjust opacity/transform, this transitions them
   transition: opacity 0.2s, transform 0.2s;
+
+  > * {
+    pointer-events: none;
+  }
 }
 
 // The wrapper for draggable items. Global because it's referenced by other styles.

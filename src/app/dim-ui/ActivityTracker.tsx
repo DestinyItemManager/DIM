@@ -177,16 +177,4 @@ function useVisibilityRefresh() {
       document.removeEventListener('visibilitychange', visibilityHandler);
     };
   }, [hasSearchQuery, refreshProfileOnVisible]);
-
-  // Also directly subscribe to dimNeedsUpdate so we'll refresh in the background
-  useEffect(
-    () =>
-      dimNeedsUpdate$.subscribe((needsUpdate) => {
-        if (needsUpdate && !hasSearchQuery && document.hidden) {
-          // Sneaky updates - if DIM is hidden and needs an update, do the update.
-          reloadDIM();
-        }
-      }),
-    [hasSearchQuery]
-  );
 }
