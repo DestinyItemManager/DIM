@@ -162,10 +162,6 @@ export default function LoadoutDrawer2({
         prompt: t('Loadouts.FindAnother', {
           name: warnItem.bucket.inArmor ? warnItem.bucket.name : warnItem.name,
         }),
-
-        // don't show information related to selected perks so we don't give the impression
-        // that we will update perk selections when applying the loadout
-        ignoreSelectedPerks: true,
       });
 
       onAddItem(item);
@@ -324,10 +320,6 @@ async function pickLoadoutItem(
         itemCanBeInLoadout(item) &&
         !loadoutHasItem(item),
       prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
-
-      // don't show information related to selected perks so we don't give the impression
-      // that we will update perk selections when applying the loadout
-      ignoreSelectedPerks: true,
     });
 
     add(item);

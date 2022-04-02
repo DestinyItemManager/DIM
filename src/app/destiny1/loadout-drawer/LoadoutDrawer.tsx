@@ -101,10 +101,6 @@ export default function LoadoutDrawer({
             item.classType === loadoutClassType ||
             item.classType === DestinyClass.Unknown),
         prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
-
-        // don't show information related to selected perks so we don't give the impression
-        // that we will update perk selections when applying the loadout
-        ignoreSelectedPerks: true,
       });
 
       onAddItem(item);
