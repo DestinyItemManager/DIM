@@ -95,6 +95,7 @@ function WishlistRolls({
           plugByPerkHash[p.plugDef.hash] = p;
         }
 
+        // if this is a crafted item, use its template's plug order. otherwise fall back to its reusable or randomized plugsets
         const plugSetHash =
           templateSockets?.[s.socketIndex].reusablePlugSetHash ??
           (s.socketDefinition.randomizedPlugSetHash || s.socketDefinition.reusablePlugSetHash);
@@ -159,7 +160,7 @@ function WishlistRolls({
                           {hashes
                             .sort(
                               compareBy(
-                                // unrecognized/unrollable perks last
+                                // unrecognized/unrollable perks sort to last
                                 (h) => columnOrderByPlugHash[h] ?? 9999
                               )
                             )
