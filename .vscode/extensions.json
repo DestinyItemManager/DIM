@@ -8,6 +8,7 @@
     "streetsidesoftware.code-spell-checker",
     "dbaeumer.vscode-eslint",
     "orta.vscode-jest",
-    "stylelint.vscode-stylelint"
+    "stylelint.vscode-stylelint",
+    "amodio.tsl-problem-matcher"
   ]
 }
