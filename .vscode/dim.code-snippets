@@ -36,27 +36,9 @@
     "description": "Import t helper from i18next"
   },
 
-  "import React": {
-    "prefix": "imr",
-    "body": ["import React from 'react';"],
-    "description": "Import React"
-  },
-
   "import clsx": {
     "prefix": "imc",
     "body": ["import clsx from 'clsx';"],
     "description": "Import clsx"
   },
-
-  "mapStateToProps": {
-    "prefix": "mapStateToProps",
-    "body": [
-      "function mapStateToProps(state: RootState): StoreProps {",
-      "  return {",
-      "    $0",
-      "  };",
-      "}"
-    ],
-    "description": "mapStateToProps"
-  }
 }
