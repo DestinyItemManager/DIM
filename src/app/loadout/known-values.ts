@@ -2,7 +2,7 @@ import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
-import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
+import { activityModPlugCategoryHashes } from './mod-utils';
 
 export const slotSpecificPlugCategoryHashes = [
   armor2PlugCategoryHashesByName.helmet,
@@ -14,5 +14,5 @@ export const slotSpecificPlugCategoryHashes = [
 
 export const knownModPlugCategoryHashes = [
   ...armor2PlugCategoryHashes,
-  ...raidModPlugCategoryHashes,
+  ...activityModPlugCategoryHashes,
 ];
