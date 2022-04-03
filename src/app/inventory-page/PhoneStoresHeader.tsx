@@ -1,10 +1,10 @@
+import { DimStore } from 'app/inventory/store-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { wrap } from 'app/utils/util';
 import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from 'framer-motion';
 import React, { useEffect, useRef } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
 import styles from './PhoneStoresHeader.m.scss';
-import { DimStore } from './store-types';
 
 const spring: Spring = {
   type: 'spring',

@@ -30,7 +30,7 @@ import ErrorPanel from './ErrorPanel';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
 const Inventory = React.lazy(
-  () => import(/* webpackChunkName: "inventory" */ 'app/inventory/Inventory')
+  () => import(/* webpackChunkName: "inventory" */ 'app/inventory-page/Inventory')
 );
 const Progress = React.lazy(
   () => import(/* webpackChunkName: "progress" */ 'app/progress/Progress')

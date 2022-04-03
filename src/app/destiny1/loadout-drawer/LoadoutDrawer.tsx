@@ -5,7 +5,6 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import ItemIcon from 'app/inventory/ItemIcon';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
-import 'app/inventory/Stores.scss';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { deleteLoadout, updateLoadout } from 'app/loadout-drawer/actions';
 import {

@@ -3,6 +3,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
+import 'app/inventory-page/StoreBucket.scss';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
@@ -23,7 +24,6 @@ import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import '../inventory/StoreBucket.scss';
 import styles from './SocketDetails.m.scss';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 

@@ -1,3 +1,4 @@
+import 'app/inventory-page/StoreBucket.scss';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { addIcon, AppIcon } from 'app/shell/icons';
