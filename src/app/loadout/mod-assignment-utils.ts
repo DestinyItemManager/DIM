@@ -24,12 +24,9 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
+import { activityModPlugCategoryHashes } from './known-values';
 import { generateModPermutations } from './mod-permutations';
-import {
-  activityModPlugCategoryHashes,
-  bucketHashToPlugCategoryHash,
-  getItemEnergyType,
-} from './mod-utils';
+import { bucketHashToPlugCategoryHash, getItemEnergyType } from './mod-utils';
 
 /**
  * a temporary structure, keyed by item ID,

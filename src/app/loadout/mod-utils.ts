@@ -5,17 +5,9 @@ import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-know
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import { isArmorEnergyLocked } from './armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
-
-/** The plug category hashes that belong to the 5th mod slot, such as raid and nightmare mods. */
-export const activityModPlugCategoryHashes = [
-  ...raidModPlugCategoryHashes,
-  PlugCategoryHashes.EnhancementsSeasonMaverick,
-];
 
 export const bucketHashToPlugCategoryHash = {
   [armorBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,

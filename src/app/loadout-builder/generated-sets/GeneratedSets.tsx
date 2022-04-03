@@ -7,7 +7,7 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { activityModPlugCategoryHashes } from 'app/loadout/mod-utils';
+import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import _ from 'lodash';
 import React, {
   Dispatch,

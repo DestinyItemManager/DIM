@@ -23,13 +23,12 @@ import React, { useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { isLoadoutBuilderItem } from './item-utils';
-import { knownModPlugCategoryHashes, slotSpecificPlugCategoryHashes } from './known-values';
 import {
   activityModPlugCategoryHashes,
-  isInsertableArmor2Mod,
-  sortModGroups,
-  sortMods,
-} from './mod-utils';
+  knownModPlugCategoryHashes,
+  slotSpecificPlugCategoryHashes,
+} from './known-values';
+import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
 import { PlugSet } from './plug-drawer/types';
 
