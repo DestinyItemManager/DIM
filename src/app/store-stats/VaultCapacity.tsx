@@ -107,7 +107,7 @@ export default React.memo(function VaultCapacity() {
                   bucket.name.substring(0, 1)
                 )}
               </div>
-              <PressTip tooltip={isConsumables ? mats : undefined}>
+              <PressTip tooltip={isConsumables ? mats : undefined} placement="bottom">
                 <div
                   title={title}
                   className={clsx({

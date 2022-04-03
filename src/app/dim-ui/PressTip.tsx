@@ -1,3 +1,4 @@
+import { Placement } from '@popperjs/core';
 import clsx from 'clsx';
 import _ from 'lodash';
 import {
@@ -37,6 +38,7 @@ interface Props {
   elementType?: React.ElementType;
   className?: string;
   style?: React.CSSProperties;
+  placement?: Placement;
 }
 
 type ControlProps = Props &
@@ -69,6 +71,7 @@ function Control({
   children,
   elementType: Component = 'div',
   className,
+  placement,
   ...rest
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
@@ -78,7 +81,7 @@ function Control({
     contents: tooltipContents,
     reference: triggerRef,
     arrowClassName: styles.arrow,
-    placement: 'top',
+    placement,
   });
 
   if (!tooltip) {
