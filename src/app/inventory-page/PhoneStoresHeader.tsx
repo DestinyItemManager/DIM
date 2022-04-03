@@ -127,7 +127,7 @@ export default function PhoneStoresHeader({
       >
         {segments.map((store, index) => (
           <div
-            className="store-cell"
+            className={styles.character}
             key={makeKey(store.id)}
             style={{ width: `${Math.floor(100 / segments.length)}%` }}
           >
