@@ -7,24 +7,25 @@ import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector, hasClassifiedSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import {
+  gatherEngramsLoadout,
+  itemLevelingLoadout,
+  itemMoveLoadout,
+  randomLoadout,
+} from 'app/loadout-drawer/auto-loadouts';
+import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
+import { loadoutsSelector, previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
+import { showNotification } from 'app/notifications/notifications';
 import { ItemFilter } from 'app/search/filter-types';
+import { filteredItemsSelector, searchFilterSelector } from 'app/search/search-filter';
 import { plainString } from 'app/search/search-filters/freeform';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
-import { isiOSBrowser } from 'app/utils/browsers';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import consumablesIcon from 'destiny-icons/general/consumables.svg';
-import _ from 'lodash';
-import React, { useState } from 'react';
-import { connect, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { createSelector } from 'reselect';
-import { DimStore } from '../inventory/store-types';
-import { showNotification } from '../notifications/notifications';
-import { filteredItemsSelector, searchFilterSelector } from '../search/search-filter';
 import {
   addIcon,
   AppIcon,
@@ -38,21 +39,20 @@ import {
   searchIcon,
   sendIcon,
   undoIcon,
-} from '../shell/icons';
-import { querySelector, useIsPhonePortrait } from '../shell/selectors';
-import { queueAction } from '../utils/action-queue';
-import {
-  gatherEngramsLoadout,
-  itemLevelingLoadout,
-  itemMoveLoadout,
-  randomLoadout,
-} from './auto-loadouts';
-import { applyLoadout } from './loadout-apply';
-import { Loadout } from './loadout-types';
-import { isMissingItems, newLoadout } from './loadout-utils';
+} from 'app/shell/icons';
+import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { queueAction } from 'app/utils/action-queue';
+import { isiOSBrowser } from 'app/utils/browsers';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import consumablesIcon from 'destiny-icons/general/consumables.svg';
+import _ from 'lodash';
+import React, { useState } from 'react';
+import { connect, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { createSelector } from 'reselect';
 import styles from './LoadoutPopup.m.scss';
-import { makeRoomForPostmaster, totalPostmasterItems } from './postmaster';
-import { loadoutsSelector, previousLoadoutSelector } from './selectors';
+import MaxlightButton from './MaxlightButton';
 
 interface ProvidedProps {
   dimStore: DimStore;

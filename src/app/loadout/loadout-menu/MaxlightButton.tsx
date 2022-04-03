@@ -1,16 +1,16 @@
+import PressTip from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getArtifactBonus } from 'app/inventory/stores-helpers';
+import { maxLightItemSet, maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
+import { AppIcon, powerActionIcon, powerIndicatorIcon } from 'app/shell/icons';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import xpIcon from 'images/xpIcon.svg';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import PressTip from '../dim-ui/PressTip';
-import { AppIcon, powerActionIcon, powerIndicatorIcon } from '../shell/icons';
-import { maxLightItemSet, maxLightLoadout } from './auto-loadouts';
 import styles from './MaxlightButton.m.scss';
 
 interface Props {
