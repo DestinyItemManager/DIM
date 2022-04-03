@@ -142,6 +142,14 @@ export function getArmorExoticPerkSocket(item: DimItem): DimSocket | undefined {
   }
 }
 
+export function socketContainsPlugWithCategory(
+  socket: DimSocket,
+  category: PlugCategoryHashes
+): socket is Omit<DimSocket, 'plugged'> & { plugged: DimPlug } {
+  // the above type predicate removes the need to null-check `plugged` after this call
+  return socket.plugged?.plugDef.plug.plugCategoryHash === category;
+}
+
 /**
  * the "intrinsic" plug type is:
  * - weapon frames
@@ -149,8 +157,11 @@ export function getArmorExoticPerkSocket(item: DimItem): DimSocket | undefined {
  * - exotic armor special effect plugs
  * - the special invisible plugs that contribute to armor 2.0 stat rolls
  */
-export function socketContainsIntrinsicPlug(socket: DimSocket) {
-  return socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics;
+export function socketContainsIntrinsicPlug(
+  socket: DimSocket
+): socket is Omit<DimSocket, 'plugged'> & { plugged: DimPlug } {
+  // the above type predicate removes the need to null-check `plugged` after this call
+  return socketContainsPlugWithCategory(socket, PlugCategoryHashes.Intrinsics);
 }
 
 /**
