@@ -9,6 +9,7 @@ interface CssExports {
   'subclassPathBottom': string;
   'subclassPathMiddle': string;
   'subclassPathTop': string;
+  'subclassSuperIcon': string;
   'xpBar': string;
   'xpBarAmount': string;
 }

@@ -1,6 +1,6 @@
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
@@ -11,7 +11,7 @@ import styles from './InventoryItem.m.scss';
 import { DimItem } from './item-types';
 import ItemIcon from './ItemIcon';
 import NewItemIndicator from './NewItemIndicator';
-import { selectedSubclassPath } from './subclass';
+import { getSubclassIconInfo } from './subclass';
 import TagIcon from './TagIcon';
 
 interface Props {
@@ -27,8 +27,8 @@ interface Props {
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
   wishlistRoll?: InventoryWishListRoll;
-  /** Don't show information that relates to currently selected perks (only used for subclasses currently) */
-  ignoreSelectedPerks?: boolean;
+  /** Show the selected Super ability on subclasses? */
+  selectedSuperDisplay?: 'enabled' | 'disabled' | 'v3SubclassesOnly';
   innerRef?: React.Ref<HTMLDivElement>;
   /** TODO: item locked needs to be passed in */
   onClick?(e: React.MouseEvent): void;
@@ -44,7 +44,7 @@ export default function InventoryItem({
   notes,
   searchHidden,
   wishlistRoll,
-  ignoreSelectedPerks,
+  selectedSuperDisplay = 'enabled',
   onClick,
   onShiftClick,
   onDoubleClick,
@@ -61,29 +61,34 @@ export default function InventoryItem({
     };
   }
 
-  const subclassPath =
-    (!ignoreSelectedPerks &&
-      item?.destinyVersion === 2 &&
-      item.talentGrid &&
-      selectedSubclassPath(item.talentGrid)) ||
-    null;
+  const isSubclass =
+    item?.destinyVersion === 2 && item.itemCategoryHashes.includes(ItemCategoryHashes.Subclasses);
+  const subclassIconInfo =
+    isSubclass && selectedSuperDisplay !== 'disabled'
+      ? getSubclassIconInfo(item, selectedSuperDisplay === 'v3SubclassesOnly')
+      : null;
   const itemStyles = clsx('item', {
     [styles.searchHidden]: searchHidden,
-    [styles.subclassPathTop]: subclassPath?.position === 'top',
-    [styles.subclassPathMiddle]: subclassPath?.position === 'middle',
-    [styles.subclassPathBottom]: subclassPath?.position === 'bottom',
+    [styles.subclass]: isSubclass,
+    [styles.subclassPathTop]: subclassIconInfo?.path === 'top',
+    [styles.subclassPathMiddle]: subclassIconInfo?.path === 'middle',
+    [styles.subclassPathBottom]: subclassIconInfo?.path === 'bottom',
   });
   // Subtitle for engram powerlevel vs regular item type
   const subtitle = item.destinyVersion === 2 && item.isEngram ? item.power : item.typeName;
   // Memoize the contents of the item - most of the time if this is re-rendering it's for a search, or a new item
   const contents = useMemo(() => {
     // Subclasses have limited, but customized, display. They can't be new, or tagged, or locked, etc.
-    if (subclassPath) {
+    if (subclassIconInfo) {
       return (
         <>
-          <img src={subclassPath.base} className={clsx('item-img', styles.subclassBase)} alt="" />
-          {subclassPath.super && (
-            <BungieImage src={subclassPath.super} className={styles.subclass} alt="" />
+          <img
+            src={subclassIconInfo.base}
+            className={clsx('item-img', styles.subclassBase)}
+            alt=""
+          />
+          {subclassIconInfo.super && (
+            <BungieImage src={subclassIconInfo.super} className={styles.subclassSuperIcon} alt="" />
           )}
         </>
       );
@@ -114,7 +119,7 @@ export default function InventoryItem({
         {isNew && <NewItemIndicator />}
       </>
     );
-  }, [isNew, item, notes, subclassPath, tag, wishlistRoll]);
+  }, [isNew, item, notes, subclassIconInfo, tag, wishlistRoll]);
 
   return (
     <div

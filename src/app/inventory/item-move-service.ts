@@ -1160,27 +1160,24 @@ export function sortMoveAsideCandidatesForStore(
 }
 
 /**
- * Check if any bucket has "overfilled" and trigger a refresh if so.
+ * Check if any bucket in the active store has "overfilled" and trigger a refresh if so.
  */
 export function checkForOverFill(): ThunkResult {
   return async (_dispatch, getState) => {
-    const stores = storesSelector(getState());
-    const buckets = bucketsSelector(getState())!;
+    const store = currentStoreSelector(getState());
+    const buckets = bucketsSelector(getState());
 
-    const anyOverflow = (() => {
-      for (const store of stores) {
-        const countByBucket = _.countBy(store.items, (i) => i.bucket.hash);
-        for (const [bucketHashStr, amount] of Object.entries(countByBucket)) {
-          if (amount > buckets.byHash[parseInt(bucketHashStr, 10)].capacity) {
-            return true;
-          }
-        }
+    if (!store || !buckets) {
+      return;
+    }
+
+    const countByBucket = _.countBy(store.items, (i) => i.bucket.hash);
+    for (const [bucketHashStr, amount] of Object.entries(countByBucket)) {
+      if (amount > buckets.byHash[parseInt(bucketHashStr, 10)].capacity) {
+        // Request a refresh of the store, this bucket is overfilled
+        refresh();
+        return;
       }
-      return false;
-    })();
-
-    if (anyOverflow) {
-      refresh();
     }
   };
 }

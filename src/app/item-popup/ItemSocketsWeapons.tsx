@@ -10,10 +10,16 @@ import {
   getSocketByIndex,
   getSocketsByIndexes,
   getWeaponArchetypeSocket,
+  socketContainsPlugWithCategory,
 } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { ItemCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import {
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+  StatHashes,
+} from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -82,7 +88,9 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
     )
     .filter(
       (socket) =>
-        socket.plugged?.plugDef.displayProperties.name && !isDeepsightResonanceSocket(socket)
+        socket.plugged?.plugDef.displayProperties.name &&
+        !isDeepsightResonanceSocket(socket) &&
+        !socketContainsPlugWithCategory(socket, PlugCategoryHashes.GenericAllVfx)
     );
 
   const keyStats =

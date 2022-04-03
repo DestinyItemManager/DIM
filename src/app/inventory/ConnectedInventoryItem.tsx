@@ -15,7 +15,7 @@ interface ProvidedProps {
   item: DimItem;
   id?: string; // defaults to item.index - id is typically used for `itemPop`
   allowFilter?: boolean;
-  ignoreSelectedPerks?: boolean;
+  selectedSuperDisplay?: 'enabled' | 'disabled' | 'v3SubclassesOnly';
   innerRef?: React.Ref<HTMLDivElement>;
   onClick?(e: React.MouseEvent): void;
   onShiftClick?(e: React.MouseEvent): void;
@@ -70,7 +70,7 @@ function ConnectedInventoryItem({
   onShiftClick,
   onDoubleClick,
   searchHidden,
-  ignoreSelectedPerks,
+  selectedSuperDisplay,
   innerRef,
 }: Props) {
   return (
@@ -85,7 +85,7 @@ function ConnectedInventoryItem({
       onShiftClick={onShiftClick}
       onDoubleClick={onDoubleClick}
       searchHidden={searchHidden}
-      ignoreSelectedPerks={ignoreSelectedPerks}
+      selectedSuperDisplay={selectedSuperDisplay}
       innerRef={innerRef}
     />
   );

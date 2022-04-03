@@ -23,7 +23,14 @@ export default function LockedItem({
       <DraggableInventoryItem item={lockedItem}>
         <ItemPopupTrigger item={lockedItem}>
           {(ref, onClick) => (
-            <ConnectedInventoryItem item={lockedItem} onClick={onClick} innerRef={ref} />
+            <ConnectedInventoryItem
+              item={lockedItem}
+              onClick={onClick}
+              innerRef={ref}
+              // don't show the selected Super ability on subclasses because we aren't applying socket overrides
+              // to locked subclasses based on what is selected using 'Customize subclass'
+              selectedSuperDisplay="disabled"
+            />
           )}
         </ItemPopupTrigger>
       </DraggableInventoryItem>
