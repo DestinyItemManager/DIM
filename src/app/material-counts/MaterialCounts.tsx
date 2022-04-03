@@ -54,11 +54,11 @@ export function MaterialCounts({ wide }: { wide?: boolean }) {
             }
 
             return (
-              <React.Fragment key={h}>
+              <div className={styles.material} key={h}>
                 <span className={styles.amount}>{amount.toLocaleString()}</span>
                 <BungieImage src={icon} />
                 <span>{materialName}</span>
-              </React.Fragment>
+              </div>
             );
           })}
         </React.Fragment>
