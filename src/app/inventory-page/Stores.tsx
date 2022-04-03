@@ -5,7 +5,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import PhoneStores from '../inventory-page/PhoneStores';
 import DesktopStores from './DesktopStores';
-import './Stores.scss';
 
 /**
  * Display inventory and character headers for all characters and the vault.

@@ -9,9 +9,11 @@
   display: block;
   // Don't let the browser handle touches, we'll do it ourselves
   touch-action: none;
+}
 
-  > * {
-    display: inline-block;
-    vertical-align: top;
-  }
+.character {
+  display: inline-block;
+  padding: 8px 0;
+  box-sizing: border-box;
+  vertical-align: top;
 }
