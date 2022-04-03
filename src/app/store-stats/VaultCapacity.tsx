@@ -7,6 +7,7 @@ import {
   MaterialCountsTooltip,
   showMaterialCount,
 } from 'app/material-counts/MaterialCountsWrappers';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import vaultIcon from 'destiny-icons/armor_types/helmet.svg';
@@ -90,6 +91,7 @@ const vaultCountsSelector = createSelector(
 export default React.memo(function VaultCapacity() {
   const vaultCounts = useSelector(vaultCountsSelector);
   const mats = <MaterialCountsTooltip />;
+  const isPhonePortrait = useIsPhonePortrait();
 
   return (
     <>
@@ -107,7 +109,11 @@ export default React.memo(function VaultCapacity() {
                   bucket.name.substring(0, 1)
                 )}
               </div>
-              <PressTip tooltip={isConsumables ? mats : undefined} placement="bottom" wide>
+              <PressTip
+                tooltip={isConsumables && !isPhonePortrait ? mats : undefined}
+                placement="bottom"
+                wide
+              >
                 <div
                   title={title}
                   className={clsx({
