@@ -4,6 +4,7 @@ interface CssExports {
   'amount': string;
   'materialCounts': string;
   'spanGrid': string;
+  'wide': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
