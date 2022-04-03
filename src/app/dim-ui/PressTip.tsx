@@ -37,6 +37,8 @@ interface Props {
   /** By default everything gets wrapped in a div, but you can choose a different element type here. */
   elementType?: React.ElementType;
   className?: string;
+  /** Allow the tooltip to be wider than the normal size */
+  wide?: boolean;
   style?: React.CSSProperties;
   placement?: Placement;
 }
@@ -72,6 +74,7 @@ function Control({
   elementType: Component = 'div',
   className,
   placement,
+  wide,
   ...rest
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
@@ -100,7 +103,10 @@ function Control({
       {children}
       {open &&
         ReactDOM.createPortal(
-          <div className={styles.tooltip} ref={tooltipContents}>
+          <div
+            className={clsx(styles.tooltip, { [styles.wideTooltip]: wide })}
+            ref={tooltipContents}
+          >
             <div className={styles.content}>{_.isFunction(tooltip) ? tooltip() : tooltip}</div>
             <div className={styles.arrow} />
           </div>,
