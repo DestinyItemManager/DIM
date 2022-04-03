@@ -1,4 +1,4 @@
-import { consolidateSecondaryPerks } from './wishlistCollapser';
+import { consolidateSecondaryPerks } from './wishlist-collapser';
 
 describe('perkConsolidator', () => {
   it('does its thing', () => {
