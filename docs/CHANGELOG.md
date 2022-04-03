@@ -1,5 +1,8 @@
 ## Next
 
+* The Item Popup's header now opens the Armory view when clicked, and has some cursor/link styling as a reminder.
+* Deprecated Black Armory Radiance slots are now hidden, to make space for other weapon data.
+* Material Counts tooltip now fits onscreen better on desktop. On mobile, it's available under the banner dropdown of the Vault inventory page.
 * Wishlist combinations now collapse themselves into manageable groups in the Armory view.
 * Enhanced Elemental Capacitor no longer adds all its stat bonuses to weapons on which it's selected.
 * Fynch rank is now showing the correct number on the Vendors page.
@@ -10,6 +13,7 @@
 * Item moves are better about allowing a move if you really have space on a character, even if DIM hasn't refreshed its view of inventory. That said, DIM will always work best when its view of your inventory is up to date, so continue to refresh data after deleting items in game. DIM will now refresh automatically if we "overfill" a bucket because clearly we're out of date in that circumstance.
 * Mod Picker will now properly register Shadowkeep Nightmare Mods as activity mods.
 * Selected Super ability is now displayed on Void and Stasis subclass icons.
+* Mod position selector avoids invalid sockets a little better.
 
 ## 7.10.0 <span class="changelog-date">(2022-03-27)</span>
 
