@@ -20,8 +20,17 @@ jobs:
           with:
             contains: 'Changelog-None'
 
+        - name: Remove other Changelog Labels if Changelog-None Applied
+          if: steps.haslabel.outputs.labeled-Changelog-None == true
+          uses: mondeja/remove-labels-gh-action@v1
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            labels: |
+              Changelog-Applied
+              Changelog-Missing
+
         - name: Check for updates
-          id: procelain
+          id: porcelain
           uses: technote-space/get-diff-action@v4
 
         - name: Check for updates to CHANGELOG.md
@@ -41,7 +50,7 @@ jobs:
               Changelog-Applied
 
         - name: No CHANGELOG.md Update (Add Missing)
-          if: (steps.procelain.outputs.insertions > 0 && steps.changelog_check.outputs.insertions == 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
+          if: (steps.porcelain.outputs.insertions > 0 && steps.changelog_check.outputs.insertions == 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
           uses: christianvuerings/add-labels@v1
           with:
             labels: |
