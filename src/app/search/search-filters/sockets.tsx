@@ -9,7 +9,11 @@ import {
 } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import {
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+} from 'data/d2/generated-enums';
 import {
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
@@ -100,7 +104,7 @@ const socketFilters: FilterDefinition[] = [
       return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable)
         .filter(
           (socket) =>
-            socket.plugged?.plugDef.plug.plugCategoryIdentifier === 'frames' &&
+            socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
             socket.hasRandomizedPlugItems
         )
         .some((socket) => socket.plugOptions.length > 1);
