@@ -26,7 +26,7 @@ jobs:
           uses: technote-space/get-diff-action@v4
           with:
             PATTERNS: |
-              CHANGELOG.md
+              docs/CHANGELOG.md
 
         - name: No CHANGELOG.md Update
           if: (steps.changelog_check.outputs.insertions > 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
