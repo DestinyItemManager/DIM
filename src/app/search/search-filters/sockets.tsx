@@ -7,8 +7,9 @@ import {
   modSlotTags,
   modTypeTags,
 } from 'app/utils/item-utils';
+import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import {
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
@@ -85,6 +86,24 @@ const socketFilters: FilterDefinition[] = [
         );
 
       return matchesCollectionsRoll;
+    },
+  },
+  {
+    keywords: 'extraperk',
+    description: tl('Filter.ExtraPerk'),
+    destinyVersion: 2,
+    filter: () => (item: DimItem) => {
+      if (!(item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary')) {
+        return false;
+      }
+
+      return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable)
+        .filter(
+          (socket) =>
+            socket.plugged?.plugDef.plug.plugCategoryIdentifier === 'frames' &&
+            socket.hasRandomizedPlugItems
+        )
+        .some((socket) => socket.plugOptions.length > 1);
     },
   },
   {

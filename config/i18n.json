@@ -210,6 +210,7 @@
     "Equipment": "Items that can be equipped.",
     "Equipped": "Items that are currently equipped on a character.",
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
+    "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
     "Filter": "Filter",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
