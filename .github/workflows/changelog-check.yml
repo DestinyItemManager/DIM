@@ -20,6 +20,10 @@ jobs:
           with:
             contains: 'Changelog-None'
 
+        - name: Check for updates
+          id: procelain
+          uses: technote-space/get-diff-action@v4
+
         - name: Check for updates to CHANGELOG.md
           if: steps.haslabel.outputs.labeled-Changelog-None != true
           id: changelog_check
@@ -29,7 +33,7 @@ jobs:
               docs/CHANGELOG.md
 
         - name: No CHANGELOG.md Update
-          if: (steps.changelog_check.outputs.insertions > 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
+          if: (steps.procelain.outputs.insertions > 0 && steps.changelog_check.outputs.insertions == 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
           uses: christianvuerings/add-labels@v1
           with:
             labels: |
