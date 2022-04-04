@@ -1,5 +1,7 @@
 ## Next
 
+## 7.11.0 <span class="changelog-date">(2022-04-03)</span>
+
 * The Item Popup's header now opens the Armory view when clicked, and has some cursor/link styling as a reminder.
 * Deprecated Black Armory Radiance slots are now hidden, to make space for other weapon data.
 * Material Counts tooltip now fits onscreen better on desktop. On mobile, it's available under the banner dropdown of the Vault inventory page.
