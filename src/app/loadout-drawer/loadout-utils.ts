@@ -397,15 +397,27 @@ const oldToNewItems = {
 };
 
 /**
- * Given a loadout item specification, find the corresponding inventory item we should use.
+ * Items that are technically instanced but should always
+ * be matched by hash.
  */
-export function findItemForLoadout(
+const matchByHash = [
+  BucketHashes.Subclass,
+  BucketHashes.Shaders,
+  BucketHashes.Emblems,
+  BucketHashes.Emotes_Invisible,
+  BucketHashes.Emotes_Equippable,
+  D1BucketHashes.Horn,
+];
+
+/**
+ * Figure out how a LoadoutItem with a given hash should be resolved:
+ * By hash or by id, and by which hash.
+ */
+function getResolutionInfo(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  allItems: DimItem[],
-  storeId: string | undefined,
-  loadoutItem: LoadoutItem
-): DimItem | undefined {
-  const hash = oldToNewItems[loadoutItem.hash] ?? loadoutItem.hash;
+  loadoutItemHash: number
+) {
+  const hash = oldToNewItems[loadoutItemHash] ?? loadoutItemHash;
 
   const def = defs.InventoryItem.get(hash) as
     | undefined
@@ -414,40 +426,67 @@ export function findItemForLoadout(
         instanced: boolean;
         bucketTypeHash: number;
       });
-
   // in this world, there are no guarantees
   if (!def) {
     return;
   }
-
   // Instanced items match by ID, uninstanced match by hash. It'd actually be
   // nice to use "is random rolled or configurable" here instead but that's hard
   // to determine.
-  // TODO: this might be nice to add to DimItem
   const bucketHash = def.bucketTypeHash || def.inventory?.bucketTypeHash || 0;
   const instanced =
     (def.instanced || def.inventory?.isInstanceItem) &&
     // Subclasses and some other types are technically instanced but should be matched by hash
-    ![
-      BucketHashes.Subclass,
-      BucketHashes.Shaders,
-      BucketHashes.Emblems,
-      BucketHashes.Emotes_Invisible,
-      BucketHashes.Emotes_Equippable,
-      D1BucketHashes.Horn,
-    ].includes(bucketHash);
+    !matchByHash.includes(bucketHash);
+
+  return {
+    hash,
+    instanced,
+  };
+}
+
+/**
+ * Returns the index of the LoadoutItem in the list of loadoutItems that would
+ * resolve to the same item as loadoutItem, or -1 if not found.
+ */
+export function findSameLoadoutItemIndex(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  loadoutItems: LoadoutItem[],
+  loadoutItem: Pick<LoadoutItem, 'hash' | 'id'>
+) {
+  const info = getResolutionInfo(defs, loadoutItem.hash)!;
+
+  return loadoutItems.findIndex((i) => {
+    const newHash = oldToNewItems[i.hash] ?? i.hash;
+    return info.hash === newHash && (!info.instanced || loadoutItem.id === i.id);
+  });
+}
+
+/**
+ * Given a loadout item specification, find the corresponding inventory item we should use.
+ */
+export function findItemForLoadout(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  allItems: DimItem[],
+  storeId: string | undefined,
+  loadoutItem: LoadoutItem
+): DimItem | undefined {
+  const info = getResolutionInfo(defs, loadoutItem.hash);
+
+  if (!info) {
+    return;
+  }
 
   // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
-  if (instanced) {
+  if (info.instanced) {
     return allItems.find((item) => item.id === loadoutItem.id);
   }
 
   // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
-  const candidates = allItems.filter((item) => item.hash === hash);
-  return (
-    (storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined) ??
-    candidates[0]
-  );
+  const candidates = allItems.filter((item) => item.hash === info.hash);
+  const onCurrent =
+    storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined;
+  return onCurrent ?? (candidates[0]?.notransfer ? undefined : candidates[0]);
 }
 
 export function isMissingItems(

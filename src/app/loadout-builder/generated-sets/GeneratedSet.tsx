@@ -74,6 +74,7 @@ function GeneratedSet({
   for (const loadout of loadouts) {
     const equippedLoadoutItems = loadout.items.filter((item) => item.equip);
     const allSetItems = set.armor.flat();
+    // Accessing id is safe: Armor is always instanced
     const intersection = _.intersectionBy(allSetItems, equippedLoadoutItems, (item) => item.id);
     if (intersection.length === set.armor.length) {
       existingLoadout = loadout;
