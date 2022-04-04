@@ -61,6 +61,7 @@ jobs:
           if: (steps.changelog_check.outputs.insertions > 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
           uses: christianvuerings/add-labels@v1
           with:
-            token: ${{ secrets.GITHUB_TOKEN }}
             labels: |
               Changelog-Applied
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
