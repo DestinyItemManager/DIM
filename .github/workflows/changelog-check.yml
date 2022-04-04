@@ -32,7 +32,15 @@ jobs:
             PATTERNS: |
               docs/CHANGELOG.md
 
-        - name: No CHANGELOG.md Update
+        - name: No CHANGELOG.md Update (Remove Applied)
+          if: (steps.changelog_check.outputs.insertions > 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
+          uses: mondeja/remove-labels-gh-action@v1
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            labels: |
+              Changelog-Applied
+
+        - name: No CHANGELOG.md Update (Add Missing)
           if: (steps.procelain.outputs.insertions > 0 && steps.changelog_check.outputs.insertions == 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
           uses: christianvuerings/add-labels@v1
           with:
@@ -41,9 +49,17 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: CHANGELOG.md Updated
+        - name: CHANGELOG.md Updated (Remove Missing)
           if: (steps.changelog_check.outputs.insertions > 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
           uses: mondeja/remove-labels-gh-action@v1
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            labels: |
+              Changelog-Missing
+
+        - name: CHANGELOG.md Updated (Add Applied)
+          if: (steps.changelog_check.outputs.insertions > 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
+          uses: christianvuerings/add-labels@v1
           with:
             token: ${{ secrets.GITHUB_TOKEN }}
             labels: |
