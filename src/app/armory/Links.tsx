@@ -5,6 +5,7 @@ import { LoreLink } from 'app/item-popup/ItemDescription';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { getSocketsWithStyle, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import destinysets from 'images/destinysets.svg';
 import destinytracker from 'images/destinytracker.png';
 import logo from 'images/dimlogo.svg';
@@ -115,17 +116,18 @@ function buildGunsmithSockets(item: DimItem) {
     const perks = getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.Reusable);
     perks.unshift(); // remove the archetype perk
     let i = 0;
+    // Only pick 4 perks and purposefully ignore the origin perk
+    // on some guns as the link format doesn't support them.
     for (const perk of _.take(perks, 4)) {
       perkValues[i] = perk.plugged?.plugDef.hash ?? 0;
       i++;
     }
     const masterwork = item.sockets.allSockets.find(isWeaponMasterworkSocket);
     perkValues[4] = masterwork?.plugged?.plugDef.hash ?? 0;
-    // I dunno how to find weapon mod, it's usually the last non-masterwork non-plug socket
-    const weaponMod = Array.from(item.sockets.allSockets)
-      .reverse()
-      .find((s) => s !== masterwork && !s.isPerk);
-    perkValues[5] = weaponMod?.plugged?.plugDef.hash ?? 0;
+    const weaponMod = item.sockets.allSockets.find((s) =>
+      s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage)
+    );
+    perkValues[5] = weaponMod?.plugged!.plugDef.hash ?? 0;
 
     return perkValues.join(',');
   }
