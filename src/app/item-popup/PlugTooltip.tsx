@@ -7,12 +7,12 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isPlugStatActive } from 'app/utils/item-utils';
+import { getPerkDescriptions } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DestinyInventoryItemDefinition,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
-  DestinySandboxPerkDefinition,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
@@ -68,7 +68,6 @@ export function DimPlugTooltip({
   return (
     <PlugTooltip
       def={plug.plugDef}
-      perks={plug.perks}
       stats={stats}
       plugObjectives={plug.plugObjectives}
       enableFailReasons={plug.enableFailReasons}
@@ -91,7 +90,6 @@ export function DimPlugTooltip({
  */
 export function PlugTooltip({
   def,
-  perks,
   stats,
   plugObjectives,
   enableFailReasons,
@@ -101,7 +99,6 @@ export function PlugTooltip({
   craftingData,
 }: {
   def: DestinyInventoryItemDefinition;
-  perks?: DestinySandboxPerkDefinition[];
   stats?: { [statHash: string]: number };
   plugObjectives?: DestinyObjectiveProgress[];
   enableFailReasons?: string;
@@ -113,18 +110,7 @@ export function PlugTooltip({
   const defs = useD2Definitions();
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
-
-  let displayedPerks = perks;
-
-  // If perks aren't available from a prop, see if we can get them.
-  if (!displayedPerks) {
-    displayedPerks = _.compact(
-      _.uniqBy(
-        def.perks,
-        (p) => defs?.SandboxPerk.get(p.perkHash).displayProperties.description
-      ).map((perk) => defs?.SandboxPerk.get(perk.perkHash))
-    );
-  }
+  const perkDescriptions = (defs && getPerkDescriptions(def, defs)) || [];
 
   // filter out plug objectives related to Resonant Elements
   const filteredPlugObjectives = plugObjectives?.filter(
@@ -136,22 +122,14 @@ export function PlugTooltip({
       <h2>{def.displayProperties.name}</h2>
       {!hidePlugSubtype && def.itemTypeDisplayName && <h3>{def.itemTypeDisplayName}</h3>}
 
-      {def.displayProperties.description ? (
-        <div>
-          <RichDestinyText text={def.displayProperties.description} />
-        </div>
-      ) : (
-        displayedPerks.map((perk) => (
-          <div key={perk.hash}>
-            {def.displayProperties.name !== perk.displayProperties.name && (
-              <div>{perk.displayProperties.name}</div>
-            )}
-            <div>
-              <RichDestinyText text={perk.displayProperties.description} />
-            </div>
+      {perkDescriptions.map((perkDesc) => (
+        <div key={perkDesc.perkHash}>
+          {perkDesc.name && <div>{perkDesc.name}</div>}
+          <div>
+            <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
           </div>
-        ))
-      )}
+        </div>
+      ))}
       {sourceString && <div className="plug-source">{sourceString}</div>}
       {stats && Object.entries(stats).length > 0 && (
         <div className="plug-stats">
