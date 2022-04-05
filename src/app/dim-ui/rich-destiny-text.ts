@@ -31,6 +31,7 @@ const glyphInfos: [exampleReplacement: StringsNeedingReplacement, codepoint: Fon
   ['[Bow]', FontGlyphs.bow], // 
   ['[Sidearm]', FontGlyphs.sidearm], // 
   ['[Special Grenade Launcher]', FontGlyphs.grenade_launcher_field_forged], // 
+  ['[Glaive]', FontGlyphs.glaive], //
   // Heavy Weapons
   ['[Grenade Launcher]', FontGlyphs.grenade_launcher], // 
   ['[Rocket Launcher]', FontGlyphs.rocket_launcher], // 
