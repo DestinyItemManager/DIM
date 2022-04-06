@@ -150,6 +150,12 @@ function WishlistRolls({
                 //   [[tac mag], [rifled barrel, extended barrel]]
                 // ]
                 const consolidatedSecondaries = consolidateSecondaryPerks(cr.rolls);
+                // if there were no secondary perks in any of the rolls,
+                // consolidateSecondaryPerks will *correctly* return an array with no permutations.
+                // if so, we'll add a blank dummy one so there's something to iterate below.
+                if (!consolidatedSecondaries.length) {
+                  consolidatedSecondaries.push([]);
+                }
 
                 return consolidatedSecondaries.map((secondaryBundle) => {
                   const bundles = [...primaryBundles, ...secondaryBundle];
