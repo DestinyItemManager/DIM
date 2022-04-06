@@ -16,7 +16,12 @@ import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
-import { executeMoveItem, MoveReservations } from '../inventory/item-move-service';
+import {
+  checkForOverFill,
+  createMoveSession,
+  executeMoveItem,
+  MoveReservations,
+} from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
@@ -87,6 +92,8 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
         throw e;
       }
     }
+
+    dispatch(checkForOverFill());
   };
 }
 
@@ -166,6 +173,7 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
 
     const promise = (async () => {
       let succeeded = 0;
+      const moveSession = createMoveSession(cancelToken);
 
       for (const item of items) {
         let amount = item.amount;
@@ -181,7 +189,7 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
         }
 
         try {
-          await dispatch(executeMoveItem(item, store, { equip: false, amount, cancelToken }));
+          await dispatch(executeMoveItem(item, store, { equip: false, amount }, moveSession));
           succeeded++;
         } catch (e) {
           if (e instanceof CanceledError) {
@@ -212,6 +220,8 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
       if (!succeeded) {
         throw new Error(t('Loadouts.PullFromPostmasterGeneralError'));
       }
+
+      dispatch(checkForOverFill());
     })();
 
     showNotification(postmasterNotification(items.length, store, promise, cancel));
@@ -227,9 +237,11 @@ function moveItemsToVault(
   cancelToken: CancelToken
 ): ThunkResult {
   return async (dispatch, getState) => {
-    const reservations: MoveReservations = {};
-    // reserve space for all move-asides
-    reservations[store.id] = _.countBy(items, (i) => i.bucket.hash);
+    const reservations: MoveReservations = {
+      // reserve space for all move-asides
+      [store.id]: _.countBy(items, (i) => i.bucket.hash),
+    };
+    const moveSession = createMoveSession(cancelToken);
 
     for (const item of items) {
       const stores = storesSelector(getState());
@@ -245,25 +257,33 @@ function moveItemsToVault(
 
         if (otherStoresWithSpace.length) {
           await dispatch(
-            executeMoveItem(item, otherStoresWithSpace[0], {
-              equip: false,
-              amount: item.amount,
-              excludes: items,
-              reservations,
-              cancelToken,
-            })
+            executeMoveItem(
+              item,
+              otherStoresWithSpace[0],
+              {
+                equip: false,
+                amount: item.amount,
+                excludes: items,
+                reservations,
+              },
+              moveSession
+            )
           );
           continue;
         }
       }
       await dispatch(
-        executeMoveItem(item, vault, {
-          equip: false,
-          amount: item.amount,
-          excludes: items,
-          reservations,
-          cancelToken,
-        })
+        executeMoveItem(
+          item,
+          vault,
+          {
+            equip: false,
+            amount: item.amount,
+            excludes: items,
+            reservations,
+          },
+          moveSession
+        )
       );
     }
   };

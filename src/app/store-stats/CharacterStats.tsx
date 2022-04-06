@@ -44,13 +44,7 @@ function CharacterStat({ stats, storeId, className, showTier }: CharacterStatPro
               className={clsx('stat', { pointerCursor: isMaxGearPower })}
               aria-label={`${stat.name} ${stat.value}`}
               role={isMaxGearPower ? 'button' : 'group'}
-              onClick={
-                isMaxGearPower
-                  ? () => {
-                      showGearPower(storeId);
-                    }
-                  : undefined
-              }
+              onClick={isMaxGearPower ? () => showGearPower(storeId) : undefined}
             >
               <img src={stat.icon} alt={stat.name} />
               <div>

@@ -1,15 +1,16 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import GearPower from 'app/gear-power/GearPower';
 import { t } from 'app/i18next-t';
 import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
-import Stores from 'app/inventory/Stores';
+import { storesLoadedSelector } from 'app/inventory/selectors';
+import { useLoadStores } from 'app/inventory/store/hooks';
+import { MaterialCountsSheet } from 'app/material-counts/MaterialCountsWrappers';
 import { DestinyComponentType } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { DestinyAccount } from '../accounts/destiny-account';
-import GearPower from '../gear-power/GearPower';
-import { storesLoadedSelector } from './selectors';
-import { useLoadStores } from './store/hooks';
+import Stores from './Stores';
 
 interface Props {
   account: DestinyAccount;
@@ -41,6 +42,7 @@ export default function Inventory({ account }: Props) {
       <Stores />
       <DragPerformanceFix />
       {account.destinyVersion === 2 && <GearPower />}
+      {account.destinyVersion === 2 && <MaterialCountsSheet />}
     </ErrorBoundary>
   );
 }

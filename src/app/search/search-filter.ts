@@ -114,33 +114,37 @@ function makeSearchFilterFactory(
     const parsedQuery = parseQuery(query);
 
     // Transform our query syntax tree into a filter function by recursion.
-    const transformAST = (ast: QueryAST): ItemFilter => {
+    const transformAST = (ast: QueryAST): ItemFilter | undefined => {
       switch (ast.op) {
         case 'and': {
-          const fns = ast.operands.map(transformAST);
-          return (item) => {
-            for (const fn of fns) {
-              if (!fn(item)) {
-                return false;
-              }
-            }
-            return true;
-          };
-        }
-        case 'or': {
-          const fns = ast.operands.map(transformAST);
-          return (item) => {
-            for (const fn of fns) {
-              if (fn(item)) {
+          const fns = _.compact(ast.operands.map(transformAST));
+          return fns.length
+            ? (item) => {
+                for (const fn of fns) {
+                  if (!fn(item)) {
+                    return false;
+                  }
+                }
                 return true;
               }
-            }
-            return false;
-          };
+            : undefined;
+        }
+        case 'or': {
+          const fns = _.compact(ast.operands.map(transformAST));
+          return fns.length
+            ? (item) => {
+                for (const fn of fns) {
+                  if (fn(item)) {
+                    return true;
+                  }
+                }
+                return false;
+              }
+            : undefined;
         }
         case 'not': {
           const fn = transformAST(ast.operand);
-          return (item) => !fn(item);
+          return fn && ((item) => !fn(item));
         }
         case 'filter': {
           const filterName = ast.type;
@@ -156,18 +160,18 @@ function makeSearchFilterFactory(
             } catch (e) {
               // TODO: mark invalid - fill out what didn't make sense and where it was in the string
               errorLog('search', 'Invalid query term', filterName, filterValue, e);
-              return () => true;
+              return undefined;
             }
           }
 
           // TODO: mark invalid - fill out what didn't make sense and where it was in the string
-          return () => true;
+          return undefined;
         }
         case 'noop':
-          return () => true;
+          return undefined;
       }
     };
 
-    return transformAST(parsedQuery);
+    return transformAST(parsedQuery) ?? (() => true);
   };
 }

@@ -2,14 +2,16 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import type { ItemTierName } from 'app/search/d2-known-values';
+import { refresh } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
-import { CancelToken, neverCanceled } from 'app/utils/cancel';
+import { CancelToken } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, warnLog } from 'app/utils/log';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
+import { Immutable } from 'immer';
 import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
@@ -37,6 +39,7 @@ import {
 import { DimItem } from './item-types';
 import { getLastManuallyMoved } from './manual-moves';
 import {
+  bucketsSelector,
   currentStoreSelector,
   itemHashTagsSelector,
   itemInfosSelector,
@@ -51,6 +54,26 @@ import {
   getVault,
   spaceLeftForItem,
 } from './stores-helpers';
+
+/**
+ * An object we can use to track state across a "session" of move operations.
+ * That might be just the moves involved in a single move request (including
+ * move-asides), or it may encompass an entire loadout application.
+ */
+export interface MoveSession {
+  /** Keep track of which buckets we tried to blindly move to but were actually full */
+  bucketsFullOnCurrentStore: Set<number>;
+  /** A token that can be checked to see if the whole operation is canceled. */
+  readonly cancelToken: CancelToken;
+  // TODO: a record of moves? something to prevent infinite moves loops?
+}
+
+export function createMoveSession(cancelToken: CancelToken): MoveSession {
+  return {
+    bucketsFullOnCurrentStore: new Set(),
+    cancelToken,
+  };
+}
 
 /**
  * You can reserve a number of spaces in each BucketHash in each store.
@@ -159,7 +182,8 @@ export function getSimilarItem(
     exclusions,
     excludeExotic = false,
   }: {
-    exclusions?: Exclusion[];
+    exclusions?: readonly Exclusion[];
+    /** Don't pick an exotic to equip in this item's place (because we're specifically trying to dequip an exotic) */
     excludeExotic?: boolean;
   } = {}
 ): DimItem | null {
@@ -205,7 +229,7 @@ const replacementWeighting: Record<ItemTierName, number> = {
 function searchForSimilarItem(
   item: DimItem,
   store: DimStore,
-  exclusions: Exclusion[] | undefined,
+  exclusions: readonly Exclusion[] | undefined,
   target: DimStore,
   excludeExotic: boolean
 ): DimItem | null {
@@ -264,9 +288,9 @@ function searchForSimilarItem(
 export function equipItems(
   store: DimStore,
   items: DimItem[],
-  cancelToken: CancelToken = neverCanceled,
   /** A list of items to not consider equipping in order to de-equip an exotic */
-  exclusions = []
+  exclusions: readonly Exclusion[],
+  session: MoveSession
 ): ThunkResult<{ [itemInstanceId: string]: PlatformErrorCodes }> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
@@ -296,9 +320,9 @@ export function equipItems(
               return Promise.resolve(similarItem);
             } else {
               // If we need to get the similar item from elsewhere, do that first
-              return dispatch(
-                executeMoveItem(similarItem, store, { equip: true, cancelToken })
-              ).then(() => similarItem);
+              return dispatch(executeMoveItem(similarItem, store, { equip: true }, session)).then(
+                () => similarItem
+              );
             }
           }
         }
@@ -315,7 +339,7 @@ export function equipItems(
     // It's faster to call equipItem for a single item
     if (items.length === 1) {
       try {
-        await dispatch(equipItem(items[0], cancelToken));
+        await dispatch(equipItem(items[0], session.cancelToken));
         return { [items[0].id]: PlatformErrorCodes.Success };
       } catch (e) {
         return {
@@ -325,7 +349,7 @@ export function equipItems(
       }
     }
 
-    cancelToken.checkCanceled();
+    session.cancelToken.checkCanceled();
     const results = await equipItemsApi(items[0])(
       currentAccountSelector(getState())!,
       store,
@@ -359,8 +383,13 @@ function equipItem(item: DimItem, cancelToken: CancelToken): ThunkResult<DimItem
 /** De-equip an item, which really means find another item to equip in its place. */
 function dequipItem(
   item: DimItem,
-  excludeExotic = false,
-  cancelToken: CancelToken = neverCanceled
+  session: MoveSession,
+  {
+    excludeExotic = false,
+  }: {
+    /** Don't pick an exotic to equip in this item's place (because we're specifically trying to dequip an exotic) */
+    excludeExotic?: boolean;
+  } = { excludeExotic: false }
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const stores = storesSelector(getState());
@@ -370,26 +399,22 @@ function dequipItem(
     }
 
     const ownerStore = getStore(stores, item.owner)!;
-    await dispatch(executeMoveItem(similarItem, ownerStore, { equip: true, cancelToken }));
+    await dispatch(executeMoveItem(similarItem, ownerStore, { equip: true }, session));
     return item;
   };
 }
 
-function moveToVault(
-  item: DimItem,
-  cancelToken: CancelToken,
-  amount: number = item.amount
-): ThunkResult<DimItem> {
+function moveToVault(item: DimItem, amount: number, session: MoveSession): ThunkResult<DimItem> {
   return async (dispatch, getState) =>
-    dispatch(moveToStore(item, getVault(storesSelector(getState()))!, cancelToken, false, amount));
+    dispatch(moveToStore(item, getVault(storesSelector(getState()))!, false, amount, session));
 }
 
 function moveToStore(
   item: DimItem,
   store: DimStore,
-  cancelToken: CancelToken,
-  equip = false,
-  amount: number = item.amount
+  equip: boolean,
+  amount: number,
+  session: MoveSession
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
@@ -420,7 +445,7 @@ function moveToStore(
         ? item.locked
         : undefined;
 
-    cancelToken.checkCanceled();
+    session.cancelToken.checkCanceled();
 
     try {
       await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
@@ -430,7 +455,7 @@ function moveToStore(
         e instanceof DimError &&
         e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionOnEquippedItem
       ) {
-        await dispatch(dequipItem(item));
+        await dispatch(dequipItem(item, session));
         await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
       } else if (
         e instanceof DimError &&
@@ -448,7 +473,7 @@ function moveToStore(
     const newItem = dispatch(updateItemModel(item, source, store, false, amount));
     item =
       newItem.owner !== 'vault' && equip
-        ? await dispatch(equipItem(newItem, cancelToken))
+        ? await dispatch(equipItem(newItem, session.cancelToken))
         : newItem;
 
     if (overrideLockState !== undefined) {
@@ -482,12 +507,16 @@ function moveToStore(
  * that would conflict. If it could not move aside, this
  * rejects. It never returns false.
  */
-function canEquipExotic(item: DimItem, store: DimStore): ThunkResult<boolean> {
+function canEquipExotic(
+  item: DimItem,
+  store: DimStore,
+  session: MoveSession
+): ThunkResult<boolean> {
   return async (dispatch) => {
     const otherExotic = getOtherExoticThatNeedsDequipping(item, store);
     if (otherExotic) {
       try {
-        await dispatch(dequipItem(otherExotic, true));
+        await dispatch(dequipItem(otherExotic, session, { excludeExotic: true }));
         return true;
       } catch (e) {
         throw new Error(
@@ -523,7 +552,7 @@ function getOtherExoticThatNeedsDequipping(item: DimItem, store: DimStore): DimI
 interface MoveContext {
   /** Bucket hash */
   originalItemType: number;
-  excludes: Exclusion[];
+  excludes: readonly Exclusion[];
   spaceLeft(s: DimStore, i: DimItem): number;
 }
 
@@ -538,7 +567,7 @@ interface MoveContext {
  * Especially important is that we avoid moving items back onto the active character
  * unless there's no other option.
  *
- * @param store the store to choose a move aside item from.
+ * @param target the store to choose a move aside item from.
  * @param item the item we're making space for.
  * @param moveContext a helper object that can answer questions about how much space is left.
  * @return An object with item and target properties representing both the item and its destination. This won't ever be undefined.
@@ -743,13 +772,13 @@ function canMoveToStore(
   amount: number,
   options: {
     excludes: Exclusion[];
-    reservations: MoveReservations;
+    reservations: Immutable<MoveReservations>;
     numRetries?: number;
-    cancelToken: CancelToken;
-  }
+  },
+  session: MoveSession
 ): ThunkResult<boolean> {
   return async (dispatch, getState) => {
-    const { excludes = [], reservations = {}, numRetries = 0, cancelToken } = options;
+    const { excludes = [], reservations = {}, numRetries = 0 } = options;
 
     function spaceLeftWithReservations(s: DimStore, i: DimItem) {
       let left = spaceLeftForItem(s, i, storesSelector(getState()));
@@ -855,16 +884,19 @@ function canMoveToStore(
         // Make one move and start over!
         try {
           await dispatch(
-            executeMoveItem(moveAsideItem, moveAsideTarget, {
-              equip: false,
-              amount: moveAsideItem.amount,
-              excludes,
-              // TODO: is this right?
-              reservations: {},
-              cancelToken,
-            })
+            executeMoveItem(
+              moveAsideItem,
+              moveAsideTarget,
+              {
+                equip: false,
+                amount: moveAsideItem.amount,
+                excludes,
+                reservations,
+              },
+              session
+            )
           );
-          return await dispatch(canMoveToStore(item, store, amount, options));
+          return await dispatch(canMoveToStore(item, store, amount, options, session));
         } catch (e) {
           if (numRetries < 3) {
             // Exclude this item and try again so we pick another
@@ -876,7 +908,7 @@ function canMoveToStore(
               `Unable to move aside ${moveAsideItem.name} to ${moveAsideTarget.name}. Trying again.`,
               e
             );
-            return dispatch(canMoveToStore(item, store, amount, options));
+            return dispatch(canMoveToStore(item, store, amount, options, session));
           } else {
             throw e;
           }
@@ -917,21 +949,19 @@ function isValidTransfer(
   item: DimItem,
   amount: number,
   excludes: Exclusion[],
-  reservations: MoveReservations,
-  cancelToken: CancelToken
+  reservations: Immutable<MoveReservations>,
+  session: MoveSession
 ): ThunkResult<boolean> {
   return async (dispatch) => {
     if (equip) {
       canEquip(item, store); // throws
       if (item.equippingLabel) {
-        await dispatch(canEquipExotic(item, store)); // throws
+        await dispatch(canEquipExotic(item, store, session)); // throws
       }
     }
-    return dispatch(canMoveToStore(item, store, amount, { excludes, reservations, cancelToken }));
+    return dispatch(canMoveToStore(item, store, amount, { excludes, reservations }, session));
   };
 }
-
-let lastTimeCurrentStoreWasReallyFull = 0;
 
 /**
  * Move item to target store, optionally equipping it. This is the "low level" smart move, which will move items out of
@@ -945,6 +975,7 @@ let lastTimeCurrentStoreWasReallyFull = 0;
  * @param amount how much of the item to move (for stacks). Can span more than one stack's worth.
  * @param excludes A list of {id, hash} objects representing items that should not be moved aside to make the move happen.
  * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
+ * @param session An object used to track properties such as cancellation or stores filling up for a whole sequence of moves.
  * @return A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
  */
 export function executeMoveItem(
@@ -955,14 +986,13 @@ export function executeMoveItem(
     amount = item.amount || 1,
     excludes = [],
     reservations = {},
-    cancelToken = neverCanceled,
   }: {
     equip?: boolean;
     amount?: number;
     excludes?: Exclusion[];
-    reservations?: MoveReservations;
-    cancelToken?: CancelToken;
-  }
+    reservations?: Immutable<MoveReservations>;
+  },
+  session: MoveSession
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
@@ -976,15 +1006,23 @@ export function executeMoveItem(
     // We're moving from the vault to the current character. Maybe they're
     // playing the game and deleting stuff? Try just jamming it in there, and
     // catch any errors. If we find out that the store is full through this
-    // probe, don't try again for a while.
-    const timeSinceCurrentStoreWasReallyFull = Date.now() - lastTimeCurrentStoreWasReallyFull;
-    if (source.isVault && target.current && timeSinceCurrentStoreWasReallyFull > 5000) {
+    // probe, don't try again for the rest of this move session.
+    if (
+      // Either pulling from the vault,
+      (source.isVault ||
+        // or pulling from the postmaster
+        (item.location.inPostmaster && (source.id === target.id || item.bucket.accountWide))) &&
+      // To the current character
+      target.current &&
+      !session.bucketsFullOnCurrentStore.has(item.bucket.hash)
+    ) {
       try {
         infoLog('move', 'Try blind move of', item.name, 'to', target.name);
-        return await dispatch(moveToStore(item, target, cancelToken, equip, amount));
+        return await dispatch(moveToStore(item, target, equip, amount, session));
       } catch (e) {
         if (
           e instanceof DimError &&
+          // TODO: does this fire for pull from postmaster?
           e.bungieErrorCode() === PlatformErrorCodes.DestinyNoRoomInDestination
         ) {
           warnLog(
@@ -995,16 +1033,14 @@ export function executeMoveItem(
             target.name,
             'but the bucket is really full'
           );
-          lastTimeCurrentStoreWasReallyFull = Date.now();
+          session.bucketsFullOnCurrentStore.add(item.bucket.hash);
         } else {
           throw e;
         }
       }
     }
 
-    await dispatch(
-      isValidTransfer(equip, target, item, amount, excludes, reservations, cancelToken)
-    );
+    await dispatch(isValidTransfer(equip, target, item, amount, excludes, reservations, session));
 
     // Replace the target store - isValidTransfer may have reloaded it
     target = getStore(getStores(), target.id)!;
@@ -1013,10 +1049,10 @@ export function executeMoveItem(
     // Get from postmaster first
     if (item.location.inPostmaster) {
       if (source.id === target.id || item.bucket.accountWide) {
-        item = await dispatch(moveToStore(item, target, cancelToken, equip, amount));
+        item = await dispatch(moveToStore(item, target, equip, amount, session));
       } else {
         item = await dispatch(
-          executeMoveItem(item, source, { equip, amount, excludes, reservations, cancelToken })
+          executeMoveItem(item, source, { equip, amount, excludes, reservations }, session)
         );
         target = getStore(getStores(), target.id)!;
         source = getStore(getStores(), item.owner)!;
@@ -1028,15 +1064,15 @@ export function executeMoveItem(
       if (source.id !== target.id && !item.bucket.accountWide) {
         // Different Guardian
         if (item.equipped) {
-          item = await dispatch(dequipItem(item));
+          item = await dispatch(dequipItem(item, session));
         }
-        item = await dispatch(moveToVault(item, cancelToken, amount));
-        item = await dispatch(moveToStore(item, target, cancelToken, equip, amount));
+        item = await dispatch(moveToVault(item, amount, session));
+        item = await dispatch(moveToStore(item, target, equip, amount, session));
       }
       if (equip && !item.equipped) {
-        item = await dispatch(equipItem(item, cancelToken));
+        item = await dispatch(equipItem(item, session.cancelToken));
       } else if (!equip && item.equipped) {
-        item = await dispatch(dequipItem(item));
+        item = await dispatch(dequipItem(item, session));
       }
     } else if (source.isVault && target.isVault) {
       // Vault to Vault
@@ -1044,10 +1080,11 @@ export function executeMoveItem(
     } else if (source.isVault || target.isVault) {
       // Guardian to Vault or Vault to Guardian
       if (item.equipped) {
-        item = await dispatch(dequipItem(item));
+        item = await dispatch(dequipItem(item, session));
       }
-      item = await dispatch(moveToStore(item, target, cancelToken, equip, amount));
+      item = await dispatch(moveToStore(item, target, equip, amount, session));
     }
+
     return item;
   };
 }
@@ -1120,4 +1157,27 @@ export function sortMoveAsideCandidatesForStore(
   // Sort all candidates
   moveAsideCandidates.sort(itemValueComparator);
   return moveAsideCandidates;
+}
+
+/**
+ * Check if any bucket in the active store has "overfilled" and trigger a refresh if so.
+ */
+export function checkForOverFill(): ThunkResult {
+  return async (_dispatch, getState) => {
+    const store = currentStoreSelector(getState());
+    const buckets = bucketsSelector(getState());
+
+    if (!store || !buckets) {
+      return;
+    }
+
+    const countByBucket = _.countBy(store.items, (i) => i.bucket.hash);
+    for (const [bucketHashStr, amount] of Object.entries(countByBucket)) {
+      if (amount > buckets.byHash[parseInt(bucketHashStr, 10)].capacity) {
+        // Request a refresh of the store, this bucket is overfilled
+        refresh();
+        return;
+      }
+    }
+  };
 }

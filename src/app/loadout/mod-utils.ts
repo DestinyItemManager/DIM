@@ -1,22 +1,13 @@
 import { LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import { isArmorEnergyLocked } from './armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
-
-/** The plug category hashes that belong to the 5th mod slot, such as raid and nightmare mods. */
-export const activityModPlugCategoryHashes = [
-  ...raidModPlugCategoryHashes,
-  PlugCategoryHashes.EnhancementsSeasonMaverick,
-];
 
 export const bucketHashToPlugCategoryHash = {
   [armorBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,
@@ -127,25 +118,6 @@ export function getItemEnergyType(
   return isArmorEnergyLocked(item, lockArmorEnergyType)
     ? item.energy.energyType
     : DestinyEnergyType.Any;
-}
-
-// this exists because singleInitialItemHash may be absent,
-// for example on Artifice Armor. in that case, the default
-// plug can be found in the socket's reusable PlugSet.
-
-/**
- * gets the InventoryItem hash corresponding to a socket's default contents
- * (what should be plugged in order to "revert/clear" it)
- */
-export function getDefaultPlugHash(socket: DimSocket, defs: D2ManifestDefinitions) {
-  if (socket.plugged) {
-    const { singleInitialItemHash, reusablePlugSetHash } = socket.socketDefinition;
-    return singleInitialItemHash
-      ? singleInitialItemHash
-      : reusablePlugSetHash
-      ? defs?.PlugSet.get(reusablePlugSetHash).reusablePlugItems[0].plugItemHash
-      : undefined;
-  }
 }
 
 /**

@@ -10,7 +10,6 @@ interface CssExports {
   'sorted': string;
   'spacer': string;
   'statLabel': string;
-  'swipeAdvice': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

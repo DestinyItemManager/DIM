@@ -1,5 +1,5 @@
+import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { createLoadoutShare } from 'app/dim-api/dim-api';
 import { languageSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
@@ -13,23 +13,21 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
-import { showNotification } from 'app/notifications/notifications';
 import { plainString } from 'app/search/search-filters/freeform';
 import { useSetting } from 'app/settings/hooks';
-import { LoadoutSort } from 'app/settings/initial-settings';
 import { addIcon, AppIcon, deleteIcon, faCalculator } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { ReactNode, useMemo, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import styles from './Loadouts.m.scss';
 import LoadoutView from './LoadoutView';
 
@@ -52,6 +50,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const stores = useSelector(sortedStoresSelector);
   const currentStore = getCurrentStore(stores)!;
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore.id);
+  const [sharedLoadout, setSharedLoadout] = useState<Loadout>();
   const selectedStore = getStore(stores, selectedStoreId)!;
   const classType = selectedStore.classType;
   const allLoadouts = useSelector(loadoutsSelector);
@@ -149,11 +148,20 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             store={selectedStore}
             saved={savedLoadoutIds.has(loadout.id)}
             equippable={loadout !== currentLoadout}
-            account={account}
+            onShare={setSharedLoadout}
           />
         ))}
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
+      {sharedLoadout &&
+        ReactDOM.createPortal(
+          <LoadoutShareSheet
+            account={account}
+            loadout={sharedLoadout}
+            onClose={() => setSharedLoadout(undefined)}
+          />,
+          document.body
+        )}
     </PageWithMenu>
   );
 }
@@ -163,30 +171,18 @@ function LoadoutRow({
   store,
   saved,
   equippable,
-  account,
+  onShare,
 }: {
   loadout: Loadout;
   store: DimStore;
   saved: boolean;
   equippable: boolean;
-  account: DestinyAccount;
+  onShare: (loadout: Loadout) => void;
 }) {
   const dispatch = useThunkDispatch();
 
   const actionButtons = useMemo(() => {
     const handleDeleteClick = (loadout: Loadout) => dispatch(deleteLoadout(loadout.id));
-    const shareBuild = async () => {
-      // TODO: cache these a bit locally so you can hammer the button without creating a bunch of links
-      const shareUrl = await createLoadoutShare(
-        account.membershipId,
-        convertDimLoadoutToApiLoadout(loadout)
-      );
-      copyString(shareUrl);
-      showNotification({
-        type: 'success',
-        title: t('LoadoutBuilder.CopiedBuild'),
-      });
-    };
 
     const handleApply = () =>
       dispatch(applyLoadout(store, loadout, { allowUndo: true, onlyMatchingClass: true }));
@@ -210,7 +206,7 @@ function LoadoutRow({
 
     if (loadout.parameters && !_.isEmpty(loadout.parameters)) {
       actionButtons.push(
-        <button key="share" type="button" className="dim-button" onClick={shareBuild}>
+        <button key="share" type="button" className="dim-button" onClick={() => onShare(loadout)}>
           {t('Loadouts.ShareLoadout')}
         </button>
       );
@@ -225,7 +221,7 @@ function LoadoutRow({
     }
 
     return actionButtons;
-  }, [account.membershipId, dispatch, equippable, loadout, saved, store]);
+  }, [dispatch, equippable, loadout, onShare, saved, store]);
 
   return (
     <LoadoutView

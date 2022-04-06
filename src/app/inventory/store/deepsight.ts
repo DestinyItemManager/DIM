@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { socketContainsPlugWithCategory } from 'app/utils/socket-utils';
 import { resonantElementTagsByObjectiveHash } from 'data/d2/crafting-resonant-elements';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { DimDeepsight, DimItem, DimResonantElement, DimSocket } from '../item-types';
@@ -39,8 +40,8 @@ function getResonanceSocket(item: DimItem): DimSocket | undefined {
 
 export function isDeepsightResonanceSocket(socket: DimSocket): boolean {
   return Boolean(
-    socket.plugged?.plugDef.plug.plugCategoryHash ===
-      PlugCategoryHashes.CraftingPlugsWeaponsModsMemories && socket.plugged?.plugDef.objectives
+    socketContainsPlugWithCategory(socket, PlugCategoryHashes.CraftingPlugsWeaponsModsMemories) &&
+      socket.plugged.plugDef.objectives
   );
 }
 

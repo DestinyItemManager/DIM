@@ -1,3 +1,4 @@
+import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
 import { settingsSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -28,7 +29,7 @@ import { setCharacterOrder } from './actions';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
 import { useSetSetting } from './hooks';
-import { LoadoutSort, Settings } from './initial-settings';
+import { Settings } from './initial-settings';
 import { itemSortSettings } from './item-sort';
 import Select, { mapToOptions } from './Select';
 import './settings.scss';

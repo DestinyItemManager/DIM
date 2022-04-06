@@ -4,7 +4,7 @@ import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { ItemTypeName } from 'app/item-popup/ItemPopupHeader';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
-import { getWeaponArchetype } from 'app/utils/socket-utils';
+import { getWeaponArchetype, socketContainsPlugWithCategory } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -17,7 +17,7 @@ export default function Highlights({ item }: { item: DimItem }) {
   if (item.bucket.sort === 'Weapons' && item.sockets) {
     // Don't ask me why Traits are called "Frames" but it does work.
     const perkSockets = item.sockets.allSockets.filter(
-      (s) => s.isPerk && s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames
+      (s) => s.isPerk && socketContainsPlugWithCategory(s, PlugCategoryHashes.Frames)
     );
     const archetype = !item.isExotic && getWeaponArchetype(item)?.displayProperties.name;
 

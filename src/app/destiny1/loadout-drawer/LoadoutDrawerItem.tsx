@@ -24,7 +24,7 @@ export default function LoadoutDrawerItem({
   return (
     <div onClick={(e) => equip(resolvedLoadoutItem, e)} className="loadout-item">
       <ClosableContainer onClose={onClose} showCloseIconOnHover={true}>
-        <ConnectedInventoryItem item={item} ignoreSelectedPerks={true} />
+        <ConnectedInventoryItem item={item} selectedSuperDisplay="v3SubclassesOnly" />
         {item.bucket.hash === BucketHashes.Subclass && (
           <ClassIcon classType={item.classType} className="loadout-item-class-icon" />
         )}

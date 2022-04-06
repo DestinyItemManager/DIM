@@ -99,8 +99,7 @@
     "Error": {
       "Unmatched": "This item doesn't match the type of items being compared."
     },
-    "Splits": "Compare similar splits ({{quantity}})",
-    "SwipeAdvice": "Use two fingers to scroll"
+    "Splits": "Compare similar splits ({{quantity}})"
   },
   "Cooldown": {
     "Grenade": "Grenade cooldown: {{cooldown}}",
@@ -211,6 +210,7 @@
     "Equipment": "Items that can be equipped.",
     "Equipped": "Items that are currently equipped on a character.",
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
+    "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
     "Filter": "Filter",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
@@ -347,6 +347,7 @@
     "Inventory": "Inventory",
     "IosPwaPrompt": "In Safari, click the share icon (middle button on the bottom) and select \"Add to Home Screen\".",
     "KeyboardShortcuts": "Keyboard Shortcuts",
+    "MaterialCounts": "Material Counts",
     "Menu": "Menu",
     "Refresh": "Refresh Destiny Data [R]",
     "ReloadApp": "Reload App",
@@ -666,7 +667,7 @@
     "MakeRoomDone_male_plural": "Finished making room for {{count}} Postmaster items by moving {{movedNum}} items off of {{store}}.",
     "MakeRoomError": "Unable to make room for all Postmaster items: {{error}}.",
     "ManageLoadouts": "Manage Loadouts",
-    "MaxSlots": "You can only have {{slots}} of that kind of item in a loadout.",
+    "MaxSlots": "You can only have {{slots}} {{bucketName}} in a loadout.",
     "MaximizeLight": "Max Light",
     "MaximizePower": "Max Power",
     "MaximizeStat": "Maximize Stat",
@@ -714,6 +715,23 @@
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
     "SortByName": "Sort by name",
     "SortByEditTime": "Sort by last edited",
+    "Share": {
+      "Title": "Share \"{{name}}\"",
+      "Placeholder": "Loading share link",
+      "Error": "Error getting share link",
+      "Copied": "Copied loadout link to clipboard",
+      "CopyButton": "Copy Link",
+      "NativeShare": "Share Link",
+      "Summary": "Share this loadout containing:",
+      "NumItems": "{{count}} item - recipients will be prompted to select a comparable item from their inventory",
+      "NumItems_plural": "{{count}} items - recipients will be prompted to select comparable items from their inventory",
+      "NumMods": "{{count}} mod",
+      "NumMods_plural": "{{count}} mods",
+      "Fashion": "Fashion (shaders & ornaments)",
+      "Subclass": "Subclass customization",
+      "LoadoutOptimizer": "Loadout Optimizer settings",
+      "Notes": "Notes"
+    },
     "ShareLoadout": "Share Loadout",
     "ShowModPlacement": "Show Mod Placement",
     "SubclassOptions": "{{subclass}} options",

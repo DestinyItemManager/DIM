@@ -10,6 +10,7 @@
   justify-content: flex-start;
   -webkit-overflow-scrolling: touch;
   contain: content;
+  touch-action: none;
 }
 
 .statLabel {
@@ -88,13 +89,6 @@
       filter: drop-shadow(0 0 1px black);
     }
   }
-}
-
-.swipeAdvice {
-  width: min-content;
-  white-space: normal;
-  color: #999;
-  padding: 8px 0;
 }
 
 .highlightBar {

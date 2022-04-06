@@ -510,7 +510,7 @@ function FashionSocket({
   const handleOrnamentClick = socket && (() => onPickPlug({ item: exampleItem, socket }));
   const canSlotOrnament =
     plugHash !== undefined &&
-    (plugHash === socket?.socketDefinition.singleInitialItemHash ||
+    (plugHash === socket?.emptyPlugItemHash ||
       (unlockedPlugSetItems.has(plugHash) &&
         socket?.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash)) ||
       socket?.reusablePlugItems?.some((p) => p.plugItemHash === plugHash && p.enabled));
@@ -546,11 +546,18 @@ function findOtherCopies(
   item: DestinyInventoryItemDefinition | DimItem | number
 ) {
   const itemDef = defs.InventoryItem.get(typeof item === 'number' ? item : item.hash);
-  return Object.values(defs.InventoryItem.getAll()).filter(
-    (i) =>
+  const results: DestinyInventoryItemDefinition[] = [];
+  const invItemTable = defs.InventoryItem.getAll();
+  for (const h in invItemTable) {
+    const i = invItemTable[h];
+    if (
       i.displayProperties.name === itemDef.displayProperties.name &&
       i.displayProperties.icon === itemDef.displayProperties.icon
-  );
+    ) {
+      results.push(i);
+    }
+  }
+  return results;
 }
 
 function manuallyFindItemForCollectible(
@@ -558,7 +565,11 @@ function manuallyFindItemForCollectible(
   collectible: DestinyCollectibleDefinition | number
 ) {
   const collectibleHash = typeof collectible === 'number' ? collectible : collectible.hash;
-  return Object.values(defs.InventoryItem.getAll()).find(
-    (i) => i.collectibleHash === collectibleHash
-  );
+  const invItemTable = defs.InventoryItem.getAll();
+  for (const h in invItemTable) {
+    const i = invItemTable[h];
+    if (i.collectibleHash === collectibleHash) {
+      return i;
+    }
+  }
 }

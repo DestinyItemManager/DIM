@@ -4,7 +4,7 @@ import { ArmorSlotIcon, WeaponSlotIcon, WeaponTypeIcon } from 'app/dim-ui/ItemCa
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { quoteFilterString } from 'app/search/search-filters/freeform';
+import { quoteFilterString } from 'app/search/query-parser';
 import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
 import { getWeaponArchetype } from 'app/utils/socket-utils';
 import rarityIcons from 'data/d2/engram-rarity-icons.json';

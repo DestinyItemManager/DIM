@@ -1,12 +1,12 @@
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { DimItem } from 'app/inventory/item-types';
+import { dropItem } from 'app/inventory/move-item';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { itemCanBeEquippedByStoreId } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import { InventoryBucket } from './inventory-buckets';
-import { DimItem } from './item-types';
-import { dropItem } from './move-item';
 import styles from './StoreBucketDropTarget.m.scss';
 
 interface Props {

@@ -17,7 +17,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { Link, NavLink, NavLinkProps } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useSubscription } from 'use-subscription';
 import ClickOutside from '../dim-ui/ClickOutside';
@@ -143,7 +143,7 @@ export default function Header() {
 
   const bugReportLink = $DIM_FLAVOR !== 'release';
 
-  const navLinkClassName: NavLinkProps['className'] = ({ isActive }) =>
+  const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
     clsx(styles.menuItem, { [styles.active]: isActive });
 
   // Generic links about DIM

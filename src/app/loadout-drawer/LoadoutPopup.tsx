@@ -1,3 +1,4 @@
+import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -9,12 +10,13 @@ import { allItemsSelector, bucketsSelector, hasClassifiedSelector } from 'app/in
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import MaxlightButton from 'app/loadout-drawer/MaxlightButton';
 import { useDefinitions } from 'app/manifest/selectors';
+import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { ItemFilter } from 'app/search/filter-types';
 import { plainString } from 'app/search/search-filters/freeform';
-import { LoadoutSort } from 'app/settings/initial-settings';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
@@ -204,10 +206,36 @@ function LoadoutPopup({
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
 
+  const filteringLoadouts = loadoutQuery.length > 0;
+
   return (
     <div className={styles.content} onClick={onClick} role="menu">
+      {totalLoadouts >= 10 && (
+        <li className={styles.menuItem}>
+          <form>
+            <AppIcon icon={searchIcon} />
+            <input
+              type="text"
+              autoFocus={nativeAutoFocus}
+              placeholder={t('Header.FilterHelpLoadouts')}
+              onClick={blockPropagation}
+              value={loadoutQuery}
+              onChange={(e) => setLoadoutQuery(e.target.value)}
+            />
+          </form>
+        </li>
+      )}
       <ul className={styles.list}>
-        {query.length > 0 && (
+        {!filteringLoadouts && dimStore.isVault && isPhonePortrait && (
+          <li className={styles.menuItem}>
+            <span onClick={showMaterialCount}>
+              <img src={consumablesIcon} />
+              <span>{t('Header.MaterialCounts')}</span>
+            </span>
+          </li>
+        )}
+
+        {!filteringLoadouts && query.length > 0 && (
           <li className={styles.menuItem}>
             <span onClick={applySearchLoadout}>
               <AppIcon icon={searchIcon} />
@@ -216,7 +244,7 @@ function LoadoutPopup({
           </li>
         )}
 
-        {!dimStore.isVault && (
+        {!filteringLoadouts && !dimStore.isVault && (
           <li className={styles.menuItem}>
             <span onClick={onStartFarming}>
               <AppIcon icon={engramIcon} />
@@ -228,7 +256,7 @@ function LoadoutPopup({
           </li>
         )}
 
-        {dimStore.destinyVersion === 1 && (
+        {!filteringLoadouts && dimStore.destinyVersion === 1 && (
           <li className={styles.menuItem}>
             <span onClick={() => applyGatherEngramsLoadout({ exotics: true })}>
               <AppIcon icon={engramIcon} />
@@ -243,7 +271,7 @@ function LoadoutPopup({
           </li>
         )}
 
-        {dimStore.destinyVersion === 2 && (
+        {!filteringLoadouts && dimStore.destinyVersion === 2 && (
           <li className={styles.menuItem}>
             <Link to="../loadouts">
               <AppIcon icon={faList} />
@@ -253,14 +281,16 @@ function LoadoutPopup({
           </li>
         )}
 
-        <li className={styles.menuItem}>
-          <span onClick={makeNewLoadout}>
-            <AppIcon icon={addIcon} />
-            <span>{t('Loadouts.Create')}</span>
-          </span>
-        </li>
+        {!filteringLoadouts && (
+          <li className={styles.menuItem}>
+            <span onClick={makeNewLoadout}>
+              <AppIcon icon={addIcon} />
+              <span>{t('Loadouts.Create')}</span>
+            </span>
+          </li>
+        )}
 
-        {previousLoadout && (
+        {!filteringLoadouts && previousLoadout && (
           <li className={styles.menuItem}>
             <span
               title={previousLoadout.name}
@@ -275,7 +305,7 @@ function LoadoutPopup({
           </li>
         )}
 
-        {!dimStore.isVault && (
+        {!filteringLoadouts && !dimStore.isVault && (
           <>
             <li className={styles.menuItem}>
               <MaxlightButton
@@ -305,22 +335,6 @@ function LoadoutPopup({
               </>
             )}
           </>
-        )}
-
-        {totalLoadouts >= 10 && (
-          <li className={styles.menuItem}>
-            <form>
-              <AppIcon icon={searchIcon} />
-              <input
-                type="text"
-                autoFocus={nativeAutoFocus}
-                placeholder={t('Header.FilterHelpLoadouts')}
-                onClick={blockPropagation}
-                value={loadoutQuery}
-                onChange={(e) => setLoadoutQuery(e.target.value)}
-              />
-            </form>
-          </li>
         )}
 
         {filteredLoadouts.map((loadout) => (

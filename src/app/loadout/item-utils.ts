@@ -28,10 +28,6 @@ export async function pickSubclass(filterItems: (item: DimItem) => boolean) {
       // the appropriate store at render time
       uniqueBy: (item) => item.hash,
       prompt: t('Loadouts.ChooseItem', { name: t('Bucket.Class') }),
-
-      // don't show information related to selected perks so we don't give the impression
-      // that we will update perk selections when applying the loadout
-      ignoreSelectedPerks: true,
     });
 
     return item;

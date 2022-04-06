@@ -49,7 +49,9 @@ export default function LoadoutEditSubclass({
                   // plugs in the loadout and they may be different to the popup
                   onClick={plugs.length ? undefined : onClick}
                   item={subclass.item}
-                  ignoreSelectedPerks
+                  // don't show the selected Super ability because we are displaying the Super ability plug next
+                  // to the subclass icon
+                  selectedSuperDisplay="disabled"
                 />
               )}
             </ItemPopupTrigger>

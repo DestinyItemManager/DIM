@@ -1,6 +1,9 @@
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { calculateAssumedItemEnergy, isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
-import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
+import {
+  activityModPlugCategoryHashes,
+  knownModPlugCategoryHashes,
+} from 'app/loadout/known-values';
 import { MAX_ARMOR_ENERGY_CAPACITY, modsWithConditionalStats } from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
 import {
@@ -9,7 +12,6 @@ import {
   DestinyItemInvestmentStatDefinition,
 } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
-import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
@@ -31,7 +33,7 @@ export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition):
   };
 
   if (
-    raidModPlugCategoryHashes.includes(processMod.plugCategoryHash) ||
+    activityModPlugCategoryHashes.includes(processMod.plugCategoryHash) ||
     !knownModPlugCategoryHashes.includes(processMod.plugCategoryHash)
   ) {
     processMod.tag = getModTypeTagByPlugCategoryHash(mod.plug.plugCategoryHash);

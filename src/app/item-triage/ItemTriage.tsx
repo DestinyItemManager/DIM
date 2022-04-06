@@ -18,8 +18,9 @@ import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { ItemFilter } from 'app/search/filter-types';
+import { quoteFilterString } from 'app/search/query-parser';
 import { filterFactorySelector } from 'app/search/search-filter';
-import { nameFilter, quoteFilterString } from 'app/search/search-filters/freeform';
+import { nameFilter } from 'app/search/search-filters/freeform';
 import {
   classFilter,
   damageFilter,
@@ -83,6 +84,7 @@ export function ItemTriage({ item }: { item: DimItem }) {
   // we rely on factorCombosLabels and itemFactors having the same number of elements,
   // because they are check the same factors
   const factorCombosLabels = getItemFactorComboDisplays(item);
+  // Accessing id is safe: ItemTriage is only weapons and armor (see above)
   const inLoadouts = loadouts.filter((l) => l.items.some((i) => i.id === item.id));
 
   return (

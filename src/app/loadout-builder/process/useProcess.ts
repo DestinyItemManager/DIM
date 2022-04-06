@@ -6,7 +6,8 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { keyByStatHash } from 'app/inventory/store/stats';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { calculateAssumedItemEnergy, isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
-import { activityModPlugCategoryHashes, bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
+import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
+import { bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
 import {
   armor2PlugCategoryHashesByName,
   MAX_ARMOR_ENERGY_CAPACITY,

@@ -5,20 +5,25 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import ItemIcon from 'app/inventory/ItemIcon';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
-import 'app/inventory/Stores.scss';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { deleteLoadout, updateLoadout } from 'app/loadout-drawer/actions';
-import { stateReducer } from 'app/loadout-drawer/loadout-drawer-reducer';
+import {
+  addItem,
+  equipItem,
+  removeItem,
+  setNotes,
+} from 'app/loadout-drawer/loadout-drawer-reducer';
 import { addItem$ } from 'app/loadout-drawer/loadout-events';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import LoadoutDrawerDropTarget from 'app/loadout-drawer/LoadoutDrawerDropTarget';
-import { useDefinitions } from 'app/manifest/selectors';
+import LoadoutDrawerFooter from 'app/loadout-drawer/LoadoutDrawerFooter';
+import { useD1Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import React, { useCallback, useMemo, useReducer, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import './loadout-drawer.scss';
@@ -48,16 +53,12 @@ export default function LoadoutDrawer({
   onClose(): void;
 }) {
   const dispatch = useThunkDispatch();
-  const defs = useDefinitions()!;
+  const defs = useD1Definitions()!;
 
   const allItems = useSelector(allItemsSelector);
   const buckets = useSelector(bucketsSelector)!;
   const [showingItemPicker, setShowingItemPicker] = useState(false);
-
-  // All state and the state of the loadout is managed through this reducer
-  const [{ loadout }, stateDispatch] = useReducer(stateReducer(defs), {
-    loadout: initialLoadout,
-  });
+  const [loadout, setLoadout] = useState(initialLoadout);
 
   const loadoutItems = loadout?.items;
 
@@ -68,22 +69,16 @@ export default function LoadoutDrawer({
   );
 
   const onAddItem = useCallback(
-    (item: DimItem, equip?: boolean) =>
-      stateDispatch({
-        type: 'addItem',
-        item,
-        equip,
-      }),
-    []
+    (item: DimItem, equip?: boolean) => setLoadout(addItem(defs, item, equip)),
+    [defs]
   );
 
   const onRemoveItem = (resolvedItem: ResolvedLoadoutItem, e?: React.MouseEvent) => {
     e?.stopPropagation();
-    stateDispatch({ type: 'removeItem', resolvedItem });
+    setLoadout(removeItem(defs, resolvedItem));
   };
 
-  const onEquipItem = (resolvedItem: ResolvedLoadoutItem) =>
-    stateDispatch({ type: 'equipItem', resolvedItem });
+  const onEquipItem = (item: ResolvedLoadoutItem) => setLoadout(equipItem(defs, item));
 
   /**
    * If an item comes in on the addItem$ observable, add it.
@@ -106,10 +101,6 @@ export default function LoadoutDrawer({
             item.classType === loadoutClassType ||
             item.classType === DestinyClass.Unknown),
         prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
-
-        // don't show information related to selected perks so we don't give the impression
-        // that we will update perk selections when applying the loadout
-        ignoreSelectedPerks: true,
       });
 
       onAddItem(item);
@@ -158,26 +149,18 @@ export default function LoadoutDrawer({
     return null;
   }
 
-  const onDeleteLoadout = () => {
+  const onDeleteLoadout = (onClose: () => void) => {
     dispatch(deleteLoadout(loadout.id));
-    close();
+    onClose();
   };
 
   const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
-    stateDispatch({ type: 'update', loadout: { ...loadout, notes: e.target.value } });
+    setLoadout(setNotes(e.target.value));
 
-  const header = ({ onClose }: { onClose(): void }) => (
+  const header = (
     <div className="loadout-drawer-header">
       <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
-      <LoadoutDrawerOptions
-        loadout={loadout}
-        showClass={showClass}
-        isNew={isNew}
-        updateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
-        saveLoadout={(e) => (isNew ? saveAsNew(e, onClose) : onSaveLoadout(e, loadout, onClose))}
-        saveAsNew={(e) => saveAsNew(e, onClose)}
-        deleteLoadout={onDeleteLoadout}
-      />
+      <LoadoutDrawerOptions loadout={loadout} showClass={showClass} setLoadout={setLoadout} />
       {loadout.notes !== undefined && (
         <textarea
           onChange={handleNotesChanged}
@@ -189,8 +172,19 @@ export default function LoadoutDrawer({
     </div>
   );
 
+  const footer = ({ onClose }: { onClose(): void }) => (
+    <LoadoutDrawerFooter
+      loadout={loadout}
+      isNew={isNew}
+      onSaveLoadout={(e, isNew) =>
+        isNew ? saveAsNew(e, onClose) : onSaveLoadout(e, loadout, onClose)
+      }
+      onDeleteLoadout={() => onDeleteLoadout(onClose)}
+    />
+  );
+
   return (
-    <Sheet onClose={onClose} header={header} disabled={showingItemPicker}>
+    <Sheet onClose={onClose} header={header} footer={footer} disabled={showingItemPicker}>
       <div className="loadout-drawer loadout-create">
         <div className="loadout-content">
           <LoadoutDrawerDropTarget onDroppedItem={onAddItem} classType={loadout.classType}>
@@ -216,11 +210,10 @@ export default function LoadoutDrawer({
                 storeId={storeId}
                 loadout={loadout}
                 items={items}
-                buckets={buckets}
                 equip={onEquipItem}
                 remove={onRemoveItem}
                 add={onAddItem}
-                onUpdateLoadout={(loadout) => stateDispatch({ type: 'update', loadout })}
+                setLoadout={setLoadout}
                 onShowItemPicker={setShowingItemPicker}
               />
             </div>

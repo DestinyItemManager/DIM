@@ -3,6 +3,11 @@ import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-bucke
 import { bucketsSelector, currentStoreSelector, vaultSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
+import {
+  MaterialCountsTooltip,
+  showMaterialCount,
+} from 'app/material-counts/MaterialCountsWrappers';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import vaultIcon from 'destiny-icons/armor_types/helmet.svg';
@@ -12,7 +17,6 @@ import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { MaterialCounts } from './MaterialCounts';
 import styles from './VaultCapacity.m.scss';
 
 const bucketIcons = {
@@ -86,7 +90,8 @@ const vaultCountsSelector = createSelector(
 /** Current amounts and maximum capacities of the vault */
 export default React.memo(function VaultCapacity() {
   const vaultCounts = useSelector(vaultCountsSelector);
-  const mats = <MaterialCounts />;
+  const mats = <MaterialCountsTooltip />;
+  const isPhonePortrait = useIsPhonePortrait();
 
   return (
     <>
@@ -104,12 +109,17 @@ export default React.memo(function VaultCapacity() {
                   bucket.name.substring(0, 1)
                 )}
               </div>
-              <PressTip tooltip={isConsumables ? mats : undefined}>
+              <PressTip
+                tooltip={isConsumables && !isPhonePortrait ? mats : undefined}
+                placement="bottom"
+                wide
+              >
                 <div
                   title={title}
                   className={clsx({
                     [styles.full]: count === bucket.capacity,
                   })}
+                  onClick={isConsumables ? showMaterialCount : undefined}
                 >
                   {count}/{bucket.capacity}
                 </div>

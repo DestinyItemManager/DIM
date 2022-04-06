@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import {
   DestinyInventoryItemDefinition,
@@ -10,7 +11,10 @@ import {
   DestinyItemSocketState,
   DestinyObjectiveProgress,
   DestinySocketCategoryStyle,
+  DestinySocketTypeDefinition,
+  SocketPlugSources,
 } from 'bungie-api-ts/destiny2';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import {
   ItemCategoryHashes,
   PlugCategoryHashes,
@@ -216,6 +220,17 @@ function buildDefinedSocket(
   // The currently equipped plug, if any
   const reusablePlugs: DimPlug[] = [];
 
+  const craftingData: NonNullable<DimSocket['craftingData']> = {};
+  function addCraftingReqs(plugEntry: DestinyItemSocketEntryPlugItemRandomizedDefinition) {
+    if (
+      plugEntry.craftingRequirements &&
+      (plugEntry.craftingRequirements.materialRequirementHashes.length ||
+        plugEntry.craftingRequirements.unlockRequirements.length)
+    ) {
+      craftingData[plugEntry.plugItemHash] = plugEntry.craftingRequirements;
+    }
+  }
+
   // We only build a larger list of plug options if this is a perk socket, since users would
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
   // we will only populate plugOptions with the currently inserted plug.
@@ -227,6 +242,7 @@ function buildDefinedSocket(
           const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
           if (built) {
             reusablePlugs.push({ ...built, cannotCurrentlyRoll: !reusablePlug.currentlyCanRoll });
+            addCraftingReqs(reusablePlug);
           }
         }
       }
@@ -252,6 +268,7 @@ function buildDefinedSocket(
           // on the fact that they have no name
           if (built?.plugDef.displayProperties.name) {
             reusablePlugs.push({ ...built, cannotCurrentlyRoll: !randomPlug.currentlyCanRoll });
+            addCraftingReqs(randomPlug);
           }
         }
       }
@@ -297,20 +314,24 @@ function buildDefinedSocket(
     plugged = plugOptions[0];
   }
 
+  const plugSet = socketDef.reusablePlugSetHash
+    ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
+    : undefined;
+
   return {
     socketIndex: index,
     plugged,
     plugOptions,
-    plugSet: socketDef.reusablePlugSetHash
-      ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
-      : undefined,
+    plugSet,
     curatedRoll: null,
+    emptyPlugItemHash: findEmptyPlug(socketDef, socketTypeDef, plugSet),
     reusablePlugItems: [],
     hasRandomizedPlugItems:
       Boolean(socketDef.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets,
     isPerk,
     isReusable,
     socketDefinition: socketDef,
+    craftingData: Object.keys(craftingData).length ? craftingData : undefined,
   };
 }
 
@@ -409,6 +430,98 @@ function addPlugOption(
   }
 }
 
+function isKnownEmptyPlugItemHash(plugItemHash: number) {
+  return emptyPlugHashes.has(plugItemHash);
+}
+
+// These socket categories never have any empty-able sockets.
+const noDefaultSocketCategoryHashes: SocketCategoryHashes[] = [
+  SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+  SocketCategoryHashes.Abilities_Abilities_LightSubclass,
+  SocketCategoryHashes.Super,
+  SocketCategoryHashes.WeaponPerks_Reusable,
+  SocketCategoryHashes.IntrinsicTraits,
+  SocketCategoryHashes.ArmorPerks_LargePerk,
+  SocketCategoryHashes.ArmorPerks_Reusable,
+  SocketCategoryHashes.ArmorTier,
+  SocketCategoryHashes.ClanPerks_Unlockable_ClanBanner,
+  SocketCategoryHashes.GhostShellPerks,
+  SocketCategoryHashes.VehiclePerks,
+];
+/**
+ * DIM sometimes wants to know whether a plug is the "empty" plug so that
+ * it knows not to record an override, or it may choose to reset a socket
+ * back to empty to free up mod space, or it may wish to distinguish the
+ * empty plug in UI sorting. However there's no easy, manifest-driven way
+ * to figure out whether an empty plug exists and if so, what it is.
+ *
+ * The closest thing is the singleInitialItemHash, and that works for many
+ * mod sockets, but it's insufficient in some cases (non-exhaustive):
+ *
+ * 1. The socket may not have a singleInitialItemHash. Artifice artifact mod
+ *    slots don't reference any plug in singleInitialItemHash, and the first
+ *    entry in the plug set just so happened to be the empty plug.
+ * 2. The socket's singleInitialItemHash may reference a non-empty plug. A lot
+ *    of armor references associated shaders here instead.
+ * 3. The singleInitialItemHash is an empty plug, but it's not the proper empty
+ *    plug. This happens to void subclass aspect and fragment sockets, and is
+ *    really insidious because void subclasses start with these sockets but these
+ *    plugs can never be inserted, so we can't use it.
+ */
+function findEmptyPlug(
+  socket: DestinyItemSocketEntryDefinition,
+  socketType: DestinySocketTypeDefinition,
+  plugSet: DimPlugSet | undefined,
+  reusablePlugs?: DestinyItemPlugBase[]
+) {
+  // First, perform some filtering, both for efficiency and to explicitly
+  // leave emptyPlugItemHash set to undefined for sockets that never have
+  // an empty plug, like abilities etc.
+
+  if (noDefaultSocketCategoryHashes.includes(socketType.socketCategoryHash)) {
+    return undefined;
+  }
+
+  // Y2+ weapon masterworks don't have an "empty" entry.
+  if (socket.socketTypeHash === weaponMasterworkY2SocketTypeHash) {
+    return undefined;
+  }
+  // Exotic mods (like the Aeon socket) can't be emptied.
+  if (
+    socketType.plugWhitelist.length &&
+    socketType.plugWhitelist.every((e) => e.categoryIdentifier.includes('enhancements.exotic'))
+  ) {
+    return undefined;
+  }
+  // Sockets that ONLY get their items from your inventory necessarily can't be emptied
+  if ((socket.plugSources & ~SocketPlugSources.InventorySourced) === 0) {
+    return undefined;
+  }
+
+  // Sometimes the empty plug is a regular plug set entry, sometimes it's one
+  // of the reusablePlugItems. However, reusablePlugItems is thrown away when
+  // there's a PlugSet, so we check the live API response reusablePlugs instead
+  // if available. This is insufficient for shaders on blue items because
+  // neither the API response nor the plugSet have the empty shader.
+  // FIXME #7793: Retain socket.reusablePlugItems when it has unique items
+  // and evaluate whether checking live API response is still necessary
+  const empty =
+    reusablePlugs?.map((p) => p.plugItemHash).find(isKnownEmptyPlugItemHash) ||
+    plugSet?.precomputedEmptyPlugItemHash ||
+    socket.reusablePlugItems.map((p) => p.plugItemHash).find(isKnownEmptyPlugItemHash);
+
+  // Falling back to singleInitialItemHash is the conservative choice:
+  // 1. Before this function existed, we used singleInitialItemHash all the
+  //    time and it only broke in specific situations, so we might as well
+  //    continue using it when we didn't find a better plug before.
+  // 2. The game has a lot of sockets and we don't want to be updating
+  //    D2AI every time a new socket appears -- better to just fix either
+  //    the filters above or the D2AI list when something breaks.
+  //
+  // If there's a very good reason to assume a socket can't be emptied, filter it above.
+  return empty ?? (socket.singleInitialItemHash || undefined);
+}
+
 /**
  * Build information about an individual socket, and its plugs, using live information.
  */
@@ -485,14 +598,17 @@ function buildSocket(
   const hasRandomizedPlugItems =
     Boolean(socketDef?.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets;
 
+  const plugSet = socketDef.reusablePlugSetHash
+    ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
+    : undefined;
+
   return {
     socketIndex: index,
     plugged,
     plugOptions,
-    plugSet: socketDef.reusablePlugSetHash
-      ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
-      : undefined,
+    plugSet,
     curatedRoll,
+    emptyPlugItemHash: findEmptyPlug(socketDef, socketTypeDef, plugSet, reusablePlugs),
     hasRandomizedPlugItems,
     reusablePlugItems: reusablePlugs,
     isPerk,
@@ -522,14 +638,20 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
 
   const plugs: DimPlug[] = [];
   const defPlugSet = defs.PlugSet.get(plugSetHash);
-  for (const def of defPlugSet.reusablePlugItems) {
-    const plug = buildCachedDefinedPlug(defs, def.plugItemHash);
+  for (const plugEntry of defPlugSet.reusablePlugItems) {
+    const plug = buildCachedDefinedPlug(defs, plugEntry.plugItemHash);
     if (plug) {
       plugs.push(plug);
     }
   }
 
-  const dimPlugSet = { plugs, hash: plugSetHash };
+  const dimPlugSet: DimPlugSet = {
+    plugs,
+    hash: plugSetHash,
+    precomputedEmptyPlugItemHash: defPlugSet.reusablePlugItems
+      .map((p) => p.plugItemHash)
+      .find(isKnownEmptyPlugItemHash),
+  };
   reusablePlugSetCache[plugSetHash] = dimPlugSet;
 
   return dimPlugSet;
@@ -545,7 +667,7 @@ function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): 
     // We mutate cannotCurrentlyRoll and attach stats in this module so we need to spread the object
     // We also run DimItems through immer in the store, which means these get frozen. This essentially
     // unfreezes it in that situation. It only seems to be an issue for fake items in loadouts.
-    // TODO (ryan) lets fine a way around this
+    // TODO (ryan) lets find a way around this
     return cachedValue ? { ...cachedValue } : null;
   }
 
@@ -553,6 +675,6 @@ function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): 
   definedPlugCache[plugHash] = plug;
 
   // We mutate cannotCurrentlyRoll and attach stats in this module so we need to spread the object
-  // TODO (ryan) lets fine a way around this
+  // TODO (ryan) lets find a way around this
   return plug ? { ...plug } : null;
 }

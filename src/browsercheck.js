@@ -89,7 +89,7 @@ export function isSupported(browsersSupported, userAgent) {
   var browser = getBrowserVersionFromUserAgent(agent);
   var supported = isBrowserSupported(browser);
 
-  if (!supported && agent.os.name !== 'Android') {
+  if (!supported /* && agent.os.name !== 'Android'*/) {
     // Detect anything based on chrome as if it were chrome
     var chromeMatch = /Chrome\/(\d+)/.exec(agent.ua);
     if (chromeMatch) {

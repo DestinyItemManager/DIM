@@ -5,11 +5,17 @@
   line-height: 17px;
   letter-spacing: -0.02em;
   padding: 10px;
+  cursor: pointer;
 
   background-color: #555;
   color: #eee;
   a {
     color: #eee;
+  }
+  &:hover {
+    a {
+      text-decoration: underline;
+    }
   }
 }
 
