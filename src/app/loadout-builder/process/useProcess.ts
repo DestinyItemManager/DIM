@@ -262,6 +262,7 @@ const groupComparator = chainComparator(
  * It can group by any number of the following concepts depending on locked mods and armor upgrades,
  * - Stat distribution
  * - Masterwork status
+ * - Exoticness (every exotic must be distinguished from other exotics and all legendaries)
  * - If there are energy requirements for slot independent mods it creates groups split by energy type
  * - If there are activity mods it will create groups split by specialty socket tag
  */
@@ -297,12 +298,15 @@ function groupItems(
     }
   }
 
-  // Group by mod requirements (energy, slot). The groups are based on the mods
+  // Group by any restrictions so that items within the group can be freely exchanged subject
+  // to the user's mod choices. This means grouping by mod slot tags, mod energy capacity and type
+  // and exoticness. The groups for mod energies and tags are based on the mods
   // requested - for example if we only request solar mods, the groups should be
   // "solar", and "other", not "solar", "arc", "void", "stasis". If we only request
   // a vault of glass mod, we don't make a group that includes deep stone crypt mods.
   const modGroupingFn = (item: DimItem) => {
-    let groupId = '';
+    // Ensure exotics always form a distinct group
+    let groupId = item.isExotic ? `${item.hash}` : '';
 
     if (requiredActivityModSlots.size) {
       const socketTags = getInterestingSocketMetadatas(item) ?? [];
@@ -314,6 +318,8 @@ function groupItems(
       }
     }
 
+    groupId += '-';
+
     if (requiredEnergyTypes.size) {
       groupId +=
         // Only add the grouping key if the socket matches what we need, otherwise it doesn't matter
@@ -324,6 +330,13 @@ function groupItems(
           ? item.energy.energyType
           : DestinyEnergyType.Any;
     }
+
+    groupId += '-';
+
+    // Finally, factor in item energy capacity -- on the off chance that a user has
+    // a strictly lower stat armor piece with a higher energy capacity, we must not
+    // exclude it.
+    groupId += calculateAssumedItemEnergy(item, assumeArmorMasterwork, MIN_LO_ITEM_ENERGY);
 
     return groupId;
   };
