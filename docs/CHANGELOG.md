@@ -1,5 +1,7 @@
 ## Next
 
+* If a wish list contains only non-enhanced perks, DIM will mark a roll as matching if it has the Enhanced versions of those perks.
+
 ## 7.11.0 <span class="changelog-date">(2022-04-03)</span>
 
 * The Item Popup's header now opens the Armory view when clicked, and has some cursor/link styling as a reminder.
