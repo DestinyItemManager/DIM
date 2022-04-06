@@ -84,6 +84,8 @@ export function filterItems({
         firstPassFilteredItems = firstPassFilteredItems.filter((i) => !i.isExotic);
       }
 
+      // TODO: Filter out exotics in other buckets that are not the locked exotic?
+
       // Filter out excluded items and items that can't take the bucket specific locked
       // mods energy type or cost.
       // Filtering the cost is necessary because process only checks mod energy

@@ -1,6 +1,7 @@
 ## Next
 
 * If a wish list contains only non-enhanced perks, DIM will mark a roll as matching if it has the Enhanced versions of those perks.
+* Fixed a rare edge case where Loadout Optimizer would not consider legendary armor if you own an exotic with strictly better stats.
 
 ## 7.11.0 <span class="changelog-date">(2022-04-03)</span>
 
