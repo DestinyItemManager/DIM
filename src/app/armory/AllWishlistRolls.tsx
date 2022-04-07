@@ -158,7 +158,7 @@ function WishlistRolls({
                 }
 
                 return consolidatedSecondaries.map((secondaryBundle) => {
-                  const bundles = [...primaryBundles, ...secondaryBundle];
+                  const bundles = [...secondaryBundle, ...primaryBundles];
                   return (
                     <li key={bundles.map((b) => b.join()).join()} className={styles.roll}>
                       {bundles.map((hashes) => (
