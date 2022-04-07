@@ -139,7 +139,6 @@ export function useProcess({
       processItems[bucketHash] = [];
 
       const groupedItems = groupItems(
-        defs,
         items,
         statOrder,
         assumeArmorMasterwork,
@@ -267,7 +266,6 @@ const groupComparator = chainComparator(
  * - If there are activity mods it will create groups split by specialty socket tag
  */
 function groupItems(
-  defs: D2ManifestDefinitions,
   items: readonly DimItem[],
   statOrder: number[],
   assumeArmorMasterwork: AssumeArmorMasterwork | undefined,
@@ -331,13 +329,6 @@ function groupItems(
           : DestinyEnergyType.Any;
     }
 
-    groupId += '-';
-
-    // Finally, factor in item energy capacity -- on the off chance that a user has
-    // a strictly lower stat armor piece with a higher energy capacity, we must not
-    // exclude it.
-    groupId += calculateAssumedItemEnergy(item, assumeArmorMasterwork, MIN_LO_ITEM_ENERGY);
-
     return groupId;
   };
 
@@ -348,23 +339,28 @@ function groupItems(
     // Ensure ordering of stats
     // TODO: statOrder includes disabled stats, should we omit them?
     if (statsByHash) {
+      const assumedEnergy = calculateAssumedItemEnergy(
+        item,
+        assumeArmorMasterwork,
+        MIN_LO_ITEM_ENERGY
+      );
       for (const statHash of statOrder) {
         let value = statsByHash[statHash]!.base;
         // Add in masterwork stat bonus if we're assuming masterwork stats
-        if (
-          defs &&
-          calculateAssumedItemEnergy(item, assumeArmorMasterwork, MIN_LO_ITEM_ENERGY) ===
-            MAX_ARMOR_ENERGY_CAPACITY
-        ) {
+        if (assumedEnergy === MAX_ARMOR_ENERGY_CAPACITY) {
           value += 2;
         }
         statValues.push(value);
       }
+      // Also use assumed energy because a class item with 9 energy is better than one with 8
+      statValues.push(assumedEnergy);
     }
     statsCache.set(item, statValues);
   }
 
-  // Group items by their exact stats
+  // Group items by their exact stats. The statsCache includes mod energy capacity
+  // but that's fine because items in the same group with the same stats but lower
+  // energy capacities already got excluded.
   const statGroupingFn = (item: DimItem) => statsCache.get(item)!.toString();
 
   const modGroups = _.groupBy(items, modGroupingFn);
