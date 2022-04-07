@@ -1025,7 +1025,8 @@
       "Fragment": "Insert Fragment",
       "Aspect": "Insert Aspect",
       "Transmat": "Apply Transmat Effect",
-      "Projection": "Apply Ghost Projection"
+      "Projection": "Apply Ghost Projection",
+      "Super": "Equip Super"
     },
     "Select": {
       "Mod": "Preview Mod",
