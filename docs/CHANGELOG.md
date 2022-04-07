@@ -6,6 +6,7 @@
 * `is:extraperk` filter finds weapons with additional toggleable perks, from pinnacle activities and Umbral Focusing.
 * Fixed perk grouping for some perk-only wish lists.
 * Armory wish list view now shows perks, magazines, barrels, etc. in a similar order to the in-game view.
+* Re-added the D2Gunsmith link to the weapons armory page.
 
 ## 7.11.0 <span class="changelog-date">(2022-04-03)</span>
 
