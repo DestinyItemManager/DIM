@@ -929,7 +929,7 @@
       "Ornament": "Apply Ornament",
       "Projection": "Apply Ghost Projection",
       "Shader": "Apply Shader",
-      "Super": "",
+      "Super": "Equip Super",
       "Transmat": "Apply Transmat Effect"
     },
     "ListStyle": "Display perks as a list",
