@@ -159,6 +159,11 @@ function WishlistRolls({
 
                 return consolidatedSecondaries.map((secondaryBundle) => {
                   const bundles = [...secondaryBundle, ...primaryBundles];
+
+                  // remove invalid rolls. this should really be handled upstream in wishlist processing
+                  if (bundles.some((b) => b.some((h) => !(h in plugByPerkHash)))) {
+                    return null;
+                  }
                   return (
                     <li key={bundles.map((b) => b.join()).join()} className={styles.roll}>
                       {bundles.map((hashes) => (
