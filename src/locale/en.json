@@ -208,6 +208,7 @@
     "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
     "Filter": "Filter",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
+    "HasMemento": "Shows crafted weapons that currently have a memento inserted.",
     "HasNotes": "Show items that have notes applied.",
     "HasOrnament": "Shows items that have an ornament applied.",
     "HasShader": "Shows items that have a shader applied.",
