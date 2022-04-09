@@ -205,6 +205,7 @@
     "Equipment": "可以装备的物品.",
     "Equipped": "目前已装备的物品.",
     "Event": "显示命运2中特定活动中的物品",
+    "ExtraPerk": "显示带有额外可选特性的随机特性传说武器。",
     "Filter": "过滤器",
     "Glimmer": "显示与增加微光获取有关的消耗品。",
     "HasNotes": "显示已有备注的物品",
@@ -928,7 +929,7 @@
       "Ornament": "应用皮肤",
       "Projection": "应用机灵投影",
       "Shader": "应用着色器",
-      "Super": "",
+      "Super": "Equip Super",
       "Transmat": "应用传送效果"
     },
     "ListStyle": "按列表显示特性",
