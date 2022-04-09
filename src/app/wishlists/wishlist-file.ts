@@ -1,6 +1,5 @@
 import { emptySet } from 'app/utils/empty';
 import { timer, warnLog } from 'app/utils/log';
-import D2EnhancedTraits from 'data/d2/trait-to-enhanced-trait.json';
 import { DimWishList, WishListAndInfo, WishListInfo, WishListRoll } from './types';
 
 /**
@@ -55,26 +54,22 @@ export function toWishList(...fileTexts: string[]): WishListAndInfo {
         } else if (!info.description && line.startsWith(descriptionLabel)) {
           info.description = line.slice(descriptionLabel.length);
         } else {
-          const suppliedRoll =
+          const roll =
             toDimWishListRoll(line, blockNotes) ||
             toBansheeWishListRoll(line, blockNotes) ||
             toDtrWishListRoll(line, blockNotes);
 
-          if (suppliedRoll) {
-            const rolls = autoUpgradeRoll(suppliedRoll);
+          if (roll) {
+            const rollHash = `${roll.itemHash};${roll.isExpertMode};${sortedSetToString(
+              roll.recommendedPerks
+            )}`;
 
-            for (const roll of rolls) {
-              const rollHash = `${roll.itemHash};${roll.isExpertMode};${sortedSetToString(
-                roll.recommendedPerks
-              )}`;
-
-              if (!seen.has(rollHash)) {
-                seen.add(rollHash);
-                wishList.wishListRolls.push(roll);
-                info.numRolls++;
-              } else {
-                dupes++;
-              }
+            if (!seen.has(rollHash)) {
+              seen.add(rollHash);
+              wishList.wishListRolls.push(roll);
+              info.numRolls++;
+            } else {
+              dupes++;
             }
           }
         }
@@ -89,55 +84,6 @@ export function toWishList(...fileTexts: string[]): WishListAndInfo {
   } finally {
     stopTimer();
   }
-}
-
-/**
- * Automatically "upgrades" a roll - craftable weapons include enhanced
- * perks, and we do not expect users to know that there's an enhanced
- * Overflow that exists alongside Overflow.
- * This transforms the roll they asked for into potentially a number of
- * rolls (and includes enhanced versions of the perks they requested).
- */
-function autoUpgradeRoll(roll: WishListRoll): WishListRoll[] {
-  const allRolls: WishListRoll[] = [];
-
-  allRolls.push(roll);
-
-  roll.recommendedPerks.forEach((perk) => {
-    const enhancedRoll = getEnhancedRoll(roll, perk);
-
-    if (enhancedRoll) {
-      allRolls.push(enhancedRoll);
-
-      enhancedRoll.recommendedPerks.forEach((ePerk) => {
-        const innerEnhancedRoll = getEnhancedRoll(enhancedRoll, ePerk);
-
-        if (innerEnhancedRoll) {
-          allRolls.push(innerEnhancedRoll);
-        }
-      });
-    }
-  });
-
-  return allRolls;
-}
-
-function getEnhancedRoll(roll: WishListRoll, perkToCheck: number): WishListRoll | null {
-  const enhancedPerk = D2EnhancedTraits[perkToCheck];
-
-  if (enhancedPerk && !isNaN(enhancedPerk)) {
-    const cloneRoll = {
-      ...roll,
-      recommendedPerks: new Set(roll.recommendedPerks),
-    };
-
-    cloneRoll.recommendedPerks.delete(perkToCheck);
-    cloneRoll.recommendedPerks.add(enhancedPerk);
-
-    return cloneRoll;
-  }
-
-  return null;
 }
 
 function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {

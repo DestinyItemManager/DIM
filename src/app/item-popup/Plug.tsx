@@ -1,3 +1,4 @@
+import { enhancedToPerk } from 'app/armory/wishlist-collapser';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
@@ -130,6 +131,12 @@ export function PerkCircleWithTooltip({
       craftingData={socketInfo.craftingData?.[plug.plugDef.hash]}
     />
   );
+
+  const isRecommendedPerk =
+    wishlistRoll &&
+    (wishlistRoll.wishListPerks.has(plug.plugDef.hash) ||
+      wishlistRoll.wishListPerks.has(enhancedToPerk[plug.plugDef.hash]));
+
   return (
     <>
       <PressTip tooltip={tooltip}>
@@ -141,7 +148,7 @@ export function PerkCircleWithTooltip({
           cannotRoll={cannotRoll}
         />
       </PressTip>
-      {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
+      {isRecommendedPerk && (
         <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t('WishListRoll.BestRatedTip')} />
       )}
     </>
