@@ -230,7 +230,7 @@ const socketFilters: FilterDefinition[] = [
       },
   },
   {
-    keywords: 'hasmemento',
+    keywords: 'memento',
     description: tl('Filter.HasMemento'),
     format: ['query'],
     destinyVersion: 2,
