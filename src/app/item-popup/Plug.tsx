@@ -1,4 +1,3 @@
-import { enhancedToPerk } from 'app/armory/wishlist-collapser';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
@@ -12,7 +11,7 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import PressTip from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
+import { InventoryWishListRoll, isWishListPlug } from '../wishlists/wishlists';
 import './ItemSockets.scss';
 import styles from './Plug.m.scss';
 import { DimPlugTooltip } from './PlugTooltip';
@@ -132,10 +131,7 @@ export function PerkCircleWithTooltip({
     />
   );
 
-  const isRecommendedPerk =
-    wishlistRoll &&
-    (wishlistRoll.wishListPerks.has(plug.plugDef.hash) ||
-      wishlistRoll.wishListPerks.has(enhancedToPerk[plug.plugDef.hash]));
+  const isRecommendedPerk = isWishListPlug(plug, wishlistRoll);
 
   return (
     <>

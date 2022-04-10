@@ -72,12 +72,20 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
 }
 
 /** Is the plug's hash included in the recommended perks from the wish list roll? */
-function isWishListPlug(plug: DimPlug, wishListRoll: WishListRoll): boolean {
-  return (
-    // if this perk was recommended
-    wishListRoll.recommendedPerks.has(plug.plugDef.hash) ||
-    // or this enhanced perk's base version was recommended
-    wishListRoll.recommendedPerks.has(enhancedToPerk[plug.plugDef.hash])
+export function isWishListPlug(
+  plug: DimPlug,
+  wishListRoll?: WishListRoll | InventoryWishListRoll
+): boolean {
+  const perks =
+    wishListRoll &&
+    ('recommendedPerks' in wishListRoll
+      ? wishListRoll.recommendedPerks
+      : wishListRoll.wishListPerks);
+  return Boolean(
+    perks &&
+      (perks.has(plug.plugDef.hash) || // if this perk was recommended
+        // or this enhanced perk's base version was recommended
+        perks.has(enhancedToPerk[plug.plugDef.hash]))
   );
 }
 
