@@ -11,7 +11,7 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import PressTip from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
+import { InventoryWishListRoll, isWishListPlug } from '../wishlists/wishlists';
 import './ItemSockets.scss';
 import styles from './Plug.m.scss';
 import { DimPlugTooltip } from './PlugTooltip';
@@ -130,6 +130,9 @@ export function PerkCircleWithTooltip({
       craftingData={socketInfo.craftingData?.[plug.plugDef.hash]}
     />
   );
+
+  const isRecommendedPerk = isWishListPlug(plug, wishlistRoll);
+
   return (
     <>
       <PressTip tooltip={tooltip}>
@@ -141,7 +144,7 @@ export function PerkCircleWithTooltip({
           cannotRoll={cannotRoll}
         />
       </PressTip>
-      {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
+      {isRecommendedPerk && (
         <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t('WishListRoll.BestRatedTip')} />
       )}
     </>
