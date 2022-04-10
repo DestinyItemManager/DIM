@@ -7,6 +7,7 @@
 * Fixed perk grouping for some perk-only wish lists.
 * Armory wish list view now shows perks, magazines, barrels, etc. in a similar order to the in-game view.
 * Re-added the D2Gunsmith link to the weapons armory page.
+* `memento:any`, `memento:nightfall` etc. filters find crafted weapons with a memento inserted.
 
 ## 7.11.0 <span class="changelog-date">(2022-04-03)</span>
 

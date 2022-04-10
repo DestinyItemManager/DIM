@@ -9,6 +9,7 @@ import {
 } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
+import craftingMementos from 'data/d2/crafting-mementos.json';
 import {
   ItemCategoryHashes,
   PlugCategoryHashes,
@@ -227,6 +228,22 @@ const socketFilters: FilterDefinition[] = [
             return !item.deepsightInfo.complete;
         }
       },
+  },
+  {
+    keywords: 'memento',
+    description: tl('Filter.HasMemento'),
+    format: ['query'],
+    destinyVersion: 2,
+    suggestions: ['any', ...Object.keys(craftingMementos)],
+    filter: ({ filterValue }) => {
+      const list: number[] | undefined = craftingMementos[filterValue];
+      return (item: DimItem) =>
+        item.sockets?.allSockets.some(
+          (s) =>
+            s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos &&
+            (filterValue === 'any' || list?.includes(s.plugged.plugDef.hash))
+        );
+    },
   },
 ];
 
