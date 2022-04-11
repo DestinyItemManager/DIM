@@ -1,7 +1,15 @@
 .emoteWheel {
-  margin-left: 10px;
-
-  td > img {
+  margin-left: 13px;
+  display: grid;
+  gap: 4px;
+  place-items: center;
+  grid-template-columns: min-content min-content min-content;
+  grid-template-rows: min-content min-content min-content;
+  grid-template-areas:
+    '  .      slot0     .  '
+    'slot2 collection slot3'
+    '  .      slot1     .  ';
+  & > div > img {
     display: block;
     margin-left: auto;
     margin-right: auto;

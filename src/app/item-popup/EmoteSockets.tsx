@@ -22,35 +22,16 @@ export default function EmoteSockets({
   sockets: DimSocket[];
   onClick?(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
 }) {
+  const selectorIcon = <DefItemIcon itemDef={itemDef} />;
+
   return (
-    <table className={clsx(styles.emoteWheel, 'item-socket-category-Consumable socket-container')}>
-      <tbody>
-        <tr>
-          <td />
-          <td>
-            <Socket item={item} socket={sockets[0]} onClick={onClick} />
-          </td>
-          <td />
-        </tr>
-        <tr>
-          <td>
-            <Socket item={item} socket={sockets[2]} onClick={onClick} />
-          </td>
-          <td>
-            <DefItemIcon itemDef={itemDef} />
-          </td>
-          <td>
-            <Socket item={item} socket={sockets[3]} onClick={onClick} />
-          </td>
-        </tr>
-        <tr>
-          <td />
-          <td>
-            <Socket item={item} socket={sockets[1]} onClick={onClick} />
-          </td>
-          <td />
-        </tr>
-      </tbody>
-    </table>
+    <div className={clsx(styles.emoteWheel, 'item-socket-category-Consumable socket-container')}>
+      {sockets.map((s, i) => (
+        <div style={{ gridArea: `slot${i}` }} key={`${item.id}${s.socketIndex}`}>
+          <Socket item={item} socket={s} onClick={onClick} />
+        </div>
+      ))}
+      <div style={{ gridArea: 'collection' }}>{selectorIcon}</div>
+    </div>
   );
 }
