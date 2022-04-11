@@ -6,6 +6,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
+import { pickPlugPositions } from '../mod-assignment-utils';
 import Mod from './Mod';
 import styles from './Sockets.m.scss';
 
@@ -43,23 +44,19 @@ function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
   const modsAndWhitelist: { plugDef: PluggableInventoryItemDefinition; whitelist: number[] }[] = [];
   const modsToUse = lockedMods ? [...lockedMods] : [];
 
+  const assignments = pickPlugPositions(defs, item, modsToUse);
+
   for (const socket of item.sockets?.allSockets || []) {
     const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
-    let toSave: DestinyInventoryItemDefinition | undefined;
-
-    for (let modIndex = 0; modIndex < modsToUse.length; modIndex++) {
-      const mod = modsToUse[modIndex];
-      if (
-        socketType.plugWhitelist.some((plug) => plug.categoryHash === mod.plug.plugCategoryHash)
-      ) {
-        toSave = mod;
-        modsToUse.splice(modIndex, 1);
-        break;
-      }
-    }
+    let toSave: DestinyInventoryItemDefinition | undefined = assignments.find(
+      (a) => a.socketIndex === socket.socketIndex
+    )?.mod;
 
     if (!toSave) {
-      const plugHash = socket.emptyPlugItemHash;
+      const plugHash =
+        socket.emptyPlugItemHash ||
+        (socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
+          socket.plugged.plugDef.hash);
       if (plugHash) {
         toSave = defs.InventoryItem.get(plugHash);
       }

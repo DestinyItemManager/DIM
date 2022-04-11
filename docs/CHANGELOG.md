@@ -1,5 +1,7 @@
 ## Next
 
+* If an armor piece doesn't have enough mod slots to fit the requested mods (e.g. three resist mods but no artifice chest piece), DIM will notice this earlier and show them as unassigned in the Show Mod Placement menu.
+
 ## 7.12.0 <span class="changelog-date">(2022-04-10)</span>
 
 * If a wish list contains only non-enhanced perks, DIM will mark a roll as matching if it has the Enhanced versions of those perks.
