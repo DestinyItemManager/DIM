@@ -19,13 +19,12 @@ function MenuItem({ item, forClass }: { item: DropDownItem; forClass?: DestinyCl
   return (
     <div key={item.id} className={`check-button ${styles.checkButton}`} onClick={item.onItemSelect}>
       <label>
+        {item.dropdownLabel ?? item.dropdownLabel}
         {item.id === 'customstat' ? (
           <>
             {t('Organizer.Columns.CustomTotal')}
             <StatTotalToggle forClass={forClass} />
           </>
-        ) : item.dropdownLabel ? (
-          item.dropdownLabel
         ) : (
           item.content
         )}

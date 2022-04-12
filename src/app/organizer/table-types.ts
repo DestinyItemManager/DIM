@@ -32,7 +32,9 @@ export interface ColumnDefinition {
   gridWidth?: string;
   /** Header renderer */
   header: React.ReactNode;
-  /** Dropdown label renderer */
+  /**
+   * If the column-toggler dropdown needs a more verbose label when the header is only an icon `e.g.Power or Locked`, that label content goes here
+   */
   dropdownLabel?: React.ReactNode;
   /** Columns can optionally belong to a column group - if so, they're shown/hidden as a group. */
   columnGroup?: ColumnGroup;
