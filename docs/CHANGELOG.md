@@ -1,7 +1,7 @@
 ## Next
 
 * If an armor piece doesn't have enough mod slots to fit the requested mods (e.g. three resist mods but no artifice chest piece), DIM will notice this earlier and show them as unassigned in the Show Mod Placement menu.
-* Added text labels to "icon-only" columns (lock icon, power icon, etc.) in dropdowns. Only shows label in dropdown, columns shows icon only.
+* Added text labels to "icon-only" columns (lock icon, power icon, etc.) in dropdowns. Only show label in dropdowns, columns show icon only.
 
 ## 7.12.0 <span class="changelog-date">(2022-04-10)</span>
 
