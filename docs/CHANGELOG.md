@@ -1,6 +1,7 @@
 ## Next
 
 * If an armor piece doesn't have enough mod slots to fit the requested mods (e.g. three resist mods but no artifice chest piece), DIM will notice this earlier and show them as unassigned in the Show Mod Placement menu.
+* Added text labels to "icon-only" columns (lock icon, power icon, etc.) in dropdowns. Only shows label in dropdown, columns shows icon only.
 
 ## 7.12.0 <span class="changelog-date">(2022-04-10)</span>
 
@@ -472,7 +473,7 @@
   * Clicking other perk option previews their stat effects.
   * You can click the "DIM" link to open the item info on its own, and share a roll with others.
   * Clicking modslots lets you change mods.
-  * Selecting different ornaments shows what the ornament looks like on the item.
+  * Selecting different ornaments shows what the ornament looks like on the item.****
   * Added a link to D2 Gunsmith for weapons.
 * Inventory screen can now be sorted by whether an item is masterworked. Check [Settings](/settings) to view and rearrange your sort strategy.
 * Loadout Optimizer shows an estimate of how long it'll take to complete finding sets.
