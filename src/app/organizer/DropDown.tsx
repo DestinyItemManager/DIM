@@ -10,6 +10,7 @@ import styles from './DropDown.m.scss';
 export interface DropDownItem {
   id: string;
   content: ReactNode;
+  dropdownLabel?: ReactNode;
   checked?: boolean;
   onItemSelect?(e: React.MouseEvent): void;
 }
@@ -26,6 +27,7 @@ function MenuItem({ item, forClass }: { item: DropDownItem; forClass?: DestinyCl
         ) : (
           item.content
         )}
+        {item.dropdownLabel}
       </label>
       {item.checked !== undefined && (
         <AppIcon icon={item.checked ? enabledIcon : unselectedCheckIcon} />

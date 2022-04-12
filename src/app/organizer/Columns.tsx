@@ -256,6 +256,7 @@ export function getColumns(
     !isGhost && {
       id: 'power',
       header: <AppIcon icon={powerIndicatorIcon} />,
+      dropdownLabel: t('Organizer.Columns.Power'),
       value: (item) => item.power,
       defaultSort: SortDirection.DESC,
       filter: (value) => `power:>=${value}`,

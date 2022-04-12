@@ -14,6 +14,7 @@ type Value = string | number | boolean | undefined | null;
 export interface ColumnGroup {
   id: string;
   header: React.ReactNode;
+  dropdownLabel?: React.ReactNode;
 }
 
 // TODO: column groupings?
@@ -31,6 +32,8 @@ export interface ColumnDefinition {
   gridWidth?: string;
   /** Header renderer */
   header: React.ReactNode;
+  /** Dropdown label renderer */
+  dropdownLabel?: React.ReactNode;
   /** Columns can optionally belong to a column group - if so, they're shown/hidden as a group. */
   columnGroup?: ColumnGroup;
   /** The raw value of the column for this item. */
