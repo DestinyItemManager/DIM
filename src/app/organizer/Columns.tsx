@@ -289,6 +289,7 @@ export function getColumns(
     {
       id: 'locked',
       header: <AppIcon icon={lockIcon} />,
+      dropdownLabel: t('Organizer.Columns.Locked'),
       value: (i) => i.locked,
       cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
       defaultSort: SortDirection.DESC,

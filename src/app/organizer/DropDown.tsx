@@ -24,10 +24,11 @@ function MenuItem({ item, forClass }: { item: DropDownItem; forClass?: DestinyCl
             {t('Organizer.Columns.CustomTotal')}
             <StatTotalToggle forClass={forClass} />
           </>
+        ) : item.dropdownLabel ? (
+          item.dropdownLabel
         ) : (
           item.content
         )}
-        {item.dropdownLabel}
       </label>
       {item.checked !== undefined && (
         <AppIcon icon={item.checked ? enabledIcon : unselectedCheckIcon} />
