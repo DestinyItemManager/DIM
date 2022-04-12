@@ -1,0 +1,21 @@
+@import '../variables.scss';
+
+.maxPowerLoadoutItem {
+  display: none;
+
+  :global(.show-new-items) &,
+  &.alwaysShow {
+    display: block;
+    width: calc(var(--item-size) * 0.065);
+    height: calc(var(--item-size) * 0.065);
+    border: calc(var(--item-size) * 0.065) solid #e5c809;
+    position: absolute;
+    bottom: $item-border-width + 2px;
+    right: $item-border-width + 2px;
+    border-radius: 1px;
+    pointer-events: none;
+    background-color: #363162;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
+    transform: rotate(45deg);
+  }
+}
