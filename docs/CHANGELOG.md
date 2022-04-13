@@ -4,6 +4,7 @@
 * Added text labels to "icon-only" columns (lock icon, power icon, etc.) in dropdowns on the Organizer page. Only show label in dropdowns, columns show icon only.
 * Echo of Persistence Void Fragment now indicates that it has a stat penalty depending on the Guardian class.
 * We no longer auto-refresh inventory if you "overfill" a bucket, as refreshing too quickly was returning out-of-date info from Bungie.net and making items appear to "revert" to an earlier location. Make sure to refresh manually if DIM is getting out of sync with the game state.
+* Using the Mod Picker to edit loadout mods should now correctly show all picked mods.
 
 ## 7.12.0 <span class="changelog-date">(2022-04-10)</span>
 
