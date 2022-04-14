@@ -31,6 +31,9 @@ export default React.memo(function EnabledColumnsSelector({
   for (const column of columns) {
     const id = getColumnSelectionId(column);
     const header = column.columnGroup ? column.columnGroup.header : column.header;
+    const dropdownLabel = column.columnGroup
+      ? column.columnGroup.dropdownLabel
+      : column.dropdownLabel;
     if (id === 'selection' || column.noHide) {
       continue;
     }
@@ -41,6 +44,7 @@ export default React.memo(function EnabledColumnsSelector({
       items[id] = {
         id,
         content: header,
+        dropdownLabel: dropdownLabel,
         checked,
         onItemSelect: () => onChangeEnabledColumn({ id, checked: !checked }),
       };

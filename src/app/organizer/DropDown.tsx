@@ -10,6 +10,7 @@ import styles from './DropDown.m.scss';
 export interface DropDownItem {
   id: string;
   content: ReactNode;
+  dropdownLabel?: ReactNode;
   checked?: boolean;
   onItemSelect?(e: React.MouseEvent): void;
 }
@@ -18,6 +19,7 @@ function MenuItem({ item, forClass }: { item: DropDownItem; forClass?: DestinyCl
   return (
     <div key={item.id} className={`check-button ${styles.checkButton}`} onClick={item.onItemSelect}>
       <label>
+        {item.dropdownLabel ?? item.dropdownLabel}
         {item.id === 'customstat' ? (
           <>
             {t('Organizer.Columns.CustomTotal')}

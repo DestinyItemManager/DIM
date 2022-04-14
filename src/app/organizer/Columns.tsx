@@ -256,6 +256,7 @@ export function getColumns(
     !isGhost && {
       id: 'power',
       header: <AppIcon icon={powerIndicatorIcon} />,
+      dropdownLabel: t('Organizer.Columns.Power'),
       value: (item) => item.power,
       defaultSort: SortDirection.DESC,
       filter: (value) => `power:>=${value}`,
@@ -288,6 +289,7 @@ export function getColumns(
     {
       id: 'locked',
       header: <AppIcon icon={lockIcon} />,
+      dropdownLabel: t('Organizer.Columns.Locked'),
       value: (i) => i.locked,
       cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
       defaultSort: SortDirection.DESC,
