@@ -439,8 +439,7 @@ export function getColumns(
     },
     {
       id: 'perks',
-      header:
-        destinyVersion === 2 ? t('Organizer.Columns.PerksMods') : t('Organizer.Columns.Perks'),
+      header: t('Organizer.Columns.Perks'),
       value: () => 0, // TODO: figure out a way to sort perks
       cell: (_val, item) =>
         isD1Item(item) ? (
@@ -450,6 +449,34 @@ export function getColumns(
         ),
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
+      filter: (value) =>
+        typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
+    },
+    {
+      id: 'mods',
+      header: t('Organizer.Columns.Mods'),
+      value: () => 0,
+      cell: (_val, item) =>
+        isD1Item(item) ? (
+          <D1PerksCell item={item} />
+        ) : (
+          <PerksCell item={item} onPlugClicked={onPlugClicked} />
+        ),
+      noSort: true,
+      filter: (value) =>
+        typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
+    },
+    {
+      id: 'shaders',
+      header: t('Organizer.Columns.Shaders'),
+      value: () => 0,
+      cell: (_val, item) =>
+        isD1Item(item) ? (
+          <D1PerksCell item={item} />
+        ) : (
+          <PerksCell item={item} onPlugClicked={onPlugClicked} />
+        ),
+      noSort: true,
       filter: (value) =>
         typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
     },
@@ -605,6 +632,8 @@ function PerksCell({
   if (!sockets.length) {
     return null;
   }
+
+  console.log(sockets);
   return (
     <>
       {sockets.map((socket) => (
