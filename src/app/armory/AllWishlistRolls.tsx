@@ -5,6 +5,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { compareBy } from 'app/utils/comparators';
 import { wishListRollsForItemHashSelector } from 'app/wishlists/selectors';
 import { WishListRoll } from 'app/wishlists/types';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -157,45 +158,70 @@ function WishlistRolls({
                   consolidatedSecondaries.push([]);
                 }
 
-                return consolidatedSecondaries.map((secondaryBundle) => {
-                  const bundles = [...secondaryBundle, ...primaryBundles];
+                // permute each secondary bundle with each primary bundle.
+                // i.e.
+                // [
+                //   [[drop mag], [smallbore,     extended barrel], [outlaw], [kill clip]],
+                //   [[tac mag ], [rifled barrel, extended barrel], [outlaw], [kill clip]],
+                //   [[drop mag], [smallbore,     extended barrel], [outlaw], [rampage  ]],
+                //   [[tac mag ], [rifled barrel, extended barrel], [outlaw], [rampage  ]]
+                // ]
+                const permutations = consolidatedSecondaries.map((secondaryBundle) => [
+                  ...secondaryBundle,
+                  ...primaryBundles,
+                ]);
 
+                return permutations.map((bundles) => {
                   // remove invalid rolls. this should really be handled upstream in wishlist processing
                   if (bundles.some((b) => b.some((h) => !(h in plugByPerkHash)))) {
                     return null;
                   }
                   return (
                     <li key={bundles.map((b) => b.join()).join()} className={styles.roll}>
-                      {bundles.map((hashes) => (
-                        <div key={hashes.join()} className={styles.orGroup}>
-                          {hashes
-                            .sort(
-                              compareBy(
-                                // unrecognized/unrollable perks sort to last
-                                (h) => columnOrderByPlugHash[h] ?? 9999
-                              )
-                            )
-                            .map((h) => {
-                              const socket = socketByPerkHash[h];
-                              const plug = plugByPerkHash[h];
-                              return (
-                                plug &&
-                                socket && (
-                                  <Plug
-                                    key={plug.plugDef.hash}
-                                    plug={plug}
-                                    item={item}
-                                    socketInfo={socket}
-                                    hasMenu={false}
-                                    notSelected={realAvailablePlugHashes?.includes(
-                                      plug.plugDef.hash
-                                    )}
-                                  />
+                      {bundles.map((hashes) => {
+                        // remove origin perks that can't possibly not be there. no point in displaying these.
+                        // maybe this should be handled upstream in wishlist processing.
+                        if (
+                          hashes.some(
+                            (h) =>
+                              plugByPerkHash[h].plugDef.plug.plugCategoryHash ===
+                                PlugCategoryHashes.Origins &&
+                              socketByPerkHash[h].socketDefinition.singleInitialItemHash === h
+                          )
+                        ) {
+                          return null;
+                        }
+                        return (
+                          <div key={hashes.join()} className={styles.orGroup}>
+                            {hashes
+                              .sort(
+                                compareBy(
+                                  // unrecognized/unrollable perks sort to last
+                                  (h) => columnOrderByPlugHash[h] ?? 9999
                                 )
-                              );
-                            })}
-                        </div>
-                      ))}
+                              )
+                              .map((h) => {
+                                const socket = socketByPerkHash[h];
+                                const plug = plugByPerkHash[h];
+                                return (
+                                  plug &&
+                                  socket && (
+                                    <Plug
+                                      key={plug.plugDef.hash}
+                                      plug={plug}
+                                      item={item}
+                                      socketInfo={socket}
+                                      hasMenu={false}
+                                      notSelected={realAvailablePlugHashes?.includes(
+                                        plug.plugDef.hash
+                                      )}
+                                    />
+                                  )
+                                );
+                              })}
+                          </div>
+                        );
+                      })}
                     </li>
                   );
                 });
