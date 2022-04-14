@@ -5,6 +5,7 @@ import {
   DimSocketCategory,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
+import { modsWithConditionalStats } from 'app/search/d2-known-values';
 import {
   DestinyInventoryItemDefinition,
   DestinySocketCategoryStyle,
@@ -219,8 +220,17 @@ export function getPerkDescriptions(
   // within this plug, let's not repeat any descriptions or requirement strings
   const uniqueStrings = new Set<string>();
 
+  // Terrible hack here: Echo of Persistence behaves like Charge Harvester, but uses a number of hidden perks
+  // (which we can't associate with stats), But we also can't get the relevant classType in here,
+  // so just copy the "-10 to the stat that governs your class ability recharge rate" perk from Charge Harvester.
+  const perks = [...plug.perks];
+  if (plug.hash === modsWithConditionalStats.echoOfPersistence) {
+    const chargeHarvesterDef = defs.InventoryItem.get(modsWithConditionalStats.chargeHarvester);
+    perks.push(chargeHarvesterDef.perks[1]);
+  }
+
   // filter out things with no displayable text, or that are meant to be hidden
-  for (const perk of plug.perks) {
+  for (const perk of perks) {
     if (perk.perkVisibility === ItemPerkVisibility.Hidden) {
       continue;
     }
