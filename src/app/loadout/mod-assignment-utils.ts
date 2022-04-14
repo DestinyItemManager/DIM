@@ -1,6 +1,6 @@
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, DimSockets, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
 import {
   armor2PlugCategoryHashesByName,
@@ -325,10 +325,44 @@ export function fitMostMods({
 }
 
 /**
+ * Get active armor mod sockets and sort the sockets and mods for a greedy assignment strategy to succeed.
+ */
+function getArmorSocketsAndMods(
+  sockets: DimSockets | null,
+  mods: PluggableInventoryItemDefinition[]
+) {
+  const orderedSockets = getSocketsByCategoryHash(sockets, SocketCategoryHashes.ArmorMods)
+    // If a socket is not plugged (even with an empty socket) we consider it disabled
+    // This needs to be checked as the 30th anniversary armour has the Artifice socket
+    // but the API considers it to be disabled.
+    .filter((socket) => socket.plugged)
+    // Artificer sockets only plug a subset of the bucket specific mods so we sort by the size
+    // of the plugItems in the plugset so we use that first if possible. This is optional and
+    // simply prefers plugging artifact mods into artifice sockets if available.
+    .sort(compareBy((socket) => (socket.plugSet ? socket.plugSet.plugs.length : 999)));
+
+  // Order the mods themselves based on how many sockets they could fit into,
+  // inserting the more picky mods first. This is necessary because we
+  // want to honor user choice with mod sockets, but need to move some mods if
+  // necessary. Consider the following scenario:
+  // * Artifice chestpiece has two artifact resist mods in the normal sockets
+  // * mods are [artifact resist, artifact resist, normal resist]
+  // Naively inserting those mods finds the artifact mods in their position,
+  // but the artifact-only socket can't slot the normal resist mod. Thus,
+  // we must assign the regular resist mod first.
+  const orderedMods = _.sortBy(
+    mods,
+    (mod) => orderedSockets.filter((s) => plugFitsIntoSocket(s, mod.hash)).length
+  );
+
+  return { orderedSockets, orderedMods };
+}
+
+/**
  * Assign bucket specific mods based on assumed energy type, assumed mod energy capacity, and available sockets,
  * partitioning mods based whether it could fit them into the item.
- * Socket choice for mod assignment is greedy, but uses a heuristic based on the number of mods from the plugSet
- * since sockets with fewer available mods are more restrictive and should be preferred (e.g. Artifice sockets)
+ * Socket choice for mod assignment is greedy, but uses a heuristic based on the number of sockets a mod could
+ * fit into, since mods that can fit into fewer sockets must be prioritized.
  */
 export function assignBucketSpecificMods({
   assumeArmorMasterwork,
@@ -353,24 +387,13 @@ export function assignBucketSpecificMods({
   // The others will be rejected below.
   const itemEnergyType = getItemEnergyType(item, lockArmorEnergyType, modsToAssign);
 
-  const sockets = getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorMods);
-
-  const socketsOrderedWithArtificeFirst = sockets
-    // If a socket is not plugged (even with an empty socket) we consider it disabled
-    // This needs to be checked as the 30th anniversary armour has the Artifice socket
-    // but the API considers it to be disabled.
-    .filter((socket) => socket.plugSet && socket.plugged)
-    // Artificer sockets only plug a subset of the bucket specific mods so we sort by the size
-    // of the plugItems in the plugset so we use that first if possible.
-    .sort(compareBy((socket) => socket.plugSet?.plugs.length));
+  const { orderedSockets, orderedMods } = getArmorSocketsAndMods(item.sockets, modsToAssign);
 
   const assigned = [];
   const unassigned = [];
 
-  for (const mod of modsToAssign) {
-    const socketIndex = socketsOrderedWithArtificeFirst.findIndex((socket) =>
-      plugFitsIntoSocket(socket, mod.hash)
-    );
+  for (const mod of orderedMods) {
+    const socketIndex = orderedSockets.findIndex((socket) => plugFitsIntoSocket(socket, mod.hash));
     if (socketIndex === -1) {
       // We don't have a socket to fit this mod into
       unassigned.push(mod);
@@ -390,7 +413,7 @@ export function assignBucketSpecificMods({
 
     assigned.push(mod);
     itemEnergyCapacity -= modCost;
-    socketsOrderedWithArtificeFirst.splice(socketIndex, 1);
+    orderedSockets.splice(socketIndex, 1);
   }
 
   return { assigned, unassigned };
@@ -419,25 +442,18 @@ export function pickPlugPositions(
   if (!item.sockets) {
     return assignments;
   }
-  const existingModSockets = getSocketsByCategoryHash(
-    item.sockets,
-    SocketCategoryHashes.ArmorMods
-  ).sort(
-    // We are sorting so that we can assign mods to the socket with the least number of possible options
-    // first. This helps with artificer mods as the socket is a subset of the other mod sockets on the item
-    compareBy((socket) => (socket.plugSet ? socket.plugSet.plugs.length : 999))
-  );
 
-  for (const modToInsert of modsToInsert) {
+  const { orderedSockets, orderedMods } = getArmorSocketsAndMods(item.sockets, modsToInsert);
+
+  for (const modToInsert of orderedMods) {
     // If this mod is already plugged somewhere, that's the slot we want to keep it in
-    let destinationSocketIndex = existingModSockets.findIndex(
+    let destinationSocketIndex = orderedSockets.findIndex(
       (socket) => socket.plugged?.plugDef.hash === modToInsert.hash
     );
 
     // If it wasn't found already plugged, find the first socket with a matching PCH
-    // TO-DO: this is naive and is going to be misleading for armor
     if (destinationSocketIndex === -1) {
-      destinationSocketIndex = existingModSockets.findIndex((socket) =>
+      destinationSocketIndex = orderedSockets.findIndex((socket) =>
         plugFitsIntoSocket(socket, modToInsert.hash)
       );
     }
@@ -450,7 +466,7 @@ export function pickPlugPositions(
     }
 
     // we found it!! this is where we have chosen to place the mod
-    const destinationSocket = existingModSockets[destinationSocketIndex];
+    const destinationSocket = orderedSockets[destinationSocketIndex];
 
     assignments.push({
       socketIndex: destinationSocket.socketIndex,
@@ -459,17 +475,12 @@ export function pickPlugPositions(
     });
 
     // remove this existing socket from consideration
-    existingModSockets.splice(destinationSocketIndex, 1);
+    orderedSockets.splice(destinationSocketIndex, 1);
   }
 
   // For each remaining armor mod socket that won't have mods assigned,
   // allow it to be returned to its default (usually "Empty Mod Socket").
-  for (const socket of existingModSockets) {
-    if (!socket.plugged) {
-      // Avoid trying to plug something into unavailable sockets,
-      // like artifice mod sockets on non-artifice armor instances.
-      continue;
-    }
+  for (const socket of orderedSockets) {
     const defaultModHash = socket.emptyPlugItemHash;
     const mod =
       defaultModHash &&
