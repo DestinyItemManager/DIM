@@ -1,5 +1,5 @@
 # Latest LTS node
-FROM node:fermium
+FROM node:17
 
 # Create app directory
 RUN mkdir -p /usr/src/app
