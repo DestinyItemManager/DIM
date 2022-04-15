@@ -124,17 +124,20 @@ export default function SocketDetailsSelectedPlug({
       if (!itemStat) {
         return null;
       }
+
+      if (!isPlugStatActive(item, plug.hash, stat.statTypeHash, stat.isConditionallyActive)) {
+        return null;
+      }
+
       const statGroupDef = defs.StatGroup.get(
         defs.InventoryItem.get(item.hash).stats!.statGroupHash!
       );
 
       const statDisplay = statGroupDef?.scaledStats.find((s) => s.statHash === stat.statTypeHash);
+      const currentModValue =
+        currentPlug?.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statTypeHash)
+          ?.value || 0;
 
-      const currentModValue = currentPlug?.stats?.[stat.statTypeHash] || 0;
-
-      if (!isPlugStatActive(item, plug.hash, stat.statTypeHash, stat.isConditionallyActive)) {
-        return null;
-      }
       let modValue = stat.value;
       const updatedInvestmentValue = itemStat.investmentValue + modValue - currentModValue;
       let itemStatValue = updatedInvestmentValue;
