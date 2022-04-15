@@ -9,7 +9,7 @@ import PressTip from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t, tl } from 'app/i18next-t';
 import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
-import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
+import { D1Item, DimItem, DimSocket, DimSocketCategory } from 'app/inventory/item-types';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
@@ -605,18 +605,12 @@ function PerksCell({
   if (!item.sockets) {
     return null;
   }
-
-  let sockets = item.sockets.categories.flatMap((c) =>
-    getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
-      (s) =>
-        !isKillTrackerSocket(s) &&
-        !isEmptyArmorModSocket(s) &&
-        s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
-        s.isPerk &&
-        (item.isExotic || // ignore archetype if it's not exotic
-          !s.plugged.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsIntrinsic))
-    )
+  const perks = item.sockets.categories.filter(
+    (c) =>
+      c.category.displayProperties.name !== 'WEAPON MODS' &&
+      c.category.displayProperties.name !== 'WEAPON COSMETICS'
   );
+  let sockets = getSockets(item, perks);
 
   if (traitsOnly) {
     sockets = sockets.filter(
@@ -735,16 +729,7 @@ function ModsCell({
   const mods = item.sockets.categories.filter(
     (c) => c.category.displayProperties.name === 'WEAPON MODS'
   );
-  const sockets = mods.flatMap((c) =>
-    getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
-      (s) =>
-        !isKillTrackerSocket(s) &&
-        !isEmptyArmorModSocket(s) &&
-        s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
-        (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
-          isUsedArmorModSocket(s))
-    )
-  );
+  const sockets = getSockets(item, mods);
 
   if (!sockets.length) {
     return null;
@@ -807,16 +792,7 @@ function ShadersCell({
   const shaders = item.sockets.categories.filter(
     (c) => c.category.displayProperties.name === 'WEAPON COSMETICS'
   );
-  const sockets = shaders.flatMap((c) =>
-    getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
-      (s) =>
-        !isKillTrackerSocket(s) &&
-        !isEmptyArmorModSocket(s) &&
-        s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
-        (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
-          isUsedArmorModSocket(s))
-    )
-  );
+  const sockets = getSockets(item, shaders);
 
   if (!sockets.length) {
     return null;
@@ -865,6 +841,24 @@ function ShadersCell({
         </div>
       ))}
     </>
+  );
+}
+
+function getSockets(item: DimItem, category: DimSocketCategory[]) {
+  return category.flatMap((c) =>
+    getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
+      (s) =>
+        !isKillTrackerSocket(s) &&
+        !isEmptyArmorModSocket(s) &&
+        s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
+        (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
+          isUsedArmorModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
+          (s.isPerk &&
+            (item.isExotic || // ignore archetype if it's not exotic
+              !s.plugged.plugDef.itemCategoryHashes?.includes(
+                ItemCategoryHashes.WeaponModsIntrinsic
+              ))))
+    )
   );
 }
 
