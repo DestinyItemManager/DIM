@@ -30,6 +30,12 @@ describe('lo process mappers', () => {
     }
   });
 
+  const defaultArmorRules = {
+    assumeArmorMasterwork: AssumeArmorMasterwork.None,
+    lockArmorEnergyType: LockArmorEnergyType.None,
+    minItemEnergy: MIN_LO_ITEM_ENERGY,
+  };
+
   test('mapped energy matches slot specific mods', () => {
     const modifiedItem: DimItem = {
       ...classItem,
@@ -37,8 +43,10 @@ describe('lo process mappers', () => {
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
-      assumeArmorMasterwork: AssumeArmorMasterwork.All,
-      lockArmorEnergyType: undefined,
+      armorEnergyRules: {
+        ...defaultArmorRules,
+        assumeArmorMasterwork: AssumeArmorMasterwork.All,
+      },
       modsForSlot: [perpetuationMod],
     });
 
@@ -49,8 +57,10 @@ describe('lo process mappers', () => {
   test('mapped energy capacity is 10 when assumed masterwork is used', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
-      assumeArmorMasterwork: AssumeArmorMasterwork.All,
-      lockArmorEnergyType: undefined,
+      armorEnergyRules: {
+        ...defaultArmorRules,
+        assumeArmorMasterwork: AssumeArmorMasterwork.All,
+      },
       modsForSlot: [],
     });
 
@@ -64,8 +74,7 @@ describe('lo process mappers', () => {
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
-      assumeArmorMasterwork: undefined,
-      lockArmorEnergyType: undefined,
+      armorEnergyRules: defaultArmorRules,
       modsForSlot: [],
     });
 
@@ -79,8 +88,7 @@ describe('lo process mappers', () => {
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
-      assumeArmorMasterwork: undefined,
-      lockArmorEnergyType: undefined,
+      armorEnergyRules: defaultArmorRules,
       modsForSlot: [],
     });
 
@@ -90,8 +98,7 @@ describe('lo process mappers', () => {
   test('mapped energy type is Any when energy is not locked', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
-      assumeArmorMasterwork: undefined,
-      lockArmorEnergyType: undefined,
+      armorEnergyRules: defaultArmorRules,
       modsForSlot: [],
     });
 
@@ -101,8 +108,10 @@ describe('lo process mappers', () => {
   test('mapped energy type is the items when energy is locked', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
-      assumeArmorMasterwork: undefined,
-      lockArmorEnergyType: LockArmorEnergyType.All,
+      armorEnergyRules: {
+        ...defaultArmorRules,
+        lockArmorEnergyType: LockArmorEnergyType.All,
+      },
       modsForSlot: [],
     });
 

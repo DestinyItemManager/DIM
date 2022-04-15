@@ -1,4 +1,3 @@
-import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -27,7 +26,7 @@ import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { StatsSet } from '../process-worker/stats-set';
 import { ProcessItemsByBucket } from '../process-worker/types';
-import { ArmorSet, ItemsByBucket, MIN_LO_ITEM_ENERGY, StatFilters, StatRanges } from '../types';
+import { ArmorEnergyRules, ArmorSet, ItemsByBucket, StatFilters, StatRanges } from '../types';
 import {
   getTotalModStatChanges,
   hydrateArmorSet,
@@ -55,8 +54,7 @@ export function useProcess({
   filteredItems,
   lockedMods,
   subclass,
-  assumeArmorMasterwork,
-  lockArmorEnergyType,
+  armorEnergyRules,
   statOrder,
   statFilters,
   anyExotic,
@@ -66,8 +64,7 @@ export function useProcess({
   filteredItems: ItemsByBucket;
   lockedMods: PluggableInventoryItemDefinition[];
   subclass: ResolvedLoadoutItem | undefined;
-  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
-  lockArmorEnergyType: LockArmorEnergyType | undefined;
+  armorEnergyRules: ArmorEnergyRules;
   statOrder: number[];
   statFilters: StatFilters;
   anyExotic: boolean;
@@ -135,8 +132,7 @@ export function useProcess({
       const groupedItems = groupItems(
         items,
         statOrder,
-        assumeArmorMasterwork,
-        lockArmorEnergyType,
+        armorEnergyRules,
         generalMods,
         combatMods,
         activityMods
@@ -149,8 +145,7 @@ export function useProcess({
           processItems[bucketHash].push(
             mapDimItemToProcessItem({
               dimItem: item,
-              assumeArmorMasterwork,
-              lockArmorEnergyType,
+              armorEnergyRules,
               modsForSlot: lockedModMap[bucketHashToPlugCategoryHash[item.bucket.hash]],
             })
           );
@@ -216,8 +211,7 @@ export function useProcess({
     statOrder,
     anyExotic,
     subclass?.loadoutItem.socketOverrides,
-    assumeArmorMasterwork,
-    lockArmorEnergyType,
+    armorEnergyRules,
   ]);
 
   return { result, processing, remainingTime };
@@ -261,8 +255,7 @@ const groupComparator = chainComparator(
 function groupItems(
   items: readonly DimItem[],
   statOrder: number[],
-  assumeArmorMasterwork: AssumeArmorMasterwork | undefined,
-  lockArmorEnergyType: LockArmorEnergyType | undefined,
+  armorEnergyRules: ArmorEnergyRules,
   generalMods: PluggableInventoryItemDefinition[],
   combatMods: PluggableInventoryItemDefinition[],
   activityMods: PluggableInventoryItemDefinition[]
@@ -317,7 +310,7 @@ function groupItems(
         item.energy &&
         requiredEnergyTypes.has(item.energy.energyType) &&
         // If we can swap to another energy type, there's no need to group by current energy type
-        isArmorEnergyLocked(item, lockArmorEnergyType)
+        isArmorEnergyLocked(item, armorEnergyRules)
           ? item.energy.energyType
           : DestinyEnergyType.Any;
     }
@@ -332,11 +325,7 @@ function groupItems(
     // Ensure ordering of stats
     // TODO: statOrder includes disabled stats, should we omit them?
     if (statsByHash) {
-      const assumedEnergy = calculateAssumedItemEnergy(
-        item,
-        assumeArmorMasterwork,
-        MIN_LO_ITEM_ENERGY
-      );
+      const assumedEnergy = calculateAssumedItemEnergy(item, armorEnergyRules);
       for (const statHash of statOrder) {
         let value = statsByHash[statHash]!.base;
         // Add in masterwork stat bonus if we're assuming masterwork stats

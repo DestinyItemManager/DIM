@@ -1,3 +1,4 @@
+import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { armorBuckets } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
@@ -87,3 +88,13 @@ export const LOCKED_EXOTIC_ANY_EXOTIC = -2;
  * The minimum armour energy value used in the LO Builder
  */
 export const MIN_LO_ITEM_ENERGY = 7;
+
+/**
+ * Rules describing how armor can change energy type and capacity
+ * to acommodate mods and hit optimal stats.
+ */
+export interface ArmorEnergyRules {
+  lockArmorEnergyType: LockArmorEnergyType;
+  assumeArmorMasterwork: AssumeArmorMasterwork;
+  minItemEnergy: number;
+}

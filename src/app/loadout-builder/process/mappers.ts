@@ -1,4 +1,3 @@
-import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import {
   activityModPlugCategoryHashes,
@@ -20,7 +19,7 @@ import {
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import { ArmorSet, ArmorStats, MIN_LO_ITEM_ENERGY } from '../types';
+import { ArmorEnergyRules, ArmorSet, ArmorStats } from '../types';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
@@ -122,19 +121,17 @@ export function getTotalModStatChanges(
  */
 export function mapDimItemToProcessItem({
   dimItem,
-  assumeArmorMasterwork,
-  lockArmorEnergyType,
+  armorEnergyRules,
   modsForSlot,
 }: {
   dimItem: DimItem;
-  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
-  lockArmorEnergyType: LockArmorEnergyType | undefined;
+  armorEnergyRules: ArmorEnergyRules;
   modsForSlot?: PluggableInventoryItemDefinition[];
 }): ProcessItem {
   const { id, hash, name, isExotic, power, stats: dimItemStats, energy } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
-  const capacity = calculateAssumedItemEnergy(dimItem, assumeArmorMasterwork, MIN_LO_ITEM_ENERGY);
+  const capacity = calculateAssumedItemEnergy(dimItem, armorEnergyRules);
 
   if (dimItemStats) {
     for (const { statHash, base } of dimItemStats) {
@@ -152,7 +149,7 @@ export function mapDimItemToProcessItem({
     : 0;
 
   // Bucket specific mods have been validated
-  const energyType = getItemEnergyType(dimItem, lockArmorEnergyType, modsForSlot);
+  const energyType = getItemEnergyType(dimItem, armorEnergyRules, modsForSlot);
 
   return {
     id,

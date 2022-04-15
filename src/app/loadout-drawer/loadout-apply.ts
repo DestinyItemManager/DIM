@@ -1,4 +1,4 @@
-import { LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
@@ -987,9 +987,11 @@ function applyLoadoutMods(
     const { itemModAssignments, unassignedMods } = fitMostMods({
       items: armor,
       plannedMods: mods,
-      assumeArmorMasterwork: undefined,
-      lockArmorEnergyType: LockArmorEnergyType.All,
-      minItemEnergy: 1,
+      armorEnergyRules: {
+        assumeArmorMasterwork: AssumeArmorMasterwork.None,
+        lockArmorEnergyType: LockArmorEnergyType.All,
+        minItemEnergy: 1,
+      },
     });
 
     for (const mod of unassignedMods) {

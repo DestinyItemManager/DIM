@@ -1,8 +1,4 @@
-import {
-  AssumeArmorMasterwork,
-  LoadoutParameters,
-  LockArmorEnergyType,
-} from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
@@ -12,7 +8,7 @@ import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
 import React, { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet, ArmorStatHashes, MIN_LO_ITEM_ENERGY, PinnedItems } from '../types';
+import { ArmorEnergyRules, ArmorSet, ArmorStatHashes, PinnedItems } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
@@ -34,8 +30,7 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
-  lockArmorEnergyType: LockArmorEnergyType | undefined;
+  armorEnergyRules: ArmorEnergyRules;
 }
 
 /**
@@ -57,8 +52,7 @@ function GeneratedSet({
   lbDispatch,
   params,
   halfTierMods,
-  assumeArmorMasterwork,
-  lockArmorEnergyType,
+  armorEnergyRules,
 }: Props) {
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
@@ -87,12 +81,10 @@ function GeneratedSet({
     const { itemModAssignments } = fitMostMods({
       items: displayedItems,
       plannedMods: lockedMods,
-      assumeArmorMasterwork,
-      lockArmorEnergyType,
-      minItemEnergy: MIN_LO_ITEM_ENERGY,
+      armorEnergyRules,
     });
     return itemModAssignments;
-  }, [displayedItems, lockedMods, assumeArmorMasterwork, lockArmorEnergyType]);
+  }, [displayedItems, lockedMods, armorEnergyRules]);
 
   if (set.armor.some((items) => !items.length)) {
     errorLog('loadout optimizer', 'No valid sets!');

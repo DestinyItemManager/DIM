@@ -1,4 +1,8 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import {
+  AssumeArmorMasterwork,
+  LoadoutParameters,
+  LockArmorEnergyType,
+} from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createLoadoutShare } from 'app/dim-api/dim-api';
 import { savedLoadoutParametersSelector } from 'app/dim-api/selectors';
@@ -49,7 +53,12 @@ import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
-import { generalSocketReusablePlugSetHash, ItemsByBucket, LOCKED_EXOTIC_ANY_EXOTIC } from './types';
+import {
+  generalSocketReusablePlugSetHash,
+  ItemsByBucket,
+  LOCKED_EXOTIC_ANY_EXOTIC,
+  MIN_LO_ITEM_ENERGY,
+} from './types';
 
 interface ProvidedProps {
   stores: DimStore[];
@@ -244,31 +253,34 @@ function LoadoutBuilder({
     return equippedLoadout ? [...classLoadouts, equippedLoadout] : classLoadouts;
   }, [loadouts, selectedStore]);
 
-  const filteredItems = useMemo(
-    () =>
-      filterItems({
-        defs,
-        items: characterItems,
-        pinnedItems,
-        excludedItems,
-        lockedMods,
-        lockedExoticHash,
-        lockArmorEnergyType: loadoutParameters.lockArmorEnergyType,
-        assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork,
-        searchFilter,
-      }),
-    [
+  const [armorEnergyRules, filteredItems] = useMemo(() => {
+    const armorEnergyRules = {
+      lockArmorEnergyType: loadoutParameters.lockArmorEnergyType ?? LockArmorEnergyType.None,
+      assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork ?? AssumeArmorMasterwork.None,
+      minItemEnergy: MIN_LO_ITEM_ENERGY,
+    };
+    const items = filterItems({
       defs,
-      characterItems,
+      items: characterItems,
       pinnedItems,
       excludedItems,
       lockedMods,
       lockedExoticHash,
-      loadoutParameters.lockArmorEnergyType,
-      loadoutParameters.assumeArmorMasterwork,
+      armorEnergyRules,
       searchFilter,
-    ]
-  );
+    });
+    return [armorEnergyRules, items];
+  }, [
+    defs,
+    characterItems,
+    pinnedItems,
+    excludedItems,
+    lockedMods,
+    lockedExoticHash,
+    loadoutParameters.lockArmorEnergyType,
+    loadoutParameters.assumeArmorMasterwork,
+    searchFilter,
+  ]);
 
   const { result, processing, remainingTime } = useProcess({
     defs,
@@ -276,8 +288,7 @@ function LoadoutBuilder({
     filteredItems,
     lockedMods,
     subclass,
-    assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork,
-    lockArmorEnergyType: loadoutParameters.lockArmorEnergyType,
+    armorEnergyRules,
     statOrder,
     statFilters,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
@@ -464,8 +475,7 @@ function LoadoutBuilder({
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
-            assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
-            lockArmorEnergyType={loadoutParameters.lockArmorEnergyType}
+            armorEnergyRules={armorEnergyRules}
             notes={notes}
           />
         )}

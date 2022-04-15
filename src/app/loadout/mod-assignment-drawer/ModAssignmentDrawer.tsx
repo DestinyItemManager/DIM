@@ -1,4 +1,4 @@
-import { LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { EnergyIncrements } from 'app/dim-ui/EnergyIncrements';
 import PressTip from 'app/dim-ui/PressTip';
@@ -78,9 +78,11 @@ export default function ModAssignmentDrawer({
     const { itemModAssignments, unassignedMods } = fitMostMods({
       items: armor,
       plannedMods: mods,
-      assumeArmorMasterwork: undefined,
-      lockArmorEnergyType: LockArmorEnergyType.All,
-      minItemEnergy: 1,
+      armorEnergyRules: {
+        assumeArmorMasterwork: AssumeArmorMasterwork.None,
+        lockArmorEnergyType: LockArmorEnergyType.All,
+        minItemEnergy: 1,
+      },
     });
 
     return [itemModAssignments, unassignedMods, mods];
