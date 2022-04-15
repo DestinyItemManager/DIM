@@ -278,6 +278,9 @@ export function makeItem(
     if (item.itemHash === 3752071771) {
       // This happens only in the French manifest, for this one item. Just overwrite the definition.
       (itemDef.displayProperties as any).name = 'Le Flow, le Métal';
+    } else if (item.itemHash === 3377778206) {
+      // https://d2.destinygamewiki.com/wiki/Gift_of_the_Lighthouse
+      (itemDef.displayProperties as any).name = 'Gift of the Lighthouse';
     }
     return null;
   }
