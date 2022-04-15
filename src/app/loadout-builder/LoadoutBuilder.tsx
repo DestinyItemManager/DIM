@@ -16,7 +16,11 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import {
+  LoadoutsByItem,
+  loadoutsByItemSelector,
+  loadoutsSelector,
+} from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
@@ -54,6 +58,7 @@ import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
 import {
+  ArmorEnergyRules,
   generalSocketReusablePlugSetHash,
   ItemsByBucket,
   LOCKED_EXOTIC_ANY_EXOTIC,
@@ -74,6 +79,7 @@ interface StoreProps {
     [classType: number]: ItemsByBucket;
   }>;
   loadouts: Loadout[];
+  loadoutsByItem: LoadoutsByItem;
   searchFilter: ItemFilter;
   searchQuery: string;
   halfTierMods: PluggableInventoryItemDefinition[];
@@ -158,6 +164,7 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     items: itemsSelector(state),
     loadouts: loadoutsSelector(state),
+    loadoutsByItem: loadoutsByItemSelector(state),
     searchFilter: searchFilterSelector(state),
     searchQuery: querySelector(state),
     halfTierMods: halfTierModsSelector(state),
@@ -172,6 +179,7 @@ function LoadoutBuilder({
   stores,
   items,
   loadouts,
+  loadoutsByItem,
   searchFilter,
   preloadedLoadout,
   initialClassType,
@@ -254,10 +262,14 @@ function LoadoutBuilder({
   }, [loadouts, selectedStore]);
 
   const [armorEnergyRules, filteredItems] = useMemo(() => {
-    const armorEnergyRules = {
+    const armorEnergyRules: ArmorEnergyRules = {
       lockArmorEnergyType: loadoutParameters.lockArmorEnergyType ?? LockArmorEnergyType.None,
       assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork ?? AssumeArmorMasterwork.None,
       minItemEnergy: MIN_LO_ITEM_ENERGY,
+      loadouts: {
+        loadoutsByItem,
+        optimizingLoadoutId: preloadedLoadout?.id,
+      },
     };
     const items = filterItems({
       defs,
@@ -271,14 +283,16 @@ function LoadoutBuilder({
     });
     return [armorEnergyRules, items];
   }, [
+    loadoutParameters.lockArmorEnergyType,
+    loadoutParameters.assumeArmorMasterwork,
+    loadoutsByItem,
+    preloadedLoadout?.id,
     defs,
     characterItems,
     pinnedItems,
     excludedItems,
     lockedMods,
     lockedExoticHash,
-    loadoutParameters.lockArmorEnergyType,
-    loadoutParameters.assumeArmorMasterwork,
     searchFilter,
   ]);
 
@@ -357,6 +371,7 @@ function LoadoutBuilder({
       <EnergyOptions
         assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
         lockArmorEnergyType={loadoutParameters.lockArmorEnergyType}
+        optimizingLoadoutName={preloadedLoadout?.name}
         lbDispatch={lbDispatch}
       />
       <LockArmorAndPerks

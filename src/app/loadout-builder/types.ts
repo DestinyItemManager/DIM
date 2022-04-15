@@ -1,4 +1,5 @@
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
+import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import { armorBuckets } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
@@ -96,5 +97,16 @@ export const MIN_LO_ITEM_ENERGY = 7;
 export interface ArmorEnergyRules {
   lockArmorEnergyType: LockArmorEnergyType;
   assumeArmorMasterwork: AssumeArmorMasterwork;
+  /**
+   * How much energy capacity items have at least.
+   */
   minItemEnergy: number;
+  /**
+   * Info about other loadouts. This must be specified if `lockArmorEnergyType`
+   * can be `LockArmorEnergyType.OtherLoadouts`.
+   */
+  loadouts?: {
+    loadoutsByItem: LoadoutsByItem;
+    optimizingLoadoutId: string | undefined;
+  };
 }

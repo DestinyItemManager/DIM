@@ -553,6 +553,8 @@
     "ExoticSpecialCategory": "Special",
     "Filter": "Filters",
     "GeneratedBuilds": "Builds",
+    "InLoadouts": "In Loadouts",
+    "InOtherLoadouts": "Other Loadouts",
     "Legendary": "Legendary",
     "LegendaryShardsAndEnhancementPrismDetails": "All items' current stats will be used. For items at {{energyLevel}} energy or below, the Optimizer will assume {{energyLevel}} energy. {{elementLockDescription}}\n\nItems above {{energyLevel}} energy will use their existing energy level and element.",
     "LimitedCombos": "You have {{combosWithoutCaps, number}} possible armor combinations, but DIM only looked at the {{combos, number}} highest stat combos to keep your browser from crashing. Select some perks, use a search, or dismantle old armor to reduce the number of combos. Pinning general or seasonal mods increases the number of combos.",
@@ -560,12 +562,12 @@
     "LockElement": "Lock Element",
     "LockElementOptions": {
       "All": "All armor will be locked to its current element.",
-      "Masterworked": "Armor will be locked to its current element if it's already masterworked.",
+      "InLoadouts": "Armor will be locked to its current element if it is equipped in any existing Loadouts.",
+      "InOtherLoadouts": "You are currently optimizing Loadout {{loadoutName}}. Armor will be locked to its current element if it is equipped in any Loadouts other than {{loadoutName}}.",
       "None": "Armor element will be changed as needed to fit the selected mods."
     },
     "LockItem": "Pin item",
     "LockPerk": "Select perk",
-    "Masterworked": "Masterworked",
     "MissingClass": "Build is for: {{className}}",
     "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
     "NewEmptyLoadout": "Create Empty Loadout",

@@ -16,9 +16,22 @@ export function calculateAssumedItemEnergy(
   return Math.max(itemEnergy, assumedEnergy);
 }
 
-export function isArmorEnergyLocked(item: DimItem, { lockArmorEnergyType }: ArmorEnergyRules) {
-  return (
-    lockArmorEnergyType === LockArmorEnergyType.All ||
-    (item.masterwork && lockArmorEnergyType === LockArmorEnergyType.Masterworked)
-  );
+export function isArmorEnergyLocked(
+  item: DimItem,
+  { lockArmorEnergyType, loadouts }: ArmorEnergyRules
+) {
+  switch (lockArmorEnergyType) {
+    case LockArmorEnergyType.None: {
+      return false;
+    }
+    case LockArmorEnergyType.Masterworked: {
+      const { loadoutsByItem, optimizingLoadoutId } = loadouts!;
+      return loadoutsByItem[item.id]?.some(
+        (l) => l.loadoutItem.equip && l.loadout.id !== optimizingLoadoutId
+      );
+    }
+    case LockArmorEnergyType.All: {
+      return true;
+    }
+  }
 }
