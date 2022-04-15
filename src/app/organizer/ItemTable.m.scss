@@ -191,6 +191,31 @@ $content-cells: 5;
     display: flex;
     flex-direction: column;
   }
+
+  @media (max-width: 1000px) {
+    columns: 4;
+  }
+}
+
+.mods,
+.shaders {
+  columns: 1;
+  height: 100%;
+  box-sizing: border-box;
+  @include vertical-space-children(4px);
+  column-gap: 8px;
+  &.header {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (max-width: 1000px) {
+    columns: 4;
+  }
+
+  & .modPerks {
+    white-space: nowrap;
+  }
 }
 
 .modPerks {

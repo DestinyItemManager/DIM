@@ -456,26 +456,28 @@ export function getColumns(
       id: 'mods',
       header: t('Organizer.Columns.Mods'),
       value: () => 0,
-      cell: (_val, item) =>
-        isD1Item(item) ? (
-          <D1PerksCell item={item} />
-        ) : (
-          <PerksCell item={item} onPlugClicked={onPlugClicked} />
-        ),
+      // cell: (_val, item) =>
+      //   isD1Item(item) ? (
+      //     <D1ModsCell item={item} />
+      //   ) : (
+      //     <ModsCell item={item} onPlugClicked={onPlugClicked} />
+      //   ),
+      cell: (_val, item) => <ModsCell item={item} onPlugClicked={onPlugClicked} />,
       noSort: true,
       filter: (value) =>
         typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
     },
     {
-      id: 'shaders',
+      id: 'shaders', // maybe better as 'shader'?
       header: t('Organizer.Columns.Shaders'),
       value: () => 0,
-      cell: (_val, item) =>
-        isD1Item(item) ? (
-          <D1PerksCell item={item} />
-        ) : (
-          <PerksCell item={item} onPlugClicked={onPlugClicked} />
-        ),
+      // cell: (_val, item) =>
+      //   isD1Item(item) ? (
+      //     <D1ShadersCell item={item} />
+      //   ) : (
+      //     <ShadersCell item={item} onPlugClicked={onPlugClicked} />
+      //   ),
+      cell: (_val, item) => <ShadersCell item={item} onPlugClicked={onPlugClicked} />,
       noSort: true,
       filter: (value) =>
         typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
@@ -610,13 +612,9 @@ function PerksCell({
         !isKillTrackerSocket(s) &&
         !isEmptyArmorModSocket(s) &&
         s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
-        (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
-          isUsedArmorModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
-          (s.isPerk &&
-            (item.isExotic || // ignore archetype if it's not exotic
-              !s.plugged.plugDef.itemCategoryHashes?.includes(
-                ItemCategoryHashes.WeaponModsIntrinsic
-              ))))
+        s.isPerk &&
+        (item.isExotic || // ignore archetype if it's not exotic
+          !s.plugged.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsIntrinsic))
     )
   );
 
@@ -633,7 +631,6 @@ function PerksCell({
     return null;
   }
 
-  console.log(sockets);
   return (
     <>
       {sockets.map((socket) => (
@@ -718,6 +715,153 @@ function D1PerksCell({ item }: { item: D1Item }) {
                 </PressTip>
               )
           )}
+        </div>
+      ))}
+    </>
+  );
+}
+
+function ModsCell({
+  item,
+  onPlugClicked,
+}: {
+  item: DimItem;
+  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+}) {
+  if (!item.sockets) {
+    return null;
+  }
+
+  const mods = item.sockets.categories.filter(
+    (c) => c.category.displayProperties.name === 'WEAPON MODS'
+  );
+  const sockets = mods.flatMap((c) =>
+    getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
+      (s) =>
+        !isKillTrackerSocket(s) &&
+        !isEmptyArmorModSocket(s) &&
+        s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
+        (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
+          isUsedArmorModSocket(s))
+    )
+  );
+
+  if (!sockets.length) {
+    return null;
+  }
+
+  return (
+    <>
+      {sockets.map((socket) => (
+        <div
+          key={socket.socketIndex}
+          className={clsx(styles.modPerks, {
+            [styles.isPerk]: socket.isPerk && socket.plugOptions.length > 1,
+          })}
+        >
+          {socket.plugOptions.map((m) => (
+            <PressTip key={m.plugDef.hash} tooltip={() => <DimPlugTooltip item={item} plug={m} />}>
+              <div
+                className={clsx(styles.modPerk, {
+                  [styles.perkSelected]:
+                    socket.isPerk && socket.plugOptions.length > 1 && m === socket.plugged,
+                  [styles.perkSelectable]: socket.plugOptions.length > 1,
+                })}
+                data-perk-name={m.plugDef.displayProperties.name}
+                onClick={
+                  onPlugClicked && socket.plugOptions.length > 1
+                    ? (e: React.MouseEvent) => {
+                        if (!e.shiftKey) {
+                          e.stopPropagation();
+                          onPlugClicked({ item, socket, plugHash: m.plugDef.hash });
+                        }
+                      }
+                    : undefined
+                }
+              >
+                <div className={styles.miniPerkContainer}>
+                  <DefItemIcon itemDef={m.plugDef} borderless={true} />
+                </div>{' '}
+                {m.plugDef.displayProperties.name}
+              </div>
+            </PressTip>
+          ))}
+        </div>
+      ))}
+    </>
+  );
+}
+
+// TODO: CosmeticCell might make more sense
+function ShadersCell({
+  item,
+  onPlugClicked,
+}: {
+  item: DimItem;
+  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+}) {
+  if (!item.sockets) {
+    return null;
+  }
+
+  const shaders = item.sockets.categories.filter(
+    (c) => c.category.displayProperties.name === 'WEAPON COSMETICS'
+  );
+  const sockets = shaders.flatMap((c) =>
+    getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
+      (s) =>
+        !isKillTrackerSocket(s) &&
+        !isEmptyArmorModSocket(s) &&
+        s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
+        (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
+          isUsedArmorModSocket(s))
+    )
+  );
+
+  if (!sockets.length) {
+    return null;
+  }
+
+  return (
+    <>
+      {sockets.map((socket) => (
+        <div
+          key={socket.socketIndex}
+          className={clsx(styles.modPerks, {
+            [styles.isPerk]: socket.isPerk && socket.plugOptions.length > 1,
+          })}
+          data-socket-name={
+            socket.plugged?.plugDef.displayProperties.name === 'WEAPON COSMETICS' ??
+            socket.plugged?.plugDef.displayProperties.name
+          }
+        >
+          {socket.plugOptions.map((s) => (
+            <PressTip key={s.plugDef.hash} tooltip={() => <DimPlugTooltip item={item} plug={s} />}>
+              <div
+                className={clsx(styles.modPerk, {
+                  [styles.perkSelected]:
+                    socket.isPerk && socket.plugOptions.length > 1 && s === socket.plugged,
+                  [styles.perkSelectable]: socket.plugOptions.length > 1,
+                })}
+                data-perk-name={s.plugDef.displayProperties.name}
+                onClick={
+                  onPlugClicked && socket.plugOptions.length > 1
+                    ? (e: React.MouseEvent) => {
+                        if (!e.shiftKey) {
+                          e.stopPropagation();
+                          onPlugClicked({ item, socket, plugHash: s.plugDef.hash });
+                        }
+                      }
+                    : undefined
+                }
+              >
+                <div className={styles.miniPerkContainer}>
+                  <DefItemIcon itemDef={s.plugDef} borderless={true} />
+                </div>{' '}
+                {s.plugDef.displayProperties.name}
+              </div>
+            </PressTip>
+          ))}
         </div>
       ))}
     </>

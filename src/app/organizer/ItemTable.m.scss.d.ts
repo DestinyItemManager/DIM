@@ -20,6 +20,7 @@ interface CssExports {
   'miniPerkContainer': string;
   'modPerk': string;
   'modPerks': string;
+  'mods': string;
   'modslot': string;
   'modslotIcon': string;
   'name': string;
@@ -34,6 +35,7 @@ interface CssExports {
   'rating': string;
   'season': string;
   'selection': string;
+  'shaders': string;
   'shiftHeld': string;
   'sorter': string;
   'stat2715839340': string;
