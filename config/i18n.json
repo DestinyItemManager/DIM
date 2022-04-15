@@ -210,8 +210,10 @@
     "Equipment": "Items that can be equipped.",
     "Equipped": "Items that are currently equipped on a character.",
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
+    "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
     "Filter": "Filter",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
+    "HasMemento": "Shows crafted weapons that currently have a memento inserted.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "HasNotes": "Show items that have notes applied.",
     "HasShader": "Shows items that have a shader applied.",
@@ -869,8 +871,10 @@
       "Breaker": "Breaker",
       "Icon": "Icon",
       "Name": "Name",
+      "Power": "Power",
       "Element": "Element",
       "Damage": "Damage",
+      "Locked": "Locked",
       "Energy": "Energy",
       "Location": "Location",
       "Tag": "Tag",
@@ -1024,7 +1028,8 @@
       "Fragment": "Insert Fragment",
       "Aspect": "Insert Aspect",
       "Transmat": "Apply Transmat Effect",
-      "Projection": "Apply Ghost Projection"
+      "Projection": "Apply Ghost Projection",
+      "Super": "Equip Super"
     },
     "Select": {
       "Mod": "Preview Mod",

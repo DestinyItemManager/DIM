@@ -205,6 +205,7 @@
     "Equipment": "Itens que podem ser equipados.",
     "Equipped": "Itens que no momento estão equipados em outra personagem.",
     "Event": "Mostra itens de que evento apareceram no Destiny 2.",
+    "ExtraPerk": "Mostra armas Lendárias com valores aleatórios que tenham um perk adicional selecionável.",
     "Filter": "Filtro",
     "Glimmer": "Exibe itens que são consumíveis que estão relacionados a ganho de lúmen.",
     "HasNotes": "Exibe itens que possuem anotações.",
@@ -928,7 +929,7 @@
       "Ornament": "Aplicar Ornamento",
       "Projection": "Aplicar Projeção de Fantasma",
       "Shader": "Aplicar Tonalizador",
-      "Super": "",
+      "Super": "Equipar Super",
       "Transmat": "Aplicar Efeito de Transmaterialização"
     },
     "ListStyle": "Exibir perks em listagem",

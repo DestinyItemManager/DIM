@@ -6,7 +6,7 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 
-const enhancedToPerk = _.mapValues(_.invert(perkToEnhanced), Number);
+export const enhancedToPerk = _.mapValues(_.invert(perkToEnhanced), Number);
 
 type Roll = {
   /** rampage, outlaw, etc. */
@@ -174,15 +174,17 @@ export function consolidateSecondaryPerks(initialRolls: Roll[]) {
   const allSecondaryIndices = _.uniq(initialRolls.flatMap((r) => r.secondarySocketIndices)).sort(
     (a, b) => a - b
   );
+  let newClusteredRolls = initialRolls
+    // ignore rolls with no secondary perks in them
+    .filter((r) => r.secondarySocketIndices.length)
+    .map((r) =>
+      allSecondaryIndices.map((i) => {
+        const perkHash = r.secondaryPerksMap[i];
+        return perkHash ? { perks: [perkHash], key: `${perkHash}` } : { perks: [], key: `` };
+      })
+    );
 
-  let newClusteredRolls = initialRolls.map((r) =>
-    allSecondaryIndices.map((i) => {
-      const perkHash = r.secondaryPerksMap[i];
-      return perkHash ? { perks: [perkHash], key: `${perkHash}` } : { perks: [], key: `` };
-    })
-  );
-  // yes, this is an `in`
-  for (const socketIndex in allSecondaryIndices) {
+  for (let socketIndex = 0; socketIndex < allSecondaryIndices.length; socketIndex++) {
     // eslint-disable-next-line no-constant-condition
     while (true) {
       const perkBundleToConsolidate = newClusteredRolls.find((r1) =>
@@ -199,7 +201,7 @@ export function consolidateSecondaryPerks(initialRolls: Roll[]) {
 
       newClusteredRolls = bundlesToLeaveAlone;
       const newPerkBundle = Array.from(perkBundleToConsolidate);
-      for (const i in newPerkBundle) {
+      for (let i = 0; i < newPerkBundle.length; i++) {
         if (i === socketIndex) {
           continue;
         }

@@ -9,6 +9,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { SearchInput } from 'app/search/SearchInput';
 import { compareBy } from 'app/utils/comparators';
+import { socketContainsPlugWithCategory } from 'app/utils/socket-utils';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import anyExoticIcon from 'images/anyExotic.svg';
@@ -63,17 +64,14 @@ function findLockableExotics(
     if (def?.displayProperties.hasIcon) {
       const exoticPerk = item.sockets?.allSockets.find(
         (socket) =>
-          socket.plugged &&
-          socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
+          socketContainsPlugWithCategory(socket, PlugCategoryHashes.Intrinsics) &&
           socket.plugged.plugDef.inventory?.tierType === TierType.Exotic
       )?.plugged?.plugDef;
 
       const exoticMods =
         item.sockets?.allSockets
-          .find(
-            (socket) =>
-              socket.plugged?.plugDef.plug.plugCategoryHash ===
-              PlugCategoryHashes.EnhancementsExoticAeonCult
+          .find((socket) =>
+            socketContainsPlugWithCategory(socket, PlugCategoryHashes.EnhancementsExoticAeonCult)
           )
           ?.plugSet?.plugs.map((dimPlug) => dimPlug.plugDef) || [];
 

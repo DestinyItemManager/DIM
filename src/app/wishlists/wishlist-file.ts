@@ -63,6 +63,7 @@ export function toWishList(...fileTexts: string[]): WishListAndInfo {
             const rollHash = `${roll.itemHash};${roll.isExpertMode};${sortedSetToString(
               roll.recommendedPerks
             )}`;
+
             if (!seen.has(rollHash)) {
               seen.add(rollHash);
               wishList.wishListRolls.push(roll);

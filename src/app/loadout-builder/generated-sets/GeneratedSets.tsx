@@ -7,7 +7,7 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
+import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import _ from 'lodash';
 import React, {
   Dispatch,
@@ -33,7 +33,7 @@ function hasExoticPerkRaidModOrSwapIcon(items: DimItem[]) {
         item.isExotic ||
         item.sockets?.allSockets.some(
           ({ plugged }) =>
-            plugged && raidModPlugCategoryHashes.includes(plugged.plugDef.plug.plugCategoryHash)
+            plugged && activityModPlugCategoryHashes.includes(plugged.plugDef.plug.plugCategoryHash)
         )
     )
   );

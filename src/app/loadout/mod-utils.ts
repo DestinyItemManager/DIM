@@ -5,17 +5,9 @@ import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-know
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
 import _ from 'lodash';
 import { isArmorEnergyLocked } from './armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
-
-/** The plug category hashes that belong to the 5th mod slot, such as raid and nightmare mods. */
-export const activityModPlugCategoryHashes = [
-  ...raidModPlugCategoryHashes,
-  PlugCategoryHashes.EnhancementsSeasonMaverick,
-];
 
 export const bucketHashToPlugCategoryHash = {
   [armorBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,
@@ -99,11 +91,14 @@ export function createGetModRenderKey() {
 /**
  * This is used to figure out the energy type of an item used in mod assignments.
  *
- * It first considers if there are bucket specific mods applied, and returns that
- * energy type if it's not Any. If not then it considers armour upgrade options
- * and returns the appropriate energy type from that.
+ * If the item's energy is locked given the upgrade options, this returns the item's
+ * current energy. If not locked, this returns the energy as restricted by the first not-Any
+ * mod in `bucketSpecificMods`
  *
- * It can return the Any energy type if armour upgrade options allow energy changes.
+ * This does not validate that all the mods match that element.
+ *
+ * It can return the Any energy type if armour upgrade options allow energy changes
+ * and no mods require a specific element.
  */
 export function getItemEnergyType(
   item: DimItem,
@@ -114,18 +109,15 @@ export function getItemEnergyType(
     return DestinyEnergyType.Any;
   }
 
-  const bucketSpecificModType = bucketSpecificMods?.find(
-    (mod) => mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any
-  )?.plug.energyCost?.energyType;
+  if (isArmorEnergyLocked(item, lockArmorEnergyType)) {
+    return item.energy.energyType;
+  } else {
+    const bucketSpecificModType = bucketSpecificMods?.find(
+      (mod) => mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any
+    )?.plug.energyCost?.energyType;
 
-  // if we find bucket specific mods with an energy type we have to use that
-  if (bucketSpecificModType) {
-    return bucketSpecificModType;
+    return bucketSpecificModType ?? DestinyEnergyType.Any;
   }
-
-  return isArmorEnergyLocked(item, lockArmorEnergyType)
-    ? item.energy.energyType
-    : DestinyEnergyType.Any;
 }
 
 /**

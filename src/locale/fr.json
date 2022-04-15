@@ -205,6 +205,7 @@
     "Equipment": "Objets qui peuvent être équipés.",
     "Equipped": "Objets qui sont actuellement équipés sur un personnage.",
     "Event": "Affiche les objets en fonction de l’événement de Destiny 2 pendant lequel ils sont apparu.",
+    "ExtraPerk": "Affiche les armes légendaires obtenues avec des attributs aléatoires ayant un attribut sélectionnable supplémentaire.",
     "Filter": "Filtre",
     "Glimmer": "Affiche les objets consommables qui ont un rapport avec l'obtention de lumen.",
     "HasNotes": "Afficher les objets ayant des notes.",
@@ -928,7 +929,7 @@
       "Ornament": "Appliquer l'ornement",
       "Projection": "Appliquer la projection de spectre",
       "Shader": "Applique le revêtement",
-      "Super": "",
+      "Super": "Équiper le super",
       "Transmat": "Appliquer l'effet de téléportation"
     },
     "ListStyle": "Afficher les attributs sous forme de liste",

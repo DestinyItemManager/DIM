@@ -1,6 +1,6 @@
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, DimSockets, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
 import {
   armor2PlugCategoryHashesByName,
@@ -24,12 +24,9 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
+import { activityModPlugCategoryHashes } from './known-values';
 import { generateModPermutations } from './mod-permutations';
-import {
-  activityModPlugCategoryHashes,
-  bucketHashToPlugCategoryHash,
-  getItemEnergyType,
-} from './mod-utils';
+import { bucketHashToPlugCategoryHash, getItemEnergyType } from './mod-utils';
 
 /**
  * a temporary structure, keyed by item ID,
@@ -110,6 +107,8 @@ export function fitMostMods({
   const combatMods: PluggableInventoryItemDefinition[] = [];
   const activityMods: PluggableInventoryItemDefinition[] = [];
 
+  const otherMods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] } = {};
+
   // Divide up the locked mods into general, combat and activity mod arrays. Also we
   // take the bucket specific mods and put them in a map of item ids to mods so
   // we can calculate the used energy values for each item
@@ -121,27 +120,36 @@ export function fitMostMods({
     } else if (activityModPlugCategoryHashes.includes(plannedMod.plug.plugCategoryHash)) {
       activityMods.push(plannedMod);
     } else {
-      // possible target for plugging this mod
-      const targetItem = items.find(
-        (item) =>
-          plannedMod.plug.plugCategoryHash === bucketHashToPlugCategoryHash[item.bucket.hash]
-      );
+      (otherMods[plannedMod.plug.plugCategoryHash] ??= []).push(plannedMod);
+    }
+  }
 
-      if (targetItem) {
-        if (
-          isBucketSpecificModValid({
-            assumeArmorMasterwork,
-            lockArmorEnergyType,
-            minItemEnergy,
-            item: targetItem,
-            mod: plannedMod,
-            assignedMods: bucketSpecificAssignments[targetItem.id].assigned,
-          })
-        ) {
-          bucketSpecificAssignments[targetItem.id].assigned.push(plannedMod);
-        } else {
-          bucketSpecificAssignments[targetItem.id].unassigned.push(plannedMod);
-        }
+  const unassignedMods: PluggableInventoryItemDefinition[] = [];
+
+  for (const [plugCategoryHash_, modsToAssign] of Object.entries(otherMods)) {
+    const plugCategoryHash = Number(plugCategoryHash_);
+    const targetItem = items.find(
+      (item) => plugCategoryHash === bucketHashToPlugCategoryHash[item.bucket.hash]
+    );
+
+    if (targetItem) {
+      bucketSpecificAssignments[targetItem.id] = assignBucketSpecificMods({
+        assumeArmorMasterwork,
+        lockArmorEnergyType,
+        minItemEnergy,
+        item: targetItem,
+        modsToAssign,
+      });
+    } else {
+      unassignedMods.push(...modsToAssign);
+
+      if (!Object.values(bucketHashToPlugCategoryHash).includes(plugCategoryHash)) {
+        warnLog(
+          'loadout mods',
+          'unknown mod kind',
+          modsToAssign[0].plug.plugCategoryIdentifier,
+          '(neither known activity, combat style, general, or bucket specific mod)'
+        );
       }
     }
   }
@@ -298,7 +306,6 @@ export function fitMostMods({
     [itemInstanceId: string]: PluggableInventoryItemDefinition[];
   } = {};
 
-  const unassignedMods: PluggableInventoryItemDefinition[] = [];
   for (const item of items) {
     // accumulate all unassigned mods
     for (const collection of [
@@ -315,6 +322,101 @@ export function fitMostMods({
   }
 
   return { itemModAssignments, unassignedMods };
+}
+
+/**
+ * Get active armor mod sockets and sort the sockets and mods for a greedy assignment strategy to succeed.
+ */
+function getArmorSocketsAndMods(
+  sockets: DimSockets | null,
+  mods: PluggableInventoryItemDefinition[]
+) {
+  const orderedSockets = getSocketsByCategoryHash(sockets, SocketCategoryHashes.ArmorMods)
+    // If a socket is not plugged (even with an empty socket) we consider it disabled
+    // This needs to be checked as the 30th anniversary armour has the Artifice socket
+    // but the API considers it to be disabled.
+    .filter((socket) => socket.plugged)
+    // Artificer sockets only plug a subset of the bucket specific mods so we sort by the size
+    // of the plugItems in the plugset so we use that first if possible. This is optional and
+    // simply prefers plugging artifact mods into artifice sockets if available.
+    .sort(compareBy((socket) => (socket.plugSet ? socket.plugSet.plugs.length : 999)));
+
+  // Order the mods themselves based on how many sockets they could fit into,
+  // inserting the more picky mods first. This is necessary because we
+  // want to honor user choice with mod sockets, but need to move some mods if
+  // necessary. Consider the following scenario:
+  // * Artifice chestpiece has two artifact resist mods in the normal sockets
+  // * mods are [artifact resist, artifact resist, normal resist]
+  // Naively inserting those mods finds the artifact mods in their position,
+  // but the artifact-only socket can't slot the normal resist mod. Thus,
+  // we must assign the regular resist mod first.
+  const orderedMods = _.sortBy(
+    mods,
+    (mod) => orderedSockets.filter((s) => plugFitsIntoSocket(s, mod.hash)).length
+  );
+
+  return { orderedSockets, orderedMods };
+}
+
+/**
+ * Assign bucket specific mods based on assumed energy type, assumed mod energy capacity, and available sockets,
+ * partitioning mods based whether it could fit them into the item.
+ * Socket choice for mod assignment is greedy, but uses a heuristic based on the number of sockets a mod could
+ * fit into, since mods that can fit into fewer sockets must be prioritized.
+ */
+export function assignBucketSpecificMods({
+  assumeArmorMasterwork,
+  lockArmorEnergyType,
+  minItemEnergy,
+  item,
+  modsToAssign,
+}: {
+  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  lockArmorEnergyType: LockArmorEnergyType | undefined;
+  minItemEnergy: number;
+  item: DimItem;
+  modsToAssign: PluggableInventoryItemDefinition[];
+}): {
+  assigned: PluggableInventoryItemDefinition[];
+  unassigned: PluggableInventoryItemDefinition[];
+} {
+  // given spending rules, what we can assume this item's energy is
+  let itemEnergyCapacity = calculateAssumedItemEnergy(item, assumeArmorMasterwork, minItemEnergy);
+  // given spending/element rules & current assignments, what element is this armor?
+  // NB if the mods have different elements, this returns the first best not-Any type.
+  // The others will be rejected below.
+  const itemEnergyType = getItemEnergyType(item, lockArmorEnergyType, modsToAssign);
+
+  const { orderedSockets, orderedMods } = getArmorSocketsAndMods(item.sockets, modsToAssign);
+
+  const assigned = [];
+  const unassigned = [];
+
+  for (const mod of orderedMods) {
+    const socketIndex = orderedSockets.findIndex((socket) => plugFitsIntoSocket(socket, mod.hash));
+    if (socketIndex === -1) {
+      // We don't have a socket to fit this mod into
+      unassigned.push(mod);
+      continue;
+    }
+
+    // cost of inserting this new proposed mod
+    const modCost = mod.plug.energyCost?.energyCost || 0;
+    // element of this new proposed mod
+    const modEnergyType = mod.plug.energyCost?.energyType || DestinyEnergyType.Any;
+
+    if (modCost > itemEnergyCapacity || !energyTypesAreCompatible(itemEnergyType, modEnergyType)) {
+      // The mod is incompatible with the item or the existing mods we have already assigned
+      unassigned.push(mod);
+      continue;
+    }
+
+    assigned.push(mod);
+    itemEnergyCapacity -= modCost;
+    orderedSockets.splice(socketIndex, 1);
+  }
+
+  return { assigned, unassigned };
 }
 
 /**
@@ -340,25 +442,18 @@ export function pickPlugPositions(
   if (!item.sockets) {
     return assignments;
   }
-  const existingModSockets = getSocketsByCategoryHash(
-    item.sockets,
-    SocketCategoryHashes.ArmorMods
-  ).sort(
-    // We are sorting so that we can assign mods to the socket with the least number of possible options
-    // first. This helps with artificer mods as the socket is a subset of the other mod sockets on the item
-    compareBy((socket) => (socket.plugSet ? socket.plugSet.plugs.length : 999))
-  );
 
-  for (const modToInsert of modsToInsert) {
+  const { orderedSockets, orderedMods } = getArmorSocketsAndMods(item.sockets, modsToInsert);
+
+  for (const modToInsert of orderedMods) {
     // If this mod is already plugged somewhere, that's the slot we want to keep it in
-    let destinationSocketIndex = existingModSockets.findIndex(
+    let destinationSocketIndex = orderedSockets.findIndex(
       (socket) => socket.plugged?.plugDef.hash === modToInsert.hash
     );
 
     // If it wasn't found already plugged, find the first socket with a matching PCH
-    // TO-DO: this is naive and is going to be misleading for armor
     if (destinationSocketIndex === -1) {
-      destinationSocketIndex = existingModSockets.findIndex((socket) =>
+      destinationSocketIndex = orderedSockets.findIndex((socket) =>
         plugFitsIntoSocket(socket, modToInsert.hash)
       );
     }
@@ -371,7 +466,7 @@ export function pickPlugPositions(
     }
 
     // we found it!! this is where we have chosen to place the mod
-    const destinationSocket = existingModSockets[destinationSocketIndex];
+    const destinationSocket = orderedSockets[destinationSocketIndex];
 
     assignments.push({
       socketIndex: destinationSocket.socketIndex,
@@ -380,12 +475,12 @@ export function pickPlugPositions(
     });
 
     // remove this existing socket from consideration
-    existingModSockets.splice(destinationSocketIndex, 1);
+    orderedSockets.splice(destinationSocketIndex, 1);
   }
 
   // For each remaining armor mod socket that won't have mods assigned,
   // allow it to be returned to its default (usually "Empty Mod Socket").
-  for (const socket of existingModSockets) {
+  for (const socket of orderedSockets) {
     const defaultModHash = socket.emptyPlugItemHash;
     const mod =
       defaultModHash &&
@@ -502,39 +597,6 @@ export function createPluggingStrategy(item: DimItem, assignments: Assignment[])
   // append any "reset to default"s that we didn't consume
   operationSet.push(...optionalRegains);
   return operationSet;
-}
-/** given conditions and assigned mods, can this mod be placed on this armor item? */
-function isBucketSpecificModValid({
-  assumeArmorMasterwork,
-  lockArmorEnergyType,
-  minItemEnergy,
-  item,
-  mod,
-  assignedMods,
-}: {
-  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
-  lockArmorEnergyType: LockArmorEnergyType | undefined;
-  minItemEnergy: number;
-  item: DimItem;
-  mod: PluggableInventoryItemDefinition;
-  /** mods that are already assigned to this item */
-  assignedMods: PluggableInventoryItemDefinition[];
-}) {
-  // given spending rules, what we can assume this item's energy is
-  const itemEnergyCapacity = calculateAssumedItemEnergy(item, assumeArmorMasterwork, minItemEnergy);
-  // given spending/element rules & current assignments, what element is this armor?
-  const itemEnergyType = getItemEnergyType(item, lockArmorEnergyType, assignedMods);
-
-  // how many armor energy points are already used
-  const energyUsed = _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
-  // cost of inserting this new proposed mod
-  const modCost = mod.plug.energyCost?.energyCost || 0;
-  // element of this new proposed mod
-  const modEnergyType = mod.plug.energyCost?.energyType || DestinyEnergyType.Any;
-  // is the proposed mod's element compatible with armor's element?
-  const energyTypeIsValid = energyTypesAreCompatible(modEnergyType, itemEnergyType);
-
-  return energyTypeIsValid && energyUsed + modCost <= itemEnergyCapacity;
 }
 
 function isActivityModValid(

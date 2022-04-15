@@ -64,6 +64,8 @@ $dropdown-menu: 10;
   }
 
   label {
+    display: flex;
+    gap: 4px;
     margin-right: 4px;
     > :global(.app-icon) {
       margin-right: 4px;

@@ -1,6 +1,8 @@
-import { activityModPlugCategoryHashes } from 'app/loadout/mod-utils';
 import _ from 'lodash';
-import { knownModPlugCategoryHashes } from '../../loadout/known-values';
+import {
+  activityModPlugCategoryHashes,
+  knownModPlugCategoryHashes,
+} from '../../loadout/known-values';
 import { armor2PlugCategoryHashesByName } from '../../search/d2-known-values';
 import { infoLog } from '../../utils/log';
 import {

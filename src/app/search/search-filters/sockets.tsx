@@ -7,8 +7,14 @@ import {
   modSlotTags,
   modTypeTags,
 } from 'app/utils/item-utils';
+import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import craftingMementos from 'data/d2/crafting-mementos.json';
+import {
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+} from 'data/d2/generated-enums';
 import {
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
@@ -85,6 +91,24 @@ const socketFilters: FilterDefinition[] = [
         );
 
       return matchesCollectionsRoll;
+    },
+  },
+  {
+    keywords: 'extraperk',
+    description: tl('Filter.ExtraPerk'),
+    destinyVersion: 2,
+    filter: () => (item: DimItem) => {
+      if (!(item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary')) {
+        return false;
+      }
+
+      return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable)
+        .filter(
+          (socket) =>
+            socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
+            socket.hasRandomizedPlugItems
+        )
+        .some((socket) => socket.plugOptions.length > 1);
     },
   },
   {
@@ -204,6 +228,22 @@ const socketFilters: FilterDefinition[] = [
             return !item.deepsightInfo.complete;
         }
       },
+  },
+  {
+    keywords: 'memento',
+    description: tl('Filter.HasMemento'),
+    format: ['query'],
+    destinyVersion: 2,
+    suggestions: ['any', ...Object.keys(craftingMementos)],
+    filter: ({ filterValue }) => {
+      const list: number[] | undefined = craftingMementos[filterValue];
+      return (item: DimItem) =>
+        item.sockets?.allSockets.some(
+          (s) =>
+            s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos &&
+            (filterValue === 'any' || list?.includes(s.plugged.plugDef.hash))
+        );
+    },
   },
 ];
 

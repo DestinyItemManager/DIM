@@ -6,7 +6,8 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { keyByStatHash } from 'app/inventory/store/stats';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { calculateAssumedItemEnergy, isArmorEnergyLocked } from 'app/loadout/armor-upgrade-utils';
-import { activityModPlugCategoryHashes, bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
+import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
+import { bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
 import {
   armor2PlugCategoryHashesByName,
   MAX_ARMOR_ENERGY_CAPACITY,
@@ -138,7 +139,6 @@ export function useProcess({
       processItems[bucketHash] = [];
 
       const groupedItems = groupItems(
-        defs,
         items,
         statOrder,
         assumeArmorMasterwork,
@@ -261,11 +261,11 @@ const groupComparator = chainComparator(
  * It can group by any number of the following concepts depending on locked mods and armor upgrades,
  * - Stat distribution
  * - Masterwork status
+ * - Exoticness (every exotic must be distinguished from other exotics and all legendaries)
  * - If there are energy requirements for slot independent mods it creates groups split by energy type
  * - If there are activity mods it will create groups split by specialty socket tag
  */
 function groupItems(
-  defs: D2ManifestDefinitions,
   items: readonly DimItem[],
   statOrder: number[],
   assumeArmorMasterwork: AssumeArmorMasterwork | undefined,
@@ -296,12 +296,15 @@ function groupItems(
     }
   }
 
-  // Group by mod requirements (energy, slot). The groups are based on the mods
+  // Group by any restrictions so that items within the group can be freely exchanged subject
+  // to the user's mod choices. This means grouping by mod slot tags, mod energy capacity and type
+  // and exoticness. The groups for mod energies and tags are based on the mods
   // requested - for example if we only request solar mods, the groups should be
   // "solar", and "other", not "solar", "arc", "void", "stasis". If we only request
   // a vault of glass mod, we don't make a group that includes deep stone crypt mods.
   const modGroupingFn = (item: DimItem) => {
-    let groupId = '';
+    // Ensure exotics always form a distinct group
+    let groupId = item.isExotic ? `${item.hash}` : '';
 
     if (requiredActivityModSlots.size) {
       const socketTags = getInterestingSocketMetadatas(item) ?? [];
@@ -312,6 +315,8 @@ function groupItems(
         }
       }
     }
+
+    groupId += '-';
 
     if (requiredEnergyTypes.size) {
       groupId +=
@@ -334,23 +339,28 @@ function groupItems(
     // Ensure ordering of stats
     // TODO: statOrder includes disabled stats, should we omit them?
     if (statsByHash) {
+      const assumedEnergy = calculateAssumedItemEnergy(
+        item,
+        assumeArmorMasterwork,
+        MIN_LO_ITEM_ENERGY
+      );
       for (const statHash of statOrder) {
         let value = statsByHash[statHash]!.base;
         // Add in masterwork stat bonus if we're assuming masterwork stats
-        if (
-          defs &&
-          calculateAssumedItemEnergy(item, assumeArmorMasterwork, MIN_LO_ITEM_ENERGY) ===
-            MAX_ARMOR_ENERGY_CAPACITY
-        ) {
+        if (assumedEnergy === MAX_ARMOR_ENERGY_CAPACITY) {
           value += 2;
         }
         statValues.push(value);
       }
+      // Also use assumed energy because a class item with 9 energy is better than one with 8
+      statValues.push(assumedEnergy);
     }
     statsCache.set(item, statValues);
   }
 
-  // Group items by their exact stats
+  // Group items by their exact stats. The statsCache includes mod energy capacity
+  // but that's fine because items in the same group with the same stats but lower
+  // energy capacities already got excluded.
   const statGroupingFn = (item: DimItem) => statsCache.get(item)!.toString();
 
   const modGroups = _.groupBy(items, modGroupingFn);

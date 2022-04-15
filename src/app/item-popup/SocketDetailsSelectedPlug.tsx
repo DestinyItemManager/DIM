@@ -21,6 +21,7 @@ import {
   isPlugStatActive,
   itemIsInstanced,
 } from 'app/utils/item-utils';
+import { getPerkDescriptions } from 'app/utils/socket-utils';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -104,9 +105,7 @@ export default function SocketDetailsSelectedPlug({
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const destiny2CoreSettings = useSelector(destiny2CoreSettingsSelector)!;
-  const plugPerkDescriptions = _.compact(
-    plug.perks?.map((p) => defs.SandboxPerk.get(p.perkHash)?.displayProperties.description)
-  );
+  const perkDescriptions = getPerkDescriptions(plug, defs);
 
   const materialRequirementSet =
     (plug.plug.insertionMaterialRequirementHash &&
@@ -222,9 +221,9 @@ export default function SocketDetailsSelectedPlug({
             <> &mdash; {plug.itemTypeDisplayName}</>
           )}
         </h3>
-        {plugPerkDescriptions.length
-          ? plugPerkDescriptions.map((desc, idx) => <div key={idx}>{desc}</div>)
-          : plug.displayProperties.description && <div>{plug.displayProperties.description}</div>}
+        {perkDescriptions.map((perkDesc) => (
+          <div key={perkDesc.perkHash}>{perkDesc.description || perkDesc.requirement}</div>
+        ))}
         {sourceString && <div>{sourceString}</div>}
       </div>
       {stats.length > 0 && (

@@ -2,23 +2,38 @@
   display: grid;
   margin: auto;
   width: fit-content;
-  grid-template-columns: max-content max-content max-content;
+  grid-template-columns: repeat(3, max-content);
   gap: 2px 6px;
   align-items: center;
+
+  &.wide {
+    grid-template-columns: repeat(6, max-content);
+  }
 
   img {
     height: 20px;
     width: 20px;
   }
-  .amount {
-    text-align: right;
-    font-weight: bold;
-    font-variant-numeric: tabular-nums;
+}
+.material {
+  display: contents;
+  & > :first-child {
+    margin-left: 10px;
   }
-  .spanGrid {
-    grid-column-end: span 3;
-    hr {
-      margin: 3px;
-    }
+  & > :last-child {
+    margin-right: 10px;
+  }
+}
+.amount {
+  text-align: right;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+
+.spanGrid {
+  grid-column: 1/-1;
+
+  hr {
+    margin: 3px;
   }
 }

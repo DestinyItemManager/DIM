@@ -1,7 +1,9 @@
 import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
-import HeaderShadowDiv from 'app/inventory/HeaderShadowDiv';
-import InventoryCollapsibleTitle from 'app/inventory/InventoryCollapsibleTitle';
+import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { locateItem$ } from 'app/inventory/locate-item';
+import { DimStore } from 'app/inventory/store-types';
+import { findItemsByBucket, getCurrentStore, getVault } from 'app/inventory/stores-helpers';
 import ItemFeedSidebar from 'app/item-feed/ItemFeedSidebar';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
@@ -12,11 +14,9 @@ import React from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
 import D1ReputationSection from './D1ReputationSection';
 import styles from './DesktopStores.m.scss';
-import { InventoryBucket, InventoryBuckets } from './inventory-buckets';
-import { locateItem$ } from './locate-item';
-import { DimStore } from './store-types';
+import HeaderShadowDiv from './HeaderShadowDiv';
+import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
 import { StoreBuckets } from './StoreBuckets';
-import { findItemsByBucket, getCurrentStore, getVault } from './stores-helpers';
 import './Stores.scss';
 
 interface Props {

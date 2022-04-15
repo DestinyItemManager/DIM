@@ -19,6 +19,7 @@ import { Loadout, LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
 import {
   createSocketOverridesFromEquipped,
   extractArmorModHashes,
+  findSameLoadoutItemIndex,
   fromEquippedTypes,
   getUnequippedItemsForLoadout,
   singularBucketHashes,
@@ -66,9 +67,6 @@ export function addItem(
     loadoutItem.socketOverrides = socketOverrides;
   }
 
-  // TODO: We really want to be operating against the resolved items, right? Should we re-resolve them here, or what?
-  //       If we don't, we may not properly detect a dupe?
-
   // We only allow one subclass, and it must be equipped. Same with a couple other things.
   const singular = singularBucketHashes.includes(item.bucket.hash);
   const maxSlots = singular ? 1 : item.bucket.capacity;
@@ -87,9 +85,9 @@ export function addItem(
       return;
     }
 
-    // If this item is already in the loadout, find it via its id/hash.
-    const dupe = draftLoadout.items.find((i) => i.hash === item.hash && i.id === item.id);
-    if (dupe) {
+    const dupeIndex = findSameLoadoutItemIndex(defs, draftLoadout.items, loadoutItem);
+    if (dupeIndex !== -1) {
+      const dupe = draftLoadout.items[dupeIndex];
       if (item.maxStackSize > 1) {
         // The item is already here but we'd like to add more of it (only D1 loadouts hold stackables)
         const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
@@ -155,8 +153,9 @@ export function removeItem(
   { item, loadoutItem: searchLoadoutItem }: ResolvedLoadoutItem
 ): LoadoutUpdateFunction {
   return produce((draftLoadout) => {
-    // We can't just look it up by identity since Immer wraps objects in a proxy
     // TODO: it might be nice if we just assigned a unique ID to every loadout item just for in-memory ops like deleting
+    // We can't just look it up by identity since Immer wraps objects in a proxy and getItemsFromLoadoutItems
+    // changes the socketOverrides, so simply search by unmodified ID and hash.
     const loadoutItemIndex = draftLoadout.items.findIndex(
       (i) => i.hash === searchLoadoutItem.hash && i.id === searchLoadoutItem.id
     );
@@ -199,8 +198,9 @@ export function equipItem(
       return;
     }
 
-    // We can't just look it up by identity since Immer wraps objects in a proxy
     // TODO: it might be nice if we just assigned a unique ID to every loadout item just for in-memory ops like deleting
+    // We can't just look it up by identity since Immer wraps objects in a proxy and getItemsFromLoadoutItems
+    // changes the socketOverrides, so simply search by unmodified ID and hash.
     const loadoutItemIndex = draftLoadout.items.findIndex(
       (i) => i.hash === searchLoadoutItem.hash && i.id === searchLoadoutItem.id
     );
@@ -251,11 +251,12 @@ export function applySocketOverrides(
   socketOverrides: SocketOverrides
 ): LoadoutUpdateFunction {
   return produce((draftLoadout) => {
-    let loadoutItem = draftLoadout.items.find((li) => li.id === searchLoadoutItem.id);
-    // TODO: right now socketOverrides are only really used for subclasses, so we can match by hash
-    if (!loadoutItem) {
-      loadoutItem = draftLoadout.items.find((li) => li.hash === searchLoadoutItem.hash);
-    }
+    // TODO: it might be nice if we just assigned a unique ID to every loadout item just for in-memory ops like deleting
+    // We can't just look it up by identity since Immer wraps objects in a proxy and getItemsFromLoadoutItems
+    // changes the socketOverrides, so simply search by unmodified ID and hash.
+    const loadoutItem = draftLoadout.items.find(
+      (li) => li.id === searchLoadoutItem.id && li.hash === searchLoadoutItem.hash
+    );
     if (loadoutItem) {
       loadoutItem.socketOverrides = socketOverrides;
     }

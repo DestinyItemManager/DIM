@@ -1,5 +1,25 @@
 ## Next
 
+* If an armor piece doesn't have enough mod slots to fit the requested mods (e.g. three resist mods but no artifice chest piece), DIM will notice this earlier and show them as unassigned in the Show Mod Placement menu.
+* Added text labels to "icon-only" columns (lock icon, power icon, etc.) in dropdowns on the Organizer page. Only show label in dropdowns, columns show icon only.
+* Echo of Persistence Void Fragment now indicates that it has a stat penalty depending on the Guardian class.
+
+## 7.12.0 <span class="changelog-date">(2022-04-10)</span>
+
+* If a wish list contains only non-enhanced perks, DIM will mark a roll as matching if it has the Enhanced versions of those perks.
+* Fixed a rare edge case where Loadout Optimizer would not consider legendary armor if you own an exotic with strictly better stats.
+* Glaive symbol now shows up in bounties, challenges, etc.
+* `is:extraperk` filter finds weapons with additional toggleable perks, from pinnacle activities and Umbral Focusing.
+* Fixed perk grouping for some perk-only wish lists.
+* Armory wish list view now shows perks, magazines, barrels, etc. in a similar order to the in-game view.
+* Re-added the D2Gunsmith link to the weapons armory page.
+* `memento:any`, `memento:nightfall` etc. filters find crafted weapons with a memento inserted.
+
+## 7.11.0 <span class="changelog-date">(2022-04-03)</span>
+
+* The Item Popup's header now opens the Armory view when clicked, and has some cursor/link styling as a reminder.
+* Deprecated Black Armory Radiance slots are now hidden, to make space for other weapon data.
+* Material Counts tooltip now fits onscreen better on desktop. On mobile, it's available under the banner dropdown of the Vault inventory page.
 * Wishlist combinations now collapse themselves into manageable groups in the Armory view.
 * Enhanced Elemental Capacitor no longer adds all its stat bonuses to weapons on which it's selected.
 * Fynch rank is now showing the correct number on the Vendors page.
@@ -8,7 +28,9 @@
 * Invalid search terms no longer cause the entire search to match every item.
 * Searches do better with quoted strings, and allow for escaping quotes in strings (e.g. `"My \"Cool\" Loadout"`)
 * Item moves are better about allowing a move if you really have space on a character, even if DIM hasn't refreshed its view of inventory. That said, DIM will always work best when its view of your inventory is up to date, so continue to refresh data after deleting items in game. DIM will now refresh automatically if we "overfill" a bucket because clearly we're out of date in that circumstance.
+* Mod Picker will now properly register Shadowkeep Nightmare Mods as activity mods.
 * Selected Super ability is now displayed on Void and Stasis subclass icons.
+* Mod position selector avoids invalid sockets a little better.
 
 ## 7.10.0 <span class="changelog-date">(2022-03-27)</span>
 

@@ -1,5 +1,4 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import LoadoutDrawer from 'app/destiny1/loadout-drawer/LoadoutDrawer';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
@@ -10,7 +9,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
@@ -19,7 +18,14 @@ import { generateMissingLoadoutItemId } from './loadout-item-conversion';
 import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
 import { Loadout } from './loadout-types';
 import { newLoadout } from './loadout-utils';
-import LoadoutDrawer2 from './LoadoutDrawer2';
+
+const LoadoutDrawer = React.lazy(
+  () => import(/* webpackChunkName: "loadout-drawer" */ './LoadoutDrawer2')
+);
+const D1LoadoutDrawer = React.lazy(
+  () =>
+    import(/* webpackChunkName: "d1-loadout-drawer" */ 'app/destiny1/loadout-drawer/LoadoutDrawer')
+);
 
 /**
  * A launcher for the LoadoutDrawer. This is used both so we can lazy-load the
@@ -37,8 +43,12 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
   // TODO: Alternately we could come up with the concept of a
   // `useControlledReducer` that applied a reducer to mutate an object whose
   // state is handled outside the component.
-  const [initialLoadout, setInitialLoadout] =
-    useState<{ loadout: Loadout; storeId?: string; showClass: boolean; isNew: boolean }>();
+  const [initialLoadout, setInitialLoadout] = useState<{
+    loadout: Loadout;
+    storeId?: string;
+    showClass: boolean;
+    isNew: boolean;
+  }>();
 
   const handleDrawerClose = useCallback(() => {
     setInitialLoadout(undefined);
@@ -166,21 +176,25 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
   }, [handleDrawerClose, pathname]);
 
   if (initialLoadout) {
-    return account.destinyVersion === 2 ? (
-      <LoadoutDrawer2
-        initialLoadout={initialLoadout.loadout}
-        storeId={initialLoadout.storeId}
-        isNew={initialLoadout.isNew}
-        onClose={handleDrawerClose}
-      />
-    ) : (
-      <LoadoutDrawer
-        initialLoadout={initialLoadout.loadout}
-        storeId={initialLoadout.storeId}
-        isNew={initialLoadout.isNew}
-        showClass={initialLoadout.showClass}
-        onClose={handleDrawerClose}
-      />
+    return (
+      <Suspense fallback={null}>
+        {account.destinyVersion === 2 ? (
+          <LoadoutDrawer
+            initialLoadout={initialLoadout.loadout}
+            storeId={initialLoadout.storeId}
+            isNew={initialLoadout.isNew}
+            onClose={handleDrawerClose}
+          />
+        ) : (
+          <D1LoadoutDrawer
+            initialLoadout={initialLoadout.loadout}
+            storeId={initialLoadout.storeId}
+            isNew={initialLoadout.isNew}
+            showClass={initialLoadout.showClass}
+            onClose={handleDrawerClose}
+          />
+        )}
+      </Suspense>
     );
   }
   return null;

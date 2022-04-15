@@ -5,6 +5,7 @@ interface CssExports {
   'content': string;
   'control': string;
   'tooltip': string;
+  'wideTooltip': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

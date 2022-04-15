@@ -39,7 +39,7 @@ export function MaterialCountsTooltip() {
     <>
       {t('Header.MaterialCounts')}
       <hr />
-      <MaterialCounts />
+      <MaterialCounts wide />
     </>
   );
 }

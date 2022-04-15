@@ -14,6 +14,7 @@ type Value = string | number | boolean | undefined | null;
 export interface ColumnGroup {
   id: string;
   header: React.ReactNode;
+  dropdownLabel?: React.ReactNode;
 }
 
 // TODO: column groupings?
@@ -31,6 +32,10 @@ export interface ColumnDefinition {
   gridWidth?: string;
   /** Header renderer */
   header: React.ReactNode;
+  /**
+   * If the column-toggler dropdown needs a more verbose label when the header is only an icon `e.g.Power or Locked`, that label content goes here
+   */
+  dropdownLabel?: React.ReactNode;
   /** Columns can optionally belong to a column group - if so, they're shown/hidden as a group. */
   columnGroup?: ColumnGroup;
   /** The raw value of the column for this item. */

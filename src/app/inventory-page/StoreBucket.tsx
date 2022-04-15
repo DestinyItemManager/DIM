@@ -1,7 +1,19 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { DimItem } from 'app/inventory/item-types';
+import { pullItem } from 'app/inventory/move-item';
+import {
+  currentStoreSelector,
+  sortedStoresSelector,
+  storesSelector,
+} from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { characterOrderSelector } from 'app/settings/character-sort';
+import { ItemSortSettings, itemSortSettingsSelector } from 'app/settings/item-sort';
+import { addIcon, AppIcon } from 'app/shell/icons';
 import { sortItems } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -14,17 +26,9 @@ import { shallowEqual } from 'fast-equals';
 import _ from 'lodash';
 import React, { useCallback } from 'react';
 import { connect, ConnectedComponent } from 'react-redux';
-import { ItemSortSettings, itemSortSettingsSelector } from '../settings/item-sort';
-import { addIcon, AppIcon } from '../shell/icons';
-import { InventoryBucket } from './inventory-buckets';
-import { DimItem } from './item-types';
-import { pullItem } from './move-item';
-import { currentStoreSelector, sortedStoresSelector, storesSelector } from './selectors';
-import { DimStore } from './store-types';
 import './StoreBucket.scss';
 import StoreBucketDropTarget from './StoreBucketDropTarget';
 import StoreInventoryItem from './StoreInventoryItem';
-import { findItemsByBucket } from './stores-helpers';
 
 // Props provided from parents
 interface ProvidedProps {

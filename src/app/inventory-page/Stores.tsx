@@ -1,11 +1,10 @@
 import { settingSelector } from 'app/dim-api/selectors';
+import { bucketsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import PhoneStores from '../inventory-page/PhoneStores';
 import DesktopStores from './DesktopStores';
-import PhoneStores from './PhoneStores';
-import { bucketsSelector, sortedStoresSelector } from './selectors';
-import './Stores.scss';
 
 /**
  * Display inventory and character headers for all characters and the vault.

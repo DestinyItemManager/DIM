@@ -2,8 +2,10 @@
 // Please do not change this file!
 interface CssExports {
   'amount': string;
+  'material': string;
   'materialCounts': string;
   'spanGrid': string;
+  'wide': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
