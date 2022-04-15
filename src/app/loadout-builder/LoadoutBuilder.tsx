@@ -68,7 +68,6 @@ interface StoreProps {
   searchFilter: ItemFilter;
   searchQuery: string;
   halfTierMods: PluggableInventoryItemDefinition[];
-  disabledDueToMaintenance: boolean;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -147,17 +146,12 @@ function mapStateToProps() {
     }
   );
 
-  const disabledDueToMaintenanceSelector = createSelector(allItemsSelector, (items) =>
-    items.every((item) => item.missingSockets)
-  );
-
   return (state: RootState): StoreProps => ({
     items: itemsSelector(state),
     loadouts: loadoutsSelector(state),
     searchFilter: searchFilterSelector(state),
     searchQuery: querySelector(state),
     halfTierMods: halfTierModsSelector(state),
-    disabledDueToMaintenance: disabledDueToMaintenanceSelector(state),
   });
 }
 
@@ -176,7 +170,6 @@ function LoadoutBuilder({
   searchQuery,
   halfTierMods,
   initialLoadoutParameters,
-  disabledDueToMaintenance,
 }: Props) {
   const defs = useD2Definitions()!;
   const [
@@ -288,7 +281,6 @@ function LoadoutBuilder({
     statOrder,
     statFilters,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
-    disabledDueToMaintenance,
   });
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
@@ -331,10 +323,6 @@ function LoadoutBuilder({
   // I don't think this can actually happen?
   if (!selectedStore) {
     return null;
-  }
-
-  if (disabledDueToMaintenance) {
-    return <div className={styles.disabled}>{t('LoadoutBuilder.DisabledDueToMaintenance')}</div>;
   }
 
   const menuContent = (
