@@ -26,8 +26,8 @@ Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 * It is highly recommended to use [VSCode](https://code.visualstudio.com/) to work on DIM. When you open DIM in VSCode, accept the recommended plugins it suggests.
 * Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to running `yarn install`.
 
-**Docker Supported Development**
-* As an alternative to installing the above, we support a docker-based development environment. See: [Docker Development Guide](Docker.md)
+**Docker Development**
+* As an alternative to installing the above, you can try a docker-based development environment, but be aware that none of the core developers use it so it may be broken. See: [Docker Development Guide](Docker.md)
 
 
 ### Clone the repo
