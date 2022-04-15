@@ -12,6 +12,7 @@ import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
 import ItemTagSelector from 'app/item-popup/ItemTagSelector';
 import { addItemToLoadout } from 'app/loadout-drawer/loadout-events';
 import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -100,7 +101,7 @@ export function ConsolidateActionButton({
 }: ActionButtonProps & { actionModel: ItemActionsModel }) {
   const stores = useSelector(sortedStoresSelector);
   const owner = getStore(stores, item.owner);
-  const dispatch = useDispatch();
+  const dispatch = useThunkDispatch();
 
   if (!actionModel.canConsolidate) {
     return null;
@@ -126,7 +127,7 @@ export function DistributeActionButton({
   label,
   actionModel,
 }: ActionButtonProps & { actionModel: ItemActionsModel }) {
-  const dispatch = useDispatch();
+  const dispatch = useThunkDispatch();
 
   if (!actionModel.canDistribute) {
     return null;

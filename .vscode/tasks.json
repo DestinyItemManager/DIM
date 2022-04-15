@@ -9,21 +9,7 @@
       "command": "yarn",
       "args": ["start"],
       "isBackground": true,
-      "problemMatcher": {
-        "pattern": [
-          {
-            "regexp": "\\b\\B",
-            "file": 1,
-            "location": 2,
-            "message": 3
-          }
-        ],
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "==> Webpack is starting to build.*",
-          "endsPattern": "==> Webpack finished building.*"
-        }
-      }
+      "problemMatcher": ["$ts-checker-webpack", "$ts-checker-eslint-webpack"]
     }
   ]
 }

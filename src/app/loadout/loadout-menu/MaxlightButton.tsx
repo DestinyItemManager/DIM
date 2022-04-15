@@ -7,10 +7,9 @@ import { maxLightItemSet, maxLightLoadout } from 'app/loadout-drawer/auto-loadou
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { AppIcon, powerActionIcon, powerIndicatorIcon } from 'app/shell/icons';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import xpIcon from 'images/xpIcon.svg';
-import React from 'react';
-import { useDispatch } from 'react-redux';
 import styles from './MaxlightButton.m.scss';
 
 interface Props {
@@ -21,7 +20,7 @@ interface Props {
 }
 
 export default function MaxlightButton({ allItems, dimStore, hasClassified, hideIcon }: Props) {
-  const dispatch = useDispatch();
+  const dispatch = useThunkDispatch();
 
   const maxLight = getLight(dimStore, maxLightItemSet(allItems, dimStore).equippable);
   const artifactLight = getArtifactBonus(dimStore);
