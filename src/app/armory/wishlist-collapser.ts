@@ -100,7 +100,6 @@ export function consolidateRollsForOneWeapon(
       // this group needs enhancedness grouping
       // these rolls can be clumped into groups that have the same secondary perks
       const rollsGroupedBySecondaryStuff = _.groupBy(rollGroup, (r) => r.secondaryPerkIdentifier);
-
       for (const secondaryPerkKey in rollsGroupedBySecondaryStuff) {
         const rollsWithSameSecondaryPerks = rollsGroupedBySecondaryStuff[secondaryPerkKey];
 
@@ -110,8 +109,8 @@ export function consolidateRollsForOneWeapon(
         );
 
         const commonPrimaryPerksKey = commonPrimaryPerks.join();
-
         if (
+          rollsWithSameSecondaryPerks.length === 1 ||
           // if there's 2 rolls, if they have something in common,
           // i.e. "base/enh" and "base/base" have a "base" in the same column
           // it's safe to combine,
@@ -122,10 +121,12 @@ export function consolidateRollsForOneWeapon(
           // if there's 4 separate rolls, this is a full permutation of base/base, base/enh, enh/base, enh/enh
           rollsWithSameSecondaryPerks.length === 4
         ) {
-          (rollsGroupedByPrimaryPerks[commonPrimaryPerksKey] ??= {
+          const rollGroup = (rollsGroupedByPrimaryPerks[commonPrimaryPerksKey] ??= {
             commonPrimaryPerks,
             rolls: [],
-          }).rolls.push(...rollsWithSameSecondaryPerks);
+          });
+
+          rollGroup.rolls.push(...rollsWithSameSecondaryPerks);
         }
 
         // otherwise, this is a unique set of rows. deliver them as-is, keyed by their non-grouped perks
@@ -145,7 +146,6 @@ export function consolidateRollsForOneWeapon(
       }
     }
   }
-
   return Object.values(rollsGroupedByPrimaryPerks);
 }
 
@@ -171,43 +171,53 @@ function isMajorPerk(item?: DestinyInventoryItemDefinition) {
 //   [[tac mag], [rifled barrel, extended barrel]]
 // ]
 export function consolidateSecondaryPerks(initialRolls: Roll[]) {
-  const allSecondaryIndices = _.uniq(initialRolls.flatMap((r) => r.secondarySocketIndices)).sort(
-    (a, b) => a - b
-  );
+  // these are legit socketIndices according the item def. this might be like, [3, 4]
+  const allSecondarySocketIndices = _.uniq(
+    initialRolls.flatMap((r) => r.secondarySocketIndices)
+  ).sort((a, b) => a - b);
+
+  // newClusteredRolls collapses perks into an array with no blank spaces,
+  // so we'll use this to iterate our new structure.
+  // if above is [3, 4], this would be [0, 1]. basically array.keys
+  const rollIndices = allSecondarySocketIndices.map((_, i) => i);
+
   let newClusteredRolls = initialRolls
     // ignore rolls with no secondary perks in them
     .filter((r) => r.secondarySocketIndices.length)
     .map((r) =>
-      allSecondaryIndices.map((i) => {
+      allSecondarySocketIndices.map((i) => {
         const perkHash = r.secondaryPerksMap[i];
         return perkHash ? { perks: [perkHash], key: `${perkHash}` } : { perks: [], key: `` };
       })
     );
 
-  for (let socketIndex = 0; socketIndex < allSecondaryIndices.length; socketIndex++) {
+  // we iterate through the perk columns, looking for stuff to collapse
+  for (const index of rollIndices) {
+    // we repeatedly look for things to collapse until there are none
     // eslint-disable-next-line no-constant-condition
     while (true) {
+      // find a bundle that matches another bundle, in every column except our current one
       const perkBundleToConsolidate = newClusteredRolls.find((r1) =>
-        newClusteredRolls.some((r2) => r1 !== r2 && r1[socketIndex].key === r2[socketIndex].key)
+        newClusteredRolls.some(
+          (r2) => r1 !== r2 && rollIndices.every((i) => i === index || r1[i].key === r2[i].key)
+        )
       );
+      // if nothing's found, we've collapsed as much as we can
       if (!perkBundleToConsolidate) {
         break;
       }
 
-      const [bundlesToCombine, bundlesToLeaveAlone] = _.partition(
-        newClusteredRolls,
-        (r) => r[socketIndex].key === perkBundleToConsolidate[socketIndex].key
+      const [bundlesToCombine, bundlesToLeaveAlone] = _.partition(newClusteredRolls, (r) =>
+        rollIndices.every((i) => i === index || perkBundleToConsolidate[i].key === r[i].key)
       );
 
+      // set aside the uninvolved bundles
       newClusteredRolls = bundlesToLeaveAlone;
-      const newPerkBundle = Array.from(perkBundleToConsolidate);
-      for (let i = 0; i < newPerkBundle.length; i++) {
-        if (i === socketIndex) {
-          continue;
-        }
 
-        newPerkBundle[i] = combineColumns(bundlesToCombine.map((b) => b[i]));
-      }
+      // build a new bundle with the same other columns, but add together the perks in this column
+      const newPerkBundle = perkBundleToConsolidate.map((e, i) =>
+        i === index ? combineColumns(bundlesToCombine.map((b) => b[i])) : e
+      );
 
       newClusteredRolls.push(newPerkBundle);
     }
