@@ -2,7 +2,6 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import type { ItemTierName } from 'app/search/d2-known-values';
-import { refresh } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
@@ -1173,9 +1172,11 @@ export function checkForOverFill(): ThunkResult {
 
     const countByBucket = _.countBy(store.items, (i) => i.bucket.hash);
     for (const [bucketHashStr, amount] of Object.entries(countByBucket)) {
-      if (amount > buckets.byHash[parseInt(bucketHashStr, 10)].capacity) {
+      const bucket = buckets.byHash[parseInt(bucketHashStr, 10)];
+      if (amount > bucket.capacity) {
         // Request a refresh of the store, this bucket is overfilled
-        refresh();
+        // refresh();
+        infoLog('move', 'Bucket', bucket.name, 'overfilled');
         return;
       }
     }
