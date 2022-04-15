@@ -54,9 +54,10 @@ function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
 
     if (!toSave) {
       const plugHash =
-        socket.emptyPlugItemHash ||
-        (socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
-          socket.plugged.plugDef.hash);
+        socket.plugged &&
+        (socket.emptyPlugItemHash ||
+          (socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
+            socket.plugged.plugDef.hash));
       if (plugHash) {
         toSave = defs.InventoryItem.get(plugHash);
       }

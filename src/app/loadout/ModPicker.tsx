@@ -13,6 +13,7 @@ import {
   MAX_ARMOR_ENERGY_CAPACITY,
 } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
+import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
@@ -195,11 +196,22 @@ function mapStateToProps() {
 
       const plugSets = Object.values(plugSetsByHash);
 
+      // Order our mods so that we assign the most picky mods first (the mods that have the fewest
+      // plugSets containing them). This is necessary for artifact mods in artificer sockets and
+      // essentially the same logic that actual mod assignment uses.
+      const orderedMods = _.sortBy(
+        lockedMods,
+        (mod) => plugSets.filter((s) => s.plugs.some((p) => p.hash === mod.hash)).length
+      );
+
+      // However, sort the plugSets so that regular armor plugsets are preferred.
+      // Assigning the first artifact mod to the (Artifice Armor) header is confusing
+      // when a user doesn't have any artifice armor in the loadouts because the mod
+      // assignment might not actually need any artifice sockets.
+      plugSets.sort(compareBy((plugSet) => -plugSet.plugs.length));
+
       // Now we populate the plugsets with their corresponding plugs.
-      // Due to artificer plugsets being a subset of the corresponding bucket specific plugsets
-      // we sort the plugsets in reverse by length to ensure we use artificer sockets first.
-      plugSets.sort((a, b) => b.plugs.length - a.plugs.length);
-      for (const initiallySelected of lockedMods) {
+      for (const initiallySelected of orderedMods) {
         const possiblePlugSets = plugSets.filter((set) =>
           set.plugs.some((plug) => plug.hash === initiallySelected.hash)
         );
