@@ -63,6 +63,9 @@
     "last 2 Edge versions",
     "last 2 Opera versions"
   ],
+  "resolutions": {
+    "@types/react": "17.0.43"
+  },
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/plugin-transform-react-constant-elements": "^7.0.0",
