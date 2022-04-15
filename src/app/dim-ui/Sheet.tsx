@@ -164,7 +164,7 @@ export default function Sheet({
    * outer callback when the animation is done.
    */
   const handleClose = useCallback(
-    (e?, dragDismiss?: boolean) => {
+    (e?: React.MouseEvent, dragDismiss?: boolean) => {
       if (disabled) {
         return;
       }

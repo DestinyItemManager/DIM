@@ -163,7 +163,7 @@ export default function PlugDrawer({
   }, [query, internalPlugSets, defs, language]);
 
   const handleIsPlugSelectable = useCallback(
-    (plug) =>
+    (plug: PluggableInventoryItemDefinition) =>
       isPlugSelectable(
         plug,
         internalPlugSets.flatMap((plugSet) => plugSet.selected)

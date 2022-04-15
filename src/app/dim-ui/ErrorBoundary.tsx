@@ -5,6 +5,7 @@ import { reportException } from '../utils/exceptions';
 
 interface Props {
   name: string;
+  children?: React.ReactNode | React.ReactNode[];
 }
 
 interface State {
