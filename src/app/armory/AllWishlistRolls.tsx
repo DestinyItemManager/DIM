@@ -182,12 +182,35 @@ function WishlistRolls({
                         // remove origin perks that can't possibly not be there. no point in displaying these.
                         // maybe this should be handled upstream in wishlist processing.
                         if (
-                          hashes.some(
-                            (h) =>
-                              plugByPerkHash[h].plugDef.plug.plugCategoryHash ===
-                                PlugCategoryHashes.Origins &&
-                              socketByPerkHash[h].socketDefinition.singleInitialItemHash === h
-                          )
+                          hashes.some((h) => {
+                            const socket = socketByPerkHash[h];
+                            const plug = plugByPerkHash[h];
+
+                            // include column if it's not an origin perk column
+                            if (plug.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.Origins) {
+                              return false;
+                            }
+
+                            // exclude column if this origin perk is auto-plugged
+                            if (socket.socketDefinition.singleInitialItemHash === h) {
+                              return true;
+                            }
+
+                            const plugSet =
+                              socket.socketDefinition.reusablePlugSetHash &&
+                              defs.PlugSet.get(socket.socketDefinition.reusablePlugSetHash);
+
+                            // include column if we can't determine more info
+                            if (!plugSet) {
+                              return false;
+                            }
+
+                            // exclude column if there's only one perk possible here?
+                            return (
+                              plugSet.reusablePlugItems.length === 1 &&
+                              plugSet.reusablePlugItems[0].plugItemHash === h
+                            );
+                          })
                         ) {
                           return null;
                         }
