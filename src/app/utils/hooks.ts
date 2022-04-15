@@ -44,7 +44,7 @@ export function useShiftHeld() {
  */
 export function useSetCSSVarToHeight(ref: React.RefObject<HTMLElement>, propertyName: string) {
   const updateVar = useCallback(
-    (height) => {
+    (height: number) => {
       document.querySelector('html')!.style.setProperty(propertyName, height + 'px');
     },
     [propertyName]
