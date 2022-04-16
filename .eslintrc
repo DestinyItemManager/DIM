@@ -202,6 +202,9 @@
         "ignoreRestSiblings": true
       }
     ],
+    "@typescript-eslint/no-for-in-array": "error",
+    "no-implied-eval": "off",
+    "@typescript-eslint/no-implied-eval": "error",
     "array-func/prefer-array-from": "off",
     "react-redux/mapStateToProps-prefer-hoisted": "error",
     "react-redux/no-unused-prop-types": "error",
