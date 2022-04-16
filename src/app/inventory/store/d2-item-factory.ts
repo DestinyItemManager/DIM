@@ -104,8 +104,8 @@ export function processItems(
       createdItem.owner = owner.id;
       result.push(createdItem);
     } else {
-      // the item failed to be created for some reason. 3 things can currently cause this:
-      // an exception occurred, the item lacks a definition, or it lacks one of either name||questLineName
+      // the item failed to be created for some reason. 2 things can currently cause this:
+      // an exception occurred, or the item lacks a definition
       // not all of these should cause the store to consider itself hadErrors.
       // dummies and invisible items are not a big deal
 
@@ -278,8 +278,12 @@ export function makeItem(
     if (item.itemHash === 3752071771) {
       // This happens only in the French manifest, for this one item. Just overwrite the definition.
       (itemDef.displayProperties as any).name = 'Le Flow, le Métal';
+    } else if (item.itemHash === 3377778206) {
+      // https://d2.destinygamewiki.com/wiki/Gift_of_the_Lighthouse
+      (itemDef.displayProperties as any).name = 'Gift of the Lighthouse';
+    } else {
+      (itemDef.displayProperties as any).name = '???';
     }
-    return null;
   }
 
   let displayProperties = itemDef.displayProperties;
