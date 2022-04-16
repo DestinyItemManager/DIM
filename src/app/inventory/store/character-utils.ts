@@ -86,7 +86,7 @@ export function getD1CharacterStatTiers(stat: DimCharacterStat) {
   if (!statsWithTiers.includes(stat.hash)) {
     return [];
   }
-  const tiers = new Array(5);
+  const tiers = new Array<number>(5);
   let remaining = stat.value;
   for (let t = 0; t < 5; t++) {
     remaining -= tiers[t] = remaining > 60 ? 60 : remaining;

@@ -178,7 +178,7 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
     isDestiny2: () => true,
   };
   lazyTables.forEach((tableShort) => {
-    const table = `Destiny${tableShort}Definition`;
+    const table = `Destiny${tableShort}Definition` as keyof AllDestinyManifestComponents;
     defs[tableShort] = {
       get(id: number, requestor?: { hash: number } | string | number) {
         const dbTable = db[table];
