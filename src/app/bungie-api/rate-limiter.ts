@@ -92,13 +92,11 @@ export class RateLimiterQueue {
   }
 }
 
-export const RateLimiterConfig = {
-  limiters: [] as RateLimiterQueue[],
+const limiters: RateLimiterQueue[] = [];
 
-  addLimiter(queue: RateLimiterQueue) {
-    this.limiters.push(queue);
-  },
-};
+export function addLimiter(queue: RateLimiterQueue) {
+  limiters.push(queue);
+}
 
 /**
  * Produce a version of "fetch" that respects global rate limiting rules.
@@ -107,7 +105,7 @@ export function rateLimitedFetch(fetcher: typeof fetch): typeof fetch {
   return (request: Request | string, options?: RequestInit) => {
     const url = typeof request === 'string' ? request : request.url;
     let limiter;
-    for (const possibleLimiter of RateLimiterConfig.limiters) {
+    for (const possibleLimiter of limiters) {
       if (possibleLimiter.matches(url)) {
         limiter = possibleLimiter;
         break;

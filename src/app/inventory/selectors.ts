@@ -164,7 +164,7 @@ export interface OwnedItemsInfo {
  */
 export const ownedItemsSelector = createSelector(allItemsSelector, (allItems) => {
   const accountWideOwned = new Set<number>();
-  const storeSpecificOwned = {};
+  const storeSpecificOwned: { [owner: string]: Set<number> } = {};
   for (const item of allItems) {
     if (STORE_SPECIFIC_OWNERSHIP_BUCKETS.includes(item.bucket.hash)) {
       if (!storeSpecificOwned[item.owner]) {
