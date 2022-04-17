@@ -5,14 +5,21 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { setSearchQuery } from 'app/shell/actions';
+import ErrorPanel from 'app/shell/ErrorPanel';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
+import { createSelector } from 'reselect';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { savedLoadoutParametersSelector } from '../dim-api/selectors';
-import { sortedStoresSelector } from '../inventory/selectors';
+import { allItemsSelector, sortedStoresSelector } from '../inventory/selectors';
 import LoadoutBuilder from './LoadoutBuilder';
+
+const disabledDueToMaintenanceSelector = createSelector(
+  allItemsSelector,
+  (items) => items.length > 0 && items.every((item) => item.missingSockets || !item.sockets)
+);
 
 interface Props {
   account: DestinyAccount;
@@ -28,6 +35,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions();
   const stores = useSelector(sortedStoresSelector);
+  const disabledDueToMaintenance = useSelector(disabledDueToMaintenanceSelector);
   useLoadStores(account);
 
   const savedLoadoutParameters = useSelector(savedLoadoutParametersSelector);
@@ -62,6 +70,15 @@ export default function LoadoutBuilderContainer({ account }: Props) {
 
   if (!stores || !stores.length || !defs) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
+  }
+
+  // Don't even bother showing the tool when Bungie has shut off sockets.
+  if (disabledDueToMaintenance) {
+    return (
+      <div className="dim-page">
+        <ErrorPanel title={t('LoadoutBuilder.DisabledDueToMaintenance')} showTwitters />
+      </div>
+    );
   }
 
   // TODO: key off the URL params?
