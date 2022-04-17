@@ -28,7 +28,7 @@ declare const $featureFlags: {
   itemFeed: boolean;
 };
 
-declare function ga(...params: string[]);
+declare function ga(...params: string[]): void;
 
 interface Window {
   OC?: unknown;

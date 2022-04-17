@@ -97,7 +97,7 @@ class PeekableGenerator<T> {
       this.next = undefined;
       return ret;
     }
-    return this.gen.next().value;
+    return this.gen.next().value as T | undefined;
   }
 }
 

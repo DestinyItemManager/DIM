@@ -75,7 +75,7 @@ async function xurLocationFetch(): Promise<XurLocationResponse> {
 
   const response = await Promise.resolve(fetch(request));
   if (response.ok) {
-    return response.json();
+    return response.json() as Promise<XurLocationResponse>;
   }
 
   throw new Error("Unable to load Xur's location: " + response.status);

@@ -96,7 +96,7 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
     deleteDimApiToken();
   }
   if (response.ok) {
-    return response.json();
+    return response.json() as Promise<T>;
   }
 
   let responseData: { error: string; message: string } | undefined;
@@ -124,7 +124,7 @@ export interface DimAuthToken {
  */
 function getToken(): DimAuthToken | undefined {
   const tokenString = localStorage.getItem(localStorageKey);
-  return tokenString ? JSON.parse(tokenString) : undefined;
+  return tokenString ? (JSON.parse(tokenString) as DimAuthToken) : undefined;
 }
 
 /**

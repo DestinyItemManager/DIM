@@ -134,7 +134,7 @@ export default function Activities({ account }: Props) {
     };
 
     if (rawActivity.extended) {
-      activity.skulls = rawActivity.extended.skullCategories.map((s: any) => s.skulls.flat());
+      activity.skulls = rawActivity.extended.skullCategories.flatMap((s) => s.skulls);
     }
 
     const rawSkullCategories = rawActivity.activityTiers[0].skullCategories;
