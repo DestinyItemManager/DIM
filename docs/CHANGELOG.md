@@ -1,5 +1,7 @@
 ## Next
 
+## 7.13.0 <span class="changelog-date">(2022-04-17)</span>
+
 * If an armor piece doesn't have enough mod slots to fit the requested mods (e.g. three resist mods but no artifice chest piece), DIM will notice this earlier and show them as unassigned in the Show Mod Placement menu.
 * Added text labels to "icon-only" columns (lock icon, power icon, etc.) in dropdowns on the Organizer page. Only show label in dropdowns, columns show icon only.
 * Echo of Persistence Void Fragment now indicates that it has a stat penalty depending on the Guardian class.
