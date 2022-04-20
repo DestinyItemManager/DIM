@@ -81,7 +81,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           </svg>
         </>
       )}
-      {item.highlightedObjective && (!item.deepsightInfo || item.deepsightInfo.complete) && (
+      {(item.highlightedObjective || item.deepsightInfo?.complete) && (
         <img className={styles.highlightedObjective} src={pursuitComplete} />
       )}
     </>
