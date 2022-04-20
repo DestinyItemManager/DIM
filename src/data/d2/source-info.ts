@@ -954,7 +954,7 @@ const D2Sources: {
       654652973, // Guide 25 Last Wish encounters
       707740602, // Guide 10 Last Wish encounters
       866530798, // Source: Not a Scratch.
-      1007078046, // Source: Vow of the Disciple raid
+      1007078046, // Source: "Vow of the Disciple" Raid
       1405897559, // Source: "Deep Stone Crypt" raid.
       1483048674, // Source: Complete the "Scourge of the Past" raid.
       1491707941, // Source: "Garden of Salvation" raid.
@@ -1287,7 +1287,7 @@ const D2Sources: {
   vow: {
     itemHashes: [],
     sourceHashes: [
-      1007078046, // Source: Vow of the Disciple raid
+      1007078046, // Source: "Vow of the Disciple" Raid
     ],
     searchString: [],
   },
