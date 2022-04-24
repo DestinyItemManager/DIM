@@ -1,12 +1,9 @@
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
-import { doShowTriage, ItemTriage } from 'app/item-triage/ItemTriage';
+import { doShowTriage, ItemTriage, TriageTabToggle } from 'app/item-triage/ItemTriage';
 import { percent } from 'app/shell/formatters';
-import { AppIcon, thumbsUpIcon } from 'app/shell/icons';
-import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemDetails from './ItemDetails';
@@ -29,7 +26,6 @@ export default function ItemPopupBody({
   tab: ItemPopupTab;
   onTabChanged(tab: ItemPopupTab): void;
 }) {
-  const wishlistRoll = useSelector(wishListSelector(item));
   const failureStrings = Array.from(extraInfo?.failureStrings || []);
   if (!item.canPullFromPostmaster && item.location.inPostmaster) {
     failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
@@ -49,18 +45,7 @@ export default function ItemPopupBody({
   if ($featureFlags.triage && doShowTriage(item)) {
     tabs.push({
       tab: ItemPopupTab.Triage,
-      title: (
-        <span className="popup-tab-title">
-          {t('MovePopup.TriageTab')}
-          {tab === ItemPopupTab.Overview && wishlistRoll && (
-            <AppIcon
-              className="thumbs-up"
-              icon={thumbsUpIcon}
-              title={t('WishListRoll.BestRatedTip')}
-            />
-          )}
-        </span>
-      ),
+      title: <TriageTabToggle item={item} currentTab={tab} />,
       component: <ItemTriage item={item} />,
     });
   }

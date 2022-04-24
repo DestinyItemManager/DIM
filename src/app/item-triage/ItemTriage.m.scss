@@ -1,93 +1,100 @@
-.inlineIcon {
-  height: 25px;
-  width: 25px;
-  display: inline-block;
-  vertical-align: middle;
-  &.smaller {
-    height: 20px;
-    width: 20px;
-    margin: 2.5px;
-  }
-}
-
 .itemTriagePane {
-  margin: 5px 10px 5px;
-}
+  margin: 5px 0;
+  :global(.title) {
+    background-color: transparent;
+    padding: 0 13px;
+    min-height: 28px;
 
-.ownershipTable {
-  display: grid;
-  grid-template-columns: auto max-content;
-  margin-bottom: 15px;
-  & > div {
-    align-self: center;
-    &.header {
-      text-transform: uppercase;
-      .inlineIcon {
-        height: 18px;
-        width: 18px;
-        position: relative;
-        top: -2px;
-      }
+    &:hover {
+      background-color: #2224;
     }
   }
+  :global(.collapse-content) {
+    margin: 0 15px 8px;
+  }
 }
+
 .statTable {
   display: grid;
-  grid-template-columns: auto max-content;
+  grid-template-columns: min-content min-content auto min-content min-content;
   margin-bottom: 15px;
   & > div {
     align-self: center;
-    &.header {
-      text-transform: uppercase;
-      .inlineIcon {
-        height: 18px;
-        width: 18px;
-        position: relative;
-        top: -2px;
-      }
-    }
   }
 }
+
+.header {
+  display: contents;
+  > span:nth-child(n + 2) {
+    text-align: center;
+  }
+}
+
+.similarItemsTable {
+  display: grid;
+  grid-template-columns: auto min-content min-content;
+  margin-bottom: 0;
+  & > div {
+    align-self: center;
+  }
+  .header {
+    :nth-child(2) {
+      grid-column: 2 / 4;
+    }
+  }
+  .headerDivider {
+    grid-column-end: span 3;
+  }
+  .count {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+}
+
 .headerDivider {
   grid-column-end: span 2;
   background: #888;
   height: 1px;
 }
-.factorCombo {
-  padding: 4px;
-  & > * {
-    display: inline-block;
+
+.tableRow {
+  display: contents;
+  &:nth-child(n + 2) > * {
+    border-top: 1px solid #5555;
   }
-}
-.comboCount {
-  display: flex;
-  justify-content: center;
-  > span {
-    text-align: right;
-    margin-right: 0.5em;
-    min-width: 2em;
+  & > * {
+    height: 25px;
+    display: flex;
+    align-items: center;
   }
 }
 
-.bestStat {
-  visibility: visible;
+.factorCombo {
+  & > :nth-child(n + 2) {
+    margin-left: 2px;
+  }
 }
-.thisStat {
-  text-align: center;
+
+.statsHeaderLeft {
+  grid-column: 1 / 4;
 }
+.statsHeaderRight {
+  grid-column: 4 / 6;
+}
+.statsHeaderDivider {
+  grid-column: 1 / -1;
+  background: #888;
+  height: 1px;
+}
+
 .dimmed {
   opacity: 0.8;
 }
 .statValue {
   font-weight: bold;
   width: 20px;
-  display: inline-block;
   text-align: center;
-}
-
-.statIconWrapper {
-  width: 25px;
-  display: inline-block;
+  justify-content: center;
 }
 
 .weaponSvg {
@@ -96,28 +103,64 @@
   filter: invert(1);
 }
 
-.headerImage {
-  vertical-align: bottom;
-  margin-bottom: -2px;
-}
-
-.inlineBlock {
-  display: inline-block;
+.inlineIcon {
+  height: 18px;
+  width: auto;
+  margin: -3px 0;
 }
 
 .loadoutRow {
-  display: block;
+  display: flex;
+  .loadoutName {
+    flex-grow: 1;
+  }
 }
 
-.lowKeyButton {
-  cursor: pointer;
-  color: #888;
-  background-color: #222;
-  padding: 0 6px;
-  border-radius: 4px;
-  text-align: center;
-  &:hover {
-    background-color: #68a0b7;
-    color: #222;
+.controls {
+  width: max-content;
+  display: flex;
+  align-items: center;
+  & > :nth-child(n + 2) {
+    margin-left: 2px;
   }
+}
+
+.thumbsUp {
+  position: relative !important;
+  top: -3px !important;
+  right: 0 !important;
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  margin: -3px 0;
+  margin-left: 2px;
+}
+
+.inLoadout {
+  filter: invert(1);
+  height: 18px;
+  width: 18px;
+  position: relative;
+  display: inline-block;
+  margin: -3px 0;
+}
+
+.factorCollapsedValue {
+  font-weight: bold;
+}
+
+.loadoutList {
+  margin: 0;
+  padding: 0;
+  li {
+    padding: 4px;
+    &:nth-child(n + 2) {
+      border-top: 1px solid #5555;
+    }
+  }
+}
+
+.factorIcon {
+  height: 20px;
+  width: 20px;
 }

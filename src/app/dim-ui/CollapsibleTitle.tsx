@@ -15,7 +15,7 @@ interface Props {
   /** right-aligned content that's in the title bar, but isn't the title */
   extra?: React.ReactNode;
   /** if true, the `extra` content shows up only when this section is collapsed */
-  extraOnlyCollapsed?: boolean;
+  showExtraOnlyWhenCollapsed?: boolean;
   /** if true, this section is forced closed and ignores clicks */
   disabled?: boolean;
   children?: React.ReactNode;
@@ -28,7 +28,7 @@ export default function CollapsibleTitle({
   defaultCollapsed,
   children,
   extra,
-  extraOnlyCollapsed,
+  showExtraOnlyWhenCollapsed,
   className,
   disabled,
   sectionId,
@@ -50,12 +50,21 @@ export default function CollapsibleTitle({
 
   return (
     <>
-      <div className={clsx('title', className, { collapsed })} style={style} onClick={toggle}>
+      <div
+        className={clsx(
+          'title',
+          className,
+          { collapsed },
+          disabled && collapsed && 'disabled-collapsed'
+        )}
+        style={style}
+        onClick={toggle}
+      >
         <span className="collapse-handle">
           <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
           <span>{title}</span>
         </span>
-        {extraOnlyCollapsed ? collapsed && extra : extra}
+        {showExtraOnlyWhenCollapsed ? collapsed && extra : extra}
       </div>
       <AnimatePresence>
         {!collapsed && (

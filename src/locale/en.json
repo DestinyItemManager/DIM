@@ -1037,6 +1037,14 @@
     "TagItem": "Tag Item",
     "UnlockAll": "Unlock Items"
   },
+  "Triage": {
+    "HighStats": "High Stats",
+    "InLoadouts": "In Loadouts",
+    "OwnedCount": "# Owned",
+    "SimilarItems": "Similar Items",
+    "ThisItem": "This item",
+    "YourBestItem": "Your best item"
+  },
   "Triumphs": {
     "HideCompleted": "Hide completed triumphs",
     "RevealRedacted": "Reveal redacted triumphs"

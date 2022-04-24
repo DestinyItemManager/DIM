@@ -10,8 +10,19 @@ import styles from './SpecialtyModSlotIcon.m.scss';
 interface ModSlotIconProps {
   item: DimItem;
   className?: string;
+  /**
+   * if the icon will be displayed pretty small,
+   * set this to true and the icon will zoom
+   * to use less of its detail
+   */
   lowRes?: boolean;
 }
+
+/**
+ * if an item has specialty modslots, this returns one or
+ * more elements wrapped in a fragment. they'll probably
+ * need a flex/something wrapper to display right
+ */
 export function SpecialtyModSlotIcon({
   item,
   className,
@@ -34,9 +45,7 @@ export function SpecialtyModSlotIcon({
         return (
           <PressTip tooltip={emptySlotItem.itemTypeDisplayName} key={emptySlotItem.hash}>
             <div
-              className={clsx(className, styles.specialtyModIcon, {
-                [styles.lowRes]: lowRes,
-              })}
+              className={clsx(className, styles.specialtyModIcon, lowRes && styles.lowRes)}
               style={bungieBackgroundStyleAdvanced(
                 emptySlotItem.displayProperties.icon,
                 'linear-gradient(#000b, #000b)', // forced dark background to help w/ visibility
@@ -72,7 +81,7 @@ export function ArmorSlotSpecificModSocketIcon({ item, className, lowRes }: ModS
   return emptySocketIcon ? (
     <PressTip elementType="span" tooltip={emptySocketIcon.itemTypeDisplayName}>
       <div
-        className={`${className} ${styles.specialtyModIcon} ${lowRes ? styles.lowRes : ''}`}
+        className={clsx(className, styles.specialtyModIcon, lowRes && styles.lowRes)}
         style={bungieBackgroundStyle(emptySocketIcon.displayProperties.icon)}
       />
     </PressTip>
