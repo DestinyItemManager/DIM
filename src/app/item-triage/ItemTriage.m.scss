@@ -1,3 +1,5 @@
+@import '../variables.scss';
+
 .itemTriagePane {
   margin: 5px 0;
   :global(.title) {
@@ -14,6 +16,25 @@
   }
 }
 
+@include phone-portrait {
+  // on phone, undo how small we shrunk title bars
+  :global(.title) {
+    min-height: 34px;
+  }
+
+  // and make the compare/search buttons bigger
+  .controls {
+    align-items: stretch !important;
+    > a {
+      font-size: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
 .statTable {
   display: grid;
   grid-template-columns: min-content min-content auto min-content min-content;
@@ -27,6 +48,9 @@
   display: contents;
   > span:nth-child(n + 2) {
     text-align: center;
+  }
+  > span {
+    min-width: max-content;
   }
 }
 
@@ -92,9 +116,9 @@
 }
 .statValue {
   font-weight: bold;
-  width: 20px;
-  text-align: center;
-  justify-content: center;
+  padding: 0 3px;
+  text-align: right;
+  justify-content: right;
 }
 
 .weaponSvg {
@@ -111,6 +135,8 @@
 
 .loadoutRow {
   display: flex;
+  height: 25px;
+  align-items: center;
   .loadoutName {
     flex-grow: 1;
   }
@@ -119,6 +145,7 @@
 .controls {
   display: flex;
   align-items: center;
+  align-self: stretch;
   & > :nth-child(n + 2) {
     margin-left: 2px;
   }
