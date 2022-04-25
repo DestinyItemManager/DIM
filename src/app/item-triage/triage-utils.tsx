@@ -1,6 +1,6 @@
 import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
 import { DimItem } from 'app/inventory/item-types';
-import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Factor, factorComboCategories, FactorComboCategory, factorCombos } from './triage-factors';
@@ -63,19 +63,18 @@ function collectRelevantStatMaxes(
   const statMaxes: Record<number | string, number> = { custom: 0 };
 
   for (const item of allItems) {
+    // reasons to skip gathering stats from this item
     if (
-      !(
-        item.stats && // item must have stats
-        // compare only items with the same canonical bucket.
-        item.bucket.hash === exampleItem.bucket.hash &&
-        // accept anything if seed item is class unknown
-        (exampleItem.classType === DestinyClass.Unknown ||
-          // or accept individual items if they're matching or unknown.
-          item.classType === DestinyClass.Unknown ||
-          item.classType === exampleItem.classType) &&
-        // accept any tier if seed item is exotic, or filter out exotics if this item isn't
-        (exampleItem.isExotic || !item.isExotic)
-      )
+      // skip items without stats
+      !item.stats ||
+      // compare only items with the same canonical bucket.
+      item.bucket.hash !== exampleItem.bucket.hash ||
+      // item needs to be class-comparable
+      (exampleItem.classType !== DestinyClass.Unknown &&
+        item.classType !== DestinyClass.Unknown &&
+        item.classType !== exampleItem.classType) ||
+      // compare exotics' stats only to dupes
+      (exampleItem.isExotic && exampleItem.hash !== item.hash)
     ) {
       continue;
     }
@@ -100,7 +99,7 @@ function collectRelevantStatMaxes(
 // a stat is notable on seed item when it's at least this % of the best owned
 const notabilityThreshold = 0.82;
 // total works within a smaller range with a big lower bound so let's be pickier
-const totalNotabilityThreshold = 0.94;
+const totalNotabilityThreshold = 0.9;
 /**
  * returns an entry for each notable stat found on the seed item
  */
@@ -124,7 +123,9 @@ export function getNotableStats(
         const statPercent = stat.base / statMaxes[stat.statHash];
         return (
           statPercent >=
-          (stat.statHash === TOTAL_STAT_HASH ? totalNotabilityThreshold : notabilityThreshold)
+          (stat.statHash === TOTAL_STAT_HASH || stat.statHash === CUSTOM_TOTAL_STAT_HASH
+            ? totalNotabilityThreshold
+            : notabilityThreshold)
         );
       })
       .map((stat) => {
