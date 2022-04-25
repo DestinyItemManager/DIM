@@ -1,5 +1,7 @@
 ## Next
 
+## 7.14.0 <span class="changelog-date">(2022-04-24)</span>
+
 * Work around an issue where Bungie.net is not highlighting completed Deepsight weapons.
 
 ## 7.13.0 <span class="changelog-date">(2022-04-17)</span>
