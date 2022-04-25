@@ -143,6 +143,12 @@
   display: inline-block;
   margin: -3px 0;
 }
+:global(.title) {
+  .inLoadout {
+    margin-left: -2px;
+    filter: invert(0.75);
+  }
+}
 
 .factorCollapsedValue {
   font-weight: bold;

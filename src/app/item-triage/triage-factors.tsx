@@ -1,3 +1,4 @@
+import { stripAdept } from 'app/compare/compare-buttons';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import PressTip from 'app/dim-ui/PressTip';
@@ -7,7 +8,6 @@ import { DimItem } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { quoteFilterString } from 'app/search/query-parser';
-import { nameFilter } from 'app/search/search-filters/freeform';
 import {
   classFilter,
   damageFilter,
@@ -60,7 +60,7 @@ const itemFactors: Record<string, Factor> = {
         <span>{item.name}</span>
       </>
     ),
-    filter: nameFilter.fromItem!,
+    filter: (item) => `name:"${stripAdept(item.name)}"`,
   },
   element: {
     id: 'element',
@@ -142,7 +142,7 @@ const itemFactors: Record<string, Factor> = {
   },
   archetype: {
     id: 'archetype',
-    runIf: (item) => getWeaponArchetype(item),
+    runIf: (item) => !item.isExotic && getWeaponArchetype(item),
     render: (item) => {
       const archetypeSocket = getWeaponArchetypeSocket(item);
       return archetypeSocket?.plugged ? (

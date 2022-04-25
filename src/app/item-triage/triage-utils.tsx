@@ -1,11 +1,13 @@
 import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
 import { DimItem } from 'app/inventory/item-types';
+import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Factor, factorComboCategories, FactorComboCategory, factorCombos } from './triage-factors';
 
 /** returns [dimmed, bright] variations along a 1->100  red->yellow->green line */
 export function getValueColors(value: number): [string, string] {
+  value = Math.min(value, 100);
   const hue = value * 1.25;
   const light = Math.floor(-(value ** 2 / 250) + (2 * value) / 5 + 30);
   return [`hsl(${hue}, 100%, 8%)`, `hsl(${hue}, 100%, ${light}%)`];
@@ -96,7 +98,9 @@ function collectRelevantStatMaxes(
 }
 
 // a stat is notable on seed item when it's at least this % of the best owned
-const notabilityThreshold = 0.8;
+const notabilityThreshold = 0.82;
+// total works within a smaller range with a big lower bound so let's be pickier
+const totalNotabilityThreshold = 0.94;
 /**
  * returns an entry for each notable stat found on the seed item
  */
@@ -115,8 +119,14 @@ export function getNotableStats(
     ) ?? 0;
   const customRatio = customTotal / statMaxes.custom || 0;
   return {
-    notableStats: exampleItem.stats
-      ?.filter((stat) => stat.base / statMaxes[stat.statHash] >= notabilityThreshold)
+    notableStats: exampleItem
+      .stats!.filter((stat) => {
+        const statPercent = stat.base / statMaxes[stat.statHash];
+        return (
+          statPercent >=
+          (stat.statHash === TOTAL_STAT_HASH ? totalNotabilityThreshold : notabilityThreshold)
+        );
+      })
       .map((stat) => {
         const best = statMaxes[stat.statHash];
         const rawRatio = stat.base / best || 0;

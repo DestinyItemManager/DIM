@@ -1,5 +1,5 @@
 import { compareFilteredItems } from 'app/compare/actions';
-import { settingSelector } from 'app/dim-api/selectors';
+import { collapsedSelector, settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
@@ -20,7 +20,7 @@ import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import helmet from 'destiny-icons/armor_types/helmet.svg';
 import _ from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 // eslint-disable-next-line css-modules/no-unused-class
@@ -77,13 +77,19 @@ export function ItemTriage({ item }: { item: DimItem }) {
       {item.bucket.inWeapons && <WishlistTriageSection item={item} />}
       <LoadoutsTriageSection item={item} />
       <FactorsTriageSection item={item} />
-      {item.bucket.inArmor && <ArmorStatsTriageSection item={item} />}
+      {item.bucket.inArmor && item.bucket.hash !== BucketHashes.ClassArmor && (
+        <ArmorStatsTriageSection item={item} />
+      )}
     </div>
   );
 }
 
 function WishlistTriageSection({ item }: { item: DimItem }) {
   const wishlistItem = useSelector(wishListSelector(item));
+  const disabled = !wishlistItem;
+  const collapsedSetting = useSelector(collapsedSelector('triage-wishlist'));
+  const collapsed = disabled || collapsedSetting;
+  const [alreadyOpen] = useState(collapsed);
 
   return (
     <CollapsibleTitle
@@ -91,13 +97,14 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
       sectionId="triage-wishlist"
       defaultCollapsed={false}
       extra={wishlistItem ? <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> : '–'}
-      disabled={!wishlistItem}
+      disabled={disabled}
     >
       {wishlistItem?.notes?.length && (
-        <ExpandableTextBlock linesWhenClosed={3} className={popupStyles.description}>
-          <span className={popupStyles.wishListLabel}>
-            {t('WishListRoll.WishListNotes', { notes: '' })}
-          </span>
+        <ExpandableTextBlock
+          linesWhenClosed={3}
+          className={popupStyles.description}
+          alreadyOpen={alreadyOpen}
+        >
           <span className={popupStyles.wishListTextContent}>{wishlistItem.notes}</span>
         </ExpandableTextBlock>
       )}
@@ -114,8 +121,12 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
       title={t('Triage.InLoadouts')}
       sectionId="triage-loadout"
       defaultCollapsed={true}
-      extra={<span className={styles.factorCollapsedValue}>{inLoadouts.length}</span>}
-      showExtraOnlyWhenCollapsed
+      extra={
+        <span className={styles.factorCollapsedValue}>
+          {inLoadouts.length}
+          <img src={helmet} className={styles.inLoadout} />
+        </span>
+      }
       disabled={!inLoadouts.length}
     >
       <ul className={styles.loadoutList}>
@@ -196,14 +207,23 @@ function ArmorStatsTriageSection({ item }: { item: DimItem }) {
   const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
   const notableStats = getNotableStats(item, customTotalStatsByClass, allItems);
 
+  const hasNotable = notableStats.notableStats.length > 0;
+
+  let extra: JSX.Element | string = '–';
+  if (hasNotable) {
+    const bestStat = _.maxBy(notableStats.notableStats, (s) => s.percent)!;
+    extra = <span style={{ color: getValueColors(bestStat.quality)[1] }}>{bestStat.percent}%</span>;
+  }
   return (
     <CollapsibleTitle
       title={t('Triage.HighStats')}
       sectionId="triage-highstat"
       defaultCollapsed={false}
       showExtraOnlyWhenCollapsed
+      disabled={!hasNotable}
+      extra={extra}
     >
-      {notableStats && (
+      {hasNotable && (
         <div className={styles.statTable}>
           <div className={styles.header}>
             <div className={styles.statsHeaderLeft}>
@@ -261,8 +281,8 @@ function StartCompareButton({ filter, items }: { filter: string; items: DimItem[
     dispatch(compareFilteredItems(filter, items));
     hideItemPopup();
   };
-  const type = items[0].typeName;
-  if (items.some((i) => i.typeName !== type)) {
+  const type = items[0]?.typeName;
+  if (!type || items.some((i) => i.typeName !== type)) {
     return null;
   }
 
