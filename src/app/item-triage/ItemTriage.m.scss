@@ -146,7 +146,8 @@
 :global(.title) {
   .inLoadout {
     margin-left: -2px;
-    filter: invert(0.75);
+    margin-right: -2px;
+    filter: invert(0.5);
   }
 }
 
