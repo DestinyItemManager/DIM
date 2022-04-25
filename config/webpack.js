@@ -408,7 +408,7 @@ module.exports = (env) => {
         // Show a banner for supporting a charitable cause
         '$featureFlags.issueBanner': JSON.stringify(false),
         // Show the triage tab in the item popup
-        '$featureFlags.triage': JSON.stringify(env.dev),
+        '$featureFlags.triage': JSON.stringify(!env.release),
         // Advanced Write Actions (inserting mods)
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
         // Ability cooldowns in stats tooltips

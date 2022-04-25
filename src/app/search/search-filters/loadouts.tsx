@@ -3,13 +3,16 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { FilterDefinition } from '../filter-types';
 import { quoteFilterString } from '../query-parser';
 
+export function loadoutToSearchString(loadout: Loadout) {
+  return 'inloadout:' + quoteFilterString(loadout.name.toLowerCase());
+}
+
 const loadoutFilters: FilterDefinition[] = [
   {
     keywords: 'inloadout',
     format: ['simple', 'freeform'],
 
-    suggestionsGenerator: ({ loadouts }) =>
-      loadouts?.map((l) => 'inloadout:' + quoteFilterString(l.name.toLowerCase())),
+    suggestionsGenerator: ({ loadouts }) => loadouts?.map(loadoutToSearchString),
 
     description: tl('Filter.InLoadout'),
     filter: ({ filterValue, loadouts }) => {
