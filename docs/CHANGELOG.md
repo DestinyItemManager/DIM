@@ -1,5 +1,9 @@
 ## Next
 
+### Beta Only
+
+* Enabled the Triage tab of the item popup. Find some information here to help decide if an item is worth keeping. Let us know what helps and what could help more!
+
 ## 7.14.0 <span class="changelog-date">(2022-04-24)</span>
 
 * Work around an issue where Bungie.net is not highlighting completed Deepsight weapons.
