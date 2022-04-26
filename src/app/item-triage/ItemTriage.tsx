@@ -133,7 +133,7 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
       <ul className={styles.loadoutList}>
         {inLoadouts.map((l) => {
           const edit = () => {
-            editLoadout(l.loadout, 'vault', {
+            editLoadout(l.loadout, item.owner, {
               isNew: false,
             });
             hideItemPopup();

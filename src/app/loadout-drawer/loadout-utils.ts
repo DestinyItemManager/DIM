@@ -4,6 +4,7 @@ import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { v3SubclassHashesByV2SubclassHash } from 'app/inventory/subclass';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
@@ -545,4 +546,26 @@ export function getUnequippedItemsForLoadout(dimStore: DimStore, category?: stri
       (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)) &&
       !item.equipped
   );
+}
+
+/**
+ * Pick a (non-vault) store that backs the loadout drawer, using the
+ * preferredStoreId if it matches the classType and using the first
+ * matching store otherwise.
+ */
+export function pickBackingStore(
+  stores: DimStore[],
+  preferredStoreId: string | undefined,
+  classType: DestinyClass
+) {
+  const requestedStore =
+    !preferredStoreId || preferredStoreId === 'vault'
+      ? getCurrentStore(stores)
+      : getStore(stores, preferredStoreId);
+  return requestedStore &&
+    (classType === DestinyClass.Unknown || requestedStore.classType === classType)
+    ? requestedStore
+    : stores.find(
+        (s) => !s.isVault && (s.classType === classType || classType === DestinyClass.Unknown)
+      );
 }

@@ -58,7 +58,7 @@ export default function ModAssignmentDrawer({
   onClose,
 }: {
   loadout: Loadout;
-  storeId: string | undefined;
+  storeId: string;
   onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
   onClose(): void;
 }) {
