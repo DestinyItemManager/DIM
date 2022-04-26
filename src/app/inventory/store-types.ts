@@ -101,7 +101,7 @@ export interface DimCharacterStat {
   /** The localized description of the stat. */
   description: string;
 
-  /** maxGearPower (statHash -3) and maxTotalPower (-1) can come with various caveats */
+  /** maxGearPower and maxTotalPower can come with various caveats */
   statProblems?: {
     /** this stat may be inaccurate because it relies on classified items */
     hasClassified?: boolean;

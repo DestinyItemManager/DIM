@@ -17,7 +17,7 @@ import noExoticIcon from 'images/noExotic.svg';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { LockableBucketHashes } from '../types';
+import { LockableBucketHashes, LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC } from '../types';
 import styles from './ExoticPicker.m.scss';
 import ExoticTile, { FakeExoticTile, LockedExoticWithPlugs } from './ExoticTile';
 
@@ -173,22 +173,22 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
             <div className={styles.header}>{t('LoadoutBuilder.ExoticSpecialCategory')}</div>
             <div className={styles.items}>
               <FakeExoticTile
-                selected={lockedExoticHash === -1}
+                selected={lockedExoticHash === LOCKED_EXOTIC_NO_EXOTIC}
                 title={t('LoadoutBuilder.NoExotic')}
                 description={t('LoadoutBuilder.NoExoticDescription')}
                 icon={noExoticIcon}
                 onSelected={() => {
-                  onSelected(-1);
+                  onSelected(LOCKED_EXOTIC_NO_EXOTIC);
                   onClose();
                 }}
               />
               <FakeExoticTile
-                selected={lockedExoticHash === -2}
+                selected={lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC}
                 title={t('LoadoutBuilder.AnyExotic')}
                 description={t('LoadoutBuilder.AnyExoticDescription')}
                 icon={anyExoticIcon}
                 onSelected={() => {
-                  onSelected(-2);
+                  onSelected(LOCKED_EXOTIC_ANY_EXOTIC);
                   onClose();
                 }}
               />
