@@ -63,8 +63,8 @@ const itemFactors: Record<string, Factor> = {
     filter: (item) => `name:"${stripAdept(item.name)}"`,
   },
   element: {
-    id: 'element',
-    runIf: (item) => item.element,
+    id: 'element', //             don't compare exotic weapon elements, that's silly.
+    runIf: (item) => item.element && !(item.isExotic && item.bucket.inWeapons),
     render: (item) => (
       <PressTip elementType="span" tooltip={item.element?.displayProperties.name}>
         <ElementIcon className={clsx(styles.inlineIcon2)} element={item.element} />

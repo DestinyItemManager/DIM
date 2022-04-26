@@ -1,6 +1,7 @@
 import { compareFilteredItems } from 'app/compare/actions';
 import { collapsedSelector, settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import { SetFilterButton } from 'app/dim-ui/SetFilterButton';
@@ -139,6 +140,7 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
           };
           return (
             <li className={styles.loadoutRow} key={l.id}>
+              <ClassIcon classType={l.classType} className={styles.inlineIcon} />
               <span className={styles.loadoutName}>{l.name}</span>
               <span className={styles.controls}>
                 <a
