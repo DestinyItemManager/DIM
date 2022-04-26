@@ -28,7 +28,9 @@ export function getSimilarItems(
   if (factorComboCategories.includes(exampleItem.bucket.sort!)) {
     for (const factorCombo of factorCombos[exampleItem.bucket.sort as FactorComboCategory]) {
       if (factorCombo.every((factor) => factor.runIf(exampleItem))) {
-        const query = factorCombo.map((f) => f.filter(exampleItem)).join(' ');
+        const filters = factorCombo.map((f) => f.filter(exampleItem));
+        filters.push(exampleItem.isExotic ? 'is:exotic' : 'not:exotic');
+        const query = filters.join(' ');
         const items = allItems.filter(filterFactory(query));
         const count = items.length;
 
