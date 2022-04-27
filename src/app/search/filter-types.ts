@@ -5,6 +5,7 @@ import { ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { WishListRoll } from 'app/wishlists/types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
@@ -25,7 +26,7 @@ export interface FilterContext {
   stores: DimStore[];
   allItems: DimItem[];
   currentStore: DimStore;
-  loadouts: Loadout[];
+  loadoutsByItem: LoadoutsByItem;
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined;
   wishListsByHash: _.Dictionary<WishListRoll[]>;
   newItems: Set<string>;

@@ -17,8 +17,7 @@ import {
   sortedStoresSelector,
 } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
-import { Loadout } from '../loadout-drawer/loadout-types';
-import { loadoutsSelector } from '../loadout-drawer/selectors';
+import { LoadoutsByItem, loadoutsByItemSelector } from '../loadout-drawer/selectors';
 import { querySelector } from '../shell/selectors';
 import { wishListFunctionSelector, wishListsByHashSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -41,7 +40,7 @@ export const filterFactorySelector = createSelector(
   sortedStoresSelector,
   allItemsSelector,
   currentStoreSelector,
-  loadoutsSelector,
+  loadoutsByItemSelector,
   wishListFunctionSelector,
   wishListsByHashSelector,
   (state: RootState) => state.inventory.newItems,
@@ -79,7 +78,7 @@ function makeSearchFilterFactory(
   stores: DimStore[],
   allItems: DimItem[],
   currentStore: DimStore,
-  loadouts: Loadout[],
+  loadoutsByItem: LoadoutsByItem,
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined,
   wishListsByHash: _.Dictionary<WishListRoll[]>,
   newItems: Set<string>,
@@ -94,7 +93,7 @@ function makeSearchFilterFactory(
     stores,
     allItems,
     currentStore,
-    loadouts,
+    loadoutsByItem,
     wishListFunction,
     newItems,
     itemInfos,
