@@ -89,10 +89,28 @@ export const LOCKED_EXOTIC_ANY_EXOTIC = -2;
  * The minimum armour energy value used in the LO Builder
  */
 export const MIN_LO_ITEM_ENERGY = 7;
+/**
+ * The armor energy rules that Loadout Optimizer uses by default.
+ * Requires a reasonable and inexpensive amount of upgrade materials.
+ */
+export const loDefaultArmorEnergyRules: ArmorEnergyRules = {
+  lockArmorEnergyType: LockArmorEnergyType.None,
+  assumeArmorMasterwork: AssumeArmorMasterwork.None,
+  minItemEnergy: MIN_LO_ITEM_ENERGY,
+};
+/**
+ * The armor energy rules that describe the changes DIM can
+ * make in-game -- none as of now.
+ */
+export const ingameArmorEnergyRules: ArmorEnergyRules = {
+  lockArmorEnergyType: LockArmorEnergyType.All,
+  assumeArmorMasterwork: AssumeArmorMasterwork.None,
+  minItemEnergy: 1,
+};
 
 /**
  * Rules describing how armor can change energy type and capacity
- * to acommodate mods and hit optimal stats.
+ * to accomodate mods and hit optimal stats.
  */
 export interface ArmorEnergyRules {
   lockArmorEnergyType: LockArmorEnergyType;

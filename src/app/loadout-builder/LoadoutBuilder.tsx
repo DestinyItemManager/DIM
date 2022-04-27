@@ -1,8 +1,4 @@
-import {
-  AssumeArmorMasterwork,
-  LoadoutParameters,
-  LockArmorEnergyType,
-} from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createLoadoutShare } from 'app/dim-api/dim-api';
 import { savedLoadoutParametersSelector } from 'app/dim-api/selectors';
@@ -62,7 +58,7 @@ import {
   generalSocketReusablePlugSetHash,
   ItemsByBucket,
   LOCKED_EXOTIC_ANY_EXOTIC,
-  MIN_LO_ITEM_ENERGY,
+  loDefaultArmorEnergyRules,
 } from './types';
 
 interface ProvidedProps {
@@ -263,14 +259,18 @@ function LoadoutBuilder({
 
   const [armorEnergyRules, filteredItems] = useMemo(() => {
     const armorEnergyRules: ArmorEnergyRules = {
-      lockArmorEnergyType: loadoutParameters.lockArmorEnergyType ?? LockArmorEnergyType.None,
-      assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork ?? AssumeArmorMasterwork.None,
-      minItemEnergy: MIN_LO_ITEM_ENERGY,
+      ...loDefaultArmorEnergyRules,
       loadouts: {
         loadoutsByItem,
         optimizingLoadoutId: preloadedLoadout?.id,
       },
     };
+    if (loadoutParameters.lockArmorEnergyType !== undefined) {
+      armorEnergyRules.lockArmorEnergyType = loadoutParameters.lockArmorEnergyType;
+    }
+    if (loadoutParameters.assumeArmorMasterwork !== undefined) {
+      armorEnergyRules.assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
+    }
     const items = filterItems({
       defs,
       items: characterItems,

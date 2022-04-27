@@ -4,7 +4,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import 'cross-fetch/polyfill';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
-import { MIN_LO_ITEM_ENERGY } from '../types';
+import { loDefaultArmorEnergyRules, MIN_LO_ITEM_ENERGY } from '../types';
 import { mapDimItemToProcessItem } from './mappers';
 
 describe('lo process mappers', () => {
@@ -30,12 +30,6 @@ describe('lo process mappers', () => {
     }
   });
 
-  const defaultArmorRules = {
-    assumeArmorMasterwork: AssumeArmorMasterwork.None,
-    lockArmorEnergyType: LockArmorEnergyType.None,
-    minItemEnergy: MIN_LO_ITEM_ENERGY,
-  };
-
   test('mapped energy matches slot specific mods', () => {
     const modifiedItem: DimItem = {
       ...classItem,
@@ -44,7 +38,7 @@ describe('lo process mappers', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
       armorEnergyRules: {
-        ...defaultArmorRules,
+        ...loDefaultArmorEnergyRules,
         assumeArmorMasterwork: AssumeArmorMasterwork.All,
       },
       modsForSlot: [perpetuationMod],
@@ -58,7 +52,7 @@ describe('lo process mappers', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
       armorEnergyRules: {
-        ...defaultArmorRules,
+        ...loDefaultArmorEnergyRules,
         assumeArmorMasterwork: AssumeArmorMasterwork.All,
       },
       modsForSlot: [],
@@ -74,7 +68,7 @@ describe('lo process mappers', () => {
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
-      armorEnergyRules: defaultArmorRules,
+      armorEnergyRules: loDefaultArmorEnergyRules,
       modsForSlot: [],
     });
 
@@ -88,7 +82,7 @@ describe('lo process mappers', () => {
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
-      armorEnergyRules: defaultArmorRules,
+      armorEnergyRules: loDefaultArmorEnergyRules,
       modsForSlot: [],
     });
 
@@ -98,7 +92,7 @@ describe('lo process mappers', () => {
   test('mapped energy type is Any when energy is not locked', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
-      armorEnergyRules: defaultArmorRules,
+      armorEnergyRules: loDefaultArmorEnergyRules,
       modsForSlot: [],
     });
 
@@ -109,7 +103,7 @@ describe('lo process mappers', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
       armorEnergyRules: {
-        ...defaultArmorRules,
+        ...loDefaultArmorEnergyRules,
         lockArmorEnergyType: LockArmorEnergyType.All,
       },
       modsForSlot: [],
