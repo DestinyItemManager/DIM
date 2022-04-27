@@ -434,6 +434,12 @@ function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
   );
 }
 
+export const fakeCharacterStatHashes = {
+  maxGearPower: -3,
+  powerBonus: -2,
+  maxTotalPower: -1,
+};
+
 // Add a fake stat for "max base power"
 function updateBasePower(
   allItems: DimItem[],
@@ -472,7 +478,7 @@ function updateBasePower(
     );
 
     store.stats.maxGearPower = {
-      hash: -3,
+      hash: fakeCharacterStatHashes.maxGearPower,
       name: t('Stats.MaxGearPowerAll'),
       // used to be t('Stats.MaxGearPower'), a translation i don't want to lose yet
       statProblems,
@@ -484,7 +490,7 @@ function updateBasePower(
 
     const artifactPower = getArtifactBonus(store);
     store.stats.powerModifier = {
-      hash: -2,
+      hash: fakeCharacterStatHashes.powerBonus,
       name: t('Stats.PowerModifier'),
       description: '',
       richTooltip: ArtifactXP(characterProgress, bonusPowerProgressionHash),
@@ -493,7 +499,7 @@ function updateBasePower(
     };
 
     store.stats.maxTotalPower = {
-      hash: -1,
+      hash: fakeCharacterStatHashes.maxTotalPower,
       name: t('Stats.MaxTotalPower'),
       statProblems,
       description: '',

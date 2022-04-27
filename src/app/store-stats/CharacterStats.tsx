@@ -3,6 +3,7 @@ import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import PressTip from 'app/dim-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
 import { t } from 'app/i18next-t';
+import { fakeCharacterStatHashes } from 'app/inventory/d2-stores';
 import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { statTier } from 'app/loadout-builder/utils';
 import { armorStats } from 'app/search/d2-known-values';
@@ -34,9 +35,9 @@ function CharacterStat({ stats, storeId, className, showTier }: CharacterStatPro
         </div>
       )}
       {stats.map(({ stat, tooltip }) => {
-        // if this is the "max gear power" stat (hash -3),
+        // if this is the "max gear power" stat
         // add in an onClick and an extra class
-        const isMaxGearPower = stat.hash === -3 && storeId;
+        const isMaxGearPower = stat.hash === fakeCharacterStatHashes.maxGearPower && storeId;
 
         return (
           <PressTip key={stat.hash} tooltip={tooltip}>
@@ -56,7 +57,8 @@ function CharacterStat({ stats, storeId, className, showTier }: CharacterStatPro
                 ) : (
                   stat.value
                 )}
-                {stat.statProblems?.notOnStore && stat.hash === -3 ? (
+                {stat.statProblems?.notOnStore &&
+                stat.hash === fakeCharacterStatHashes.maxGearPower ? (
                   <AlertIcon className="warningIcon" />
                 ) : (
                   (stat.statProblems?.hasClassified || stat.statProblems?.notEquippable) && (
