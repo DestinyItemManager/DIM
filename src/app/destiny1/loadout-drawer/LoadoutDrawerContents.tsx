@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import type { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
-import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import {
   fillLoadoutFromEquipped,
@@ -57,7 +57,7 @@ export default function LoadoutDrawerContents({
   setLoadout,
   onShowItemPicker,
 }: {
-  storeId?: string;
+  storeId: string;
   loadout: Loadout;
   items: ResolvedLoadoutItem[];
   setLoadout: (updater: LoadoutUpdateFunction) => void;
@@ -71,11 +71,7 @@ export default function LoadoutDrawerContents({
   const stores = useSelector(storesSelector);
 
   // The store to use for "fill from equipped/unequipped"
-  const dimStore = storeId
-    ? getStore(stores, storeId)!
-    : (loadout.classType !== DestinyClass.Unknown &&
-        stores.find((s) => s.classType === loadout.classType)) ||
-      getCurrentStore(stores)!;
+  const dimStore = getStore(stores, storeId)!;
 
   const doFillLoadoutFromEquipped = () => setLoadout(fillLoadoutFromEquipped(defs, dimStore));
 

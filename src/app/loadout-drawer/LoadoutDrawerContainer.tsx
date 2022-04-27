@@ -2,8 +2,7 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
-import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { warnMissingClass } from 'app/loadout-builder/loadout-builder-reducer';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
@@ -17,7 +16,7 @@ import { addItem$, editLoadout$ } from './loadout-events';
 import { generateMissingLoadoutItemId } from './loadout-item-conversion';
 import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
 import { Loadout } from './loadout-types';
-import { newLoadout } from './loadout-utils';
+import { newLoadout, pickBackingStore } from './loadout-utils';
 
 const LoadoutDrawer = React.lazy(
   () => import(/* webpackChunkName: "loadout-drawer" */ './LoadoutDrawer2')
@@ -45,7 +44,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
   // state is handled outside the component.
   const [initialLoadout, setInitialLoadout] = useState<{
     loadout: Loadout;
-    storeId?: string;
+    storeId: string;
     showClass: boolean;
     isNew: boolean;
   }>();
@@ -54,20 +53,32 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
     setInitialLoadout(undefined);
   }, []);
 
+  const stores = useSelector(storesSelector);
+
   // The loadout to edit comes in from the editLoadout$ observable
   useEventBusListener(
     editLoadout$,
-    useCallback(({ loadout, storeId, showClass, isNew }) => {
-      setInitialLoadout({
-        loadout,
-        storeId: storeId === 'vault' ? undefined : storeId,
-        showClass: Boolean(showClass),
-        isNew: Boolean(isNew),
-      });
-    }, [])
-  );
+    useCallback(
+      ({ loadout, storeId, showClass, isNew }) => {
+        // Fall back to current store because otherwise there's no way to delete loadouts
+        // the user doesn't have a class for.
+        const editingStore =
+          pickBackingStore(stores, storeId, loadout.classType) ?? getCurrentStore(stores);
 
-  const stores = useSelector(storesSelector);
+        if (!editingStore) {
+          return;
+        }
+
+        setInitialLoadout({
+          loadout,
+          storeId: editingStore.id,
+          showClass: Boolean(showClass),
+          isNew: Boolean(isNew),
+        });
+      },
+      [stores]
+    )
+  );
 
   const hasInitialLoadout = Boolean(initialLoadout);
 
@@ -77,20 +88,16 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
     useCallback(
       (item: DimItem) => {
         if (!hasInitialLoadout) {
-          // If we don't have a loadout, this action was invoked via the "+ Loadout" button in item actions
-          let owner: DimStore =
-            item.owner === 'vault' ? getCurrentStore(stores)! : getStore(stores, item.owner)!;
+          // If we don't have a loadout, this action was invoked via the "+ Loadout" button
+          // in item actions, so pick the best store to back this loadout with
+          const owner = pickBackingStore(stores, item.owner, item.classType);
 
-          if (item.classType !== DestinyClass.Unknown && item.classType !== owner.classType) {
-            const matchingStore = stores.find((s) => s.classType === item.classType);
-            if (!matchingStore) {
-              showNotification({
-                type: 'warning',
-                title: t('Loadouts.ClassTypeMissing', { className: item.classTypeNameLocalized }),
-              });
-              return;
-            }
-            owner = matchingStore;
+          if (!owner) {
+            showNotification({
+              type: 'warning',
+              title: t('Loadouts.ClassTypeMissing', { className: item.classTypeNameLocalized }),
+            });
+            return;
           }
 
           const classType =
@@ -125,10 +132,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
       try {
         const parsedLoadout = convertDimApiLoadoutToLoadout(JSON.parse(loadoutJSON));
         if (parsedLoadout) {
-          const storeId =
-            parsedLoadout.classType === DestinyClass.Unknown
-              ? getCurrentStore(stores)?.id
-              : stores.find((s) => s.classType === parsedLoadout.classType)?.id;
+          const storeId = pickBackingStore(stores, undefined, parsedLoadout.classType)?.id;
 
           if (!storeId) {
             warnMissingClass(parsedLoadout.classType, defs);

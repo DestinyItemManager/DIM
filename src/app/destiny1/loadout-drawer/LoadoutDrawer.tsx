@@ -45,9 +45,9 @@ export default function LoadoutDrawer({
   /**
    * The store that provides context to how this loadout is being edited from.
    * The store this edit session was launched from. This is to help pick which
-   * mods are enabled, which subclass items to show, etc. Defaults to current store.
+   * mods are enabled, which subclass items to show, etc.
    */
-  storeId?: string;
+  storeId: string;
   isNew: boolean;
   showClass: boolean;
   onClose(): void;

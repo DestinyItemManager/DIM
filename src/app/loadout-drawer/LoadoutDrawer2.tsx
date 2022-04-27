@@ -4,7 +4,7 @@ import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { pickSubclass } from 'app/loadout/item-utils';
 import { useDefinitions } from 'app/manifest/selectors';
@@ -61,9 +61,9 @@ export default function LoadoutDrawer2({
   /**
    * The store that provides context to how this loadout is being edited from.
    * The store this edit session was launched from. This is to help pick which
-   * mods are enabled, which subclass items to show, etc. Defaults to current store.
+   * mods are enabled, which subclass items to show, etc.
    */
-  storeId?: string;
+  storeId: string;
   isNew: boolean;
   onClose(): void;
 }) {
@@ -82,10 +82,7 @@ export default function LoadoutDrawer2({
     return (...args: T) => setLoadout(fn(defs, ...args));
   }
 
-  const store = storeId
-    ? getStore(stores, storeId)
-    : stores.find((s) => !s.isVault && s.classType === loadout?.classType) ??
-      getCurrentStore(stores);
+  const store = getStore(stores, storeId)!;
 
   const onAddItem = useCallback(
     (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) =>
@@ -331,7 +328,7 @@ async function pickLoadoutItem(
 
 async function pickLoadoutSubclass(
   loadout: Loadout,
-  storeId: string | undefined,
+  storeId: string,
   add: (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) => void,
   onShowItemPicker: (shown: boolean) => void
 ) {
@@ -341,7 +338,7 @@ async function pickLoadoutSubclass(
   const subclassItemFilter = (item: DimItem) =>
     item.bucket.hash === BucketHashes.Subclass &&
     item.classType === loadoutClassType &&
-    (!storeId || item.owner === storeId) &&
+    item.owner === storeId &&
     itemCanBeInLoadout(item) &&
     !loadoutHasItem(item);
 

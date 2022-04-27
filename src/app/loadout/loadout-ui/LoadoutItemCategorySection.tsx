@@ -40,7 +40,7 @@ export default function LoadoutItemCategorySection({
 }: {
   category: D2BucketCategory;
   subclass?: ResolvedLoadoutItem;
-  storeId?: string;
+  storeId: string;
   items?: ResolvedLoadoutItem[];
   savedMods: PluggableInventoryItemDefinition[];
   modsByBucket: {

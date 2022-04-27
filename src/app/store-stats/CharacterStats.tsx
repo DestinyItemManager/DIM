@@ -19,7 +19,7 @@ interface CharacterStatProps {
     stat: DimCharacterStat;
     tooltip: React.ReactNode;
   }[];
-  storeId?: string;
+  storeId: string | undefined;
   className?: string;
   showTier?: boolean;
 }
@@ -37,7 +37,7 @@ function CharacterStat({ stats, storeId, className, showTier }: CharacterStatPro
       {stats.map(({ stat, tooltip }) => {
         // if this is the "max gear power" stat
         // add in an onClick and an extra class
-        const isMaxGearPower = stat.hash === fakeCharacterStatHashes.maxGearPower && storeId;
+        const isMaxGearPower = stat.hash === fakeCharacterStatHashes.maxGearPower;
 
         return (
           <PressTip key={stat.hash} tooltip={tooltip}>
@@ -45,7 +45,7 @@ function CharacterStat({ stats, storeId, className, showTier }: CharacterStatPro
               className={clsx('stat', { pointerCursor: isMaxGearPower })}
               aria-label={`${stat.name} ${stat.value}`}
               role={isMaxGearPower ? 'button' : 'group'}
-              onClick={isMaxGearPower ? () => showGearPower(storeId) : undefined}
+              onClick={isMaxGearPower ? () => showGearPower(storeId!) : undefined}
             >
               <img src={stat.icon} alt={stat.name} />
               <div>
@@ -74,7 +74,7 @@ function CharacterStat({ stats, storeId, className, showTier }: CharacterStatPro
   );
 }
 
-export function PowerFormula({ stats, storeId }: { stats: DimStore['stats']; storeId?: string }) {
+export function PowerFormula({ stats, storeId }: { stats: DimStore['stats']; storeId: string }) {
   const powerTooltip = (stat: DimCharacterStat): React.ReactNode => (
     <>
       {stat.name}
@@ -107,13 +107,10 @@ export function PowerFormula({ stats, storeId }: { stats: DimStore['stats']; sto
 
 export function LoadoutStats({
   stats,
-  storeId,
   characterClass,
   showTier,
 }: {
   stats: DimStore['stats'];
-  /** Store is optional because in the loadout drawer we don't have a specific store */
-  storeId?: string;
   characterClass: DestinyClass; // this can be DestinyClass.Unknown
   showTier?: boolean;
 }) {
@@ -124,5 +121,5 @@ export function LoadoutStats({
       tooltip: <StatTooltip stat={stat} characterClass={characterClass} />,
     }));
 
-  return <CharacterStat showTier={showTier} stats={statInfos} storeId={storeId} />;
+  return <CharacterStat showTier={showTier} stats={statInfos} storeId={undefined} />;
 }
