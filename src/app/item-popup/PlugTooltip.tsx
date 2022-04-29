@@ -1,3 +1,4 @@
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
@@ -90,6 +91,7 @@ export function DimPlugTooltip({
  */
 export function PlugTooltip({
   def,
+  tooltipWarning,
   stats,
   plugObjectives,
   enableFailReasons,
@@ -99,6 +101,7 @@ export function PlugTooltip({
   craftingData,
 }: {
   def: DestinyInventoryItemDefinition;
+  tooltipWarning?: string;
   stats?: { [statHash: string]: number };
   plugObjectives?: DestinyObjectiveProgress[];
   enableFailReasons?: string;
@@ -175,6 +178,11 @@ export function PlugTooltip({
       {wishListTip && (
         <p>
           <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}
+        </p>
+      )}
+      {tooltipWarning && (
+        <p>
+          <AlertIcon /> {tooltipWarning}
         </p>
       )}
     </>

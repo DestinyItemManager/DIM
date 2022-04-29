@@ -579,6 +579,7 @@
     "GatherEngrams": "Gather Engrams",
     "GatherEngramsExceptExotics": "Exotics",
     "Generated": "T{{tier}} Loadout",
+    "InsufficientFragmentCapacity": "Insufficient Fragment Capacity",
     "ItemErrorSummary": "1 item error:",
     "ItemErrorSummary_plural": "{{count}} item errors:",
     "ItemLeveling": "Item Leveling",

@@ -69,10 +69,17 @@ export default function LoadoutEditSubclass({
         )}
       </div>
       {plugs.length ? (
-        <div className={styles.subclassMods}>
-          {plugs?.map((plug) => (
-            <PlugDef key={getModRenderKey(plug)} plug={plug} />
-          ))}
+        <div>
+          <div className={styles.subclassMods}>
+            {plugs?.map((plug) => (
+              <PlugDef
+                className={clsx({ [styles.missingItem]: !plug.active })}
+                tooltipWarning={!plug.active ? t('Loadouts.InsufficientFragmentCapacity') : ''}
+                key={getModRenderKey(plug.plug)}
+                plug={plug.plug}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>

@@ -80,6 +80,12 @@ export function newLoadout(name: string, items: LoadoutItem[], classType?: Desti
 export function createSocketOverridesFromEquipped(item: DimItem) {
   if (item.sockets) {
     const socketOverrides: SocketOverrides = {};
+    const aspects = getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.Aspects);
+    let activeFragments = _.sumBy(
+      aspects,
+      (aspect) => aspect.plugged?.plugDef.plug.energyCapacity?.capacityValue || 0
+    );
+
     for (const category of item.sockets.categories) {
       const sockets = getSocketsByIndexes(item.sockets, category.socketIndexes);
       for (const socket of sockets) {
@@ -90,7 +96,8 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
           // Only save them if they're valid plug options though, otherwise
           // we'd save the empty stasis sockets that Void 3.0 spawns with
           plugFitsIntoSocket(socket, socket.plugged.plugDef.hash) &&
-          socket.plugged.plugDef.hash !== socket.emptyPlugItemHash
+          socket.plugged.plugDef.hash !== socket.emptyPlugItemHash &&
+          (category.category.hash !== SocketCategoryHashes.Fragments || activeFragments-- > 0)
         ) {
           socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
         }

@@ -7,6 +7,7 @@ import React from 'react';
 
 interface Props {
   plug: PluggableInventoryItemDefinition;
+  tooltipWarning?: string;
   className?: string;
   onClick?(): void;
   onClose?(): void;
@@ -15,9 +16,12 @@ interface Props {
 /**
  * Displays a plug (mod, perk) based on just its definition, with optional close button.
  */
-export default function PlugDef({ plug, className, onClick, onClose }: Props) {
+export default function PlugDef({ plug, tooltipWarning, className, onClick, onClose }: Props) {
   const contents = (
-    <PressTip className={className} tooltip={() => <PlugTooltip def={plug} />}>
+    <PressTip
+      className={className}
+      tooltip={() => <PlugTooltip def={plug} tooltipWarning={tooltipWarning} />}
+    >
       <div
         role={onClick ? 'button' : undefined}
         className="item"

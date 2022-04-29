@@ -4,6 +4,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { isLoadoutBuilderItem, pickSubclass } from 'app/loadout/item-utils';
+import { getSubclassPlugs } from 'app/loadout/loadout-ui/LoadoutSubclassSection';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { createGetModRenderKey } from 'app/loadout/mod-utils';
 import SubclassPlugDrawer from 'app/loadout/SubclassPlugDrawer';
@@ -11,14 +12,9 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { emptyArray, emptyObject } from 'app/utils/empty';
+import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
-import {
-  getDefaultAbilityChoiceHash,
-  getSocketByIndex,
-  getSocketsByCategoryHashes,
-} from 'app/utils/socket-utils';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import clsx from 'clsx';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import ReactDom from 'react-dom';
@@ -131,42 +127,11 @@ export default memo(function LockArmorAndPerks({
     LockableBucketHashes.indexOf(i.bucket.hash)
   );
 
-  // This creates a list of socket override plugs for the subclass.
-  // We need to track whether it is a default ability as those cannot be deleted.
   const socketOverridePlugs: {
     plug: PluggableInventoryItemDefinition;
-    isDefaultAbility: boolean;
-  }[] = useMemo(() => {
-    if (!subclass?.loadoutItem.socketOverrides || !subclass.item.sockets) {
-      return emptyArray();
-    }
-
-    const rtn: { plug: PluggableInventoryItemDefinition; isDefaultAbility: boolean }[] = [];
-
-    for (const socketIndexString of Object.keys(subclass?.loadoutItem.socketOverrides)) {
-      const socketIndex = parseInt(socketIndexString, 10);
-      const socket = getSocketByIndex(subclass.item.sockets, socketIndex);
-      const abilityAndSuperSockets = getSocketsByCategoryHashes(subclass.item.sockets, [
-        SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
-        SocketCategoryHashes.Abilities_Abilities_LightSubclass,
-        SocketCategoryHashes.Super,
-      ]);
-
-      const overridePlug = defs.InventoryItem.get(
-        subclass.loadoutItem.socketOverrides[socketIndex]
-      ) as PluggableInventoryItemDefinition;
-
-      const isDefaultAbility = Boolean(
-        socket &&
-          getDefaultAbilityChoiceHash(socket) === overridePlug.hash &&
-          abilityAndSuperSockets.includes(socket)
-      );
-
-      rtn.push({ plug: overridePlug, isDefaultAbility });
-    }
-
-    return rtn;
-  }, [defs, subclass?.loadoutItem.socketOverrides, subclass?.item.sockets]);
+    active: boolean;
+    canBeEmptied: boolean;
+  }[] = useMemo(() => getSubclassPlugs(defs, subclass), [defs, subclass]);
 
   return (
     <>
@@ -220,14 +185,16 @@ export default memo(function LockArmorAndPerks({
               lockedItem={subclass.item}
               onRemove={() => lbDispatch({ type: 'removeSubclass' })}
             />
-            {socketOverridePlugs.map(({ plug, isDefaultAbility }) => (
+            {socketOverridePlugs.map(({ plug, active, canBeEmptied }) => (
               <PlugDef
                 key={getModRenderKey(plug)}
+                className={clsx({ [styles.badPlug]: !active })}
+                tooltipWarning={!active ? t('Loadouts.InsufficientFragmentCapacity') : ''}
                 plug={plug}
                 onClose={
-                  isDefaultAbility
-                    ? undefined
-                    : () => lbDispatch({ type: 'removeSingleSubclassSocketOverride', plug })
+                  canBeEmptied
+                    ? () => lbDispatch({ type: 'removeSingleSubclassSocketOverride', plug })
+                    : undefined
                 }
               />
             ))}

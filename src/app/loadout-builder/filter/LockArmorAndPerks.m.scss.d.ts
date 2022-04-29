@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'area': string;
+  'badPlug': string;
   'buttons': string;
   'guide': string;
   'itemGrid': string;

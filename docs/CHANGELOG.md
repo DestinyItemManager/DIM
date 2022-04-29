@@ -1,5 +1,8 @@
 ## Next
 
+* Filling a Loadout subclass configuration from the currently equipped subclass will now ignore inactive Fragments.
+* Loadouts and Loadout Optimizer will now indicate when a subclass configuration has more Fragments than Fragment slots granted by its Aspects.
+
 ## 7.14.1 <span class="changelog-date">(2022-04-26)</span>
 
 ### Beta Only
