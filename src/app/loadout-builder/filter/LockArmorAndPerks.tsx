@@ -3,8 +3,8 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DimStore } from 'app/inventory/store-types';
 import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { getSubclassPlugs } from 'app/loadout-drawer/loadout-utils';
 import { isLoadoutBuilderItem, pickSubclass } from 'app/loadout/item-utils';
-import { getSubclassPlugs } from 'app/loadout/loadout-ui/LoadoutSubclassSection';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { createGetModRenderKey } from 'app/loadout/mod-utils';
 import SubclassPlugDrawer from 'app/loadout/SubclassPlugDrawer';

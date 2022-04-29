@@ -272,6 +272,55 @@ export function getLoadoutStats(
   return stats;
 }
 
+/**
+ * Gets the UI displayed subclass plugs.
+ * `active` indicates whether there are enough fragment slots.
+ * `canBeEmptied` is set for fragments and aspects.
+ */
+export function getSubclassPlugs(
+  defs: D2ManifestDefinitions,
+  subclass: ResolvedLoadoutItem | undefined
+) {
+  const plugs: {
+    plug: PluggableInventoryItemDefinition;
+    active: boolean;
+    canBeEmptied: boolean;
+  }[] = [];
+
+  if (subclass?.item.sockets?.categories) {
+    const aspects = subclass.item.sockets.categories.find(
+      (c) => c.category.hash === SocketCategoryHashes.Aspects
+    );
+    let activeFragments = _.sumBy(aspects?.socketIndexes, (aspectIndex) => {
+      const override = subclass.loadoutItem.socketOverrides?.[aspectIndex];
+      const def = override ? defs.InventoryItem.get(override) : undefined;
+
+      return def?.plug?.energyCapacity?.capacityValue || 0;
+    });
+
+    for (const category of subclass.item.sockets.categories) {
+      const showInitial =
+        category.category.hash !== SocketCategoryHashes.Aspects &&
+        category.category.hash !== SocketCategoryHashes.Fragments;
+      const sockets = getSocketsByIndexes(subclass.item.sockets, category.socketIndexes);
+
+      for (const socket of sockets) {
+        const override = subclass.loadoutItem.socketOverrides?.[socket.socketIndex];
+        const initial = getDefaultAbilityChoiceHash(socket);
+        const hash = override || (showInitial && initial);
+        const plug = hash && defs.InventoryItem.get(hash);
+        if (plug && isPluggableItem(plug)) {
+          const active =
+            category.category.hash !== SocketCategoryHashes.Fragments || activeFragments-- > 0;
+          plugs.push({ plug, active, canBeEmptied: !showInitial });
+        }
+      }
+    }
+  }
+
+  return plugs;
+}
+
 // Generate an optimized item set (loadout items) based on a filtered set of items and a value function
 export function optimalItemSet(
   applicableItems: DimItem[],
