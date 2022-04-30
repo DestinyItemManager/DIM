@@ -97,6 +97,8 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
           // we'd save the empty stasis sockets that Void 3.0 spawns with
           plugFitsIntoSocket(socket, socket.plugged.plugDef.hash) &&
           socket.plugged.plugDef.hash !== socket.emptyPlugItemHash &&
+          // Note the short circuit behavior to only run the post-decrement
+          // if we actually have a fragment.
           (category.category.hash !== SocketCategoryHashes.Fragments || activeFragments-- > 0)
         ) {
           socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
@@ -310,6 +312,8 @@ export function getSubclassPlugs(
         const hash = override || (showInitial && initial);
         const plug = hash && defs.InventoryItem.get(hash);
         if (plug && isPluggableItem(plug)) {
+          // Note the short circuit behavior to only run the post-decrement
+          // if we actually have a fragment.
           const active =
             category.category.hash !== SocketCategoryHashes.Fragments || activeFragments-- > 0;
           plugs.push({ plug, active, canBeEmptied: !showInitial });
