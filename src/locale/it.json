@@ -1037,6 +1037,14 @@
     "TagItem": "Etichetta",
     "UnlockAll": "Sblocca Oggetti"
   },
+  "Triage": {
+    "HighStats": "Statistiche alte",
+    "InLoadouts": "In loadout",
+    "OwnedCount": "# in possesso",
+    "SimilarItems": "Oggetti simili",
+    "ThisItem": "Questo oggetto",
+    "YourBestItem": "Il tuo miglior oggetto"
+  },
   "Triumphs": {
     "HideCompleted": "Nascondi trionfi completati",
     "RevealRedacted": "Mostra trionfi segreti"

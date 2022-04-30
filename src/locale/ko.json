@@ -711,7 +711,7 @@
     "Infuse": "주입",
     "LockUnlock": {
       "Lock": "{{itemType}} 잠금",
-      "Locked": "잠금",
+      "Locked": "잠김",
       "Unlock": "{{itemType}} 잠금 해제",
       "Unlocked": "잠금 해제됨"
     },
@@ -1036,6 +1036,14 @@
     "LockAll": "아이템 잠금",
     "TagItem": "태그 추가",
     "UnlockAll": "아이템 잠금 해제"
+  },
+  "Triage": {
+    "HighStats": "높은 능력치",
+    "InLoadouts": "로드아웃에 포함됨",
+    "OwnedCount": "# 소지 수",
+    "SimilarItems": "유사한 아이템",
+    "ThisItem": "이 아이템",
+    "YourBestItem": "가장 좋은 아이템"
   },
   "Triumphs": {
     "HideCompleted": "완료한 업적 숨기기",

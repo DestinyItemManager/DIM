@@ -1037,6 +1037,14 @@
     "TagItem": "標記物品",
     "UnlockAll": "解鎖物品"
   },
+  "Triage": {
+    "HighStats": "高屬性",
+    "InLoadouts": "包含該物品的配裝",
+    "OwnedCount": "數量",
+    "SimilarItems": "相似物品",
+    "ThisItem": "當前物品",
+    "YourBestItem": "你的最佳物品"
+  },
   "Triumphs": {
     "HideCompleted": "隱藏已完成的成就",
     "RevealRedacted": "顯示隱藏的成就"

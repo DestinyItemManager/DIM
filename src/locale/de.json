@@ -1037,6 +1037,14 @@
     "TagItem": "Markieren",
     "UnlockAll": "Entsperre Gegenstände"
   },
+  "Triage": {
+    "HighStats": "Hohe Werte",
+    "InLoadouts": "In Loadouts",
+    "OwnedCount": "# Im Besitz",
+    "SimilarItems": "Ähnliche Gegenstände",
+    "ThisItem": "Dieser Gegenstand",
+    "YourBestItem": "Dein bester Gegenstand"
+  },
   "Triumphs": {
     "HideCompleted": "Abgeschlossene Triumphe ausblenden",
     "RevealRedacted": "Versteckte Triumphe enthüllen"

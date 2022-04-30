@@ -1037,6 +1037,14 @@
     "TagItem": "Étiqueter",
     "UnlockAll": "Déverrouillez les objets"
   },
+  "Triage": {
+    "HighStats": "Stats élevés",
+    "InLoadouts": "Dans les arsenaux",
+    "OwnedCount": "# Possédés",
+    "SimilarItems": "Objets similaires",
+    "ThisItem": "Cet objet",
+    "YourBestItem": "Votre meilleur objet"
+  },
   "Triumphs": {
     "HideCompleted": "Masquer les triomphes complétés",
     "RevealRedacted": "Afficher les triomphes masqués"

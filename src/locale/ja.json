@@ -1037,6 +1037,14 @@
     "TagItem": "アイテムをタグする",
     "UnlockAll": "アイテムのロックを解除"
   },
+  "Triage": {
+    "HighStats": "高ステータス",
+    "InLoadouts": "ロードアウト中",
+    "OwnedCount": "所持",
+    "SimilarItems": "類似のアイテム",
+    "ThisItem": "このアイテム",
+    "YourBestItem": "最高のアイテム"
+  },
   "Triumphs": {
     "HideCompleted": "完了した勝利の道のりを隠す",
     "RevealRedacted": "改定された勝利の道のりを表示する"

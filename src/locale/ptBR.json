@@ -1037,6 +1037,14 @@
     "TagItem": "Etiquetar como...",
     "UnlockAll": "Destravar itens"
   },
+  "Triage": {
+    "HighStats": "Atributos Altos",
+    "InLoadouts": "Vinculado aos Sets",
+    "OwnedCount": "# Possuído",
+    "SimilarItems": "Itens Similares",
+    "ThisItem": "Este item",
+    "YourBestItem": "Seu melhor item"
+  },
   "Triumphs": {
     "HideCompleted": "Ocultar triunfos concluídos",
     "RevealRedacted": "Exibir triunfos editados"

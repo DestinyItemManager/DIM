@@ -208,7 +208,7 @@
     "ExtraPerk": "Показывает Легендарные оружия со случайными перками которые имеют дополнительный выбираемый перк.",
     "Filter": "Фильтр",
     "Glimmer": "Расходуемые предметы, относящиеся к получению Блеска.",
-    "HasMemento": "Shows crafted weapons that currently have a memento inserted.",
+    "HasMemento": "Показывает созданное оружие, в которое вставлено воспоминание.",
     "HasNotes": "С Заметками.",
     "HasOrnament": "Показывает предметы с применённым орнаментом.",
     "HasShader": "Покрашенные шейдерами.",
@@ -772,7 +772,7 @@
       "KillTracker": "Счетчик убийств",
       "Loadouts": "Наборы",
       "Location": "Где лежит",
-      "Locked": "Locked",
+      "Locked": "Заблокировано",
       "MasterworkStat": "Мод Абсолюта",
       "MasterworkTier": "Уровень Абсолюта",
       "ModSlot": "Слот для модов",
@@ -782,7 +782,7 @@
       "PercentComplete": "% Выполнения",
       "Perks": "Бонусы",
       "PerksMods": "Перки, моды и шейдеры",
-      "Power": "Power",
+      "Power": "Сила",
       "Quality": "Качество %",
       "Recency": "Новизна",
       "Season": "Сезон",
@@ -1036,6 +1036,14 @@
     "LockAll": "Заблокировать предметы",
     "TagItem": "Отметить предмет",
     "UnlockAll": "Разблокировать предметы"
+  },
+  "Triage": {
+    "HighStats": "Высокие хар-ки",
+    "InLoadouts": "В наборах",
+    "OwnedCount": "# В инвентаре",
+    "SimilarItems": "Похожие предметы",
+    "ThisItem": "Этот предмет",
+    "YourBestItem": "Ваш лучший предмет"
   },
   "Triumphs": {
     "HideCompleted": "Скрыть выполненные триумфы",
