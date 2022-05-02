@@ -2,6 +2,8 @@
 
 ## 7.14.1 <span class="changelog-date">(2022-04-26)</span>
 
+* Reverted Deepsight workaround, so weapon attunement displays correctly.
+
 ### Beta Only
 
 * Enabled the Triage tab of the item popup. Find some information here to help decide if an item is worth keeping. Let us know what helps and what could help more!
