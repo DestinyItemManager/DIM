@@ -1,5 +1,7 @@
 ## Next
 
+## 7.15.0 <span class="changelog-date">(2022-05-01)</span>
+
 ## 7.14.1 <span class="changelog-date">(2022-04-26)</span>
 
 * Reverted Deepsight workaround, so weapon attunement displays correctly.
