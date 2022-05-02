@@ -586,6 +586,12 @@ export function makeItem(
     reportException('Sockets', e, { itemHash: item.itemHash });
   }
 
+  // Extract weapon crafting info from the crafted socket but
+  // before building stats because the weapon level affects stats.
+  createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
+  // Deepsight Resonance
+  createdItem.deepsightInfo = buildDeepsightInfo(createdItem, defs);
+
   try {
     createdItem.stats = buildStats(defs, createdItem, itemDef);
   } catch (e) {
@@ -713,12 +719,6 @@ export function makeItem(
     );
     reportException('MasterworkInfo', e, { itemHash: item.itemHash });
   }
-
-  // Crafted
-  createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
-
-  // Deepsight Resonance
-  createdItem.deepsightInfo = buildDeepsightInfo(createdItem, defs);
 
   try {
     buildPursuitInfo(createdItem, item, itemDef);

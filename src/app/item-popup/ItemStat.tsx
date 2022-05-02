@@ -12,10 +12,14 @@ import { AppIcon, helpIcon } from 'app/shell/icons';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
-import { getSocketsWithStyle, socketContainsIntrinsicPlug } from '../utils/socket-utils';
+import {
+  getFirstSocketByCategoryHash,
+  getSocketsWithStyle,
+  socketContainsIntrinsicPlug,
+} from '../utils/socket-utils';
 import styles from './ItemStat.m.scss';
 import RecoilStat from './RecoilStat';
 
@@ -26,6 +30,34 @@ const modItemCategoryHashes = [
   ItemCategoryHashes.ArmorMods, // armor 2.0 mods
 ];
 
+function getWeaponMasterworkValue({ stat, item }: { stat: DimStat; item: DimItem }) {
+  if (item.masterworkInfo) {
+    return item.masterworkInfo?.stats?.find((s) => s.hash === stat.statHash)?.value ?? 0;
+  } else if (item.crafted && item.sockets) {
+    // For crafted weapons, enhanced intrinsics provide masterwork-like stats.
+    const intrinsic = getFirstSocketByCategoryHash(
+      item.sockets,
+      SocketCategoryHashes.IntrinsicTraits
+    )?.plugged;
+    if (
+      intrinsic &&
+      isPlugStatActive(
+        item,
+        intrinsic.plugDef.hash,
+        Number(stat.statHash),
+        Boolean(
+          intrinsic.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statHash)
+            ?.isConditionallyActive
+        )
+      )
+    ) {
+      return intrinsic?.stats?.[stat.statHash] ?? 0;
+    }
+  }
+
+  return 0;
+}
+
 /**
  * A single stat line.
  */
@@ -35,12 +67,9 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const armor2MasterworkValue =
     armor2MasterworkSockets && getTotalPlugEffects(armor2MasterworkSockets, [stat.statHash]);
 
-  const masterworkIndex =
-    item?.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash) || 0;
-
-  const isMasterworkedStat = item?.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
-  const masterworkValue = item?.masterworkInfo?.stats?.[masterworkIndex]?.value || 0;
-  const masterworkDisplayValue = (isMasterworkedStat && masterworkValue) || armor2MasterworkValue;
+  const masterworkValue = (item && getWeaponMasterworkValue({ stat, item })) ?? 0;
+  const isMasterworkedStat = masterworkValue > 0;
+  const masterworkDisplayValue = masterworkValue ?? armor2MasterworkValue;
 
   // const moddedStatValue = item && getTotalModEffects(item, stat);
   const modEffects = item && _.sortBy(getModEffects(item, stat), ([n]) => -n);
