@@ -1,5 +1,7 @@
 ## Next
 
+* Stat bonuses granted to crafted weapons by an enhanced intrinsic are now distinguished in the stat bars similarly to masterwork effects.
+
 ## 7.15.0 <span class="changelog-date">(2022-05-01)</span>
 
 ## 7.14.1 <span class="changelog-date">(2022-04-26)</span>
