@@ -8,18 +8,23 @@ export function ActivityModifier({ modifierHash }: { modifierHash: number }) {
   const defs = useD2Definitions()!;
 
   const modifier = defs.ActivityModifier.get(modifierHash);
-  if (!modifier) {
+  const modifierName = modifier.displayProperties.name;
+  const modifierIcon = modifier.displayProperties.icon;
+
+  if (!modifier || (!modifierName && !modifierIcon)) {
     return null;
   }
 
   return (
     <div className="milestone-modifier">
-      <BungieImage src={modifier.displayProperties.icon} alt="" />
-      <div className="milestone-modifier-info">
-        <PressTip tooltip={modifier.displayProperties.description}>
-          <div className="milestone-modifier-name">{modifier.displayProperties.name}</div>
-        </PressTip>
-      </div>
+      {Boolean(modifierIcon) && <BungieImage src={modifierIcon} />}
+      {Boolean(modifierName) && (
+        <div className="milestone-modifier-info">
+          <PressTip tooltip={modifier.displayProperties.description}>
+            <div className="milestone-modifier-name">{modifierName}</div>
+          </PressTip>
+        </div>
+      )}
     </div>
   );
 }
