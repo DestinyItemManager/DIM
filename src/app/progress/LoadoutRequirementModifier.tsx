@@ -102,14 +102,19 @@ export default function LoadoutRequirementModifier({
     </>
   );
 
+  const modifierName = modifier.displayProperties.name;
+  const modifierIcon = modifier.displayProperties.icon;
+
   return (
     <div className="milestone-modifier">
-      <BungieImage src={modifier.displayProperties.icon} />
-      <div className="milestone-modifier-info">
-        <PressTip tooltip={description}>
-          <div className="milestone-modifier-name">{modifier.displayProperties.name}</div>
-        </PressTip>
-      </div>
+      {Boolean(modifierIcon) && <BungieImage src={modifierIcon} />}
+      {Boolean(modifierName) && (
+        <div className="milestone-modifier-info">
+          <PressTip tooltip={description}>
+            <div className="milestone-modifier-name">{modifierName}</div>
+          </PressTip>
+        </div>
+      )}
     </div>
   );
 }
