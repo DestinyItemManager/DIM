@@ -1,6 +1,7 @@
 ## Next
 
 * Stat bonuses granted to crafted weapons by an enhanced intrinsic are now distinguished in the stat bars similarly to masterwork effects.
+* Make sure DIM displays the scoring thresholds on the Shoot To Score quest.
 
 ## 7.15.0 <span class="changelog-date">(2022-05-01)</span>
 

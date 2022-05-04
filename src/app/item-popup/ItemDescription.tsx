@@ -28,7 +28,9 @@ export default function ItemDescription({ item }: { item: DimItem }) {
             </div>
           )}
           {Boolean(item.displaySource?.length) && (
-            <div className={styles.flavorText}>{item.displaySource}</div>
+            <div className={styles.flavorText}>
+              <RichDestinyText text={item.displaySource} ownerId={item.owner} />
+            </div>
           )}
         </>
       )}
