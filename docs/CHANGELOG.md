@@ -2,6 +2,7 @@
 
 * Stat bonuses granted to crafted weapons by an enhanced intrinsic are now distinguished in the stat bars similarly to masterwork effects.
 * Make sure DIM displays the scoring thresholds on the Shoot To Score quest.
+* The recoil direction stat has been tweaked to show a much wider spread as the recoil stat value decreases.
 
 ## 7.15.0 <span class="changelog-date">(2022-05-01)</span>
 
