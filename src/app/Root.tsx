@@ -1,7 +1,8 @@
 import { withProfiler } from '@sentry/react';
 import React from 'react';
+import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider, MouseTransition, TouchTransition } from 'react-dnd-multi-backend';
+import MultiBackend, { Backends, MouseTransition, TouchTransition } from 'react-dnd-multi-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -12,7 +13,7 @@ import store from './store/store';
 const WrappedApp = $featureFlags.sentry ? withProfiler(App) : App;
 
 function Root() {
-  const options = {
+  const options: Backends = {
     backends: [
       { backend: HTML5Backend as any, transition: MouseTransition },
       {
@@ -25,7 +26,7 @@ function Root() {
   return (
     <Router>
       <Provider store={store}>
-        <DndProvider options={options}>
+        <DndProvider backend={MultiBackend as any} options={options}>
           <WrappedApp />
         </DndProvider>
       </Provider>

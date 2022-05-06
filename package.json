@@ -64,7 +64,7 @@
     "last 2 Opera versions"
   ],
   "resolutions": {
-    "@types/react": "17.0.43"
+    "@types/react": "18.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -83,11 +83,11 @@
     "@types/node": "^17.0.4",
     "@types/papaparse": "^5.0.0",
     "@types/prop-types": "^15.5.2",
-    "@types/react": "^17.0.0",
+    "@types/react": "^18.0.8",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-dnd-multi-backend": "^6.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@types/react-test-renderer": "^17.0.1",
+    "@types/react-dom": "^18.0.3",
+    "@types/react-test-renderer": "^18.0.0",
     "@types/react-transition-group": "^4.2.0",
     "@types/react-virtualized": "^9.21.1",
     "@types/use-subscription": "^1.0.0",
@@ -147,7 +147,7 @@
     "prettier-plugin-organize-imports": "^2.0.0",
     "pretty-quick": "^3.1.2",
     "react-refresh": "^0.13.0",
-    "react-test-renderer": "^17.0.2",
+    "react-test-renderer": "^18.1.0",
     "sass-loader": "^12.1.0",
     "source-map-loader": "^3.0.0",
     "style-loader": "^3.0.0",
@@ -201,13 +201,13 @@
     "memoize-one": "^6.0.0",
     "mousetrap": "^1.6.2",
     "papaparse": "^5.0.0",
-    "react": "^17.0.1",
+    "react": "^18.1.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dnd-multi-backend": "^6.0.2",
     "react-dnd-touch-backend": "^16.0.1",
-    "react-dom": "^17.0.1",
+    "react-dom": "^18.1.0",
     "react-dropzone": "^14.2.0",
     "react-redux": "^8.0.1",
     "react-router": "^6.0.2",
