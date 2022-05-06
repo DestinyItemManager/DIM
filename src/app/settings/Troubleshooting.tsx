@@ -50,7 +50,7 @@ export function TroubleshootingSettings() {
         {$DIM_FLAVOR === 'dev' && (
           <FileUpload
             title="Upload Profile Response JSON"
-            accept="application/json"
+            accept={{ 'application/json': ['.json'] }}
             onDrop={importMockProfile}
           />
         )}

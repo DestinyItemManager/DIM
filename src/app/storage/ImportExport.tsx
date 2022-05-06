@@ -66,7 +66,11 @@ export default function ImportExport({
           <AppIcon icon={downloadIcon} /> {t('Storage.Export')}
         </button>
       </p>
-      <FileUpload onDrop={importData} accept="application/json" title={t('Storage.Import')} />
+      <FileUpload
+        onDrop={importData}
+        accept={{ 'application/json': ['.json'] }}
+        title={t('Storage.Import')}
+      />
     </div>
   );
 }
