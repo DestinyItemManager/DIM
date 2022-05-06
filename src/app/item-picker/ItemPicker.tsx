@@ -7,7 +7,7 @@ import { RootState } from 'app/store/types';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -28,14 +28,14 @@ interface StoreProps {
   filters(query: string): ItemFilter;
 }
 
-function mapStateToProps(): MapStateToProps<StoreProps, ProvidedProps> {
+function mapStateToProps() {
   const filteredItemsSelector = createSelector(
     allItemsSelector,
     (_state: RootState, ownProps: ProvidedProps) => ownProps.filterItems,
     (allitems, filterItems) => (filterItems ? allitems.filter(filterItems) : allitems)
   );
 
-  return (state: RootState, ownProps) => ({
+  return (state: RootState, ownProps: ProvidedProps) => ({
     allItems: filteredItemsSelector(state, ownProps),
     filters: filterFactorySelector(state),
     itemSortSettings: itemSortSettingsSelector(state),

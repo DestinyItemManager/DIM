@@ -299,6 +299,9 @@ module.exports = (env) => {
         testing: path.resolve('./src/testing/'),
         docs: path.resolve('./docs/'),
         'destiny-icons': path.resolve('./destiny-icons/'),
+        // https://github.com/react-dnd/react-dnd/issues/3433
+        'react/jsx-runtime': 'react/jsx-runtime.js',
+        'react/jsx-dev-runtime': 'react/jsx-dev-runtime.js',
       },
 
       fallback: {
