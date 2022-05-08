@@ -239,6 +239,7 @@ function getStringsFromAllSockets(item: DimItem, includeDescription = true) {
       results.push(
         ...getStringsFromDisplayPropertiesMap(plugAndPerkDisplay.flat(2), includeDescription)
       );
+      results.push(...socket.plugOptions.map((plug) => plug.plugDef.itemTypeDisplayName));
       // include tooltips from the plugged item
       if (socket.plugged?.plugDef.tooltipNotifications) {
         for (const t of socket.plugged.plugDef.tooltipNotifications) {
