@@ -29,7 +29,7 @@ import {
   getVault,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
-import { ingameArmorEnergyRules, LockableBucketHashes } from 'app/loadout-builder/types';
+import { inGameArmorEnergyRules, LockableBucketHashes } from 'app/loadout-builder/types';
 import {
   createPluggingStrategy,
   fitMostMods,
@@ -986,7 +986,7 @@ function applyLoadoutMods(
     const { itemModAssignments, unassignedMods } = fitMostMods({
       items: armor,
       plannedMods: mods,
-      armorEnergyRules: ingameArmorEnergyRules,
+      armorEnergyRules: inGameArmorEnergyRules,
     });
 
     for (const mod of unassignedMods) {

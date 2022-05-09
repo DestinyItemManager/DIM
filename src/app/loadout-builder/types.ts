@@ -102,7 +102,7 @@ export const loDefaultArmorEnergyRules: ArmorEnergyRules = {
  * The armor energy rules that describe the changes DIM can
  * make in-game -- none as of now.
  */
-export const ingameArmorEnergyRules: ArmorEnergyRules = {
+export const inGameArmorEnergyRules: ArmorEnergyRules = {
   lockArmorEnergyType: LockArmorEnergyType.All,
   assumeArmorMasterwork: AssumeArmorMasterwork.None,
   minItemEnergy: 1,
@@ -110,7 +110,7 @@ export const ingameArmorEnergyRules: ArmorEnergyRules = {
 
 /**
  * Rules describing how armor can change energy type and capacity
- * to accomodate mods and hit optimal stats.
+ * to accommodate mods and hit optimal stats.
  */
 export interface ArmorEnergyRules {
   lockArmorEnergyType: LockArmorEnergyType;
