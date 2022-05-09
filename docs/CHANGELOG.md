@@ -1,5 +1,7 @@
 ## Next
 
+* Fix "lower is better" stats not being masterworked gold in the item popup.
+
 ## 7.16.0 <span class="changelog-date">(2022-05-08)</span>
 
 * Stat bonuses granted to crafted weapons by an enhanced intrinsic are now distinguished in the stat bars similarly to masterwork effects.

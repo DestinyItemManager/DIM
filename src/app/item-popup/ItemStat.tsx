@@ -68,7 +68,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     armor2MasterworkSockets && getTotalPlugEffects(armor2MasterworkSockets, [stat.statHash]);
 
   const masterworkValue = (item && getWeaponMasterworkValue({ stat, item })) ?? 0;
-  const isMasterworkedStat = masterworkValue > 0;
+  const isMasterworkedStat = masterworkValue !== 0;
   const masterworkDisplayValue = masterworkValue ?? armor2MasterworkValue;
 
   // const moddedStatValue = item && getTotalModEffects(item, stat);
