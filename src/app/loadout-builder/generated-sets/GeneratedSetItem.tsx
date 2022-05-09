@@ -124,7 +124,12 @@ export default function GeneratedSetItem({
     const { plugCategoryHash } = plugDef.plug;
 
     if (plugCategoryHash === PlugCategoryHashes.Intrinsics) {
-      lbDispatch({ type: 'lockExotic', lockedExoticHash: item.hash });
+      // Legendary armor can have intrinsic perks and it might be
+      // nice to provide a convenient user interface for those,
+      // but the exotic picker is not the way to do it.
+      if (item.isExotic) {
+        lbDispatch({ type: 'lockExotic', lockedExoticHash: item.hash });
+      }
     } else {
       lbDispatch({
         type: 'openModPicker',
