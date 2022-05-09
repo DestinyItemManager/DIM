@@ -1,5 +1,8 @@
 ## Next
 
+* Fixed Organizer not showing some legendary armor intrinsic perks.
+* Fixed a glitch in Loadout Optimizer where legendary armor intrinsic perks could be clicked to lock that piece as an exotic.
+
 ## 7.16.1 <span class="changelog-date">(2022-05-09)</span>
 
 * Fix "lower is better" stats not being masterworked gold in the item popup.

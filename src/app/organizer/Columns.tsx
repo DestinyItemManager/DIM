@@ -588,10 +588,13 @@ function PerksCell({
         (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
           isUsedArmorModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
           (s.isPerk &&
-            (item.isExotic || // ignore archetype if it's not exotic
-              !s.plugged.plugDef.itemCategoryHashes?.includes(
-                ItemCategoryHashes.WeaponModsIntrinsic
-              ))))
+            // Filter out the archetype plug for legendary weapons
+            // as it's already in the archetype column
+            !(
+              !item.isExotic &&
+              item.bucket.inWeapons &&
+              s.plugged.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsIntrinsic)
+            )))
     )
   );
 
