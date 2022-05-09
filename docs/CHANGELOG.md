@@ -1,5 +1,7 @@
 ## Next
 
+## 7.16.1 <span class="changelog-date">(2022-05-09)</span>
+
 * Fix "lower is better" stats not being masterworked gold in the item popup.
 
 ## 7.16.0 <span class="changelog-date">(2022-05-08)</span>
