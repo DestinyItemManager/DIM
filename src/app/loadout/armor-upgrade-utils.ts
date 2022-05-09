@@ -21,6 +21,7 @@ export function isArmorEnergyLocked(
   { lockArmorEnergyType, loadouts }: ArmorEnergyRules
 ) {
   switch (lockArmorEnergyType) {
+    default:
     case LockArmorEnergyType.None: {
       return false;
     }
