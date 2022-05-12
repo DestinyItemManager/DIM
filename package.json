@@ -64,7 +64,7 @@
     "last 2 Opera versions"
   ],
   "resolutions": {
-    "@types/react": "18.0.8"
+    "@types/react": "18.0.9"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
