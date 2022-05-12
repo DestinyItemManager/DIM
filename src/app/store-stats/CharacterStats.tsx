@@ -7,7 +7,6 @@ import { fakeCharacterStatHashes } from 'app/inventory/d2-stores';
 import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { statTier } from 'app/loadout-builder/utils';
 import { armorStats } from 'app/search/d2-known-values';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -107,18 +106,16 @@ export function PowerFormula({ stats, storeId }: { stats: DimStore['stats']; sto
 
 export function LoadoutStats({
   stats,
-  characterClass,
   showTier,
 }: {
   stats: DimStore['stats'];
-  characterClass: DestinyClass; // this can be DestinyClass.Unknown
   showTier?: boolean;
 }) {
   const statInfos = armorStats
     .map((h) => stats[h])
     .map((stat) => ({
       stat,
-      tooltip: <StatTooltip stat={stat} characterClass={characterClass} />,
+      tooltip: <StatTooltip stat={stat} />,
     }));
 
   return <CharacterStat showTier={showTier} stats={statInfos} storeId={undefined} />;

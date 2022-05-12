@@ -44,7 +44,7 @@ function Header({
       <div className={styles.headerInfo}>
         <div className={styles.headerName}>{loadout.name}</div>
         <div className={styles.headerStats}>
-          <LoadoutStats stats={stats} characterClass={loadout.classType} />
+          <LoadoutStats stats={stats} />
         </div>
       </div>
     </div>
