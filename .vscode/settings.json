@@ -45,5 +45,16 @@
   "css.customData": ["./.vscode/custom.css-data.json"],
   "css.validate": false,
   "scss.validate": false,
-  "stylelint.validate": ["css", "scss"]
+  "stylelint.validate": ["css", "scss"],
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.js, ${capture}.test.ts",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts, ${capture}.test.js",
+    "*.jsx": "${capture}.js, ${capture}.test.js",
+    "*.tsx": "${capture}.ts, ${capture}.test.ts",
+    "*.m.scss": "${capture}.m.scss.d.ts",
+    "tsconfig.json": "tsconfig.*.json",
+    "package.json": "package-lock.json, yarn.lock"
+  }
 }
