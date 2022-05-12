@@ -7,7 +7,7 @@ import { pollForBungieAlerts } from 'app/shell/alerts';
 import store from 'app/store/store';
 import { infoLog } from 'app/utils/log';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import idbReady from 'safari-14-idb-fix';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
 import './app/google';
@@ -37,6 +37,8 @@ setupRateLimiter();
 const i18nPromise = initi18n();
 
 (async () => {
+  const root = ReactDOM.createRoot(document.getElementById('app')!);
+
   // idbReady works around a bug in Safari 14 where IndexedDB doesn't initialize sometimes
   await idbReady();
   // Block on testing that we can use LocalStorage and IDB, before everything starts trying to use it
@@ -44,7 +46,7 @@ const i18nPromise = initi18n();
   if (!storageWorks) {
     // Make sure localization is loaded
     await i18nPromise;
-    ReactDOM.render(<StorageBroken />, document.getElementById('app'));
+    root.render(<StorageBroken />);
     return;
   }
 
@@ -66,5 +68,5 @@ const i18nPromise = initi18n();
   // Settings depends on i18n
   watchLanguageChanges();
 
-  ReactDOM.render(<Root />, document.getElementById('app'));
+  root.render(<Root />);
 })();
