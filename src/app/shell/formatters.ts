@@ -18,7 +18,7 @@ export function getColor(value: number, property = 'background-color') {
     color = 20;
   } else if (value <= 95) {
     color = 60;
-  } else if (value <= 99) {
+  } else if (value < 100) {
     color = 120;
   } else if (value >= 100) {
     color = 190;
