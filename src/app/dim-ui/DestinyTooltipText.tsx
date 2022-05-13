@@ -26,6 +26,6 @@ export function DestinyTooltipText({ item }: { item: DimItem }) {
   );
 }
 
-export function isExpirationTooltip(tip: DestinyItemTooltipNotification) {
+function isExpirationTooltip(tip: DestinyItemTooltipNotification) {
   return tip.displayStyle.endsWith('_expiration') || tip.displayStyle.endsWith('_seasonal');
 }

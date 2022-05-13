@@ -8,7 +8,7 @@ import { MaterialCounts } from './MaterialCounts';
 /**
  * The currently selected store for showing gear power.
  */
-export const doShowMaterialCounts$ = new Observable<boolean>(false);
+const doShowMaterialCounts$ = new Observable<boolean>(false);
 
 /**
  * Show the gear power sheet
