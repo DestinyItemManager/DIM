@@ -80,7 +80,6 @@ export const statLabels: Record<number, string | undefined> = {
   [StatHashes.ReloadSpeed]: tl('Organizer.Stats.Reload'), // Reload Speed
   [StatHashes.AimAssistance]: tl('Organizer.Stats.Aim'), // Aim Assistance
   [StatHashes.RecoilDirection]: tl('Organizer.Stats.Recoil'), // Recoil Direction
-  [StatHashes.InventorySize]: tl('Organizer.Stats.Inventory'), // Inventory Size
   [StatHashes.Attack]: tl('Organizer.Stats.Power'), // Inventory Size
   [StatHashes.Defense]: tl('Organizer.Stats.Power'), // Inventory Size
 };
