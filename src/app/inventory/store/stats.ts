@@ -65,7 +65,6 @@ export const statAllowList = [
   StatHashes.Zoom,
   StatHashes.RecoilDirection,
   StatHashes.Magazine,
-  StatHashes.InventorySize,
   StatHashes.AmmoCapacity,
   ...armorStats,
   TOTAL_STAT_HASH,
@@ -79,7 +78,6 @@ export const statsMs = [StatHashes.DrawTime, StatHashes.ChargeTime];
 const statsNoBar = [
   StatHashes.RoundsPerMinute,
   StatHashes.Magazine,
-  StatHashes.InventorySize,
   StatHashes.RecoilDirection,
   ...statsMs,
 ];
