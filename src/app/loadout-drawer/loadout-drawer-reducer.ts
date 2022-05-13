@@ -485,7 +485,7 @@ export function setClearSpace(clearSpace: boolean): LoadoutUpdateFunction {
   });
 }
 
-export function setLoadoutParameters(params: Partial<LoadoutParameters>): LoadoutUpdateFunction {
+function setLoadoutParameters(params: Partial<LoadoutParameters>): LoadoutUpdateFunction {
   return (loadout) => ({
     ...loadout,
     parameters: { ...loadout.parameters, ...params },
@@ -519,7 +519,7 @@ export function clearBucketCategory(
 /**
  * Remove all items that are in one or more buckets.
  */
-export function clearBuckets(
+function clearBuckets(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   bucketHashes: number[]
 ): LoadoutUpdateFunction {

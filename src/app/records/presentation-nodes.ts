@@ -356,7 +356,7 @@ function toCraftables(
   );
 }
 
-export function toCraftable(
+function toCraftable(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   profileResponse: DestinyProfileResponse,

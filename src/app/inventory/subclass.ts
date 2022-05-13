@@ -75,7 +75,7 @@ const superIconNodeHashes = {
   burningMaul: 1323416107,
 };
 
-export const subclassInfoByHash: Record<number, SubclassInfo> = {
+const subclassInfoByHash: Record<number, SubclassInfo> = {
   // Arcstrider (v2)
   1334959255: v2Subclass(DamageType.Arc, DestinyClass.Hunter, {
     top: subclassPath(1690891826, superIconNodeHashes.arcStaff),

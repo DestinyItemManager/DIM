@@ -153,12 +153,3 @@ export function getNotableStats(
     },
   };
 }
-
-export function getItemFactorCombos(exampleItem: DimItem) {
-  if (!exampleItem.bucket.sort || !factorComboCategories.includes(exampleItem.bucket.sort)) {
-    return [];
-  }
-  return factorCombos[exampleItem.bucket.sort as FactorComboCategory].filter((factorCombo) =>
-    factorCombo.every((factor) => factor.runIf(exampleItem))
-  );
-}

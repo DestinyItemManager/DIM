@@ -28,11 +28,9 @@ import SneakyUpdates from './shell/SneakyUpdates';
 const WhatsNew = React.lazy(
   () => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
 );
-
-// These three are all from the same chunk
-const SettingsPage = React.lazy(async () => ({
-  default: (await import(/* webpackChunkName: "settings" */ './settings/components')).SettingsPage,
-}));
+const SettingsPage = React.lazy(
+  () => import(/* webpackChunkName: "settings" */ './settings/SettingsPage')
+);
 const SearchHistory = React.lazy(
   () => import(/* webpackChunkName: "searchHistory" */ './search/SearchHistory')
 );

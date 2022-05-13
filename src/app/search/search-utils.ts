@@ -48,7 +48,7 @@ export function parseAndValidateQuery(
 /**
  * Return whether the query is completely valid - syntactically, and where every term matches a known filter.
  */
-export function validateQuery(query: QueryAST, searchConfig: SearchConfig): boolean {
+function validateQuery(query: QueryAST, searchConfig: SearchConfig): boolean {
   if (query.error) {
     return false;
   }

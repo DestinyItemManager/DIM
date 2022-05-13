@@ -66,7 +66,7 @@ const getUniqueItemNamesFromManifest = _.once(
   }
 );
 
-export const nameFilter: FilterDefinition = {
+const nameFilter: FilterDefinition = {
   keywords: 'name',
   description: tl('Filter.PartialMatch'),
   format: 'freeform',

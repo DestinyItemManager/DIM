@@ -1,5 +1,5 @@
-import { bungieBackgroundStyle, bungieBackgroundStyleAdvanced } from 'app/dim-ui/BungieImage';
-import { DimItem, DimSocket } from 'app/inventory/item-types';
+import { bungieBackgroundStyleAdvanced } from 'app/dim-ui/BungieImage';
+import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getInterestingSocketMetadatas, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import clsx from 'clsx';
@@ -57,33 +57,4 @@ export function SpecialtyModSlotIcon({
       })}
     </>
   );
-}
-
-const armorSlotSpecificPlugCategoryIdentifier =
-  /enhancements\.v2_(head|arms|chest|legs|class_item)/i;
-
-/** verifies an item is d2 armor and has an armor slot specific mod socket, which is returned */
-const getArmorSlotSpecificModSocket: (item: DimItem) => DimSocket | undefined = (item) =>
-  (item.bucket.inArmor &&
-    item.sockets?.allSockets.find((socket) =>
-      socket.plugged?.plugDef.plug.plugCategoryIdentifier.match(
-        armorSlotSpecificPlugCategoryIdentifier
-      )
-    )) ||
-  undefined;
-
-export function ArmorSlotSpecificModSocketIcon({ item, className, lowRes }: ModSlotIconProps) {
-  const defs = useD2Definitions()!;
-  const foundSocket = getArmorSlotSpecificModSocket(item);
-  // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-  const emptySocketHash = foundSocket && foundSocket.emptyPlugItemHash;
-  const emptySocketIcon = emptySocketHash && defs.InventoryItem.get(emptySocketHash);
-  return emptySocketIcon ? (
-    <PressTip elementType="span" tooltip={emptySocketIcon.itemTypeDisplayName}>
-      <div
-        className={clsx(className, styles.specialtyModIcon, lowRes && styles.lowRes)}
-        style={bungieBackgroundStyle(emptySocketIcon.displayProperties.icon)}
-      />
-    </PressTip>
-  ) : null;
 }

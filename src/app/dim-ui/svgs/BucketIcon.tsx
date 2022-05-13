@@ -13,7 +13,7 @@ import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import React from 'react';
 import BungieImage from '../BungieImage';
 
-export const bucketIcons = {
+const bucketIcons = {
   [BucketHashes.KineticWeapons]: dmgKinetic,
   [BucketHashes.EnergyWeapons]: energyWeapon,
   [BucketHashes.PowerWeapons]: powerWeapon,
