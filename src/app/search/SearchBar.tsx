@@ -17,6 +17,7 @@ import _ from 'lodash';
 import React, {
   Suspense,
   useCallback,
+  useDeferredValue,
   useEffect,
   useImperativeHandle,
   useLayoutEffect,
@@ -203,7 +204,7 @@ function SearchBar(
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus = !mainSearchBar && !isPhonePortrait && !isiOSBrowser();
 
-  const [liveQuery, setLiveQuery] = useState('');
+  const [liveQueryLive, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
   const inputElement = useRef<HTMLInputElement>(null);
 
@@ -214,6 +215,8 @@ function SearchBar(
     }, 500),
     [onQueryChanged]
   );
+
+  const liveQuery = useDeferredValue(liveQueryLive);
 
   const { valid, saveable } = validateQuery(liveQuery);
 
@@ -269,7 +272,7 @@ function SearchBar(
       setLiveQuery(inputValue || '');
       debouncedUpdateQuery(inputValue || '');
       if (type !== useCombobox.stateChangeTypes.InputChange) {
-        debouncedUpdateQuery.flush();
+        // debouncedUpdateQuery.flush();
       }
       if (type === useCombobox.stateChangeTypes.FunctionReset) {
         onClear?.();
@@ -381,6 +384,41 @@ function SearchBar(
     }
   };
 
+  const autocompleteMenu = useMemo(
+    () => (
+      <ul {...getMenuProps()} className={styles.menu}>
+        {isOpen &&
+          items.map((item, index) => (
+            <li
+              className={clsx(styles.menuItem, {
+                [styles.highlightedItem]: highlightedIndex === index,
+              })}
+              key={`${item.type}${item.query}`}
+              {...getItemProps({ item, index })}
+            >
+              <Row
+                highlighted={highlightedIndex === index}
+                item={item}
+                isPhonePortrait={isPhonePortrait}
+                isTabAutocompleteItem={item === tabAutocompleteItem}
+                onClick={deleteSearch}
+              />
+            </li>
+          ))}
+      </ul>
+    ),
+    [
+      deleteSearch,
+      getItemProps,
+      getMenuProps,
+      highlightedIndex,
+      isOpen,
+      isPhonePortrait,
+      items,
+      tabAutocompleteItem,
+    ]
+  );
+
   return (
     <div
       className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
@@ -476,26 +514,7 @@ function SearchBar(
           document.body
         )}
 
-      <ul {...getMenuProps()} className={styles.menu}>
-        {isOpen &&
-          items.map((item, index) => (
-            <li
-              className={clsx(styles.menuItem, {
-                [styles.highlightedItem]: highlightedIndex === index,
-              })}
-              key={`${item.type}${item.query}`}
-              {...getItemProps({ item, index })}
-            >
-              <Row
-                highlighted={highlightedIndex === index}
-                item={item}
-                isPhonePortrait={isPhonePortrait}
-                isTabAutocompleteItem={item === tabAutocompleteItem}
-                onClick={deleteSearch}
-              />
-            </li>
-          ))}
-      </ul>
+      {autocompleteMenu}
     </div>
   );
 }
