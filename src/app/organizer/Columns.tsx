@@ -22,7 +22,7 @@ import TagIcon from 'app/inventory/TagIcon';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
 import NotesArea from 'app/item-popup/NotesArea';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
-import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
+import { recoilValue } from 'app/item-popup/RecoilStat';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
@@ -185,13 +185,7 @@ export function getColumns(
             if (!stat) {
               return null;
             }
-            const value = stat.base;
-            return (
-              <div className={clsx(styles.statValue)}>
-                {value}
-                {column.statHash === StatHashes.RecoilDirection && <RecoilStat value={value} />}
-              </div>
-            );
+            return <ItemStatValue stat={stat} item={item} baseStat />;
           },
           filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`,
         }))
