@@ -75,7 +75,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
   }
 
   return (
-    <div className={clsx('sockets', styles.generalSockets, { [styles.minimalSockets]: minimal })}>
+    <>
       {exoticArmorPerkSocket && (
         <ArchetypeRow minimal={minimal}>
           {exoticArmorPerkSocket?.plugged && (
@@ -95,54 +95,56 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
           )}
         </ArchetypeRow>
       )}
-      {emoteWheelCategory && (
-        <EmoteSockets
-          item={item}
-          itemDef={defs.InventoryItem.get(item.hash)}
-          sockets={emoteWheelCategory.socketIndexes.map((s) => item.sockets!.allSockets[s])}
-          onClick={handleSocketClick}
-        />
-      )}
-      {categories.map((category) => (
-        <div
-          key={category.category.hash}
-          className={clsx('item-socket-category', categoryStyle(category.category.categoryStyle))}
-        >
-          {!minimal && (
-            <div className="item-socket-category-name">
-              {category.category.displayProperties.name}
-            </div>
-          )}
-          <div className="item-sockets">
-            {getSocketsByIndexes(item.sockets!, category.socketIndexes).map(
-              (socketInfo) =>
-                socketInfo.socketIndex !== exoticArmorPerkSocket?.socketIndex &&
-                socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
-                  <Socket
-                    key={socketInfo.socketIndex}
-                    item={item}
-                    socket={socketInfo}
-                    wishlistRoll={wishlistRoll}
-                    onClick={handleSocketClick}
-                  />
-                )
-            )}
-          </div>
-        </div>
-      ))}
-      {socketInMenu &&
-        ReactDOM.createPortal(
-          <SocketDetails
-            key={socketInMenu.socketIndex}
+      <div className={clsx('sockets', styles.generalSockets, { [styles.minimalSockets]: minimal })}>
+        {emoteWheelCategory && (
+          <EmoteSockets
             item={item}
-            socket={socketInMenu}
-            allowInsertPlug
-            onClose={() => setSocketInMenu(null)}
-            onPlugSelected={onPlugClicked}
-          />,
-          document.body
+            itemDef={defs.InventoryItem.get(item.hash)}
+            sockets={emoteWheelCategory.socketIndexes.map((s) => item.sockets!.allSockets[s])}
+            onClick={handleSocketClick}
+          />
         )}
-    </div>
+        {categories.map((category) => (
+          <div
+            key={category.category.hash}
+            className={clsx('item-socket-category', categoryStyle(category.category.categoryStyle))}
+          >
+            {!minimal && (
+              <div className="item-socket-category-name">
+                {category.category.displayProperties.name}
+              </div>
+            )}
+            <div className="item-sockets">
+              {getSocketsByIndexes(item.sockets!, category.socketIndexes).map(
+                (socketInfo) =>
+                  socketInfo.socketIndex !== exoticArmorPerkSocket?.socketIndex &&
+                  socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
+                    <Socket
+                      key={socketInfo.socketIndex}
+                      item={item}
+                      socket={socketInfo}
+                      wishlistRoll={wishlistRoll}
+                      onClick={handleSocketClick}
+                    />
+                  )
+              )}
+            </div>
+          </div>
+        ))}
+        {socketInMenu &&
+          ReactDOM.createPortal(
+            <SocketDetails
+              key={socketInMenu.socketIndex}
+              item={item}
+              socket={socketInMenu}
+              allowInsertPlug
+              onClose={() => setSocketInMenu(null)}
+              onPlugSelected={onPlugClicked}
+            />,
+            document.body
+          )}
+      </div>
+    </>
   );
 }
 
