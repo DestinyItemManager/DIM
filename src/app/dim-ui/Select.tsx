@@ -118,17 +118,15 @@ export default function Select<T>({
         <button
           type="button"
           style={buttonStyle}
-          {...getToggleButtonProps({ ref: buttonRef })}
-          disabled={disabled}
+          {...getToggleButtonProps({ ref: buttonRef, disabled })}
         >
           {children}
         </button>
       ) : (
         <button
           type="button"
-          {...getToggleButtonProps({ ref: buttonRef })}
+          {...getToggleButtonProps({ ref: buttonRef, disabled })}
           className={styles.button}
-          disabled={disabled}
         >
           {selectedItem.content}{' '}
           <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} className={styles.arrow} />
@@ -146,16 +144,13 @@ export default function Select<T>({
                   <div
                     className={clsx(styles.menuItem, {
                       [styles.highlighted]: highlightedIndex === index,
-                      highlighted: highlightedIndex === index,
                       [styles.disabled]: item.disabled,
                     })}
                     key={item.key}
                     {...getItemProps({
                       item,
                       index,
-                      onClick: (e: any) => {
-                        e.nativeEvent.preventDownshiftDefault = item.disabled;
-                      },
+                      disabled: item.disabled,
                     })}
                   >
                     {item.content}
