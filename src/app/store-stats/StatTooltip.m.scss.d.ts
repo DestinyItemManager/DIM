@@ -4,7 +4,6 @@ interface CssExports {
   'description': string;
   'label': string;
   'name': string;
-  'value': string;
   'values': string;
 }
 export const cssExports: CssExports;

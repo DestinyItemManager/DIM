@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
-import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
 import { ArmorStatHashes, ArmorStats } from '../types';
@@ -17,7 +17,6 @@ interface Props {
   maxPower: number;
   statOrder: ArmorStatHashes[];
   enabledStats: Set<ArmorStatHashes>;
-  characterClass: DestinyClass;
   className?: string;
   existingLoadoutName?: string;
 }
@@ -30,7 +29,6 @@ function SetStats({
   maxPower,
   statOrder,
   enabledStats,
-  characterClass,
   className,
   existingLoadoutName,
 }: Props) {
@@ -79,7 +77,6 @@ function SetStats({
                   value: stats[statHash],
                   description: statDefs[statHash].displayProperties.description,
                 }}
-                characterClass={characterClass}
               />
             )}
           >

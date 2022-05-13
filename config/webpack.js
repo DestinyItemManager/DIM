@@ -411,8 +411,6 @@ module.exports = (env) => {
         '$featureFlags.triage': JSON.stringify(!env.release),
         // Advanced Write Actions (inserting mods)
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
-        // Ability cooldowns in stats tooltips
-        '$featureFlags.abilityCooldowns': JSON.stringify(false),
         // Item feed sidebar
         '$featureFlags.itemFeed': JSON.stringify(true),
       }),

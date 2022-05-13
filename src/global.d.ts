@@ -22,8 +22,6 @@ declare const $featureFlags: {
   triage: boolean;
   /** Advanced Write Actions (inserting mods) */
   awa: boolean;
-  /** Whether ability cooldowns are shown in stats tooltips */
-  abilityCooldowns: boolean;
   /** Item feed sidebar */
   itemFeed: boolean;
 };
