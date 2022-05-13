@@ -12,6 +12,7 @@ import {
   popperOffsets,
   preventOverflow,
 } from '@popperjs/core';
+import computeSidecarPosition from 'app/item-popup/sidecar-popper-modifier';
 import _ from 'lodash';
 import React, { useLayoutEffect, useRef } from 'react';
 
@@ -25,12 +26,14 @@ const createPopper = popperGenerator({
     flip,
     preventOverflow,
     arrow,
+    computeSidecarPosition,
   ],
 });
 
 const popperOptions = (
   placement: Options['placement'] = 'auto',
   arrowClassName?: string,
+  menuClassName?: string,
   boundarySelector?: string,
   offset = arrowClassName ? 5 : 0,
   fixed = false
@@ -47,6 +50,7 @@ const popperOptions = (
     bottom: 10,
   };
   const hasArrow = Boolean(arrowClassName);
+  const hasMenu = Boolean(menuClassName);
   return {
     strategy: fixed ? 'fixed' : 'absolute',
     placement,
@@ -79,6 +83,12 @@ const popperOptions = (
           element: '.' + arrowClassName,
         },
       },
+      hasMenu && {
+        name: 'computeSidecarPosition',
+        options: {
+          element: '.' + menuClassName,
+        },
+      },
     ]),
   };
 };
@@ -87,6 +97,7 @@ export function usePopper({
   contents,
   reference,
   arrowClassName,
+  menuClassName,
   boundarySelector,
   placement,
   offset,
@@ -98,6 +109,8 @@ export function usePopper({
   reference: React.RefObject<HTMLElement>;
   /** A class used to identify the arrow */
   arrowClassName?: string;
+  /** A class used to identify the sidecar menu */
+  menuClassName?: string;
   /** An optional additional selector for a "boundary area" */
   boundarySelector?: string;
   /** Placement preference of the popper. Defaults to "auto" */
@@ -125,7 +138,14 @@ export function usePopper({
       if (popper.current) {
         popper.current.update();
       } else {
-        const options = popperOptions(placement, arrowClassName, boundarySelector, offset, fixed);
+        const options = popperOptions(
+          placement,
+          arrowClassName,
+          menuClassName,
+          boundarySelector,
+          offset,
+          fixed
+        );
         popper.current = createPopper(reference.current, contents.current, options);
         popper.current.update();
         setTimeout(() => popper.current?.update(), 0); // helps fix arrow position

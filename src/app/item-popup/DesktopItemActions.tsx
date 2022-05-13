@@ -12,13 +12,14 @@ import { useSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
-import _ from 'lodash';
-import React, { useLayoutEffect, useRef } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './DesktopItemActions.m.scss';
 import { ItemActionsModel } from './item-popup-actions';
 
 const sharedButtonProps = { role: 'button', tabIndex: -1 };
+
+export const menuClassName = styles.interaction;
 
 export default function DesktopItemActions({
   item,
@@ -53,38 +54,8 @@ export default function DesktopItemActions({
     }
   });
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  useLayoutEffect(() => {
-    const reposition = () => {
-      if (containerRef.current) {
-        const parent = containerRef.current.closest('.item-popup');
-        const arrow = parent?.querySelector('.arrow');
-        if (!arrow || !parent) {
-          return;
-        }
-        const arrowRect = arrow.getBoundingClientRect();
-        const parentRect = parent.getBoundingClientRect();
-        const containerHeight = containerRef.current.clientHeight;
-        const offset = arrowRect.top - parentRect.top + 2.5;
-
-        const top = _.clamp(offset - containerHeight / 2, 0, parent.clientHeight - containerHeight);
-
-        // Originally this used translateY, but that caused menus to not work on Safari.
-        containerRef.current.style.marginTop = `${Math.round(top)}px`;
-
-        // TODO: also don't push it off screen
-      }
-    };
-
-    reposition();
-    setTimeout(reposition, 10);
-  });
-
   return (
-    <div
-      className={clsx(styles.interaction, { [styles.collapsed]: sidecarCollapsed })}
-      ref={containerRef}
-    >
+    <div className={clsx(styles.interaction, { [styles.collapsed]: sidecarCollapsed })}>
       {actionsModel.hasControls && (
         <div
           className={styles.collapseButton}
