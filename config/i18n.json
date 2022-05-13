@@ -1045,15 +1045,6 @@
     "GridStyle": "Display perks as a grid"
   },
   "Stats": {
-    "LightGrenadeCooldown": "Light Grenade Cooldown",
-    "LightMeleeCooldown": "Light Melee Cooldown",
-    "LightSuperCooldown": "Light Super Cooldown",
-    "DarkGrenadeCooldown": "Dark Grenade Cooldown",
-    "DarkMeleeCooldown": "Dark Melee Cooldown",
-    "DarkSuperCooldown": "Dark Super Cooldown",
-    "RiftCooldown": "Rift Cooldown",
-    "BarricadeCooldown": "Barricade Cooldown",
-    "DodgeCooldown": "Dodge Cooldown",
     "Custom": "Custom Total",
     "CustomDesc": "Custom total of selected base stats, ignoring mods or masterworks. Visit Settings to configure which stats are included.",
     "Discipline": "Discipline",
