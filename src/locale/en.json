@@ -1117,6 +1117,8 @@
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "Clear Wish List",
+    "CopiedLine": "Wish List roll copied to clipboard",
+    "CopyLine": "Copy Wish List Roll",
     "ExternalSource": "Optionally, supply the URL(s) for a wish list (pipe | separated)",
     "Header": "Wish List",
     "Import": "Load Wish List Rolls",
@@ -1130,7 +1132,7 @@
     "Untitled": "Untitled Wish List",
     "UpdateExternalSource": "Update Wish List Source",
     "Voltron": "voltron (default)",
-    "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy. We ship with this by default.",
+    "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from across the Destiny community. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
   },
   "no-space": "",
