@@ -148,7 +148,6 @@ export function usePopper({
         );
         popper.current = createPopper(reference.current, contents.current, options);
         popper.current.update();
-        setTimeout(() => popper.current?.update(), 0); // helps fix arrow position
       }
     }
 
