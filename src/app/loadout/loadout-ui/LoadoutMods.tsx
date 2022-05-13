@@ -8,7 +8,7 @@ import { addIcon, AppIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import ModAssignmentDrawer from '../mod-assignment-drawer/ModAssignmentDrawer';
@@ -16,6 +16,21 @@ import { createGetModRenderKey } from '../mod-utils';
 import ModPicker from '../ModPicker';
 import styles from './LoadoutMods.m.scss';
 import PlugDef from './PlugDef';
+
+const LoadoutModMemo = memo(function LoadoutMod({
+  mod,
+  className,
+  onRemoveMod,
+}: {
+  mod: PluggableInventoryItemDefinition;
+  className: string;
+  onRemoveMod?(modHash: number): void;
+}) {
+  // We need this to be undefined if `onRemoveMod` is not present as the presence of the onClose
+  // callback determines whether the close icon is displayed on hover
+  const onClose = onRemoveMod && (() => onRemoveMod(mod.hash));
+  return <PlugDef className={className} plug={mod} onClose={onClose} />;
+});
 
 /**
  * Shows saved mods in the loadout view.
@@ -27,6 +42,7 @@ export default memo(function LoadoutMods({
   clearUnsetMods,
   hideShowModPlacements,
   onUpdateMods,
+  onRemoveMod,
   onClearUnsetModsChanged,
 }: {
   loadout: Loadout;
@@ -36,6 +52,7 @@ export default memo(function LoadoutMods({
   clearUnsetMods?: boolean;
   /** If present, show an "Add Mod" button */
   onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
+  onRemoveMod?(modHash: number): void;
   onClearUnsetModsChanged?(checked: boolean): void;
 }) {
   const isPhonePortrait = useIsPhonePortrait();
@@ -62,7 +79,7 @@ export default memo(function LoadoutMods({
     <div className={styles.mods}>
       <div className={styles.modsGrid}>
         {savedMods.map((mod) => (
-          <LoadoutMod
+          <LoadoutModMemo
             className={clsx({
               [styles.missingItem]: !(
                 unlockedPlugSetItems.has(mod.hash) ||
@@ -72,8 +89,7 @@ export default memo(function LoadoutMods({
             })}
             key={getModRenderKey(mod)}
             mod={mod}
-            savedMods={savedMods}
-            onUpdateMods={onUpdateMods}
+            onRemoveMod={onRemoveMod}
           />
         ))}
         {onUpdateMods && (
@@ -134,30 +150,3 @@ export default memo(function LoadoutMods({
     </div>
   );
 });
-
-function LoadoutMod({
-  mod,
-  savedMods,
-  className,
-  onUpdateMods,
-}: {
-  mod: PluggableInventoryItemDefinition;
-  savedMods: PluggableInventoryItemDefinition[];
-  className: string;
-  onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
-}) {
-  // We need this to be undefined if `onUpdateMods` is not present as the presence of the onClose
-  // callback determines whether the close icon is displayed on hover
-  const onClose = useMemo(
-    () =>
-      onUpdateMods &&
-      (() => {
-        const firstIndex = savedMods.findIndex((savedMod) => savedMod.hash === mod.hash);
-        const newMods = [...savedMods];
-        newMods.splice(firstIndex, 1);
-        onUpdateMods(newMods);
-      }),
-    [mod.hash, onUpdateMods, savedMods]
-  );
-  return <PlugDef className={className} plug={mod} onClose={onClose} />;
-}

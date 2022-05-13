@@ -17,6 +17,7 @@ import {
   fillLoadoutFromUnequipped,
   LoadoutUpdateFunction,
   removeItem,
+  removeMod,
   setLoadoutSubclassFromEquipped,
   syncModsFromEquipped,
   updateMods,
@@ -100,6 +101,7 @@ export default function LoadoutEdit({
 
   const handleUpdateMods = (newMods: PluggableInventoryItemDefinition[]) =>
     setLoadout(updateMods(newMods.map((mod) => mod.hash)));
+  const handleRemoveMod = withUpdater(removeMod);
   const handleClearCategory = withDefsUpdater(clearBucketCategory);
   const handleModsByBucketUpdated = withUpdater(updateModsByBucket);
   const handleApplySocketOverrides = withUpdater(applySocketOverrides);
@@ -216,6 +218,7 @@ export default function LoadoutEdit({
           storeId={store.id}
           savedMods={savedMods}
           onUpdateMods={handleUpdateMods}
+          onRemoveMod={handleRemoveMod}
           clearUnsetMods={clearUnsetMods}
           onClearUnsetModsChanged={handleClearUnsetModsChanged}
         />
