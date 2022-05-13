@@ -114,24 +114,22 @@ export default function Select<T>({
 
   return (
     <div className={className}>
-      {children ? (
-        <button
-          type="button"
-          style={buttonStyle}
-          {...getToggleButtonProps({ ref: buttonRef, disabled })}
-        >
-          {children}
-        </button>
-      ) : (
-        <button
-          type="button"
-          {...getToggleButtonProps({ ref: buttonRef, disabled })}
-          className={styles.button}
-        >
-          {selectedItem.content}{' '}
-          <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} className={styles.arrow} />
-        </button>
-      )}
+      <button
+        type="button"
+        style={buttonStyle}
+        className={children ? undefined : styles.button}
+        {...getToggleButtonProps({
+          ref: buttonRef,
+          disabled,
+        })}
+      >
+        {children ?? (
+          <>
+            {selectedItem.content}{' '}
+            <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} className={styles.arrow} />
+          </>
+        )}
+      </button>
       <div
         {...getMenuProps({ ref: menuRef })}
         className={clsx(styles.menu, { [styles.open]: isOpen })}
