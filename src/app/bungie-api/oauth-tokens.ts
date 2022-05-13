@@ -23,7 +23,7 @@ export interface Tokens {
  * This service manages storage and management of saved OAuth
  * authorization and refresh tokens.
  *
- * See https://www.bungie.net/en/Help/Article/45481 for details about
+ * See https://bungie-net.github.io/multi/index.html#about-security for details about
  * Bungie.net OAuth.
  */
 
