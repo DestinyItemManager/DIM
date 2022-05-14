@@ -283,7 +283,6 @@ function makeFakePursuitItem(
     infusable: false,
     infusionFuel: false,
     sockets: null,
-    perks: null,
     masterworkInfo: null,
     craftedInfo: null,
     deepsightInfo: null,

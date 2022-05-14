@@ -127,7 +127,6 @@ const freeformFilters: FilterDefinition[] = [
         // TODO: this definitely does too many array allocations to be performant
         const strings = [
           ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
-          ...getStringsFromDisplayPropertiesMap(item.perks?.map((p) => p.displayProperties)),
           ...getStringsFromAllSockets(item),
         ];
         return strings.some((s) => startWord.test(plainString(s, language)));
@@ -183,7 +182,6 @@ const freeformFilters: FilterDefinition[] = [
         }
         const perkStrings = [
           ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
-          ...getStringsFromDisplayPropertiesMap(item.perks?.map((p) => p.displayProperties)),
           ...getStringsFromAllSockets(item),
         ];
         return perkStrings.some((s) => plainString(s, language).includes(filterValue));
