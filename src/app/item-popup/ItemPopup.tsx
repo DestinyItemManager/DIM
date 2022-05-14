@@ -10,7 +10,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import clsx from 'clsx';
 import React, { useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import DesktopItemActions from './DesktopItemActions';
+import DesktopItemActions, { menuClassName } from './DesktopItemActions';
 import { ItemPopupExtraInfo } from './item-popup';
 import { buildItemActionsModel } from './item-popup-actions';
 import styles from './ItemPopup.m.scss';
@@ -60,6 +60,7 @@ export default function ItemPopup({
     reference: { current: element || null },
     boundarySelector,
     arrowClassName: styles.arrow,
+    menuClassName: menuClassName,
   });
 
   const itemActionsModel = useMemo(

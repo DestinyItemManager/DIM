@@ -7,8 +7,8 @@
 @import '../variables.scss';
 
 .arrow {
-  width: 0;
-  height: 0;
+  width: 10px;
+  height: 10px;
   border-style: solid;
   position: absolute;
   border-color: black;
@@ -45,6 +45,8 @@
   }
 
   &[data-popper-placement^='top'] .arrow {
+    width: 0;
+    height: 0;
     border-width: 5px 5px 0 5px;
     border-left-color: transparent;
     border-right-color: transparent;
@@ -53,6 +55,8 @@
   }
 
   &[data-popper-placement^='bottom'] .arrow {
+    width: 0;
+    height: 0;
     border-width: 0 5px 5px 5px;
     top: -5px;
     border-color: transparent transparent white transparent;
@@ -74,6 +78,8 @@
     }
   }
   &[data-popper-placement^='right'] .arrow {
+    width: 0;
+    height: 0;
     border-width: 5px 5px 5px 0;
     border-left-color: transparent;
     border-top-color: transparent;
@@ -81,6 +87,8 @@
     left: -5px;
   }
   &[data-popper-placement^='left'] .arrow {
+    width: 0;
+    height: 0;
     border-width: 5px 0 5px 5px;
     border-top-color: transparent;
     border-right-color: transparent;
