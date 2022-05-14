@@ -34,7 +34,7 @@ export default function CompareStat({
       className={styles.stat}
       style={color}
     >
-      {statValue && stat.bar && item.bucket.sort === 'Armor' && (
+      {statValue !== 0 && stat.bar && item.bucket.sort === 'Armor' && (
         <span className={styles.bar}>
           <span style={{ width: percent(statValue / stat.statMaximumValue) }} />
         </span>
