@@ -302,9 +302,6 @@ function makeItem(
     primaryStat: null,
     typeName: itemDef.itemTypeName,
     isEngram: (itemDef.itemCategoryHashes || []).includes(34),
-    // "perks" are the two or so talent grid items that are "featured" for an
-    // item in its popup in the game. We don't currently use these.
-    // perks: item.perks,
     equipRequiredLevel: item.equipRequiredLevel,
     maxStackSize: itemDef.maxStackSize > 0 ? itemDef.maxStackSize : 1,
     // 0: titan, 1: hunter, 2: warlock, 3: any
@@ -341,7 +338,6 @@ function makeItem(
     index: '',
     infusable: false,
     infusionFuel: false,
-    perks: null,
     masterworkInfo: null,
     craftedInfo: null,
     deepsightInfo: null,

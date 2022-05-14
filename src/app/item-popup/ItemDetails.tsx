@@ -29,6 +29,7 @@ import EnergyMeter from './EnergyMeter';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemDescription from './ItemDescription';
 import ItemExpiration from './ItemExpiration';
+import ItemPerks from './ItemPerks';
 import ItemSockets from './ItemSockets';
 import ItemStats from './ItemStats';
 import ItemTalentGrid from './ItemTalentGrid';
@@ -126,19 +127,7 @@ export default function ItemDetails({
         onApplied={resetSocketOverrides}
       />
 
-      {item.perks && (
-        <div className="item-details item-perks">
-          {item.perks.map((perk) => (
-            <div className="item-perk" key={perk.hash}>
-              {perk.displayProperties.hasIcon && <BungieImage src={perk.displayProperties.icon} />}
-              <div className="item-perk-info">
-                <div className="item-perk-name">{perk.displayProperties.name}</div>
-                <div className="item-perk-description">{perk.displayProperties.description}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      {item.perks && <ItemPerks item={item} />}
 
       {defs && item.objectives && (
         <div className="item-details">

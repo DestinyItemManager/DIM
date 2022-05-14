@@ -10,6 +10,7 @@ import {
   DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemInstanceEnergy,
+  DestinyItemPerkEntryDefinition,
   DestinyItemPlugBase,
   DestinyItemQualityBlockDefinition,
   DestinyItemQuantity,
@@ -117,7 +118,7 @@ export interface DimItem {
   /** Can this be used as infusion fuel? */
   infusionFuel: boolean;
   /** Perks, which are specifically called-out special abilities of items shown in the game's popup UI. */
-  perks: DimPerk[] | null;
+  perks?: DestinyItemPerkEntryDefinition[];
   /** Is this an engram? */
   isEngram: boolean;
   /** The reference hash for lore attached to this item (D2 only). */
@@ -515,11 +516,6 @@ export interface DimSockets {
   allSockets: DimSocket[];
   /** Sockets grouped by category. */
   categories: DimSocketCategory[];
-}
-
-export interface DimPerk extends DestinySandboxPerkDefinition {
-  /** Localized reason for why the perk can't be used. */
-  requirement: string;
 }
 
 export interface DimPursuit {

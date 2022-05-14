@@ -27,6 +27,7 @@ import {
   DictionaryComponentResponse,
   ItemBindStatus,
   ItemLocation,
+  ItemPerkVisibility,
   ItemState,
   SingleComponentResponse,
   TransferStatuses,
@@ -38,7 +39,7 @@ import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
-import { DimItem, DimPerk } from '../item-types';
+import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';
 import { buildCraftedInfo } from './crafted';
@@ -544,7 +545,6 @@ export function makeItem(
     infusable: false,
     infusionFuel: false,
     sockets: null,
-    perks: null,
     masterworkInfo: null,
     craftedInfo: null,
     deepsightInfo: null,
@@ -622,18 +622,14 @@ export function makeItem(
     reportException('Objectives', e, { itemHash: item.itemHash });
   }
 
-  // TODO: Are these ever defined??
   if (itemDef.perks?.length) {
-    createdItem.perks = itemDef.perks
-      .map(
-        (p): DimPerk => ({
-          requirement: p.requirementDisplayString,
-          ...defs.SandboxPerk.get(p.perkHash),
-        })
-      )
-      .filter((p) => p.isDisplayable);
-    if (createdItem.perks.length === 0) {
-      createdItem.perks = null;
+    const perks = itemDef.perks.filter(
+      (p) =>
+        p.perkVisibility === ItemPerkVisibility.Visible &&
+        defs.SandboxPerk.get(p.perkHash)?.isDisplayable
+    );
+    if (perks.length) {
+      createdItem.perks = perks;
     }
   }
 
