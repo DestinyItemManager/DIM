@@ -260,16 +260,18 @@ function ItemTable({
       dispatch(
         setSettingAction(
           columnSetting(itemType),
-          _.uniq(
-            _.compact(
-              columns.map((c) => {
-                const cId = getColumnSelectionId(c);
-                if (cId === id) {
-                  return checked ? cId : undefined;
-                } else {
-                  return enabledColumns.includes(cId) ? cId : undefined;
-                }
-              })
+          Array.from(
+            new Set(
+              _.compact(
+                columns.map((c) => {
+                  const cId = getColumnSelectionId(c);
+                  if (cId === id) {
+                    return checked ? cId : undefined;
+                  } else {
+                    return enabledColumns.includes(cId) ? cId : undefined;
+                  }
+                })
+              )
             )
           )
         )
@@ -429,7 +431,7 @@ function ItemTable({
     }
 
     if (checked) {
-      setSelectedItemIds((selected) => _.uniq([...selected, ...changingIds]));
+      setSelectedItemIds((selected) => [...new Set([...selected, ...changingIds])]);
     } else {
       setSelectedItemIds((selected) => selected.filter((i) => !changingIds.includes(i)));
     }

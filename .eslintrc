@@ -78,6 +78,16 @@
         "object": "_",
         "property": "filter",
         "message": "Please use the native js filter."
+      },
+      {
+        "object": "_",
+        "property": "uniq",
+        "message": "Please use Array.from(new Set(foo)) or [...new Set(foo)] instead."
+      },
+      {
+        "object": "_",
+        "property": "uniqBy",
+        "message": "Please use the uniqBy from app/utils/util instead"
       }
     ],
     "spaced-comment": [

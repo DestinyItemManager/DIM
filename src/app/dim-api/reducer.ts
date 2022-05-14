@@ -565,7 +565,7 @@ function compactUpdate(
         combinedUpdate = {
           ...existingUpdate,
           // Combine into a unique set
-          payload: Array.from(new Set([...existingUpdate.payload, ...update.payload])),
+          payload: [...new Set([...existingUpdate.payload, ...update.payload])],
         };
       }
       break;

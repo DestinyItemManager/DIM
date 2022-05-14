@@ -4,6 +4,7 @@ import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { compareBy } from 'app/utils/comparators';
+import { uniqBy } from 'app/utils/util';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
@@ -40,7 +41,7 @@ export default function Milestones({
     ? defs.SeasonPass.get(season.seasonPassHash)
     : undefined;
 
-  const milestoneItems = _.uniqBy(
+  const milestoneItems = uniqBy(
     [...milestonesForCharacter(defs, profileInfo, store), ...profileMilestones],
     (m) => m.milestoneHash
   ).flatMap((milestone) => milestoneToItems(milestone, defs, buckets, store));

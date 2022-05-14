@@ -16,6 +16,7 @@ import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { clearAppBadge } from 'app/utils/app-badge';
 import { errorLog } from 'app/utils/log';
+import { uniqBy } from 'app/utils/util';
 import i18next from 'i18next';
 import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
@@ -228,7 +229,7 @@ export default function SettingsPage() {
 
   const uniqChars =
     stores &&
-    _.uniqBy(
+    uniqBy(
       stores.filter((s) => !s.isVault),
       (s) => s.classType
     );

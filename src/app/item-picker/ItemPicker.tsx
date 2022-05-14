@@ -4,6 +4,7 @@ import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
 import { sortItems } from 'app/shell/item-comparators';
 import { RootState } from 'app/store/types';
+import { uniqBy } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
@@ -83,7 +84,7 @@ function ItemPicker({
       items = _.sortBy(items, sortBy);
     }
     if (uniqueBy) {
-      items = _.uniqBy(items, uniqueBy);
+      items = uniqBy(items, uniqueBy);
     }
     return items;
   }, [allItems, filter, itemSortSettings, sortBy, uniqueBy]);

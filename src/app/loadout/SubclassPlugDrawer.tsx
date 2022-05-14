@@ -9,6 +9,7 @@ import { PlugSet } from 'app/loadout/plug-drawer/types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { compareBy } from 'app/utils/comparators';
 import { getDefaultAbilityChoiceHash, getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { uniqBy } from 'app/utils/util';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -218,7 +219,7 @@ function getPlugsForSubclass(
               }
             }
           }
-          plugSet.plugs = _.uniqBy(plugSet.plugs, (plug) => plug.hash);
+          plugSet.plugs = uniqBy(plugSet.plugs, (plug) => plug.hash);
 
           plugSets.push(plugSet);
         }

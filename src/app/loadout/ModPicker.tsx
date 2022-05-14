@@ -17,6 +17,7 @@ import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { uniqBy } from 'app/utils/util';
 import { DestinyClass, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -149,7 +150,7 @@ function mapStateToProps() {
           }
 
           // TODO: Why would there be duplicates within a single plugset?
-          const plugs = _.uniqBy(plugsWithDuplicates, (plug) => plug.hash);
+          const plugs = uniqBy(plugsWithDuplicates, (plug) => plug.hash);
 
           // Combat, general and raid mods are restricted across items so we need to manually
           // set the max selectable

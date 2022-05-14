@@ -2,7 +2,6 @@ import { XurLocation } from '@d2api/d2api-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
-import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
@@ -46,9 +45,11 @@ export default function Vendor({
 
   const placeString = xurLocation
     ? extractXurLocationString(defs, xurLocation)
-    : _.uniq(
-        [vendor.destination?.displayProperties.name, vendor.place?.displayProperties.name].filter(
-          (n) => n?.length
+    : Array.from(
+        new Set(
+          [vendor.destination?.displayProperties.name, vendor.place?.displayProperties.name].filter(
+            (n) => n?.length
+          )
         )
       ).join(', ');
 

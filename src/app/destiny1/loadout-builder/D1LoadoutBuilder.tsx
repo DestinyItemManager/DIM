@@ -9,6 +9,7 @@ import { getColor } from 'app/shell/formatters';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
+import { uniqBy } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
@@ -138,7 +139,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       );
       if (felwinters.length) {
         this.setState(({ excludeditems }) => ({
-          excludeditems: _.uniqBy([...excludeditems, ...felwinters], (i) => i.id),
+          excludeditems: uniqBy([...excludeditems, ...felwinters], (i) => i.id),
         }));
       }
     }
@@ -152,7 +153,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       );
       if (felwinters.length) {
         this.setState(({ excludeditems }) => ({
-          excludeditems: _.uniqBy([...excludeditems, ...felwinters], (i) => i.id),
+          excludeditems: uniqBy([...excludeditems, ...felwinters], (i) => i.id),
         }));
       }
     }
@@ -175,7 +176,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       );
       if (felwinters.length) {
         this.setState(({ excludeditems }) => ({
-          excludeditems: _.uniqBy(
+          excludeditems: uniqBy(
             [...excludeditems, ...felwinters.map((si) => si.item)],
             (i) => i.id
           ),
@@ -806,7 +807,7 @@ function filterPerks(perks: D1GridNode[], item: D1Item) {
     return [];
   }
   // ['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma']
-  return _.uniqBy(perks.concat(item.talentGrid.nodes), (node) => node.hash).filter(
+  return uniqBy(perks.concat(item.talentGrid.nodes), (node) => node.hash).filter(
     (node) => !unwantedPerkHashes.includes(node.hash)
   );
 }

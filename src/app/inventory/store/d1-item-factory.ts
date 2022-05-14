@@ -11,6 +11,7 @@ import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
+import { uniqBy } from 'app/utils/util';
 import {
   BucketCategory,
   DamageType,
@@ -634,7 +635,7 @@ function buildTalentGrid(
   }) as D1GridNode[];
 
   // We need to unique-ify because Ornament nodes show up twice!
-  gridNodes = _.uniqBy(_.compact(gridNodes), (n) => n.hash);
+  gridNodes = uniqBy(_.compact(gridNodes), (n) => n.hash);
 
   if (!gridNodes.length) {
     return null;
