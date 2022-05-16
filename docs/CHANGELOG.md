@@ -2,6 +2,12 @@
 
 * Fixed Organizer not showing some legendary armor intrinsic perks.
 * Fixed a glitch in Loadout Optimizer where legendary armor intrinsic perks could be clicked to lock that piece as an exotic.
+* Fixed double zeroes on armor in Compare.
+* Fixed bad stat coloring in Compare when stats are more than 100 points apart (this only really affected power level).
+* Popups and tooltips are a bit snappier.
+* The close button in the Armory view (click an item's title) no longer overlaps the scrollbar.
+* Inventory size stat no longer shows on any item - it used to show on Bows only.
+
 
 ## 7.16.1 <span class="changelog-date">(2022-05-09)</span>
 
