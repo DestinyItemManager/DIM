@@ -146,6 +146,29 @@ export function consolidateRollsForOneWeapon(
       }
     }
   }
+
+  // Because a base perk in the wish list matches an enhanced perk on the weapon,
+  // add enhanced perks to the wish list rolls if the weapon can have them and the
+  // roll doesn't specify them
+  for (const roll of Object.values(rollsGroupedByPrimaryPerks)) {
+    for (const perk of roll.commonPrimaryPerks) {
+      const enhancedPerk = perkToEnhanced[perk];
+      if (enhancedPerk && !roll.commonPrimaryPerks.includes(enhancedPerk)) {
+        const socketIndex = socketIndexByPerkHash[perk];
+        if (
+          socketIndex !== undefined &&
+          item.sockets?.allSockets.some(
+            (s) =>
+              s.socketIndex === socketIndex &&
+              s.plugOptions.some((p) => p.plugDef.hash === enhancedPerk)
+          )
+        ) {
+          roll.commonPrimaryPerks.push(enhancedPerk);
+        }
+      }
+    }
+  }
+
   return Object.values(rollsGroupedByPrimaryPerks);
 }
 
