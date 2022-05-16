@@ -1,6 +1,6 @@
-import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSockets, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
 import {
   armor2PlugCategoryHashesByName,
@@ -60,17 +60,13 @@ interface ModAssignments {
 export function fitMostMods({
   items,
   plannedMods,
-  assumeArmorMasterwork,
-  lockArmorEnergyType,
-  minItemEnergy,
+  armorEnergyRules,
 }: {
   /** a set (i.e. helmet, arms, etc) of items that we are trying to assign mods to */
   items: DimItem[];
   /** mods we are trying to place on the items */
   plannedMods: PluggableInventoryItemDefinition[];
-  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
-  lockArmorEnergyType: LockArmorEnergyType | undefined;
-  minItemEnergy: number;
+  armorEnergyRules: ArmorEnergyRules;
 }): {
   itemModAssignments: {
     [itemInstanceId: string]: PluggableInventoryItemDefinition[];
@@ -134,9 +130,7 @@ export function fitMostMods({
 
     if (targetItem) {
       bucketSpecificAssignments[targetItem.id] = assignBucketSpecificMods({
-        assumeArmorMasterwork,
-        lockArmorEnergyType,
-        minItemEnergy,
+        armorEnergyRules,
         item: targetItem,
         modsToAssign,
       });
@@ -163,9 +157,7 @@ export function fitMostMods({
       buildItemEnergy({
         item,
         assignedMods: bucketSpecificAssignments[item.id].assigned,
-        assumeArmorMasterwork,
-        lockArmorEnergyType,
-        minItemEnergy,
+        armorEnergyRules,
       })
   );
 
@@ -365,15 +357,11 @@ function getArmorSocketsAndMods(
  * fit into, since mods that can fit into fewer sockets must be prioritized.
  */
 export function assignBucketSpecificMods({
-  assumeArmorMasterwork,
-  lockArmorEnergyType,
-  minItemEnergy,
   item,
+  armorEnergyRules,
   modsToAssign,
 }: {
-  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
-  lockArmorEnergyType: LockArmorEnergyType | undefined;
-  minItemEnergy: number;
+  armorEnergyRules: ArmorEnergyRules;
   item: DimItem;
   modsToAssign: PluggableInventoryItemDefinition[];
 }): {
@@ -381,11 +369,11 @@ export function assignBucketSpecificMods({
   unassigned: PluggableInventoryItemDefinition[];
 } {
   // given spending rules, what we can assume this item's energy is
-  let itemEnergyCapacity = calculateAssumedItemEnergy(item, assumeArmorMasterwork, minItemEnergy);
+  let itemEnergyCapacity = calculateAssumedItemEnergy(item, armorEnergyRules);
   // given spending/element rules & current assignments, what element is this armor?
   // NB if the mods have different elements, this returns the first best not-Any type.
   // The others will be rejected below.
-  const itemEnergyType = getItemEnergyType(item, lockArmorEnergyType, modsToAssign);
+  const itemEnergyType = getItemEnergyType(item, armorEnergyRules, modsToAssign);
 
   const { orderedSockets, orderedMods } = getArmorSocketsAndMods(item.sockets, modsToAssign);
 
@@ -723,22 +711,18 @@ function isPlugActive(
 function buildItemEnergy({
   item,
   assignedMods,
-  assumeArmorMasterwork,
-  lockArmorEnergyType,
-  minItemEnergy,
+  armorEnergyRules,
 }: {
   item: DimItem;
   assignedMods: PluggableInventoryItemDefinition[];
-  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
-  lockArmorEnergyType: LockArmorEnergyType | undefined;
-  minItemEnergy: number;
+  armorEnergyRules: ArmorEnergyRules;
 }): ItemEnergy {
   return {
     used: _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0),
     originalCapacity: item.energy?.energyCapacity || 0,
-    derivedCapacity: calculateAssumedItemEnergy(item, assumeArmorMasterwork, minItemEnergy),
+    derivedCapacity: calculateAssumedItemEnergy(item, armorEnergyRules),
     originalType: item.energy?.energyType || DestinyEnergyType.Any,
-    derivedType: getItemEnergyType(item, lockArmorEnergyType, assignedMods),
+    derivedType: getItemEnergyType(item, armorEnergyRules, assignedMods),
   };
 }
 

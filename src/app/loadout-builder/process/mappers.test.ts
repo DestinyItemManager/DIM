@@ -4,7 +4,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import 'cross-fetch/polyfill';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
-import { MIN_LO_ITEM_ENERGY } from '../types';
+import { loDefaultArmorEnergyRules, MIN_LO_ITEM_ENERGY } from '../types';
 import { mapDimItemToProcessItem } from './mappers';
 
 describe('lo process mappers', () => {
@@ -37,8 +37,10 @@ describe('lo process mappers', () => {
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
-      assumeArmorMasterwork: AssumeArmorMasterwork.All,
-      lockArmorEnergyType: undefined,
+      armorEnergyRules: {
+        ...loDefaultArmorEnergyRules,
+        assumeArmorMasterwork: AssumeArmorMasterwork.All,
+      },
       modsForSlot: [perpetuationMod],
     });
 
@@ -49,8 +51,10 @@ describe('lo process mappers', () => {
   test('mapped energy capacity is 10 when assumed masterwork is used', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
-      assumeArmorMasterwork: AssumeArmorMasterwork.All,
-      lockArmorEnergyType: undefined,
+      armorEnergyRules: {
+        ...loDefaultArmorEnergyRules,
+        assumeArmorMasterwork: AssumeArmorMasterwork.All,
+      },
       modsForSlot: [],
     });
 
@@ -64,8 +68,7 @@ describe('lo process mappers', () => {
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
-      assumeArmorMasterwork: undefined,
-      lockArmorEnergyType: undefined,
+      armorEnergyRules: loDefaultArmorEnergyRules,
       modsForSlot: [],
     });
 
@@ -79,8 +82,7 @@ describe('lo process mappers', () => {
     };
     const mappedItem = mapDimItemToProcessItem({
       dimItem: modifiedItem,
-      assumeArmorMasterwork: undefined,
-      lockArmorEnergyType: undefined,
+      armorEnergyRules: loDefaultArmorEnergyRules,
       modsForSlot: [],
     });
 
@@ -90,8 +92,7 @@ describe('lo process mappers', () => {
   test('mapped energy type is Any when energy is not locked', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
-      assumeArmorMasterwork: undefined,
-      lockArmorEnergyType: undefined,
+      armorEnergyRules: loDefaultArmorEnergyRules,
       modsForSlot: [],
     });
 
@@ -101,8 +102,10 @@ describe('lo process mappers', () => {
   test('mapped energy type is the items when energy is locked', () => {
     const mappedItem = mapDimItemToProcessItem({
       dimItem: classItem,
-      assumeArmorMasterwork: undefined,
-      lockArmorEnergyType: LockArmorEnergyType.All,
+      armorEnergyRules: {
+        ...loDefaultArmorEnergyRules,
+        lockArmorEnergyType: LockArmorEnergyType.All,
+      },
       modsForSlot: [],
     });
 

@@ -1,3 +1,5 @@
+import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
+import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import { armorBuckets } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
@@ -87,3 +89,42 @@ export const LOCKED_EXOTIC_ANY_EXOTIC = -2;
  * The minimum armour energy value used in the LO Builder
  */
 export const MIN_LO_ITEM_ENERGY = 7;
+/**
+ * The armor energy rules that Loadout Optimizer uses by default.
+ * Requires a reasonable and inexpensive amount of upgrade materials.
+ */
+export const loDefaultArmorEnergyRules: ArmorEnergyRules = {
+  lockArmorEnergyType: LockArmorEnergyType.None,
+  assumeArmorMasterwork: AssumeArmorMasterwork.None,
+  minItemEnergy: MIN_LO_ITEM_ENERGY,
+};
+/**
+ * The armor energy rules that describe the changes DIM can
+ * make in-game -- none as of now.
+ */
+export const inGameArmorEnergyRules: ArmorEnergyRules = {
+  lockArmorEnergyType: LockArmorEnergyType.All,
+  assumeArmorMasterwork: AssumeArmorMasterwork.None,
+  minItemEnergy: 1,
+};
+
+/**
+ * Rules describing how armor can change energy type and capacity
+ * to accommodate mods and hit optimal stats.
+ */
+export interface ArmorEnergyRules {
+  lockArmorEnergyType: LockArmorEnergyType;
+  assumeArmorMasterwork: AssumeArmorMasterwork;
+  /**
+   * How much energy capacity items have at least.
+   */
+  minItemEnergy: number;
+  /**
+   * Info about other loadouts. This must be specified if `lockArmorEnergyType`
+   * can be `LockArmorEnergyType.OtherLoadouts`.
+   */
+  loadouts?: {
+    loadoutsByItem: LoadoutsByItem;
+    optimizingLoadoutId: string | undefined;
+  };
+}

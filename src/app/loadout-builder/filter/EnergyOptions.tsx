@@ -59,10 +59,12 @@ function RadioButton({ label, tooltip, name, selected, onChange }: Option & { na
 export default function EnergyOptions({
   assumeArmorMasterwork,
   lockArmorEnergyType,
+  optimizingLoadoutName,
   lbDispatch,
 }: {
   assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
   lockArmorEnergyType: LockArmorEnergyType | undefined;
+  optimizingLoadoutName: string | undefined;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const lockEnergyOptions: Option[] = useMemo(
@@ -81,8 +83,16 @@ export default function EnergyOptions({
         },
       },
       {
-        label: t('LoadoutBuilder.Masterworked'),
-        tooltip: t('LoadoutBuilder.LockElementOptions.Masterworked'),
+        label:
+          optimizingLoadoutName !== undefined
+            ? t('LoadoutBuilder.InOtherLoadouts')
+            : t('LoadoutBuilder.InLoadouts'),
+        tooltip:
+          optimizingLoadoutName !== undefined
+            ? t('LoadoutBuilder.LockElementOptions.InOtherLoadouts', {
+                loadoutName: optimizingLoadoutName,
+              })
+            : t('LoadoutBuilder.LockElementOptions.InLoadouts'),
         selected: lockArmorEnergyType === LockArmorEnergyType.Masterworked,
         onChange: () => {
           if (lockArmorEnergyType !== LockArmorEnergyType.Masterworked) {
@@ -107,7 +117,7 @@ export default function EnergyOptions({
         },
       },
     ],
-    [lbDispatch, lockArmorEnergyType]
+    [lbDispatch, lockArmorEnergyType, optimizingLoadoutName]
   );
 
   const assumeMasterworkOptions: Option[] = useMemo(

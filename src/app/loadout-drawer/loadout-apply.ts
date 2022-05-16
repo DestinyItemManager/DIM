@@ -1,4 +1,3 @@
-import { LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
@@ -30,7 +29,7 @@ import {
   getVault,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
-import { LockableBucketHashes } from 'app/loadout-builder/types';
+import { inGameArmorEnergyRules, LockableBucketHashes } from 'app/loadout-builder/types';
 import {
   createPluggingStrategy,
   fitMostMods,
@@ -987,9 +986,7 @@ function applyLoadoutMods(
     const { itemModAssignments, unassignedMods } = fitMostMods({
       items: armor,
       plannedMods: mods,
-      assumeArmorMasterwork: undefined,
-      lockArmorEnergyType: LockArmorEnergyType.All,
-      minItemEnergy: 1,
+      armorEnergyRules: inGameArmorEnergyRules,
     });
 
     for (const mod of unassignedMods) {

@@ -1,5 +1,10 @@
 ## Next
 
+* In Loadout Optimizer, the option to lock Masterworked armor to its current element has been replaced with an option to lock the element on armor equipped in other DIM Loadouts.
+  * The Witch Queen had reduced the cost of changing the element on a fully masterworked armor piece to 10,000-20,000 Glimmer and one Upgrade Module, making it cheaper than changing the element on a not fully masterworked armor piece.
+  * Selecting this option means Loadout Optimizer will suggest changes to armor elements as needed but avoid breaking other Loadouts where mod assignments rely on particular elements.
+  * Clicking the "Optimize Armor" button in a Loadout to open Loadout Optimizer excludes this Loadout from consideration because you're actually looking to make changes to this Loadout.
+
 ## 7.17.0 <span class="changelog-date">(2022-05-15)</span>
 
 * Fixed Organizer not showing some legendary armor intrinsic perks.
@@ -9,7 +14,6 @@
 * Popups and tooltips are a bit snappier.
 * The close button in the Armory view (click an item's title) no longer overlaps the scrollbar.
 * Inventory size stat no longer shows on any item - it used to show on Bows only.
-
 
 ## 7.16.1 <span class="changelog-date">(2022-05-09)</span>
 

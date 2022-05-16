@@ -1,8 +1,4 @@
-import {
-  AssumeArmorMasterwork,
-  LoadoutParameters,
-  LockArmorEnergyType,
-} from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -20,7 +16,7 @@ import React, {
 } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet, PinnedItems } from '../types';
+import { ArmorEnergyRules, ArmorSet, PinnedItems } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
@@ -80,8 +76,7 @@ interface Props {
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
-  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
-  lockArmorEnergyType: LockArmorEnergyType | undefined;
+  armorEnergyRules: ArmorEnergyRules;
   notes?: string;
 }
 
@@ -100,8 +95,7 @@ export default memo(function GeneratedSets({
   lbDispatch,
   params,
   halfTierMods,
-  assumeArmorMasterwork,
-  lockArmorEnergyType,
+  armorEnergyRules,
   notes,
 }: Props) {
   const windowScroller = useRef<WindowScroller>(null);
@@ -160,8 +154,7 @@ export default memo(function GeneratedSets({
           loadouts={loadouts}
           params={params}
           halfTierMods={halfTierMods}
-          assumeArmorMasterwork={assumeArmorMasterwork}
-          lockArmorEnergyType={lockArmorEnergyType}
+          armorEnergyRules={armorEnergyRules}
           notes={notes}
         />
       ) : sets.length > 0 ? (
@@ -191,8 +184,7 @@ export default memo(function GeneratedSets({
                   loadouts={loadouts}
                   params={params}
                   halfTierMods={halfTierMods}
-                  assumeArmorMasterwork={assumeArmorMasterwork}
-                  lockArmorEnergyType={lockArmorEnergyType}
+                  armorEnergyRules={armorEnergyRules}
                   notes={notes}
                 />
               )}

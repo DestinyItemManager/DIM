@@ -1,6 +1,6 @@
-import { LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
@@ -102,14 +102,14 @@ export function createGetModRenderKey() {
  */
 export function getItemEnergyType(
   item: DimItem,
-  lockArmorEnergyType: LockArmorEnergyType | undefined,
+  armorEnergyRules: ArmorEnergyRules,
   bucketSpecificMods?: PluggableInventoryItemDefinition[]
 ) {
   if (!item.energy) {
     return DestinyEnergyType.Any;
   }
 
-  if (isArmorEnergyLocked(item, lockArmorEnergyType)) {
+  if (isArmorEnergyLocked(item, armorEnergyRules)) {
     return item.energy.energyType;
   } else {
     const bucketSpecificModType = bucketSpecificMods?.find(

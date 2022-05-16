@@ -1,3 +1,4 @@
+import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import 'cross-fetch/polyfill';
@@ -19,6 +20,7 @@ import {
 } from './process-worker/process-utils';
 import { ProcessItem, ProcessMod } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
+import { MIN_LO_ITEM_ENERGY } from './types';
 
 function modifyMod({
   mod,
@@ -90,6 +92,12 @@ describe('process-utils', () => {
   let combatMods: ProcessMod[];
   let activityMods: ProcessMod[];
 
+  const armorEnergyRules = {
+    assumeArmorMasterwork: AssumeArmorMasterwork.None,
+    lockArmorEnergyType: LockArmorEnergyType.All,
+    minItemEnergy: MIN_LO_ITEM_ENERGY,
+  };
+
   beforeAll(async () => {
     const [defs, stores] = await Promise.all([getTestDefinitions(), getTestStores()]);
     for (const store of stores) {
@@ -97,36 +105,31 @@ describe('process-utils', () => {
         if (!helmet && isArmor2Helmet(storeItem)) {
           helmet = mapDimItemToProcessItem({
             dimItem: storeItem,
-            assumeArmorMasterwork: undefined,
-            lockArmorEnergyType: undefined,
+            armorEnergyRules,
           });
         }
         if (!arms && isArmor2Arms(storeItem)) {
           arms = mapDimItemToProcessItem({
             dimItem: storeItem,
-            assumeArmorMasterwork: undefined,
-            lockArmorEnergyType: undefined,
+            armorEnergyRules,
           });
         }
         if (!chest && isArmor2Chest(storeItem)) {
           chest = mapDimItemToProcessItem({
             dimItem: storeItem,
-            assumeArmorMasterwork: undefined,
-            lockArmorEnergyType: undefined,
+            armorEnergyRules,
           });
         }
         if (!legs && isArmor2Legs(storeItem)) {
           legs = mapDimItemToProcessItem({
             dimItem: storeItem,
-            assumeArmorMasterwork: undefined,
-            lockArmorEnergyType: undefined,
+            armorEnergyRules,
           });
         }
         if (!classItem && isArmor2ClassItem(storeItem)) {
           classItem = mapDimItemToProcessItem({
             dimItem: storeItem,
-            assumeArmorMasterwork: undefined,
-            lockArmorEnergyType: undefined,
+            armorEnergyRules,
           });
         }
 

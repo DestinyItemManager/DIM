@@ -12,7 +12,11 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import {
+  LoadoutsByItem,
+  loadoutsByItemSelector,
+  loadoutsSelector,
+} from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
@@ -49,7 +53,13 @@ import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
 import { useProcess } from './process/useProcess';
-import { generalSocketReusablePlugSetHash, ItemsByBucket, LOCKED_EXOTIC_ANY_EXOTIC } from './types';
+import {
+  ArmorEnergyRules,
+  generalSocketReusablePlugSetHash,
+  ItemsByBucket,
+  LOCKED_EXOTIC_ANY_EXOTIC,
+  loDefaultArmorEnergyRules,
+} from './types';
 
 interface ProvidedProps {
   stores: DimStore[];
@@ -65,6 +75,7 @@ interface StoreProps {
     [classType: number]: ItemsByBucket;
   }>;
   loadouts: Loadout[];
+  loadoutsByItem: LoadoutsByItem;
   searchFilter: ItemFilter;
   searchQuery: string;
   halfTierMods: PluggableInventoryItemDefinition[];
@@ -149,6 +160,7 @@ function mapStateToProps() {
   return (state: RootState): StoreProps => ({
     items: itemsSelector(state),
     loadouts: loadoutsSelector(state),
+    loadoutsByItem: loadoutsByItemSelector(state),
     searchFilter: searchFilterSelector(state),
     searchQuery: querySelector(state),
     halfTierMods: halfTierModsSelector(state),
@@ -163,6 +175,7 @@ function LoadoutBuilder({
   stores,
   items,
   loadouts,
+  loadoutsByItem,
   searchFilter,
   preloadedLoadout,
   initialClassType,
@@ -244,31 +257,44 @@ function LoadoutBuilder({
     return equippedLoadout ? [...classLoadouts, equippedLoadout] : classLoadouts;
   }, [loadouts, selectedStore]);
 
-  const filteredItems = useMemo(
-    () =>
-      filterItems({
-        defs,
-        items: characterItems,
-        pinnedItems,
-        excludedItems,
-        lockedMods,
-        lockedExoticHash,
-        lockArmorEnergyType: loadoutParameters.lockArmorEnergyType,
-        assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork,
-        searchFilter,
-      }),
-    [
+  const [armorEnergyRules, filteredItems] = useMemo(() => {
+    const armorEnergyRules: ArmorEnergyRules = {
+      ...loDefaultArmorEnergyRules,
+      loadouts: {
+        loadoutsByItem,
+        optimizingLoadoutId: preloadedLoadout?.id,
+      },
+    };
+    if (loadoutParameters.lockArmorEnergyType !== undefined) {
+      armorEnergyRules.lockArmorEnergyType = loadoutParameters.lockArmorEnergyType;
+    }
+    if (loadoutParameters.assumeArmorMasterwork !== undefined) {
+      armorEnergyRules.assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
+    }
+    const items = filterItems({
       defs,
-      characterItems,
+      items: characterItems,
       pinnedItems,
       excludedItems,
       lockedMods,
       lockedExoticHash,
-      loadoutParameters.lockArmorEnergyType,
-      loadoutParameters.assumeArmorMasterwork,
+      armorEnergyRules,
       searchFilter,
-    ]
-  );
+    });
+    return [armorEnergyRules, items];
+  }, [
+    loadoutParameters.lockArmorEnergyType,
+    loadoutParameters.assumeArmorMasterwork,
+    loadoutsByItem,
+    preloadedLoadout?.id,
+    defs,
+    characterItems,
+    pinnedItems,
+    excludedItems,
+    lockedMods,
+    lockedExoticHash,
+    searchFilter,
+  ]);
 
   const { result, processing, remainingTime } = useProcess({
     defs,
@@ -276,8 +302,7 @@ function LoadoutBuilder({
     filteredItems,
     lockedMods,
     subclass,
-    assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork,
-    lockArmorEnergyType: loadoutParameters.lockArmorEnergyType,
+    armorEnergyRules,
     statOrder,
     statFilters,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
@@ -346,6 +371,7 @@ function LoadoutBuilder({
       <EnergyOptions
         assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
         lockArmorEnergyType={loadoutParameters.lockArmorEnergyType}
+        optimizingLoadoutName={preloadedLoadout?.name}
         lbDispatch={lbDispatch}
       />
       <LockArmorAndPerks
@@ -464,8 +490,7 @@ function LoadoutBuilder({
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
-            assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
-            lockArmorEnergyType={loadoutParameters.lockArmorEnergyType}
+            armorEnergyRules={armorEnergyRules}
             notes={notes}
           />
         )}

@@ -1,4 +1,3 @@
-import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { assignBucketSpecificMods } from 'app/loadout/mod-assignment-utils';
@@ -7,12 +6,12 @@ import { ItemFilter } from 'app/search/filter-types';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import {
+  ArmorEnergyRules,
   ExcludedItems,
   ItemsByBucket,
   LockableBucketHash,
   LockableBucketHashes,
   LOCKED_EXOTIC_NO_EXOTIC,
-  MIN_LO_ITEM_ENERGY,
   PinnedItems,
 } from './types';
 
@@ -26,8 +25,7 @@ export function filterItems({
   excludedItems,
   lockedMods,
   lockedExoticHash,
-  lockArmorEnergyType,
-  assumeArmorMasterwork,
+  armorEnergyRules,
   searchFilter,
 }: {
   defs: D2ManifestDefinitions | undefined;
@@ -36,8 +34,7 @@ export function filterItems({
   excludedItems: ExcludedItems;
   lockedMods: PluggableInventoryItemDefinition[];
   lockedExoticHash: number | undefined;
-  lockArmorEnergyType: LockArmorEnergyType | undefined;
-  assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
+  armorEnergyRules: ArmorEnergyRules;
   searchFilter: ItemFilter;
 }): ItemsByBucket {
   const filteredItems: {
@@ -87,10 +84,8 @@ export function filterItems({
         (item) =>
           !excludedItems[bucket]?.some((excluded) => item.id === excluded.id) &&
           assignBucketSpecificMods({
-            assumeArmorMasterwork,
-            lockArmorEnergyType,
-            minItemEnergy: MIN_LO_ITEM_ENERGY,
             item,
+            armorEnergyRules,
             modsToAssign: lockedModsForPlugCategoryHash,
           }).unassigned.length === 0
       );
