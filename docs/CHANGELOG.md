@@ -1,5 +1,7 @@
 ## Next
 
+## 7.17.0 <span class="changelog-date">(2022-05-15)</span>
+
 * Fixed Organizer not showing some legendary armor intrinsic perks.
 * Fixed a glitch in Loadout Optimizer where legendary armor intrinsic perks could be clicked to lock that piece as an exotic.
 * Fixed double zeroes on armor in Compare.
