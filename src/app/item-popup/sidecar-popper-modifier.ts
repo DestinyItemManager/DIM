@@ -28,14 +28,16 @@ function positionMenu({ state }: ModifierArguments<Options>) {
   );
 
   // Originally this used translateY, but that caused menus to not work on Safari.
-  state.styles.sidecar = Object.assign({}, state.styles.sidecar, {
+  state.styles.sidecar = {
+    ...state.styles.sidecar,
     marginTop: `${Math.round(top)}px`,
-  });
+  };
 }
 
 // Get the sidecar menu element for use later
 function setupMenu({ state, options }: ModifierArguments<Options>) {
   let sidecarElement = options.element;
+  state.styles.sidecar = {}; // prevent an error later when applyStyles removes the style
 
   // Find menu element
   if (!sidecarElement) {
