@@ -194,7 +194,7 @@ export function itemMoveLoadout(items: DimItem[], store: DimStore): Loadout {
 
   const itemsByType = _.mapValues(
     _.groupBy(items, (i) => i.bucket.hash),
-    (items) => limitToBucketSize(items, store.isVault)
+    (items) => limitToBucketSize(items, store)
   );
 
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
@@ -205,22 +205,32 @@ export function itemMoveLoadout(items: DimItem[], store: DimStore): Loadout {
   return newLoadout(t('Loadouts.FilteredItems'), finalItems);
 }
 
-function limitToBucketSize(items: DimItem[], isVault: boolean) {
+function limitToBucketSize(items: DimItem[], store: DimStore) {
   if (!items.length) {
     return [];
   }
   const item = items[0];
-
-  if (!item.bucket) {
-    return isVault ? items : _.take(items, 9);
-  }
+  const isVault = store.isVault;
   const bucket = isVault ? item.bucket.vaultBucket : item.bucket;
 
   if (!bucket) {
     return isVault ? items : _.take(items, 9);
   }
+
+  const [alreadyEquipped, otherItems] = _.partition(
+    items,
+    (item) => item.equipped && item.owner === store.id
+  );
+
   // TODO: this doesn't take into account stacks that need to split
-  return _.take(items, bucket.capacity - (item.equipment ? 1 : 0));
+  return _.take(
+    // move the ones that are already there to the front
+    [...alreadyEquipped, ...otherItems],
+    // If a matching item is already equipped we can take 10, otherwise we have
+    // to subtract one for the equipped item because we don't want to displace
+    // it
+    bucket.capacity - (item.equipment && !alreadyEquipped.length ? 1 : 0)
+  );
 }
 
 // Add up stackable items so we don't have duplicates. This helps us actually move them, see
