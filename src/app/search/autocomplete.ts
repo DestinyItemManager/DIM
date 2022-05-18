@@ -1,6 +1,7 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { SearchConfig } from './search-config';
@@ -90,10 +91,7 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
     // mix them together
     return [
       ..._.take(
-        _.uniqBy(
-          _.compact([queryItem, ...filterSuggestions, ...recentSearchItems]),
-          (i) => i.query
-        ),
+        uniqBy(_.compact([queryItem, ...filterSuggestions, ...recentSearchItems]), (i) => i.query),
         7
       ),
       helpItem,

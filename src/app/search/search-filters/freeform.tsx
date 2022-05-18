@@ -40,7 +40,7 @@ const getPerkNamesFromManifest = _.once(
         return i.displayProperties.name && pch && interestingPlugTypes.has(pch);
       })
       .map((i) => i.displayProperties.name.toLowerCase());
-    return Array.from(new Set(perkNames));
+    return [...new Set(perkNames)];
   }
 );
 
@@ -67,7 +67,7 @@ const getUniqueItemNamesFromManifest = _.once(
         return !powerCap || !irrelevantPowerCaps.has(powerCap);
       })
       .map((i) => i.displayProperties.name.toLowerCase());
-    return Array.from(new Set(itemNames));
+    return [...new Set(itemNames)];
   }
 );
 

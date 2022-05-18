@@ -1,5 +1,6 @@
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { uniqBy } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D1Item } from '../../inventory/item-types';
@@ -200,7 +201,7 @@ export function getBestArmor(
     }
 
     bestCombs = [];
-    _.uniqBy(best, (o) => o.item.index).forEach((obj) => {
+    uniqBy(best, (o) => o.item.index).forEach((obj) => {
       obj.bonusType = getBonusType(obj.item);
       if (obj.bonusType === '') {
         bestCombs.push({ item: obj.item, bonusType: '' });

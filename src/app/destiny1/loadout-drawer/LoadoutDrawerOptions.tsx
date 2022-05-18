@@ -8,9 +8,9 @@ import {
   setNotes,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { uniqBy } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -20,7 +20,7 @@ const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
   const classTypeValues: {
     label: string;
     value: DestinyClass;
-  }[] = _.uniqBy(
+  }[] = uniqBy(
     stores.filter((s) => !s.isVault),
     (store) => store.classType
   ).map((store) => ({ label: store.className, value: store.classType }));

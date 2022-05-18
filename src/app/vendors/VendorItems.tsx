@@ -2,6 +2,7 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
+import { uniqBy } from 'app/utils/util';
 import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import React from 'react';
@@ -97,7 +98,7 @@ export default function VendorItems({
 
   // add in faction tokens if this vendor has them
   if (!filtering && faction?.tokenValues) {
-    currencies = _.uniqBy(
+    currencies = uniqBy(
       [
         ...Object.keys(faction.tokenValues)
           .map((h) => defs.InventoryItem.get(parseInt(h, 10)))
@@ -110,7 +111,7 @@ export default function VendorItems({
 
   // add all traded planetmats if this vendor is the spider
   if (vendor?.component?.vendorHash === VENDORS.RAHOOL) {
-    currencies = _.uniqBy(
+    currencies = uniqBy(
       [...rahoolMats.map((h) => defs.InventoryItem.get(h)), ...currencies],
       (i) => i.hash
     );

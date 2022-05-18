@@ -104,7 +104,7 @@ export function consolidateRollsForOneWeapon(
         const rollsWithSameSecondaryPerks = rollsGroupedBySecondaryStuff[secondaryPerkKey];
 
         const commonPrimaryPerks = _.sortBy(
-          _.uniq(rollsWithSameSecondaryPerks.flatMap((r) => r.primaryPerksList)),
+          [...new Set(rollsWithSameSecondaryPerks.flatMap((r) => r.primaryPerksList))],
           (h) => socketIndexByPerkHash[h]
         );
 
@@ -195,8 +195,8 @@ function isMajorPerk(item?: DestinyInventoryItemDefinition) {
 // ]
 export function consolidateSecondaryPerks(initialRolls: Roll[]) {
   // these are legit socketIndices according the item def. this might be like, [3, 4]
-  const allSecondarySocketIndices = _.uniq(
-    initialRolls.flatMap((r) => r.secondarySocketIndices)
+  const allSecondarySocketIndices = Array.from(
+    new Set(initialRolls.flatMap((r) => r.secondarySocketIndices))
   ).sort((a, b) => a - b);
 
   // newClusteredRolls collapses perks into an array with no blank spaces,
@@ -284,7 +284,7 @@ function combineColumns(
     key: string;
   }[]
 ) {
-  const perks = _.uniq(columns.flatMap((c) => c.perks)).sort();
+  const perks = [...new Set(columns.flatMap((c) => c.perks))].sort();
 
   return {
     perks,

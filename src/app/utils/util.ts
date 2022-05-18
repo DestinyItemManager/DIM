@@ -117,3 +117,19 @@ export const wrap = (index: number, length: number) => {
   }
   return index;
 };
+
+/**
+ * A faster replacement for _.uniqBy that uses a Set internally
+ */
+export function uniqBy<T, K>(data: Iterable<T>, iteratee: (input: T) => K): T[] {
+  const dedupe = new Set<K>();
+  const result: T[] = [];
+  for (const d of data) {
+    const mapped = iteratee(d);
+    if (!dedupe.has(mapped)) {
+      result.push(d);
+      dedupe.add(mapped);
+    }
+  }
+  return result;
+}

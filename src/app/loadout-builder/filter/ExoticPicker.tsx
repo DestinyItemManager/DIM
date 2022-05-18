@@ -10,6 +10,7 @@ import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { SearchInput } from 'app/search/SearchInput';
 import { compareBy } from 'app/utils/comparators';
 import { socketContainsPlugWithCategory } from 'app/utils/socket-utils';
+import { uniqBy } from 'app/utils/util';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import anyExoticIcon from 'images/anyExotic.svg';
@@ -43,7 +44,7 @@ function findLockableExotics(
   const orderedExotics = _.sortBy(exotics, (item) =>
     LockableBucketHashes.indexOf(item.bucket.hash)
   );
-  const uniqueExotics = _.uniqBy(orderedExotics, (item) => item.hash);
+  const uniqueExotics = uniqBy(orderedExotics, (item) => item.hash);
 
   // Add in armor 1 exotics that don't have an armor 2 version
   const exoticArmorWithoutEnergy = allItems.filter(

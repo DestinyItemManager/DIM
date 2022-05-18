@@ -1,6 +1,5 @@
 import { GlobalAlert } from 'bungie-api-ts/core';
 import { deepEqual } from 'fast-equals';
-import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import { isPhonePortraitFromMediaQuery } from '../utils/media-queries';
@@ -90,7 +89,7 @@ export const shell: Reducer<ShellState, ShellAction> = (
     case getType(actions.loadingStart): {
       return {
         ...state,
-        loadingMessages: _.uniq([...state.loadingMessages, action.payload]),
+        loadingMessages: [...new Set([...state.loadingMessages, action.payload])],
       };
     }
 

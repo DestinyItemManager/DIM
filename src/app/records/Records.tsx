@@ -91,7 +91,7 @@ export default function Records({ account }: Props) {
     : [];
 
   // We put the hashes we know about from profile first
-  const nodeHashes = _.uniq([...profileHashes, ...otherHashes]);
+  const nodeHashes = [...new Set([...profileHashes, ...otherHashes])];
 
   const menuItems = [
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
