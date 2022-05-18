@@ -1245,7 +1245,7 @@
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from across the Destiny community. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}",
-    "CopyLine": "Copy Wish List Roll",
+    "CopyLine": "Copy Selected Perks as Wish List Roll",
     "CopiedLine": "Wish List roll copied to clipboard"
   }
 }

@@ -1118,7 +1118,7 @@
     "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "Clear Wish List",
     "CopiedLine": "Wish List roll copied to clipboard",
-    "CopyLine": "Copy Wish List Roll",
+    "CopyLine": "Copy Selected Perks as Wish List Roll",
     "ExternalSource": "Optionally, supply the URL(s) for a wish list (pipe | separated)",
     "Header": "Wish List",
     "Import": "Load Wish List Rolls",
