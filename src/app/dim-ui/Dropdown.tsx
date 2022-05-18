@@ -55,10 +55,19 @@ export default function Dropdown({
   fixed,
   placement = kebab ? 'bottom-end' : 'bottom-start',
 }: Props) {
-  const { isOpen, getToggleButtonProps, getMenuProps, highlightedIndex, getItemProps } = useSelect({
-    items,
-    itemToString: (i) => i?.key || 'none',
-  });
+  const { isOpen, getToggleButtonProps, getMenuProps, highlightedIndex, getItemProps, reset } =
+    useSelect({
+      items,
+      itemToString: (i) => i?.key || 'none',
+      circularNavigation: true,
+      onSelectedItemChange: ({ selectedItem }) => {
+        if (selectedItem && isDropdownOption(selectedItem) && !selectedItem.disabled) {
+          selectedItem.onSelected();
+        }
+        // Unselect to reset the state
+        reset();
+      },
+    });
 
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLElement>(null);
@@ -75,9 +84,8 @@ export default function Dropdown({
     <div className={className}>
       <button
         type="button"
-        {...getToggleButtonProps({ ref: buttonRef })}
+        {...getToggleButtonProps({ ref: buttonRef, disabled })}
         className={kebab ? styles.kebabButton : styles.button}
-        disabled={disabled}
       >
         {kebab ? (
           <AppIcon icon={kebabIcon} />
@@ -91,7 +99,15 @@ export default function Dropdown({
         {isOpen &&
           items.map((item, index) =>
             !isDropdownOption(item) ? (
-              <div key={item.key} className={styles.separator} />
+              <div
+                key={item.key}
+                className={styles.separator}
+                {...getItemProps({
+                  item,
+                  index,
+                  disabled: true,
+                })}
+              />
             ) : (
               <div
                 className={clsx(styles.menuItem, {
@@ -102,11 +118,7 @@ export default function Dropdown({
                 {...getItemProps({
                   item,
                   index,
-                  onClick: !item.disabled
-                    ? item.onSelected
-                    : (e: any) => {
-                        e.nativeEvent.preventDownshiftDefault = true;
-                      },
+                  disabled: item.disabled,
                 })}
               >
                 {item.content}

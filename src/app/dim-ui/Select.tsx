@@ -114,26 +114,22 @@ export default function Select<T>({
 
   return (
     <div className={className}>
-      {children ? (
-        <button
-          type="button"
-          style={buttonStyle}
-          {...getToggleButtonProps({ ref: buttonRef })}
-          disabled={disabled}
-        >
-          {children}
-        </button>
-      ) : (
-        <button
-          type="button"
-          {...getToggleButtonProps({ ref: buttonRef })}
-          className={styles.button}
-          disabled={disabled}
-        >
-          {selectedItem.content}{' '}
-          <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} className={styles.arrow} />
-        </button>
-      )}
+      <button
+        type="button"
+        style={buttonStyle}
+        className={children ? undefined : styles.button}
+        {...getToggleButtonProps({
+          ref: buttonRef,
+          disabled,
+        })}
+      >
+        {children ?? (
+          <>
+            {selectedItem.content}{' '}
+            <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} className={styles.arrow} />
+          </>
+        )}
+      </button>
       <div
         {...getMenuProps({ ref: menuRef })}
         className={clsx(styles.menu, { [styles.open]: isOpen })}
@@ -146,16 +142,13 @@ export default function Select<T>({
                   <div
                     className={clsx(styles.menuItem, {
                       [styles.highlighted]: highlightedIndex === index,
-                      highlighted: highlightedIndex === index,
                       [styles.disabled]: item.disabled,
                     })}
                     key={item.key}
                     {...getItemProps({
                       item,
                       index,
-                      onClick: (e: any) => {
-                        e.nativeEvent.preventDownshiftDefault = item.disabled;
-                      },
+                      disabled: item.disabled,
                     })}
                   >
                     {item.content}
