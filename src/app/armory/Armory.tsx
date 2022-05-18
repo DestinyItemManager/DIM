@@ -34,6 +34,7 @@ import { useSelector } from 'react-redux';
 import AllWishlistRolls from './AllWishlistRolls';
 import styles from './Armory.m.scss';
 import Links from './Links';
+import WishListEntry from './WishListEntry';
 
 export default function Armory({
   itemHash,
@@ -222,6 +223,9 @@ export default function Armory({
           )}
         </>
       )}
+
+      <WishListEntry item={item} />
+
       {storeItems.length > 0 && (
         <>
           <h2>

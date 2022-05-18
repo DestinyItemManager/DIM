@@ -94,9 +94,9 @@ function buildSocketParam(item: DimItem): string {
   const perkValues: number[] = [];
 
   if (item.sockets) {
-    item.sockets.allSockets.forEach((socket) => {
+    for (const socket of item.sockets.allSockets) {
       perkValues[socket.socketIndex] = socket.plugged?.plugDef.hash ?? 0;
-    });
+    }
   }
 
   // Fill in those empty array elements

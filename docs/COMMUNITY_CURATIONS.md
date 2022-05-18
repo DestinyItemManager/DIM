@@ -3,9 +3,11 @@ Community Curations (Wish Lists)
 
 If you've ever wanted to have DIM automatically look for specific drops (or share your list of ideal drops with other folks), this will let you do just that.
 
-To build a list of your own, go to [Destiny Tracker's items DB](https://destinytracker.com/destiny-2/db/items/weapon) - it lets you look for items and select the perks that you're looking for. Once you find an item that you like, copy the URL that it generates into a text file. Keep looking and finding those items that you're hunting for and paste them into that file, separating each with a new line.
 
-If there's a few rolls of that Better Devils that you've got your eye on, feel free to put bunches of them in your file. We'll match the first of them that we can find. If you want one Better Devils roll for PvE and another for PvP, put one in a file for PvE items and the other in a file for PvP items and load them one at a time.
+You can use https://wishlists.littlelight.club/ to create a wish list, or you can build it from a text file
+To build a list of your own, go to [Little Light's Wishlist Manager](https://wishlists.littlelight.club/) - it lets you look for items and select the perks that you're looking for.
+
+If there's a few rolls of that Better Devils that you've got your eye on, feel free to put bunches of them in your file. We'll match the first of them that we can find. If you want one Better Devils roll for PvE and another for PvP, put one in a file for PvE items and the other in a file for PvP items and load them one at a time. Don't worry about Enhanced perks - select the regular version and Enhanced versions will be matched too.
 
 Once you've got your list put together, load it up (in the rating/review menu) and look for the green thumbs (or search with `is:wishlist`). If you click on the item, it will tell you what perks the curator picked out.
 
@@ -17,13 +19,13 @@ If you want to hit the ground running, you can find a collection of breakdowns f
 
 ## Keeping up-to-date with premade lists
 
-If you want to DIM to use a premade list and have it subscribe to any updates made to it, you can do that through the settings menu. I'm biased, and recommend using `https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt` - you can bring your own, but it needs to be hosted on GitHub, otherwise DIM will refuse to load it (we don't trust just any host).
+If you want to DIM to use a premade list and have it subscribe to any updates made to it, you can do that through the settings menu. The wish list will automatically update within 24 hours of the source updating. I'm biased, and recommend using `https://raw.githubusercontent.com/48klocs/dim-wish-list-sources/master/voltron.txt` - you can bring your own, but it needs to be hosted on GitHub, otherwise DIM will refuse to load it (we don't trust just any host).
 
 If you choose to use an external source, that selection will override any file list you may have chosen to use (and vice versa). Clicking "clear wish lists" will clear both the file and external source.
 
-## Linking To Destiny Tracker's items database from DIM
+## Creating your own wish list manually
 
-If you have a roll in your inventory that you'd like to add to your wish list to share, you can do it from inside of DIM. Find your item, make sure you have the perks you think are important selected (this is important!) and click the name of the item in the title bar of the item's pop-up. It'll bring you to Destiny Tracker's items database. You can double-check if you want, change the perks (for the roll you wish you had), or just copy and paste it into your file.
+Wish lists are just a text file. You can create your own by adding a single roll at a time, one by one, in a file. Each roll goes on its own line. If you have a roll in your inventory that you'd like to add to your wish list to share, you can do it from inside of DIM. Find your item, and click the name of the item to bring up the Armory view. Configure all the perks the way you want, then copy the wish list line from the text box below the perks.
 
 ## Title and Description
 You can optionally add a title and/or description to your wish lists. For title, add a line that looks like...
@@ -48,11 +50,9 @@ If you want to add searchable notes, end the line with `#notes:Here are some not
 
 You can add notes to a block of rolls. To open block notes, enter a line that looks like `//notes:These are notes that will apply to everything that immediately follows.` The notes (everything after the colon) will apply to everything that follows them. The first line that isn't recognized as a valid item (or a new block note) closes the block notes. If block notes are open and an individual item has notes on it, the item's notes will be used instead of the block notes.
 
-## "Expert Mode"
+## Constructing wish list rolls
 
-**Please note: you're largely on your own with this option. It's called expert mode for a reason, people.**
-
-If you're feeling particularly saucy, I've added an "expert mode" line format. You can put add lines with this alternate format in file with banshee-44 links and comments and it'll all be read together. The format looks like...
+A wish list roll line looks like this:
 
 `dimwishlist:item=1234&perks=456,567`
 
@@ -64,7 +64,7 @@ Do not expect it to be flexible with casing or naming (it's not).
 
 `item`'s value is expected to be the manifest hash for the item, `perks` are one or more perk hashes, separated by commas.
 
-To find these hashes, use the mighty [Destiny Sets Data Explorer](https://data.destinysets.com/). You can search for items, perks and other things by typing their name in the search bar. Focus on things named "Inventory Item" when picking them out. The sandbox perk and collectible versions of perks won't be found in your inventory.
+To find these hashes, use the mighty [Destiny Sets Data Explorer](https://data.destinysets.com/). You can search for items, perks and other things by typing their name in the search bar. Focus on things named "Inventory Item" when picking them out. The sandbox perk and collectible versions of perks won't be found in your inventory. Don't worry about Enhanced perks - select the regular version and Enhanced versions will be matched in your wishlist automatically.
 
 Once you look up an item that you want to keep an eye out for, copy its hash (the number to the right of the name). That becomes the value for `item`.
 
