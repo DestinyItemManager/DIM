@@ -32,26 +32,31 @@ export const plainString = (s: string, language: string): string =>
   latinize(s, language).toLowerCase();
 
 const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);
-const getPerkNamesFromManifest = _.once((allItems: DestinyInventoryItemDefinition[]) => {
-  const perkNames = allItems
-    .filter((i) => {
-      const pch = i.plug?.plugCategoryHash;
-      return i.displayProperties.name && pch && interestingPlugTypes.has(pch);
-    })
-    .map((i) => i.displayProperties.name);
-  return _.uniq(perkNames);
-});
+const getPerkNamesFromManifest = _.once(
+  (allItems: { [hash: number]: DestinyInventoryItemDefinition }) => {
+    const perkNames = Object.values(allItems)
+      .filter((i) => {
+        const pch = i.plug?.plugCategoryHash;
+        return i.displayProperties.name && pch && interestingPlugTypes.has(pch);
+      })
+      .map((i) => i.displayProperties.name.toLowerCase());
+    return Array.from(new Set(perkNames));
+  }
+);
 
 // things that are sunset            1010        1060        1060        1260
 const irrelevantPowerCaps = new Set([2471437758, 1862490583, 1862490584, 1862490585]);
 
 const getUniqueItemNamesFromManifest = _.once(
-  (allManifestItems: DestinyInventoryItemDefinition[]) => {
-    const itemNames = allManifestItems
+  (allManifestItems: { [hash: number]: DestinyInventoryItemDefinition }) => {
+    const itemNames = Object.values(allManifestItems)
       .filter((i) => {
+        if (!i.itemCategoryHashes) {
+          return false;
+        }
         const isWeaponOrArmor =
-          i.itemCategoryHashes?.includes(ItemCategoryHashes.Weapon) ||
-          i.itemCategoryHashes?.includes(ItemCategoryHashes.Armor);
+          i.itemCategoryHashes.includes(ItemCategoryHashes.Weapon) ||
+          i.itemCategoryHashes.includes(ItemCategoryHashes.Armor);
         if (!i.displayProperties.name || !isWeaponOrArmor) {
           return false;
         }
@@ -61,8 +66,8 @@ const getUniqueItemNamesFromManifest = _.once(
         // (user's owned items will be included regardless)
         return !powerCap || !irrelevantPowerCaps.has(powerCap);
       })
-      .map((i) => i.displayProperties.name);
-    return _.uniq(itemNames);
+      .map((i) => i.displayProperties.name.toLowerCase());
+    return Array.from(new Set(itemNames));
   }
 );
 
@@ -70,19 +75,16 @@ const nameFilter: FilterDefinition = {
   keywords: 'name',
   description: tl('Filter.PartialMatch'),
   format: 'freeform',
-  // could we do this with a for loop faster,
-  // with wayyyyy more lines of code?? absolutely
   suggestionsGenerator: ({ d2Manifest, allItems }) => {
     if (d2Manifest && allItems) {
       const myItemNames = allItems
         .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
-        .map((i) => i.name);
+        .map((i) => i.name.toLowerCase());
       // favor items we actually own
-      const allItemNames = getUniqueItemNamesFromManifest(
-        Object.values(d2Manifest.InventoryItem.getAll())
-      );
-      return _.uniq([...myItemNames, ...allItemNames]).map(
-        (s) => `name:${quoteFilterString(s.toLowerCase())}`
+      const allItemNames = getUniqueItemNamesFromManifest(d2Manifest.InventoryItem.getAll());
+      return Array.from(
+        new Set([...myItemNames, ...allItemNames]),
+        (s) => `name:${quoteFilterString(s)}`
       );
     }
   },
@@ -123,14 +125,10 @@ const freeformFilters: FilterDefinition[] = [
     format: 'freeform',
     filter: ({ filterValue, language }) => {
       const startWord = startWordRegexp(plainString(filterValue, language), language);
-      return (item) => {
-        // TODO: this definitely does too many array allocations to be performant
-        const strings = [
-          ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
-          ...getStringsFromAllSockets(item),
-        ];
-        return strings.some((s) => startWord.test(plainString(s, language)));
-      };
+      const test = (s: string) => startWord.test(plainString(s, language));
+      return (item) =>
+        (item.talentGrid && testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes)) ||
+        (item.sockets && testStringsFromAllSockets(test, item));
     },
   },
   {
@@ -142,26 +140,23 @@ const freeformFilters: FilterDefinition[] = [
         const myPerks = allItems
           .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
           .flatMap((i) => i.sockets?.allSockets.filter((s) => s.plugged && s.isPerk) ?? []);
-        const myPerkNames = myPerks.map((s) => s.plugged!.plugDef.displayProperties.name);
-        const allPerkNames = getPerkNamesFromManifest(
-          Object.values(d2Manifest.InventoryItem.getAll())
+        const myPerkNames = myPerks.map((s) =>
+          s.plugged!.plugDef.displayProperties.name.toLowerCase()
         );
+        const allPerkNames = getPerkNamesFromManifest(d2Manifest.InventoryItem.getAll());
         // favor items we actually own
-        return _.uniq([...myPerkNames, ...allPerkNames]).map(
-          (s) => `perkname:${quoteFilterString(s.toLowerCase())}`
+        return Array.from(
+          new Set([...myPerkNames, ...allPerkNames]),
+          (s) => `perkname:${quoteFilterString(s)}`
         );
       }
     },
     filter: ({ filterValue, language }) => {
       const startWord = startWordRegexp(plainString(filterValue, language), language);
-      return (item) => {
-        // TODO: this may do too many array allocations to be performant.
-        const strings = [
-          ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes, false),
-          ...getStringsFromAllSockets(item, false),
-        ];
-        return strings.some((s) => startWord.test(plainString(s, language)));
-      };
+      const test = (s: string) => startWord.test(plainString(s, language));
+      return (item) =>
+        testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes, false) ||
+        testStringsFromAllSockets(test, item, false);
     },
   },
   {
@@ -170,21 +165,17 @@ const freeformFilters: FilterDefinition[] = [
     format: 'freeform',
     filter: ({ filterValue, itemInfos, itemHashTags, language }) => {
       filterValue = plainString(filterValue, language);
+      const test = (s: string) => plainString(s, language).includes(filterValue);
       return (item) => {
         const notes = getNotes(item, itemInfos, itemHashTags);
-        if (
-          (notes && plainString(notes, language).includes(filterValue)) ||
-          plainString(item.name, language).includes(filterValue) ||
-          plainString(item.description, language).includes(filterValue) ||
-          plainString(item.typeName, language).includes(filterValue)
-        ) {
-          return true;
-        }
-        const perkStrings = [
-          ...getStringsFromDisplayPropertiesMap(item.talentGrid?.nodes),
-          ...getStringsFromAllSockets(item),
-        ];
-        return perkStrings.some((s) => plainString(s, language).includes(filterValue));
+        return (
+          (notes && test(notes)) ||
+          test(item.name) ||
+          test(item.description) ||
+          test(item.typeName) ||
+          testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes) ||
+          testStringsFromAllSockets(test, item)
+        );
       };
     },
   },
@@ -196,56 +187,74 @@ export default freeformFilters;
  * feed in an object with a `name` and a `description` property,
  * to get an array of just those strings
  */
-function getStringsFromDisplayProperties<T extends { name: string; description: string }>(
+function testStringsFromDisplayProperties<T extends { name: string; description: string }>(
+  test: (str: string) => boolean,
   displayProperties?: T,
   includeDescription = true
-) {
+): boolean {
   if (!displayProperties) {
-    return [];
+    return false;
   }
-  return [displayProperties.name, includeDescription && displayProperties.description].filter(
-    Boolean
-  ) as string[];
+
+  return Boolean(
+    (displayProperties.name && test(displayProperties.name)) ||
+      (includeDescription && displayProperties.description && test(displayProperties.description))
+  );
 }
 
 /**
  * feed in an object or objects with a `name` and a `description` property,
  * to get an array of just those strings
  */
-function getStringsFromDisplayPropertiesMap<T extends { name: string; description: string }>(
+function testStringsFromDisplayPropertiesMap<T extends { name: string; description: string }>(
+  test: (str: string) => boolean,
   displayProperties?: T | T[] | null,
   includeDescription = true
-) {
+): boolean {
   if (!displayProperties) {
-    return [];
+    return false;
   }
   if (!Array.isArray(displayProperties)) {
-    displayProperties = [displayProperties];
+    return testStringsFromDisplayProperties(test, displayProperties, includeDescription);
   }
-  return displayProperties.flatMap((d) => getStringsFromDisplayProperties(d, includeDescription));
+  return displayProperties.some((d) =>
+    testStringsFromDisplayProperties(test, d, includeDescription)
+  );
 }
 
 /** includes name and description unless you set the arg2 flag */
-function getStringsFromAllSockets(item: DimItem, includeDescription = true) {
-  const results: string[] = [];
-  if (item.sockets) {
-    for (const socket of item.sockets.allSockets) {
-      const plugAndPerkDisplay = socket.plugOptions.map((plug) => [
-        plug.plugDef.displayProperties,
-        plug.perks.map((perk) => perk.displayProperties),
-      ]);
-      results.push(
-        ...getStringsFromDisplayPropertiesMap(plugAndPerkDisplay.flat(2), includeDescription)
-      );
-      results.push(...socket.plugOptions.map((plug) => plug.plugDef.itemTypeDisplayName));
-      // include tooltips from the plugged item
-      if (socket.plugged?.plugDef.tooltipNotifications) {
-        for (const t of socket.plugged.plugDef.tooltipNotifications) {
-          results.push(t.displayString);
+function testStringsFromAllSockets(
+  test: (str: string) => boolean,
+  item: DimItem,
+  includeDescription = true
+): boolean {
+  if (!item.sockets) {
+    return false;
+  }
+  for (const socket of item.sockets.allSockets) {
+    for (const plug of socket.plugOptions) {
+      if (
+        testStringsFromDisplayPropertiesMap(
+          test,
+          plug.plugDef.displayProperties,
+          includeDescription
+        ) ||
+        test(plug.plugDef.itemTypeDisplayName) ||
+        plug.perks.some((perk) =>
+          testStringsFromDisplayPropertiesMap(test, perk.displayProperties, includeDescription)
+        )
+      ) {
+        return true;
+      }
+    }
+    // include tooltips from the plugged item
+    if (socket.plugged?.plugDef.tooltipNotifications) {
+      for (const t of socket.plugged.plugDef.tooltipNotifications) {
+        if (test(t.displayString)) {
+          return true;
         }
       }
     }
   }
-
-  return results;
+  return false;
 }
