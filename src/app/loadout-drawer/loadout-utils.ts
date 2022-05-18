@@ -505,9 +505,23 @@ export function isMissingItems(
   loadout: Loadout
 ): boolean {
   for (const loadoutItem of loadout.items) {
-    const item = findItemForLoadout(defs, allItems, storeId, loadoutItem);
-    if (!item) {
+    const info = getResolutionInfo(defs, loadoutItem.hash);
+    if (!info) {
+      // If an item hash is entirely missing from the database, we show that
+      // there is a missing item but can't offer a replacement (or even show
+      // which item went missing), but we can maybe add a migration in `oldToNewItems`?
       return true;
+    }
+    if (info.instanced) {
+      if (!allItems.some((item) => item.id === loadoutItem.id)) {
+        return true;
+      }
+    } else {
+      // The vault can't really have uninstanced items like subclasses or emblems, so no point
+      // in reporting a missing item in that case.
+      if (storeId !== 'vault' && !getUninstancedLoadoutItem(allItems, info.hash, storeId)) {
+        return true;
+      }
     }
   }
   return false;

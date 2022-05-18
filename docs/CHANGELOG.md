@@ -4,6 +4,7 @@
   * The Witch Queen had reduced the cost of changing the element on a fully masterworked armor piece to 10,000-20,000 Glimmer and one Upgrade Module, making it cheaper than changing the element on a not fully masterworked armor piece.
   * Selecting this option means Loadout Optimizer will suggest changes to armor elements as needed but avoid breaking other Loadouts where mod assignments rely on particular elements.
   * Clicking the "Optimize Armor" button in a Loadout to open Loadout Optimizer excludes this Loadout from consideration because you're actually looking to make changes to this Loadout.
+* Loadouts list opened from Vault emblem now won't erroneously warn that Loadouts with subclasses or emblems are missing items.
 
 ## 7.17.0 <span class="changelog-date">(2022-05-15)</span>
 
