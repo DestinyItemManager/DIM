@@ -37,7 +37,6 @@ function positionMenu({ state }: ModifierArguments<Options>) {
 // Get the sidecar menu element for use later
 function setupMenu({ state, options }: ModifierArguments<Options>) {
   let sidecarElement = options.element;
-  state.styles.sidecar = {}; // prevent an error later when applyStyles removes the style
 
   // Find menu element
   if (!sidecarElement) {

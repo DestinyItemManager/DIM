@@ -124,7 +124,10 @@ export function usePopper({
 
   const destroy = () => {
     if (popper.current) {
-      popper.current.destroy();
+      try {
+        // Work around a popper issue with our custom modifier until we can switch to floating-ui
+        popper.current.destroy();
+      } catch {}
       popper.current = undefined;
     }
   };
