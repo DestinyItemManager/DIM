@@ -31,6 +31,10 @@ export interface SearchItem {
   highlightRange?: [number, number];
   /** Help text */
   helpText?: React.ReactNode;
+  /** Header text */
+  headerText?: string;
+  /** An alternative query to display in the autocomplete dropdown */
+  displayQuery?: string;
 }
 
 /** matches a keyword that's probably a math comparison */
@@ -153,14 +157,26 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
   const recentSearchesForQuery = query
     ? recentSearches.filter((s) => s.query.includes(query))
     : Array.from(recentSearches);
-  return recentSearchesForQuery.sort(recentSearchComparator).map((s) => ({
-    type: s.saved
-      ? SearchItemType.Saved
-      : s.usageCount > 0
-      ? SearchItemType.Recent
-      : SearchItemType.Suggested,
-    query: s.query,
-  }));
+  const commentRegEx = /\/\*(.*?)\*\/\s*/;
+  return recentSearchesForQuery.sort(recentSearchComparator).map((s) => {
+    const result: SearchItem = {
+      type: s.saved
+        ? SearchItemType.Saved
+        : s.usageCount > 0
+        ? SearchItemType.Recent
+        : SearchItemType.Suggested,
+      query: s.query,
+    };
+
+    // if the query starts with a comment, strip it from the query text and it display it as a header
+    const commentMatch = commentRegEx.exec(s.query);
+    if (commentMatch) {
+      result.displayQuery = s.query.substring(commentMatch[0].length).trim();
+      result.headerText = commentMatch[1].trim();
+    }
+
+    return result;
+  });
 }
 
 const caretEndRegex = /([\s)]|$)/;

@@ -133,6 +133,12 @@ const Row = React.memo(
     <>
       <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
       <span className={styles.menuItemQuery}>
+        {item.headerText && (
+          <>
+            <span className={styles.menuItemQueryHeader}>{item.headerText}</span>
+            <br />
+          </>
+        )}
         {item.type === SearchItemType.Help ? (
           t('Header.FilterHelpMenuItem')
         ) : item.highlightRange ? (
@@ -143,7 +149,7 @@ const Row = React.memo(
             className={styles.textHighlight}
           />
         ) : (
-          item.query
+          item.displayQuery || item.query
         )}
       </span>
       <span className={styles.menuItemHelp} />
