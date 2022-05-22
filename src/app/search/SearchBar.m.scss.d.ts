@@ -13,6 +13,8 @@ interface CssExports {
   'menuItemQueryHeader': string;
   'open': string;
   'openButton': string;
+  'queryBody': string;
+  'queryHeader': string;
   'saveSearchButton': string;
   'searchBar': string;
   'textHighlight': string;
