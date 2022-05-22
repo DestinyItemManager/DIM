@@ -75,7 +75,10 @@
   }
 }
 
-.queryBody {
+.namedQueryBody {
+  display: block;
+  font-size: 10.5px;
+  letter-spacing: 1px;
   opacity: 0.5;
 }
 
@@ -89,7 +92,7 @@
     color: #333;
     visibility: visible;
   }
-  .queryBody {
+  .namedQueryBody {
     opacity: 1;
   }
 }
@@ -103,11 +106,6 @@
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-}
-
-.queryHeader {
-  font-size: 10.5px;
-  letter-spacing: 1px;
 }
 
 .menuItemHelp {

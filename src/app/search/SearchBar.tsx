@@ -135,7 +135,7 @@ const Row = React.memo(
       <span className={styles.menuItemQuery}>
         {item.headerText && (
           <>
-            <span className={styles.queryHeader}>{item.headerText}</span>
+            {item.headerText}
             <br />
           </>
         )}
@@ -149,7 +149,7 @@ const Row = React.memo(
             className={styles.textHighlight}
           />
         ) : item.displayQuery ? (
-          <span className={styles.queryBody}>{item.displayQuery}</span>
+          <span className={styles.namedQueryBody}>{item.displayQuery}</span>
         ) : (
           item.query
         )}

@@ -10,10 +10,9 @@ interface CssExports {
   'menuItemHelp': string;
   'menuItemIcon': string;
   'menuItemQuery': string;
+  'namedQueryBody': string;
   'open': string;
   'openButton': string;
-  'queryBody': string;
-  'queryHeader': string;
   'saveSearchButton': string;
   'searchBar': string;
   'textHighlight': string;
