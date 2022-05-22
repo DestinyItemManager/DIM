@@ -75,6 +75,10 @@
   }
 }
 
+.queryBody {
+  opacity: 0.5;
+}
+
 .highlightedItem {
   background-color: $orange;
   color: black !important;
@@ -85,7 +89,7 @@
     color: #333;
     visibility: visible;
   }
-  .menuItemQueryHeader {
+  .queryBody {
     opacity: 1;
   }
 }
@@ -104,10 +108,6 @@
 .queryHeader {
   font-size: 10.5px;
   letter-spacing: 1px;
-}
-
-.queryBody {
-  opacity: 0.5;
 }
 
 .menuItemHelp {
