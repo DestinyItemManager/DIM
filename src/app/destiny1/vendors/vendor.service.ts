@@ -198,7 +198,7 @@ function mergeVendors([firstVendor, ...otherVendors]: Vendor[]) {
   const mergedVendor = copy(firstVendor);
 
   otherVendors.forEach((vendor) => {
-    Object.assign(firstVendor.cacheKeys, vendor.cacheKeys);
+    Object.assign(mergedVendor.cacheKeys, vendor.cacheKeys);
 
     vendor.categories.forEach((category) => {
       const existingCategory = mergedVendor.categories.find((c) => c.title === category.title);

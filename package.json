@@ -198,7 +198,6 @@
     "i18next-http-backend": "^1.0.21",
     "immer": "^9.0.2",
     "lodash": "^4.17.8",
-    "memoize-one": "^6.0.0",
     "mousetrap": "^1.6.2",
     "papaparse": "^5.0.0",
     "react": "^18.1.0",
