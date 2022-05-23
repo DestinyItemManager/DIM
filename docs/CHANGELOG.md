@@ -1,5 +1,7 @@
 ## Next
 
+## 7.18.0 <span class="changelog-date">(2022-05-22)</span>
+
 * In Loadout Optimizer, the option to lock Masterworked armor to its current element has been replaced with an option to lock the element on armor equipped in other DIM Loadouts.
   * The Witch Queen had reduced the cost of changing the element on a fully masterworked armor piece to 10,000-20,000 Glimmer and one Upgrade Module, making it cheaper than changing the element on a not fully masterworked armor piece.
   * Selecting this option means Loadout Optimizer will suggest changes to armor elements as needed but avoid breaking other Loadouts where mod assignments rely on particular elements.
