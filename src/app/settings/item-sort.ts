@@ -1,5 +1,6 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
+import { createSelector } from 'reselect';
 import { Settings } from './initial-settings';
 
 export type ItemSortSettings = {
@@ -7,10 +8,15 @@ export type ItemSortSettings = {
   sortReversals: Settings['itemSortReversals'];
 };
 
-export const itemSortSettings: (settings: Settings) => ItemSortSettings = (settings: Settings) => ({
-  sortOrder: settings.itemSortOrderCustom || ['primStat', 'name'],
-  sortReversals: settings.itemSortReversals || [],
-});
+const itemSortOrderCustomSelector = (state: RootState) =>
+  settingsSelector(state).itemSortOrderCustom;
+const itemSortReversalsSelector = (state: RootState) => settingsSelector(state).itemSortReversals;
 
-export const itemSortSettingsSelector = (state: RootState) =>
-  itemSortSettings(settingsSelector(state));
+export const itemSortSettingsSelector = createSelector(
+  itemSortOrderCustomSelector,
+  itemSortReversalsSelector,
+  (itemSortOrderCustom, itemSortReversals) => ({
+    sortOrder: itemSortOrderCustom || ['primStat', 'name'],
+    sortReversals: itemSortReversals || [],
+  })
+);
