@@ -239,14 +239,10 @@ function SearchBar(
     dispatch(saveSearch({ query: liveQuery, saved: !saved }));
   };
 
+  const caretPosition = inputElement.current?.selectionStart || liveQuery.length;
   const items = useMemo(
-    () =>
-      autocompleter(
-        liveQuery,
-        inputElement.current?.selectionStart || liveQuery.length,
-        recentSearches
-      ),
-    [autocompleter, liveQuery, recentSearches]
+    () => autocompleter(liveQuery, caretPosition, recentSearches),
+    [autocompleter, caretPosition, liveQuery, recentSearches]
   );
 
   // useCombobox from Downshift manages the state of the dropdown

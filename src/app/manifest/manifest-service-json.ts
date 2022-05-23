@@ -16,7 +16,6 @@ import {
 import { BucketHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
-import memoizeOne from 'memoize-one';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
@@ -98,7 +97,7 @@ export const warnMissingDefinition = _.debounce(
   }
 );
 
-const getManifestAction = memoizeOne(
+const getManifestAction = _.once(
   (tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> =>
     dedupePromise((dispatch) => dispatch(doGetManifest(tableAllowList)))
 );
