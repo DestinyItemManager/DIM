@@ -1,5 +1,21 @@
 const missingSources: { [key: string]: number[] } = {
-  '30th': [],
+  '30th': [
+    286271818, // Twisting Echo Cloak
+    399065241, // Descending Echo Greaves
+    587312237, // Twisting Echo Grips
+    833653807, // Twisting Echo Strides
+    1756483796, // Twisting Echo Mask
+    1951355667, // Twisting Echo Vest
+    2244604734, // Corrupting Echo Gloves
+    2663987096, // Corrupting Echo Boots
+    2885497847, // Descending Echo Gauntlets
+    3048458482, // Corrupting Echo Robes
+    3171090615, // Corrupting Echo Cover
+    3267969345, // Descending Echo Cage
+    3685276035, // Corrupting Echo Bond
+    3871537958, // Descending Echo Helm
+    4050474396, // Descending Echo Mark
+  ],
   ada: [],
   adventure: [
     11686457, // Unethical Experiments Cloak
@@ -22,9 +38,9 @@ const missingSources: { [key: string]: number[] } = {
     3706457515, // Songbreaker Grips
   ],
   banshee: [
-    288409041, // Rocket Launcher Scavenger
-    288409046, // Hand Cannon Targeting
-    2119661523, // Auto Rifle Loader
+    875346617, // Sidearm Dexterity
+    875346621, // Shotgun Dexterity
+    3339644635, // Pulse Rifle Targeting
   ],
   battlegrounds: [],
   blackarmory: [],
@@ -467,9 +483,7 @@ const missingSources: { [key: string]: number[] } = {
   ],
   cayde6: [],
   cipher: [],
-  compass: [
-    288409047, // Melee Wellmaker
-  ],
+  compass: [],
   contact: [],
   crownofsorrow: [
     17280095, // Shadow's Strides
@@ -899,7 +913,23 @@ const missingSources: { [key: string]: number[] } = {
     4255727106, // Ancient Apocalypse Hood
   ],
   dsc: [],
-  dungeon: [],
+  dungeon: [
+    286271818, // Twisting Echo Cloak
+    399065241, // Descending Echo Greaves
+    587312237, // Twisting Echo Grips
+    833653807, // Twisting Echo Strides
+    1756483796, // Twisting Echo Mask
+    1951355667, // Twisting Echo Vest
+    2244604734, // Corrupting Echo Gloves
+    2663987096, // Corrupting Echo Boots
+    2885497847, // Descending Echo Gauntlets
+    3048458482, // Corrupting Echo Robes
+    3171090615, // Corrupting Echo Cover
+    3267969345, // Descending Echo Cage
+    3685276035, // Corrupting Echo Bond
+    3871537958, // Descending Echo Helm
+    4050474396, // Descending Echo Mark
+  ],
   edz: [
     10307688, // Wildwood Plate
     11686458, // Orobas Vectura Cloak
@@ -1340,11 +1370,27 @@ const missingSources: { [key: string]: number[] } = {
     3939809874, // Plate of Transcendence
     4177973942, // Vest of Transcendence
   ],
-  grasp: [],
+  grasp: [
+    286271818, // Twisting Echo Cloak
+    399065241, // Descending Echo Greaves
+    587312237, // Twisting Echo Grips
+    833653807, // Twisting Echo Strides
+    1756483796, // Twisting Echo Mask
+    1951355667, // Twisting Echo Vest
+    2244604734, // Corrupting Echo Gloves
+    2663987096, // Corrupting Echo Boots
+    2885497847, // Descending Echo Gauntlets
+    3048458482, // Corrupting Echo Robes
+    3171090615, // Corrupting Echo Cover
+    3267969345, // Descending Echo Cage
+    3685276035, // Corrupting Echo Bond
+    3871537958, // Descending Echo Helm
+    4050474396, // Descending Echo Mark
+  ],
   gunsmith: [
-    288409041, // Rocket Launcher Scavenger
-    288409046, // Hand Cannon Targeting
-    2119661523, // Auto Rifle Loader
+    875346617, // Sidearm Dexterity
+    875346621, // Shotgun Dexterity
+    3339644635, // Pulse Rifle Targeting
   ],
   harbinger: [],
   ikora: [
@@ -1656,7 +1702,6 @@ const missingSources: { [key: string]: number[] } = {
     160388292, // Kerak Type 2
     265279665, // Clandestine Maneuvers
     269552461, // Road Complex AA1
-    288409042, // Glaive Dexterity
     308026950, // Road Complex AA1
     311394919, // Insight Unyielding Greaves
     316000947, // Dead End Cure 2.1
@@ -1697,6 +1742,7 @@ const missingSources: { [key: string]: number[] } = {
     836969671, // Insight Unyielding Greaves
     854373147, // Insight Unyielding Plate
     875215126, // Prodigal Mark
+    875346622, // Trace Rifle Reserves
     880368054, // Tangled Web Grips
     881579413, // Terra Concord Helm
     919186882, // Tangled Web Mark
@@ -1778,7 +1824,6 @@ const missingSources: { [key: string]: number[] } = {
     2092750352, // Tangled Web Strides
     2111956477, // Insight Rover Boots
     2112821379, // Insight Unyielding Helm
-    2119661521, // Glaive Scavenger
     2148295091, // Tangled Web Helm
     2151378428, // Tangled Web Greaves
     2159363321, // Be Thy Guide
@@ -1864,6 +1909,9 @@ const missingSources: { [key: string]: number[] } = {
     3299386902, // Insight Unyielding Plate
     3304280092, // Devastation Complex
     3316802363, // Retro-Grade TG2
+    3339644634, // Sidearm Holster
+    3339644637, // Trace Rifle Ammo Finder
+    3339644638, // Shotgun Holster
     3360070350, // Prodigal Greaves
     3386676796, // Prodigal Gloves
     3397835010, // Prodigal Strides
@@ -1984,28 +2032,7 @@ const missingSources: { [key: string]: number[] } = {
   lost: [],
   lostsectors: [],
   mars: [],
-  menagerie: [
-    126418248, // Exodus Down Vest
-    192377242, // Exodus Down Strides
-    472691604, // Exodus Down Vest
-    853736709, // Exodus Down Cloak
-    1539014368, // Exodus Down Grips
-    1640979177, // Exodus Down Cloak
-    2172333833, // Exodus Down Mask
-    2252973221, // Exodus Down Cloak
-    2423003287, // Exodus Down Grips
-    2462524641, // Exodus Down Vest
-    2947629004, // Exodus Down Grips
-    2953649850, // Exodus Down Strides
-    3026265798, // Exodus Down Mask
-    3446606632, // Exodus Down Vest
-    3593464438, // Exodus Down Strides
-    3669590332, // Exodus Down Cloak
-    3807183801, // Exodus Down Strides
-    3875829376, // Exodus Down Grips
-    4060742749, // Exodus Down Mask
-    4130486121, // Exodus Down Mask
-  ],
+  menagerie: [],
   mercury: [],
   moon: [
     193805725, // Dreambane Cloak
@@ -2027,13 +2054,17 @@ const missingSources: { [key: string]: number[] } = {
   nessus: [
     11686457, // Unethical Experiments Cloak
     56157064, // Exodus Down Gauntlets
+    126418248, // Exodus Down Vest
     177493699, // Exodus Down Plate
+    192377242, // Exodus Down Strides
     320310250, // Unethical Experiments Bond
+    472691604, // Exodus Down Vest
     527652447, // Exodus Down Mark
     569251271, // Exodus Down Gloves
     569678873, // Exodus Down Mark
     582151075, // Exodus Down Helm
     667921213, // Exodus Down Mark
+    853736709, // Exodus Down Cloak
     874856664, // Exodus Down Bond
     957928253, // Exodus Down Gauntlets
     1010733668, // Exodus Down Helm
@@ -2045,32 +2076,48 @@ const missingSources: { [key: string]: number[] } = {
     1355771621, // Shieldbreaker Vest
     1427620200, // Exodus Down Gloves
     1439502385, // Exodus Down Helm
+    1539014368, // Exodus Down Grips
+    1640979177, // Exodus Down Cloak
     1669675549, // Exodus Down Bond
     1678216306, // Exodus Down Gauntlets
     1810569868, // Exodus Down Bond
     2029766091, // Exodus Down Gloves
     2032811197, // Exodus Down Robes
     2079454604, // Exodus Down Greaves
+    2172333833, // Exodus Down Mask
     2218838661, // Exodus Down Robes
+    2252973221, // Exodus Down Cloak
     2359639520, // Exodus Down Robes
+    2423003287, // Exodus Down Grips
     2426340791, // Unethical Experiments Mark
+    2462524641, // Exodus Down Vest
     2528959426, // Exodus Down Boots
     2731698402, // Exodus Down Hood
     2736812653, // Exodus Down Helm
     2811068561, // Exodus Down Hood
     2816760678, // Exodus Down Greaves
+    2947629004, // Exodus Down Grips
+    2953649850, // Exodus Down Strides
+    3026265798, // Exodus Down Mask
     3323553887, // Exodus Down Greaves
+    3446606632, // Exodus Down Vest
     3536375792, // Exodus Down Bond
     3545981149, // Exodus Down Boots
+    3593464438, // Exodus Down Strides
     3617024265, // Exodus Down Boots
     3654781892, // Exodus Down Plate
     3660228214, // Exodus Down Hood
+    3669590332, // Exodus Down Cloak
     3742350309, // Exodus Down Boots
     3754164794, // Exodus Down Mark
+    3807183801, // Exodus Down Strides
     3855512540, // Exodus Down Gauntlets
+    3875829376, // Exodus Down Grips
     3951684081, // Exodus Down Robes
     3960258378, // Exodus Down Hood
     4007396243, // Exodus Down Gloves
+    4060742749, // Exodus Down Mask
+    4130486121, // Exodus Down Mask
   ],
   nightfall: [],
   nightmare: [],
@@ -2653,9 +2700,7 @@ const missingSources: { [key: string]: number[] } = {
   vexoffensive: [],
   vog: [],
   vow: [],
-  wartable: [
-    2119661524, // Font of Might
-  ],
+  wartable: [],
   wellspring: [],
   wrathborn: [],
   zavala: [

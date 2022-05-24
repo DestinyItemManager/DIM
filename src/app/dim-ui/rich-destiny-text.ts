@@ -39,10 +39,6 @@ const glyphInfos: [exampleReplacement: StringsNeedingReplacement, codepoint: Fon
   ['[Sword]', FontGlyphs.sword_heavy], // 
   // Artifacts that can be picked up and used as weapons
   ['', FontGlyphs.spear_launcher], // 
-  // Gambit - Blockers
-  ['[Small Blocker]', FontGlyphs.small_blocker], // 
-  ['[Medium Blocker]', FontGlyphs.medium_blocker], // 
-  ['[Large Blocker]', FontGlyphs.large_blocker], // 
   // Map Markers
   ['[Quest]', FontGlyphs.quest], // 
   ['[Lost Sector]', FontGlyphs.lostsector], // 

@@ -133,6 +133,7 @@ const D2Sources: {
       3580904580, // Legend of Acrius
     ],
     sourceHashes: [
+      976328308, // Source: The Derelict Leviathan
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
       2399751101, // Acquired from the raid "Crown of Sorrow."
       2511152325, // Acquired from the Menagerie aboard the Leviathan.
@@ -305,6 +306,7 @@ const D2Sources: {
       636474187, // Source: Adventure "Deathless" on Saturn's Moon, Titan.
       925197669, // Source: Complete a Bergusia Forge ignition.
       948753311, // Source: Found by completing Volundr Forge ignitions.
+      976328308, // Source: The Derelict Leviathan
       1036506031, // Source: Complete activities and earn rank-up packages on Mars.
       1067250718, // Source: Adventure "Arecibo" on Io.
       1175566043, // Source: Complete Nightfall strike "A Garden World."
@@ -540,6 +542,7 @@ const D2Sources: {
       611838069, // Source: Earned during the seasonal Guardian Games event.
       641018908, // Source: Earned during the 2018 Solstice of Heroes event.
       772619302, // Completed all 8 Moments of Triumph in Destiny's second year.
+      923678151, // Source: Upgraded Event Card Reward
       930411416, // Source: Dawning 2021
       1054169368, // Source: Festival of the Lost 2021.
       1360005982, // Completed a Moment of Triumph in Destiny's second year.
@@ -803,7 +806,6 @@ const D2Sources: {
     ],
     sourceHashes: [
       2511152325, // Acquired from the Menagerie aboard the Leviathan.
-      4130543671, // Acquired from the Menagerie aboard the Leviathan with the requisite combination of runes in the Chalice of Opulence.
     ],
     searchString: [],
   },
@@ -859,6 +861,7 @@ const D2Sources: {
       817015032, // Source: Complete Nightfall strike "The Inverted Spire."
       860666126, // Source: Nightfall
       1175566043, // Source: Complete Nightfall strike "A Garden World."
+      1283862526, // Source: Season of the Haunted Nightfall Grandmaster
       1581680964, // Source: Complete Nightfall strike "Tree of Probabilities."
       1596489410, // Source: Season of the Risen Nightfall Grandmaster
       1618699950, // Source: Season of the Lost Nightfall Grandmaster
@@ -874,6 +877,7 @@ const D2Sources: {
       2926805810, // Source: Complete Nightfall strike "Strange Terrain."
       3022766747, // Source: Complete Nightfall strike "The Insight Terminus."
       3067146211, // Source: Complete Nightfall strike "Exodus Crash."
+      3142874552, // Source: Nightfall
       3528789901, // Source: Season of the Chosen Nightfall Grandmaster
       3874934421, // Source: Complete Nightfall strike "The Corrupted."
       3964663093, // Source: Rare drop from high-scoring Nightfall strikes on Mercury.

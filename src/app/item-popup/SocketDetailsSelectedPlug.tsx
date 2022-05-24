@@ -49,7 +49,7 @@ const whitelistPlugCategoryToLocKey = {
 
 const socketCategoryToLocKey = {
   [SocketCategoryHashes.Super]: 'Super',
-  [SocketCategoryHashes.Abilities_Abilities_DarkSubclass]: 'Ability',
+  [SocketCategoryHashes.Abilities_Abilities]: 'Ability',
   [SocketCategoryHashes.Abilities_Abilities_LightSubclass]: 'Ability',
   [SocketCategoryHashes.Aspects]: 'Aspect',
   [SocketCategoryHashes.Fragments]: 'Fragment',

@@ -3,9 +3,11 @@ const exoticWeaponHashesWithCatalyst: Set<number> = new Set([
   46524085, // Osteo Striga
   347366834, // Ace of Spades
   400096939, // Outbreak Perfected
+  417164956, // Jötunn
   603721696, // Cryosthesia 77K
   776191470, // Tommy's Matchbook
   814876685, // Trinity Ghoul
+  1234150730, // Trespasser
   1331482397, // MIDA Multi-Tool
   1345867570, // Sweet Business
   1345867571, // Coldheart
