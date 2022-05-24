@@ -330,7 +330,10 @@ function processCurrencies(profileInfo: DestinyProfileResponse, defs: D2Manifest
   const currencies = profileCurrencies.map((c) => ({
     itemHash: c.itemHash,
     quantity: c.quantity,
-    displayProperties: defs.InventoryItem.get(c.itemHash).displayProperties,
+    displayProperties: defs.InventoryItem.get(c.itemHash)?.displayProperties ?? {
+      name: 'Unknown',
+      description: 'Unknown item',
+    },
   }));
   return currencies;
 }

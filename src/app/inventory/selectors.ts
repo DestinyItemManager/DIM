@@ -200,7 +200,7 @@ export const ownedUncollectiblePlugsSelector = createSelector(
       ) => {
         _.forIn(plugs, (plugSet) => {
           for (const plug of plugSet) {
-            if (plug.enabled && !defs.InventoryItem.get(plug.plugItemHash).collectibleHash) {
+            if (plug.enabled && !defs.InventoryItem.get(plug.plugItemHash)?.collectibleHash) {
               insertInto.add(plug.plugItemHash);
             }
           }
