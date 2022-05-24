@@ -1,5 +1,5 @@
 export const resonantElementTagsByObjectiveHash: Record<number, string> = {
-  4061659983: 'resonantelements', // Resonant Elements
+  4061659983: 'resonant', // Resonant Elements
 } as const;
 
 export const resonantMaterialStringVarHashes: {
