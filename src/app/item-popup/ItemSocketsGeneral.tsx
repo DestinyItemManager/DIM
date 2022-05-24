@@ -2,11 +2,11 @@ import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { getArmorExoticPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
+import { Portal } from 'app/utils/temp-container';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
@@ -131,8 +131,8 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
             </div>
           </div>
         ))}
-        {socketInMenu &&
-          ReactDOM.createPortal(
+        {socketInMenu && (
+          <Portal>
             <SocketDetails
               key={socketInMenu.socketIndex}
               item={item}
@@ -140,9 +140,9 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
               allowInsertPlug
               onClose={() => setSocketInMenu(null)}
               onPlugSelected={onPlugClicked}
-            />,
-            document.body
-          )}
+            />
+          </Portal>
+        )}
       </div>
     </>
   );

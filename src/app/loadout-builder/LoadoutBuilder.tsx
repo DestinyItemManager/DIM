@@ -29,13 +29,13 @@ import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { isArmor2Mod } from 'app/utils/item-utils';
+import { Portal } from 'app/utils/temp-container';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, { useEffect, useMemo } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { allItemsSelector } from '../inventory/selectors';
@@ -494,8 +494,8 @@ function LoadoutBuilder({
             notes={notes}
           />
         )}
-        {modPicker.open &&
-          ReactDOM.createPortal(
+        {modPicker.open && (
+          <Portal>
             <ModPicker
               classType={classType}
               owner={selectedStore.id}
@@ -508,11 +508,11 @@ function LoadoutBuilder({
                 })
               }
               onClose={() => lbDispatch({ type: 'closeModPicker' })}
-            />,
-            document.body
-          )}
-        {compareSet &&
-          ReactDOM.createPortal(
+            />
+          </Portal>
+        )}
+        {compareSet && (
+          <Portal>
             <CompareDrawer
               set={compareSet}
               selectedStore={selectedStore}
@@ -523,9 +523,9 @@ function LoadoutBuilder({
               params={params}
               notes={notes}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
-            />,
-            document.body
-          )}
+            />
+          </Portal>
+        )}
       </PageWithMenu.Contents>
     </PageWithMenu>
   );

@@ -29,10 +29,10 @@ import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import { getItemsAndSubclassFromLoadout, loadoutPower } from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { emptyObject } from 'app/utils/empty';
+import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisplay';
 import SubclassPlugDrawer from '../SubclassPlugDrawer';
@@ -152,17 +152,16 @@ export default function LoadoutEdit({
                 )}
               </div>
             )}
-            {plugDrawerOpen &&
-              subclass &&
-              ReactDOM.createPortal(
+            {plugDrawerOpen && subclass && (
+              <Portal>
                 <SubclassPlugDrawer
                   subclass={subclass.item}
                   socketOverrides={subclass.loadoutItem.socketOverrides ?? {}}
                   onClose={() => setPlugDrawerOpen(false)}
                   onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
-                />,
-                document.body
-              )}
+                />
+              </Portal>
+            )}
           </LoadoutEditBucketDropTarget>
         </LoadoutEditSection>
       )}

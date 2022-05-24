@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { tempContainer } from './temp-container';
 
 /**
  * Count the number of values in the list that pass the predicate.
@@ -96,9 +97,9 @@ export function download(data: string, filename: string, type: string) {
   const a = document.createElement('a');
   a.setAttribute('href', `data:${type};charset=utf-8,${encodeURIComponent(data)}`);
   a.setAttribute('download', filename);
-  document.body.appendChild(a);
+  tempContainer.appendChild(a);
   a.click();
-  setTimeout(() => document.body.removeChild(a));
+  setTimeout(() => tempContainer.removeChild(a));
 }
 
 /**

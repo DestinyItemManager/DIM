@@ -4,6 +4,7 @@ import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
+import { Portal } from 'app/utils/temp-container';
 import { DamageType, DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -11,7 +12,6 @@ import heavy from 'destiny-icons/general/ammo-heavy.svg';
 import primary from 'destiny-icons/general/ammo-primary.svg';
 import special from 'destiny-icons/general/ammo-special.svg';
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
 import { DimItem } from '../inventory/item-types';
 import styles from './ItemPopupHeader.m.scss';
 
@@ -76,11 +76,11 @@ export default function ItemPopupHeader({
           )}
         </div>
       </div>
-      {showArmory &&
-        ReactDOM.createPortal(
-          <ArmorySheet onClose={() => setShowArmory(false)} item={item} />,
-          document.body
-        )}
+      {showArmory && (
+        <Portal>
+          <ArmorySheet onClose={() => setShowArmory(false)} item={item} />
+        </Portal>
+      )}
     </div>
   );
 }

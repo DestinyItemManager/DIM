@@ -1,4 +1,5 @@
 import { Placement } from '@popperjs/core';
+import { tempContainer } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import _ from 'lodash';
 import {
@@ -110,7 +111,7 @@ function Control({
             <div className={styles.content}>{_.isFunction(tooltip) ? tooltip() : tooltip}</div>
             <div className={styles.arrow} />
           </div>,
-          pressTipRoot.current || document.body
+          pressTipRoot.current || tempContainer
         )}
     </Component>
   );

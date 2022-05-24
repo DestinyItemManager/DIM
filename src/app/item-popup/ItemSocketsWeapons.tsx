@@ -12,6 +12,7 @@ import {
   getWeaponArchetypeSocket,
   socketContainsPlugWithCategory,
 } from 'app/utils/socket-utils';
+import { Portal } from 'app/utils/temp-container';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import {
@@ -22,7 +23,6 @@ import {
 } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
@@ -191,8 +191,8 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
           {mods.map(renderSocket)}
         </div>
       )}
-      {socketInMenu &&
-        ReactDOM.createPortal(
+      {socketInMenu && (
+        <Portal>
           <SocketDetails
             key={socketInMenu.socketIndex}
             item={item}
@@ -200,9 +200,9 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
             allowInsertPlug
             onClose={() => setSocketInMenu(null)}
             onPlugSelected={onPlugClicked}
-          />,
-          document.body
-        )}
+          />
+        </Portal>
+      )}
     </div>
   );
 }
