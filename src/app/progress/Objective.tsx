@@ -33,6 +33,10 @@ export default function Objective({
 
   const progress = objective.progress || 0;
 
+  if (!objectiveDef) {
+    return null;
+  }
+
   if (
     'minimumVisibilityThreshold' in objectiveDef &&
     objectiveDef.minimumVisibilityThreshold > 0 &&
