@@ -62,6 +62,7 @@ export const statAllowList = [
   StatHashes.GuardEndurance,
   StatHashes.ReloadSpeed,
   StatHashes.AimAssistance,
+  StatHashes.AirborneEffectiveness,
   StatHashes.Zoom,
   StatHashes.RecoilDirection,
   StatHashes.Magazine,
@@ -87,6 +88,7 @@ const hiddenStatsAllowList = [
   StatHashes.AimAssistance,
   StatHashes.Zoom,
   StatHashes.RecoilDirection,
+  StatHashes.AirborneEffectiveness,
 ];
 
 /** a dictionary to look up StatDisplay info by statHash */
