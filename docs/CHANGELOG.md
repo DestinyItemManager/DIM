@@ -1,5 +1,7 @@
 ## Next
 
+## 7.18.1 <span class="changelog-date">(2022-05-24)</span>
+
 * Added seasonal info for Season of the Haunted and fixed some bugs with new items.
 * Loadouts with a Solar subclass will automatically be upgraded to Solar 3.0.
 * Show Airborne Effectiveness stat on weapons.
