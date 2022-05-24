@@ -2,7 +2,7 @@ import type { DimStore } from 'app/inventory/store-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
-import React from 'react';
+import React, { memo } from 'react';
 import styles from './CharacterTile.m.scss';
 
 function CharacterEmblem({ store }: { store: DimStore }) {
@@ -13,7 +13,7 @@ function CharacterEmblem({ store }: { store: DimStore }) {
  * Render a basic character tile without any event handlers
  * This is currently being shared between StoreHeading and CharacterTileButton
  */
-export default function CharacterTile({ store }: { store: DimStore }) {
+export default memo(function CharacterTile({ store }: { store: DimStore }) {
   const maxTotalPower = Math.floor(store.stats?.maxTotalPower?.value || store.powerLevel);
   const isPhonePortrait = useIsPhonePortrait();
 
@@ -59,4 +59,4 @@ export default function CharacterTile({ store }: { store: DimStore }) {
       </div>
     </div>
   );
-}
+});
