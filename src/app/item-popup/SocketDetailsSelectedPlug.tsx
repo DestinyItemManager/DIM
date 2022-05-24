@@ -65,7 +65,7 @@ function uiCategorizeSocket(defs: D2ManifestDefinitions, socket: DestinyItemSock
     if (socketCategoryToLocKey[socketTypeDef.socketCategoryHash]) {
       return socketCategoryToLocKey[socketTypeDef.socketCategoryHash];
     } else {
-      const plug = socketTypeDef.plugWhitelist.find(
+      const plug = socketTypeDef.plugWhitelist?.find(
         (p) => whitelistPlugCategoryToLocKey[p.categoryHash]
       );
       if (plug) {

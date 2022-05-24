@@ -72,7 +72,7 @@ function mapStateToProps() {
     (_state: RootState, { socket }: ProvidedProps) => socket.socketDefinition,
     (defs, visibleShaders, socketDef) => {
       const socketType = defs?.SocketType.get(socketDef.socketTypeHash);
-      if (socketType?.plugWhitelist.some((p) => p.categoryHash === PlugCategoryHashes.Shader)) {
+      if (socketType?.plugWhitelist?.some((p) => p.categoryHash === PlugCategoryHashes.Shader)) {
         return visibleShaders;
       }
       return undefined;
@@ -97,7 +97,7 @@ function mapStateToProps() {
 
       const modHashes = new Set<number>();
 
-      const plugAllowList = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
+      const plugAllowList = new Set(socketType.plugWhitelist?.map((e) => e.categoryHash) ?? []);
       for (const item of allItems) {
         const itemDef = defs!.InventoryItem.get(item.hash);
         if (

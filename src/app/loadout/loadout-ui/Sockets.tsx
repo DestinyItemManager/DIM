@@ -74,7 +74,7 @@ function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
     ) {
       modsAndWhitelist.push({
         plugDef: toSave,
-        whitelist: socketType.plugWhitelist.map((plug) => plug.categoryHash),
+        whitelist: socketType.plugWhitelist?.map((plug) => plug.categoryHash) ?? [],
       });
     }
   }

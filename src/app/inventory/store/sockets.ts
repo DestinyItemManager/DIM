@@ -488,7 +488,7 @@ function findEmptyPlug(
   }
   // Exotic mods (like the Aeon socket) can't be emptied.
   if (
-    socketType.plugWhitelist.length &&
+    socketType.plugWhitelist?.length &&
     socketType.plugWhitelist.every((e) => e.categoryIdentifier.includes('enhancements.exotic'))
   ) {
     return undefined;

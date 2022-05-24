@@ -437,7 +437,7 @@ function FashionItem({
   }
 
   const isShaderSocket = (s: DimSocket) =>
-    defs.SocketType.get(s.socketDefinition.socketTypeHash)?.plugWhitelist.some(
+    defs.SocketType.get(s.socketDefinition.socketTypeHash)?.plugWhitelist?.some(
       (pw) => pw.categoryHash === PlugCategoryHashes.Shader
     );
   const cosmeticSockets = getSocketsByCategoryHash(
