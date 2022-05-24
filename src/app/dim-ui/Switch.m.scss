@@ -1,3 +1,4 @@
+@use 'sass:math';
 @import '../variables.scss';
 
 $dotSize: 16px;
@@ -28,7 +29,7 @@ $touchPadding: 2px; // A bit of extra hit area
       display: inline-block;
       width: $barWidth;
       height: $barHeight;
-      margin: ($dotSize - $barHeight) / 2 !important;
+      margin: math.div($dotSize - $barHeight, 2) !important;
       padding: 0 !important;
       background-color: rgba(255, 255, 255, 0.2);
       border-radius: 20px;
