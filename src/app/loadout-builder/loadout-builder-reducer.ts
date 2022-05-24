@@ -406,7 +406,7 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
 
         const { plug } = action;
         const abilityAndSuperSockets = getSocketsByCategoryHashes(state.subclass.item.sockets, [
-          SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+          SocketCategoryHashes.Abilities_Abilities,
           SocketCategoryHashes.Abilities_Abilities_LightSubclass,
           SocketCategoryHashes.Super,
         ]);

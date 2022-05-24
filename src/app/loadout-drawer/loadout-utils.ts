@@ -107,7 +107,7 @@ export function createSubclassDefaultSocketOverrides(item: DimItem) {
   if (item.bucket.hash === BucketHashes.Subclass && item.sockets) {
     const socketOverrides: SocketOverrides = {};
     const abilityAndSuperSockets = getSocketsByCategoryHashes(item.sockets, [
-      SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+      SocketCategoryHashes.Abilities_Abilities,
       SocketCategoryHashes.Abilities_Abilities_LightSubclass,
       SocketCategoryHashes.Super,
     ]);

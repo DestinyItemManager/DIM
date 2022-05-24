@@ -436,7 +436,7 @@ function isKnownEmptyPlugItemHash(plugItemHash: number) {
 
 // These socket categories never have any empty-able sockets.
 const noDefaultSocketCategoryHashes: SocketCategoryHashes[] = [
-  SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+  SocketCategoryHashes.Abilities_Abilities,
   SocketCategoryHashes.Abilities_Abilities_LightSubclass,
   SocketCategoryHashes.Super,
   SocketCategoryHashes.WeaponPerks_Reusable,
