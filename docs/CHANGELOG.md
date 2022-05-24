@@ -1,5 +1,8 @@
 ## Next
 
+* Added seasonal info for Season of the Haunted and fixed some bugs with new items.
+* Loadouts with a Solar subclass will automatically be upgraded to Solar 3.0.
+
 ## 7.18.0 <span class="changelog-date">(2022-05-22)</span>
 
 * In Loadout Optimizer, the option to lock Masterworked armor to its current element has been replaced with an option to lock the element on armor equipped in other DIM Loadouts.
