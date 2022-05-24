@@ -1,4 +1,4 @@
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 .compare-item {
   border-left: 1px solid rgba(245, 245, 245, 0.25);

@@ -1,4 +1,4 @@
-@import '../../variables.scss';
+@use '../../variables.scss' as *;
 
 // TODO: use reexported classes from LoadoutItemCategorySection instead of composes
 

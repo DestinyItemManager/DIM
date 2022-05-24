@@ -1,5 +1,5 @@
 @use 'sass:color';
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 .statName {
   grid-column: 1;

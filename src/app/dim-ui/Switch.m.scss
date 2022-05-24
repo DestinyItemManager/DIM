@@ -1,5 +1,5 @@
 @use 'sass:math';
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 $dotSize: 16px;
 $barHeight: 10px;

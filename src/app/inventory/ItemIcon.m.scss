@@ -1,4 +1,4 @@
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 $legendaryBg: #522f65;
 $exoticBg: #ceae33;
