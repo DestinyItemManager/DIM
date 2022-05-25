@@ -5,6 +5,8 @@
 * Added seasonal info for Season of the Haunted and fixed some bugs with new items.
 * Loadouts with a Solar subclass will automatically be upgraded to Solar 3.0.
 * Show Airborne Effectiveness stat on weapons.
+* Resonant Element search filters such as `deepsight:ruinous` have been removed as these currencies
+are now deprecated.
 
 ## 7.18.0 <span class="changelog-date">(2022-05-22)</span>
 
