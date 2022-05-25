@@ -1,5 +1,7 @@
 ## Next
 
+* Enhanced intrinsics on crafted weapons are now treated as a masterwork internally. As a result, you can use e.g. `is:crafted -masterwork:any` to find crafted weapons without an enhanced intrinsic. The golden border additionally requires two enhanced traits, just like in-game.
+
 ## 7.18.1 <span class="changelog-date">(2022-05-24)</span>
 
 * Added seasonal info for Season of the Haunted and fixed some bugs with new items.
