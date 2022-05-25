@@ -205,6 +205,11 @@ export function itemMoveLoadout(items: DimItem[], store: DimStore): Loadout {
   return newLoadout(t('Loadouts.FilteredItems'), finalItems);
 }
 
+/**
+ * Take a number of items from the list of items we mean to transfer to store,
+ * such that no more items are selected than can fit into the destination
+ * bucket, and the equipped item won't be changed.
+ */
 function limitToBucketSize(items: DimItem[], store: DimStore) {
   if (!items.length) {
     return [];
@@ -217,15 +222,30 @@ function limitToBucketSize(items: DimItem[], store: DimStore) {
     return isVault ? items : _.take(items, 9);
   }
 
-  const [alreadyEquipped, otherItems] = _.partition(
-    items,
-    (item) => item.equipped && item.owner === store.id
+  const enum BucketLocation {
+    AlreadyThereAndEquipped,
+    AlreadyThereAndUnequipped,
+    NotThere,
+  }
+
+  // Separate out any item that's already on the target store and further by equipped and not equipped -
+  // this won't count against our space.
+  const {
+    [BucketLocation.AlreadyThereAndEquipped]: alreadyEquipped = [],
+    [BucketLocation.AlreadyThereAndUnequipped]: alreadyUnequipped = [],
+    [BucketLocation.NotThere]: otherItems = [],
+  } = _.groupBy(items, (item) =>
+    item.owner === store.id
+      ? item.equipped
+        ? BucketLocation.AlreadyThereAndEquipped
+        : BucketLocation.AlreadyThereAndUnequipped
+      : BucketLocation.NotThere
   );
 
   // TODO: this doesn't take into account stacks that need to split
   return _.take(
-    // move the ones that are already there to the front
-    [...alreadyEquipped, ...otherItems],
+    // move the ones that are already there to the front to minimize moves
+    [...alreadyEquipped, ...alreadyUnequipped, ...otherItems],
     // If a matching item is already equipped we can take 10, otherwise we have
     // to subtract one for the equipped item because we don't want to displace
     // it
