@@ -1,5 +1,7 @@
 ## Next
 
+* Selected Super ability is now displayed on Solar subclass icons.
+
 ## 7.18.1 <span class="changelog-date">(2022-05-24)</span>
 
 * Added seasonal info for Season of the Haunted and fixed some bugs with new items.
