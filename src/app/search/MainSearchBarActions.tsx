@@ -2,47 +2,27 @@ import { t } from 'app/i18next-t';
 import { toggleSearchResults } from 'app/shell/actions';
 import { AppIcon, faList } from 'app/shell/icons';
 import { querySelector, searchResultsOpenSelector } from 'app/shell/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { Portal } from 'app/utils/temp-container';
 import { motion } from 'framer-motion';
-import React from 'react';
-import { connect } from 'react-redux';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { DimItem } from '../inventory/item-types';
 import styles from './MainSearchBarActions.m.scss';
 import { filteredItemsSelector, validateQuerySelector } from './search-filter';
 import './search-filter.scss';
 import SearchResults from './SearchResults';
 
-interface StoreProps {
-  searchQuery: string;
-  filteredItems: DimItem[];
-  searchResultsOpen: boolean;
-  queryValid: boolean;
-}
-
-type Props = StoreProps & ThunkDispatchProp;
-
-function mapStateToProps(state: RootState): StoreProps {
-  const searchQuery = querySelector(state);
-  return {
-    searchQuery,
-    queryValid: validateQuerySelector(state)(searchQuery).valid,
-    filteredItems: filteredItemsSelector(state),
-    searchResultsOpen: searchResultsOpenSelector(state),
-  };
-}
-
 /**
  * The extra buttons that appear in the main search bar when there are matched items.
  */
-function MainSearchBarActions({
-  filteredItems,
-  queryValid,
-  searchQuery,
-  searchResultsOpen,
-  dispatch,
-}: Props) {
+export default function MainSearchBarActions() {
+  const searchQuery = useSelector(querySelector);
+  const validateQuery = useSelector(validateQuerySelector);
+  const queryValid = validateQuery(searchQuery).valid;
+  const filteredItems = useSelector(filteredItemsSelector);
+  const searchResultsOpen = useSelector(searchResultsOpenSelector);
+  const dispatch = useDispatch();
+
   const location = useLocation();
   const onInventory = location.pathname.endsWith('inventory');
   const onProgress = location.pathname.endsWith('progress');
@@ -54,6 +34,10 @@ function MainSearchBarActions({
   const showSearchResults = onInventory;
   const showSearchCount = Boolean(
     queryValid && searchQuery && !onProgress && !onRecords && !onVendors
+  );
+  const handleCloseSearchResults = useCallback(
+    () => dispatch(toggleSearchResults(false)),
+    [dispatch]
   );
 
   return (
@@ -88,14 +72,9 @@ function MainSearchBarActions({
 
       {showSearchResults && searchResultsOpen && (
         <Portal>
-          <SearchResults
-            items={filteredItems}
-            onClose={() => dispatch(toggleSearchResults(false))}
-          />
+          <SearchResults items={filteredItems} onClose={handleCloseSearchResults} />
         </Portal>
       )}
     </>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(MainSearchBarActions);
