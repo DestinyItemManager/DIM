@@ -6,8 +6,7 @@ import React from 'react';
 import styles from './WeaponDeepsightInfo.m.scss';
 
 /**
- * A progress bar that shows a weapon's Deepsight Resonance attunement progress and lists the extractable
- * Resonant Elements.
+ * A progress bar that shows a weapon's Deepsight Resonance attunement progress.
  */
 export function WeaponDeepsightInfo({ deepsightInfo }: { deepsightInfo: DimDeepsight }) {
   const pct = percent(deepsightInfo.progress || 0);

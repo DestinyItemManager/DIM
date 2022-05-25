@@ -590,7 +590,7 @@ export function makeItem(
   // before building stats because the weapon level affects stats.
   createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
   // Deepsight Resonance
-  createdItem.deepsightInfo = buildDeepsightInfo(createdItem, defs);
+  createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
 
   try {
     createdItem.stats = buildStats(defs, createdItem, itemDef);
