@@ -24,7 +24,6 @@ import {
   DestinyStatDefinition,
 } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from './inventory-buckets';
-import { DimResonantElementTag } from './store/deepsight';
 
 /**
  * A generic DIM item, representing almost anything. This completely represents any D2 item, and most D1 items,
@@ -257,18 +256,11 @@ export interface DimCrafted {
   dateCrafted?: number;
 }
 
-export interface DimResonantElement {
-  tag: DimResonantElementTag;
-  icon: string;
-  name: string;
-}
 export interface DimDeepsight {
   /** Whether the weapon is ready for resonant material extraction */
   complete: boolean;
   /** 0-1 progress until the weapon is attuned */
   progress: number;
-  /** A collection of Resonant Elements that can be extracted from this weapon once attuned */
-  resonantElements: DimResonantElement[];
 }
 
 export interface DimStat {
