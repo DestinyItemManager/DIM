@@ -1,6 +1,6 @@
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
@@ -61,8 +61,7 @@ export default function InventoryItem({
     };
   }
 
-  const isSubclass =
-    item?.destinyVersion === 2 && item.itemCategoryHashes.includes(ItemCategoryHashes.Subclasses);
+  const isSubclass = item?.destinyVersion === 2 && item.bucket.hash === BucketHashes.Subclass;
   const subclassIconInfo =
     isSubclass && selectedSuperDisplay !== 'disabled'
       ? getSubclassIconInfo(item, selectedSuperDisplay === 'v3SubclassesOnly')
