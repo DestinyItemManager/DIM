@@ -912,7 +912,8 @@
       "Reload": "Reload",
       "Aim": "Aim",
       "Recoil": "Recoil",
-      "Power": "Power"
+      "Power": "Power",
+      "Airborne": "Airborne"
     }
   },
   "Progress": {

@@ -77,11 +77,12 @@ export function getColumnSelectionId(column: ColumnDefinition) {
 // Some stat labels are long. This lets us replace them with i18n
 export const statLabels: Record<number, string | undefined> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
-  [StatHashes.ReloadSpeed]: tl('Organizer.Stats.Reload'), // Reload Speed
-  [StatHashes.AimAssistance]: tl('Organizer.Stats.Aim'), // Aim Assistance
-  [StatHashes.RecoilDirection]: tl('Organizer.Stats.Recoil'), // Recoil Direction
-  [StatHashes.Attack]: tl('Organizer.Stats.Power'), // Inventory Size
-  [StatHashes.Defense]: tl('Organizer.Stats.Power'), // Inventory Size
+  [StatHashes.ReloadSpeed]: tl('Organizer.Stats.Reload'),
+  [StatHashes.AimAssistance]: tl('Organizer.Stats.Aim'),
+  [StatHashes.RecoilDirection]: tl('Organizer.Stats.Recoil'),
+  [StatHashes.Attack]: tl('Organizer.Stats.Power'),
+  [StatHashes.Defense]: tl('Organizer.Stats.Power'),
+  [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
 };
 
 // const booleanCell = (value: any) => (value ? <AppIcon icon={faCheck} /> : undefined);
