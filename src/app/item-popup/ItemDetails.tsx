@@ -92,7 +92,7 @@ export default function ItemDetails({
         <WeaponCraftedInfo craftInfo={item.craftedInfo} className="crafted-progress" />
       )}
 
-      {item.deepsightInfo && defs.isDestiny2() && <WeaponDeepsightInfo item={item} />}
+      {defs.isDestiny2() && <WeaponDeepsightInfo item={item} />}
 
       {killTrackerInfo && defs.isDestiny2() && (
         <KillTrackerInfo tracker={killTrackerInfo} showTextLabel className="masterwork-progress" />

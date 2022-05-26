@@ -1,5 +1,9 @@
 import { socketContainsPlugWithCategory } from 'app/utils/socket-utils';
-import { DestinyInventoryItemDefinition, DestinyItemComponent } from 'bungie-api-ts/destiny2';
+import {
+  DestinyInventoryItemDefinition,
+  DestinyItemComponent,
+  DestinyObjectiveProgress,
+} from 'bungie-api-ts/destiny2';
 import { resonantElementTagsByObjectiveHash } from 'data/d2/crafting-resonant-elements';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { DimDeepsight, DimItem, DimSocket } from '../item-types';
@@ -7,6 +11,14 @@ import { DimDeepsight, DimItem, DimSocket } from '../item-types';
 export const resonantElementObjectiveHashes = Object.keys(resonantElementTagsByObjectiveHash).map(
   (objectiveHashStr) => parseInt(objectiveHashStr, 10)
 );
+
+const fakeObjective: DestinyObjectiveProgress = {
+  complete: false,
+  objectiveHash: 0,
+  progress: 0,
+  visible: false,
+  completionValue: 1000,
+};
 
 export function buildDeepsightInfo(
   item: DimItem,
@@ -27,11 +39,8 @@ export function buildDeepsightInfo(
     itemComponent.tooltipNotificationIndexes[0] === 0;
 
   const attunementObjective = resonanceSocket.plugged.plugObjectives[0];
-  if (!attunementObjective) {
-    return undefined;
-  }
   return {
-    attunementObjective,
+    attunementObjective: attunementObjective ?? fakeObjective,
     extractPattern,
   };
 }

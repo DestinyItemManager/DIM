@@ -10,34 +10,38 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './WeaponDeepsightInfo.m.scss';
 
-const getItemPatternRecordHash = _.memoize((defs: D2ManifestDefinitions, itemName: string) => {
+/**
+ * Generate a table from item name to the record for their crafting pattern.
+ */
+const getAllItemPatternRecordHashes = _.once((defs: D2ManifestDefinitions) => {
+  const recordHashesByName: { [itemName: string]: number } = {};
   for (const record of Object.values(defs.Record.getAll())) {
-    if (
-      record.completionInfo?.toastStyle === DestinyRecordToastStyle.CraftingRecipeUnlocked &&
-      record.displayProperties.name === itemName
-    ) {
-      return record.hash;
+    if (record.completionInfo?.toastStyle === DestinyRecordToastStyle.CraftingRecipeUnlocked) {
+      recordHashesByName[record.displayProperties.name] = record.hash;
     }
   }
+  return recordHashesByName;
 });
 
 /**
  * A progress bar that shows a weapon's Deepsight Resonance attunement progress.
  */
 export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
-  const deepsightInfo = item.deepsightInfo!;
+  const deepsightInfo = item.deepsightInfo;
   const record = useSelector((state: RootState) => {
-    if (!deepsightInfo.extractPattern) {
-      return undefined;
-    }
     const defs = d2ManifestSelector(state)!;
     const profileResponse = profileResponseSelector(state);
-    const recordHash = getItemPatternRecordHash(defs, item.name);
+    const recordHash = getAllItemPatternRecordHashes(defs)[item.name];
     return recordHash ? profileResponse?.profileRecords?.data?.records[recordHash] : undefined;
   });
+
+  if (!deepsightInfo && !record?.objectives[0]) {
+    return null;
+  }
+
   return (
     <div className={styles.deepsightProgress}>
-      <Objective objective={deepsightInfo.attunementObjective} />
+      {deepsightInfo && <Objective objective={deepsightInfo.attunementObjective} />}
       {record?.objectives[0] && <Objective objective={record.objectives[0]} />}
     </div>
   );
