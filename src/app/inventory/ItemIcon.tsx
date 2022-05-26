@@ -166,7 +166,8 @@ function getModCostInfo(mod: DestinyInventoryItemDefinition | number, defs: D2Ma
   if (
     mod?.plug &&
     mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedStasisTrinkets &&
-    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedVoidFragments
+    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedVoidFragments &&
+    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedSolarFragments
   ) {
     modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
 
