@@ -204,9 +204,9 @@ export interface DimItem {
   /** If this item is a masterwork, this will include information about its masterwork properties. */
   masterworkInfo: DimMasterwork | null;
   /** If this item is crafted, this includes info about its crafting properties. */
-  craftedInfo: DimCrafted | null;
+  craftedInfo?: DimCrafted;
   /** If this item has Deepsight Resonance, this includes info about its Deepsight properties. */
-  deepsightInfo: DimDeepsight | null;
+  deepsightInfo?: DimDeepsight;
   /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The state of this item in the user's D2 Collection */

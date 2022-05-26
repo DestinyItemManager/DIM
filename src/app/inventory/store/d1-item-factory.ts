@@ -340,8 +340,6 @@ function makeItem(
     infusable: false,
     infusionFuel: false,
     masterworkInfo: null,
-    craftedInfo: null,
-    deepsightInfo: null,
     infusionQuality: null,
     canPullFromPostmaster: false,
     uniqueStack: false,

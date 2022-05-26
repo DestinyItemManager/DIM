@@ -12,10 +12,10 @@ export function buildDeepsightInfo(
   item: DimItem,
   itemComponent: DestinyItemComponent,
   itemDef: DestinyInventoryItemDefinition
-): DimDeepsight | null {
+): DimDeepsight | undefined {
   const resonanceSocket = getResonanceSocket(item);
   if (!resonanceSocket || !resonanceSocket.plugged?.plugObjectives) {
-    return null;
+    return undefined;
   }
 
   // A heuristic for what tooltips deepsight weapons have - right now if a

@@ -284,8 +284,6 @@ function makeFakePursuitItem(
     infusionFuel: false,
     sockets: null,
     masterworkInfo: null,
-    craftedInfo: null,
-    deepsightInfo: null,
     infusionQuality: null,
     owner: store.id,
     uniqueStack: false,

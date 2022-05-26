@@ -546,8 +546,6 @@ export function makeItem(
     infusionFuel: false,
     sockets: null,
     masterworkInfo: null,
-    craftedInfo: null,
-    deepsightInfo: null,
     infusionQuality: null,
     tooltipNotifications,
   };
