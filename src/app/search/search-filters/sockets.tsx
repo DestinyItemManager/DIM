@@ -7,7 +7,7 @@ import {
   modTypeTags,
 } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
-import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
+import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import craftingMementos from 'data/d2/crafting-mementos.json';
 import {
   ItemCategoryHashes,
@@ -222,7 +222,11 @@ const socketFilters: FilterDefinition[] = [
           case 'incomplete':
             return !item.deepsightInfo.attunementObjective.complete;
           case 'pattern':
-            return item.deepsightInfo.extractPattern;
+            return Boolean(
+              !item.deepsightInfo.attunementObjective.complete &&
+                item.patternUnlockRecord &&
+                item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
+            );
         }
       },
   },

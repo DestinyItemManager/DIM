@@ -24,6 +24,8 @@ import {
   DestinyItemSubType,
   DestinyItemType,
   DestinyObjectiveProgress,
+  DestinyProfileRecordsComponent,
+  DestinyRecordState,
   DictionaryComponentResponse,
   ItemBindStatus,
   ItemLocation,
@@ -42,7 +44,7 @@ import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';
-import { buildCraftedInfo } from './crafted';
+import { buildCraftedInfo, itemNameToCraftingPatternRecordHash } from './crafted';
 import { buildDeepsightInfo } from './deepsight';
 import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
@@ -75,7 +77,8 @@ export function processItems(
   },
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
-  }
+  },
+  profileRecords?: DestinyProfileRecordsComponent
 ): DimItem[] {
   const result: DimItem[] = [];
 
@@ -89,7 +92,8 @@ export function processItems(
         item,
         owner,
         mergedCollectibles,
-        uninstancedItemObjectives
+        uninstancedItemObjectives,
+        profileRecords
       );
     } catch (e) {
       errorLog('d2-stores', 'Error processing item', item, e);
@@ -252,7 +256,8 @@ export function makeItem(
   },
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
-  }
+  },
+  profileRecords?: DestinyProfileRecordsComponent
 ): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
 
@@ -587,9 +592,21 @@ export function makeItem(
   // Extract weapon crafting info from the crafted socket but
   // before building stats because the weapon level affects stats.
   createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
+
+  // Crafting pattern
+  const patternRecordHash = itemNameToCraftingPatternRecordHash(defs)[createdItem.name];
+  if (patternRecordHash) {
+    createdItem.patternUnlockRecord = profileRecords?.records[patternRecordHash];
+  }
+
   // Deepsight Resonance
-  createdItem.deepsightInfo = buildDeepsightInfo(createdItem, item, itemDef);
-  if (createdItem.deepsightInfo?.extractPattern) {
+  createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
+  if (
+    createdItem.deepsightInfo &&
+    !createdItem.deepsightInfo.attunementObjective.complete &&
+    createdItem.patternUnlockRecord &&
+    createdItem.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
+  ) {
     // Add back in the "pattern can be extracted" tooltip
     createdItem.tooltipNotifications = item.tooltipNotificationIndexes
       .map((i) => itemDef.tooltipNotifications?.[i])

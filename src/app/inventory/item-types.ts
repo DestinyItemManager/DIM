@@ -18,6 +18,7 @@ import {
   DestinyItemTooltipNotification,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
+  DestinyRecordComponent,
   DestinySandboxPerkDefinition,
   DestinySocketCategoryDefinition,
   DestinyStat,
@@ -205,6 +206,12 @@ export interface DimItem {
   masterworkInfo: DimMasterwork | null;
   /** If this item is crafted, this includes info about its crafting properties. */
   craftedInfo?: DimCrafted;
+  /**
+   * The record (triumph) that corresponds to this item's crafting pattern, if
+   * it has one. This should be populated whether or not the pattern is unlocked.
+   * Optional in case we ever fail to match items to their record.
+   */
+  patternUnlockRecord?: DestinyRecordComponent;
   /** If this item has Deepsight Resonance, this includes info about its Deepsight properties. */
   deepsightInfo?: DimDeepsight;
   /** an item's current breaker type, if it has one */
@@ -259,8 +266,6 @@ export interface DimCrafted {
 export interface DimDeepsight {
   /** Progress of attuning the item - when complete, a resonant material can be extracted */
   attunementObjective: DestinyObjectiveProgress;
-  /** Whether completing this item's deepsight objective will progress towards unlocking its pattern. */
-  extractPattern: boolean;
 }
 
 export interface DimStat {

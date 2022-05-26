@@ -7,6 +7,7 @@ import { errorLog } from 'app/utils/log';
 import {
   DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
+  DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -85,7 +86,12 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
         (!item.deepsightInfo || item.deepsightInfo.attunementObjective.complete) && (
           <img className={styles.highlightedObjective} src={pursuitComplete} />
         )}
-      {item.deepsightInfo?.extractPattern && <div className={styles.deepsightPattern} />}
+      {Boolean(
+        item.deepsightInfo &&
+          !item.deepsightInfo.attunementObjective.complete &&
+          item.patternUnlockRecord &&
+          item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
+      ) && <div className={styles.deepsightPattern} />}
     </>
   );
 }

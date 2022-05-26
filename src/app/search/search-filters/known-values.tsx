@@ -4,8 +4,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
-import { DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
-import craftableHashes from 'data/d2/craftable-hashes.json';
+import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
@@ -181,7 +180,15 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: ['craftable'],
     description: tl('Filter.Craftable'),
     destinyVersion: 2,
-    filter: () => (item) => craftableHashes.includes(item.hash),
+    filter: () => (item) => item.crafted,
+  },
+  {
+    keywords: ['patternunlocked'],
+    description: tl('Filter.PatternUnlocked'),
+    destinyVersion: 2,
+    filter: () => (item) =>
+      item.patternUnlockRecord &&
+      !(item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted),
   },
   {
     keywords: 'source',

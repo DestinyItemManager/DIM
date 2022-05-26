@@ -1,6 +1,11 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
-import { DestinyObjectiveProgress, DestinyObjectiveUiStyle } from 'bungie-api-ts/destiny2';
+import {
+  DestinyObjectiveProgress,
+  DestinyObjectiveUiStyle,
+  DestinyRecordToastStyle,
+} from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import { DimCrafted, DimItem, DimSocket } from '../item-types';
 
 /** the socket category containing the single socket with weapon crafting objectives */
@@ -8,6 +13,21 @@ export const craftedSocketCategoryHash = 3583996951;
 
 /** the socket category containing the Mementos */
 export const mementoSocketCategoryHash = 3201856887;
+
+/**
+ * Generate a table from item name to the record for their crafting pattern.
+ */
+export const itemNameToCraftingPatternRecordHash = _.once((defs: D2ManifestDefinitions) => {
+  const recordHashesByName: { [itemName: string]: number } = {};
+  if (defs) {
+    for (const record of Object.values(defs.Record.getAll())) {
+      if (record.completionInfo?.toastStyle === DestinyRecordToastStyle.CraftingRecipeUnlocked) {
+        recordHashesByName[record.displayProperties.name] = record.hash;
+      }
+    }
+  }
+  return recordHashesByName;
+});
 
 export function buildCraftedInfo(
   item: DimItem,
