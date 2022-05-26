@@ -261,6 +261,8 @@ export interface DimDeepsight {
   complete: boolean;
   /** 0-1 progress until the weapon is attuned */
   progress: number;
+  /** Whether completing this item's deepsight objective will progress towards unlocking its pattern. */
+  extractPattern: boolean;
 }
 
 export interface DimStat {

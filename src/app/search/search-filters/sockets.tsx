@@ -206,7 +206,7 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.Deepsight'),
     format: ['simple', 'query'],
     destinyVersion: 2,
-    suggestions: ['complete', 'incomplete'],
+    suggestions: ['complete', 'incomplete', 'pattern'],
     filter:
       ({ filterValue }) =>
       (item: DimItem) => {
@@ -221,6 +221,8 @@ const socketFilters: FilterDefinition[] = [
             return item.deepsightInfo.complete;
           case 'incomplete':
             return !item.deepsightInfo.complete;
+          case 'pattern':
+            return item.deepsightInfo.extractPattern;
         }
       },
   },

@@ -590,7 +590,13 @@ export function makeItem(
   // before building stats because the weapon level affects stats.
   createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
   // Deepsight Resonance
-  createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
+  createdItem.deepsightInfo = buildDeepsightInfo(createdItem, item, itemDef);
+  if (createdItem.deepsightInfo?.extractPattern) {
+    // Add back in the "pattern can be extracted" tooltip
+    createdItem.tooltipNotifications = item.tooltipNotificationIndexes
+      .map((i) => itemDef.tooltipNotifications?.[i])
+      .filter(Boolean);
+  }
 
   try {
     createdItem.stats = buildStats(defs, createdItem, itemDef);
