@@ -85,6 +85,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
         (!item.deepsightInfo || item.deepsightInfo.attunementObjective.complete) && (
           <img className={styles.highlightedObjective} src={pursuitComplete} />
         )}
+      {item.deepsightInfo?.extractPattern && <div className={styles.deepsightPattern} />}
     </>
   );
 }
