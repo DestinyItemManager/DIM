@@ -27,11 +27,11 @@ export function buildDeepsightInfo(
     itemComponent.tooltipNotificationIndexes[0] === 0;
 
   const attunementObjective = resonanceSocket.plugged.plugObjectives[0];
+  if (!attunementObjective) {
+    return undefined;
+  }
   return {
-    complete: attunementObjective?.complete,
-    progress: attunementObjective?.progress
-      ? attunementObjective.progress / attunementObjective.completionValue
-      : 0,
+    attunementObjective,
     extractPattern,
   };
 }

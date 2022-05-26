@@ -1,8 +1,8 @@
 .deepsightProgress {
   padding: 4px 10px 4px;
   background: #333;
-}
 
-.deepsightObjectiveProgress {
-  background: #222;
+  :global(.objective-progress) {
+    background: #222;
+  }
 }

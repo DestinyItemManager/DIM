@@ -149,7 +149,7 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   // deepsight incomplete -> deepsight complete -> no deepsight
   // in order of "needs addressing"? ish?
   deepsight: compareBy((item: DimItem) =>
-    item.deepsightInfo ? (item.deepsightInfo.complete ? 2 : 1) : 3
+    item.deepsightInfo ? (item.deepsightInfo.attunementObjective.complete ? 2 : 1) : 3
   ),
   default: () => 0,
 };

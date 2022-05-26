@@ -218,9 +218,9 @@ const socketFilters: FilterDefinition[] = [
           case 'deepsight':
             return true;
           case 'complete':
-            return item.deepsightInfo.complete;
+            return item.deepsightInfo.attunementObjective.complete;
           case 'incomplete':
-            return !item.deepsightInfo.complete;
+            return !item.deepsightInfo.attunementObjective.complete;
           case 'pattern':
             return item.deepsightInfo.extractPattern;
         }

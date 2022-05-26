@@ -257,10 +257,8 @@ export interface DimCrafted {
 }
 
 export interface DimDeepsight {
-  /** Whether the weapon is ready for resonant material extraction */
-  complete: boolean;
-  /** 0-1 progress until the weapon is attuned */
-  progress: number;
+  /** Progress of attuning the item - when complete, a resonant material can be extracted */
+  attunementObjective: DestinyObjectiveProgress;
   /** Whether completing this item's deepsight objective will progress towards unlocking its pattern. */
   extractPattern: boolean;
 }
