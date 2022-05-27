@@ -812,6 +812,7 @@
     "ShiftTip": "Tip: Hold the Shift key and click on a cell to filter items",
     "Stats": {
       "Aim": "Aim",
+      "Airborne": "Airborne",
       "Power": "Power",
       "RPM": "RPM",
       "Recoil": "Recoil",

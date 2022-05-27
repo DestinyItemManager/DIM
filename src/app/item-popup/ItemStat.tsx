@@ -3,7 +3,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import PressTip from 'app/dim-ui/PressTip';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
 import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
@@ -25,6 +25,12 @@ const modItemCategoryHashes = [
   ItemCategoryHashes.ArmorModsGameplay, // armor mods (pre-2.0)
   ItemCategoryHashes.ArmorMods, // armor 2.0 mods
 ];
+
+// Some stat labels are long. This lets us replace them with i18n
+const statLabels: Record<number, string | undefined> = {
+  [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
+  [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
+};
 
 /**
  * A single stat line.
@@ -87,7 +93,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         aria-label={stat.displayProperties.name}
         title={stat.displayProperties.description}
       >
-        {stat.displayProperties.name}
+        {stat.statHash in statLabels ? t(statLabels[stat.statHash]!) : stat.displayProperties.name}
       </div>
 
       <div className={clsx(styles.value, optionalClasses)}>
