@@ -1,4 +1,4 @@
-@import '../../variables.scss';
+@use '../../variables.scss' as *;
 
 .vendors {
   composes: dim-page from global;

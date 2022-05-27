@@ -1,4 +1,4 @@
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 .badge {
   margin-top: -1 * $item-border-width;

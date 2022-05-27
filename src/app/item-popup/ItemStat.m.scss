@@ -1,4 +1,5 @@
-@import '../variables.scss';
+@use 'sass:color';
+@use '../variables.scss' as *;
 
 .statName {
   grid-column: 1;
@@ -72,9 +73,9 @@
 .moddedStatBar {
   background-color: $blue;
   & + .moddedStatBar {
-    background-color: adjust-color($blue, $lightness: -10);
+    background-color: color.adjust($blue, $lightness: -10%);
     & + .moddedStatBar {
-      background-color: adjust-color($blue, $lightness: -20);
+      background-color: color.adjust($blue, $lightness: -20%);
     }
   }
 }
