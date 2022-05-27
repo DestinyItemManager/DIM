@@ -168,14 +168,7 @@ const freeformFilters: FilterDefinition[] = [
       const test = (s: string) => plainString(s, language).includes(filterValue);
       return (item) => {
         const notes = getNotes(item, itemInfos, itemHashTags);
-        return (
-          (notes && test(notes)) ||
-          test(item.name) ||
-          test(item.description) ||
-          test(item.typeName) ||
-          testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes) ||
-          testStringsFromAllSockets(test, item)
-        );
+        return (notes && test(notes)) || test(item.name);
       };
     },
   },
