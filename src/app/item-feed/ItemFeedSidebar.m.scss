@@ -1,8 +1,9 @@
 @use '../variables.scss' as *;
 
 .trayContainer {
-  position: sticky;
+  position: fixed;
   @include below-header;
+  right: 0;
   height: calc(var(--viewport-height) - var(--header-height));
   z-index: 10;
   box-sizing: border-box;
