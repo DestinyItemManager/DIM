@@ -11,7 +11,7 @@ import ItemPicker from './ItemPicker';
  * single element to help prevent multiple pickers from showing
  * at once and to make the API easier.
  */
-function ItemPickerContainer() {
+export default function ItemPickerContainer() {
   const [generation, setGeneration] = useState(0);
   const [options, setOptions] = useState<ItemPickerState>();
 
@@ -45,5 +45,3 @@ function ItemPickerContainer() {
 
   return <ItemPicker key={generation} {...options} onSheetClosed={onClose} />;
 }
-
-export default ItemPickerContainer;
