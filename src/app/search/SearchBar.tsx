@@ -10,6 +10,7 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isiOSBrowser } from 'app/utils/browsers';
+import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
@@ -25,7 +26,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import {
@@ -495,8 +495,8 @@ function SearchBar(
         </AnimatePresence>
       </LayoutGroup>
 
-      {filterHelpOpen &&
-        ReactDOM.createPortal(
+      {filterHelpOpen && (
+        <Portal>
           <Sheet
             onClose={() => setFilterHelpOpen(false)}
             header={
@@ -510,9 +510,9 @@ function SearchBar(
             <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
               <LazyFilterHelp />
             </Suspense>
-          </Sheet>,
-          document.body
-        )}
+          </Sheet>
+        </Portal>
+      )}
 
       {autocompleteMenu}
     </div>

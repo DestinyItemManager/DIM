@@ -9,6 +9,7 @@ import {
 } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { errorLog, warnLog } from 'app/utils/log';
+import { isEnhancedPerk } from 'app/utils/socket-utils';
 import {
   BucketCategory,
   ComponentPrivacySetting,
@@ -32,8 +33,14 @@ import {
   SingleComponentResponse,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
+import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import extendedICH from 'data/d2/extended-ich.json';
-import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import {
+  BucketHashes,
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  StatHashes,
+} from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
@@ -586,11 +593,30 @@ export function makeItem(
     reportException('Sockets', e, { itemHash: item.itemHash });
   }
 
+  // A crafted weapon with an enhanced intrinsic and two enhanced traits is masterworked
+  // https://github.com/Bungie-net/api/issues/1662
+  if (createdItem.crafted && createdItem.sockets) {
+    const containsEnhancedIntrinsic = createdItem.sockets.allSockets.some(
+      (s) => s.plugged && enhancedIntrinsics.has(s.plugged.plugDef.hash)
+    );
+    if (containsEnhancedIntrinsic) {
+      const numEnhancedTraits = createdItem.sockets.allSockets.filter(
+        (s) =>
+          s.plugged &&
+          s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
+          isEnhancedPerk(s.plugged)
+      );
+      if (numEnhancedTraits.length >= 2) {
+        createdItem.masterwork = true;
+      }
+    }
+  }
+
   // Extract weapon crafting info from the crafted socket but
   // before building stats because the weapon level affects stats.
   createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
   // Deepsight Resonance
-  createdItem.deepsightInfo = buildDeepsightInfo(createdItem, defs);
+  createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
 
   try {
     createdItem.stats = buildStats(defs, createdItem, itemDef);

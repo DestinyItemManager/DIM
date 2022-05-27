@@ -47,6 +47,11 @@ $badge-height: '(#{$badge-font-size} + 4px)';
 // The height of our "issue banner" for charities/causes
 $issue-banner-height: 101px;
 
+// From ceaser-easing package
+$easeInCubic: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+$easeOutCubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+$easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+
 // A mixin that allows targeting styles only when in phone-portrait display mode
 @mixin phone-portrait {
   // This seems like a good breakpoint for portrait based on https://material.io/devices/
