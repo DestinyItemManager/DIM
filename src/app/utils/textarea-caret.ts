@@ -1,6 +1,9 @@
 // We'll copy the properties below into the mirror div.
 // Note that some browsers, such as Firefox, do not concatenate properties
 // into their shorthand (e.g. padding-top, padding-bottom etc. -> padding),
+
+import { tempContainer } from './temp-container';
+
 // so we have to list every single property explicitly.
 const properties = [
   'direction', // RTL support
@@ -124,7 +127,7 @@ export default function getCaretCoordinates(element: HTMLTextAreaElement, positi
   div.appendChild(span);
 
   // DIM: append to this element instead of body to avoid expensive recalcs
-  const parent = document.getElementById('textarea-caret')!;
+  const parent = tempContainer;
 
   parent.appendChild(div);
   const coordinates = {
