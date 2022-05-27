@@ -220,6 +220,9 @@ textarea {
   color: white;
   box-sizing: border-box;
   font-family: monospace, 'Destiny Symbols';
+  font-size: inherit;
+  // Setting this makes yuku/textcomplete faster because it doesn't need to make a fake element to measure line height (incorrectly, too)
+  line-height: calc(16 / 12);
 }
 
 select {

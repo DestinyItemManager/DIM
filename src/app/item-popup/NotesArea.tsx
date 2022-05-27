@@ -78,10 +78,8 @@ function NotesEditor({
 
   // track what's in the text field and warn people if it's too long
   const [liveNotes, setLiveNotes] = useState(notes ?? '');
-  const onNotesUpdated = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const onNotesUpdated = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setLiveNotes(e.target.value);
-  };
-  const tags = useSelector(allNotesHashtagsSelector);
 
   // track the Text Area so we can get its contents once, at time of save,
   // without relying on the constantly refreshing liveNotes value
@@ -97,9 +95,7 @@ function NotesEditor({
     );
   }, [dispatch, item]);
 
-  const stopEvents = (e: React.SyntheticEvent) => {
-    e.stopPropagation();
-  };
+  const stopEvents = (e: React.SyntheticEvent) => e.stopPropagation();
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     e.stopPropagation();
@@ -115,6 +111,7 @@ function NotesEditor({
     }
   };
 
+  // Save notes when component is unmounted
   // https://reactjs.org/blog/2020/08/10/react-v17-rc.html#effect-cleanup-timing
   useLayoutEffect(() => saveNotes, [saveNotes]);
 
@@ -122,6 +119,36 @@ function NotesEditor({
     e.stopPropagation();
   };
 
+  useTagsAutocomplete(textArea);
+
+  // On iOS at least, focusing the keyboard pushes the content off the screen
+  const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
+
+  return (
+    <form name="notes">
+      <textarea
+        ref={textArea}
+        name="data"
+        autoFocus={nativeAutoFocus}
+        placeholder={t('Notes.Help')}
+        maxLength={maxLength}
+        value={liveNotes}
+        onClick={onClick}
+        onChange={onNotesUpdated}
+        onBlur={stopEvents}
+        onKeyDown={onKeyDown}
+        onTouchStart={stopEvents}
+        onMouseDown={stopEvents}
+      />
+      {liveNotes && liveNotes.length > maxLength && (
+        <span className={styles.error}>{t('Notes.Error')}</span>
+      )}
+    </form>
+  );
+}
+
+function useTagsAutocomplete(textArea: React.RefObject<HTMLTextAreaElement>) {
+  const tags = useSelector(allNotesHashtagsSelector);
   useEffect(() => {
     if (textArea.current) {
       const editor = new TextareaEditor(textArea.current);
@@ -170,29 +197,4 @@ function NotesEditor({
       };
     }
   }, [textArea, tags]);
-
-  // On iOS at least, focusing the keyboard pushes the content off the screen
-  const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
-
-  return (
-    <form name="notes">
-      <textarea
-        ref={textArea}
-        name="data"
-        autoFocus={nativeAutoFocus}
-        placeholder={t('Notes.Help')}
-        maxLength={maxLength}
-        value={liveNotes}
-        onClick={onClick}
-        onChange={onNotesUpdated}
-        onBlur={stopEvents}
-        onKeyDown={onKeyDown}
-        onTouchStart={stopEvents}
-        onMouseDown={stopEvents}
-      />
-      {liveNotes && liveNotes.length > maxLength && (
-        <span className={styles.error}>{t('Notes.Error')}</span>
-      )}
-    </form>
-  );
 }
