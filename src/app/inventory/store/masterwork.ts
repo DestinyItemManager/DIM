@@ -1,8 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isPlugStatActive } from 'app/utils/item-utils';
-import { isWeaponMasterworkSocket } from 'app/utils/socket-utils';
+import { getFirstSocketByCategoryHash, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import { DamageType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem, DimMasterwork, DimSockets } from '../item-types';
 
 /**
@@ -44,11 +44,15 @@ function buildMasterworkInfo(
   sockets: DimSockets,
   defs: D2ManifestDefinitions
 ): DimMasterwork | null {
-  const socket = sockets.allSockets.find(isWeaponMasterworkSocket);
-  if (!socket || !socket.plugged) {
+  // For crafted weapons, the enhanced intrinsic provides masterwork-like stats
+  const masterworkPlug =
+    (createdItem.crafted &&
+      getFirstSocketByCategoryHash(sockets, SocketCategoryHashes.IntrinsicTraits)?.plugged) ||
+    sockets.allSockets.find(isWeaponMasterworkSocket)?.plugged;
+  if (!masterworkPlug) {
     return null;
   }
-  const investmentStats = socket.plugged.plugDef.investmentStats;
+  const investmentStats = masterworkPlug.plugDef.investmentStats;
 
   const exoticWeapon = createdItem.isExotic && createdItem.bucket?.sort === 'Weapons';
 
@@ -68,7 +72,7 @@ function buildMasterworkInfo(
     if (
       !isPlugStatActive(
         createdItem,
-        socket.plugged.plugDef.hash,
+        masterworkPlug.plugDef.hash,
         stat.statTypeHash,
         stat.isConditionallyActive
       )
@@ -84,12 +88,12 @@ function buildMasterworkInfo(
     stats.push({
       hash: stat.statTypeHash,
       name: defs.Stat.get(stat.statTypeHash).displayProperties.name,
-      value: socket.plugged?.stats?.[stat.statTypeHash] || 0,
+      value: masterworkPlug.stats?.[stat.statTypeHash] || 0,
     });
   }
 
   return {
-    tier: exoticWeapon ? maxTier : Math.abs(socket.plugged?.plugDef.investmentStats[0].value),
+    tier: exoticWeapon ? maxTier : Math.abs(masterworkPlug.plugDef.investmentStats[0].value),
     stats,
   };
 }

@@ -15,6 +15,7 @@ export enum D2SeasonEnum {
   SPLICER,
   LOST,
   WITCH_QUEEN,
+  HAUNTED,
 
   __LENGTH__, // This always needs to be last
 }
@@ -241,6 +242,20 @@ export const D2SeasonInfo = {
     powerfulCap: 1550,
     pinnacleCap: 1560,
     releaseDate: '2022-02-22',
+    resetTime: '17:00:00Z',
+    numWeeks: 15,
+  },
+  17: {
+    DLCName: '',
+    seasonName: 'Season of the Haunted',
+    seasonTag: 'haunted',
+    season: 17,
+    maxLevel: 50,
+    powerFloor: 1350,
+    softCap: 1510,
+    powerfulCap: 1560,
+    pinnacleCap: 1570,
+    releaseDate: '2022-05-24',
     resetTime: '17:00:00Z',
     numWeeks: 15,
   },

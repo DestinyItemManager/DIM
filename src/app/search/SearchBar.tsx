@@ -10,6 +10,7 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isiOSBrowser } from 'app/utils/browsers';
+import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
@@ -25,7 +26,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import {
@@ -67,9 +67,10 @@ interface ProvidedProps {
   /** The search query to fill in the input. This is used only initially, or when searchQueryVersion changes */
   searchQuery?: string;
   /** Children are used as optional extra action buttons only when there is a query. */
-  children?: React.ReactChild;
+  children?: React.ReactNode;
   /** An optional menu of actions that can be executed on the search. Always shown. */
-  menu?: React.ReactChild;
+  menu?: React.ReactNode;
+  instant?: boolean;
   /** Fired whenever the query changes (already debounced) */
   onQueryChanged(query: string): void;
   /** Fired whenever the query has been cleared */
@@ -190,6 +191,7 @@ function SearchBar(
     placeholder,
     children,
     onQueryChanged,
+    instant,
     onClear,
     dispatch,
     validateQuery,
@@ -210,9 +212,11 @@ function SearchBar(
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdateQuery = useCallback(
-    _.debounce((query: string) => {
-      onQueryChanged(query);
-    }, 500),
+    instant
+      ? onQueryChanged
+      : _.debounce((query: string) => {
+          onQueryChanged(query);
+        }, 500),
     [onQueryChanged]
   );
 
@@ -491,8 +495,8 @@ function SearchBar(
         </AnimatePresence>
       </LayoutGroup>
 
-      {filterHelpOpen &&
-        ReactDOM.createPortal(
+      {filterHelpOpen && (
+        <Portal>
           <Sheet
             onClose={() => setFilterHelpOpen(false)}
             header={
@@ -506,9 +510,9 @@ function SearchBar(
             <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
               <LazyFilterHelp />
             </Suspense>
-          </Sheet>,
-          document.body
-        )}
+          </Sheet>
+        </Portal>
+      )}
 
       {autocompleteMenu}
     </div>

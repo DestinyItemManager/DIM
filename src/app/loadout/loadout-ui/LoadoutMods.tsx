@@ -7,9 +7,9 @@ import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
+import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import React, { memo, useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import ModAssignmentDrawer from '../mod-assignment-drawer/ModAssignmentDrawer';
 import { createGetModRenderKey } from '../mod-utils';
@@ -125,28 +125,27 @@ export default memo(function LoadoutMods({
           )}
         </div>
       )}
-      {showModAssignmentDrawer &&
-        ReactDOM.createPortal(
+      {showModAssignmentDrawer && (
+        <Portal>
           <ModAssignmentDrawer
             loadout={loadout}
             storeId={storeId}
             onUpdateMods={onUpdateMods}
             onClose={() => setShowModAssignmentDrawer(false)}
-          />,
-          document.body
-        )}
-      {onUpdateMods &&
-        showModPicker &&
-        ReactDOM.createPortal(
+          />
+        </Portal>
+      )}
+      {onUpdateMods && showModPicker && (
+        <Portal>
           <ModPicker
             classType={loadout.classType}
             owner={storeId}
             lockedMods={savedMods}
             onAccept={onUpdateMods}
             onClose={() => setShowModPicker(false)}
-          />,
-          document.body
-        )}
+          />
+        </Portal>
+      )}
     </div>
   );
 });

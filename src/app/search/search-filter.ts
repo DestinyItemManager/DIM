@@ -1,7 +1,6 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
 import { Settings } from 'app/settings/initial-settings';
-import { RootState } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
 import { WishListRoll } from 'app/wishlists/types';
 import _ from 'lodash';
@@ -14,6 +13,7 @@ import {
   displayableBucketHashesSelector,
   itemHashTagsSelector,
   itemInfosSelector,
+  newItemsSelector,
   sortedStoresSelector,
 } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
@@ -43,7 +43,7 @@ export const filterFactorySelector = createSelector(
   loadoutsByItemSelector,
   wishListFunctionSelector,
   wishListsByHashSelector,
-  (state: RootState) => state.inventory.newItems,
+  newItemsSelector,
   itemInfosSelector,
   itemHashTagsSelector,
   languageSelector,

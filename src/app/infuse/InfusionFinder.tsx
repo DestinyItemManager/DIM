@@ -9,7 +9,7 @@ import { DimThunkDispatch } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import React, { useCallback, useEffect, useReducer } from 'react';
+import React, { useCallback, useDeferredValue, useEffect, useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
@@ -129,10 +129,14 @@ export default function InfusionFinder() {
   const filters = useSelector(filterFactorySelector);
   const [lastInfusionDirection, setLastInfusionDirection] = useSetting('infusionDirection');
 
-  const [{ direction, query, source, target, filter }, stateDispatch] = useReducer(stateReducer, {
-    direction: lastInfusionDirection,
-    filter: '',
-  });
+  const [{ direction, query, source, target, filter: liveFilter }, stateDispatch] = useReducer(
+    stateReducer,
+    {
+      direction: lastInfusionDirection,
+      filter: '',
+    }
+  );
+  const filter = useDeferredValue(liveFilter);
 
   const reset = () => stateDispatch({ type: 'reset' });
   const selectItem = (item: DimItem) => stateDispatch({ type: 'selectItem', item });
@@ -257,7 +261,7 @@ export default function InfusionFinder() {
           </div>
         </div>
         <div className="infuseSearch">
-          <SearchBar onQueryChanged={onQueryChanged} placeholder={t('Infusion.Filter')} />
+          <SearchBar onQueryChanged={onQueryChanged} placeholder={t('Infusion.Filter')} instant />
         </div>
       </div>
     </div>

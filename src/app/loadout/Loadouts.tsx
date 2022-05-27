@@ -21,10 +21,10 @@ import { useSetting } from 'app/settings/hooks';
 import { addIcon, AppIcon, deleteIcon, faCalculator } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { ReactNode, useMemo, useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
@@ -153,15 +153,15 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         ))}
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
-      {sharedLoadout &&
-        ReactDOM.createPortal(
+      {sharedLoadout && (
+        <Portal>
           <LoadoutShareSheet
             account={account}
             loadout={sharedLoadout}
             onClose={() => setSharedLoadout(undefined)}
-          />,
-          document.body
-        )}
+          />
+        </Portal>
+      )}
     </PageWithMenu>
   );
 }

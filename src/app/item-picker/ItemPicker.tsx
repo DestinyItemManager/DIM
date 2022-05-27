@@ -7,7 +7,7 @@ import { RootState } from 'app/store/types';
 import { uniqBy } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useDeferredValue, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../dim-ui/Sheet';
@@ -56,12 +56,16 @@ function ItemPicker({
   onCancel,
   onSheetClosed,
 }: Props) {
-  const [query, setQuery] = useState('');
+  const [liveQuery, setQuery] = useState('');
+  const query = useDeferredValue(liveQuery);
 
-  const onItemSelectedFn = (item: DimItem, onClose: () => void) => {
-    onItemSelected({ item });
-    onClose();
-  };
+  const onItemSelectedFn = useCallback(
+    (item: DimItem, onClose: () => void) => {
+      onItemSelected({ item });
+      onClose();
+    },
+    [onItemSelected]
+  );
 
   const onSheetClosedFn = () => {
     onCancel();
@@ -72,7 +76,11 @@ function ItemPicker({
     <div>
       <h1>{prompt || t('ItemPicker.ChooseItem')}</h1>
       <div className="item-picker-search">
-        <SearchBar placeholder={t('ItemPicker.SearchPlaceholder')} onQueryChanged={setQuery} />
+        <SearchBar
+          placeholder={t('ItemPicker.SearchPlaceholder')}
+          onQueryChanged={setQuery}
+          instant
+        />
       </div>
     </div>
   );
@@ -101,18 +109,12 @@ function ItemPicker({
       {({ onClose }) => (
         <div className="sub-bucket">
           {items.map((item) => (
-            <div key={item.index} className="item-picker-item">
-              <ConnectedInventoryItem
-                item={item}
-                onClick={() => onItemSelectedFn(item, onClose)}
-                // don't show the selected Super ability on subclasses in the item picker because the active Super
-                // ability is never relevant in the context that item picker is used
-                selectedSuperDisplay="disabled"
-              />
-              {item.bucket.hash === BucketHashes.Subclass && (
-                <ClassIcon classType={item.classType} className="item-picker-item-class-icon" />
-              )}
-            </div>
+            <ItemPickerItem
+              key={item.index}
+              item={item}
+              onClose={onClose}
+              onItemSelectedFn={onItemSelectedFn}
+            />
           ))}
         </div>
       )}
@@ -121,3 +123,33 @@ function ItemPicker({
 }
 
 export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(ItemPicker);
+
+function ItemPickerItem({
+  item,
+  onClose,
+  onItemSelectedFn,
+}: {
+  item: DimItem;
+  onClose: () => void;
+  onItemSelectedFn: (item: DimItem, onClose: () => void) => void;
+}) {
+  const handleClick = useCallback(
+    () => onItemSelectedFn(item, onClose),
+    [item, onClose, onItemSelectedFn]
+  );
+
+  return (
+    <div className="item-picker-item">
+      <ConnectedInventoryItem
+        item={item}
+        onClick={handleClick}
+        // don't show the selected Super ability on subclasses in the item picker because the active Super
+        // ability is never relevant in the context that item picker is used
+        selectedSuperDisplay="disabled"
+      />
+      {item.bucket.hash === BucketHashes.Subclass && (
+        <ClassIcon classType={item.classType} className="item-picker-item-class-icon" />
+      )}
+    </div>
+  );
+}

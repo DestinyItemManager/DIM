@@ -24,12 +24,10 @@ interface Props {
 // Wrap the {CharacterTile} with a button for the loadout menu and the D1 XP progress bar
 function CharacterHeader({
   store,
-  loadoutMenuOpen,
   menuRef,
   onClick,
 }: {
   store: DimStore;
-  loadoutMenuOpen: boolean;
   menuRef: React.RefObject<HTMLDivElement>;
   onClick: () => void;
 }) {
@@ -45,11 +43,7 @@ function CharacterHeader({
       onClick={onClick}
     >
       <CharacterTile store={store} />
-      <div
-        className={clsx('loadout-button', {
-          'loadout-open': loadoutMenuOpen,
-        })}
-      >
+      <div className="loadout-button">
         <AppIcon icon={kebabIcon} title={t('Loadouts.Loadouts')} />
       </div>
       {!store.isVault && isD1Store(store) && <CharacterHeaderXPBar store={store} />}
@@ -98,12 +92,7 @@ export default function StoreHeading({ store, selectedStore, loadoutMenuRef, onT
 
   return (
     <div>
-      <CharacterHeader
-        store={store}
-        loadoutMenuOpen={loadoutMenuOpen}
-        menuRef={menuTrigger}
-        onClick={openLoadoutPopup}
-      />
+      <CharacterHeader store={store} menuRef={menuTrigger} onClick={openLoadoutPopup} />
       {loadoutMenu}
     </div>
   );

@@ -11,7 +11,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -23,7 +23,7 @@ import { StatInfo } from './Compare';
 import styles from './CompareItem.m.scss';
 import CompareStat from './CompareStat';
 
-export default function CompareItem({
+export default memo(function CompareItem({
   item,
   stats,
   compareBaseStats,
@@ -112,7 +112,7 @@ export default function CompareItem({
       {item.sockets && <ItemSockets item={item} minimal={true} onPlugClicked={onPlugClicked} />}
     </div>
   );
-}
+});
 
 function VendorItemWarning({ item }: { item: DimItem }) {
   const defs = useD2Definitions()!;

@@ -1,6 +1,5 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { resonantElementTags } from 'app/inventory/store/deepsight';
 import {
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
@@ -207,16 +206,12 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.Deepsight'),
     format: ['simple', 'query'],
     destinyVersion: 2,
-    suggestions: resonantElementTags.concat(['complete', 'incomplete']),
+    suggestions: ['complete', 'incomplete'],
     filter:
       ({ filterValue }) =>
       (item: DimItem) => {
         if (!item.deepsightInfo) {
           return false;
-        }
-
-        if (resonantElementTags.includes(filterValue)) {
-          return item.deepsightInfo.resonantElements.some((e) => e.tag === filterValue);
         }
 
         switch (filterValue) {

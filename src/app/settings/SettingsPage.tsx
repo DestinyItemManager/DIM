@@ -31,7 +31,7 @@ import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
 import { useSetSetting } from './hooks';
 import { Settings } from './initial-settings';
-import { itemSortSettings } from './item-sort';
+import { itemSortSettingsSelector } from './item-sort';
 import Select, { mapToOptions } from './Select';
 import './settings.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
@@ -200,7 +200,7 @@ export default function SettingsPage() {
   }));
   vaultColOptions.unshift({ value: 999, name: t('Settings.ColumnSizeAuto') });
 
-  const sortSettings = itemSortSettings(settings);
+  const sortSettings = useSelector(itemSortSettingsSelector);
 
   const itemSortCustom = _.sortBy(
     _.map(

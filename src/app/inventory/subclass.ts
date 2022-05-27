@@ -138,6 +138,9 @@ const subclassInfoByHash: Record<number, SubclassInfo> = {
   2453351420: v3Subclass(DamageType.Void, DestinyClass.Hunter), // Nightstalker (v3)
   2842471112: v3Subclass(DamageType.Void, DestinyClass.Titan), // Sentinel (v3)
   2849050827: v3Subclass(DamageType.Void, DestinyClass.Warlock), // Voidwalker (v3)
+  2240888816: v3Subclass(DamageType.Thermal, DestinyClass.Hunter), // Gunslinger (v3)
+  3941205951: v3Subclass(DamageType.Thermal, DestinyClass.Warlock), // Dawnblade (v3)
+  2550323932: v3Subclass(DamageType.Thermal, DestinyClass.Titan), // Sunbreaker (v3)
 };
 
 // build up a map of V2 -> V3 subclass hashes
