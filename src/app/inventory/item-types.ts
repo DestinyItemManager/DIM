@@ -44,6 +44,8 @@ export interface DimItem {
   id: string;
   /** The inventoryItemHash, see DestinyInventoryItemDefinition. */
   hash: number;
+  /** Is the item an instance of an item, in the user's inventory? Uninstanced items include stacked consumables, some bounties/quests, and fake items created for vendors, progress, etc. */
+  instanced: boolean;
   /** Is this classified? Some items are classified in the manifest. */
   classified: boolean;
   /** The version of Destiny this comes from. */

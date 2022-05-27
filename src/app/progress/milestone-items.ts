@@ -247,6 +247,7 @@ function makeFakePursuitItem(
     notransfer: true,
     canPullFromPostmaster: false,
     id: '0', // zero for non-instanced is legacy hack
+    instanced: false,
     equipped: false,
     equipment: false, // TODO: this has a ton of good info for the item move logic
     complete: false,

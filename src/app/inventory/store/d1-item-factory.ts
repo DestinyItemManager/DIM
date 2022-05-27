@@ -9,7 +9,7 @@ import {
 import { t } from 'app/i18next-t';
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { lightStats } from 'app/search/search-filter-values';
-import { getItemYear } from 'app/utils/item-utils';
+import { getItemYear, itemIdIsInstanced } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
 import { uniqBy } from 'app/utils/util';
 import {
@@ -294,6 +294,7 @@ function makeItem(
         itemDef.redacted
     ),
     id: item.itemInstanceId,
+    instanced: itemIdIsInstanced(item.itemInstanceId || '0'),
     equipped: item.isEquipped,
     equipment: item.isEquipment,
     equippingLabel:

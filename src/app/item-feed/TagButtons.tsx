@@ -1,10 +1,9 @@
-import { clearNewItem, setItemTag } from 'app/inventory/actions';
+import { clearNewItem, setTag } from 'app/inventory/actions';
 import { tagConfig, TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import _ from 'lodash';
-import React from 'react';
 import styles from './TagButtons.m.scss';
 
 /**
@@ -17,13 +16,8 @@ export default function TagButtons({ item, tag }: { item: DimItem; tag: TagValue
     (t) => t.sortOrder
   );
 
-  const setTag = (tag: TagValue) => {
-    dispatch(
-      setItemTag({
-        itemId: item.id,
-        tag,
-      })
-    );
+  const handleSetTag = (tag: TagValue) => {
+    dispatch(setTag(item, tag));
     dispatch(clearNewItem(item.id));
   };
 
@@ -35,7 +29,7 @@ export default function TagButtons({ item, tag }: { item: DimItem; tag: TagValue
           className={styles.tagButton}
           type="button"
           disabled={tagOption.type === tag}
-          onClick={() => setTag(tagOption.type)}
+          onClick={() => handleSetTag(tagOption.type)}
         >
           <AppIcon icon={tagOption.icon} />
         </button>

@@ -4,7 +4,6 @@ import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, undoIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
-import React from 'react';
 import { setItemHashTag, setItemTagsBulk } from './actions';
 import { getTag, tagConfig, TagValue } from './dim-item-info';
 import { setItemLockState } from './item-move-service';
@@ -30,7 +29,7 @@ export function bulkTagItems(
       previousState.set(item, getTag(item, itemInfos, itemHashTags));
     }
 
-    const [instanced, nonInstanced] = _.partition(itemsToBeTagged, (i) => i.id && i.id !== '0');
+    const [instanced, nonInstanced] = _.partition(itemsToBeTagged, (i) => i.instanced);
 
     if (instanced.length) {
       dispatch(
@@ -42,17 +41,14 @@ export function bulkTagItems(
         )
       );
     }
-    if (nonInstanced.length) {
-      for (const item of nonInstanced) {
-        dispatch(
-          setItemHashTag({
-            itemHash: item.hash,
-            tag: selectedTag === 'clear' ? undefined : selectedTag,
-          })
-        );
-      }
+    for (const item of nonInstanced) {
+      dispatch(
+        setItemHashTag({
+          itemHash: item.hash,
+          tag: selectedTag === 'clear' ? undefined : selectedTag,
+        })
+      );
     }
-
     if (notification) {
       showNotification({
         type: 'success',
