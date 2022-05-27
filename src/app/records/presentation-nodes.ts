@@ -116,6 +116,7 @@ export function toPresentationNodeTree(
       profileResponse,
       presentationNodeDef.children.craftables
     );
+
     const visible = craftables.length;
 
     const acquired = count(craftables, (c) => c.canCraftThis);

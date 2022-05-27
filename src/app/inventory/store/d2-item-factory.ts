@@ -25,6 +25,7 @@ import {
   DestinyItemSubType,
   DestinyItemType,
   DestinyObjectiveProgress,
+  DestinyProfileRecordsComponent,
   DictionaryComponentResponse,
   ItemBindStatus,
   ItemLocation,
@@ -54,6 +55,7 @@ import { buildDeepsightInfo } from './deepsight';
 import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives } from './objectives';
+import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
@@ -82,7 +84,8 @@ export function processItems(
   },
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
-  }
+  },
+  profileRecords?: DestinyProfileRecordsComponent
 ): DimItem[] {
   const result: DimItem[] = [];
 
@@ -96,7 +99,8 @@ export function processItems(
         item,
         owner,
         mergedCollectibles,
-        uninstancedItemObjectives
+        uninstancedItemObjectives,
+        profileRecords
       );
     } catch (e) {
       errorLog('d2-stores', 'Error processing item', item, e);
@@ -259,7 +263,8 @@ export function makeItem(
   },
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
-  }
+  },
+  profileRecords?: DestinyProfileRecordsComponent
 ): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
 
@@ -553,8 +558,6 @@ export function makeItem(
     infusionFuel: false,
     sockets: null,
     masterworkInfo: null,
-    craftedInfo: null,
-    deepsightInfo: null,
     infusionQuality: null,
     tooltipNotifications,
   };
@@ -615,6 +618,10 @@ export function makeItem(
   // Extract weapon crafting info from the crafted socket but
   // before building stats because the weapon level affects stats.
   createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
+
+  // Crafting pattern
+  createdItem.patternUnlockRecord = buildPatternInfo(createdItem, itemDef, defs, profileRecords);
+
   // Deepsight Resonance
   createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
 

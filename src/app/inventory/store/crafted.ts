@@ -9,15 +9,18 @@ export const craftedSocketCategoryHash = 3583996951;
 /** the socket category containing the Mementos */
 export const mementoSocketCategoryHash = 3201856887;
 
-export function buildCraftedInfo(item: DimItem, defs: D2ManifestDefinitions): DimCrafted | null {
+export function buildCraftedInfo(
+  item: DimItem,
+  defs: D2ManifestDefinitions
+): DimCrafted | undefined {
   const craftedSocket = getCraftedSocket(item);
   if (!craftedSocket) {
-    return null;
+    return undefined;
   }
 
   const objectives = craftedSocket.plugged?.plugObjectives;
   if (!objectives) {
-    return null;
+    return undefined;
   }
 
   return getCraftingInfo(defs, objectives);

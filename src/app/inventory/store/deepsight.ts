@@ -1,4 +1,5 @@
 import { socketContainsPlugWithCategory } from 'app/utils/socket-utils';
+import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import { resonantElementTagsByObjectiveHash } from 'data/d2/crafting-resonant-elements';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { DimDeepsight, DimItem, DimSocket } from '../item-types';
@@ -7,18 +8,23 @@ export const resonantElementObjectiveHashes = Object.keys(resonantElementTagsByO
   (objectiveHashStr) => parseInt(objectiveHashStr, 10)
 );
 
-export function buildDeepsightInfo(item: DimItem): DimDeepsight | null {
+const fakeObjective: DestinyObjectiveProgress = {
+  complete: false,
+  objectiveHash: 0,
+  progress: 0,
+  visible: false,
+  completionValue: 1000,
+};
+
+export function buildDeepsightInfo(item: DimItem): DimDeepsight | undefined {
   const resonanceSocket = getResonanceSocket(item);
   if (!resonanceSocket || !resonanceSocket.plugged?.plugObjectives) {
-    return null;
+    return undefined;
   }
 
   const attunementObjective = resonanceSocket.plugged.plugObjectives[0];
   return {
-    complete: attunementObjective?.complete,
-    progress: attunementObjective?.progress
-      ? attunementObjective.progress / attunementObjective.completionValue
-      : 0,
+    attunementObjective: attunementObjective ?? fakeObjective,
   };
 }
 

@@ -86,7 +86,7 @@ export default function Records({ account }: Props) {
   // We discover the rest of the root nodes from the Bungie.net core settings
   const otherHashes = destiny2CoreSettings
     ? Object.keys(destiny2CoreSettings)
-        .filter((k) => k.includes('RootNode'))
+        .filter((k) => k.includes('RootNode') && k !== 'craftingRootNodeHash')
         .map((k) => destiny2CoreSettings[k] as number)
     : [];
 
