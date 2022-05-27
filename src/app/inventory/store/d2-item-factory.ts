@@ -25,7 +25,6 @@ import {
   DestinyItemType,
   DestinyObjectiveProgress,
   DestinyProfileRecordsComponent,
-  DestinyRecordState,
   DictionaryComponentResponse,
   ItemBindStatus,
   ItemLocation,
@@ -594,24 +593,14 @@ export function makeItem(
   createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
 
   // Crafting pattern
-  const patternRecordHash = itemNameToCraftingPatternRecordHash(defs)[createdItem.name];
+  const patternRecordHash =
+    createdItem.bucket.inWeapons && itemNameToCraftingPatternRecordHash(defs)[createdItem.name];
   if (patternRecordHash) {
     createdItem.patternUnlockRecord = profileRecords?.records[patternRecordHash];
   }
 
   // Deepsight Resonance
   createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
-  if (
-    createdItem.deepsightInfo &&
-    !createdItem.deepsightInfo.attunementObjective.complete &&
-    createdItem.patternUnlockRecord &&
-    createdItem.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
-  ) {
-    // Add back in the "pattern can be extracted" tooltip
-    createdItem.tooltipNotifications = item.tooltipNotificationIndexes
-      .map((i) => itemDef.tooltipNotifications?.[i])
-      .filter(Boolean);
-  }
 
   try {
     createdItem.stats = buildStats(defs, createdItem, itemDef);

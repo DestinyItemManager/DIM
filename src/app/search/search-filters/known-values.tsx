@@ -180,7 +180,7 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: ['craftable'],
     description: tl('Filter.Craftable'),
     destinyVersion: 2,
-    filter: () => (item) => item.crafted,
+    filter: () => (item) => Boolean(item.patternUnlockRecord),
   },
   {
     keywords: ['patternunlocked'],

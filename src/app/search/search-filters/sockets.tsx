@@ -223,8 +223,7 @@ const socketFilters: FilterDefinition[] = [
             return !item.deepsightInfo.attunementObjective.complete;
           case 'pattern':
             return Boolean(
-              !item.deepsightInfo.attunementObjective.complete &&
-                item.patternUnlockRecord &&
+              item.patternUnlockRecord &&
                 item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
             );
         }
