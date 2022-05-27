@@ -16,6 +16,7 @@ import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
+import { Portal } from 'app/utils/temp-container';
 import {
   DestinyCollectibleDefinition,
   DestinyInventoryItemDefinition,
@@ -25,7 +26,6 @@ import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enum
 import produce from 'immer';
 import _ from 'lodash';
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
 import PlugDef from '../loadout-ui/PlugDef';
@@ -391,17 +391,17 @@ export default function FashionDrawer({
           {rightButtons}
         </div>
       )}
-      {pickPlug &&
-        ReactDOM.createPortal(
+      {pickPlug && (
+        <Portal>
           <SocketDetails
             item={pickPlug.item}
             allowInsertPlug={false}
             socket={pickPlug.socket}
             onClose={() => setPickPlug(undefined)}
             onPlugSelected={handlePlugSelected}
-          />,
-          document.body
-        )}
+          />
+        </Portal>
+      )}
     </Sheet>
   );
 }

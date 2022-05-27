@@ -9,12 +9,12 @@ import { SearchFilterRef } from 'app/search/SearchBar';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
+import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import logo from 'images/logo-type-right-light.svg';
 import _ from 'lodash';
 import Mousetrap from 'mousetrap';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
@@ -369,13 +369,13 @@ export default function Header() {
       )}
       {isPhonePortrait && installable && <AppInstallBanner onClick={installDim} />}
       <PostmasterWarningBanner />
-      {promptIosPwa &&
-        ReactDOM.createPortal(
+      {promptIosPwa && (
+        <Portal>
           <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>
             <p className={styles.pwaPrompt}>{t('Header.IosPwaPrompt')}</p>
-          </Sheet>,
-          document.body
-        )}
+          </Sheet>
+        </Portal>
+      )}
     </header>
   );
 }

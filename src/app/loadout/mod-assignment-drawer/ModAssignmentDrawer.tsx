@@ -11,10 +11,10 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
+import { Portal } from 'app/utils/temp-container';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
-import ReactDOM from 'react-dom';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
 import { fitMostMods } from '../mod-assignment-utils';
@@ -177,9 +177,8 @@ export default function ModAssignmentDrawer({
           )}
         </div>
       </Sheet>
-      {onUpdateMods &&
-        plugCategoryHashWhitelist &&
-        ReactDOM.createPortal(
+      {onUpdateMods && plugCategoryHashWhitelist && (
+        <Portal>
           <ModPicker
             classType={loadout.classType}
             owner={storeId}
@@ -187,9 +186,9 @@ export default function ModAssignmentDrawer({
             plugCategoryHashWhitelist={plugCategoryHashWhitelist}
             onAccept={onUpdateMods}
             onClose={() => setPlugCategoryHashWhitelist(undefined)}
-          />,
-          document.body
-        )}
+          />
+        </Portal>
+      )}
     </>
   );
 }

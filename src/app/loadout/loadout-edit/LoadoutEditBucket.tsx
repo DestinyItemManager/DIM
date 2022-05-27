@@ -13,11 +13,11 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
+import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import FashionDrawer from '../fashion/FashionDrawer';
 import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
@@ -257,17 +257,17 @@ function FashionButton({
       >
         <AppIcon icon={faTshirt} /> {t('Loadouts.Fashion')}
       </button>
-      {showFashionDrawer &&
-        ReactDOM.createPortal(
+      {showFashionDrawer && (
+        <Portal>
           <FashionDrawer
             loadout={loadout}
             items={items}
             storeId={storeId}
             onModsByBucketUpdated={onModsByBucketUpdated}
             onClose={() => setShowFashionDrawer(false)}
-          />,
-          document.body
-        )}
+          />
+        </Portal>
+      )}
     </>
   );
 }
