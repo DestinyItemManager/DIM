@@ -43,11 +43,12 @@ import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';
-import { buildCraftedInfo, itemNameToCraftingPatternRecordHash } from './crafted';
+import { buildCraftedInfo } from './crafted';
 import { buildDeepsightInfo } from './deepsight';
 import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
 import { buildObjectives } from './objectives';
+import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
@@ -593,11 +594,7 @@ export function makeItem(
   createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
 
   // Crafting pattern
-  const patternRecordHash =
-    createdItem.bucket.inWeapons && itemNameToCraftingPatternRecordHash(defs)[createdItem.name];
-  if (patternRecordHash) {
-    createdItem.patternUnlockRecord = profileRecords?.records[patternRecordHash];
-  }
+  createdItem.patternUnlockRecord = buildPatternInfo(createdItem, itemDef, defs, profileRecords);
 
   // Deepsight Resonance
   createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
