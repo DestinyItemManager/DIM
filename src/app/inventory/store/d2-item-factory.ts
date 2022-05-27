@@ -8,7 +8,6 @@ import {
   uniqueEquipBuckets,
 } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
-import { itemIdIsInstanced } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
 import { isEnhancedPerk } from 'app/utils/socket-utils';
 import {
@@ -496,7 +495,7 @@ export function makeItem(
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
-    instanced: itemIdIsInstanced(item.itemInstanceId || '0'),
+    instanced: item.itemInstanceId !== '0',
     equipped: Boolean(itemInstanceData.isEquipped),
     // TODO: equippingBlock has a ton of good info for the item move logic
     equipment:

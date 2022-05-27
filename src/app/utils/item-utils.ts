@@ -124,19 +124,6 @@ export function getMasterworkStatNames(mw: DimMasterwork | null) {
   );
 }
 
-// some DimItem.id are non-0 but represent vendor "instances" of an item
-// a real (owned) instanceId is a long int but in DIM it's a string
-// this checks DimItem.id for something that looks like an owned item
-const instancedId = /^\d+$/;
-
-/**
- * "Instanced" items are uniquely identifiable by an id, while "uninstanced" items don't have any such
- * identifier even though there may be multiple of them in a given location.
- */
-export function itemIdIsInstanced(id: string): boolean {
-  return id !== '0' && instancedId.test(id);
-}
-
 /**
  * Items that are sunset are always sunset.
  */

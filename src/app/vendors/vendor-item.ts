@@ -128,7 +128,6 @@ export class VendorItem {
     vendorHash: number,
     vendorItemDef?: DestinyVendorItemDefinition,
     saleItem?: DestinyVendorSaleItemComponent,
-    // TODO: this will be useful for showing the move-popup details
     itemComponents?: DestinyItemComponentSetOfint32,
     mergedCollectibles?: {
       [hash: number]: DestinyCollectibleComponent;
@@ -170,6 +169,8 @@ export class VendorItem {
       // override the DimItem.id for vendor items, so they are each unique enough to identify
       // (otherwise they'd get their vendor index as an id, which is only unique per-vendor)
       this.item.id = `${vendorHash}-${this.key}`;
+      this.item.index = this.item.id;
+      this.item.instanced = false;
 
       // if this is sold by a vendor, add vendor information
       if (saleItem && characterId) {
