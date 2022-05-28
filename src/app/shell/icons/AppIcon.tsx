@@ -18,20 +18,14 @@ function AppIcon({
   if (typeof icon === 'string') {
     return (
       <span
-        className={clsx(
-          icon,
-          'app-icon',
-          'no-pointer-events',
-          className,
-          spinning ? 'fa-spin' : false
-        )}
+        className={clsx(icon, 'app-icon', className, spinning ? 'fa-spin' : false)}
         title={title}
       />
     );
   } else {
     return (
       <FontAwesomeIcon
-        className={className ? 'app-icon ' + className : 'app-icon'}
+        className={clsx('app-icon', className)}
         icon={icon}
         title={title}
         spin={spinning}

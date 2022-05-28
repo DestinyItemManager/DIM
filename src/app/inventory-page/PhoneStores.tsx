@@ -5,11 +5,11 @@ import { DimStore } from 'app/inventory/store-types';
 import StoreStats from 'app/store-stats/StoreStats';
 import { useEventBusListener } from 'app/utils/hooks';
 import { wrap } from 'app/utils/util';
-import clsx from 'clsx';
 import { motion, PanInfo } from 'framer-motion';
 import { useCallback, useRef, useState } from 'react';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { getCurrentStore, getStore, getVault } from '../inventory/stores-helpers';
+import CategoryStrip from './CategoryStrip';
 import HeaderShadowDiv from './HeaderShadowDiv';
 import PhoneStoresHeader from './PhoneStoresHeader';
 import { StoreBuckets } from './StoreBuckets';
@@ -140,32 +140,6 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
         buckets={buckets}
         onCategorySelected={handleCategoryChange}
       />
-    </div>
-  );
-}
-
-function CategoryStrip({
-  buckets,
-  category: selectedCategoryId,
-  onCategorySelected,
-}: {
-  buckets: InventoryBuckets;
-  category: string;
-  onCategorySelected(category: string): void;
-}) {
-  return (
-    <div className="category-options">
-      {Object.keys(buckets.byCategory)
-        .filter((category) => category !== 'Postmaster')
-        .map((category) => (
-          <div
-            key={category}
-            onClick={() => onCategorySelected(category)}
-            className={clsx({ selected: category === selectedCategoryId })}
-          >
-            {t(`Bucket.${category}`, { contextList: 'buckets' })}
-          </div>
-        ))}
     </div>
   );
 }

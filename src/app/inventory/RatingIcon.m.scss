@@ -1,14 +1,11 @@
-.icon {
+.godroll {
   font-size: 0.8em !important;
   margin-right: auto;
-}
-
-.godroll {
-  composes: icon;
   color: #0b486b;
 }
 
 .trashlist {
-  composes: icon;
+  font-size: 0.8em !important;
+  margin-right: auto;
   color: #d14334;
 }

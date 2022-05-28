@@ -16,13 +16,13 @@
   justify-content: flex-end;
   line-height: calc(#{$badge-height});
   overflow: hidden;
+}
 
-  /* this width keeps the span aligned right (short text appears on right side of polaroid)
+/* this width keeps the span aligned right (short text appears on right side of polaroid)
      but if the text is too long, it will overflow(hidden) off the right side instead of left. */
-  span {
-    max-width: 100%;
-    max-height: 100%;
-  }
+.badgeContent {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .engram {

@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 import { isDragging$ } from './drag-events';
+import styles from './DraggableInventoryItem.m.scss';
 import { DimItem } from './item-types';
 
 interface Props {
@@ -50,7 +51,10 @@ export default function DraggableInventoryItem({ children, item }: Props) {
   return (
     <div
       ref={dragRef}
-      className={clsx('item-drag-container', `item-type-${item.type}`, { 'cant-drag': !canDrag })}
+      className={clsx('item-drag-container', {
+        [styles.engram]: item.isEngram,
+        [styles.cantDrag]: !canDrag,
+      })}
     >
       {children}
     </div>

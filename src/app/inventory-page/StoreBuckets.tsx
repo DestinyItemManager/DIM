@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import StoreBucket from '../inventory-page/StoreBucket';
+import styles from './StoreBuckets.m.scss';
 
 /** One row of store buckets, one for each character and vault. */
 export function StoreBuckets({
@@ -77,7 +78,7 @@ export function StoreBuckets({
     <div
       className={clsx('store-row', `bucket-${bucket.hash}`, { 'account-wide': bucket.accountWide })}
     >
-      {labels && <div className="store-cell bucket-label title">{bucket.name}</div>}
+      {labels && <div className={clsx(styles.bucketLabel)}>{bucket.name}</div>}
       {content}
     </div>
   );

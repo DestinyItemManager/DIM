@@ -100,7 +100,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
           />
         )
       )}
-      <span>{badgeContent}</span>
+      <span className={styles.badgeContent}>{badgeContent}</span>
     </div>
   );
 }

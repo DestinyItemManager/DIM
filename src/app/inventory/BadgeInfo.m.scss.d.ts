@@ -3,6 +3,7 @@
 interface CssExports {
   'arc': string;
   'badge': string;
+  'badgeContent': string;
   'capped': string;
   'deepsight': string;
   'energyCapacity': string;
