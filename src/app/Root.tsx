@@ -11,31 +11,21 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import store from './store/store';
-import { isiOSBrowser } from './utils/browsers';
 
 // Wrap App with Sentry profiling
 const WrappedApp = $featureFlags.sentry ? withProfiler(App) : App;
 
 function Root() {
   const options: MultiBackendOptions = {
-    backends: isiOSBrowser()
-      ? [
-          {
-            id: 'touch',
-            backend: TouchBackend,
-            transition: TouchTransition,
-            options: { delayTouchStart: 150 },
-          },
-        ]
-      : [
-          { id: 'html5', backend: HTML5Backend, transition: MouseTransition },
-          {
-            id: 'touch',
-            backend: TouchBackend,
-            transition: TouchTransition,
-            options: { delayTouchStart: 150 },
-          },
-        ],
+    backends: [
+      { id: 'html5', backend: HTML5Backend, transition: MouseTransition },
+      {
+        id: 'touch',
+        backend: TouchBackend,
+        transition: TouchTransition,
+        options: { delayTouchStart: 150 },
+      },
+    ],
   };
   return (
     <Router>
