@@ -120,8 +120,8 @@ export function getNotableStats(
     ) ?? 0;
   const customRatio = customTotal / statMaxes.custom || 0;
   return {
-    notableStats: exampleItem
-      .stats!.filter((stat) => {
+    notableStats: (exampleItem.stats ?? [])
+      .filter((stat) => {
         const statPercent = stat.base / statMaxes[stat.statHash];
         return (
           statPercent >=
