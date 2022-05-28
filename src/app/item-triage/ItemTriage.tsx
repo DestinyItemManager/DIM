@@ -207,25 +207,20 @@ function FactorsTriageSection({ item }: { item: DimItem }) {
 function ArmorStatsTriageSection({ item }: { item: DimItem }) {
   const allItems = useSelector(allItemsSelector);
   const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
-  const notableStats = getNotableStats(item, customTotalStatsByClass, allItems);
 
-  const hasNotable = notableStats.notableStats.length > 0;
+  let extra: JSX.Element | string = '?';
+  let highStats: JSX.Element | null = null;
+  if (!item.classified) {
+    extra = '–';
 
-  let extra: JSX.Element | string = '–';
-  if (hasNotable) {
-    const bestStat = _.maxBy(notableStats.notableStats, (s) => s.percent)!;
-    extra = <span style={{ color: getValueColors(bestStat.quality)[1] }}>{bestStat.percent}%</span>;
-  }
-  return (
-    <CollapsibleTitle
-      title={t('Triage.HighStats')}
-      sectionId="triage-highstat"
-      defaultCollapsed={false}
-      showExtraOnlyWhenCollapsed
-      disabled={!hasNotable}
-      extra={extra}
-    >
-      {hasNotable && (
+    const notableStats = getNotableStats(item, customTotalStatsByClass, allItems);
+    if (notableStats.notableStats.length > 0) {
+      const bestStat = _.maxBy(notableStats.notableStats, (s) => s.percent)!;
+      extra = (
+        <span style={{ color: getValueColors(bestStat.quality)[1] }}>{bestStat.percent}%</span>
+      );
+
+      highStats = (
         <div className={styles.statTable}>
           <div className={styles.header}>
             <div className={styles.statsHeaderLeft}>
@@ -256,7 +251,19 @@ function ArmorStatsTriageSection({ item }: { item: DimItem }) {
             </div>
           ))}
         </div>
-      )}
+      );
+    }
+  }
+  return (
+    <CollapsibleTitle
+      title={t('Triage.HighStats')}
+      sectionId="triage-highstat"
+      defaultCollapsed={false}
+      showExtraOnlyWhenCollapsed
+      disabled={highStats === null}
+      extra={extra}
+    >
+      {highStats}
     </CollapsibleTitle>
   );
 }
