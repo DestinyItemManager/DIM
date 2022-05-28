@@ -1,7 +1,7 @@
 ## Next
 
 * Enhanced intrinsics on crafted weapons are now treated as a masterwork internally. As a result, you can use e.g. `is:crafted -masterwork:any` to find crafted weapons without an enhanced intrinsic. The golden border additionally requires two enhanced traits, just like in-game.
-* Resonant Element search filters such as `deepsight:ruinous` have been removed as these currenciesare now deprecated.
+* Resonant Element search filters such as `deepsight:ruinous` have been removed as these currencies are now deprecated.
 * Selected Super ability is now displayed on Solar subclass icons.
 * Features around managing crafting patterns:
   * Items that have a pattern to unlock will show the progress to that pattern in the item popup - even on items that do not have deepsight resonance.
