@@ -246,6 +246,7 @@
     "Notes": "Cherche les objets que vous avez marqué avec des notes personnalisés",
     "Ornament": "Affiche les objets avec des ornements et filtre leur statut.",
     "PartialMatch": "Affiche les objets dont le nom, la description, n'importe quel attribut, ou n'importe quel mod contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets. le filtre \"perk:\" cherche uniquement dans les attributs.",
+    "PatternUnlocked": "Shows items that have a crafting pattern unlocked, even if the item itself isn't crafted.",
     "Perk": "Affiche les objets dont la description ou le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
     "PerkName": "Affiche les objets dont le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
     "PinnacleReward": "Affiche les poursuites qui produisent une récompense de prestige.",
@@ -698,7 +699,6 @@
     "AddNote": "Ajouter une note",
     "AddToLoadout": "Arsenal",
     "All": "Tous",
-    "AttunementProgress": "Progression de l'harmonisation",
     "CannotCurrentlyRoll": "Cet attribut ne peut pas être obtenu sur la version actuelle de cet objet.",
     "CantPullFromPostmaster": "Vous devez aller à la tour pour récupérer cet objet.",
     "Consolidate": "Réunir",
@@ -812,6 +812,7 @@
     "ShiftTip": "Astuce: Maintenez la touche Maj et cliquez sur une cellule pour filtrer les objets",
     "Stats": {
       "Aim": "Visée",
+      "Airborne": "Aérien",
       "Power": "Puissance",
       "RPM": "CPM",
       "Recoil": "Recul",

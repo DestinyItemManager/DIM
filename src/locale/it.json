@@ -246,6 +246,7 @@
     "Notes": "Cerca oggetti che hai segnato con note",
     "Ornament": "Mostra gli oggetti con decori e li filtra in base allo stato.",
     "PartialMatch": "Mostra gli oggetti nei quali nome, descrizione, qualsiasi perk, o modifica, hanno un riscontro parziale con il testo del filtro. Cerca intere frasi usando le virgolette. Il filtro 'perk:' filtrerà solo i perks.",
+    "PatternUnlocked": "Mostra gli oggetti che hanno un modello di forgiatura sbloccato, anche se l'oggetto non è stato forgiato.",
     "Perk": "Mostra gli oggetti in cui uno dei perk o modifiche ha una corrispondenza parziale con il testo del filtro nel nome o descrizione. Cerca intere frasi usando le virgolette.",
     "PerkName": "Mostra gli oggetti in cui un perk o modifiche ha una corrispondenza parziale con il testo del filtro solo nel nome. Cerca intere frasi usando le virgolette.",
     "PinnacleReward": "Mostra gli incarichi che portano ad una ricompensa di punta.",
@@ -698,7 +699,6 @@
     "AddNote": "Aggiungi una nota",
     "AddToLoadout": "Loadout",
     "All": "Tutto",
-    "AttunementProgress": "Progresso Armonizzazione",
     "CannotCurrentlyRoll": "Questo perk non può essere ottenuto sulla versione attuale di questo oggetto.",
     "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
     "Consolidate": "Consolida",
@@ -812,6 +812,7 @@
     "ShiftTip": "Suggerimento: Tieni premuto il tasto Maiusc e clicca su una cella per filtrare gli oggetti",
     "Stats": {
       "Aim": "Mira Assistita",
+      "Airborne": "Efficacia in volo",
       "Power": "Potere",
       "RPM": "p.a.m.",
       "Recoil": "Direzione Rinculo",

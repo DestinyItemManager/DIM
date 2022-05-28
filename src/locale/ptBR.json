@@ -246,6 +246,7 @@
     "Notes": "Procura por itens que você marcou com anotações personalizadas",
     "Ornament": "Mostra itens com ornamentos e filtros pra seus estados.",
     "PartialMatch": "Exibe itens onde seu nome, descrição, seus perks ou mods tenham uma correspondência parcial com o filtro indicado. Pesquise por frases inteiras usando aspas. O filtro 'perk:' buscará apenas por perks.",
+    "PatternUnlocked": "Mostra itens que possuem um padrão desbloqueado, mesmo que o item em si não tenha sido criado.",
     "Perk": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome ou descrição. Pesquise por frases inteiras usando aspas.",
     "PerkName": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome. Pesquise por frases inteiras usando aspas.",
     "PinnacleReward": "Exibe empreitadas que recompensam equipamentos pináculos.",
@@ -698,7 +699,6 @@
     "AddNote": "Adicionar anotação",
     "AddToLoadout": "Set",
     "All": "Tudo",
-    "AttunementProgress": "Progresso da Calibragem",
     "CannotCurrentlyRoll": "Este perk não pode ser utilizado na versão atual deste item.",
     "CantPullFromPostmaster": "Você dever ir à torre para recuperar este item.",
     "Consolidate": "Consolidar",
@@ -812,6 +812,7 @@
     "ShiftTip": "Dica: segure shift e clique em uma célula para filtrar os itens",
     "Stats": {
       "Aim": "Mira",
+      "Airborne": "No ar",
       "Power": "Poder",
       "RPM": "RPM",
       "Recoil": "Recuo",
