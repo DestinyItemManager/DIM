@@ -484,7 +484,7 @@ function ItemTable({
 
   return (
     <div
-      className={clsx(styles.table, 'show-new-items', shiftHeld && styles.shiftHeld)}
+      className={clsx(styles.table, shiftHeld && styles.shiftHeld)}
       style={{ gridTemplateColumns: gridSpec }}
       role="table"
       ref={tableRef}

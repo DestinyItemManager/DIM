@@ -38,7 +38,6 @@ const SearchHistory = React.lazy(
 export default function App() {
   const language = useSelector(settingSelector('language'));
   const itemQuality = useSelector(settingSelector('itemQuality'));
-  const showNewItems = useSelector(settingSelector('showNewItems'));
   const charColMobile = useSelector(settingSelector('charColMobile'));
   const needsLogin = useSelector((state: RootState) => state.accounts.needsLogin);
   const needsDeveloper = useSelector((state: RootState) => state.accounts.needsDeveloper);
@@ -48,7 +47,6 @@ export default function App() {
       key={`lang-${language}`}
       className={clsx(styles.app, `lang-${language}`, `char-cols-${charColMobile}`, {
         itemQuality,
-        'show-new-items': showNewItems,
       })}
     >
       <ScrollToTop />
