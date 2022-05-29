@@ -1,4 +1,6 @@
 import { settingsSelector } from 'app/dim-api/selectors';
+import { DimItem } from 'app/inventory/item-types';
+import { sortItems } from 'app/shell/item-comparators';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { Settings } from './initial-settings';
@@ -19,4 +21,12 @@ export const itemSortSettingsSelector = createSelector(
     sortOrder: itemSortOrderCustom || ['primStat', 'name'],
     sortReversals: itemSortReversals || [],
   })
+);
+
+/**
+ * Get a function that will sort items according to the user's preferences.
+ */
+export const itemSorterSelector = createSelector(
+  itemSortSettingsSelector,
+  (sortSettings) => (items: readonly DimItem[]) => sortItems(items, sortSettings)
 );

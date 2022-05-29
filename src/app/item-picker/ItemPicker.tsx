@@ -2,12 +2,11 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
-import { sortItems } from 'app/shell/item-comparators';
 import { RootState } from 'app/store/types';
 import { uniqBy } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useCallback, useDeferredValue, useMemo, useState } from 'react';
+import { useCallback, useDeferredValue, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Sheet from '../dim-ui/Sheet';
@@ -15,7 +14,7 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
 import { filterFactorySelector } from '../search/search-filter';
-import { ItemSortSettings, itemSortSettingsSelector } from '../settings/item-sort';
+import { itemSorterSelector } from '../settings/item-sort';
 import { ItemPickerState } from './item-picker';
 import './ItemPicker.scss';
 
@@ -25,7 +24,7 @@ type ProvidedProps = ItemPickerState & {
 
 interface StoreProps {
   allItems: DimItem[];
-  itemSortSettings: ItemSortSettings;
+  sortItems: (items: readonly DimItem[]) => readonly DimItem[];
   filters(query: string): ItemFilter;
 }
 
@@ -39,7 +38,7 @@ function mapStateToProps() {
   return (state: RootState, ownProps: ProvidedProps) => ({
     allItems: filteredItemsSelector(state, ownProps),
     filters: filterFactorySelector(state),
-    itemSortSettings: itemSortSettingsSelector(state),
+    sortItems: itemSorterSelector(state),
   });
 }
 
@@ -49,7 +48,7 @@ function ItemPicker({
   allItems,
   prompt,
   filters,
-  itemSortSettings,
+  sortItems,
   sortBy,
   uniqueBy,
   onItemSelected,
@@ -87,7 +86,7 @@ function ItemPicker({
 
   const filter = useMemo(() => filters(query), [filters, query]);
   const items = useMemo(() => {
-    let items = sortItems(allItems.filter(filter), itemSortSettings);
+    let items = sortItems(allItems.filter(filter));
     if (sortBy) {
       items = _.sortBy(items, sortBy);
     }
@@ -95,7 +94,7 @@ function ItemPicker({
       items = uniqBy(items, uniqueBy);
     }
     return items;
-  }, [allItems, filter, itemSortSettings, sortBy, uniqueBy]);
+  }, [allItems, filter, sortItems, sortBy, uniqueBy]);
 
   // TODO: have compact and "list" views
   // TODO: long press for item popup
