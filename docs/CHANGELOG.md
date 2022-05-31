@@ -9,6 +9,7 @@
   * Search filter `deepsight:pattern` finds those items.
   * The search `is:patternunlocked` finds items where the pattern for that item has already been unlocked (whether or not that item is crafted).
   * Don't forget that `is:craftable` highlights any items that can be crafted.
+* The top level comment of a saved search filter is now displayed separately from the filter query.
 
 ## 7.18.1 <span class="changelog-date">(2022-05-24)</span>
 
