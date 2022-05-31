@@ -1,5 +1,7 @@
 ## Next
 
+* The top level comment of a saved search filter is now displayed separately from the filter query.
+
 ## 7.19.0 <span class="changelog-date">(2022-05-29)</span>
 
 * Enhanced intrinsics on crafted weapons are now treated as a masterwork internally. As a result, you can use e.g. `is:crafted -masterwork:any` to find crafted weapons without an enhanced intrinsic. The golden border additionally requires two enhanced traits, just like in-game.
@@ -11,7 +13,6 @@
   * Search filter `deepsight:pattern` finds those items.
   * The search `is:patternunlocked` finds items where the pattern for that item has already been unlocked (whether or not that item is crafted).
   * Don't forget that `is:craftable` highlights any items that can be crafted.
-* The top level comment of a saved search filter is now displayed separately from the filter query.
 * Fixed Triage tab's similar items search for slug Shotguns.
 
 ## 7.18.1 <span class="changelog-date">(2022-05-24)</span>
