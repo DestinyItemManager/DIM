@@ -1,0 +1,25 @@
+.spanColumns {
+  grid-column: 1 / -1;
+}
+
+.clickToExpand {
+  font-weight: normal;
+  letter-spacing: normal;
+  margin-left: 8px;
+  text-transform: none;
+  font-size: 11px;
+  opacity: 0.5;
+  vertical-align: middle;
+}
+
+.bucketSize {
+  margin-left: 4px;
+  text-transform: none;
+  font-size: 12px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+.postmasterFull {
+  background-color: rgba(151, 4, 1, 0.75) !important;
+}
