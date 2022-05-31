@@ -127,7 +127,7 @@ export default function Sheet({
   const sheetContents = useRef<HTMLDivElement | null>(null);
   const sheetContentsRefFn = useLockSheetContents(sheetContents);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (freezeInitialHeight && sheetContents.current && !frozenHeight) {
       if (sheetContents.current.clientHeight > 0) {
         setFrozenHeight(sheetContents.current.clientHeight);

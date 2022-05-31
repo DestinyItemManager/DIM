@@ -1,5 +1,4 @@
-@import 'ceaser-easing';
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 .page {
   :global .perk-image {

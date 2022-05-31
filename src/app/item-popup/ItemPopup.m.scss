@@ -4,7 +4,7 @@
 // The popup displaying info and actions for an single item.
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 .arrow {
   width: 10px;

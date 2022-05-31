@@ -299,6 +299,7 @@ module.exports = (env) => {
         testing: path.resolve('./src/testing/'),
         docs: path.resolve('./docs/'),
         'destiny-icons': path.resolve('./destiny-icons/'),
+        'textarea-caret': path.resolve('./src/app/utils/textarea-caret'),
       },
 
       fallback: {

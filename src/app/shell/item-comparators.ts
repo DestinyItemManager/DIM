@@ -149,15 +149,20 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
   // deepsight incomplete -> deepsight complete -> no deepsight
   // in order of "needs addressing"? ish?
   deepsight: compareBy((item: DimItem) =>
-    item.deepsightInfo ? (item.deepsightInfo.complete ? 2 : 1) : 3
+    item.deepsightInfo ? (item.deepsightInfo.attunementObjective.complete ? 2 : 1) : 3
   ),
   default: () => 0,
 };
 
 /**
  * Sort items according to the user's preferences (via the sort parameter).
+ * Returned array is readonly since it could either be a new array or the
+ * original.
  */
-export function sortItems(items: DimItem[], itemSortSettings: ItemSortSettings) {
+export function sortItems(
+  items: readonly DimItem[],
+  itemSortSettings: ItemSortSettings
+): readonly DimItem[] {
   if (!items.length) {
     return items;
   }
@@ -192,12 +197,12 @@ export function sortItems(items: DimItem[], itemSortSettings: ItemSortSettings) 
     if (itemSortSettings.sortOrder.includes('rarity')) {
       comparators.unshift(ITEM_COMPARATORS.rarity);
     }
-    return items.sort(chainComparator(...comparators));
+    return [...items].sort(chainComparator(...comparators));
   }
 
   // Re-sort consumables
   if (itemLocationId === BucketHashes.Consumables) {
-    return items.sort(
+    return [...items].sort(
       chainComparator(
         ITEM_COMPARATORS.typeName,
         ITEM_COMPARATORS.rarity,
@@ -209,7 +214,7 @@ export function sortItems(items: DimItem[], itemSortSettings: ItemSortSettings) 
 
   // Engrams and Postmaster always sort by recency, oldest to newest, like in game
   if (itemLocationId === BucketHashes.Engrams || itemLocationId === BucketHashes.LostItems) {
-    return items.sort(reverseComparator(acquisitionRecencyComparator));
+    return [...items].sort(reverseComparator(acquisitionRecencyComparator));
   }
 
   // always sort by archive first
@@ -225,5 +230,5 @@ export function sortItems(items: DimItem[], itemSortSettings: ItemSortSettings) 
         : comparator;
     })
   );
-  return items.sort(comparator);
+  return [...items].sort(comparator);
 }

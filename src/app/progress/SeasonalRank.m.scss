@@ -1,4 +1,4 @@
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 .seasonalRewardWrapper {
   composes: pursuit from './PursuitItem.m.scss';

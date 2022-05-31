@@ -1,4 +1,4 @@
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 .progressIcon {
   height: calc(var(--item-size) / 2);

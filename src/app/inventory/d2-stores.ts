@@ -330,7 +330,10 @@ function processCurrencies(profileInfo: DestinyProfileResponse, defs: D2Manifest
   const currencies = profileCurrencies.map((c) => ({
     itemHash: c.itemHash,
     quantity: c.quantity,
-    displayProperties: defs.InventoryItem.get(c.itemHash).displayProperties,
+    displayProperties: defs.InventoryItem.get(c.itemHash)?.displayProperties ?? {
+      name: 'Unknown',
+      description: 'Unknown item',
+    },
   }));
   return currencies;
 }
@@ -352,6 +355,7 @@ function processCharacter(
   const characterInventory = profileInfo.characterInventories.data?.[characterId]?.items || [];
   const profileInventory = profileInfo.profileInventory.data?.items || [];
   const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
+  const profileRecords = profileInfo.profileRecords?.data; // Not present in the initial load
   const itemComponents = profileInfo.itemComponents;
   const uninstancedItemObjectives =
     getCharacterProgressions(profileInfo, characterId)?.uninstancedItemObjectives || [];
@@ -378,7 +382,8 @@ function processCharacter(
     items,
     itemComponents,
     mergedCollectibles,
-    uninstancedItemObjectives
+    uninstancedItemObjectives,
+    profileRecords
   );
   store.items = processedItems;
   return store;
@@ -395,6 +400,7 @@ function processVault(
   const profileInventory = profileInfo.profileInventory.data
     ? profileInfo.profileInventory.data.items
     : [];
+  const profileRecords = profileInfo.profileRecords?.data; // Not present in the initial load
   const itemComponents = profileInfo.itemComponents;
 
   const store = makeVault();
@@ -414,7 +420,9 @@ function processVault(
     store,
     items,
     itemComponents,
-    mergedCollectibles
+    mergedCollectibles,
+    undefined,
+    profileRecords
   );
   store.items = processedItems;
 

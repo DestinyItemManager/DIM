@@ -1,6 +1,5 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { resonantElementTags } from 'app/inventory/store/deepsight';
 import {
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
@@ -8,7 +7,7 @@ import {
   modTypeTags,
 } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
-import { DestinyItemSubType } from 'bungie-api-ts/destiny2';
+import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import craftingMementos from 'data/d2/crafting-mementos.json';
 import {
   ItemCategoryHashes,
@@ -207,7 +206,7 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.Deepsight'),
     format: ['simple', 'query'],
     destinyVersion: 2,
-    suggestions: resonantElementTags.concat(['complete', 'incomplete']),
+    suggestions: ['complete', 'incomplete', 'pattern'],
     filter:
       ({ filterValue }) =>
       (item: DimItem) => {
@@ -215,17 +214,18 @@ const socketFilters: FilterDefinition[] = [
           return false;
         }
 
-        if (resonantElementTags.includes(filterValue)) {
-          return item.deepsightInfo.resonantElements.some((e) => e.tag === filterValue);
-        }
-
         switch (filterValue) {
           case 'deepsight':
             return true;
           case 'complete':
-            return item.deepsightInfo.complete;
+            return item.deepsightInfo.attunementObjective.complete;
           case 'incomplete':
-            return !item.deepsightInfo.complete;
+            return !item.deepsightInfo.attunementObjective.complete;
+          case 'pattern':
+            return Boolean(
+              item.patternUnlockRecord &&
+                item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
+            );
         }
       },
   },

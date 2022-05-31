@@ -1,5 +1,4 @@
 import { withProfiler } from '@sentry/react';
-import React from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import {
   DndProvider,

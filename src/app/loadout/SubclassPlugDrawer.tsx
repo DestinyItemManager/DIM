@@ -180,7 +180,7 @@ function getPlugsForSubclass(
         const firstSocket = socketGroup[0];
 
         const isAbilityLikeSocket =
-          category.category.hash === SocketCategoryHashes.Abilities_Abilities_DarkSubclass ||
+          category.category.hash === SocketCategoryHashes.Abilities_Abilities ||
           category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
           category.category.hash === SocketCategoryHashes.Super;
 

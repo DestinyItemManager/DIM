@@ -1,4 +1,4 @@
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 .openNotesEditor {
   // wraps all the content that clicks open the notes editor
@@ -48,7 +48,6 @@
 .dropdownMenu {
   color: black;
   background-color: white;
-  transform: translate(0, -4px);
   border-radius: 4px;
   overflow: hidden;
   list-style: none;

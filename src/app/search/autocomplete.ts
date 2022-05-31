@@ -3,7 +3,6 @@ import { t } from 'app/i18next-t';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
-import memoizeOne from 'memoize-one';
 import { SearchConfig } from './search-config';
 import freeformFilters from './search-filters/freeform';
 
@@ -66,7 +65,7 @@ const filterNames = [
 export default function createAutocompleter(searchConfig: SearchConfig) {
   const filterComplete = makeFilterComplete(searchConfig);
 
-  return memoizeOne((query: string, caretIndex: number, recentSearches: Search[]): SearchItem[] => {
+  return (query: string, caretIndex: number, recentSearches: Search[]): SearchItem[] => {
     // If there's a query, it's always the first entry
     const queryItem = query
       ? {
@@ -100,7 +99,7 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
       ),
       helpItem,
     ];
-  });
+  };
 }
 
 // TODO: this should probably be different when there's a query vs not. With a query

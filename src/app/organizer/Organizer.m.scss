@@ -1,4 +1,4 @@
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 .organizer {
   :global(.issue-banner-shown) & {

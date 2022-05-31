@@ -1,42 +1,25 @@
-import { t } from 'app/i18next-t';
-import { DimDeepsight } from 'app/inventory/item-types';
-import { percent } from 'app/shell/formatters';
-import clsx from 'clsx';
+import { DimItem } from 'app/inventory/item-types';
+import Objective from 'app/progress/Objective';
 import React from 'react';
-import BungieImage from './BungieImage';
-import PressTip from './PressTip';
 import styles from './WeaponDeepsightInfo.m.scss';
 
 /**
- * A progress bar that shows a weapon's Deepsight Resonance attunement progress and lists the extractable
- * Resonant Elements.
+ * A progress bar that shows a weapon's Deepsight Resonance attunement progress.
  */
-export function WeaponDeepsightInfo({ deepsightInfo }: { deepsightInfo: DimDeepsight }) {
-  const pct = percent(deepsightInfo.progress || 0);
+export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
+  const deepsightInfo = item.deepsightInfo;
+  const record = item.patternUnlockRecord;
 
-  const resonantElements = deepsightInfo.resonantElements.map((e) => (
-    <div key={e.tag} className={styles.element}>
-      <BungieImage src={e.icon} />
-      <span>{e.name}</span>
-    </div>
-  ));
+  if (!deepsightInfo && !record?.objectives[0]) {
+    return null;
+  }
 
   return (
     <div className={styles.deepsightProgress}>
-      <PressTip tooltip={resonantElements?.length > 0 ? resonantElements : undefined}>
-        <div
-          className={clsx('objective-row', {
-            ['objective-complete']: deepsightInfo.complete,
-          })}
-        >
-          <div className="objective-checkbox" />
-          <div className={clsx('objective-progress', styles.deepsightObjectiveProgress)}>
-            <div className="objective-progress-bar" style={{ width: pct }} />
-            <div className="objective-description">{t('MovePopup.AttunementProgress')}</div>
-            <div className="objective-text">{pct}</div>
-          </div>
-        </div>
-      </PressTip>
+      {deepsightInfo && <Objective objective={deepsightInfo.attunementObjective} />}
+      {record?.objectives.map((objective) => (
+        <Objective key={objective.objectiveHash} objective={objective} />
+      ))}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 $legendaryBg: #522f65;
 $exoticBg: #ceae33;
@@ -134,6 +134,20 @@ $commonBg: #366f42;
   height: calc((var(--item-size) + 1px) / 2) !important;
   right: 0;
   top: calc(var(--item-size) - ((var(--item-size) + 1px) / 2) - 1px);
+  pointer-events: none;
+}
+
+.deepsightPattern {
+  $size: 12;
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border: calc(var(--item-size) * #{$size / 100}) solid $deepsight-border-color;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  right: 0;
+  top: calc(var(--item-size) - (var(--item-size) * #{$size / 50}) - 1px);
   pointer-events: none;
 }
 

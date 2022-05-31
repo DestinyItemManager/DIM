@@ -3,8 +3,8 @@
  */
 
 import ItemPopup from 'app/item-popup/ItemPopup';
+import { Portal } from 'app/utils/temp-container';
 import React, { useCallback, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 
@@ -61,17 +61,17 @@ export default function ItemGrid({
           )}
         </BasicItemTrigger>
       ))}
-      {popup &&
-        ReactDOM.createPortal(
+      {popup && (
+        <Portal>
           <ItemPopup
             onClose={() => setPopup(undefined)}
             item={popup.item}
             element={popup.element}
             zIndex={zIndex + 1}
             noLink={noLink}
-          />,
-          document.body
-        )}
+          />
+        </Portal>
+      )}
     </div>
   );
 }

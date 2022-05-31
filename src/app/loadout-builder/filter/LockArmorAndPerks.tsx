@@ -18,10 +18,10 @@ import {
   getSocketByIndex,
   getSocketsByCategoryHashes,
 } from 'app/utils/socket-utils';
+import { Portal } from 'app/utils/temp-container';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
-import ReactDom from 'react-dom';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
@@ -147,7 +147,7 @@ export default memo(function LockArmorAndPerks({
       const socketIndex = parseInt(socketIndexString, 10);
       const socket = getSocketByIndex(subclass.item.sockets, socketIndex);
       const abilityAndSuperSockets = getSocketsByCategoryHashes(subclass.item.sockets, [
-        SocketCategoryHashes.Abilities_Abilities_DarkSubclass,
+        SocketCategoryHashes.Abilities_Abilities,
         SocketCategoryHashes.Abilities_Abilities_LightSubclass,
         SocketCategoryHashes.Super,
       ]);
@@ -288,19 +288,18 @@ export default memo(function LockArmorAndPerks({
           </button>
         </div>
       </LoadoutBucketDropTarget>
-      {showExoticPicker &&
-        ReactDom.createPortal(
+      {showExoticPicker && (
+        <Portal>
           <ExoticPicker
             lockedExoticHash={lockedExoticHash}
             classType={selectedStore.classType}
             onSelected={(exotic) => lbDispatch({ type: 'lockExotic', lockedExoticHash: exotic })}
             onClose={() => setShowExoticPicker(false)}
-          />,
-          document.body
-        )}
-      {showSubclassOptionsPicker &&
-        subclass &&
-        ReactDom.createPortal(
+          />
+        </Portal>
+      )}
+      {showSubclassOptionsPicker && subclass && (
+        <Portal>
           <SubclassPlugDrawer
             subclass={subclass.item}
             socketOverrides={subclass.loadoutItem.socketOverrides || emptyObject()}
@@ -308,9 +307,9 @@ export default memo(function LockArmorAndPerks({
               lbDispatch({ type: 'updateSubclassSocketOverrides', socketOverrides })
             }
             onClose={() => setShowSubclassOptionsPicker(false)}
-          />,
-          document.body
-        )}
+          />
+        </Portal>
+      )}
     </>
   );
 });

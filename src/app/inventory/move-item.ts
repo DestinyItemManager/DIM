@@ -1,4 +1,5 @@
 import { getCurrentHub, startTransaction } from '@sentry/browser';
+import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -19,7 +20,7 @@ import { checkForOverFill, createMoveSession, executeMoveItem } from './item-mov
 import { DimItem } from './item-types';
 import { updateManualMoveTimestamp } from './manual-moves';
 import { moveItemNotification } from './MoveNotifications';
-import { storesSelector } from './selectors';
+import { currentStoreSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { amountOfItem, getCurrentStore, getStore, getVault } from './stores-helpers';
 
@@ -77,6 +78,8 @@ export function moveItemTo(
   amount: number = item.amount
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
+    const currentStore = currentStoreSelector(getState())!;
+    const singleCharacterSetting = settingSelector('singleCharacter')(getState());
     const transaction = startTransaction({ name: 'moveItemTo' });
     // set the transaction on the scope so it picks up any errors
     getCurrentHub()?.configureScope((scope) => scope.setSpan(transaction));
@@ -90,11 +93,12 @@ export function moveItemTo(
       throw new DimError('Help.CannotMove');
     }
 
-    if (
-      item.owner === store.id &&
-      !item.location.inPostmaster &&
-      ((item.equipped && equip) || (!item.equipped && !equip))
-    ) {
+    if (item.owner === store.id && !item.location.inPostmaster && item.equipped === equip) {
+      return item;
+    }
+
+    // In single character mode dropping something from the "vault" back on the "vault" shouldn't move anything
+    if (singleCharacterSetting && store.isVault && item.owner !== currentStore.id) {
       return item;
     }
 

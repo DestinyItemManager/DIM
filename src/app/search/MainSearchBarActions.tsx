@@ -3,9 +3,9 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { AppIcon, faList } from 'app/shell/icons';
 import { querySelector, searchResultsOpenSelector } from 'app/shell/selectors';
 import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { Portal } from 'app/utils/temp-container';
 import { motion } from 'framer-motion';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router';
 import { DimItem } from '../inventory/item-types';
@@ -86,15 +86,14 @@ function MainSearchBarActions({
         </motion.div>
       )}
 
-      {showSearchResults &&
-        searchResultsOpen &&
-        ReactDOM.createPortal(
+      {showSearchResults && searchResultsOpen && (
+        <Portal>
           <SearchResults
             items={filteredItems}
             onClose={() => dispatch(toggleSearchResults(false))}
-          />,
-          document.body
-        )}
+          />
+        </Portal>
+      )}
     </>
   );
 }

@@ -7,6 +7,7 @@ import { errorLog } from 'app/utils/log';
 import {
   DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
+  DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -81,9 +82,16 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           </svg>
         </>
       )}
-      {item.highlightedObjective && (!item.deepsightInfo || item.deepsightInfo.complete) && (
-        <img className={styles.highlightedObjective} src={pursuitComplete} />
-      )}
+      {item.highlightedObjective &&
+        (!item.deepsightInfo || item.deepsightInfo.attunementObjective.complete) && (
+          <img className={styles.highlightedObjective} src={pursuitComplete} />
+        )}
+      {Boolean(
+        item.deepsightInfo &&
+          !item.deepsightInfo.attunementObjective.complete &&
+          item.patternUnlockRecord &&
+          item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
+      ) && <div className={styles.deepsightPattern} />}
     </>
   );
 }
@@ -166,7 +174,8 @@ function getModCostInfo(mod: DestinyInventoryItemDefinition | number, defs: D2Ma
   if (
     mod?.plug &&
     mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedStasisTrinkets &&
-    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedVoidFragments
+    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedVoidFragments &&
+    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedSolarFragments
   ) {
     modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
 

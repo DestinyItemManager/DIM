@@ -1,4 +1,4 @@
-@import '../variables.scss';
+@use '../variables.scss' as *;
 
 .character {
   cursor: pointer;
@@ -51,17 +51,11 @@
 }
 
 .loadout-button {
-  opacity: 0.8;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: black;
   width: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
-
-  &.loadout-open {
-    opacity: 1;
-    background-color: rgba(0, 0, 0, 1);
-  }
 }
 
 .lang-ja {
