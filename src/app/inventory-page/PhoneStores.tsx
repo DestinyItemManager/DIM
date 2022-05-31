@@ -7,7 +7,7 @@ import { useEventBusListener } from 'app/utils/hooks';
 import { wrap } from 'app/utils/util';
 import clsx from 'clsx';
 import { motion, PanInfo } from 'framer-motion';
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { getCurrentStore, getStore, getVault } from '../inventory/stores-helpers';
 import HeaderShadowDiv from './HeaderShadowDiv';
@@ -201,10 +201,13 @@ function StoresInventory({
     />
   );
 
+  const store = stores[0];
+
   return (
     <>
-      {selectedCategoryId === 'Armor' && (
-        <StoreStats store={stores[0]} style={{ paddingBottom: 8 }} />
+      {((!store.isVault && selectedCategoryId === 'Armor') ||
+        (store.isVault && selectedCategoryId === 'Inventory')) && (
+        <StoreStats store={store} style={{ paddingBottom: 8 }} />
       )}
       {showPostmaster && buckets.byCategory['Postmaster'].map(renderBucket)}
       {buckets.byCategory[selectedCategoryId].map(renderBucket)}

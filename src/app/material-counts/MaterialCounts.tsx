@@ -1,5 +1,9 @@
 import BungieImage from 'app/dim-ui/BungieImage';
-import { craftingMaterialCountsSelector, materialsSelector } from 'app/inventory/selectors';
+import {
+  craftingMaterialCountsSelector,
+  currenciesSelector,
+  materialsSelector,
+} from 'app/inventory/selectors';
 import clsx from 'clsx';
 import spiderMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
@@ -13,16 +17,32 @@ const goodMats = [2979281381, 4257549984, 3853748946, 4257549985, 3702027555];
 const seasonal = [747321467, 178490507, 2206486079, 2181364647];
 const crafting = [2497395625, 353704689, 2708128607];
 
-export function MaterialCounts({ wide }: { wide?: boolean }) {
+export function MaterialCounts({
+  wide,
+  includeCurrencies,
+}: {
+  wide?: boolean;
+  includeCurrencies?: boolean;
+}) {
   const allMats = useSelector(materialsSelector);
   const craftingMaterialCounts = useSelector(craftingMaterialCountsSelector);
   const materials = _.groupBy(allMats, (m) => m.hash);
 
+  const currencies = useSelector(currenciesSelector);
+
   return (
     <div className={clsx(styles.materialCounts, { [styles.wide]: wide })}>
+      {includeCurrencies &&
+        currencies.map((currency) => (
+          <div className={styles.material} key={currency.itemHash}>
+            <span className={styles.amount}>{currency.quantity.toLocaleString()}</span>
+            <BungieImage src={currency.displayProperties.icon} />
+            <span>{currency.displayProperties.name}</span>
+          </div>
+        ))}
       {[showMats, seasonal, goodMats, crafting].map((matgroup, i) => (
         <React.Fragment key={matgroup[0]}>
-          {i > 0 && (
+          {(includeCurrencies || i > 0) && (
             <span className={styles.spanGrid}>
               <hr />
             </span>
