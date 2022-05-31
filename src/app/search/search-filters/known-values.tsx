@@ -96,11 +96,20 @@ export const itemCategoryFilter: FilterDefinition = {
     return (item) => item.itemCategoryHashes.includes(categoryHash);
   },
   fromItem: (item) => {
-    const mostSpecificTypeHash = item.itemCategoryHashes[item.itemCategoryHashes.length - 1];
-    const typeTag = Object.entries(itemCategoryHashesByName).find(
-      ([_tag, ich]) => ich === mostSpecificTypeHash
-    )?.[0];
-    return typeTag ? `is:${typeTag}` : '';
+    /*
+    The last ICH will be the most specific, so start there and try find a corresponding search
+    filter. If we can't find one (e.g. for slug shotguns), try the next most specific ICH and so on.
+    */
+    for (let i = item.itemCategoryHashes.length - 1; i >= 0; i--) {
+      const itemCategoryHash = item.itemCategoryHashes[i];
+      const typeTag = Object.entries(itemCategoryHashesByName).find(
+        ([_tag, ich]) => ich === itemCategoryHash
+      )?.[0];
+      if (typeTag) {
+        return `is:${typeTag}`;
+      }
+    }
+    return '';
   },
 };
 

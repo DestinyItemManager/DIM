@@ -5,7 +5,6 @@ import { DamageType, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import shapedIcon from 'images/shaped.png';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
 import styles from './BadgeInfo.m.scss';
@@ -30,7 +29,6 @@ interface Props {
 }
 
 export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
-  const savedNotes = useSelector(itemNoteSelector(item));
   const isBounty = Boolean(!item.primaryStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   const isGeneric = !isBounty && !isStackable;
@@ -51,7 +49,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
     (isBounty && `${Math.floor(100 * item.percentComplete)}%`) ||
     (isStackable && item.amount.toString()) ||
     (isGeneric && item.primaryStat?.value.toString()) ||
-    (item.classified && (savedNotes ?? '???'));
+    (item.classified && <ClassifiedNotes item={item} />);
 
   const fixContrast =
     (item.energy &&
@@ -103,4 +101,14 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
       <span>{badgeContent}</span>
     </div>
   );
+}
+
+/**
+ * ClassifiedNotes shows the notes field for classified items as a way to make
+ * them easier to ID. It's broken out into its own component so that the store
+ * subscription for notes only happens for classified items.
+ */
+function ClassifiedNotes({ item }: { item: DimItem }) {
+  const savedNotes = useSelector(itemNoteSelector(item));
+  return <>{savedNotes ?? '???'}</>;
 }

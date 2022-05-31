@@ -246,6 +246,7 @@
     "Notes": "Szukaj przedmioty z nałożonymi przez ciebie notatkami",
     "Ornament": "Pokazuje przedmioty z ozdobami i filtruje po ich status.",
     "PartialMatch": "Pokazuje elementy, w których ich nazwa, opis, dowolny atut lub dowolne modyfikacje są częściowo dopasowane do tekstu filtra. Wyszukaj całe frazy za pomocą cytatów. Filtr 'perk:' będzie tylko wyszukiwać atuty.",
+    "PatternUnlocked": "Shows items that have a crafting pattern unlocked, even if the item itself isn't crafted.",
     "Perk": "Pokazuje przedmioty, w których jeden z ich atutów lub modyfikacji jest częściowo dopasowany do tekstu filtra w ich nazwie lub opisie. Wyszukaj całe frazy używając cytatów.",
     "PerkName": "Pokazuje przedmioty, w których jeden z ich atutów lub modyfikacji jest częściowo dopasowany do tekstu filtra tylko w ich nazwie. Wyszukaj całe frazy używając cytatów.",
     "PinnacleReward": "Pokazuje zadania, które dają szczytowe nagrody.",
@@ -698,7 +699,6 @@
     "AddNote": "Dodaj notatkę",
     "AddToLoadout": "Uzbrojenie",
     "All": "Wszystkie",
-    "AttunementProgress": "Attunement Progress",
     "CannotCurrentlyRoll": "Ten perk nie może być otrzymany na bieżącej wersji tego przedmiotu.",
     "CantPullFromPostmaster": "Musisz udać się na Wieżę zęby odebrać ten przedmiot.",
     "Consolidate": "Połącz",
@@ -812,6 +812,7 @@
     "ShiftTip": "Wskazówka: Przytrzymaj klawisz Shift i kliknij komórkę, aby filtrować przedmioty",
     "Stats": {
       "Aim": "Cel",
+      "Airborne": "Airborne",
       "Power": "Moc",
       "RPM": "RPM",
       "Recoil": "Odrzut",
