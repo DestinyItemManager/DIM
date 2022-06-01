@@ -107,7 +107,10 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
     // mix them together
     return [
       ..._.take(
-        uniqBy(_.compact([queryItem, ...filterSuggestions, ...recentSearchItems]), (i) => i.query),
+        uniqBy(
+          _.compact([queryItem, ...filterSuggestions, ...recentSearchItems]),
+          (i) => i.query.fullText
+        ),
         7
       ),
       helpItem,
