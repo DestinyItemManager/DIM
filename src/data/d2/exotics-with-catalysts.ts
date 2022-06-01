@@ -55,6 +55,7 @@ const exoticWeaponHashesWithCatalyst: Set<number> = new Set([
   3628991658, // Graviton Lance
   3628991659, // Vigilance Wing
   3654674561, // Dead Man's Tale
+  3664831848, // Heartshadow
   3761898871, // Lorentz Driver
   3766045777, // Black Talon
   3844694310, // The Jade Rabbit

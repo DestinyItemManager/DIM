@@ -117,6 +117,7 @@ export const D2WeaponStatHashByName = {
   recoildirection: StatHashes.RecoilDirection,
   drawtime: StatHashes.DrawTime,
   zoom: StatHashes.Zoom,
+  airborne: StatHashes.AirborneEffectiveness,
 };
 
 export const swordStatsByName = {
