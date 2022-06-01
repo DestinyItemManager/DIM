@@ -280,6 +280,9 @@ const bareWords = /[^\s)]+/y;
 // Whitespace that doesn't match anything else is an implicit `and`
 const whitespace = /\s+/y;
 const comment = /\/\*(.*?)\*\/\s*/y;
+export function makeCommentString(text: string) {
+  return `/* ${text} */`;
+}
 
 /**
  * The lexer yields a series of tokens representing the linear structure of the search query.
@@ -468,7 +471,7 @@ export function canonicalizeQuery(query: QueryAST, depth = 0): string {
 
   // Only preserve the top-level comment
   if (query.comment && depth === 0) {
-    return `/* ${query.comment} */ ${result}`;
+    return `${makeCommentString(query.comment)} ${result}`;
   }
 
   return result;

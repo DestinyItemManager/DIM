@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
+import { makeCommentString, parseQuery } from './query-parser';
 import { SearchConfig } from './search-config';
 import freeformFilters from './search-filters/freeform';
 
@@ -21,19 +22,24 @@ export const enum SearchItemType {
   // TODO: add types for exact-match item or perk that adds them to the query?
 }
 
+export interface SearchQuery {
+  /** The full text of the query */
+  fullText: string;
+  /** The query's top-level comment */
+  header?: string;
+  /** The query text excluding the top-level comment */
+  body: string;
+  /** Help text */
+  helpText?: string;
+}
+
 /** An item in the search autocompleter */
 export interface SearchItem {
   type: SearchItemType;
   /** The suggested query */
-  query: string;
+  query: SearchQuery;
   /** An optional part of the query that will be highlighted */
   highlightRange?: [number, number];
-  /** Help text */
-  helpText?: React.ReactNode;
-  /** Header text */
-  headerText?: string;
-  /** An alternative query to display in the autocomplete dropdown */
-  displayQuery?: string;
 }
 
 /** matches a keyword that's probably a math comparison */
@@ -67,10 +73,13 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
 
   return (query: string, caretIndex: number, recentSearches: Search[]): SearchItem[] => {
     // If there's a query, it's always the first entry
-    const queryItem = query
+    const queryItem: SearchItem | undefined = query
       ? {
           type: SearchItemType.Autocomplete,
-          query: query,
+          query: {
+            fullText: query,
+            body: query,
+          },
         }
       : undefined;
     // Generate completions of the current search
@@ -86,9 +95,13 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
 
     // Help is always last...
     // Add an item for opening the filter help
-    const helpItem = {
+    const helpItem: SearchItem = {
       type: SearchItemType.Help,
-      query: query || '', // use query as the text so we don't change text when selecting it
+      query: {
+        // use query as the text so we don't change text when selecting it
+        fullText: query || '',
+        body: query || '',
+      },
     };
 
     // mix them together
@@ -156,24 +169,21 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
   const recentSearchesForQuery = query
     ? recentSearches.filter((s) => s.query.includes(query))
     : Array.from(recentSearches);
-  const commentRegEx = /\/\*(.*?)\*\/\s*/;
   return recentSearchesForQuery.sort(recentSearchComparator).map((s) => {
+    const ast = parseQuery(s.query);
+    const topLevelComment = ast.comment && makeCommentString(ast.comment);
     const result: SearchItem = {
       type: s.saved
         ? SearchItemType.Saved
         : s.usageCount > 0
         ? SearchItemType.Recent
         : SearchItemType.Suggested,
-      query: s.query,
+      query: {
+        fullText: s.query,
+        header: ast.comment,
+        body: topLevelComment ? s.query.substring(topLevelComment.length).trim() : s.query,
+      },
     };
-
-    // if the query starts with a comment, strip it from the query text and it display it as a header
-    const commentMatch = commentRegEx.exec(s.query);
-    if (commentMatch) {
-      result.displayQuery = s.query.substring(commentMatch[0].length).trim();
-      result.headerText = commentMatch[1].trim();
-    }
-
     return result;
   });
 }
@@ -219,15 +229,18 @@ export function autocompleteTermSuggestions(
     const filterDef = findFilter(word, searchConfig);
     const newQuery = base + word + query.slice(caretIndex);
     return {
-      query: newQuery,
+      query: {
+        fullText: newQuery,
+        body: newQuery,
+        helpText: filterDef
+          ? (Array.isArray(filterDef.description)
+              ? t(...filterDef.description)
+              : t(filterDef.description)
+            )?.replace(/\.$/, '')
+          : undefined,
+      },
       type: SearchItemType.Autocomplete,
       highlightRange: [match.index, match.index + word.length],
-      helpText: filterDef
-        ? (Array.isArray(filterDef.description)
-            ? t(...filterDef.description)
-            : t(filterDef.description)
-          )?.replace(/\.$/, '')
-        : undefined,
     };
   });
 }

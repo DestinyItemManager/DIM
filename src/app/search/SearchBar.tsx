@@ -134,9 +134,9 @@ const Row = React.memo(
     <>
       <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
       <span className={styles.menuItemQuery}>
-        {item.headerText && (
+        {item.query.header && (
           <>
-            {item.headerText}
+            {item.query.header}
             <br />
           </>
         )}
@@ -144,15 +144,15 @@ const Row = React.memo(
           t('Header.FilterHelpMenuItem')
         ) : item.highlightRange ? (
           <HighlightedText
-            text={item.query}
+            text={item.query.fullText}
             startIndex={item.highlightRange[0]}
             endIndex={item.highlightRange[1]}
             className={styles.textHighlight}
           />
-        ) : item.displayQuery ? (
-          <span className={styles.namedQueryBody}>{item.displayQuery}</span>
+        ) : item.query.header ? (
+          <span className={styles.namedQueryBody}>{item.query.body}</span>
         ) : (
-          item.query
+          item.query.body
         )}
       </span>
       <span className={styles.menuItemHelp} />
@@ -275,7 +275,7 @@ function SearchBar(
     stateReducer,
     initialIsOpen: isPhonePortrait && mainSearchBar,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
-    itemToString: (i) => i?.query || '',
+    itemToString: (i) => i?.query.fullText || '',
     onInputValueChange: ({ inputValue, type }) => {
       setLiveQuery(inputValue || '');
       debouncedUpdateQuery(inputValue || '');
@@ -332,7 +332,7 @@ function SearchBar(
   const deleteSearch = useCallback(
     (e: React.MouseEvent, item: SearchItem) => {
       e.stopPropagation();
-      dispatch(searchDeleted(item.query));
+      dispatch(searchDeleted(item.query.fullText));
     },
     [dispatch]
   );
@@ -365,11 +365,11 @@ function SearchBar(
   const tabAutocompleteItem =
     highlightedIndex > 0 && items[highlightedIndex]?.type === SearchItemType.Autocomplete
       ? items[highlightedIndex]
-      : items.find((s) => s.type === SearchItemType.Autocomplete && s.query !== liveQuery);
+      : items.find((s) => s.type === SearchItemType.Autocomplete && s.query.fullText !== liveQuery);
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab' && !e.altKey && !e.ctrlKey && tabAutocompleteItem && isOpen) {
       e.preventDefault();
-      setInputValue(tabAutocompleteItem.query);
+      setInputValue(tabAutocompleteItem.query.fullText);
       if (tabAutocompleteItem.highlightRange) {
         selectionRef.current = tabAutocompleteItem.highlightRange[1];
       }
@@ -385,7 +385,7 @@ function SearchBar(
       items[highlightedIndex]?.type === SearchItemType.Recent
     ) {
       e.preventDefault();
-      dispatch(searchDeleted(items[highlightedIndex].query));
+      dispatch(searchDeleted(items[highlightedIndex].query.fullText));
     } else if (e.key === 'Enter' && !isOpen && liveQuery) {
       // Show search results on "Enter" with a closed menu
       dispatch(toggleSearchResults());
@@ -401,7 +401,7 @@ function SearchBar(
               className={clsx(styles.menuItem, {
                 [styles.highlightedItem]: highlightedIndex === index,
               })}
-              key={`${item.type}${item.query}`}
+              key={`${item.type}${item.query.fullText}`}
               {...getItemProps({ item, index })}
             >
               <Row
