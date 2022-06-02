@@ -1,5 +1,7 @@
 ## Next
 
+* Loadout Optimizer will now suggest class items with an elemental affinity matching the mods even when allowing changes to elemental affinity.
+
 ## 7.19.0 <span class="changelog-date">(2022-05-29)</span>
 
 * Enhanced intrinsics on crafted weapons are now treated as a masterwork internally. As a result, you can use e.g. `is:crafted -masterwork:any` to find crafted weapons without an enhanced intrinsic. The golden border additionally requires two enhanced traits, just like in-game.

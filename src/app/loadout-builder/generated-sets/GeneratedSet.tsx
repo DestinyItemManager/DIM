@@ -4,7 +4,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
-import { errorLog } from 'app/utils/log';
+import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -63,7 +63,9 @@ function GeneratedSet({
   };
 
   let existingLoadout: Loadout | undefined;
-  let displayedItems: DimItem[] = set.armor.map((items) => items[0]);
+  let displayedItems: DimItem[] = set.armor.map(
+    (items) => _.maxBy(items, (i) => i.energy?.energyCapacity)!
+  );
 
   for (const loadout of loadouts) {
     const equippedLoadoutItems = loadout.items.filter((item) => item.equip);
@@ -77,7 +79,7 @@ function GeneratedSet({
     }
   }
 
-  const itemModAssignments = useMemo(() => {
+  let itemModAssignments = useMemo(() => {
     const { itemModAssignments } = fitMostMods({
       items: displayedItems,
       plannedMods: lockedMods,
@@ -86,9 +88,31 @@ function GeneratedSet({
     return itemModAssignments;
   }, [displayedItems, lockedMods, armorEnergyRules]);
 
-  if (set.armor.some((items) => !items.length)) {
-    errorLog('loadout optimizer', 'No valid sets!');
-    return null;
+  if (!existingLoadout) {
+    itemModAssignments = { ...itemModAssignments };
+    // If we have a bucket with alternatives, pick an alternative
+    // item of the correct element. This is mostly for class items,
+    // and works because fitMostMods prefers changing class item
+    // elements over other pieces
+    for (let i = 0; i < set.armor.length; i++) {
+      if (set.armor[i].length > 1) {
+        const targetEnergy = itemModAssignments[displayedItems[i].id]
+          .map((m) => m.plug.energyCost?.energyType)
+          .find((e) => e !== DestinyEnergyType.Any);
+        if (targetEnergy !== undefined && targetEnergy !== displayedItems[i].energy?.energyType) {
+          const replacementItem = _.maxBy(
+            set.armor[i].filter((i) => i.energy?.energyType === targetEnergy),
+            (i) => i.energy?.energyCapacity
+          );
+          if (replacementItem) {
+            const mods = itemModAssignments[displayedItems[i].id];
+            delete itemModAssignments[displayedItems[i].id];
+            itemModAssignments[replacementItem.id] = mods;
+            displayedItems[i] = replacementItem;
+          }
+        }
+      }
+    }
   }
 
   const canCompareLoadouts =
@@ -123,6 +147,7 @@ function GeneratedSet({
       </div>
       <GeneratedSetButtons
         set={set}
+        items={displayedItems}
         subclass={subclass}
         store={selectedStore}
         canCompareLoadouts={canCompareLoadouts}
