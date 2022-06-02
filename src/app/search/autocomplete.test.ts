@@ -81,7 +81,7 @@ describe('filterSortRecentSearches', () => {
 
   test.each(cases)('filter/sort recent searches for query |%s|', (query) => {
     const candidates = filterSortRecentSearches(query, recentSearches);
-    expect(candidates.map((c) => c.query)).toMatchSnapshot();
+    expect(candidates.map((c) => c.query.fullText)).toMatchSnapshot();
   });
 });
 
