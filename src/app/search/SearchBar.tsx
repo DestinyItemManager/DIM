@@ -133,13 +133,8 @@ const Row = React.memo(
   }) => (
     <>
       <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
-      <span className={styles.menuItemQuery}>
-        {item.query.header && (
-          <>
-            {item.query.header}
-            <br />
-          </>
-        )}
+      <p className={styles.menuItemQuery}>
+        {item.query.header}
         {item.type === SearchItemType.Help ? (
           t('Header.FilterHelpMenuItem')
         ) : item.highlightRange ? (
@@ -149,12 +144,16 @@ const Row = React.memo(
             endIndex={item.highlightRange[1]}
             className={styles.textHighlight}
           />
-        ) : item.query.header ? (
-          <span className={styles.namedQueryBody}>{item.query.body}</span>
         ) : (
-          item.query.body
+          <span
+            className={clsx({
+              [styles.namedQueryBody]: item.query.header !== undefined,
+            })}
+          >
+            {item.query.body}
+          </span>
         )}
-      </span>
+      </p>
       <span className={styles.menuItemHelp} />
       {!isPhonePortrait && isTabAutocompleteItem && (
         <KeyHelp className={styles.keyHelp} combo="tab" />
