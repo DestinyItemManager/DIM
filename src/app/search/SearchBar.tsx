@@ -130,58 +130,55 @@ const Row = React.memo(
     isPhonePortrait: boolean;
     isTabAutocompleteItem: boolean;
     onClick(e: React.MouseEvent, item: SearchItem): void;
-  }) => (
-    <>
-      <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
-      <p className={styles.menuItemQuery}>
-        {item.query.header && item.highlightRange?.section === 'header' ? (
-          <HighlightedText
-            text={item.query.header}
-            startIndex={item.highlightRange.range[0]}
-            endIndex={item.highlightRange.range[1]}
-            className={styles.textHighlight}
-          />
-        ) : (
-          item.query.header
+  }) => {
+    function highlight(text: string, section: string) {
+      return item.highlightRange?.section === section ? (
+        <HighlightedText
+          text={text}
+          startIndex={item.highlightRange.range[0]}
+          endIndex={item.highlightRange.range[1]}
+          className={styles.textHighlight}
+        />
+      ) : (
+        text
+      );
+    }
+
+    return (
+      <>
+        <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
+        <p className={styles.menuItemQuery}>
+          {item.query.header && highlight(item.query.header, 'header')}
+          {item.type === SearchItemType.Help ? (
+            t('Header.FilterHelpMenuItem')
+          ) : (
+            <span
+              className={clsx({
+                [styles.namedQueryBody]: item.query.header !== undefined,
+              })}
+            >
+              {highlight(item.query.body, 'body')}
+            </span>
+          )}
+        </p>
+        <span className={styles.menuItemHelp} />
+        {!isPhonePortrait && isTabAutocompleteItem && (
+          <KeyHelp className={styles.keyHelp} combo="tab" />
         )}
-        {item.type === SearchItemType.Help ? (
-          t('Header.FilterHelpMenuItem')
-        ) : (
-          <span
-            className={clsx({
-              [styles.namedQueryBody]: item.query.header !== undefined,
-            })}
+        {!isPhonePortrait && highlighted && <KeyHelp className={styles.keyHelp} combo="enter" />}
+        {(item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
+          <button
+            type="button"
+            className={styles.deleteIcon}
+            onClick={(e) => onClick(e, item)}
+            title={t('Header.DeleteSearch')}
           >
-            {item.highlightRange?.section === 'body' ? (
-              <HighlightedText
-                text={item.query.body}
-                startIndex={item.highlightRange.range[0]}
-                endIndex={item.highlightRange.range[1]}
-                className={styles.textHighlight}
-              />
-            ) : (
-              item.query.body
-            )}
-          </span>
+            <AppIcon icon={closeIcon} />
+          </button>
         )}
-      </p>
-      <span className={styles.menuItemHelp} />
-      {!isPhonePortrait && isTabAutocompleteItem && (
-        <KeyHelp className={styles.keyHelp} combo="tab" />
-      )}
-      {!isPhonePortrait && highlighted && <KeyHelp className={styles.keyHelp} combo="enter" />}
-      {(item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
-        <button
-          type="button"
-          className={styles.deleteIcon}
-          onClick={(e) => onClick(e, item)}
-          title={t('Header.DeleteSearch')}
-        >
-          <AppIcon icon={closeIcon} />
-        </button>
-      )}
-    </>
-  )
+      </>
+    );
+  }
 );
 
 // TODO: break filter autocomplete into its own object/helpers... with tests
