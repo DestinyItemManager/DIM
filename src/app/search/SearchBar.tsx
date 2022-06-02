@@ -134,23 +134,34 @@ const Row = React.memo(
     <>
       <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
       <p className={styles.menuItemQuery}>
-        {item.query.header}
-        {item.type === SearchItemType.Help ? (
-          t('Header.FilterHelpMenuItem')
-        ) : item.highlightRange ? (
+        {item.query.header && item.highlightRange?.section === 'header' ? (
           <HighlightedText
-            text={item.query.fullText}
-            startIndex={item.highlightRange[0]}
-            endIndex={item.highlightRange[1]}
+            text={item.query.header}
+            startIndex={item.highlightRange.range[0]}
+            endIndex={item.highlightRange.range[1]}
             className={styles.textHighlight}
           />
+        ) : (
+          item.query.header
+        )}
+        {item.type === SearchItemType.Help ? (
+          t('Header.FilterHelpMenuItem')
         ) : (
           <span
             className={clsx({
               [styles.namedQueryBody]: item.query.header !== undefined,
             })}
           >
-            {item.query.body}
+            {item.highlightRange?.section === 'body' ? (
+              <HighlightedText
+                text={item.query.body}
+                startIndex={item.highlightRange.range[0]}
+                endIndex={item.highlightRange.range[1]}
+                className={styles.textHighlight}
+              />
+            ) : (
+              item.query.body
+            )}
           </span>
         )}
       </p>

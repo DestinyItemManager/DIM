@@ -39,7 +39,11 @@ export interface SearchItem {
   /** The suggested query */
   query: SearchQuery;
   /** An optional part of the query that will be highlighted */
-  highlightRange?: [number, number];
+  highlightRange?: {
+    section: 'header' | 'body';
+    /** The indices of the first and last character that should be highlighted */
+    range: [number, number];
+  };
 }
 
 /** matches a keyword that's probably a math comparison */
@@ -187,6 +191,29 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
         body: topLevelComment ? s.query.substring(topLevelComment.length).trim() : s.query,
       },
     };
+
+    // highlight the matched range of the query
+    if (query) {
+      if (result.query.header) {
+        const index = result.query.header.indexOf(query);
+        if (index !== -1) {
+          result.highlightRange = {
+            section: 'header',
+            range: [index, index + query.length],
+          };
+        }
+      }
+      if (!result.highlightRange) {
+        const index = result.query.body.indexOf(query);
+        if (index !== -1) {
+          result.highlightRange = {
+            section: 'body',
+            range: [index, index + query.length],
+          };
+        }
+      }
+    }
+
     return result;
   });
 }
@@ -243,7 +270,10 @@ export function autocompleteTermSuggestions(
           : undefined,
       },
       type: SearchItemType.Autocomplete,
-      highlightRange: [match.index, match.index + word.length],
+      highlightRange: {
+        section: 'body',
+        range: [match.index, match.index + word.length],
+      },
     };
   });
 }
