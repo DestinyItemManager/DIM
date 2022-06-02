@@ -127,6 +127,7 @@
 /* Highlighted spans of text in the autocompleter */
 .textHighlight {
   display: inline-block;
+  white-space: pre;
   border-bottom: 1px dotted #ddd;
   margin-bottom: -1px;
   .highlightedItem & {
