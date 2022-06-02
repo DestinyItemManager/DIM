@@ -10,7 +10,6 @@
 // The top-level item container. Global because it's referenced by other styles.
 :global(.item) {
   position: relative;
-  contain: layout paint style;
   box-sizing: border-box;
   width: var(--item-size);
   // searchHidden will adjust opacity/transform, this transitions them
@@ -23,7 +22,6 @@
 
 // The wrapper for draggable items. Global because it's referenced by other styles.
 :global(.item-drag-container) {
-  contain: layout paint style;
   box-sizing: border-box;
   width: var(--item-size);
   cursor: grab;

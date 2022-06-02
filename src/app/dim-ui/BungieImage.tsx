@@ -18,6 +18,7 @@ export default React.memo(function BungieImage(props: BungieImageProps) {
   return (
     <img
       src={bungieNetPath(src)}
+      loading="lazy"
       {...otherProps}
       className={clsx(otherProps.className, 'no-pointer-events')}
     />
