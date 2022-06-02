@@ -362,6 +362,117 @@ Array [
 ]
 `;
 
+exports[`filterSortRecentSearches check saved search highlighting for query || 1`] = `
+Array [
+  Object {
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "is:patternunlocked -is:crafted",
+      "header": undefined,
+    },
+    "type": 1,
+  },
+  Object {
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "/* random-roll craftable guns */ is:patternunlocked -is:crafted",
+      "header": "random-roll craftable guns",
+    },
+    "type": 1,
+  },
+]
+`;
+
+exports[`filterSortRecentSearches check saved search highlighting for query |craft| 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        23,
+        28,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "is:patternunlocked -is:crafted",
+      "header": undefined,
+    },
+    "type": 1,
+  },
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        12,
+        17,
+      ],
+      "section": "header",
+    },
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "/* random-roll craftable guns */ is:patternunlocked -is:crafted",
+      "header": "random-roll craftable guns",
+    },
+    "type": 1,
+  },
+]
+`;
+
+exports[`filterSortRecentSearches check saved search highlighting for query |craftable| 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        12,
+        21,
+      ],
+      "section": "header",
+    },
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "/* random-roll craftable guns */ is:patternunlocked -is:crafted",
+      "header": "random-roll craftable guns",
+    },
+    "type": 1,
+  },
+]
+`;
+
+exports[`filterSortRecentSearches check saved search highlighting for query |crafted| 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        23,
+        30,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "is:patternunlocked -is:crafted",
+      "header": undefined,
+    },
+    "type": 1,
+  },
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        23,
+        30,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "/* random-roll craftable guns */ is:patternunlocked -is:crafted",
+      "header": "random-roll craftable guns",
+    },
+    "type": 1,
+  },
+]
+`;
+
 exports[`filterSortRecentSearches filter/sort recent searches for query || 1`] = `
 Array [
   "recent saved",
