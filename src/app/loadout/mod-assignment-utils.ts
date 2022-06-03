@@ -649,7 +649,9 @@ function calculateEnergyChange(
       // For class items, we may have alternatives in LO and they're the
       // easiest to replace, so there's a small tiebreaker here to nudge LO into
       // preferring changing class item affinity over others.
-      return itemEnergy.isClassItem ? 4 : 5;
+      return (
+        itemEnergy.derivedCapacity - itemEnergy.originalCapacity + (itemEnergy.isClassItem ? 4 : 5)
+      );
     }
   } else {
     // Otherwise just check how many levels of upgrade we need
@@ -731,7 +733,6 @@ function buildItemEnergy({
     derivedCapacity: calculateAssumedItemEnergy(item, armorEnergyRules),
     originalType: item.energy?.energyType || DestinyEnergyType.Any,
     derivedType: getItemEnergyType(item, armorEnergyRules, assignedMods),
-    isExotic: item.isExotic,
     isClassItem: item.bucket.hash === BucketHashes.ClassArmor,
   };
 }
@@ -742,7 +743,6 @@ interface ItemEnergy {
   derivedCapacity: number;
   originalType: DestinyEnergyType;
   derivedType: DestinyEnergyType;
-  isExotic: boolean;
   isClassItem: boolean;
 }
 /**
