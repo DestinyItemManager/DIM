@@ -3,12 +3,18 @@
 exports[`autocompleteTermSuggestions autocomplete within query for |(is:blue jun)| with caret at position 11 1`] = `
 Array [
   Object {
-    "helpText": undefined,
-    "highlightRange": Array [
-      9,
-      17,
-    ],
-    "query": "(is:blue tag:junk)",
+    "highlightRange": Object {
+      "range": Array [
+        9,
+        17,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "(is:blue tag:junk)",
+      "fullText": "(is:blue tag:junk)",
+      "helpText": undefined,
+    },
     "type": 3,
   },
 ]
@@ -17,12 +23,18 @@ Array [
 exports[`autocompleteTermSuggestions autocomplete within query for |is:bow is:void| with caret at position 11 1`] = `
 Array [
   Object {
-    "helpText": undefined,
-    "highlightRange": Array [
-      7,
-      14,
-    ],
-    "query": "is:bow is:void",
+    "highlightRange": Object {
+      "range": Array [
+        7,
+        14,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "is:bow is:void",
+      "fullText": "is:bow is:void",
+      "helpText": undefined,
+    },
     "type": 3,
   },
 ]
@@ -31,21 +43,33 @@ Array [
 exports[`autocompleteTermSuggestions autocomplete within query for |is:haspower is:b| with caret at position 16 1`] = `
 Array [
   Object {
-    "helpText": undefined,
-    "highlightRange": Array [
-      12,
-      18,
-    ],
-    "query": "is:haspower is:bow",
+    "highlightRange": Object {
+      "range": Array [
+        12,
+        18,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "is:haspower is:bow",
+      "fullText": "is:haspower is:bow",
+      "helpText": undefined,
+    },
     "type": 3,
   },
   Object {
-    "helpText": undefined,
-    "highlightRange": Array [
-      12,
-      19,
-    ],
-    "query": "is:haspower is:blue",
+    "highlightRange": Object {
+      "range": Array [
+        12,
+        19,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "is:haspower is:blue",
+      "fullText": "is:haspower is:blue",
+      "helpText": undefined,
+    },
     "type": 3,
   },
 ]
@@ -335,6 +359,117 @@ Array [
   "basestat:total:",
   "basestat:custom:",
   "basestat:any:",
+]
+`;
+
+exports[`filterSortRecentSearches check saved search highlighting for query || 1`] = `
+Array [
+  Object {
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "is:patternunlocked -is:crafted",
+      "header": undefined,
+    },
+    "type": 1,
+  },
+  Object {
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "/* random-roll craftable guns */ is:patternunlocked -is:crafted",
+      "header": "random-roll craftable guns",
+    },
+    "type": 1,
+  },
+]
+`;
+
+exports[`filterSortRecentSearches check saved search highlighting for query |craft| 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        23,
+        28,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "is:patternunlocked -is:crafted",
+      "header": undefined,
+    },
+    "type": 1,
+  },
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        12,
+        17,
+      ],
+      "section": "header",
+    },
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "/* random-roll craftable guns */ is:patternunlocked -is:crafted",
+      "header": "random-roll craftable guns",
+    },
+    "type": 1,
+  },
+]
+`;
+
+exports[`filterSortRecentSearches check saved search highlighting for query |craftable| 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        12,
+        21,
+      ],
+      "section": "header",
+    },
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "/* random-roll craftable guns */ is:patternunlocked -is:crafted",
+      "header": "random-roll craftable guns",
+    },
+    "type": 1,
+  },
+]
+`;
+
+exports[`filterSortRecentSearches check saved search highlighting for query |crafted| 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        23,
+        30,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "is:patternunlocked -is:crafted",
+      "header": undefined,
+    },
+    "type": 1,
+  },
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        23,
+        30,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "is:patternunlocked -is:crafted",
+      "fullText": "/* random-roll craftable guns */ is:patternunlocked -is:crafted",
+      "header": "random-roll craftable guns",
+    },
+    "type": 1,
+  },
 ]
 `;
 

@@ -81,7 +81,27 @@ describe('filterSortRecentSearches', () => {
 
   test.each(cases)('filter/sort recent searches for query |%s|', (query) => {
     const candidates = filterSortRecentSearches(query, recentSearches);
-    expect(candidates.map((c) => c.query)).toMatchSnapshot();
+    expect(candidates.map((c) => c.query.fullText)).toMatchSnapshot();
+  });
+
+  const savedSearches: Search[] = [
+    {
+      query: 'is:patternunlocked -is:crafted',
+      usageCount: 1,
+      saved: true,
+      lastUsage: Date.now(),
+    },
+    {
+      query: '/* random-roll craftable guns */ is:patternunlocked -is:crafted',
+      usageCount: 1,
+      saved: true,
+      lastUsage: Date.now() - 24 * 60 * 60 * 1000,
+    },
+  ];
+  const highlightCases: string[] = ['', 'craft', 'craftable', 'crafted'];
+  test.each(highlightCases)('check saved search highlighting for query |%s|', (query: string) => {
+    const candidates = filterSortRecentSearches(query, savedSearches);
+    expect(candidates).toMatchSnapshot();
   });
 });
 

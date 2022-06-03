@@ -75,6 +75,13 @@
   }
 }
 
+.namedQueryBody {
+  display: block;
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  opacity: 0.5;
+}
+
 .highlightedItem {
   background-color: $orange;
   color: black !important;
@@ -85,10 +92,14 @@
     color: #333;
     visibility: visible;
   }
+  .namedQueryBody {
+    opacity: 1;
+  }
 }
 
 .menuItemQuery {
   white-space: normal;
+  margin: 0;
   padding: 1px 0;
   overflow: hidden;
   max-height: 4em;
@@ -116,6 +127,7 @@
 /* Highlighted spans of text in the autocompleter */
 .textHighlight {
   display: inline-block;
+  white-space: pre;
   border-bottom: 1px dotted #ddd;
   margin-bottom: -1px;
   .highlightedItem & {
