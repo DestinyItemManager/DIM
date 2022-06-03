@@ -1,18 +1,18 @@
 import { Textcomplete } from '@textcomplete/core';
 import { TextareaEditor } from '@textcomplete/textarea';
 import { t } from 'app/i18next-t';
-import { setItemHashNote, setItemNote } from 'app/inventory/actions';
+import { setNote } from 'app/inventory/actions';
 import { itemNoteSelector } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { allNotesHashtagsSelector } from 'app/inventory/selectors';
 import { AppIcon, editIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
-import { itemIsInstanced } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styles from './NotesArea.m.scss';
 
 const maxLength = 120;
@@ -85,14 +85,10 @@ function NotesEditor({
   // without relying on the constantly refreshing liveNotes value
   const textArea = useRef<HTMLTextAreaElement>(null);
   // dispatch notes updates
-  const dispatch = useDispatch();
+  const dispatch = useThunkDispatch();
   const saveNotes = useCallback(() => {
     const newNotes = textArea.current?.value.trim();
-    dispatch(
-      itemIsInstanced(item)
-        ? setItemNote({ itemId: item.id, note: newNotes })
-        : setItemHashNote({ itemHash: item.hash, note: newNotes })
-    );
+    dispatch(setNote(item, newNotes));
   }, [dispatch, item]);
 
   const stopEvents = (e: React.SyntheticEvent) => e.stopPropagation();

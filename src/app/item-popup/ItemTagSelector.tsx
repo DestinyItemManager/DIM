@@ -1,14 +1,12 @@
 import KeyHelp from 'app/dim-ui/KeyHelp';
 import Select, { Option } from 'app/dim-ui/Select';
 import { t, tl } from 'app/i18next-t';
-import { setItemHashTag, setItemTag } from 'app/inventory/actions';
+import { setTag } from 'app/inventory/actions';
 import { tagSelector } from 'app/inventory/selectors';
 import { AppIcon, clearIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { itemIsInstanced } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { itemTagSelectorList, TagInfo, TagValue } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
@@ -25,19 +23,7 @@ export default function ItemTagSelector({ item, className, hideKeys, hideButtonL
   const dispatch = useThunkDispatch();
   const tag = useSelector(tagSelector(item));
 
-  const onChange = (tag?: TagValue) => {
-    dispatch(
-      itemIsInstanced(item)
-        ? setItemTag({
-            itemId: item.id,
-            tag: tag === 'clear' ? undefined : tag,
-          })
-        : setItemHashTag({
-            itemHash: item.hash,
-            tag: tag === 'clear' ? undefined : tag,
-          })
-    );
-  };
+  const onChange = (tag?: TagValue) => dispatch(setTag(item, tag));
 
   const dropdownOptions: Option<TagValue>[] = _.sortBy(
     itemTagSelectorList.map((t) =>

@@ -2,7 +2,6 @@ import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { tl } from 'app/i18next-t';
 import { RootState, ThunkResult } from 'app/store/types';
-import { itemIsInstanced } from 'app/utils/item-utils';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
 import { tagCleanup } from './actions';
@@ -157,8 +156,7 @@ export function getTag(
   }
 ): TagValue | undefined {
   return item.taggable
-    ? (itemIsInstanced(item) ? itemInfos[item.id]?.tag : itemHashTags?.[item.hash]?.tag) ||
-        undefined
+    ? (item.instanced ? itemInfos[item.id]?.tag : itemHashTags?.[item.hash]?.tag) || undefined
     : undefined;
 }
 
@@ -170,8 +168,7 @@ export function getNotes(
   }
 ): string | undefined {
   return item.taggable
-    ? (itemIsInstanced(item) ? itemInfos[item.id]?.notes : itemHashTags?.[item.hash]?.notes) ||
-        undefined
+    ? (item.instanced ? itemInfos[item.id]?.notes : itemHashTags?.[item.hash]?.notes) || undefined
     : undefined;
 }
 

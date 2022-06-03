@@ -12,7 +12,7 @@ import store from '../store/store';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 
 export const acquisitionRecencyComparator = reverseComparator(
-  compareBy((item: DimItem) => item.id.padStart(20, '0'))
+  compareBy((item: DimItem) => (item.instanced ? item.id.padStart(20, '0') : 0))
 );
 
 const D1_CONSUMABLE_SORT_ORDER = [

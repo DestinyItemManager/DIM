@@ -1,7 +1,7 @@
 import { compareFilteredItems } from 'app/compare/actions';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { t } from 'app/i18next-t';
-import { setItemNote } from 'app/inventory/actions';
+import { setNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { storesSortedByImportanceSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -70,7 +70,7 @@ export default React.memo(function ItemActionsDropdown({
     const note = prompt(t('Organizer.NotePrompt'));
     if (note !== null && filteredItems.length) {
       for (const item of filteredItems) {
-        dispatch(setItemNote({ itemId: item.id, note: note || undefined }));
+        dispatch(setNote(item, note));
       }
     }
   };

@@ -351,8 +351,8 @@ export function setTrackedState(
   item: DimItem,
   trackedState: boolean
 ): Promise<ServerResponse<number>> {
-  if (item.id === '0') {
-    throw new Error("Can't track non-instanced items");
+  if (!item.trackable) {
+    throw new Error("Can't track non-trackable items");
   }
 
   return setQuestTrackedState(authenticatedHttpClient, {
