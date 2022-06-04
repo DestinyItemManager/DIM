@@ -913,21 +913,53 @@ const missingSources: { [key: string]: number[] } = {
     4255727106, // Ancient Apocalypse Hood
   ],
   dsc: [],
+  duality: [
+    145651147, // Deep Explorer Vest
+    420895300, // Deep Explorer Mark
+    1148597205, // Deep Explorer Grasps
+    2057955626, // Deep Explorer Vestments
+    2499351855, // Deep Explorer Gauntlets
+    2649394513, // Deep Explorer Greaves
+    2694773307, // Deep Explorer Bond
+    2724719415, // Deep Explorer Strides
+    2797334754, // Deep Explorer Cloak
+    2819810688, // Deep Explorer Boots
+    2935559305, // Deep Explorer Plate
+    3260781446, // Deep Explorer Gloves
+    3270955774, // Deep Explorer Helmet
+    3326914239, // Deep Explorer Hood
+    4047213660, // Deep Explorer Mask
+  ],
   dungeon: [
+    145651147, // Deep Explorer Vest
     286271818, // Twisting Echo Cloak
     399065241, // Descending Echo Greaves
+    420895300, // Deep Explorer Mark
     587312237, // Twisting Echo Grips
     833653807, // Twisting Echo Strides
+    1148597205, // Deep Explorer Grasps
     1756483796, // Twisting Echo Mask
     1951355667, // Twisting Echo Vest
+    2057955626, // Deep Explorer Vestments
     2244604734, // Corrupting Echo Gloves
+    2499351855, // Deep Explorer Gauntlets
+    2649394513, // Deep Explorer Greaves
     2663987096, // Corrupting Echo Boots
+    2694773307, // Deep Explorer Bond
+    2724719415, // Deep Explorer Strides
+    2797334754, // Deep Explorer Cloak
+    2819810688, // Deep Explorer Boots
     2885497847, // Descending Echo Gauntlets
+    2935559305, // Deep Explorer Plate
     3048458482, // Corrupting Echo Robes
     3171090615, // Corrupting Echo Cover
+    3260781446, // Deep Explorer Gloves
     3267969345, // Descending Echo Cage
+    3270955774, // Deep Explorer Helmet
+    3326914239, // Deep Explorer Hood
     3685276035, // Corrupting Echo Bond
     3871537958, // Descending Echo Helm
+    4047213660, // Deep Explorer Mask
     4050474396, // Descending Echo Mark
   ],
   edz: [
@@ -1393,6 +1425,7 @@ const missingSources: { [key: string]: number[] } = {
     3339644635, // Pulse Rifle Targeting
   ],
   harbinger: [],
+  haunted: [],
   ikora: [
     89175653, // Noble Constant Mark
     185326970, // Noble Constant Type 2
