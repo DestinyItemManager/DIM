@@ -246,7 +246,7 @@
     "Notes": "Cherche les objets que vous avez marqué avec des notes personnalisés",
     "Ornament": "Affiche les objets avec des ornements et filtre leur statut.",
     "PartialMatch": "Affiche les objets dont le nom, la description, n'importe quel attribut, ou n'importe quel mod contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets. le filtre \"perk:\" cherche uniquement dans les attributs.",
-    "PatternUnlocked": "Shows items that have a crafting pattern unlocked, even if the item itself isn't crafted.",
+    "PatternUnlocked": "Affiche les objets qui ont un modèle de fabrication débloqué, même si l'objet lui-même n'a pas été fabriqué.",
     "Perk": "Affiche les objets dont la description ou le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
     "PerkName": "Affiche les objets dont le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
     "PinnacleReward": "Affiche les poursuites qui produisent une récompense de prestige.",
@@ -365,6 +365,9 @@
     "NoTransfer": "Transférer matériel d'infusion\n {{target}} ne peut pas être déplacé.",
     "SwitchDirection": "Inverser",
     "TransferItems": "Transférer"
+  },
+  "Inventory": {
+    "ClickToExpand": "(Cliquez pour agrandir)"
   },
   "ItemFeed": {
     "Description": "Flux d'objets",

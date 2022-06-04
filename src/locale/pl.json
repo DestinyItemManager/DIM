@@ -366,6 +366,9 @@
     "SwitchDirection": "Przełącz",
     "TransferItems": "Przenieś"
   },
+  "Inventory": {
+    "ClickToExpand": "(Click to expand)"
+  },
   "ItemFeed": {
     "Description": "Kanał produktu",
     "HideTagged": "Ukryj oznaczone"

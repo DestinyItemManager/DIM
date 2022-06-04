@@ -366,6 +366,9 @@
     "SwitchDirection": "変更",
     "TransferItems": "転送"
   },
+  "Inventory": {
+    "ClickToExpand": "(クリックして展開)"
+  },
   "ItemFeed": {
     "Description": "アイテムフィード",
     "HideTagged": "タグ付けされたものを隠す"

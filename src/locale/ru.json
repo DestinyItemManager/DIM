@@ -366,6 +366,9 @@
     "SwitchDirection": "Переставить",
     "TransferItems": "Перенести"
   },
+  "Inventory": {
+    "ClickToExpand": "(Click to expand)"
+  },
   "ItemFeed": {
     "Description": "Лента предметов",
     "HideTagged": "Скрыть отмеченные"
