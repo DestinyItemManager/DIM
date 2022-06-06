@@ -5,6 +5,9 @@
 ## 7.20.0 <span class="changelog-date">(2022-06-05)</span>
 
 * The top level comment of a saved search filter is now displayed separately from the filter query.
+* Support for new loot: `source:duality` and `source:haunted`.
+* Little clearer warning when you have hidden a major section of your inventory.
+* Moved the currencies (glimmer, legendary shards, etc) from the "Armor" tab to the "Inventory" tab on mobile, and also included them in the material counts sheet (accessible from Vault header dropdown).
 
 ## 7.19.0 <span class="changelog-date">(2022-05-29)</span>
 
