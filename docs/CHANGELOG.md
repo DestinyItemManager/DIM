@@ -1,5 +1,7 @@
 ## Next
 
+## 7.20.0 <span class="changelog-date">(2022-06-05)</span>
+
 * The top level comment of a saved search filter is now displayed separately from the filter query.
 
 ## 7.19.0 <span class="changelog-date">(2022-05-29)</span>
