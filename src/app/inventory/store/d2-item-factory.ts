@@ -495,7 +495,7 @@ export function makeItem(
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
-    instanced: item.itemInstanceId !== '0',
+    instanced: Boolean(item.itemInstanceId && item.itemInstanceId !== '0'),
     equipped: Boolean(itemInstanceData.isEquipped),
     // TODO: equippingBlock has a ton of good info for the item move logic
     equipment:
