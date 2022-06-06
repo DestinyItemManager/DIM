@@ -1,5 +1,7 @@
 ## Next
 
+## 7.20.1 <span class="changelog-date">(2022-06-06)</span>
+
 * Fixed some items showing the wrong popup.
 
 ## 7.20.0 <span class="changelog-date">(2022-06-05)</span>
