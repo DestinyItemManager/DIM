@@ -50,6 +50,7 @@ export function initi18n(): Promise<unknown> {
     i18next.use(HttpApi).init(
       {
         initImmediate: true,
+        compatibilityJSON: 'v3',
         debug: $DIM_FLAVOR === 'dev',
         lng: lang,
         fallbackLng: 'en',
