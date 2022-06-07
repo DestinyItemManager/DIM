@@ -193,7 +193,7 @@
     "fast-copy": "^2.0.1",
     "fast-equals": "^4.0.1",
     "framer-motion": "^6.2.3",
-    "i18next": "^20.2.2",
+    "i18next": "^21.8.8",
     "i18next-http-backend": "^1.0.21",
     "immer": "^9.0.2",
     "lodash": "^4.17.8",
