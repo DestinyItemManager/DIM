@@ -1,3 +1,4 @@
+import ClarityDescriptionConstructor from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
@@ -15,7 +16,6 @@ import {
   DestinyPlugItemCraftingRequirements,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React from 'react';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import './ItemSockets.scss';
@@ -126,7 +126,10 @@ export function PlugTooltip({
         <div key={perkDesc.perkHash}>
           {perkDesc.name && <div>{perkDesc.name}</div>}
           <div>
-            <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
+            <ClarityDescriptionConstructor
+              hash={def.hash}
+              fallback={<RichDestinyText text={perkDesc.description || perkDesc.requirement} />}
+            />
           </div>
         </div>
       ))}

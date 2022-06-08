@@ -1,3 +1,4 @@
+import ClarityDescriptionConstructor from 'app/clarity/descriptions/ClarityDescriptions';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
@@ -6,7 +7,7 @@ import { Portal } from 'app/utils/temp-container';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
@@ -86,8 +87,13 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
             >
               {!minimal && (
                 <div className={styles.exoticDescription}>
-                  <RichDestinyText
-                    text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
+                  <ClarityDescriptionConstructor
+                    hash={exoticArmorPerkSocket.plugged.plugDef.hash}
+                    fallback={
+                      <RichDestinyText
+                        text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
+                      />
+                    }
                   />
                 </div>
               )}

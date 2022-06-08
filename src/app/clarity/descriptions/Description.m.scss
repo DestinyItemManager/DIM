@@ -1,0 +1,23 @@
+.center {
+  text-align: center;
+}
+.spacer {
+  padding-top: 5px;
+}
+.bold {
+  font-weight: bold;
+}
+.background {
+  background-color: hsla(0, 0%, 100%, 0.17);
+}
+.title {
+  text-decoration: underline;
+}
+.link {
+  a:link {
+    color: hsl(201, 100%, 65%);
+  }
+  a:visited {
+    color: hsl(201, 100%, 65%);
+  }
+}
