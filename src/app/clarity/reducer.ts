@@ -14,9 +14,13 @@ export interface ClarityState {
 }
 
 export const fetchClarityDescriptions_ = async () => {
-  const data = await fetch('https://ice-mourne.github.io/database-clarity/descriptions.json');
-  const json: ClarityDescription = await data.json();
-  return json;
+  try {
+    const data = await fetch('https://ice-mourne.github.io/database-clarity/descriptions.json');
+    const json: ClarityDescription = await data.json();
+    return json;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const initialState: ClarityState = {};

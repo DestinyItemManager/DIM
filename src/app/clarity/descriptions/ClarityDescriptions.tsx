@@ -4,12 +4,11 @@ import { Line, LinesContent } from '../descriptionInterface';
 /* eslint-disable css-modules/no-unused-class */
 import styles from './Description.m.scss';
 
-// if anyone wondering is that it well this is striped down version of the original
-const otherOptions = (options: LinesContent) => {
-  if (options.linkUrl) {
+const customContent = (content: LinesContent) => {
+  if (content.linkUrl) {
     return (
-      <a href={options.linkUrl} target="_blank">
-        {options.linkText}
+      <a href={content.linkUrl} target="_blank">
+        {content.linkText}
       </a>
     );
   }
@@ -24,6 +23,7 @@ const joinClassNames = (classNames?: string) =>
 /**
  * @param Object.hash Perk hash from DestinyInventoryItemDefinition
  * @param Object.fallback Default DIM description - It will return whatever you give it if it can't find the perk
+ ** This is cut down version of original converted
  */
 export default function ClarityDescriptionConstructor({
   hash,
@@ -51,7 +51,7 @@ export default function ClarityDescriptionConstructor({
             title={linesContent.title}
             key={i}
           >
-            {linesContent.text || otherOptions(linesContent)}
+            {linesContent.text || customContent(linesContent)}
           </span>
         ))}
       </div>
