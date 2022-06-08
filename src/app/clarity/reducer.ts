@@ -10,17 +10,14 @@ export interface ClarityState {
    * Descriptions from cumunity provided by Clarity API
    */
   descriptions?: ClarityDescription;
+  toggleDescriptions?: boolean;
   // I will add more things i need for clarity later on
 }
 
 export const fetchClarityDescriptions_ = async () => {
-  try {
-    const data = await fetch('https://ice-mourne.github.io/database-clarity/descriptions.json');
-    const json: ClarityDescription = await data.json();
-    return json;
-  } catch (error) {
-    console.error(error);
-  }
+  const data = await fetch('https://ice-mourne.github.io/database-clarity/descriptions.json');
+  const json: ClarityDescription = await data.json();
+  return json;
 };
 
 const initialState: ClarityState = {};
@@ -34,6 +31,12 @@ export const clarity: Reducer<ClarityState, ClarityAction> = (
         ...state,
         descriptions: action.payload,
       };
+    case getType(actions.toggleDescriptions):
+      return {
+        ...state,
+        toggleDescriptions: !state.toggleDescriptions,
+      };
+
     default:
       return state;
   }

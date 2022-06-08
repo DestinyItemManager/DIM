@@ -265,6 +265,26 @@ export default function SettingsPage() {
                 </div>
               )}
             </div>
+            <h2>Comunity Descriptions</h2>
+            <div className="setting">
+              <Checkbox
+                label="Display Comunity Descriptions" // TODO: Change this to work with other languages
+                name="showCommunityDescriptions"
+                value={settings.showCommunityDescriptions}
+                onChange={onCheckChange}
+              />
+              <div className="fineprint">Description are not managed by DIM team</div>
+              <div className="fineprint">
+                Don't bother reporting anything about them to DIM's team.
+              </div>
+              <div className="fineprint">
+                If you notice inaccuracies or have questions, join the{' '}
+                <a href="https://d2clarity.page.link/discordDIM" target="_blank">
+                  Clarity Discord Server
+                </a>
+                .
+              </div>
+            </div>
           </section>
 
           <section id="items">

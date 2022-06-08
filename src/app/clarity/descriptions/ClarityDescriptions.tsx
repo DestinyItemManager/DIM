@@ -1,3 +1,4 @@
+import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
 import { useSelector } from 'react-redux';
 import { Line, LinesContent } from '../descriptionInterface';
@@ -33,8 +34,9 @@ export default function ClarityDescriptionConstructor({
   fallback: JSX.Element;
 }): JSX.Element {
   const descriptions = useSelector((state: RootState) => state.clarity.descriptions);
-
+  const settings = useSelector(settingsSelector);
   if (
+    !settings.showCommunityDescriptions ||
     hash === undefined ||
     descriptions === undefined ||
     descriptions[hash]?.simpleDescription === undefined
@@ -68,7 +70,7 @@ export default function ClarityDescriptionConstructor({
           lineText: [
             { text: 'Community description from ' },
             {
-              linkUrl: 'https://d2clarity.wordpress.com/',
+              linkUrl: 'https://d2clarity.page.link/websiteDIM',
               linkText: 'Clarity',
               className: 'link',
             },

@@ -7,3 +7,5 @@ import { ClarityDescription } from './descriptionInterface';
 export const fetchClarityDescriptions = createAction(
   'fetchClarityDescriptions'
 )<ClarityDescription>();
+
+export const toggleDescriptions = createAction('toggleDescriptions')();

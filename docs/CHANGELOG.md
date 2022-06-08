@@ -1,5 +1,8 @@
 ## Next
 
+* Added optional descriptions with cumunity gathered data for weapons and armor.
+  * Can be enabled in settings.
+
 ## 7.20.1 <span class="changelog-date">(2022-06-06)</span>
 
 * Fixed some items showing the wrong popup.
