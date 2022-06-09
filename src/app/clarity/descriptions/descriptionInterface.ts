@@ -71,3 +71,10 @@ export interface ClarityDescription {
    */
   [key: number]: Perk;
 }
+
+export interface ClarityVersions {
+  /**
+   * version format 1.0
+   */
+  descriptions: number;
+}
