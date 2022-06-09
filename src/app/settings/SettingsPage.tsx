@@ -3,6 +3,7 @@ import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selec
 import { settingsSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import ExternalLink from 'app/dim-ui/ExternalLink';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import { clearAllNewItems } from 'app/inventory/actions';
@@ -76,6 +77,12 @@ const languageOptions = mapToOptions({
   'zh-chs': '简体中文', // Chinese (Simplified)
 });
 
+const descriptionDisplayOptions = mapToOptions({
+  bungieDescription: 'Bungie description',
+  comunityDescription: 'Comunity description',
+  bothDescriptions: 'Comunity and Bungie descriptions',
+});
+
 // This state is outside the settings page because the settings loses its
 let languageChanged = false;
 
@@ -134,6 +141,10 @@ export default function SettingsPage() {
     i18next.changeLanguage(language, () => {
       setSetting('language', language);
     });
+  };
+
+  const changeDescriptionDisplay = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSetting('descriptionsToDisplay', e.target.value);
   };
 
   const resetItemSize = (e: React.MouseEvent) => {
@@ -267,11 +278,12 @@ export default function SettingsPage() {
             </div>
             <h2>Comunity Descriptions</h2>
             <div className="setting">
-              <Checkbox
-                label="Display Comunity Descriptions" // TODO: Change this to work with other languages
-                name="showCommunityDescriptions"
-                value={settings.showCommunityDescriptions}
-                onChange={onCheckChange}
+              <Select
+                label="Description display" // TODO: Change this to work with other languages
+                name="descriptionsToDisplay"
+                value={settings.descriptionsToDisplay}
+                options={descriptionDisplayOptions}
+                onChange={changeDescriptionDisplay}
               />
               <div className="fineprint">Description are not managed by DIM team</div>
               <div className="fineprint">
@@ -279,9 +291,9 @@ export default function SettingsPage() {
               </div>
               <div className="fineprint">
                 If you notice inaccuracies or have questions, join the{' '}
-                <a href="https://d2clarity.page.link/discordDIM" target="_blank">
+                <ExternalLink href="https://d2clarity.page.link/discordDIM">
                   Clarity Discord Server
-                </a>
+                </ExternalLink>
                 .
               </div>
             </div>

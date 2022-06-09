@@ -1,5 +1,5 @@
 import { createAction } from 'typesafe-actions';
-import { ClarityDescription } from './descriptionInterface';
+import { ClarityDescription } from './descriptions/descriptionInterface';
 
 /**
  * Download new descriptions from Clarity API
