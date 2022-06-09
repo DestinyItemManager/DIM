@@ -22,7 +22,7 @@ export default function StoreInventoryItem({ item }: Props) {
   );
   const isPhonePortrait = useIsPhonePortrait();
 
-  return isPhonePortrait ? (
+  const itemPopup = (
     <ItemPopupTrigger item={item}>
       {(ref, onClick) => (
         <ConnectedInventoryItem
@@ -37,22 +37,11 @@ export default function StoreInventoryItem({ item }: Props) {
         />
       )}
     </ItemPopupTrigger>
+  );
+
+  return isPhonePortrait ? (
+    itemPopup
   ) : (
-    <DraggableInventoryItem item={item}>
-      <ItemPopupTrigger item={item}>
-        {(ref, onClick) => (
-          <ConnectedInventoryItem
-            item={item}
-            allowFilter={true}
-            innerRef={ref}
-            onClick={onClick}
-            onDoubleClick={doubleClicked}
-            // for only StoreInventoryItems (the main inventory page)
-            // we mark these to be dimmed if archived
-            dimArchived
-          />
-        )}
-      </ItemPopupTrigger>
-    </DraggableInventoryItem>
+    <DraggableInventoryItem item={item}>{itemPopup}</DraggableInventoryItem>
   );
 }
