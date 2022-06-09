@@ -1,3 +1,4 @@
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React, { useCallback } from 'react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -19,8 +20,24 @@ export default function StoreInventoryItem({ item }: Props) {
     (e: React.MouseEvent) => dispatch(moveItemToCurrentStore(item, e)),
     [dispatch, item]
   );
+  const isPhonePortrait = useIsPhonePortrait();
 
-  return (
+  return isPhonePortrait ? (
+    <ItemPopupTrigger item={item}>
+      {(ref, onClick) => (
+        <ConnectedInventoryItem
+          item={item}
+          allowFilter={true}
+          innerRef={ref}
+          onClick={onClick}
+          onDoubleClick={doubleClicked}
+          // for only StoreInventoryItems (the main inventory page)
+          // we mark these to be dimmed if archived
+          dimArchived
+        />
+      )}
+    </ItemPopupTrigger>
+  ) : (
     <DraggableInventoryItem item={item}>
       <ItemPopupTrigger item={item}>
         {(ref, onClick) => (
