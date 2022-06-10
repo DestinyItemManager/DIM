@@ -19,6 +19,7 @@ import _ from 'lodash';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import './ItemSockets.scss';
+import styles from './PlugTooltip.m.scss';
 
 // TODO: Connect this to redux
 export function DimPlugTooltip({
@@ -126,12 +127,16 @@ export function PlugTooltip({
         <div key={perkDesc.perkHash}>
           {perkDesc.name && <div>{perkDesc.name}</div>}
 
-          <ClarityDescriptions
-            hash={def.hash}
-            bungieDescription={
-              <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
-            }
-          />
+          {$featureFlags.clarityDescriptions ? (
+            <ClarityDescriptions
+              hash={def.hash}
+              bungieDescription={
+                <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
+              }
+            />
+          ) : (
+            <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
+          )}
         </div>
       ))}
       {sourceString && <div>{sourceString}</div>}

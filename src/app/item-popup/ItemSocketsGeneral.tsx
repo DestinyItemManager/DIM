@@ -1,5 +1,4 @@
-import ClarityDescriptionConstructor from 'app/clarity/descriptions/ClarityDescriptions';
-import { settingSelector } from 'app/dim-api/selectors';
+import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
@@ -30,7 +29,6 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
-  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
 
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
     if (hasMenu) {
@@ -89,14 +87,20 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
             >
               {!minimal && (
                 <div className={styles.exoticDescription}>
-                  <ClarityDescriptionConstructor
-                    hash={exoticArmorPerkSocket.plugged.plugDef.hash}
-                    bungieDescription={
-                      <RichDestinyText
-                        text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
-                      />
-                    }
-                  />
+                  {$featureFlags.clarityDescriptions ? (
+                    <ClarityDescriptions
+                      hash={exoticArmorPerkSocket.plugged.plugDef.hash}
+                      bungieDescription={
+                        <RichDestinyText
+                          text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
+                        />
+                      }
+                    />
+                  ) : (
+                    <RichDestinyText
+                      text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
+                    />
+                  )}
                 </div>
               )}
             </ArchetypeSocket>

@@ -155,7 +155,7 @@ export function loadStores(
         dispatch(loadStoresData(account));
       }
 
-      dispatch(loadClarity());
+      $featureFlags.clarityDescriptions && dispatch(loadClarity());
     }
 
     return stores;

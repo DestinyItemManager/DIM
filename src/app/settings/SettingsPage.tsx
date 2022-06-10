@@ -371,25 +371,27 @@ export default function SettingsPage() {
                 </label>
               </div>
             </div>
-            <div className="setting">
-              <Select
-                label={t('Settings.CommunityData')}
-                name="descriptionsToDisplay"
-                value={settings.descriptionsToDisplay}
-                options={descriptionDisplayOptions}
-                onChange={changeDescriptionDisplay}
-              />
-              <div
-                className="fineprint"
-                dangerouslySetInnerHTML={{
-                  __html: t('Views.About.CommunityInsight', {
-                    clarityLink,
-                    compendiumLink,
-                    clarityDiscordLink,
-                  }),
-                }}
-              />
-            </div>
+            {$featureFlags.clarityDescriptions && (
+              <div className="setting">
+                <Select
+                  label={t('Settings.CommunityData')}
+                  name="descriptionsToDisplay"
+                  value={settings.descriptionsToDisplay}
+                  options={descriptionDisplayOptions}
+                  onChange={changeDescriptionDisplay}
+                />
+                <div
+                  className="fineprint"
+                  dangerouslySetInnerHTML={{
+                    __html: t('Views.About.CommunityInsight', {
+                      clarityLink,
+                      compendiumLink,
+                      clarityDiscordLink,
+                    }),
+                  }}
+                />
+              </div>
+            )}
             {hasD1Account && (
               <Checkbox
                 label={t('Settings.EnableAdvancedStats')}

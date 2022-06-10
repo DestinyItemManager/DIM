@@ -24,6 +24,8 @@ declare const $featureFlags: {
   awa: boolean;
   /** Item feed sidebar */
   itemFeed: boolean;
+  /** Clarity perk descriptions */
+  clarityDescriptions: boolean;
 };
 
 declare function ga(...params: string[]): void;

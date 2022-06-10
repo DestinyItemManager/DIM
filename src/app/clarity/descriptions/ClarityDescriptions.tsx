@@ -36,7 +36,7 @@ export default function ClarityDescriptions({
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
   const lines = descriptions?.[hash]?.simpleDescription;
   if (descriptionsToDisplay === 'bungie' || !lines) {
-    return bungieDescription;
+    return <>{bungieDescription}</>;
   }
 
   const convertedDescription = lines?.map((line, i) => (
