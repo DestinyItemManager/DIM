@@ -39,6 +39,8 @@ export interface ItemActionsModel {
   maximumMoveAmount: number;
   /** Show an editor for the amount of items to move. */
   showAmounts: boolean;
+  /** Has a meaningful armory view. */
+  armory: boolean;
   /** A list of stores that we could equip to. This includes all valid locations, but some can be disabled. */
   equip: StoreButtonInfo[];
   /** A list of stores that we could move to. This includes all valid locations, but some can be disabled. Vault isn't included. */
@@ -96,6 +98,8 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
   const equip = canEquip.map((s) => ({ store: s, enabled: !disableEquip(s) }));
   const store = canStore.map((s) => ({ store: s, enabled: !disableStore(s) }));
 
+  const armory = item.equipment;
+
   const hasMoveControls = Boolean(
     (inPostmaster && pullFromPostmaster) || equip.length || store.length
   );
@@ -106,7 +110,8 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
       infusable ||
       loadoutable ||
       canConsolidate ||
-      canDistribute
+      canDistribute ||
+      armory
   );
   const hasControls = hasAccessoryControls || hasMoveControls;
 
@@ -128,6 +133,7 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
     hasMoveControls,
     hasAccessoryControls,
     hasControls,
+    armory,
   };
 }
 

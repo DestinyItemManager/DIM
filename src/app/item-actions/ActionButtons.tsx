@@ -1,3 +1,4 @@
+import ArmorySheet from 'app/armory/ArmorySheet';
 import { addCompareItem } from 'app/compare/actions';
 import { t } from 'app/i18next-t';
 import { showInfuse } from 'app/infuse/infuse';
@@ -11,11 +12,12 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
 import ItemTagSelector from 'app/item-popup/ItemTagSelector';
 import { addItemToLoadout } from 'app/loadout-drawer/loadout-events';
-import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
+import { addIcon, AppIcon, compareIcon, faInfo } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import React from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
 import arrowsOut from '../../images/arrows-out.png';
@@ -186,6 +188,34 @@ export function LoadoutActionButton({
     <ActionButton onClick={addToLoadout}>
       <AppIcon icon={addIcon} />
       {label && <span className={styles.label}>{t('MovePopup.AddToLoadout')}</span>}
+    </ActionButton>
+  );
+}
+
+export function ArmoryActionButton({
+  item,
+  label,
+  actionModel,
+}: ActionButtonProps & { actionModel: ItemActionsModel }) {
+  const [showArmory, setShowArmory] = useState(false);
+  if (!actionModel.armory) {
+    return null;
+  }
+
+  const show = () => {
+    setShowArmory(true);
+  };
+
+  return (
+    <ActionButton onClick={show}>
+      <AppIcon icon={faInfo} />
+      {label && <span className={styles.label}>{t('Armory.Label')}</span>}
+
+      {showArmory && (
+        <Portal>
+          <ArmorySheet onClose={() => setShowArmory(false)} item={item} />
+        </Portal>
+      )}
     </ActionButton>
   );
 }

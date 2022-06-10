@@ -1,7 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
-import React from 'react';
 import {
+  ArmoryActionButton,
   CompareActionButton,
   ConsolidateActionButton,
   DistributeActionButton,
@@ -43,6 +43,9 @@ export default function ItemAccessoryButtons({
       )}
       {actionsModel.infusable && (
         <InfuseActionButton item={item} label={showLabel} actionModel={actionsModel} />
+      )}
+      {actionsModel.armory && (
+        <ArmoryActionButton item={item} label={showLabel} actionModel={actionsModel} />
       )}
     </>
   );

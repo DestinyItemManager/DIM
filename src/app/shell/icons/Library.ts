@@ -80,6 +80,7 @@ const faBookmark = 'far fa-bookmark';
 const faBalanceScaleLeft = 'fas fa-balance-scale-left';
 const faGripVertical = 'fas fa-grip-vertical';
 const faThumbtack = 'fas fa-thumbtack';
+const faInfo = 'fas fa-info-circle';
 
 const faXbox = 'fab fa-xbox';
 const faPlayStation = 'fab fa-playstation';
@@ -178,4 +179,5 @@ export {
   faGrid,
   faAngleLeft,
   faAngleRight,
+  faInfo,
 };

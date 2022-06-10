@@ -27,6 +27,7 @@
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
   "Armory": {
+    "Label": "Item Info",
     "NoNotes": "No Notes",
     "Season": "Season {{season}}, Year {{year}}",
     "TrashlistedRolls": "Trashlisted Roll",
