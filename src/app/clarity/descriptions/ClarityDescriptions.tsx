@@ -1,5 +1,6 @@
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { descriptionsSelector } from '../selectors';
 /* eslint-disable css-modules/no-unused-class */
@@ -23,11 +24,17 @@ const joinClassNames = (classNames?: string) =>
  * @param Object.defaultDimDescription It will return whatever you give it if it can't find the perk
  ** This is cut down version of original converted
  */
-export default function ClarityDescriptions({ hash }: { hash: number }) {
+export default function ClarityDescriptions({
+  hash,
+  fallback,
+}: {
+  hash: number;
+  fallback?: React.ReactNode;
+}) {
   const descriptions = useSelector(descriptionsSelector);
   const lines = descriptions?.[hash]?.simpleDescription;
   if (!lines) {
-    return null;
+    return <>{fallback ?? null}</>;
   }
 
   const convertedDescription = lines?.map((line, i) => (

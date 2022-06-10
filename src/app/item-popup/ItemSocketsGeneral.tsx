@@ -100,7 +100,14 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
                     />
                   )}
                   {showCommunityDescription && (
-                    <ClarityDescriptions hash={exoticArmorPerkSocket.plugged.plugDef.hash} />
+                    <ClarityDescriptions
+                      hash={exoticArmorPerkSocket.plugged.plugDef.hash}
+                      fallback={
+                        <RichDestinyText
+                          text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
+                        />
+                      }
+                    />
                   )}
                 </div>
               )}

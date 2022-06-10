@@ -131,6 +131,8 @@ export function PlugTooltip({
     !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
   const showCommunityDescription =
     $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
+  const showCommunityDescriptionOnly =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
 
   return (
     <>
@@ -141,8 +143,15 @@ export function PlugTooltip({
         <div key={perkDesc.perkHash}>
           {perkDesc.name && <div>{perkDesc.name}</div>}
 
-          {showBungieDescription && (
+          {showBungieDescription ? (
             <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
+          ) : (
+            showCommunityDescriptionOnly && (
+              <ClarityDescriptions
+                hash={def.hash}
+                fallback={<RichDestinyText text={perkDesc.description || perkDesc.requirement} />}
+              />
+            )
           )}
         </div>
       ))}
@@ -154,7 +163,9 @@ export function PlugTooltip({
           ))}
         </div>
       )}
-      {showCommunityDescription && <ClarityDescriptions hash={def.hash} />}
+      {showCommunityDescription && !showCommunityDescriptionOnly && (
+        <ClarityDescriptions hash={def.hash} />
+      )}
       {defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
         <div className={styles.objectives}>
           {filteredPlugObjectives.map((objective) => (
