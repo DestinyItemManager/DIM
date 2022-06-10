@@ -150,12 +150,13 @@ export function PlugTooltip({
               <ClarityDescriptions
                 hash={def.hash}
                 fallback={<RichDestinyText text={perkDesc.description || perkDesc.requirement} />}
+                comunityOnly={showCommunityDescriptionOnly}
               />
             )
           )}
         </div>
       ))}
-      {sourceString && <div>{sourceString}</div>}
+      {!showCommunityDescriptionOnly && sourceString && <div>{sourceString}</div>}
       {stats && Object.entries(stats).length > 0 && (
         <div className="plug-stats">
           {Object.entries(stats).map(([statHash, value]) => (

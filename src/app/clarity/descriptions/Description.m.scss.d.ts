@@ -6,6 +6,7 @@ interface CssExports {
   'bold': string;
   'center': string;
   'communityDescription': string;
+  'communityDescriptionOnly': string;
   'descriptionDivider': string;
   'heavy': string;
   'highlight1': string;

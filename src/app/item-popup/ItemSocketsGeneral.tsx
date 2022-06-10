@@ -36,6 +36,8 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
     !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
   const showCommunityDescription =
     $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
+  const showCommunityDescriptionOnly =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
 
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
     if (hasMenu) {
@@ -107,6 +109,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
                           text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
                         />
                       }
+                      comunityOnly={showCommunityDescriptionOnly}
                     />
                   )}
                 </div>

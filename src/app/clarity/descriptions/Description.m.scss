@@ -12,6 +12,17 @@
   }
 }
 
+.communityDescriptionOnly {
+  margin-top: 2px;
+  h3 {
+    margin: 0;
+    font-size: inherit;
+  }
+  p {
+    margin: 0;
+  }
+}
+
 // --- colors
 .pvp {
   color: hsl(0, 100%, 80%);

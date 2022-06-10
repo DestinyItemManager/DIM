@@ -27,9 +27,11 @@ const joinClassNames = (classNames?: string) =>
 export default function ClarityDescriptions({
   hash,
   fallback,
+  comunityOnly,
 }: {
   hash: number;
   fallback?: React.ReactNode;
+  comunityOnly?: boolean;
 }) {
   const descriptions = useSelector(descriptionsSelector);
   const lines = descriptions?.[hash]?.simpleDescription;
@@ -48,7 +50,7 @@ export default function ClarityDescriptions({
   ));
 
   return (
-    <div className={styles.communityDescription}>
+    <div className={comunityOnly ? styles.communityDescriptionOnly : styles.communityDescription}>
       <h3>{t('MovePopup.CommunityData')}</h3>
       {convertedDescription}
     </div>
