@@ -4,6 +4,7 @@ import { handleAuthErrors } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
@@ -153,6 +154,8 @@ export function loadStores(
         // async load the rest (no await)
         dispatch(loadStoresData(account));
       }
+
+      dispatch(loadClarity());
     }
 
     return stores;

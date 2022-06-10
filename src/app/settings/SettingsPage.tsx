@@ -1,9 +1,9 @@
 import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
+import { clarityDiscordLink, clarityLink, compendiumLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
-import ExternalLink from 'app/dim-ui/ExternalLink';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import { clearAllNewItems } from 'app/inventory/actions';
@@ -75,12 +75,6 @@ const languageOptions = mapToOptions({
   ja: '日本語',
   'zh-cht': '繁體中文', // Chinese (Traditional)
   'zh-chs': '简体中文', // Chinese (Simplified)
-});
-
-const descriptionDisplayOptions = mapToOptions({
-  bungieDescription: 'Bungie description',
-  comunityDescription: 'Comunity description',
-  bothDescriptions: 'Comunity and Bungie descriptions',
 });
 
 // This state is outside the settings page because the settings loses its
@@ -197,6 +191,12 @@ export default function SettingsPage() {
     // archetype: 'Archetype'
   };
 
+  const descriptionDisplayOptions = mapToOptions({
+    both: t('Settings.BothDescriptions'),
+    bungie: t('Settings.BungieDescriptionOnly'),
+    community: t('Settings.CommunityDescriptionOnly'),
+  });
+
   const charColOptions = _.range(2, 6).map((num) => ({
     value: num,
     name: t('Settings.ColumnSize', { num }),
@@ -275,27 +275,6 @@ export default function SettingsPage() {
                   </button>
                 </div>
               )}
-            </div>
-            <h2>Comunity Descriptions</h2>
-            <div className="setting">
-              <Select
-                label="Description display" // TODO: Change this to work with other languages
-                name="descriptionsToDisplay"
-                value={settings.descriptionsToDisplay}
-                options={descriptionDisplayOptions}
-                onChange={changeDescriptionDisplay}
-              />
-              <div className="fineprint">Description are not managed by DIM team</div>
-              <div className="fineprint">
-                Don't bother reporting anything about them to DIM's team.
-              </div>
-              <div className="fineprint">
-                If you notice inaccuracies or have questions, join the{' '}
-                <ExternalLink href="https://d2clarity.page.link/discordDIM">
-                  Clarity Discord Server
-                </ExternalLink>
-                .
-              </div>
             </div>
           </section>
 
@@ -391,6 +370,25 @@ export default function SettingsPage() {
                   <span>{t('Settings.PerkGrid')}</span>
                 </label>
               </div>
+            </div>
+            <div className="setting">
+              <Select
+                label={t('Settings.CommunityData')}
+                name="descriptionsToDisplay"
+                value={settings.descriptionsToDisplay}
+                options={descriptionDisplayOptions}
+                onChange={changeDescriptionDisplay}
+              />
+              <div
+                className="fineprint"
+                dangerouslySetInnerHTML={{
+                  __html: t('Views.About.CommunityInsight', {
+                    clarityLink,
+                    compendiumLink,
+                    clarityDiscordLink,
+                  }),
+                }}
+              />
             </div>
             {hasD1Account && (
               <Checkbox

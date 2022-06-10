@@ -5,6 +5,7 @@ interface CssExports {
   'background': string;
   'bold': string;
   'center': string;
+  'communityDescription': string;
   'descriptionDivider': string;
   'heavy': string;
   'highlight1': string;

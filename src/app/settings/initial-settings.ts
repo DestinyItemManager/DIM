@@ -9,12 +9,12 @@ export interface Settings extends DimApiSettings {
   itemSortReversals: string[];
 
   /** Select descriptions to display */
-  readonly descriptionsToDisplay: 'bungieDescription' | 'comunityDescription' | 'bothDescriptions';
+  readonly descriptionsToDisplay: 'bungie' | 'community' | 'both';
 }
 
 export const initialSettingsState: Settings = {
   ...defaultSettings,
   language: defaultLanguage(),
   itemSortReversals: [],
-  descriptionsToDisplay: 'bothDescriptions',
+  descriptionsToDisplay: 'both',
 };

@@ -1,4 +1,4 @@
-import ClarityDescriptionConstructor from 'app/clarity/descriptions/ClarityDescriptions';
+import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
@@ -125,15 +125,16 @@ export function PlugTooltip({
       {perkDescriptions.map((perkDesc) => (
         <div key={perkDesc.perkHash}>
           {perkDesc.name && <div>{perkDesc.name}</div>}
-          <div>
-            <ClarityDescriptionConstructor
-              hash={def.hash}
-              fallback={<RichDestinyText text={perkDesc.description || perkDesc.requirement} />}
-            />
-          </div>
+
+          <ClarityDescriptions
+            hash={def.hash}
+            bungieDescription={
+              <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
+            }
+          />
         </div>
       ))}
-      {sourceString && <div className="plug-source">{sourceString}</div>}
+      {sourceString && <div>{sourceString}</div>}
       {stats && Object.entries(stats).length > 0 && (
         <div className="plug-stats">
           {Object.entries(stats).map(([statHash, value]) => (
@@ -142,7 +143,7 @@ export function PlugTooltip({
         </div>
       )}
       {defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
-        <div className="plug-objectives">
+        <div className={styles.objectives}>
           {filteredPlugObjectives.map((objective) => (
             <Objective key={objective.objectiveHash} objective={objective} />
           ))}

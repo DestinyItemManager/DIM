@@ -1,20 +1,21 @@
 import { get, set } from 'app/storage/idb-keyval';
-import store from 'app/store/store';
+import { ThunkResult } from 'app/store/types';
 import * as actions from '../actions';
 import { ClarityDescription, ClarityVersions } from './descriptionInterface';
 
-const fetchClarity = async (type: 'descriptions' | 'version') => {
-  const urls = {
-    descriptions: 'https://ice-mourne.github.io/database-clarity/descriptions.json',
-    version: 'https://ice-mourne.github.io/database-clarity/versions.json',
-  };
+const urls = {
+  descriptions: 'https://ice-mourne.github.io/database-clarity/descriptions.json',
+  version: 'https://ice-mourne.github.io/database-clarity/versions.json',
+} as const;
+
+const fetchClarity = async (type: keyof typeof urls) => {
   const data = await fetch(urls[type]);
   const json = await data.json();
   return json;
 };
 
 const loadClarityDescriptions = async () => {
-  const savedVersion = Number(localStorage.getItem('clarityDescriptionVersion'));
+  const savedVersion = Number(localStorage.getItem('clarityDescriptionVersion') ?? '0');
   const liveVersion: ClarityVersions = await fetchClarity('version');
 
   if (savedVersion !== liveVersion.descriptions) {
@@ -28,7 +29,13 @@ const loadClarityDescriptions = async () => {
   return savedDescriptions;
 };
 
-// technically this works fine but if i should move it just tell me where or just move it
-loadClarityDescriptions().then((descriptions) => {
-  store.dispatch(actions.loadDescriptions(descriptions));
-});
+/**
+ * Load the Clarity database, either remotely or from the local cache.
+ * TODO: reload this every so often when stores reload
+ */
+export function loadClarity(): ThunkResult {
+  return async (dispatch) => {
+    const descriptions = await loadClarityDescriptions();
+    dispatch(actions.loadDescriptions(descriptions));
+  };
+}

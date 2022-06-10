@@ -7,7 +7,7 @@ export type ClarityAction = ActionType<typeof actions>;
 
 export interface ClarityState {
   /**
-   * Descriptions from cumunity provided by Clarity API
+   * Descriptions from community provided by Clarity API
    */
   descriptions?: ClarityDescription;
   // I will add more things i need for clarity later on

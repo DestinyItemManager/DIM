@@ -51,12 +51,12 @@ interface Perk {
   simpleDescription?: Line[];
 
   /**
-   * Comunity gatred stats what are not provided by Bungie
+   * Community gathered stats that are not provided by Bungie
    */
   stats?: { [key: string]: any };
 
   /**
-   * Then lats time perk was updated time in ms (Date.now())
+   * Then last time perk was updated time in ms (Date.now())
    */
   lastUpdate: number;
   /**

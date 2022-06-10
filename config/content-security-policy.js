@@ -40,7 +40,9 @@ module.exports = function csp(env) {
       // DIM Sync
       'https://api.destinyitemmanager.com',
       // Xur location
-      'paracausal.science',
+      'https://paracausal.science',
+      // Clarity
+      'https://ice-mourne.github.io',
     ],
     imgSrc: [
       SELF,
