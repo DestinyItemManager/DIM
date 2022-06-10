@@ -1,7 +1,5 @@
-import { settingSelector } from 'app/dim-api/selectors';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { descriptionsSelector } from '../selectors';
 /* eslint-disable css-modules/no-unused-class */
@@ -25,18 +23,11 @@ const joinClassNames = (classNames?: string) =>
  * @param Object.defaultDimDescription It will return whatever you give it if it can't find the perk
  ** This is cut down version of original converted
  */
-export default function ClarityDescriptions({
-  hash,
-  bungieDescription,
-}: {
-  hash: number;
-  bungieDescription: React.ReactNode;
-}) {
+export default function ClarityDescriptions({ hash }: { hash: number }) {
   const descriptions = useSelector(descriptionsSelector);
-  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
   const lines = descriptions?.[hash]?.simpleDescription;
-  if (descriptionsToDisplay === 'bungie' || !lines) {
-    return <>{bungieDescription}</>;
+  if (!lines) {
+    return null;
   }
 
   const convertedDescription = lines?.map((line, i) => (
@@ -50,12 +41,9 @@ export default function ClarityDescriptions({
   ));
 
   return (
-    <>
-      {descriptionsToDisplay === 'both' && bungieDescription}
-      <div className={styles.communityDescription}>
-        <h3>{t('MovePopup.CommunityData')}</h3>
-        {convertedDescription}
-      </div>
-    </>
+    <div className={styles.communityDescription}>
+      <h3>{t('MovePopup.CommunityData')}</h3>
+      {convertedDescription}
+    </div>
   );
 }
