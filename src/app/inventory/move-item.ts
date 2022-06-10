@@ -126,7 +126,7 @@ export function moveItemTo(
       updateManualMoveTimestamp(item);
 
       const [cancelToken, cancel] = withCancel();
-      const moveSession = createMoveSession(cancelToken);
+      const moveSession = createMoveSession(cancelToken, [item]);
 
       const movePromise = queueAction(() =>
         loadingTracker.addPromise(
@@ -184,7 +184,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
           const stores = storesSelector(getState());
           const characters = stores.filter((s) => !s.isVault);
           const vault = getVault(stores)!;
-          const moveSession = createMoveSession(neverCanceled);
+          const moveSession = createMoveSession(neverCanceled, [actionableItem]);
 
           try {
             for (const s of characters) {
@@ -244,7 +244,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
         (async () => {
           // Sort vault to the end
           const stores = _.sortBy(storesSelector(getState()), (s) => (s.id === 'vault' ? 2 : 1));
-          const moveSession = createMoveSession(neverCanceled);
+          const moveSession = createMoveSession(neverCanceled, [actionableItem]);
 
           let total = 0;
           const amounts = stores.map((store) => {
