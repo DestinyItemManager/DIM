@@ -1,5 +1,7 @@
 ## Next
 
+* When making automatic moves, DIM will always avoid filling in your last open Consumables slot. An item can still be manually moved into your character's pockets as the 50th consumable.
+
 ## 7.20.1 <span class="changelog-date">(2022-06-06)</span>
 
 * Fixed some items showing the wrong popup.
