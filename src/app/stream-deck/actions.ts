@@ -55,12 +55,16 @@ export function sendToStreamDeck(args: Record<string, any>): ThunkResult {
 }
 
 export function sendLoadouts(): ThunkResult {
-  return async (dispatch, getState) =>
-    dispatch(
-      sendToStreamDeck({
-        loadouts: streamDeckLoadoutsUpdate(getState()),
-      })
-    );
+  return async (dispatch, getState) => {
+    const loadouts = streamDeckLoadoutsUpdate(getState());
+    if (Object.keys(loadouts).length) {
+      return dispatch(
+        sendToStreamDeck({
+          loadouts,
+        })
+      );
+    }
+  };
 }
 
 // handle actions coming from the stream deck instance
@@ -176,14 +180,20 @@ export function stopStreamDeckConnection(): ThunkResult {
 export function startStreamDeckConnection(): ThunkResult {
   return async (dispatch, getState) => {
     const initWS = () => {
-      // if settings are not loaded retry after 1s
-      if (!getState().dimApi.globalSettingsLoaded) {
+      const state = getState();
+
+      // if settings/manifest/profile are not loaded retry after 1s
+      if (
+        !state.dimApi.globalSettingsLoaded ||
+        !state.manifest.destiny2CoreSettings ||
+        !state.inventory.profileResponse?.profileProgression
+      ) {
         setTimeout(initWS, 1000);
         return;
       }
 
       // if stream deck is disabled stop don't try to connect
-      if (!settingSelector('streamDeckEnabled')(getState())) {
+      if (!settingSelector('streamDeckEnabled')(state)) {
         return;
       }
 
