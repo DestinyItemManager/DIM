@@ -1,6 +1,7 @@
 ## Next
 
 * When making automatic moves, DIM will always avoid filling in your last open Consumables slot. An item can still be manually moved into your character's pockets as the 50th consumable.
+* When moving multiple items, DIM will transfer them in a more consistent order e.g. Kinetic weapons are moved before Heavy weapons, helmets before chest armor etc.
 
 ## 7.20.1 <span class="changelog-date">(2022-06-06)</span>
 
