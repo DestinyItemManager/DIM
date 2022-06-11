@@ -306,13 +306,17 @@ function groupItems(
 
     if (requiredEnergyTypes.size) {
       groupId +=
-        // Only add the grouping key if the socket matches what we need, otherwise it doesn't matter
         item.energy &&
-        requiredEnergyTypes.has(item.energy.energyType) &&
-        // If we can swap to another energy type, there's no need to group by current energy type
-        isArmorEnergyLocked(item, armorEnergyRules)
-          ? item.energy.energyType
-          : DestinyEnergyType.Any;
+        // We group all items locked to an energy type we don't care about
+        // by using an `X` instead of the numerical energy type -- if we only
+        // want to assign Solar mods, we can put all items locked to Void,
+        // Stasis and Arc into their own group (apart from the Any items and
+        // apart from the items locked to Solar)
+        (isArmorEnergyLocked(item, armorEnergyRules)
+          ? requiredEnergyTypes.has(item.energy.energyType)
+            ? item.energy.energyType
+            : 'X'
+          : DestinyEnergyType.Any);
     }
 
     return groupId;
