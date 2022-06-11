@@ -173,7 +173,7 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
 
     const promise = (async () => {
       let succeeded = 0;
-      const moveSession = createMoveSession(cancelToken);
+      const moveSession = createMoveSession(cancelToken, items);
 
       for (const item of items) {
         let amount = item.amount;
@@ -241,7 +241,7 @@ function moveItemsToVault(
       // reserve space for all move-asides
       [store.id]: _.countBy(items, (i) => i.bucket.hash),
     };
-    const moveSession = createMoveSession(cancelToken);
+    const moveSession = createMoveSession(cancelToken, items);
 
     for (const item of items) {
       const stores = storesSelector(getState());

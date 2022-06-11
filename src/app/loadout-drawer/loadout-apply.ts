@@ -177,8 +177,6 @@ function doApplyLoadout(
     const getLoadoutItem = (loadoutItem: LoadoutItem) =>
       findItemForLoadout(defs, allItemsSelector(getState()), store.id, loadoutItem);
 
-    const moveSession = createMoveSession(cancelToken);
-
     try {
       // Back up the current state as an "undo" loadout
       if (allowUndo && !store.isVault) {
@@ -340,6 +338,10 @@ function doApplyLoadout(
       });
 
       const realItemsToDequip = _.compact(itemsToDequip.map((i) => getLoadoutItem(i)));
+
+      const involvedItems = [..._.compact(itemsToEquip.map(getLoadoutItem)), ...realItemsToDequip];
+      const moveSession = createMoveSession(cancelToken, involvedItems);
+
       // Group dequips per character
       const dequips = _.map(
         _.groupBy(realItemsToDequip, (i) => i.owner),
