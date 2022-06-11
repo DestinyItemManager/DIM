@@ -143,7 +143,7 @@
 ## 6.94.0 <span class="changelog-date">(2021-12-05)</span>
 
 * You can change perks and slot zero-cost mods from the item Popup.
-* Loadouts can now apply mods. See [Mods in Loadouts](https://destinyitemmanager.fandom.com/wiki/Mods_in_Loadouts) for details. Some things to keep in mind:
+* Loadouts can now apply mods. See [Mods in Loadouts](https://github.com/DestinyItemManager/DIM/wiki/Mods-in-Loadouts) for details. Some things to keep in mind:
   * This will not work until the 30th Anniversary patch.
   * Applying mods will also strip off any mods that aren't in your loadout from your equipped armor.
   * Mods will be placed on your equipped armor whether that armor came from your loadout or not.
@@ -1029,7 +1029,7 @@
 ## 6.26.0 <span class="changelog-date">(2020-08-23)</span>
 
 * Better touchscreen support for drag and drop.
-* Wishlists now support Github gists (raw text URLs), so there's no need to set up an entire repository to host them. If you are making wishlists, you can try out changes easier than ever. If you're not making wishlists, hopefully you're using them. If you don't know what wishlists are, [here you go](https://destinyitemmanager.fandom.com/wiki/Wish_Lists)
+* Wishlists now support Github gists (raw text URLs), so there's no need to set up an entire repository to host them. If you are making wishlists, you can try out changes easier than ever. If you're not making wishlists, hopefully you're using them. If you don't know what wishlists are, [here you go](https://github.com/DestinyItemManager/DIM/wiki/Wish-Lists)
 * Engrams get a more form-fitting outline on mouse hover.
 * If you have a search query active, DIM will not automatically reload to update itself.
 * The `is:curated` search has been overhauled to better find curated rolls.
