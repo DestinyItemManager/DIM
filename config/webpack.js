@@ -72,8 +72,8 @@ module.exports = (env) => {
     output: {
       path: path.resolve('./dist'),
       publicPath: '/',
-      filename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:6].js',
-      chunkFilename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:6].js',
+      filename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js',
+      chunkFilename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js',
       assetModuleFilename: ASSET_NAME_PATTERN,
       hashFunction: 'xxhash64',
     },
@@ -201,8 +201,8 @@ module.exports = (env) => {
                 modules: {
                   localIdentName:
                     env.dev || env.beta
-                      ? '[name]_[local]-[contenthash:base64:5]'
-                      : '[contenthash:base64:5]',
+                      ? '[name]_[local]-[contenthash:base64:8]'
+                      : '[contenthash:base64:8]',
                   exportLocalsConvention: 'camelCaseOnly',
                 },
                 sourceMap: true,
@@ -262,7 +262,7 @@ module.exports = (env) => {
           include: /src(\/|\\)locale/,
           type: 'asset/resource',
           generator: {
-            filename: '[name]-[contenthash:6][ext]',
+            filename: '[name]-[contenthash:8][ext]',
           },
         },
         {
@@ -315,8 +315,8 @@ module.exports = (env) => {
       new NotifyPlugin('DIM', !env.dev),
 
       new MiniCssExtractPlugin({
-        filename: env.dev ? '[name]-[contenthash].css' : '[name]-[contenthash:6].css',
-        chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:6].css',
+        filename: env.dev ? '[name]-[contenthash].css' : '[name]-[contenthash:8].css',
+        chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:8].css',
       }),
 
       new HtmlWebpackPlugin({
