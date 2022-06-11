@@ -147,11 +147,14 @@ export function PlugTooltip({
             <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
           ) : (
             showCommunityDescriptionOnly && (
-              <ClarityDescriptions
-                hash={def.hash}
-                fallback={<RichDestinyText text={perkDesc.description || perkDesc.requirement} />}
-                comunityOnly={showCommunityDescriptionOnly}
-              />
+              <>
+                {!showCommunityDescriptionOnly && sourceString && <div>{sourceString}</div>}
+                <ClarityDescriptions
+                  hash={def.hash}
+                  fallback={<RichDestinyText text={perkDesc.description || perkDesc.requirement} />}
+                  communityOnly={showCommunityDescriptionOnly}
+                />
+              </>
             )
           )}
         </div>

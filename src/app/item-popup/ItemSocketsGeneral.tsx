@@ -109,7 +109,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
                           text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
                         />
                       }
-                      comunityOnly={showCommunityDescriptionOnly}
+                      communityOnly={showCommunityDescriptionOnly}
                     />
                   )}
                 </div>

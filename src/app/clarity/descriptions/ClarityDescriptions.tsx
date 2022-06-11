@@ -27,11 +27,11 @@ const joinClassNames = (classNames?: string) =>
 export default function ClarityDescriptions({
   hash,
   fallback,
-  comunityOnly,
+  communityOnly: comunityOnly,
 }: {
   hash: number;
   fallback?: React.ReactNode;
-  comunityOnly?: boolean;
+  communityOnly?: boolean;
 }) {
   const descriptions = useSelector(descriptionsSelector);
   const lines = descriptions?.[hash]?.simpleDescription;
