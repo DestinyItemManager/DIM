@@ -7,10 +7,12 @@ import { defaultLanguage } from 'app/i18n';
 export interface Settings extends DimApiSettings {
   /** supplements itemSortOrderCustom by allowing each sort to be reversed */
   itemSortReversals: string[];
+  streamDeckEnabled: boolean;
 }
 
 export const initialSettingsState: Settings = {
   ...defaultSettings,
   language: defaultLanguage(),
   itemSortReversals: [],
+  streamDeckEnabled: false,
 };

@@ -924,7 +924,8 @@
     "SortCustom": "Custom Sort",
     "SortName": "Name",
     "SpacesSize": "{{count}} space",
-    "SpacesSize_plural": "{{count}} spaces"
+    "SpacesSize_plural": "{{count}} spaces",
+    "StreamDeck": "Elgato Stream Deck"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
@@ -1021,6 +1022,11 @@
     "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "UpdateErrorTitle": "DIM Sync Error",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
+  },
+  "StreamDeck": {
+    "Enable": "Stream Deck Plugin",
+    "FinePrint": "Enable the connection with the DIM Stream Deck plugin",
+    "Install": "Install plugin"
   },
   "Tags": {
     "Archive": "Archive",

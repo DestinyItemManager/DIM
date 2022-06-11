@@ -1,3 +1,4 @@
+import { StreamDeckState } from 'app/stream-deck/reducer';
 import type { VendorsState } from 'app/vendors/reducer';
 import type { AnyAction } from 'redux';
 import type { ThunkAction, ThunkDispatch } from 'redux-thunk';
@@ -23,6 +24,7 @@ export interface RootState {
   readonly manifest: ManifestState;
   readonly vendors: VendorsState;
   readonly compare: CompareState;
+  readonly streamDeck: StreamDeckState;
   readonly dimApi: DimApiState;
 }
 
