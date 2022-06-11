@@ -9,6 +9,8 @@ import { connectedSelector } from 'app/stream-deck/selectors';
 import { useSelector } from 'react-redux';
 import './StreamDeckSettings.scss';
 
+export const $streamDeckFeature = ['beta', 'dev'].includes($DIM_FLAVOR);
+
 export default function StreamDeckSettings() {
   const dispatch = useThunkDispatch();
   const enabled = useSelector(settingSelector('streamDeckEnabled'));
