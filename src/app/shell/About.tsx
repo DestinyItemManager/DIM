@@ -35,7 +35,7 @@ const youTubeLink = 'https://www.youtube.com/channel/UCsNRmUfaeIi5Tk7U0mlZ6UQ';
 const twitterLink = 'https://twitter.com/ThisIsDIM';
 const redditLink = 'https://destinyitemmanager.reddit.com';
 const discordLink = 'https://discord.gg/UK2GWC7';
-const wikiLink = 'https://destinyitemmanager.fandom.com/wiki/Destiny_Item_Manager_Wiki';
+const wikiLink = 'https://github.com/DestinyItemManager/DIM/wiki';
 
 export default function About() {
   const iOSApp = document.cookie.includes('app-platform=iOS App Store;');

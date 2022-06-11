@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import styles from './Login.m.scss';
 
-const dimApiHelpLink = 'https://destinyitemmanager.fandom.com/wiki/DIM_Sync';
+const dimApiHelpLink = 'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync';
 const loginHelpLink =
   'https://github.com/DestinyItemManager/DIM/wiki/Authorizing-Destiny-Item-Manager-with-Bungie.net';
 
