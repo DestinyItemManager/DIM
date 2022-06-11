@@ -1,4 +1,6 @@
+import { getBungieAccount } from 'app/accounts/bungie-account';
 import { percent } from 'app/shell/formatters';
+import { isiOSBrowser } from 'app/utils/browsers';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
@@ -35,6 +37,9 @@ interface Props {
   onShiftClick?(e: React.MouseEvent): void;
   onDoubleClick?(e: React.MouseEvent): void;
 }
+
+// TEMP: Mess up only Ben's item display to try and debug iOS perf issues
+const testStrippedDownItem = getBungieAccount()?.membershipId === '7094' && isiOSBrowser();
 
 export default function InventoryItem({
   item,
@@ -102,8 +107,10 @@ export default function InventoryItem({
           </div>
         )}
         <ItemIcon item={item} />
-        <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
-        {(tag || item.locked || notes) && (
+        {!testStrippedDownItem && (
+          <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
+        )}
+        {!testStrippedDownItem && (tag || item.locked || notes) && (
           <div className={styles.icons}>
             {item.locked && (
               <AppIcon
@@ -115,7 +122,7 @@ export default function InventoryItem({
             {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
           </div>
         )}
-        {isNew && <NewItemIndicator />}
+        {!testStrippedDownItem && isNew && <NewItemIndicator />}
       </>
     );
   }, [isNew, item, notes, subclassIconInfo, tag, wishlistRoll]);
