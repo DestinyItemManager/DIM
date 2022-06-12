@@ -51,11 +51,6 @@
   }
 }
 
-.clarityModDescription {
-  composes: flexColumn from '../dim-ui/common.m.scss';
-  grid-area: desc;
-}
-
 .modStats {
   grid-area: modstat;
 }
