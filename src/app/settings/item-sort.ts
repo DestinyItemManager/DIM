@@ -1,5 +1,6 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { DimItem } from 'app/inventory/item-types';
+import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { sortItems } from 'app/shell/item-comparators';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
@@ -28,5 +29,8 @@ export const itemSortSettingsSelector = createSelector(
  */
 export const itemSorterSelector = createSelector(
   itemSortSettingsSelector,
-  (sortSettings) => (items: readonly DimItem[]) => sortItems(items, sortSettings)
+  itemInfosSelector,
+  itemHashTagsSelector,
+  (sortSettings, itemInfos, itemHashTags) => (items: readonly DimItem[]) =>
+    sortItems(items, sortSettings, itemInfos, itemHashTags)
 );
