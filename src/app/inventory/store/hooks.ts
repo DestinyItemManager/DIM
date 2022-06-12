@@ -2,7 +2,6 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { refresh$ } from 'app/shell/refresh-events';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
-import { DestinyComponentType } from 'bungie-api-ts/destiny2';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { queueAction } from '../../utils/action-queue';
@@ -17,22 +16,19 @@ import { storesLoadedSelector } from '../selectors';
  * in the same component. useDispatch() is cheap because it just listens to a
  * context that never changes.
  */
-export function useLoadStores(
-  account: DestinyAccount | undefined,
-  components?: DestinyComponentType[]
-) {
+export function useLoadStores(account: DestinyAccount | undefined) {
   const dispatch = useThunkDispatch();
   const loaded = useSelector(storesLoadedSelector);
 
   useEffect(() => {
     if (account && !loaded) {
       if (account?.destinyVersion === 2) {
-        dispatch(d2LoadStores(components));
+        dispatch(d2LoadStores());
       } else {
         dispatch(d1LoadStores());
       }
     }
-  }, [account, dispatch, components, loaded]);
+  }, [account, dispatch, loaded]);
 
   useEventBusListener(
     refresh$,
