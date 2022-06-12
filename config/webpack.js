@@ -414,6 +414,8 @@ module.exports = (env) => {
         '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
         // Item feed sidebar
         '$featureFlags.itemFeed': JSON.stringify(true),
+        // Clarity perk descriptions
+        '$featureFlags.clarityDescriptions': JSON.stringify(!env.release),
       }),
 
       new LodashModuleReplacementPlugin({
