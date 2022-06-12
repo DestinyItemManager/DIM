@@ -1,6 +1,5 @@
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
-import React from 'react';
 import { AppIcon, helpIcon } from '../shell/icons';
 import ExternalLink from './ExternalLink';
 
@@ -20,7 +19,7 @@ export default function UserGuideLink({
     return null;
   }
 
-  const link = `https://destinyitemmanager.fandom.com/wiki/${topic}`;
+  const link = `https://github.com/DestinyItemManager/DIM/wiki/${topic}`;
 
   return (
     <ExternalLink href={link} className={clsx('dim-button', className)}>

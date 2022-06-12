@@ -9,12 +9,11 @@ export function resetItemIndexGenerator() {
 /** Set an ID for the item that should be unique across all items */
 export function createItemIndex(item: DimItem): string {
   // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-  let index = item.id;
   if (item.id === '0') {
-    _idTracker[index] ||= 0;
-    _idTracker[index]++;
-    index = `${index}-t${_idTracker[index]}`;
+    _idTracker[item.hash] ||= 0;
+    _idTracker[item.hash]++;
+    return `${item.hash}-t${_idTracker[item.hash]}`;
   }
 
-  return index;
+  return item.id;
 }

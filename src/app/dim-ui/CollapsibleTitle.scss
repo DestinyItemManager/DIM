@@ -38,7 +38,11 @@
     }
     margin-left: -4px;
     width: 10px;
-    margin-right: 8px;
+    margin-right: 6px;
+    .collapsed & {
+      margin-left: -2px;
+      margin-right: 4px;
+    }
   }
 
   &.disabled-collapsed {

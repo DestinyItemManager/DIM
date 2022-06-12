@@ -3,10 +3,9 @@ import { t } from 'app/i18next-t';
 import { tagSelector } from 'app/inventory/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptyArray } from 'app/utils/empty';
-import { itemIsInstanced } from 'app/utils/item-utils';
 import { useSelector } from 'react-redux';
 import { Hotkey } from '../hotkeys/hotkeys';
-import { setItemHashTag, setItemTag } from '../inventory/actions';
+import { setTag } from '../inventory/actions';
 import { itemTagList } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 
@@ -23,15 +22,7 @@ export default function ItemTagHotkeys({ item }: Props) {
       {
         combo: 'shift+0',
         description: t('Tags.ClearTag'),
-        callback: () =>
-          dispatch(
-            itemIsInstanced(item)
-              ? setItemTag({ itemId: item.id, tag: undefined })
-              : setItemHashTag({
-                  itemHash: item.hash,
-                  tag: undefined,
-                })
-          ),
+        callback: () => dispatch(setTag(item, 'clear')),
       },
     ];
 
@@ -40,15 +31,7 @@ export default function ItemTagHotkeys({ item }: Props) {
         hotkeys.push({
           combo: tag.hotkey,
           description: t('Hotkey.MarkItemAs', { tag: tag.type }),
-          callback: () =>
-            dispatch(
-              itemIsInstanced(item)
-                ? setItemTag({ itemId: item.id, tag: itemTag === tag.type ? undefined : tag.type })
-                : setItemHashTag({
-                    itemHash: item.hash,
-                    tag: itemTag === tag.type ? undefined : tag.type,
-                  })
-            ),
+          callback: () => dispatch(setTag(item, itemTag === tag.type ? 'clear' : tag.type)),
         });
       }
     });

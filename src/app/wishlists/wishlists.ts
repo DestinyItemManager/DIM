@@ -155,12 +155,13 @@ export function getInventoryWishListRoll(
   wishListRolls: { [itemHash: number]: WishListRoll[] }
 ): InventoryWishListRoll | undefined {
   if (
-    !$featureFlags.wishLists ||
-    !wishListRolls ||
-    !item ||
-    item.destinyVersion === 1 ||
-    !item.sockets ||
-    item.id === '0'
+    !(
+      $featureFlags.wishLists &&
+      wishListRolls &&
+      item?.destinyVersion === 2 &&
+      item.sockets &&
+      item.instanced
+    )
   ) {
     return;
   }

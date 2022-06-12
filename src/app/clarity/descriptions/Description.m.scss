@@ -1,0 +1,134 @@
+/* stylelint-disable selector-class-pattern */
+
+// leaving everything here in case we add them to simplified descriptions
+.communityDescription {
+  margin-top: 1em;
+  h3 {
+    margin: 0;
+    font-size: inherit;
+  }
+  p {
+    margin: 0;
+  }
+}
+
+.communityDescriptionOnly {
+  margin-top: 2px;
+  h3 {
+    margin: 0;
+    font-size: inherit;
+  }
+  p {
+    margin: 0;
+  }
+}
+
+// --- colors
+.pvp {
+  color: hsl(0, 100%, 80%);
+}
+.pve {
+  color: hsl(220, 100%, 70%);
+}
+.highlight_1 {
+  color: hsl(116, 58%, 65%);
+}
+.highlight_2 {
+  color: hsl(51, 100%, 50%);
+}
+.highlight_3 {
+  color: hsl(180, 100%, 50%);
+}
+.highlight_4 {
+  color: hsl(300, 100%, 77%);
+}
+
+// --- images
+@mixin img-before {
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
+  content: '';
+  margin-right: 3px;
+  height: 10px;
+}
+.arc::before,
+.solar::before,
+.void::before,
+.stasis::before {
+  background-size: 10px 10px;
+  width: 10px;
+  @include img-before;
+}
+.primary::before,
+.special::before,
+.heavy::before {
+  background-size: 18px 20px;
+  width: 13px;
+  @include img-before;
+}
+// --- elements
+.arc::before {
+  background-image: url(https://www.bungie.net/common/destiny2_content/icons/DestinyDamageTypeDefinition_092d066688b879c807c3b460afdd61e6.png);
+}
+.solar::before {
+  background-image: url(https://www.bungie.net/common/destiny2_content/icons/DestinyDamageTypeDefinition_2a1773e10968f2d088b97c22b22bba9e.png);
+}
+.void::before {
+  background-image: url(https://www.bungie.net/common/destiny2_content/icons/DestinyDamageTypeDefinition_ceb2f6197dccf3958bb31cc783eb97a0.png);
+}
+.stasis::before {
+  background-image: url(https://www.bungie.net/common/destiny2_content/icons/DestinyDamageTypeDefinition_530c4c3e7981dc2aefd24fd3293482bf.png);
+}
+// --- ammo
+.primary::before {
+  background-image: url(https://www.bungie.net/common/destiny2_content/icons/dc4bb9bcdd4ae8a83fb9007a51d7d711.png);
+}
+.special::before {
+  background-image: url(https://www.bungie.net/common/destiny2_content/icons/b6d3805ca8400272b7ee7935b0b75c79.png);
+}
+.heavy::before {
+  background-image: url(https://www.bungie.net/common/destiny2_content/icons/9fa60d5a99c9ff9cea0fb6dd690f26ec.png);
+}
+
+// --- random styling
+.center {
+  text-align: center;
+}
+.descriptionDivider {
+  margin-top: 3px;
+  padding-bottom: 3px;
+  border-top: 1px solid #ccc;
+}
+.spacer {
+  padding-top: 5px;
+}
+.bold {
+  font-weight: bold;
+}
+.background {
+  background-color: hsla(0, 0%, 100%, 0.17);
+}
+.title {
+  text-decoration: underline;
+}
+.link {
+  a:link {
+    color: hsl(201, 100%, 65%);
+  }
+  a:visited {
+    color: hsl(201, 100%, 65%);
+  }
+}
+
+// --- makes table
+.table {
+  display: table;
+  div {
+    display: table-row;
+    span {
+      display: table-cell;
+      padding: 1px 3px;
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { clarity } from 'app/clarity/reducer';
 import { vendors } from 'app/vendors/reducer';
 import { combineReducers, Reducer } from 'redux';
 import { accounts } from '../accounts/reducer';
@@ -23,6 +24,7 @@ const reducer: Reducer<RootState> = (state, action) => {
     manifest,
     vendors,
     compare,
+    clarity,
     // Dummy reducer to get the types to work
     dimApi: (state: DimApiState = dimApiInitialState) => state,
   });

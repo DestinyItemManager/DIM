@@ -16,18 +16,14 @@ import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import {
-  emptySpecialtySocketHashes,
-  isPlugStatActive,
-  itemIsInstanced,
-} from 'app/utils/item-utils';
+import { emptySpecialtySocketHashes, isPlugStatActive } from 'app/utils/item-utils';
 import { getPerkDescriptions } from 'app/utils/socket-utils';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ItemStats from './ItemStats';
 import { StatValue } from './PlugTooltip';
@@ -161,7 +157,7 @@ export default function SocketDetailsSelectedPlug({
   // Can we actually insert this mod instead of just previewing it?
   const canDoAWA =
     allowInsertPlug &&
-    itemIsInstanced(item) &&
+    item.instanced &&
     canInsertPlug(socket, plug.hash, destiny2CoreSettings, defs);
 
   const kind = uiCategorizeSocket(defs, socket.socketDefinition);

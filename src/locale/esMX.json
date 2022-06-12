@@ -246,7 +246,7 @@
     "Notes": "Busca los objetos que has etiquetado con notas personalizadas",
     "Ornament": "Muestra objetos con ornamentos y filtros para su estado.",
     "PartialMatch": "Muestra objetos donde su nombre, descripción, cualquier ventaja, o cualquier modificador tiene una coincidencia parcial al texto filtrado. Busca por frases enteras usando comillas. El filtro \"perk:\" sólo buscará ventajas.",
-    "PatternUnlocked": "Muestra objetos que tienen un patrón de fabricación desbloqueado, incluso si el objeto en sí no está fabricado.",
+    "PatternUnlocked": "Muestra objetos que tienen un patrón de fabricación desbloqueado, incluso si el objeto no está fabricado.",
     "Perk": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado en su nombre o descripción. Busca por frases enteras usando comillas.",
     "PerkName": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado sólo en su nombre. Busca por frases enteras usando comillas.",
     "PinnacleReward": "Muestra aventuras que produzcan una recompensa hito.",
@@ -365,6 +365,9 @@
     "NoTransfer": "El material para infundir\n{{target}} no se puede mover.",
     "SwitchDirection": "Cambiar",
     "TransferItems": "Transferir"
+  },
+  "Inventory": {
+    "ClickToExpand": "(Haz clic para expandir)"
   },
   "ItemFeed": {
     "Description": "Objetos Recientes",

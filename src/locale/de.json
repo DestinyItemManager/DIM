@@ -246,7 +246,7 @@
     "Notes": "Zeigt Gegenstände, denen du eine eigene Notiz hinzugefügt hast",
     "Ornament": "Zeigt Gegenstände mit Ornamenten und filtert nach ihrem Status.",
     "PartialMatch": "Zeigt Gegenstände, deren Name, Beschreibung, jeglicher Perk, oder Mod eine teilweise Übereinstimmung zum Suchtext haben. Suche nach ganzen Phrasen mittels Anführungszeichen. Der 'perk:' Filter durchsucht nur Perks.",
-    "PatternUnlocked": "Shows items that have a crafting pattern unlocked, even if the item itself isn't crafted.",
+    "PatternUnlocked": "Zeigt Gegenstände, dessen Bauplan freigeschaltet ist, auch wenn der Gegenstand an sich nicht geformt wurde.",
     "Perk": "Zeigt Gegenstände, bei denen einer der Perks oder Mods den Suchtext im Namen oder in der Beschreibung enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
     "PerkName": "Zeigt Gegenstände an, bei denen einer der Perks oder Mods den Suchtext nur im Namen enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
     "PinnacleReward": "Zeigt Jagden, welche eine Spitzenbelohnung hervorbringen.",
@@ -365,6 +365,9 @@
     "NoTransfer": "Transfer des Infundiermaterials\n{{target}} kann nicht verschoben werden.",
     "SwitchDirection": "Umschalten",
     "TransferItems": "Übertragen"
+  },
+  "Inventory": {
+    "ClickToExpand": "(Klicken zum Erweitern)"
   },
   "ItemFeed": {
     "Description": "Gegenstands-Feed",
@@ -812,7 +815,7 @@
     "ShiftTip": "Tipp: Halte die Umschalt-Taste gedrückt und klicke auf eine Zelle, um Objekte zu filtern",
     "Stats": {
       "Aim": "Zielen",
-      "Airborne": "Airborne",
+      "Airborne": "Luft-Effektivität",
       "Power": "Power",
       "RPM": "U/min",
       "Recoil": "Rückstoß",

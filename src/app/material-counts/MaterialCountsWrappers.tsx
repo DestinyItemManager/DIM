@@ -1,9 +1,9 @@
 import { t } from 'app/i18next-t';
 import { Observable } from 'app/utils/observable';
-import React from 'react';
 import { useSubscription } from 'use-subscription';
 import Sheet from '../dim-ui/Sheet';
 import { MaterialCounts } from './MaterialCounts';
+import styles from './MaterialCountsWrappers.m.scss';
 
 /**
  * The currently selected store for showing gear power.
@@ -29,7 +29,9 @@ export function MaterialCountsSheet() {
 
   return (
     <Sheet onClose={close} header={<h1>{t('Header.MaterialCounts')}</h1>}>
-      <MaterialCounts />
+      <div className={styles.container}>
+        <MaterialCounts includeCurrencies />
+      </div>
     </Sheet>
   );
 }

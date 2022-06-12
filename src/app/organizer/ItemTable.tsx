@@ -5,7 +5,7 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t, tl } from 'app/i18next-t';
-import { setItemNote } from 'app/inventory/actions';
+import { setNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
@@ -292,7 +292,7 @@ function ItemTable({
     }
     if (selectedItems.length) {
       for (const item of selectedItems) {
-        dispatch(setItemNote({ itemId: item.id, note }));
+        dispatch(setNote(item, note));
       }
     }
   };

@@ -213,5 +213,5 @@ function moveItemsToVault(
     reservations[store.id][bucket.hash] = 1;
   });
 
-  return clearItemsOffCharacter(store, items, createMoveSession(cancelToken), reservations);
+  return clearItemsOffCharacter(store, items, createMoveSession(cancelToken, items), reservations);
 }

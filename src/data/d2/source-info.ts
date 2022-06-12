@@ -464,6 +464,13 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  duality: {
+    itemHashes: [],
+    sourceHashes: [
+      1282207663, // Source: Dungeon Duality
+    ],
+    searchString: [],
+  },
   dungeon: {
     itemHashes: [
       185321778, // The Eternal Return
@@ -474,6 +481,7 @@ const D2Sources: {
       210885364, // Source: Flawless completion of Presage Exotic Quest on Master difficulty.
       506073192, // Source: Season of Arrivals dungeon.
       675740011, // Source: "Grasp of Avarice" Dungeon
+      1282207663, // Source: Dungeon Duality
       1745960977, // Source: Pit of Heresy
       2745272818, // Source: Presage Exotic Quest
       2856954949, // Source: "Let Loose Thy Talons" Exotic quest.
@@ -677,6 +685,16 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       2856954949, // Source: "Let Loose Thy Talons" Exotic quest.
+    ],
+    searchString: [],
+  },
+  haunted: {
+    itemHashes: [],
+    sourceHashes: [
+      620369433, // Source: Season of the Haunted Triumph
+      1283862526, // Source: Season of the Haunted Nightfall Grandmaster
+      2273761598, // Source: Season of the Haunted Activities
+      2676881949, // Source: Season of the Haunted
     ],
     searchString: [],
   },

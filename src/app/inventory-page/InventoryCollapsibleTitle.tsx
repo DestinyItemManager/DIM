@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import '../dim-ui/CollapsibleTitle.scss';
 import { toggleCollapsedSection } from '../settings/actions';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
+import styles from './InventoryCollapsibleTitle.m.scss';
 import './InventoryCollapsibleTitle.scss';
 
 interface Props {
@@ -39,6 +40,10 @@ export default function InventoryCollapsibleTitle({
   );
 
   const checkPostmaster = sectionId === 'Postmaster';
+  if (!checkPostmaster) {
+    // Only the postmaster needs a header per store, the rest span across all stores
+    stores = [stores[0]];
+  }
 
   const initialMount = useRef(true);
 
@@ -53,50 +58,64 @@ export default function InventoryCollapsibleTitle({
           collapsed,
         })}
       >
-        {stores.map((store, index) => {
-          const storeIsDestiny2 = store.destinyVersion === 2;
-          const isPostmasterAlmostFull = postmasterAlmostFull(store);
-          const postMasterSpaceUsed = postmasterSpaceUsed(store);
-          const showPostmasterFull = checkPostmaster && storeIsDestiny2 && isPostmasterAlmostFull;
+        {stores
+          .filter((s) => !s.isVault)
+          .map((store, index) => {
+            const storeIsDestiny2 = store.destinyVersion === 2;
+            const isPostmasterAlmostFull = postmasterAlmostFull(store);
+            const postMasterSpaceUsed = postmasterSpaceUsed(store);
+            const showPostmasterFull = checkPostmaster && storeIsDestiny2 && isPostmasterAlmostFull;
 
-          const data = {
-            number: postMasterSpaceUsed,
-            postmasterSize: POSTMASTER_SIZE,
-          };
+            const data = {
+              number: postMasterSpaceUsed,
+              postmasterSize: POSTMASTER_SIZE,
+            };
 
-          const text =
-            postMasterSpaceUsed < POSTMASTER_SIZE
-              ? t('ItemService.PostmasterAlmostFull', data)
-              : t('ItemService.PostmasterFull', data);
+            const text =
+              postMasterSpaceUsed < POSTMASTER_SIZE
+                ? t('ItemService.PostmasterAlmostFull', data)
+                : t('ItemService.PostmasterFull', data);
 
-          return (
-            <div
-              key={store.id}
-              className={clsx('title', 'store-cell', className, {
-                collapsed,
-                vault: store.isVault,
-                postmasterFull: showPostmasterFull,
-                postmaster: checkPostmaster,
-              })}
-            >
-              {index === 0 ? (
-                <span className="collapse-handle" onClick={toggle}>
-                  <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
-                  <span>
-                    {showPostmasterFull ? text : title}
+            return (
+              <div
+                key={store.id}
+                className={clsx('title', 'store-cell', className, {
+                  collapsed,
+                  [styles.postmasterFull]: showPostmasterFull,
+                  [styles.spanColumns]: !checkPostmaster,
+                })}
+              >
+                {index === 0 ? (
+                  <span className="collapse-handle" onClick={toggle}>
+                    <AppIcon
+                      className="collapse-icon"
+                      icon={collapsed ? expandIcon : collapseIcon}
+                    />{' '}
+                    <span>
+                      {showPostmasterFull ? text : title}
+                      {checkPostmaster && collapsed && (
+                        <span className={styles.bucketSize}>
+                          ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
+                        </span>
+                      )}
+                      {collapsed && !checkPostmaster && (
+                        <span className={styles.clickToExpand}>{t('Inventory.ClickToExpand')}</span>
+                      )}
+                    </span>
+                  </span>
+                ) : (
+                  <>
+                    {showPostmasterFull && text}
                     {checkPostmaster && collapsed && (
-                      <span className="bucket-size">
+                      <span className={styles.bucketSize}>
                         ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
                       </span>
                     )}
-                  </span>
-                </span>
-              ) : (
-                showPostmasterFull && text
-              )}
-            </div>
-          );
-        })}
+                  </>
+                )}
+              </div>
+            );
+          })}
       </div>
 
       <AnimatePresence>

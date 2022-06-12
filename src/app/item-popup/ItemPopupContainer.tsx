@@ -4,7 +4,7 @@ import { sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { useSubscription } from 'use-subscription';
@@ -65,7 +65,7 @@ export default function ItemPopupContainer({ boundarySelector }: Props) {
  */
 function maybeFindItem(item: DimItem, stores: DimStore[]) {
   // Don't worry about non-instanced items
-  if (item.id === '0') {
+  if (!item.instanced) {
     return item;
   }
 

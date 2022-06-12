@@ -171,7 +171,7 @@
     "UseEquipped": "Usar cosméticos equipados"
   },
   "FileUpload": {
-    "Instructions": "Haga click o arrastre archivos"
+    "Instructions": "Haga clic o arrastre archivos"
   },
   "Filter": {
     "Adept": "\\(experto\\)",
@@ -296,7 +296,7 @@
     "Year": "Muestra los objetos con su respectivo año de aparición en Destiny."
   },
   "General": {
-    "ClickForDetails": "Haga click para detalles",
+    "ClickForDetails": "Haga clic para detalles",
     "Confirm": "¿Confirmar?",
     "UserGuideLink": "Guía de usuario"
   },
@@ -320,7 +320,7 @@
     "InstallDIM": "Instalar como App",
     "InstallDIMBanner": "Instalar DIM como app en tu pantalla de inicio",
     "Inventory": "Inventario",
-    "IosPwaPrompt": "En Safari, haga click en el icono compartir (botón central en la parte abajo) y selecciona \"Añadir a la Pantalla de Inicio\".",
+    "IosPwaPrompt": "En Safari, haga clic en el icono compartir (botón central en la parte abajo) y selecciona \"Añadir a la Pantalla de Inicio\".",
     "KeyboardShortcuts": "Atajos de Teclado",
     "LaunchDIMAlone": "Separar Ventana",
     "MaterialCounts": "Recuento de Materiales",
@@ -365,6 +365,9 @@
     "NoTransfer": "El material de infusión para transferir {{target}} no se pudo mover.",
     "SwitchDirection": "Cambiar",
     "TransferItems": "Transferir"
+  },
+  "Inventory": {
+    "ClickToExpand": "(Clic para expandir)"
   },
   "ItemFeed": {
     "Description": "Objetos Recientes",
@@ -423,7 +426,7 @@
       "Help": "¿Necesitas ayuda?",
       "HigherTiers": "Niveles altos son mejores",
       "Intellect": "El Intelecto acelera la recarga de tiempo de la Súper",
-      "Lock": "Fija un conjunto de ventajas dando click al botón de fijar y seleccionando las mejoras",
+      "Lock": "Fija un conjunto de ventajas dando clic al botón de fijar y seleccionando las mejoras",
       "MultiPerk": "Para usar armadura con múltiples ventajas juntas, presiona SHIFT+CLICK en las ventajas deseadas",
       "NoPerk": "Si una ventaja no aparece, quiere decir que no tienes armadura que cuente con esa ventaja",
       "Or": "Armaduras con cualquiera de estas ventajas serán usadas (\"o\")",
@@ -613,7 +616,7 @@
     "NotStarted": "Esperando a otras acciones",
     "NotesPlaceholder": "Escribe algunas notas sobre esta equipación",
     "NotificationTitle": "Equipación: {{name}}",
-    "OnWrongCharacterAdvice": "Haga click aquí para encontrar los objetos de Poder más altos para este personaje.",
+    "OnWrongCharacterAdvice": "Haga clic aquí para encontrar los objetos de Poder más altos para este personaje.",
     "OnWrongCharacterWarning": "La armadura más poderosa de este personaje está en otro personaje. Para contar el Poder del botín, recompensas poderosas e hito, la armadura debe estar en este personaje o en el Depósito.",
     "OnlyItems": "Solo objetos equipables, materiales y consumibles pueden añadirse a una configuración.",
     "OpenInOptimizer": "Optimizar Armadura",
@@ -809,7 +812,7 @@
     "Organizer": "Organizador",
     "SelectAll": "Seleccionar Todo",
     "SelectItem": "Seleccionar o deseleccionar {{name}}",
-    "ShiftTip": "Consejo: Mantén la tecla SHIFT y haz click en una celda para filtrar objetos",
+    "ShiftTip": "Consejo: Mantén la tecla SHIFT y haz clic en una celda para filtrar objetos",
     "Stats": {
       "Aim": "Puntería",
       "Airborne": "Aéreo",
@@ -964,7 +967,7 @@
     "NoBonus": "Sin bonus",
     "NotApplicable": "No aplicable",
     "OfMaxRoll": "{{range}} del máximo posible de tiradas",
-    "PercentHelp": "Haz click para más información acerca de su calidad estadística.",
+    "PercentHelp": "Haz clic para más información acerca de su calidad estadística.",
     "PowerModifier": "Poder otorgado por la progresión de experiencia de temporada",
     "Prestige": "Nivel de Prestigio: {{level}}\n{{exp}}xp para 5 motas de luz.",
     "Quality": "Calidad de las estadísticas",

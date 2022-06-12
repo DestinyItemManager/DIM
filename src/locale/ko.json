@@ -366,6 +366,9 @@
     "SwitchDirection": "전환",
     "TransferItems": "이동"
   },
+  "Inventory": {
+    "ClickToExpand": "(클릭하여 확장)"
+  },
   "ItemFeed": {
     "Description": "최근 아이템",
     "HideTagged": "태그된 아이템 숨기기"

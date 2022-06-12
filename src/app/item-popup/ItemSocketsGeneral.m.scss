@@ -1,6 +1,9 @@
 .exoticDescription {
   color: #aaa;
   white-space: pre-line;
+  h3 {
+    color: white;
+  }
 }
 .minimalSockets {
   flex-flow: column nowrap;

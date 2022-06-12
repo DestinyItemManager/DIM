@@ -294,6 +294,7 @@ function makeItem(
         itemDef.redacted
     ),
     id: item.itemInstanceId,
+    instanced: item.itemInstanceId !== '0',
     equipped: item.isEquipped,
     equipment: item.isEquipment,
     equippingLabel:

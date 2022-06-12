@@ -197,7 +197,7 @@ function updateCharacters(state: InventoryState, characters: actions.CharacterIn
 
 /** Can an item be marked as new? */
 const canBeNew = (item: DimItem) =>
-  item.equipment && item.id !== '0' && item.bucket.hash !== BucketHashes.Subclass;
+  item.equipment && item.instanced && item.bucket.hash !== BucketHashes.Subclass;
 
 /**
  * Given an old inventory, a new inventory, and all the items that were previously marked as new,

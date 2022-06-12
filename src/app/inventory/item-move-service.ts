@@ -10,6 +10,7 @@ import { errorLog, infoLog, warnLog } from 'app/utils/log';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { Immutable } from 'immer';
 import _ from 'lodash';
 import { AnyAction } from 'redux';
@@ -64,12 +65,27 @@ export interface MoveSession {
   bucketsFullOnCurrentStore: Set<number>;
   /** A token that can be checked to see if the whole operation is canceled. */
   readonly cancelToken: CancelToken;
+  /**
+   * Items explicitly involved in the requested move.
+   * Used to distinguish user-intentional moves vs make-space moves.
+   * Contains instanceIds, or for uninstanced items, item hashes.
+   */
+  involvedItems: Set<string | number>;
   // TODO: a record of moves? something to prevent infinite moves loops?
 }
 
-export function createMoveSession(cancelToken: CancelToken): MoveSession {
+export function createMoveSession(
+  cancelToken: CancelToken,
+  /** Items explicitly involved in the move. */
+  items: DimItem[]
+): MoveSession {
+  const involvedItems = new Set<string | number>();
+  for (const item of items) {
+    involvedItems.add(item.instanced ? item.id : item.hash);
+  }
   return {
     bucketsFullOnCurrentStore: new Set(),
+    involvedItems,
     cancelToken,
   };
 }
@@ -754,8 +770,12 @@ function chooseMoveAsideItem(
 }
 
 /**
- * Is there enough space to move the given item into store? This will refresh
- * data and/or move items aside in an attempt to make a move possible.
+ * Ensures there is enough space to move the given item into store.
+ * This will refresh data and/or move items aside in an attempt to make a move possible.
+ *
+ * This recursively calls itself to accommodate multi-step moves.
+ * Returns `true` if you're good to go (or if the item's already there).
+ *
  * @param item The item we're trying to move.
  * @param store The destination store.
  * @param options.triedFallback True if we've already tried reloading stores
@@ -765,7 +785,7 @@ function chooseMoveAsideItem(
  * @param options.numRetries A count of how many alternate items we've tried.
  * @return a promise that's either resolved if the move can proceed or rejected with an error.
  */
-function canMoveToStore(
+function ensureCanMoveToStore(
   item: DimItem,
   store: DimStore,
   amount: number,
@@ -785,6 +805,7 @@ function canMoveToStore(
       if (reservations[s.id]?.[i.bucket.hash]) {
         left -= reservations[s.id][i.bucket.hash];
       }
+
       // but not counting the original item that's moving
       if (
         s.id === item.owner &&
@@ -793,6 +814,13 @@ function canMoveToStore(
       ) {
         left--;
       }
+
+      // if this is a consumable, and wasn't an explicitly requested move,
+      // pretend the consumables bucket is 1 stack smaller, so we don't automatically max it out
+      if (i.bucket.hash === BucketHashes.Consumables && !session.involvedItems.has(i.hash)) {
+        left -= i.maxStackSize;
+      }
+
       return Math.max(0, left);
     }
 
@@ -882,20 +910,14 @@ function canMoveToStore(
       } else {
         // Make one move and start over!
         try {
-          await dispatch(
-            executeMoveItem(
-              moveAsideItem,
-              moveAsideTarget,
-              {
-                equip: false,
-                amount: moveAsideItem.amount,
-                excludes,
-                reservations,
-              },
-              session
-            )
-          );
-          return await dispatch(canMoveToStore(item, store, amount, options, session));
+          const moveAsideOpts = {
+            equip: false,
+            amount: moveAsideItem.amount,
+            excludes,
+            reservations,
+          };
+          await dispatch(executeMoveItem(moveAsideItem, moveAsideTarget, moveAsideOpts, session));
+          return await dispatch(ensureCanMoveToStore(item, store, amount, options, session));
         } catch (e) {
           if (numRetries < 3) {
             // Exclude this item and try again so we pick another
@@ -907,7 +929,7 @@ function canMoveToStore(
               `Unable to move aside ${moveAsideItem.name} to ${moveAsideTarget.name}. Trying again.`,
               e
             );
-            return dispatch(canMoveToStore(item, store, amount, options, session));
+            return dispatch(ensureCanMoveToStore(item, store, amount, options, session));
           } else {
             throw e;
           }
@@ -939,10 +961,14 @@ function canEquip(item: DimItem, store: DimStore): void {
 }
 
 /**
- * Check whether this transfer can happen. If necessary, make secondary inventory moves
- * in order to make the primary transfer possible, such as making room or dequipping exotics.
+ * Ensures there is enough space to move the given item into store.
+ * This will refresh data/move items aside/de-equip exotics,
+ * in an attempt to make a move possible.
+ *
+ * This is functionally just ensureCanMoveToStore, with an
+ * additional accomodation for equips and the one-exotic rule.
  */
-function isValidTransfer(
+function ensureValidTransfer(
   equip: boolean,
   store: DimStore,
   item: DimItem,
@@ -953,12 +979,12 @@ function isValidTransfer(
 ): ThunkResult<boolean> {
   return async (dispatch) => {
     if (equip) {
-      canEquip(item, store); // throws
+      canEquip(item, store); // may throw
       if (item.equippingLabel) {
-        await dispatch(canEquipExotic(item, store, session)); // throws
+        await dispatch(canEquipExotic(item, store, session)); // may throw
       }
     }
-    return dispatch(canMoveToStore(item, store, amount, { excludes, reservations }, session));
+    return dispatch(ensureCanMoveToStore(item, store, amount, { excludes, reservations }, session));
   };
 }
 
@@ -1013,7 +1039,11 @@ export function executeMoveItem(
         (item.location.inPostmaster && (source.id === target.id || item.bucket.accountWide))) &&
       // To the current character
       target.current &&
-      !session.bucketsFullOnCurrentStore.has(item.bucket.hash)
+      // don't blind move if this destination bucket already had a blind move failure
+      !session.bucketsFullOnCurrentStore.has(item.bucket.hash) &&
+      // don't blind move consumables to character,
+      // because we don't want to unintentionally max out consumables
+      item.bucket.hash !== BucketHashes.Consumables
     ) {
       try {
         infoLog('move', 'Try blind move of', item.name, 'to', target.name);
@@ -1039,9 +1069,11 @@ export function executeMoveItem(
       }
     }
 
-    await dispatch(isValidTransfer(equip, target, item, amount, excludes, reservations, session));
+    await dispatch(
+      ensureValidTransfer(equip, target, item, amount, excludes, reservations, session)
+    );
 
-    // Replace the target store - isValidTransfer may have reloaded it
+    // Replace the target store - ensureValidTransfer may have reloaded it
     target = getStore(getStores(), target.id)!;
     source = getStore(getStores(), item.owner)!;
 

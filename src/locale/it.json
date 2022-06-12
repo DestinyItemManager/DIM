@@ -366,6 +366,9 @@
     "SwitchDirection": "Cambia",
     "TransferItems": "Trasferisci"
   },
+  "Inventory": {
+    "ClickToExpand": "(Clicca per espandere)"
+  },
   "ItemFeed": {
     "Description": "Oggetti Recenti",
     "HideTagged": "Nascondi etichettati"

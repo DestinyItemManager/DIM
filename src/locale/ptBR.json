@@ -366,6 +366,9 @@
     "SwitchDirection": "Inverter",
     "TransferItems": "Transferir"
   },
+  "Inventory": {
+    "ClickToExpand": "(clique para expandir)"
+  },
   "ItemFeed": {
     "Description": "Itens Recentes",
     "HideTagged": "Ocultar Etiquetados"

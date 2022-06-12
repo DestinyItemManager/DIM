@@ -246,7 +246,7 @@
     "Notes": "搜索已添加了自订备注的物品",
     "Ornament": "显示带有装饰物和过滤器的物品.",
     "PartialMatch": "显示名称/描述/特性/模组与筛选器部分匹配的物品。使用引号来搜索包含空格的文本。使用 'perk:' 过滤器便可仅搜索特性。",
-    "PatternUnlocked": "Shows items that have a crafting pattern unlocked, even if the item itself isn't crafted.",
+    "PatternUnlocked": "显示制作样式已解锁的武器，即使该武器并非制造而来。",
     "Perk": "显示带有特性或模组的名称或描述与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
     "PerkName": "显示带有特性或模组的名称与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
     "PinnacleReward": "显示提供巅峰奖励的追猎目标。",
@@ -365,6 +365,9 @@
     "NoTransfer": "移动灌注材料\n{{target}} 无法移动。",
     "SwitchDirection": "切换",
     "TransferItems": "转移"
+  },
+  "Inventory": {
+    "ClickToExpand": "（点击展开）"
   },
   "ItemFeed": {
     "Description": "物品流",
@@ -812,7 +815,7 @@
     "ShiftTip": "提示：按住 Shift 键并点击单元格以筛选项目",
     "Stats": {
       "Aim": "瞄准",
-      "Airborne": "Airborne",
+      "Airborne": "空中效率",
       "Power": "能量",
       "RPM": "弹夹数每分钟",
       "Recoil": "后坐力",

@@ -366,6 +366,9 @@
     "SwitchDirection": "切換",
     "TransferItems": "轉移"
   },
+  "Inventory": {
+    "ClickToExpand": "(點擊展開)"
+  },
   "ItemFeed": {
     "Description": "物品流",
     "HideTagged": "隱藏已標記的物品"
@@ -812,7 +815,7 @@
     "ShiftTip": "提示：按住 Shift 鍵並點擊單元格以篩選項目",
     "Stats": {
       "Aim": "瞄準",
-      "Airborne": "空中效率",
+      "Airborne": "空運效率",
       "Power": "能量",
       "RPM": "彈夾數每分鐘",
       "Recoil": "後坐力",

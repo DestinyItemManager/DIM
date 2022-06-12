@@ -137,6 +137,50 @@ export const setItemHashNote = createAction('tag_notes/SET_HASH_NOTE')<{
   note?: string;
 }>();
 
+/**
+ * Set the tag for an item regardless of whether it's instanced or not. Prefer this to setItemTag / setItemHashTag.
+ */
+export function setTag(item: DimItem, tag: TagValue | undefined): ThunkResult {
+  return async (dispatch) => {
+    if (!item.taggable) {
+      return;
+    }
+    dispatch(
+      item.instanced
+        ? setItemTag({
+            itemId: item.id,
+            tag: tag === 'clear' ? undefined : tag,
+          })
+        : setItemHashTag({
+            itemHash: item.hash,
+            tag: tag === 'clear' ? undefined : tag,
+          })
+    );
+  };
+}
+
+/**
+ * Set the note for an item regardless of whether it's instanced or not. Prefer this to setItemNote / setItemHashNote.
+ */
+export function setNote(item: DimItem, note: string | undefined): ThunkResult {
+  return async (dispatch) => {
+    if (!item.taggable) {
+      return;
+    }
+    dispatch(
+      item.instanced
+        ? setItemNote({
+            itemId: item.id,
+            note,
+          })
+        : setItemHashNote({
+            itemHash: item.hash,
+            note,
+          })
+    );
+  };
+}
+
 /** Clear out tags and notes for items that no longer exist. Argument is the list of inventory item IDs to remove. */
 export const tagCleanup = createAction('tag_notes/CLEANUP')<string[]>();
 

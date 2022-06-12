@@ -14,12 +14,9 @@
         color: rgba(245, 245, 245, 0.25);
       }
     }
-    &.vault {
-      flex: 1;
-    }
     &.collapsed {
       color: white;
-      filter: brightness(0.5);
+      font-weight: bold;
       min-height: 32px;
       padding-bottom: 4px;
     }
@@ -35,26 +32,7 @@
   }
 }
 
+// Used in StoreBuckets only
 .postmasterFull {
   background-color: rgba(151, 4, 1, 0.25) !important;
-  &.title {
-    background-color: rgba(151, 4, 1, 0.75) !important;
-  }
-}
-
-@include phone-portrait {
-  .inventory-content .title.postmaster {
-    // TODO clean this up after we remove background colors based on emblem
-    background-color: none !important;
-    padding-top: 0;
-    min-height: 34px;
-    opacity: 0.8;
-  }
-}
-
-.bucket-size {
-  margin-left: 4px;
-  text-transform: none;
-  font-size: 12px;
-  letter-spacing: 0;
 }

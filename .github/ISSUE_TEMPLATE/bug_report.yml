@@ -5,7 +5,7 @@ body:
 - type: markdown
   attributes:
     value: |
-      Thank you for taking the time to fill out a bug report! To save both you and us time, please make sure to check the [FAQ](https://destinyitemmanager.fandom.com/wiki/Category:FAQ) and [search issues](https://github.com/DestinyItemManager/DIM/issues?q=is%3Aissue) to see if this has already been reported.
+      Thank you for taking the time to fill out a bug report! To save both you and us time, please make sure to check the [FAQ](https://github.com/DestinyItemManager/DIM/wiki/FAQ) and [search issues](https://github.com/DestinyItemManager/DIM/issues?q=is%3Aissue) to see if this has already been reported.
 - type: input
   id: DIMversion
   attributes:
