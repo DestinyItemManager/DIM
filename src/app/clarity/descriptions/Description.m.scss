@@ -10,17 +10,11 @@
   p {
     margin: 0;
   }
+  grid-area: clarityDesc;
 }
 
-.communityDescriptionOnly {
+.communityOnly {
   margin-top: 2px;
-  h3 {
-    margin: 0;
-    font-size: inherit;
-  }
-  p {
-    margin: 0;
-  }
 }
 
 // --- colors

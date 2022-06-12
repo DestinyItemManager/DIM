@@ -56,6 +56,11 @@ interface Perk {
   stats?: { [key: string]: any };
 
   /**
+   * Description with stats only (not needed in DIM)
+   */
+  statOnly?: boolean;
+
+  /**
    * Then last time perk was updated time in ms (Date.now())
    */
   lastUpdate: number;
