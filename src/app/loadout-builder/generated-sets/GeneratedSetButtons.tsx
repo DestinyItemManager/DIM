@@ -1,6 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
@@ -8,7 +8,7 @@ import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-uti
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React, { Dispatch } from 'react';
+import { Dispatch } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet } from '../types';
 import { statTier } from '../utils';
@@ -20,6 +20,7 @@ import styles from './GeneratedSetButtons.m.scss';
 export default function GeneratedSetButtons({
   store,
   set,
+  items,
   subclass,
   notes,
   params,
@@ -30,6 +31,7 @@ export default function GeneratedSetButtons({
 }: {
   store: DimStore;
   set: ArmorSet;
+  items: DimItem[];
   subclass: ResolvedLoadoutItem | undefined;
   notes?: string;
   params: LoadoutParameters;
@@ -42,12 +44,12 @@ export default function GeneratedSetButtons({
 
   // Opens the loadout menu for the generated set
   const openLoadout = () => {
-    onLoadoutSet(createLoadout(store.classType, set, subclass, params, notes));
+    onLoadoutSet(createLoadout(store.classType, set, items, subclass, params, notes));
   };
 
   // Automatically equip items for this generated set to the active store
   const equipItems = () => {
-    const loadout = createLoadout(store.classType, set, subclass, params, notes);
+    const loadout = createLoadout(store.classType, set, items, subclass, params, notes);
     return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
 
@@ -100,6 +102,7 @@ export default function GeneratedSetButtons({
 function createLoadout(
   classType: DestinyClass,
   set: ArmorSet,
+  items: DimItem[],
   subclass: ResolvedLoadoutItem | undefined,
   params: LoadoutParameters,
   notes?: string
@@ -107,13 +110,13 @@ function createLoadout(
   const data = {
     tier: _.sumBy(Object.values(set.stats), statTier),
   };
-  const items = set.armor.map((items) => convertToLoadoutItem(items[0], true));
+  const loadoutItems = items.map((item) => convertToLoadoutItem(item, true));
 
   if (subclass) {
-    items.push(subclass.loadoutItem);
+    loadoutItems.push(subclass.loadoutItem);
   }
 
-  const loadout = newLoadout(t('Loadouts.Generated', data), items, classType);
+  const loadout = newLoadout(t('Loadouts.Generated', data), loadoutItems, classType);
   loadout.notes = notes;
   loadout.parameters = params;
   return loadout;
