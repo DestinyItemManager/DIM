@@ -12,9 +12,8 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { characterOrderSelector } from 'app/settings/character-sort';
-import { ItemSortSettings, itemSortSettingsSelector } from 'app/settings/item-sort';
+import { itemSorterSelector } from 'app/settings/item-sort';
 import { addIcon, AppIcon } from 'app/shell/icons';
-import { sortItems } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
@@ -46,7 +45,7 @@ interface StoreProps {
   storeClassType: DestinyClass;
   isVault: boolean;
   items: DimItem[];
-  itemSortSettings: ItemSortSettings;
+  sortItems: (items: readonly DimItem[]) => readonly DimItem[];
   storeClassList: DestinyClass[];
   characterOrder: string;
 }
@@ -102,7 +101,7 @@ function mapStateToProps() {
       storeClassType: store.classType,
       isVault: store.isVault,
       items: internItems(items),
-      itemSortSettings: itemSortSettingsSelector(state),
+      sortItems: itemSorterSelector(state),
       // We only need this property when this is a vault armor bucket
       storeClassList:
         store.isVault && bucket.inArmor
@@ -120,7 +119,7 @@ type Props = ProvidedProps & StoreProps;
  */
 function StoreBucket({
   items,
-  itemSortSettings,
+  sortItems,
   bucket,
   storeId,
   destinyVersion,
@@ -156,7 +155,7 @@ function StoreBucket({
         {classTypeOrder.map((classType) => (
           <React.Fragment key={classType}>
             <ClassIcon classType={classType} className="armor-class-icon" />
-            {sortItems(itemsByClass[classType], itemSortSettings).map((item) => (
+            {sortItems(itemsByClass[classType]).map((item) => (
               <StoreInventoryItem key={item.index} item={item} />
             ))}
           </React.Fragment>
@@ -166,12 +165,7 @@ function StoreBucket({
   }
 
   const equippedItem = isVault ? undefined : items.find((i) => i.equipped);
-  const unequippedItems = isVault
-    ? sortItems(items, itemSortSettings)
-    : sortItems(
-        items.filter((i) => !i.equipped),
-        itemSortSettings
-      );
+  const unequippedItems = isVault ? sortItems(items) : sortItems(items.filter((i) => !i.equipped));
 
   return (
     <>
@@ -232,7 +226,7 @@ export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(
     | 'storeClassType'
     | 'isVault'
     | 'items'
-    | 'itemSortSettings'
+    | 'sortItems'
     | 'storeClassList'
     | 'characterOrder'
   > &
