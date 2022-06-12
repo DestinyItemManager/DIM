@@ -57,7 +57,7 @@ if ($featureFlags.sentry) {
         beforeNavigate: (context) => ({
           ...context,
           // We could use the React-Router integration but it's annoying
-          name: location.pathname
+          name: window.location.pathname
             .replace(/\/\d+\/d(1|2)/g, '/profileMembershipId/d$1')
             .replace(/\/vendors\/\d+/g, '/vendors/vendorId')
             .replace(/index\.html/, ''),
