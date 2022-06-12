@@ -4,12 +4,14 @@ import * as actions from './actions';
 
 export interface StreamDeckState {
   connected: boolean;
+  enabled: boolean;
 }
 
 export type StreamDeckAction = ActionType<typeof actions>;
 
 const initialState: StreamDeckState = {
   connected: false,
+  enabled: (localStorage.getItem('stream-deck-enabled') || 'false') === 'true',
 };
 
 export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
@@ -27,6 +29,12 @@ export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
         ...state,
         connected: false,
       };
+    case getType(actions.streamDeckChangeStatus):
+      return {
+        ...state,
+        enabled: action.payload,
+      };
+
     default:
       return state;
   }

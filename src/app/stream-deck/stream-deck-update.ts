@@ -68,11 +68,9 @@ function getCurrentSeason(state: RootState, profile: DestinyProfileResponse | un
   const seasonPass = season?.seasonPassHash
     ? defs?.SeasonPass.get(season.seasonPassHash)
     : undefined;
-
   if (!season) {
     return [];
   }
-
   return [
     seasonPass?.rewardProgressionHash,
     seasonPass?.prestigeProgressionHash,

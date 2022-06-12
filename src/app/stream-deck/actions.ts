@@ -27,6 +27,8 @@ export const streamDeckConnected = createAction('stream-deck/CONNECTED')();
 
 export const streamDeckDisconnected = createAction('stream-deck/DISCONNECTED')();
 
+export const streamDeckChangeStatus = createAction('stream-deck/CHANGE-STATUS')<boolean>();
+
 interface StreamDeckMessage {
   action:
     | 'search'

@@ -1,3 +1,5 @@
 import { RootState } from 'app/store/types';
 
-export const connectedSelector = (state: RootState) => state.streamDeck.connected;
+export const streamDeckConnectedSelector = (state: RootState) => state.streamDeck.connected;
+
+export const streamDeckEnabledSelector = (state: RootState) => state.streamDeck.enabled;

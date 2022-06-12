@@ -1,11 +1,13 @@
-import { settingSelector } from 'app/dim-api/selectors';
 import Switch from 'app/dim-ui/Switch';
 import { t } from 'app/i18next-t';
-import { setSettingAction } from 'app/settings/actions';
 import { AppIcon, faArrowCircleDown } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { startStreamDeckConnection, stopStreamDeckConnection } from 'app/stream-deck/actions';
-import { connectedSelector } from 'app/stream-deck/selectors';
+import {
+  startStreamDeckConnection,
+  stopStreamDeckConnection,
+  streamDeckChangeStatus,
+} from 'app/stream-deck/actions';
+import { streamDeckConnectedSelector, streamDeckEnabledSelector } from 'app/stream-deck/selectors';
 import { useSelector } from 'react-redux';
 import './StreamDeckSettings.scss';
 
@@ -13,15 +15,16 @@ export const $streamDeckFeature = ['beta', 'dev'].includes($DIM_FLAVOR);
 
 export default function StreamDeckSettings() {
   const dispatch = useThunkDispatch();
-  const enabled = useSelector(settingSelector('streamDeckEnabled'));
-  const connected = useSelector(connectedSelector);
+  const connected = useSelector(streamDeckConnectedSelector);
+  const enabled = useSelector(streamDeckEnabledSelector);
 
   const onPluginInstall = () => {
     window.open('https://apps.elgato.com/plugins/com.dim.streamdeck');
   };
 
   const onStreamDeckChange = async (enabled: boolean) => {
-    dispatch(setSettingAction('streamDeckEnabled', enabled));
+    localStorage.setItem('stream-deck-enabled', enabled.toString());
+    dispatch(streamDeckChangeStatus(enabled));
     if (enabled) {
       dispatch(startStreamDeckConnection());
     } else {
