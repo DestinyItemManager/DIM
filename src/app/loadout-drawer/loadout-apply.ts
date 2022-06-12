@@ -207,7 +207,7 @@ function doApplyLoadout(
 
       // TODO: would be great to avoid all these getLoadoutItems?
 
-      let applicableLoadoutItems = _.compact(
+      let resolvedItems = _.compact(
         loadout.items.map((loadoutItem) => {
           const item = getLoadoutItem(loadoutItem);
           if (item) {
@@ -220,13 +220,13 @@ function doApplyLoadout(
       );
       if (onlyMatchingClass && !store.isVault) {
         // Trim down the list of items to only those that could be equipped by the store we're sending to.
-        applicableLoadoutItems = applicableLoadoutItems.filter(
+        resolvedItems = resolvedItems.filter(
           ({ item }) => !item.equipment || itemCanBeEquippedBy(item, store)
         );
       }
 
       // Sort loadout items by their bucket so we move items in the order that DIM displays them
-      const sortedLoadoutItems = _.sortBy(applicableLoadoutItems, ({ item }) => {
+      const applicableLoadoutItems = _.sortBy(resolvedItems, ({ item }) => {
         const sortIndex = bucketHashToIndex[item.bucket.hash];
         return sortIndex === undefined ? Number.MAX_SAFE_INTEGER : sortIndex;
       }).map(({ loadoutItem }) => loadoutItem);
@@ -272,7 +272,7 @@ function doApplyLoadout(
           state.phase = LoadoutApplyPhase.Deequip;
 
           // Fill out pending state for all items
-          for (const loadoutItem of sortedLoadoutItems) {
+          for (const loadoutItem of applicableLoadoutItems) {
             const item = getLoadoutItem(loadoutItem)!;
             state.itemStates[item.index] = {
               item,
@@ -312,7 +312,7 @@ function doApplyLoadout(
 
       // Filter out items that don't need to move
       const loadoutItemsToMove: LoadoutItem[] = Array.from(
-        sortedLoadoutItems.filter((loadoutItem) => {
+        applicableLoadoutItems.filter((loadoutItem) => {
           const item = getLoadoutItem(loadoutItem);
           // Ignore any items that are already in the correct state
           const requiresAction =
@@ -383,7 +383,7 @@ function doApplyLoadout(
           const itemsToEquip = _.compact(
             dequipItems.map((i) =>
               getSimilarItem(getStores(), i, {
-                exclusions: sortedLoadoutItems,
+                exclusions: applicableLoadoutItems,
                 excludeExotic: i.isExotic,
               })
             )
@@ -393,7 +393,7 @@ function doApplyLoadout(
               equipItems(
                 getStore(getStores(), owner)!,
                 itemsToEquip,
-                sortedLoadoutItems,
+                applicableLoadoutItems,
                 moveSession
               )
             );
@@ -439,7 +439,13 @@ function doApplyLoadout(
         try {
           const initialItem = getLoadoutItem(loadoutItem)!;
           await dispatch(
-            applyLoadoutItem(store.id, loadoutItem, getLoadoutItem, sortedLoadoutItems, moveSession)
+            applyLoadoutItem(
+              store.id,
+              loadoutItem,
+              getLoadoutItem,
+              applicableLoadoutItems,
+              moveSession
+            )
           );
           const updatedItem = getLoadoutItem(loadoutItem);
           if (updatedItem) {
@@ -560,7 +566,7 @@ function doApplyLoadout(
         infoLog('loadout mods', 'Mods to apply', modsToApply);
         await dispatch(
           applyLoadoutMods(
-            sortedLoadoutItems,
+            applicableLoadoutItems,
             store.id,
             modsToApply,
             modsByBucketToApply,
@@ -586,7 +592,7 @@ function doApplyLoadout(
         await dispatch(
           clearSpaceAfterLoadout(
             getTargetStore(),
-            sortedLoadoutItems.map((i) => getLoadoutItem(i)!),
+            applicableLoadoutItems.map((i) => getLoadoutItem(i)!),
             moveSession
           )
         );
