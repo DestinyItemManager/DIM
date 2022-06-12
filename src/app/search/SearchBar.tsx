@@ -517,7 +517,7 @@ function SearchBar(
             header={
               <>
                 <h1>{t('Header.Filters')}</h1>
-                <UserGuideLink topic="Item_Search" />
+                <UserGuideLink topic="Item-Search" />
               </>
             }
             sheetClassName="filterHelp"

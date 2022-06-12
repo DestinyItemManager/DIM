@@ -21,7 +21,7 @@ import {
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
 import { activityModPlugCategoryHashes } from './known-values';
@@ -617,13 +617,8 @@ function isCombatModValid(
 }
 
 /**
- * Calculates the energy needed to be bought to assign the given mods.
- *
- * For example
- * - if an item needs to be upgraded to fit the mod in, it will be the number of energy levels the user
- * buys
- * - if an items energy element needs to be changed, it will be the energy needed for the mods plus
- * energy the item originally had (the energy wasted).
+ * A cost heuristic for upgrading / changing armor elements.
+ * Costs modelled are upgrading the energy capacity and changing the element.
  */
 function calculateEnergyChange(
   itemEnergy: ItemEnergy,
@@ -641,12 +636,27 @@ function calculateEnergyChange(
 
   const modCost =
     itemEnergy.used + _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
-  const energyUsedAndWasted = modCost + itemEnergy.originalCapacity;
-  const energyInvested = Math.max(0, modCost - itemEnergy.originalCapacity);
+  const mustChangeAffinity =
+    finalEnergy !== DestinyEnergyType.Any && finalEnergy !== itemEnergy.originalType;
 
-  return finalEnergy === itemEnergy.originalType || finalEnergy === DestinyEnergyType.Any
-    ? energyInvested
-    : energyUsedAndWasted;
+  if (mustChangeAffinity) {
+    if (itemEnergy.derivedCapacity < 10) {
+      // If we must change the affinity on an item we're not expecting to be masterworked,
+      // add the wasted energy
+      return modCost + itemEnergy.originalCapacity;
+    } else {
+      // Changing the affinity is reasonably inexpensive for masterworked items.
+      // For class items, we may have alternatives in LO and they're the
+      // easiest to replace, so there's a small tiebreaker here to nudge LO into
+      // preferring changing class item affinity over others.
+      return (
+        itemEnergy.derivedCapacity - itemEnergy.originalCapacity + (itemEnergy.isClassItem ? 4 : 5)
+      );
+    }
+  } else {
+    // Otherwise just check how many levels of upgrade we need
+    return Math.max(0, modCost - itemEnergy.originalCapacity);
+  }
 }
 
 /**
@@ -723,6 +733,7 @@ function buildItemEnergy({
     derivedCapacity: calculateAssumedItemEnergy(item, armorEnergyRules),
     originalType: item.energy?.energyType || DestinyEnergyType.Any,
     derivedType: getItemEnergyType(item, armorEnergyRules, assignedMods),
+    isClassItem: item.bucket.hash === BucketHashes.ClassArmor,
   };
 }
 
@@ -732,6 +743,7 @@ interface ItemEnergy {
   derivedCapacity: number;
   originalType: DestinyEnergyType;
   derivedType: DestinyEnergyType;
+  isClassItem: boolean;
 }
 /**
  * Validates whether a mod can be assigned to an item in the mod assignments algorithm.

@@ -91,7 +91,7 @@ export default function LoadoutShareSheet({
       header={
         <>
           <h1>{t('Loadouts.Share.Title', { name: loadout.name })}</h1>
-          <UserGuideLink topic="Share_Loadouts" />
+          <UserGuideLink topic="Share-Loadouts" />
         </>
       }
       sheetClassName={styles.sheet}

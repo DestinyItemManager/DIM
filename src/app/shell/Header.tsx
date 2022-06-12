@@ -315,7 +315,7 @@ export default function Header() {
                 )}
                 <ExternalLink
                   className={styles.menuItem}
-                  href="https://destinyitemmanager.fandom.com/wiki/Category:User_Guide"
+                  href="https://github.com/DestinyItemManager/DIM/wiki"
                 >
                   {t('General.UserGuideLink')}
                 </ExternalLink>

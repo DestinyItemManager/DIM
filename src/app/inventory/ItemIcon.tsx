@@ -1,8 +1,10 @@
+import { getBungieAccount } from 'app/accounts/bungie-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage, { bungieBackgroundStyle, bungieNetPath } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { d2MissingIcon } from 'app/search/d2-known-values';
+import { isiOSBrowser } from 'app/utils/browsers';
 import { errorLog } from 'app/utils/log';
 import {
   DestinyEnergyTypeDefinition,
@@ -12,7 +14,6 @@ import {
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import pursuitComplete from 'images/highlightedObjective.svg';
-import React from 'react';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
 
@@ -23,6 +24,9 @@ const itemTierStyles = {
   Rare: styles.rare,
   Uncommon: styles.common,
 };
+
+// TEMP: Mess up only Ben's item display to try and debug iOS perf issues
+const testStrippedDownItem = getBungieAccount()?.membershipId === '7094' && isiOSBrowser();
 
 /**
  * This is just the icon part of the inventory tile - without the bottom stats bar, tag icons, etc.
@@ -55,12 +59,12 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       ) : (
         <BungieImage src={item.icon} className={itemImageStyles} alt="" />
       )}
-      {item.iconOverlay && (
+      {!testStrippedDownItem && item.iconOverlay && (
         <div className={styles.iconOverlay}>
           <BungieImage src={item.iconOverlay} />
         </div>
       )}
-      {(item.masterwork || item.deepsightInfo) && (
+      {!testStrippedDownItem && (item.masterwork || item.deepsightInfo) && (
         <div
           className={clsx(styles.backgroundOverlay, {
             [styles.legendaryMasterwork]: item.masterwork && !item.isExotic,
@@ -69,7 +73,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           })}
         />
       )}
-      {item.plug?.costElementIcon && (
+      {!testStrippedDownItem && item.plug?.costElementIcon && (
         <>
           <div
             style={bungieBackgroundStyle(item.plug.costElementIcon)}
@@ -82,16 +86,18 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           </svg>
         </>
       )}
-      {item.highlightedObjective &&
+      {!testStrippedDownItem &&
+        item.highlightedObjective &&
         (!item.deepsightInfo || item.deepsightInfo.attunementObjective.complete) && (
           <img className={styles.highlightedObjective} src={pursuitComplete} />
         )}
-      {Boolean(
-        item.deepsightInfo &&
-          !item.deepsightInfo.attunementObjective.complete &&
-          item.patternUnlockRecord &&
-          item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
-      ) && <div className={styles.deepsightPattern} />}
+      {!testStrippedDownItem &&
+        Boolean(
+          item.deepsightInfo &&
+            !item.deepsightInfo.attunementObjective.complete &&
+            item.patternUnlockRecord &&
+            item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
+        ) && <div className={styles.deepsightPattern} />}
     </>
   );
 }

@@ -1,3 +1,5 @@
+import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
+import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
@@ -15,10 +17,11 @@ import {
   DestinyPlugItemCraftingRequirements,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React from 'react';
+import { useSelector } from 'react-redux';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import './ItemSockets.scss';
+import styles from './PlugTooltip.m.scss';
 
 // TODO: Connect this to redux
 export function DimPlugTooltip({
@@ -41,24 +44,30 @@ export function DimPlugTooltip({
     : undefined;
 
   const visibleStats = plug.stats
-    ? _.sortBy(Object.keys(plug.stats), (h) => statAllowList.indexOf(parseInt(h, 10))).filter(
-        (statHash) =>
-          isPlugStatActive(
-            item,
-            plug.plugDef.hash,
-            Number(statHash),
-            Boolean(
-              plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
-                ?.isConditionallyActive
-            )
-          )
+    ? _.sortBy(
+        Object.keys(plug.stats)
+          .map((statHashStr) => parseInt(statHashStr, 10))
+          .filter(
+            (statHash) =>
+              statAllowList.includes(statHash) &&
+              isPlugStatActive(
+                item,
+                plug.plugDef.hash,
+                statHash,
+                Boolean(
+                  plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
+                    ?.isConditionallyActive
+                )
+              )
+          ),
+        (h) => statAllowList.indexOf(h)
       )
     : [];
 
   const stats: { [statHash: string]: number } = {};
 
   for (const statHash of visibleStats) {
-    const value = plug.stats?.[parseInt(statHash, 10)];
+    const value = plug.stats?.[statHash];
     if (value) {
       stats[statHash] = value;
     }
@@ -108,6 +117,7 @@ export function PlugTooltip({
   craftingData?: DestinyPlugItemCraftingRequirements;
 }) {
   const defs = useD2Definitions();
+  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
   const perkDescriptions = (defs && getPerkDescriptions(def, defs)) || [];
@@ -117,6 +127,13 @@ export function PlugTooltip({
     (o) => !resonantElementObjectiveHashes.includes(o.objectiveHash)
   );
 
+  const showBungieDescription =
+    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
+  const showCommunityDescription =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
+  const showCommunityDescriptionOnly =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
+
   return (
     <>
       <h2>{def.displayProperties.name}</h2>
@@ -125,12 +142,24 @@ export function PlugTooltip({
       {perkDescriptions.map((perkDesc) => (
         <div key={perkDesc.perkHash}>
           {perkDesc.name && <div>{perkDesc.name}</div>}
-          <div>
+
+          {showBungieDescription ? (
             <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
-          </div>
+          ) : (
+            showCommunityDescriptionOnly && (
+              <>
+                {sourceString && <div>{sourceString}</div>}
+                <ClarityDescriptions
+                  hash={def.hash}
+                  fallback={<RichDestinyText text={perkDesc.description || perkDesc.requirement} />}
+                  communityOnly={showCommunityDescriptionOnly}
+                />
+              </>
+            )
+          )}
         </div>
       ))}
-      {sourceString && <div className="plug-source">{sourceString}</div>}
+      {!showCommunityDescriptionOnly && sourceString && <div>{sourceString}</div>}
       {stats && Object.entries(stats).length > 0 && (
         <div className="plug-stats">
           {Object.entries(stats).map(([statHash, value]) => (
@@ -138,8 +167,11 @@ export function PlugTooltip({
           ))}
         </div>
       )}
+      {showCommunityDescription && !showCommunityDescriptionOnly && (
+        <ClarityDescriptions hash={def.hash} />
+      )}
       {defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
-        <div className="plug-objectives">
+        <div className={styles.objectives}>
           {filteredPlugObjectives.map((objective) => (
             <Objective key={objective.objectiveHash} objective={objective} />
           ))}
