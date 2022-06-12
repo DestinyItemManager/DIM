@@ -1,5 +1,5 @@
+import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
-import { itemHashTagsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { getSeason } from 'app/inventory/store/season';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
@@ -7,8 +7,7 @@ import { ItemSortSettings } from 'app/settings/item-sort';
 import { isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { getTag, tagConfig } from '../inventory/dim-item-info';
-import store from '../store/store';
+import { getTag, ItemInfos, tagConfig } from '../inventory/dim-item-info';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 
 export const acquisitionRecencyComparator = reverseComparator(
@@ -88,16 +87,40 @@ const ITEM_SORT_DENYLIST = new Set([
   D1BucketHashes.Quests,
 ]);
 
-// TODO: pass in state
-const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
+// These comparators require knowledge of the tag state/database
+const TAG_ITEM_COMPARATORS: {
+  [key: string]: (
+    itemInfos: ItemInfos,
+    itemHashTags: {
+      [itemHash: string]: ItemHashTag;
+    }
+  ) => Comparator<DimItem>;
+} = {
+  // see tagConfig
+  tag: (itemInfos, itemHashTags) =>
+    compareBy((item) => {
+      const tag = getTag(item, itemInfos, itemHashTags);
+      return tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000;
+    }),
+  // not archive -> archive
+  archive: (itemInfos, itemHashTags) =>
+    compareBy((item) => {
+      const tag = getTag(item, itemInfos, itemHashTags);
+      return tag === 'archive';
+    }),
+};
+
+const ITEM_COMPARATORS: {
+  [key: string]: Comparator<DimItem>;
+} = {
   // A -> Z
-  typeName: compareBy((item: DimItem) => item.typeName),
+  typeName: compareBy((item) => item.typeName),
   // exotic -> common
-  rarity: reverseComparator(compareBy((item: DimItem) => D2ItemTiers[item.tier])),
+  rarity: reverseComparator(compareBy((item) => D2ItemTiers[item.tier])),
   // high -> low
-  primStat: reverseComparator(compareBy((item: DimItem) => item.primaryStat?.value ?? 0)),
+  primStat: reverseComparator(compareBy((item) => item.primaryStat?.value ?? 0)),
   // high -> low
-  basePower: reverseComparator(compareBy((item: DimItem) => item.power)),
+  basePower: reverseComparator(compareBy((item) => item.power)),
   // This only sorts by D1 item quality
   rating: reverseComparator(
     compareBy((item: DimItem & { quality: { min: number } }) => {
@@ -108,47 +131,33 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
     })
   ),
   // Titan -> Hunter -> Warlock -> Unknown
-  classType: compareBy((item: DimItem) => item.classType),
+  classType: compareBy((item) => item.classType),
   // None -> Primary -> Special -> Heavy -> Unknown
-  ammoType: compareBy((item: DimItem) => item.ammoType),
+  ammoType: compareBy((item) => item.ammoType),
   // A -> Z
-  name: compareBy((item: DimItem) => item.name),
+  name: compareBy((item) => item.name),
   // lots -> few
-  amount: reverseComparator(compareBy((item: DimItem) => item.amount)),
-  // see tagConfig
-  tag: compareBy((item: DimItem) => {
-    const tag = getTag(
-      item,
-      itemInfosSelector(store.getState()),
-      itemHashTagsSelector(store.getState())
-    );
-    return tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000;
-  }),
+  amount: reverseComparator(compareBy((item) => item.amount)),
   // recent season -> old season
   season: reverseComparator(
     chainComparator(
-      compareBy((item: DimItem) => (item.destinyVersion === 2 ? getSeason(item) : 0)),
-      compareBy((item: DimItem) => item.iconOverlay ?? '')
+      compareBy((item) => (item.destinyVersion === 2 ? getSeason(item) : 0)),
+      compareBy((item) => item.iconOverlay ?? '')
     )
   ),
   // sunset -> not sunset
   sunset: compareBy(isSunset),
-  // not archive -> archive
-  archive: compareBy((item: DimItem) => {
-    const tag = getTag(item, itemInfosSelector(store.getState()));
-    return tag === 'archive';
-  }),
   // new -> old
   acquisitionRecency: acquisitionRecencyComparator,
   // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
-  element: compareBy((item: DimItem) => item.element?.enumValue ?? Number.MAX_SAFE_INTEGER),
+  element: compareBy((item) => item.element?.enumValue ?? Number.MAX_SAFE_INTEGER),
   // masterwork -> not masterwork
-  masterworked: compareBy((item: DimItem) => (item.masterwork ? 0 : 1)),
+  masterworked: compareBy((item) => (item.masterwork ? 0 : 1)),
   // crafted -> not crafted
-  crafted: compareBy((item: DimItem) => (item.crafted ? 0 : 1)),
+  crafted: compareBy((item) => (item.crafted ? 0 : 1)),
   // deepsight incomplete -> deepsight complete -> no deepsight
   // in order of "needs addressing"? ish?
-  deepsight: compareBy((item: DimItem) =>
+  deepsight: compareBy((item) =>
     item.deepsightInfo ? (item.deepsightInfo.attunementObjective.complete ? 2 : 1) : 3
   ),
   default: () => 0,
@@ -161,7 +170,11 @@ const ITEM_COMPARATORS: { [key: string]: Comparator<DimItem> } = {
  */
 export function sortItems(
   items: readonly DimItem[],
-  itemSortSettings: ItemSortSettings
+  itemSortSettings: ItemSortSettings,
+  itemInfos: ItemInfos,
+  itemHashTags: {
+    [itemHash: string]: ItemHashTag;
+  }
 ): readonly DimItem[] {
   if (!items.length) {
     return items;
@@ -220,9 +233,14 @@ export function sortItems(
   // always sort by archive first
   const comparator = chainComparator(
     ...['archive', ...itemSortSettings.sortOrder].map((comparatorName) => {
-      const comparator = ITEM_COMPARATORS[comparatorName];
+      let comparator = ITEM_COMPARATORS[comparatorName];
       if (!comparator) {
-        return ITEM_COMPARATORS.default;
+        const tagComparator = TAG_ITEM_COMPARATORS[comparatorName]?.(itemInfos, itemHashTags);
+
+        if (!tagComparator) {
+          return ITEM_COMPARATORS.default;
+        }
+        comparator = tagComparator;
       }
 
       return itemSortSettings.sortReversals.includes(comparatorName)
