@@ -19,7 +19,7 @@ import {
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import { ArmorEnergyRules, ArmorSet, ArmorStats } from '../types';
+import { ArmorEnergyRules, ArmorSet, ArmorStats, ItemGroup } from '../types';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
@@ -171,12 +171,12 @@ export function mapDimItemToProcessItem({
 
 export function hydrateArmorSet(
   processed: ProcessArmorSet,
-  itemsById: Map<string, DimItem[]>
+  itemsById: Map<string, ItemGroup>
 ): ArmorSet {
   const armor: DimItem[][] = [];
 
   for (const itemId of processed.armor) {
-    armor.push(itemsById.get(itemId)!);
+    armor.push(itemsById.get(itemId)!.items);
   }
 
   return {
