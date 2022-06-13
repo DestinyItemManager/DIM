@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed a rare edge case where Loadout Optimizer would miss certain valid elemental mod assignments with locked armor energy types.
+
 ## 7.21.0 <span class="changelog-date">(2022-06-12)</span>
 
 * The [DIM User Guide](https://github.com/DestinyItemManager/DIM/wiki) has moved back to GitHub from Fandom, so you can read about DIM without intrusive ads.
@@ -12,7 +14,6 @@
 ### Beta Only
 
 * Weapon perks now include community-sourced weapon and armor perk descriptions courtesy of [Clarity](https://d2clarity.page.link/websiteDIM) and [Pip1n's Destiny Data Compendium](https://docs.google.com/spreadsheets/d/1WaxvbLx7UoSZaBqdFr1u32F2uWVLo-CJunJB4nlGUE4/htmlview?pru=AAABe9E7ngw*TxEsfbPsk5ukmr0FbZfK8w#). These can be disabled in settings.
-
 
 ## 7.20.1 <span class="changelog-date">(2022-06-06)</span>
 
