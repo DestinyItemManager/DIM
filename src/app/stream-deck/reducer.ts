@@ -5,6 +5,7 @@ import * as actions from './actions';
 export interface StreamDeckState {
   connected: boolean;
   enabled: boolean;
+  selection?: 'item' | 'loadout' | undefined;
 }
 
 export type StreamDeckAction = ActionType<typeof actions>;
@@ -28,6 +29,16 @@ export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
       return {
         ...state,
         connected: false,
+      };
+    case getType(actions.streamDeckWaitSelection):
+      return {
+        ...state,
+        selection: action.payload,
+      };
+    case getType(actions.streamDeckClearSelection):
+      return {
+        ...state,
+        selection: undefined,
       };
     case getType(actions.streamDeckChangeStatus):
       return {

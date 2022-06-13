@@ -1,10 +1,11 @@
-import { settingSelector } from 'app/dim-api/selectors';
 import { startFarming, stopFarming } from 'app/farming/actions';
 import { allItemsSelector, currentStoreSelector, storesSelector } from 'app/inventory/selectors';
+import { hideItemPopup } from 'app/item-popup/item-popup';
 import { maxLightLoadout, randomLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { pullFromPostmaster } from 'app/loadout-drawer/postmaster';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { setSearchQuery } from 'app/shell/actions';
 import { refresh } from 'app/shell/refresh-events';
 import { ThunkResult } from 'app/store/types';
@@ -29,6 +30,12 @@ export const streamDeckDisconnected = createAction('stream-deck/DISCONNECTED')()
 
 export const streamDeckChangeStatus = createAction('stream-deck/CHANGE-STATUS')<boolean>();
 
+export const streamDeckWaitSelection = createAction('stream-deck/WAIT-SELECTION')<
+  'loadout' | 'item'
+>();
+
+export const streamDeckClearSelection = createAction('stream-deck/CLEAR-SELECTION')();
+
 interface StreamDeckMessage {
   action:
     | 'search'
@@ -37,22 +44,38 @@ interface StreamDeckMessage {
     | 'refresh'
     | 'farmingMode'
     | 'maxPower'
+    | 'freeSlot'
+    | 'equipItem'
+    | 'selection'
     | 'loadout';
   args: {
     search: string;
     weaponsOnly: boolean;
     loadout: string;
     character: string;
+    slot: string;
+    item: string;
+    selection: 'loadout' | 'item';
   };
 }
 
 // serialize the data and send it if connected
 export function sendToStreamDeck(args: Record<string, any>): ThunkResult {
-  return async (_, getState) => {
-    if (!getState().streamDeck.connected) {
-      return;
+  return async () => {
+    if (streamDeckWebSocket?.readyState === WebSocket.OPEN) {
+      streamDeckWebSocket.send(JSON.stringify(args));
     }
-    streamDeckWebSocket.send(JSON.stringify(args));
+  };
+}
+
+export function streamDeckSelectItem(item: string, icon: string): ThunkResult {
+  return async (dispatch, getState) => {
+    const { streamDeck } = getState();
+    if (streamDeck.enabled && streamDeck.selection === 'item') {
+      hideItemPopup();
+      dispatch(streamDeckClearSelection());
+      return dispatch(sendToStreamDeck({ selection: { item, icon } }));
+    }
   };
 }
 
@@ -60,11 +83,7 @@ export function sendLoadouts(): ThunkResult {
   return async (dispatch, getState) => {
     const loadouts = streamDeckLoadoutsUpdate(getState());
     if (Object.keys(loadouts).length) {
-      return dispatch(
-        sendToStreamDeck({
-          loadouts,
-        })
-      );
+      return dispatch(sendToStreamDeck({ loadouts }));
     }
   };
 }
@@ -113,6 +132,26 @@ export function handleStreamDeckMessage(data: StreamDeckMessage): ThunkResult {
         const loadout = maxLightLoadout(allItems, currentStore);
         return dispatch(applyLoadout(currentStore, loadout, { allowUndo: true }));
       }
+      case 'selection': {
+        dispatch(setSearchQuery(''));
+        dispatch(streamDeckWaitSelection(data.args.selection));
+        showNotification({
+          title: 'Stream Deck // Equip Item',
+          body: 'Choose an item from the inventory',
+          type: 'info',
+          duration: 1000,
+          promise: new Promise((resolve) => {
+            const interval = setInterval(() => {
+              const state = getState();
+              if (!state.streamDeck.selection) {
+                clearInterval(interval);
+                resolve(true);
+              }
+            }, 1000);
+          }),
+        });
+        return;
+      }
       case 'loadout': {
         const loadouts = loadoutsSelector(state);
         const store = storesSelector(state).find((it) => it.id === data.args.character);
@@ -120,6 +159,13 @@ export function handleStreamDeckMessage(data: StreamDeckMessage): ThunkResult {
         if (store && loadout) {
           return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
         }
+        return;
+      }
+      case 'freeSlot': {
+        throw new Error('Not implemented yet: "freeSlot" case');
+      }
+      case 'equipItem': {
+        throw new Error('Not implemented yet: "equipItem" case');
       }
     }
   };
@@ -195,7 +241,7 @@ export function startStreamDeckConnection(): ThunkResult {
       }
 
       // if stream deck is disabled stop don't try to connect
-      if (!settingSelector('streamDeckEnabled')(state)) {
+      if (!state.streamDeck.enabled) {
         return;
       }
 
@@ -219,9 +265,8 @@ export function startStreamDeckConnection(): ThunkResult {
       streamDeckWebSocket.onclose = function () {
         dispatch(streamDeckDisconnected());
         clearInterval(refreshInterval);
-        const enabled = settingSelector('streamDeckEnabled')(getState());
-        // retry to re-connect after 5s
-        if (enabled) {
+        if (getState().streamDeck.enabled) {
+          // retry to re-connect after 5s
           setTimeout(initWS, 5000);
         }
       };
