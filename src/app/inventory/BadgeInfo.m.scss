@@ -33,14 +33,10 @@
   padding: 0 4px;
 }
 
-.summaryIcon {
-  display: flex;
-  flex: 1;
-}
-
 .shapedIcon {
   width: calc((8 / 50) * var(--item-size));
   height: calc((8 / 50) * var(--item-size));
+  margin-right: auto;
 }
 
 .quality {
