@@ -317,8 +317,7 @@ export default function SettingsPage() {
                   className="dim-button"
                   onClick={() => dispatch(clearAllNewItems())}
                 >
-                  <NewItemIndicator className="new-item" alwaysShow />{' '}
-                  <span>{t('Hotkey.ClearNewItems')}</span>
+                  <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
                 </button>
               </div>
             </div>

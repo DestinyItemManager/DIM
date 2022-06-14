@@ -106,21 +106,3 @@
   height: 100%;
   background-color: $xp;
 }
-
-.newItem {
-  display: none;
-
-  :global(.show-new-items) & {
-    display: block;
-    width: calc(var(--item-size) * 0.08);
-    height: calc(var(--item-size) * 0.08);
-    border: calc(var(--item-size) * 0.08) solid #cf0707;
-    position: absolute;
-    top: $item-border-width + 2px;
-    right: $item-border-width + 2px;
-    border-radius: 50%;
-    pointer-events: none;
-    background-color: white;
-    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
-  }
-}

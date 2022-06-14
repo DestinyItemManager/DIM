@@ -1,5 +1,6 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
+import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import {
   isBooleanObjective,
   isFlawlessPassage,
@@ -65,7 +66,7 @@ function PursuitItem(
           full={item.maxStackSize > 1 && item.amount === item.maxStackSize}
         />
       )}
-      {isNew && <div className={styles.newItem} />}
+      {isNew && <NewItemIndicator />}
       {expired && <img className={styles.expired} src={pursuitExpired} />}
       {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
       {trackedInDim && <img className={styles.trackedIcon} src={dimTrackedIcon} />}
