@@ -1,5 +1,6 @@
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
+import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { descriptionsSelector } from '../selectors';
@@ -27,7 +28,7 @@ const joinClassNames = (classNames?: string) =>
 export default function ClarityDescriptions({
   hash,
   fallback,
-  communityOnly: comunityOnly,
+  communityOnly,
 }: {
   hash: number;
   fallback?: React.ReactNode;
@@ -35,7 +36,8 @@ export default function ClarityDescriptions({
 }) {
   const descriptions = useSelector(descriptionsSelector);
   const lines = descriptions?.[hash]?.simpleDescription;
-  if (!lines) {
+  const statOnly = descriptions?.[hash]?.statOnly;
+  if (!lines || statOnly) {
     return <>{fallback ?? null}</>;
   }
 
@@ -50,7 +52,7 @@ export default function ClarityDescriptions({
   ));
 
   return (
-    <div className={comunityOnly ? styles.communityDescriptionOnly : styles.communityDescription}>
+    <div className={clsx(styles.communityDescription, communityOnly && styles.communityOnly)}>
       <h3>{t('MovePopup.CommunityData')}</h3>
       {convertedDescription}
     </div>
