@@ -87,19 +87,11 @@ $commonBg: #366f42;
 }
 
 .iconOverlay {
-  overflow: hidden;
   top: $item-border-width;
   left: $item-border-width;
   height: calc(var(--item-size) - #{2 * $item-border-width});
   width: calc(var(--item-size) - #{2 * $item-border-width});
   position: absolute;
-  & > img {
-    top: 0;
-    left: 0;
-    height: calc(var(--item-size) - #{2 * $item-border-width});
-    width: calc(var(--item-size) - #{2 * $item-border-width});
-    position: absolute;
-  }
 }
 
 .energyCostOverlay {

@@ -55,9 +55,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
         <BungieImage src={item.icon} className={itemImageStyles} alt="" />
       )}
       {item.iconOverlay && (
-        <div className={styles.iconOverlay}>
-          <BungieImage src={item.iconOverlay} />
-        </div>
+        <BungieImage src={item.iconOverlay} className={styles.iconOverlay} alt="" />
       )}
       {(item.masterwork || item.deepsightInfo) && (
         <div
