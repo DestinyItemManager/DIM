@@ -61,11 +61,11 @@ $commonBg: #366f42;
 // The overlay image for masterworks and Deepsight weapons
 .backgroundOverlay {
   box-sizing: border-box;
-  top: 0;
-  left: 0;
+  top: $item-border-width - 0.4px;
+  left: $item-border-width - 0.4px;
   border-width: 0;
-  height: calc(var(--item-size));
-  width: calc(var(--item-size));
+  height: calc(var(--item-size) - #{2 * ($item-border-width - 0.4px)});
+  width: calc(var(--item-size) - #{2 * ($item-border-width - 0.4px)});
   position: absolute;
   background-repeat: no-repeat;
   background-position: center;
