@@ -68,7 +68,7 @@ export default function InventoryItem({
   // intercept inventory item click and send it to the stream deck if needed
   const streamDeckSelectionClick = (e: React.MouseEvent<HTMLDivElement>) => {
     enhancedOnClick?.(e);
-    dispatch(streamDeckSelectItem(item.id, item.icon));
+    dispatch(streamDeckSelectItem(item));
   };
 
   const isSubclass = item?.destinyVersion === 2 && item.bucket.hash === BucketHashes.Subclass;

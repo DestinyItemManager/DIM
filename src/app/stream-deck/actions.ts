@@ -1,5 +1,6 @@
 import { startFarming, stopFarming } from 'app/farming/actions';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import {
   allItemsSelector,
@@ -76,14 +77,23 @@ export function sendToStreamDeck(args: Record<string, any>): ThunkResult {
 }
 
 // on click on InventoryItem send the item.id and item.icon to the Stream Deck
-export function streamDeckSelectItem(item: string, icon: string): ThunkResult {
+export function streamDeckSelectItem(item: DimItem): ThunkResult {
   return async (dispatch, getState) => {
     const { streamDeck } = getState();
     if (streamDeck.enabled && streamDeck.selection === 'item') {
       hideItemPopup();
       streamDeck.selectionPromise.resolve();
       dispatch(streamDeckClearSelection());
-      return dispatch(sendToStreamDeck({ selection: { item, icon } }));
+      return dispatch(
+        sendToStreamDeck({
+          selection: {
+            label: item.name,
+            subtitle: item.typeName,
+            item: item.id,
+            icon: item.icon,
+          },
+        })
+      );
     }
   };
 }
