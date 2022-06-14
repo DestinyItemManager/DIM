@@ -1,3 +1,4 @@
+import { DeferredPromise } from 'app/stream-deck/util/DeferredPromise';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import * as actions from './actions';
@@ -5,6 +6,7 @@ import * as actions from './actions';
 export interface StreamDeckState {
   connected: boolean;
   enabled: boolean;
+  selectionPromise: DeferredPromise;
   selection?: 'item' | 'loadout' | undefined;
 }
 
@@ -12,6 +14,7 @@ export type StreamDeckAction = ActionType<typeof actions>;
 
 const initialState: StreamDeckState = {
   connected: false,
+  selectionPromise: new DeferredPromise(),
   enabled: (localStorage.getItem('stream-deck-enabled') || 'false') === 'true',
 };
 

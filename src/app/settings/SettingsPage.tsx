@@ -14,7 +14,9 @@ import WishListSettings from 'app/settings/WishListSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import StreamDeckSettings, { $streamDeckFeature } from 'app/stream-deck/StreamDeckSettings';
+import StreamDeckSettings, {
+  $streamDeckFeature,
+} from 'app/stream-deck/StreamDeckSettings/StreamDeckSettings';
 import { clearAppBadge } from 'app/utils/app-badge';
 import { errorLog } from 'app/utils/log';
 import { uniqBy } from 'app/utils/util';

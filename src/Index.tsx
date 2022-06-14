@@ -6,7 +6,7 @@ import { loadCoreSettings } from 'app/manifest/actions';
 import { pollForBungieAlerts } from 'app/shell/alerts';
 import store from 'app/store/store';
 import { startStreamDeckConnection } from 'app/stream-deck/actions';
-import { $streamDeckFeature } from 'app/stream-deck/StreamDeckSettings';
+import { $streamDeckFeature } from 'app/stream-deck/StreamDeckSettings/StreamDeckSettings';
 import { infoLog } from 'app/utils/log';
 import ReactDOM from 'react-dom/client';
 import idbReady from 'safari-14-idb-fix';
