@@ -1,10 +1,8 @@
-import { getBungieAccount } from 'app/accounts/bungie-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage, { bungieBackgroundStyle, bungieNetPath } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { d2MissingIcon } from 'app/search/d2-known-values';
-import { isiOSBrowser } from 'app/utils/browsers';
 import { errorLog } from 'app/utils/log';
 import {
   DestinyEnergyTypeDefinition,
@@ -24,9 +22,6 @@ const itemTierStyles = {
   Rare: styles.rare,
   Uncommon: styles.common,
 };
-
-// TEMP: Mess up only Ben's item display to try and debug iOS perf issues
-const testStrippedDownItem = getBungieAccount()?.membershipId === '7094' && isiOSBrowser();
 
 /**
  * This is just the icon part of the inventory tile - without the bottom stats bar, tag icons, etc.
@@ -59,12 +54,12 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       ) : (
         <BungieImage src={item.icon} className={itemImageStyles} alt="" />
       )}
-      {!testStrippedDownItem && item.iconOverlay && (
+      {item.iconOverlay && (
         <div className={styles.iconOverlay}>
           <BungieImage src={item.iconOverlay} />
         </div>
       )}
-      {!testStrippedDownItem && (item.masterwork || item.deepsightInfo) && (
+      {(item.masterwork || item.deepsightInfo) && (
         <div
           className={clsx(styles.backgroundOverlay, {
             [styles.legendaryMasterwork]: item.masterwork && !item.isExotic,
@@ -73,7 +68,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           })}
         />
       )}
-      {!testStrippedDownItem && item.plug?.costElementIcon && (
+      {item.plug?.costElementIcon && (
         <>
           <div
             style={bungieBackgroundStyle(item.plug.costElementIcon)}
@@ -86,18 +81,16 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           </svg>
         </>
       )}
-      {!testStrippedDownItem &&
-        item.highlightedObjective &&
+      {item.highlightedObjective &&
         (!item.deepsightInfo || item.deepsightInfo.attunementObjective.complete) && (
           <img className={styles.highlightedObjective} src={pursuitComplete} />
         )}
-      {!testStrippedDownItem &&
-        Boolean(
-          item.deepsightInfo &&
-            !item.deepsightInfo.attunementObjective.complete &&
-            item.patternUnlockRecord &&
-            item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
-        ) && <div className={styles.deepsightPattern} />}
+      {Boolean(
+        item.deepsightInfo &&
+          !item.deepsightInfo.attunementObjective.complete &&
+          item.patternUnlockRecord &&
+          item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
+      ) && <div className={styles.deepsightPattern} />}
     </>
   );
 }
