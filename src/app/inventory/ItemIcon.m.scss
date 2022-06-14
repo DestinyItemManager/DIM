@@ -61,11 +61,11 @@ $commonBg: #366f42;
 // The overlay image for masterworks and Deepsight weapons
 .backgroundOverlay {
   box-sizing: border-box;
-  top: $item-border-width;
-  left: $item-border-width;
+  top: 0;
+  left: 0;
   border-width: 0;
-  height: calc(var(--item-size) - #{2 * $item-border-width});
-  width: calc(var(--item-size) - #{2 * $item-border-width});
+  height: calc(var(--item-size));
+  width: calc(var(--item-size));
   position: absolute;
   background-repeat: no-repeat;
   background-position: center;
@@ -79,10 +79,11 @@ $commonBg: #366f42;
   background-image: url('../../images/exotic-masterwork.png');
 }
 .deepsightBorder {
-  background-image: url('../../images/deepsight.png');
+  border: 2px solid $deepsight-border-color;
+  // background-image: url('../../images/deepsight.png');
 
   &.legendaryMasterwork {
-    background-image: url('../../images/deepsight.png'), url('../../images/masterwork.png');
+    background-image: url('../../images/masterwork.png');
   }
 }
 
