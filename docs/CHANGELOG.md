@@ -1,12 +1,12 @@
 ## Next
 
 * Fixed a rare edge case where Loadout Optimizer would miss certain valid elemental mod assignments with locked armor energy types.
+* When moving multiple items, DIM will transfer them in a more consistent order e.g. Kinetic weapons are moved before Heavy weapons, helmets before chest armor etc.
 
 ## 7.21.0 <span class="changelog-date">(2022-06-12)</span>
 
 * The [DIM User Guide](https://github.com/DestinyItemManager/DIM/wiki) has moved back to GitHub from Fandom, so you can read about DIM without intrusive ads.
 * When making automatic moves, DIM will always avoid filling in your last open Consumables slot. An item can still be manually moved into your character's pockets as the 50th consumable.
-* When moving multiple items, DIM will transfer them in a more consistent order e.g. Kinetic weapons are moved before Heavy weapons, helmets before chest armor etc.
 * Loadout Optimizer will now suggest class items with an elemental affinity matching the mods even when allowing changes to elemental affinity.
 * Fixed an issue where the item popup could appear partly offscreen.
 * Items sorted by tag will re-sort themselves immediately after their tag changes.
