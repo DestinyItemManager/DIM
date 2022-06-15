@@ -92,6 +92,12 @@ $commonBg: #366f42;
   height: calc(var(--item-size) - #{2 * $item-border-width});
   width: calc(var(--item-size) - #{2 * $item-border-width});
   position: absolute;
+
+  // Ensure that the contained image is correctly scaled down in cases where --item-size is reduced
+  // e.g. Loadout Optimizer Exotic armor picker, Loadout Fashion Mods, Loadout Organizer perk columns
+  & > img {
+    width: 100%;
+  }
 }
 
 .energyCostOverlay {
