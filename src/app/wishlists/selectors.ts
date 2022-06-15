@@ -29,7 +29,15 @@ export const wishListFunctionSelector = createSelector(
     // Cache of inventory item id to roll. For this to work, make sure vendor/collections rolls have unique ids.
     const cache = new Map<string, InventoryWishListRoll | undefined>();
     return (item: DimItem) => {
-      if (!item.instanced) {
+      if (
+        !(
+          $featureFlags.wishLists &&
+          wishlists &&
+          item?.destinyVersion === 2 &&
+          item.sockets &&
+          item.bucket.inWeapons
+        )
+      ) {
         return undefined;
       }
       if (cache.has(item.id)) {
