@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
-import BadgeInfo from './BadgeInfo';
+import BadgeInfo, { shouldShowBadge } from './BadgeInfo';
 import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
 import { DimItem } from './item-types';
@@ -69,6 +69,7 @@ export default function InventoryItem({
     [styles.subclassPathTop]: subclassIconInfo?.path === 'top',
     [styles.subclassPathMiddle]: subclassIconInfo?.path === 'middle',
     [styles.subclassPathBottom]: subclassIconInfo?.path === 'bottom',
+    [styles.hasBadge]: shouldShowBadge(item),
   });
   // Subtitle for engram powerlevel vs regular item type
   const subtitle = item.destinyVersion === 2 && item.isEngram ? item.power : item.typeName;
