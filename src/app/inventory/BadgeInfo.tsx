@@ -80,15 +80,17 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
           {item.quality.min}%
         </div>
       )}
-      {summaryIcon && <div className={styles.summaryIcon}>{summaryIcon}</div>}
+      {summaryIcon}
       {item.energy ? (
-        <span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
-          {item.energy.energyCapacity}
+        <>
+          <span className={clsx(energyTypeStyles[item.energy.energyType], styles.energyCapacity)}>
+            {item.energy.energyCapacity}
+          </span>
           <ElementIcon
             element={item.element}
             className={clsx(styles.energyCapacityIcon, { [styles.fixContrast]: fixContrast })}
           />
-        </span>
+        </>
       ) : (
         item.element &&
         !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (

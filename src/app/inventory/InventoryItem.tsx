@@ -16,8 +16,6 @@ import TagIcon from './TagIcon';
 
 interface Props {
   item: DimItem;
-  /** Optional id, otherwise will use item.index */
-  id?: string;
   /** Show this item as new? */
   isNew?: boolean;
   /** User defined tag */
@@ -38,7 +36,6 @@ interface Props {
 
 export default function InventoryItem({
   item,
-  id,
   isNew,
   tag,
   notes,
@@ -122,7 +119,7 @@ export default function InventoryItem({
 
   return (
     <div
-      id={id || item.index}
+      id={item.index}
       onClick={enhancedOnClick}
       onDoubleClick={onDoubleClick}
       title={`${item.name}\n${subtitle}`}

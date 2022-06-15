@@ -15,7 +15,6 @@ interface CssExports {
   'shapedIcon': string;
   'solar': string;
   'stasis': string;
-  'summaryIcon': string;
   'void': string;
 }
 export const cssExports: CssExports;
