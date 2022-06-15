@@ -60,8 +60,8 @@ $commonBg: #366f42;
 
 // The overlay image for masterworks and Deepsight weapons
 .backgroundOverlay {
-  // -0.4px to force browser round down
-  // It it rounds up that leaves 1px gap between the image and the border
+  // -0.4px to force the browser round down rendered value not the actual value
+  // If it rounds up that leaves a 1px gap between the image and the border
   $new-border-width: $item-border-width - 0.4px;
 
   box-sizing: border-box;
