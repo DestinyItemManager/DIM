@@ -200,7 +200,7 @@
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Shows items based on their damage type.",
-    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials. deepsight:complete and deepsight:incomplete refer to the progress of the deepsight objective, while deepsight:pattern shows items that could be progressed to unlock a pattern.",
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
