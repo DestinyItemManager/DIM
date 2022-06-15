@@ -1,7 +1,7 @@
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -72,6 +72,7 @@ export default function InventoryItem({
   });
   // Subtitle for engram powerlevel vs regular item type
   const subtitle = item.destinyVersion === 2 && item.isEngram ? item.power : item.typeName;
+
   // Memoize the contents of the item - most of the time if this is re-rendering it's for a search, or a new item
   const contents = useMemo(() => {
     // Subclasses have limited, but customized, display. They can't be new, or tagged, or locked, etc.
@@ -98,7 +99,9 @@ export default function InventoryItem({
             <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
           </div>
         )}
-        <ItemIcon item={item} />
+        <ItemIconPlaceholder>
+          <ItemIcon item={item} />
+        </ItemIconPlaceholder>
         <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
         {(tag || item.locked || notes) && (
           <div className={styles.icons}>
@@ -129,4 +132,40 @@ export default function InventoryItem({
       {contents}
     </div>
   );
+}
+
+/**
+ * A placeholder div that's the same size as our icon, which is replaced by its
+ * children when it is roughly onscreen. This is to work around a major
+ * performance regression on iOS Safari 15 where rendering image tags hangs the
+ * browser.
+ */
+function ItemIconPlaceholder({ children }: { children: React.ReactNode }) {
+  const [visible, setVisible] = useState(false);
+
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!ref.current) {
+      return;
+    }
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].intersectionRatio <= 0) {
+          return;
+        }
+        setVisible(true);
+        obs.disconnect();
+      },
+      {
+        root: null,
+        rootMargin: '16px',
+        threshold: 0,
+      }
+    );
+    obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+
+  return visible ? <>{children}</> : <div className="item-img" ref={ref} />;
 }
