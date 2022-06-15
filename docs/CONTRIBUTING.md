@@ -7,7 +7,7 @@ Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 1. All of our code is written in [TypeScript](https://typescriptlang.org) and uses React to build UI components..
 1. Take advantage of the [native JavaScript Array methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and the [Lodash](https://lodash.com/) library to write compact, easy-to-understand code.
 1. Be sure to run `yarn fix` before submitting your PR - it'll catch most style problems and make things much easier to merge.
-1. Don't forget to add a description of your change to [docs/CHANGELOG.md](docs/CHANGELOG.md) so it'll be included in the release notes!
+1. Don't forget to add a description of your change to [docs/CHANGELOG.md](CHANGELOG.md) so it'll be included in the release notes!
 
 ## Developer Quick start
 

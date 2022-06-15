@@ -13,7 +13,6 @@ import { isNewSelector, itemHashTagsSelector, itemInfosSelector } from './select
 // Props provided from parents
 interface ProvidedProps {
   item: DimItem;
-  id?: string; // defaults to item.index - id is typically used for `itemPop`
   allowFilter?: boolean;
   selectedSuperDisplay?: 'enabled' | 'disabled' | 'v3SubclassesOnly';
   innerRef?: React.Ref<HTMLDivElement>;
@@ -61,7 +60,6 @@ type Props = ProvidedProps & StoreProps;
  */
 function ConnectedInventoryItem({
   item,
-  id,
   isNew,
   tag,
   notes,
@@ -76,7 +74,6 @@ function ConnectedInventoryItem({
   return (
     <InventoryItem
       item={item}
-      id={id}
       isNew={isNew}
       tag={tag}
       notes={notes}

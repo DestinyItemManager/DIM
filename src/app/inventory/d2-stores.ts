@@ -50,8 +50,6 @@ import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-stor
 import { resetItemIndexGenerator } from './store/item-index';
 import { getArtifactBonus } from './stores-helpers';
 
-let isFirstLoad = true;
-
 /**
  * Update the high level character information for all the stores
  * (level, power, stats, etc.). This does not update the
@@ -143,13 +141,8 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
       }
     }
 
+    $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
     const stores = await dispatch(loadStoresData(account));
-
-    if (isFirstLoad) {
-      isFirstLoad = false;
-      $featureFlags.clarityDescriptions && dispatch(loadClarity());
-    }
-
     return stores;
   };
 }
