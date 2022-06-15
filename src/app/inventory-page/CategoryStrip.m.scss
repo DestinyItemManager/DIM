@@ -25,8 +25,9 @@
     border-bottom: 2px solid transparent;
     padding: $vpadding 0 5px;
   }
-  .selected {
-    color: $orange;
-    border-bottom: 2px solid $orange;
-  }
+}
+
+.selected {
+  color: $orange;
+  border-bottom: 2px solid $orange;
 }
