@@ -154,18 +154,6 @@ export function getInventoryWishListRoll(
   item: DimItem,
   wishListRolls: { [itemHash: number]: WishListRoll[] }
 ): InventoryWishListRoll | undefined {
-  if (
-    !(
-      $featureFlags.wishLists &&
-      wishListRolls &&
-      item?.destinyVersion === 2 &&
-      item.sockets &&
-      item.instanced
-    )
-  ) {
-    return;
-  }
-
   // It could be under the item hash, the wildcard, or any of the item's categories
   for (const hash of [item.hash, DimWishList.WildcardItemId, ...item.itemCategoryHashes]) {
     const matchingWishListRoll = wishListRolls[hash]?.find((cr) => allDesiredPerksExist(item, cr));
