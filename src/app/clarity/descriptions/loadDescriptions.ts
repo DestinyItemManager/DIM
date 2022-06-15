@@ -1,5 +1,6 @@
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
+import { errorLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
 import * as actions from '../actions';
 import { ClarityDescription, ClarityVersions } from './descriptionInterface';
@@ -17,13 +18,18 @@ const fetchClarity = async (type: keyof typeof urls) => {
 
 const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB) => {
   const savedVersion = Number(localStorage.getItem('clarityDescriptionVersion') ?? '0');
-  const liveVersion: ClarityVersions = await fetchClarity('version');
 
-  if (savedVersion !== liveVersion.descriptions) {
-    const descriptions: ClarityDescription = await fetchClarity('descriptions');
-    set('clarity-descriptions', descriptions);
-    localStorage.setItem('clarityDescriptionVersion', liveVersion.descriptions.toString());
-    return descriptions;
+  try {
+    const liveVersion: ClarityVersions = await fetchClarity('version');
+
+    if (savedVersion !== liveVersion.descriptions) {
+      const descriptions: ClarityDescription = await fetchClarity('descriptions');
+      set('clarity-descriptions', descriptions);
+      localStorage.setItem('clarityDescriptionVersion', liveVersion.descriptions.toString());
+      return descriptions;
+    }
+  } catch (e) {
+    errorLog('clarity', 'failed to load remote descriptions', e);
   }
 
   if (loadFromIndexedDB) {
