@@ -100,9 +100,7 @@ export default function InventoryItem({
             <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
           </div>
         )}
-        <ItemIconPlaceholder>
-          <ItemIcon item={item} />
-        </ItemIconPlaceholder>
+        <ItemIcon item={item} />
         <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
         {(tag || item.locked || notes) && (
           <div className={styles.icons}>
@@ -130,7 +128,7 @@ export default function InventoryItem({
       className={itemStyles}
       ref={innerRef}
     >
-      {contents}
+      <ItemIconPlaceholder>{contents}</ItemIconPlaceholder>
     </div>
   );
 }
