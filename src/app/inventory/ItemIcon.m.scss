@@ -60,17 +60,21 @@ $commonBg: #366f42;
 
 // The overlay image for masterworks and Deepsight weapons
 .backgroundOverlay {
+  // -0.4px to force the browser round down rendered value not the actual value
+  // If it rounds up that leaves a 1px gap between the image and the border
+  $new-border-width: $item-border-width - 0.4px;
+
   box-sizing: border-box;
-  top: $item-border-width;
-  left: $item-border-width;
+  top: $new-border-width;
+  left: $new-border-width;
   border-width: 0;
-  height: calc(var(--item-size) - #{2 * $item-border-width});
-  width: calc(var(--item-size) - #{2 * $item-border-width});
+  height: calc(var(--item-size) - #{2 * $new-border-width});
+  width: calc(var(--item-size) - #{2 * $new-border-width});
   position: absolute;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90))
-    calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90));
+  background-size: calc((var(--item-size) - #{2 * $new-border-width}) * (96 / 90))
+    calc((var(--item-size) - #{2 * $new-border-width}) * (96 / 90));
 }
 .legendaryMasterwork {
   background-image: url('../../images/masterwork.png');
@@ -79,10 +83,11 @@ $commonBg: #366f42;
   background-image: url('../../images/exotic-masterwork.png');
 }
 .deepsightBorder {
-  background-image: url('../../images/deepsight.png');
+  border: 2px solid $deepsight-border-color;
+  // background-image: url('../../images/deepsight.png');
 
   &.legendaryMasterwork {
-    background-image: url('../../images/deepsight.png'), url('../../images/masterwork.png');
+    background-image: url('../../images/masterwork.png');
   }
 }
 
