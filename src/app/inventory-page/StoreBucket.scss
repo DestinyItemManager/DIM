@@ -1,7 +1,6 @@
 @use '../variables.scss' as *;
 
-.sub-bucket,
-.subBucket {
+.sub-bucket {
   min-height: var(--item-size);
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-size));
