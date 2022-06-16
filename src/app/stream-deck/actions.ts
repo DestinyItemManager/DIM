@@ -1,4 +1,5 @@
 import { startFarming, stopFarming } from 'app/farming/actions';
+import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
@@ -136,7 +137,7 @@ export function sendLoadouts(): ThunkResult {
 function showSelectionNotification(state: RootState, selectionType: string, onCancel?: () => void) {
   showNotification({
     title: 'Elgato Stream Deck',
-    body: `Choose a${selectionType === 'item' ? 'n' : ''} ${selectionType} from the inventory`,
+    body: t(`StreamDeck.SelectionNotification.${_.startCase(selectionType)}`),
     type: 'info',
     duration: 500,
     onCancel,

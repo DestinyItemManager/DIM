@@ -1127,7 +1127,12 @@
   "StreamDeck": {
     "Enable": "Stream Deck Plugin",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin",
-    "Install": "Install plugin"
+    "Install": "Install plugin",
+    "SelectionNotification": {
+      "Item": "Choose an item from the inventory",
+      "Loadout": "Choose a loadout",
+      "Postmaster": "Choose an item from the Postmaster"
+    }
   },
   "Tags": {
     "Archive": "Archive",
