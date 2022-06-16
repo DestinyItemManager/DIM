@@ -8,9 +8,11 @@ import {
   storesSelector,
   vaultSelector,
 } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { maxLightLoadout, randomLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { pullFromPostmaster } from 'app/loadout-drawer/postmaster';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { showNotification } from 'app/notifications/notifications';
@@ -76,7 +78,7 @@ export function sendToStreamDeck(args: Record<string, any>): ThunkResult {
   };
 }
 
-// on click on InventoryItem send the item.id and item.icon to the Stream Deck
+// on click on InventoryItem send the selected item to the Stream Deck
 export function streamDeckSelectItem(item: DimItem): ThunkResult {
   return async (dispatch, getState) => {
     const { streamDeck } = getState();
@@ -86,11 +88,34 @@ export function streamDeckSelectItem(item: DimItem): ThunkResult {
       dispatch(streamDeckClearSelection());
       return dispatch(
         sendToStreamDeck({
+          selectionType: 'item',
           selection: {
             label: item.name,
             subtitle: item.typeName,
             item: item.id,
             icon: item.icon,
+          },
+        })
+      );
+    }
+  };
+}
+
+// on click on LoadoutView send the selected loadout and the related character identifier to the Stream Deck
+export function streamDeckSelectLoadout(loadout: Loadout, store: DimStore): ThunkResult {
+  return async (dispatch, getState) => {
+    const { streamDeck } = getState();
+    if (streamDeck.enabled && streamDeck.selection === 'loadout') {
+      streamDeck.selectionPromise.resolve();
+      dispatch(streamDeckClearSelection());
+      return dispatch(
+        sendToStreamDeck({
+          selectionType: 'loadout',
+          selection: {
+            label: loadout.name,
+            loadout: loadout.id,
+            subtitle: store.className ?? loadout.notes,
+            character: store.id,
           },
         })
       );
@@ -108,12 +133,13 @@ export function sendLoadouts(): ThunkResult {
 }
 
 // Show notification asking for selection
-function showSelectionNotification(state: RootState) {
+function showSelectionNotification(state: RootState, selectionType: string, onCancel?: () => void) {
   showNotification({
     title: 'Elgato Stream Deck',
-    body: 'Choose an item from the inventory',
+    body: `Choose a${selectionType === 'item' ? 'n' : ''} ${selectionType} from the inventory`,
     type: 'info',
     duration: 500,
+    onCancel,
     promise: state.streamDeck.selectionPromise.promise,
   });
 }
@@ -161,9 +187,24 @@ export function handleStreamDeckMessage(data: StreamDeckMessage): ThunkResult {
         return dispatch(applyLoadout(currentStore, loadout, { allowUndo: true }));
       }
       case 'selection': {
+        const selectionType = data.args.selection;
         dispatch(setSearchQuery(''));
-        dispatch(streamDeckWaitSelection(data.args.selection));
-        showSelectionNotification(state);
+        dispatch(streamDeckWaitSelection(selectionType));
+
+        // open the related page
+        const path = selectionType === 'loadout' ? 'loadouts' : 'inventory';
+        const [menuItem] = document.querySelectorAll(`a[href$="/${path}"]`);
+        const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+        menuItem?.dispatchEvent(event);
+
+        // show the notification
+        setTimeout(
+          () =>
+            showSelectionNotification(state, selectionType, () => {
+              dispatch(streamDeckClearSelection());
+            }),
+          500
+        );
         return;
       }
       case 'loadout': {
@@ -193,7 +234,6 @@ export function handleStreamDeckMessage(data: StreamDeckMessage): ThunkResult {
             await dispatch(moveItemTo(item, currentStore, false));
           }
         }
-        return;
       }
     }
   };

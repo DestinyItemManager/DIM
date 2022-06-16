@@ -7,6 +7,18 @@
   background: rgba(0, 0, 0, 0.25);
 }
 
+.sdSelectable {
+  @extend .loadout;
+  padding: 14px; // fix for 1px border
+  border: 1px solid transparent;
+  &:hover {
+    transition: all 0.3s;
+    border-color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+  }
+}
+
 .title {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;

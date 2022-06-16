@@ -11,13 +11,16 @@ import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/lo
 import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { streamDeckSelectLoadout } from 'app/stream-deck/actions';
+import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { ReactNode, useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection';
 import LoadoutMods from './loadout-ui/LoadoutMods';
@@ -83,6 +86,8 @@ export default function LoadoutView({
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const isPhonePortrait = useIsPhonePortrait();
+  const dispatch = useThunkDispatch();
+  const streamDeckSelection = useSelector(streamDeckSelectionSelector);
 
   // TODO: filter down by usable mods?
   const modsByBucket: {
@@ -101,8 +106,16 @@ export default function LoadoutView({
   const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
   const power = loadoutPower(store, categories);
 
+  const onLoadoutSelect = () => dispatch(streamDeckSelectLoadout(loadout, store));
+
+  const selectable = streamDeckSelection === 'loadout' && !hideShowModPlacements;
+
   return (
-    <div className={styles.loadout} id={loadout.id}>
+    <div
+      className={selectable ? styles.sdSelectable : styles.loadout}
+      id={loadout.id}
+      onClick={onLoadoutSelect}
+    >
       <div className={styles.title}>
         <h2>
           {loadout.classType === DestinyClass.Unknown && (
