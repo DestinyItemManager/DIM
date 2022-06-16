@@ -131,7 +131,7 @@ export function DefItemIcon({
   return (
     <>
       <BungieImage src={itemDef.displayProperties.icon} className={itemImageStyles} alt="" />
-      {iconOverlay && <BungieImage src={iconOverlay} className={styles.iconOverlay} />}
+      {iconOverlay && <BungieImage src={iconOverlay} className={styles.iconOverlay} alt="" />}
       {modInfo?.energyCostElementOverlay && (
         <>
           <div

@@ -46,15 +46,17 @@ export function moveItemToCurrentStore(item: DimItem, e?: React.MouseEvent): Thu
 export function pullItem(storeId: string, bucket: InventoryBucket): ThunkResult {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), storeId)!;
-    const { item } = await showItemPicker({
-      filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
-      prompt: t('MovePopup.PullItem', {
-        bucket: bucket.name,
-        store: store.name,
-      }),
-    });
+    try {
+      const { item } = await showItemPicker({
+        filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
+        prompt: t('MovePopup.PullItem', {
+          bucket: bucket.name,
+          store: store.name,
+        }),
+      });
 
-    await dispatch(moveItemTo(item, store));
+      await dispatch(moveItemTo(item, store));
+    } catch (e) {}
   };
 }
 
