@@ -13,9 +13,10 @@ import { DimStore } from 'app/inventory/store-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { maxLightLoadout, randomLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { pullFromPostmaster } from 'app/loadout-drawer/postmaster';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { setSearchQuery } from 'app/shell/actions';
 import { refresh } from 'app/shell/refresh-events';
@@ -102,12 +103,23 @@ export function streamDeckSelectItem(item: DimItem): ThunkResult {
   };
 }
 
+function findSubClass(items: LoadoutItem[], state: RootState) {
+  const defs = d2ManifestSelector(state);
+  for (const item of items) {
+    const def = defs?.InventoryItem.get(item.hash);
+    // find subclass item
+    if (def?.inventory?.bucketTypeHash === 3284755031) {
+      return def.displayProperties.icon;
+    }
+  }
+}
+
 // on click on LoadoutView send the selected loadout and the related character identifier to the Stream Deck
 export function streamDeckSelectLoadout(loadout: Loadout, store: DimStore): ThunkResult {
   return async (dispatch, getState) => {
-    const { streamDeck } = getState();
-    if (streamDeck.enabled && streamDeck.selection === 'loadout') {
-      streamDeck.selectionPromise.resolve();
+    const state = getState();
+    if (state.streamDeck.enabled && state.streamDeck.selection === 'loadout') {
+      state.streamDeck.selectionPromise.resolve();
       dispatch(streamDeckClearSelection());
       return dispatch(
         sendToStreamDeck({
@@ -117,6 +129,7 @@ export function streamDeckSelectLoadout(loadout: Loadout, store: DimStore): Thun
             loadout: loadout.id,
             subtitle: store.className ?? loadout.notes,
             character: store.id,
+            icon: findSubClass(loadout.items, state),
           },
         })
       );
