@@ -1040,11 +1040,6 @@
   resolved "https://registry.yarnpkg.com/@csstools/selector-specificity/-/selector-specificity-2.0.1.tgz#b6b8d81780b9a9f6459f4bfe9226ac6aefaefe87"
   integrity sha512-aG20vknL4/YjQF9BSV7ts4EWm/yrjagAN7OWBNmlbEOUiu0llj4OGrFoOKK3g2vey4/p2omKCoHrWtPxSwV3HA==
 
-"@d2api/d2api-types@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@d2api/d2api-types/-/d2api-types-1.0.2.tgz#ea90395bfdcd8cb233361573ba1f554b8d398e5d"
-  integrity sha512-DR/vjANiI4UYf6Cy8hz+Xb0s5hE6c2I6OXsjx5DRBSJSETDevGxQk2LZjSt5b/yJcfvoaBoJowN3oEP4tlmXnw==
-
 "@destinyitemmanager/dim-api-types@^1.0.0":
   version "1.20.0"
   resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.20.0.tgz#8954443283bac2f4bc430290630caf88140ad8fe"
