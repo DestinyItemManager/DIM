@@ -1,4 +1,5 @@
 @use '../variables.scss' as *;
+@use 'sass:math';
 
 $legendaryBg: #522f65;
 $exoticBg: #ceae33;
@@ -22,22 +23,22 @@ $commonBg: #366f42;
   &:global(.transparent) {
     border-color: transparent;
   }
+}
 
-  &.legendary {
-    background-color: $legendaryBg;
-  }
-  &.exotic {
-    background-color: $exoticBg;
-  }
-  &.basic {
-    background-color: $basicBg;
-  }
-  &.rare {
-    background-color: $rareBg;
-  }
-  &.common {
-    background-color: $commonBg;
-  }
+.legendary {
+  background-color: $legendaryBg;
+}
+.exotic {
+  background-color: $exoticBg;
+}
+.basic {
+  background-color: $basicBg;
+}
+.rare {
+  background-color: $rareBg;
+}
+.common {
+  background-color: $commonBg;
 }
 
 // Alternate border styles
@@ -119,7 +120,7 @@ $commonBg: #366f42;
   left: $item-border-width;
   pointer-events: none;
 
-  text {
+  > text {
     fill: white;
   }
 }
@@ -140,11 +141,11 @@ $commonBg: #366f42;
   display: block;
   width: 0;
   height: 0;
-  border: calc(var(--item-size) * #{$size / 100}) solid $deepsight-border-color;
+  border: calc(var(--item-size) * #{math.div($size, 100)}) solid $deepsight-border-color;
   border-top-color: transparent;
   border-left-color: transparent;
   right: 0;
-  top: calc(var(--item-size) - (var(--item-size) * #{$size / 50}) - 1px);
+  top: calc(var(--item-size) - (var(--item-size) * #{math.div($size, 50)}) - 1px);
   pointer-events: none;
 }
 

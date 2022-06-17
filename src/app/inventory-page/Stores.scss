@@ -5,17 +5,7 @@
 }
 
 .inventory-content {
-  margin: 0 auto;
   width: 100%;
-
-  .title {
-    top: 124px;
-    z-index: 1;
-
-    .phone-portrait & {
-      top: 79px;
-    }
-  }
 
   // Prevent collapsing at smaller than iPad landscape sizes
   min-width: calc(
@@ -56,25 +46,8 @@
 
   @include phone-portrait {
     // Full-width, single column
-    grid-template-columns: 1fr;
+    display: block;
     padding-right: 0;
-
-    .bucket-label {
-      opacity: 0.8;
-      margin: 0;
-      z-index: inherit;
-      background: none; // comment out to add background background
-      flex-direction: row !important;
-
-      a {
-        text-decoration: none;
-        font-size: 0.8em;
-        opacity: 0.8;
-        span {
-          margin-right: 2px;
-        }
-      }
-    }
   }
 }
 
@@ -92,6 +65,9 @@
 
   &.vault {
     min-width: calc(var(--character-column-width) + var(--inventory-column-padding));
+    @include phone-portrait {
+      min-width: auto;
+    }
   }
 
   &.account-wide {
@@ -146,24 +122,6 @@
       @include phone-portrait {
         --item-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
       }
-    }
-  }
-
-  .item-type-Engrams.item-drag-container:hover {
-    // don't display the default outline when hovering over a draggable subclass item
-    outline: none;
-
-    // allow the pseudo-element to render outside the bounds of the item
-    contain: layout style;
-
-    // render a hexagon-shaped pseudo-element to act as the border
-    &::before {
-      content: '';
-      position: absolute;
-      width: var(--item-size);
-      height: var(--item-size);
-      box-sizing: border-box;
-      background: url('images/engram_outline.svg');
     }
   }
 
@@ -230,36 +188,5 @@
     .character {
       margin: 0 5px;
     }
-  }
-}
-
-.category-options {
-  display: flex;
-  background-color: black;
-  position: fixed;
-  align-items: center;
-  bottom: 0;
-  top: inherit;
-  left: 0;
-  right: 0;
-  $vpadding: 15px;
-  justify-content: space-around;
-  // https://css-tricks.com/when-sass-and-new-css-features-collide/
-  padding-bottom: Max(#{($vpadding - 1)}, env(safe-area-inset-bottom));
-  z-index: 7;
-
-  > div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 1.2px;
-    border-bottom: 2px solid transparent;
-    padding: $vpadding 0 5px;
-  }
-  .selected {
-    color: $orange;
-    border-bottom: 2px solid $orange;
   }
 }

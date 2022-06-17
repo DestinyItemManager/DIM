@@ -27,9 +27,6 @@
   box-sizing: border-box;
   width: var(--item-size);
   cursor: grab;
-  &:global(.cant-drag) {
-    cursor: pointer;
-  }
 
   &:hover {
     @include draggable-hover-border;
