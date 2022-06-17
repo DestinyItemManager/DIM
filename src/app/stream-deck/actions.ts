@@ -1,3 +1,5 @@
+import { currentAccountSelector } from 'app/accounts/selectors';
+import { createLoadoutShare } from 'app/dim-api/dim-api';
 import { startFarming, stopFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -13,6 +15,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { maxLightLoadout, randomLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
+import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { pullFromPostmaster } from 'app/loadout-drawer/postmaster';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
@@ -35,6 +38,9 @@ import { createAction } from 'typesafe-actions';
 let streamDeckWebSocket: WebSocket;
 
 let refreshInterval: ReturnType<typeof setInterval>;
+
+// Cache shares to loadouts weakly, to cut down on creating shares
+const loadoutShares = new WeakMap<Loadout, string>();
 
 export const streamDeckConnected = createAction('stream-deck/CONNECTED')();
 
@@ -59,7 +65,8 @@ interface StreamDeckMessage {
     | 'freeSlot'
     | 'pullItem'
     | 'selection'
-    | 'loadout';
+    | 'loadout'
+    | 'shareLoadout';
   args: {
     search: string;
     weaponsOnly: boolean;
@@ -227,6 +234,27 @@ export function handleStreamDeckMessage(data: StreamDeckMessage): ThunkResult {
         const loadout = loadouts.find((it) => it.id === data.args.loadout);
         if (store && loadout) {
           return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
+        }
+        return;
+      }
+      case 'shareLoadout': {
+        const loadouts = loadoutsSelector(state);
+        const account = currentAccountSelector(state);
+        const accountId = account?.membershipId;
+        const loadout = loadouts.find((it) => it.id === data.args.loadout);
+        if (accountId && loadout) {
+          const shareUrl =
+            loadoutShares.get(loadout) ||
+            (await createLoadoutShare(
+              account?.membershipId,
+              convertDimLoadoutToApiLoadout(loadout)
+            ));
+          loadoutShares.set(loadout, shareUrl);
+          return dispatch(
+            sendToStreamDeck({
+              shareUrl,
+            })
+          );
         }
         return;
       }
