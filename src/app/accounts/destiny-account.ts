@@ -26,7 +26,7 @@ import { loggedOut } from './actions';
  * Platform types (membership types) in the Bungie API.
  */
 const PLATFORM_LABELS = {
-  // t('Accounts', { metadata: { keys: 'platforms' }})
+  // t(`Accounts.${platform}`, { metadata: { keys: 'platforms' }})
   [BungieMembershipType.TigerXbox]: 'Xbox',
   [BungieMembershipType.TigerPsn]: 'PlayStation',
   [BungieMembershipType.TigerBlizzard]: 'Blizzard',

@@ -30,56 +30,44 @@ module.exports = {
 
     const content = fs.readFileSync(file.path, enc);
 
+    // prettier-ignore
     const contexts = {
       compact: ['compact'],
       max: ['Max'],
     };
 
+    // prettier-ignore
     const keys = {
-      buckets: {
-        list: ['General', 'Inventory', 'Postmaster', 'Progress', 'Unknown'],
-      },
+      buckets: { list: ['General', 'Inventory', 'Postmaster', 'Progress', 'Unknown'] },
       cooldowns: { list: ['Grenade', 'Melee', 'Super'] },
       difficulty: { list: ['Normal', 'Hard'] },
-      minMax: { list: ['Min', 'Max'], separator: false },
+      minMax: { list: ['Min', 'Max'] },
       platforms: { list: ['PlayStation', 'Stadia', 'Steam', 'Xbox'] },
       progress: { list: ['Bounties', 'Items', 'Quests'] },
-      sockets: {
-        list: [
-          'Mod',
-          'Ability',
-          'Shader',
-          'Ornament',
-          'Fragment',
-          'Aspect',
-          'Projection',
-          'Transmat',
-          'Super',
-        ],
-      },
+      sockets: { list: ['Mod', 'Ability', 'Shader', 'Ornament', 'Fragment', 'Aspect', 'Projection', 'Transmat', 'Super'] },
+      unsupported: { list: ['Unsupported', 'Steam'] },
     };
 
     parser.parseFuncFromString(content, { list: ['t', 'tl', 'DimError'] }, (key, options) => {
       if (options.metadata?.context) {
+        // Add context based on metadata
         delete options.context;
         const context = contexts[options.metadata?.context];
         parser.set(key, options);
         for (let i = 0; i < context?.length; i++) {
-          parser.set(`${key}_${context[i]}`, options);
+          parser.set(`${key}${parser.options.contextSeparator}${context[i]}`, options);
         }
       }
 
       if (options.metadata?.keys) {
+        // Add keys based on metadata (dynamic or otherwise)
         const list = keys[options.metadata?.keys].list;
-        const addSeparator = keys[options.metadata?.keys].separator ?? true;
-        if (key.endsWith('.')) {
-          key = key.slice(0, -1);
-        }
         for (let i = 0; i < list?.length; i++) {
-          parser.set(`${key}${addSeparator ? '.' : ''}${list[i]}`, options);
+          parser.set(`${key}${list[i]}`, options);
         }
       }
 
+      // Add all other non-metadata related keys w/ default options
       if (!options.metadata) {
         parser.set(key, options);
       }
