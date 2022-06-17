@@ -172,7 +172,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",
-    "@d2api/d2api-types": "^1.0.2",
     "@destinyitemmanager/dim-api-types": "^1.0.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
