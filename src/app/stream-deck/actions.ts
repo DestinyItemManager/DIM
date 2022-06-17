@@ -74,6 +74,7 @@ interface StreamDeckMessage {
     character: string;
     slot: InventoryBucket['type'];
     item: string;
+    page: string;
     selection: 'loadout' | 'item';
   };
 }
@@ -165,6 +166,13 @@ function showSelectionNotification(state: RootState, selectionType: string, onCa
   });
 }
 
+// click on the nav link to open a specific page
+function goToPage(path: string) {
+  const [menuItem] = document.querySelectorAll(`a[href$="/${path}"]`);
+  const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+  menuItem?.dispatchEvent(event);
+}
+
 // handle actions coming from the stream deck instance
 export function handleStreamDeckMessage(data: StreamDeckMessage): ThunkResult {
   return async (dispatch, getState) => {
@@ -179,7 +187,8 @@ export function handleStreamDeckMessage(data: StreamDeckMessage): ThunkResult {
       case 'refresh':
         return refresh();
       case 'search': {
-        dispatch(setSearchQuery(data.args.search, true));
+        goToPage(data.args.page || 'inventory');
+        setTimeout(() => dispatch(setSearchQuery(data.args.search, true)), 500);
         return;
       }
       case 'randomize': {
@@ -213,10 +222,7 @@ export function handleStreamDeckMessage(data: StreamDeckMessage): ThunkResult {
         dispatch(streamDeckWaitSelection(selectionType));
 
         // open the related page
-        const path = selectionType === 'loadout' ? 'loadouts' : 'inventory';
-        const [menuItem] = document.querySelectorAll(`a[href$="/${path}"]`);
-        const event = new MouseEvent('click', { bubbles: true, cancelable: true });
-        menuItem?.dispatchEvent(event);
+        goToPage(selectionType === 'loadout' ? 'loadouts' : 'inventory');
 
         // show the notification
         setTimeout(
