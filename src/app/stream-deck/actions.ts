@@ -245,10 +245,7 @@ export function handleStreamDeckMessage(data: StreamDeckMessage): ThunkResult {
         if (accountId && loadout) {
           const shareUrl =
             loadoutShares.get(loadout) ||
-            (await createLoadoutShare(
-              account?.membershipId,
-              convertDimLoadoutToApiLoadout(loadout)
-            ));
+            (await createLoadoutShare(accountId, convertDimLoadoutToApiLoadout(loadout)));
           loadoutShares.set(loadout, shareUrl);
           return dispatch(
             sendToStreamDeck({
