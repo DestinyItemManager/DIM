@@ -31,6 +31,7 @@ import {
   streamDeckVaultUpdate,
 } from 'app/stream-deck/stream-deck-update';
 import { observeStore } from 'app/utils/redux-utils';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { createAction } from 'typesafe-actions';
 
