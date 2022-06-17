@@ -130,7 +130,7 @@
     "html-loader": "^3.0.1",
     "html-webpack-plugin": "^5.0.0",
     "husky": "^4.0.6",
-    "i18next-scanner-dim": "^3.2.1",
+    "i18next-scanner": "^3.3.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^28.0.3",
     "jest-environment-jsdom": "^28.0.2",

@@ -5525,10 +5525,10 @@ i18next-http-backend@^1.0.21:
   dependencies:
     cross-fetch "3.1.5"
 
-i18next-scanner-dim@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/i18next-scanner-dim/-/i18next-scanner-dim-3.2.1.tgz#af630f38f958c34ff98c420c3ff09558e5a404da"
-  integrity sha512-xo5/xNiDNcsYsxKGCco52HmNwiPSg83mC93Tty7F4hpCAKwr9FQjoEcSSpjFBzGoM0pkV7WPgEtkUVlRLikidw==
+i18next-scanner@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/i18next-scanner/-/i18next-scanner-3.3.0.tgz#ec2776a7667f6b5df7b674968a081e806418b148"
+  integrity sha512-wVCv2HCpFWi/KIU/UiWgzUZg3Ih9zO8GLRv0aAQWJ7LUukrLaNkzdtVdkED6b4AiEDfCuM4X1KLcBi+pvL6JzQ==
   dependencies:
     acorn "^8.0.4"
     acorn-dynamic-import "^4.0.0"
