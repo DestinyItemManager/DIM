@@ -9,7 +9,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyCollectibleComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -184,6 +184,11 @@ function SingleVendor({
     }
   }
 
+  let refreshTime = d2Vendor.component && new Date(d2Vendor.component.nextRefreshDate);
+  if (refreshTime?.getFullYear() === 9999) {
+    refreshTime = undefined;
+  }
+
   return (
     <div className={clsx(styles.page, 'dim-page', artifactCheck)}>
       <ErrorBoundary name="SingleVendor">
@@ -192,10 +197,9 @@ function SingleVendor({
             {displayName} <VendorLocation>{placeString}</VendorLocation>
           </h1>
           <div>{displayDesc}</div>
-          {d2Vendor.component && (
+          {refreshTime && (
             <div>
-              Inventory updates in{' '}
-              <Countdown endTime={new Date(d2Vendor.component.nextRefreshDate)} />
+              {t('Vendors.RefreshTime')} <Countdown endTime={refreshTime} />
             </div>
           )}
         </div>

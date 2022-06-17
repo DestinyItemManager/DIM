@@ -53,6 +53,11 @@ export default function Vendor({
         )
       ).join(', ');
 
+  let refreshTime = vendor.component && new Date(vendor.component.nextRefreshDate);
+  if (refreshTime?.getFullYear() === 9999) {
+    refreshTime = undefined;
+  }
+
   return (
     <div id={vendor.def.hash.toString()}>
       <CollapsibleTitle
@@ -74,9 +79,7 @@ export default function Vendor({
             </div>
           </>
         }
-        extra={
-          vendor.component && <Countdown endTime={new Date(vendor.component.nextRefreshDate)} />
-        }
+        extra={refreshTime && <Countdown endTime={refreshTime} />}
         sectionId={`d2vendor-${vendor.def.hash}`}
       >
         <VendorItems

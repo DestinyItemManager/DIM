@@ -1055,6 +1055,7 @@
     "Engram": "Reward Engram",
     "FilterToUnacquired": "Only show uncollected items",
     "NoItems": "This Vendor is currently not offering any items.",
+    "RefreshTime": "Inventory refreshes in:",
     "Vendors": "Vendors"
   },
   "Views": {
