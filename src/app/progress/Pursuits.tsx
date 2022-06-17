@@ -7,7 +7,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import BountyGuide, { BountyFilter, DefType, matchBountyFilters } from './BountyGuide';
 import Pursuit, { showPursuitAsExpired } from './Pursuit';
 
@@ -57,7 +57,7 @@ export default function Pursuits({ store }: { store: DimStore }) {
           pursuits[group] && (
             <section id={group} key={group}>
               <CollapsibleTitle
-                title={t(`Progress.${group}`, { contextList: 'progress' })}
+                title={t(`Progress.${group}`, { metadata: { keys: 'progress' } })}
                 sectionId={'pursuits-' + group}
               >
                 <PursuitsGroup pursuits={pursuits[group]} store={store} />
