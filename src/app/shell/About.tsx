@@ -1,7 +1,8 @@
 import { getToken } from 'app/bungie-api/oauth-tokens';
+import { clarityDiscordLink, clarityLink, compendiumLink } from 'app/clarity/about';
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../images/logo-light.svg';
 import ExternalLink from '../dim-ui/ExternalLink';
@@ -34,7 +35,7 @@ const youTubeLink = 'https://www.youtube.com/channel/UCsNRmUfaeIi5Tk7U0mlZ6UQ';
 const twitterLink = 'https://twitter.com/ThisIsDIM';
 const redditLink = 'https://destinyitemmanager.reddit.com';
 const discordLink = 'https://discord.gg/UK2GWC7';
-const wikiLink = 'https://destinyitemmanager.fandom.com/wiki/Destiny_Item_Manager_Wiki';
+const wikiLink = 'https://github.com/DestinyItemManager/DIM/wiki';
 
 export default function About() {
   const iOSApp = document.cookie.includes('app-platform=iOS App Store;');
@@ -88,6 +89,15 @@ export default function About() {
             </ExternalLink>
           </li>
         )}
+        <li
+          dangerouslySetInnerHTML={{
+            __html: t('Views.About.CommunityInsight', {
+              clarityLink,
+              compendiumLink,
+              clarityDiscordLink,
+            }),
+          }}
+        />
       </ul>
       <div className={styles.social}>
         {!iOSApp && (

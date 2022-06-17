@@ -12,7 +12,6 @@ import {
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import pursuitComplete from 'images/highlightedObjective.svg';
-import React from 'react';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
 
@@ -56,9 +55,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
         <BungieImage src={item.icon} className={itemImageStyles} alt="" />
       )}
       {item.iconOverlay && (
-        <div className={styles.iconOverlay}>
-          <BungieImage src={item.iconOverlay} />
-        </div>
+        <BungieImage src={item.iconOverlay} className={styles.iconOverlay} alt="" />
       )}
       {(item.masterwork || item.deepsightInfo) && (
         <div
@@ -134,11 +131,7 @@ export function DefItemIcon({
   return (
     <>
       <BungieImage src={itemDef.displayProperties.icon} className={itemImageStyles} alt="" />
-      {iconOverlay && (
-        <div className={styles.iconOverlay}>
-          <BungieImage src={iconOverlay} />
-        </div>
-      )}
+      {iconOverlay && <BungieImage src={iconOverlay} className={styles.iconOverlay} alt="" />}
       {modInfo?.energyCostElementOverlay && (
         <>
           <div

@@ -14,7 +14,6 @@ import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from './BucketPlaceholder';
 import { FashionMods } from './FashionMods';
@@ -87,7 +86,7 @@ export default function LoadoutItemCategorySection({
       ) : (
         <>
           <div className={clsx(styles.placeholder, `category-${category}`)}>
-            {t(`Bucket.${category}`, { contextList: 'buckets' })}
+            {t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
           </div>
         </>
       )}

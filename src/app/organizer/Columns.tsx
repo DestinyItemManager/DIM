@@ -59,7 +59,7 @@ import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -573,6 +573,10 @@ function PerksCell({
     return null;
   }
 
+  const legendaryWeaponArchetypePlugHash =
+    item.bucket.inWeapons && !item.isExotic
+      ? getWeaponArchetypeSocket(item)?.plugged?.plugDef?.hash
+      : undefined;
   let sockets = item.sockets.categories.flatMap((c) =>
     getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
       (s) =>
@@ -584,11 +588,8 @@ function PerksCell({
           (s.isPerk &&
             // Filter out the archetype plug for legendary weapons
             // as it's already in the archetype column
-            !(
-              !item.isExotic &&
-              item.bucket.inWeapons &&
-              s.plugged.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsIntrinsic)
-            )))
+            (!legendaryWeaponArchetypePlugHash ||
+              s.plugged.plugDef.hash !== legendaryWeaponArchetypePlugHash)))
     )
   );
 

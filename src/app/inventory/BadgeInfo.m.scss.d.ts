@@ -3,6 +3,7 @@
 interface CssExports {
   'arc': string;
   'badge': string;
+  'badgeContent': string;
   'capped': string;
   'deepsight': string;
   'energyCapacity': string;
@@ -15,7 +16,6 @@ interface CssExports {
   'shapedIcon': string;
   'solar': string;
   'stasis': string;
-  'summaryIcon': string;
   'void': string;
 }
 export const cssExports: CssExports;

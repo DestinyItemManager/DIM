@@ -1,4 +1,5 @@
 import type { StreamDeckState } from 'app/stream-deck/reducer';
+import type { ClarityState } from 'app/clarity/reducer';
 import type { VendorsState } from 'app/vendors/reducer';
 import type { AnyAction } from 'redux';
 import type { ThunkAction, ThunkDispatch } from 'redux-thunk';
@@ -26,6 +27,7 @@ export interface RootState {
   readonly compare: CompareState;
   readonly streamDeck: StreamDeckState;
   readonly dimApi: DimApiState;
+  readonly clarity: ClarityState;
 }
 
 export type ThunkResult<R = void> = ThunkAction<Promise<R>, RootState, undefined, AnyAction>;

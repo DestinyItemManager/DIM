@@ -109,8 +109,7 @@ export function isSupported(browsersSupported, userAgent) {
 var lang = getUserLocale();
 
 if ($BROWSERS.length && lang) {
-  // t('Browsercheck.Unsupported')
-  // t('Browsercheck.Steam')
+  // t(`Browsercheck.${Unsupported}`, { metadata: { keys: 'unsupported' }})
   var supported = isSupported($BROWSERS, navigator.userAgent);
   if (!supported) {
     document.getElementById('browser-warning').innerText = unsupported[lang];

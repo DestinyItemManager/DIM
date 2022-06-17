@@ -1,10 +1,4 @@
-import { XurLocation } from '@d2api/d2api-types';
-import { useD2Definitions } from 'app/manifest/selectors';
-import { VENDORS } from 'app/search/d2-known-values';
-import { RootState } from 'app/store/types';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import Countdown from '../dim-ui/Countdown';
@@ -38,20 +32,18 @@ export default function Vendor({
   filtering: boolean;
   characterId: string;
 }) {
-  const defs = useD2Definitions()!;
-  const xurLocation = useSelector((state: RootState) =>
-    vendor.def.hash === VENDORS.XUR ? state.vendors.xurLocation : undefined
-  );
+  const placeString = Array.from(
+    new Set(
+      [vendor.destination?.displayProperties.name, vendor.place?.displayProperties.name].filter(
+        (n) => n?.length
+      )
+    )
+  ).join(', ');
 
-  const placeString = xurLocation
-    ? extractXurLocationString(defs, xurLocation)
-    : Array.from(
-        new Set(
-          [vendor.destination?.displayProperties.name, vendor.place?.displayProperties.name].filter(
-            (n) => n?.length
-          )
-        )
-      ).join(', ');
+  let refreshTime = vendor.component && new Date(vendor.component.nextRefreshDate);
+  if (refreshTime?.getFullYear() === 9999) {
+    refreshTime = undefined;
+  }
 
   return (
     <div id={vendor.def.hash.toString()}>
@@ -74,9 +66,7 @@ export default function Vendor({
             </div>
           </>
         }
-        extra={
-          vendor.component && <Countdown endTime={new Date(vendor.component.nextRefreshDate)} />
-        }
+        extra={refreshTime && <Countdown endTime={refreshTime} />}
         sectionId={`d2vendor-${vendor.def.hash}`}
       >
         <VendorItems
@@ -89,18 +79,4 @@ export default function Vendor({
       </CollapsibleTitle>
     </div>
   );
-}
-
-function extractXurLocationString(defs: D2ManifestDefinitions, xurLocation: XurLocation) {
-  const placeDef = defs.Place.get(xurLocation.placeHash);
-  if (!placeDef) {
-    return xurLocation.locationName;
-  }
-  const destinationDef = defs.Destination.get(xurLocation.destinationHash);
-  if (!destinationDef) {
-    return xurLocation.locationName;
-  }
-  const bubbleDef = destinationDef.bubbles[xurLocation.bubbleIndex];
-
-  return `${bubbleDef.displayProperties.name}, ${destinationDef.displayProperties.name}, ${placeDef.displayProperties.name}`;
 }

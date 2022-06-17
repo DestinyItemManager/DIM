@@ -1,0 +1,7 @@
+.bucketLabel {
+  composes: title from global;
+  opacity: 0.8;
+  margin: 0;
+  padding: 0 var(--inventory-column-padding);
+  background: none; // comment out to add background background
+}

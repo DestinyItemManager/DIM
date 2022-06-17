@@ -35,7 +35,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { allItemsSelector } from '../inventory/selectors';
@@ -433,7 +433,7 @@ function LoadoutBuilder({
           )}
         </AnimatePresence>
         <div className={styles.toolbar}>
-          <UserGuideLink topic="Loadout_Optimizer" />
+          <UserGuideLink topic="Loadout-Optimizer" />
           <button
             type="button"
             className="dim-button"

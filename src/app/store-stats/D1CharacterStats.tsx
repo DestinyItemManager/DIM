@@ -4,7 +4,6 @@ import type { DimStore } from 'app/inventory/store-types';
 import { getD1CharacterStatTiers, statsWithTiers } from 'app/inventory/store/character-utils';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
-import React from 'react';
 import './CharacterStats.scss';
 
 interface Props {
@@ -18,7 +17,7 @@ export default function D1CharacterStats({ stats }: Props) {
       const tier = Math.floor(Math.min(300, stat.value) / 60);
       const next = t('Stats.TierProgress', {
         context: tier === 5 ? 'Max' : '',
-        contextList: 'max',
+        metadata: { context: ['max'] },
         progress: tier === 5 ? stat.value : stat.value % 60,
         tier,
         nextTier: tier + 1,
@@ -29,7 +28,7 @@ export default function D1CharacterStats({ stats }: Props) {
       if (cooldown) {
         cooldown = t(`Cooldown.${stat.effect}`, {
           cooldown,
-          contextList: 'cooldowns',
+          metadata: { keys: 'cooldowns' },
         });
       }
       return next + cooldown;

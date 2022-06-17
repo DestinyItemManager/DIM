@@ -147,7 +147,8 @@ span:focus {
 }
 
 // Use this to make images not tappable (Android Chrome will show a download menu)
-.no-pointer-events {
+.no-pointer-events,
+.app-icon {
   pointer-events: none;
 }
 

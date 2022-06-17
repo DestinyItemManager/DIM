@@ -7,7 +7,6 @@ interface CssExports {
   'flawedPassage': string;
   'fullstack': string;
   'image': string;
-  'newItem': string;
   'progress': string;
   'progressAmount': string;
   'pursuit': string;

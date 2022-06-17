@@ -39,8 +39,8 @@ module.exports = function csp(env) {
       'https://gist.githubusercontent.com',
       // DIM Sync
       'https://api.destinyitemmanager.com',
-      // Xur location
-      'paracausal.science',
+      // Clarity
+      'https://ice-mourne.github.io',
     ],
     imgSrc: [
       SELF,

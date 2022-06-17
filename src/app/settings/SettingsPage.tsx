@@ -1,5 +1,6 @@
 import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
+import { clarityDiscordLink, clarityLink, compendiumLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
@@ -139,6 +140,10 @@ export default function SettingsPage() {
     });
   };
 
+  const changeDescriptionDisplay = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSetting('descriptionsToDisplay', e.target.value);
+  };
+
   const resetItemSize = (e: React.MouseEvent) => {
     e.preventDefault();
     setSetting('itemSize', 50);
@@ -188,6 +193,12 @@ export default function SettingsPage() {
     deepsight: t('Settings.SortByDeepsight'),
     // archetype: 'Archetype'
   };
+
+  const descriptionDisplayOptions = mapToOptions({
+    both: t('Settings.BothDescriptions'),
+    bungie: t('Settings.BungieDescriptionOnly'),
+    community: t('Settings.CommunityDescriptionOnly'),
+  });
 
   const charColOptions = _.range(2, 6).map((num) => ({
     value: num,
@@ -310,8 +321,7 @@ export default function SettingsPage() {
                   className="dim-button"
                   onClick={() => dispatch(clearAllNewItems())}
                 >
-                  <NewItemIndicator className="new-item" alwaysShow />{' '}
-                  <span>{t('Hotkey.ClearNewItems')}</span>
+                  <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
                 </button>
               </div>
             </div>
@@ -364,6 +374,27 @@ export default function SettingsPage() {
                 </label>
               </div>
             </div>
+            {$featureFlags.clarityDescriptions && (
+              <div className="setting">
+                <Select
+                  label={t('Settings.CommunityData')}
+                  name="descriptionsToDisplay"
+                  value={settings.descriptionsToDisplay}
+                  options={descriptionDisplayOptions}
+                  onChange={changeDescriptionDisplay}
+                />
+                <div
+                  className="fineprint"
+                  dangerouslySetInnerHTML={{
+                    __html: t('Views.About.CommunityInsight', {
+                      clarityLink,
+                      compendiumLink,
+                      clarityDiscordLink,
+                    }),
+                  }}
+                />
+              </div>
+            )}
             {hasD1Account && (
               <Checkbox
                 label={t('Settings.EnableAdvancedStats')}

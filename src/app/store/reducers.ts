@@ -1,5 +1,6 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { streamDeck } from 'app/stream-deck/reducer';
+import { clarity } from 'app/clarity/reducer';
 import { vendors } from 'app/vendors/reducer';
 import { combineReducers, Reducer } from 'redux';
 import { accounts } from '../accounts/reducer';
@@ -25,6 +26,7 @@ const reducer: Reducer<RootState> = (state, action) => {
     vendors,
     compare,
     streamDeck,
+    clarity,
     // Dummy reducer to get the types to work
     dimApi: (state: DimApiState = dimApiInitialState) => state,
   });

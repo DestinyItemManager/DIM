@@ -1,3 +1,5 @@
+import { D1Categories } from 'app/destiny1/d1-bucket-categories';
+import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
@@ -87,6 +89,20 @@ const outOfSpaceWarning = _.throttle((store) => {
     body: t('FarmingMode.OutOfRoom', { character: store.name }),
   });
 }, 60000);
+
+const sortedBucketHashes = [
+  ...D2Categories.Weapons,
+  ...D2Categories.Armor,
+  ...D2Categories.General,
+  ...D2Categories.Inventory,
+  ...D1Categories.Weapons,
+  ...D1Categories.Armor,
+  ...D1Categories.General,
+];
+const bucketHashToIndex = {};
+for (let i = 0; i < sortedBucketHashes.length; i++) {
+  bucketHashToIndex[sortedBucketHashes[i]] = i;
+}
 
 /**
  * Apply a loadout - a collection of items to be moved and possibly equipped all at once.
@@ -191,18 +207,29 @@ function doApplyLoadout(
 
       // TODO: would be great to avoid all these getLoadoutItems?
 
-      // Trim down the list of items to only those that could be equipped by the store we're sending to.
-      const applicableLoadoutItems = loadout.items.filter((loadoutItem) => {
-        const item = getLoadoutItem(loadoutItem);
-        // Don't filter if they're going to the vault
-        return (
-          item &&
-          (!onlyMatchingClass ||
-            store.isVault ||
-            !item.equipment ||
-            itemCanBeEquippedBy(item, store))
+      let resolvedItems = _.compact(
+        loadout.items.map((loadoutItem) => {
+          const item = getLoadoutItem(loadoutItem);
+          if (item) {
+            return {
+              loadoutItem,
+              item,
+            };
+          }
+        })
+      );
+      if (onlyMatchingClass && !store.isVault) {
+        // Trim down the list of items to only those that could be equipped by the store we're sending to.
+        resolvedItems = resolvedItems.filter(
+          ({ item }) => !item.equipment || itemCanBeEquippedBy(item, store)
         );
-      });
+      }
+
+      // Sort loadout items by their bucket so we move items in the order that DIM displays them
+      const applicableLoadoutItems = _.sortBy(resolvedItems, ({ item }) => {
+        const sortIndex = bucketHashToIndex[item.bucket.hash];
+        return sortIndex === undefined ? Number.MAX_SAFE_INTEGER : sortIndex;
+      }).map(({ loadoutItem }) => loadoutItem);
 
       // Figure out which items have specific socket overrides that will need to be applied.
       // TODO: remove socket-overrides from the mods to apply list!

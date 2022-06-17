@@ -24,8 +24,6 @@
 }
 
 .inventoryContainer {
-  display: flex;
-
   :global(.issue-banner-shown) & {
     padding-bottom: $issue-banner-height;
     @include phone-portrait {

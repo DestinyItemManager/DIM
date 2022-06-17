@@ -107,7 +107,7 @@ export interface TagInfo {
 
 // populate tag list from tag config info
 export const itemTagList: TagInfo[] = Object.values(tagConfig);
-// t(Tags.TagItem) is the dropdown selector text hint for untagged things
+
 export const itemTagSelectorList: TagInfo[] = [
   { label: tl('Tags.TagItem') },
   ...Object.values(tagConfig),

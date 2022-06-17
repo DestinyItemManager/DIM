@@ -10,7 +10,6 @@ import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import StoreStats from 'app/store-stats/StoreStats';
 import { useEventBusListener } from 'app/utils/hooks';
 import clsx from 'clsx';
-import React from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
 import D1ReputationSection from './D1ReputationSection';
 import styles from './DesktopStores.m.scss';
@@ -136,7 +135,7 @@ function CollapsibleContainer({
 
   return (
     <InventoryCollapsibleTitle
-      title={t(`Bucket.${category}`, { contextList: 'buckets' })}
+      title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
       sectionId={category}
       stores={stores}
     >

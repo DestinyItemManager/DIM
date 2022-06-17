@@ -70,11 +70,9 @@ export async function getLinkedAccounts(
 /**
  * Get the user's stores on this platform. This includes characters, vault, and item information.
  */
-export function getStores(
-  platform: DestinyAccount,
-  components?: DestinyComponentType[]
-): Promise<DestinyProfileResponse> {
-  const defaultComponents = [
+export function getStores(platform: DestinyAccount): Promise<DestinyProfileResponse> {
+  return getProfile(
+    platform,
     DestinyComponentType.Profiles,
     DestinyComponentType.ProfileInventories,
     DestinyComponentType.ProfileCurrencies,
@@ -98,10 +96,8 @@ export function getStores(
     DestinyComponentType.Metrics,
     DestinyComponentType.StringVariables,
     DestinyComponentType.ProfileProgression,
-    DestinyComponentType.Craftables,
-  ];
-
-  return getProfile(platform, ...(components || defaultComponents));
+    DestinyComponentType.Craftables
+  );
 }
 
 /**

@@ -1,3 +1,5 @@
+import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
+import { settingSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
@@ -6,7 +8,7 @@ import { Portal } from 'app/utils/temp-container';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
@@ -28,6 +30,14 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
+
+  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
+  const showBungieDescription =
+    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
+  const showCommunityDescription =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
+  const showCommunityDescriptionOnly =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
 
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
     if (hasMenu) {
@@ -86,9 +96,26 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
             >
               {!minimal && (
                 <div className={styles.exoticDescription}>
-                  <RichDestinyText
-                    text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
-                  />
+                  {showBungieDescription && (
+                    <RichDestinyText
+                      text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
+                    />
+                  )}
+                  {showCommunityDescription && (
+                    <ClarityDescriptions
+                      hash={exoticArmorPerkSocket.plugged.plugDef.hash}
+                      fallback={
+                        !showBungieDescription && (
+                          <RichDestinyText
+                            text={
+                              exoticArmorPerkSocket.plugged.plugDef.displayProperties.description
+                            }
+                          />
+                        )
+                      }
+                      communityOnly={showCommunityDescriptionOnly}
+                    />
+                  )}
                 </div>
               )}
             </ArchetypeSocket>

@@ -1,4 +1,5 @@
 @use '../variables.scss' as *;
+@use 'sass:math';
 
 $legendaryBg: #522f65;
 $exoticBg: #ceae33;
@@ -22,22 +23,22 @@ $commonBg: #366f42;
   &:global(.transparent) {
     border-color: transparent;
   }
+}
 
-  &.legendary {
-    background-color: $legendaryBg;
-  }
-  &.exotic {
-    background-color: $exoticBg;
-  }
-  &.basic {
-    background-color: $basicBg;
-  }
-  &.rare {
-    background-color: $rareBg;
-  }
-  &.common {
-    background-color: $commonBg;
-  }
+.legendary {
+  background-color: $legendaryBg;
+}
+.exotic {
+  background-color: $exoticBg;
+}
+.basic {
+  background-color: $basicBg;
+}
+.rare {
+  background-color: $rareBg;
+}
+.common {
+  background-color: $commonBg;
 }
 
 // Alternate border styles
@@ -60,17 +61,21 @@ $commonBg: #366f42;
 
 // The overlay image for masterworks and Deepsight weapons
 .backgroundOverlay {
+  // -0.4px to force the browser round down rendered value not the actual value
+  // If it rounds up that leaves a 1px gap between the image and the border
+  $new-border-width: $item-border-width - 0.4px;
+
   box-sizing: border-box;
-  top: $item-border-width;
-  left: $item-border-width;
+  top: $new-border-width;
+  left: $new-border-width;
   border-width: 0;
-  height: calc(var(--item-size) - #{2 * $item-border-width});
-  width: calc(var(--item-size) - #{2 * $item-border-width});
+  height: calc(var(--item-size) - #{2 * $new-border-width});
+  width: calc(var(--item-size) - #{2 * $new-border-width});
   position: absolute;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90))
-    calc((var(--item-size) - #{2 * $item-border-width}) * (96 / 90));
+  background-size: calc((var(--item-size) - #{2 * $new-border-width}) * (96 / 90))
+    calc((var(--item-size) - #{2 * $new-border-width}) * (96 / 90));
 }
 .legendaryMasterwork {
   background-image: url('../../images/masterwork.png');
@@ -79,27 +84,20 @@ $commonBg: #366f42;
   background-image: url('../../images/exotic-masterwork.png');
 }
 .deepsightBorder {
-  background-image: url('../../images/deepsight.png');
+  border: 2px solid $deepsight-border-color;
+  // background-image: url('../../images/deepsight.png');
 
   &.legendaryMasterwork {
-    background-image: url('../../images/deepsight.png'), url('../../images/masterwork.png');
+    background-image: url('../../images/masterwork.png');
   }
 }
 
 .iconOverlay {
-  overflow: hidden;
   top: $item-border-width;
   left: $item-border-width;
   height: calc(var(--item-size) - #{2 * $item-border-width});
   width: calc(var(--item-size) - #{2 * $item-border-width});
   position: absolute;
-  & > img {
-    top: 0;
-    left: 0;
-    height: calc(var(--item-size) - #{2 * $item-border-width});
-    width: calc(var(--item-size) - #{2 * $item-border-width});
-    position: absolute;
-  }
 }
 
 .energyCostOverlay {
@@ -122,7 +120,7 @@ $commonBg: #366f42;
   left: $item-border-width;
   pointer-events: none;
 
-  text {
+  > text {
     fill: white;
   }
 }
@@ -143,11 +141,11 @@ $commonBg: #366f42;
   display: block;
   width: 0;
   height: 0;
-  border: calc(var(--item-size) * #{$size / 100}) solid $deepsight-border-color;
+  border: calc(var(--item-size) * #{math.div($size, 100)}) solid $deepsight-border-color;
   border-top-color: transparent;
   border-left-color: transparent;
   right: 0;
-  top: calc(var(--item-size) - (var(--item-size) * #{$size / 50}) - 1px);
+  top: calc(var(--item-size) - (var(--item-size) * #{math.div($size, 50)}) - 1px);
   pointer-events: none;
 }
 

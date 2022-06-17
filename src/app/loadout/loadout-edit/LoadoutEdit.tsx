@@ -32,7 +32,7 @@ import { emptyObject } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisplay';
 import SubclassPlugDrawer from '../SubclassPlugDrawer';
@@ -169,7 +169,7 @@ export default function LoadoutEdit({
         (category: D2BucketCategory) => (
           <LoadoutEditSection
             key={category}
-            title={t(`Bucket.${category}`, { contextList: 'buckets' })}
+            title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
             onClear={() => handleClearCategory(category)}
             onFillFromEquipped={() => handleFillCategoryFromEquipped(category)}
             fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}

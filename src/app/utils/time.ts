@@ -45,7 +45,7 @@ export function i15dDurationFromMs(milliseconds: number, compact = false) {
     ? `${t('Countdown.Days', {
         count: days,
         context: compact ? 'compact' : '',
-        contextList: 'compact',
+        metadata: { context: ['compact'] },
       })} ${hhMM}`
     : `${hhMM}`;
 }

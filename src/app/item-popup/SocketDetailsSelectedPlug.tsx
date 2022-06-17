@@ -1,4 +1,6 @@
+import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
@@ -162,8 +164,8 @@ export default function SocketDetailsSelectedPlug({
 
   const kind = uiCategorizeSocket(defs, socket.socketDefinition);
   const insertName = canDoAWA
-    ? t(`Sockets.Insert.${kind}`, { contextList: 'sockets' })
-    : t(`Sockets.Select.${kind}`, { contextList: 'sockets' });
+    ? t(`Sockets.Insert.${kind}`, { metadata: { keys: 'sockets' } })
+    : t(`Sockets.Select.${kind}`, { metadata: { keys: 'sockets' } });
 
   const [insertInProgress, setInsertInProgress] = useState(false);
 
@@ -207,6 +209,14 @@ export default function SocketDetailsSelectedPlug({
     );
   });
 
+  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
+  const showBungieDescription =
+    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
+  const showCommunityDescription =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
+  const showCommunityDescriptionOnly =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
+
   return (
     <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
       <div className={styles.modIcon}>
@@ -220,11 +230,13 @@ export default function SocketDetailsSelectedPlug({
             <> &mdash; {plug.itemTypeDisplayName}</>
           )}
         </h3>
-        {perkDescriptions.map((perkDesc) => (
-          <div key={perkDesc.perkHash}>{perkDesc.description || perkDesc.requirement}</div>
-        ))}
+        {showBungieDescription &&
+          perkDescriptions.map((perkDesc) => (
+            <div key={perkDesc.perkHash}>{perkDesc.description || perkDesc.requirement}</div>
+          ))}
         {sourceString && <div>{sourceString}</div>}
       </div>
+
       {stats.length > 0 && (
         <div className={styles.modStats}>
           {stats.map((stat) => (
@@ -237,6 +249,20 @@ export default function SocketDetailsSelectedPlug({
       {stats.length > 0 && (
         <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
       )}
+
+      {showCommunityDescription && (
+        <ClarityDescriptions
+          hash={plug.hash}
+          fallback={
+            !showBungieDescription &&
+            perkDescriptions.map((perkDesc) => (
+              <div key={perkDesc.perkHash}>{perkDesc.description || perkDesc.requirement}</div>
+            ))
+          }
+          communityOnly={showCommunityDescriptionOnly}
+        />
+      )}
+
       {(canDoAWA || onPlugSelected) && (
         <motion.button
           layout

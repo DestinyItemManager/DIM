@@ -17,15 +17,13 @@ function positionMenu({ state }: ModifierArguments<Options>) {
     return;
   }
 
-  const sidecarSize = getLayoutRect(sidecarMenu);
+  const popperHeight = state.rects.popper.height;
+
+  const sidecarHeight = getLayoutRect(sidecarMenu).height;
   const arrowCenter = (arrowRect.y || 0) + 5; // arrow is 10px tall
 
   // Don't let the sidecar be positioned above or below the popup
-  const top = _.clamp(
-    arrowCenter - sidecarSize.height / 2,
-    0,
-    parent.innerHeight - sidecarSize.height
-  );
+  const top = _.clamp(arrowCenter - sidecarHeight / 2, 0, popperHeight - sidecarHeight);
 
   // Originally this used translateY, but that caused menus to not work on Safari.
   state.styles.sidecar = {

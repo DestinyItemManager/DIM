@@ -4,6 +4,7 @@ import { handleAuthErrors } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
@@ -16,7 +17,6 @@ import {
   DestinyCharacterProgressionComponent,
   DestinyCollectibleComponent,
   DestinyCollectiblesComponent,
-  DestinyComponentType,
   DestinyItemComponent,
   DestinyProfileCollectiblesComponent,
   DestinyProfileResponse,
@@ -49,8 +49,6 @@ import { processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
 import { getArtifactBonus } from './stores-helpers';
-
-let isFirstLoad = true;
 
 /**
  * Update the high level character information for all the stores
@@ -131,9 +129,7 @@ export function mergeCollectibles(
  * Returns a promise for a fresh view of the stores and their items.
  */
 
-export function loadStores(
-  components?: DestinyComponentType[]
-): ThunkResult<DimStore[] | undefined> {
+export function loadStores(): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     let account = currentAccountSelector(getState());
     if (!account) {
@@ -145,24 +141,13 @@ export function loadStores(
       }
     }
 
-    const stores = await dispatch(loadStoresData(account, isFirstLoad ? components : undefined));
-
-    if (isFirstLoad) {
-      isFirstLoad = false;
-      if (components) {
-        // async load the rest (no await)
-        dispatch(loadStoresData(account));
-      }
-    }
-
+    $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
+    const stores = await dispatch(loadStoresData(account));
     return stores;
   };
 }
 
-function loadStoresData(
-  account: DestinyAccount,
-  components?: DestinyComponentType[]
-): ThunkResult<DimStore[] | undefined> {
+function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
       // If we switched account since starting this, give up
@@ -186,7 +171,7 @@ function loadStoresData(
           dispatch(loadNewItems(account)),
           mockProfileData
             ? (JSON.parse(mockProfileData) as DestinyProfileResponse)
-            : getStores(account, components),
+            : getStores(account),
         ]);
 
         // If we switched account since starting this, give up
