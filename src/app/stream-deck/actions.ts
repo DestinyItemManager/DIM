@@ -115,7 +115,7 @@ function findSubClass(items: LoadoutItem[], state: RootState) {
   for (const item of items) {
     const def = defs?.InventoryItem.get(item.hash);
     // find subclass item
-    if (def?.inventory?.bucketTypeHash === 3284755031) {
+    if (def?.inventory?.bucketTypeHash === BucketHashes.Subclass) {
       return def.displayProperties.icon;
     }
   }
