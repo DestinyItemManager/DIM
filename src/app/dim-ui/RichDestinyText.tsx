@@ -2,7 +2,6 @@ import { dynamicStringsSelector } from 'app/inventory/selectors';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { conversionTable, iconPlaceholder } from './rich-destiny-text';
-import styles from './RichDestinyText.m.scss';
 
 const dynamicTextFinder = /\{var:\d+\}/g;
 
@@ -35,19 +34,17 @@ export default function RichDestinyText({
     .split(iconPlaceholder)
     .filter(Boolean)
     .map((t, index) => replaceWithIcon(t, index));
-  return <>{richTextSegments}</>;
+  return <span>{richTextSegments}</span>;
 }
 
 function replaceWithIcon(textSegment: string, index: number) {
   const replacementInfo = conversionTable[textSegment];
-  return (
-    <span
-      key={textSegment + index}
-      title={replacementInfo?.plaintext}
-      className={replacementInfo ? styles.glyph : undefined}
-    >
-      {replacementInfo?.unicode ?? textSegment}
+  return replacementInfo ? (
+    <span key={textSegment + index} title={replacementInfo.plaintext}>
+      {replacementInfo.unicode}
     </span>
+  ) : (
+    textSegment
   );
 }
 
