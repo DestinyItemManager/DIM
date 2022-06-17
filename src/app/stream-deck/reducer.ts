@@ -7,7 +7,7 @@ export interface StreamDeckState {
   connected: boolean;
   enabled: boolean;
   selectionPromise: DeferredPromise;
-  selection?: 'item' | 'loadout' | undefined;
+  selection?: 'item' | 'loadout' | 'postmaster' | undefined;
 }
 
 export type StreamDeckAction = ActionType<typeof actions>;
