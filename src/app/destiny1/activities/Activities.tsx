@@ -5,7 +5,6 @@ import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import CharacterTileButton from '../../character-tile/CharacterTileButton';
@@ -77,7 +76,9 @@ export default function Activities({ account }: Props) {
       tier.activityData.recommendedLight === 390
         ? '390'
         : tier.tierDisplayName
-        ? t(`Activities.${tier.tierDisplayName}`, { contextList: 'difficulty' })
+        ? t(`Activities.${tier.tierDisplayName}`, {
+            metadata: { keys: 'difficulty' },
+          })
         : tierDef.activityName;
 
     const characters =
