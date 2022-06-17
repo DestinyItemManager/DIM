@@ -2,7 +2,6 @@ import {
   allItemsSelector,
   currenciesSelector,
   profileResponseSelector,
-  storesSelector,
   vaultSelector,
 } from 'app/inventory/selectors';
 import { AccountCurrency, DimStore } from 'app/inventory/store-types';
@@ -10,7 +9,6 @@ import { getArtifactBonus } from 'app/inventory/stores-helpers';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { RootState } from 'app/store/types';
@@ -103,26 +101,4 @@ export function streamDeckMetricsUpdate(state: RootState) {
     battlePass: battlePassHash ? seasonalRank : 0,
     artifactIcon,
   };
-}
-
-// create the loadouts update data
-export function streamDeckLoadoutsUpdate(state: RootState) {
-  const characters = storesSelector(state);
-  const loadouts = loadoutsSelector(state);
-  const mappedLoadouts = characters
-    .filter((it) => !it.isVault)
-    .map((char) => [
-      char.id,
-      {
-        label: char.name,
-        items: loadouts
-          .filter((it) => it.classType === undefined || it.classType === char.classType)
-          .map((it) => ({
-            id: it.id,
-            label: it.name,
-          })),
-      },
-    ]);
-
-  return Object.fromEntries(mappedLoadouts);
 }

@@ -25,7 +25,6 @@ import { setSearchQuery } from 'app/shell/actions';
 import { refresh } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
 import {
-  streamDeckLoadoutsUpdate,
   streamDeckMaxPowerUpdate,
   streamDeckMetricsUpdate,
   streamDeckPostMasterUpdate,
@@ -141,15 +140,6 @@ export function streamDeckSelectLoadout(loadout: Loadout, store: DimStore): Thun
           },
         })
       );
-    }
-  };
-}
-
-export function sendLoadouts(): ThunkResult {
-  return async (dispatch, getState) => {
-    const loadouts = streamDeckLoadoutsUpdate(getState());
-    if (Object.keys(loadouts).length) {
-      return dispatch(sendToStreamDeck({ loadouts }));
     }
   };
 }
@@ -297,17 +287,10 @@ export const installFarmingObserver = _.once((dispatch) => {
   );
 });
 
-export const installLoadoutsObserver = _.once((dispatch) => {
-  observeStore(
-    (state) => loadoutsSelector(state),
-    () => dispatch(sendLoadouts())
-  );
-});
-
-// collect and send to the stream deck specific refresh data
+// collect and send data to the stream deck
 function refreshStreamDeck(): ThunkResult {
   return async (dispatch, getState) => {
-    const listener = () => {
+    const refreshAction = () => {
       const state = getState();
       const store = currentStoreSelector(getState());
       if (!store) {
@@ -323,8 +306,8 @@ function refreshStreamDeck(): ThunkResult {
       );
     };
     clearInterval(refreshInterval);
-    refreshInterval = setInterval(listener, 30000);
-    listener();
+    refreshInterval = setInterval(refreshAction, 30000);
+    refreshAction();
   };
 }
 
@@ -359,7 +342,6 @@ export function startStreamDeckConnection(): ThunkResult {
       }
 
       installFarmingObserver(dispatch);
-      installLoadoutsObserver(dispatch);
 
       // close the existing websocket if connected
       if (streamDeckWebSocket && streamDeckWebSocket.readyState !== WebSocket.CLOSED) {
@@ -372,7 +354,6 @@ export function startStreamDeckConnection(): ThunkResult {
       streamDeckWebSocket.onopen = function () {
         dispatch(streamDeckConnected());
         dispatch(refreshStreamDeck());
-        dispatch(sendLoadouts());
       };
 
       streamDeckWebSocket.onclose = function () {
