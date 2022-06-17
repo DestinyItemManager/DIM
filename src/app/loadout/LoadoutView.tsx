@@ -112,7 +112,7 @@ export default function LoadoutView({
 
   return (
     <div
-      className={selectable ? styles.sdSelectable : styles.loadout}
+      className={`${styles.loadout} ${selectable ? styles.sdSelectable : ''}`}
       id={loadout.id}
       onClick={onLoadoutSelect}
     >
