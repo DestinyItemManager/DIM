@@ -3,7 +3,7 @@ import { settingSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
-import { getArmorExoticPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
+import { getIntrinsicArmorPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -55,7 +55,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
     return null;
   }
 
-  const exoticArmorPerkSocket = getArmorExoticPerkSocket(item);
+  const intrinsicArmorPerkSocket = getIntrinsicArmorPerkSocket(item);
   const emoteWheelCategory = item.sockets.categories.find(
     (c) => c.category.hash === SocketCategoryHashes.Emotes
   );
@@ -63,8 +63,8 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
   let categories = item.sockets.categories.filter(
     (c) =>
       // hide socket category if there's no sockets in this category after
-      // removing the exotic perk socket, which we handle specially
-      c.socketIndexes.some((s) => s !== exoticArmorPerkSocket?.socketIndex) &&
+      // removing the intrinsic armor perk socket, which we handle specially
+      c.socketIndexes.some((s) => s !== intrinsicArmorPerkSocket?.socketIndex) &&
       // hide if this is the energy slot. it's already displayed in ItemDetails
       c.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter &&
       // hide if this is the emote wheel because we show it separately
@@ -86,29 +86,29 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
 
   return (
     <>
-      {exoticArmorPerkSocket && (
+      {intrinsicArmorPerkSocket && (
         <ArchetypeRow minimal={minimal}>
-          {exoticArmorPerkSocket?.plugged && (
+          {intrinsicArmorPerkSocket?.plugged && (
             <ArchetypeSocket
-              archetypeSocket={exoticArmorPerkSocket}
+              archetypeSocket={intrinsicArmorPerkSocket}
               item={item}
               onClick={handleSocketClick}
             >
               {!minimal && (
-                <div className={styles.exoticDescription}>
+                <div className={styles.armorIntrinsicDescription}>
                   {showBungieDescription && (
                     <RichDestinyText
-                      text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
+                      text={intrinsicArmorPerkSocket.plugged.plugDef.displayProperties.description}
                     />
                   )}
                   {showCommunityDescription && (
                     <ClarityDescriptions
-                      hash={exoticArmorPerkSocket.plugged.plugDef.hash}
+                      hash={intrinsicArmorPerkSocket.plugged.plugDef.hash}
                       fallback={
                         !showBungieDescription && (
                           <RichDestinyText
                             text={
-                              exoticArmorPerkSocket.plugged.plugDef.displayProperties.description
+                              intrinsicArmorPerkSocket.plugged.plugDef.displayProperties.description
                             }
                           />
                         )
@@ -144,7 +144,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
             <div className="item-sockets">
               {getSocketsByIndexes(item.sockets!, category.socketIndexes).map(
                 (socketInfo) =>
-                  socketInfo.socketIndex !== exoticArmorPerkSocket?.socketIndex &&
+                  socketInfo.socketIndex !== intrinsicArmorPerkSocket?.socketIndex &&
                   socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                     <Socket
                       key={socketInfo.socketIndex}
