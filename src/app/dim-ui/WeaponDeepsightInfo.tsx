@@ -6,6 +6,7 @@ import { faCheck } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { DestinyRecordComponent } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import BungieImage from './BungieImage';
 import PressTip from './PressTip';
 import styles from './WeaponDeepsightInfo.m.scss';
 
@@ -62,7 +63,7 @@ function PatternUnlockedIndicator({ record }: { record: DestinyRecordComponent |
         </>
       }
     >
-      <img className={styles.patternIcon} src={weaponPatternIcon} />
+      <BungieImage className={styles.patternIcon} src={weaponPatternIcon} />
       <span>
         {record.objectives.every((o) => o.complete) ? (
           <AppIcon className={styles.patternOwned} icon={faCheck} />
