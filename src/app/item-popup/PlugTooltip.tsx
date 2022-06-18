@@ -1,4 +1,5 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
@@ -6,6 +7,7 @@ import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { statAllowList } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { Settings } from 'app/settings/initial-settings';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isPlugStatActive } from 'app/utils/item-utils';
@@ -120,30 +122,13 @@ export function PlugTooltip({
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
-  const perkDescriptions = (defs && getPerkDescriptions(def, defs)) || [];
 
   // filter out plug objectives related to Resonant Elements
   const filteredPlugObjectives = plugObjectives?.filter(
     (o) => !resonantElementObjectiveHashes.includes(o.objectiveHash)
   );
 
-  const showBungieDescription =
-    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
-  const showCommunityDescription =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
-  const showCommunityDescriptionOnly =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
-
-  const bungieDescription = (
-    <>
-      {perkDescriptions.map((perkDesc) => (
-        <div key={perkDesc.perkHash}>
-          {perkDesc.name && <div>{perkDesc.name}</div>}
-          <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
-        </div>
-      ))}
-    </>
-  );
+  const plugDescriptions = buildPlugDescriptions(def, defs, descriptionsToDisplay);
   const renderedStats = stats && Object.entries(stats).length > 0 && (
     <div className="plug-stats">
       {Object.entries(stats).map(([statHash, value]) => (
@@ -157,20 +142,28 @@ export function PlugTooltip({
       <h2>{def.displayProperties.name}</h2>
       {!hidePlugSubtype && def.itemTypeDisplayName && <h3>{def.itemTypeDisplayName}</h3>}
 
-      {showBungieDescription && (
+      {/*
+        If we're displaying the Bungie description, display the stats between the Bungie description and
+        community description. If we're not displaying the Bungie description, display the stats after the
+        community insight.
+
+        This ensures that the stats are always shown after a description, even if ClarityDescriptions needs
+        to fall back to the Bungie description.
+      */}
+      {plugDescriptions.description && (
         <>
-          {bungieDescription}
+          {plugDescriptions.description}
           {renderedStats}
         </>
       )}
-      {showCommunityDescription && (
+      {plugDescriptions.communityInsight && (
         <ClarityDescriptions
-          hash={def.hash}
-          fallback={showCommunityDescriptionOnly && bungieDescription}
-          communityOnly={showCommunityDescriptionOnly}
+          hash={plugDescriptions.communityInsight.hash}
+          fallback={plugDescriptions.communityInsight.fallback}
+          communityOnly={plugDescriptions.communityInsight.communityOnly}
         />
       )}
-      {showCommunityDescriptionOnly && renderedStats}
+      {!plugDescriptions.description && renderedStats}
       {sourceString && <div>{sourceString}</div>}
       {defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
         <div className={styles.objectives}>
@@ -213,6 +206,40 @@ export function PlugTooltip({
       )}
     </>
   );
+}
+
+function buildPlugDescriptions(
+  plugDef: DestinyInventoryItemDefinition,
+  defs: D2ManifestDefinitions | undefined,
+  descriptionsToDisplay: Settings['descriptionsToDisplay']
+) {
+  const perkDescriptions = (defs && getPerkDescriptions(plugDef, defs)) || [];
+  const bungieDescription = (
+    <>
+      {perkDescriptions.map((perkDesc) => (
+        <div key={perkDesc.perkHash}>
+          {perkDesc.name && <div>{perkDesc.name}</div>}
+          <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
+        </div>
+      ))}
+    </>
+  );
+
+  const showBungieDescription =
+    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
+  const showCommunityDescription =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
+  const showCommunityDescriptionOnly =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
+
+  return {
+    description: showBungieDescription && bungieDescription,
+    communityInsight: showCommunityDescription && {
+      hash: plugDef.hash,
+      fallback: showCommunityDescriptionOnly && bungieDescription,
+      communityOnly: showCommunityDescriptionOnly,
+    },
+  };
 }
 
 export function StatValue({ value, statHash }: { value: number; statHash: number }) {
