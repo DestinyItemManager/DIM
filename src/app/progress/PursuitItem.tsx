@@ -29,7 +29,7 @@ function PursuitItem(
   // Either there's a counter progress bar, or multiple checkboxes
   const showProgressBoolean = (objectives: DestinyObjectiveProgress[]) => {
     const numBooleans = count(objectives, (o) =>
-      isBooleanObjective(defs.Objective.get(o.objectiveHash), o.completionValue)
+      isBooleanObjective(defs.Objective.get(o.objectiveHash), o.progress, o.completionValue)
     );
     return numBooleans > 1 || objectives.length !== numBooleans;
   };

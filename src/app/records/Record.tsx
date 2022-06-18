@@ -2,6 +2,7 @@ import { trackTriumph } from 'app/dim-api/basic-actions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
+import { isBooleanObjective } from 'app/inventory/store/objectives';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { Reward } from 'app/progress/Reward';
 import { percent } from 'app/shell/formatters';
@@ -12,7 +13,6 @@ import {
   DestinyRecordComponent,
   DestinyRecordDefinition,
   DestinyRecordState,
-  DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
@@ -153,11 +153,10 @@ export default function Record({
     objectives &&
     ((!obscured && objectives.length > 1) ||
       (objectives.length === 1 &&
-        !(
-          defs.Objective.get(objectives[0].objectiveHash).valueStyle ===
-            DestinyUnlockValueUIStyle.Checkbox ||
-          (objectives[0].completionValue === 1 &&
-            !defs.Objective.get(objectives[0].objectiveHash).allowOvercompletion)
+        !isBooleanObjective(
+          defs.Objective.get(objectives[0].objectiveHash),
+          objectives[0].progress ?? 0,
+          objectives[0].completionValue
         )));
 
   // TODO: show track badge greyed out / on hover

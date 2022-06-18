@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { DimCrafted } from 'app/inventory/item-types';
-import { percent } from 'app/shell/formatters';
-import React from 'react';
+import { percentWithSingleDecimal } from 'app/shell/formatters';
 
 /**
  * A progress bar that shows weapon crafting info like the game does.
@@ -13,7 +12,7 @@ export function WeaponCraftedInfo({
   craftInfo: DimCrafted;
   className: string;
 }) {
-  const pct = percent(craftInfo.progress || 0);
+  const pct = percentWithSingleDecimal(craftInfo.progress || 0);
   const progressBarStyle = {
     width: pct,
   };
