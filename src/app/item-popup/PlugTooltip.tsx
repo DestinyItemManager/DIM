@@ -134,42 +134,44 @@ export function PlugTooltip({
   const showCommunityDescriptionOnly =
     $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
 
+  const bungieDescription = (
+    <>
+      {perkDescriptions.map((perkDesc) => (
+        <div key={perkDesc.perkHash}>
+          {perkDesc.name && <div>{perkDesc.name}</div>}
+          <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
+        </div>
+      ))}
+    </>
+  );
+  const renderedStats = stats && Object.entries(stats).length > 0 && (
+    <div className="plug-stats">
+      {Object.entries(stats).map(([statHash, value]) => (
+        <StatValue key={statHash} statHash={parseInt(statHash, 10)} value={value} />
+      ))}
+    </div>
+  );
+
   return (
     <>
       <h2>{def.displayProperties.name}</h2>
       {!hidePlugSubtype && def.itemTypeDisplayName && <h3>{def.itemTypeDisplayName}</h3>}
 
-      {perkDescriptions.map((perkDesc) => (
-        <div key={perkDesc.perkHash}>
-          {perkDesc.name && <div>{perkDesc.name}</div>}
-
-          {showBungieDescription ? (
-            <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
-          ) : (
-            showCommunityDescriptionOnly && (
-              <>
-                {sourceString && <div>{sourceString}</div>}
-                <ClarityDescriptions
-                  hash={def.hash}
-                  fallback={<RichDestinyText text={perkDesc.description || perkDesc.requirement} />}
-                  communityOnly={showCommunityDescriptionOnly}
-                />
-              </>
-            )
-          )}
-        </div>
-      ))}
-      {!showCommunityDescriptionOnly && sourceString && <div>{sourceString}</div>}
-      {stats && Object.entries(stats).length > 0 && (
-        <div className="plug-stats">
-          {Object.entries(stats).map(([statHash, value]) => (
-            <StatValue key={statHash} statHash={parseInt(statHash, 10)} value={value} />
-          ))}
-        </div>
+      {showBungieDescription && (
+        <>
+          {bungieDescription}
+          {renderedStats}
+        </>
       )}
-      {showCommunityDescription && !showCommunityDescriptionOnly && (
-        <ClarityDescriptions hash={def.hash} />
+      {showCommunityDescription && (
+        <ClarityDescriptions
+          hash={def.hash}
+          fallback={showCommunityDescriptionOnly && bungieDescription}
+          communityOnly={showCommunityDescriptionOnly}
+        />
       )}
+      {showCommunityDescriptionOnly && renderedStats}
+      {sourceString && <div>{sourceString}</div>}
       {defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
         <div className={styles.objectives}>
           {filteredPlugObjectives.map((objective) => (

@@ -205,7 +205,8 @@ function getIntrinsicArmorPerkDetails(
     description: showBungieDescription && socket.plugged.plugDef.displayProperties.description,
     communityInsight: showCommunityDescription && {
       hash: socket.plugged.plugDef.hash,
-      fallback: !showBungieDescription && socket.plugged.plugDef.displayProperties.description,
+      fallback:
+        showCommunityDescriptionOnly && socket.plugged.plugDef.displayProperties.description,
       communityOnly: showCommunityDescriptionOnly,
     },
   };
