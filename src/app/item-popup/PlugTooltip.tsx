@@ -157,11 +157,7 @@ export function PlugTooltip({
         </>
       )}
       {plugDescriptions.communityInsight && (
-        <ClarityDescriptions
-          hash={plugDescriptions.communityInsight.hash}
-          fallback={plugDescriptions.communityInsight.fallback}
-          communityOnly={plugDescriptions.communityInsight.communityOnly}
-        />
+        <ClarityDescriptions {...plugDescriptions.communityInsight} />
       )}
       {!plugDescriptions.description && renderedStats}
       {sourceString && <div>{sourceString}</div>}
