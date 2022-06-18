@@ -8,22 +8,18 @@
     "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
+    "": "",
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
     "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
     "MissingTitle": "Account Not Found",
-    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account."
   },
   "Activities": {
+    "": "",
     "Activities": "Activities",
-    "Hard": "Hard",
     "Nightfall": "Nightfall Strike",
-    "Normal": "Normal",
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
   "Armory": {
@@ -37,19 +33,14 @@
     "YourItems": "Your Items"
   },
   "Browsercheck": {
-    "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
-    "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work."
+    "": ""
   },
   "Bucket": {
+    "": "",
     "Armor": "Armor",
     "Class": "Subclass",
-    "General": "General",
     "Ghost": "Ghost",
-    "Inventory": "Inventory",
-    "Postmaster": "Postmaster",
-    "Progress": "Progress",
     "Reputation": "Reputation",
-    "Unknown": "Unknown",
     "Vault": "Vault",
     "Weapons": "Weapons"
   },
@@ -96,14 +87,14 @@
     "SoldBy": "Sold by: {{vendorName}}"
   },
   "Cooldown": {
-    "Grenade": "Grenade cooldown: {{cooldown}}",
-    "Melee": "Melee cooldown: {{cooldown}}",
-    "Super": "Super cooldown: {{cooldown}}"
+    "": ""
   },
   "Countdown": {
     "Days": "1 Day",
-    "Days_compact": "{{count}}d",
-    "Days_compact_plural": "{{count}}d",
+    "Days_female": "",
+    "Days_female_plural": "",
+    "Days_male": "",
+    "Days_male_plural": "",
     "Days_plural": "{{count}} Days"
   },
   "Csv": {
@@ -528,8 +519,7 @@
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Processing sets for\n{{character}} ({{remainingTime}}s)",
     "SaveAs": "Save as",
-    "SelectMax": "- Max -",
-    "SelectMin": "- Min -",
+    "Select": "",
     "ShareBuild": "Share Build Settings",
     "ShareBuildTitle": "Loadout Optimizer Settings",
     "ShareBuildWithNotes": "Share With Notes",
@@ -706,6 +696,7 @@
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "CommunityData": "Community Insight",
     "Consolidate": "Consolidate",
+    "CraftingPattern": "Crafting Pattern",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
     "FavoriteUnFavorite": {
@@ -829,6 +820,7 @@
     "PostmasterFull": "The postmaster is full! ({{number}}/{{postmasterSize}})"
   },
   "Progress": {
+    "": "",
     "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
     "Items": "Quest Items",
@@ -935,28 +927,12 @@
     "ApplyPerks": "Apply Perks",
     "GridStyle": "Display perks as a grid",
     "Insert": {
-      "Ability": "Equip Ability",
-      "Aspect": "Insert Aspect",
-      "Fragment": "Insert Fragment",
-      "Mod": "Insert Mod",
-      "Ornament": "Apply Ornament",
-      "Projection": "Apply Ghost Projection",
-      "Shader": "Apply Shader",
-      "Super": "Equip Super",
-      "Transmat": "Apply Transmat Effect"
+      "": ""
     },
     "ListStyle": "Display perks as a list",
     "Search": "Search names or descriptions",
     "Select": {
-      "Ability": "Preview Ability",
-      "Aspect": "Preview Aspect",
-      "Fragment": "Preview Fragment",
-      "Mod": "Preview Mod",
-      "Ornament": "Preview Ornament",
-      "Projection": "Preview Ghost Projection",
-      "Shader": "Preview Shader",
-      "Super": "Preview Super",
-      "Transmat": "Preview Transmat Effect"
+      "": ""
     },
     "SelectWishlistPerks": "Preview Wishlist Perks"
   },
@@ -980,7 +956,8 @@
     "Sunset": "Sunset",
     "Tier": "Tier {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
-    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
+    "TierProgress_female": "",
+    "TierProgress_male": "",
     "Total": "Total"
   },
   "Storage": {
