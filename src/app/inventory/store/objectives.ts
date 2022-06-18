@@ -53,12 +53,27 @@ export function buildObjectives(
   return objectives.filter((o) => o.visible && defs.Objective.get(o.objectiveHash));
 }
 
+export function getValueStyle(
+  objectiveDef: DestinyObjectiveDefinition | D1ObjectiveDefinition | undefined,
+  progress: number,
+  completionValue = 0
+) {
+  return objectiveDef
+    ? (progress < completionValue
+        ? 'inProgressValueStyle' in objectiveDef && objectiveDef.inProgressValueStyle
+        : 'completedValueStyle' in objectiveDef && objectiveDef.completedValueStyle) ??
+        objectiveDef.valueStyle
+    : DestinyUnlockValueUIStyle.Automatic;
+}
+
 export function isBooleanObjective(
   objectiveDef: DestinyObjectiveDefinition | D1ObjectiveDefinition,
+  progress: number | undefined,
   completionValue: number
 ) {
   return (
-    objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Checkbox ||
+    getValueStyle(objectiveDef, progress ?? 0, completionValue) ===
+      DestinyUnlockValueUIStyle.Checkbox ||
     (completionValue === 1 &&
       (!('allowOvercompletion' in objectiveDef) ||
         !objectiveDef.allowOvercompletion ||

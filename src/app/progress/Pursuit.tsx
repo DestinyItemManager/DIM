@@ -9,7 +9,6 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { percent } from 'app/shell/formatters';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { ObjectiveValue } from './Objective';
 import PursuitItem from './PursuitItem';
@@ -44,7 +43,7 @@ export default function Pursuit({
   const isBoolean =
     firstObjective &&
     firstObjectiveDef &&
-    isBooleanObjective(firstObjectiveDef, firstObjective.completionValue);
+    isBooleanObjective(firstObjectiveDef, firstObjective.progress, firstObjective.completionValue);
   const showObjectiveDetail = objectives.length === 1 && !isBoolean;
 
   const showObjectiveProgress = objectives.length > 1 || (objectives.length === 1 && !isBoolean);
