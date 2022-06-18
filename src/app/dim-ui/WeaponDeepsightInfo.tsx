@@ -32,9 +32,10 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
           </div>
         </>
       ) : (
-        Boolean(relevantObjectives?.length) && (
+        relevantObjectives &&
+        relevantObjectives.length > 0 && (
           <div className={styles.deepsightProgressSection}>
-            {relevantObjectives!.map((objective) => (
+            {relevantObjectives.map((objective) => (
               <Objective key={objective.objectiveHash} objective={objective} />
             ))}
           </div>
