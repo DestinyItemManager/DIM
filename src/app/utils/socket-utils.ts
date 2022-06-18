@@ -237,9 +237,8 @@ export function getPerkDescriptions(
 
     const sandboxPerk = defs.SandboxPerk.get(perk.perkHash);
     const perkName = sandboxPerk.displayProperties.name;
-    let perkDescription = sandboxPerk.displayProperties.description || undefined;
-    let perkRequirement = perk.requirementDisplayString || undefined;
 
+    let perkDescription = sandboxPerk.displayProperties.description || undefined;
     if (perkDescription) {
       if (uniqueStrings.has(perkDescription)) {
         perkDescription = undefined;
@@ -247,6 +246,9 @@ export function getPerkDescriptions(
         uniqueStrings.add(perkDescription);
       }
     }
+
+    // Some perks are only active in certain activities (see Garden of Salvation raid mods)
+    let perkRequirement = perk.requirementDisplayString || undefined;
     if (perkRequirement) {
       if (uniqueStrings.has(perkRequirement)) {
         perkRequirement = undefined;
@@ -268,7 +270,7 @@ export function getPerkDescriptions(
   const plugDescription = plug.displayProperties.description || undefined;
   if (plugDescription && !uniqueStrings.has(plugDescription)) {
     // if we already have some displayable perks, this means the description is basically
-    // a "requirements" string like "This mod's perks are only active" etc etc etc
+    // a "requirements" string like "This mod's perks are only active" etc. (see Deep Stone Crypt raid mods)
     results.push(
       results.length > 0
         ? {
@@ -283,7 +285,8 @@ export function getPerkDescriptions(
   }
 
   // a fallback: if we still don't have any perk descriptions, at least keep the first perk for display.
-  // there are mods like this: no desc, and annoyingly all perks are set to ItemPerkVisibility.Hidden
+  // there are mods like this (e.g. Elemental Armaments): no description, and annoyingly all perks are set
+  // to ItemPerkVisibility.Hidden
   if (!results.length && plug.perks.length) {
     const firstPerk = plug.perks[0];
     const sandboxPerk = defs.SandboxPerk.get(firstPerk.perkHash);
