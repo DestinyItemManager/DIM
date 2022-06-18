@@ -195,7 +195,7 @@
     "CurrentClass": "Показывает предметы, которые могут быть экипированы текущим стражем.",
     "CustomStatLower": "Показывает броню, статистики которой строго ниже другого типа брони, учитывая только статистику в общем списке этого класса.",
     "DamageType": "По типу стихии.",
-    "Deepsight": "Показывает оружия с Резонансом Глубинного зрения, которые можно настроить для получения материалов.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials. deepsight:complete and deepsight:incomplete refer to the progress of the deepsight objective, while deepsight:pattern shows items that could be progressed to unlock a pattern.",
     "Description": "Описание",
     "Dupe": "Одинаковые, Включая перевыпуски разных сезонов",
     "DupeCount": "Предметы, которые имеют указанное количество дубликатов.",
@@ -246,7 +246,7 @@
     "Notes": "По тексту Заметок",
     "Ornament": "Показывает вещи с орнаментами и фильтрами их статуса.",
     "PartialMatch": "Показывает предметы, в которых их название, описание, перки или любые моды частично совпадают с текстом фильтра. Ищите целые фразы, используя кавычки. Фильтр \"perk:\" будет искать только перки.",
-    "PatternUnlocked": "Shows items that have a crafting pattern unlocked, even if the item itself isn't crafted.",
+    "PatternUnlocked": "Показывает предметы, чей образ уже разблокирован, даже если сам предмет не был изготовлен.",
     "Perk": "Показывает предметы, в которых один из их перков или модов частично совпадает с текстом фильтра в их названии или описании. Ищите фразы целиком, используя кавычки.",
     "PerkName": "Показывает предметы, в которых один из их перков или модов частично соответствует тексту фильтра только в их названии. Ищите фразы целиком, используя кавычки.",
     "PinnacleReward": "Испытания со Сверхмощными наградами.",
@@ -367,7 +367,7 @@
     "TransferItems": "Перенести"
   },
   "Inventory": {
-    "ClickToExpand": "(Click to expand)"
+    "ClickToExpand": "(Нажмите, чтобы развернуть)"
   },
   "ItemFeed": {
     "Description": "Лента предметов",
@@ -704,7 +704,9 @@
     "All": "Все",
     "CannotCurrentlyRoll": "Этот перк не доступен в текущей версии этого предмета.",
     "CantPullFromPostmaster": "Для получения этого предмета требуется отправиться на Башню.",
+    "CommunityData": "Community Insight",
     "Consolidate": "Собрать все",
+    "CraftingPattern": "Crafting Pattern",
     "DistributeEvenly": "Распределить равномерно",
     "Equip": "Надеть",
     "FavoriteUnFavorite": {
@@ -815,7 +817,7 @@
     "ShiftTip": "Совет: [Shift]+[ЛКМ] по значению (любому, кроме Значка) в полученном результате отфильтрует по нему выборку.",
     "Stats": {
       "Aim": "Помощь в прицеливании",
-      "Airborne": "Airborne",
+      "Airborne": "Эффективность в воздухе",
       "Power": "Сила",
       "RPM": "Выстрелов в минуту",
       "Recoil": "Отдача",
@@ -868,12 +870,16 @@
   "Settings": {
     "BadgePostmaster": "Показать количество предметов в почтмейстере для текущего персонажа на значке приложения",
     "BadgePostmasterExplanation": "Для этого необходимо установить DIM в качестве приложения, и ваша система должна поддерживать отображение значков",
+    "BothDescriptions": "Оба описания",
+    "BungieDescriptionOnly": "Описания от Bungie",
     "CharacterOrder": "Сортировать персонажей по",
     "CharacterOrderFixed": "Возраст персонажа (может глючить на ПК)",
     "CharacterOrderRecent": "активность",
     "CharacterOrderReversed": "активность (реверс)",
     "ColumnSize": "{{num}} предметов",
     "ColumnSizeAuto": "Авто",
+    "CommunityData": "Community Perk Insights",
+    "CommunityDescriptionOnly": "Описания от сообщества",
     "CsvImport": "Импорт CSV",
     "CustomStatDesc": "Укажите какие Характеристики суммируются при подсчёте Своей Суммы для каждого класса. Своя Сумма доступна во всплывающей подсказке, Органайзере и Сравнении. Чтобы найти все предметы со Своей Суммой больше или равной тридцати наберите \"stat:custom:>=30\" в панели поиска.",
     "Data": "Таблицы",
@@ -1050,12 +1056,14 @@
     "Engram": "Наградные энграммы",
     "FilterToUnacquired": "Отсутствующие в Коллекции",
     "NoItems": "Этот вендор в настоящее время не предлагает никаких предметов.",
+    "RefreshTime": "Inventory refreshes in:",
     "Vendors": "Вендоры"
   },
   "Views": {
     "About": {
       "APIHistory": "История API действий аккаунта bungie.net (Все совершенные через DIM и другие веб-приложения)",
       "BungieCopyright": "Изображения и содержимое являются собственностью Bungie.",
+      "CommunityInsight": "Community Perk Insights courtesy of {{clarityLink}} and {{compendiumLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
       "Discord": "Discord",
       "DiscordHelp": "Задавайте вопросы, пишите отзывы и получайте помощь в каналах нашего Discord.",
       "FAQ": "Часто Задаваемые Вопросы (FAQ)",
