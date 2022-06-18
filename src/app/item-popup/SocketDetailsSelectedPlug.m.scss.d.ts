@@ -10,6 +10,7 @@ interface CssExports {
   'modIcon': string;
   'modStats': string;
   'selectedPlug': string;
+  'source': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

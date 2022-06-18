@@ -15,6 +15,7 @@ import { interpolateStatValue } from 'app/inventory/store/stats';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
+import { Settings } from 'app/settings/initial-settings';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -103,7 +104,6 @@ export default function SocketDetailsSelectedPlug({
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const destiny2CoreSettings = useSelector(destiny2CoreSettingsSelector)!;
-  const perkDescriptions = getPerkDescriptions(plug, defs);
 
   const materialRequirementSet =
     (plug.plug.insertionMaterialRequirementHash &&
@@ -210,12 +210,7 @@ export default function SocketDetailsSelectedPlug({
   });
 
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-  const showBungieDescription =
-    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
-  const showCommunityDescription =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
-  const showCommunityDescriptionOnly =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
+  const plugDescriptions = buildPlugDescriptions(plug, defs, descriptionsToDisplay);
 
   return (
     <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
@@ -230,11 +225,7 @@ export default function SocketDetailsSelectedPlug({
             <> &mdash; {plug.itemTypeDisplayName}</>
           )}
         </h3>
-        {showBungieDescription &&
-          perkDescriptions.map((perkDesc) => (
-            <div key={perkDesc.perkHash}>{perkDesc.description || perkDesc.requirement}</div>
-          ))}
-        {sourceString && <div>{sourceString}</div>}
+        {plugDescriptions.description}
       </div>
 
       {stats.length > 0 && (
@@ -250,18 +241,11 @@ export default function SocketDetailsSelectedPlug({
         <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
       )}
 
-      {showCommunityDescription && (
-        <ClarityDescriptions
-          hash={plug.hash}
-          fallback={
-            !showBungieDescription &&
-            perkDescriptions.map((perkDesc) => (
-              <div key={perkDesc.perkHash}>{perkDesc.description || perkDesc.requirement}</div>
-            ))
-          }
-          communityOnly={showCommunityDescriptionOnly}
-        />
+      {plugDescriptions.communityInsight && (
+        <ClarityDescriptions {...plugDescriptions.communityInsight} />
       )}
+
+      {sourceString && <div className={styles.source}>{sourceString}</div>}
 
       {(canDoAWA || onPlugSelected) && (
         <motion.button
@@ -284,4 +268,35 @@ export default function SocketDetailsSelectedPlug({
       )}
     </div>
   );
+}
+
+function buildPlugDescriptions(
+  plugDef: PluggableInventoryItemDefinition,
+  defs: D2ManifestDefinitions,
+  descriptionsToDisplay: Settings['descriptionsToDisplay']
+) {
+  const perkDescriptions = getPerkDescriptions(plugDef, defs);
+  const bungieDescription = (
+    <>
+      {perkDescriptions.map((perkDesc) => (
+        <div key={perkDesc.perkHash}>{perkDesc.description || perkDesc.requirement}</div>
+      ))}
+    </>
+  );
+
+  const showBungieDescription =
+    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
+  const showCommunityDescription =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
+  const showCommunityDescriptionOnly =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
+
+  return {
+    description: showBungieDescription && bungieDescription,
+    communityInsight: showCommunityDescription && {
+      hash: plugDef.hash,
+      fallback: showCommunityDescriptionOnly && bungieDescription,
+      communityOnly: showCommunityDescriptionOnly,
+    },
+  };
 }
