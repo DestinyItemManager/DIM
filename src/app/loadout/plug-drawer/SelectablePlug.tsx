@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -6,7 +7,7 @@ import { StatValue } from 'app/item-popup/PlugTooltip';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getPerkDescriptions } from 'app/utils/socket-utils';
 import clsx from 'clsx';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import styles from './SelectablePlug.m.scss';
 
 /**
@@ -69,12 +70,10 @@ function SelectablePlugDetails({
   displayedStatHashes?: number[];
 }) {
   const defs = useD2Definitions()!;
-
+  const plugDescriptions = buildPlugDescriptions(plug, defs);
   const displayedStats = plug.investmentStats.filter((stat) =>
     displayedStatHashes?.includes(stat.statTypeHash)
   );
-  const perkDescriptions = getPerkDescriptions(plug, defs);
-
   return (
     <>
       <div className={clsx('item', styles.iconContainer)} title={plug.displayProperties.name}>
@@ -82,14 +81,7 @@ function SelectablePlugDetails({
       </div>
       <div className={styles.plugInfo}>
         <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
-        {perkDescriptions.map((perkDesc) => (
-          <div className={styles.partialDescription} key={perkDesc.perkHash}>
-            {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
-            {perkDesc.requirement && (
-              <div className={styles.requirement}>{perkDesc.requirement}</div>
-            )}{' '}
-          </div>
-        ))}
+        {plugDescriptions.description}
         {displayedStats.length > 0 && (
           <div className="plug-stats">
             {displayedStats.map((stat) => (
@@ -100,4 +92,25 @@ function SelectablePlugDetails({
       </div>
     </>
   );
+}
+
+function buildPlugDescriptions(
+  plugDef: PluggableInventoryItemDefinition,
+  defs: D2ManifestDefinitions
+) {
+  const perkDescriptions = getPerkDescriptions(plugDef, defs);
+  return {
+    description: (
+      <>
+        {perkDescriptions.map((perkDesc) => (
+          <div className={styles.partialDescription} key={perkDesc.perkHash}>
+            {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
+            {perkDesc.requirement && (
+              <div className={styles.requirement}>{perkDesc.requirement}</div>
+            )}{' '}
+          </div>
+        ))}
+      </>
+    ),
+  };
 }
