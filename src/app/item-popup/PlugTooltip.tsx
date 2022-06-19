@@ -1,4 +1,4 @@
-import { ClarityDescriptions } from 'app/clarity/descriptions/ClarityDescriptions';
+import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import { CommunityInsight, useCommunityInsight } from 'app/clarity/hooks';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';

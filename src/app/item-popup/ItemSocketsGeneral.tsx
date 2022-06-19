@@ -1,4 +1,4 @@
-import { ClarityDescriptions } from 'app/clarity/descriptions/ClarityDescriptions';
+import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import { useCommunityInsight } from 'app/clarity/hooks';
 import { settingSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
