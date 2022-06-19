@@ -1,4 +1,5 @@
-import { ClarityDescriptionsOld } from 'app/clarity/descriptions/ClarityDescriptions';
+import { ClarityDescriptions } from 'app/clarity/descriptions/ClarityDescriptions';
+import { CommunityInsight, useCommunityInsight } from 'app/clarity/hooks';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -210,7 +211,13 @@ export default function SocketDetailsSelectedPlug({
   });
 
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-  const plugDescriptions = buildPlugDescriptions(plug, defs, descriptionsToDisplay);
+  const communityInsight = useCommunityInsight(plug.hash);
+  const plugDescriptions = buildPlugDescriptions(
+    plug,
+    defs,
+    descriptionsToDisplay,
+    communityInsight
+  );
 
   return (
     <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
@@ -241,16 +248,18 @@ export default function SocketDetailsSelectedPlug({
         <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
       )}
 
-      {plugDescriptions.communityInsight && (
-        <ClarityDescriptionsOld
-          hash={plugDescriptions.communityInsight.hash}
-          fallback={plugDescriptions.communityInsight.fallback}
-          className={clsx(styles.modClarityDescription, {
-            [styles.modClarityDescriptionCommunityOnly]:
-              plugDescriptions.communityInsight.communityOnly,
-          })}
-        />
-      )}
+      {plugDescriptions.communityInsight &&
+        (plugDescriptions.communityInsight.description ? (
+          <ClarityDescriptions
+            communityInsight={plugDescriptions.communityInsight.description}
+            className={clsx(styles.modClarityDescription, {
+              [styles.modClarityDescriptionCommunityOnly]:
+                plugDescriptions.communityInsight.communityOnly,
+            })}
+          />
+        ) : (
+          plugDescriptions.communityInsight.fallback
+        ))}
 
       {sourceString && <div className={styles.source}>{sourceString}</div>}
 
@@ -280,7 +289,8 @@ export default function SocketDetailsSelectedPlug({
 function buildPlugDescriptions(
   plugDef: PluggableInventoryItemDefinition,
   defs: D2ManifestDefinitions,
-  descriptionsToDisplay: Settings['descriptionsToDisplay']
+  descriptionsToDisplay: Settings['descriptionsToDisplay'],
+  communityInsight: CommunityInsight | undefined
 ) {
   const perkDescriptions = getPerkDescriptions(plugDef, defs);
   const bungieDescription = (
@@ -301,7 +311,7 @@ function buildPlugDescriptions(
   return {
     description: showBungieDescription && bungieDescription,
     communityInsight: showCommunityDescription && {
-      hash: plugDef.hash,
+      description: communityInsight,
       fallback: showCommunityDescriptionOnly && bungieDescription,
       communityOnly: showCommunityDescriptionOnly,
     },
