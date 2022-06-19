@@ -1,4 +1,4 @@
-import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
+import { ClarityDescriptionsOld } from 'app/clarity/descriptions/ClarityDescriptions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -242,7 +242,7 @@ export default function SocketDetailsSelectedPlug({
       )}
 
       {plugDescriptions.communityInsight && (
-        <ClarityDescriptions
+        <ClarityDescriptionsOld
           hash={plugDescriptions.communityInsight.hash}
           fallback={plugDescriptions.communityInsight.fallback}
           className={clsx(styles.modClarityDescription, {

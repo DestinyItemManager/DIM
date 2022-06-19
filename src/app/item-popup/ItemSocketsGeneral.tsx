@@ -1,4 +1,5 @@
-import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
+import { ClarityDescriptions } from 'app/clarity/descriptions/ClarityDescriptions';
+import { useCommunityInsight } from 'app/clarity/hooks';
 import { settingSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -11,7 +12,6 @@ import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
-import { Settings } from '../settings/initial-settings';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import EmoteSockets from './EmoteSockets';
@@ -31,7 +31,6 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
-  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
 
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
     if (hasMenu) {
@@ -78,42 +77,15 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
     });
   }
 
-  const intrinsicArmorPerk = getIntrinsicArmorPerkDetails(
-    intrinsicArmorPerkSocket,
-    descriptionsToDisplay
-  );
   return (
     <>
-      {intrinsicArmorPerk && (
-        <ArchetypeRow minimal={minimal}>
-          <ArchetypeSocket
-            archetypeSocket={intrinsicArmorPerk.socket}
-            item={item}
-            onClick={handleSocketClick}
-          >
-            {!minimal && (
-              <div className={styles.armorIntrinsicDescription}>
-                {intrinsicArmorPerk.description && (
-                  <RichDestinyText text={intrinsicArmorPerk.description} />
-                )}
-                {intrinsicArmorPerk.communityInsight && (
-                  <ClarityDescriptions
-                    hash={intrinsicArmorPerk.communityInsight.hash}
-                    fallback={
-                      intrinsicArmorPerk.communityInsight.fallback && (
-                        <RichDestinyText text={intrinsicArmorPerk.communityInsight.fallback} />
-                      )
-                    }
-                    className={clsx(styles.clarityDescription, {
-                      [styles.clarityDescriptionCommunityOnly]:
-                        intrinsicArmorPerk.communityInsight.communityOnly,
-                    })}
-                  />
-                )}
-              </div>
-            )}
-          </ArchetypeSocket>
-        </ArchetypeRow>
+      {intrinsicArmorPerkSocket && (
+        <IntrinsicArmorPerk
+          item={item}
+          socket={intrinsicArmorPerkSocket}
+          minimal={minimal}
+          handleSocketClick={handleSocketClick}
+        />
       )}
       <div className={clsx('sockets', styles.generalSockets, { [styles.minimalSockets]: minimal })}>
         {emoteWheelCategory && (
@@ -137,7 +109,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
             <div className="item-sockets">
               {getSocketsByIndexes(item.sockets!, category.socketIndexes).map(
                 (socketInfo) =>
-                  socketInfo.socketIndex !== intrinsicArmorPerk?.socket.socketIndex &&
+                  socketInfo.socketIndex !== intrinsicArmorPerkSocket?.socketIndex &&
                   socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                     <Socket
                       key={socketInfo.socketIndex}
@@ -168,6 +140,68 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
   );
 }
 
+function IntrinsicArmorPerk({
+  item,
+  socket,
+  minimal,
+  handleSocketClick,
+}: {
+  item: DimItem;
+  socket: DimSocket;
+  minimal?: boolean;
+  handleSocketClick: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
+}) {
+  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
+  const communityInsight = useCommunityInsight(socket.plugged?.plugDef.hash);
+
+  if (!socket?.plugged) {
+    return null;
+  }
+
+  const showBungieDescription =
+    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
+  const showCommunityDescription =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
+  const showCommunityDescriptionOnly =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
+
+  const intrinsicArmorPerk = {
+    description: showBungieDescription && socket.plugged.plugDef.displayProperties.description,
+    communityInsight: showCommunityDescription && {
+      description: communityInsight,
+      fallback:
+        showCommunityDescriptionOnly && socket.plugged.plugDef.displayProperties.description,
+    },
+  };
+
+  return (
+    <ArchetypeRow minimal={minimal}>
+      <ArchetypeSocket archetypeSocket={socket} item={item} onClick={handleSocketClick}>
+        {!minimal && (
+          <div className={styles.armorIntrinsicDescription}>
+            {intrinsicArmorPerk.description && (
+              <RichDestinyText text={intrinsicArmorPerk.description} />
+            )}
+            {intrinsicArmorPerk.communityInsight &&
+              (intrinsicArmorPerk.communityInsight.description ? (
+                <ClarityDescriptions
+                  communityInsight={intrinsicArmorPerk.communityInsight.description}
+                  className={clsx(styles.clarityDescription, {
+                    [styles.clarityDescriptionCommunityOnly]: showCommunityDescriptionOnly,
+                  })}
+                />
+              ) : (
+                intrinsicArmorPerk.communityInsight.fallback && (
+                  <RichDestinyText text={intrinsicArmorPerk.communityInsight.fallback} />
+                )
+              ))}
+          </div>
+        )}
+      </ArchetypeSocket>
+    </ArchetypeRow>
+  );
+}
+
 /** converts a socket category to a valid css class name */
 function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
   switch (categoryStyle) {
@@ -186,31 +220,4 @@ function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
     default:
       return null;
   }
-}
-
-function getIntrinsicArmorPerkDetails(
-  socket: DimSocket | undefined,
-  descriptionsToDisplay: Settings['descriptionsToDisplay']
-) {
-  if (!socket?.plugged) {
-    return;
-  }
-
-  const showBungieDescription =
-    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
-  const showCommunityDescription =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
-  const showCommunityDescriptionOnly =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
-
-  return {
-    socket: socket,
-    description: showBungieDescription && socket.plugged.plugDef.displayProperties.description,
-    communityInsight: showCommunityDescription && {
-      hash: socket.plugged.plugDef.hash,
-      fallback:
-        showCommunityDescriptionOnly && socket.plugged.plugDef.displayProperties.description,
-      communityOnly: showCommunityDescriptionOnly,
-    },
-  };
 }
