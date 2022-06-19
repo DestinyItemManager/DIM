@@ -35,13 +35,12 @@ export default function ClarityDescriptions({
   communityOnly?: boolean;
 }) {
   const descriptions = useSelector(descriptionsSelector);
-  const lines = descriptions?.[hash]?.simpleDescription;
-  const statOnly = descriptions?.[hash]?.statOnly;
-  if (!lines || statOnly) {
+  const perk = descriptions?.[hash];
+  if (!perk || perk.statOnly || !perk.simpleDescription) {
     return <>{fallback ?? null}</>;
   }
 
-  const convertedDescription = lines?.map((line, i) => (
+  const convertedDescription = perk.simpleDescription.map((line, i) => (
     <div className={joinClassNames(line.className)} key={i}>
       {line.lineText?.map((linesContent, i) => (
         <span className={joinClassNames(linesContent.className)} title={linesContent.title} key={i}>
