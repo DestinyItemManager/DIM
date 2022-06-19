@@ -166,12 +166,10 @@ function IntrinsicArmorPerk({
     $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
 
   const intrinsicArmorPerk = {
-    description: showBungieDescription && socket.plugged.plugDef.displayProperties.description,
-    communityInsight: showCommunityDescription && {
-      description: communityInsight,
-      fallback:
-        showCommunityDescriptionOnly && socket.plugged.plugDef.displayProperties.description,
-    },
+    description:
+      (showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)) &&
+      socket.plugged.plugDef.displayProperties.description,
+    communityInsight: showCommunityDescription && communityInsight,
   };
 
   return (
@@ -182,19 +180,14 @@ function IntrinsicArmorPerk({
             {intrinsicArmorPerk.description && (
               <RichDestinyText text={intrinsicArmorPerk.description} />
             )}
-            {intrinsicArmorPerk.communityInsight &&
-              (intrinsicArmorPerk.communityInsight.description ? (
-                <ClarityDescriptions
-                  communityInsight={intrinsicArmorPerk.communityInsight.description}
-                  className={clsx(styles.clarityDescription, {
-                    [styles.clarityDescriptionCommunityOnly]: showCommunityDescriptionOnly,
-                  })}
-                />
-              ) : (
-                intrinsicArmorPerk.communityInsight.fallback && (
-                  <RichDestinyText text={intrinsicArmorPerk.communityInsight.fallback} />
-                )
-              ))}
+            {intrinsicArmorPerk.communityInsight && (
+              <ClarityDescriptions
+                communityInsight={intrinsicArmorPerk.communityInsight}
+                className={clsx(styles.clarityDescription, {
+                  [styles.clarityDescriptionCommunityOnly]: showCommunityDescriptionOnly,
+                })}
+              />
+            )}
           </div>
         )}
       </ArchetypeSocket>
