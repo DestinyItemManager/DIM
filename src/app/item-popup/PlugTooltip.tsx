@@ -1,4 +1,5 @@
-import { ClarityDescriptionsOld } from 'app/clarity/descriptions/ClarityDescriptions';
+import { ClarityDescriptions } from 'app/clarity/descriptions/ClarityDescriptions';
+import { CommunityInsight, useCommunityInsight } from 'app/clarity/hooks';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -121,6 +122,7 @@ export function PlugTooltip({
 }) {
   const defs = useD2Definitions();
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
+  const communityInsight = useCommunityInsight(def.hash);
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
 
@@ -129,7 +131,12 @@ export function PlugTooltip({
     (o) => !resonantElementObjectiveHashes.includes(o.objectiveHash)
   );
 
-  const plugDescriptions = buildPlugDescriptions(def, defs, descriptionsToDisplay);
+  const plugDescriptions = buildPlugDescriptions(
+    def,
+    defs,
+    descriptionsToDisplay,
+    communityInsight
+  );
   const renderedStats = stats && Object.entries(stats).length > 0 && (
     <div className="plug-stats">
       {Object.entries(stats).map(([statHash, value]) => (
@@ -157,16 +164,18 @@ export function PlugTooltip({
           {renderedStats}
         </>
       )}
-      {plugDescriptions.communityInsight && (
-        <ClarityDescriptionsOld
-          hash={plugDescriptions.communityInsight.hash}
-          fallback={plugDescriptions.communityInsight.fallback}
-          className={clsx(styles.clarityDescription, {
-            [styles.clarityDescriptionCommunityOnly]:
-              plugDescriptions.communityInsight.communityOnly,
-          })}
-        />
-      )}
+      {plugDescriptions.communityInsight &&
+        (plugDescriptions.communityInsight.description ? (
+          <ClarityDescriptions
+            communityInsight={plugDescriptions.communityInsight.description}
+            className={clsx(styles.clarityDescription, {
+              [styles.clarityDescriptionCommunityOnly]:
+                plugDescriptions.communityInsight.communityOnly,
+            })}
+          />
+        ) : (
+          plugDescriptions.communityInsight.fallback
+        ))}
       {!plugDescriptions.description && renderedStats}
       {sourceString && <div>{sourceString}</div>}
       {defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
@@ -215,7 +224,8 @@ export function PlugTooltip({
 function buildPlugDescriptions(
   plugDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions | undefined,
-  descriptionsToDisplay: Settings['descriptionsToDisplay']
+  descriptionsToDisplay: Settings['descriptionsToDisplay'],
+  communityInsight: CommunityInsight | undefined
 ) {
   const perkDescriptions = (defs && getPerkDescriptions(plugDef, defs)) || [];
   const bungieDescription = (
@@ -239,7 +249,7 @@ function buildPlugDescriptions(
   return {
     description: showBungieDescription && bungieDescription,
     communityInsight: showCommunityDescription && {
-      hash: plugDef.hash,
+      description: communityInsight,
       fallback: showCommunityDescriptionOnly && bungieDescription,
       communityOnly: showCommunityDescriptionOnly,
     },
