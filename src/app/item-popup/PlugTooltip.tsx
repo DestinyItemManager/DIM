@@ -137,6 +137,14 @@ export function PlugTooltip({
     descriptionsToDisplay,
     communityInsight
   );
+  const clarityDescription = plugDescriptions.communityInsight && (
+    <ClarityDescriptions
+      communityInsight={plugDescriptions.communityInsight.description}
+      className={clsx(styles.clarityDescription, {
+        [styles.clarityDescriptionCommunityOnly]: plugDescriptions.communityInsight.communityOnly,
+      })}
+    />
+  );
   const renderedStats = stats && Object.entries(stats).length > 0 && (
     <div className="plug-stats">
       {Object.entries(stats).map(([statHash, value]) => (
@@ -154,29 +162,11 @@ export function PlugTooltip({
         If we're displaying the Bungie description, display the stats between the Bungie description and
         community description. If we're not displaying the Bungie description, display the stats after the
         community insight.
-
-        This ensures that the stats are always shown after a description, even if ClarityDescriptions needs
-        to fall back to the Bungie description.
       */}
-      {plugDescriptions.description && (
-        <>
-          {plugDescriptions.description}
-          {renderedStats}
-        </>
-      )}
-      {plugDescriptions.communityInsight &&
-        (plugDescriptions.communityInsight.description ? (
-          <ClarityDescriptions
-            communityInsight={plugDescriptions.communityInsight.description}
-            className={clsx(styles.clarityDescription, {
-              [styles.clarityDescriptionCommunityOnly]:
-                plugDescriptions.communityInsight.communityOnly,
-            })}
-          />
-        ) : (
-          plugDescriptions.communityInsight.fallback
-        ))}
-      {!plugDescriptions.description && renderedStats}
+      {plugDescriptions.description || clarityDescription}
+      {renderedStats}
+      {plugDescriptions.description && clarityDescription}
+
       {sourceString && <div>{sourceString}</div>}
       {defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
         <div className={styles.objectives}>
@@ -228,16 +218,6 @@ function buildPlugDescriptions(
   communityInsight: CommunityInsight | undefined
 ) {
   const perkDescriptions = (defs && getPerkDescriptions(plugDef, defs)) || [];
-  const bungieDescription = (
-    <>
-      {perkDescriptions.map((perkDesc) => (
-        <div key={perkDesc.perkHash}>
-          {perkDesc.name && <div>{perkDesc.name}</div>}
-          <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
-        </div>
-      ))}
-    </>
-  );
 
   const showBungieDescription =
     !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
@@ -247,12 +227,21 @@ function buildPlugDescriptions(
     $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
 
   return {
-    description: showBungieDescription && bungieDescription,
-    communityInsight: showCommunityDescription && {
-      description: communityInsight,
-      fallback: showCommunityDescriptionOnly && bungieDescription,
-      communityOnly: showCommunityDescriptionOnly,
-    },
+    description: (showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)) && (
+      <>
+        {perkDescriptions.map((perkDesc) => (
+          <div key={perkDesc.perkHash}>
+            {perkDesc.name && <div>{perkDesc.name}</div>}
+            <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
+          </div>
+        ))}
+      </>
+    ),
+    communityInsight: showCommunityDescription &&
+      communityInsight && {
+        description: communityInsight,
+        communityOnly: showCommunityDescriptionOnly,
+      },
   };
 }
 
