@@ -104,7 +104,10 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
                         <RichDestinyText text={intrinsicArmorPerk.communityInsight.fallback} />
                       )
                     }
-                    communityOnly={intrinsicArmorPerk.communityInsight.communityOnly}
+                    className={clsx(styles.clarityDescription, {
+                      [styles.clarityDescriptionCommunityOnly]:
+                        intrinsicArmorPerk.communityInsight.communityOnly,
+                    })}
                   />
                 )}
               </div>

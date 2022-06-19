@@ -28,11 +28,11 @@ const joinClassNames = (classNames?: string) =>
 export default function ClarityDescriptions({
   hash,
   fallback,
-  communityOnly,
+  className,
 }: {
   hash: number;
   fallback?: React.ReactNode;
-  communityOnly?: boolean;
+  className?: string;
 }) {
   const descriptions = useSelector(descriptionsSelector);
   const perk = descriptions?.[hash];
@@ -51,7 +51,7 @@ export default function ClarityDescriptions({
   ));
 
   return (
-    <div className={clsx(styles.communityDescription, communityOnly && styles.communityOnly)}>
+    <div className={clsx(styles.communityDescription, className)}>
       <h3>{t('MovePopup.CommunityData')}</h3>
       {convertedDescription}
     </div>

@@ -55,6 +55,14 @@
   }
 }
 
+.modClarityDescription {
+  grid-area: clarityDesc;
+  margin-top: 1em;
+}
+.modClarityDescriptionCommunityOnly {
+  margin-top: 2px;
+}
+
 .modStats {
   grid-area: modstat;
 }

@@ -242,7 +242,14 @@ export default function SocketDetailsSelectedPlug({
       )}
 
       {plugDescriptions.communityInsight && (
-        <ClarityDescriptions {...plugDescriptions.communityInsight} />
+        <ClarityDescriptions
+          hash={plugDescriptions.communityInsight.hash}
+          fallback={plugDescriptions.communityInsight.fallback}
+          className={clsx(styles.modClarityDescription, {
+            [styles.modClarityDescriptionCommunityOnly]:
+              plugDescriptions.communityInsight.communityOnly,
+          })}
+        />
       )}
 
       {sourceString && <div className={styles.source}>{sourceString}</div>}
