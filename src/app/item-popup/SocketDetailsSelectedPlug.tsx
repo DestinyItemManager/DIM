@@ -248,18 +248,15 @@ export default function SocketDetailsSelectedPlug({
         <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
       )}
 
-      {plugDescriptions.communityInsight &&
-        (plugDescriptions.communityInsight.description ? (
-          <ClarityDescriptions
-            communityInsight={plugDescriptions.communityInsight.description}
-            className={clsx(styles.modClarityDescription, {
-              [styles.modClarityDescriptionCommunityOnly]:
-                plugDescriptions.communityInsight.communityOnly,
-            })}
-          />
-        ) : (
-          plugDescriptions.communityInsight.fallback
-        ))}
+      {plugDescriptions.communityInsight && (
+        <ClarityDescriptions
+          communityInsight={plugDescriptions.communityInsight.description}
+          className={clsx(styles.modClarityDescription, {
+            [styles.modClarityDescriptionCommunityOnly]:
+              plugDescriptions.communityInsight.communityOnly,
+          })}
+        />
+      )}
 
       {sourceString && <div className={styles.source}>{sourceString}</div>}
 
@@ -293,13 +290,6 @@ function buildPlugDescriptions(
   communityInsight: CommunityInsight | undefined
 ) {
   const perkDescriptions = getPerkDescriptions(plugDef, defs);
-  const bungieDescription = (
-    <>
-      {perkDescriptions.map((perkDesc) => (
-        <div key={perkDesc.perkHash}>{perkDesc.description || perkDesc.requirement}</div>
-      ))}
-    </>
-  );
 
   const showBungieDescription =
     !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
@@ -309,11 +299,17 @@ function buildPlugDescriptions(
     $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
 
   return {
-    description: showBungieDescription && bungieDescription,
-    communityInsight: showCommunityDescription && {
-      description: communityInsight,
-      fallback: showCommunityDescriptionOnly && bungieDescription,
-      communityOnly: showCommunityDescriptionOnly,
-    },
+    description: (showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)) && (
+      <>
+        {perkDescriptions.map((perkDesc) => (
+          <div key={perkDesc.perkHash}>{perkDesc.description || perkDesc.requirement}</div>
+        ))}
+      </>
+    ),
+    communityInsight: showCommunityDescription &&
+      communityInsight && {
+        description: communityInsight,
+        communityOnly: showCommunityDescriptionOnly,
+      },
   };
 }
