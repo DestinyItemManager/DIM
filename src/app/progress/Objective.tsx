@@ -2,12 +2,13 @@ import { D1ObjectiveDefinition, D1ObjectiveProgress } from 'app/destiny1/d1-mani
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import {
+  getValueStyle,
   isBooleanObjective,
   isFlawlessObjective,
   isRoundsWonObjective,
 } from 'app/inventory/store/objectives';
 import { useDefinitions } from 'app/manifest/selectors';
-import { percent } from 'app/shell/formatters';
+import { percent, percentWithSingleDecimal } from 'app/shell/formatters';
 import { timerDurationFromMs } from 'app/utils/time';
 import {
   DestinyObjectiveDefinition,
@@ -15,7 +16,6 @@ import {
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React from 'react';
 import '../item-popup/ItemObjectives.scss';
 import ObjectiveDescription from './ObjectiveDescription';
 
@@ -59,7 +59,8 @@ export default function Objective({
       objectiveDef.progressDescription) ||
     (complete ? t('Objectives.Complete') : t('Objectives.Incomplete'));
 
-  if (objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Integer) {
+  const valueStyle = getValueStyle(objectiveDef, progress, completionValue);
+  if (valueStyle === DestinyUnlockValueUIStyle.Integer) {
     return (
       <div className="objective-row">
         <div className="objective-integer">
@@ -73,7 +74,7 @@ export default function Objective({
     );
   }
 
-  const isBoolean = isBooleanObjective(objectiveDef, completionValue);
+  const isBoolean = isBooleanObjective(objectiveDef, progress, completionValue);
   const showAsCounter = isTrialsPassage && isRoundsWonObjective(objective.objectiveHash);
   const passageFlawed =
     isTrialsPassage && isFlawlessObjective(objective.objectiveHash) && !complete;
@@ -122,12 +123,7 @@ export function ObjectiveValue({
   progress: number;
   completionValue?: number;
 }) {
-  const valueStyle = objectiveDef
-    ? (progress < completionValue
-        ? 'inProgressValueStyle' in objectiveDef && objectiveDef.inProgressValueStyle
-        : 'completedValueStyle' in objectiveDef && objectiveDef.completedValueStyle) ??
-      objectiveDef.valueStyle
-    : DestinyUnlockValueUIStyle.Automatic;
+  const valueStyle = getValueStyle(objectiveDef, progress, completionValue);
 
   // TODO: pips
 
@@ -137,6 +133,8 @@ export function ObjectiveValue({
     case DestinyUnlockValueUIStyle.Percentage:
       if (completionValue === 100) {
         return <>{percent(progress / completionValue)}</>;
+      } else if (completionValue === 1000) {
+        return <>{percentWithSingleDecimal(progress / completionValue)}</>;
       }
       break;
     case DestinyUnlockValueUIStyle.ExplicitPercentage:
@@ -150,6 +148,7 @@ export function ObjectiveValue({
     case DestinyUnlockValueUIStyle.TimeDuration:
       return <>{timerDurationFromMs(progress)}</>;
     case DestinyUnlockValueUIStyle.Checkbox:
+    case DestinyUnlockValueUIStyle.Hidden:
       return null;
     default:
       break;
