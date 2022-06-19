@@ -3,7 +3,6 @@
 interface CssExports {
   'armorIntrinsicDescription': string;
   'clarityDescription': string;
-  'clarityDescriptionCommunityOnly': string;
   'generalSockets': string;
   'minimalSockets': string;
 }

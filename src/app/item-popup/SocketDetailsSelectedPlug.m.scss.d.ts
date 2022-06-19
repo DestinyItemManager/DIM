@@ -7,7 +7,6 @@ interface CssExports {
   'itemStats': string;
   'material': string;
   'modClarityDescription': string;
-  'modClarityDescriptionCommunityOnly': string;
   'modDescription': string;
   'modIcon': string;
   'modStats': string;

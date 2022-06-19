@@ -19,7 +19,6 @@ import {
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
 } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { DimItem, DimPlug } from '../inventory/item-types';
@@ -140,9 +139,7 @@ export function PlugTooltip({
   const clarityDescription = plugDescriptions.communityInsight && (
     <ClarityDescriptions
       communityInsight={plugDescriptions.communityInsight.description}
-      className={clsx(styles.clarityDescription, {
-        [styles.clarityDescriptionCommunityOnly]: plugDescriptions.communityInsight.communityOnly,
-      })}
+      className={styles.clarityDescription}
     />
   );
   const renderedStats = stats && Object.entries(stats).length > 0 && (

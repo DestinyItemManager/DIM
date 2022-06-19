@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'clarityDescription': string;
-  'clarityDescriptionCommunityOnly': string;
   'objectives': string;
 }
 export const cssExports: CssExports;

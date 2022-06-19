@@ -183,9 +183,7 @@ function IntrinsicArmorPerk({
             {intrinsicArmorPerk.communityInsight && (
               <ClarityDescriptions
                 communityInsight={intrinsicArmorPerk.communityInsight}
-                className={clsx(styles.clarityDescription, {
-                  [styles.clarityDescriptionCommunityOnly]: showCommunityDescriptionOnly,
-                })}
+                className={styles.clarityDescription}
               />
             )}
           </div>

@@ -57,10 +57,9 @@
 
 .modClarityDescription {
   grid-area: clarityDesc;
-  margin-top: 1em;
-}
-.modClarityDescriptionCommunityOnly {
   margin-top: 2px;
+  border-left: 2px solid #0d7fad;
+  padding-left: 6px;
 }
 
 .modStats {
@@ -75,6 +74,7 @@
 
 .source {
   grid-area: source;
+  margin-top: 2px;
 }
 
 .material {
