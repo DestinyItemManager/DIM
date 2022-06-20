@@ -1,5 +1,6 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
-import { CommunityInsight, useCommunityInsight } from 'app/clarity/hooks';
+import { Perk } from 'app/clarity/descriptions/descriptionInterface';
+import { useCommunityInsight } from 'app/clarity/hooks';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -250,7 +251,7 @@ export default function SocketDetailsSelectedPlug({
 
       {plugDescriptions.communityInsight && (
         <ClarityDescriptions
-          communityInsight={plugDescriptions.communityInsight}
+          perk={plugDescriptions.communityInsight}
           className={styles.modClarityDescription}
         />
       )}
@@ -284,7 +285,7 @@ function buildPlugDescriptions(
   plugDef: PluggableInventoryItemDefinition,
   defs: D2ManifestDefinitions,
   descriptionsToDisplay: Settings['descriptionsToDisplay'],
-  communityInsight: CommunityInsight | undefined
+  communityInsight: Perk | undefined
 ) {
   const perkDescriptions = getPerkDescriptions(plugDef, defs);
 

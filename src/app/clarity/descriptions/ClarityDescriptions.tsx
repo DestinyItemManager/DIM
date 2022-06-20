@@ -1,10 +1,9 @@
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
-import { CommunityInsight } from '../hooks';
 /* eslint-disable css-modules/no-unused-class */
 import styles from './Description.m.scss';
-import { LinesContent } from './descriptionInterface';
+import { LinesContent, Perk } from './descriptionInterface';
 
 const customContent = (content: LinesContent) => {
   if (content.linkUrl) {
@@ -23,13 +22,17 @@ const joinClassNames = (classNames?: string) =>
  * This is a cut-down version of the original from the Clarity extension.
  */
 export default function ClarityDescriptions({
-  communityInsight,
+  perk,
   className,
 }: {
-  communityInsight: CommunityInsight;
+  perk: Perk;
   className?: string;
 }) {
-  const convertedDescription = communityInsight.simpleDescription.map((line, i) => (
+  if (!perk.simpleDescription) {
+    return null;
+  }
+
+  const convertedDescription = perk.simpleDescription.map((line, i) => (
     <div className={joinClassNames(line.className)} key={i}>
       {line.lineText?.map((linesContent, i) => (
         <span className={joinClassNames(linesContent.className)} title={linesContent.title} key={i}>

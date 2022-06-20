@@ -182,7 +182,7 @@ function IntrinsicArmorPerk({
             )}
             {intrinsicArmorPerk.communityInsight && (
               <ClarityDescriptions
-                communityInsight={intrinsicArmorPerk.communityInsight}
+                perk={intrinsicArmorPerk.communityInsight}
                 className={styles.clarityDescription}
               />
             )}
