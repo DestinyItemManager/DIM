@@ -138,7 +138,7 @@ export function PlugTooltip({
   );
   const clarityDescription = plugDescriptions.communityInsight && (
     <ClarityDescriptions
-      communityInsight={plugDescriptions.communityInsight.description}
+      communityInsight={plugDescriptions.communityInsight}
       className={styles.clarityDescription}
     />
   );
@@ -234,11 +234,7 @@ function buildPlugDescriptions(
         ))}
       </>
     ),
-    communityInsight: showCommunityDescription &&
-      communityInsight && {
-        description: communityInsight,
-        communityOnly: showCommunityDescriptionOnly,
-      },
+    communityInsight: showCommunityDescription && communityInsight,
   };
 }
 

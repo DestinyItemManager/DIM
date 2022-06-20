@@ -250,7 +250,7 @@ export default function SocketDetailsSelectedPlug({
 
       {plugDescriptions.communityInsight && (
         <ClarityDescriptions
-          communityInsight={plugDescriptions.communityInsight.description}
+          communityInsight={plugDescriptions.communityInsight}
           className={styles.modClarityDescription}
         />
       )}
@@ -303,10 +303,6 @@ function buildPlugDescriptions(
         ))}
       </>
     ),
-    communityInsight: showCommunityDescription &&
-      communityInsight && {
-        description: communityInsight,
-        communityOnly: showCommunityDescriptionOnly,
-      },
+    communityInsight: showCommunityDescription && communityInsight,
   };
 }
