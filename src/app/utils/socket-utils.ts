@@ -220,68 +220,89 @@ export function getPerkDescriptions(
   // within this plug, let's not repeat any descriptions or requirement strings
   const uniqueStrings = new Set<string>();
 
-  // Terrible hack here: Echo of Persistence behaves like Charge Harvester, but uses a number of hidden perks
-  // (which we can't associate with stats), But we also can't get the relevant classType in here,
-  // so just copy the "-10 to the stat that governs your class ability recharge rate" perk from Charge Harvester.
-  const perks = [...plug.perks];
-  if (plug.hash === modsWithConditionalStats.echoOfPersistence) {
-    const chargeHarvesterDef = defs.InventoryItem.get(modsWithConditionalStats.chargeHarvester);
-    perks.push(chargeHarvesterDef.perks[1]);
+  function addPerkDescriptions() {
+    // Terrible hack here: Echo of Persistence behaves like Charge Harvester, but uses a number of hidden perks
+    // (which we can't associate with stats), But we also can't get the relevant classType in here,
+    // so just copy the "-10 to the stat that governs your class ability recharge rate" perk from Charge Harvester.
+    const perks = [...plug.perks];
+    if (plug.hash === modsWithConditionalStats.echoOfPersistence) {
+      const chargeHarvesterDef = defs.InventoryItem.get(modsWithConditionalStats.chargeHarvester);
+      perks.push(chargeHarvesterDef.perks[1]);
+    }
+
+    // filter out things with no displayable text, or that are meant to be hidden
+    for (const perk of perks) {
+      if (perk.perkVisibility === ItemPerkVisibility.Hidden) {
+        continue;
+      }
+
+      const sandboxPerk = defs.SandboxPerk.get(perk.perkHash);
+      const perkName = sandboxPerk.displayProperties.name;
+
+      let perkDescription = sandboxPerk.displayProperties.description || undefined;
+      if (perkDescription) {
+        if (uniqueStrings.has(perkDescription)) {
+          perkDescription = undefined;
+        } else {
+          uniqueStrings.add(perkDescription);
+        }
+      }
+
+      // Some perks are only active in certain activities (see Garden of Salvation raid mods)
+      let perkRequirement = perk.requirementDisplayString || undefined;
+      if (perkRequirement) {
+        if (uniqueStrings.has(perkRequirement)) {
+          perkRequirement = undefined;
+        } else {
+          uniqueStrings.add(perkRequirement);
+        }
+      }
+
+      if (perkDescription || perkRequirement) {
+        results.push({
+          perkHash: perk.perkHash,
+          name: perkName && perkName !== plug.displayProperties.name ? perkName : undefined,
+          description: perkDescription,
+          requirement: perkRequirement,
+        });
+      }
+    }
   }
 
-  // filter out things with no displayable text, or that are meant to be hidden
-  for (const perk of perks) {
-    if (perk.perkVisibility === ItemPerkVisibility.Hidden) {
-      continue;
+  // mods & catalysts often store auxiliary info like requirements and caveats in their description, so we'll
+  // use their perk descriptions instead and only fall back to the actual description if we don't have any perks
+
+  // todo: figure this out based on plug type
+  const isPrimaryDescriptionInPerks = false;
+
+  if (isPrimaryDescriptionInPerks) {
+    addPerkDescriptions();
+
+    const plugDescription = plug.displayProperties.description || undefined;
+    if (plugDescription && !uniqueStrings.has(plugDescription)) {
+      // if we already have some displayable perks, this means the description is basically
+      // a "requirements" string like "This mod's perks are only active" etc. (see Deep Stone Crypt raid mods)
+      results.push(
+        results.length > 0
+          ? {
+              perkHash: 0,
+              requirement: plugDescription,
+            }
+          : {
+              perkHash: 0,
+              description: plugDescription,
+            }
+      );
     }
-
-    const sandboxPerk = defs.SandboxPerk.get(perk.perkHash);
-    const perkName = sandboxPerk.displayProperties.name;
-
-    let perkDescription = sandboxPerk.displayProperties.description || undefined;
-    if (perkDescription) {
-      if (uniqueStrings.has(perkDescription)) {
-        perkDescription = undefined;
-      } else {
-        uniqueStrings.add(perkDescription);
-      }
-    }
-
-    // Some perks are only active in certain activities (see Garden of Salvation raid mods)
-    let perkRequirement = perk.requirementDisplayString || undefined;
-    if (perkRequirement) {
-      if (uniqueStrings.has(perkRequirement)) {
-        perkRequirement = undefined;
-      } else {
-        uniqueStrings.add(perkRequirement);
-      }
-    }
-
-    if (perkDescription || perkRequirement) {
+  } else {
+    if (plug.displayProperties.description) {
       results.push({
-        perkHash: perk.perkHash,
-        name: perkName && perkName !== plug.displayProperties.name ? perkName : undefined,
-        description: perkDescription,
-        requirement: perkRequirement,
+        perkHash: 0,
+        description: plug.displayProperties.description,
       });
+    } else {
+      addPerkDescriptions();
     }
-  }
-
-  const plugDescription = plug.displayProperties.description || undefined;
-  if (plugDescription && !uniqueStrings.has(plugDescription)) {
-    // if we already have some displayable perks, this means the description is basically
-    // a "requirements" string like "This mod's perks are only active" etc. (see Deep Stone Crypt raid mods)
-    results.push(
-      results.length > 0
-        ? {
-            perkHash: 0,
-            requirement: plugDescription,
-          }
-        : {
-            perkHash: 0,
-            description: plugDescription,
-          }
-    );
   }
 
   // a fallback: if we still don't have any perk descriptions, at least keep the first perk for display.
