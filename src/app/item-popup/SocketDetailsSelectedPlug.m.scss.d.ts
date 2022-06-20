@@ -9,6 +9,7 @@ interface CssExports {
   'modClarityDescription': string;
   'modDescription': string;
   'modIcon': string;
+  'modRequirement': string;
   'modStats': string;
   'selectedPlug': string;
   'source': string;

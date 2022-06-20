@@ -233,7 +233,10 @@ function buildPlugDescriptions(
         {perkDescriptions.map((perkDesc) => (
           <div key={perkDesc.perkHash}>
             {perkDesc.name && <div>{perkDesc.name}</div>}
-            <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
+            {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
+            {perkDesc.requirement && (
+              <RichDestinyText text={perkDesc.requirement} className={styles.requirement} />
+            )}
           </div>
         ))}
       </>

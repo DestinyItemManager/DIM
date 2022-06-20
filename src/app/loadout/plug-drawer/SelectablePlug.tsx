@@ -107,7 +107,7 @@ function buildPlugDescriptions(
             {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
             {perkDesc.requirement && (
               <div className={styles.requirement}>{perkDesc.requirement}</div>
-            )}{' '}
+            )}
           </div>
         ))}
       </>

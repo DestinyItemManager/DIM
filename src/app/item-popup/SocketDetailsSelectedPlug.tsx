@@ -28,7 +28,7 @@ import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ItemStats from './ItemStats';
 import { StatValue } from './PlugTooltip';
@@ -303,7 +303,12 @@ function buildPlugDescriptions(
     description: (showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)) && (
       <>
         {perkDescriptions.map((perkDesc) => (
-          <div key={perkDesc.perkHash}>{perkDesc.description || perkDesc.requirement}</div>
+          <React.Fragment key={perkDesc.perkHash}>
+            {perkDesc.description && <div>{perkDesc.description}</div>}
+            {perkDesc.requirement && (
+              <div className={styles.modRequirement}>{perkDesc.requirement}</div>
+            )}
+          </React.Fragment>
         ))}
       </>
     ),

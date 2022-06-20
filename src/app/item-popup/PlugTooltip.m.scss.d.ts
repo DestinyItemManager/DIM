@@ -3,6 +3,7 @@
 interface CssExports {
   'clarityDescription': string;
   'objectives': string;
+  'requirement': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
