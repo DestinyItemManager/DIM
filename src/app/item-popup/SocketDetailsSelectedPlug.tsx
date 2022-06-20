@@ -1,6 +1,6 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
-import { Perk } from 'app/clarity/descriptions/descriptionInterface';
-import { useCommunityInsight } from 'app/clarity/hooks';
+import { ClarityDescription } from 'app/clarity/descriptions/descriptionInterface';
+import { clarityDescriptionsSelector } from 'app/clarity/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -211,13 +211,13 @@ export default function SocketDetailsSelectedPlug({
     );
   });
 
+  const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-  const communityInsight = useCommunityInsight(plug.hash);
   const plugDescriptions = buildPlugDescriptions(
     plug,
     defs,
     descriptionsToDisplay,
-    communityInsight
+    allClarityDescriptions
   );
 
   return (
@@ -285,9 +285,12 @@ function buildPlugDescriptions(
   plugDef: PluggableInventoryItemDefinition,
   defs: D2ManifestDefinitions,
   descriptionsToDisplay: Settings['descriptionsToDisplay'],
-  communityInsight: Perk | undefined
+  allClarityDescriptions: ClarityDescription | undefined
 ) {
   const perkDescriptions = getPerkDescriptions(plugDef, defs);
+  const clarityPerk = allClarityDescriptions?.[plugDef.hash];
+  const communityInsight =
+    clarityPerk && !clarityPerk.statOnly && clarityPerk.simpleDescription ? clarityPerk : undefined;
 
   const showBungieDescription =
     !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';

@@ -1,6 +1,6 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
-import { Perk } from 'app/clarity/descriptions/descriptionInterface';
-import { useCommunityInsight } from 'app/clarity/hooks';
+import { ClarityDescription } from 'app/clarity/descriptions/descriptionInterface';
+import { clarityDescriptionsSelector } from 'app/clarity/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -121,8 +121,8 @@ export function PlugTooltip({
   craftingData?: DestinyPlugItemCraftingRequirements;
 }) {
   const defs = useD2Definitions();
+  const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-  const communityInsight = useCommunityInsight(def.hash);
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
 
@@ -135,7 +135,7 @@ export function PlugTooltip({
     def,
     defs,
     descriptionsToDisplay,
-    communityInsight
+    allClarityDescriptions
   );
   const clarityDescription = plugDescriptions.communityInsight && (
     <ClarityDescriptions
@@ -213,9 +213,12 @@ function buildPlugDescriptions(
   plugDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions | undefined,
   descriptionsToDisplay: Settings['descriptionsToDisplay'],
-  communityInsight: Perk | undefined
+  allClarityDescriptions: ClarityDescription | undefined
 ) {
   const perkDescriptions = (defs && getPerkDescriptions(plugDef, defs)) || [];
+  const clarityPerk = allClarityDescriptions?.[plugDef.hash];
+  const communityInsight =
+    clarityPerk && !clarityPerk.statOnly && clarityPerk.simpleDescription ? clarityPerk : undefined;
 
   const showBungieDescription =
     !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';

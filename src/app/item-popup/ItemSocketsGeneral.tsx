@@ -1,5 +1,5 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
-import { useCommunityInsight } from 'app/clarity/hooks';
+import { clarityDescriptionsSelector } from 'app/clarity/selectors';
 import { settingSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -151,12 +151,15 @@ function IntrinsicArmorPerk({
   minimal?: boolean;
   handleSocketClick: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
 }) {
+  const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-  const communityInsight = useCommunityInsight(socket.plugged?.plugDef.hash);
 
-  if (!socket?.plugged) {
+  if (!socket.plugged?.plugDef.hash) {
     return null;
   }
+  const clarityPerk = allClarityDescriptions?.[socket.plugged.plugDef.hash];
+  const communityInsight =
+    clarityPerk && !clarityPerk.statOnly && clarityPerk.simpleDescription ? clarityPerk : undefined;
 
   const showBungieDescription =
     !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
