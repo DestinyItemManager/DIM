@@ -2,7 +2,6 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import { createLoadoutShare } from 'app/dim-api/dim-api';
 import { startFarming, stopFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
-import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import {
@@ -24,18 +23,16 @@ import { showNotification } from 'app/notifications/notifications';
 import { setSearchQuery } from 'app/shell/actions';
 import { refresh } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
-import {
-  streamDeckMaxPowerUpdate,
-  streamDeckMetricsUpdate,
-  streamDeckPostMasterUpdate,
-  streamDeckVaultUpdate,
-} from 'app/stream-deck/stream-deck-update';
+import { checkAuthorization } from 'app/stream-deck/authorization/authorization';
+import encryption from 'app/stream-deck/authorization/encryption';
+import { streamDeckLocal } from 'app/stream-deck/util/local-storage';
+import packager from 'app/stream-deck/util/packager';
 import { observeStore } from 'app/utils/redux-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { createAction } from 'typesafe-actions';
 
-let streamDeckWebSocket: WebSocket;
+export let streamDeckWebSocket: WebSocket;
 
 let refreshInterval: ReturnType<typeof setInterval>;
 
@@ -54,36 +51,12 @@ export const streamDeckWaitSelection = createAction('stream-deck/WAIT-SELECTION'
 
 export const streamDeckClearSelection = createAction('stream-deck/CLEAR-SELECTION')();
 
-interface StreamDeckMessage {
-  action:
-    | 'search'
-    | 'randomize'
-    | 'collectPostmaster'
-    | 'refresh'
-    | 'farmingMode'
-    | 'maxPower'
-    | 'freeSlot'
-    | 'pullItem'
-    | 'selection'
-    | 'loadout'
-    | 'shareLoadout';
-  args: {
-    search: string;
-    weaponsOnly: boolean;
-    loadout: string;
-    character: string;
-    slot: InventoryBucket['type'];
-    item: string;
-    page: string;
-    selection: 'loadout' | 'item';
-  };
-}
-
 // serialize the data and send it if connected
 export function sendToStreamDeck(args: Record<string, any>): ThunkResult {
   return async () => {
     if (streamDeckWebSocket?.readyState === WebSocket.OPEN) {
-      streamDeckWebSocket.send(JSON.stringify(args));
+      const sharedKey = streamDeckLocal.sharedKey();
+      sharedKey && streamDeckWebSocket.send(encryption.encrypt(JSON.stringify(args), sharedKey));
     }
   };
 }
@@ -146,10 +119,15 @@ export function streamDeckSelectLoadout(loadout: Loadout, store: DimStore): Thun
 }
 
 // Show notification asking for selection
-function showSelectionNotification(state: RootState, selectionType: string, onCancel?: () => void) {
+function showSelectionNotification(
+  state: RootState,
+  selectionType: 'item' | 'loadout',
+  onCancel?: () => void
+) {
   showNotification({
     title: 'Elgato Stream Deck',
-    body: t(`StreamDeck.SelectionNotification.${_.startCase(selectionType)}`),
+    body:
+      selectionType === 'item' ? t('StreamDeck.Selection.Item') : t('StreamDeck.Selection.Loadout'),
     type: 'info',
     duration: 500,
     onCancel,
@@ -165,9 +143,17 @@ function goToPage(path: string) {
 }
 
 // handle actions coming from the stream deck instance
-export function handleStreamDeckMessage(data: StreamDeckMessage): ThunkResult {
+export function handleStreamDeckMessage(msg: string): ThunkResult {
   return async (dispatch, getState) => {
     const state = getState();
+
+    const data = checkAuthorization(msg, state.streamDeck, streamDeckWebSocket);
+
+    // this is not an encrypted msg or a challenge string
+    if (!data) {
+      return;
+    }
+
     const currentStore = currentStoreSelector(state);
 
     if (!currentStore) {
@@ -299,10 +285,10 @@ function refreshStreamDeck(): ThunkResult {
       }
       dispatch(
         sendToStreamDeck({
-          postmaster: streamDeckPostMasterUpdate(store),
-          maxPower: streamDeckMaxPowerUpdate(store, state),
-          vault: streamDeckVaultUpdate(state),
-          metrics: streamDeckMetricsUpdate(state),
+          postmaster: packager.postmaster(store),
+          maxPower: packager.maxPower(store, state),
+          vault: packager.vault(state),
+          metrics: packager.metrics(state),
         })
       );
     };
@@ -350,7 +336,7 @@ export function startStreamDeckConnection(): ThunkResult {
       }
 
       // try to connect to the stream deck local instance
-      streamDeckWebSocket = new WebSocket('ws://localhost:9119');
+      streamDeckWebSocket = new WebSocket('ws://localhost:9119', streamDeckLocal.identifier());
 
       streamDeckWebSocket.onopen = function () {
         dispatch(streamDeckConnected());
@@ -360,14 +346,14 @@ export function startStreamDeckConnection(): ThunkResult {
       streamDeckWebSocket.onclose = function () {
         dispatch(streamDeckDisconnected());
         clearInterval(refreshInterval);
-        if (getState().streamDeck.enabled) {
+        if (getState().streamDeck.enabled && streamDeckWebSocket.readyState === WebSocket.CLOSED) {
           // retry to re-connect after 5s
           setTimeout(initWS, 5000);
         }
       };
 
-      streamDeckWebSocket.onmessage = function (e) {
-        dispatch(handleStreamDeckMessage(JSON.parse(e.data)));
+      streamDeckWebSocket.onmessage = function ({ data }) {
+        dispatch(handleStreamDeckMessage(data));
       };
 
       streamDeckWebSocket.onerror = function () {

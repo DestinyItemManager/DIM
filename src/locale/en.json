@@ -1029,13 +1029,18 @@
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StreamDeck": {
+    "Authorization": {
+      "No": "No",
+      "Reset": "DE-AUTHORIZE",
+      "Title": "Do you see this number on the Stream Deck ?",
+      "Yes": "Yes"
+    },
     "Enable": "Stream Deck Plugin",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin",
     "Install": "Install plugin",
-    "SelectionNotification": {
+    "Selection": {
       "Item": "Choose an item from the inventory",
-      "Loadout": "Choose a loadout",
-      "Postmaster": "Choose an item from the Postmaster"
+      "Loadout": "Choose a loadout"
     }
   },
   "Tags": {

@@ -1133,10 +1133,16 @@
     "Enable": "Stream Deck Plugin",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin",
     "Install": "Install plugin",
-    "SelectionNotification": {
+    "Selection": {
       "Item": "Choose an item from the inventory",
       "Loadout": "Choose a loadout",
       "Postmaster": "Choose an item from the Postmaster"
+    },
+    "Authorization": {
+      "Title": "Do you see this number on the Stream Deck ?",
+      "Yes": "Yes",
+      "No": "No",
+      "Reset": "DE-AUTHORIZE"
     }
   },
   "Tags": {

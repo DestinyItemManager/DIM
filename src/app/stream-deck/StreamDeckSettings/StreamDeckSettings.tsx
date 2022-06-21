@@ -7,7 +7,12 @@ import {
   stopStreamDeckConnection,
   streamDeckChangeStatus,
 } from 'app/stream-deck/actions';
+import {
+  generateIdentifier,
+  resetStreamDeckAuthorization,
+} from 'app/stream-deck/authorization/authorization';
 import { streamDeckConnectedSelector, streamDeckEnabledSelector } from 'app/stream-deck/selectors';
+import { streamDeckLocal } from 'app/stream-deck/util/local-storage';
 import { useSelector } from 'react-redux';
 import './StreamDeckSettings.scss';
 
@@ -23,13 +28,19 @@ export default function StreamDeckSettings() {
   };
 
   const onStreamDeckChange = async (enabled: boolean) => {
-    localStorage.setItem('stream-deck-enabled', enabled.toString());
+    streamDeckLocal.setEnabled(enabled);
     dispatch(streamDeckChangeStatus(enabled));
+    generateIdentifier();
     if (enabled) {
       dispatch(startStreamDeckConnection());
     } else {
       dispatch(stopStreamDeckConnection());
     }
+  };
+
+  const onStreamDeckAuthorizationReset = () => {
+    resetStreamDeckAuthorization();
+    dispatch(stopStreamDeckConnection()).then(() => dispatch(startStreamDeckConnection()));
   };
 
   return (
@@ -50,6 +61,12 @@ export default function StreamDeckSettings() {
             <AppIcon icon={faArrowCircleDown} /> {t('StreamDeck.Install')}
           </button>
         )}
+      </div>
+
+      <div className="setting">
+        <button type="button" className="dim-button" onClick={onStreamDeckAuthorizationReset}>
+          {t('StreamDeck.Authorization.Reset')}
+        </button>
       </div>
     </section>
   );

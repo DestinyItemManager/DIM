@@ -23,7 +23,7 @@ function getCurrency(currencies: AccountCurrency[], hash: number) {
 }
 
 // create the postmaster update data
-export function streamDeckPostMasterUpdate(store: DimStore) {
+function streamDeckPostMasterUpdate(store: DimStore) {
   return {
     total: totalPostmasterItems(store),
     ascendantShards: getPostMasterItem(store, 4257549985),
@@ -33,7 +33,7 @@ export function streamDeckPostMasterUpdate(store: DimStore) {
 }
 
 // create the max power update data
-export function streamDeckMaxPowerUpdate(store: DimStore, state: RootState) {
+function streamDeckMaxPowerUpdate(store: DimStore, state: RootState) {
   const allItems = allItemsSelector(state);
   const maxLight = getLight(store, maxLightItemSet(allItems, store).equippable);
   const artifact = getArtifactBonus(store);
@@ -46,7 +46,7 @@ export function streamDeckMaxPowerUpdate(store: DimStore, state: RootState) {
 }
 
 // create the vault update data
-export function streamDeckVaultUpdate(state: RootState) {
+function streamDeckVaultUpdate(state: RootState) {
   const vault = vaultSelector(state);
   const currencies = currenciesSelector(state);
   return {
@@ -77,7 +77,7 @@ function getCurrentSeason(state: RootState, profile: DestinyProfileResponse | un
 }
 
 // create the metrics update data
-export function streamDeckMetricsUpdate(state: RootState) {
+function streamDeckMetricsUpdate(state: RootState) {
   const profile = profileResponseSelector(state);
   const progression = getCharacterProgressions(profile)?.progressions ?? {};
   const [battlePassHash, prestigeLevel, artifactIcon] = getCurrentSeason(state, profile);
@@ -102,3 +102,10 @@ export function streamDeckMetricsUpdate(state: RootState) {
     artifactIcon,
   };
 }
+
+export default {
+  metrics: streamDeckMetricsUpdate,
+  vault: streamDeckVaultUpdate,
+  maxPower: streamDeckMaxPowerUpdate,
+  postmaster: streamDeckPostMasterUpdate,
+};

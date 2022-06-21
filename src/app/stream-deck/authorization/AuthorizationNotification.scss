@@ -1,0 +1,23 @@
+.stream-deck-authorization {
+  flex-direction: column;
+  display: flex;
+  flex: 1;
+}
+
+.stream-deck-challenge {
+  font-size: 36px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.stream-deck-authorization-buttons {
+  display: flex;
+  justify-content: center;
+  padding: 4px 8px;
+  & button:first-of-type {
+    margin-right: 16px;
+  }
+}
