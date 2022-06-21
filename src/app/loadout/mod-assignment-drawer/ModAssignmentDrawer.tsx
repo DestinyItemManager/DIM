@@ -1,6 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { EnergyIncrements } from 'app/dim-ui/EnergyIncrements';
-import PressTip from 'app/dim-ui/PressTip';
+import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
@@ -14,7 +13,7 @@ import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { Portal } from 'app/utils/temp-container';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Mod from '../loadout-ui/Mod';
 import Sockets from '../loadout-ui/Sockets';
 import { fitMostMods } from '../mod-assignment-utils';
@@ -128,31 +127,18 @@ export default function ModAssignmentDrawer({
                 itemModAssignments[item.id],
                 (m) => m.plug.energyCost?.energyCost || 0
               );
+
+              const adjustedEnergy = item.energy ? { ...item.energy, energyUsed } : null;
+
               return (
                 <div key={item.id} className={styles.itemAndMods}>
                   <div>
                     <ConnectedInventoryItem item={item} />
-                    {item.energy && (
-                      <PressTip
-                        tooltip={
-                          <>
-                            {t('EnergyMeter.Energy')}
-                            <hr />
-                            {t('EnergyMeter.Used')}: {item.energy.energyUsed}
-                            <br />
-                            {t('EnergyMeter.Unused')}: {item.energy.energyUnused}
-                          </>
-                        }
-                        className={styles.energyMeter}
-                      >
-                        <EnergyIncrements
-                          energy={{
-                            energyType: item.energy.energyType,
-                            energyCapacity: item.energy.energyCapacity,
-                            energyUsed,
-                          }}
-                        />
-                      </PressTip>
+                    {adjustedEnergy && (
+                      <EnergyIncrementsWithPresstip
+                        energy={adjustedEnergy}
+                        wrapperClass={styles.energyMeter}
+                      />
                     )}
                   </div>
 

@@ -1,9 +1,12 @@
 ## Next
 
+## 7.22.0 <span class="changelog-date">(2022-06-19)</span>
+
 * Fixed a rare edge case where Loadout Optimizer would miss certain valid elemental mod assignments with locked armor energy types.
 * When moving multiple items, DIM will transfer them in a more consistent order e.g. Kinetic weapons are moved before Heavy weapons, helmets before chest armor etc.
 * Fixed Organizer redundantly showing enhanced weapon intrinsics in multiple columns.
 * Vendor items once again show wish list thumbsup icons.
+* Weapon attunement and leveling progress now shows a single digit of additional precision.
 
 ## 7.21.0 <span class="changelog-date">(2022-06-12)</span>
 

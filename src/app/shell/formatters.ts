@@ -6,6 +6,13 @@ export function percent(val: number): string {
 }
 
 /**
+ * Given a value 0-1, returns a string describing it as a percentage from 0-100
+ */
+export function percentWithSingleDecimal(val: number): string {
+  return `${Math.min(100, Math.floor(1000 * val) / 10).toLocaleString()}%`;
+}
+
+/**
  * Given a value on (or outside) a 0-100 scale, returns a css color key and value for a react `style` attribute
  */
 export function getColor(value: number, property = 'background-color') {
