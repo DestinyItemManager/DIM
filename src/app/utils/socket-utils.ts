@@ -269,12 +269,17 @@ export function getPerkDescriptions(
     }
   }
 
-  // mods & catalysts often store auxiliary info like requirements and caveats in their description, so we'll
-  // use their perk descriptions instead and only fall back to the actual description if we don't have any perks
+  /*
+  Most plugs (e.g. mods, catalysts) store their most useful information in their perks and use the description
+  field for auxiliary info like requirements and caveats. As a result, we want to prioritise strings in the
+  perks and only fall back to the actual description if we don't have any perks.
 
-  // todo: figure this out based on plug type
-  const isPrimaryDescriptionInPerks = false;
-
+  The exception to this rule is for plugs with the intrinsic plug UI display style (e.g. weapon frames,
+  Exotic intrinsics). These plugs have their perks displayed on the item tooltip in-game and usually contain a
+  single perk that summarises the functionality of the plug. In these cases, we want to prioritise strings in
+  the plug's description field as it typically contains a more detailed description.
+  */
+  const isPrimaryDescriptionInPerks = plug.uiItemDisplayStyle !== 'ui_display_style_intrinsic_plug';
   if (isPrimaryDescriptionInPerks) {
     addPerkDescriptions();
 
