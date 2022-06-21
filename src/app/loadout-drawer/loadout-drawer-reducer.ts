@@ -247,18 +247,29 @@ export function equipItem(
 }
 
 export function applySocketOverrides(
-  { loadoutItem: searchLoadoutItem }: ResolvedLoadoutItem,
+  resolvedLoadoutItem: ResolvedLoadoutItem,
   socketOverrides: SocketOverrides
 ): LoadoutUpdateFunction {
   return produce((draftLoadout) => {
+    const { loadoutItem, item } = resolvedLoadoutItem;
+
+    // We don't actually want to save empty fragment overrides, these are populated when the initial
+    // socket overrides are applied to items at the LoadoutItem/DimItem reconciliation stage
+    const fragmentSockets = getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.Fragments);
+    for (const fragment of fragmentSockets) {
+      if (socketOverrides[fragment.socketIndex] === fragment.emptyPlugItemHash) {
+        delete socketOverrides[fragment.socketIndex];
+      }
+    }
+
     // TODO: it might be nice if we just assigned a unique ID to every loadout item just for in-memory ops like deleting
     // We can't just look it up by identity since Immer wraps objects in a proxy and getItemsFromLoadoutItems
     // changes the socketOverrides, so simply search by unmodified ID and hash.
-    const loadoutItem = draftLoadout.items.find(
-      (li) => li.id === searchLoadoutItem.id && li.hash === searchLoadoutItem.hash
+    const draftLoadoutItem = draftLoadout.items.find(
+      (li) => li.id === loadoutItem.id && li.hash === loadoutItem.hash
     );
-    if (loadoutItem) {
-      loadoutItem.socketOverrides = socketOverrides;
+    if (draftLoadoutItem) {
+      draftLoadoutItem.socketOverrides = socketOverrides;
     }
   });
 }

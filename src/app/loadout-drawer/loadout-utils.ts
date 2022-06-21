@@ -11,7 +11,7 @@ import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats } from 'app/search/d2-known-values';
-import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
   getDefaultAbilityChoiceHash,
   getFirstSocketByCategoryHash,
@@ -237,20 +237,9 @@ export function getLoadoutStats(
     });
   });
 
-  // Add stats that come from the subclass fragments
-  // TODO: Now that we apply socket overrides when we resolve items, do we need to do this calculation?
-  if (subclass?.loadoutItem.socketOverrides) {
-    for (const plugHash of Object.values(subclass.loadoutItem.socketOverrides)) {
-      const plug = defs.InventoryItem.get(plugHash);
-      for (const stat of plug.investmentStats) {
-        if (
-          stat.statTypeHash in stats &&
-          isPlugStatActive(subclass.item, plugHash, stat.statTypeHash, stat.isConditionallyActive)
-        ) {
-          stats[stat.statTypeHash].value += stat.value;
-        }
-      }
-    }
+  // Add stats that come from the subclass
+  for (const stat of subclass?.item.stats || []) {
+    stats[stat.statHash].value += stat.value;
   }
 
   // Add the mod stats

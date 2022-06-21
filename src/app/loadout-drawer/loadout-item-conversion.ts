@@ -6,7 +6,8 @@ import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import { emptyArray } from 'app/utils/empty';
 import { warnLog } from 'app/utils/log';
-import { plugFitsIntoSocket } from 'app/utils/socket-utils';
+import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
 import { LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
 import { findItemForLoadout } from './loadout-utils';
@@ -44,12 +45,41 @@ export function getItemsFromLoadoutItems(
       const modsForBucket =
         loadoutItem.equip && modsByBucket ? modsByBucket[item.bucket.hash] ?? [] : [];
 
-      let overrides = loadoutItem.socketOverrides;
+      let overrides = loadoutItem.socketOverrides || {};
 
+      // Apply armour mods to the socket overrides
       for (const modHash of modsForBucket) {
         const socket = item.sockets?.allSockets.find((s) => plugFitsIntoSocket(s, modHash));
         if (socket) {
           overrides = { ...overrides, [socket?.socketIndex]: modHash };
+        }
+      }
+
+      // Hydrate the empty sockets for fragments as overrides. This ensures that the stats that
+      // result from the overridden item are correct.
+      if (
+        item.bucket.hash === BucketHashes.Subclass &&
+        item.sockets?.allSockets &&
+        defs.isDestiny2()
+      ) {
+        const aspects = getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.Aspects);
+        let activeFragments = 0;
+        for (const aspect of aspects) {
+          activeFragments += aspect.plugged?.plugDef.plug.energyCapacity?.capacityValue || 0;
+        }
+
+        const fragments = getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.Fragments);
+        for (const fragment of fragments) {
+          if (overrides[fragment.socketIndex] && activeFragments) {
+            activeFragments--;
+            continue;
+          }
+
+          fragment.actuallyPlugged = fragment.plugged || undefined;
+          fragment.plugged =
+            fragment.plugSet?.plugs.find((p) => p.plugDef.hash === fragment.emptyPlugItemHash) ||
+            null;
+          fragment.plugOptions = fragment.plugged ? [fragment.plugged] : [];
         }
       }
 

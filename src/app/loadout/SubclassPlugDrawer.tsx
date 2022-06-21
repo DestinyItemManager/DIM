@@ -13,7 +13,7 @@ import { uniqBy } from 'app/utils/util';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 const DISPLAYED_PLUG_STATS = [StatHashes.AspectEnergyCapacity];
