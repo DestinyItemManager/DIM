@@ -1,8 +1,9 @@
 import 'app/dim-ui/EnergyMeterIncrements.scss';
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React from 'react';
+import PressTip from './PressTip';
 
 export const energyStyles: { [energy in DestinyEnergyType]?: string } = {
   [DestinyEnergyType.Arc]: 'arc',
@@ -37,5 +38,49 @@ export function EnergyIncrements({
         <div key={i} className={incrementStyle} />
       ))}
     </div>
+  );
+}
+
+export function EnergyIncrementsWithPresstip({
+  item,
+  energy,
+  wrapperClass,
+}: {
+  item?: DimItem;
+  energy?: {
+    energyType: DestinyEnergyType;
+    energyCapacity: number;
+    energyUsed: number;
+  };
+  wrapperClass?: string | undefined;
+}) {
+  const energy_ = energy ?? item?.energy;
+  if (!energy_) {
+    return null;
+  }
+  const { energyType, energyCapacity, energyUsed } = energy_;
+  const energyUnused = energyCapacity - energyUsed;
+
+  return (
+    <PressTip
+      tooltip={
+        <>
+          {t('EnergyMeter.Energy')}
+          <hr />
+          {t('EnergyMeter.Used')}: {energyUsed}
+          <br />
+          {t('EnergyMeter.Unused')}: {energyUnused}
+        </>
+      }
+      className={wrapperClass}
+    >
+      <EnergyIncrements
+        energy={{
+          energyType,
+          energyCapacity,
+          energyUsed,
+        }}
+      />
+    </PressTip>
   );
 }
