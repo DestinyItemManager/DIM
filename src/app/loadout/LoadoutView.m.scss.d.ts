@@ -7,7 +7,6 @@ interface CssExports {
   'loadout': string;
   'loadoutNotes': string;
   'missingItems': string;
-  'sdSelectable': string;
   'title': string;
 }
 export const cssExports: CssExports;

@@ -2,35 +2,28 @@ import Switch from 'app/dim-ui/Switch';
 import { t } from 'app/i18next-t';
 import { AppIcon, faArrowCircleDown } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+
+import ExternalLink from 'app/dim-ui/ExternalLink';
+import { streamDeckConnectedSelector } from 'app/stream-deck/selectors';
 import {
+  resetStreamDeckAuthorization,
   startStreamDeckConnection,
   stopStreamDeckConnection,
-  streamDeckChangeStatus,
-} from 'app/stream-deck/actions';
-import {
-  generateIdentifier,
-  resetStreamDeckAuthorization,
-} from 'app/stream-deck/authorization/authorization';
-import { streamDeckConnectedSelector, streamDeckEnabledSelector } from 'app/stream-deck/selectors';
-import { streamDeckLocal } from 'app/stream-deck/util/local-storage';
+} from 'app/stream-deck/stream-deck';
+import { setStreamDeckEnabled, streamDeckEnabled } from 'app/stream-deck/util/local-storage';
+import clsx from 'clsx';
 import { useSelector } from 'react-redux';
-import './StreamDeckSettings.scss';
-
-export const $streamDeckFeature = ['beta', 'dev'].includes($DIM_FLAVOR);
+import styles from './StreamDeckSettings.m.scss';
 
 export default function StreamDeckSettings() {
   const dispatch = useThunkDispatch();
   const connected = useSelector(streamDeckConnectedSelector);
-  const enabled = useSelector(streamDeckEnabledSelector);
-
-  const onPluginInstall = () => {
-    window.open('https://apps.elgato.com/plugins/com.dim.streamdeck');
-  };
+  const enabled = streamDeckEnabled();
 
   const onStreamDeckChange = async (enabled: boolean) => {
-    streamDeckLocal.setEnabled(enabled);
-    dispatch(streamDeckChangeStatus(enabled));
-    generateIdentifier();
+    // on switch toggle set if Stream Deck feature is enabled or no
+    setStreamDeckEnabled(enabled);
+    // start or stop WebSocket connection
     if (enabled) {
       dispatch(startStreamDeckConnection());
     } else {
@@ -38,28 +31,32 @@ export default function StreamDeckSettings() {
     }
   };
 
-  const onStreamDeckAuthorizationReset = () => {
-    resetStreamDeckAuthorization();
-    dispatch(stopStreamDeckConnection()).then(() => dispatch(startStreamDeckConnection()));
+  const onStreamDeckAuthorizationReset = async () => {
+    // regenerate client identifier and remove shared key for Stream Deck
+    await resetStreamDeckAuthorization();
+    await dispatch(stopStreamDeckConnection());
+    await dispatch(startStreamDeckConnection());
   };
 
   return (
     <section id="stream-deck">
       <h2>{t('Settings.StreamDeck')}</h2>
-      <div className={`setting stream-deck-settings connected-${connected}`}>
+      <div
+        className={clsx('setting', styles.streamDeckSettings, {
+          [styles.streamDeckConnected]: connected,
+        })}
+      >
         <div className="setting horizontal">
           <label htmlFor="streamDeckEnabled">{t('StreamDeck.Enable')}</label>
           <Switch name="streamDeckEnabled" checked={enabled} onChange={onStreamDeckChange} />
         </div>
         <div className="fineprint">{t('StreamDeck.FinePrint')}</div>
         {!connected && (
-          <button
-            type="button"
-            className="dim-button download-stream-deck-plugin"
-            onClick={onPluginInstall}
-          >
-            <AppIcon icon={faArrowCircleDown} /> {t('StreamDeck.Install')}
-          </button>
+          <ExternalLink href="https://apps.elgato.com/plugins/com.dim.streamdeck">
+            <button type="button" className={clsx('dim-button', styles.downloadPlugin)}>
+              <AppIcon icon={faArrowCircleDown} /> {t('StreamDeck.Install')}
+            </button>
+          </ExternalLink>
         )}
       </div>
 

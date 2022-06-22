@@ -1,10 +1,10 @@
-.stream-deck-authorization {
+.authorization {
   flex-direction: column;
   display: flex;
   flex: 1;
 }
 
-.stream-deck-challenge {
+.authorizationChallenge {
   font-size: 36px;
   height: 100%;
   display: flex;
@@ -13,7 +13,7 @@
   padding: 0 8px;
 }
 
-.stream-deck-authorization-buttons {
+.authorizationButtons {
   display: flex;
   justify-content: center;
   padding: 4px 8px;

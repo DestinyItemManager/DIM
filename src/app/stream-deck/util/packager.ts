@@ -1,3 +1,4 @@
+import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
   currenciesSelector,
@@ -5,35 +6,40 @@ import {
   vaultSelector,
 } from 'app/inventory/selectors';
 import { AccountCurrency, DimStore } from 'app/inventory/store-types';
-import { getArtifactBonus } from 'app/inventory/stores-helpers';
+import { findItemsByBucket, getArtifactBonus } from 'app/inventory/stores-helpers';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { RootState } from 'app/store/types';
+import { MaxPowerArgs, MetricsArgs, PostmasterArgs, VaultArgs } from 'app/stream-deck/interfaces';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 
-function getPostMasterItem(store: DimStore, hash: number) {
-  return store.items.find((it) => it.location.inPostmaster && it.hash === hash)?.amount || 0;
+// find and get the quantity of a specif item type
+function getPostMasterItem(lostItems: DimItem[], hash: number) {
+  return lostItems.find((it) => it.location.inPostmaster && it.hash === hash)?.amount || 0;
 }
 
+// find and get the quantity of a specif currency
 function getCurrency(currencies: AccountCurrency[], hash: number) {
-  return currencies.find((curr: AccountCurrency) => curr.itemHash === hash)?.quantity;
+  return currencies.find((curr) => curr.itemHash === hash)?.quantity;
 }
 
 // create the postmaster update data
-function streamDeckPostMasterUpdate(store: DimStore) {
+function streamDeckPostMasterUpdate(store: DimStore): PostmasterArgs {
+  const items = findItemsByBucket(store, BucketHashes.LostItems);
   return {
     total: totalPostmasterItems(store),
-    ascendantShards: getPostMasterItem(store, 4257549985),
-    enhancementPrisms: getPostMasterItem(store, 4257549984),
-    spoils: getPostMasterItem(store, 3702027555),
+    ascendantShards: getPostMasterItem(items, 4257549985),
+    enhancementPrisms: getPostMasterItem(items, 4257549984),
+    spoils: getPostMasterItem(items, 3702027555),
   };
 }
 
 // create the max power update data
-function streamDeckMaxPowerUpdate(store: DimStore, state: RootState) {
+function streamDeckMaxPowerUpdate(store: DimStore, state: RootState): MaxPowerArgs {
   const allItems = allItemsSelector(state);
   const maxLight = getLight(store, maxLightItemSet(allItems, store).equippable);
   const artifact = getArtifactBonus(store);
@@ -46,11 +52,14 @@ function streamDeckMaxPowerUpdate(store: DimStore, state: RootState) {
 }
 
 // create the vault update data
-function streamDeckVaultUpdate(state: RootState) {
+function streamDeckVaultUpdate(state: RootState): VaultArgs | undefined {
   const vault = vaultSelector(state);
+  if (!vault) {
+    return;
+  }
   const currencies = currenciesSelector(state);
   return {
-    vault: vault?.items.length,
+    vault: vault.items.length,
     shards: getCurrency(currencies, 1022552290),
     glimmer: getCurrency(currencies, 3159615086),
     brightDust: getCurrency(currencies, 2817410917),
@@ -58,7 +67,10 @@ function streamDeckVaultUpdate(state: RootState) {
 }
 
 // seasonal hash from src/app/progress/Milestones.tsx
-function getCurrentSeason(state: RootState, profile: DestinyProfileResponse | undefined) {
+function getCurrentSeason(
+  state: RootState,
+  profile: DestinyProfileResponse | undefined
+): [number?, number?, string?] {
   const defs = d2ManifestSelector(state);
   const season = profile?.profile?.data?.currentSeasonHash
     ? defs?.Season.get(profile.profile.data.currentSeasonHash)
@@ -77,7 +89,7 @@ function getCurrentSeason(state: RootState, profile: DestinyProfileResponse | un
 }
 
 // create the metrics update data
-function streamDeckMetricsUpdate(state: RootState) {
+function streamDeckMetricsUpdate(state: RootState): MetricsArgs {
   const profile = profileResponseSelector(state);
   const progression = getCharacterProgressions(profile)?.progressions ?? {};
   const [battlePassHash, prestigeLevel, artifactIcon] = getCurrentSeason(state, profile);

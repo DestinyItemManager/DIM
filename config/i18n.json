@@ -1134,6 +1134,7 @@
     "Enable": "Stream Deck Plugin",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin",
     "Install": "Install plugin",
+    "SelectLoadout": "Send to Stream Deck",
     "Selection": {
       "Item": "Choose an item from the inventory",
       "Loadout": "Choose a loadout",

@@ -11,9 +11,6 @@ import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/lo
 import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { streamDeckSelectLoadout } from 'app/stream-deck/actions';
-import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
@@ -86,8 +83,6 @@ export default function LoadoutView({
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const isPhonePortrait = useIsPhonePortrait();
-  const dispatch = useThunkDispatch();
-  const streamDeckSelection = useSelector(streamDeckSelectionSelector);
 
   // TODO: filter down by usable mods?
   const modsByBucket: {
@@ -106,16 +101,8 @@ export default function LoadoutView({
   const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
   const power = loadoutPower(store, categories);
 
-  const onLoadoutSelect = () => dispatch(streamDeckSelectLoadout(loadout, store));
-
-  const selectable = streamDeckSelection === 'loadout' && !hideShowModPlacements;
-
   return (
-    <div
-      className={`${styles.loadout} ${selectable ? styles.sdSelectable : ''}`}
-      id={loadout.id}
-      onClick={onLoadoutSelect}
-    >
+    <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
         <h2>
           {loadout.classType === DestinyClass.Unknown && (

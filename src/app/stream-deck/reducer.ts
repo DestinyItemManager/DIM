@@ -1,23 +1,22 @@
 import { DeferredPromise } from 'app/stream-deck/util/deferred';
-import { streamDeckLocal } from 'app/stream-deck/util/local-storage';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import * as actions from './actions';
 
 export interface StreamDeckState {
-  connected: boolean;
-  enabled: boolean;
-  selectionPromise: DeferredPromise;
-  selection?: 'item' | 'loadout' | 'postmaster' | undefined;
-  confirmAuthorizationKey?: string;
+  // WebSocket status
+  readonly connected: boolean;
+  // Deferred promise used with selections notifications and actions
+  readonly selectionPromise: DeferredPromise;
+  // Selection type
+  readonly selection?: 'item' | 'loadout' | 'postmaster' | undefined;
 }
 
 export type StreamDeckAction = ActionType<typeof actions>;
 
-const initialState: StreamDeckState = {
+export const initialState: StreamDeckState = {
   connected: false,
   selectionPromise: new DeferredPromise(),
-  enabled: streamDeckLocal.enabled(),
 };
 
 export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
@@ -45,12 +44,6 @@ export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
         ...state,
         selection: undefined,
       };
-    case getType(actions.streamDeckChangeStatus):
-      return {
-        ...state,
-        enabled: action.payload,
-      };
-
     default:
       return state;
   }

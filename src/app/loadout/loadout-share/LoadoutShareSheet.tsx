@@ -14,7 +14,8 @@ import React, { useEffect, useState } from 'react';
 import styles from './LoadoutShareSheet.m.scss';
 
 // Cache shares to loadouts weakly, to cut down on creating shares
-const loadoutShares = new WeakMap<Loadout, string>();
+// exported to use in stream deck module
+export const loadoutShares = new WeakMap<Loadout, string>();
 
 export default function LoadoutShareSheet({
   account,

@@ -1,6 +1,4 @@
 import { percent } from 'app/shell/formatters';
-import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { streamDeckSelectItem } from 'app/stream-deck/actions';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
@@ -49,9 +47,8 @@ export default function InventoryItem({
   onDoubleClick,
   innerRef,
 }: Props) {
-  const dispatch = useThunkDispatch();
-
   let enhancedOnClick = onClick;
+
   if (onShiftClick) {
     enhancedOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.shiftKey) {
@@ -61,12 +58,6 @@ export default function InventoryItem({
       }
     };
   }
-
-  // intercept inventory item click and send it to the stream deck if needed
-  const streamDeckSelectionClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    enhancedOnClick?.(e);
-    dispatch(streamDeckSelectItem(item));
-  };
 
   const isSubclass = item?.destinyVersion === 2 && item.bucket.hash === BucketHashes.Subclass;
   const subclassIconInfo =
@@ -130,7 +121,7 @@ export default function InventoryItem({
   return (
     <div
       id={item.index}
-      onClick={streamDeckSelectionClick}
+      onClick={enhancedOnClick}
       onDoubleClick={onDoubleClick}
       title={`${item.name}\n${subtitle}`}
       className={itemStyles}

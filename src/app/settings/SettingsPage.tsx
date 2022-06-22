@@ -15,9 +15,7 @@ import WishListSettings from 'app/settings/WishListSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import StreamDeckSettings, {
-  $streamDeckFeature,
-} from 'app/stream-deck/StreamDeckSettings/StreamDeckSettings';
+import StreamDeckSettings from 'app/stream-deck/StreamDeckSettings/StreamDeckSettings';
 import { clearAppBadge } from 'app/utils/app-badge';
 import { errorLog } from 'app/utils/log';
 import { uniqBy } from 'app/utils/util';
@@ -239,7 +237,9 @@ export default function SettingsPage() {
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
     { id: 'storage', title: t('Storage.MenuTitle') },
     { id: 'spreadsheets', title: t('Settings.Data') },
-    $streamDeckFeature ? { id: 'stream-deck', title: t('Settings.StreamDeck') } : undefined,
+    $featureFlags.elgatoStreamDeck
+      ? { id: 'stream-deck', title: t('Settings.StreamDeck') }
+      : undefined,
   ]);
 
   const uniqChars =
@@ -546,7 +546,7 @@ export default function SettingsPage() {
 
           <Spreadsheets />
 
-          {$streamDeckFeature && <StreamDeckSettings />}
+          {$featureFlags.elgatoStreamDeck && <StreamDeckSettings />}
 
           {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
             <TroubleshootingSettings />

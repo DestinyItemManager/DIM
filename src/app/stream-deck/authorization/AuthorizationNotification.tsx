@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { DeferredPromise } from 'app/stream-deck/util/deferred';
-import './AuthorizationNotification.scss';
+import styles from './AuthorizationNotification.m.scss';
 
 interface StreamDeckChallengeProps {
   challenge: number;
@@ -11,10 +11,10 @@ interface StreamDeckChallengeProps {
 
 function StreamDeckChallenge({ challenge, onApprove, onCancel }: StreamDeckChallengeProps) {
   return (
-    <div className="stream-deck-authorization">
+    <div className={styles.authorization}>
       <span>{t('StreamDeck.Authorization.Title')}</span>
-      <div className="stream-deck-challenge">{challenge}</div>
-      <div className="stream-deck-authorization-buttons">
+      <div className={styles.authorizationChallenge}>{challenge}</div>
+      <div className={styles.authorizationButtons}>
         <button type="button" className="dim-button" onClick={onApprove}>
           {t('StreamDeck.Authorization.Yes')}
         </button>

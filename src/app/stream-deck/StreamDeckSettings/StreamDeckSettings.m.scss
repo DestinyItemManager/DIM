@@ -1,0 +1,13 @@
+@use '../../variables' as *;
+
+.streamDeckSettings {
+  border-left: 5px solid #b2b2b2;
+}
+
+.streamDeckConnected {
+  border-color: $xp;
+}
+
+.downloadPlugin {
+  margin-top: 8px;
+}

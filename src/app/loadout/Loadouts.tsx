@@ -18,13 +18,15 @@ import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-u
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { plainString } from 'app/search/search-filters/freeform';
 import { useSetting } from 'app/settings/hooks';
-import { addIcon, AppIcon, deleteIcon, faCalculator } from 'app/shell/icons';
+import { addIcon, AppIcon, deleteIcon, faCalculator, faCheckCircle } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
+import { streamDeckSelectLoadout } from 'app/stream-deck/stream-deck';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React, { ReactNode, useMemo, useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
@@ -180,6 +182,7 @@ function LoadoutRow({
   onShare: (loadout: Loadout) => void;
 }) {
   const dispatch = useThunkDispatch();
+  const streamDeckSelection = useSelector(streamDeckSelectionSelector);
 
   const actionButtons = useMemo(() => {
     const handleDeleteClick = (loadout: Loadout) => dispatch(deleteLoadout(loadout.id));
@@ -191,6 +194,21 @@ function LoadoutRow({
     const actionButtons: ReactNode[] = [];
 
     if (equippable) {
+      if (streamDeckSelection === 'loadout') {
+        const handleSelection = () => dispatch(streamDeckSelectLoadout(loadout, store));
+        return [
+          <button
+            key="select-for-stream-deck"
+            type="button"
+            className="dim-button"
+            onClick={handleSelection}
+          >
+            <span className={styles.iconLabel}>{t('StreamDeck.SelectLoadout')}</span>
+            <AppIcon icon={faCheckCircle} title={t('StreamDeck.SelectLoadout')} />
+          </button>,
+        ];
+      }
+
       actionButtons.push(
         <button key="apply" type="button" className="dim-button" onClick={handleApply}>
           {t('Loadouts.Apply')}
@@ -221,7 +239,7 @@ function LoadoutRow({
     }
 
     return actionButtons;
-  }, [dispatch, equippable, loadout, onShare, saved, store]);
+  }, [dispatch, equippable, loadout, onShare, saved, store, streamDeckSelection]);
 
   return (
     <LoadoutView

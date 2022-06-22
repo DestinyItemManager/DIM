@@ -1,9 +1,13 @@
-import { streamDeckWebSocket } from 'app/stream-deck/actions';
 import { showStreamDeckAuthorizationNotification } from 'app/stream-deck/authorization/AuthorizationNotification';
 import encryption, { DIM_VERIFICATION } from 'app/stream-deck/authorization/encryption';
 import { StreamDeckMessage } from 'app/stream-deck/interfaces';
 import { StreamDeckState } from 'app/stream-deck/reducer';
-import { streamDeckLocal } from 'app/stream-deck/util/local-storage';
+import {
+  clientIdentifier,
+  setClientIdentifier,
+  setStreamDeckSharedKey,
+  streamDeckSharedKey,
+} from 'app/stream-deck/util/local-storage';
 
 // check stream deck WS authorization and decrypt message if token exists
 export const checkAuthorization = (
@@ -19,7 +23,7 @@ export const checkAuthorization = (
       promise,
       () => {
         ws.send(`dim://auth:${sharedKey}`);
-        streamDeckLocal.setSharedKey(sharedKey);
+        setStreamDeckSharedKey(sharedKey);
         promise.resolve();
       },
       () => {
@@ -30,7 +34,7 @@ export const checkAuthorization = (
   }
 
   try {
-    const decrypted = encryption.decrypt(data, streamDeckLocal.sharedKey());
+    const decrypted = encryption.decrypt(data, streamDeckSharedKey());
     return JSON.parse(decrypted);
   } catch (e) {
     return;
@@ -39,15 +43,7 @@ export const checkAuthorization = (
 
 // generate random client identifier
 export const generateIdentifier = () => {
-  if (!streamDeckLocal.identifier()) {
-    streamDeckLocal.setIdentifier(Math.random().toString(36).slice(2));
+  if (!clientIdentifier()) {
+    setClientIdentifier(Math.random().toString(36).slice(2));
   }
-};
-
-// reset authorization token and regenerate client identifier
-export const resetStreamDeckAuthorization = () => {
-  streamDeckWebSocket.send(`dim://reset:${streamDeckLocal.identifier()}`);
-  streamDeckLocal.removeIdentifier();
-  streamDeckLocal.removeSharedKey();
-  generateIdentifier();
 };
