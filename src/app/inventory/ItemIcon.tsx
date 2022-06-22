@@ -52,10 +52,10 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       {useClassifiedPlaceholder ? (
         <BucketIcon item={item} className={itemImageStyles} />
       ) : (
-        <BungieImage src={item.icon} className={itemImageStyles} alt="" />
+        <div style={bungieBackgroundStyle(item.icon)} className={itemImageStyles} />
       )}
       {item.iconOverlay && (
-        <BungieImage src={item.iconOverlay} className={styles.iconOverlay} alt="" />
+        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
       )}
       {(item.masterwork || item.deepsightInfo) && (
         <div

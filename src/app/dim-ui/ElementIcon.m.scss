@@ -2,6 +2,8 @@
   width: calc((8 / 50) * var(--item-size));
   height: calc((8 / 50) * var(--item-size));
   margin-right: 1px;
+  background-size: contain;
+  background-repeat: no-repeat;
 
   :global(.destiny1) & {
     width: calc((10 / 50) * var(--item-size));
