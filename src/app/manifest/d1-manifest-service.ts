@@ -96,29 +96,26 @@ function loadManifestRemote(version: string, path: string): ThunkResult<object> 
       const manifest = await (response.ok ? response.json() : Promise.reject(response));
 
       // We intentionally don't wait on this promise
-      saveManifestToIndexedDB(manifest, version);
+      async () => {
+        try {
+          await set(idbKey, manifest);
+          infoLog('manifest', `Successfully stored manifest file.`);
+          localStorage.setItem(localStorageKey, version);
+        } catch (e) {
+          errorLog('manifest', 'Error saving manifest file', e);
+          showNotification({
+            title: t('Help.NoStorage'),
+            body: t('Help.NoStorageMessage'),
+            type: 'error',
+          });
+        }
+      };
 
       return manifest;
     } finally {
       dispatch(loadingEnd(t('Manifest.Download')));
     }
   };
-}
-
-// This is not an anonymous arrow function inside loadManifestRemote because of https://bugs.webkit.org/show_bug.cgi?id=166879
-async function saveManifestToIndexedDB(typedArray: object, version: string) {
-  try {
-    await set(idbKey, typedArray);
-    infoLog('manifest', `Successfully stored manifest file.`);
-    localStorage.setItem(localStorageKey, version);
-  } catch (e) {
-    errorLog('manifest', 'Error saving manifest file', e);
-    showNotification({
-      title: t('Help.NoStorage'),
-      body: t('Help.NoStorageMessage'),
-      type: 'error',
-    });
-  }
 }
 
 function deleteManifestFile() {
