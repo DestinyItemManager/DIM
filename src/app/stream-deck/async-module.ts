@@ -29,7 +29,7 @@ import { accountRoute } from 'app/routes';
 import { filteredItemsSelector } from 'app/search/search-filter';
 import { setRouterLocation, setSearchQuery } from 'app/shell/actions';
 import { refresh } from 'app/shell/refresh-events';
-import { DimThunkDispatch, RootState, ThunkResult } from 'app/store/types';
+import { RootState, ThunkResult } from 'app/store/types';
 import {
   streamDeckClearSelection,
   streamDeckConnected,
@@ -67,32 +67,30 @@ function sendToStreamDeck(args: SendToStreamDeckArgs): ThunkResult {
 }
 
 // on click on InventoryItem send the selected item to the Stream Deck
-async function streamDeckSelectItem(
-  dispatch: DimThunkDispatch,
-  getState: () => RootState,
-  item: DimItem
-) {
-  const { streamDeck } = getState();
-  if (streamDeck.selection === 'item') {
-    // hide the item popup that will be opened on classic item click
-    hideItemPopup();
-    // hide the notification
-    streamDeck.selectionPromise.resolve();
-    // clear the selection state in the store
-    dispatch(streamDeckClearSelection());
-    // send selection to the Stream Deck
-    return dispatch(
-      sendToStreamDeck({
-        selectionType: 'item',
-        selection: {
-          label: item.name,
-          subtitle: item.typeName,
-          item: item.id,
-          icon: item.icon,
-        },
-      })
-    );
-  }
+function streamDeckSelectItem(item: DimItem): ThunkResult {
+  return async (dispatch, getState) => {
+    const { streamDeck } = getState();
+    if (streamDeck.selection === 'item') {
+      // hide the item popup that will be opened on classic item click
+      hideItemPopup();
+      // hide the notification
+      streamDeck.selectionPromise.resolve();
+      // clear the selection state in the store
+      dispatch(streamDeckClearSelection());
+      // send selection to the Stream Deck
+      return dispatch(
+        sendToStreamDeck({
+          selectionType: 'item',
+          selection: {
+            label: item.name,
+            subtitle: item.typeName,
+            item: item.id,
+            icon: item.icon,
+          },
+        })
+      );
+    }
+  };
 }
 
 function findSubClass(items: LoadoutItem[], state: RootState) {
@@ -107,29 +105,26 @@ function findSubClass(items: LoadoutItem[], state: RootState) {
 }
 
 // on click on LoadoutView send the selected loadout and the related character identifier to the Stream Deck
-async function streamDeckSelectLoadout(
-  dispatch: DimThunkDispatch,
-  getState: () => RootState,
-  loadout: Loadout,
-  store: DimStore
-) {
-  const state = getState();
-  if (state.streamDeck.selection === 'loadout') {
-    state.streamDeck.selectionPromise.resolve();
-    dispatch(streamDeckClearSelection());
-    return dispatch(
-      sendToStreamDeck({
-        selectionType: 'loadout',
-        selection: {
-          label: loadout.name,
-          loadout: loadout.id,
-          subtitle: store.className ?? loadout.notes,
-          character: store.id,
-          icon: findSubClass(loadout.items, state),
-        },
-      })
-    );
-  }
+function streamDeckSelectLoadout(loadout: Loadout, store: DimStore): ThunkResult {
+  return async (dispatch, getState) => {
+    const state = getState();
+    if (state.streamDeck.selection === 'loadout') {
+      state.streamDeck.selectionPromise.resolve();
+      dispatch(streamDeckClearSelection());
+      return dispatch(
+        sendToStreamDeck({
+          selectionType: 'loadout',
+          selection: {
+            label: loadout.name,
+            loadout: loadout.id,
+            subtitle: store.className ?? loadout.notes,
+            character: store.id,
+            icon: findSubClass(loadout.items, state),
+          },
+        })
+      );
+    }
+  };
 }
 
 // Show notification asking for selection
@@ -317,72 +312,76 @@ function routeTo(state: RootState, path: string) {
 }
 
 // stop the websocket's connection with the local stream deck instance
-async function stopStreamDeckConnection(dispatch: DimThunkDispatch) {
-  streamDeckWebSocket?.close();
-  clearInterval(refreshInterval);
-  dispatch(streamDeckDisconnected());
+function stopStreamDeckConnection(): ThunkResult {
+  return async (dispatch) => {
+    streamDeckWebSocket?.close();
+    clearInterval(refreshInterval);
+    dispatch(streamDeckDisconnected());
+  };
 }
 
 // start the websocket's connection with the local stream deck instance
-async function startStreamDeckConnection(dispatch: DimThunkDispatch, getState: () => RootState) {
-  const initWS = () => {
-    const state = getState();
+function startStreamDeckConnection(): ThunkResult {
+  return async (dispatch, getState) => {
+    const initWS = () => {
+      const state = getState();
 
-    // if settings/manifest/profile are not loaded retry after 1s
-    if (
-      !state.dimApi.globalSettingsLoaded ||
-      !state.manifest.destiny2CoreSettings ||
-      !state.inventory.profileResponse?.profileProgression
-    ) {
-      window.setTimeout(initWS, 1000);
-      return;
-    }
-
-    // ensure identifier exists
-    generateIdentifier();
-
-    // if stream deck is disabled stop and don't try to connect
-    if (!streamDeckEnabled()) {
-      return;
-    }
-
-    installFarmingObserver(dispatch);
-
-    // close the existing websocket if connected
-    if (streamDeckWebSocket && streamDeckWebSocket.readyState !== WebSocket.CLOSED) {
-      streamDeckWebSocket.close();
-    }
-
-    // try to connect to the stream deck local instance
-    streamDeckWebSocket = new WebSocket('wss://localhost:9119', clientIdentifier());
-
-    streamDeckWebSocket.onopen = function () {
-      dispatch(streamDeckConnected());
-      // start refreshing task with interval
-      dispatch(refreshStreamDeck());
-    };
-
-    streamDeckWebSocket.onclose = function () {
-      dispatch(streamDeckDisconnected());
-      // stop refreshing the Stream Deck State
-      clearInterval(refreshInterval);
-      // if the plugin is still enabled and the websocket is closed
-      if (streamDeckEnabled() && streamDeckWebSocket.readyState === WebSocket.CLOSED) {
-        // retry to re-connect after 5s
-        window.setTimeout(initWS, 5000);
+      // if settings/manifest/profile are not loaded retry after 1s
+      if (
+        !state.dimApi.globalSettingsLoaded ||
+        !state.manifest.destiny2CoreSettings ||
+        !state.inventory.profileResponse?.profileProgression
+      ) {
+        window.setTimeout(initWS, 1000);
+        return;
       }
+
+      // ensure identifier exists
+      generateIdentifier();
+
+      // if stream deck is disabled stop and don't try to connect
+      if (!streamDeckEnabled()) {
+        return;
+      }
+
+      installFarmingObserver(dispatch);
+
+      // close the existing websocket if connected
+      if (streamDeckWebSocket && streamDeckWebSocket.readyState !== WebSocket.CLOSED) {
+        streamDeckWebSocket.close();
+      }
+
+      // try to connect to the stream deck local instance
+      streamDeckWebSocket = new WebSocket('wss://localhost:9119', clientIdentifier());
+
+      streamDeckWebSocket.onopen = function () {
+        dispatch(streamDeckConnected());
+        // start refreshing task with interval
+        dispatch(refreshStreamDeck());
+      };
+
+      streamDeckWebSocket.onclose = function () {
+        dispatch(streamDeckDisconnected());
+        // stop refreshing the Stream Deck State
+        clearInterval(refreshInterval);
+        // if the plugin is still enabled and the websocket is closed
+        if (streamDeckEnabled() && streamDeckWebSocket.readyState === WebSocket.CLOSED) {
+          // retry to re-connect after 5s
+          window.setTimeout(initWS, 5000);
+        }
+      };
+
+      streamDeckWebSocket.onmessage = function ({ data }) {
+        dispatch(handleStreamDeckMessage(data));
+      };
+
+      streamDeckWebSocket.onerror = function () {
+        streamDeckWebSocket.close();
+      };
     };
 
-    streamDeckWebSocket.onmessage = function ({ data }) {
-      dispatch(handleStreamDeckMessage(data));
-    };
-
-    streamDeckWebSocket.onerror = function () {
-      streamDeckWebSocket.close();
-    };
+    initWS();
   };
-
-  initWS();
 }
 
 function resetIdentifierOnStreamDeck() {

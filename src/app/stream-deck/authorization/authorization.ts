@@ -1,7 +1,6 @@
 import { showStreamDeckAuthorizationNotification } from 'app/stream-deck/authorization/AuthorizationNotification';
 import { DIM_VERIFICATION, streamDeckDecrypt } from 'app/stream-deck/authorization/encryption';
-import { StreamDeckMessage } from 'app/stream-deck/interfaces';
-import { StreamDeckState } from 'app/stream-deck/reducer';
+import { StreamDeckMessage, StreamDeckState } from 'app/stream-deck/interfaces';
 import {
   clientIdentifier,
   setClientIdentifier,

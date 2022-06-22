@@ -1,10 +1,7 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { clarity } from 'app/clarity/reducer';
-import {
-  initialState as streamDeckInitialState,
-  streamDeck,
-  StreamDeckState,
-} from 'app/stream-deck/reducer';
+import { StreamDeckState } from 'app/stream-deck/interfaces';
+import { lazyStreamDeck, streamDeckInitialState } from 'app/stream-deck/stream-deck';
 import { vendors } from 'app/vendors/reducer';
 import { combineReducers, Reducer } from 'redux';
 import { accounts } from '../accounts/reducer';
@@ -45,8 +42,8 @@ const reducer: Reducer<RootState> = (state, action) => {
   );
 
   // enable reducer for Stream Deck Feature only if enabled
-  if ($featureFlags.elgatoStreamDeck) {
-    const streamDeckState = streamDeck(intermediateState.streamDeck, action);
+  if ($featureFlags.elgatoStreamDeck && lazyStreamDeck.reducer) {
+    const streamDeckState = lazyStreamDeck.reducer(intermediateState.streamDeck, action);
     if (streamDeckState !== intermediateState.streamDeck) {
       intermediateState = {
         ...intermediateState,

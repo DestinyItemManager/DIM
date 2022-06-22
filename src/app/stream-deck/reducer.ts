@@ -1,26 +1,10 @@
-import { DeferredPromise } from 'app/stream-deck/util/deferred';
+import { StreamDeckAction, StreamDeckState } from 'app/stream-deck/interfaces';
 import { Reducer } from 'redux';
-import { ActionType, getType } from 'typesafe-actions';
+import { getType } from 'typesafe-actions';
 import * as actions from './actions';
 
-export interface StreamDeckState {
-  // WebSocket status
-  readonly connected: boolean;
-  // Deferred promise used with selections notifications and actions
-  readonly selectionPromise: DeferredPromise;
-  // Selection type
-  readonly selection?: 'item' | 'loadout' | 'postmaster' | undefined;
-}
-
-export type StreamDeckAction = ActionType<typeof actions>;
-
-export const initialState: StreamDeckState = {
-  connected: false,
-  selectionPromise: new DeferredPromise(),
-};
-
-export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
-  state: StreamDeckState = initialState,
+const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
+  state: StreamDeckState,
   action: StreamDeckAction
 ) => {
   switch (action.type) {
@@ -48,3 +32,5 @@ export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
       return state;
   }
 };
+
+export default streamDeck;

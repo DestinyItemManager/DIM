@@ -1,5 +1,5 @@
-import type { StreamDeckState } from 'app/stream-deck/reducer';
 import type { ClarityState } from 'app/clarity/reducer';
+import { StreamDeckState } from 'app/stream-deck/interfaces';
 import type { VendorsState } from 'app/vendors/reducer';
 import type { AnyAction } from 'redux';
 import type { ThunkAction, ThunkDispatch } from 'redux-thunk';

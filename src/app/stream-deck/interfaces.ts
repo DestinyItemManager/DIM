@@ -1,6 +1,26 @@
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { DimItem } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { ThunkResult } from 'app/store/types';
+import * as actions from 'app/stream-deck/actions';
+import { DeferredPromise } from 'app/stream-deck/util/deferred';
+import { Reducer } from 'redux';
+import { ActionType } from 'typesafe-actions';
 
 export type StreamDeckSelectionType = 'loadout' | 'item';
+
+// Redux Store Stream Deck State
+export interface StreamDeckState {
+  // WebSocket status
+  readonly connected: boolean;
+  // Deferred promise used with selections notifications and actions
+  readonly selectionPromise: DeferredPromise;
+  // Selection type
+  readonly selection?: 'item' | 'loadout' | 'postmaster' | undefined;
+}
+
+export type StreamDeckAction = ActionType<typeof actions>;
 
 // trigger a pre-written search
 // choose a specific page (inventory, vendors, records, etc..)
@@ -129,4 +149,15 @@ export interface SendToStreamDeckArgs {
   maxPower?: MaxPowerArgs;
   vault?: VaultArgs;
   metrics?: MetricsArgs;
+}
+
+export interface LazyStreamDeck {
+  reducer?: Reducer<StreamDeckState, StreamDeckAction>;
+  core?: {
+    startStreamDeckConnection: () => ThunkResult;
+    stopStreamDeckConnection: () => ThunkResult;
+    streamDeckSelectItem: (item: DimItem) => ThunkResult;
+    streamDeckSelectLoadout: (loadout: Loadout, store: DimStore) => ThunkResult;
+    resetIdentifierOnStreamDeck: () => void;
+  };
 }
