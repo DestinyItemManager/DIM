@@ -1140,7 +1140,7 @@
       "Postmaster": "Choose an item from the Postmaster"
     },
     "Authorization": {
-      "Title": "Do you see this number on the Stream Deck ?",
+      "Title": "Do you see this number on the Stream Deck?",
       "Yes": "Yes",
       "No": "No",
       "Reset": "DE-AUTHORIZE"
