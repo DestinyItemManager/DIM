@@ -26,6 +26,11 @@
   height: calc(var(--item-size) + #{$badge-height});
 }
 
+.placeholderBadge {
+  height: calc(var(--item-size) + #{$badge-height}) !important;
+  border-bottom-width: calc(#{$item-border-width} + #{$badge-height}) !important;
+}
+
 // The wrapper for draggable items. Global because it's referenced by other styles.
 :global(.item-drag-container) {
   contain: layout paint style;

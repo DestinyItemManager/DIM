@@ -4,6 +4,7 @@ interface CssExports {
   'hasBadge': string;
   'icon': string;
   'icons': string;
+  'placeholderBadge': string;
   'searchHidden': string;
   'subclass': string;
   'subclassBase': string;

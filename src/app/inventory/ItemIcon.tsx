@@ -23,14 +23,7 @@ const itemTierStyles = {
   Uncommon: styles.common,
 };
 
-/**
- * This is just the icon part of the inventory tile - without the bottom stats bar, tag icons, etc.
- * This exists because we have to do a fair bit of work to make the icon look like it does in game
- * with respect to masterwork, season icons, mod overlays, etc.
- *
- * This renders just a fragment - it always needs to be rendered inside another div with class "item".
- */
-export default function ItemIcon({ item, className }: { item: DimItem; className?: string }) {
+export function getItemImageStyles(item: DimItem, className?: string) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
   const borderless =
     (item?.destinyVersion === 2 &&
@@ -46,6 +39,19 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     [styles.bucketIcon]: useClassifiedPlaceholder,
     [itemTierStyles[item.tier]]: !borderless && !item.plug,
   });
+  return itemImageStyles;
+}
+
+/**
+ * This is just the icon part of the inventory tile - without the bottom stats bar, tag icons, etc.
+ * This exists because we have to do a fair bit of work to make the icon look like it does in game
+ * with respect to masterwork, season icons, mod overlays, etc.
+ *
+ * This renders just a fragment - it always needs to be rendered inside another div with class "item".
+ */
+export default function ItemIcon({ item, className }: { item: DimItem; className?: string }) {
+  const useClassifiedPlaceholder = item.icon === d2MissingIcon && item.classified;
+  const itemImageStyles = getItemImageStyles(item, className);
 
   return (
     <>

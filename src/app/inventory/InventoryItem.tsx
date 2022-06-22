@@ -9,7 +9,7 @@ import BadgeInfo, { shouldShowBadge } from './BadgeInfo';
 import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
 import { DimItem } from './item-types';
-import ItemIcon from './ItemIcon';
+import ItemIcon, { getItemImageStyles } from './ItemIcon';
 import NewItemIndicator from './NewItemIndicator';
 import { getSubclassIconInfo } from './subclass';
 import TagIcon from './TagIcon';
@@ -63,13 +63,14 @@ export default function InventoryItem({
     isSubclass && selectedSuperDisplay !== 'disabled'
       ? getSubclassIconInfo(item, selectedSuperDisplay === 'v3SubclassesOnly')
       : null;
+  const hasBadge = shouldShowBadge(item);
   const itemStyles = clsx('item', {
     [styles.searchHidden]: searchHidden,
     [styles.subclass]: isSubclass,
     [styles.subclassPathTop]: subclassIconInfo?.path === 'top',
     [styles.subclassPathMiddle]: subclassIconInfo?.path === 'middle',
     [styles.subclassPathBottom]: subclassIconInfo?.path === 'bottom',
-    [styles.hasBadge]: shouldShowBadge(item),
+    [styles.hasBadge]: hasBadge,
   });
   // Subtitle for engram powerlevel vs regular item type
   const subtitle = item.destinyVersion === 2 && item.isEngram ? item.power : item.typeName;
@@ -128,7 +129,9 @@ export default function InventoryItem({
       className={itemStyles}
       ref={innerRef}
     >
-      <ItemIconPlaceholder>{contents}</ItemIconPlaceholder>
+      <ItemIconPlaceholder item={item} hasBadge={hasBadge}>
+        {contents}
+      </ItemIconPlaceholder>
     </div>
   );
 }
@@ -139,7 +142,15 @@ export default function InventoryItem({
  * performance regression on iOS Safari 15 where rendering image tags hangs the
  * browser.
  */
-function ItemIconPlaceholder({ children }: { children: React.ReactNode }) {
+function ItemIconPlaceholder({
+  item,
+  children,
+  hasBadge,
+}: {
+  item: DimItem;
+  children: React.ReactNode;
+  hasBadge: boolean;
+}) {
   const [visible, setVisible] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -166,5 +177,12 @@ function ItemIconPlaceholder({ children }: { children: React.ReactNode }) {
     return () => obs.disconnect();
   }, []);
 
-  return visible ? <>{children}</> : <div className="item-img" ref={ref} />;
+  return visible ? (
+    <>{children}</>
+  ) : (
+    <div
+      className={clsx(getItemImageStyles(item), { [styles.placeholderBadge]: hasBadge })}
+      ref={ref}
+    />
+  );
 }
