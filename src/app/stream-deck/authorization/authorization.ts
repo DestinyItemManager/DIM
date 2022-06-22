@@ -1,5 +1,5 @@
 import { showStreamDeckAuthorizationNotification } from 'app/stream-deck/authorization/AuthorizationNotification';
-import encryption, { DIM_VERIFICATION } from 'app/stream-deck/authorization/encryption';
+import { DIM_VERIFICATION, streamDeckDecrypt } from 'app/stream-deck/authorization/encryption';
 import { StreamDeckMessage } from 'app/stream-deck/interfaces';
 import { StreamDeckState } from 'app/stream-deck/reducer';
 import {
@@ -34,7 +34,7 @@ export const checkAuthorization = (
   }
 
   try {
-    const decrypted = encryption.decrypt(data, streamDeckSharedKey());
+    const decrypted = streamDeckDecrypt(data, streamDeckSharedKey());
     return JSON.parse(decrypted);
   } catch (e) {
     return;

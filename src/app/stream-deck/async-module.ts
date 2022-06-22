@@ -40,7 +40,7 @@ import {
   checkAuthorization,
   generateIdentifier,
 } from 'app/stream-deck/authorization/authorization';
-import encryption from 'app/stream-deck/authorization/encryption';
+import { streamDeckEncrypt } from 'app/stream-deck/authorization/encryption';
 import { SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
 import {
   clientIdentifier,
@@ -61,7 +61,7 @@ function sendToStreamDeck(args: SendToStreamDeckArgs): ThunkResult {
   return async () => {
     if (streamDeckWebSocket?.readyState === WebSocket.OPEN) {
       const sharedKey = streamDeckSharedKey();
-      sharedKey && streamDeckWebSocket.send(encryption.encrypt(JSON.stringify(args), sharedKey));
+      sharedKey && streamDeckWebSocket.send(streamDeckEncrypt(JSON.stringify(args), sharedKey));
     }
   };
 }
