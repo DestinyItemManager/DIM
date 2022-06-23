@@ -237,9 +237,7 @@ export default function SettingsPage() {
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
     { id: 'storage', title: t('Storage.MenuTitle') },
     { id: 'spreadsheets', title: t('Settings.Data') },
-    $featureFlags.elgatoStreamDeck
-      ? { id: 'stream-deck', title: t('Settings.StreamDeck') }
-      : undefined,
+    $featureFlags.elgatoStreamDeck ? { id: 'stream-deck', title: 'Elgato Stream Deck' } : undefined,
   ]);
 
   const uniqChars =

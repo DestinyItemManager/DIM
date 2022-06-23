@@ -930,8 +930,7 @@
     "SortCustom": "Custom Sort",
     "SortName": "Name",
     "SpacesSize": "{{count}} space",
-    "SpacesSize_plural": "{{count}} spaces",
-    "StreamDeck": "Elgato Stream Deck"
+    "SpacesSize_plural": "{{count}} spaces"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
@@ -1031,10 +1030,8 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "No": "No",
       "Reset": "DE-AUTHORIZE",
-      "Title": "Do you see this number on the Stream Deck?",
-      "Yes": "Yes"
+      "Title": "Pick this number on your Stream Deck"
     },
     "Enable": "Stream Deck Plugin",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin",

@@ -2,7 +2,7 @@ import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { ThunkResult } from 'app/store/types';
+import { RootState, ThunkResult } from 'app/store/types';
 import * as actions from 'app/stream-deck/actions';
 import { DeferredPromise } from 'app/stream-deck/util/deferred';
 import { Reducer } from 'redux';
@@ -25,7 +25,7 @@ export type StreamDeckAction = ActionType<typeof actions>;
 // trigger a pre-written search
 // choose a specific page (inventory, vendors, records, etc..)
 // choose if highlight items only or move search items to current store
-interface SearchAction {
+export interface SearchAction {
   action: 'search';
   search: string;
   page: string;
@@ -34,61 +34,72 @@ interface SearchAction {
 
 // randomize the current character
 // both modes (weapon only / all)
-interface RandomizeAction {
+export interface RandomizeAction {
   action: 'randomize';
   weaponsOnly: boolean;
 }
 
 // collect all items from postmaster
-interface CollectPostmasterAction {
+export interface CollectPostmasterAction {
   action: 'collectPostmaster';
 }
 
 // trigger refresh DIM
-interface RefreshAction {
+export interface RefreshAction {
   action: 'refresh';
 }
 
 // enable/disable farming mode
-interface FarmingModeAction {
+export interface FarmingModeAction {
   action: 'farmingMode';
 }
 
 // maximize power
-interface MaxPowerAction {
+export interface MaxPowerAction {
   action: 'maxPower';
 }
 
 // pick a random item of the selected bucket
 // and move it to the vault to free a slot
-interface FreeBucketSlotAction {
+export interface FreeBucketSlotAction {
   action: 'freeBucketSlot';
   bucket: InventoryBucket['type'];
 }
 
 // pull a selected item from other character/vault
 // (if the current character has already that item it will be moved to the vault)
-interface PullItemAction {
+export interface PullItemAction {
   action: 'pullItem';
   item: string;
 }
 
 // allow the user to pick a specific "thing" and send it to the Stream Deck
 // this thing can be a loadout or an item
-interface SelectionAction {
+export interface SelectionAction {
   action: 'selection';
   selection: StreamDeckSelectionType;
 }
 
 // equip a selected loadout (for a specific store)
 // send the shareable link of a loadout to the Stream Deck
-interface EquipOrShareLoadoutAction {
+export interface EquipOrShareLoadoutAction {
   action: 'loadout' | 'shareLoadout';
   loadout: string;
   character: string;
 }
 
-export type StreamDeckMessage =
+export interface AuthorizationInitAction {
+  action: 'authorization:init';
+}
+
+export interface AuthorizationConfirmAction {
+  action: 'authorization:confirm';
+  challenge?: number;
+}
+
+export type StreamDeckMessage = (
+  | AuthorizationInitAction
+  | AuthorizationConfirmAction
   | SearchAction
   | RandomizeAction
   | CollectPostmasterAction
@@ -98,7 +109,8 @@ export type StreamDeckMessage =
   | FreeBucketSlotAction
   | PullItemAction
   | SelectionAction
-  | EquipOrShareLoadoutAction;
+  | EquipOrShareLoadoutAction
+) & { token?: string };
 
 // Types of messages sent to Stream Deck
 
@@ -116,7 +128,8 @@ export interface MetricsArgs {
   trials: number;
   gunsmith: number;
   ironBanner: number;
-  battlePass: any;
+  triumphs: number;
+  battlePass: number;
   artifactIcon?: string;
 }
 
@@ -133,22 +146,35 @@ export interface MaxPowerArgs {
   total: string;
 }
 
+export interface Challenge {
+  label: number;
+  value: string;
+}
+
 export interface SendToStreamDeckArgs {
-  selectionType?: StreamDeckSelectionType;
-  selection?: {
-    label: string;
-    subtitle: string;
-    icon?: string;
-    item?: string;
-    loadout?: string;
-    character?: string;
+  // action to execute on Stream Deck
+  action: 'dim:update' | 'dim:share-url' | 'authorization:challenges' | 'authorization:reset';
+  // AuthorizationNotification token
+  token?: string;
+  // actions parameters
+  data?: {
+    challenges?: Challenge[];
+    selectionType?: StreamDeckSelectionType;
+    selection?: {
+      label: string;
+      subtitle: string;
+      icon?: string;
+      item?: string;
+      loadout?: string;
+      character?: string;
+    };
+    farmingMode?: boolean;
+    shareUrl?: string;
+    postmaster?: PostmasterArgs;
+    maxPower?: MaxPowerArgs;
+    vault?: VaultArgs;
+    metrics?: MetricsArgs;
   };
-  farmingMode?: boolean;
-  shareUrl?: string;
-  postmaster?: PostmasterArgs;
-  maxPower?: MaxPowerArgs;
-  vault?: VaultArgs;
-  metrics?: MetricsArgs;
 }
 
 export interface LazyStreamDeck {
@@ -161,3 +187,14 @@ export interface LazyStreamDeck {
     resetIdentifierOnStreamDeck: () => void;
   };
 }
+
+export interface HandlerArgs<T> {
+  msg: T;
+  state: RootState;
+  store: DimStore;
+}
+
+export type MessageHandler = Record<
+  StreamDeckMessage['action'],
+  (args: HandlerArgs<StreamDeckMessage>) => ThunkResult
+>;

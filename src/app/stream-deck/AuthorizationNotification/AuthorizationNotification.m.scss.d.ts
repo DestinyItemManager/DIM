@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'authorization': string;
-  'authorizationButtons': string;
   'authorizationChallenge': string;
 }
 export const cssExports: CssExports;

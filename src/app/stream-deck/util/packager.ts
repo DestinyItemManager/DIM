@@ -110,6 +110,7 @@ function streamDeckMetricsUpdate(state: RootState): MetricsArgs {
     trials: progression[2755675426].currentProgress,
     gunsmith: progression[1471185389].currentProgress,
     ironBanner: progression[599071390].currentProgress,
+    triumphs: 0, // TODO to be implemented
     battlePass: battlePassHash ? seasonalRank : 0,
     artifactIcon,
   };

@@ -1,51 +1,25 @@
 // async module
 
 // serialize the data and send it if connected
-import { currentAccountSelector } from 'app/accounts/selectors';
-import { createLoadoutShare } from 'app/dim-api/dim-api';
-import { startFarming, stopFarming } from 'app/farming/actions';
-import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { moveItemTo } from 'app/inventory/move-item';
-import {
-  allItemsSelector,
-  currentStoreSelector,
-  storesSelector,
-  vaultSelector,
-} from 'app/inventory/selectors';
+import { currentStoreSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { getStore } from 'app/inventory/stores-helpers';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { itemMoveLoadout, maxLightLoadout, randomLoadout } from 'app/loadout-drawer/auto-loadouts';
-import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { pullFromPostmaster } from 'app/loadout-drawer/postmaster';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
-import { loadoutShares } from 'app/loadout/loadout-share/LoadoutShareSheet';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { showNotification } from 'app/notifications/notifications';
-import { accountRoute } from 'app/routes';
-import { filteredItemsSelector } from 'app/search/search-filter';
-import { setRouterLocation, setSearchQuery } from 'app/shell/actions';
-import { refresh } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
 import {
   streamDeckClearSelection,
   streamDeckConnected,
   streamDeckDisconnected,
-  streamDeckWaitSelection,
 } from 'app/stream-deck/actions';
-import {
-  checkAuthorization,
-  generateIdentifier,
-} from 'app/stream-deck/authorization/authorization';
-import { streamDeckEncrypt } from 'app/stream-deck/authorization/encryption';
 import { SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
+import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
 import {
   clientIdentifier,
+  setClientIdentifier,
   streamDeckEnabled,
-  streamDeckSharedKey,
+  streamDeckToken,
 } from 'app/stream-deck/util/local-storage';
 import packager from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
@@ -57,11 +31,24 @@ let streamDeckWebSocket: WebSocket;
 
 let refreshInterval: number;
 
-function sendToStreamDeck(args: SendToStreamDeckArgs): ThunkResult {
+// generate random client identifier
+function generateIdentifier() {
+  if (!clientIdentifier()) {
+    setClientIdentifier(Math.random().toString(36).slice(2));
+  }
+}
+
+export function sendToStreamDeck(msg: SendToStreamDeckArgs, noAuth = false): ThunkResult {
   return async () => {
     if (streamDeckWebSocket?.readyState === WebSocket.OPEN) {
-      const sharedKey = streamDeckSharedKey();
-      sharedKey && streamDeckWebSocket.send(streamDeckEncrypt(JSON.stringify(args), sharedKey));
+      const token = streamDeckToken();
+      (noAuth || token) &&
+        streamDeckWebSocket.send(
+          JSON.stringify({
+            ...msg,
+            token,
+          })
+        );
     }
   };
 }
@@ -80,12 +67,15 @@ function streamDeckSelectItem(item: DimItem): ThunkResult {
       // send selection to the Stream Deck
       return dispatch(
         sendToStreamDeck({
-          selectionType: 'item',
-          selection: {
-            label: item.name,
-            subtitle: item.typeName,
-            item: item.id,
-            icon: item.icon,
+          action: 'dim:update',
+          data: {
+            selectionType: 'item',
+            selection: {
+              label: item.name,
+              subtitle: item.typeName,
+              item: item.id,
+              icon: item.icon,
+            },
           },
         })
       );
@@ -113,157 +103,19 @@ function streamDeckSelectLoadout(loadout: Loadout, store: DimStore): ThunkResult
       dispatch(streamDeckClearSelection());
       return dispatch(
         sendToStreamDeck({
-          selectionType: 'loadout',
-          selection: {
-            label: loadout.name,
-            loadout: loadout.id,
-            subtitle: store.className ?? loadout.notes,
-            character: store.id,
-            icon: findSubClass(loadout.items, state),
+          action: 'dim:update',
+          data: {
+            selectionType: 'loadout',
+            selection: {
+              label: loadout.name,
+              loadout: loadout.id,
+              subtitle: store.className ?? loadout.notes,
+              character: store.id,
+              icon: findSubClass(loadout.items, state),
+            },
           },
         })
       );
-    }
-  };
-}
-
-// Show notification asking for selection
-function showSelectionNotification(
-  state: RootState,
-  selectionType: 'item' | 'loadout',
-  onCancel?: () => void
-) {
-  // cancel previous selection notification
-  state.streamDeck.selectionPromise.resolve();
-
-  showNotification({
-    title: 'Elgato Stream Deck',
-    body:
-      selectionType === 'item' ? t('StreamDeck.Selection.Item') : t('StreamDeck.Selection.Loadout'),
-    type: 'info',
-    duration: 500,
-    onCancel,
-    onClick: onCancel,
-    promise: state.streamDeck.selectionPromise.promise,
-  });
-}
-
-// handle actions coming from the stream deck instance
-function handleStreamDeckMessage(msg: string): ThunkResult {
-  return async (dispatch, getState) => {
-    const state = getState();
-
-    const data = checkAuthorization(msg, state.streamDeck, streamDeckWebSocket);
-
-    // this is not an encrypted msg or a challenge string
-    if (!data) {
-      return;
-    }
-
-    const currentStore = currentStoreSelector(state);
-
-    if (!currentStore) {
-      return;
-    }
-
-    switch (data.action) {
-      case 'refresh':
-        return refresh();
-      case 'search': {
-        dispatch(setRouterLocation(routeTo(state, data.page || 'inventory')));
-        if (data.pullItems) {
-          const loadout = itemMoveLoadout(filteredItemsSelector(state), currentStore);
-          return dispatch(applyLoadout(currentStore, loadout, { allowUndo: true }));
-        } else {
-          dispatch(setSearchQuery(data.search, true));
-        }
-        return;
-      }
-      case 'randomize': {
-        const allItems = allItemsSelector(state);
-        const loadout = randomLoadout(
-          currentStore,
-          allItems,
-          data.weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' : () => true
-        );
-        loadout && (await dispatch(applyLoadout(currentStore, loadout, { allowUndo: true })));
-        return;
-      }
-      case 'collectPostmaster': {
-        return dispatch(pullFromPostmaster(currentStore));
-      }
-      case 'farmingMode': {
-        if (state.farming.storeId) {
-          return dispatch(stopFarming());
-        } else {
-          return dispatch(startFarming(currentStore?.id));
-        }
-      }
-      case 'maxPower': {
-        const allItems = allItemsSelector(state);
-        const loadout = maxLightLoadout(allItems, currentStore);
-        return dispatch(applyLoadout(currentStore, loadout, { allowUndo: true }));
-      }
-      case 'selection': {
-        const selectionType = data.selection;
-        dispatch(setSearchQuery(''));
-        dispatch(streamDeckWaitSelection(selectionType));
-
-        // open the related page
-        const path = selectionType === 'loadout' ? 'loadouts' : 'inventory';
-        dispatch(setRouterLocation(routeTo(state, path)));
-
-        // show the notification
-        showSelectionNotification(state, selectionType, () => dispatch(streamDeckClearSelection()));
-        return;
-      }
-      case 'loadout': {
-        const loadouts = loadoutsSelector(state);
-        const stores = storesSelector(state);
-        const store = getStore(stores, data.character);
-        const loadout = loadouts.find((it) => it.id === data.loadout);
-        if (store && loadout) {
-          return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
-        }
-        return;
-      }
-      case 'shareLoadout': {
-        const loadouts = loadoutsSelector(state);
-        const account = currentAccountSelector(state);
-        const accountId = account?.membershipId;
-        const loadout = loadouts.find((it) => it.id === data.loadout);
-        if (accountId && loadout) {
-          const shareUrl =
-            loadoutShares.get(loadout) ||
-            (await createLoadoutShare(accountId, convertDimLoadoutToApiLoadout(loadout)));
-          loadoutShares.set(loadout, shareUrl);
-          return dispatch(
-            sendToStreamDeck({
-              shareUrl,
-            })
-          );
-        }
-        return;
-      }
-      case 'freeBucketSlot': {
-        const items = currentStore.items.filter((it) => it.type === data.bucket);
-        const vaultStore = vaultSelector(state);
-        const pickedItem = items.find((it) => !it.equipped);
-        pickedItem && (await dispatch(moveItemTo(pickedItem, vaultStore!, false)));
-        return;
-      }
-      case 'pullItem': {
-        const allItems = allItemsSelector(state);
-        const vaultStore = vaultSelector(state);
-        const item = allItems.find((it) => it.index === data.item);
-        if (item) {
-          if (currentStore.items.includes(item)) {
-            await dispatch(moveItemTo(item, vaultStore!, false));
-          } else {
-            await dispatch(moveItemTo(item, currentStore, false));
-          }
-        }
-      }
     }
   };
 }
@@ -274,7 +126,10 @@ const installFarmingObserver = _.once((dispatch) => {
     (_, newState) => {
       dispatch(
         sendToStreamDeck({
-          farmingMode: Boolean(newState),
+          action: 'dim:update',
+          data: {
+            farmingMode: Boolean(newState),
+          },
         })
       );
     }
@@ -292,10 +147,13 @@ function refreshStreamDeck(): ThunkResult {
       }
       dispatch(
         sendToStreamDeck({
-          postmaster: packager.postmaster(store),
-          maxPower: packager.maxPower(store, state),
-          vault: packager.vault(state),
-          metrics: packager.metrics(state),
+          action: 'dim:update',
+          data: {
+            postmaster: packager.postmaster(store),
+            maxPower: packager.maxPower(store, state),
+            vault: packager.vault(state),
+            metrics: packager.metrics(state),
+          },
         })
       );
     };
@@ -303,12 +161,6 @@ function refreshStreamDeck(): ThunkResult {
     refreshInterval = window.setInterval(refreshAction, 30000);
     refreshAction();
   };
-}
-
-// Calc location path
-function routeTo(state: RootState, path: string) {
-  const account = currentAccountSelector(state);
-  return account ? `${accountRoute(account)}/${path}` : undefined;
 }
 
 // stop the websocket's connection with the local stream deck instance
@@ -372,7 +224,7 @@ function startStreamDeckConnection(): ThunkResult {
       };
 
       streamDeckWebSocket.onmessage = function ({ data }) {
-        dispatch(handleStreamDeckMessage(data));
+        dispatch(handleStreamDeckMessage(JSON.parse(data)));
       };
 
       streamDeckWebSocket.onerror = function () {
@@ -385,7 +237,9 @@ function startStreamDeckConnection(): ThunkResult {
 }
 
 function resetIdentifierOnStreamDeck() {
-  streamDeckWebSocket?.send(`dim://reset:${clientIdentifier()}`);
+  sendToStreamDeck({
+    action: 'authorization:reset',
+  });
 }
 
 infoLog('stream deck', 'feature lazy loaded');

@@ -1026,8 +1026,7 @@
     "SortCustom": "Custom Sort",
     "SortName": "Name",
     "SpacesSize": "{{count}} space",
-    "SpacesSize_plural": "{{count}} spaces",
-    "StreamDeck": "Elgato Stream Deck"
+    "SpacesSize_plural": "{{count}} spaces"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
@@ -1141,9 +1140,7 @@
       "Postmaster": "Choose an item from the Postmaster"
     },
     "Authorization": {
-      "Title": "Do you see this number on the Stream Deck?",
-      "Yes": "Yes",
-      "No": "No",
+      "Title": "Pick this number on your Stream Deck",
       "Reset": "DE-AUTHORIZE"
     }
   },

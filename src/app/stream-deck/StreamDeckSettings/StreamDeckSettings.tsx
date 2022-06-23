@@ -45,7 +45,7 @@ export default function StreamDeckSettings() {
 
   return (
     <section id="stream-deck">
-      <h2>{t('Settings.StreamDeck')}</h2>
+      <h2>Elgato Stream Deck</h2>
       <div
         className={clsx('setting', styles.streamDeckSettings, {
           [styles.streamDeckConnected]: connected,

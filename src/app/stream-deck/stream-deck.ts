@@ -4,10 +4,7 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { ThunkResult } from 'app/store/types';
 import { LazyStreamDeck, StreamDeckState } from 'app/stream-deck/interfaces';
 import { DeferredPromise } from 'app/stream-deck/util/deferred';
-import {
-  removeClientIdentifier,
-  removeStreamDeckSharedKey,
-} from 'app/stream-deck/util/local-storage';
+import { removeClientIdentifier, removeStreamDeckToken } from 'app/stream-deck/util/local-storage';
 
 export const lazyStreamDeck: LazyStreamDeck = {};
 
@@ -39,11 +36,11 @@ export const streamDeckSelectItem = (item: DimItem): ThunkResult =>
 export const streamDeckSelectLoadout = (loadout: Loadout, store: DimStore) =>
   lazyStreamDeck.core!.streamDeckSelectLoadout(loadout, store);
 
-// reset authorization token and regenerate client identifier
+// reset AuthorizationNotification token and regenerate client identifier
 export const resetStreamDeckAuthorization = async () => {
   lazyStreamDeck.core!.resetIdentifierOnStreamDeck();
   removeClientIdentifier();
-  removeStreamDeckSharedKey();
+  removeStreamDeckToken();
 };
 
 // run both lazy loaded modules
