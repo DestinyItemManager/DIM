@@ -1,7 +1,9 @@
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
 import { streamDeckSelectItem } from 'app/stream-deck/stream-deck';
 import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import React, { useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from '../inventory/DraggableInventoryItem';
 import { DimItem } from '../inventory/item-types';
@@ -22,6 +24,8 @@ export default function StoreInventoryItem({ item }: Props) {
     [dispatch, item]
   );
 
+  const selection = useSelector(streamDeckSelectionSelector);
+
   return (
     <DraggableInventoryItem item={item}>
       <ItemPopupTrigger item={item}>
@@ -31,7 +35,11 @@ export default function StoreInventoryItem({ item }: Props) {
             allowFilter={true}
             innerRef={ref}
             // intercept inventory item click and send it to the stream deck if needed
-            onClick={streamDeckEnabled() ? () => dispatch(streamDeckSelectItem(item)) : onClick}
+            onClick={
+              streamDeckEnabled() && selection === 'item'
+                ? () => dispatch(streamDeckSelectItem(item))
+                : onClick
+            }
             onDoubleClick={doubleClicked}
             // for only StoreInventoryItems (the main inventory page)
             // we mark these to be dimmed if archived
