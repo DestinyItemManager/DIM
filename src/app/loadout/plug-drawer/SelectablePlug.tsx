@@ -1,11 +1,10 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { StatValue } from 'app/item-popup/PlugTooltip';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { getPerkDescriptions } from 'app/utils/socket-utils';
+import { getPlugDescriptions } from 'app/utils/plug-descriptions';
 import clsx from 'clsx';
 import { useCallback, useMemo } from 'react';
 import styles from './SelectablePlug.m.scss';
@@ -70,7 +69,7 @@ function SelectablePlugDetails({
   displayedStatHashes?: number[];
 }) {
   const defs = useD2Definitions()!;
-  const plugDescriptions = buildPlugDescriptions(plug, defs);
+  const plugDescriptions = getPlugDescriptions(plug, defs);
   const displayedStats = plug.investmentStats.filter((stat) =>
     displayedStatHashes?.includes(stat.statTypeHash)
   );
@@ -101,13 +100,4 @@ function SelectablePlugDetails({
       </div>
     </>
   );
-}
-
-function buildPlugDescriptions(
-  plugDef: PluggableInventoryItemDefinition,
-  defs: D2ManifestDefinitions
-) {
-  return {
-    perks: getPerkDescriptions(plugDef, defs),
-  };
 }

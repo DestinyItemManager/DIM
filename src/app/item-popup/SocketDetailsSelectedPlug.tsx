@@ -22,7 +22,7 @@ import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptySpecialtySocketHashes, isPlugStatActive } from 'app/utils/item-utils';
-import { getPerkDescriptions } from 'app/utils/socket-utils';
+import { getPlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -312,7 +312,7 @@ function buildPlugDescriptions(
   return {
     perks:
       showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)
-        ? (defs && getPerkDescriptions(plugDef, defs)) || []
+        ? (defs && getPlugDescriptions(plugDef, defs).perks) || []
         : undefined,
     communityInsight: showCommunityDescription && communityInsight,
   };

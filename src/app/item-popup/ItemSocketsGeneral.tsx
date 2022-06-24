@@ -4,11 +4,8 @@ import { settingSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
-import {
-  getIntrinsicArmorPerkSocket,
-  getPerkDescriptions,
-  getSocketsByIndexes,
-} from 'app/utils/socket-utils';
+import { getPlugDescriptions } from 'app/utils/plug-descriptions';
+import { getIntrinsicArmorPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -176,7 +173,7 @@ function IntrinsicArmorPerk({
   const intrinsicArmorPerk = {
     perks:
       showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)
-        ? (defs && getPerkDescriptions(socket.plugged.plugDef, defs)) || []
+        ? (defs && getPlugDescriptions(socket.plugged.plugDef, defs).perks) || []
         : undefined,
     communityInsight: showCommunityDescription && communityInsight,
   };

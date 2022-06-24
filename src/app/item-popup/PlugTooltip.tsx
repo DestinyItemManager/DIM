@@ -13,7 +13,7 @@ import { Settings } from 'app/settings/initial-settings';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isPlugStatActive } from 'app/utils/item-utils';
-import { getPerkDescriptions } from 'app/utils/socket-utils';
+import { getPlugDescriptions } from 'app/utils/plug-descriptions';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DestinyInventoryItemDefinition,
@@ -242,7 +242,7 @@ function buildPlugDescriptions(
   return {
     perks:
       showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)
-        ? (defs && getPerkDescriptions(plugDef, defs)) || []
+        ? (defs && getPlugDescriptions(plugDef, defs).perks) || []
         : undefined,
     communityInsight: showCommunityDescription && communityInsight,
   };
