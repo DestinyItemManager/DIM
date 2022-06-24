@@ -302,16 +302,10 @@ export function getPerkDescriptions(
 
   Other plugs (e.g. Exotic catalysts) always use the description field to store their requirements.
   */
-  const descriptionFieldUsage = traitHashes.includes(EXOTIC_CATALYST_TRAIT)
-    ? 'requirement'
-    : itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
-    ? 'requirementIfPerksPresent'
-    : 'functionality';
-
-  if (descriptionFieldUsage === 'requirement') {
+  if (traitHashes.includes(EXOTIC_CATALYST_TRAIT)) {
     addPerkDescriptions();
     addDescriptionAsRequirement();
-  } else if (descriptionFieldUsage === 'requirementIfPerksPresent') {
+  } else if (itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)) {
     addPerkDescriptions();
 
     // if we already have some displayable perks, this means the description is basically
@@ -321,7 +315,7 @@ export function getPerkDescriptions(
     } else {
       addDescriptionAsFunctionality();
     }
-  } else if (descriptionFieldUsage === 'functionality') {
+  } else {
     if (plugDescription) {
       addDescriptionAsFunctionality();
     } else {
