@@ -5,7 +5,7 @@ import { settingSelector } from 'app/dim-api/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT, modsWithConditionalStats } from 'app/search/d2-known-values';
 import { DestinyInventoryItemDefinition, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
 
 interface DimPlugPerkDescription {
@@ -20,7 +20,20 @@ interface DimPlugDescriptions {
   communityInsight: Perk | undefined;
 }
 
-export function usePlugDescriptions(plug?: DestinyInventoryItemDefinition): DimPlugDescriptions {
+// some stats are often referred to using different names
+const statNameAliases = {
+  [StatHashes.AimAssistance]: ['Aim Assist'],
+  [StatHashes.AmmoCapacity]: ['Magazine Stat'],
+  [StatHashes.ReloadSpeed]: ['Reload'],
+};
+
+export function usePlugDescriptions(
+  plug?: DestinyInventoryItemDefinition,
+  stats?: {
+    value: number;
+    statHash: number;
+  }[]
+): DimPlugDescriptions {
   const defs = useD2Definitions();
   const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
@@ -41,7 +54,30 @@ export function usePlugDescriptions(plug?: DestinyInventoryItemDefinition): DimP
   const showCommunityDescriptionOnly =
     $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
 
-  const { perks, usedStrings } = getPerkDescriptions(plug, defs);
+  // within this plug, let's not repeat any strings
+  const usedStrings = new Set<string>();
+
+  if (stats) {
+    // preload the used string tracker with common text representations of stat modifications
+    for (const stat of stats) {
+      const statDef = defs.Stat.get(stat.statHash);
+      if (statDef) {
+        const statNames = [statDef.displayProperties.name].concat(statNameAliases[stat.statHash]);
+        for (const statName of statNames) {
+          if (stat.value < 0) {
+            usedStrings.add(`${stat.value} ${statName}`);
+            usedStrings.add(`${stat.value} ${statName} ▼`);
+          } else {
+            usedStrings.add(`+${stat.value} ${statName}`);
+            usedStrings.add(`+${stat.value} ${statName} ▲`);
+            usedStrings.add(`Grants ${stat.value} ${statName}`);
+          }
+        }
+      }
+    }
+  }
+
+  const perks = getPerkDescriptions(plug, defs, usedStrings);
 
   if (showCommunityDescription) {
     const clarityPerk = allClarityDescriptions?.[plug.hash];
@@ -69,15 +105,11 @@ export function usePlugDescriptions(plug?: DestinyInventoryItemDefinition): DimP
 
 function getPerkDescriptions(
   plug: DestinyInventoryItemDefinition,
-  defs: D2ManifestDefinitions
-): {
-  perks: DimPlugPerkDescription[];
-  usedStrings: Set<string>;
-} {
+  defs: D2ManifestDefinitions,
+  usedStrings: Set<string>
+): DimPlugPerkDescription[] {
   const results: DimPlugPerkDescription[] = [];
 
-  // within this plug, let's not repeat any strings
-  const usedStrings = new Set<string>();
   const plugDescription = plug.displayProperties.description || undefined;
 
   function addPerkDescriptions() {
@@ -209,10 +241,7 @@ function getPerkDescriptions(
     }
   }
 
-  return {
-    perks: results,
-    usedStrings,
-  };
+  return results;
 }
 
 function stripUsedStrings(

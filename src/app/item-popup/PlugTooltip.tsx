@@ -115,7 +115,14 @@ export function PlugTooltip({
   craftingData?: DestinyPlugItemCraftingRequirements;
 }) {
   const defs = useD2Definitions();
-  const plugDescriptions = usePlugDescriptions(def);
+  const statsArray =
+    (stats &&
+      Object.entries(stats).map(([statHash, value]) => ({
+        value,
+        statHash: parseInt(statHash, 10),
+      }))) ||
+    [];
+  const plugDescriptions = usePlugDescriptions(def, statsArray);
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
 
@@ -141,10 +148,10 @@ export function PlugTooltip({
       className={styles.clarityDescription}
     />
   );
-  const renderedStats = stats && Object.entries(stats).length > 0 && (
+  const renderedStats = statsArray.length > 0 && (
     <div className="plug-stats">
-      {Object.entries(stats).map(([statHash, value]) => (
-        <StatValue key={statHash} statHash={parseInt(statHash, 10)} value={value} />
+      {statsArray.map((stat) => (
+        <StatValue key={stat.statHash} statHash={stat.statHash} value={stat.value} />
       ))}
     </div>
   );

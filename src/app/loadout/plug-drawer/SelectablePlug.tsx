@@ -67,9 +67,12 @@ function SelectablePlugDetails({
   plug: PluggableInventoryItemDefinition;
   displayedStatHashes?: number[];
 }) {
-  const plugDescriptions = usePlugDescriptions(plug);
   const displayedStats = plug.investmentStats.filter((stat) =>
     displayedStatHashes?.includes(stat.statTypeHash)
+  );
+  const plugDescriptions = usePlugDescriptions(
+    plug,
+    displayedStats.map((stat) => ({ statHash: stat.statTypeHash, value: stat.value }))
   );
   return (
     <>

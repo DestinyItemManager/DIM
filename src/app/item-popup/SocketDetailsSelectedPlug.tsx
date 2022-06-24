@@ -207,7 +207,10 @@ export default function SocketDetailsSelectedPlug({
     );
   });
 
-  const plugDescriptions = usePlugDescriptions(plug);
+  const plugDescriptions = usePlugDescriptions(
+    plug,
+    stats.map((stat) => ({ value: stat.modValue, statHash: stat.dimStat.statHash }))
+  );
   return (
     <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
       <div className={styles.modIcon}>
