@@ -5,14 +5,18 @@ import {
   DimSocketCategory,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
-import { modsWithConditionalStats } from 'app/search/d2-known-values';
+import { EXOTIC_CATALYST_TRAIT, modsWithConditionalStats } from 'app/search/d2-known-values';
 import {
   DestinyInventoryItemDefinition,
   DestinySocketCategoryStyle,
   ItemPerkVisibility,
   TierType,
 } from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import {
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+} from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimSocket, DimSockets } from '../inventory/item-types';
 import { isArmor2Mod } from './item-utils';
@@ -220,6 +224,10 @@ export function getPerkDescriptions(
   // within this plug, let's not repeat any descriptions or requirement strings
   const uniqueStrings = new Set<string>();
 
+  const itemCategoryHashes = plug.itemCategoryHashes ?? [];
+  const traitHashes = plug.traitHashes ?? [];
+  const plugDescription = plug.displayProperties.description || undefined;
+
   function addPerkDescriptions() {
     // Terrible hack here: Echo of Persistence behaves like Charge Harvester, but uses a number of hidden perks
     // (which we can't associate with stats), But we also can't get the relevant classType in here,
@@ -268,43 +276,54 @@ export function getPerkDescriptions(
       }
     }
   }
-
-  /*
-  Most plugs (e.g. mods, catalysts) store their most useful information in their perks and use the description
-  field for auxiliary info like requirements and caveats. As a result, we want to prioritise strings in the
-  perks and only fall back to the actual description if we don't have any perks.
-
-  The exception to this rule is for plugs with the intrinsic plug UI display style (e.g. weapon frames,
-  Exotic intrinsics). These plugs have their perks displayed on the item tooltip in-game and usually contain a
-  single perk that summarises the functionality of the plug. In these cases, we want to prioritise strings in
-  the plug's description field as it typically contains a more detailed description.
-  */
-  const isPrimaryDescriptionInPerks = plug.uiItemDisplayStyle !== 'ui_display_style_intrinsic_plug';
-  if (isPrimaryDescriptionInPerks) {
-    addPerkDescriptions();
-
-    const plugDescription = plug.displayProperties.description || undefined;
+  function addDescriptionAsRequirement() {
     if (plugDescription && !uniqueStrings.has(plugDescription)) {
-      // if we already have some displayable perks, this means the description is basically
-      // a "requirements" string like "This mod's perks are only active" etc. (see Deep Stone Crypt raid mods)
-      results.push(
-        results.length > 0
-          ? {
-              perkHash: 0,
-              requirement: plugDescription,
-            }
-          : {
-              perkHash: 0,
-              description: plugDescription,
-            }
-      );
-    }
-  } else {
-    if (plug.displayProperties.description) {
       results.push({
         perkHash: 0,
-        description: plug.displayProperties.description,
+        requirement: plugDescription,
       });
+    }
+  }
+  function addDescriptionAsFunctionality() {
+    if (plugDescription && !uniqueStrings.has(plugDescription)) {
+      results.push({
+        perkHash: 0,
+        description: plugDescription,
+      });
+    }
+  }
+
+  /*
+  Most plugs use the description field to describe their functionality.
+
+  Some plugs (e.g. armor mods) store their functionality in their perk descriptions and use the description
+  field for auxiliary info like requirements and caveats. For these plugs, we want to prioritise strings in the
+  perks and only fall back to the actual description if we don't have any perks.
+
+  Other plugs (e.g. Exotic catalysts) always use the description field to store their requirements.
+  */
+  const descriptionFieldUsage = traitHashes.includes(EXOTIC_CATALYST_TRAIT)
+    ? 'requirement'
+    : itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
+    ? 'requirementIfPerksPresent'
+    : 'functionality';
+
+  if (descriptionFieldUsage === 'requirement') {
+    addPerkDescriptions();
+    addDescriptionAsRequirement();
+  } else if (descriptionFieldUsage === 'requirementIfPerksPresent') {
+    addPerkDescriptions();
+
+    // if we already have some displayable perks, this means the description is basically
+    // a "requirements" string like "This mod's perks are only active" etc. (see Deep Stone Crypt raid mods)
+    if (results.length > 0) {
+      addDescriptionAsRequirement();
+    } else {
+      addDescriptionAsFunctionality();
+    }
+  } else if (descriptionFieldUsage === 'functionality') {
+    if (plugDescription) {
+      addDescriptionAsFunctionality();
     } else {
       addPerkDescriptions();
     }
