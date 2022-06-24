@@ -159,7 +159,7 @@ function IntrinsicArmorPerk({
   const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
 
-  if (!socket.plugged?.plugDef.hash || !defs) {
+  if (!socket.plugged?.plugDef.hash) {
     return null;
   }
   const clarityPerk = allClarityDescriptions?.[socket.plugged.plugDef.hash];
@@ -176,7 +176,7 @@ function IntrinsicArmorPerk({
   const intrinsicArmorPerk = {
     perks:
       showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)
-        ? getPerkDescriptions(socket.plugged.plugDef, defs)
+        ? (defs && getPerkDescriptions(socket.plugged.plugDef, defs)) || []
         : undefined,
     communityInsight: showCommunityDescription && communityInsight,
   };

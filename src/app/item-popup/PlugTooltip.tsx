@@ -137,6 +137,19 @@ export function PlugTooltip({
     descriptionsToDisplay,
     allClarityDescriptions
   );
+  const bungieDescription = plugDescriptions.perks && (
+    <>
+      {plugDescriptions.perks.map((perkDesc) => (
+        <div key={perkDesc.perkHash}>
+          {perkDesc.name && <div>{perkDesc.name}</div>}
+          {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
+          {perkDesc.requirement && (
+            <RichDestinyText text={perkDesc.requirement} className={styles.requirement} />
+          )}
+        </div>
+      ))}
+    </>
+  );
   const clarityDescription = plugDescriptions.communityInsight && (
     <ClarityDescriptions
       perk={plugDescriptions.communityInsight}
@@ -161,9 +174,9 @@ export function PlugTooltip({
         community description. If we're not displaying the Bungie description, display the stats after the
         community insight.
       */}
-      {plugDescriptions.description || clarityDescription}
+      {bungieDescription || clarityDescription}
       {renderedStats}
-      {plugDescriptions.description && clarityDescription}
+      {bungieDescription && clarityDescription}
 
       {sourceString && <div>{sourceString}</div>}
       {defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
@@ -215,7 +228,6 @@ function buildPlugDescriptions(
   descriptionsToDisplay: Settings['descriptionsToDisplay'],
   allClarityDescriptions: ClarityDescription | undefined
 ) {
-  const perkDescriptions = (defs && getPerkDescriptions(plugDef, defs)) || [];
   const clarityPerk = allClarityDescriptions?.[plugDef.hash];
   const communityInsight =
     clarityPerk && !clarityPerk.statOnly && clarityPerk.simpleDescription ? clarityPerk : undefined;
@@ -228,19 +240,10 @@ function buildPlugDescriptions(
     $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
 
   return {
-    description: (showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)) && (
-      <>
-        {perkDescriptions.map((perkDesc) => (
-          <div key={perkDesc.perkHash}>
-            {perkDesc.name && <div>{perkDesc.name}</div>}
-            {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
-            {perkDesc.requirement && (
-              <RichDestinyText text={perkDesc.requirement} className={styles.requirement} />
-            )}
-          </div>
-        ))}
-      </>
-    ),
+    perks:
+      showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)
+        ? (defs && getPerkDescriptions(plugDef, defs)) || []
+        : undefined,
     communityInsight: showCommunityDescription && communityInsight,
   };
 }

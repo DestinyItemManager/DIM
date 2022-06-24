@@ -81,7 +81,16 @@ function SelectablePlugDetails({
       </div>
       <div className={styles.plugInfo}>
         <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
-        {plugDescriptions.description}
+        <>
+          {plugDescriptions.perks.map((perkDesc) => (
+            <div className={styles.partialDescription} key={perkDesc.perkHash}>
+              {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
+              {perkDesc.requirement && (
+                <div className={styles.requirement}>{perkDesc.requirement}</div>
+              )}
+            </div>
+          ))}
+        </>
         {displayedStats.length > 0 && (
           <div className="plug-stats">
             {displayedStats.map((stat) => (
@@ -98,19 +107,7 @@ function buildPlugDescriptions(
   plugDef: PluggableInventoryItemDefinition,
   defs: D2ManifestDefinitions
 ) {
-  const perkDescriptions = getPerkDescriptions(plugDef, defs);
   return {
-    description: (
-      <>
-        {perkDescriptions.map((perkDesc) => (
-          <div className={styles.partialDescription} key={perkDesc.perkHash}>
-            {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
-            {perkDesc.requirement && (
-              <div className={styles.requirement}>{perkDesc.requirement}</div>
-            )}
-          </div>
-        ))}
-      </>
-    ),
+    perks: getPerkDescriptions(plugDef, defs),
   };
 }

@@ -233,7 +233,18 @@ export default function SocketDetailsSelectedPlug({
             <> &mdash; {plug.itemTypeDisplayName}</>
           )}
         </h3>
-        {plugDescriptions.description}
+        {plugDescriptions.perks && (
+          <>
+            {plugDescriptions.perks.map((perkDesc) => (
+              <React.Fragment key={perkDesc.perkHash}>
+                {perkDesc.description && <div>{perkDesc.description}</div>}
+                {perkDesc.requirement && (
+                  <div className={styles.modRequirement}>{perkDesc.requirement}</div>
+                )}
+              </React.Fragment>
+            ))}
+          </>
+        )}
       </div>
 
       {stats.length > 0 && (
@@ -287,7 +298,6 @@ function buildPlugDescriptions(
   descriptionsToDisplay: Settings['descriptionsToDisplay'],
   allClarityDescriptions: ClarityDescription | undefined
 ) {
-  const perkDescriptions = getPerkDescriptions(plugDef, defs);
   const clarityPerk = allClarityDescriptions?.[plugDef.hash];
   const communityInsight =
     clarityPerk && !clarityPerk.statOnly && clarityPerk.simpleDescription ? clarityPerk : undefined;
@@ -300,18 +310,10 @@ function buildPlugDescriptions(
     $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
 
   return {
-    description: (showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)) && (
-      <>
-        {perkDescriptions.map((perkDesc) => (
-          <React.Fragment key={perkDesc.perkHash}>
-            {perkDesc.description && <div>{perkDesc.description}</div>}
-            {perkDesc.requirement && (
-              <div className={styles.modRequirement}>{perkDesc.requirement}</div>
-            )}
-          </React.Fragment>
-        ))}
-      </>
-    ),
+    perks:
+      showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)
+        ? (defs && getPerkDescriptions(plugDef, defs)) || []
+        : undefined,
     communityInsight: showCommunityDescription && communityInsight,
   };
 }
