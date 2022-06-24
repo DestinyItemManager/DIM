@@ -221,18 +221,14 @@ export default function SocketDetailsSelectedPlug({
             <> &mdash; {plug.itemTypeDisplayName}</>
           )}
         </h3>
-        {plugDescriptions.perks && (
-          <>
-            {plugDescriptions.perks.map((perkDesc) => (
-              <React.Fragment key={perkDesc.perkHash}>
-                {perkDesc.description && <div>{perkDesc.description}</div>}
-                {perkDesc.requirement && (
-                  <div className={styles.modRequirement}>{perkDesc.requirement}</div>
-                )}
-              </React.Fragment>
-            ))}
-          </>
-        )}
+        {plugDescriptions.perks.map((perkDesc) => (
+          <React.Fragment key={perkDesc.perkHash}>
+            {perkDesc.description && <div>{perkDesc.description}</div>}
+            {perkDesc.requirement && (
+              <div className={styles.modRequirement}>{perkDesc.requirement}</div>
+            )}
+          </React.Fragment>
+        ))}
       </div>
 
       {stats.length > 0 && (

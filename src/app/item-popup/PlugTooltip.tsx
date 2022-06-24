@@ -124,19 +124,17 @@ export function PlugTooltip({
     (o) => !resonantElementObjectiveHashes.includes(o.objectiveHash)
   );
 
-  const bungieDescription = plugDescriptions.perks && (
-    <>
-      {plugDescriptions.perks.map((perkDesc) => (
-        <div key={perkDesc.perkHash}>
-          {perkDesc.name && <div>{perkDesc.name}</div>}
-          {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
-          {perkDesc.requirement && (
-            <RichDestinyText text={perkDesc.requirement} className={styles.requirement} />
-          )}
-        </div>
-      ))}
-    </>
-  );
+  const bungieDescription =
+    plugDescriptions.perks.length > 0 &&
+    plugDescriptions.perks.map((perkDesc) => (
+      <div key={perkDesc.perkHash}>
+        {perkDesc.name && <div>{perkDesc.name}</div>}
+        {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
+        {perkDesc.requirement && (
+          <RichDestinyText text={perkDesc.requirement} className={styles.requirement} />
+        )}
+      </div>
+    ));
   const clarityDescription = plugDescriptions.communityInsight && (
     <ClarityDescriptions
       perk={plugDescriptions.communityInsight}

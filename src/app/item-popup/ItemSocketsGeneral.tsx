@@ -150,21 +150,21 @@ function IntrinsicArmorPerk({
   minimal?: boolean;
   handleSocketClick: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
 }) {
-  const intrinsicArmorPerk = usePlugDescriptions(socket.plugged?.plugDef);
+  const plugDescriptions = usePlugDescriptions(socket.plugged?.plugDef);
   return (
     <ArchetypeRow minimal={minimal}>
       <ArchetypeSocket archetypeSocket={socket} item={item} onClick={handleSocketClick}>
         {!minimal && (
           <div className={styles.armorIntrinsicDescription}>
-            {intrinsicArmorPerk.perks.map(
+            {plugDescriptions.perks.map(
               (perkDesc) =>
                 perkDesc.description && (
                   <RichDestinyText key={perkDesc.perkHash} text={perkDesc.description} />
                 )
             )}
-            {intrinsicArmorPerk.communityInsight && (
+            {plugDescriptions.communityInsight && (
               <ClarityDescriptions
-                perk={intrinsicArmorPerk.communityInsight}
+                perk={plugDescriptions.communityInsight}
                 className={styles.clarityDescription}
               />
             )}
