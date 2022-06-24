@@ -1,7 +1,12 @@
+import { Perk } from 'app/clarity/descriptions/descriptionInterface';
+import { clarityDescriptionsSelector } from 'app/clarity/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingSelector } from 'app/dim-api/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT, modsWithConditionalStats } from 'app/search/d2-known-values';
 import { DestinyInventoryItemDefinition, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { useSelector } from 'react-redux';
 
 interface DimPlugPerkDescription {
   perkHash: number;
@@ -12,15 +17,45 @@ interface DimPlugPerkDescription {
 
 interface DimPlugDescriptions {
   perks: DimPlugPerkDescription[];
+  communityInsight: Perk | undefined;
 }
 
-export function getPlugDescriptions(
+export function usePlugDescriptions(plug?: DestinyInventoryItemDefinition): DimPlugDescriptions {
+  const defs = useD2Definitions();
+  const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
+  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
+
+  if (!plug) {
+    return {
+      perks: [],
+      communityInsight: undefined,
+    };
+  }
+  const clarityPerk = allClarityDescriptions?.[plug.hash];
+  const communityInsight =
+    clarityPerk && !clarityPerk.statOnly && clarityPerk.simpleDescription ? clarityPerk : undefined;
+
+  const showBungieDescription =
+    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
+  const showCommunityDescription =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
+  const showCommunityDescriptionOnly =
+    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
+
+  return {
+    perks:
+      showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)
+        ? (defs && getPerkDescriptions(plug, defs)) || []
+        : [],
+    communityInsight: showCommunityDescription ? communityInsight : undefined,
+  };
+}
+
+function getPerkDescriptions(
   plug: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions
-): DimPlugDescriptions {
-  const result: DimPlugDescriptions = {
-    perks: [],
-  };
+): DimPlugPerkDescription[] {
+  const results: DimPlugPerkDescription[] = [];
 
   // within this plug, let's not repeat any descriptions or requirement strings
   const uniqueStrings = new Set<string>();
@@ -65,7 +100,7 @@ export function getPlugDescriptions(
       }
 
       if (perkDescription || perkRequirement) {
-        result.perks.push({
+        results.push({
           perkHash: perk.perkHash,
           name: perkName && perkName !== plug.displayProperties.name ? perkName : undefined,
           description: perkDescription,
@@ -76,7 +111,7 @@ export function getPlugDescriptions(
   }
   function addDescriptionAsRequirement() {
     if (plugDescription && !uniqueStrings.has(plugDescription)) {
-      result.perks.push({
+      results.push({
         perkHash: 0,
         requirement: plugDescription,
       });
@@ -84,7 +119,7 @@ export function getPlugDescriptions(
   }
   function addDescriptionAsFunctionality() {
     if (plugDescription && !uniqueStrings.has(plugDescription)) {
-      result.perks.push({
+      results.push({
         perkHash: 0,
         description: plugDescription,
       });
@@ -108,7 +143,7 @@ export function getPlugDescriptions(
 
     // if we already have some displayable perks, this means the description is basically
     // a "requirements" string like "This mod's perks are only active" etc. (see Deep Stone Crypt raid mods)
-    if (result.perks.length > 0) {
+    if (results.length > 0) {
       addDescriptionAsRequirement();
     } else {
       addDescriptionAsFunctionality();
@@ -124,11 +159,11 @@ export function getPlugDescriptions(
   // a fallback: if we still don't have any perk descriptions, at least keep the first perk for display.
   // there are mods like this (e.g. Elemental Armaments): no description, and annoyingly all perks are set
   // to ItemPerkVisibility.Hidden
-  if (!result.perks.length && plug.perks.length) {
+  if (!results.length && plug.perks.length) {
     const firstPerk = plug.perks[0];
     const sandboxPerk = defs.SandboxPerk.get(firstPerk.perkHash);
     const perkName = sandboxPerk.displayProperties.name;
-    result.perks.push({
+    results.push({
       perkHash: firstPerk.perkHash,
       name: perkName && perkName !== plug.displayProperties.name ? perkName : undefined,
       description: sandboxPerk.displayProperties.description,
@@ -136,5 +171,5 @@ export function getPlugDescriptions(
     });
   }
 
-  return result;
+  return results;
 }

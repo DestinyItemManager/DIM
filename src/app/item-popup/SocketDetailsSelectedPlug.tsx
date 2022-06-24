@@ -1,8 +1,5 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
-import { ClarityDescription } from 'app/clarity/descriptions/descriptionInterface';
-import { clarityDescriptionsSelector } from 'app/clarity/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
@@ -17,12 +14,11 @@ import { interpolateStatValue } from 'app/inventory/store/stats';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
-import { Settings } from 'app/settings/initial-settings';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptySpecialtySocketHashes, isPlugStatActive } from 'app/utils/item-utils';
-import { getPlugDescriptions } from 'app/utils/plug-descriptions';
+import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -211,15 +207,7 @@ export default function SocketDetailsSelectedPlug({
     );
   });
 
-  const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
-  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-  const plugDescriptions = buildPlugDescriptions(
-    plug,
-    defs,
-    descriptionsToDisplay,
-    allClarityDescriptions
-  );
-
+  const plugDescriptions = usePlugDescriptions(plug);
   return (
     <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
       <div className={styles.modIcon}>
@@ -290,30 +278,4 @@ export default function SocketDetailsSelectedPlug({
       )}
     </div>
   );
-}
-
-function buildPlugDescriptions(
-  plugDef: PluggableInventoryItemDefinition,
-  defs: D2ManifestDefinitions,
-  descriptionsToDisplay: Settings['descriptionsToDisplay'],
-  allClarityDescriptions: ClarityDescription | undefined
-) {
-  const clarityPerk = allClarityDescriptions?.[plugDef.hash];
-  const communityInsight =
-    clarityPerk && !clarityPerk.statOnly && clarityPerk.simpleDescription ? clarityPerk : undefined;
-
-  const showBungieDescription =
-    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
-  const showCommunityDescription =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
-  const showCommunityDescriptionOnly =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
-
-  return {
-    perks:
-      showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)
-        ? (defs && getPlugDescriptions(plugDef, defs).perks) || []
-        : undefined,
-    communityInsight: showCommunityDescription && communityInsight,
-  };
 }

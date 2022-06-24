@@ -1,10 +1,8 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
-import { clarityDescriptionsSelector } from 'app/clarity/selectors';
-import { settingSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
-import { getPlugDescriptions } from 'app/utils/plug-descriptions';
+import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { getIntrinsicArmorPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
@@ -152,38 +150,13 @@ function IntrinsicArmorPerk({
   minimal?: boolean;
   handleSocketClick: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
 }) {
-  const defs = useD2Definitions();
-  const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
-  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-
-  if (!socket.plugged?.plugDef.hash) {
-    return null;
-  }
-  const clarityPerk = allClarityDescriptions?.[socket.plugged.plugDef.hash];
-  const communityInsight =
-    clarityPerk && !clarityPerk.statOnly && clarityPerk.simpleDescription ? clarityPerk : undefined;
-
-  const showBungieDescription =
-    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
-  const showCommunityDescription =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
-  const showCommunityDescriptionOnly =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
-
-  const intrinsicArmorPerk = {
-    perks:
-      showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)
-        ? (defs && getPlugDescriptions(socket.plugged.plugDef, defs).perks) || []
-        : undefined,
-    communityInsight: showCommunityDescription && communityInsight,
-  };
-
+  const intrinsicArmorPerk = usePlugDescriptions(socket.plugged?.plugDef);
   return (
     <ArchetypeRow minimal={minimal}>
       <ArchetypeSocket archetypeSocket={socket} item={item} onClick={handleSocketClick}>
         {!minimal && (
           <div className={styles.armorIntrinsicDescription}>
-            {intrinsicArmorPerk.perks?.map(
+            {intrinsicArmorPerk.perks.map(
               (perkDesc) =>
                 perkDesc.description && (
                   <RichDestinyText key={perkDesc.perkHash} text={perkDesc.description} />

@@ -1,19 +1,14 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
-import { ClarityDescription } from 'app/clarity/descriptions/descriptionInterface';
-import { clarityDescriptionsSelector } from 'app/clarity/selectors';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { statAllowList } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { Settings } from 'app/settings/initial-settings';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isPlugStatActive } from 'app/utils/item-utils';
-import { getPlugDescriptions } from 'app/utils/plug-descriptions';
+import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DestinyInventoryItemDefinition,
@@ -21,7 +16,6 @@ import {
   DestinyPlugItemCraftingRequirements,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { useSelector } from 'react-redux';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import './ItemSockets.scss';
@@ -121,8 +115,7 @@ export function PlugTooltip({
   craftingData?: DestinyPlugItemCraftingRequirements;
 }) {
   const defs = useD2Definitions();
-  const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
-  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
+  const plugDescriptions = usePlugDescriptions(def);
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
 
@@ -131,12 +124,6 @@ export function PlugTooltip({
     (o) => !resonantElementObjectiveHashes.includes(o.objectiveHash)
   );
 
-  const plugDescriptions = buildPlugDescriptions(
-    def,
-    defs,
-    descriptionsToDisplay,
-    allClarityDescriptions
-  );
   const bungieDescription = plugDescriptions.perks && (
     <>
       {plugDescriptions.perks.map((perkDesc) => (
@@ -220,32 +207,6 @@ export function PlugTooltip({
       )}
     </>
   );
-}
-
-function buildPlugDescriptions(
-  plugDef: DestinyInventoryItemDefinition,
-  defs: D2ManifestDefinitions | undefined,
-  descriptionsToDisplay: Settings['descriptionsToDisplay'],
-  allClarityDescriptions: ClarityDescription | undefined
-) {
-  const clarityPerk = allClarityDescriptions?.[plugDef.hash];
-  const communityInsight =
-    clarityPerk && !clarityPerk.statOnly && clarityPerk.simpleDescription ? clarityPerk : undefined;
-
-  const showBungieDescription =
-    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
-  const showCommunityDescription =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
-  const showCommunityDescriptionOnly =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
-
-  return {
-    perks:
-      showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)
-        ? (defs && getPlugDescriptions(plugDef, defs).perks) || []
-        : undefined,
-    communityInsight: showCommunityDescription && communityInsight,
-  };
 }
 
 export function StatValue({ value, statHash }: { value: number; statHash: number }) {
