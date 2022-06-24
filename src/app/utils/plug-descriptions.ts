@@ -25,15 +25,14 @@ export function usePlugDescriptions(plug?: DestinyInventoryItemDefinition): DimP
   const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
 
-  if (!plug) {
-    return {
-      perks: [],
-      communityInsight: undefined,
-    };
+  const result: DimPlugDescriptions = {
+    perks: [],
+    communityInsight: undefined,
+  };
+
+  if (!plug || !defs) {
+    return result;
   }
-  const clarityPerk = allClarityDescriptions?.[plug.hash];
-  const communityInsight =
-    clarityPerk && !clarityPerk.statOnly && clarityPerk.simpleDescription ? clarityPerk : undefined;
 
   const showBungieDescription =
     !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
@@ -42,23 +41,43 @@ export function usePlugDescriptions(plug?: DestinyInventoryItemDefinition): DimP
   const showCommunityDescriptionOnly =
     $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
 
-  return {
-    perks:
-      showBungieDescription || (showCommunityDescriptionOnly && !communityInsight)
-        ? (defs && getPerkDescriptions(plug, defs)) || []
-        : [],
-    communityInsight: showCommunityDescription ? communityInsight : undefined,
-  };
+  const { perks, usedStrings } = getPerkDescriptions(plug, defs);
+
+  if (showCommunityDescription) {
+    const clarityPerk = allClarityDescriptions?.[plug.hash];
+    if (clarityPerk && !clarityPerk.statOnly) {
+      // strip out any strings that are used in the Bungie description
+      const communityInsightWithoutDupes = stripUsedStrings(clarityPerk, usedStrings);
+      if (communityInsightWithoutDupes) {
+        // if our stripped community description is truthy, we know it contains at least 1 unique string
+        // we only want to display the stripped community description if we're also showing the Bungie description
+        result.communityInsight = showBungieDescription
+          ? communityInsightWithoutDupes
+          : clarityPerk;
+      }
+    }
+  }
+
+  // if we don't have a community description, fall back to the Bungie description (if we aren't already
+  // displaying it)
+  if (showBungieDescription || (showCommunityDescriptionOnly && !result.communityInsight)) {
+    result.perks.push(...perks);
+  }
+
+  return result;
 }
 
 function getPerkDescriptions(
   plug: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions
-): DimPlugPerkDescription[] {
+): {
+  perks: DimPlugPerkDescription[];
+  usedStrings: Set<string>;
+} {
   const results: DimPlugPerkDescription[] = [];
 
-  // within this plug, let's not repeat any descriptions or requirement strings
-  const uniqueStrings = new Set<string>();
+  // within this plug, let's not repeat any strings
+  const usedStrings = new Set<string>();
   const plugDescription = plug.displayProperties.description || undefined;
 
   function addPerkDescriptions() {
@@ -82,20 +101,20 @@ function getPerkDescriptions(
 
       let perkDescription = sandboxPerk.displayProperties.description || undefined;
       if (perkDescription) {
-        if (uniqueStrings.has(perkDescription)) {
+        if (usedStrings.has(perkDescription)) {
           perkDescription = undefined;
         } else {
-          uniqueStrings.add(perkDescription);
+          usedStrings.add(perkDescription);
         }
       }
 
       // Some perks are only active in certain activities (see Garden of Salvation raid mods)
       let perkRequirement = perk.requirementDisplayString || undefined;
       if (perkRequirement) {
-        if (uniqueStrings.has(perkRequirement)) {
+        if (usedStrings.has(perkRequirement)) {
           perkRequirement = undefined;
         } else {
-          uniqueStrings.add(perkRequirement);
+          usedStrings.add(perkRequirement);
         }
       }
 
@@ -110,19 +129,21 @@ function getPerkDescriptions(
     }
   }
   function addDescriptionAsRequirement() {
-    if (plugDescription && !uniqueStrings.has(plugDescription)) {
+    if (plugDescription && !usedStrings.has(plugDescription)) {
       results.push({
         perkHash: 0,
         requirement: plugDescription,
       });
+      usedStrings.add(plugDescription);
     }
   }
   function addDescriptionAsFunctionality() {
-    if (plugDescription && !uniqueStrings.has(plugDescription)) {
+    if (plugDescription && !usedStrings.has(plugDescription)) {
       results.push({
         perkHash: 0,
         description: plugDescription,
       });
+      usedStrings.add(plugDescription);
     }
   }
 
@@ -163,13 +184,63 @@ function getPerkDescriptions(
     const firstPerk = plug.perks[0];
     const sandboxPerk = defs.SandboxPerk.get(firstPerk.perkHash);
     const perkName = sandboxPerk.displayProperties.name;
-    results.push({
+    const perkDesc: DimPlugPerkDescription = {
       perkHash: firstPerk.perkHash,
       name: perkName && perkName !== plug.displayProperties.name ? perkName : undefined,
-      description: sandboxPerk.displayProperties.description,
-      requirement: firstPerk.requirementDisplayString,
-    });
+    };
+
+    if (
+      sandboxPerk.displayProperties.description &&
+      !usedStrings.has(sandboxPerk.displayProperties.description)
+    ) {
+      perkDesc.description = sandboxPerk.displayProperties.description;
+      usedStrings.add(sandboxPerk.displayProperties.description);
+    }
+    if (
+      firstPerk.requirementDisplayString &&
+      !usedStrings.has(firstPerk.requirementDisplayString)
+    ) {
+      perkDesc.requirement = firstPerk.requirementDisplayString;
+      usedStrings.add(firstPerk.requirementDisplayString);
+    }
+
+    if (perkDesc.description || perkDesc.requirement) {
+      results.push(perkDesc);
+    }
   }
 
-  return results;
+  return {
+    perks: results,
+    usedStrings,
+  };
+}
+
+function stripUsedStrings(
+  communityInsight: Readonly<Perk>,
+  usedStrings: ReadonlySet<string>
+): Perk | undefined {
+  if (!communityInsight.simpleDescription) {
+    return;
+  }
+
+  // todo: only rebuild these arrays if they contain a duplicate line
+
+  const simpleDescription = communityInsight.simpleDescription.map((line) =>
+    line.lineText
+      ? {
+          ...line,
+          lineText: line.lineText.filter(
+            (content) => !content.text || !usedStrings.has(content.text)
+          ),
+        }
+      : line
+  );
+  if (!simpleDescription.some((line) => line.lineText?.length)) {
+    return;
+  }
+
+  return {
+    ...communityInsight,
+    simpleDescription,
+  };
 }

@@ -157,7 +157,7 @@ export function PlugTooltip({
       {/*
         If we're displaying the Bungie description, display the stats between the Bungie description and
         community description. If we're not displaying the Bungie description, display the stats after the
-        community insight.
+        community description.
       */}
       {bungieDescription || clarityDescription}
       {renderedStats}
