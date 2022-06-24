@@ -223,9 +223,6 @@ export function getPerkDescriptions(
 
   // within this plug, let's not repeat any descriptions or requirement strings
   const uniqueStrings = new Set<string>();
-
-  const itemCategoryHashes = plug.itemCategoryHashes ?? [];
-  const traitHashes = plug.traitHashes ?? [];
   const plugDescription = plug.displayProperties.description || undefined;
 
   function addPerkDescriptions() {
@@ -302,10 +299,10 @@ export function getPerkDescriptions(
 
   Other plugs (e.g. Exotic catalysts) always use the description field to store their requirements.
   */
-  if (traitHashes.includes(EXOTIC_CATALYST_TRAIT)) {
+  if (plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT)) {
     addPerkDescriptions();
     addDescriptionAsRequirement();
-  } else if (itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)) {
+  } else if (plug.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) {
     addPerkDescriptions();
 
     // if we already have some displayable perks, this means the description is basically
