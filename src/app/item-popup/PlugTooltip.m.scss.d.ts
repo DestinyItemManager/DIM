@@ -3,6 +3,7 @@
 interface CssExports {
   'clarityDescription': string;
   'objectives': string;
+  'perkName': string;
   'requirement': string;
 }
 export const cssExports: CssExports;

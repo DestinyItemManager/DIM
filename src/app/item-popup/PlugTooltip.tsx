@@ -135,7 +135,7 @@ export function PlugTooltip({
     plugDescriptions.perks.length > 0 &&
     plugDescriptions.perks.map((perkDesc) => (
       <div key={perkDesc.perkHash}>
-        {perkDesc.name && <div>{perkDesc.name}</div>}
+        {perkDesc.name && <div className={styles.perkName}>{perkDesc.name}</div>}
         {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
         {perkDesc.requirement && (
           <RichDestinyText text={perkDesc.requirement} className={styles.requirement} />
