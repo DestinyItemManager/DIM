@@ -8,20 +8,6 @@ import { removeClientIdentifier, removeStreamDeckToken } from 'app/stream-deck/u
 
 export const lazyStreamDeck: LazyStreamDeck = {};
 
-// load core function
-const loadStreamDeckAsync = async () => {
-  if (!lazyStreamDeck.core) {
-    lazyStreamDeck.core = (await import('./async-module')).default;
-  }
-};
-
-// load stream deck reducer
-const loadStreamDeckReducer = async () => {
-  if (!lazyStreamDeck.reducer) {
-    lazyStreamDeck.reducer = (await import('./reducer')).default;
-  }
-};
-
 // wrapped lazy loaded functions
 
 export const startStreamDeckConnection = (): ThunkResult =>
@@ -43,9 +29,13 @@ export const resetStreamDeckAuthorization = async () => {
   removeStreamDeckToken();
 };
 
-// run both lazy loaded modules
-export const lazyLoadStreamDeck = async () =>
-  Promise.all([loadStreamDeckReducer(), loadStreamDeckAsync()]);
+// run both lazy core and reducer modules
+export const lazyLoadStreamDeck = async () => {
+  if (!lazyStreamDeck.core) {
+    lazyStreamDeck.core = (await import('./async-module')).default;
+    lazyStreamDeck.reducer = (await import('./reducer')).streamDeck;
+  }
+};
 
 // initial stream deck store state
 export const streamDeckInitialState: StreamDeckState = {

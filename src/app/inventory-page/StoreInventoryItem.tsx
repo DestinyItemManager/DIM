@@ -24,7 +24,10 @@ export default function StoreInventoryItem({ item }: Props) {
     [dispatch, item]
   );
 
-  const selection = useSelector(streamDeckSelectionSelector);
+  const selection = $featureFlags.elgatoStreamDeck
+    ? // eslint-disable-next-line
+      useSelector(streamDeckSelectionSelector)
+    : null;
 
   return (
     <DraggableInventoryItem item={item}>
@@ -36,7 +39,7 @@ export default function StoreInventoryItem({ item }: Props) {
             innerRef={ref}
             // intercept inventory item click and send it to the stream deck if needed
             onClick={
-              streamDeckEnabled() && selection === 'item'
+              selection === 'item' && streamDeckEnabled()
                 ? () => dispatch(streamDeckSelectItem(item))
                 : onClick
             }

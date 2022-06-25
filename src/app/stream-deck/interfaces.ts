@@ -151,14 +151,9 @@ export interface Challenge {
   value: string;
 }
 
-export interface SendToStreamDeckArgs {
-  // action to execute on Stream Deck
-  action: 'dim:update' | 'dim:share-url' | 'authorization:challenges' | 'authorization:reset';
-  // AuthorizationNotification token
-  token?: string;
-  // actions parameters
+export interface SendUpdateArgs {
+  action: 'dim:update';
   data?: {
-    challenges?: Challenge[];
     selectionType?: StreamDeckSelectionType;
     selection?: {
       label: string;
@@ -169,13 +164,36 @@ export interface SendToStreamDeckArgs {
       character?: string;
     };
     farmingMode?: boolean;
-    shareUrl?: string;
     postmaster?: PostmasterArgs;
     maxPower?: MaxPowerArgs;
     vault?: VaultArgs;
     metrics?: MetricsArgs;
   };
 }
+
+export interface SendShareUrlArgs {
+  action: 'dim:share-url';
+  data?: {
+    shareUrl?: string;
+  };
+}
+
+export interface SendAuthorizationChallengesArgs {
+  action: 'authorization:challenges';
+  data?: {
+    challenges?: Challenge[];
+  };
+}
+
+export interface SendAuthorizationResetArgs {
+  action: 'authorization:reset';
+}
+
+export type SendToStreamDeckArgs =
+  | SendUpdateArgs
+  | SendShareUrlArgs
+  | SendAuthorizationChallengesArgs
+  | SendAuthorizationResetArgs;
 
 export interface LazyStreamDeck {
   reducer?: Reducer<StreamDeckState, StreamDeckAction>;

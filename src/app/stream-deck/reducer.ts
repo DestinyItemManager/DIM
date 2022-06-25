@@ -3,7 +3,7 @@ import { Reducer } from 'redux';
 import { getType } from 'typesafe-actions';
 import * as actions from './actions';
 
-const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
+export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
   state: StreamDeckState,
   action: StreamDeckAction
 ) => {
@@ -32,5 +32,3 @@ const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
       return state;
   }
 };
-
-export default streamDeck;

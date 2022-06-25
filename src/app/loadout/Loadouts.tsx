@@ -182,7 +182,11 @@ function LoadoutRow({
   onShare: (loadout: Loadout) => void;
 }) {
   const dispatch = useThunkDispatch();
-  const streamDeckSelection = useSelector(streamDeckSelectionSelector);
+
+  const streamDeckSelection = $featureFlags.elgatoStreamDeck
+    ? // eslint-disable-next-line
+      useSelector(streamDeckSelectionSelector)
+    : null;
 
   const actionButtons = useMemo(() => {
     const handleDeleteClick = (loadout: Loadout) => dispatch(deleteLoadout(loadout.id));
