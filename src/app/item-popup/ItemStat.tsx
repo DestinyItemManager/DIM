@@ -14,7 +14,6 @@ import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React from 'react';
 import { getSocketsWithStyle, socketContainsIntrinsicPlug } from '../utils/socket-utils';
 import styles from './ItemStat.m.scss';
 import RecoilStat from './RecoilStat';
@@ -337,7 +336,7 @@ function getPlugEffects(sockets: DimSocket[], statHashes: number[], item: DimIte
 
       const considerActive = isPlugStatActive(
         item,
-        socket.plugged.plugDef.hash,
+        socket.plugged.plugDef,
         statHash,
         isConditionallyActive
       );

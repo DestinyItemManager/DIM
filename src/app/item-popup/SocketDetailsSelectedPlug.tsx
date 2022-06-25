@@ -121,7 +121,7 @@ export default function SocketDetailsSelectedPlug({
         return null;
       }
 
-      if (!isPlugStatActive(item, plug.hash, stat.statTypeHash, stat.isConditionallyActive)) {
+      if (!isPlugStatActive(item, plug, stat.statTypeHash, stat.isConditionallyActive)) {
         return null;
       }
 

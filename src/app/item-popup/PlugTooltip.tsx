@@ -50,7 +50,7 @@ export function DimPlugTooltip({
               statAllowList.includes(statHash) &&
               isPlugStatActive(
                 item,
-                plug.plugDef.hash,
+                plug.plugDef,
                 statHash,
                 Boolean(
                   plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))

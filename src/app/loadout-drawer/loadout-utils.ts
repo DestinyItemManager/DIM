@@ -245,7 +245,7 @@ export function getLoadoutStats(
       for (const stat of plug.investmentStats) {
         if (
           stat.statTypeHash in stats &&
-          isPlugStatActive(subclass.item, plugHash, stat.statTypeHash, stat.isConditionallyActive)
+          isPlugStatActive(subclass.item, plug, stat.statTypeHash, stat.isConditionallyActive)
         ) {
           stats[stat.statTypeHash].value += stat.value;
         }
