@@ -59,7 +59,7 @@ export function usePlugDescriptions(
     $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
 
   // within this plug, let's not repeat any strings
-  const usedStrings = new Set<string>();
+  const statStrings = new Set<string>();
 
   if (stats) {
     // preload the used string tracker with common text representations of stat modifications
@@ -69,19 +69,20 @@ export function usePlugDescriptions(
         const statNames = [statDef.displayProperties.name].concat(statNameAliases[stat.statHash]);
         for (const statName of statNames) {
           if (stat.value < 0) {
-            usedStrings.add(`${stat.value} ${statName}`);
-            usedStrings.add(`${stat.value} ${statName} ▼`);
+            statStrings.add(`${stat.value} ${statName}`);
+            statStrings.add(`${stat.value} ${statName} ▼`);
           } else {
-            usedStrings.add(`+${stat.value} ${statName}`);
-            usedStrings.add(`+${stat.value} ${statName} ▲`);
-            usedStrings.add(`Grants ${stat.value} ${statName}`);
+            statStrings.add(`+${stat.value} ${statName}`);
+            statStrings.add(`+${stat.value} ${statName} ▲`);
+            statStrings.add(`Grants ${stat.value} ${statName}`);
           }
         }
       }
     }
   }
 
-  const perks = getPerkDescriptions(plug, defs, usedStrings);
+  const statAndBungieDescStrings = new Set<string>(statStrings);
+  const perks = getPerkDescriptions(plug, defs, statAndBungieDescStrings);
 
   if (showCommunityDescription && allClarityDescriptions) {
     let clarityPerk = allClarityDescriptions[plug.hash];
@@ -96,13 +97,16 @@ export function usePlugDescriptions(
 
     if (clarityPerk && !clarityPerk.statOnly) {
       // strip out any strings that are used in the Bungie description
-      const communityInsightWithoutDupes = stripUsedStrings(clarityPerk, usedStrings);
-      if (communityInsightWithoutDupes) {
+      const communityInsightWithoutBungieStrings = stripUsedStrings(
+        clarityPerk,
+        statAndBungieDescStrings
+      );
+      if (communityInsightWithoutBungieStrings) {
         // if our stripped community description is truthy, we know it contains at least 1 unique string
-        // we only want to display the stripped community description if we're also showing the Bungie description
+        // we only want to strip out Bungie description strings if we're also showing the Bungie description
         result.communityInsight = showBungieDescription
-          ? communityInsightWithoutDupes
-          : clarityPerk;
+          ? communityInsightWithoutBungieStrings
+          : stripUsedStrings(clarityPerk, statStrings);
       }
     }
   }
