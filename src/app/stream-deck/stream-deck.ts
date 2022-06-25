@@ -32,8 +32,9 @@ export const resetStreamDeckAuthorization = async () => {
 // run both lazy core and reducer modules
 export const lazyLoadStreamDeck = async () => {
   if (!lazyStreamDeck.core) {
-    lazyStreamDeck.core = (await import('./async-module')).default;
-    lazyStreamDeck.reducer = (await import('./reducer')).streamDeck;
+    const { reducer, ...core } = (await import('./async-module')).default;
+    lazyStreamDeck.core = core;
+    lazyStreamDeck.reducer = reducer;
   }
 };
 

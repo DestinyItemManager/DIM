@@ -15,6 +15,7 @@ import {
 } from 'app/stream-deck/actions';
 import { SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
+import { streamDeck } from 'app/stream-deck/reducer';
 import {
   clientIdentifier,
   setClientIdentifier,
@@ -251,4 +252,5 @@ export default {
   streamDeckSelectItem,
   streamDeckSelectLoadout,
   resetIdentifierOnStreamDeck,
+  reducer: streamDeck,
 };
