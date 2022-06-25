@@ -6,6 +6,8 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT, modsWithConditionalStats } from 'app/search/d2-known-values';
 import { DestinyInventoryItemDefinition, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
+import _ from 'lodash';
 import { useSelector } from 'react-redux';
 
 interface DimPlugPerkDescription {
@@ -26,6 +28,8 @@ const statNameAliases = {
   [StatHashes.AmmoCapacity]: ['Magazine Stat'],
   [StatHashes.ReloadSpeed]: ['Reload'],
 };
+
+export const enhancedPerkToRegularPerk = _.mapValues(_.invert(perkToEnhanced), Number);
 
 export function usePlugDescriptions(
   plug?: DestinyInventoryItemDefinition,
@@ -79,8 +83,17 @@ export function usePlugDescriptions(
 
   const perks = getPerkDescriptions(plug, defs, usedStrings);
 
-  if (showCommunityDescription) {
-    const clarityPerk = allClarityDescriptions?.[plug.hash];
+  if (showCommunityDescription && allClarityDescriptions) {
+    let clarityPerk = allClarityDescriptions[plug.hash];
+
+    // if we couldn't find a Clarity description for this perk, fall back to the non-enhanced perk variant
+    if (!clarityPerk) {
+      const regularPerkHash = enhancedPerkToRegularPerk[plug.hash];
+      if (regularPerkHash) {
+        clarityPerk = allClarityDescriptions[regularPerkHash];
+      }
+    }
+
     if (clarityPerk && !clarityPerk.statOnly) {
       // strip out any strings that are used in the Bungie description
       const communityInsightWithoutDupes = stripUsedStrings(clarityPerk, usedStrings);
