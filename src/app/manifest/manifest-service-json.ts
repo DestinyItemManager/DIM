@@ -99,51 +99,54 @@ export const warnMissingDefinition = _.debounce(
 
 const getManifestAction = _.once(
   (tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> =>
-    dedupePromise((dispatch) =>
-      dispatch(async () => {
-        dispatch(loadingStart(t('Manifest.Load')));
-        const stopTimer = timer('Load manifest');
-        try {
-          const manifest = await dispatch(loadManifest(tableAllowList));
-          if (!manifest.DestinyVendorDefinition) {
-            throw new Error('Manifest corrupted, please reload');
-          }
-          return manifest;
-        } catch (e) {
-          let message = e.message || e;
-
-          if (e instanceof TypeError || e.status === -1) {
-            message = navigator.onLine
-              ? t('BungieService.NotConnectedOrBlocked')
-              : t('BungieService.NotConnected');
-          } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
-            message = t('BungieService.Difficulties');
-          } else if (e.status < 200 || e.status >= 400) {
-            message = t('BungieService.NetworkError', {
-              status: e.status,
-              statusText: e.statusText,
-            });
-          } else {
-            // Something may be wrong with the manifest
-            await deleteManifestFile();
-          }
-
-          const statusText = t('Manifest.Error', { error: message });
-          errorLog('manifest', 'Manifest loading error', { error: e }, e);
-          reportException('manifest load', e);
-          const error = new Error(statusText);
-          error.name = 'ManifestError';
-          throw error;
-        } finally {
-          dispatch(loadingEnd(t('Manifest.Load')));
-          stopTimer();
-        }
-      })
-    )
+    dedupePromise((dispatch) => dispatch(doGetManifest(tableAllowList)))
 );
 
 export function getManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
   return getManifestAction(tableAllowList);
+}
+
+// This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
+function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
+  return async (dispatch) => {
+    dispatch(loadingStart(t('Manifest.Load')));
+    const stopTimer = timer('Load manifest');
+    try {
+      const manifest = await dispatch(loadManifest(tableAllowList));
+      if (!manifest.DestinyVendorDefinition) {
+        throw new Error('Manifest corrupted, please reload');
+      }
+      return manifest;
+    } catch (e) {
+      let message = e.message || e;
+
+      if (e instanceof TypeError || e.status === -1) {
+        message = navigator.onLine
+          ? t('BungieService.NotConnectedOrBlocked')
+          : t('BungieService.NotConnected');
+      } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
+        message = t('BungieService.Difficulties');
+      } else if (e.status < 200 || e.status >= 400) {
+        message = t('BungieService.NetworkError', {
+          status: e.status,
+          statusText: e.statusText,
+        });
+      } else {
+        // Something may be wrong with the manifest
+        await deleteManifestFile();
+      }
+
+      const statusText = t('Manifest.Error', { error: message });
+      errorLog('manifest', 'Manifest loading error', { error: e }, e);
+      reportException('manifest load', e);
+      const error = new Error(statusText);
+      error.name = 'ManifestError';
+      throw error;
+    } finally {
+      dispatch(loadingEnd(t('Manifest.Load')));
+      stopTimer();
+    }
+  };
 }
 
 function loadManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
@@ -196,21 +199,7 @@ function loadManifestRemote(
       const manifest = await downloadManifestComponents(components, tableAllowList);
 
       // We intentionally don't wait on this promise
-      async () => {
-        try {
-          await set(idbKey, manifest);
-          infoLog('manifest', `Successfully stored manifest file.`);
-          localStorage.setItem(localStorageKey, version);
-          localStorage.setItem(localStorageKey + '-whitelist', JSON.stringify(tableAllowList));
-        } catch (e) {
-          errorLog('manifest', 'Error saving manifest file', e);
-          showNotification({
-            title: t('Help.NoStorage'),
-            body: t('Help.NoStorageMessage'),
-            type: 'error',
-          });
-        }
-      };
+      saveManifestToIndexedDB(manifest, version, tableAllowList);
       return manifest;
     } finally {
       dispatch(loadingEnd(t('Manifest.Download')));
@@ -267,6 +256,27 @@ export async function downloadManifestComponents(
   await Promise.all(futures);
 
   return manifest as AllDestinyManifestComponents;
+}
+
+// This is not an anonymous arrow function inside loadManifestRemote because of https://bugs.webkit.org/show_bug.cgi?id=166879
+async function saveManifestToIndexedDB(
+  typedArray: object,
+  version: string,
+  tableAllowList: string[]
+) {
+  try {
+    await set(idbKey, typedArray);
+    infoLog('manifest', `Successfully stored manifest file.`);
+    localStorage.setItem(localStorageKey, version);
+    localStorage.setItem(localStorageKey + '-whitelist', JSON.stringify(tableAllowList));
+  } catch (e) {
+    errorLog('manifest', 'Error saving manifest file', e);
+    showNotification({
+      title: t('Help.NoStorage'),
+      body: t('Help.NoStorageMessage'),
+      type: 'error',
+    });
+  }
 }
 
 function deleteManifestFile() {
