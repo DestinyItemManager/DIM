@@ -17,6 +17,38 @@ const joinClassNames = (classNames?: string) =>
     .map((className) => styles[className])
     .join(' ');
 
+/*
+     (^|\b) : start from the beginning of the string or a word boundary
+      [+-]? : include + or - prefixes
+\d+(\.\d+)? : match numbers (including decimal values)
+         x? : optionally match 'x' multiplier suffix
+        ?:% : optionally include % suffix
+       \b|$ : stop at a word boundary or the end of the string
+*/
+const boldTextRegEx = /(^|\b)(([+-]?\d+(\.\d+)?)x?)(?:%|\b|$)/g;
+
+function applyFormatting(text: string) {
+  const segments = [];
+
+  const matches = [...text.matchAll(boldTextRegEx)];
+  let startIndex = 0;
+  let n = 0;
+  for (const match of matches) {
+    if (match.index === undefined) {
+      continue;
+    }
+    const capturedText = match[0];
+    segments.push(text.substring(startIndex, match.index));
+    segments.push(<b key={n++}>{capturedText}</b>);
+    startIndex = match.index + capturedText.length;
+  }
+  if (startIndex < text.length) {
+    segments.push(text.substring(startIndex));
+  }
+
+  return segments;
+}
+
 /**
  * Renders the Clarity description for the provided Community Insight.
  * This is a cut-down version of the original from the Clarity extension.
@@ -36,7 +68,7 @@ export default function ClarityDescriptions({
     <div className={joinClassNames(line.className)} key={i}>
       {line.lineText?.map((linesContent, i) => (
         <span className={joinClassNames(linesContent.className)} title={linesContent.title} key={i}>
-          {linesContent.text || customContent(linesContent)}
+          {linesContent.text ? applyFormatting(linesContent.text) : customContent(linesContent)}
         </span>
       ))}
     </div>
