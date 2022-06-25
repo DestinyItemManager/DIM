@@ -1,5 +1,10 @@
 ## Next
 
+* Perk and mod tooltips should contain fewer duplicate lines of text.
+* Community-sourced perk descriptions have been made more visually distinct.
+* Exotic catalyst requirements are now hidden on tooltips if the catalyst is complete.
+* Fixed an issue where stat modifications from Exotic catalysts were being displayed when the catalyst was incomplete.
+
 ## 7.22.0 <span class="changelog-date">(2022-06-19)</span>
 
 * Fixed a rare edge case where Loadout Optimizer would miss certain valid elemental mod assignments with locked armor energy types.
