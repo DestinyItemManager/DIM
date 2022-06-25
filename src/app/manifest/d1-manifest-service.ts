@@ -105,7 +105,6 @@ function loadManifestRemote(version: string, path: string): ThunkResult<object> 
   };
 }
 
-// This is not an anonymous arrow function inside loadManifestRemote because of https://bugs.webkit.org/show_bug.cgi?id=166879
 async function saveManifestToIndexedDB(typedArray: object, version: string) {
   try {
     await set(idbKey, typedArray);
