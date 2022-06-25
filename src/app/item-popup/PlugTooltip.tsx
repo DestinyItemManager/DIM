@@ -5,6 +5,7 @@ import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { statAllowList } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isPlugStatActive } from 'app/utils/item-utils';
@@ -71,6 +72,11 @@ export function DimPlugTooltip({
     }
   }
 
+  // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume
+  // that an Exotic weapon can only be masterworked if its catalyst is complete.
+  const hideRequirements =
+    plug.plugDef.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && item.masterwork;
+
   // The PlugTooltip does all the rendering and layout, we just process information here.
   return (
     <PlugTooltip
@@ -81,6 +87,7 @@ export function DimPlugTooltip({
       cannotCurrentlyRoll={plug.cannotCurrentlyRoll}
       wishListTip={wishListTip}
       hidePlugSubtype={hidePlugSubtype}
+      hideRequirements={hideRequirements}
       craftingData={craftingData}
     />
   );
@@ -103,6 +110,7 @@ export function PlugTooltip({
   cannotCurrentlyRoll,
   wishListTip,
   hidePlugSubtype,
+  hideRequirements,
   craftingData,
 }: {
   def: DestinyInventoryItemDefinition;
@@ -112,6 +120,7 @@ export function PlugTooltip({
   cannotCurrentlyRoll?: boolean;
   wishListTip?: string;
   hidePlugSubtype?: boolean;
+  hideRequirements?: boolean;
   craftingData?: DestinyPlugItemCraftingRequirements;
 }) {
   const defs = useD2Definitions();
@@ -137,7 +146,7 @@ export function PlugTooltip({
       <div key={perkDesc.perkHash}>
         {perkDesc.name && <div className={styles.perkName}>{perkDesc.name}</div>}
         {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
-        {perkDesc.requirement && (
+        {!hideRequirements && perkDesc.requirement && (
           <RichDestinyText text={perkDesc.requirement} className={styles.requirement} />
         )}
       </div>
@@ -171,7 +180,7 @@ export function PlugTooltip({
       {bungieDescription && clarityDescription}
 
       {sourceString && <div>{sourceString}</div>}
-      {defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
+      {!hideRequirements && defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
         <div className={styles.objectives}>
           {filteredPlugObjectives.map((objective) => (
             <Objective key={objective.objectiveHash} objective={objective} />

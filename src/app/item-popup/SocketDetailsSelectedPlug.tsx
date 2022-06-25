@@ -13,7 +13,7 @@ import {
 import { interpolateStatValue } from 'app/inventory/store/stats';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
+import { DEFAULT_ORNAMENTS, EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -211,6 +211,11 @@ export default function SocketDetailsSelectedPlug({
     plug,
     stats.map((stat) => ({ value: stat.modValue, statHash: stat.dimStat.statHash }))
   );
+
+  // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume
+  // that an Exotic weapon can only be masterworked if its catalyst is complete.
+  const hideRequirements = plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && item.masterwork;
+
   return (
     <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
       <div className={styles.modIcon}>
@@ -227,7 +232,7 @@ export default function SocketDetailsSelectedPlug({
         {plugDescriptions.perks.map((perkDesc) => (
           <React.Fragment key={perkDesc.perkHash}>
             {perkDesc.description && <div>{perkDesc.description}</div>}
-            {perkDesc.requirement && (
+            {!hideRequirements && perkDesc.requirement && (
               <div className={styles.modRequirement}>{perkDesc.requirement}</div>
             )}
           </React.Fragment>
