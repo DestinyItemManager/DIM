@@ -106,7 +106,6 @@ export function getManifest(tableAllowList: string[]): ThunkResult<AllDestinyMan
   return getManifestAction(tableAllowList);
 }
 
-// This is not an anonymous arrow function inside getManifest because of https://bugs.webkit.org/show_bug.cgi?id=166879
 function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Load')));
@@ -258,7 +257,6 @@ export async function downloadManifestComponents(
   return manifest as AllDestinyManifestComponents;
 }
 
-// This is not an anonymous arrow function inside loadManifestRemote because of https://bugs.webkit.org/show_bug.cgi?id=166879
 async function saveManifestToIndexedDB(
   typedArray: object,
   version: string,
