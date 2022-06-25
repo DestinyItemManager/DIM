@@ -704,9 +704,9 @@
     "All": "全て",
     "CannotCurrentlyRoll": "このアイテムの現在のバージョンでは、このパークをロールできません。",
     "CantPullFromPostmaster": "このアイテムを取得するには、タワーに行く必要があります。",
-    "CommunityData": "Community Insight",
+    "CommunityData": "コミュニティの評価",
     "Consolidate": "統合する",
-    "CraftingPattern": "Crafting Pattern",
+    "CraftingPattern": "クラフトパターン",
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
     "FavoriteUnFavorite": {
@@ -870,7 +870,7 @@
   "Settings": {
     "BadgePostmaster": "現在のキャラクターにおけるポストマスターアイテム数をアプリアイコンに表示する",
     "BadgePostmasterExplanation": "この機能を利用するには、DIM をアプリとしてインストールし、OS がバッジの表示に対応している必要があります。",
-    "BothDescriptions": "Both Descriptions",
+    "BothDescriptions": "両方の説明",
     "BungieDescriptionOnly": "Bungie の説明",
     "CharacterOrder": "キャラ別のソート",
     "CharacterOrderFixed": "キャラのプレイ年数(PC環境では動作不安定です)",
@@ -878,8 +878,8 @@
     "CharacterOrderReversed": "最近使ったキャラ(逆順)",
     "ColumnSize": "{{num}} 個",
     "ColumnSizeAuto": "オート",
-    "CommunityData": "Community Perk Insights",
-    "CommunityDescriptionOnly": "Community Descriptions",
+    "CommunityData": "コミュニティのパーク評価",
+    "CommunityDescriptionOnly": "コミュニティの説明",
     "CsvImport": "CSV の取り込み",
     "CustomStatDesc": "アーマーのステータス値を選択して、アイテムポップアップ、オーガナイザー、比較に表示するカスタムの合計値を作成します。stat:custom:>=30で検索します。",
     "Data": "スプレッドシート",
@@ -1056,14 +1056,14 @@
     "Engram": "報酬エングラム",
     "FilterToUnacquired": "未収集アイテムのみ表示",
     "NoItems": "このベンダーは現在、アイテムを提供していません。",
-    "RefreshTime": "Inventory refreshes in:",
+    "RefreshTime": "でインベントリがリフレッシュされます。",
     "Vendors": "ベンダー"
   },
   "Views": {
     "About": {
       "APIHistory": "DIM (またはその他のDestinyアプリ) で実行されたアクション履歴を表示する",
       "BungieCopyright": "すべての画像とコンテンツはBungieの所有物です。",
-      "CommunityInsight": "Community Perk Insights courtesy of {{clarityLink}} and {{compendiumLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
+      "CommunityInsight": "コミュニティのパーク評価は {{clarityLink}} と {{compendiumLink}} の提供によるものです。不正確な情報に気づいたり、質問がある場合は、 {{clarityDiscordLink}} に参加してください。",
       "Discord": "Discord",
       "DiscordHelp": "Discordチャネルで質問をしたり、フィードバックをするとサポートを受けられます。",
       "FAQ": "よくある質問",
