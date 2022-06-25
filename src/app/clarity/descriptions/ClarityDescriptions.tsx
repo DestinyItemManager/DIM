@@ -18,14 +18,14 @@ const joinClassNames = (classNames?: string) =>
     .join(' ');
 
 /*
-     (^|\b) : start from the beginning of the string or a word boundary
-      [+-]? : include + or - prefixes
-\d+(\.\d+)? : match numbers (including decimal values)
-         x? : optionally match 'x' multiplier suffix
-        ?:% : optionally include % suffix
-       \b|$ : stop at a word boundary or the end of the string
+       (^|\b) : start from the beginning of the string or a word boundary
+        [+-]? : include + or - prefixes
+  (\d*\.)?\d+ : match numbers (including decimal values)
+([xs]|ms|HP)? : optionally include 'x' multiplier, 's', 'ms' and 'HP' unit suffixes
+      ?:[%°+] : optionally include %, ° and + suffixes
+         \b|$ : stop at a word boundary or the end of the string
 */
-const boldTextRegEx = /(^|\b)(([+-]?\d+(\.\d+)?)x?)(?:%|\b|$)/g;
+const boldTextRegEx = /(^|\b)([+-]?(\d*\.)?\d+([xs]|ms|HP)?)(?:[%°+]|\b|$)/g;
 
 function applyFormatting(text: string) {
   const segments = [];
