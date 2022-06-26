@@ -342,6 +342,10 @@ select {
   &:focus:not(:focus-visible) {
     border-color: transparent;
   }
+
+  & .app-icon {
+    margin-right: 4px;
+  }
 }
 
 a.dim-button {
