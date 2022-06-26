@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router';
 import styles from './App.m.scss';
 import Developer from './developer/Developer';
-import ActivityTracker from './dim-ui/ActivityTracker';
+import AutoRefresh from './dim-ui/AutoRefresh';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 import ErrorBoundary from './dim-ui/ErrorBoundary';
 import PageLoading from './dim-ui/PageLoading';
@@ -114,7 +114,7 @@ export default function App() {
           </Suspense>
         </ErrorBoundary>
         <NotificationsContainer />
-        <ActivityTracker />
+        <AutoRefresh />
         <HotkeysCheatSheet />
       </ClickOutsideRoot>
     </div>

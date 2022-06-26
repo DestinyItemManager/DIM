@@ -21,11 +21,11 @@ function triggerTryRefresh() {
 }
 
 /**
- * All the ActivityTracker component does is play host to the useAutoRefresh hook. It's still
+ * All the AutoRefresh component does is play host to the useAutoRefresh hook. It's still
  * a component so that whenever useAutoRefresh triggers a re-render it's only re-rendering this
  * component and not the whole app.
  */
-export default function ActivityTracker() {
+export default function AutoRefresh() {
   useAutoRefresh();
   return null;
 }
