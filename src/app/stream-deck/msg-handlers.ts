@@ -2,7 +2,6 @@
 
 // serialize the data and send it if connected
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { createLoadoutShare } from 'app/dim-api/dim-api';
 import { startFarming, stopFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import { moveItemTo } from 'app/inventory/move-item';
@@ -15,10 +14,8 @@ import {
 import { getStore } from 'app/inventory/stores-helpers';
 import { itemMoveLoadout, maxLightLoadout, randomLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { pullFromPostmaster } from 'app/loadout-drawer/postmaster';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
-import { loadoutShares } from 'app/loadout/loadout-share/LoadoutShareSheet';
 import { showNotification } from 'app/notifications/notifications';
 import { accountRoute } from 'app/routes';
 import { filteredItemsSelector } from 'app/search/search-filter';
@@ -33,7 +30,7 @@ import {
   AuthorizationInitAction,
   Challenge,
   CollectPostmasterAction,
-  EquipOrShareLoadoutAction,
+  EquipLoadoutAction,
   FarmingModeAction,
   FreeBucketSlotAction,
   HandlerArgs,
@@ -155,7 +152,7 @@ function selectionHandler({ msg, state }: HandlerArgs<SelectionAction>): ThunkRe
   };
 }
 
-function equipLoadoutHandler({ msg, state }: HandlerArgs<EquipOrShareLoadoutAction>): ThunkResult {
+function equipLoadoutHandler({ msg, state }: HandlerArgs<EquipLoadoutAction>): ThunkResult {
   return async (dispatch) => {
     const loadouts = loadoutsSelector(state);
     const stores = storesSelector(state);
@@ -163,27 +160,6 @@ function equipLoadoutHandler({ msg, state }: HandlerArgs<EquipOrShareLoadoutActi
     const loadout = loadouts.find((it) => it.id === msg.loadout);
     if (store && loadout) {
       return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
-    }
-  };
-}
-
-function shareLoadoutHandler({ msg, state }: HandlerArgs<EquipOrShareLoadoutAction>): ThunkResult {
-  return async (dispatch) => {
-    const loadouts = loadoutsSelector(state);
-    const account = currentAccountSelector(state);
-    const accountId = account?.membershipId;
-    const loadout = loadouts.find((it) => it.id === msg.loadout);
-    if (accountId && loadout) {
-      const shareUrl =
-        loadoutShares.get(loadout) ||
-        (await createLoadoutShare(accountId, convertDimLoadoutToApiLoadout(loadout)));
-      loadoutShares.set(loadout, shareUrl);
-      return dispatch(
-        sendToStreamDeck({
-          action: 'dim:share-url',
-          data: { shareUrl },
-        })
-      );
     }
   };
 }
@@ -281,7 +257,6 @@ const handlers: MessageHandler = {
   farmingMode: farmingModeHandler,
   selection: selectionHandler,
   loadout: equipLoadoutHandler,
-  shareLoadout: shareLoadoutHandler,
   freeBucketSlot: freeBucketSlotHandler,
   pullItem: pullItemHandler,
   'authorization:init': authorizationInitHandler,

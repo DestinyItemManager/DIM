@@ -82,8 +82,8 @@ export interface SelectionAction {
 
 // equip a selected loadout (for a specific store)
 // send the shareable link of a loadout to the Stream Deck
-export interface EquipOrShareLoadoutAction {
-  action: 'loadout' | 'shareLoadout';
+export interface EquipLoadoutAction {
+  action: 'loadout';
   loadout: string;
   character: string;
 }
@@ -109,7 +109,7 @@ export type StreamDeckMessage = (
   | FreeBucketSlotAction
   | PullItemAction
   | SelectionAction
-  | EquipOrShareLoadoutAction
+  | EquipLoadoutAction
 ) & { token?: string };
 
 // Types of messages sent to Stream Deck
@@ -171,13 +171,6 @@ export interface SendUpdateArgs {
   };
 }
 
-export interface SendShareUrlArgs {
-  action: 'dim:share-url';
-  data?: {
-    shareUrl?: string;
-  };
-}
-
 export interface SendAuthorizationChallengesArgs {
   action: 'authorization:challenges';
   data?: {
@@ -191,7 +184,6 @@ export interface SendAuthorizationResetArgs {
 
 export type SendToStreamDeckArgs =
   | SendUpdateArgs
-  | SendShareUrlArgs
   | SendAuthorizationChallengesArgs
   | SendAuthorizationResetArgs;
 
