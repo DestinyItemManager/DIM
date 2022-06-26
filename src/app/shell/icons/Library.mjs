@@ -1,15 +1,6 @@
-import {
-  battleNetIcon,
-  dimEngramIcon,
-  dimHunterIcon,
-  dimPowerAltIcon,
-  dimPowerIcon,
-  dimTitanIcon,
-  dimWarlockIcon,
-  stadiaIcon,
-} from './custom';
-
 // https://fontawesome.com/v5/search
+
+// IMPORTANT: run `yarn fa-subset` after changing this file or new icons won't show up
 
 const faArchive = 'fas fa-archive';
 const faArrowCircleUp = 'fas fa-arrow-circle-up';
@@ -90,14 +81,6 @@ const faGithub = 'fab fa-github';
 const faReddit = 'fab fa-reddit';
 
 export {
-  battleNetIcon,
-  stadiaIcon,
-  dimEngramIcon as engramIcon,
-  dimPowerIcon as powerIndicatorIcon,
-  dimPowerAltIcon as powerActionIcon,
-  dimHunterIcon as hunterIcon,
-  dimTitanIcon as titanIcon,
-  dimWarlockIcon as warlockIcon,
   faArchive as archiveIcon,
   faArrowCircleUp as updateIcon,
   faArrowRight as rightArrowIcon,

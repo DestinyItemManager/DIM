@@ -1,70 +1,21 @@
 import { fontawesomeSubset } from 'fontawesome-subset';
 
-fontawesomeSubset(
-  {
-    regular: ['check-circle', 'question-circle', 'star', 'trash-alt', 'bookmark'],
-    solid: [
-      'archive',
-      'arrow-circle-up',
-      'arrow-right',
-      'ban',
-      'bars',
-      'bolt',
-      'calculator',
-      'check',
-      'check-circle',
-      'cog',
-      'file-export',
-      'envelope',
-      'eraser',
-      'level-up-alt',
-      'lock',
-      'unlock',
-      'caret-down',
-      'pencil-alt',
-      'plus',
-      'caret-right',
-      'angle-right',
-      'angle-double-left',
-      'angle-double-right',
-      'plus-circle',
-      'search',
-      'sign-out-alt',
-      'chevron-down',
-      'chevron-up',
-      'shopping-cart',
-      'star',
-      'sync',
-      'table',
-      'tag',
-      'list',
-      'th',
-      'thumbs-up',
-      'thumbs-down',
-      'times',
-      'times-circle',
-      'undo',
-      'file-import',
-      'heart',
-      'globe',
-      'sticky-note',
-      'minus-square',
-      'random',
-      'equals',
-      'ellipsis-v',
-      'arrow-circle-down',
-      'exclamation-circle',
-      'caret-up',
-      'clock',
-      'exclamation-triangle',
-      'tshirt',
-      'external-link-alt',
-      'bookmark',
-      'balance-scale-left',
-      'grip-vertical',
-      'thumbtack',
-    ],
-    brands: ['twitter', 'xbox', 'playstation', 'youtube', 'discord', 'github', 'reddit'],
-  },
-  'src/data/webfonts'
-);
+import * as icons from './app/shell/icons/Library.mjs';
+
+const subset = {};
+
+for (const icon of Object.values(icons)) {
+  if (typeof icon === 'string') {
+    const [lib, symbol] = icon.split(' ');
+    const iconName = symbol.replace('fa-', '');
+    const libName =
+      lib === 'fas' ? 'solid' : lib === 'far' ? 'regular' : lib === 'fab' ? 'brands' : undefined;
+    if (!libName) {
+      throw new Error('Unknown library');
+    }
+    subset[libName] ||= [];
+    subset[libName].push(iconName);
+  }
+}
+
+fontawesomeSubset(subset, 'src/data/webfonts');
