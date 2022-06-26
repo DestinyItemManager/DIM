@@ -1,3 +1,4 @@
+import { userIsPlayingSelector } from 'app/inventory/selectors';
 import { dimNeedsUpdate$, reloadDIM } from 'app/register-service-worker';
 import { hasSearchQuerySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
@@ -93,6 +94,8 @@ function useAutoRefresh() {
  */
 function useScheduledAutoRefresh() {
   const { destinyProfileRefreshInterval, autoRefresh } = useSelector(globalSettingsSelector);
+  const userIsPlaying = useSelector(userIsPlayingSelector);
+
   // A timer for auto refreshing on a schedule, if that's enabled.
   const refreshAccountDataInterval = useRef<number>();
 
@@ -101,13 +104,13 @@ function useScheduledAutoRefresh() {
   const startTimer = useCallback(() => {
     // Cancel any ongoing timer before restarting
     clearTimer();
-    if (autoRefresh) {
+    if (autoRefresh && userIsPlaying) {
       refreshAccountDataInterval.current = window.setTimeout(
         triggerTryRefresh,
         destinyProfileRefreshInterval * 1000
       );
     }
-  }, [autoRefresh, destinyProfileRefreshInterval]);
+  }, [autoRefresh, userIsPlaying, destinyProfileRefreshInterval]);
 
   // Every time we refresh for any reason, restart the timer
   useEventBusListener(refresh$, startTimer);
