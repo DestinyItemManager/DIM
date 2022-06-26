@@ -9,26 +9,34 @@ import styles from './ItemIconPlaceholder.m.scss';
 // We'll use a single intersection observer instead of one per item, roughly following the strategy
 // from https://github.com/thebuilder/react-intersection-observer/blob/master/src/observe.ts
 const elements = new WeakMap<Element, () => void>();
-const observer = new IntersectionObserver(
-  (entries) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) {
-        const elem = entry.target;
-        const callback = elements.get(elem);
-        if (callback) {
-          callback();
-          elements.delete(elem);
-          observer.unobserve(elem);
+const observer =
+  'IntersectionObserver' in window
+    ? new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              const elem = entry.target;
+              const callback = elements.get(elem);
+              if (callback) {
+                callback();
+                elements.delete(elem);
+                observer.unobserve(elem);
+              }
+            }
+          }
+        },
+        {
+          root: null,
+          rootMargin: '16px',
+          threshold: 0,
         }
-      }
-    }
-  },
-  {
-    root: null,
-    rootMargin: '16px',
-    threshold: 0,
-  }
-);
+      )
+    : {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        observe: () => {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        unobserve: () => {},
+      };
 
 /**
  * A placeholder div that's the same size as our icon, which is replaced by its
