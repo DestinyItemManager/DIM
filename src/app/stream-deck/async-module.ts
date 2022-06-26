@@ -138,7 +138,7 @@ const installFarmingObserver = _.once((dispatch) => {
 });
 
 // collect and send data to the stream deck
-function refreshStreamDeck(): ThunkResult {
+export function refreshStreamDeck(): ThunkResult {
   return async (dispatch, getState) => {
     const refreshAction = () => {
       const state = getState();
@@ -219,8 +219,8 @@ function startStreamDeckConnection(): ThunkResult {
         clearInterval(refreshInterval);
         // if the plugin is still enabled and the websocket is closed
         if (streamDeckEnabled() && streamDeckWebSocket.readyState === WebSocket.CLOSED) {
-          // retry to re-connect after 5s
-          window.setTimeout(initWS, 5000);
+          // retry to re-connect after 2.5s
+          window.setTimeout(initWS, 2500);
         }
       };
 

@@ -23,7 +23,7 @@ import { setRouterLocation, setSearchQuery } from 'app/shell/actions';
 import { refresh } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
 import { streamDeckClearSelection, streamDeckWaitSelection } from 'app/stream-deck/actions';
-import { sendToStreamDeck } from 'app/stream-deck/async-module';
+import { refreshStreamDeck, sendToStreamDeck } from 'app/stream-deck/async-module';
 import { showStreamDeckAuthorizationNotification } from 'app/stream-deck/AuthorizationNotification/AuthorizationNotification';
 import {
   AuthorizationConfirmAction,
@@ -200,13 +200,15 @@ function authorizationConfirmHandler({
   msg,
   state,
 }: HandlerArgs<AuthorizationConfirmAction>): ThunkResult {
-  return async () => {
+  return async (dispatch) => {
     const { label, value } = onGoingAuthorizationChallenge || {};
     if (label && label === msg.challenge) {
       // if label exist then also the values is defined
       setStreamDeckToken(value!);
       // hide the notification
       state.streamDeck.selectionPromise.resolve();
+      // refresh stream deck state
+      await dispatch(refreshStreamDeck());
     }
     // the current challenge is no more valid
     onGoingAuthorizationChallenge = undefined;
