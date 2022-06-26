@@ -160,12 +160,11 @@ function ItemIconPlaceholder({
     }
 
     const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].intersectionRatio <= 0) {
-          return;
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
         }
-        setVisible(true);
-        obs.disconnect();
       },
       {
         root: null,
