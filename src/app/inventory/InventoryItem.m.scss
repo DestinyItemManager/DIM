@@ -23,7 +23,7 @@
 }
 
 .hasBadge {
-  height: calc(var(--item-size) + #{$badge-height});
+  height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
 }
 
 .placeholderBadge {
