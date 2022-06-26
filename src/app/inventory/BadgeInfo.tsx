@@ -28,6 +28,22 @@ interface Props {
   wishlistRoll?: InventoryWishListRoll;
 }
 
+export function shouldShowBadge(item: DimItem) {
+  const isBounty = Boolean(!item.primaryStat && item.objectives);
+  const isStackable = Boolean(item.maxStackSize > 1);
+  const isGeneric = !isBounty && !isStackable;
+
+  const hideBadge = Boolean(
+    item.location.hash === BucketHashes.Subclass ||
+      (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
+      (isBounty && (item.complete || item.hidePercentage)) ||
+      (isStackable && item.amount === 1) ||
+      (isGeneric && !item.primaryStat?.value && !item.classified)
+  );
+
+  return !hideBadge;
+}
+
 export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const isBounty = Boolean(!item.primaryStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);

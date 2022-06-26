@@ -1,0 +1,6 @@
+@use '../variables.scss' as *;
+
+.placeholderBadge {
+  height: calc(var(--item-size) + #{$badge-height}) !important;
+  border-bottom-width: calc(#{$item-border-width} + #{$badge-height}) !important;
+}

@@ -14,7 +14,7 @@ $commonBg: #366f42;
   height: var(--item-size);
   box-sizing: border-box;
   border: $item-border-width solid #ddd;
-
+  background-size: contain;
   &:focus {
     outline: none;
   }
@@ -97,6 +97,7 @@ $commonBg: #366f42;
   left: $item-border-width;
   height: calc(var(--item-size) - #{2 * $item-border-width});
   width: calc(var(--item-size) - #{2 * $item-border-width});
+  background-size: contain;
   position: absolute;
 }
 

@@ -5,11 +5,12 @@ import React, { useMemo } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
-import BadgeInfo from './BadgeInfo';
+import BadgeInfo, { shouldShowBadge } from './BadgeInfo';
 import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
 import { DimItem } from './item-types';
 import ItemIcon from './ItemIcon';
+import ItemIconPlaceholder from './ItemIconPlaceholder';
 import NewItemIndicator from './NewItemIndicator';
 import { getSubclassIconInfo } from './subclass';
 import TagIcon from './TagIcon';
@@ -63,15 +64,18 @@ export default function InventoryItem({
     isSubclass && selectedSuperDisplay !== 'disabled'
       ? getSubclassIconInfo(item, selectedSuperDisplay === 'v3SubclassesOnly')
       : null;
+  const hasBadge = shouldShowBadge(item);
   const itemStyles = clsx('item', {
     [styles.searchHidden]: searchHidden,
     [styles.subclass]: isSubclass,
     [styles.subclassPathTop]: subclassIconInfo?.path === 'top',
     [styles.subclassPathMiddle]: subclassIconInfo?.path === 'middle',
     [styles.subclassPathBottom]: subclassIconInfo?.path === 'bottom',
+    [styles.hasBadge]: hasBadge,
   });
   // Subtitle for engram powerlevel vs regular item type
   const subtitle = item.destinyVersion === 2 && item.isEngram ? item.power : item.typeName;
+
   // Memoize the contents of the item - most of the time if this is re-rendering it's for a search, or a new item
   const contents = useMemo(() => {
     // Subclasses have limited, but customized, display. They can't be new, or tagged, or locked, etc.
@@ -126,7 +130,9 @@ export default function InventoryItem({
       className={itemStyles}
       ref={innerRef}
     >
-      {contents}
+      <ItemIconPlaceholder item={item} hasBadge={hasBadge}>
+        {contents}
+      </ItemIconPlaceholder>
     </div>
   );
 }
