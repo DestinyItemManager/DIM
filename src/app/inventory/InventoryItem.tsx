@@ -1,7 +1,7 @@
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -9,7 +9,8 @@ import BadgeInfo, { shouldShowBadge } from './BadgeInfo';
 import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
 import { DimItem } from './item-types';
-import ItemIcon, { getItemImageStyles } from './ItemIcon';
+import ItemIcon from './ItemIcon';
+import ItemIconPlaceholder from './ItemIconPlaceholder';
 import NewItemIndicator from './NewItemIndicator';
 import { getSubclassIconInfo } from './subclass';
 import TagIcon from './TagIcon';
@@ -133,55 +134,5 @@ export default function InventoryItem({
         {contents}
       </ItemIconPlaceholder>
     </div>
-  );
-}
-
-/**
- * A placeholder div that's the same size as our icon, which is replaced by its
- * children when it is roughly onscreen. This is to work around a major
- * performance regression on iOS Safari 15 where rendering image tags hangs the
- * browser.
- */
-function ItemIconPlaceholder({
-  item,
-  children,
-  hasBadge,
-}: {
-  item: DimItem;
-  children: React.ReactNode;
-  hasBadge: boolean;
-}) {
-  const [visible, setVisible] = useState(false);
-
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!ref.current) {
-      return;
-    }
-
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      {
-        root: null,
-        rootMargin: '16px',
-        threshold: 0,
-      }
-    );
-    obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
-
-  return visible ? (
-    <>{children}</>
-  ) : (
-    <div
-      className={clsx(getItemImageStyles(item), { [styles.placeholderBadge]: hasBadge })}
-      ref={ref}
-    />
   );
 }
