@@ -66,6 +66,8 @@ export interface DimStore<Item = DimItem> {
   percentToNextLevel: number;
   /** Power/light level. */
   powerLevel: number;
+  /** The record corresponding to the currently equipped Title. */
+  titleInfo?: DimTitle;
   /** Character stats. */
   stats: {
     /** average of your highest simultaneously equippable gear with bonus fields for rich tooltip content and equippability warnings */
@@ -78,6 +80,11 @@ export interface DimStore<Item = DimItem> {
   };
   /** Did any of the items in the last inventory build fail? */
   hadErrors: boolean;
+}
+
+export interface DimTitle {
+  title: string;
+  gildedNum: number;
 }
 
 /** Account-wide currency counts, e.g. glimmer */

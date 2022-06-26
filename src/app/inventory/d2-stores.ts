@@ -13,7 +13,6 @@ import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, timer } from 'app/utils/log';
 import {
-  DestinyCharacterComponent,
   DestinyCharacterProgressionComponent,
   DestinyCollectibleComponent,
   DestinyCollectiblesComponent,
@@ -340,12 +339,13 @@ function processCharacter(
   const characterInventory = profileInfo.characterInventories.data?.[characterId]?.items || [];
   const profileInventory = profileInfo.profileInventory.data?.items || [];
   const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
-  const profileRecords = profileInfo.profileRecords?.data; // Not present in the initial load
+  const profileRecords = profileInfo.profileRecords?.data;
+  const characterRecords = profileInfo.characterRecords.data![characterId];
   const itemComponents = profileInfo.itemComponents;
   const uninstancedItemObjectives =
     getCharacterProgressions(profileInfo, characterId)?.uninstancedItemObjectives || [];
 
-  const store = makeCharacter(defs, character, lastPlayedDate);
+  const store = makeCharacter(defs, character, lastPlayedDate, characterRecords);
 
   // We work around the weird account-wide buckets by assigning them to the current character
   const items = characterInventory.concat(characterEquipment.flat());
@@ -418,13 +418,11 @@ function processVault(
  * Find the date of the most recently played character.
  */
 function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
-  return Object.values(profileInfo.characters.data!).reduce(
-    (memo: Date, character: DestinyCharacterComponent) => {
-      const d1 = new Date(character.dateLastPlayed);
-      return memo ? (d1 >= memo ? d1 : memo) : d1;
-    },
-    new Date(0)
-  );
+  const dateLastPlayed = profileInfo.profile.data?.dateLastPlayed;
+  if (dateLastPlayed) {
+    return new Date(dateLastPlayed);
+  }
+  return new Date(0);
 }
 
 export const fakeCharacterStatHashes = {

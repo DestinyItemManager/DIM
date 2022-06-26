@@ -1,8 +1,9 @@
-import type { DimStore } from 'app/inventory/store-types';
+import type { DimStore, DimTitle } from 'app/inventory/store-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
-import React, { memo } from 'react';
+import clsx from 'clsx';
+import { memo } from 'react';
 import styles from './CharacterTile.m.scss';
 
 function CharacterEmblem({ store }: { store: DimStore }) {
@@ -49,7 +50,7 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
             isPhonePortrait && <VaultCapacity />
           ) : (
             <>
-              <div>{store.race}</div>
+              <div>{store.titleInfo ? <Title titleInfo={store.titleInfo} /> : store.race}</div>
               {store.destinyVersion === 1 && store.level < 40 && (
                 <div className={styles.level}>{store.level}</div>
               )}
@@ -60,3 +61,14 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
     </div>
   );
 });
+
+function Title({ titleInfo }: { titleInfo: DimTitle }) {
+  const { title, gildedNum } = titleInfo;
+  const gilded = gildedNum > 0;
+  return (
+    <span className={clsx(styles.title, { [styles.gilded]: gilded })}>
+      {title}
+      {gilded && <span className={styles.gildedNum}>gildedNum</span>}
+    </span>
+  );
+}

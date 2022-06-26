@@ -1,11 +1,16 @@
 import { t } from 'app/i18next-t';
 import { armorStats } from 'app/search/d2-known-values';
-import { DestinyCharacterComponent, DestinyClass, DestinyGender } from 'bungie-api-ts/destiny2';
+import {
+  DestinyCharacterComponent,
+  DestinyCharacterRecordsComponent,
+  DestinyClass,
+  DestinyGender,
+} from 'bungie-api-ts/destiny2';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
-import { DimCharacterStat, DimStore } from '../store-types';
+import { DimCharacterStat, DimStore, DimTitle } from '../store-types';
 
 /**
  * A factory service for producing "stores" (characters or the vault).
@@ -21,7 +26,8 @@ const genderTypeToEnglish = {
 export function makeCharacter(
   defs: D2ManifestDefinitions,
   character: DestinyCharacterComponent,
-  mostRecentLastPlayed: Date
+  mostRecentLastPlayed: Date,
+  characterRecords: DestinyCharacterRecordsComponent
 ): DimStore {
   const race = defs.Race[character.raceHash];
   const raceLocalizedName = race.displayProperties.name;
@@ -56,6 +62,9 @@ export function makeCharacter(
     genderName: genderTypeToEnglish[gender.genderType] ?? '',
     isVault: false,
     color: character.emblemColor,
+    titleInfo: character.titleRecordHash
+      ? getTitleInfo(character.titleRecordHash, defs, characterRecords, character.genderHash)
+      : undefined,
     items: [],
     hadErrors: false,
   };
@@ -116,4 +125,31 @@ export function getCharacterStatsData(
   });
 
   return ret;
+}
+
+function getTitleInfo(
+  titleRecordHash: number,
+  defs: D2ManifestDefinitions,
+  characterRecords: DestinyCharacterRecordsComponent,
+  genderHash: number
+): DimTitle | undefined {
+  const titleRecordDef = defs?.Record.get(titleRecordHash);
+  if (!titleRecordDef) {
+    return undefined;
+  }
+  const title = titleRecordDef.titleInfo.titlesByGenderHash[genderHash];
+  if (!title) {
+    return undefined;
+  }
+
+  let gildedNum = 0;
+  if (titleRecordDef.titleInfo.gildingTrackingRecordHash) {
+    const gildedRecord =
+      characterRecords.records[titleRecordDef.titleInfo.gildingTrackingRecordHash];
+    if (gildedRecord?.completedCount) {
+      gildedNum = gildedRecord.completedCount;
+    }
+  }
+
+  return { title, gildedNum };
 }
