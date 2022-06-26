@@ -32,7 +32,6 @@ import {
   CollectPostmasterAction,
   EquipLoadoutAction,
   FarmingModeAction,
-  FreeBucketSlotAction,
   HandlerArgs,
   MaxPowerAction,
   MessageHandler,
@@ -164,6 +163,10 @@ function equipLoadoutHandler({ msg, state }: HandlerArgs<EquipLoadoutAction>): T
   };
 }
 
+/*
+
+Feature toggled out (to be discussed as possible new feature on DIM)
+
 function freeBucketSlotHandler({
   msg,
   state,
@@ -176,6 +179,7 @@ function freeBucketSlotHandler({
     pickedItem && (await dispatch(moveItemTo(pickedItem, vaultStore!, false)));
   };
 }
+*/
 
 function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): ThunkResult {
   return async (dispatch) => {
@@ -257,7 +261,7 @@ const handlers: MessageHandler = {
   farmingMode: farmingModeHandler,
   selection: selectionHandler,
   loadout: equipLoadoutHandler,
-  freeBucketSlot: freeBucketSlotHandler,
+  // freeBucketSlot: freeBucketSlotHandler,
   pullItem: pullItemHandler,
   'authorization:init': authorizationInitHandler,
   'authorization:confirm': authorizationConfirmHandler,

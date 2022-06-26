@@ -1,4 +1,3 @@
-import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
@@ -61,10 +60,10 @@ export interface MaxPowerAction {
 
 // pick a random item of the selected bucket
 // and move it to the vault to free a slot
-export interface FreeBucketSlotAction {
-  action: 'freeBucketSlot';
-  bucket: InventoryBucket['type'];
-}
+// export interface FreeBucketSlotAction {
+//  action: 'freeBucketSlot';
+//  bucket: InventoryBucket['type'];
+// }
 
 // pull a selected item from other character/vault
 // (if the current character has already that item it will be moved to the vault)
@@ -106,7 +105,7 @@ export type StreamDeckMessage = (
   | RefreshAction
   | FarmingModeAction
   | MaxPowerAction
-  | FreeBucketSlotAction
+  // | FreeBucketSlotAction
   | PullItemAction
   | SelectionAction
   | EquipLoadoutAction
