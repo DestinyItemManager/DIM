@@ -1030,6 +1030,7 @@
   },
   "StreamDeck": {
     "Authorization": {
+      "Error": "Picked number is not the valid one!",
       "Reset": "DE-AUTHORIZE",
       "Title": "Pick this number on your Stream Deck"
     },

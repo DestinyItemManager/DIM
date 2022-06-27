@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { showNotification } from 'app/notifications/notifications';
+import { NotificationError, showNotification } from 'app/notifications/notifications';
 import { DeferredPromise } from 'app/stream-deck/util/deferred';
 import styles from './AuthorizationNotification.m.scss';
 
@@ -26,6 +26,10 @@ export function showStreamDeckAuthorizationNotification(
     body: <StreamDeckChallenge challenge={challenge} />,
     type: 'progress',
     duration: 500,
-    promise: promise.promise,
+    promise: promise.promise?.catch((e) => {
+      throw new NotificationError(e.message, {
+        body: t('StreamDeck.Authorization.Error'),
+      });
+    }),
   });
 }

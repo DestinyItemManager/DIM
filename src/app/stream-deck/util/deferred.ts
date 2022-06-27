@@ -5,6 +5,7 @@
 export class DeferredPromise {
   promise?: Promise<any>;
   public _resolve?: (v?: any) => any;
+  public _reject?: (e?: any) => any;
 
   constructor() {
     this.reset();
@@ -15,9 +16,15 @@ export class DeferredPromise {
     this.reset();
   }
 
+  reject(message?: string) {
+    this._reject?.(message);
+    this.reset();
+  }
+
   reset() {
-    this.promise = new Promise((resolve) => {
+    this.promise = new Promise((resolve, reject) => {
       this._resolve = resolve;
+      this._reject = reject;
     });
   }
 }

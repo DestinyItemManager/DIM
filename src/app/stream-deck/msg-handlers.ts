@@ -77,6 +77,7 @@ function refreshHandler(): ThunkResult {
     refresh();
   };
 }
+
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function searchHandler({ msg, state, store }: HandlerArgs<SearchAction>): ThunkResult {
@@ -196,12 +197,17 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
   };
 }
 
-function authorizationConfirmHandler({
-  msg,
-  state,
-}: HandlerArgs<AuthorizationConfirmAction>): ThunkResult {
+function authorizationConfirmHandler(args: HandlerArgs<AuthorizationConfirmAction>): ThunkResult {
+  const { msg, state } = args;
   return async (dispatch) => {
+    // ignore step if token is already set
+    if (streamDeckToken()) {
+      return;
+    }
+
     const { label, value } = onGoingAuthorizationChallenge || {};
+
+    // handle confirmation
     if (label && label === msg.challenge) {
       // if label exist then also the values is defined
       setStreamDeckToken(value!);
@@ -209,9 +215,17 @@ function authorizationConfirmHandler({
       state.streamDeck.selectionPromise.resolve();
       // refresh stream deck state
       await dispatch(refreshStreamDeck());
+      // the current challenge is no more valid
+      onGoingAuthorizationChallenge = undefined;
+      return;
     }
-    // the current challenge is no more valid
-    onGoingAuthorizationChallenge = undefined;
+    // if the user tapped the error challenge number
+    // hide the notification
+    state.streamDeck.selectionPromise.reject('invalid-challenge');
+    // trigger the challenges again
+    return dispatch(
+      authorizationInitHandler({ ...args, state, msg: { action: 'authorization:init' } })
+    );
   };
 }
 
@@ -274,13 +288,13 @@ export function handleStreamDeckMessage(msg: StreamDeckMessage): ThunkResult {
   return async (dispatch, getState) => {
     const state = getState();
     const store = currentStoreSelector(state);
-
-    if (!msg.token && !msg.action.startsWith('authorization')) {
-      throw new Error('missing-token');
-    }
-
-    if (msg.token && msg.token !== streamDeckToken()) {
-      throw new Error('invalid-token');
+    const token = streamDeckToken();
+    if (!msg.action.startsWith('authorization')) {
+      if (!msg.token) {
+        throw new Error('missing-token');
+      } else if (token && msg.token !== token) {
+        throw new Error('invalid-token');
+      }
     }
 
     if (store) {

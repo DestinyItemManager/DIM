@@ -1141,6 +1141,7 @@
     },
     "Authorization": {
       "Title": "Pick this number on your Stream Deck",
+      "Error": "Picked number is not the valid one!",
       "Reset": "DE-AUTHORIZE"
     }
   },
