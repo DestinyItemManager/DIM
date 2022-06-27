@@ -9,6 +9,7 @@ interface CssExports {
   'classIcon': string;
   'emblem': string;
   'gilded': string;
+  'gildedIcon': string;
   'gildedNum': string;
   'level': string;
   'maxTotalPower': string;

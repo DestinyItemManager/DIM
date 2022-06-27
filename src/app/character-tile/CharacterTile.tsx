@@ -3,6 +3,7 @@ import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
 import clsx from 'clsx';
+import { FontGlyphs } from 'data/d2/d2-font-glyphs';
 import { memo } from 'react';
 import styles from './CharacterTile.m.scss';
 
@@ -68,7 +69,12 @@ function Title({ titleInfo }: { titleInfo: DimTitle }) {
   return (
     <span className={clsx(styles.title, { [styles.gilded]: gilded })}>
       {title}
-      {gilded && <span className={styles.gildedNum}>gildedNum</span>}
+      {gilded && (
+        <>
+          <span className={styles.gildedIcon}>{String.fromCodePoint(FontGlyphs.gilded_title)}</span>
+          {gildedNum > 1 && <span className={styles.gildedNum}>{gildedNum}</span>}
+        </>
+      )}
     </span>
   );
 }
