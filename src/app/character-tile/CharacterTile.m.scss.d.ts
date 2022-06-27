@@ -8,7 +8,7 @@ interface CssExports {
   'class': string;
   'classIcon': string;
   'emblem': string;
-  'gilded': string;
+  'gildedCurrentSeason': string;
   'gildedIcon': string;
   'gildedNum': string;
   'level': string;

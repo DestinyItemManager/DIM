@@ -85,6 +85,7 @@ export interface DimStore<Item = DimItem> {
 export interface DimTitle {
   title: string;
   gildedNum: number;
+  isGildedForCurrentSeason: boolean;
 }
 
 /** Account-wide currency counts, e.g. glimmer */

@@ -143,13 +143,16 @@ function getTitleInfo(
   }
 
   let gildedNum = 0;
+  const isGildedForCurrentSeason = false;
   if (titleRecordDef.titleInfo.gildingTrackingRecordHash) {
     const gildedRecord =
       characterRecords.records[titleRecordDef.titleInfo.gildingTrackingRecordHash];
     if (gildedRecord?.completedCount) {
       gildedNum = gildedRecord.completedCount;
     }
+
+    // todo: figure out whether the title is gilded for the current season
   }
 
-  return { title, gildedNum };
+  return { title, gildedNum, isGildedForCurrentSeason };
 }

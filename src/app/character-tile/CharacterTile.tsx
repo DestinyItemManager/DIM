@@ -64,12 +64,13 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
 });
 
 function Title({ titleInfo }: { titleInfo: DimTitle }) {
-  const { title, gildedNum } = titleInfo;
-  const gilded = gildedNum > 0;
+  const { title, gildedNum, isGildedForCurrentSeason } = titleInfo;
   return (
-    <span className={clsx(styles.title, { [styles.gilded]: gilded })}>
+    <span
+      className={clsx(styles.title, { [styles.gildedCurrentSeason]: isGildedForCurrentSeason })}
+    >
       {title}
-      {gilded && (
+      {gildedNum > 0 && (
         <>
           <span className={styles.gildedIcon}>{String.fromCodePoint(FontGlyphs.gilded_title)}</span>
           {gildedNum > 1 && <span className={styles.gildedNum}>{gildedNum}</span>}
