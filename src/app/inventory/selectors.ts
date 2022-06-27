@@ -112,6 +112,10 @@ export const profileResponseSelector = (state: RootState) => state.inventory.pro
 export const userIsPlayingSelector = (state: RootState) =>
   Boolean(state.inventory.profileResponse?.profileTransitoryData?.data);
 
+/** Whether DIM will automatically refresh on a schedule */
+export const autoRefreshEnabledSelector = (state: RootState) =>
+  userIsPlayingSelector(state) && state.dimApi.globalSettings.autoRefresh;
+
 /** returns name/icon/amount for a hard-coded list of crafting materials */
 export const craftingMaterialCountsSelector = createSelector(
   d2ManifestSelector,

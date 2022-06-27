@@ -1,4 +1,4 @@
-import { userIsPlayingSelector } from 'app/inventory/selectors';
+import { autoRefreshEnabledSelector } from 'app/inventory/selectors';
 import { dimNeedsUpdate$, reloadDIM } from 'app/register-service-worker';
 import { hasSearchQuerySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
@@ -93,8 +93,8 @@ function useAutoRefresh() {
  * because we want the timing to be between actual refreshes.
  */
 function useScheduledAutoRefresh() {
-  const { destinyProfileRefreshInterval, autoRefresh } = useSelector(globalSettingsSelector);
-  const userIsPlaying = useSelector(userIsPlayingSelector);
+  const { destinyProfileRefreshInterval } = useSelector(globalSettingsSelector);
+  const autoRefresh = useSelector(autoRefreshEnabledSelector);
 
   // A timer for auto refreshing on a schedule, if that's enabled.
   const refreshAccountDataInterval = useRef<number>();
@@ -104,13 +104,13 @@ function useScheduledAutoRefresh() {
   const startTimer = useCallback(() => {
     // Cancel any ongoing timer before restarting
     clearTimer();
-    if (autoRefresh && userIsPlaying) {
+    if (autoRefresh) {
       refreshAccountDataInterval.current = window.setTimeout(
         triggerTryRefresh,
         destinyProfileRefreshInterval * 1000
       );
     }
-  }, [autoRefresh, userIsPlaying, destinyProfileRefreshInterval]);
+  }, [autoRefresh, destinyProfileRefreshInterval]);
 
   // Every time we refresh for any reason, restart the timer
   useEventBusListener(refresh$, startTimer);
@@ -154,6 +154,8 @@ function useOnlineRefresh() {
     };
   }, []);
 }
+
+// TODO: https://developer.mozilla.org/en-US/docs/Web/API/Idle_Detection_API
 
 /**
  * Trigger a refresh attempt whenever the page becomes visible. This also includes
