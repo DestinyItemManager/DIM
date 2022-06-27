@@ -12,6 +12,7 @@ module.exports = {
     '^testing/(.*)$': '<rootDir>/src/testing/$1',
     '^docs/(.*)$': '<rootDir>/docs/$1',
     '^.+\\.s?css$': 'identity-obj-proxy',
+    'Library\\.mjs$': 'identity-obj-proxy',
   },
   transformIgnorePatterns: ['node_modules/?!(bungie-api-ts)'],
   globals: {

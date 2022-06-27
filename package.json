@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "7.22.0",
+  "version": "7.23.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "private": true,
@@ -64,7 +64,7 @@
     "last 2 Opera versions"
   ],
   "resolutions": {
-    "@types/react": "18.0.12",
+    "@types/react": "18.0.14",
     "react-redux": "^8.0.1",
     "react-is": "^18.1.0"
   },
@@ -82,7 +82,7 @@
     "@types/jest": "^28.1.1",
     "@types/lodash": "^4.14.0",
     "@types/mousetrap": "^1.6.8",
-    "@types/node": "^17.0.4",
+    "@types/node": "^18.0.0",
     "@types/papaparse": "^5.0.0",
     "@types/prop-types": "^15.5.2",
     "@types/react": "^18.0.12",
@@ -145,7 +145,7 @@
     "postcss": "^8.0.9",
     "postcss-loader": "^7.0.0",
     "prettier": "^2.5.0",
-    "prettier-plugin-organize-imports": "^2.0.0",
+    "prettier-plugin-organize-imports": "^3.0.0",
     "pretty-quick": "^3.1.2",
     "react-refresh": "^0.14.0",
     "react-test-renderer": "^18.1.0",

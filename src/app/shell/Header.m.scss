@@ -130,7 +130,7 @@ $header-height: 44px;
   @include phone-portrait {
     display: none;
   }
-  @media (max-width: 1280px) {
+  @media (max-width: 1200px) {
     display: none;
   }
 

@@ -4,6 +4,11 @@
 * Community-sourced perk descriptions have been made more visually distinct.
 * Exotic catalyst requirements are now hidden on tooltips if the catalyst is complete.
 * Fixed an issue where stat modifications from Exotic catalysts were being displayed when the catalyst was incomplete.
+## 7.23.0 <span class="changelog-date">(2022-06-26)</span>
+
+* The links on the top of the page will now show for narrower screens. All links are always available in the menu.
+* Improved performance of switching characters and opening item picker or search results on iOS. Something had gotten slower with Safari in one of the recent iOS updates, so we had to do a lot of work to get back to a responsive UI.
+* Fixed the tooltip in the mod assignment page not showing the correct energy usage.
 
 ## 7.22.0 <span class="changelog-date">(2022-06-19)</span>
 
