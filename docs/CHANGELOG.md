@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed a crash when trying to assign deprecated Combat Style mods.
+
 ## 7.23.1 <span class="changelog-date">(2022-06-27)</span>
 
 * Fix missing icons in the subclass and mod menus.

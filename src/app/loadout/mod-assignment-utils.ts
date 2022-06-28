@@ -104,12 +104,25 @@ export function fitMostMods({
   const activityMods: PluggableInventoryItemDefinition[] = [];
 
   const otherMods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] } = {};
+  const unassignedMods: PluggableInventoryItemDefinition[] = [];
+
+  const allActiveModSockets = items
+    .flatMap((i) => getSocketsByCategoryHash(i.sockets, SocketCategoryHashes.ArmorMods))
+    .filter((socket) => socket.plugged);
 
   // Divide up the locked mods into general, combat and activity mod arrays. Also we
   // take the bucket specific mods and put them in a map of item ids to mods so
   // we can calculate the used energy values for each item
   for (const plannedMod of plannedMods) {
-    if (plannedMod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general) {
+    if (!allActiveModSockets.some((s) => plugFitsIntoSocket(s, plannedMod.hash))) {
+      // Eagerly reject mods that can't possibly fit into any socket at all under
+      // any circumstances, such as deprecated (artifact) armor mods.
+      // The mod assignment code below relies on manually curated socket/plug metadata, so
+      // it doesn't check whether a plug actually appears in the list of possible plugs.
+      // Deprecated combat style armor mods in particular are indistinguishable from
+      // non-deprecated ones by their definitions alone.
+      unassignedMods.push(plannedMod);
+    } else if (plannedMod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general) {
       generalMods.push(plannedMod);
     } else if (combatCompatiblePlugCategoryHashes.includes(plannedMod.plug.plugCategoryHash)) {
       combatMods.push(plannedMod);
@@ -119,8 +132,6 @@ export function fitMostMods({
       (otherMods[plannedMod.plug.plugCategoryHash] ??= []).push(plannedMod);
     }
   }
-
-  const unassignedMods: PluggableInventoryItemDefinition[] = [];
 
   for (const [plugCategoryHash_, modsToAssign] of Object.entries(otherMods)) {
     const plugCategoryHash = Number(plugCategoryHash_);
