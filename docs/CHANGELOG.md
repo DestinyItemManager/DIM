@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed the crafted weapon level progress bar going missing with some Operating System languages.
+
 ## 7.23.1 <span class="changelog-date">(2022-06-27)</span>
 
 * Fix missing icons in the subclass and mod menus.
