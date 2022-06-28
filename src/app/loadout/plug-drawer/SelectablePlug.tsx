@@ -6,7 +6,7 @@ import { StatValue } from 'app/item-popup/PlugTooltip';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getPerkDescriptions } from 'app/utils/socket-utils';
 import clsx from 'clsx';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import styles from './SelectablePlug.m.scss';
 
 /**
@@ -77,7 +77,7 @@ function SelectablePlugDetails({
 
   return (
     <>
-      <div className={clsx('item', styles.iconContainer)} title={plug.displayProperties.name}>
+      <div className="item" title={plug.displayProperties.name}>
         <DefItemIcon itemDef={plug} />
       </div>
       <div className={styles.plugInfo}>

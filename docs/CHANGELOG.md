@@ -1,5 +1,7 @@
 ## Next
 
+* Fix missing icons in the subclass and mod menus.
+
 ## 7.23.0 <span class="changelog-date">(2022-06-26)</span>
 
 * The links on the top of the page will now show for narrower screens. All links are always available in the menu.
