@@ -1,5 +1,7 @@
 ## Next
 
+## 7.23.1 <span class="changelog-date">(2022-06-27)</span>
+
 * Fix missing icons in the subclass and mod menus.
 
 ## 7.23.0 <span class="changelog-date">(2022-06-26)</span>
