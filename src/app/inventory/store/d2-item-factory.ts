@@ -586,6 +586,13 @@ export function makeItem(
       ...createdItem.itemCategoryHashes,
       extendedICH[createdItem.hash],
     ];
+    // Masks are helmets too
+    if (extendedICH[createdItem.hash] === ItemCategoryHashes.Mask) {
+      createdItem.itemCategoryHashes = [
+        ...createdItem.itemCategoryHashes,
+        ItemCategoryHashes.Helmets,
+      ];
+    }
   }
 
   try {
