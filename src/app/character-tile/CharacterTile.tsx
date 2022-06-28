@@ -11,6 +11,8 @@ function CharacterEmblem({ store }: { store: DimStore }) {
   return <div className={styles.emblem} style={{ backgroundImage: `url("${store.icon}")` }} />;
 }
 
+const gildedIcon = String.fromCodePoint(FontGlyphs.gilded_title);
+
 /**
  * Render a basic character tile without any event handlers
  * This is currently being shared between StoreHeading and CharacterTileButton
@@ -72,7 +74,7 @@ function Title({ titleInfo }: { titleInfo: DimTitle }) {
       {title}
       {gildedNum > 0 && (
         <>
-          <span className={styles.gildedIcon}>{String.fromCodePoint(FontGlyphs.gilded_title)}</span>
+          <span className={styles.gildedIcon}>{gildedIcon}</span>
           {gildedNum > 1 && <span className={styles.gildedNum}>{gildedNum}</span>}
         </>
       )}
