@@ -1,5 +1,7 @@
 ## Next
 
+* If you have a title equipped on your character, it will replace your character's race in the character headers.
+
 ## 7.22.0 <span class="changelog-date">(2022-06-19)</span>
 
 * Fixed a rare edge case where Loadout Optimizer would miss certain valid elemental mod assignments with locked armor energy types.
