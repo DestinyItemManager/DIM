@@ -158,7 +158,6 @@ function getTitleInfo(
     isGildedForCurrentSeason = Boolean(
       gildedRecord && !(gildedRecord.state & DestinyRecordState.ObjectiveNotCompleted)
     );
-    // todo: figure out whether the title is gilded for the current season
   }
 
   return { title, gildedNum, isGildedForCurrentSeason };
