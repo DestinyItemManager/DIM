@@ -340,12 +340,11 @@ function processCharacter(
   const profileInventory = profileInfo.profileInventory.data?.items || [];
   const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
   const profileRecords = profileInfo.profileRecords?.data;
-  const characterRecords = profileInfo.characterRecords.data![characterId];
   const itemComponents = profileInfo.itemComponents;
   const uninstancedItemObjectives =
     getCharacterProgressions(profileInfo, characterId)?.uninstancedItemObjectives || [];
 
-  const store = makeCharacter(defs, character, lastPlayedDate, characterRecords);
+  const store = makeCharacter(defs, character, lastPlayedDate, profileRecords);
 
   // We work around the weird account-wide buckets by assigning them to the current character
   const items = characterInventory.concat(characterEquipment.flat());

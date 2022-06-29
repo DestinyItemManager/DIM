@@ -130,14 +130,12 @@
 .title {
   font-style: italic;
   color: #e1c2ec;
-  text-shadow: 0.5px 0.5px 2px rgba(0, 0, 0, 0.75), 0 0 2px #bf63e3,
-    0 0 12px rgba(191, 99, 227, 0.75);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .gildedCurrentSeason {
   color: rgb(249, 222, 184);
-  text-shadow: 0.5px 0.5px 2px rgba(0, 0, 0, 0.75), 0 0 2px #ffc70d,
-    0 0 12px rgba(255, 199, 13, 0.75);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .gildedIcon {

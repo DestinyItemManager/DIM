@@ -2,9 +2,10 @@ import { t } from 'app/i18next-t';
 import { armorStats } from 'app/search/d2-known-values';
 import {
   DestinyCharacterComponent,
-  DestinyCharacterRecordsComponent,
   DestinyClass,
   DestinyGender,
+  DestinyProfileRecordsComponent,
+  DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
@@ -27,7 +28,7 @@ export function makeCharacter(
   defs: D2ManifestDefinitions,
   character: DestinyCharacterComponent,
   mostRecentLastPlayed: Date,
-  characterRecords: DestinyCharacterRecordsComponent
+  profileRecords: DestinyProfileRecordsComponent | undefined
 ): DimStore {
   const race = defs.Race[character.raceHash];
   const raceLocalizedName = race.displayProperties.name;
@@ -63,7 +64,7 @@ export function makeCharacter(
     isVault: false,
     color: character.emblemColor,
     titleInfo: character.titleRecordHash
-      ? getTitleInfo(character.titleRecordHash, defs, characterRecords, character.genderHash)
+      ? getTitleInfo(character.titleRecordHash, defs, profileRecords, character.genderHash)
       : undefined,
     items: [],
     hadErrors: false,
@@ -130,7 +131,7 @@ export function getCharacterStatsData(
 function getTitleInfo(
   titleRecordHash: number,
   defs: D2ManifestDefinitions,
-  characterRecords: DestinyCharacterRecordsComponent,
+  profileRecords: DestinyProfileRecordsComponent | undefined,
   genderHash: number
 ): DimTitle | undefined {
   const titleRecordDef = defs?.Record.get(titleRecordHash);
@@ -143,14 +144,20 @@ function getTitleInfo(
   }
 
   let gildedNum = 0;
-  const isGildedForCurrentSeason = false;
+  let isGildedForCurrentSeason = false;
+
+  // Gilding information is stored per-profile, not per-character
   if (titleRecordDef.titleInfo.gildingTrackingRecordHash) {
     const gildedRecord =
-      characterRecords.records[titleRecordDef.titleInfo.gildingTrackingRecordHash];
+      profileRecords?.records[titleRecordDef.titleInfo.gildingTrackingRecordHash];
+
     if (gildedRecord?.completedCount) {
       gildedNum = gildedRecord.completedCount;
     }
 
+    isGildedForCurrentSeason = Boolean(
+      gildedRecord && !(gildedRecord.state & DestinyRecordState.ObjectiveNotCompleted)
+    );
     // todo: figure out whether the title is gilded for the current season
   }
 
