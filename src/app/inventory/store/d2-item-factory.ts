@@ -43,6 +43,7 @@ import {
   StatHashes,
 } from 'data/d2/generated-enums';
 import _ from 'lodash';
+import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
@@ -60,7 +61,7 @@ import { buildSockets } from './sockets';
 import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
 
-const collectiblesByItemHash = _.once(
+const collectiblesByItemHash = memoizeOne(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
     _.keyBy(Collectible, (c) => c.itemHash)
 );
