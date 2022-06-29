@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed an issue where fashion mods would not display in loadouts.
+* Fixed the element icon displaying below the energy number in Compare.
 * Somewhat worked around an issue with Bungie.net where on refresh you would see an older version of your inventory.
 * Fixed the crafted weapon level progress bar going missing with some Operating System languages.
 * Perk and mod tooltips should contain fewer duplicate lines of text.
