@@ -7,13 +7,15 @@
   grid-template-columns: var(--item-size) 1fr;
   grid-template-areas:
     'mod desc button'
-    'mod clarityDesc button';
+    'mod clarityDesc button'
+    'mod source button';
   &.hasStats {
     grid-template-columns: var(--item-size) 1fr 1fr;
     grid-template-areas:
       'mod desc stat button'
       'mod modstat stat button'
-      'mod clarityDesc stat button';
+      'mod clarityDesc stat button'
+      'mod source stat button';
   }
 
   gap: 0 8px;
@@ -22,6 +24,7 @@
     grid-template-areas:
       'mod desc'
       'mod clarityDesc'
+      'mod source'
       'mod button';
     &.hasStats {
       grid-template-columns: var(--item-size) 1fr;
@@ -30,6 +33,7 @@
         'mod modstat'
         'mod stat'
         'mod clarityDesc'
+        'mod source'
         'mod button';
     }
     gap: 8px 8px;
@@ -50,6 +54,17 @@
     margin: 0;
   }
 }
+.modRequirement {
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.modClarityDescription {
+  grid-area: clarityDesc;
+  margin-top: 2px;
+  border-left: 2px solid $communityBlue;
+  padding-left: 6px;
+}
 
 .modStats {
   grid-area: modstat;
@@ -59,6 +74,11 @@
   grid-area: stat;
   margin: 0;
   height: min-content;
+}
+
+.source {
+  grid-area: source;
+  margin-top: 2px;
 }
 
 .material {

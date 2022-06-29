@@ -25,9 +25,11 @@ const dynamicTextFinder = /\{var:\d+\}/g;
 export default function RichDestinyText({
   text,
   ownerId = '', // normalize for cleaner indexing later
+  className,
 }: {
   text?: string;
   ownerId?: string;
+  className?: string;
 }): React.ReactElement {
   const replacer = useDynamicStringReplacer(ownerId);
   const conversionTable = useSelector(conversionTableSelector)!;
@@ -39,7 +41,7 @@ export default function RichDestinyText({
     .split(iconPlaceholder)
     .filter(Boolean)
     .map((t, index) => replaceWithIcon(t, index, conversionTable));
-  return <span>{richTextSegments}</span>;
+  return <span className={className}>{richTextSegments}</span>;
 }
 
 function replaceWithIcon(

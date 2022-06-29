@@ -1,9 +1,9 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
-import { settingSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
-import { getArmorExoticPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
+import { usePlugDescriptions } from 'app/utils/plug-descriptions';
+import { getIntrinsicArmorPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -31,14 +31,6 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
   const wishlistRoll = useSelector(wishListSelector(item));
   const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
 
-  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-  const showBungieDescription =
-    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
-  const showCommunityDescription =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
-  const showCommunityDescriptionOnly =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
-
   const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
     if (hasMenu) {
       setSocketInMenu(socket);
@@ -55,7 +47,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
     return null;
   }
 
-  const exoticArmorPerkSocket = getArmorExoticPerkSocket(item);
+  const intrinsicArmorPerkSocket = getIntrinsicArmorPerkSocket(item);
   const emoteWheelCategory = item.sockets.categories.find(
     (c) => c.category.hash === SocketCategoryHashes.Emotes
   );
@@ -63,8 +55,8 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
   let categories = item.sockets.categories.filter(
     (c) =>
       // hide socket category if there's no sockets in this category after
-      // removing the exotic perk socket, which we handle specially
-      c.socketIndexes.some((s) => s !== exoticArmorPerkSocket?.socketIndex) &&
+      // removing the intrinsic armor perk socket, which we handle specially
+      c.socketIndexes.some((s) => s !== intrinsicArmorPerkSocket?.socketIndex) &&
       // hide if this is the energy slot. it's already displayed in ItemDetails
       c.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter &&
       // hide if this is the emote wheel because we show it separately
@@ -86,41 +78,13 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
 
   return (
     <>
-      {exoticArmorPerkSocket && (
-        <ArchetypeRow minimal={minimal}>
-          {exoticArmorPerkSocket?.plugged && (
-            <ArchetypeSocket
-              archetypeSocket={exoticArmorPerkSocket}
-              item={item}
-              onClick={handleSocketClick}
-            >
-              {!minimal && (
-                <div className={styles.exoticDescription}>
-                  {showBungieDescription && (
-                    <RichDestinyText
-                      text={exoticArmorPerkSocket.plugged.plugDef.displayProperties.description}
-                    />
-                  )}
-                  {showCommunityDescription && (
-                    <ClarityDescriptions
-                      hash={exoticArmorPerkSocket.plugged.plugDef.hash}
-                      fallback={
-                        !showBungieDescription && (
-                          <RichDestinyText
-                            text={
-                              exoticArmorPerkSocket.plugged.plugDef.displayProperties.description
-                            }
-                          />
-                        )
-                      }
-                      communityOnly={showCommunityDescriptionOnly}
-                    />
-                  )}
-                </div>
-              )}
-            </ArchetypeSocket>
-          )}
-        </ArchetypeRow>
+      {intrinsicArmorPerkSocket && (
+        <IntrinsicArmorPerk
+          item={item}
+          socket={intrinsicArmorPerkSocket}
+          minimal={minimal}
+          handleSocketClick={handleSocketClick}
+        />
       )}
       <div className={clsx('sockets', styles.generalSockets, { [styles.minimalSockets]: minimal })}>
         {emoteWheelCategory && (
@@ -144,7 +108,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
             <div className="item-sockets">
               {getSocketsByIndexes(item.sockets!, category.socketIndexes).map(
                 (socketInfo) =>
-                  socketInfo.socketIndex !== exoticArmorPerkSocket?.socketIndex &&
+                  socketInfo.socketIndex !== intrinsicArmorPerkSocket?.socketIndex &&
                   socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                     <Socket
                       key={socketInfo.socketIndex}
@@ -172,6 +136,42 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
         )}
       </div>
     </>
+  );
+}
+
+function IntrinsicArmorPerk({
+  item,
+  socket,
+  minimal,
+  handleSocketClick,
+}: {
+  item: DimItem;
+  socket: DimSocket;
+  minimal?: boolean;
+  handleSocketClick: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
+}) {
+  const plugDescriptions = usePlugDescriptions(socket.plugged?.plugDef);
+  return (
+    <ArchetypeRow minimal={minimal}>
+      <ArchetypeSocket archetypeSocket={socket} item={item} onClick={handleSocketClick}>
+        {!minimal && (
+          <div className={styles.armorIntrinsicDescription}>
+            {plugDescriptions.perks.map(
+              (perkDesc) =>
+                perkDesc.description && (
+                  <RichDestinyText key={perkDesc.perkHash} text={perkDesc.description} />
+                )
+            )}
+            {plugDescriptions.communityInsight && (
+              <ClarityDescriptions
+                perk={plugDescriptions.communityInsight}
+                className={styles.clarityDescription}
+              />
+            )}
+          </div>
+        )}
+      </ArchetypeSocket>
+    </ArchetypeRow>
   );
 }
 

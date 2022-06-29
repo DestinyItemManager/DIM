@@ -1,9 +1,16 @@
-.exoticDescription {
+@use '../variables' as *;
+
+.armorIntrinsicDescription {
   color: #aaa;
   white-space: pre-line;
   h3 {
     color: white;
   }
+}
+.clarityDescription {
+  margin-top: 2px;
+  border-left: 2px solid $communityBlue;
+  padding-left: 6px;
 }
 .minimalSockets {
   flex-flow: column nowrap;

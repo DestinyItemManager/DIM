@@ -11,6 +11,7 @@ import { getSeason } from 'app/inventory/store/season';
 import {
   armor2PlugCategoryHashes,
   energyNamesByEnum,
+  EXOTIC_CATALYST_TRAIT,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
   modsWithConditionalStats,
@@ -288,15 +289,25 @@ export function getItemYear(item: DimItem) {
  */
 export function isPlugStatActive(
   item: DimItem,
-  plugHash: number,
+  plug: DestinyInventoryItemDefinition,
   statHash: number,
   isConditionallyActive: boolean,
   modsOnOtherItems?: PluggableInventoryItemDefinition[]
 ): boolean {
+  /*
+  Some Exotic weapon catalysts can be inserted even though the catalyst objectives are incomplete.
+  In these cases, the catalyst effects are only applied once the objectives are complete.
+  We'll assume that the item can only be masterworked if its associated catalyst has been completed.
+  */
+  if (plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && !item.masterwork) {
+    return false;
+  }
+
   if (!isConditionallyActive) {
     return true;
   }
 
+  const plugHash = plug.hash;
   if (
     plugHash === modsWithConditionalStats.elementalCapacitor ||
     plugHash === modsWithConditionalStats.enhancedElementalCapacitor

@@ -17,7 +17,7 @@ import {
 import { modslotFilter } from 'app/search/search-filters/sockets';
 import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
 import {
-  getArmorExoticPerkSocket,
+  getIntrinsicArmorPerkSocket,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
 } from 'app/utils/socket-utils';
@@ -89,17 +89,18 @@ const itemFactors: Record<string, Factor> = {
   },
   specialtySocket: {
     id: 'specialtySocket',
-    runIf: (i) => getInterestingSocketMetadatas(i) || (!i.isExotic && getArmorExoticPerkSocket(i)),
+    runIf: (i) =>
+      getInterestingSocketMetadatas(i) || (!i.isExotic && getIntrinsicArmorPerkSocket(i)),
     render: (item) => {
       const found: JSX.Element[] = [];
 
-      const largePerk = getArmorExoticPerkSocket(item)?.plugged;
-      if (largePerk) {
+      const intrinsicArmorPerk = getIntrinsicArmorPerkSocket(item)?.plugged;
+      if (intrinsicArmorPerk) {
         found.push(
-          <PressTip tooltip={() => <DimPlugTooltip item={item} plug={largePerk} />}>
+          <PressTip tooltip={() => <DimPlugTooltip item={item} plug={intrinsicArmorPerk} />}>
             <DefItemIcon
               className={styles.factorIcon}
-              itemDef={largePerk.plugDef}
+              itemDef={intrinsicArmorPerk.plugDef}
               borderless={true}
             />
           </PressTip>
@@ -120,9 +121,10 @@ const itemFactors: Record<string, Factor> = {
       return <>{found}</>;
     },
     filter: (item) => {
-      const largePerk = getArmorExoticPerkSocket(item)?.plugged;
+      const intrinsicPerk = getIntrinsicArmorPerkSocket(item)?.plugged;
       const largePerkFilterString =
-        largePerk && `perkname:${quoteFilterString(largePerk.plugDef.displayProperties.name)}`;
+        intrinsicPerk &&
+        `perkname:${quoteFilterString(intrinsicPerk.plugDef.displayProperties.name)}`;
       const modSlotFilterString = modslotFilter.fromItem!(item);
       return [largePerkFilterString, modSlotFilterString].filter(Boolean).join(' ');
     },
