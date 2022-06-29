@@ -1,3 +1,4 @@
+import { autoRefreshEnabledSelector } from 'app/inventory/selectors';
 import { dimNeedsUpdate$, reloadDIM } from 'app/register-service-worker';
 import { hasSearchQuerySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
@@ -92,7 +93,9 @@ function useAutoRefresh() {
  * because we want the timing to be between actual refreshes.
  */
 function useScheduledAutoRefresh() {
-  const { destinyProfileRefreshInterval, autoRefresh } = useSelector(globalSettingsSelector);
+  const { destinyProfileRefreshInterval } = useSelector(globalSettingsSelector);
+  const autoRefresh = useSelector(autoRefreshEnabledSelector);
+
   // A timer for auto refreshing on a schedule, if that's enabled.
   const refreshAccountDataInterval = useRef<number>();
 
@@ -151,6 +154,8 @@ function useOnlineRefresh() {
     };
   }, []);
 }
+
+// TODO: https://developer.mozilla.org/en-US/docs/Web/API/Idle_Detection_API
 
 /**
  * Trigger a refresh attempt whenever the page becomes visible. This also includes
