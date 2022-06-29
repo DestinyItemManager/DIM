@@ -1,9 +1,14 @@
 ## Next
 
+* Fixed the crafted weapon level progress bar going missing with some Operating System languages.
 * Perk and mod tooltips should contain fewer duplicate lines of text.
 * Community-sourced perk descriptions have been made more visually distinct.
 * Exotic catalyst requirements are now hidden on tooltips if the catalyst is complete.
 * Fixed an issue where stat modifications from Exotic catalysts were being displayed when the catalyst was incomplete.
+
+## 7.23.1 <span class="changelog-date">(2022-06-27)</span>
+
+* Fix missing icons in the subclass and mod menus.
 
 ## 7.23.0 <span class="changelog-date">(2022-06-26)</span>
 

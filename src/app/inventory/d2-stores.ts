@@ -11,7 +11,7 @@ import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
-import { errorLog, timer } from 'app/utils/log';
+import { errorLog, timer, warnLog } from 'app/utils/log';
 import {
   DestinyCharacterComponent,
   DestinyCharacterProgressionComponent,
@@ -147,6 +147,8 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
   };
 }
 
+let latestDateLastPlayedTimestamp = 0;
+
 function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
@@ -177,6 +179,28 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         // If we switched account since starting this, give up
         if (account !== currentAccountSelector(getState())) {
           return;
+        }
+
+        // dateLastPlayed doesn't advance with every load, nor does it advance
+        // when things are moved via DIM. It appears to only be updated when
+        // something happens in game that affects the user's stored profile.
+        // However, due to some caching or server affinity issue, sometimes it
+        // can go backwards, meaning this profile reflects an earlier state than
+        // one we've seen before. If that is the case, we should ignore this
+        // update.
+        const dateLastPlayed = profileInfo.profile.data?.dateLastPlayed;
+        if (dateLastPlayed) {
+          const dateLastPlayedTimestamp = new Date(dateLastPlayed).getTime();
+          if (dateLastPlayedTimestamp < latestDateLastPlayedTimestamp) {
+            warnLog(
+              'd2-stores',
+              "Profile dateLastPlayed was older than another profile response we've seen - ignoring",
+              latestDateLastPlayedTimestamp,
+              dateLastPlayedTimestamp
+            );
+            return;
+          }
+          latestDateLastPlayedTimestamp = dateLastPlayedTimestamp;
         }
 
         const stopTimer = timer('Process inventory');

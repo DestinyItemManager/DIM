@@ -1,25 +1,3 @@
-export enum D2SeasonEnum {
-  RED_WAR = 1,
-  CURSE_OF_OSIRIS,
-  WARMIND,
-  FORSAKEN,
-  BLACK_ARMORY,
-  JOKERS_WILD,
-  PENUMBRA,
-  SHADOWKEEP,
-  DAWN,
-  WORTHY,
-  ARRIVAL,
-  HUNT,
-  CHOSEN,
-  SPLICER,
-  LOST,
-  WITCH_QUEEN,
-  HAUNTED,
-
-  __LENGTH__, // This always needs to be last
-}
-
 export const D2SeasonInfo = {
   1: {
     DLCName: 'Red War',
@@ -163,7 +141,7 @@ export const D2SeasonInfo = {
   },
   11: {
     DLCName: '',
-    seasonName: 'Season of the Arrivals',
+    seasonName: 'Season of the Arrival',
     seasonTag: 'arrival',
     season: 11,
     maxLevel: 50,
@@ -173,7 +151,7 @@ export const D2SeasonInfo = {
     pinnacleCap: 1060,
     releaseDate: '2020-06-09',
     resetTime: '17:00:00Z',
-    numWeeks: 15,
+    numWeeks: 22,
   },
   12: {
     DLCName: 'Beyond Light',
@@ -187,7 +165,7 @@ export const D2SeasonInfo = {
     pinnacleCap: 1260,
     releaseDate: '2020-11-10',
     resetTime: '17:00:00Z',
-    numWeeks: 12,
+    numWeeks: 13,
   },
   13: {
     DLCName: '',
@@ -243,7 +221,7 @@ export const D2SeasonInfo = {
     pinnacleCap: 1560,
     releaseDate: '2022-02-22',
     resetTime: '17:00:00Z',
-    numWeeks: 15,
+    numWeeks: 13,
   },
   17: {
     DLCName: '',
@@ -257,7 +235,7 @@ export const D2SeasonInfo = {
     pinnacleCap: 1570,
     releaseDate: '2022-05-24',
     resetTime: '17:00:00Z',
-    numWeeks: 15,
+    numWeeks: 13,
   },
 } as Record<
   number,
@@ -277,32 +255,4 @@ export const D2SeasonInfo = {
   }
 >;
 
-function getCurrentSeason(): number {
-  const CLOSE_TO_RESET_HOURS = 5;
-  const today = new Date();
-  for (let i = D2SeasonEnum.__LENGTH__ - 1; i > 0; i--) {
-    const seasonDate = new Date(`${D2SeasonInfo[i].releaseDate}T${D2SeasonInfo[i].resetTime}`);
-    const closeToNewSeason =
-      isToday(seasonDate) && numHoursBetween(today, seasonDate) <= CLOSE_TO_RESET_HOURS; // same day and within hours of reset
-    if (today >= seasonDate || closeToNewSeason) {
-      return D2SeasonInfo[i].season;
-    }
-  }
-  return 0;
-}
-
-function numHoursBetween(d1: Date, d2: Date) {
-  const MILLISECONDS_PER_HOUR = 3600000;
-  return Math.abs(d1.getTime() - d2.getTime()) / MILLISECONDS_PER_HOUR;
-}
-
-function isToday(someDate: Date) {
-  const today = new Date();
-  return (
-    someDate.getDate() === today.getDate() &&
-    someDate.getMonth() === today.getMonth() &&
-    someDate.getFullYear() === today.getFullYear()
-  );
-}
-
-export const D2CalculatedSeason: number = getCurrentSeason();
+export const D2CalculatedSeason = 17;

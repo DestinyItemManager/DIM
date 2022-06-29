@@ -76,7 +76,7 @@ function SelectablePlugDetails({
   );
   return (
     <>
-      <div className={clsx('item', styles.iconContainer)} title={plug.displayProperties.name}>
+      <div className="item" title={plug.displayProperties.name}>
         <DefItemIcon itemDef={plug} />
       </div>
       <div className={styles.plugInfo}>
