@@ -1,5 +1,7 @@
 ## Next
 
+## 7.23.2 <span class="changelog-date">(2022-06-29)</span>
+
 * Fixed an issue where fashion mods would not display in loadouts.
 * Fixed the element icon displaying below the energy number in Compare.
 * Somewhat worked around an issue with Bungie.net where on refresh you would see an older version of your inventory.
