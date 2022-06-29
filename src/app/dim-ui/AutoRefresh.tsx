@@ -60,12 +60,13 @@ function useAutoRefresh() {
       const hasActivePromises = loadingTracker.active();
       const isVisible = !document.hidden;
       const isOnline = navigator.onLine;
+      const currentlyDragging = isDragging$.getCurrentValue();
 
       if (
         !hasActivePromises &&
         isVisible &&
         isOnline &&
-        !isDragging$.getCurrentValue() &&
+        !currentlyDragging &&
         // Don't auto reload on the optimizer page, it makes it recompute all the time
         !onOptimizerPage
       ) {
@@ -75,6 +76,15 @@ function useAutoRefresh() {
         // the loading tracker goes back to inactive.
         const unsubscribe = loadingTracker.active$.subscribe((active) => {
           if (!active) {
+            unsubscribe();
+            // Trigger the event bus which will run the most recent version of this handler
+            triggerTryRefresh();
+          }
+        });
+      } else if (currentlyDragging) {
+        // Same deal as above, but waiting for the drag to end
+        const unsubscribe = isDragging$.subscribe((dragging) => {
+          if (!dragging) {
             unsubscribe();
             // Trigger the event bus which will run the most recent version of this handler
             triggerTryRefresh();
