@@ -158,6 +158,7 @@ module.exports = (env) => {
         {
           // Optimize SVGs - mostly for destiny-icons.
           test: /\.svg$/,
+          exclude: /data\/webfonts\//,
           type: 'asset',
           generator: {
             dataUrl: (content) => svgToMiniDataURI(content.toString()),
@@ -210,7 +211,7 @@ module.exports = (env) => {
               },
             },
             'postcss-loader',
-            'sass-loader',
+            { loader: 'sass-loader', options: { sassOptions: { quietDeps: true } } },
           ],
         },
         // Regular *.scss are global
@@ -226,7 +227,7 @@ module.exports = (env) => {
               },
             },
             'postcss-loader',
-            'sass-loader',
+            { loader: 'sass-loader', options: { sassOptions: { quietDeps: true } } },
           ],
         },
         {
@@ -264,6 +265,11 @@ module.exports = (env) => {
           generator: {
             filename: '[name]-[contenthash:8][ext]',
           },
+        },
+        {
+          // Force webfonts to be separate files instead of having small ones inlined into CSS
+          test: /data\/webfonts\//,
+          type: 'asset/resource',
         },
         {
           type: 'javascript/auto',
@@ -380,7 +386,6 @@ module.exports = (env) => {
           { from: `./icons/${env.name}/` },
           { from: `./icons/splash`, to: 'splash/' },
           { from: './src/safari-pinned-tab.svg' },
-          { from: './src/data/webfonts', to: 'static' },
         ],
       }),
 
@@ -499,7 +504,7 @@ module.exports = (env) => {
 
       // Generate a service worker
       new InjectManifest({
-        include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/.*\.(png|gif|jpg|svg)$/],
+        include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/(?!fa-).*\.(png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
           /extension-dist/,
@@ -523,6 +528,7 @@ module.exports = (env) => {
           filename: '[path][base].br',
           algorithm: 'brotliCompress',
           exclude: /data\/d1\/manifests/,
+          // Skip .woff and .woff2, they're already well compressed
           test: /\.js$|\.css$|\.html$|\.json$|\.map$|\.ttf$|\.eot$|\.svg$|\.wasm$/,
           compressionOptions: {
             params: {

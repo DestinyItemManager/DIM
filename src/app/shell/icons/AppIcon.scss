@@ -1,0 +1,22 @@
+$fa-font-path: 'data/webfonts';
+
+/* Importing FontAwesome SCSS from node modules */
+
+// We import specific files from the main "fontawesome" module to slim things down
+@import '@fortawesome/fontawesome-free/scss/variables';
+@import '@fortawesome/fontawesome-free/scss/mixins';
+@import '@fortawesome/fontawesome-free/scss/core';
+//@import '@fortawesome/fontawesome-free/scss/larger';
+//@import '@fortawesome/fontawesome-free/scss/fixed-width';
+//@import '@fortawesome/fontawesome-free/scss/list';
+//@import '@fortawesome/fontawesome-free/scss/bordered-pulled';
+@import '@fortawesome/fontawesome-free/scss/animated';
+//@import '@fortawesome/fontawesome-free/scss/rotated-flipped';
+//@import '@fortawesome/fontawesome-free/scss/stacked';
+@import '@fortawesome/fontawesome-free/scss/icons';
+//@import '@fortawesome/fontawesome-free/scss/screen-reader';
+
+// And this imports the actual fonts
+@import '@fortawesome/fontawesome-free/scss/solid';
+@import '@fortawesome/fontawesome-free/scss/regular';
+@import '@fortawesome/fontawesome-free/scss/brands';
