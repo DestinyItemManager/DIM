@@ -18,7 +18,7 @@ import { authenticatedApi, unauthenticatedApi } from './dim-api-helper';
 export async function getGlobalSettings() {
   const response = await unauthenticatedApi<PlatformInfoResponse>(
     {
-      url: '/platform_info',
+      url: `/platform_info?flavor=${$DIM_FLAVOR}`,
       method: 'GET',
     },
     true
