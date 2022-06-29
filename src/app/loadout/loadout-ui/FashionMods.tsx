@@ -5,7 +5,6 @@ import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './FashionMods.m.scss';
 import PlugDef from './PlugDef';
@@ -40,7 +39,7 @@ export function FashionMods({
     (DEFAULT_ORNAMENTS.includes(ornament) || unlockedPlugSetItems.has(ornament));
 
   return (
-    <div className={clsx(styles.items, styles.unequipped, styles.fashion)}>
+    <div className={clsx(styles.items, styles.unequipped)}>
       <PlugDef
         className={clsx({ [styles.missingItem]: !canSlotShader })}
         plug={(shaderItem ?? defaultShader) as PluggableInventoryItemDefinition}
