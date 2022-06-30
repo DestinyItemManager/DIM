@@ -205,7 +205,7 @@ function startStreamDeckConnection(): ThunkResult {
       }
 
       // try to connect to the stream deck local instance
-      streamDeckWebSocket = new WebSocket('wss://localhost:9119', clientIdentifier());
+      streamDeckWebSocket = new WebSocket('ws://localhost:9119', clientIdentifier());
 
       streamDeckWebSocket.onopen = function () {
         dispatch(streamDeckConnected());
