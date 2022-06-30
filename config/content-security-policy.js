@@ -42,7 +42,7 @@ module.exports = function csp(env) {
       // Clarity
       'https://ice-mourne.github.io',
       // Stream Deck Plugin
-      'wss://localhost:9119',
+      'ws://localhost:9119',
     ],
     imgSrc: [
       SELF,
