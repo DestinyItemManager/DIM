@@ -1202,7 +1202,7 @@ export function checkForOverFill(): ThunkResult {
       return;
     }
 
-    const countByBucket = _.countBy(store.items, (i) => i.bucket.hash);
+    const countByBucket = _.countBy(store.items, (i) => i.location.hash);
     for (const [bucketHashStr, amount] of Object.entries(countByBucket)) {
       const bucket = buckets.byHash[parseInt(bucketHashStr, 10)];
       if (amount > bucket.capacity) {

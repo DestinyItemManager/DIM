@@ -327,6 +327,7 @@
   },
   "Header": {
     "About": "About DIM",
+    "AutoRefresh": "DIM will automatically reload as long as you are still playing.",
     "BulkTag": "Bulk tag items",
     "BungieNetAlert": "Bungie Alert",
     "Clear": "Clear search filter",

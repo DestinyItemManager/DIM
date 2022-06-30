@@ -96,7 +96,8 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.Metrics,
     DestinyComponentType.StringVariables,
     DestinyComponentType.ProfileProgression,
-    DestinyComponentType.Craftables
+    DestinyComponentType.Craftables,
+    DestinyComponentType.Transitory
   );
 }
 

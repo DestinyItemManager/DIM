@@ -1,3 +1,4 @@
+import { autoRefreshEnabledSelector } from 'app/inventory/selectors';
 import { dimNeedsUpdate$, reloadDIM } from 'app/register-service-worker';
 import { hasSearchQuerySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
@@ -21,11 +22,11 @@ function triggerTryRefresh() {
 }
 
 /**
- * All the ActivityTracker component does is play host to the useAutoRefresh hook. It's still
+ * All the AutoRefresh component does is play host to the useAutoRefresh hook. It's still
  * a component so that whenever useAutoRefresh triggers a re-render it's only re-rendering this
  * component and not the whole app.
  */
-export default function ActivityTracker() {
+export default function AutoRefresh() {
   useAutoRefresh();
   return null;
 }
@@ -59,12 +60,13 @@ function useAutoRefresh() {
       const hasActivePromises = loadingTracker.active();
       const isVisible = !document.hidden;
       const isOnline = navigator.onLine;
+      const currentlyDragging = isDragging$.getCurrentValue();
 
       if (
         !hasActivePromises &&
         isVisible &&
         isOnline &&
-        !isDragging$.getCurrentValue() &&
+        !currentlyDragging &&
         // Don't auto reload on the optimizer page, it makes it recompute all the time
         !onOptimizerPage
       ) {
@@ -74,6 +76,15 @@ function useAutoRefresh() {
         // the loading tracker goes back to inactive.
         const unsubscribe = loadingTracker.active$.subscribe((active) => {
           if (!active) {
+            unsubscribe();
+            // Trigger the event bus which will run the most recent version of this handler
+            triggerTryRefresh();
+          }
+        });
+      } else if (currentlyDragging) {
+        // Same deal as above, but waiting for the drag to end
+        const unsubscribe = isDragging$.subscribe((dragging) => {
+          if (!dragging) {
             unsubscribe();
             // Trigger the event bus which will run the most recent version of this handler
             triggerTryRefresh();
@@ -92,7 +103,9 @@ function useAutoRefresh() {
  * because we want the timing to be between actual refreshes.
  */
 function useScheduledAutoRefresh() {
-  const { destinyProfileRefreshInterval, autoRefresh } = useSelector(globalSettingsSelector);
+  const { destinyProfileRefreshInterval } = useSelector(globalSettingsSelector);
+  const autoRefresh = useSelector(autoRefreshEnabledSelector);
+
   // A timer for auto refreshing on a schedule, if that's enabled.
   const refreshAccountDataInterval = useRef<number>();
 
@@ -151,6 +164,8 @@ function useOnlineRefresh() {
     };
   }, []);
 }
+
+// TODO: https://developer.mozilla.org/en-US/docs/Web/API/Idle_Detection_API
 
 /**
  * Trigger a refresh attempt whenever the page becomes visible. This also includes

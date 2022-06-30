@@ -108,6 +108,14 @@ export const materialsSelector = (state: RootState) =>
 /** The actual raw profile response from the Bungie.net profile API */
 export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
 
+/** Whether or not the user is currently playing Destiny 2 */
+export const userIsPlayingSelector = (state: RootState) =>
+  Boolean(state.inventory.profileResponse?.profileTransitoryData?.data);
+
+/** Whether DIM will automatically refresh on a schedule */
+export const autoRefreshEnabledSelector = (state: RootState) =>
+  userIsPlayingSelector(state) && state.dimApi.globalSettings.autoRefresh;
+
 /** returns name/icon/amount for a hard-coded list of crafting materials */
 export const craftingMaterialCountsSelector = createSelector(
   d2ManifestSelector,

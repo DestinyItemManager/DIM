@@ -2,6 +2,30 @@
 
 * If you have a title equipped on your character, it will replace your character's race in the character headers.
 
+## 7.23.2 <span class="changelog-date">(2022-06-29)</span>
+
+* Fixed an issue where fashion mods would not display in loadouts.
+* Fixed the element icon displaying below the energy number in Compare.
+* Somewhat worked around an issue with Bungie.net where on refresh you would see an older version of your inventory.
+* Fixed the crafted weapon level progress bar going missing with some Operating System languages.
+* Perk and mod tooltips should contain fewer duplicate lines of text.
+* Exotic catalyst requirements are now hidden on tooltips if the catalyst is complete.
+* Fixed an issue where stat modifications from Exotic catalysts were being displayed when the catalyst was incomplete.
+
+### Beta Only
+
+* Community-sourced perk descriptions have been made more visually distinct.
+
+## 7.23.1 <span class="changelog-date">(2022-06-27)</span>
+
+* Fix missing icons in the subclass and mod menus.
+
+## 7.23.0 <span class="changelog-date">(2022-06-26)</span>
+
+* The links on the top of the page will now show for narrower screens. All links are always available in the menu.
+* Improved performance of switching characters and opening item picker or search results on iOS. Something had gotten slower with Safari in one of the recent iOS updates, so we had to do a lot of work to get back to a responsive UI.
+* Fixed the tooltip in the mod assignment page not showing the correct energy usage.
+
 ## 7.22.0 <span class="changelog-date">(2022-06-19)</span>
 
 * Fixed a rare edge case where Loadout Optimizer would miss certain valid elemental mod assignments with locked armor energy types.

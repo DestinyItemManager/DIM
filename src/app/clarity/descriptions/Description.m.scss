@@ -2,7 +2,6 @@
 
 // leaving everything here in case we add them to simplified descriptions
 .communityDescription {
-  margin-top: 1em;
   h3 {
     margin: 0;
     font-size: inherit;
@@ -10,11 +9,6 @@
   p {
     margin: 0;
   }
-  grid-area: clarityDesc;
-}
-
-.communityOnly {
-  margin-top: 2px;
 }
 
 // --- colors

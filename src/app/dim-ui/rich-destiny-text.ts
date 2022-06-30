@@ -1,7 +1,8 @@
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
 import type { StringsNeedingReplacement } from 'data/d2/objective-richTexts';
 import richTextManifestExamples from 'data/d2/objective-richTexts';
-import _ from 'lodash';
+import { createSelector } from 'reselect';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 
 const glyphInfos: [exampleReplacement: StringsNeedingReplacement, codepoint: FontGlyphs][] = [
@@ -72,50 +73,60 @@ export const iconPlaceholder = /(\[[^\]]+\]|[\uE000-\uF8FF])/g;
 //   "[Rocket Launcher]": { plaintext:"[Rocket Launcher]", unicode:"" },
 //   "": { plaintext:"[Rocket Launcher]", unicode:"" },
 // }
-
-export const conversionTable: NodeJS.Dict<{
+export type RichTextConversionTable = NodeJS.Dict<{
   unicode: string;
   plaintext: string;
-}> = {};
+}>;
 
 /**
  * given defs, uses known examples from the manifest
  * and returns a localized string-to-font glyph conversion table
  *           "[Rocket Launcher]" -> ""
  */
-export const generateConversionTable = _.once(async (defs: D2ManifestDefinitions) => {
-  // loop through conversionTable entries to update them with manifest string info
-  for (const [exampleReplacement, codepoint] of glyphInfos) {
-    // the single private use character in the d2 font that represents this
-    const unicode = String.fromCodePoint(codepoint);
-
-    // info we'll use to look up current language's version of the "[Rocket Launcher] final blows" objective
-    const [tableName, hash] = richTextManifestExamples[exampleReplacement];
-    const localizedString =
-      tableName === 'Objective'
-        ? defs.Objective.get(hash)?.progressDescription
-        : tableName === 'SandboxPerk'
-        ? defs.SandboxPerk.get(hash)?.displayProperties.description
-        : undefined;
-
-    // find just the text segment that says "[Rocket Launcher]" in current language
-    const progressDescriptionMatch = localizedString?.match(iconPlaceholder)?.[0];
-
-    // data we'll need later to render a glyph and give it a title attribute
-    const thisReplacementInfo = { unicode, plaintext: progressDescriptionMatch ?? unicode };
-
-    // insert it into the lookup table, keyed by the unicode character
-    conversionTable[unicode] = thisReplacementInfo;
-
-    // and also keyed by the matching string, if we found one
-    if (progressDescriptionMatch) {
-      conversionTable[progressDescriptionMatch] = thisReplacementInfo;
+export const conversionTableSelector = createSelector(
+  d2ManifestSelector,
+  (defs?: D2ManifestDefinitions) => {
+    if (!defs) {
+      return undefined;
     }
-  }
 
-  // free up an absolutely minuscule bit of memory
-  glyphInfos.length = 0;
-  for (const k in richTextManifestExamples) {
-    delete richTextManifestExamples[k];
+    const conversionTable: RichTextConversionTable = {};
+
+    // loop through conversionTable entries to update them with manifest string info
+    for (const [exampleReplacement, codepoint] of glyphInfos) {
+      // the single private use character in the d2 font that represents this
+      const unicode = String.fromCodePoint(codepoint);
+
+      // info we'll use to look up current language's version of the "[Rocket Launcher] final blows" objective
+      const [tableName, hash] = richTextManifestExamples[exampleReplacement];
+      const localizedString =
+        tableName === 'Objective'
+          ? defs.Objective.get(hash)?.progressDescription
+          : tableName === 'SandboxPerk'
+          ? defs.SandboxPerk.get(hash)?.displayProperties.description
+          : undefined;
+
+      // find just the text segment that says "[Rocket Launcher]" in current language
+      const progressDescriptionMatch = localizedString?.match(iconPlaceholder)?.[0];
+
+      // data we'll need later to render a glyph and give it a title attribute
+      const thisReplacementInfo = { unicode, plaintext: progressDescriptionMatch ?? unicode };
+
+      // insert it into the lookup table, keyed by the unicode character
+      conversionTable[unicode] = thisReplacementInfo;
+
+      // and also keyed by the matching string, if we found one
+      if (progressDescriptionMatch) {
+        conversionTable[progressDescriptionMatch] = thisReplacementInfo;
+      }
+    }
+
+    // free up an absolutely minuscule bit of memory
+    glyphInfos.length = 0;
+    for (const k in richTextManifestExamples) {
+      delete richTextManifestExamples[k];
+    }
+
+    return conversionTable;
   }
-});
+);

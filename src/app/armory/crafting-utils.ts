@@ -1,8 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
+import memoizeOne from 'memoize-one';
 
-const buildTemplateLookup = _.once((defs: D2ManifestDefinitions) => {
+const buildTemplateLookup = memoizeOne((defs: D2ManifestDefinitions) => {
   const results: NodeJS.Dict<DestinyInventoryItemDefinition> = {};
   const invItemTable = defs.InventoryItem.getAll();
   for (const h in invItemTable) {

@@ -1,15 +1,15 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
-import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { statAllowList } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isPlugStatActive } from 'app/utils/item-utils';
-import { getPerkDescriptions } from 'app/utils/socket-utils';
+import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DestinyInventoryItemDefinition,
@@ -17,7 +17,6 @@ import {
   DestinyPlugItemCraftingRequirements,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { useSelector } from 'react-redux';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import './ItemSockets.scss';
@@ -52,7 +51,7 @@ export function DimPlugTooltip({
               statAllowList.includes(statHash) &&
               isPlugStatActive(
                 item,
-                plug.plugDef.hash,
+                plug.plugDef,
                 statHash,
                 Boolean(
                   plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
@@ -73,6 +72,11 @@ export function DimPlugTooltip({
     }
   }
 
+  // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume
+  // that an Exotic weapon can only be masterworked if its catalyst is complete.
+  const hideRequirements =
+    plug.plugDef.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && item.masterwork;
+
   // The PlugTooltip does all the rendering and layout, we just process information here.
   return (
     <PlugTooltip
@@ -83,6 +87,7 @@ export function DimPlugTooltip({
       cannotCurrentlyRoll={plug.cannotCurrentlyRoll}
       wishListTip={wishListTip}
       hidePlugSubtype={hidePlugSubtype}
+      hideRequirements={hideRequirements}
       craftingData={craftingData}
     />
   );
@@ -105,6 +110,7 @@ export function PlugTooltip({
   cannotCurrentlyRoll,
   wishListTip,
   hidePlugSubtype,
+  hideRequirements,
   craftingData,
 }: {
   def: DestinyInventoryItemDefinition;
@@ -114,63 +120,67 @@ export function PlugTooltip({
   cannotCurrentlyRoll?: boolean;
   wishListTip?: string;
   hidePlugSubtype?: boolean;
+  hideRequirements?: boolean;
   craftingData?: DestinyPlugItemCraftingRequirements;
 }) {
   const defs = useD2Definitions();
-  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
+  const statsArray =
+    (stats &&
+      Object.entries(stats).map(([statHash, value]) => ({
+        value,
+        statHash: parseInt(statHash, 10),
+      }))) ||
+    [];
+  const plugDescriptions = usePlugDescriptions(def, statsArray);
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
-  const perkDescriptions = (defs && getPerkDescriptions(def, defs)) || [];
 
   // filter out plug objectives related to Resonant Elements
   const filteredPlugObjectives = plugObjectives?.filter(
     (o) => !resonantElementObjectiveHashes.includes(o.objectiveHash)
   );
 
-  const showBungieDescription =
-    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
-  const showCommunityDescription =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
-  const showCommunityDescriptionOnly =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
+  const bungieDescription =
+    plugDescriptions.perks.length > 0 &&
+    plugDescriptions.perks.map((perkDesc) => (
+      <div key={perkDesc.perkHash}>
+        {perkDesc.name && <div className={styles.perkName}>{perkDesc.name}</div>}
+        {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
+        {!hideRequirements && perkDesc.requirement && (
+          <RichDestinyText text={perkDesc.requirement} className={styles.requirement} />
+        )}
+      </div>
+    ));
+  const clarityDescription = plugDescriptions.communityInsight && (
+    <ClarityDescriptions
+      perk={plugDescriptions.communityInsight}
+      className={styles.clarityDescription}
+    />
+  );
+  const renderedStats = statsArray.length > 0 && (
+    <div className="plug-stats">
+      {statsArray.map((stat) => (
+        <StatValue key={stat.statHash} statHash={stat.statHash} value={stat.value} />
+      ))}
+    </div>
+  );
 
   return (
     <>
       <h2>{def.displayProperties.name}</h2>
       {!hidePlugSubtype && def.itemTypeDisplayName && <h3>{def.itemTypeDisplayName}</h3>}
 
-      {perkDescriptions.map((perkDesc) => (
-        <div key={perkDesc.perkHash}>
-          {perkDesc.name && <div>{perkDesc.name}</div>}
+      {/*
+        If we're displaying the Bungie description, display the stats between the Bungie description and
+        community description. If we're not displaying the Bungie description, display the stats after the
+        community description.
+      */}
+      {bungieDescription || clarityDescription}
+      {renderedStats}
+      {bungieDescription && clarityDescription}
 
-          {showBungieDescription ? (
-            <RichDestinyText text={perkDesc.description || perkDesc.requirement} />
-          ) : (
-            showCommunityDescriptionOnly && (
-              <>
-                {sourceString && <div>{sourceString}</div>}
-                <ClarityDescriptions
-                  hash={def.hash}
-                  fallback={<RichDestinyText text={perkDesc.description || perkDesc.requirement} />}
-                  communityOnly={showCommunityDescriptionOnly}
-                />
-              </>
-            )
-          )}
-        </div>
-      ))}
-      {!showCommunityDescriptionOnly && sourceString && <div>{sourceString}</div>}
-      {stats && Object.entries(stats).length > 0 && (
-        <div className="plug-stats">
-          {Object.entries(stats).map(([statHash, value]) => (
-            <StatValue key={statHash} statHash={parseInt(statHash, 10)} value={value} />
-          ))}
-        </div>
-      )}
-      {showCommunityDescription && !showCommunityDescriptionOnly && (
-        <ClarityDescriptions hash={def.hash} />
-      )}
-      {defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
+      {sourceString && <div>{sourceString}</div>}
+      {!hideRequirements && defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
         <div className={styles.objectives}>
           {filteredPlugObjectives.map((objective) => (
             <Objective key={objective.objectiveHash} objective={objective} />

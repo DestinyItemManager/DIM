@@ -1,11 +1,6 @@
 @import '../../variables';
 
 .plug {
-  > img,
-  > * > img {
-    height: var(--item-size);
-    width: var(--item-size);
-  }
   > * {
     margin-right: 8px;
   }
@@ -47,10 +42,6 @@
   &:focus {
     outline: none;
   }
-}
-
-.iconContainer {
-  height: fit-content;
 }
 
 .requirement {

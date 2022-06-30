@@ -5,6 +5,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
+import memoizeOne from 'memoize-one';
 import { FilterDefinition } from '../filter-types';
 import { quoteFilterString } from '../query-parser';
 
@@ -32,7 +33,7 @@ export const plainString = (s: string, language: string): string =>
   latinize(s, language).toLowerCase();
 
 const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);
-const getPerkNamesFromManifest = _.once(
+const getPerkNamesFromManifest = memoizeOne(
   (allItems: { [hash: number]: DestinyInventoryItemDefinition }) => {
     const perkNames = Object.values(allItems)
       .filter((i) => {

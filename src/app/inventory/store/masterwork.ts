@@ -72,7 +72,7 @@ function buildMasterworkInfo(
     if (
       !isPlugStatActive(
         createdItem,
-        masterworkPlug.plugDef.hash,
+        masterworkPlug.plugDef,
         stat.statTypeHash,
         stat.isConditionallyActive
       )
