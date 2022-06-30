@@ -49,6 +49,7 @@ export default function InventoryItem({
   innerRef,
 }: Props) {
   let enhancedOnClick = onClick;
+
   if (onShiftClick) {
     enhancedOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.shiftKey) {

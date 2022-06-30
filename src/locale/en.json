@@ -1029,6 +1029,21 @@
     "UpdateErrorTitle": "DIM Sync Error",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
+  "StreamDeck": {
+    "Authorization": {
+      "Error": "Picked number is not the valid one!",
+      "Reset": "DE-AUTHORIZE",
+      "Title": "Pick this number on your Stream Deck"
+    },
+    "Enable": "Stream Deck Plugin",
+    "FinePrint": "Enable the connection with the DIM Stream Deck plugin",
+    "Install": "Install plugin",
+    "SelectLoadout": "Send to Stream Deck",
+    "Selection": {
+      "Item": "Choose an item from the inventory",
+      "Loadout": "Choose a loadout"
+    }
+  },
   "Tags": {
     "Archive": "Archive",
     "ClearTag": "Clear Tag",

@@ -26,6 +26,8 @@ declare const $featureFlags: {
   itemFeed: boolean;
   /** Clarity perk descriptions */
   clarityDescriptions: boolean;
+  /** Elgato Stream Deck integration */
+  elgatoStreamDeck: boolean;
 };
 
 declare function ga(...params: string[]): void;

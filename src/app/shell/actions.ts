@@ -26,6 +26,19 @@ export const toggleSearchResults = createAction(
 )();
 
 /**
+ * Set the current location path
+ */
+export const setRouterLocation = createAction(
+  'shell/SET_ROUTER_LOCATION',
+  (location?: string) => location
+)();
+
+/**
+ * Reset the current location path
+ */
+export const resetRouterLocation = createAction('shell/RESET_ROUTER_LOCATION')();
+
+/**
  * Update the known list of Bungie.net alerts.
  */
 export const updateBungieAlerts = createAction('shell/BUNGIE_ALERTS')<GlobalAlert[]>();

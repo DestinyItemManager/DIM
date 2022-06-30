@@ -1,4 +1,5 @@
 import { withProfiler } from '@sentry/react';
+import { LocationSwitcher } from 'app/shell/LocationSwitcher';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import {
   DndProvider,
@@ -30,6 +31,7 @@ function Root() {
   return (
     <Router>
       <Provider store={store}>
+        <LocationSwitcher />
         <DndProvider options={options}>
           <WrappedApp />
         </DndProvider>
