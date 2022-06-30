@@ -39,7 +39,8 @@
 .bottom {
   font-size: 12px;
   color: white;
-  filter: contrast(0.5);
+  line-height: 10px;
+  text-shadow: none;
 
   @include phone-portrait {
     :global(.vault) & {
@@ -124,4 +125,28 @@
   width: auto;
   height: 16px;
   margin-right: 4px;
+}
+
+.title {
+  font-style: italic;
+  color: #e1c2ec;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.gildedCurrentSeason {
+  color: rgb(249, 222, 184);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.gildedIcon {
+  font-style: normal;
+  margin-left: 4px;
+}
+
+.gildedNum {
+  font-size: 10px;
+  font-style: normal;
+  margin-left: 1px;
+  vertical-align: super;
+  line-height: 0;
 }

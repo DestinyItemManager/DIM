@@ -17,7 +17,7 @@ export const perpetuationModHash = 4137020505;
 export const distributionModHash = 1513970148;
 
 function isArmor2Item(item: DimItem) {
-  return item.energy && item.bucket.inArmor && !item.equippingLabel;
+  return item.energy && item.bucket.inArmor && !item.equippingLabel && item.tier === 'Legendary';
 }
 
 export function isArmor2Helmet(item: DimItem) {

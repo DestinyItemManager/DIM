@@ -8,9 +8,13 @@ interface CssExports {
   'class': string;
   'classIcon': string;
   'emblem': string;
+  'gildedCurrentSeason': string;
+  'gildedIcon': string;
+  'gildedNum': string;
   'level': string;
   'maxTotalPower': string;
   'powerLevel': string;
+  'title': string;
   'top': string;
 }
 export const cssExports: CssExports;

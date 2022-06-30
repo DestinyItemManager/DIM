@@ -1,5 +1,7 @@
 ## Next
 
+* If you have a title equipped on your character, it will replace your character's race in the character headers.
+
 ## 7.23.2 <span class="changelog-date">(2022-06-29)</span>
 
 * Fixed an issue where fashion mods would not display in loadouts.
