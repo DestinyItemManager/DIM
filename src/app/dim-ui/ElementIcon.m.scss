@@ -4,6 +4,7 @@
   margin-right: 1px;
   background-size: 100%;
   background-repeat: no-repeat;
+  display: inline-block;
 
   :global(.destiny1) & {
     width: calc((10 / 50) * var(--item-size));

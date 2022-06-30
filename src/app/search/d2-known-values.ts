@@ -249,6 +249,9 @@ export const WELL_RESTED_PERK = 2352765282;
 /** an "All" trait we want to filter out of trait lists */
 export const ALL_TRAIT = 1434215347;
 
+/** the trait hash that is used to identify Exotic weapon catalyst plugs */
+export const EXOTIC_CATALYST_TRAIT = 1505531793;
+
 export const energyNamesByEnum: Record<DestinyEnergyType, string> = {
   [DestinyEnergyType.Any]: 'any',
   [DestinyEnergyType.Arc]: 'arc',

@@ -17,7 +17,7 @@ import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { ReactNode, useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection';
 import LoadoutMods from './loadout-ui/LoadoutMods';

@@ -5,8 +5,9 @@ import { saveItemInfosOnStateChange } from 'app/inventory/observers';
 import { loadCoreSettings } from 'app/manifest/actions';
 import { pollForBungieAlerts } from 'app/shell/alerts';
 import store from 'app/store/store';
+import { lazyLoadStreamDeck, startStreamDeckConnection } from 'app/stream-deck/stream-deck';
+import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import { infoLog } from 'app/utils/log';
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import idbReady from 'safari-14-idb-fix';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
@@ -59,6 +60,11 @@ const i18nPromise = initi18n();
   store.dispatch(loadDimApiData());
   store.dispatch(loadCoreSettings());
   store.dispatch(pollForBungieAlerts());
+
+  if ($featureFlags.elgatoStreamDeck && streamDeckEnabled()) {
+    await lazyLoadStreamDeck();
+    store.dispatch(startStreamDeckConnection());
+  }
 
   saveItemInfosOnStateChange();
 

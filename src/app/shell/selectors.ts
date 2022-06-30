@@ -7,6 +7,7 @@ export const hasSearchQuerySelector = (state: RootState) => Boolean(state.shell.
 export const searchQueryVersionSelector = (state: RootState) => state.shell.searchQueryVersion;
 export const bungieAlertsSelector = (state: RootState) => state.shell.bungieAlerts;
 export const searchResultsOpenSelector = (state: RootState) => state.shell.searchResultsOpen;
+export const routerLocationSelector = (state: RootState) => state.shell.routerLocation;
 
 export function useIsPhonePortrait() {
   return useSelector(isPhonePortraitSelector);

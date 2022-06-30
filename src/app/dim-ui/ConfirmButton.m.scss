@@ -16,8 +16,8 @@
     overflow: hidden;
   }
 
-  // applies to just the "confirm" message container
-  & > div:nth-child(2) {
+  // applies to both icon and "confirm" message container
+  & > div {
     display: flex;
     align-items: center;
     justify-content: center;

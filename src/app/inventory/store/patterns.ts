@@ -4,13 +4,13 @@ import {
   DestinyProfileRecordsComponent,
   DestinyRecordToastStyle,
 } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
+import memoizeOne from 'memoize-one';
 import { DimItem } from '../item-types';
 
 /**
  * Generate a table from item name to the record for their crafting pattern.
  */
-export const itemNameToCraftingPatternRecordHash = _.once((defs: D2ManifestDefinitions) => {
+export const itemNameToCraftingPatternRecordHash = memoizeOne((defs: D2ManifestDefinitions) => {
   const recordHashesByName: { [itemName: string]: number } = {};
   if (defs) {
     for (const record of Object.values(defs.Record.getAll())) {

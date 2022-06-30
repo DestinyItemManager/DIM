@@ -3,8 +3,7 @@ import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { StatValue } from 'app/item-popup/PlugTooltip';
-import { useD2Definitions } from 'app/manifest/selectors';
-import { getPerkDescriptions } from 'app/utils/socket-utils';
+import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import clsx from 'clsx';
 import { useCallback, useMemo } from 'react';
 import styles from './SelectablePlug.m.scss';
@@ -68,13 +67,13 @@ function SelectablePlugDetails({
   plug: PluggableInventoryItemDefinition;
   displayedStatHashes?: number[];
 }) {
-  const defs = useD2Definitions()!;
-
   const displayedStats = plug.investmentStats.filter((stat) =>
     displayedStatHashes?.includes(stat.statTypeHash)
   );
-  const perkDescriptions = getPerkDescriptions(plug, defs);
-
+  const plugDescriptions = usePlugDescriptions(
+    plug,
+    displayedStats.map((stat) => ({ statHash: stat.statTypeHash, value: stat.value }))
+  );
   return (
     <>
       <div className="item" title={plug.displayProperties.name}>
@@ -82,12 +81,12 @@ function SelectablePlugDetails({
       </div>
       <div className={styles.plugInfo}>
         <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
-        {perkDescriptions.map((perkDesc) => (
+        {plugDescriptions.perks.map((perkDesc) => (
           <div className={styles.partialDescription} key={perkDesc.perkHash}>
             {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
             {perkDesc.requirement && (
               <div className={styles.requirement}>{perkDesc.requirement}</div>
-            )}{' '}
+            )}
           </div>
         ))}
         {displayedStats.length > 0 && (

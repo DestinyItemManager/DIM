@@ -1,0 +1,14 @@
+.authorization {
+  flex-direction: column;
+  display: flex;
+  flex: 1;
+}
+
+.authorizationChallenge {
+  font-size: 36px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 8px;
+}

@@ -11,9 +11,8 @@ import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
-import { errorLog, timer } from 'app/utils/log';
+import { errorLog, timer, warnLog } from 'app/utils/log';
 import {
-  DestinyCharacterComponent,
   DestinyCharacterProgressionComponent,
   DestinyCollectibleComponent,
   DestinyCollectiblesComponent,
@@ -147,6 +146,8 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
   };
 }
 
+let latestDateLastPlayedTimestamp = 0;
+
 function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
@@ -177,6 +178,28 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         // If we switched account since starting this, give up
         if (account !== currentAccountSelector(getState())) {
           return;
+        }
+
+        // dateLastPlayed doesn't advance with every load, nor does it advance
+        // when things are moved via DIM. It appears to only be updated when
+        // something happens in game that affects the user's stored profile.
+        // However, due to some caching or server affinity issue, sometimes it
+        // can go backwards, meaning this profile reflects an earlier state than
+        // one we've seen before. If that is the case, we should ignore this
+        // update.
+        const dateLastPlayed = profileInfo.profile.data?.dateLastPlayed;
+        if (dateLastPlayed) {
+          const dateLastPlayedTimestamp = new Date(dateLastPlayed).getTime();
+          if (dateLastPlayedTimestamp < latestDateLastPlayedTimestamp) {
+            warnLog(
+              'd2-stores',
+              "Profile dateLastPlayed was older than another profile response we've seen - ignoring",
+              latestDateLastPlayedTimestamp,
+              dateLastPlayedTimestamp
+            );
+            return;
+          }
+          latestDateLastPlayedTimestamp = dateLastPlayedTimestamp;
         }
 
         const stopTimer = timer('Process inventory');
@@ -340,12 +363,12 @@ function processCharacter(
   const characterInventory = profileInfo.characterInventories.data?.[characterId]?.items || [];
   const profileInventory = profileInfo.profileInventory.data?.items || [];
   const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
-  const profileRecords = profileInfo.profileRecords?.data; // Not present in the initial load
+  const profileRecords = profileInfo.profileRecords?.data;
   const itemComponents = profileInfo.itemComponents;
   const uninstancedItemObjectives =
     getCharacterProgressions(profileInfo, characterId)?.uninstancedItemObjectives || [];
 
-  const store = makeCharacter(defs, character, lastPlayedDate);
+  const store = makeCharacter(defs, character, lastPlayedDate, profileRecords);
 
   // We work around the weird account-wide buckets by assigning them to the current character
   const items = characterInventory.concat(characterEquipment.flat());
@@ -418,13 +441,11 @@ function processVault(
  * Find the date of the most recently played character.
  */
 function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
-  return Object.values(profileInfo.characters.data!).reduce(
-    (memo: Date, character: DestinyCharacterComponent) => {
-      const d1 = new Date(character.dateLastPlayed);
-      return memo ? (d1 >= memo ? d1 : memo) : d1;
-    },
-    new Date(0)
-  );
+  const dateLastPlayed = profileInfo.profile.data?.dateLastPlayed;
+  if (dateLastPlayed) {
+    return new Date(dateLastPlayed);
+  }
+  return new Date(0);
 }
 
 export const fakeCharacterStatHashes = {

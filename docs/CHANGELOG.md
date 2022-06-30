@@ -1,6 +1,21 @@
 ## Next
 
+* If you have a title equipped on your character, it will replace your character's race in the character headers.
 * Fixed a crash when trying to assign deprecated Combat Style mods.
+
+## 7.23.2 <span class="changelog-date">(2022-06-29)</span>
+
+* Fixed an issue where fashion mods would not display in loadouts.
+* Fixed the element icon displaying below the energy number in Compare.
+* Somewhat worked around an issue with Bungie.net where on refresh you would see an older version of your inventory.
+* Fixed the crafted weapon level progress bar going missing with some Operating System languages.
+* Perk and mod tooltips should contain fewer duplicate lines of text.
+* Exotic catalyst requirements are now hidden on tooltips if the catalyst is complete.
+* Fixed an issue where stat modifications from Exotic catalysts were being displayed when the catalyst was incomplete.
+
+### Beta Only
+
+* Community-sourced perk descriptions have been made more visually distinct.
 
 ## 7.23.1 <span class="changelog-date">(2022-06-27)</span>
 

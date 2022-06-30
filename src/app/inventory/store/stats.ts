@@ -331,7 +331,7 @@ function applyPlugsToStats(
         if (
           !isPlugStatActive(
             createdItem,
-            socket.plugged.plugDef.hash,
+            socket.plugged.plugDef,
             affectedStatHash,
             pluggedInvestmentStat.isConditionallyActive
           )

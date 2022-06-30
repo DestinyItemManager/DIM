@@ -1,4 +1,3 @@
-import { generateConversionTable } from 'app/dim-ui/rich-destiny-text';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { reportException } from 'app/utils/exceptions';
@@ -163,10 +162,7 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
     }
 
     const defs = buildDefinitionsFromManifest(db);
-
     dispatch(setD2Manifest(defs));
-    // dispatch, but don't wait for, the one-time text-replacement table-builder
-    generateConversionTable(defs);
     return defs;
   };
 }

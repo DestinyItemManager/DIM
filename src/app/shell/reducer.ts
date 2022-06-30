@@ -25,6 +25,9 @@ export interface ShellState {
   /** Global, page-covering loading state. */
   readonly loadingMessages: string[];
 
+  /** BrowserRouter custom location  */
+  readonly routerLocation?: string;
+
   readonly bungieAlerts: GlobalAlert[];
 }
 
@@ -36,6 +39,7 @@ const initialState: ShellState = {
   searchQueryVersion: 0,
   searchResultsOpen: false,
   loadingMessages: [],
+  routerLocation: '',
   bungieAlerts: [],
 };
 
@@ -104,6 +108,20 @@ export const shell: Reducer<ShellState, ShellAction> = (
       return deepEqual(state.bungieAlerts, action.payload)
         ? state
         : { ...state, bungieAlerts: action.payload };
+    }
+
+    case getType(actions.setRouterLocation): {
+      return {
+        ...state,
+        routerLocation: action.payload,
+      };
+    }
+
+    case getType(actions.resetRouterLocation): {
+      return {
+        ...state,
+        routerLocation: undefined,
+      };
     }
 
     default:

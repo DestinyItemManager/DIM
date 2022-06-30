@@ -1,5 +1,7 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { clarity } from 'app/clarity/reducer';
+import { StreamDeckState } from 'app/stream-deck/interfaces';
+import { lazyStreamDeck, streamDeckInitialState } from 'app/stream-deck/stream-deck';
 import { vendors } from 'app/vendors/reducer';
 import { combineReducers, Reducer } from 'redux';
 import { accounts } from '../accounts/reducer';
@@ -27,9 +29,10 @@ const reducer: Reducer<RootState> = (state, action) => {
     clarity,
     // Dummy reducer to get the types to work
     dimApi: (state: DimApiState = dimApiInitialState) => state,
+    streamDeck: (state: StreamDeckState = streamDeckInitialState) => state,
   });
 
-  const intermediateState = combinedReducers(state, action);
+  let intermediateState = combinedReducers(state, action);
 
   // Run the DIM API reducer last, and provide the current account along with it
   const dimApiState = dimApi(
@@ -37,6 +40,17 @@ const reducer: Reducer<RootState> = (state, action) => {
     action,
     currentAccountSelector(intermediateState)
   );
+
+  // enable reducer for Stream Deck Feature only if enabled
+  if ($featureFlags.elgatoStreamDeck && lazyStreamDeck.reducer) {
+    const streamDeckState = lazyStreamDeck.reducer(intermediateState.streamDeck, action);
+    if (streamDeckState !== intermediateState.streamDeck) {
+      intermediateState = {
+        ...intermediateState,
+        streamDeck: streamDeckState,
+      };
+    }
+  }
 
   if (intermediateState.dimApi !== dimApiState) {
     return {

@@ -13,9 +13,3 @@
 .missingItem {
   composes: missingItem from './LoadoutItemCategorySection.m.scss';
 }
-
-.fashion {
-  :global(.item) {
-    height: unset !important;
-  }
-}

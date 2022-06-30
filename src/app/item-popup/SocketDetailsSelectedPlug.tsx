@@ -1,6 +1,5 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
@@ -14,18 +13,18 @@ import {
 import { interpolateStatValue } from 'app/inventory/store/stats';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
+import { DEFAULT_ORNAMENTS, EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptySpecialtySocketHashes, isPlugStatActive } from 'app/utils/item-utils';
-import { getPerkDescriptions } from 'app/utils/socket-utils';
+import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ItemStats from './ItemStats';
 import { StatValue } from './PlugTooltip';
@@ -103,7 +102,6 @@ export default function SocketDetailsSelectedPlug({
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const destiny2CoreSettings = useSelector(destiny2CoreSettingsSelector)!;
-  const perkDescriptions = getPerkDescriptions(plug, defs);
 
   const materialRequirementSet =
     (plug.plug.insertionMaterialRequirementHash &&
@@ -123,7 +121,7 @@ export default function SocketDetailsSelectedPlug({
         return null;
       }
 
-      if (!isPlugStatActive(item, plug.hash, stat.statTypeHash, stat.isConditionallyActive)) {
+      if (!isPlugStatActive(item, plug, stat.statTypeHash, stat.isConditionallyActive)) {
         return null;
       }
 
@@ -209,13 +207,14 @@ export default function SocketDetailsSelectedPlug({
     );
   });
 
-  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-  const showBungieDescription =
-    !$featureFlags.clarityDescriptions || descriptionsToDisplay !== 'community';
-  const showCommunityDescription =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay !== 'bungie';
-  const showCommunityDescriptionOnly =
-    $featureFlags.clarityDescriptions && descriptionsToDisplay === 'community';
+  const plugDescriptions = usePlugDescriptions(
+    plug,
+    stats.map((stat) => ({ value: stat.modValue, statHash: stat.dimStat.statHash }))
+  );
+
+  // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume
+  // that an Exotic weapon can only be masterworked if its catalyst is complete.
+  const hideRequirements = plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && item.masterwork;
 
   return (
     <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
@@ -230,11 +229,14 @@ export default function SocketDetailsSelectedPlug({
             <> &mdash; {plug.itemTypeDisplayName}</>
           )}
         </h3>
-        {showBungieDescription &&
-          perkDescriptions.map((perkDesc) => (
-            <div key={perkDesc.perkHash}>{perkDesc.description || perkDesc.requirement}</div>
-          ))}
-        {sourceString && <div>{sourceString}</div>}
+        {plugDescriptions.perks.map((perkDesc) => (
+          <React.Fragment key={perkDesc.perkHash}>
+            {perkDesc.description && <div>{perkDesc.description}</div>}
+            {!hideRequirements && perkDesc.requirement && (
+              <div className={styles.modRequirement}>{perkDesc.requirement}</div>
+            )}
+          </React.Fragment>
+        ))}
       </div>
 
       {stats.length > 0 && (
@@ -250,18 +252,14 @@ export default function SocketDetailsSelectedPlug({
         <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
       )}
 
-      {showCommunityDescription && (
+      {plugDescriptions.communityInsight && (
         <ClarityDescriptions
-          hash={plug.hash}
-          fallback={
-            !showBungieDescription &&
-            perkDescriptions.map((perkDesc) => (
-              <div key={perkDesc.perkHash}>{perkDesc.description || perkDesc.requirement}</div>
-            ))
-          }
-          communityOnly={showCommunityDescriptionOnly}
+          perk={plugDescriptions.communityInsight}
+          className={styles.modClarityDescription}
         />
       )}
+
+      {sourceString && <div className={styles.source}>{sourceString}</div>}
 
       {(canDoAWA || onPlugSelected) && (
         <motion.button

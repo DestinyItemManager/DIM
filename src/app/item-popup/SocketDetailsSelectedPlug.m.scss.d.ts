@@ -6,10 +6,13 @@ interface CssExports {
   'insertLabel': string;
   'itemStats': string;
   'material': string;
+  'modClarityDescription': string;
   'modDescription': string;
   'modIcon': string;
+  'modRequirement': string;
   'modStats': string;
   'selectedPlug': string;
+  'source': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

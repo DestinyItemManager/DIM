@@ -23,7 +23,7 @@ type PerkType =
   // ---------
   | 'ghostMod';
 
-interface Perk {
+export interface Perk {
   /**
    * Perk hash from inventoryItems
    */

@@ -1,13 +1,17 @@
-import type { DimStore } from 'app/inventory/store-types';
+import type { DimStore, DimTitle } from 'app/inventory/store-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
-import React, { memo } from 'react';
+import clsx from 'clsx';
+import { FontGlyphs } from 'data/d2/d2-font-glyphs';
+import { memo } from 'react';
 import styles from './CharacterTile.m.scss';
 
 function CharacterEmblem({ store }: { store: DimStore }) {
   return <div className={styles.emblem} style={{ backgroundImage: `url("${store.icon}")` }} />;
 }
+
+const gildedIcon = String.fromCodePoint(FontGlyphs.gilded_title);
 
 /**
  * Render a basic character tile without any event handlers
@@ -49,7 +53,7 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
             isPhonePortrait && <VaultCapacity />
           ) : (
             <>
-              <div>{store.race}</div>
+              <div>{store.titleInfo ? <Title titleInfo={store.titleInfo} /> : store.race}</div>
               {store.destinyVersion === 1 && store.level < 40 && (
                 <div className={styles.level}>{store.level}</div>
               )}
@@ -60,3 +64,20 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
     </div>
   );
 });
+
+function Title({ titleInfo }: { titleInfo: DimTitle }) {
+  const { title, gildedNum, isGildedForCurrentSeason } = titleInfo;
+  return (
+    <span
+      className={clsx(styles.title, { [styles.gildedCurrentSeason]: isGildedForCurrentSeason })}
+    >
+      {title}
+      {gildedNum > 0 && (
+        <>
+          <span className={styles.gildedIcon}>{gildedIcon}</span>
+          {gildedNum > 1 && <span className={styles.gildedNum}>{gildedNum}</span>}
+        </>
+      )}
+    </span>
+  );
+}
