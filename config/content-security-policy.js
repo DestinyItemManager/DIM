@@ -41,6 +41,8 @@ module.exports = function csp(env) {
       'https://api.destinyitemmanager.com',
       // Clarity
       'https://ice-mourne.github.io',
+      // Stream Deck Plugin
+      'wss://localhost:9119',
     ],
     imgSrc: [
       SELF,
