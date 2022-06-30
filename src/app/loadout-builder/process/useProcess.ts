@@ -19,9 +19,10 @@ import {
   getModTypeTagByPlugCategoryHash,
 } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
+import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { proxy, releaseProxy, wrap } from 'comlink';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { StatsSet } from '../process-worker/stats-set';
@@ -107,6 +108,26 @@ export function useProcess({
       result: selectedStore.id === state.resultStoreId ? state.result : null,
       currentCleanup: cleanup,
     }));
+
+    // If a mod can't fit into any socket of any item, we have no sets.
+    // This is a not particularly pretty hack to make it so that deprecated
+    // armor mods aren't misidentified as combat mods -- also see `fitMostMods`.
+    const allActiveModSockets = Object.values(filteredItems)
+      .flat()
+      .flatMap((i) => getSocketsByCategoryHash(i.sockets, SocketCategoryHashes.ArmorMods))
+      .filter((socket) => socket.plugged);
+    if (lockedMods.some((m) => !allActiveModSockets.some((s) => plugFitsIntoSocket(s, m.hash)))) {
+      setState((oldState) => ({
+        ...oldState,
+        processing: false,
+        result: {
+          sets: [],
+          combos: 0,
+          processTime: 0,
+        },
+      }));
+      return;
+    }
 
     const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
     const generalMods = lockedModMap[armor2PlugCategoryHashesByName.general] || [];
