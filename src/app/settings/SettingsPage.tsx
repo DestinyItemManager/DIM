@@ -185,7 +185,7 @@ export default function SettingsPage() {
     season: t('Settings.SortBySeason'),
     sunset: t('Settings.SortBySunset'),
     acquisitionRecency: t('Settings.SortByRecent'),
-    element: 'Weapon Element',
+    elementWeapon: 'Weapon Element',
     elementArmor: 'Armor Element',
     masterworked: t('Settings.Masterworked'),
     crafted: t('Settings.SortByCrafted'),
