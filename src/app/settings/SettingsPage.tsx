@@ -186,6 +186,7 @@ export default function SettingsPage() {
     sunset: t('Settings.SortBySunset'),
     acquisitionRecency: t('Settings.SortByRecent'),
     element: t('Organizer.Columns.Element'),
+    elementArmor: 'Armor Element',
     masterworked: t('Settings.Masterworked'),
     crafted: t('Settings.SortByCrafted'),
     deepsight: t('Settings.SortByDeepsight'),
