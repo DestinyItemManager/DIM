@@ -2,6 +2,7 @@
 
 * If you have a title equipped on your character, it will replace your character's race in the character headers.
 * Fixed a crash when trying to assign deprecated Combat Style mods.
+* The "Move other items away" loadout toggle no longer clears ghosts, ships, or sparrows.
 
 ## 7.23.2 <span class="changelog-date">(2022-06-29)</span>
 
