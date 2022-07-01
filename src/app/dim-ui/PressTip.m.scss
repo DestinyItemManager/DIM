@@ -5,7 +5,7 @@
   height: 10px;
   border-style: solid;
   position: absolute;
-  border-color: #444;
+  border-color: #424259;
 }
 
 .control {
@@ -16,10 +16,11 @@
 
 .tooltip {
   position: absolute;
-  background-color: #444;
+  background-color: #14141f;
   color: white;
   width: fit-content;
   max-width: 300px;
+  border: 1px solid #424259;
   border-top: 5px solid #888;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   padding: 8px;
@@ -35,7 +36,7 @@
 
   h2,
   h3 {
-    background-color: #444;
+    background-color: #14141f;
   }
   h2 {
     font-size: 14px;
