@@ -726,7 +726,15 @@ function clearSpaceAfterLoadout(
 
   for (const [bucketId, loadoutItems] of Object.entries(itemsByType)) {
     // Exclude a handful of buckets from being cleared out
-    if ([BucketHashes.Consumables, BucketHashes.Materials].includes(loadoutItems[0].bucket.hash)) {
+    if (
+      [
+        BucketHashes.Consumables,
+        BucketHashes.Materials,
+        BucketHashes.Ghost,
+        BucketHashes.Ships,
+        BucketHashes.Vehicle,
+      ].includes(loadoutItems[0].bucket.hash)
+    ) {
       continue;
     }
     let numUnequippedLoadoutItems = 0;
