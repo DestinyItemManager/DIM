@@ -302,6 +302,7 @@
   },
   "Header": {
     "About": "DIMについて",
+    "AutoRefresh": "プレイ中ならば DIM は自動的に再読み込みされます。",
     "BulkTag": "バルクタグアイテム",
     "BungieNetAlert": "Bungie Alert",
     "Clear": "フィルターをクリア",
@@ -1027,6 +1028,21 @@
     "UpdateErrorBody": "DIM Sync にデータを保存する際に問題が発生しました。後で自動的に再試行します。",
     "UpdateErrorTitle": "同期エラー",
     "Usage": "DIMは、このデバイスで利用可能な {{quota, humanBytes}} のうち {{usage, humanBytes}} を使用しています。これには、Bungie.netからダウンロードされたDestinyアイテムデータベースが含まれます。"
+  },
+  "StreamDeck": {
+    "Authorization": {
+      "Error": "Picked number is not the valid one!",
+      "Reset": "DE-AUTHORIZE",
+      "Title": "Pick this number on your Stream Deck"
+    },
+    "Enable": "Stream Deck Plugin",
+    "FinePrint": "Enable the connection with the DIM Stream Deck plugin",
+    "Install": "Install plugin",
+    "SelectLoadout": "Send to Stream Deck",
+    "Selection": {
+      "Item": "Choose an item from the inventory",
+      "Loadout": "Choose a loadout"
+    }
   },
   "Tags": {
     "Archive": "アーカイブ",

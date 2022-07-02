@@ -195,7 +195,7 @@
     "CurrentClass": "显示当前登录的守护者可装备的物品。",
     "CustomStatLower": "显示相比其他同类别护甲而言属性全面更低的护甲，但只考虑对应职业的自定义属性总和里的属性。",
     "DamageType": "按照伤害类型显示.",
-    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials. deepsight:complete and deepsight:incomplete refer to the progress of the deepsight objective, while deepsight:pattern shows items that could be progressed to unlock a pattern.",
+    "Deepsight": "显示带有深视共振的武器，可用于提取材料。可用 deepsight:complete 或 deepsight:incomplete 来筛选深视目标的进度，或用 deepsight:pattern 来筛选能解锁制作样式的物品。",
     "Description": "描述",
     "Dupe": "显示重复的物品，包含不同赛季版本",
     "DupeCount": "拥有指定重复数量的物品。",
@@ -302,6 +302,7 @@
   },
   "Header": {
     "About": "关于DIM",
+    "AutoRefresh": "只要你仍在游戏，DIM 就会自动刷新。",
     "BulkTag": "批量标记物品",
     "BungieNetAlert": "Bungie提示您",
     "Clear": "清除蒐索筛选器",
@@ -704,9 +705,9 @@
     "All": "全部",
     "CannotCurrentlyRoll": "此特性不会出现在此物品的当前版本上。",
     "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
-    "CommunityData": "Community Insight",
+    "CommunityData": "社区见解",
     "Consolidate": "合并",
-    "CraftingPattern": "Crafting Pattern",
+    "CraftingPattern": "制作样式",
     "DistributeEvenly": "均匀分配",
     "Equip": "装备",
     "FavoriteUnFavorite": {
@@ -870,16 +871,16 @@
   "Settings": {
     "BadgePostmaster": "在 App 图标上显示当前角色的邮政官物品数量",
     "BadgePostmasterExplanation": "若要此功能生效，你必须将 DIM 安装为 App，且操作系统必须支持显示标记",
-    "BothDescriptions": "Both Descriptions",
-    "BungieDescriptionOnly": "Bungie Descriptions",
+    "BothDescriptions": "Bungie 与社区描述",
+    "BungieDescriptionOnly": "Bungie 描述",
     "CharacterOrder": "排序方式",
     "CharacterOrderFixed": "角色年龄(PC平台有错误)",
     "CharacterOrderRecent": "最近使用的角色",
     "CharacterOrderReversed": "最近使用的角色(倒序)",
     "ColumnSize": "{{num}} 个物品",
     "ColumnSizeAuto": "自动",
-    "CommunityData": "Community Perk Insights",
-    "CommunityDescriptionOnly": "Community Descriptions",
+    "CommunityData": "社区特性见解",
+    "CommunityDescriptionOnly": "社区描述",
     "CsvImport": "导入 CSV",
     "CustomStatDesc": "选择护甲属性来自定义在物品弹窗、管理器和对比中显示的属性总和。用 stat:custom:>=30 来搜索。",
     "Data": "试算表",
@@ -1028,6 +1029,21 @@
     "UpdateErrorTitle": "DIM 同步错误",
     "Usage": "DIM 使用了此设备{{quota, humanBytes}}可用空间中的{{usage, humanBytes}}.这包括从 bungie. net 下载的命运2物品资料库。"
   },
+  "StreamDeck": {
+    "Authorization": {
+      "Error": "选择了错误的号码！",
+      "Reset": "取消授权",
+      "Title": "在你的 Stream Deck 上选择这个号码"
+    },
+    "Enable": "Stream Deck 插件",
+    "FinePrint": "连接到 DIM Stream Deck 插件",
+    "Install": "安装插件",
+    "SelectLoadout": "发送到 Stream Deck",
+    "Selection": {
+      "Item": "从库存中选择一个物品",
+      "Loadout": "选择一个配装"
+    }
+  },
   "Tags": {
     "Archive": "归档",
     "ClearTag": "清除标签",
@@ -1056,14 +1072,14 @@
     "Engram": "奖励记忆水晶",
     "FilterToUnacquired": "仅显示未收集物品",
     "NoItems": "此商人目前没有提供任何物品。",
-    "RefreshTime": "Inventory refreshes in:",
+    "RefreshTime": "库存刷新倒计时：",
     "Vendors": "商贩"
   },
   "Views": {
     "About": {
       "APIHistory": "查看DIM（及其他命运2app）的历史记录",
       "BungieCopyright": "所有图像和内容都归Bungie所有。",
-      "CommunityInsight": "Community Perk Insights courtesy of {{clarityLink}} and {{compendiumLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
+      "CommunityInsight": "社区特性见解取自 {{clarityLink}} 和 {{compendiumLink}}。如果你发现了问题或有疑问，可加入 {{clarityDiscordLink}}。",
       "Discord": "Discord",
       "DiscordHelp": "报告问题,回馈建议,或在Discord频道中获得支援。",
       "FAQ": "常见问题",

@@ -302,6 +302,7 @@
   },
   "Header": {
     "About": "À propos de DIM",
+    "AutoRefresh": "DIM se rechargera automatiquement tant que vous jouez.",
     "BulkTag": "Étiquetage de masse des objets",
     "BungieNetAlert": "Alerte Bungie",
     "Clear": "Effacer le filtre de recherche",
@@ -1027,6 +1028,21 @@
     "UpdateErrorBody": "Nous avons rencontré un problème lors de l'enregistrement de vos données sur DIM Sync. Nous allons automatiquement réessayer plus tard.",
     "UpdateErrorTitle": "Erreur de synchronisation DIM",
     "Usage": "DIM utilise {{usage, humanBytes}} sur {{quota, humanBytes}} disponible pour lui sur cet appareil. Cela inclus la base de données d'objets de Destiny téléchargée depuis Bungie.net."
+  },
+  "StreamDeck": {
+    "Authorization": {
+      "Error": "Le numéro choisi n'est pas valide !",
+      "Reset": "DÉSAUTORISER",
+      "Title": "Choisissez ce numéro sur votre Stream Deck"
+    },
+    "Enable": "Plugin Stream Deck",
+    "FinePrint": "Activer la connection avec le plugin DIM Stream Deck",
+    "Install": "Installer le plugin",
+    "SelectLoadout": "Envoyer au Stream Deck",
+    "Selection": {
+      "Item": "Choisissez un objet dans l'inventaire",
+      "Loadout": "Choisissez un arsenal"
+    }
   },
   "Tags": {
     "Archive": "Archive",
