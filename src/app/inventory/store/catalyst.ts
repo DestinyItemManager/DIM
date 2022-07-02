@@ -1,5 +1,5 @@
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import exoticsWithoutCatalysts from 'data/d2/exotics-without-catalysts.json';
+import exoticsWithoutCatalysts from 'data/d2/exotics-with-catalysts';
 import { DimCatalyst, DimItem } from '../item-types';
 
 export function buildCatalystInfo(
@@ -10,7 +10,7 @@ export function buildCatalystInfo(
     return undefined;
   }
 
-  if (exoticsWithoutCatalysts.includes(createdItem.hash)) {
+  if (!exoticsWithoutCatalysts.has(createdItem.hash)) {
     return undefined;
   }
 
@@ -28,5 +28,5 @@ export function buildCatalystInfo(
 
   // const progress = 0;
 
-  return { hasCatalyst: true, complete: complete };
+  return { complete: complete };
 }
