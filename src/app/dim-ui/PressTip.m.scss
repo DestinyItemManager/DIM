@@ -14,6 +14,24 @@
   -webkit-touch-callout: none;
 }
 
+.header {
+  h2 {
+    font-size: 14px;
+    margin: 0;
+    color: white;
+  }
+  h3 {
+    font-size: 12px;
+    margin: 0;
+    color: #aaa;
+  }
+}
+
+.content {
+  width: fit-content;
+  padding: 8px;
+}
+
 .tooltip {
   position: absolute;
   background-color: #14141f;
@@ -33,15 +51,14 @@
     max-width: 100vw;
   }
 
-  h2 {
-    font-size: 14px;
-    margin: 0;
-    @include destiny-header;
-  }
-  h3 {
-    font-size: 12px;
-    margin: 0;
-    color: #aaa;
+  .header {
+    background-color: #070709;
+    padding: 6px 8px;
+    margin: -8px -8px 6px -8px;
+
+    h2 {
+      @include destiny-header;
+    }
   }
 
   hr {
@@ -86,15 +103,4 @@
     border-bottom-color: transparent;
     right: -5px;
   }
-}
-
-.header {
-  background-color: #070709;
-  padding: 6px 8px;
-  margin: -8px -8px 6px -8px;
-}
-
-.content {
-  width: fit-content;
-  padding: 8px;
 }

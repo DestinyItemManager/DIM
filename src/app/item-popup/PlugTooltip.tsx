@@ -1,5 +1,6 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { PressTipHeader } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
@@ -167,8 +168,10 @@ export function PlugTooltip({
 
   return (
     <>
-      <h2>{def.displayProperties.name}</h2>
-      {!hidePlugSubtype && def.itemTypeDisplayName && <h3>{def.itemTypeDisplayName}</h3>}
+      <PressTipHeader
+        header={def.displayProperties.name}
+        subheader={hidePlugSubtype ? undefined : def.itemTypeDisplayName}
+      />
 
       {/*
         If we're displaying the Bungie description, display the stats between the Bungie description and
