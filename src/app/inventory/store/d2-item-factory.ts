@@ -35,7 +35,6 @@ import {
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import exoticsWithoutCatalysts from 'data/d2/exotics-without-catalysts.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import {
   BucketHashes,
@@ -49,9 +48,10 @@ import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
 import { InventoryBuckets } from '../inventory-buckets';
-import { DimCatalyst, DimItem } from '../item-types';
+import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';
+import { buildCatalystInfo } from './catalyst';
 import { buildCraftedInfo } from './crafted';
 import { buildDeepsightInfo } from './deepsight';
 import { createItemIndex } from './item-index';
@@ -819,33 +819,4 @@ function buildPursuitInfo(
       questStepsTotal: itemDef.setData.itemList.length,
     };
   }
-}
-
-function buildCatalystInfo(
-  createdItem: DimItem,
-  itemDef: DestinyInventoryItemDefinition
-): DimCatalyst | undefined {
-  if (createdItem.equippingLabel !== 'exotic_weapon') {
-    return undefined;
-  }
-
-  if (exoticsWithoutCatalysts.includes(createdItem.hash)) {
-    return undefined;
-  }
-
-  const catalystSocket = Boolean(
-    itemDef.sockets?.socketEntries.filter((s) => s.singleInitialItemHash === 1498917124)
-  );
-
-  const objectives = itemDef.objectives?.objectiveHashes ? itemDef.objectives.objectiveHashes : [];
-
-  if (objectives.length === 0 && !catalystSocket) {
-    return undefined;
-  }
-
-  const complete = Boolean(createdItem.masterwork);
-
-  // const progress = 0;
-
-  return { hasCatalyst: true, complete: complete };
 }
