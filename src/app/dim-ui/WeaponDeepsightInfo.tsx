@@ -55,14 +55,16 @@ function PatternUnlockedIndicator({ record }: { record: DestinyRecordComponent |
   return (
     <PressTip
       className={clsx(styles.patternProgress, styles.deepsightProgressSection)}
-      tooltip={
-        <>
-          <h2>{t('MovePopup.CraftingPattern')}</h2>
-          {record?.objectives.map((objective) => (
-            <Objective key={objective.objectiveHash} objective={objective} />
-          ))}
-        </>
-      }
+      tooltip={{
+        header: t('MovePopup.CraftingPattern'),
+        body: (
+          <>
+            {record?.objectives.map((objective) => (
+              <Objective key={objective.objectiveHash} objective={objective} />
+            ))}
+          </>
+        ),
+      }}
     >
       <BungieImage className={styles.patternIcon} src={weaponPatternIcon} />
       <span>

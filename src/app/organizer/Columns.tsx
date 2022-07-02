@@ -675,12 +675,10 @@ function D1PerksCell({ item }: { item: D1Item }) {
               isD1Item(item) && (
                 <PressTip
                   key={p.hash}
-                  tooltip={
-                    <>
-                      <h2>{p.name}</h2>
-                      <div>{p.description}</div>
-                    </>
-                  }
+                  tooltip={{
+                    header: p.name,
+                    body: p.description,
+                  }}
                 >
                   <div className={styles.modPerk} data-perk-name={p.name}>
                     <BungieImage src={p.icon} /> {p.name}

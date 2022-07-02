@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import PressTip from '../dim-ui/PressTip';
 import { D1GridNode, DimGridNode, DimItem } from '../inventory/item-types';
@@ -56,12 +56,10 @@ export default memo(function ItemTalentGrid({ item, perksOnly }: Props) {
           <PressTip
             elementType="g"
             key={node.hash}
-            tooltip={
-              <>
-                <h2>{node.name}</h2>
-                <div>{node.description}</div>
-              </>
-            }
+            tooltip={{
+              header: node.name,
+              body: node.description,
+            }}
           >
             <g
               transform={`translate(${(node.column - hiddenColumns) * totalNodeSize},${
@@ -97,9 +95,6 @@ export default memo(function ItemTalentGrid({ item, perksOnly }: Props) {
                 width="96"
                 transform="scale(0.25)"
               />
-              <title>
-                {node.name}&#10;{node.description}
-              </title>
             </g>
           </PressTip>
         ))}
