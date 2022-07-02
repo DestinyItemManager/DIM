@@ -5,7 +5,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
-import PressTip from 'app/dim-ui/PressTip';
+import PressTip, { PressTipHeader } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t, tl } from 'app/i18next-t';
 import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
@@ -675,10 +675,12 @@ function D1PerksCell({ item }: { item: D1Item }) {
               isD1Item(item) && (
                 <PressTip
                   key={p.hash}
-                  tooltip={{
-                    header: p.name,
-                    body: p.description,
-                  }}
+                  tooltip={
+                    <>
+                      <PressTipHeader header={p.name} />
+                      <div>{p.description}</div>
+                    </>
+                  }
                 >
                   <div className={styles.modPerk} data-perk-name={p.name}>
                     <BungieImage src={p.icon} /> {p.name}

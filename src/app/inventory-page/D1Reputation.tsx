@@ -2,7 +2,7 @@ import { D1Store } from 'app/inventory/store-types';
 import _ from 'lodash';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import DiamondProgress from '../dim-ui/DiamondProgress';
-import PressTip from '../dim-ui/PressTip';
+import PressTip, { PressTipHeader } from '../dim-ui/PressTip';
 import './D1Reputation.scss';
 
 export default function D1Reputation({ store }: { store: D1Store }) {
@@ -17,10 +17,12 @@ export default function D1Reputation({ store }: { store: D1Store }) {
           rep.order >= 0 && (
             <PressTip
               key={rep.faction.hash}
-              tooltip={{
-                header: rep.faction.factionName,
-                body: `${rep.progressToNextLevel}/${rep.nextLevelAt}`,
-              }}
+              tooltip={
+                <>
+                  <PressTipHeader header={rep.faction.factionName} />
+                  {rep.progressToNextLevel} / {rep.nextLevelAt}
+                </>
+              }
             >
               <div className="factionrep">
                 <DiamondProgress

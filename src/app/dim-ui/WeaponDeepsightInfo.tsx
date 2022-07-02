@@ -7,7 +7,7 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import { DestinyRecordComponent } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import BungieImage from './BungieImage';
-import PressTip from './PressTip';
+import PressTip, { PressTipHeader } from './PressTip';
 import styles from './WeaponDeepsightInfo.m.scss';
 
 /**
@@ -55,16 +55,14 @@ function PatternUnlockedIndicator({ record }: { record: DestinyRecordComponent |
   return (
     <PressTip
       className={clsx(styles.patternProgress, styles.deepsightProgressSection)}
-      tooltip={{
-        header: t('MovePopup.CraftingPattern'),
-        body: (
-          <>
-            {record?.objectives.map((objective) => (
-              <Objective key={objective.objectiveHash} objective={objective} />
-            ))}
-          </>
-        ),
-      }}
+      tooltip={
+        <>
+          <PressTipHeader header={t('MovePopup.CraftingPattern')} />
+          {record?.objectives.map((objective) => (
+            <Objective key={objective.objectiveHash} objective={objective} />
+          ))}
+        </>
+      }
     >
       <BungieImage className={styles.patternIcon} src={weaponPatternIcon} />
       <span>

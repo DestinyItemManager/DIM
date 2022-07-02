@@ -25,21 +25,12 @@ export const PressTipRoot = createContext<MutableRefObject<HTMLElement | null>>(
   current: null,
 });
 
-type ReactNodeOrCreator = React.ReactNode | (() => React.ReactNode);
-type Tooltip =
-  | ReactNodeOrCreator
-  | {
-      header?: string;
-      subheader?: string;
-      body: ReactNodeOrCreator;
-    };
-
 interface Props {
   /**
    * The tooltip may be provided directly, or as a function which will defer
    * constructing the tree until the tooltip is shown.
    */
-  tooltip: Tooltip;
+  tooltip: React.ReactNode | (() => React.ReactNode);
   /**
    * The children of this component define the content that will trigger the tooltip.
    */
@@ -108,10 +99,6 @@ function Control({
 
   // TODO: if we reuse a stable tooltip container instance we could animate between them
   // TODO: or use framer motion layout animations?
-
-  const tooltipContent: Tooltip =
-    typeof tooltip === 'object' && 'body' in tooltip ? tooltip : { body: tooltip };
-
   return (
     <Component ref={triggerRef} className={clsx(styles.control, className)} {...rest}>
       {children}
@@ -121,12 +108,7 @@ function Control({
             className={clsx(styles.tooltip, { [styles.wideTooltip]: wide })}
             ref={tooltipContents}
           >
-            {tooltipContent.header && (
-              <PressTipHeader header={tooltipContent.header} subheader={tooltipContent.subheader} />
-            )}
-            <div className={styles.content}>
-              {_.isFunction(tooltipContent.body) ? tooltipContent.body() : tooltipContent.body}
-            </div>
+            <div className={styles.content}>{_.isFunction(tooltip) ? tooltip() : tooltip}</div>
             <div className={styles.arrow} />
           </div>,
           pressTipRoot.current || tempContainer
