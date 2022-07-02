@@ -122,10 +122,7 @@ function Control({
             ref={tooltipContents}
           >
             {tooltipContent.header && (
-              <div className={styles.header}>
-                <h2>{tooltipContent.header}</h2>
-                {tooltipContent.subheader && <h3>{tooltipContent.subheader}</h3>}
-              </div>
+              <PressTipHeader header={tooltipContent.header} subheader={tooltipContent.subheader} />
             )}
             <div className={styles.content}>
               {_.isFunction(tooltipContent.body) ? tooltipContent.body() : tooltipContent.body}
@@ -135,6 +132,15 @@ function Control({
           pressTipRoot.current || tempContainer
         )}
     </Component>
+  );
+}
+
+export function PressTipHeader({ header, subheader }: { header: string; subheader?: string }) {
+  return (
+    <div className={styles.header}>
+      <h2>{header}</h2>
+      {subheader && <h3>{subheader}</h3>}
+    </div>
   );
 }
 
