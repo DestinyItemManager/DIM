@@ -1,11 +1,16 @@
-.streamDeckSettings {
-  border-left: 5px solid #b2b2b2;
+.notConnected {
+  margin-left: 8px;
+  color: #b2b2b2;
 }
 
-.streamDeckConnected {
-  border-color: #6dcc66;
+.connected {
+  color: #6dcc66;
 }
 
 .downloadPlugin {
+  margin-top: 8px;
+}
+
+.resetButton {
   margin-top: 8px;
 }
