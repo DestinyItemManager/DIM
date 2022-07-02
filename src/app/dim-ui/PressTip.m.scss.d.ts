@@ -4,6 +4,7 @@ interface CssExports {
   'arrow': string;
   'content': string;
   'control': string;
+  'header': string;
   'tooltip': string;
   'wideTooltip': string;
 }

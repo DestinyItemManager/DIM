@@ -23,7 +23,6 @@
   border: 1px solid #424259;
   border-top: 5px solid #78788c;
   box-shadow: 0 0 4px 2px #16162680;
-  padding: 8px;
   text-align: left;
   z-index: 99999;
   white-space: pre-wrap;
@@ -34,18 +33,14 @@
     max-width: 100vw;
   }
 
-  h2,
-  h3 {
-    background-color: #14141f;
-  }
   h2 {
     font-size: 14px;
-    margin: 0 0 4px 0;
+    margin: 0;
     @include destiny-header;
   }
   h3 {
     font-size: 12px;
-    margin: -4px 0 4px 0;
+    margin: 0;
     color: #aaa;
   }
 
@@ -93,6 +88,13 @@
   }
 }
 
+.header {
+  background-color: #070709;
+  padding: 6px 8px;
+  margin: 0 0 -2px 0;
+}
+
 .content {
   width: fit-content;
+  padding: 8px;
 }
