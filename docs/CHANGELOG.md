@@ -3,6 +3,10 @@
 * If you have a title equipped on your character, it will replace your character's race in the character headers.
 * Fixed a crash when trying to assign deprecated Combat Style mods.
 
+### Beta Only
+
+* We have enabled experimental direct support for the [DIM Stream Deck extension](https://dim-stream-deck.netlify.app/). If you have a Stream Deck you can install this plugin and then enable the connection from DIM's settings to control DIM from your Stream Deck. Please note that the plugin is neither written by nor supported by the DIM team. **If you had installed the old Stream Deck Chrome extension, you need to uninstall it, or DIM will act weird (popups closing, etc).**
+
 ## 7.23.2 <span class="changelog-date">(2022-06-29)</span>
 
 * Fixed an issue where fashion mods would not display in loadouts.
