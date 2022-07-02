@@ -193,7 +193,7 @@
     "BulkRevert_plural": "Reverted tags on {{count}} items.",
     "BulkTag": "Tagged selected item as {{tag}}.",
     "BulkTag_plural": "Tagged {{count}} selected items as {{tag}}.",
-    "Catalyst": "Shows catalysts based on their status.",
+    "Catalyst": "Shows catalysts based on their status. catalyst:complete shows catalysts you have completed and applied, catalyst:incomplete shows catalysts you have unlocked but either not completed the objective or applied the catalyst, and catalyst:missing shows items that can have a catalyst but you haven't found it yet.",
     "Class": "Shows items based on their class affinity.",
     "Combine": "Filters can be combined or grouped with parentheses, \"or\" and \"and\" to narrow down your search, for example \"{{example}}\".",
     "ContributePower": "Shows items that have power and can contribute to your power level.",
