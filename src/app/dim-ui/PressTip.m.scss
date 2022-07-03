@@ -1,7 +1,6 @@
 @use '../variables.scss' as *;
 
 $borderColor: #5d5970;
-$ribbonColor: #8e8e9e;
 
 .arrow {
   width: 10px;
@@ -35,7 +34,7 @@ $ribbonColor: #8e8e9e;
   width: fit-content;
   padding: 8px;
   border: 1px solid $borderColor;
-  border-top: 5px solid $ribbonColor;
+  border-top: 5px solid var(--ribbon-color);
 }
 
 .tooltip {
@@ -50,6 +49,8 @@ $ribbonColor: #8e8e9e;
   white-space: pre-wrap;
   box-sizing: border-box;
   user-select: none;
+
+  --ribbon-color: #8e8e9e;
 
   &.wideTooltip {
     max-width: 100vw;
@@ -87,7 +88,7 @@ $ribbonColor: #8e8e9e;
     height: 0;
     border-width: 0 5px 5px 5px;
     top: -5px;
-    border-color: transparent transparent $ribbonColor transparent;
+    border-color: transparent transparent var(--ribbon-color) transparent;
   }
   &[data-popper-placement='right'] .arrow {
     width: 0;
@@ -110,15 +111,12 @@ $ribbonColor: #8e8e9e;
 
   &.minimalTooltip {
     border-radius: 3px;
+    --ribbon-color: #{$borderColor};
 
     .content {
       padding: 3px 6px;
       border-top: 1px solid $borderColor;
       border-radius: 3px;
-    }
-
-    &[data-popper-placement='bottom'] .arrow {
-      border-color: transparent transparent $borderColor transparent;
     }
   }
 }
