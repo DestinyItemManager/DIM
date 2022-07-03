@@ -40,7 +40,8 @@ import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
 
-const isMobile = 'ontouchstart' in document.documentElement;
+// using mobile portrait media query
+const isMobile = window.matchMedia('(max-width: 540px)').matches;
 
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
