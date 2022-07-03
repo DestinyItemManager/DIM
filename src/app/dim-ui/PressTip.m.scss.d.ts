@@ -5,6 +5,7 @@ interface CssExports {
   'content': string;
   'control': string;
   'header': string;
+  'minimalTooltip': string;
   'tooltip': string;
   'wideTooltip': string;
 }

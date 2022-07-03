@@ -11,7 +11,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { memo, useCallback, useMemo, useRef } from 'react';
+import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
@@ -82,7 +82,7 @@ export default memo(function CompareItem({
         <ItemPopupTrigger item={item} noCompare={true}>
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
-              <PressTip className={styles.itemAside} tooltip={itemNotes}>
+              <PressTip minimal className={styles.itemAside} tooltip={itemNotes}>
                 <ConnectedInventoryItem item={item} />
               </PressTip>
             </div>

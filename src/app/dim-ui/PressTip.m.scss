@@ -1,12 +1,15 @@
 @use '../variables.scss' as *;
 
+$borderColor: #5d5970;
+$ribbonColor: #8e8e9e;
+
 .arrow {
   width: 10px;
   height: 10px;
   border-width: 0;
   border-style: solid;
   position: absolute;
-  border-color: #424259;
+  border-color: $borderColor;
 }
 
 .control {
@@ -31,8 +34,8 @@
 .content {
   width: fit-content;
   padding: 8px;
-  border: 1px solid #424259;
-  border-top: 5px solid #78788c;
+  border: 1px solid $borderColor;
+  border-top: 5px solid $ribbonColor;
 }
 
 .tooltip {
@@ -63,7 +66,7 @@
   }
 
   hr {
-    border-color: #424259;
+    border-color: $borderColor;
   }
 
   p {
@@ -84,7 +87,7 @@
     height: 0;
     border-width: 0 5px 5px 5px;
     top: -5px;
-    border-color: transparent transparent #78788c transparent;
+    border-color: transparent transparent $ribbonColor transparent;
   }
   &[data-popper-placement='right'] .arrow {
     width: 0;
@@ -103,5 +106,19 @@
     border-right-color: transparent;
     border-bottom-color: transparent;
     right: -5px;
+  }
+
+  &.minimalTooltip {
+    border-radius: 3px;
+
+    .content {
+      padding: 3px 6px;
+      border-top: 1px solid $borderColor;
+      border-radius: 3px;
+    }
+
+    &[data-popper-placement='bottom'] .arrow {
+      border-color: transparent transparent $borderColor transparent;
+    }
   }
 }

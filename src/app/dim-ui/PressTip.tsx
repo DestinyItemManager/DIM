@@ -40,6 +40,8 @@ interface Props {
   className?: string;
   /** Allow the tooltip to be wider than the normal size */
   wide?: boolean;
+  /** Reduce padding around the tooltip content. This is appropriate for single-line strings. */
+  minimal?: boolean;
   style?: React.CSSProperties;
   placement?: Placement;
 }
@@ -76,6 +78,7 @@ function Control({
   className,
   placement,
   wide,
+  minimal,
   ...rest
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
@@ -105,7 +108,10 @@ function Control({
       {open &&
         ReactDOM.createPortal(
           <div
-            className={clsx(styles.tooltip, { [styles.wideTooltip]: wide })}
+            className={clsx(styles.tooltip, {
+              [styles.wideTooltip]: wide,
+              [styles.minimalTooltip]: minimal,
+            })}
             ref={tooltipContents}
           >
             <div className={styles.content}>{_.isFunction(tooltip) ? tooltip() : tooltip}</div>
