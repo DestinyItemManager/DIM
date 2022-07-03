@@ -148,6 +148,7 @@ function StatBar({ segments, stat }: { segments: [number, string?, string?][]; s
         {segments.map(([val, className, description], index) => (
           <PressTip
             key={index}
+            minimal
             tooltip={[description, val].filter(Boolean).join(': ') || undefined}
             className={clsx(styles.barInner, className)}
             style={{ width: percent(val / stat.maximumValue) }}

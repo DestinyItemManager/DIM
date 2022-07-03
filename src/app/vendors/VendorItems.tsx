@@ -5,7 +5,6 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
 import PressTip from '../dim-ui/PressTip';
@@ -139,6 +138,7 @@ export default function VendorItems({
             <div className={styles.vendorItems}>
               {factionProgress && faction && (
                 <PressTip
+                  minimal
                   tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}
                 >
                   <div>
