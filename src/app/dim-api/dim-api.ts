@@ -18,7 +18,8 @@ import { authenticatedApi, unauthenticatedApi } from './dim-api-helper';
 export async function getGlobalSettings() {
   const response = await unauthenticatedApi<PlatformInfoResponse>(
     {
-      url: `/platform_info?flavor=${$DIM_FLAVOR}`,
+      // This uses "app" instead of "release" because I misremembered it when implementing the server
+      url: `/platform_info?flavor=${$DIM_FLAVOR === 'release' ? 'app' : $DIM_FLAVOR}`,
       method: 'GET',
     },
     true
