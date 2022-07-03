@@ -636,7 +636,9 @@ export function makeItem(
   createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
 
   // Catalyst
-  createdItem.catalystInfo = buildCatalystInfo(createdItem, itemDef);
+  if (createdItem.isExotic && createdItem.bucket.inWeapons) {
+    createdItem.catalystInfo = buildCatalystInfo(createdItem.hash, profileRecords);
+  }
 
   try {
     createdItem.stats = buildStats(defs, createdItem, itemDef);

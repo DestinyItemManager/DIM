@@ -259,12 +259,12 @@ const socketFilters: FilterDefinition[] = [
         }
 
         switch (filterValue) {
-          case 'all':
-            return true;
+          case 'missing':
+            return !item.catalystInfo.unlocked;
           case 'complete':
-            return item.catalystInfo?.complete;
+            return item.catalystInfo.complete;
           case 'incomplete':
-            return !item.catalystInfo?.complete;
+            return !item.catalystInfo.complete;
           default:
             return false;
         }

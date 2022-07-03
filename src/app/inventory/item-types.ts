@@ -275,6 +275,11 @@ export interface DimDeepsight {
 export interface DimCatalyst {
   /** Whether the weapon catalyst is completed */
   complete: boolean;
+  /** Whether the player has unlocked/discovered the catalyst */
+  unlocked: boolean;
+
+  // TODO: on item popup, remove catalyst socket if item.catalystInfo is undefined
+  // TODO: on item popup, show catalyst progress somewhere? maybe like deepsight?
 }
 
 export interface DimStat {
