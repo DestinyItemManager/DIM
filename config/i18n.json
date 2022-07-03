@@ -1131,8 +1131,11 @@
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StreamDeck": {
+    "Connected": "Connected",
+    "NotConnected": "Not Connected",
     "Enable": "Stream Deck Plugin",
-    "FinePrint": "Enable the connection with the DIM Stream Deck plugin",
+    "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
+    "OldExtension": "Make sure to uninstall the old Stream Deck Chrome extension. It is no longer needed and will cause odd behavior in DIM.",
     "Install": "Install plugin",
     "SelectLoadout": "Send to Stream Deck",
     "Selection": {
