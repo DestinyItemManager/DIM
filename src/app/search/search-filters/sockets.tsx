@@ -259,10 +259,7 @@ const socketFilters: FilterDefinition[] = [
           // count enhanced perks
           for (const socket of item.sockets.allSockets) {
             if (socket.plugged) {
-              const isEnhanced = isEnhancedPerk(socket.plugged);
-              if (isEnhanced) {
-                enhancedPerkCount++;
-              }
+              isEnhancedPerk(socket.plugged) && enhancedPerkCount++;
             }
           }
         }
