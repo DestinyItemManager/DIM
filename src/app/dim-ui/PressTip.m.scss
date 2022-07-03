@@ -3,6 +3,7 @@
 .arrow {
   width: 10px;
   height: 10px;
+  border-width: 0;
   border-style: solid;
   position: absolute;
   border-color: #424259;
@@ -30,6 +31,8 @@
 .content {
   width: fit-content;
   padding: 8px;
+  border: 1px solid #424259;
+  border-top: 5px solid #78788c;
 }
 
 .tooltip {
@@ -38,8 +41,6 @@
   color: white;
   width: fit-content;
   max-width: 300px;
-  border: 1px solid #424259;
-  border-top: 5px solid #78788c;
   box-shadow: 0 0 4px 2px #16162680;
   text-align: left;
   z-index: 99999;
@@ -82,7 +83,7 @@
     width: 0;
     height: 0;
     border-width: 0 5px 5px 5px;
-    top: -10px;
+    top: -5px;
     border-color: transparent transparent #78788c transparent;
   }
   &[data-popper-placement='right'] .arrow {
