@@ -40,6 +40,8 @@ import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
 
+const isMobile = 'ontouchstart' in document.documentElement;
+
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
   element: {
@@ -237,7 +239,9 @@ export default function SettingsPage() {
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
     { id: 'storage', title: t('Storage.MenuTitle') },
     { id: 'spreadsheets', title: t('Settings.Data') },
-    $featureFlags.elgatoStreamDeck ? { id: 'stream-deck', title: 'Elgato Stream Deck' } : undefined,
+    $featureFlags.elgatoStreamDeck && !isMobile
+      ? { id: 'stream-deck', title: 'Elgato Stream Deck' }
+      : undefined,
   ]);
 
   const uniqChars =
@@ -544,7 +548,7 @@ export default function SettingsPage() {
 
           <Spreadsheets />
 
-          {$featureFlags.elgatoStreamDeck && <StreamDeckSettings />}
+          {$featureFlags.elgatoStreamDeck && !isMobile && <StreamDeckSettings />}
 
           {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
             <TroubleshootingSettings />
