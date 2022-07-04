@@ -185,7 +185,7 @@
     "@textcomplete/core": "^0.1.9",
     "@textcomplete/textarea": "^0.1.9",
     "@use-gesture/react": "^10.2.6",
-    "body-scroll-lock": "^3.1.5",
+    "body-scroll-lock": "^4.0.0-beta.0",
     "bungie-api-ts": "^4.12.0",
     "caniuse-lite": ">=1.0.30000843",
     "clsx": "^1.0.4",

@@ -207,6 +207,7 @@
     "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe. Only one duplicate is chosen as the highest, and the rest are considered lower.",
     "Energy": "Shows items that have energy capacity (Armor 2.0).",
     "Engrams": "Shows engrams.",
+    "EnhancedPerk": "Shows weapons that have the specified number of enhanced perks.",
     "Equipment": "Items that can be equipped.",
     "Equipped": "Items that are currently equipped on a character.",
     "Event": "Shows items from which event in Destiny 2 they appeared in.",

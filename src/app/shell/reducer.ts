@@ -55,6 +55,9 @@ export const shell: Reducer<ShellState, ShellAction> = (
       };
     case getType(actions.setSearchQuery): {
       const { query, updateVersion } = action.payload;
+      if (query === undefined) {
+        throw new Error('undefined query');
+      }
       return query !== state.searchQuery
         ? {
             ...state,
