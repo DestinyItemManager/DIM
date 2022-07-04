@@ -8,7 +8,7 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import styles from './MainSearchBarActions.m.scss';
-import { filteredItemsSelector, validateQuerySelector } from './search-filter';
+import { filteredItemsSelector, queryValidSelector } from './search-filter';
 import './search-filter.scss';
 import SearchResults from './SearchResults';
 
@@ -17,8 +17,7 @@ import SearchResults from './SearchResults';
  */
 export default function MainSearchBarActions() {
   const searchQuery = useSelector(querySelector);
-  const validateQuery = useSelector(validateQuerySelector);
-  const queryValid = validateQuery(searchQuery).valid;
+  const queryValid = useSelector(queryValidSelector);
   const filteredItems = useSelector(filteredItemsSelector);
   const searchResultsOpen = useSelector(searchResultsOpenSelector);
   const dispatch = useDispatch();
