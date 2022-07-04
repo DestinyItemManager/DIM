@@ -86,11 +86,11 @@ export type RichTextConversionTable = NodeJS.Dict<{
 export const conversionTableSelector = createSelector(
   d2ManifestSelector,
   (defs?: D2ManifestDefinitions) => {
-    if (!defs) {
-      return undefined;
-    }
-
     const conversionTable: RichTextConversionTable = {};
+
+    if (!defs) {
+      return conversionTable;
+    }
 
     // loop through conversionTable entries to update them with manifest string info
     for (const [exampleReplacement, codepoint] of glyphInfos) {
