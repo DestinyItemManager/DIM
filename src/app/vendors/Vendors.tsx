@@ -5,21 +5,19 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyCurrenciesComponent } from 'bungie-api-ts/destiny2';
 import { motion, PanInfo } from 'framer-motion';
-import React, { useCallback, useEffect, useState } from 'react';
-import { connect, useSelector } from 'react-redux';
+import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { sortedStoresSelector } from '../inventory/selectors';
-import { DimStore } from '../inventory/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh-events';
 import { loadAllVendors } from './actions';
@@ -28,7 +26,6 @@ import {
   filterVendorGroupsToSearch,
   filterVendorGroupsToUnacquired,
 } from './d2-vendors';
-import { VendorsState } from './reducer';
 import {
   ownedVendorItemsSelector,
   vendorGroupsForCharacterSelector,
@@ -38,33 +35,18 @@ import Vendor from './Vendor';
 import styles from './Vendors.m.scss';
 import VendorsMenu from './VendorsMenu';
 
-interface ProvidedProps {
-  account: DestinyAccount;
-}
-interface StoreProps {
-  stores: DimStore[];
-  searchQuery: string;
-  vendors: VendorsState['vendorsByCharacter'];
-  filterItems: ItemFilter;
-}
-
-function mapStateToProps() {
-  return (state: RootState): StoreProps => ({
-    stores: sortedStoresSelector(state),
-    searchQuery: querySelector(state),
-    filterItems: searchFilterSelector(state),
-    vendors: vendorsByCharacterSelector(state),
-  });
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
 /**
  * The "All Vendors" page for D2 that shows all the rotating vendors.
  */
-function Vendors({ stores, searchQuery, filterItems, vendors, dispatch, account }: Props) {
+export default function Vendors({ account }: { account: DestinyAccount }) {
   const defs = useD2Definitions();
   const isPhonePortrait = useIsPhonePortrait();
+  const stores = useSelector(sortedStoresSelector);
+  const searchQuery = useSelector(querySelector);
+  const filterItems = useSelector(searchFilterSelector);
+  const vendors = useSelector(vendorsByCharacterSelector);
+  const dispatch = useThunkDispatch();
+
   const [filterToUnacquired, setFilterToUnacquired] = useState(false);
 
   // once the page is loaded, user can select this
@@ -220,5 +202,3 @@ function VendorGroup({
     </>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(Vendors);
