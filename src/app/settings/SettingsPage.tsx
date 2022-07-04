@@ -40,9 +40,6 @@ import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
 
-// using mobile portrait media query
-const isMobile = window.matchMedia('(max-width: 540px)').matches;
-
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
   element: {
@@ -240,7 +237,7 @@ export default function SettingsPage() {
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
     { id: 'storage', title: t('Storage.MenuTitle') },
     { id: 'spreadsheets', title: t('Settings.Data') },
-    $featureFlags.elgatoStreamDeck && !isMobile
+    $featureFlags.elgatoStreamDeck && !isPhonePortrait
       ? { id: 'stream-deck', title: 'Elgato Stream Deck' }
       : undefined,
   ]);
@@ -549,7 +546,7 @@ export default function SettingsPage() {
 
           <Spreadsheets />
 
-          {$featureFlags.elgatoStreamDeck && !isMobile && <StreamDeckSettings />}
+          {$featureFlags.elgatoStreamDeck && !isPhonePortrait && <StreamDeckSettings />}
 
           {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
             <TroubleshootingSettings />
