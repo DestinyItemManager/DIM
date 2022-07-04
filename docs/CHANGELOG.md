@@ -1,5 +1,6 @@
 ## Next
 
+* Weapon perks now include community-sourced weapon and armor perk descriptions courtesy of [Clarity](https://d2clarity.page.link/websiteDIM) and [Pip1n's Destiny Data Compendium](https://docs.google.com/spreadsheets/d/1WaxvbLx7UoSZaBqdFr1u32F2uWVLo-CJunJB4nlGUE4/htmlview?pru=AAABe9E7ngw*TxEsfbPsk5ukmr0FbZfK8w#). These can be disabled in settings.
 * If you have a title equipped on your character, it will replace your character's race in the character headers.
 * Fixed a crash when trying to assign deprecated Combat Style mods.
 * The "Move other items away" loadout toggle no longer clears ghosts, ships, or sparrows.
