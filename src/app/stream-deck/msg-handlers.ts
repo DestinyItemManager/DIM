@@ -191,7 +191,7 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
       if (store.items.includes(item)) {
         await dispatch(moveItemTo(item, vaultStore!, false));
       } else {
-        await dispatch(moveItemTo(item, store, false));
+        await dispatch(moveItemTo(item, store, msg.equip));
       }
     }
   };
