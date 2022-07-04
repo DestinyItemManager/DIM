@@ -237,7 +237,9 @@ export default function SettingsPage() {
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
     { id: 'storage', title: t('Storage.MenuTitle') },
     { id: 'spreadsheets', title: t('Settings.Data') },
-    $featureFlags.elgatoStreamDeck ? { id: 'stream-deck', title: 'Elgato Stream Deck' } : undefined,
+    $featureFlags.elgatoStreamDeck && !isPhonePortrait
+      ? { id: 'stream-deck', title: 'Elgato Stream Deck' }
+      : undefined,
   ]);
 
   const uniqChars =
@@ -544,7 +546,7 @@ export default function SettingsPage() {
 
           <Spreadsheets />
 
-          {$featureFlags.elgatoStreamDeck && <StreamDeckSettings />}
+          {$featureFlags.elgatoStreamDeck && !isPhonePortrait && <StreamDeckSettings />}
 
           {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
             <TroubleshootingSettings />
