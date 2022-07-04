@@ -24,10 +24,11 @@ jobs:
           if: steps.haslabel.outputs.labeled-Changelog-None == true
           uses: mondeja/remove-labels-gh-action@v1
           with:
-            token: ${{ secrets.GITHUB_TOKEN }}
             labels: |
               Changelog-Applied
               Changelog-Missing
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Check for updates
           id: porcelain
@@ -45,9 +46,10 @@ jobs:
           if: (steps.changelog_check.outputs.insertions > 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
           uses: mondeja/remove-labels-gh-action@v1
           with:
-            token: ${{ secrets.GITHUB_TOKEN }}
             labels: |
               Changelog-Applied
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         - name: No CHANGELOG.md Update (Add Missing)
           if: (steps.porcelain.outputs.insertions > 0 && steps.changelog_check.outputs.insertions == 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
@@ -62,9 +64,10 @@ jobs:
           if: (steps.changelog_check.outputs.insertions > 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
           uses: mondeja/remove-labels-gh-action@v1
           with:
-            token: ${{ secrets.GITHUB_TOKEN }}
             labels: |
               Changelog-Missing
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         - name: CHANGELOG.md Updated (Add Applied)
           if: (steps.changelog_check.outputs.insertions > 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
