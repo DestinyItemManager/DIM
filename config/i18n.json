@@ -1025,7 +1025,7 @@
     "SortByType": "Type",
     "SortBySeason": "Season (D2)",
     "SortBySunset": "Has Been Sunset (D2)",
-    "SortByWeaponElement": "Weapon Element",
+    "SortByWeaponElement": "Damage Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name",
     "SpacesSize": "{{count}} space",
