@@ -199,6 +199,14 @@ export const dimApi = (
 
     case getType(actions.profileLoaded): {
       const { profileResponse, account } = action.payload;
+
+      // If the user was using "element" sort, replace it with "elementWeapon" and "elementArmor" sorts.
+      const sortOrder = profileResponse.settings?.itemSortOrderCustom || [];
+
+      if (sortOrder.includes('element')) {
+        sortOrder.splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor');
+      }
+
       // TODO: clean out invalid/simple searches on first load?
       const newState = {
         ...state,
@@ -208,6 +216,7 @@ export const dimApi = (
         settings: {
           ...state.settings,
           ...profileResponse.settings,
+          itemSortOrderCustom: sortOrder,
         },
         itemHashTags: profileResponse.itemHashTags
           ? _.keyBy(profileResponse.itemHashTags, (t) => t.hash)
