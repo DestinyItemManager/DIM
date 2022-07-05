@@ -157,7 +157,7 @@ const ITEM_COMPARATORS: {
       return undefined;
     }
   }),
-  // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
+  // Any -> Arc -> Thermal -> Void -> Ghost -> Subclass -> Stasis
   elementArmor: compareBy((item) => {
     if (item.itemCategoryHashes.includes(ItemCategoryHashes.Armor)) {
       return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
