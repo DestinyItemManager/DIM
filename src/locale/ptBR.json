@@ -302,6 +302,7 @@
   },
   "Header": {
     "About": "Sobre o DIM",
+    "AutoRefresh": "DIM atualizará automaticamente enquanto você estiver jogando.",
     "BulkTag": "Etiquetar itens em massa",
     "BungieNetAlert": "Alerta da Bungie",
     "Clear": "Limpar filtro de busca",
@@ -1027,6 +1028,21 @@
     "UpdateErrorBody": "Tivemos um problema ao salvar seus dados na Sincronização DIM. Tentaremos novamente mais tarde.",
     "UpdateErrorTitle": "Erro na Sincronização DIM",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponíveis neste dispositivo. Isso inclui as bases de dados de itens do Destiny da Bungie.net."
+  },
+  "StreamDeck": {
+    "Authorization": {
+      "Error": "Número escolhido não foi o correto!",
+      "Reset": "DESAUTORIZAR",
+      "Title": "Obtenha este número em seu Stream Deck"
+    },
+    "Enable": "Plugin do Stream Deck",
+    "FinePrint": "Permite a conexão com o plugin DIM Stream Deck",
+    "Install": "Instalar plugin",
+    "SelectLoadout": "Enviar para o Stream Deck",
+    "Selection": {
+      "Item": "Escolha um item do inventário",
+      "Loadout": "Escolha um set"
+    }
   },
   "Tags": {
     "Archive": "Arquivar",

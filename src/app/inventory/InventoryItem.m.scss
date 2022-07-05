@@ -101,7 +101,7 @@
 .icons {
   position: absolute;
   left: $item-border-width + 2px;
-  top: calc(var(--item-size) - #{$badge-height} - #{$item-border-width});
+  top: calc(var(--item-size) - #{$badge-height});
   display: flex;
   flex-direction: row;
 }

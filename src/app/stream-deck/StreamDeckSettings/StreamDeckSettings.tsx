@@ -46,29 +46,31 @@ export default function StreamDeckSettings() {
   return (
     <section id="stream-deck">
       <h2>Elgato Stream Deck</h2>
-      <div
-        className={clsx('setting', styles.streamDeckSettings, {
-          [styles.streamDeckConnected]: connected,
-        })}
-      >
+      <div className="setting">
         <div className="setting horizontal">
           <label htmlFor="streamDeckEnabled">{t('StreamDeck.Enable')}</label>
           <Switch name="streamDeckEnabled" checked={enabled} onChange={onStreamDeckChange} />
         </div>
-        <div className="fineprint">{t('StreamDeck.FinePrint')}</div>
-        {!connected && (
-          <ExternalLink href="https://apps.elgato.com/plugins/com.dim.streamdeck">
-            <button type="button" className={clsx('dim-button', styles.downloadPlugin)}>
-              <AppIcon icon={faArrowCircleDown} /> {t('StreamDeck.Install')}
-            </button>
-          </ExternalLink>
+        <div className="fineprint">
+          {t('StreamDeck.FinePrint')} <b>{t('StreamDeck.OldExtension')}</b>
+        </div>
+        {connected ? (
+          <div className={styles.connected}>{t('StreamDeck.Connected')}</div>
+        ) : (
+          <div>
+            <ExternalLink href="https://apps.elgato.com/plugins/com.dim.streamdeck">
+              <button type="button" className={clsx('dim-button', styles.downloadPlugin)}>
+                <AppIcon icon={faArrowCircleDown} /> {t('StreamDeck.Install')}
+              </button>
+            </ExternalLink>
+            <span className={styles.notConnected}>{t('StreamDeck.NotConnected')}</span>
+          </div>
         )}
-      </div>
-
-      <div className="setting">
-        <button type="button" className="dim-button" onClick={onStreamDeckAuthorizationReset}>
-          {t('StreamDeck.Authorization.Reset')}
-        </button>
+        <div className={styles.resetButton}>
+          <button type="button" className="dim-button" onClick={onStreamDeckAuthorizationReset}>
+            {t('StreamDeck.Authorization.Reset')}
+          </button>
+        </div>
       </div>
     </section>
   );

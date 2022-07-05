@@ -302,6 +302,7 @@
   },
   "Header": {
     "About": "關於DIM",
+    "AutoRefresh": "DIM will automatically reload as long as you are still playing.",
     "BulkTag": "批量標記物品",
     "BungieNetAlert": "Bungie提示您",
     "Clear": "清除蒐索篩選器",
@@ -1027,6 +1028,21 @@
     "UpdateErrorBody": "保存你的數據到 DIM 同步時出錯。我們稍後會自動重試。",
     "UpdateErrorTitle": "同步錯誤",
     "Usage": "DIM 使用了此設備{{quota, humanBytes}}可用空間中的{{usage, humanBytes}}.這包括從 bungie. net 下載的命運2物品資料庫。"
+  },
+  "StreamDeck": {
+    "Authorization": {
+      "Error": "Picked number is not the valid one!",
+      "Reset": "DE-AUTHORIZE",
+      "Title": "Pick this number on your Stream Deck"
+    },
+    "Enable": "Stream Deck Plugin",
+    "FinePrint": "Enable the connection with the DIM Stream Deck plugin",
+    "Install": "Install plugin",
+    "SelectLoadout": "Send to Stream Deck",
+    "Selection": {
+      "Item": "Choose an item from the inventory",
+      "Loadout": "Choose a loadout"
+    }
   },
   "Tags": {
     "Archive": "歸檔",

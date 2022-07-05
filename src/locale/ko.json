@@ -302,6 +302,7 @@
   },
   "Header": {
     "About": "DIM에 관하여",
+    "AutoRefresh": "플레이하는 동안 DIM을 자동으로 새로고침합니다.",
     "BulkTag": "아이템 대량으로 태그하기",
     "BungieNetAlert": "Bungie 알림",
     "Clear": "검색 필터 초기화",
@@ -1027,6 +1028,21 @@
     "UpdateErrorBody": "DIM 동기화에 데이터를 저장하는 도중 문제가 발생하였습니다. 잠시 후에 자동으로 다시 시도합니다.",
     "UpdateErrorTitle": "DIM 동기화 오류",
     "Usage": "DIM은 이 기기에서 {{quota, humanBytes}} 중 {{usage, humanBytes}}를 사용하고 있습니다. 이는 Bungie.net에서 다운로드한 데스티니 아이템 데이터베이스를 포함하고 있습니다."
+  },
+  "StreamDeck": {
+    "Authorization": {
+      "Error": "잘못된 번호가 선택되었습니다!",
+      "Reset": "인증 해제",
+      "Title": "스트림덱에서 이 번호 선택"
+    },
+    "Enable": "스트림덱 플러그인",
+    "FinePrint": "DIM 스트림덱 플러그인으로 연결 활성화",
+    "Install": "플러그인 설치",
+    "SelectLoadout": "스트림덱으로 보내기",
+    "Selection": {
+      "Item": "소지품에서 아이템 선택",
+      "Loadout": "로드아웃 선택"
+    }
   },
   "Tags": {
     "Archive": "보관",

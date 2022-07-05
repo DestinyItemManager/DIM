@@ -69,7 +69,9 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
     headerStores = [currentStore, vault];
   }
 
-  const selectedStore = selectedStoreId ? getStore(stores, selectedStoreId)! : currentStore;
+  const selectedStore = selectedStoreId
+    ? getStore(stores, selectedStoreId) ?? currentStore
+    : currentStore;
 
   const handleSwipe = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     // Velocity is in px/ms

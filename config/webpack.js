@@ -420,7 +420,7 @@ module.exports = (env) => {
         // Item feed sidebar
         '$featureFlags.itemFeed': JSON.stringify(true),
         // Clarity perk descriptions
-        '$featureFlags.clarityDescriptions': JSON.stringify(!env.release),
+        '$featureFlags.clarityDescriptions': JSON.stringify(true),
         // Elgato Stream Deck integration
         '$featureFlags.elgatoStreamDeck': JSON.stringify(!env.release),
       }),
