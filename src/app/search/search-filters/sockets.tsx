@@ -250,7 +250,7 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.Catalyst'),
     format: ['query'],
     destinyVersion: 2,
-    suggestions: ['complete', 'incomplete', 'all'],
+    suggestions: ['complete', 'incomplete', 'missing'],
     filter:
       ({ filterValue }) =>
       (item: DimItem) => {
@@ -264,7 +264,7 @@ const socketFilters: FilterDefinition[] = [
           case 'complete':
             return item.catalystInfo.complete;
           case 'incomplete':
-            return !item.catalystInfo.complete;
+            return item.catalystInfo.unlocked && !item.catalystInfo.complete;
           default:
             return false;
         }
