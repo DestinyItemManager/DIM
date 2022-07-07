@@ -70,6 +70,7 @@ export interface MaxPowerAction {
 export interface PullItemAction {
   action: 'pullItem';
   item: string;
+  equip: boolean;
 }
 
 // allow the user to pick a specific "thing" and send it to the Stream Deck
