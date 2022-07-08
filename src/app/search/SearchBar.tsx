@@ -223,6 +223,7 @@ function SearchBar(
 
   const [liveQueryLive, setLiveQuery] = useState('');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
+  const [menuMaxHeight, setMenuMaxHeight] = useState<undefined | number>();
   const inputElement = useRef<HTMLInputElement>(null);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -336,6 +337,17 @@ function SearchBar(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQueryVersion]);
 
+  // Determine a maximum height for the results menu
+  useEffect(() => {
+    if (inputElement.current) {
+      const { y, height } = inputElement.current.getBoundingClientRect();
+      const { height: viewportHeight } = window.visualViewport;
+
+      // constrain to pixels remaining in viewport minus offset minus 10px for padding
+      setMenuMaxHeight(viewportHeight - y - height - 10);
+    }
+  }, [isOpen]);
+
   const deleteSearch = useCallback(
     (e: React.MouseEvent, item: SearchItem) => {
       e.stopPropagation();
@@ -401,7 +413,13 @@ function SearchBar(
 
   const autocompleteMenu = useMemo(
     () => (
-      <ul {...getMenuProps()} className={styles.menu}>
+      <ul
+        {...getMenuProps()}
+        className={styles.menu}
+        style={{
+          maxHeight: menuMaxHeight,
+        }}
+      >
         {isOpen &&
           items.map((item, index) => (
             <li
@@ -431,6 +449,7 @@ function SearchBar(
       isPhonePortrait,
       items,
       tabAutocompleteItem,
+      menuMaxHeight,
     ]
   );
 
