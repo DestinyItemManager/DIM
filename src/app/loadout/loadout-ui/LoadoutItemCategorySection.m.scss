@@ -45,7 +45,7 @@
   composes: sub-bucket from global;
   width: 100%;
   padding: 0;
-  --item-icon-size: calc(0.5 * var(--item-size) - 2px);
+  --item-icon-size: calc(0.5 * var(--item-size) - 1px);
   > * {
     --item-size: var(--item-icon-size);
   }

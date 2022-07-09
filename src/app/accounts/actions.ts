@@ -25,8 +25,9 @@ export function handleAuthErrors(e: Error): ThunkResult {
     if ($DIM_FLAVOR === 'dev' && e instanceof DimError && e.code === 'BungieService.DevVersion') {
       dispatch(needsDeveloper());
     } else if (
-      e.name === 'FatalTokenError' ||
-      (e instanceof DimError && e.code === 'BungieService.NotLoggedIn')
+      e instanceof Error &&
+      (e.name === 'FatalTokenError' ||
+        (e instanceof DimError && e.code === 'BungieService.NotLoggedIn'))
     ) {
       dispatch(loggedOut());
     }

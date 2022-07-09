@@ -32,7 +32,7 @@ export default function RichDestinyText({
   className?: string;
 }): React.ReactElement {
   const replacer = useDynamicStringReplacer(ownerId);
-  const conversionTable = useSelector(conversionTableSelector)!;
+  const conversionTable = useSelector(conversionTableSelector);
   // perform dynamic string replacement
   text = replacer(text);
 
