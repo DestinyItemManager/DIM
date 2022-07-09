@@ -142,6 +142,11 @@ function Control({
   );
 }
 
+export function useIsInTooltip(): boolean {
+  const customizeTooltip = useContext(CustomizeTooltipContext);
+  return customizeTooltip !== null;
+}
+
 export function CustomizeTooltip(customization: TooltipCustomization) {
   const customizeTooltip = useContext(CustomizeTooltipContext);
   if (customizeTooltip) {
