@@ -231,7 +231,7 @@
 * Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
 * Loadout Optimizer now correctly takes Echo of Persistence's class-specific stat reductions into account when generating sets.
 * The "Kinetic Slot" icon in Compare sheet now looks different from the "Kinetic Damage" icon.
-* Added `catalyst:` filter which accepts the following parameters `all`, `complete`, and `incomplete`.
+* Added `catalyst:` filter which accepts the following parameters `missing`, `complete`, and `incomplete`.
 
 ### Features
 
