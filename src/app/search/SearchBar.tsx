@@ -339,7 +339,7 @@ function SearchBar(
 
   // Determine a maximum height for the results menu
   useEffect(() => {
-    if (inputElement.current) {
+    if (inputElement.current && window.visualViewport) {
       const { y, height } = inputElement.current.getBoundingClientRect();
       const { height: viewportHeight } = window.visualViewport;
 
