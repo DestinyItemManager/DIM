@@ -1,6 +1,6 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { CustomizeTooltip } from 'app/dim-ui/PressTip';
+import { CustomizeTooltip, useIsInTooltip } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
@@ -28,13 +28,11 @@ export function DimPlugTooltip({
   item,
   plug,
   wishlistRoll,
-  hidePlugSubtype,
   craftingData,
 }: {
   item: DimItem;
   plug: DimPlug;
   wishlistRoll?: InventoryWishListRoll;
-  hidePlugSubtype?: boolean;
   craftingData?: DestinyPlugItemCraftingRequirements;
 }) {
   // TODO: show insertion costs
@@ -87,7 +85,6 @@ export function DimPlugTooltip({
       enableFailReasons={plug.enableFailReasons}
       cannotCurrentlyRoll={plug.cannotCurrentlyRoll}
       wishListTip={wishListTip}
-      hidePlugSubtype={hidePlugSubtype}
       hideRequirements={hideRequirements}
       craftingData={craftingData}
     />
@@ -110,7 +107,6 @@ export function PlugTooltip({
   enableFailReasons,
   cannotCurrentlyRoll,
   wishListTip,
-  hidePlugSubtype,
   hideRequirements,
   craftingData,
 }: {
@@ -120,7 +116,6 @@ export function PlugTooltip({
   enableFailReasons?: string;
   cannotCurrentlyRoll?: boolean;
   wishListTip?: string;
-  hidePlugSubtype?: boolean;
   hideRequirements?: boolean;
   craftingData?: DestinyPlugItemCraftingRequirements;
 }) {
@@ -166,12 +161,11 @@ export function PlugTooltip({
     </div>
   );
 
+  const isInTooltip = useIsInTooltip();
   return (
     <>
-      <CustomizeTooltip
-        header={def.displayProperties.name}
-        subheader={hidePlugSubtype ? undefined : def.itemTypeDisplayName}
-      />
+      <CustomizeTooltip header={def.displayProperties.name} subheader={def.itemTypeDisplayName} />
+      {!isInTooltip && <h2>{def.displayProperties.name}</h2>}
 
       {/*
         If we're displaying the Bungie description, display the stats between the Bungie description and
