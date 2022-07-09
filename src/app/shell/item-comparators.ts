@@ -5,7 +5,7 @@ import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
 import { ItemSortSettings } from 'app/settings/item-sort';
 import { isSunset } from 'app/utils/item-utils';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTag, ItemInfos, tagConfig } from '../inventory/dim-item-info';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
@@ -151,18 +151,14 @@ const ITEM_COMPARATORS: {
   acquisitionRecency: acquisitionRecencyComparator,
   // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
   elementWeapon: compareBy((item) => {
-    if (item.itemCategoryHashes.includes(ItemCategoryHashes.Weapon)) {
+    if (item.bucket.inWeapons) {
       return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
-    } else {
-      return undefined;
     }
   }),
   // Any -> Arc -> Thermal -> Void -> Ghost -> Subclass -> Stasis
   elementArmor: compareBy((item) => {
-    if (item.itemCategoryHashes.includes(ItemCategoryHashes.Armor)) {
+    if (item.bucket.inArmor) {
       return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
-    } else {
-      return undefined;
     }
   }),
   // masterwork -> not masterwork
