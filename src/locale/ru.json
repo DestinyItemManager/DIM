@@ -202,6 +202,7 @@
     "DupeLower": "Дубликаты предметов, включая переиздания, не являющиеся дубликатами самого высокого уровня Силы. Только один дубликат выбирается как высший, а остальные считаются низшими.",
     "Energy": "Броню с Энергией (Броню 2.0).",
     "Engrams": "Показывает энграммы.",
+    "EnhancedPerk": "Shows weapons that have the specified number of enhanced perks.",
     "Equipment": "Предметы, которые могут быть экипированы.",
     "Equipped": "Предметы, которые экипированы на персонаже.",
     "Event": "По источникам получения.",
@@ -1035,9 +1036,12 @@
       "Reset": "DE-AUTHORIZE",
       "Title": "Выберите этот номер на вашем Stream Deck"
     },
+    "Connected": "Connected",
     "Enable": "Плагин Stream Deck",
-    "FinePrint": "Включить соединение с плагином DIM Stream Deck",
+    "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "Install": "Установить плагин",
+    "NotConnected": "Not Connected",
+    "OldExtension": "Make sure to uninstall the old Stream Deck Chrome extension. It is no longer needed and will cause odd behavior in DIM.",
     "SelectLoadout": "Отправить в Stream Deck",
     "Selection": {
       "Item": "Выберите предмет из инвентаря",

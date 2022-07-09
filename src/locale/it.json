@@ -202,6 +202,7 @@
     "DupeLower": "Oggetti duplicati, compresi quelli ri-emessi, che non sono il duplicato col Potere più alto. Soltanto un duplicato viene scelto come il più alto, gli altri vengono considerati più bassi.",
     "Energy": "Mostra gli oggetti che hanno una capacità energetica (Armature 2.0).",
     "Engrams": "Mostra engrammi.",
+    "EnhancedPerk": "Mostra le armi che hanno il numero di perk migliorati specificato.",
     "Equipment": "Oggetti che possono essere equipaggiati.",
     "Equipped": "Oggetti che sono al momento equipaggiati su un personaggio.",
     "Event": "Mostra oggetti in base a quale evento di Destiny 2 sono comparsi.",
@@ -1035,9 +1036,12 @@
       "Reset": "DE-AUTORIZZA",
       "Title": "Scegli questo numero nel tuo Stream Deck"
     },
+    "Connected": "Connesso",
     "Enable": "Plugin Stream Deck",
-    "FinePrint": "Abilita connessione con il plugin dello Stream Deck di DIM",
+    "FinePrint": "Abilita la connessione con il plugin dello Stream Deck di DIM. Questo plugin è un progetto separato che non è scritto né supportato dal team di DIM.",
     "Install": "Installa plugin",
+    "NotConnected": "Non connesso",
+    "OldExtension": "Assicurati di disinstallare la vecchia estensione di Stream Deck su Chrome. Non è più necessaria e causerà un comportamento anomalo in DIM.",
     "SelectLoadout": "Invia a Stream Deck",
     "Selection": {
       "Item": "Scegli un oggetto dall'inventario",

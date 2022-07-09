@@ -202,6 +202,7 @@
     "DupeLower": "Doppelte Gegenstände, einschließlich Neuauflagen, die nicht das höchste Powerlevel haben. Nur ein Duplikat wird als das höchste ausgewählt, und der Rest als niedriger betrachtet.",
     "Energy": "Zeigt Gegenstände mit Energiekapazität (Rüstung 2.0).",
     "Engrams": "Zeige Engramme.",
+    "EnhancedPerk": "Zeigt Waffen, die die angegebene Anzahl an verbesserten Perks haben.",
     "Equipment": "Gegenstände, die ausgerüstet werden können.",
     "Equipped": "Gegenstände, die aktuell von einem Charakter ausgerüstet sind.",
     "Event": "Zeigt Gegenstände nach dem Event in dem sie in Destiny 2 erschienen sind an.",
@@ -1032,13 +1033,16 @@
   "StreamDeck": {
     "Authorization": {
       "Error": "Die gewählte Nummer ist nicht gültig!",
-      "Reset": "DE-AUTHORISIEREN",
-      "Title": "Wähle diese Nummer auf deinem Stream-Deck"
+      "Reset": "DE-AUTORISIEREN",
+      "Title": "Wähle diese Nummer auf deinem Stream Deck"
     },
-    "Enable": "Stream-Deck-Plugin",
-    "FinePrint": "Aktiviere die Verbindung mit dem DIM-Stream-Deck-Plugin",
+    "Connected": "Verbunden",
+    "Enable": "Stream Deck Plugin",
+    "FinePrint": "Aktiviere die Verbindung mit dem DIM Stream Deck Plugin. Dieses Plugin ist ein separates Projekt, das weder vom DIM-Team geschrieben noch unterstützt wird.",
     "Install": "Plugin installieren",
-    "SelectLoadout": "An Stream-Deck senden",
+    "NotConnected": "Nicht verbunden",
+    "OldExtension": "Stelle sicher, dass du die alte Stream Deck Chrome-Erweiterung deinstallierst. Sie wird nicht mehr benötigt und wird merkwürdiges Verhalten in DIM verursachen.",
+    "SelectLoadout": "An Stream Deck senden",
     "Selection": {
       "Item": "Wähle einen Gegenstand aus dem Inventar",
       "Loadout": "Wähle ein Loadout"

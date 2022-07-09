@@ -202,6 +202,7 @@
     "DupeLower": "非最高光等的重複和再版物品。重複物品中只有一件會被視為最高光等，其餘均視為較低光等。",
     "Energy": "顯示擁有能量容量的物品（護甲2.0）。",
     "Engrams": "顯示記憶水晶.",
+    "EnhancedPerk": "Shows weapons that have the specified number of enhanced perks.",
     "Equipment": "可以裝備的物品.",
     "Equipped": "目前已裝備的物品.",
     "Event": "顯示命運2中特定活動中的物品",
@@ -1035,9 +1036,12 @@
       "Reset": "DE-AUTHORIZE",
       "Title": "Pick this number on your Stream Deck"
     },
+    "Connected": "Connected",
     "Enable": "Stream Deck Plugin",
-    "FinePrint": "Enable the connection with the DIM Stream Deck plugin",
+    "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "Install": "Install plugin",
+    "NotConnected": "Not Connected",
+    "OldExtension": "Make sure to uninstall the old Stream Deck Chrome extension. It is no longer needed and will cause odd behavior in DIM.",
     "SelectLoadout": "Send to Stream Deck",
     "Selection": {
       "Item": "Choose an item from the inventory",
