@@ -26,6 +26,10 @@
     opacity: 0.6;
   }
 }
+.cannotRollSection {
+  background-color: rgba($red, 0.15);
+  border-top-color: rgba($red, 0.5) !important;
+}
 .tooltip {
   .clarityDescription {
     margin: 0;

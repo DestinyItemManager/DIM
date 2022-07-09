@@ -236,8 +236,10 @@ export function PlugTooltip({
         {enableFailReasons ? <p>{enableFailReasons}</p> : null}
         {getCraftingRequirements()}
       </TooltipSection>
-      <TooltipSection>
+      <TooltipSection className={styles.cannotRollSection}>
         {cannotCurrentlyRoll && <p>{t('MovePopup.CannotCurrentlyRoll')}</p>}
+      </TooltipSection>
+      <TooltipSection>
         {wishListTip && (
           <p>
             <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}
