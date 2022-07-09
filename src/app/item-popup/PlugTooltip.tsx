@@ -1,6 +1,6 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { CustomizeTooltip, useIsInTooltip } from 'app/dim-ui/PressTip';
+import { CustomizeTooltip, TooltipSection, useIsInTooltip } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
@@ -148,10 +148,12 @@ export function PlugTooltip({
       </div>
     ));
   const clarityDescription = plugDescriptions.communityInsight && (
-    <ClarityDescriptions
-      perk={plugDescriptions.communityInsight}
-      className={styles.clarityDescription}
-    />
+    <TooltipSection>
+      <ClarityDescriptions
+        perk={plugDescriptions.communityInsight}
+        className={styles.clarityDescription}
+      />
+    </TooltipSection>
   );
   const renderedStats = statsArray.length > 0 && (
     <div className="plug-stats">
@@ -161,10 +163,56 @@ export function PlugTooltip({
     </div>
   );
 
+  function getCraftingRequirements() {
+    if (!craftingData) {
+      return null;
+    }
+
+    const unlockRequirements =
+      craftingData.unlockRequirements.length &&
+      craftingData.unlockRequirements.map((r) => (
+        <p key={r.failureDescription}>
+          <b>{r.failureDescription}</b>
+        </p>
+      ));
+    const materialRequirements =
+      defs &&
+      craftingData.materialRequirementHashes.length &&
+      _.compact(
+        craftingData.materialRequirementHashes.flatMap((h) => {
+          const materialRequirement = defs?.MaterialRequirementSet.get(h).materials;
+          return _.compact(
+            materialRequirement.map((m) => {
+              if (!m.countIsConstant || m.omitFromRequirements) {
+                return null;
+              }
+              const itemName = defs.InventoryItem.get(m.itemHash).displayProperties.name;
+              return (
+                <div key={`${m.itemHash}-${m.count}`}>
+                  <b>{m.count}</b> {itemName}
+                </div>
+              );
+            })
+          );
+        })
+      );
+
+    return unlockRequirements || (materialRequirements && materialRequirements.length > 0) ? (
+      <>
+        {unlockRequirements}
+        {materialRequirements}
+      </>
+    ) : null;
+  }
+
   const isInTooltip = useIsInTooltip();
   return (
     <>
-      <CustomizeTooltip header={def.displayProperties.name} subheader={def.itemTypeDisplayName} />
+      <CustomizeTooltip
+        header={def.displayProperties.name}
+        subheader={def.itemTypeDisplayName}
+        className={styles.tooltip}
+      />
       {!isInTooltip && <h2>{def.displayProperties.name}</h2>}
 
       {/*
@@ -176,46 +224,26 @@ export function PlugTooltip({
       {renderedStats}
       {bungieDescription && clarityDescription}
 
-      {sourceString && <div>{sourceString}</div>}
-      {!hideRequirements && defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
-        <div className={styles.objectives}>
-          {filteredPlugObjectives.map((objective) => (
-            <Objective key={objective.objectiveHash} objective={objective} />
-          ))}
-        </div>
-      )}
-      {enableFailReasons && <p>{enableFailReasons}</p>}
-      {craftingData && (
-        <>
-          {craftingData.unlockRequirements.map((r) => (
-            <p key={r.failureDescription}>
-              <b>{r.failureDescription}</b>
-            </p>
-          ))}
-          {defs &&
-            craftingData.materialRequirementHashes.length &&
-            craftingData.materialRequirementHashes.flatMap((h) => {
-              const materialRequirement = defs?.MaterialRequirementSet.get(h).materials;
-              return materialRequirement.map((m) => {
-                if (!m.countIsConstant || m.omitFromRequirements) {
-                  return null;
-                }
-                const itemName = defs.InventoryItem.get(m.itemHash).displayProperties.name;
-                return (
-                  <div key={`${m.itemHash}-${m.count}`}>
-                    <b>{m.count}</b> {itemName}
-                  </div>
-                );
-              });
-            })}
-        </>
-      )}
-      {cannotCurrentlyRoll && <p>{t('MovePopup.CannotCurrentlyRoll')}</p>}
-      {wishListTip && (
-        <p>
-          <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}
-        </p>
-      )}
+      <TooltipSection>
+        {sourceString && <div>{sourceString}</div>}
+        {!hideRequirements && defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
+          <div className={styles.objectives}>
+            {filteredPlugObjectives.map((objective) => (
+              <Objective key={objective.objectiveHash} objective={objective} />
+            ))}
+          </div>
+        )}
+        {enableFailReasons ? <p>{enableFailReasons}</p> : null}
+        {getCraftingRequirements()}
+      </TooltipSection>
+      <TooltipSection>
+        {cannotCurrentlyRoll && <p>{t('MovePopup.CannotCurrentlyRoll')}</p>}
+        {wishListTip && (
+          <p>
+            <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}
+          </p>
+        )}
+      </TooltipSection>
     </>
   );
 }

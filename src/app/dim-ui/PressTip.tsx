@@ -55,6 +55,7 @@ type ControlProps = Props &
 interface TooltipCustomization {
   header?: string;
   subheader?: string;
+  className?: string;
 }
 const CustomizeTooltipContext = createContext<React.Dispatch<
   React.SetStateAction<TooltipCustomization>
@@ -117,7 +118,7 @@ function Control({
       {open &&
         ReactDOM.createPortal(
           <div
-            className={clsx(styles.tooltip, {
+            className={clsx(styles.tooltip, tooltipCustomization.className, {
               [styles.wideTooltip]: wide,
               [styles.minimalTooltip]: minimal,
             })}
@@ -147,14 +148,26 @@ export function useIsInTooltip(): boolean {
   return customizeTooltip !== null;
 }
 
-export function CustomizeTooltip({ header, subheader }: TooltipCustomization) {
+export function CustomizeTooltip({ header, subheader, className }: TooltipCustomization) {
   const customizeTooltip = useContext(CustomizeTooltipContext);
   useEffect(() => {
     if (customizeTooltip) {
-      customizeTooltip({ header, subheader });
+      customizeTooltip({ header, subheader, className });
     }
-  }, [customizeTooltip, header, subheader]);
+  }, [customizeTooltip, header, subheader, className]);
   return null;
+}
+
+export function TooltipSection({ children }: { children: React.ReactNode }) {
+  const isInTooltip = useIsInTooltip();
+  const childrenWithContent = React.Children.map(children, (c) => c);
+  if (!childrenWithContent || childrenWithContent.length < 1) {
+    return null;
+  }
+  if (!isInTooltip) {
+    return <>{children}</>;
+  }
+  return <div className={styles.section}>{children}</div>;
 }
 
 const isPointerEvents = 'onpointerdown' in window;

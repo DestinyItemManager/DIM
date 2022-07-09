@@ -119,4 +119,23 @@ $borderColor: #5d5970;
       border-radius: 3px;
     }
   }
+
+  .section {
+    margin: 6px -8px -6px -8px;
+    padding: 4px 8px;
+    border-top: 1px solid rgba($borderColor, 0.4);
+
+    > :first-child {
+      margin-top: 0;
+    }
+    > :last-child {
+      margin-bottom: 0;
+    }
+
+    &:last-child {
+      margin: 6px -8px 0 -8px;
+      padding: 4px 8px 0 8px;
+      border-bottom: none;
+    }
+  }
 }

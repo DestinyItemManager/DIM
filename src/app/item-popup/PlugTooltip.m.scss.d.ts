@@ -5,6 +5,7 @@ interface CssExports {
   'objectives': string;
   'perkName': string;
   'requirement': string;
+  'tooltip': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
