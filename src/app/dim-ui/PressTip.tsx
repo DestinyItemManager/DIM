@@ -116,26 +116,26 @@ function Control({
       {children}
       {open &&
         ReactDOM.createPortal(
-          <CustomizeTooltipContext.Provider value={customizeTooltip}>
-            <div
-              className={clsx(styles.tooltip, {
-                [styles.wideTooltip]: wide,
-                [styles.minimalTooltip]: minimal,
-              })}
-              ref={tooltipContents}
-            >
-              <div className={styles.content}>
-                {tooltipCustomization.header && (
-                  <div className={styles.header}>
-                    <h2>{tooltipCustomization.header}</h2>
-                    {tooltipCustomization.subheader && <h3>{tooltipCustomization.subheader}</h3>}
-                  </div>
-                )}
+          <div
+            className={clsx(styles.tooltip, {
+              [styles.wideTooltip]: wide,
+              [styles.minimalTooltip]: minimal,
+            })}
+            ref={tooltipContents}
+          >
+            <div className={styles.content}>
+              {tooltipCustomization.header && (
+                <div className={styles.header}>
+                  <h2>{tooltipCustomization.header}</h2>
+                  {tooltipCustomization.subheader && <h3>{tooltipCustomization.subheader}</h3>}
+                </div>
+              )}
+              <CustomizeTooltipContext.Provider value={customizeTooltip}>
                 {_.isFunction(tooltip) ? tooltip() : tooltip}
-              </div>
-              <div className={styles.arrow} />
+              </CustomizeTooltipContext.Provider>
             </div>
-          </CustomizeTooltipContext.Provider>,
+            <div className={styles.arrow} />
+          </div>,
           pressTipRoot.current || tempContainer
         )}
     </Component>
@@ -147,11 +147,13 @@ export function useIsInTooltip(): boolean {
   return customizeTooltip !== null;
 }
 
-export function CustomizeTooltip(customization: TooltipCustomization) {
+export function CustomizeTooltip({ header, subheader }: TooltipCustomization) {
   const customizeTooltip = useContext(CustomizeTooltipContext);
-  if (customizeTooltip) {
-    customizeTooltip(customization);
-  }
+  useEffect(() => {
+    if (customizeTooltip) {
+      customizeTooltip({ header, subheader });
+    }
+  }, [customizeTooltip, header, subheader]);
   return null;
 }
 
