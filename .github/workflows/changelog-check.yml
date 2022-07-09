@@ -1,6 +1,6 @@
 name: Verify CHANGELOG.md Updated
 on:
-  pull_request:
+  pull_request_target:
     types: [assigned, opened, synchronize, reopened, labeled, unlabeled]
     paths-ignore:
       - 'docs/**'
@@ -13,6 +13,11 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
+          # https://github.community/t/can-workflow-changes-be-used-with-pull-request-target/178626
+          # Why this can be dangerous https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+          with:
+            ref: ${{github.event.pull_request.head.ref}}
+            repository: ${{github.event.pull_request.head.repo.full_name}}
 
         - name: Labeled to Changelog:-None?
           id: haslabel
