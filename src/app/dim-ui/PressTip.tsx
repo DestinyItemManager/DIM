@@ -52,6 +52,14 @@ type ControlProps = Props &
     triggerRef: React.RefObject<HTMLDivElement>;
   };
 
+interface TooltipCustomization {
+  header?: string;
+  subheader?: string;
+}
+const CustomizeTooltipContext = createContext<React.Dispatch<
+  React.SetStateAction<TooltipCustomization>
+> | null>(null);
+
 /**
  * <PressTip.Control /> can be used to have a controlled version of the PressTip
  *
@@ -83,6 +91,7 @@ function Control({
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
   const pressTipRoot = useContext(PressTipRoot);
+  const [tooltipCustomization, customizeTooltip] = useState<TooltipCustomization>({});
 
   usePopper({
     contents: tooltipContents,
@@ -107,29 +116,38 @@ function Control({
       {children}
       {open &&
         ReactDOM.createPortal(
-          <div
-            className={clsx(styles.tooltip, {
-              [styles.wideTooltip]: wide,
-              [styles.minimalTooltip]: minimal,
-            })}
-            ref={tooltipContents}
-          >
-            <div className={styles.content}>{_.isFunction(tooltip) ? tooltip() : tooltip}</div>
-            <div className={styles.arrow} />
-          </div>,
+          <CustomizeTooltipContext.Provider value={customizeTooltip}>
+            <div
+              className={clsx(styles.tooltip, {
+                [styles.wideTooltip]: wide,
+                [styles.minimalTooltip]: minimal,
+              })}
+              ref={tooltipContents}
+            >
+              <div className={styles.content}>
+                {tooltipCustomization.header && (
+                  <div className={styles.header}>
+                    <h2>{tooltipCustomization.header}</h2>
+                    {tooltipCustomization.subheader && <h3>{tooltipCustomization.subheader}</h3>}
+                  </div>
+                )}
+                {_.isFunction(tooltip) ? tooltip() : tooltip}
+              </div>
+              <div className={styles.arrow} />
+            </div>
+          </CustomizeTooltipContext.Provider>,
           pressTipRoot.current || tempContainer
         )}
     </Component>
   );
 }
 
-export function PressTipHeader({ header, subheader }: { header: string; subheader?: string }) {
-  return (
-    <div className={styles.header}>
-      <h2>{header}</h2>
-      {subheader && <h3>{subheader}</h3>}
-    </div>
-  );
+export function CustomizeTooltip(customization: TooltipCustomization) {
+  const customizeTooltip = useContext(CustomizeTooltipContext);
+  if (customizeTooltip) {
+    customizeTooltip(customization);
+  }
+  return null;
 }
 
 const isPointerEvents = 'onpointerdown' in window;
