@@ -18,6 +18,14 @@
   padding-left: 6px;
   margin-left: -8px;
 }
+.communityInsightSection {
+  background-color: rgba($communityBlue, 0.15);
+  border-top-color: rgba($communityBlue, 0.75) !important;
+
+  h3 {
+    opacity: 0.6;
+  }
+}
 .tooltip {
   .clarityDescription {
     margin: 0;

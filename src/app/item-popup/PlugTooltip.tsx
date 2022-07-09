@@ -148,7 +148,7 @@ export function PlugTooltip({
       </div>
     ));
   const clarityDescription = plugDescriptions.communityInsight && (
-    <TooltipSection>
+    <TooltipSection className={styles.communityInsightSection}>
       <ClarityDescriptions
         perk={plugDescriptions.communityInsight}
         className={styles.clarityDescription}

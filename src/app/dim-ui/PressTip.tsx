@@ -158,7 +158,13 @@ export function CustomizeTooltip({ header, subheader, className }: TooltipCustom
   return null;
 }
 
-export function TooltipSection({ children }: { children: React.ReactNode }) {
+export function TooltipSection({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   const isInTooltip = useIsInTooltip();
   const childrenWithContent = React.Children.map(children, (c) => c);
   if (!childrenWithContent || childrenWithContent.length < 1) {
@@ -167,7 +173,7 @@ export function TooltipSection({ children }: { children: React.ReactNode }) {
   if (!isInTooltip) {
     return <>{children}</>;
   }
-  return <div className={styles.section}>{children}</div>;
+  return <div className={clsx(styles.section, className)}>{children}</div>;
 }
 
 const isPointerEvents = 'onpointerdown' in window;

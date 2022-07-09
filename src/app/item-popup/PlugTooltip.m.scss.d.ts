@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'clarityDescription': string;
+  'communityInsightSection': string;
   'objectives': string;
   'perkName': string;
   'requirement': string;
