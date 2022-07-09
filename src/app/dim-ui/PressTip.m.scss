@@ -139,3 +139,8 @@ $borderColor: #5d5970;
     }
   }
 }
+
+@mixin presstip-section-color($color) {
+  background-color: rgba($color, 0.15);
+  border-top-color: rgba($color, 0.5);
+}

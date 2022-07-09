@@ -1,4 +1,5 @@
 @use '../variables' as *;
+@use '../dim-ui/PressTip.m.scss' as *;
 
 .objectives {
   margin: 4px 0;
@@ -18,22 +19,19 @@
   padding-left: 6px;
   margin-left: -8px;
 }
-.communityInsightSection {
-  background-color: rgba($communityBlue, 0.15);
-  border-top-color: rgba($communityBlue, 0.75) !important;
-
-  h3 {
-    opacity: 0.6;
-  }
-}
-.cannotRollSection {
-  background-color: rgba($red, 0.15);
-  border-top-color: rgba($red, 0.5) !important;
-}
 .tooltip {
   .clarityDescription {
     margin: 0;
     padding: 0;
     border-left: none;
+  }
+  .communityInsightSection {
+    @include presstip-section-color($communityBlue);
+    h3 {
+      opacity: 0.6;
+    }
+  }
+  .cannotRollSection {
+    @include presstip-section-color($red);
   }
 }
