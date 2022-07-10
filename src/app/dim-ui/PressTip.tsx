@@ -124,13 +124,13 @@ function Control({
             })}
             ref={tooltipContents}
           >
+            {tooltipCustomization.header && (
+              <div className={styles.header}>
+                <h2>{tooltipCustomization.header}</h2>
+                {tooltipCustomization.subheader && <h3>{tooltipCustomization.subheader}</h3>}
+              </div>
+            )}
             <div className={styles.content}>
-              {tooltipCustomization.header && (
-                <div className={styles.header}>
-                  <h2>{tooltipCustomization.header}</h2>
-                  {tooltipCustomization.subheader && <h3>{tooltipCustomization.subheader}</h3>}
-                </div>
-              )}
               <CustomizeTooltipContext.Provider value={customizeTooltip}>
                 {_.isFunction(tooltip) ? tooltip() : tooltip}
               </CustomizeTooltipContext.Provider>

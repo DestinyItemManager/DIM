@@ -147,7 +147,7 @@ export function PlugTooltip({
         )}
       </div>
     ));
-  const clarityDescription = plugDescriptions.communityInsight && (
+  const clarityDescriptionSection = plugDescriptions.communityInsight && (
     <TooltipSection className={styles.communityInsightSection}>
       <ClarityDescriptions
         perk={plugDescriptions.communityInsight}
@@ -174,13 +174,24 @@ export function PlugTooltip({
       {!isInTooltip && <h2>{def.displayProperties.name}</h2>}
 
       {/*
-        If we're displaying the Bungie description, display the stats between the Bungie description and
-        community description. If we're not displaying the Bungie description, display the stats after the
-        community description.
+        If we're displaying the Bungie description, display the stats in the same section as the Bungie
+        description. If we're not displaying the Bungie description, display the stats in a separate section
+        after the community description.
       */}
-      {bungieDescription || clarityDescription}
-      {renderedStats}
-      {bungieDescription && clarityDescription}
+      {bungieDescription ? (
+        <>
+          <TooltipSection>
+            {bungieDescription}
+            {renderedStats}
+          </TooltipSection>
+          {clarityDescriptionSection}
+        </>
+      ) : (
+        <>
+          {clarityDescriptionSection}
+          <TooltipSection>{renderedStats}</TooltipSection>
+        </>
+      )}
 
       <TooltipSection>
         {sourceString && <div>{sourceString}</div>}
