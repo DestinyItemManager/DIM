@@ -84,7 +84,7 @@ $half-arrow-size: $arrow-size * 0.5;
     width: 0;
     height: 0;
     border-width: 0 $half-arrow-size $half-arrow-size $half-arrow-size;
-    top: -$half-arrow-size;
+    top: -$arrow-size;
     border-color: transparent transparent var(--ribbon-color) transparent;
   }
   &[data-popper-placement='right'] .arrow {
