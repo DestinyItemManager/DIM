@@ -41,8 +41,10 @@ const popperOptions = (
   offset = arrowClassName ? popperArrowSize / 2 : 0,
   fixed = false
 ): Partial<Options> => {
-  const rootStyle = document.querySelector('html')!.style;
-  const headerHeight = parseInt(rootStyle.getPropertyValue('--header-height')!, 10);
+  const headerHeight = parseInt(
+    document.querySelector('html')!.style.getPropertyValue('--header-height')!,
+    10
+  );
   const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
   const padding: Padding = {
     left: 10,

@@ -21,21 +21,21 @@ $half-arrow-size: $arrow-size * 0.5;
 }
 
 .tooltip {
+  --ribbon-color: #8e8e9e;
+
   position: absolute;
   background-color: #14141f;
   color: white;
   width: fit-content;
   max-width: 300px;
+  border: 1px solid $border-color;
+  border-top: 5px solid var(--ribbon-color);
   box-shadow: 0 0 4px 2px #16162680;
   text-align: left;
   z-index: 99999;
   white-space: pre-wrap;
   box-sizing: border-box;
   user-select: none;
-
-  --ribbon-color: #8e8e9e;
-  border: 1px solid $border-color;
-  border-top: 5px solid var(--ribbon-color);
 
   &.wideTooltip {
     max-width: 100vw;
