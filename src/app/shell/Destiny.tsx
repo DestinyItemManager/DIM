@@ -11,6 +11,7 @@ import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
 import { storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import StripSockets from 'app/inventory/StripSockets';
 import ItemFeedPage from 'app/item-feed/ItemFeedPage';
 import LoadoutDrawerContainer from 'app/loadout-drawer/LoadoutDrawerContainer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
@@ -256,6 +257,7 @@ export default function Destiny() {
       </div>
       <LoadoutDrawerContainer account={account} />
       <Compare />
+      {account.destinyVersion === 2 && <StripSockets />}
       <Farming />
       <InfusionFinder />
       <ItemPopupContainer boundarySelector=".store-header" />

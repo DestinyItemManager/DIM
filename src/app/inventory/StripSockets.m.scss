@@ -1,0 +1,68 @@
+@import '../variables';
+
+.insertButton {
+  composes: dim-button from global;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  transition: none;
+
+  @include horizontal-space-children(8px);
+}
+
+.stripSheet {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.socketKindButton {
+  > * {
+    margin-right: 8px;
+  }
+
+  border: 1px solid #666;
+  cursor: pointer;
+  margin: 1px 2px;
+  padding: 8px;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  box-sizing: border-box;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  &:focus {
+    outline: 1px solid $blue;
+  }
+}
+
+.buttonInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.buttonTitle {
+  &.selectedTitle {
+    color: $orange;
+  }
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.selectedButton {
+  border-color: $orange;
+  &:focus {
+    outline: none;
+  }
+}
+
+.itemTypeIcon {
+  &.svg {
+    filter: invert(1);
+  }
+  width: 18px;
+  height: 18px;
+  vertical-align: bottom;
+}
