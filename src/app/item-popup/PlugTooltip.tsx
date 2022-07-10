@@ -204,6 +204,7 @@ export function PlugTooltip({
         )}
         {enableFailReasons && <p>{enableFailReasons}</p>}
       </TooltipSection>
+
       {craftingData && (
         <TooltipSection className={styles.craftingRequirementsSection}>
           {craftingData.unlockRequirements.map((r) => (
