@@ -7,6 +7,7 @@ interface CssExports {
   'communityInsightSection': string;
   'content': string;
   'control': string;
+  'craftingRequirementsSection': string;
   'header': string;
   'minimalTooltip': string;
   'objectives': string;

@@ -31,6 +31,9 @@
       opacity: 0.6;
     }
   }
+  .craftingRequirementsSection {
+    @include tooltip-section-color($deepsight-border-color);
+  }
   .cannotRollSection {
     @include tooltip-section-color($red);
   }

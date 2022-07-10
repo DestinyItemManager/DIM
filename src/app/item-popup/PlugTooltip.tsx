@@ -192,32 +192,30 @@ export function PlugTooltip({
           </div>
         )}
         {enableFailReasons && <p>{enableFailReasons}</p>}
-        {craftingData && (
-          <>
-            {craftingData.unlockRequirements.map((r) => (
-              <p key={r.failureDescription}>
-                <b>{r.failureDescription}</b>
-              </p>
-            ))}
-            {defs &&
-              craftingData.materialRequirementHashes.length &&
-              craftingData.materialRequirementHashes.flatMap((h) => {
-                const materialRequirement = defs?.MaterialRequirementSet.get(h).materials;
-                return materialRequirement.map((m) => {
-                  if (!m.countIsConstant || m.omitFromRequirements) {
-                    return null;
-                  }
-                  const itemName = defs.InventoryItem.get(m.itemHash).displayProperties.name;
-                  return (
-                    <div key={`${m.itemHash}-${m.count}`}>
-                      <b>{m.count}</b> {itemName}
-                    </div>
-                  );
-                });
-              })}
-          </>
-        )}
       </TooltipSection>
+      {craftingData && (
+        <TooltipSection className={styles.craftingRequirementsSection}>
+          {craftingData.unlockRequirements.map((r) => (
+            <p key={r.failureDescription}>{r.failureDescription}</p>
+          ))}
+          {defs &&
+            craftingData.materialRequirementHashes.length &&
+            craftingData.materialRequirementHashes.flatMap((h) => {
+              const materialRequirement = defs?.MaterialRequirementSet.get(h).materials;
+              return materialRequirement.map((m) => {
+                if (!m.countIsConstant || m.omitFromRequirements) {
+                  return null;
+                }
+                const itemName = defs.InventoryItem.get(m.itemHash).displayProperties.name;
+                return (
+                  <div key={`${m.itemHash}-${m.count}`}>
+                    <b>{m.count}</b> {itemName}
+                  </div>
+                );
+              });
+            })}
+        </TooltipSection>
+      )}
       {cannotCurrentlyRoll && (
         <TooltipSection className={styles.cannotRollSection}>
           <p>{t('MovePopup.CannotCurrentlyRoll')}</p>
