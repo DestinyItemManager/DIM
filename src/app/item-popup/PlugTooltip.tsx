@@ -187,10 +187,12 @@ export function PlugTooltip({
           {clarityDescriptionSection}
         </>
       ) : (
-        <>
-          {clarityDescriptionSection}
-          <TooltipSection>{renderedStats}</TooltipSection>
-        </>
+        (clarityDescriptionSection || renderedStats) && (
+          <>
+            {clarityDescriptionSection}
+            <TooltipSection>{renderedStats}</TooltipSection>
+          </>
+        )
       )}
 
       <TooltipSection>
