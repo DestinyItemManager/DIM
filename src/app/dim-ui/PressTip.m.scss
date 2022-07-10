@@ -1,14 +1,17 @@
 @use '../variables.scss' as *;
 
-$borderColor: #5d5970;
+$arrow-size: 10px; // ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
+$border-color: #5d5970;
+$horizontal-padding: 8px;
+$half-arrow-size: $arrow-size / 2;
 
 .arrow {
-  width: 10px;
-  height: 10px;
+  width: $arrow-size;
+  height: $arrow-size;
   border-width: 0;
   border-style: solid;
   position: absolute;
-  border-color: $borderColor;
+  border-color: $border-color;
 }
 
 .control {
@@ -32,8 +35,8 @@ $borderColor: #5d5970;
 
 .content {
   width: fit-content;
-  padding: 8px;
-  border: 1px solid $borderColor;
+  padding: 8px $horizontal-padding;
+  border: 1px solid $border-color;
   border-top: 5px solid var(--ribbon-color);
 }
 
@@ -58,8 +61,8 @@ $borderColor: #5d5970;
 
   .header {
     background-color: #070709;
-    padding: 6px 8px;
-    margin: -8px -8px 6px -8px;
+    padding: 6px $horizontal-padding;
+    margin: -8px #{-$horizontal-padding} 6px #{-$horizontal-padding};
 
     h2 {
       @include destiny-header;
@@ -67,7 +70,7 @@ $borderColor: #5d5970;
   }
 
   hr {
-    border-color: $borderColor;
+    border-color: $border-color;
   }
 
   p {
@@ -77,53 +80,53 @@ $borderColor: #5d5970;
   &[data-popper-placement='top'] .arrow {
     width: 0;
     height: 0;
-    border-width: 5px 5px 0 5px;
+    border-width: $half-arrow-size $half-arrow-size 0 $half-arrow-size;
     border-left-color: transparent;
     border-right-color: transparent;
     border-bottom-color: transparent;
-    bottom: -5px;
+    bottom: -$half-arrow-size;
   }
   &[data-popper-placement='bottom'] .arrow {
     width: 0;
     height: 0;
-    border-width: 0 5px 5px 5px;
-    top: -5px;
+    border-width: 0 $half-arrow-size $half-arrow-size $half-arrow-size;
+    top: -$half-arrow-size;
     border-color: transparent transparent var(--ribbon-color) transparent;
   }
   &[data-popper-placement='right'] .arrow {
     width: 0;
     height: 0;
-    border-width: 5px 5px 5px 0;
+    border-width: $half-arrow-size $half-arrow-size $half-arrow-size 0;
     border-left-color: transparent;
     border-top-color: transparent;
     border-bottom-color: transparent;
-    left: -5px;
+    left: -$half-arrow-size;
   }
   &[data-popper-placement='left'] .arrow {
     width: 0;
     height: 0;
-    border-width: 5px 0 5px 5px;
+    border-width: $half-arrow-size 0 $half-arrow-size $half-arrow-size;
     border-top-color: transparent;
     border-right-color: transparent;
     border-bottom-color: transparent;
-    right: -5px;
+    right: -$half-arrow-size;
   }
 
   &.minimalTooltip {
     border-radius: 3px;
-    --ribbon-color: #{$borderColor};
+    --ribbon-color: #{$border-color};
 
     .content {
       padding: 3px 6px;
-      border-top: 1px solid $borderColor;
+      border-top: 1px solid $border-color;
       border-radius: 3px;
     }
   }
 
   .section {
-    margin: 6px -8px -6px -8px;
-    padding: 4px 8px;
-    border-top: 1px solid rgba($borderColor, 0.4);
+    margin: 6px #{-$horizontal-padding} -6px #{-$horizontal-padding};
+    padding: 4px $horizontal-padding;
+    border-top: 1px solid rgba($border-color, 0.4);
 
     > :first-child {
       margin-top: 0;
@@ -133,14 +136,14 @@ $borderColor: #5d5970;
     }
 
     &:last-child {
-      margin: 6px -8px -8px -8px;
-      padding: 4px 8px 6px 8px;
+      margin: 6px #{-$horizontal-padding} -8px #{-$horizontal-padding};
+      padding: 4px $horizontal-padding 6px $horizontal-padding;
       border-bottom: none;
     }
   }
 }
 
-@mixin presstip-section-color($color) {
+@mixin tooltip-section-color($color) {
   background-color: rgba($color, 0.15);
   border-top-color: rgba($color, 0.5);
 }

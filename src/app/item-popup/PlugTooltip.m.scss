@@ -26,12 +26,12 @@
     border-left: none;
   }
   .communityInsightSection {
-    @include presstip-section-color($communityBlue);
+    @include tooltip-section-color($communityBlue);
     h3 {
       opacity: 0.6;
     }
   }
   .cannotRollSection {
-    @include presstip-section-color($red);
+    @include tooltip-section-color($red);
   }
 }
