@@ -4,11 +4,7 @@ import {
   DimSocketCategory,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
-import {
-  DestinyInventoryItemDefinition,
-  DestinySocketCategoryStyle,
-  TierType,
-} from 'bungie-api-ts/destiny2';
+import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimSocket, DimSockets } from '../inventory/item-types';
@@ -193,7 +189,14 @@ export function getDefaultAbilityChoiceHash(socket: DimSocket) {
       socket.plugSet!.plugs[0]!.plugDef.hash;
 }
 
-export function isEnhancedPerk(perk: DimPlug | DestinyInventoryItemDefinition) {
-  const plugDef = 'plugDef' in perk ? perk.plugDef : perk;
-  return plugDef.inventory!.tierType === TierType.Common;
+export function isEnhancedPerk(perk: DimPlug) {
+  const plugDef = perk.plugDef;
+  return (
+    plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
+    plugDef.inventory!.tierType === TierType.Common
+  );
+}
+
+export function countEnhancedPerks(sockets: DimSockets) {
+  return sockets.allSockets.filter((s) => s.plugged && isEnhancedPerk(s.plugged)).length;
 }
