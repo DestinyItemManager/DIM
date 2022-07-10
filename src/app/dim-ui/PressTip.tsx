@@ -166,10 +166,6 @@ export function TooltipSection({
   className?: string;
 }) {
   const isInTooltip = useIsInTooltip();
-  const childrenWithContent = React.Children.map(children, (c) => c);
-  if (!childrenWithContent || childrenWithContent.length < 1) {
-    return null;
-  }
   if (!isInTooltip) {
     return <>{children}</>;
   }

@@ -123,27 +123,24 @@ $half-arrow-size: $arrow-size / 2;
     }
   }
 
-  .section {
-    margin: 6px #{-$horizontal-padding} -6px #{-$horizontal-padding};
-    padding: 4px $horizontal-padding;
+  .section:not(:empty) {
+    margin: 6px #{-$horizontal-padding} -8px #{-$horizontal-padding};
+    padding: 4px $horizontal-padding 6px $horizontal-padding;
     border-top: 1px solid rgba($border-color, 0.4);
 
     > :first-child {
       margin-top: 0;
     }
+
     > :last-child {
       margin-bottom: 0;
-    }
-
-    &:last-child {
-      margin: 6px #{-$horizontal-padding} -8px #{-$horizontal-padding};
-      padding: 4px $horizontal-padding 6px $horizontal-padding;
-      border-bottom: none;
     }
   }
 }
 
 @mixin tooltip-section-color($color) {
-  background-color: rgba($color, 0.15);
-  border-top-color: rgba($color, 0.5);
+  &:not(:empty) {
+    background-color: rgba($color, 0.15);
+    border-top-color: rgba($color, 0.5);
+  }
 }
