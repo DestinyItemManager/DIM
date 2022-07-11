@@ -202,6 +202,7 @@
     "DupeLower": "Itens duplicados, incluindo similares, que não possuem o maior poder duplicado. Apenas uma das duplicatas é escolhida como a maior. Todos os demais são considerados menores.",
     "Energy": "Exibe itens que possuem capacidade de energia (Armaduras 2.0).",
     "Engrams": "Mostrar engramas.",
+    "EnhancedPerk": "Exibe armas que possuem um número específico de perks melhorados.",
     "Equipment": "Itens que podem ser equipados.",
     "Equipped": "Itens que no momento estão equipados em outra personagem.",
     "Event": "Mostra itens de que evento apareceram no Destiny 2.",
@@ -1035,9 +1036,12 @@
       "Reset": "DESAUTORIZAR",
       "Title": "Obtenha este número em seu Stream Deck"
     },
+    "Connected": "Conectado",
     "Enable": "Plugin do Stream Deck",
-    "FinePrint": "Permite a conexão com o plugin DIM Stream Deck",
+    "FinePrint": "Permite a conexão com o plugin DIM Stream Deck. Este plugin pertence a um projeto independente que não foi escrito e nem é suportado pela equipe DIM.",
     "Install": "Instalar plugin",
+    "NotConnected": "Não Conectado",
+    "OldExtension": "Certifique-se que a extensão antiga do Stream Deck Chrome seja desinstalada. Ela não é mais necessária e causará um comportamento inesperado no DIM.",
     "SelectLoadout": "Enviar para o Stream Deck",
     "Selection": {
       "Item": "Escolha um item do inventário",
