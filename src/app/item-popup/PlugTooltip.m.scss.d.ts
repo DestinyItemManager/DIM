@@ -14,6 +14,7 @@ interface CssExports {
   'perkName': string;
   'requirement': string;
   'section': string;
+  'source': string;
   'tooltip': string;
   'wideTooltip': string;
 }

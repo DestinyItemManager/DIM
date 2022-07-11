@@ -17,7 +17,6 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
@@ -69,7 +68,7 @@ export default function ItemDetails({
       <ItemDescription item={item} />
 
       {!item.stats && Boolean(item.collectibleHash) && defs.isDestiny2() && (
-        <div className="item-details">
+        <div className="item-details item-source">
           {defs.Collectible.get(item.collectibleHash!).sourceString}
         </div>
       )}

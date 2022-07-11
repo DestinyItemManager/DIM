@@ -29,7 +29,6 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getItemYear } from 'app/utils/item-utils';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import AllWishlistRolls from './AllWishlistRolls';
 import styles from './Armory.m.scss';
@@ -129,7 +128,7 @@ export default function Armory({
               </div>
             )}
             {season && (
-              <div className={styles.source}>
+              <div className={styles.season}>
                 {season.displayProperties.hasIcon && (
                   <BungieImage height={15} width={15} src={season.displayProperties.icon} />
                 )}{' '}
@@ -141,7 +140,9 @@ export default function Armory({
           </div>
           <DestinyTooltipText item={item} />
           {item.classified && <div>{t('ItemService.Classified2')}</div>}
-          {collectible?.sourceString && <div>{collectible?.sourceString}</div>}
+          {collectible?.sourceString && (
+            <div className={styles.source}>{collectible?.sourceString}</div>
+          )}
           {item.description && (
             <p>
               <RichDestinyText text={item.description} />

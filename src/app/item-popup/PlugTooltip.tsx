@@ -196,7 +196,7 @@ export function PlugTooltip({
       )}
 
       <TooltipSection>
-        {sourceString && <div>{sourceString}</div>}
+        {sourceString && <div className={styles.source}>{sourceString}</div>}
         {!hideRequirements && defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
           <div className={styles.objectives}>
             {filteredPlugObjectives.map((objective) => (
