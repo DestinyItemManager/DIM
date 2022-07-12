@@ -2,9 +2,10 @@
   <img width="500px" src="https://i.ibb.co/nrxPcMq/DCtjvn-MV0-AABFDJ-removebg-preview.png" alt="DestinyItemManager Logo">
 
   <div align="center">
-  <a href="">[![Crowdin](https://badges.crowdin.net/destiny-item-manager/localized.svg)](https://crowdin.com/project/destiny-item-manager)</a>
-  <a href="">[![OpenCollective](https://opencollective.com/dim/backers/badge.svg)](#backers)</a>
-  <a href="">[![OpenCollective](https://opencollective.com/dim/sponsors/badge.svg)](#sponsors)</a>
+
+   <a href="">[![Crowdin](https://badges.crowdin.net/destiny-item-manager/localized.svg)](https://crowdin.com/project/destiny-item-manager)</a>
+   <a href="">[![OpenCollective](https://opencollective.com/dim/backers/badge.svg)](#backers)</a>
+   <a href="">[![OpenCollective](https://opencollective.com/dim/sponsors/badge.svg)](#sponsors)</a>
 
   ### [Launch DIM](https://app.destinyitemmanager.com)
 
