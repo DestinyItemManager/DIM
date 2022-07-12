@@ -1,8 +1,16 @@
-[![Crowdin](https://badges.crowdin.net/destiny-item-manager/localized.svg)](https://crowdin.com/project/destiny-item-manager)
-[![OpenCollective](https://opencollective.com/dim/backers/badge.svg)](#backers)
-[![OpenCollective](https://opencollective.com/dim/sponsors/badge.svg)](#sponsors)
+<p align="center">
+  <img width="500px" src="https://i.ibb.co/nrxPcMq/DCtjvn-MV0-AABFDJ-removebg-preview.png" alt="DestinyItemManager Logo">
+  
+  <div align="center">
 
-### [Launch DIM](https://app.destinyitemmanager.com)
+  <a href="">[![Crowdin](https://badges.crowdin.net/destiny-item-manager/localized.svg)](https://crowdin.com/project/destiny-item-manager)</a>
+  <a href="">[![OpenCollective](https://opencollective.com/dim/backers/badge.svg)](#backers)</a>
+  <a href="">[![OpenCollective](https://opencollective.com/dim/sponsors/badge.svg)](#sponsors)</a>
+
+   ### [Launch DIM](https://app.destinyitemmanager.com)
+
+  </div>
+</p>
 
 ## Destiny Item Manager
 Destiny Item Manager (DIM) lets [Destiny](http://destinythegame.com/) game players easily move items between their Guardians and the Vault. DIM's goal is to let players equip their guardians quickly. Our Loadouts feature accomplishes this by removing manual steps needed when transferring items.
@@ -18,7 +26,7 @@ Have a bug or a feature request? Please first search for [existing and closed is
 
 ## Backers
 [Support us](https://opencollective.com/dim#backer) with a one-time or monthly donation and help us continue our active development.
-
+<div align="center"> 
 <a href="https://opencollective.com/dim/backer/0/website" target="_blank"><img src="https://opencollective.com/dim/backer/0/avatar.svg"></a>
 <a href="https://opencollective.com/dim/backer/1/website" target="_blank"><img src="https://opencollective.com/dim/backer/1/avatar.svg"></a>
 <a href="https://opencollective.com/dim/backer/2/website" target="_blank"><img src="https://opencollective.com/dim/backer/2/avatar.svg"></a>
@@ -80,14 +88,16 @@ Have a bug or a feature request? Please first search for [existing and closed is
 <a href="https://opencollective.com/dim/backer/58/website" target="_blank"><img src="https://opencollective.com/dim/backer/58/avatar.svg"></a>
 <a href="https://opencollective.com/dim/backer/59/website" target="_blank"><img src="https://opencollective.com/dim/backer/59/avatar.svg"></a>
 <a href="https://opencollective.com/dim/backer/60/website" target="_blank"><img src="https://opencollective.com/dim/backer/60/avatar.svg"></a>
+ </div>
 
 ## Sponsors
 Become a sponsor and get your logo here with a link to your site.
-
+<div align="center"> 
 <a href="https://opencollective.com/dim/sponsor/0/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/0/avatar.svg"></a>
 <a href="https://opencollective.com/dim/sponsor/1/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/1/avatar.svg"></a>
 <a href="https://opencollective.com/dim/sponsor/2/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/3/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/dim/sponsor/3/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/3/avatar.svg"></a> 
+</div>
 
 ## Translation
 If you speak a language other than English that Destiny supports, a great way to help with DIM development is to provide translations. See [translation guide](https://github.com/DestinyItemManager/DIM/blob/master/docs/TRANSLATIONS.md) for more info on how to help.
