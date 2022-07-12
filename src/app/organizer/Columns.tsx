@@ -542,7 +542,7 @@ export function getColumns(
     {
       id: 'notes',
       header: t('Organizer.Columns.Notes'),
-      value: (item) => getNotes(item, itemInfos),
+      value: (item) => getNotes(item, itemInfos) ?? '',
       cell: (_val, item) => <NotesArea item={item} minimal={true} />,
       gridWidth: 'minmax(200px, 1fr)',
       filter: (value: string) => `notes:${quoteFilterString(value)}`,
