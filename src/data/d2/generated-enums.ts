@@ -979,3 +979,12 @@ export const enum BreakerTypeHashes {
   ShieldPiercing = 485622768,
   Stagger = 3178805705,
 }
+
+export const enum ProgressionHashes {
+  CrucibleRank = 2083746873,
+  GambitRank = 3008065600,
+  GloryRank = 1647151960,
+  StrangeFavor = 527867935,
+  TrialsRank = 2755675426,
+  VanguardRank = 457612306,
+}
