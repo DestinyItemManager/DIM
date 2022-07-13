@@ -342,9 +342,12 @@ function SearchBar(
     if (inputElement.current && window.visualViewport) {
       const { y, height } = inputElement.current.getBoundingClientRect();
       const { height: viewportHeight } = window.visualViewport;
+      // pixels remaining in viewport minus offset minus 10px for padding
+      const pxAvailable = viewportHeight - y - height - 10;
+      const resultItemHeight = 30;
 
-      // constrain to pixels remaining in viewport minus offset minus 10px for padding
-      setMenuMaxHeight(viewportHeight - y - height - 10);
+      // constrain to size that would allow only whole items to be seen
+      setMenuMaxHeight(Math.floor(pxAvailable / resultItemHeight) * resultItemHeight);
     }
   }, [isOpen]);
 
