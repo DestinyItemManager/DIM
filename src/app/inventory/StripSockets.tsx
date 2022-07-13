@@ -198,6 +198,8 @@ export default function StripSockets() {
     return null;
   }
 
+  const isProcessing = state.tag === 'processing';
+
   const reset = () => {
     if (state.tag === 'processing') {
       state.cancel();
@@ -206,7 +208,7 @@ export default function StripSockets() {
   };
 
   const onInsertPlugs = async () => {
-    if (state.tag === 'processing') {
+    if (isProcessing) {
       return;
     }
 
@@ -264,11 +266,14 @@ export default function StripSockets() {
               numWeapons={entry.numWeapons}
               numOthers={entry.numOthers}
               selected={activeKinds.includes(entry.kind)}
+              selectable={!isProcessing}
               onClick={() => {
-                if (activeKinds.includes(entry.kind)) {
-                  setActiveKinds(activeKinds.filter((k) => k !== entry.kind));
-                } else {
-                  setActiveKinds([...activeKinds, entry.kind]);
+                if (!isProcessing) {
+                  if (activeKinds.includes(entry.kind)) {
+                    setActiveKinds(activeKinds.filter((k) => k !== entry.kind));
+                  } else {
+                    setActiveKinds([...activeKinds, entry.kind]);
+                  }
                 }
               }}
             />
@@ -282,9 +287,9 @@ export default function StripSockets() {
       type="button"
       className={styles.insertButton}
       onClick={onInsertPlugs}
-      disabled={state.tag === 'processing' || totalNumSockets === 0}
+      disabled={isProcessing || totalNumSockets === 0}
     >
-      {state.tag === 'processing' && (
+      {isProcessing && (
         <span>
           <AppIcon icon={refreshIcon} spinning={true} />
         </span>
@@ -310,6 +315,7 @@ function SocketKindButton({
   numArmor,
   numOthers,
   selected,
+  selectable,
   onClick,
 }: {
   name: string;
@@ -318,12 +324,14 @@ function SocketKindButton({
   numArmor: number;
   numOthers: number;
   selected: boolean;
+  selectable: boolean;
   onClick: () => void;
 }) {
   return (
     <div
       className={clsx(styles.socketKindButton, {
         [styles.selectedButton]: selected,
+        [styles.notSelectable]: !selectable,
       })}
       onClick={onClick}
       role="button"

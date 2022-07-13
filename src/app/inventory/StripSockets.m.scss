@@ -58,6 +58,11 @@
   }
 }
 
+.notSelectable {
+  opacity: 0.5;
+  cursor: default;
+}
+
 .itemTypeIcon {
   &.svg {
     filter: invert(1);

@@ -5,6 +5,7 @@ interface CssExports {
   'buttonTitle': string;
   'insertButton': string;
   'itemTypeIcon': string;
+  'notSelectable': string;
   'selectedButton': string;
   'selectedTitle': string;
   'socketKindButton': string;
