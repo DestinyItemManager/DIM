@@ -21,6 +21,7 @@ import {
   TierType,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import _ from 'lodash';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
@@ -168,7 +169,8 @@ export function PlugTooltip({
   );
 
   const isInTooltip = useIsInTooltip();
-  const enhanced = isPluggableItem(def) && isEnhancedPerk(def);
+  const enhanced =
+    enhancedIntrinsics.has(def.hash) || (isPluggableItem(def) && isEnhancedPerk(def));
   return (
     <>
       <CustomizeTooltip
