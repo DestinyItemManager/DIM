@@ -189,8 +189,7 @@ export function getDefaultAbilityChoiceHash(socket: DimSocket) {
       socket.plugSet!.plugs[0]!.plugDef.hash;
 }
 
-export function isEnhancedPerk(perk: DimPlug) {
-  const plugDef = perk.plugDef;
+export function isEnhancedPerk(plugDef: PluggableInventoryItemDefinition) {
   return (
     plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
     plugDef.inventory!.tierType === TierType.Common
@@ -198,5 +197,5 @@ export function isEnhancedPerk(perk: DimPlug) {
 }
 
 export function countEnhancedPerks(sockets: DimSockets) {
-  return sockets.allSockets.filter((s) => s.plugged && isEnhancedPerk(s.plugged)).length;
+  return sockets.allSockets.filter((s) => s.plugged && isEnhancedPerk(s.plugged.plugDef)).length;
 }

@@ -8,7 +8,6 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import { isEnhancedPerk } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import React from 'react';
 import PressTip from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll, isWishListPlug } from '../wishlists/wishlists';
@@ -174,7 +173,7 @@ function PerkCircle({
   plug: DimPlug;
   className?: string;
 } & PlugStatuses) {
-  const enhanced = isEnhancedPerk(plug);
+  const enhanced = isEnhancedPerk(plug.plugDef);
   const statusClasses =
     clsx({
       [styles.plugged]: plugged,

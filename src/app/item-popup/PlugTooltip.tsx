@@ -4,6 +4,7 @@ import { CustomizeTooltip, TooltipSection, useIsInTooltip } from 'app/dim-ui/Pre
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { statAllowList } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
@@ -11,6 +12,7 @@ import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
+import { isEnhancedPerk } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DestinyInventoryItemDefinition,
@@ -166,6 +168,7 @@ export function PlugTooltip({
   );
 
   const isInTooltip = useIsInTooltip();
+  const enhanced = isPluggableItem(def) && isEnhancedPerk(def);
   return (
     <>
       <CustomizeTooltip
@@ -173,6 +176,7 @@ export function PlugTooltip({
         subheader={def.itemTypeDisplayName}
         className={clsx(styles.tooltip, {
           [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
+          [styles.tooltipEnhanced]: enhanced,
         })}
       />
       {!isInTooltip && <h2>{def.displayProperties.name}</h2>}

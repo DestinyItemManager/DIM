@@ -45,3 +45,6 @@
 .tooltipExotic {
   @include tooltip-ribbon-color($exotic);
 }
+.tooltipEnhanced {
+  @include tooltip-ribbon-color($enhancedYellow);
+}
