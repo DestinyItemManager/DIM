@@ -16,7 +16,9 @@ import {
   DestinyInventoryItemDefinition,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
+  TierType,
 } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import _ from 'lodash';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
@@ -169,7 +171,9 @@ export function PlugTooltip({
       <CustomizeTooltip
         header={def.displayProperties.name}
         subheader={def.itemTypeDisplayName}
-        className={styles.tooltip}
+        className={clsx(styles.tooltip, {
+          [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
+        })}
       />
       {!isInTooltip && <h2>{def.displayProperties.name}</h2>}
 

@@ -42,3 +42,6 @@
     @include tooltip-section-color($red);
   }
 }
+.tooltipExotic {
+  @include tooltip-ribbon-color($exotic);
+}

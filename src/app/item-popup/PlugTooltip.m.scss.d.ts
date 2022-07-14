@@ -16,6 +16,7 @@ interface CssExports {
   'section': string;
   'source': string;
   'tooltip': string;
+  'tooltipExotic': string;
   'wideTooltip': string;
 }
 export const cssExports: CssExports;

@@ -136,6 +136,10 @@ $half-arrow-size: $arrow-size * 0.5;
   }
 }
 
+@mixin tooltip-ribbon-color($color) {
+  --ribbon-color: #{$color};
+}
+
 @mixin tooltip-section-color($color) {
   &:not(:empty) {
     background-color: rgba($color, 0.15);
