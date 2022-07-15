@@ -160,11 +160,6 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       await dispatch(loadGlobalSettings());
     }
 
-    // API is disabled, give up
-    if (!getState().dimApi.globalSettings.dimApiEnabled) {
-      return;
-    }
-
     // Check if we're even logged into Bungie.net. Don't need to load or sync if not.
     const bungieToken = await getBungieToken();
     if (!bungieToken) {
@@ -193,7 +188,10 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
     }
     installObservers(dispatch); // idempotent
 
-    if (!getState().dimApi.apiPermissionGranted) {
+    if (
+      !getState().dimApi.apiPermissionGranted ||
+      !getState().dimApi.globalSettings.dimApiEnabled
+    ) {
       // They don't want to sync to the server, stay local only
       readyResolve();
       return;
