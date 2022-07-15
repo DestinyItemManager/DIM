@@ -1,12 +1,6 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
-import {
-  TooltipContext,
-  TooltipCustomize,
-  TooltipHeader,
-  TooltipSection,
-  TooltipSubheader,
-} from 'app/dim-ui/PressTip';
+import { Tooltip, TooltipContext } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
@@ -160,12 +154,12 @@ export function PlugTooltip({
       </div>
     ));
   const clarityDescriptionSection = plugDescriptions.communityInsight && (
-    <TooltipSection className={styles.communityInsightSection}>
+    <Tooltip.Section className={styles.communityInsightSection}>
       <ClarityDescriptions
         perk={plugDescriptions.communityInsight}
         className={styles.clarityDescription}
       />
-    </TooltipSection>
+    </Tooltip.Section>
   );
   const renderedStats = statsArray.length > 0 && (
     <div className="plug-stats">
@@ -180,9 +174,9 @@ export function PlugTooltip({
     enhancedIntrinsics.has(def.hash) || (isPluggableItem(def) && isEnhancedPerk(def));
   return (
     <>
-      <TooltipHeader text={def.displayProperties.name} />
-      <TooltipSubheader text={def.itemTypeDisplayName} />
-      <TooltipCustomize
+      <Tooltip.Header text={def.displayProperties.name} />
+      <Tooltip.Subheader text={def.itemTypeDisplayName} />
+      <Tooltip.Customize
         className={clsx(styles.tooltip, {
           [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
           [styles.tooltipEnhanced]: enhanced,
@@ -197,22 +191,22 @@ export function PlugTooltip({
       */}
       {bungieDescription ? (
         <>
-          <TooltipSection>
+          <Tooltip.Section>
             {bungieDescription}
             {renderedStats}
-          </TooltipSection>
+          </Tooltip.Section>
           {clarityDescriptionSection}
         </>
       ) : (
         (clarityDescriptionSection || renderedStats) && (
           <>
             {clarityDescriptionSection}
-            <TooltipSection>{renderedStats}</TooltipSection>
+            <Tooltip.Section>{renderedStats}</Tooltip.Section>
           </>
         )
       )}
 
-      <TooltipSection>
+      <Tooltip.Section>
         {sourceString && <div className={styles.source}>{sourceString}</div>}
         {!hideRequirements && defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
           <div className={styles.objectives}>
@@ -222,10 +216,10 @@ export function PlugTooltip({
           </div>
         )}
         {enableFailReasons && <p>{enableFailReasons}</p>}
-      </TooltipSection>
+      </Tooltip.Section>
 
       {craftingData && (
-        <TooltipSection className={styles.craftingRequirementsSection}>
+        <Tooltip.Section className={styles.craftingRequirementsSection}>
           {craftingData.unlockRequirements.map((r) => (
             <p key={r.failureDescription}>{r.failureDescription}</p>
           ))}
@@ -245,19 +239,19 @@ export function PlugTooltip({
                 );
               });
             })}
-        </TooltipSection>
+        </Tooltip.Section>
       )}
       {cannotCurrentlyRoll && (
-        <TooltipSection className={styles.cannotRollSection}>
+        <Tooltip.Section className={styles.cannotRollSection}>
           <p>{t('MovePopup.CannotCurrentlyRoll')}</p>
-        </TooltipSection>
+        </Tooltip.Section>
       )}
       {wishListTip && (
-        <TooltipSection>
+        <Tooltip.Section>
           <p>
             <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}
           </p>
-        </TooltipSection>
+        </Tooltip.Section>
       )}
     </>
   );

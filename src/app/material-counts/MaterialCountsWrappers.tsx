@@ -1,4 +1,4 @@
-import { TooltipHeader } from 'app/dim-ui/PressTip';
+import { Tooltip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { Observable } from 'app/utils/observable';
 import { useSubscription } from 'use-subscription';
@@ -40,7 +40,7 @@ export function MaterialCountsSheet() {
 export function MaterialCountsTooltip() {
   return (
     <>
-      <TooltipHeader text={t('Header.MaterialCounts')} />
+      <Tooltip.Header text={t('Header.MaterialCounts')} />
       <MaterialCounts wide />
     </>
   );

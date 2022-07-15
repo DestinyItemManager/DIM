@@ -7,7 +7,7 @@ import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
-import PressTip from '../dim-ui/PressTip';
+import { PressTip } from '../dim-ui/PressTip';
 import FactionIcon from '../progress/FactionIcon';
 import { D2Vendor } from './d2-vendors';
 import { VendorItem } from './vendor-item';

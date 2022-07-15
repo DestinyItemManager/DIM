@@ -3,7 +3,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getInterestingSocketMetadatas, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import PressTip from './PressTip';
+import { PressTip } from './PressTip';
 import styles from './SpecialtyModSlotIcon.m.scss';
 
 interface ModSlotIconProps {

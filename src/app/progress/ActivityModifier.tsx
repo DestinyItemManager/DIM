@@ -1,7 +1,7 @@
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import BungieImage from '../dim-ui/BungieImage';
-import PressTip from '../dim-ui/PressTip';
+import { PressTip } from '../dim-ui/PressTip';
 import './ActivityModifier.scss';
 
 export function ActivityModifier({ modifierHash }: { modifierHash: number }) {

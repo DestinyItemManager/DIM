@@ -2,7 +2,7 @@ import { DimItem } from 'app/inventory/item-types';
 import clsx from 'clsx';
 import kineticSlot from 'images/kinetic-slot.svg';
 import styles from './ItemCategoryIcon.m.scss';
-import PressTip from './PressTip';
+import { PressTip } from './PressTip';
 import {
   getArmorSlotSvgIcon,
   getWeaponSlotSvgIcon,

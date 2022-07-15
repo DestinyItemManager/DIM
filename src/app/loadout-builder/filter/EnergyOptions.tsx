@@ -1,5 +1,5 @@
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
-import PressTip from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import React, { Dispatch, useMemo } from 'react';

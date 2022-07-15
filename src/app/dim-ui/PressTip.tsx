@@ -147,49 +147,45 @@ function Control({
   );
 }
 
-export function TooltipHeader({ text }: { text: string }) {
-  const tooltip = useContext(TooltipContext);
-  useEffect(() => {
-    if (tooltip) {
-      tooltip.customizeTooltip((customization) => ({ ...customization, header: text }));
-    }
-  }, [tooltip, text]);
-  return null;
-}
+export const Tooltip = {
+  Header: ({ text }: { text: string }) => {
+    const tooltip = useContext(TooltipContext);
+    useEffect(() => {
+      if (tooltip) {
+        tooltip.customizeTooltip((customization) => ({ ...customization, header: text }));
+      }
+    }, [tooltip, text]);
+    return null;
+  },
 
-export function TooltipSubheader({ text }: { text: string }) {
-  const tooltip = useContext(TooltipContext);
-  useEffect(() => {
-    if (tooltip) {
-      tooltip.customizeTooltip((customization) => ({ ...customization, subheader: text }));
-    }
-  }, [tooltip, text]);
-  return null;
-}
+  Subheader: ({ text }: { text: string }) => {
+    const tooltip = useContext(TooltipContext);
+    useEffect(() => {
+      if (tooltip) {
+        tooltip.customizeTooltip((customization) => ({ ...customization, subheader: text }));
+      }
+    }, [tooltip, text]);
+    return null;
+  },
 
-export function TooltipCustomize({ className }: { className: string }) {
-  const tooltip = useContext(TooltipContext);
-  useEffect(() => {
-    if (tooltip) {
-      tooltip.customizeTooltip((customization) => ({ ...customization, className }));
-    }
-  }, [tooltip, className]);
-  return null;
-}
+  Customize: ({ className }: { className: string }) => {
+    const tooltip = useContext(TooltipContext);
+    useEffect(() => {
+      if (tooltip) {
+        tooltip.customizeTooltip((customization) => ({ ...customization, className }));
+      }
+    }, [tooltip, className]);
+    return null;
+  },
 
-export function TooltipSection({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  const tooltip = useContext(TooltipContext);
-  if (!tooltip) {
-    return <>{children}</>;
-  }
-  return <div className={clsx(styles.section, className)}>{children}</div>;
-}
+  Section: ({ children, className }: { children: React.ReactNode; className?: string }) => {
+    const tooltip = useContext(TooltipContext);
+    if (!tooltip) {
+      return <>{children}</>;
+    }
+    return <div className={clsx(styles.section, className)}>{children}</div>;
+  },
+};
 
 const isPointerEvents = 'onpointerdown' in window;
 const isTouch = 'ontouchstart' in window;
@@ -216,7 +212,7 @@ const hoverDelay = hoverable ? 100 : 300;
  *   PressTip context element
  * </PressTip>
  */
-function PressTip(props: Props) {
+export function PressTip(props: Props) {
   const timer = useRef<number>(0);
   const touchStartTime = useRef<number>(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -300,5 +296,3 @@ function PressTip(props: Props) {
 
   return <Control open={open} triggerRef={ref} {...events} {...props} />;
 }
-
-export default PressTip;

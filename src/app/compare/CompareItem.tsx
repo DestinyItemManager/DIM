@@ -1,4 +1,4 @@
-import PressTip from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { itemNoteSelector } from 'app/inventory/dim-item-info';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';

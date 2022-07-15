@@ -8,7 +8,7 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import { isEnhancedPerk } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import PressTip from '../dim-ui/PressTip';
+import { PressTip } from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll, isWishListPlug } from '../wishlists/wishlists';
 import './ItemSockets.scss';

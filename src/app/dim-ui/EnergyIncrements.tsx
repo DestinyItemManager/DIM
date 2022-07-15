@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import PressTip from './PressTip';
+import { PressTip } from './PressTip';
 
 export const energyStyles: { [energy in DestinyEnergyType]?: string } = {
   [DestinyEnergyType.Arc]: 'arc',
