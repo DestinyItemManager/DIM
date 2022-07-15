@@ -57,7 +57,10 @@
       display: inline-block;
       width: 6px;
       height: 11px;
-      $escapedColorStr: '%23#{string.slice(' #{$enhancedYellow}', 2)}';
+
+      // We need to encode the '#' prefix in the color in order to use it within the SVG.
+      /* prettier-ignore */
+      $escapedColorStr: '%23#{string.slice('#{$enhancedYellow}', 2)}';
       background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 33"><path d="M6,33 L6,16 L0,16 L9,0 L18,16 L12,16 L12,33 z" fill="#{$escapedColorStr}" /></svg>');
       background-size: 6px 11px;
       margin-right: 3px;
