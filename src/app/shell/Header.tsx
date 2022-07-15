@@ -6,6 +6,7 @@ import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
+import DimApiWarningBanner from 'app/storage/DimApiWarningBanner';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
@@ -369,6 +370,7 @@ export default function Header() {
       )}
       {isPhonePortrait && installable && <AppInstallBanner onClick={installDim} />}
       <PostmasterWarningBanner />
+      <DimApiWarningBanner />
       {promptIosPwa && (
         <Portal>
           <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>

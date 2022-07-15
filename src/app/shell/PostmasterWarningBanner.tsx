@@ -6,7 +6,6 @@ import {
   postmasterSpaceUsed,
   POSTMASTER_SIZE,
 } from 'app/loadout-drawer/postmaster';
-import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -51,7 +50,7 @@ export default React.memo(function PostmasterWarningBanner() {
       : t('PostmasterWarningBanner.PostmasterFull', data);
 
   return (
-    <div className={clsx(styles.banner)}>
+    <div className={styles.banner}>
       <PullFromPostmaster store={store} />
       <span>{text}</span>
     </div>
