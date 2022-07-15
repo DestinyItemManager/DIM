@@ -66,7 +66,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
     _.debounce((currentState: DimApiState, nextState: DimApiState) => {
       if (
         // Avoid writing back what we just loaded from IDB
-        currentState?.profileLoadedFromIndexedDb &&
+        (currentState?.profileLoadedFromIndexedDb || nextState.profileLoaded) &&
         // Don't save if there was an error
         !nextState.profileLoadedError &&
         // Check to make sure one of the fields we care about has changed
