@@ -1,5 +1,4 @@
 import { t } from 'app/i18next-t';
-import React from 'react';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { NotifyInput } from '../notifications/notifications';
 import { AppIcon, twitterIcon } from '../shell/icons';
@@ -36,9 +35,8 @@ export function dimErrorToaster(title: string, message: string, e: Error): Notif
     title,
     body: (
       <>
-        <div>
-          {message}: {e.message}
-        </div>
+        <div>{message}</div>
+        <div>{e.message}</div>
         <div>
           {t('BungieService.Twitter')}{' '}
           <ExternalLink href="http://twitter.com/ThisIsDIM">Twitter</ExternalLink>{' '}
@@ -50,5 +48,6 @@ export function dimErrorToaster(title: string, message: string, e: Error): Notif
         </div>
       </>
     ),
+    duration: 60_000,
   };
 }
