@@ -4,7 +4,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React from 'react';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import CompletionCheckbox from './CompletionCheckbox';
 import styles from './CrucibleRank.m.scss';
@@ -12,12 +11,13 @@ import styles from './CrucibleRank.m.scss';
 interface CrucibleRankProps {
   progress: DestinyProgression;
   streak?: DestinyProgression;
+  resetCount?: number;
 }
 
 /**
  * displays a single Crucible or Gambit rank for the account
  */
-export function CrucibleRank({ progress, streak }: CrucibleRankProps) {
+export function CrucibleRank({ progress, streak, resetCount }: CrucibleRankProps) {
   const defs = useD2Definitions()!;
   const replacer = useDynamicStringReplacer();
   const progressionDef = defs.Progression.get(progress.progressionHash);
@@ -63,10 +63,8 @@ export function CrucibleRank({ progress, streak }: CrucibleRankProps) {
             pct: Math.round((progress.currentProgress / rankTotal) * 100),
           })}
         </div>
-        {Boolean(progress.currentResetCount) && (
-          <div className={styles.factionLevel}>
-            {t('Progress.Resets', { count: progress.currentResetCount })}
-          </div>
+        {Boolean(resetCount) && (
+          <div className={styles.factionLevel}>{t('Progress.Resets', { count: resetCount })}</div>
         )}
       </div>
     </div>
