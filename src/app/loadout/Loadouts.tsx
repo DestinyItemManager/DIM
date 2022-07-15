@@ -1,6 +1,7 @@
 import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { languageSelector } from 'app/dim-api/selectors';
+import { apiPermissionGrantedSelector, languageSelector } from 'app/dim-api/selectors';
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
@@ -60,6 +61,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const isPhonePortrait = useIsPhonePortrait();
   const query = useSelector(querySelector);
   const language = useSelector(languageSelector);
+  const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
 
   const savedLoadouts = useMemo(
     () =>
@@ -143,6 +145,11 @@ function Loadouts({ account }: { account: DestinyAccount }) {
       </PageWithMenu.Menu>
 
       <PageWithMenu.Contents className={styles.page}>
+        {!apiPermissionGranted && (
+          <p>
+            <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
+          </p>
+        )}
         {loadouts.map((loadout) => (
           <LoadoutRow
             key={loadout.id}

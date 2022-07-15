@@ -38,6 +38,9 @@ export default function DimApiSettings() {
       exportBackupData(data);
       showBackupDownloadedNotification();
       dispatch(loadDimApiData());
+    } else {
+      // Reset the warning about data not being saved
+      localStorage.removeItem('warned-no-sync');
     }
   };
 

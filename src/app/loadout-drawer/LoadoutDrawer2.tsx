@@ -1,5 +1,7 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -72,6 +74,7 @@ export default function LoadoutDrawer2({
   const stores = useSelector(storesSelector);
   const [showingItemPicker, setShowingItemPicker] = useState(false);
   const [loadout, setLoadout] = useState(initialLoadout);
+  const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
 
   function withUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
     return (...args: T) => setLoadout(fn(...args));
@@ -231,6 +234,11 @@ export default function LoadoutDrawer2({
         classType={loadout.classType}
         className={styles.body}
       >
+        {!apiPermissionGranted && (
+          <p>
+            <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
+          </p>
+        )}
         <LoadoutEdit
           store={store}
           loadout={loadout}
