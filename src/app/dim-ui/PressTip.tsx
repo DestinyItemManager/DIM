@@ -9,6 +9,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -57,9 +58,10 @@ interface TooltipCustomization {
   subheader?: string;
   className?: string;
 }
-const CustomizeTooltipContext = createContext<React.Dispatch<
-  React.SetStateAction<TooltipCustomization>
-> | null>(null);
+interface Tooltip {
+  customizeTooltip: React.Dispatch<React.SetStateAction<TooltipCustomization>>;
+}
+export const TooltipContext = createContext<Tooltip | null>(null);
 
 /**
  * <PressTip.Control /> can be used to have a controlled version of the PressTip
@@ -92,7 +94,9 @@ function Control({
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
   const pressTipRoot = useContext(PressTipRoot);
+
   const [tooltipCustomization, customizeTooltip] = useState<TooltipCustomization>({});
+  const tooltipContext: Tooltip = useMemo(() => ({ customizeTooltip }), [customizeTooltip]);
 
   usePopper({
     contents: tooltipContents,
@@ -131,9 +135,9 @@ function Control({
               </div>
             )}
             <div className={styles.content}>
-              <CustomizeTooltipContext.Provider value={customizeTooltip}>
+              <TooltipContext.Provider value={tooltipContext}>
                 {_.isFunction(tooltip) ? tooltip() : tooltip}
-              </CustomizeTooltipContext.Provider>
+              </TooltipContext.Provider>
             </div>
             <div className={styles.arrow} />
           </div>,
@@ -143,18 +147,13 @@ function Control({
   );
 }
 
-export function useIsInTooltip(): boolean {
-  const customizeTooltip = useContext(CustomizeTooltipContext);
-  return customizeTooltip !== null;
-}
-
 export function CustomizeTooltip({ header, subheader, className }: TooltipCustomization) {
-  const customizeTooltip = useContext(CustomizeTooltipContext);
+  const tooltip = useContext(TooltipContext);
   useEffect(() => {
-    if (customizeTooltip) {
-      customizeTooltip({ header, subheader, className });
+    if (tooltip) {
+      tooltip.customizeTooltip({ header, subheader, className });
     }
-  }, [customizeTooltip, header, subheader, className]);
+  }, [tooltip, header, subheader, className]);
   return null;
 }
 
@@ -165,8 +164,8 @@ export function TooltipSection({
   children: React.ReactNode;
   className?: string;
 }) {
-  const isInTooltip = useIsInTooltip();
-  if (!isInTooltip) {
+  const tooltip = useContext(TooltipContext);
+  if (!tooltip) {
     return <>{children}</>;
   }
   return <div className={clsx(styles.section, className)}>{children}</div>;
