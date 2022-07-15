@@ -1,4 +1,4 @@
-import { CustomizeTooltip } from 'app/dim-ui/PressTip';
+import { TooltipHeader } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { statTier } from 'app/loadout-builder/utils';
 import styles from './StatTooltip.m.scss';
@@ -15,7 +15,7 @@ function StatTooltip({ stat }: { stat: Stat }) {
 
   return (
     <div>
-      <CustomizeTooltip header={stat.name} />
+      <TooltipHeader text={stat.name} />
       <div className={styles.values}>
         <div className={styles.label}>{t('Stats.Tier', { tier })}</div>
         <div>{`${stat.value}/100`}</div>

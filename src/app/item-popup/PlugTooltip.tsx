@@ -1,6 +1,12 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { CustomizeTooltip, TooltipContext, TooltipSection } from 'app/dim-ui/PressTip';
+import {
+  TooltipContext,
+  TooltipCustomize,
+  TooltipHeader,
+  TooltipSection,
+  TooltipSubheader,
+} from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
@@ -174,9 +180,9 @@ export function PlugTooltip({
     enhancedIntrinsics.has(def.hash) || (isPluggableItem(def) && isEnhancedPerk(def));
   return (
     <>
-      <CustomizeTooltip
-        header={def.displayProperties.name}
-        subheader={def.itemTypeDisplayName}
+      <TooltipHeader text={def.displayProperties.name} />
+      <TooltipSubheader text={def.itemTypeDisplayName} />
+      <TooltipCustomize
         className={clsx(styles.tooltip, {
           [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
           [styles.tooltipEnhanced]: enhanced,

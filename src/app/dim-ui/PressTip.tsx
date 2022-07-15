@@ -147,13 +147,33 @@ function Control({
   );
 }
 
-export function CustomizeTooltip({ header, subheader, className }: TooltipCustomization) {
+export function TooltipHeader({ text }: { text: string }) {
   const tooltip = useContext(TooltipContext);
   useEffect(() => {
     if (tooltip) {
-      tooltip.customizeTooltip({ header, subheader, className });
+      tooltip.customizeTooltip((customization) => ({ ...customization, header: text }));
     }
-  }, [tooltip, header, subheader, className]);
+  }, [tooltip, text]);
+  return null;
+}
+
+export function TooltipSubheader({ text }: { text: string }) {
+  const tooltip = useContext(TooltipContext);
+  useEffect(() => {
+    if (tooltip) {
+      tooltip.customizeTooltip((customization) => ({ ...customization, subheader: text }));
+    }
+  }, [tooltip, text]);
+  return null;
+}
+
+export function TooltipCustomize({ className }: { className: string }) {
+  const tooltip = useContext(TooltipContext);
+  useEffect(() => {
+    if (tooltip) {
+      tooltip.customizeTooltip((customization) => ({ ...customization, className }));
+    }
+  }, [tooltip, className]);
   return null;
 }
 
