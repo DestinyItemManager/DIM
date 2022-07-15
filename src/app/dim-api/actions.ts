@@ -64,8 +64,18 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
   observeStore(
     (state) => state.dimApi,
     _.debounce((currentState: DimApiState, nextState: DimApiState) => {
-      // Avoid writing back what we just loaded from IDB
-      if (currentState?.profileLoadedFromIndexedDb) {
+      if (
+        // Avoid writing back what we just loaded from IDB
+        currentState?.profileLoadedFromIndexedDb &&
+        // Don't save if there was an error
+        !nextState.profileLoadedError &&
+        // Check to make sure one of the fields we care about has changed
+        (nextState.settings !== currentState.settings ||
+          nextState.profiles !== currentState.profiles ||
+          nextState.updateQueue !== currentState.updateQueue ||
+          nextState.itemHashTags !== currentState.itemHashTags ||
+          nextState.searches !== currentState.searches)
+      ) {
         // Only save the difference between the current and default settings
         const settingsToSave = subtractObject(nextState.settings, initialSettingsState) as Settings;
 
