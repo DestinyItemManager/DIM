@@ -15,6 +15,7 @@ interface CssExports {
   'requirement': string;
   'section': string;
   'source': string;
+  'subheader': string;
   'tooltip': string;
   'tooltipEnhanced': string;
   'tooltipExotic': string;

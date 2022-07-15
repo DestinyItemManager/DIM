@@ -23,7 +23,7 @@ import {
 import clsx from 'clsx';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import _ from 'lodash';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import './ItemSockets.scss';
@@ -170,18 +170,24 @@ export function PlugTooltip({
   );
 
   const tooltip = useContext(TooltipContext);
+  const exotic = def.inventory?.tierType === TierType.Exotic;
   const enhanced =
     enhancedIntrinsics.has(def.hash) || (isPluggableItem(def) && isEnhancedPerk(def));
+  useEffect(() => {
+    if (tooltip) {
+      tooltip.customizeTooltip({
+        header: def.displayProperties.name,
+        subheader: <span className={styles.subheader}>{def.itemTypeDisplayName}</span>,
+        className: clsx(styles.tooltip, {
+          [styles.tooltipExotic]: exotic,
+          [styles.tooltipEnhanced]: enhanced,
+        }),
+      });
+    }
+  }, [tooltip, def.displayProperties.name, def.itemTypeDisplayName, exotic, enhanced]);
+
   return (
     <>
-      <Tooltip.Header text={def.displayProperties.name} />
-      <Tooltip.Subheader text={def.itemTypeDisplayName} />
-      <Tooltip.Customize
-        className={clsx(styles.tooltip, {
-          [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
-          [styles.tooltipEnhanced]: enhanced,
-        })}
-      />
       {!tooltip && <h2>{def.displayProperties.name}</h2>}
 
       {/*

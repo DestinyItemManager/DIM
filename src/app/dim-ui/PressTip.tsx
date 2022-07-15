@@ -54,8 +54,8 @@ type ControlProps = Props &
   };
 
 interface TooltipCustomization {
-  header?: string;
-  subheader?: string;
+  header?: React.ReactNode;
+  subheader?: React.ReactNode;
   className?: string;
 }
 interface Tooltip {
