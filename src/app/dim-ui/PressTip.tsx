@@ -92,8 +92,7 @@ function Control({
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
   const pressTipRoot = useContext(PressTipRoot);
-
-  const [tooltipCustomization, customizeTooltip] = useState<TooltipCustomization>({});
+  const [customization, customizeTooltip] = useState<TooltipCustomization>({});
 
   usePopper({
     contents: tooltipContents,
@@ -119,16 +118,16 @@ function Control({
       {open &&
         ReactDOM.createPortal(
           <div
-            className={clsx(styles.tooltip, tooltipCustomization.className, {
+            className={clsx(styles.tooltip, customization.className, {
               [styles.wideTooltip]: wide,
               [styles.minimalTooltip]: minimal,
             })}
             ref={tooltipContents}
           >
-            {tooltipCustomization.header && (
+            {customization.header && (
               <div className={styles.header}>
-                <h2>{tooltipCustomization.header}</h2>
-                {tooltipCustomization.subheader && <h3>{tooltipCustomization.subheader}</h3>}
+                <h2>{customization.header}</h2>
+                {customization.subheader && <h3>{customization.subheader}</h3>}
               </div>
             )}
             <div className={styles.content}>
@@ -148,16 +147,6 @@ function Control({
  * This hook allows customization of the tooltip that the calling component is currently hosted within.
  * It has no effect if the calling component is not hosted within a tooltip.
  *
- * @param getHeader A function that returns the content to be rendered in the tooltip's header (bold uppercase
- * text). If the hook is being invoked on every render, this **must** be memoised (e.g. wrapped in `useCallback`)
- * to prevent an infinite loop.
- *
- * @param getSubheader A function that returns the content to be rendered in the tooltip's subheader (dimmed text
- * below the header). If the hook is being invoked on every render, this **must** be memoised (e.g. wrapped in
- * `useCallback`) to prevent an infinite loop.
- *
- * @param className The CSS class(es) to be applied to the tooltip's root element.
- *
  * @returns Whether the calling component is currently being hosted in a tooltip.
  */
 export function useTooltipCustomization({
@@ -165,8 +154,19 @@ export function useTooltipCustomization({
   getSubheader,
   className,
 }: {
+  /**
+   * A function that returns the content to be rendered in the tooltip's header (bold uppercase text). This
+   * **MUST** be memoized (e.g. wrapped in `useCallback`) to prevent an infinite loop.
+   */
   getHeader?: () => React.ReactNode;
+
+  /**
+   * A function that returns the content to be rendered in the tooltip's subheader (dimmed text below the
+   * header). This **MUST** be memoized (e.g. wrapped in `useCallback`) to prevent an infinite loop.
+   */
   getSubheader?: () => React.ReactNode;
+
+  /** The CSS class(es) to be applied to the tooltip's root element. */
   className?: string;
 }) {
   const customizeTooltip = useContext(TooltipContext);
@@ -193,7 +193,7 @@ export const Tooltip = {
    * If you want to display more than a single string, use the `useTooltipCustomization` hook instead.
    */
   Header: ({ text }: { text: string }) => {
-    useTooltipCustomization({ getHeader: () => text });
+    useTooltipCustomization({ getHeader: useCallback(() => text, [text]) });
     return null;
   },
 
@@ -205,7 +205,7 @@ export const Tooltip = {
    * If you want to display more than a single string, use the `useTooltipCustomization` hook instead.
    */
   Subheader: ({ text }: { text: string }) => {
-    useTooltipCustomization({ getSubheader: () => text });
+    useTooltipCustomization({ getSubheader: useCallback(() => text, [text]) });
     return null;
   },
 
