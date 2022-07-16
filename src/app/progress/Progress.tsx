@@ -2,29 +2,23 @@ import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
   bucketsSelector,
   profileResponseSelector,
   sortedStoresSelector,
 } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { RAID_NODE } from 'app/search/d2-known-values';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState } from 'app/store/types';
-import { Destiny2CoreSettings } from 'bungie-api-ts/core';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { motion, PanInfo } from 'framer-motion';
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import '../records/PresentationNode.scss';
 import Milestones from './Milestones';
 import './progress.scss';
@@ -35,43 +29,16 @@ import SeasonalChallenges from './SeasonalChallenges';
 import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
 import { TrackedTriumphs } from './TrackedTriumphs';
 
-interface ProvidedProps {
-  account: DestinyAccount;
-}
-
-interface StoreProps {
-  buckets?: InventoryBuckets;
-  stores: DimStore[];
-  profileInfo?: DestinyProfileResponse;
-  searchQuery?: string;
-  allItems: DimItem[];
-  coreSettings?: Destiny2CoreSettings;
-}
-
-type Props = ProvidedProps & StoreProps;
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    stores: sortedStoresSelector(state),
-    buckets: bucketsSelector(state),
-    profileInfo: profileResponseSelector(state),
-    searchQuery: querySelector(state),
-    allItems: allItemsSelector(state),
-    coreSettings: destiny2CoreSettingsSelector(state),
-  };
-}
-
-function Progress({
-  account,
-  stores,
-  buckets,
-  profileInfo,
-  searchQuery,
-  allItems,
-  coreSettings,
-}: Props) {
+export default function Progress({ account }: { account: DestinyAccount }) {
   const defs = useD2Definitions();
   const isPhonePortrait = useIsPhonePortrait();
+  const stores = useSelector(sortedStoresSelector);
+  const buckets = useSelector(bucketsSelector);
+  const profileInfo = useSelector(profileResponseSelector);
+  const searchQuery = useSelector(querySelector);
+  const allItems = useSelector(allItemsSelector);
+  const coreSettings = useSelector(destiny2CoreSettingsSelector);
+
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
   useLoadStores(account);
@@ -230,5 +197,3 @@ function Progress({
     </ErrorBoundary>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(Progress);

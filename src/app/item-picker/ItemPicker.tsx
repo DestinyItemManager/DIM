@@ -1,14 +1,11 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
-import { ItemFilter } from 'app/search/filter-types';
 import SearchBar from 'app/search/SearchBar';
-import { RootState } from 'app/store/types';
 import { uniqBy } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useDeferredValue, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
+import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
@@ -18,45 +15,22 @@ import { itemSorterSelector } from '../settings/item-sort';
 import { ItemPickerState } from './item-picker';
 import './ItemPicker.scss';
 
-type ProvidedProps = ItemPickerState & {
-  onSheetClosed(): void;
-};
-
-interface StoreProps {
-  allItems: DimItem[];
-  sortItems: (items: readonly DimItem[]) => readonly DimItem[];
-  filters(query: string): ItemFilter;
-}
-
-function mapStateToProps() {
-  const filteredItemsSelector = createSelector(
-    allItemsSelector,
-    (_state: RootState, ownProps: ProvidedProps) => ownProps.filterItems,
-    (allitems, filterItems) => (filterItems ? allitems.filter(filterItems) : allitems)
-  );
-
-  return (state: RootState, ownProps: ProvidedProps) => ({
-    allItems: filteredItemsSelector(state, ownProps),
-    filters: filterFactorySelector(state),
-    sortItems: itemSorterSelector(state),
-  });
-}
-
-type Props = ProvidedProps & StoreProps;
-
-function ItemPicker({
-  allItems,
+export default function ItemPicker({
   prompt,
-  filters,
-  sortItems,
+  filterItems,
   sortBy,
   uniqueBy,
   onItemSelected,
   onCancel,
   onSheetClosed,
-}: Props) {
+}: ItemPickerState & {
+  onSheetClosed(): void;
+}) {
   const [liveQuery, setQuery] = useState('');
   const query = useDeferredValue(liveQuery);
+  const allItems = useSelector(allItemsSelector);
+  const filters = useSelector(filterFactorySelector);
+  const sortItems = useSelector(itemSorterSelector);
 
   const onItemSelectedFn = useCallback(
     (item: DimItem, onClose: () => void) => {
@@ -84,9 +58,14 @@ function ItemPicker({
     </div>
   );
 
-  const filter = useMemo(() => filters(query), [filters, query]);
+  // All items, filtered by the pre-filter configured on the item picker
+  const filteredItems = useMemo(
+    () => (filterItems ? allItems.filter(filterItems) : allItems),
+    [allItems, filterItems]
+  );
+  // Further filtered by the search bar in the item picker
   const items = useMemo(() => {
-    let items = sortItems(allItems.filter(filter));
+    let items = sortItems(filteredItems.filter(filters(query)));
     if (sortBy) {
       items = _.sortBy(items, sortBy);
     }
@@ -94,7 +73,7 @@ function ItemPicker({
       items = uniqBy(items, uniqueBy);
     }
     return items;
-  }, [allItems, filter, sortItems, sortBy, uniqueBy]);
+  }, [sortItems, filteredItems, filters, query, sortBy, uniqueBy]);
 
   // TODO: have compact and "list" views
   // TODO: long press for item popup
@@ -120,8 +99,6 @@ function ItemPicker({
     </Sheet>
   );
 }
-
-export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(ItemPicker);
 
 function ItemPickerItem({
   item,
