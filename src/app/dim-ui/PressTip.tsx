@@ -61,10 +61,6 @@ const TooltipContext = createContext<React.Dispatch<
   React.SetStateAction<TooltipCustomization>
 > | null>(null);
 
-export function useTooltipCustomization() {
-  return useContext(TooltipContext);
-}
-
 /**
  * <PressTip.Control /> can be used to have a controlled version of the PressTip
  *
@@ -148,34 +144,43 @@ function Control({
   );
 }
 
+export function useTooltipCustomization({
+  getHeader,
+  getSubheader,
+  className,
+}: {
+  getHeader?: () => React.ReactNode;
+  getSubheader?: () => React.ReactNode;
+  className?: string;
+}) {
+  const customizeTooltip = useContext(TooltipContext);
+  useEffect(() => {
+    if (customizeTooltip) {
+      customizeTooltip((existing) => ({
+        ...existing,
+        ...(getHeader && { header: getHeader() }),
+        ...(getSubheader && { subheader: getSubheader() }),
+        ...(className && { className }),
+      }));
+    }
+  }, [customizeTooltip, getHeader, getSubheader, className]);
+
+  return customizeTooltip !== null;
+}
+
 export const Tooltip = {
   Header: ({ text }: { text: string }) => {
-    const customizeTooltip = useTooltipCustomization();
-    useEffect(() => {
-      if (customizeTooltip) {
-        customizeTooltip((customization) => ({ ...customization, header: text }));
-      }
-    }, [customizeTooltip, text]);
+    useTooltipCustomization({ getHeader: () => text });
     return null;
   },
 
   Subheader: ({ text }: { text: string }) => {
-    const customizeTooltip = useTooltipCustomization();
-    useEffect(() => {
-      if (customizeTooltip) {
-        customizeTooltip((customization) => ({ ...customization, subheader: text }));
-      }
-    }, [customizeTooltip, text]);
+    useTooltipCustomization({ getSubheader: () => text });
     return null;
   },
 
   Customize: ({ className }: { className: string }) => {
-    const customizeTooltip = useTooltipCustomization();
-    useEffect(() => {
-      if (customizeTooltip) {
-        customizeTooltip((customization) => ({ ...customization, className }));
-      }
-    }, [customizeTooltip, className]);
+    useTooltipCustomization({ className });
     return null;
   },
 
