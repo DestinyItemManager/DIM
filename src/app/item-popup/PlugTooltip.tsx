@@ -1,6 +1,6 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { Tooltip, TooltipContext } from 'app/dim-ui/PressTip';
+import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
@@ -23,7 +23,7 @@ import {
 import clsx from 'clsx';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import _ from 'lodash';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import './ItemSockets.scss';
@@ -169,13 +169,13 @@ export function PlugTooltip({
     </div>
   );
 
-  const tooltip = useContext(TooltipContext);
+  const customizeTooltip = useTooltipCustomization();
   const exotic = def.inventory?.tierType === TierType.Exotic;
   const enhanced =
     enhancedIntrinsics.has(def.hash) || (isPluggableItem(def) && isEnhancedPerk(def));
   useEffect(() => {
-    if (tooltip) {
-      tooltip.customizeTooltip({
+    if (customizeTooltip) {
+      customizeTooltip({
         header: def.displayProperties.name,
         subheader: <span className={styles.subheader}>{def.itemTypeDisplayName}</span>,
         className: clsx(styles.tooltip, {
@@ -184,11 +184,11 @@ export function PlugTooltip({
         }),
       });
     }
-  }, [tooltip, def.displayProperties.name, def.itemTypeDisplayName, exotic, enhanced]);
+  }, [customizeTooltip, def.displayProperties.name, def.itemTypeDisplayName, exotic, enhanced]);
 
   return (
     <>
-      {!tooltip && <h2>{def.displayProperties.name}</h2>}
+      {!customizeTooltip && <h2>{def.displayProperties.name}</h2>}
 
       {/*
         If we're displaying the Bungie description, display the stats in the same section as the Bungie

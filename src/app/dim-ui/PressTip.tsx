@@ -9,7 +9,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -58,10 +57,13 @@ interface TooltipCustomization {
   subheader?: React.ReactNode;
   className?: string;
 }
-interface Tooltip {
-  customizeTooltip: React.Dispatch<React.SetStateAction<TooltipCustomization>>;
+const TooltipContext = createContext<React.Dispatch<
+  React.SetStateAction<TooltipCustomization>
+> | null>(null);
+
+export function useTooltipCustomization() {
+  return useContext(TooltipContext);
 }
-export const TooltipContext = createContext<Tooltip | null>(null);
 
 /**
  * <PressTip.Control /> can be used to have a controlled version of the PressTip
@@ -96,7 +98,6 @@ function Control({
   const pressTipRoot = useContext(PressTipRoot);
 
   const [tooltipCustomization, customizeTooltip] = useState<TooltipCustomization>({});
-  const tooltipContext: Tooltip = useMemo(() => ({ customizeTooltip }), [customizeTooltip]);
 
   usePopper({
     contents: tooltipContents,
@@ -135,7 +136,7 @@ function Control({
               </div>
             )}
             <div className={styles.content}>
-              <TooltipContext.Provider value={tooltipContext}>
+              <TooltipContext.Provider value={customizeTooltip}>
                 {_.isFunction(tooltip) ? tooltip() : tooltip}
               </TooltipContext.Provider>
             </div>
@@ -149,32 +150,32 @@ function Control({
 
 export const Tooltip = {
   Header: ({ text }: { text: string }) => {
-    const tooltip = useContext(TooltipContext);
+    const customizeTooltip = useTooltipCustomization();
     useEffect(() => {
-      if (tooltip) {
-        tooltip.customizeTooltip((customization) => ({ ...customization, header: text }));
+      if (customizeTooltip) {
+        customizeTooltip((customization) => ({ ...customization, header: text }));
       }
-    }, [tooltip, text]);
+    }, [customizeTooltip, text]);
     return null;
   },
 
   Subheader: ({ text }: { text: string }) => {
-    const tooltip = useContext(TooltipContext);
+    const customizeTooltip = useTooltipCustomization();
     useEffect(() => {
-      if (tooltip) {
-        tooltip.customizeTooltip((customization) => ({ ...customization, subheader: text }));
+      if (customizeTooltip) {
+        customizeTooltip((customization) => ({ ...customization, subheader: text }));
       }
-    }, [tooltip, text]);
+    }, [customizeTooltip, text]);
     return null;
   },
 
   Customize: ({ className }: { className: string }) => {
-    const tooltip = useContext(TooltipContext);
+    const customizeTooltip = useTooltipCustomization();
     useEffect(() => {
-      if (tooltip) {
-        tooltip.customizeTooltip((customization) => ({ ...customization, className }));
+      if (customizeTooltip) {
+        customizeTooltip((customization) => ({ ...customization, className }));
       }
-    }, [tooltip, className]);
+    }, [customizeTooltip, className]);
     return null;
   },
 
