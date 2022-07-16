@@ -144,6 +144,22 @@ function Control({
   );
 }
 
+/**
+ * This hook allows customization of the tooltip that the calling component is currently hosted within.
+ * It has no effect if the calling component is not hosted within a tooltip.
+ *
+ * @param getHeader A function that returns the content to be rendered in the tooltip's header (bold uppercase
+ * text). If the hook is being invoked on every render, this **must** be memoised (e.g. wrapped in `useCallback`)
+ * to prevent an infinite loop.
+ *
+ * @param getSubheader A function that returns the content to be rendered in the tooltip's subheader (dimmed text
+ * below the header). If the hook is being invoked on every render, this **must** be memoised (e.g. wrapped in
+ * `useCallback`) to prevent an infinite loop.
+ *
+ * @param className The CSS class(es) to be applied to the tooltip's root element.
+ *
+ * @returns Whether the calling component is currently being hosted in a tooltip.
+ */
 export function useTooltipCustomization({
   getHeader,
   getSubheader,
@@ -169,21 +185,44 @@ export function useTooltipCustomization({
 }
 
 export const Tooltip = {
+  /**
+   * A convenience component used to customise the tooltip's header (bold uppercase text) from within JSX.
+   * This does not render anything and has no effect if the calling component is not currently hosted within
+   * a tooltip.
+   *
+   * If you want to display more than a single string, use the `useTooltipCustomization` hook instead.
+   */
   Header: ({ text }: { text: string }) => {
     useTooltipCustomization({ getHeader: () => text });
     return null;
   },
 
+  /**
+   * A convenience component used to customise the tooltip's subheader (dimmed text below the header) from
+   * within JSX. This does not render anything and has no effect if the calling component is not currently
+   * hosted within a tooltip.
+   *
+   * If you want to display more than a single string, use the `useTooltipCustomization` hook instead.
+   */
   Subheader: ({ text }: { text: string }) => {
     useTooltipCustomization({ getSubheader: () => text });
     return null;
   },
 
+  /**
+   * A convenience component used to add a CSS class to the tooltip's root component from within JSX.
+   * This does not render anything and has no effect if the calling component is not currently hosted within
+   * a tooltip.
+   */
   Customize: ({ className }: { className: string }) => {
     useTooltipCustomization({ className });
     return null;
   },
 
+  /**
+   * If the calling component is hosted within a tooltip, this component wraps its children in a styled `div`.
+   * If not, a fragment containing the children is returned instead.
+   */
   Section: ({ children, className }: { children: React.ReactNode; className?: string }) => {
     const tooltip = useContext(TooltipContext);
     if (!tooltip) {
@@ -201,7 +240,7 @@ const hoverDelay = hoverable ? 100 : 300;
 /**
  * A "press tip" is a tooltip that can be shown by pressing on an element, or via hover.
  *
- * Tooltop content can be any React element, and can be updated through React.
+ * Tooltip content can be any React element, and can be updated through React.
  *
  * Short taps on the element will fire a click event rather than showing the element.
  *
