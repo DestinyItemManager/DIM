@@ -25,6 +25,22 @@
   opacity: 0.7;
 }
 .tooltip {
+  .subheader {
+    display: flex;
+    justify-content: space-between;
+  }
+  .energyCost {
+    font-weight: bold;
+    color: #eee;
+
+    .elementIcon {
+      height: 12px;
+      width: 20px;
+      background-size: contain;
+      background-position: right 0;
+      margin: 0 2px -1px 0;
+    }
+  }
   .clarityDescription {
     margin: 0;
     padding: 0;
@@ -49,7 +65,7 @@
 .tooltipEnhanced {
   @include tooltip-ribbon-color($enhancedYellow);
 
-  .subheader {
+  .subheader > span {
     color: $enhancedYellow;
 
     &::before {

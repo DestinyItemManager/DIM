@@ -8,6 +8,8 @@ interface CssExports {
   'content': string;
   'control': string;
   'craftingRequirementsSection': string;
+  'elementIcon': string;
+  'energyCost': string;
   'header': string;
   'minimalTooltip': string;
   'objectives': string;

@@ -1,5 +1,6 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import ElementIcon from 'app/dim-ui/ElementIcon';
 import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
@@ -169,12 +170,24 @@ export function PlugTooltip({
     </div>
   );
 
+  const energyCost = def.plug?.energyCost;
+
   const isInTooltip = useTooltipCustomization({
     getHeader: useCallback(() => def.displayProperties.name, [def.displayProperties.name]),
-    getSubheader: useCallback(
-      () => <span className={styles.subheader}>{def.itemTypeDisplayName}</span>,
-      [def.itemTypeDisplayName]
-    ),
+    getSubheader: useCallback(() => {
+      const energyType = energyCost?.energyCost && defs?.EnergyType.get(energyCost.energyTypeHash);
+      return (
+        <div className={styles.subheader}>
+          <span>{def.itemTypeDisplayName}</span>
+          {energyType && (
+            <span className={styles.energyCost}>
+              <ElementIcon element={energyType} className={styles.elementIcon} />
+              {energyCost.energyCost}
+            </span>
+          )}
+        </div>
+      );
+    }, [def.itemTypeDisplayName, energyCost, defs]),
     className: clsx(styles.tooltip, {
       [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
       [styles.tooltipEnhanced]:
