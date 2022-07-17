@@ -35,7 +35,8 @@ export const wishListFunctionSelector = createSelector(
           wishlists &&
           item?.destinyVersion === 2 &&
           item.sockets &&
-          item.bucket.inWeapons
+          item.bucket.inWeapons &&
+          item.id !== '0'
         )
       ) {
         return undefined;
