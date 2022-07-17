@@ -5,6 +5,8 @@
 // results:
 // ■ ■ ■ □ ▬ ▬
 
+@use '../variables.scss' as *;
+
 .energyMeterIncrements {
   display: flex;
   align-items: center;
@@ -63,16 +65,16 @@
     }
   }
 
-  &.solar {
-    @include increment-style(#f0631e);
-  }
   &.arc {
-    @include increment-style(#79bbe8);
+    @include increment-style($arc);
+  }
+  &.solar {
+    @include increment-style($solar);
   }
   &.void {
-    @include increment-style(#8e749e);
+    @include increment-style($void);
   }
   &.stasis {
-    @include increment-style(#4d88ff);
+    @include increment-style($stasis);
   }
 }
