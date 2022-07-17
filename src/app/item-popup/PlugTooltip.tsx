@@ -16,6 +16,7 @@ import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { isEnhancedPerk, isModCostHidden } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
+  DestinyEnergyType,
   DestinyInventoryItemDefinition,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
@@ -192,6 +193,10 @@ export function PlugTooltip({
       [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
       [styles.tooltipEnhanced]:
         enhancedIntrinsics.has(def.hash) || (isPluggableItem(def) && isEnhancedPerk(def)),
+      [styles.tooltipElementArc]: energyCost?.energyType === DestinyEnergyType.Arc,
+      [styles.tooltipElementSolar]: energyCost?.energyType === DestinyEnergyType.Thermal,
+      [styles.tooltipElementVoid]: energyCost?.energyType === DestinyEnergyType.Void,
+      [styles.tooltipElementStasis]: energyCost?.energyType === DestinyEnergyType.Stasis,
     }),
   });
 

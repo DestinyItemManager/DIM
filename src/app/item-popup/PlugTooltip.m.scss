@@ -83,3 +83,15 @@
     }
   }
 }
+.tooltipElementArc {
+  @include tooltip-ribbon-color($arc);
+}
+.tooltipElementSolar {
+  @include tooltip-ribbon-color($solar);
+}
+.tooltipElementVoid {
+  @include tooltip-ribbon-color($void);
+}
+.tooltipElementStasis {
+  @include tooltip-ribbon-color($stasis);
+}

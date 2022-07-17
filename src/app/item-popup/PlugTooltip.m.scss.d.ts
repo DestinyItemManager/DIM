@@ -19,6 +19,10 @@ interface CssExports {
   'source': string;
   'subheader': string;
   'tooltip': string;
+  'tooltipElementArc': string;
+  'tooltipElementSolar': string;
+  'tooltipElementStasis': string;
+  'tooltipElementVoid': string;
   'tooltipEnhanced': string;
   'tooltipExotic': string;
   'wideTooltip': string;
