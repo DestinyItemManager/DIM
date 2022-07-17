@@ -9,6 +9,8 @@
   display: flex;
   align-items: center;
 
+  border-color: white;
+
   .unavailable,
   .used,
   .unused {
@@ -18,6 +20,10 @@
   }
   .unavailable {
     height: 0;
+    border-color: #888;
+  }
+  .used {
+    background: white;
   }
   &.small {
     .unavailable,
@@ -47,43 +53,26 @@
     }
   }
 
-  .unavailable {
-    border-color: #888;
+  @mixin increment-style($color) {
+    .unused {
+      border-color: $color;
+    }
+    .used {
+      border-color: $color;
+      background: $color;
+    }
   }
 
-  &.solar > .used {
-    border-color: #f0631e;
-    background: #f0631e;
+  &.solar {
+    @include increment-style(#f0631e);
   }
-
-  &.solar > .unused {
-    border-color: #f0631e;
+  &.arc {
+    @include increment-style(#79bbe8);
   }
-
-  &.arc > .used {
-    border-color: #79bbe8;
-    background: #79bbe8;
+  &.void {
+    @include increment-style(#8e749e);
   }
-
-  &.arc > .unused {
-    border-color: #79bbe8;
-  }
-
-  &.void > .used {
-    border-color: #8e749e;
-    background: #8e749e;
-  }
-
-  &.void > .unused {
-    border-color: #8e749e;
-  }
-
-  &.stasis > .used {
-    border-color: #4d88ff;
-    background: #4d88ff;
-  }
-
-  &.stasis > .unused {
-    border-color: #4d88ff;
+  &.stasis {
+    @include increment-style(#4d88ff);
   }
 }
