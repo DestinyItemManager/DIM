@@ -13,7 +13,7 @@ import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
-import { isEnhancedPerk } from 'app/utils/socket-utils';
+import { isEnhancedPerk, isModCostHidden } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DestinyInventoryItemDefinition,
@@ -170,7 +170,7 @@ export function PlugTooltip({
     </div>
   );
 
-  const energyCost = def.plug?.energyCost;
+  const energyCost = def.plug && !isModCostHidden(def.plug) ? def.plug.energyCost : null;
 
   const isInTooltip = useTooltipCustomization({
     getHeader: useCallback(() => def.displayProperties.name, [def.displayProperties.name]),

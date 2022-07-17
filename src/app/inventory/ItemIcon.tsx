@@ -4,13 +4,14 @@ import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { d2MissingIcon } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
+import { isModCostHidden } from 'app/utils/socket-utils';
 import {
   DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import pursuitComplete from 'images/highlightedObjective.svg';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
@@ -169,13 +170,7 @@ function getModCostInfo(mod: DestinyInventoryItemDefinition | number, defs: D2Ma
     mod = defs.InventoryItem.get(mod);
   }
 
-  // hide cost for Subclass 3.0 fragments as these are currently always set to 1
-  if (
-    mod?.plug &&
-    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedStasisTrinkets &&
-    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedVoidFragments &&
-    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedSolarFragments
-  ) {
+  if (mod?.plug && !isModCostHidden(mod.plug)) {
     modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
 
     if (mod.plug.energyCost?.energyTypeHash) {

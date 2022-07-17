@@ -4,7 +4,11 @@ import {
   DimSocketCategory,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
-import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
+import {
+  DestinyItemPlugDefinition,
+  DestinySocketCategoryStyle,
+  TierType,
+} from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimSocket, DimSockets } from '../inventory/item-types';
@@ -198,4 +202,13 @@ export function isEnhancedPerk(plugDef: PluggableInventoryItemDefinition) {
 
 export function countEnhancedPerks(sockets: DimSockets) {
   return sockets.allSockets.filter((s) => s.plugged && isEnhancedPerk(s.plugged.plugDef)).length;
+}
+
+export function isModCostHidden(plug: DestinyItemPlugDefinition) {
+  // hide cost for Subclass 3.0 fragments as these are currently always set to 1
+  return (
+    plug.plugCategoryHash === PlugCategoryHashes.SharedStasisTrinkets ||
+    plug.plugCategoryHash === PlugCategoryHashes.SharedVoidFragments ||
+    plug.plugCategoryHash === PlugCategoryHashes.SharedSolarFragments
+  );
 }
