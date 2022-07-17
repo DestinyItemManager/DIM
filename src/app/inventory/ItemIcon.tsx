@@ -4,7 +4,7 @@ import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { d2MissingIcon } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
-import { isModCostHidden } from 'app/utils/socket-utils';
+import { isModCostVisible } from 'app/utils/socket-utils';
 import {
   DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
@@ -170,8 +170,8 @@ function getModCostInfo(mod: DestinyInventoryItemDefinition | number, defs: D2Ma
     mod = defs.InventoryItem.get(mod);
   }
 
-  if (mod?.plug && !isModCostHidden(mod.plug)) {
-    modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
+  if (mod?.plug && isModCostVisible(mod.plug)) {
+    modCostInfo.energyCost = mod.plug.energyCost.energyCost;
 
     if (mod.plug.energyCost?.energyTypeHash) {
       modCostInfo.energyCostElement = defs.EnergyType.get(mod.plug.energyCost.energyTypeHash);

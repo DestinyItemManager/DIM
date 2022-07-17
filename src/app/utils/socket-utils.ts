@@ -1,6 +1,5 @@
 import {
   DimItem,
-  DimPlug,
   DimSocketCategory,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
@@ -13,6 +12,10 @@ import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enum
 import _ from 'lodash';
 import { DimSocket, DimSockets } from '../inventory/item-types';
 import { isArmor2Mod } from './item-utils';
+
+type WithRequiredProperty<T, K extends keyof T> = T & {
+  [P in K]-?: NonNullable<T[P]>;
+};
 
 function getSocketHashesByCategoryStyle(
   sockets: DimSockets,
@@ -145,7 +148,7 @@ export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefine
 export function socketContainsPlugWithCategory(
   socket: DimSocket,
   category: PlugCategoryHashes
-): socket is Omit<DimSocket, 'plugged'> & { plugged: DimPlug } {
+): socket is WithRequiredProperty<DimSocket, 'plugged'> {
   // the above type predicate removes the need to null-check `plugged` after this call
   return socket.plugged?.plugDef.plug.plugCategoryHash === category;
 }
@@ -159,7 +162,7 @@ export function socketContainsPlugWithCategory(
  */
 export function socketContainsIntrinsicPlug(
   socket: DimSocket
-): socket is Omit<DimSocket, 'plugged'> & { plugged: DimPlug } {
+): socket is WithRequiredProperty<DimSocket, 'plugged'> {
   // the above type predicate removes the need to null-check `plugged` after this call
   return socketContainsPlugWithCategory(socket, PlugCategoryHashes.Intrinsics);
 }
@@ -204,11 +207,22 @@ export function countEnhancedPerks(sockets: DimSockets) {
   return sockets.allSockets.filter((s) => s.plugged && isEnhancedPerk(s.plugged.plugDef)).length;
 }
 
-export function isModCostHidden(plug: DestinyItemPlugDefinition) {
+export function isModCostVisible(
+  plug: DestinyItemPlugDefinition
+): plug is WithRequiredProperty<DestinyItemPlugDefinition, 'energyCost'> {
+  // hide cost if it's less than 1
+  if ((plug.energyCost?.energyCost ?? 0) < 1) {
+    return false;
+  }
+
   // hide cost for Subclass 3.0 fragments as these are currently always set to 1
-  return (
+  if (
     plug.plugCategoryHash === PlugCategoryHashes.SharedStasisTrinkets ||
     plug.plugCategoryHash === PlugCategoryHashes.SharedVoidFragments ||
     plug.plugCategoryHash === PlugCategoryHashes.SharedSolarFragments
-  );
+  ) {
+    return false;
+  }
+
+  return true;
 }

@@ -13,7 +13,7 @@ import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
-import { isEnhancedPerk, isModCostHidden } from 'app/utils/socket-utils';
+import { isEnhancedPerk, isModCostVisible } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DestinyEnergyType,
@@ -171,12 +171,12 @@ export function PlugTooltip({
     </div>
   );
 
-  const energyCost = def.plug && !isModCostHidden(def.plug) ? def.plug.energyCost : null;
+  const energyCost = def.plug && isModCostVisible(def.plug) ? def.plug.energyCost : null;
 
   const isInTooltip = useTooltipCustomization({
     getHeader: useCallback(() => def.displayProperties.name, [def.displayProperties.name]),
     getSubheader: useCallback(() => {
-      const energyType = energyCost?.energyCost && defs?.EnergyType.get(energyCost.energyTypeHash);
+      const energyType = energyCost && defs?.EnergyType.get(energyCost.energyTypeHash);
       return (
         <div className={styles.subheader}>
           <span>{def.itemTypeDisplayName}</span>
