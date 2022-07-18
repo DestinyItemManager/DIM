@@ -1,13 +1,13 @@
 export interface LinesContent {
   text?: string;
-  className?: string;
+  className?: string[];
   linkUrl?: string;
   linkText?: string;
   title?: string;
 }
 export interface Line {
-  lineText?: LinesContent[];
-  className?: string;
+  linesContent?: LinesContent[];
+  className?: string[];
 }
 type PerkType =
   | 'armorExotic'
@@ -21,13 +21,14 @@ type PerkType =
   | 'weaponMod'
   | 'weaponCatalystExotic'
   // ---------
-  | 'ghostMod';
+  | 'ghostMod'
+  | 'artifactMod';
 
 export interface Perk {
   /**
    * Perk hash from inventoryItems
    */
-  id: number;
+  hash: number;
   /**
    * Perk name from inventoryItems
    */
@@ -36,7 +37,7 @@ export interface Perk {
   /**
    * Exotic armor / weapon hash from inventoryItems
    */
-  itemId?: number;
+  itemHash?: number;
   /**
    * Exotic armor / weapon name from inventoryItems
    */
@@ -48,17 +49,11 @@ export interface Perk {
   type: PerkType;
 
   description: Line[];
-  simpleDescription?: Line[];
-
-  /**
-   * Community gathered stats that are not provided by Bungie
-   */
-  stats?: { [key: string]: any };
 
   /**
    * Description with stats only (not needed in DIM)
    */
-  statOnly?: boolean;
+  investmentStatOnly?: boolean;
 
   /**
    * Then last time perk was updated time in ms (Date.now())

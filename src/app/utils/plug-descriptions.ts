@@ -95,7 +95,7 @@ export function usePlugDescriptions(
       }
     }
 
-    if (clarityPerk && !clarityPerk.statOnly) {
+    if (clarityPerk && !clarityPerk.investmentStatOnly) {
       // strip out any strings that are used in the Bungie description
       const communityInsightWithoutBungieStrings = stripUsedStrings(
         clarityPerk,
@@ -265,28 +265,28 @@ function stripUsedStrings(
   communityInsight: Readonly<Perk>,
   usedStrings: ReadonlySet<string>
 ): Perk | undefined {
-  if (!communityInsight.simpleDescription) {
+  if (!communityInsight.description) {
     return;
   }
 
   // todo: only rebuild these arrays if they contain a duplicate line
 
-  const simpleDescription = communityInsight.simpleDescription.map((line) =>
-    line.lineText
-      ? {
-          ...line,
-          lineText: line.lineText.filter(
-            (content) => !content.text || !usedStrings.has(content.text)
-          ),
-        }
-      : line
-  );
-  if (!simpleDescription.some((line) => line.lineText?.length)) {
-    return;
-  }
+  // const description = communityInsight.description.map((line) =>
+  //   line.linesContent
+  //     ? {
+  //         ...line,
+  //         linesContent: line.linesContent.filter(
+  //           (content) => !content.text || !usedStrings.has(content.text)
+  //         ),
+  //       }
+  //     : line
+  // );
+  // if (!description.some((line) => line.linesContent?.length)) {
+  //   return;
+  // }
 
   return {
     ...communityInsight,
-    simpleDescription,
+    description: communityInsight.description,
   };
 }

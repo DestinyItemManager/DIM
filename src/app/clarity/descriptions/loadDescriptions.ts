@@ -6,7 +6,7 @@ import * as actions from '../actions';
 import { ClarityDescription, ClarityVersions } from './descriptionInterface';
 
 const urls = {
-  descriptions: 'https://ice-mourne.github.io/database-clarity/descriptions.json',
+  descriptions: 'https://ice-mourne.github.io/database-clarity/descriptions/dim.json',
   version: 'https://ice-mourne.github.io/database-clarity/versions.json',
 } as const;
 

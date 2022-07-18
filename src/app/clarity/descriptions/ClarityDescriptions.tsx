@@ -11,11 +11,8 @@ const customContent = (content: LinesContent) => {
   }
 };
 
-const joinClassNames = (classNames?: string) =>
-  classNames
-    ?.split(' ')
-    .map((className) => styles[className])
-    .join(' ');
+const joinClassNames = (classNames?: string[]) =>
+  classNames?.map((className) => styles[className]).join(' ');
 
 /*
        (^|\b) : start from the beginning of the string or a word boundary
@@ -60,13 +57,13 @@ export default function ClarityDescriptions({
   perk: Perk;
   className?: string;
 }) {
-  if (!perk.simpleDescription) {
+  if (!perk.description) {
     return null;
   }
 
-  const convertedDescription = perk.simpleDescription.map((line, i) => (
+  const convertedDescription = perk.description.map((line, i) => (
     <div className={joinClassNames(line.className)} key={i}>
-      {line.lineText?.map((linesContent, i) => (
+      {line.linesContent?.map((linesContent, i) => (
         <span className={joinClassNames(linesContent.className)} title={linesContent.title} key={i}>
           {linesContent.text ? applyFormatting(linesContent.text) : customContent(linesContent)}
         </span>
