@@ -1,5 +1,5 @@
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
-import { DamageType, DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import {
   ItemCategoryHashes,
@@ -13,7 +13,7 @@ import subclassStasis from 'images/subclass-stasis.png';
 import subclassVoidAlt from 'images/subclass-void-alt.png';
 import subclassVoid from 'images/subclass-void.png';
 import _ from 'lodash';
-import { DimItem } from './item-types';
+import { DimItem, PluggableInventoryItemDefinition } from './item-types';
 
 type SubclassPath = 'top' | 'middle' | 'bottom';
 
@@ -344,11 +344,7 @@ function getV3SubclassIconInfo(
   }
 }
 
-export function getDamageTypeForSubclassPlug(item: DestinyInventoryItemDefinition) {
-  if (!item.plug) {
-    return null;
-  }
-
+export function getDamageTypeForSubclassPlug(item: PluggableInventoryItemDefinition) {
   // ignore empty plugs because they'll be present across all subclasses
   if (emptyPlugHashes.has(item.hash)) {
     return null;

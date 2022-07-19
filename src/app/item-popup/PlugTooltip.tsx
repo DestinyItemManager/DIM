@@ -173,8 +173,9 @@ export function PlugTooltip({
     </div>
   );
 
-  const energyCost = def.plug && isModCostVisible(def.plug) ? def.plug.energyCost : null;
-  const subclassDamageType = getDamageTypeForSubclassPlug(def);
+  const isPluggable = isPluggableItem(def);
+  const energyCost = isPluggable && isModCostVisible(def.plug) ? def.plug.energyCost : null;
+  const subclassDamageType = isPluggable && getDamageTypeForSubclassPlug(def);
 
   const isInTooltip = useTooltipCustomization({
     getHeader: useCallback(() => def.displayProperties.name, [def.displayProperties.name]),
@@ -195,7 +196,7 @@ export function PlugTooltip({
     className: clsx(styles.tooltip, {
       [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
       [styles.tooltipEnhanced]:
-        enhancedIntrinsics.has(def.hash) || (isPluggableItem(def) && isEnhancedPerk(def)),
+        enhancedIntrinsics.has(def.hash) || (isPluggable && isEnhancedPerk(def)),
       [styles.tooltipElementArc]:
         energyCost?.energyType === DestinyEnergyType.Arc || subclassDamageType === DamageType.Arc,
       [styles.tooltipElementSolar]:
