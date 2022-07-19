@@ -1,6 +1,11 @@
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
-import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { DamageType, DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
+import {
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+} from 'data/d2/generated-enums';
 import subclassArc from 'images/subclass-arc.png';
 import subclassSolar from 'images/subclass-solar.png';
 import subclassStasisAlt from 'images/subclass-stasis-alt.png';
@@ -337,4 +342,39 @@ function getV3SubclassIconInfo(
       };
     }
   }
+}
+
+export function getDamageTypeForSubclassPlug(item: DestinyInventoryItemDefinition) {
+  if (!item.plug) {
+    return null;
+  }
+
+  // ignore empty plugs because they'll be present across all subclasses
+  if (emptyPlugHashes.has(item.hash)) {
+    return null;
+  }
+
+  // early out to avoid looping through subclass infos
+  if (
+    !item.itemCategoryHashes ||
+    !item.itemCategoryHashes.includes(ItemCategoryHashes.SubclassMods)
+  ) {
+    return null;
+  }
+
+  for (const subclass of Object.values(subclassInfoByHash)) {
+    if (
+      subclass.isV3 &&
+      (item.plug.plugCategoryHash === subclass.plugCategoryHashes.supers ||
+        item.plug.plugCategoryHash === subclass.plugCategoryHashes.classAbilities ||
+        item.plug.plugCategoryHash === subclass.plugCategoryHashes.movementAbilities ||
+        item.plug.plugCategoryHash === subclass.plugCategoryHashes.melees ||
+        item.plug.plugCategoryHash === subclass.plugCategoryHashes.grenades ||
+        item.plug.plugCategoryHash === subclass.plugCategoryHashes.aspects ||
+        item.plug.plugCategoryHash === subclass.plugCategoryHashes.fragments)
+    ) {
+      return subclass.damageType;
+    }
+  }
+  return null;
 }

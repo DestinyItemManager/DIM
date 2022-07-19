@@ -7,6 +7,7 @@ import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { statAllowList } from 'app/inventory/store/stats';
+import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { thumbsUpIcon } from 'app/shell/icons';
@@ -16,6 +17,7 @@ import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { isEnhancedPerk, isModCostVisible } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
+  DamageType,
   DestinyEnergyType,
   DestinyInventoryItemDefinition,
   DestinyObjectiveProgress,
@@ -172,6 +174,7 @@ export function PlugTooltip({
   );
 
   const energyCost = def.plug && isModCostVisible(def.plug) ? def.plug.energyCost : null;
+  const subclassDamageType = getDamageTypeForSubclassPlug(def);
 
   const isInTooltip = useTooltipCustomization({
     getHeader: useCallback(() => def.displayProperties.name, [def.displayProperties.name]),
@@ -193,10 +196,16 @@ export function PlugTooltip({
       [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
       [styles.tooltipEnhanced]:
         enhancedIntrinsics.has(def.hash) || (isPluggableItem(def) && isEnhancedPerk(def)),
-      [styles.tooltipElementArc]: energyCost?.energyType === DestinyEnergyType.Arc,
-      [styles.tooltipElementSolar]: energyCost?.energyType === DestinyEnergyType.Thermal,
-      [styles.tooltipElementVoid]: energyCost?.energyType === DestinyEnergyType.Void,
-      [styles.tooltipElementStasis]: energyCost?.energyType === DestinyEnergyType.Stasis,
+      [styles.tooltipElementArc]:
+        energyCost?.energyType === DestinyEnergyType.Arc || subclassDamageType === DamageType.Arc,
+      [styles.tooltipElementSolar]:
+        energyCost?.energyType === DestinyEnergyType.Thermal ||
+        subclassDamageType === DamageType.Thermal,
+      [styles.tooltipElementVoid]:
+        energyCost?.energyType === DestinyEnergyType.Void || subclassDamageType === DamageType.Void,
+      [styles.tooltipElementStasis]:
+        energyCost?.energyType === DestinyEnergyType.Stasis ||
+        subclassDamageType === DamageType.Stasis,
     }),
   });
 
