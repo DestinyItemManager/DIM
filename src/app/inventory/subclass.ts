@@ -1,6 +1,6 @@
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import subclassArc from 'images/subclass-arc.png';
 import subclassSolar from 'images/subclass-solar.png';
 import subclassStasisAlt from 'images/subclass-stasis-alt.png';
@@ -26,6 +26,15 @@ interface V2SubclassInfo extends CommonSubclassInfo {
 }
 interface V3SubclassInfo extends CommonSubclassInfo {
   isV3: true;
+  plugCategoryHashes: {
+    supers: PlugCategoryHashes;
+    classAbilities: PlugCategoryHashes;
+    movementAbilities: PlugCategoryHashes;
+    melees: PlugCategoryHashes;
+    grenades: PlugCategoryHashes;
+    aspects: PlugCategoryHashes;
+    fragments: PlugCategoryHashes;
+  };
 }
 type SubclassInfo = V2SubclassInfo | V3SubclassInfo;
 
@@ -44,11 +53,16 @@ function v2Subclass(
 function subclassPath(nodeHash: number, superIconNodeHash: number): V2SubclassPathInfo {
   return { nodeHash, superIconNodeHash };
 }
-function v3Subclass(damageType: DamageType, characterClass: DestinyClass): SubclassInfo {
+function v3Subclass(
+  damageType: DamageType,
+  characterClass: DestinyClass,
+  plugCategoryHashes: V3SubclassInfo['plugCategoryHashes']
+): SubclassInfo {
   return {
     damageType,
     characterClass,
     isV3: true,
+    plugCategoryHashes,
   };
 }
 
@@ -75,7 +89,7 @@ const superIconNodeHashes = {
   burningMaul: 1323416107,
 };
 
-const subclassInfoByHash: Record<number, SubclassInfo> = {
+export const subclassInfoByHash: Record<number, SubclassInfo> = {
   // Arcstrider (v2)
   1334959255: v2Subclass(DamageType.Arc, DestinyClass.Hunter, {
     top: subclassPath(1690891826, superIconNodeHashes.arcStaff),
@@ -132,15 +146,97 @@ const subclassInfoByHash: Record<number, SubclassInfo> = {
   }),
 
   // Subclass 3.0
-  873720784: v3Subclass(DamageType.Stasis, DestinyClass.Hunter), // Revenant (v3)
-  613647804: v3Subclass(DamageType.Stasis, DestinyClass.Titan), // Behemoth (v3)
-  3291545503: v3Subclass(DamageType.Stasis, DestinyClass.Warlock), // Shadebinder (v3)
-  2453351420: v3Subclass(DamageType.Void, DestinyClass.Hunter), // Nightstalker (v3)
-  2842471112: v3Subclass(DamageType.Void, DestinyClass.Titan), // Sentinel (v3)
-  2849050827: v3Subclass(DamageType.Void, DestinyClass.Warlock), // Voidwalker (v3)
-  2240888816: v3Subclass(DamageType.Thermal, DestinyClass.Hunter), // Gunslinger (v3)
-  3941205951: v3Subclass(DamageType.Thermal, DestinyClass.Warlock), // Dawnblade (v3)
-  2550323932: v3Subclass(DamageType.Thermal, DestinyClass.Titan), // Sunbreaker (v3)
+
+  // Revenant (v3)
+  873720784: v3Subclass(DamageType.Stasis, DestinyClass.Hunter, {
+    supers: PlugCategoryHashes.HunterStasisSupers,
+    classAbilities: PlugCategoryHashes.HunterStasisClassAbilities,
+    movementAbilities: PlugCategoryHashes.HunterStasisMovement,
+    melees: PlugCategoryHashes.HunterStasisMelee,
+    grenades: PlugCategoryHashes.SharedStasisGrenades,
+    aspects: PlugCategoryHashes.HunterStasisTotems,
+    fragments: PlugCategoryHashes.SharedStasisTrinkets,
+  }),
+  // Behemoth (v3)
+  613647804: v3Subclass(DamageType.Stasis, DestinyClass.Titan, {
+    supers: PlugCategoryHashes.TitanStasisSupers,
+    classAbilities: PlugCategoryHashes.TitanStasisClassAbilities,
+    movementAbilities: PlugCategoryHashes.TitanStasisMovement,
+    melees: PlugCategoryHashes.TitanStasisMelee,
+    grenades: PlugCategoryHashes.SharedStasisGrenades,
+    aspects: PlugCategoryHashes.TitanStasisTotems,
+    fragments: PlugCategoryHashes.SharedStasisTrinkets,
+  }),
+  // Shadebinder (v3)
+  3291545503: v3Subclass(DamageType.Stasis, DestinyClass.Warlock, {
+    supers: PlugCategoryHashes.WarlockStasisSupers,
+    classAbilities: PlugCategoryHashes.WarlockStasisClassAbilities,
+    movementAbilities: PlugCategoryHashes.WarlockStasisMovement,
+    melees: PlugCategoryHashes.WarlockStasisMelee,
+    grenades: PlugCategoryHashes.SharedStasisGrenades,
+    aspects: PlugCategoryHashes.WarlockStasisTotems,
+    fragments: PlugCategoryHashes.SharedStasisTrinkets,
+  }),
+  // Nightstalker (v3)
+  2453351420: v3Subclass(DamageType.Void, DestinyClass.Hunter, {
+    supers: PlugCategoryHashes.HunterVoidSupers,
+    classAbilities: PlugCategoryHashes.HunterVoidClassAbilities,
+    movementAbilities: PlugCategoryHashes.HunterVoidMovement,
+    melees: PlugCategoryHashes.HunterVoidMelee,
+    grenades: PlugCategoryHashes.SharedVoidGrenades,
+    aspects: PlugCategoryHashes.HunterVoidAspects,
+    fragments: PlugCategoryHashes.SharedVoidFragments,
+  }),
+  // Sentinel (v3)
+  2842471112: v3Subclass(DamageType.Void, DestinyClass.Titan, {
+    supers: PlugCategoryHashes.TitanVoidSupers,
+    classAbilities: PlugCategoryHashes.TitanVoidClassAbilities,
+    movementAbilities: PlugCategoryHashes.TitanVoidMovement,
+    melees: PlugCategoryHashes.TitanVoidMelee,
+    grenades: PlugCategoryHashes.SharedVoidGrenades,
+    aspects: PlugCategoryHashes.TitanVoidAspects,
+    fragments: PlugCategoryHashes.SharedVoidFragments,
+  }),
+  // Voidwalker (v3)
+  2849050827: v3Subclass(DamageType.Void, DestinyClass.Warlock, {
+    supers: PlugCategoryHashes.WarlockVoidSupers,
+    classAbilities: PlugCategoryHashes.WarlockVoidClassAbilities,
+    movementAbilities: PlugCategoryHashes.WarlockVoidMovement,
+    melees: PlugCategoryHashes.WarlockVoidMelee,
+    grenades: PlugCategoryHashes.SharedVoidGrenades,
+    aspects: PlugCategoryHashes.WarlockVoidAspects,
+    fragments: PlugCategoryHashes.SharedVoidFragments,
+  }),
+  // Gunslinger (v3)
+  2240888816: v3Subclass(DamageType.Thermal, DestinyClass.Hunter, {
+    supers: PlugCategoryHashes.HunterSolarSupers,
+    classAbilities: PlugCategoryHashes.HunterSolarClassAbilities,
+    movementAbilities: PlugCategoryHashes.HunterSolarMovement,
+    melees: PlugCategoryHashes.HunterSolarMelee,
+    grenades: PlugCategoryHashes.SharedSolarGrenades,
+    aspects: PlugCategoryHashes.HunterSolarAspects,
+    fragments: PlugCategoryHashes.SharedSolarFragments,
+  }),
+  // Sunbreaker (v3)
+  2550323932: v3Subclass(DamageType.Thermal, DestinyClass.Titan, {
+    supers: PlugCategoryHashes.TitanSolarSupers,
+    classAbilities: PlugCategoryHashes.TitanSolarClassAbilities,
+    movementAbilities: PlugCategoryHashes.TitanSolarMovement,
+    melees: PlugCategoryHashes.TitanSolarMelee,
+    grenades: PlugCategoryHashes.SharedSolarGrenades,
+    aspects: PlugCategoryHashes.TitanSolarAspects,
+    fragments: PlugCategoryHashes.SharedSolarFragments,
+  }),
+  // Dawnblade (v3)
+  3941205951: v3Subclass(DamageType.Thermal, DestinyClass.Warlock, {
+    supers: PlugCategoryHashes.WarlockSolarSupers,
+    classAbilities: PlugCategoryHashes.WarlockSolarClassAbilities,
+    movementAbilities: PlugCategoryHashes.WarlockSolarMovement,
+    melees: PlugCategoryHashes.WarlockSolarMelee,
+    grenades: PlugCategoryHashes.SharedSolarGrenades,
+    aspects: PlugCategoryHashes.WarlockSolarAspects,
+    fragments: PlugCategoryHashes.SharedSolarFragments,
+  }),
 };
 
 // build up a map of V2 -> V3 subclass hashes

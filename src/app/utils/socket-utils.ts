@@ -3,6 +3,7 @@ import {
   DimSocketCategory,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
+import { subclassInfoByHash } from 'app/inventory/subclass';
 import {
   DestinyItemPlugDefinition,
   DestinySocketCategoryStyle,
@@ -216,12 +217,10 @@ export function isModCostVisible(
   }
 
   // hide cost for Subclass 3.0 fragments as these are currently always set to 1
-  if (
-    plug.plugCategoryHash === PlugCategoryHashes.SharedStasisTrinkets ||
-    plug.plugCategoryHash === PlugCategoryHashes.SharedVoidFragments ||
-    plug.plugCategoryHash === PlugCategoryHashes.SharedSolarFragments
-  ) {
-    return false;
+  for (const subclass of Object.values(subclassInfoByHash)) {
+    if (subclass.isV3 && plug.plugCategoryHash === subclass.plugCategoryHashes.fragments) {
+      return false;
+    }
   }
 
   return true;
