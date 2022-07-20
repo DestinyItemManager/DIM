@@ -3,7 +3,6 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import {
-  allItemsSelector,
   bucketsSelector,
   profileResponseSelector,
   sortedStoresSelector,
@@ -20,13 +19,13 @@ import { DestinyAccount } from '../accounts/destiny-account';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import '../records/PresentationNode.scss';
+import { Event } from './Event';
 import Milestones from './Milestones';
 import './progress.scss';
 import Pursuits from './Pursuits';
 import Raids from './Raids';
 import Ranks from './Ranks';
 import SeasonalChallenges from './SeasonalChallenges';
-import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
 import { TrackedTriumphs } from './TrackedTriumphs';
 
 export default function Progress({ account }: { account: DestinyAccount }) {
@@ -36,7 +35,6 @@ export default function Progress({ account }: { account: DestinyAccount }) {
   const buckets = useSelector(bucketsSelector);
   const profileInfo = useSelector(profileResponseSelector);
   const searchQuery = useSelector(querySelector);
-  const allItems = useSelector(allItemsSelector);
   const coreSettings = useSelector(destiny2CoreSettingsSelector);
 
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
@@ -83,8 +81,8 @@ export default function Progress({ account }: { account: DestinyAccount }) {
   const raidNode = defs.PresentationNode.get(RAID_NODE);
   const raidTitle = raidNode?.displayProperties.name;
 
-  const solsticeTitle = defs.InventoryItem.get(3723510815).displayProperties.name;
-  const solsticeArmor = solsticeOfHeroesArmor(allItems, selectedStore);
+  const eventCardHash = profileInfo.profile.data?.activeEventCardHash;
+  const eventCard = eventCardHash && defs.EventCard.get(eventCardHash);
 
   const seasonalChallengesPresentationNode =
     coreSettings?.seasonalChallengesPresentationNodeHash &&
@@ -93,7 +91,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
   const menuItems = [
     { id: 'ranks', title: t('Progress.CrucibleRank') },
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
-    ...(solsticeArmor.length ? [{ id: 'solstice', title: solsticeTitle }] : []),
+    ...(eventCard ? [{ id: 'event', title: eventCard.displayProperties.name }] : []),
     { id: 'milestones', title: t('Progress.Milestones') },
     ...(seasonalChallengesPresentationNode
       ? [
@@ -153,7 +151,17 @@ export default function Progress({ account }: { account: DestinyAccount }) {
               </CollapsibleTitle>
             </section>
 
-            <SolsticeOfHeroes armor={solsticeArmor} title={solsticeTitle} />
+            {eventCard && (
+              <section id="event">
+                <CollapsibleTitle title={eventCard.displayProperties.name} sectionId="event">
+                  <div className="progress-row">
+                    <ErrorBoundary name={eventCard.displayProperties.name}>
+                      <Event card={eventCard} store={selectedStore} buckets={buckets} />
+                    </ErrorBoundary>
+                  </div>
+                </CollapsibleTitle>
+              </section>
+            )}
 
             <section id="milestones">
               <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
