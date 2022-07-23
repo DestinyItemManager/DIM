@@ -836,6 +836,7 @@
     "CrucibleRank": "ランク",
     "Items": "クエストアイテム",
     "Milestones": "マイルストーンと挑戦",
+    "NoEventChallenges": "You have completed all event challenges",
     "NoTrackedTriumph": "追跡中の勝利の道のりはありませんでした。ゲーム内で1つを追跡するか、DIMで好きなだけ追跡してください。",
     "PercentPrestige": "リセットまで{{pct}}％達成",
     "PowerBonusHeader": "+{{powerBonus}} パワーボーナス",

@@ -836,6 +836,7 @@
     "CrucibleRank": "Ränge",
     "Items": "Quest-Gegenstände",
     "Milestones": "Meilensteine & Herausforderungen",
+    "NoEventChallenges": "Du hast alle Event-Herausforderungen abgeschlossen",
     "NoTrackedTriumph": "Du verfolgst keine Triumphe. Verfolge einen im Spiel oder so vielen wie du möchtest in DIM.",
     "PercentPrestige": "{{pct}}% vor Zurücksetzung",
     "PowerBonusHeader": "+{{powerBonus}} Power-Belohnungen",

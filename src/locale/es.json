@@ -836,6 +836,7 @@
     "CrucibleRank": "Rango",
     "Items": "Objetos de aventuras",
     "Milestones": "Hazañas & Desafíos",
+    "NoEventChallenges": "Has completado todos los desafíos del evento",
     "NoTrackedTriumph": "No tienes triunfos seguidos. Sigue uno en el juego, o tantos como quieras en DIM.",
     "PercentPrestige": "{{pct}}% hacia el reinicio",
     "PowerBonusHeader": "+{{powerBonus}} Recompensas De Poder",
