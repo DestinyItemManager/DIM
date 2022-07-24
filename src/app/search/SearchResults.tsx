@@ -4,6 +4,7 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import clsx from 'clsx';
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
@@ -14,7 +15,13 @@ import styles from './SearchResults.m.scss';
  * This displays all the items that match the given search - it is shown by default when a search is active
  * on mobile, and as a sheet when you hit "enter" on desktop.
  */
-export default function SearchResults({ items, onClose }: { items: DimItem[]; onClose(): void }) {
+export default memo(function SearchResults({
+  items,
+  onClose,
+}: {
+  items: DimItem[];
+  onClose(): void;
+}) {
   const sortItems = useSelector(itemSorterSelector);
 
   const header = (
@@ -47,4 +54,4 @@ export default function SearchResults({ items, onClose }: { items: DimItem[]; on
       </ClickOutsideRoot>
     </Sheet>
   );
-}
+});

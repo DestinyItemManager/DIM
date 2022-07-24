@@ -1,17 +1,27 @@
-import { RootState } from 'app/store/types';
 import _ from 'lodash';
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { searchFilterSelector } from '../search/search-filter';
 import { wishListSelector } from '../wishlists/selectors';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { getNotes, getTag, TagValue } from './dim-item-info';
+import { getNotes, getTag } from './dim-item-info';
 import InventoryItem from './InventoryItem';
 import { DimItem } from './item-types';
 import { isNewSelector, itemHashTagsSelector, itemInfosSelector } from './selectors';
 
-// Props provided from parents
-interface ProvidedProps {
+/**
+ * An item that can load its auxiliary state directly from Redux. Not suitable
+ * for showing a ton of items, but useful!
+ */
+export default function ConnectedInventoryItem({
+  item,
+  onClick,
+  onShiftClick,
+  onDoubleClick,
+  selectedSuperDisplay,
+  dimArchived,
+  allowFilter,
+  innerRef,
+}: {
   item: DimItem;
   allowFilter?: boolean;
   selectedSuperDisplay?: 'enabled' | 'disabled' | 'v3SubclassesOnly';
@@ -20,72 +30,50 @@ interface ProvidedProps {
   onShiftClick?(e: React.MouseEvent): void;
   onDoubleClick?(e: React.MouseEvent): void;
   dimArchived?: boolean;
-}
-
-// Props from Redux via mapStateToProps
-interface StoreProps {
-  isNew: boolean;
-  tag?: TagValue;
-  notes?: boolean;
-  wishlistRoll?: InventoryWishListRoll;
-  searchHidden?: boolean;
-}
-
-function mapStateToProps(state: RootState, props: ProvidedProps): StoreProps {
-  const { item, dimArchived } = props;
-  const itemInfos = itemInfosSelector(state);
-  const itemHashTags = itemHashTagsSelector(state);
+}) {
+  const itemInfos = useSelector(itemInfosSelector);
+  const itemHashTags = useSelector(itemHashTagsSelector);
   const tag = getTag(item, itemInfos, itemHashTags);
-  const currentFilter = searchFilterSelector(state);
+  const currentFilter = useSelector(searchFilterSelector);
   const defaultFilterActive = currentFilter === _.stubTrue;
 
-  return {
-    isNew: isNewSelector(item)(state),
-    tag,
-    notes: getNotes(item, itemInfos, itemHashTags) ? true : false,
-    wishlistRoll: wishListSelector(item)(state),
-    searchHidden:
-      // dim this item if there's no search filter and it's archived
-      (dimArchived && defaultFilterActive && tag === 'archive') ||
-      // or if there is filtering and it doesn't meet the condition
-      (props.allowFilter && !currentFilter(item)),
-  };
-}
+  const isNew = useSelector(isNewSelector(item));
+  const notes = getNotes(item, itemInfos, itemHashTags) ? true : false;
+  const wishlistRoll = useSelector(wishListSelector(item));
+  const searchHidden =
+    // dim this item if there's no search filter and it's archived
+    (dimArchived && defaultFilterActive && tag === 'archive') ||
+    // or if there is filtering and it doesn't meet the condition
+    (allowFilter && !currentFilter(item));
 
-type Props = ProvidedProps & StoreProps;
-
-/**
- * An item that can load its auxiliary state directly from Redux. Not suitable
- * for showing a ton of items, but useful!
- */
-function ConnectedInventoryItem({
-  item,
-  isNew,
-  tag,
-  notes,
-  wishlistRoll,
-  onClick,
-  onShiftClick,
-  onDoubleClick,
-  searchHidden,
-  selectedSuperDisplay,
-  innerRef,
-}: Props) {
-  return (
-    <InventoryItem
-      item={item}
-      isNew={isNew}
-      tag={tag}
-      notes={notes}
-      wishlistRoll={wishlistRoll}
-      onClick={onClick}
-      onShiftClick={onShiftClick}
-      onDoubleClick={onDoubleClick}
-      searchHidden={searchHidden}
-      selectedSuperDisplay={selectedSuperDisplay}
-      innerRef={innerRef}
-    />
+  return useMemo(
+    () => (
+      <InventoryItem
+        item={item}
+        isNew={isNew}
+        tag={tag}
+        notes={notes}
+        wishlistRoll={wishlistRoll}
+        onClick={onClick}
+        onShiftClick={onShiftClick}
+        onDoubleClick={onDoubleClick}
+        searchHidden={searchHidden}
+        selectedSuperDisplay={selectedSuperDisplay}
+        innerRef={innerRef}
+      />
+    ),
+    [
+      innerRef,
+      isNew,
+      item,
+      notes,
+      onClick,
+      onDoubleClick,
+      onShiftClick,
+      searchHidden,
+      selectedSuperDisplay,
+      tag,
+      wishlistRoll,
+    ]
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(ConnectedInventoryItem);

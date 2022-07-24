@@ -4,8 +4,6 @@ import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector, hasClassifiedSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import {
@@ -23,7 +21,6 @@ import { loadoutsSelector, previousLoadoutSelector } from 'app/loadout-drawer/se
 import { useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';
-import { ItemFilter } from 'app/search/filter-types';
 import { filteredItemsSelector, searchFilterSelector } from 'app/search/search-filter';
 import { plainString } from 'app/search/search-filters/freeform';
 import {
@@ -41,85 +38,55 @@ import {
   undoIcon,
 } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { queueAction } from 'app/utils/action-queue';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import _ from 'lodash';
-import React, { useState } from 'react';
-import { connect, useSelector } from 'react-redux';
+import React, { useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { createSelector } from 'reselect';
 import styles from './LoadoutPopup.m.scss';
 import MaxlightButton from './MaxlightButton';
 
-interface ProvidedProps {
+export default function LoadoutPopup({
+  dimStore,
+  onClick,
+}: {
   dimStore: DimStore;
   onClick?(e: React.MouseEvent): void;
-}
+}) {
+  // For the most part we don't need to memoize this - this menu is destroyed when closed
+  const defs = useDefinitions()!;
+  const isPhonePortrait = useIsPhonePortrait();
+  const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
+  const language = useSelector(languageSelector);
+  const previousLoadout = useSelector(previousLoadoutSelector(dimStore.id));
+  const query = useSelector(querySelector);
+  const searchFilter = useSelector(searchFilterSelector);
+  const buckets = useSelector(bucketsSelector)!;
+  const hasClassified = useSelector(hasClassifiedSelector);
+  const allItems = useSelector(allItemsSelector);
+  const filteredItems = useSelector(filteredItemsSelector);
+  const loadoutSort = useSelector(settingSelector('loadoutSort'));
+  const allLoadouts = useSelector(loadoutsSelector);
+  const dispatch = useThunkDispatch();
 
-interface StoreProps {
-  previousLoadout?: Loadout;
-  loadouts: Loadout[];
-  query: string;
-  hasClassified: boolean;
-  buckets: InventoryBuckets;
-  searchFilter: ItemFilter;
-  allItems: DimItem[];
-  filteredItems: DimItem[];
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
-function mapStateToProps() {
-  const loadoutSortSelector = settingSelector('loadoutSort');
-  const loadoutsForPlatform = createSelector(
-    loadoutsSelector,
-    loadoutSortSelector,
-    (_state: RootState, { dimStore }: ProvidedProps) => dimStore,
-    (loadouts, loadoutSort, dimStore) =>
+  const loadouts = useMemo(
+    () =>
       _.sortBy(
-        loadouts.filter(
+        allLoadouts.filter(
           (loadout) =>
             dimStore.classType === DestinyClass.Unknown ||
             loadout.classType === DestinyClass.Unknown ||
             loadout.classType === dimStore.classType
         ),
         loadoutSort === LoadoutSort.ByEditTime ? (l) => -(l.lastUpdatedAt ?? 0) : (l) => l.name
-      )
+      ),
+    [allLoadouts, dimStore.classType, loadoutSort]
   );
 
-  return (state: RootState, ownProps: ProvidedProps): StoreProps => ({
-    previousLoadout: previousLoadoutSelector(state, ownProps.dimStore.id),
-    loadouts: loadoutsForPlatform(state, ownProps),
-    query: querySelector(state),
-    searchFilter: searchFilterSelector(state),
-    buckets: bucketsSelector(state)!,
-    hasClassified: hasClassifiedSelector(state),
-    allItems: allItemsSelector(state),
-    filteredItems: filteredItemsSelector(state),
-  });
-}
-
-function LoadoutPopup({
-  dimStore,
-  previousLoadout,
-  loadouts,
-  query,
-  onClick,
-  hasClassified,
-  searchFilter,
-  buckets,
-  allItems,
-  filteredItems,
-  dispatch,
-}: Props) {
-  // For the most part we don't need to memoize this - this menu is destroyed when closed
-  const defs = useDefinitions()!;
-  const isPhonePortrait = useIsPhonePortrait();
-  const numPostmasterItemsTotal = totalPostmasterItems(dimStore);
-  const language = useSelector(languageSelector);
   const [loadoutQuery, setLoadoutQuery] = useState('');
 
   const makeNewLoadout = () =>
@@ -383,8 +350,6 @@ function LoadoutPopup({
     </div>
   );
 }
-
-export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(LoadoutPopup);
 
 /**
  * Filter a loadout down to only the equipped items in the loadout.

@@ -4,6 +4,7 @@
   width: var(--item-size);
   height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
   border: 1px solid #ddd;
+  box-sizing: border-box;
 }
 
 .placeholder {

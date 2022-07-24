@@ -2,76 +2,41 @@ import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
 import {
-  allItemsSelector,
   bucketsSelector,
   profileResponseSelector,
   sortedStoresSelector,
 } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { RAID_NODE } from 'app/search/d2-known-values';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState } from 'app/store/types';
-import { Destiny2CoreSettings } from 'bungie-api-ts/core';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { motion, PanInfo } from 'framer-motion';
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import '../records/PresentationNode.scss';
+import { Event } from './Event';
 import Milestones from './Milestones';
 import './progress.scss';
 import Pursuits from './Pursuits';
 import Raids from './Raids';
 import Ranks from './Ranks';
 import SeasonalChallenges from './SeasonalChallenges';
-import SolsticeOfHeroes, { solsticeOfHeroesArmor } from './SolsticeOfHeroes';
 import { TrackedTriumphs } from './TrackedTriumphs';
 
-interface ProvidedProps {
-  account: DestinyAccount;
-}
-
-interface StoreProps {
-  buckets?: InventoryBuckets;
-  stores: DimStore[];
-  profileInfo?: DestinyProfileResponse;
-  searchQuery?: string;
-  allItems: DimItem[];
-  coreSettings?: Destiny2CoreSettings;
-}
-
-type Props = ProvidedProps & StoreProps;
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    stores: sortedStoresSelector(state),
-    buckets: bucketsSelector(state),
-    profileInfo: profileResponseSelector(state),
-    searchQuery: querySelector(state),
-    allItems: allItemsSelector(state),
-    coreSettings: destiny2CoreSettingsSelector(state),
-  };
-}
-
-function Progress({
-  account,
-  stores,
-  buckets,
-  profileInfo,
-  searchQuery,
-  allItems,
-  coreSettings,
-}: Props) {
+export default function Progress({ account }: { account: DestinyAccount }) {
   const defs = useD2Definitions();
   const isPhonePortrait = useIsPhonePortrait();
+  const stores = useSelector(sortedStoresSelector);
+  const buckets = useSelector(bucketsSelector);
+  const profileInfo = useSelector(profileResponseSelector);
+  const searchQuery = useSelector(querySelector);
+  const coreSettings = useSelector(destiny2CoreSettingsSelector);
+
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
   useLoadStores(account);
@@ -116,8 +81,8 @@ function Progress({
   const raidNode = defs.PresentationNode.get(RAID_NODE);
   const raidTitle = raidNode?.displayProperties.name;
 
-  const solsticeTitle = defs.InventoryItem.get(3723510815).displayProperties.name;
-  const solsticeArmor = solsticeOfHeroesArmor(allItems, selectedStore);
+  const eventCardHash = profileInfo.profile.data?.activeEventCardHash;
+  const eventCard = eventCardHash && defs.EventCard.get(eventCardHash);
 
   const seasonalChallengesPresentationNode =
     coreSettings?.seasonalChallengesPresentationNodeHash &&
@@ -126,7 +91,7 @@ function Progress({
   const menuItems = [
     { id: 'ranks', title: t('Progress.CrucibleRank') },
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
-    ...(solsticeArmor.length ? [{ id: 'solstice', title: solsticeTitle }] : []),
+    ...(eventCard ? [{ id: 'event', title: eventCard.displayProperties.name }] : []),
     { id: 'milestones', title: t('Progress.Milestones') },
     ...(seasonalChallengesPresentationNode
       ? [
@@ -186,7 +151,17 @@ function Progress({
               </CollapsibleTitle>
             </section>
 
-            <SolsticeOfHeroes armor={solsticeArmor} title={solsticeTitle} />
+            {eventCard && (
+              <section id="event">
+                <CollapsibleTitle title={eventCard.displayProperties.name} sectionId="event">
+                  <div className="progress-row">
+                    <ErrorBoundary name={eventCard.displayProperties.name}>
+                      <Event card={eventCard} store={selectedStore} buckets={buckets} />
+                    </ErrorBoundary>
+                  </div>
+                </CollapsibleTitle>
+              </section>
+            )}
 
             <section id="milestones">
               <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
@@ -230,5 +205,3 @@ function Progress({
     </ErrorBoundary>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(Progress);

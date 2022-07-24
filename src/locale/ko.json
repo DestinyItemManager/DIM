@@ -54,7 +54,7 @@
     "Weapons": "무기"
   },
   "BungieAlert": {
-    "Title": "Bungie로부터의 메시지:"
+    "Title": "Bungie의 메시지:"
   },
   "BungieService": {
     "AppNotPermitted": "DIM이 이 작업을 수행할 권한이 없습니다.",
@@ -70,7 +70,7 @@
     "Maintenance": "Bungie.net 서버가 점검 중입니다.",
     "MissingInventory": "Bungie.net에서 소지품을 반환하지 않았으며, 개인 정보 보호 설정에 의해 차단되었을 수 있습니다. 로그아웃 후 다시 로그인해 보십시오.",
     "NetworkError": "통신 오류 - {{status}} {{statusText}}",
-    "NoAccount": "데스티니 계정을 찾을 수 없습니다. 올바른 플랫폼을 선택하셨습니까?",
+    "NoAccount": "데스티니 계정을 찾을 수 없습니다. 올바른 플랫폼을 선택하셨나요?",
     "NoAccountForPlatform": "{{platform}}에서 데스티니 계정을 찾지 못했습니다.",
     "NotConnected": "인터넷에 연결되어 있지 않을 수 있습니다.",
     "NotConnectedOrBlocked": "인터넷에 연결되지 않았거나, 광고 차단 혹은 개인정보 관련 확장 프로그램이 Bungie.net을 차단하고 있을 수 있습니다.",
@@ -202,6 +202,7 @@
     "DupeLower": "재출시된 아이템을 포함하여 가장 높은 전투력이 아닌 중복된 아이템을 표시합니다. 하나의 중복된 아이템만 가장 높은 전투력으로 선택되며, 나머지 아이템은 낮은 전투력으로 간주됩니다.",
     "Energy": "에너지 수용량이 있는 아이템 표시 (방어구 2.0)",
     "Engrams": "엔그램 표시",
+    "EnhancedPerk": "특정 개수의 강화된 속성을 지닌 아이템 표시",
     "Equipment": "장착 가능한 아이템",
     "Equipped": "캐릭터가 착용하고 있는 아이템",
     "Event": "데스티니 2의 특정 이벤트에서 나온 아이템 표시",
@@ -444,7 +445,7 @@
     "LightMode": {
       "HelpCurrent": "현재 방어 레벨에 따른 로드아웃 계산하기",
       "HelpScaled": "모든 장비가 350 방어라는 가정 하에 로드아웃 계산",
-      "LightMode": "밝은 모드"
+      "LightMode": "전투력 모드"
     },
     "Loading": "가장 좋은 장비 조합 불러오는 중",
     "LockEquipped": "장착된 아이템 잠금",
@@ -601,7 +602,7 @@
     "MakeRoomError": "모든 우편 담당자 아이템을 위한 공간을 만들 수 없습니다: {{error}}",
     "ManageLoadouts": "로드아웃 관리",
     "MaxSlots": "로드아웃에는 최대 {{slots}}개의 {{bucketName}}을(를) 포함할 수 있습니다.",
-    "MaximizeLight": "최대 빛",
+    "MaximizeLight": "최대 전투력",
     "MaximizePower": "최대 전투력",
     "MaximizeStat": "능력치 최대화",
     "MissingItemsWarning": "이 로드아웃의 일부 아이템이 더 이상 소지품에 없습니다.",
@@ -835,6 +836,7 @@
     "CrucibleRank": "등급",
     "Items": "퀘스트 아이템",
     "Milestones": "이정표 & 도전",
+    "NoEventChallenges": "모든 이벤트 도전 완료",
     "NoTrackedTriumph": "추적 중인 업적이 없습니다. 게임 내에서 1개를 추적하거나 DIM에서 원하는 만큼 추적하세요.",
     "PercentPrestige": "초기화까지 {{pct}}%",
     "PowerBonusHeader": "+{{powerBonus}} 전투력 보상",
@@ -1035,9 +1037,12 @@
       "Reset": "인증 해제",
       "Title": "스트림덱에서 이 번호 선택"
     },
+    "Connected": "연결됨",
     "Enable": "스트림덱 플러그인",
-    "FinePrint": "DIM 스트림덱 플러그인으로 연결 활성화",
+    "FinePrint": "DIM 스트림덱 플러그인으로 연결을 활성화합니다. 이 플러그인은 DIM 팀에 의해 작성되거나 지원되지 않는 별개의 프로젝트입니다.",
     "Install": "플러그인 설치",
+    "NotConnected": "연결되지 않음",
+    "OldExtension": "이전 버전의 스트림덱 크롬 확장 프로그램을 제거해야 합니다. DIM에서 더 이상 필요하지 않으며 비정상적인 동작을 일으킵니다.",
     "SelectLoadout": "스트림덱으로 보내기",
     "Selection": {
       "Item": "소지품에서 아이템 선택",
@@ -1120,7 +1125,7 @@
       "Explanation": "DIM이 데스티니 캐릭터, 금고, 진척도를 확인하고 수정할 수 있도록 허용해주세요.",
       "LearnMore": "계정과 로그인에 대해 더 알아보기",
       "NewAccount": "다른 Bungie.net 계정으로 로그인",
-      "Permission": "당신의 허가를 필요로 합니다...",
+      "Permission": "당신의 허락이 필요합니다...",
       "UpgradeExplanation": "해당 버전의 iOS에서는 홈 화면 앱에서 DIM에 로그인할 수 없습니다. iOS 12.2 이상으로 업그레이드한 후 DIM을 홈 화면에 다시 추가해주세요.",
       "UpgradeiOS": "iOS를 업그레이드하세요"
     },

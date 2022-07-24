@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
@@ -9,120 +10,92 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isValidMasterworkStat } from 'app/inventory/store/masterwork';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { collectionsVisibleShadersSelector } from 'app/records/selectors';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { SearchInput } from 'app/search/SearchInput';
-import { RootState } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
-import { DestinyEnergyType, PlugUiStyles, SocketPlugSources } from 'bungie-api-ts/destiny2';
+import {
+  DestinyEnergyType,
+  DestinyProfileResponse,
+  PlugUiStyles,
+  SocketPlugSources,
+} from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import React, { useState } from 'react';
-import { connect, useSelector } from 'react-redux';
-import { createSelector } from 'reselect';
+import { memo, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import styles from './SocketDetails.m.scss';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 
-interface ProvidedProps {
-  item: DimItem;
-  socket: DimSocket;
-  /** Set to true if you want to insert the plug when it's selected, rather than returning it. */
-  allowInsertPlug: boolean;
-  onClose(): void;
-  onPlugSelected?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+/**
+ * Build a set of the inventory item hashes of all plug items in the socket's
+ * plug set that are unlocked by this character.
+ */
+function buildUnlockedPlugs(
+  profileResponse: DestinyProfileResponse | undefined,
+  owner: string,
+  socket: DimSocket
+) {
+  const plugSetHash =
+    socket.socketDefinition.reusablePlugSetHash || socket.socketDefinition.randomizedPlugSetHash;
+  if (!plugSetHash || !profileResponse) {
+    return emptySet<number>();
+  }
+  return unlockedItemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, owner);
 }
 
-interface StoreProps {
-  inventoryPlugs: Set<number>;
-  unlockedPlugs: Set<number>;
-  /** if not undefined, hide locked plugs not in this set */
-  shownLockedPlugs?: Set<number>;
+/**
+ * Build a set of items that should be shown even if locked. If undefined, show all.
+ * This is a heuristic only, which is why the defensive approach is to never hide unlocked
+ * plugs.
+ */
+function buildShownLockedPlugs(
+  defs: D2ManifestDefinitions | undefined,
+  visibleShaders: Set<number> | undefined,
+  socket: DimSocket
+) {
+  const socketType = defs?.SocketType.get(socket.socketDefinition.socketTypeHash);
+  if (socketType?.plugWhitelist.some((p) => p.categoryHash === PlugCategoryHashes.Shader)) {
+    return visibleShaders;
+  }
+  return undefined;
 }
 
-function mapStateToProps() {
-  /**
-   * Build a set of the inventory item hashes of all plug items in the socket's
-   * plug set that are unlocked by this character.
-   */
-  const unlockedPlugsSelector = createSelector(
-    profileResponseSelector,
-    (_state: RootState, { item }: ProvidedProps) => item.owner,
-    (_state: RootState, { socket }: ProvidedProps) =>
-      socket.socketDefinition.reusablePlugSetHash || socket.socketDefinition.randomizedPlugSetHash,
-    (profileResponse, owner, plugSetHash) => {
-      if (!plugSetHash || !profileResponse) {
-        return emptySet<number>();
-      }
-      return unlockedItemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, owner);
+/**
+ * Build a set of the inventory item hashes of all mods in inventory that
+ * could be plugged into this socket. This includes things like legacy mods
+ * and consumable mods.
+ */
+function buildInventoryPlugs(allItems: DimItem[], socket: DimSocket, defs: D2ManifestDefinitions) {
+  const socketTypeHash = socket.socketDefinition.socketTypeHash;
+  const plugSources = socket.socketDefinition.plugSources;
+  const socketType = defs.SocketType.get(socketTypeHash);
+  if (!(plugSources & SocketPlugSources.InventorySourced && socketType.plugWhitelist)) {
+    return emptySet<number>();
+  }
+
+  const modHashes = new Set<number>();
+
+  const plugAllowList = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
+  for (const item of allItems) {
+    const itemDef = defs.InventoryItem.get(item.hash);
+    if (
+      itemDef.plug &&
+      plugAllowList.has(itemDef.plug.plugCategoryHash) &&
+      item.location.hash === BucketHashes.Modifications
+    ) {
+      modHashes.add(item.hash);
     }
-  );
+  }
 
-  /**
-   * Build a set of items that should be shown even if locked. If undefined, show all.
-   * This is a heuristic only, which is why the defensive approach is to never hide unlocked
-   * plugs.
-   */
-  const shownLockedPlugsSelector = createSelector(
-    d2ManifestSelector,
-    collectionsVisibleShadersSelector,
-    (_state: RootState, { socket }: ProvidedProps) => socket.socketDefinition,
-    (defs, visibleShaders, socketDef) => {
-      const socketType = defs?.SocketType.get(socketDef.socketTypeHash);
-      if (socketType?.plugWhitelist.some((p) => p.categoryHash === PlugCategoryHashes.Shader)) {
-        return visibleShaders;
-      }
-      return undefined;
-    }
-  );
-
-  /**
-   * Build a set of the inventory item hashes of all mods in inventory that
-   * could be plugged into this socket. This includes things like legacy mods
-   * and consumable mods.
-   */
-  const inventoryPlugs = createSelector(
-    allItemsSelector,
-    (_state: RootState, props: ProvidedProps) => props.socket.socketDefinition.socketTypeHash,
-    (_state: RootState, props: ProvidedProps) => props.socket.socketDefinition.plugSources,
-    d2ManifestSelector,
-    (allItems, socketTypeHash, plugSources, defs) => {
-      const socketType = defs!.SocketType.get(socketTypeHash);
-      if (!(plugSources & SocketPlugSources.InventorySourced && socketType.plugWhitelist)) {
-        return emptySet<number>();
-      }
-
-      const modHashes = new Set<number>();
-
-      const plugAllowList = new Set(socketType.plugWhitelist.map((e) => e.categoryHash));
-      for (const item of allItems) {
-        const itemDef = defs!.InventoryItem.get(item.hash);
-        if (
-          itemDef.plug &&
-          plugAllowList.has(itemDef.plug.plugCategoryHash) &&
-          item.location.hash === BucketHashes.Modifications
-        ) {
-          modHashes.add(item.hash);
-        }
-      }
-
-      return modHashes;
-    }
-  );
-
-  return (state: RootState, props: ProvidedProps): StoreProps => ({
-    inventoryPlugs: inventoryPlugs(state, props),
-    unlockedPlugs: unlockedPlugsSelector(state, props),
-    shownLockedPlugs: shownLockedPlugsSelector(state, props),
-  });
+  return modHashes;
 }
 
-type Props = ProvidedProps & StoreProps;
-
-export const SocketDetailsMod = React.memo(
+export const SocketDetailsMod = memo(
   ({
     itemDef,
     className,
@@ -148,16 +121,20 @@ export const SocketDetailsMod = React.memo(
   }
 );
 
-function SocketDetails({
+export default function SocketDetails({
   item,
   socket,
-  unlockedPlugs,
-  inventoryPlugs,
-  shownLockedPlugs,
   allowInsertPlug,
   onClose,
   onPlugSelected,
-}: Props) {
+}: {
+  item: DimItem;
+  socket: DimSocket;
+  /** Set to true if you want to insert the plug when it's selected, rather than returning it. */
+  allowInsertPlug: boolean;
+  onClose(): void;
+  onPlugSelected?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+}) {
   const defs = useD2Definitions()!;
   const plugged = socket.plugged?.plugDef;
   const actuallyPlugged = (socket.actuallyPlugged || socket.plugged)?.plugDef;
@@ -169,6 +146,24 @@ function SocketDetails({
 
   const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
   const socketCategory = defs.SocketCategory.get(socketType.socketCategoryHash);
+
+  const allItems = useSelector(allItemsSelector);
+  const inventoryPlugs = useMemo(
+    () => buildInventoryPlugs(allItems, socket, defs),
+    [allItems, defs, socket]
+  );
+
+  const visibleShaders = useSelector(collectionsVisibleShadersSelector);
+  const shownLockedPlugs = useMemo(
+    () => buildShownLockedPlugs(defs, visibleShaders, socket),
+    [defs, socket, visibleShaders]
+  );
+
+  const profileResponse = useSelector(profileResponseSelector);
+  const unlockedPlugs = useMemo(
+    () => buildUnlockedPlugs(profileResponse, item.owner, socket),
+    [item.owner, profileResponse, socket]
+  );
 
   // Start with the inventory plugs
   const modHashes = new Set<number>(inventoryPlugs);
@@ -343,5 +338,3 @@ function SocketDetails({
     </Sheet>
   );
 }
-
-export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(SocketDetails);

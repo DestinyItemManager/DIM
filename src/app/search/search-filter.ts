@@ -67,10 +67,17 @@ export const filteredItemsSelector = createSelector(
     allItems.filter((i) => displayableBuckets.has(i.location.hash) && searchFilter(i))
 );
 
-/** A selector for a function for searching items, given the current search query. */
+/** A selector for a function for validating a query. */
 export const validateQuerySelector = createSelector(
   searchConfigSelector,
   (searchConfig) => (query: string) => parseAndValidateQuery(query, searchConfig)
+);
+
+/** Whether the current search query is valid. */
+export const queryValidSelector = createSelector(
+  querySelector,
+  validateQuerySelector,
+  (query, validateQuery) => validateQuery(query).valid
 );
 
 function makeSearchFilterFactory(

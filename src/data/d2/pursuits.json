@@ -2769,7 +2769,8 @@
     "Destination": [2244580325]
   },
   "3235811446": {
-    "DamageType": [1847026933]
+    "DamageType": [1847026933],
+    "KillType": [1]
   },
   "3235811448": {
     "ItemCategory": [6]
