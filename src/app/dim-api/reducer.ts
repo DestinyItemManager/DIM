@@ -202,9 +202,14 @@ export const dimApi = (
 
       // If the user was using "element" sort, replace it with "elementWeapon" and "elementArmor" sorts.
       const sortOrder = profileResponse.settings?.itemSortOrderCustom || [];
+      const reversals = profileResponse.settings?.itemSortReversals || [];
 
       if (sortOrder.includes('element')) {
         sortOrder.splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor');
+      }
+
+      if (reversals.includes('element')) {
+        reversals.splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor');
       }
 
       // TODO: clean out invalid/simple searches on first load?
@@ -217,6 +222,7 @@ export const dimApi = (
           ...state.settings,
           ...profileResponse.settings,
           itemSortOrderCustom: sortOrder,
+          itemSortReversals: reversals,
         },
         itemHashTags: profileResponse.itemHashTags
           ? _.keyBy(profileResponse.itemHashTags, (t) => t.hash)
