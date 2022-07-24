@@ -76,6 +76,7 @@ function streamDeckSelectItem(item: DimItem): ThunkResult {
               subtitle: item.typeName,
               item: item.id,
               icon: item.icon,
+              overlay: item.iconOverlay,
             },
           },
         })

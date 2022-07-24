@@ -36,12 +36,14 @@ import {
   MaxPowerAction,
   MessageHandler,
   PullItemAction,
+  PullItemsInfoAction,
   RandomizeAction,
   SearchAction,
   SelectionAction,
   StreamDeckMessage,
 } from 'app/stream-deck/interfaces';
 import { setStreamDeckToken, streamDeckToken } from 'app/stream-deck/util/local-storage';
+import { DamageType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 
 let onGoingAuthorizationChallenge: Challenge | undefined;
@@ -149,6 +151,29 @@ function selectionHandler({ msg, state }: HandlerArgs<SelectionAction>): ThunkRe
     }
     // show the notification
     showSelectionNotification(state, selectionType, () => dispatch(streamDeckClearSelection()));
+  };
+}
+
+function itemsInfoRequestHandler({ msg, state }: HandlerArgs<PullItemsInfoAction>): ThunkResult {
+  return async (dispatch) => {
+    const items = allItemsSelector(state).filter((it) => msg.ids?.includes(it.index));
+    return dispatch(
+      sendToStreamDeck({
+        action: 'items:info',
+        data: {
+          info: items.map((it) => ({
+            identifier: it.index,
+            power: it.power,
+            overlay: it.iconOverlay,
+            isExotic: it.isExotic,
+            element:
+              it.element?.enumValue === DamageType.Kinetic
+                ? undefined
+                : it.element?.displayProperties?.icon,
+          })),
+        },
+      })
+    );
   };
 }
 
@@ -279,6 +304,7 @@ const handlers: MessageHandler = {
   loadout: equipLoadoutHandler,
   // freeBucketSlot: freeBucketSlotHandler,
   pullItem: pullItemHandler,
+  'pullItem:items-request': itemsInfoRequestHandler,
   'authorization:init': authorizationInitHandler,
   'authorization:confirm': authorizationConfirmHandler,
 };

@@ -72,6 +72,12 @@ export interface PullItemAction {
   item: string;
 }
 
+// the stream deck request specific items instances info update ex. element, power, etc
+export interface PullItemsInfoAction {
+  action: 'pullItem:items-request';
+  ids: string[];
+}
+
 // allow the user to pick a specific "thing" and send it to the Stream Deck
 // this thing can be a loadout or an item
 export interface SelectionAction {
@@ -107,6 +113,7 @@ export type StreamDeckMessage = (
   | MaxPowerAction
   // | FreeBucketSlotAction
   | PullItemAction
+  | PullItemsInfoAction
   | SelectionAction
   | EquipLoadoutAction
 ) & { token?: string };
@@ -158,6 +165,7 @@ export interface SendUpdateArgs {
       label: string;
       subtitle: string;
       icon?: string;
+      overlay?: string;
       item?: string;
       loadout?: string;
       character?: string;
@@ -177,12 +185,26 @@ export interface SendAuthorizationChallengesArgs {
   };
 }
 
+export interface SendItemsInfoArgs {
+  action: 'items:info';
+  data: {
+    info: {
+      overlay?: string;
+      isExotic: boolean;
+      identifier: string;
+      power: number;
+      element?: string;
+    }[];
+  };
+}
+
 export interface SendAuthorizationResetArgs {
   action: 'authorization:reset';
 }
 
 export type SendToStreamDeckArgs =
   | SendUpdateArgs
+  | SendItemsInfoArgs
   | SendAuthorizationChallengesArgs
   | SendAuthorizationResetArgs;
 
