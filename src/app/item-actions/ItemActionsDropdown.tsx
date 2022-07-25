@@ -20,6 +20,7 @@ import {
   AppIcon,
   clearIcon,
   compareIcon,
+  faWindowClose,
   lockIcon,
   stickyNoteIcon,
   unlockedIcon,
@@ -54,7 +55,7 @@ export default React.memo(function ItemActionsDropdown({
     isComparable = filteredItems.every((i) => i.typeName === type);
   }
 
-  const isStrippable = filteredItems.some((i) =>
+  const canStrip = filteredItems.some((i) =>
     i.sockets?.allSockets.some(
       (s) => s.emptyPlugItemHash && s.plugged?.plugDef.hash !== s.emptyPlugItemHash
     )
@@ -131,8 +132,12 @@ export default React.memo(function ItemActionsDropdown({
     destinyVersion === 2 && {
       key: 'strip-sockets',
       onSelected: () => stripSockets(searchQuery),
-      disabled: !isStrippable || !searchActive,
-      content: <>{t('StripSockets.Action')}</>,
+      disabled: !canStrip || !searchActive,
+      content: (
+        <>
+          <AppIcon icon={faWindowClose} /> {t('StripSockets.Action')}
+        </>
+      ),
     },
     {
       key: 'note',
