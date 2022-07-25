@@ -1,26 +1,22 @@
+import PressTip from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
-import 'app/inventory-page/StoreBucket.scss';
-import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, faCheckCircle, refreshIcon } from 'app/shell/icons';
-import { withCancel } from 'app/utils/cancel';
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
-import styles from './StripSockets.m.scss';
-
 import { t } from 'app/i18next-t';
+import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { filterFactorySelector } from 'app/search/search-filter';
+import { AppIcon, faCheckCircle, refreshIcon } from 'app/shell/icons';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { withCancel } from 'app/utils/cancel';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { useSelector } from 'react-redux';
-import { useSubscription } from 'use-subscription';
-import { DefItemIcon } from '../inventory/ItemIcon';
-import { allItemsSelector } from '../inventory/selectors';
-
-import PressTip from 'app/dim-ui/PressTip';
-import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import chestArmorItem from 'destiny-icons/armor_types/chest.svg';
 import ghostIcon from 'destiny-icons/general/ghost.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import produce from 'immer';
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useSubscription } from 'use-subscription';
+import { DefItemIcon } from '../inventory/ItemIcon';
+import { allItemsSelector } from '../inventory/selectors';
 import {
   artifactModsSelector,
   collectSocketsToStrip,
@@ -29,6 +25,7 @@ import {
   StripAction,
 } from './strip-sockets';
 import { stripSocketsQuery$ } from './strip-sockets-actions';
+import styles from './StripSockets.m.scss';
 
 /**
  * Error, OK, or still in our worklist
@@ -83,6 +80,8 @@ function reducer(state: State, action: UIAction): State {
         return produce(state, (draft) => {
           draft.tag === 'processing' && (draft.cancelling = true);
         });
+      } else if (state.tag === 'done') {
+        return { tag: 'selecting' };
       }
       break;
     case 'confirm_process':
@@ -317,24 +316,29 @@ function StripSocketsChoose({
     socketKinds && (
       <>
         {socketKinds.length ? (
-          socketKinds.map((entry) => (
-            <SocketKindButton
-              key={entry.kind}
-              name={t(entry.name, { count: entry.numApplicableSockets })}
-              representativeDef={entry.representativePlug}
-              numArmor={entry.numArmor}
-              numWeapons={entry.numWeapons}
-              numOthers={entry.numOthers}
-              selected={activeKinds.includes(entry.kind)}
-              onClick={() => {
-                if (activeKinds.includes(entry.kind)) {
-                  setActiveKinds(activeKinds.filter((k) => k !== entry.kind));
-                } else {
-                  setActiveKinds([...activeKinds, entry.kind]);
-                }
-              }}
-            />
-          ))
+          socketKinds.map((entry) => {
+            const itemCats = [
+              { icon: handCannonIcon, num: entry.numWeapons },
+              { icon: chestArmorItem, num: entry.numArmor },
+              { icon: ghostIcon, num: entry.numOthers },
+            ];
+            return (
+              <SocketKindButton
+                key={entry.kind}
+                name={t(entry.name, { count: entry.numApplicableSockets })}
+                representativeDef={entry.representativePlug}
+                itemCategories={itemCats}
+                selected={activeKinds.includes(entry.kind)}
+                onClick={() => {
+                  if (activeKinds.includes(entry.kind)) {
+                    setActiveKinds(activeKinds.filter((k) => k !== entry.kind));
+                  } else {
+                    setActiveKinds([...activeKinds, entry.kind]);
+                  }
+                }}
+              />
+            );
+          })
         ) : (
           <div className={styles.noSocketsMessage}>{t('StripSockets.NoSockets')}</div>
         )}
@@ -346,17 +350,13 @@ function StripSocketsChoose({
 function SocketKindButton({
   name,
   representativeDef,
-  numWeapons,
-  numArmor,
-  numOthers,
+  itemCategories,
   selected,
   onClick,
 }: {
   name: string;
   representativeDef: DestinyInventoryItemDefinition;
-  numWeapons: number;
-  numArmor: number;
-  numOthers: number;
+  itemCategories: { icon: string; num: number }[];
   selected: boolean;
   onClick: () => void;
 }) {
@@ -382,24 +382,14 @@ function SocketKindButton({
         </div>
       </div>
       <div>
-        {numWeapons > 0 && (
-          <>
-            <img src={handCannonIcon} className={styles.itemTypeIcon} /> {numWeapons}
-            <br />
-          </>
-        )}
-        {numArmor > 0 && (
-          <>
-            <img src={chestArmorItem} className={styles.itemTypeIcon} /> {numArmor}
-            <br />
-          </>
-        )}
-
-        {numOthers > 0 && (
-          /* help what is a good icon for "others"? */
-          <>
-            <img src={ghostIcon} className={styles.itemTypeIcon} /> {numOthers}
-          </>
+        {itemCategories.map(
+          ({ icon, num }) =>
+            num > 0 && (
+              <>
+                <img src={icon} className={styles.itemTypeIcon} /> {num}
+                <br />
+              </>
+            )
         )}
       </div>
     </div>
