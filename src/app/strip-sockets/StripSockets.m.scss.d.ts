@@ -3,14 +3,17 @@
 interface CssExports {
   'buttonInfo': string;
   'buttonTitle': string;
+  'failed': string;
+  'iconList': string;
   'insertButton': string;
   'itemTypeIcon': string;
-  'notSelectable': string;
+  'noSocketsMessage': string;
+  'ok': string;
+  'plug': string;
   'selectedButton': string;
   'selectedTitle': string;
   'socketKindButton': string;
   'stripSheet': string;
-  'svg': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -15,6 +15,11 @@
   margin: 0 auto;
 }
 
+.noSocketsMessage {
+  margin: 2px 0 2px 8px;
+  font-size: 14px;
+}
+
 .socketKindButton {
   > * {
     margin-right: 8px;
@@ -58,16 +63,34 @@
   }
 }
 
-.notSelectable {
-  opacity: 0.5;
-  cursor: default;
-}
-
 .itemTypeIcon {
-  &.svg {
-    filter: invert(1);
-  }
+  filter: invert(1);
   width: 18px;
   height: 18px;
   vertical-align: bottom;
+}
+
+.iconList {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 8px 8px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  --item-size: 32px;
+
+  > * {
+    margin: 0 4px 4px 0;
+  }
+}
+
+.plug {
+  &.ok {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+
+  &.failed {
+    outline: 2px solid $red;
+  }
 }
