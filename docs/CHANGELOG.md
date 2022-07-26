@@ -1,5 +1,13 @@
 ## Next
 
+## 7.27.0 <span class="changelog-date">(2022-07-24)</span>
+
+## 7.26.1 <span class="changelog-date">(2022-07-23)</span>
+
+* Added Solstice event challenges to the Progress page.
+
+## 7.26.0 <span class="changelog-date">(2022-07-17)</span>
+
 * Worked around a Bungie.net API bug where Vanguard reset count was reported under Strange Favor (Dares of Eternity) instead.
 
 ## 7.25.0 <span class="changelog-date">(2022-07-10)</span>

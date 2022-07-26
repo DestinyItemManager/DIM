@@ -108,7 +108,13 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
             <div className="item-sockets">
               {getSocketsByIndexes(item.sockets!, category.socketIndexes).map(
                 (socketInfo) =>
+                  // don't include armor intrinsics in automated socket listings
                   socketInfo.socketIndex !== intrinsicArmorPerkSocket?.socketIndex &&
+                  // don't include these weird little solstice stat rerolling mechanic sockets
+                  !socketInfo.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(
+                    'events.solstice.'
+                  ) &&
+                  // don't include kill trackers
                   socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                     <Socket
                       key={socketInfo.socketIndex}

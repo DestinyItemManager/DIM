@@ -945,7 +945,8 @@
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs",
     "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
-    "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM."
+    "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
+    "NoEventChallenges": "You have completed all event challenges"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",

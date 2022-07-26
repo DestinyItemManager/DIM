@@ -836,6 +836,7 @@
     "CrucibleRank": "Gradi",
     "Items": "Oggetti Imprese",
     "Milestones": "Pietre miliari & Sfide",
+    "NoEventChallenges": "Hai completato tutte le sfide dell'evento",
     "NoTrackedTriumph": "Non stai seguendo nessun trionfo. Seguine uno in gioco, oppure tutti quelli che vuoi su DIM.",
     "PercentPrestige": "{{pct}}% al reset",
     "PowerBonusHeader": "Ricompense +{{powerBonus}} Potere",
