@@ -3,7 +3,11 @@ import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
-import { getIntrinsicArmorPerkSocket, getSocketsByIndexes } from 'app/utils/socket-utils';
+import {
+  getIntrinsicArmorPerkSocket,
+  getSocketsByIndexes,
+  isEventArmorRerollSocket,
+} from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -111,9 +115,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
                   // don't include armor intrinsics in automated socket listings
                   socketInfo.socketIndex !== intrinsicArmorPerkSocket?.socketIndex &&
                   // don't include these weird little solstice stat rerolling mechanic sockets
-                  !socketInfo.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(
-                    'events.solstice.'
-                  ) &&
+                  !isEventArmorRerollSocket(socketInfo) &&
                   // don't include kill trackers
                   socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
                     <Socket
