@@ -238,7 +238,7 @@ export function fitMostMods({
           (assignment) => assignment.assigned
         );
         for (const item of items) {
-          totalActiveConditionalMods += calculateTotalActivatedMods(
+          totalActiveConditionalMods += calculateTotalActivatedModsScore(
             bucketSpecificAssignments[item.id].assigned,
             assignments[item.id].assigned,
             allAssignedMods
@@ -672,59 +672,67 @@ function calculateEnergyChange(
  * Calculates the total number of active conditional mods on the item.
  * Used to ensure mod assignments favor results that activate these mods.
  */
-function calculateTotalActivatedMods(
+function calculateTotalActivatedModsScore(
   bucketSpecificAssignments: PluggableInventoryItemDefinition[],
   bucketIndependentAssignmentsForItem: PluggableInventoryItemDefinition[],
   allAssignedMods: PluggableInventoryItemDefinition[]
 ) {
-  let activeMods = 0;
+  let activeModsScore = 0;
 
   for (const mod of bucketIndependentAssignmentsForItem) {
-    if (
-      isPlugActive(
-        mod,
-        bucketSpecificAssignments,
-        bucketIndependentAssignmentsForItem,
-        allAssignedMods
-      )
-    ) {
-      activeMods++;
-    }
+    activeModsScore += plugActivationScore(
+      mod,
+      bucketSpecificAssignments,
+      bucketIndependentAssignmentsForItem,
+      allAssignedMods
+    );
   }
 
-  return activeMods;
+  return activeModsScore;
 }
 
 /**
- * Determines whether a conditional mod has had its requirements met by the other mods.
- * Currently only used for radiant light and powerful friends
+ * Determines whether a mod has had its requirements met by the other mods. Right now this is used
+ * to score statful Charged With Light mods (powerful friends, radiant light is activated) and other
+ * CWL mods with conditionally active perks.
  */
-function isPlugActive(
+function plugActivationScore(
   mod: PluggableInventoryItemDefinition,
   bucketSpecificAssignments: PluggableInventoryItemDefinition[],
   bucketIndependentAssignmentsForItem: PluggableInventoryItemDefinition[],
   allMods: PluggableInventoryItemDefinition[]
 ) {
-  if (
+  const isArc = (mod: PluggableInventoryItemDefinition) =>
+    mod.plug.energyCost?.energyType === DestinyEnergyType.Arc;
+  const isCWL = (mod: PluggableInventoryItemDefinition) =>
+    modTypeTagByPlugCategoryHash[mod.plug.plugCategoryHash] === 'chargedwithlight';
+
+  // Powerful Friends and Radiant Light provide stat bonuses if activated, every(!) other
+  // CWL mod provides some other perk.
+  //
+  // Because Arc CWL mods can activate each others' perks, this prioritization is almost pointless,
+  // except for when there's no feasible assignment for all mods and DIM has to decide which mods to drop.
+  // Not sure if this is useful in any way, but it at provides a rule where there otherwise isn't one.
+  const potentialValue =
     mod.hash === modsWithConditionalStats.powerfulFriends ||
     mod.hash === modsWithConditionalStats.radiantLight
+      ? 1
+      : isArc(mod) && isCWL(mod)
+      ? 0.9
+      : 0;
+
+  // Arc bucket-specific mod on this piece, Arc activity mod was put on this piece, or
+  // there's a different Arc CWL mod assigned too.
+  if (
+    potentialValue > 0 &&
+    (bucketSpecificAssignments.some((m) => m.hash !== mod.hash && isArc(m)) ||
+      bucketIndependentAssignmentsForItem.some((m) => m.hash !== mod.hash && isArc(m)) ||
+      allMods?.some((plugDef) => plugDef !== mod && isCWL(plugDef) && isArc(plugDef)))
   ) {
-    // True if a second arc mod is socketed or a arc charged with light mod  is found in modsOnOtherItems.
-    return Boolean(
-      bucketSpecificAssignments.some(
-        (m) => m.hash !== mod.hash && m.plug.energyCost?.energyType === DestinyEnergyType.Arc
-      ) ||
-        bucketIndependentAssignmentsForItem.some(
-          (m) => m.hash !== mod.hash && m.plug.energyCost?.energyType === DestinyEnergyType.Arc
-        ) ||
-        allMods?.some(
-          (plugDef) =>
-            plugDef !== mod &&
-            modTypeTagByPlugCategoryHash[plugDef.plug.plugCategoryHash] === 'chargedwithlight' &&
-            plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
-        )
-    );
+    return potentialValue;
   }
+
+  return 0;
 }
 
 function buildItemEnergy({
