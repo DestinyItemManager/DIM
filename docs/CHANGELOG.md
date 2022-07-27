@@ -1,6 +1,7 @@
 ## Next
 
 * Hid Solstice armor rerolling sockets from Loadout Optimizer too.
+* Collections items will now be recognized as craftable. Try the search filter `is:craftable -is:patternunlocked` on the Records page to list craftable weapons you still need to unlock the pattern for, and click the weapons to see your pattern progress.
 
 ## 7.27.0 <span class="changelog-date">(2022-07-24)</span>
 

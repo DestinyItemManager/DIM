@@ -156,11 +156,12 @@ export function makeFakeItem(
   buckets: InventoryBuckets,
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   itemHash: number,
-  itemInstanceId = '0',
-  quantity = 1,
+  itemInstanceId?: string,
+  quantity?: number,
   mergedCollectibles?: {
     [hash: number]: DestinyCollectibleComponent;
-  }
+  },
+  profileRecords?: DestinyProfileRecordsComponent
 ): DimItem | null {
   return makeItem(
     defs,
@@ -168,8 +169,8 @@ export function makeFakeItem(
     itemComponents,
     {
       itemHash,
-      itemInstanceId,
-      quantity,
+      itemInstanceId: itemInstanceId ?? '0',
+      quantity: quantity ?? 1,
       bindStatus: ItemBindStatus.NotBound,
       location: ItemLocation.Vendor,
       bucketHash: 0,
@@ -183,7 +184,9 @@ export function makeFakeItem(
       versionNumber: defs.InventoryItem.get(itemHash)?.quality?.currentVersion,
     },
     undefined,
-    mergedCollectibles
+    mergedCollectibles,
+    undefined,
+    profileRecords
   );
 }
 
