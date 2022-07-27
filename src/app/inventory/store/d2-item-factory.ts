@@ -160,9 +160,10 @@ export function makeFakeItem(
   quantity = 1,
   mergedCollectibles?: {
     [hash: number]: DestinyCollectibleComponent;
-  }
+  },
+  allowWishList?: boolean
 ): DimItem | null {
-  return makeItem(
+  const item = makeItem(
     defs,
     buckets,
     itemComponents,
@@ -185,6 +186,11 @@ export function makeFakeItem(
     undefined,
     mergedCollectibles
   );
+
+  if (item && !allowWishList) {
+    item.wishListEnabled = false;
+  }
+  return item;
 }
 
 /**
@@ -549,6 +555,7 @@ export function makeItem(
     pursuit: null,
     taggable: false,
     comparable: false,
+    wishListEnabled: false,
     power: 0,
     index: '',
     infusable: false,
@@ -599,6 +606,8 @@ export function makeItem(
     errorLog('d2-stores', `Error building sockets for ${createdItem.name}`, item, itemDef, e);
     reportException('Sockets', e, { itemHash: item.itemHash });
   }
+
+  createdItem.wishListEnabled = Boolean(createdItem.bucket.inWeapons && createdItem.sockets);
 
   // A crafted weapon with an enhanced intrinsic and two enhanced traits is masterworked
   // https://github.com/Bungie-net/api/issues/1662

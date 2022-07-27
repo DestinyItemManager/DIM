@@ -113,6 +113,11 @@ export interface DimItem {
   taggable: boolean;
   /** Can this be compared with other items? */
   comparable: boolean;
+  /**
+   * Can this item receive wish list thumbs up icons?
+   * True for inventory and vendor items, false for really fake items.
+   */
+  wishListEnabled: boolean;
   /** Should we hide the percentage display? */
   hidePercentage: boolean;
   /** Can this be infused? */

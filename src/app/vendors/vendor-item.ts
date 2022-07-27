@@ -160,7 +160,9 @@ export class VendorItem {
       // For sale items the item ID needs to be the vendor item index, since that's how we look up item components for perks
       this.key.toString(),
       vendorItemDef ? vendorItemDef.quantity : 1,
-      mergedCollectibles
+      mergedCollectibles,
+      // vendor items are wish list enabled!
+      true
     );
 
     if (this.item) {

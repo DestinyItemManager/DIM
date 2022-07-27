@@ -336,6 +336,7 @@ function makeItem(
     hidePercentage: false,
     taggable: false,
     comparable: false,
+    wishListEnabled: false,
     power: item.primaryStat?.value ?? 0,
     index: '',
     infusable: false,
