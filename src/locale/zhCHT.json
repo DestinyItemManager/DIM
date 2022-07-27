@@ -836,6 +836,7 @@
     "CrucibleRank": "排名",
     "Items": "任務物品",
     "Milestones": "里程碑和挑戰",
+    "NoEventChallenges": "You have completed all event challenges",
     "NoTrackedTriumph": "你沒有正在跟蹤的成就。在遊戲中跟蹤一個，或在 DIM 中跟蹤任意數目。",
     "PercentPrestige": "重置百分比{{pct}}%",
     "PowerBonusHeader": "+{{powerBonus}} 光等獎勵",

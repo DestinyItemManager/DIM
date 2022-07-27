@@ -836,6 +836,7 @@
     "CrucibleRank": "Ranque",
     "Items": "Itens de Jornada",
     "Milestones": "Marcos e Desafios",
+    "NoEventChallenges": "Você concluiu todos os desafios do evento",
     "NoTrackedTriumph": "Você não está rastreando nenhum triunfo. Selecione um através do jogo ou quantos você quiser aqui no DIM.",
     "PercentPrestige": "{{pct}}% para resetar",
     "PowerBonusHeader": "Recompensas Poderosas +{{powerBonus}}",

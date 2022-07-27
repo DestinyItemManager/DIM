@@ -836,6 +836,7 @@
     "CrucibleRank": "Rangi",
     "Items": "Przedmioty zadań",
     "Milestones": "Kamienie milowe i wyzwania",
+    "NoEventChallenges": "You have completed all event challenges",
     "NoTrackedTriumph": "Nie masz żadnych śledzonych triumfów. Śledź jednego w grze lub tyle, ile chcesz w DIM.",
     "PercentPrestige": "{{pct}}% do resetu",
     "PowerBonusHeader": "+{{powerBonus}} Power Rewards",

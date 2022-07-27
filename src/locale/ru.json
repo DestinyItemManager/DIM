@@ -836,6 +836,7 @@
     "CrucibleRank": "Ранги",
     "Items": "Предметы Заданий",
     "Milestones": "Испытания",
+    "NoEventChallenges": "Вы выполнили все испытания мероприятия",
     "NoTrackedTriumph": "Нет Отслеживаемых Триумфов. Отслеживайте один в игре, или сколько угодно в DIM.",
     "PercentPrestige": "{{pct}}% обнуления",
     "PowerBonusHeader": "+{{powerBonus}} Сила Наград",
