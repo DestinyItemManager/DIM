@@ -4,11 +4,7 @@ import {
   DimSocketCategory,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
-import {
-  DestinyInventoryItemDefinition,
-  DestinySocketCategoryStyle,
-  TierType,
-} from 'bungie-api-ts/destiny2';
+import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimSocket, DimSockets } from '../inventory/item-types';
@@ -193,7 +189,23 @@ export function getDefaultAbilityChoiceHash(socket: DimSocket) {
       socket.plugSet!.plugs[0]!.plugDef.hash;
 }
 
-export function isEnhancedPerk(perk: DimPlug | DestinyInventoryItemDefinition) {
-  const plugDef = 'plugDef' in perk ? perk.plugDef : perk;
-  return plugDef.inventory!.tierType === TierType.Common;
+/**
+ * With Solstice 2022, event armor has a ton of sockets for stat rerolling
+ * and they take up a lot of space. No idea if this system will be around for
+ * other armor but if it does, just add to this function.
+ */
+export function isEventArmorRerollSocket(socket: DimSocket) {
+  return socket.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith('events.solstice.');
+}
+
+export function isEnhancedPerk(perk: DimPlug) {
+  const plugDef = perk.plugDef;
+  return (
+    plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
+    plugDef.inventory!.tierType === TierType.Common
+  );
+}
+
+export function countEnhancedPerks(sockets: DimSockets) {
+  return sockets.allSockets.filter((s) => s.plugged && isEnhancedPerk(s.plugged)).length;
 }

@@ -79,9 +79,11 @@ export const loadoutsByItemSelector = createSelector(
   }
 );
 
-export const previousLoadoutSelector = (state: RootState, storeId: string): Loadout | undefined => {
-  if (state.loadouts.previousLoadouts[storeId]) {
-    return _.last(state.loadouts.previousLoadouts[storeId]);
-  }
-  return undefined;
-};
+export const previousLoadoutSelector =
+  (storeId: string) =>
+  (state: RootState): Loadout | undefined => {
+    if (state.loadouts.previousLoadouts[storeId]) {
+      return _.last(state.loadouts.previousLoadouts[storeId]);
+    }
+    return undefined;
+  };

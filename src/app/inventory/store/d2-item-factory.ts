@@ -9,7 +9,7 @@ import {
 } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { errorLog, warnLog } from 'app/utils/log';
-import { isEnhancedPerk } from 'app/utils/socket-utils';
+import { countEnhancedPerks } from 'app/utils/socket-utils';
 import {
   BucketCategory,
   ComponentPrivacySetting,
@@ -36,12 +36,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import extendedICH from 'data/d2/extended-ich.json';
-import {
-  BucketHashes,
-  ItemCategoryHashes,
-  PlugCategoryHashes,
-  StatHashes,
-} from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -612,16 +607,8 @@ export function makeItem(
     const containsEnhancedIntrinsic = createdItem.sockets.allSockets.some(
       (s) => s.plugged && enhancedIntrinsics.has(s.plugged.plugDef.hash)
     );
-    if (containsEnhancedIntrinsic) {
-      const numEnhancedTraits = createdItem.sockets.allSockets.filter(
-        (s) =>
-          s.plugged &&
-          s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
-          isEnhancedPerk(s.plugged)
-      );
-      if (numEnhancedTraits.length >= 2) {
-        createdItem.masterwork = true;
-      }
+    if (containsEnhancedIntrinsic && countEnhancedPerks(createdItem.sockets) >= 2) {
+      createdItem.masterwork = true;
     }
   }
 
