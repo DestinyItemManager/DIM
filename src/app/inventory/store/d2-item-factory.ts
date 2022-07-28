@@ -46,6 +46,7 @@ import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';
+import { buildCatalystInfo } from './catalyst';
 import { buildCraftedInfo } from './crafted';
 import { buildDeepsightInfo } from './deepsight';
 import { createItemIndex } from './item-index';
@@ -620,6 +621,11 @@ export function makeItem(
 
   // Deepsight Resonance
   createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
+
+  // Catalyst
+  if (createdItem.isExotic && createdItem.bucket.inWeapons) {
+    createdItem.catalystInfo = buildCatalystInfo(createdItem.hash, profileRecords);
+  }
 
   try {
     createdItem.stats = buildStats(defs, createdItem, itemDef);
