@@ -1,5 +1,6 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { GeneralModsCache, getViableGeneralModPicks, ModsPick } from './auto-stat-mod-utils';
 import { ProcessItem, ProcessMod } from './types';
 
 interface SortParam {
@@ -66,19 +67,26 @@ function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[])
 // Used for null values
 const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
 
+export type SlotIndependentPickAssignResult =
+  | { res: 'mods_dont_fit' }
+  | { res: 'cannot_hit_stats' }
+  | { res: 'ok'; pick: ModsPick };
+
 /**
- * This figures out if all general, combat and activity mods can be assigned to an armour set.
+ * This figures out if all general, combat and activity mods can be assigned to an armour set and auto stat mods
+ * can be picked to provide the neededStats.
  *
- * The params generalModPermutations, combatModPermutations, activityModPermutations are assumed to be the results
- * from processUtils.ts#generateModPermutations, i.e. all permutations of general, combat or activity mods.
+ * The params combatModPermutations, activityModPermutations are assumed to be the results
+ * from processUtils.ts#generateModPermutations, i.e. all permutations of combat or activity mods.
  * By preprocessing all the assignments we skip a lot of work in the middle of the big process algorithm.
  */
-export function canTakeSlotIndependentMods(
-  generalModPermutations: (ProcessMod | null)[][],
+export function pickAndAssignSlotIndependentMods(
   combatModPermutations: (ProcessMod | null)[][],
   activityModPermutations: (ProcessMod | null)[][],
-  items: ProcessItem[]
-) {
+  items: ProcessItem[],
+  cache: GeneralModsCache,
+  neededStats: number[]
+): SlotIndependentPickAssignResult {
   // Sort the items like the mods are to try and get a greedy result
   // Theory here is that aligning energy types between items and mods and assigning the mods with the
   // highest cost to the items with the highest amount of energy available will find results faster
@@ -88,28 +96,21 @@ export function canTakeSlotIndependentMods(
   const [arcCombatMods, solarCombatMods, voidCombatMods, stasisCombatMods] = getEnergyCounts(
     combatModPermutations[0]
   );
-  const [arcGeneralMods, solarGeneralMods, voidGeneralMods, stasisGeneralMods] = getEnergyCounts(
-    generalModPermutations[0]
-  );
   const [arcActivityMods, solarActivityMods, voidActivityMods, stasisActivityMods] =
     getEnergyCounts(activityModPermutations[0]);
 
   // A quick check to see if we have enough of each energy type for the mods so we can exit early if not
   if (
-    voidItems + anyItems < voidGeneralMods ||
     voidItems + anyItems < voidCombatMods ||
     voidItems + anyItems < voidActivityMods ||
-    solarItems + anyItems < solarGeneralMods ||
     solarItems + anyItems < solarCombatMods ||
     solarItems + anyItems < solarActivityMods ||
-    arcItems + anyItems < arcGeneralMods ||
     arcItems + anyItems < arcCombatMods ||
     arcItems + anyItems < arcActivityMods ||
-    stasisItems + anyItems < stasisGeneralMods ||
     stasisItems + anyItems < stasisCombatMods ||
     stasisItems + anyItems < stasisActivityMods
   ) {
-    return false;
+    return { res: 'mods_dont_fit' };
   }
 
   // An early check to ensure we have enough activity mod combos
@@ -132,10 +133,18 @@ export function canTakeSlotIndependentMods(
         }
       }
       if (socketsCount < tagCounts[tag]) {
-        return false;
+        return { res: 'mods_dont_fit' };
       }
     }
   }
+
+  // Figure out if there's any way for stat mods to provide the needed stats. If neededStats are
+  // all 0, this returns the user-picked general mods only.
+  const validGeneralModPicks = getViableGeneralModPicks(cache, neededStats);
+  if (validGeneralModPicks.length === 0) {
+    return { res: 'cannot_hit_stats' };
+  }
+  let assignedModsAtLeastOnce = false;
 
   // Now we begin looping over all the mod permutations, we have chosen activity mods because they
   // are the most selective. This is a similar principle to DB query theory where you want to run
@@ -204,61 +213,37 @@ export function canTakeSlotIndependentMods(
         }
       }
 
-      generalModLoop: for (const generalModPermutation of generalModPermutations) {
-        generalItemLoop: for (let i = 0; i < sortedItems.length; i++) {
-          const generalMod = generalModPermutation[i];
+      assignedModsAtLeastOnce = true;
 
-          // If a mod is null there is nothing being socketed into the item so move on
-          if (!generalMod) {
-            continue generalItemLoop;
-          }
+      // This is a valid activity and combat mod assignment. See how much energy is left over per piece
+      const remainingEnergies = Array(sortedItems.length).fill(0);
+      for (let idx = 0; idx < sortedItems.length; idx++) {
+        remainingEnergies[idx] =
+          (sortedItems[idx].energy?.capacity || 0) -
+          (sortedItems[idx].energy?.val || 0) -
+          (activityPermutation[idx]?.energy?.val || 0) -
+          (combatPermutation[idx]?.energy?.val || 0);
+      }
+      // Sort the costs array descending, same as our auto stat mod picks
+      remainingEnergies.sort((a, b) => b - a);
 
-          const item = sortedItems[i];
-          const generalEnergy = generalMod.energy || defaultModEnergy;
-          const combatEnergy = combatPermutation[i]?.energy || defaultModEnergy;
-          const activityEnergy = activityPermutation[i]?.energy || defaultModEnergy;
-
-          // Energy is valid when the item has enough energy capacity for the activity, combat
-          // and genreal mods, the items energy type accommodates the mods energy, and if activity
-          // and combat mods are present the energy types of each mod are compatible
-          const generalEnergyIsValid =
-            item.energy &&
-            item.energy.val + generalEnergy.val + combatEnergy.val + activityEnergy.val <=
-              item.energy.capacity &&
-            (item.energy.type === generalEnergy.type ||
-              generalEnergy.type === DestinyEnergyType.Any ||
-              item.energy.type === DestinyEnergyType.Any) &&
-            (combatEnergy.type === generalEnergy.type ||
-              generalEnergy.type === DestinyEnergyType.Any ||
-              combatEnergy.type === DestinyEnergyType.Any) &&
-            (activityEnergy.type === generalEnergy.type ||
-              generalEnergy.type === DestinyEnergyType.Any ||
-              activityEnergy.type === DestinyEnergyType.Any);
-
-          // The general mods wont fit in the item set so move on to the next set of mods
-          if (!generalEnergyIsValid) {
-            continue generalModLoop;
+      let validPick: ModsPick | undefined = undefined;
+      pick: for (const testPick of validGeneralModPicks) {
+        for (let energyIdx = 0; energyIdx < remainingEnergies.length; energyIdx++) {
+          if (testPick.costs[energyIdx] > remainingEnergies[energyIdx]) {
+            continue pick;
           }
         }
-
-        // TODO For auto mods we will want to figure out what mods we can auto assign at this point.
-        // This will mean looking at what is assigned to each item and assigning the most desirable
-        // stat mod that will fit with the given energy use. For example, if intellect is the first
-        // stat in our ordered stats but we only have 3 energy, we will probably need to decide on
-        // using a +5 intellect or mobility (or whatever 3 cost stat mod is highest).
-        // The hit on performance is going to be that we need to remove the `return true` following
-        // this comment. Instead we will want to iterate over all mod combinations and find the best
-        // auto assignment of mods and return said assignment. There may be an early exit for this
-        // but I haven't quite figured that out in my head yet.
-
-        // To hit this point we need to have found a valid set of activity mods
-        // if none is found the continues will skip this.
-        return true;
+        validPick = testPick;
+        break;
+      }
+      if (validPick) {
+        return { res: 'ok', pick: validPick };
       }
     }
   }
 
-  return false;
+  return { res: assignedModsAtLeastOnce ? 'cannot_hit_stats' : 'mods_dont_fit' };
 }
 
 export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {

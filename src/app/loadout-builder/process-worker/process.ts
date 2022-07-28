@@ -13,9 +13,10 @@ import {
   StatFilters,
   StatRanges,
 } from '../types';
+import { createGeneralModsCache } from './auto-stat-mod-utils';
 import {
-  canTakeSlotIndependentMods,
   generateProcessModPermutations,
+  pickAndAssignSlotIndependentMods,
   sortProcessModsOrItems,
 } from './process-utils';
 import { SetTracker } from './set-tracker';
@@ -46,6 +47,8 @@ export function process(
   statFilters: StatFilters,
   /** Ensure every set includes one exotic */
   anyExotic: boolean,
+  /** Use stat mods to hit stat minimums */
+  autoStatMods: boolean,
   onProgress: (remainingTime: number) => void
 ): {
   sets: ProcessArmorSet[];
@@ -119,9 +122,6 @@ export function process(
     }
   }
 
-  const generalModsPermutations = generateProcessModPermutations(
-    generalMods.sort(sortProcessModsOrItems)
-  );
   const combatModPermutations = generateProcessModPermutations(
     combatMods.sort(sortProcessModsOrItems)
   );
@@ -129,6 +129,8 @@ export function process(
     activityMods.sort(sortProcessModsOrItems)
   );
   const hasMods = Boolean(combatMods.length || activityMods.length || generalMods.length);
+
+  const autoStatModsCache = createGeneralModsCache(generalMods, statOrder, autoStatMods);
 
   let numSkippedLowTier = 0;
   let numStatRangeExceeded = 0;
@@ -228,7 +230,7 @@ export function process(
               const tier = tiers[index];
               const filter = statFiltersInStatOrder[index];
               if (!filter.ignored) {
-                if (tier > filter.max || tier < filter.min) {
+                if (tier > filter.max) {
                   statRangeExceeded = true;
                 }
                 totalTier += tier;
@@ -248,36 +250,13 @@ export function process(
 
             const armor = [helm, gaunt, chest, leg, classItem];
 
-            // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
-            // TODO: this isn't a big part of the overall cost of the loop, but we could consider trying to slot
-            // mods at every level (e.g. just helmet, just helmet+arms) and skipping this if they already fit.
-            if (
-              hasMods &&
-              !canTakeSlotIndependentMods(
-                generalModsPermutations,
-                combatModPermutations,
-                activityModPermutations,
-                armor
-              )
-            ) {
-              numCantSlotMods++;
-              continue;
-            }
+            const neededStats = [0, 0, 0, 0, 0, 0];
+            let needSomeStats = false;
 
-            // Calculate the "tiers string" here, since most sets don't make it this far
-            // A string version of the tier-level of each stat, must be lexically comparable
-            // TODO: It seems like constructing and comparing tiersString would be expensive but it's less so
-            // than comparing stat arrays element by element
-            let tiersString = '';
+            // Check in which stats we're lacking
             for (let index = 0; index < 6; index++) {
               const value = Math.min(Math.max(stats[index], 0), 100);
-              const tier = tiers[index];
-              // Make each stat exactly one code unit so the string compares correctly
               const filter = statFiltersInStatOrder[index];
-              if (!filter.ignored) {
-                // using a power of 2 (16) instead of 11 is faster
-                tiersString += tier.toString(16);
-              }
 
               // Track the stat ranges of sets that made it through all our filters
               const range = statRangesFilteredInStatOrder[index];
@@ -287,10 +266,63 @@ export function process(
               if (value < range.min) {
                 range.min = value;
               }
+
+              if (!filter.ignored) {
+                const neededValue = filter.min * 10 - value;
+                if (neededValue > 0) {
+                  neededStats[index] = neededValue;
+                  needSomeStats = true;
+                }
+              }
+            }
+
+            if (needSomeStats && !autoStatMods) {
+              numStatRangeExceeded++;
+              continue;
+            }
+
+            let statMods: number[] = [];
+            // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
+            // TODO: this isn't a big part of the overall cost of the loop, but we could consider trying to slot
+            // mods at every level (e.g. just helmet, just helmet+arms) and skipping this if they already fit.
+            if (hasMods || needSomeStats) {
+              const modPickResult = pickAndAssignSlotIndependentMods(
+                combatModPermutations,
+                activityModPermutations,
+                armor,
+                autoStatModsCache,
+                neededStats
+              );
+
+              switch (modPickResult.res) {
+                case 'cannot_hit_stats':
+                  numStatRangeExceeded++;
+                  continue;
+                case 'mods_dont_fit':
+                  numCantSlotMods++;
+                  continue;
+                default:
+                  statMods = modPickResult.pick.modHashes;
+              }
+            }
+
+            // Calculate the "tiers string" here, since most sets don't make it this far
+            // A string version of the tier-level of each stat, must be lexically comparable
+            // TODO: It seems like constructing and comparing tiersString would be expensive but it's less so
+            // than comparing stat arrays element by element
+            let tiersString = '';
+            for (let index = 0; index < 6; index++) {
+              const tier = tiers[index];
+              // Make each stat exactly one code unit so the string compares correctly
+              const filter = statFiltersInStatOrder[index];
+              if (!filter.ignored) {
+                // using a power of 2 (16) instead of 11 is faster
+                tiersString += tier.toString(16);
+              }
             }
 
             numValidSets++;
-            setTracker.insert(totalTier, tiersString, armor, stats);
+            setTracker.insert(totalTier, tiersString, armor, stats, statMods);
           }
         }
       }
@@ -334,12 +366,13 @@ export function process(
     }
   );
 
-  const sets = finalSets.map(({ armor, stats }) => ({
+  const sets = finalSets.map(({ armor, stats, statMods }) => ({
     armor: armor.map((item) => item.id),
     stats: statOrder.reduce((statObj, statHash, i) => {
       statObj[statHash] = stats[i];
       return statObj;
     }, {}) as ArmorStats,
+    statMods,
   }));
 
   return {

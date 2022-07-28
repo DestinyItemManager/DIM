@@ -185,6 +185,7 @@ export type LoadoutBuilderAction =
   | { type: 'unpinItem'; item: DimItem }
   | { type: 'excludeItem'; item: DimItem }
   | { type: 'unexcludeItem'; item: DimItem }
+  | { type: 'autoStatModsChanged'; autoStatMods: boolean }
   | { type: 'lockedModsChanged'; lockedMods: PluggableInventoryItemDefinition[] }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
@@ -483,6 +484,14 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
         return { ...state, compareSet: action.set };
       case 'closeCompareDrawer':
         return { ...state, compareSet: undefined };
+      case 'autoStatModsChanged':
+        return {
+          ...state,
+          loadoutParameters: {
+            ...state.loadoutParameters,
+            autoStatMods: action.autoStatMods,
+          },
+        };
     }
   };
 }

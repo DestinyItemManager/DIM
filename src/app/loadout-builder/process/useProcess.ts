@@ -66,6 +66,7 @@ export function useProcess({
   statOrder,
   statFilters,
   anyExotic,
+  autoStatMods,
 }: {
   defs: D2ManifestDefinitions;
   selectedStore: DimStore;
@@ -76,6 +77,7 @@ export function useProcess({
   statOrder: number[];
   statFilters: StatFilters;
   anyExotic: boolean;
+  autoStatMods: boolean;
 }) {
   const [remainingTime, setRemainingTime] = useState(0);
   const [{ result, processing }, setState] = useState<ProcessState>({
@@ -195,6 +197,7 @@ export function useProcess({
         statOrder,
         statFilters,
         anyExotic,
+        autoStatMods,
         proxy(setRemainingTime)
       )
       .then(({ sets, combos, statRangesFiltered }) => {
@@ -235,6 +238,7 @@ export function useProcess({
     anyExotic,
     subclass?.loadoutItem.socketOverrides,
     armorEnergyRules,
+    autoStatMods,
   ]);
 
   return { result, processing, remainingTime };

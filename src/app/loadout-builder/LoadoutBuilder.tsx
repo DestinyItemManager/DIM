@@ -164,6 +164,7 @@ export default memo(function LoadoutBuilder({
   const isPhonePortrait = useIsPhonePortrait();
 
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
+  const autoStatMods = loadoutParameters.autoStatMods ?? false;
 
   const lockedMods = useMemo(
     () =>
@@ -268,6 +269,7 @@ export default memo(function LoadoutBuilder({
     statOrder,
     statFilters,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
+    autoStatMods,
   });
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
@@ -344,6 +346,7 @@ export default memo(function LoadoutBuilder({
         subclass={subclass}
         lockedExoticHash={lockedExoticHash}
         searchFilter={searchFilter}
+        autoStatMods={autoStatMods}
         lbDispatch={lbDispatch}
       />
       {isPhonePortrait && (
