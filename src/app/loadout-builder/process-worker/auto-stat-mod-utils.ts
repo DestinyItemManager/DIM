@@ -167,9 +167,6 @@ export function getViableGeneralModPicks(
     }
     return acc;
   }, startingMods);
-  // Sort large mods ascending so that we split an intellect mod first -- that's important
-  // for our efficient splitting algorithm below to be correct
-  startingMods.largeMods.sort(compareBy(({ cost }) => cost));
 
   const remainingAssignmentSlots = 5 - cache.generalModCosts.length;
   const unusedModSlots =
@@ -182,6 +179,10 @@ export function getViableGeneralModPicks(
     return [];
   }
   cache.cacheSuccesses++;
+
+  // Sort large mods ascending so that we split an intellect mod first -- that's important
+  // for our efficient splitting algorithm below to be correct
+  startingMods.largeMods.sort(compareBy(({ cost }) => cost));
 
   const options =
     unusedModSlots !== 0 && startingMods.largeMods.length > 0
