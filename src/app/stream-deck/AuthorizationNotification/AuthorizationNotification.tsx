@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { NotificationError, showNotification } from 'app/notifications/notifications';
 import { notificationPromise } from 'app/stream-deck/msg-handlers';
-import { infoLog } from 'app/utils/log';
 import styles from './AuthorizationNotification.m.scss';
 
 interface StreamDeckChallengeProps {
@@ -24,15 +23,10 @@ export function showStreamDeckAuthorizationNotification(challenge: number) {
     body: <StreamDeckChallenge challenge={challenge} />,
     type: 'progress',
     duration: 500,
-    promise: notificationPromise.promise
-      ?.then(() => {
-        infoLog('sd', 'ok');
-        return true;
-      })
-      ?.catch((e) => {
-        throw new NotificationError(e.message, {
-          body: t('StreamDeck.Authorization.Error'),
-        });
-      }),
+    promise: notificationPromise.promise?.catch((e) => {
+      throw new NotificationError(e.message, {
+        body: t('StreamDeck.Authorization.Error'),
+      });
+    }),
   });
 }
