@@ -3,7 +3,6 @@ import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { RootState, ThunkResult } from 'app/store/types';
 import * as actions from 'app/stream-deck/actions';
-import { DeferredPromise } from 'app/stream-deck/util/deferred';
 import { Reducer } from 'redux';
 import { ActionType } from 'typesafe-actions';
 
@@ -13,8 +12,6 @@ export type StreamDeckSelectionType = 'loadout' | 'item';
 export interface StreamDeckState {
   // WebSocket status
   readonly connected: boolean;
-  // Deferred promise used with selections notifications and actions
-  readonly selectionPromise: DeferredPromise;
   // Selection type
   readonly selection?: 'item' | 'loadout' | 'postmaster' | undefined;
 }

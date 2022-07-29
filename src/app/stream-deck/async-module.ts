@@ -14,7 +14,7 @@ import {
   streamDeckDisconnected,
 } from 'app/stream-deck/actions';
 import { SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
-import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
+import { handleStreamDeckMessage, notificationPromise } from 'app/stream-deck/msg-handlers';
 import { streamDeck } from 'app/stream-deck/reducer';
 import {
   clientIdentifier,
@@ -62,7 +62,7 @@ function streamDeckSelectItem(item: DimItem): ThunkResult {
       // hide the item popup that will be opened on classic item click
       hideItemPopup();
       // hide the notification
-      streamDeck.selectionPromise.resolve();
+      notificationPromise.resolve();
       // clear the selection state in the store
       dispatch(streamDeckClearSelection());
       // send selection to the Stream Deck
@@ -101,7 +101,7 @@ function streamDeckSelectLoadout(loadout: Loadout, store: DimStore): ThunkResult
   return async (dispatch, getState) => {
     const state = getState();
     if (state.streamDeck.selection === 'loadout') {
-      state.streamDeck.selectionPromise.resolve();
+      notificationPromise.resolve();
       dispatch(streamDeckClearSelection());
       return dispatch(
         sendToStreamDeck({
