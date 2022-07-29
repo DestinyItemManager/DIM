@@ -13,12 +13,7 @@ import {
   StatFilters,
   StatRanges,
 } from '../types';
-import { createGeneralModsCache } from './auto-stat-mod-utils';
-import {
-  generateProcessModPermutations,
-  pickAndAssignSlotIndependentMods,
-  sortProcessModsOrItems,
-} from './process-utils';
+import { pickAndAssignSlotIndependentMods, precalculateStructures } from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
   LockedProcessMods,
@@ -122,15 +117,14 @@ export function process(
     }
   }
 
-  const combatModPermutations = generateProcessModPermutations(
-    combatMods.sort(sortProcessModsOrItems)
-  );
-  const activityModPermutations = generateProcessModPermutations(
-    activityMods.sort(sortProcessModsOrItems)
+  const precalculatedInfo = precalculateStructures(
+    generalMods,
+    combatMods,
+    activityMods,
+    autoStatMods,
+    statOrder
   );
   const hasMods = Boolean(combatMods.length || activityMods.length || generalMods.length);
-
-  const autoStatModsCache = createGeneralModsCache(generalMods, statOrder, autoStatMods);
 
   let numSkippedLowTier = 0;
   let numStatRangeExceeded = 0;
@@ -287,10 +281,8 @@ export function process(
             // mods at every level (e.g. just helmet, just helmet+arms) and skipping this if they already fit.
             if (hasMods || needSomeStats) {
               const modPickResult = pickAndAssignSlotIndependentMods(
-                combatModPermutations,
-                activityModPermutations,
+                precalculatedInfo,
                 armor,
-                autoStatModsCache,
                 neededStats
               );
 
@@ -365,6 +357,11 @@ export function process(
       numNoExotic,
     }
   );
+  infoLog('loadout optimizer', 'auto stat mods', {
+    cacheHits: precalculatedInfo.cache.cacheHits,
+    cacheMisses: precalculatedInfo.cache.cacheMisses,
+    cacheSuccesses: precalculatedInfo.cache.cacheSuccesses,
+  });
 
   const sets = finalSets.map(({ armor, stats, statMods }) => ({
     armor: armor.map((item) => item.id),

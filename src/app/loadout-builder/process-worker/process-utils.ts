@@ -1,6 +1,12 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { GeneralModsCache, getViableGeneralModPicks, ModsPick } from './auto-stat-mod-utils';
+import { ArmorStatHashes } from '../types';
+import {
+  createGeneralModsCache,
+  GeneralModsCache,
+  getViableGeneralModPicks,
+  ModsPick,
+} from './auto-stat-mod-utils';
 import { ProcessItem, ProcessMod } from './types';
 
 interface SortParam {
@@ -13,6 +19,16 @@ interface SortParam {
 export interface ProcessItemSubset extends SortParam {
   id: string;
   compatibleModSeasons?: string[];
+}
+
+export interface PrecalculatedInfo {
+  cache: GeneralModsCache;
+  combatModPermutations: (ProcessMod | null)[][];
+  combatModEnergyCounts: EnergyTypeCounts;
+  hasActivityMods: boolean;
+  activityModPermutations: (ProcessMod | null)[][];
+  activityModEnergyCounts: EnergyTypeCounts;
+  activityTagCounts: { [tag: string]: number };
 }
 
 /**
@@ -32,7 +48,40 @@ export function sortProcessModsOrItems(a: SortParam, b: SortParam) {
   return -1;
 }
 
-function getEnergyCounts(modsOrItems: (ProcessMod | null | ProcessItemSubset)[]) {
+type EnergyTypeCounts = [
+  arcCount: number,
+  solarCount: number,
+  voidCount: number,
+  stasisCount: number,
+  anyCount: number
+];
+
+export function precalculateStructures(
+  generalMods: ProcessMod[],
+  combatMods: ProcessMod[],
+  activityMods: ProcessMod[],
+  autoStatMods: boolean,
+  statOrder: ArmorStatHashes[]
+): PrecalculatedInfo {
+  return {
+    cache: createGeneralModsCache(generalMods, statOrder, autoStatMods),
+    combatModPermutations: generateProcessModPermutations(combatMods.sort(sortProcessModsOrItems)),
+    combatModEnergyCounts: getEnergyCounts(combatMods),
+    hasActivityMods: activityMods.length > 0,
+    activityModPermutations: generateProcessModPermutations(
+      activityMods.sort(sortProcessModsOrItems)
+    ),
+    activityModEnergyCounts: getEnergyCounts(activityMods),
+    activityTagCounts: activityMods.reduce((acc, mod) => {
+      if (mod.tag) {
+        acc[mod.tag] = (acc[mod.tag] || 0) + 1;
+      }
+      return acc;
+    }, {}),
+  };
+}
+
+function getEnergyCounts(modsOrItems: (ProcessMod | ProcessItemSubset)[]): EnergyTypeCounts {
   let arcCount = 0;
   let solarCount = 0;
   let voidCount = 0;
@@ -81,10 +130,8 @@ export type SlotIndependentPickAssignResult =
  * By preprocessing all the assignments we skip a lot of work in the middle of the big process algorithm.
  */
 export function pickAndAssignSlotIndependentMods(
-  combatModPermutations: (ProcessMod | null)[][],
-  activityModPermutations: (ProcessMod | null)[][],
+  info: PrecalculatedInfo,
   items: ProcessItem[],
-  cache: GeneralModsCache,
   neededStats: number[]
 ): SlotIndependentPickAssignResult {
   // Sort the items like the mods are to try and get a greedy result
@@ -93,11 +140,10 @@ export function pickAndAssignSlotIndependentMods(
   const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
 
   const [arcItems, solarItems, voidItems, stasisItems, anyItems] = getEnergyCounts(sortedItems);
-  const [arcCombatMods, solarCombatMods, voidCombatMods, stasisCombatMods] = getEnergyCounts(
-    combatModPermutations[0]
-  );
+  const [arcCombatMods, solarCombatMods, voidCombatMods, stasisCombatMods] =
+    info.combatModEnergyCounts;
   const [arcActivityMods, solarActivityMods, voidActivityMods, stasisActivityMods] =
-    getEnergyCounts(activityModPermutations[0]);
+    info.activityModEnergyCounts;
 
   // A quick check to see if we have enough of each energy type for the mods so we can exit early if not
   if (
@@ -116,31 +162,23 @@ export function pickAndAssignSlotIndependentMods(
   // An early check to ensure we have enough activity mod combos
   // It works by creating an index of tags to totals of said tag
   // we can then ensure we have enough items with said tags.
-  if (activityModPermutations[0].length) {
-    const tagCounts: { [tag: string]: number } = {};
-
-    for (const mod of activityModPermutations[0]) {
-      if (mod?.tag) {
-        tagCounts[mod.tag] = (tagCounts[mod.tag] || 0) + 1;
-      }
-    }
-
-    for (const tag of Object.keys(tagCounts)) {
+  if (info.hasActivityMods) {
+    for (const tag of Object.keys(info.activityTagCounts)) {
       let socketsCount = 0;
       for (const item of items) {
         if (item.compatibleModSeasons?.includes(tag)) {
           socketsCount++;
         }
       }
-      if (socketsCount < tagCounts[tag]) {
+      if (socketsCount < info.activityTagCounts[tag]) {
         return { res: 'mods_dont_fit' };
       }
     }
   }
 
   // Figure out if there's any way for stat mods to provide the needed stats. If neededStats are
-  // all 0, this returns the user-picked general mods only.
-  const validGeneralModPicks = getViableGeneralModPicks(cache, neededStats);
+  // all 0, this returns the user-picked general mod costs only.
+  const validGeneralModPicks = getViableGeneralModPicks(info.cache, neededStats);
   if (validGeneralModPicks.length === 0) {
     return { res: 'cannot_hit_stats' };
   }
@@ -151,7 +189,7 @@ export function pickAndAssignSlotIndependentMods(
   // the most selective part of your query first to narrow results down as early as possible. In
   // this case we can use it to skip large branches of the triple nested mod loop because not all
   // armour will have activity slots.
-  activityModLoop: for (const activityPermutation of activityModPermutations) {
+  activityModLoop: for (const activityPermutation of info.activityModPermutations) {
     activityItemLoop: for (let i = 0; i < sortedItems.length; i++) {
       const activityMod = activityPermutation[i];
 
@@ -180,7 +218,7 @@ export function pickAndAssignSlotIndependentMods(
       }
     }
 
-    combatModLoop: for (const combatPermutation of combatModPermutations) {
+    combatModLoop: for (const combatPermutation of info.combatModPermutations) {
       combatItemLoop: for (let i = 0; i < sortedItems.length; i++) {
         const combatMod = combatPermutation[i];
 
@@ -216,27 +254,21 @@ export function pickAndAssignSlotIndependentMods(
       assignedModsAtLeastOnce = true;
 
       // This is a valid activity and combat mod assignment. See how much energy is left over per piece
-      const remainingEnergies = Array(sortedItems.length).fill(0);
-      for (let idx = 0; idx < sortedItems.length; idx++) {
-        remainingEnergies[idx] =
-          (sortedItems[idx].energy?.capacity || 0) -
-          (sortedItems[idx].energy?.val || 0) -
+      const remainingEnergies = sortedItems.map(
+        (i, idx) =>
+          (i.energy?.capacity || 0) -
+          (i.energy?.val || 0) -
           (activityPermutation[idx]?.energy?.val || 0) -
-          (combatPermutation[idx]?.energy?.val || 0);
-      }
+          (combatPermutation[idx]?.energy?.val || 0)
+      );
+
       // Sort the costs array descending, same as our auto stat mod picks
       remainingEnergies.sort((a, b) => b - a);
 
-      let validPick: ModsPick | undefined = undefined;
-      pick: for (const testPick of validGeneralModPicks) {
-        for (let energyIdx = 0; energyIdx < remainingEnergies.length; energyIdx++) {
-          if (testPick.costs[energyIdx] > remainingEnergies[energyIdx]) {
-            continue pick;
-          }
-        }
-        validPick = testPick;
-        break;
-      }
+      const validPick = validGeneralModPicks.find((pick) =>
+        pick.costs.every((cost, idx) => cost <= remainingEnergies[idx])
+      );
+
       if (validPick) {
         return { res: 'ok', pick: validPick };
       }

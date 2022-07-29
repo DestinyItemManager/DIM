@@ -27,7 +27,7 @@ const minorStatMods: { [statHash in ArmorStatHashes]: { hash: number; cost: numb
 // splitting a recovery mod (4 cost into 2, 2 cost) in the same stage because the intellect mod leaves
 // us in a better situation. Similarly, it's unimportant if we split a mobility mod or a resilience mod,
 // the effect is the same.
-const ignoreSplittingRelations: { [statHash in ArmorStatHashes]: ArmorStatHashes[] } = {
+const dontSplitTheseAgain: { [statHash in ArmorStatHashes]: ArmorStatHashes[] } = {
   [StatHashes.Mobility]: [
     StatHashes.Mobility,
     StatHashes.Resilience,
@@ -71,6 +71,9 @@ export interface GeneralModsCache {
   statOrder: ArmorStatHashes[];
   autoStatMods: boolean;
   cache: { [statsString: string]: ModsPick[] };
+  cacheHits: number;
+  cacheMisses: number;
+  cacheSuccesses: number;
 }
 /**
  * Okay, so LO should automatically assign stat mods to hit minimum required stats.
@@ -92,15 +95,15 @@ export interface GeneralModsCache {
  *
  * What saves us here is that stat mods don't have an element or mod slot requirement, so we
  * don't have to test all permutations of stat mods. Instead, we just sort the costs of each pick
- * descending and compare with the leftover energy capacities, also sorced descendingly.
+ * descending and compare with the leftover energy capacities, also sorted descending.
  *
  * When LO determines that a set is missing some stats, it asks this cache for picks of mods that
- * generate these stats. `getViableAutoModPicks` builds a list of possible picks.
+ * generate these stats. `getViableGeneralModPicks` builds a list of possible picks.
  * LO can then test these picks for every BI assignment it comes up with.
  *
  * Finally, what's perhaps interesting about this is that this already factors in stat mods the
  * user picked themselves, but without the stats (because those are factored in externally in the base stats).
- * E.g. if the user forces an intellect mod (cost 5), `getViableAutoModPicks` will only generate picks with up
+ * E.g. if the user forces an intellect mod (cost 5), `getViableGeneralModPicks` will only generate picks with up
  * to 4 extra mods, and the costs of every pick will include a 5 at the front. LO thus doesn't need to
  * iterate over stat mod permutations and gets the check for free.
  */
@@ -114,6 +117,9 @@ export function createGeneralModsCache(
     statOrder,
     autoStatMods,
     cache: {},
+    cacheHits: 0,
+    cacheMisses: 0,
+    cacheSuccesses: 0,
   };
 }
 
@@ -125,12 +131,27 @@ export function getViableGeneralModPicks(
     return [{ costs: cache.generalModCosts, modHashes: [] }];
   }
   // Divide by 5 and round up to the nearest integer, such that
-  // if we need [0]->0, [1,5] -> 1, [6-10] -> 2, [11-15] -> 3, ...
-  neededStats = neededStats.map((x) => Math.ceil(x / 5));
-  const statsString = 'stats-' + neededStats.map((x) => x.toString(16)).join('');
+  // if we need [0]->0, [1-5]->1, [6-10]->2, [11-15]->3, ...
+  // This cache lookup is really hot code and can easily take up over
+  // 10% of the total processing time of the whole LO process.
+  let statsString = 'stats-';
+  neededStats = neededStats.map((x) => {
+    const val = Math.ceil(x / 5);
+    statsString += val.toString(16);
+    return val;
+  });
   if (cache[statsString]) {
+    cache.cacheHits++;
     return cache[statsString];
   }
+  cache.cacheMisses++;
+
+  // This is where code is allowed to be not super optimized. Depending on how many
+  // stats the user sets a minimum for, the number of different stat requirements goes up.
+  // Setting everything to T10 can easily cause 100k different stat requirements, they're
+  // all trivially infeasible because they require more than 5 mods. So in practice, this
+  // should never really be a performance concern because there's always only a relatively
+  // narrow band of stat requirements that can actually be satisfied.
 
   const startingMods: ModsWorkingSet = { largeMods: [], smallMods: [] };
 
@@ -160,6 +181,7 @@ export function getViableGeneralModPicks(
     cache[statsString] = [];
     return [];
   }
+  cache.cacheSuccesses++;
 
   const options =
     unusedModSlots !== 0 && startingMods.largeMods.length > 0
@@ -194,7 +216,7 @@ function finalize(cache: GeneralModsCache, sets: ModsWorkingSet[]): ModsPick[] {
  * Recursively derives variants of a pick of mods by splitting large mods into small mods.
  * Here's an example (large mods first, small mods second, `|` denotes the hiWatermark):
  * ```
- * [RES+10 REC+10 INT+10], []
+ * [RES+10 REC+10 INT+10 |], []
  *     [RES+10 REC+10 |], [INT+5 INT+5]
  *         [RES+10 |], [INT+5 INT+5 REC+5 REC+5]
  *         [| REC+10], [INT+5 INT+5 RES+5 RES+5]
@@ -216,9 +238,10 @@ function splitMods(
   const returnVal: ModsWorkingSet[] = [];
 
   for (let idx = hiWatermark - 1; idx >= 0; idx--) {
+    const modStatHash = workingSet.largeMods[idx].statHash;
     // In an earlier iteration, we performed an at least equivalently favorable
     // split, so ignore this split for now.
-    if (bannedSplitStatHashes.includes(workingSet.largeMods[idx].statHash)) {
+    if (bannedSplitStatHashes.includes(modStatHash)) {
       continue;
     }
 
@@ -227,13 +250,13 @@ function splitMods(
       largeMods: workingSet.largeMods.slice(),
       smallMods: workingSet.smallMods.slice(),
     };
-    const modStatHash = splitSet.largeMods[idx].statHash;
+
     const smallMod = minorStatMods[modStatHash];
     // Remove it from the large mods set and add the small variant twice
     splitSet.largeMods.splice(idx, 1);
     splitSet.smallMods.push(smallMod, smallMod);
     // Don't split a mod with the same or worse energy effects in this loop later
-    bannedSplitStatHashes.push(...ignoreSplittingRelations[modStatHash]);
+    bannedSplitStatHashes.push(...dontSplitTheseAgain[modStatHash]);
     returnVal.push(splitSet);
     // and if we have another free slot even after splitting, split further mods
     // at lower positions than the one we already split (see function comments,

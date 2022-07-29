@@ -15,10 +15,10 @@ import {
   recoveryModHash,
 } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
-import { createGeneralModsCache } from './process-worker/auto-stat-mod-utils';
 import {
   generateProcessModPermutations,
   pickAndAssignSlotIndependentMods,
+  precalculateStructures,
 } from './process-worker/process-utils';
 import { ProcessItem, ProcessMod } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
@@ -159,8 +159,8 @@ describe('process-utils', () => {
 
   const canTakeSlotIndependentMods = (
     generalMods: ProcessMod[],
-    combatModPermutations: (ProcessMod | null)[][],
-    activityModPermutations: (ProcessMod | null)[][],
+    combatMods: ProcessMod[],
+    activityMods: ProcessMod[],
     items: ProcessItem[]
   ) => {
     const statOrder: ArmorStatHashes[] = [
@@ -172,16 +172,14 @@ describe('process-utils', () => {
       StatHashes.Strength,
     ];
     const neededStats = [0, 0, 0, 0, 0, 0];
-    const cache = createGeneralModsCache(generalMods, statOrder, false);
-    return (
-      pickAndAssignSlotIndependentMods(
-        combatModPermutations,
-        activityModPermutations,
-        items,
-        cache,
-        neededStats
-      ).res === 'ok'
+    const precalculatedInfo = precalculateStructures(
+      generalMods,
+      combatMods,
+      activityMods,
+      false,
+      statOrder
     );
+    return pickAndAssignSlotIndependentMods(precalculatedInfo, items, neededStats).res === 'ok';
   };
 
   // Answers are derived as permutations of multisets
@@ -200,14 +198,14 @@ describe('process-utils', () => {
   });
 
   it('can fit all mods when there are no mods', () => {
-    expect(canTakeSlotIndependentMods([], [[]], [[]], items)).toBe(true);
+    expect(canTakeSlotIndependentMods([], [], [], items)).toBe(true);
   });
 
   it('can fit five general mods', () => {
     const modifiedItems = items.map((item) =>
       modifyItem({ item, energyVal: item.energy!.capacity - generalMod.energy!.val })
     );
-    expect(canTakeSlotIndependentMods(generalMods, [[]], [[]], modifiedItems)).toBe(true);
+    expect(canTakeSlotIndependentMods(generalMods, [], [], modifiedItems)).toBe(true);
   });
 
   test.each([0, 1, 2, 3, 4])(
@@ -223,8 +221,7 @@ describe('process-utils', () => {
               : item.energy!.capacity,
         })
       );
-      const combatModPerms = generateProcessModPermutations([combatMod]);
-      expect(canTakeSlotIndependentMods([], combatModPerms, [[]], modifiedItems)).toBe(true);
+      expect(canTakeSlotIndependentMods([], [combatMod], [], modifiedItems)).toBe(true);
     }
   );
 
@@ -240,11 +237,8 @@ describe('process-utils', () => {
         compatibleModSeasons: [tag],
       })
     );
-    const combatModPerms = generateProcessModPermutations(combatMods);
     // sanity check
-    expect(canTakeSlotIndependentMods([], combatModPerms, [[]], modifiedItems)).toBe(
-      canFit === 'can'
-    );
+    expect(canTakeSlotIndependentMods([], combatMods, [], modifiedItems)).toBe(canFit === 'can');
   });
 
   test.each([0, 1, 2, 3, 4])(
@@ -258,8 +252,7 @@ describe('process-utils', () => {
           compatibleModSeasons: i === itemIndex ? [combatMod.tag!] : [],
         })
       );
-      const combatModPerms = generateProcessModPermutations([combatMod]);
-      expect(canTakeSlotIndependentMods([], combatModPerms, [[]], modifiedItems)).toBe(true);
+      expect(canTakeSlotIndependentMods([], [combatMod], [], modifiedItems)).toBe(true);
     }
   );
 
@@ -275,11 +268,8 @@ describe('process-utils', () => {
         compatibleModSeasons: [tag],
       })
     );
-    const activityModPerms = generateProcessModPermutations(activityMods);
     // sanity check
-    expect(canTakeSlotIndependentMods([], [[]], activityModPerms, modifiedItems)).toBe(
-      canFit === 'can'
-    );
+    expect(canTakeSlotIndependentMods([], [], activityMods, modifiedItems)).toBe(canFit === 'can');
   });
 
   test.each([0, 1, 2, 3, 4])(
@@ -293,8 +283,7 @@ describe('process-utils', () => {
           compatibleModSeasons: i === itemIndex ? [activityMod.tag!] : [],
         })
       );
-      const activityModPerms = generateProcessModPermutations([activityMod]);
-      expect(canTakeSlotIndependentMods([], [[]], activityModPerms, modifiedItems)).toBe(true);
+      expect(canTakeSlotIndependentMods([], [], [activityMod], modifiedItems)).toBe(true);
     }
   );
 
@@ -322,14 +311,11 @@ describe('process-utils', () => {
       energyVal: 3,
     });
 
-    const combatModPerms = generateProcessModPermutations([modifiedCombatMod]);
-    const activityModPerms = generateProcessModPermutations([modifiedActivityMod]);
-
     expect(
       canTakeSlotIndependentMods(
         [modifiedGeneralMod],
-        combatModPerms,
-        activityModPerms,
+        [modifiedCombatMod],
+        [modifiedActivityMod],
         modifiedItems
       )
     ).toBe(false);
@@ -361,14 +347,11 @@ describe('process-utils', () => {
         energyVal: modType === 'activity' ? 4 : 3,
       });
 
-      const combatModPerms = generateProcessModPermutations([modifiedCombatMod]);
-      const activityModPerms = generateProcessModPermutations([modifiedActivityMod]);
-
       expect(
         canTakeSlotIndependentMods(
           [modifiedGeneralMod],
-          combatModPerms,
-          activityModPerms,
+          [modifiedCombatMod],
+          [modifiedActivityMod],
           modifiedItems
         )
       ).toBe(false);
@@ -401,14 +384,11 @@ describe('process-utils', () => {
         energyVal: 3,
       });
 
-      const combatModPerms = generateProcessModPermutations([modifiedCombatMod]);
-      const activityModPerms = generateProcessModPermutations([modifiedActivityMod]);
-
       expect(
         canTakeSlotIndependentMods(
           [modifiedGeneralMod],
-          combatModPerms,
-          activityModPerms,
+          [modifiedCombatMod],
+          [modifiedActivityMod],
           modifiedItems
         )
       ).toBe(false);
