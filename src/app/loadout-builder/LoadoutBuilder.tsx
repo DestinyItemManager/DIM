@@ -164,6 +164,7 @@ export default memo(function LoadoutBuilder({
   const isPhonePortrait = useIsPhonePortrait();
 
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
+
   const autoStatMods = loadoutParameters.autoStatMods ?? false;
 
   const lockedMods = useMemo(

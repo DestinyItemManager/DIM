@@ -157,6 +157,9 @@ const lbStateInit = ({
   const statOrder = statOrderFromLoadoutParameters(loadoutParams);
   const statFilters = statFiltersFromLoadoutParamaters(loadoutParams);
 
+  // FIXME: Always require turning on auto mods explicitly for now...
+  loadoutParams = { ...loadoutParams, autoStatMods: undefined };
+
   return {
     loadoutParameters: loadoutParams,
     statOrder,

@@ -78,7 +78,7 @@ import {
   setSocketOverrideResult,
 } from './loadout-apply-state';
 import { Assignment, Loadout, LoadoutItem } from './loadout-types';
-import { backupLoadout, findItemForLoadout } from './loadout-utils';
+import { backupLoadout, findItemForLoadout, getModHashesFromLoadout } from './loadout-utils';
 
 // TODO: move this whole file to "loadouts" folder
 
@@ -252,7 +252,9 @@ function doApplyLoadout(
         (unlockedPlugSetItems().has(h) || h === DEFAULT_SHADER || DEFAULT_ORNAMENTS.includes(h));
 
       // Don't apply mods when moving to the vault
-      const modsToApply = ((!store.isVault && loadout.parameters?.mods) || []).filter(checkMod);
+      const modsToApply = ((!store.isVault && getModHashesFromLoadout(loadout)) || []).filter(
+        checkMod
+      );
       // Mods specific to a bucket but not an item - fashion mods (shader/ornament)
       const modsByBucketToApply: {
         [bucketHash: number]: number[];

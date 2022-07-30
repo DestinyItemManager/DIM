@@ -28,33 +28,29 @@ const minorStatMods: { [statHash in ArmorStatHashes]: { hash: number; cost: numb
 // us in a better situation. Similarly, it's unimportant if we split a mobility mod or a resilience mod,
 // the effect is the same.
 const dontSplitTheseAgain: { [statHash in ArmorStatHashes]: ArmorStatHashes[] } = {
-  [StatHashes.Mobility]: [
-    StatHashes.Mobility,
-    StatHashes.Resilience,
-    StatHashes.Discipline,
-    StatHashes.Strength,
-  ],
-  [StatHashes.Resilience]: [
-    StatHashes.Mobility,
-    StatHashes.Resilience,
-    StatHashes.Discipline,
-    StatHashes.Strength,
-  ],
-  [StatHashes.Recovery]: [StatHashes.Recovery],
-  [StatHashes.Discipline]: [
-    StatHashes.Mobility,
-    StatHashes.Resilience,
-    StatHashes.Discipline,
-    StatHashes.Strength,
-  ],
-  [StatHashes.Intellect]: [StatHashes.Recovery, StatHashes.Intellect],
-  [StatHashes.Strength]: [
-    StatHashes.Mobility,
-    StatHashes.Resilience,
-    StatHashes.Discipline,
-    StatHashes.Strength,
-  ],
+  [StatHashes.Mobility]: [],
+  [StatHashes.Resilience]: [],
+  [StatHashes.Recovery]: [],
+  [StatHashes.Discipline]: [],
+  [StatHashes.Intellect]: [],
+  [StatHashes.Strength]: [],
 };
+
+for (const statHash_ of Object.keys(dontSplitTheseAgain)) {
+  const statHash = Number(statHash_) as ArmorStatHashes;
+  const largeMod = largeStatMods[statHash];
+  const smallMod = minorStatMods[statHash];
+
+  for (const otherStatHash_ of Object.keys(dontSplitTheseAgain)) {
+    const otherStatHash = Number(otherStatHash_) as ArmorStatHashes;
+    const otherLargeMod = largeStatMods[otherStatHash];
+    const otherSmallMod = minorStatMods[otherStatHash];
+    // If splitting otherMod leaves us in the same or a worse position than splitting the current mod
+    if (otherLargeMod.cost <= largeMod.cost && otherSmallMod.cost >= smallMod.cost) {
+      dontSplitTheseAgain[statHash].push(otherStatHash);
+    }
+  }
+}
 
 export interface ModsPick {
   costs: number[];
@@ -113,7 +109,7 @@ export function createGeneralModsCache(
   autoStatMods: boolean
 ): GeneralModsCache {
   return {
-    generalModCosts: generalMods.map((mod) => mod.energy?.val || 0),
+    generalModCosts: generalMods.map((mod) => mod.energy?.val || 0).sort(compareBy((x) => -x)),
     statOrder,
     autoStatMods,
     cache: {},

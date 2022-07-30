@@ -4,10 +4,9 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
 import { inGameArmorEnergyRules } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
+import { getLoadoutStats, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { Portal } from 'app/utils/temp-container';
@@ -69,10 +68,9 @@ export default function ModAssignmentDrawer({
 
   const [itemModAssignments, unassignedMods, mods] = useMemo(() => {
     let mods: PluggableInventoryItemDefinition[] = [];
-    if (defs && loadout.parameters?.mods?.length) {
-      mods = loadout.parameters?.mods
-        .map((hash) => defs.InventoryItem.get(hash))
-        .filter(isPluggableItem);
+    getModsFromLoadout(defs, loadout);
+    if (defs) {
+      mods = getModsFromLoadout(defs, loadout);
     }
     const { itemModAssignments, unassignedMods } = fitMostMods({
       items: armor,
@@ -81,7 +79,7 @@ export default function ModAssignmentDrawer({
     });
 
     return [itemModAssignments, unassignedMods, mods];
-  }, [defs, loadout.parameters?.mods, armor]);
+  }, [defs, loadout, armor]);
 
   const onSocketClick = useCallback(
     (plugDef: PluggableInventoryItemDefinition, plugCategoryHashWhitelist: number[]) => {

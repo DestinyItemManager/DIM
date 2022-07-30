@@ -157,7 +157,7 @@ function GeneratedSet({
               pinned={pinnedItems[item.bucket.hash] === item}
               lbDispatch={lbDispatch}
               assignedMods={itemModAssignments[item.id]}
-              showEnergyChanges={Boolean(lockedMods.length)}
+              showEnergyChanges={Boolean(lockedMods.length || set.statMods.length)}
             />
           ))}
         </div>
