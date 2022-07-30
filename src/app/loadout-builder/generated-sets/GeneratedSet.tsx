@@ -142,6 +142,7 @@ function GeneratedSet({
         <div className={styles.header}>
           <SetStats
             stats={set.stats}
+            autoStatMods={set.statMods}
             maxPower={getPower(displayedItems)}
             statOrder={statOrder}
             enabledStats={enabledStats}

@@ -252,15 +252,6 @@ export function process(
               const value = Math.min(Math.max(stats[index], 0), 100);
               const filter = statFiltersInStatOrder[index];
 
-              // Track the stat ranges of sets that made it through all our filters
-              const range = statRangesFilteredInStatOrder[index];
-              if (value > range.max) {
-                range.max = value;
-              }
-              if (value < range.min) {
-                range.min = value;
-              }
-
               if (!filter.ignored) {
                 const neededValue = filter.min * 10 - value;
                 if (neededValue > 0) {
@@ -283,7 +274,7 @@ export function process(
               const modPickResult = pickAndAssignSlotIndependentMods(
                 precalculatedInfo,
                 armor,
-                neededStats
+                needSomeStats ? neededStats : undefined
               );
 
               switch (modPickResult.res) {
@@ -310,6 +301,16 @@ export function process(
               if (!filter.ignored) {
                 // using a power of 2 (16) instead of 11 is faster
                 tiersString += tier.toString(16);
+              }
+
+              // Track the stat ranges of sets that made it through all our filters
+              const range = statRangesFilteredInStatOrder[index];
+              const value = stats[index];
+              if (value > range.max) {
+                range.max = value;
+              }
+              if (value < range.min) {
+                range.min = value;
               }
             }
 
