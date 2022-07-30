@@ -12,7 +12,7 @@ import chestArmorItem from 'destiny-icons/armor_types/chest.svg';
 import ghostIcon from 'destiny-icons/general/ghost.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import produce from 'immer';
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import { DefItemIcon } from '../inventory/ItemIcon';
@@ -148,14 +148,16 @@ export default function StripSockets() {
 
       stripDispatch({ tag: 'confirm_process', socketList: selectedSockets, cancel });
 
-      await dispatch(
-        doStripSockets(
-          selectedSockets,
-          cancelToken,
-          (idx, error) => stripDispatch({ tag: 'notify_progress', idx, error }),
-          (success) => stripDispatch({ tag: 'notify_done', success })
-        )
-      );
+      try {
+        await dispatch(
+          doStripSockets(selectedSockets, cancelToken, (idx, error) =>
+            stripDispatch({ tag: 'notify_progress', idx, error })
+          )
+        );
+        stripDispatch({ tag: 'notify_done', success: true });
+      } catch {
+        stripDispatch({ tag: 'notify_done', success: false });
+      }
     },
     [dispatch, isChoosing]
   );
@@ -173,8 +175,7 @@ export default function StripSockets() {
           <>
             <span>
               <AppIcon icon={refreshIcon} spinning={true} />
-            </span>
-
+            </span>{' '}
             {t('StripSockets.Running')}
           </>
         ) : (
@@ -383,12 +384,12 @@ function SocketKindButton({
       </div>
       <div>
         {itemCategories.map(
-          ({ icon, num }) =>
+          ({ icon, num }, idx) =>
             num > 0 && (
-              <>
+              <React.Fragment key={idx}>
                 <img src={icon} className={styles.itemTypeIcon} /> {num}
                 <br />
-              </>
+              </React.Fragment>
             )
         )}
       </div>

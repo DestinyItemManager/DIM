@@ -158,30 +158,23 @@ export function collectSocketsToStrip(
 export function doStripSockets(
   socketList: StripAction[],
   cancelToken: CancelToken,
-  progressCallback: (idx: number, errorMsg: string | undefined) => void,
-  doneCallback: (completed: boolean) => void
+  progressCallback: (idx: number, errorMsg: string | undefined) => void
 ): ThunkResult {
   return async (dispatch) => {
-    try {
-      for (let i = 0; i < socketList.length; i++) {
-        cancelToken.checkCanceled();
+    for (let i = 0; i < socketList.length; i++) {
+      cancelToken.checkCanceled();
 
-        const entry = socketList[i];
+      const entry = socketList[i];
 
-        try {
-          const socket = entry.item.sockets!.allSockets.find(
-            (i) => i.socketIndex === entry.socketIndex
-          )!;
-          await dispatch(insertPlug(entry.item, socket, socket.emptyPlugItemHash!));
-          progressCallback(i, undefined);
-        } catch (e) {
-          progressCallback(i, e.message ?? '???');
-        }
+      try {
+        const socket = entry.item.sockets!.allSockets.find(
+          (i) => i.socketIndex === entry.socketIndex
+        )!;
+        await dispatch(insertPlug(entry.item, socket, socket.emptyPlugItemHash!));
+        progressCallback(i, undefined);
+      } catch (e) {
+        progressCallback(i, e.message ?? '???');
       }
-      doneCallback(true);
-    } catch {
-      // cancelled
-      doneCallback(false);
     }
   };
 }
