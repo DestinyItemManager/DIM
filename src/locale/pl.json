@@ -186,6 +186,7 @@
     "BulkRevert_plural": "Przywrócono tagi na {{count}} przedmiotach.",
     "BulkTag": "Otagowano wybrany przedmiot jako {{tag}}.",
     "BulkTag_plural": "Otagowano {{count}} przedmiotów jako {{tag}}.",
+    "Catalyst": "Shows catalysts based on their status. catalyst:complete shows catalysts you have completed and applied, catalyst:incomplete shows catalysts you have unlocked but either not completed the objective or applied the catalyst, and catalyst:missing shows items that can have a catalyst but you haven't found it yet.",
     "Class": "Pokazuje przedmioty na podstawie ich podobieństwu do klasy.",
     "Combine": "Filtry mogą być połączone lub pogrupowane z nawiasami, \"or\" i \"and\" w celu zawężenia wyszukiwania, na przykład \"{{example}}\".",
     "ContributePower": "Pokazuje przedmioty, które mają moc i mogą przyczynić się do twojego poziomu mocy.",

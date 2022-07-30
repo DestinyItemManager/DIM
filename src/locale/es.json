@@ -186,6 +186,7 @@
     "BulkRevert_plural": "Etiquetas revertidas en {{count}} objetos.",
     "BulkTag": "Etiquetado objeto seleccionado como {{tag}}.",
     "BulkTag_plural": "Etiquetados {{count}} objetos seleccionados como {{tag}}.",
+    "Catalyst": "Muestra catalizadores basados en su estado. catalyst:complete muestra catalizadores que hayas completado y aplicado, catalyst:incomplete muestra catalizadores que hayas desbloqueado pero puede que no has completado el objetivo o aplicado el catalizador, y catalyst:missing muestra objetos que pueden tener un catalizador pero no se han encontrado todavía.",
     "Class": "Muestra objetos basados en su afinidad de clase.",
     "Combine": "Los filtros pueden ser combinados o agrupados con paréntesis, \"or\" y \"and\" para limitar tu búsqueda, por ejemplo \"{{example}}\".",
     "ContributePower": "Muestra los objetos que tienen poder y contribuyen a subir tu nivel de poder.",
