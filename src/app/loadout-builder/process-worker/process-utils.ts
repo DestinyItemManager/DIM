@@ -116,10 +116,7 @@ function getEnergyCounts(modsOrItems: (ProcessMod | ProcessItemSubset)[]): Energ
 // Used for null values
 const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
 
-export type SlotIndependentPickAssignResult =
-  | { res: 'mods_dont_fit' }
-  | { res: 'cannot_hit_stats' }
-  | { res: 'ok'; pick: ModsPick };
+export type SlotIndependentPickAssignResult = 'mods_dont_fit' | 'cannot_hit_stats' | ModsPick;
 
 /**
  * This figures out if all general, combat and activity mods can be assigned to an armour set and auto stat mods
@@ -163,7 +160,7 @@ export function pickAndAssignSlotIndependentMods(
     stasisItems + anyItems < stasisCombatMods ||
     stasisItems + anyItems < stasisActivityMods
   ) {
-    return { res: 'mods_dont_fit' };
+    return 'mods_dont_fit';
   }
 
   // An early check to ensure we have enough activity mod combos
@@ -178,7 +175,7 @@ export function pickAndAssignSlotIndependentMods(
         }
       }
       if (socketsCount < activityTagCounts[tag]) {
-        return { res: 'mods_dont_fit' };
+        return 'mods_dont_fit';
       }
     }
   }
@@ -187,7 +184,7 @@ export function pickAndAssignSlotIndependentMods(
   // all 0, this returns the user-picked general mod costs only.
   const validGeneralModPicks = neededStats && getViableGeneralModPicks(cache, neededStats);
   if (validGeneralModPicks?.length === 0) {
-    return { res: 'cannot_hit_stats' };
+    return 'cannot_hit_stats';
   }
   let assignedModsAtLeastOnce = false;
 
@@ -286,12 +283,12 @@ export function pickAndAssignSlotIndependentMods(
       }
 
       if (validPick) {
-        return { res: 'ok', pick: validPick };
+        return validPick;
       }
     }
   }
 
-  return { res: assignedModsAtLeastOnce ? 'cannot_hit_stats' : 'mods_dont_fit' };
+  return assignedModsAtLeastOnce ? 'cannot_hit_stats' : 'mods_dont_fit';
 }
 
 export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {

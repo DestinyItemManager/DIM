@@ -277,7 +277,7 @@ export function process(
                 needSomeStats ? neededStats : undefined
               );
 
-              switch (modPickResult.res) {
+              switch (modPickResult) {
                 case 'cannot_hit_stats':
                   numStatRangeExceeded++;
                   continue;
@@ -285,7 +285,7 @@ export function process(
                   numCantSlotMods++;
                   continue;
                 default:
-                  statMods = modPickResult.pick.modHashes;
+                  statMods = modPickResult.modHashes;
               }
             }
 

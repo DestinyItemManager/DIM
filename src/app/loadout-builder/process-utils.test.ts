@@ -179,7 +179,9 @@ describe('process-utils', () => {
       false,
       statOrder
     );
-    return pickAndAssignSlotIndependentMods(precalculatedInfo, items, neededStats).res === 'ok';
+    return (
+      typeof pickAndAssignSlotIndependentMods(precalculatedInfo, items, neededStats) !== 'string'
+    );
   };
 
   // Answers are derived as permutations of multisets
