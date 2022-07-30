@@ -14,7 +14,7 @@ export default function Farming() {
   const dispatch = useThunkDispatch();
   const store = useSelector(farmingStoreSelector);
   const [makeRoomForItems, setMakeRoomForItems] = useSetting('farmingMakeRoomForItems');
-  const inventoryClearSpaces = useSelector(settingSelector('inventoryClearSpaces'));
+  const inventoryClearSpaces = Number(useSelector(settingSelector('inventoryClearSpaces')));
 
   const makeRoomForItemsChanged = (e: React.ChangeEvent<HTMLInputElement>) =>
     setMakeRoomForItems(e.currentTarget.checked);
