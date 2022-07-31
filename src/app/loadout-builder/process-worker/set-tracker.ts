@@ -17,9 +17,7 @@ interface TierSet {
  * as we process new sets with an insertion sort algorithm.
  *
  * The `statMix` string is what actually matters for sorting, the `stats` array
- * is simply an output used for set display. In our implementation of auto mods,
- * the statMix and tier uses the stats before adding auto stat mods stats so that
- * sorting prefers
+ * is simply an output used for set display.
  */
 export class SetTracker {
   // Tiers ordered by decreasing tier

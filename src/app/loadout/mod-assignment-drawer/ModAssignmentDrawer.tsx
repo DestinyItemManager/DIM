@@ -68,7 +68,6 @@ export default function ModAssignmentDrawer({
 
   const [itemModAssignments, unassignedMods, mods] = useMemo(() => {
     let mods: PluggableInventoryItemDefinition[] = [];
-    getModsFromLoadout(defs, loadout);
     if (defs) {
       mods = getModsFromLoadout(defs, loadout);
     }

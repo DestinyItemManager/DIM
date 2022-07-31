@@ -30,7 +30,7 @@ export type ExcludedItems = {
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.
  */
 export interface ArmorSet {
-  /** The overall stats for the loadout as a whole. */
+  /** The overall stats for the loadout as a whole, but excluding auto stat mods. */
   readonly stats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly DimItem[][];
