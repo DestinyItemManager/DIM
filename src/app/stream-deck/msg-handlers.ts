@@ -212,18 +212,20 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
     const vaultStore = vaultSelector(state);
     const selected = allItems.filter((it) => it.index.startsWith(msg.item));
     const moveToVaultItem = selected.find((it) => it.owner !== 'vault');
-    if (selected.length) {
-      if (moveToVaultItem) {
-        if (!msg.equip) {
-          // move to vault only if the action is not a long press
-          // because on stream deck it is only an EQUIP action
-          // not a toggle one
-          await dispatch(moveItemTo(moveToVaultItem, vaultStore!, false, moveToVaultItem.amount));
-        }
-      } else {
-        const item = selected[0];
-        await dispatch(moveItemTo(item, store, msg.equip, item.amount));
+    if (!selected.length) {
+      // no matching item found
+      return;
+    }
+    if (moveToVaultItem) {
+      if (!msg.equip) {
+        // move to vault only if the action is not a long press
+        // because on stream deck it is only an EQUIP action
+        // not a toggle one
+        await dispatch(moveItemTo(moveToVaultItem, vaultStore!, false, moveToVaultItem.amount));
       }
+    } else {
+      const item = selected[0];
+      await dispatch(moveItemTo(item, store, msg.equip, item.amount));
     }
   };
 }
