@@ -1,6 +1,6 @@
 import { rankProgressionHashesSelector } from 'app/manifest/selectors';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import React from 'react';
+import { ProgressionHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
 import { CrucibleRank } from './CrucibleRank';
 import { getCharacterProgressions } from './selectors';
@@ -33,12 +33,12 @@ import { getCharacterProgressions } from './selectors';
 // );
 
 const rankProgressionToStreakProgression = {
-  2083746873: 2203850209, // Valor
-  1647151960: 2572719399, // Glory
-  3008065600: 2939151659, // Infamy
-  457612306: 600547406, // Vanguard
-  2755675426: 70699614, // Trials
-  527867935: 1999336308, // Strange Favor (Dares of Eternity)
+  [ProgressionHashes.CrucibleRank]: 2203850209,
+  [ProgressionHashes.GloryRank]: 2572719399,
+  [ProgressionHashes.GambitRank]: 2939151659,
+  [ProgressionHashes.VanguardRank]: 600547406,
+  [ProgressionHashes.TrialsRank]: 70699614,
+  [ProgressionHashes.StrangeFavor]: 1999336308,
 };
 
 /**
@@ -50,8 +50,18 @@ export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResp
 
   return (
     <div className="progress-for-character ranks-for-character">
-      {progressionHashes.map(
-        (progressionHash) =>
+      {progressionHashes.map((progressionHash) => {
+        // Bungie.net reports the Vanguard reset count under Strange Favor (Dares of Eternity),
+        // so we just swap them manually back here. Re-evaluate this if there's any movement on
+        // https://github.com/Bungie-net/api/issues/1544#issuecomment-991315895
+        const resetProgressionHash =
+          progressionHash === ProgressionHashes.VanguardRank
+            ? ProgressionHashes.StrangeFavor
+            : progressionHash === ProgressionHashes.StrangeFavor
+            ? ProgressionHashes.VanguardRank
+            : progressionHash;
+
+        return (
           firstCharacterProgression[progressionHash] && (
             <CrucibleRank
               key={progressionHash}
@@ -59,9 +69,11 @@ export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResp
               streak={
                 firstCharacterProgression[rankProgressionToStreakProgression[progressionHash]]
               }
+              resetCount={firstCharacterProgression[resetProgressionHash]?.currentResetCount}
             />
           )
-      )}
+        );
+      })}
     </div>
   );
 }

@@ -1,28 +1,23 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
-import { DestinyCollectibleComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { useCallback, useEffect } from 'react';
-import { connect, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import Countdown from '../dim-ui/Countdown';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { bucketsSelector, profileResponseSelector, storesSelector } from '../inventory/selectors';
-import { DimStore } from '../inventory/store-types';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh-events';
 import { loadAllVendors } from './actions';
 import { toVendor } from './d2-vendors';
-import type { VendorsState } from './reducer';
 import {
   mergedCollectiblesSelector,
   ownedVendorItemsSelector,
@@ -32,50 +27,20 @@ import styles from './SingleVendor.m.scss';
 import { VendorLocation } from './Vendor';
 import VendorItems from './VendorItems';
 
-interface ProvidedProps {
-  account: DestinyAccount;
-}
-
-interface StoreProps {
-  stores: DimStore[];
-  buckets?: InventoryBuckets;
-  profileResponse?: DestinyProfileResponse;
-  vendors: VendorsState['vendorsByCharacter'];
-  defs?: D2ManifestDefinitions;
-  mergedCollectibles: {
-    [x: number]: DestinyCollectibleComponent;
-  };
-}
-
-function mapStateToProps(state: RootState): StoreProps {
-  return {
-    stores: storesSelector(state),
-    buckets: bucketsSelector(state),
-    profileResponse: profileResponseSelector(state),
-    vendors: vendorsByCharacterSelector(state),
-    defs: d2ManifestSelector(state),
-    mergedCollectibles: mergedCollectiblesSelector(state),
-  };
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
 /**
  * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.
  */
-function SingleVendor({
-  account,
-  stores,
-  buckets,
-  profileResponse,
-  dispatch,
-  vendors,
-  defs,
-  mergedCollectibles,
-}: Props) {
+export default function SingleVendor({ account }: { account: DestinyAccount }) {
   const { vendorHash: vendorHashString } = useParams();
   const vendorHash = parseInt(vendorHashString ?? '', 10);
   const { search } = useLocation();
+  const stores = useSelector(storesSelector);
+  const buckets = useSelector(bucketsSelector);
+  const profileResponse = useSelector(profileResponseSelector);
+  const vendors = useSelector(vendorsByCharacterSelector);
+  const defs = useD2Definitions();
+  const mergedCollectibles = useSelector(mergedCollectiblesSelector);
+  const dispatch = useThunkDispatch();
 
   // TODO: get for all characters, or let people select a character? This is a hack
   // we at least need to display that character!
@@ -213,5 +178,3 @@ function SingleVendor({
     </div>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(SingleVendor);

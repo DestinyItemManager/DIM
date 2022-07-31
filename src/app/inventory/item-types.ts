@@ -216,6 +216,8 @@ export interface DimItem {
   patternUnlockRecord?: DestinyRecordComponent;
   /** If this item has Deepsight Resonance, this includes info about its Deepsight properties. */
   deepsightInfo?: DimDeepsight;
+  /** If this item has a catalyst, this includes info about its catalyst properties. */
+  catalystInfo?: DimCatalyst;
   /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The state of this item in the user's D2 Collection */
@@ -268,6 +270,16 @@ export interface DimCrafted {
 export interface DimDeepsight {
   /** Progress of attuning the item - when complete, a resonant material can be extracted */
   attunementObjective: DestinyObjectiveProgress;
+}
+
+export interface DimCatalyst {
+  /** Whether the weapon catalyst is completed */
+  complete: boolean;
+  /** Whether the player has unlocked/discovered the catalyst */
+  unlocked: boolean;
+
+  // TODO: on item popup, remove catalyst socket if item.catalystInfo is undefined
+  // TODO: on item popup, show catalyst progress somewhere? maybe like deepsight?
 }
 
 export interface DimStat {

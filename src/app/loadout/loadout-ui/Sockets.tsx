@@ -2,10 +2,10 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { modTypeTagByPlugCategoryHash } from 'app/search/specialty-modslots';
+import { isEventArmorRerollSocket } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import React from 'react';
 import { pickPlugPositions } from '../mod-assignment-utils';
 import Mod from './Mod';
 import styles from './Sockets.m.scss';
@@ -67,6 +67,7 @@ function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
       toSave &&
       isPluggableItem(toSave) &&
       !undesirablePlugs.includes(toSave.plug.plugCategoryHash) &&
+      !isEventArmorRerollSocket(socket) &&
       // account for plugs that look exotic-ish but are nothings
       // but always include specialty mod slots, Vow mods don't have
       // an itemTypeDisplayName https://github.com/Bungie-net/api/issues/1620

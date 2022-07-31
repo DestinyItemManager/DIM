@@ -4,7 +4,6 @@ import { getNotes } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { FilterDefinition } from '../filter-types';
 import { quoteFilterString } from '../query-parser';
@@ -48,7 +47,7 @@ const getPerkNamesFromManifest = memoizeOne(
 // things that are sunset            1010        1060        1060        1260
 const irrelevantPowerCaps = new Set([2471437758, 1862490583, 1862490584, 1862490585]);
 
-const getUniqueItemNamesFromManifest = _.once(
+const getUniqueItemNamesFromManifest = memoizeOne(
   (allManifestItems: { [hash: number]: DestinyInventoryItemDefinition }) => {
     const itemNames = Object.values(allManifestItems)
       .filter((i) => {

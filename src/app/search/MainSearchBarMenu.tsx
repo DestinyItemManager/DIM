@@ -1,36 +1,20 @@
 import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
 import { querySelector } from 'app/shell/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { motion } from 'framer-motion';
-import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import { DimItem } from '../inventory/item-types';
-import { filteredItemsSelector, validateQuerySelector } from './search-filter';
+import { filteredItemsSelector, queryValidSelector } from './search-filter';
 import './search-filter.scss';
-
-interface StoreProps {
-  searchQuery: string;
-  filteredItems: DimItem[];
-  showSearchCount: boolean;
-}
-
-type Props = StoreProps & ThunkDispatchProp;
-
-function mapStateToProps(state: RootState): StoreProps {
-  const searchQuery = querySelector(state);
-  return {
-    searchQuery,
-    showSearchCount: Boolean(searchQuery && validateQuerySelector(state)(searchQuery)),
-    filteredItems: filteredItemsSelector(state),
-  };
-}
 
 /**
  * The three-dots dropdown menu of actions for the search bar that act on searched items.
  */
-function MainSearchBarMenu({ filteredItems, showSearchCount, searchQuery }: Props) {
+export default function MainSearchBarMenu() {
   const location = useLocation();
+  const searchQuery = useSelector(querySelector);
+  const queryValid = useSelector(queryValidSelector);
+  const showSearchCount = Boolean(searchQuery && queryValid);
+  const filteredItems = useSelector(filteredItemsSelector);
   const onInventory = location.pathname.endsWith('inventory');
 
   const showSearchActions = onInventory;
@@ -55,5 +39,3 @@ function MainSearchBarMenu({ filteredItems, showSearchCount, searchQuery }: Prop
     </motion.div>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(MainSearchBarMenu);

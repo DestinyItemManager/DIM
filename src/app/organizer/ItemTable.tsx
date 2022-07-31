@@ -1,13 +1,11 @@
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { StatInfo } from 'app/compare/Compare';
-import { settingsSelector } from 'app/dim-api/selectors';
-import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
+import { settingSelector } from 'app/dim-api/selectors';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t, tl } from 'app/i18next-t';
 import { setNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
-import { ItemInfos, TagInfo } from 'app/inventory/dim-item-info';
+import { TagInfo } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
@@ -23,19 +21,18 @@ import {
 } from 'app/inventory/store/override-sockets';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
-import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
+import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSettingAction } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
 import { loadingTracker } from 'app/shell/loading-tracker';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
 import { hasWishListSelector, wishListFunctionSelector } from 'app/wishlists/selectors';
-import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -43,8 +40,7 @@ import _ from 'lodash';
 import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
-import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
+import { useSelector } from 'react-redux';
 import { getColumns, getColumnSelectionId } from './Columns';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
 import { itemIncludesCategories } from './filtering-utils';
@@ -70,79 +66,9 @@ const downloadButtonSettings = [
   { categoryId: ['ghosts'], csvType: 'Ghost' as const, label: tl('Bucket.Ghost') },
 ];
 
-interface ProvidedProps {
-  categories: ItemCategoryTreeNode[];
-}
-
-interface StoreProps {
-  stores: DimStore[];
-  items: DimItem[];
-  itemInfos: ItemInfos;
-  wishList: (item: DimItem) => InventoryWishListRoll | undefined;
-  hasWishList: boolean;
-  enabledColumns: string[];
-  customTotalStatsByClass: StatHashListsKeyedByDestinyClass;
-  loadoutsByItem: LoadoutsByItem;
-  newItems: Set<string>;
-  destinyVersion: DestinyVersion;
-}
-
-function mapStateToProps() {
-  const itemsSelector = createSelector(
-    allItemsSelector,
-    searchFilterSelector,
-    (_state: RootState, props: ProvidedProps) => props.categories,
-    (allItems, searchFilter, categories) => {
-      const terminal = Boolean(_.last(categories)?.terminal);
-      if (!terminal) {
-        return emptyArray<DimItem>();
-      }
-      const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h !== 0);
-      const items = allItems.filter(
-        (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i)
-      );
-      return items;
-    }
-  );
-
-  return (state: RootState, props: ProvidedProps): StoreProps => {
-    const items = itemsSelector(state, props);
-    const isWeapon = items[0]?.bucket.inWeapons;
-    const isArmor = items[0]?.bucket.inArmor;
-    const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
-    return {
-      items,
-      stores: storesSelector(state),
-      itemInfos: itemInfosSelector(state),
-      wishList: wishListFunctionSelector(state),
-      hasWishList: hasWishListSelector(state),
-      enabledColumns: settingsSelector(state)[columnSetting(itemType)],
-      customTotalStatsByClass: settingsSelector(state).customTotalStatsByClass,
-      loadoutsByItem: loadoutsByItemSelector(state),
-      newItems: newItemsSelector(state),
-      destinyVersion: destinyVersionSelector(state),
-    };
-  };
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
 const MemoRow = React.memo(TableRow);
 
-function ItemTable({
-  items: originalItems,
-  categories,
-  itemInfos,
-  wishList,
-  hasWishList,
-  stores,
-  enabledColumns,
-  customTotalStatsByClass,
-  loadoutsByItem,
-  newItems,
-  destinyVersion,
-  dispatch,
-}: Props) {
+export default function ItemTable({ categories }: { categories: ItemCategoryTreeNode[] }) {
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
     { columnId: 'name', sort: SortDirection.ASC },
   ]);
@@ -150,6 +76,37 @@ function ItemTable({
   // Track the last selection for shift-selecting
   const lastSelectedId = useRef<string | null>(null);
   const [socketOverrides, onPlugClicked] = useSocketOverridesForItems();
+
+  const allItems = useSelector(allItemsSelector);
+  const searchFilter = useSelector(searchFilterSelector);
+  const originalItems = useMemo(() => {
+    const terminal = Boolean(_.last(categories)?.terminal);
+    if (!terminal) {
+      return emptyArray<DimItem>();
+    }
+    const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h !== 0);
+    const items = allItems.filter(
+      (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i)
+    );
+    return items;
+  }, [allItems, categories, searchFilter]);
+
+  const firstCategory = categories[1];
+  const isWeapon = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Weapon);
+  const isGhost = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Ghost);
+  const isArmor = !isWeapon && !isGhost;
+  const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
+
+  const stores = useSelector(storesSelector);
+  const itemInfos = useSelector(itemInfosSelector);
+  const wishList = useSelector(wishListFunctionSelector);
+  const hasWishList = useSelector(hasWishListSelector);
+  const enabledColumns = useSelector(settingSelector(columnSetting(itemType)));
+  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
+  const loadoutsByItem = useSelector(loadoutsByItemSelector);
+  const newItems = useSelector(newItemsSelector);
+  const destinyVersion = useSelector(destinyVersionSelector);
+  const dispatch = useThunkDispatch();
 
   const classCategoryHash =
     categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
@@ -195,11 +152,6 @@ function ItemTable({
     [terminal, items]
   );
 
-  const firstCategory = categories[1];
-  const isWeapon = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Weapon);
-  const isGhost = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Ghost);
-  const isArmor = !isWeapon && !isGhost;
-  const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
   const customStatTotal = customTotalStatsByClass[classIfAny] ?? emptyArray();
 
   const columns: ColumnDefinition[] = useMemo(
@@ -683,8 +635,6 @@ function TableRow({
     </>
   );
 }
-
-export default connect<StoreProps>(mapStateToProps)(ItemTable);
 
 function columnSetting(itemType: 'weapon' | 'armor' | 'ghost') {
   switch (itemType) {

@@ -12,15 +12,10 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
-import {
-  LoadoutsByItem,
-  loadoutsByItemSelector,
-  loadoutsSelector,
-} from 'app/loadout-drawer/selectors';
+import { loadoutsByItemSelector, loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
-import { ItemFilter } from 'app/search/filter-types';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
@@ -35,8 +30,8 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
-import { useEffect, useMemo } from 'react';
-import { connect } from 'react-redux';
+import { memo, useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { allItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
@@ -60,28 +55,6 @@ import {
   LOCKED_EXOTIC_ANY_EXOTIC,
   loDefaultArmorEnergyRules,
 } from './types';
-
-interface ProvidedProps {
-  stores: DimStore[];
-  initialClassType: DestinyClass | undefined;
-  notes: string | undefined;
-  preloadedLoadout: Loadout | undefined;
-  initialLoadoutParameters: LoadoutParameters;
-  account: DestinyAccount;
-}
-
-interface StoreProps {
-  items: Readonly<{
-    [classType: number]: ItemsByBucket;
-  }>;
-  loadouts: Loadout[];
-  loadoutsByItem: LoadoutsByItem;
-  searchFilter: ItemFilter;
-  searchQuery: string;
-  halfTierMods: PluggableInventoryItemDefinition[];
-}
-
-type Props = ProvidedProps & StoreProps;
 
 const statOrderSelector = (state: RootState) =>
   savedLoadoutParametersSelector(state).statConstraints!.map((c) => c.statHash);
@@ -128,63 +101,53 @@ const halfTierModsSelector = createSelector(
   }
 );
 
-function mapStateToProps() {
-  /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
-  const itemsSelector = createSelector(
-    allItemsSelector,
-    (
-      allItems
-    ): Readonly<{
-      [classType: number]: ItemsByBucket;
-    }> => {
-      const items: {
-        [classType: number]: ItemsByBucket;
-      } = {};
-      for (const item of allItems) {
-        if (!item || !isLoadoutBuilderItem(item)) {
-          continue;
-        }
-        const { classType, bucket } = item;
-        (items[classType] ??= {
-          [BucketHashes.Helmet]: [],
-          [BucketHashes.Gauntlets]: [],
-          [BucketHashes.ChestArmor]: [],
-          [BucketHashes.LegArmor]: [],
-          [BucketHashes.ClassArmor]: [],
-        })[bucket.hash].push(item);
-      }
-      return items;
-    }
-  );
-
-  return (state: RootState): StoreProps => ({
-    items: itemsSelector(state),
-    loadouts: loadoutsSelector(state),
-    loadoutsByItem: loadoutsByItemSelector(state),
-    searchFilter: searchFilterSelector(state),
-    searchQuery: querySelector(state),
-    halfTierMods: halfTierModsSelector(state),
-  });
-}
-
 /**
  * The Loadout Optimizer screen
  */
-function LoadoutBuilder({
+export default memo(function LoadoutBuilder({
   account,
   stores,
-  items,
-  loadouts,
-  loadoutsByItem,
-  searchFilter,
   preloadedLoadout,
   initialClassType,
   notes,
-  searchQuery,
-  halfTierMods,
   initialLoadoutParameters,
-}: Props) {
+}: {
+  stores: DimStore[];
+  initialClassType: DestinyClass | undefined;
+  notes: string | undefined;
+  preloadedLoadout: Loadout | undefined;
+  initialLoadoutParameters: LoadoutParameters;
+  account: DestinyAccount;
+}) {
   const defs = useD2Definitions()!;
+  const allLoadouts = useSelector(loadoutsSelector);
+  const allItems = useSelector(allItemsSelector);
+  const loadoutsByItem = useSelector(loadoutsByItemSelector);
+  const searchFilter = useSelector(searchFilterSelector);
+  const searchQuery = useSelector(querySelector);
+  const halfTierMods = useSelector(halfTierModsSelector);
+
+  /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
+  const items = useMemo(() => {
+    const items: {
+      [classType: number]: ItemsByBucket;
+    } = {};
+    for (const item of allItems) {
+      if (!item || !isLoadoutBuilderItem(item)) {
+        continue;
+      }
+      const { classType, bucket } = item;
+      (items[classType] ??= {
+        [BucketHashes.Helmet]: [],
+        [BucketHashes.Gauntlets]: [],
+        [BucketHashes.ChestArmor]: [],
+        [BucketHashes.LegArmor]: [],
+        [BucketHashes.ClassArmor]: [],
+      })[bucket.hash].push(item);
+    }
+    return items;
+  }, [allItems]);
+
   const [
     {
       loadoutParameters,
@@ -246,16 +209,16 @@ function LoadoutBuilder({
 
   const characterItems = items[classType];
 
-  loadouts = useMemo(() => {
+  const loadouts = useMemo(() => {
     const equippedLoadout: Loadout | undefined = newLoadoutFromEquipped(
       t('Loadouts.CurrentlyEquipped'),
       selectedStore
     );
-    const classLoadouts = loadouts.filter(
+    const classLoadouts = allLoadouts.filter(
       (l) => l.classType === selectedStore.classType || l.classType === DestinyClass.Unknown
     );
     return equippedLoadout ? [...classLoadouts, equippedLoadout] : classLoadouts;
-  }, [loadouts, selectedStore]);
+  }, [allLoadouts, selectedStore]);
 
   const [armorEnergyRules, filteredItems] = useMemo(() => {
     const armorEnergyRules: ArmorEnergyRules = {
@@ -529,6 +492,4 @@ function LoadoutBuilder({
       </PageWithMenu.Contents>
     </PageWithMenu>
   );
-}
-
-export default connect<StoreProps>(mapStateToProps)(LoadoutBuilder);
+});

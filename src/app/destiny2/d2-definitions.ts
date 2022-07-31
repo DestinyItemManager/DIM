@@ -13,6 +13,7 @@ import {
   DestinyDamageTypeDefinition,
   DestinyDestinationDefinition,
   DestinyEnergyTypeDefinition,
+  DestinyEventCardDefinition,
   DestinyFactionDefinition,
   DestinyGenderDefinition,
   DestinyInventoryBucketDefinition,
@@ -78,6 +79,7 @@ const lazyTables = [
   'Trait',
   'PowerCap',
   'BreakerType',
+  'EventCard',
 ];
 
 const eagerTables = [
@@ -132,6 +134,7 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   BreakerType: DefinitionTable<DestinyBreakerTypeDefinition>;
   DamageType: DefinitionTable<DestinyDamageTypeDefinition>;
   Collectible: DefinitionTable<DestinyCollectibleDefinition>;
+  EventCard: DefinitionTable<DestinyEventCardDefinition>;
 
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };
