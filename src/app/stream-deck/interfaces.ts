@@ -67,6 +67,7 @@ export interface MaxPowerAction {
 export interface PullItemAction {
   action: 'pullItem';
   item: string;
+  equip: boolean;
 }
 
 // the stream deck request specific items instances info update ex. element, power, etc
