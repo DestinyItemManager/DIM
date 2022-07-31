@@ -206,17 +206,18 @@ function freeBucketSlotHandler({
   };
 }
 */
-
 function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): ThunkResult {
   return async (dispatch) => {
     const allItems = allItemsSelector(state);
     const vaultStore = vaultSelector(state);
-    const item = allItems.find((it) => it.index === msg.item);
-    if (item) {
-      if (store.items.includes(item)) {
-        await dispatch(moveItemTo(item, vaultStore!, false));
+    const selected = allItems.filter((it) => it.index.startsWith(msg.item));
+    const moveToVaultItem = selected.find((it) => it.owner !== 'vault');
+    if (selected.length) {
+      if (moveToVaultItem) {
+        await dispatch(moveItemTo(moveToVaultItem, vaultStore!, false, moveToVaultItem.amount));
       } else {
-        await dispatch(moveItemTo(item, store, false));
+        const item = selected[0];
+        await dispatch(moveItemTo(item, store, false, item.amount));
       }
     }
   };

@@ -58,7 +58,7 @@ export function sendToStreamDeck(msg: SendToStreamDeckArgs, noAuth = false): Thu
 function streamDeckSelectItem(item: DimItem): ThunkResult {
   return async (dispatch, getState) => {
     const { streamDeck } = getState();
-    if (streamDeck.selection === 'item') {
+    if (streamDeck.selection === 'item' && !item.notransfer) {
       // hide the item popup that will be opened on classic item click
       hideItemPopup();
       // hide the notification
@@ -74,7 +74,7 @@ function streamDeckSelectItem(item: DimItem): ThunkResult {
             selection: {
               label: item.name,
               subtitle: item.typeName,
-              item: item.id,
+              item: item.index.replace(/-.*/, ''),
               icon: item.icon,
               overlay: item.iconOverlay,
             },
