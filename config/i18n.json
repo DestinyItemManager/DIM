@@ -527,6 +527,7 @@
     "ShareBuildTitle": "Loadout Optimizer Settings",
     "ShareBuildWithNotes": "Share With Notes",
     "AddHalfTierMods": "Add +5 Mods",
+    "AutoStatMods": "Auto add stat mods",
     "All": "All",
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
