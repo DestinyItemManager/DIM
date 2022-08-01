@@ -1,5 +1,7 @@
 ## Next
 
+## 7.28.0 <span class="changelog-date">(2022-07-31)</span>
+
 * Hid Solstice armor rerolling sockets from Loadout Optimizer too.
 
 ## 7.27.0 <span class="changelog-date">(2022-07-24)</span>
