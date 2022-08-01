@@ -1,5 +1,125 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for |acd/0 fee| with caret at position 9 with exact match 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        6,
+        33,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "acd/0 name:\\"acd/0 feedback fence\\"",
+      "fullText": "acd/0 name:\\"acd/0 feedback fence\\"",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for |ager's sce| with caret at position 10 with exact match 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        7,
+        28,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "ager's name:\\"ager's scepter\\"",
+      "fullText": "ager's name:\\"ager's scepter\\"",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for |arctic haz| with caret at position 10 with exact match 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        7,
+        25,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "arctic name:\\"arctic haze\\"",
+      "fullText": "arctic name:\\"arctic haze\\"",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for |first in, last| with caret at position 14 with exact match 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        10,
+        35,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "first in, name:\\"first in, last out\\"",
+      "fullText": "first in, name:\\"first in, last out\\"",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for |the last word| with caret at position 13 with exact match 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        9,
+        29,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "the last name:\\"the last word\\"",
+      "fullText": "the last name:\\"the last word\\"",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for |two-tail| with caret at position 8 with exact match 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        4,
+        25,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "two-name:\\"two-tailed fox\\"",
+      "fullText": "two-name:\\"two-tailed fox\\"",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
 exports[`autocompleteTermSuggestions autocomplete within query for |(is:blue jun)| with caret at position 11 1`] = `
 [
   {

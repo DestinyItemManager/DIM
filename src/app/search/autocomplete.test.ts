@@ -29,6 +29,29 @@ describe('autocompleteTermSuggestions', () => {
       expect(candidates).toMatchSnapshot();
     }
   );
+
+  const multiWordCases: [query: string, caretIndex: number, mockCandidate: string][] = [
+    ['arctic haz', 10, 'arctic haze'],
+    ["ager's sce", 10, "ager's scepter"],
+    ['the last word', 13, 'the last word'],
+    ['acd/0 fee', 9, 'acd/0 feedback fence'],
+    ['first in, last', 14, 'first in, last out'],
+    ['two-tail', 8, 'two-tailed fox'],
+  ];
+
+  test.each(multiWordCases)(
+    'autocomplete within multi-word query for |%s| with caret at position %d with exact match',
+    (query: string, caretIndex: number, mockCandidate: string) => {
+      const candidates = autocompleteTermSuggestions(
+        query,
+        caretIndex,
+        // use mock candidates to simulate exact name-matches for multiword items
+        () => [`name:"${mockCandidate}"`],
+        searchConfig
+      );
+      expect(candidates).toMatchSnapshot();
+    }
+  );
 });
 
 describe('filterSortRecentSearches', () => {
