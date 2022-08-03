@@ -651,8 +651,8 @@ function calculateEnergyChange(
     finalEnergy !== DestinyEnergyType.Any && finalEnergy !== itemEnergy.originalType;
 
   if (mustChangeAffinity) {
-    if (itemEnergy.derivedCapacity < 10) {
-      // If we must change the affinity on an item we're not expecting to be masterworked,
+    if (itemEnergy.originalCapacity < 10) {
+      // If we must change the affinity on an item not already masterworked,
       // add the wasted energy
       return modCost + itemEnergy.originalCapacity;
     } else {
@@ -660,9 +660,7 @@ function calculateEnergyChange(
       // For class items, we may have alternatives in LO and they're the
       // easiest to replace, so there's a small tiebreaker here to nudge LO into
       // preferring changing class item affinity over others.
-      return (
-        itemEnergy.derivedCapacity - itemEnergy.originalCapacity + (itemEnergy.isClassItem ? 4 : 5)
-      );
+      return itemEnergy.isClassItem ? 4 : 5;
     }
   } else {
     // Otherwise just check how many levels of upgrade we need
