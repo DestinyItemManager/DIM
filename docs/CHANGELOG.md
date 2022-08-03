@@ -1,7 +1,11 @@
 ## Next
 
-* Hid Solstice armor rerolling sockets from Loadout Optimizer too.
+* Fixed Armory perk grid showing arbitrary wish list thumbs, and fixed Collections offering wish list notes for unrelated weapons.
 * Collections items will now be recognized as craftable. Try the search filter `is:craftable -is:patternunlocked` on the Records page to list craftable weapons you still need to unlock the pattern for, and click the weapons to see your pattern progress.
+
+## 7.28.0 <span class="changelog-date">(2022-07-31)</span>
+
+* Hid Solstice armor rerolling sockets from Loadout Optimizer too.
 
 ## 7.27.0 <span class="changelog-date">(2022-07-24)</span>
 
@@ -246,6 +250,7 @@
 * Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
 * Loadout Optimizer now correctly takes Echo of Persistence's class-specific stat reductions into account when generating sets.
 * The "Kinetic Slot" icon in Compare sheet now looks different from the "Kinetic Damage" icon.
+* Added `catalyst:` filter which accepts the following parameters `missing`, `complete`, and `incomplete`.
 
 ### Features
 

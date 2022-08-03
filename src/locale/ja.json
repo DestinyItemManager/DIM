@@ -186,6 +186,7 @@
     "BulkRevert_plural": "{{count}} 個のアイテムのタグを元に戻しました",
     "BulkTag": "選択したアイテムを{{tag}} としてタグ付けしました。",
     "BulkTag_plural": "選択した{{count}} 個のアイテムに{{tag}} のタグを付けました。",
+    "Catalyst": "Shows catalysts based on their status. catalyst:complete shows catalysts you have completed and applied, catalyst:incomplete shows catalysts you have unlocked but either not completed the objective or applied the catalyst, and catalyst:missing shows items that can have a catalyst but you haven't found it yet.",
     "Class": "クラス別にアイテムを表示",
     "Combine": "フィルタは、括弧、\"or\"、\"and \"と組み合わせたり、グループ化したりして、検索結果を絞り込むことができます。例えば \"{{example}}\" のように。",
     "ContributePower": "パワーがあり、パワーレベルに貢献できる項目を表示します。",

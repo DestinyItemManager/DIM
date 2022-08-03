@@ -63,9 +63,8 @@ function GeneratedSet({
   };
 
   let existingLoadout: Loadout | undefined;
-  let displayedItems: DimItem[] = set.armor.map(
-    (items) => _.maxBy(items, (i) => i.energy?.energyCapacity)!
-  );
+  // Items are sorted by their energy capacity when grouping
+  let displayedItems: DimItem[] = set.armor.map((items) => items[0]);
 
   for (const loadout of loadouts) {
     const equippedLoadoutItems = loadout.items.filter((item) => item.equip);
@@ -100,10 +99,7 @@ function GeneratedSet({
           .map((m) => m.plug.energyCost?.energyType)
           .find((e) => e !== DestinyEnergyType.Any);
         if (targetEnergy !== undefined && targetEnergy !== displayedItems[i].energy?.energyType) {
-          const replacementItem = _.maxBy(
-            set.armor[i].filter((i) => i.energy?.energyType === targetEnergy),
-            (i) => i.energy?.energyCapacity
-          );
+          const replacementItem = set.armor[i].find((i) => i.energy?.energyType === targetEnergy);
           if (replacementItem) {
             const mods = itemModAssignments[displayedItems[i].id];
             delete itemModAssignments[displayedItems[i].id];

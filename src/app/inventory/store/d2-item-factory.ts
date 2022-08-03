@@ -46,6 +46,7 @@ import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';
+import { buildCatalystInfo } from './catalyst';
 import { buildCraftedInfo } from './crafted';
 import { buildDeepsightInfo } from './deepsight';
 import { createItemIndex } from './item-index';
@@ -162,8 +163,9 @@ export function makeFakeItem(
     [hash: number]: DestinyCollectibleComponent;
   },
   profileRecords?: DestinyProfileRecordsComponent
+  allowWishList?: boolean
 ): DimItem | null {
-  return makeItem(
+  const item = makeItem(
     defs,
     buckets,
     itemComponents,
@@ -188,6 +190,11 @@ export function makeFakeItem(
     undefined,
     profileRecords
   );
+
+  if (item && !allowWishList) {
+    item.wishListEnabled = false;
+  }
+  return item;
 }
 
 /**
@@ -552,6 +559,7 @@ export function makeItem(
     pursuit: null,
     taggable: false,
     comparable: false,
+    wishListEnabled: false,
     power: 0,
     index: '',
     infusable: false,
@@ -603,6 +611,8 @@ export function makeItem(
     reportException('Sockets', e, { itemHash: item.itemHash });
   }
 
+  createdItem.wishListEnabled = Boolean(createdItem.bucket.inWeapons && createdItem.sockets);
+
   // A crafted weapon with an enhanced intrinsic and two enhanced traits is masterworked
   // https://github.com/Bungie-net/api/issues/1662
   if (createdItem.crafted && createdItem.sockets) {
@@ -623,6 +633,11 @@ export function makeItem(
 
   // Deepsight Resonance
   createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
+
+  // Catalyst
+  if (createdItem.isExotic && createdItem.bucket.inWeapons) {
+    createdItem.catalystInfo = buildCatalystInfo(createdItem.hash, profileRecords);
+  }
 
   try {
     createdItem.stats = buildStats(defs, createdItem, itemDef);
