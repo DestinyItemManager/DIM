@@ -161,6 +161,7 @@ export class VendorItem {
       this.key.toString(),
       vendorItemDef ? vendorItemDef.quantity : 1,
       mergedCollectibles,
+      undefined,
       // vendor items are wish list enabled!
       true
     );

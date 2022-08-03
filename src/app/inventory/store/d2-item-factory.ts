@@ -162,7 +162,7 @@ export function makeFakeItem(
   mergedCollectibles?: {
     [hash: number]: DestinyCollectibleComponent;
   },
-  profileRecords?: DestinyProfileRecordsComponent
+  profileRecords?: DestinyProfileRecordsComponent,
   allowWishList?: boolean
 ): DimItem | null {
   const item = makeItem(
