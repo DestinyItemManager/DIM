@@ -1105,7 +1105,7 @@
     "DimApiFinePrint": "DIM will save your tags, loadouts, and settings to the DIM servers and sync them between different versions of DIM.",
     "DimSyncEnabled": "DIM Sync Enabled",
     "DimSyncDown": "DIM Sync is not connected due to a problem talking to the server.",
-    "UpdateQueueLength": "{{count}} new changes will be saved when we can reconnect.",
+    "UpdateQueueLength": "{{count}} new change will be saved when we can reconnect.",
     "UpdateQueueLength_plural": "{{count}} new changes will be saved when we can reconnect.",
     "EnableDimApi": "Enable DIM Sync (recommended)",
     "Export": "Download Data Backup",
