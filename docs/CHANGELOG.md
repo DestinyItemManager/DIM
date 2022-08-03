@@ -3,6 +3,7 @@
 ## 7.28.0 <span class="changelog-date">(2022-07-31)</span>
 
 * Hid Solstice armor rerolling sockets from Loadout Optimizer too.
+* Fixed Armory perk grid showing arbitrary wish list thumbs, and fixed Collections offering wish list notes for unrelated weapons.
 
 ## 7.27.0 <span class="changelog-date">(2022-07-24)</span>
 
