@@ -2,6 +2,7 @@
 
 * Fixed Armory perk grid showing arbitrary wish list thumbs, and fixed Collections offering wish list notes for unrelated weapons.
 * Collections items will now be recognized as craftable. Try the search filter `is:craftable -is:patternunlocked` on the Records page to list craftable weapons you still need to unlock the pattern for, and click the weapons to see your pattern progress.
+* When prioritizing where to place other Arc armor mods, DIM Loadout Mod assignment will now try to activate the secondary perks of **all** Arc Charged With Light mods.
 * Fixed the "Remove other mods" toggle in Loadouts resetting when saving the Loadout as "Any Class".
 
 ## 7.28.0 <span class="changelog-date">(2022-07-31)</span>
