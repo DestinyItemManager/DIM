@@ -708,7 +708,7 @@ function plugActivationScore(
     modTypeTagByPlugCategoryHash[mod.plug.plugCategoryHash] === 'chargedwithlight';
 
   // Powerful Friends and Radiant Light provide stat bonuses if activated, every(!) other
-  // CWL mod provides some other perk.
+  // Arc CWL mod provides some other additional perk.
   //
   // Because Arc CWL mods can activate each others' perks, this prioritization is almost pointless,
   // except for when there's no feasible assignment for all mods and DIM has to decide which mods to drop.
