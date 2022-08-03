@@ -1029,6 +1029,8 @@
     "ProfileErrorTitle": "DIM Sync Error",
     "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again later.",
     "UpdateErrorTitle": "DIM Sync Error",
+    "UpdateQueueLength": "{{count}} new change will be saved when we can reconnect.",
+    "UpdateQueueLength_plural": "{{count}} new changes will be saved when we can reconnect.",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StreamDeck": {
