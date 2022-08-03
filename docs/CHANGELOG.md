@@ -2,8 +2,7 @@
 
 * Fixed Armory perk grid showing arbitrary wish list thumbs, and fixed Collections offering wish list notes for unrelated weapons.
 * Collections items will now be recognized as craftable. Try the search filter `is:craftable -is:patternunlocked` on the Records page to list craftable weapons you still need to unlock the pattern for, and click the weapons to see your pattern progress.
-* DIM Loadout Mod assignment will now take all Arc Charged With Light mods' secondary perks into account when deciding where to place mods.
-  * DIM used to try to activate only Powerful Friends and Radiant Light by placing it on an item with an arc mod if necessary because they provided bonus stats. This prioritization now works for Lucent Blade and other Arc CWL mods too.
+* When prioritizing where to place other Arc armor mods, DIM Loadout Mod assignment will now try to activate the secondary perks of **all** Arc Charged With Light mods.
 
 ## 7.28.0 <span class="changelog-date">(2022-07-31)</span>
 
