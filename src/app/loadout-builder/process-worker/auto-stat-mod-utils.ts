@@ -4,13 +4,16 @@ import { ArmorStatHashes } from '../types';
 import { ProcessMod } from './types';
 
 // Regular stat mods add 10
-const largeStatMods: { [statHash in ArmorStatHashes]: { hash: number; cost: number } } = {
-  [StatHashes.Mobility]: { hash: 3961599962, cost: 3 },
-  [StatHashes.Resilience]: { hash: 2850583378, cost: 3 },
-  [StatHashes.Recovery]: { hash: 2645858828, cost: 4 },
-  [StatHashes.Discipline]: { hash: 4048838440, cost: 3 },
-  [StatHashes.Intellect]: { hash: 3355995799, cost: 5 },
-  [StatHashes.Strength]: { hash: 3253038666, cost: 3 },
+// NB includes the stat hash again to avoid creating new objects in the temporary ModsWorkingSet
+const largeStatMods: {
+  [statHash in ArmorStatHashes]: { hash: number; cost: number; statHash: ArmorStatHashes };
+} = {
+  [StatHashes.Mobility]: { hash: 3961599962, cost: 3, statHash: StatHashes.Mobility },
+  [StatHashes.Resilience]: { hash: 2850583378, cost: 3, statHash: StatHashes.Resilience },
+  [StatHashes.Recovery]: { hash: 2645858828, cost: 4, statHash: StatHashes.Recovery },
+  [StatHashes.Discipline]: { hash: 4048838440, cost: 3, statHash: StatHashes.Discipline },
+  [StatHashes.Intellect]: { hash: 3355995799, cost: 5, statHash: StatHashes.Intellect },
+  [StatHashes.Strength]: { hash: 3253038666, cost: 3, statHash: StatHashes.Strength },
 };
 
 // Minor stat mods add 5
@@ -52,15 +55,25 @@ for (const statHash_ of Object.keys(dontSplitTheseAgain)) {
   }
 }
 
+/**
+ * A particular way to hit some target stats.
+ */
 export interface ModsPick {
+  /** ALL general mod costs, sorted descending, for easy greedy mod assignment. */
   costs: number[];
+  /** The hashes of stat mods that were picked in order to hit target stats. */
   modHashes: number[];
 }
 
-type ModsWorkingSet = {
+/**
+ * A temporary structure containing the large mods and small mods for a particular pick.
+ * The `splitMods` algorithm will recursively create new variants by splitting large into
+ * small mods.
+ */
+interface ModsWorkingSet {
   largeMods: { hash: number; cost: number; statHash: ArmorStatHashes }[];
   smallMods: { hash: number; cost: number }[];
-};
+}
 
 export interface GeneralModsCache {
   generalModCosts: number[];
@@ -133,7 +146,7 @@ export function getViableGeneralModPicks(
   let statsString = 'stats-';
   neededStats = neededStats.map((x) => {
     const val = Math.ceil(x / 5);
-    statsString += val.toString(16);
+    statsString += val.toString(32);
     return val;
   });
   if (cache[statsString]) {
@@ -154,11 +167,11 @@ export function getViableGeneralModPicks(
   neededStats.reduce((acc, neededValue, index) => {
     const statHash = cache.statOrder[index];
     if ((neededValue & 1) !== 0) {
-      acc.smallMods.push({ ...minorStatMods[statHash] });
+      acc.smallMods.push(minorStatMods[statHash]);
       neededValue -= 1;
     }
     while (neededValue > 0) {
-      acc.largeMods.push({ ...largeStatMods[statHash], statHash });
+      acc.largeMods.push(largeStatMods[statHash]);
       neededValue -= 2;
     }
     return acc;
@@ -178,7 +191,7 @@ export function getViableGeneralModPicks(
 
   // Sort large mods ascending so that we split an intellect mod first -- that's important
   // for our efficient splitting algorithm below to be correct
-  startingMods.largeMods.sort(compareBy(({ cost }) => cost));
+  startingMods.largeMods.sort((a, b) => a.cost - b.cost);
 
   const options =
     unusedModSlots !== 0 && startingMods.largeMods.length > 0

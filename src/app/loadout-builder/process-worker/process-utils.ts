@@ -142,7 +142,8 @@ export function pickAndAssignSlotIndependentMods(
   // Sort the items like the mods are to try and get a greedy result
   // Theory here is that aligning energy types between items and mods and assigning the mods with the
   // highest cost to the items with the highest amount of energy available will find results faster
-  const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
+  // const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
+  const sortedItems = items;
 
   const [arcItems, solarItems, voidItems, stasisItems, anyItems] = getEnergyCounts(sortedItems);
   const [arcCombatMods, solarCombatMods, voidCombatMods, stasisCombatMods] = combatModEnergyCounts;
@@ -276,7 +277,7 @@ export function pickAndAssignSlotIndependentMods(
           pick.costs.every((cost, idx) => cost <= remainingEnergies[idx])
         );
       } else {
-        // We don't need any stats, so just copy
+        // We don't need any stats, so just verify we can assign the general mods
         validPick = cache.generalModCosts.every((cost, idx) => cost <= remainingEnergies[idx])
           ? { costs: cache.generalModCosts, modHashes: [] }
           : undefined;
