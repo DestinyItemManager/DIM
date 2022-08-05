@@ -15,6 +15,8 @@ $commonBg: #366f42;
   box-sizing: border-box;
   border: $item-border-width solid #ddd;
   background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
   &:focus {
     outline: none;
   }
