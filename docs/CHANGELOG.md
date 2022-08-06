@@ -6,6 +6,10 @@
 * Fixed the "Remove other mods" toggle in Loadouts resetting when saving the Loadout as "Any Class".
 * Eliminated an unnecessary 10 second pause when loading DIM if the DIM Sync service is down.
 
+### Beta Only
+
+* Added warnings about potential data loss when you save tags, notes, and loadouts but have DIM Sync off.
+
 ## 7.28.0 <span class="changelog-date">(2022-07-31)</span>
 
 * Hid Solstice armor rerolling sockets from Loadout Optimizer too.
