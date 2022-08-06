@@ -234,7 +234,7 @@ export default function LoadoutDrawer2({
         classType={loadout.classType}
         className={styles.body}
       >
-        {!apiPermissionGranted && (
+        {$featureFlags.warnNoSync && !apiPermissionGranted && (
           <p>
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>

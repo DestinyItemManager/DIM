@@ -423,6 +423,8 @@ module.exports = (env) => {
         '$featureFlags.clarityDescriptions': JSON.stringify(true),
         // Elgato Stream Deck integration
         '$featureFlags.elgatoStreamDeck': JSON.stringify(true),
+        // Warn when DIM Sync is off and you save some DIM-specific data
+        '$featureFlags.warnNoSync': JSON.stringify(!env.release),
       }),
 
       new LodashModuleReplacementPlugin({

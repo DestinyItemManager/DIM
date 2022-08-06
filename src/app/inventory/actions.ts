@@ -149,7 +149,9 @@ export function setTag(item: DimItem, tag: TagValue | undefined): ThunkResult {
       return;
     }
 
-    dispatch(warnNoSync());
+    if ($featureFlags.warnNoSync) {
+      dispatch(warnNoSync());
+    }
     dispatch(
       item.instanced
         ? setItemTag({
@@ -173,7 +175,9 @@ export function setNote(item: DimItem, note: string | undefined): ThunkResult {
       return;
     }
 
-    dispatch(warnNoSync());
+    if ($featureFlags.warnNoSync) {
+      dispatch(warnNoSync());
+    }
     dispatch(
       item.instanced
         ? setItemNote({

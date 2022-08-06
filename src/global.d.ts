@@ -28,6 +28,8 @@ declare const $featureFlags: {
   clarityDescriptions: boolean;
   /** Elgato Stream Deck integration */
   elgatoStreamDeck: boolean;
+  /* Warn when DIM Sync is off and you save some DIM-specific data */
+  warnNoSync: boolean;
 };
 
 declare function ga(...params: string[]): void;

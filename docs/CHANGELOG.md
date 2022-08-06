@@ -5,6 +5,10 @@
 * When prioritizing where to place other Arc armor mods, DIM Loadout Mod assignment will now try to activate the secondary perks of **all** Arc Charged With Light mods.
 * Fixed the "Remove other mods" toggle in Loadouts resetting when saving the Loadout as "Any Class".
 
+### Beta Only
+
+* Added warnings about potential data loss when you save tags, notes, and loadouts but have DIM Sync off.
+
 ## 7.28.0 <span class="changelog-date">(2022-07-31)</span>
 
 * Hid Solstice armor rerolling sockets from Loadout Optimizer too.
