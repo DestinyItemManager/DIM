@@ -545,10 +545,10 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       32323943, // Source: Moments of Triumph.
-      151416041, // Source: Solstice of Heroes.
+      151416041, // Source: Solstice
       510530151, // Source: Dawning 2020
       611838069, // Source: Earned during the seasonal Guardian Games event.
-      641018908, // Source: Earned during the 2018 Solstice of Heroes event.
+      641018908, // Source: Earned during the 2018 Solstice event.
       772619302, // Completed all 8 Moments of Triumph in Destiny's second year.
       923678151, // Source: Upgraded Event Card Reward
       930411416, // Source: Dawning 2021
@@ -556,6 +556,7 @@ const D2Sources: {
       1360005982, // Completed a Moment of Triumph in Destiny's second year.
       1397119901, // Completed a Moment of Triumph in Destiny's first year.
       1462687159, // Reached level 5 in the Ages of Triumph record book.
+      1666677522, // Source: Solstice
       1677921161, // Source: Festival of the Lost 2018.
       1919933822, // Source: Festival of the Lost 2020.
       2006303146, // Source: Guardian Games 2022
@@ -567,7 +568,7 @@ const D2Sources: {
       3190938946, // Source: Festival of the Lost 2019.
       3388021959, // Source: Earned during the Guardian Games event.
       3693722471, // Source: Festival of the Lost 2020.
-      3724111213, // Source: Earned during the 2019 Solstice of Heroes event.
+      3724111213, // Source: Earned during the 2019 Solstice event.
       3736521079, // Reached level 1 in the Ages of Triumph record book.
       3952847349, // Source: The Dawning.
       4054646289, // Source: Earned during the seasonal Dawning event.

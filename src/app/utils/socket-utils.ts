@@ -189,6 +189,15 @@ export function getDefaultAbilityChoiceHash(socket: DimSocket) {
       socket.plugSet!.plugs[0]!.plugDef.hash;
 }
 
+/**
+ * With Solstice 2022, event armor has a ton of sockets for stat rerolling
+ * and they take up a lot of space. No idea if this system will be around for
+ * other armor but if it does, just add to this function.
+ */
+export function isEventArmorRerollSocket(socket: DimSocket) {
+  return socket.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith('events.solstice.');
+}
+
 export function isEnhancedPerk(perk: DimPlug) {
   const plugDef = perk.plugDef;
   return (

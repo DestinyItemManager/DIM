@@ -293,8 +293,11 @@ function filterLoadoutToAllowedItems(
 
     if (loadout.classType === DestinyClass.Unknown && loadout.parameters) {
       // Remove fashion and non-mod loadout parameters from Any Class loadouts
-      if (loadout.parameters.mods?.length) {
-        loadout.parameters = { mods: loadout.parameters.mods };
+      if (loadout.parameters.mods?.length || loadout.parameters.clearMods) {
+        loadout.parameters = {
+          mods: loadout.parameters.mods,
+          clearMods: loadout.parameters.clearMods,
+        };
       } else {
         delete loadout.parameters;
       }

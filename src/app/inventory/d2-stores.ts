@@ -188,7 +188,7 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         // one we've seen before. If that is the case, we should ignore this
         // update.
         const dateLastPlayed = profileInfo.profile.data?.dateLastPlayed;
-        if (dateLastPlayed) {
+        if (dateLastPlayed && !readOnly) {
           const dateLastPlayedTimestamp = new Date(dateLastPlayed).getTime();
           if (dateLastPlayedTimestamp < latestDateLastPlayedTimestamp) {
             warnLog(

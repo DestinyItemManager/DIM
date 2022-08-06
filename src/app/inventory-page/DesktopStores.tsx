@@ -9,7 +9,9 @@ import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import StoreStats from 'app/store-stats/StoreStats';
 import { useEventBusListener } from 'app/utils/hooks';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { useMemo } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
 import D1ReputationSection from './D1ReputationSection';
 import styles from './DesktopStores.m.scss';
@@ -33,6 +35,20 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
   const currentStore = getCurrentStore(stores);
   const setSetting = useSetSetting();
   useEventBusListener(locateItem$, itemPop);
+
+  // Hide the single character toggle for players with only one character
+  // unless they own items that cannot be used by their only character.
+  const singleCharacterHasEffect = useMemo(
+    () =>
+      stores.length > 2 ||
+      (currentStore &&
+        stores.some((s) =>
+          s.items.some(
+            (i) => i.classType !== DestinyClass.Unknown && i.classType !== currentStore.classType
+          )
+        )),
+    [stores, currentStore]
+  );
 
   if (!stores.length || !buckets || !vault || !currentStore) {
     return null;
@@ -62,7 +78,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
             </div>
           ))}
           <div className={styles.buttons}>
-            {stores.length > 2 && (
+            {singleCharacterHasEffect && (
               <button
                 type="button"
                 className={styles.singleCharacterButton}
