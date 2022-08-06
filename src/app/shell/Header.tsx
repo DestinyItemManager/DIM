@@ -370,7 +370,7 @@ export default function Header() {
       )}
       {isPhonePortrait && installable && <AppInstallBanner onClick={installDim} />}
       <PostmasterWarningBanner />
-      <DimApiWarningBanner />
+      {$featureFlags.warnNoSync && <DimApiWarningBanner />}
       {promptIosPwa && (
         <Portal>
           <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>
