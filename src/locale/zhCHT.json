@@ -1026,10 +1026,10 @@
     "IndexedDBStorage": "本地流覽器存儲",
     "LearnMore": "了解 DIM 同步",
     "MenuTitle": "同步和備份",
-    "ProfileErrorBody": "從 DIM 同步加載你的數據時出錯。我們會自動重試。",
-    "ProfileErrorTitle": "同步錯誤",
-    "UpdateErrorBody": "保存你的數據到 DIM 同步時出錯。我們稍後會自動重試。",
-    "UpdateErrorTitle": "同步錯誤",
+    "ProfileErrorBody": "We had a problem communicating with DIM Sync. Your latest settings, tags, loadouts, and searches may not be shown. Your data is still on our servers, and any updates you make locally will be saved when we can reconnect. We'll keep retrying while DIM is open.",
+    "ProfileErrorTitle": "DIM Sync Download Error",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
+    "UpdateErrorTitle": "DIM Sync Save Error",
     "Usage": "DIM 使用了此設備{{quota, humanBytes}}可用空間中的{{usage, humanBytes}}.這包括從 bungie. net 下載的命運2物品資料庫。"
   },
   "StreamDeck": {

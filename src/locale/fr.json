@@ -168,7 +168,7 @@
     "SyncShaders": "Synchroniser les revêtements",
     "SyncShadersTitle": "Utiliser le même revêtement sur tous les objets",
     "Title": "Choisir les revêtements et ornements",
-    "UseEquipped": "Utiliser ceux équipés"
+    "UseEquipped": "Utiliser équipés"
   },
   "FileUpload": {
     "Instructions": "Cliquer ou glisser des fichiers"
@@ -1026,10 +1026,10 @@
     "IndexedDBStorage": "Stockage local du navigateur",
     "LearnMore": "En savoir plus sur la synchronisation DIM",
     "MenuTitle": "Synchronisation & sauvegardes",
-    "ProfileErrorBody": "Nous avons rencontré un problème lors du chargement de vos données depuis DIM Sync. Nous allons continuer à essayer de les charger automatiquement.",
-    "ProfileErrorTitle": "Erreur de synchronisation DIM",
-    "UpdateErrorBody": "Nous avons rencontré un problème lors de l'enregistrement de vos données sur DIM Sync. Nous allons automatiquement réessayer plus tard.",
-    "UpdateErrorTitle": "Erreur de synchronisation DIM",
+    "ProfileErrorBody": "We had a problem communicating with DIM Sync. Your latest settings, tags, loadouts, and searches may not be shown. Your data is still on our servers, and any updates you make locally will be saved when we can reconnect. We'll keep retrying while DIM is open.",
+    "ProfileErrorTitle": "DIM Sync Download Error",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
+    "UpdateErrorTitle": "Erreur de sauvegarde synchronisation DIM",
     "Usage": "DIM utilise {{usage, humanBytes}} sur {{quota, humanBytes}} disponible pour lui sur cet appareil. Cela inclus la base de données d'objets de Destiny téléchargée depuis Bungie.net."
   },
   "StreamDeck": {

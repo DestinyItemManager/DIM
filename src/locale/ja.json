@@ -1026,10 +1026,10 @@
     "IndexedDBStorage": "ローカルブラウザストレージ",
     "LearnMore": "DIM Sync について詳しくはこちら",
     "MenuTitle": "同期とバックアップ",
-    "ProfileErrorBody": "DIM Sync からデータを読み込む際に問題が発生しました。自動的に読み込みます。",
-    "ProfileErrorTitle": "同期エラー",
-    "UpdateErrorBody": "DIM Sync にデータを保存する際に問題が発生しました。後で自動的に再試行します。",
-    "UpdateErrorTitle": "同期エラー",
+    "ProfileErrorBody": "We had a problem communicating with DIM Sync. Your latest settings, tags, loadouts, and searches may not be shown. Your data is still on our servers, and any updates you make locally will be saved when we can reconnect. We'll keep retrying while DIM is open.",
+    "ProfileErrorTitle": "DIM Sync Download Error",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
+    "UpdateErrorTitle": "DIM Sync Save Error",
     "Usage": "DIMは、このデバイスで利用可能な {{quota, humanBytes}} のうち {{usage, humanBytes}} を使用しています。これには、Bungie.netからダウンロードされたDestinyアイテムデータベースが含まれます。"
   },
   "StreamDeck": {

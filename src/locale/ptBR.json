@@ -1026,10 +1026,10 @@
     "IndexedDBStorage": "Armazenamento local do Navegador",
     "LearnMore": "Saiba mais sobre a Sincronização DIM",
     "MenuTitle": "Sincronização e Backups",
-    "ProfileErrorBody": "Tivemos um problema ao carregar seus dados na Sincronização DIM. Continuaremos tentando carregá-lo automaticamente.",
-    "ProfileErrorTitle": "Erro na Sincronização DIM",
-    "UpdateErrorBody": "Tivemos um problema ao salvar seus dados na Sincronização DIM. Tentaremos novamente mais tarde.",
-    "UpdateErrorTitle": "Erro na Sincronização DIM",
+    "ProfileErrorBody": "Ocorreu um problema durante a comunicação com a Sincronização DIM. Suas últimas configurações, etiquetas, sets e históricos de pesquisas podem não estar disponíveis no momento. Entretanto, seus dados ainda estão em nossos servidores e qualquer modificação que fizer serão salvas assim que pudermos reestabelecer a conexão. Tentaremos reconectar enquanto o DIM estiver aberto.",
+    "ProfileErrorTitle": "Erro ao carregar a Sincronização DIM",
+    "UpdateErrorBody": "Ocorreu um problema ao salvar os seus dados na Sincronização DIM. Tentaremos novamente enquanto o DIM estiver aberto.",
+    "UpdateErrorTitle": "Erro ao salvar a Sincronização DIM",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponíveis neste dispositivo. Isso inclui as bases de dados de itens do Destiny da Bungie.net."
   },
   "StreamDeck": {
