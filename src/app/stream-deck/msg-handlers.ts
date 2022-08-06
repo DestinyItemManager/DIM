@@ -27,7 +27,6 @@ import { refreshStreamDeck, sendToStreamDeck } from 'app/stream-deck/async-modul
 import { showStreamDeckAuthorizationNotification } from 'app/stream-deck/AuthorizationNotification/AuthorizationNotification';
 import {
   AuthorizationConfirmAction,
-  AuthorizationInitAction,
   Challenge,
   CollectPostmasterAction,
   EquipLoadoutAction,
@@ -36,13 +35,20 @@ import {
   MaxPowerAction,
   MessageHandler,
   PullItemAction,
+  PullItemsInfoAction,
   RandomizeAction,
   SearchAction,
   SelectionAction,
   StreamDeckMessage,
 } from 'app/stream-deck/interfaces';
+import { DeferredPromise } from 'app/stream-deck/util/deferred';
 import { setStreamDeckToken, streamDeckToken } from 'app/stream-deck/util/local-storage';
+import { infoLog } from 'app/utils/log';
+import { DamageType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
+
+// Deferred promise used with selections notifications and actions
+export const notificationPromise = new DeferredPromise();
 
 let onGoingAuthorizationChallenge: Challenge | undefined;
 
@@ -53,13 +59,9 @@ function routeTo(state: RootState, path: string) {
 }
 
 // Show notification asking for selection
-function showSelectionNotification(
-  state: RootState,
-  selectionType: 'item' | 'loadout',
-  onCancel?: () => void
-) {
+function showSelectionNotification(selectionType: 'item' | 'loadout', onCancel?: () => void) {
   // cancel previous selection notification
-  state.streamDeck.selectionPromise.resolve();
+  notificationPromise.resolve();
   showNotification({
     title: 'Elgato Stream Deck',
     body:
@@ -68,7 +70,7 @@ function showSelectionNotification(
     duration: 500,
     onCancel,
     onClick: onCancel,
-    promise: state.streamDeck.selectionPromise.promise,
+    promise: notificationPromise.promise,
   });
 }
 
@@ -148,7 +150,30 @@ function selectionHandler({ msg, state }: HandlerArgs<SelectionAction>): ThunkRe
       await delay(100);
     }
     // show the notification
-    showSelectionNotification(state, selectionType, () => dispatch(streamDeckClearSelection()));
+    showSelectionNotification(selectionType, () => dispatch(streamDeckClearSelection()));
+  };
+}
+
+function itemsInfoRequestHandler({ msg, state }: HandlerArgs<PullItemsInfoAction>): ThunkResult {
+  return async (dispatch) => {
+    const items = allItemsSelector(state).filter((it) => msg.ids?.includes(it.index));
+    return dispatch(
+      sendToStreamDeck({
+        action: 'items:info',
+        data: {
+          info: items.map((it) => ({
+            identifier: it.index,
+            power: it.power,
+            overlay: it.iconOverlay,
+            isExotic: it.isExotic,
+            element:
+              it.element?.enumValue === DamageType.Kinetic
+                ? undefined
+                : it.element?.displayProperties?.icon,
+          })),
+        },
+      })
+    );
   };
 }
 
@@ -181,43 +206,40 @@ function freeBucketSlotHandler({
   };
 }
 */
-
 function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): ThunkResult {
   return async (dispatch) => {
     const allItems = allItemsSelector(state);
     const vaultStore = vaultSelector(state);
-    const item = allItems.find((it) => it.index === msg.item);
-    if (item) {
-      if (store.items.includes(item)) {
-        if (!msg.equip) {
-          // move to vault only if the action is not a long press
-          // because on stream deck it is only an EQUIP action
-          // not a toggle one
-          await dispatch(moveItemTo(item, vaultStore!));
-        }
-      } else {
-        await dispatch(moveItemTo(item, store, msg.equip));
+    const selected = allItems.filter((it) => it.index.startsWith(msg.item));
+    const moveToVaultItem = selected.find((it) => it.owner !== 'vault');
+    if (!selected.length) {
+      // no matching item found
+      return;
+    }
+    if (moveToVaultItem) {
+      if (!msg.equip) {
+        // move to vault only if the action is not a long press
+        // because on stream deck it is only an EQUIP action
+        // not a toggle one
+        await dispatch(moveItemTo(moveToVaultItem, vaultStore!, false, moveToVaultItem.amount));
       }
+    } else {
+      const item = selected[0];
+      await dispatch(moveItemTo(item, store, msg.equip, item.amount));
     }
   };
 }
 
 function authorizationConfirmHandler(args: HandlerArgs<AuthorizationConfirmAction>): ThunkResult {
-  const { msg, state } = args;
+  const { msg } = args;
   return async (dispatch) => {
-    // ignore step if token is already set
-    if (streamDeckToken()) {
-      return;
-    }
-
     const { label, value } = onGoingAuthorizationChallenge || {};
-
     // handle confirmation
     if (label && label === msg.challenge) {
       // if label exist then also the values is defined
       setStreamDeckToken(value!);
       // hide the notification
-      state.streamDeck.selectionPromise.resolve();
+      notificationPromise.resolve();
       // refresh stream deck state
       await dispatch(refreshStreamDeck());
       // the current challenge is no more valid
@@ -226,11 +248,9 @@ function authorizationConfirmHandler(args: HandlerArgs<AuthorizationConfirmActio
     }
     // if the user tapped the error challenge number
     // hide the notification
-    state.streamDeck.selectionPromise.reject('invalid-challenge');
+    notificationPromise.reject('invalid-challenge');
     // trigger the challenges again
-    return dispatch(
-      authorizationInitHandler({ ...args, state, msg: { action: 'authorization:init' } })
-    );
+    return dispatch(authorizationInitHandler());
   };
 }
 
@@ -251,16 +271,16 @@ function generateChallenges() {
   return challenges;
 }
 
-function authorizationInitHandler({ state }: HandlerArgs<AuthorizationInitAction>): ThunkResult {
+function authorizationInitHandler(): ThunkResult {
   return async (dispatch) => {
     const challenges = generateChallenges();
     const challenge = challenges[_.random(2, false)];
     // keep track of current challenge
     onGoingAuthorizationChallenge = challenge;
     // hide previous notification
-    state.streamDeck.selectionPromise.resolve();
+    notificationPromise.resolve();
     // show challenge number
-    showStreamDeckAuthorizationNotification(challenge.label, state.streamDeck.selectionPromise);
+    showStreamDeckAuthorizationNotification(challenge.label);
     return dispatch(
       sendToStreamDeck(
         {
@@ -284,6 +304,7 @@ const handlers: MessageHandler = {
   loadout: equipLoadoutHandler,
   // freeBucketSlot: freeBucketSlotHandler,
   pullItem: pullItemHandler,
+  'pullItem:items-request': itemsInfoRequestHandler,
   'authorization:init': authorizationInitHandler,
   'authorization:confirm': authorizationConfirmHandler,
 };
@@ -309,3 +330,5 @@ export function handleStreamDeckMessage(msg: StreamDeckMessage): ThunkResult {
     }
   };
 }
+
+infoLog('sd', 'loaded');

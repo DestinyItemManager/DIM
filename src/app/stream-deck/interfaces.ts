@@ -3,7 +3,6 @@ import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { RootState, ThunkResult } from 'app/store/types';
 import * as actions from 'app/stream-deck/actions';
-import { DeferredPromise } from 'app/stream-deck/util/deferred';
 import { Reducer } from 'redux';
 import { ActionType } from 'typesafe-actions';
 
@@ -13,8 +12,6 @@ export type StreamDeckSelectionType = 'loadout' | 'item';
 export interface StreamDeckState {
   // WebSocket status
   readonly connected: boolean;
-  // Deferred promise used with selections notifications and actions
-  readonly selectionPromise: DeferredPromise;
   // Selection type
   readonly selection?: 'item' | 'loadout' | 'postmaster' | undefined;
 }
@@ -73,6 +70,12 @@ export interface PullItemAction {
   equip: boolean;
 }
 
+// the stream deck request specific items instances info update ex. element, power, etc
+export interface PullItemsInfoAction {
+  action: 'pullItem:items-request';
+  ids: string[];
+}
+
 // allow the user to pick a specific "thing" and send it to the Stream Deck
 // this thing can be a loadout or an item
 export interface SelectionAction {
@@ -108,6 +111,7 @@ export type StreamDeckMessage = (
   | MaxPowerAction
   // | FreeBucketSlotAction
   | PullItemAction
+  | PullItemsInfoAction
   | SelectionAction
   | EquipLoadoutAction
 ) & { token?: string };
@@ -159,6 +163,7 @@ export interface SendUpdateArgs {
       label: string;
       subtitle: string;
       icon?: string;
+      overlay?: string;
       item?: string;
       loadout?: string;
       character?: string;
@@ -178,12 +183,26 @@ export interface SendAuthorizationChallengesArgs {
   };
 }
 
+export interface SendItemsInfoArgs {
+  action: 'items:info';
+  data: {
+    info: {
+      overlay?: string;
+      isExotic: boolean;
+      identifier: string;
+      power: number;
+      element?: string;
+    }[];
+  };
+}
+
 export interface SendAuthorizationResetArgs {
   action: 'authorization:reset';
 }
 
 export type SendToStreamDeckArgs =
   | SendUpdateArgs
+  | SendItemsInfoArgs
   | SendAuthorizationChallengesArgs
   | SendAuthorizationResetArgs;
 
