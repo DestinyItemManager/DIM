@@ -1026,9 +1026,9 @@
     "IndexedDBStorage": "Local Browser Storage",
     "LearnMore": "Learn more about DIM Sync",
     "MenuTitle": "Sync & Backups",
-    "ProfileErrorBody": "We had a problem loading your latest settings, tags, loadouts, and searches from DIM Sync. Your data is still on our servers, and any updates you make locally will be saved when we can reconnect. We'll keep trying to load your data in the background as you use DIM.",
+    "ProfileErrorBody": "We had a problem communicating with DIM Sync. Your latest settings, tags, loadouts, and searches may not be shown. Your data is still on our servers, and any updates you make locally will be saved when we can reconnect. We'll keep retrying while DIM is open.",
     "ProfileErrorTitle": "DIM Sync Download Error",
-    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll automatically try again as you use DIM.",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
     "UpdateErrorTitle": "DIM Sync Save Error",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
