@@ -4,6 +4,7 @@
 * Collections items will now be recognized as craftable. Try the search filter `is:craftable -is:patternunlocked` on the Records page to list craftable weapons you still need to unlock the pattern for, and click the weapons to see your pattern progress.
 * When prioritizing where to place other Arc armor mods, DIM Loadout Mod assignment will now try to activate the secondary perks of **all** Arc Charged With Light mods.
 * Fixed the "Remove other mods" toggle in Loadouts resetting when saving the Loadout as "Any Class".
+* Eliminated an unnecessary 10 second pause when loading DIM if the DIM Sync service is down.
 
 ## 7.28.0 <span class="changelog-date">(2022-07-31)</span>
 
@@ -18,7 +19,6 @@
 ## 7.26.0 <span class="changelog-date">(2022-07-17)</span>
 
 * Worked around a Bungie.net API bug where Vanguard reset count was reported under Strange Favor (Dares of Eternity) instead.
-* Eliminated an unnecessary 10 second pause when loading DIM if the DIM Sync service is down.
 
 ## 7.25.0 <span class="changelog-date">(2022-07-10)</span>
 
