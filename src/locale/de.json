@@ -1026,10 +1026,10 @@
     "IndexedDBStorage": "Lokaler Browserspeicher",
     "LearnMore": "Erfahre mehr über DIM Sync",
     "MenuTitle": "Sync & Backups",
-    "ProfileErrorBody": "Wir haben ein Problem beim Laden deiner Daten von DIM Sync. Wir versuchen weiterhin sie automatisch zu laden.",
-    "ProfileErrorTitle": "DIM Sync Fehler",
-    "UpdateErrorBody": "Wir hatten ein Problem beim Speichern deiner Daten in DIM Sync. Wir versuchen es später automatisch nochmal.",
-    "UpdateErrorTitle": "DIM Sync Fehler",
+    "ProfileErrorBody": "Wir hatten ein Problem bei der Kommunikation mit DIM Sync. Deine neuesten Einstellungen, Tags, Loadouts und Suchanfragen werden möglicherweise nicht angezeigt. Ihre Daten sind immer noch auf unseren Servern und alle Updates, die du lokal vornimmst, werden gespeichert, sobald wir eine erneute Verbindung herstellen können. Wir werden es immer wieder versuchen, solange DIM geöffnet ist.",
+    "ProfileErrorTitle": "DIM-Sync-Downloadfehler",
+    "UpdateErrorBody": "Beim Speichern deiner Daten in DIM Sync ist ein Problem aufgetreten. Wir versuchen es weiter, solange DIM geöffnet ist.",
+    "UpdateErrorTitle": "DIM-Sync-Speicherfehler",
     "Usage": "DIM benutzt insgesamt {{usage, humanBytes}} von {{quota, humanBytes}}, auf diesem Gerät. Das beinhaltet die heruntergeladene Destiny-Datenbank von Bungie.net."
   },
   "StreamDeck": {

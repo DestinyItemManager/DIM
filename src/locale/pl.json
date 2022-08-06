@@ -1026,10 +1026,10 @@
     "IndexedDBStorage": "Lokalna pamięć przeglądarki",
     "LearnMore": "Dowiedz się więcej o synchronizacji DIM",
     "MenuTitle": "Synchronizacja i kopie zapasowe",
-    "ProfileErrorBody": "Wystąpił problem podczas ładowania Twoich danych z DIM Sync. Będziemy starali się je ładować automatycznie.",
-    "ProfileErrorTitle": "Błąd synchronizacji DIM",
-    "UpdateErrorBody": "Wystąpił problem podczas zapisywania Twoich danych do DIM Sync. Automatycznie spróbujemy ponownie później.",
-    "UpdateErrorTitle": "Błąd synchronizacji DIM",
+    "ProfileErrorBody": "We had a problem communicating with DIM Sync. Your latest settings, tags, loadouts, and searches may not be shown. Your data is still on our servers, and any updates you make locally will be saved when we can reconnect. We'll keep retrying while DIM is open.",
+    "ProfileErrorTitle": "DIM Sync Download Error",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
+    "UpdateErrorTitle": "DIM Sync Save Error",
     "Usage": "DIM używa {{usage, humanBytes}} z {{quota, humanBytes}} dostępnych dla niego na tym urządzeniu. Obejmuje to pobrane bazy danych przedmiotów Destiny z Bungie.net."
   },
   "StreamDeck": {

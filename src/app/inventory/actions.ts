@@ -1,6 +1,9 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
+import { t } from 'app/i18next-t';
+import { showNotification } from 'app/notifications/notifications';
 import { get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import {
@@ -145,6 +148,10 @@ export function setTag(item: DimItem, tag: TagValue | undefined): ThunkResult {
     if (!item.taggable) {
       return;
     }
+
+    if ($featureFlags.warnNoSync) {
+      dispatch(warnNoSync());
+    }
     dispatch(
       item.instanced
         ? setItemTag({
@@ -167,6 +174,10 @@ export function setNote(item: DimItem, note: string | undefined): ThunkResult {
     if (!item.taggable) {
       return;
     }
+
+    if ($featureFlags.warnNoSync) {
+      dispatch(warnNoSync());
+    }
     dispatch(
       item.instanced
         ? setItemNote({
@@ -178,6 +189,26 @@ export function setNote(item: DimItem, note: string | undefined): ThunkResult {
             note,
           })
     );
+  };
+}
+
+/**
+ * Warn the first time someone saves a tag or note and they haven't enabled DIM Sync.
+ */
+function warnNoSync(): ThunkResult {
+  return async (_dispatch, getState) => {
+    if (
+      !apiPermissionGrantedSelector(getState()) &&
+      localStorage.getItem('warned-no-sync') !== 'true'
+    ) {
+      localStorage.setItem('warned-no-sync', 'true');
+      showNotification({
+        type: 'warning',
+        title: t('Storage.DataIsLocal'),
+        body: t('Storage.DimSyncNotEnabled'),
+        duration: 60_000,
+      });
+    }
   };
 }
 
