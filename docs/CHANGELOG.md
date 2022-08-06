@@ -18,6 +18,7 @@
 ## 7.26.0 <span class="changelog-date">(2022-07-17)</span>
 
 * Worked around a Bungie.net API bug where Vanguard reset count was reported under Strange Favor (Dares of Eternity) instead.
+* DIM now has direct support for the [DIM Stream Deck extension](https://dim-stream-deck.netlify.app/). If you have a Stream Deck you can install this plugin and then enable the connection from DIM's settings to control DIM from your Stream Deck. Please note that the plugin is neither written by nor supported by the DIM team.
 
 ## 7.25.0 <span class="changelog-date">(2022-07-10)</span>
 

@@ -422,7 +422,7 @@ module.exports = (env) => {
         // Clarity perk descriptions
         '$featureFlags.clarityDescriptions': JSON.stringify(true),
         // Elgato Stream Deck integration
-        '$featureFlags.elgatoStreamDeck': JSON.stringify(!env.release),
+        '$featureFlags.elgatoStreamDeck': JSON.stringify(true),
       }),
 
       new LodashModuleReplacementPlugin({
