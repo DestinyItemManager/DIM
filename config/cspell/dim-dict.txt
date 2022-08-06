@@ -13,6 +13,7 @@ DTR
 dupelower
 equippability
 equippable
+elgato
 favorited
 ICHs
 inleftchar

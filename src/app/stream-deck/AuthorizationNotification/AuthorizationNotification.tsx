@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { NotificationError, showNotification } from 'app/notifications/notifications';
-import { DeferredPromise } from 'app/stream-deck/util/deferred';
+import { notificationPromise } from 'app/stream-deck/msg-handlers';
 import styles from './AuthorizationNotification.m.scss';
 
 interface StreamDeckChallengeProps {
@@ -17,16 +17,13 @@ function StreamDeckChallenge({ challenge }: StreamDeckChallengeProps) {
 }
 
 // Show notification asking for selection
-export function showStreamDeckAuthorizationNotification(
-  challenge: number,
-  promise: DeferredPromise
-) {
+export function showStreamDeckAuthorizationNotification(challenge: number) {
   showNotification({
     title: `Elgato Stream Deck`,
     body: <StreamDeckChallenge challenge={challenge} />,
     type: 'progress',
     duration: 500,
-    promise: promise.promise?.catch((e) => {
+    promise: notificationPromise.promise?.catch((e) => {
       throw new NotificationError(e.message, {
         body: t('StreamDeck.Authorization.Error'),
       });

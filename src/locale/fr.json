@@ -168,7 +168,7 @@
     "SyncShaders": "Synchroniser les revêtements",
     "SyncShadersTitle": "Utiliser le même revêtement sur tous les objets",
     "Title": "Choisir les revêtements et ornements",
-    "UseEquipped": "Utiliser ceux équipés"
+    "UseEquipped": "Utiliser équipés"
   },
   "FileUpload": {
     "Instructions": "Cliquer ou glisser des fichiers"
@@ -186,6 +186,7 @@
     "BulkRevert_plural": "Rajout des étiquettes sur {{count}} objets.",
     "BulkTag": "Élément sélectionné étiqueté {{tag}}.",
     "BulkTag_plural": "{{count}} Éléments sélectionnés étiquetés {{tag}}.",
+    "Catalyst": "Affiche les catalyseurs selon leur statut. catalyst:complete affiche les catalyseurs que vous avez complétés et appliqués, catalyst:incomplete affiche les catalyseurs que vous avez débloqués mais que vous n'avez soi pas complété soi pas appliqué, et catalyst:missing affiche les objets qui peuvent avoir un catalyseur que vous n'avez pas encore trouvé.",
     "Class": "Affiche les objets en fonction de leur affinité de classe.",
     "Combine": "Les filtres peuvent être combinés ou groupés avec des parenthèses, \"or\" et \"and\" pour affiner votre recherche, par exemple \"{{example}}\".",
     "ContributePower": "Affiche les objets qui ont de la puissance et qui peuvent contribuer à votre niveau de puissance.",
@@ -836,6 +837,7 @@
     "CrucibleRank": "Rangs",
     "Items": "Objets de quête",
     "Milestones": "Jalons & Défis",
+    "NoEventChallenges": "Vous avez terminé tous les défis d'événement",
     "NoTrackedTriumph": "Vous ne suivez pas de triomphes. Suivez en un dans le jeu, ou autant que vous voulez sur DIM.",
     "PercentPrestige": "{{pct}}% du rang maximum",
     "PowerBonusHeader": "Récompenses +{{powerBonus}} puissance",
@@ -1024,10 +1026,10 @@
     "IndexedDBStorage": "Stockage local du navigateur",
     "LearnMore": "En savoir plus sur la synchronisation DIM",
     "MenuTitle": "Synchronisation & sauvegardes",
-    "ProfileErrorBody": "Nous avons rencontré un problème lors du chargement de vos données depuis DIM Sync. Nous allons continuer à essayer de les charger automatiquement.",
-    "ProfileErrorTitle": "Erreur de synchronisation DIM",
-    "UpdateErrorBody": "Nous avons rencontré un problème lors de l'enregistrement de vos données sur DIM Sync. Nous allons automatiquement réessayer plus tard.",
-    "UpdateErrorTitle": "Erreur de synchronisation DIM",
+    "ProfileErrorBody": "We had a problem communicating with DIM Sync. Your latest settings, tags, loadouts, and searches may not be shown. Your data is still on our servers, and any updates you make locally will be saved when we can reconnect. We'll keep retrying while DIM is open.",
+    "ProfileErrorTitle": "DIM Sync Download Error",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
+    "UpdateErrorTitle": "Erreur de sauvegarde synchronisation DIM",
     "Usage": "DIM utilise {{usage, humanBytes}} sur {{quota, humanBytes}} disponible pour lui sur cet appareil. Cela inclus la base de données d'objets de Destiny téléchargée depuis Bungie.net."
   },
   "StreamDeck": {
