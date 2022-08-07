@@ -1,9 +1,10 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   DimItem,
   DimSocketCategory,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
-import { subclassInfoByHash } from 'app/inventory/subclass';
+import { getSubclassPlugCategories } from 'app/inventory/subclass';
 import {
   DestinyItemPlugDefinition,
   DestinySocketCategoryStyle,
@@ -218,6 +219,7 @@ export function countEnhancedPerks(sockets: DimSockets) {
 }
 
 export function isModCostVisible(
+  defs: D2ManifestDefinitions,
   plug: DestinyItemPlugDefinition
 ): plug is WithRequiredProperty<DestinyItemPlugDefinition, 'energyCost'> {
   // hide cost if it's less than 1
@@ -226,10 +228,9 @@ export function isModCostVisible(
   }
 
   // hide cost for Subclass 3.0 fragments as these are currently always set to 1
-  for (const subclass of Object.values(subclassInfoByHash)) {
-    if (subclass.isV3 && plug.plugCategoryHash === subclass.plugCategoryHashes.fragments) {
-      return false;
-    }
+  const subclassPlugCategory = getSubclassPlugCategories(defs).get(plug.plugCategoryHash);
+  if (subclassPlugCategory?.socketCategoryHash === SocketCategoryHashes.Fragments) {
+    return false;
   }
 
   return true;

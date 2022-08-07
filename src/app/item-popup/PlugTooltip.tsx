@@ -174,8 +174,9 @@ export function PlugTooltip({
   );
 
   const isPluggable = isPluggableItem(def);
-  const energyCost = isPluggable && isModCostVisible(def.plug) ? def.plug.energyCost : null;
-  const subclassDamageType = isPluggable && getDamageTypeForSubclassPlug(def);
+  const energyCost =
+    isPluggable && defs && isModCostVisible(defs, def.plug) ? def.plug.energyCost : null;
+  const subclassDamageType = isPluggable && defs && getDamageTypeForSubclassPlug(defs, def);
 
   const isInTooltip = useTooltipCustomization({
     getHeader: useCallback(() => def.displayProperties.name, [def.displayProperties.name]),

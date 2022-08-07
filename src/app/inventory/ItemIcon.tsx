@@ -170,7 +170,7 @@ function getModCostInfo(mod: DestinyInventoryItemDefinition | number, defs: D2Ma
     mod = defs.InventoryItem.get(mod);
   }
 
-  if (mod?.plug && isModCostVisible(mod.plug)) {
+  if (mod?.plug && isModCostVisible(defs, mod.plug)) {
     modCostInfo.energyCost = mod.plug.energyCost.energyCost;
 
     if (mod.plug.energyCost?.energyTypeHash) {

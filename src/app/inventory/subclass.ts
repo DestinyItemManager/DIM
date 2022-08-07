@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
@@ -13,6 +14,7 @@ import subclassStasis from 'images/subclass-stasis.png';
 import subclassVoidAlt from 'images/subclass-void-alt.png';
 import subclassVoid from 'images/subclass-void.png';
 import _ from 'lodash';
+import memoizeOne from 'memoize-one';
 import { DimItem, PluggableInventoryItemDefinition } from './item-types';
 
 type SubclassPath = 'top' | 'middle' | 'bottom';
@@ -31,15 +33,6 @@ interface V2SubclassInfo extends CommonSubclassInfo {
 }
 interface V3SubclassInfo extends CommonSubclassInfo {
   isV3: true;
-  plugCategoryHashes: {
-    supers: PlugCategoryHashes;
-    classAbilities: PlugCategoryHashes;
-    movementAbilities: PlugCategoryHashes;
-    melees: PlugCategoryHashes;
-    grenades: PlugCategoryHashes;
-    aspects: PlugCategoryHashes;
-    fragments: PlugCategoryHashes;
-  };
 }
 type SubclassInfo = V2SubclassInfo | V3SubclassInfo;
 
@@ -58,16 +51,11 @@ function v2Subclass(
 function subclassPath(nodeHash: number, superIconNodeHash: number): V2SubclassPathInfo {
   return { nodeHash, superIconNodeHash };
 }
-function v3Subclass(
-  damageType: DamageType,
-  characterClass: DestinyClass,
-  plugCategoryHashes: V3SubclassInfo['plugCategoryHashes']
-): SubclassInfo {
+function v3Subclass(damageType: DamageType, characterClass: DestinyClass): SubclassInfo {
   return {
     damageType,
     characterClass,
     isV3: true,
-    plugCategoryHashes,
   };
 }
 
@@ -151,98 +139,76 @@ export const subclassInfoByHash: Record<number, SubclassInfo> = {
   }),
 
   // Subclass 3.0
-
-  // Revenant (v3)
-  873720784: v3Subclass(DamageType.Stasis, DestinyClass.Hunter, {
-    supers: PlugCategoryHashes.HunterStasisSupers,
-    classAbilities: PlugCategoryHashes.HunterStasisClassAbilities,
-    movementAbilities: PlugCategoryHashes.HunterStasisMovement,
-    melees: PlugCategoryHashes.HunterStasisMelee,
-    grenades: PlugCategoryHashes.SharedStasisGrenades,
-    aspects: PlugCategoryHashes.HunterStasisTotems,
-    fragments: PlugCategoryHashes.SharedStasisTrinkets,
-  }),
-  // Behemoth (v3)
-  613647804: v3Subclass(DamageType.Stasis, DestinyClass.Titan, {
-    supers: PlugCategoryHashes.TitanStasisSupers,
-    classAbilities: PlugCategoryHashes.TitanStasisClassAbilities,
-    movementAbilities: PlugCategoryHashes.TitanStasisMovement,
-    melees: PlugCategoryHashes.TitanStasisMelee,
-    grenades: PlugCategoryHashes.SharedStasisGrenades,
-    aspects: PlugCategoryHashes.TitanStasisTotems,
-    fragments: PlugCategoryHashes.SharedStasisTrinkets,
-  }),
-  // Shadebinder (v3)
-  3291545503: v3Subclass(DamageType.Stasis, DestinyClass.Warlock, {
-    supers: PlugCategoryHashes.WarlockStasisSupers,
-    classAbilities: PlugCategoryHashes.WarlockStasisClassAbilities,
-    movementAbilities: PlugCategoryHashes.WarlockStasisMovement,
-    melees: PlugCategoryHashes.WarlockStasisMelee,
-    grenades: PlugCategoryHashes.SharedStasisGrenades,
-    aspects: PlugCategoryHashes.WarlockStasisTotems,
-    fragments: PlugCategoryHashes.SharedStasisTrinkets,
-  }),
-  // Nightstalker (v3)
-  2453351420: v3Subclass(DamageType.Void, DestinyClass.Hunter, {
-    supers: PlugCategoryHashes.HunterVoidSupers,
-    classAbilities: PlugCategoryHashes.HunterVoidClassAbilities,
-    movementAbilities: PlugCategoryHashes.HunterVoidMovement,
-    melees: PlugCategoryHashes.HunterVoidMelee,
-    grenades: PlugCategoryHashes.SharedVoidGrenades,
-    aspects: PlugCategoryHashes.HunterVoidAspects,
-    fragments: PlugCategoryHashes.SharedVoidFragments,
-  }),
-  // Sentinel (v3)
-  2842471112: v3Subclass(DamageType.Void, DestinyClass.Titan, {
-    supers: PlugCategoryHashes.TitanVoidSupers,
-    classAbilities: PlugCategoryHashes.TitanVoidClassAbilities,
-    movementAbilities: PlugCategoryHashes.TitanVoidMovement,
-    melees: PlugCategoryHashes.TitanVoidMelee,
-    grenades: PlugCategoryHashes.SharedVoidGrenades,
-    aspects: PlugCategoryHashes.TitanVoidAspects,
-    fragments: PlugCategoryHashes.SharedVoidFragments,
-  }),
-  // Voidwalker (v3)
-  2849050827: v3Subclass(DamageType.Void, DestinyClass.Warlock, {
-    supers: PlugCategoryHashes.WarlockVoidSupers,
-    classAbilities: PlugCategoryHashes.WarlockVoidClassAbilities,
-    movementAbilities: PlugCategoryHashes.WarlockVoidMovement,
-    melees: PlugCategoryHashes.WarlockVoidMelee,
-    grenades: PlugCategoryHashes.SharedVoidGrenades,
-    aspects: PlugCategoryHashes.WarlockVoidAspects,
-    fragments: PlugCategoryHashes.SharedVoidFragments,
-  }),
-  // Gunslinger (v3)
-  2240888816: v3Subclass(DamageType.Thermal, DestinyClass.Hunter, {
-    supers: PlugCategoryHashes.HunterSolarSupers,
-    classAbilities: PlugCategoryHashes.HunterSolarClassAbilities,
-    movementAbilities: PlugCategoryHashes.HunterSolarMovement,
-    melees: PlugCategoryHashes.HunterSolarMelee,
-    grenades: PlugCategoryHashes.SharedSolarGrenades,
-    aspects: PlugCategoryHashes.HunterSolarAspects,
-    fragments: PlugCategoryHashes.SharedSolarFragments,
-  }),
-  // Sunbreaker (v3)
-  2550323932: v3Subclass(DamageType.Thermal, DestinyClass.Titan, {
-    supers: PlugCategoryHashes.TitanSolarSupers,
-    classAbilities: PlugCategoryHashes.TitanSolarClassAbilities,
-    movementAbilities: PlugCategoryHashes.TitanSolarMovement,
-    melees: PlugCategoryHashes.TitanSolarMelee,
-    grenades: PlugCategoryHashes.SharedSolarGrenades,
-    aspects: PlugCategoryHashes.TitanSolarAspects,
-    fragments: PlugCategoryHashes.SharedSolarFragments,
-  }),
-  // Dawnblade (v3)
-  3941205951: v3Subclass(DamageType.Thermal, DestinyClass.Warlock, {
-    supers: PlugCategoryHashes.WarlockSolarSupers,
-    classAbilities: PlugCategoryHashes.WarlockSolarClassAbilities,
-    movementAbilities: PlugCategoryHashes.WarlockSolarMovement,
-    melees: PlugCategoryHashes.WarlockSolarMelee,
-    grenades: PlugCategoryHashes.SharedSolarGrenades,
-    aspects: PlugCategoryHashes.WarlockSolarAspects,
-    fragments: PlugCategoryHashes.SharedSolarFragments,
-  }),
+  873720784: v3Subclass(DamageType.Stasis, DestinyClass.Hunter), // Revenant (v3)
+  613647804: v3Subclass(DamageType.Stasis, DestinyClass.Titan), // Behemoth (v3)
+  3291545503: v3Subclass(DamageType.Stasis, DestinyClass.Warlock), // Shadebinder (v3)
+  2453351420: v3Subclass(DamageType.Void, DestinyClass.Hunter), // Nightstalker (v3)
+  2842471112: v3Subclass(DamageType.Void, DestinyClass.Titan), // Sentinel (v3)
+  2849050827: v3Subclass(DamageType.Void, DestinyClass.Warlock), // Voidwalker (v3)
+  2240888816: v3Subclass(DamageType.Thermal, DestinyClass.Hunter), // Gunslinger (v3)
+  2550323932: v3Subclass(DamageType.Thermal, DestinyClass.Titan), // Sunbreaker (v3)
+  3941205951: v3Subclass(DamageType.Thermal, DestinyClass.Warlock), // Dawnblade (v3)
 };
+
+interface SubclassPlugCategory {
+  /** The item hashes of all subclasses that can insert plugs of this category. */
+  compatibleSubclassHashes: number[];
+  /**
+   * The socket category that plugs of this category can be inserted into e.g. abilities, fragments etc.
+   * If plugs of this category can be inserted into multiple sockets with differing socket category hashes,
+   * this will be set to null.
+   */
+  socketCategoryHash: SocketCategoryHashes | null;
+  /**
+   * The damage type of the subclasses that plugs of this category can be inserted into.
+   * If plugs of this category can be inserted into multiple subclasses with differing damage types, this
+   * will be set to null.
+   */
+  damageType: DamageType | null;
+}
+
+export const getSubclassPlugCategories = memoizeOne((defs: D2ManifestDefinitions) => {
+  const results = new Map<PlugCategoryHashes, SubclassPlugCategory>();
+  for (const [itemHashStr, subclassInfo] of Object.entries(subclassInfoByHash)) {
+    if (!subclassInfo.isV3) {
+      continue;
+    }
+    const subclassHash = parseInt(itemHashStr, 10);
+    const def = defs.InventoryItem.get(subclassHash);
+    if (!def.sockets) {
+      continue;
+    }
+    for (const socketEntry of def.sockets.socketEntries) {
+      const socketType = defs.SocketType.get(socketEntry.socketTypeHash);
+      const socketCategoryHash = socketType.socketCategoryHash;
+      for (const whitelistedPlugCategory of socketType.plugWhitelist) {
+        const plugCategoryHash = whitelistedPlugCategory.categoryHash;
+        const plugCategory = results.get(plugCategoryHash);
+        if (plugCategory) {
+          plugCategory.compatibleSubclassHashes.push(subclassHash);
+
+          /*
+          If there are conflicting damage types or socket categories, reset back to null. We assume that
+          the caller can't ascertain anything useful in these cases.
+          */
+          if (plugCategory.damageType !== subclassInfo.damageType) {
+            plugCategory.damageType = null;
+          }
+          if (plugCategory.socketCategoryHash !== socketCategoryHash) {
+            plugCategory.socketCategoryHash = null;
+          }
+        } else {
+          results.set(plugCategoryHash, {
+            compatibleSubclassHashes: [subclassHash],
+            damageType: subclassInfo.damageType,
+            socketCategoryHash,
+          });
+        }
+      }
+    }
+  }
+  return results;
+});
 
 // build up a map of V2 -> V3 subclass hashes
 export const v3SubclassHashesByV2SubclassHash: Record<number, number> = {};
@@ -344,7 +310,10 @@ function getV3SubclassIconInfo(
   }
 }
 
-export function getDamageTypeForSubclassPlug(item: PluggableInventoryItemDefinition) {
+export function getDamageTypeForSubclassPlug(
+  defs: D2ManifestDefinitions,
+  item: PluggableInventoryItemDefinition
+) {
   // ignore empty plugs because they'll be present across all subclasses
   if (emptyPlugHashes.has(item.hash)) {
     return null;
@@ -358,19 +327,10 @@ export function getDamageTypeForSubclassPlug(item: PluggableInventoryItemDefinit
     return null;
   }
 
-  for (const subclass of Object.values(subclassInfoByHash)) {
-    if (
-      subclass.isV3 &&
-      (item.plug.plugCategoryHash === subclass.plugCategoryHashes.supers ||
-        item.plug.plugCategoryHash === subclass.plugCategoryHashes.classAbilities ||
-        item.plug.plugCategoryHash === subclass.plugCategoryHashes.movementAbilities ||
-        item.plug.plugCategoryHash === subclass.plugCategoryHashes.melees ||
-        item.plug.plugCategoryHash === subclass.plugCategoryHashes.grenades ||
-        item.plug.plugCategoryHash === subclass.plugCategoryHashes.aspects ||
-        item.plug.plugCategoryHash === subclass.plugCategoryHashes.fragments)
-    ) {
-      return subclass.damageType;
-    }
+  const subclassPlugCategory = getSubclassPlugCategories(defs).get(item.plug.plugCategoryHash);
+  if (subclassPlugCategory) {
+    return subclassPlugCategory.damageType;
   }
+
   return null;
 }
