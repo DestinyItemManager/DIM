@@ -211,7 +211,7 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
     const allItems = allItemsSelector(state);
     const vaultStore = vaultSelector(state);
     const selected = allItems.filter((it) => it.index.startsWith(msg.item));
-    const moveToVaultItem = selected.find((it) => it.owner !== 'vault');
+    const moveToVaultItem = selected.find((it) => it.owner === store.id);
     if (!selected.length) {
       // no matching item found
       return;
