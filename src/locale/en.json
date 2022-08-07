@@ -1055,6 +1055,23 @@
       "Loadout": "Choose a loadout"
     }
   },
+  "StripSockets": {
+    "Action": "Strip Sockets",
+    "ArmorMods": "{{count}}x Armor Mod",
+    "ArtifactMods": "{{count}}x Artifact Mod",
+    "Button": "Strip {{numSockets}} Sockets",
+    "Cancel": "Cancel",
+    "Choose": "Choose Sockets to strip",
+    "Done": "Stripped Sockets",
+    "NoSockets": "No Sockets to clear",
+    "Ok": "Ok",
+    "Ornaments": "{{count}}x Ornament",
+    "Others": "{{count}}x Ghost Projection",
+    "Running": "Stripping Sockets",
+    "Shaders": "{{count}}x Shader",
+    "Subclass": "{{count}}x Subclass Option",
+    "WeaponMods": "{{count}}x Weapon Mod"
+  },
   "Tags": {
     "Archive": "Archive",
     "ClearTag": "Clear Tag",

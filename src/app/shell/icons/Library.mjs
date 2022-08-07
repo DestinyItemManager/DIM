@@ -51,6 +51,7 @@ export const thumbsUpIcon = 'fas fa-thumbs-up';
 export const thumbsDownIcon = 'fas fa-thumbs-down';
 export const closeIcon = 'fas fa-times';
 export const faTimesCircle = 'fas fa-times-circle';
+export const faWindowClose = 'fas fa-window-close';
 export const disabledIcon = faTimesCircle;
 export const deleteIcon = 'far fa-trash-alt';
 export const twitterIcon = 'fab fa-twitter';

@@ -1138,6 +1138,23 @@
     "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
+  "StripSockets": {
+    "Action": "Strip Sockets",
+    "Button": "Strip {{numSockets}} Sockets",
+    "Choose": "Choose Sockets to strip",
+    "Running": "Stripping Sockets",
+    "Done": "Stripped Sockets",
+    "Ok": "Ok",
+    "Cancel": "Cancel",
+    "NoSockets": "No Sockets to clear",
+    "Shaders": "{{count}}x Shader",
+    "Ornaments": "{{count}}x Ornament",
+    "WeaponMods": "{{count}}x Weapon Mod",
+    "ArtifactMods": "{{count}}x Artifact Mod",
+    "ArmorMods": "{{count}}x Armor Mod",
+    "Subclass": "{{count}}x Subclass Option",
+    "Others": "{{count}}x Ghost Projection"
+  },
   "StreamDeck": {
     "Connected": "Connected",
     "NotConnected": "Not Connected",
