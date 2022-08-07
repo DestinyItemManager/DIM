@@ -1,4 +1,4 @@
-import PressTip from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
@@ -267,7 +267,7 @@ function StripSocketsProcess({
           [styles.failed]: failed,
         });
         return failed ? (
-          <PressTip key={key} className={className} tooltip={state}>
+          <PressTip minimal key={key} className={className} tooltip={state}>
             {icon}
           </PressTip>
         ) : (
