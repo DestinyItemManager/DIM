@@ -1006,6 +1006,7 @@
       "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
     },
     "DimApiFinePrint": "DIM will save your tags, loadouts, and settings to the DIM servers and sync them between different versions of DIM.",
+    "DimSyncDown": "DIM Sync is not connected due to a problem talking to the server.",
     "DimSyncEnabled": "DIM Sync Enabled",
     "DimSyncNotEnabled": "DIM Sync is not enabled, so your settings, tags, loadouts, and searches are only stored locally and will be lost if you clear your browser storage. Enable DIM Sync in Settings to back up your data automatically, or regularly back up your data manually.",
     "EnableDimApi": "Enable DIM Sync (recommended)",
@@ -1032,6 +1033,8 @@
     "ProfileErrorTitle": "DIM Sync Download Error",
     "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
     "UpdateErrorTitle": "DIM Sync Save Error",
+    "UpdateQueueLength": "{{count}} new change will be saved when we can reconnect.",
+    "UpdateQueueLength_plural": "{{count}} new changes will be saved when we can reconnect.",
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StreamDeck": {

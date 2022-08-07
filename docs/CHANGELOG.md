@@ -9,6 +9,7 @@
 ### Beta Only
 
 * Added warnings about potential data loss when you save tags, notes, and loadouts but have DIM Sync off.
+* Added an info bar when DIM Sync is not able to talk to the server.
 
 ## 7.28.0 <span class="changelog-date">(2022-07-31)</span>
 
