@@ -43,7 +43,6 @@ import {
 } from 'app/stream-deck/interfaces';
 import { DeferredPromise } from 'app/stream-deck/util/deferred';
 import { setStreamDeckToken, streamDeckToken } from 'app/stream-deck/util/local-storage';
-import { infoLog } from 'app/utils/log';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 
@@ -211,7 +210,7 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
     const allItems = allItemsSelector(state);
     const vaultStore = vaultSelector(state);
     const selected = allItems.filter((it) => it.index.startsWith(msg.item));
-    const moveToVaultItem = selected.find((it) => it.owner !== 'vault');
+    const moveToVaultItem = selected.find((it) => it.owner === store.id);
     if (!selected.length) {
       // no matching item found
       return;
@@ -327,5 +326,3 @@ export function handleStreamDeckMessage(msg: StreamDeckMessage): ThunkResult {
     }
   };
 }
-
-infoLog('sd', 'loaded');
