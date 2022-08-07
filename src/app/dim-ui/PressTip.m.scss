@@ -24,8 +24,8 @@ $half-arrow-size: $arrow-size * 0.5;
   --ribbon-color: #8e8e9e;
 
   position: absolute;
-  background-color: #14141f;
-  color: white;
+  background-color: #151523;
+  color: #dadaea;
   width: fit-content;
   max-width: 300px;
   border: 1px solid $border-color;
@@ -50,7 +50,7 @@ $half-arrow-size: $arrow-size * 0.5;
   }
 
   .header {
-    background-color: #070709;
+    background-color: #0a0a0f;
     padding: 6px $horizontal-padding;
 
     h2 {
@@ -63,7 +63,7 @@ $half-arrow-size: $arrow-size * 0.5;
     h3 {
       font-size: 12px;
       margin: 0;
-      color: #aaa;
+      color: #8e8e9e;
     }
   }
 
