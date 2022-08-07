@@ -43,7 +43,6 @@ import {
 } from 'app/stream-deck/interfaces';
 import { DeferredPromise } from 'app/stream-deck/util/deferred';
 import { setStreamDeckToken, streamDeckToken } from 'app/stream-deck/util/local-storage';
-import { infoLog } from 'app/utils/log';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 
@@ -327,5 +326,3 @@ export function handleStreamDeckMessage(msg: StreamDeckMessage): ThunkResult {
     }
   };
 }
-
-infoLog('sd', 'loaded');
