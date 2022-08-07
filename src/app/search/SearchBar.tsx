@@ -221,7 +221,7 @@ function SearchBar(
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus = !mainSearchBar && !isPhonePortrait && !isiOSBrowser();
 
-  const [liveQueryLive, setLiveQuery] = useState('');
+  const [liveQueryLive, setLiveQuery] = useState(searchQuery ?? '');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
   const [menuMaxHeight, setMenuMaxHeight] = useState<undefined | number>();
   const inputElement = useRef<HTMLInputElement>(null);
@@ -281,6 +281,7 @@ function SearchBar(
   } = useCombobox<SearchItem>({
     items,
     stateReducer,
+    inputValue: liveQuery,
     initialIsOpen: isPhonePortrait && mainSearchBar,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query.fullText || '',
