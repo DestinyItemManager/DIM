@@ -1,4 +1,5 @@
 @use '../variables.scss' as *;
+@use 'sass:color';
 
 $arrow-size: 10px; // ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
 $border-color: #5d5970;
@@ -142,6 +143,7 @@ $half-arrow-size: $arrow-size * 0.5;
 
 @mixin tooltip-section-color($color) {
   &:not(:empty) {
+    color: color.mix(white, $color, 80%);
     background-color: rgba($color, 0.15);
     border-top-color: rgba($color, 0.5);
   }
