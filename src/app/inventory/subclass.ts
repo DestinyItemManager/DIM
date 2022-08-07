@@ -82,7 +82,7 @@ const superIconNodeHashes = {
   burningMaul: 1323416107,
 };
 
-export const subclassInfoByHash: Record<number, SubclassInfo> = {
+const subclassInfoByHash: Record<number, SubclassInfo> = {
   // Arcstrider (v2)
   1334959255: v2Subclass(DamageType.Arc, DestinyClass.Hunter, {
     top: subclassPath(1690891826, superIconNodeHashes.arcStaff),
@@ -319,7 +319,7 @@ export function getDamageTypeForSubclassPlug(
     return null;
   }
 
-  // early out to avoid looping through subclass infos
+  // early out to avoid building subclass plug categories
   if (
     !item.itemCategoryHashes ||
     !item.itemCategoryHashes.includes(ItemCategoryHashes.SubclassMods)
