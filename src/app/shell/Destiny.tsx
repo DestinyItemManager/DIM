@@ -16,6 +16,7 @@ import LoadoutDrawerContainer from 'app/loadout-drawer/LoadoutDrawerContainer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
+import StripSockets from 'app/strip-sockets/StripSockets';
 import { setAppBadge } from 'app/utils/app-badge';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
@@ -256,6 +257,7 @@ export default function Destiny() {
       </div>
       <LoadoutDrawerContainer account={account} />
       <Compare />
+      {account.destinyVersion === 2 && <StripSockets />}
       <Farming />
       <InfusionFinder />
       <ItemPopupContainer boundarySelector=".store-header" />

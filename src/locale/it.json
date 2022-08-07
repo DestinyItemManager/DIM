@@ -186,6 +186,7 @@
     "BulkRevert_plural": "Etichette ripristinate su {{count}} oggetti.",
     "BulkTag": "Etichettato oggetto selezionato come {{tag}}.",
     "BulkTag_plural": "Etichettati {{count}} oggetti selezionati come {{tag}}.",
+    "Catalyst": "Mostra i catalizzatori basandosi sul loro stato. catalyst:complete mostra i catalizzatori che hai completato e inserito, catalyst:incomplete mostra i catalizzatori che hai sbloccato ma non hai ancora completato l'obbiettivo oppure non hai ancora inserito, e catalyst:missing mostra gli oggetti che possono avere un catalizzatore ma non è ancora stato trovato.",
     "Class": "Mostra gli oggetti in base alla loro affinità di classe.",
     "Combine": "I filtri possono essere combinati o raggruppati con delle parentesi, \"or\" e \"and\" per restringere la ricerca, ad esempio \"{{example}}\".",
     "ContributePower": "Mostra gli oggetti che hanno Potere e possono contribuire al tuo livello Potere.",
@@ -1025,10 +1026,10 @@
     "IndexedDBStorage": "Memoria del browser locale",
     "LearnMore": "Informazioni su DIM Sync",
     "MenuTitle": "Sync & Backup",
-    "ProfileErrorBody": "Abbiamo avuto un problema nel caricamento dei tuoi dati da DIM Sync. Continueremo a cercare di caricarli automaticamente.",
-    "ProfileErrorTitle": "Errore DIM Sync",
-    "UpdateErrorBody": "Abbiamo avuto un problema durante il salvataggio dei tuoi dati su DIM Sync. Riproveremo automaticamente più tardi.",
-    "UpdateErrorTitle": "Errore DIM Sync",
+    "ProfileErrorBody": "Abbiamo avuto un problema di comunicazione con DIM Sync. Le tue ultime impostazioni, etichette, loadout e ricerche potrebbero non essere mostrate. I tuoi dati sono ancora nei nostri server, ed ogni aggiornamento che farai in locale sarà salvato appena potremo riconnetterci. Continueremo a riprovare mentre DIM è aperto.",
+    "ProfileErrorTitle": "Errore Dowload DIM Sync",
+    "UpdateErrorBody": "Abbiamo avuto un problema salvando i tuoi dati su DIM Sync. Continueremo a riprovare mentre DIM è aperto.",
+    "UpdateErrorTitle": "Errore Salvataggio DIM Sync",
     "Usage": "DIM sta usando {{usage, humanBytes}} su {{quota, humanBytes}} disponibili su questo dispositivo. Questo comprende i database di Destiny scaricati da Bungie.net."
   },
   "StreamDeck": {

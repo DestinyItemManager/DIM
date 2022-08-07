@@ -67,7 +67,7 @@ const itemFactors: Record<string, Factor> = {
     runIf: (item) => item.element && !(item.isExotic && item.bucket.inWeapons),
     render: (item) => (
       <PressTip minimal elementType="span" tooltip={item.element?.displayProperties.name}>
-        <ElementIcon className={clsx(styles.inlineIcon2)} element={item.element} />
+        <ElementIcon className={clsx(styles.factorIcon)} element={item.element} />
       </PressTip>
     ),
     filter: damageFilter.fromItem!,
@@ -97,7 +97,10 @@ const itemFactors: Record<string, Factor> = {
       const intrinsicArmorPerk = getIntrinsicArmorPerkSocket(item)?.plugged;
       if (intrinsicArmorPerk) {
         found.push(
-          <PressTip tooltip={() => <DimPlugTooltip item={item} plug={intrinsicArmorPerk} />}>
+          <PressTip
+            key={intrinsicArmorPerk.plugDef.hash}
+            tooltip={() => <DimPlugTooltip item={item} plug={intrinsicArmorPerk} />}
+          >
             <DefItemIcon
               className={styles.factorIcon}
               itemDef={intrinsicArmorPerk.plugDef}
@@ -109,6 +112,7 @@ const itemFactors: Record<string, Factor> = {
 
       const specialty = (
         <SpecialtyModSlotIcon
+          key="specialty"
           className={styles.modSlotIcon}
           item={item}
           lowRes

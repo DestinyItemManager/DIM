@@ -186,6 +186,7 @@
     "BulkRevert_plural": "恢復 {{count}} 件物品標籤",
     "BulkTag": "將選擇物品標記為 {{tag}}.",
     "BulkTag_plural": "將 {{count}} 件選擇物品標記為 {{tag}}.",
+    "Catalyst": "Shows catalysts based on their status. catalyst:complete shows catalysts you have completed and applied, catalyst:incomplete shows catalysts you have unlocked but either not completed the objective or applied the catalyst, and catalyst:missing shows items that can have a catalyst but you haven't found it yet.",
     "Class": "按照職業類別顯示.",
     "Combine": "可以用括號來組合過濾器，或用「or」和「and」來進一步篩選你的搜索，例如「{{example}}」。",
     "ContributePower": "顯示擁有光等的物品.",
@@ -202,7 +203,7 @@
     "DupeLower": "非最高光等的重複和再版物品。重複物品中只有一件會被視為最高光等，其餘均視為較低光等。",
     "Energy": "顯示擁有能量容量的物品（護甲2.0）。",
     "Engrams": "顯示記憶水晶.",
-    "EnhancedPerk": "Shows weapons that have the specified number of enhanced perks.",
+    "EnhancedPerk": "顯示具有指定數量强化特點的武器。",
     "Equipment": "可以裝備的物品.",
     "Equipped": "目前已裝備的物品.",
     "Event": "顯示命運2中特定活動中的物品",
@@ -303,7 +304,7 @@
   },
   "Header": {
     "About": "關於DIM",
-    "AutoRefresh": "DIM will automatically reload as long as you are still playing.",
+    "AutoRefresh": "游玩時，DIM 會自動刷新。",
     "BulkTag": "批量標記物品",
     "BungieNetAlert": "Bungie提示您",
     "Clear": "清除蒐索篩選器",
@@ -836,7 +837,7 @@
     "CrucibleRank": "排名",
     "Items": "任務物品",
     "Milestones": "里程碑和挑戰",
-    "NoEventChallenges": "You have completed all event challenges",
+    "NoEventChallenges": "你已經完成了所有活動挑戰",
     "NoTrackedTriumph": "你沒有正在跟蹤的成就。在遊戲中跟蹤一個，或在 DIM 中跟蹤任意數目。",
     "PercentPrestige": "重置百分比{{pct}}%",
     "PowerBonusHeader": "+{{powerBonus}} 光等獎勵",
@@ -1025,28 +1026,28 @@
     "IndexedDBStorage": "本地流覽器存儲",
     "LearnMore": "了解 DIM 同步",
     "MenuTitle": "同步和備份",
-    "ProfileErrorBody": "從 DIM 同步加載你的數據時出錯。我們會自動重試。",
-    "ProfileErrorTitle": "同步錯誤",
-    "UpdateErrorBody": "保存你的數據到 DIM 同步時出錯。我們稍後會自動重試。",
-    "UpdateErrorTitle": "同步錯誤",
+    "ProfileErrorBody": "We had a problem communicating with DIM Sync. Your latest settings, tags, loadouts, and searches may not be shown. Your data is still on our servers, and any updates you make locally will be saved when we can reconnect. We'll keep retrying while DIM is open.",
+    "ProfileErrorTitle": "DIM Sync Download Error",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
+    "UpdateErrorTitle": "DIM Sync Save Error",
     "Usage": "DIM 使用了此設備{{quota, humanBytes}}可用空間中的{{usage, humanBytes}}.這包括從 bungie. net 下載的命運2物品資料庫。"
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "Picked number is not the valid one!",
-      "Reset": "DE-AUTHORIZE",
-      "Title": "Pick this number on your Stream Deck"
+      "Error": "選擇了無效的號碼！",
+      "Reset": "撤銷授權",
+      "Title": "在你的 Stream Deck 上選擇這個號碼"
     },
-    "Connected": "Connected",
+    "Connected": "已連接",
     "Enable": "Stream Deck Plugin",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "Install": "Install plugin",
     "NotConnected": "Not Connected",
     "OldExtension": "Make sure to uninstall the old Stream Deck Chrome extension. It is no longer needed and will cause odd behavior in DIM.",
-    "SelectLoadout": "Send to Stream Deck",
+    "SelectLoadout": "發送到 Stream Deck",
     "Selection": {
-      "Item": "Choose an item from the inventory",
-      "Loadout": "Choose a loadout"
+      "Item": "從庫存中選擇一個物品",
+      "Loadout": "選擇一個配裝"
     }
   },
   "Tags": {

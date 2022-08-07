@@ -247,6 +247,31 @@ const socketFilters: FilterDefinition[] = [
     },
   },
   {
+    keywords: 'catalyst',
+    description: tl('Filter.Catalyst'),
+    format: ['query'],
+    destinyVersion: 2,
+    suggestions: ['complete', 'incomplete', 'missing'],
+    filter:
+      ({ filterValue }) =>
+      (item: DimItem) => {
+        if (!item.catalystInfo) {
+          return false;
+        }
+
+        switch (filterValue) {
+          case 'missing':
+            return !item.catalystInfo.unlocked;
+          case 'complete':
+            return item.catalystInfo.complete;
+          case 'incomplete':
+            return item.catalystInfo.unlocked && !item.catalystInfo.complete;
+          default:
+            return false;
+        }
+      },
+  },
+  {
     keywords: 'enhancedperk',
     description: tl('Filter.EnhancedPerk'),
     format: 'range',

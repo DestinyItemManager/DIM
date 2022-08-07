@@ -24,7 +24,13 @@ interface CompareButton {
  * Generate possible comparisons for armor, given a reference item.
  */
 export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
-  const exampleItemElementIcon = <ElementIcon key={exampleItem.id} element={exampleItem.element} />;
+  const exampleItemElementIcon = (
+    <ElementIcon
+      key={exampleItem.id}
+      element={exampleItem.element}
+      className={styles.inlineImageIcon}
+    />
+  );
   const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem);
 
   let comparisonSets: CompareButton[] = _.compact([
@@ -60,7 +66,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         buttonLabel: [
           <SpecialtyModSlotIcon
             excludeStandardD2ModSockets
-            className={styles.inlineModSlotIcon}
+            className={styles.inlineImageIcon}
             key="1"
             lowRes
             item={exampleItem}
@@ -90,7 +96,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           exampleItemElementIcon,
           <SpecialtyModSlotIcon
             excludeStandardD2ModSockets
-            className={styles.inlineModSlotIcon}
+            className={styles.inlineImageIcon}
             key="1"
             lowRes
             item={exampleItem}
@@ -196,7 +202,11 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     // same weapon type and also matching element (& usually same-slot because same element)
     exampleItem.element && {
       buttonLabel: [
-        <ElementIcon key={exampleItem.id} element={exampleItem.element} />,
+        <ElementIcon
+          key={exampleItem.id}
+          element={exampleItem.element}
+          className={styles.inlineImageIcon}
+        />,
         <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
       ],
       query: `is:${getItemDamageShortName(exampleItem)}`,

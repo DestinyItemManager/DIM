@@ -444,7 +444,7 @@ export default memo(function LoadoutBuilder({
           <GeneratedSets
             sets={filteredSets}
             subclass={subclass}
-            lockedMods={processing ? emptyArray() : lockedMods}
+            lockedMods={result?.mods ?? emptyArray()}
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
