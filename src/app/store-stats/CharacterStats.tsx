@@ -1,6 +1,6 @@
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
-import PressTip from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
 import { t } from 'app/i18next-t';
 import { fakeCharacterStatHashes } from 'app/inventory/d2-stores';

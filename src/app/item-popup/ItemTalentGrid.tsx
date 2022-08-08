@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
-import PressTip from '../dim-ui/PressTip';
+import { PressTip, Tooltip } from '../dim-ui/PressTip';
 import { D1GridNode, DimGridNode, DimItem } from '../inventory/item-types';
 import './ItemTalentGrid.scss';
 
@@ -58,7 +58,7 @@ export default memo(function ItemTalentGrid({ item, perksOnly }: Props) {
             key={node.hash}
             tooltip={
               <>
-                <h2>{node.name}</h2>
+                <Tooltip.Header text={node.name} />
                 <div>{node.description}</div>
               </>
             }
@@ -97,9 +97,6 @@ export default memo(function ItemTalentGrid({ item, perksOnly }: Props) {
                 width="96"
                 transform="scale(0.25)"
               />
-              <title>
-                {node.name}&#10;{node.description}
-              </title>
             </g>
           </PressTip>
         ))}

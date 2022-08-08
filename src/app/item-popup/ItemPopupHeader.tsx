@@ -5,13 +5,18 @@ import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { Portal } from 'app/utils/temp-container';
-import { DamageType, DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
+import {
+  DamageType,
+  DestinyAmmunitionType,
+  DestinyClass,
+  DestinyEnergyType,
+} from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import heavy from 'destiny-icons/general/ammo-heavy.svg';
 import primary from 'destiny-icons/general/ammo-primary.svg';
 import special from 'destiny-icons/general/ammo-special.svg';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { DimItem } from '../inventory/item-types';
 import styles from './ItemPopupHeader.m.scss';
 
@@ -32,6 +37,13 @@ export default function ItemPopupHeader({
   noLink?: boolean;
 }) {
   const [showArmory, setShowArmory] = useState(false);
+
+  const showElementIcon =
+    item.element &&
+    (item.bucket.inWeapons
+      ? item.element.enumValue !== DamageType.Kinetic
+      : item.element.enumValue !== DestinyEnergyType.Ghost &&
+        item.element.enumValue !== DestinyEnergyType.Subclass);
 
   return (
     <div
@@ -60,10 +72,7 @@ export default function ItemPopupHeader({
         </div>
 
         <div className={styles.details}>
-          {item.element &&
-            !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
-              <ElementIcon element={item.element} className={styles.elementIcon} />
-            )}
+          {showElementIcon && <ElementIcon element={item.element} className={styles.elementIcon} />}
           <div className={styles.power}>{item.primaryStat?.value}</div>
           {item.powerCap && <div className={styles.powerCap}>| {item.powerCap} </div>}
           {item.pursuit?.questStepNum && (

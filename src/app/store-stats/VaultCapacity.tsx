@@ -1,4 +1,4 @@
-import PressTip from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, currentStoreSelector, vaultSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';

@@ -14,9 +14,10 @@ $gradient: radial-gradient(
 $communityBlue: #0d7fad;
 
 // Elemental damage types
-$arc: #85c5ec;
-$solar: #f2721b;
-$void: #814bcf;
+$arc: #79bbe8;
+$solar: #f0631e;
+$void: #8e749e;
+$stasis: #4d88ff;
 
 // Item rarities
 $common: #dcdcdc;
@@ -34,6 +35,9 @@ $power: $gold;
 // Color of the item border for masterworks
 $masterwork-border-color: #eade8b;
 $deepsight-border-color: #d25336;
+
+// Yellow used for enhanced weapon perks
+$enhancedYellow: #f3cf55;
 
 // Item tiles' border
 $item-border-width: 1px;

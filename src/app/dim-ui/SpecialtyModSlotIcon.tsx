@@ -3,8 +3,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getInterestingSocketMetadatas, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import React from 'react';
-import PressTip from './PressTip';
+import { PressTip } from './PressTip';
 import styles from './SpecialtyModSlotIcon.m.scss';
 
 interface ModSlotIconProps {
@@ -43,7 +42,7 @@ export function SpecialtyModSlotIcon({
         // TODO: Why not look this up through emptyPlugItemHash?
         const emptySlotItem = defs.InventoryItem.get(m.emptyModSocketHash);
         return (
-          <PressTip tooltip={emptySlotItem.itemTypeDisplayName} key={emptySlotItem.hash}>
+          <PressTip minimal tooltip={emptySlotItem.itemTypeDisplayName} key={emptySlotItem.hash}>
             <div
               className={clsx(className, styles.specialtyModIcon, lowRes && styles.lowRes)}
               style={bungieBackgroundStyleAdvanced(

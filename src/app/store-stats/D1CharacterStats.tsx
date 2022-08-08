@@ -1,4 +1,4 @@
-import PressTip from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import type { DimStore } from 'app/inventory/store-types';
 import { getD1CharacterStatTiers, statsWithTiers } from 'app/inventory/store/character-utils';

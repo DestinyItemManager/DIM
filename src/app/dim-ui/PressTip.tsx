@@ -40,6 +40,8 @@ interface Props {
   className?: string;
   /** Allow the tooltip to be wider than the normal size */
   wide?: boolean;
+  /** Reduce padding around the tooltip content. This is appropriate for single-line strings. */
+  minimal?: boolean;
   style?: React.CSSProperties;
   placement?: Placement;
 }
@@ -49,6 +51,15 @@ type ControlProps = Props &
     open: boolean;
     triggerRef: React.RefObject<HTMLDivElement>;
   };
+
+interface TooltipCustomization {
+  header?: React.ReactNode;
+  subheader?: React.ReactNode;
+  className?: string;
+}
+const TooltipContext = createContext<React.Dispatch<
+  React.SetStateAction<TooltipCustomization>
+> | null>(null);
 
 /**
  * <PressTip.Control /> can be used to have a controlled version of the PressTip
@@ -76,10 +87,12 @@ function Control({
   className,
   placement,
   wide,
+  minimal,
   ...rest
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
   const pressTipRoot = useContext(PressTipRoot);
+  const [customization, customizeTooltip] = useState<TooltipCustomization>({});
 
   usePopper({
     contents: tooltipContents,
@@ -105,10 +118,23 @@ function Control({
       {open &&
         ReactDOM.createPortal(
           <div
-            className={clsx(styles.tooltip, { [styles.wideTooltip]: wide })}
+            className={clsx(styles.tooltip, customization.className, {
+              [styles.wideTooltip]: wide,
+              [styles.minimalTooltip]: minimal,
+            })}
             ref={tooltipContents}
           >
-            <div className={styles.content}>{_.isFunction(tooltip) ? tooltip() : tooltip}</div>
+            {customization.header && (
+              <div className={styles.header}>
+                <h2>{customization.header}</h2>
+                {customization.subheader && <h3>{customization.subheader}</h3>}
+              </div>
+            )}
+            <div className={styles.content}>
+              <TooltipContext.Provider value={customizeTooltip}>
+                {_.isFunction(tooltip) ? tooltip() : tooltip}
+              </TooltipContext.Provider>
+            </div>
             <div className={styles.arrow} />
           </div>,
           pressTipRoot.current || tempContainer
@@ -116,6 +142,95 @@ function Control({
     </Component>
   );
 }
+
+/**
+ * This hook allows customization of the tooltip that the calling component is currently hosted within.
+ * It has no effect if the calling component is not hosted within a tooltip.
+ *
+ * @returns Whether the calling component is currently being hosted in a tooltip.
+ */
+export function useTooltipCustomization({
+  getHeader,
+  getSubheader,
+  className,
+}: {
+  /**
+   * A function that returns the content to be rendered in the tooltip's header (bold uppercase text). This
+   * **MUST** be memoized (e.g. wrapped in `useCallback`) to prevent an infinite loop.
+   */
+  getHeader?: () => React.ReactNode;
+
+  /**
+   * A function that returns the content to be rendered in the tooltip's subheader (dimmed text below the
+   * header). This **MUST** be memoized (e.g. wrapped in `useCallback`) to prevent an infinite loop.
+   */
+  getSubheader?: () => React.ReactNode;
+
+  /** The CSS class(es) to be applied to the tooltip's root element. */
+  className?: string;
+}) {
+  const customizeTooltip = useContext(TooltipContext);
+  useEffect(() => {
+    if (customizeTooltip) {
+      customizeTooltip((existing) => ({
+        ...existing,
+        ...(getHeader && { header: getHeader() }),
+        ...(getSubheader && { subheader: getSubheader() }),
+        ...(className && { className }),
+      }));
+    }
+  }, [customizeTooltip, getHeader, getSubheader, className]);
+
+  return customizeTooltip !== null;
+}
+
+export const Tooltip = {
+  /**
+   * A convenience component used to customise the tooltip's header (bold uppercase text) from within JSX.
+   * This does not render anything and has no effect if the calling component is not currently hosted within
+   * a tooltip.
+   *
+   * If you want to display more than a single string, use the `useTooltipCustomization` hook instead.
+   */
+  Header: ({ text }: { text: string }) => {
+    useTooltipCustomization({ getHeader: useCallback(() => text, [text]) });
+    return null;
+  },
+
+  /**
+   * A convenience component used to customise the tooltip's subheader (dimmed text below the header) from
+   * within JSX. This does not render anything and has no effect if the calling component is not currently
+   * hosted within a tooltip.
+   *
+   * If you want to display more than a single string, use the `useTooltipCustomization` hook instead.
+   */
+  Subheader: ({ text }: { text: string }) => {
+    useTooltipCustomization({ getSubheader: useCallback(() => text, [text]) });
+    return null;
+  },
+
+  /**
+   * A convenience component used to add a CSS class to the tooltip's root component from within JSX.
+   * This does not render anything and has no effect if the calling component is not currently hosted within
+   * a tooltip.
+   */
+  Customize: ({ className }: { className: string }) => {
+    useTooltipCustomization({ className });
+    return null;
+  },
+
+  /**
+   * If the calling component is hosted within a tooltip, this component wraps its children in a styled `div`.
+   * If not, a fragment containing the children is returned instead.
+   */
+  Section: ({ children, className }: { children: React.ReactNode; className?: string }) => {
+    const tooltip = useContext(TooltipContext);
+    if (!tooltip) {
+      return <>{children}</>;
+    }
+    return <div className={clsx(styles.section, className)}>{children}</div>;
+  },
+};
 
 const isPointerEvents = 'onpointerdown' in window;
 const isTouch = 'ontouchstart' in window;
@@ -125,7 +240,7 @@ const hoverDelay = hoverable ? 100 : 300;
 /**
  * A "press tip" is a tooltip that can be shown by pressing on an element, or via hover.
  *
- * Tooltop content can be any React element, and can be updated through React.
+ * Tooltip content can be any React element, and can be updated through React.
  *
  * Short taps on the element will fire a click event rather than showing the element.
  *
@@ -142,7 +257,7 @@ const hoverDelay = hoverable ? 100 : 300;
  *   PressTip context element
  * </PressTip>
  */
-function PressTip(props: Props) {
+export function PressTip(props: Props) {
   const timer = useRef<number>(0);
   const touchStartTime = useRef<number>(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -226,5 +341,3 @@ function PressTip(props: Props) {
 
   return <Control open={open} triggerRef={ref} {...events} {...props} />;
 }
-
-export default PressTip;

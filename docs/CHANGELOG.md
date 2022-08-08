@@ -1,5 +1,11 @@
 ## Next
 
+* Tooltips have been redesigned:
+  * They now use a darker color scheme that fits in better with the rest of DIM.
+  * Perk and mod tooltips for enhanced weapon traits and Exotic catalysts have unique styles to help them stand out.
+  * The energy cost of armor mods is displayed within tooltips.
+* Fixed an issue where the energy meter on Ghosts was not displaying the amount of energy that had been used by inserted mods.
+
 ## 7.29.1 <span class="changelog-date">(2022-08-07)</span>
 
 * Fix a bug where you couldn't edit a search query from the middle.

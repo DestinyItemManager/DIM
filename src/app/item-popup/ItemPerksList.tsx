@@ -3,7 +3,7 @@ import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
@@ -138,12 +138,7 @@ function PerkPlug({
       </div>
       {selectedPerk ? (
         <div className={styles.perkInfo}>
-          <DimPlugTooltip
-            item={item}
-            plug={plug}
-            wishlistRoll={wishlistRoll}
-            hidePlugSubtype={true}
-          />
+          <DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />
         </div>
       ) : (
         selected &&

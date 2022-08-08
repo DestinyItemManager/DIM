@@ -1,6 +1,6 @@
+import { Tooltip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { statTier } from 'app/loadout-builder/utils';
-import React from 'react';
 import styles from './StatTooltip.m.scss';
 
 interface Stat {
@@ -15,12 +15,13 @@ function StatTooltip({ stat }: { stat: Stat }) {
 
   return (
     <div>
-      <div className={styles.name}>{stat.name}</div>
+      <Tooltip.Header text={stat.name} />
       <div className={styles.values}>
         <div className={styles.label}>{t('Stats.Tier', { tier })}</div>
         <div>{`${stat.value}/100`}</div>
       </div>
-      <div className={styles.description}>{stat.description}</div>
+      <hr />
+      <div>{stat.description}</div>
     </div>
   );
 }

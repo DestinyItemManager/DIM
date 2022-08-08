@@ -2,7 +2,7 @@ import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import ExternalLink from 'app/dim-ui/ExternalLink';
-import PressTip from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t, tl } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
@@ -148,6 +148,7 @@ function StatBar({ segments, stat }: { segments: [number, string?, string?][]; s
         {segments.map(([val, className, description], index) => (
           <PressTip
             key={index}
+            minimal
             tooltip={[description, val].filter(Boolean).join(': ') || undefined}
             className={clsx(styles.barInner, className)}
             style={{ width: percent(val / stat.maximumValue) }}
