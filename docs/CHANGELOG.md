@@ -1,5 +1,7 @@
 ## Next
 
+* Fix a bug where you couldn't edit a search query from the middle.
+
 ## 7.29.0 <span class="changelog-date">(2022-08-07)</span>
 
 * Fixed Armory perk grid showing arbitrary wish list thumbs, and fixed Collections offering wish list notes for unrelated weapons.
