@@ -1,5 +1,7 @@
 ## Next
 
+## 7.29.1 <span class="changelog-date">(2022-08-07)</span>
+
 * Fix a bug where you couldn't edit a search query from the middle.
 
 ## 7.29.0 <span class="changelog-date">(2022-08-07)</span>
