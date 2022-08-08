@@ -80,6 +80,46 @@ Array [
 ]
 `;
 
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for |is:weapon arctic haz -is:exotic| with caret at position 20 with exact match 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        17,
+        35,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "is:weapon arctic name:\\"arctic haze\\" -is:exotic",
+      "fullText": "is:weapon arctic name:\\"arctic haze\\" -is:exotic",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for |name:"foo" arctic haz| with caret at position 21 with exact match 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        18,
+        36,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "name:\\"foo\\" arctic name:\\"arctic haze\\"",
+      "fullText": "name:\\"foo\\" arctic name:\\"arctic haze\\"",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |the last word| with caret at position 13 with exact match 1`] = `
 Array [
   Object {

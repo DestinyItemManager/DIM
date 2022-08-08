@@ -32,6 +32,8 @@ describe('autocompleteTermSuggestions', () => {
 
   const multiWordCases: [query: string, caretIndex: number, mockCandidate: string][] = [
     ['arctic haz', 10, 'arctic haze'],
+    ['is:weapon arctic haz -is:exotic', 20, 'arctic haze'],
+    ['name:"foo" arctic haz', 21, 'arctic haze'],
     ["ager's sce", 10, "ager's scepter"],
     ['the last word', 13, 'the last word'],
     ['acd/0 fee', 9, 'acd/0 feedback fence'],
