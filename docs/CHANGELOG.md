@@ -12,7 +12,6 @@
 * Added a "Strip Sockets" search action to remove shaders, ornaments, weapon, armor, and artifact mods. This is available from the advanced actions dropdown to the right of the search field. Search for targeted items first, then choose what to remove.
 * Eliminated an unnecessary 10 second pause when loading DIM if the DIM Sync service is down.
 * Fixed search filter string disappearing when rotating or majorly resizing the DIM window.
-* DIM now shows a banner and some other warnings to let users know when and why their data is not being saved to DIM Sync.
 * Integration for the [DIM Stream Deck extension](https://dim-stream-deck.netlify.app/) is now available outside DIM Beta.
 * Fixed an issue with saving/syncing the Farming Mode slot count setting.
 * Fixed a crash and improved the accuracy of the Loadout Optimizer's mod assignment behavior.
