@@ -1,4 +1,5 @@
 ## Next
+* Fixed an issue where emblems that were not transferrable across characters were being shown in the loadout drawer.
 
 ## 7.32.0 <span class="changelog-date">(2022-08-28)</span>
 
