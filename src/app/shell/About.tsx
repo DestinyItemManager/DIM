@@ -37,6 +37,8 @@ const redditLink = 'https://destinyitemmanager.reddit.com';
 const discordLink = 'https://discord.gg/UK2GWC7';
 const wikiLink = 'https://github.com/DestinyItemManager/DIM/wiki';
 
+const browserInfo = navigator.userAgent;
+
 export default function About() {
   const iOSApp = document.cookie.includes('app-platform=iOS App Store;');
 
@@ -71,6 +73,8 @@ export default function About() {
             })}
           </span>
         </Link>
+        <br />
+        <span>{browserInfo}</span>
       </div>
       <p>{t('Views.About.HowItsMade')}</p>
       {$DIM_FLAVOR === 'release' && <p>{t(`Views.About.Schedule.release`)}</p>}
