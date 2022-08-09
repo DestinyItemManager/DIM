@@ -35,6 +35,7 @@
   * The energy cost of armor mods is displayed within tooltips.
 * Fixed an issue where the energy meter on Ghosts was not displaying the amount of energy that had been used by inserted mods.
 * Solar class ability and jump icons have had their colors adjusted to match other solar abilities (we couldn't handle it anymore).
+* Added browser info on the About page
 
 ## 7.29.1 <span class="changelog-date">(2022-08-07)</span>
 
