@@ -1,9 +1,10 @@
 @use '../variables.scss' as *;
 @use 'sass:color';
 
-$arrow-size: 10px; // ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
+$arrow-size: 16px; // ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
 $border-color: #5d5970;
-$horizontal-padding: 8px;
+// $border-color: #403f52;
+$horizontal-padding: 12px;
 $half-arrow-size: $arrow-size * 0.5;
 
 .arrow {
@@ -26,12 +27,15 @@ $half-arrow-size: $arrow-size * 0.5;
 
   position: absolute;
   background-color: #151523;
+  // background-color: #262535;
   color: #dadaea;
   width: fit-content;
-  max-width: 300px;
+  max-width: 320px;
   border: 1px solid $border-color;
   border-top: 5px solid var(--ribbon-color);
-  box-shadow: 0 0 4px 2px #16162680;
+  border-radius: 8px;
+  // box-shadow: 0 0 16px 8px #080811a1;
+  box-shadow: 0 0 24px 4px #080811;
   text-align: left;
   z-index: 99999;
   white-space: pre-wrap;
@@ -52,7 +56,8 @@ $half-arrow-size: $arrow-size * 0.5;
 
   .header {
     background-color: #0a0a0f;
-    padding: 6px $horizontal-padding;
+    padding: 8px $horizontal-padding;
+    border-radius: 8px 8px 0 0;
 
     h2 {
       font-size: 14px;
@@ -69,7 +74,7 @@ $half-arrow-size: $arrow-size * 0.5;
   }
 
   .content {
-    padding: 6px $horizontal-padding;
+    padding: 8px $horizontal-padding;
   }
 
   &[data-popper-placement='top'] .arrow {
@@ -118,8 +123,8 @@ $half-arrow-size: $arrow-size * 0.5;
   }
 
   .section:not(:empty) {
-    margin: 6px #{-$horizontal-padding} -6px #{-$horizontal-padding};
-    padding: 4px $horizontal-padding 6px $horizontal-padding;
+    margin: 8px #{-$horizontal-padding} -8px #{-$horizontal-padding};
+    padding: 6px $horizontal-padding 8px $horizontal-padding;
     border-top: 1px solid rgba($border-color, 0.5);
 
     > :first-child {
@@ -131,7 +136,7 @@ $half-arrow-size: $arrow-size * 0.5;
     }
 
     &:first-child {
-      margin-top: -6px;
+      margin-top: -8px;
       border-top: none;
     }
   }
@@ -144,7 +149,10 @@ $half-arrow-size: $arrow-size * 0.5;
 @mixin tooltip-section-color($color) {
   &:not(:empty) {
     color: color.mix(white, $color, 80%);
-    background-color: rgba($color, 0.15);
+    background-color: rgba($color, 0.2);
     border-top-color: rgba($color, 0.5);
+    border-top-width: 1px;
+    // border-top-width: 0;
+    border-top-color: #151523;
   }
 }

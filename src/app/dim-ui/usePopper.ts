@@ -17,7 +17,7 @@ import _ from 'lodash';
 import React, { useLayoutEffect, useRef } from 'react';
 
 // ensure this stays in sync with 'arrow-size' in 'PressTip.m.scss'
-const popperArrowSize = 10;
+const popperArrowSize = 16;
 
 /** Makes a custom popper that doesn't have the event listeners modifier */
 const createPopper = popperGenerator({
