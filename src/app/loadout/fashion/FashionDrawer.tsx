@@ -547,6 +547,7 @@ function FashionSocket({
     content = (
       <PressTip tooltip={<FashSocketTooltip bucketHash={bucketHash} socket={socket} />}>
         <div
+          role={socket && 'button'}
           className={clsx('item', {
             [styles.missingItem]: !canSlotOrnament,
             [styles.noSocket]: !socket,
