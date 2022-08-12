@@ -1,6 +1,7 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
+import { PressTip } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
@@ -22,10 +23,10 @@ import {
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
 import PlugDef from '../loadout-ui/PlugDef';
@@ -483,6 +484,23 @@ function FashionItem({
   );
 }
 
+function FashSocketTooltip({
+  bucketHash,
+  socket,
+}: {
+  bucketHash: number;
+  socket: DimSocket | undefined;
+}) {
+  let text = t('FashionDrawer.NoPreference');
+
+  if (!socket && bucketHash === BucketHashes.Shaders) {
+    text = 'This item cannot fit a shader';
+  } else if (!socket) {
+    text = 'This item cannot fit an ornament';
+  }
+  return <div>{text}</div>;
+}
+
 function FashionSocket({
   bucketHash,
   plugHash,
@@ -515,28 +533,37 @@ function FashionSocket({
         socket?.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash)) ||
       socket?.reusablePlugItems?.some((p) => p.plugItemHash === plugHash && p.enabled));
 
-  return (
-    <ClosableContainer
-      onClose={plugHash ? () => onRemovePlug(bucketHash, plugHash) : undefined}
-      showCloseIconOnHover
-    >
-      {plug ? (
-        <PlugDef
-          onClick={handleOrnamentClick}
-          className={clsx({ [styles.missingItem]: !canSlotOrnament })}
-          plug={(plug ?? defaultPlug) as PluggableInventoryItemDefinition}
-        />
-      ) : (
+  let content = null;
+
+  if (plug) {
+    content = (
+      <PlugDef
+        onClick={handleOrnamentClick}
+        className={clsx({ [styles.missingItem]: !canSlotOrnament })}
+        plug={(plug ?? defaultPlug) as PluggableInventoryItemDefinition}
+      />
+    );
+  } else {
+    content = (
+      <PressTip tooltip={<FashSocketTooltip bucketHash={bucketHash} socket={socket} />}>
         <div
-          role="button"
-          className={clsx('item', { [styles.missingItem]: !canSlotOrnament })}
-          onClick={handleOrnamentClick}
-          tabIndex={0}
-          title={t('FashionDrawer.NoPreference')}
+          className={clsx('item', {
+            [styles.missingItem]: !canSlotOrnament,
+            [styles.noSocket]: !socket,
+          })}
         >
           <DefItemIcon itemDef={defaultPlug} />
         </div>
-      )}
+      </PressTip>
+    );
+  }
+
+  return (
+    <ClosableContainer
+      onClose={plugHash ? () => onRemovePlug(bucketHash, plugHash) : undefined}
+      showCloseIconOnHover={true}
+    >
+      {content}
     </ClosableContainer>
   );
 }

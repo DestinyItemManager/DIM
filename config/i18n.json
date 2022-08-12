@@ -157,20 +157,22 @@
     "Stop": "Stop"
   },
   "FashionDrawer": {
-    "Title": "Choose shaders and ornaments",
     "Accept": "Save fashion",
-    "Reset": "Clear fashion",
-    "Sync": "Sync",
-    "UseEquipped": "Use equipped fashion",
-    "SyncShaders": "Sync Shaders",
-    "SyncShadersTitle": "Use the same shader on all items",
-    "SyncOrnaments": "Sync Ornaments",
-    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
-    "ClearShaders": "Clear Shaders",
-    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "CannotFitOrnament": "This item cannot fit an ornament",
+    "CannotFitShader": "This item cannot fit a shader",
     "ClearOrnaments": "Clear Ornaments",
     "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
-    "NoPreference": "No preference - this socket won't be changed"
+    "ClearShaders": "Clear Shaders",
+    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "NoPreference": "No preference - this socket won't be changed",
+    "Reset": "Clear fashion",
+    "Sync": "Sync",
+    "SyncOrnaments": "Sync Ornaments",
+    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
+    "SyncShaders": "Sync Shaders",
+    "SyncShadersTitle": "Use the same shader on all items",
+    "Title": "Choose shaders and ornaments",
+    "UseEquipped": "Use equipped fashion"
   },
   "FileUpload": {
     "Instructions": "Click or drag files"
