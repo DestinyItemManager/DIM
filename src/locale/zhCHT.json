@@ -998,6 +998,7 @@
     "AutoBackup": "為了以防萬一，我們已經把你的數據備份到了下載文件夾里的 dim-data.json 文件。",
     "BackUpFirst": "為了以防萬一，在全部刪除數據前，你必須先將其備份。",
     "BrowserMayClearData": "如果硬碟空間不足或長時間未訪問DIM，流覽器有可能會刪除這些資料資訊。",
+    "DataIsLocal": "Tag and note data is local only",
     "DeleteAllData": "從 DIM 同步服務器刪除所有數據",
     "DeleteAllDataConfirm": "你確定要從 DIM 同步中刪除你的所有賬號的所有數據嗎？這無法撤銷。",
     "DeleteAllDataLabel": "清空 DIM 同步數據",
@@ -1005,7 +1006,9 @@
       "IndexedDBStorage": "本機存放區僅在此流覽器中存儲資訊。如果刪除流覽器資料，也會刪除這些資訊。"
     },
     "DimApiFinePrint": "DIM 會把你的標籤、配裝和設置保存到雲端，並同步給 DIM 的不同版本。",
+    "DimSyncDown": "DIM Sync is not connected due to a problem talking to the server.",
     "DimSyncEnabled": "DIM 同步已啟用",
+    "DimSyncNotEnabled": "DIM Sync is not enabled, so your settings, tags, loadouts, and searches are only stored locally and will be lost if you clear your browser storage. Enable DIM Sync in Settings to back up your data automatically, or regularly back up your data manually.",
     "EnableDimApi": "啟用 DIM 同步（推薦）",
     "Export": "下載資料備份",
     "Import": "導入資料備份",
@@ -1030,6 +1033,8 @@
     "ProfileErrorTitle": "DIM Sync Download Error",
     "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
     "UpdateErrorTitle": "DIM Sync Save Error",
+    "UpdateQueueLength": "{{count}} new change will be saved when we can reconnect.",
+    "UpdateQueueLength_plural": "{{count}} new changes will be saved when we can reconnect.",
     "Usage": "DIM 使用了此設備{{quota, humanBytes}}可用空間中的{{usage, humanBytes}}.這包括從 bungie. net 下載的命運2物品資料庫。"
   },
   "StreamDeck": {
@@ -1049,6 +1054,23 @@
       "Item": "從庫存中選擇一個物品",
       "Loadout": "選擇一個配裝"
     }
+  },
+  "StripSockets": {
+    "Action": "Strip Sockets",
+    "ArmorMods": "{{count}}x Armor Mod",
+    "ArtifactMods": "{{count}}x Artifact Mod",
+    "Button": "Strip {{numSockets}} Sockets",
+    "Cancel": "Cancel",
+    "Choose": "Choose Sockets to strip",
+    "Done": "Stripped Sockets",
+    "NoSockets": "No Sockets to clear",
+    "Ok": "Ok",
+    "Ornaments": "{{count}}x Ornament",
+    "Others": "{{count}}x Ghost Projection",
+    "Running": "Stripping Sockets",
+    "Shaders": "{{count}}x Shader",
+    "Subclass": "{{count}}x Subclass Option",
+    "WeaponMods": "{{count}}x Weapon Mod"
   },
   "Tags": {
     "Archive": "歸檔",

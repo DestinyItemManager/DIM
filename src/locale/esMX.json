@@ -998,6 +998,7 @@
     "AutoBackup": "Hemos hecho una copia de seguridad de tus datos en un archivo en tu carpeta de descargas llamado dim-data.json, sólo por si acaso.",
     "BackUpFirst": "DEBES hacer una copia de tu información primero, antes de borrarlo todo. Sólo por si acaso.",
     "BrowserMayClearData": "El navegador puede borrar esta información si te quedas sin espacio o no visitas DIM frecuentemente.",
+    "DataIsLocal": "La información de las etiquetas y notas sólo es local",
     "DeleteAllData": "Borrar TODA la Información de los Servidores de Sincronización DIM",
     "DeleteAllDataConfirm": "¿Estás seguro que quieres borrar TODA tu información, para todas las cuentas, de Sincronización DIM? No puedes deshacer esto.",
     "DeleteAllDataLabel": "Limpiar Información de Sincronización DIM",
@@ -1005,7 +1006,9 @@
       "IndexedDBStorage": "El almacenamiento local sólo guardará información en este navegador. El limpiar tus datos de navegación borrará esta información."
     },
     "DimApiFinePrint": "DIM guardará todas tus etiquetas, equipaciones y configuraciones a los servidores de DIM y se sincronizarán entre diferentes versiones de DIM.",
+    "DimSyncDown": "La Sincronización DIM no está conectada debido a un problema de comunicación con el servidor.",
     "DimSyncEnabled": "Sincronización DIM habilitada",
+    "DimSyncNotEnabled": "La Sincronización DIM no está activada, así que tus configuraciones, etiquetas, equipaciones y búsquedas sólo son almacenadas localmente y se perderán si limpias el almacenamiento del navegador. Activa Sincronización DIM en Configuración para hacer una copia de tu información automáticamente, o hacer una copia de tu información manualmente.",
     "EnableDimApi": "Habilitar sincronización DIM (recomendado)",
     "Export": "Descargar Información para Respaldo",
     "Import": "Importar Información de Respaldo",
@@ -1030,6 +1033,8 @@
     "ProfileErrorTitle": "Error de Descarga de Sincronización DIM",
     "UpdateErrorBody": "Tuvimos un problema guardando tu información a Sincronización DIM. Seguiremos intentándolo mientras DIM esté abierto.",
     "UpdateErrorTitle": "Error de Guardado de Sincronización DIM",
+    "UpdateQueueLength": "{{count}} cambio nuevo será guardado cuando podamos reconectar.",
+    "UpdateQueueLength_plural": "{{count}} cambios nuevos serán guardados cuando podamos reconectar.",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponibles en este dispositivo. Esto incluye las bases de datos de objetos de Destiny descargados de Bungie.net."
   },
   "StreamDeck": {
@@ -1049,6 +1054,23 @@
       "Item": "Elige un elemento del inventario",
       "Loadout": "Elije un equipamiento"
     }
+  },
+  "StripSockets": {
+    "Action": "Desocupar Ranuras",
+    "ArmorMods": "{{count}}x Mods de Armadura",
+    "ArtifactMods": "{{count}}x Mods de Artefacto",
+    "Button": "Desocupar {{numSockets}} Ranuras",
+    "Cancel": "Cancelar",
+    "Choose": "Elige Ranuras a desocupar",
+    "Done": "Ranuras Desocupadas",
+    "NoSockets": "No hay Espacios para limpiar",
+    "Ok": "Ok",
+    "Ornaments": "{{count}}x Diseño",
+    "Others": "{{count}}x Proyecciónes de Espectro",
+    "Running": "Desocupando Ranuras",
+    "Shaders": "{{count}}x Shader",
+    "Subclass": "{{count}}x Opción de Subclase",
+    "WeaponMods": "{{count}}x Mods de Armas"
   },
   "Tags": {
     "Archive": "Archivar",

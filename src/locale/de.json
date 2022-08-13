@@ -998,6 +998,7 @@
     "AutoBackup": "Wir haben deine Daten in der Datei dim-data.json in deinem Download Ordner gesichert, für alle Fälle.",
     "BackUpFirst": "Du MUSST deine Daten zuerst sichern, bevor du alles löschen kannst. Für alle Fälle.",
     "BrowserMayClearData": "Der Browser könnte diese Informationen eventuell löschen, wenn du zu wenig freien Speicher hast oder DIM nicht regelmäßig besuchst.",
+    "DataIsLocal": "Markierungs- und Notizdaten sind nur lokal",
     "DeleteAllData": "ALLE Daten von DIM Sync-Servern löschen",
     "DeleteAllDataConfirm": "Bist du sicher, dass du ALLE deine Daten für alle Konten von DIM Sync löschen möchtest? Du kannst dies nicht rückgängig machen.",
     "DeleteAllDataLabel": "DIM Sync-Daten löschen",
@@ -1005,7 +1006,9 @@
       "IndexedDBStorage": "Lokaler Speicher, speichert deine Daten nur in diesem Browser. Beim Löschen deiner Browserdaten werden diese Informationen gelöscht."
     },
     "DimApiFinePrint": "DIM speichert deine Tags, Ausrüstungen und Einstellungen auf den DIM-Servern und synchronisiert sie zwischen verschiedenen Versionen von DIM.",
+    "DimSyncDown": "DIM Sync konnte sich aufgrund eines Kommunikationsfehlers mit dem Server nicht verbinden.",
     "DimSyncEnabled": "DIM Sync aktiviert",
+    "DimSyncNotEnabled": "DIM Sync ist nicht aktiviert. Dies bedeutet, dass deine Einstellungen, Markierungen, Ausrüstungen und Suchanfragen nur lokal gespeichert sind und verlorengehen werden, wenn du deinen Browserspeicher löschst. Du kannst DIM Sync in den Einstellungen aktivieren, um deine Daten automatisch zu sichern; oder sie regelmäßig zum Sichern manuell herunterladen.",
     "EnableDimApi": "DIM Sync aktivieren (empfohlen)",
     "Export": "Datensicherung herunterladen",
     "Import": "Datensicherung importieren",
@@ -1030,6 +1033,8 @@
     "ProfileErrorTitle": "DIM-Sync-Downloadfehler",
     "UpdateErrorBody": "Beim Speichern deiner Daten in DIM Sync ist ein Problem aufgetreten. Wir versuchen es weiter, solange DIM geöffnet ist.",
     "UpdateErrorTitle": "DIM-Sync-Speicherfehler",
+    "UpdateQueueLength": "{{count}} neue Änderung wird bei der nächsten erfolgreichen Verbindung gespeichert werden.",
+    "UpdateQueueLength_plural": "{{count}} neue Änderungen werden bei der nächsten erfolgreichen Verbindung gespeichert werden.",
     "Usage": "DIM benutzt insgesamt {{usage, humanBytes}} von {{quota, humanBytes}}, auf diesem Gerät. Das beinhaltet die heruntergeladene Destiny-Datenbank von Bungie.net."
   },
   "StreamDeck": {
@@ -1049,6 +1054,23 @@
       "Item": "Wähle einen Gegenstand aus dem Inventar",
       "Loadout": "Wähle ein Loadout"
     }
+  },
+  "StripSockets": {
+    "Action": "Fassungen leeren",
+    "ArmorMods": "{{count}}x Rüstungsmod",
+    "ArtifactMods": "{{count}}x Artefaktmod",
+    "Button": "{{numSockets}} Fassungen leeren",
+    "Cancel": "Abbrechen",
+    "Choose": "Fassungen zum Leeren auswählen",
+    "Done": "Geleerte Fassungen",
+    "NoSockets": "Keine Fassungen zu leeren",
+    "Ok": "OK",
+    "Ornaments": "{{count}}x Ornament",
+    "Others": "{{count}}x Geist-Projektion",
+    "Running": "Fassungen werden geleert",
+    "Shaders": "{{count}}x Shader",
+    "Subclass": "{{count}}x Fokus-Option",
+    "WeaponMods": "{{count}}x Waffenmod"
   },
   "Tags": {
     "Archive": "Archiv",

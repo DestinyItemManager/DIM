@@ -998,6 +998,7 @@
     "AutoBackup": "Nós fizemos o backup dos seus dados para um arquivo em sua pasta de downloads chamado dim-data.json, só por precaução.",
     "BackUpFirst": "Você DEVE fazer o backup dos seus dados atuais antes de apagar tudo. Só por precaução.",
     "BrowserMayClearData": "O navegador pode apagar esses dados se você ficar sem espaço ou não visitar DIM frequentemente.",
+    "DataIsLocal": "Etiqueta e anotações apenas locais",
     "DeleteAllData": "Remover TODOS os dados dos Servidores de Sincronização DIM",
     "DeleteAllDataConfirm": "Tem certeza que TODOS os seus dados devem ser removidos, de todas as contas, da Sincronização DIM? Não dá pra voltar atrás.",
     "DeleteAllDataLabel": "Descartar todos os dados da Sincronização DIM",
@@ -1005,7 +1006,9 @@
       "IndexedDBStorage": "Armazenamento local salvará suas informações apenas neste navegador. Limpar seus dados de navegação apagará essas informações."
     },
     "DimApiFinePrint": "DIM salvará suas configurações, etiquetas e sets em servidores próprios e sincronizará entre diferentes versões do aplicativo.",
+    "DimSyncDown": "A Sincronização DIM está indisponível devido a um problema de comunicação com o servidor.",
     "DimSyncEnabled": "Sincronização DIM ativada",
+    "DimSyncNotEnabled": "A Sincronização DIM está desativada, portanto, suas configurações, etiquetas, sets e históricos de pesquisas só serão armazenados localmente e se perderão caso você limpe o armazenamento do seu navegador. Ative a Sincronização DIM nas configurações para guardar seus dados automaticamente ou faça backups manual regularmente.",
     "EnableDimApi": "Ativar a Sincronização DIM (recomendado)",
     "Export": "Baixar Dados de Backup",
     "Import": "Importar Dados de Backup",
@@ -1030,6 +1033,8 @@
     "ProfileErrorTitle": "Erro ao carregar a Sincronização DIM",
     "UpdateErrorBody": "Ocorreu um problema ao salvar os seus dados na Sincronização DIM. Tentaremos novamente enquanto o DIM estiver aberto.",
     "UpdateErrorTitle": "Erro ao salvar a Sincronização DIM",
+    "UpdateQueueLength": "{{count}} alterações serão salvas assim que for possível reconectar.",
+    "UpdateQueueLength_plural": "{{count}} alteração será salva assim que for possível reconectar.",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponíveis neste dispositivo. Isso inclui as bases de dados de itens do Destiny da Bungie.net."
   },
   "StreamDeck": {
@@ -1049,6 +1054,23 @@
       "Item": "Escolha um item do inventário",
       "Loadout": "Escolha um set"
     }
+  },
+  "StripSockets": {
+    "Action": "Limpar soquetes",
+    "ArmorMods": "{{count}}x mod de Armaduras",
+    "ArtifactMods": "{{count}}x mod de Artefatos",
+    "Button": "Limpar {{numSockets}} soquetes",
+    "Cancel": "Cancelar",
+    "Choose": "Escolha os soquetes para limpar",
+    "Done": "Soquetes limpados",
+    "NoSockets": "Nenhum soquete para limpar",
+    "Ok": "Ok",
+    "Ornaments": "{{count}}x Ornamento",
+    "Others": "{{count}}x Projeção de Fantasmas",
+    "Running": "Limpando soquetes",
+    "Shaders": "{{count}}x Tonalizador",
+    "Subclass": "{{count}}x Opção de Subclasse",
+    "WeaponMods": "{{count}}x mod de Armas"
   },
   "Tags": {
     "Archive": "Arquivar",
