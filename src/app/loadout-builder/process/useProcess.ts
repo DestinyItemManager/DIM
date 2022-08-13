@@ -39,11 +39,14 @@ interface ProcessState {
   result: {
     sets: ArmorSet[];
     /**
-     * The mods used to generate the sets above. The sets are
-     * guaranteed (modulo bugs in worker) to fit these mods, so
-     * set rendering must use this mods list to render sets.
+     * The mods and rules used to generate the sets above. The sets
+     * are guaranteed (modulo bugs in worker) to fit these mods given
+     * these settings, so set rendering must use these to render sets.
+     * Otherwise set rendering may render old sets with new settings/mods,
+     * which will fail in ways indistinguishable from legitimate mismatches.
      */
     mods: PluggableInventoryItemDefinition[];
+    armorEnergyRules: ArmorEnergyRules;
     combos: number;
     processTime: number;
     statRangesFiltered?: StatRanges;
@@ -127,6 +130,7 @@ export function useProcess({
         result: {
           sets: [],
           mods: lockedMods,
+          armorEnergyRules,
           combos: 0,
           processTime: 0,
         },
@@ -206,6 +210,7 @@ export function useProcess({
           result: {
             sets: hydratedSets,
             mods: lockedMods,
+            armorEnergyRules,
             combos,
             processTime: performance.now() - processStart,
             statRangesFiltered,

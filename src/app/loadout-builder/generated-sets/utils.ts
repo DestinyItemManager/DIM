@@ -23,11 +23,8 @@ function getComparatorsForMatchedSetSorting(statOrder: number[], enabledStats: S
 export function sortGeneratedSets(
   statOrder: number[],
   enabledStats: Set<number>,
-  sets?: readonly ArmorSet[]
-): readonly ArmorSet[] | undefined {
-  if (sets === undefined) {
-    return;
-  }
+  sets: readonly ArmorSet[]
+): readonly ArmorSet[] {
   if (sets.length === 0) {
     return emptyArray();
   }
