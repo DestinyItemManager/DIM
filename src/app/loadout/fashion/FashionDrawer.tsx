@@ -562,7 +562,7 @@ function FashionSocket({
   return (
     <ClosableContainer
       onClose={plugHash ? () => onRemovePlug(bucketHash, plugHash) : undefined}
-      showCloseIconOnHover={true}
+      showCloseIconOnHover
     >
       {content}
     </ClosableContainer>
