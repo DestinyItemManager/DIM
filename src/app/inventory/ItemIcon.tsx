@@ -16,9 +16,8 @@ import pursuitComplete from 'images/highlightedObjective.svg';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
 
-// These are the solar abilities that have statis colored images on their definitions.
-// To make them match the orange solar color (best we can) we apply a css filter to
-// change their color.
+// These solar abilities have stasis-colored icons in their Bungie-provided definitions.
+// To make them match the orange solar color (best we can) we apply a css filter.
 const solarSubclassDefsToColorFilter = [
   2979486802, // Empowering rift
   2979486803, // Healing rift
