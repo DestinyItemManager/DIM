@@ -6,7 +6,7 @@ interface CssExports {
   'categoryArmor': string;
   'categoryGeneral': string;
   'categoryWeapons': string;
-  'equipped': string;
+  'equippedGrid': string;
   'itemBucket': string;
   'itemCategory': string;
   'items': string;
@@ -14,6 +14,7 @@ interface CssExports {
   'missingItem': string;
   'showFashion': string;
   'unequipped': string;
+  'unequippedGrid': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

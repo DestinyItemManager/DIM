@@ -37,26 +37,29 @@
   justify-content: center;
 }
 
-.equipped {
+.equippedGrid {
   composes: sub-bucket from global;
   width: 100%;
   padding: 0;
 }
 
 .unequipped {
-  composes: sub-bucket from global;
-  width: 100%;
-  padding: 0;
-  gap: 4px;
   --item-icon-size: calc(var(--item-size) - 6px);
-  grid-template-columns: var(--item-icon-size);
   > * {
     --item-size: var(--item-icon-size);
   }
 }
 
+.unequippedGrid {
+  composes: sub-bucket from global;
+  width: 100%;
+  padding: 0;
+  gap: 4px;
+  grid-template-columns: var(--item-icon-size);
+}
+
 .showFashion {
-  .equipped {
+  .equippedGrid {
     :global(.item) {
       height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
     }

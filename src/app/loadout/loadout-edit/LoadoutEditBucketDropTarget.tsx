@@ -2,6 +2,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
+import { AppIcon, equippedIcon, unequippedIcon } from 'app/shell/icons';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -83,6 +84,7 @@ export default function LoadoutEditBucketDropTarget({
               })}
               ref={equippedRef}
             >
+              <AppIcon className={styles.icon} icon={equippedIcon} />
               {t('Loadouts.Equipped')}
             </div>
           )}
@@ -93,6 +95,7 @@ export default function LoadoutEditBucketDropTarget({
               })}
               ref={unequippedRef}
             >
+              <AppIcon className={styles.icon} icon={unequippedIcon} />
               {t('Loadouts.Unequipped')}
             </div>
           )}

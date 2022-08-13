@@ -2,8 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'dragOver': string;
-  'icon': string;
-  'options': string;
+  'drop': string;
+  'dropContainer': string;
   'over': string;
 }
 export const cssExports: CssExports;

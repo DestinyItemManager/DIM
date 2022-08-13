@@ -49,7 +49,7 @@ export default function LoadoutDrawerDropTarget({
       canDrop: (i) =>
         itemCanBeInLoadout(i) &&
         (i.classType === DestinyClass.Unknown || classType === i.classType),
-      collect: (monitor) => ({ isOver: monitor.isOver() && monitor.canDrop() }),
+      collect: (monitor) => ({ isOver: monitor.isOver({ shallow: true }) && monitor.canDrop() }),
     }),
     [bucketTypes, onDroppedItem]
   );

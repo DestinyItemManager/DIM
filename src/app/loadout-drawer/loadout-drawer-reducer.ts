@@ -81,6 +81,8 @@ export function addItem(
       return;
     }
 
+    const typeInventory = loadoutItemsInBucket(defs, draftLoadout, item.bucket.hash);
+
     const dupeIndex = findSameLoadoutItemIndex(defs, draftLoadout.items, loadoutItem);
     if (dupeIndex !== -1) {
       const dupe = draftLoadout.items[dupeIndex];
@@ -89,11 +91,21 @@ export function addItem(
         const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
         dupe.amount += increment;
       }
-      // Otherwise just bail and don't modify the loadout
+
+      // If the equip status isn't explicity set or it matches the dupe already no action is needed
+      if (equip === undefined || equip === dupe.equip) {
+        return;
+      }
+
+      // If we are wanting to equip the dupe make sure every thing else isn't equipped
+      if (equip) {
+        for (const otherItem of typeInventory) {
+          otherItem.equip = false;
+        }
+      }
+      dupe.equip = equip;
       return;
     }
-
-    const typeInventory = loadoutItemsInBucket(defs, draftLoadout, item.bucket.hash);
 
     if (typeInventory.length >= maxSlots) {
       // We're already full

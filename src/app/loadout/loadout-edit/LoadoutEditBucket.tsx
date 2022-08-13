@@ -2,6 +2,7 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
@@ -14,6 +15,7 @@ import { addIcon, AppIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -25,6 +27,7 @@ import { FashionMods } from '../loadout-ui/FashionMods';
 import LoadoutParametersDisplay from '../loadout-ui/LoadoutParametersDisplay';
 import { OptimizerButton } from '../loadout-ui/OptimizerButton';
 import styles from './LoadoutEditBucket.m.scss';
+import LoadoutEditItemDropTarget from './LoadoutEditItemDropTarget';
 
 const categoryStyles = {
   Weapons: styles.categoryWeapons,
@@ -34,6 +37,7 @@ const categoryStyles = {
 
 export default function LoadoutEditBucket({
   category,
+  classType,
   storeId,
   items,
   modsByBucket,
@@ -44,6 +48,7 @@ export default function LoadoutEditBucket({
   children,
 }: {
   category: D2BucketCategory;
+  classType: DestinyClass;
   storeId: string;
   items?: ResolvedLoadoutItem[];
   modsByBucket: {
@@ -71,6 +76,7 @@ export default function LoadoutEditBucket({
         {bucketOrder.map((bucket) => (
           <ItemBucket
             key={bucket.hash}
+            classType={classType}
             bucket={bucket}
             items={itemsByBucket[bucket.hash]}
             onClickPlaceholder={onClickPlaceholder}
@@ -136,7 +142,51 @@ export function ArmorExtras({
   );
 }
 
+/**
+ * An extension of the usual draggable inventory item for loadouts that allows the for
+ * removal of the item from the loadout. This also handles styling for when an item is
+ * missing.
+ */
+const DraggableRemovableLoadoutItem = React.memo(
+  ({
+    loadoutItem,
+    onClickWarnItem,
+    onRemoveItem,
+    onToggleEquipped,
+  }: {
+    loadoutItem: ResolvedLoadoutItem;
+    onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
+    onRemoveItem: (resolvedItem: ResolvedLoadoutItem) => void;
+    onToggleEquipped: (resolvedItem: ResolvedLoadoutItem) => void;
+  }) => (
+    <DraggableInventoryItem item={loadoutItem.item}>
+      <ClosableContainer onClose={() => onRemoveItem(loadoutItem)} showCloseIconOnHover>
+        <ItemPopupTrigger
+          item={loadoutItem.item}
+          extraData={{ socketOverrides: loadoutItem.loadoutItem.socketOverrides }}
+        >
+          {(ref, onClick) => (
+            <div
+              className={clsx({
+                [styles.missingItem]: loadoutItem.missing,
+              })}
+            >
+              <ConnectedInventoryItem
+                item={loadoutItem.item}
+                innerRef={ref}
+                onClick={loadoutItem.missing ? () => onClickWarnItem(loadoutItem) : onClick}
+                onDoubleClick={() => onToggleEquipped(loadoutItem)}
+              />
+            </div>
+          )}
+        </ItemPopupTrigger>
+      </ClosableContainer>
+    </DraggableInventoryItem>
+  )
+);
+
 function ItemBucket({
+  classType,
   bucket,
   items,
   equippedContent,
@@ -145,6 +195,7 @@ function ItemBucket({
   onRemoveItem,
   onToggleEquipped,
 }: {
+  classType: DestinyClass;
   bucket: InventoryBucket;
   items: ResolvedLoadoutItem[];
   equippedContent?: React.ReactNode;
@@ -181,54 +232,85 @@ function ItemBucket({
 
   return (
     <div className={clsx(styles.itemBucket, { [styles.showFashion]: showFashion })}>
-      {[equipped, unequipped].map((items, index) =>
-        items.length > 0 ? (
-          <div
-            className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
-            key={index}
+      {equipped.length > 0 ? (
+        <>
+          <LoadoutEditItemDropTarget
+            bucket={bucket}
+            classType={classType}
+            equippedItems={equipped}
+            unequippedItems={unequipped}
+            equip={true}
           >
-            {items.map((li) => (
-              <ClosableContainer
-                key={li.item.id}
-                onClose={() => onRemoveItem(li)}
-                showCloseIconOnHover
-              >
-                <ItemPopupTrigger
-                  item={li.item}
-                  extraData={{ socketOverrides: li.loadoutItem.socketOverrides }}
-                >
-                  {(ref, onClick) => (
-                    <div
-                      className={clsx({
-                        [styles.missingItem]: li.missing,
-                      })}
-                    >
-                      <ConnectedInventoryItem
-                        item={li.item}
-                        innerRef={ref}
-                        onClick={li.missing ? () => onClickWarnItem(li) : onClick}
-                        onDoubleClick={() => onToggleEquipped(li)}
-                      />
-                    </div>
-                  )}
-                </ItemPopupTrigger>
-              </ClosableContainer>
-            ))}
-            {index === 0 ? equippedContent : addUnequipped}
-          </div>
-        ) : index === 0 ? (
-          <div
-            className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
-            key={index}
+            <div className={clsx(styles.items, styles.equippedGrid)}>
+              {equipped.map((li) => (
+                <DraggableRemovableLoadoutItem
+                  key={li.item.id}
+                  loadoutItem={li}
+                  onClickWarnItem={onClickWarnItem}
+                  onRemoveItem={onRemoveItem}
+                  onToggleEquipped={onToggleEquipped}
+                />
+              ))}
+            </div>
+          </LoadoutEditItemDropTarget>
+          {equippedContent}
+        </>
+      ) : (
+        <>
+          <LoadoutEditItemDropTarget
+            bucket={bucket}
+            classType={classType}
+            equippedItems={equipped}
+            unequippedItems={unequipped}
+            equip={true}
           >
-            <BucketPlaceholder
-              bucketHash={bucketHash}
-              onClick={() => handlePlaceholderClick(true)}
-            />
-            {equippedContent}
+            <div className={clsx(styles.items, styles.equippedGrid)}>
+              <BucketPlaceholder
+                bucketHash={bucketHash}
+                onClick={() => handlePlaceholderClick(true)}
+              />
+            </div>
+          </LoadoutEditItemDropTarget>
+          {equippedContent}
+        </>
+      )}
+      {unequipped.length > 0 ? (
+        <div className={styles.unequipped}>
+          <LoadoutEditItemDropTarget
+            bucket={bucket}
+            classType={classType}
+            equippedItems={equipped}
+            unequippedItems={unequipped}
+            equip={false}
+          >
+            <div className={clsx(styles.items, styles.unequippedGrid)}>
+              {/*  eslint-disable-next-line radar/no-identical-functions */}
+              {unequipped.map((li) => (
+                <DraggableRemovableLoadoutItem
+                  key={li.item.id}
+                  loadoutItem={li}
+                  onClickWarnItem={onClickWarnItem}
+                  onRemoveItem={onRemoveItem}
+                  onToggleEquipped={onToggleEquipped}
+                />
+              ))}
+            </div>
+          </LoadoutEditItemDropTarget>
+          {addUnequipped}
+        </div>
+      ) : (
+        addUnequipped && (
+          <div className={styles.unequipped}>
+            <LoadoutEditItemDropTarget
+              bucket={bucket}
+              classType={classType}
+              equippedItems={equipped}
+              unequippedItems={unequipped}
+              equip={false}
+            >
+              {addUnequipped}
+            </LoadoutEditItemDropTarget>
           </div>
-        ) : (
-          addUnequipped
         )
       )}
     </div>
