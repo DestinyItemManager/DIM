@@ -79,7 +79,7 @@ export interface GeneralModsCache {
   generalModCosts: number[];
   statOrder: ArmorStatHashes[];
   autoStatMods: boolean;
-  cache: { [statsString: string]: ModsPick[] };
+  cache: { [statsKey: string]: ModsPick[] };
   cacheHits: number;
   cacheMisses: number;
   cacheSuccesses: number;
@@ -141,17 +141,20 @@ export function getViableGeneralModPicks(
   }
   // Divide by 5 and round up to the nearest integer, such that
   // if we need [0]->0, [1-5]->1, [6-10]->2, [11-15]->3, ...
-  // This cache lookup is really hot code and can easily take up over
-  // 10% of the total processing time of the whole LO process.
-  let statsString = 'stats-';
+  // This cache lookup is really hot code, so we use an optimized
+  // key creation method, which is safe because we have 6 stats that
+  // should each be < 320 (since 320 / 5 = 64) and
+  // 64^6 = 2^(6*6) = 2^36  <<  2^53 - 1 == MAX_SAFE_INTEGER
+  let statsNumber = 0;
   neededStats = neededStats.map((x) => {
     const val = Math.ceil(x / 5);
-    statsString += val.toString(32);
+    statsNumber = statsNumber * 64 + val;
     return val;
   });
-  if (cache[statsString]) {
+  const statsKey = statsNumber.toFixed();
+  if (cache[statsKey]) {
     cache.cacheHits++;
-    return cache[statsString];
+    return cache[statsKey];
   }
   cache.cacheMisses++;
 
@@ -184,7 +187,7 @@ export function getViableGeneralModPicks(
   // We now have the smallest number of mods that can help us hit our target stats.
   // If this is already too many mods, we have to stop.
   if (unusedModSlots < 0) {
-    cache[statsString] = [];
+    cache[statsKey] = [];
     return [];
   }
   cache.cacheSuccesses++;
@@ -198,7 +201,7 @@ export function getViableGeneralModPicks(
       ? [startingMods, ...splitMods(startingMods, unusedModSlots, startingMods.largeMods.length)]
       : [startingMods];
   const picks = finalize(cache, options);
-  cache[statsString] = picks;
+  cache[statsKey] = picks;
   return picks;
 }
 

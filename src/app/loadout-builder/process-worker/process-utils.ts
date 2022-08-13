@@ -142,8 +142,7 @@ export function pickAndAssignSlotIndependentMods(
   // Sort the items like the mods are to try and get a greedy result
   // Theory here is that aligning energy types between items and mods and assigning the mods with the
   // highest cost to the items with the highest amount of energy available will find results faster
-  // const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
-  const sortedItems = items;
+  const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
 
   const [arcItems, solarItems, voidItems, stasisItems, anyItems] = getEnergyCounts(sortedItems);
   const [arcCombatMods, solarCombatMods, voidCombatMods, stasisCombatMods] = combatModEnergyCounts;
@@ -188,6 +187,7 @@ export function pickAndAssignSlotIndependentMods(
     return 'cannot_hit_stats';
   }
   let assignedModsAtLeastOnce = false;
+  const remainingEnergyCapacities = [0, 0, 0, 0, 0];
 
   // Now we begin looping over all the mod permutations, we have chosen activity mods because they
   // are the most selective. This is a similar principle to DB query theory where you want to run
@@ -259,26 +259,29 @@ export function pickAndAssignSlotIndependentMods(
       assignedModsAtLeastOnce = true;
 
       // This is a valid activity and combat mod assignment. See how much energy is left over per piece
-      const remainingEnergies = sortedItems.map(
+      sortedItems.forEach(
         (i, idx) =>
-          (i.energy?.capacity || 0) -
-          (i.energy?.val || 0) -
-          (activityPermutation[idx]?.energy?.val || 0) -
-          (combatPermutation[idx]?.energy?.val || 0)
+          (remainingEnergyCapacities[idx] =
+            (i.energy?.capacity || 0) -
+            (i.energy?.val || 0) -
+            (activityPermutation[idx]?.energy?.val || 0) -
+            (combatPermutation[idx]?.energy?.val || 0))
       );
 
       // Sort the costs array descending, same as our auto stat mod picks
-      remainingEnergies.sort((a, b) => b - a);
+      remainingEnergyCapacities.sort((a, b) => b - a);
 
       let validPick: ModsPick | undefined;
 
       if (validGeneralModPicks) {
         validPick = validGeneralModPicks.find((pick) =>
-          pick.costs.every((cost, idx) => cost <= remainingEnergies[idx])
+          pick.costs.every((cost, idx) => cost <= remainingEnergyCapacities[idx])
         );
       } else {
         // We don't need any stats, so just verify we can assign the general mods
-        validPick = cache.generalModCosts.every((cost, idx) => cost <= remainingEnergies[idx])
+        validPick = cache.generalModCosts.every(
+          (cost, idx) => cost <= remainingEnergyCapacities[idx]
+        )
           ? { costs: cache.generalModCosts, modHashes: [] }
           : undefined;
       }
