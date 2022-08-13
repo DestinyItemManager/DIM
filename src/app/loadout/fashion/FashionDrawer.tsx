@@ -494,9 +494,9 @@ function FashSocketTooltip({
   let text = t('FashionDrawer.NoPreference');
 
   if (!socket && bucketHash === BucketHashes.Shaders) {
-    text = 'This item cannot fit a shader';
+    text = t('FashionDrawer.CannotFitShader');
   } else if (!socket) {
-    text = 'This item cannot fit an ornament';
+    text = t('FashionDrawer.CannotFitOrnament');
   }
   return <div>{text}</div>;
 }
