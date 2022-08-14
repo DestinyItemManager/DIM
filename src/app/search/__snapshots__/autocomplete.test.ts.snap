@@ -5,14 +5,14 @@ Array [
   Object {
     "highlightRange": Object {
       "range": Array [
-        6,
-        33,
+        0,
+        27,
       ],
       "section": "body",
     },
     "query": Object {
-      "body": "acd/0 name:\\"acd/0 feedback fence\\"",
-      "fullText": "acd/0 name:\\"acd/0 feedback fence\\"",
+      "body": "name:\\"acd/0 feedback fence\\"",
+      "fullText": "name:\\"acd/0 feedback fence\\"",
       "helpText": undefined,
     },
     "type": 3,
@@ -25,14 +25,14 @@ Array [
   Object {
     "highlightRange": Object {
       "range": Array [
-        7,
-        28,
+        0,
+        21,
       ],
       "section": "body",
     },
     "query": Object {
-      "body": "ager's name:\\"ager's scepter\\"",
-      "fullText": "ager's name:\\"ager's scepter\\"",
+      "body": "name:\\"ager's scepter\\"",
+      "fullText": "name:\\"ager's scepter\\"",
       "helpText": undefined,
     },
     "type": 3,
@@ -45,14 +45,14 @@ Array [
   Object {
     "highlightRange": Object {
       "range": Array [
-        7,
-        25,
+        0,
+        18,
       ],
       "section": "body",
     },
     "query": Object {
-      "body": "arctic name:\\"arctic haze\\"",
-      "fullText": "arctic name:\\"arctic haze\\"",
+      "body": "name:\\"arctic haze\\"",
+      "fullText": "name:\\"arctic haze\\"",
       "helpText": undefined,
     },
     "type": 3,
@@ -65,14 +65,14 @@ Array [
   Object {
     "highlightRange": Object {
       "range": Array [
-        10,
-        35,
+        0,
+        25,
       ],
       "section": "body",
     },
     "query": Object {
-      "body": "first in, name:\\"first in, last out\\"",
-      "fullText": "first in, name:\\"first in, last out\\"",
+      "body": "name:\\"first in, last out\\"",
+      "fullText": "name:\\"first in, last out\\"",
       "helpText": undefined,
     },
     "type": 3,
@@ -85,14 +85,14 @@ Array [
   Object {
     "highlightRange": Object {
       "range": Array [
-        17,
-        35,
+        10,
+        28,
       ],
       "section": "body",
     },
     "query": Object {
-      "body": "is:weapon arctic name:\\"arctic haze\\" -is:exotic",
-      "fullText": "is:weapon arctic name:\\"arctic haze\\" -is:exotic",
+      "body": "is:weapon name:\\"arctic haze\\" -is:exotic",
+      "fullText": "is:weapon name:\\"arctic haze\\" -is:exotic",
       "helpText": undefined,
     },
     "type": 3,
@@ -105,14 +105,14 @@ Array [
   Object {
     "highlightRange": Object {
       "range": Array [
-        18,
-        36,
+        11,
+        29,
       ],
       "section": "body",
     },
     "query": Object {
-      "body": "name:\\"foo\\" arctic name:\\"arctic haze\\"",
-      "fullText": "name:\\"foo\\" arctic name:\\"arctic haze\\"",
+      "body": "name:\\"foo\\" name:\\"arctic haze\\"",
+      "fullText": "name:\\"foo\\" name:\\"arctic haze\\"",
       "helpText": undefined,
     },
     "type": 3,
@@ -125,14 +125,14 @@ Array [
   Object {
     "highlightRange": Object {
       "range": Array [
-        9,
-        29,
+        0,
+        20,
       ],
       "section": "body",
     },
     "query": Object {
-      "body": "the last name:\\"the last word\\"",
-      "fullText": "the last name:\\"the last word\\"",
+      "body": "name:\\"the last word\\"",
+      "fullText": "name:\\"the last word\\"",
       "helpText": undefined,
     },
     "type": 3,
@@ -145,14 +145,14 @@ Array [
   Object {
     "highlightRange": Object {
       "range": Array [
-        4,
-        25,
+        0,
+        21,
       ],
       "section": "body",
     },
     "query": Object {
-      "body": "two-name:\\"two-tailed fox\\"",
-      "fullText": "two-name:\\"two-tailed fox\\"",
+      "body": "name:\\"two-tailed fox\\"",
+      "fullText": "name:\\"two-tailed fox\\"",
       "helpText": undefined,
     },
     "type": 3,

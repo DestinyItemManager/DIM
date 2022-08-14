@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
-import { makeCommentString, parseQuery, traverseAST } from './query-parser';
+import { FilterOp, makeCommentString, parseQuery, traverseAST } from './query-parser';
 import { SearchConfig } from './search-config';
 import freeformFilters from './search-filters/freeform';
 
@@ -220,15 +220,8 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
 
 const caretEndRegex = /([\s)]|$)/;
 
-// most times, insist on at least 3 typed characters, but for #, start suggesting immediately
-const lastWordRegex = /(\b[\w:"'<=>]{3,}|#\w*)$/;
 // matches a string that seems to end with a closing, not opening, quote
 const closingQuoteRegex = /\w["']$/;
-
-// match all completed filters
-// const completeFiltersRegex = new RegExp(
-//   `^(-?(?:${filterNames.join('|')}):(?:\\S+|"(?:.*?)")\\s+)*(.+)$`
-// );
 
 /**
  * Find the position of the last "complete" filter segment of the query before the caretIndex
@@ -242,8 +235,27 @@ export function findLastFilter(
   index: number;
 } | null {
   const queryUpToCaret = query.slice(0, caretIndex);
-  traverseAST(parseQuery(queryUpToCaret), console.log, true);
-  const execResult = lastWordRegex.exec(queryUpToCaret);
+  const ast = parseQuery(queryUpToCaret);
+  const uselessKeywordArgs: string[] = [];
+  let keepTraversing = true;
+
+  traverseAST(
+    ast,
+    (filter: FilterOp) => {
+      if (keepTraversing && filter.type === 'keyword') {
+        uselessKeywordArgs.push(filter.args);
+      } else {
+        keepTraversing = false;
+      }
+    },
+    true // traverse in reverse
+  );
+
+  const lastWordsRegex = new RegExp(
+    // most times, insist on at least 3 typed characters, but for #, start suggesting immediately
+    `(${uselessKeywordArgs.reverse().join('\\s+')}|\\b[\\w:"'<=>]{3,}|#\\w*)$`
+  );
+  const execResult = lastWordsRegex.exec(queryUpToCaret);
   if (execResult) {
     const [__, term] = execResult;
     const { index } = execResult;
