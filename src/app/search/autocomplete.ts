@@ -220,6 +220,8 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
 
 const caretEndRegex = /([\s)]|$)/;
 
+// most times, insist on at least 3 typed characters, but for #, start suggesting immediately
+const lastWordRegex = /(\b[\w:"'<=>]{3,}|#\w*)$/;
 // matches a string that seems to end with a closing, not opening, quote
 const closingQuoteRegex = /\w["']$/;
 
@@ -236,14 +238,14 @@ export function findLastFilter(
 } | null {
   const queryUpToCaret = query.slice(0, caretIndex);
   const ast = parseQuery(queryUpToCaret);
-  const uselessKeywordArgs: string[] = [];
+  const trailingKeywordArgs: string[] = [];
   let keepTraversing = true;
 
   traverseAST(
     ast,
     (filter: FilterOp) => {
       if (keepTraversing && filter.type === 'keyword') {
-        uselessKeywordArgs.push(filter.args);
+        trailingKeywordArgs.push(filter.args);
       } else {
         keepTraversing = false;
       }
@@ -251,12 +253,16 @@ export function findLastFilter(
     true // traverse in reverse
   );
 
-  const lastWordsRegex = new RegExp(
-    // most times, insist on at least 3 typed characters, but for #, start suggesting immediately
-    `(${uselessKeywordArgs.reverse().join('\\s+')}|\\b[\\w:"'<=>]{3,}|#\\w*)$`
-  );
-  const execResult = lastWordsRegex.exec(queryUpToCaret);
-  if (execResult) {
+  // @TODO: Assumes these "keywords" are separated by just one space and no trailing spaces.
+  // To fix, turn this into a regex. But first it would need to be escaped - it can have parens, etc
+  const trailingKeywordStrings = trailingKeywordArgs.reverse().join(' ');
+  const execResult = lastWordRegex.exec(queryUpToCaret);
+
+  if (trailingKeywordStrings && queryUpToCaret.endsWith(trailingKeywordStrings)) {
+    const index = queryUpToCaret.length - trailingKeywordStrings.length;
+    const term = queryUpToCaret.substring(index);
+    return { term, index };
+  } else if (execResult) {
     const [__, term] = execResult;
     const { index } = execResult;
     return { term, index };

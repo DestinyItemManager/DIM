@@ -15,6 +15,7 @@ describe('autocompleteTermSuggestions', () => {
     ['(is:blue jun)', 11],
     ['is:bow is:void', 11],
     ['season:>outl', 12],
+    ['not(', 4],
   ];
 
   test.each(cases)(
@@ -37,8 +38,9 @@ describe('autocompleteTermSuggestions', () => {
     ["ager's sce", 10, "ager's scepter"],
     ['the last word', 13, 'the last word'],
     ['acd/0 fee', 9, 'acd/0 feedback fence'],
-    ['first in, last', 14, 'first in, last out'],
+    ['stat:rpm:200 first in, last', 27, 'first in, last out'],
     ['two-tail', 8, 'two-tailed fox'],
+    ['arctic  haz', 11, 'arctic haze'], // this currently isn't handled due to the double space
   ];
 
   test.each(multiWordCases)(
