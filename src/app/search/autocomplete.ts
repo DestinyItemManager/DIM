@@ -222,12 +222,13 @@ const caretEndRegex = /([\s)]|$)/;
 
 // most times, insist on at least 3 typed characters, but for #, start suggesting immediately
 const lastWordRegex = /(\b[\w:"'<=>]{3,}|#\w*)$/;
-// match all completed filters
-const completeFiltersRegex = new RegExp(
-  `^(-?(?:${filterNames.join('|')}):(?:\\S+|"(?:.*?)")\\s+)*(.+)$`
-);
 // matches a string that seems to end with a closing, not opening, quote
 const closingQuoteRegex = /\w["']$/;
+
+// match all completed filters
+// const completeFiltersRegex = new RegExp(
+//   `^(-?(?:${filterNames.join('|')}):(?:\\S+|"(?:.*?)")\\s+)*(.+)$`
+// );
 
 /**
  * Find the position of the last "complete" filter segment of the query before the caretIndex
