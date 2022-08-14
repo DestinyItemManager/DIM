@@ -20,6 +20,7 @@ interface CssExports {
   'legendaryMasterwork': string;
   'masterwork': string;
   'rare': string;
+  'solarColorFilter': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

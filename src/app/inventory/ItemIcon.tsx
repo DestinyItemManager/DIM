@@ -16,6 +16,26 @@ import pursuitComplete from 'images/highlightedObjective.svg';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
 
+// These solar abilities have stasis-colored icons in their Bungie-provided definitions.
+// To make them match the orange solar color (best we can) we apply a css filter.
+const solarSubclassDefsToColorFilter = [
+  2979486802, // Empowering rift
+  2979486803, // Healing rift
+  3686638443, // Strafe glide
+  3686638442, // Burst glide
+  3686638441, // Balanced glide
+  2495523340, // Towering baricade
+  2495523341, // Rally barricade
+  2225231092, // High lift
+  2225231093, // Strafe lift
+  2225231094, // Catapult lift
+  3636300854, // Marksman's dodge
+  3636300855, // Gambler's dodge
+  1128768654, // High jump
+  1128768655, // Strafe jump
+  1128768652, // Triple jump
+];
+
 const itemTierStyles = {
   Legendary: styles.legendary,
   Exotic: styles.exotic,
@@ -126,6 +146,7 @@ export function DefItemIcon({
     className,
     {
       [styles.borderless]: borderless,
+      [styles.solarColorFilter]: solarSubclassDefsToColorFilter.includes(itemDef.hash),
     },
     !borderless &&
       !itemDef.plug &&

@@ -944,7 +944,7 @@
       "Aspect": "Insertar Aspecto",
       "Fragment": "Insertar Fragmento",
       "Mod": "Insertar Modificador",
-      "Ornament": "Aplicar Ornamento",
+      "Ornament": "Aplicar Diseño",
       "Projection": "Aplicar Proyección de Espectro",
       "Shader": "Aplicar Shader",
       "Super": "Equipar Súper",
@@ -998,6 +998,7 @@
     "AutoBackup": "Hemos hecho una copia de seguridad de tus datos en un archivo en tu carpeta de descargas llamado dim-data.json, sólo por si acaso.",
     "BackUpFirst": "DEBES hacer una copia de tu información primero, antes de borrarlo todo. Sólo por si acaso.",
     "BrowserMayClearData": "El navegador puede borrar esta información si te quedas sin espacio o no visitas DIM frecuentemente.",
+    "DataIsLocal": "La información de las etiquetas y notas sólo es local",
     "DeleteAllData": "Borrar TODA la Información de los Servidores de Sincronización DIM",
     "DeleteAllDataConfirm": "¿Estás seguro de que quieres borrar TODA tu información, para todas las cuentas, de Sincronización DIM? No puedes deshacer esto.",
     "DeleteAllDataLabel": "Limpiar Información de Sincronización DIM",
@@ -1005,7 +1006,9 @@
       "IndexedDBStorage": "El almacenamiento local sólo guardará información en este navegador. Limpiando sus datos de navegación borrará esta información."
     },
     "DimApiFinePrint": "DIM guardará todas tus etiquetas, equipaciones y configuraciones a los servidores de DIM y se sincronizarán entre diferentes versiones de DIM.",
+    "DimSyncDown": "Sincronización DIM no está conectada debido a un problema comunicándose con el servidor.",
     "DimSyncEnabled": "Sincronización DIM habilitada",
+    "DimSyncNotEnabled": "Sincronización DIM no está activada, así que tus configuraciones, etiquetas, equipaciones y búsquedas sólo son almacenadas localmente y se perderán si limpias el almacenamiento del navegador. Activa Sincronización DIM en Configuración para hacer una copia de tu información automáticamente, o hacer una copia de tu información manualmente.",
     "EnableDimApi": "Activar Sincronización DIM (recomendado)",
     "Export": "Descargar Información de la Copia de Seguridad",
     "Import": "Importar Información de la Copia de Seguridad",
@@ -1030,6 +1033,8 @@
     "ProfileErrorTitle": "Error de Descarga de Sincronización DIM",
     "UpdateErrorBody": "Tuvimos un problema guardando tu información a Sincronización DIM. Seguiremos intentándolo mientras DIM esté abierto.",
     "UpdateErrorTitle": "Error de Guardado de Sincronización DIM",
+    "UpdateQueueLength": "{{count}} cambio nuevo será guardado cuando podamos reconectar.",
+    "UpdateQueueLength_plural": "{{count}} cambios nuevos serán guardados cuando podamos reconectar.",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponibles para ello en este dispositivo. Esto incluye las bases de datos de objetos de Destiny descargados de Bungie.net."
   },
   "StreamDeck": {
@@ -1049,6 +1054,23 @@
       "Item": "Elige un objeto del inventario",
       "Loadout": "Elegir una equipación"
     }
+  },
+  "StripSockets": {
+    "Action": "Despejar Ranuras",
+    "ArmorMods": "{{count}}x Modificadores de Armadura",
+    "ArtifactMods": "{{count}}x Modificadores de Artefacto",
+    "Button": "Despejar {{numSockets}} Ranuras",
+    "Cancel": "Cancelar",
+    "Choose": "Elige Ranuras para despejar",
+    "Done": "Ranuras Despejadas",
+    "NoSockets": "Sin Ranuras para despejar",
+    "Ok": "Ok",
+    "Ornaments": "{{count}}x Diseños",
+    "Others": "{{count}}x Proyecciones de Espectro",
+    "Running": "Despejando Ranuras",
+    "Shaders": "{{count}}x Shaders",
+    "Subclass": "{{count}}x Opciones de Subclase",
+    "WeaponMods": "{{count}}x Modificadores de Arma"
   },
   "Tags": {
     "Archive": "Archivar",

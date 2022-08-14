@@ -998,6 +998,7 @@
     "AutoBackup": "为了以防万一，我们已经把你的数据备份到了下载文件夹里的 dim-data.json 文件。",
     "BackUpFirst": "为了以防万一，在全部删除数据前，你必须先将其备份。",
     "BrowserMayClearData": "如果硬盘空间不足或长时间未访问DIM，浏览器有可能会删除这些数据信息。",
+    "DataIsLocal": "标签和备注数据仅在本地保存",
     "DeleteAllData": "从 DIM 同步服务器删除所有数据",
     "DeleteAllDataConfirm": "你确定要从 DIM 同步中删除你的所有账号的所有数据吗？这无法撤销。",
     "DeleteAllDataLabel": "清空 DIM 同步数据",
@@ -1005,7 +1006,9 @@
       "IndexedDBStorage": "本机存放区仅在此流览器中存储资讯。如果删除流览器资料，也会删除这些资讯。"
     },
     "DimApiFinePrint": "DIM 会把你的标签、配装和设置保存到云端，并同步给 DIM 的不同版本。",
+    "DimSyncDown": "与服务器通信时出现问题，DIM 同步尚未连接。",
     "DimSyncEnabled": "DIM 同步已启用",
+    "DimSyncNotEnabled": "DIM 同步未启用，所以你的设置、标签、配装和搜索将仅在本地保存，会在清理浏览器存储时丢失。在设置中启用 DIM 同步便可自动或随时手动备份你的数据。",
     "EnableDimApi": "启用 DIM 同步（推荐）",
     "Export": "下载数据备份",
     "Import": "导入数据备份",
@@ -1030,6 +1033,8 @@
     "ProfileErrorTitle": "DIM 同步下载错误",
     "UpdateErrorBody": "向 DIM 同步保存你的数据时出了点问题。我们会在 DIM 开启时自动重试。",
     "UpdateErrorTitle": "DIM同步保存错误",
+    "UpdateQueueLength": "我们将在能重新连接时保存 {{count}} 个新更改。",
+    "UpdateQueueLength_plural": "我们将在能重新连接时保存 {{count}} 个新更改。",
     "Usage": "DIM 使用了此设备{{quota, humanBytes}}可用空间中的{{usage, humanBytes}}.这包括从 bungie. net 下载的命运2物品资料库。"
   },
   "StreamDeck": {
@@ -1049,6 +1054,23 @@
       "Item": "从库存中选择一个物品",
       "Loadout": "选择一个配装"
     }
+  },
+  "StripSockets": {
+    "Action": "清空插槽",
+    "ArmorMods": "{{count}}x 护甲模组",
+    "ArtifactMods": "{{count}}x 神器模组",
+    "Button": "清空 {{numSockets}} 个插槽",
+    "Cancel": "取消",
+    "Choose": "选择要清空的插槽",
+    "Done": "已清空的插槽",
+    "NoSockets": "无插槽可清空",
+    "Ok": "确定",
+    "Ornaments": "{{count}}x 皮肤",
+    "Others": "{{count}}x 机灵投影",
+    "Running": "清空插槽",
+    "Shaders": "{{count}}x 着色器",
+    "Subclass": "{{count}}x 子职业选项",
+    "WeaponMods": "{{count}}x 武器模组"
   },
   "Tags": {
     "Archive": "归档",
