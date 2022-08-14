@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
-import { makeCommentString, parseQuery } from './query-parser';
+import { makeCommentString, parseQuery, traverseAST } from './query-parser';
 import { SearchConfig } from './search-config';
 import freeformFilters from './search-filters/freeform';
 
@@ -222,6 +222,10 @@ const caretEndRegex = /([\s)]|$)/;
 
 // most times, insist on at least 3 typed characters, but for #, start suggesting immediately
 const lastWordRegex = /(\b[\w:"'<=>]{3,}|#\w*)$/;
+// match all completed filters
+const completeFiltersRegex = new RegExp(
+  `^(-?(?:${filterNames.join('|')}):(?:\\S+|"(?:.*?)")\\s+)*(.+)$`
+);
 // matches a string that seems to end with a closing, not opening, quote
 const closingQuoteRegex = /\w["']$/;
 
@@ -236,7 +240,9 @@ export function findLastFilter(
   term: string;
   index: number;
 } | null {
-  const execResult = lastWordRegex.exec(query.slice(0, caretIndex));
+  const queryUpToCaret = query.slice(0, caretIndex);
+  traverseAST(parseQuery(queryUpToCaret), console.log, true);
+  const execResult = lastWordRegex.exec(queryUpToCaret);
   if (execResult) {
     const [__, term] = execResult;
     const { index } = execResult;
