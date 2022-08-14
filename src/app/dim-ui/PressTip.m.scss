@@ -4,6 +4,7 @@
 $ribbon-width: 5px;
 $arrow-size: 16px; // ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
 $minimal-arrow-size: 10px;
+$background-color: #151523;
 $border-color: #5d5970;
 $horizontal-padding: 11px;
 
@@ -17,7 +18,7 @@ $horizontal-padding: 11px;
   --ribbon-color: #8e8e9e;
 
   position: absolute;
-  background-color: #151523;
+  background-color: $background-color;
   color: #dadaea;
   width: fit-content;
   max-width: 306px;
@@ -158,6 +159,6 @@ $horizontal-padding: 11px;
   &:not(:empty) {
     color: color.mix(white, $color, 80%);
     background-color: rgba($color, 0.175);
-    border-top-color: #151523;
+    border-top-color: $background-color;
   }
 }
