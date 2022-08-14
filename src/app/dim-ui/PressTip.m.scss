@@ -1,19 +1,11 @@
 @use '../variables.scss' as *;
 @use 'sass:color';
 
+$ribbon-width: 5px;
 $arrow-size: 16px; // ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
+$minimal-arrow-size: 10px;
 $border-color: #5d5970;
 $horizontal-padding: 11px;
-$half-arrow-size: $arrow-size * 0.5;
-
-.arrow {
-  width: $arrow-size;
-  height: $arrow-size;
-  border-width: 0;
-  border-style: solid;
-  position: absolute;
-  border-color: $border-color;
-}
 
 .control {
   user-select: none;
@@ -30,7 +22,7 @@ $half-arrow-size: $arrow-size * 0.5;
   width: fit-content;
   max-width: 306px;
   border: 1px solid $border-color;
-  border-top: 5px solid var(--ribbon-color);
+  border-top: $ribbon-width solid var(--ribbon-color);
   border-radius: 8px;
   box-shadow: 0 0 24px 6px #080811;
   text-align: left;
@@ -74,48 +66,67 @@ $half-arrow-size: $arrow-size * 0.5;
     padding: 8px $horizontal-padding;
   }
 
+  .arrow {
+    --length: #{$arrow-size * 0.5};
+    width: calc(var(--length) * 2);
+    height: calc(var(--length) * 2);
+    border-width: 0;
+    border-style: solid;
+    position: absolute;
+    border-color: $border-color;
+  }
+
   &[data-popper-placement='top'] .arrow {
     width: 0;
     height: 0;
-    border-width: $half-arrow-size $half-arrow-size 0 $half-arrow-size;
+    border-width: var(--length) var(--length) 0 var(--length);
     border-left-color: transparent;
     border-right-color: transparent;
     border-bottom-color: transparent;
-    bottom: -$half-arrow-size;
+    bottom: calc(var(--length) * -1);
   }
   &[data-popper-placement='bottom'] .arrow {
     width: 0;
     height: 0;
-    border-width: 0 $half-arrow-size $half-arrow-size $half-arrow-size;
-    top: -$arrow-size;
+    border-width: 0 var(--length) var(--length) var(--length);
     border-color: transparent transparent var(--ribbon-color) transparent;
+    top: calc(#{-$ribbon-width} - var(--length));
   }
   &[data-popper-placement='right'] .arrow {
     width: 0;
     height: 0;
-    border-width: $half-arrow-size $half-arrow-size $half-arrow-size 0;
+    border-width: var(--length) var(--length) var(--length) 0;
     border-left-color: transparent;
     border-top-color: transparent;
     border-bottom-color: transparent;
-    left: -$half-arrow-size;
+    left: calc(var(--length) * -1);
   }
   &[data-popper-placement='left'] .arrow {
     width: 0;
     height: 0;
-    border-width: $half-arrow-size 0 $half-arrow-size $half-arrow-size;
+    border-width: var(--length) 0 var(--length) var(--length);
     border-top-color: transparent;
     border-right-color: transparent;
     border-bottom-color: transparent;
-    right: -$half-arrow-size;
+    right: calc(var(--length) * -1);
   }
 
   &.minimalTooltip {
     border-radius: 3px;
     --ribbon-color: #{$border-color};
-    border-top: 1px solid $border-color;
+    background-color: $border-color;
+    border: none;
+    box-shadow: 0 0 10px 3px #080811;
 
     .content {
       padding: 3px 6px;
+    }
+
+    .arrow {
+      --length: #{$minimal-arrow-size * 0.5};
+    }
+    &[data-popper-placement='bottom'] .arrow {
+      top: calc(var(--length) * -1);
     }
   }
 
@@ -147,7 +158,6 @@ $half-arrow-size: $arrow-size * 0.5;
   &:not(:empty) {
     color: color.mix(white, $color, 80%);
     background-color: rgba($color, 0.175);
-    border-top-color: rgba($color, 0.5);
     border-top-color: #151523;
   }
 }
