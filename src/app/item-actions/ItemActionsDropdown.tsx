@@ -1,3 +1,4 @@
+import { destinyVersionSelector } from 'app/accounts/selectors';
 import { compareFilteredItems } from 'app/compare/actions';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { t } from 'app/i18next-t';
@@ -9,6 +10,8 @@ import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { stripSockets } from 'app/strip-sockets/strip-sockets-actions';
+import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { isTagValue, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
@@ -17,6 +20,7 @@ import {
   AppIcon,
   clearIcon,
   compareIcon,
+  faWindowClose,
   lockIcon,
   stickyNoteIcon,
   unlockedIcon,
@@ -43,12 +47,19 @@ export default React.memo(function ItemActionsDropdown({
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
   const stores = useSelector(storesSortedByImportanceSelector);
+  const destinyVersion = useSelector(destinyVersionSelector);
 
   let isComparable = false;
   if (filteredItems.length) {
     const type = filteredItems[0].typeName;
     isComparable = filteredItems.every((i) => i.typeName === type);
   }
+
+  const canStrip = filteredItems.some((i) =>
+    i.sockets?.allSockets.some(
+      (s) => s.emptyPlugItemHash && s.plugged?.plugDef.hash !== s.emptyPlugItemHash
+    )
+  );
 
   const bulkTag = loadingTracker.trackPromise(async (selectedTag: TagValue) => {
     // Bulk tagging
@@ -93,7 +104,7 @@ export default React.memo(function ItemActionsDropdown({
     }));
   bulkItemTags.push({ type: 'clear', label: t('Tags.ClearTag'), icon: clearIcon });
 
-  const dropdownOptions: Option[] = [
+  const dropdownOptions: Option[] = _.compact([
     ...stores.map((store) => ({
       key: `move-${store.id}`,
       onSelected: () => applySearchLoadout(store),
@@ -115,6 +126,16 @@ export default React.memo(function ItemActionsDropdown({
       content: (
         <>
           <AppIcon icon={compareIcon} /> {t('Header.CompareMatching')}
+        </>
+      ),
+    },
+    destinyVersion === 2 && {
+      key: 'strip-sockets',
+      onSelected: () => stripSockets(searchQuery),
+      disabled: !canStrip || !searchActive,
+      content: (
+        <>
+          <AppIcon icon={faWindowClose} /> {t('StripSockets.Action')}
         </>
       ),
     },
@@ -159,7 +180,7 @@ export default React.memo(function ItemActionsDropdown({
         </>
       ),
     })),
-  ];
+  ]);
 
   return (
     <Dropdown

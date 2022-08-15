@@ -15,6 +15,8 @@ $commonBg: #366f42;
   box-sizing: border-box;
   border: $item-border-width solid #ddd;
   background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
   &:focus {
     outline: none;
   }
@@ -153,4 +155,8 @@ $commonBg: #366f42;
 .bucketIcon {
   filter: invert(1);
   border-color: #222;
+}
+
+.solarColorFilter {
+  filter: hue-rotate(148deg) grayscale(0.1);
 }

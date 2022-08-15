@@ -4,16 +4,37 @@ import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { d2MissingIcon } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
+import { isModCostVisible } from 'app/utils/socket-utils';
 import {
   DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import pursuitComplete from 'images/highlightedObjective.svg';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
+
+// These solar abilities have stasis-colored icons in their Bungie-provided definitions.
+// To make them match the orange solar color (best we can) we apply a css filter.
+const solarSubclassDefsToColorFilter = [
+  2979486802, // Empowering rift
+  2979486803, // Healing rift
+  3686638443, // Strafe glide
+  3686638442, // Burst glide
+  3686638441, // Balanced glide
+  2495523340, // Towering baricade
+  2495523341, // Rally barricade
+  2225231092, // High lift
+  2225231093, // Strafe lift
+  2225231094, // Catapult lift
+  3636300854, // Marksman's dodge
+  3636300855, // Gambler's dodge
+  1128768654, // High jump
+  1128768655, // Strafe jump
+  1128768652, // Triple jump
+];
 
 const itemTierStyles = {
   Legendary: styles.legendary,
@@ -125,6 +146,7 @@ export function DefItemIcon({
     className,
     {
       [styles.borderless]: borderless,
+      [styles.solarColorFilter]: solarSubclassDefsToColorFilter.includes(itemDef.hash),
     },
     !borderless &&
       !itemDef.plug &&
@@ -169,14 +191,8 @@ function getModCostInfo(mod: DestinyInventoryItemDefinition | number, defs: D2Ma
     mod = defs.InventoryItem.get(mod);
   }
 
-  // hide cost for Subclass 3.0 fragments as these are currently always set to 1
-  if (
-    mod?.plug &&
-    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedStasisTrinkets &&
-    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedVoidFragments &&
-    mod.plug.plugCategoryHash !== PlugCategoryHashes.SharedSolarFragments
-  ) {
-    modCostInfo.energyCost = mod.plug.energyCost?.energyCost;
+  if (mod?.plug && isModCostVisible(defs, mod.plug)) {
+    modCostInfo.energyCost = mod.plug.energyCost.energyCost;
 
     if (mod.plug.energyCost?.energyTypeHash) {
       modCostInfo.energyCostElement = defs.EnergyType.get(mod.plug.energyCost.energyTypeHash);

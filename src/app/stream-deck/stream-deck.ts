@@ -3,7 +3,6 @@ import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { ThunkResult } from 'app/store/types';
 import { LazyStreamDeck, StreamDeckState } from 'app/stream-deck/interfaces';
-import { DeferredPromise } from 'app/stream-deck/util/deferred';
 import { removeClientIdentifier, removeStreamDeckToken } from 'app/stream-deck/util/local-storage';
 
 export const lazyStreamDeck: LazyStreamDeck = {};
@@ -41,5 +40,4 @@ export const lazyLoadStreamDeck = async () => {
 // initial stream deck store state
 export const streamDeckInitialState: StreamDeckState = {
   connected: false,
-  selectionPromise: new DeferredPromise(),
 };

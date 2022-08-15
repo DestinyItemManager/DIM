@@ -6,6 +6,7 @@ interface CssExports {
   'flavor': string;
   'header': string;
   'headerContent': string;
+  'season': string;
   'section': string;
   'source': string;
   'subtitle': string;

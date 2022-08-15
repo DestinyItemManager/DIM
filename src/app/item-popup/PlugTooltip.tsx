@@ -1,22 +1,33 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import ElementIcon from 'app/dim-ui/ElementIcon';
+import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { statAllowList } from 'app/inventory/store/stats';
+import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
+import { isEnhancedPerk, isModCostVisible } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
+  DamageType,
+  DestinyEnergyType,
   DestinyInventoryItemDefinition,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
+  TierType,
 } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
+import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import _ from 'lodash';
+import { useCallback } from 'react';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import './ItemSockets.scss';
@@ -27,13 +38,11 @@ export function DimPlugTooltip({
   item,
   plug,
   wishlistRoll,
-  hidePlugSubtype,
   craftingData,
 }: {
   item: DimItem;
   plug: DimPlug;
   wishlistRoll?: InventoryWishListRoll;
-  hidePlugSubtype?: boolean;
   craftingData?: DestinyPlugItemCraftingRequirements;
 }) {
   // TODO: show insertion costs
@@ -86,7 +95,6 @@ export function DimPlugTooltip({
       enableFailReasons={plug.enableFailReasons}
       cannotCurrentlyRoll={plug.cannotCurrentlyRoll}
       wishListTip={wishListTip}
-      hidePlugSubtype={hidePlugSubtype}
       hideRequirements={hideRequirements}
       craftingData={craftingData}
     />
@@ -109,7 +117,6 @@ export function PlugTooltip({
   enableFailReasons,
   cannotCurrentlyRoll,
   wishListTip,
-  hidePlugSubtype,
   hideRequirements,
   craftingData,
 }: {
@@ -119,7 +126,6 @@ export function PlugTooltip({
   enableFailReasons?: string;
   cannotCurrentlyRoll?: boolean;
   wishListTip?: string;
-  hidePlugSubtype?: boolean;
   hideRequirements?: boolean;
   craftingData?: DestinyPlugItemCraftingRequirements;
 }) {
@@ -151,11 +157,13 @@ export function PlugTooltip({
         )}
       </div>
     ));
-  const clarityDescription = plugDescriptions.communityInsight && (
-    <ClarityDescriptions
-      perk={plugDescriptions.communityInsight}
-      className={styles.clarityDescription}
-    />
+  const clarityDescriptionSection = plugDescriptions.communityInsight && (
+    <Tooltip.Section className={styles.communityInsightSection}>
+      <ClarityDescriptions
+        perk={plugDescriptions.communityInsight}
+        className={styles.clarityDescription}
+      />
+    </Tooltip.Section>
   );
   const renderedStats = statsArray.length > 0 && (
     <div className="plug-stats">
@@ -165,35 +173,86 @@ export function PlugTooltip({
     </div>
   );
 
+  const isPluggable = isPluggableItem(def);
+  const energyCost =
+    isPluggable && defs && isModCostVisible(defs, def.plug) ? def.plug.energyCost : null;
+  const subclassDamageType = isPluggable && defs && getDamageTypeForSubclassPlug(defs, def);
+
+  const isInTooltip = useTooltipCustomization({
+    getHeader: useCallback(() => def.displayProperties.name, [def.displayProperties.name]),
+    getSubheader: useCallback(() => {
+      const energyType = energyCost && defs?.EnergyType.get(energyCost.energyTypeHash);
+      return (
+        <div className={styles.subheader}>
+          <span>{def.itemTypeDisplayName}</span>
+          {energyType && (
+            <span className={styles.energyCost}>
+              <ElementIcon element={energyType} className={styles.elementIcon} />
+              {energyCost.energyCost}
+            </span>
+          )}
+        </div>
+      );
+    }, [def.itemTypeDisplayName, energyCost, defs]),
+    className: clsx(styles.tooltip, {
+      [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
+      [styles.tooltipEnhanced]:
+        enhancedIntrinsics.has(def.hash) || (isPluggable && isEnhancedPerk(def)),
+      [styles.tooltipElementArc]:
+        energyCost?.energyType === DestinyEnergyType.Arc || subclassDamageType === DamageType.Arc,
+      [styles.tooltipElementSolar]:
+        energyCost?.energyType === DestinyEnergyType.Thermal ||
+        subclassDamageType === DamageType.Thermal,
+      [styles.tooltipElementVoid]:
+        energyCost?.energyType === DestinyEnergyType.Void || subclassDamageType === DamageType.Void,
+      [styles.tooltipElementStasis]:
+        energyCost?.energyType === DestinyEnergyType.Stasis ||
+        subclassDamageType === DamageType.Stasis,
+    }),
+  });
+
   return (
     <>
-      <h2>{def.displayProperties.name}</h2>
-      {!hidePlugSubtype && def.itemTypeDisplayName && <h3>{def.itemTypeDisplayName}</h3>}
+      {!isInTooltip && <h2>{def.displayProperties.name}</h2>}
 
       {/*
-        If we're displaying the Bungie description, display the stats between the Bungie description and
-        community description. If we're not displaying the Bungie description, display the stats after the
-        community description.
+        If we're displaying the Bungie description, display the stats in the same section as the Bungie
+        description. If we're not displaying the Bungie description, display the stats in a separate section
+        after the community description.
       */}
-      {bungieDescription || clarityDescription}
-      {renderedStats}
-      {bungieDescription && clarityDescription}
-
-      {sourceString && <div>{sourceString}</div>}
-      {!hideRequirements && defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
-        <div className={styles.objectives}>
-          {filteredPlugObjectives.map((objective) => (
-            <Objective key={objective.objectiveHash} objective={objective} />
-          ))}
-        </div>
-      )}
-      {enableFailReasons && <p>{enableFailReasons}</p>}
-      {craftingData && (
+      {bungieDescription ? (
         <>
+          <Tooltip.Section>
+            {bungieDescription}
+            {renderedStats}
+          </Tooltip.Section>
+          {clarityDescriptionSection}
+        </>
+      ) : (
+        (clarityDescriptionSection || renderedStats) && (
+          <>
+            {clarityDescriptionSection}
+            <Tooltip.Section>{renderedStats}</Tooltip.Section>
+          </>
+        )
+      )}
+
+      <Tooltip.Section>
+        {sourceString && <div className={styles.source}>{sourceString}</div>}
+        {!hideRequirements && defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
+          <div className={styles.objectives}>
+            {filteredPlugObjectives.map((objective) => (
+              <Objective key={objective.objectiveHash} objective={objective} />
+            ))}
+          </div>
+        )}
+        {enableFailReasons && <p>{enableFailReasons}</p>}
+      </Tooltip.Section>
+
+      {craftingData && (
+        <Tooltip.Section className={styles.craftingRequirementsSection}>
           {craftingData.unlockRequirements.map((r) => (
-            <p key={r.failureDescription}>
-              <b>{r.failureDescription}</b>
-            </p>
+            <p key={r.failureDescription}>{r.failureDescription}</p>
           ))}
           {defs &&
             craftingData.materialRequirementHashes.length &&
@@ -211,13 +270,19 @@ export function PlugTooltip({
                 );
               });
             })}
-        </>
+        </Tooltip.Section>
       )}
-      {cannotCurrentlyRoll && <p>{t('MovePopup.CannotCurrentlyRoll')}</p>}
+      {cannotCurrentlyRoll && (
+        <Tooltip.Section className={styles.cannotRollSection}>
+          <p>{t('MovePopup.CannotCurrentlyRoll')}</p>
+        </Tooltip.Section>
+      )}
       {wishListTip && (
-        <p>
-          <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}
-        </p>
+        <Tooltip.Section>
+          <p>
+            <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}
+          </p>
+        </Tooltip.Section>
       )}
     </>
   );

@@ -16,6 +16,9 @@ import computeSidecarPosition from 'app/item-popup/sidecar-popper-modifier';
 import _ from 'lodash';
 import React, { useLayoutEffect, useRef } from 'react';
 
+// ensure this stays in sync with 'arrow-size' in 'PressTip.m.scss'
+const popperArrowSize = 10;
+
 /** Makes a custom popper that doesn't have the event listeners modifier */
 const createPopper = popperGenerator({
   defaultModifiers: [
@@ -35,7 +38,7 @@ const popperOptions = (
   arrowClassName?: string,
   menuClassName?: string,
   boundarySelector?: string,
-  offset = arrowClassName ? 5 : 0,
+  offset = arrowClassName ? popperArrowSize / 2 : 0,
   fixed = false
 ): Partial<Options> => {
   const headerHeight = parseInt(

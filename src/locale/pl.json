@@ -186,6 +186,7 @@
     "BulkRevert_plural": "Przywrócono tagi na {{count}} przedmiotach.",
     "BulkTag": "Otagowano wybrany przedmiot jako {{tag}}.",
     "BulkTag_plural": "Otagowano {{count}} przedmiotów jako {{tag}}.",
+    "Catalyst": "Shows catalysts based on their status. catalyst:complete shows catalysts you have completed and applied, catalyst:incomplete shows catalysts you have unlocked but either not completed the objective or applied the catalyst, and catalyst:missing shows items that can have a catalyst but you haven't found it yet.",
     "Class": "Pokazuje przedmioty na podstawie ich podobieństwu do klasy.",
     "Combine": "Filtry mogą być połączone lub pogrupowane z nawiasami, \"or\" i \"and\" w celu zawężenia wyszukiwania, na przykład \"{{example}}\".",
     "ContributePower": "Pokazuje przedmioty, które mają moc i mogą przyczynić się do twojego poziomu mocy.",
@@ -997,6 +998,7 @@
     "AutoBackup": "Zrobiliśmy kopię zapasową Twoich danych do pliku w folderze pobrane o nazwie dim-data.json, na wszelki wypadek.",
     "BackUpFirst": "MUSISZ wykonać kopię zapasową swoich danych, zanim je usuniesz. Na wszelki wypadek.",
     "BrowserMayClearData": "Przeglądarka może usunąć te informacje, jeśli zabraknie Ci miejsca lub nie będziesz często odwiedzać DIM.",
+    "DataIsLocal": "Tag and note data is local only",
     "DeleteAllData": "Usuń WSZYSTKIE dane z serwerów synchronizacji DIM",
     "DeleteAllDataConfirm": "Czy na pewno chcesz usunąć WSZYSTKIE dane, z wszystkich kont, ze synchronizacji DIM? Nie możesz tego cofnąć.",
     "DeleteAllDataLabel": "Wyczyść dane synchronizacji DIM",
@@ -1004,7 +1006,9 @@
       "IndexedDBStorage": "Lokalna pamięć zapisze twoje informacje tylko w tej przeglądarce. Wyczyszczenie danych przeglądania spowoduje usunięcie tych informacji."
     },
     "DimApiFinePrint": "DIM zapisze tagi, uzbrojenie i ustawienia na serwerach DIM i zsynchronizuje je między różnymi wersjami DIM.",
+    "DimSyncDown": "DIM Sync is not connected due to a problem talking to the server.",
     "DimSyncEnabled": "Synchronizacja DIM włączona",
+    "DimSyncNotEnabled": "DIM Sync is not enabled, so your settings, tags, loadouts, and searches are only stored locally and will be lost if you clear your browser storage. Enable DIM Sync in Settings to back up your data automatically, or regularly back up your data manually.",
     "EnableDimApi": "Włącz synchronizację DIM (zalecane)",
     "Export": "Pobierz kopię zapasową danych",
     "Import": "Importuj kopię zapasową danych",
@@ -1025,10 +1029,12 @@
     "IndexedDBStorage": "Lokalna pamięć przeglądarki",
     "LearnMore": "Dowiedz się więcej o synchronizacji DIM",
     "MenuTitle": "Synchronizacja i kopie zapasowe",
-    "ProfileErrorBody": "Wystąpił problem podczas ładowania Twoich danych z DIM Sync. Będziemy starali się je ładować automatycznie.",
-    "ProfileErrorTitle": "Błąd synchronizacji DIM",
-    "UpdateErrorBody": "Wystąpił problem podczas zapisywania Twoich danych do DIM Sync. Automatycznie spróbujemy ponownie później.",
-    "UpdateErrorTitle": "Błąd synchronizacji DIM",
+    "ProfileErrorBody": "We had a problem communicating with DIM Sync. Your latest settings, tags, loadouts, and searches may not be shown. Your data is still on our servers, and any updates you make locally will be saved when we can reconnect. We'll keep retrying while DIM is open.",
+    "ProfileErrorTitle": "DIM Sync Download Error",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
+    "UpdateErrorTitle": "DIM Sync Save Error",
+    "UpdateQueueLength": "{{count}} new change will be saved when we can reconnect.",
+    "UpdateQueueLength_plural": "{{count}} new changes will be saved when we can reconnect.",
     "Usage": "DIM używa {{usage, humanBytes}} z {{quota, humanBytes}} dostępnych dla niego na tym urządzeniu. Obejmuje to pobrane bazy danych przedmiotów Destiny z Bungie.net."
   },
   "StreamDeck": {
@@ -1048,6 +1054,23 @@
       "Item": "Choose an item from the inventory",
       "Loadout": "Choose a loadout"
     }
+  },
+  "StripSockets": {
+    "Action": "Strip Sockets",
+    "ArmorMods": "{{count}}x Armor Mod",
+    "ArtifactMods": "{{count}}x Artifact Mod",
+    "Button": "Strip {{numSockets}} Sockets",
+    "Cancel": "Cancel",
+    "Choose": "Choose Sockets to strip",
+    "Done": "Stripped Sockets",
+    "NoSockets": "No Sockets to clear",
+    "Ok": "Ok",
+    "Ornaments": "{{count}}x Ornament",
+    "Others": "{{count}}x Ghost Projection",
+    "Running": "Stripping Sockets",
+    "Shaders": "{{count}}x Shader",
+    "Subclass": "{{count}}x Subclass Option",
+    "WeaponMods": "{{count}}x Weapon Mod"
   },
   "Tags": {
     "Archive": "Archiwizuj",

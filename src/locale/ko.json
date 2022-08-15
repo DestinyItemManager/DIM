@@ -186,6 +186,7 @@
     "BulkRevert_plural": "{{count}}개의 아이템의 태그를 되돌렸습니다.",
     "BulkTag": "선택된 아이템에 {{tag}} 태그를 지정하였습니다.",
     "BulkTag_plural": "{{count}}개의 선택된 아이템에 {{tag}} 태그를 지정하였습니다.",
+    "Catalyst": "촉매제를 현재 상태에 따라 표시합니다. catalyst:complete는 완료하고 장착된 촉매제를 표시하며, catalyst:incomplete는 잠금 해제하였으나 완료하지 않았거나 장착하지 않은 촉매제를 표시하며, catalyst:missing은 촉매제를 장착할 수 있으나 아직 찾지 못한 아이템을 표시합니다.",
     "Class": "직업에 관련된 아이템 표시",
     "Combine": "필터는 \"{{example}}\"와 같이 괄호, \"or\" 및 \"and\"로 결합하거나 그룹화하여 검색 범위를 좁힐 수 있습니다.",
     "ContributePower": "전투력을 높일 수 있는 아이템 표시",
@@ -997,6 +998,7 @@
     "AutoBackup": "만일을 대비해서 데이터를 다운로드 폴더의 dim-data.json 파일에 백업했습니다.",
     "BackUpFirst": "만일을 대비해서 모든 데이터를 삭제하기 전에 백업하세요.",
     "BrowserMayClearData": "저장 공간이 부족하거나 DIM을 꾸준히 방문하시지 않으면 브라우저에서 이 정보를 지울 수도 있습니다",
+    "DataIsLocal": "태그와 메모 데이터가 로컬에서만 사용 가능",
     "DeleteAllData": "DIM 동기화 서버의 모든 데이터 삭제",
     "DeleteAllDataConfirm": "정말로 DIM 동기화에서 모든 계정의 모든 데이터를 삭제하시겠습니까? 되돌릴 수 없습니다.",
     "DeleteAllDataLabel": "DIM 동기화 데이터 삭제",
@@ -1004,7 +1006,9 @@
       "IndexedDBStorage": "로컬 저장소는 정보를 이 브라우저에만 저장할 것입니다. 브라우저 데이터를 삭제하면 이 정보도 같이 삭제됩니다."
     },
     "DimApiFinePrint": "DIM이 태그, 로드아웃, 설정을 DIM 서버에 저장하고 다른 버전의 DIM과 동기화합니다.",
+    "DimSyncDown": "서버와 통신하는 도중 오류가 발생하여 DIM 동기화가 연결되지 않았습니다.",
     "DimSyncEnabled": "DIM 동기화 활성화됨",
+    "DimSyncNotEnabled": "DIM 동기화가 활성화되지 않았으며, 설정, 태그, 로드아웃, 검색 기록이 로컬에만 저장되고 브라우저 저장소를 비울 경우 삭제됩니다. DIM 동기화를 활성화하여 데이터를 자동으로 백업하거나, 정기적으로 데이터를 수동으로 백업하세요.",
     "EnableDimApi": "DIM 동기화 활성화 (권장)",
     "Export": "데이터 백업 다운로드",
     "Import": "데이터 백업 불러오기",
@@ -1025,10 +1029,12 @@
     "IndexedDBStorage": "로컬 브라우저 저장소",
     "LearnMore": "DIM 동기화에 대해 더 알아보기",
     "MenuTitle": "동기화 & 백업",
-    "ProfileErrorBody": "DIM 동기화에서 데이터를 불러오는 도중 문제가 발생하였습니다. 계속 불러오려고 시도하겠습니다.",
-    "ProfileErrorTitle": "DIM 동기화 오류",
-    "UpdateErrorBody": "DIM 동기화에 데이터를 저장하는 도중 문제가 발생하였습니다. 잠시 후에 자동으로 다시 시도합니다.",
-    "UpdateErrorTitle": "DIM 동기화 오류",
+    "ProfileErrorBody": "DIM 동기화와 통신하는 도중 문제가 발생하였습니다. 최신 설정, 태그, 로드아웃, 검색 기록이 표시되지 않을 수 있습니다. 데이터는 여전히 서버에 있으며, 로컬에서 수정된 내역은 서버에 다시 연결되었을 때 저장됩니다. DIM이 열려있는 동안 계속 시도하겠습니다.",
+    "ProfileErrorTitle": "DIM 동기화 다운로드 오류",
+    "UpdateErrorBody": "DIM 동기화에 데이터를 저장하는 도중 문제가 발생하였습니다. DIM이 열려있는 동안 계속 시도하겠습니다.",
+    "UpdateErrorTitle": "DIM 동기화 저장 오류",
+    "UpdateQueueLength": "서버에 다시 연결되었을 때 {{count}}개의 새로운 변경 사항이 저장됩니다.",
+    "UpdateQueueLength_plural": "서버에 다시 연결되었을 때 {{count}}개의 새로운 변경 사항이 저장됩니다.",
     "Usage": "DIM은 이 기기에서 {{quota, humanBytes}} 중 {{usage, humanBytes}}를 사용하고 있습니다. 이는 Bungie.net에서 다운로드한 데스티니 아이템 데이터베이스를 포함하고 있습니다."
   },
   "StreamDeck": {
@@ -1048,6 +1054,23 @@
       "Item": "소지품에서 아이템 선택",
       "Loadout": "로드아웃 선택"
     }
+  },
+  "StripSockets": {
+    "Action": "소켓 해제",
+    "ArmorMods": "{{count}}x 방어구 개조 부품",
+    "ArtifactMods": "{{count}}x 유물 개조 부품",
+    "Button": "{{numSockets}}개의 소켓 해제",
+    "Cancel": "취소",
+    "Choose": "해제할 소켓 선택",
+    "Done": "소켓 해제 완료",
+    "NoSockets": "해제할 소켓 없음",
+    "Ok": "확인",
+    "Ornaments": "{{count}}x 장식",
+    "Others": "{{count}}x 고스트 투영",
+    "Running": "소켓 해제 중",
+    "Shaders": "{{count}}x 안료",
+    "Subclass": "{{count}}x 하위직업 옵션",
+    "WeaponMods": "{{count}}x 무기 개조 부품"
   },
   "Tags": {
     "Archive": "보관",

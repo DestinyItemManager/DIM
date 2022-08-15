@@ -1,10 +1,9 @@
 import BungieImage from 'app/dim-ui/BungieImage';
-import PressTip from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ARMSMASTER_ACTIVITY_MODIFIER } from 'app/search/d2-known-values';
 import { DestinyItemSubType, DestinyMilestoneChallengeActivity } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import React from 'react';
 import './ActivityModifier.scss';
 
 /**

@@ -1,6 +1,12 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
+import {
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+} from 'data/d2/generated-enums';
 import subclassArc from 'images/subclass-arc.png';
 import subclassSolar from 'images/subclass-solar.png';
 import subclassStasisAlt from 'images/subclass-stasis-alt.png';
@@ -8,7 +14,8 @@ import subclassStasis from 'images/subclass-stasis.png';
 import subclassVoidAlt from 'images/subclass-void-alt.png';
 import subclassVoid from 'images/subclass-void.png';
 import _ from 'lodash';
-import { DimItem } from './item-types';
+import memoizeOne from 'memoize-one';
+import { DimItem, PluggableInventoryItemDefinition } from './item-types';
 
 type SubclassPath = 'top' | 'middle' | 'bottom';
 
@@ -139,9 +146,69 @@ const subclassInfoByHash: Record<number, SubclassInfo> = {
   2842471112: v3Subclass(DamageType.Void, DestinyClass.Titan), // Sentinel (v3)
   2849050827: v3Subclass(DamageType.Void, DestinyClass.Warlock), // Voidwalker (v3)
   2240888816: v3Subclass(DamageType.Thermal, DestinyClass.Hunter), // Gunslinger (v3)
-  3941205951: v3Subclass(DamageType.Thermal, DestinyClass.Warlock), // Dawnblade (v3)
   2550323932: v3Subclass(DamageType.Thermal, DestinyClass.Titan), // Sunbreaker (v3)
+  3941205951: v3Subclass(DamageType.Thermal, DestinyClass.Warlock), // Dawnblade (v3)
 };
+
+interface SubclassPlugCategory {
+  /** The item hashes of all subclasses that can insert plugs of this category. */
+  compatibleSubclassHashes: number[];
+  /**
+   * The socket category that plugs of this category can be inserted into e.g. abilities, fragments etc.
+   * If plugs of this category can be inserted into multiple sockets with differing socket category hashes,
+   * this will be set to null.
+   */
+  socketCategoryHash: SocketCategoryHashes | null;
+  /**
+   * The damage type of the subclasses that plugs of this category can be inserted into.
+   * If plugs of this category can be inserted into multiple subclasses with differing damage types, this
+   * will be set to null.
+   */
+  damageType: DamageType | null;
+}
+
+export const getSubclassPlugCategories = memoizeOne((defs: D2ManifestDefinitions) => {
+  const results = new Map<PlugCategoryHashes, SubclassPlugCategory>();
+  for (const [itemHashStr, subclassInfo] of Object.entries(subclassInfoByHash)) {
+    if (!subclassInfo.isV3) {
+      continue;
+    }
+    const subclassHash = parseInt(itemHashStr, 10);
+    const def = defs.InventoryItem.get(subclassHash);
+    if (!def.sockets) {
+      continue;
+    }
+    for (const socketEntry of def.sockets.socketEntries) {
+      const socketType = defs.SocketType.get(socketEntry.socketTypeHash);
+      const socketCategoryHash = socketType.socketCategoryHash;
+      for (const whitelistedPlugCategory of socketType.plugWhitelist) {
+        const plugCategoryHash = whitelistedPlugCategory.categoryHash;
+        const plugCategory = results.get(plugCategoryHash);
+        if (plugCategory) {
+          plugCategory.compatibleSubclassHashes.push(subclassHash);
+
+          /*
+          If there are conflicting damage types or socket categories, reset back to null. We assume that
+          the caller can't ascertain anything useful in these cases.
+          */
+          if (plugCategory.damageType !== subclassInfo.damageType) {
+            plugCategory.damageType = null;
+          }
+          if (plugCategory.socketCategoryHash !== socketCategoryHash) {
+            plugCategory.socketCategoryHash = null;
+          }
+        } else {
+          results.set(plugCategoryHash, {
+            compatibleSubclassHashes: [subclassHash],
+            damageType: subclassInfo.damageType,
+            socketCategoryHash,
+          });
+        }
+      }
+    }
+  }
+  return results;
+});
 
 // build up a map of V2 -> V3 subclass hashes
 export const v3SubclassHashesByV2SubclassHash: Record<number, number> = {};
@@ -241,4 +308,29 @@ function getV3SubclassIconInfo(
       };
     }
   }
+}
+
+export function getDamageTypeForSubclassPlug(
+  defs: D2ManifestDefinitions,
+  item: PluggableInventoryItemDefinition
+) {
+  // ignore empty plugs because they'll be present across all subclasses
+  if (emptyPlugHashes.has(item.hash)) {
+    return null;
+  }
+
+  // early out to avoid building subclass plug categories
+  if (
+    !item.itemCategoryHashes ||
+    !item.itemCategoryHashes.includes(ItemCategoryHashes.SubclassMods)
+  ) {
+    return null;
+  }
+
+  const subclassPlugCategory = getSubclassPlugCategories(defs).get(item.plug.plugCategoryHash);
+  if (subclassPlugCategory) {
+    return subclassPlugCategory.damageType;
+  }
+
+  return null;
 }

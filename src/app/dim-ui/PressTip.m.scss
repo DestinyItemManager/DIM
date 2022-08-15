@@ -1,11 +1,18 @@
 @use '../variables.scss' as *;
+@use 'sass:color';
+
+$arrow-size: 10px; // ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
+$border-color: #5d5970;
+$horizontal-padding: 8px;
+$half-arrow-size: $arrow-size * 0.5;
 
 .arrow {
-  width: 10px;
-  height: 10px;
+  width: $arrow-size;
+  height: $arrow-size;
+  border-width: 0;
   border-style: solid;
   position: absolute;
-  border-color: #444;
+  border-color: $border-color;
 }
 
 .control {
@@ -15,14 +22,16 @@
 }
 
 .tooltip {
+  --ribbon-color: #8e8e9e;
+
   position: absolute;
-  background-color: #444;
-  color: white;
+  background-color: #151523;
+  color: #dadaea;
   width: fit-content;
   max-width: 300px;
-  border-top: 5px solid #888;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-  padding: 8px;
+  border: 1px solid $border-color;
+  border-top: 5px solid var(--ribbon-color);
+  box-shadow: 0 0 4px 2px #16162680;
   text-align: left;
   z-index: 99999;
   white-space: pre-wrap;
@@ -33,65 +42,109 @@
     max-width: 100vw;
   }
 
-  h2,
-  h3 {
-    background-color: #444;
-  }
-  h2 {
-    font-size: 14px;
-    margin: 0 0 4px 0;
-    @include destiny-header;
-  }
-  h3 {
-    font-size: 12px;
-    margin: -4px 0 4px 0;
-    color: #aaa;
-  }
-
   hr {
-    border-color: #888;
+    border-color: $border-color;
   }
 
   p {
     margin-bottom: 0;
   }
 
+  .header {
+    background-color: #0a0a0f;
+    padding: 6px $horizontal-padding;
+
+    h2 {
+      font-size: 14px;
+      margin: 0;
+      color: white;
+      @include destiny-header;
+    }
+
+    h3 {
+      font-size: 12px;
+      margin: 0;
+      color: #8e8e9e;
+    }
+  }
+
+  .content {
+    padding: 6px $horizontal-padding;
+  }
+
   &[data-popper-placement='top'] .arrow {
     width: 0;
     height: 0;
-    border-width: 5px 5px 0 5px;
+    border-width: $half-arrow-size $half-arrow-size 0 $half-arrow-size;
     border-left-color: transparent;
     border-right-color: transparent;
     border-bottom-color: transparent;
-    bottom: -5px;
+    bottom: -$half-arrow-size;
   }
   &[data-popper-placement='bottom'] .arrow {
     width: 0;
     height: 0;
-    border-width: 0 5px 5px 5px;
-    top: -10px;
-    border-color: transparent transparent #888 transparent;
+    border-width: 0 $half-arrow-size $half-arrow-size $half-arrow-size;
+    top: -$arrow-size;
+    border-color: transparent transparent var(--ribbon-color) transparent;
   }
   &[data-popper-placement='right'] .arrow {
     width: 0;
     height: 0;
-    border-width: 5px 5px 5px 0;
+    border-width: $half-arrow-size $half-arrow-size $half-arrow-size 0;
     border-left-color: transparent;
     border-top-color: transparent;
     border-bottom-color: transparent;
-    left: -5px;
+    left: -$half-arrow-size;
   }
   &[data-popper-placement='left'] .arrow {
     width: 0;
     height: 0;
-    border-width: 5px 0 5px 5px;
+    border-width: $half-arrow-size 0 $half-arrow-size $half-arrow-size;
     border-top-color: transparent;
     border-right-color: transparent;
     border-bottom-color: transparent;
-    right: -5px;
+    right: -$half-arrow-size;
+  }
+
+  &.minimalTooltip {
+    border-radius: 3px;
+    --ribbon-color: #{$border-color};
+    border-top: 1px solid $border-color;
+
+    .content {
+      padding: 3px 6px;
+    }
+  }
+
+  .section:not(:empty) {
+    margin: 6px #{-$horizontal-padding} -6px #{-$horizontal-padding};
+    padding: 4px $horizontal-padding 6px $horizontal-padding;
+    border-top: 1px solid rgba($border-color, 0.5);
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+
+    &:first-child {
+      margin-top: -6px;
+      border-top: none;
+    }
   }
 }
 
-.content {
-  width: fit-content;
+@mixin tooltip-ribbon-color($color) {
+  --ribbon-color: #{$color};
+}
+
+@mixin tooltip-section-color($color) {
+  &:not(:empty) {
+    color: color.mix(white, $color, 80%);
+    background-color: rgba($color, 0.15);
+    border-top-color: rgba($color, 0.5);
+  }
 }

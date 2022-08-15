@@ -1,5 +1,8 @@
 @import '../../variables';
 
+$or-color: $orange;
+$and-color: #814bcf;
+
 .loadout-builder {
   margin-top: 10px;
 
@@ -34,11 +37,11 @@
   }
 
   .ex-or {
-    background-color: $orange;
+    background-color: $or-color;
   }
 
   .ex-and {
-    background-color: $void;
+    background-color: $and-color;
   }
 
   .locked-perk-notification img {
@@ -369,12 +372,12 @@
 
     & .perk:hover,
     & .active-perk-or {
-      background-color: $orange;
+      background-color: $or-color;
     }
 
     &.shift-held .perk:hover,
     & .active-perk-and {
-      background-color: $void;
+      background-color: $and-color;
     }
 
     & .perk img {

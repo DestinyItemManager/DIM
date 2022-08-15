@@ -41,6 +41,10 @@ export const customStatsSelector = (state: RootState) =>
 export const apiPermissionGrantedSelector = (state: RootState) =>
   state.dimApi.apiPermissionGranted === true;
 
+export const dimSyncErrorSelector = (state: RootState) => state.dimApi.profileLoadedError;
+
+export const updateQueueLengthSelector = (state: RootState) => state.dimApi.updateQueue.length;
+
 /**
  * Return saved API data for the currently active profile (account).
  */

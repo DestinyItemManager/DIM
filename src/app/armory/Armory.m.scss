@@ -25,7 +25,7 @@
   }
 }
 
-.source {
+.season {
   display: flex;
   align-items: center;
   &:nth-child(n + 1) {
@@ -36,6 +36,11 @@
   > img {
     margin-right: 2px;
   }
+}
+
+.source {
+  font-style: italic;
+  opacity: 0.7;
 }
 
 .header {
