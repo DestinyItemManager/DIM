@@ -40,6 +40,7 @@ describe('autocompleteTermSuggestions', () => {
     ['acd/0 fee', 9, 'acd/0 feedback fence'],
     ['stat:rpm:200 first in, last', 27, 'first in, last out'],
     ['two-tail', 8, 'two-tailed fox'],
+    ['(is:a or is:b) and (is:c or multi w)', 35, 'multi word'],
     ['arctic  haz', 11, 'arctic haze'], // this currently isn't handled due to the double space
   ];
 

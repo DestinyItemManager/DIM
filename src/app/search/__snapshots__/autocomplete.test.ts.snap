@@ -1,5 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for |(is:a or is:b) and (is:c or multi w)| with caret at position 35 with exact match 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        28,
+        45,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "(is:a or is:b) and (is:c or name:\\"multi word\\")",
+      "fullText": "(is:a or is:b) and (is:c or name:\\"multi word\\")",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |acd/0 fee| with caret at position 9 with exact match 1`] = `
 Array [
   Object {
