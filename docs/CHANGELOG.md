@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed Loadouts trying to clear Solstice sockets and Strip Sockets trying to remove Festival of the Lost helmet ornaments.
+
 ## 7.30.0 <span class="changelog-date">(2022-08-14)</span>
 
 * Tooltips have been redesigned:
