@@ -7,7 +7,7 @@ export interface LinesContent {
 }
 export interface Line {
   linesContent?: LinesContent[];
-  className?: string[];
+  classNames?: string[];
 }
 type PerkType =
   | 'armorExotic'
