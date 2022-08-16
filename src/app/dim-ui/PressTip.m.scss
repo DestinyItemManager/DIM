@@ -1,8 +1,8 @@
 @use '../variables.scss' as *;
 @use 'sass:color';
 
-$ribbon-width: 5px;
-$arrow-size: 16px; // ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
+$ribbon-width: 6px;
+$arrow-size: 15px; // ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
 $minimal-arrow-size: 10px;
 $background-color: #151523;
 $border-color: #5d5970;
@@ -23,14 +23,28 @@ $horizontal-padding: 11px;
   width: fit-content;
   max-width: 306px;
   border: 1px solid $border-color;
-  border-top: $ribbon-width solid var(--ribbon-color);
-  border-radius: 8px;
+  border-top-width: $ribbon-width;
+  border-radius: $ribbon-width;
   box-shadow: 0 0 24px 6px #080811;
   text-align: left;
   z-index: 99999;
   white-space: pre-wrap;
   box-sizing: border-box;
   user-select: none;
+
+  // The 'ribbon' at the top of the tooltip. We can't use border or an inset box shadow because the change in
+  // color between the left/right and top edges results in weird slanted artifacts.
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    background-color: var(--ribbon-color);
+    height: $ribbon-width;
+    top: -$ribbon-width;
+    left: -1px;
+    right: -1px;
+    border-radius: $ribbon-width $ribbon-width 0 0;
+  }
 
   &.wideTooltip {
     max-width: 100vw;
@@ -47,7 +61,6 @@ $horizontal-padding: 11px;
   .header {
     background-color: #0a0a0f;
     padding: 6px $horizontal-padding;
-    border-radius: 4px 4px 0 0;
 
     h2 {
       font-size: 14px;
@@ -118,6 +131,11 @@ $horizontal-padding: 11px;
     background-color: $border-color;
     border: none;
     box-shadow: 0 0 10px 3px #080811;
+
+    // hide ribbon
+    &::after {
+      display: none;
+    }
 
     .content {
       padding: 3px 6px;
