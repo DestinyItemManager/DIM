@@ -22,7 +22,7 @@ const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB) => {
   try {
     const liveVersion: ClarityVersions = await fetchClarity('version');
 
-    if (savedVersion !== liveVersion.descriptions) {
+    if (liveVersion.checkDescriptionVersion && savedVersion !== liveVersion.descriptions) {
       const descriptions: ClarityDescription = await fetchClarity('descriptions');
       set('clarity-descriptions', descriptions);
       localStorage.setItem('clarityDescriptionVersion', liveVersion.descriptions.toString());

@@ -77,4 +77,8 @@ export interface ClarityVersions {
    * version format 1.0
    */
   descriptions: number;
+  /**
+   * Disables online version cheking used for magration
+   */
+  checkDescriptionVersion: boolean;
 }
