@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
+import { eventArmorRerollSocketIdentifiers } from 'app/utils/socket-utils';
 import {
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
@@ -448,6 +449,17 @@ const noDefaultSocketCategoryHashes: SocketCategoryHashes[] = [
   SocketCategoryHashes.GhostShellPerks,
   SocketCategoryHashes.VehiclePerks,
 ];
+
+// Because we conservatively fall back to `singleInitialItemHash`, we
+// may misinterpret some `singleInitialItemHash`es as the empty plug.
+// If this list gets too large, consider removing the `singleInitialItemHash` fallback,
+// because it's really just a concession to the fact that D2AI can't ever be 100% complete.
+const noDefaultPlugIdentifiers: (string | number)[] = [
+  'enhancements.exotic', // Exotic Armor Perk sockets (Aeons, all options are equivalent)
+  ...eventArmorRerollSocketIdentifiers, // Weird rerolling sockets
+  PlugCategoryHashes.ArmorSkinsSharedHead, // FotL Helmet Ornaments
+];
+
 /**
  * DIM sometimes wants to know whether a plug is the "empty" plug so that
  * it knows not to record an override, or it may choose to reset a socket
@@ -486,13 +498,20 @@ function findEmptyPlug(
   if (socket.socketTypeHash === weaponMasterworkY2SocketTypeHash) {
     return undefined;
   }
-  // Exotic mods (like the Aeon socket) can't be emptied.
+
   if (
     socketType.plugWhitelist.length &&
-    socketType.plugWhitelist.every((e) => e.categoryIdentifier.includes('enhancements.exotic'))
+    socketType.plugWhitelist.every((whiteListEntry) =>
+      noDefaultPlugIdentifiers.some((id) =>
+        typeof id === 'number'
+          ? whiteListEntry.categoryHash === id
+          : whiteListEntry.categoryIdentifier.startsWith(id)
+      )
+    )
   ) {
     return undefined;
   }
+
   // Sockets that ONLY get their items from your inventory necessarily can't be emptied
   if ((socket.plugSources & ~SocketPlugSources.InventorySourced) === 0) {
     return undefined;

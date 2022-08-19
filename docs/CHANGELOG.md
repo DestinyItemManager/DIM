@@ -1,5 +1,9 @@
 ## Next
 
+* Fixed Loadouts trying to clear Solstice sockets and Strip Sockets trying to remove Festival of the Lost helmet ornaments.
+
+## 7.30.0 <span class="changelog-date">(2022-08-14)</span>
+
 * Tooltips have been redesigned:
   * They now use a darker color scheme that fits in better with the rest of DIM.
   * Perk and mod tooltips for enhanced weapon traits and Exotic catalysts have unique styles to help them stand out.
