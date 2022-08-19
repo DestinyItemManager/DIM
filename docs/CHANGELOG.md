@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed Loadouts trying to clear Solstice sockets and Strip Sockets trying to remove Festival of the Lost helmet ornaments.
+* Tooltips have been adjusted further. They now have more spacing around content, rounded corners and improved contrast.
 
 ## 7.30.0 <span class="changelog-date">(2022-08-14)</span>
 
