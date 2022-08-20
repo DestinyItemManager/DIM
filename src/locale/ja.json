@@ -1060,7 +1060,7 @@
     "ArmorMods": "{{count}}x Armor Mod",
     "ArtifactMods": "{{count}}x Artifact Mod",
     "Button": "Strip {{numSockets}} Sockets",
-    "Cancel": "Cancel",
+    "Cancel": "キャンセル",
     "Choose": "Choose Sockets to strip",
     "Done": "Stripped Sockets",
     "NoSockets": "No Sockets to clear",

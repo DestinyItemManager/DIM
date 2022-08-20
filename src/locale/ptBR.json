@@ -1056,13 +1056,13 @@
     }
   },
   "StripSockets": {
-    "Action": "Limpar soquetes",
-    "ArmorMods": "{{count}}x mod de Armaduras",
-    "ArtifactMods": "{{count}}x mod de Artefatos",
-    "Button": "Limpar {{numSockets}} soquetes",
+    "Action": "Limpar Soquetes",
+    "ArmorMods": "{{count}}x Mod de Armaduras",
+    "ArtifactMods": "{{count}}x Mod de Artefatos",
+    "Button": "Limpar {{numSockets}} Soquetes",
     "Cancel": "Cancelar",
-    "Choose": "Escolha os soquetes para limpar",
-    "Done": "Soquetes limpados",
+    "Choose": "Escolha os Soquetes para limpar",
+    "Done": "Soquetes limpos",
     "NoSockets": "Nenhum soquete para limpar",
     "Ok": "Ok",
     "Ornaments": "{{count}}x Ornamento",
@@ -1070,7 +1070,7 @@
     "Running": "Limpando soquetes",
     "Shaders": "{{count}}x Tonalizador",
     "Subclass": "{{count}}x Opção de Subclasse",
-    "WeaponMods": "{{count}}x mod de Armas"
+    "WeaponMods": "{{count}}x Mod de Armas"
   },
   "Tags": {
     "Archive": "Arquivar",
