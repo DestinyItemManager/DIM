@@ -181,11 +181,7 @@ export function filterPresentationNodesToSearch(
   // If the node itself matches
   if (searchDisplayProperties(node.nodeDef.displayProperties, searchQuery)) {
     // Return this whole node
-    return [
-      {
-        path: [...path, node],
-      },
-    ];
+    return [{ path: [...path, node] }];
   }
 
   if (node.childPresentationNodes) {
