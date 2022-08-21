@@ -175,7 +175,8 @@ export function filterPresentationNodesToSearch(
   searchQuery: string,
   filterItems: ItemFilter,
   completedRecordsHidden: boolean,
-  path: DimPresentationNode[] = []
+  path: DimPresentationNode[] = [],
+  defs: D2ManifestDefinitions
 ): DimPresentationNodeSearchResult[] {
   // If the node itself matches
   if (searchDisplayProperties(node.nodeDef.displayProperties, searchQuery)) {
@@ -190,10 +191,14 @@ export function filterPresentationNodesToSearch(
   if (node.childPresentationNodes) {
     // TODO: build up the tree?
     return node.childPresentationNodes.flatMap((c) =>
-      filterPresentationNodesToSearch(c, searchQuery, filterItems, completedRecordsHidden, [
-        ...path,
-        node,
-      ])
+      filterPresentationNodesToSearch(
+        c,
+        searchQuery,
+        filterItems,
+        completedRecordsHidden,
+        [...path, node],
+        defs
+      )
     );
   }
 
@@ -216,7 +221,9 @@ export function filterPresentationNodesToSearch(
         !(
           completedRecordsHidden &&
           Boolean(r.recordComponent.state & DestinyRecordState.RecordRedeemed)
-        ) && searchDisplayProperties(r.recordDef.displayProperties, searchQuery)
+        ) &&
+        (searchDisplayProperties(r.recordDef.displayProperties, searchQuery) ||
+          searchRewards(r.recordDef, searchQuery, defs))
     );
 
     return records.length
@@ -267,6 +274,15 @@ export function searchDisplayProperties(
   return (
     displayProperties.name.toLowerCase().includes(searchQuery) ||
     displayProperties.description.toLowerCase().includes(searchQuery)
+  );
+}
+export function searchRewards(
+  record: DestinyRecordDefinition,
+  searchQuery: string,
+  defs: D2ManifestDefinitions
+) {
+  return record.rewardItems.some((ri) =>
+    searchDisplayProperties(defs.InventoryItem.get(ri.itemHash).displayProperties, searchQuery)
   );
 }
 

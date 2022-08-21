@@ -36,6 +36,7 @@ export interface FilterContext {
   };
   language: string;
   customStats: Settings['customTotalStatsByClass'];
+  d2Definitions: D2ManifestDefinitions | undefined;
 }
 
 /**

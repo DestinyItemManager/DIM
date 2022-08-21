@@ -1,5 +1,7 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { errorLog } from 'app/utils/log';
 import { WishListRoll } from 'app/wishlists/types';
@@ -48,6 +50,7 @@ export const filterFactorySelector = createSelector(
   itemHashTagsSelector,
   languageSelector,
   customStatsSelector,
+  d2ManifestSelector,
   makeSearchFilterFactory
 );
 
@@ -94,7 +97,8 @@ function makeSearchFilterFactory(
     [itemHash: string]: ItemHashTag;
   },
   language: string,
-  customStats: Settings['customTotalStatsByClass']
+  customStats: Settings['customTotalStatsByClass'],
+  d2Definitions: D2ManifestDefinitions
 ) {
   const filterContext: FilterContext = {
     stores,
@@ -108,6 +112,7 @@ function makeSearchFilterFactory(
     language,
     customStats,
     wishListsByHash,
+    d2Definitions,
   };
 
   return (query: string): ItemFilter => {
