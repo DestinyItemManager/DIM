@@ -237,6 +237,20 @@ export const D2SeasonInfo = {
     resetTime: '17:00:00Z',
     numWeeks: 13,
   },
+  18: {
+    DLCName: '',
+    seasonName: 'Season of Plunder',
+    seasonTag: 'plunder',
+    season: 18,
+    maxLevel: 50,
+    powerFloor: 1350,
+    softCap: 1520,
+    powerfulCap: 1570,
+    pinnacleCap: 1580,
+    releaseDate: '2022-08-23',
+    resetTime: '17:00:00Z',
+    numWeeks: 13,
+  },
 } as Record<
   number,
   {
@@ -255,4 +269,4 @@ export const D2SeasonInfo = {
   }
 >;
 
-export const D2CalculatedSeason = 17;
+export const D2CalculatedSeason = 18;

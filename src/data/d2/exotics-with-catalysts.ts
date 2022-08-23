@@ -2,6 +2,7 @@ const exoticWeaponHashesWithCatalyst: Set<number> = new Set([
   19024058, // Prometheus Lens
   46524085, // Osteo Striga
   347366834, // Ace of Spades
+  374573733, // Delicate Tomb
   400096939, // Outbreak Perfected
   417164956, // Jötunn
   603721696, // Cryosthesia 77K
@@ -41,6 +42,7 @@ const exoticWeaponHashesWithCatalyst: Set<number> = new Set([
   3141979347, // Borealis
   3211806999, // Izanagi's Burden
   3260753130, // Ticuu's Divination
+  3325463374, // Thunderlord
   3413074534, // Polaris Lance
   3413860063, // Lord of Wolves
   3437746471, // Crimson

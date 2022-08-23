@@ -193,9 +193,7 @@ const D2Sources: {
   },
   cipher: {
     itemHashes: [],
-    sourceHashes: [
-      4155903822, // Source: Obtained from Master Cryptarch Rahool.
-    ],
+    sourceHashes: [],
     searchString: [],
   },
   compass: {
@@ -483,7 +481,6 @@ const D2Sources: {
       675740011, // Source: "Grasp of Avarice" Dungeon
       1282207663, // Source: Dungeon Duality
       1745960977, // Source: Pit of Heresy
-      2745272818, // Source: Presage Exotic Quest
       2856954949, // Source: "Let Loose Thy Talons" Exotic quest.
       3597879858, // Source: Presage Exotic Quest
     ],
@@ -595,9 +592,7 @@ const D2Sources: {
   },
   exoticcipher: {
     itemHashes: [],
-    sourceHashes: [
-      4155903822, // Source: Obtained from Master Cryptarch Rahool.
-    ],
+    sourceHashes: [],
     searchString: [],
   },
   fwc: {
@@ -894,6 +889,7 @@ const D2Sources: {
       2805208672, // Source: Complete Nightfall strike "The Hollowed Lair."
       2851783112, // Source: Complete Nightfall strike "Lake of Shadows."
       2926805810, // Source: Complete Nightfall strike "Strange Terrain."
+      2982642634, // Source: Season of Plunder Grandmaster Nightfall
       3022766747, // Source: Complete Nightfall strike "The Insight Terminus."
       3067146211, // Source: Complete Nightfall strike "Exodus Crash."
       3142874552, // Source: Nightfall
@@ -931,7 +927,6 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       210885364, // Source: Flawless completion of Presage Exotic Quest on Master difficulty.
-      2745272818, // Source: Presage Exotic Quest
       3597879858, // Source: Presage Exotic Quest
     ],
     searchString: [],
@@ -973,6 +968,7 @@ const D2Sources: {
       4103414242, // Divinity
     ],
     sourceHashes: [
+      160129377, // Source: "King's Fall" Raid
       557146120, // Source: Complete a Guided Game as a guide or seeker.
       654652973, // Guide 25 Last Wish encounters
       707740602, // Guide 10 Last Wish encounters
