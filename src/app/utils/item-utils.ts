@@ -336,7 +336,8 @@ export function isPlugStatActive(
   }
   if (
     plugHash === modsWithConditionalStats.chargeHarvester ||
-    plugHash === modsWithConditionalStats.echoOfPersistence
+    plugHash === modsWithConditionalStats.echoOfPersistence ||
+    plugHash === modsWithConditionalStats.sparkOfFocus
   ) {
     // "-10 to the stat that governs your class ability recharge"
     return (

@@ -307,4 +307,5 @@ export const modsWithConditionalStats = {
   elementalCapacitor: 3511092054,
   echoOfPersistence: 2272984671,
   enhancedElementalCapacitor: 711234314,
+  sparkOfFocus: 1727069360,
 } as const;
