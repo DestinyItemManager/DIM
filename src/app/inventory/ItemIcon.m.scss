@@ -160,3 +160,11 @@ $commonBg: #366f42;
 .solarColorFilter {
   filter: hue-rotate(148deg) grayscale(0.1);
 }
+
+.arcColorFilter {
+  filter: hue-rotate(302deg) brightness(2) grayscale(0.5);
+}
+
+.transparencyFix {
+  background-color: black;
+}
