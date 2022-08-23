@@ -1,5 +1,7 @@
 ## Next
 
+## 7.31.1 <span class="changelog-date">(2022-08-23)</span>
+
 ## 7.31.0 <span class="changelog-date">(2022-08-21)</span>
 
 * Fixed Loadouts trying to clear Solstice sockets and Strip Sockets trying to remove Festival of the Lost helmet ornaments.
