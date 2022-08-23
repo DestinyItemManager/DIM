@@ -176,10 +176,10 @@ export const dimApi = (
         ? {
             ...state,
             profileLoadedFromIndexedDb: true,
-            settings: {
+            settings: fixBadSettingsTypes({
               ...state.settings,
               ...action.payload.settings,
-            },
+            }),
             profiles: {
               ...state.profiles,
               ...action.payload.profiles,
@@ -218,12 +218,10 @@ export const dimApi = (
         profileLoaded: true,
         profileLoadedError: undefined,
         profileLastLoaded: Date.now(),
-        settings: {
+        settings: fixBadSettingsTypes({
           ...state.settings,
           ...profileResponse.settings,
-          itemSortOrderCustom: sortOrder,
-          itemSortReversals: reversals,
-        },
+        }),
         itemHashTags: profileResponse.itemHashTags
           ? _.keyBy(profileResponse.itemHashTags, (t) => t.hash)
           : state.itemHashTags,
@@ -396,6 +394,26 @@ export const dimApi = (
       return state;
   }
 };
+
+/**
+ * DIM accidentally stored some integer settings as strings,
+ * so fix them up here.
+ */
+function fixBadSettingsTypes(settings: Settings) {
+  if (typeof settings.charCol === 'string') {
+    settings = { ...settings, charCol: parseInt(settings.charCol, 10) };
+  }
+  if (typeof settings.charColMobile === 'string') {
+    settings = { ...settings, charColMobile: parseInt(settings.charColMobile, 10) };
+  }
+  if (typeof settings.inventoryClearSpaces === 'string') {
+    settings = { ...settings, inventoryClearSpaces: parseInt(settings.inventoryClearSpaces, 10) };
+  }
+  if (typeof settings.itemSize === 'string') {
+    settings = { ...settings, itemSize: parseInt(settings.itemSize, 10) };
+  }
+  return settings;
+}
 
 function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, value: Settings[V]) {
   // Don't worry about changing settings to their current value

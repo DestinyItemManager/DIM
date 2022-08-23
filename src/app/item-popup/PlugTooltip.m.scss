@@ -1,9 +1,11 @@
 @use '../variables' as *;
+@use 'sass:string';
+@use '../dim-ui/PressTip.m.scss' as *;
 
 .objectives {
   margin: 4px 0;
   padding: 8px;
-  background-color: #333;
+  background-color: #0b0b11;
   border-radius: 4px;
 }
 .perkName {
@@ -17,4 +19,79 @@
   border-left: 2px solid $communityBlue;
   padding-left: 6px;
   margin-left: -8px;
+}
+.source {
+  font-style: italic;
+  opacity: 0.7;
+}
+.tooltip {
+  .subheader {
+    display: flex;
+    justify-content: space-between;
+  }
+  .energyCost {
+    font-weight: bold;
+    color: #eee;
+
+    .elementIcon {
+      height: 12px;
+      width: 20px;
+      background-size: contain;
+      background-position: right 0;
+      margin: 0 2px -1px 0;
+    }
+  }
+  .clarityDescription {
+    margin: 0;
+    padding: 0;
+    border-left: none;
+  }
+  .communityInsightSection {
+    @include tooltip-section-color($communityBlue);
+    h3 {
+      opacity: 0.6;
+    }
+  }
+  .craftingRequirementsSection {
+    @include tooltip-section-color($deepsight-border-color);
+  }
+  .cannotRollSection {
+    @include tooltip-section-color($red);
+  }
+}
+.tooltipExotic {
+  @include tooltip-ribbon-color($exotic);
+}
+.tooltipEnhanced {
+  @include tooltip-ribbon-color($enhancedYellow);
+
+  .subheader > span {
+    color: $enhancedYellow;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 11px;
+
+      // We need to encode the '#' prefix in the color in order to use it within the SVG.
+      /* prettier-ignore */
+      $escapedColorStr: '%23#{string.slice('#{$enhancedYellow}', 2)}';
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 33"><path d="M6,33 L6,16 L0,16 L9,0 L18,16 L12,16 L12,33 z" fill="#{$escapedColorStr}" /></svg>');
+      background-size: 6px 11px;
+      margin-right: 3px;
+    }
+  }
+}
+.tooltipElementArc {
+  @include tooltip-ribbon-color($arc);
+}
+.tooltipElementSolar {
+  @include tooltip-ribbon-color($solar);
+}
+.tooltipElementVoid {
+  @include tooltip-ribbon-color($void);
+}
+.tooltipElementStasis {
+  @include tooltip-ribbon-color($stasis);
 }

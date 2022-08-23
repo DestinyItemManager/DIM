@@ -186,6 +186,7 @@
     "BulkRevert_plural": "Etichette ripristinate su {{count}} oggetti.",
     "BulkTag": "Etichettato oggetto selezionato come {{tag}}.",
     "BulkTag_plural": "Etichettati {{count}} oggetti selezionati come {{tag}}.",
+    "Catalyst": "Mostra i catalizzatori basandosi sul loro stato. catalyst:complete mostra i catalizzatori che hai completato e inserito, catalyst:incomplete mostra i catalizzatori che hai sbloccato ma non hai ancora completato l'obbiettivo oppure non hai ancora inserito, e catalyst:missing mostra gli oggetti che possono avere un catalizzatore ma non è ancora stato trovato.",
     "Class": "Mostra gli oggetti in base alla loro affinità di classe.",
     "Combine": "I filtri possono essere combinati o raggruppati con delle parentesi, \"or\" e \"and\" per restringere la ricerca, ad esempio \"{{example}}\".",
     "ContributePower": "Mostra gli oggetti che hanno Potere e possono contribuire al tuo livello Potere.",
@@ -997,6 +998,7 @@
     "AutoBackup": "Abbiamo salvato i tuoi dati in un file, nella tua cartella di download, chiamato dim-data.json, in caso servissero.",
     "BackUpFirst": "Devi prima effettuare un backup dei tuoi dati. Non si sa mai.",
     "BrowserMayClearData": "Il browser può cancellare queste informazioni se esaurisci la memoria o se non visiti DIM spesso.",
+    "DataIsLocal": "I dati delle note ed etichette sono solo locali",
     "DeleteAllData": "Cancella TUTTI i dati dai server di DIM Sync",
     "DeleteAllDataConfirm": "Sei sicuro di voler eliminare TUTTI i tuoi dati, da tutti gli account, da DIM Sync? Non è possibile annullare questa operazione.",
     "DeleteAllDataLabel": "Cancella i dati di DIM Sync",
@@ -1004,7 +1006,9 @@
       "IndexedDBStorage": "Archiviazione in locale salverà le informazioni solo su questo browser. Se cancelli i tuoi dati di navigazione, esse andranno perse."
     },
     "DimApiFinePrint": "DIM salverà le tue etichette, loadout e impostazioni nei server di DIM e li sincronizzerà tra tutte le sue versioni.",
+    "DimSyncDown": "DIM Sync non è connesso a causa di un problema di comunicazione con il server.",
     "DimSyncEnabled": "DIM Sync Attivato",
+    "DimSyncNotEnabled": "DIM Sync non è abilitato, quindi le tue impostazioni, etichette, loadout e ricerche sono memorizzate in locale e andranno perse se pulisci la memoria del browser. Attiva DIM Sync nelle Impostazioni per eseguire il backup automatico dei dati, oppure fai regolarmente un backup manuale.",
     "EnableDimApi": "Abilita DIM Sync (consigliato)",
     "Export": "Scarica Backup Dati",
     "Import": "Importa Backup Dati",
@@ -1025,10 +1029,12 @@
     "IndexedDBStorage": "Memoria del browser locale",
     "LearnMore": "Informazioni su DIM Sync",
     "MenuTitle": "Sync & Backup",
-    "ProfileErrorBody": "Abbiamo avuto un problema nel caricamento dei tuoi dati da DIM Sync. Continueremo a cercare di caricarli automaticamente.",
-    "ProfileErrorTitle": "Errore DIM Sync",
-    "UpdateErrorBody": "Abbiamo avuto un problema durante il salvataggio dei tuoi dati su DIM Sync. Riproveremo automaticamente più tardi.",
-    "UpdateErrorTitle": "Errore DIM Sync",
+    "ProfileErrorBody": "Abbiamo avuto un problema di comunicazione con DIM Sync. Le tue ultime impostazioni, etichette, loadout e ricerche potrebbero non essere mostrate. I tuoi dati sono ancora nei nostri server, ed ogni aggiornamento che farai in locale sarà salvato appena potremo riconnetterci. Continueremo a riprovare mentre DIM è aperto.",
+    "ProfileErrorTitle": "Errore Dowload DIM Sync",
+    "UpdateErrorBody": "Abbiamo avuto un problema salvando i tuoi dati su DIM Sync. Continueremo a riprovare mentre DIM è aperto.",
+    "UpdateErrorTitle": "Errore Salvataggio DIM Sync",
+    "UpdateQueueLength": "{{count}} nuova modifica sarà salvata quando potremo riconnetterci.",
+    "UpdateQueueLength_plural": "{{count}} nuove modifiche saranno salvate quando potremo riconnetterci.",
     "Usage": "DIM sta usando {{usage, humanBytes}} su {{quota, humanBytes}} disponibili su questo dispositivo. Questo comprende i database di Destiny scaricati da Bungie.net."
   },
   "StreamDeck": {
@@ -1048,6 +1054,23 @@
       "Item": "Scegli un oggetto dall'inventario",
       "Loadout": "Scegli un loadout"
     }
+  },
+  "StripSockets": {
+    "Action": "Svuota alloggiamenti",
+    "ArmorMods": "{{count}}x Modifiche armatura",
+    "ArtifactMods": "{{count}}x Modifiche artefatto",
+    "Button": "Svuotamento {{numSockets}} alloggiamenti",
+    "Cancel": "Annulla",
+    "Choose": "Scegli gli alloggiamenti da svuotare",
+    "Done": "Alloggiamenti svuotati",
+    "NoSockets": "Nessun alloggiamento da svuotare",
+    "Ok": "Ok",
+    "Ornaments": "{{count}}x Decoro",
+    "Others": "{{count}}x Proiezioni Spettro",
+    "Running": "Svuotamento alloggiamenti",
+    "Shaders": "{{count}}x Shader",
+    "Subclass": "{{count}}x Opzione sottoclasse",
+    "WeaponMods": "{{count}}x Modifica arma"
   },
   "Tags": {
     "Archive": "Archivia",

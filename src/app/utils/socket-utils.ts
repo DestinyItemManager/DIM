@@ -1,14 +1,23 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   DimItem,
-  DimPlug,
   DimSocketCategory,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
-import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
+import { getSubclassPlugCategories } from 'app/inventory/subclass';
+import {
+  DestinyItemPlugDefinition,
+  DestinySocketCategoryStyle,
+  TierType,
+} from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimSocket, DimSockets } from '../inventory/item-types';
 import { isArmor2Mod } from './item-utils';
+
+type WithRequiredProperty<T, K extends keyof T> = T & {
+  [P in K]-?: NonNullable<T[P]>;
+};
 
 function getSocketHashesByCategoryStyle(
   sockets: DimSockets,
@@ -141,7 +150,7 @@ export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefine
 export function socketContainsPlugWithCategory(
   socket: DimSocket,
   category: PlugCategoryHashes
-): socket is Omit<DimSocket, 'plugged'> & { plugged: DimPlug } {
+): socket is WithRequiredProperty<DimSocket, 'plugged'> {
   // the above type predicate removes the need to null-check `plugged` after this call
   return socket.plugged?.plugDef.plug.plugCategoryHash === category;
 }
@@ -155,7 +164,7 @@ export function socketContainsPlugWithCategory(
  */
 export function socketContainsIntrinsicPlug(
   socket: DimSocket
-): socket is Omit<DimSocket, 'plugged'> & { plugged: DimPlug } {
+): socket is WithRequiredProperty<DimSocket, 'plugged'> {
   // the above type predicate removes the need to null-check `plugged` after this call
   return socketContainsPlugWithCategory(socket, PlugCategoryHashes.Intrinsics);
 }
@@ -189,8 +198,20 @@ export function getDefaultAbilityChoiceHash(socket: DimSocket) {
       socket.plugSet!.plugs[0]!.plugDef.hash;
 }
 
-export function isEnhancedPerk(perk: DimPlug) {
-  const plugDef = perk.plugDef;
+export const eventArmorRerollSocketIdentifiers: string[] = ['events.solstice.'];
+
+/**
+ * With Solstice 2022, event armor has a ton of sockets for stat rerolling
+ * and they take up a lot of space. No idea if this system will be around for
+ * other armor but if it does, just add to this function.
+ */
+export function isEventArmorRerollSocket(socket: DimSocket) {
+  return eventArmorRerollSocketIdentifiers.some((i) =>
+    socket.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(i)
+  );
+}
+
+export function isEnhancedPerk(plugDef: PluggableInventoryItemDefinition) {
   return (
     plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
     plugDef.inventory!.tierType === TierType.Common
@@ -198,5 +219,23 @@ export function isEnhancedPerk(perk: DimPlug) {
 }
 
 export function countEnhancedPerks(sockets: DimSockets) {
-  return sockets.allSockets.filter((s) => s.plugged && isEnhancedPerk(s.plugged)).length;
+  return sockets.allSockets.filter((s) => s.plugged && isEnhancedPerk(s.plugged.plugDef)).length;
+}
+
+export function isModCostVisible(
+  defs: D2ManifestDefinitions,
+  plug: DestinyItemPlugDefinition
+): plug is WithRequiredProperty<DestinyItemPlugDefinition, 'energyCost'> {
+  // hide cost if it's less than 1
+  if ((plug.energyCost?.energyCost ?? 0) < 1) {
+    return false;
+  }
+
+  // hide cost for Subclass 3.0 fragments as these are currently always set to 1
+  const subclassPlugCategory = getSubclassPlugCategories(defs).get(plug.plugCategoryHash);
+  if (subclassPlugCategory?.socketCategoryHash === SocketCategoryHashes.Fragments) {
+    return false;
+  }
+
+  return true;
 }

@@ -64,8 +64,18 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
   observeStore(
     (state) => state.dimApi,
     _.debounce((currentState: DimApiState, nextState: DimApiState) => {
-      // Avoid writing back what we just loaded from IDB
-      if (currentState?.profileLoadedFromIndexedDb) {
+      if (
+        // Avoid writing back what we just loaded from IDB
+        (currentState?.profileLoadedFromIndexedDb || nextState.profileLoaded) &&
+        // Don't save if there was an error
+        !nextState.profileLoadedError &&
+        // Check to make sure one of the fields we care about has changed
+        (nextState.settings !== currentState.settings ||
+          nextState.profiles !== currentState.profiles ||
+          nextState.updateQueue !== currentState.updateQueue ||
+          nextState.itemHashTags !== currentState.itemHashTags ||
+          nextState.searches !== currentState.searches)
+      ) {
         // Only save the difference between the current and default settings
         const settingsToSave = subtractObject(nextState.settings, initialSettingsState) as Settings;
 
@@ -137,22 +147,31 @@ let getProfileBackoff = 0;
 let waitingForApiPermission = false;
 
 /**
- * Load all API data (including global settings). This should be called at start and whenever the account is changed.
+ * Load all API data (including global settings). This should be called at start
+ * and whenever the account is changed. It's also called whenever stores refresh
+ * (via the refresh button or when auto refresh triggers). This action is meant
+ * to be called repeatedly and be idempotent.
  *
- * This action effectively drives a workflow that enables DIM Sync, as well. We check for whether the user has
- * opted in to Sync, and if they haven't we prompt. We also use this action to kick off auto-import of legacy data.
+ * Note that we block loading the manifest on this, because we need the user's
+ * settings in order to choose the right language.
+ *
+ * TODO: If we can replace the manifest after load, maybe we just load using the
+ * default language and switch it if the language in settings is different.
+ *
+ * This action drives a workflow for onboarding to DIM Sync, as well. We check
+ * for whether the user has opted in to Sync, and if they haven't, we prompt.
+ * Usually they already made their choice at login, though.
  */
 export function loadDimApiData(forceLoad = false): ThunkResult {
   return async (dispatch, getState) => {
     installApiPermissionObserver();
 
+    // Load global settings first. This fails open (we fall back to defaults)
+    // but loading it first gives us a chance to find out if the API is disabled
+    // and what the current refresh rate is, which gives us important
+    // operational controls in case the API is knocked over.
     if (!getState().dimApi.globalSettingsLoaded) {
       await dispatch(loadGlobalSettings());
-    }
-
-    // API is disabled, give up
-    if (!getState().dimApi.globalSettings.dimApiEnabled) {
-      return;
     }
 
     // Check if we're even logged into Bungie.net. Don't need to load or sync if not.
@@ -177,14 +196,18 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       }
     }
 
+    // Load accounts info - we can't load the profile-specific DIM API data without it.
     const getPlatformsPromise = dispatch(getPlatforms()); // in parallel, we'll wait later
     if (!getState().dimApi.profileLoadedFromIndexedDb && !getState().dimApi.profileLoaded) {
       await dispatch(loadProfileFromIndexedDB());
     }
     installObservers(dispatch); // idempotent
 
-    if (!getState().dimApi.apiPermissionGranted) {
-      // They don't want to sync to the server, stay local only
+    // They don't want to sync from the server, or the API is disabled - stick with local data
+    if (
+      !getState().dimApi.apiPermissionGranted ||
+      !getState().dimApi.globalSettings.dimApiEnabled
+    ) {
       readyResolve();
       return;
     }
@@ -203,7 +226,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
     if (forceLoad || !getState().dimApi.profileLoaded || profileOutOfDate) {
       // get current account
       const accounts = await getPlatformsPromise;
-      if (!accounts) {
+      if (!accounts.length) {
         // User isn't logged in or has no accounts, nothing to load!
         return;
       }
@@ -229,15 +252,17 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
           getProfileBackoff++;
           const waitTime = getBackoffWaitTime(getProfileBackoff);
           infoLog('loadDimApiData', 'Waiting', waitTime, 'ms before re-attempting profile fetch');
-          await delay(waitTime);
 
-          // Retry
-          dispatch(loadDimApiData(forceLoad));
+          // Wait, then retry. We don't await this here so we don't stop the finally block from running
+          delay(waitTime).then(() => dispatch(loadDimApiData(forceLoad)));
         } else if ($DIM_FLAVOR === 'dev') {
           dispatch(needsDeveloper());
         }
         return;
       } finally {
+        // Release the app to load with whatever language was saved or the
+        // default. Better to have the wrong language (that fixes itself on
+        // reload) than to block the app working if the DIM API is down.
         readyResolve();
       }
     }

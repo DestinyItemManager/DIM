@@ -1,7 +1,7 @@
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
-import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
-import PressTip from '../dim-ui/PressTip';
+import { PressTip } from '../dim-ui/PressTip';
 import './ActivityModifier.scss';
 
 export function ActivityModifier({ modifierHash }: { modifierHash: number }) {
@@ -20,7 +20,7 @@ export function ActivityModifier({ modifierHash }: { modifierHash: number }) {
       {Boolean(modifierIcon) && <BungieImage src={modifierIcon} />}
       {Boolean(modifierName) && (
         <div className="milestone-modifier-info">
-          <PressTip tooltip={modifier.displayProperties.description}>
+          <PressTip tooltip={<RichDestinyText text={modifier.displayProperties.description} />}>
             <div className="milestone-modifier-name">{modifierName}</div>
           </PressTip>
         </div>

@@ -1,12 +1,11 @@
 import BungieImage from 'app/dim-ui/BungieImage';
-import PressTip from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React from 'react';
 import { ArmorStatHashes, ArmorStats } from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';

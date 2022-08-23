@@ -1,7 +1,7 @@
 import { stripAdept } from 'app/compare/compare-buttons';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
-import PressTip from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { getArmorSlotSvgIcon, getWeaponTypeSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { DimItem } from 'app/inventory/item-types';
@@ -48,7 +48,7 @@ const itemFactors: Record<string, Factor> = {
     runIf: () => true,
     render: () => null,
     // let's probably not show class icon for now. just invisibly include it in the considerations.
-    // render: (item) => (<PressTip elementType="span" tooltip={item.classTypeNameLocalized}><ClassIcon classType={item.classType} className={styles.classIcon} /></PressTip>),
+    // render: (item) => (<PressTip minimal elementType="span" tooltip={item.classTypeNameLocalized}><ClassIcon classType={item.classType} className={styles.classIcon} /></PressTip>),
     filter: classFilter.fromItem!,
   },
   name: {
@@ -66,8 +66,8 @@ const itemFactors: Record<string, Factor> = {
     id: 'element', //             don't compare exotic weapon elements, that's silly.
     runIf: (item) => item.element && !(item.isExotic && item.bucket.inWeapons),
     render: (item) => (
-      <PressTip elementType="span" tooltip={item.element?.displayProperties.name}>
-        <ElementIcon className={clsx(styles.inlineIcon2)} element={item.element} />
+      <PressTip minimal elementType="span" tooltip={item.element?.displayProperties.name}>
+        <ElementIcon className={clsx(styles.factorIcon)} element={item.element} />
       </PressTip>
     ),
     filter: damageFilter.fromItem!,
@@ -78,7 +78,7 @@ const itemFactors: Record<string, Factor> = {
     render: (item) => {
       const weaponIcon = getWeaponTypeSvgIcon(item);
       return weaponIcon ? (
-        <PressTip elementType="span" tooltip={item.typeName}>
+        <PressTip minimal elementType="span" tooltip={item.typeName}>
           <img className={clsx(styles.inlineIcon2, styles.weaponSvg)} src={weaponIcon} />
         </PressTip>
       ) : (
@@ -97,7 +97,10 @@ const itemFactors: Record<string, Factor> = {
       const intrinsicArmorPerk = getIntrinsicArmorPerkSocket(item)?.plugged;
       if (intrinsicArmorPerk) {
         found.push(
-          <PressTip tooltip={() => <DimPlugTooltip item={item} plug={intrinsicArmorPerk} />}>
+          <PressTip
+            key={intrinsicArmorPerk.plugDef.hash}
+            tooltip={() => <DimPlugTooltip item={item} plug={intrinsicArmorPerk} />}
+          >
             <DefItemIcon
               className={styles.factorIcon}
               itemDef={intrinsicArmorPerk.plugDef}
@@ -109,6 +112,7 @@ const itemFactors: Record<string, Factor> = {
 
       const specialty = (
         <SpecialtyModSlotIcon
+          key="specialty"
           className={styles.modSlotIcon}
           item={item}
           lowRes
@@ -133,7 +137,7 @@ const itemFactors: Record<string, Factor> = {
     id: 'armorSlot',
     runIf: (item) => item.bucket.inArmor,
     render: (item) => (
-      <PressTip elementType="span" tooltip={item.typeName}>
+      <PressTip minimal elementType="span" tooltip={item.typeName}>
         <img
           src={getArmorSlotSvgIcon(item)}
           className={clsx(styles.inlineIcon2, styles.weaponSvg, styles.factorIcon)}

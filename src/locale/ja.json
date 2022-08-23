@@ -186,6 +186,7 @@
     "BulkRevert_plural": "{{count}} 個のアイテムのタグを元に戻しました",
     "BulkTag": "選択したアイテムを{{tag}} としてタグ付けしました。",
     "BulkTag_plural": "選択した{{count}} 個のアイテムに{{tag}} のタグを付けました。",
+    "Catalyst": "Shows catalysts based on their status. catalyst:complete shows catalysts you have completed and applied, catalyst:incomplete shows catalysts you have unlocked but either not completed the objective or applied the catalyst, and catalyst:missing shows items that can have a catalyst but you haven't found it yet.",
     "Class": "クラス別にアイテムを表示",
     "Combine": "フィルタは、括弧、\"or\"、\"and \"と組み合わせたり、グループ化したりして、検索結果を絞り込むことができます。例えば \"{{example}}\" のように。",
     "ContributePower": "パワーがあり、パワーレベルに貢献できる項目を表示します。",
@@ -997,6 +998,7 @@
     "AutoBackup": "念のため、ダウンロードフォルダにあるdim-data.jsonというファイルにデータをバックアップしました。",
     "BackUpFirst": "すべてを削除する前に、まずデータをバックアップしなければなりません。",
     "BrowserMayClearData": "スペースに空きが無くなったり、DIMを長期使用してない場合ブラウザがこの情報を削除する場合があります。",
+    "DataIsLocal": "Tag and note data is local only",
     "DeleteAllData": "DIM Syncサーバーからすべてのデータを削除",
     "DeleteAllDataConfirm": "DIM Sync から、すべてのアカウントのすべてのデータを削除してもよろしいですか？元に戻すことはできません。",
     "DeleteAllDataLabel": "DIM Syncのデータを消去",
@@ -1004,7 +1006,9 @@
       "IndexedDBStorage": "ローカルストレージは、このブラウザでのみ情報を保存します。閲覧データを消去すると、この情報が削除されます。"
     },
     "DimApiFinePrint": "DIMは、タグ、ロードアウト、設定をDIMサーバーに保存し、異なるバージョンのDIM間で同期します。",
+    "DimSyncDown": "DIM Sync is not connected due to a problem talking to the server.",
     "DimSyncEnabled": "DIM Syncを有効にする",
+    "DimSyncNotEnabled": "DIM Sync is not enabled, so your settings, tags, loadouts, and searches are only stored locally and will be lost if you clear your browser storage. Enable DIM Sync in Settings to back up your data automatically, or regularly back up your data manually.",
     "EnableDimApi": "DIM Sync を有効にする (推奨)",
     "Export": "バックアップのダウンロード",
     "Import": "バックアップのインポート",
@@ -1025,10 +1029,12 @@
     "IndexedDBStorage": "ローカルブラウザストレージ",
     "LearnMore": "DIM Sync について詳しくはこちら",
     "MenuTitle": "同期とバックアップ",
-    "ProfileErrorBody": "DIM Sync からデータを読み込む際に問題が発生しました。自動的に読み込みます。",
-    "ProfileErrorTitle": "同期エラー",
-    "UpdateErrorBody": "DIM Sync にデータを保存する際に問題が発生しました。後で自動的に再試行します。",
-    "UpdateErrorTitle": "同期エラー",
+    "ProfileErrorBody": "We had a problem communicating with DIM Sync. Your latest settings, tags, loadouts, and searches may not be shown. Your data is still on our servers, and any updates you make locally will be saved when we can reconnect. We'll keep retrying while DIM is open.",
+    "ProfileErrorTitle": "DIM Sync Download Error",
+    "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
+    "UpdateErrorTitle": "DIM Sync Save Error",
+    "UpdateQueueLength": "{{count}} new change will be saved when we can reconnect.",
+    "UpdateQueueLength_plural": "{{count}} new changes will be saved when we can reconnect.",
     "Usage": "DIMは、このデバイスで利用可能な {{quota, humanBytes}} のうち {{usage, humanBytes}} を使用しています。これには、Bungie.netからダウンロードされたDestinyアイテムデータベースが含まれます。"
   },
   "StreamDeck": {
@@ -1048,6 +1054,23 @@
       "Item": "Choose an item from the inventory",
       "Loadout": "Choose a loadout"
     }
+  },
+  "StripSockets": {
+    "Action": "Strip Sockets",
+    "ArmorMods": "{{count}}x Armor Mod",
+    "ArtifactMods": "{{count}}x Artifact Mod",
+    "Button": "Strip {{numSockets}} Sockets",
+    "Cancel": "キャンセル",
+    "Choose": "Choose Sockets to strip",
+    "Done": "Stripped Sockets",
+    "NoSockets": "No Sockets to clear",
+    "Ok": "Ok",
+    "Ornaments": "{{count}}x Ornament",
+    "Others": "{{count}}x Ghost Projection",
+    "Running": "Stripping Sockets",
+    "Shaders": "{{count}}x Shader",
+    "Subclass": "{{count}}x Subclass Option",
+    "WeaponMods": "{{count}}x Weapon Mod"
   },
   "Tags": {
     "Archive": "アーカイブ",

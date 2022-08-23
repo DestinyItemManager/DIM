@@ -294,7 +294,11 @@ function toCollectibles(
         defs,
         buckets,
         profileResponse.itemComponents,
-        collectibleDef.itemHash
+        collectibleDef.itemHash,
+        undefined,
+        undefined,
+        undefined,
+        profileResponse.profileRecords.data
       );
       if (!item) {
         return null;

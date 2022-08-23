@@ -10,7 +10,6 @@ import {
   getSocketByIndex,
   getSocketsByIndexes,
   getWeaponArchetypeSocket,
-  socketContainsPlugWithCategory,
 } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
@@ -22,7 +21,7 @@ import {
   StatHashes,
 } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
@@ -77,6 +76,11 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
     !item.crafted && mementoSocketCategoryHash,
   ];
 
+  const excludedPlugCategoryHashes = [
+    PlugCategoryHashes.GenericAllVfx,
+    !item.catalystInfo && PlugCategoryHashes.V400EmptyExoticMasterwork,
+  ];
+
   // Iterate in reverse category order so cosmetic mods are at the front
   const mods = [...item.sockets.categories]
     .filter((c) => !excludedSocketCategoryHashes.includes(c.category.hash))
@@ -90,7 +94,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
       (socket) =>
         socket.plugged?.plugDef.displayProperties.name &&
         !isDeepsightResonanceSocket(socket) &&
-        !socketContainsPlugWithCategory(socket, PlugCategoryHashes.GenericAllVfx)
+        !excludedPlugCategoryHashes.includes(socket.plugged.plugDef.plug.plugCategoryHash)
     );
 
   const keyStats =

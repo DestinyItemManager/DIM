@@ -3,6 +3,7 @@ import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import { armorBuckets } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
+import { ProcessItem } from './process-worker/types';
 
 export interface MinMax {
   min: number;
@@ -37,6 +38,16 @@ export interface ArmorSet {
 
 export type ItemsByBucket = Readonly<{
   [bucketHash in LockableBucketHash]: readonly DimItem[];
+}>;
+
+/**
+ * An item group mapping to the same process item. All items in this group
+ * must be interchangeable subject to the armor energy rules, always, for any
+ * given mod assignment.
+ */
+export type ItemGroup = Readonly<{
+  canonicalProcessItem: ProcessItem;
+  items: DimItem[];
 }>;
 
 /**

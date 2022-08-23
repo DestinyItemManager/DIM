@@ -1,5 +1,48 @@
 ## Next
 
+## 7.31.0 <span class="changelog-date">(2022-08-21)</span>
+
+* Fixed Loadouts trying to clear Solstice sockets and Strip Sockets trying to remove Festival of the Lost helmet ornaments.
+* Tooltips have been adjusted further. They now have more spacing around content, rounded corners and improved contrast.
+
+## 7.30.0 <span class="changelog-date">(2022-08-14)</span>
+
+* Tooltips have been redesigned:
+  * They now use a darker color scheme that fits in better with the rest of DIM.
+  * Perk and mod tooltips for enhanced weapon traits and Exotic catalysts have unique styles to help them stand out.
+  * The energy cost of armor mods is displayed within tooltips.
+* Fixed an issue where the energy meter on Ghosts was not displaying the amount of energy that had been used by inserted mods.
+* Solar class ability and jump icons have had their colors adjusted to match other solar abilities (we couldn't handle it anymore).
+
+## 7.29.1 <span class="changelog-date">(2022-08-07)</span>
+
+* Fix a bug where you couldn't edit a search query from the middle.
+
+## 7.29.0 <span class="changelog-date">(2022-08-07)</span>
+
+* Fixed Armory perk grid showing arbitrary wish list thumbs, and fixed Collections offering wish list notes for unrelated weapons.
+* Collections items will now be recognized as craftable. Try the search filter `is:craftable -is:patternunlocked` on the Records page to list craftable weapons you still need to unlock the pattern for, and click the weapons to see your pattern progress.
+* When prioritizing where to place other Arc armor mods, DIM Loadout Mod assignment will now try to activate the secondary perks of all types of Arc Charged With Light mods.
+* Fixed the "Remove other mods" toggle in Loadouts resetting when saving the Loadout as "Any Class".
+* Fixed missing element icons in the Triage pane.
+* Added a "Strip Sockets" search action to remove shaders, ornaments, weapon, armor, and artifact mods. This is available from the advanced actions dropdown to the right of the search field. Search for targeted items first, then choose what to remove.
+* Eliminated an unnecessary 10 second pause when loading DIM if the DIM Sync service is down.
+* Fixed search filter string disappearing when rotating or majorly resizing the DIM window.
+* Integration for the [DIM Stream Deck extension](https://dim-stream-deck.netlify.app/) is now available outside DIM Beta.
+* Fixed an issue with saving/syncing the Farming Mode slot count setting.
+* Fixed a crash and improved the accuracy of the Loadout Optimizer's mod assignment behavior.
+
+### Beta Only
+
+* Added warnings about potential data loss when you save tags, notes, and loadouts but have DIM Sync off.
+* Added an info bar when DIM Sync is not able to talk to the server.
+
+## 7.28.0 <span class="changelog-date">(2022-07-31)</span>
+
+* Hid Solstice armor rerolling sockets from Loadout Optimizer too.
+
+## 7.27.0 <span class="changelog-date">(2022-07-24)</span>
+
 ## 7.26.1 <span class="changelog-date">(2022-07-23)</span>
 
 * Added Solstice event challenges to the Progress page.
@@ -7,6 +50,7 @@
 ## 7.26.0 <span class="changelog-date">(2022-07-17)</span>
 
 * Worked around a Bungie.net API bug where Vanguard reset count was reported under Strange Favor (Dares of Eternity) instead.
+* DIM now has direct support for the [DIM Stream Deck extension](https://dim-stream-deck.netlify.app/). If you have a Stream Deck you can install this plugin and then enable the connection from DIM's settings to control DIM from your Stream Deck. Please note that the plugin is neither written by nor supported by the DIM team.
 
 ## 7.25.0 <span class="changelog-date">(2022-07-10)</span>
 
@@ -241,6 +285,7 @@
 * Loadout Optimizer Mod picker will now correctly update when switching between mod slots without closing Mod Picker.
 * Loadout Optimizer now correctly takes Echo of Persistence's class-specific stat reductions into account when generating sets.
 * The "Kinetic Slot" icon in Compare sheet now looks different from the "Kinetic Damage" icon.
+* Added `catalyst:` filter which accepts the following parameters `missing`, `complete`, and `incomplete`.
 
 ### Features
 

@@ -183,6 +183,8 @@ body {
   accent-color: $orange;
   // Disable drag and drop so we can use our polyfill
   -webkit-user-drag: none;
+  // Don't let iOS Safari mess with font sizes
+  text-size-adjust: none;
 }
 
 h2,

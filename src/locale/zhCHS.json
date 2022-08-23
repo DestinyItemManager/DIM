@@ -186,6 +186,7 @@
     "BulkRevert_plural": "恢复 {{count}} 件物品标签",
     "BulkTag": "将选择物品标记为 {{tag}}.",
     "BulkTag_plural": "将 {{count}} 件选择物品标记为 {{tag}}.",
+    "Catalyst": "按状态显示催化。catalyst:complete 显示你已解锁并应用的催化，catalyst:incomplete 显示你已解锁但尚未完成目标且应用的催化，而 catalyst:missing 显示你尚未解锁催化的物品。",
     "Class": "按照职业类别显示.",
     "Combine": "可以用括号来组合过滤器，或用“or”和“and”来进一步筛选你的搜索，例如“{{example}}”。",
     "ContributePower": "显示拥有光等的物品.",
@@ -997,6 +998,7 @@
     "AutoBackup": "为了以防万一，我们已经把你的数据备份到了下载文件夹里的 dim-data.json 文件。",
     "BackUpFirst": "为了以防万一，在全部删除数据前，你必须先将其备份。",
     "BrowserMayClearData": "如果硬盘空间不足或长时间未访问DIM，浏览器有可能会删除这些数据信息。",
+    "DataIsLocal": "标签和备注数据仅在本地保存",
     "DeleteAllData": "从 DIM 同步服务器删除所有数据",
     "DeleteAllDataConfirm": "你确定要从 DIM 同步中删除你的所有账号的所有数据吗？这无法撤销。",
     "DeleteAllDataLabel": "清空 DIM 同步数据",
@@ -1004,7 +1006,9 @@
       "IndexedDBStorage": "本机存放区仅在此流览器中存储资讯。如果删除流览器资料，也会删除这些资讯。"
     },
     "DimApiFinePrint": "DIM 会把你的标签、配装和设置保存到云端，并同步给 DIM 的不同版本。",
+    "DimSyncDown": "与服务器通信时出现问题，DIM 同步尚未连接。",
     "DimSyncEnabled": "DIM 同步已启用",
+    "DimSyncNotEnabled": "DIM 同步未启用，所以你的设置、标签、配装和搜索将仅在本地保存，会在清理浏览器存储时丢失。在设置中启用 DIM 同步便可自动或随时手动备份你的数据。",
     "EnableDimApi": "启用 DIM 同步（推荐）",
     "Export": "下载数据备份",
     "Import": "导入数据备份",
@@ -1025,10 +1029,12 @@
     "IndexedDBStorage": "本地浏览器存储",
     "LearnMore": "了解 DIM 同步",
     "MenuTitle": "同步和备份",
-    "ProfileErrorBody": "从 DIM 同步加载你的数据时出错。我们会自动重试。",
-    "ProfileErrorTitle": "DIM 同步错误",
-    "UpdateErrorBody": "保存你的数据到 DIM 同步时出错。我们稍后会自动重试。",
-    "UpdateErrorTitle": "DIM 同步错误",
+    "ProfileErrorBody": "与 DIM 同步通信时出错。可能无法显示你最新的设置、标签、配装和搜索。你的数据仍在我们的服务器上，而我们会在能重新连接时保存你的本地更改。我们会在 DIM 开启时自动重试。",
+    "ProfileErrorTitle": "DIM 同步下载错误",
+    "UpdateErrorBody": "向 DIM 同步保存你的数据时出了点问题。我们会在 DIM 开启时自动重试。",
+    "UpdateErrorTitle": "DIM同步保存错误",
+    "UpdateQueueLength": "我们将在能重新连接时保存 {{count}} 个新更改。",
+    "UpdateQueueLength_plural": "我们将在能重新连接时保存 {{count}} 个新更改。",
     "Usage": "DIM 使用了此设备{{quota, humanBytes}}可用空间中的{{usage, humanBytes}}.这包括从 bungie. net 下载的命运2物品资料库。"
   },
   "StreamDeck": {
@@ -1048,6 +1054,23 @@
       "Item": "从库存中选择一个物品",
       "Loadout": "选择一个配装"
     }
+  },
+  "StripSockets": {
+    "Action": "清空插槽",
+    "ArmorMods": "{{count}}x 护甲模组",
+    "ArtifactMods": "{{count}}x 神器模组",
+    "Button": "清空 {{numSockets}} 个插槽",
+    "Cancel": "取消",
+    "Choose": "选择要清空的插槽",
+    "Done": "已清空的插槽",
+    "NoSockets": "无插槽可清空",
+    "Ok": "确定",
+    "Ornaments": "{{count}}x 皮肤",
+    "Others": "{{count}}x 机灵投影",
+    "Running": "清空插槽",
+    "Shaders": "{{count}}x 着色器",
+    "Subclass": "{{count}}x 子职业选项",
+    "WeaponMods": "{{count}}x 武器模组"
   },
   "Tags": {
     "Archive": "归档",

@@ -168,7 +168,7 @@
     "SyncShaders": "Synchroniser les revêtements",
     "SyncShadersTitle": "Utiliser le même revêtement sur tous les objets",
     "Title": "Choisir les revêtements et ornements",
-    "UseEquipped": "Utiliser ceux équipés"
+    "UseEquipped": "Utiliser équipés"
   },
   "FileUpload": {
     "Instructions": "Cliquer ou glisser des fichiers"
@@ -186,6 +186,7 @@
     "BulkRevert_plural": "Rajout des étiquettes sur {{count}} objets.",
     "BulkTag": "Élément sélectionné étiqueté {{tag}}.",
     "BulkTag_plural": "{{count}} Éléments sélectionnés étiquetés {{tag}}.",
+    "Catalyst": "Affiche les catalyseurs selon leur statut. catalyst:complete affiche les catalyseurs que vous avez complétés et appliqués, catalyst:incomplete affiche les catalyseurs que vous avez débloqués mais que vous n'avez soi pas complété soi pas appliqué, et catalyst:missing affiche les objets qui peuvent avoir un catalyseur que vous n'avez pas encore trouvé.",
     "Class": "Affiche les objets en fonction de leur affinité de classe.",
     "Combine": "Les filtres peuvent être combinés ou groupés avec des parenthèses, \"or\" et \"and\" pour affiner votre recherche, par exemple \"{{example}}\".",
     "ContributePower": "Affiche les objets qui ont de la puissance et qui peuvent contribuer à votre niveau de puissance.",
@@ -997,6 +998,7 @@
     "AutoBackup": "Nous avons sauvegardé vos données dans un fichier appelé dim-data.json dans votre dossier de téléchargements.",
     "BackUpFirst": "Vous DEVEZ d'abord sauvegarder vos données avant de les supprimer. Au cas où.",
     "BrowserMayClearData": "Votre navigateur peut supprimer cette information si vous n'avez plus d'espace ou si vous ne visitez pas DIM fréquemment.",
+    "DataIsLocal": "Les données des étiquettes et des notes sont uniquement locales",
     "DeleteAllData": "Supprimer TOUTES les données des serveurs de synchronisation DIM",
     "DeleteAllDataConfirm": "Êtes-vous sûr de vouloir supprimer TOUTES vos données, pour tous les comptes, de la synchronisation DIM ? Vous ne pouvez pas annuler cette opération.",
     "DeleteAllDataLabel": "Effacer les données de synchronisation DIM",
@@ -1004,7 +1006,9 @@
       "IndexedDBStorage": "Le stockage local ne sauvegardera votre information que sur ce navigateur. Effacer les données de votre navigateur supprimera cette information."
     },
     "DimApiFinePrint": "DIM sauvegardera vos étiquettes, arsenaux, et paramètres sur les serveurs DIM et les synchronisera entre les différentes versions de DIM.",
+    "DimSyncDown": "La synchronisation DIM n'est pas connectée à cause d'un problème de communication avec le serveur.",
     "DimSyncEnabled": "Synchronisation DIM activée",
+    "DimSyncNotEnabled": "La synchronisation DIM n'est pas activée, donc vos paramètres, étiquettes, arsenaux, et les recherches ne sont stockées que localement et seront perdues si vous effacez le stockage de votre navigateur. Activez la synchronisation DIM dans les paramètres pour sauvegarder automatiquement vos données, ou sauvegardez régulièrement vos données manuellement.",
     "EnableDimApi": "Activer la synchronisation DIM (recommandé)",
     "Export": "Télécharger une sauvegarde de données",
     "Import": "Importer une sauvegarde de données",
@@ -1025,10 +1029,12 @@
     "IndexedDBStorage": "Stockage local du navigateur",
     "LearnMore": "En savoir plus sur la synchronisation DIM",
     "MenuTitle": "Synchronisation & sauvegardes",
-    "ProfileErrorBody": "Nous avons rencontré un problème lors du chargement de vos données depuis DIM Sync. Nous allons continuer à essayer de les charger automatiquement.",
-    "ProfileErrorTitle": "Erreur de synchronisation DIM",
-    "UpdateErrorBody": "Nous avons rencontré un problème lors de l'enregistrement de vos données sur DIM Sync. Nous allons automatiquement réessayer plus tard.",
-    "UpdateErrorTitle": "Erreur de synchronisation DIM",
+    "ProfileErrorBody": "Nous avons eu un problème de communication avec la synchronisation DIM. Vos derniers paramètres, étiquettes, arsenaux et recherches peuvent ne pas être affichés. Vos données sont toujours sur nos serveurs, et toutes les mises à jour que vous faites localement seront enregistrées lorsque nous pourrons nous reconnecter. Nous continuerons à réessayer pendant que DIM est ouvert.",
+    "ProfileErrorTitle": "Erreur de téléchargement de la synchronisation DIM",
+    "UpdateErrorBody": "Nous avons rencontré un problème lors de l'enregistrement de vos données dans la synchronisation DIM. Nous continuerons à réessayer pendant que DIM est ouvert.",
+    "UpdateErrorTitle": "Erreur de sauvegarde synchronisation DIM",
+    "UpdateQueueLength": "{{count}} nouveau changement sera sauvegardé lorsque nous pourrons nous reconnecter.",
+    "UpdateQueueLength_plural": "{{count}} nouveaux changements seront sauvegardés lorsque nous pourrons nous reconnecter.",
     "Usage": "DIM utilise {{usage, humanBytes}} sur {{quota, humanBytes}} disponible pour lui sur cet appareil. Cela inclus la base de données d'objets de Destiny téléchargée depuis Bungie.net."
   },
   "StreamDeck": {
@@ -1048,6 +1054,23 @@
       "Item": "Choisissez un objet dans l'inventaire",
       "Loadout": "Choisissez un arsenal"
     }
+  },
+  "StripSockets": {
+    "Action": "Vider les emplacements",
+    "ArmorMods": "{{count}}x Mod d'armure",
+    "ArtifactMods": "{{count}}x Mod d'artefact",
+    "Button": "Vider {{numSockets}} emplacements",
+    "Cancel": "Annuler",
+    "Choose": "Choisissez les emplacements à vider",
+    "Done": "Emplacements vidés",
+    "NoSockets": "Aucun emplacement à vider",
+    "Ok": "Ok",
+    "Ornaments": "{{count}}x Ornement",
+    "Others": "{{count}}x Projection de spectre",
+    "Running": "Vidage des emplacements",
+    "Shaders": "{{count}}x Revêtement",
+    "Subclass": "{{count}}x Option de doctrine",
+    "WeaponMods": "{{count}}x Mod d'arme"
   },
   "Tags": {
     "Archive": "Archive",

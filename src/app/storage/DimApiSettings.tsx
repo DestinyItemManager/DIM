@@ -3,7 +3,7 @@ import { deleteAllApiData, loadDimApiData } from 'app/dim-api/actions';
 import { setApiPermissionGranted } from 'app/dim-api/basic-actions';
 import { exportDimApiData } from 'app/dim-api/dim-api';
 import { importDataBackup } from 'app/dim-api/import';
-import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
+import { apiPermissionGrantedSelector, dimSyncErrorSelector } from 'app/dim-api/selectors';
 import HelpLink from 'app/dim-ui/HelpLink';
 import Switch from 'app/dim-ui/Switch';
 import { t } from 'app/i18next-t';
@@ -11,7 +11,6 @@ import { showNotification } from 'app/notifications/notifications';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { RootState } from 'app/store/types';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -26,7 +25,7 @@ const dimApiHelpLink =
 export default function DimApiSettings() {
   const dispatch = useThunkDispatch();
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
-  const profileLoadedError = useSelector((state: RootState) => state.dimApi.profileLoadedError);
+  const profileLoadedError = useSelector(dimSyncErrorSelector);
   const [hasBackedUp, setHasBackedUp] = useState(false);
 
   const onApiPermissionChange = async (checked: boolean) => {
@@ -38,6 +37,9 @@ export default function DimApiSettings() {
       exportBackupData(data);
       showBackupDownloadedNotification();
       dispatch(loadDimApiData());
+    } else {
+      // Reset the warning about data not being saved
+      localStorage.removeItem('warned-no-sync');
     }
   };
 

@@ -1,4 +1,4 @@
-import PressTip from 'app/dim-ui/PressTip';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';

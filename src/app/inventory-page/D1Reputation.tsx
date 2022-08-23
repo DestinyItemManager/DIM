@@ -1,9 +1,8 @@
 import { D1Store } from 'app/inventory/store-types';
 import _ from 'lodash';
-import React from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import DiamondProgress from '../dim-ui/DiamondProgress';
-import PressTip from '../dim-ui/PressTip';
+import { PressTip, Tooltip } from '../dim-ui/PressTip';
 import './D1Reputation.scss';
 
 export default function D1Reputation({ store }: { store: D1Store }) {
@@ -20,8 +19,8 @@ export default function D1Reputation({ store }: { store: D1Store }) {
               key={rep.faction.hash}
               tooltip={
                 <>
-                  <h2>{rep.faction.factionName}</h2>
-                  {rep.progressToNextLevel}/{rep.nextLevelAt}
+                  <Tooltip.Header text={rep.faction.factionName} />
+                  {rep.progressToNextLevel} / {rep.nextLevelAt}
                 </>
               }
             >

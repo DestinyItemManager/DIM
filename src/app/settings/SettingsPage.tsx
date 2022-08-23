@@ -299,7 +299,7 @@ export default function SettingsPage() {
                     min="48"
                     max="66"
                     name="itemSize"
-                    onChange={onChange}
+                    onChange={onChangeNumeric}
                   />
                   {Math.max(48, settings.itemSize)}px
                   <button type="button" className="dim-button" onClick={resetItemSize}>
@@ -475,7 +475,7 @@ export default function SettingsPage() {
                   name="charColMobile"
                   value={settings.charColMobile}
                   options={charColOptions}
-                  onChange={onChange}
+                  onChange={onChangeNumeric}
                 />
                 <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
               </div>
@@ -485,7 +485,7 @@ export default function SettingsPage() {
                 name="charCol"
                 value={settings.charCol}
                 options={charColOptions}
-                onChange={onChange}
+                onChange={onChangeNumeric}
               />
             )}
             <div className="setting">
@@ -510,7 +510,7 @@ export default function SettingsPage() {
               name="inventoryClearSpaces"
               value={settings.inventoryClearSpaces}
               options={numberOfSpacesOptions}
-              onChange={onChange}
+              onChange={onChangeNumeric}
             />
             <div className="setting">
               <label>{t('Settings.LoadoutSort')}</label>
