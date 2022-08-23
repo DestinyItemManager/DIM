@@ -38,9 +38,9 @@ const missingSources: { [key: string]: number[] } = {
     3706457515, // Songbreaker Grips
   ],
   banshee: [
-    875346617, // Sidearm Dexterity
-    875346621, // Shotgun Dexterity
-    3339644635, // Pulse Rifle Targeting
+    1324233016, // Sword Scavenger
+    1324233019, // Scout Rifle Loader
+    2187989977, // Machine Gun Scavenger
   ],
   battlegrounds: [],
   blackarmory: [],
@@ -349,6 +349,7 @@ const missingSources: { [key: string]: number[] } = {
     2162276668, // Cry Defiance
     2165661157, // Baseline Mark
     2183384906, // War Mantis
+    2187989983, // Focusing Strike
     2190967049, // Prophet Snow
     2211544324, // The Outlander's Cloak
     2230522771, // War Mantis
@@ -1420,9 +1421,9 @@ const missingSources: { [key: string]: number[] } = {
     4050474396, // Descending Echo Mark
   ],
   gunsmith: [
-    875346617, // Sidearm Dexterity
-    875346621, // Shotgun Dexterity
-    3339644635, // Pulse Rifle Targeting
+    1324233016, // Sword Scavenger
+    1324233019, // Scout Rifle Loader
+    2187989977, // Machine Gun Scavenger
   ],
   harbinger: [],
   haunted: [],
@@ -1775,7 +1776,6 @@ const missingSources: { [key: string]: number[] } = {
     836969671, // Insight Unyielding Greaves
     854373147, // Insight Unyielding Plate
     875215126, // Prodigal Mark
-    875346622, // Trace Rifle Reserves
     880368054, // Tangled Web Grips
     881579413, // Terra Concord Helm
     919186882, // Tangled Web Mark
@@ -1804,6 +1804,7 @@ const missingSources: { [key: string]: number[] } = {
     1293868684, // Insight Unyielding Helm
     1295776817, // Insight Rover Grips
     1301696822, // Mimetic Savior Greaves
+    1324233017, // Machine Gun Holster
     1330107298, // Thorium Holt Robes
     1330542168, // Tangled Web Bond
     1348658294, // Clandestine Maneuvers
@@ -1862,6 +1863,7 @@ const missingSources: { [key: string]: number[] } = {
     2159363321, // Be Thy Guide
     2173858802, // Prodigal Cloak
     2185500219, // Insight Unyielding Plate
+    2187989980, // Glaive Loader
     2193432605, // Mimetic Savior Helm
     2205604183, // Dead End Cure 2.1
     2206284939, // Tangled Web Strides
@@ -1942,9 +1944,6 @@ const missingSources: { [key: string]: number[] } = {
     3299386902, // Insight Unyielding Plate
     3304280092, // Devastation Complex
     3316802363, // Retro-Grade TG2
-    3339644634, // Sidearm Holster
-    3339644637, // Trace Rifle Ammo Finder
-    3339644638, // Shotgun Holster
     3360070350, // Prodigal Greaves
     3386676796, // Prodigal Gloves
     3397835010, // Prodigal Strides
