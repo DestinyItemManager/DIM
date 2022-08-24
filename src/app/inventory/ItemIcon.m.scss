@@ -158,11 +158,11 @@ $commonBg: #366f42;
 }
 
 .solarColorFilter {
-  filter: hue-rotate(148deg) grayscale(0.1);
+  filter: hue-rotate(148deg) grayscale(0.1) saturate(0.8);
 }
 
 .arcColorFilter {
-  filter: hue-rotate(302deg) brightness(2) grayscale(0.5);
+  filter: hue-rotate(307deg) brightness(2) grayscale(0.5) saturate(0.9);
 }
 
 .transparencyFix {
