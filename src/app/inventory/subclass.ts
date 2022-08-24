@@ -148,6 +148,9 @@ const subclassInfoByHash: Record<number, SubclassInfo> = {
   2240888816: v3Subclass(DamageType.Thermal, DestinyClass.Hunter), // Gunslinger (v3)
   2550323932: v3Subclass(DamageType.Thermal, DestinyClass.Titan), // Sunbreaker (v3)
   3941205951: v3Subclass(DamageType.Thermal, DestinyClass.Warlock), // Dawnblade (v3)
+  2328211300: v3Subclass(DamageType.Arc, DestinyClass.Hunter), // Arcstrider (v3)
+  2932390016: v3Subclass(DamageType.Arc, DestinyClass.Titan), // Striker (v3)
+  3168997075: v3Subclass(DamageType.Arc, DestinyClass.Warlock), // Stormcaller (v3)
 };
 
 interface SubclassPlugCategory {
