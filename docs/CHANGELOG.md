@@ -1,5 +1,7 @@
 ## Next
 
+* Updating/overwriting a Loadout using Loadout Optimizer's "Compare Loadout" button will now correctly remove the placeholders for armor equipped in the Loadout that no longer exists.
+
 ## 7.31.1 <span class="changelog-date">(2022-08-23)</span>
 
 ## 7.31.0 <span class="changelog-date">(2022-08-21)</span>

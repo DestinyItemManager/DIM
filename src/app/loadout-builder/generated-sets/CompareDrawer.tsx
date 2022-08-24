@@ -2,12 +2,14 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { updateLoadout } from 'app/loadout-drawer/actions';
+import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { convertToLoadoutItem, findItemForLoadout } from 'app/loadout-drawer/loadout-utils';
+import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
 import LoadoutView from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -48,10 +50,16 @@ function chooseInitialLoadout(
   );
 }
 
+/**
+ * Creates an updated loadout from an old `loadout`, with
+ * equipped armor replaced with `setItems`, any subclass
+ * replaced with `subclass`, and the given `params` and `notes`.
+ */
 function createLoadoutUsingLOItems(
   defs: D2ManifestDefinitions,
   allItems: DimItem[],
   storeId: string | undefined,
+  buckets: InventoryBuckets,
   setItems: DimItem[],
   subclass: ResolvedLoadoutItem | undefined,
   loadout: Loadout | undefined,
@@ -60,24 +68,35 @@ function createLoadoutUsingLOItems(
 ) {
   return produce(loadout, (draftLoadout) => {
     if (draftLoadout) {
+      const [resolvedItems, warnItems] = getItemsFromLoadoutItems(
+        draftLoadout.items,
+        defs,
+        storeId,
+        buckets,
+        allItems
+      );
       const newItems = setItems.map((item) => convertToLoadoutItem(item, true));
-
       if (subclass) {
         newItems.push(subclass.loadoutItem);
       }
 
-      for (const item of draftLoadout.items) {
-        const existingLoadoutItem = findItemForLoadout(defs, allItems, storeId, item);
+      // We treat missing and existing items all the same here, we just need to
+      // investigate the resolution result for whether items need to be
+      // retained or will be replaced.
+      // NB this drops items if fake item creation fails, but that's fine
+      // because the user gets a preview of the entire loadout as it would be saved
+      for (const existingItem of resolvedItems.concat(warnItems)) {
+        // An item is replaced if
         const hasBeenReplaced =
-          // An item is replaced if the item actually resolves to something and
-          // something else is equipped in its position, the item itself exists
-          // anywhere in the loadout (pockets) or we replace the subclass
-          existingLoadoutItem &&
-          ((item.equip && LockableBucketHashes.includes(existingLoadoutItem.bucket.hash)) ||
-            setItems.some((i) => i.id === existingLoadoutItem?.id) ||
-            (subclass && existingLoadoutItem?.bucket.hash === BucketHashes.Subclass));
+          // it's an equipped armor piece (since our LO set always consists of 5 equipped pieces)
+          (existingItem.loadoutItem.equip &&
+            LockableBucketHashes.includes(existingItem.item.bucket.hash)) ||
+          // it already exists in our setItems (it may be pocketed)
+          setItems.some((i) => i.id === existingItem.item.id) ||
+          // or we replace the subclass
+          (subclass && existingItem.item.bucket.hash === BucketHashes.Subclass);
         if (!hasBeenReplaced) {
-          newItems.push(item);
+          newItems.push(existingItem.loadoutItem);
         }
       }
 
@@ -110,6 +129,7 @@ export default function CompareDrawer({
   );
 
   const allItems = useSelector(allItemsSelector);
+  const buckets = useSelector(bucketsSelector)!;
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const generatedLoadout = useMemo(
@@ -118,13 +138,14 @@ export default function CompareDrawer({
         defs,
         allItems,
         selectedStore.id,
+        buckets,
         setItems,
         subclass,
         selectedLoadout,
         params,
         notes
       ),
-    [allItems, defs, notes, params, selectedLoadout, selectedStore.id, setItems, subclass]
+    [allItems, defs, notes, params, selectedLoadout, selectedStore.id, buckets, setItems, subclass]
   );
 
   const onSaveLoadout = (e: React.MouseEvent) => {
