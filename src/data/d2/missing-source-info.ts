@@ -483,7 +483,6 @@ const missingSources: { [key: string]: number[] } = {
     4288395850, // Cloak of Retelling
   ],
   cayde6: [],
-  cipher: [],
   compass: [],
   contact: [],
   crownofsorrow: [
@@ -1184,7 +1183,6 @@ const missingSources: { [key: string]: number[] } = {
     4059030097, // Winterhart Mask
   ],
   evidenceboard: [],
-  exoticcipher: [],
   fwc: [
     680327840, // Simulator Greaves
     807866445, // Simulator Gloves
@@ -1674,6 +1672,7 @@ const missingSources: { [key: string]: number[] } = {
     4211068696, // Iron Truage Legs
     4248834293, // Iron Remembrance Vest
   ],
+  kingsfall: [],
   lastwish: [
     4968701, // Greaves of the Great Hunt
     16387641, // Mark of the Great Hunt
@@ -2171,6 +2170,7 @@ const missingSources: { [key: string]: number[] } = {
     4083497488, // Sovereign Gloves
   ],
   pit: [],
+  plunder: [],
   presage: [],
   prestige: [],
   prophecy: [],

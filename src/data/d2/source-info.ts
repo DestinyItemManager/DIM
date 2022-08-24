@@ -191,11 +191,6 @@ const D2Sources: {
     ],
     searchString: [],
   },
-  cipher: {
-    itemHashes: [],
-    sourceHashes: [],
-    searchString: [],
-  },
   compass: {
     itemHashes: [],
     sourceHashes: [
@@ -590,11 +585,6 @@ const D2Sources: {
     ],
     searchString: [],
   },
-  exoticcipher: {
-    itemHashes: [],
-    sourceHashes: [],
-    searchString: [],
-  },
   fwc: {
     itemHashes: [],
     sourceHashes: [
@@ -732,6 +722,13 @@ const D2Sources: {
       2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
       3072862693, // Source: Complete Iron Banner matches and earn rank-up packages from Lord Saladin.
       3966667255, // Source: Complete Iron Banner's Season 9 Seasonal Pursuit.
+    ],
+    searchString: [],
+  },
+  kingsfall: {
+    itemHashes: [],
+    sourceHashes: [
+      160129377, // Source: "King's Fall" Raid
     ],
     searchString: [],
   },
@@ -920,6 +917,18 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       1745960977, // Source: Pit of Heresy
+    ],
+    searchString: [],
+  },
+  plunder: {
+    itemHashes: [],
+    sourceHashes: [
+      790152021, // Source: Season of Plunder Triumph
+      2982642634, // Source: Season of Plunder Grandmaster Nightfall
+      3265560237, // Source: Cryptic Quatrains III
+      3308438907, // Source: Season of Plunder
+      3740731576, // Source: "A Rising Tide" Mission
+      4199401779, // Source: Season of Plunder Activities
     ],
     searchString: [],
   },
