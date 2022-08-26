@@ -291,7 +291,7 @@ export function PlugTooltip({
 export function StatValue({ value, statHash }: { value: number; statHash: number }) {
   const defs = useD2Definitions()!;
   const statDef = defs.Stat.get(statHash);
-  if (!statDef || !statDef.displayProperties.name) {
+  if (!statDef?.displayProperties.name) {
     return null;
   }
   return (

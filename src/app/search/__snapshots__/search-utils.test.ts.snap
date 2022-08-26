@@ -6,7 +6,7 @@ exports[`generateSuggestionsForFilter full suggestions for filter format '[ 'ran
   'ghost',  'subclass',
   'stasis'
 ] 1`] = `
-Array [
+[
   "energycapacity:",
   "energycapacity:<",
   "energycapacity:>",
@@ -24,13 +24,13 @@ Array [
 `;
 
 exports[`generateSuggestionsForFilter full suggestions for filter format 'freeform', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
-Array [
+[
   "a:",
 ]
 `;
 
 exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
-Array [
+[
   "a:",
   "a:b",
   "a:c",
@@ -44,7 +44,7 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'query'
   'total',     'custom',
   'any'
 ] 1`] = `
-Array [
+[
   "maxstatvalue:",
   "maxstatvalue:mobility",
   "maxstatvalue:resilience",
@@ -65,7 +65,7 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'query'
   'total',     'custom',
   'any'
 ] 2`] = `
-Array [
+[
   "maxstatvalue:",
   "maxstatvalue:mobility",
   "maxstatvalue:resilience",
@@ -80,7 +80,7 @@ Array [
 `;
 
 exports[`generateSuggestionsForFilter full suggestions for filter format 'range', keyword 'a' with suggestions undefined 1`] = `
-Array [
+[
   "a:",
   "a:<",
   "a:>",
@@ -90,7 +90,7 @@ Array [
 `;
 
 exports[`generateSuggestionsForFilter full suggestions for filter format 'rangeoverload', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
-Array [
+[
   "a:",
   "a:<",
   "a:>",
@@ -103,7 +103,7 @@ Array [
 `;
 
 exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
-Array [
+[
   "a:",
   "a:b:",
   "a:b:<",
@@ -132,7 +132,7 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
   'strength',        'total',       'custom',
   'any'
 ] 1`] = `
-Array [
+[
   "stat:",
   "stat:rpm:",
   "stat:rpm:<",
@@ -308,14 +308,14 @@ Array [
 `;
 
 exports[`generateSuggestionsForFilter full suggestions for filter format 'undefined', keyword '[ 'a' ]' with suggestions undefined 1`] = `
-Array [
+[
   "is:a",
   "not:a",
 ]
 `;
 
 exports[`generateSuggestionsForFilter full suggestions for filter format 'undefined', keyword '[ 'a', 'b', 'c' ]' with suggestions undefined 1`] = `
-Array [
+[
   "is:a",
   "not:a",
   "is:b",

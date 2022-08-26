@@ -138,7 +138,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
       }
       const contents = results.data;
 
-      if (!contents || !contents.length) {
+      if (!contents?.length) {
         throw new Error(t('Csv.EmptyFile'));
       }
 

@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`check Request builder for [Function getItem] 1`] = `
-Object {
+{
   "body": null,
   "headers": Headers {
-    Symbol(map): Object {
-      "X-API-Key": Array [
+    Symbol(map): {
+      "X-API-Key": [
         "123",
       ],
     },
@@ -16,11 +16,11 @@ Object {
 `;
 
 exports[`check Request builder for [Function getLinkedProfiles] 1`] = `
-Object {
+{
   "body": null,
   "headers": Headers {
-    Symbol(map): Object {
-      "X-API-Key": Array [
+    Symbol(map): {
+      "X-API-Key": [
         "123",
       ],
     },
@@ -31,11 +31,11 @@ Object {
 `;
 
 exports[`check Request builder for [Function getProfile] 1`] = `
-Object {
+{
   "body": null,
   "headers": Headers {
-    Symbol(map): Object {
-      "X-API-Key": Array [
+    Symbol(map): {
+      "X-API-Key": [
         "123",
       ],
     },
@@ -46,11 +46,11 @@ Object {
 `;
 
 exports[`check Request builder for [Function getVendor] 1`] = `
-Object {
+{
   "body": null,
   "headers": Headers {
-    Symbol(map): Object {
-      "X-API-Key": Array [
+    Symbol(map): {
+      "X-API-Key": [
         "123",
       ],
     },
@@ -61,9 +61,9 @@ Object {
 `;
 
 exports[`check Request builder for [Function pullFromPostmaster] 1`] = `
-Object {
-  "body": Object {
-    "data": Array [
+{
+  "body": {
+    "data": [
       123,
       34,
       99,
@@ -203,11 +203,11 @@ Object {
     "type": "Buffer",
   },
   "headers": Headers {
-    Symbol(map): Object {
-      "Content-Type": Array [
+    Symbol(map): {
+      "Content-Type": [
         "application/json",
       ],
-      "X-API-Key": Array [
+      "X-API-Key": [
         "123",
       ],
     },

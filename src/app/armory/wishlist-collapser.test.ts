@@ -25,29 +25,29 @@ describe('perkConsolidator', () => {
         },
       ] as any)
     ).toMatchInlineSnapshot(`
-      Array [
-        Array [
-          Array [
+      [
+        [
+          [
             4134353779,
           ],
-          Array [
+          [
             1482024992,
           ],
         ],
-        Array [
-          Array [
+        [
+          [
             106909392,
           ],
-          Array [
+          [
             1332244541,
           ],
         ],
-        Array [
-          Array [
+        [
+          [
             106909392,
             4134353779,
           ],
-          Array [
+          [
             1467527085,
           ],
         ],
