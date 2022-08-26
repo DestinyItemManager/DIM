@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`autocompleteTermSuggestions autocomplete within query for |(is:blue jun)| with caret at position 11 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         9,
         17,
       ],
       "section": "body",
     },
-    "query": Object {
+    "query": {
       "body": "(is:blue tag:junk)",
       "fullText": "(is:blue tag:junk)",
       "helpText": undefined,
@@ -21,16 +21,16 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within query for |is:bow is:void| with caret at position 11 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         7,
         14,
       ],
       "section": "body",
     },
-    "query": Object {
+    "query": {
       "body": "is:bow is:void",
       "fullText": "is:bow is:void",
       "helpText": undefined,
@@ -41,31 +41,31 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within query for |is:haspower is:b| with caret at position 16 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         12,
         18,
       ],
       "section": "body",
     },
-    "query": Object {
+    "query": {
       "body": "is:haspower is:bow",
       "fullText": "is:haspower is:bow",
       "helpText": undefined,
     },
     "type": 3,
   },
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+  {
+    "highlightRange": {
+      "range": [
         12,
         19,
       ],
       "section": "body",
     },
-    "query": Object {
+    "query": {
       "body": "is:haspower is:blue",
       "fullText": "is:haspower is:blue",
       "helpText": undefined,
@@ -75,23 +75,23 @@ Array [
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within query for |season:>outl| with caret at position 12 1`] = `Array []`;
+exports[`autocompleteTermSuggestions autocomplete within query for |season:>outl| with caret at position 12 1`] = `[]`;
 
 exports[`filterComplete autocomplete terms for |is:b| 1`] = `
-Array [
+[
   "is:bow",
   "is:blue",
 ]
 `;
 
 exports[`filterComplete autocomplete terms for |jun| 1`] = `
-Array [
+[
   "tag:junk",
 ]
 `;
 
 exports[`filterComplete autocomplete terms for |ote| 1`] = `
-Array [
+[
   "notes:",
   "is:hasnotes",
   "is:emotes",
@@ -99,13 +99,13 @@ Array [
 `;
 
 exports[`filterComplete autocomplete terms for |sni| 1`] = `
-Array [
+[
   "is:sniperrifle",
 ]
 `;
 
 exports[`filterComplete autocomplete terms for |stat:| 1`] = `
-Array [
+[
   "stat:",
   "stat:rpm:",
   "stat:rof:",
@@ -281,13 +281,13 @@ Array [
 `;
 
 exports[`filterComplete autocomplete terms for |stat:mob| 1`] = `
-Array [
+[
   "stat:mobility:",
 ]
 `;
 
 exports[`filterComplete autocomplete terms for |stat| 1`] = `
-Array [
+[
   "stat:",
   "is:statlower",
   "basestat:",
@@ -369,17 +369,17 @@ Array [
 `;
 
 exports[`filterSortRecentSearches check saved search highlighting for query || 1`] = `
-Array [
-  Object {
-    "query": Object {
+[
+  {
+    "query": {
       "body": "is:patternunlocked -is:crafted",
       "fullText": "is:patternunlocked -is:crafted",
       "header": undefined,
     },
     "type": 1,
   },
-  Object {
-    "query": Object {
+  {
+    "query": {
       "body": "is:patternunlocked -is:crafted",
       "fullText": "/* random-roll craftable guns */ is:patternunlocked -is:crafted",
       "header": "random-roll craftable guns",
@@ -390,31 +390,31 @@ Array [
 `;
 
 exports[`filterSortRecentSearches check saved search highlighting for query |craft| 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         23,
         28,
       ],
       "section": "body",
     },
-    "query": Object {
+    "query": {
       "body": "is:patternunlocked -is:crafted",
       "fullText": "is:patternunlocked -is:crafted",
       "header": undefined,
     },
     "type": 1,
   },
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+  {
+    "highlightRange": {
+      "range": [
         12,
         17,
       ],
       "section": "header",
     },
-    "query": Object {
+    "query": {
       "body": "is:patternunlocked -is:crafted",
       "fullText": "/* random-roll craftable guns */ is:patternunlocked -is:crafted",
       "header": "random-roll craftable guns",
@@ -425,16 +425,16 @@ Array [
 `;
 
 exports[`filterSortRecentSearches check saved search highlighting for query |craftable| 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         12,
         21,
       ],
       "section": "header",
     },
-    "query": Object {
+    "query": {
       "body": "is:patternunlocked -is:crafted",
       "fullText": "/* random-roll craftable guns */ is:patternunlocked -is:crafted",
       "header": "random-roll craftable guns",
@@ -445,31 +445,31 @@ Array [
 `;
 
 exports[`filterSortRecentSearches check saved search highlighting for query |crafted| 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         23,
         30,
       ],
       "section": "body",
     },
-    "query": Object {
+    "query": {
       "body": "is:patternunlocked -is:crafted",
       "fullText": "is:patternunlocked -is:crafted",
       "header": undefined,
     },
     "type": 1,
   },
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+  {
+    "highlightRange": {
+      "range": [
         23,
         30,
       ],
       "section": "body",
     },
-    "query": Object {
+    "query": {
       "body": "is:patternunlocked -is:crafted",
       "fullText": "/* random-roll craftable guns */ is:patternunlocked -is:crafted",
       "header": "random-roll craftable guns",
@@ -480,7 +480,7 @@ Array [
 `;
 
 exports[`filterSortRecentSearches filter/sort recent searches for query || 1`] = `
-Array [
+[
   "recent saved",
   "yearold saved",
   "0 days old, 9 uses",
@@ -761,7 +761,7 @@ Array [
 `;
 
 exports[`filterSortRecentSearches filter/sort recent searches for query |high| 1`] = `
-Array [
+[
   "dayold highuse",
   "yearold highuse",
 ]

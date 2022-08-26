@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
-Array [
+[
   "arc",
   "armor",
   "armor2.0",
@@ -128,7 +128,7 @@ Array [
 `;
 
 exports[`buildSearchConfig generates a reasonable filter map: key-value filters 1`] = `
-Array [
+[
   "basestat",
   "breaker",
   "catalyst",

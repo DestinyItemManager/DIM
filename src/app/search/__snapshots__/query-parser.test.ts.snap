@@ -79,42 +79,42 @@ exports[`parse |  (
     )
     -tag:keep -tag:archive -tag:favorite -tag:infuse -is:maxpower -power:>=1260 -is:inloadout -is:masterwork
     )|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "op": "or",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "op": "and",
-          "operands": Array [
-            Object {
+          "operands": [
+            {
               "args": "weapon",
               "op": "filter",
               "type": "is",
             },
-            Object {
+            {
               "op": "not",
-              "operand": Object {
+              "operand": {
                 "args": "maxpower",
                 "op": "filter",
                 "type": "is",
               },
             },
-            Object {
+            {
               "op": "or",
-              "operands": Array [
-                Object {
+              "operands": [
+                {
                   "args": "1060",
                   "op": "filter",
                   "type": "powerlimit",
                 },
-                Object {
+                {
                   "args": "junk",
                   "op": "filter",
                   "type": "tag",
                 },
-                Object {
+                {
                   "args": "blue",
                   "op": "filter",
                   "type": "is",
@@ -123,49 +123,49 @@ Object {
             },
           ],
         },
-        Object {
+        {
           "op": "and",
-          "operands": Array [
-            Object {
+          "operands": [
+            {
               "args": "armor",
               "op": "filter",
               "type": "is",
             },
-            Object {
+            {
               "op": "not",
-              "operand": Object {
+              "operand": {
                 "args": "exotic",
                 "op": "filter",
                 "type": "is",
               },
             },
-            Object {
+            {
               "op": "not",
-              "operand": Object {
+              "operand": {
                 "args": "classitem",
                 "op": "filter",
                 "type": "is",
               },
             },
-            Object {
+            {
               "op": "not",
-              "operand": Object {
+              "operand": {
                 "op": "and",
-                "operands": Array [
-                  Object {
+                "operands": [
+                  {
                     "args": "titan",
                     "op": "filter",
                     "type": "is",
                   },
-                  Object {
+                  {
                     "op": "or",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "recovery:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "total:>=63",
                         "op": "filter",
                         "type": "basestat",
@@ -175,40 +175,40 @@ Object {
                 ],
               },
             },
-            Object {
+            {
               "op": "not",
-              "operand": Object {
+              "operand": {
                 "op": "and",
-                "operands": Array [
-                  Object {
+                "operands": [
+                  {
                     "args": "hunter",
                     "op": "filter",
                     "type": "is",
                   },
-                  Object {
+                  {
                     "op": "or",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "op": "and",
-                        "operands": Array [
-                          Object {
+                        "operands": [
+                          {
                             "args": "recovery:>=13",
                             "op": "filter",
                             "type": "basestat",
                           },
-                          Object {
+                          {
                             "args": "mobility:>=18",
                             "op": "filter",
                             "type": "basestat",
                           },
                         ],
                       },
-                      Object {
+                      {
                         "args": "recovery:>15",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "total:>=63",
                         "op": "filter",
                         "type": "basestat",
@@ -218,35 +218,35 @@ Object {
                 ],
               },
             },
-            Object {
+            {
               "op": "not",
-              "operand": Object {
+              "operand": {
                 "op": "and",
-                "operands": Array [
-                  Object {
+                "operands": [
+                  {
                     "args": "warlock",
                     "op": "filter",
                     "type": "is",
                   },
-                  Object {
+                  {
                     "op": "or",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "op": "and",
-                        "operands": Array [
-                          Object {
+                        "operands": [
+                          {
                             "args": "recovery:>=18",
                             "op": "filter",
                             "type": "basestat",
                           },
-                          Object {
+                          {
                             "args": ">=17",
                             "op": "filter",
                             "type": "discipline",
                           },
                         ],
                       },
-                      Object {
+                      {
                         "args": "total:>=63",
                         "op": "filter",
                         "type": "basestat",
@@ -256,455 +256,455 @@ Object {
                 ],
               },
             },
-            Object {
+            {
               "op": "not",
-              "operand": Object {
+              "operand": {
                 "op": "or",
-                "operands": Array [
-                  Object {
+                "operands": [
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "resilience:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "resilience:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "resilience:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "resilience:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "resilience:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "recovery:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "recovery:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "recovery:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "recovery:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "recovery:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "discipline:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "discipline:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "discipline:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "discipline:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "discipline:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "intellect:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "intellect:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "intellect:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "intellect:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "intellect:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "strength:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "strength:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "strength:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "strength:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "strength:>=18",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
@@ -714,405 +714,405 @@ Object {
                 ],
               },
             },
-            Object {
+            {
               "op": "not",
-              "operand": Object {
+              "operand": {
                 "op": "or",
-                "operands": Array [
-                  Object {
+                "operands": [
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "mobility:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "resilience:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "recovery:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
                     ],
                   },
-                  Object {
+                  {
                     "op": "and",
-                    "operands": Array [
-                      Object {
+                    "operands": [
+                      {
                         "args": "discipline:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "intellect:>=13",
                         "op": "filter",
                         "type": "basestat",
                       },
-                      Object {
+                      {
                         "args": "strength:>=13",
                         "op": "filter",
                         "type": "basestat",
@@ -1122,37 +1122,37 @@ Object {
                 ],
               },
             },
-            Object {
+            {
               "op": "not",
-              "operand": Object {
+              "operand": {
                 "op": "and",
-                "operands": Array [
-                  Object {
+                "operands": [
+                  {
                     "args": "mobility:>=8",
                     "op": "filter",
                     "type": "basestat",
                   },
-                  Object {
+                  {
                     "args": "resilience:>=8",
                     "op": "filter",
                     "type": "basestat",
                   },
-                  Object {
+                  {
                     "args": "recovery:>=8",
                     "op": "filter",
                     "type": "basestat",
                   },
-                  Object {
+                  {
                     "args": "discipline:>=8",
                     "op": "filter",
                     "type": "basestat",
                   },
-                  Object {
+                  {
                     "args": "intellect:>=8",
                     "op": "filter",
                     "type": "basestat",
                   },
-                  Object {
+                  {
                     "args": "strength:>=8",
                     "op": "filter",
                     "type": "basestat",
@@ -1162,28 +1162,28 @@ Object {
             },
           ],
         },
-        Object {
+        {
           "op": "and",
-          "operands": Array [
-            Object {
+          "operands": [
+            {
               "args": "classitem",
               "op": "filter",
               "type": "is",
             },
-            Object {
+            {
               "op": "or",
-              "operands": Array [
-                Object {
+              "operands": [
+                {
                   "op": "and",
-                  "operands": Array [
-                    Object {
+                  "operands": [
+                    {
                       "args": "dupelower",
                       "op": "filter",
                       "type": "is",
                     },
-                    Object {
+                    {
                       "op": "not",
-                      "operand": Object {
+                      "operand": {
                         "args": "modded",
                         "op": "filter",
                         "type": "is",
@@ -1191,7 +1191,7 @@ Object {
                     },
                   ],
                 },
-                Object {
+                {
                   "args": "sunset",
                   "op": "filter",
                   "type": "is",
@@ -1200,17 +1200,17 @@ Object {
             },
           ],
         },
-        Object {
+        {
           "op": "and",
-          "operands": Array [
-            Object {
+          "operands": [
+            {
               "args": "armor",
               "op": "filter",
               "type": "is",
             },
-            Object {
+            {
               "op": "not",
-              "operand": Object {
+              "operand": {
                 "args": ">1060",
                 "op": "filter",
                 "type": "powerlimit",
@@ -1218,15 +1218,15 @@ Object {
             },
           ],
         },
-        Object {
+        {
           "op": "and",
-          "operands": Array [
-            Object {
+          "operands": [
+            {
               "args": "armor",
               "op": "filter",
               "type": "is",
             },
-            Object {
+            {
               "args": "blue",
               "op": "filter",
               "type": "is",
@@ -1235,65 +1235,65 @@ Object {
         },
       ],
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "keep",
         "op": "filter",
         "type": "tag",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "archive",
         "op": "filter",
         "type": "tag",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "favorite",
         "op": "filter",
         "type": "tag",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "infuse",
         "op": "filter",
         "type": "tag",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "maxpower",
         "op": "filter",
         "type": "is",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": ">=1260",
         "op": "filter",
         "type": "power",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "inloadout",
         "op": "filter",
         "type": "is",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "masterwork",
         "op": "filter",
         "type": "is",
@@ -1382,1799 +1382,1799 @@ exports[`parse |  (
     )
     -tag:keep -tag:archive -tag:favorite -tag:infuse -is:maxpower -power:>=1260 -is:inloadout -is:masterwork
     )|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "(",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "weapon",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "maxpower",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "powerlimit",
     "1060",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "filter",
     "tag",
     "junk",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "filter",
     "is",
     "blue",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "exotic",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "classitem",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "titan",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=18",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "total:>=63",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "hunter",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=18",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>15",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "total:>=63",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "warlock",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "discipline",
     ">=17",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "total:>=63",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=18",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=13",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=13",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "mobility:>=8",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "resilience:>=8",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "recovery:>=8",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "discipline:>=8",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "intellect:>=8",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "basestat",
     "strength:>=8",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "classitem",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "dupelower",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "modded",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "sunset",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "powerlimit",
     ">1060",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "is",
     "blue",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "tag",
     "keep",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "tag",
     "archive",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "tag",
     "favorite",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "tag",
     "infuse",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "maxpower",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "power",
     ">=1260",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "inloadout",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "masterwork",
   ],
-  Array [
+  [
     ")",
   ],
 ]
@@ -3182,7 +3182,7 @@ Array [
 
 exports[`parse |  /* My cool search */
  is:armor|: ast 1`] = `
-Object {
+{
   "args": "armor",
   "comment": "my cool search",
   "op": "filter",
@@ -3192,12 +3192,12 @@ Object {
 
 exports[`parse |  /* My cool search */
  is:armor|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "comment",
     "my cool search",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
@@ -3206,7 +3206,7 @@ Array [
 `;
 
 exports[`parse |"grenade launcher reserves"|: ast 1`] = `
-Object {
+{
   "args": "grenade launcher reserves",
   "op": "filter",
   "type": "keyword",
@@ -3214,8 +3214,8 @@ Object {
 `;
 
 exports[`parse |"grenade launcher reserves"|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "keyword",
     "grenade launcher reserves",
@@ -3224,7 +3224,7 @@ Array [
 `;
 
 exports[`parse |"수집가"|: ast 1`] = `
-Object {
+{
   "args": "수집가",
   "op": "filter",
   "type": "keyword",
@@ -3232,8 +3232,8 @@ Object {
 `;
 
 exports[`parse |"수집가"|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "keyword",
     "수집가",
@@ -3242,17 +3242,17 @@ Array [
 `;
 
 exports[`parse |( power:>1000 and -modslot:arrival ) |: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "args": ">1000",
       "op": "filter",
       "type": "power",
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "arrival",
         "op": "filter",
         "type": "modslot",
@@ -3263,52 +3263,52 @@ Object {
 `;
 
 exports[`parse |( power:>1000 and -modslot:arrival ) |: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "power",
     ">1000",
   ],
-  Array [
+  [
     "and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "modslot",
     "arrival",
   ],
-  Array [
+  [
     ")",
   ],
 ]
 `;
 
 exports[`parse |(("test" or "test") and "test")|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "op": "or",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "test",
           "op": "filter",
           "type": "keyword",
         },
-        Object {
+        {
           "args": "test",
           "op": "filter",
           "type": "keyword",
         },
       ],
     },
-    Object {
+    {
       "args": "test",
       "op": "filter",
       "type": "keyword",
@@ -3318,71 +3318,71 @@ Object {
 `;
 
 exports[`parse |(("test" or "test") and "test")|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "(",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "test",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "test",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "and",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "test",
   ],
-  Array [
+  [
     ")",
   ],
 ]
 `;
 
 exports[`parse |(is:hunter power:>=540) or (is:warlock power:>=560)|: ast 1`] = `
-Object {
+{
   "op": "or",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "op": "and",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "hunter",
           "op": "filter",
           "type": "is",
         },
-        Object {
+        {
           "args": ">=540",
           "op": "filter",
           "type": "power",
         },
       ],
     },
-    Object {
+    {
       "op": "and",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "warlock",
           "op": "filter",
           "type": "is",
         },
-        Object {
+        {
           "args": ">=560",
           "op": "filter",
           "type": "power",
@@ -3394,81 +3394,81 @@ Object {
 `;
 
 exports[`parse |(is:hunter power:>=540) or (is:warlock power:>=560)|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "hunter",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "power",
     ">=540",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "warlock",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "power",
     ">=560",
   ],
-  Array [
+  [
     ")",
   ],
 ]
 `;
 
 exports[`parse |(is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival)|: ast 1`] = `
-Object {
+{
   "op": "or",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "op": "and",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "weapon",
           "op": "filter",
           "type": "is",
         },
-        Object {
+        {
           "args": "sniperrifle",
           "op": "filter",
           "type": "is",
         },
       ],
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "op": "and",
-        "operands": Array [
-          Object {
+        "operands": [
+          {
             "args": "armor",
             "op": "filter",
             "type": "is",
           },
-          Object {
+          {
             "args": "arrival",
             "op": "filter",
             "type": "modslot",
@@ -3481,82 +3481,82 @@ Object {
 `;
 
 exports[`parse |(is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival)|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "weapon",
   ],
-  Array [
+  [
     "and",
   ],
-  Array [
+  [
     "filter",
     "is",
     "sniperrifle",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
   ],
-  Array [
+  [
     "and",
   ],
-  Array [
+  [
     "filter",
     "modslot",
     "arrival",
   ],
-  Array [
+  [
     ")",
   ],
 ]
 `;
 
 exports[`parse |(is:weapon is:sniperrifle) or (is:armor modslot:arrival)|: ast 1`] = `
-Object {
+{
   "op": "or",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "op": "and",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "weapon",
           "op": "filter",
           "type": "is",
         },
-        Object {
+        {
           "args": "sniperrifle",
           "op": "filter",
           "type": "is",
         },
       ],
     },
-    Object {
+    {
       "op": "and",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "armor",
           "op": "filter",
           "type": "is",
         },
-        Object {
+        {
           "args": "arrival",
           "op": "filter",
           "type": "modslot",
@@ -3568,81 +3568,81 @@ Object {
 `;
 
 exports[`parse |(is:weapon is:sniperrifle) or (is:armor modslot:arrival)|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "weapon",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "is",
     "sniperrifle",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "modslot",
     "arrival",
   ],
-  Array [
+  [
     ")",
   ],
 ]
 `;
 
 exports[`parse |/* My cool search */ (/* armor */ is:armor and is:blue) or (/*weapons*/ is:weapon and perkname:"Kill Clip")|: ast 1`] = `
-Object {
+{
   "comment": "my cool search",
   "op": "or",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "op": "and",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "armor",
           "op": "filter",
           "type": "is",
         },
-        Object {
+        {
           "args": "blue",
           "op": "filter",
           "type": "is",
         },
       ],
     },
-    Object {
+    {
       "comment": "weapons",
       "op": "and",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "weapon",
           "op": "filter",
           "type": "is",
         },
-        Object {
+        {
           "args": "kill clip",
           "op": "filter",
           "type": "perkname",
@@ -3654,65 +3654,65 @@ Object {
 `;
 
 exports[`parse |/* My cool search */ (/* armor */ is:armor and is:blue) or (/*weapons*/ is:weapon and perkname:"Kill Clip")|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "comment",
     "my cool search",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "comment",
     "armor",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
   ],
-  Array [
+  [
     "and",
   ],
-  Array [
+  [
     "filter",
     "is",
     "blue",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "comment",
     "weapons",
   ],
-  Array [
+  [
     "filter",
     "is",
     "weapon",
   ],
-  Array [
+  [
     "and",
   ],
-  Array [
+  [
     "filter",
     "perkname",
     "kill clip",
   ],
-  Array [
+  [
     ")",
   ],
 ]
 `;
 
 exports[`parse |/* My cool search */ is:armor|: ast 1`] = `
-Object {
+{
   "args": "armor",
   "comment": "my cool search",
   "op": "filter",
@@ -3721,12 +3721,12 @@ Object {
 `;
 
 exports[`parse |/* My cool search */ is:armor|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "comment",
     "my cool search",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
@@ -3735,20 +3735,20 @@ Array [
 `;
 
 exports[`parse |- is:exotic - (power:>1000)|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "exotic",
         "op": "filter",
         "type": "is",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": ">1000",
         "op": "filter",
         "type": "power",
@@ -3759,49 +3759,49 @@ Object {
 `;
 
 exports[`parse |- is:exotic - (power:>1000)|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "exotic",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "power",
     ">1000",
   ],
-  Array [
+  [
     ")",
   ],
 ]
 `;
 
 exports[`parse |-(power:>1000 and -modslot:arrival)|: ast 1`] = `
-Object {
+{
   "op": "not",
-  "operand": Object {
+  "operand": {
     "op": "and",
-    "operands": Array [
-      Object {
+    "operands": [
+      {
         "args": ">1000",
         "op": "filter",
         "type": "power",
       },
-      Object {
+      {
         "op": "not",
-        "operand": Object {
+        "operand": {
           "args": "arrival",
           "op": "filter",
           "type": "modslot",
@@ -3813,53 +3813,53 @@ Object {
 `;
 
 exports[`parse |-(power:>1000 and -modslot:arrival)|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "power",
     ">1000",
   ],
-  Array [
+  [
     "and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "modslot",
     "arrival",
   ],
-  Array [
+  [
     ")",
   ],
 ]
 `;
 
 exports[`parse |-is:equipped is:haspower is:incurrentchar|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "equipped",
         "op": "filter",
         "type": "is",
       },
     },
-    Object {
+    {
       "args": "haspower",
       "op": "filter",
       "type": "is",
     },
-    Object {
+    {
       "args": "incurrentchar",
       "op": "filter",
       "type": "is",
@@ -3869,27 +3869,27 @@ Object {
 `;
 
 exports[`parse |-is:equipped is:haspower is:incurrentchar|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "equipped",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "is",
     "haspower",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "is",
     "incurrentchar",
@@ -3898,42 +3898,42 @@ Array [
 `;
 
 exports[`parse |-is:exotic -is:locked -is:maxpower -is:tagged stat:total:<55|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "exotic",
         "op": "filter",
         "type": "is",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "locked",
         "op": "filter",
         "type": "is",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "maxpower",
         "op": "filter",
         "type": "is",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "tagged",
         "op": "filter",
         "type": "is",
       },
     },
-    Object {
+    {
       "args": "total:<55",
       "op": "filter",
       "type": "stat",
@@ -3943,52 +3943,52 @@ Object {
 `;
 
 exports[`parse |-is:exotic -is:locked -is:maxpower -is:tagged stat:total:<55|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "exotic",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "locked",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "maxpower",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "tagged",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "stat",
     "total:<55",
@@ -3997,26 +3997,26 @@ Array [
 `;
 
 exports[`parse |-source:garden -source:lastwish sunsetsafter:arrival|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "garden",
         "op": "filter",
         "type": "source",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "lastwish",
         "op": "filter",
         "type": "source",
       },
     },
-    Object {
+    {
       "args": "arrival",
       "op": "filter",
       "type": "sunsetsafter",
@@ -4026,30 +4026,30 @@ Object {
 `;
 
 exports[`parse |-source:garden -source:lastwish sunsetsafter:arrival|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "source",
     "garden",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "source",
     "lastwish",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "sunsetsafter",
     "arrival",
@@ -4058,9 +4058,9 @@ Array [
 `;
 
 exports[`parse |-witherhoard|: ast 1`] = `
-Object {
+{
   "op": "not",
-  "operand": Object {
+  "operand": {
     "args": "witherhoard",
     "op": "filter",
     "type": "keyword",
@@ -4069,11 +4069,11 @@ Object {
 `;
 
 exports[`parse |-witherhoard|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "witherhoard",
@@ -4082,15 +4082,15 @@ Array [
 `;
 
 exports[`parse |cluster tracking|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "args": "cluster",
       "op": "filter",
       "type": "keyword",
     },
-    Object {
+    {
       "args": "tracking",
       "op": "filter",
       "type": "keyword",
@@ -4100,16 +4100,16 @@ Object {
 `;
 
 exports[`parse |cluster tracking|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "keyword",
     "cluster",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "tracking",
@@ -4118,15 +4118,15 @@ Array [
 `;
 
 exports[`parse |gnawing hunger|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "args": "gnawing",
       "op": "filter",
       "type": "keyword",
     },
-    Object {
+    {
       "args": "hunger",
       "op": "filter",
       "type": "keyword",
@@ -4136,16 +4136,16 @@ Object {
 `;
 
 exports[`parse |gnawing hunger|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "keyword",
     "gnawing",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "hunger",
@@ -4154,7 +4154,7 @@ Array [
 `;
 
 exports[`parse |is:armor2.0|: ast 1`] = `
-Object {
+{
   "args": "armor2.0",
   "op": "filter",
   "type": "is",
@@ -4162,8 +4162,8 @@ Object {
 `;
 
 exports[`parse |is:armor2.0|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "is",
     "armor2.0",
@@ -4172,22 +4172,22 @@ Array [
 `;
 
 exports[`parse |is:blue is:haspower -is:maxpower|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "args": "blue",
       "op": "filter",
       "type": "is",
     },
-    Object {
+    {
       "args": "haspower",
       "op": "filter",
       "type": "is",
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "maxpower",
         "op": "filter",
         "type": "is",
@@ -4198,27 +4198,27 @@ Object {
 `;
 
 exports[`parse |is:blue is:haspower -is:maxpower|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "is",
     "blue",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "is",
     "haspower",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "maxpower",
@@ -4227,22 +4227,22 @@ Array [
 `;
 
 exports[`parse |is:blue is:haspower not:maxpower|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "args": "blue",
       "op": "filter",
       "type": "is",
     },
-    Object {
+    {
       "args": "haspower",
       "op": "filter",
       "type": "is",
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "maxpower",
         "op": "filter",
         "type": "is",
@@ -4253,24 +4253,24 @@ Object {
 `;
 
 exports[`parse |is:blue is:haspower not:maxpower|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "is",
     "blue",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "is",
     "haspower",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "not",
     "maxpower",
@@ -4279,32 +4279,32 @@ Array [
 `;
 
 exports[`parse |is:blue is:weapon or is:armor not:maxpower|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "args": "blue",
       "op": "filter",
       "type": "is",
     },
-    Object {
+    {
       "op": "or",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "weapon",
           "op": "filter",
           "type": "is",
         },
-        Object {
+        {
           "args": "armor",
           "op": "filter",
           "type": "is",
         },
       ],
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "maxpower",
         "op": "filter",
         "type": "is",
@@ -4315,32 +4315,32 @@ Object {
 `;
 
 exports[`parse |is:blue is:weapon or is:armor not:maxpower|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "is",
     "blue",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "is",
     "weapon",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "not",
     "maxpower",
@@ -4349,23 +4349,23 @@ Array [
 `;
 
 exports[`parse |is:rocketlauncher (perk:"cluster" or perk:"tracking module")|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "args": "rocketlauncher",
       "op": "filter",
       "type": "is",
     },
-    Object {
+    {
       "op": "or",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "cluster",
           "op": "filter",
           "type": "perk",
         },
-        Object {
+        {
           "args": "tracking module",
           "op": "filter",
           "type": "perk",
@@ -4377,57 +4377,57 @@ Object {
 `;
 
 exports[`parse |is:rocketlauncher (perk:"cluster" or perk:"tracking module")|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "is",
     "rocketlauncher",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "perk",
     "cluster",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "filter",
     "perk",
     "tracking module",
   ],
-  Array [
+  [
     ")",
   ],
 ]
 `;
 
 exports[`parse |is:rocketlauncher -"cluster" -"tracking module"|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "args": "rocketlauncher",
       "op": "filter",
       "type": "is",
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "cluster",
         "op": "filter",
         "type": "keyword",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "tracking module",
         "op": "filter",
         "type": "keyword",
@@ -4438,30 +4438,30 @@ Object {
 `;
 
 exports[`parse |is:rocketlauncher -"cluster" -"tracking module"|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "is",
     "rocketlauncher",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "cluster",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "tracking module",
@@ -4470,25 +4470,25 @@ Array [
 `;
 
 exports[`parse |is:rocketlauncher -"cluster" -'tracking module'|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "args": "rocketlauncher",
       "op": "filter",
       "type": "is",
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "cluster",
         "op": "filter",
         "type": "keyword",
       },
     },
-    Object {
+    {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "tracking module",
         "op": "filter",
         "type": "keyword",
@@ -4499,30 +4499,30 @@ Object {
 `;
 
 exports[`parse |is:rocketlauncher -"cluster" -'tracking module'|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "is",
     "rocketlauncher",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "cluster",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "tracking module",
@@ -4531,31 +4531,31 @@ Array [
 `;
 
 exports[`parse |is:weapon (is:sniperrifle or (is:armor and modslot:arrival))|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "args": "weapon",
       "op": "filter",
       "type": "is",
     },
-    Object {
+    {
       "op": "or",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "sniperrifle",
           "op": "filter",
           "type": "is",
         },
-        Object {
+        {
           "op": "and",
-          "operands": Array [
-            Object {
+          "operands": [
+            {
               "args": "armor",
               "op": "filter",
               "type": "is",
             },
-            Object {
+            {
               "args": "arrival",
               "op": "filter",
               "type": "modslot",
@@ -4569,82 +4569,82 @@ Object {
 `;
 
 exports[`parse |is:weapon (is:sniperrifle or (is:armor and modslot:arrival))|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "is",
     "weapon",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "sniperrifle",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
   ],
-  Array [
+  [
     "and",
   ],
-  Array [
+  [
     "filter",
     "modslot",
     "arrival",
   ],
-  Array [
+  [
     ")",
   ],
-  Array [
+  [
     ")",
   ],
 ]
 `;
 
 exports[`parse |is:weapon and is:sniperrifle or not is:armor and modslot:arrival|: ast 1`] = `
-Object {
+{
   "op": "or",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "op": "and",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "weapon",
           "op": "filter",
           "type": "is",
         },
-        Object {
+        {
           "args": "sniperrifle",
           "op": "filter",
           "type": "is",
         },
       ],
     },
-    Object {
+    {
       "op": "and",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "op": "not",
-          "operand": Object {
+          "operand": {
             "args": "armor",
             "op": "filter",
             "type": "is",
           },
         },
-        Object {
+        {
           "args": "arrival",
           "op": "filter",
           "type": "modslot",
@@ -4656,35 +4656,35 @@ Object {
 `;
 
 exports[`parse |is:weapon and is:sniperrifle or not is:armor and modslot:arrival|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "is",
     "weapon",
   ],
-  Array [
+  [
     "and",
   ],
-  Array [
+  [
     "filter",
     "is",
     "sniperrifle",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
   ],
-  Array [
+  [
     "and",
   ],
-  Array [
+  [
     "filter",
     "modslot",
     "arrival",
@@ -4693,31 +4693,31 @@ Array [
 `;
 
 exports[`parse |is:weapon is:sniperrifle or is:armor and modslot:arrival|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "args": "weapon",
       "op": "filter",
       "type": "is",
     },
-    Object {
+    {
       "op": "or",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "sniperrifle",
           "op": "filter",
           "type": "is",
         },
-        Object {
+        {
           "op": "and",
-          "operands": Array [
-            Object {
+          "operands": [
+            {
               "args": "armor",
               "op": "filter",
               "type": "is",
             },
-            Object {
+            {
               "args": "arrival",
               "op": "filter",
               "type": "modslot",
@@ -4731,32 +4731,32 @@ Object {
 `;
 
 exports[`parse |is:weapon is:sniperrifle or is:armor and modslot:arrival|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "is",
     "weapon",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "is",
     "sniperrifle",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
   ],
-  Array [
+  [
     "and",
   ],
-  Array [
+  [
     "filter",
     "modslot",
     "arrival",
@@ -4765,25 +4765,25 @@ Array [
 `;
 
 exports[`parse |is:weapon is:sniperrifle or not is:armor modslot:arrival|: ast 1`] = `
-Object {
+{
   "op": "and",
-  "operands": Array [
-    Object {
+  "operands": [
+    {
       "args": "weapon",
       "op": "filter",
       "type": "is",
     },
-    Object {
+    {
       "op": "or",
-      "operands": Array [
-        Object {
+      "operands": [
+        {
           "args": "sniperrifle",
           "op": "filter",
           "type": "is",
         },
-        Object {
+        {
           "op": "not",
-          "operand": Object {
+          "operand": {
             "args": "armor",
             "op": "filter",
             "type": "is",
@@ -4791,7 +4791,7 @@ Object {
         },
       ],
     },
-    Object {
+    {
       "args": "arrival",
       "op": "filter",
       "type": "modslot",
@@ -4801,35 +4801,35 @@ Object {
 `;
 
 exports[`parse |is:weapon is:sniperrifle or not is:armor modslot:arrival|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "is",
     "weapon",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "is",
     "sniperrifle",
   ],
-  Array [
+  [
     "or",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "is",
     "armor",
   ],
-  Array [
+  [
     "implicit_and",
   ],
-  Array [
+  [
     "filter",
     "modslot",
     "arrival",
@@ -4838,7 +4838,7 @@ Array [
 `;
 
 exports[`parse |name:"Gahlran's Right Hand"|: ast 1`] = `
-Object {
+{
   "args": "gahlran's right hand",
   "op": "filter",
   "type": "name",
@@ -4846,8 +4846,8 @@ Object {
 `;
 
 exports[`parse |name:"Gahlran's Right Hand"|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "name",
     "gahlran's right hand",
@@ -4856,7 +4856,7 @@ Array [
 `;
 
 exports[`parse |name:"Hard Light"|: ast 1`] = `
-Object {
+{
   "args": "hard light",
   "op": "filter",
   "type": "name",
@@ -4864,8 +4864,8 @@ Object {
 `;
 
 exports[`parse |name:"Hard Light"|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "name",
     "hard light",
@@ -4874,7 +4874,7 @@ Array [
 `;
 
 exports[`parse |name:'Hard Light'|: ast 1`] = `
-Object {
+{
   "args": "hard light",
   "op": "filter",
   "type": "name",
@@ -4882,8 +4882,8 @@ Object {
 `;
 
 exports[`parse |name:'Hard Light'|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "name",
     "hard light",
@@ -4892,9 +4892,9 @@ Array [
 `;
 
 exports[`parse |not "forgotten"|: ast 1`] = `
-Object {
+{
   "op": "not",
-  "operand": Object {
+  "operand": {
     "args": "forgotten",
     "op": "filter",
     "type": "keyword",
@@ -4903,11 +4903,11 @@ Object {
 `;
 
 exports[`parse |not "forgotten"|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "forgotten",
@@ -4916,9 +4916,9 @@ Array [
 `;
 
 exports[`parse |not (forgotten)|: ast 1`] = `
-Object {
+{
   "op": "not",
-  "operand": Object {
+  "operand": {
     "args": "forgotten",
     "op": "filter",
     "type": "keyword",
@@ -4927,32 +4927,32 @@ Object {
 `;
 
 exports[`parse |not (forgotten)|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "(",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "forgotten",
   ],
-  Array [
+  [
     ")",
   ],
 ]
 `;
 
 exports[`parse |not -not:maxpower|: ast 1`] = `
-Object {
+{
   "op": "not",
-  "operand": Object {
+  "operand": {
     "op": "not",
-    "operand": Object {
+    "operand": {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "maxpower",
         "op": "filter",
         "type": "is",
@@ -4963,14 +4963,14 @@ Object {
 `;
 
 exports[`parse |not -not:maxpower|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "not",
     "maxpower",
@@ -4979,9 +4979,9 @@ Array [
 `;
 
 exports[`parse |not forgotten|: ast 1`] = `
-Object {
+{
   "op": "not",
-  "operand": Object {
+  "operand": {
     "args": "forgotten",
     "op": "filter",
     "type": "keyword",
@@ -4990,9 +4990,9 @@ Object {
 `;
 
 exports[`parse |not forgotten|: ast 2`] = `
-Object {
+{
   "op": "not",
-  "operand": Object {
+  "operand": {
     "args": "forgotten",
     "op": "filter",
     "type": "keyword",
@@ -5001,11 +5001,11 @@ Object {
 `;
 
 exports[`parse |not forgotten|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "forgotten",
@@ -5014,11 +5014,11 @@ Array [
 `;
 
 exports[`parse |not forgotten|: lexer 2`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "keyword",
     "forgotten",
@@ -5027,13 +5027,13 @@ Array [
 `;
 
 exports[`parse |not not not:maxpower|: ast 1`] = `
-Object {
+{
   "op": "not",
-  "operand": Object {
+  "operand": {
     "op": "not",
-    "operand": Object {
+    "operand": {
       "op": "not",
-      "operand": Object {
+      "operand": {
         "args": "maxpower",
         "op": "filter",
         "type": "is",
@@ -5044,14 +5044,14 @@ Object {
 `;
 
 exports[`parse |not not not:maxpower|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "not",
     "maxpower",
@@ -5060,11 +5060,11 @@ Array [
 `;
 
 exports[`parse |not not:maxpower|: ast 1`] = `
-Object {
+{
   "op": "not",
-  "operand": Object {
+  "operand": {
     "op": "not",
-    "operand": Object {
+    "operand": {
       "args": "maxpower",
       "op": "filter",
       "type": "is",
@@ -5074,11 +5074,11 @@ Object {
 `;
 
 exports[`parse |not not:maxpower|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "not",
   ],
-  Array [
+  [
     "filter",
     "not",
     "maxpower",
@@ -5087,9 +5087,9 @@ Array [
 `;
 
 exports[`parse |not:maxpower|: ast 1`] = `
-Object {
+{
   "op": "not",
-  "operand": Object {
+  "operand": {
     "args": "maxpower",
     "op": "filter",
     "type": "is",
@@ -5098,8 +5098,8 @@ Object {
 `;
 
 exports[`parse |not:maxpower|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "not",
     "maxpower",
@@ -5108,7 +5108,7 @@ Array [
 `;
 
 exports[`parse |perk:"수집가"|: ast 1`] = `
-Object {
+{
   "args": "수집가",
   "op": "filter",
   "type": "perk",
@@ -5116,8 +5116,8 @@ Object {
 `;
 
 exports[`parse |perk:"수집가"|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "perk",
     "수집가",
@@ -5126,7 +5126,7 @@ Array [
 `;
 
 exports[`parse |perk:수집가|: ast 1`] = `
-Object {
+{
   "args": "수집가",
   "op": "filter",
   "type": "perk",
@@ -5134,8 +5134,8 @@ Object {
 `;
 
 exports[`parse |perk:수집가|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "perk",
     "수집가",
@@ -5144,7 +5144,7 @@ Array [
 `;
 
 exports[`parse |‘grenade launcher reserves’|: ast 1`] = `
-Object {
+{
   "args": "grenade launcher reserves",
   "op": "filter",
   "type": "keyword",
@@ -5152,8 +5152,8 @@ Object {
 `;
 
 exports[`parse |‘grenade launcher reserves’|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "keyword",
     "grenade launcher reserves",
@@ -5162,7 +5162,7 @@ Array [
 `;
 
 exports[`parse |“grenade launcher reserves”|: ast 1`] = `
-Object {
+{
   "args": "grenade launcher reserves",
   "op": "filter",
   "type": "keyword",
@@ -5170,8 +5170,8 @@ Object {
 `;
 
 exports[`parse |“grenade launcher reserves”|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "keyword",
     "grenade launcher reserves",
@@ -5180,7 +5180,7 @@ Array [
 `;
 
 exports[`parse |수집가|: ast 1`] = `
-Object {
+{
   "args": "수집가",
   "op": "filter",
   "type": "keyword",
@@ -5188,8 +5188,8 @@ Object {
 `;
 
 exports[`parse |수집가|: lexer 1`] = `
-Array [
-  Array [
+[
+  [
     "filter",
     "keyword",
     "수집가",
