@@ -103,7 +103,7 @@ export function buildStats(
   createdItem: DimItem,
   itemDef = defs.InventoryItem.get(createdItem.hash)
 ) {
-  if (!itemDef.stats || !itemDef.stats.statGroupHash) {
+  if (!itemDef.stats?.statGroupHash) {
     return null;
   }
   const statGroup = defs.StatGroup.get(itemDef.stats.statGroupHash);

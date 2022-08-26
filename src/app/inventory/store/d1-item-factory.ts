@@ -682,7 +682,7 @@ function buildStats(
   grid: D1TalentGrid | null,
   type: string
 ): D1Stat[] | null {
-  if (!item.stats || !item.stats.length || !itemDef.stats) {
+  if (!item.stats?.length || !itemDef.stats) {
     return null;
   }
 

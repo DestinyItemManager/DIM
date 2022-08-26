@@ -7,7 +7,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { setSearchQuery } from 'app/shell/actions';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { createSelector } from 'reselect';
@@ -68,7 +68,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     }
   }, [dispatch, query]);
 
-  if (!stores || !stores.length || !defs) {
+  if (!stores?.length || !defs) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 

@@ -323,10 +323,7 @@ export function getDamageTypeForSubclassPlug(
   }
 
   // early out to avoid building subclass plug categories
-  if (
-    !item.itemCategoryHashes ||
-    !item.itemCategoryHashes.includes(ItemCategoryHashes.SubclassMods)
-  ) {
+  if (!item.itemCategoryHashes?.includes(ItemCategoryHashes.SubclassMods)) {
     return null;
   }
 

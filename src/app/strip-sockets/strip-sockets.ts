@@ -56,7 +56,7 @@ export const artifactModsSelector = createSelector(
     allItemsSelector(state).find((i) => i.bucket.hash === BucketHashes.SeasonalArtifact)
       ?.previewVendor,
   (defs, vendorHash) => {
-    if (!defs || !defs.isDestiny2()) {
+    if (!defs?.isDestiny2()) {
       return undefined;
     }
     const vendor = vendorHash && defs.Vendor.get(vendorHash);

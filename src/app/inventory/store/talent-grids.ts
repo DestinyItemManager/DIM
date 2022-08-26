@@ -30,7 +30,7 @@ export function buildTalentGrid(
   }
 
   const talentGridDef = defs.TalentGrid.get(talentGrid.talentGridHash);
-  if (!talentGridDef || !talentGridDef.nodes || !talentGridDef.nodes.length) {
+  if (!talentGridDef?.nodes?.length) {
     return null;
   }
 
