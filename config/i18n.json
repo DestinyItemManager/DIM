@@ -9,12 +9,7 @@
     "NotSupported": "We cannot change this type of mod or perk"
   },
   "Accounts": {
-    "Blizzard": "PC",
     "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox",
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
     "MissingTitle": "Account Not Found",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
