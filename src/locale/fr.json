@@ -75,7 +75,7 @@
     "NotConnected": "Vous n'êtes peut-être pas connecté à internet.",
     "NotConnectedOrBlocked": "Vous n'êtes peut-être pas connecté à internet, ou un bloquer de pub est peut-être en train de bloquer Bungie.net.",
     "NotLoggedIn": "Veuillez autoriser DIM pour pouvoir utiliser cette application.",
-    "Slow": "Bungie.net est lent en ce moment",
+    "Slow": "Bungie.net actuellement lent",
     "SlowDetails": "Bungie.net prend longtemps pour obtenir vos informations. Cela peut arriver lorsque beaucoup d'utilisateurs sont dans le jeu en même temps, ou s'il y a des problèmes avec Bungie.net. Il est aussi possible que votre connection internet ait des problèmes. Nous allons continuer d'essayer d'obtenir vos informations.",
     "SlowResponse": "Bungie.net a été trop lent pour répondre.",
     "Throttled": "Bungie.net limite le nombre de requêtes que DIM peut faire.",
