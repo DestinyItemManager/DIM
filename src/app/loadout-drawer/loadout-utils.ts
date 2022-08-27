@@ -5,7 +5,6 @@ import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { v3SubclassHashesByV2SubclassHash } from 'app/inventory/subclass';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
@@ -394,7 +393,24 @@ export function extractArmorModHashes(item: DimItem) {
  * the old one. When loading loadouts we'd like to just use the new version.
  */
 const oldToNewItems = {
-  ...v3SubclassHashesByV2SubclassHash,
+  // Arcstrider
+  1334959255: 2328211300,
+  // Striker
+  2958378809: 2932390016,
+  // Stormcaller
+  1751782730: 3168997075,
+  // Gunslinger
+  3635991036: 2240888816,
+  // Sunbreaker
+  3105935002: 2550323932,
+  // Dawnblade
+  3481861797: 3941205951,
+  // Nightstalker
+  3225959819: 2453351420,
+  // Sentinel
+  3382391785: 2842471112,
+  // Voidwalker
+  3887892656: 2849050827,
 };
 
 /**

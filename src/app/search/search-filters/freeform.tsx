@@ -3,6 +3,7 @@ import { DIM_LANG_INFOS } from 'app/i18n';
 import { tl } from 'app/i18next-t';
 import { getNotes } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
+import { isD1Item } from 'app/utils/item-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import memoizeOne from 'memoize-one';
@@ -128,7 +129,9 @@ const freeformFilters: FilterDefinition[] = [
       const startWord = startWordRegexp(plainString(filterValue, language), language);
       const test = (s: string) => startWord.test(plainString(s, language));
       return (item) =>
-        (item.talentGrid && testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes)) ||
+        (isD1Item(item) &&
+          item.talentGrid &&
+          testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes)) ||
         (item.sockets && testStringsFromAllSockets(test, item));
     },
   },
@@ -156,7 +159,8 @@ const freeformFilters: FilterDefinition[] = [
       const startWord = startWordRegexp(plainString(filterValue, language), language);
       const test = (s: string) => startWord.test(plainString(s, language));
       return (item) =>
-        testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes, false) ||
+        (isD1Item(item) &&
+          testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes, false)) ||
         testStringsFromAllSockets(test, item, false);
     },
   },
@@ -174,7 +178,7 @@ const freeformFilters: FilterDefinition[] = [
           test(item.name) ||
           test(item.description) ||
           test(item.typeName) ||
-          testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes) ||
+          (isD1Item(item) && testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes)) ||
           testStringsFromAllSockets(test, item) ||
           (d2Definitions &&
             (testStringsFromObjectives(test, d2Definitions, item.objectives) ||

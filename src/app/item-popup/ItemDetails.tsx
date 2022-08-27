@@ -12,7 +12,7 @@ import { ActivityModifier } from 'app/progress/ActivityModifier';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
 import { RootState } from 'app/store/types';
-import { getItemKillTrackerInfo } from 'app/utils/item-utils';
+import { getItemKillTrackerInfo, isD1Item } from 'app/utils/item-utils';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
@@ -105,7 +105,7 @@ export default function ItemDetails({
         </div>
       )}
 
-      {item.talentGrid && (
+      {isD1Item(item) && item.talentGrid && (
         <div className="item-details item-perks">
           <ItemTalentGrid item={item} />
         </div>

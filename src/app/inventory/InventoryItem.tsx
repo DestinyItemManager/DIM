@@ -26,8 +26,8 @@ interface Props {
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
   wishlistRoll?: InventoryWishListRoll;
-  /** Show the selected Super ability on subclasses? */
-  selectedSuperDisplay?: 'enabled' | 'disabled' | 'v3SubclassesOnly';
+  /** Hide the selected Super ability on subclasses? */
+  hideSelectedSuper?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   /** TODO: item locked needs to be passed in */
   onClick?(e: React.MouseEvent): void;
@@ -42,7 +42,7 @@ export default function InventoryItem({
   notes,
   searchHidden,
   wishlistRoll,
-  selectedSuperDisplay = 'enabled',
+  hideSelectedSuper,
   onClick,
   onShiftClick,
   onDoubleClick,
@@ -61,10 +61,7 @@ export default function InventoryItem({
   }
 
   const isSubclass = item?.destinyVersion === 2 && item.bucket.hash === BucketHashes.Subclass;
-  const subclassIconInfo =
-    isSubclass && selectedSuperDisplay !== 'disabled'
-      ? getSubclassIconInfo(item, selectedSuperDisplay === 'v3SubclassesOnly')
-      : null;
+  const subclassIconInfo = isSubclass && !hideSelectedSuper ? getSubclassIconInfo(item) : null;
   const hasBadge = shouldShowBadge(item);
   const itemStyles = clsx('item', {
     [styles.searchHidden]: searchHidden,

@@ -55,7 +55,6 @@ import { buildObjectives } from './objectives';
 import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
-import { buildTalentGrid } from './talent-grids';
 
 const collectiblesByItemHash = memoizeOne(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
@@ -553,7 +552,6 @@ export function makeItem(
     breakerType: null,
     percentComplete: 0,
     hidePercentage: false,
-    talentGrid: null,
     stats: null,
     objectives: null,
     pursuit: null,
@@ -644,16 +642,6 @@ export function makeItem(
   } catch (e) {
     errorLog('d2-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
-  }
-
-  try {
-    const talentData = itemComponents?.talentGrids?.data;
-    if (talentData) {
-      createdItem.talentGrid = buildTalentGrid(item, talentData, defs);
-    }
-  } catch (e) {
-    errorLog('d2-stores', `Error building talent grid for ${createdItem.name}`, item, itemDef, e);
-    reportException('TalentGrid', e, { itemHash: item.itemHash });
   }
 
   try {
