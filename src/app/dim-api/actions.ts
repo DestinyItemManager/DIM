@@ -198,9 +198,9 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
     // Load accounts info - we can't load the profile-specific DIM API data without it.
     const getPlatformsPromise = dispatch(getPlatforms()); // in parallel, we'll wait later
-    if (!getState().dimApi.profileLoadedFromIndexedDb && !getState().dimApi.profileLoaded) {
-      await dispatch(loadProfileFromIndexedDB());
-    }
+
+    // Load from indexedDB if needed
+    await dispatch(loadProfileFromIndexedDB());
     installObservers(dispatch); // idempotent
 
     // They don't want to sync from the server, or the API is disabled - stick with local data
@@ -353,18 +353,11 @@ function flushUpdates(): ThunkResult {
 
 function loadProfileFromIndexedDB(): ThunkResult {
   return async (dispatch, getState) => {
-    // If we already got it from the server, don't bother
-    if (getState().dimApi.profileLoaded || getState().dimApi.profileLoadedFromIndexedDb) {
+    if (getState().dimApi.profileLoadedFromIndexedDb) {
       return;
     }
 
     const profile = await get<ProfileIndexedDBState | undefined>('dim-api-profile');
-
-    // If we already got it from the server, don't bother
-    if (getState().dimApi.profileLoaded || getState().dimApi.profileLoadedFromIndexedDb) {
-      return;
-    }
-
     dispatch(profileLoadedFromIDB(profile));
   };
 }
