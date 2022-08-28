@@ -7,9 +7,6 @@ interface CssExports {
   'searchHidden': string;
   'subclass': string;
   'subclassBase': string;
-  'subclassPathBottom': string;
-  'subclassPathMiddle': string;
-  'subclassPathTop': string;
   'subclassSuperIcon': string;
   'xpBar': string;
   'xpBarAmount': string;

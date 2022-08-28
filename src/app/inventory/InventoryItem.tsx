@@ -66,9 +66,6 @@ export default function InventoryItem({
   const itemStyles = clsx('item', {
     [styles.searchHidden]: searchHidden,
     [styles.subclass]: isSubclass,
-    [styles.subclassPathTop]: subclassIconInfo?.path === 'top',
-    [styles.subclassPathMiddle]: subclassIconInfo?.path === 'middle',
-    [styles.subclassPathBottom]: subclassIconInfo?.path === 'bottom',
     [styles.hasBadge]: hasBadge,
   });
   // Subtitle for engram powerlevel vs regular item type

@@ -16,8 +16,6 @@ import subclassVoid from 'images/subclass-void.png';
 import memoizeOne from 'memoize-one';
 import { DimItem, PluggableInventoryItemDefinition } from './item-types';
 
-type SubclassPath = 'top' | 'middle' | 'bottom';
-
 interface SubclassInfo {
   damageType: DamageType;
   characterClass: DestinyClass;
@@ -120,20 +118,13 @@ const altBaseImagesByDamageType: Partial<Record<DamageType, string>> = {
 
 interface SubclassIconInfo {
   base: string;
-  path?: SubclassPath;
   super: string;
 }
 export function getSubclassIconInfo(item: DimItem): SubclassIconInfo | undefined {
-  const info = subclassInfoByHash[item.hash];
-  if (info) {
-    return getV3SubclassIconInfo(item, info);
+  const subclassInfo = subclassInfoByHash[item.hash];
+  if (!subclassInfo) {
+    return undefined;
   }
-}
-
-function getV3SubclassIconInfo(
-  item: DimItem,
-  subclassInfo: SubclassInfo
-): SubclassIconInfo | undefined {
   const base =
     altBaseImagesByDamageType[subclassInfo.damageType] ??
     baseImagesByDamageType[subclassInfo.damageType];
