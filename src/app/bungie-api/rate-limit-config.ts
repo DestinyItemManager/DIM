@@ -29,10 +29,20 @@ export default function setupRateLimiter() {
     new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipItem/, 1, 100)
   );
   addLimiter(
+    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipItems/, 1, 100)
+  );
+  addLimiter(
     new RateLimiterQueue(
       /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/InsertSocketPlugFree/,
       2,
-      1100
+      500
+    )
+  );
+  addLimiter(
+    new RateLimiterQueue(
+      /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/InsertSocketPlug/,
+      2,
+      500
     )
   );
 }
