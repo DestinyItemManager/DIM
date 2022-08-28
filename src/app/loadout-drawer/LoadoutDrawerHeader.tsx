@@ -23,6 +23,7 @@ export default function LoadoutDrawerHeader({
         minLength={1}
         maxLength={50}
         required={true}
+        autoComplete="off"
         type="text"
         value={loadout.name}
         placeholder={t('Loadouts.LoadoutName')}
