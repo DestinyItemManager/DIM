@@ -17,14 +17,14 @@ export default function ConnectedInventoryItem({
   onClick,
   onShiftClick,
   onDoubleClick,
-  selectedSuperDisplay,
+  hideSelectedSuper,
   dimArchived,
   allowFilter,
   innerRef,
 }: {
   item: DimItem;
   allowFilter?: boolean;
-  selectedSuperDisplay?: 'enabled' | 'disabled' | 'v3SubclassesOnly';
+  hideSelectedSuper?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   onClick?(e: React.MouseEvent): void;
   onShiftClick?(e: React.MouseEvent): void;
@@ -58,7 +58,7 @@ export default function ConnectedInventoryItem({
         onShiftClick={onShiftClick}
         onDoubleClick={onDoubleClick}
         searchHidden={searchHidden}
-        selectedSuperDisplay={selectedSuperDisplay}
+        hideSelectedSuper={hideSelectedSuper}
         innerRef={innerRef}
       />
     ),
@@ -71,7 +71,7 @@ export default function ConnectedInventoryItem({
       onDoubleClick,
       onShiftClick,
       searchHidden,
-      selectedSuperDisplay,
+      hideSelectedSuper,
       tag,
       wishlistRoll,
     ]

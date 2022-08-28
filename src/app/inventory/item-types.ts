@@ -193,8 +193,6 @@ export interface DimItem {
   highlightedObjective: boolean;
   /** What percent complete is this item (considers XP and objectives). */
   percentComplete: number;
-  /** The talent grid, used for D1 perks and D1/D2 subclass grids. */
-  talentGrid: DimTalentGrid | null;
   /** D2 items use sockets and plugs to represent everything from perks to mods to ornaments and shaders. */
   sockets: DimSockets | null;
   /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
@@ -334,14 +332,10 @@ export interface D1Stat extends DimStat {
   };
 }
 
-export interface DimTalentGrid {
-  /** A flat list of nodes in the grid. */
-  nodes: DimGridNode[];
+export interface D1TalentGrid {
   /** Is the grid complete (leveled and unlocked)? */
   complete: boolean;
-}
-
-export interface D1TalentGrid extends DimTalentGrid {
+  /** A flat list of nodes in the grid. */
   nodes: D1GridNode[];
   /** Have all nodes been unlocked via XP? */
   xpComplete: boolean;
@@ -357,7 +351,7 @@ export interface D1TalentGrid extends DimTalentGrid {
   infusable: boolean;
 }
 
-export interface DimGridNode {
+export interface D1GridNode {
   /** Localized name of the grid. */
   name: string;
   /** Talent grid definition hash. */
@@ -380,9 +374,6 @@ export interface DimGridNode {
   unlocked: boolean;
   /** Some nodes don't show up in the grid, like purchased ascend nodes */
   hidden: boolean;
-}
-
-export interface D1GridNode extends DimGridNode {
   /** Is this an ornament node? */
   ornament: boolean;
   /** How much XP has been put into this node? */

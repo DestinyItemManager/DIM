@@ -22,7 +22,6 @@ import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
-import { emptyArray } from 'app/utils/empty';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { copyString } from 'app/utils/util';
@@ -278,11 +277,11 @@ export default memo(function LoadoutBuilder({
     [loadoutParameters, searchQuery, statFilters, statOrder]
   );
 
-  const sets = result?.sets;
+  const resultSets = result?.sets;
 
   const filteredSets = useMemo(
-    () => sortGeneratedSets(statOrder, enabledStats, sets),
-    [statOrder, enabledStats, sets]
+    () => resultSets && sortGeneratedSets(statOrder, enabledStats, resultSets),
+    [statOrder, enabledStats, resultSets]
   );
 
   const shareBuild = async (notes?: string) => {
@@ -440,11 +439,11 @@ export default memo(function LoadoutBuilder({
             </p>
           </div>
         )}
-        {filteredSets && (
+        {result && filteredSets && (
           <GeneratedSets
             sets={filteredSets}
             subclass={subclass}
-            lockedMods={result?.mods ?? emptyArray()}
+            lockedMods={result.mods}
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
@@ -453,7 +452,7 @@ export default memo(function LoadoutBuilder({
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
-            armorEnergyRules={armorEnergyRules}
+            armorEnergyRules={result.armorEnergyRules}
             notes={notes}
           />
         )}

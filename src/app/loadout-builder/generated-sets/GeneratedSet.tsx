@@ -4,6 +4,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
+import { errorLog } from 'app/utils/log';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch, useMemo } from 'react';
@@ -79,11 +80,23 @@ function GeneratedSet({
   }
 
   let itemModAssignments = useMemo(() => {
-    const { itemModAssignments } = fitMostMods({
+    const { itemModAssignments, unassignedMods } = fitMostMods({
       items: displayedItems,
       plannedMods: lockedMods,
       armorEnergyRules,
     });
+
+    // Set rendering is a great place to verify that the worker process
+    // and DIM's regular mod assignment algorithm agree with each other,
+    // so do that here.
+    if (unassignedMods.length) {
+      errorLog(
+        'loadout optimizer',
+        'internal error: set rendering was unable to fit some mods that the worker thought were possible',
+        unassignedMods
+      );
+    }
+
     return itemModAssignments;
   }, [displayedItems, lockedMods, armorEnergyRules]);
 

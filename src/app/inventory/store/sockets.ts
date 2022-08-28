@@ -499,8 +499,7 @@ function findEmptyPlug(
   }
 
   if (
-    socketType.plugWhitelist.length &&
-    socketType.plugWhitelist.every((whiteListEntry) =>
+    socketType.plugWhitelist.some((whiteListEntry) =>
       noDefaultPlugIdentifiers.some((id) =>
         typeof id === 'number'
           ? whiteListEntry.categoryHash === id

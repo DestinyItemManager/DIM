@@ -1,6 +1,13 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
-import { battleNetIcon, faPlayStation, faSteam, faXbox, stadiaIcon } from 'app/shell/icons';
+import {
+  battleNetIcon,
+  epicIcon,
+  faPlayStation,
+  faSteam,
+  faXbox,
+  stadiaIcon,
+} from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
@@ -26,13 +33,13 @@ import { loggedOut } from './actions';
  * Platform types (membership types) in the Bungie API.
  */
 const PLATFORM_LABELS = {
-  // t(`Accounts.${platform}`, { metadata: { keys: 'platforms' }})
   [BungieMembershipType.TigerXbox]: 'Xbox',
   [BungieMembershipType.TigerPsn]: 'PlayStation',
   [BungieMembershipType.TigerBlizzard]: 'Blizzard',
   [BungieMembershipType.TigerDemon]: 'Demon',
   [BungieMembershipType.TigerSteam]: 'Steam',
   [BungieMembershipType.TigerStadia]: 'Stadia',
+  [BungieMembershipType.TigerEgs]: 'Epic',
   [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 
@@ -43,6 +50,7 @@ export const PLATFORM_ICONS = {
   [BungieMembershipType.TigerDemon]: 'Demon',
   [BungieMembershipType.TigerSteam]: faSteam,
   [BungieMembershipType.TigerStadia]: stadiaIcon,
+  [BungieMembershipType.TigerEgs]: epicIcon,
   [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 

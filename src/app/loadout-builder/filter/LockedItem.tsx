@@ -3,7 +3,6 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import React from 'react';
 
 /**
  * Render a pinned or excluded item.
@@ -29,7 +28,7 @@ export default function LockedItem({
               innerRef={ref}
               // don't show the selected Super ability on subclasses because we aren't applying socket overrides
               // to locked subclasses based on what is selected using 'Customize subclass'
-              selectedSuperDisplay="disabled"
+              hideSelectedSuper
             />
           )}
         </ItemPopupTrigger>

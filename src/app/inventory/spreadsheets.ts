@@ -19,7 +19,7 @@ import _ from 'lodash';
 import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
 import { getNotes, getTag, ItemInfos, tagConfig } from './dim-item-info';
-import { DimGridNode, DimItem, DimSockets } from './item-types';
+import { D1GridNode, DimItem, DimSockets } from './item-types';
 import { itemInfosSelector, storesSelector } from './selectors';
 import { getClass } from './store/character-utils';
 import { getEvent, getSeason } from './store/season';
@@ -209,7 +209,7 @@ function buildSocketNames(sockets: DimSockets): string[] {
   return socketItems.flat();
 }
 
-function buildNodeNames(nodes: DimGridNode[]): string[] {
+function buildNodeNames(nodes: D1GridNode[]): string[] {
   return _.compact(
     nodes.map((node) => {
       if (FILTER_NODE_NAMES.includes(node.name)) {
@@ -226,7 +226,7 @@ function getMaxPerks(items: DimItem[]) {
     _.max(
       items.map(
         (item) =>
-          (item.talentGrid
+          (isD1Item(item) && item.talentGrid
             ? buildNodeNames(item.talentGrid.nodes)
             : item.sockets
             ? buildSocketNames(item.sockets)
@@ -238,11 +238,12 @@ function getMaxPerks(items: DimItem[]) {
 }
 
 function addPerks(row: Record<string, unknown>, item: DimItem, maxPerks: number) {
-  const perks = item.talentGrid
-    ? buildNodeNames(item.talentGrid.nodes)
-    : item.sockets
-    ? buildSocketNames(item.sockets)
-    : [];
+  const perks =
+    isD1Item(item) && item.talentGrid
+      ? buildNodeNames(item.talentGrid.nodes)
+      : item.sockets
+      ? buildSocketNames(item.sockets)
+      : [];
 
   _.times(maxPerks, (index) => {
     row[`Perks ${index}`] = perks[index];
