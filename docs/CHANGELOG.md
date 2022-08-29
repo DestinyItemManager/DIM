@@ -1,5 +1,7 @@
 ## Next
 
+## 7.32.0 <span class="changelog-date">(2022-08-28)</span>
+
 * If the DIM API is down and you have pending updates, DIM will load correctly instead of spinning forever. We also do a better job of keeping changes you make while the API is down.
 * If the DIM API is not returning some info (e.g. searches), we'll fall back to your locally cached data instead of wiping it out.
 * Updating/overwriting a Loadout using Loadout Optimizer's "Compare Loadout" button will now correctly remove the placeholders for armor equipped in the Loadout that no longer exists.
