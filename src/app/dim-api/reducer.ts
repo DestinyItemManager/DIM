@@ -176,7 +176,7 @@ export const dimApi = (
         ? {
             ...state,
             profileLoadedFromIndexedDb: true,
-            settings: fixBadSettingsTypes({
+            settings: migrateSettings({
               ...state.settings,
               ...action.payload.settings,
             }),
@@ -209,7 +209,7 @@ export const dimApi = (
         profileLoaded: true,
         profileLoadedError: undefined,
         profileLastLoaded: Date.now(),
-        settings: fixBadSettingsTypes({
+        settings: migrateSettings({
           ...state.settings,
           ...profileResponse.settings,
         }),
@@ -393,11 +393,8 @@ export const dimApi = (
   }
 };
 
-/**
- * DIM accidentally stored some integer settings as strings,
- * so fix them up here.
- */
-function fixBadSettingsTypes(settings: Settings) {
+function migrateSettings(settings: Settings) {
+  // Fix some integer settings being stored as strings
   if (typeof settings.charCol === 'string') {
     settings = { ...settings, charCol: parseInt(settings.charCol, 10) };
   }
@@ -410,6 +407,21 @@ function fixBadSettingsTypes(settings: Settings) {
   if (typeof settings.itemSize === 'string') {
     settings = { ...settings, itemSize: parseInt(settings.itemSize, 10) };
   }
+
+  // Replace 'element' sort with 'elementWeapon' and 'elementArmor'
+  const sortOrder = settings.itemSortOrderCustom || [];
+  const reversals = settings.itemSortReversals || [];
+
+  if (sortOrder.includes('element')) {
+    sortOrder.splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor');
+  }
+
+  if (reversals.includes('element')) {
+    reversals.splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor');
+  }
+
+  settings = { ...settings, itemSortOrderCustom: sortOrder, itemSortReversals: reversals };
+
   return settings;
 }
 
