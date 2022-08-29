@@ -200,8 +200,11 @@ export const dimApi = (
     case getType(actions.profileLoaded): {
       const { profileResponse, account } = action.payload;
 
+      const profileKey = account ? makeProfileKeyFromAccount(account) : '';
+      const existingProfile = account ? state.profiles[profileKey] : undefined;
+
       // TODO: clean out invalid/simple searches on first load?
-      const newState = {
+      const newState: DimApiState = {
         ...state,
         profileLoaded: true,
         profileLoadedError: undefined,
@@ -216,20 +219,27 @@ export const dimApi = (
         profiles: account
           ? {
               ...state.profiles,
-              // Overwrite just this account's profile
-              [makeProfileKeyFromAccount(account)]: {
-                loadouts: _.keyBy(profileResponse.loadouts || [], (l) => l.id),
-                tags: _.keyBy(profileResponse.tags || [], (t) => t.id),
-                triumphs: (profileResponse.triumphs || []).map((t) => parseInt(t.toString(), 10)),
+              // Overwrite just this account's profile. If a specific key is missing from the response, don't overwrite it.
+              [profileKey]: {
+                loadouts: profileResponse.loadouts
+                  ? _.keyBy(profileResponse.loadouts, (l) => l.id)
+                  : existingProfile?.loadouts ?? {},
+                tags: profileResponse.tags
+                  ? _.keyBy(profileResponse.tags, (t) => t.id)
+                  : existingProfile?.tags ?? {},
+                triumphs: profileResponse.triumphs
+                  ? profileResponse.triumphs.map((t) => parseInt(t.toString(), 10))
+                  : existingProfile?.triumphs ?? [],
               },
             }
           : state.profiles,
-        searches: account
-          ? {
-              ...state.searches,
-              [account.destinyVersion]: profileResponse.searches || [],
-            }
-          : state.searches,
+        searches:
+          account && profileResponse.searches
+            ? {
+                ...state.searches,
+                [account.destinyVersion]: profileResponse.searches || [],
+              }
+            : state.searches,
       };
 
       // If this is the first load, cleanup searches
