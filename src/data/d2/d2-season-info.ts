@@ -249,7 +249,7 @@ export const D2SeasonInfo = {
     pinnacleCap: 1580,
     releaseDate: '2022-08-23',
     resetTime: '17:00:00Z',
-    numWeeks: 13,
+    numWeeks: 15,
   },
 } as Record<
   number,

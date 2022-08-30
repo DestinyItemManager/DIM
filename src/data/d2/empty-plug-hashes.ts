@@ -48,6 +48,7 @@ export const emptyPlugHashes: Set<number> = new Set([
   706611068, // Empty Mod Socket (Garden of Salvation Raid Mod, enhancements.raid_garden)
   3738398030, // Empty Mod Socket (Vault of Glass Armor Mod, enhancements.raid_v520)
   2447143568, // Empty Mod Socket (Vow of the Disciple Raid Mod, enhancements.raid_v600)
+  1728096240, // Empty Mod Socket (King's Fall Mod, enhancements.raid_v620)
   720857, // Empty Mod Socket (Legacy Armor Mod, enhancements.season_forge)
   1180997867, // Empty Mod Socket (Nightmare Mod, enhancements.season_maverick)
   2620967748, // Empty Mod Socket (Legacy Armor Mod, enhancements.season_maverick)
