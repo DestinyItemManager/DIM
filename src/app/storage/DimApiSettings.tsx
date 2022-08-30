@@ -7,6 +7,7 @@ import { apiPermissionGrantedSelector, dimSyncErrorSelector } from 'app/dim-api/
 import HelpLink from 'app/dim-ui/HelpLink';
 import Switch from 'app/dim-ui/Switch';
 import { t } from 'app/i18next-t';
+import { dimApiHelpLink } from 'app/login/Login';
 import { showNotification } from 'app/notifications/notifications';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
@@ -18,9 +19,6 @@ import styles from './DimApiSettings.m.scss';
 import { exportBackupData, exportLocalData } from './export-data';
 import ImportExport from './ImportExport';
 import LocalStorageInfo from './LocalStorageInfo';
-
-const dimApiHelpLink =
-  'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
 
 export default function DimApiSettings() {
   const dispatch = useThunkDispatch();
