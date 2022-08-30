@@ -17,13 +17,13 @@
   align-items: center;
   color: white;
   div {
-    background-color: #6dcc66;
+    background-color: $green;
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
     &.full {
-      background-color: red;
+      background-color: $red;
     }
   }
 }

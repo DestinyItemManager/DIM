@@ -1,3 +1,5 @@
+@use '../variables.scss' as *;
+
 .deepsightProgress {
   display: flex;
 
@@ -29,5 +31,5 @@
 }
 
 .patternOwned {
-  color: #44bd32;
+  color: $acquiredGreen;
 }
