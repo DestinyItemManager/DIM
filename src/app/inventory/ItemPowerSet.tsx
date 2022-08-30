@@ -1,4 +1,5 @@
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
+import clsx from 'clsx';
 import React from 'react';
 import { DimItem } from './item-types';
 import styles from './ItemPowerSet.m.scss';
@@ -22,7 +23,14 @@ export function ItemPowerSet(items: DimItem[], powerFloor: number) {
             <span className={styles.bucketName}>{i.bucket.name}</span>
             <BucketIcon className={styles.invert} item={i} />
             <span>{i.power}</span>
-            <span className={styles.powerDiff}>{powerDiff ? `${diffSymbol}${powerDiff}` : ''}</span>
+            <span
+              className={clsx(styles.powerDiff, {
+                [styles.positive]: powerDiff > 0,
+                [styles.negative]: powerDiff < 0,
+              })}
+            >
+              {powerDiff ? `${diffSymbol}${powerDiff}` : ''}
+            </span>
           </React.Fragment>
         );
       })}
