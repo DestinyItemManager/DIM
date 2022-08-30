@@ -1,5 +1,11 @@
+@use '../variables.scss' as *;
+
 .xpIcon {
   height: 1.2em;
   width: auto;
   filter: invert(1);
+}
+
+.artifactProgress {
+  background-color: $artifactBlue !important;
 }
