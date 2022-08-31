@@ -1,7 +1,7 @@
 ## Next
 
-* Visual adjustments for power level tooltips.
 * Progress page now correctly classifies the Star Chart weekly challenge as a powerful reward source instead of a pinnacle.
+* Visual adjustments to power level tooltips.
 
 ## 7.32.0 <span class="changelog-date">(2022-08-28)</span>
 
