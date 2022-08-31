@@ -64,6 +64,15 @@ const enhancedIntrinsics: Set<number> = new Set([
   2419864979, // Aggressive Burst
   1068043187, // Aggressive Burst
   1020196213, // Aggressive Burst
+  1472963920, // High-Impact Frame
+  4231246084, // High-Impact Frame
+  302702765, // High-Impact Frame
+  2617324347, // High-Impact Frame
+  3769337248, // High-Impact Frame
+  1451602450, // High-Impact Frame
+  1875323682, // High-Impact Frame
+  1946568256, // High-Impact Frame
+  2516075140, // High-Impact Frame
   3355499393, // Adaptive Frame
   2490530085, // Adaptive Frame
   141515518, // Adaptive Frame
@@ -95,6 +104,15 @@ const enhancedIntrinsics: Set<number> = new Set([
   3249407402, // Rapid-Fire Frame
   2164888232, // Rapid-Fire Frame
   3841661468, // Rapid-Fire Frame
+  1472963920, // High-Impact Frame
+  4231246084, // High-Impact Frame
+  302702765, // High-Impact Frame
+  2617324347, // High-Impact Frame
+  3769337248, // High-Impact Frame
+  1451602450, // High-Impact Frame
+  1875323682, // High-Impact Frame
+  1946568256, // High-Impact Frame
+  2516075140, // High-Impact Frame
   1793150018, // Adaptive Frame
   1793150018, // Adaptive Frame
   2458294492, // Precision Frame
@@ -120,6 +138,15 @@ const enhancedIntrinsics: Set<number> = new Set([
   3272152575, // Lightweight Frame
   3725333007, // Lightweight Frame
   308595185, // Lightweight Frame
+  3355499393, // Adaptive Frame
+  2490530085, // Adaptive Frame
+  141515518, // Adaptive Frame
+  3435239180, // Adaptive Frame
+  4249817697, // Adaptive Frame
+  2178772051, // Adaptive Frame
+  489506521, // Adaptive Frame
+  1900989425, // Adaptive Frame
+  3133077199, // Adaptive Frame
   1472963920, // High-Impact Frame
   4231246084, // High-Impact Frame
   302702765, // High-Impact Frame
@@ -129,6 +156,15 @@ const enhancedIntrinsics: Set<number> = new Set([
   1875323682, // High-Impact Frame
   1946568256, // High-Impact Frame
   2516075140, // High-Impact Frame
+  453527127, // Precision Frame
+  3000852559, // Precision Frame
+  3399947696, // Precision Frame
+  1045795938, // Precision Frame
+  384272571, // Precision Frame
+  3226552705, // Precision Frame
+  224485255, // Precision Frame
+  743857847, // Precision Frame
+  364418505, // Precision Frame
   453527127, // Precision Frame
   3000852559, // Precision Frame
   3399947696, // Precision Frame
@@ -272,6 +308,15 @@ const enhancedIntrinsics: Set<number> = new Set([
   489506521, // Adaptive Frame
   1900989425, // Adaptive Frame
   3133077199, // Adaptive Frame
+  3355499393, // Adaptive Frame
+  2490530085, // Adaptive Frame
+  141515518, // Adaptive Frame
+  3435239180, // Adaptive Frame
+  4249817697, // Adaptive Frame
+  2178772051, // Adaptive Frame
+  489506521, // Adaptive Frame
+  1900989425, // Adaptive Frame
+  3133077199, // Adaptive Frame
   1241894699, // Together Forever
   2826720951, // Together Forever
   1300107783, // Together Forever
@@ -298,6 +343,15 @@ const enhancedIntrinsics: Set<number> = new Set([
   3272152575, // Lightweight Frame
   3725333007, // Lightweight Frame
   308595185, // Lightweight Frame
+  3355499393, // Adaptive Frame
+  2490530085, // Adaptive Frame
+  141515518, // Adaptive Frame
+  3435239180, // Adaptive Frame
+  4249817697, // Adaptive Frame
+  2178772051, // Adaptive Frame
+  489506521, // Adaptive Frame
+  1900989425, // Adaptive Frame
+  3133077199, // Adaptive Frame
   1472963920, // High-Impact Frame
   4231246084, // High-Impact Frame
   302702765, // High-Impact Frame
