@@ -1,5 +1,7 @@
 ## Next
 
+* Progress page now correctly classifies the Star Chart weekly challenge as a powerful reward source instead of a pinnacle.
+
 ## 7.32.0 <span class="changelog-date">(2022-08-28)</span>
 
 * If the DIM API is down and you have pending updates, DIM will load correctly instead of spinning forever. We also do a better job of keeping changes you make while the API is down.
