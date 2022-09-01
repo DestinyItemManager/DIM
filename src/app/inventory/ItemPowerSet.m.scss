@@ -1,3 +1,5 @@
+@use '../variables.scss' as *;
+
 .itemPowerSet {
   display: grid;
   margin: auto;
@@ -14,16 +16,20 @@
     }
   }
 
-  .bucketName,
-  .powerDiff {
-    color: #aaa;
-  }
-
   .bucketName {
     text-align: right;
+    opacity: 0.6;
   }
   .powerDiff {
     text-align: center;
+    font-weight: bold;
+
+    &.positive {
+      color: $green;
+    }
+    &.negative {
+      color: $red;
+    }
   }
   .spanGrid {
     grid-column-end: span 4;

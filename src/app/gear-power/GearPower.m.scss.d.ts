@@ -22,6 +22,7 @@ interface CssExports {
   'notes': string;
   'positive': string;
   'power': string;
+  'powerLevel': string;
   'statMeta': string;
 }
 export const cssExports: CssExports;

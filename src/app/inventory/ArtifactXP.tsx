@@ -1,6 +1,6 @@
 import { percent } from 'app/shell/formatters';
 import { DestinyCharacterProgressionComponent } from 'bungie-api-ts/destiny2';
-import React from 'react';
+import clsx from 'clsx';
 import xpIcon from '../../images/xpIcon.svg';
 import styles from './ArtifactXP.m.scss';
 const formatter = new Intl.NumberFormat();
@@ -25,7 +25,10 @@ export function ArtifactXP(
   };
   return (
     <div className="objective-progress">
-      <div className="objective-progress-bar" style={progressBarStyle} />
+      <div
+        className={clsx('objective-progress-bar', styles.artifactProgress)}
+        style={progressBarStyle}
+      />
       <div className="objective-description">
         <img src={xpIcon} className={styles.xpIcon} /> {level + 1}
       </div>

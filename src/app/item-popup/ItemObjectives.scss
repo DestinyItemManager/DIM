@@ -1,5 +1,7 @@
 // TODO: Move to Objective.tsx
 
+@use '../variables.scss' as *;
+
 .objective-row {
   display: flex;
   flex-direction: row;
@@ -69,7 +71,7 @@
 }
 
 .objective-progress-bar {
-  background-color: #5ea16a;
+  background-color: $xp;
   position: absolute;
   top: 0;
   left: 0;
@@ -90,7 +92,7 @@
     margin: 2px;
     height: 11px;
     width: 11px;
-    background-color: #5ea16a;
+    background-color: $xp;
   }
 }
 

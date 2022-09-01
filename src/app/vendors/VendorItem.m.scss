@@ -29,7 +29,7 @@
 
 .ownedIcon {
   composes: ownershipIcon;
-  background: #44bd32;
+  background: $acquiredGreen;
 }
 
 .vendorItem {
