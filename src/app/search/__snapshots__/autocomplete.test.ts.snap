@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |(is:a or is:b) and (is:c or multi w)| with caret at position 35 with exact match 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         28,
         45,
       ],
       "section": "body",
     },
-    "query": Object {
-      "body": "(is:a or is:b) and (is:c or name:\\"multi word\\")",
-      "fullText": "(is:a or is:b) and (is:c or name:\\"multi word\\")",
+    "query": {
+      "body": "(is:a or is:b) and (is:c or name:"multi word")",
+      "fullText": "(is:a or is:b) and (is:c or name:"multi word")",
       "helpText": undefined,
     },
     "type": 3,
@@ -21,18 +21,18 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |acd/0 fee| with caret at position 9 with exact match 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         0,
         27,
       ],
       "section": "body",
     },
-    "query": Object {
-      "body": "name:\\"acd/0 feedback fence\\"",
-      "fullText": "name:\\"acd/0 feedback fence\\"",
+    "query": {
+      "body": "name:"acd/0 feedback fence"",
+      "fullText": "name:"acd/0 feedback fence"",
       "helpText": undefined,
     },
     "type": 3,
@@ -41,18 +41,18 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |ager's sce| with caret at position 10 with exact match 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         0,
         21,
       ],
       "section": "body",
     },
-    "query": Object {
-      "body": "name:\\"ager's scepter\\"",
-      "fullText": "name:\\"ager's scepter\\"",
+    "query": {
+      "body": "name:"ager's scepter"",
+      "fullText": "name:"ager's scepter"",
       "helpText": undefined,
     },
     "type": 3,
@@ -61,18 +61,18 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |arctic  haz| with caret at position 11 with exact match 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         0,
         18,
       ],
       "section": "body",
     },
-    "query": Object {
-      "body": "name:\\"arctic haze\\"",
-      "fullText": "name:\\"arctic haze\\"",
+    "query": {
+      "body": "name:"arctic haze"",
+      "fullText": "name:"arctic haze"",
       "helpText": undefined,
     },
     "type": 3,
@@ -81,18 +81,18 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |arctic haz| with caret at position 10 with exact match 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         0,
         18,
       ],
       "section": "body",
     },
-    "query": Object {
-      "body": "name:\\"arctic haze\\"",
-      "fullText": "name:\\"arctic haze\\"",
+    "query": {
+      "body": "name:"arctic haze"",
+      "fullText": "name:"arctic haze"",
       "helpText": undefined,
     },
     "type": 3,
@@ -101,18 +101,18 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |is:weapon arctic haz -is:exotic| with caret at position 20 with exact match 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         10,
         28,
       ],
       "section": "body",
     },
-    "query": Object {
-      "body": "is:weapon name:\\"arctic haze\\" -is:exotic",
-      "fullText": "is:weapon name:\\"arctic haze\\" -is:exotic",
+    "query": {
+      "body": "is:weapon name:"arctic haze" -is:exotic",
+      "fullText": "is:weapon name:"arctic haze" -is:exotic",
       "helpText": undefined,
     },
     "type": 3,
@@ -121,18 +121,18 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |name:"foo" arctic haz| with caret at position 21 with exact match 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         11,
         29,
       ],
       "section": "body",
     },
-    "query": Object {
-      "body": "name:\\"foo\\" name:\\"arctic haze\\"",
-      "fullText": "name:\\"foo\\" name:\\"arctic haze\\"",
+    "query": {
+      "body": "name:"foo" name:"arctic haze"",
+      "fullText": "name:"foo" name:"arctic haze"",
       "helpText": undefined,
     },
     "type": 3,
@@ -141,18 +141,18 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |rare curio or arctic haz| with caret at position 24 with exact match 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         14,
         32,
       ],
       "section": "body",
     },
-    "query": Object {
-      "body": "rare curio or name:\\"arctic haze\\"",
-      "fullText": "rare curio or name:\\"arctic haze\\"",
+    "query": {
+      "body": "rare curio or name:"arctic haze"",
+      "fullText": "rare curio or name:"arctic haze"",
       "helpText": undefined,
     },
     "type": 3,
@@ -161,18 +161,18 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |stat:rpm:200 first in, last| with caret at position 27 with exact match 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         13,
         38,
       ],
       "section": "body",
     },
-    "query": Object {
-      "body": "stat:rpm:200 name:\\"first in, last out\\"",
-      "fullText": "stat:rpm:200 name:\\"first in, last out\\"",
+    "query": {
+      "body": "stat:rpm:200 name:"first in, last out"",
+      "fullText": "stat:rpm:200 name:"first in, last out"",
       "helpText": undefined,
     },
     "type": 3,
@@ -181,18 +181,18 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |the last word| with caret at position 13 with exact match 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         0,
         20,
       ],
       "section": "body",
     },
-    "query": Object {
-      "body": "name:\\"the last word\\"",
-      "fullText": "name:\\"the last word\\"",
+    "query": {
+      "body": "name:"the last word"",
+      "fullText": "name:"the last word"",
       "helpText": undefined,
     },
     "type": 3,
@@ -201,18 +201,18 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |toil and trou| with caret at position 13 with exact match 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         0,
         23,
       ],
       "section": "body",
     },
-    "query": Object {
-      "body": "name:\\"toil and trouble\\"",
-      "fullText": "name:\\"toil and trouble\\"",
+    "query": {
+      "body": "name:"toil and trouble"",
+      "fullText": "name:"toil and trouble"",
       "helpText": undefined,
     },
     "type": 3,
@@ -221,18 +221,18 @@ Array [
 `;
 
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |two-tail| with caret at position 8 with exact match 1`] = `
-Array [
-  Object {
-    "highlightRange": Object {
-      "range": Array [
+[
+  {
+    "highlightRange": {
+      "range": [
         0,
         21,
       ],
       "section": "body",
     },
-    "query": Object {
-      "body": "name:\\"two-tailed fox\\"",
-      "fullText": "name:\\"two-tailed fox\\"",
+    "query": {
+      "body": "name:"two-tailed fox"",
+      "fullText": "name:"two-tailed fox"",
       "helpText": undefined,
     },
     "type": 3,
@@ -315,9 +315,9 @@ exports[`autocompleteTermSuggestions autocomplete within query for |is:haspower 
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within query for |not(| with caret at position 4 1`] = `Array []`;
+exports[`autocompleteTermSuggestions autocomplete within query for |not(| with caret at position 4 1`] = `[]`;
 
-exports[`autocompleteTermSuggestions autocomplete within query for |season:>outl| with caret at position 12 1`] = `Array []`;
+exports[`autocompleteTermSuggestions autocomplete within query for |season:>outl| with caret at position 12 1`] = `[]`;
 
 exports[`filterComplete autocomplete terms for |is:b| 1`] = `
 [
