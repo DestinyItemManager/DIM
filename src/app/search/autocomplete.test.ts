@@ -41,7 +41,9 @@ describe('autocompleteTermSuggestions', () => {
     ['stat:rpm:200 first in, last', 27, 'first in, last out'],
     ['two-tail', 8, 'two-tailed fox'],
     ['(is:a or is:b) and (is:c or multi w)', 35, 'multi word'],
-    ['arctic  haz', 11, 'arctic haze'], // this currently isn't handled due to the double space
+    ['arctic  haz', 11, 'arctic haze'], // todo: not handled due to the double space
+    ['toil and trou', 13, 'toil and trouble'], // todo: handled due to the `and`
+    ['rare curio or arctic haz', 24, 'arctic haze'], // todo: not handled, eats all five words
   ];
 
   test.each(multiWordCases)(

@@ -65,14 +65,14 @@ Array [
   Object {
     "highlightRange": Object {
       "range": Array [
-        8,
-        26,
+        0,
+        18,
       ],
       "section": "body",
     },
     "query": Object {
-      "body": "arctic  name:\\"arctic haze\\"",
-      "fullText": "arctic  name:\\"arctic haze\\"",
+      "body": "name:\\"arctic haze\\"",
+      "fullText": "name:\\"arctic haze\\"",
       "helpText": undefined,
     },
     "type": 3,
@@ -140,6 +140,26 @@ Array [
 ]
 `;
 
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for |rare curio or arctic haz| with caret at position 24 with exact match 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        14,
+        32,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "rare curio or name:\\"arctic haze\\"",
+      "fullText": "rare curio or name:\\"arctic haze\\"",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |stat:rpm:200 first in, last| with caret at position 27 with exact match 1`] = `
 Array [
   Object {
@@ -173,6 +193,26 @@ Array [
     "query": Object {
       "body": "name:\\"the last word\\"",
       "fullText": "name:\\"the last word\\"",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for |toil and trou| with caret at position 13 with exact match 1`] = `
+Array [
+  Object {
+    "highlightRange": Object {
+      "range": Array [
+        0,
+        23,
+      ],
+      "section": "body",
+    },
+    "query": Object {
+      "body": "name:\\"toil and trouble\\"",
+      "fullText": "name:\\"toil and trouble\\"",
       "helpText": undefined,
     },
     "type": 3,
