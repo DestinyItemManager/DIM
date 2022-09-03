@@ -3,6 +3,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
+import deprecatedMods from 'data/d2/deprecated-mods.json';
 import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
@@ -86,7 +87,22 @@ export default function VendorItems({
     return <div className={styles.vendorContents}>{t('Vendors.NoItems')}</div>;
   }
 
-  const itemsByCategory = _.groupBy(vendor.items, (item: VendorItem) => item.displayCategoryIndex);
+  // remove deprecated mods from seasonal artifact
+  if (vendor.def.hash === 2894222926) {
+    const first = vendor.items.findIndex((firstDepMod) =>
+      deprecatedMods.includes(firstDepMod?.item?.hash ?? 0)
+    );
+    const reverseList = [...vendor.items].reverse();
+    const last =
+      vendor.items.length -
+      2 -
+      reverseList.findIndex((lastDepMod) => deprecatedMods.includes(lastDepMod?.item?.hash ?? 0));
+    if (first > -1 && last > -1) {
+      vendor.items.splice(first, last);
+    }
+  }
+
+  const itemsByCategory = _.groupBy(vendor.items, (item: VendorItem) => item?.displayCategoryIndex);
 
   const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
   const rewardVendorHash = faction?.rewardVendorHash || undefined;
