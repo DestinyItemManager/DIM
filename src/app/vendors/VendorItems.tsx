@@ -3,6 +3,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
+import deprecatedMods from 'data/d2/deprecated-mods.json';
 import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
@@ -86,7 +87,14 @@ export default function VendorItems({
     return <div className={styles.vendorContents}>{t('Vendors.NoItems')}</div>;
   }
 
-  const itemsByCategory = _.groupBy(vendor.items, (item: VendorItem) => item.displayCategoryIndex);
+  // remove deprecated mods from seasonal artifact
+  if (vendor.def.hash === VENDORS.ARTIFACT) {
+    vendor.items = vendor.items.filter(
+      (i) => i.item?.hash && !deprecatedMods.includes(i.item.hash)
+    );
+  }
+
+  const itemsByCategory = _.groupBy(vendor.items, (item) => item?.displayCategoryIndex);
 
   const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
   const rewardVendorHash = faction?.rewardVendorHash || undefined;

@@ -242,6 +242,12 @@ export const VENDORS = {
   VAULT: 1037843411,
   XUR: 2190858386,
   WAR_TABLE_UPGRADES_RISEN: 3950870173,
+  /**
+   * this has always been named "The Gate Lord's Eye" from season 8,
+   * but every season this vendor is updated with the new contents
+   * of that season's artifact
+   */
+  ARTIFACT: 2894222926,
 };
 
 /** used to snag the icon for display */
