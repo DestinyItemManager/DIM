@@ -191,8 +191,8 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |r
       "section": "body",
     },
     "query": {
-      "body": "rare curio or name:"arctic haze"",
-      "fullText": "rare curio or name:"arctic haze"",
+      "body": "rare curio or arctic name:"arctic haze"",
+      "fullText": "rare curio or arctic name:"arctic haze"",
       "helpText": undefined,
     },
     "type": 3,
@@ -245,14 +245,14 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |t
   {
     "highlightRange": {
       "range": [
-        0,
-        23,
+        9,
+        32,
       ],
       "section": "body",
     },
     "query": {
-      "body": "name:"toil and trouble"",
-      "fullText": "name:"toil and trouble"",
+      "body": "toil and name:"toil and trouble"",
+      "fullText": "toil and name:"toil and trouble"",
       "helpText": undefined,
     },
     "type": 3,

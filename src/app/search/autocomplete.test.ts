@@ -42,10 +42,10 @@ describe('autocompleteTermSuggestions', () => {
     ['two-tail', 8, 'two-tailed fox'],
     ['(is:a or is:b) and (is:c or multi w)', 35, 'multi word'],
     ['arctic  haz', 11, 'arctic haze'],
-    ['toil and trou', 13, 'toil and trouble'], // todo: not handled due to the `and`
     ['"rare curio" arctic haz', 23, 'arctic haze'],
     ['"rare curio" or arctic haz', 26, 'arctic haze'],
-    ['rare curio or arctic haz', 24, 'arctic haze'], // todo: not handled due to the `or`
+    ['toil and trou', 13, 'toil and trouble'], // todo: not handled due to the `and`
+    ['rare curio or arctic haz', 24, 'arctic haze'], // todo: parser result is unexpected here
   ];
 
   test.each(multiWordCases)(
