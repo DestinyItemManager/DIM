@@ -13,11 +13,7 @@
     "ErrorLoading": "Impossible de charger les comptes Destiny depuis Bungie.net",
     "MissingDescription": "Le compte que vous essayez de voir n'est pas un compte associé à votre profil Bungie.net.",
     "MissingTitle": "Compte Introuvable",
-    "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent."
   },
   "Activities": {
     "Activities": "Activités",
@@ -76,7 +72,7 @@
     "NotConnectedOrBlocked": "Vous n'êtes peut-être pas connecté à internet, ou un bloquer de pub est peut-être en train de bloquer Bungie.net.",
     "NotLoggedIn": "Veuillez autoriser DIM pour pouvoir utiliser cette application.",
     "Slow": "Bungie.net actuellement lent",
-    "SlowDetails": "Bungie.net prend longtemps pour obtenir vos informations. Cela peut arriver lorsque beaucoup d'utilisateurs sont dans le jeu en même temps, ou s'il y a des problèmes avec Bungie.net. Il est aussi possible que votre connection internet ait des problèmes. Nous allons continuer d'essayer d'obtenir vos informations.",
+    "SlowDetails": "Bungie.net prend longtemps pour obtenir la donnée demandée. Cela peut arriver lorsque beaucoup d'utilisateurs sont dans le jeu en même temps, ou s'il y a des problèmes avec Bungie.net. Il est aussi possible que votre connection internet ait des problèmes. Nous allons continuer d'essayer d'obtenir la donnée.",
     "SlowResponse": "Bungie.net a été trop lent pour répondre.",
     "Throttled": "Bungie.net limite le nombre de requêtes que DIM peut faire.",
     "Twitter": "Tenez-vous informé sur:",
@@ -920,6 +916,7 @@
     "SizeItem": "Taille des objets",
     "SortByAmmoType": "Type de munitions",
     "SortByAmount": "Taille de la pile",
+    "SortByArmorElement": "Élément d'armure (D2)",
     "SortByClassType": "Classe requise",
     "SortByCrafted": "Fabriqué (D2)",
     "SortByDeepsight": "Résonnance (D2)",
@@ -931,6 +928,7 @@
     "SortBySunset": "Limite de puissance (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
+    "SortByWeaponElement": "Type de dégâts",
     "SortCustom": "Tri personnalisé",
     "SortName": "Nom",
     "SpacesSize": "{{count}} espace",

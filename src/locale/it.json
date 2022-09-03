@@ -13,11 +13,7 @@
     "ErrorLoading": "Impossibile caricare gli account di Destiny da Bungie.net",
     "MissingDescription": "L'account che stai cercando di visualizzare non è un account collegato al tuo profilo Bungie.net.",
     "MissingTitle": "Account Non Trovato",
-    "NoCharacters": "Non possiedi personaggi di Destiny associati a questo account Bungie.net. Prova a connetterti con un account diverso.",
-    "PlayStation": "Playstation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "NoCharacters": "Non possiedi personaggi di Destiny associati a questo account Bungie.net. Prova a connetterti con un account diverso."
   },
   "Activities": {
     "Activities": "Attività",
@@ -920,6 +916,7 @@
     "SizeItem": "Dimensione oggetti",
     "SortByAmmoType": "Tipo di munizioni",
     "SortByAmount": "Dimensione della pila",
+    "SortByArmorElement": "Elemento Armatura (D2)",
     "SortByClassType": "Classe Richiesta",
     "SortByCrafted": "Oggetti Forgiati (D2)",
     "SortByDeepsight": "Vista Profonda",
@@ -931,6 +928,7 @@
     "SortBySunset": "Limite di Potere massimo raggiungibile (D2)",
     "SortByTag": "Etichetta ({{taglist}})",
     "SortByType": "Tipo",
+    "SortByWeaponElement": "Tipo di danno",
     "SortCustom": "Ordinamento Personalizzato",
     "SortName": "Nome",
     "SpacesSize": "{{count}} spazio",

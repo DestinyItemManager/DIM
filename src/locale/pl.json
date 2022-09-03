@@ -13,11 +13,7 @@
     "ErrorLoading": "Nie można załadować kont Destiny z Bungie.net",
     "MissingDescription": "Konto, które próbujesz zobaczyć, nie jest kontem połączonym z Twoim profilem Bungie.net.",
     "MissingTitle": "Nie znaleziono konta",
-    "NoCharacters": "Nie posiadasz żadnych postaci z Destiny powiązanych z tym kontem Bungie.net. Spróbuj zalogować się na inne konto.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "NoCharacters": "Nie posiadasz żadnych postaci z Destiny powiązanych z tym kontem Bungie.net. Spróbuj zalogować się na inne konto."
   },
   "Activities": {
     "Activities": "Aktywności",
@@ -920,6 +916,7 @@
     "SizeItem": "Rozmiar elementu",
     "SortByAmmoType": "Rodzaj amunicji",
     "SortByAmount": "Rozmiar stosu",
+    "SortByArmorElement": "Armor Element (D2)",
     "SortByClassType": "Wymagana klasa",
     "SortByCrafted": "Crafted (D2)",
     "SortByDeepsight": "Deepsight (D2)",
@@ -931,6 +928,7 @@
     "SortBySunset": "Został przedawniony (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Rodzaj",
+    "SortByWeaponElement": "Damage Type",
     "SortCustom": "Sortowanie niestandardowe",
     "SortName": "Nazwa",
     "SpacesSize": "{{count}} miejsce",

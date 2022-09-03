@@ -13,11 +13,7 @@
     "ErrorLoading": "Не удалось загрузить учётные записи Destiny с Bungie.net",
     "MissingDescription": "Учетная запись, которую вы пытаетесь просмотреть, не связана с вашим профилем Bungie.net.",
     "MissingTitle": "Аккаунт не найден",
-    "NoCharacters": "На данном аккаунте Bungie.net не имеется ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Google Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "NoCharacters": "На данном аккаунте Bungie.net не имеется ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт."
   },
   "Activities": {
     "Activities": "Активности",
@@ -920,6 +916,7 @@
     "SizeItem": "Размер предмета",
     "SortByAmmoType": "Тип боеприпасов",
     "SortByAmount": "Количество",
+    "SortByArmorElement": "Стихия Брони (D2)",
     "SortByClassType": "Класс",
     "SortByCrafted": "Изготовленное (D2)",
     "SortByDeepsight": "Резонанс Глубинного зрения (D2)",
@@ -931,6 +928,7 @@
     "SortBySunset": "Sunset (D2) предмет",
     "SortByTag": "Тэги ({{taglist}})",
     "SortByType": "Тип",
+    "SortByWeaponElement": "Тип Урона",
     "SortCustom": "Свой порядок",
     "SortName": "Имя",
     "SpacesSize": "{{count}} место",

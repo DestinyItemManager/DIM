@@ -13,11 +13,7 @@
     "ErrorLoading": "無法從 Bungie.net 加載命運賬戶",
     "MissingDescription": "你試圖查看的賬戶並未連接到你的 Bungie.net 賬戶。",
     "MissingTitle": "找不到帳戶",
-    "NoCharacters": "沒有找到與此Bungie.net帳號相關聯的Destiny角色，登陸其它帳號試試看。",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "NoCharacters": "沒有找到與此Bungie.net帳號相關聯的Destiny角色，登陸其它帳號試試看。"
   },
   "Activities": {
     "Activities": "活動",
@@ -920,6 +916,7 @@
     "SizeItem": "物品顯示大小",
     "SortByAmmoType": "彈藥類型",
     "SortByAmount": "堆疊大小",
+    "SortByArmorElement": "Armor Element (D2)",
     "SortByClassType": "必要的類",
     "SortByCrafted": "已製造 (D2)",
     "SortByDeepsight": "深視共振 (D2)",
@@ -931,6 +928,7 @@
     "SortBySunset": "已退環境（D2）",
     "SortByTag": "標籤{{taglist}}",
     "SortByType": "類型",
+    "SortByWeaponElement": "Damage Type",
     "SortCustom": "自訂排序",
     "SortName": "名稱",
     "SpacesSize": "{{count}} 個空位",

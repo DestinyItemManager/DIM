@@ -13,11 +13,7 @@
     "ErrorLoading": "No se pudieron cargar cuentas de Destiny desde Bungie.net",
     "MissingDescription": "La cuenta que estás intentando ver no es una cuenta vinculada a tu perfil de Bungie.net.",
     "MissingTitle": "Cuenta no encontrada",
-    "NoCharacters": "No tienes personajes de Destiny asociados con esta cuenta de Bungie.net. Inicia sesión con una cuenta diferente.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "NoCharacters": "No tienes personajes de Destiny asociados con esta cuenta de Bungie.net. Inicia sesión con una cuenta diferente."
   },
   "Activities": {
     "Activities": "Actividades",
@@ -920,6 +916,7 @@
     "SizeItem": "Tamaño de objeto",
     "SortByAmmoType": "Tipo de Munición",
     "SortByAmount": "Tamaño de la Pila",
+    "SortByArmorElement": "Elemento de Armadura (D2)",
     "SortByClassType": "Clase Requerida",
     "SortByCrafted": "Creadas (D2)",
     "SortByDeepsight": "Visión Profunda (D2)",
@@ -931,6 +928,7 @@
     "SortBySunset": "Ha Sido Jubilada (D2)",
     "SortByTag": "Etiqueta ({{taglist}})",
     "SortByType": "Tipo",
+    "SortByWeaponElement": "Tipo de Daño",
     "SortCustom": "Orden Personalizado",
     "SortName": "Nombre",
     "SpacesSize": "{{count}} espacio",

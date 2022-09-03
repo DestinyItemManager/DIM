@@ -13,11 +13,7 @@
     "ErrorLoading": "Destiny Accounts können nicht von Bungie.net geladen werden",
     "MissingDescription": "Der Account, den du sehen möchtest, ist kein Account, der mit deinem Bungie.net Profil verknüpft ist.",
     "MissingTitle": "Account nicht gefunden",
-    "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen."
   },
   "Activities": {
     "Activities": "Aktivitäten",
@@ -920,6 +916,7 @@
     "SizeItem": "Gegenstandsgröße",
     "SortByAmmoType": "Munitionstyp",
     "SortByAmount": "Stapelgröße",
+    "SortByArmorElement": "Rüstungselement (D2)",
     "SortByClassType": "Benötigte Klasse",
     "SortByCrafted": "Geformt (D2)",
     "SortByDeepsight": "Tiefensicht (D2)",
@@ -931,6 +928,7 @@
     "SortBySunset": "In Waffen-Ruhestand (D2)",
     "SortByTag": "Markierung ({{taglist}})",
     "SortByType": "Typ",
+    "SortByWeaponElement": "Schadensart",
     "SortCustom": "Benutzerdefinierte Sortierung",
     "SortName": "Name",
     "SpacesSize": "{{count}} Platz",
@@ -1006,7 +1004,7 @@
       "IndexedDBStorage": "Lokaler Speicher, speichert deine Daten nur in diesem Browser. Beim Löschen deiner Browserdaten werden diese Informationen gelöscht."
     },
     "DimApiFinePrint": "DIM speichert deine Tags, Ausrüstungen und Einstellungen auf den DIM-Servern und synchronisiert sie zwischen verschiedenen Versionen von DIM.",
-    "DimSyncDown": "DIM Sync konnte sich aufgrund eines Kommunikationsfehlers mit dem Server nicht verbinden.",
+    "DimSyncDown": "DIM Sync konnte sich, aufgrund eines Kommunikationsfehlers mit dem Server, nicht verbinden.",
     "DimSyncEnabled": "DIM Sync aktiviert",
     "DimSyncNotEnabled": "DIM Sync ist nicht aktiviert. Dies bedeutet, dass deine Einstellungen, Markierungen, Ausrüstungen und Suchanfragen nur lokal gespeichert sind und verlorengehen werden, wenn du deinen Browserspeicher löschst. Du kannst DIM Sync in den Einstellungen aktivieren, um deine Daten automatisch zu sichern; oder sie regelmäßig zum Sichern manuell herunterladen.",
     "EnableDimApi": "DIM Sync aktivieren (empfohlen)",
@@ -1062,7 +1060,7 @@
     "Button": "{{numSockets}} Fassungen leeren",
     "Cancel": "Abbrechen",
     "Choose": "Fassungen zum Leeren auswählen",
-    "Done": "Geleerte Fassungen",
+    "Done": "Fassungen geleert",
     "NoSockets": "Keine Fassungen zu leeren",
     "Ok": "OK",
     "Ornaments": "{{count}}x Ornament",

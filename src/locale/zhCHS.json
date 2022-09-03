@@ -13,11 +13,7 @@
     "ErrorLoading": "无法从 Bungie.net 加载命运账户",
     "MissingDescription": "你试图查看的账户并未连接到你的 Bungie.net 账户。",
     "MissingTitle": "找不到账户",
-    "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。"
   },
   "Activities": {
     "Activities": "活动",
@@ -920,6 +916,7 @@
     "SizeItem": "物品显示大小",
     "SortByAmmoType": "弹药类型",
     "SortByAmount": "堆叠大小",
+    "SortByArmorElement": "护甲元素（D2）",
     "SortByClassType": "必要的类",
     "SortByCrafted": "已制造（D2）",
     "SortByDeepsight": "深视共振（D2）",
@@ -931,6 +928,7 @@
     "SortBySunset": "已退环境（D2）",
     "SortByTag": "标签{{taglist}}",
     "SortByType": "类型",
+    "SortByWeaponElement": "伤害类型",
     "SortCustom": "自订排序",
     "SortName": "名称",
     "SpacesSize": "{{count}} 个空位",
