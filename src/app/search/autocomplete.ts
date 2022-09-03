@@ -253,14 +253,13 @@ export function findLastFilter(
     true // traverse in reverse
   );
 
-  // @TODO: Assumes these "keywords" are separated by just one space and no trailing spaces.
-  // To fix, turn this into a regex. But first it would need to be escaped - it can have parens, etc
   const trailingKeywordStrings = trailingKeywordArgs.reverse().join(' ');
+  const spaceNormalizedQuery = queryUpToCaret.trim().replace(/\s+/, ' ');
   const execResult = lastWordRegex.exec(queryUpToCaret);
 
-  if (trailingKeywordStrings && queryUpToCaret.endsWith(trailingKeywordStrings)) {
-    const index = queryUpToCaret.length - trailingKeywordStrings.length;
-    const term = queryUpToCaret.substring(index);
+  if (trailingKeywordStrings && spaceNormalizedQuery.endsWith(trailingKeywordStrings)) {
+    const index = spaceNormalizedQuery.length - trailingKeywordStrings.length;
+    const term = spaceNormalizedQuery.substring(index);
     return { term, index };
   } else if (execResult) {
     const [__, term] = execResult;
