@@ -253,6 +253,7 @@ export function findLastFilter(
     true // traverse in reverse
   );
 
+  // @TODO: This could be cleaner if the AST parser returned column locations; we wouldn't have to guess at indexes by doing space normalization
   const trailingKeywordStrings = trailingKeywordArgs.reverse().join(' ');
   const spaceNormalizedQuery = queryUpToCaret.trim().replace(/\s+/, ' ');
   const execResult = lastWordRegex.exec(queryUpToCaret);
