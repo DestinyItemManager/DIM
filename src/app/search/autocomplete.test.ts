@@ -43,7 +43,7 @@ describe('autocompleteTermSuggestions', () => {
     ['(is:a or is:b) and (is:c or multi w)', 35, 'multi word'],
     ['arctic  haz', 11, 'arctic haze'],
     ['toil and trou', 13, 'toil and trouble'], // todo: handled due to the `and`
-    ['rare curio or arctic haz', 24, 'arctic haze'], // todo: not handled, eats all five words
+    ['"rare curio" arctic haz', 23, 'arctic haze'],
   ];
 
   test.each(multiWordCases)(

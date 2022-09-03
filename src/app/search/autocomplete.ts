@@ -244,7 +244,7 @@ export function findLastFilter(
   traverseAST(
     ast,
     (filter: FilterOp) => {
-      if (keepTraversing && filter.type === 'keyword') {
+      if (keepTraversing && filter.type === 'keyword' && !/\s+/.test(filter.args)) {
         trailingKeywordArgs.push(filter.args);
       } else {
         keepTraversing = false;

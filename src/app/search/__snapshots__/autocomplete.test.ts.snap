@@ -1,5 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for |"rare curio" arctic haz| with caret at position 23 with exact match 1`] = `
+[
+  {
+    "highlightRange": {
+      "range": [
+        13,
+        31,
+      ],
+      "section": "body",
+    },
+    "query": {
+      "body": ""rare curio" name:"arctic haze"",
+      "fullText": ""rare curio" name:"arctic haze"",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
 exports[`autocompleteTermSuggestions autocomplete within multi-word query for |(is:a or is:b) and (is:c or multi w)| with caret at position 35 with exact match 1`] = `
 [
   {
@@ -133,26 +153,6 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |n
     "query": {
       "body": "name:"foo" name:"arctic haze"",
       "fullText": "name:"foo" name:"arctic haze"",
-      "helpText": undefined,
-    },
-    "type": 3,
-  },
-]
-`;
-
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |rare curio or arctic haz| with caret at position 24 with exact match 1`] = `
-[
-  {
-    "highlightRange": {
-      "range": [
-        14,
-        32,
-      ],
-      "section": "body",
-    },
-    "query": {
-      "body": "rare curio or name:"arctic haze"",
-      "fullText": "rare curio or name:"arctic haze"",
       "helpText": undefined,
     },
     "type": 3,
