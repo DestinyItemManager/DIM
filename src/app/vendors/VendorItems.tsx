@@ -88,7 +88,7 @@ export default function VendorItems({
   }
 
   // remove deprecated mods from seasonal artifact
-  if (vendor.def.hash === 2894222926) {
+  if (vendor.def.hash === VENDORS.ARTIFACT) {
     const first = vendor.items.findIndex((firstDepMod) =>
       deprecatedMods.includes(firstDepMod?.item?.hash ?? 0)
     );
