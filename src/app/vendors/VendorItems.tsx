@@ -89,20 +89,12 @@ export default function VendorItems({
 
   // remove deprecated mods from seasonal artifact
   if (vendor.def.hash === VENDORS.ARTIFACT) {
-    const first = vendor.items.findIndex((firstDepMod) =>
-      deprecatedMods.includes(firstDepMod?.item?.hash ?? 0)
+    vendor.items = vendor.items.filter(
+      (i) => i.item?.hash && !deprecatedMods.includes(i.item.hash)
     );
-    const reverseList = [...vendor.items].reverse();
-    const last =
-      vendor.items.length -
-      2 -
-      reverseList.findIndex((lastDepMod) => deprecatedMods.includes(lastDepMod?.item?.hash ?? 0));
-    if (first > -1 && last > -1) {
-      vendor.items.splice(first, last);
-    }
   }
 
-  const itemsByCategory = _.groupBy(vendor.items, (item: VendorItem) => item?.displayCategoryIndex);
+  const itemsByCategory = _.groupBy(vendor.items, (item) => item?.displayCategoryIndex);
 
   const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
   const rewardVendorHash = faction?.rewardVendorHash || undefined;
