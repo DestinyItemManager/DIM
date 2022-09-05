@@ -2,6 +2,9 @@
 
 * Progress page now correctly classifies the Star Chart weekly challenge as a powerful reward source instead of a pinnacle.
 * Visual adjustments to power level tooltips.
+* Loadout Optimizer is now aware of King's Fall mods.
+* Deprecated mods no longer appear in the Seasonal Artifact preview.
+* Made an experimental change to how we sequence Bungie.net API calls that may make their performance more consistent.
 
 ## 7.32.0 <span class="changelog-date">(2022-08-28)</span>
 
