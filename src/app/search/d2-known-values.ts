@@ -242,6 +242,7 @@ export const VENDORS = {
   VAULT: 1037843411,
   XUR: 2190858386,
   WAR_TABLE_UPGRADES_RISEN: 3950870173,
+  STAR_CHART_UPGRADES_PLUNDER: 3004285529,
   /**
    * this has always been named "The Gate Lord's Eye" from season 8,
    * but every season this vendor is updated with the new contents
