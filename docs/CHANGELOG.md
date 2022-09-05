@@ -1,5 +1,7 @@
 ## Next
 
+## 7.33.0 <span class="changelog-date">(2022-09-04)</span>
+
 * Progress page now correctly classifies the Star Chart weekly challenge as a powerful reward source instead of a pinnacle.
 * Visual adjustments to power level tooltips.
 * Loadout Optimizer is now aware of King's Fall mods.
