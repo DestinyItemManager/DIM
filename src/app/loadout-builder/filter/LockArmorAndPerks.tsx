@@ -176,11 +176,13 @@ export default memo(function LockArmorAndPerks({
 
   return (
     <>
-      <div className={styles.area}>
-        <CheckButton onChange={onMaxStatModsChanged} name="autoStatMods" checked={autoStatMods}>
-          {t('LoadoutBuilder.AutoStatMods')}
-        </CheckButton>
-      </div>
+      {$featureFlags.loAutoStatMods && (
+        <div className={styles.area}>
+          <CheckButton onChange={onMaxStatModsChanged} name="autoStatMods" checked={autoStatMods}>
+            {t('LoadoutBuilder.AutoStatMods')}
+          </CheckButton>
+        </div>
+      )}
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol start={2}>
