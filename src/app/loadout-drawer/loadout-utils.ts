@@ -543,20 +543,24 @@ export function isMissingItems(
   return false;
 }
 
-/** Returns a flat list of all mods (both user picked and auto mods) hashes in the Loadout */
-export function getModHashesFromLoadout(loadout: Loadout) {
-  return [...(loadout.parameters?.mods ?? []), ...(loadout.autoStatMods ?? [])];
+/** Returns a flat list of mods hashes in the Loadout, by default including auto stat mods */
+export function getModHashesFromLoadout(loadout: Loadout, includeAutoMods = true) {
+  return [
+    ...(loadout.parameters?.mods ?? []),
+    ...((includeAutoMods && loadout.autoStatMods) || []),
+  ];
 }
 
-/** Returns a flat list of all mods (both user picked and auto mods) as PluggableInventoryItemDefinitions in the Loadout */
+/** Returns a flat list of mods as PluggableInventoryItemDefinitions in the Loadout, by default including auto stat mods */
 export function getModsFromLoadout(
   defs: D1ManifestDefinitions | D2ManifestDefinitions | undefined,
-  loadout: Loadout
+  loadout: Loadout,
+  includeAutoMods = true
 ) {
   const mods: PluggableInventoryItemDefinition[] = [];
 
   if (defs?.isDestiny2()) {
-    for (const modHash of getModHashesFromLoadout(loadout)) {
+    for (const modHash of getModHashesFromLoadout(loadout, includeAutoMods)) {
       const item = defs.InventoryItem.get(modHash);
 
       if (isPluggableItem(item)) {
