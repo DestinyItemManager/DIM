@@ -251,6 +251,20 @@ export const D2SeasonInfo = {
     resetTime: '17:00:00Z',
     numWeeks: 15,
   },
+  19: {
+    DLCName: '',
+    seasonName: 'Season of [Redacted]',
+    seasonTag: '[redacted]',
+    season: 19,
+    maxLevel: 50,
+    powerFloor: 1350,
+    softCap: 1530,
+    powerfulCap: 1580,
+    pinnacleCap: 1590,
+    releaseDate: '2022-12-06',
+    resetTime: '17:00:00Z',
+    numWeeks: -1,
+  },
 } as Record<
   number,
   {
