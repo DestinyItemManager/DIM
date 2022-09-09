@@ -460,7 +460,6 @@ function FashionItem({
       )}
       <FashionSocket
         bucketHash={bucketHash}
-        plugHash={shader}
         socket={shaderSocket}
         plug={shaderItem}
         exampleItem={exampleItem}
@@ -471,7 +470,6 @@ function FashionItem({
       />
       <FashionSocket
         bucketHash={bucketHash}
-        plugHash={ornament}
         socket={ornamentSocket}
         plug={ornamentItem}
         exampleItem={exampleItem}
@@ -484,26 +482,8 @@ function FashionItem({
   );
 }
 
-function FashSocketTooltip({
-  bucketHash,
-  socket,
-}: {
-  bucketHash: number;
-  socket: DimSocket | undefined;
-}) {
-  let text = t('FashionDrawer.NoPreference');
-
-  if (!socket && bucketHash === BucketHashes.Shaders) {
-    text = t('FashionDrawer.CannotFitShader');
-  } else if (!socket) {
-    text = t('FashionDrawer.CannotFitOrnament');
-  }
-  return <div>{text}</div>;
-}
-
 function FashionSocket({
   bucketHash,
-  plugHash,
   socket,
   plug,
   exampleItem,
@@ -513,7 +493,6 @@ function FashionSocket({
   onRemovePlug,
 }: {
   bucketHash: number;
-  plugHash: number | undefined;
   socket: DimSocket | undefined;
   plug: DestinyInventoryItemDefinition | undefined;
   exampleItem: DimItem;
@@ -526,45 +505,52 @@ function FashionSocket({
     unlockedPlugSetItemsSelector(state, storeId)
   );
   const handleOrnamentClick = socket && (() => onPickPlug({ item: exampleItem, socket }));
+
+  const unlockedPlugsWithoutTheDefault = Array.from(unlockedPlugSetItems).filter(
+    (plugHash) => plugHash !== defaultPlug.hash
+  );
+
   const canSlotOrnament =
-    plugHash !== undefined &&
-    (plugHash === socket?.emptyPlugItemHash ||
-      (unlockedPlugSetItems.has(plugHash) &&
-        socket?.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash)) ||
-      socket?.reusablePlugItems?.some((p) => p.plugItemHash === plugHash && p.enabled));
-
-  let content = null;
-
-  if (plug) {
-    content = (
-      <PlugDef
-        onClick={handleOrnamentClick}
-        className={clsx({ [styles.missingItem]: !canSlotOrnament })}
-        plug={(plug ?? defaultPlug) as PluggableInventoryItemDefinition}
-      />
-    );
-  } else {
-    content = (
-      <PressTip tooltip={<FashSocketTooltip bucketHash={bucketHash} socket={socket} />}>
-        <div
-          role={socket && 'button'}
-          className={clsx('item', {
-            [styles.missingItem]: !canSlotOrnament,
-            [styles.noSocket]: !socket,
-          })}
-        >
-          <DefItemIcon itemDef={defaultPlug} />
-        </div>
-      </PressTip>
-    );
-  }
+    (socket?.plugSet &&
+      _.intersection(
+        unlockedPlugsWithoutTheDefault,
+        socket.plugSet.plugs.map((plug) => plug.plugDef.hash)
+      ).length > 0) ||
+    (socket?.reusablePlugItems &&
+      _.intersection(
+        unlockedPlugsWithoutTheDefault,
+        socket.reusablePlugItems.filter((p) => p.enabled).map((p) => p.plugItemHash)
+      ).length > 0);
 
   return (
     <ClosableContainer
-      onClose={plugHash ? () => onRemovePlug(bucketHash, plugHash) : undefined}
+      onClose={plug ? () => onRemovePlug(bucketHash, plug.hash) : undefined}
       showCloseIconOnHover
     >
-      {content}
+      {plug && canSlotOrnament ? (
+        <PlugDef onClick={handleOrnamentClick} plug={plug as PluggableInventoryItemDefinition} />
+      ) : (
+        <PressTip
+          tooltip={
+            <div>
+              {canSlotOrnament
+                ? t('FashionDrawer.NoPreference')
+                : bucketHash === BucketHashes.Shaders
+                ? t('FashionDrawer.CannotFitShader')
+                : t('FashionDrawer.CannotFitOrnament')}
+            </div>
+          }
+        >
+          <div
+            role="button"
+            tabIndex={0}
+            className={clsx('item', styles.missingItem, { [styles.noOrnament]: !canSlotOrnament })}
+            onClick={canSlotOrnament ? handleOrnamentClick : undefined}
+          >
+            <DefItemIcon itemDef={defaultPlug} />
+          </div>
+        </PressTip>
+      )}
     </ClosableContainer>
   );
 }

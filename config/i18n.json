@@ -158,7 +158,7 @@
   },
   "FashionDrawer": {
     "Accept": "Save fashion",
-    "CannotFitOrnament": "This item cannot fit an ornament",
+    "CannotFitOrnament": "This item does not have an ornament socket or you have no ornaments for it.",
     "CannotFitShader": "This item cannot fit a shader",
     "ClearOrnaments": "Clear Ornaments",
     "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",

@@ -5,7 +5,7 @@ interface CssExports {
   'item': string;
   'items': string;
   'missingItem': string;
-  'noSocket': string;
+  'noOrnament': string;
   'right': string;
   'sheet': string;
   'verticalButtons': string;
