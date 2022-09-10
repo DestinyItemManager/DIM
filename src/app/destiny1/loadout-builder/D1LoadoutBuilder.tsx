@@ -332,26 +332,31 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
               ))}
             </div>
           </div>
-          <div className="section" ng-show="excludeditems.length">
-            <p>
-              <span>{t('LB.Exclude')}</span> - <small>{t('LB.ExcludeHelp')}</small>
-            </p>
-            <div className="loadout-builder-section">
-              <ExcludeItemsDropTarget onExcluded={this.excludeItem} className="excluded-container">
-                <div className="excluded-items">
-                  {excludeditems.map((excludeditem) => (
-                    <ClosableContainer
-                      key={excludeditem.index}
-                      className="excluded-item"
-                      onClose={() => this.onExcludedRemove(excludeditem)}
-                    >
-                      <LoadoutBuilderItem item={excludeditem} />
-                    </ClosableContainer>
-                  ))}
-                </div>
-              </ExcludeItemsDropTarget>
+          {excludeditems.length > 0 && (
+            <div className="section">
+              <p>
+                <span>{t('LB.Exclude')}</span> - <small>{t('LB.ExcludeHelp')}</small>
+              </p>
+              <div className="loadout-builder-section">
+                <ExcludeItemsDropTarget
+                  onExcluded={this.excludeItem}
+                  className="excluded-container"
+                >
+                  <div className="excluded-items">
+                    {excludeditems.map((excludeditem) => (
+                      <ClosableContainer
+                        key={excludeditem.index}
+                        className="excluded-item"
+                        onClose={() => this.onExcludedRemove(excludeditem)}
+                      >
+                        <LoadoutBuilderItem item={excludeditem} />
+                      </ClosableContainer>
+                    ))}
+                  </div>
+                </ExcludeItemsDropTarget>
+              </div>
             </div>
-          </div>
+          )}
           {progress >= 1 && hasSets && (
             <div className="section">
               {t('LB.FilterSets')} ({t('Stats.Intellect')}/{t('Stats.Discipline')}/
