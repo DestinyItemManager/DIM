@@ -26,9 +26,16 @@ export function energyUpgrade(
   newEnergyType: DestinyEnergyType,
   newEnergyCapacity: number
 ) {
-  const tierSocket =
+  let tierSocket;
+  const armorTierSocket =
     item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
-
+  const ghostTierSocket =
+    item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.GhostTier);
+  tierSocket = armorTierSocket;
+  // We want to display energy info for ghosts
+  if (!armorTierSocket?.plugSet) {
+    tierSocket = ghostTierSocket;
+  }
   if (!tierSocket?.plugSet) {
     return [];
   }

@@ -17,7 +17,7 @@ import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './EnergyMeter.m.scss';
 
 const swappableEnergyTypes = [
@@ -26,6 +26,8 @@ const swappableEnergyTypes = [
   DestinyEnergyType.Void,
   DestinyEnergyType.Stasis,
 ];
+
+const permanentEnergyTypes = [DestinyEnergyType.Ghost];
 
 export default function EnergyMeter({ item }: { item: DimItem }) {
   const defs = useD2Definitions()!;
@@ -202,7 +204,12 @@ function EnergyUpgradePreview({
   previewEnergyType: DestinyEnergyType;
 }) {
   const defs = useD2Definitions()!;
-  if (!item.energy || !swappableEnergyTypes.includes(item.energy.energyType)) {
+  // return null if not swappable and not a ghost
+  if (
+    !item.energy ||
+    (!swappableEnergyTypes.includes(item.energy.energyType) &&
+      !permanentEnergyTypes.includes(item.energy.energyType))
+  ) {
     return null;
   }
 
