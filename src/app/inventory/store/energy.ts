@@ -31,7 +31,7 @@ export function energyUpgrade(
     item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
   const ghostTierSocket =
     item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.GhostTier);
-  tierSocket = armorTierSocket;
+  const tierSocket = armorTierSocket?.plugSet ? armorTierSocket : ghostTierSocket;
   // We want to display energy info for ghosts
   if (!armorTierSocket?.plugSet) {
     tierSocket = ghostTierSocket;
