@@ -3,6 +3,8 @@
 
 ## 7.34.0 <span class="changelog-date">(2022-09-11)</span>
 
+* Season of Plunder Star Chart upgrades are now shown in the right order on the Vendors page.
+
 ## 7.33.0 <span class="changelog-date">(2022-09-04)</span>
 
 * Progress page now correctly classifies the Star Chart weekly challenge as a powerful reward source instead of a pinnacle.
