@@ -42,7 +42,9 @@ const systemInfo = getSystemInfo();
 
 function getSystemInfo() {
   const parser = new UAParser();
-  const info = `${parser.getBrowser().name} ${parser.getBrowser().version} - ${parser.getOS().name} ${parser.getOS().version}`;
+  const { name: browserName, version: browserVersion } = parser.getBrowser();
+  const { name: osName, version: osVersion } = parser.getOS();
+  const info = `${browserName} ${browserVersion} - ${osName} ${osVersion}`;
   return info;
 }
 
