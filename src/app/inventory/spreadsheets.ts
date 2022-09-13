@@ -4,6 +4,7 @@ import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import { ThunkResult } from 'app/store/types';
 import {
+  getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
   getSpecialtySocketMetadatas,
@@ -530,6 +531,7 @@ function downloadWeapons(
       row.Accuracy = stats.accuracy;
     }
     row.Notes = getNotes(item, itemInfos);
+    row['Kill Tracker'] = getItemKillTrackerInfo(item)?.count ?? 0;
 
     addPerks(row, item, maxPerks);
 
