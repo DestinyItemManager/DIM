@@ -27,8 +27,6 @@ const swappableEnergyTypes = [
   DestinyEnergyType.Stasis,
 ];
 
-const permanentEnergyTypes = [DestinyEnergyType.Ghost];
-
 export default function EnergyMeter({ item }: { item: DimItem }) {
   const defs = useD2Definitions()!;
   const energyCapacity = item.energy?.energyCapacity || 0;
@@ -207,7 +205,8 @@ function EnergyUpgradePreview({
   // return null if not swappable and not a ghost
   if (
     !item.energy ||
-    ![...swappableEnergyTypes, DestinyEnergyType.Ghost].includes(item.energy.energyType) {
+    ![...swappableEnergyTypes, DestinyEnergyType.Ghost].includes(item.energy.energyType)
+  ) {
     return null;
   }
 
