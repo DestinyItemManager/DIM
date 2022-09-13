@@ -456,6 +456,13 @@ function downloadWeapons(
       recoil: 0,
       blastRadius: 0,
       velocity: 0,
+      airborne: 0,
+      shieldduration: 0,
+      chargerate: 0,
+      guardresist: 0,
+      guardefficiency: 0,
+      guardendurance: 0,
+      swingspeed: 0,
     };
 
     if (item.stats) {
@@ -508,6 +515,27 @@ function downloadWeapons(
             case StatHashes.Velocity:
               stats.velocity = stat.value;
               break;
+            case StatHashes.AirborneEffectiveness:
+              stats.airborne = stat.value;
+              break;
+            case StatHashes.ShieldDuration:
+              stats.shieldduration = stat.value;
+              break;
+            case StatHashes.ChargeRate:
+              stats.chargerate = stat.value;
+              break;
+            case StatHashes.GuardResistance:
+              stats.guardresist = stat.value;
+              break;
+            case StatHashes.GuardEfficiency:
+              stats.guardefficiency = stat.value;
+              break;
+            case StatHashes.GuardEndurance:
+              stats.guardendurance = stat.value;
+              break;
+            case StatHashes.SwingSpeed:
+              stats.swingspeed = stat.value;
+              break;
           }
         }
       });
@@ -529,9 +557,23 @@ function downloadWeapons(
     if (item.destinyVersion === 2) {
       row['Draw Time'] = stats.drawtime;
       row.Accuracy = stats.accuracy;
+
+      // Sword Stats
+      row['Charge Rate'] = stats.chargerate;
+      row['Guard Resistance'] = stats.guardresist;
+      row['Guard Efficiency'] = stats.guardefficiency;
+      row['Guard Endurance'] = stats.guardendurance;
+      row['Swing Speed'] = stats.swingspeed;
+
+      row['Shield Duration'] = stats.shieldduration; // Glaive
+      row['Airborne Effectiveness'] = stats.airborne;
+
+      row.Crafted = item.crafted;
+      row['Crafted Level'] = item.craftedInfo?.level ?? 0;
+
+      row['Kill Tracker'] = getItemKillTrackerInfo(item)?.count ?? 0;
     }
     row.Notes = getNotes(item, itemInfos);
-    row['Kill Tracker'] = getItemKillTrackerInfo(item)?.count ?? 0;
 
     addPerks(row, item, maxPerks);
 
