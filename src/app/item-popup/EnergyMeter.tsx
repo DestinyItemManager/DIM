@@ -207,9 +207,7 @@ function EnergyUpgradePreview({
   // return null if not swappable and not a ghost
   if (
     !item.energy ||
-    (!swappableEnergyTypes.includes(item.energy.energyType) &&
-      !permanentEnergyTypes.includes(item.energy.energyType))
-  ) {
+    ![...swappableEnergyTypes, DestinyEnergyType.Ghost].includes(item.energy.energyType) {
     return null;
   }
 
