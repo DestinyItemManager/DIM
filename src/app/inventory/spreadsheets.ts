@@ -316,9 +316,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       row['Power Limit'] = item.powerCap;
     }
     if (item.destinyVersion === 2) {
-      const masterworkType = getMasterworkStatNames(item.masterworkInfo);
-      const index = !masterworkType?.includes(',') ? undefined : masterworkType?.indexOf(',');
-      row['Masterwork Type'] = masterworkType.slice(0, index) || undefined;
+      row['Masterwork Type'] = item.element?.displayProperties.name;
       row['Masterwork Tier'] = item.masterworkInfo?.tier || undefined;
     }
     row.Owner = nameMap[item.owner];
