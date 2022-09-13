@@ -26,7 +26,10 @@ export function energyUpgrade(
   newEnergyType: DestinyEnergyType,
   newEnergyCapacity: number
 ) {
-  let tierSocket;
+  const tierSocket =
+    item.sockets &&
+    (getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier) ||
+      getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.GhostTier));
   const armorTierSocket =
     item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
   const ghostTierSocket =
