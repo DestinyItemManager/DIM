@@ -170,7 +170,7 @@ const knownValuesFilters: FilterDefinition[] = [
       if (!breakerType) {
         throw new Error('Unknown breaker type ' + breakerType);
       }
-      return (item) => item.breakerType?.hash === breakerType;
+      return (item) => breakerType.includes(item.breakerType?.hash);
     },
   },
   {

@@ -298,13 +298,14 @@ export type ItemTierName = keyof typeof D2ItemTiers & string;
 export const energyCapacityTypeNames = Object.values(energyNamesByEnum);
 
 export const breakerTypes = {
-  barrier: BreakerTypeHashes.ShieldPiercing,
-  antibarrier: BreakerTypeHashes.ShieldPiercing,
-  shieldpiercing: BreakerTypeHashes.ShieldPiercing,
-  overload: BreakerTypeHashes.Disruption,
-  disruption: BreakerTypeHashes.Disruption,
-  unstoppable: BreakerTypeHashes.Stagger,
-  stagger: BreakerTypeHashes.Stagger,
+  all: [BreakerTypeHashes.Stagger, BreakerTypeHashes.Disruption, BreakerTypeHashes.ShieldPiercing],
+  barrier: [BreakerTypeHashes.ShieldPiercing],
+  antibarrier: [BreakerTypeHashes.ShieldPiercing],
+  shieldpiercing: [BreakerTypeHashes.ShieldPiercing],
+  overload: [BreakerTypeHashes.Disruption],
+  disruption: [BreakerTypeHashes.Disruption],
+  unstoppable: [BreakerTypeHashes.Stagger],
+  stagger: [BreakerTypeHashes.Stagger],
 };
 
 export const modsWithConditionalStats = {
