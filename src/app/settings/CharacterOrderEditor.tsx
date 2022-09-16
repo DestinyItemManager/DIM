@@ -1,6 +1,5 @@
+import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import _ from 'lodash';
-import React from 'react';
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useSelector } from 'react-redux';
 import { sortedStoresSelector } from '../inventory/selectors';
 import { AppIcon, refreshIcon } from '../shell/icons';
