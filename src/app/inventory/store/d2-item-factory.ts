@@ -35,6 +35,7 @@ import {
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
+import extendedBreaker from 'data/d2/extended-breaker.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -717,6 +718,10 @@ export function makeItem(
     if (breakerTypeHash) {
       createdItem.breakerType = defs.BreakerType.get(breakerTypeHash);
     }
+  }
+
+  if (extendedBreaker[createdItem.hash]) {
+    createdItem.breakerType = defs.BreakerType.get(extendedBreaker[createdItem.hash]);
   }
 
   // linear fusion rifles always seem to contain the "fusion rifle" category as well.

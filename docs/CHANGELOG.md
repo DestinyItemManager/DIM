@@ -1,5 +1,6 @@
 ## Next
 * Fixed an issue where emblems that were not transferrable across characters were being shown in the loadout drawer.
+* DIM now identifies more intrinsic breakers, added `breaker:any`
 
 ## 7.34.0 <span class="changelog-date">(2022-09-11)</span>
 
