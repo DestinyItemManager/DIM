@@ -921,7 +921,20 @@ const D2Sources: {
     searchString: [],
   },
   plunder: {
-    itemHashes: [],
+    itemHashes: [
+      820890091, // Planck's Stride
+      910459310, // Brigand's Law
+      1298815317, // Brigand's Law
+      2144363076, // Brigand's Law
+      2192971810, // Brigand's Law
+      2559599505, // Planck's Stride
+      2611964593, // Brigand's Law
+      2839071082, // Planck's Stride
+      3417523187, // Planck's Stride
+      3575589837, // Planck's Stride
+      3904579395, // Brigand's Law
+      4229502516, // Planck's Stride
+    ],
     sourceHashes: [
       790152021, // Source: Season of Plunder Triumph
       2982642634, // Source: Season of Plunder Grandmaster Nightfall
