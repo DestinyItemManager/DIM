@@ -298,7 +298,7 @@ export type ItemTierName = keyof typeof D2ItemTiers & string;
 export const energyCapacityTypeNames = Object.values(energyNamesByEnum);
 
 export const breakerTypes = {
-  all: [BreakerTypeHashes.Stagger, BreakerTypeHashes.Disruption, BreakerTypeHashes.ShieldPiercing],
+  any: [BreakerTypeHashes.Stagger, BreakerTypeHashes.Disruption, BreakerTypeHashes.ShieldPiercing],
   barrier: [BreakerTypeHashes.ShieldPiercing],
   antibarrier: [BreakerTypeHashes.ShieldPiercing],
   shieldpiercing: [BreakerTypeHashes.ShieldPiercing],
