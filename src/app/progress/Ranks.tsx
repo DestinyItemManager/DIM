@@ -63,7 +63,6 @@ export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResp
             />
           )
       )}
-      )
     </div>
   );
 }
