@@ -209,6 +209,7 @@
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
     "Filter": "Filter",
+    "Foundry": "Shows items by which foundry created them.",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
     "HasMemento": "Shows crafted weapons that currently have a memento inserted.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",

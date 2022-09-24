@@ -174,6 +174,17 @@ const knownValuesFilters: FilterDefinition[] = [
     },
   },
   {
+    keywords: 'foundry',
+    description: tl('Filter.Foundry'),
+    format: 'query',
+    suggestions: ['hakke', 'omolon', 'suros', 'veist'],
+    destinyVersion: 2,
+    filter:
+      ({ filterValue }) =>
+      (item) =>
+        item.foundry === filterValue,
+  },
+  {
     keywords: 'powerfulreward',
     description: tl('Filter.PowerfulReward'),
     destinyVersion: 2,

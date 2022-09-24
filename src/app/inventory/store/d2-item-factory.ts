@@ -36,6 +36,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import extendedBreaker from 'data/d2/extended-breaker.json';
+import extendedFoundry from 'data/d2/extended-foundry.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -551,6 +552,7 @@ export function makeItem(
     availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes,
     // These get filled in later
     breakerType: null,
+    foundry: null,
     percentComplete: 0,
     hidePercentage: false,
     stats: null,
@@ -722,6 +724,16 @@ export function makeItem(
 
   if (extendedBreaker[createdItem.hash]) {
     createdItem.breakerType = defs.BreakerType.get(extendedBreaker[createdItem.hash]);
+  }
+
+  if (itemDef.traitIds?.some((trait) => trait.startsWith('foundry.'))) {
+    createdItem.foundry = itemDef.traitIds
+      .filter((trait) => trait.startsWith('foundry.'))[0]
+      .split('.')[1];
+  }
+
+  if (extendedFoundry[createdItem.hash]) {
+    createdItem.foundry = extendedFoundry[createdItem.hash].split('.')[1];
   }
 
   // linear fusion rifles always seem to contain the "fusion rifle" category as well.

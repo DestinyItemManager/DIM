@@ -333,6 +333,7 @@ function makeItem(
     quality: null,
     sockets: null,
     breakerType: null,
+    foundry: null,
     hidePercentage: false,
     taggable: false,
     comparable: false,
