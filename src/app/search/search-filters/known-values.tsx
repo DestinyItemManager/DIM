@@ -182,7 +182,7 @@ const knownValuesFilters: FilterDefinition[] = [
     filter:
       ({ filterValue }) =>
       (item) =>
-        item.foundry === filterValue,
+        item.foundry?.endsWith(filterValue),
   },
   {
     keywords: 'powerfulreward',

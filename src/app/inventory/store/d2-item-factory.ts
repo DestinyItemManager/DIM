@@ -727,13 +727,11 @@ export function makeItem(
   }
 
   if (itemDef.traitIds?.some((trait) => trait.startsWith('foundry.'))) {
-    createdItem.foundry = itemDef.traitIds
-      .filter((trait) => trait.startsWith('foundry.'))[0]
-      .split('.')[1];
+    createdItem.foundry = itemDef.traitIds.filter((trait) => trait.startsWith('foundry.'))[0];
   }
 
   if (extendedFoundry[createdItem.hash]) {
-    createdItem.foundry = extendedFoundry[createdItem.hash].split('.')[1];
+    createdItem.foundry = extendedFoundry[createdItem.hash];
   }
 
   // linear fusion rifles always seem to contain the "fusion rifle" category as well.
