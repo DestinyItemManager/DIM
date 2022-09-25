@@ -727,7 +727,9 @@ export function makeItem(
   }
 
   if (itemDef.traitIds?.some((trait) => trait.startsWith('foundry.'))) {
-    createdItem.foundry = itemDef.traitIds.filter((trait) => trait.startsWith('foundry.'))[0];
+    createdItem.foundry = itemDef.traitIds
+      .filter((trait) => trait.startsWith('foundry.'))[0]
+      .replace('_', '-'); // tex_mechanica
   }
 
   if (extendedFoundry[createdItem.hash]) {

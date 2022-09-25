@@ -177,7 +177,7 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: 'foundry',
     description: tl('Filter.Foundry'),
     format: 'query',
-    suggestions: ['hakke', 'omolon', 'suros', 'veist'],
+    suggestions: ['daito', 'hakke', 'omolon', 'suros', 'tex-mechanica', 'veist'],
     destinyVersion: 2,
     filter:
       ({ filterValue }) =>
