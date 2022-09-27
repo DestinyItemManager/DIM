@@ -102,9 +102,12 @@ function createLoadoutUsingLOItems(
       }
 
       draftLoadout.items = newItems;
+      const allMods = [...(params.mods ?? []), ...autoMods];
+      // FIXME(#8733) add auto mods to autoStatMods instead of adding them to regular mods
+      params = { ...params, mods: allMods.length ? allMods : undefined };
       draftLoadout.parameters = params;
+      // loadout.autoStatMods = autoMods.length ? autoMods : undefined;
       draftLoadout.notes = notes || draftLoadout.notes;
-      draftLoadout.autoStatMods = autoMods;
     }
   });
 }

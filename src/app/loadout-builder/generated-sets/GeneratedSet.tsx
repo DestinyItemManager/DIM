@@ -60,8 +60,6 @@ function GeneratedSet({
 
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
-    loadout.parameters = params;
-    loadout.autoStatMods = set.statMods.length > 0 ? set.statMods : undefined;
     editLoadout(loadout, selectedStore.id, {
       showClass: false,
     });

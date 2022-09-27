@@ -1,5 +1,9 @@
 ## Next
 
+### Beta Only
+
+* Added an experimental Loadout Optimizer setting that automatically adds +10 and +5 stat mods to hit specified stat minimums.
+
 ## 7.37.0 <span class="changelog-date">(2022-10-02)</span>
 
 * Add `foundry` search term. Try `foundry:hakke` for all your items brought to you by Hakke.
@@ -14,9 +18,6 @@
 ## 7.34.0 <span class="changelog-date">(2022-09-11)</span>
 
 * Season of Plunder Star Chart upgrades are now shown in the right order on the Vendors page.
-### Beta Only
-
-* Added an experimental Loadout Optimizer setting that automatically adds +10 and +5 stat mods to hit specified stat minimums.
 
 ## 7.33.0 <span class="changelog-date">(2022-09-04)</span>
 

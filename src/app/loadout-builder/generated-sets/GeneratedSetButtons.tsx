@@ -118,6 +118,9 @@ function createLoadout(
 
   const loadout = newLoadout(t('Loadouts.Generated', data), loadoutItems, classType);
   loadout.notes = notes;
-  loadout.parameters = params;
+  // FIXME(#8733) add auto mods to autoStatMods instead of adding them to regular mods
+  const allMods = [...(params.mods ?? []), ...set.statMods];
+  loadout.parameters = { ...params, mods: allMods.length ? allMods : undefined };
+  // loadout.autoStatMods = set.statMods.length ? set.statMods : undefined;
   return loadout;
 }
