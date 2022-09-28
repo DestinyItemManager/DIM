@@ -174,6 +174,21 @@ const knownValuesFilters: FilterDefinition[] = [
     },
   },
   {
+    keywords: 'foundry',
+    description: tl('Filter.Foundry'),
+    format: 'query',
+    suggestions: ['daito', 'hakke', 'omolon', 'suros', 'tex-mechanica', 'veist', 'any'],
+    destinyVersion: 2,
+    filter: ({ filterValue }) => {
+      switch (filterValue) {
+        case 'any':
+          return (item) => Boolean(item.foundry);
+        default:
+          return (item) => item.foundry?.endsWith(filterValue);
+      }
+    },
+  },
+  {
     keywords: 'powerfulreward',
     description: tl('Filter.PowerfulReward'),
     destinyVersion: 2,

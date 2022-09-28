@@ -1,8 +1,11 @@
 ## Next
 
+* Add `foundry` search term. Try `foundry:hakke` for all your items brought to you by Hakke.
+
 ## 7.36.0 <span class="changelog-date">(2022-09-25)</span>
 
 ## 7.35.0 <span class="changelog-date">(2022-09-18)</span>
+
 * Fixed an issue where emblems that were not transferrable across characters were being shown in the loadout drawer.
 * DIM now identifies more intrinsic breakers, added `breaker:any`
 
