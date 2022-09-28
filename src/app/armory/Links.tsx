@@ -116,17 +116,28 @@ function buildLightGGSockets(item: DimItem) {
     const perks = getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.Reusable);
     perks.unshift(); // remove the archetype perk
     let i = 0;
-    // Light.gg can support origin perks, pick 5
-    for (const perk of _.take(perks, 5)) {
+    // Light.gg can support origin traits, pick first 4 then search for origin traits
+    for (const perk of _.take(perks, 4)) {
       perkValues[i] = perk.plugged?.plugDef.hash ?? 0;
       i++;
     }
+    const origin = item.sockets.allSockets.find((s) =>
+      s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits)
+    );
+    perkValues[4] = origin?.plugged!.plugDef.hash ?? 0;
     const masterwork = item.sockets.allSockets.find(isWeaponMasterworkSocket);
     perkValues[5] = masterwork?.plugged?.plugDef.hash ?? 0;
     const weaponMod = item.sockets.allSockets.find((s) =>
       s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage)
     );
     perkValues[6] = weaponMod?.plugged!.plugDef.hash ?? 0;
+
+    // Handles armor and weapons that do not have origin traits
+    if (perkValues[4] === 0) {
+      perkValues[4] = perkValues[5];
+      perkValues[5] = perkValues[6];
+      delete perkValues[6];
+    }
 
     return perkValues.join(',');
   }
