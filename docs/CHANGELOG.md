@@ -1,6 +1,7 @@
 ## Next
 
 * Add `foundry` search term. Try `foundry:hakke` for all your items brought to you by Hakke.
+* Added perks to Light.gg links. See your weapon's popularity rating without having to reselect it's perks.
 
 ## 7.36.0 <span class="changelog-date">(2022-09-25)</span>
 

@@ -12,7 +12,6 @@ import logo from 'images/dimlogo.svg';
 import gunsmith from 'images/gunsmith.png';
 import lightgg from 'images/lightgg.png';
 import _ from 'lodash';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './Links.m.scss';
 
@@ -27,7 +26,7 @@ const links = [
     name: 'Light.gg',
     icon: lightgg,
     link: (item: DimItem, language: string) =>
-      `https://www.light.gg/db/${language}/items/${item.hash}`,
+      `https://www.light.gg/db/${language}/items/${item.hash}?p=${buildLightGGSockets(item)}`,
   },
   { name: 'DestinyTracker', icon: destinytracker, link: destinyDBLink },
   {
@@ -105,6 +104,34 @@ function buildSocketParam(item: DimItem): string {
   }
 
   return perkValues.join(',');
+}
+
+/**
+ * Light.gg's socket format is highly similar to that of D2Gunsmith: [...<first four perks, padded out if necessary, origin trait, masterwork, weapon mod].join(',')
+ * Functionality is duplicated to support potential future branching between the platforms.
+ */
+function buildLightGGSockets(item: DimItem) {
+  if (item.sockets) {
+    const perkValues: number[] = [0, 0, 0, 0, 0];
+    const perks = getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.Reusable);
+    perks.unshift(); // remove the archetype perk
+    let i = 0;
+    // Light.gg can support origin perks, pick 5
+    for (const perk of _.take(perks, 5)) {
+      perkValues[i] = perk.plugged?.plugDef.hash ?? 0;
+      i++;
+    }
+    const masterwork = item.sockets.allSockets.find(isWeaponMasterworkSocket);
+    perkValues[5] = masterwork?.plugged?.plugDef.hash ?? 0;
+    const weaponMod = item.sockets.allSockets.find((s) =>
+      s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage)
+    );
+    perkValues[6] = weaponMod?.plugged!.plugDef.hash ?? 0;
+
+    return perkValues.join(',');
+  }
+
+  return '';
 }
 
 /**
