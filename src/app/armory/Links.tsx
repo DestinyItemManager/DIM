@@ -26,7 +26,7 @@ const links = [
     name: 'Light.gg',
     icon: lightgg,
     link: (item: DimItem, language: string) =>
-      `https://www.light.gg/db/${language}/items/${item.hash}?p=${buildLightGGSockets(item)}`,
+      `https://www.light.gg/db/${language}/items/${item.hash}${buildLightGGSockets(item)}`,
   },
   { name: 'DestinyTracker', icon: destinytracker, link: destinyDBLink },
   {
@@ -111,7 +111,7 @@ function buildSocketParam(item: DimItem): string {
  * Functionality is duplicated to support potential future branching between the platforms.
  */
 function buildLightGGSockets(item: DimItem) {
-  if (item.sockets) {
+  if (item.sockets && item.bucket?.inWeapons) {
     const perkValues: number[] = [0, 0, 0, 0, 0];
     const perks = getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.Reusable);
     perks.unshift(); // remove the archetype perk
@@ -139,7 +139,7 @@ function buildLightGGSockets(item: DimItem) {
       delete perkValues[6];
     }
 
-    return perkValues.join(',');
+    return `?p=${perkValues.join(',')}`;
   }
 
   return '';
