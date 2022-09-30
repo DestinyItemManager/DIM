@@ -1,5 +1,5 @@
 import { useDrag } from '@use-gesture/react';
-import { isEventFromFirefoxScrollbar, isiOSBrowser } from 'app/utils/browsers';
+import { isEventFromFirefoxScrollbar } from 'app/utils/browsers';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import { useReducedMotion } from 'framer-motion';
@@ -312,6 +312,7 @@ function useGlobalEscapeKey(onEscapePressed: () => void) {
   }, [onEscapePressed]);
 }
 
+const supportsOverscrollBehavior = CSS.supports('overscroll-behavior', 'none');
 /**
  * Locks body scroll except for touches in the sheet contents, and adds a block-events
  * touch handler to sheet contents.
@@ -333,7 +334,7 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
       sheetContents.current = contents;
       if (sheetContents.current) {
         sheetContents.current.addEventListener('touchstart', blockEvents);
-        if (isiOSBrowser()) {
+        if (!supportsOverscrollBehavior) {
           // as-is, body-scroll-lock does not work on on Android #5615
           document.body.classList.add('body-scroll-lock');
           enableBodyScroll(sheetContents.current);
@@ -348,7 +349,7 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
     () => () => {
       if (sheetContents.current) {
         sheetContents.current.removeEventListener('touchstart', blockEvents);
-        if (isiOSBrowser()) {
+        if (!supportsOverscrollBehavior) {
           setTimeout(() => {
             document.body.classList.remove('body-scroll-lock');
           }, 0);
