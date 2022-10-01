@@ -205,6 +205,7 @@
     "Event": "显示命运2中特定活动中的物品",
     "ExtraPerk": "显示带有额外可选特性的随机特性传说武器。",
     "Filter": "过滤器",
+    "Foundry": "Shows items by which foundry created them.",
     "Glimmer": "显示与增加微光获取有关的消耗品。",
     "HasMemento": "显示通过制作获得并装有纪念物的武器。",
     "HasNotes": "显示已有备注的物品",

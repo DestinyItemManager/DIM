@@ -205,6 +205,7 @@
     "Event": "Zeigt Gegenstände nach dem Event in dem sie in Destiny 2 erschienen sind an.",
     "ExtraPerk": "Zeigt Legendäre Waffen mit zufälligen Rolls und einem zusätzlich auswählbaren Perk.",
     "Filter": "Filter",
+    "Foundry": "Zeigt an, von welcher Schmiede die Items stammen.",
     "Glimmer": "Zeigt Verbrauchsgegenstände, die mit dem Erhalt von Glimmer verbunden sind.",
     "HasMemento": "Zeigt geformte Waffen, die derzeit ein Memento eingefügt haben.",
     "HasNotes": "Zeige Gegenstände mit Notizen an.",
@@ -964,7 +965,7 @@
     "SelectWishlistPerks": "Vorschau der Wunschlisten-Perks"
   },
   "Stats": {
-    "Custom": "Benutzerdefinierte Summe",
+    "Custom": "Benutzerdef. Summe",
     "CustomDesc": "Benutzerdefinierte Summe der ausgewählten Basis-Werte, Mods oder Meisterwerke. Gehe in die Einstellungen, um zu konfigurieren, welche Werte enthalten sind.",
     "Discipline": "Disziplin",
     "Intellect": "Intellekt",
