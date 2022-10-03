@@ -5,7 +5,7 @@ import { LoreLink } from 'app/item-popup/ItemDescription';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { getSocketsWithStyle, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import destinysets from 'images/destinysets.svg';
 import destinytracker from 'images/destinytracker.png';
 import logo from 'images/dimlogo.svg';
@@ -160,7 +160,11 @@ function getWeaponSocketInfo(
 
     // TODO: Map enhanced intrinsic frames with their corresponding stat masterworks
     const masterworkSocket = item.sockets.allSockets.find(isWeaponMasterworkSocket);
-    const masterwork = item?.crafted ? 0 : masterworkSocket?.plugged?.plugDef.hash ?? 0;
+    const masterwork =
+      masterworkSocket?.plugged?.plugDef.plug.plugCategoryHash ===
+      PlugCategoryHashes.CraftingPlugsFrameIdentifiers
+        ? 0
+        : masterworkSocket?.plugged?.plugDef.hash ?? 0;
 
     const weaponModSocket = item.sockets.allSockets.find((s) =>
       s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage)
