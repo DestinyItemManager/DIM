@@ -1,5 +1,7 @@
 ## Next
 
+## 7.37.0 <span class="changelog-date">(2022-10-02)</span>
+
 * Add `foundry` search term. Try `foundry:hakke` for all your items brought to you by Hakke.
 
 ## 7.36.0 <span class="changelog-date">(2022-09-25)</span>
