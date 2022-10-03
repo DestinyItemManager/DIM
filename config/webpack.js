@@ -425,6 +425,8 @@ module.exports = (env) => {
         '$featureFlags.elgatoStreamDeck': JSON.stringify(true),
         // Warn when DIM Sync is off and you save some DIM-specific data
         '$featureFlags.warnNoSync': JSON.stringify(!env.release),
+        // Expose the "Add required stat mods" Loadout Optimizer toggle
+        '$featureFlags.loAutoStatMods': JSON.stringify(!env.release),
       }),
 
       new LodashModuleReplacementPlugin({

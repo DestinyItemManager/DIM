@@ -3,13 +3,15 @@ import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import React, { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ModAssignmentDrawer from '../mod-assignment-drawer/ModAssignmentDrawer';
 import { createGetModRenderKey } from '../mod-utils';
@@ -37,7 +39,7 @@ const LoadoutModMemo = memo(function LoadoutMod({
  */
 export default memo(function LoadoutMods({
   loadout,
-  savedMods,
+  allMods,
   storeId,
   clearUnsetMods,
   hideShowModPlacements,
@@ -46,7 +48,7 @@ export default memo(function LoadoutMods({
   onClearUnsetModsChanged,
 }: {
   loadout: Loadout;
-  savedMods: PluggableInventoryItemDefinition[];
+  allMods: PluggableInventoryItemDefinition[];
   storeId: string;
   hideShowModPlacements?: boolean;
   clearUnsetMods?: boolean;
@@ -55,6 +57,7 @@ export default memo(function LoadoutMods({
   onRemoveMod?(modHash: number): void;
   onClearUnsetModsChanged?(checked: boolean): void;
 }) {
+  const defs = useD2Definitions()!;
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
@@ -64,12 +67,16 @@ export default memo(function LoadoutMods({
     unlockedPlugSetItemsSelector(state, storeId)
   );
 
+  // Explicitly show only actual saved mods in the mods picker, not auto mods,
+  // otherwise we'd duplicate auto mods into loadout parameter mods when coonfirming
+  const savedMods = useMemo(() => getModsFromLoadout(defs, loadout, false), [defs, loadout]);
+
   // TODO: filter down by usable mods?
   // TODO: Hide the "Add Mod" button when no more mods can fit
   // TODO: turn the mod assignment drawer into a super mod editor?
   // TODO: let these be dragged and dropped into the loadout editor
 
-  if (savedMods.length === 0 && !onUpdateMods) {
+  if (allMods.length === 0 && !onUpdateMods) {
     return !isPhonePortrait ? (
       <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
     ) : null;
@@ -78,7 +85,7 @@ export default memo(function LoadoutMods({
   return (
     <div className={styles.mods}>
       <div className={styles.modsGrid}>
-        {savedMods.map((mod) => (
+        {allMods.map((mod) => (
           <LoadoutModMemo
             className={clsx({
               [styles.missingItem]: !(

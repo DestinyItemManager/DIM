@@ -97,14 +97,14 @@ export function ArmorExtras({
   loadout,
   storeId,
   subclass,
-  savedMods,
+  allMods,
   items,
   onModsByBucketUpdated,
 }: {
   loadout: Loadout;
   storeId: string;
   subclass?: ResolvedLoadoutItem;
-  savedMods: PluggableInventoryItemDefinition[];
+  allMods: PluggableInventoryItemDefinition[];
   items?: ResolvedLoadoutItem[];
   onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
 }) {
@@ -118,7 +118,7 @@ export function ArmorExtras({
         <div className="stat-bars destiny2">
           <LoadoutStats
             showTier
-            stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, savedMods)}
+            stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods)}
           />
         </div>
       )}

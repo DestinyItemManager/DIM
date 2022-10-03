@@ -157,6 +157,9 @@ const lbStateInit = ({
   const statOrder = statOrderFromLoadoutParameters(loadoutParams);
   const statFilters = statFiltersFromLoadoutParamaters(loadoutParams);
 
+  // FIXME: Always require turning on auto mods explicitly for now...
+  loadoutParams = { ...loadoutParams, autoStatMods: undefined };
+
   return {
     loadoutParameters: loadoutParams,
     statOrder,
@@ -185,6 +188,7 @@ export type LoadoutBuilderAction =
   | { type: 'unpinItem'; item: DimItem }
   | { type: 'excludeItem'; item: DimItem }
   | { type: 'unexcludeItem'; item: DimItem }
+  | { type: 'autoStatModsChanged'; autoStatMods: boolean }
   | { type: 'lockedModsChanged'; lockedMods: PluggableInventoryItemDefinition[] }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
@@ -483,6 +487,14 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
         return { ...state, compareSet: action.set };
       case 'closeCompareDrawer':
         return { ...state, compareSet: undefined };
+      case 'autoStatModsChanged':
+        return {
+          ...state,
+          loadoutParameters: {
+            ...state.loadoutParameters,
+            autoStatMods: action.autoStatMods,
+          },
+        };
     }
   };
 }

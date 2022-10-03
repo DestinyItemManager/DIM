@@ -41,7 +41,6 @@ import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import TierSelect from './filter/TierSelect';
 import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
@@ -165,6 +164,8 @@ export default memo(function LoadoutBuilder({
 
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
 
+  const autoStatMods = loadoutParameters.autoStatMods ?? false;
+
   const lockedMods = useMemo(
     () =>
       (loadoutParameters.mods ?? []).map((m) => defs.InventoryItem.get(m)).filter(isPluggableItem),
@@ -268,6 +269,7 @@ export default memo(function LoadoutBuilder({
     statOrder,
     statFilters,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
+    autoStatMods,
   });
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
@@ -277,12 +279,7 @@ export default memo(function LoadoutBuilder({
     [loadoutParameters, searchQuery, statFilters, statOrder]
   );
 
-  const resultSets = result?.sets;
-
-  const filteredSets = useMemo(
-    () => resultSets && sortGeneratedSets(statOrder, enabledStats, resultSets),
-    [statOrder, enabledStats, resultSets]
-  );
+  const filteredSets = result?.sets;
 
   const shareBuild = async (notes?: string) => {
     // TODO: replace this with a new share tool
@@ -344,6 +341,7 @@ export default memo(function LoadoutBuilder({
         subclass={subclass}
         lockedExoticHash={lockedExoticHash}
         searchFilter={searchFilter}
+        autoStatMods={autoStatMods}
         lbDispatch={lbDispatch}
       />
       {isPhonePortrait && (
@@ -439,9 +437,9 @@ export default memo(function LoadoutBuilder({
             </p>
           </div>
         )}
-        {result && filteredSets && (
+        {result && (
           <GeneratedSets
-            sets={filteredSets}
+            sets={result.sets}
             subclass={subclass}
             lockedMods={result.mods}
             pinnedItems={pinnedItems}

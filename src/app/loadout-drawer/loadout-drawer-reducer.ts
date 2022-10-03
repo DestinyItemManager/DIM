@@ -316,20 +316,23 @@ export function clearSubclass(defs: D2ManifestDefinitions): LoadoutUpdateFunctio
  * Remove a specific mod by its inventory item hash.
  */
 export function removeMod(hash: number): LoadoutUpdateFunction {
-  return (loadout) => {
-    const newLoadout = { ...loadout };
-    const newMods = newLoadout.parameters?.mods?.length ? [...newLoadout.parameters.mods] : [];
-    const index = newMods.indexOf(hash);
-    if (index !== -1) {
-      newMods.splice(index, 1);
-      newLoadout.parameters = {
-        ...newLoadout.parameters,
-        mods: newMods,
-      };
-      return newLoadout;
+  return produce((loadout) => {
+    if (loadout.autoStatMods) {
+      const index = loadout.autoStatMods.indexOf(hash);
+      if (index !== -1) {
+        loadout.autoStatMods.splice(index, 1);
+        return;
+      }
     }
-    return loadout;
-  };
+
+    if (loadout.parameters?.mods) {
+      const index = loadout.parameters.mods.indexOf(hash);
+      if (index !== -1) {
+        loadout.parameters.mods.splice(index, 1);
+        return;
+      }
+    }
+  });
 }
 
 /** Replace the loadout's subclass with the store's currently equipped subclass */
@@ -542,6 +545,7 @@ function clearBuckets(
 export function clearMods(): LoadoutUpdateFunction {
   return produce((loadout) => {
     delete loadout.parameters?.mods;
+    delete loadout.autoStatMods;
   });
 }
 
