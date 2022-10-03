@@ -130,7 +130,7 @@ function buildGunsmithSockets(item: DimItem) {
   const perkValues = getWeaponSocketInfo(item);
 
   if (perkValues) {
-    return `?p=${perkValues.traits.join(',')},${perkValues.masterwork},${perkValues.weaponMod}`;
+    return `${perkValues.traits.join(',')},${perkValues.masterwork},${perkValues.weaponMod}`;
   }
 
   return '';
