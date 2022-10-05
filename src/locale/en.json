@@ -54,6 +54,7 @@
   },
   "BungieService": {
     "AppNotPermitted": "DIM does not have permission to perform this action.",
+    "D1Difficulties": "Bungie.net is currently experiencing difficulties. If you linked your Bungie.net account with your Epic account, your Destiny 1 information can no longer be loaded, even if you unlink your Epic account.",
     "DestinyCannotPerformActionAtThisLocation": "You cannot equip items or change mods while in an activity. Try heading to orbit or a social area. This is a limitation of the Bungie.net API, not DIM.",
     "DestinyItemUnequippable": "You cannot equip this item. If this character's last activity locked their equipment, try logging into the character again.",
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",

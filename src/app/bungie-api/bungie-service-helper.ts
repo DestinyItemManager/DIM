@@ -209,6 +209,9 @@ export function handleErrors(error: Error) {
         }
 
       case PlatformErrorCodes.DestinyUnexpectedError:
+        if (error.endpoint.includes('/D1/')) {
+          throw new DimError('BungieService.D1Difficulties').withError(error);
+        }
         throw new DimError('BungieService.Difficulties').withError(error);
       default: {
         throw new DimError(
