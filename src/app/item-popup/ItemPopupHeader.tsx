@@ -45,13 +45,16 @@ export default function ItemPopupHeader({
       : item.element.enumValue !== DestinyEnergyType.Ghost &&
         item.element.enumValue !== DestinyEnergyType.Subclass);
 
+  const linkToArmory = item.destinyVersion === 2;
+
   return (
     <div
       className={clsx(styles.header, tierClassName[item.tier], {
         [styles.masterwork]: item.masterwork,
         [styles.pursuit]: item.pursuit,
+        [styles.armory]: linkToArmory,
       })}
-      onClick={() => setShowArmory(true)}
+      onClick={linkToArmory ? () => setShowArmory(true) : undefined}
     >
       {noLink || item.destinyVersion === 1 ? (
         <span className={styles.title}>{item.name}</span>
@@ -85,7 +88,7 @@ export default function ItemPopupHeader({
           )}
         </div>
       </div>
-      {showArmory && (
+      {showArmory && linkToArmory && (
         <Portal>
           <ArmorySheet onClose={() => setShowArmory(false)} item={item} />
         </Portal>
