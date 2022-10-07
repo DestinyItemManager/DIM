@@ -898,27 +898,109 @@ function applySocketOverrides(
         const modsForItem: Assignment[] = [];
         const categories = dimItem.sockets?.categories || [];
 
+        // Loadout progress reporting is unaware of our socket remapping, so
+        // we need to translate from actual item socket index to socketOverride index.
+        const itemSocketToLoadoutOverrideSocket: { [itemSocketIndex: number]: number } = {};
+
         for (const category of categories) {
-          const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);
-
-          for (const socket of sockets) {
-            const socketIndex = socket.socketIndex;
-            let modHash: number | undefined = loadoutItem.socketOverrides[socketIndex];
-
-            // So far only subclass abilities are known to be able to socket the initial item
-            // aspects and fragments return a 500
-            if (
-              modHash === undefined &&
-              (category.category.hash === SocketCategoryHashes.Abilities_Abilities ||
-                category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
-                category.category.hash === SocketCategoryHashes.Super)
-            ) {
-              modHash = getDefaultAbilityChoiceHash(socket);
+          // So this is a bit awkward but subclasses use socketOverrides (socketIndex => hash)
+          // for aspects and fragments, but the actual order is not important and we don't want
+          // to plug fragments and aspects to match some arbitrary order. So here we untangle the
+          // aspects and fragments and assign them similar to armor mods where it doesn't really
+          // matter where they are.
+          // For fragments, socketIndices only specifies the active sockets, all sockets beyond that
+          // are ignored even if they contain a needed fragment, so that we will plug it somewhere
+          // in an earlier, active socket.
+          const handleShuffledSockets = (socketIndices: number[]) => {
+            const sockets = getSocketsByIndexes(dimItem.sockets!, socketIndices);
+            const neededOverrides = _.compact(
+              socketIndices.map((socketIndex) => {
+                const hash = loadoutItem.socketOverrides![socketIndex];
+                return hash && { hash, loadoutSocketIndex: socketIndex };
+              })
+            );
+            const excessSockets = [];
+            // If the loadout doesn't specify aspects/fragments, don't touch them because that's how it worked for a long time.
+            if (neededOverrides.length) {
+              for (const socket of sockets) {
+                if (socket.plugged) {
+                  const idx = neededOverrides.findIndex(
+                    ({ hash }) => hash === socket.plugged!.plugDef.hash
+                  );
+                  if (idx !== -1) {
+                    const overrideIndex = neededOverrides[idx].loadoutSocketIndex;
+                    neededOverrides.splice(idx, 1);
+                    const mod = defs.InventoryItem.get(
+                      socket.plugged.plugDef.hash
+                    ) as PluggableInventoryItemDefinition;
+                    modsForItem.push({ socketIndex: socket.socketIndex, mod, requested: true });
+                    itemSocketToLoadoutOverrideSocket[socket.socketIndex] = overrideIndex;
+                  } else {
+                    excessSockets.push(socket);
+                  }
+                }
+              }
+              for (const socket of excessSockets) {
+                let override = neededOverrides.pop();
+                if (!override) {
+                  override = {
+                    hash: socket.emptyPlugItemHash!,
+                    loadoutSocketIndex: socket.socketIndex,
+                  };
+                }
+                const mod = defs.InventoryItem.get(
+                  override.hash
+                ) as PluggableInventoryItemDefinition;
+                modsForItem.push({ socketIndex: socket.socketIndex, mod, requested: true });
+                itemSocketToLoadoutOverrideSocket[socket.socketIndex] = override.loadoutSocketIndex;
+              }
             }
-            if (modHash) {
-              const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
-              // We explicitly set sockets that aren't in socketOverrides to the default plug for subclasses
-              modsForItem.push({ socketIndex, mod, requested: true });
+          };
+
+          if (category.category.hash === SocketCategoryHashes.Aspects) {
+            handleShuffledSockets(category.socketIndexes);
+          } else if (category.category.hash === SocketCategoryHashes.Fragments) {
+            // For fragments, we first need to figure out how many sockets we have available.
+            // If the loadout specifies overrides for aspects, we use all override aspects to calculate
+            // fragment capacity, otherwise we look at the item itself because we don't unplug any aspects
+            // if the overrides don't list any.
+            const aspectSocketIndices = dimItem.sockets!.categories.find(
+              (c) => c.category.hash === SocketCategoryHashes.Aspects
+            )!.socketIndexes;
+            let aspectDefs = _.compact(
+              aspectSocketIndices.map((aspectSocketIndex) => {
+                const aspectHash = loadoutItem.socketOverrides![aspectSocketIndex];
+                return aspectHash && defs.InventoryItem.get(aspectHash);
+              })
+            );
+            if (!aspectDefs.length) {
+              aspectDefs = _.compact(
+                getSocketsByIndexes(dimItem.sockets!, aspectSocketIndices).map(
+                  (socket) => socket.plugged?.plugDef
+                )
+              );
+            }
+            const fragmentCapacity = _.sumBy(
+              aspectDefs,
+              (aspectDef) => aspectDef.plug?.energyCapacity?.capacityValue || 0
+            );
+            handleShuffledSockets(category.socketIndexes.slice(0, fragmentCapacity));
+          } else {
+            const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);
+            for (const socket of sockets) {
+              const socketIndex = socket.socketIndex;
+              let modHash: number | undefined = loadoutItem.socketOverrides[socketIndex];
+
+              if (modHash === undefined && dimItem.bucket.hash === BucketHashes.Subclass) {
+                // A subclass without any overrides for abilities still shows
+                // the "default" ability plugs, so we need to plug those
+                modHash = getDefaultAbilityChoiceHash(socket);
+              }
+              if (modHash) {
+                const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
+                // We explicitly set sockets that aren't in socketOverrides to the default plug for subclasses
+                modsForItem.push({ socketIndex, mod, requested: true });
+              }
             }
           }
         }
@@ -926,7 +1008,11 @@ function applySocketOverrides(
         const handleSuccess = ({ socketIndex, requested }: Assignment) => {
           requested &&
             setLoadoutState(
-              setSocketOverrideResult(dimItem, socketIndex, LoadoutSocketOverrideState.Applied)
+              setSocketOverrideResult(
+                dimItem,
+                itemSocketToLoadoutOverrideSocket[socketIndex] ?? socketIndex,
+                LoadoutSocketOverrideState.Applied
+              )
             );
         };
         const handleFailure = (
@@ -938,7 +1024,7 @@ function applySocketOverrides(
             ? setLoadoutState(
                 setSocketOverrideResult(
                   dimItem,
-                  socketIndex,
+                  itemSocketToLoadoutOverrideSocket[socketIndex] ?? socketIndex,
                   LoadoutSocketOverrideState.Failed,
                   error,
                   equipNotPossible
