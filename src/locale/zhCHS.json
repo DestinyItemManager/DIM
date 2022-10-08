@@ -489,6 +489,7 @@
       "Legendary": "传说护甲会使用大师之作属性和 10 点能量等级。",
       "None": "所有护甲会使用当前的属性和至少 7 点能量等级。"
     },
+    "AutoStatMods": "Add required stat mods",
     "ChooseAlternateTitle": "选择另一个物品",
     "CompareLoadout": "对比配装",
     "ConfirmOverwrite": "你确定要用这套新的护甲来替换配装“{{name}}”里的护甲吗？",

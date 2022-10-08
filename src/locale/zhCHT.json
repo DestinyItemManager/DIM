@@ -489,6 +489,7 @@
       "Legendary": "傳說護甲會使用大師杰作内容和10點能量等級。",
       "None": "所有護甲會使用大師之作內容和10點能量等級。"
     },
+    "AutoStatMods": "Add required stat mods",
     "ChooseAlternateTitle": "選擇另一個物品",
     "CompareLoadout": "對比配裝",
     "ConfirmOverwrite": "你確定要用這套新的護甲來替換配裝「{{name}}」里的護甲嗎？",

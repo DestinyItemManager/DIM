@@ -489,6 +489,7 @@
       "Legendary": "Las armaduras legendarias usarán estadísticas de obra maestra completa y tendrán un nivel de energía de 10.",
       "None": "Todas las armaduras usarán sus estadísticas actuales y tendrán un nivel de energía mínimo de 7."
     },
+    "AutoStatMods": "Añadir mods de estadísticas requeridos",
     "ChooseAlternateTitle": "Elige otro objeto",
     "CompareLoadout": "Comparar Equipación",
     "ConfirmOverwrite": "¿Estás seguro de que quieres reemplazar la armadura en la equipación \"{{name}}\" con este nuevo set de armadura?",

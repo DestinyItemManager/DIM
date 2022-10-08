@@ -489,6 +489,7 @@
       "Legendary": "Armaduras lendárias serão consideradas obras-primas com nível de energia 10.",
       "None": "Todas as armaduras serão consideradas com os atributos atuais e terão um nível mínimo de energia de 7."
     },
+    "AutoStatMods": "Adicionar mods de atributos ncessários",
     "ChooseAlternateTitle": "Escolher outro item",
     "CompareLoadout": "Comparar Sets",
     "ConfirmOverwrite": "Você tem certeza que deseja substituir a armadura do set \"{{name}}\" com este novo conjunto de armaduras?",

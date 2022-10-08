@@ -489,6 +489,7 @@
       "Legendary": "Le armature leggendarie utilizzeranno statistiche prodigiose e avranno un livello energia 10.",
       "None": "Tutte le armature utilizzeranno le loro statistiche attuali ed avranno un livello minimo di energia 7."
     },
+    "AutoStatMods": "Aggiungi le Modifiche statistiche necessarie",
     "ChooseAlternateTitle": "Scegli un altro oggetto",
     "CompareLoadout": "Confronta Loadout",
     "ConfirmOverwrite": "Sei sicuro di voler sostituire l'armatura nel loadout \"{{name}}\" con questo nuovo set di armature?",

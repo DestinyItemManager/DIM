@@ -489,6 +489,7 @@
       "Legendary": "Legendäre Rüstungen verwenden gemeisterwerkte Werte und haben ein Energielevel von 10.",
       "None": "Alle Rüstungen verwenden ihre aktuellen Werte und haben mindestens ein Energielevel von 7."
     },
+    "AutoStatMods": "Benötigte Statistik-Mods hinzufügen",
     "ChooseAlternateTitle": "Wähle einen anderen Gegenstand",
     "CompareLoadout": "Vergleiche Ausrüstung",
     "ConfirmOverwrite": "Bist du sicher, dass du die Gegenstände in deiner Ausrüstung \"{{name}}\" durch dieses neue Rüstungsset ersetzen möchtest?",

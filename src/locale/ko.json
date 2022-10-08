@@ -489,6 +489,7 @@
       "Legendary": "전설 방어구의 걸작 능력치를 사용하며 10의 에너지 수용량을 가집니다.",
       "None": "모든 방어구의 현재 능력치를 사용하며 최소 7의 에너지 수용량을 가집니다."
     },
+    "AutoStatMods": "필요한 능력치 개조 부품 추가",
     "ChooseAlternateTitle": "다른 아이템 선택",
     "CompareLoadout": "로드아웃 비교",
     "ConfirmOverwrite": "로드아웃 \"{{name}}\"의 방어구를 새로운 방어구 조합으로 변경하시겠습니까?",

@@ -489,6 +489,7 @@
       "Legendary": "Legendarna zbroja będzie używała mistrzowskich statystyk i będzie miała poziom energii 10.",
       "None": "Wszystkie zbroje wykorzystają swoje obecne statystyki i będą miały minimalny poziom wynoszący 7 energii."
     },
+    "AutoStatMods": "Add required stat mods",
     "ChooseAlternateTitle": "Wybierz inny przedmiot",
     "CompareLoadout": "Porównaj uzbrojenie",
     "ConfirmOverwrite": "Czy na pewno chcesz zastąpić pancerz w uzbrojeniu \"{{name}}\" tym nowym zestawem pancerza?",

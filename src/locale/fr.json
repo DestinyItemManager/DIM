@@ -489,6 +489,7 @@
       "Legendary": "Les armures légendaires utiliseront leurs stats de pièce maîtresse et auront un niveau d'énergie de 10.",
       "None": "Toutes les armures utiliseront leurs stats actuelles et auront un niveau d'énergie minimum de 7."
     },
+    "AutoStatMods": "Add required stat mods",
     "ChooseAlternateTitle": "Choisir un autre objet",
     "CompareLoadout": "Comparer Arsenal",
     "ConfirmOverwrite": "Êtes-vous sûr de vouloir remplacer l'armure dans l'arsenal \"{{name}}\" par ce nouvel ensemble d'armure?",
