@@ -59,7 +59,7 @@
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with Bungie.net.",
     "Difficulties": "Bungie.net is currently experiencing difficulties.",
-    "D1Difficulties": "Bungie.net is currently experiencing difficulties. If you linked your Bungie.net account with your Epic account, your Destiny 1 information can no longer be loaded, even if you unlink your Epic account.",
+    "D1Difficulties": "Bungie.net is currently experiencing difficulties. If you linked your Bungie.net account with your Epic Games account, your Destiny 1 information cannot be loaded. Bungie is aware of this issue, and unlinking Epic will not fix this.",
     "ErrorTitle": "Bungie.net Error",
     "ItemUniquenessExplanation": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
     "ItemUniquenessExplanation_female": "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one.",
