@@ -1,5 +1,7 @@
 ## Next
 
+## 7.38.0 <span class="changelog-date">(2022-10-09)</span>
+
 ### Beta Only
 
 * Added an experimental Loadout Optimizer setting that automatically adds +10 and +5 stat mods to hit specified stat minimums.
