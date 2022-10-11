@@ -6,7 +6,11 @@ import {
   modSlotTags,
   modTypeTags,
 } from 'app/utils/item-utils';
-import { countEnhancedPerks, getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import {
+  countEnhancedPerks,
+  getIntrinsicArmorPerkSocket,
+  getSocketsByCategoryHash,
+} from 'app/utils/socket-utils';
 import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import craftingMementos from 'data/d2/crafting-mementos.json';
 import {
@@ -186,14 +190,9 @@ const socketFilters: FilterDefinition[] = [
   },
   {
     keywords: 'armorintrinsic',
-    description: tl('Filter.Mods.Y3'),
+    description: tl('Filter.ArmorIntrinsic'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) =>
-      item.sockets &&
-      !item.isExotic &&
-      getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorPerks_LargePerk).some(
-        (s) => s.plugged?.plugDef.displayProperties.name
-      ),
+    filter: () => (item: DimItem) => Boolean(!item.isExotic && getIntrinsicArmorPerkSocket(item)),
   },
   {
     keywords: 'holdsmod',

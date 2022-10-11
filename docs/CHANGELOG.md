@@ -1,5 +1,8 @@
 ## Next
 
+* Added `is:armorintrinsic` to find Artifice Armor, armor with seasonal perks, etc.
+* Compare suggestion buttons now offer comparison to similar armor intrinsics.
+
 ## 7.38.0 <span class="changelog-date">(2022-10-09)</span>
 
 ### Beta Only
