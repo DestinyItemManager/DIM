@@ -185,6 +185,17 @@ const socketFilters: FilterDefinition[] = [
       ),
   },
   {
+    keywords: 'armorintrinsic',
+    description: tl('Filter.Mods.Y3'),
+    destinyVersion: 2,
+    filter: () => (item: DimItem) =>
+      item.sockets &&
+      !item.isExotic &&
+      getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorPerks_LargePerk).some(
+        (s) => s.plugged?.plugDef.displayProperties.name
+      ),
+  },
+  {
     keywords: 'holdsmod',
     description: tl('Filter.HoldsMod'),
     format: 'query',

@@ -21,14 +21,17 @@ export function useEventBusListener<T>(
 export function useShiftHeld() {
   const [shiftHeld, setShiftHeld] = useState(false);
   useEffect(() => {
-    const shiftCheck = (e: KeyboardEvent) => setShiftHeld(e.shiftKey);
-
-    document.addEventListener('keydown', shiftCheck);
-    document.addEventListener('keyup', shiftCheck);
-
+    const shiftTrue = (e: KeyboardEvent) => {
+      e.shiftKey && setShiftHeld(true);
+    };
+    const shiftFalse = (e: KeyboardEvent) => {
+      !e.shiftKey && setShiftHeld(false);
+    };
+    document.addEventListener('keydown', shiftTrue);
+    document.addEventListener('keyup', shiftFalse);
     return () => {
-      document.removeEventListener('keydown', shiftCheck);
-      document.removeEventListener('keyup', shiftCheck);
+      document.removeEventListener('keydown', shiftTrue);
+      document.removeEventListener('keyup', shiftFalse);
     };
   }, []);
 
