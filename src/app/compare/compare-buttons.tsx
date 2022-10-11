@@ -92,7 +92,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           </PressTip>,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `not:sunset perk:${exampleItemIntrinsic.name}`,
+        query: `not:sunset perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
       },
 
     // armor 2.0 and needs to match energy capacity element
