@@ -1,12 +1,13 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { ArmorSlotIcon, WeaponSlotIcon, WeaponTypeIcon } from 'app/dim-ui/ItemCategoryIcon';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
-import { getWeaponArchetype } from 'app/utils/socket-utils';
+import { getIntrinsicArmorPerkSocket, getWeaponArchetype } from 'app/utils/socket-utils';
 import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -32,6 +33,9 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     />
   );
   const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem);
+  const exampleItemIntrinsic =
+    !exampleItem.isExotic &&
+    getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
 
   let comparisonSets: CompareButton[] = _.compact([
     // same slot on the same class
@@ -76,6 +80,19 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         query: `not:sunset ${exampleItemModSlotMetadatas
           .map((m) => `modslot:${m.slotTag || 'none'}`)
           .join(' ')}`,
+      },
+
+    // above but also the same special intrinsic, if it has one
+    exampleItem.destinyVersion === 2 &&
+      exampleItem.element &&
+      exampleItemIntrinsic && {
+        buttonLabel: [
+          <PressTip minimal tooltip={exampleItemIntrinsic.name} key="1">
+            <BungieImage key="2" className={styles.intrinsicIcon} src={exampleItemIntrinsic.icon} />
+          </PressTip>,
+          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+        ],
+        query: `not:sunset perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
       },
 
     // armor 2.0 and needs to match energy capacity element
