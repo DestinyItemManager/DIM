@@ -4,6 +4,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -55,9 +56,10 @@ function GeneratedSet({
   halfTierMods,
   armorEnergyRules,
 }: Props) {
+  const defs = useD2Definitions()!;
+
   // Set the loadout property to show/hide the loadout menu
   const setCreateLoadout = (loadout: Loadout) => {
-    loadout.parameters = params;
     editLoadout(loadout, selectedStore.id, {
       showClass: false,
     });
@@ -80,9 +82,13 @@ function GeneratedSet({
   }
 
   let itemModAssignments = useMemo(() => {
+    const statMods = set.statMods.map(
+      (d) => defs.InventoryItem.get(d) as PluggableInventoryItemDefinition
+    );
+    const allMods = [...lockedMods, ...statMods];
     const { itemModAssignments, unassignedMods } = fitMostMods({
       items: displayedItems,
-      plannedMods: lockedMods,
+      plannedMods: allMods,
       armorEnergyRules,
     });
 
@@ -98,7 +104,7 @@ function GeneratedSet({
     }
 
     return itemModAssignments;
-  }, [displayedItems, lockedMods, armorEnergyRules]);
+  }, [set.statMods, lockedMods, displayedItems, armorEnergyRules, defs.InventoryItem]);
 
   if (!existingLoadout) {
     itemModAssignments = { ...itemModAssignments };
@@ -134,6 +140,7 @@ function GeneratedSet({
         <div className={styles.header}>
           <SetStats
             stats={set.stats}
+            autoStatMods={set.statMods}
             maxPower={getPower(displayedItems)}
             statOrder={statOrder}
             enabledStats={enabledStats}
@@ -149,7 +156,7 @@ function GeneratedSet({
               pinned={pinnedItems[item.bucket.hash] === item}
               lbDispatch={lbDispatch}
               assignedMods={itemModAssignments[item.id]}
-              showEnergyChanges={Boolean(lockedMods.length)}
+              showEnergyChanges={Boolean(lockedMods.length || set.statMods.length)}
             />
           ))}
         </div>

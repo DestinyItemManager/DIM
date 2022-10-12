@@ -1,5 +1,16 @@
 ## Next
 
+* Added `is:armorintrinsic` to find Artifice Armor, armor with seasonal perks, etc.
+* Compare suggestion buttons now offer comparison to similar armor intrinsics.
+
+## 7.38.0 <span class="changelog-date">(2022-10-09)</span>
+
+### Beta Only
+
+* Added an experimental Loadout Optimizer setting that automatically adds +10 and +5 stat mods to hit specified stat minimums.
+
+## 7.37.0 <span class="changelog-date">(2022-10-02)</span>
+
 * Add `foundry` search term. Try `foundry:hakke` for all your items brought to you by Hakke.
 * Added perks to Light.gg links. See your weapon's popularity rating without having to reselect it's perks.
 

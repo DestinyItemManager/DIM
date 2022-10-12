@@ -1,6 +1,8 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
@@ -9,10 +11,11 @@ import clsx from 'clsx';
 import { ArmorStatHashes, ArmorStats } from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
-import { calculateTotalTier, sumEnabledStats } from './utils';
+import { calculateSetStats } from './utils';
 
 interface Props {
   stats: ArmorStats;
+  autoStatMods: number[];
   maxPower: number;
   statOrder: ArmorStatHashes[];
   enabledStats: Set<ArmorStatHashes>;
@@ -25,6 +28,7 @@ interface Props {
  */
 function SetStats({
   stats,
+  autoStatMods,
   maxPower,
   statOrder,
   enabledStats,
@@ -36,26 +40,40 @@ function SetStats({
   for (const statHash of statOrder) {
     statDefs[statHash] = defs.Stat.get(statHash);
   }
-  const totalTier = calculateTotalTier(stats);
-  const enabledTier = sumEnabledStats(stats, enabledStats);
+  const { enabledBaseTier, totalBaseTier, statsWithAutoMods } = calculateSetStats(
+    defs,
+    stats,
+    autoStatMods,
+    enabledStats
+  );
 
   return (
     <div className={clsx(styles.container, className)}>
       <div className={styles.tierLightContainer}>
         <span className={clsx(styles.tier, styles.tierLightSegment)}>
           {t('LoadoutBuilder.TierNumber', {
-            tier: enabledTier,
+            tier: enabledBaseTier,
           })}
         </span>
-        {enabledTier !== totalTier && (
+        {enabledBaseTier !== totalBaseTier && (
           <span className={clsx(styles.tier, styles.nonActiveStat)}>
             {` (${t('LoadoutBuilder.TierNumber', {
-              tier: totalTier,
+              tier: totalBaseTier,
             })})`}
           </span>
         )}
+        {autoStatMods.length > 0 && (
+          <div className={clsx(styles.autoModsContainer)}>
+            {autoStatMods.map((modHash, idx) => {
+              const def = defs.InventoryItem.get(modHash);
+              return (
+                isPluggableItem(def) && <PlugDef className={clsx('item')} key={idx} plug={def} />
+              );
+            })}
+          </div>
+        )}
         <span className={styles.light}>
-          <AppIcon icon={powerIndicatorIcon} /> {maxPower}
+          <AppIcon icon={powerIndicatorIcon} className={clsx(styles.statIcon)} /> {maxPower}
         </span>
         {existingLoadoutName ? (
           <span className={styles.existingLoadout}>
@@ -73,7 +91,7 @@ function SetStats({
                 stat={{
                   hash: statHash,
                   name: statDefs[statHash].displayProperties.name,
-                  value: stats[statHash],
+                  value: statsWithAutoMods[statHash],
                   description: statDefs[statHash].displayProperties.description,
                 }}
               />
@@ -82,7 +100,7 @@ function SetStats({
             <Stat
               isActive={enabledStats.has(statHash)}
               stat={statDefs[statHash]}
-              value={stats[statHash]}
+              value={statsWithAutoMods[statHash]}
             />
           </PressTip>
         ))}
@@ -115,7 +133,8 @@ function Stat({
           tier: statTierWithHalf(value),
         })}
       </span>
-      <BungieImage src={stat.displayProperties.icon} /> {stat.displayProperties.name}
+      <BungieImage className={clsx(styles.statIcon)} src={stat.displayProperties.icon} />{' '}
+      {stat.displayProperties.name}
     </span>
   );
 }

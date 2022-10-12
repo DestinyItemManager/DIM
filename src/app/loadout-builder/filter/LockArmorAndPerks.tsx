@@ -1,3 +1,4 @@
+import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -38,6 +39,7 @@ interface Props {
   subclass?: ResolvedLoadoutItem;
   lockedExoticHash?: number;
   searchFilter: ItemFilter;
+  autoStatMods: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -52,6 +54,7 @@ export default memo(function LockArmorAndPerks({
   subclass,
   lockedExoticHash,
   searchFilter,
+  autoStatMods,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
@@ -168,8 +171,18 @@ export default memo(function LockArmorAndPerks({
     return rtn;
   }, [defs, subclass?.loadoutItem.socketOverrides, subclass?.item.sockets]);
 
+  const onMaxStatModsChanged = (autoStatMods: boolean) =>
+    lbDispatch({ type: 'autoStatModsChanged', autoStatMods });
+
   return (
     <>
+      {$featureFlags.loAutoStatMods && (
+        <div className={styles.area}>
+          <CheckButton onChange={onMaxStatModsChanged} name="autoStatMods" checked={autoStatMods}>
+            {t('LoadoutBuilder.AutoStatMods')}
+          </CheckButton>
+        </div>
+      )}
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol start={2}>

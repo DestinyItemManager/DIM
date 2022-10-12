@@ -30,6 +30,8 @@ declare const $featureFlags: {
   elgatoStreamDeck: boolean;
   /* Warn when DIM Sync is off and you save some DIM-specific data */
   warnNoSync: boolean;
+  /* Expose the "Add required stat mods" Loadout Optimizer toggle */
+  loAutoStatMods: boolean;
 };
 
 declare function ga(...params: string[]): void;
