@@ -117,6 +117,7 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
     vendorHash,
     defs,
     buckets,
+    profileResponse,
     vendor,
     account,
     characterId,
