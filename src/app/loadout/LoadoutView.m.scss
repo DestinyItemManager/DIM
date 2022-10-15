@@ -65,4 +65,6 @@
 .loadoutNotes {
   margin: 4px 0;
   white-space: pre-wrap;
+  overflow-wrap: break-word;
+  user-select: text;
 }
