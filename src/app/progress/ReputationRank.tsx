@@ -6,18 +6,20 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import CompletionCheckbox from './CompletionCheckbox';
-import styles from './CrucibleRank.m.scss';
+import styles from './ReputationRank.m.scss';
 
-interface CrucibleRankProps {
+/**
+ * displays a single reputation rank for the account
+ */
+export function ReputationRank({
+  progress,
+  streak,
+  resetCount,
+}: {
   progress: DestinyProgression;
   streak?: DestinyProgression;
   resetCount?: number;
-}
-
-/**
- * displays a single Crucible or Gambit rank for the account
- */
-export function CrucibleRank({ progress, streak, resetCount }: CrucibleRankProps) {
+}) {
   const defs = useD2Definitions()!;
   const replacer = useDynamicStringReplacer();
   const progressionDef = defs.Progression.get(progress.progressionHash);
@@ -37,7 +39,7 @@ export function CrucibleRank({ progress, streak, resetCount }: CrucibleRankProps
       title={replacer(progressionDef.displayProperties.description)}
     >
       <div>
-        <CrucibleRankIcon progress={progress} />
+        <ReputationRankIcon progress={progress} />
       </div>
       <div className={styles.factionInfo}>
         <div className={styles.factionLevel}>
@@ -71,7 +73,7 @@ export function CrucibleRank({ progress, streak, resetCount }: CrucibleRankProps
   );
 }
 
-function CrucibleRankIcon({ progress }: { progress: DestinyProgression }) {
+function ReputationRankIcon({ progress }: { progress: DestinyProgression }) {
   const defs = useD2Definitions()!;
 
   const progressionDef = defs.Progression.get(progress.progressionHash);
