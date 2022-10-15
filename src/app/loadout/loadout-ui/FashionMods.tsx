@@ -1,4 +1,7 @@
+import { PressTip } from 'app/dim-ui/PressTip';
+import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
@@ -44,10 +47,18 @@ export function FashionMods({
         className={clsx({ [styles.missingItem]: !canSlotShader })}
         plug={(shaderItem ?? defaultShader) as PluggableInventoryItemDefinition}
       />
-      <PlugDef
-        className={clsx({ [styles.missingItem]: !canSlotOrnament })}
-        plug={(ornamentItem ?? defaultOrnament) as PluggableInventoryItemDefinition}
-      />
+      {ornamentItem ? (
+        <PlugDef
+          className={clsx({ [styles.missingItem]: !canSlotOrnament })}
+          plug={ornamentItem as PluggableInventoryItemDefinition}
+        />
+      ) : (
+        <PressTip tooltip={<div>{t('FashionDrawer.NoPreference')}</div>}>
+          <div className={clsx('item', styles.missingItem)}>
+            <DefItemIcon itemDef={defaultOrnament} />
+          </div>
+        </PressTip>
+      )}
     </div>
   );
 }
