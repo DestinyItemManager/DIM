@@ -32,6 +32,8 @@ declare const $featureFlags: {
   warnNoSync: boolean;
   /* Expose the "Add required stat mods" Loadout Optimizer toggle */
   loAutoStatMods: boolean;
+  /* Whether to send cookies to the Bungie.net API */
+  apiCookies: boolean;
 };
 
 declare function ga(...params: string[]): void;
