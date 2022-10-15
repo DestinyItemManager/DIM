@@ -50,18 +50,8 @@ export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResp
 
   return (
     <div className="progress-for-character ranks-for-character">
-      {progressionHashes.map((progressionHash) => {
-        // Bungie.net reports the Vanguard reset count under Strange Favor (Dares of Eternity),
-        // so we just swap them manually back here. Re-evaluate this if there's any movement on
-        // https://github.com/Bungie-net/api/issues/1544#issuecomment-991315895
-        const resetProgressionHash =
-          progressionHash === ProgressionHashes.VanguardRank
-            ? ProgressionHashes.StrangeFavor
-            : progressionHash === ProgressionHashes.StrangeFavor
-            ? ProgressionHashes.VanguardRank
-            : progressionHash;
-
-        return (
+      {progressionHashes.map(
+        (progressionHash) =>
           firstCharacterProgression[progressionHash] && (
             <CrucibleRank
               key={progressionHash}
@@ -69,11 +59,10 @@ export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResp
               streak={
                 firstCharacterProgression[rankProgressionToStreakProgression[progressionHash]]
               }
-              resetCount={firstCharacterProgression[resetProgressionHash]?.currentResetCount}
+              resetCount={firstCharacterProgression[progressionHash]?.currentResetCount}
             />
           )
-        );
-      })}
+      )}
     </div>
   );
 }

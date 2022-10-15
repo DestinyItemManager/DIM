@@ -5,6 +5,7 @@ import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
@@ -137,7 +138,14 @@ export default function LoadoutDrawer2({
     bucket: InventoryBucket;
     equip: boolean;
   }) => {
-    pickLoadoutItem(defs, loadout, bucket, (item) => onAddItem(item, equip), setShowingItemPicker);
+    pickLoadoutItem(
+      defs,
+      loadout,
+      bucket,
+      (item) => onAddItem(item, equip),
+      setShowingItemPicker,
+      store
+    );
   };
 
   const handleRemoveItem = withDefsUpdater(removeItem);
@@ -310,12 +318,12 @@ async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
   add: (item: DimItem) => void,
-  onShowItemPicker: (shown: boolean) => void
+  onShowItemPicker: (shown: boolean) => void,
+  store: DimStore
 ) {
   const loadoutClassType = loadout?.classType;
   const loadoutHasItem = (item: DimItem) =>
     findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
-
   onShowItemPicker(true);
   try {
     const { item } = await showItemPicker({
@@ -326,7 +334,8 @@ async function pickLoadoutItem(
           item.classType === loadoutClassType ||
           item.classType === DestinyClass.Unknown) &&
         itemCanBeInLoadout(item) &&
-        !loadoutHasItem(item),
+        !loadoutHasItem(item) &&
+        (!item.notransfer || item.owner === store.id),
       prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
     });
 

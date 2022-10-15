@@ -223,6 +223,8 @@ export interface DimItem {
   catalystInfo?: DimCatalyst;
   /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
+  /** The foundry this item was made by */
+  foundry: string | null;
   /** The state of this item in the user's D2 Collection */
   collectibleState?: DestinyCollectibleState;
   /** Extra tooltips to show in the item popup */

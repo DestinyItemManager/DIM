@@ -174,6 +174,7 @@
     "AmmoType": "Zeigt Gegenstände basierend auf deren Munitionstyp.",
     "Armor": "Zeigt Gegenstände, die Rüstung sind.",
     "ArmorCategory": "Zeigt Rüstungen basierend auf deren Kategorie.",
+    "ArmorIntrinsic": "Shows legendary armor which has an intrinsic perk, such as Artifice Armor.",
     "Ascended": "Zeigt Gegenstände, die einen aufsteigenden Knoten haben, die aufgestiegen sind.",
     "Breaker": "Nach Brechertyp oder dem entsprechenden Champion-Typ filtern.",
     "BulkClear": "Markierung von 1 Gegenstand entfernt.",
@@ -205,6 +206,7 @@
     "Event": "Zeigt Gegenstände nach dem Event in dem sie in Destiny 2 erschienen sind an.",
     "ExtraPerk": "Zeigt Legendäre Waffen mit zufälligen Rolls und einem zusätzlich auswählbaren Perk.",
     "Filter": "Filter",
+    "Foundry": "Zeigt an, von welcher Schmiede die Items stammen.",
     "Glimmer": "Zeigt Verbrauchsgegenstände, die mit dem Erhalt von Glimmer verbunden sind.",
     "HasMemento": "Zeigt geformte Waffen, die derzeit ein Memento eingefügt haben.",
     "HasNotes": "Zeige Gegenstände mit Notizen an.",
@@ -488,6 +490,7 @@
       "Legendary": "Legendäre Rüstungen verwenden gemeisterwerkte Werte und haben ein Energielevel von 10.",
       "None": "Alle Rüstungen verwenden ihre aktuellen Werte und haben mindestens ein Energielevel von 7."
     },
+    "AutoStatMods": "Benötigte Statistik-Mods hinzufügen",
     "ChooseAlternateTitle": "Wähle einen anderen Gegenstand",
     "CompareLoadout": "Vergleiche Ausrüstung",
     "ConfirmOverwrite": "Bist du sicher, dass du die Gegenstände in deiner Ausrüstung \"{{name}}\" durch dieses neue Rüstungsset ersetzen möchtest?",
@@ -964,7 +967,7 @@
     "SelectWishlistPerks": "Vorschau der Wunschlisten-Perks"
   },
   "Stats": {
-    "Custom": "Benutzerdefinierte Summe",
+    "Custom": "Benutzerdef. Summe",
     "CustomDesc": "Benutzerdefinierte Summe der ausgewählten Basis-Werte, Mods oder Meisterwerke. Gehe in die Einstellungen, um zu konfigurieren, welche Werte enthalten sind.",
     "Discipline": "Disziplin",
     "Intellect": "Intellekt",

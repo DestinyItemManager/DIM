@@ -174,6 +174,7 @@
     "AmmoType": "Shows items based on their ammo type.",
     "Armor": "Shows items that are armor.",
     "ArmorCategory": "Shows armors based on their category.",
+    "ArmorIntrinsic": "Shows legendary armor which has an intrinsic perk, such as Artifice Armor.",
     "Ascended": "Shows items that have an ascend node which have been ascended.",
     "Breaker": "Filter by breaker type or corresponding champion type.",
     "BulkClear": "Removed tag from 1 item.",
@@ -205,6 +206,7 @@
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
     "Filter": "Filter",
+    "Foundry": "Shows items by which foundry created them.",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
     "HasMemento": "Shows crafted weapons that currently have a memento inserted.",
     "HasNotes": "Show items that have notes applied.",
@@ -488,6 +490,7 @@
       "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
       "None": "All armor will use its current stats and will have a minimum energy level of 7."
     },
+    "AutoStatMods": "Add required stat mods",
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",

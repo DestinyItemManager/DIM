@@ -58,6 +58,7 @@ function chooseInitialLoadout(
 function createLoadoutUsingLOItems(
   defs: D2ManifestDefinitions,
   allItems: DimItem[],
+  autoMods: number[],
   storeId: string | undefined,
   buckets: InventoryBuckets,
   setItems: DimItem[],
@@ -101,7 +102,11 @@ function createLoadoutUsingLOItems(
       }
 
       draftLoadout.items = newItems;
+      const allMods = [...(params.mods ?? []), ...autoMods];
+      // FIXME(#8733) add auto mods to autoStatMods instead of adding them to regular mods
+      params = { ...params, mods: allMods.length ? allMods : undefined };
       draftLoadout.parameters = params;
+      // loadout.autoStatMods = autoMods.length ? autoMods : undefined;
       draftLoadout.notes = notes || draftLoadout.notes;
     }
   });
@@ -137,6 +142,7 @@ export default function CompareDrawer({
       createLoadoutUsingLOItems(
         defs,
         allItems,
+        set.statMods,
         selectedStore.id,
         buckets,
         setItems,
@@ -145,7 +151,18 @@ export default function CompareDrawer({
         params,
         notes
       ),
-    [allItems, defs, notes, params, selectedLoadout, selectedStore.id, buckets, setItems, subclass]
+    [
+      defs,
+      allItems,
+      set.statMods,
+      selectedStore.id,
+      buckets,
+      setItems,
+      subclass,
+      selectedLoadout,
+      params,
+      notes,
+    ]
   );
 
   const onSaveLoadout = (e: React.MouseEvent) => {

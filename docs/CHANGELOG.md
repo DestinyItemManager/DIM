@@ -1,8 +1,30 @@
 ## Next
 
+* Added `is:armorintrinsic` to find Artifice Armor, armor with seasonal perks, etc.
+* Compare suggestion buttons now offer comparison to similar armor intrinsics.
+* Added perks to Light.gg links. See your weapon's popularity rating without having to reselect its perks.
 * Added browser info on the About page
 
+## 7.38.0 <span class="changelog-date">(2022-10-09)</span>
+
+### Beta Only
+
+* Added an experimental Loadout Optimizer setting that automatically adds +10 and +5 stat mods to hit specified stat minimums.
+
+## 7.37.0 <span class="changelog-date">(2022-10-02)</span>
+
+* Add `foundry` search term. Try `foundry:hakke` for all your items brought to you by Hakke.
+
+## 7.36.0 <span class="changelog-date">(2022-09-25)</span>
+
+## 7.35.0 <span class="changelog-date">(2022-09-18)</span>
+
+* Fixed an issue where emblems that were not transferrable across characters were being shown in the loadout drawer.
+* DIM now identifies more intrinsic breakers, added `breaker:any`
+
 ## 7.34.0 <span class="changelog-date">(2022-09-11)</span>
+
+* Season of Plunder Star Chart upgrades are now shown in the right order on the Vendors page.
 
 ## 7.33.0 <span class="changelog-date">(2022-09-04)</span>
 

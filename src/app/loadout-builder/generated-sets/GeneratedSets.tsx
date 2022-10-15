@@ -5,15 +5,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import _ from 'lodash';
-import React, {
-  Dispatch,
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { Dispatch, memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorEnergyRules, ArmorSet, PinnedItems } from '../types';
@@ -39,9 +31,10 @@ function hasExoticPerkRaidModOrSwapIcon(items: DimItem[]) {
  * Gets the set used to measure how high a row can be. It also returns a recalcTrigger that is
  * intended to trigger a recalculation when the value changes.
  *
- * It figures out the tallest row by looking at items with exotic perks and swap icons.
+ * It figures out the tallest row by looking at items with exotic perks, swap icons and auto mods.
  * Exotic perks add another row to the mod icons and the swap icon sits below the item image.
  * The height they add is roughly equivalent so we treat both conditions equally.
+ * Additionally, auto stat mods are separately listed above the set, and require a bit of extra space.
  *
  * This algorithm is built from the portrait mobile layout but will work for any other layout
  * as well. Landscape iPad has two rows, desktop can be 1, 2, or 3 rows depending on browser
@@ -58,7 +51,7 @@ function getMeasureSet(sets: readonly ArmorSet[]) {
       }
     }
 
-    return countWithExoticPerkOrSwapIcon;
+    return countWithExoticPerkOrSwapIcon + (set.statMods.length ? 0.5 : 0);
   });
 
   return measureSet;
