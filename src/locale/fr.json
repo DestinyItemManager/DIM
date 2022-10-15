@@ -174,6 +174,7 @@
     "AmmoType": "Affiche les objets en fonction de leur type de munition.",
     "Armor": "Affiche les objets qui sont des armures.",
     "ArmorCategory": "Affiche les armures selon leur catégorie.",
+    "ArmorIntrinsic": "Affiche les armures qui ont un attribut intrinsèque, comme Armure d'Artifice par exemple.",
     "Ascended": "Affiche les objets qui ont eu une ascension.",
     "Breaker": "Filtrer par type d'anti-champion ou par type de champion.",
     "BulkClear": "Suppression de l'étiquette de 1 objet.",
@@ -489,7 +490,7 @@
       "Legendary": "Les armures légendaires utiliseront leurs stats de pièce maîtresse et auront un niveau d'énergie de 10.",
       "None": "Toutes les armures utiliseront leurs stats actuelles et auront un niveau d'énergie minimum de 7."
     },
-    "AutoStatMods": "Add required stat mods",
+    "AutoStatMods": "Ajouter les mods de stat requis",
     "ChooseAlternateTitle": "Choisir un autre objet",
     "CompareLoadout": "Comparer Arsenal",
     "ConfirmOverwrite": "Êtes-vous sûr de vouloir remplacer l'armure dans l'arsenal \"{{name}}\" par ce nouvel ensemble d'armure?",

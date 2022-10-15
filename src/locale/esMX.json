@@ -174,6 +174,7 @@
     "AmmoType": "Mostrar objetos basados en su tipo de munición.",
     "Armor": "Muestra objetos que son armaduras.",
     "ArmorCategory": "Muestra armaduras basadas en su categoría.",
+    "ArmorIntrinsic": "Muestra armadura legendaria que tenga un perk intrínseco, como Armadura Artificiosa.",
     "Ascended": "Muestra objetos que tengan un nodo ascendente en el que haya sido ascendido.",
     "Breaker": "Filtrar por tipo de triturador o el tipo de campeón correspondiente.",
     "BulkClear": "Etiqueta eliminada de 1 objeto.",

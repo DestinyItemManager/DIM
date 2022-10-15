@@ -174,6 +174,7 @@
     "AmmoType": "按照弹药类型显示物品",
     "Armor": "显示护甲物品。",
     "ArmorCategory": "按照类别显示防具.",
+    "ArmorIntrinsic": "Shows legendary armor which has an intrinsic perk, such as Artifice Armor.",
     "Ascended": "显示可提升光等且已提升的物品。",
     "Breaker": "按照对抗类型或对应的勇士类型筛选。",
     "BulkClear": "移除物品标签",
