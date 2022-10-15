@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
+import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import EmoteSockets from './EmoteSockets';
@@ -66,7 +66,8 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
       // hide if this is the emote wheel because we show it separately
       c.category.hash !== SocketCategoryHashes.Emotes &&
       // Hidden sockets for intrinsic armor stats
-      c.category.uiCategoryStyle !== 2251952357
+      c.category.uiCategoryStyle !== 2251952357 &&
+      getSocketsByIndexes(item.sockets!, c.socketIndexes).length > 0
   );
   if (minimal) {
     // Only show the first of each style of category
@@ -79,6 +80,24 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
       return false;
     });
   }
+
+  // Pre-calculate the list of sockets we'll display for each category
+  const socketsByCategory = new Map<DimSocketCategory, DimSocket[]>();
+  for (const category of categories) {
+    const sockets = getSocketsByIndexes(item.sockets, category.socketIndexes).filter(
+      (socketInfo) =>
+        // don't include armor intrinsics in automated socket listings
+        socketInfo.socketIndex !== intrinsicArmorPerkSocket?.socketIndex &&
+        // don't include these weird little solstice stat rerolling mechanic sockets
+        !isEventArmorRerollSocket(socketInfo) &&
+        // don't include kill trackers
+        socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash
+    );
+    socketsByCategory.set(category, sockets);
+  }
+
+  // Remove categories where all the sockets were filtered out.
+  categories = categories.filter((c) => socketsByCategory.get(c)?.length);
 
   return (
     <>
@@ -110,23 +129,15 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
               </div>
             )}
             <div className="item-sockets">
-              {getSocketsByIndexes(item.sockets!, category.socketIndexes).map(
-                (socketInfo) =>
-                  // don't include armor intrinsics in automated socket listings
-                  socketInfo.socketIndex !== intrinsicArmorPerkSocket?.socketIndex &&
-                  // don't include these weird little solstice stat rerolling mechanic sockets
-                  !isEventArmorRerollSocket(socketInfo) &&
-                  // don't include kill trackers
-                  socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash && (
-                    <Socket
-                      key={socketInfo.socketIndex}
-                      item={item}
-                      socket={socketInfo}
-                      wishlistRoll={wishlistRoll}
-                      onClick={handleSocketClick}
-                    />
-                  )
-              )}
+              {socketsByCategory.get(category)?.map((socketInfo) => (
+                <Socket
+                  key={socketInfo.socketIndex}
+                  item={item}
+                  socket={socketInfo}
+                  wishlistRoll={wishlistRoll}
+                  onClick={handleSocketClick}
+                />
+              ))}
             </div>
           </div>
         ))}
