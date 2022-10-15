@@ -193,7 +193,7 @@
     "comlink": "^4.3.0",
     "core-js": "^3.6.0",
     "downshift": "^6.0.2",
-    "fast-copy": "^2.0.1",
+    "fast-copy": "^3.0.0",
     "fast-equals": "^4.0.1",
     "framer-motion": "^7.2.1",
     "i18next": "^21.8.8",
