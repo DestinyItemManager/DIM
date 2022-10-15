@@ -339,6 +339,8 @@ function LoadoutEditCategorySection({
       onRandomize={() => handleRandomizeCategory(allItems, category, searchFilter)}
       hasRandomizeQuery={searchFilter !== _.stubTrue}
       onFillFromEquipped={() => handleFillCategoryFromEquipped(artifactUnlocks, category)}
+      fillFromEquippedDisabled={disableFillInForCategory(categories, category)}
+      onSyncFromEquipped={() => handleSyncCategoryFromEquipped(category)}
       fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
       onFillFromInventory={() => handleFillCategoryFromUnequipped(category)}
       onClearLoadoutParameters={
