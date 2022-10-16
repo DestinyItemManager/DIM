@@ -45,7 +45,7 @@ export default function ConnectedInventoryItem({
     // dim this item if there's no search filter and it's archived
     (dimArchived && defaultFilterActive && tag === 'archive') ||
     // or if there is a valid filter and it doesn't meet the condition
-    (allowFilter && !validQuery && !currentFilter(item));
+    (allowFilter && validQuery && !currentFilter(item));
 
   return useMemo(
     () => (
