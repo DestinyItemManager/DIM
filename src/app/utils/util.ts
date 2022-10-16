@@ -11,9 +11,6 @@ export function count<T>(
   return _.sumBy(list, (item) => (predicate(item) ? 1 : 0));
 }
 
-export function preventNaN<T extends number | string>(testValue: number, defaultValue: T) {
-  return !isNaN(testValue) ? testValue : defaultValue;
-}
 // TODO: maybe we need a type utils file?
 // Create a type from the keys of an object type that map to values of type PropType
 type PropertiesOfType<T, PropType> = keyof {
