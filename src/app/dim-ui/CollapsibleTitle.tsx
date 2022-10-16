@@ -48,6 +48,8 @@ export default function CollapsibleTitle({
     [disabled, dispatch, sectionId]
   );
 
+  const id = `collapsible-${sectionId}`;
+
   return (
     <>
       <div
@@ -59,6 +61,8 @@ export default function CollapsibleTitle({
         )}
         style={style}
         onClick={toggle}
+        aria-expanded={!collapsed}
+        aria-controls={id}
       >
         <span className="collapse-handle">
           <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
@@ -69,6 +73,7 @@ export default function CollapsibleTitle({
       <AnimatePresence>
         {!collapsed && (
           <motion.div
+            id={id}
             key="content"
             initial={initialMount.current ? false : 'collapsed'}
             animate="open"

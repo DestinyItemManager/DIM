@@ -31,23 +31,23 @@
     width: 30px;
   }
 
-  .collapse-icon {
-    font-size: 16px;
-    &:hover {
-      color: $orange;
-    }
-    margin-left: -4px;
-    width: 10px;
-    margin-right: 6px;
-    .collapsed & {
-      margin-left: -2px;
-      margin-right: 4px;
-    }
-  }
-
   &.disabled-collapsed {
     color: #888;
     cursor: not-allowed;
+  }
+}
+
+.collapse-icon {
+  font-size: 16px;
+  &:hover {
+    color: $orange;
+  }
+  margin-left: -4px;
+  width: 10px;
+  margin-right: 6px;
+  .collapsed & {
+    margin-left: -2px;
+    margin-right: 4px;
   }
 }
 

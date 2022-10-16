@@ -10,37 +10,43 @@
   background-color: rgba(151, 4, 1, 0.75) !important;
 }
 
-.inventoryTitle {
-  :global(.title) {
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 14px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    flex: none;
-    cursor: default;
-    padding-top: 4px;
-    min-height: 28px;
+.title {
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex: none;
+  cursor: default;
+  padding-top: 4px;
+  min-height: 28px;
+  background-color: transparent;
+  padding: 0 var(--inventory-column-padding);
+  box-sizing: border-box;
+
+  &:hover {
     background-color: transparent;
-
-    &:hover {
-      background-color: transparent;
-    }
-
-    .collapsed {
-      color: white;
-      font-weight: bold;
-      min-height: 32px;
-      padding-bottom: 4px;
-    }
   }
+}
 
-  :global(.collapse-handle) {
-    cursor: pointer;
-    height: 100%;
-    padding-right: 8px;
-  }
+.collapsed {
+  color: white;
+  min-height: 32px;
+  padding-bottom: 4px;
+}
+
+.handle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  height: 100%;
+  padding-right: 8px;
+}
+
+.content {
+  overflow: hidden;
 }

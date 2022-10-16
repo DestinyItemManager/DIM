@@ -13,13 +13,7 @@ export default function StoreSection({
 }) {
   return (
     <>
-      <div className="store-row">
-        <div className={clsx(styles.title)}>
-          <span className={styles.handle}>
-            <span>{title}</span>
-          </span>
-        </div>
-      </div>
+      <div className={clsx('store-row', styles.title)}>{title}</div>
       <div>{children}</div>
     </>
   );

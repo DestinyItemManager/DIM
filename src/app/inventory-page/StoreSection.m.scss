@@ -1,25 +1,16 @@
-.handle {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 100%;
-}
-
 // TODO: extract some common bits, dedupe with PostmasterSection
 .title {
   color: white;
   text-transform: uppercase;
   letter-spacing: 2px;
   font-size: 14px;
-  justify-content: space-between;
-  align-items: center;
   display: flex;
   flex-direction: row;
+  align-items: center;
   padding: 0 var(--inventory-column-padding);
   box-sizing: border-box;
   flex: none;
   padding-top: 4px;
   min-height: 28px;
-  background-color: transparent;
   grid-column: 1 / -1;
 }

@@ -3,8 +3,10 @@
 interface CssExports {
   'bucketSize': string;
   'collapsed': string;
-  'inventoryTitle': string;
+  'content': string;
+  'handle': string;
   'postmasterFull': string;
+  'title': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

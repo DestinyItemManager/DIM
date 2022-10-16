@@ -23,12 +23,10 @@ import styles from './PostmasterStoreSection.m.scss';
 export default function PostmasterStoreSection({
   title,
   children,
-  className,
   stores,
 }: {
   title: React.ReactNode;
   children?: React.ReactNode;
-  className?: string;
   stores: DimStore[];
 }) {
   const sectionId = 'Postmaster';
@@ -38,6 +36,7 @@ export default function PostmasterStoreSection({
     () => dispatch(toggleCollapsedSection(sectionId)),
     [dispatch, sectionId]
   );
+  const id = `inventory-${sectionId}`;
 
   const initialMount = useRef(true);
 
@@ -47,11 +46,7 @@ export default function PostmasterStoreSection({
 
   return (
     <>
-      <div
-        className={clsx('store-row', styles.inventoryTitle, {
-          [styles.collapsed]: collapsed,
-        })}
-      >
+      <div className="store-row">
         {stores
           .filter((s) => !s.isVault)
           .map((store, index) => {
@@ -73,13 +68,18 @@ export default function PostmasterStoreSection({
             return (
               <div
                 key={store.id}
-                className={clsx('title', 'store-cell', className, {
-                  collapsed,
+                className={clsx(styles.title, {
+                  [styles.collapsed]: collapsed,
                   [styles.postmasterFull]: showPostmasterFull,
                 })}
               >
                 {index === 0 ? (
-                  <span className="collapse-handle" onClick={toggle}>
+                  <span
+                    className={styles.handle}
+                    onClick={toggle}
+                    aria-expanded={!collapsed}
+                    aria-controls={id}
+                  >
                     <AppIcon
                       className="collapse-icon"
                       icon={collapsed ? expandIcon : collapseIcon}
@@ -111,6 +111,7 @@ export default function PostmasterStoreSection({
       <AnimatePresence>
         {!collapsed && (
           <motion.div
+            id={id}
             key="content"
             initial={initialMount.current ? false : 'collapsed'}
             animate="open"
@@ -120,7 +121,7 @@ export default function PostmasterStoreSection({
               collapsed: { height: 0 },
             }}
             transition={{ duration: 0.3 }}
-            className="collapse-content"
+            className={styles.content}
           >
             {children}
           </motion.div>
