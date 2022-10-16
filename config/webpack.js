@@ -427,6 +427,8 @@ module.exports = (env) => {
         '$featureFlags.warnNoSync': JSON.stringify(!env.release),
         // Expose the "Add required stat mods" Loadout Optimizer toggle
         '$featureFlags.loAutoStatMods': JSON.stringify(!env.release),
+        // Whether to send cookies to the Bungie.net API
+        '$featureFlags.apiCookies': JSON.stringify(env.release),
       }),
 
       new LodashModuleReplacementPlugin({
