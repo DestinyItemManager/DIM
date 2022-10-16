@@ -25,7 +25,6 @@ import {
   emptySocketHashes,
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
-import { rangeStringToComparator } from './range-numeric';
 
 export const modslotFilter: FilterDefinition = {
   keywords: 'modslot',
@@ -286,10 +285,10 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.EnhancedPerk'),
     format: 'range',
     destinyVersion: 2,
-    filter: ({ filterValue }) => {
-      const compare = rangeStringToComparator(filterValue);
-      return (item: DimItem) => item.sockets && compare(countEnhancedPerks(item.sockets));
-    },
+    filter:
+      ({ compare }) =>
+      (item: DimItem) =>
+        item.sockets && compare!(countEnhancedPerks(item.sockets)),
   },
 ];
 

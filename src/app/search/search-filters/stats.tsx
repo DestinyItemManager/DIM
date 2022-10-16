@@ -8,10 +8,22 @@ import {
   allStatNames,
   armorAnyStatHashes,
   armorStatHashes,
+  dimArmorStatHashByName,
   searchableArmorStatNames,
   statHashByName,
 } from '../search-filter-values';
-import { rangeStringToComparator } from './range-numeric';
+
+// Support (for armor) these aliases for the stat in the nth rank
+const est = {
+  highest: 0,
+  secondhighest: 1,
+  thirdhighest: 2,
+  fourthhighest: 3,
+  fifthhighest: 4,
+  sixthhighest: 5,
+};
+
+const allAtomicStats = [...allStatNames, ...Object.keys(est)];
 
 // filters that operate on stats, several of which calculate values from all items beforehand
 const statFilters: FilterDefinition[] = [
@@ -20,23 +32,32 @@ const statFilters: FilterDefinition[] = [
     // t('Filter.StatsExtras')
     description: tl('Filter.Stats'),
     format: 'stat',
-    suggestions: allStatNames,
-    filter: ({ filterValue }) => statFilterFromString(filterValue),
+    suggestions: allAtomicStats,
+    validateStat: (stat) =>
+      allAtomicStats.includes(stat) ||
+      stat.split(/&|\+/).every((s) => s !== 'any' && allAtomicStats.includes(s)),
+    filter: ({ filterValue, compare }) => statFilterFromString(filterValue, compare!),
   },
   {
     keywords: 'basestat',
     // t('Filter.StatsExtras')
     description: tl('Filter.StatsBase'),
     format: 'stat',
-    suggestions: searchableArmorStatNames,
-    filter: ({ filterValue }) => statFilterFromString(filterValue, true),
+    // Note: weapons of the same hash also have the same base stats, so this is only useful for
+    // armor really, so the suggestions only list armor stats. But `validateStats` does allow
+    // other stats too because there's no good reason to forbid it...
+    suggestions: [...searchableArmorStatNames, ...Object.keys(est)],
+    validateStat: (stat) =>
+      allAtomicStats.includes(stat) ||
+      stat.split(/&|\+/).every((s) => s !== 'any' && allAtomicStats.includes(s)),
+    filter: ({ filterValue, compare }) => statFilterFromString(filterValue, compare!, true),
   },
   {
     // looks for a loadout (simultaneously equippable) maximized for this stat
     keywords: 'maxstatloadout',
     description: tl('Filter.StatsLoadout'),
     format: 'query',
-    suggestions: searchableArmorStatNames,
+    suggestions: Object.keys(dimArmorStatHashByName),
     destinyVersion: 2,
     filter: ({ filterValue, stores, allItems }) => {
       const maxStatLoadout = findMaxStatLoadout(stores, allItems, filterValue);
@@ -100,41 +121,21 @@ const statFilters: FilterDefinition[] = [
 
 export default statFilters;
 
-// Support (for armor) these aliases for the stat in the nth rank
-const est = {
-  highest: 0,
-  secondhighest: 1,
-  thirdhighest: 2,
-  fourthhighest: 3,
-  fifthhighest: 4,
-  sixthhighest: 5,
-};
-
 /**
  * given a stat name, this returns a FilterDefinition for comparing that stat
  */
 function statFilterFromString(
-  filterValue: string,
+  statNames: string,
+  compare: (value: number) => boolean,
   byBaseValue = false
 ): (item: DimItem) => boolean {
-  const [statNames, statValue, shouldntExist] = filterValue.split(':');
-
-  // we are looking for, at most, 3 colon-separated sections in the overall text:
-  // stat                   mobility                    >=5
-  // and one was already removed ("stat"), so bail if there's more than 1 colon left
-  if (shouldntExist) {
-    throw new Error('Too many segments');
-  }
-
-  const numberComparisonFunction = rangeStringToComparator(statValue);
-
   // this will be used to index into the right property of a DimStat
   const byWhichValue = byBaseValue ? 'base' : 'value';
 
   // a special case filter where we check for any single (natural) stat matching the comparator
   if (statNames === 'any') {
     const statMatches = (s: DimStat) =>
-      armorAnyStatHashes.includes(s.statHash) && numberComparisonFunction(s[byWhichValue]);
+      armorAnyStatHashes.includes(s.statHash) && compare(s[byWhichValue]);
     return (item) => Boolean(item.stats?.find(statMatches));
   } else if (statNames in est) {
     return (item) => {
@@ -145,13 +146,13 @@ function statFilterFromString(
         .filter((s) => armorAnyStatHashes.includes(s.statHash))
         .map((s) => s[byWhichValue])
         .sort((a, b) => b - a);
-      return numberComparisonFunction(sortedStats[est[statNames]]);
+      return compare(sortedStats[est[statNames]]);
     };
   }
 
   const statCombiner = createStatCombiner(statNames, byWhichValue);
   // the filter computes combined values of requested stats and runs the total against comparator
-  return (item) => numberComparisonFunction(statCombiner(item));
+  return (item) => compare(statCombiner(item));
 }
 
 // converts the string "mobility+strength&discipline" into a function which
