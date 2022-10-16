@@ -150,12 +150,12 @@ export function PerkCircleWithTooltip({
   );
 }
 
-type PlugStatuses = {
+interface PlugStatuses {
   plugged?: boolean;
   selected?: boolean;
   cannotRoll?: boolean;
   notSelected?: boolean;
-};
+}
 
 /**
  * an encircled perk image.

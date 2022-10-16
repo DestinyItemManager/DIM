@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 export const enhancedToPerk = _.mapValues(_.invert(perkToEnhanced), Number);
 
-type Roll = {
+interface Roll {
   /** rampage, outlaw, etc. */
   primaryPerksList: number[];
   /** fast access to primaryPerks keys */
@@ -24,7 +24,7 @@ type Roll = {
   secondarySocketIndices: number[];
   /** string to quickly measure secondaryPerks equality */
   secondaryPerkIdentifier: string;
-};
+}
 
 export function consolidateRollsForOneWeapon(
   defs: D2ManifestDefinitions,

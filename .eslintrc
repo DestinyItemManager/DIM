@@ -247,6 +247,7 @@
     "@typescript-eslint/no-base-to-string": "error",
     "@typescript-eslint/non-nullable-type-assertion-style": "error",
     "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "@typescript-eslint/consistent-type-definitions": "error",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
