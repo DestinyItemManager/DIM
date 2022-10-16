@@ -1,6 +1,7 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
+import { PressTip } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
@@ -22,10 +23,10 @@ import {
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
 import PlugDef from '../loadout-ui/PlugDef';
@@ -459,7 +460,6 @@ function FashionItem({
       )}
       <FashionSocket
         bucketHash={bucketHash}
-        plugHash={shader}
         socket={shaderSocket}
         plug={shaderItem}
         exampleItem={exampleItem}
@@ -470,7 +470,6 @@ function FashionItem({
       />
       <FashionSocket
         bucketHash={bucketHash}
-        plugHash={ornament}
         socket={ornamentSocket}
         plug={ornamentItem}
         exampleItem={exampleItem}
@@ -485,7 +484,6 @@ function FashionItem({
 
 function FashionSocket({
   bucketHash,
-  plugHash,
   socket,
   plug,
   exampleItem,
@@ -495,7 +493,6 @@ function FashionSocket({
   onRemovePlug,
 }: {
   bucketHash: number;
-  plugHash: number | undefined;
   socket: DimSocket | undefined;
   plug: DestinyInventoryItemDefinition | undefined;
   exampleItem: DimItem;
@@ -508,34 +505,51 @@ function FashionSocket({
     unlockedPlugSetItemsSelector(state, storeId)
   );
   const handleOrnamentClick = socket && (() => onPickPlug({ item: exampleItem, socket }));
+
+  const unlockedPlugsWithoutTheDefault = Array.from(unlockedPlugSetItems).filter(
+    (plugHash) => plugHash !== defaultPlug.hash
+  );
+
   const canSlotOrnament =
-    plugHash !== undefined &&
-    (plugHash === socket?.emptyPlugItemHash ||
-      (unlockedPlugSetItems.has(plugHash) &&
-        socket?.plugSet?.plugs.some((p) => p.plugDef.hash === plugHash)) ||
-      socket?.reusablePlugItems?.some((p) => p.plugItemHash === plugHash && p.enabled));
+    (socket?.plugSet &&
+      _.intersection(
+        unlockedPlugsWithoutTheDefault,
+        socket.plugSet.plugs.map((plug) => plug.plugDef.hash)
+      ).length > 0) ||
+    (socket?.reusablePlugItems &&
+      _.intersection(
+        unlockedPlugsWithoutTheDefault,
+        socket.reusablePlugItems.filter((p) => p.enabled).map((p) => p.plugItemHash)
+      ).length > 0);
 
   return (
     <ClosableContainer
-      onClose={plugHash ? () => onRemovePlug(bucketHash, plugHash) : undefined}
+      onClose={plug ? () => onRemovePlug(bucketHash, plug.hash) : undefined}
       showCloseIconOnHover
     >
-      {plug ? (
-        <PlugDef
-          onClick={handleOrnamentClick}
-          className={clsx({ [styles.missingItem]: !canSlotOrnament })}
-          plug={(plug ?? defaultPlug) as PluggableInventoryItemDefinition}
-        />
+      {plug && canSlotOrnament ? (
+        <PlugDef onClick={handleOrnamentClick} plug={plug as PluggableInventoryItemDefinition} />
       ) : (
-        <div
-          role="button"
-          className={clsx('item', { [styles.missingItem]: !canSlotOrnament })}
-          onClick={handleOrnamentClick}
-          tabIndex={0}
-          title={t('FashionDrawer.NoPreference')}
+        <PressTip
+          tooltip={
+            <div>
+              {canSlotOrnament
+                ? t('FashionDrawer.NoPreference')
+                : bucketHash === BucketHashes.Shaders
+                ? t('FashionDrawer.CannotFitShader')
+                : t('FashionDrawer.CannotFitOrnament')}
+            </div>
+          }
         >
-          <DefItemIcon itemDef={defaultPlug} />
-        </div>
+          <div
+            role="button"
+            tabIndex={0}
+            className={clsx('item', styles.missingItem, { [styles.noOrnament]: !canSlotOrnament })}
+            onClick={canSlotOrnament ? handleOrnamentClick : undefined}
+          >
+            <DefItemIcon itemDef={defaultPlug} />
+          </div>
+        </PressTip>
       )}
     </ClosableContainer>
   );

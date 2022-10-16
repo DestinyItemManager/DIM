@@ -4,6 +4,8 @@
 * Compare suggestion buttons now offer comparison to similar armor intrinsics.
 * Added perks to Light.gg links. See your weapon's popularity rating without having to reselect its perks.
 * Vendor items now show pattern unlock progress.
+* Removed the "streak" boxes from Trials rank.
+* Added browser info on the About page
 
 ## 7.38.0 <span class="changelog-date">(2022-10-09)</span>
 

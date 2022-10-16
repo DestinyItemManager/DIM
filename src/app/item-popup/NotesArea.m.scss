@@ -5,6 +5,8 @@
   cursor: pointer;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
+  overflow-wrap: break-word;
+  word-break: break-word;
   &:hover {
     color: $orange;
   }

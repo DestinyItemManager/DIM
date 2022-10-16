@@ -1,7 +1,7 @@
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
+import { PressTip } from 'app/dim-ui/PressTip';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
-import { getClass } from 'app/inventory/store/character-utils';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { currySelector } from 'app/utils/redux-utils';
@@ -48,26 +48,30 @@ export default function LoadoutDrawerFooter({
   // There's an existing loadout with the same name & class and it's not the loadout we are currently editing
   const clashesWithAnotherLoadout = clashingLoadout && clashingLoadout.id !== loadout.id;
 
-  const clashingLoadoutWarning = clashesWithAnotherLoadout
-    ? clashingLoadout.classType !== DestinyClass.Unknown
-      ? t('Loadouts.AlreadyExistsClass', {
-          className: getClass(clashingLoadout.classType),
-        })
-      : t('Loadouts.AlreadyExistsGlobal')
-    : undefined;
+  const saveDisabledReasons: string[] = [];
 
-  const saveDisabled =
-    !loadout.name.length ||
-    clashesWithAnotherLoadout ||
-    (!loadout.items.length &&
-      // Allow mod only loadouts
-      !loadout.parameters?.mods?.length &&
-      !loadout.parameters?.clearMods &&
-      // Allow fashion only loadouts
-      _.isEmpty(loadout.parameters?.modsByBucket));
+  if (!loadout.name.length) {
+    saveDisabledReasons.push(t('Loadouts.SaveDisabled.NoName'));
+  }
+  if (clashesWithAnotherLoadout) {
+    saveDisabledReasons.push(t('Loadouts.SaveDisabled.AlreadyExists'));
+  }
+
+  const loadoutEmpty =
+    !loadout.items.length &&
+    // Allow mod only loadouts
+    !loadout.parameters?.mods?.length &&
+    !loadout.parameters?.clearMods &&
+    // Allow fashion only loadouts
+    _.isEmpty(loadout.parameters?.modsByBucket);
+  if (loadoutEmpty) {
+    saveDisabledReasons.push(t('Loadouts.SaveDisabled.Empty'));
+  }
+
+  const saveDisabled = saveDisabledReasons.length > 0;
 
   // Don't show "Save as New" if this is a new loadout or we haven't changed the name
-  const showSaveAsNew = !isNew && (!clashingLoadout || clashingLoadout.id !== loadout.id);
+  const showSaveAsNew = !isNew;
 
   const saveAsNewDisabled =
     saveDisabled ||
@@ -76,34 +80,38 @@ export default function LoadoutDrawerFooter({
 
   return (
     <div className={styles.loadoutOptions}>
-      {clashingLoadoutWarning && <div>{clashingLoadoutWarning}</div>}
       <form onSubmit={(e) => onSaveLoadout(e, isNew)}>
-        <button
-          className="dim-button"
-          type="submit"
-          disabled={saveDisabled}
-          title={clashingLoadoutWarning}
+        <PressTip
+          tooltip={
+            saveDisabledReasons.length > 0
+              ? saveDisabledReasons.map((reason) => <div key={reason}>{reason}</div>)
+              : undefined
+          }
         >
-          {isNew ? t('Loadouts.Save') : t('Loadouts.Update')}
-        </button>
-        {showSaveAsNew && (
-          <button
-            className="dim-button"
-            onClick={(e) => onSaveLoadout(e, true)}
-            type="button"
-            title={
-              clashingLoadout
-                ? clashingLoadout.classType !== DestinyClass.Unknown
-                  ? t('Loadouts.AlreadyExistsClass', {
-                      className: getClass(clashingLoadout.classType),
-                    })
-                  : t('Loadouts.AlreadyExistsGlobal')
-                : t('Loadouts.SaveAsNewTooltip')
-            }
-            disabled={saveAsNewDisabled}
-          >
-            {t('Loadouts.SaveAsNew')}
+          <button className="dim-button" type="submit" disabled={saveDisabled}>
+            {isNew ? t('Loadouts.Save') : t('Loadouts.Update')}
           </button>
+        </PressTip>
+        {showSaveAsNew && (
+          <PressTip
+            tooltip={
+              clashingLoadout
+                ? t('Loadouts.SaveDisabled.AlreadyExists')
+                : saveDisabled
+                ? saveDisabledReasons.join('\n')
+                : undefined
+            }
+          >
+            <button
+              className="dim-button"
+              onClick={(e) => onSaveLoadout(e, true)}
+              type="button"
+              disabled={saveAsNewDisabled}
+              title={t('Loadouts.SaveAsNewTooltip')}
+            >
+              {t('Loadouts.SaveAsNew')}
+            </button>
+          </PressTip>
         )}
         {!isNew && (
           <ConfirmButton key="delete" danger onClick={onDeleteLoadout}>

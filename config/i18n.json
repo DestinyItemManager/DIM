@@ -157,20 +157,22 @@
     "Stop": "Stop"
   },
   "FashionDrawer": {
-    "Title": "Choose shaders and ornaments",
     "Accept": "Save fashion",
-    "Reset": "Clear fashion",
-    "Sync": "Sync",
-    "UseEquipped": "Use equipped fashion",
-    "SyncShaders": "Sync Shaders",
-    "SyncShadersTitle": "Use the same shader on all items",
-    "SyncOrnaments": "Sync Ornaments",
-    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
-    "ClearShaders": "Clear Shaders",
-    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "CannotFitOrnament": "This item does not have an ornament socket or you have no ornaments for it.",
+    "CannotFitShader": "This item cannot fit a shader",
     "ClearOrnaments": "Clear Ornaments",
     "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
-    "NoPreference": "No preference - this socket won't be changed"
+    "ClearShaders": "Clear Shaders",
+    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "NoPreference": "No preference - this socket won't be changed",
+    "Reset": "Clear fashion",
+    "Sync": "Sync",
+    "SyncOrnaments": "Sync Ornaments",
+    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
+    "SyncShaders": "Sync Shaders",
+    "SyncShadersTitle": "Use the same shader on all items",
+    "Title": "Choose shaders and ornaments",
+    "UseEquipped": "Use equipped fashion"
   },
   "FileUpload": {
     "Instructions": "Click or drag files"
@@ -627,8 +629,6 @@
     "AddEquippedItems": "Add Equipped",
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
-    "AlreadyExists": "A loadout with this name already exists for your {{className}}.",
-    "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
     "AppliedAuto": "Automatic Loadout Builder",
     "Apply": "Apply",
@@ -721,6 +721,11 @@
     "SaveLoadout": "Save Loadout",
     "SaveAsNew": "Save as New",
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
+    "SaveDisabled": {
+      "AlreadyExists": "Choose a new name for the loadout.",
+      "Empty": "The loadout is empty.",
+      "NoName": "The loadout needs a name."
+    },
     "SortByName": "Sort by name",
     "SortByEditTime": "Sort by last edited",
     "Share": {
