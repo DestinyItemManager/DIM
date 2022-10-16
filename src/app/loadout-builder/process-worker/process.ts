@@ -65,7 +65,7 @@ export function process(
   const statRangesFilteredInStatOrder = statOrder.map((h) => statRangesFiltered[h]);
 
   // Store stat arrays for each items in stat order
-  const statsCacheInStatOrder: Map<ProcessItem, number[]> = new Map();
+  const statsCacheInStatOrder = new Map<ProcessItem, number[]>();
 
   // Precompute the stats of each item in stat order
   for (const item of LockableBucketHashes.flatMap((h) => filteredItems[h])) {

@@ -1,4 +1,4 @@
-const exoticWeaponHashesWithCatalyst: Set<number> = new Set([
+const exoticWeaponHashesWithCatalyst = new Set<number>([
   19024058, // Prometheus Lens
   46524085, // Osteo Striga
   347366834, // Ace of Spades

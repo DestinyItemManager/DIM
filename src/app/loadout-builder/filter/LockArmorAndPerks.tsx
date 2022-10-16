@@ -315,7 +315,7 @@ export default memo(function LockArmorAndPerks({
         <Portal>
           <SubclassPlugDrawer
             subclass={subclass.item}
-            socketOverrides={subclass.loadoutItem.socketOverrides || emptyObject()}
+            socketOverrides={subclass.loadoutItem.socketOverrides ?? emptyObject()}
             onAccept={(socketOverrides) =>
               lbDispatch({ type: 'updateSubclassSocketOverrides', socketOverrides })
             }
