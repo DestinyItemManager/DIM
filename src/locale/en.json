@@ -550,8 +550,6 @@
     "AddEquippedItems": "Add Equipped",
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
     "Apply": "Apply",
     "ApplyMods": "Applying mods",
@@ -645,6 +643,11 @@
     "Save": "Save",
     "SaveAsNew": "Save as New",
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
+    "SaveDisabled": {
+      "AlreadyExists": "Choose a new name for the loadout.",
+      "Empty": "The loadout is empty.",
+      "NoName": "The loadout needs a name."
+    },
     "SaveLoadout": "Save Loadout",
     "Share": {
       "Copied": "Copied loadout link to clipboard",
