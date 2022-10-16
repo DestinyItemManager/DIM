@@ -60,7 +60,7 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
           notifyTimeout
         ),
         API_KEY,
-        true
+        $featureFlags.apiCookies
       )
     ),
     logThrottle
