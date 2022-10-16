@@ -14,36 +14,30 @@ import { useSelector } from 'react-redux';
 import '../dim-ui/CollapsibleTitle.scss';
 import { toggleCollapsedSection } from '../settings/actions';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
-import styles from './InventoryCollapsibleTitle.m.scss';
-import './InventoryCollapsibleTitle.scss';
+import styles from './PostmasterStoreSection.m.scss';
 
-interface Props {
-  sectionId: string;
-  title: React.ReactNode;
-  children?: React.ReactNode;
-  className?: string;
-  stores: DimStore[];
-}
-
-export default function InventoryCollapsibleTitle({
-  sectionId,
+/**
+ * A special row in inventory for the postmaster which is collapsible and can show
+ * when the postmaster is getting full.
+ */
+export default function PostmasterStoreSection({
   title,
   children,
   className,
   stores,
-}: Props) {
+}: {
+  title: React.ReactNode;
+  children?: React.ReactNode;
+  className?: string;
+  stores: DimStore[];
+}) {
+  const sectionId = 'Postmaster';
   const dispatch = useThunkDispatch();
   const collapsed = Boolean(useSelector(collapsedSelector(sectionId)));
   const toggle = useCallback(
     () => dispatch(toggleCollapsedSection(sectionId)),
     [dispatch, sectionId]
   );
-
-  const checkPostmaster = sectionId === 'Postmaster';
-  if (!checkPostmaster) {
-    // Only the postmaster needs a header per store, the rest span across all stores
-    stores = [stores[0]];
-  }
 
   const initialMount = useRef(true);
 
@@ -54,8 +48,8 @@ export default function InventoryCollapsibleTitle({
   return (
     <>
       <div
-        className={clsx('store-row', 'inventory-title', {
-          collapsed,
+        className={clsx('store-row', styles.inventoryTitle, {
+          [styles.collapsed]: collapsed,
         })}
       >
         {stores
@@ -64,7 +58,7 @@ export default function InventoryCollapsibleTitle({
             const storeIsDestiny2 = store.destinyVersion === 2;
             const isPostmasterAlmostFull = postmasterAlmostFull(store);
             const postMasterSpaceUsed = postmasterSpaceUsed(store);
-            const showPostmasterFull = checkPostmaster && storeIsDestiny2 && isPostmasterAlmostFull;
+            const showPostmasterFull = storeIsDestiny2 && isPostmasterAlmostFull;
 
             const data = {
               number: postMasterSpaceUsed,
@@ -82,7 +76,6 @@ export default function InventoryCollapsibleTitle({
                 className={clsx('title', 'store-cell', className, {
                   collapsed,
                   [styles.postmasterFull]: showPostmasterFull,
-                  [styles.spanColumns]: !checkPostmaster,
                 })}
               >
                 {index === 0 ? (
@@ -93,20 +86,17 @@ export default function InventoryCollapsibleTitle({
                     />{' '}
                     <span>
                       {showPostmasterFull ? text : title}
-                      {checkPostmaster && collapsed && (
+                      {collapsed && (
                         <span className={styles.bucketSize}>
                           ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
                         </span>
-                      )}
-                      {collapsed && !checkPostmaster && (
-                        <span className={styles.clickToExpand}>{t('Inventory.ClickToExpand')}</span>
                       )}
                     </span>
                   </span>
                 ) : (
                   <>
                     {showPostmasterFull && text}
-                    {checkPostmaster && collapsed && (
+                    {collapsed && (
                       <span className={styles.bucketSize}>
                         ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
                       </span>

@@ -16,9 +16,10 @@ import StoreHeading from '../character-tile/StoreHeading';
 import D1ReputationSection from './D1ReputationSection';
 import styles from './DesktopStores.m.scss';
 import HeaderShadowDiv from './HeaderShadowDiv';
-import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
+import PostmasterStoreSection from './PostmasterStoreSection';
 import { StoreBuckets } from './StoreBuckets';
 import './Stores.scss';
+import StoreSection from './StoreSection';
 
 interface Props {
   stores: DimStore[];
@@ -149,23 +150,25 @@ function CollapsibleContainer({
     return null;
   }
 
-  return (
-    <InventoryCollapsibleTitle
-      title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
-      sectionId={category}
+  const bucketContents = inventoryBucket.map((bucket) => (
+    <StoreBuckets
+      key={bucket.hash}
+      bucket={bucket}
       stores={stores}
-    >
-      {inventoryBucket.map((bucket) => (
-        <StoreBuckets
-          key={bucket.hash}
-          bucket={bucket}
-          stores={stores}
-          vault={vault}
-          currentStore={currentStore}
-          singleCharacter={singleCharacter}
-        />
-      ))}
-    </InventoryCollapsibleTitle>
+      vault={vault}
+      currentStore={currentStore}
+      singleCharacter={singleCharacter}
+    />
+  ));
+
+  const title = t(`Bucket.${category}`, { metadata: { keys: 'buckets' } });
+
+  return category === 'Postmaster' ? (
+    <PostmasterStoreSection title={title} stores={stores}>
+      {bucketContents}
+    </PostmasterStoreSection>
+  ) : (
+    <StoreSection title={title}>{bucketContents}</StoreSection>
   );
 }
 

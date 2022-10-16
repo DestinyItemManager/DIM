@@ -1,0 +1,46 @@
+.bucketSize {
+  margin-left: 4px;
+  text-transform: none;
+  font-size: 12px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+.postmasterFull {
+  background-color: rgba(151, 4, 1, 0.75) !important;
+}
+
+.inventoryTitle {
+  :global(.title) {
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex: none;
+    cursor: default;
+    padding-top: 4px;
+    min-height: 28px;
+    background-color: transparent;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    .collapsed {
+      color: white;
+      font-weight: bold;
+      min-height: 32px;
+      padding-bottom: 4px;
+    }
+  }
+
+  :global(.collapse-handle) {
+    cursor: pointer;
+    height: 100%;
+    padding-right: 8px;
+  }
+}

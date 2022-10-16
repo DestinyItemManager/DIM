@@ -2,9 +2,9 @@
 // Please do not change this file!
 interface CssExports {
   'bucketSize': string;
-  'clickToExpand': string;
+  'collapsed': string;
+  'inventoryTitle': string;
   'postmasterFull': string;
-  'spanColumns': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

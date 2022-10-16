@@ -58,7 +58,7 @@ export function StoreBuckets({
         key={store.id}
         className={clsx('store-cell', {
           vault: store.isVault,
-          postmasterFull:
+          [styles.postmasterFull]:
             bucket.sort === 'Postmaster' &&
             store.destinyVersion === 2 &&
             postmasterAlmostFull(store),
