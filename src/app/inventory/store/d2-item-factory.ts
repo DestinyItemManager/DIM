@@ -629,6 +629,12 @@ export function makeItem(
   // before building stats because the weapon level affects stats.
   createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
 
+  if (createdItem.crafted) {
+    const craftedItemInstanceId = `${createdItem.hash}${createdItem.craftedInfo?.dateCrafted}`;
+    createdItem.id = craftedItemInstanceId;
+    createdItem.index = craftedItemInstanceId;
+  }
+
   // Crafting pattern
   createdItem.patternUnlockRecord = buildPatternInfo(createdItem, itemDef, defs, profileRecords);
 
