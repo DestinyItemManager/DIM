@@ -14,31 +14,25 @@ export function count<T>(
 export function preventNaN<T extends number | string>(testValue: number, defaultValue: T) {
   return !isNaN(testValue) ? testValue : defaultValue;
 }
+// TODO: maybe we need a type utils file?
+// Create a type from the keys of an object type that map to values of type PropType
+type PropertiesOfType<T, PropType> = keyof {
+  [K in keyof T as T[K] extends PropType ? K : never]: T[K];
+};
 
 /**
+ * This is similar to _.keyBy, but it specifically handles keying multiple times per item, where
+ * the keys come from an array property.
+ *
  * given the key 'key', turns
- * [           { key: '1' },      { key: '2' } ]
- * into { '1': { key: '1' }, '2': { key: '2' } }
+ * [           { key: [1, 3] },      { key: [2, 4] } ]
+ * into { '1': { key: [1, 3] }, '2': { key: [2, 4], '3': { key: [1, 3] }, '4': { key: [2, 4] } }
  */
-export function objectifyArray<T>(
-  array: T[],
-  key: keyof T | ((obj: T) => keyof T)
-): NodeJS.Dict<T> {
+export function objectifyArray<T>(array: T[], key: PropertiesOfType<T, any[]>): NodeJS.Dict<T> {
   return array.reduce<NodeJS.Dict<T>>((acc, val) => {
-    if (_.isFunction(key)) {
-      acc[key(val) as string] = val;
-    } else {
-      const prop = val[key];
-      if (typeof prop === 'string') {
-        acc[prop] = val;
-      } else if (Array.isArray(prop)) {
-        for (const eachKeyName of prop) {
-          acc[eachKeyName] = val;
-        }
-      } else {
-        const keyName = JSON.stringify(prop);
-        acc[keyName] = val;
-      }
+    const prop = val[key] as any[];
+    for (const eachKeyName of prop) {
+      acc[eachKeyName] = val;
     }
     return acc;
   }, {});
