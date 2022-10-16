@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { searchFilterSelector } from '../search/search-filter';
+import { queryValidSelector, searchFilterSelector } from '../search/search-filter';
 import { wishListSelector } from '../wishlists/selectors';
 import { getNotes, getTag } from './dim-item-info';
 import InventoryItem from './InventoryItem';
@@ -35,6 +35,7 @@ export default function ConnectedInventoryItem({
   const itemHashTags = useSelector(itemHashTagsSelector);
   const tag = getTag(item, itemInfos, itemHashTags);
   const currentFilter = useSelector(searchFilterSelector);
+  const validQuery = useSelector(queryValidSelector);
   const defaultFilterActive = currentFilter === _.stubTrue;
 
   const isNew = useSelector(isNewSelector(item));
@@ -43,8 +44,8 @@ export default function ConnectedInventoryItem({
   const searchHidden =
     // dim this item if there's no search filter and it's archived
     (dimArchived && defaultFilterActive && tag === 'archive') ||
-    // or if there is filtering and it doesn't meet the condition
-    (allowFilter && !currentFilter(item));
+    // or if there is a valid filter and it doesn't meet the condition
+    (allowFilter && !validQuery && !currentFilter(item));
 
   return useMemo(
     () => (

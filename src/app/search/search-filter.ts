@@ -134,7 +134,8 @@ function makeSearchFilterFactory(
       switch (ast.op) {
         case 'and': {
           const fns = _.compact(ast.operands.map(transformAST));
-          return fns.length
+          // Propagate filter errors
+          return fns.length === ast.operands.length
             ? (item) => {
                 for (const fn of fns) {
                   if (!fn(item)) {
@@ -147,7 +148,8 @@ function makeSearchFilterFactory(
         }
         case 'or': {
           const fns = _.compact(ast.operands.map(transformAST));
-          return fns.length
+          // Propagate filter errors
+          return fns.length === ast.operands.length
             ? (item) => {
                 for (const fn of fns) {
                   if (fn(item)) {
@@ -210,7 +212,8 @@ function makeSearchFilterFactory(
       }
     };
 
-    return transformAST(parsedQuery) ?? (() => true);
+    // If our filter has any invalid parts, the search filter should match no items
+    return transformAST(parsedQuery) ?? (() => false);
   };
 }
 

@@ -71,7 +71,10 @@ export default function MainSearchBarActions() {
 
       {showSearchResults && searchResultsOpen && (
         <Portal>
-          <SearchResults items={filteredItems} onClose={handleCloseSearchResults} />
+          <SearchResults
+            items={queryValid ? filteredItems : []}
+            onClose={handleCloseSearchResults}
+          />
         </Portal>
       )}
     </>
