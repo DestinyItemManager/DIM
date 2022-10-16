@@ -1,5 +1,6 @@
 ## Next
 
+* You can now undo and redo changes to loadouts while editing them.
 * Added `is:armorintrinsic` to find Artifice Armor, armor with seasonal perks, etc.
 * Compare suggestion buttons now offer comparison to similar armor intrinsics.
 * Added perks to Light.gg links. See your weapon's popularity rating without having to reselect its perks.

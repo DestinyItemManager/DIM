@@ -37,6 +37,7 @@ import {
   setName,
   setNotes,
 } from './loadout-drawer-reducer';
+import { useLoadoutEditHistory } from './loadout-edit-history';
 import { addItem$ } from './loadout-events';
 import { Loadout, ResolvedLoadoutItem } from './loadout-types';
 import { createSubclassDefaultSocketOverrides, findSameLoadoutItemIndex } from './loadout-utils';
@@ -45,7 +46,6 @@ import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
 
-// TODO: Consider moving editLoadout/addItemToLoadout into Redux (actions + state)
 // TODO: break out a container from the actual loadout drawer so we can lazy load the drawer
 
 /**
@@ -74,7 +74,8 @@ export default function LoadoutDrawer2({
   const defs = useDefinitions()!;
   const stores = useSelector(storesSelector);
   const [showingItemPicker, setShowingItemPicker] = useState(false);
-  const [loadout, setLoadout] = useState(initialLoadout);
+  const { loadout, setLoadout, undo, redo, canUndo, canRedo } =
+    useLoadoutEditHistory(initialLoadout);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
 
   function withUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
@@ -91,7 +92,7 @@ export default function LoadoutDrawer2({
   const onAddItem = useCallback(
     (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) =>
       setLoadout(addItem(defs, item, equip, socketOverrides)),
-    [defs]
+    [defs, setLoadout]
   );
 
   /**
@@ -220,6 +221,10 @@ export default function LoadoutDrawer2({
       isNew={isNew}
       onSaveLoadout={(e, saveAsNew) => handleSaveLoadout(e, onClose, saveAsNew)}
       onDeleteLoadout={() => handleDeleteLoadout(onClose)}
+      undo={undo}
+      redo={redo}
+      hasUndo={canUndo}
+      hasRedo={canRedo}
     />
   );
 
