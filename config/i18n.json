@@ -722,7 +722,6 @@
     "SaveAsNew": "Save as New",
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
     "SaveDisabled": {
-      "Header": "This loadout cannot be saved",
       "AlreadyExists": "Choose a new name for the loadout.",
       "Empty": "The loadout is empty.",
       "NoName": "The loadout needs a name."
