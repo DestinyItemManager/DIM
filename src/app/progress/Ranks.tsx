@@ -2,7 +2,7 @@ import { rankProgressionHashesSelector } from 'app/manifest/selectors';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { ProgressionHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
-import { CrucibleRank } from './CrucibleRank';
+import { ReputationRank } from './ReputationRank';
 import { getCharacterProgressions } from './selectors';
 
 // There are 2 similar DestinyProgression definitions for each rank
@@ -37,7 +37,6 @@ const rankProgressionToStreakProgression = {
   [ProgressionHashes.GloryRank]: 2572719399,
   [ProgressionHashes.GambitRank]: 2939151659,
   [ProgressionHashes.VanguardRank]: 600547406,
-  [ProgressionHashes.TrialsRank]: 70699614,
   [ProgressionHashes.StrangeFavor]: 1999336308,
 };
 
@@ -53,7 +52,7 @@ export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResp
       {progressionHashes.map(
         (progressionHash) =>
           firstCharacterProgression[progressionHash] && (
-            <CrucibleRank
+            <ReputationRank
               key={progressionHash}
               progress={firstCharacterProgression[progressionHash]}
               streak={
