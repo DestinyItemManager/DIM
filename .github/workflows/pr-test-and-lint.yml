@@ -28,7 +28,7 @@ jobs:
       - name: Jest Test
         run: yarn jest
 
-      - uses: actions/upload-artifact@v2  # upload test results
+      - uses: actions/upload-artifact@v3  # upload test results
         if: success() || failure()        # run this step even if previous step failed
         with:
           name: test-results
@@ -70,7 +70,7 @@ jobs:
 
       - name: Annotate ESLint Results
         if: github.event.pull_request.head.repo.full_name == github.repository
-        uses: ataylorme/eslint-annotate-action@1.2.0
+        uses: ataylorme/eslint-annotate-action@v2
         continue-on-error: true
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"

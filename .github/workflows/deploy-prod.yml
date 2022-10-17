@@ -62,7 +62,7 @@ jobs:
           echo "VERSION=${{ steps.bump_version.outputs.next-version }}" >> $GITHUB_ENV
 
       - name: Update Version in package.json
-        uses: reedyuk/npm-version@1.1.1
+        uses: dmikey/package-json-version@0.0.2
         with:
           version: ${{ env.VERSION }}
 
