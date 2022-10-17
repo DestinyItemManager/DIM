@@ -3,13 +3,18 @@ import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definit
 import { buildStores } from 'app/inventory/d2-stores';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
 import { delay } from 'app/utils/util';
-import { DestinyManifest, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import {
+  DestinyManifest,
+  DestinyProfileResponse,
+  DestinyVendorsResponse,
+} from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
 import fs from 'fs/promises';
 import _ from 'lodash';
 import path from 'path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
 import profile from './data/profile-2022-06-27.json';
+import vendors from './data/vendors-2022-10-16.json';
 
 /**
  * Get the current manifest as JSON. Downloads the manifest if not cached.
@@ -71,13 +76,12 @@ export const testAccount = {
   lastPlayed: '2021-05-08T03:34:26.000Z',
 };
 
+export const getTestProfile = () => (profile as any).Response as DestinyProfileResponse;
+export const getTestVendors = () => (vendors as any).Response as DestinyVendorsResponse;
+
 export const getTestStores = _.once(async () => {
   const manifest = await getTestDefinitions();
 
-  const stores = buildStores(
-    manifest,
-    getBuckets(manifest),
-    (profile as any).Response as DestinyProfileResponse
-  );
+  const stores = buildStores(manifest, getBuckets(manifest), getTestProfile());
   return stores;
 });
