@@ -63,14 +63,23 @@
   }
 }
 
+@mixin items-width($numItems) {
+  width: calc(#{$numItems} * var(--item-size) + #{$numItems - 1} * var(--item-margin));
+}
+
 .categoryWeapons {
-  width: calc(3 * var(--item-size) + 2 * var(--item-margin));
+  @include items-width(3);
 }
 .categoryArmor {
-  width: calc(5 * var(--item-size) + 4 * var(--item-margin));
+  @include items-width(5);
 }
 .categoryGeneral {
-  width: calc(2 * var(--item-size) + 1 * var(--item-margin));
+  // 2x2 grid
+  @include items-width(2);
+  @include phone-portrait {
+    // 4 in a line
+    @include items-width(4);
+  }
 }
 
 .missingItem {
@@ -81,7 +90,8 @@
   display: flex;
   flex-flow: row wrap;
   margin: 4px 0;
-  @include horizontal-space-children(4px);
+  @include flex-gap(4px);
+  justify-content: center;
 }
 
 .addButton {

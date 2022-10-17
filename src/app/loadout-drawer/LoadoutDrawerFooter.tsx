@@ -2,7 +2,7 @@ import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { PressTip } from 'app/dim-ui/PressTip';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
-import { AppIcon, deleteIcon } from 'app/shell/icons';
+import { AppIcon, deleteIcon, redoIcon, undoIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { currySelector } from 'app/utils/redux-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -38,9 +38,17 @@ export default function LoadoutDrawerFooter({
   isNew,
   onSaveLoadout,
   onDeleteLoadout,
+  undo,
+  redo,
+  hasUndo,
+  hasRedo,
 }: {
   loadout: Readonly<Loadout>;
   isNew: boolean;
+  undo?: () => void;
+  redo?: () => void;
+  hasUndo?: boolean;
+  hasRedo?: boolean;
   onSaveLoadout(e: React.FormEvent, saveAsNew: boolean): void;
   onDeleteLoadout(): void;
 }) {
@@ -117,6 +125,28 @@ export default function LoadoutDrawerFooter({
           <ConfirmButton key="delete" danger onClick={onDeleteLoadout}>
             <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
           </ConfirmButton>
+        )}
+        {undo && (
+          <button
+            className="dim-button"
+            onClick={undo}
+            type="button"
+            title={t('Loadouts.Undo')}
+            disabled={!hasUndo}
+          >
+            <AppIcon icon={undoIcon} />
+          </button>
+        )}
+        {redo && (
+          <button
+            className="dim-button"
+            onClick={redo}
+            type="button"
+            title={t('Loadouts.Redo')}
+            disabled={!hasRedo}
+          >
+            <AppIcon icon={redoIcon} />
+          </button>
         )}
         <UserGuideLink topic="Loadouts" />
       </form>
