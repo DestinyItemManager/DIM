@@ -1,5 +1,7 @@
 ## Next
 
+## 7.39.0 <span class="changelog-date">(2022-10-16)</span>
+
 * Added `is:armorintrinsic` to find Artifice Armor, armor with seasonal perks, etc.
 * Compare suggestion buttons now offer comparison to similar armor intrinsics.
 * Added perks to Light.gg links. See your weapon's popularity rating without having to reselect its perks.
