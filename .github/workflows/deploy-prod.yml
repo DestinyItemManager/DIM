@@ -72,6 +72,7 @@ jobs:
       - name: Build and deploy
         run: ./build/deploy-prod.sh
         env:
+          NODE_OPTIONS: "--max_old_space_size=8192"
           WEB_API_KEY: ${{ secrets.PROD_API_KEY }}
           WEB_OAUTH_CLIENT_ID: ${{ secrets.PROD_OAUTH_CLIENT_ID }}
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.PROD_OAUTH_CLIENT_SECRET }}
