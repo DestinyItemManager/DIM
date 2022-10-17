@@ -19,3 +19,4 @@ manifest-cache
 Heap.*
 eslint_report.json
 webpack-stats.json
+junit.xml

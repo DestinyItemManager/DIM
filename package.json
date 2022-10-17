@@ -42,6 +42,14 @@
       "pre-commit": "pretty-quick --staged"
     }
   },
+  "jest-junit": {
+    "outputName": "junit.xml",
+    "ancestorSeparator": " › ",
+    "uniqueOutputName": "false",
+    "suiteNameTemplate": "{filepath}",
+    "classNameTemplate": "{classname}",
+    "titleTemplate": "{title}"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/DestinyItemManager/DIM.git"
@@ -137,6 +145,7 @@
     "jest": "^29.0.1",
     "jest-environment-jsdom": "^29.0.1",
     "jest-fetch-mock": "^3.0.3",
+    "jest-junit": "^14.0.1",
     "json-sort-cli": "^2.0.1",
     "lodash-webpack-plugin": "^0.11.5",
     "markdown-loader": "^8.0.0",

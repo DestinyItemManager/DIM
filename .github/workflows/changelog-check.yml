@@ -36,19 +36,15 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Check for updates
-          id: porcelain
-          uses: technote-space/get-diff-action@v4
-
-        - name: Check for updates to CHANGELOG.md
-          if: steps.haslabel.outputs.labeled-Changelog-None != true
-          id: changelog_check
-          uses: technote-space/get-diff-action@v4
+          uses: dorny/paths-filter@v2
+          id: filters
           with:
-            PATTERNS: |
-              docs/CHANGELOG.md
+            filters: |
+              porcelain: '**'
+              changelog: 'docs/CHANGELOG.md'
 
         - name: No CHANGELOG.md Update (Remove Applied)
-          if: (steps.changelog_check.outputs.insertions > 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
+          if: (${{ steps.filters.outputs.changelog == 'true' }} && steps.haslabel.outputs.labeled-Changelog-None != true)
           uses: mondeja/remove-labels-gh-action@v1
           with:
             labels: |
@@ -57,7 +53,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         - name: No CHANGELOG.md Update (Add Missing)
-          if: (steps.porcelain.outputs.insertions > 0 && steps.changelog_check.outputs.insertions == 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
+          if: (${{ steps.filters.outputs.porcelain == 'true' }} && ${{ steps.filters.outputs.changelog == 'true' }} && steps.haslabel.outputs.labeled-Changelog-None != true)
           uses: christianvuerings/add-labels@v1
           with:
             labels: |
@@ -66,7 +62,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         - name: CHANGELOG.md Updated (Remove Missing)
-          if: (steps.changelog_check.outputs.insertions > 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
+          if: (${{ steps.filters.outputs.changelog == 'true' }} && steps.haslabel.outputs.labeled-Changelog-None != true)
           uses: mondeja/remove-labels-gh-action@v1
           with:
             labels: |
@@ -75,7 +71,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         - name: CHANGELOG.md Updated (Add Applied)
-          if: (steps.changelog_check.outputs.insertions > 0 && steps.haslabel.outputs.labeled-Changelog-None != true)
+          if: (${{ steps.filters.outputs.changelog == 'true' }} && steps.haslabel.outputs.labeled-Changelog-None != true)
           uses: christianvuerings/add-labels@v1
           with:
             labels: |
