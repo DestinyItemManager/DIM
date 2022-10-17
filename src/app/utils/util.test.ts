@@ -1,4 +1,4 @@
-import { count, dedupePromise, objectifyArray, weakMemoize, wrap } from './util';
+import { count, dedupePromise, objectifyArray, uniqBy, weakMemoize, wrap } from './util';
 
 describe('count', () => {
   test('counts elements that match the predicate', () =>
@@ -97,5 +97,26 @@ describe('wrap', () => {
   test('negative index by a lot', async () => {
     const index = wrap(-27, 5);
     expect(index).toBe(3);
+  });
+});
+
+describe('uniqBy', () => {
+  test('identity', async () => {
+    const result = uniqBy(['a', 'b', 'a', 'c'], (i) => i);
+    expect(result).toEqual(['a', 'b', 'c']);
+  });
+
+  test('object values', async () => {
+    // If the iteree function produces objects, they need to be reference equal to count as dupes
+    const val1 = { val: 'b' };
+    const val2 = { val: 'other' };
+
+    const result = uniqBy(['a', 'b', 'a', 'c'], (i) => (i === 'b' ? val1 : val2));
+    expect(result).toEqual(['a', 'b']);
+  });
+
+  test('complex func', async () => {
+    const result = uniqBy([{ val: 'a' }, { val: 'b' }, { val: 'a' }, { val: 'c' }], (i) => i.val);
+    expect(result).toEqual([{ val: 'a' }, { val: 'b' }, { val: 'c' }]);
   });
 });
