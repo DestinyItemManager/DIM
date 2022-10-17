@@ -92,10 +92,14 @@ const hiddenStatsAllowList = [
 ];
 
 /** a dictionary to look up StatDisplay info by statHash */
-type StatDisplayLookup = { [statHash: number]: DestinyStatDisplayDefinition | undefined };
+interface StatDisplayLookup {
+  [statHash: number]: DestinyStatDisplayDefinition | undefined;
+}
 
 /** a dictionary to look up an item's DimStats by statHash */
-type StatLookup = { [statHash: number]: DimStat | undefined };
+interface StatLookup {
+  [statHash: number]: DimStat | undefined;
+}
 
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(

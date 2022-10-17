@@ -13,7 +13,7 @@ import { uniqBy } from 'app/utils/util';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 const DISPLAYED_PLUG_STATS = [StatHashes.AspectEnergyCapacity];
@@ -159,8 +159,8 @@ function getPlugsForSubclass(
   initiallySelected: PluggableInventoryItemDefinition[]
 ) {
   const plugSets: PlugSetWithDefaultPlug[] = [];
-  const aspects: Set<PluggableInventoryItemDefinition> = new Set();
-  const fragments: Set<PluggableInventoryItemDefinition> = new Set();
+  const aspects = new Set<PluggableInventoryItemDefinition>();
+  const fragments = new Set<PluggableInventoryItemDefinition>();
 
   if (!subclass.sockets || !defs) {
     return { plugSets, aspects, fragments };

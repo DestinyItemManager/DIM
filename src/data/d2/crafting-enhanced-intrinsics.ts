@@ -1,4 +1,4 @@
-const enhancedIntrinsics: Set<number> = new Set([
+const enhancedIntrinsics = new Set<number>([
   3332480988, // Legacy PR-55 Frame
   916649862, // Legacy PR-55 Frame
   2155015844, // Legacy PR-55 Frame

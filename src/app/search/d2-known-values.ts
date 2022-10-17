@@ -293,7 +293,14 @@ export const D2ItemTiers = {
   [TierType.Exotic]: 'Exotic',
 } as const;
 
-export type ItemTierName = keyof typeof D2ItemTiers & string;
+export type ItemTierName =
+  | 'Unknown'
+  | 'Currency'
+  | 'Common'
+  | 'Uncommon'
+  | 'Rare'
+  | 'Legendary'
+  | 'Exotic';
 
 export const energyCapacityTypeNames = Object.values(energyNamesByEnum);
 

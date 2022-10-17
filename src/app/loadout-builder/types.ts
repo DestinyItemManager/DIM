@@ -17,14 +17,14 @@ export interface MinMaxIgnored {
 }
 
 /** A map from bucketHash to the pinned item if there is one. */
-export type PinnedItems = {
+export interface PinnedItems {
   [bucketHash: number]: DimItem | undefined;
-};
+}
 
 /** A map from bucketHash to any excluded items. */
-export type ExcludedItems = {
+export interface ExcludedItems {
   [bucketHash: number]: DimItem[] | undefined;
-};
+}
 
 /**
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.
