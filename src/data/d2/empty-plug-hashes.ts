@@ -1,4 +1,4 @@
-export const emptyPlugHashes: Set<number> = new Set([
+export const emptyPlugHashes = new Set<number>([
   235531041, // Activity Mod Socket (Activity Ghost Mod, enhancements.ghosts_activity)
   3545404847, // Activity Mod Socket (Activity Ghost Mod, enhancements.ghosts_activity_fake)
   1390587439, // Default Effect (ship.spawnfx)
