@@ -6,7 +6,6 @@ import {
   getVendor,
   pullFromPostmaster,
 } from 'bungie-api-ts/destiny2';
-// import { bungieApiQuery } from './bungie-api-utils';
 import { createHttpClient } from './http-client';
 
 const errors = {
@@ -28,9 +27,6 @@ const errors = {
   },
 };
 
-// shimming in the global polyfill because i am a criminal
-require('cross-fetch/polyfill');
-
 type TroubleshootingResponse = { req: Request; ErrorCode: number };
 
 const makePretendFetch = (response?: any) => (req: any) => ({
@@ -38,8 +34,6 @@ const makePretendFetch = (response?: any) => (req: any) => ({
 });
 const pretendHttpClient = (response?: any) =>
   createHttpClient(makePretendFetch(response) as any as typeof fetch, '123', false);
-
-// bungieApiQuery(`/Platform/GlobalAlerts/`)
 
 const cases: [(...params: any) => any, object | undefined][] = [
   [

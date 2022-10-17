@@ -122,6 +122,17 @@
         "message": "Please use the uniqBy from app/utils/util instead"
       }
     ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["testing/*"],
+            "message": "You cannot use test helpers in regular code."
+          }
+        ]
+      }
+    ],
     "spaced-comment": [
       "error",
       "always",
@@ -256,5 +267,13 @@
     "radar/no-small-switch": "off",
     "radar/no-duplicate-string": "off",
     "radar/prefer-immediate-return": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.test.ts"],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ]
 }
