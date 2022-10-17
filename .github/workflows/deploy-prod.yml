@@ -33,7 +33,7 @@ jobs:
         uses: benoitchantre/setup-ssh-authentication-action@1.0.0
         with:
           private-key: ${{ secrets.SSH_KEY }}
-          name: dim.rsa
+          private-key-name: dim.rsa
           known-hosts: ${{ secrets.REMOTE_HOST }}
 
       - name: get-npm-version
