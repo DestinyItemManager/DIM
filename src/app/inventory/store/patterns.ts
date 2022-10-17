@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
 import {
   DestinyInventoryItemDefinition,
   DestinyProfileRecordsComponent,
@@ -33,7 +34,7 @@ export function buildPatternInfo(
 ) {
   // Craftable items will have a reference to their recipe item
   const recipeItemHash = itemDef.inventory?.recipeItemHash;
-  if (!recipeItemHash) {
+  if (!recipeItemHash && itemDef.inventory?.bucketTypeHash !== THE_FORBIDDEN_BUCKET) {
     return undefined;
   }
 

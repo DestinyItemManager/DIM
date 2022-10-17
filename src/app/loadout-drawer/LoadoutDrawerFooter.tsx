@@ -90,9 +90,11 @@ export default function LoadoutDrawerFooter({
     <div className={styles.loadoutOptions}>
       <form onSubmit={(e) => onSaveLoadout(e, isNew)}>
         <PressTip
-          tooltip={saveDisabledReasons.map((reason) => (
-            <div key={reason}>{reason}</div>
-          ))}
+          tooltip={
+            saveDisabledReasons.length > 0
+              ? saveDisabledReasons.map((reason) => <div key={reason}>{reason}</div>)
+              : undefined
+          }
         >
           <button className="dim-button" type="submit" disabled={saveDisabled}>
             {isNew ? t('Loadouts.Save') : t('Loadouts.Update')}
@@ -105,7 +107,7 @@ export default function LoadoutDrawerFooter({
                 ? t('Loadouts.SaveDisabled.AlreadyExists')
                 : saveDisabled
                 ? saveDisabledReasons.join('\n')
-                : t('Loadouts.SaveAsNewTooltip')
+                : undefined
             }
           >
             <button
@@ -113,6 +115,7 @@ export default function LoadoutDrawerFooter({
               onClick={(e) => onSaveLoadout(e, true)}
               type="button"
               disabled={saveAsNewDisabled}
+              title={t('Loadouts.SaveAsNewTooltip')}
             >
               {t('Loadouts.SaveAsNew')}
             </button>

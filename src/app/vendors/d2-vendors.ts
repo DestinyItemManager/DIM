@@ -11,6 +11,7 @@ import {
   DestinyInventoryItemDefinition,
   DestinyItemComponentSetOfint32,
   DestinyPlaceDefinition,
+  DestinyProfileResponse,
   DestinyVendorComponent,
   DestinyVendorDefinition,
   DestinyVendorGroupDefinition,
@@ -38,13 +39,16 @@ const vendorOrder = [VENDORS.SPIDER, VENDORS.ADA_TRANSMOG, VENDORS.BANSHEE, VEND
 
 export function toVendorGroups(
   vendorsResponse: DestinyVendorsResponse,
+  profileResponse: DestinyProfileResponse,
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   account: DestinyAccount,
   characterId: string,
-  mergedCollectibles?: {
-    [hash: number]: DestinyCollectibleComponent;
-  }
+  mergedCollectibles:
+    | {
+        [hash: number]: DestinyCollectibleComponent;
+      }
+    | undefined
 ): D2VendorGroup[] {
   if (!vendorsResponse.vendorGroups.data) {
     return [];
@@ -63,6 +67,7 @@ export function toVendorGroups(
                   vendorHash,
                   defs,
                   buckets,
+                  profileResponse,
                   vendorsResponse.vendors.data?.[vendorHash],
                   account,
                   characterId,
@@ -88,16 +93,21 @@ export function toVendor(
   vendorHash: number,
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
+  profileResponse: DestinyProfileResponse | undefined,
   vendor: DestinyVendorComponent | undefined,
   account: DestinyAccount,
   characterId: string,
-  itemComponents?: DestinyItemComponentSetOfint32,
-  sales?: {
-    [key: string]: DestinyVendorSaleItemComponent;
-  },
-  mergedCollectibles?: {
-    [hash: number]: DestinyCollectibleComponent;
-  }
+  itemComponents: DestinyItemComponentSetOfint32 | undefined,
+  sales:
+    | {
+        [key: string]: DestinyVendorSaleItemComponent;
+      }
+    | undefined,
+  mergedCollectibles:
+    | {
+        [hash: number]: DestinyCollectibleComponent;
+      }
+    | undefined
 ): D2Vendor | undefined {
   const vendorDef = defs.Vendor.get(vendorHash);
 
@@ -110,6 +120,7 @@ export function toVendor(
     defs,
     buckets,
     vendorDef,
+    profileResponse,
     characterId,
     itemComponents,
     sales,
@@ -149,14 +160,19 @@ function getVendorItems(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   vendorDef: DestinyVendorDefinition,
+  profileResponse: DestinyProfileResponse | undefined,
   characterId: string,
-  itemComponents?: DestinyItemComponentSetOfint32,
-  sales?: {
-    [key: string]: DestinyVendorSaleItemComponent;
-  },
-  mergedCollectibles?: {
-    [hash: number]: DestinyCollectibleComponent;
-  }
+  itemComponents: DestinyItemComponentSetOfint32 | undefined,
+  sales:
+    | {
+        [key: string]: DestinyVendorSaleItemComponent;
+      }
+    | undefined,
+  mergedCollectibles:
+    | {
+        [hash: number]: DestinyCollectibleComponent;
+      }
+    | undefined
 ): VendorItem[] {
   if (sales) {
     const components = Object.values(sales);
@@ -165,6 +181,7 @@ function getVendorItems(
         defs,
         buckets,
         vendorDef,
+        profileResponse,
         component,
         characterId,
         itemComponents,
