@@ -1,4 +1,4 @@
-import { count, dedupePromise, objectifyArray, weakMemoize } from './util';
+import { count, dedupePromise, objectifyArray, weakMemoize, wrap } from './util';
 
 describe('count', () => {
   test('counts elements that match the predicate', () =>
@@ -78,5 +78,24 @@ describe('dedupePromise', () => {
     outerResolve('baz');
     const val4 = await promise4;
     expect(val4).toBe('baz');
+  });
+});
+
+describe('wrap', () => {
+  test('negative index', async () => {
+    const index = wrap(-1, 2);
+    expect(index).toBe(1);
+  });
+  test('too large index', async () => {
+    const index = wrap(3, 2);
+    expect(index).toBe(1);
+  });
+  test('too large index by a lot', async () => {
+    const index = wrap(27, 5);
+    expect(index).toBe(2);
+  });
+  test('negative index by a lot', async () => {
+    const index = wrap(-27, 5);
+    expect(index).toBe(3);
   });
 });
