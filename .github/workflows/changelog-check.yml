@@ -12,7 +12,7 @@ jobs:
       if: github.event.pull_request.draft == false
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v2
+        - uses: actions/checkout@v3
           # https://github.community/t/can-workflow-changes-be-used-with-pull-request-target/178626
           # Why this can be dangerous https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
           with:
