@@ -25,11 +25,11 @@ jobs:
           cache: yarn
 
       - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.0
         with:
-          key: ${{ secrets.SSH_KEY }}
+          private-key: ${{ secrets.SSH_KEY }}
           name: dim.rsa
-          known_hosts: ${{ secrets.REMOTE_HOST }}
+          known-hosts: ${{ secrets.REMOTE_HOST }}
 
       - name: get-npm-version
         id: package-version

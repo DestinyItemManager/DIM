@@ -45,16 +45,17 @@ jobs:
           PR_BUILD: true
 
       - name: Check for updates to build pipeline
-        id: build_pipeline
-        uses: technote-space/get-diff-action@v4
+        id: filter
+        uses: dorny/paths-filter@v2
         with:
-          PATTERNS: |
-            package.json
-            yarn.lock
-            config/webpack.js
+          filters: |
+            build-pipeline:
+              - package.json
+              - yarn.lock
+              - config/webpack.js
 
       - name: Send webpack stats to RelativeCI
-        if: (steps.build_pipeline.outputs.insertions > 0)
+        if: ${{ steps.filter.outputs.build-pipeline == 'true' }}
         uses: relative-ci/agent-action@v2
         with:
           webpackStatsFile: ./webpack-stats.json

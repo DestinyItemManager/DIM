@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: streetsidesoftware/cspell-action@v1.6.0
+      - uses: streetsidesoftware/cspell-action@v2
         with:
           strict: false
           config: 'cspell.json'
