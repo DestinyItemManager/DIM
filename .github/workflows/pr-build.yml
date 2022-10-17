@@ -41,6 +41,7 @@ jobs:
       - name: Build beta
         run: yarn build:beta
         env:
+          NODE_OPTIONS: "--max_old_space_size=8192"
           PR_BUILD: true
 
       - name: Check for updates to build pipeline
