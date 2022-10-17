@@ -2,7 +2,6 @@ name: PR Test & Lint
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
     paths-ignore:
       - 'docs/**'
 
@@ -26,23 +25,14 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Jest Test (Forked)
-        if: github.event.pull_request.head.repo.full_name != github.repository
+      - name: Jest Test
         run: yarn jest
 
-      - name: Jest Test (Non-Forked)
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        run: yarn jest --json --outputFile="jest.results.json"
-        continue-on-error: true
-
-      - name: Jest Annotations & Coverage (Non-Forked)
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        uses: mattallty/jest-github-action@v1.0.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v2  # upload test results
+        if: success() || failure()        # run this step even if previous step failed
         with:
-          coverage-comment: false
-          test-command: "echo done"
+          name: test-results
+          path: junit.xml
 
   lint:
     runs-on: ubuntu-latest

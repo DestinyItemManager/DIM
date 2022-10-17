@@ -1,5 +1,6 @@
 module.exports = {
   testEnvironment: 'jsdom',
+  reporters: ['default', 'jest-junit'],
   verbose: true,
   testTimeout: 60000,
   moduleNameMapper: {
