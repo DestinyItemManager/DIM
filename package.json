@@ -42,6 +42,14 @@
       "pre-commit": "pretty-quick --staged"
     }
   },
+  "jest-junit": {
+    "outputName": "junit.xml",
+    "ancestorSeparator": " › ",
+    "uniqueOutputName": "false",
+    "suiteNameTemplate": "{filepath}",
+    "classNameTemplate": "{classname}",
+    "titleTemplate": "{title}"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/DestinyItemManager/DIM.git"
