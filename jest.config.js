@@ -14,6 +14,7 @@ module.exports = {
     '^.+\\.s?css$': 'identity-obj-proxy',
     'Library\\.mjs$': 'identity-obj-proxy',
   },
+  setupFiles: ['./src/testing/jest-setup.js'],
   transformIgnorePatterns: ['node_modules/?!(bungie-api-ts)'],
   globals: {
     $BROWSERS: [],

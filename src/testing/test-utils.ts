@@ -23,42 +23,47 @@ import vendors from './data/vendors-2022-10-16.json';
 // TODO: maybe use the fake indexeddb and just insert it from a file on startup??
 // fake indexeddb + mock server (msw or jest-mock-fetch) to simulate the API??
 export async function getTestManifestJson() {
-  // download and parse manifest
-  const cacheDir = path.resolve(__dirname, '..', '..', 'manifest-cache');
+  fetchMock.dontMock();
+  try {
+    // download and parse manifest
+    const cacheDir = path.resolve(__dirname, '..', '..', 'manifest-cache');
 
-  let manifest: DestinyManifest;
-  for (let i = 0; ; i++) {
-    try {
-      manifest = await d2GetManifest();
-      break;
-    } catch (e) {
-      if (i === 4) {
-        throw e;
+    let manifest: DestinyManifest;
+    for (let i = 0; ; i++) {
+      try {
+        manifest = await d2GetManifest();
+        break;
+      } catch (e) {
+        if (i === 4) {
+          throw e;
+        }
+        await delay(1000);
       }
-      await delay(1000);
     }
+
+    const enManifestUrl = manifest.jsonWorldContentPaths.en;
+    const filename = path.resolve(cacheDir, path.basename(enManifestUrl));
+
+    const fileExists = await fs
+      .access(filename, F_OK)
+      .then(() => true)
+      .catch(() => false);
+
+    if (fileExists) {
+      return JSON.parse(await fs.readFile(filename, 'utf-8'));
+    }
+
+    await fs.mkdir(cacheDir, { recursive: true });
+
+    const manifestDb = await downloadManifestComponents(
+      manifest.jsonWorldComponentContentPaths.en,
+      allTables
+    );
+    await fs.writeFile(filename, JSON.stringify(manifestDb), 'utf-8');
+    return manifestDb;
+  } finally {
+    fetchMock.dontMock();
   }
-
-  const enManifestUrl = manifest.jsonWorldContentPaths.en;
-  const filename = path.resolve(cacheDir, path.basename(enManifestUrl));
-
-  const fileExists = await fs
-    .access(filename, F_OK)
-    .then(() => true)
-    .catch(() => false);
-
-  if (fileExists) {
-    return JSON.parse(await fs.readFile(filename, 'utf-8'));
-  }
-
-  await fs.mkdir(cacheDir, { recursive: true });
-
-  const manifestDb = await downloadManifestComponents(
-    manifest.jsonWorldComponentContentPaths.en,
-    allTables
-  );
-  await fs.writeFile(filename, JSON.stringify(manifestDb), 'utf-8');
-  return manifestDb;
 }
 
 export const getTestDefinitions = _.once(async () => {

@@ -1,8 +1,6 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { mergeCollectibles } from 'app/inventory/d2-stores';
-import { BungieMembershipType } from 'bungie-api-ts/common';
-import 'cross-fetch/polyfill';
 import { getTestDefinitions, getTestProfile, getTestVendors } from 'testing/test-utils';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
 
@@ -17,7 +15,7 @@ async function getTestVendorGroups() {
   );
   const account: DestinyAccount = {
     displayName: '',
-    originalPlatformType: BungieMembershipType.TigerPsn,
+    originalPlatformType: 2,
     platformLabel: '',
     membershipId: '',
     destinyVersion: 1,

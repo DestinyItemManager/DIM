@@ -1,7 +1,6 @@
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import 'cross-fetch/polyfill';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import {
