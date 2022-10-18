@@ -3,6 +3,7 @@
 * You can now undo and redo changes to loadouts while editing them.
 * Fix for an error displaying new vendor inventories when definitions are still old.
 * Fix the Progress page's event section to properly detect the new Festival of the Lost event card.
+* Removed a now-unnecessary workaround for incorrect subclass ability colors.
 
 ## 7.39.0 <span class="changelog-date">(2022-10-16)</span>
 
