@@ -563,6 +563,7 @@ const D2Sources: {
       3724111213, // Source: Earned during the 2019 Solstice event.
       3736521079, // Reached level 1 in the Ages of Triumph record book.
       3952847349, // Source: The Dawning.
+      4041583267, // Source: Festival of the Lost
       4054646289, // Source: Earned during the seasonal Dawning event.
     ],
     searchString: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry', 'games'],
