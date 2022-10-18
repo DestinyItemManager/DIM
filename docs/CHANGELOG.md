@@ -1,5 +1,7 @@
 ## Next
 
+## 7.39.1 <span class="changelog-date">(2022-10-18)</span>
+
 * You can now undo and redo changes to loadouts while editing them.
 * Fix for an error displaying new vendor inventories when definitions are still old.
 * Fix the Progress page's event section to properly detect the new Festival of the Lost event card.
