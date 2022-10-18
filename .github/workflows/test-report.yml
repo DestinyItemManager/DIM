@@ -14,3 +14,17 @@ jobs:
         name: JEST Tests                  # Name of the check run which will be created
         path: '*.xml'                     # Path to test results (inside artifact .zip)
         reporter: jest-junit              # Format of test results
+
+  lint-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: lint-results
+
+      - name: Annotate ESLint Results
+        uses: ataylorme/eslint-annotate-action@v2
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          report-json: "eslint.results.json"
+          fail-on-warning: true
