@@ -34,21 +34,25 @@ export function Event({
   const profileResponse = useSelector(profileResponseSelector)!;
   const trackedRecords = useSelector(trackedTriumphsSelector);
 
-  // This is a bit weird but Bungie says it should be done this way:
-  // The event card references a presentation node with three presentation node children, one
-  // per class/character (?)
-  // The PresentationNodes component makes two of them invisible per character and one
-  // stays visible, so find the one that's actually visible.
   const challengesRootNode = defs.PresentationNode.get(card.triumphsPresentationNodeHash);
-  const classSpecificNodeHash = challengesRootNode.children.presentationNodes.find((node) => {
-    const relevantNodeInfo =
-      profileResponse.characterPresentationNodes?.data?.[store.id]?.nodes[
-        node.presentationNodeHash
-      ];
-    return (
-      relevantNodeInfo && (relevantNodeInfo.state & DestinyPresentationNodeState.Invisible) === 0
-    );
-  });
+  const childrenNodes = challengesRootNode.children.presentationNodes;
+  const classSpecificNodeHash =
+    childrenNodes.length === 1
+      ? // If we only have one node, it's probably the right node.
+        childrenNodes[0]
+      : // This is for Solstice, which has three different nodes for the three characters.
+        // The PresentationNodes component makes two of them invisible per character and one
+        // stays visible, so find the one that's actually visible.
+        childrenNodes.find((node) => {
+          const relevantNodeInfo =
+            profileResponse.characterPresentationNodes?.data?.[store.id]?.nodes[
+              node.presentationNodeHash
+            ];
+          return (
+            relevantNodeInfo &&
+            (relevantNodeInfo.state & DestinyPresentationNodeState.Invisible) === 0
+          );
+        });
 
   const classSpecificNode =
     classSpecificNodeHash && defs.PresentationNode.get(classSpecificNodeHash.presentationNodeHash);
