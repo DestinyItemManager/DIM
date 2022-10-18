@@ -16,48 +16,6 @@ import pursuitComplete from 'images/highlightedObjective.svg';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
 
-// These solar abilities have stasis-colored icons in their Bungie-provided definitions.
-// To make them match the orange solar color (best we can) we apply a css filter.
-const solarSubclassDefsToColorFilter = [
-  2979486802, // InventoryItem "Empowering Rift"
-  2979486803, // InventoryItem "Healing Rift"
-  3686638443, // InventoryItem "Strafe Glide"
-  3686638442, // InventoryItem "Burst Glide"
-  3686638441, // InventoryItem "Balanced Glide"
-  2495523340, // InventoryItem "Towering Barricade"
-  2495523341, // InventoryItem "Rally Barricade"
-  2225231092, // InventoryItem "High Lift"
-  2225231093, // InventoryItem "Strafe Lift"
-  2225231094, // InventoryItem "Catapult Lift"
-  3636300854, // InventoryItem "Marksman's Dodge"
-  3636300855, // InventoryItem "Gambler's Dodge"
-  1128768654, // InventoryItem "High Jump"
-  1128768655, // InventoryItem "Strafe Jump"
-  1128768652, // InventoryItem "Triple Jump"
-];
-
-// And again for Arc
-const arcSubclassDefsToColorFilter = [
-  25156515, // InventoryItem "Healing Rift"
-  25156514, // InventoryItem "Empowering Rift"
-  4154539169, // InventoryItem "Strafe Glide"
-  4154539168, // InventoryItem "Burst Glide"
-  4154539171, // InventoryItem "Balanced Glide"
-  426473316, // InventoryItem "Marksman's Dodge"
-  426473317, // InventoryItem "Gambler's Dodge"
-  95544328, // InventoryItem "Triple Jump"
-  95544331, // InventoryItem "Strafe Jump"
-  95544330, // InventoryItem "High Jump"
-  489583096, // InventoryItem "Towering Barricade"
-  489583097, // InventoryItem "Rally Barricade"
-  1698387814, // InventoryItem "High Lift"
-  1698387815, // InventoryItem "Strafe Lift"
-  1698387812, // InventoryItem "Catapult Lift"
-  2708585277, // InventoryItem "Seismic Strike"
-  2708585276, // InventoryItem "Ballistic Slam"
-  2708585279, // InventoryItem "Thunderclap"
-];
-
 const itemTierStyles = {
   Legendary: styles.legendary,
   Exotic: styles.exotic,
@@ -163,16 +121,11 @@ export function DefItemIcon({
   borderless ||=
     itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||
     itemCategoryHashes.includes(ItemCategoryHashes.Engrams);
-  const solarFix = solarSubclassDefsToColorFilter.includes(itemDef.hash);
-  const arcFix = arcSubclassDefsToColorFilter.includes(itemDef.hash);
   const itemImageStyles = clsx(
     'item-img',
     className,
     {
       [styles.borderless]: borderless,
-      [styles.solarColorFilter]: solarFix,
-      [styles.arcColorFilter]: arcFix,
-      [styles.transparencyFix]: arcFix || solarFix,
     },
     !borderless &&
       !itemDef.plug &&
