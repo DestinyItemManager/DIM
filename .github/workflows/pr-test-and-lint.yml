@@ -59,12 +59,20 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Save ESLint Report JSON
+      - name: ESLint (Forked)
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        run: yarn lintcached
+
+      - name: Save ESLint Report JSON (Non-Forked)
+        if: github.event.pull_request.head.repo.full_name == github.repository
         run: yarn lint-report:cached
         continue-on-error: true
 
-      - uses: actions/upload-artifact@v3  # upload test results
-        if: success() || failure()        # run this step even if previous step failed
+      - name: Annotate ESLint Results
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: ataylorme/eslint-annotate-action@v2
+        continue-on-error: true
         with:
-          name: lint-results
-          path: eslint.results.json
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          report-json: "eslint.results.json"
+          fail-on-warning: true
