@@ -152,6 +152,8 @@
   },
   "FashionDrawer": {
     "Accept": "Salva stile",
+    "CannotFitOrnament": "This item does not have an ornament socket or you have no ornaments for it.",
+    "CannotFitShader": "This item cannot fit a shader",
     "ClearOrnaments": "Cancella Decori",
     "ClearOrnamentsTitle": "Reimposta tutti i decori su \"nessuna preferenza\"",
     "ClearShaders": "Cancella Shader",
@@ -548,8 +550,6 @@
     "AddEquippedItems": "Aggiungi Equipaggiati",
     "AddNotes": "Aggiungi note",
     "AddUnequippedItems": "Aggiungi non equipaggiati",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "Un loadout globale con questo nome esiste già.",
     "Any": "Qualsiasi classe",
     "Apply": "Applica",
     "ApplyMods": "Applicazione Modifiche",
@@ -643,6 +643,11 @@
     "Save": "Salva",
     "SaveAsNew": "Salva come Nuovo",
     "SaveAsNewTooltip": "Mantieni il losdout originale e salva questo come nuovo loadout",
+    "SaveDisabled": {
+      "AlreadyExists": "Scegli un nuovo nome per il loadout.",
+      "Empty": "Il loadout è vuoto.",
+      "NoName": "Il loadout ha bisogno di un nome."
+    },
     "SaveLoadout": "Salva Loadout",
     "Share": {
       "Copied": "Collegamento al loadout copiato negli appunti",

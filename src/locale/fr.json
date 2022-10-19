@@ -152,6 +152,8 @@
   },
   "FashionDrawer": {
     "Accept": "Sauvegarder le style",
+    "CannotFitOrnament": "This item does not have an ornament socket or you have no ornaments for it.",
+    "CannotFitShader": "This item cannot fit a shader",
     "ClearOrnaments": "Retirer les ornements",
     "ClearOrnamentsTitle": "Réinitialiser tous les ornements à \"aucune préférence\"",
     "ClearShaders": "Retirer les revêtements",
@@ -548,8 +550,6 @@
     "AddEquippedItems": "Ajouter les objets équipés",
     "AddNotes": "Ajouter des notes",
     "AddUnequippedItems": "Ajouter les objets non équipés",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "Un arsenal global avec ce nom existe déjà.",
     "Any": "N'importe quelle classe",
     "Apply": "Appliquer",
     "ApplyMods": "Ajout des mods",
@@ -643,6 +643,11 @@
     "Save": "Sauvegarder",
     "SaveAsNew": "Sauvegarder comme nouveau",
     "SaveAsNewTooltip": "Garder l'arsenal original et enregistrer celui-ci comme un nouvel arsenal",
+    "SaveDisabled": {
+      "AlreadyExists": "Choose a new name for the loadout.",
+      "Empty": "The loadout is empty.",
+      "NoName": "The loadout needs a name."
+    },
     "SaveLoadout": "Sauvegarder l'arsenal",
     "Share": {
       "Copied": "Lien de l'arsenal copié dans le presse-papiers",

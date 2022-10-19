@@ -152,6 +152,8 @@
   },
   "FashionDrawer": {
     "Accept": "Salvar estilo",
+    "CannotFitOrnament": "Este item não possui um soquete de ornamento ou você não tem um ornamento para ele.",
+    "CannotFitShader": "Este item não pode receber um tonalizador",
     "ClearOrnaments": "Limpar Ornamentos",
     "ClearOrnamentsTitle": "Redefinir todos os ornamentos para \"sem preferência\"",
     "ClearShaders": "Limpar Tonalizadores",
@@ -548,8 +550,6 @@
     "AddEquippedItems": "Adicionar Equipado",
     "AddNotes": "Adicionar Anotações",
     "AddUnequippedItems": "Adicionar Não Equipados",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "Um set global com este nome já existe.",
     "Any": "Qualquer classe",
     "Apply": "Aplicar",
     "ApplyMods": "Aplicando mods",
@@ -643,6 +643,11 @@
     "Save": "Salvar",
     "SaveAsNew": "Salvar como Novo",
     "SaveAsNewTooltip": "Manter o set original e salvar este como novo",
+    "SaveDisabled": {
+      "AlreadyExists": "Escolha um novo nome para o set.",
+      "Empty": "O set está vazio.",
+      "NoName": "O set precisa de um nome."
+    },
     "SaveLoadout": "Salvar Set",
     "Share": {
       "Copied": "Link de compartilhamento copiado para a área de transferência",

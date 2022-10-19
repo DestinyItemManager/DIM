@@ -152,6 +152,8 @@
   },
   "FashionDrawer": {
     "Accept": "패션 저장",
+    "CannotFitOrnament": "이 아이템은 장식 소켓이 없거나 해당하는 장식을 소지하고 있지 않습니다.",
+    "CannotFitShader": "이 아이템에 안료를 적용할 수 없음",
     "ClearOrnaments": "장식 초기화",
     "ClearOrnamentsTitle": "모든 장식을 \"선택 안 함\"으로 초기화",
     "ClearShaders": "안료 초기화",
@@ -548,8 +550,6 @@
     "AddEquippedItems": "장착된 아이템 추가",
     "AddNotes": "메모 추가",
     "AddUnequippedItems": "장착하지 않은 아이템 추가",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "동일한 이름을 가진 공용 로드아웃이 존재합니다.",
     "Any": "모든 직업",
     "Apply": "적용",
     "ApplyMods": "개조 부품 적용 중",
@@ -643,6 +643,11 @@
     "Save": "저장",
     "SaveAsNew": "새로 저장",
     "SaveAsNewTooltip": "기존 로드아웃을 유지하고 새로운 로드아웃으로 저장",
+    "SaveDisabled": {
+      "AlreadyExists": "새 로드아웃 이름을 입력해주세요.",
+      "Empty": "로드아웃이 비어있습니다.",
+      "NoName": "로드아웃의 이름이 필요합니다."
+    },
     "SaveLoadout": "로드아웃 저장",
     "Share": {
       "Copied": "클립보드로 로드아웃 주소가 복사됨",

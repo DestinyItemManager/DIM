@@ -152,6 +152,8 @@
   },
   "FashionDrawer": {
     "Accept": "保存外貌",
+    "CannotFitOrnament": "This item does not have an ornament socket or you have no ornaments for it.",
+    "CannotFitShader": "This item cannot fit a shader",
     "ClearOrnaments": "清除皮膚",
     "ClearOrnamentsTitle": "將所有皮膚重置為“無偏好”",
     "ClearShaders": "清除著色器",
@@ -548,8 +550,6 @@
     "AddEquippedItems": "添加已裝備",
     "AddNotes": "添加備註",
     "AddUnequippedItems": "添加未裝備的",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "同名全域配裝已經存在",
     "Any": "全部職業",
     "Apply": "應用",
     "ApplyMods": "正在應用模組",
@@ -643,6 +643,11 @@
     "Save": "保存",
     "SaveAsNew": "另存為",
     "SaveAsNewTooltip": "保留原始配裝並將其另存為新配装",
+    "SaveDisabled": {
+      "AlreadyExists": "Choose a new name for the loadout.",
+      "Empty": "The loadout is empty.",
+      "NoName": "The loadout needs a name."
+    },
     "SaveLoadout": "保存配裝",
     "Share": {
       "Copied": "將配装連結複製到剪貼板",

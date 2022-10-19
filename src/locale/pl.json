@@ -152,6 +152,8 @@
   },
   "FashionDrawer": {
     "Accept": "Zapisz modę",
+    "CannotFitOrnament": "This item does not have an ornament socket or you have no ornaments for it.",
+    "CannotFitShader": "This item cannot fit a shader",
     "ClearOrnaments": "Wyczyść ozdoby",
     "ClearOrnamentsTitle": "Zresetuj wszystkie ozdoby do \"brak preferencji\"",
     "ClearShaders": "Wyczyść barwy",
@@ -548,8 +550,6 @@
     "AddEquippedItems": "Dodaj Założone",
     "AddNotes": "Dodaj notatki",
     "AddUnequippedItems": "Dodaj niezałożone",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "Globalne uzbrojenie o tej nazwie już istnieje.",
     "Any": "Dowolna klasa",
     "Apply": "Zatwierdź",
     "ApplyMods": "Aplikowanie modyfikacji",
@@ -643,6 +643,11 @@
     "Save": "Zapisz",
     "SaveAsNew": "Save as New",
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
+    "SaveDisabled": {
+      "AlreadyExists": "Choose a new name for the loadout.",
+      "Empty": "The loadout is empty.",
+      "NoName": "The loadout needs a name."
+    },
     "SaveLoadout": "Zapisz Uzbrojenie",
     "Share": {
       "Copied": "Copied loadout link to clipboard",
