@@ -25,10 +25,11 @@ interface Props {
   account: DestinyAccount;
 }
 
-// Deprecated /optimizer links still in use by GuardianForge
 export interface LoUrlParams {
-  classType: DestinyClass;
-  loadoutParameters: LoadoutParameters;
+  // This is used by /optimizer links as well as by the Loadouts page
+  classType: DestinyClass | undefined;
+  // loadoutParameters and notes are still used by /optimizer links from GuardianForge
+  loadoutParameters: LoadoutParameters | undefined;
   notes: string | undefined;
 }
 
@@ -67,8 +68,8 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     query = preloadedLoadout.parameters.query;
   }
 
-  const urlParameters = urlLoadoutParameters && {
-    classType: urlClassType ?? DestinyClass.Unknown,
+  const urlParameters = {
+    classType: urlClassType,
     loadoutParameters: urlLoadoutParameters,
     notes: urlNotes ?? '',
   };

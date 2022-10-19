@@ -85,19 +85,30 @@ const lbStateInit = ({
 }): LoadoutBuilderState => {
   const pinnedItems: PinnedItems = {};
 
-  let classType: DestinyClass;
-  let preloadedParameters: LoadoutParameters;
+  // Preloaded loadouts from the "Optimize Armor" button take priority
+  let classType: DestinyClass =
+    (preloadedLoadout ? preloadedLoadout.classType : urlParameters?.classType) ??
+    DestinyClass.Unknown;
+  let preloadedParameters = preloadedLoadout
+    ? preloadedLoadout.parameters
+    : urlParameters?.loadoutParameters;
+  // Pick a store that matches the classType
+  const storeMatchingClass = pickBackingStore(stores, undefined, classType);
 
-  if (preloadedLoadout) {
-    classType = preloadedLoadout.classType;
-    preloadedParameters = preloadedLoadout.parameters ?? {};
-  } else if (urlParameters) {
-    classType = urlParameters.classType;
-    preloadedParameters = urlParameters.loadoutParameters;
-  } else {
-    classType = DestinyClass.Unknown;
-    preloadedParameters = {};
+  // If we requested a specific class type but the user doesn't have it, we
+  // need to pick some different store, but ensure that class-specific stuff
+  // doesn't end up in LO parameters.
+  if (!storeMatchingClass && classType !== DestinyClass.Unknown) {
+    warnMissingClass(classType, defs);
+    preloadedParameters = { ...preloadedParameters, exoticArmorHash: undefined };
+    // ensure we don't start a LO session with items for a totally different class type
+    preloadedLoadout = undefined;
   }
+
+  // Fall back to the current store if we didn't find a store matching our class
+  const selectedStore = storeMatchingClass ?? getCurrentStore(stores)!;
+  const selectedStoreId = selectedStore.id;
+  classType = selectedStore.classType;
 
   // In order of increasing priority:
   // default parameters, global saved parameters, stat order for this class,
@@ -108,18 +119,6 @@ const lbStateInit = ({
     loadoutParameters.statConstraints = thisClassStatConstraints;
   }
   loadoutParameters = { ...loadoutParameters, ...preloadedParameters };
-
-  const storeMatchingClass = pickBackingStore(stores, undefined, classType);
-
-  if (!storeMatchingClass && classType !== DestinyClass.Unknown) {
-    warnMissingClass(classType, defs);
-    // Take out the exotic
-    loadoutParameters = { ...loadoutParameters, exoticArmorHash: undefined };
-    // ensure we don't start a LO session with items for a totally different class type
-    preloadedLoadout = undefined;
-  }
-
-  const selectedStoreId = (storeMatchingClass ?? getCurrentStore(stores)!).id;
 
   let subclass: ResolvedLoadoutItem | undefined;
 

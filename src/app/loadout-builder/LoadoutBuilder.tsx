@@ -113,7 +113,7 @@ export default memo(function LoadoutBuilder({
 }: {
   account: DestinyAccount;
   stores: DimStore[];
-  urlParameters: LoUrlParams | undefined;
+  urlParameters: LoUrlParams;
   preloadedLoadout: Loadout | undefined;
 }) {
   const defs = useD2Definitions()!;
@@ -183,7 +183,7 @@ export default memo(function LoadoutBuilder({
     // If the user is playing with an existing loadout (potentially one they received from a loadout share)
     // or a direct /optimizer link, do not overwrite the global saved loadout parameters.
     // If they decide to save that loadout, these will still be saved with the loadout.
-    if (preloadedLoadout || urlParameters) {
+    if (preloadedLoadout || urlParameters.loadoutParameters) {
       return;
     }
 
@@ -221,7 +221,7 @@ export default memo(function LoadoutBuilder({
     urlParameters,
   ]);
 
-  const notes = urlParameters?.notes ?? preloadedLoadout?.notes;
+  const notes = preloadedLoadout?.notes ?? urlParameters?.notes;
 
   const onCharacterChanged = useCallback(
     (storeId: string) =>
