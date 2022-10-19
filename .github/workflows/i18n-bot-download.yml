@@ -38,7 +38,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: sort locale ${lang}.json
+      - name: sort locale json
         run: |
           allLocales=("en" "de" "es" "esMX" "fr" "it" "ja" "ko" "pl" "ptBR" "ru" "zhCHS" "zhCHT")
           for lang in ${allLocales[@]}; do
@@ -48,12 +48,17 @@ jobs:
       - name: build browsercheck utils
         run: yarn bcu
 
-      - name: Check for new files (DIM)
-        id: porcelain
-        run: echo ::set-output name=porcelain::"$(git status --porcelain)"
+      - name: porcelain check
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          base: HEAD
+          filters: |
+            changed:
+              - '**'
 
       - name: Commit files
-        if: steps.porcelain.outputs.porcelain
+        if: steps.filter.outputs.changed
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: i18n
