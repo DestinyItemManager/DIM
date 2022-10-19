@@ -152,6 +152,8 @@
   },
   "FashionDrawer": {
     "Accept": "Guardar cosméticos",
+    "CannotFitOrnament": "Este objeto no tiene ranura para diseño o no tienes diseños para él.",
+    "CannotFitShader": "A este objeto no le encaja ningún shader",
     "ClearOrnaments": "Limpiar Diseños",
     "ClearOrnamentsTitle": "Reiniciar todos los diseños a \"sin preferencia\"",
     "ClearShaders": "Limpiar Shaders",
@@ -548,8 +550,6 @@
     "AddEquippedItems": "Añadir Equipados",
     "AddNotes": "Agregar nota",
     "AddUnequippedItems": "Añadir Desequipados",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "Una equipación global ya existe con este nombre.",
     "Any": "Cualquier clase",
     "Apply": "Aplicar",
     "ApplyMods": "Aplicando mods",
@@ -643,6 +643,11 @@
     "Save": "Guardar",
     "SaveAsNew": "Guardar como Nuevo",
     "SaveAsNewTooltip": "Mantener la equipación original y guardar esta como una nueva",
+    "SaveDisabled": {
+      "AlreadyExists": "Elige un nuevo nombre para la equipación.",
+      "Empty": "La equipación está vacía.",
+      "NoName": "Esta equipación necesita un nombre."
+    },
     "SaveLoadout": "Guardar Equipación",
     "Share": {
       "Copied": "Enlace copiado de la equipación al portapapeles",

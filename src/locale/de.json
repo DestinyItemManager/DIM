@@ -152,6 +152,8 @@
   },
   "FashionDrawer": {
     "Accept": "Mode speichern",
+    "CannotFitOrnament": "Dieser Gegenstand hat keinen Ornamenten-Sockel oder du hast keine Ornamente dafür.",
+    "CannotFitShader": "Diesem Gegenstand kann kein Shader zugewiesen werden",
     "ClearOrnaments": "Ornament-Auswahl aufheben",
     "ClearOrnamentsTitle": "Alle Ornamente mit \"Keine Präferenz\" markieren",
     "ClearShaders": "Shader-Auswahl aufheben",
@@ -174,7 +176,7 @@
     "AmmoType": "Zeigt Gegenstände basierend auf deren Munitionstyp.",
     "Armor": "Zeigt Gegenstände, die Rüstung sind.",
     "ArmorCategory": "Zeigt Rüstungen basierend auf deren Kategorie.",
-    "ArmorIntrinsic": "Shows legendary armor which has an intrinsic perk, such as Artifice Armor.",
+    "ArmorIntrinsic": "Zeigt legendäre Rüstung, die einen intrinsischen Perk hat, wie zum Beispiel Kunstvolle Rüstung.",
     "Ascended": "Zeigt Gegenstände, die einen aufsteigenden Knoten haben, die aufgestiegen sind.",
     "Breaker": "Nach Brechertyp oder dem entsprechenden Champion-Typ filtern.",
     "BulkClear": "Markierung von 1 Gegenstand entfernt.",
@@ -312,7 +314,7 @@
     "FilterHelpBrief": "Suche Gegenstände",
     "FilterHelpLoadouts": "Ausrüstungs-Namen und -Notizen suchen",
     "FilterHelpMenuItem": "Filter Hilfe...",
-    "FilterHelpOptimizer": "Filter Rüstung von Loadouts: {{example}}",
+    "FilterHelpOptimizer": "Filter Rüstung von Ausrüstungen: {{example}}",
     "FilterHelpProgress": "Suche Meilensteine und Herausforderungen",
     "FilterHelpRecords": "Triumphe und Sammlungen durchsuchen",
     "FilterMatchCount": "1 Gegenstand",
@@ -502,14 +504,14 @@
     "ExistingLoadout": "Bestehende Ausrüstung",
     "ExoticSpecialCategory": "Spezial",
     "Filter": "Filter",
-    "InLoadouts": "In Loadouts",
-    "InOtherLoadouts": "Andere Loadouts",
+    "InLoadouts": "In Ausrüstungen",
+    "InOtherLoadouts": "Andere Ausrüstungen",
     "Legendary": "Legendär",
     "LockElement": "Affinität sperren",
     "LockElementOptions": {
       "All": "Alle Rüstungen werden an ihre aktuelle Affinität gebunden.",
-      "InLoadouts": "Die Rüstung wird an ihr aktuelles Element gebunden, wenn sie in einem vorhandenen Loadout ausgerüstet ist.",
-      "InOtherLoadouts": "Du optimierst gerade Loadout {{loadoutName}}. Rüstung wird an ihr aktuelles Element gebunden, wenn sie in einem anderen Loadout, welches nicht {{loadoutName}} ist, ausgerüstet ist.",
+      "InLoadouts": "Die Rüstung wird an ihr aktuelles Element gebunden, wenn sie in einer vorhandenen Ausrüstung ausgerüstet ist.",
+      "InOtherLoadouts": "Du optimierst gerade die Ausrüstung {{loadoutName}}. Rüstung wird an ihr aktuelles Element gebunden, wenn sie in einer anderen Ausrüstung, welche nicht {{loadoutName}} ist, ausgerüstet ist.",
       "None": "Die Rüstungs-Affinität wird entsprechend der ausgewählten Mods geändert."
     },
     "LockEquipped": "ausgerüstete Gegenstände anpinnen",
@@ -548,8 +550,6 @@
     "AddEquippedItems": "Ausgerüstetes hinzufügen",
     "AddNotes": "Notizen hinzufügen",
     "AddUnequippedItems": "Unausgerüstet hinzufügen",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "Eine globale Ausrüstung mit diesem Namen existiert bereits.",
     "Any": "Jede Klasse",
     "Apply": "Anwenden",
     "ApplyMods": "Wende Mods an",
@@ -605,7 +605,7 @@
     "MaximizeLight": "Max Licht",
     "MaximizePower": "Max Power",
     "MaximizeStat": "Maximiere Werte",
-    "MissingItemsWarning": "Einige der Gegenstände in diesem Loadout befinden sich nicht mehr in deinem Inventar.",
+    "MissingItemsWarning": "Einige der Gegenstände in dieser Ausrüstung befinden sich nicht mehr in deinem Inventar.",
     "ModErrorSummary": "1 Mod-Fehler:",
     "ModErrorSummary_plural": "{{count}} Mod-Fehler:",
     "ModPlacement": "Mod-Platzierung",
@@ -643,6 +643,11 @@
     "Save": "Speichern",
     "SaveAsNew": "Als Neu speichern",
     "SaveAsNewTooltip": "Die ursprüngliche Ausrüstung behalten und dies als neue Ausrüstung speichern",
+    "SaveDisabled": {
+      "AlreadyExists": "Wähle einen neuen Namen für die Ausrüstung.",
+      "Empty": "Die Ausrüstung ist leer.",
+      "NoName": "Die Ausrüstung benötigt einen Namen."
+    },
     "SaveLoadout": "Ausrüstung speichern",
     "Share": {
       "Copied": "Ausrüstungs-Link in die Zwischenablage kopiert",
@@ -1030,7 +1035,7 @@
     "IndexedDBStorage": "Lokaler Browserspeicher",
     "LearnMore": "Erfahre mehr über DIM Sync",
     "MenuTitle": "Sync & Backups",
-    "ProfileErrorBody": "Wir hatten ein Problem bei der Kommunikation mit DIM Sync. Deine neuesten Einstellungen, Tags, Loadouts und Suchanfragen werden möglicherweise nicht angezeigt. Ihre Daten sind immer noch auf unseren Servern und alle Updates, die du lokal vornimmst, werden gespeichert, sobald wir eine erneute Verbindung herstellen können. Wir werden es immer wieder versuchen, solange DIM geöffnet ist.",
+    "ProfileErrorBody": "Wir hatten ein Problem bei der Kommunikation mit DIM Sync. Deine neuesten Einstellungen, Tags, Ausrüstungen und Suchanfragen werden möglicherweise nicht angezeigt. Ihre Daten sind immer noch auf unseren Servern und alle Updates, die du lokal vornimmst, werden gespeichert, sobald wir eine erneute Verbindung herstellen können. Wir werden es immer wieder versuchen, solange DIM geöffnet ist.",
     "ProfileErrorTitle": "DIM-Sync-Downloadfehler",
     "UpdateErrorBody": "Beim Speichern deiner Daten in DIM Sync ist ein Problem aufgetreten. Wir versuchen es weiter, solange DIM geöffnet ist.",
     "UpdateErrorTitle": "DIM-Sync-Speicherfehler",
@@ -1053,7 +1058,7 @@
     "SelectLoadout": "An Stream Deck senden",
     "Selection": {
       "Item": "Wähle einen Gegenstand aus dem Inventar",
-      "Loadout": "Wähle ein Loadout"
+      "Loadout": "Wähle eine Ausrüstung"
     }
   },
   "StripSockets": {
@@ -1086,7 +1091,7 @@
   },
   "Triage": {
     "HighStats": "Hohe Werte",
-    "InLoadouts": "In Loadouts",
+    "InLoadouts": "In Ausrüstungen",
     "OwnedCount": "# In Besitz",
     "SimilarItems": "Ähnliche Gegenstände",
     "ThisItem": "Dieser Gegenstand",

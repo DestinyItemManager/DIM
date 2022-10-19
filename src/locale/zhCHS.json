@@ -152,6 +152,8 @@
   },
   "FashionDrawer": {
     "Accept": "保存外貌",
+    "CannotFitOrnament": "此物品没有皮肤插槽，或你没有此物品的皮肤。",
+    "CannotFitShader": "此物品不能使用着色器",
     "ClearOrnaments": "清除皮肤",
     "ClearOrnamentsTitle": "将所有皮肤重置为“无偏好”",
     "ClearShaders": "清除着色器",
@@ -174,7 +176,7 @@
     "AmmoType": "按照弹药类型显示物品",
     "Armor": "显示护甲物品。",
     "ArmorCategory": "按照类别显示防具.",
-    "ArmorIntrinsic": "Shows legendary armor which has an intrinsic perk, such as Artifice Armor.",
+    "ArmorIntrinsic": "显示带有固有特性的传说护甲，例如诡计护甲。",
     "Ascended": "显示可提升光等且已提升的物品。",
     "Breaker": "按照对抗类型或对应的勇士类型筛选。",
     "BulkClear": "移除物品标签",
@@ -206,7 +208,7 @@
     "Event": "显示命运2中特定活动中的物品",
     "ExtraPerk": "显示带有额外可选特性的随机特性传说武器。",
     "Filter": "过滤器",
-    "Foundry": "Shows items by which foundry created them.",
+    "Foundry": "按武器铸造厂显示物品。",
     "Glimmer": "显示与增加微光获取有关的消耗品。",
     "HasMemento": "显示通过制作获得并装有纪念物的武器。",
     "HasNotes": "显示已有备注的物品",
@@ -490,7 +492,7 @@
       "Legendary": "传说护甲会使用大师之作属性和 10 点能量等级。",
       "None": "所有护甲会使用当前的属性和至少 7 点能量等级。"
     },
-    "AutoStatMods": "Add required stat mods",
+    "AutoStatMods": "添加所需的属性模组",
     "ChooseAlternateTitle": "选择另一个物品",
     "CompareLoadout": "对比配装",
     "ConfirmOverwrite": "你确定要用这套新的护甲来替换配装“{{name}}”里的护甲吗？",
@@ -548,8 +550,6 @@
     "AddEquippedItems": "添加已装备",
     "AddNotes": "添加备注",
     "AddUnequippedItems": "添加未装备的",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "同名全域配装已经存在",
     "Any": "全部职业",
     "Apply": "应用",
     "ApplyMods": "正在应用模组",
@@ -643,6 +643,11 @@
     "Save": "保存",
     "SaveAsNew": "另存为",
     "SaveAsNewTooltip": "保留原始配装并将其保存为新配装",
+    "SaveDisabled": {
+      "AlreadyExists": "为该配装选择一个新的名称。",
+      "Empty": "配装为空。",
+      "NoName": "配装需要名称。"
+    },
     "SaveLoadout": "保存配装",
     "Share": {
       "Copied": "已复制配装链接到剪贴板",

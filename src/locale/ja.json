@@ -152,6 +152,8 @@
   },
   "FashionDrawer": {
     "Accept": "ファッションを保存",
+    "CannotFitOrnament": "このアイテムにはオーナメントソケットが無いか、オーナメントを保有していません。",
+    "CannotFitShader": "このアイテムはシェーダーを装備できません",
     "ClearOrnaments": "装備品をクリア",
     "ClearOrnamentsTitle": "全ての装飾品を「優先なし」にリセット",
     "ClearShaders": "シェーダーをクリア",
@@ -548,8 +550,6 @@
     "AddEquippedItems": "設備品を追加",
     "AddNotes": "メモを追加する",
     "AddUnequippedItems": "所持品に加える",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "この名前のグローバルロードアウトは既に存在します。",
     "Any": "全てのクラス",
     "Apply": "適用",
     "ApplyMods": "Modを適用",
@@ -643,6 +643,11 @@
     "Save": "保存",
     "SaveAsNew": "新規保存",
     "SaveAsNewTooltip": "最初の装備を、新しいロードアウトとして保存",
+    "SaveDisabled": {
+      "AlreadyExists": "ロードアウトの新しい名前を選択。",
+      "Empty": "ロードアウトが空です。",
+      "NoName": "ロードアウトには名前が必要です。"
+    },
     "SaveLoadout": "ロードアウトを保存",
     "Share": {
       "Copied": "ロードアウトのリンクをクリップボードにコピーしました",
