@@ -7,12 +7,12 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { setSearchQuery } from 'app/shell/actions';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { createSelector } from 'reselect';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { savedLoadoutParametersSelector } from '../dim-api/selectors';
 import { allItemsSelector, sortedStoresSelector } from '../inventory/selectors';
 import LoadoutBuilder from './LoadoutBuilder';
 
@@ -23,6 +23,13 @@ const disabledDueToMaintenanceSelector = createSelector(
 
 interface Props {
   account: DestinyAccount;
+}
+
+// Deprecated /optimizer links still in use by GuardianForge
+export interface LoUrlParams {
+  classType: DestinyClass;
+  loadoutParameters: LoadoutParameters;
+  notes: string | undefined;
 }
 
 /**
@@ -37,8 +44,6 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   const stores = useSelector(sortedStoresSelector);
   const disabledDueToMaintenance = useSelector(disabledDueToMaintenanceSelector);
   useLoadStores(account);
-
-  const savedLoadoutParameters = useSelector(savedLoadoutParametersSelector);
 
   const searchParams = new URLSearchParams(location.search);
   const urlClassTypeString = searchParams.get('class');
@@ -61,6 +66,12 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   if (preloadedLoadout?.parameters?.query) {
     query = preloadedLoadout.parameters.query;
   }
+
+  const urlParameters = urlLoadoutParameters && {
+    classType: urlClassType ?? DestinyClass.Unknown,
+    loadoutParameters: urlLoadoutParameters,
+    notes: urlNotes ?? '',
+  };
 
   useEffect(() => {
     if (query) {
@@ -87,9 +98,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
       account={account}
       stores={stores}
       preloadedLoadout={preloadedLoadout}
-      initialClassType={urlClassType}
-      notes={urlNotes ?? preloadedLoadout?.notes}
-      initialLoadoutParameters={urlLoadoutParameters || savedLoadoutParameters}
+      urlParameters={urlParameters}
     />
   );
 }

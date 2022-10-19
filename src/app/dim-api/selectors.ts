@@ -28,6 +28,9 @@ export const savedLoadoutParametersSelector = createSelector(
   (loParams) => ({ ...defaultLoadoutParameters, ...loParams })
 );
 
+export const savedLoStatConstraintsByClassSelector = (state: RootState) =>
+  settingsSelector(state).loStatConstraintsByClass;
+
 export const languageSelector = (state: RootState) => settingsSelector(state).language;
 
 export const collapsedSelector =

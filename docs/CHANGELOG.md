@@ -1,6 +1,7 @@
 ## Next
 
 * Invalid search queries are now detected more reliably and DIM will not show search results if the query is invalid.
+* Loadout Optimizer will now remember stat priorities and enabled stats per Guardian class.
 
 ## 7.40.0 <span class="changelog-date">(2022-10-23)</span>
 
