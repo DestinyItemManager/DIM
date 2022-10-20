@@ -485,6 +485,38 @@ const missingSources: { [key: string]: number[] } = {
   cayde6: [],
   compass: [],
   contact: [],
+  cos: [
+    17280095, // Shadow's Strides
+    256904954, // Shadow's Grips
+    309687341, // Shadow's Greaves
+    325125949, // Shadow's Helm
+    560455272, // Penumbral Mark
+    612065993, // Penumbral Mark
+    874272413, // Shadow's Robes
+    974648224, // Shadow's Boots
+    1434870610, // Shadow's Helm
+    1457195686, // Shadow's Gloves
+    1481751647, // Shadow's Mind
+    1862963733, // Shadow's Plate
+    1901223867, // Shadow's Gauntlets
+    1934647691, // Shadow's Mask
+    1937834292, // Shadow's Strides
+    1946621757, // Shadow's Grips
+    1999427172, // Shadow's Mask
+    2023695690, // Shadow's Robes
+    2153222031, // Shadow's Gloves
+    2194479195, // Penumbral Bond
+    2765688378, // Penumbral Cloak
+    2769298993, // Shadow's Boots
+    3082625196, // Shadow's Gauntlets
+    3108321700, // Penumbral Bond
+    3349283422, // Shadow's Mind
+    3483984579, // Shadow's Vest
+    3517729518, // Shadow's Vest
+    3518193943, // Penumbral Cloak
+    3759659288, // Shadow's Plate
+    4152814806, // Shadow's Greaves
+  ],
   crownofsorrow: [
     17280095, // Shadow's Strides
     256904954, // Shadow's Grips
@@ -1401,6 +1433,40 @@ const missingSources: { [key: string]: number[] } = {
     3939809874, // Plate of Transcendence
     4177973942, // Vest of Transcendence
   ],
+  gardenofsalvation: [
+    11974904, // Greaves of Ascendancy
+    281660259, // Temptation's Mark
+    519078295, // Helm of Righteousness
+    557676195, // Cowl of Righteousness
+    1653741426, // Grips of Exaltation
+    2015894615, // Gloves of Exaltation
+    2054979724, // Strides of Ascendancy
+    2320830625, // Robes of Transcendence
+    3001934726, // Mask of Righteousness
+    3103335676, // Temptation's Bond
+    3549177695, // Cloak of Temptation
+    3824429433, // Boots of Ascendancy
+    3887559710, // Gauntlets of Exaltation
+    3939809874, // Plate of Transcendence
+    4177973942, // Vest of Transcendence
+  ],
+  gos: [
+    11974904, // Greaves of Ascendancy
+    281660259, // Temptation's Mark
+    519078295, // Helm of Righteousness
+    557676195, // Cowl of Righteousness
+    1653741426, // Grips of Exaltation
+    2015894615, // Gloves of Exaltation
+    2054979724, // Strides of Ascendancy
+    2320830625, // Robes of Transcendence
+    3001934726, // Mask of Righteousness
+    3103335676, // Temptation's Bond
+    3549177695, // Cloak of Temptation
+    3824429433, // Boots of Ascendancy
+    3887559710, // Gauntlets of Exaltation
+    3939809874, // Plate of Transcendence
+    4177973942, // Vest of Transcendence
+  ],
   grasp: [
     286271818, // Twisting Echo Cloak
     399065241, // Descending Echo Greaves
@@ -1672,6 +1738,7 @@ const missingSources: { [key: string]: number[] } = {
     4211068696, // Iron Truage Legs
     4248834293, // Iron Remembrance Vest
   ],
+  kf: [],
   kingsfall: [],
   lastwish: [
     4968701, // Greaves of the Great Hunt
@@ -2062,6 +2129,53 @@ const missingSources: { [key: string]: number[] } = {
   ],
   lost: [],
   lostsectors: [],
+  lw: [
+    4968701, // Greaves of the Great Hunt
+    16387641, // Mark of the Great Hunt
+    49280456, // Gloves of the Great Hunt
+    65929376, // Gauntlets of the Great Hunt
+    146275556, // Vest of the Great Hunt
+    196235132, // Grips of the Great Hunt
+    576683388, // Gauntlets of the Great Hunt
+    726265506, // Boots of the Great Hunt
+    776723133, // Robes of the Great Hunt
+    778784376, // Mark of the Great Hunt
+    821841934, // Bond of the Great Hunt
+    972689703, // Vest of the Great Hunt
+    1021341893, // Mark of the Great Hunt
+    1127835600, // Grips of the Great Hunt
+    1190016345, // Mask of the Great Hunt
+    1195800715, // Boots of the Great Hunt
+    1258342944, // Mask of the Great Hunt
+    1314563129, // Cloak of the Great Hunt
+    1432728945, // Hood of the Great Hunt
+    1444894250, // Strides of the Great Hunt
+    1477271933, // Bond of the Great Hunt
+    1646520469, // Cloak of the Great Hunt
+    1656835365, // Plate of the Great Hunt
+    2112541750, // Cloak of the Great Hunt
+    2274520361, // Helm of the Great Hunt
+    2280287728, // Bond of the Great Hunt
+    2550116544, // Robes of the Great Hunt
+    2598685593, // Gloves of the Great Hunt
+    2868042232, // Vest of the Great Hunt
+    2950533187, // Strides of the Great Hunt
+    3055836250, // Greaves of the Great Hunt
+    3119383537, // Grips of the Great Hunt
+    3143067364, // Plate of the Great Hunt
+    3208178411, // Gauntlets of the Great Hunt
+    3227674085, // Boots of the Great Hunt
+    3251351304, // Hood of the Great Hunt
+    3445296383, // Robes of the Great Hunt
+    3445582154, // Hood of the Great Hunt
+    3492720019, // Gloves of the Great Hunt
+    3494130310, // Strides of the Great Hunt
+    3614211816, // Plate of the Great Hunt
+    3838639757, // Mask of the Great Hunt
+    3868637058, // Helm of the Great Hunt
+    3874578566, // Greaves of the Great Hunt
+    4219088013, // Helm of the Great Hunt
+  ],
   mars: [],
   menagerie: [],
   mercury: [],
@@ -2421,6 +2535,23 @@ const missingSources: { [key: string]: number[] } = {
     4125324487, // Bulletsmith's Ire Gauntlets
     4238134294, // Gunsmith's Devotion Robes
   ],
+  scourgeofthepast: [
+    350056552, // Bladesmith's Memory Mask
+    388999052, // Bulletsmith's Ire Mark
+    1624906371, // Gunsmith's Devotion Crown
+    1917693279, // Bladesmith's Memory Vest
+    2530113265, // Bulletsmith's Ire Plate
+    2589473259, // Bladesmith's Memory Strides
+    2762445138, // Gunsmith's Devotion Gloves
+    2878130185, // Bulletsmith's Ire Greaves
+    2921334134, // Bulletsmith's Ire Helm
+    3163683564, // Gunsmith's Devotion Boots
+    3164851950, // Bladesmith's Memory Cloak
+    3567761471, // Gunsmith's Devotion Bond
+    3992358137, // Bladesmith's Memory Grips
+    4125324487, // Bulletsmith's Ire Gauntlets
+    4238134294, // Gunsmith's Devotion Robes
+  ],
   seasonpass: [
     1387688628, // The Gate Lord's Eye
   ],
@@ -2535,6 +2666,55 @@ const missingSources: { [key: string]: number[] } = {
   ],
   shipwright: [],
   sos: [
+    223783885, // Insigne Shade Bond
+    503773817, // Insigne Shade Gloves
+    548581042, // Insigne Shade Boots
+    802557885, // Turris Shade Gauntlets
+    855363300, // Turris Shade Helm
+    1156439528, // Insigne Shade Cover
+    1296628624, // Insigne Shade Robes
+    1339632007, // Turris Shade Helm
+    1675393889, // Insigne Shade Cover
+    1793869832, // Turris Shade Greaves
+    2128823667, // Turris Shade Mark
+    2513313400, // Insigne Shade Gloves
+    2552158692, // Equitis Shade Rig
+    2620001759, // Insigne Shade Robes
+    2710517999, // Equitis Shade Grips
+    2722103686, // Equitis Shade Boots
+    2904930850, // Turris Shade Plate
+    2933666377, // Equitis Shade Rig
+    3066613133, // Equitis Shade Cowl
+    3168183519, // Turris Shade Greaves
+    3285121297, // Equitis Shade Boots
+    3395856235, // Insigne Shade Boots
+    3416932282, // Turris Shade Mark
+    3440648382, // Equitis Shade Cowl
+    3581198350, // Turris Shade Gauntlets
+    3719175804, // Equitis Shade Grips
+    3720446265, // Equitis Shade Cloak
+    3867160430, // Insigne Shade Bond
+    4135228483, // Turris Shade Plate
+    4247935492, // Equitis Shade Cloak
+  ],
+  sotp: [
+    350056552, // Bladesmith's Memory Mask
+    388999052, // Bulletsmith's Ire Mark
+    1624906371, // Gunsmith's Devotion Crown
+    1917693279, // Bladesmith's Memory Vest
+    2530113265, // Bulletsmith's Ire Plate
+    2589473259, // Bladesmith's Memory Strides
+    2762445138, // Gunsmith's Devotion Gloves
+    2878130185, // Bulletsmith's Ire Greaves
+    2921334134, // Bulletsmith's Ire Helm
+    3163683564, // Gunsmith's Devotion Boots
+    3164851950, // Bladesmith's Memory Cloak
+    3567761471, // Gunsmith's Devotion Bond
+    3992358137, // Bladesmith's Memory Grips
+    4125324487, // Bulletsmith's Ire Gauntlets
+    4238134294, // Gunsmith's Devotion Robes
+  ],
+  spireofstars: [
     223783885, // Insigne Shade Bond
     503773817, // Insigne Shade Gloves
     548581042, // Insigne Shade Boots
@@ -2729,6 +2909,7 @@ const missingSources: { [key: string]: number[] } = {
     4177448932, // Focusing Wraps
   ],
   umbral: [],
+  vaultofglass: [],
   vexoffensive: [],
   vog: [],
   vow: [],
