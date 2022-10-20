@@ -282,6 +282,10 @@ export interface DimCatalyst {
   complete: boolean;
   /** Whether the player has unlocked/discovered the catalyst */
   unlocked: boolean;
+  /** % of unlock of catalyst */
+  progress?: number;
+
+  objectives?: DestinyObjectiveProgress[];
 
   // TODO: on item popup, remove catalyst socket if item.catalystInfo is undefined
   // TODO: on item popup, show catalyst progress somewhere? maybe like deepsight?
