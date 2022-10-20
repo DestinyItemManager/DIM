@@ -284,8 +284,6 @@ export interface DimCatalyst {
   unlocked: boolean;
   /** Progress the player has made on unlocking the catalyst  */
   objectives?: DestinyObjectiveProgress[];
-
-  // TODO: on item popup, remove catalyst socket if item.catalystInfo is undefined
 }
 
 export interface DimStat {
