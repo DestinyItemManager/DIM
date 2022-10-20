@@ -1410,7 +1410,21 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  votd: {
+    itemHashes: [],
+    sourceHashes: [
+      1007078046, // Source: "Vow of the Disciple" Raid
+    ],
+    searchString: [],
+  },
   vow: {
+    itemHashes: [],
+    sourceHashes: [
+      1007078046, // Source: "Vow of the Disciple" Raid
+    ],
+    searchString: [],
+  },
+  vowofthedisciple: {
     itemHashes: [],
     sourceHashes: [
       1007078046, // Source: "Vow of the Disciple" Raid
