@@ -1,6 +1,6 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { ArmorStatHashes } from '../types';
+import { ArmorStatHashes, MinMaxIgnored } from '../types';
 import {
   createGeneralModsCache,
   GeneralModsCache,
@@ -293,6 +293,164 @@ export function pickAndAssignSlotIndependentMods(
   }
 
   return assignedModsAtLeastOnce ? 'cannot_hit_stats' : 'mods_dont_fit';
+}
+
+/**
+ * Optimizes the auto stat mod picks to maximize the prioritized stats in order.
+ * This function is super slow, so it's best only called for a limited number of sets.
+ * Returns mod hashes that are able to increase
+ */
+export function pickOptimalStatMods(
+  { activityModPermutations, cache, combatModPermutations }: PrecalculatedInfo,
+  items: ProcessItem[],
+  setStats: number[],
+  statFiltersInStatOrder: MinMaxIgnored[]
+): number[] | undefined {
+  // High-level overview of this algorithm:
+  // We know:
+  // * There exists at least one feasible mod assignment.
+  // * There exists at least one pick of auto stat mods to hit the necessary stat minimums.
+  // We do:
+  // * Collect all feasible mod assignments (in terms of their remaining energy capacities)
+  // * Start with the stats needed to hit stat minimums.
+  // * Iteratively try and increase prioritized stats.
+  // E.g. if we have T9 recovery, T7.5 intellect, T4 resilience, we'll try in order
+  // * T10, T7.5, T4 (let's assume for the sake of this example that this succeeds)
+  // * T10, T8,   T4 (assume success)
+  // * T10, T9,   T4 (assume fail)
+  // * T10, T8,   T5 (assume success)
+  // * T10, T8,   T6 (assume fail)
+  // ...and then we try to increase the last three stats just like that, assume they fail too.
+
+  const remainingEnergiesPerAssignment: number[][] = [];
+
+  const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
+
+  // This loop is copy-pasted from above because we need to do the same thing as above
+  // We don't have to do any of the early exits though, since we know they succeed.
+  activityModLoop: for (const activityPermutation of activityModPermutations) {
+    activityItemLoop: for (let i = 0; i < sortedItems.length; i++) {
+      const activityMod = activityPermutation[i];
+      if (!activityMod) {
+        continue activityItemLoop;
+      }
+
+      const item = sortedItems[i];
+      const tag = activityMod.tag!;
+      const activityEnergy = activityMod.energy || defaultModEnergy;
+
+      const activityEnergyIsValid =
+        item.energy &&
+        item.energy.val + activityEnergy.val <= item.energy.capacity &&
+        (item.energy.type === activityEnergy.type ||
+          activityEnergy.type === DestinyEnergyType.Any ||
+          item.energy.type === DestinyEnergyType.Any);
+
+      if (!activityEnergyIsValid || !item.compatibleModSeasons?.includes(tag)) {
+        continue activityModLoop;
+      }
+    }
+
+    combatModLoop: for (const combatPermutation of combatModPermutations) {
+      combatItemLoop: for (let i = 0; i < sortedItems.length; i++) {
+        const combatMod = combatPermutation[i];
+
+        if (!combatMod) {
+          continue combatItemLoop;
+        }
+
+        const item = sortedItems[i];
+        const combatEnergy = combatMod.energy || defaultModEnergy;
+        const tag = combatMod.tag!;
+        const activityEnergy = activityPermutation[i]?.energy || defaultModEnergy;
+
+        const combatEnergyIsValid =
+          item.energy &&
+          item.energy.val + combatEnergy.val + activityEnergy.val <= item.energy.capacity &&
+          (item.energy.type === combatEnergy.type ||
+            combatEnergy.type === DestinyEnergyType.Any ||
+            item.energy.type === DestinyEnergyType.Any) &&
+          (activityEnergy.type === combatEnergy.type ||
+            combatEnergy.type === DestinyEnergyType.Any ||
+            activityEnergy.type === DestinyEnergyType.Any);
+
+        if (!combatEnergyIsValid || !item.compatibleModSeasons?.includes(tag)) {
+          continue combatModLoop;
+        }
+      }
+
+      const remainingEnergyCapacities = sortedItems.map(
+        (i, idx) =>
+          (i.energy?.capacity || 0) -
+          (i.energy?.val || 0) -
+          (activityPermutation[idx]?.energy?.val || 0) -
+          (combatPermutation[idx]?.energy?.val || 0)
+      );
+
+      // Sort the costs array descending, same as our auto stat mod picks
+      remainingEnergyCapacities.sort((a, b) => b - a);
+      remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
+    }
+  }
+
+  let committedStats = [0, 0, 0, 0, 0, 0];
+  let modsPick: ModsPick | undefined;
+  const maxAddedStats = [0, 0, 0, 0, 0, 0];
+
+  for (let index = 0; index < 6; index++) {
+    const value = Math.min(Math.max(setStats[index], 0), 100);
+    const filter = statFiltersInStatOrder[index];
+
+    if (!filter.ignored) {
+      const neededValue = filter.min * 10 - value;
+      if (neededValue > 0) {
+        // As per function preconditions, we know that we can hit these minimum stats
+        committedStats[index] = neededValue;
+      }
+      maxAddedStats[index] = filter.max * 10 - value;
+    }
+  }
+
+  let statIndex = 0;
+  while (statIndex < committedStats.length) {
+    if (committedStats[statIndex] >= maxAddedStats[statIndex]) {
+      // We can't go any higher with this stat, so go to the next stat
+      statIndex++;
+    } else {
+      // Try to increase this stat by +5 or +10
+      const tentativeStats = committedStats.slice();
+      if (setStats[statIndex] % 10 >= 5 && tentativeStats[statIndex] === 0) {
+        // Our set has a .5 tier in this stat and we didn't already increase this stat,
+        // so fill up the half tier first.
+        tentativeStats[statIndex] += 5;
+      } else {
+        // Three cases:
+        // 1. Set has a full tier (not a .5) in this stat
+        // 2. minimum stats code got us to a full tier
+        // 3. other branch got us to a full tier.
+        // So we can just go +10 safely.
+        tentativeStats[statIndex] += 10;
+      }
+
+      // Now, try to actually fit mods for these stats
+      const validPicks = getViableGeneralModPicks(cache, tentativeStats);
+      const pick = validPicks.find((pick) =>
+        remainingEnergiesPerAssignment.some((remainingEnergies) =>
+          pick.costs.every((cost, idx) => cost <= remainingEnergies[idx])
+        )
+      );
+      if (pick) {
+        // It is in fact possible to fit mods with these better stats,
+        // so commit our stat increase here
+        modsPick = pick;
+        committedStats = tentativeStats;
+      } else {
+        // This increase was not possible, so go to the next stat
+        statIndex++;
+      }
+    }
+  }
+  return modsPick?.modHashes;
 }
 
 export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {

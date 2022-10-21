@@ -16,6 +16,12 @@ export interface MinMaxIgnored {
   ignored: boolean;
 }
 
+export const enum AutoStatModsSetting {
+  None,
+  Minimums,
+  Maximize,
+}
+
 /** A map from bucketHash to the pinned item if there is one. */
 export interface PinnedItems {
   [bucketHash: number]: DimItem | undefined;

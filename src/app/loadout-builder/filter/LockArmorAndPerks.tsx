@@ -1,4 +1,3 @@
-import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -25,7 +24,8 @@ import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
-import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
+import { AutoStatModsSetting, ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
+import { Option, RadioSetting } from './EnergyOptions';
 import ExoticArmorChoice from './ExoticArmorChoice';
 import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
@@ -39,7 +39,7 @@ interface Props {
   subclass?: ResolvedLoadoutItem;
   lockedExoticHash?: number;
   searchFilter: ItemFilter;
-  autoStatMods: boolean;
+  autoStatMods: AutoStatModsSetting;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -171,16 +171,60 @@ export default memo(function LockArmorAndPerks({
     return rtn;
   }, [defs, subclass?.loadoutItem.socketOverrides, subclass?.item.sockets]);
 
-  const onMaxStatModsChanged = (autoStatMods: boolean) =>
-    lbDispatch({ type: 'autoStatModsChanged', autoStatMods });
+  const autoStatModsOptions: Option[] = useMemo(
+    () => [
+      {
+        label: t('LoadoutBuilder.AddAutoStatMods.None'),
+        tooltip: t('LoadoutBuilder.AddAutoStatMods.NoneTooltip'),
+        selected: autoStatMods === AutoStatModsSetting.None,
+        onChange: () => {
+          if (autoStatMods !== AutoStatModsSetting.None) {
+            lbDispatch({
+              type: 'autoStatModsChanged',
+              autoStatMods: AutoStatModsSetting.None,
+            });
+          }
+        },
+      },
+      {
+        label: t('LoadoutBuilder.AddAutoStatMods.Required'),
+        tooltip: t('LoadoutBuilder.AddAutoStatMods.RequiredTooltip'),
+        selected: autoStatMods === AutoStatModsSetting.Minimums,
+        onChange: () => {
+          if (autoStatMods !== AutoStatModsSetting.Minimums) {
+            lbDispatch({
+              type: 'autoStatModsChanged',
+              autoStatMods: AutoStatModsSetting.Minimums,
+            });
+          }
+        },
+      },
+      {
+        label: t('LoadoutBuilder.AddAutoStatMods.Optimal'),
+        tooltip: t('LoadoutBuilder.AddAutoStatMods.OptimalTooltip'),
+        selected: autoStatMods === AutoStatModsSetting.Maximize,
+        onChange: () => {
+          if (autoStatMods !== AutoStatModsSetting.Maximize) {
+            lbDispatch({
+              type: 'autoStatModsChanged',
+              autoStatMods: AutoStatModsSetting.Maximize,
+            });
+          }
+        },
+      },
+    ],
+    [autoStatMods, lbDispatch]
+  );
 
   return (
     <>
       {$featureFlags.loAutoStatMods && (
         <div className={styles.area}>
-          <CheckButton onChange={onMaxStatModsChanged} name="autoStatMods" checked={autoStatMods}>
-            {t('LoadoutBuilder.AutoStatMods')}
-          </CheckButton>
+          <RadioSetting
+            name="autoStatMods"
+            label={t('LoadoutBuilder.AutoStatMods')}
+            options={autoStatModsOptions}
+          />
         </div>
       )}
       {isPhonePortrait && (

@@ -8,12 +8,17 @@ import { infoLog } from '../../utils/log';
 import {
   ArmorStatHashes,
   ArmorStats,
+  AutoStatModsSetting,
   LockableBucketHashes,
   LockableBuckets,
   StatFilters,
   StatRanges,
 } from '../types';
-import { pickAndAssignSlotIndependentMods, precalculateStructures } from './process-utils';
+import {
+  pickAndAssignSlotIndependentMods,
+  pickOptimalStatMods,
+  precalculateStructures,
+} from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
   LockedProcessMods,
@@ -43,7 +48,7 @@ export function process(
   /** Ensure every set includes one exotic */
   anyExotic: boolean,
   /** Use stat mods to hit stat minimums */
-  autoStatMods: boolean,
+  autoStatMods: AutoStatModsSetting,
   onProgress: (remainingTime: number) => void
 ): {
   sets: ProcessArmorSet[];
@@ -121,7 +126,7 @@ export function process(
     generalMods,
     combatMods,
     activityMods,
-    autoStatMods,
+    autoStatMods !== AutoStatModsSetting.None,
     statOrder
   );
   const hasMods = Boolean(combatMods.length || activityMods.length || generalMods.length);
@@ -261,7 +266,7 @@ export function process(
               }
             }
 
-            if (needSomeStats && !autoStatMods) {
+            if (needSomeStats && autoStatMods === AutoStatModsSetting.None) {
               numStatRangeExceeded++;
               continue;
             }
@@ -370,7 +375,12 @@ export function process(
       statObj[statHash] = stats[i];
       return statObj;
     }, {}) as ArmorStats,
-    statMods,
+    // Finally, only for our remaining 200 sets, try to optimize stat mods. This is a slow function,
+    // but 200 sets is nothing compared to the loops above...
+    statMods:
+      (autoStatMods === AutoStatModsSetting.Maximize &&
+        pickOptimalStatMods(precalculatedInfo, armor, stats, statFiltersInStatOrder)) ||
+      statMods,
   }));
 
   return {

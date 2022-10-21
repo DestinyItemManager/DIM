@@ -6,14 +6,14 @@ import React, { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import styles from './EnergyOptions.m.scss';
 
-interface Option {
+export interface Option {
   label: string;
   tooltip: string;
   selected: boolean;
   onChange(): void;
 }
 
-const RadioSetting = React.memo(function RadioSetting({
+export const RadioSetting = React.memo(function RadioSetting({
   label,
   name,
   options,

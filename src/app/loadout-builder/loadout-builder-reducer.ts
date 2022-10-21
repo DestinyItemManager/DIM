@@ -27,6 +27,7 @@ import { statFiltersFromLoadoutParamaters, statOrderFromLoadoutParameters } from
 import {
   ArmorSet,
   ArmorStatHashes,
+  AutoStatModsSetting,
   ExcludedItems,
   LockableBucketHashes,
   PinnedItems,
@@ -38,6 +39,7 @@ export interface LoadoutBuilderState {
   // TODO: also fold statOrder, statFilters into loadoutParameters
   statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
   statFilters: Readonly<StatFilters>;
+  autoStatMods: AutoStatModsSetting;
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
   selectedStoreId?: string;
@@ -166,6 +168,7 @@ const lbStateInit = ({
     pinnedItems,
     excludedItems: emptyObject(),
     statFilters,
+    autoStatMods: AutoStatModsSetting.None,
     subclass,
     selectedStoreId,
     modPicker: {
@@ -188,7 +191,7 @@ export type LoadoutBuilderAction =
   | { type: 'unpinItem'; item: DimItem }
   | { type: 'excludeItem'; item: DimItem }
   | { type: 'unexcludeItem'; item: DimItem }
-  | { type: 'autoStatModsChanged'; autoStatMods: boolean }
+  | { type: 'autoStatModsChanged'; autoStatMods: AutoStatModsSetting }
   | { type: 'lockedModsChanged'; lockedMods: PluggableInventoryItemDefinition[] }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
@@ -490,10 +493,7 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
       case 'autoStatModsChanged':
         return {
           ...state,
-          loadoutParameters: {
-            ...state.loadoutParameters,
-            autoStatMods: action.autoStatMods,
-          },
+          autoStatMods: action.autoStatMods,
         };
     }
   };

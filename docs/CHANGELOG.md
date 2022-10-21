@@ -1,5 +1,7 @@
 ## Next
 
+* Loadout Optimizer now has an experimental option to automatically add +10 and +5 stat mods to optimize prioritized stats, beyond any required minimums.
+
 ## 7.39.1 <span class="changelog-date">(2022-10-18)</span>
 
 * You can now undo and redo changes to loadouts while editing them.

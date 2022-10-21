@@ -482,6 +482,14 @@
     "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
+    "AddAutoStatMods": {
+      "None": "None",
+      "NoneTooltip": "Do not automatically pick stat mods.",
+      "Optimal": "Optimal",
+      "OptimalTooltip": "Automatically pick and assign stat mods to increase prioritized stats in order of their priority.",
+      "Required": "Required",
+      "RequiredTooltip": "Automatically pick and assign stat mods to hit specified stat minimums."
+    },
     "AddHalfTierMods": "Add +5 Mods",
     "All": "All",
     "AnyExotic": "Any Exotic",
@@ -492,7 +500,7 @@
       "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
       "None": "All armor will use its current stats and will have a minimum energy level of 7."
     },
-    "AutoStatMods": "Add required stat mods",
+    "AutoStatMods": "Automatically add stat mods",
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
@@ -639,6 +647,7 @@
     "RandomizeSearch": "Randomize from Search",
     "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "Randomize your equipped weapons?",
+    "Redo": "",
     "RestoreAllItems": "All Items",
     "Save": "Save",
     "SaveAsNew": "Save as New",
@@ -678,6 +687,7 @@
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedModError": "Mod didn't fit on your current armor",
     "UnassignedMods": "Unassigned Mods",
+    "Undo": "",
     "Unequipped": "Unequipped",
     "Update": "Save Changes",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",

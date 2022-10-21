@@ -21,6 +21,7 @@ import { ProcessItem, ProcessItemsByBucket } from '../process-worker/types';
 import {
   ArmorEnergyRules,
   ArmorSet,
+  AutoStatModsSetting,
   ItemGroup,
   ItemsByBucket,
   StatFilters,
@@ -77,7 +78,7 @@ export function useProcess({
   statOrder: number[];
   statFilters: StatFilters;
   anyExotic: boolean;
-  autoStatMods: boolean;
+  autoStatMods: AutoStatModsSetting;
 }) {
   const [remainingTime, setRemainingTime] = useState(0);
   const [{ result, processing }, setState] = useState<ProcessState>({
