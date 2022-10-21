@@ -62,7 +62,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         - name: No CHANGELOG.md Update (Add Missing)
-          if: (steps.porcelain.outputs.changed == 'true' && steps.filters.outputs.changelog == 'true' && ssteps.haslabel.outputs.label_check != true)
+          if: (steps.porcelain.outputs.changed == 'true' && steps.filters.outputs.changelog == 'true' && steps.haslabel.outputs.label_check != true)
           uses: christianvuerings/add-labels@v1
           with:
             labels: |
