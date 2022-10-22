@@ -31,27 +31,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: i18n-diff
-        uses: technote-space/get-diff-action@v6.1.0
-        id: git_diff
+      - name: porcelain check
+        uses: dorny/paths-filter@v2
+        id: filter
         with:
-          PATTERNS: |
-            src/locale/en.json
+          base: HEAD
+          filters: |
+            changed:
+              - 'src/locale/en.json'
 
-      - name: Discord notification (>1)
-        if: ( steps.git_diff.outputs.insertions > 1 )
+      - name: Discord notification
+        # TODO: Add back in the number of changes via `git diff --numstat -- src/locale/en.json` and some awk or grep magic
+        if: steps.filter.outputs.changed
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_I18N_WEBHOOK }}
-          DISCORD_EMBEDS: '[{"title":"DIM - crowdin", "color": 15954978, "url": "https://crowdin.com/project/destiny-item-manager","description": "${{ steps.i18n-diff.outputs.insertions }} translations have been added or changed on crowdin."  }]'
+          DISCORD_EMBEDS: '[{"title":"DIM - crowdin", "color": 15954978, "url": "https://crowdin.com/project/destiny-item-manager","description": "Translation(s) have been added or changed on crowdin."  }]'
         uses: Ilshidur/action-discord@master
         with:
           args: "<@&622449489008918548>"
 
-      - name: Discord notification (1)
-        if: ( steps.git_diff.outputs.insertions == 1 )
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_I18N_WEBHOOK }}
-          DISCORD_EMBEDS: '[{"title":"DIM - crowdin", "color": 15954978, "url": "https://crowdin.com/project/destiny-item-manager","description": "${{ steps.i18n-diff.outputs.insertions }} translation has been added or changed on crowdin."  }]'
-        uses: Ilshidur/action-discord@master
-        with:
-          args: "<@&622449489008918548>"
