@@ -7,7 +7,7 @@ import {
   getViableGeneralModPicks,
   ModsPick,
 } from './auto-stat-mod-utils';
-import { ProcessItem, ProcessMod } from './types';
+import { ProcessItem, ProcessMod, SetRejectionReason } from './types';
 
 interface SortParam {
   energy?: {
@@ -116,7 +116,7 @@ function getEnergyCounts(modsOrItems: (ProcessMod | ProcessItemSubset)[]): Energ
 // Used for null values
 const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
 
-export type SlotIndependentPickAssignResult = 'mods_dont_fit' | 'cannot_hit_stats' | ModsPick;
+export type SlotIndependentPickAssignResult = SetRejectionReason | ModsPick;
 
 /**
  * This figures out if all general, combat and activity mods can be assigned to an armour set and auto stat mods
@@ -160,7 +160,7 @@ export function pickAndAssignSlotIndependentMods(
     stasisItems + anyItems < stasisCombatMods ||
     stasisItems + anyItems < stasisActivityMods
   ) {
-    return 'mods_dont_fit';
+    return 'cantSlotMods';
   }
 
   // An early check to ensure we have enough activity mod combos
@@ -175,7 +175,7 @@ export function pickAndAssignSlotIndependentMods(
         }
       }
       if (socketsCount < activityTagCounts[tag]) {
-        return 'mods_dont_fit';
+        return 'cantSlotMods';
       }
     }
   }
@@ -184,8 +184,9 @@ export function pickAndAssignSlotIndependentMods(
   // all 0, this returns the user-picked general mod costs only.
   const validGeneralModPicks = neededStats && getViableGeneralModPicks(cache, neededStats);
   if (validGeneralModPicks?.length === 0) {
-    return 'cannot_hit_stats';
+    return 'noAutoModsPick';
   }
+
   let assignedModsAtLeastOnce = false;
   const remainingEnergyCapacities = [0, 0, 0, 0, 0];
 
@@ -292,7 +293,7 @@ export function pickAndAssignSlotIndependentMods(
     }
   }
 
-  return assignedModsAtLeastOnce ? 'cannot_hit_stats' : 'mods_dont_fit';
+  return assignedModsAtLeastOnce && neededStats ? 'cantSlotAutoMods' : 'cantSlotMods';
 }
 
 export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {

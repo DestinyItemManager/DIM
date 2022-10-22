@@ -49,6 +49,7 @@ import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
+import NoSetsFoundExplainer from './NoSetsFoundExplainer';
 import { useProcess } from './process/useProcess';
 import {
   ArmorEnergyRules,
@@ -264,7 +265,7 @@ export default memo(function LoadoutBuilder({
     return equippedLoadout ? [...classLoadouts, equippedLoadout] : classLoadouts;
   }, [allLoadouts, selectedStore]);
 
-  const [armorEnergyRules, filteredItems] = useMemo(() => {
+  const [armorEnergyRules, filteredItems, filterInfo] = useMemo(() => {
     const armorEnergyRules: ArmorEnergyRules = {
       ...loDefaultArmorEnergyRules,
       loadouts: {
@@ -278,8 +279,7 @@ export default memo(function LoadoutBuilder({
     if (loadoutParameters.assumeArmorMasterwork !== undefined) {
       armorEnergyRules.assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
     }
-
-    const items = filterItems({
+    const [items, filterInfo] = filterItems({
       defs,
       items: characterItems,
       pinnedItems,
@@ -290,7 +290,7 @@ export default memo(function LoadoutBuilder({
       armorEnergyRules,
       searchFilter,
     });
-    return [armorEnergyRules, items];
+    return [armorEnergyRules, items, filterInfo];
   }, [
     loadoutsByItem,
     optimizingLoadoutId,
@@ -502,7 +502,7 @@ export default memo(function LoadoutBuilder({
             </p>
           </div>
         )}
-        {result && (
+        {result && result.sets.length > 0 ? (
           <GeneratedSets
             sets={result.sets}
             subclass={subclass}
@@ -517,6 +517,19 @@ export default memo(function LoadoutBuilder({
             halfTierMods={halfTierMods}
             armorEnergyRules={result.armorEnergyRules}
             notes={notes}
+          />
+        ) : (
+          <NoSetsFoundExplainer
+            defs={defs}
+            dispatch={lbDispatch}
+            lockedMods={lockedMods}
+            autoAssignStatMods={autoStatMods}
+            armorEnergyRules={armorEnergyRules}
+            lockedExoticHash={lockedExoticHash}
+            statFilters={statFilters}
+            pinnedItems={pinnedItems}
+            filterInfo={filterInfo}
+            processInfo={result?.processInfo}
           />
         )}
         {modPicker.open && (

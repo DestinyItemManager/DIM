@@ -66,3 +66,23 @@ export interface LockedProcessMods {
   combatMods: ProcessMod[];
   activityMods: ProcessMod[];
 }
+
+export type SetRejectionReason =
+  | 'skippedLowTier'
+  | 'lowerBoundsExceeded'
+  | 'upperBoundsExceeded'
+  | 'noAutoModsPick'
+  | 'cantSlotMods'
+  | 'cantSlotAutoMods'
+  | 'noExotic'
+  | 'doubleExotic';
+
+/**
+ * Information about the operation of the worker process.
+ */
+export interface ProcessInfo {
+  numProcessed: number;
+  numValidSets: number;
+  // Why it skipped a number of sets
+  stats: { [key in SetRejectionReason]: number };
+}

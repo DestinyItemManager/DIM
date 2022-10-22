@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { assignBucketSpecificMods, ModMap } from 'app/loadout/mod-assignment-utils';
 import { ItemFilter } from 'app/search/filter-types';
+import { warnLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
 import {
   ArmorEnergyRules,
@@ -12,6 +13,21 @@ import {
   LOCKED_EXOTIC_NO_EXOTIC,
   PinnedItems,
 } from './types';
+
+/**
+ * Contains information about whether items got filtered out for various reasons.
+ */
+export interface FilterInfo {
+  alwaysInvalidMods: PluggableInventoryItemDefinition[] | undefined;
+  searchQueryEffective: boolean;
+  perBucketStats: {
+    [key in LockableBucketHash]: {
+      totalConsidered: number;
+      cantFitMods: number;
+      finalValid: number;
+    };
+  };
+}
 
 /**
  * Filter the items map down given the locking and filtering configs.
@@ -36,7 +52,7 @@ export function filterItems({
   lockedExoticHash: number | undefined;
   armorEnergyRules: ArmorEnergyRules;
   searchFilter: ItemFilter;
-}): ItemsByBucket {
+}): [ItemsByBucket, FilterInfo] {
   const filteredItems: {
     [bucketHash in LockableBucketHash]: readonly DimItem[];
   } = {
@@ -47,10 +63,26 @@ export function filterItems({
     [BucketHashes.ClassArmor]: [],
   };
 
-  // If we have mods that don't fit into any items, then technically
-  // all items are filtered out...
+  const emptyFilterInfo = () => ({
+    totalConsidered: 0,
+    cantFitMods: 0,
+    finalValid: 0,
+  });
+
+  const filterInfo: FilterInfo = {
+    alwaysInvalidMods: undefined,
+    searchQueryEffective: false,
+    perBucketStats: {
+      [BucketHashes.Helmet]: emptyFilterInfo(),
+      [BucketHashes.Gauntlets]: emptyFilterInfo(),
+      [BucketHashes.ChestArmor]: emptyFilterInfo(),
+      [BucketHashes.LegArmor]: emptyFilterInfo(),
+      [BucketHashes.ClassArmor]: emptyFilterInfo(),
+    },
+  };
+
   if (!items || !defs || unassignedMods.length) {
-    return filteredItems;
+    return [filteredItems, filterInfo];
   }
 
   for (const bucket of LockableBucketHashes) {
@@ -72,17 +104,33 @@ export function filterItems({
         firstPassFilteredItems = exotics;
       } else if (lockedExoticHash === LOCKED_EXOTIC_NO_EXOTIC) {
         firstPassFilteredItems = firstPassFilteredItems.filter((i) => !i.isExotic);
+      } else if (lockedExoticHash !== undefined && lockedExoticHash > 0) {
+        const def = defs.InventoryItem.get(lockedExoticHash);
+        if (def.inventory?.bucketTypeHash !== bucket) {
+          // The locked exotic is in a different bucket, so we can remove all
+          // exotics from this bucket
+          firstPassFilteredItems = firstPassFilteredItems.filter((i) => !i.isExotic);
+        }
       }
 
-      // TODO: Filter out exotics in other buckets that are not the locked exotic?
+      if (!firstPassFilteredItems.length) {
+        warnLog(
+          'loadout optimizer',
+          'no items for bucket',
+          bucket,
+          'does this happen enough to be worth reporting in some way?'
+        );
+      }
 
       // Use only Armor 2.0 items that aren't excluded and can take the bucket specific locked
       // mods energy type and cost.
       // Filtering the cost is necessary because process only checks mod energy
       // for combinations of bucket independent mods, and we might not pick those.
-      const excludedAndModsFilteredItems = firstPassFilteredItems.filter(
+      const withoutExcluded = firstPassFilteredItems.filter(
+        (item) => !excludedItems[bucket]?.some((excluded) => item.id === excluded.id)
+      );
+      const excludedAndModsFilteredItems = withoutExcluded.filter(
         (item) =>
-          !excludedItems[bucket]?.some((excluded) => item.id === excluded.id) &&
           assignBucketSpecificMods({
             item,
             armorEnergyRules,
@@ -95,8 +143,18 @@ export function filterItems({
       filteredItems[bucket] = searchFilteredItems.length
         ? searchFilteredItems
         : excludedAndModsFilteredItems;
+
+      filterInfo.searchQueryEffective ||=
+        searchFilteredItems.length > 0 &&
+        searchFilteredItems.length !== excludedAndModsFilteredItems.length;
+
+      filterInfo.perBucketStats[bucket] = {
+        totalConsidered: firstPassFilteredItems.length,
+        cantFitMods: withoutExcluded.length - excludedAndModsFilteredItems.length,
+        finalValid: filteredItems[bucket].length,
+      };
     }
   }
 
-  return filteredItems;
+  return [filteredItems, filterInfo];
 }

@@ -10,7 +10,13 @@ import {
 } from '../types';
 import { pickAndAssignSlotIndependentMods, precalculateStructures } from './process-utils';
 import { SetTracker } from './set-tracker';
-import { LockedProcessMods, ProcessArmorSet, ProcessItem, ProcessItemsByBucket } from './types';
+import {
+  LockedProcessMods,
+  ProcessArmorSet,
+  ProcessInfo,
+  ProcessItem,
+  ProcessItemsByBucket,
+} from './types';
 
 /** Caps the maximum number of total armor sets that'll be returned */
 const RETURNED_ARMOR_SETS = 200;
@@ -39,6 +45,7 @@ export function process(
   combos: number;
   /** The stat ranges of all sets that matched our filters & mod selection. */
   statRangesFiltered?: StatRanges;
+  processInfo?: ProcessInfo;
 } {
   const pstart = performance.now();
 
@@ -102,40 +109,48 @@ export function process(
   );
   const hasMods = Boolean(combatMods.length || activityMods.length || generalMods.length);
 
-  let numSkippedLowTier = 0;
-  let numStatRangeExceeded = 0;
-  let numCantSlotMods = 0;
-  let numValidSets = 0;
-  let numDoubleExotic = 0;
-  let numNoExotic = 0;
-  let numProcessed = 0;
+  const processStats: ProcessInfo = {
+    numProcessed: 0,
+    numValidSets: 0,
+    stats: {
+      skippedLowTier: 0,
+      doubleExotic: 0,
+      noExotic: 0,
+      cantSlotAutoMods: 0,
+      cantSlotMods: 0,
+      lowerBoundsExceeded: 0,
+      noAutoModsPick: 0,
+      upperBoundsExceeded: 0,
+    },
+  };
+
   let elapsedSeconds = 0;
 
   for (const helm of helms) {
     for (const gaunt of gauntlets) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
       if (gaunt.isExotic && helm.isExotic) {
-        numDoubleExotic += chests.length * legs.length * classItems.length;
+        processStats.stats.doubleExotic += chests.length * legs.length * classItems.length;
         continue;
       }
       for (const chest of chests) {
         if (chest.isExotic && (gaunt.isExotic || helm.isExotic)) {
-          numDoubleExotic += legs.length * classItems.length;
+          processStats.stats.doubleExotic += legs.length * classItems.length;
           continue;
         }
         for (const leg of legs) {
           if (leg.isExotic && (chest.isExotic || gaunt.isExotic || helm.isExotic)) {
-            numDoubleExotic += classItems.length;
+            processStats.stats.doubleExotic += classItems.length;
             continue;
           }
 
           if (anyExotic && !helm.isExotic && !gaunt.isExotic && !chest.isExotic && !leg.isExotic) {
-            numNoExotic += classItems.length;
+            processStats.stats.doubleExotic += classItems.length;
             continue;
           }
 
           for (const classItem of classItems) {
-            numProcessed++;
+            processStats.numProcessed++;
 
             const helmStats = statsCacheInStatOrder.get(helm)!;
             const gauntStats = statsCacheInStatOrder.get(gaunt)!;
@@ -146,41 +161,41 @@ export function process(
             // JavaScript engines apparently don't unroll loops automatically and this makes a big difference in speed.
             const stats = [
               modStatsInStatOrder[0] +
-                helmStats[0] +
-                gauntStats[0] +
-                chestStats[0] +
-                legStats[0] +
-                classItemStats[0],
+              helmStats[0] +
+              gauntStats[0] +
+              chestStats[0] +
+              legStats[0] +
+              classItemStats[0],
               modStatsInStatOrder[1] +
-                helmStats[1] +
-                gauntStats[1] +
-                chestStats[1] +
-                legStats[1] +
-                classItemStats[1],
+              helmStats[1] +
+              gauntStats[1] +
+              chestStats[1] +
+              legStats[1] +
+              classItemStats[1],
               modStatsInStatOrder[2] +
-                helmStats[2] +
-                gauntStats[2] +
-                chestStats[2] +
-                legStats[2] +
-                classItemStats[2],
+              helmStats[2] +
+              gauntStats[2] +
+              chestStats[2] +
+              legStats[2] +
+              classItemStats[2],
               modStatsInStatOrder[3] +
-                helmStats[3] +
-                gauntStats[3] +
-                chestStats[3] +
-                legStats[3] +
-                classItemStats[3],
+              helmStats[3] +
+              gauntStats[3] +
+              chestStats[3] +
+              legStats[3] +
+              classItemStats[3],
               modStatsInStatOrder[4] +
-                helmStats[4] +
-                gauntStats[4] +
-                chestStats[4] +
-                legStats[4] +
-                classItemStats[4],
+              helmStats[4] +
+              gauntStats[4] +
+              chestStats[4] +
+              legStats[4] +
+              classItemStats[4],
               modStatsInStatOrder[5] +
-                helmStats[5] +
-                gauntStats[5] +
-                chestStats[5] +
-                legStats[5] +
-                classItemStats[5],
+              helmStats[5] +
+              gauntStats[5] +
+              chestStats[5] +
+              legStats[5] +
+              classItemStats[5],
             ];
 
             // TODO: avoid min/max?
@@ -208,13 +223,13 @@ export function process(
             }
 
             if (statRangeExceeded) {
-              numStatRangeExceeded++;
+              processStats.stats.upperBoundsExceeded++;
               continue;
             }
 
             // Drop this set if it could never make it
             if (!setTracker.couldInsert(totalTier)) {
-              numSkippedLowTier++;
+              processStats.stats.skippedLowTier++;
               continue;
             }
 
@@ -238,7 +253,7 @@ export function process(
             }
 
             if (needSomeStats && !autoStatMods) {
-              numStatRangeExceeded++;
+              processStats.stats.lowerBoundsExceeded++;
               continue;
             }
 
@@ -253,15 +268,11 @@ export function process(
                 needSomeStats ? neededStats : undefined
               );
 
-              switch (modPickResult) {
-                case 'cannot_hit_stats':
-                  numStatRangeExceeded++;
-                  continue;
-                case 'mods_dont_fit':
-                  numCantSlotMods++;
-                  continue;
-                default:
-                  statMods = modPickResult.modHashes;
+              if (typeof modPickResult === 'string') {
+                processStats.stats[modPickResult]++;
+                continue;
+              } else {
+                statMods = modPickResult.modHashes;
               }
             }
 
@@ -290,7 +301,7 @@ export function process(
               }
             }
 
-            numValidSets++;
+            processStats.numValidSets++;
             setTracker.insert(totalTier, tiersString, armor, stats, statMods);
           }
         }
@@ -302,8 +313,8 @@ export function process(
 
       if (newElapsedSeconds > elapsedSeconds) {
         elapsedSeconds = newElapsedSeconds;
-        const speed = (numProcessed * 1000) / totalTime;
-        const remaining = Math.round((combos - numProcessed) / speed);
+        const speed = (processStats.numProcessed * 1000) / totalTime;
+        const remaining = Math.round((combos - processStats.numProcessed) / speed);
         onProgress(remaining);
       }
     }
@@ -315,7 +326,7 @@ export function process(
   infoLog(
     'loadout optimizer',
     'found',
-    numValidSets,
+    processStats.numValidSets,
     'stat mixes after processing',
     combos,
     'stat combinations in',
@@ -323,16 +334,13 @@ export function process(
     'ms - ',
     Math.floor((combos * 1000) / totalTime),
     'combos/s',
-    // Split into two objects so console.log will show them all expanded
-    {
-      numCantSlotMods,
-      numSkippedLowTier,
-      numStatRangeExceeded,
-    },
-    {
-      numDoubleExotic,
-      numNoExotic,
-    }
+    // Split into multiple objects so console.log will show them all expanded
+    ..._.chunk(Object.entries(processStats.stats), 3).map((arr) =>
+      arr.reduce((acc, [key, val]) => {
+        acc[key] = val;
+        return acc;
+      }, {})
+    )
   );
   infoLog('loadout optimizer', 'auto stat mods', {
     cacheHits: precalculatedInfo.cache.cacheHits,
@@ -353,5 +361,6 @@ export function process(
     sets,
     combos,
     statRangesFiltered,
+    processInfo: processStats,
   };
 }
