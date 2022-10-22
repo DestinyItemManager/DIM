@@ -1,5 +1,6 @@
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
+import { WeaponCatalystInfo } from 'app/dim-ui/WeaponCatalystInfo';
 import { WeaponCraftedInfo } from 'app/dim-ui/WeaponCraftedInfo';
 import { WeaponDeepsightInfo } from 'app/dim-ui/WeaponDeepsightInfo';
 import { t } from 'app/i18next-t';
@@ -92,6 +93,8 @@ export default function ItemDetails({
       )}
 
       {defs.isDestiny2() && <WeaponDeepsightInfo item={item} />}
+
+      {defs.isDestiny2() && <WeaponCatalystInfo item={item} />}
 
       {killTrackerInfo && defs.isDestiny2() && (
         <KillTrackerInfo tracker={killTrackerInfo} showTextLabel className="masterwork-progress" />
