@@ -133,11 +133,11 @@ function loadGlobalSettings(): ThunkResult {
 
 /**
  * Wait, with exponential backoff - we'll try infinitely otherwise, in a tight loop!
- * Double the wait time, starting with 30 seconds, until we reach 5 minutes.
+ * Double the wait time, starting with 60 seconds, until we reach 10 minutes.
  */
 function getBackoffWaitTime(backoff: number) {
   // Don't wait less than 10 seconds or more than 10 minutes
-  return Math.max(10_000, Math.min(10 * 60 * 1000, Math.random() * Math.pow(2, backoff) * 15_000));
+  return Math.max(10_000, Math.min(10 * 60 * 1000, Math.random() * Math.pow(2, backoff) * 30_000));
 }
 
 // Backoff multiplier
@@ -287,73 +287,72 @@ function flushUpdates(): ThunkResult {
       return;
     }
 
-    if (dimApiState.updateInProgressWatermark === 0 && dimApiState.updateQueue.length > 0) {
-      // Prepare the queue
-      dispatch(prepareToFlushUpdates());
-      dimApiState = getState().dimApi;
+    // Skip if there's already an update going on, or the queue is empty
+    if (dimApiState.updateInProgressWatermark !== 0 || dimApiState.updateQueue.length === 0) {
+      return;
+    }
 
-      if (dimApiState.updateInProgressWatermark === 0) {
-        return;
-      }
+    // Prepare the queue
+    dispatch(prepareToFlushUpdates());
+    dimApiState = getState().dimApi;
 
-      infoLog(
-        'flushUpdates',
-        'Flushing queue of',
-        dimApiState.updateInProgressWatermark,
-        'updates'
+    if (dimApiState.updateInProgressWatermark === 0) {
+      return;
+    }
+
+    infoLog('flushUpdates', 'Flushing queue of', dimApiState.updateInProgressWatermark, 'updates');
+
+    // Only select the items that were frozen for update. They're guaranteed
+    // to not change while we're updating and they'll be for a single profile.
+    const updates = dimApiState.updateQueue.slice(0, dimApiState.updateInProgressWatermark);
+
+    try {
+      const firstWithAccount = updates.find((u) => u.platformMembershipId) || updates[0];
+
+      const results = await postUpdates(
+        firstWithAccount.platformMembershipId,
+        firstWithAccount.destinyVersion,
+        updates
       );
+      infoLog('flushUpdates', 'got results', updates, results);
 
-      // Only select the items that were frozen for update. They're guaranteed
-      // to not change while we're updating and they'll be for a single profile.
-      const updates = dimApiState.updateQueue.slice(0, dimApiState.updateInProgressWatermark);
+      // Quickly heal from being failure backoff
+      flushUpdatesBackoff = Math.floor(flushUpdatesBackoff / 2);
 
-      try {
-        const firstWithAccount = updates.find((u) => u.platformMembershipId) || updates[0];
+      dispatch(finishedUpdates(results));
 
-        const results = await postUpdates(
-          firstWithAccount.platformMembershipId,
-          firstWithAccount.destinyVersion,
-          updates
-        );
-        infoLog('flushUpdates', 'got results', updates, results);
-
-        // Quickly heal from being failure backoff
-        flushUpdatesBackoff = Math.floor(flushUpdatesBackoff / 2);
-
-        dispatch(finishedUpdates(results));
-
-        if (dimApiState.updateQueue.length > 0) {
-          // Flush more updates!
-          dispatch(flushUpdates());
-        } else if (!dimApiState.profileLoaded) {
-          // Load API data in case we didn't do it before
-          dispatch(loadDimApiData());
-        }
-      } catch (e) {
-        if (flushUpdatesBackoff === 0) {
-          showUpdateErrorNotification(e);
-        }
-        errorLog('flushUpdates', 'Unable to save updates to DIM API', e);
-
-        // Wait, with exponential backoff
-        flushUpdatesBackoff++;
-        const waitTime = getBackoffWaitTime(flushUpdatesBackoff);
-        // Don't wait for the retry, so we don't block profile loading
-        (async () => {
-          infoLog('flushUpdates', 'Waiting', waitTime, 'ms before re-attempting updates');
-          await delay(waitTime);
-
-          // Now mark the queue failed so it can be retried. Until
-          // updateInProgressWatermark gets reset no other flushUpdates call will
-          // do anything.
-          dispatch(flushUpdatesFailed());
-
-          // Try again
-          dispatch(flushUpdates());
-        })();
-
-        throw e;
+      dimApiState = getState().dimApi;
+      if (dimApiState.updateQueue.length > 0) {
+        // Flush more updates!
+        dispatch(flushUpdates());
+      } else if (!dimApiState.profileLoaded) {
+        // Load API data in case we didn't do it before
+        dispatch(loadDimApiData());
       }
+    } catch (e) {
+      if (flushUpdatesBackoff === 0) {
+        showUpdateErrorNotification(e);
+      }
+      errorLog('flushUpdates', 'Unable to save updates to DIM API', e);
+
+      // Wait, with exponential backoff
+      flushUpdatesBackoff++;
+      const waitTime = getBackoffWaitTime(flushUpdatesBackoff);
+      // Don't wait for the retry, so we don't block profile loading
+      (async () => {
+        infoLog('flushUpdates', 'Waiting', waitTime, 'ms before re-attempting updates');
+        await delay(waitTime);
+
+        // Now mark the queue failed so it can be retried. Until
+        // updateInProgressWatermark gets reset no other flushUpdates call will
+        // do anything.
+        dispatch(flushUpdatesFailed());
+
+        // Try again
+        dispatch(flushUpdates());
+      })();
+
+      throw e;
     }
   };
 }
