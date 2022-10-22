@@ -268,8 +268,8 @@ export interface DimCrafted {
   level?: number;
   /** 0-1 progress to the next level */
   progress?: number;
-  /** when this weapon was crafted, UTC epoch milliseconds timestamp */
-  dateCrafted?: number;
+  /** when this weapon was crafted, UTC epoch seconds timestamp */
+  craftedDate?: number;
 }
 
 export interface DimDeepsight {
