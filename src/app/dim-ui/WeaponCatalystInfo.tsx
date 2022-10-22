@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import Objective from 'app/progress/Objective';
-import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import styles from './WeaponCatalystInfo.m.scss';
 
 /**
@@ -12,7 +11,12 @@ import styles from './WeaponCatalystInfo.m.scss';
 export function WeaponCatalystInfo({ item }: { item: DimItem }) {
   const { catalystInfo } = item;
 
-  if (!catalystInfo?.unlocked || catalystInfo?.complete || !catalystInfo?.objectives?.length) {
+  if (
+    !catalystInfo ||
+    !catalystInfo.unlocked ||
+    catalystInfo.complete ||
+    !catalystInfo.objectives?.length
+  ) {
     return null;
   }
 
@@ -20,7 +24,7 @@ export function WeaponCatalystInfo({ item }: { item: DimItem }) {
     <div className={styles.catalystProgress}>
       <span className={styles.catalystProgressTitle}>{t('MovePopup.CatalystProgress')}</span>
       <div className={styles.catalystProgressSection}>
-        {catalystInfo.objectives.map((objective: DestinyObjectiveProgress) => (
+        {catalystInfo.objectives.map((objective) => (
           <Objective key={objective.objectiveHash} objective={objective} />
         ))}
       </div>
