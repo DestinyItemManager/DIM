@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "Por favor, use la App del Acompañante de Destiny 2 para aprobar que DIM modifique tus objetos.",
+    "ConfirmDescription": "Por favor, use la Aplicación del Acompañante de Destiny 2 para aprobar que DIM modifique tus objetos.",
     "ConfirmTitle": "Confirmar Acción",
     "Error": "Error cambiando modificadores o ventajas",
     "ErrorMessage": "No pudimos equipar {{plug}} en {{item}}.\n\n{{error}}",
@@ -120,7 +120,7 @@
     "Title": "Algo fue mal"
   },
   "ErrorPanel": {
-    "Description": "Esto probablemente sea un problema que afecta a todas las aplicaciones de terceros. Comprube a a ver si Bungie.net carga o la Aplicación del Acompañante de Destiny 2 funciona.",
+    "Description": "Esto probablemente sea un problema que afecta a todas las aplicaciones de terceros. Comprube a ver si Bungie.net carga o la Aplicación del Acompañante de Destiny 2 funciona.",
     "Troubleshooting": "Guía de Solución de Problemas"
   },
   "FarmingMode": {
@@ -1118,7 +1118,7 @@
       "DiscordHelp": "Haz preguntas, da tu opinión y recibe soporte en nuestros canales de Discord.",
       "FAQ": "Preguntas Más Frecuentes",
       "FAQAccess": "¿Cómo accede DIM a mis datos de Destiny?",
-      "FAQAccessAnswer": "Utilizamos la autenticación de la app de Bungie para permitir a DIM ver y mover tus objetos. DIM nunca ve tu usuario o contraseña. Funciona del mismo modo que la app Acompañante.",
+      "FAQAccessAnswer": "Utilizamos la autenticación de la aplicación de Bungie para permitir a DIM ver y mover tus objetos. DIM nunca ve tu usuario o contraseña. Funciona del mismo modo que la aplicación Acompañante.",
       "FAQKeyboard": "¿DIM soporta atajos de teclado?",
       "FAQKeyboardAnswer": "¡Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
       "FAQLogout": "¿Cómo puedo cerrar sesión en DIM?",
@@ -1130,7 +1130,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Si estas interesado en contribuir al proyecto, visíta la página del proyecto en {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM es gratis, una app de código abierto construída por desarrolladores de la comunidad bajo los mismos servicios usado por Bungie.net y la Aplicación del Acompañante de Destiny.",
+      "HowItsMade": "DIM es gratis, una aplicación de código abierto construída por desarrolladores de la comunidad bajo los mismos servicios usado por Bungie.net y la Aplicación del Acompañante de Destiny.",
       "Reddit": "Reddit",
       "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, ¡háznoslas saber!",
       "Schedule": {
