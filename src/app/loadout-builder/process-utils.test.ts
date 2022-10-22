@@ -19,7 +19,7 @@ import {
   pickAndAssignSlotIndependentMods,
   precalculateStructures,
 } from './process-worker/process-utils';
-import { ProcessItem, ProcessMod } from './process-worker/types';
+import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
 import { ArmorStatHashes, MIN_LO_ITEM_ENERGY } from './types';
 
@@ -178,8 +178,18 @@ describe('process-utils', () => {
       false,
       statOrder
     );
+    const modStatistics: ModAssignmentStatistics = {
+      earlyModsCheck: { timesChecked: 0, timesFailed: 0 },
+      autoModsPick: { timesChecked: 0, timesFailed: 0 },
+      finalAssignment: {
+        modAssignmentAttempted: 0,
+        modsAssignmentFailed: 0,
+        autoModsAssignmentFailed: 0,
+      },
+    };
     return (
-      typeof pickAndAssignSlotIndependentMods(precalculatedInfo, items, neededStats) !== 'string'
+      pickAndAssignSlotIndependentMods(precalculatedInfo, modStatistics, items, neededStats) !==
+      undefined
     );
   };
 

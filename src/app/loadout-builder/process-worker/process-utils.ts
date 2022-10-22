@@ -7,7 +7,7 @@ import {
   getViableGeneralModPicks,
   ModsPick,
 } from './auto-stat-mod-utils';
-import { ProcessItem, ProcessMod, SetRejectionReason } from './types';
+import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 interface SortParam {
   energy?: {
@@ -116,8 +116,6 @@ function getEnergyCounts(modsOrItems: (ProcessMod | ProcessItemSubset)[]): Energ
 // Used for null values
 const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
 
-export type SlotIndependentPickAssignResult = SetRejectionReason | ModsPick;
-
 /**
  * This figures out if all general, combat and activity mods can be assigned to an armour set and auto stat mods
  * can be picked to provide the neededStats.
@@ -125,6 +123,9 @@ export type SlotIndependentPickAssignResult = SetRejectionReason | ModsPick;
  * The params combatModPermutations, activityModPermutations are assumed to be the results
  * from processUtils.ts#generateModPermutations, i.e. all permutations of combat or activity mods.
  * By preprocessing all the assignments we skip a lot of work in the middle of the big process algorithm.
+ *
+ * Returns a ModsPick representing the automatically picked stat mods in the success case, even
+ * if no auto stat mods were requested/needed, in which case the arrays will be empty.
  */
 export function pickAndAssignSlotIndependentMods(
   {
@@ -136,9 +137,10 @@ export function pickAndAssignSlotIndependentMods(
     combatModPermutations,
     hasActivityMods,
   }: PrecalculatedInfo,
+  modStatistics: ModAssignmentStatistics,
   items: ProcessItem[],
   neededStats: number[] | undefined
-): SlotIndependentPickAssignResult {
+): ModsPick | undefined {
   // Sort the items like the mods are to try and get a greedy result
   // Theory here is that aligning energy types between items and mods and assigning the mods with the
   // highest cost to the items with the highest amount of energy available will find results faster
@@ -148,6 +150,8 @@ export function pickAndAssignSlotIndependentMods(
   const [arcCombatMods, solarCombatMods, voidCombatMods, stasisCombatMods] = combatModEnergyCounts;
   const [arcActivityMods, solarActivityMods, voidActivityMods, stasisActivityMods] =
     activityModEnergyCounts;
+
+  modStatistics.earlyModsCheck.timesChecked++;
 
   // A quick check to see if we have enough of each energy type for the mods so we can exit early if not
   if (
@@ -160,7 +164,8 @@ export function pickAndAssignSlotIndependentMods(
     stasisItems + anyItems < stasisCombatMods ||
     stasisItems + anyItems < stasisActivityMods
   ) {
-    return 'cantSlotMods';
+    modStatistics.earlyModsCheck.timesFailed++;
+    return undefined;
   }
 
   // An early check to ensure we have enough activity mod combos
@@ -175,20 +180,27 @@ export function pickAndAssignSlotIndependentMods(
         }
       }
       if (socketsCount < activityTagCounts[tag]) {
-        return 'cantSlotMods';
+        modStatistics.earlyModsCheck.timesFailed++;
+        return undefined;
       }
     }
   }
 
-  // Figure out if there's any way for stat mods to provide the needed stats. If neededStats are
-  // all 0, this returns the user-picked general mod costs only.
-  const validGeneralModPicks = neededStats && getViableGeneralModPicks(cache, neededStats);
-  if (validGeneralModPicks?.length === 0) {
-    return 'noAutoModsPick';
+  // Figure out if there's any way for stat mods to provide the needed stats -- if hitting target stats is trivially
+  // infeasible, just don't.
+  let validGeneralModPicks: ModsPick[] | undefined;
+  if (neededStats) {
+    modStatistics.autoModsPick.timesChecked++;
+    validGeneralModPicks = getViableGeneralModPicks(cache, neededStats);
+    if (validGeneralModPicks.length === 0) {
+      modStatistics.autoModsPick.timesFailed++;
+    }
   }
 
   let assignedModsAtLeastOnce = false;
   const remainingEnergyCapacities = [0, 0, 0, 0, 0];
+
+  modStatistics.finalAssignment.modAssignmentAttempted++;
 
   // Now we begin looping over all the mod permutations, we have chosen activity mods because they
   // are the most selective. This is a similar principle to DB query theory where you want to run
@@ -293,7 +305,12 @@ export function pickAndAssignSlotIndependentMods(
     }
   }
 
-  return assignedModsAtLeastOnce && neededStats ? 'cantSlotAutoMods' : 'cantSlotMods';
+  if (assignedModsAtLeastOnce && neededStats) {
+    modStatistics.finalAssignment.autoModsAssignmentFailed++;
+  } else {
+    modStatistics.finalAssignment.modsAssignmentFailed++;
+  }
+  return undefined;
 }
 
 export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {

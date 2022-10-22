@@ -13,9 +13,9 @@ import { SetTracker } from './set-tracker';
 import {
   LockedProcessMods,
   ProcessArmorSet,
-  ProcessInfo,
   ProcessItem,
   ProcessItemsByBucket,
+  ProcessStatistics,
 } from './types';
 
 /** Caps the maximum number of total armor sets that'll be returned */
@@ -45,7 +45,7 @@ export function process(
   combos: number;
   /** The stat ranges of all sets that matched our filters & mod selection. */
   statRangesFiltered?: StatRanges;
-  processInfo?: ProcessInfo;
+  processInfo?: ProcessStatistics;
 } {
   const pstart = performance.now();
 
@@ -109,19 +109,28 @@ export function process(
   );
   const hasMods = Boolean(combatMods.length || activityMods.length || generalMods.length);
 
-  const processStats: ProcessInfo = {
-    numProcessed: 0,
-    numValidSets: 0,
-    stats: {
-      skippedLowTier: 0,
+  const setStatistics = {
+    skipReasons: {
       doubleExotic: 0,
       noExotic: 0,
-      cantSlotAutoMods: 0,
-      cantSlotMods: 0,
-      lowerBoundsExceeded: 0,
-      noAutoModsPick: 0,
-      upperBoundsExceeded: 0,
+      skippedLowTier: 0,
     },
+    lowerBoundsExceeded: { timesChecked: 0, timesFailed: 0 },
+    upperBoundsExceeded: { timesChecked: 0, timesFailed: 0 },
+    modsStatistics: {
+      earlyModsCheck: { timesChecked: 0, timesFailed: 0 },
+      autoModsPick: { timesChecked: 0, timesFailed: 0 },
+      finalAssignment: {
+        modAssignmentAttempted: 0,
+        modsAssignmentFailed: 0,
+        autoModsAssignmentFailed: 0,
+      },
+    },
+  };
+  const processStatistics: ProcessStatistics = {
+    numProcessed: 0,
+    numValidSets: 0,
+    statistics: setStatistics,
   };
 
   let elapsedSeconds = 0;
@@ -130,27 +139,27 @@ export function process(
     for (const gaunt of gauntlets) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
       if (gaunt.isExotic && helm.isExotic) {
-        processStats.stats.doubleExotic += chests.length * legs.length * classItems.length;
+        setStatistics.skipReasons.doubleExotic += chests.length * legs.length * classItems.length;
         continue;
       }
       for (const chest of chests) {
         if (chest.isExotic && (gaunt.isExotic || helm.isExotic)) {
-          processStats.stats.doubleExotic += legs.length * classItems.length;
+          setStatistics.skipReasons.doubleExotic += legs.length * classItems.length;
           continue;
         }
         for (const leg of legs) {
           if (leg.isExotic && (chest.isExotic || gaunt.isExotic || helm.isExotic)) {
-            processStats.stats.doubleExotic += classItems.length;
+            setStatistics.skipReasons.doubleExotic += classItems.length;
             continue;
           }
 
           if (anyExotic && !helm.isExotic && !gaunt.isExotic && !chest.isExotic && !leg.isExotic) {
-            processStats.stats.doubleExotic += classItems.length;
+            setStatistics.skipReasons.noExotic += classItems.length;
             continue;
           }
 
           for (const classItem of classItems) {
-            processStats.numProcessed++;
+            processStatistics.numProcessed++;
 
             const helmStats = statsCacheInStatOrder.get(helm)!;
             const gauntStats = statsCacheInStatOrder.get(gaunt)!;
@@ -222,14 +231,15 @@ export function process(
               }
             }
 
-            if (statRangeExceeded) {
-              processStats.stats.upperBoundsExceeded++;
+            // Drop this set if it could never make it
+            if (!setTracker.couldInsert(totalTier)) {
+              setStatistics.skipReasons.skippedLowTier++;
               continue;
             }
 
-            // Drop this set if it could never make it
-            if (!setTracker.couldInsert(totalTier)) {
-              processStats.stats.skippedLowTier++;
+            setStatistics.upperBoundsExceeded.timesChecked++;
+            if (statRangeExceeded) {
+              setStatistics.upperBoundsExceeded.timesFailed++;
               continue;
             }
 
@@ -252,8 +262,9 @@ export function process(
               }
             }
 
+            setStatistics.lowerBoundsExceeded.timesChecked++;
             if (needSomeStats && !autoStatMods) {
-              processStats.stats.lowerBoundsExceeded++;
+              setStatistics.lowerBoundsExceeded.timesFailed++;
               continue;
             }
 
@@ -262,17 +273,17 @@ export function process(
             // TODO: this isn't a big part of the overall cost of the loop, but we could consider trying to slot
             // mods at every level (e.g. just helmet, just helmet+arms) and skipping this if they already fit.
             if (hasMods || needSomeStats) {
-              const modPickResult = pickAndAssignSlotIndependentMods(
+              const modsPick = pickAndAssignSlotIndependentMods(
                 precalculatedInfo,
+                setStatistics.modsStatistics,
                 armor,
                 needSomeStats ? neededStats : undefined
               );
 
-              if (typeof modPickResult === 'string') {
-                processStats.stats[modPickResult]++;
-                continue;
+              if (modsPick) {
+                statMods = modsPick.modHashes;
               } else {
-                statMods = modPickResult.modHashes;
+                continue;
               }
             }
 
@@ -301,7 +312,7 @@ export function process(
               }
             }
 
-            processStats.numValidSets++;
+            processStatistics.numValidSets++;
             setTracker.insert(totalTier, tiersString, armor, stats, statMods);
           }
         }
@@ -313,8 +324,8 @@ export function process(
 
       if (newElapsedSeconds > elapsedSeconds) {
         elapsedSeconds = newElapsedSeconds;
-        const speed = (processStats.numProcessed * 1000) / totalTime;
-        const remaining = Math.round((combos - processStats.numProcessed) / speed);
+        const speed = (processStatistics.numProcessed * 1000) / totalTime;
+        const remaining = Math.round((combos - processStatistics.numProcessed) / speed);
         onProgress(remaining);
       }
     }
@@ -323,10 +334,11 @@ export function process(
   const finalSets = setTracker.getArmorSets(RETURNED_ARMOR_SETS);
 
   const totalTime = performance.now() - pstart;
+
   infoLog(
     'loadout optimizer',
     'found',
-    processStats.numValidSets,
+    processStatistics.numValidSets,
     'stat mixes after processing',
     combos,
     'stat combinations in',
@@ -335,12 +347,17 @@ export function process(
     Math.floor((combos * 1000) / totalTime),
     'combos/s',
     // Split into multiple objects so console.log will show them all expanded
-    ..._.chunk(Object.entries(processStats.stats), 3).map((arr) =>
-      arr.reduce((acc, [key, val]) => {
-        acc[key] = val;
-        return acc;
-      }, {})
-    )
+    'sets outright skipped:',
+    setStatistics.skipReasons,
+    'lower and upper bounds:',
+    setStatistics.lowerBoundsExceeded,
+    setStatistics.upperBoundsExceeded,
+    'mod assignment stats:',
+    'early check:',
+    setStatistics.modsStatistics.earlyModsCheck,
+    'auto mods pick:',
+    setStatistics.modsStatistics.autoModsPick,
+    setStatistics.modsStatistics
   );
   infoLog('loadout optimizer', 'auto stat mods', {
     cacheHits: precalculatedInfo.cache.cacheHits,
@@ -361,6 +378,6 @@ export function process(
     sets,
     combos,
     statRangesFiltered,
-    processInfo: processStats,
+    processInfo: processStatistics,
   };
 }

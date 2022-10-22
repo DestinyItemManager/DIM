@@ -2,9 +2,11 @@ import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { AppIcon, banIcon } from 'app/shell/icons';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -14,7 +16,7 @@ import LockedItem from './filter/LockedItem';
 import { FilterInfo } from './item-filter';
 import { LoadoutBuilderAction } from './loadout-builder-reducer';
 import styles from './NoSetsFoundExplainer.m.scss';
-import { ProcessInfo } from './process-worker/types';
+import { ProcessStatistics, RejectionRatio } from './process-worker/types';
 import { ArmorEnergyRules, LockableBucketHashes, PinnedItems, StatFilters } from './types';
 
 interface ActionableSuggestion {
@@ -27,6 +29,19 @@ interface ProblemDescription {
   id: string;
   suggestions: ActionableSuggestion[];
 }
+
+/** How many sets can be excluded by upper bounds before we warn. Not too high because upper bounds are rarely useful. */
+const UPPER_STAT_BOUNDS_WARN_RATIO = 0.8;
+/**
+ * How many sets can be excluded by lower bounds before we warn.
+ * Quite high because LO's purpose is literally to sift through tons of garbage sets.
+ */
+const LOWER_STAT_BOUNDS_WARN_RATIO = 0.95;
+/**
+ * >98% usually only happens when you select activity mods or restrictive mod settings and tons
+ * of combat mods with the same element
+ */
+const EARLY_MOD_REJECTION_WARN_RATIO = 0.98;
 
 export default function NoSetsFoundExplainer({
   defs,
@@ -49,7 +64,7 @@ export default function NoSetsFoundExplainer({
   pinnedItems: PinnedItems;
   lockedExoticHash: number | undefined;
   filterInfo?: FilterInfo;
-  processInfo?: ProcessInfo;
+  processInfo?: ProcessStatistics;
 }) {
   const problems: ProblemDescription[] = [];
 
@@ -96,6 +111,14 @@ export default function NoSetsFoundExplainer({
 
   const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
   const generalMods = lockedModMap[armor2PlugCategoryHashesByName.general] || [];
+  const combatMods = Object.entries(lockedModMap).flatMap(([plugCategoryHash, mods]) =>
+    mods && combatCompatiblePlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
+  );
+  const activityMods = Object.entries(lockedModMap).flatMap(([plugCategoryHash, mods]) =>
+    mods && activityModPlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
+  );
+
+  let failedModsInBucket = false;
 
   // Also quite easy to diagnose: If a bucket has no valid pieces before we send to the worker,
   // then we should consider removing some item restrictions (such as unpinning/unrestricting items)
@@ -109,6 +132,7 @@ export default function NoSetsFoundExplainer({
       const bucketInfo = filterInfo.perBucketStats[bucketHash];
       const bucketMods = lockedModMap[bucketHashToPlugCategoryHash[bucketHash]];
       if (bucketInfo.totalConsidered > 0 && bucketInfo.finalValid === 0 && bucketMods?.length) {
+        failedModsInBucket = true;
         const suggestions: ActionableSuggestion[] = [
           {
             id: 'considerDroppingMods',
@@ -168,11 +192,17 @@ export default function NoSetsFoundExplainer({
 
   const elementMayCauseProblems =
     armorEnergyRules.lockArmorEnergyType !== LockArmorEnergyType.None &&
+    (processInfo?.statistics.modsStatistics.earlyModsCheck.timesFailed ||
+      processInfo?.statistics.modsStatistics.finalAssignment.modsAssignmentFailed ||
+      failedModsInBucket) &&
     lockedMods.some(
       (mod) => mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any
     );
   const capacityMayCauseProblems =
     armorEnergyRules.assumeArmorMasterwork !== AssumeArmorMasterwork.All &&
+    (processInfo?.statistics.modsStatistics.finalAssignment.modsAssignmentFailed ||
+      processInfo?.statistics.modsStatistics.finalAssignment.autoModsAssignmentFailed ||
+      failedModsInBucket) &&
     (lockedMods.length || anyStatMinimums);
 
   if (
@@ -244,117 +274,147 @@ export default function NoSetsFoundExplainer({
     }
 
     const allPinnedItems = _.compact(LockableBucketHashes.map((hash) => pinnedItems[hash]));
-    const unpinItemsSuggestion = allPinnedItems.length > 0 && {
-      id: 'considerUnpinningItems',
-      contents: (
-        <>
-          {allPinnedItems.map((pinnedItem) => (
-            <div key={pinnedItem.id} className={styles.modRow}>
-              <LockedItem
-                lockedItem={pinnedItem}
-                onRemove={() => dispatch({ type: 'unpinItem', item: pinnedItem })}
-              />
-            </div>
-          ))}
-          <i key="hint">Consider unpinning items.</i>
-        </>
-      ),
+    let usedUnpinSuggestion = false;
+    const unpinItemsSuggestion = () => {
+      if (usedUnpinSuggestion) {
+        return undefined;
+      }
+      usedUnpinSuggestion = true;
+      return (
+        allPinnedItems.length > 0 && {
+          id: 'considerUnpinningItems',
+          contents: (
+            <>
+              {allPinnedItems.map((pinnedItem) => (
+                <div key={pinnedItem.id} className={styles.modRow}>
+                  <LockedItem
+                    lockedItem={pinnedItem}
+                    onRemove={() => dispatch({ type: 'unpinItem', item: pinnedItem })}
+                  />
+                </div>
+              ))}
+              <i key="hint">Consider unpinning items.</i>
+            </>
+          ),
+        }
+      );
     };
 
-    // This is a bit ugly -- we essentially have to reverse engineer where sets fail in the worker process.
-    if (processInfo.stats.cantSlotAutoMods > 0) {
+    // Here, we check which parts of the worker process rejected a ton of sets. LO essentially
+    // checks upper bounds, lower bounds, mod assignments in that order. If a step checked more than
+    // 0 sets and failed 100% of them, it should be worth reporting -- but if, say, the stat bounds check
+    // rejected 99.9% of sets and then left 1 set through, and then we failed to assign combat mods to that
+    // 1 set, then blaming the selected combat mods is kind of unfair, so we should show steps that reject a high percentage
+    // too. Maybe some statistical confidence calculation could be useful here, but let's just use some numbers that made sense in testing.
+
+    const isInteresting = ({ timesChecked, timesFailed }: RejectionRatio, threshold: number) =>
+      timesChecked > 0 && timesFailed / timesChecked >= threshold;
+
+    const {
+      lowerBoundsExceeded,
+      upperBoundsExceeded,
+      modsStatistics: modsStats,
+    } = processInfo.statistics;
+
+    if (isInteresting(upperBoundsExceeded, UPPER_STAT_BOUNDS_WARN_RATIO)) {
       problems.push({
-        id: 'cantSlotAutoMods',
-        description: `${processInfo.stats.cantSlotAutoMods} sets can fit all mods, but do not have enough energy or slots left over to pick stat mods to hit requested stat tiers.`,
+        id: 'upperBoundsExceeded',
+        description: `${upperBoundsExceeded.timesFailed} sets had too high stats.`,
         suggestions: _.compact([
           {
             id: 'hint',
+            contents: <i>Consider increasing stat maximums.</i>,
+          },
+          unpinItemsSuggestion(),
+        ]),
+      });
+    }
+
+    if (isInteresting(lowerBoundsExceeded, LOWER_STAT_BOUNDS_WARN_RATIO)) {
+      problems.push({
+        id: 'lowerBoundsExceeded',
+        description: `${lowerBoundsExceeded.timesFailed} sets did not hit requested stat tiers.`,
+        suggestions: _.compact([
+          !autoAssignStatMods &&
+            $featureFlags.loAutoStatMods && {
+              id: 'hint1',
+              contents: <i>Consider allowing DIM to pick stat mods.</i>,
+            },
+          {
+            id: 'hint2',
             contents: <i>Consider reducing stat minimums.</i>,
           },
-          lockedMods.length > 0 && {
-            id: 'hint2',
-            contents: (
-              <>
-                {modRow(lockedMods)}
-                <i key="hint">Consider removing some mods.</i>
-              </>
-            ),
-          },
-          unpinItemsSuggestion,
+          unpinItemsSuggestion(),
         ]),
       });
-    } else if (processInfo.stats.cantSlotMods > 0) {
-      problems.push({
-        id: 'cantSlotMods',
-        description: `${processInfo.stats.cantSlotMods} sets could not fit all requested mods.`,
-        suggestions: _.compact([
-          {
-            id: 'hint',
-            contents: (
-              <>
-                {modRow(lockedMods)}
-                <i key="hint">Consider removing some mods.</i>
-              </>
-            ),
-          },
-          unpinItemsSuggestion,
-        ]),
-      });
-    } else if (processInfo.stats.noAutoModsPick > 0) {
-      // There's literally no valid way to pick stat mods to hit these stats, so consider relaxing stat requirements
-      problems.push({
-        id: 'noAutoModsPick',
-        description: `For ${processInfo.stats.noAutoModsPick} sets, it's not possible to pick stat mods to hit requested stat tiers.`,
-        suggestions: _.compact([
-          generalMods.length > 0 && {
-            id: 'hint1',
-            contents: (
-              <>
-                {modRow(generalMods)}
-                <i key="hint">Consider removing some mods.</i>
-              </>
-            ),
-          },
-          {
-            id: 'hint2',
-            contents: <i key="hint">Consider reducing stat minimums.</i>,
-          },
-          unpinItemsSuggestion,
-        ]),
-      });
-    } else if (
-      processInfo.stats.lowerBoundsExceeded > 0 ||
-      processInfo.stats.upperBoundsExceeded > 0
-    ) {
-      if (processInfo.stats.lowerBoundsExceeded > 0) {
+    }
+
+    if (modsStats.earlyModsCheck.timesChecked > 0) {
+      // If we got here, we took a closer look at a number of sets, but failed to pick/assign mods.
+
+      if (isInteresting(modsStats.earlyModsCheck, EARLY_MOD_REJECTION_WARN_RATIO)) {
         problems.push({
-          id: 'lowerBoundsExceeded',
-          description: `${processInfo.stats.lowerBoundsExceeded} sets did not hit requested stat tiers.`,
+          id: 'noAutoModsPick',
+          description: `${modsStats.earlyModsCheck.timesFailed} sets can't fit requested mods due to energy type or mod slot requirements.`,
           suggestions: _.compact([
-            !autoAssignStatMods &&
-              $featureFlags.loAutoStatMods && {
-                id: 'hint1',
-                contents: <i>Consider allowing DIM to assign stat mods.</i>,
-              },
-            {
-              id: 'hint2',
-              contents: <i>Consider reducing stat minimums.</i>,
+            (combatMods.length > 0 || activityMods.length > 0) && {
+              id: 'hint1',
+              contents: (
+                <>
+                  {modRow([...combatMods, ...activityMods])}
+                  <i key="hint">Consider removing some mods.</i>
+                </>
+              ),
             },
-            unpinItemsSuggestion,
+            unpinItemsSuggestion(),
           ]),
         });
       }
 
-      if (processInfo.stats.upperBoundsExceeded > 0) {
+      if (isInteresting(modsStats.autoModsPick, LOWER_STAT_BOUNDS_WARN_RATIO)) {
+        // We fail to pick stat mods to hit these stats very often, so consider relaxing stat requirements
         problems.push({
-          id: 'upperBoundsExceeded',
-          description: `${processInfo.stats.upperBoundsExceeded} sets had too high stats.`,
+          id: 'noAutoModsPick',
+          description: `For ${modsStats.autoModsPick.timesFailed} sets, it's not possible to pick stat mods to hit requested stat tiers.`,
+          suggestions: _.compact([
+            generalMods.length > 0 && {
+              id: 'hint1',
+              contents: (
+                <>
+                  {modRow(generalMods)}
+                  <i key="hint">Consider removing some mods.</i>
+                </>
+              ),
+            },
+            {
+              id: 'hint2',
+              contents: <i key="hint">Consider reducing stat minimums.</i>,
+            },
+            unpinItemsSuggestion(),
+          ]),
+        });
+      }
+
+      if (modsStats.finalAssignment.modAssignmentAttempted > 0) {
+        // We made it to mod assignment, but didn't end up successfully. Definitely worth pointing out.
+        problems.push({
+          id: 'cantSlotMods',
+          description: `${modsStats.finalAssignment.modAssignmentAttempted} sets could not fit all requested mods.`,
           suggestions: _.compact([
             {
               id: 'hint',
-              contents: <i>Consider increasing stat maximums.</i>,
+              contents: (
+                <>
+                  {modRow(lockedMods)}
+                  <i key="hint">Consider removing some mods.</i>
+                </>
+              ),
             },
-            unpinItemsSuggestion,
+            modsStats.finalAssignment.autoModsAssignmentFailed > 0 && {
+              id: 'hint2',
+              contents: <i key="hint">Consider reducing stat minimums.</i>,
+            },
+            unpinItemsSuggestion(),
           ]),
         });
       }

@@ -67,22 +67,41 @@ export interface LockedProcessMods {
   activityMods: ProcessMod[];
 }
 
-export type SetRejectionReason =
-  | 'skippedLowTier'
-  | 'lowerBoundsExceeded'
-  | 'upperBoundsExceeded'
-  | 'noAutoModsPick'
-  | 'cantSlotMods'
-  | 'cantSlotAutoMods'
-  | 'noExotic'
-  | 'doubleExotic';
+export interface RejectionRatio {
+  timesFailed: number;
+  timesChecked: number;
+}
+
+export interface ModAssignmentStatistics {
+  /** Mod-tag and mod element counts check. */
+  earlyModsCheck: RejectionRatio;
+  /** How many times we couldn't possibly hit the target stats with any number of auto mods picks */
+  autoModsPick: RejectionRatio;
+  finalAssignment: {
+    /** How many times we tried mod permutations for permutations that worked. */
+    modAssignmentAttempted: number;
+    /** How many times we failed to assign user-picked slot-independent mods. */
+    modsAssignmentFailed: number;
+    /** How many times we failed to assign auto stat mods. */
+    autoModsAssignmentFailed: number;
+  };
+}
 
 /**
  * Information about the operation of the worker process.
  */
-export interface ProcessInfo {
+export interface ProcessStatistics {
   numProcessed: number;
   numValidSets: number;
-  // Why it skipped a number of sets
-  stats: { [key in SetRejectionReason]: number };
+  statistics: {
+    /** Sets skipped for really uninteresting/coarse reasons. */
+    skipReasons: {
+      noExotic: number;
+      doubleExotic: number;
+      skippedLowTier: number;
+    };
+    lowerBoundsExceeded: RejectionRatio;
+    upperBoundsExceeded: RejectionRatio;
+    modsStatistics: ModAssignmentStatistics;
+  };
 }

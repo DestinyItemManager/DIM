@@ -13,7 +13,7 @@ import { proxy, releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
-import { ProcessInfo, ProcessItem, ProcessItemsByBucket } from '../process-worker/types';
+import { ProcessItem, ProcessItemsByBucket, ProcessStatistics } from '../process-worker/types';
 import {
   ArmorEnergyRules,
   ArmorSet,
@@ -48,7 +48,7 @@ interface ProcessState {
     statRangesFiltered?: StatRanges;
 
     // What the actual process did to remove some sets.
-    processInfo: ProcessInfo | undefined;
+    processInfo: ProcessStatistics | undefined;
   } | null;
 }
 
