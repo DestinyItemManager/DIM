@@ -1,5 +1,7 @@
 ## Next
 
+* Catalyst progress shows up in the item popup for exotic weapons that still need their catalyst finished.
+
 ## 7.39.1 <span class="changelog-date">(2022-10-18)</span>
 
 * You can now undo and redo changes to loadouts while editing them.
