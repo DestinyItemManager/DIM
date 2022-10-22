@@ -153,7 +153,7 @@
   "FashionDrawer": {
     "Accept": "Sauvegarder le style",
     "CannotFitOrnament": "This item does not have an ornament socket or you have no ornaments for it.",
-    "CannotFitShader": "This item cannot fit a shader",
+    "CannotFitShader": "Cet objet n'accepte pas un shader",
     "ClearOrnaments": "Retirer les ornements",
     "ClearOrnamentsTitle": "Réinitialiser tous les ornements à \"aucune préférence\"",
     "ClearShaders": "Retirer les revêtements",
