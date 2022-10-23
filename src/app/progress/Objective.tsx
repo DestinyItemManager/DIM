@@ -60,6 +60,10 @@ export default function Objective({
     (complete ? t('Objectives.Complete') : t('Objectives.Incomplete'));
 
   const valueStyle = getValueStyle(objectiveDef, progress, completionValue);
+  if (valueStyle === DestinyUnlockValueUIStyle.Hidden) {
+    return null;
+  }
+
   if (valueStyle === DestinyUnlockValueUIStyle.Integer) {
     return (
       <div className="objective-row">
