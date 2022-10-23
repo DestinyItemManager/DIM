@@ -2,7 +2,7 @@ import { BungieError, HttpStatusError } from 'app/bungie-api/http-client';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import { DimError } from 'app/utils/dim-error';
-import React from 'react';
+import React, { useState } from 'react';
 import { AppIcon, helpIcon, refreshIcon, twitterIcon } from '../shell/icons';
 import styles from './ErrorPanel.m.scss';
 
@@ -14,38 +14,38 @@ const Timeline = React.lazy(async () => {
   return { default: m.Timeline };
 });
 
-const twitters = (
-  <div className={styles.twitters}>
-    <React.Suspense fallback={null}>
-      <Timeline
-        dataSource={{
-          sourceType: 'profile',
-          screenName: 'BungieHelp',
-        }}
-        options={{
-          dnt: true,
-          via: 'BungieHelp',
-          username: 'BungieHelp',
-          height: '100%',
-          theme: 'dark',
-        }}
-      />
-      <Timeline
-        dataSource={{
-          sourceType: 'profile',
-          screenName: 'ThisIsDIM',
-        }}
-        options={{
-          dnt: true,
-          via: 'ThisIsDIM',
-          username: 'ThisIsDIM',
-          height: '100%',
-          theme: 'dark',
-        }}
-      />
-    </React.Suspense>
-  </div>
-);
+function Twitters() {
+  const [error, setError] = useState(false);
+  // If the user has blocked twitter just don't show them
+  if (error) {
+    return null;
+  }
+  return (
+    <div className={styles.twitters}>
+      <React.Suspense fallback={null}>
+        {['BungieHelp', 'ThisIsDIM'].map((account) => (
+          <div key={account} className={styles.timeline}>
+            <Timeline
+              dataSource={{
+                sourceType: 'profile',
+                screenName: account,
+              }}
+              options={{
+                dnt: true,
+                theme: 'dark',
+                chrome: 'noheader nofooter noborders',
+              }}
+              renderError={() => {
+                setError(true);
+                return null;
+              }}
+            />
+          </div>
+        ))}
+      </React.Suspense>
+    </div>
+  );
+}
 
 export default function ErrorPanel({
   title,
@@ -117,7 +117,7 @@ export default function ErrorPanel({
           )}
         </div>
       </div>
-      {showTwitters && twitters}
+      {showTwitters && <Twitters />}
     </div>
   );
 }

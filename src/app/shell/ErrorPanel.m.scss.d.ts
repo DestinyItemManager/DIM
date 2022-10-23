@@ -3,6 +3,7 @@
 interface CssExports {
   'errorCode': string;
   'errorPanel': string;
+  'timeline': string;
   'twitterLinks': string;
   'twitters': string;
 }
