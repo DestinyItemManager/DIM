@@ -1,5 +1,8 @@
 ## Next
 
+* Firefox users should notice fewer cases where their data is out of sync with the game.
+* DIM will warn you if you have DIM Sync off and try to save Loadouts or Tags that could be lost without DIM Sync.
+
 ## 7.39.1 <span class="changelog-date">(2022-10-18)</span>
 
 * You can now undo and redo changes to loadouts while editing them.

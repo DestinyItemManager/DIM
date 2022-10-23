@@ -424,11 +424,11 @@ module.exports = (env) => {
         // Elgato Stream Deck integration
         '$featureFlags.elgatoStreamDeck': JSON.stringify(true),
         // Warn when DIM Sync is off and you save some DIM-specific data
-        '$featureFlags.warnNoSync': JSON.stringify(!env.release),
+        '$featureFlags.warnNoSync': JSON.stringify(true),
         // Expose the "Add required stat mods" Loadout Optimizer toggle
         '$featureFlags.loAutoStatMods': JSON.stringify(!env.release),
         // Whether to send cookies to the Bungie.net API
-        '$featureFlags.apiCookies': JSON.stringify(env.release),
+        '$featureFlags.apiCookies': JSON.stringify(false),
       }),
 
       new LodashModuleReplacementPlugin({
