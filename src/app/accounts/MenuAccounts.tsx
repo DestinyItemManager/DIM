@@ -20,9 +20,6 @@ export default function MenuAccounts({
   const dispatch = useThunkDispatch();
   const currentAccount = useSelector(currentAccountSelector);
   const accounts = useSelector(accountsSelector);
-  if (!currentAccount) {
-    return null;
-  }
 
   const onLogOut = () => dispatch(logOut());
 

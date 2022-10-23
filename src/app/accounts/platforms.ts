@@ -3,7 +3,6 @@ import { del, get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
-import _ from 'lodash';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { loadingTracker } from '../shell/loading-tracker';
 import * as actions from './actions';
@@ -20,40 +19,36 @@ const loadAccountsFromIndexedDBAction: ThunkResult = dedupePromise(async (dispat
   dispatch(actions.loadFromIDB(accounts || []));
 });
 
-const getPlatformsAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise(
-  async (dispatch, getState) => {
-    let realAccountsPromise: Promise<readonly DestinyAccount[]> | null = null;
-    if (!getState().accounts.loaded) {
-      // Kick off a load from bungie.net in the background
-      realAccountsPromise = dispatch(loadAccountsFromBungieNet());
-    }
-
-    if (!getState().accounts.loadedFromIDB) {
-      try {
-        await dispatch(loadAccountsFromIndexedDBAction);
-      } catch (e) {
-        errorLog('accounts', 'Unable to load accounts from IDB', e);
-      }
-    }
-
-    if (!accountsLoadedSelector(getState()) && realAccountsPromise) {
-      // Fall back to Bungie.net
-      try {
-        await realAccountsPromise;
-      } catch (e) {
-        dispatch(actions.error(e));
-        errorLog('accounts', 'Unable to load accounts from Bungie.net', e);
-      }
-    }
-
-    // Whatever we've got at this point is the answer
-    const platform = await dispatch(loadActivePlatform());
-    dispatch(setActivePlatform(platform));
-    return accountsSelector(getState());
+const getPlatformsAction: ThunkResult = dedupePromise(async (dispatch, getState) => {
+  let realAccountsPromise: Promise<readonly DestinyAccount[]> | null = null;
+  if (!getState().accounts.loaded) {
+    // Kick off a load from bungie.net in the background
+    realAccountsPromise = dispatch(loadAccountsFromBungieNet());
   }
-);
 
-export function getPlatforms(): ThunkResult<readonly DestinyAccount[]> {
+  if (!getState().accounts.loadedFromIDB) {
+    try {
+      await dispatch(loadAccountsFromIndexedDBAction);
+    } catch (e) {
+      errorLog('accounts', 'Unable to load accounts from IDB', e);
+    }
+  }
+
+  if (!accountsLoadedSelector(getState()) && realAccountsPromise) {
+    // Fall back to Bungie.net
+    try {
+      await realAccountsPromise;
+    } catch (e) {
+      dispatch(actions.error(e));
+      errorLog('accounts', 'Unable to load accounts from Bungie.net', e);
+    }
+  }
+});
+
+/**
+ * Load data about available accounts.
+ */
+export function getPlatforms(): ThunkResult {
   return getPlatformsAction;
 }
 
@@ -75,6 +70,11 @@ function loadAccountsFromBungieNet(): ThunkResult<readonly DestinyAccount[]> {
   return loadAccountsFromBungieNetAction;
 }
 
+/**
+ * Switch the current account to the given account. Lots of things depend on the current account
+ * to calculate their info. This also saves information about the last used account so we can restore
+ * it next time. This should be called when switching accounts or navigating to an account-specific page.
+ */
 export function setActivePlatform(
   account: DestinyAccount | undefined
 ): ThunkResult<DestinyAccount | undefined> {
@@ -102,31 +102,6 @@ function loadPlatforms(membershipId: string): ThunkResult<readonly DestinyAccoun
       }
     }
     return accountsSelector(getState());
-  };
-}
-
-function loadActivePlatform(): ThunkResult<DestinyAccount | undefined> {
-  return async (_dispatch, getState) => {
-    const account = currentAccountSelector(getState());
-    if (account) {
-      return account;
-    }
-
-    const accounts = accountsSelector(getState());
-    if (!accounts.length) {
-      return undefined;
-    }
-
-    const membershipId = localStorage.getItem('dim-last-membership-id');
-    const destinyVersionStr = localStorage.getItem('dim-last-destiny-version');
-    const destinyVersion = destinyVersionStr ? parseInt(destinyVersionStr, 10) : 2;
-
-    const active = accounts.find(
-      (account) =>
-        account.membershipId === membershipId && account.destinyVersion === destinyVersion
-    );
-
-    return active ?? _.maxBy(accounts, (account) => account.lastPlayed);
   };
 }
 

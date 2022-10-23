@@ -5,5 +5,5 @@ import { DestinyAccount } from './accounts/destiny-account';
  * paths are simple.
  */
 
-export const accountRoute = (account: DestinyAccount) =>
+export const accountRoute = (account: Pick<DestinyAccount, 'membershipId' | 'destinyVersion'>) =>
   `/${account.membershipId}/d${account.destinyVersion}`;
