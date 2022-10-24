@@ -62,5 +62,7 @@ export interface ProcessMod {
 }
 
 export interface LockedProcessMods {
-  [plugCategoryHash: number]: ProcessMod[];
+  generalMods: ProcessMod[];
+  combatMods: ProcessMod[];
+  activityMods: ProcessMod[];
 }

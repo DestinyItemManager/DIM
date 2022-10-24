@@ -16,6 +16,7 @@ import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-c
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsByItemSelector, loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
@@ -178,6 +179,11 @@ export default memo(function LoadoutBuilder({
     [defs, loadoutParameters.mods]
   );
 
+  const { modMap: lockedModMap, unassignedMods } = useMemo(
+    () => categorizeArmorMods(lockedMods, allItems),
+    [allItems, lockedMods]
+  );
+
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
 
@@ -270,27 +276,30 @@ export default memo(function LoadoutBuilder({
     if (loadoutParameters.assumeArmorMasterwork !== undefined) {
       armorEnergyRules.assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
     }
+
     const items = filterItems({
       defs,
       items: characterItems,
       pinnedItems,
       excludedItems,
-      lockedMods,
+      lockedModMap,
+      unassignedMods,
       lockedExoticHash,
       armorEnergyRules,
       searchFilter,
     });
     return [armorEnergyRules, items];
   }, [
-    loadoutParameters.lockArmorEnergyType,
-    loadoutParameters.assumeArmorMasterwork,
     loadoutsByItem,
     optimizingLoadoutId,
+    loadoutParameters.lockArmorEnergyType,
+    loadoutParameters.assumeArmorMasterwork,
     defs,
     characterItems,
     pinnedItems,
     excludedItems,
-    lockedMods,
+    lockedModMap,
+    unassignedMods,
     lockedExoticHash,
     searchFilter,
   ]);
@@ -299,7 +308,7 @@ export default memo(function LoadoutBuilder({
     defs,
     selectedStore,
     filteredItems,
-    lockedMods,
+    lockedModMap,
     subclass,
     armorEnergyRules,
     statOrder,

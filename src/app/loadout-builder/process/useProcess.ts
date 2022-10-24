@@ -3,18 +3,14 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
-import { bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
-import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
+import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { getModTypeTagByPlugCategoryHash } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
-import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { proxy, releaseProxy, wrap } from 'comlink';
-import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { ProcessItem, ProcessItemsByBucket } from '../process-worker/types';
@@ -60,7 +56,7 @@ export function useProcess({
   defs,
   selectedStore,
   filteredItems,
-  lockedMods,
+  lockedModMap,
   subclass,
   armorEnergyRules,
   statOrder,
@@ -71,7 +67,7 @@ export function useProcess({
   defs: D2ManifestDefinitions;
   selectedStore: DimStore;
   filteredItems: ItemsByBucket;
-  lockedMods: PluggableInventoryItemDefinition[];
+  lockedModMap: ModMap;
   subclass: ResolvedLoadoutItem | undefined;
   armorEnergyRules: ArmorEnergyRules;
   statOrder: number[];
@@ -118,36 +114,13 @@ export function useProcess({
       currentCleanup: cleanup,
     }));
 
-    // If a mod can't fit into any socket of any item, we have no sets.
-    // This is a not particularly pretty hack to make it so that deprecated
-    // armor mods aren't misidentified as combat mods -- also see `fitMostMods`.
-    const allActiveModSockets = Object.values(filteredItems)
-      .flat()
-      .flatMap((i) => getSocketsByCategoryHash(i.sockets, SocketCategoryHashes.ArmorMods))
-      .filter((socket) => socket.plugged);
-    if (lockedMods.some((m) => !allActiveModSockets.some((s) => plugFitsIntoSocket(s, m.hash)))) {
-      setState((oldState) => ({
-        ...oldState,
-        processing: false,
-        result: {
-          sets: [],
-          mods: lockedMods,
-          armorEnergyRules,
-          combos: 0,
-          processTime: 0,
-        },
-      }));
-      return;
-    }
+    const { allMods, bucketSpecificMods, activityMods, combatMods, generalMods } = lockedModMap;
 
-    const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
-    const generalMods = lockedModMap[armor2PlugCategoryHashesByName.general] || [];
-    const combatMods = Object.entries(lockedModMap).flatMap(([plugCategoryHash, mods]) =>
-      mods && combatCompatiblePlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
-    );
-    const activityMods = Object.entries(lockedModMap).flatMap(([plugCategoryHash, mods]) =>
-      mods && activityModPlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
-    );
+    const lockedProcessMods = {
+      generalMods: generalMods.map(mapArmor2ModToProcessMod),
+      combatMods: combatMods.map(mapArmor2ModToProcessMod),
+      activityMods: activityMods.map(mapArmor2ModToProcessMod),
+    };
 
     const processItems: ProcessItemsByBucket = {
       [BucketHashes.Helmet]: [],
@@ -168,7 +141,7 @@ export function useProcess({
         generalMods,
         combatMods,
         activityMods,
-        lockedModMap[bucketHashToPlugCategoryHash[bucketHash]] || []
+        bucketSpecificMods[bucketHash] || []
       );
 
       for (const group of groupedItems) {
@@ -176,10 +149,6 @@ export function useProcess({
         itemsById.set(group.canonicalProcessItem.id, group);
       }
     }
-
-    const lockedProcessMods = _.mapValues(lockedModMap, (mods) =>
-      mods.map(mapArmor2ModToProcessMod)
-    );
 
     const subclassPlugs = subclass?.loadoutItem.socketOverrides
       ? Object.values(subclass.loadoutItem.socketOverrides)
@@ -192,7 +161,7 @@ export function useProcess({
     worker
       .process(
         processItems,
-        getTotalModStatChanges(lockedMods, subclassPlugs, selectedStore.classType),
+        getTotalModStatChanges(allMods, subclassPlugs, selectedStore.classType),
         lockedProcessMods,
         statOrder,
         statFilters,
@@ -212,7 +181,7 @@ export function useProcess({
           processing: false,
           result: {
             sets: hydratedSets,
-            mods: lockedMods,
+            mods: allMods,
             armorEnergyRules,
             combos,
             processTime: performance.now() - processStart,
@@ -230,7 +199,6 @@ export function useProcess({
   }, [
     defs,
     filteredItems,
-    lockedMods,
     selectedStore.classType,
     selectedStore.id,
     statFilters,
@@ -239,6 +207,7 @@ export function useProcess({
     subclass?.loadoutItem.socketOverrides,
     armorEnergyRules,
     autoStatMods,
+    lockedModMap,
   ]);
 
   return { result, processing, remainingTime };

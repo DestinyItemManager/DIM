@@ -1,9 +1,4 @@
 import _ from 'lodash';
-import {
-  activityModPlugCategoryHashes,
-  knownModPlugCategoryHashes,
-} from '../../loadout/known-values';
-import { armor2PlugCategoryHashesByName } from '../../search/d2-known-values';
 import { infoLog } from '../../utils/log';
 import {
   ArmorStatHashes,
@@ -15,13 +10,7 @@ import {
 } from '../types';
 import { pickAndAssignSlotIndependentMods, precalculateStructures } from './process-utils';
 import { SetTracker } from './set-tracker';
-import {
-  LockedProcessMods,
-  ProcessArmorSet,
-  ProcessItem,
-  ProcessItemsByBucket,
-  ProcessMod,
-} from './types';
+import { LockedProcessMods, ProcessArmorSet, ProcessItem, ProcessItemsByBucket } from './types';
 
 /** Caps the maximum number of total armor sets that'll be returned */
 const RETURNED_ARMOR_SETS = 200;
@@ -36,7 +25,7 @@ export function process(
   /** Selected mods' total contribution to each stat */
   modStatTotals: ArmorStats,
   /** Mods to add onto the sets */
-  lockedModMap: LockedProcessMods,
+  lockedMods: LockedProcessMods,
   /** The user's chosen stat order, including disabled stats */
   statOrder: ArmorStatHashes[],
   statFilters: StatFilters,
@@ -102,20 +91,7 @@ export function process(
 
   const setTracker = new SetTracker(10_000);
 
-  let generalMods: ProcessMod[] = [];
-  let combatMods: ProcessMod[] = [];
-  let activityMods: ProcessMod[] = [];
-
-  for (const [plugCategoryHash, mods] of Object.entries(lockedModMap)) {
-    const pch = Number(plugCategoryHash);
-    if (pch === armor2PlugCategoryHashesByName.general) {
-      generalMods = generalMods.concat(mods);
-    } else if (activityModPlugCategoryHashes.includes(pch)) {
-      activityMods = activityMods.concat(mods);
-    } else if (!knownModPlugCategoryHashes.includes(pch)) {
-      combatMods = combatMods.concat(mods);
-    }
-  }
+  const { activityMods, combatMods, generalMods } = lockedMods;
 
   const precalculatedInfo = precalculateStructures(
     generalMods,
