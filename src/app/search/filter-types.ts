@@ -58,24 +58,36 @@ export interface SuggestionsContext {
  * * `simple`: `is:[keyword]` and `not:[keyword]`
  * * `query`: `[keyword]:[suggestion]`
  * * `freeform`: `[keyword]:[literallyanything]`
- * * `range`: `[keyword]:op?[number]`
- * * `rangeoverload`: `[keyword]:op?([number]|[suggestion])`
+ * * `range`: `[keyword]:op?([number]|[overload])`
  * * `stat`:  `[keyword]:[suggestion]:op?[number]`
  */
-export type FilterFormat =
-  | 'simple'
-  | 'query'
-  | 'freeform'
-  | 'range'
-  | 'rangeoverload'
-  | 'stat'
-  | 'custom';
+export type FilterFormat = 'simple' | 'query' | 'freeform' | 'range' | 'stat' | 'custom';
 
 export function canonicalFilterFormats(format: FilterDefinition['format']): FilterFormat[] {
   if (!format) {
     return ['simple'];
   }
   return Array.isArray(format) ? format : [format];
+}
+
+/**
+ * The arguments to the filter creation function coming from
+ * parsing the filter syntax.
+ */
+export interface FilterArgs {
+  /**
+   * the matched left-hand-side. will be `is` when using is: or not: syntax,
+   * otherwise the matched filter name
+   */
+  lhs: string;
+  /**
+   * the right-hand-side (or middle for stat filters).
+   * if matching an is: filter, this is the keyword (rhs). otherwise,
+   * this is the thing right next to the keyword
+   */
+  filterValue: string;
+  /** the generated comparator if this is a range or stat filter */
+  compare?: (value: number) => boolean;
 }
 
 /**
@@ -101,7 +113,7 @@ export interface FilterDefinition {
    * What kind of query this is, used to help generate suggestions.
    * Leave unset for `simple`, specify one, or specify multiple formats,
    * as long as their usage of `suggestions` doesn't clash.
-   * `query`, `rangeoverload`, and `stat` use `suggestions`.
+   * `query` and `stat` use `suggestions`.
    */
   format?: FilterFormat | FilterFormat[];
 
@@ -123,12 +135,22 @@ export interface FilterDefinition {
    * filter function will be generated once, at the point where the overall
    * query is parsed.
    */
-  filter: (args: { filterValue: string } & FilterContext) => ItemFilter;
+  filter: (args: FilterArgs & FilterContext) => ItemFilter;
 
   /**
-   * A list of suggested keywords, depending on the format.
+   * A list of suggested keywords, for `query` and `stat` formats.
    */
   suggestions?: string[];
+
+  /**
+   * For range-like filters, a mapping of strings to numbers (like season names or power cap aliases)
+   */
+  overload?: { [key: string]: number };
+
+  /**
+   * For stat filters, check whether this is a valid stat name or combination.
+   */
+  validateStat?: (stat: string) => boolean;
 
   /**
    * A custom function used to generate (additional) suggestions.

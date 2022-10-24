@@ -1,5 +1,7 @@
 ## Next
 
+* Invalid search queries are now detected more reliably and DIM will not show search results if the query is invalid.
+
 ## 7.40.0 <span class="changelog-date">(2022-10-23)</span>
 
 * Catalyst progress shows up in the item popup for exotic weapons that still need their catalyst finished.
