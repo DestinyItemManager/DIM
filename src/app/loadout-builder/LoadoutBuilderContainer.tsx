@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { createSelector } from 'reselect';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { savedLoadoutParametersSelector } from '../dim-api/selectors';
 import { allItemsSelector, sortedStoresSelector } from '../inventory/selectors';
 import LoadoutBuilder from './LoadoutBuilder';
 
@@ -37,8 +36,6 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   const stores = useSelector(sortedStoresSelector);
   const disabledDueToMaintenance = useSelector(disabledDueToMaintenanceSelector);
   useLoadStores(account);
-
-  const savedLoadoutParameters = useSelector(savedLoadoutParametersSelector);
 
   const searchParams = new URLSearchParams(location.search);
   const urlClassTypeString = searchParams.get('class');
@@ -87,9 +84,9 @@ export default function LoadoutBuilderContainer({ account }: Props) {
       account={account}
       stores={stores}
       preloadedLoadout={preloadedLoadout}
-      initialClassType={urlClassType}
+      initialClassType={urlClassType ?? preloadedLoadout?.classType}
+      initialLoadoutParameters={urlLoadoutParameters || preloadedLoadout?.parameters}
       notes={urlNotes ?? preloadedLoadout?.notes}
-      initialLoadoutParameters={urlLoadoutParameters || savedLoadoutParameters}
     />
   );
 }

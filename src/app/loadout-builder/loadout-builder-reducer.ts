@@ -3,8 +3,13 @@ import {
   defaultLoadoutParameters,
   LoadoutParameters,
   LockArmorEnergyType,
+  StatConstraint,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import {
+  savedLoadoutParametersSelector,
+  savedLoStatConstraintsByClassSelector,
+} from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -13,6 +18,7 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import {
   createSubclassDefaultSocketOverrides,
   findItemForLoadout,
+  pickBackingStore,
 } from 'app/loadout-drawer/loadout-utils';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { showNotification } from 'app/notifications/notifications';
@@ -23,6 +29,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useReducer } from 'react';
+import { useSelector } from 'react-redux';
 import { statFiltersFromLoadoutParamaters, statOrderFromLoadoutParameters } from './loadout-params';
 import {
   ArmorSet,
@@ -62,106 +69,103 @@ export function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefini
 
 const lbStateInit = ({
   stores,
-  preloadedLoadout,
-  initialLoadoutParameters,
-  classType,
   defs,
+  preloadedLoadout,
+  initialClassType,
+  initialLoadoutParameters,
+  savedLoadoutBuilderParameters,
+  savedStatConstraintsPerClass,
 }: {
   stores: DimStore[];
-  preloadedLoadout?: Loadout;
-  initialLoadoutParameters: LoadoutParameters;
-  classType: DestinyClass | undefined;
   defs: D2ManifestDefinitions;
+  preloadedLoadout: Loadout | undefined;
+  initialClassType: DestinyClass | undefined;
+  initialLoadoutParameters: LoadoutParameters | undefined;
+  savedLoadoutBuilderParameters: LoadoutParameters;
+  savedStatConstraintsPerClass: { [classType: number]: StatConstraint[] };
 }): LoadoutBuilderState => {
   const pinnedItems: PinnedItems = {};
 
-  const matchingClass =
-    classType !== undefined ? stores.find((store) => store.classType === classType) : undefined;
+  // Preloaded loadouts from the "Optimize Armor" button take priority
+  let classType: DestinyClass = initialClassType ?? DestinyClass.Unknown;
+  // Pick a store that matches the classType
+  const storeMatchingClass = pickBackingStore(stores, undefined, classType);
 
-  if (classType !== undefined && !matchingClass) {
+  // If we requested a specific class type but the user doesn't have it, we
+  // need to pick some different store, but ensure that class-specific stuff
+  // doesn't end up in LO parameters.
+  if (!storeMatchingClass && classType !== DestinyClass.Unknown) {
     warnMissingClass(classType, defs);
-    // Take out the exotic
     initialLoadoutParameters = { ...initialLoadoutParameters, exoticArmorHash: undefined };
+    // ensure we don't start a LO session with items for a totally different class type
+    preloadedLoadout = undefined;
   }
 
-  let selectedStoreId = (matchingClass ?? getCurrentStore(stores)!).id;
+  // Fall back to the current store if we didn't find a store matching our class
+  const selectedStore = storeMatchingClass ?? getCurrentStore(stores)!;
+  const selectedStoreId = selectedStore.id;
+  classType = selectedStore.classType;
 
-  let loadoutParams = initialLoadoutParameters;
+  // In order of increasing priority:
+  // default parameters, global saved parameters, stat order for this class,
+  // things that came from the loadout share or preloaded loadout
+  let loadoutParameters = { ...defaultLoadoutParameters, ...savedLoadoutBuilderParameters };
+  const thisClassStatConstraints = savedStatConstraintsPerClass[classType];
+  if (thisClassStatConstraints) {
+    loadoutParameters.statConstraints = thisClassStatConstraints;
+  }
+  loadoutParameters = { ...loadoutParameters, ...initialLoadoutParameters };
+
   let subclass: ResolvedLoadoutItem | undefined;
 
-  if (stores.length && preloadedLoadout) {
-    let loadoutStore = getCurrentStore(stores);
-    if (preloadedLoadout.classType === DestinyClass.Unknown) {
-      const includedClasses = new Set(
-        preloadedLoadout.items
-          .map((i) => defs.InventoryItem.get(i.hash)?.classType)
-          .filter((c) => c !== undefined && c !== DestinyClass.Unknown)
-      );
-      if (includedClasses.size === 1) {
-        const includedClassType = includedClasses.values().next().value;
-        loadoutStore =
-          stores.find((store) => store.classType === includedClassType) ?? loadoutStore;
+  // Loadouts only support items that are supported by the Loadout's class
+  if (preloadedLoadout) {
+    // TODO: instead of locking items, show the loadout fixed at the top to compare against and leave all items free
+    for (const loadoutItem of preloadedLoadout.items) {
+      if (loadoutItem.equip) {
+        const allItems = stores.flatMap((s) => s.items);
+        const item = findItemForLoadout(defs, allItems, selectedStoreId, loadoutItem);
+        if (item && isLoadoutBuilderItem(item)) {
+          pinnedItems[item.bucket.hash] = item;
+        } else if (item?.bucket.hash === BucketHashes.Subclass && item.sockets) {
+          // In LO we populate the default ability plugs because in game you cannot unselect all abilities.
+          const socketOverridesForLO = {
+            ...createSubclassDefaultSocketOverrides(item),
+            ...loadoutItem.socketOverrides,
+          };
+
+          subclass = {
+            item,
+            loadoutItem: { ...loadoutItem, socketOverrides: socketOverridesForLO },
+          };
+        }
       }
-    } else {
-      loadoutStore = stores.find((store) => store.classType === preloadedLoadout.classType);
     }
 
-    if (!loadoutStore) {
-      warnMissingClass(preloadedLoadout.classType, defs);
-    } else {
-      selectedStoreId = loadoutStore.id;
-      // TODO: instead of locking items, show the loadout fixed at the top to compare against and leave all items free
-      for (const loadoutItem of preloadedLoadout.items) {
-        if (loadoutItem.equip) {
-          const allItems = stores.flatMap((s) => s.items);
-          const item = findItemForLoadout(defs, allItems, selectedStoreId, loadoutItem);
-          if (item && isLoadoutBuilderItem(item)) {
-            pinnedItems[item.bucket.hash] = item;
-          } else if (item?.bucket.hash === BucketHashes.Subclass && item.sockets) {
-            // In LO we populate the default ability plugs because in game you cannot unselect all abilities.
-            const socketOverridesForLO = {
-              ...createSubclassDefaultSocketOverrides(item),
-              ...loadoutItem.socketOverrides,
-            };
+    if (!loadoutParameters.exoticArmorHash) {
+      const equippedExotic = preloadedLoadout.items
+        .filter((li) => li.equip)
+        .map((li) => defs.InventoryItem.get(li.hash))
+        .find(
+          (i) =>
+            Boolean(i?.equippingBlock?.uniqueLabel) &&
+            LockableBucketHashes.includes(i.inventory?.bucketTypeHash ?? 0)
+        );
 
-            subclass = {
-              item,
-              loadoutItem: { ...loadoutItem, socketOverrides: socketOverridesForLO },
-            };
-          }
-        }
-      }
-
-      // Load all parameters from the loadout if we can
-      if (preloadedLoadout.parameters) {
-        loadoutParams = { ...defaultLoadoutParameters, ...preloadedLoadout.parameters };
-      }
-
-      if (!loadoutParams.exoticArmorHash) {
-        const equippedExotic = preloadedLoadout.items
-          .filter((li) => li.equip)
-          .map((li) => defs.InventoryItem.get(li.hash))
-          .find(
-            (i) =>
-              Boolean(i?.equippingBlock?.uniqueLabel) &&
-              LockableBucketHashes.includes(i.inventory?.bucketTypeHash ?? 0)
-          );
-
-        if (equippedExotic) {
-          loadoutParams = { ...loadoutParams, exoticArmorHash: equippedExotic.hash };
-        }
+      if (equippedExotic) {
+        loadoutParameters = { ...loadoutParameters, exoticArmorHash: equippedExotic.hash };
       }
     }
   }
 
-  const statOrder = statOrderFromLoadoutParameters(loadoutParams);
-  const statFilters = statFiltersFromLoadoutParamaters(loadoutParams);
+  const statOrder = statOrderFromLoadoutParameters(loadoutParameters);
+  const statFilters = statFiltersFromLoadoutParamaters(loadoutParameters);
 
   // FIXME: Always require turning on auto mods explicitly for now...
-  loadoutParams = { ...loadoutParams, autoStatMods: undefined };
+  loadoutParameters = { ...loadoutParameters, autoStatMods: undefined };
 
   return {
-    loadoutParameters: loadoutParams,
+    loadoutParameters,
     statOrder,
     pinnedItems,
     excludedItems: emptyObject(),
@@ -175,7 +179,11 @@ const lbStateInit = ({
 };
 
 export type LoadoutBuilderAction =
-  | { type: 'changeCharacter'; storeId: string }
+  | {
+      type: 'changeCharacter';
+      store: DimStore;
+      savedStatConstraintsByClass: { [classType: number]: StatConstraint[] };
+    }
   | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
   | { type: 'sortOrderChanged'; sortOrder: LoadoutBuilderState['statOrder'] }
   | {
@@ -207,18 +215,27 @@ export type LoadoutBuilderAction =
 function lbStateReducer(defs: D2ManifestDefinitions) {
   return (state: LoadoutBuilderState, action: LoadoutBuilderAction): LoadoutBuilderState => {
     switch (action.type) {
-      case 'changeCharacter':
+      case 'changeCharacter': {
+        let loadoutParameters = {
+          ...state.loadoutParameters,
+          exoticArmorHash: undefined,
+        };
+
+        const constraints = action.savedStatConstraintsByClass[action.store.classType];
+        if (constraints) {
+          loadoutParameters = { ...loadoutParameters, statConstraints: constraints };
+        }
         return {
           ...state,
-          selectedStoreId: action.storeId,
+          selectedStoreId: action.store.id,
           pinnedItems: {},
           excludedItems: {},
-          loadoutParameters: {
-            ...state.loadoutParameters,
-            exoticArmorHash: undefined,
-          },
+          loadoutParameters,
+          statOrder: statOrderFromLoadoutParameters(loadoutParameters),
+          statFilters: statFiltersFromLoadoutParamaters(loadoutParameters),
           subclass: undefined,
         };
+      }
       case 'statFiltersChanged':
         return { ...state, statFilters: action.statFilters };
       case 'pinItem': {
@@ -501,14 +518,24 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
 
 export function useLbState(
   stores: DimStore[],
+  defs: D2ManifestDefinitions,
   preloadedLoadout: Loadout | undefined,
-  classType: DestinyClass | undefined,
-  initialLoadoutParameters: LoadoutParameters,
-  defs: D2ManifestDefinitions
+  initialClassType: DestinyClass | undefined,
+  initialLoadoutParameters: LoadoutParameters | undefined
 ) {
+  const savedLoadoutBuilderParameters = useSelector(savedLoadoutParametersSelector);
+  const savedStatConstraintsPerClass = useSelector(savedLoStatConstraintsByClassSelector);
   return useReducer(
     lbStateReducer(defs),
-    { stores, preloadedLoadout, initialLoadoutParameters, defs, classType },
+    {
+      stores,
+      defs,
+      preloadedLoadout,
+      initialClassType,
+      initialLoadoutParameters,
+      savedLoadoutBuilderParameters,
+      savedStatConstraintsPerClass,
+    },
     lbStateInit
   );
 }
