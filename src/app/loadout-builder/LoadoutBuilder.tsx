@@ -1,3 +1,4 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createLoadoutShare } from 'app/dim-api/dim-api';
 import {
@@ -47,7 +48,6 @@ import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
-import { LoUrlParams } from './LoadoutBuilderContainer';
 import { useProcess } from './process/useProcess';
 import {
   ArmorEnergyRules,
@@ -108,12 +108,16 @@ const halfTierModsSelector = createSelector(
 export default memo(function LoadoutBuilder({
   account,
   stores,
-  urlParameters,
+  initialClassType,
+  initialLoadoutParameters,
+  notes,
   preloadedLoadout,
 }: {
   account: DestinyAccount;
   stores: DimStore[];
-  urlParameters: LoUrlParams;
+  initialClassType: DestinyClass | undefined;
+  initialLoadoutParameters: LoadoutParameters | undefined;
+  notes: string | undefined;
   preloadedLoadout: Loadout | undefined;
 }) {
   const defs = useD2Definitions()!;
@@ -161,7 +165,7 @@ export default memo(function LoadoutBuilder({
       compareSet,
     },
     lbDispatch,
-  ] = useLbState(stores, defs, preloadedLoadout, urlParameters);
+  ] = useLbState(stores, defs, preloadedLoadout, initialClassType, initialLoadoutParameters);
   const isPhonePortrait = useIsPhonePortrait();
 
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
@@ -183,7 +187,7 @@ export default memo(function LoadoutBuilder({
     // If the user is playing with an existing loadout (potentially one they received from a loadout share)
     // or a direct /optimizer link, do not overwrite the global saved loadout parameters.
     // If they decide to save that loadout, these will still be saved with the loadout.
-    if (preloadedLoadout || urlParameters.loadoutParameters) {
+    if (initialLoadoutParameters) {
       return;
     }
 
@@ -218,10 +222,8 @@ export default memo(function LoadoutBuilder({
     savedStatConstraintsByClass,
     classType,
     preloadedLoadout,
-    urlParameters,
+    initialLoadoutParameters,
   ]);
-
-  const notes = preloadedLoadout?.notes ?? urlParameters?.notes;
 
   const onCharacterChanged = useCallback(
     (storeId: string) =>

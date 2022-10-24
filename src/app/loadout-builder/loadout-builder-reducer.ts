@@ -31,7 +31,6 @@ import _ from 'lodash';
 import { useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { statFiltersFromLoadoutParamaters, statOrderFromLoadoutParameters } from './loadout-params';
-import { LoUrlParams } from './LoadoutBuilderContainer';
 import {
   ArmorSet,
   ArmorStatHashes,
@@ -72,26 +71,23 @@ const lbStateInit = ({
   stores,
   defs,
   preloadedLoadout,
-  urlParameters,
+  initialClassType,
+  initialLoadoutParameters,
   savedLoadoutBuilderParameters,
   savedStatConstraintsPerClass,
 }: {
   stores: DimStore[];
   defs: D2ManifestDefinitions;
   preloadedLoadout: Loadout | undefined;
-  urlParameters: LoUrlParams | undefined;
+  initialClassType: DestinyClass | undefined;
+  initialLoadoutParameters: LoadoutParameters | undefined;
   savedLoadoutBuilderParameters: LoadoutParameters;
   savedStatConstraintsPerClass: { [classType: number]: StatConstraint[] };
 }): LoadoutBuilderState => {
   const pinnedItems: PinnedItems = {};
 
   // Preloaded loadouts from the "Optimize Armor" button take priority
-  let classType: DestinyClass =
-    (preloadedLoadout ? preloadedLoadout.classType : urlParameters?.classType) ??
-    DestinyClass.Unknown;
-  let preloadedParameters = preloadedLoadout
-    ? preloadedLoadout.parameters
-    : urlParameters?.loadoutParameters;
+  let classType: DestinyClass = initialClassType ?? DestinyClass.Unknown;
   // Pick a store that matches the classType
   const storeMatchingClass = pickBackingStore(stores, undefined, classType);
 
@@ -100,7 +96,7 @@ const lbStateInit = ({
   // doesn't end up in LO parameters.
   if (!storeMatchingClass && classType !== DestinyClass.Unknown) {
     warnMissingClass(classType, defs);
-    preloadedParameters = { ...preloadedParameters, exoticArmorHash: undefined };
+    initialLoadoutParameters = { ...initialLoadoutParameters, exoticArmorHash: undefined };
     // ensure we don't start a LO session with items for a totally different class type
     preloadedLoadout = undefined;
   }
@@ -118,7 +114,7 @@ const lbStateInit = ({
   if (thisClassStatConstraints) {
     loadoutParameters.statConstraints = thisClassStatConstraints;
   }
-  loadoutParameters = { ...loadoutParameters, ...preloadedParameters };
+  loadoutParameters = { ...loadoutParameters, ...initialLoadoutParameters };
 
   let subclass: ResolvedLoadoutItem | undefined;
 
@@ -524,7 +520,8 @@ export function useLbState(
   stores: DimStore[],
   defs: D2ManifestDefinitions,
   preloadedLoadout: Loadout | undefined,
-  urlParameters: LoUrlParams | undefined
+  initialClassType: DestinyClass | undefined,
+  initialLoadoutParameters: LoadoutParameters | undefined
 ) {
   const savedLoadoutBuilderParameters = useSelector(savedLoadoutParametersSelector);
   const savedStatConstraintsPerClass = useSelector(savedLoStatConstraintsByClassSelector);
@@ -534,7 +531,8 @@ export function useLbState(
       stores,
       defs,
       preloadedLoadout,
-      urlParameters,
+      initialClassType,
+      initialLoadoutParameters,
       savedLoadoutBuilderParameters,
       savedStatConstraintsPerClass,
     },

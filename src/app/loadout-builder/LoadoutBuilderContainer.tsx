@@ -7,7 +7,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { setSearchQuery } from 'app/shell/actions';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -23,14 +22,6 @@ const disabledDueToMaintenanceSelector = createSelector(
 
 interface Props {
   account: DestinyAccount;
-}
-
-export interface LoUrlParams {
-  // This is used by /optimizer links as well as by the Loadouts page
-  classType: DestinyClass | undefined;
-  // loadoutParameters and notes are still used by /optimizer links from GuardianForge
-  loadoutParameters: LoadoutParameters | undefined;
-  notes: string | undefined;
 }
 
 /**
@@ -68,12 +59,6 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     query = preloadedLoadout.parameters.query;
   }
 
-  const urlParameters = {
-    classType: urlClassType,
-    loadoutParameters: urlLoadoutParameters,
-    notes: urlNotes ?? '',
-  };
-
   useEffect(() => {
     if (query) {
       dispatch(setSearchQuery(query));
@@ -99,7 +84,9 @@ export default function LoadoutBuilderContainer({ account }: Props) {
       account={account}
       stores={stores}
       preloadedLoadout={preloadedLoadout}
-      urlParameters={urlParameters}
+      initialClassType={urlClassType ?? preloadedLoadout?.classType}
+      initialLoadoutParameters={urlLoadoutParameters || preloadedLoadout?.parameters}
+      notes={urlNotes ?? preloadedLoadout?.notes}
     />
   );
 }
