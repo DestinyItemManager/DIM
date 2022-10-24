@@ -188,7 +188,7 @@ function makeSearchFilterFactory(
             return undefined;
           } else {
             const filterDef = kvFilters[filterName];
-            const matchedFilter = matchFilter(filterDef, filterName, filterValue);
+            const matchedFilter = filterDef && matchFilter(filterDef, filterName, filterValue);
             if (matchedFilter) {
               try {
                 return matchedFilter(filterContext);

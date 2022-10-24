@@ -2,6 +2,7 @@ import { t } from 'app/i18next-t';
 import { toggleSearchResults } from 'app/shell/actions';
 import { AppIcon, faList } from 'app/shell/icons';
 import { querySelector, searchResultsOpenSelector } from 'app/shell/selectors';
+import { emptyArray } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
 import { motion } from 'framer-motion';
 import { useCallback } from 'react';
@@ -72,7 +73,7 @@ export default function MainSearchBarActions() {
       {showSearchResults && searchResultsOpen && (
         <Portal>
           <SearchResults
-            items={queryValid ? filteredItems : []}
+            items={queryValid ? filteredItems : emptyArray()}
             onClose={handleCloseSearchResults}
           />
         </Portal>
