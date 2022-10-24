@@ -1,5 +1,7 @@
 ## Next
 
+## 7.40.0 <span class="changelog-date">(2022-10-23)</span>
+
 * Catalyst progress shows up in the item popup for exotic weapons that still need their catalyst finished.
 * Firefox users should notice fewer cases where their data is out of sync with the game.
 * DIM will warn you if you have DIM Sync off and try to save Loadouts or Tags that could be lost without DIM Sync.
