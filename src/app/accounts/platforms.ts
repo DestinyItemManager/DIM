@@ -109,7 +109,10 @@ export function logOut(): ThunkResult {
   return async (dispatch) => {
     removeToken();
     deleteDimApiToken();
+    localStorage.removeItem('dim-last-membership-id');
+    localStorage.removeItem('dim-last-destiny-version');
     del('accounts'); // remove saved accounts from IDB
+
     dispatch(actions.loggedOut());
   };
 }

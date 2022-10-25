@@ -14,6 +14,7 @@ const currentAccount: DestinyAccount = {
   originalPlatformType: BungieMembershipType.TigerPsn,
   platformLabel: 'PlayStation',
   platforms: [BungieMembershipType.TigerPsn],
+  lastPlayed: new Date(),
 };
 const currentAccountKey = '98765-d2';
 

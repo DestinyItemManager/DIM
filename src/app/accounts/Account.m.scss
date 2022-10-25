@@ -1,12 +1,19 @@
 @use '../variables.scss' as *;
 
 .account {
-  display: block;
   cursor: pointer;
   line-height: 15px;
   text-align: left;
   position: relative;
-  padding: 6px 2rem 4px 1rem;
+  padding: 10px 2rem 10px 1rem;
+  font-size: 14px !important;
+  color: #aaa;
+  margin: 1px 0 0 0 !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* Match the "D2" branding */
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   &:focus,
   &:active {
@@ -16,28 +23,9 @@
   &:focus {
     background-color: #3f3f3f;
   }
-}
-
-.selectedAccount {
-  border-left: 4px solid $orange;
-  padding-left: calc(1rem - 4px);
-  padding-right: 24px;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.accountDetails {
-  font-size: 12px !important;
-  color: #aaa;
-  margin: 1px 0 0 0 !important;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  /* Match the "D2" branding */
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   :global(.app-icon) {
-    font-size: 14px !important;
+    font-size: 16px !important;
     margin: 0 0 0 2px;
     &.first {
       border-left: 1px solid #666;
@@ -50,6 +38,10 @@
   }
 }
 
-.accountName span {
-  margin: 0 !important;
+.selectedAccount {
+  border-left: 4px solid $orange;
+  padding-left: calc(1rem - 4px);
+  padding-right: 24px;
+  height: 100%;
+  box-sizing: border-box;
 }

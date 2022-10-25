@@ -12,10 +12,13 @@ import styles from './MenuAccounts.m.scss';
 import { logOut } from './platforms';
 import { accountsSelector, currentAccountSelector } from './selectors';
 
+/**
+ * The accounts list in the sidebar menu.
+ */
 export default function MenuAccounts({
   closeDropdown,
 }: {
-  closeDropdown(e: React.MouseEvent<HTMLDivElement>): void;
+  closeDropdown(e: React.MouseEvent<HTMLElement>): void;
 }) {
   const dispatch = useThunkDispatch();
   const currentAccount = useSelector(currentAccountSelector);
@@ -23,24 +26,27 @@ export default function MenuAccounts({
 
   const onLogOut = () => dispatch(logOut());
 
-  const sortedAccounts = _.sortBy(accounts, (a) => -(a.lastPlayed?.getTime() || 0));
+  const sortedAccounts = _.sortBy(
+    accounts,
+    (a) => -a.destinyVersion,
+    (a) => -a.lastPlayed.getTime()
+  );
+  const bungieName = sortedAccounts[0]?.displayName;
 
   return (
     <div className={styles.accountSelect}>
-      <h3>Accounts</h3>
+      <h3>{t('Accounts.Title')}</h3>
+      <div className={styles.accountName}>{bungieName}</div>
       {sortedAccounts.map((account) => (
         <Link
           key={`${account.membershipId}-${account.destinyVersion}`}
           to={`${accountRoute(account)}/inventory`}
+          onClick={closeDropdown}
         >
-          <Account
-            account={account}
-            selected={account === currentAccount}
-            onClick={closeDropdown}
-          />
+          <Account account={account} selected={account === currentAccount} />
         </Link>
       ))}
-      <div className={clsx(styles.logout)} onClick={onLogOut}>
+      <div className={clsx(styles.logout)} onClick={onLogOut} role="button">
         <AppIcon icon={signOutIcon} />
         &nbsp;
         {t('Settings.LogOut')}

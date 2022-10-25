@@ -16,3 +16,7 @@
   composes: account from './Account.m.scss';
   margin-top: 20px;
 }
+
+.accountName {
+  padding: 2px 2rem 4px 1rem;
+}

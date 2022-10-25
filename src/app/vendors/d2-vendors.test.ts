@@ -20,6 +20,7 @@ async function getTestVendorGroups() {
     membershipId: '',
     destinyVersion: 1,
     platforms: [],
+    lastPlayed: new Date(),
   };
   const characterId = Object.keys(profileResponse.characters.data!)[0];
 

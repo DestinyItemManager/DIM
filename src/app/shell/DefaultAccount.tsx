@@ -1,5 +1,5 @@
-import MenuAccounts from 'app/accounts/MenuAccounts';
 import { getPlatforms } from 'app/accounts/platforms';
+import SelectAccount from 'app/accounts/SelectAccount';
 import {
   accountsLoadedSelector,
   accountsSelector,
@@ -58,8 +58,7 @@ export default function DefaultAccount() {
   if (accounts.length > 0) {
     return (
       <div className="dim-page">
-        Hello?
-        <MenuAccounts closeDropdown={() => {}} />
+        <SelectAccount />
       </div>
     );
   }
