@@ -198,8 +198,8 @@ $header-height: 44px;
 
     &:hover,
     &:focus {
-      background-color: #3f3f3f;
-      color: white;
+      background-color: $orange;
+      color: black;
       transition: none;
     }
 

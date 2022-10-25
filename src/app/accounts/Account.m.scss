@@ -21,7 +21,8 @@
   }
   &:hover,
   &:focus {
-    background-color: #3f3f3f;
+    color: black;
+    background-color: $orange;
   }
 
   :global(.app-icon) {
