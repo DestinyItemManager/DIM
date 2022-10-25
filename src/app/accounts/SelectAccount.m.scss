@@ -34,24 +34,9 @@
 
 .accountDetails {
   font-size: 16px;
-  margin: 1px 0 0 0;
-  font-weight: bold;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  /* Match the "D2" branding */
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  padding: 0;
 
   :global(.app-icon) {
-    font-size: 18px;
     margin: 0 0 0 6px;
-    &.first {
-      border-left: 1px solid #666;
-      padding-left: 8px;
-      margin-left: 10px;
-    }
-    &:hover {
-      color: #aaa !important;
-    }
   }
 }

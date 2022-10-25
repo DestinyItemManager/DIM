@@ -1,3 +1,5 @@
+@use '../variables.scss' as *;
+
 .accountSelect {
   color: white;
   height: auto;
@@ -9,6 +11,21 @@
 
   a {
     text-decoration: none;
+
+    &:focus,
+    &:active {
+      outline: none;
+    }
+    > div {
+      padding: 10px 2rem 10px 1rem;
+      color: #aaa;
+
+      &:hover,
+      &:focus {
+        color: black;
+        background-color: $orange;
+      }
+    }
   }
 }
 

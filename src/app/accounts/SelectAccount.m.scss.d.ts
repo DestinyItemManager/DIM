@@ -5,7 +5,6 @@ interface CssExports {
   'accountDetails': string;
   'accountList': string;
   'accountSelect': string;
-  'first': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
