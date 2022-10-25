@@ -21,7 +21,7 @@ jobs:
 
         - name: Labeled to Changelog-None?
           id: haslabel
-          uses: docker://agilepathway/label-checker@v1.2.6
+          uses: agilepathway/label-checker@v1.2.6
           with:
             all_of: 'Changelog-None'
             allow_failure: true
