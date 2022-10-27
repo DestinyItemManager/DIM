@@ -1,5 +1,7 @@
 ## Next
 
+* Applying a Loadout with subclass configuration should now avoid pointless reordering of Aspects and Fragments in their slots.
+
 ## 7.41.0 <span class="changelog-date">(2022-10-30)</span>
 
 * On first visit, DIM will prompt you to select a platform instead of automatically selecting the most recently played one. Also, DIM will no longer fall back to your D1 account when Bungie.net is down.
