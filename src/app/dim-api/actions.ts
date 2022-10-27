@@ -1,7 +1,7 @@
 import { DeleteAllResponse } from '@destinyitemmanager/dim-api-types';
 import { needsDeveloper } from 'app/accounts/actions';
 import { compareAccounts } from 'app/accounts/destiny-account';
-import { currentAccountSelector } from 'app/accounts/selectors';
+import { accountsSelector, currentAccountSelector } from 'app/accounts/selectors';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
 import { t } from 'app/i18next-t';
@@ -225,8 +225,8 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
     if (forceLoad || !getState().dimApi.profileLoaded || profileOutOfDate) {
       // get current account
-      const accounts = await getPlatformsPromise;
-      if (!accounts.length) {
+      await getPlatformsPromise;
+      if (!accountsSelector(getState()).length) {
         // User isn't logged in or has no accounts, nothing to load!
         return;
       }

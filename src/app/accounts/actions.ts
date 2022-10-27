@@ -4,9 +4,7 @@ import { createAction } from 'typesafe-actions';
 import { DestinyAccount } from './destiny-account';
 
 export const accountsLoaded = createAction('accounts/ACCOUNTS_LOADED')<DestinyAccount[]>();
-export const setCurrentAccount = createAction('accounts/SET_CURRENT_ACCOUNT')<
-  DestinyAccount | undefined
->();
+export const setCurrentAccount = createAction('accounts/SET_CURRENT_ACCOUNT')<DestinyAccount>();
 
 export const loadFromIDB = createAction('accounts/LOAD_FROM_IDB')<DestinyAccount[]>();
 

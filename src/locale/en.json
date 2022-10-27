@@ -8,12 +8,16 @@
     "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
+    "Choose": "Profiles for {{bungieName}}",
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
     "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance.",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
     "MissingTitle": "Account Not Found",
-    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account."
+    "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
+    "SwitchAccounts": "You can switch accounts later from the menu in the header.",
+    "Title": "Accounts"
   },
   "Activities": {
     "Activities": "Activities",
