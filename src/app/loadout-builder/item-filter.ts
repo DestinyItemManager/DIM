@@ -1,10 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { assignBucketSpecificMods } from 'app/loadout/mod-assignment-utils';
-import { bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
+import { assignBucketSpecificMods, ModMap } from 'app/loadout/mod-assignment-utils';
 import { ItemFilter } from 'app/search/filter-types';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import {
   ArmorEnergyRules,
   ExcludedItems,
@@ -23,7 +21,8 @@ export function filterItems({
   items,
   pinnedItems,
   excludedItems,
-  lockedMods,
+  lockedModMap,
+  unassignedMods,
   lockedExoticHash,
   armorEnergyRules,
   searchFilter,
@@ -32,7 +31,8 @@ export function filterItems({
   items: ItemsByBucket | undefined;
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
-  lockedMods: PluggableInventoryItemDefinition[];
+  lockedModMap: ModMap;
+  unassignedMods: PluggableInventoryItemDefinition[];
   lockedExoticHash: number | undefined;
   armorEnergyRules: ArmorEnergyRules;
   searchFilter: ItemFilter;
@@ -47,14 +47,14 @@ export function filterItems({
     [BucketHashes.ClassArmor]: [],
   };
 
-  if (!items || !defs) {
+  // If we have mods that don't fit into any items, then technically
+  // all items are filtered out...
+  if (!items || !defs || unassignedMods.length) {
     return filteredItems;
   }
 
-  const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
-
   for (const bucket of LockableBucketHashes) {
-    const lockedModsForPlugCategoryHash = lockedModMap[bucketHashToPlugCategoryHash[bucket]] || [];
+    const lockedModsForPlugCategoryHash = lockedModMap.bucketSpecificMods[bucket] || [];
 
     if (items[bucket]) {
       // There can only be one pinned item as we hide items from the item picker once
