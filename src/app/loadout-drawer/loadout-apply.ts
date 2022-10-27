@@ -941,17 +941,23 @@ function applySocketOverrides(
                 }
               }
               for (const socket of excessSockets) {
+                // For every socket we didn't find a corresponding requested socketOverride for,
+                // we assign the remaining plugs, resetting all remaining sockets beyond that to empty
                 let override = neededOverrides.pop();
+                let requested = true;
                 if (!override) {
                   override = {
                     hash: socket.emptyPlugItemHash!,
                     loadoutSocketIndex: socket.socketIndex,
                   };
+                  // These emptying actions are not marked as requested because we didn't create
+                  // the corresponding UI element to correctly report progress
+                  requested = false;
                 }
                 const mod = defs.InventoryItem.get(
                   override.hash
                 ) as PluggableInventoryItemDefinition;
-                modsForItem.push({ socketIndex: socket.socketIndex, mod, requested: true });
+                modsForItem.push({ socketIndex: socket.socketIndex, mod, requested });
                 itemSocketToLoadoutOverrideSocket[socket.socketIndex] = override.loadoutSocketIndex;
               }
             }
