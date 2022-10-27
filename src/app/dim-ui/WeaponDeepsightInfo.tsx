@@ -28,7 +28,7 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
         <>
           <PatternUnlockedIndicator record={record} />
           <div className={styles.deepsightProgressSection}>
-            <Objective objective={deepsightInfo.attunementObjective} />
+            <Objective objective={deepsightInfo.attunementObjective} showHidden />
           </div>
         </>
       ) : (
@@ -36,7 +36,7 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
         relevantObjectives.length > 0 && (
           <div className={styles.deepsightProgressSection}>
             {relevantObjectives.map((objective) => (
-              <Objective key={objective.objectiveHash} objective={objective} />
+              <Objective key={objective.objectiveHash} objective={objective} showHidden />
             ))}
           </div>
         )
