@@ -269,12 +269,21 @@ export function process(
             // A string version of the tier-level of each stat, must be lexically comparable
             // TODO: It seems like constructing and comparing tiersString would be expensive but it's less so
             // than comparing stat arrays element by element
+            // As a small improvement, we add a measure of how many auto stat mods we needed to get here in front,
+            // this ensures that among sets with the same armor tier, the sets that required the fewest stat mods
+            // are sorted first, and whether we needed 3 resilience mods and 1 discipline mod or 1 resilience mod
+            // and 3 discipline mods does not matter at all when the user gave these lower bounds
+
             let tiersString = '';
+            let missingTiers = 0;
             for (let index = 0; index < 6; index++) {
               const tier = tiers[index];
               // Make each stat exactly one code unit so the string compares correctly
               const filter = statFiltersInStatOrder[index];
               if (!filter.ignored) {
+                if (tier < filter.min) {
+                  missingTiers += filter.min - tier;
+                }
                 // using a power of 2 (16) instead of 11 is faster
                 tiersString += tier.toString(16);
               }
@@ -291,6 +300,8 @@ export function process(
             }
 
             numValidSets++;
+
+            tiersString = (15 - missingTiers).toString(16) + tiersString;
             setTracker.insert(totalTier, tiersString, armor, stats, statMods);
           }
         }
@@ -310,6 +321,23 @@ export function process(
   }
 
   const finalSets = setTracker.getArmorSets(RETURNED_ARMOR_SETS);
+
+  if (finalSets.length) {
+    // These ranges use the build stats without auto stat mods, so their
+    // reported max can be lower than the supposed minimum from stat filters,
+    // which looks very confusing. If any builds made it, either they already
+    // had equal or higher stats, or we picked auto stat mods to get them there.
+    // Doing it here is cheaper than summing up all the auto stat mods in the
+    // loop as long as they're only picked to actually meet these lower bounds.
+    for (let index = 0; index < 6; index++) {
+      const filter = statFiltersInStatOrder[index];
+      if (!filter.ignored) {
+        const range = statRangesFilteredInStatOrder[index];
+        range.min = Math.max(range.min, filter.min * 10);
+        range.max = Math.max(range.min, range.max);
+      }
+    }
+  }
 
   const totalTime = performance.now() - pstart;
   infoLog(

@@ -1,4 +1,3 @@
-import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -30,6 +29,7 @@ import ExoticArmorChoice from './ExoticArmorChoice';
 import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
+import { Option, RadioSetting } from './RadioSetting';
 
 interface Props {
   selectedStore: DimStore;
@@ -171,17 +171,40 @@ export default memo(function LockArmorAndPerks({
     return rtn;
   }, [defs, subclass?.loadoutItem.socketOverrides, subclass?.item.sockets]);
 
-  const onMaxStatModsChanged = (autoStatMods: boolean) =>
-    lbDispatch({ type: 'autoStatModsChanged', autoStatMods });
+  const autoStatModsOptions: Option[] = useMemo(
+    () => [
+      {
+        label: t('LoadoutBuilder.AutoStatMods.None'),
+        tooltip: t('LoadoutBuilder.AutoStatMods.NoneTooltip'),
+        selected: !autoStatMods,
+        onChange: () => {
+          if (autoStatMods) {
+            lbDispatch({ type: 'autoStatModsChanged', autoStatMods: false });
+          }
+        },
+      },
+      {
+        label: t('LoadoutBuilder.AutoStatMods.Required'),
+        tooltip: t('LoadoutBuilder.AutoStatMods.RequiredTooltip'),
+        selected: autoStatMods,
+        onChange: () => {
+          if (!autoStatMods) {
+            lbDispatch({ type: 'autoStatModsChanged', autoStatMods: true });
+          }
+        },
+      },
+    ],
+    [autoStatMods, lbDispatch]
+  );
 
   return (
     <>
       {$featureFlags.loAutoStatMods && (
-        <div className={styles.area}>
-          <CheckButton onChange={onMaxStatModsChanged} name="autoStatMods" checked={autoStatMods}>
-            {t('LoadoutBuilder.AutoStatMods')}
-          </CheckButton>
-        </div>
+        <RadioSetting
+          name="autoStatMods"
+          label={t('LoadoutBuilder.AutoStatMods.Label')}
+          options={autoStatModsOptions}
+        />
       )}
       {isPhonePortrait && (
         <div className={styles.guide}>

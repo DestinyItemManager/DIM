@@ -3,6 +3,7 @@
 * On first visit, DIM will prompt you to select a platform instead of automatically selecting the most recently played one. Also, DIM will no longer fall back to your D1 account when Bungie.net is down.
 * Invalid search queries are now detected more reliably and DIM will not show search results if the query is invalid.
 * Loadout Optimizer will now remember stat priorities and enabled stats per Guardian class.
+* Loadout Optimizer now has a setting to automatically add stat mods to meet certain stat tier requirements.
 
 ## 7.40.0 <span class="changelog-date">(2022-10-23)</span>
 

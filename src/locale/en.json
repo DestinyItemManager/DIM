@@ -496,7 +496,13 @@
       "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
       "None": "All armor will use its current stats and will have a minimum energy level of 7."
     },
-    "AutoStatMods": "Add required stat mods",
+    "AutoStatMods": {
+      "Label": "Automatically add stat mods",
+      "None": "None",
+      "NoneTooltip": "No stat mods will be picked automatically.",
+      "Required": "Required",
+      "RequiredTooltip": "Stat mods will be picked and assigned automatically as needed to meet minimum stat tier requirements."
+    },
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
