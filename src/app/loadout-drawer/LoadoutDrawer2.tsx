@@ -15,6 +15,7 @@ import { addIcon, AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
@@ -37,7 +38,6 @@ import {
   setName,
   setNotes,
 } from './loadout-drawer-reducer';
-import { useHistory } from './loadout-edit-history';
 import { addItem$ } from './loadout-events';
 import { Loadout, ResolvedLoadoutItem } from './loadout-types';
 import { createSubclassDefaultSocketOverrides, findSameLoadoutItemIndex } from './loadout-utils';

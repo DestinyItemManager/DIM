@@ -14,7 +14,6 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { useHistory } from 'app/loadout-drawer/loadout-edit-history';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import {
   createSubclassDefaultSocketOverrides,
@@ -26,6 +25,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
 import { getDefaultAbilityChoiceHash, getSocketsByCategoryHashes } from 'app/utils/socket-utils';
+import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -221,6 +221,25 @@ export type LoadoutBuilderAction =
   | LoadoutBuilderUIAction
   | { type: 'undo' }
   | { type: 'redo' };
+
+function lbUIReducer(state: LoadoutBuilderUI, action: LoadoutBuilderUIAction) {
+  switch (action.type) {
+    case 'openCompareDrawer':
+      return { ...state, compareSet: action.set };
+    case 'openModPicker':
+      return {
+        ...state,
+        modPicker: {
+          open: true,
+          plugCategoryHashWhitelist: action.plugCategoryHashWhitelist,
+        },
+      };
+    case 'closeCompareDrawer':
+      return { ...state, compareSet: undefined };
+    case 'closeModPicker':
+      return { ...state, modPicker: { open: false } };
+  }
+}
 
 // TODO: Move more logic inside the reducer
 function lbConfigReducer(defs: D2ManifestDefinitions) {
@@ -547,30 +566,10 @@ export function useLbState(
 
   const lbConfReducer = useMemo(() => lbConfigReducer(defs), [defs]);
 
-  const [lbUIState, lbUIDispatch] = useReducer(
-    (uiState: LoadoutBuilderUI, action: LoadoutBuilderUIAction) => {
-      switch (action.type) {
-        case 'openCompareDrawer':
-          return { ...uiState, compareSet: action.set };
-        case 'openModPicker':
-          return {
-            ...uiState,
-            modPicker: {
-              open: true,
-              plugCategoryHashWhitelist: action.plugCategoryHashWhitelist,
-            },
-          };
-        case 'closeCompareDrawer':
-          return { ...uiState, compareSet: undefined };
-        case 'closeModPicker':
-          return { ...uiState, modPicker: { open: false } };
-      }
-    },
-    {
-      compareSet: undefined,
-      modPicker: { open: false },
-    }
-  );
+  const [lbUIState, lbUIDispatch] = useReducer(lbUIReducer, {
+    compareSet: undefined,
+    modPicker: { open: false },
+  });
 
   const dispatch = useCallback(
     (action: LoadoutBuilderAction) => {

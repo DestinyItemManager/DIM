@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
+import { newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { useHistory } from './loadout-edit-history';
-import { newLoadout } from './loadout-utils';
+import { useHistory } from './undo-redo-history';
 
 // Hilariously when I looked up a guide to testing React hooks... it was for testing a useUndo hook:
 // https://kentcdodds.com/blog/how-to-test-custom-react-hooks
