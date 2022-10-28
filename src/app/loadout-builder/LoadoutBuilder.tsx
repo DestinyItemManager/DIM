@@ -49,7 +49,7 @@ import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
-import NoSetsFoundExplainer from './NoSetsFoundExplainer';
+import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import { useProcess } from './process/useProcess';
 import {
   ArmorEnergyRules,
@@ -519,10 +519,11 @@ export default memo(function LoadoutBuilder({
             notes={notes}
           />
         ) : (
-          <NoSetsFoundExplainer
+          <NoBuildsFoundExplainer
             defs={defs}
             dispatch={lbDispatch}
-            lockedMods={lockedMods}
+            lockedModMap={lockedModMap}
+            alwaysInvalidMods={unassignedMods}
             autoAssignStatMods={autoStatMods}
             armorEnergyRules={armorEnergyRules}
             lockedExoticHash={lockedExoticHash}

@@ -67,16 +67,16 @@ export interface LockedProcessMods {
   activityMods: ProcessMod[];
 }
 
-export interface RejectionRatio {
+export interface RejectionRate {
   timesFailed: number;
   timesChecked: number;
 }
 
 export interface ModAssignmentStatistics {
   /** Mod-tag and mod element counts check. */
-  earlyModsCheck: RejectionRatio;
+  earlyModsCheck: RejectionRate;
   /** How many times we couldn't possibly hit the target stats with any number of auto mods picks */
-  autoModsPick: RejectionRatio;
+  autoModsPick: RejectionRate;
   finalAssignment: {
     /** How many times we tried mod permutations for permutations that worked. */
     modAssignmentAttempted: number;
@@ -100,8 +100,8 @@ export interface ProcessStatistics {
       doubleExotic: number;
       skippedLowTier: number;
     };
-    lowerBoundsExceeded: RejectionRatio;
-    upperBoundsExceeded: RejectionRatio;
+    lowerBoundsExceeded: RejectionRate;
+    upperBoundsExceeded: RejectionRate;
     modsStatistics: ModAssignmentStatistics;
   };
 }

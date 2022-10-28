@@ -1,13 +1,12 @@
 import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
+import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
-import { bucketHashToPlugCategoryHash } from 'app/loadout/mod-utils';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
-import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
+import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { AppIcon, banIcon } from 'app/shell/icons';
+import { uniqBy } from 'app/utils/util';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Dispatch } from 'react';
@@ -15,8 +14,8 @@ import ExoticArmorChoice from './filter/ExoticArmorChoice';
 import LockedItem from './filter/LockedItem';
 import { FilterInfo } from './item-filter';
 import { LoadoutBuilderAction } from './loadout-builder-reducer';
-import styles from './NoSetsFoundExplainer.m.scss';
-import { ProcessStatistics, RejectionRatio } from './process-worker/types';
+import styles from './NoBuildsFoundExplainer.m.scss';
+import { ProcessStatistics, RejectionRate } from './process-worker/types';
 import { ArmorEnergyRules, LockableBucketHashes, PinnedItems, StatFilters } from './types';
 
 interface ActionableSuggestion {
@@ -43,11 +42,12 @@ const LOWER_STAT_BOUNDS_WARN_RATIO = 0.95;
  */
 const EARLY_MOD_REJECTION_WARN_RATIO = 0.98;
 
-export default function NoSetsFoundExplainer({
+export default function NoBuildsFoundExplainer({
   defs,
   dispatch,
   autoAssignStatMods,
-  lockedMods,
+  lockedModMap,
+  alwaysInvalidMods,
   armorEnergyRules,
   statFilters,
   pinnedItems,
@@ -58,7 +58,8 @@ export default function NoSetsFoundExplainer({
   defs: D2ManifestDefinitions;
   dispatch: Dispatch<LoadoutBuilderAction>;
   autoAssignStatMods: boolean;
-  lockedMods: PluggableInventoryItemDefinition[];
+  lockedModMap: ModMap;
+  alwaysInvalidMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
   statFilters: StatFilters;
   pinnedItems: PinnedItems;
@@ -83,40 +84,30 @@ export default function NoSetsFoundExplainer({
   // Easy to diagnose problem -- we have things that aren't
   // armor mods, or deprecated mods. The correct option is
   // to drop them, so offer that.
-  const alwaysInvalidMods = filterInfo?.alwaysInvalidMods;
-  if (alwaysInvalidMods?.length) {
+  if (alwaysInvalidMods.length) {
     problems.push({
       id: 'alwaysInvalidMods',
-      description: 'These mods are not valid armor mods:',
+      description: t('LoadoutBuilder.NoBuildsFoundExplainer.AlwaysInvalidMods'),
       suggestions: [
         {
           id: 'dropInvalidMods',
           contents: (
             <>
-              {modRow(alwaysInvalidMods)},
               <button
                 key="removeAllInvalid"
                 type="button"
                 className="dim-button"
                 onClick={() => dispatch({ type: 'removeLockedMods', mods: alwaysInvalidMods })}
               >
-                <AppIcon icon={banIcon} /> Remove these mods
+                <AppIcon icon={banIcon} /> {t('LoadoutBuilder.NoBuildsFoundExplainer.RemoveMods')}
               </button>
+              {modRow(alwaysInvalidMods)}
             </>
           ),
         },
       ],
     });
   }
-
-  const lockedModMap = _.groupBy(lockedMods, (mod) => mod.plug.plugCategoryHash);
-  const generalMods = lockedModMap[armor2PlugCategoryHashesByName.general] || [];
-  const combatMods = Object.entries(lockedModMap).flatMap(([plugCategoryHash, mods]) =>
-    mods && combatCompatiblePlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
-  );
-  const activityMods = Object.entries(lockedModMap).flatMap(([plugCategoryHash, mods]) =>
-    mods && activityModPlugCategoryHashes.includes(Number(plugCategoryHash)) ? mods : []
-  );
 
   let failedModsInBucket = false;
 
@@ -130,7 +121,7 @@ export default function NoSetsFoundExplainer({
       defs.InventoryItem.get(lockedExoticHash).inventory!.bucketTypeHash;
     for (const bucketHash of LockableBucketHashes) {
       const bucketInfo = filterInfo.perBucketStats[bucketHash];
-      const bucketMods = lockedModMap[bucketHashToPlugCategoryHash[bucketHash]];
+      const bucketMods = lockedModMap.bucketSpecificMods[bucketHash];
       if (bucketInfo.totalConsidered > 0 && bucketInfo.finalValid === 0 && bucketMods?.length) {
         failedModsInBucket = true;
         const suggestions: ActionableSuggestion[] = [
@@ -139,7 +130,7 @@ export default function NoSetsFoundExplainer({
             contents: (
               <>
                 {modRow(bucketMods)}
-                <i key="hint">Consider removing these mods.</i>
+                {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveMods')}
               </>
             ),
           },
@@ -150,13 +141,13 @@ export default function NoSetsFoundExplainer({
             id: 'considerUnpinningItem',
             contents: (
               <>
-                <div key="item" className={styles.modRow}>
+                {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveMods')}
+                <div className={styles.modRow}>
                   <LockedItem
                     lockedItem={pinnedItem}
                     onRemove={() => dispatch({ type: 'unpinItem', item: pinnedItem })}
                   />
                 </div>
-                <i key="hint">Consider unpinning this item.</i>
               </>
             ),
           });
@@ -167,13 +158,13 @@ export default function NoSetsFoundExplainer({
             id: 'considerRemovingExotic',
             contents: (
               <>
-                <div key="item" className={styles.modRow}>
+                {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeAllowMoreItems')}
+                <div className={styles.modRow}>
                   <ExoticArmorChoice
                     lockedExoticHash={lockedExoticHash!}
                     onClose={() => dispatch({ type: 'removeLockedExotic' })}
                   />
                 </div>
-                <i key="hint">Consider removing your exotic choice.</i>
               </>
             ),
           });
@@ -181,21 +172,34 @@ export default function NoSetsFoundExplainer({
 
         problems.push({
           id: `badBucket-${bucketHash}`,
-          description: `The ${defs.InventoryBucket[bucketHash].displayProperties.name} slot does not have items that can fit these mods.`,
+          description: t('LoadoutBuilder.NoBuildsFoundExplainer.BadSlot', {
+            bucketName: defs.InventoryBucket[bucketHash].displayProperties.name,
+          }),
           suggestions,
         });
       }
     }
   }
 
+  // TODO: Maybe add a "trivially infeasible slot-independent mods" check?
+  // E.g. if we have solar mods in helmet, arms and chest but have more than
+  // two non-solar combat mods, mod assignment is trivially infeasible and we
+  // can point that out directly?
+
   const anyStatMinimums = Object.values(statFilters).some((f) => !f.ignored && f.min > 0);
+
+  const bucketIndependentMods = [
+    ...lockedModMap.generalMods,
+    ...lockedModMap.combatMods,
+    ...lockedModMap.activityMods,
+  ];
 
   const elementMayCauseProblems =
     armorEnergyRules.lockArmorEnergyType !== LockArmorEnergyType.None &&
     (processInfo?.statistics.modsStatistics.earlyModsCheck.timesFailed ||
       processInfo?.statistics.modsStatistics.finalAssignment.modsAssignmentFailed ||
       failedModsInBucket) &&
-    lockedMods.some(
+    lockedModMap.allMods.some(
       (mod) => mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any
     );
   const capacityMayCauseProblems =
@@ -203,7 +207,7 @@ export default function NoSetsFoundExplainer({
     (processInfo?.statistics.modsStatistics.finalAssignment.modsAssignmentFailed ||
       processInfo?.statistics.modsStatistics.finalAssignment.autoModsAssignmentFailed ||
       failedModsInBucket) &&
-    (lockedMods.length || anyStatMinimums);
+    (lockedModMap.allMods.length || anyStatMinimums);
 
   if (
     (!alwaysInvalidMods || alwaysInvalidMods.length === 0) &&
@@ -213,8 +217,7 @@ export default function NoSetsFoundExplainer({
     // process worker, offer some advice.
     problems.push({
       id: 'armorEnergyRestrictions',
-      description:
-        'DIM is restricted in what assumptions it can make about armor energy type and capacity.',
+      description: t('LoadoutBuilder.NoBuildsFoundExplainer.AssumptionsRestricted'),
       suggestions: _.compact([
         capacityMayCauseProblems && {
           id: 'assumeMasterworked',
@@ -230,7 +233,7 @@ export default function NoSetsFoundExplainer({
                 })
               }
             >
-              Assume armor is masterworked
+              {t('LoadoutBuilder.NoBuildsFoundExplainer.AssumeMasterworked')}
             </button>
           ),
         },
@@ -248,7 +251,7 @@ export default function NoSetsFoundExplainer({
                 })
               }
             >
-              Allow changes to armor elements
+              {t('LoadoutBuilder.NoBuildsFoundExplainer.AssumeElementChange')}
             </button>
           ),
         },
@@ -262,12 +265,11 @@ export default function NoSetsFoundExplainer({
     if (filterInfo?.searchQueryEffective) {
       problems.push({
         id: 'searchQuery',
-        description:
-          'An active search query is restricting the items DIM is considering for builds.',
+        description: t('LoadoutBuilder.NoBuildsFoundExplainer.ActiveSearchQuery'),
         suggestions: [
           {
             id: 'clearQuery',
-            contents: <i>Consider clearing your search query.</i>,
+            contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveSearchQuery'),
           },
         ],
       });
@@ -285,6 +287,7 @@ export default function NoSetsFoundExplainer({
           id: 'considerUnpinningItems',
           contents: (
             <>
+              {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeAllowMoreItems')}
               {allPinnedItems.map((pinnedItem) => (
                 <div key={pinnedItem.id} className={styles.modRow}>
                   <LockedItem
@@ -293,7 +296,6 @@ export default function NoSetsFoundExplainer({
                   />
                 </div>
               ))}
-              <i key="hint">Consider unpinning items.</i>
             </>
           ),
         }
@@ -301,13 +303,23 @@ export default function NoSetsFoundExplainer({
     };
 
     // Here, we check which parts of the worker process rejected a ton of sets. LO essentially
-    // checks upper bounds, lower bounds, mod assignments in that order. If a step checked more than
-    // 0 sets and failed 100% of them, it should be worth reporting -- but if, say, the stat bounds check
-    // rejected 99.9% of sets and then left 1 set through, and then we failed to assign combat mods to that
-    // 1 set, then blaming the selected combat mods is kind of unfair, so we should show steps that reject a high percentage
-    // too. Maybe some statistical confidence calculation could be useful here, but let's just use some numbers that made sense in testing.
+    // checks upper bounds, lower bounds, mod assignments in that order. We base our reports on the
+    // percentage of sets that failed each of the steps. This is, statistically speaking, not really a good
+    // way to do it because the "last" step that fails always fails 100% of the sets it sees (otherwise
+    // it either wouldn't be the last step or we wouldn't be here). So if we have three filter steps A -> B -> C and no sets,
+    // where A, B, C are the events that a set would independently pass A, B and C respectively,
+    // we get approximations for P(!A), P(!B | A) (B failed given that A succeeded) and P(!C | B∩A) (similarly)
+    // our numFailed/numChecked rate for C will be either 0/0 or result in P(!C | B∩A) = 1.
+    // Say A is the upper bounds check, B is the lower bounds check, and C is mod assignment, then if A rejected 99.9% of sets
+    // and left 1 set through, this set passed lower bounds, and then we failed to assign combat mods to that 1 set in step C,
+    // then blaming the selected combat mods is kind of unfair even though 100% of sets failed C. So there's no perfect way to solve this,
+    // we just have to make up percentages that work well.
+    // As an aside, this particularly interesting when the steps aren't statistically independent -- e.g. if everything that
+    // passes A fails C and everything that fails A would pass C.
+    // This might happen with stat upper bounds -- non-masterworked armor tends to have lower stats, so may pass more upper bounds
+    // checks, but also has less energy capacity for mods. So upper bounds should probably be warned about quite early and often.
 
-    const isInteresting = ({ timesChecked, timesFailed }: RejectionRatio, threshold: number) =>
+    const isInteresting = ({ timesChecked, timesFailed }: RejectionRate, threshold: number) =>
       timesChecked > 0 && timesFailed / timesChecked >= threshold;
 
     const {
@@ -319,11 +331,11 @@ export default function NoSetsFoundExplainer({
     if (isInteresting(upperBoundsExceeded, UPPER_STAT_BOUNDS_WARN_RATIO)) {
       problems.push({
         id: 'upperBoundsExceeded',
-        description: `${upperBoundsExceeded.timesFailed} sets had too high stats.`,
+        description: t('LoadoutBuilder.NoBuildsFoundExplainer.UpperBoundsFailed'),
         suggestions: _.compact([
           {
             id: 'hint',
-            contents: <i>Consider increasing stat maximums.</i>,
+            contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeIncreaseUpperBounds'),
           },
           unpinItemsSuggestion(),
         ]),
@@ -333,16 +345,30 @@ export default function NoSetsFoundExplainer({
     if (isInteresting(lowerBoundsExceeded, LOWER_STAT_BOUNDS_WARN_RATIO)) {
       problems.push({
         id: 'lowerBoundsExceeded',
-        description: `${lowerBoundsExceeded.timesFailed} sets did not hit requested stat tiers.`,
+        description: t('LoadoutBuilder.NoBuildsFoundExplainer.LowerBoundsFailed'),
         suggestions: _.compact([
           !autoAssignStatMods &&
             $featureFlags.loAutoStatMods && {
               id: 'hint1',
-              contents: <i>Consider allowing DIM to pick stat mods.</i>,
+              contents: (
+                <button
+                  key="allowAutoStatMods"
+                  type="button"
+                  className="dim-button"
+                  onClick={() =>
+                    dispatch({
+                      type: 'autoStatModsChanged',
+                      autoStatMods: true,
+                    })
+                  }
+                >
+                  {t('LoadoutBuilder.NoBuildsFoundExplainer.AllowAutoStatMods')}
+                </button>
+              ),
             },
           {
             id: 'hint2',
-            contents: <i>Consider reducing stat minimums.</i>,
+            contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeDecreaseLowerBounds'),
           },
           unpinItemsSuggestion(),
         ]),
@@ -352,72 +378,70 @@ export default function NoSetsFoundExplainer({
     if (modsStats.earlyModsCheck.timesChecked > 0) {
       // If we got here, we took a closer look at a number of sets, but failed to pick/assign mods.
 
+      const suggestions: (ActionableSuggestion | false | undefined)[] = [];
+
       if (isInteresting(modsStats.earlyModsCheck, EARLY_MOD_REJECTION_WARN_RATIO)) {
-        problems.push({
-          id: 'noAutoModsPick',
-          description: `${modsStats.earlyModsCheck.timesFailed} sets can't fit requested mods due to energy type or mod slot requirements.`,
-          suggestions: _.compact([
-            (combatMods.length > 0 || activityMods.length > 0) && {
-              id: 'hint1',
-              contents: (
-                <>
-                  {modRow([...combatMods, ...activityMods])}
-                  <i key="hint">Consider removing some mods.</i>
-                </>
-              ),
-            },
-            unpinItemsSuggestion(),
-          ]),
-        });
+        // Early mod rejection is armor elements / mod tags
+        suggestions.push(
+          (lockedModMap.combatMods.length > 0 || lockedModMap.activityMods.length > 0) && {
+            id: 'removeElementOrTagMods',
+            contents: (
+              <>
+                {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveMods')}
+                {modRow([...lockedModMap.combatMods, ...lockedModMap.activityMods])}
+              </>
+            ),
+          },
+          unpinItemsSuggestion()
+        );
       }
 
       if (isInteresting(modsStats.autoModsPick, LOWER_STAT_BOUNDS_WARN_RATIO)) {
-        // We fail to pick stat mods to hit these stats very often, so consider relaxing stat requirements
-        problems.push({
-          id: 'noAutoModsPick',
-          description: `For ${modsStats.autoModsPick.timesFailed} sets, it's not possible to pick stat mods to hit requested stat tiers.`,
-          suggestions: _.compact([
-            generalMods.length > 0 && {
-              id: 'hint1',
-              contents: (
-                <>
-                  {modRow(generalMods)}
-                  <i key="hint">Consider removing some mods.</i>
-                </>
-              ),
-            },
-            {
-              id: 'hint2',
-              contents: <i key="hint">Consider reducing stat minimums.</i>,
-            },
-            unpinItemsSuggestion(),
-          ]),
-        });
+        // We fail to pick stat mods to hit these stats very often, so consider
+        // relaxing stat requirements and dropping general mods so min auto mods
+        // has more freedom
+        suggestions.push(
+          lockedModMap.generalMods.length > 0 && {
+            id: 'removeGeneralMods',
+            contents: (
+              <>
+                {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveMods')}
+                {modRow(lockedModMap.generalMods)}
+              </>
+            ),
+          },
+          {
+            id: 'decreaseLowerBounds',
+            contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeDecreaseLowerBounds'),
+          },
+          unpinItemsSuggestion()
+        );
       }
 
       if (modsStats.finalAssignment.modAssignmentAttempted > 0) {
         // We made it to mod assignment, but didn't end up successfully. Definitely worth pointing out.
-        problems.push({
-          id: 'cantSlotMods',
-          description: `${modsStats.finalAssignment.modAssignmentAttempted} sets could not fit all requested mods.`,
-          suggestions: _.compact([
-            {
-              id: 'hint',
-              contents: (
-                <>
-                  {modRow(lockedMods)}
-                  <i key="hint">Consider removing some mods.</i>
-                </>
-              ),
-            },
-            modsStats.finalAssignment.autoModsAssignmentFailed > 0 && {
-              id: 'hint2',
-              contents: <i key="hint">Consider reducing stat minimums.</i>,
-            },
-            unpinItemsSuggestion(),
-          ]),
-        });
+        suggestions.push(
+          bucketIndependentMods.length > 0 && {
+            id: 'removeBucketIndependentMods',
+            contents: (
+              <>
+                {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveMods')}
+                {modRow(bucketIndependentMods)}
+              </>
+            ),
+          },
+          modsStats.finalAssignment.autoModsAssignmentFailed > 0 && {
+            id: 'decreaseLowerBounds',
+            contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeDecreaseLowerBounds'),
+          },
+          unpinItemsSuggestion()
+        );
       }
+      problems.push({
+        id: 'modAssignmentFailed',
+        description: t('LoadoutBuilder.NoBuildsFoundExplainer.ModAssignmentFailed'),
+        suggestions: uniqBy(_.compact(suggestions), ({ id }) => id),
+      });
     }
   }
 
@@ -425,7 +449,7 @@ export default function NoSetsFoundExplainer({
     <div className={styles.noBuildsExplainerContainer}>
       <h3 className={styles.noBuildsFoundMsg}>
         <AlertIcon />
-        No builds found. Here are possible reasons DIM couldn't find any sets:
+        {t('LoadoutBuilder.NoBuildsFoundExplainer.Header')}
       </h3>
       {problems.length > 0 && (
         <ul>
@@ -433,11 +457,11 @@ export default function NoSetsFoundExplainer({
             <li key={p.id}>
               <div className={styles.problemDescription}>
                 <h3>{p.description}</h3>
-                <div className={styles.suggestionList}>
+                <ul className={styles.suggestionList}>
                   {p.suggestions.map((suggestion) => (
-                    <div key={suggestion.id}>{suggestion.contents}</div>
+                    <li key={suggestion.id}>{suggestion.contents}</li>
                   ))}
-                </div>
+                </ul>
               </div>
             </li>
           ))}
