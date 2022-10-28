@@ -69,6 +69,21 @@
   }
 }
 
+.undoRedo {
+  display: flex;
+  flex-direction: row;
+  margin: 10px 0;
+
+  > * {
+    flex: 1;
+    margin-right: 4px;
+  }
+
+  > *:last-child {
+    margin-right: 0;
+  }
+}
+
 .speedReport {
   font-size: 11px;
   user-select: text;

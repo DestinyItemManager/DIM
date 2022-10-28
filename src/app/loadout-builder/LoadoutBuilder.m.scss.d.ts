@@ -7,6 +7,7 @@ interface CssExports {
   'processing': string;
   'speedReport': string;
   'toolbar': string;
+  'undoRedo': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
