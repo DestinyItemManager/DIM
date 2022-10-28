@@ -376,6 +376,7 @@ export default memo(function LoadoutBuilder({
         assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
         lockArmorEnergyType={loadoutParameters.lockArmorEnergyType}
         optimizingLoadoutName={preloadedLoadout?.name}
+        autoStatMods={autoStatMods}
         lbDispatch={lbDispatch}
       />
       <LockArmorAndPerks
@@ -386,7 +387,6 @@ export default memo(function LoadoutBuilder({
         subclass={subclass}
         lockedExoticHash={lockedExoticHash}
         searchFilter={searchFilter}
-        autoStatMods={autoStatMods}
         lbDispatch={lbDispatch}
       />
       {isPhonePortrait && (

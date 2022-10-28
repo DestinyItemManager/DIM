@@ -9,13 +9,41 @@ export default function EnergyOptions({
   assumeArmorMasterwork,
   lockArmorEnergyType,
   optimizingLoadoutName,
+  autoStatMods,
   lbDispatch,
 }: {
   assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
   lockArmorEnergyType: LockArmorEnergyType | undefined;
   optimizingLoadoutName: string | undefined;
+  autoStatMods: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
+  const autoStatModsOptions: Option[] = useMemo(
+    () => [
+      {
+        label: t('LoadoutBuilder.AutoStatMods.None'),
+        tooltip: t('LoadoutBuilder.AutoStatMods.NoneTooltip'),
+        selected: !autoStatMods,
+        onChange: () => {
+          if (autoStatMods) {
+            lbDispatch({ type: 'autoStatModsChanged', autoStatMods: false });
+          }
+        },
+      },
+      {
+        label: t('LoadoutBuilder.AutoStatMods.Required'),
+        tooltip: t('LoadoutBuilder.AutoStatMods.RequiredTooltip'),
+        selected: autoStatMods,
+        onChange: () => {
+          if (!autoStatMods) {
+            lbDispatch({ type: 'autoStatModsChanged', autoStatMods: true });
+          }
+        },
+      },
+    ],
+    [autoStatMods, lbDispatch]
+  );
+
   const lockEnergyOptions: Option[] = useMemo(
     () => [
       {
@@ -116,6 +144,13 @@ export default function EnergyOptions({
 
   return (
     <div className={styles.energyOptions}>
+      {$featureFlags.loAutoStatMods && (
+        <RadioSetting
+          name="autoStatMods"
+          label={t('LoadoutBuilder.AutoStatMods.Label')}
+          options={autoStatModsOptions}
+        />
+      )}
       <RadioSetting
         name="lockElement"
         label={t('LoadoutBuilder.LockElement')}

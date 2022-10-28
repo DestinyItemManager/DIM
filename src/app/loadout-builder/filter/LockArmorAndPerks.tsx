@@ -29,7 +29,6 @@ import ExoticArmorChoice from './ExoticArmorChoice';
 import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
-import { Option, RadioSetting } from './RadioSetting';
 
 interface Props {
   selectedStore: DimStore;
@@ -39,7 +38,6 @@ interface Props {
   subclass?: ResolvedLoadoutItem;
   lockedExoticHash?: number;
   searchFilter: ItemFilter;
-  autoStatMods: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }
 
@@ -54,7 +52,6 @@ export default memo(function LockArmorAndPerks({
   subclass,
   lockedExoticHash,
   searchFilter,
-  autoStatMods,
   lbDispatch,
 }: Props) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
@@ -171,41 +168,8 @@ export default memo(function LockArmorAndPerks({
     return rtn;
   }, [defs, subclass?.loadoutItem.socketOverrides, subclass?.item.sockets]);
 
-  const autoStatModsOptions: Option[] = useMemo(
-    () => [
-      {
-        label: t('LoadoutBuilder.AutoStatMods.None'),
-        tooltip: t('LoadoutBuilder.AutoStatMods.NoneTooltip'),
-        selected: !autoStatMods,
-        onChange: () => {
-          if (autoStatMods) {
-            lbDispatch({ type: 'autoStatModsChanged', autoStatMods: false });
-          }
-        },
-      },
-      {
-        label: t('LoadoutBuilder.AutoStatMods.Required'),
-        tooltip: t('LoadoutBuilder.AutoStatMods.RequiredTooltip'),
-        selected: autoStatMods,
-        onChange: () => {
-          if (!autoStatMods) {
-            lbDispatch({ type: 'autoStatModsChanged', autoStatMods: true });
-          }
-        },
-      },
-    ],
-    [autoStatMods, lbDispatch]
-  );
-
   return (
     <>
-      {$featureFlags.loAutoStatMods && (
-        <RadioSetting
-          name="autoStatMods"
-          label={t('LoadoutBuilder.AutoStatMods.Label')}
-          options={autoStatModsOptions}
-        />
-      )}
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol start={2}>

@@ -500,8 +500,8 @@
       "Label": "Automatically add stat mods",
       "None": "None",
       "NoneTooltip": "No stat mods will be picked automatically.",
-      "Required": "Required",
-      "RequiredTooltip": "Stat mods will be picked and assigned automatically as needed to meet minimum stat tier requirements."
+      "Required": "Meet Minimums",
+      "RequiredTooltip": "Stat mods will be included and assigned automatically to meet minimum stat tier requirements."
     },
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
