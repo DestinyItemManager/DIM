@@ -41,7 +41,7 @@ import {
   StatFilters,
 } from './types';
 
-export interface LoadoutBuilderUI {
+interface LoadoutBuilderUI {
   modPicker: {
     open: boolean;
     plugCategoryHashWhitelist?: number[];
@@ -49,7 +49,7 @@ export interface LoadoutBuilderUI {
   compareSet?: ArmorSet;
 }
 
-export interface LoadoutBuilderConfiguration {
+interface LoadoutBuilderConfiguration {
   loadoutParameters: LoadoutParameters;
   // TODO: also fold statOrder, statFilters into loadoutParameters
   statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
@@ -181,7 +181,7 @@ const lbConfigInit = ({
   };
 };
 
-export type LoadoutBuilderConfigAction =
+type LoadoutBuilderConfigAction =
   | {
       type: 'changeCharacter';
       store: DimStore;
@@ -210,7 +210,7 @@ export type LoadoutBuilderConfigAction =
   | { type: 'lockExotic'; lockedExoticHash: number }
   | { type: 'removeLockedExotic' };
 
-export type LoadoutBuilderUIAction =
+type LoadoutBuilderUIAction =
   | { type: 'openModPicker'; plugCategoryHashWhitelist?: number[] }
   | { type: 'closeModPicker' }
   | { type: 'openCompareDrawer'; set: ArmorSet }
