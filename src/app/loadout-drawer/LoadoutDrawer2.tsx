@@ -37,7 +37,7 @@ import {
   setName,
   setNotes,
 } from './loadout-drawer-reducer';
-import { useLoadoutEditHistory } from './loadout-edit-history';
+import { useHistory } from './loadout-edit-history';
 import { addItem$ } from './loadout-events';
 import { Loadout, ResolvedLoadoutItem } from './loadout-types';
 import { createSubclassDefaultSocketOverrides, findSameLoadoutItemIndex } from './loadout-utils';
@@ -74,8 +74,14 @@ export default function LoadoutDrawer2({
   const defs = useDefinitions()!;
   const stores = useSelector(storesSelector);
   const [showingItemPicker, setShowingItemPicker] = useState(false);
-  const { loadout, setLoadout, undo, redo, canUndo, canRedo } =
-    useLoadoutEditHistory(initialLoadout);
+  const {
+    state: loadout,
+    setState: setLoadout,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useHistory(initialLoadout);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
 
   function withUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {

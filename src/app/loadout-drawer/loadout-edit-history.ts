@@ -1,16 +1,16 @@
 import { useCallback, useReducer } from 'react';
-import { LoadoutUpdateFunction } from './loadout-drawer-reducer';
-import { Loadout } from './loadout-types';
 
-interface LoadoutEditHistory {
-  loadout: Loadout;
-  undoStack: Loadout[];
-  redoStack: Loadout[];
+interface History<S> {
+  state: S;
+  undoStack: S[];
+  redoStack: S[];
 }
 
-interface SetLoadoutAction {
-  type: 'set_loadout';
-  loadoutUpdate: LoadoutUpdateFunction;
+type StateUpdateFunction<S> = (oldState: S) => S;
+
+interface SetAction<S> {
+  type: 'set';
+  update: StateUpdateFunction<S>;
 }
 
 interface UndoAction {
@@ -21,72 +21,80 @@ interface RedoAction {
   type: 'redo';
 }
 
-type Action = SetLoadoutAction | UndoAction | RedoAction;
+type Action<S> = SetAction<S> | UndoAction | RedoAction;
 
-function loadoutEditHistoryReducer(state: LoadoutEditHistory, action: Action): LoadoutEditHistory {
+function historyReducer<S>(oldState: History<S>, action: Action<S>): History<S> {
   switch (action.type) {
-    case 'set_loadout': {
-      const { undoStack, loadout } = state;
+    case 'set': {
+      const { undoStack, state } = oldState;
       return {
-        loadout: action.loadoutUpdate(loadout),
-        undoStack: [...undoStack, loadout],
+        state: action.update(state),
+        undoStack: [...undoStack, state],
         redoStack: [],
       };
     }
     case 'undo': {
-      const { undoStack, redoStack, loadout } = state;
+      const { undoStack, redoStack, state } = oldState;
       if (undoStack.length < 1) {
         throw new Error("Can't undo");
       }
-      const previousLoadout = undoStack[undoStack.length - 1];
+      const previousState = undoStack[undoStack.length - 1];
       return {
-        loadout: previousLoadout,
+        state: previousState,
         undoStack: undoStack.slice(0, -1),
-        redoStack: [...redoStack, loadout],
+        redoStack: [...redoStack, state],
       };
     }
     case 'redo': {
-      const { undoStack, redoStack, loadout } = state;
+      const { undoStack, redoStack, state } = oldState;
       if (redoStack.length < 1) {
         throw new Error("Can't redo");
       }
-      const nextLoadout = redoStack[redoStack.length - 1];
+      const nextState = redoStack[redoStack.length - 1];
       return {
-        loadout: nextLoadout,
-        undoStack: [...undoStack, loadout],
+        state: nextState,
+        undoStack: [...undoStack, state],
         redoStack: redoStack.slice(0, -1),
       };
     }
   }
 }
 
-function initializer(loadout: Loadout): LoadoutEditHistory {
+function initializer<S>(state: S): History<S> {
   return {
-    loadout,
+    state,
     undoStack: [],
     redoStack: [],
   };
 }
 
-// TODO: with a bit of finagling this could be generalized to wrap any state or
-// reducer. Perhaps for the loadout optimizer or certain settings?
-export function useLoadoutEditHistory(initialLoadout: Loadout) {
-  const [{ loadout, undoStack, redoStack }, dispatch] = useReducer(
-    loadoutEditHistoryReducer,
-    initialLoadout,
+export function useHistory<S>(initialState: S): {
+  state: S;
+  setState: (f: StateUpdateFunction<S>) => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
+} {
+  // Needed for type checking, TS otherwise seems to get lost
+  // in weaker overloads of `useReducer`?
+  const reducer: typeof historyReducer<S> = historyReducer;
+  const [{ state, undoStack, redoStack }, dispatch] = useReducer(
+    reducer,
+    initialState,
     initializer
   );
 
-  const setLoadout = useCallback(
-    (loadoutUpdate: LoadoutUpdateFunction) => dispatch({ type: 'set_loadout', loadoutUpdate }),
+  const setState = useCallback(
+    (f: StateUpdateFunction<S>) => dispatch({ type: 'set', update: f }),
     []
   );
   const undo = useCallback(() => dispatch({ type: 'undo' }), []);
   const redo = useCallback(() => dispatch({ type: 'redo' }), []);
 
   return {
-    loadout,
-    setLoadout,
+    state,
+    setState,
     undo,
     redo,
     canUndo: undoStack.length > 0,
