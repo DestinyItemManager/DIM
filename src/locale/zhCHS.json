@@ -8,12 +8,16 @@
     "IrreversiblePlugging": "你不拥有{{plug}}，所以我们不会覆盖它。"
   },
   "Accounts": {
+    "Choose": "{{bungieName}} 的档案",
     "ErrorLoadInventory": "无法加载你的《命运 {{version}}》角色和库存",
     "ErrorLoadManifest": "无法从 Bungie 加载命运信息数据库",
     "ErrorLoading": "无法从 Bungie.net 加载命运账户",
+    "MissingAccountWarning": "如果你的账户没有显示，你可能登录了错误的 Bungie.net 账户，或 Bungie.net 可能正在停机维护。",
     "MissingDescription": "你试图查看的账户并未连接到你的 Bungie.net 账户。",
     "MissingTitle": "找不到账户",
-    "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。"
+    "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。",
+    "SwitchAccounts": "你可以稍后在标题栏菜单里切换账户。",
+    "Title": "账户"
   },
   "Activities": {
     "Activities": "活动",
@@ -120,7 +124,7 @@
     "Title": "发生了一些错误"
   },
   "ErrorPanel": {
-    "Description": "这个问题可能影响到了所有第三方 App。检查一下 Bungie.net 或命运 2 伴侣 App 是否能正常工作。",
+    "Description": "使用命运同伴 App 来尝试加载你的物品栏。如果出现错误，则 Bungie.net 出现了问题。",
     "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
@@ -639,6 +643,7 @@
     "RandomizeSearch": "从搜索结果随机选取",
     "RandomizeSearchPrompt": "从“{{query}}”的搜索结果随机配装？",
     "RandomizeWeapons": "确定要将你的武器随机搭配吗？",
+    "Redo": "重做",
     "RestoreAllItems": "所有物品",
     "Save": "保存",
     "SaveAsNew": "另存为",
@@ -678,6 +683,7 @@
     "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个. 我们已经处理所有已拥有的",
     "UnassignedModError": "模组不适合你当前的护甲",
     "UnassignedMods": "未分配的模组",
+    "Undo": "撤销",
     "Unequipped": "未装备",
     "Update": "保存更改",
     "VendorsCannotEquip": "您没有这些项目。点击来选择一个替换或点击 X 来删除：",
@@ -711,6 +717,7 @@
     "All": "全部",
     "CannotCurrentlyRoll": "此特性不会出现在此物品的当前版本上。",
     "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
+    "CatalystProgress": "催化剂进度",
     "CommunityData": "社区见解",
     "Consolidate": "合并",
     "CraftingPattern": "制作样式",

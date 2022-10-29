@@ -8,12 +8,16 @@
     "IrreversiblePlugging": "不擁有{{plug}}，所以我們不會覆蓋它。"
   },
   "Accounts": {
+    "Choose": "Profiles for {{bungieName}}",
     "ErrorLoadInventory": "無法加載你的《命運 {{version}}》角色和庫存",
     "ErrorLoadManifest": "無法從 Bungie 加載命運信息數據庫",
     "ErrorLoading": "無法從 Bungie.net 加載命運賬戶",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance.",
     "MissingDescription": "你試圖查看的賬戶並未連接到你的 Bungie.net 賬戶。",
     "MissingTitle": "找不到帳戶",
-    "NoCharacters": "沒有找到與此Bungie.net帳號相關聯的Destiny角色，登陸其它帳號試試看。"
+    "NoCharacters": "沒有找到與此Bungie.net帳號相關聯的Destiny角色，登陸其它帳號試試看。",
+    "SwitchAccounts": "You can switch accounts later from the menu in the header.",
+    "Title": "Accounts"
   },
   "Activities": {
     "Activities": "活動",
@@ -120,7 +124,7 @@
     "Title": "發生了一些錯誤"
   },
   "ErrorPanel": {
-    "Description": "這個問題可能影響到了所有第三方 App。檢查一下 Bungie.net 或命運 2 伴侶 App 是否能正常工作。",
+    "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
     "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
@@ -639,6 +643,7 @@
     "RandomizeSearch": "從搜索結果隨機選取",
     "RandomizeSearchPrompt": "從「{{query}}」的搜索結果隨機配裝？",
     "RandomizeWeapons": "確定要將你的武器隨機搭配嗎？",
+    "Redo": "Redo",
     "RestoreAllItems": "全部專案",
     "Save": "保存",
     "SaveAsNew": "另存為",
@@ -678,6 +683,7 @@
     "TooManyRequested": "你有{{total}} 個{{itemname}}, 但完成配裝需要{{requested}} 個. 我們已經處理所有已擁有的",
     "UnassignedModError": "模組不適合你當前的護甲",
     "UnassignedMods": "未分配的模組",
+    "Undo": "Undo",
     "Unequipped": "未裝備",
     "Update": "保存更改",
     "VendorsCannotEquip": "您沒有這些項目。點擊來選擇一個替換或點擊 X 來刪除：",
@@ -711,6 +717,7 @@
     "All": "全部",
     "CannotCurrentlyRoll": "此特性不會出現在此物品的當前版本上。",
     "CantPullFromPostmaster": "你必須到高塔去取回這件物品。",
+    "CatalystProgress": "Catalyst Progress",
     "CommunityData": "社区描述",
     "Consolidate": "合併",
     "CraftingPattern": "製作樣式",

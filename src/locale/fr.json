@@ -8,12 +8,16 @@
     "IrreversiblePlugging": "Vous ne possédez pas {{plug}}, donc nous ne le remplacerons pas."
   },
   "Accounts": {
+    "Choose": "Profiles for {{bungieName}}",
     "ErrorLoadInventory": "Impossible de charger vos personnages et inventaire Destiny {{version}}",
     "ErrorLoadManifest": "Impossible de charger la base de données d'information de Destiny depuis Bungie",
     "ErrorLoading": "Impossible de charger les comptes Destiny depuis Bungie.net",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance.",
     "MissingDescription": "Le compte que vous essayez de voir n'est pas un compte associé à votre profil Bungie.net.",
     "MissingTitle": "Compte Introuvable",
-    "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent."
+    "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
+    "SwitchAccounts": "You can switch accounts later from the menu in the header.",
+    "Title": "Accounts"
   },
   "Activities": {
     "Activities": "Activités",
@@ -120,7 +124,7 @@
     "Title": "Une erreur s'est produite"
   },
   "ErrorPanel": {
-    "Description": "Ce problème affecte probablement toutes les applications tiers. Vérifiez si Bungie.net charge, ou si l'application compagnon de Destiny 2 fonctionne.",
+    "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
     "Troubleshooting": "Guide de Dépannage"
   },
   "FarmingMode": {
@@ -639,6 +643,7 @@
     "RandomizeSearch": "Équiper aléatoire à partir de la recherche",
     "RandomizeSearchPrompt": "Équiper au hasard à partir de la recherche \"{{query}}\"?",
     "RandomizeWeapons": "Équiper des armes au hasard ?",
+    "Redo": "Redo",
     "RestoreAllItems": "Tous les objets",
     "Save": "Sauvegarder",
     "SaveAsNew": "Sauvegarder comme nouveau",
@@ -678,6 +683,7 @@
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre arsenal demande {{requested}}. Nous avons transféré tous ceux que vous possédiez.",
     "UnassignedModError": "Le mot n'a pas pu être équipé sur votre armure actuelle",
     "UnassignedMods": "Mods non assignés",
+    "Undo": "Undo",
     "Unequipped": "Non équipé",
     "Update": "Enregistrer les modifications",
     "VendorsCannotEquip": "Vous n'avez pas ces objets. Appuyez pour sélectionner un remplacement ou cliquez sur X pour retirer:",
@@ -711,6 +717,7 @@
     "All": "Tous",
     "CannotCurrentlyRoll": "Cet attribut ne peut pas être obtenu sur la version actuelle de cet objet.",
     "CantPullFromPostmaster": "Vous devez aller à la tour pour récupérer cet objet.",
+    "CatalystProgress": "Catalyst Progress",
     "CommunityData": "Informations de la communauté",
     "Consolidate": "Réunir",
     "CraftingPattern": "Modèle de fabrication",

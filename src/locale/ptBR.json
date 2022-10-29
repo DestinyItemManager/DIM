@@ -8,12 +8,16 @@
     "IrreversiblePlugging": "Você não possui {{plug}}, então não podemos sobrescrevê-lo."
   },
   "Accounts": {
+    "Choose": "Perfis para {{bungieName}}",
     "ErrorLoadInventory": "Não foi possível carregar os seus personagens e inventário de Destiny {{version}}",
     "ErrorLoadManifest": "Não foi possível carregar as informações de banco de dados de Destiny da Bungie",
     "ErrorLoading": "Não foi possível carregar as contas de Destiny da Bungie.net",
+    "MissingAccountWarning": "Caso não encontre sua conta aqui, significa que você ainda não a autorizou através da Bungie.net ou o serviço da Bungie pode estar em manutenção no momento.",
     "MissingDescription": "A conta que você está tentando visualizar não está vinculada em seu perfil da Bungie.net.",
     "MissingTitle": "Conta não encontrada",
-    "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente conectar com uma conta diferente."
+    "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente conectar com uma conta diferente.",
+    "SwitchAccounts": "Você poderá alternar entre contas posteriormente através do menu superior.",
+    "Title": "Contas"
   },
   "Activities": {
     "Activities": "Atividades",
@@ -120,7 +124,7 @@
     "Title": "Algo deu errado"
   },
   "ErrorPanel": {
-    "Description": "Este problema possivelmente afeta todos as aplicações de terceiro. Verifique se a Bungie.net carrega ou se o app Destiny 2 Companion funciona como o esperado.",
+    "Description": "Tente carregar seu inventário no app Destiny 2 Companion para saber se a Bungie.net está fora do ar.",
     "Troubleshooting": "Guia para Solução de Problemas"
   },
   "FarmingMode": {
@@ -639,6 +643,7 @@
     "RandomizeSearch": "Tornar aleatório a partir da busca",
     "RandomizeSearchPrompt": "Tornar aleatório seus itens equipados a partir da busca \"{{query}}\"?",
     "RandomizeWeapons": "Randomizar suas armas equipadas?",
+    "Redo": "Refazer",
     "RestoreAllItems": "Todos os itens",
     "Save": "Salvar",
     "SaveAsNew": "Salvar como Novo",
@@ -678,6 +683,7 @@
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "UnassignedModError": "Mod incompatível com a armadura atual",
     "UnassignedMods": "Mods não Atribuídos",
+    "Undo": "Desfazer",
     "Unequipped": "Não Equipado",
     "Update": "Salvar Alterações",
     "VendorsCannotEquip": "Você não tem esses itens. Toque para pegar um substituto ou clique no X para remover:",
@@ -711,6 +717,7 @@
     "All": "Tudo",
     "CannotCurrentlyRoll": "Este perk não pode ser utilizado na versão atual deste item.",
     "CantPullFromPostmaster": "Você dever ir à torre para recuperar este item.",
+    "CatalystProgress": "Progresso do Catalisador",
     "CommunityData": "Conhecimento da Comunidade",
     "Consolidate": "Consolidar",
     "CraftingPattern": "Padrão de Criação",

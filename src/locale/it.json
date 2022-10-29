@@ -8,12 +8,16 @@
     "IrreversiblePlugging": "Non possiedi {{plug}}, perciò non lo sovrascriveremo."
   },
   "Accounts": {
+    "Choose": "Profili per {{bungieName}}",
     "ErrorLoadInventory": "Impossible caricare i tuoi personaggi ed inventario di Destiny {{version}}",
     "ErrorLoadManifest": "Impossibile caricare il database informazioni di Destiny da Bungie",
     "ErrorLoading": "Impossibile caricare gli account di Destiny da Bungie.net",
+    "MissingAccountWarning": "Se non vedi il tuo account qui, potresti non aver effettuato l'accesso all'account Bungie corretto, oppure Bungie.net potrebbe essere in manutenzione.",
     "MissingDescription": "L'account che stai cercando di visualizzare non è un account collegato al tuo profilo Bungie.net.",
     "MissingTitle": "Account Non Trovato",
-    "NoCharacters": "Non possiedi personaggi di Destiny associati a questo account Bungie.net. Prova a connetterti con un account diverso."
+    "NoCharacters": "Non possiedi personaggi di Destiny associati a questo account Bungie.net. Prova a connetterti con un account diverso.",
+    "SwitchAccounts": "Puoi cambiare account successivamente dal menu nella testata.",
+    "Title": "Account"
   },
   "Activities": {
     "Activities": "Attività",
@@ -120,7 +124,7 @@
     "Title": "Qualcosa è andato storto"
   },
   "ErrorPanel": {
-    "Description": "È probabile che questo sia un problema che riguarda tutte le applicazioni di terze parti. Controlla se Bungie.net o la Destiny 2 Companion App funzionano.",
+    "Description": "Prova a visualizzare il tuo inventario sulla Companion App di Destiny 2 per vedere se Bungie.net sta funzionando.",
     "Troubleshooting": "Guida alla risoluzione dei problemi"
   },
   "FarmingMode": {
@@ -152,8 +156,8 @@
   },
   "FashionDrawer": {
     "Accept": "Salva stile",
-    "CannotFitOrnament": "This item does not have an ornament socket or you have no ornaments for it.",
-    "CannotFitShader": "This item cannot fit a shader",
+    "CannotFitOrnament": "Questo oggetto non ha un alloggiamento per decori oppure non hai decori per esso.",
+    "CannotFitShader": "Questo oggetto non può usare uno shader",
     "ClearOrnaments": "Cancella Decori",
     "ClearOrnamentsTitle": "Reimposta tutti i decori su \"nessuna preferenza\"",
     "ClearShaders": "Cancella Shader",
@@ -639,6 +643,7 @@
     "RandomizeSearch": "Randomizza da Ricerca",
     "RandomizeSearchPrompt": "Randomizzare i tuoi oggetti equipaggiati da ricerca\"{{query}}\"?",
     "RandomizeWeapons": "Randomizzare le armi equipaggiate?",
+    "Redo": "Ripeti",
     "RestoreAllItems": "Tutti gli Elementi",
     "Save": "Salva",
     "SaveAsNew": "Salva come Nuovo",
@@ -678,6 +683,7 @@
     "TooManyRequested": "Hai un totale di {{total}} {{itemname}} ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
     "UnassignedModError": "La Modifica non è adatta alla tua armatura attuale",
     "UnassignedMods": "Modifiche non assegnate",
+    "Undo": "Annulla",
     "Unequipped": "Non equipaggiato",
     "Update": "Salva Cambiamenti",
     "VendorsCannotEquip": "Non possiedi questi oggetti. Tocca per trovare un sostituto oppure clicca la X per rimuovere:",
@@ -711,6 +717,7 @@
     "All": "Tutto",
     "CannotCurrentlyRoll": "Questo perk non può essere ottenuto sulla versione attuale di questo oggetto.",
     "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
+    "CatalystProgress": "Progresso Catalizzatore",
     "CommunityData": "Spiegazione della community",
     "Consolidate": "Consolida",
     "CraftingPattern": "Modello per forgiatura",

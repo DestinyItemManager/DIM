@@ -8,12 +8,16 @@
     "IrreversiblePlugging": "{{plug}} を所有していないため、上書きされません。"
   },
   "Accounts": {
+    "Choose": "Profiles for {{bungieName}}",
     "ErrorLoadInventory": "Destiny {{version}} のキャラクターとインベントリをロードできません",
     "ErrorLoadManifest": "BungieからDestinyの情報データベースをロードできません",
     "ErrorLoading": "Bungie.netからDestinyのアカウント情報をロードできません",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance.",
     "MissingDescription": "表示しようとしているアカウントはBungie.netのプロフィールにリンクされていません。",
     "MissingTitle": "アカウントが見つかりません",
-    "NoCharacters": "このBungie.netアカウントには、Destinyのキャラクターが関連付けられていません。別のアカウントでログインしてみてください。"
+    "NoCharacters": "このBungie.netアカウントには、Destinyのキャラクターが関連付けられていません。別のアカウントでログインしてみてください。",
+    "SwitchAccounts": "You can switch accounts later from the menu in the header.",
+    "Title": "Accounts"
   },
   "Activities": {
     "Activities": "アクティビティ",
@@ -120,7 +124,7 @@
     "Title": "何か問題が発生したようです"
   },
   "ErrorPanel": {
-    "Description": "サードパーティ製アプリだけで問題が起きている可能性があります。 Bungie.netにアクセスできるか、Destiny 2公式コンパニオンアプリが動作するか確認してください。",
+    "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
     "Troubleshooting": "トラブルシューティングガイド"
   },
   "FarmingMode": {
@@ -639,6 +643,7 @@
     "RandomizeSearch": "ランダム検索",
     "RandomizeSearchPrompt": "検索検\"{{query}}\"から装備アイテムをランダム化しますか？",
     "RandomizeWeapons": "装備した武器をランダム化しますか?",
+    "Redo": "やり直す",
     "RestoreAllItems": "全アイテム",
     "Save": "保存",
     "SaveAsNew": "新規保存",
@@ -678,6 +683,7 @@
     "TooManyRequested": "あなたは{{total}} {{itemname}} を持っていますが、あなたのロードアウトは{{requested}} を要求します。あなたが持っていた物をすべてを転送しました。",
     "UnassignedModError": "Modが現在のアーマーに適用できませんでした",
     "UnassignedMods": "割り当てられていない Mod",
+    "Undo": "元に戻す",
     "Unequipped": "装備解除中",
     "Update": "変更を保存",
     "VendorsCannotEquip": "これらのアイテムはありません。タップして交換を選択するか、Xをクリックして削除します。",
@@ -711,6 +717,7 @@
     "All": "全て",
     "CannotCurrentlyRoll": "このアイテムの現在のバージョンでは、このパークをロールできません。",
     "CantPullFromPostmaster": "このアイテムを取得するには、タワーに行く必要があります。",
+    "CatalystProgress": "媒体の進行",
     "CommunityData": "コミュニティの評価",
     "Consolidate": "統合する",
     "CraftingPattern": "クラフトパターン",

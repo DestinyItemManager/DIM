@@ -8,12 +8,16 @@
     "IrreversiblePlugging": "Nie posiadasz {{plug}}, więc nie nadpiszemy jej."
   },
   "Accounts": {
+    "Choose": "Profiles for {{bungieName}}",
     "ErrorLoadInventory": "Nie można załadować Twoich postaci Destiny {{version}} oraz ekwipunku",
     "ErrorLoadManifest": "Nie można załadować bazy danych informacji Destiny od Bungie",
     "ErrorLoading": "Nie można załadować kont Destiny z Bungie.net",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance.",
     "MissingDescription": "Konto, które próbujesz zobaczyć, nie jest kontem połączonym z Twoim profilem Bungie.net.",
     "MissingTitle": "Nie znaleziono konta",
-    "NoCharacters": "Nie posiadasz żadnych postaci z Destiny powiązanych z tym kontem Bungie.net. Spróbuj zalogować się na inne konto."
+    "NoCharacters": "Nie posiadasz żadnych postaci z Destiny powiązanych z tym kontem Bungie.net. Spróbuj zalogować się na inne konto.",
+    "SwitchAccounts": "You can switch accounts later from the menu in the header.",
+    "Title": "Accounts"
   },
   "Activities": {
     "Activities": "Aktywności",
@@ -120,7 +124,7 @@
     "Title": "Coś poszło nie tak"
   },
   "ErrorPanel": {
-    "Description": "Jest to prawdopodobnie problem dotyczący wszystkich aplikacji innych firm. Sprawdź, czy Bungie.net się wczytuje lub, czy aplikacja towarzysząca Destiny 2 działa.",
+    "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
     "Troubleshooting": "Przewodnik rozwiązywania problemów"
   },
   "FarmingMode": {
@@ -639,6 +643,7 @@
     "RandomizeSearch": "Losowo z Wyszukiwania",
     "RandomizeSearchPrompt": "Wylosuj wyposażone przedmioty z wyszukania \"{{query}}\"?",
     "RandomizeWeapons": "Losować twoją założoną broń?",
+    "Redo": "Redo",
     "RestoreAllItems": "Wszystkie Przedmioty",
     "Save": "Zapisz",
     "SaveAsNew": "Save as New",
@@ -678,6 +683,7 @@
     "TooManyRequested": "Masz {{total}} {{itemname}}, ale Twoje wyposażenie wymaga {{requested}}. Przenieśliśmy wszystko, co miałeś.",
     "UnassignedModError": "Modyfikacja nie pasuję do twojej bieżącej zbroi",
     "UnassignedMods": "Nieprzypisane Modyfikacje",
+    "Undo": "Undo",
     "Unequipped": "Unequipped",
     "Update": "Save Changes",
     "VendorsCannotEquip": "Nie masz tych przedmiotów. Naciśnij, aby wybrać zamiennik lub kliknij X, aby usunąć:",
@@ -711,6 +717,7 @@
     "All": "Wszystkie",
     "CannotCurrentlyRoll": "Ten perk nie może być otrzymany na bieżącej wersji tego przedmiotu.",
     "CantPullFromPostmaster": "Musisz udać się na Wieżę zęby odebrać ten przedmiot.",
+    "CatalystProgress": "Catalyst Progress",
     "CommunityData": "Community Insight",
     "Consolidate": "Połącz",
     "CraftingPattern": "Crafting Pattern",

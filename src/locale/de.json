@@ -8,12 +8,16 @@
     "IrreversiblePlugging": "Du besitzt {{plug}} nicht, also werden wir es nicht ersetzen."
   },
   "Accounts": {
+    "Choose": "Profile für {{bungieName}}",
     "ErrorLoadInventory": "Fehler beim Laden deiner Destiny {{version}} Charaktere und des Inventars",
     "ErrorLoadManifest": "Destiny Info-Datenbank kann nicht von Bungie geladen werden",
     "ErrorLoading": "Destiny Accounts können nicht von Bungie.net geladen werden",
+    "MissingAccountWarning": "Wenn du deinen Account hier nicht siehst, hast du dich möglicherweise nicht mit dem richtigen Bungie.net-Account eingeloggt oder Bungie.net ist wegen Wartungsarbeiten möglicherweise nicht verfügbar.",
     "MissingDescription": "Der Account, den du sehen möchtest, ist kein Account, der mit deinem Bungie.net Profil verknüpft ist.",
     "MissingTitle": "Account nicht gefunden",
-    "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen."
+    "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen.",
+    "SwitchAccounts": "Du kannst die Konten später aus dem Menü in der Kopfzeile wechseln.",
+    "Title": "Konten"
   },
   "Activities": {
     "Activities": "Aktivitäten",
@@ -120,7 +124,7 @@
     "Title": "Ein Fehler ist aufgetreten"
   },
   "ErrorPanel": {
-    "Description": "Dies ist wahrscheinlich ein Problem, welches alle Apps von Dritten betrifft - überprüfe, ob Bungie.net oder die Companion App funktioniert.",
+    "Description": "Lade dein Inventar in der Destiny 2 Companion App um zu sehen, ob Bungie.net nicht verfügbar ist.",
     "Troubleshooting": "Fehlerbehebung"
   },
   "FarmingMode": {
@@ -639,6 +643,7 @@
     "RandomizeSearch": "Zufällig von Suche",
     "RandomizeSearchPrompt": "Zufällige Gegenstände von der Suche \"{{query}}\" ausrüsten?",
     "RandomizeWeapons": "Zufällige ausgerüstete Waffen wählen?",
+    "Redo": "Wiederholen",
     "RestoreAllItems": "Alle Gegenstände",
     "Save": "Speichern",
     "SaveAsNew": "Als Neu speichern",
@@ -678,6 +683,7 @@
     "TooManyRequested": "Du hast {{total}} {{itemname}}, aber deine Ausrüstung verlangt jedoch {{requested}}. Wir haben alles übertragen, was da war.",
     "UnassignedModError": "Mod passt nicht auf deine aktuelle Rüstung",
     "UnassignedMods": "Nicht zugewiesene Mods",
+    "Undo": "Rückgängig",
     "Unequipped": "Nicht ausgerüstet",
     "Update": "Änderungen speichern",
     "VendorsCannotEquip": "Du hast diesen Gegenstand nicht. Tippe, um einen Ersatz zu wählen oder klicke auf X zum Entfernen:",
@@ -711,6 +717,7 @@
     "All": "Alle",
     "CannotCurrentlyRoll": "Dieser Perk kann nicht auf die aktuelle Version dieses Gegenstands gerollt werden.",
     "CantPullFromPostmaster": "Du musst auf den Turm, um diesen Gegenstand abzurufen.",
+    "CatalystProgress": "Katalysator-Fortschritt",
     "CommunityData": "Community-Einblick",
     "Consolidate": "Zusammenführen",
     "CraftingPattern": "Bauplan",
