@@ -155,8 +155,8 @@ export function useProcess({
 
     const subclassPlugs = subclass?.loadoutItem.socketOverrides
       ? Object.values(subclass.loadoutItem.socketOverrides)
-        .map((hash) => defs.InventoryItem.get(hash))
-        .filter(isPluggableItem)
+          .map((hash) => defs.InventoryItem.get(hash))
+          .filter(isPluggableItem)
       : emptyArray<PluggableInventoryItemDefinition>();
 
     // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores

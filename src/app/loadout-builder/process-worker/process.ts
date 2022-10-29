@@ -170,41 +170,41 @@ export function process(
             // JavaScript engines apparently don't unroll loops automatically and this makes a big difference in speed.
             const stats = [
               modStatsInStatOrder[0] +
-              helmStats[0] +
-              gauntStats[0] +
-              chestStats[0] +
-              legStats[0] +
-              classItemStats[0],
+                helmStats[0] +
+                gauntStats[0] +
+                chestStats[0] +
+                legStats[0] +
+                classItemStats[0],
               modStatsInStatOrder[1] +
-              helmStats[1] +
-              gauntStats[1] +
-              chestStats[1] +
-              legStats[1] +
-              classItemStats[1],
+                helmStats[1] +
+                gauntStats[1] +
+                chestStats[1] +
+                legStats[1] +
+                classItemStats[1],
               modStatsInStatOrder[2] +
-              helmStats[2] +
-              gauntStats[2] +
-              chestStats[2] +
-              legStats[2] +
-              classItemStats[2],
+                helmStats[2] +
+                gauntStats[2] +
+                chestStats[2] +
+                legStats[2] +
+                classItemStats[2],
               modStatsInStatOrder[3] +
-              helmStats[3] +
-              gauntStats[3] +
-              chestStats[3] +
-              legStats[3] +
-              classItemStats[3],
+                helmStats[3] +
+                gauntStats[3] +
+                chestStats[3] +
+                legStats[3] +
+                classItemStats[3],
               modStatsInStatOrder[4] +
-              helmStats[4] +
-              gauntStats[4] +
-              chestStats[4] +
-              legStats[4] +
-              classItemStats[4],
+                helmStats[4] +
+                gauntStats[4] +
+                chestStats[4] +
+                legStats[4] +
+                classItemStats[4],
               modStatsInStatOrder[5] +
-              helmStats[5] +
-              gauntStats[5] +
-              chestStats[5] +
-              legStats[5] +
-              classItemStats[5],
+                helmStats[5] +
+                gauntStats[5] +
+                chestStats[5] +
+                legStats[5] +
+                classItemStats[5],
             ];
 
             // TODO: avoid min/max?

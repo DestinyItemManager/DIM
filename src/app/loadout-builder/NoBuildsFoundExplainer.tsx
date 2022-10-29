@@ -129,8 +129,8 @@ export default function NoBuildsFoundExplainer({
             id: 'considerDroppingMods',
             contents: (
               <>
-                {modRow(bucketMods)}
                 {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveMods')}
+                {modRow(bucketMods)}
               </>
             ),
           },
@@ -141,7 +141,7 @@ export default function NoBuildsFoundExplainer({
             id: 'considerUnpinningItem',
             contents: (
               <>
-                {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveMods')}
+                {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeAllowMoreItems')}
                 <div className={styles.modRow}>
                   <LockedItem
                     lockedItem={pinnedItem}
