@@ -63,21 +63,21 @@ export function filterItems({
     [BucketHashes.ClassArmor]: [],
   };
 
-  const emptyFilterInfo = () => ({
+  const emptyFilterInfo = {
     totalConsidered: 0,
     cantFitMods: 0,
     finalValid: 0,
-  });
+  };
 
   const filterInfo: FilterInfo = {
     alwaysInvalidMods: undefined,
     searchQueryEffective: false,
     perBucketStats: {
-      [BucketHashes.Helmet]: emptyFilterInfo(),
-      [BucketHashes.Gauntlets]: emptyFilterInfo(),
-      [BucketHashes.ChestArmor]: emptyFilterInfo(),
-      [BucketHashes.LegArmor]: emptyFilterInfo(),
-      [BucketHashes.ClassArmor]: emptyFilterInfo(),
+      [BucketHashes.Helmet]: { ...emptyFilterInfo },
+      [BucketHashes.Gauntlets]: { ...emptyFilterInfo },
+      [BucketHashes.ChestArmor]: { ...emptyFilterInfo },
+      [BucketHashes.LegArmor]: { ...emptyFilterInfo },
+      [BucketHashes.ClassArmor]: { ...emptyFilterInfo },
     },
   };
 

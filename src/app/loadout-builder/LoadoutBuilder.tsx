@@ -182,13 +182,16 @@ export default memo(function LoadoutBuilder({
     [defs, loadoutParameters.mods]
   );
 
-  const { modMap: lockedModMap, unassignedMods } = useMemo(
-    () => categorizeArmorMods(lockedMods, allItems),
-    [allItems, lockedMods]
-  );
-
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
+
+  const characterItems = items[classType];
+
+  const { modMap: lockedModMap, unassignedMods } = useMemo(
+    () =>
+      categorizeArmorMods(lockedMods, characterItems ? Object.values(characterItems).flat() : []),
+    [characterItems, lockedMods]
+  );
 
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
   const setSetting = useSetSetting();
@@ -251,8 +254,6 @@ export default memo(function LoadoutBuilder({
     () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
     [statFilters]
   );
-
-  const characterItems = items[classType];
 
   const loadouts = useMemo(() => {
     const equippedLoadout: Loadout | undefined = newLoadoutFromEquipped(
