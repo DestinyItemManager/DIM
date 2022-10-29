@@ -128,7 +128,11 @@ export function createSubclassDefaultSocketOverrides(item: DimItem) {
     ]);
 
     for (const socket of abilityAndSuperSockets) {
-      socketOverrides[socket.socketIndex] = getDefaultAbilityChoiceHash(socket);
+      socketOverrides[socket.socketIndex] =
+        socket.plugged &&
+        socket.plugSet?.plugs.some((plug) => plug.plugDef.hash === socket.plugged!.plugDef.hash)
+          ? socket.plugged.plugDef.hash
+          : getDefaultAbilityChoiceHash(socket);
     }
     return socketOverrides;
   }
