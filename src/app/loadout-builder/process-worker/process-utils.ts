@@ -194,6 +194,7 @@ export function pickAndAssignSlotIndependentMods(
     validGeneralModPicks = getViableGeneralModPicks(cache, neededStats);
     if (validGeneralModPicks.length === 0) {
       modStatistics.autoModsPick.timesFailed++;
+      return undefined;
     }
   }
 
