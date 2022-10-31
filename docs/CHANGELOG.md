@@ -1,6 +1,7 @@
 ## Next
 
 * Applying a Loadout with subclass configuration should now avoid pointless reordering of Aspects and Fragments in their slots.
+* When selecting a subclass in Loadout Optimizer, it will now start configured with your currently equipped super and abilities (but not aspects or fragments).
 
 ## 7.41.0 <span class="changelog-date">(2022-10-30)</span>
 
