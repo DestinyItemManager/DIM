@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import {
   activityModPlugCategoryHashes,
@@ -19,7 +20,15 @@ import {
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import { ArmorEnergyRules, ArmorSet, ArmorStats, ItemGroup } from '../types';
+import {
+  ArmorEnergyRules,
+  ArmorSet,
+  ArmorStatHashes,
+  ArmorStats,
+  ItemGroup,
+  StatFilters,
+} from '../types';
+import { statTier } from '../utils';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
@@ -171,6 +180,9 @@ export function mapDimItemToProcessItem({
 }
 
 export function hydrateArmorSet(
+  defs: D2ManifestDefinitions,
+  statFilters: StatFilters,
+  statOrder: ArmorStatHashes[],
   processed: ProcessArmorSet,
   itemsById: Map<string, ItemGroup>
 ): ArmorSet {
@@ -180,7 +192,53 @@ export function hydrateArmorSet(
     armor.push(itemsById.get(itemId)!.items);
   }
 
+  let enabledBaseTier = 0,
+    enabledTier = 0,
+    totalTier = 0,
+    prioritizedTier = 0,
+    prioritizedPlusFives = 0,
+    consideredPlusFives = 0;
+  const totalStats = { ...processed.stats };
+
+  for (const modHash of processed.statMods) {
+    const def = defs.InventoryItem.get(modHash);
+    if (def?.investmentStats.length) {
+      for (const stat of def.investmentStats) {
+        if (totalStats[stat.statTypeHash] !== undefined) {
+          totalStats[stat.statTypeHash] += stat.value;
+        }
+      }
+    }
+  }
+
+  for (const statHash of statOrder) {
+    const tier = statTier(totalStats[statHash]);
+    const priority = statFilters[statHash].priority;
+    if (priority !== 'ignored') {
+      enabledBaseTier += statTier(processed.stats[statHash]);
+      enabledTier += tier;
+    }
+    const isPlusFive = totalStats[statHash] < 100 && totalStats[statHash] % 10 >= 5;
+    if (priority === 'prioritized') {
+      prioritizedTier += tier;
+      if (isPlusFive) {
+        prioritizedPlusFives += 1;
+      }
+    } else if (priority === 'considered' && isPlusFive) {
+      consideredPlusFives += 1;
+    }
+    totalTier += tier;
+  }
+
   return {
+    enabledBaseTier,
+    enabledTier,
+    totalTier,
+    prioritizedTier,
+    prioritizedPlusFives,
+    consideredPlusFives,
+    totalStats,
+
     armor,
     stats: processed.stats,
     statMods: processed.statMods,

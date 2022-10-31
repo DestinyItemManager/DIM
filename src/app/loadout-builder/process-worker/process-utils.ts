@@ -1,6 +1,7 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { ArmorStatHashes } from '../types';
+import { ArmorStatHashes, MinMaxPriority } from '../types';
 import {
   createGeneralModsCache,
   GeneralModsCache,
@@ -332,4 +333,157 @@ export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {
       })
       .join(',');
   return generatePermutationsOfFive(mods, createPermutationKey);
+}
+
+interface OptimizationStep {
+  statIndex: number;
+  repeat: boolean;
+  value: 5 | 10;
+}
+
+/**
+ * Optimizes the auto stat mod picks to maximize the prioritized stats.
+ */
+export function pickOptimalStatMods(
+  { activityModPermutations, cache, combatModPermutations }: PrecalculatedInfo,
+  items: ProcessItem[],
+  setStats: number[],
+  statFiltersInStatOrder: MinMaxPriority[]
+): number[] | undefined {
+  const remainingEnergiesPerAssignment: number[][] = [];
+
+  const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
+
+  // This loop is copy-pasted from above because we need to do the same thing as above
+  // We don't have to do any of the early exits though, since we know they succeed.
+  activityModLoop: for (const activityPermutation of activityModPermutations) {
+    activityItemLoop: for (let i = 0; i < sortedItems.length; i++) {
+      const activityMod = activityPermutation[i];
+      if (!activityMod) {
+        continue activityItemLoop;
+      }
+
+      const item = sortedItems[i];
+      const tag = activityMod.tag!;
+      const activityEnergy = activityMod.energy || defaultModEnergy;
+
+      const activityEnergyIsValid =
+        item.energy &&
+        item.energy.val + activityEnergy.val <= item.energy.capacity &&
+        (item.energy.type === activityEnergy.type ||
+          activityEnergy.type === DestinyEnergyType.Any ||
+          item.energy.type === DestinyEnergyType.Any);
+
+      if (!activityEnergyIsValid || !item.compatibleModSeasons?.includes(tag)) {
+        continue activityModLoop;
+      }
+    }
+
+    combatModLoop: for (const combatPermutation of combatModPermutations) {
+      combatItemLoop: for (let i = 0; i < sortedItems.length; i++) {
+        const combatMod = combatPermutation[i];
+
+        if (!combatMod) {
+          continue combatItemLoop;
+        }
+
+        const item = sortedItems[i];
+        const combatEnergy = combatMod.energy || defaultModEnergy;
+        const tag = combatMod.tag!;
+        const activityEnergy = activityPermutation[i]?.energy || defaultModEnergy;
+
+        const combatEnergyIsValid =
+          item.energy &&
+          item.energy.val + combatEnergy.val + activityEnergy.val <= item.energy.capacity &&
+          (item.energy.type === combatEnergy.type ||
+            combatEnergy.type === DestinyEnergyType.Any ||
+            item.energy.type === DestinyEnergyType.Any) &&
+          (activityEnergy.type === combatEnergy.type ||
+            combatEnergy.type === DestinyEnergyType.Any ||
+            activityEnergy.type === DestinyEnergyType.Any);
+
+        if (!combatEnergyIsValid || !item.compatibleModSeasons?.includes(tag)) {
+          continue combatModLoop;
+        }
+      }
+
+      const remainingEnergyCapacities = sortedItems.map(
+        (i, idx) =>
+          (i.energy?.capacity || 0) -
+          (i.energy?.val || 0) -
+          (activityPermutation[idx]?.energy?.val || 0) -
+          (combatPermutation[idx]?.energy?.val || 0)
+      );
+
+      // Sort the costs array descending, same as our auto stat mod picks
+      remainingEnergyCapacities.sort((a, b) => b - a);
+      remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
+    }
+  }
+
+  // The steps our optimization algorithm will try in reverse order.
+  const opts: OptimizationStep[] = [];
+  // The *additional* stats that we for sure know we can hit, and the ModsPick that got
+  // us there.
+  let committedStats = [0, 0, 0, 0, 0, 0];
+  let modsPick: ModsPick | undefined;
+  // The amount of additional stat points after which stats don't give us a benefit anymore.
+  const maxAddedStats = [0, 0, 0, 0, 0, 0];
+
+  for (let statIndex = setStats.length - 1; statIndex >= 0; statIndex--) {
+    const value = Math.min(Math.max(setStats[statIndex], 0), 100);
+    const filter = statFiltersInStatOrder[statIndex];
+    if (filter.priority !== 'ignored') {
+      const neededValue = filter.min * 10 - value;
+      if (neededValue > 0) {
+        // As per function preconditions, we know that we can hit these minimum stats
+        committedStats[statIndex] = neededValue;
+      }
+      maxAddedStats[statIndex] = filter.max * 10 - value;
+      // Add a single attempt at a +5 mod if we have a .5 tier.
+      if (committedStats[statIndex] === 0 && setStats[statIndex] % 10 >= 5) {
+        opts.push({ statIndex, value: 5, repeat: false });
+      }
+      // Also try to repeatedly add another whole stat tier (which can be either a full mod or two half mods)
+      opts.push({ statIndex, value: 10, repeat: true });
+    }
+  }
+
+  // First optimize the prioritized stats, and within those do +5s first.
+  opts.sort(
+    chainComparator<OptimizationStep>(
+      compareBy((step) =>
+        statFiltersInStatOrder[step.statIndex].priority === 'prioritized' ? 1 : 0
+      ),
+      compareBy((step) => (step.repeat ? 0 : 1))
+    )
+  );
+
+  let step = opts.pop();
+  while (step) {
+    if (committedStats[step.statIndex] >= maxAddedStats[step.statIndex]) {
+      // Skip this stat if adding anything doesn't gain us anything
+      step = opts.pop();
+      continue;
+    }
+
+    const tentativeStats = committedStats.slice();
+    tentativeStats[step.statIndex] += step.value;
+
+    const validPicks = getViableGeneralModPicks(cache, tentativeStats);
+    const pick = validPicks.find((pick) =>
+      remainingEnergiesPerAssignment.some((remainingEnergies) =>
+        pick.costs.every((cost, idx) => cost <= remainingEnergies[idx])
+      )
+    );
+    if (pick) {
+      modsPick = pick;
+      committedStats = tentativeStats;
+    }
+
+    if (!pick || !step.repeat) {
+      step = opts.pop();
+    }
+  }
+  return modsPick?.modHashes;
 }

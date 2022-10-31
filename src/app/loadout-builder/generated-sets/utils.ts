@@ -1,35 +1,24 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { armorStats } from 'app/search/d2-known-values';
-import _ from 'lodash';
-import { ArmorStats } from '../types';
-import { statTier } from '../utils';
+import { chainComparator, compareBy } from 'app/utils/comparators';
+import { ArmorSet, AutoStatModsSetting } from '../types';
 
-export function calculateSetStats(
-  defs: D2ManifestDefinitions,
-  stats: ArmorStats,
-  autoStatMods: number[],
-  enabledStats: Set<number>
-): { enabledBaseTier: number; totalBaseTier: number; statsWithAutoMods: ArmorStats } {
-  const totalBaseTier = _.sum(Object.values(stats).map(statTier));
-  const enabledBaseTier = _.sumBy(armorStats, (statHash) =>
-    enabledStats.has(statHash) ? statTier(stats[statHash]) : 0
+/**
+ * A final sorting pass over all sets. This should mostly agree with the sorting in the worker,
+ * but it may do a final pass over the returned sets to add more stat mods and that requires us
+ * to sort again. So just do that here.
+ */
+export function sortAndPrepareSets(
+  sets: ArmorSet[],
+  autoStatMods: AutoStatModsSetting
+): ArmorSet[] {
+  return sets.sort(
+    chainComparator(
+      compareBy((set) =>
+        autoStatMods === AutoStatModsSetting.Minimums ? -set.enabledBaseTier : -set.enabledTier
+      ),
+      compareBy((set) => set.statMods.length),
+      compareBy((set) => -set.prioritizedTier),
+      compareBy((set) => -set.prioritizedPlusFives),
+      compareBy((set) => -set.consideredPlusFives)
+    )
   );
-
-  const statsWithAutoMods = { ...stats };
-  for (const modHash of autoStatMods) {
-    const def = defs.InventoryItem.get(modHash);
-    if (def?.investmentStats.length) {
-      for (const stat of def.investmentStats) {
-        if (statsWithAutoMods[stat.statTypeHash] !== undefined) {
-          statsWithAutoMods[stat.statTypeHash] += stat.value;
-        }
-      }
-    }
-  }
-
-  return {
-    enabledBaseTier,
-    totalBaseTier,
-    statsWithAutoMods,
-  };
 }

@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import React, { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import { AutoStatModsSetting } from '../types';
 import styles from './EnergyOptions.m.scss';
 
 interface Option {
@@ -60,13 +61,51 @@ export default function EnergyOptions({
   assumeArmorMasterwork,
   lockArmorEnergyType,
   optimizingLoadoutName,
+  autoStatMods,
   lbDispatch,
 }: {
   assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
   lockArmorEnergyType: LockArmorEnergyType | undefined;
   optimizingLoadoutName: string | undefined;
+  autoStatMods: AutoStatModsSetting;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
+  const autoStatModsOptions: Option[] = useMemo(
+    () => [
+      {
+        label: t('LoadoutBuilder.AutoStatMods.None'),
+        tooltip: t('LoadoutBuilder.AutoStatMods.NoneTooltip'),
+        selected: autoStatMods === AutoStatModsSetting.None,
+        onChange: () => {
+          if (autoStatMods !== AutoStatModsSetting.None) {
+            lbDispatch({ type: 'autoStatModsChanged', autoStatMods: AutoStatModsSetting.None });
+          }
+        },
+      },
+      {
+        label: t('LoadoutBuilder.AutoStatMods.Required'),
+        tooltip: t('LoadoutBuilder.AutoStatMods.RequiredTooltip'),
+        selected: autoStatMods === AutoStatModsSetting.Minimums,
+        onChange: () => {
+          if (autoStatMods !== AutoStatModsSetting.Minimums) {
+            lbDispatch({ type: 'autoStatModsChanged', autoStatMods: AutoStatModsSetting.Minimums });
+          }
+        },
+      },
+      {
+        label: t('LoadoutBuilder.AutoStatMods.Optimal'),
+        tooltip: t('LoadoutBuilder.AutoStatMods.OptimalTooltip'),
+        selected: autoStatMods === AutoStatModsSetting.Maximize,
+        onChange: () => {
+          if (autoStatMods !== AutoStatModsSetting.Maximize) {
+            lbDispatch({ type: 'autoStatModsChanged', autoStatMods: AutoStatModsSetting.Maximize });
+          }
+        },
+      },
+    ],
+    [autoStatMods, lbDispatch]
+  );
+
   const lockEnergyOptions: Option[] = useMemo(
     () => [
       {
@@ -167,6 +206,13 @@ export default function EnergyOptions({
 
   return (
     <div className={styles.energyOptions}>
+      {$featureFlags.experimentalLoSettings && (
+        <RadioSetting
+          name="autoStatMods"
+          label={t('LoadoutBuilder.AutoStatMods.Label')}
+          options={autoStatModsOptions}
+        />
+      )}
       <RadioSetting
         name="lockElement"
         label={t('LoadoutBuilder.LockElement')}

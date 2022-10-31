@@ -16,7 +16,13 @@ import { FilterInfo } from './item-filter';
 import { LoadoutBuilderAction } from './loadout-builder-reducer';
 import styles from './NoBuildsFoundExplainer.m.scss';
 import { ProcessStatistics, RejectionRate } from './process-worker/types';
-import { ArmorEnergyRules, LockableBucketHashes, PinnedItems, StatFilters } from './types';
+import {
+  ArmorEnergyRules,
+  AutoStatModsSetting,
+  LockableBucketHashes,
+  PinnedItems,
+  StatFilters,
+} from './types';
 
 interface ActionableSuggestion {
   id: string;
@@ -186,7 +192,9 @@ export default function NoBuildsFoundExplainer({
   // two non-solar combat mods, mod assignment is trivially infeasible and we
   // can point that out directly?
 
-  const anyStatMinimums = Object.values(statFilters).some((f) => !f.ignored && f.min > 0);
+  const anyStatMinimums = Object.values(statFilters).some(
+    (f) => f.priority !== 'ignored' && f.min > 0
+  );
 
   const bucketIndependentMods = [
     ...lockedModMap.generalMods,
@@ -348,7 +356,7 @@ export default function NoBuildsFoundExplainer({
         description: t('LoadoutBuilder.NoBuildsFoundExplainer.LowerBoundsFailed'),
         suggestions: _.compact([
           !autoAssignStatMods &&
-            $featureFlags.loAutoStatMods && {
+            $featureFlags.experimentalLoSettings && {
               id: 'hint1',
               contents: (
                 <button
@@ -358,7 +366,7 @@ export default function NoBuildsFoundExplainer({
                   onClick={() =>
                     dispatch({
                       type: 'autoStatModsChanged',
-                      autoStatMods: true,
+                      autoStatMods: AutoStatModsSetting.Minimums,
                     })
                   }
                 >

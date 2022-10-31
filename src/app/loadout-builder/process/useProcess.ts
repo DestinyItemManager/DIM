@@ -17,6 +17,7 @@ import { ProcessItem, ProcessItemsByBucket, ProcessStatistics } from '../process
 import {
   ArmorEnergyRules,
   ArmorSet,
+  AutoStatModsSetting,
   ItemGroup,
   ItemsByBucket,
   StatFilters,
@@ -76,7 +77,7 @@ export function useProcess({
   statOrder: number[];
   statFilters: StatFilters;
   anyExotic: boolean;
-  autoStatMods: boolean;
+  autoStatMods: AutoStatModsSetting;
 }) {
   const [remainingTime, setRemainingTime] = useState(0);
   const [{ result, processing }, setState] = useState<ProcessState>({
@@ -177,7 +178,9 @@ export function useProcess({
           'loadout optimizer',
           `useProcess: worker time ${performance.now() - workerStart}ms`
         );
-        const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
+        const hydratedSets = sets.map((set) =>
+          hydrateArmorSet(defs, statFilters, statOrder, set, itemsById)
+        );
 
         setState((oldState) => ({
           ...oldState,

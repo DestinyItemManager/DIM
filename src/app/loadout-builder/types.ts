@@ -10,10 +10,24 @@ export interface MinMax {
   max: number;
 }
 
-export interface MinMaxIgnored {
+export type Priority = 'prioritized' | 'considered' | 'ignored';
+
+export interface MinMaxPriority {
   min: number;
   max: number;
-  ignored: boolean;
+  priority: Priority;
+}
+
+/**
+ * When to automatically add stat mods to generated sets.
+ */
+export const enum AutoStatModsSetting {
+  /** Don't add any automatically */
+  None,
+  /** Add stat mods to meet minimum required tiers */
+  Minimums,
+  /** Optimize stat tiers according to priority */
+  Maximize,
 }
 
 /** A map from bucketHash to the pinned item if there is one. */
@@ -30,12 +44,26 @@ export interface ExcludedItems {
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.
  */
 export interface ArmorSet {
-  /** The overall stats for the loadout as a whole, but excluding auto stat mods. */
-  readonly stats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly DimItem[][];
   /** Which stat mods were added? */
   readonly statMods: number[];
+  /** The tier of this builds' enabled stats, excluding auto stat mods. */
+  readonly enabledBaseTier: number;
+  /** The tier of this builds' enabled stats including auto stat mods. */
+  readonly enabledTier: number;
+  /** The tier of this builds' total stats, even ignored ones. */
+  readonly totalTier: number;
+  /** The number of tiers in the "prioritized" section. */
+  readonly prioritizedTier: number;
+  /** The number of .5 tiers in the "prioritized" section. */
+  readonly prioritizedPlusFives: number;
+  /** The number of .5 tiers in the "considered" section. */
+  readonly consideredPlusFives: number;
+  /** The overall stats for the loadout as a whole, but excluding auto stat mods. */
+  readonly stats: Readonly<ArmorStats>;
+  /** The overall stats for the loadout as a whole, including auto stat mods. */
+  readonly totalStats: Readonly<ArmorStats>;
 }
 
 export type ItemsByBucket = Readonly<{
@@ -81,7 +109,7 @@ export type ArmorStatHashes =
   | StatHashes.Strength;
 
 export type StatRanges = { [statHash in ArmorStatHashes]: MinMax };
-export type StatFilters = { [statHash in ArmorStatHashes]: MinMaxIgnored };
+export type StatFilters = { [statHash in ArmorStatHashes]: MinMaxPriority };
 export type ArmorStats = { [statHash in ArmorStatHashes]: number };
 
 /**

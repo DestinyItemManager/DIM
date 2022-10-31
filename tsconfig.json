@@ -28,7 +28,8 @@
       "testing/*": ["src/testing/*"],
       "docs/*": ["docs/*"],
       "*.css": ["config/css-stub.js"]
-    }
+    },
+    "typeRoots": ["src/dimApiTypeExtensions.d.ts", "node_modules/@types"]
   },
   "include": ["./src/**/*"]
 }

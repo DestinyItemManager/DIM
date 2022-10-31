@@ -93,7 +93,11 @@
   margin-right: 20px;
 
   &::before {
-    content: '+';
+    content: '(';
+    align-self: center;
+  }
+  &::after {
+    content: ')';
     align-self: center;
   }
 

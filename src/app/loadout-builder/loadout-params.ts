@@ -7,20 +7,20 @@ import {
 } from '@destinyitemmanager/dim-api-types';
 import { armorStats } from 'app/search/d2-known-values';
 import _ from 'lodash';
-import { ArmorStatHashes, MinMaxIgnored, StatFilters } from './types';
+import { ArmorStatHashes, MinMaxPriority, StatFilters } from './types';
 
 export function buildLoadoutParams(
   loadoutParameters: LoadoutParameters,
   searchQuery: string,
-  statFilters: Readonly<{ [statType in ArmorStatHashes]: MinMaxIgnored }>,
-  statOrder: number[]
+  statFilters: Readonly<{ [statType in ArmorStatHashes]: MinMaxPriority }>,
+  statOrder: ArmorStatHashes[]
 ): LoadoutParameters {
   const params: LoadoutParameters = {
     ...loadoutParameters,
     statConstraints: _.compact(
       statOrder.map((statHash) => {
         const minMax = statFilters[statHash];
-        if (minMax.ignored) {
+        if (minMax.priority === 'ignored') {
           return undefined;
         }
         const stat: StatConstraint = {
@@ -31,6 +31,9 @@ export function buildLoadoutParams(
         }
         if (minMax.max < 10) {
           stat.maxTier = minMax.max;
+        }
+        if (minMax.priority === 'prioritized') {
+          stat.prioritized = true;
         }
         return stat;
       })
@@ -60,8 +63,12 @@ export function statFiltersFromLoadoutParamaters(params: LoadoutParameters): Sta
   return armorStats.reduce((memo, statHash) => {
     const c = statConstraintsByStatHash[statHash];
     memo[statHash] = c
-      ? { min: c.minTier ?? 0, max: c.maxTier ?? 10, ignored: false }
-      : { min: 0, max: 10, ignored: true };
+      ? {
+          min: c.minTier ?? 0,
+          max: c.maxTier ?? 10,
+          priority: c.prioritized ? 'prioritized' : 'considered',
+        }
+      : { min: 0, max: 10, priority: 'ignored' };
     return memo;
     // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
   }, {} as StatFilters);

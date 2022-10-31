@@ -1,5 +1,46 @@
 @import '../../variables';
 
+.dropArea {
+  background-color: black;
+  padding: 3px;
+  padding-bottom: 10px;
+
+  &.empty {
+    display: block;
+    > div {
+      height: 44px;
+    }
+  }
+}
+
+.areaDesignation {
+  display: flex;
+  flex-direction: row;
+  color: #ddd;
+}
+.areaDesignation::before,
+.areaDesignation::after {
+  content: '';
+  color: #ddd;
+  flex: 1 1;
+  border-bottom: 1px solid;
+  margin: auto;
+}
+.areaDesignation::before {
+  margin-right: 10px;
+}
+.areaDesignation::after {
+  margin-left: 10px;
+}
+
+.areaPlaceHolder {
+  height: 43px;
+  color: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .iconStat {
   display: inline-block;
   height: 17px;
@@ -43,7 +84,7 @@
   margin-bottom: 2px;
   background-color: black;
   align-items: center;
-  padding: 4px 4px 4px 0;
+  padding: 0 4px 4px 0;
   @include phone-portrait {
     grid-template-areas: 'name range minimum maximum';
     grid-template-columns: 1fr min-content 45px 45px;

@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { Dispatch, memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorEnergyRules, ArmorSet, PinnedItems } from '../types';
+import { ArmorEnergyRules, ArmorSet, PinnedItems, StatFilters } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
@@ -63,7 +63,7 @@ interface Props {
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
   statOrder: number[];
-  enabledStats: Set<number>;
+  statFilters: StatFilters;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
@@ -82,7 +82,7 @@ export default memo(function GeneratedSets({
   sets,
   subclass,
   statOrder,
-  enabledStats,
+  statFilters,
   loadouts,
   lbDispatch,
   params,
@@ -142,7 +142,7 @@ export default memo(function GeneratedSets({
           pinnedItems={pinnedItems}
           lbDispatch={lbDispatch}
           statOrder={statOrder}
-          enabledStats={enabledStats}
+          statFilters={statFilters}
           loadouts={loadouts}
           params={params}
           halfTierMods={halfTierMods}
@@ -173,7 +173,7 @@ export default memo(function GeneratedSets({
                     pinnedItems={pinnedItems}
                     lbDispatch={lbDispatch}
                     statOrder={statOrder}
-                    enabledStats={enabledStats}
+                    statFilters={statFilters}
                     loadouts={loadouts}
                     params={params}
                     halfTierMods={halfTierMods}

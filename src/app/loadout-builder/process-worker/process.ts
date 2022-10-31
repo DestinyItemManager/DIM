@@ -3,12 +3,17 @@ import { infoLog } from '../../utils/log';
 import {
   ArmorStatHashes,
   ArmorStats,
+  AutoStatModsSetting,
   LockableBucketHashes,
   LockableBuckets,
   StatFilters,
   StatRanges,
 } from '../types';
-import { pickAndAssignSlotIndependentMods, precalculateStructures } from './process-utils';
+import {
+  pickAndAssignSlotIndependentMods,
+  pickOptimalStatMods,
+  precalculateStructures,
+} from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
   LockedProcessMods,
@@ -37,8 +42,8 @@ export function process(
   statFilters: StatFilters,
   /** Ensure every set includes one exotic */
   anyExotic: boolean,
-  /** Use stat mods to hit stat minimums */
-  autoStatMods: boolean,
+  /** When to use auto stat mods */
+  autoStatMods: AutoStatModsSetting,
   onProgress: (remainingTime: number) => void
 ): {
   sets: ProcessArmorSet[];
@@ -104,7 +109,7 @@ export function process(
     generalMods,
     combatMods,
     activityMods,
-    autoStatMods,
+    autoStatMods !== AutoStatModsSetting.None,
     statOrder
   );
   const hasMods = Boolean(combatMods.length || activityMods.length || generalMods.length);
@@ -218,23 +223,29 @@ export function process(
             ];
 
             // Check whether the set exceeds our stat constraints
-            let totalTier = 0;
+            let prioTotalTier = 0;
+            let okTotalTier = 0;
             let statRangeExceeded = false;
             for (let index = 0; index < 6; index++) {
               const tier = tiers[index];
               const filter = statFiltersInStatOrder[index];
-              if (!filter.ignored) {
+              if (filter.priority !== 'ignored') {
                 if (tier > filter.max) {
                   statRangeExceeded = true;
                 }
-                totalTier += tier;
+                if (filter.priority === 'prioritized') {
+                  prioTotalTier += tier;
+                } else {
+                  okTotalTier += tier;
+                }
               }
             }
+
+            const totalTier = prioTotalTier + okTotalTier;
 
             // Drop this set if it could never make it
             if (!setTracker.couldInsert(totalTier)) {
               setStatistics.skipReasons.skippedLowTier++;
-              continue;
             }
 
             setStatistics.upperBoundsExceeded.timesChecked++;
@@ -253,7 +264,7 @@ export function process(
               const value = Math.min(Math.max(stats[index], 0), 100);
               const filter = statFiltersInStatOrder[index];
 
-              if (!filter.ignored) {
+              if (filter.priority !== 'ignored') {
                 const neededValue = filter.min * 10 - value;
                 if (neededValue > 0) {
                   neededStats[index] = neededValue;
@@ -263,7 +274,7 @@ export function process(
             }
 
             setStatistics.lowerBoundsExceeded.timesChecked++;
-            if (needSomeStats && !autoStatMods) {
+            if (needSomeStats && autoStatMods === AutoStatModsSetting.None) {
               setStatistics.lowerBoundsExceeded.timesFailed++;
               continue;
             }
@@ -287,33 +298,91 @@ export function process(
               }
             }
 
+            processStatistics.numValidSets++;
+
             // Calculate the "tiers string" here, since most sets don't make it this far
             // A string version of the tier-level of each stat, must be lexically comparable
             // TODO: It seems like constructing and comparing tiersString would be expensive but it's less so
             // than comparing stat arrays element by element
-            let tiersString = '';
-            for (let index = 0; index < 6; index++) {
-              const tier = tiers[index];
-              // Make each stat exactly one code unit so the string compares correctly
-              const filter = statFiltersInStatOrder[index];
-              if (!filter.ignored) {
-                // using a power of 2 (16) instead of 11 is faster
-                tiersString += tier.toString(16);
+            // Maybe there is a way to avoid number formatting routines? Would be good to just stash those bytes in a lexically comparable ASCII string.
+
+            if ($featureFlags.experimentalLoSettings) {
+              let statTiersString = '';
+              let prioT5s = 0;
+              let okT5s = 0;
+              let missingTiers = 0;
+              for (let index = 0; index < 6; index++) {
+                const tier = tiers[index];
+                const value = stats[index];
+                // Make each stat exactly one code unit so the string compares correctly
+                const filter = statFiltersInStatOrder[index];
+                if (filter.priority !== 'ignored') {
+                  statTiersString += tier.toString(16);
+                  if (filter.priority === 'prioritized') {
+                    // using a power of 2 (16) instead of 11 is faster
+                    if (value % 10 >= 5 && value < 100) {
+                      prioT5s++;
+                    }
+                  } else {
+                    if (value % 10 >= 5 && value < 100) {
+                      okT5s++;
+                    }
+                  }
+                  if (tier < filter.min) {
+                    missingTiers += filter.min - tier;
+                  }
+                }
+
+                // Track the stat ranges of sets that made it through all our filters
+                const range = statRangesFilteredInStatOrder[index];
+                if (value > range.max) {
+                  range.max = value;
+                }
+                if (value < range.min) {
+                  range.min = value;
+                }
               }
 
-              // Track the stat ranges of sets that made it through all our filters
-              const range = statRangesFilteredInStatOrder[index];
-              const value = stats[index];
-              if (value > range.max) {
-                range.max = value;
+              // Ordering is:
+              // 1. Total armor tier (this is the primary index in setTracker, so not included in stats string)
+              // 2. approx #needed stat mods
+              // 3. Total tier in prioritized stats
+              // X. considered-but-not-prioritized stats are included in the total tier already, so it'd be redundant here
+              // 4. Number of .5s in prioritized stats
+              // 5. Number of .5s in okStats
+              // 6. Tiers according to stat order
+              const tiersString =
+                (15 - missingTiers).toString(16).padStart(2, '0') +
+                prioTotalTier.toString(16).padStart(2, '0') +
+                prioT5s.toString(16) +
+                okT5s.toString(16) +
+                statTiersString;
+              // TODO Try using something like a B-Tree Map here?
+              setTracker.insert(totalTier, tiersString, armor, stats, statMods);
+            } else {
+              let tiersString = '';
+              for (let index = 0; index < 6; index++) {
+                const tier = tiers[index];
+                // Make each stat exactly one code unit so the string compares correctly
+                const filter = statFiltersInStatOrder[index];
+                if (filter.priority !== 'ignored') {
+                  // using a power of 2 (16) instead of 11 is faster
+                  tiersString += tier.toString(16);
+                }
+
+                // Track the stat ranges of sets that made it through all our filters
+                const range = statRangesFilteredInStatOrder[index];
+                const value = stats[index];
+                if (value > range.max) {
+                  range.max = value;
+                }
+                if (value < range.min) {
+                  range.min = value;
+                }
               }
-              if (value < range.min) {
-                range.min = value;
-              }
+
+              setTracker.insert(totalTier, tiersString, armor, stats, statMods);
             }
-
-            processStatistics.numValidSets++;
-            setTracker.insert(totalTier, tiersString, armor, stats, statMods);
           }
         }
       }
@@ -365,14 +434,23 @@ export function process(
     cacheSuccesses: precalculatedInfo.cache.cacheSuccesses,
   });
 
-  const sets = finalSets.map(({ armor, stats, statMods }) => ({
-    armor: armor.map((item) => item.id),
-    stats: statOrder.reduce((statObj, statHash, i) => {
+  const sets = finalSets.map(({ armor, stats, statMods }) => {
+    const statsWithoutAutoMods = statOrder.reduce((statObj, statHash, i) => {
       statObj[statHash] = stats[i];
       return statObj;
-    }, {}) as ArmorStats,
-    statMods,
-  }));
+    }, {}) as ArmorStats;
+
+    const allStatMods =
+      (autoStatMods === AutoStatModsSetting.Maximize &&
+        pickOptimalStatMods(precalculatedInfo, armor, stats, statFiltersInStatOrder)) ||
+      statMods;
+
+    return {
+      armor: armor.map((item) => item.id),
+      stats: statsWithoutAutoMods,
+      statMods: allStatMods,
+    };
+  });
 
   return {
     sets,

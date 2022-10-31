@@ -534,7 +534,15 @@
     "ShareBuildTitle": "Loadout Optimizer Settings",
     "ShareBuildWithNotes": "Share With Notes",
     "AddHalfTierMods": "Add +5 Mods",
-    "AutoStatMods": "Add required stat mods",
+    "AutoStatMods": {
+      "Label": "Automatically add stat mods",
+      "None": "None",
+      "NoneTooltip": "No stat mods will be included automatically.",
+      "Required": "As needed",
+      "RequiredTooltip": "Stat mods will be included and assigned automatically to meet minimum stat tier requirements.",
+      "Optimal": "Optimize",
+      "OptimalTooltip": "Stat mods will be included and assigned automatically to optimize prioritized stats."
+    },
     "All": "All",
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",

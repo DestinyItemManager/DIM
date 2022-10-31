@@ -30,8 +30,8 @@ declare const $featureFlags: {
   elgatoStreamDeck: boolean;
   /** Warn when DIM Sync is off and you save some DIM-specific data */
   warnNoSync: boolean;
-  /** Expose the "Add required stat mods" Loadout Optimizer toggle */
-  loAutoStatMods: boolean;
+  /** Expose the toggles for auto stat mods and the tiered stat priorities */
+  experimentalLoSettings: boolean;
   /** Whether to send cookies to the Bungie.net API */
   apiCookies: boolean;
   /** If saved DIM API data in IDB is recent enough, don't bother getting it from the server */

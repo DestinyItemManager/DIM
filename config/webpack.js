@@ -425,8 +425,8 @@ module.exports = (env) => {
         '$featureFlags.elgatoStreamDeck': JSON.stringify(true),
         // Warn when DIM Sync is off and you save some DIM-specific data
         '$featureFlags.warnNoSync': JSON.stringify(true),
-        // Expose the "Add required stat mods" Loadout Optimizer toggle
-        '$featureFlags.loAutoStatMods': JSON.stringify(!env.release),
+        // Expose the toggles for auto stat mods and the tiered stat priorities
+        '$featureFlags.experimentalLoSettings': JSON.stringify(!env.release),
         // Whether to send cookies to the Bungie.net API
         '$featureFlags.apiCookies': JSON.stringify(false),
         // If saved DIM API data in IDB is recent enough, don't bother getting it from the server

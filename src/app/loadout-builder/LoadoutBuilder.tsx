@@ -45,6 +45,7 @@ import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import TierSelect from './filter/TierSelect';
 import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
+import { sortAndPrepareSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
@@ -53,6 +54,7 @@ import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import { useProcess } from './process/useProcess';
 import {
   ArmorEnergyRules,
+  AutoStatModsSetting,
   generalSocketReusablePlugSetHash,
   ItemsByBucket,
   LOCKED_EXOTIC_ANY_EXOTIC,
@@ -157,6 +159,7 @@ export default memo(function LoadoutBuilder({
   const [
     {
       loadoutParameters,
+      autoStatMods,
       statOrder,
       pinnedItems,
       excludedItems,
@@ -173,8 +176,6 @@ export default memo(function LoadoutBuilder({
   const isPhonePortrait = useIsPhonePortrait();
 
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
-
-  const autoStatMods = loadoutParameters.autoStatMods ?? false;
 
   const lockedMods = useMemo(
     () =>
@@ -206,9 +207,9 @@ export default memo(function LoadoutBuilder({
     const newLoadoutParameters = buildLoadoutParams(
       loadoutParameters,
       '', // and the search query
-      // and don't save stat ranges either, just whether they're ignored
+      // and don't save stat ranges either, just whether they're ignored or prioritized
       _.mapValues(statFilters, (m) => ({
-        ignored: m.ignored,
+        priority: m.priority,
         min: 0,
         max: 10,
       })),
@@ -249,11 +250,6 @@ export default memo(function LoadoutBuilder({
 
   // TODO: maybe load from URL state async and fire a dispatch?
   // TODO: save params to URL when they change? or leave it for the share...
-
-  const enabledStats = useMemo(
-    () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
-    [statFilters]
-  );
 
   const loadouts = useMemo(() => {
     const equippedLoadout: Loadout | undefined = newLoadoutFromEquipped(
@@ -327,7 +323,7 @@ export default memo(function LoadoutBuilder({
     [loadoutParameters, searchQuery, statFilters, statOrder]
   );
 
-  const filteredSets = result?.sets;
+  const filteredSets = result?.sets && sortAndPrepareSets(result.sets, autoStatMods);
 
   const shareBuild = async (notes?: string) => {
     // TODO: replace this with a new share tool
@@ -397,6 +393,7 @@ export default memo(function LoadoutBuilder({
         assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
         lockArmorEnergyType={loadoutParameters.lockArmorEnergyType}
         optimizingLoadoutName={preloadedLoadout?.name}
+        autoStatMods={autoStatMods}
         lbDispatch={lbDispatch}
       />
       <LockArmorAndPerks
@@ -407,7 +404,6 @@ export default memo(function LoadoutBuilder({
         subclass={subclass}
         lockedExoticHash={lockedExoticHash}
         searchFilter={searchFilter}
-        autoStatMods={autoStatMods}
         lbDispatch={lbDispatch}
       />
       {isPhonePortrait && (
@@ -503,16 +499,16 @@ export default memo(function LoadoutBuilder({
             </p>
           </div>
         )}
-        {result && result.sets.length > 0 ? (
+        {filteredSets && filteredSets.length > 0 ? (
           <GeneratedSets
-            sets={result.sets}
+            sets={filteredSets}
             subclass={subclass}
             lockedMods={result.mods}
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
             statOrder={statOrder}
-            enabledStats={enabledStats}
+            statFilters={statFilters}
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
@@ -525,7 +521,7 @@ export default memo(function LoadoutBuilder({
             dispatch={lbDispatch}
             lockedModMap={lockedModMap}
             alwaysInvalidMods={unassignedMods}
-            autoAssignStatMods={autoStatMods}
+            autoAssignStatMods={autoStatMods !== AutoStatModsSetting.None}
             armorEnergyRules={armorEnergyRules}
             lockedExoticHash={lockedExoticHash}
             statFilters={statFilters}

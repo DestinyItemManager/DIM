@@ -8,17 +8,15 @@ import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { ArmorStatHashes, ArmorStats } from '../types';
+import { ArmorSet, ArmorStatHashes, StatFilters } from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
-import { calculateSetStats } from './utils';
 
 interface Props {
-  stats: ArmorStats;
-  autoStatMods: number[];
+  armorSet: ArmorSet;
   maxPower: number;
   statOrder: ArmorStatHashes[];
-  enabledStats: Set<ArmorStatHashes>;
+  statFilters: StatFilters;
   className?: string;
   existingLoadoutName?: string;
 }
@@ -27,11 +25,10 @@ interface Props {
  * Displays the overall tier and per-stat tier of a set.
  */
 function SetStats({
-  stats,
-  autoStatMods,
+  armorSet,
   maxPower,
   statOrder,
-  enabledStats,
+  statFilters,
   className,
   existingLoadoutName,
 }: Props) {
@@ -40,31 +37,25 @@ function SetStats({
   for (const statHash of statOrder) {
     statDefs[statHash] = defs.Stat.get(statHash);
   }
-  const { enabledBaseTier, totalBaseTier, statsWithAutoMods } = calculateSetStats(
-    defs,
-    stats,
-    autoStatMods,
-    enabledStats
-  );
 
   return (
     <div className={clsx(styles.container, className)}>
       <div className={styles.tierLightContainer}>
         <span className={clsx(styles.tier, styles.tierLightSegment)}>
           {t('LoadoutBuilder.TierNumber', {
-            tier: enabledBaseTier,
+            tier: armorSet.enabledTier,
           })}
         </span>
-        {enabledBaseTier !== totalBaseTier && (
+        {armorSet.enabledTier !== armorSet.totalTier && (
           <span className={clsx(styles.tier, styles.nonActiveStat)}>
             {` (${t('LoadoutBuilder.TierNumber', {
-              tier: totalBaseTier,
+              tier: armorSet.totalTier,
             })})`}
           </span>
         )}
-        {autoStatMods.length > 0 && (
+        {armorSet.statMods.length > 0 && (
           <div className={clsx(styles.autoModsContainer)}>
-            {autoStatMods.map((modHash, idx) => {
+            {armorSet.statMods.map((modHash, idx) => {
               const def = defs.InventoryItem.get(modHash);
               return (
                 isPluggableItem(def) && <PlugDef className={clsx('item')} key={idx} plug={def} />
@@ -91,16 +82,16 @@ function SetStats({
                 stat={{
                   hash: statHash,
                   name: statDefs[statHash].displayProperties.name,
-                  value: statsWithAutoMods[statHash],
+                  value: armorSet.totalStats[statHash],
                   description: statDefs[statHash].displayProperties.description,
                 }}
               />
             )}
           >
             <Stat
-              isActive={enabledStats.has(statHash)}
+              isActive={statFilters[statHash].priority !== 'ignored'}
               stat={statDefs[statHash]}
-              value={statsWithAutoMods[statHash]}
+              value={armorSet.totalStats[statHash]}
             />
           </PressTip>
         ))}

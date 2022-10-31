@@ -35,6 +35,7 @@ import { statFiltersFromLoadoutParamaters, statOrderFromLoadoutParameters } from
 import {
   ArmorSet,
   ArmorStatHashes,
+  AutoStatModsSetting,
   ExcludedItems,
   LockableBucketHashes,
   PinnedItems,
@@ -54,6 +55,8 @@ interface LoadoutBuilderConfiguration {
   // TODO: also fold statOrder, statFilters into loadoutParameters
   statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
   statFilters: Readonly<StatFilters>;
+  // TODO: Fold this into LoadoutParameters
+  autoStatMods: AutoStatModsSetting;
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
   selectedStoreId?: string;
@@ -167,13 +170,11 @@ const lbConfigInit = ({
   const statOrder = statOrderFromLoadoutParameters(loadoutParameters);
   const statFilters = statFiltersFromLoadoutParamaters(loadoutParameters);
 
-  // FIXME: Always require turning on auto mods explicitly for now...
-  loadoutParameters = { ...loadoutParameters, autoStatMods: undefined };
-
   return {
     loadoutParameters,
     statOrder,
     pinnedItems,
+    autoStatMods: AutoStatModsSetting.None,
     excludedItems: emptyObject(),
     statFilters,
     subclass,
@@ -199,7 +200,7 @@ type LoadoutBuilderConfigAction =
   | { type: 'unpinItem'; item: DimItem }
   | { type: 'excludeItem'; item: DimItem }
   | { type: 'unexcludeItem'; item: DimItem }
-  | { type: 'autoStatModsChanged'; autoStatMods: boolean }
+  | { type: 'autoStatModsChanged'; autoStatMods: AutoStatModsSetting }
   | { type: 'lockedModsChanged'; lockedMods: PluggableInventoryItemDefinition[] }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
   | { type: 'removeLockedMods'; mods: PluggableInventoryItemDefinition[] }
@@ -540,10 +541,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       case 'autoStatModsChanged':
         return {
           ...state,
-          loadoutParameters: {
-            ...state.loadoutParameters,
-            autoStatMods: action.autoStatMods,
-          },
+          autoStatMods: action.autoStatMods,
         };
     }
   };
