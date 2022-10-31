@@ -79,9 +79,25 @@ export function newLoadout(name: string, items: LoadoutItem[], classType?: Desti
 export function createSocketOverridesFromEquipped(item: DimItem) {
   if (item.sockets) {
     const socketOverrides: SocketOverrides = {};
-    for (const category of item.sockets.categories) {
+
+    let fragmentCapacity = getSubclassFragmentCapacity(item);
+
+    nextCategory: for (const category of item.sockets.categories) {
       const sockets = getSocketsByIndexes(item.sockets, category.socketIndexes);
       for (const socket of sockets) {
+        // For subclass fragments, only active fragments should be saved.
+        // This check has to happen early because a fragment is inactive if it's
+        // in a fragment socket index >= capacity
+        // (so with three fragment slots and fragments [1, 2, empty, 4] the last
+        // fragment will be inactive)
+        if (category.category.hash === SocketCategoryHashes.Fragments) {
+          if (fragmentCapacity > 0) {
+            fragmentCapacity--;
+          } else {
+            continue nextCategory;
+          }
+        }
+
         // Add currently plugged, unless it's the empty option. Abilities and Supers
         // explicitly don't have an emptyPlugItemHash.
         if (
@@ -570,6 +586,14 @@ export function getModsFromLoadout(
   }
 
   return mods.sort(sortMods);
+}
+
+export function getSubclassFragmentCapacity(subclassItem: DimItem): number {
+  const aspects = getSocketsByCategoryHash(subclassItem.sockets, SocketCategoryHashes.Aspects);
+  return _.sumBy(
+    aspects,
+    (aspect) => aspect.plugged?.plugDef.plug.energyCapacity?.capacityValue || 0
+  );
 }
 
 /**
