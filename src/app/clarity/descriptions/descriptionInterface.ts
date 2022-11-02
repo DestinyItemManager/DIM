@@ -1,3 +1,5 @@
+// import { hasVisibleLoadoutParameters } from "app/loadout/loadout-ui/LoadoutParametersDisplay";
+
 export interface LinesContent {
   text?: string;
   className?: string[];
@@ -9,21 +11,66 @@ export interface Line {
   linesContent?: LinesContent[];
   classNames?: string[];
 }
-type PerkType =
+type PerkTypes =
   | 'armorExotic'
-  | 'armorMod'
-  // ---------
   | 'weaponPerkExotic'
   | 'weaponFrameExotic'
-  | 'weaponPerk'
-  | 'weaponPerkEnhanced'
-  | 'weaponFrame'
-  | 'weaponMod'
   | 'weaponCatalystExotic'
   // ---------
+  | 'weaponPerk'
+  | 'weaponPerkEnhanced'
+  | 'weaponOriginTrait'
+  | 'weaponFrame'
+  // ---------
+  | 'fragment'
+  | 'aspect'
+  | 'super'
+  | 'grenade'
+  | 'melee'
+  | 'class'
+  | 'movement'
+  // ---------
+  | 'armorModGeneral'
+  | 'armorModCombat'
+  | 'armorModActivity'
+  | 'armorModSeasonal'
+  | 'weaponMod'
   | 'ghostMod'
-  | 'artifactMod';
+  | 'artifactMod'
+  // ---------
+  | 'none';
 
+export type Languages =
+  /** English - English */
+  | 'en'
+  /** German - Deutsch */
+  | 'de'
+  /** French - Français */
+  | 'fr'
+  /** Italian - Italiano */
+  | 'it'
+  /** Polish - Polski */
+  | 'pl'
+  /** Russian - Русский */
+  | 'ru'
+  /** Spanish (Spain) - Español (España) */
+  | 'es'
+  /** Spanish (Mexico) - Español (México) */
+  | 'es-mx'
+  /** Korean - 한국어 */
+  | 'ko'
+  /** Portuguese (Brazil) - Português (Brasil) */
+  | 'pt-rb'
+  /** Japanese - 日本語 */
+  | 'ja'
+  /** Chinese (Traditional) - 繁體中文 */
+  | 'zh-cht'
+  /** Chinese (Simplified) - 简体中文 */
+  | 'zh-chs';
+
+/**
+ * Clarity perk
+ */
 export interface Perk {
   /**
    * Perk hash from inventoryItems
@@ -46,24 +93,39 @@ export interface Perk {
   /**
    * Basically is this armor mod, exotic weapon perk, catalyst, etc
    */
-  type: PerkType;
+  type: PerkTypes;
 
-  description: Line[];
+  descriptions: {
+    [key in Languages]?: Line[];
+  };
 
   /**
-   * Description with stats only (not needed in DIM)
+   * Optional description most likely investment stats only
    */
-  investmentStatOnly?: boolean;
+  optional?: boolean;
 
   /**
    * Then last time perk was updated time in ms (Date.now())
    */
   lastUpdate: number;
-  /**
-   * Name of person who updated this perk so we know who to blame
-   */
-  updatedBy: string;
 }
+
+// {
+//   description: 'content of perk description booth simple and normal',
+// }
+// will be changed to
+// {
+//   descriptions: {
+//     en: 'description content',
+//     de: 'description content',
+//     fr: 'description content',
+//     es: 'description content',
+//     it: 'description content',
+//     pl: 'description content',
+//   }
+// }
+// langues listed hare are just place holders for now except en that will be obviously in where
+// new one comming will be Chinese
 
 export interface ClarityDescription {
   /**
@@ -74,11 +136,9 @@ export interface ClarityDescription {
 
 export interface ClarityVersions {
   /**
-   * version format 1.0
+   ** Version format x.y
+   ** x - major version requiring update to DIM
+   ** y - minor version just simple update to description
    */
   descriptions: number;
-  /**
-   * Disables online version cheking used for magration
-   */
-  checkDescriptionVersion: boolean;
 }

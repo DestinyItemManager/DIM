@@ -1,9 +1,11 @@
+import { languageSelector } from 'app/dim-api/selectors';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
+import { useSelector } from 'react-redux';
 /* eslint-disable css-modules/no-unused-class */
 import styles from './Description.m.scss';
-import { LinesContent, Perk } from './descriptionInterface';
+import { Languages, LinesContent, Perk } from './descriptionInterface';
 
 const customContent = (content: LinesContent) => {
   if (content.linkUrl) {
@@ -57,12 +59,15 @@ export default function ClarityDescriptions({
   perk: Perk;
   className?: string;
 }) {
-  if (!perk.description) {
+  const currentLangue = useSelector(languageSelector);
+  if (perk.descriptions === undefined) {
     return null;
   }
 
-  const convertedDescription = perk.description.map((line, i) => (
-    <div className={joinClassNames(line.className)} key={i}>
+  const description = perk.descriptions[currentLangue as Languages] || perk.descriptions.en;
+
+  const convertedDescription = description?.map((line, i) => (
+    <div className={joinClassNames(line.classNames)} key={i}>
       {line.linesContent?.map((linesContent, i) => (
         <span className={joinClassNames(linesContent.className)} title={linesContent.title} key={i}>
           {linesContent.text ? applyFormatting(linesContent.text) : customContent(linesContent)}

@@ -87,27 +87,8 @@ export function usePlugDescriptions(
   if (showCommunityDescription && allClarityDescriptions) {
     let clarityPerk = allClarityDescriptions[plug.hash];
 
-    // if we couldn't find a Clarity description for this perk, fall back to the non-enhanced perk variant
-    if (!clarityPerk) {
-      const regularPerkHash = enhancedPerkToRegularPerk[plug.hash];
-      if (regularPerkHash) {
-        clarityPerk = allClarityDescriptions[regularPerkHash];
-      }
-    }
-
-    if (clarityPerk && !clarityPerk.investmentStatOnly) {
-      // strip out any strings that are used in the Bungie description
-      const communityInsightWithoutBungieStrings = stripUsedStrings(
-        clarityPerk,
-        statAndBungieDescStrings
-      );
-      if (communityInsightWithoutBungieStrings) {
-        // if our stripped community description is truthy, we know it contains at least 1 unique string
-        // we only want to strip out Bungie description strings if we're also showing the Bungie description
-        result.communityInsight = showBungieDescription
-          ? communityInsightWithoutBungieStrings
-          : stripUsedStrings(clarityPerk, statStrings);
-      }
+    if (clarityPerk && !clarityPerk.optional) {
+      result.communityInsight = clarityPerk;
     }
   }
 
@@ -200,7 +181,7 @@ function getPerkDescriptions(
   Most plugs use the description field to describe their functionality.
 
   Some plugs (e.g. armor mods) store their functionality in their perk descriptions and use the description
-  field for auxiliary info like requirements and caveats. For these plugs, we want to prioritise strings in the
+  field for auxiliary info like requirements and caveats. For these plugs, we want to priorities strings in the
   perks and only fall back to the actual description if we don't have any perks.
 
   Other plugs (e.g. Exotic catalysts) always use the description field to store their requirements.
@@ -259,34 +240,4 @@ function getPerkDescriptions(
   }
 
   return results;
-}
-
-function stripUsedStrings(
-  communityInsight: Readonly<Perk>,
-  usedStrings: ReadonlySet<string>
-): Perk | undefined {
-  if (!communityInsight.description) {
-    return;
-  }
-
-  // todo: only rebuild these arrays if they contain a duplicate line
-
-  // const description = communityInsight.description.map((line) =>
-  //   line.linesContent
-  //     ? {
-  //         ...line,
-  //         linesContent: line.linesContent.filter(
-  //           (content) => !content.text || !usedStrings.has(content.text)
-  //         ),
-  //       }
-  //     : line
-  // );
-  // if (!description.some((line) => line.linesContent?.length)) {
-  //   return;
-  // }
-
-  return {
-    ...communityInsight,
-    description: communityInsight.description,
-  };
 }
