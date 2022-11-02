@@ -17,7 +17,7 @@
     &:last-child {
       margin-bottom: 0;
     }
-    @include horizontal-space-children(4px);
+    @include flex-gap(4px);
 
     > a {
       margin-left: auto;

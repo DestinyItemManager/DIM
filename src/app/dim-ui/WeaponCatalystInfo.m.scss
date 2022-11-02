@@ -1,0 +1,29 @@
+@use '../variables.scss' as *;
+
+.catalystProgressTitle {
+  margin-left: 4px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+
+  color: $orange;
+  font-weight: bold;
+}
+
+.catalystProgress {
+  display: flex;
+  flex-direction: column;
+  background: #222;
+
+  :global(.objective-progress) {
+    background: #222;
+  }
+  > :nth-child(n + 2) {
+    margin-left: 4px;
+  }
+}
+
+.catalystProgressSection {
+  padding: 4px 10px 4px;
+  background: #333;
+  flex-grow: 1;
+}

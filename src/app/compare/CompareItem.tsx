@@ -9,6 +9,7 @@ import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButton
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
+import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { memo, useCallback, useMemo, useRef } from 'react';
@@ -105,7 +106,7 @@ export default memo(function CompareItem({
           compareBaseStats={compareBaseStats}
         />
       ))}
-      {item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
+      {isD1Item(item) && item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
       {item.missingSockets && (
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}

@@ -17,5 +17,5 @@
   display: flex;
   flex-flow: row wrap;
   margin: 10px auto;
-  @include horizontal-space-children(4px);
+  @include flex-gap(4px);
 }

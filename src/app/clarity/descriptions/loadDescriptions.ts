@@ -2,6 +2,7 @@ import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
+import _ from 'lodash';
 import * as actions from '../actions';
 import { ClarityDescription, ClarityVersions } from './descriptionInterface';
 
@@ -14,7 +15,13 @@ const urls = {
 
 const fetchClarity = async (type: keyof typeof urls) => {
   const data = await fetch(urls[type]);
+  if (!data.ok) {
+    throw new Error('failed to fetch ' + type);
+  }
   const json = await data.json();
+  if (_.isEmpty(json)) {
+    throw new Error('empty response JSON for ' + type);
+  }
   return json;
 };
 

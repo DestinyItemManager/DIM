@@ -9,7 +9,7 @@ import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { getDefaultAbilityChoiceHash, getSocketsByIndexes } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { createGetModRenderKey } from '../mod-utils';
 import EmptySubclass from './EmptySubclass';
 import styles from './LoadoutSubclassSection.m.scss';
@@ -74,7 +74,7 @@ export default function LoadoutSubclassSection({
                 item={subclass.item}
                 // don't show the selected Super ability because we are displaying the Super ability plug next
                 // to the subclass icon
-                selectedSuperDisplay="disabled"
+                hideSelectedSuper
               />
             )}
           </ItemPopupTrigger>

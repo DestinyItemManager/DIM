@@ -55,7 +55,10 @@ const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
  * if you want to generate some keywords without a full valid filter
  */
 export function generateSuggestionsForFilter(
-  filterDefinition: Pick<FilterDefinition, 'keywords' | 'suggestions' | 'format' | 'deprecated'>
+  filterDefinition: Pick<
+    FilterDefinition,
+    'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated'
+  >
 ) {
   return generateGroupedSuggestionsForFilter(filterDefinition, false).flatMap(
     ({ keyword, ops }) => {
@@ -69,7 +72,10 @@ export function generateSuggestionsForFilter(
 }
 
 export function generateGroupedSuggestionsForFilter(
-  filterDefinition: Pick<FilterDefinition, 'keywords' | 'suggestions' | 'format' | 'deprecated'>,
+  filterDefinition: Pick<
+    FilterDefinition,
+    'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated'
+  >,
   forHelp?: boolean
 ): { keyword: string; ops?: string[] }[] {
   if (filterDefinition.deprecated) {
@@ -121,10 +127,11 @@ export function generateGroupedSuggestionsForFilter(
         break;
       case 'range':
         allSuggestions.push(...expandOps([thisFilterKeywords], operators));
-        break;
-      case 'rangeoverload':
-        allSuggestions.push(...expandOps([thisFilterKeywords], operators));
-        allSuggestions.push(...expandFlat([thisFilterKeywords, filterSuggestions]));
+        if (filterDefinition.overload) {
+          allSuggestions.push(
+            ...expandFlat([thisFilterKeywords, Object.keys(filterDefinition.overload)], 1)
+          );
+        }
         break;
       case 'stat':
         // stat lists aren't exhaustive

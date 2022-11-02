@@ -5,7 +5,6 @@ import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { v3SubclassHashesByV2SubclassHash } from 'app/inventory/subclass';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
@@ -80,9 +79,25 @@ export function newLoadout(name: string, items: LoadoutItem[], classType?: Desti
 export function createSocketOverridesFromEquipped(item: DimItem) {
   if (item.sockets) {
     const socketOverrides: SocketOverrides = {};
-    for (const category of item.sockets.categories) {
+
+    let fragmentCapacity = getSubclassFragmentCapacity(item);
+
+    nextCategory: for (const category of item.sockets.categories) {
       const sockets = getSocketsByIndexes(item.sockets, category.socketIndexes);
       for (const socket of sockets) {
+        // For subclass fragments, only active fragments should be saved.
+        // This check has to happen early because a fragment is inactive if it's
+        // in a fragment socket index >= capacity
+        // (so with three fragment slots and fragments [1, 2, empty, 4] the last
+        // fragment will be inactive)
+        if (category.category.hash === SocketCategoryHashes.Fragments) {
+          if (fragmentCapacity > 0) {
+            fragmentCapacity--;
+          } else {
+            continue nextCategory;
+          }
+        }
+
         // Add currently plugged, unless it's the empty option. Abilities and Supers
         // explicitly don't have an emptyPlugItemHash.
         if (
@@ -113,7 +128,11 @@ export function createSubclassDefaultSocketOverrides(item: DimItem) {
     ]);
 
     for (const socket of abilityAndSuperSockets) {
-      socketOverrides[socket.socketIndex] = getDefaultAbilityChoiceHash(socket);
+      socketOverrides[socket.socketIndex] =
+        socket.plugged &&
+        socket.plugSet?.plugs.some((plug) => plug.plugDef.hash === socket.plugged!.plugDef.hash)
+          ? socket.plugged.plugDef.hash
+          : getDefaultAbilityChoiceHash(socket);
     }
     return socketOverrides;
   }
@@ -394,7 +413,24 @@ export function extractArmorModHashes(item: DimItem) {
  * the old one. When loading loadouts we'd like to just use the new version.
  */
 const oldToNewItems = {
-  ...v3SubclassHashesByV2SubclassHash,
+  // Arcstrider
+  1334959255: 2328211300,
+  // Striker
+  2958378809: 2932390016,
+  // Stormcaller
+  1751782730: 3168997075,
+  // Gunslinger
+  3635991036: 2240888816,
+  // Sunbreaker
+  3105935002: 2550323932,
+  // Dawnblade
+  3481861797: 3941205951,
+  // Nightstalker
+  3225959819: 2453351420,
+  // Sentinel
+  3382391785: 2842471112,
+  // Voidwalker
+  3887892656: 2849050827,
 };
 
 /**
@@ -527,15 +563,24 @@ export function isMissingItems(
   return false;
 }
 
-/** Returns a set of PluggableInventoryItemDefinition's grouped by plugCategoryHash. */
+/** Returns a flat list of mods hashes in the Loadout, by default including auto stat mods */
+export function getModHashesFromLoadout(loadout: Loadout, includeAutoMods = true) {
+  return [
+    ...(loadout.parameters?.mods ?? []),
+    ...((includeAutoMods && loadout.autoStatMods) || []),
+  ];
+}
+
+/** Returns a flat list of mods as PluggableInventoryItemDefinitions in the Loadout, by default including auto stat mods */
 export function getModsFromLoadout(
   defs: D1ManifestDefinitions | D2ManifestDefinitions | undefined,
-  loadout: Loadout
+  loadout: Loadout,
+  includeAutoMods = true
 ) {
   const mods: PluggableInventoryItemDefinition[] = [];
 
-  if (defs?.isDestiny2() && loadout.parameters?.mods) {
-    for (const modHash of loadout.parameters.mods) {
+  if (defs?.isDestiny2()) {
+    for (const modHash of getModHashesFromLoadout(loadout, includeAutoMods)) {
       const item = defs.InventoryItem.get(modHash);
 
       if (isPluggableItem(item)) {
@@ -545,6 +590,14 @@ export function getModsFromLoadout(
   }
 
   return mods.sort(sortMods);
+}
+
+export function getSubclassFragmentCapacity(subclassItem: DimItem): number {
+  const aspects = getSocketsByCategoryHash(subclassItem.sockets, SocketCategoryHashes.Aspects);
+  return _.sumBy(
+    aspects,
+    (aspect) => aspect.plugged?.plugDef.plug.energyCapacity?.capacityValue || 0
+  );
 }
 
 /**

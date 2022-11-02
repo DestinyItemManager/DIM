@@ -2,15 +2,25 @@ import { RootState } from 'app/store/types';
 
 export const accountsSelector = (state: RootState) => state.accounts.accounts;
 
+/**
+ * Full details about the currently loaded account. This may be undefined if
+ * there is no selected account, or if the selected account doesn't appear in
+ * the list of loaded accounts.
+ */
 export const currentAccountSelector = (state: RootState) =>
-  state.accounts.currentAccount === -1
-    ? undefined
-    : accountsSelector(state)[state.accounts.currentAccount];
+  state.accounts.currentAccountMembershipId
+    ? accountsSelector(state).find(
+        (a) =>
+          a.membershipId === state.accounts.currentAccountMembershipId &&
+          a.destinyVersion === state.accounts.currentAccountDestinyVersion
+      )
+    : undefined;
 
-export const destinyVersionSelector = (state: RootState) => {
-  const currentAccount = currentAccountSelector(state);
-  return currentAccount?.destinyVersion || 2;
-};
+export const currentAccountMembershipIdSelector = (state: RootState) =>
+  state.accounts.currentAccountMembershipId;
+
+export const destinyVersionSelector = (state: RootState) =>
+  state.accounts.currentAccountDestinyVersion ?? 2;
 
 /** Are the accounts loaded enough to use? */
 export const accountsLoadedSelector = (state: RootState) =>

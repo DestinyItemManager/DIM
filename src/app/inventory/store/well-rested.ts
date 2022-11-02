@@ -22,7 +22,7 @@ export function isWellRested(
   progress?: number;
   requiredXP?: number;
 } {
-  if (!season || !season.seasonPassProgressionHash) {
+  if (!season?.seasonPassProgressionHash) {
     return {
       wellRested: false,
     };

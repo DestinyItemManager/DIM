@@ -40,13 +40,25 @@
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  @include flex-gap(16px);
 
   @include phone-portrait {
     flex-direction: column;
   }
+}
 
-  > div > div {
+.timeline {
+  box-sizing: border-box;
+  flex: 1;
+  position: relative;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+
+  [twdiv='yes'] {
+    overflow: auto;
     height: 400px;
-    outline: 4px solid rgba(255, 255, 255, 0.3);
+    background-color: black;
+    @include phone-portrait {
+      height: 300px;
+    }
   }
 }

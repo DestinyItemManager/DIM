@@ -96,7 +96,7 @@ export default function LoadoutView({
     [loadout.items, defs, buckets, allItems, store, modsByBucket]
   );
 
-  const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
+  const allMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
 
   const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
   const power = loadoutPower(store, categories);
@@ -120,7 +120,7 @@ export default function LoadoutView({
       </div>
       {loadout.notes && <div className={styles.loadoutNotes}>{loadout.notes}</div>}
       <div className={styles.contents}>
-        {(items.length > 0 || subclass || savedMods.length > 0 || !_.isEmpty(modsByBucket)) && (
+        {(items.length > 0 || subclass || allMods.length > 0 || !_.isEmpty(modsByBucket)) && (
           <>
             {(!isPhonePortrait || subclass) && (
               <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
@@ -132,7 +132,7 @@ export default function LoadoutView({
                 subclass={subclass}
                 storeId={store.id}
                 items={categories[category]}
-                savedMods={savedMods}
+                allMods={allMods}
                 modsByBucket={modsByBucket}
                 loadout={loadout}
                 hideOptimizeArmor={hideOptimizeArmor}
@@ -140,7 +140,7 @@ export default function LoadoutView({
             ))}
             <LoadoutMods
               loadout={loadout}
-              savedMods={savedMods}
+              allMods={allMods}
               storeId={store.id}
               hideShowModPlacements={hideShowModPlacements}
             />

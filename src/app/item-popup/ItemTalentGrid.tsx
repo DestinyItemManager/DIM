@@ -3,17 +3,19 @@ import _ from 'lodash';
 import { memo } from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { PressTip, Tooltip } from '../dim-ui/PressTip';
-import { D1GridNode, DimGridNode, DimItem } from '../inventory/item-types';
+import { D1GridNode, D1Item } from '../inventory/item-types';
 import './ItemTalentGrid.scss';
 
 interface ProvidedProps {
-  item: DimItem;
+  item: D1Item;
   perksOnly?: boolean;
 }
 
 type Props = ProvidedProps;
 
-// TODO: There's enough here to make a decent D2 talent grid for subclasses: https://imgur.com/a/3wNRq
+/**
+ * The talent grid was the grid of perks for D1 items. It is not used for any D2 item.
+ */
 export default memo(function ItemTalentGrid({ item, perksOnly }: Props) {
   const talentGrid = item.talentGrid;
 
@@ -69,12 +71,9 @@ export default memo(function ItemTalentGrid({ item, perksOnly }: Props) {
               })`}
               className={clsx('talent-node', {
                 'talent-node-activated': node.activated,
-                'talent-node-showxp': isD1GridNode(node) && !node.activated && node.xpRequired,
+                'talent-node-showxp': !node.activated && node.xpRequired,
                 'talent-node-default':
-                  node.activated &&
-                  (!isD1GridNode(node) || !node.xpRequired) &&
-                  !node.exclusiveInColumn &&
-                  node.column < 1,
+                  node.activated && !node.xpRequired && !node.exclusiveInColumn && node.column < 1,
               })}
             >
               <circle
@@ -83,10 +82,8 @@ export default memo(function ItemTalentGrid({ item, perksOnly }: Props) {
                 cy="17"
                 transform="rotate(-90)"
                 className="talent-node-xp"
-                strokeWidth={isD1GridNode(node) && node.xp ? 2 : 0}
-                strokeDasharray={
-                  isD1GridNode(node) ? `${(100 * node.xp) / node.xpRequired} 100` : undefined
-                }
+                strokeWidth={node.xp ? 2 : 0}
+                strokeDasharray={`${(100 * node.xp) / node.xpRequired} 100`}
               />
               <image
                 className="talent-node-img"
@@ -105,11 +102,6 @@ export default memo(function ItemTalentGrid({ item, perksOnly }: Props) {
   );
 });
 
-function talentGridNodesFilter(nodes: DimGridNode[], hiddenColumns: number) {
+function talentGridNodesFilter(nodes: D1GridNode[], hiddenColumns: number) {
   return (nodes || []).filter((node) => !node.hidden && node.column >= hiddenColumns);
-}
-
-function isD1GridNode(node: DimGridNode): node is D1GridNode {
-  const d1Node = node as D1GridNode;
-  return Boolean(d1Node.xp || d1Node.xpRequired || d1Node.xpRequirementMet);
 }

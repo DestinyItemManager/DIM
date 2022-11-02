@@ -9,6 +9,7 @@
 
   @include phone-portrait {
     --item-margin: 4px;
+    flex: 1;
   }
 }
 

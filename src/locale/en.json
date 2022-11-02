@@ -8,16 +8,16 @@
     "IrreversiblePlugging": "You don't own {{plug}}, so we won't overwrite it."
   },
   "Accounts": {
+    "Choose": "Profiles for {{bungieName}}",
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
     "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance.",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
     "MissingTitle": "Account Not Found",
     "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "SwitchAccounts": "You can switch accounts later from the menu in the header.",
+    "Title": "Accounts"
   },
   "Activities": {
     "Activities": "Activities",
@@ -124,7 +124,7 @@
     "Title": "Something went wrong"
   },
   "ErrorPanel": {
-    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works.",
+    "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
     "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {
@@ -156,6 +156,8 @@
   },
   "FashionDrawer": {
     "Accept": "Save fashion",
+    "CannotFitOrnament": "This item does not have an ornament socket or you have no ornaments for it.",
+    "CannotFitShader": "This item cannot fit a shader",
     "ClearOrnaments": "Clear Ornaments",
     "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
     "ClearShaders": "Clear Shaders",
@@ -178,6 +180,7 @@
     "AmmoType": "Shows items based on their ammo type.",
     "Armor": "Shows items that are armor.",
     "ArmorCategory": "Shows armors based on their category.",
+    "ArmorIntrinsic": "Shows legendary armor which has an intrinsic perk, such as Artifice Armor.",
     "Ascended": "Shows items that have an ascend node which have been ascended.",
     "Breaker": "Filter by breaker type or corresponding champion type.",
     "BulkClear": "Removed tag from 1 item.",
@@ -209,6 +212,7 @@
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
     "Filter": "Filter",
+    "Foundry": "Shows items by which foundry created them.",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
     "HasMemento": "Shows crafted weapons that currently have a memento inserted.",
     "HasNotes": "Show items that have notes applied.",
@@ -492,6 +496,7 @@
       "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
       "None": "All armor will use its current stats and will have a minimum energy level of 7."
     },
+    "AutoStatMods": "Add required stat mods",
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
@@ -549,8 +554,6 @@
     "AddEquippedItems": "Add Equipped",
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
     "Apply": "Apply",
     "ApplyMods": "Applying mods",
@@ -640,10 +643,16 @@
     "RandomizeSearch": "Randomize from Search",
     "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "Randomize your equipped weapons?",
+    "Redo": "Redo",
     "RestoreAllItems": "All Items",
     "Save": "Save",
     "SaveAsNew": "Save as New",
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
+    "SaveDisabled": {
+      "AlreadyExists": "Choose a new name for the loadout.",
+      "Empty": "The loadout is empty.",
+      "NoName": "The loadout needs a name."
+    },
     "SaveLoadout": "Save Loadout",
     "Share": {
       "Copied": "Copied loadout link to clipboard",
@@ -674,6 +683,7 @@
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedModError": "Mod didn't fit on your current armor",
     "UnassignedMods": "Unassigned Mods",
+    "Undo": "Undo",
     "Unequipped": "Unequipped",
     "Update": "Save Changes",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
@@ -707,6 +717,7 @@
     "All": "All",
     "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
+    "CatalystProgress": "Catalyst Progress",
     "CommunityData": "Community Insight",
     "Consolidate": "Consolidate",
     "CraftingPattern": "Crafting Pattern",
@@ -920,6 +931,7 @@
     "SizeItem": "Item size",
     "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Stack Size",
+    "SortByArmorElement": "Armor Element (D2)",
     "SortByClassType": "Required Class",
     "SortByCrafted": "Crafted (D2)",
     "SortByDeepsight": "Deepsight (D2)",
@@ -931,6 +943,7 @@
     "SortBySunset": "Has Been Sunset (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
+    "SortByWeaponElement": "Damage Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name",
     "SpacesSize": "{{count}} space",

@@ -14,22 +14,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 2 # So sentry can get the previous commit
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 18.x
           cache: yarn
 
       - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.0
         with:
-          key: ${{ secrets.SSH_KEY }}
-          name: dim.rsa
-          known_hosts: ${{ secrets.REMOTE_HOST }}
+          private-key: ${{ secrets.SSH_KEY }}
+          private-key-name: dim.rsa
+          known-hosts: ${{ secrets.REMOTE_HOST }}
 
       - name: get-npm-version
         id: package-version
@@ -51,6 +51,7 @@ jobs:
       - name: Build
         run: yarn build:beta
         env:
+          NODE_OPTIONS: "--max_old_space_size=8192"
           WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
           WEB_OAUTH_CLIENT_ID: ${{ secrets.WEB_OAUTH_CLIENT_ID }}
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.WEB_OAUTH_CLIENT_SECRET }}

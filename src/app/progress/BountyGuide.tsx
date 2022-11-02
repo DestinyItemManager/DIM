@@ -38,10 +38,10 @@ const killTypeIcons: { [key in KillType]: string | undefined } = {
 
 export type DefType = 'ActivityMode' | 'Destination' | 'DamageType' | 'ItemCategory' | 'KillType';
 
-export type BountyFilter = {
+export interface BountyFilter {
   type: DefType;
   hash: number;
-};
+}
 
 /**
  * This provides a little visual guide to what bounties you have - specifically, what weapons/activities/locations are required for your bounties.

@@ -1,4 +1,20 @@
-export const D2SeasonInfo = {
+export const D2SeasonInfo: Record<
+  number,
+  {
+    DLCName: string;
+    seasonName: string;
+    seasonTag: string;
+    season: number;
+    maxLevel: number;
+    powerFloor: number;
+    softCap: number;
+    powerfulCap: number;
+    pinnacleCap: number;
+    releaseDate: string;
+    resetTime: string;
+    numWeeks: number;
+  }
+> = {
   1: {
     DLCName: 'Red War',
     seasonName: 'Red War',
@@ -237,22 +253,34 @@ export const D2SeasonInfo = {
     resetTime: '17:00:00Z',
     numWeeks: 13,
   },
-} as Record<
-  number,
-  {
-    DLCName: string;
-    seasonName: string;
-    seasonTag: string;
-    season: number;
-    maxLevel: number;
-    powerFloor: number;
-    softCap: number;
-    powerfulCap: number;
-    pinnacleCap: number;
-    releaseDate: string;
-    resetTime: string;
-    numWeeks: number;
-  }
->;
+  18: {
+    DLCName: '',
+    seasonName: 'Season of Plunder',
+    seasonTag: 'plunder',
+    season: 18,
+    maxLevel: 50,
+    powerFloor: 1350,
+    softCap: 1520,
+    powerfulCap: 1570,
+    pinnacleCap: 1580,
+    releaseDate: '2022-08-23',
+    resetTime: '17:00:00Z',
+    numWeeks: 15,
+  },
+  19: {
+    DLCName: '',
+    seasonName: 'Season of [Redacted]',
+    seasonTag: '[redacted]',
+    season: 19,
+    maxLevel: 50,
+    powerFloor: 1350,
+    softCap: 1530,
+    powerfulCap: 1580,
+    pinnacleCap: 1590,
+    releaseDate: '2022-12-06',
+    resetTime: '17:00:00Z',
+    numWeeks: -1,
+  },
+};
 
-export const D2CalculatedSeason = 17;
+export const D2CalculatedSeason = 18;

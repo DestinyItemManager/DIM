@@ -1,12 +1,18 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
-import { battleNetIcon, faPlayStation, faSteam, faXbox, stadiaIcon } from 'app/shell/icons';
+import {
+  battleNetIcon,
+  epicIcon,
+  faPlayStation,
+  faSteam,
+  faXbox,
+  stadiaIcon,
+} from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import {
   BungieMembershipType,
-  DestinyGameVersions,
   DestinyLinkedProfilesResponse,
   DestinyProfileUserInfoCard,
   PlatformErrorCodes,
@@ -26,13 +32,13 @@ import { loggedOut } from './actions';
  * Platform types (membership types) in the Bungie API.
  */
 const PLATFORM_LABELS = {
-  // t(`Accounts.${platform}`, { metadata: { keys: 'platforms' }})
   [BungieMembershipType.TigerXbox]: 'Xbox',
   [BungieMembershipType.TigerPsn]: 'PlayStation',
   [BungieMembershipType.TigerBlizzard]: 'Blizzard',
   [BungieMembershipType.TigerDemon]: 'Demon',
   [BungieMembershipType.TigerSteam]: 'Steam',
   [BungieMembershipType.TigerStadia]: 'Stadia',
+  [BungieMembershipType.TigerEgs]: 'Epic',
   [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 
@@ -43,12 +49,13 @@ export const PLATFORM_ICONS = {
   [BungieMembershipType.TigerDemon]: 'Demon',
   [BungieMembershipType.TigerSteam]: faSteam,
   [BungieMembershipType.TigerStadia]: stadiaIcon,
+  [BungieMembershipType.TigerEgs]: epicIcon,
   [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 
 /** A specific Destiny account (one per platform and Destiny version) */
 export interface DestinyAccount {
-  /** Platform account name (gamertag or PSN ID) */
+  /** Bungie Name */
   readonly displayName: string;
   /** The platform type this account started on. It may not be exclusive to this platform anymore, but this is what gets used to call APIs. */
   readonly originalPlatformType: BungieMembershipType;
@@ -58,13 +65,11 @@ export interface DestinyAccount {
   readonly membershipId: string;
   /** Which version of Destiny is this account for? */
   readonly destinyVersion: DestinyVersion;
-  /** Which version of Destiny 2 / DLC do they own? (not reliable after Cross-Save) */
-  readonly versionsOwned?: DestinyGameVersions;
   /** All the platforms this account plays on (post-Cross-Save) */
   readonly platforms: BungieMembershipType[];
 
   /** When was this account last used? */
-  readonly lastPlayed?: Date;
+  readonly lastPlayed: Date;
 }
 
 /**
@@ -125,11 +130,10 @@ function formatBungieName(destinyAccount: DestinyProfileUserInfoCard | UserInfoC
 /**
  * @param accounts raw Bungie API accounts response
  */
-async function generatePlatforms(
+export async function generatePlatforms(
   accounts: DestinyLinkedProfilesResponse
 ): Promise<DestinyAccount[]> {
   // accounts with errors could have had D1 characters!
-
   const accountPromises = accounts.profiles
     .flatMap((destinyAccount) => {
       const account: DestinyAccount = {
@@ -160,9 +164,9 @@ async function generatePlatforms(
           originalPlatformType: destinyAccount.membershipType,
           membershipId: destinyAccount.membershipId,
           platformLabel: PLATFORM_LABELS[destinyAccount.membershipType],
-          destinyVersion: 1,
-          platforms: [destinyAccount.membershipType],
-          lastPlayed: new Date(),
+          destinyVersion: 2,
+          platforms: destinyAccount.applicableMembershipTypes,
+          lastPlayed: new Date(0),
         };
 
         if (

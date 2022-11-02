@@ -32,6 +32,6 @@ export interface RootState {
 
 export type ThunkResult<R = void> = ThunkAction<Promise<R>, RootState, undefined, AnyAction>;
 export type DimThunkDispatch = ThunkDispatch<RootState, undefined, AnyAction>;
-export type ThunkDispatchProp = {
+export interface ThunkDispatchProp {
   dispatch: DimThunkDispatch;
-};
+}

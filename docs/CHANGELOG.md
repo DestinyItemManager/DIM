@@ -1,6 +1,82 @@
 ## Next
 
+* Applying a Loadout with subclass configuration should now avoid pointless reordering of Aspects and Fragments in their slots.
+* When selecting a subclass in Loadout Optimizer, it will now start configured with your currently equipped super and abilities (but not aspects or fragments).
+* Fixed Compare drawer closing when clicking the button to compare all of a certain weapon type.
+
+## 7.41.0 <span class="changelog-date">(2022-10-30)</span>
+
+* On first visit, DIM will prompt you to select a platform instead of automatically selecting the most recently played one. Also, DIM will no longer fall back to your D1 account when Bungie.net is down.
+* Invalid search queries are now detected more reliably and DIM will not show search results if the query is invalid.
+* Loadout Optimizer will now remember stat priorities and enabled stats per Guardian class.
+
+## 7.40.0 <span class="changelog-date">(2022-10-23)</span>
+
+* Catalyst progress shows up in the item popup for exotic weapons that still need their catalyst finished.
+* Firefox users should notice fewer cases where their data is out of sync with the game.
+* DIM will warn you if you have DIM Sync off and try to save Loadouts or Tags that could be lost without DIM Sync.
+
+## 7.39.1 <span class="changelog-date">(2022-10-18)</span>
+
+* You can now undo and redo changes to loadouts while editing them.
+* Fix for an error displaying new vendor inventories when definitions are still old.
+* Fix the Progress page's event section to properly detect the new Festival of the Lost event card.
+* Removed a now-unnecessary workaround for incorrect subclass ability colors.
+
+## 7.39.0 <span class="changelog-date">(2022-10-16)</span>
+
+* Added `is:armorintrinsic` to find Artifice Armor, armor with seasonal perks, etc.
+* Compare suggestion buttons now offer comparison to similar armor intrinsics.
+* Added perks to Light.gg links. See your weapon's popularity rating without having to reselect its perks.
+* Vendor items now show pattern unlock progress.
+* Removed the "streak" boxes from Trials rank.
+* Added browser info on the About page
+
+## 7.38.0 <span class="changelog-date">(2022-10-09)</span>
+
+### Beta Only
+
+* Added an experimental Loadout Optimizer setting that automatically adds +10 and +5 stat mods to hit specified stat minimums.
+
+## 7.37.0 <span class="changelog-date">(2022-10-02)</span>
+
+* Add `foundry` search term. Try `foundry:hakke` for all your items brought to you by Hakke.
+
+## 7.36.0 <span class="changelog-date">(2022-09-25)</span>
+
+## 7.35.0 <span class="changelog-date">(2022-09-18)</span>
+
+* Fixed an issue where emblems that were not transferrable across characters were being shown in the loadout drawer.
+* DIM now identifies more intrinsic breakers, added `breaker:any`
+
+## 7.34.0 <span class="changelog-date">(2022-09-11)</span>
+
+* Season of Plunder Star Chart upgrades are now shown in the right order on the Vendors page.
+
+## 7.33.0 <span class="changelog-date">(2022-09-04)</span>
+
+* Progress page now correctly classifies the Star Chart weekly challenge as a powerful reward source instead of a pinnacle.
+* Visual adjustments to power level tooltips.
+* Loadout Optimizer is now aware of King's Fall mods.
+* Deprecated mods no longer appear in the Seasonal Artifact preview.
+* Made an experimental change to how we sequence Bungie.net API calls that may make their performance more consistent.
+
+## 7.32.0 <span class="changelog-date">(2022-08-28)</span>
+
+* If the DIM API is down and you have pending updates, DIM will load correctly instead of spinning forever. We also do a better job of keeping changes you make while the API is down.
+* If the DIM API is not returning some info (e.g. searches), we'll fall back to your locally cached data instead of wiping it out.
+* Updating/overwriting a Loadout using Loadout Optimizer's "Compare Loadout" button will now correctly remove the placeholders for armor equipped in the Loadout that no longer exists.
+* The item sort for Weapon Damage Type and Armor Element Type are now separate.
+* Epic Games accounts should display properly in the menu.
+* The loadout name editor will no longer offer system autocomplete.
+* Fixed the subclass colors for arc subclass mods.
+
+## 7.31.1 <span class="changelog-date">(2022-08-23)</span>
+
+## 7.31.0 <span class="changelog-date">(2022-08-21)</span>
+
 * Fixed Loadouts trying to clear Solstice sockets and Strip Sockets trying to remove Festival of the Lost helmet ornaments.
+* Tooltips have been adjusted further. They now have more spacing around content, rounded corners and improved contrast.
 
 ## 7.30.0 <span class="changelog-date">(2022-08-14)</span>
 

@@ -9,9 +9,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import styles from './Login.m.scss';
 
-const dimApiHelpLink = 'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync';
-const loginHelpLink =
-  'https://github.com/DestinyItemManager/DIM/wiki/Authorizing-Destiny-Item-Manager-with-Bungie.net';
+export const dimApiHelpLink = 'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync';
+const loginHelpLink = 'https://github.com/DestinyItemManager/DIM/wiki/Accounts-and-Login';
 
 export default function Login() {
   const dispatch = useThunkDispatch();

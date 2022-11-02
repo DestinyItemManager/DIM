@@ -4,6 +4,7 @@
 $orange: #e8a534;
 $blue: #68a0b7;
 $red: #ff3232; // For warnings/errors
+$green: #51a351; // For success statuses or positive deltas
 $gradient: radial-gradient(
   circle at 50% 70px,
   hsl(240, 20%, 28%) 0%,
@@ -12,6 +13,9 @@ $gradient: radial-gradient(
 
 // Blue used to denote community-provided data
 $communityBlue: #0d7fad;
+
+// Green used to indicate the subject has been acquired
+$acquiredGreen: #44bd32;
 
 // Elemental damage types
 $arc: #79bbe8;

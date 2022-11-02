@@ -1,6 +1,10 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
-import { accountsLoadedSelector, accountsSelector } from 'app/accounts/selectors';
+import {
+  accountsLoadedSelector,
+  accountsSelector,
+  currentAccountSelector,
+} from 'app/accounts/selectors';
 import ArmoryPage from 'app/armory/ArmoryPage';
 import Compare from 'app/compare/Compare';
 import { settingSelector } from 'app/dim-api/selectors';
@@ -77,6 +81,7 @@ export default function Destiny() {
   const { destinyVersion: destinyVersionString, membershipId: platformMembershipId } = useParams();
   const destinyVersion = parseInt(destinyVersionString || '2', 10) as DestinyVersion;
   const accountsLoaded = useSelector(accountsLoadedSelector);
+  const currentAccount = useSelector(currentAccountSelector);
   const account = useSelector((state: RootState) =>
     accountsSelector(state).find(
       (account) =>
@@ -167,19 +172,25 @@ export default function Destiny() {
   });
   useHotkeys(hotkeys);
 
+  if (
+    !accountsLoaded ||
+    // This delays to wait for current account to be set in Redux so we don't get ahead of ourselves
+    (account && !currentAccount)
+  ) {
+    return <ShowPageLoading message={t('Loading.Accounts')} />;
+  }
+
   if (!account) {
     if (pathname.includes('/armory/')) {
       return <Navigate to={pathname.replace(/\/\d+\/d2/, '') + search} replace />;
     } else {
-      return accountsLoaded ? (
+      return (
         <div className="dim-page">
           <ErrorPanel
             title={t('Accounts.MissingTitle')}
             fallbackMessage={t('Accounts.MissingDescription')}
           />
         </div>
-      ) : (
-        <ShowPageLoading message={t('Loading.Accounts')} />
       );
     }
   }

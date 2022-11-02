@@ -37,16 +37,31 @@ export const nonCurriedVendorGroupsForCharacterSelector = createSelector(
   mergedCollectiblesSelector,
   bucketsSelector,
   currentAccountSelector,
+  profileResponseSelector,
   // get character ID from props not state
   (state: any, characterId: string | undefined) =>
     characterId || getCurrentStore(sortedStoresSelector(state))?.id,
-  (defs, vendors, mergedCollectibles, buckets, currentAccount, selectedStoreId) => {
+  (
+    defs,
+    vendors,
+    mergedCollectibles,
+    buckets,
+    currentAccount,
+    profileResponse,
+    selectedStoreId
+  ) => {
     const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
     const vendorsResponse = vendorData?.vendorsResponse;
 
-    return vendorsResponse && defs && buckets && currentAccount && selectedStoreId
+    return vendorsResponse &&
+      defs &&
+      buckets &&
+      currentAccount &&
+      selectedStoreId &&
+      profileResponse
       ? toVendorGroups(
           vendorsResponse,
+          profileResponse,
           defs,
           buckets,
           currentAccount,

@@ -42,7 +42,6 @@ module.exports = {
       cooldowns: { list: ['Grenade', 'Melee', 'Super'] },
       difficulty: { list: ['Normal', 'Hard'] },
       minMax: { list: ['Min', 'Max'] },
-      platforms: { list: ['PlayStation', 'Stadia', 'Steam', 'Xbox'] },
       progress: { list: ['Bounties', 'Items', 'Quests'] },
       sockets: { list: ['Mod', 'Ability', 'Shader', 'Ornament', 'Fragment', 'Aspect', 'Projection', 'Transmat', 'Super'] },
       unsupported: { list: ['Unsupported', 'Steam'] },

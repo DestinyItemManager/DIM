@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "Por favor, use la App del Acompañante de Destiny 2 para aprobar que DIM modifique tus objetos.",
+    "ConfirmDescription": "Por favor, use la Aplicación del Acompañante de Destiny 2 para aprobar que DIM modifique tus objetos.",
     "ConfirmTitle": "Confirmar Acción",
     "Error": "Error cambiando modificadores o ventajas",
     "ErrorMessage": "No pudimos equipar {{plug}} en {{item}}.\n\n{{error}}",
@@ -8,16 +8,16 @@
     "IrreversiblePlugging": "No tienes ningún {{plug}}, así que no lo sobrescribiremos."
   },
   "Accounts": {
+    "Choose": "Perfiles para {{bungieName}}",
     "ErrorLoadInventory": "No se pudieron cargar tu inventario y personajes de Destiny {{version}}",
     "ErrorLoadManifest": "No se pudo cargar información de la base de datos de Destiny desde Bungie",
     "ErrorLoading": "No se pudieron cargr cuentas de Destiny desde Bungie.net",
+    "MissingAccountWarning": "Si no ves tu cuenta aquí, puede que no hayas iniciado sesión con la cuenta de Bungie.net correcta, o puede que Bungie.net esté caído por mantenimiento.",
     "MissingDescription": "La cuenta que estás intentando ver no es una cuenta vinculada a tu perfil de Bungie.net.",
     "MissingTitle": "Cuenta no encontrada",
     "NoCharacters": "No tiene ningún personaje de Destiny asociado a esta cuenta de Bungie.net. Trate de iniciar sesión en una cuenta diferente.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "SwitchAccounts": "Puedes cambiar de cuentas más tarde desde el menú en el encabezado.",
+    "Title": "Cuentas"
   },
   "Activities": {
     "Activities": "Actividades",
@@ -124,7 +124,7 @@
     "Title": "Algo fue mal"
   },
   "ErrorPanel": {
-    "Description": "Esto probablemente sea un problema que afecta a todas las aplicaciones de terceros. Comprube a a ver si Bungie.net carga o la Aplicación del Acompañante de Destiny 2 funciona.",
+    "Description": "Intenta cargar tu inventario en la Aplicación del Acompañante de Destiny 2 para ver si Bungie está caído.",
     "Troubleshooting": "Guía de Solución de Problemas"
   },
   "FarmingMode": {
@@ -156,6 +156,8 @@
   },
   "FashionDrawer": {
     "Accept": "Guardar cosméticos",
+    "CannotFitOrnament": "Este objeto no tiene ranura para diseño o no tienes diseños para él.",
+    "CannotFitShader": "A este objeto no le encaja un shader",
     "ClearOrnaments": "Limpiar Diseños",
     "ClearOrnamentsTitle": "Reiniciar todos los diseños a \"sin preferencia\"",
     "ClearShaders": "Limpiar Shaders",
@@ -178,6 +180,7 @@
     "AmmoType": "Mostrar objetos basados en su tipo de munición.",
     "Armor": "Muestra objetos que sean armaduras.",
     "ArmorCategory": "Muestra armaduras basadas en su categoría.",
+    "ArmorIntrinsic": "Muestra armadura legendaria que tenga una ventaja intrínseca, como Armadura Artificiosa.",
     "Ascended": "Muestra objetos que tengan un nodo ascendente en el que haya sido ascendido.",
     "Breaker": "Filtrar por tipo de rompedor o campeón correspondiente.",
     "BulkClear": "Etiqueta eliminada de 1 objeto.",
@@ -209,6 +212,7 @@
     "Event": "Mostrar objetos en cuyo evento de Destiny 2 aparecieron.",
     "ExtraPerk": "Muestra tiradas aleatorias de armas legendarias con una ventaja adicional seleccionable.",
     "Filter": "Filtro",
+    "Foundry": "Muestra objetos basados en la fundición que los creó.",
     "Glimmer": "Muestra objetos que son consumibles que están relacionados con la ganancia de lumen.",
     "HasMemento": "Muestra armas fabricadas que actualmente tienen un recuerdo insertado.",
     "HasNotes": "Muestra objetos que contengan notas.",
@@ -492,6 +496,7 @@
       "Legendary": "Las armaduras legendarias usarán estadísticas de obras maestras completas y tendrán un nivel de energía de 10.",
       "None": "Todas las armaduras usarán sus estadísticas actuales y tendrán un nivel de energía mínimo de 7."
     },
+    "AutoStatMods": "Añadir modificadores de estadísticas requeridos",
     "ChooseAlternateTitle": "Elige otro objeto",
     "CompareLoadout": "Comparar Equipación",
     "ConfirmOverwrite": "¿Estás seguro de que quieres reemplazar la armadura en la equipación \"{{name}}\" con este nuevo set de armadura?",
@@ -549,8 +554,6 @@
     "AddEquippedItems": "Añadir Equipados",
     "AddNotes": "Añadir Notas",
     "AddUnequippedItems": "Añadir Desequipados",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "Una equipación global ya existe con este nombre.",
     "Any": "Cualquier clase",
     "Apply": "Aplicar",
     "ApplyMods": "Aplicando modificadores",
@@ -640,10 +643,16 @@
     "RandomizeSearch": "Aleatorizar desde la Búsqueda",
     "RandomizeSearchPrompt": "Aleatorizar tus objetos equipados desde la búsqueda \"{{query}}\"?",
     "RandomizeWeapons": "¿Aleatorizar tus armas equipadas?",
+    "Redo": "Rehacer",
     "RestoreAllItems": "Todos los objetos",
     "Save": "Guardar",
     "SaveAsNew": "Guardar como Nuevo",
     "SaveAsNewTooltip": "Mantener la equipación original y guardar esta como una nueva",
+    "SaveDisabled": {
+      "AlreadyExists": "Elige un nuevo nombre para la equipación.",
+      "Empty": "La equipación está vacía.",
+      "NoName": "Esta equipación necesita un nombre."
+    },
     "SaveLoadout": "Guardar Equipación",
     "Share": {
       "Copied": "Copiado enlace de la equipación al portapapeles",
@@ -674,6 +683,7 @@
     "TooManyRequested": "Tienes {{total}}{{itemname}} pero tu equipación pregunta por {{requested}}. Transferimos todo lo que tenías.",
     "UnassignedModError": "El modificador no encajó en tu armadura actual",
     "UnassignedMods": "Mods sin Asignar",
+    "Undo": "Deshacer",
     "Unequipped": "Desequipado",
     "Update": "Guardar Cambios",
     "VendorsCannotEquip": "No tienes estos objetos. Pulsa para escoger otro reemplazo o clica la X para quitar:",
@@ -707,6 +717,7 @@
     "All": "Todo",
     "CannotCurrentlyRoll": "Esta ventaja no se puede obtener en la versión actual de este objeto.",
     "CantPullFromPostmaster": "Debes ir a la torre para recuperar este objeto.",
+    "CatalystProgress": "Progreso del Catalizador",
     "CommunityData": "Información de la Comunidad",
     "Consolidate": "Consolidar",
     "CraftingPattern": "Patrón de Fabricación",
@@ -920,6 +931,7 @@
     "SizeItem": "Tamaño de objeto",
     "SortByAmmoType": "Tipo de Munición",
     "SortByAmount": "Tamaño del Montón",
+    "SortByArmorElement": "Elemento de Armadura (D2)",
     "SortByClassType": "Clase Requerida",
     "SortByCrafted": "Fabricados (D2)",
     "SortByDeepsight": "Resonancia Profunda (D2)",
@@ -931,6 +943,7 @@
     "SortBySunset": "Ha Sido Caducada (D2)",
     "SortByTag": "Etiqueta ({{taglist}})",
     "SortByType": "Tipo",
+    "SortByWeaponElement": "Tipo de Daño",
     "SortCustom": "Orden Personalizado",
     "SortName": "Nombre",
     "SpacesSize": "{{count}} espacio",
@@ -1112,7 +1125,7 @@
       "DiscordHelp": "Haz preguntas, da tu opinión y recibe soporte en nuestros canales de Discord.",
       "FAQ": "Preguntas Más Frecuentes",
       "FAQAccess": "¿Cómo accede DIM a mis datos de Destiny?",
-      "FAQAccessAnswer": "Utilizamos la autenticación de la app de Bungie para permitir a DIM ver y mover tus objetos. DIM nunca ve tu usuario o contraseña. Funciona del mismo modo que la app Acompañante.",
+      "FAQAccessAnswer": "Utilizamos la autenticación de la aplicación de Bungie para permitir a DIM ver y mover tus objetos. DIM nunca ve tu usuario o contraseña. Funciona del mismo modo que la aplicación Acompañante.",
       "FAQKeyboard": "¿DIM soporta atajos de teclado?",
       "FAQKeyboardAnswer": "¡Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
       "FAQLogout": "¿Cómo puedo cerrar sesión en DIM?",
@@ -1124,7 +1137,7 @@
       "GitHub": "GitHub",
       "GitHubHelp": "Si estas interesado en contribuir al proyecto, visíta la página del proyecto en {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
-      "HowItsMade": "DIM es gratis, una app de código abierto construída por desarrolladores de la comunidad bajo los mismos servicios usado por Bungie.net y la Aplicación del Acompañante de Destiny.",
+      "HowItsMade": "DIM es gratis, una aplicación de código abierto construída por desarrolladores de la comunidad bajo los mismos servicios usado por Bungie.net y la Aplicación del Acompañante de Destiny.",
       "Reddit": "Reddit",
       "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, ¡háznoslas saber!",
       "Schedule": {

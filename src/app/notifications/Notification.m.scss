@@ -74,6 +74,6 @@
 }
 
 .success {
-  border-top-color: #51a351;
-  background-color: scale-color(#51a351, $lightness: -90%);
+  border-top-color: $green;
+  background-color: scale-color($green, $lightness: -90%);
 }

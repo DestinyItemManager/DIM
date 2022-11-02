@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import './ItemSockets.scss';
 import ItemSocketsGeneral from './ItemSocketsGeneral';

@@ -12,9 +12,9 @@ import { buildStats } from './stats';
  * Socket overrides are a map from socket index to plug item hash. The plug item hash
  * should be one of the socket's plugOptions (or at least a valid plug for that socket).
  */
-export type SocketOverrides = {
+export interface SocketOverrides {
   [socketIndex: number]: number;
-};
+}
 
 /**
  * Transform an item into a new item whose properties (mostly stats) reflect the chosen socket overrides.
@@ -135,7 +135,9 @@ export function useSocketOverrides(): [
   return [socketOverrides, onPlugClicked, resetOverrides];
 }
 
-export type SocketOverridesForItems = { [itemId: string]: SocketOverrides };
+export interface SocketOverridesForItems {
+  [itemId: string]: SocketOverrides;
+}
 
 /**
  * A hook to manage socket overrides for multiple items.

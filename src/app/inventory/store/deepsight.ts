@@ -18,7 +18,7 @@ const fakeObjective: DestinyObjectiveProgress = {
 
 export function buildDeepsightInfo(item: DimItem): DimDeepsight | undefined {
   const resonanceSocket = getResonanceSocket(item);
-  if (!resonanceSocket || !resonanceSocket.plugged?.plugObjectives) {
+  if (!resonanceSocket?.plugged?.plugObjectives) {
     return undefined;
   }
 

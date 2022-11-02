@@ -58,7 +58,7 @@ export function getArtifactBonus(store: DimStore) {
  */
 export function amountOfItem(store: DimStore, item: { hash: number }) {
   return _.sumBy(store.items, (i) =>
-    i.hash === item.hash && (!i.location || !i.location.inPostmaster) ? i.amount : 0
+    i.hash === item.hash && !i.location?.inPostmaster ? i.amount : 0
   );
 }
 

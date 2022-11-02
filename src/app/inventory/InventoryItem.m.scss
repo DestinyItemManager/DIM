@@ -59,27 +59,6 @@
   left: 2px;
   top: 2px;
 }
-@mixin subclass-with-path($rotation) {
-  &::before {
-    background-image: url('../../images/subclass-border-with-path.svg');
-    transform: rotate($rotation);
-  }
-  .subclassSuperIcon {
-    width: calc(var(--item-size) * 0.5);
-    height: calc(var(--item-size) * 0.5);
-    left: calc(var(--item-size) * 0.25);
-    top: calc(var(--item-size) * 0.25);
-  }
-}
-.subclassPathTop {
-  @include subclass-with-path(0deg);
-}
-.subclassPathMiddle {
-  @include subclass-with-path(90deg);
-}
-.subclassPathBottom {
-  @include subclass-with-path(180deg);
-}
 
 // The bar we show for items that have some progress on them
 .xpBar {

@@ -62,6 +62,7 @@ export const modTypeTagByPlugCategoryHash = {
   [PlugCategoryHashes.EnhancementsRaidDescent]: 'deepstonecrypt',
   [PlugCategoryHashes.EnhancementsRaidV520]: 'vaultofglass',
   [PlugCategoryHashes.EnhancementsRaidV600]: 'vowofthedisciple',
+  [PlugCategoryHashes.EnhancementsRaidV620]: 'kingsfall',
   [PlugCategoryHashes.EnhancementsSeasonV500]: 'combat',
 };
 
@@ -138,6 +139,14 @@ const modSocketMetadata: ModSocketMetadata[] = [
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV600],
     emptyModSocketHashes: [2447143568],
     emptyModSocketHash: 2447143568,
+  },
+  {
+    slotTag: 'kingsfall',
+    compatibleModTags: ['kingsfall'],
+    socketTypeHashes: [3344538838],
+    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV620],
+    emptyModSocketHashes: [1728096240],
+    emptyModSocketHash: 1728096240,
   },
   {
     slotTag: 'combatstyle',

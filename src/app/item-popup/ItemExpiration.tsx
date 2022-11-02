@@ -3,10 +3,9 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faClock } from 'app/shell/icons';
 import clsx from 'clsx';
-import React from 'react';
 
 export default function ItemExpiration({ item, compact }: { item: DimItem; compact?: boolean }) {
-  if (!item.pursuit || !item.pursuit.expirationDate) {
+  if (!item.pursuit?.expirationDate) {
     return null;
   }
   const expired = item.pursuit.expirationDate

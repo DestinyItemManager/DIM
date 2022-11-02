@@ -3,7 +3,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { RAID_ACTIVITY_TYPE_HASH, RAID_MILESTONE_HASHES } from 'app/search/d2-known-values';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React from 'react';
 import { Raid } from './Raid';
 import { getCharacterProgressions } from './selectors';
 
@@ -26,7 +25,7 @@ export default function Raids({
 
   // filter to milestones with child activities that are raids
   const filteredMilestones = allMilestones.filter((milestone) => {
-    const milestoneActivities = defs.Milestone.get(milestone.milestoneHash).activities;
+    const milestoneActivities = defs.Milestone.get(milestone.milestoneHash)?.activities;
     return (
       RAID_MILESTONE_HASHES.includes(milestone.milestoneHash) ||
       milestoneActivities?.some(

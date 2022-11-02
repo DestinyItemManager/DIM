@@ -13,7 +13,6 @@ import {
   DestinyItemTalentGridBlockDefinition,
   DestinyItemTranslationBlockDefinition,
 } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
@@ -49,9 +48,7 @@ const tableTrimmers = {
       if (def.preview?.derivedItemCategories?.length) {
         def.preview.derivedItemCategories = emptyArray();
       }
-      if (def.inventory!.bucketTypeHash !== BucketHashes.Subclass) {
-        def.talentGrid = emptyObject<Mutable<DestinyItemTalentGridBlockDefinition>>();
-      }
+      def.talentGrid = emptyObject<Mutable<DestinyItemTalentGridBlockDefinition>>();
 
       if (def.sockets) {
         def.sockets.intrinsicSockets = emptyArray();

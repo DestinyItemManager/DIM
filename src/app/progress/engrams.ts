@@ -62,6 +62,12 @@ export function getEngramPowerBonus(itemHash: number, maxPower?: number, parentI
     itemHash = 73143230;
   }
 
+  // Season of Plunder vendor 8 bounties challenge (The Astral Seas) gives a T1 powerful
+  // even though it's listed as a pinnacle in the API
+  if (parentItemHash === 1194402836) {
+    itemHash = 3114385605;
+  }
+
   const engramInfo: {
     cap: PowerCap;
     bonus: number;

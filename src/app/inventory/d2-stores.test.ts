@@ -1,4 +1,3 @@
-import 'cross-fetch/polyfill';
 import { getTestStores } from 'testing/test-utils';
 
 describe('process stores', () => {

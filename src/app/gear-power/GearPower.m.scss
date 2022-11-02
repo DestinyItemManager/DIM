@@ -23,10 +23,20 @@
     }
 
     h1:first-child {
-      opacity: 0.6;
+      margin-bottom: 4px;
     }
     h1:last-child {
       margin-bottom: 0;
+    }
+  }
+
+  .powerLevel {
+    color: $power;
+
+    :global(.app-icon) {
+      font-size: 60%;
+      vertical-align: 45%;
+      margin-right: 2px;
     }
   }
 
@@ -90,7 +100,9 @@
         height: 40px;
         width: 40px;
         margin: 0 5px;
+        border: 1px solid #ddd;
         cursor: pointer;
+        pointer-events: auto;
       }
       .gearItemInfo {
         display: flex;
@@ -121,10 +133,10 @@
         opacity: 0.3;
       }
       .positive {
-        color: green;
+        color: $green;
       }
       .negative {
-        color: red;
+        color: $red;
       }
       .neutral,
       .positive,

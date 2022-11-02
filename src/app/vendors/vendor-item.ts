@@ -5,6 +5,7 @@ import {
   DestinyItemComponentSetOfint32,
   DestinyItemQuantity,
   DestinyItemSocketEntryPlugItemDefinition,
+  DestinyProfileResponse,
   DestinyVendorDefinition,
   DestinyVendorItemDefinition,
   DestinyVendorItemState,
@@ -33,6 +34,7 @@ export class VendorItem {
     return new VendorItem(
       defs,
       buckets,
+      undefined,
       plugItemDef.plugItemHash,
       [],
       0,
@@ -53,13 +55,16 @@ export class VendorItem {
     defs: D2ManifestDefinitions,
     buckets: InventoryBuckets,
     vendorDef: DestinyVendorDefinition,
+    profileResponse: DestinyProfileResponse | undefined,
     saleItem: DestinyVendorSaleItemComponent,
     // all DIM vendor calls are character-specific. any sale item should have an associated character.
     characterId: string,
-    itemComponents?: DestinyItemComponentSetOfint32,
-    mergedCollectibles?: {
-      [hash: number]: DestinyCollectibleComponent;
-    }
+    itemComponents: DestinyItemComponentSetOfint32 | undefined,
+    mergedCollectibles:
+      | {
+          [hash: number]: DestinyCollectibleComponent;
+        }
+      | undefined
   ): VendorItem {
     const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
     const failureStrings =
@@ -70,6 +75,7 @@ export class VendorItem {
     return new VendorItem(
       defs,
       buckets,
+      profileResponse,
       saleItem.itemHash,
       failureStrings,
       vendorDef.hash,
@@ -97,6 +103,7 @@ export class VendorItem {
     return new VendorItem(
       defs,
       buckets,
+      undefined,
       vendorItemDef.itemHash,
       [],
       0,
@@ -123,15 +130,18 @@ export class VendorItem {
   constructor(
     defs: D2ManifestDefinitions,
     buckets: InventoryBuckets,
+    profileResponse: DestinyProfileResponse | undefined,
     itemHash: number,
     failureStrings: string[],
     vendorHash: number,
-    vendorItemDef?: DestinyVendorItemDefinition,
-    saleItem?: DestinyVendorSaleItemComponent,
-    itemComponents?: DestinyItemComponentSetOfint32,
-    mergedCollectibles?: {
-      [hash: number]: DestinyCollectibleComponent;
-    },
+    vendorItemDef: DestinyVendorItemDefinition | undefined,
+    saleItem: DestinyVendorSaleItemComponent | undefined,
+    itemComponents: DestinyItemComponentSetOfint32 | undefined,
+    mergedCollectibles:
+      | {
+          [hash: number]: DestinyCollectibleComponent;
+        }
+      | undefined,
     canPurchase = true,
     // the character to whom this item is being offered
     characterId?: string
@@ -161,7 +171,7 @@ export class VendorItem {
       this.key.toString(),
       vendorItemDef ? vendorItemDef.quantity : 1,
       mergedCollectibles,
-      undefined,
+      profileResponse?.profileRecords.data,
       // vendor items are wish list enabled!
       true
     );

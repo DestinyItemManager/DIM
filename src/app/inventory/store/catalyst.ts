@@ -30,5 +30,5 @@ export function buildCatalystInfo(
   // 2. could do a second pass on items populating it? rip through all the quest items, find ones whose rewards reference a catalyst, then go back and fix up the items' DimCatalyst info? would need a mapping from item hash to catalyst item hash (which I guess we can match up by name...)
   const unlocked = !(record.state & DestinyRecordState.Obscured);
 
-  return { complete, unlocked };
+  return { complete, unlocked, objectives: record.objectives };
 }

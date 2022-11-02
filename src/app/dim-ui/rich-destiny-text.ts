@@ -42,7 +42,7 @@ const glyphInfos: [exampleReplacement: StringsNeedingReplacement, codepoint: Fon
   ['', FontGlyphs.spear_launcher], // 
   // Map Markers
   ['[Quest]', FontGlyphs.quest], // 
-  ['[Lost Sector]', FontGlyphs.lostsector], // 
+  // ['[Lost Sector]', FontGlyphs.lostsector], // 
   // Breakers
   ['[Disruption]', FontGlyphs.combat_role_overload], // 
   ['[Shield-Piercing]', FontGlyphs.combat_role_pierce], // 

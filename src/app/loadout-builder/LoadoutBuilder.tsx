@@ -1,7 +1,10 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createLoadoutShare } from 'app/dim-api/dim-api';
-import { savedLoadoutParametersSelector } from 'app/dim-api/selectors';
+import {
+  savedLoadoutParametersSelector,
+  savedLoStatConstraintsByClassSelector,
+} from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
@@ -13,6 +16,7 @@ import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-c
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsByItemSelector, loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
@@ -22,7 +26,6 @@ import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
-import { emptyArray } from 'app/utils/empty';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { copyString } from 'app/utils/util';
@@ -30,7 +33,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { allItemsSelector } from '../inventory/selectors';
@@ -42,7 +45,6 @@ import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import TierSelect from './filter/TierSelect';
 import CompareDrawer from './generated-sets/CompareDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
@@ -107,17 +109,17 @@ const halfTierModsSelector = createSelector(
 export default memo(function LoadoutBuilder({
   account,
   stores,
-  preloadedLoadout,
   initialClassType,
-  notes,
   initialLoadoutParameters,
+  notes,
+  preloadedLoadout,
 }: {
+  account: DestinyAccount;
   stores: DimStore[];
   initialClassType: DestinyClass | undefined;
+  initialLoadoutParameters: LoadoutParameters | undefined;
   notes: string | undefined;
   preloadedLoadout: Loadout | undefined;
-  initialLoadoutParameters: LoadoutParameters;
-  account: DestinyAccount;
 }) {
   const defs = useD2Definitions()!;
   const allLoadouts = useSelector(loadoutsSelector);
@@ -126,6 +128,7 @@ export default memo(function LoadoutBuilder({
   const searchFilter = useSelector(searchFilterSelector);
   const searchQuery = useSelector(querySelector);
   const halfTierMods = useSelector(halfTierModsSelector);
+  const savedStatConstraintsByClass = useSelector(savedLoStatConstraintsByClassSelector);
 
   /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
   const items = useMemo(() => {
@@ -148,6 +151,8 @@ export default memo(function LoadoutBuilder({
     return items;
   }, [allItems]);
 
+  const optimizingLoadoutId = preloadedLoadout?.id;
+
   const [
     {
       loadoutParameters,
@@ -161,10 +166,12 @@ export default memo(function LoadoutBuilder({
       compareSet,
     },
     lbDispatch,
-  ] = useLbState(stores, preloadedLoadout, initialClassType, initialLoadoutParameters, defs);
+  ] = useLbState(stores, defs, preloadedLoadout, initialClassType, initialLoadoutParameters);
   const isPhonePortrait = useIsPhonePortrait();
 
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
+
+  const autoStatMods = loadoutParameters.autoStatMods ?? false;
 
   const lockedMods = useMemo(
     () =>
@@ -172,35 +179,70 @@ export default memo(function LoadoutBuilder({
     [defs, loadoutParameters.mods]
   );
 
+  const { modMap: lockedModMap, unassignedMods } = useMemo(
+    () => categorizeArmorMods(lockedMods, allItems),
+    [allItems, lockedMods]
+  );
+
+  const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
+  const classType = selectedStore.classType;
+
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
   const setSetting = useSetSetting();
   useEffect(() => {
+    // If the user is playing with an existing loadout (potentially one they received from a loadout share)
+    // or a direct /optimizer link, do not overwrite the global saved loadout parameters.
+    // If they decide to save that loadout, these will still be saved with the loadout.
+    if (initialLoadoutParameters) {
+      return;
+    }
+
+    const newLoadoutParameters = buildLoadoutParams(
+      loadoutParameters,
+      '', // and the search query
+      // and don't save stat ranges either, just whether they're ignored
+      _.mapValues(statFilters, (m) => ({
+        ignored: m.ignored,
+        min: 0,
+        max: 10,
+      })),
+      statOrder
+    );
     const newSavedLoadoutParams = _.pick(
-      buildLoadoutParams(
-        loadoutParameters,
-        '', // and the search query
-        // and don't save stat ranges either, just whether they're ignored
-        _.mapValues(statFilters, (m) => ({
-          ignored: m.ignored,
-          min: 0,
-          max: 10,
-        })),
-        statOrder
-      ),
-      // Only keep a few parameters
-      'statConstraints',
+      newLoadoutParameters,
       'assumeArmorMasterwork',
       'lockArmorEnergyType'
     );
 
     setSetting('loParameters', newSavedLoadoutParams);
-  }, [setSetting, statFilters, statOrder, loadoutParameters]);
+    setSetting('loStatConstraintsByClass', {
+      ...savedStatConstraintsByClass,
+      [classType]: newLoadoutParameters.statConstraints,
+    });
+  }, [
+    setSetting,
+    statFilters,
+    statOrder,
+    loadoutParameters,
+    optimizingLoadoutId,
+    savedStatConstraintsByClass,
+    classType,
+    preloadedLoadout,
+    initialLoadoutParameters,
+  ]);
+
+  const onCharacterChanged = useCallback(
+    (storeId: string) =>
+      lbDispatch({
+        type: 'changeCharacter',
+        store: stores.find((store) => store.id === storeId)!,
+        savedStatConstraintsByClass,
+      }),
+    [lbDispatch, savedStatConstraintsByClass, stores]
+  );
 
   // TODO: maybe load from URL state async and fire a dispatch?
   // TODO: save params to URL when they change? or leave it for the share...
-
-  const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
-  const classType = selectedStore.classType;
 
   const enabledStats = useMemo(
     () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
@@ -225,7 +267,7 @@ export default memo(function LoadoutBuilder({
       ...loDefaultArmorEnergyRules,
       loadouts: {
         loadoutsByItem,
-        optimizingLoadoutId: preloadedLoadout?.id,
+        optimizingLoadoutId,
       },
     };
     if (loadoutParameters.lockArmorEnergyType !== undefined) {
@@ -234,27 +276,30 @@ export default memo(function LoadoutBuilder({
     if (loadoutParameters.assumeArmorMasterwork !== undefined) {
       armorEnergyRules.assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
     }
+
     const items = filterItems({
       defs,
       items: characterItems,
       pinnedItems,
       excludedItems,
-      lockedMods,
+      lockedModMap,
+      unassignedMods,
       lockedExoticHash,
       armorEnergyRules,
       searchFilter,
     });
     return [armorEnergyRules, items];
   }, [
+    loadoutsByItem,
+    optimizingLoadoutId,
     loadoutParameters.lockArmorEnergyType,
     loadoutParameters.assumeArmorMasterwork,
-    loadoutsByItem,
-    preloadedLoadout?.id,
     defs,
     characterItems,
     pinnedItems,
     excludedItems,
-    lockedMods,
+    lockedModMap,
+    unassignedMods,
     lockedExoticHash,
     searchFilter,
   ]);
@@ -263,12 +308,13 @@ export default memo(function LoadoutBuilder({
     defs,
     selectedStore,
     filteredItems,
-    lockedMods,
+    lockedModMap,
     subclass,
     armorEnergyRules,
     statOrder,
     statFilters,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
+    autoStatMods,
   });
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
@@ -278,12 +324,7 @@ export default memo(function LoadoutBuilder({
     [loadoutParameters, searchQuery, statFilters, statOrder]
   );
 
-  const sets = result?.sets;
-
-  const filteredSets = useMemo(
-    () => sortGeneratedSets(statOrder, enabledStats, sets),
-    [statOrder, enabledStats, sets]
-  );
+  const filteredSets = result?.sets;
 
   const shareBuild = async (notes?: string) => {
     // TODO: replace this with a new share tool
@@ -345,6 +386,7 @@ export default memo(function LoadoutBuilder({
         subclass={subclass}
         lockedExoticHash={lockedExoticHash}
         searchFilter={searchFilter}
+        autoStatMods={autoStatMods}
         lbDispatch={lbDispatch}
       />
       {isPhonePortrait && (
@@ -364,7 +406,7 @@ export default memo(function LoadoutBuilder({
         <CharacterSelect
           selectedStore={selectedStore}
           stores={stores}
-          onCharacterChanged={(storeId: string) => lbDispatch({ type: 'changeCharacter', storeId })}
+          onCharacterChanged={onCharacterChanged}
         />
         {isPhonePortrait ? (
           <CollapsibleTitle sectionId="lb-filter" title={t('LoadoutBuilder.Filter')}>
@@ -440,11 +482,11 @@ export default memo(function LoadoutBuilder({
             </p>
           </div>
         )}
-        {filteredSets && (
+        {result && (
           <GeneratedSets
-            sets={filteredSets}
+            sets={result.sets}
             subclass={subclass}
-            lockedMods={result?.mods ?? emptyArray()}
+            lockedMods={result.mods}
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
@@ -453,7 +495,7 @@ export default memo(function LoadoutBuilder({
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}
-            armorEnergyRules={armorEnergyRules}
+            armorEnergyRules={result.armorEnergyRules}
             notes={notes}
           />
         )}
@@ -480,7 +522,7 @@ export default memo(function LoadoutBuilder({
               set={compareSet}
               selectedStore={selectedStore}
               loadouts={loadouts}
-              initialLoadoutId={preloadedLoadout?.id}
+              initialLoadoutId={optimizingLoadoutId}
               subclass={subclass}
               classType={classType}
               params={params}

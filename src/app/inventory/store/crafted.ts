@@ -33,10 +33,13 @@ function getCraftedSocket(item: DimItem): DimSocket | undefined {
   }
 }
 
-function getCraftingInfo(defs: D2ManifestDefinitions, objectives: DestinyObjectiveProgress[]) {
+function getCraftingInfo(
+  defs: D2ManifestDefinitions,
+  objectives: DestinyObjectiveProgress[]
+): DimCrafted {
   let level;
   let progress;
-  let dateCrafted;
+  let craftedDate;
 
   for (const objective of objectives) {
     const def = defs.Objective.get(objective.objectiveHash);
@@ -49,10 +52,10 @@ function getCraftingInfo(defs: D2ManifestDefinitions, objectives: DestinyObjecti
             ? objective.progress / objective.completionValue
             : undefined;
       } else if (def.uiStyle === DestinyObjectiveUiStyle.CraftingWeaponTimestamp) {
-        dateCrafted = objective.progress ? objective.progress * 1000 : undefined;
+        craftedDate = objective.progress;
       }
     }
   }
 
-  return { level, progress, dateCrafted };
+  return { level, progress, craftedDate };
 }

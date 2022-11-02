@@ -2,7 +2,6 @@ name: PR Test & Lint
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
     paths-ignore:
       - 'docs/**'
 
@@ -15,10 +14,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 18.x
           cache: yarn
@@ -26,37 +25,28 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
-      - name: Jest Test (Forked)
-        if: github.event.pull_request.head.repo.full_name != github.repository
+      - name: Jest Test
         run: yarn jest
 
-      - name: Jest Test (Non-Forked)
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        run: yarn jest --json --outputFile="jest.results.json"
-        continue-on-error: true
-
-      - name: Jest Annotations & Coverage (Non-Forked)
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        uses: mattallty/jest-github-action@v1.0.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v3  # upload test results
+        if: success() || failure()        # run this step even if previous step failed
         with:
-          coverage-comment: false
-          test-command: "echo done"
+          name: test-results
+          path: junit.xml
 
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 18.x
           cache: yarn
 
       - name: Cache ESLint
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-eslint
         with:
@@ -80,7 +70,7 @@ jobs:
 
       - name: Annotate ESLint Results
         if: github.event.pull_request.head.repo.full_name == github.repository
-        uses: ataylorme/eslint-annotate-action@1.2.0
+        uses: ataylorme/eslint-annotate-action@v2
         continue-on-error: true
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"

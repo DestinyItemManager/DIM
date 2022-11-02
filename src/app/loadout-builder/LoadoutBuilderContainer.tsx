@@ -7,12 +7,11 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { setSearchQuery } from 'app/shell/actions';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { createSelector } from 'reselect';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { savedLoadoutParametersSelector } from '../dim-api/selectors';
 import { allItemsSelector, sortedStoresSelector } from '../inventory/selectors';
 import LoadoutBuilder from './LoadoutBuilder';
 
@@ -37,8 +36,6 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   const stores = useSelector(sortedStoresSelector);
   const disabledDueToMaintenance = useSelector(disabledDueToMaintenanceSelector);
   useLoadStores(account);
-
-  const savedLoadoutParameters = useSelector(savedLoadoutParametersSelector);
 
   const searchParams = new URLSearchParams(location.search);
   const urlClassTypeString = searchParams.get('class');
@@ -68,7 +65,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     }
   }, [dispatch, query]);
 
-  if (!stores || !stores.length || !defs) {
+  if (!stores?.length || !defs) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
@@ -87,9 +84,9 @@ export default function LoadoutBuilderContainer({ account }: Props) {
       account={account}
       stores={stores}
       preloadedLoadout={preloadedLoadout}
-      initialClassType={urlClassType}
+      initialClassType={urlClassType ?? preloadedLoadout?.classType}
+      initialLoadoutParameters={urlLoadoutParameters || preloadedLoadout?.parameters}
       notes={urlNotes ?? preloadedLoadout?.notes}
-      initialLoadoutParameters={urlLoadoutParameters || savedLoadoutParameters}
     />
   );
 }

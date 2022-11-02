@@ -270,12 +270,12 @@ function makeFakePursuitItem(
     isEngram: false,
     percentComplete: 0, // filled in later
     hidePercentage: false,
-    talentGrid: null, // filled in later
     stats: null, // filled in later
     objectives: null, // filled in later
     ammoType: DestinyAmmunitionType.None,
     missingSockets: false,
     breakerType: null,
+    foundry: null,
     pursuit: null,
     taggable: false,
     comparable: false,

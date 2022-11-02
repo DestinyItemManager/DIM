@@ -12,6 +12,9 @@
   a {
     color: #eee;
   }
+}
+
+.armory {
   &:hover {
     a {
       text-decoration: underline;
@@ -105,6 +108,7 @@
 .common,
 .exotic {
   color: #222;
+  /* stylelint-disable-next-line no-descending-specificity */
   a {
     color: #222;
   }
@@ -124,6 +128,7 @@
 .pursuit {
   background-color: #333;
   color: #eee;
+  /* stylelint-disable-next-line no-descending-specificity */
   a {
     color: #eee;
   }

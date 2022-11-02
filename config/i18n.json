@@ -9,19 +9,18 @@
     "NotSupported": "We cannot change this type of mod or perk"
   },
   "Accounts": {
-    "Blizzard": "PC",
+    "Choose": "Profiles for {{bungieName}}",
+    "Title": "Accounts",
     "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox",
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance.",
     "MissingTitle": "Account Not Found",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
     "UnlinkTwitch": "Linking your Twitch account to Bungie.net will cause your D1 accounts to stop working.",
     "UnlinkTwitchButton": "Unlink Twitch",
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
-    "ErrorLoadManifest": "Unable to load Destiny info database from Bungie"
+    "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
+    "SwitchAccounts": "You can switch accounts later from the menu in the header."
   },
   "Activities": {
     "Activities": "Activities",
@@ -130,7 +129,7 @@
     "Title": "Something went wrong"
   },
   "ErrorPanel": {
-    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works.",
+    "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
     "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {
@@ -162,20 +161,22 @@
     "Stop": "Stop"
   },
   "FashionDrawer": {
-    "Title": "Choose shaders and ornaments",
     "Accept": "Save fashion",
-    "Reset": "Clear fashion",
-    "Sync": "Sync",
-    "UseEquipped": "Use equipped fashion",
-    "SyncShaders": "Sync Shaders",
-    "SyncShadersTitle": "Use the same shader on all items",
-    "SyncOrnaments": "Sync Ornaments",
-    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
-    "ClearShaders": "Clear Shaders",
-    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "CannotFitOrnament": "This item does not have an ornament socket or you have no ornaments for it.",
+    "CannotFitShader": "This item cannot fit a shader",
     "ClearOrnaments": "Clear Ornaments",
     "ClearOrnamentsTitle": "Reset all ornaments to \"no preference\"",
-    "NoPreference": "No preference - this socket won't be changed"
+    "ClearShaders": "Clear Shaders",
+    "ClearShadersTitle": "Reset all shaders to \"no preference\"",
+    "NoPreference": "No preference - this socket won't be changed",
+    "Reset": "Clear fashion",
+    "Sync": "Sync",
+    "SyncOrnaments": "Sync Ornaments",
+    "SyncOrnamentsTitle": "Use ornaments from the same set on all items, if they're unlocked",
+    "SyncShaders": "Sync Shaders",
+    "SyncShadersTitle": "Use the same shader on all items",
+    "Title": "Choose shaders and ornaments",
+    "UseEquipped": "Use equipped fashion"
   },
   "FileUpload": {
     "Instructions": "Click or drag files"
@@ -184,6 +185,7 @@
     "Adept": "\\(Adept\\)",
     "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "Shows armors based on their category.",
+    "ArmorIntrinsic": "Shows legendary armor which has an intrinsic perk, such as Artifice Armor.",
     "Ascended": "Shows items that have an ascend node which have been ascended.",
     "Unascended": "Shows items that have an ascend node which have not been ascended.",
     "Breaker": "Filter by breaker type or corresponding champion type.",
@@ -214,6 +216,7 @@
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
     "Filter": "Filter",
+    "Foundry": "Shows items by which foundry created them.",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
     "HasMemento": "Shows crafted weapons that currently have a memento inserted.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
@@ -531,6 +534,7 @@
     "ShareBuildTitle": "Loadout Optimizer Settings",
     "ShareBuildWithNotes": "Share With Notes",
     "AddHalfTierMods": "Add +5 Mods",
+    "AutoStatMods": "Add required stat mods",
     "All": "All",
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
@@ -629,8 +633,6 @@
     "AddEquippedItems": "Add Equipped",
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
-    "AlreadyExists": "A loadout with this name already exists for your {{className}}.",
-    "AlreadyExistsGlobal": "A global loadout with this name already exists.",
     "Any": "Any class",
     "AppliedAuto": "Automatic Loadout Builder",
     "Apply": "Apply",
@@ -718,11 +720,17 @@
     "RandomizeSearch": "Randomize from Search",
     "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "Randomize your equipped weapons?",
+    "Redo": "Redo",
     "RestoreAllItems": "All Items",
     "Save": "Save",
     "SaveLoadout": "Save Loadout",
     "SaveAsNew": "Save as New",
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
+    "SaveDisabled": {
+      "AlreadyExists": "Choose a new name for the loadout.",
+      "Empty": "The loadout is empty.",
+      "NoName": "The loadout needs a name."
+    },
     "SortByName": "Sort by name",
     "SortByEditTime": "Sort by last edited",
     "Share": {
@@ -752,6 +760,7 @@
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedMods": "Unassigned Mods",
     "UnassignedModError": "Mod didn't fit on your current armor",
+    "Undo": "Undo",
     "Unequipped": "Unequipped",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
     "WeaponsOnly": "Weapons Only",
@@ -846,7 +855,8 @@
     "TriageTab": "Triage",
     "Vault": "Vault",
     "WeaponLevel": "Weapon Level {{level}}",
-    "AttunementProgress": "Attunement Progress"
+    "AttunementProgress": "Attunement Progress",
+    "CatalystProgress": "Catalyst Progress"
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
@@ -1016,6 +1026,7 @@
     "SizeItem": "Item size",
     "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Stack Size",
+    "SortByArmorElement": "Armor Element (D2)",
     "SortByClassType": "Required Class",
     "SortByCrafted": "Crafted (D2)",
     "SortByDeepsight": "Deepsight (D2)",
@@ -1027,6 +1038,7 @@
     "SortByType": "Type",
     "SortBySeason": "Season (D2)",
     "SortBySunset": "Has Been Sunset (D2)",
+    "SortByWeaponElement": "Damage Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name",
     "SpacesSize": "{{count}} space",

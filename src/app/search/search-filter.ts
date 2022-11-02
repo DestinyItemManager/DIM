@@ -1,5 +1,7 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { errorLog } from 'app/utils/log';
 import { WishListRoll } from 'app/wishlists/types';
@@ -21,10 +23,15 @@ import { LoadoutsByItem, loadoutsByItemSelector } from '../loadout-drawer/select
 import { querySelector } from '../shell/selectors';
 import { wishListFunctionSelector, wishListsByHashSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { FilterContext, ItemFilter } from './filter-types';
+import {
+  canonicalFilterFormats,
+  FilterContext,
+  FilterDefinition,
+  ItemFilter,
+} from './filter-types';
 import { parseQuery, QueryAST } from './query-parser';
 import { SearchConfig, searchConfigSelector } from './search-config';
-import { parseAndValidateQuery } from './search-utils';
+import { parseAndValidateQuery, rangeStringToComparator } from './search-utils';
 
 //
 // Selectors
@@ -48,6 +55,7 @@ export const filterFactorySelector = createSelector(
   itemHashTagsSelector,
   languageSelector,
   customStatsSelector,
+  d2ManifestSelector,
   makeSearchFilterFactory
 );
 
@@ -94,7 +102,8 @@ function makeSearchFilterFactory(
     [itemHash: string]: ItemHashTag;
   },
   language: string,
-  customStats: Settings['customTotalStatsByClass']
+  customStats: Settings['customTotalStatsByClass'],
+  d2Definitions: D2ManifestDefinitions
 ) {
   const filterContext: FilterContext = {
     stores,
@@ -108,6 +117,7 @@ function makeSearchFilterFactory(
     language,
     customStats,
     wishListsByHash,
+    d2Definitions,
   };
 
   return (query: string): ItemFilter => {
@@ -124,7 +134,8 @@ function makeSearchFilterFactory(
       switch (ast.op) {
         case 'and': {
           const fns = _.compact(ast.operands.map(transformAST));
-          return fns.length
+          // Propagate filter errors
+          return fns.length === ast.operands.length
             ? (item) => {
                 for (const fn of fns) {
                   if (!fn(item)) {
@@ -137,7 +148,8 @@ function makeSearchFilterFactory(
         }
         case 'or': {
           const fns = _.compact(ast.operands.map(transformAST));
-          return fns.length
+          // Propagate filter errors
+          return fns.length === ast.operands.length
             ? (item) => {
                 for (const fn of fns) {
                   if (fn(item)) {
@@ -156,28 +168,116 @@ function makeSearchFilterFactory(
           const filterName = ast.type;
           const filterValue = ast.args;
 
-          // "is:" filters are slightly special cased
-          const filterDef = filterName === 'is' ? isFilters[filterValue] : kvFilters[filterName];
-
-          if (filterDef) {
-            // Each filter knows how to generate a standalone item filter function
-            try {
-              return filterDef.filter({ filterValue, ...filterContext });
-            } catch (e) {
-              // TODO: mark invalid - fill out what didn't make sense and where it was in the string
-              errorLog('search', 'Invalid query term', filterName, filterValue, e);
-              return undefined;
+          if (filterName === 'is') {
+            // "is:" filters are slightly special cased
+            const filterDef = isFilters[filterValue];
+            if (filterDef) {
+              try {
+                return filterDef.filter({ lhs: filterName, filterValue, ...filterContext });
+              } catch (e) {
+                // An `is` filter really shouldn't throw an error on filter construction...
+                errorLog(
+                  'search',
+                  'internal error: filter construction threw exception',
+                  filterName,
+                  filterValue,
+                  e
+                );
+              }
             }
+            return undefined;
+          } else {
+            const filterDef = kvFilters[filterName];
+            const matchedFilter = filterDef && matchFilter(filterDef, filterName, filterValue);
+            if (matchedFilter) {
+              try {
+                return matchedFilter(filterContext);
+              } catch (e) {
+                // If this happens, a filter declares more syntax valid than it actually accepts, which
+                // is a bug in the filter declaration.
+                errorLog(
+                  'search',
+                  'internal error: filter construction threw exception',
+                  filterName,
+                  filterValue,
+                  e
+                );
+              }
+            }
+            return undefined;
           }
-
-          // TODO: mark invalid - fill out what didn't make sense and where it was in the string
-          return undefined;
         }
         case 'noop':
           return undefined;
       }
     };
 
-    return transformAST(parsedQuery) ?? (() => true);
+    // If our filter has any invalid parts, the search filter should match no items
+    return transformAST(parsedQuery) ?? (() => false);
   };
+}
+
+/** Matches a non-`is` filter syntax and returns a way to actually create the matched filter function. */
+export function matchFilter(
+  filterDef: FilterDefinition,
+  lhs: string,
+  filterValue: string
+): ((args: FilterContext) => ItemFilter) | undefined {
+  for (const format of canonicalFilterFormats(filterDef.format)) {
+    switch (format) {
+      case 'simple': {
+        break;
+      }
+      case 'query': {
+        if (filterDef.suggestions!.includes(filterValue)) {
+          return (filterContext) =>
+            filterDef.filter({
+              lhs,
+              filterValue,
+              ...filterContext,
+            });
+        } else {
+          break;
+        }
+      }
+      case 'freeform': {
+        return (filterContext) => filterDef.filter({ lhs, filterValue, ...filterContext });
+      }
+      case 'range': {
+        try {
+          const compare = rangeStringToComparator(filterValue, filterDef.overload);
+          return (filterContext) =>
+            filterDef.filter({
+              lhs,
+              filterValue: '',
+              compare,
+              ...filterContext,
+            });
+        } catch {
+          break;
+        }
+      }
+      case 'stat': {
+        const [stat, rangeString] = filterValue.split(':', 2);
+        try {
+          const compare = rangeStringToComparator(rangeString, filterDef.overload);
+          if (!filterDef.validateStat || filterDef.validateStat(stat)) {
+            return (filterContext) =>
+              filterDef.filter({
+                lhs,
+                filterValue: stat,
+                compare,
+                ...filterContext,
+              });
+          } else {
+            break;
+          }
+        } catch {
+          break;
+        }
+      }
+      case 'custom':
+        break;
+    }
+  }
 }
