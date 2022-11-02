@@ -12,13 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 3
           token: ${{ secrets.I18N_PAT }}
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 18.x
           cache: yarn
@@ -29,11 +29,17 @@ jobs:
       - name: yarn i18n
         run: yarn i18n
 
-      - name: Check for new files
-        id: data
-        run: echo ::set-output name=porcelain::"$(git status --porcelain)"
+      - name: porcelain check
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          base: HEAD
+          filters: |
+            changed:
+              - '**'
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        if: steps.data.outputs.porcelain
+      - name: Commit files
+        if: steps.filter.outputs.changed
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Apply i18n updates

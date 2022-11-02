@@ -6,10 +6,10 @@ import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { Settings } from './initial-settings';
 
-export type ItemSortSettings = {
+export interface ItemSortSettings {
   sortOrder: Settings['itemSortOrderCustom'];
   sortReversals: Settings['itemSortReversals'];
-};
+}
 
 const itemSortOrderCustomSelector = (state: RootState) =>
   settingsSelector(state).itemSortOrderCustom;

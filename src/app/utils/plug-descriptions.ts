@@ -130,11 +130,14 @@ function getPerkDescriptions(
   const plugDescription = plug.displayProperties.description || undefined;
 
   function addPerkDescriptions() {
-    // Terrible hack here: Echo of Persistence behaves like Charge Harvester, but uses a number of hidden perks
+    // Terrible hack here: Some subclass fragments behave like Charge Harvester, but use a number of hidden perks
     // (which we can't associate with stats), But we also can't get the relevant classType in here,
     // so just copy the "-10 to the stat that governs your class ability recharge rate" perk from Charge Harvester.
     const perks = [...plug.perks];
-    if (plug.hash === modsWithConditionalStats.echoOfPersistence) {
+    if (
+      plug.hash === modsWithConditionalStats.echoOfPersistence ||
+      plug.hash === modsWithConditionalStats.sparkOfFocus
+    ) {
       const chargeHarvesterDef = defs.InventoryItem.get(modsWithConditionalStats.chargeHarvester);
       perks.push(chargeHarvesterDef.perks[1]);
     }

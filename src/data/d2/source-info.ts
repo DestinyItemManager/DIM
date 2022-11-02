@@ -191,13 +191,6 @@ const D2Sources: {
     ],
     searchString: [],
   },
-  cipher: {
-    itemHashes: [],
-    sourceHashes: [
-      4155903822, // Source: Obtained from Master Cryptarch Rahool.
-    ],
-    searchString: [],
-  },
   compass: {
     itemHashes: [],
     sourceHashes: [
@@ -211,6 +204,19 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       2039343154, // Source: Contact public event.
+    ],
+    searchString: [],
+  },
+  cos: {
+    itemHashes: [
+      947448544, // Shadow of Earth Shell
+      1661191193, // Crown of Sorrow
+      2027598066, // Imperial Opulence
+      2027598067, // Imperial Dress
+    ],
+    sourceHashes: [
+      2399751101, // Acquired from the raid "Crown of Sorrow."
+      3147603678, // Acquired from the raid "Crown of Sorrow."
     ],
     searchString: [],
   },
@@ -483,7 +489,6 @@ const D2Sources: {
       675740011, // Source: "Grasp of Avarice" Dungeon
       1282207663, // Source: Dungeon Duality
       1745960977, // Source: Pit of Heresy
-      2745272818, // Source: Presage Exotic Quest
       2856954949, // Source: "Let Loose Thy Talons" Exotic quest.
       3597879858, // Source: Presage Exotic Quest
     ],
@@ -571,6 +576,7 @@ const D2Sources: {
       3724111213, // Source: Earned during the 2019 Solstice event.
       3736521079, // Reached level 1 in the Ages of Triumph record book.
       3952847349, // Source: The Dawning.
+      4041583267, // Source: Festival of the Lost
       4054646289, // Source: Earned during the seasonal Dawning event.
     ],
     searchString: ['dawning', 'crimsondays', 'solstice', 'fotl', 'revelry', 'games'],
@@ -590,13 +596,6 @@ const D2Sources: {
     sourceHashes: [
       1309588429, // Source: Complete the "Chief Investigator" Triumph
       2055289873, // Source: "The Evidence Board" Exotic quest
-    ],
-    searchString: [],
-  },
-  exoticcipher: {
-    itemHashes: [],
-    sourceHashes: [
-      4155903822, // Source: Obtained from Master Cryptarch Rahool.
     ],
     searchString: [],
   },
@@ -658,6 +657,24 @@ const D2Sources: {
     searchString: [],
   },
   garden: {
+    itemHashes: [
+      4103414242, // Divinity
+    ],
+    sourceHashes: [
+      1491707941, // Source: "Garden of Salvation" raid.
+    ],
+    searchString: [],
+  },
+  gardenofsalvation: {
+    itemHashes: [
+      4103414242, // Divinity
+    ],
+    sourceHashes: [
+      1491707941, // Source: "Garden of Salvation" raid.
+    ],
+    searchString: [],
+  },
+  gos: {
     itemHashes: [
       4103414242, // Divinity
     ],
@@ -740,6 +757,20 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  kf: {
+    itemHashes: [],
+    sourceHashes: [
+      160129377, // Source: "King's Fall" Raid
+    ],
+    searchString: [],
+  },
+  kingsfall: {
+    itemHashes: [],
+    sourceHashes: [
+      160129377, // Source: "King's Fall" Raid
+    ],
+    searchString: [],
+  },
   lastwish: {
     itemHashes: [
       3668669364, // Dreaming Spectrum
@@ -797,6 +828,15 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       2203185162, // Source: Solo Legend and Master Lost Sectors
+    ],
+    searchString: [],
+  },
+  lw: {
+    itemHashes: [
+      3668669364, // Dreaming Spectrum
+    ],
+    sourceHashes: [
+      2455011338, // Source: Last Wish raid.
     ],
     searchString: [],
   },
@@ -894,6 +934,7 @@ const D2Sources: {
       2805208672, // Source: Complete Nightfall strike "The Hollowed Lair."
       2851783112, // Source: Complete Nightfall strike "Lake of Shadows."
       2926805810, // Source: Complete Nightfall strike "Strange Terrain."
+      2982642634, // Source: Season of Plunder Grandmaster Nightfall
       3022766747, // Source: Complete Nightfall strike "The Insight Terminus."
       3067146211, // Source: Complete Nightfall strike "Exodus Crash."
       3142874552, // Source: Nightfall
@@ -927,11 +968,35 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  plunder: {
+    itemHashes: [
+      820890091, // Planck's Stride
+      910459310, // Brigand's Law
+      1298815317, // Brigand's Law
+      2144363076, // Brigand's Law
+      2192971810, // Brigand's Law
+      2559599505, // Planck's Stride
+      2611964593, // Brigand's Law
+      2839071082, // Planck's Stride
+      3417523187, // Planck's Stride
+      3575589837, // Planck's Stride
+      3904579395, // Brigand's Law
+      4229502516, // Planck's Stride
+    ],
+    sourceHashes: [
+      790152021, // Source: Season of Plunder Triumph
+      2982642634, // Source: Season of Plunder Grandmaster Nightfall
+      3265560237, // Source: Cryptic Quatrains III
+      3308438907, // Source: Season of Plunder
+      3740731576, // Source: "A Rising Tide" Mission
+      4199401779, // Source: Season of Plunder Activities
+    ],
+    searchString: [],
+  },
   presage: {
     itemHashes: [],
     sourceHashes: [
       210885364, // Source: Flawless completion of Presage Exotic Quest on Master difficulty.
-      2745272818, // Source: Presage Exotic Quest
       3597879858, // Source: Presage Exotic Quest
     ],
     searchString: [],
@@ -973,6 +1038,7 @@ const D2Sources: {
       4103414242, // Divinity
     ],
     sourceHashes: [
+      160129377, // Source: "King's Fall" Raid
       557146120, // Source: Complete a Guided Game as a guide or seeker.
       654652973, // Guide 25 Last Wish encounters
       707740602, // Guide 10 Last Wish encounters
@@ -1034,6 +1100,17 @@ const D2Sources: {
     searchString: [],
   },
   scourge: {
+    itemHashes: [
+      2557722678, // Midnight Smith
+    ],
+    sourceHashes: [
+      1483048674, // Source: Complete the "Scourge of the Past" raid.
+      2085016678, // Source: Complete the "Scourge of the Past" raid within the first 24 hours after its launch.
+      4246883461, // Source: Found in the "Scourge of the Past" raid.
+    ],
+    searchString: [],
+  },
+  scourgeofthepast: {
     itemHashes: [
       2557722678, // Midnight Smith
     ],
@@ -1123,6 +1200,25 @@ const D2Sources: {
     searchString: [],
   },
   sos: {
+    itemHashes: [],
+    sourceHashes: [
+      1675483099, // Source: Leviathan, Spire of Stars raid lair.
+      2812190367, // Source: Leviathan, Spire of Stars raid lair on Prestige difficulty.
+    ],
+    searchString: [],
+  },
+  sotp: {
+    itemHashes: [
+      2557722678, // Midnight Smith
+    ],
+    sourceHashes: [
+      1483048674, // Source: Complete the "Scourge of the Past" raid.
+      2085016678, // Source: Complete the "Scourge of the Past" raid within the first 24 hours after its launch.
+      4246883461, // Source: Found in the "Scourge of the Past" raid.
+    ],
+    searchString: [],
+  },
+  spireofstars: {
     itemHashes: [],
     sourceHashes: [
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
@@ -1232,6 +1328,13 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  vaultofglass: {
+    itemHashes: [],
+    sourceHashes: [
+      2065138144, // Source: Venus Raid
+    ],
+    searchString: [],
+  },
   vexoffensive: {
     itemHashes: [
       351285766, // Substitutional Alloy Greaves
@@ -1307,7 +1410,21 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  votd: {
+    itemHashes: [],
+    sourceHashes: [
+      1007078046, // Source: "Vow of the Disciple" Raid
+    ],
+    searchString: [],
+  },
   vow: {
+    itemHashes: [],
+    sourceHashes: [
+      1007078046, // Source: "Vow of the Disciple" Raid
+    ],
+    searchString: [],
+  },
+  vowofthedisciple: {
     itemHashes: [],
     sourceHashes: [
       1007078046, // Source: "Vow of the Disciple" Raid

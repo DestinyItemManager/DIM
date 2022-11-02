@@ -145,7 +145,7 @@ function buildDefinedSockets(
 ): DimSockets | null {
   // if we made it here, item has sockets
   const socketDefEntries = itemDef.sockets!.socketEntries;
-  if (!socketDefEntries || !socketDefEntries.length) {
+  if (!socketDefEntries?.length) {
     return null;
   }
 
@@ -182,8 +182,7 @@ function filterReusablePlug(reusablePlug: DimPlug) {
   return (
     !itemCategoryHashes.includes(ItemCategoryHashes.MasterworksMods) &&
     !itemCategoryHashes.includes(ItemCategoryHashes.GhostModsProjections) &&
-    (!reusablePlug.plugDef.plug ||
-      !reusablePlug.plugDef.plug.plugCategoryIdentifier.includes('masterworks.stat'))
+    !reusablePlug.plugDef.plug?.plugCategoryIdentifier.includes('masterworks.stat')
   );
 }
 
@@ -500,8 +499,7 @@ function findEmptyPlug(
   }
 
   if (
-    socketType.plugWhitelist.length &&
-    socketType.plugWhitelist.every((whiteListEntry) =>
+    socketType.plugWhitelist.some((whiteListEntry) =>
       noDefaultPlugIdentifiers.some((id) =>
         typeof id === 'number'
           ? whiteListEntry.categoryHash === id

@@ -8,16 +8,16 @@
     "IrreversiblePlugging": "Você não possui {{plug}}, então não podemos sobrescrevê-lo."
   },
   "Accounts": {
+    "Choose": "Perfis para {{bungieName}}",
     "ErrorLoadInventory": "Não foi possível carregar os seus personagens e inventário de Destiny {{version}}",
     "ErrorLoadManifest": "Não foi possível carregar as informações de banco de dados de Destiny da Bungie",
     "ErrorLoading": "Não foi possível carregar as contas de Destiny da Bungie.net",
+    "MissingAccountWarning": "Caso não encontre sua conta aqui, significa que você ainda não a autorizou através da Bungie.net ou o serviço da Bungie pode estar em manutenção no momento.",
     "MissingDescription": "A conta que você está tentando visualizar não está vinculada em seu perfil da Bungie.net.",
     "MissingTitle": "Conta não encontrada",
     "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente conectar com uma conta diferente.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "SwitchAccounts": "Você poderá alternar entre contas posteriormente através do menu superior.",
+    "Title": "Contas"
   },
   "Activities": {
     "Activities": "Atividades",
@@ -124,7 +124,7 @@
     "Title": "Algo deu errado"
   },
   "ErrorPanel": {
-    "Description": "Este problema possivelmente afeta todos as aplicações de terceiro. Verifique se a Bungie.net carrega ou se o app Destiny 2 Companion funciona como o esperado.",
+    "Description": "Tente carregar seu inventário no app Destiny 2 Companion para saber se a Bungie.net está fora do ar.",
     "Troubleshooting": "Guia para Solução de Problemas"
   },
   "FarmingMode": {
@@ -156,6 +156,8 @@
   },
   "FashionDrawer": {
     "Accept": "Salvar estilo",
+    "CannotFitOrnament": "Este item não possui um soquete de ornamento ou você não tem um ornamento para ele.",
+    "CannotFitShader": "Este item não pode receber um tonalizador",
     "ClearOrnaments": "Limpar Ornamentos",
     "ClearOrnamentsTitle": "Redefinir todos os ornamentos para \"sem preferência\"",
     "ClearShaders": "Limpar Tonalizadores",
@@ -178,6 +180,7 @@
     "AmmoType": "Mostrar itens baseados no seu tipo de munição.",
     "Armor": "Exibe itens que são armaduras.",
     "ArmorCategory": "Mostrar armaduras baseadas na sua categoria.",
+    "ArmorIntrinsic": "Exibe armaduras lendárias que possuem um perk intrínseco, como Armadura de Artífice.",
     "Ascended": "Exibe itens que possuem nódulos ascendentes e que foram ascendidos.",
     "Breaker": "Filtra pelo tipo de quebra-guarda ou tipo de campeão correspondente.",
     "BulkClear": "Etiqueta removida de 1 item.",
@@ -209,6 +212,7 @@
     "Event": "Mostra itens de que evento apareceram no Destiny 2.",
     "ExtraPerk": "Mostra armas Lendárias com valores aleatórios que tenham um perk adicional selecionável.",
     "Filter": "Filtro",
+    "Foundry": "Exibe itens de acordo com sua fonte criadora.",
     "Glimmer": "Exibe itens que são consumíveis que estão relacionados a ganho de lúmen.",
     "HasMemento": "Exibe armas criadas que atualmente possuem um memento inserido.",
     "HasNotes": "Exibe itens que possuem anotações.",
@@ -492,6 +496,7 @@
       "Legendary": "Armaduras lendárias serão consideradas obras-primas com nível de energia 10.",
       "None": "Todas as armaduras serão consideradas com os atributos atuais e terão um nível mínimo de energia de 7."
     },
+    "AutoStatMods": "Adicionar mods de atributos ncessários",
     "ChooseAlternateTitle": "Escolher outro item",
     "CompareLoadout": "Comparar Sets",
     "ConfirmOverwrite": "Você tem certeza que deseja substituir a armadura do set \"{{name}}\" com este novo conjunto de armaduras?",
@@ -549,8 +554,6 @@
     "AddEquippedItems": "Adicionar Equipado",
     "AddNotes": "Adicionar Anotações",
     "AddUnequippedItems": "Adicionar Não Equipados",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "Um set global com este nome já existe.",
     "Any": "Qualquer classe",
     "Apply": "Aplicar",
     "ApplyMods": "Aplicando mods",
@@ -640,10 +643,16 @@
     "RandomizeSearch": "Tornar aleatório a partir da busca",
     "RandomizeSearchPrompt": "Tornar aleatório seus itens equipados a partir da busca \"{{query}}\"?",
     "RandomizeWeapons": "Randomizar suas armas equipadas?",
+    "Redo": "Refazer",
     "RestoreAllItems": "Todos os itens",
     "Save": "Salvar",
     "SaveAsNew": "Salvar como Novo",
     "SaveAsNewTooltip": "Manter o set original e salvar este como novo",
+    "SaveDisabled": {
+      "AlreadyExists": "Escolha um novo nome para o set.",
+      "Empty": "O set está vazio.",
+      "NoName": "O set precisa de um nome."
+    },
     "SaveLoadout": "Salvar Set",
     "Share": {
       "Copied": "Link de compartilhamento copiado para a área de transferência",
@@ -674,6 +683,7 @@
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "UnassignedModError": "Mod incompatível com a armadura atual",
     "UnassignedMods": "Mods não Atribuídos",
+    "Undo": "Desfazer",
     "Unequipped": "Não Equipado",
     "Update": "Salvar Alterações",
     "VendorsCannotEquip": "Você não tem esses itens. Toque para pegar um substituto ou clique no X para remover:",
@@ -707,6 +717,7 @@
     "All": "Tudo",
     "CannotCurrentlyRoll": "Este perk não pode ser utilizado na versão atual deste item.",
     "CantPullFromPostmaster": "Você dever ir à torre para recuperar este item.",
+    "CatalystProgress": "Progresso do Catalisador",
     "CommunityData": "Conhecimento da Comunidade",
     "Consolidate": "Consolidar",
     "CraftingPattern": "Padrão de Criação",
@@ -920,6 +931,7 @@
     "SizeItem": "Tamanho do item",
     "SortByAmmoType": "Tipo de Munição",
     "SortByAmount": "Tamanho da Pilha",
+    "SortByArmorElement": "Elemento da Armadura (D2)",
     "SortByClassType": "Classe Requerida",
     "SortByCrafted": "Produzida (D2)",
     "SortByDeepsight": "Visão Penetrante (D2)",
@@ -931,6 +943,7 @@
     "SortBySunset": "Poder Foi Limitado (D2)",
     "SortByTag": "Etiqueta ({{taglist}})",
     "SortByType": "Tipo",
+    "SortByWeaponElement": "Tipo de Dano",
     "SortCustom": "Ordenação Personalizada",
     "SortName": "Nome",
     "SpacesSize": "{{count}} espaço",
@@ -1056,13 +1069,13 @@
     }
   },
   "StripSockets": {
-    "Action": "Limpar soquetes",
-    "ArmorMods": "{{count}}x mod de Armaduras",
-    "ArtifactMods": "{{count}}x mod de Artefatos",
-    "Button": "Limpar {{numSockets}} soquetes",
+    "Action": "Limpar Soquetes",
+    "ArmorMods": "{{count}}x Mod de Armaduras",
+    "ArtifactMods": "{{count}}x Mod de Artefatos",
+    "Button": "Limpar {{numSockets}} Soquetes",
     "Cancel": "Cancelar",
-    "Choose": "Escolha os soquetes para limpar",
-    "Done": "Soquetes limpados",
+    "Choose": "Escolha os Soquetes para limpar",
+    "Done": "Soquetes limpos",
     "NoSockets": "Nenhum soquete para limpar",
     "Ok": "Ok",
     "Ornaments": "{{count}}x Ornamento",
@@ -1070,7 +1083,7 @@
     "Running": "Limpando soquetes",
     "Shaders": "{{count}}x Tonalizador",
     "Subclass": "{{count}}x Opção de Subclasse",
-    "WeaponMods": "{{count}}x mod de Armas"
+    "WeaponMods": "{{count}}x Mod de Armas"
   },
   "Tags": {
     "Archive": "Arquivar",

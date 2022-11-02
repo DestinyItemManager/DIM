@@ -200,11 +200,11 @@ export function isKillTrackerSocket(socket: DimSocket) {
   return socket.socketDefinition.socketTypeHash === killTrackerSocketTypeHash;
 }
 
-export type KillTracker = {
+export interface KillTracker {
   type: 'pve' | 'pvp';
   count: number;
   trackerDef: PluggableInventoryItemDefinition;
-};
+}
 
 /** returns a socket's kill tracker info */
 const getSocketKillTrackerInfo = (socket: DimSocket | undefined): KillTracker | undefined => {
@@ -336,7 +336,8 @@ export function isPlugStatActive(
   }
   if (
     plugHash === modsWithConditionalStats.chargeHarvester ||
-    plugHash === modsWithConditionalStats.echoOfPersistence
+    plugHash === modsWithConditionalStats.echoOfPersistence ||
+    plugHash === modsWithConditionalStats.sparkOfFocus
   ) {
     // "-10 to the stat that governs your class ability recharge"
     return (

@@ -8,16 +8,16 @@
     "IrreversiblePlugging": "Vous ne possédez pas {{plug}}, donc nous ne le remplacerons pas."
   },
   "Accounts": {
+    "Choose": "Profiles for {{bungieName}}",
     "ErrorLoadInventory": "Impossible de charger vos personnages et inventaire Destiny {{version}}",
     "ErrorLoadManifest": "Impossible de charger la base de données d'information de Destiny depuis Bungie",
     "ErrorLoading": "Impossible de charger les comptes Destiny depuis Bungie.net",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance.",
     "MissingDescription": "Le compte que vous essayez de voir n'est pas un compte associé à votre profil Bungie.net.",
     "MissingTitle": "Compte Introuvable",
     "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "SwitchAccounts": "You can switch accounts later from the menu in the header.",
+    "Title": "Accounts"
   },
   "Activities": {
     "Activities": "Activités",
@@ -75,8 +75,8 @@
     "NotConnected": "Vous n'êtes peut-être pas connecté à internet.",
     "NotConnectedOrBlocked": "Vous n'êtes peut-être pas connecté à internet, ou un bloquer de pub est peut-être en train de bloquer Bungie.net.",
     "NotLoggedIn": "Veuillez autoriser DIM pour pouvoir utiliser cette application.",
-    "Slow": "Bungie.net est lent en ce moment",
-    "SlowDetails": "Bungie.net prend longtemps pour obtenir vos informations. Cela peut arriver lorsque beaucoup d'utilisateurs sont dans le jeu en même temps, ou s'il y a des problèmes avec Bungie.net. Il est aussi possible que votre connection internet ait des problèmes. Nous allons continuer d'essayer d'obtenir vos informations.",
+    "Slow": "Bungie.net actuellement lent",
+    "SlowDetails": "Bungie.net prend longtemps pour obtenir la donnée demandée. Cela peut arriver lorsque beaucoup d'utilisateurs sont dans le jeu en même temps, ou s'il y a des problèmes avec Bungie.net. Il est aussi possible que votre connection internet ait des problèmes. Nous allons continuer d'essayer d'obtenir la donnée.",
     "SlowResponse": "Bungie.net a été trop lent pour répondre.",
     "Throttled": "Bungie.net limite le nombre de requêtes que DIM peut faire.",
     "Twitter": "Tenez-vous informé sur:",
@@ -124,7 +124,7 @@
     "Title": "Une erreur s'est produite"
   },
   "ErrorPanel": {
-    "Description": "Ce problème affecte probablement toutes les applications tiers. Vérifiez si Bungie.net charge, ou si l'application compagnon de Destiny 2 fonctionne.",
+    "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
     "Troubleshooting": "Guide de Dépannage"
   },
   "FarmingMode": {
@@ -156,6 +156,8 @@
   },
   "FashionDrawer": {
     "Accept": "Sauvegarder le style",
+    "CannotFitOrnament": "This item does not have an ornament socket or you have no ornaments for it.",
+    "CannotFitShader": "Cet objet n'accepte pas un shader",
     "ClearOrnaments": "Retirer les ornements",
     "ClearOrnamentsTitle": "Réinitialiser tous les ornements à \"aucune préférence\"",
     "ClearShaders": "Retirer les revêtements",
@@ -178,6 +180,7 @@
     "AmmoType": "Affiche les objets en fonction de leur type de munition.",
     "Armor": "Affiche les objets qui sont des armures.",
     "ArmorCategory": "Affiche les armures selon leur catégorie.",
+    "ArmorIntrinsic": "Affiche les armures qui ont un attribut intrinsèque, comme Armure d'Artifice par exemple.",
     "Ascended": "Affiche les objets qui ont eu une ascension.",
     "Breaker": "Filtrer par type d'anti-champion ou par type de champion.",
     "BulkClear": "Suppression de l'étiquette de 1 objet.",
@@ -209,6 +212,7 @@
     "Event": "Affiche les objets en fonction de l’événement de Destiny 2 pendant lequel ils sont apparu.",
     "ExtraPerk": "Affiche les armes légendaires obtenues avec des attributs aléatoires ayant un attribut sélectionnable supplémentaire.",
     "Filter": "Filtre",
+    "Foundry": "Affiche les objets en fonction de la fonderie qui les a créés.",
     "Glimmer": "Affiche les objets consommables qui ont un rapport avec l'obtention de lumen.",
     "HasMemento": "Affiche les armes fabriquées qui ont un memento.",
     "HasNotes": "Afficher les objets ayant des notes.",
@@ -492,6 +496,7 @@
       "Legendary": "Les armures légendaires utiliseront leurs stats de pièce maîtresse et auront un niveau d'énergie de 10.",
       "None": "Toutes les armures utiliseront leurs stats actuelles et auront un niveau d'énergie minimum de 7."
     },
+    "AutoStatMods": "Ajouter les mods de stat requis",
     "ChooseAlternateTitle": "Choisir un autre objet",
     "CompareLoadout": "Comparer Arsenal",
     "ConfirmOverwrite": "Êtes-vous sûr de vouloir remplacer l'armure dans l'arsenal \"{{name}}\" par ce nouvel ensemble d'armure?",
@@ -549,8 +554,6 @@
     "AddEquippedItems": "Ajouter les objets équipés",
     "AddNotes": "Ajouter des notes",
     "AddUnequippedItems": "Ajouter les objets non équipés",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "Un arsenal global avec ce nom existe déjà.",
     "Any": "N'importe quelle classe",
     "Apply": "Appliquer",
     "ApplyMods": "Ajout des mods",
@@ -640,10 +643,16 @@
     "RandomizeSearch": "Équiper aléatoire à partir de la recherche",
     "RandomizeSearchPrompt": "Équiper au hasard à partir de la recherche \"{{query}}\"?",
     "RandomizeWeapons": "Équiper des armes au hasard ?",
+    "Redo": "Redo",
     "RestoreAllItems": "Tous les objets",
     "Save": "Sauvegarder",
     "SaveAsNew": "Sauvegarder comme nouveau",
     "SaveAsNewTooltip": "Garder l'arsenal original et enregistrer celui-ci comme un nouvel arsenal",
+    "SaveDisabled": {
+      "AlreadyExists": "Choose a new name for the loadout.",
+      "Empty": "The loadout is empty.",
+      "NoName": "The loadout needs a name."
+    },
     "SaveLoadout": "Sauvegarder l'arsenal",
     "Share": {
       "Copied": "Lien de l'arsenal copié dans le presse-papiers",
@@ -674,6 +683,7 @@
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre arsenal demande {{requested}}. Nous avons transféré tous ceux que vous possédiez.",
     "UnassignedModError": "Le mot n'a pas pu être équipé sur votre armure actuelle",
     "UnassignedMods": "Mods non assignés",
+    "Undo": "Undo",
     "Unequipped": "Non équipé",
     "Update": "Enregistrer les modifications",
     "VendorsCannotEquip": "Vous n'avez pas ces objets. Appuyez pour sélectionner un remplacement ou cliquez sur X pour retirer:",
@@ -707,6 +717,7 @@
     "All": "Tous",
     "CannotCurrentlyRoll": "Cet attribut ne peut pas être obtenu sur la version actuelle de cet objet.",
     "CantPullFromPostmaster": "Vous devez aller à la tour pour récupérer cet objet.",
+    "CatalystProgress": "Catalyst Progress",
     "CommunityData": "Informations de la communauté",
     "Consolidate": "Réunir",
     "CraftingPattern": "Modèle de fabrication",
@@ -920,6 +931,7 @@
     "SizeItem": "Taille des objets",
     "SortByAmmoType": "Type de munitions",
     "SortByAmount": "Taille de la pile",
+    "SortByArmorElement": "Élément d'armure (D2)",
     "SortByClassType": "Classe requise",
     "SortByCrafted": "Fabriqué (D2)",
     "SortByDeepsight": "Résonnance (D2)",
@@ -931,6 +943,7 @@
     "SortBySunset": "Limite de puissance (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
+    "SortByWeaponElement": "Type de dégâts",
     "SortCustom": "Tri personnalisé",
     "SortName": "Nom",
     "SpacesSize": "{{count}} espace",

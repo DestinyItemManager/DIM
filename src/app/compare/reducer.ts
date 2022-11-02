@@ -70,7 +70,7 @@ export const compare: Reducer<CompareState, CompareAction> = (
         ...state,
         session: {
           ...state.session,
-          query: `(${action.payload})`,
+          query: action.payload ? `(${action.payload})` : '',
         },
       };
     }

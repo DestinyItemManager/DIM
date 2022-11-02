@@ -6,7 +6,11 @@ import {
   modSlotTags,
   modTypeTags,
 } from 'app/utils/item-utils';
-import { countEnhancedPerks, getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import {
+  countEnhancedPerks,
+  getIntrinsicArmorPerkSocket,
+  getSocketsByCategoryHash,
+} from 'app/utils/socket-utils';
 import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import craftingMementos from 'data/d2/crafting-mementos.json';
 import {
@@ -21,7 +25,6 @@ import {
   emptySocketHashes,
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
-import { rangeStringToComparator } from './range-numeric';
 
 export const modslotFilter: FilterDefinition = {
   keywords: 'modslot',
@@ -185,6 +188,12 @@ const socketFilters: FilterDefinition[] = [
       ),
   },
   {
+    keywords: 'armorintrinsic',
+    description: tl('Filter.ArmorIntrinsic'),
+    destinyVersion: 2,
+    filter: () => (item: DimItem) => Boolean(!item.isExotic && getIntrinsicArmorPerkSocket(item)),
+  },
+  {
     keywords: 'holdsmod',
     description: tl('Filter.HoldsMod'),
     format: 'query',
@@ -276,10 +285,10 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.EnhancedPerk'),
     format: 'range',
     destinyVersion: 2,
-    filter: ({ filterValue }) => {
-      const compare = rangeStringToComparator(filterValue);
-      return (item: DimItem) => item.sockets && compare(countEnhancedPerks(item.sockets));
-    },
+    filter:
+      ({ compare }) =>
+      (item: DimItem) =>
+        item.sockets && compare!(countEnhancedPerks(item.sockets)),
   },
 ];
 

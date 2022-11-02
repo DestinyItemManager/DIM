@@ -5,6 +5,7 @@ import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
@@ -36,6 +37,7 @@ import {
   setName,
   setNotes,
 } from './loadout-drawer-reducer';
+import { useLoadoutEditHistory } from './loadout-edit-history';
 import { addItem$ } from './loadout-events';
 import { Loadout, ResolvedLoadoutItem } from './loadout-types';
 import { createSubclassDefaultSocketOverrides, findSameLoadoutItemIndex } from './loadout-utils';
@@ -44,7 +46,6 @@ import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
 
-// TODO: Consider moving editLoadout/addItemToLoadout into Redux (actions + state)
 // TODO: break out a container from the actual loadout drawer so we can lazy load the drawer
 
 /**
@@ -73,7 +74,8 @@ export default function LoadoutDrawer2({
   const defs = useDefinitions()!;
   const stores = useSelector(storesSelector);
   const [showingItemPicker, setShowingItemPicker] = useState(false);
-  const [loadout, setLoadout] = useState(initialLoadout);
+  const { loadout, setLoadout, undo, redo, canUndo, canRedo } =
+    useLoadoutEditHistory(initialLoadout);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
 
   function withUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
@@ -90,7 +92,7 @@ export default function LoadoutDrawer2({
   const onAddItem = useCallback(
     (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) =>
       setLoadout(addItem(defs, item, equip, socketOverrides)),
-    [defs]
+    [defs, setLoadout]
   );
 
   /**
@@ -137,7 +139,14 @@ export default function LoadoutDrawer2({
     bucket: InventoryBucket;
     equip: boolean;
   }) => {
-    pickLoadoutItem(defs, loadout, bucket, (item) => onAddItem(item, equip), setShowingItemPicker);
+    pickLoadoutItem(
+      defs,
+      loadout,
+      bucket,
+      (item) => onAddItem(item, equip),
+      setShowingItemPicker,
+      store
+    );
   };
 
   const handleRemoveItem = withDefsUpdater(removeItem);
@@ -212,6 +221,10 @@ export default function LoadoutDrawer2({
       isNew={isNew}
       onSaveLoadout={(e, saveAsNew) => handleSaveLoadout(e, onClose, saveAsNew)}
       onDeleteLoadout={() => handleDeleteLoadout(onClose)}
+      undo={undo}
+      redo={redo}
+      hasUndo={canUndo}
+      hasRedo={canRedo}
     />
   );
 
@@ -310,12 +323,12 @@ async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
   add: (item: DimItem) => void,
-  onShowItemPicker: (shown: boolean) => void
+  onShowItemPicker: (shown: boolean) => void,
+  store: DimStore
 ) {
   const loadoutClassType = loadout?.classType;
   const loadoutHasItem = (item: DimItem) =>
     findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
-
   onShowItemPicker(true);
   try {
     const { item } = await showItemPicker({
@@ -326,7 +339,8 @@ async function pickLoadoutItem(
           item.classType === loadoutClassType ||
           item.classType === DestinyClass.Unknown) &&
         itemCanBeInLoadout(item) &&
-        !loadoutHasItem(item),
+        !loadoutHasItem(item) &&
+        (!item.notransfer || item.owner === store.id),
       prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
     });
 

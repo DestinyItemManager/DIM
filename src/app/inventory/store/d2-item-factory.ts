@@ -35,6 +35,8 @@ import {
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
+import extendedBreaker from 'data/d2/extended-breaker.json';
+import extendedFoundry from 'data/d2/extended-foundry.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -55,7 +57,6 @@ import { buildObjectives } from './objectives';
 import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
-import { buildTalentGrid } from './talent-grids';
 
 const collectiblesByItemHash = memoizeOne(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
@@ -551,9 +552,9 @@ export function makeItem(
     availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes,
     // These get filled in later
     breakerType: null,
+    foundry: null,
     percentComplete: 0,
     hidePercentage: false,
-    talentGrid: null,
     stats: null,
     objectives: null,
     pursuit: null,
@@ -647,16 +648,6 @@ export function makeItem(
   }
 
   try {
-    const talentData = itemComponents?.talentGrids?.data;
-    if (talentData) {
-      createdItem.talentGrid = buildTalentGrid(item, talentData, defs);
-    }
-  } catch (e) {
-    errorLog('d2-stores', `Error building talent grid for ${createdItem.name}`, item, itemDef, e);
-    reportException('TalentGrid', e, { itemHash: item.itemHash });
-  }
-
-  try {
     createdItem.objectives = buildObjectives(
       item,
       itemDef,
@@ -729,6 +720,20 @@ export function makeItem(
     if (breakerTypeHash) {
       createdItem.breakerType = defs.BreakerType.get(breakerTypeHash);
     }
+  }
+
+  if (extendedBreaker[createdItem.hash]) {
+    createdItem.breakerType = defs.BreakerType.get(extendedBreaker[createdItem.hash]);
+  }
+
+  if (itemDef.traitIds?.some((trait) => trait.startsWith('foundry.'))) {
+    createdItem.foundry = itemDef.traitIds
+      .filter((trait) => trait.startsWith('foundry.'))[0]
+      .replace('_', '-'); // tex_mechanica
+  }
+
+  if (extendedFoundry[createdItem.hash]) {
+    createdItem.foundry = extendedFoundry[createdItem.hash];
   }
 
   // linear fusion rifles always seem to contain the "fusion rifle" category as well.

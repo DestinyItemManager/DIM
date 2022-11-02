@@ -8,16 +8,16 @@
     "IrreversiblePlugging": "你不拥有{{plug}}，所以我们不会覆盖它。"
   },
   "Accounts": {
+    "Choose": "{{bungieName}} 的档案",
     "ErrorLoadInventory": "无法加载你的《命运 {{version}}》角色和库存",
     "ErrorLoadManifest": "无法从 Bungie 加载命运信息数据库",
     "ErrorLoading": "无法从 Bungie.net 加载命运账户",
+    "MissingAccountWarning": "如果你的账户没有显示，你可能登录了错误的 Bungie.net 账户，或 Bungie.net 可能正在停机维护。",
     "MissingDescription": "你试图查看的账户并未连接到你的 Bungie.net 账户。",
     "MissingTitle": "找不到账户",
     "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "SwitchAccounts": "你可以稍后在标题栏菜单里切换账户。",
+    "Title": "账户"
   },
   "Activities": {
     "Activities": "活动",
@@ -124,7 +124,7 @@
     "Title": "发生了一些错误"
   },
   "ErrorPanel": {
-    "Description": "这个问题可能影响到了所有第三方 App。检查一下 Bungie.net 或命运 2 伴侣 App 是否能正常工作。",
+    "Description": "使用命运同伴 App 来尝试加载你的物品栏。如果出现错误，则 Bungie.net 出现了问题。",
     "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
@@ -156,6 +156,8 @@
   },
   "FashionDrawer": {
     "Accept": "保存外貌",
+    "CannotFitOrnament": "此物品没有皮肤插槽，或你没有此物品的皮肤。",
+    "CannotFitShader": "此物品不能使用着色器",
     "ClearOrnaments": "清除皮肤",
     "ClearOrnamentsTitle": "将所有皮肤重置为“无偏好”",
     "ClearShaders": "清除着色器",
@@ -178,6 +180,7 @@
     "AmmoType": "按照弹药类型显示物品",
     "Armor": "显示护甲物品。",
     "ArmorCategory": "按照类别显示防具.",
+    "ArmorIntrinsic": "显示带有固有特性的传说护甲，例如诡计护甲。",
     "Ascended": "显示可提升光等且已提升的物品。",
     "Breaker": "按照对抗类型或对应的勇士类型筛选。",
     "BulkClear": "移除物品标签",
@@ -209,6 +212,7 @@
     "Event": "显示命运2中特定活动中的物品",
     "ExtraPerk": "显示带有额外可选特性的随机特性传说武器。",
     "Filter": "过滤器",
+    "Foundry": "按武器铸造厂显示物品。",
     "Glimmer": "显示与增加微光获取有关的消耗品。",
     "HasMemento": "显示通过制作获得并装有纪念物的武器。",
     "HasNotes": "显示已有备注的物品",
@@ -492,6 +496,7 @@
       "Legendary": "传说护甲会使用大师之作属性和 10 点能量等级。",
       "None": "所有护甲会使用当前的属性和至少 7 点能量等级。"
     },
+    "AutoStatMods": "添加所需的属性模组",
     "ChooseAlternateTitle": "选择另一个物品",
     "CompareLoadout": "对比配装",
     "ConfirmOverwrite": "你确定要用这套新的护甲来替换配装“{{name}}”里的护甲吗？",
@@ -549,8 +554,6 @@
     "AddEquippedItems": "添加已装备",
     "AddNotes": "添加备注",
     "AddUnequippedItems": "添加未装备的",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "同名全域配装已经存在",
     "Any": "全部职业",
     "Apply": "应用",
     "ApplyMods": "正在应用模组",
@@ -640,10 +643,16 @@
     "RandomizeSearch": "从搜索结果随机选取",
     "RandomizeSearchPrompt": "从“{{query}}”的搜索结果随机配装？",
     "RandomizeWeapons": "确定要将你的武器随机搭配吗？",
+    "Redo": "重做",
     "RestoreAllItems": "所有物品",
     "Save": "保存",
     "SaveAsNew": "另存为",
     "SaveAsNewTooltip": "保留原始配装并将其保存为新配装",
+    "SaveDisabled": {
+      "AlreadyExists": "为该配装选择一个新的名称。",
+      "Empty": "配装为空。",
+      "NoName": "配装需要名称。"
+    },
     "SaveLoadout": "保存配装",
     "Share": {
       "Copied": "已复制配装链接到剪贴板",
@@ -674,6 +683,7 @@
     "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个. 我们已经处理所有已拥有的",
     "UnassignedModError": "模组不适合你当前的护甲",
     "UnassignedMods": "未分配的模组",
+    "Undo": "撤销",
     "Unequipped": "未装备",
     "Update": "保存更改",
     "VendorsCannotEquip": "您没有这些项目。点击来选择一个替换或点击 X 来删除：",
@@ -707,6 +717,7 @@
     "All": "全部",
     "CannotCurrentlyRoll": "此特性不会出现在此物品的当前版本上。",
     "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
+    "CatalystProgress": "催化剂进度",
     "CommunityData": "社区见解",
     "Consolidate": "合并",
     "CraftingPattern": "制作样式",
@@ -920,6 +931,7 @@
     "SizeItem": "物品显示大小",
     "SortByAmmoType": "弹药类型",
     "SortByAmount": "堆叠大小",
+    "SortByArmorElement": "护甲元素（D2）",
     "SortByClassType": "必要的类",
     "SortByCrafted": "已制造（D2）",
     "SortByDeepsight": "深视共振（D2）",
@@ -931,6 +943,7 @@
     "SortBySunset": "已退环境（D2）",
     "SortByTag": "标签{{taglist}}",
     "SortByType": "类型",
+    "SortByWeaponElement": "伤害类型",
     "SortCustom": "自订排序",
     "SortName": "名称",
     "SpacesSize": "{{count}} 个空位",

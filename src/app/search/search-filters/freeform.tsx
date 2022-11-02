@@ -1,7 +1,9 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DIM_LANG_INFOS } from 'app/i18n';
 import { tl } from 'app/i18next-t';
 import { getNotes } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
+import { isD1Item } from 'app/utils/item-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import memoizeOne from 'memoize-one';
@@ -127,7 +129,9 @@ const freeformFilters: FilterDefinition[] = [
       const startWord = startWordRegexp(plainString(filterValue, language), language);
       const test = (s: string) => startWord.test(plainString(s, language));
       return (item) =>
-        (item.talentGrid && testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes)) ||
+        (isD1Item(item) &&
+          item.talentGrid &&
+          testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes)) ||
         (item.sockets && testStringsFromAllSockets(test, item));
     },
   },
@@ -155,7 +159,8 @@ const freeformFilters: FilterDefinition[] = [
       const startWord = startWordRegexp(plainString(filterValue, language), language);
       const test = (s: string) => startWord.test(plainString(s, language));
       return (item) =>
-        testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes, false) ||
+        (isD1Item(item) &&
+          testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes, false)) ||
         testStringsFromAllSockets(test, item, false);
     },
   },
@@ -163,7 +168,7 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'keyword',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filter: ({ filterValue, itemInfos, itemHashTags, language }) => {
+    filter: ({ filterValue, itemInfos, itemHashTags, language, d2Definitions }) => {
       filterValue = plainString(filterValue, language);
       const test = (s: string) => plainString(s, language).includes(filterValue);
       return (item) => {
@@ -173,8 +178,11 @@ const freeformFilters: FilterDefinition[] = [
           test(item.name) ||
           test(item.description) ||
           test(item.typeName) ||
-          testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes) ||
-          testStringsFromAllSockets(test, item)
+          (isD1Item(item) && testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes)) ||
+          testStringsFromAllSockets(test, item) ||
+          (d2Definitions &&
+            (testStringsFromObjectives(test, d2Definitions, item.objectives) ||
+              testStringsFromRewards(test, d2Definitions, item.pursuit)))
         );
       };
     },
@@ -203,8 +211,7 @@ function testStringsFromDisplayProperties<T extends { name: string; description:
 }
 
 /**
- * feed in an object or objects with a `name` and a `description` property,
- * to get an array of just those strings
+ * feed in an object or objects with a `name` and a `description` property
  */
 function testStringsFromDisplayPropertiesMap<T extends { name: string; description: string }>(
   test: (str: string) => boolean,
@@ -219,6 +226,28 @@ function testStringsFromDisplayPropertiesMap<T extends { name: string; descripti
   }
   return displayProperties.some((d) =>
     testStringsFromDisplayProperties(test, d, includeDescription)
+  );
+}
+
+function testStringsFromObjectives(
+  test: (str: string) => boolean,
+  defs: D2ManifestDefinitions,
+  objectives: DimItem['objectives']
+): boolean {
+  return Boolean(
+    objectives?.some((o) => test(defs.Objective.get(o.objectiveHash).progressDescription))
+  );
+}
+
+function testStringsFromRewards(
+  test: (str: string) => boolean,
+  defs: D2ManifestDefinitions,
+  pursuitInfo: DimItem['pursuit']
+): boolean {
+  return Boolean(
+    pursuitInfo?.rewards.some((r) =>
+      testStringsFromDisplayProperties(test, defs.InventoryItem.get(r.itemHash).displayProperties)
+    )
   );
 }
 

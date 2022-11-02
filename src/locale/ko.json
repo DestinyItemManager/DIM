@@ -8,16 +8,16 @@
     "IrreversiblePlugging": "{{plug}}을(를) 소지하고 있지 않으므로 덮어쓰지 않습니다."
   },
   "Accounts": {
+    "Choose": "{{bungieName}} 프로필",
     "ErrorLoadInventory": "데스티니 {{version}} 캐릭터와 소지품 불러오기 실패",
     "ErrorLoadManifest": "Bungie에서 데스티니 정보 데이터베이스 불러오기 실패",
     "ErrorLoading": "Bungie.net에서 데스티니 계정 불러오기 실패",
+    "MissingAccountWarning": "여기에 계정이 보이지 않는다면 잘못된 Bungie.net 계정으로 로그인하였거나 Bungie.net이 점검 중일 수 있습니다.",
     "MissingDescription": "지금 보려고 하는 계정은 Bungie.net 프로필과 연결된 계정이 아닙니다.",
     "MissingTitle": "계정을 찾을 수 없습니다",
     "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해보세요.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "SwitchAccounts": "헤더의 메뉴에서 계정을 전환할 수 있습니다.",
+    "Title": "계정"
   },
   "Activities": {
     "Activities": "활동",
@@ -124,7 +124,7 @@
     "Title": "문제가 발생했습니다"
   },
   "ErrorPanel": {
-    "Description": "모든 서드파티 앱에 영향을 주는 문제일 수 있습니다. Bungie.net이나 데스티니 가디언즈 컴패니언 앱이 동작하는지 확인하세요.",
+    "Description": "Destiny 2 컴패니언 앱에서 소지품을 불러와서 Bungie.net 서버 상태를 확인하세요.",
     "Troubleshooting": "문제 해결 가이드"
   },
   "FarmingMode": {
@@ -156,6 +156,8 @@
   },
   "FashionDrawer": {
     "Accept": "패션 저장",
+    "CannotFitOrnament": "이 아이템은 장식 소켓이 없거나 해당하는 장식을 소지하고 있지 않습니다.",
+    "CannotFitShader": "이 아이템에 안료를 적용할 수 없음",
     "ClearOrnaments": "장식 초기화",
     "ClearOrnamentsTitle": "모든 장식을 \"선택 안 함\"으로 초기화",
     "ClearShaders": "안료 초기화",
@@ -178,6 +180,7 @@
     "AmmoType": "탄약 유형에 따른 아이템 표시",
     "Armor": "방어구인 아이템 표시",
     "ArmorCategory": "카테고리를 기준으로 방어구 표시",
+    "ArmorIntrinsic": "계략 방어구와 같이 본질 특성이 있는 전설 방어구 표시",
     "Ascended": "주입 노드가 있으며 주입이 된 아이템 표시",
     "Breaker": "차단기나 용사 종류에 따라 필터링",
     "BulkClear": "1개의 아이템에서 태그를 제거하였습니다.",
@@ -209,6 +212,7 @@
     "Event": "데스티니 2의 특정 이벤트에서 나온 아이템 표시",
     "ExtraPerk": "추가로 선택 가능한 특성이 있는 무작위 특성의 전설 무기 표시",
     "Filter": "필터",
+    "Foundry": "제조사에 따라 아이템 표시",
     "Glimmer": "미광체 수급에 관련된 소모품 표시",
     "HasMemento": "유품이 삽입된 제작된 무기 표시",
     "HasNotes": "메모가 추가된 아이템 표시",
@@ -492,6 +496,7 @@
       "Legendary": "전설 방어구의 걸작 능력치를 사용하며 10의 에너지 수용량을 가집니다.",
       "None": "모든 방어구의 현재 능력치를 사용하며 최소 7의 에너지 수용량을 가집니다."
     },
+    "AutoStatMods": "필요한 능력치 개조 부품 추가",
     "ChooseAlternateTitle": "다른 아이템 선택",
     "CompareLoadout": "로드아웃 비교",
     "ConfirmOverwrite": "로드아웃 \"{{name}}\"의 방어구를 새로운 방어구 조합으로 변경하시겠습니까?",
@@ -549,8 +554,6 @@
     "AddEquippedItems": "장착된 아이템 추가",
     "AddNotes": "메모 추가",
     "AddUnequippedItems": "장착하지 않은 아이템 추가",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "동일한 이름을 가진 공용 로드아웃이 존재합니다.",
     "Any": "모든 직업",
     "Apply": "적용",
     "ApplyMods": "개조 부품 적용 중",
@@ -640,10 +643,16 @@
     "RandomizeSearch": "검색 결과에서 무작위화",
     "RandomizeSearchPrompt": "\"{{query}}\"로 검색된 결과에서 무작위로 장착하시겠습니까?",
     "RandomizeWeapons": "장착된 무기를 무작위로 설정하시겠습니까?",
+    "Redo": "다시 실행",
     "RestoreAllItems": "모든 아이템",
     "Save": "저장",
     "SaveAsNew": "새로 저장",
     "SaveAsNewTooltip": "기존 로드아웃을 유지하고 새로운 로드아웃으로 저장",
+    "SaveDisabled": {
+      "AlreadyExists": "새 로드아웃 이름을 입력해주세요.",
+      "Empty": "로드아웃이 비어있습니다.",
+      "NoName": "로드아웃의 이름이 필요합니다."
+    },
     "SaveLoadout": "로드아웃 저장",
     "Share": {
       "Copied": "클립보드로 로드아웃 주소가 복사됨",
@@ -674,6 +683,7 @@
     "TooManyRequested": "{{total}}개의 {{itemname}}을(를) 가지고 있으나 로드아웃이 {{requested}}개를 필요로 합니다. 가지고 있는 모든 것을 옮겼습니다.",
     "UnassignedModError": "개조 부품이 현재 방어구에 맞지 않음",
     "UnassignedMods": "할당되지 않은 개조 부품",
+    "Undo": "되돌리기",
     "Unequipped": "장착하지 않음",
     "Update": "변경사항 저장",
     "VendorsCannotEquip": "이 아이템을 소유하고 있지 않습니다. 클릭하여 대체품을 선택하거나 X를 눌러 제거합니다:",
@@ -707,6 +717,7 @@
     "All": "전체",
     "CannotCurrentlyRoll": "이 특성은 현재 버전의 아이템에서 얻을 수 없습니다.",
     "CantPullFromPostmaster": "이 아이템을 회수하려면 탑으로 가야합니다.",
+    "CatalystProgress": "촉매제 진척도",
     "CommunityData": "커뮤니티 인사이트",
     "Consolidate": "모으기",
     "CraftingPattern": "형성 패턴",
@@ -920,6 +931,7 @@
     "SizeItem": "아이템 크기",
     "SortByAmmoType": "탄약 유형",
     "SortByAmount": "수량",
+    "SortByArmorElement": "방어구 에너지 유형 (D2)",
     "SortByClassType": "필요한 직업",
     "SortByCrafted": "제작됨 (D2)",
     "SortByDeepsight": "심안 (D2)",
@@ -931,6 +943,7 @@
     "SortBySunset": "최대 전투력이 제한됨 (D2)",
     "SortByTag": "태그 ({{taglist}})",
     "SortByType": "유형",
+    "SortByWeaponElement": "피해 유형",
     "SortCustom": "사용자 지정 정렬",
     "SortName": "이름",
     "SpacesSize": "{{count}}개의 공간",

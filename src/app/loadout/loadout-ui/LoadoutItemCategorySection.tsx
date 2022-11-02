@@ -32,7 +32,7 @@ export default function LoadoutItemCategorySection({
   subclass,
   storeId,
   items,
-  savedMods,
+  allMods,
   modsByBucket,
   loadout,
   hideOptimizeArmor,
@@ -41,7 +41,7 @@ export default function LoadoutItemCategorySection({
   subclass?: ResolvedLoadoutItem;
   storeId: string;
   items?: ResolvedLoadoutItem[];
-  savedMods: PluggableInventoryItemDefinition[];
+  allMods: PluggableInventoryItemDefinition[];
   modsByBucket: {
     [bucketHash: number]: number[];
   };
@@ -96,7 +96,7 @@ export default function LoadoutItemCategorySection({
             <div className="stat-bars destiny2">
               <LoadoutStats
                 showTier
-                stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, savedMods)}
+                stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods)}
               />
             </div>
           )}

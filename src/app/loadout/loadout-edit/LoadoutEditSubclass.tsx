@@ -6,7 +6,7 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import clsx from 'clsx';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import EmptySubclass from '../loadout-ui/EmptySubclass';
 import { getSubclassPlugs } from '../loadout-ui/LoadoutSubclassSection';
 import PlugDef from '../loadout-ui/PlugDef';
@@ -51,7 +51,7 @@ export default function LoadoutEditSubclass({
                   item={subclass.item}
                   // don't show the selected Super ability because we are displaying the Super ability plug next
                   // to the subclass icon
-                  selectedSuperDisplay="disabled"
+                  hideSelectedSuper
                 />
               )}
             </ItemPopupTrigger>

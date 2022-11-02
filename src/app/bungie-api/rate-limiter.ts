@@ -1,8 +1,13 @@
 import _ from 'lodash';
 
+/**
+ * A rate limiter queue applies when the path of a request matches its regex. It will implement the semantics of
+ * Bungie.net's rate limiter (expressed in API docs via ThrottleSecondsBetweenActionPerUser), which requires that
+ * we wait a specified amount between certain actions.
+ */
 export class RateLimiterQueue {
   pattern: RegExp;
-  requestLimit: number;
+  /** In milliseconds */
   timeLimit: number;
   queue: {
     fetcher: typeof fetch;
@@ -13,13 +18,13 @@ export class RateLimiterQueue {
   }[] = [];
   /** number of requests in the current period */
   count = 0;
+  /** The time the latest request finished */
   lastRequestTime = window.performance.now();
   timer?: number;
 
-  constructor(pattern: RegExp, requestLimit: number, timeLimit: number) {
+  constructor(pattern: RegExp, timeLimit: number) {
     this.pattern = pattern;
-    this.requestLimit = requestLimit;
-    this.timeLimit = timeLimit || 1000;
+    this.timeLimit = timeLimit;
   }
 
   matches(url: string) {
@@ -62,13 +67,20 @@ export class RateLimiterQueue {
   }
 
   processQueue() {
-    while (this.queue.length) {
+    if (this.queue.length) {
       if (this.canProcess()) {
         const config = this.queue.shift()!;
-        config.fetcher(config.request, config.options).then(config.resolver, config.rejecter);
+        this.count++;
+        config
+          .fetcher(config.request, config.options)
+          .finally(() => {
+            this.count--;
+            this.lastRequestTime = window.performance.now();
+            this.processQueue();
+          })
+          .then(config.resolver, config.rejecter);
       } else {
         this.scheduleProcessing();
-        return;
       }
     }
   }
@@ -76,19 +88,8 @@ export class RateLimiterQueue {
   // Returns whether or not we can process a request right now. Mutates state.
   canProcess() {
     const currentRequestTime = window.performance.now();
-
     const timeSinceLastRequest = currentRequestTime - this.lastRequestTime;
-    if (timeSinceLastRequest >= this.timeLimit) {
-      this.lastRequestTime = currentRequestTime;
-      this.count = 0;
-    }
-
-    if (this.count < this.requestLimit) {
-      this.count++;
-      return true;
-    } else {
-      return false;
-    }
+    return timeSinceLastRequest >= this.timeLimit && this.count === 0;
   }
 }
 

@@ -248,7 +248,7 @@ export function parseQuery(query: string): QueryAST {
       return { op: 'noop' };
     }
   } catch (e) {
-    return { op: 'noop' };
+    return { op: 'noop', error: e };
   }
   const ast = parse(tokens);
   return ast;
@@ -398,7 +398,7 @@ export function* lexer(query: string): Generator<Token> {
       } else if ((match = extract(filterArgs)) !== undefined) {
         args = match;
       } else {
-        throw new Error('missing keyword arguments for ' + match);
+        throw new Error('missing keyword arguments for ' + keyword);
       }
 
       yield ['filter', keyword, args];

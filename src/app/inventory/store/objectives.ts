@@ -35,7 +35,7 @@ export function buildObjectives(
       ? uninstancedItemObjectives[item.itemHash]
       : [];
 
-  if (!objectives || !objectives.length) {
+  if (!objectives?.length) {
     // Hmm, it should have objectives
     if (itemDef.objectives) {
       return itemDef.objectives.objectiveHashes.map((o) => ({

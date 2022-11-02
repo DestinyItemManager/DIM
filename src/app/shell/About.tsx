@@ -4,6 +4,7 @@ import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { UAParser } from 'ua-parser-js';
 import logo from '../../images/logo-light.svg';
 import ExternalLink from '../dim-ui/ExternalLink';
 import styles from './About.m.scss';
@@ -36,6 +37,16 @@ const twitterLink = 'https://twitter.com/ThisIsDIM';
 const redditLink = 'https://destinyitemmanager.reddit.com';
 const discordLink = 'https://discord.gg/UK2GWC7';
 const wikiLink = 'https://github.com/DestinyItemManager/DIM/wiki';
+
+const systemInfo = getSystemInfo();
+
+function getSystemInfo() {
+  const parser = new UAParser();
+  const { name: browserName, version: browserVersion } = parser.getBrowser();
+  const { name: osName, version: osVersion } = parser.getOS();
+  const info = `${browserName} ${browserVersion} - ${osName} ${osVersion}`;
+  return info;
+}
 
 export default function About() {
   const iOSApp = document.cookie.includes('app-platform=iOS App Store;');
@@ -71,6 +82,8 @@ export default function About() {
             })}
           </span>
         </Link>
+        <br />
+        <span>{systemInfo}</span>
       </div>
       <p>{t('Views.About.HowItsMade')}</p>
       {$DIM_FLAVOR === 'release' && <p>{t(`Views.About.Schedule.release`)}</p>}

@@ -8,16 +8,16 @@
     "IrreversiblePlugging": "No tienes ningún {{plug}}, así que no lo sobrescribiremos."
   },
   "Accounts": {
+    "Choose": "Perfiles para {{bungieName}}",
     "ErrorLoadInventory": "No se pueden cargar tus personajes e inventario de Destiny {{version}}",
     "ErrorLoadManifest": "La información de la base de datos de Destiny desde Bungie no se pudo cargar",
     "ErrorLoading": "No se pudieron cargar cuentas de Destiny desde Bungie.net",
+    "MissingAccountWarning": "Si no ves tu cuenta aquí, es posible que no hayas iniciado sesión con la cuenta de Bungie.net correcta, o es posible que Bungie.net no funcione por mantenimiento.",
     "MissingDescription": "La cuenta que estás intentando ver no es una cuenta vinculada a tu perfil de Bungie.net.",
     "MissingTitle": "Cuenta no encontrada",
     "NoCharacters": "No tienes personajes de Destiny asociados con esta cuenta de Bungie.net. Inicia sesión con una cuenta diferente.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "SwitchAccounts": "Puedes cambiar de cuentas más tarde desde el menú en el encabezado.",
+    "Title": "Cuentas"
   },
   "Activities": {
     "Activities": "Actividades",
@@ -124,7 +124,7 @@
     "Title": "Algo salió mal"
   },
   "ErrorPanel": {
-    "Description": "Esto es posible que sea un problema que afecta a todas las aplicaciones de terceros. Comprueba que Bungie.net carga o la Aplicación del Acompañante de Destiny 2 funciona.",
+    "Description": "Intenta cargar tu inventario en la Aplicación del Acompañante de Destiny 2 para ver si Bungie está funcionando.",
     "Troubleshooting": "Guía de Solución de Problemas"
   },
   "FarmingMode": {
@@ -156,6 +156,8 @@
   },
   "FashionDrawer": {
     "Accept": "Guardar cosméticos",
+    "CannotFitOrnament": "Este objeto no tiene ranura para diseño o no tienes diseños para él.",
+    "CannotFitShader": "A este objeto no le encaja ningún shader",
     "ClearOrnaments": "Limpiar Diseños",
     "ClearOrnamentsTitle": "Reiniciar todos los diseños a \"sin preferencia\"",
     "ClearShaders": "Limpiar Shaders",
@@ -178,6 +180,7 @@
     "AmmoType": "Mostrar objetos basados en su tipo de munición.",
     "Armor": "Muestra objetos que son armaduras.",
     "ArmorCategory": "Muestra armaduras basadas en su categoría.",
+    "ArmorIntrinsic": "Muestra armadura legendaria que tenga un perk intrínseco, como Armadura Artificiosa.",
     "Ascended": "Muestra objetos que tengan un nodo ascendente en el que haya sido ascendido.",
     "Breaker": "Filtrar por tipo de triturador o el tipo de campeón correspondiente.",
     "BulkClear": "Etiqueta eliminada de 1 objeto.",
@@ -209,6 +212,7 @@
     "Event": "Muestra objetos en que evento de Destiny 2 aparecieron.",
     "ExtraPerk": "Muestra armas legendarias con rolls aleatorios con una perk adicional seleccionable.",
     "Filter": "Filtro",
+    "Foundry": "Muestra objetos basados en la forja que los creó.",
     "Glimmer": "Muestra objetos que son consumibles que están relacionados con la ganancia de lumen.",
     "HasMemento": "Muestra armas creadas que en estos momentos tienen un recuerdo insertado.",
     "HasNotes": "Muestra objetos que contengan notas.",
@@ -492,6 +496,7 @@
       "Legendary": "Las armaduras legendarias usarán estadísticas de obra maestra completa y tendrán un nivel de energía de 10.",
       "None": "Todas las armaduras usarán sus estadísticas actuales y tendrán un nivel de energía mínimo de 7."
     },
+    "AutoStatMods": "Añadir mods de estadísticas requeridos",
     "ChooseAlternateTitle": "Elige otro objeto",
     "CompareLoadout": "Comparar Equipación",
     "ConfirmOverwrite": "¿Estás seguro de que quieres reemplazar la armadura en la equipación \"{{name}}\" con este nuevo set de armadura?",
@@ -549,8 +554,6 @@
     "AddEquippedItems": "Añadir Equipados",
     "AddNotes": "Agregar nota",
     "AddUnequippedItems": "Añadir Desequipados",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "Una equipación global ya existe con este nombre.",
     "Any": "Cualquier clase",
     "Apply": "Aplicar",
     "ApplyMods": "Aplicando mods",
@@ -640,10 +643,16 @@
     "RandomizeSearch": "Aleatorizar desde la Búsqueda",
     "RandomizeSearchPrompt": "Aleatorizar tus objetos equipados desde la búsqueda \"{{query}}\"?",
     "RandomizeWeapons": "¿Aleatorizar tus armas equipadas?",
+    "Redo": "Rehacer",
     "RestoreAllItems": "Todos los objetos",
     "Save": "Guardar",
     "SaveAsNew": "Guardar como Nuevo",
     "SaveAsNewTooltip": "Mantener la equipación original y guardar esta como una nueva",
+    "SaveDisabled": {
+      "AlreadyExists": "Elige un nuevo nombre para la equipación.",
+      "Empty": "La equipación está vacía.",
+      "NoName": "Esta equipación necesita un nombre."
+    },
     "SaveLoadout": "Guardar Equipación",
     "Share": {
       "Copied": "Enlace copiado de la equipación al portapapeles",
@@ -674,6 +683,7 @@
     "TooManyRequested": "Tienes {{total}}{{itemname}} pero tu equipación pregunta por {{requested}}. Transferimos todo lo que tenías.",
     "UnassignedModError": "El mod no encajó en tu armadura actual",
     "UnassignedMods": "Mods sin Asignar",
+    "Undo": "Deshacer",
     "Unequipped": "Desequipado",
     "Update": "Guardar Cambios",
     "VendorsCannotEquip": "No tienes estos objetos. Pulsa para escoger otro reemplazo o haz click en la X para quitar:",
@@ -707,6 +717,7 @@
     "All": "Todo",
     "CannotCurrentlyRoll": "Este perk no se puede obtener en la versión actual de este objeto.",
     "CantPullFromPostmaster": "Debes ir a la torre para recuperar este objeto.",
+    "CatalystProgress": "Progreso del Catalizador",
     "CommunityData": "Perspectiva de la Comunidad",
     "Consolidate": "Consolidar",
     "CraftingPattern": "Patrón de Fabricación",
@@ -920,6 +931,7 @@
     "SizeItem": "Tamaño de objeto",
     "SortByAmmoType": "Tipo de Munición",
     "SortByAmount": "Tamaño de la Pila",
+    "SortByArmorElement": "Elemento de Armadura (D2)",
     "SortByClassType": "Clase Requerida",
     "SortByCrafted": "Creadas (D2)",
     "SortByDeepsight": "Visión Profunda (D2)",
@@ -931,6 +943,7 @@
     "SortBySunset": "Ha Sido Jubilada (D2)",
     "SortByTag": "Etiqueta ({{taglist}})",
     "SortByType": "Tipo",
+    "SortByWeaponElement": "Tipo de Daño",
     "SortCustom": "Orden Personalizado",
     "SortName": "Nombre",
     "SpacesSize": "{{count}} espacio",

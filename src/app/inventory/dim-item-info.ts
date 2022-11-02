@@ -94,7 +94,9 @@ export const vaultDisplacePriority: (TagValue | 'none')[] = [
   'archive',
 ];
 
-export type ItemInfos = { [itemId: string]: ItemAnnotation };
+export interface ItemInfos {
+  [itemId: string]: ItemAnnotation;
+}
 
 export interface TagInfo {
   type?: TagValue;

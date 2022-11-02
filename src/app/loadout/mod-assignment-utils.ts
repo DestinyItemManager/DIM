@@ -26,7 +26,7 @@ import _ from 'lodash';
 import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
 import { activityModPlugCategoryHashes } from './known-values';
 import { generateModPermutations } from './mod-permutations';
-import { bucketHashToPlugCategoryHash, getItemEnergyType } from './mod-utils';
+import { getItemEnergyType, plugCategoryHashToBucketHash } from './mod-utils';
 
 /**
  * a temporary structure, keyed by item ID,
@@ -39,6 +39,82 @@ interface ModAssignments {
     assigned: PluggableInventoryItemDefinition[];
     /* which mods didn't meet the conditions to be assigned to this item */
     unassigned: PluggableInventoryItemDefinition[];
+  };
+}
+
+/**
+ * Armor mods, split into general, combat, activity, and bucket-specific mods.
+ */
+export interface ModMap {
+  allMods: PluggableInventoryItemDefinition[];
+  bucketSpecificMods: { [bucketHash: number]: PluggableInventoryItemDefinition[] };
+  generalMods: PluggableInventoryItemDefinition[];
+  combatMods: PluggableInventoryItemDefinition[];
+  activityMods: PluggableInventoryItemDefinition[];
+}
+
+/**
+ * Categorizes `allMods` into mod categories according to the `ModMap`. Pass a list of `referenceItems`
+ * to eagerly filter out mods that can't fit into any of these items (`unassignedMods`), this is typically
+ * needed in order to exclude deprecated (artifact) mods.
+ */
+export function categorizeArmorMods(
+  allMods: PluggableInventoryItemDefinition[],
+  referenceItems: DimItem[]
+): { modMap: ModMap; unassignedMods: PluggableInventoryItemDefinition[] } {
+  const generalMods: PluggableInventoryItemDefinition[] = [];
+  const combatMods: PluggableInventoryItemDefinition[] = [];
+  const activityMods: PluggableInventoryItemDefinition[] = [];
+  const bucketSpecificMods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] } = {};
+
+  const validMods: PluggableInventoryItemDefinition[] = [];
+  const unassignedMods: PluggableInventoryItemDefinition[] = [];
+
+  const allActiveModSockets = referenceItems
+    .flatMap((i) => getSocketsByCategoryHash(i.sockets, SocketCategoryHashes.ArmorMods))
+    .filter((socket) => socket.plugged);
+
+  // Divide up the locked mods into general, combat and activity mod arrays, and put
+  // bucket specific mods into a map keyed by bucket hash.
+  for (const plannedMod of allMods) {
+    const pch = plannedMod.plug.plugCategoryHash;
+    if (!allActiveModSockets.some((s) => plugFitsIntoSocket(s, plannedMod.hash))) {
+      // Eagerly reject mods that can't possibly fit into any socket at all under
+      // any circumstances, such as deprecated (artifact) armor mods.
+      // Mod assignment code relies on manually curated socket/plug metadata, so
+      // it doesn't check whether a plug actually appears in the list of possible plugs.
+      // Deprecated combat style armor mods in particular are indistinguishable from
+      // non-deprecated ones by their definitions alone.
+      unassignedMods.push(plannedMod);
+    } else if (pch === armor2PlugCategoryHashesByName.general) {
+      generalMods.push(plannedMod);
+      validMods.push(plannedMod);
+    } else if (combatCompatiblePlugCategoryHashes.includes(pch)) {
+      combatMods.push(plannedMod);
+      validMods.push(plannedMod);
+    } else if (activityModPlugCategoryHashes.includes(pch)) {
+      activityMods.push(plannedMod);
+      validMods.push(plannedMod);
+    } else {
+      const bucketHash = plugCategoryHashToBucketHash[pch];
+      if (bucketHash !== undefined) {
+        (bucketSpecificMods[bucketHash] ??= []).push(plannedMod);
+        validMods.push(plannedMod);
+      } else {
+        unassignedMods.push(plannedMod);
+      }
+    }
+  }
+
+  return {
+    modMap: {
+      allMods: validMods,
+      generalMods,
+      combatMods,
+      activityMods,
+      bucketSpecificMods,
+    },
+    unassignedMods,
   };
 }
 
@@ -99,45 +175,14 @@ export function fitMostMods({
     (item) => getSpecialtySocketMetadatas(item)
   );
 
-  const generalMods: PluggableInventoryItemDefinition[] = [];
-  const combatMods: PluggableInventoryItemDefinition[] = [];
-  const activityMods: PluggableInventoryItemDefinition[] = [];
+  const {
+    modMap: { activityMods, combatMods, generalMods, bucketSpecificMods },
+    unassignedMods,
+  } = categorizeArmorMods(plannedMods, items);
 
-  const otherMods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] } = {};
-  const unassignedMods: PluggableInventoryItemDefinition[] = [];
-
-  const allActiveModSockets = items
-    .flatMap((i) => getSocketsByCategoryHash(i.sockets, SocketCategoryHashes.ArmorMods))
-    .filter((socket) => socket.plugged);
-
-  // Divide up the locked mods into general, combat and activity mod arrays. Also we
-  // take the bucket specific mods and put them in a map of item ids to mods so
-  // we can calculate the used energy values for each item
-  for (const plannedMod of plannedMods) {
-    if (!allActiveModSockets.some((s) => plugFitsIntoSocket(s, plannedMod.hash))) {
-      // Eagerly reject mods that can't possibly fit into any socket at all under
-      // any circumstances, such as deprecated (artifact) armor mods.
-      // The mod assignment code below relies on manually curated socket/plug metadata, so
-      // it doesn't check whether a plug actually appears in the list of possible plugs.
-      // Deprecated combat style armor mods in particular are indistinguishable from
-      // non-deprecated ones by their definitions alone.
-      unassignedMods.push(plannedMod);
-    } else if (plannedMod.plug.plugCategoryHash === armor2PlugCategoryHashesByName.general) {
-      generalMods.push(plannedMod);
-    } else if (combatCompatiblePlugCategoryHashes.includes(plannedMod.plug.plugCategoryHash)) {
-      combatMods.push(plannedMod);
-    } else if (activityModPlugCategoryHashes.includes(plannedMod.plug.plugCategoryHash)) {
-      activityMods.push(plannedMod);
-    } else {
-      (otherMods[plannedMod.plug.plugCategoryHash] ??= []).push(plannedMod);
-    }
-  }
-
-  for (const [plugCategoryHash_, modsToAssign] of Object.entries(otherMods)) {
-    const plugCategoryHash = Number(plugCategoryHash_);
-    const targetItem = items.find(
-      (item) => plugCategoryHash === bucketHashToPlugCategoryHash[item.bucket.hash]
-    );
+  for (const [bucketHash_, modsToAssign] of Object.entries(bucketSpecificMods)) {
+    const bucketHash = Number(bucketHash_);
+    const targetItem = items.find((item) => item.bucket.hash === bucketHash);
 
     if (targetItem) {
       bucketSpecificAssignments[targetItem.id] = assignBucketSpecificMods({
@@ -147,15 +192,6 @@ export function fitMostMods({
       });
     } else {
       unassignedMods.push(...modsToAssign);
-
-      if (!Object.values(bucketHashToPlugCategoryHash).includes(plugCategoryHash)) {
-        warnLog(
-          'loadout mods',
-          'unknown mod kind',
-          modsToAssign[0].plug.plugCategoryIdentifier,
-          '(neither known activity, combat style, general, or bucket specific mod)'
-        );
-      }
     }
   }
 

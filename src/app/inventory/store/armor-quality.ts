@@ -20,7 +20,7 @@ export function getQualityRating(
   max: number;
   range: string;
 } | null {
-  if (!stats || !stats.length || !light || light.value < 280) {
+  if (!stats?.length || !light || light.value < 280) {
     return null;
   }
 

@@ -1,7 +1,7 @@
 import { DeleteAllResponse } from '@destinyitemmanager/dim-api-types';
 import { needsDeveloper } from 'app/accounts/actions';
 import { compareAccounts } from 'app/accounts/destiny-account';
-import { currentAccountSelector } from 'app/accounts/selectors';
+import { accountsSelector, currentAccountSelector } from 'app/accounts/selectors';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
 import { t } from 'app/i18next-t';
@@ -66,9 +66,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
     _.debounce((currentState: DimApiState, nextState: DimApiState) => {
       if (
         // Avoid writing back what we just loaded from IDB
-        (currentState?.profileLoadedFromIndexedDb || nextState.profileLoaded) &&
-        // Don't save if there was an error
-        !nextState.profileLoadedError &&
+        currentState?.profileLoadedFromIndexedDb &&
         // Check to make sure one of the fields we care about has changed
         (nextState.settings !== currentState.settings ||
           nextState.profiles !== currentState.profiles ||
@@ -135,11 +133,11 @@ function loadGlobalSettings(): ThunkResult {
 
 /**
  * Wait, with exponential backoff - we'll try infinitely otherwise, in a tight loop!
- * Double the wait time, starting with 30 seconds, until we reach 5 minutes.
+ * Double the wait time, starting with 60 seconds, until we reach 10 minutes.
  */
 function getBackoffWaitTime(backoff: number) {
   // Don't wait less than 10 seconds or more than 10 minutes
-  return Math.max(10_000, Math.min(10 * 60 * 1000, Math.random() * Math.pow(2, backoff) * 15_000));
+  return Math.max(10_000, Math.min(10 * 60 * 1000, Math.random() * Math.pow(2, backoff) * 30_000));
 }
 
 // Backoff multiplier
@@ -198,9 +196,9 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
     // Load accounts info - we can't load the profile-specific DIM API data without it.
     const getPlatformsPromise = dispatch(getPlatforms()); // in parallel, we'll wait later
-    if (!getState().dimApi.profileLoadedFromIndexedDb && !getState().dimApi.profileLoaded) {
-      await dispatch(loadProfileFromIndexedDB());
-    }
+
+    // Load from indexedDB if needed
+    await dispatch(loadProfileFromIndexedDB());
     installObservers(dispatch); // idempotent
 
     // They don't want to sync from the server, or the API is disabled - stick with local data
@@ -214,8 +212,10 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
     // don't load from remote if there is already an update queue from IDB - we'd roll back data otherwise!
     if (getState().dimApi.updateQueue.length > 0) {
-      await dispatch(flushUpdates()); // flushUpdates will call loadDimApiData again at the end
-      return;
+      try {
+        await dispatch(flushUpdates()); // flushUpdates will call loadDimApiData again at the end
+        return;
+      } catch (e) {}
     }
 
     // How long before the API data is considered stale is controlled from the server
@@ -225,8 +225,8 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
     if (forceLoad || !getState().dimApi.profileLoaded || profileOutOfDate) {
       // get current account
-      const accounts = await getPlatformsPromise;
-      if (!accounts.length) {
+      await getPlatformsPromise;
+      if (!accountsSelector(getState()).length) {
         // User isn't logged in or has no accounts, nothing to load!
         return;
       }
@@ -287,49 +287,59 @@ function flushUpdates(): ThunkResult {
       return;
     }
 
-    if (dimApiState.updateInProgressWatermark === 0 && dimApiState.updateQueue.length > 0) {
-      // Prepare the queue
-      dispatch(prepareToFlushUpdates());
-      dimApiState = getState().dimApi;
+    // Skip if there's already an update going on, or the queue is empty
+    if (dimApiState.updateInProgressWatermark !== 0 || dimApiState.updateQueue.length === 0) {
+      return;
+    }
 
-      if (dimApiState.updateInProgressWatermark === 0) {
-        return;
-      }
+    // Prepare the queue
+    dispatch(prepareToFlushUpdates());
+    dimApiState = getState().dimApi;
 
-      infoLog(
-        'flushUpdates',
-        'Flushing queue of',
-        dimApiState.updateInProgressWatermark,
-        'updates'
+    if (dimApiState.updateInProgressWatermark === 0) {
+      return;
+    }
+
+    infoLog('flushUpdates', 'Flushing queue of', dimApiState.updateInProgressWatermark, 'updates');
+
+    // Only select the items that were frozen for update. They're guaranteed
+    // to not change while we're updating and they'll be for a single profile.
+    const updates = dimApiState.updateQueue.slice(0, dimApiState.updateInProgressWatermark);
+
+    try {
+      const firstWithAccount = updates.find((u) => u.platformMembershipId) || updates[0];
+
+      const results = await postUpdates(
+        firstWithAccount.platformMembershipId,
+        firstWithAccount.destinyVersion,
+        updates
       );
+      infoLog('flushUpdates', 'got results', updates, results);
 
-      // Only select the items that were frozen for update. They're guaranteed
-      // to not change while we're updating and they'll be for a single profile.
-      const updates = dimApiState.updateQueue.slice(0, dimApiState.updateInProgressWatermark);
+      // Quickly heal from being failure backoff
+      flushUpdatesBackoff = Math.floor(flushUpdatesBackoff / 2);
 
-      try {
-        const firstWithAccount = updates.find((u) => u.platformMembershipId) || updates[0];
+      dispatch(finishedUpdates(results));
 
-        const results = await postUpdates(
-          firstWithAccount.platformMembershipId,
-          firstWithAccount.destinyVersion,
-          updates
-        );
-        infoLog('flushUpdates', 'got results', updates, results);
+      dimApiState = getState().dimApi;
+      if (dimApiState.updateQueue.length > 0) {
+        // Flush more updates!
+        dispatch(flushUpdates());
+      } else if (!dimApiState.profileLoaded) {
+        // Load API data in case we didn't do it before
+        dispatch(loadDimApiData());
+      }
+    } catch (e) {
+      if (flushUpdatesBackoff === 0) {
+        showUpdateErrorNotification(e);
+      }
+      errorLog('flushUpdates', 'Unable to save updates to DIM API', e);
 
-        // Quickly heal from being failure backoff
-        flushUpdatesBackoff = Math.floor(flushUpdatesBackoff / 2);
-
-        dispatch(finishedUpdates(results));
-      } catch (e) {
-        if (flushUpdatesBackoff === 0) {
-          showUpdateErrorNotification(e);
-        }
-        errorLog('flushUpdates', 'Unable to save updates to DIM API', e);
-
-        // Wait, with exponential backoff
-        flushUpdatesBackoff++;
-        const waitTime = getBackoffWaitTime(flushUpdatesBackoff);
+      // Wait, with exponential backoff
+      flushUpdatesBackoff++;
+      const waitTime = getBackoffWaitTime(flushUpdatesBackoff);
+      // Don't wait for the retry, so we don't block profile loading
+      (async () => {
         infoLog('flushUpdates', 'Waiting', waitTime, 'ms before re-attempting updates');
         await delay(waitTime);
 
@@ -337,34 +347,23 @@ function flushUpdates(): ThunkResult {
         // updateInProgressWatermark gets reset no other flushUpdates call will
         // do anything.
         dispatch(flushUpdatesFailed());
-      } finally {
-        dimApiState = getState().dimApi;
-        if (dimApiState.updateQueue.length > 0) {
-          // Flush more updates!
-          dispatch(flushUpdates());
-        } else if (!dimApiState.profileLoaded) {
-          // Load API data in case we didn't do it before
-          dispatch(loadDimApiData());
-        }
-      }
+
+        // Try again
+        dispatch(flushUpdates());
+      })();
+
+      throw e;
     }
   };
 }
 
 function loadProfileFromIndexedDB(): ThunkResult {
   return async (dispatch, getState) => {
-    // If we already got it from the server, don't bother
-    if (getState().dimApi.profileLoaded || getState().dimApi.profileLoadedFromIndexedDb) {
+    if (getState().dimApi.profileLoadedFromIndexedDb) {
       return;
     }
 
     const profile = await get<ProfileIndexedDBState | undefined>('dim-api-profile');
-
-    // If we already got it from the server, don't bother
-    if (getState().dimApi.profileLoaded || getState().dimApi.profileLoadedFromIndexedDb) {
-      return;
-    }
-
     dispatch(profileLoadedFromIDB(profile));
   };
 }

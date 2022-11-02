@@ -5,8 +5,8 @@ exports[`generateSuggestionsForFilter full suggestions for filter format '[ 'ran
   'solar',  'void',
   'ghost',  'subclass',
   'stasis'
-] 1`] = `
-Array [
+], overload undefined 1`] = `
+[
   "energycapacity:",
   "energycapacity:<",
   "energycapacity:>",
@@ -23,14 +23,14 @@ Array [
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'freeform', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
-Array [
+exports[`generateSuggestionsForFilter full suggestions for filter format 'freeform', keyword 'a' with suggestions [ 'b', 'c' ], overload undefined 1`] = `
+[
   "a:",
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
-Array [
+exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'a' with suggestions [ 'b', 'c' ], overload undefined 1`] = `
+[
   "a:",
   "a:b",
   "a:c",
@@ -43,8 +43,8 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'query'
   'intellect', 'strength',
   'total',     'custom',
   'any'
-] 1`] = `
-Array [
+], overload undefined 1`] = `
+[
   "maxstatvalue:",
   "maxstatvalue:mobility",
   "maxstatvalue:resilience",
@@ -64,8 +64,8 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'query'
   'intellect', 'strength',
   'total',     'custom',
   'any'
-] 2`] = `
-Array [
+], overload undefined 2`] = `
+[
   "maxstatvalue:",
   "maxstatvalue:mobility",
   "maxstatvalue:resilience",
@@ -79,8 +79,20 @@ Array [
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'range', keyword 'a' with suggestions undefined 1`] = `
-Array [
+exports[`generateSuggestionsForFilter full suggestions for filter format 'range', keyword 'a' with suggestions undefined, overload { worthy: 10, arrivals: 11 } 1`] = `
+[
+  "a:",
+  "a:<",
+  "a:>",
+  "a:<=",
+  "a:>=",
+  "a:worthy",
+  "a:arrivals",
+]
+`;
+
+exports[`generateSuggestionsForFilter full suggestions for filter format 'range', keyword 'a' with suggestions undefined, overload undefined 1`] = `
+[
   "a:",
   "a:<",
   "a:>",
@@ -89,21 +101,8 @@ Array [
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'rangeoverload', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
-Array [
-  "a:",
-  "a:<",
-  "a:>",
-  "a:<=",
-  "a:>=",
-  "a:",
-  "a:b",
-  "a:c",
-]
-`;
-
-exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'a' with suggestions [ 'b', 'c' ] 1`] = `
-Array [
+exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'a' with suggestions [ 'b', 'c' ], overload undefined 1`] = `
+[
   "a:",
   "a:b:",
   "a:b:<",
@@ -131,8 +130,8 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
   'recovery',        'discipline',  'intellect',
   'strength',        'total',       'custom',
   'any'
-] 1`] = `
-Array [
+], overload undefined 1`] = `
+[
   "stat:",
   "stat:rpm:",
   "stat:rpm:<",
@@ -307,15 +306,15 @@ Array [
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'undefined', keyword '[ 'a' ]' with suggestions undefined 1`] = `
-Array [
+exports[`generateSuggestionsForFilter full suggestions for filter format 'undefined', keyword '[ 'a' ]' with suggestions undefined, overload undefined 1`] = `
+[
   "is:a",
   "not:a",
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'undefined', keyword '[ 'a', 'b', 'c' ]' with suggestions undefined 1`] = `
-Array [
+exports[`generateSuggestionsForFilter full suggestions for filter format 'undefined', keyword '[ 'a', 'b', 'c' ]' with suggestions undefined, overload undefined 1`] = `
+[
   "is:a",
   "not:a",
   "is:b",

@@ -49,7 +49,11 @@ export interface StatInfo {
 }
 
 /** a DimStat with, at minimum, a statHash */
-export type MinimalStat = { statHash: number; value: number; base?: number };
+export interface MinimalStat {
+  statHash: number;
+  value: number;
+  base?: number;
+}
 type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
 const isTouch = 'ontouchstart' in window;

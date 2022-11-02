@@ -9,7 +9,6 @@ import {
   vendorHashes,
 } from '../d1-known-values';
 import { FilterDefinition } from '../filter-types';
-import { rangeStringToComparator } from './range-numeric';
 
 // these just check an attribute found on DimItem
 const d1Filters: FilterDefinition[] = [
@@ -140,15 +139,14 @@ const d1Filters: FilterDefinition[] = [
     description: [tl('Filter.Quality'), { percentage: 'percentage', quality: 'quality' }],
     format: 'range',
     destinyVersion: 1,
-    filter: ({ filterValue }) => {
-      const compare = rangeStringToComparator(filterValue);
-      return (item: D1Item) => {
+    filter:
+      ({ compare }) =>
+      (item: D1Item) => {
         if (!item.quality) {
           return false;
         }
-        return compare(item.quality.min);
-      };
-    },
+        return compare!(item.quality.min);
+      },
   },
   {
     keywords: [

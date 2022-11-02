@@ -1,5 +1,6 @@
 module.exports = {
   testEnvironment: 'jsdom',
+  reporters: ['default', 'jest-junit'],
   verbose: true,
   testTimeout: 60000,
   moduleNameMapper: {
@@ -14,6 +15,7 @@ module.exports = {
     '^.+\\.s?css$': 'identity-obj-proxy',
     'Library\\.mjs$': 'identity-obj-proxy',
   },
+  setupFiles: ['./src/testing/jest-setup.js'],
   transformIgnorePatterns: ['node_modules/?!(bungie-api-ts)'],
   globals: {
     $BROWSERS: [],

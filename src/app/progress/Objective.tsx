@@ -23,10 +23,12 @@ export default function Objective({
   objective,
   suppressObjectiveDescription,
   isTrialsPassage,
+  showHidden,
 }: {
   objective: DestinyObjectiveProgress | D1ObjectiveProgress;
   suppressObjectiveDescription?: boolean;
   isTrialsPassage?: boolean;
+  showHidden?: boolean;
 }) {
   const defs = useDefinitions()!;
   const objectiveDef = defs.Objective.get(objective.objectiveHash);
@@ -60,6 +62,10 @@ export default function Objective({
     (complete ? t('Objectives.Complete') : t('Objectives.Incomplete'));
 
   const valueStyle = getValueStyle(objectiveDef, progress, completionValue);
+  if (!showHidden && valueStyle === DestinyUnlockValueUIStyle.Hidden) {
+    return null;
+  }
+
   if (valueStyle === DestinyUnlockValueUIStyle.Integer) {
     return (
       <div className="objective-row">

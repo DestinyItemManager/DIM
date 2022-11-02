@@ -74,7 +74,7 @@ export default function LoadoutEdit({
     [loadout.items, defs, buckets, allItems, store, modsByBucket]
   );
 
-  const savedMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
+  const allMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
   const clearUnsetMods = loadout.parameters?.clearMods;
   const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
   const power = loadoutPower(store, categories);
@@ -197,7 +197,7 @@ export default function LoadoutEdit({
                     storeId={store.id}
                     subclass={subclass}
                     items={categories[category]}
-                    savedMods={savedMods}
+                    allMods={allMods}
                     onModsByBucketUpdated={handleModsByBucketUpdated}
                   />
                 )}
@@ -215,7 +215,7 @@ export default function LoadoutEdit({
         <LoadoutMods
           loadout={loadout}
           storeId={store.id}
-          savedMods={savedMods}
+          allMods={allMods}
           onUpdateMods={handleUpdateMods}
           onRemoveMod={handleRemoveMod}
           clearUnsetMods={clearUnsetMods}

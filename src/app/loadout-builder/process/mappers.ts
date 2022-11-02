@@ -68,7 +68,8 @@ export function isModStatActive(
     );
   } else if (
     plugHash === modsWithConditionalStats.chargeHarvester ||
-    plugHash === modsWithConditionalStats.echoOfPersistence
+    plugHash === modsWithConditionalStats.echoOfPersistence ||
+    plugHash === modsWithConditionalStats.sparkOfFocus
   ) {
     // "-10 to the stat that governs your class ability recharge"
     return (
@@ -182,5 +183,6 @@ export function hydrateArmorSet(
   return {
     armor,
     stats: processed.stats,
+    statMods: processed.statMods,
   };
 }

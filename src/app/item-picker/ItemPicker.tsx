@@ -121,7 +121,7 @@ function ItemPickerItem({
         onClick={handleClick}
         // don't show the selected Super ability on subclasses in the item picker because the active Super
         // ability is never relevant in the context that item picker is used
-        selectedSuperDisplay="disabled"
+        hideSelectedSuper
       />
       {item.bucket.hash === BucketHashes.Subclass && (
         <ClassIcon classType={item.classType} className="item-picker-item-class-icon" />

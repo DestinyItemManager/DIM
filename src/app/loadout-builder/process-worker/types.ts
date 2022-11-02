@@ -26,17 +26,21 @@ export type ProcessItemsByBucket = {
 };
 
 export interface ProcessArmorSet {
-  /** The overall stats for the loadout as a whole. */
+  /** The overall stats for the loadout as a whole, but excluding auto stat mods. */
   readonly stats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly string[];
+  /** Which stat mods were added? */
+  readonly statMods: number[];
 }
 
 export interface IntermediateProcessArmorSet {
-  /** The overall stats for the loadout as a whole, in preferred order. */
+  /** The overall stats for the loadout as a whole, but excluding auto stat mods. */
   stats: number[];
   /** The first (highest-power) valid set from this stat mix. */
   armor: ProcessItem[];
+  /** Which stat mods were added? */
+  statMods: number[];
 }
 
 interface ProcessStat {
@@ -57,6 +61,8 @@ export interface ProcessMod {
   tag?: string;
 }
 
-export type LockedProcessMods = {
-  [plugCategoryHash: number]: ProcessMod[];
-};
+export interface LockedProcessMods {
+  generalMods: ProcessMod[];
+  combatMods: ProcessMod[];
+  activityMods: ProcessMod[];
+}

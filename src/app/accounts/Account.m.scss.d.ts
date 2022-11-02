@@ -2,8 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'account': string;
-  'accountDetails': string;
-  'accountName': string;
   'first': string;
   'selectedAccount': string;
 }

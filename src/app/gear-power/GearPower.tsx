@@ -8,9 +8,9 @@ import { locateItem } from 'app/inventory/locate-item';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { classFilter } from 'app/search/search-filters/known-values';
+import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import Sheet from '../dim-ui/Sheet';
@@ -52,7 +52,8 @@ export default function GearPower() {
       <img src={selectedStore.icon} />
       <div>
         <h1>{selectedStore.name}</h1>
-        <h1>
+        <h1 className={styles.powerLevel}>
+          <AppIcon icon={powerActionIcon} />
           <FractionalPowerLevel power={maxBasePower} />
         </h1>
       </div>

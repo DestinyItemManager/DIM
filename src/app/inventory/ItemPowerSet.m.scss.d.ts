@@ -4,6 +4,8 @@ interface CssExports {
   'bucketName': string;
   'invert': string;
   'itemPowerSet': string;
+  'negative': string;
+  'positive': string;
   'powerDiff': string;
   'spanGrid': string;
 }

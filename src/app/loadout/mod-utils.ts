@@ -9,12 +9,12 @@ import _ from 'lodash';
 import { isArmorEnergyLocked } from './armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
 
-export const bucketHashToPlugCategoryHash = {
-  [armorBuckets.helmet]: armor2PlugCategoryHashesByName.helmet,
-  [armorBuckets.gauntlets]: armor2PlugCategoryHashesByName.gauntlets,
-  [armorBuckets.chest]: armor2PlugCategoryHashesByName.chest,
-  [armorBuckets.leg]: armor2PlugCategoryHashesByName.leg,
-  [armorBuckets.classitem]: armor2PlugCategoryHashesByName.classitem,
+export const plugCategoryHashToBucketHash = {
+  [armor2PlugCategoryHashesByName.helmet]: armorBuckets.helmet,
+  [armor2PlugCategoryHashesByName.gauntlets]: armorBuckets.gauntlets,
+  [armor2PlugCategoryHashesByName.chest]: armorBuckets.chest,
+  [armor2PlugCategoryHashesByName.leg]: armorBuckets.leg,
+  [armor2PlugCategoryHashesByName.classitem]: armorBuckets.classitem,
 };
 
 /**

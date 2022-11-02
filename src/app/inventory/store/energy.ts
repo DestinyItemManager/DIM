@@ -27,7 +27,9 @@ export function energyUpgrade(
   newEnergyCapacity: number
 ) {
   const tierSocket =
-    item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
+    item.sockets &&
+    (getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier) ||
+      getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.GhostTier));
 
   if (!tierSocket?.plugSet) {
     return [];

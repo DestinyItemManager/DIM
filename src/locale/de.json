@@ -8,16 +8,16 @@
     "IrreversiblePlugging": "Du besitzt {{plug}} nicht, also werden wir es nicht ersetzen."
   },
   "Accounts": {
+    "Choose": "Profile für {{bungieName}}",
     "ErrorLoadInventory": "Fehler beim Laden deiner Destiny {{version}} Charaktere und des Inventars",
     "ErrorLoadManifest": "Destiny Info-Datenbank kann nicht von Bungie geladen werden",
     "ErrorLoading": "Destiny Accounts können nicht von Bungie.net geladen werden",
+    "MissingAccountWarning": "Wenn du deinen Account hier nicht siehst, hast du dich möglicherweise nicht mit dem richtigen Bungie.net-Account eingeloggt oder Bungie.net ist wegen Wartungsarbeiten möglicherweise nicht verfügbar.",
     "MissingDescription": "Der Account, den du sehen möchtest, ist kein Account, der mit deinem Bungie.net Profil verknüpft ist.",
     "MissingTitle": "Account nicht gefunden",
     "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen.",
-    "PlayStation": "PlayStation",
-    "Stadia": "Stadia",
-    "Steam": "Steam",
-    "Xbox": "Xbox"
+    "SwitchAccounts": "Du kannst die Konten später aus dem Menü in der Kopfzeile wechseln.",
+    "Title": "Konten"
   },
   "Activities": {
     "Activities": "Aktivitäten",
@@ -124,7 +124,7 @@
     "Title": "Ein Fehler ist aufgetreten"
   },
   "ErrorPanel": {
-    "Description": "Dies ist wahrscheinlich ein Problem, welches alle Apps von Dritten betrifft - überprüfe, ob Bungie.net oder die Companion App funktioniert.",
+    "Description": "Lade dein Inventar in der Destiny 2 Companion App um zu sehen, ob Bungie.net nicht verfügbar ist.",
     "Troubleshooting": "Fehlerbehebung"
   },
   "FarmingMode": {
@@ -156,6 +156,8 @@
   },
   "FashionDrawer": {
     "Accept": "Mode speichern",
+    "CannotFitOrnament": "Dieser Gegenstand hat keinen Ornamenten-Sockel oder du hast keine Ornamente dafür.",
+    "CannotFitShader": "Diesem Gegenstand kann kein Shader zugewiesen werden",
     "ClearOrnaments": "Ornament-Auswahl aufheben",
     "ClearOrnamentsTitle": "Alle Ornamente mit \"Keine Präferenz\" markieren",
     "ClearShaders": "Shader-Auswahl aufheben",
@@ -178,6 +180,7 @@
     "AmmoType": "Zeigt Gegenstände basierend auf deren Munitionstyp.",
     "Armor": "Zeigt Gegenstände, die Rüstung sind.",
     "ArmorCategory": "Zeigt Rüstungen basierend auf deren Kategorie.",
+    "ArmorIntrinsic": "Zeigt legendäre Rüstung, die einen intrinsischen Perk hat, wie zum Beispiel Kunstvolle Rüstung.",
     "Ascended": "Zeigt Gegenstände, die einen aufsteigenden Knoten haben, die aufgestiegen sind.",
     "Breaker": "Nach Brechertyp oder dem entsprechenden Champion-Typ filtern.",
     "BulkClear": "Markierung von 1 Gegenstand entfernt.",
@@ -209,6 +212,7 @@
     "Event": "Zeigt Gegenstände nach dem Event in dem sie in Destiny 2 erschienen sind an.",
     "ExtraPerk": "Zeigt Legendäre Waffen mit zufälligen Rolls und einem zusätzlich auswählbaren Perk.",
     "Filter": "Filter",
+    "Foundry": "Zeigt an, von welcher Schmiede die Items stammen.",
     "Glimmer": "Zeigt Verbrauchsgegenstände, die mit dem Erhalt von Glimmer verbunden sind.",
     "HasMemento": "Zeigt geformte Waffen, die derzeit ein Memento eingefügt haben.",
     "HasNotes": "Zeige Gegenstände mit Notizen an.",
@@ -314,7 +318,7 @@
     "FilterHelpBrief": "Suche Gegenstände",
     "FilterHelpLoadouts": "Ausrüstungs-Namen und -Notizen suchen",
     "FilterHelpMenuItem": "Filter Hilfe...",
-    "FilterHelpOptimizer": "Filter Rüstung von Loadouts: {{example}}",
+    "FilterHelpOptimizer": "Filter Rüstung von Ausrüstungen: {{example}}",
     "FilterHelpProgress": "Suche Meilensteine und Herausforderungen",
     "FilterHelpRecords": "Triumphe und Sammlungen durchsuchen",
     "FilterMatchCount": "1 Gegenstand",
@@ -492,6 +496,7 @@
       "Legendary": "Legendäre Rüstungen verwenden gemeisterwerkte Werte und haben ein Energielevel von 10.",
       "None": "Alle Rüstungen verwenden ihre aktuellen Werte und haben mindestens ein Energielevel von 7."
     },
+    "AutoStatMods": "Benötigte Statistik-Mods hinzufügen",
     "ChooseAlternateTitle": "Wähle einen anderen Gegenstand",
     "CompareLoadout": "Vergleiche Ausrüstung",
     "ConfirmOverwrite": "Bist du sicher, dass du die Gegenstände in deiner Ausrüstung \"{{name}}\" durch dieses neue Rüstungsset ersetzen möchtest?",
@@ -503,14 +508,14 @@
     "ExistingLoadout": "Bestehende Ausrüstung",
     "ExoticSpecialCategory": "Spezial",
     "Filter": "Filter",
-    "InLoadouts": "In Loadouts",
-    "InOtherLoadouts": "Andere Loadouts",
+    "InLoadouts": "In Ausrüstungen",
+    "InOtherLoadouts": "Andere Ausrüstungen",
     "Legendary": "Legendär",
     "LockElement": "Affinität sperren",
     "LockElementOptions": {
       "All": "Alle Rüstungen werden an ihre aktuelle Affinität gebunden.",
-      "InLoadouts": "Die Rüstung wird an ihr aktuelles Element gebunden, wenn sie in einem vorhandenen Loadout ausgerüstet ist.",
-      "InOtherLoadouts": "Du optimierst gerade Loadout {{loadoutName}}. Rüstung wird an ihr aktuelles Element gebunden, wenn sie in einem anderen Loadout, welches nicht {{loadoutName}} ist, ausgerüstet ist.",
+      "InLoadouts": "Die Rüstung wird an ihr aktuelles Element gebunden, wenn sie in einer vorhandenen Ausrüstung ausgerüstet ist.",
+      "InOtherLoadouts": "Du optimierst gerade die Ausrüstung {{loadoutName}}. Rüstung wird an ihr aktuelles Element gebunden, wenn sie in einer anderen Ausrüstung, welche nicht {{loadoutName}} ist, ausgerüstet ist.",
       "None": "Die Rüstungs-Affinität wird entsprechend der ausgewählten Mods geändert."
     },
     "LockEquipped": "ausgerüstete Gegenstände anpinnen",
@@ -549,8 +554,6 @@
     "AddEquippedItems": "Ausgerüstetes hinzufügen",
     "AddNotes": "Notizen hinzufügen",
     "AddUnequippedItems": "Unausgerüstet hinzufügen",
-    "AlreadyExistsClass": "",
-    "AlreadyExistsGlobal": "Eine globale Ausrüstung mit diesem Namen existiert bereits.",
     "Any": "Jede Klasse",
     "Apply": "Anwenden",
     "ApplyMods": "Wende Mods an",
@@ -606,7 +609,7 @@
     "MaximizeLight": "Max Licht",
     "MaximizePower": "Max Power",
     "MaximizeStat": "Maximiere Werte",
-    "MissingItemsWarning": "Einige der Gegenstände in diesem Loadout befinden sich nicht mehr in deinem Inventar.",
+    "MissingItemsWarning": "Einige der Gegenstände in dieser Ausrüstung befinden sich nicht mehr in deinem Inventar.",
     "ModErrorSummary": "1 Mod-Fehler:",
     "ModErrorSummary_plural": "{{count}} Mod-Fehler:",
     "ModPlacement": "Mod-Platzierung",
@@ -640,10 +643,16 @@
     "RandomizeSearch": "Zufällig von Suche",
     "RandomizeSearchPrompt": "Zufällige Gegenstände von der Suche \"{{query}}\" ausrüsten?",
     "RandomizeWeapons": "Zufällige ausgerüstete Waffen wählen?",
+    "Redo": "Wiederholen",
     "RestoreAllItems": "Alle Gegenstände",
     "Save": "Speichern",
     "SaveAsNew": "Als Neu speichern",
     "SaveAsNewTooltip": "Die ursprüngliche Ausrüstung behalten und dies als neue Ausrüstung speichern",
+    "SaveDisabled": {
+      "AlreadyExists": "Wähle einen neuen Namen für die Ausrüstung.",
+      "Empty": "Die Ausrüstung ist leer.",
+      "NoName": "Die Ausrüstung benötigt einen Namen."
+    },
     "SaveLoadout": "Ausrüstung speichern",
     "Share": {
       "Copied": "Ausrüstungs-Link in die Zwischenablage kopiert",
@@ -674,6 +683,7 @@
     "TooManyRequested": "Du hast {{total}} {{itemname}}, aber deine Ausrüstung verlangt jedoch {{requested}}. Wir haben alles übertragen, was da war.",
     "UnassignedModError": "Mod passt nicht auf deine aktuelle Rüstung",
     "UnassignedMods": "Nicht zugewiesene Mods",
+    "Undo": "Rückgängig",
     "Unequipped": "Nicht ausgerüstet",
     "Update": "Änderungen speichern",
     "VendorsCannotEquip": "Du hast diesen Gegenstand nicht. Tippe, um einen Ersatz zu wählen oder klicke auf X zum Entfernen:",
@@ -707,6 +717,7 @@
     "All": "Alle",
     "CannotCurrentlyRoll": "Dieser Perk kann nicht auf die aktuelle Version dieses Gegenstands gerollt werden.",
     "CantPullFromPostmaster": "Du musst auf den Turm, um diesen Gegenstand abzurufen.",
+    "CatalystProgress": "Katalysator-Fortschritt",
     "CommunityData": "Community-Einblick",
     "Consolidate": "Zusammenführen",
     "CraftingPattern": "Bauplan",
@@ -920,6 +931,7 @@
     "SizeItem": "Gegenstandsgröße",
     "SortByAmmoType": "Munitionstyp",
     "SortByAmount": "Stapelgröße",
+    "SortByArmorElement": "Rüstungselement (D2)",
     "SortByClassType": "Benötigte Klasse",
     "SortByCrafted": "Geformt (D2)",
     "SortByDeepsight": "Tiefensicht (D2)",
@@ -931,6 +943,7 @@
     "SortBySunset": "In Waffen-Ruhestand (D2)",
     "SortByTag": "Markierung ({{taglist}})",
     "SortByType": "Typ",
+    "SortByWeaponElement": "Schadensart",
     "SortCustom": "Benutzerdefinierte Sortierung",
     "SortName": "Name",
     "SpacesSize": "{{count}} Platz",
@@ -966,7 +979,7 @@
     "SelectWishlistPerks": "Vorschau der Wunschlisten-Perks"
   },
   "Stats": {
-    "Custom": "Benutzerdefinierte Summe",
+    "Custom": "Benutzerdef. Summe",
     "CustomDesc": "Benutzerdefinierte Summe der ausgewählten Basis-Werte, Mods oder Meisterwerke. Gehe in die Einstellungen, um zu konfigurieren, welche Werte enthalten sind.",
     "Discipline": "Disziplin",
     "Intellect": "Intellekt",
@@ -1006,7 +1019,7 @@
       "IndexedDBStorage": "Lokaler Speicher, speichert deine Daten nur in diesem Browser. Beim Löschen deiner Browserdaten werden diese Informationen gelöscht."
     },
     "DimApiFinePrint": "DIM speichert deine Tags, Ausrüstungen und Einstellungen auf den DIM-Servern und synchronisiert sie zwischen verschiedenen Versionen von DIM.",
-    "DimSyncDown": "DIM Sync konnte sich aufgrund eines Kommunikationsfehlers mit dem Server nicht verbinden.",
+    "DimSyncDown": "DIM Sync konnte sich, aufgrund eines Kommunikationsfehlers mit dem Server, nicht verbinden.",
     "DimSyncEnabled": "DIM Sync aktiviert",
     "DimSyncNotEnabled": "DIM Sync ist nicht aktiviert. Dies bedeutet, dass deine Einstellungen, Markierungen, Ausrüstungen und Suchanfragen nur lokal gespeichert sind und verlorengehen werden, wenn du deinen Browserspeicher löschst. Du kannst DIM Sync in den Einstellungen aktivieren, um deine Daten automatisch zu sichern; oder sie regelmäßig zum Sichern manuell herunterladen.",
     "EnableDimApi": "DIM Sync aktivieren (empfohlen)",
@@ -1029,7 +1042,7 @@
     "IndexedDBStorage": "Lokaler Browserspeicher",
     "LearnMore": "Erfahre mehr über DIM Sync",
     "MenuTitle": "Sync & Backups",
-    "ProfileErrorBody": "Wir hatten ein Problem bei der Kommunikation mit DIM Sync. Deine neuesten Einstellungen, Tags, Loadouts und Suchanfragen werden möglicherweise nicht angezeigt. Ihre Daten sind immer noch auf unseren Servern und alle Updates, die du lokal vornimmst, werden gespeichert, sobald wir eine erneute Verbindung herstellen können. Wir werden es immer wieder versuchen, solange DIM geöffnet ist.",
+    "ProfileErrorBody": "Wir hatten ein Problem bei der Kommunikation mit DIM Sync. Deine neuesten Einstellungen, Tags, Ausrüstungen und Suchanfragen werden möglicherweise nicht angezeigt. Ihre Daten sind immer noch auf unseren Servern und alle Updates, die du lokal vornimmst, werden gespeichert, sobald wir eine erneute Verbindung herstellen können. Wir werden es immer wieder versuchen, solange DIM geöffnet ist.",
     "ProfileErrorTitle": "DIM-Sync-Downloadfehler",
     "UpdateErrorBody": "Beim Speichern deiner Daten in DIM Sync ist ein Problem aufgetreten. Wir versuchen es weiter, solange DIM geöffnet ist.",
     "UpdateErrorTitle": "DIM-Sync-Speicherfehler",
@@ -1052,7 +1065,7 @@
     "SelectLoadout": "An Stream Deck senden",
     "Selection": {
       "Item": "Wähle einen Gegenstand aus dem Inventar",
-      "Loadout": "Wähle ein Loadout"
+      "Loadout": "Wähle eine Ausrüstung"
     }
   },
   "StripSockets": {
@@ -1062,7 +1075,7 @@
     "Button": "{{numSockets}} Fassungen leeren",
     "Cancel": "Abbrechen",
     "Choose": "Fassungen zum Leeren auswählen",
-    "Done": "Geleerte Fassungen",
+    "Done": "Fassungen geleert",
     "NoSockets": "Keine Fassungen zu leeren",
     "Ok": "OK",
     "Ornaments": "{{count}}x Ornament",
@@ -1085,7 +1098,7 @@
   },
   "Triage": {
     "HighStats": "Hohe Werte",
-    "InLoadouts": "In Loadouts",
+    "InLoadouts": "In Ausrüstungen",
     "OwnedCount": "# In Besitz",
     "SimilarItems": "Ähnliche Gegenstände",
     "ThisItem": "Dieser Gegenstand",
