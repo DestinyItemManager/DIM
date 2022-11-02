@@ -1,5 +1,3 @@
-// import { hasVisibleLoadoutParameters } from "app/loadout/loadout-ui/LoadoutParametersDisplay";
-
 export interface LinesContent {
   text?: string;
   className?: string[];

@@ -85,7 +85,7 @@ export function usePlugDescriptions(
   const perks = getPerkDescriptions(plug, defs, statAndBungieDescStrings);
 
   if (showCommunityDescription && allClarityDescriptions) {
-    let clarityPerk = allClarityDescriptions[plug.hash];
+    const clarityPerk = allClarityDescriptions[plug.hash];
 
     if (clarityPerk && !clarityPerk.optional) {
       result.communityInsight = clarityPerk;
@@ -184,7 +184,7 @@ function getPerkDescriptions(
   Most plugs use the description field to describe their functionality.
 
   Some plugs (e.g. armor mods) store their functionality in their perk descriptions and use the description
-  field for auxiliary info like requirements and caveats. For these plugs, we want to priorities strings in the
+  field for auxiliary info like requirements and caveats. For these plugs, we want to prioritize strings in the
   perks and only fall back to the actual description if we don't have any perks.
 
   Other plugs (e.g. Exotic catalysts) always use the description field to store their requirements.
