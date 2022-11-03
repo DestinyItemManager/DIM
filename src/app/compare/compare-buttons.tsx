@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { ArmorSlotIcon, WeaponSlotIcon, WeaponTypeIcon } from 'app/dim-ui/ItemCategoryIcon';
@@ -7,10 +8,12 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
+import { warnLog } from 'app/utils/log';
 import { getIntrinsicArmorPerkSocket, getWeaponArchetype } from 'app/utils/socket-utils';
 import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
+import memoizeOne from 'memoize-one';
 import React from 'react';
 import styles from './CompareButtons.m.scss';
 
@@ -152,16 +155,38 @@ const getRpm = (i: DimItem) => {
   return itemRpmStat?.value || -99999999;
 };
 
+const exampleAdeptVersions: [baseHash: number, adeptHash: number][] = [
+  [2171478765, 1216319404], // Fatebringer (Timelost)
+  [1907698332, 3514144928], // The Summoner (Adept)
+  [1937552980, 1184692845], // Doom of Chelsis (Harrowed)
+];
+
+const collectAdeptSuffixes = memoizeOne((defs: D2ManifestDefinitions) => {
+  const suffixes: string[] = [];
+
+  for (const [baseHash, adeptHash] of exampleAdeptVersions) {
+    const baseDef = defs.InventoryItem.get(baseHash);
+    const adeptDef = defs.InventoryItem.get(adeptHash);
+    const suffix = adeptDef.displayProperties.name
+      .replace(baseDef.displayProperties.name, '')
+      .trim();
+    if (suffix && suffix.length !== adeptDef.displayProperties.name.length) {
+      // baseName is a proper substring of adeptName
+      suffixes.push(suffix);
+    } else {
+      warnLog('item comparison', 'bad base -> adept mapping', baseHash, adeptHash);
+    }
+  }
+
+  return suffixes;
+});
+
 /**
  * Strips the (Timelost) or (Adept) suffixes for the user's language
  * in order to include adept items in non-adept comparisons and vice versa.
  */
-export const stripAdept = (name: string) =>
-  name
-    .replace(new RegExp(t('Filter.Adept'), 'gi'), '')
-    .trim()
-    .replace(new RegExp(t('Filter.Timelost'), 'gi'), '')
-    .trim();
+export const stripAdeptSuffix = (defs: D2ManifestDefinitions, name: string) =>
+  collectAdeptSuffixes(defs).reduce((name, suffix) => name.replace(suffix, '').trim(), name);
 
 /**
  * Generate possible comparisons for weapons, given a reference item.
@@ -169,7 +194,6 @@ export const stripAdept = (name: string) =>
 export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
   const intrinsic = getWeaponArchetype(exampleItem);
   const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
-  const adeptStripped = stripAdept(exampleItem.name);
 
   let comparisonSets: CompareButton[] = _.compact([
     // same weapon type
@@ -231,8 +255,8 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
 
     // exact same weapon, judging by name. might span multiple expansions.
     {
-      buttonLabel: [adeptStripped],
-      query: `name:"${adeptStripped}"`,
+      buttonLabel: [exampleItem.comparisonName],
+      query: `name:"${exampleItem.comparisonName}"`,
     },
   ]);
 

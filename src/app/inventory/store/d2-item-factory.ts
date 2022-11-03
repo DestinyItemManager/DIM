@@ -1,3 +1,4 @@
+import { stripAdeptSuffix } from 'app/compare/compare-buttons';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
 import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
@@ -569,6 +570,7 @@ export function makeItem(
     masterworkInfo: null,
     infusionQuality: null,
     tooltipNotifications,
+    comparisonName: normalBucket.inWeapons ? stripAdeptSuffix(defs, name) : name,
   };
 
   // *able

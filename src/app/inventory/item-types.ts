@@ -229,6 +229,8 @@ export interface DimItem {
   collectibleState?: DestinyCollectibleState;
   /** Extra tooltips to show in the item popup */
   tooltipNotifications?: DestinyItemTooltipNotification[];
+  /** A simplified name of the item for comparison purposes, e.g. without the (Adept)/master raid variant suffix */
+  comparisonName: string;
 }
 
 /**

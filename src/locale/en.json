@@ -176,7 +176,6 @@
     "Instructions": "Click or drag files"
   },
   "Filter": {
-    "Adept": "\\(Adept\\)",
     "AmmoType": "Shows items based on their ammo type.",
     "Armor": "Shows items that are armor.",
     "ArmorCategory": "Shows armors based on their category.",
@@ -283,7 +282,6 @@
       "Tag": "Shows items that have a specific tag.",
       "Tagged": "Shows items that have any tag."
     },
-    "Timelost": "\\(Timelost\\)",
     "Tracked": "Shows quests/bounties based on their tracked status.",
     "Transferable": "Items that can be moved between characters.",
     "Trashlist": "Shows items that match your wish list's trash list.",
