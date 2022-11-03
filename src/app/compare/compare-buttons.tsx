@@ -10,6 +10,7 @@ import { quoteFilterString } from 'app/search/query-parser';
 import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
 import { getIntrinsicArmorPerkSocket, getWeaponArchetype } from 'app/utils/socket-utils';
+import { escapeRegExp } from 'app/utils/util';
 import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -162,7 +163,7 @@ const exampleAdeptVersions: [baseHash: number, adeptHash: number][] = [
 ];
 
 const collectAdeptSuffixes = memoizeOne((defs: D2ManifestDefinitions) => {
-  const suffixes: string[] = [];
+  const suffixes: RegExp[] = [];
 
   for (const [baseHash, adeptHash] of exampleAdeptVersions) {
     const baseDef = defs.InventoryItem.get(baseHash);
@@ -172,7 +173,7 @@ const collectAdeptSuffixes = memoizeOne((defs: D2ManifestDefinitions) => {
       .trim();
     if (suffix && suffix.length !== adeptDef.displayProperties.name.length) {
       // baseName is a proper substring of adeptName
-      suffixes.push(suffix);
+      suffixes.push(new RegExp(escapeRegExp(suffix), 'gi'));
     } else {
       warnLog('item comparison', 'bad base -> adept mapping', baseHash, adeptHash);
     }

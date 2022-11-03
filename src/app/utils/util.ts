@@ -125,3 +125,8 @@ export function uniqBy<T, K>(data: Iterable<T>, iteratee: (input: T) => K): T[] 
   }
   return result;
 }
+
+/** escape special characters for a regex */
+export function escapeRegExp(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
