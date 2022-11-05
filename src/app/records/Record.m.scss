@@ -25,6 +25,14 @@
     color: #a1a2a2;
     white-space: pre-wrap;
   }
+
+  p.gildingText {
+    margin: 8px 0 0 0;
+  }
+
+  p + p.gildingText {
+    margin: 0;
+  }
 }
 
 .obscured h3 {
@@ -81,7 +89,7 @@
       scale-color(#a1a2a2, $alpha: -80%) 1px,
       transparent calc(25% + 1px)
     );
-  background-size: 70px 100%;
+  background-size: 60px 100%;
   // The following offset and repeat settings
   // prevent the two gradients making up the chevron pattern
   // (which both use reduced opacity colors) from overlapping
@@ -111,6 +119,10 @@
       scale-color($gilded-triumph-border-color, $alpha: -80%) 1px,
       transparent calc(25% + 1px)
     );
+}
+
+.gildingText {
+  font-style: italic;
 }
 
 .dimTrackedIcon {

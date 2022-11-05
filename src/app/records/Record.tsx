@@ -171,18 +171,17 @@ export default function Record({
       className={clsx(styles.triumphRecord, {
         [styles.redeemed]: acquired,
         [styles.unlocked]: unlocked,
+        [styles.gildingTriumph]: recordDef.forTitleGilding,
         [styles.obscured]: obscured,
         [styles.tracked]: trackedInGame,
         [styles.trackedInDim]: trackedInDim,
         [styles.multistep]: intervals.length > 0,
-        [styles.gildingTriumph]: record.recordDef.forTitleGilding,
       })}
     >
       {!hideRecordIcon && recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
       <div className={styles.info}>
         {!obscured && recordDef.completionInfo && <div className={styles.score}>{scoreValue}</div>}
         <h3>{name}</h3>
-        {record.recordDef.forTitleGilding && <p>{t('Triumphs.GildingTriumph')}</p>}
         {description && (
           <p>
             <RichDestinyText text={description} />
@@ -207,6 +206,9 @@ export default function Record({
           !acquired &&
           !obscured &&
           rewards.map((reward) => <Reward key={reward.itemHash} reward={reward} />)}
+        {recordDef.forTitleGilding && !obscured && (
+          <p className={styles.gildingText}>{t('Triumphs.GildingTriumph')}</p>
+        )}
         {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
         {(!acquired || trackedInDim) && (
           <div role="button" onClick={toggleTracked} className={styles.dimTrackedIcon}>
