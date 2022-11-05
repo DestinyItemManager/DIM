@@ -3,6 +3,7 @@ import {
   craftingMaterialCountsSelector,
   currenciesSelector,
   materialsSelector,
+  transmogCurrenciesSelector,
 } from 'app/inventory/selectors';
 import clsx from 'clsx';
 import spiderMats from 'data/d2/spider-mats.json';
@@ -29,6 +30,7 @@ export function MaterialCounts({
   const materials = _.groupBy(allMats, (m) => m.hash);
 
   const currencies = useSelector(currenciesSelector);
+  const transmogCurrencies = useSelector(transmogCurrenciesSelector);
 
   return (
     <div className={clsx(styles.materialCounts, { [styles.wide]: wide })}>
@@ -83,6 +85,20 @@ export function MaterialCounts({
           })}
         </React.Fragment>
       ))}
+      {transmogCurrencies.length > 0 && (
+        <>
+          <span className={styles.spanGrid}>
+            <hr />
+          </span>
+          {transmogCurrencies.map((currency) => (
+            <div className={styles.material} key={currency.itemHash}>
+              <span className={styles.amount}>{currency.quantity.toLocaleString()}</span>
+              <BungieImage src={currency.displayProperties.icon} />
+              <span>{currency.displayProperties.name}</span>
+            </div>
+          ))}
+        </>
+      )}
     </div>
   );
 }
