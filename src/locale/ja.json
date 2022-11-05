@@ -8,16 +8,16 @@
     "IrreversiblePlugging": "{{plug}} を所有していないため、上書きされません。"
   },
   "Accounts": {
-    "Choose": "Profiles for {{bungieName}}",
+    "Choose": "{{bungieName}} のプロファイル",
     "ErrorLoadInventory": "Destiny {{version}} のキャラクターとインベントリをロードできません",
     "ErrorLoadManifest": "BungieからDestinyの情報データベースをロードできません",
     "ErrorLoading": "Bungie.netからDestinyのアカウント情報をロードできません",
-    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance.",
+    "MissingAccountWarning": "ここに自分のアカウントが表示されない場合は、正しい Bungie.net アカウントにログインしていないか、 Bungie.net がメンテナンスでダウンしている可能性があります。",
     "MissingDescription": "表示しようとしているアカウントはBungie.netのプロフィールにリンクされていません。",
     "MissingTitle": "アカウントが見つかりません",
     "NoCharacters": "このBungie.netアカウントには、Destinyのキャラクターが関連付けられていません。別のアカウントでログインしてみてください。",
-    "SwitchAccounts": "You can switch accounts later from the menu in the header.",
-    "Title": "Accounts"
+    "SwitchAccounts": "ヘッダーのメニューで、後からアカウントを切り替えることができます。",
+    "Title": "アカウント"
   },
   "Activities": {
     "Activities": "アクティビティ",
@@ -124,7 +124,7 @@
     "Title": "何か問題が発生したようです"
   },
   "ErrorPanel": {
-    "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
+    "Description": "Destiny 2 Companion App で保管庫をロードして、 Bungie.net がダウンしているかどうか試してみてください。",
     "Troubleshooting": "トラブルシューティングガイド"
   },
   "FarmingMode": {
