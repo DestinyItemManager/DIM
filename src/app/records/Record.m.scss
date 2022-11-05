@@ -68,6 +68,51 @@
   );
 }
 
+.gildingTriumph {
+  background-image: linear-gradient(
+      to left bottom,
+      transparent 25%,
+      scale-color(#a1a2a2, $alpha: -80%) 1px,
+      transparent calc(25% + 1px)
+    ),
+    linear-gradient(
+      to left top,
+      transparent 25%,
+      scale-color(#a1a2a2, $alpha: -80%) 1px,
+      transparent calc(25% + 1px)
+    );
+  background-size: 70px 100%;
+  // The following offset and repeat settings
+  // prevent the two gradients making up the chevron pattern
+  // (which both use reduced opacity colors) from overlapping
+  // at the 0 point, which prevents that one point from being
+  // more saturated than the rest of the lines.
+  // There is no visible gap.
+  background-position: 0 0, 0 2px;
+  background-repeat: repeat-x;
+}
+
+.redeemed.gildingTriumph {
+  border-color: $gilded-triumph-border-color;
+  // background: linear-gradient(
+  //   scale-color($gilded-triumph-border-color, $alpha: -100%) 80%,
+  //   scale-color($gilded-triumph-border-color, $alpha: -82%) 100%
+  // );
+  // background-size: 100px 100px;
+  background-image: linear-gradient(
+      to left bottom,
+      transparent 25%,
+      scale-color($gilded-triumph-border-color, $alpha: -80%) 1px,
+      transparent calc(25% + 1px)
+    ),
+    linear-gradient(
+      to left top,
+      transparent 25%,
+      scale-color($gilded-triumph-border-color, $alpha: -80%) 1px,
+      transparent calc(25% + 1px)
+    );
+}
+
 .dimTrackedIcon {
   position: absolute;
   display: none;

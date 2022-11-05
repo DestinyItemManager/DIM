@@ -175,12 +175,14 @@ export default function Record({
         [styles.tracked]: trackedInGame,
         [styles.trackedInDim]: trackedInDim,
         [styles.multistep]: intervals.length > 0,
+        [styles.gildingTriumph]: record.recordDef.forTitleGilding,
       })}
     >
       {!hideRecordIcon && recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
       <div className={styles.info}>
         {!obscured && recordDef.completionInfo && <div className={styles.score}>{scoreValue}</div>}
         <h3>{name}</h3>
+        {record.recordDef.forTitleGilding && <p>{t('Triumphs.GildingTriumph')}</p>}
         {description && (
           <p>
             <RichDestinyText text={description} />

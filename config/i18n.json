@@ -1208,7 +1208,8 @@
   },
   "Triumphs": {
     "HideCompleted": "Hide completed triumphs",
-    "RevealRedacted": "Reveal redacted triumphs"
+    "RevealRedacted": "Reveal redacted triumphs",
+    "GildingTriumph": "Gilding Triumph"
   },
   "VendorEngramsXyz": {
     "DroppingHigh": "VendorEngrams.xyz reports that this vendor is dropping high-level items.",
