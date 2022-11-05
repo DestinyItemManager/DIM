@@ -28,6 +28,7 @@
 
   p.gildingText {
     margin: 8px 0 0 0;
+    color: white;
   }
 
   p + p.gildingText {
@@ -133,8 +134,8 @@
   display: block;
 }
 
-.gildingText {
-  font-style: italic;
+.redeemed .gildingText {
+  opacity: 0.5;
 }
 
 .dimTrackedIcon {
