@@ -102,11 +102,6 @@
 
 .redeemed.gildingTriumph {
   border-color: $gilded-triumph-border-color;
-  // background: linear-gradient(
-  //   scale-color($gilded-triumph-border-color, $alpha: -100%) 80%,
-  //   scale-color($gilded-triumph-border-color, $alpha: -82%) 100%
-  // );
-  // background-size: 100px 100px;
   background-image: linear-gradient(
       to left bottom,
       transparent 25%,
@@ -119,6 +114,23 @@
       scale-color($gilded-triumph-border-color, $alpha: -80%) 1px,
       transparent calc(25% + 1px)
     );
+}
+
+.gildingGlow {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(
+    scale-color($gilded-triumph-border-color, $alpha: -100%) 80%,
+    scale-color($gilded-triumph-border-color, $alpha: -90%) 100%
+  );
+}
+
+.gildingTriumph.redeemed .gildingGlow {
+  display: block;
 }
 
 .gildingText {
@@ -168,6 +180,7 @@
 
 .info {
   flex: 1;
+  position: relative;
 }
 
 .recordLore {
