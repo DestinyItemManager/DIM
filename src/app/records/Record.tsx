@@ -211,12 +211,12 @@ export default function Record({
           <p className={styles.gildingText}>{t('Triumphs.GildingTriumph')}</p>
         )}
         {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
-        {(!acquired || trackedInDim) && (
-          <div role="button" onClick={toggleTracked} className={styles.dimTrackedIcon}>
-            <img src={dimTrackedIcon} />
-          </div>
-        )}
       </div>
+      {(!acquired || trackedInDim) && (
+        <div role="button" onClick={toggleTracked} className={styles.dimTrackedIcon}>
+          <img src={dimTrackedIcon} />
+        </div>
+      )}
       {intervalProgressBar}
     </div>
   );
