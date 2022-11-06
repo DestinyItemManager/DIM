@@ -6,6 +6,7 @@
 * When selecting a subclass in Loadout Optimizer, it will now start configured with your currently equipped super and abilities (but not aspects or fragments).
 * Fixed Compare drawer closing when clicking the button to compare all of a certain weapon type.
 * The Materials menu now includes Transmog currencies (Synthweave Bolts/Straps/Plates).
+* Gilding Triumphs for Seals are now denoted with a background, darker colors, and label text.
 
 ## 7.41.0 <span class="changelog-date">(2022-10-30)</span>
 
