@@ -178,6 +178,7 @@ export default function Record({
         [styles.multistep]: intervals.length > 0,
       })}
     >
+      <div className={styles.glow} />
       {!hideRecordIcon && recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
       <div className={styles.info}>
         {!obscured && recordDef.completionInfo && <div className={styles.score}>{scoreValue}</div>}
