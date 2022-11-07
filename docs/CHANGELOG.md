@@ -1,5 +1,7 @@
 ## Next
 
+## 7.42.0 <span class="changelog-date">(2022-11-06)</span>
+
 * Applying a Loadout with subclass configuration should now avoid pointless reordering of Aspects and Fragments in their slots.
 * When selecting a subclass in Loadout Optimizer, it will now start configured with your currently equipped super and abilities (but not aspects or fragments).
 * Fixed Compare drawer closing when clicking the button to compare all of a certain weapon type.
