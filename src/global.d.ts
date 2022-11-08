@@ -28,12 +28,14 @@ declare const $featureFlags: {
   clarityDescriptions: boolean;
   /** Elgato Stream Deck integration */
   elgatoStreamDeck: boolean;
-  /* Warn when DIM Sync is off and you save some DIM-specific data */
+  /** Warn when DIM Sync is off and you save some DIM-specific data */
   warnNoSync: boolean;
-  /* Expose the "Add required stat mods" Loadout Optimizer toggle */
+  /** Expose the "Add required stat mods" Loadout Optimizer toggle */
   loAutoStatMods: boolean;
-  /* Whether to send cookies to the Bungie.net API */
+  /** Whether to send cookies to the Bungie.net API */
   apiCookies: boolean;
+  /** If saved DIM API data in IDB is recent enough, don't bother getting it from the server */
+  skipDimApiFirstLoadIfRecent: boolean;
 };
 
 declare function ga(...params: string[]): void;

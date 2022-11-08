@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed an issue where DIM Sync data (loadouts, tags, etc) could not show up until 10 minutes after loading DIM.
+
 ## 7.42.0 <span class="changelog-date">(2022-11-06)</span>
 
 * Applying a Loadout with subclass configuration should now avoid pointless reordering of Aspects and Fragments in their slots.
