@@ -87,6 +87,9 @@
       scale-color(#a1a2a2, $alpha: -80%) 1px,
       transparent calc(25% + 1px)
     );
+  // To increase the number of chevrons in the background
+  // decrease the first number of `background-size`, and vice versa for
+  // decreasing.
   background-size: 60px 100%;
   // The following offset and repeat settings
   // prevent the two gradients making up the chevron pattern

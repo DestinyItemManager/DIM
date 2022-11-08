@@ -72,6 +72,8 @@ export default function Record({
     recordDef.loreHash &&
     `http://www.ishtar-collective.net/entries/${recordDef.loreHash}`;
 
+  const recordShouldGlow = (recordDef.forTitleGilding && acquired) || trackedInDim;
+
   const name = obscured ? t('Progress.SecretTriumph') : recordDef.displayProperties.name;
 
   const description = obscured
@@ -178,7 +180,7 @@ export default function Record({
         [styles.multistep]: intervals.length > 0,
       })}
     >
-      <div className={styles.glow} />
+      {recordShouldGlow && <div className={styles.glow} />}
       {!hideRecordIcon && recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
       <div className={styles.info}>
         {!obscured && recordDef.completionInfo && <div className={styles.score}>{scoreValue}</div>}
