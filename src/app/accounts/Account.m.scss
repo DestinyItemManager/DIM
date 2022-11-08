@@ -8,6 +8,7 @@
   font-weight: bold;
   font-size: 14px;
   margin: 1px 0 0 0;
+  white-space: nowrap;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -27,7 +28,7 @@
 
 .selectedAccount {
   border-left: 4px solid $orange;
-  padding-left: calc(1rem - 4px);
+  padding-left: calc(1rem - 4px) !important;
   padding-right: 24px;
   height: 100%;
   box-sizing: border-box;
