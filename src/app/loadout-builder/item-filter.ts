@@ -18,7 +18,6 @@ import {
  * Contains information about whether items got filtered out for various reasons.
  */
 export interface FilterInfo {
-  alwaysInvalidMods: PluggableInventoryItemDefinition[] | undefined;
   searchQueryEffective: boolean;
   perBucketStats: {
     [key in LockableBucketHash]: {
@@ -70,7 +69,6 @@ export function filterItems({
   };
 
   const filterInfo: FilterInfo = {
-    alwaysInvalidMods: undefined,
     searchQueryEffective: false,
     perBucketStats: {
       [BucketHashes.Helmet]: { ...emptyFilterInfo },
