@@ -164,9 +164,10 @@ export default memo(function LoadoutBuilder({
       statFilters,
       modPicker,
       compareSet,
+      canRedo,
+      canUndo,
     },
     lbDispatch,
-    { canUndo, canRedo },
   ] = useLbState(stores, defs, preloadedLoadout, initialClassType, initialLoadoutParameters);
   const isPhonePortrait = useIsPhonePortrait();
 

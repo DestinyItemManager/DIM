@@ -78,6 +78,8 @@ export function useHistory<S>(initialState: S): {
 } {
   // Needed for type checking, TS otherwise seems to get lost
   // in weaker overloads of `useReducer`?
+  // FIXME this should be `useReducer(historyReducer<S>, ...)`
+  // but VS Code throws spurious errors for that construct (see DIM#8819)
   const reducer: typeof historyReducer<S> = historyReducer;
   const [{ state, undoStack, redoStack }, dispatch] = useReducer(
     reducer,

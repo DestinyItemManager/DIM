@@ -602,8 +602,9 @@ export function useLbState(
     {
       ...lbConfState,
       ...lbUIState,
+      canUndo,
+      canRedo,
     },
     dispatch,
-    { canUndo, canRedo },
   ] as const;
 }

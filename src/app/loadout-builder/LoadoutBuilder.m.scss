@@ -76,12 +76,8 @@
 
   > * {
     flex: 1;
-    margin-right: 4px;
   }
-
-  > *:last-child {
-    margin-right: 0;
-  }
+  @include horizontal-space-children(4px);
 }
 
 .speedReport {
