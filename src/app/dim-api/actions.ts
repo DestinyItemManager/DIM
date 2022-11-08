@@ -151,7 +151,7 @@ let waitingForApiPermission = false;
  * for whether the user has opted in to Sync, and if they haven't, we prompt.
  * Usually they already made their choice at login, though.
  */
-export function loadDimApiData(): ThunkResult {
+export function loadDimApiData(forceLoad = false): ThunkResult {
   return async (dispatch, getState) => {
     installApiPermissionObserver();
 
@@ -225,7 +225,7 @@ export function loadDimApiData(): ThunkResult {
     const needsFirstLoad =
       !getState().dimApi.profileLoaded && !$featureFlags.skipDimApiFirstLoadIfRecent;
 
-    if (needsFirstLoad || profileOutOfDateOrMissing) {
+    if (forceLoad || needsFirstLoad || profileOutOfDateOrMissing) {
       try {
         const profileResponse = await getDimApiProfile(currentAccount);
         dispatch(profileLoaded({ profileResponse, account: currentAccount }));
@@ -248,7 +248,7 @@ export function loadDimApiData(): ThunkResult {
           infoLog('loadDimApiData', 'Waiting', waitTime, 'ms before re-attempting profile fetch');
 
           // Wait, then retry. We don't await this here so we don't stop the finally block from running
-          delay(waitTime).then(() => dispatch(loadDimApiData()));
+          delay(waitTime).then(() => dispatch(loadDimApiData(forceLoad)));
         } else if ($DIM_FLAVOR === 'dev') {
           dispatch(needsDeveloper());
         }
