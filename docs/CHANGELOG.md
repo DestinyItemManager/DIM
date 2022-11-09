@@ -1,6 +1,6 @@
 ## Next
 
-* Fixed an issue where DIM Sync data (loadouts, tags, etc) could not show up until 10 minutes after loading DIM.
+* Fixed an issue where DIM Sync data (loadouts, tags, etc) could appear missing for 10 minutes after loading DIM.
 
 ## 7.42.0 <span class="changelog-date">(2022-11-06)</span>
 
