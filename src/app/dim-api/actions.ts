@@ -1,6 +1,6 @@
 import { DeleteAllResponse } from '@destinyitemmanager/dim-api-types';
 import { needsDeveloper } from 'app/accounts/actions';
-import { compareAccounts } from 'app/accounts/destiny-account';
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { accountsSelector, currentAccountSelector } from 'app/accounts/selectors';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
@@ -40,7 +40,7 @@ import {
   setApiPermissionGranted,
 } from './basic-actions';
 import { DimApiState } from './reducer';
-import { apiPermissionGrantedSelector } from './selectors';
+import { apiPermissionGrantedSelector, makeProfileKeyFromAccount } from './selectors';
 
 const installApiPermissionObserver = _.once(() => {
   // Observe API permission and reflect it into local storage
@@ -99,15 +99,6 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
       }
     }, 1000)
   );
-
-  // Observe the current account and reload data
-  // Another one that should probably be a thunk action once account transitions are actions
-  observeStore(currentAccountSelector, (oldAccount, newAccount) => {
-    // Force load profile data if the account changed
-    if (oldAccount && newAccount && !compareAccounts(oldAccount, newAccount)) {
-      dispatch(loadDimApiData(true));
-    }
-  });
 
   // Every time data is refreshed, maybe load DIM API data too
   refresh$.subscribe(() => dispatch(loadDimApiData()));
@@ -218,20 +209,23 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       } catch (e) {}
     }
 
+    // get current account
+    await getPlatformsPromise;
+    if (!accountsSelector(getState()).length) {
+      // User isn't logged in or has no accounts, nothing to load!
+      return;
+    }
+    const currentAccount = currentAccountSelector(getState());
+
     // How long before the API data is considered stale is controlled from the server
-    const profileOutOfDate =
-      Date.now() - getState().dimApi.profileLastLoaded >
+    const profileOutOfDateOrMissing =
+      profileLastLoaded(getState().dimApi, currentAccount) >
       getState().dimApi.globalSettings.dimProfileMinimumRefreshInterval * 1000;
 
-    if (forceLoad || !getState().dimApi.profileLoaded || profileOutOfDate) {
-      // get current account
-      await getPlatformsPromise;
-      if (!accountsSelector(getState()).length) {
-        // User isn't logged in or has no accounts, nothing to load!
-        return;
-      }
-      const currentAccount = currentAccountSelector(getState());
+    const needsFirstLoad =
+      !getState().dimApi.profileLoaded && !$featureFlags.skipDimApiFirstLoadIfRecent;
 
+    if (forceLoad || needsFirstLoad || profileOutOfDateOrMissing) {
       try {
         const profileResponse = await getDimApiProfile(currentAccount);
         dispatch(profileLoaded({ profileResponse, account: currentAccount }));
@@ -265,11 +259,26 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
         // reload) than to block the app working if the DIM API is down.
         readyResolve();
       }
+    } else {
+      readyResolve();
     }
 
     // Make sure any queued updates get sent to the server
     await dispatch(flushUpdates());
   };
+}
+
+/**
+ * Get either the profile-specific last loaded time, or the global one if we don't have
+ * an account selected.
+ */
+function profileLastLoaded(dimApi: DimApiState, account: DestinyAccount | undefined) {
+  return (
+    Date.now() -
+    (account
+      ? dimApi.profiles[makeProfileKeyFromAccount(account)]?.profileLastLoaded ?? 0
+      : dimApi.profileLastLoaded)
+  );
 }
 
 // Backoff multiplier
