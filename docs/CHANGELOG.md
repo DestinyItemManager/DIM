@@ -1,5 +1,7 @@
 ## Next
 
+* Telesto has been reprimanded.
+
 ## 7.42.2 <span class="changelog-date">(2022-11-09)</span>
 
 ## 7.42.1 <span class="changelog-date">(2022-11-09)</span>
