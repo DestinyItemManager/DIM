@@ -22,7 +22,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting } from 'app/settings/hooks';
-import { AppIcon, refreshIcon } from 'app/shell/icons';
+import { AppIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
@@ -164,6 +164,8 @@ export default memo(function LoadoutBuilder({
       statFilters,
       modPicker,
       compareSet,
+      canRedo,
+      canUndo,
     },
     lbDispatch,
   ] = useLbState(stores, defs, preloadedLoadout, initialClassType, initialLoadoutParameters);
@@ -363,6 +365,24 @@ export default memo(function LoadoutBuilder({
           </ol>
         </div>
       )}
+      <div className={styles.undoRedo}>
+        <button
+          className="dim-button"
+          onClick={() => lbDispatch({ type: 'undo' })}
+          type="button"
+          disabled={!canUndo}
+        >
+          <AppIcon icon={undoIcon} /> {t('Loadouts.Undo')}
+        </button>
+        <button
+          className="dim-button"
+          onClick={() => lbDispatch({ type: 'redo' })}
+          type="button"
+          disabled={!canRedo}
+        >
+          <AppIcon icon={redoIcon} /> {t('Loadouts.Redo')}
+        </button>
+      </div>
       <TierSelect
         stats={statFilters}
         statRangesFiltered={result?.statRangesFiltered}

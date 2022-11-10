@@ -1,5 +1,7 @@
 ## Next
 
+* Loadout Optimizer now has Undo/Redo buttons covering all configuration options.
+
 ## 7.42.3 <span class="changelog-date">(2022-11-10)</span>
 
 * Telesto has been reprimanded.
