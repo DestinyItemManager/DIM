@@ -1,3 +1,4 @@
+import { clarityAttribute } from 'app/clarity/integration/attributes';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -124,6 +125,7 @@ export default function InventoryItem({
       title={`${item.name}\n${subtitle}`}
       className={itemStyles}
       ref={innerRef}
+      {...clarityAttribute('item', item)}
     >
       <ItemIconPlaceholder item={item} hasBadge={hasBadge}>
         {contents}

@@ -86,8 +86,7 @@ export function usePlugDescriptions(
 
   if (showCommunityDescription && allClarityDescriptions) {
     const clarityPerk = allClarityDescriptions[plug.hash];
-
-    if (clarityPerk && !clarityPerk.optional) {
+    if (clarityPerk) {
       result.communityInsight = clarityPerk;
     }
   }

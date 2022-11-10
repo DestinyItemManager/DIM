@@ -1,42 +1,12 @@
 export interface LinesContent {
   text?: string;
-  className?: string[];
-  linkUrl?: string;
-  linkText?: string;
-  title?: string;
+  classNames?: string[];
+  link?: string;
 }
 export interface Line {
   linesContent?: LinesContent[];
   classNames?: string[];
 }
-type PerkTypes =
-  | 'armorExotic'
-  | 'weaponPerkExotic'
-  | 'weaponFrameExotic'
-  | 'weaponCatalystExotic'
-  // ---------
-  | 'weaponPerk'
-  | 'weaponPerkEnhanced'
-  | 'weaponOriginTrait'
-  | 'weaponFrame'
-  // ---------
-  | 'fragment'
-  | 'aspect'
-  | 'super'
-  | 'grenade'
-  | 'melee'
-  | 'class'
-  | 'movement'
-  // ---------
-  | 'armorModGeneral'
-  | 'armorModCombat'
-  | 'armorModActivity'
-  | 'armorModSeasonal'
-  | 'weaponMod'
-  | 'ghostMod'
-  | 'artifactMod'
-  // ---------
-  | 'none';
 
 export type Languages =
   /** English - English */
@@ -88,42 +58,10 @@ export interface Perk {
    */
   itemName?: string;
 
-  /**
-   * Basically is this armor mod, exotic weapon perk, catalyst, etc
-   */
-  type: PerkTypes;
-
   descriptions: {
     [key in Languages]?: Line[];
   };
-
-  /**
-   * Optional description most likely investment stats only
-   */
-  optional?: boolean;
-
-  /**
-   * Then last time perk was updated time in ms (Date.now())
-   */
-  lastUpdate: number;
 }
-
-// {
-//   description: 'content of perk description booth simple and normal',
-// }
-// will be changed to
-// {
-//   descriptions: {
-//     en: 'description content',
-//     de: 'description content',
-//     fr: 'description content',
-//     es: 'description content',
-//     it: 'description content',
-//     pl: 'description content',
-//   }
-// }
-// langues listed hare are just place holders for now except en that will be obviously in where
-// new one comming will be Chinese
 
 export interface ClarityDescription {
   /**

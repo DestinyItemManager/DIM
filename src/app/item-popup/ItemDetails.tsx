@@ -1,3 +1,4 @@
+import { clarityAttribute } from 'app/clarity/integration/attributes';
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { WeaponCatalystInfo } from 'app/dim-ui/WeaponCatalystInfo';
@@ -103,7 +104,7 @@ export default function ItemDetails({
       {item.classified && <div className="item-details">{t('ItemService.Classified2')}</div>}
 
       {item.stats && (
-        <div className="item-details">
+        <div className="item-details" {...clarityAttribute('stats', item)}>
           <ItemStats item={item} />
         </div>
       )}

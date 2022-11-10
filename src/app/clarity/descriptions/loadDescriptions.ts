@@ -30,7 +30,6 @@ const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB) => {
 
   try {
     const liveVersion: ClarityVersions = await fetchClarity('version');
-    console.log(liveVersion);
 
     if (savedVersion !== liveVersion.descriptions) {
       const descriptions: ClarityDescription = await fetchClarity('descriptions');

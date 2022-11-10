@@ -10,7 +10,7 @@ export interface ClarityState {
    * Descriptions from community provided by Clarity API
    */
   descriptions?: ClarityDescription;
-  // I will add more things i need for clarity later on
+  loadClarity?: boolean;
 }
 
 const initialState: ClarityState = {};
@@ -23,6 +23,11 @@ export const clarity: Reducer<ClarityState, ClarityAction> = (
       return {
         ...state,
         descriptions: action.payload,
+      };
+    case getType(actions.loadClarity):
+      return {
+        ...state,
+        loadClarity: action.payload,
       };
     default:
       return state;

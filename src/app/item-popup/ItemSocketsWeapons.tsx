@@ -1,3 +1,4 @@
+import { clarityAttribute } from 'app/clarity/integration/attributes';
 import { t } from 'app/i18next-t';
 import { craftedSocketCategoryHash, mementoSocketCategoryHash } from 'app/inventory/store/crafted';
 import { isDeepsightResonanceSocket } from 'app/inventory/store/deepsight';
@@ -149,7 +150,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
       )}
       {perks &&
         (listPerks && !minimal && !grid ? (
-          <div className={styles.perks}>
+          <div className={styles.perks} {...clarityAttribute('perks', item)}>
             {!minimal && !grid && (
               <button
                 className={styles.displayStyleButton}
@@ -163,7 +164,10 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
             <ItemPerksList item={item} perks={perks} onClick={handleSocketClick} />
           </div>
         ) : (
-          <div className={clsx(categoryStyle(perks.category.categoryStyle), styles.perks)}>
+          <div
+            className={clsx(categoryStyle(perks.category.categoryStyle), styles.perks)}
+            {...clarityAttribute('perks', item)}
+          >
             {!minimal && !grid && (
               <button
                 className={styles.displayStyleButton}

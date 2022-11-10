@@ -1,6 +1,5 @@
 /* stylelint-disable selector-class-pattern */
 
-// leaving everything here in case we add them to simplified descriptions
 .communityDescription {
   h3 {
     margin: 0;
@@ -16,67 +15,23 @@
   color: hsl(0, 100%, 80%);
 }
 .pve {
-  color: hsl(220, 100%, 70%);
+  color: hsl(220deg, 100%, 75%);
 }
-.highlight_1 {
+.green {
   color: hsl(116, 58%, 65%);
 }
-.highlight_2 {
-  color: hsl(51, 100%, 50%);
+.yellow {
+  color: hsl(51, 100%, 45%);
 }
-.highlight_3 {
-  color: hsl(180, 100%, 50%);
+.blue {
+  color: hsl(180, 100%, 45%);
 }
-.highlight_4 {
-  color: hsl(300, 100%, 77%);
+.purple {
+  color: hsl(300, 100%, 81%);
 }
 
-// --- images
-@mixin img-before {
-  background-repeat: no-repeat;
-  background-position: center;
-  display: inline-block;
-  content: '';
-  margin-right: 3px;
-  height: 10px;
-}
-.arc::before,
-.solar::before,
-.void::before,
-.stasis::before {
-  background-size: 10px 10px;
-  width: 10px;
-  @include img-before;
-}
-.primary::before,
-.special::before,
-.heavy::before {
-  background-size: 18px 20px;
-  width: 13px;
-  @include img-before;
-}
-// --- elements
-.arc::before {
-  background-image: url(https://www.bungie.net/common/destiny2_content/icons/DestinyDamageTypeDefinition_092d066688b879c807c3b460afdd61e6.png);
-}
-.solar::before {
-  background-image: url(https://www.bungie.net/common/destiny2_content/icons/DestinyDamageTypeDefinition_2a1773e10968f2d088b97c22b22bba9e.png);
-}
-.void::before {
-  background-image: url(https://www.bungie.net/common/destiny2_content/icons/DestinyDamageTypeDefinition_ceb2f6197dccf3958bb31cc783eb97a0.png);
-}
-.stasis::before {
-  background-image: url(https://www.bungie.net/common/destiny2_content/icons/DestinyDamageTypeDefinition_530c4c3e7981dc2aefd24fd3293482bf.png);
-}
-// --- ammo
-.primary::before {
-  background-image: url(https://www.bungie.net/common/destiny2_content/icons/dc4bb9bcdd4ae8a83fb9007a51d7d711.png);
-}
-.special::before {
-  background-image: url(https://www.bungie.net/common/destiny2_content/icons/b6d3805ca8400272b7ee7935b0b75c79.png);
-}
-.heavy::before {
-  background-image: url(https://www.bungie.net/common/destiny2_content/icons/9fa60d5a99c9ff9cea0fb6dd690f26ec.png);
+.enhancedArrow {
+  color: hsl(46, 100%, 50%);
 }
 
 // --- random styling
@@ -109,14 +64,6 @@
   }
 }
 
-// --- makes table
-.table {
-  display: table;
-  div {
-    display: table-row;
-    span {
-      display: table-cell;
-      padding: 1px 3px;
-    }
-  }
+.breakSpaces {
+  white-space: break-spaces;
 }

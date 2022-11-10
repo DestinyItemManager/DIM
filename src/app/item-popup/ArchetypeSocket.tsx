@@ -1,3 +1,4 @@
+import { clarityAttribute } from 'app/clarity/integration/attributes';
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import clsx from 'clsx';
 import React from 'react';
@@ -45,11 +46,13 @@ export function ArchetypeRow({
   children,
   minimal,
   isWeapons,
+  item,
 }: {
   className?: string;
   children: React.ReactNode;
   minimal?: boolean;
   isWeapons?: boolean;
+  item?: DimItem;
 }) {
   return (
     <div
@@ -57,6 +60,7 @@ export function ArchetypeRow({
         [styles.minimal]: minimal,
         [styles.isWeapons]: isWeapons,
       })}
+      {...clarityAttribute('perks', item)}
     >
       {children}
     </div>

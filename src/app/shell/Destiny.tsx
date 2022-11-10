@@ -6,6 +6,8 @@ import {
   currentAccountSelector,
 } from 'app/accounts/selectors';
 import ArmoryPage from 'app/armory/ArmoryPage';
+import ClarityPage from 'app/clarity/integration/ClarityPage';
+import { clarityActive } from 'app/clarity/selectors';
 import Compare from 'app/compare/Compare';
 import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -108,6 +110,9 @@ export default function Destiny() {
       dispatch(fetchWishList());
     }
   }, [dispatch, isD2]);
+
+  // is clarity DIM extension installed and enebaled
+  const clarityEnabled = useSelector(clarityActive);
 
   const { pathname, search } = useLocation();
 
@@ -262,6 +267,9 @@ export default function Destiny() {
           )}
           {account.destinyVersion === 1 && (
             <Route path="activities" element={<Activities account={account} />} />
+          )}
+          {account.destinyVersion === 2 && clarityEnabled && (
+            <Route path="clarity" element={<ClarityPage />} />
           )}
           <Route path="*" element={<Navigate to="inventory" />} />
         </Routes>

@@ -1,5 +1,7 @@
 import MenuAccounts from 'app/accounts/MenuAccounts';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { clarityAttribute } from 'app/clarity/integration/attributes';
+import { clarityActive } from 'app/clarity/selectors';
 import Sheet from 'app/dim-ui/Sheet';
 import { Hotkey } from 'app/hotkeys/hotkeys';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
@@ -68,6 +70,9 @@ export default function Header() {
   const hideDropdown = useCallback(() => {
     setDropdownOpen(false);
   }, []);
+
+  // is clarity DIM extension installed and enebaled
+  const clarityEnabled = useSelector(clarityActive);
 
   // Mobile search bar
   const [showSearch, setShowSearch] = useState(false);
@@ -211,6 +216,11 @@ export default function Header() {
         to: `${path}/activities`,
         text: t('Activities.Activities'),
       },
+      account.destinyVersion === 2 &&
+        clarityEnabled && {
+          to: `${path}/clarity`,
+          text: 'Clarity menu',
+        },
     ]);
   }
 
@@ -276,7 +286,7 @@ export default function Header() {
 
   return (
     <header className={styles.container} ref={headerRef}>
-      <div className={styles.header}>
+      <div className={styles.header} {...clarityAttribute('background')}>
         <a
           className={clsx(styles.menuItem, styles.menu)}
           ref={dropdownToggler}

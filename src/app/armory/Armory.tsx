@@ -1,4 +1,5 @@
 import ItemGrid from 'app/armory/ItemGrid';
+import { clarityAttribute } from 'app/clarity/integration/attributes';
 import { addCompareItem } from 'app/compare/actions';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
@@ -173,13 +174,13 @@ export default function Armory({
       )}
 
       {item.stats && !item.bucket.inArmor && (
-        <div className={styles.section}>
+        <div className={styles.section} {...clarityAttribute('armoryStats', item)}>
           <ItemStats item={item} />
         </div>
       )}
 
       {item.sockets && (
-        <div className={styles.section}>
+        <div className={styles.section} {...clarityAttribute('armoryPerks', item)}>
           <ItemSockets item={item} grid onPlugClicked={onPlugClicked} />
         </div>
       )}

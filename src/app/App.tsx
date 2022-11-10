@@ -5,6 +5,8 @@ import React, { Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router';
 import styles from './App.m.scss';
+import { clarityAttribute } from './clarity/integration/attributes';
+import { clarityActive } from './clarity/selectors';
 import Developer from './developer/Developer';
 import AutoRefresh from './dim-ui/AutoRefresh';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
@@ -42,12 +44,17 @@ export default function App() {
   const needsLogin = useSelector((state: RootState) => state.accounts.needsLogin);
   const needsDeveloper = useSelector((state: RootState) => state.accounts.needsDeveloper);
 
+  // then clarity is on adds special attributes
+  const clarityEnabled = useSelector(clarityActive);
+  const clarityAttributes = clarityEnabled ? clarityAttribute('backgroundBefore') : {};
+
   return (
     <div
       key={`lang-${language}`}
       className={clsx(styles.app, `lang-${language}`, `char-cols-${charColMobile}`, {
         itemQuality,
       })}
+      {...clarityAttributes}
     >
       <ScrollToTop />
       <GATracker />
@@ -91,6 +98,7 @@ export default function App() {
                     'record-books',
                     'activities',
                     'armory/:itemHash',
+                    'clarity',
                   ].map((path) => (
                     <Route key={path} path={path} element={<AccountRedirectRoute />} />
                   ))}
