@@ -1,4 +1,5 @@
 ## Next
+* Gilding Triumphs for Seals are now denoted with a background, darker colors, and label text.
 
 * Loadout Optimizer now has Undo/Redo buttons covering all configuration options.
 
