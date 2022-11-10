@@ -78,6 +78,7 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
           const key = makeProfileKey(platformMembershipId, destinyVersion);
           if (!profiles[key]) {
             profiles[key] = {
+              profileLastLoaded: 0,
               loadouts: {},
               tags: {},
               triumphs: [],
@@ -92,6 +93,7 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
           const key = makeProfileKey(platformMembershipId, destinyVersion);
           if (!profiles[key]) {
             profiles[key] = {
+              profileLastLoaded: 0,
               loadouts: {},
               tags: {},
               triumphs: [],
@@ -107,6 +109,7 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
           const key = makeProfileKey(platformMembershipId, 2);
           if (!profiles[key]) {
             profiles[key] = {
+              profileLastLoaded: 0,
               loadouts: {},
               tags: {},
               triumphs: [],
