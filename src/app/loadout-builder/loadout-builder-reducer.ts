@@ -202,6 +202,7 @@ type LoadoutBuilderConfigAction =
   | { type: 'autoStatModsChanged'; autoStatMods: boolean }
   | { type: 'lockedModsChanged'; lockedMods: PluggableInventoryItemDefinition[] }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
+  | { type: 'removeLockedMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'updateSubclass'; item: DimItem }
   | { type: 'removeSubclass' }
@@ -410,6 +411,19 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         if (indexToRemove >= 0) {
           newMods.splice(indexToRemove, 1);
         }
+
+        return {
+          ...state,
+          loadoutParameters: {
+            ...state.loadoutParameters,
+            mods: newMods,
+          },
+        };
+      }
+      case 'removeLockedMods': {
+        const newMods = [...(state.loadoutParameters.mods ?? [])].filter(
+          (mod) => !action.mods.some((excludedMod) => excludedMod.hash === mod)
+        );
 
         return {
           ...state,
