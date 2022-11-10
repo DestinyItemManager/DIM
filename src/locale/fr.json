@@ -8,16 +8,16 @@
     "IrreversiblePlugging": "Vous ne possédez pas {{plug}}, donc nous ne le remplacerons pas."
   },
   "Accounts": {
-    "Choose": "Profiles for {{bungieName}}",
+    "Choose": "Profils pour {{bungieName}}",
     "ErrorLoadInventory": "Impossible de charger vos personnages et inventaire Destiny {{version}}",
     "ErrorLoadManifest": "Impossible de charger la base de données d'information de Destiny depuis Bungie",
     "ErrorLoading": "Impossible de charger les comptes Destiny depuis Bungie.net",
-    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance.",
+    "MissingAccountWarning": "Si vous ne voyez pas votre compte ici, vous ne vous êtes peut-être pas connecté au bon compte Bungie.net, ou Bungie.net est peut-être hors-ligne pour maintenance.",
     "MissingDescription": "Le compte que vous essayez de voir n'est pas un compte associé à votre profil Bungie.net.",
     "MissingTitle": "Compte Introuvable",
     "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
-    "SwitchAccounts": "You can switch accounts later from the menu in the header.",
-    "Title": "Accounts"
+    "SwitchAccounts": "Vous pouvez changer de compte plus tard à partir du menu dans la barre de navigation.",
+    "Title": "Comptes"
   },
   "Activities": {
     "Activities": "Activités",
@@ -86,7 +86,7 @@
   "Compare": {
     "Archetype": "Archétype",
     "Button": "Comparer",
-    "ButtonHelp": "Comparer des Objets",
+    "ButtonHelp": "Comparer des objets",
     "CompareBaseStats": "Afficher les Statistiques de base",
     "Error": {
       "Unmatched": "Cet objet ne correspond pas au type d'objet comparé."
@@ -124,7 +124,7 @@
     "Title": "Une erreur s'est produite"
   },
   "ErrorPanel": {
-    "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
+    "Description": "Essayez de charger votre inventaire dans l'application Compagnon de Destiny 2 pour voir si Bungie.net est hors-ligne.",
     "Troubleshooting": "Guide de Dépannage"
   },
   "FarmingMode": {
@@ -156,7 +156,7 @@
   },
   "FashionDrawer": {
     "Accept": "Sauvegarder le style",
-    "CannotFitOrnament": "This item does not have an ornament socket or you have no ornaments for it.",
+    "CannotFitOrnament": "Cet objet n'a pas d'emplacement d'ornement, ou vous n'avez pas d'ornement pour lui.",
     "CannotFitShader": "Cet objet n'accepte pas un shader",
     "ClearOrnaments": "Retirer les ornements",
     "ClearOrnamentsTitle": "Réinitialiser tous les ornements à \"aucune préférence\"",
@@ -349,12 +349,12 @@
   },
   "Hotkey": {
     "CheatSheetTitle": "Raccourcis Clavier:",
-    "ClearDialog": "Fermer le dialogue",
+    "ClearDialog": "Fermer ce dialogue",
     "ClearNewItems": "Vider la liste de nouveaux objets",
     "Enter": "ENTRER",
     "LockUnlock": "Verrouiller ou déverrouiller un objet",
     "MarkItemAs": "Marquer objet comme '{{tag}}'",
-    "Menu": "Activer/Désactive le menu",
+    "Menu": "Activer/Désactiver le menu",
     "Pull": "Transférer vers le personnage actif",
     "RefreshInventory": "Actualiser l'inventaire",
     "ShowHotkeys": "Afficher les raccourcis clavier",
@@ -643,15 +643,15 @@
     "RandomizeSearch": "Équiper aléatoire à partir de la recherche",
     "RandomizeSearchPrompt": "Équiper au hasard à partir de la recherche \"{{query}}\"?",
     "RandomizeWeapons": "Équiper des armes au hasard ?",
-    "Redo": "Redo",
+    "Redo": "Refaire",
     "RestoreAllItems": "Tous les objets",
     "Save": "Sauvegarder",
     "SaveAsNew": "Sauvegarder comme nouveau",
     "SaveAsNewTooltip": "Garder l'arsenal original et enregistrer celui-ci comme un nouvel arsenal",
     "SaveDisabled": {
-      "AlreadyExists": "Choose a new name for the loadout.",
-      "Empty": "The loadout is empty.",
-      "NoName": "The loadout needs a name."
+      "AlreadyExists": "Choisissez un nouveau nom pour l'arsenal.",
+      "Empty": "L'arsenal est vide.",
+      "NoName": "L'arsenal a besoin d'un nom."
     },
     "SaveLoadout": "Sauvegarder l'arsenal",
     "Share": {
@@ -683,7 +683,7 @@
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre arsenal demande {{requested}}. Nous avons transféré tous ceux que vous possédiez.",
     "UnassignedModError": "Le mot n'a pas pu être équipé sur votre armure actuelle",
     "UnassignedMods": "Mods non assignés",
-    "Undo": "Undo",
+    "Undo": "Annuler",
     "Unequipped": "Non équipé",
     "Update": "Enregistrer les modifications",
     "VendorsCannotEquip": "Vous n'avez pas ces objets. Appuyez pour sélectionner un remplacement ou cliquez sur X pour retirer:",
@@ -717,7 +717,7 @@
     "All": "Tous",
     "CannotCurrentlyRoll": "Cet attribut ne peut pas être obtenu sur la version actuelle de cet objet.",
     "CantPullFromPostmaster": "Vous devez aller à la tour pour récupérer cet objet.",
-    "CatalystProgress": "Catalyst Progress",
+    "CatalystProgress": "Progression du catalyseur",
     "CommunityData": "Informations de la communauté",
     "Consolidate": "Réunir",
     "CraftingPattern": "Modèle de fabrication",

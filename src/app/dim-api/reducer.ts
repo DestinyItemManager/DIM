@@ -45,7 +45,7 @@ export interface DimApiState {
   profileLoadedFromIndexedDb: boolean;
   profileLoaded: boolean;
   profileLoadedError?: Error;
-  // unix timestamp for when the profile was last loaded
+  // unix timestamp for when any profile was last loaded
   profileLastLoaded: number;
 
   /**
@@ -65,6 +65,9 @@ export interface DimApiState {
    */
   profiles: {
     [accountKey: string]: {
+      // unix timestamp for when this specific profile was last loaded
+      profileLastLoaded: number;
+
       /** Loadouts stored by loadout ID */
       loadouts: {
         [id: string]: Loadout;
@@ -221,6 +224,7 @@ export const dimApi = (
               ...state.profiles,
               // Overwrite just this account's profile. If a specific key is missing from the response, don't overwrite it.
               [profileKey]: {
+                profileLastLoaded: Date.now(),
                 loadouts: profileResponse.loadouts
                   ? _.keyBy(profileResponse.loadouts, (l) => l.id)
                   : existingProfile?.loadouts ?? {},
@@ -243,7 +247,11 @@ export const dimApi = (
       };
 
       // If this is the first load, cleanup searches
-      if (account && !state.profileLoaded) {
+      if (
+        account &&
+        profileResponse.searches?.length &&
+        !state.searches[account.destinyVersion].length
+      ) {
         return produce(newState, (state) => cleanupInvalidSearches(state, account));
       }
 
@@ -1210,6 +1218,7 @@ export function parseProfileKey(profileKey: string): [string, DestinyVersion] {
 function ensureProfile(draft: Draft<DimApiState>, profileKey: string) {
   if (!draft.profiles[profileKey]) {
     draft.profiles[profileKey] = {
+      profileLastLoaded: 0,
       loadouts: {},
       tags: {},
       triumphs: [],

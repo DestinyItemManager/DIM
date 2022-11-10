@@ -1,3 +1,4 @@
+import { loadDimApiData } from 'app/dim-api/actions';
 import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
 import { del, get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
@@ -85,6 +86,7 @@ export function setActivePlatform(
         localStorage.setItem('dim-last-membership-id', account.membershipId);
         localStorage.setItem('dim-last-destiny-version', account.destinyVersion.toString());
         dispatch(actions.setCurrentAccount(account));
+        dispatch(loadDimApiData());
       }
     }
     return account;

@@ -20,6 +20,10 @@
   > * {
     pointer-events: none;
   }
+  // telesto
+  &:hover :global(.item-img) {
+    background-image: url('https://www.bungie.net/common/destiny2_content/icons/977b96607460863e36260a5428bdd4c3.jpg') !important;
+  }
 }
 
 .hasBadge {

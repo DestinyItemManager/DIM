@@ -96,6 +96,19 @@ export const currenciesSelector = createSelector(
   (currencies) => currencies.filter((c) => visibleCurrencies.includes(c.itemHash))
 );
 
+const transmogCurrencies = [
+  1583786617, // InventoryItem "Synthweave Template"
+  4238733045, // InventoryItem "Synthweave Plate"
+  1498161294, // InventoryItem "Synthweave Bolt"
+  4019412287, // InventoryItem "Synthweave Strap"
+];
+
+/** Synthweave {Template, Bolt, Plate, Strap} currencies */
+export const transmogCurrenciesSelector = createSelector(
+  (state: RootState) => state.inventory.currencies,
+  (currencies) => currencies.filter((c) => transmogCurrencies.includes(c.itemHash))
+);
+
 /** materials/currencies that aren't top level stuff */
 export const materialsSelector = (state: RootState) =>
   allItemsSelector(state).filter(
