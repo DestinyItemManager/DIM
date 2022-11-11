@@ -22,7 +22,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting } from 'app/settings/hooks';
-import { AppIcon, refreshIcon } from 'app/shell/icons';
+import { AppIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
@@ -49,6 +49,7 @@ import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import styles from './LoadoutBuilder.m.scss';
+import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import { useProcess } from './process/useProcess';
 import {
   ArmorEnergyRules,
@@ -164,6 +165,8 @@ export default memo(function LoadoutBuilder({
       statFilters,
       modPicker,
       compareSet,
+      canRedo,
+      canUndo,
     },
     lbDispatch,
   ] = useLbState(stores, defs, preloadedLoadout, initialClassType, initialLoadoutParameters);
@@ -179,13 +182,16 @@ export default memo(function LoadoutBuilder({
     [defs, loadoutParameters.mods]
   );
 
-  const { modMap: lockedModMap, unassignedMods } = useMemo(
-    () => categorizeArmorMods(lockedMods, allItems),
-    [allItems, lockedMods]
-  );
-
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
+
+  const characterItems = items[classType];
+
+  const { modMap: lockedModMap, unassignedMods } = useMemo(
+    () =>
+      categorizeArmorMods(lockedMods, characterItems ? Object.values(characterItems).flat() : []),
+    [characterItems, lockedMods]
+  );
 
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
   const setSetting = useSetSetting();
@@ -249,8 +255,6 @@ export default memo(function LoadoutBuilder({
     [statFilters]
   );
 
-  const characterItems = items[classType];
-
   const loadouts = useMemo(() => {
     const equippedLoadout: Loadout | undefined = newLoadoutFromEquipped(
       t('Loadouts.CurrentlyEquipped'),
@@ -262,7 +266,7 @@ export default memo(function LoadoutBuilder({
     return equippedLoadout ? [...classLoadouts, equippedLoadout] : classLoadouts;
   }, [allLoadouts, selectedStore]);
 
-  const [armorEnergyRules, filteredItems] = useMemo(() => {
+  const [armorEnergyRules, filteredItems, filterInfo] = useMemo(() => {
     const armorEnergyRules: ArmorEnergyRules = {
       ...loDefaultArmorEnergyRules,
       loadouts: {
@@ -276,8 +280,7 @@ export default memo(function LoadoutBuilder({
     if (loadoutParameters.assumeArmorMasterwork !== undefined) {
       armorEnergyRules.assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
     }
-
-    const items = filterItems({
+    const [items, filterInfo] = filterItems({
       defs,
       items: characterItems,
       pinnedItems,
@@ -288,7 +291,7 @@ export default memo(function LoadoutBuilder({
       armorEnergyRules,
       searchFilter,
     });
-    return [armorEnergyRules, items];
+    return [armorEnergyRules, items, filterInfo];
   }, [
     loadoutsByItem,
     optimizingLoadoutId,
@@ -363,6 +366,24 @@ export default memo(function LoadoutBuilder({
           </ol>
         </div>
       )}
+      <div className={styles.undoRedo}>
+        <button
+          className="dim-button"
+          onClick={() => lbDispatch({ type: 'undo' })}
+          type="button"
+          disabled={!canUndo}
+        >
+          <AppIcon icon={undoIcon} /> {t('Loadouts.Undo')}
+        </button>
+        <button
+          className="dim-button"
+          onClick={() => lbDispatch({ type: 'redo' })}
+          type="button"
+          disabled={!canRedo}
+        >
+          <AppIcon icon={redoIcon} /> {t('Loadouts.Redo')}
+        </button>
+      </div>
       <TierSelect
         stats={statFilters}
         statRangesFiltered={result?.statRangesFiltered}
@@ -482,7 +503,7 @@ export default memo(function LoadoutBuilder({
             </p>
           </div>
         )}
-        {result && (
+        {result && result.sets.length > 0 ? (
           <GeneratedSets
             sets={result.sets}
             subclass={subclass}
@@ -497,6 +518,20 @@ export default memo(function LoadoutBuilder({
             halfTierMods={halfTierMods}
             armorEnergyRules={result.armorEnergyRules}
             notes={notes}
+          />
+        ) : (
+          <NoBuildsFoundExplainer
+            defs={defs}
+            dispatch={lbDispatch}
+            lockedModMap={lockedModMap}
+            alwaysInvalidMods={unassignedMods}
+            autoAssignStatMods={autoStatMods}
+            armorEnergyRules={armorEnergyRules}
+            lockedExoticHash={lockedExoticHash}
+            statFilters={statFilters}
+            pinnedItems={pinnedItems}
+            filterInfo={filterInfo}
+            processInfo={result?.processInfo}
           />
         )}
         {modPicker.open && (

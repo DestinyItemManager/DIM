@@ -25,10 +25,11 @@ import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
 import { getDefaultAbilityChoiceHash, getSocketsByCategoryHashes } from 'app/utils/socket-utils';
+import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { useReducer } from 'react';
+import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { statFiltersFromLoadoutParamaters, statOrderFromLoadoutParameters } from './loadout-params';
 import {
@@ -40,7 +41,15 @@ import {
   StatFilters,
 } from './types';
 
-export interface LoadoutBuilderState {
+interface LoadoutBuilderUI {
+  modPicker: {
+    open: boolean;
+    plugCategoryHashWhitelist?: number[];
+  };
+  compareSet?: ArmorSet;
+}
+
+interface LoadoutBuilderConfiguration {
   loadoutParameters: LoadoutParameters;
   // TODO: also fold statOrder, statFilters into loadoutParameters
   statOrder: ArmorStatHashes[]; // stat hashes, including disabled stats
@@ -49,12 +58,9 @@ export interface LoadoutBuilderState {
   excludedItems: ExcludedItems;
   selectedStoreId?: string;
   subclass?: ResolvedLoadoutItem;
-  modPicker: {
-    open: boolean;
-    plugCategoryHashWhitelist?: number[];
-  };
-  compareSet?: ArmorSet;
 }
+
+export type LoadoutBuilderState = LoadoutBuilderUI & LoadoutBuilderConfiguration;
 
 export function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefinitions) {
   const missingClassName = Object.values(defs.Class).find((c) => c.classType === classType)!
@@ -67,7 +73,7 @@ export function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefini
   });
 }
 
-const lbStateInit = ({
+const lbConfigInit = ({
   stores,
   defs,
   preloadedLoadout,
@@ -83,7 +89,7 @@ const lbStateInit = ({
   initialLoadoutParameters: LoadoutParameters | undefined;
   savedLoadoutBuilderParameters: LoadoutParameters;
   savedStatConstraintsPerClass: { [classType: number]: StatConstraint[] };
-}): LoadoutBuilderState => {
+}): LoadoutBuilderConfiguration => {
   const pinnedItems: PinnedItems = {};
 
   // Preloaded loadouts from the "Optimize Armor" button take priority
@@ -172,20 +178,17 @@ const lbStateInit = ({
     statFilters,
     subclass,
     selectedStoreId,
-    modPicker: {
-      open: false,
-    },
   };
 };
 
-export type LoadoutBuilderAction =
+type LoadoutBuilderConfigAction =
   | {
       type: 'changeCharacter';
       store: DimStore;
       savedStatConstraintsByClass: { [classType: number]: StatConstraint[] };
     }
-  | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderState['statFilters'] }
-  | { type: 'sortOrderChanged'; sortOrder: LoadoutBuilderState['statOrder'] }
+  | { type: 'statFiltersChanged'; statFilters: LoadoutBuilderConfiguration['statFilters'] }
+  | { type: 'sortOrderChanged'; sortOrder: LoadoutBuilderConfiguration['statOrder'] }
   | {
       type: 'assumeArmorMasterworkChanged';
       assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
@@ -199,21 +202,52 @@ export type LoadoutBuilderAction =
   | { type: 'autoStatModsChanged'; autoStatMods: boolean }
   | { type: 'lockedModsChanged'; lockedMods: PluggableInventoryItemDefinition[] }
   | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
+  | { type: 'removeLockedMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'updateSubclass'; item: DimItem }
   | { type: 'removeSubclass' }
   | { type: 'updateSubclassSocketOverrides'; socketOverrides: { [socketIndex: number]: number } }
   | { type: 'removeSingleSubclassSocketOverride'; plug: PluggableInventoryItemDefinition }
   | { type: 'lockExotic'; lockedExoticHash: number }
-  | { type: 'removeLockedExotic' }
+  | { type: 'removeLockedExotic' };
+
+type LoadoutBuilderUIAction =
   | { type: 'openModPicker'; plugCategoryHashWhitelist?: number[] }
   | { type: 'closeModPicker' }
   | { type: 'openCompareDrawer'; set: ArmorSet }
   | { type: 'closeCompareDrawer' };
 
+export type LoadoutBuilderAction =
+  | LoadoutBuilderConfigAction
+  | LoadoutBuilderUIAction
+  | { type: 'undo' }
+  | { type: 'redo' };
+
+function lbUIReducer(state: LoadoutBuilderUI, action: LoadoutBuilderUIAction) {
+  switch (action.type) {
+    case 'openCompareDrawer':
+      return { ...state, compareSet: action.set };
+    case 'openModPicker':
+      return {
+        ...state,
+        modPicker: {
+          open: true,
+          plugCategoryHashWhitelist: action.plugCategoryHashWhitelist,
+        },
+      };
+    case 'closeCompareDrawer':
+      return { ...state, compareSet: undefined };
+    case 'closeModPicker':
+      return { ...state, modPicker: { open: false } };
+  }
+}
+
 // TODO: Move more logic inside the reducer
-function lbStateReducer(defs: D2ManifestDefinitions) {
-  return (state: LoadoutBuilderState, action: LoadoutBuilderAction): LoadoutBuilderState => {
+function lbConfigReducer(defs: D2ManifestDefinitions) {
+  return (
+    state: LoadoutBuilderConfiguration,
+    action: LoadoutBuilderConfigAction
+  ): LoadoutBuilderConfiguration => {
     switch (action.type) {
       case 'changeCharacter': {
         let loadoutParameters = {
@@ -386,6 +420,19 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
           },
         };
       }
+      case 'removeLockedMods': {
+        const newMods = [...(state.loadoutParameters.mods ?? [])].filter(
+          (mod) => !action.mods.some((excludedMod) => excludedMod.hash === mod)
+        );
+
+        return {
+          ...state,
+          loadoutParameters: {
+            ...state.loadoutParameters,
+            mods: newMods,
+          },
+        };
+      }
       case 'updateSubclass': {
         const { item } = action;
 
@@ -490,20 +537,6 @@ function lbStateReducer(defs: D2ManifestDefinitions) {
           },
         };
       }
-      case 'openModPicker':
-        return {
-          ...state,
-          modPicker: {
-            open: true,
-            plugCategoryHashWhitelist: action.plugCategoryHashWhitelist,
-          },
-        };
-      case 'closeModPicker':
-        return { ...state, modPicker: { open: false } };
-      case 'openCompareDrawer':
-        return { ...state, compareSet: action.set };
-      case 'closeCompareDrawer':
-        return { ...state, compareSet: undefined };
       case 'autoStatModsChanged':
         return {
           ...state,
@@ -525,9 +558,16 @@ export function useLbState(
 ) {
   const savedLoadoutBuilderParameters = useSelector(savedLoadoutParametersSelector);
   const savedStatConstraintsPerClass = useSelector(savedLoStatConstraintsByClassSelector);
-  return useReducer(
-    lbStateReducer(defs),
-    {
+
+  const {
+    state: lbConfState,
+    setState,
+    redo,
+    undo,
+    canRedo,
+    canUndo,
+  } = useHistory(
+    lbConfigInit({
       stores,
       defs,
       preloadedLoadout,
@@ -535,7 +575,50 @@ export function useLbState(
       initialLoadoutParameters,
       savedLoadoutBuilderParameters,
       savedStatConstraintsPerClass,
-    },
-    lbStateInit
+    })
   );
+
+  const lbConfReducer = useMemo(() => lbConfigReducer(defs), [defs]);
+
+  const [lbUIState, lbUIDispatch] = useReducer(lbUIReducer, {
+    compareSet: undefined,
+    modPicker: { open: false },
+  });
+
+  const dispatch = useCallback(
+    (action: LoadoutBuilderAction) => {
+      switch (action.type) {
+        case 'undo':
+          undo();
+          lbUIDispatch({ type: 'closeCompareDrawer' });
+          lbUIDispatch({ type: 'closeModPicker' });
+          break;
+        case 'redo':
+          redo();
+          lbUIDispatch({ type: 'closeCompareDrawer' });
+          lbUIDispatch({ type: 'closeModPicker' });
+          break;
+        case 'openCompareDrawer':
+        case 'closeCompareDrawer':
+        case 'openModPicker':
+        case 'closeModPicker':
+          lbUIDispatch(action);
+          break;
+        default:
+          setState((oldState) => lbConfReducer(oldState, action));
+          break;
+      }
+    },
+    [lbConfReducer, redo, setState, undo]
+  );
+
+  return [
+    {
+      ...lbConfState,
+      ...lbUIState,
+      canUndo,
+      canRedo,
+    },
+    dispatch,
+  ] as const;
 }

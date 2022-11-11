@@ -13,7 +13,7 @@ import { proxy, releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
-import { ProcessItem, ProcessItemsByBucket } from '../process-worker/types';
+import { ProcessItem, ProcessItemsByBucket, ProcessStatistics } from '../process-worker/types';
 import {
   ArmorEnergyRules,
   ArmorSet,
@@ -46,6 +46,9 @@ interface ProcessState {
     combos: number;
     processTime: number;
     statRangesFiltered?: StatRanges;
+
+    // What the actual process did to remove some sets.
+    processInfo: ProcessStatistics | undefined;
   } | null;
 }
 
@@ -169,7 +172,7 @@ export function useProcess({
         autoStatMods,
         proxy(setRemainingTime)
       )
-      .then(({ sets, combos, statRangesFiltered }) => {
+      .then(({ sets, combos, statRangesFiltered, processInfo }) => {
         infoLog(
           'loadout optimizer',
           `useProcess: worker time ${performance.now() - workerStart}ms`
@@ -186,6 +189,7 @@ export function useProcess({
             combos,
             processTime: performance.now() - processStart,
             statRangesFiltered,
+            processInfo,
           },
         }));
 
