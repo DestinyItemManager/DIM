@@ -72,6 +72,8 @@ export default function Record({
     recordDef.loreHash &&
     `http://www.ishtar-collective.net/entries/${recordDef.loreHash}`;
 
+  const recordShouldGlow = (recordDef.forTitleGilding && acquired) || trackedInDim;
+
   const name = obscured ? t('Progress.SecretTriumph') : recordDef.displayProperties.name;
 
   const description = obscured
@@ -171,12 +173,14 @@ export default function Record({
       className={clsx(styles.triumphRecord, {
         [styles.redeemed]: acquired,
         [styles.unlocked]: unlocked,
+        [styles.gildingTriumph]: recordDef.forTitleGilding,
         [styles.obscured]: obscured,
         [styles.tracked]: trackedInGame,
         [styles.trackedInDim]: trackedInDim,
         [styles.multistep]: intervals.length > 0,
       })}
     >
+      {recordShouldGlow && <div className={styles.glow} />}
       {!hideRecordIcon && recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
       <div className={styles.info}>
         {!obscured && recordDef.completionInfo && <div className={styles.score}>{scoreValue}</div>}
@@ -205,13 +209,16 @@ export default function Record({
           !acquired &&
           !obscured &&
           rewards.map((reward) => <Reward key={reward.itemHash} reward={reward} />)}
-        {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
-        {(!acquired || trackedInDim) && (
-          <div role="button" onClick={toggleTracked} className={styles.dimTrackedIcon}>
-            <img src={dimTrackedIcon} />
-          </div>
+        {recordDef.forTitleGilding && !obscured && (
+          <p className={styles.gildingText}>{t('Triumphs.GildingTriumph')}</p>
         )}
+        {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
       </div>
+      {(!acquired || trackedInDim) && (
+        <div role="button" onClick={toggleTracked} className={styles.dimTrackedIcon}>
+          <img src={dimTrackedIcon} />
+        </div>
+      )}
       {intervalProgressBar}
     </div>
   );

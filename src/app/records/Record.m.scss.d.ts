@@ -4,6 +4,9 @@ interface CssExports {
   'complete': string;
   'currentScore': string;
   'dimTrackedIcon': string;
+  'gildingText': string;
+  'gildingTriumph': string;
+  'glow': string;
   'icon': string;
   'info': string;
   'interval': string;

@@ -1,5 +1,4 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
@@ -150,43 +149,43 @@ export default memo(function GeneratedSets({
           armorEnergyRules={armorEnergyRules}
           notes={notes}
         />
-      ) : sets.length > 0 ? (
-        <WindowScroller ref={windowScroller}>
-          {({ height, isScrolling, onChildScroll, scrollTop }) => (
-            <List
-              autoHeight={true}
-              height={height}
-              width={rowWidth}
-              isScrolling={isScrolling}
-              onScroll={onChildScroll}
-              overscanRowCount={2}
-              rowCount={sets.length}
-              rowHeight={rowHeight || 160}
-              rowRenderer={({ index, key, style }) => (
-                <GeneratedSet
-                  key={key}
-                  style={style}
-                  set={sets[index]}
-                  subclass={subclass}
-                  selectedStore={selectedStore}
-                  lockedMods={lockedMods}
-                  pinnedItems={pinnedItems}
-                  lbDispatch={lbDispatch}
-                  statOrder={statOrder}
-                  enabledStats={enabledStats}
-                  loadouts={loadouts}
-                  params={params}
-                  halfTierMods={halfTierMods}
-                  armorEnergyRules={armorEnergyRules}
-                  notes={notes}
-                />
-              )}
-              scrollTop={scrollTop}
-            />
-          )}
-        </WindowScroller>
       ) : (
-        <h3>{t('LoadoutBuilder.NoBuildsFoundWithReasons')}</h3>
+        sets.length > 0 && (
+          <WindowScroller ref={windowScroller}>
+            {({ height, isScrolling, onChildScroll, scrollTop }) => (
+              <List
+                autoHeight={true}
+                height={height}
+                width={rowWidth}
+                isScrolling={isScrolling}
+                onScroll={onChildScroll}
+                overscanRowCount={2}
+                rowCount={sets.length}
+                rowHeight={rowHeight || 160}
+                rowRenderer={({ index, key, style }) => (
+                  <GeneratedSet
+                    key={key}
+                    style={style}
+                    set={sets[index]}
+                    subclass={subclass}
+                    selectedStore={selectedStore}
+                    lockedMods={lockedMods}
+                    pinnedItems={pinnedItems}
+                    lbDispatch={lbDispatch}
+                    statOrder={statOrder}
+                    enabledStats={enabledStats}
+                    loadouts={loadouts}
+                    params={params}
+                    halfTierMods={halfTierMods}
+                    armorEnergyRules={armorEnergyRules}
+                    notes={notes}
+                  />
+                )}
+                scrollTop={scrollTop}
+              />
+            )}
+          </WindowScroller>
+        )
       )}
     </div>
   );
