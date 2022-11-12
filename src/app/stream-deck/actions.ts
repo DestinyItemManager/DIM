@@ -20,6 +20,6 @@ export const streamDeckWaitSelection = createAction(
 )();
 
 /**
- * Cancel selection notification and stop related components behaviour
+ * Cancel selection notification and stop related components behavior
  */
 export const streamDeckClearSelection = createAction('stream-deck/CANCEL_SELECTION')();

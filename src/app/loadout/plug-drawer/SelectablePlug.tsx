@@ -1,3 +1,4 @@
+import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -95,6 +96,12 @@ function SelectablePlugDetails({
               <StatValue key={stat.statTypeHash} statHash={stat.statTypeHash} value={stat.value} />
             ))}
           </div>
+        )}
+        {plugDescriptions.communityInsight && (
+          <ClarityDescriptions
+            perk={plugDescriptions.communityInsight}
+            className={styles.clarityDescription}
+          />
         )}
       </div>
     </>

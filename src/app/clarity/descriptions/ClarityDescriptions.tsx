@@ -8,8 +8,8 @@ import styles from './Description.m.scss';
 import { Languages, LinesContent, Perk } from './descriptionInterface';
 
 const customContent = (content: LinesContent) => {
-  if (content.linkUrl) {
-    return <ExternalLink href={content.linkUrl}>{content.linkText}</ExternalLink>;
+  if (content.link) {
+    return <ExternalLink href={content.link}>{content.text}</ExternalLink>;
   }
 };
 
@@ -26,7 +26,10 @@ const joinClassNames = (classNames?: string[]) =>
 */
 const boldTextRegEx = /(^|\b)([+-]?(\d*\.)?\d+([xs]|ms|HP)?)(?:[%°+]|\b|$)/g;
 
-function applyFormatting(text: string) {
+function applyFormatting(text: string | undefined) {
+  if (text === undefined) {
+    return;
+  }
   const segments = [];
 
   const matches = [...text.matchAll(boldTextRegEx)];
@@ -59,18 +62,18 @@ export default function ClarityDescriptions({
   perk: Perk;
   className?: string;
 }) {
-  const currentLangue = useSelector(languageSelector);
+  const currentLangue = useSelector(languageSelector) as Languages;
   if (perk.descriptions === undefined) {
     return null;
   }
 
-  const description = perk.descriptions[currentLangue as Languages] || perk.descriptions.en;
+  const description = perk.descriptions[currentLangue] || perk.descriptions.en;
 
   const convertedDescription = description?.map((line, i) => (
     <div className={joinClassNames(line.classNames)} key={i}>
       {line.linesContent?.map((linesContent, i) => (
-        <span className={joinClassNames(linesContent.className)} title={linesContent.title} key={i}>
-          {linesContent.text ? applyFormatting(linesContent.text) : customContent(linesContent)}
+        <span className={joinClassNames(linesContent.classNames)} key={i}>
+          {linesContent.link ? customContent(linesContent) : applyFormatting(linesContent.text)}
         </span>
       ))}
     </div>

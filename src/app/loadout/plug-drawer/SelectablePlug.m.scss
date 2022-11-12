@@ -54,3 +54,16 @@
     margin-bottom: 4px;
   }
 }
+
+.clarityDescription {
+  margin-top: 2px;
+  border-left: 2px solid $communityBlue;
+  padding-left: 6px;
+  h3 {
+    margin: 0;
+    font-size: inherit;
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: bold;
+  }
+}
