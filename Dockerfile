@@ -1,5 +1,5 @@
 # Latest LTS node
-FROM node:17
+FROM node:18
 
 # Create app directory
 RUN mkdir -p /usr/src/app
