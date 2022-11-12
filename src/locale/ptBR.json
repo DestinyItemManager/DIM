@@ -523,7 +523,25 @@
     "MaxTier": "Máx. {{tier}}",
     "MissingClass": "Configuração é para: {{className}}",
     "MissingClassDescription": "A configuração que você está tentando ver é para uma classe de personagem que você não possui.",
-    "NoBuildsFoundWithReasons": "Nenhum conjunto compatível encontrado. Isso geralmente ocorre quando o DIM não consegue atribuir todos os mods selecionados a nenhum conjunto de armadura.",
+    "NoBuildsFoundExplainer": {
+      "ActiveSearchQuery": "A pesquisa atual está restringindo os itens que o DIM pode incluir nas builds",
+      "AllowAutoStatMods": "Permitir que o DIM automaticamente inclua mods de atributos adicionais",
+      "AlwaysInvalidMods": "Estes mods não se encaixam em nenhum dos itens que você possui:",
+      "AssumeElementChange": "Permitir ao DIM recomendar alterações no tipo de elemento das armaduras",
+      "AssumeMasterworked": "Permitir ao DIM recomendar armaduras obra-primas",
+      "AssumptionsRestricted": "DIM não pode sugerir alterações no tipo de energia de armadura:",
+      "BadSlot": "No slot {{bucketName}}, nenhum dos itens permitidos puderam acomodar estes mods:",
+      "Header": "Nenhuma build encontrada. Aqui estão os possíveis motivos que impediram o DIM de encontrá-las:",
+      "LowerBoundsFailed": "Alguns sets não estão de acordo com o nível de atributo mínimo exigido",
+      "MaybeAllowMoreItems": "Considere permitir outros itens:",
+      "MaybeDecreaseLowerBounds": "Considere reduzir o nível de atributo mínimo exigido",
+      "MaybeIncreaseUpperBounds": "Considere aumentar o nível máximo de atributo exigido",
+      "MaybeRemoveMods": "Considere remover alguns mods:",
+      "MaybeRemoveSearchQuery": "Considere limpar ou alterar o filtro na barra de pesquisa",
+      "ModAssignmentFailed": "Alguns sets não puderam acomodar todos os mods selecionados",
+      "RemoveMods": "Remova estes mods",
+      "UpperBoundsFailed": "Alguns sets não estão de acordo com o nível de atributo máximo exigido"
+    },
     "NoExotic": "Nenhum exótico",
     "NoExoticDescription": "Similar a pesquisar por \"not:exotic\" na barra de busca - nenhuma armadura exótica será incluída no set.",
     "NoLoadoutsToCompare": "Nenhum Set para comparar",
@@ -1105,6 +1123,7 @@
     "YourBestItem": "Seu melhor item"
   },
   "Triumphs": {
+    "GildingTriumph": "Gilding Triumph",
     "HideCompleted": "Ocultar triunfos concluídos",
     "RevealRedacted": "Exibir triunfos editados"
   },

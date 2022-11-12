@@ -523,7 +523,25 @@
     "MaxTier": "Máximo {{tier}}",
     "MissingClass": "La equipación es para: {{className}}",
     "MissingClassDescription": "La equipación que estás intentando visualizar es para una clase de personaje que no tienes.",
-    "NoBuildsFoundWithReasons": "No se encontraron equipaciones. Esto normalmente es porque DIM no pudo asignar todos los mods seleccionados a ningún conjunto de armadura.",
+    "NoBuildsFoundExplainer": {
+      "ActiveSearchQuery": "Una consulta de búsqueda activa está restringiendo los objetos que DIM puede incluir en las equipaciones",
+      "AllowAutoStatMods": "Permitir que DIM incluya automáticamente mods adicionales de estadística",
+      "AlwaysInvalidMods": "Estos mods no encajan en ninguno de los objetos que tienes:",
+      "AssumeElementChange": "Permitir que DIM recomiende cambios de elemento de energía de armadura",
+      "AssumeMasterworked": "Permitir que DIM recomiende convertir armadura en obra maestra",
+      "AssumptionsRestricted": "DIM no puede recomendar cambios de energía de armadura:",
+      "BadSlot": "En la ranura {{bucketName}} ninguno de los objetos permitidos pudieron acomodar estos mods:",
+      "Header": "No se encontraron equipaciones. Estas son las posibles razones por las que DIM no pudo encontrar equipaciones:",
+      "LowerBoundsFailed": "Muchas equipaciones no cumplieron los requisitos de nivel mínimos de estadística",
+      "MaybeAllowMoreItems": "Considera permitir otros objetos:",
+      "MaybeDecreaseLowerBounds": "Considera reducir los requisitos mínimos de nivel de estadística",
+      "MaybeIncreaseUpperBounds": "Considera incrementar los requisitos máximos de nivel de estadística",
+      "MaybeRemoveMods": "Considera eliminar ciertos mods:",
+      "MaybeRemoveSearchQuery": "Considera limpiar o cambiar el filtro en la barra de búsqueda",
+      "ModAssignmentFailed": "Muchas equipaciones no pudieron acomodar todos los mods solicitados",
+      "RemoveMods": "Elimina estos mods",
+      "UpperBoundsFailed": "Muchas equipaciones no cumplieron los requisitos de nivel máximos de estadística"
+    },
     "NoExotic": "Sin Exótico",
     "NoExoticDescription": "Equivalente a la búsqueda \"no:exotic\" en la barra de búsqueda - ninguna armadura exótica será incluida en los conjuntos.",
     "NoLoadoutsToCompare": "No hay equipaciones para comparar",
@@ -1105,6 +1123,7 @@
     "YourBestItem": "Tu mejor objeto"
   },
   "Triumphs": {
+    "GildingTriumph": "Triunfo para Dorado",
     "HideCompleted": "Ocultar triunfos completados",
     "RevealRedacted": "Revelar triunfos clasificados"
   },

@@ -523,7 +523,25 @@
     "MaxTier": "最大 {{tier}}",
     "MissingClass": "配裝適用於：{{className}}",
     "MissingClassDescription": "你正試圖查看的配裝適用於一個你未擁有的角色職業。",
-    "NoBuildsFoundWithReasons": "找不到配裝。這通常是因為 DIM 找不到能裝上所有選定模組的護甲組合。",
+    "NoBuildsFoundExplainer": {
+      "ActiveSearchQuery": "An active search query is restricting the items DIM can include in builds",
+      "AllowAutoStatMods": "Allow DIM to automatically include additional stat mods",
+      "AlwaysInvalidMods": "These mods don't fit into any of your owned items:",
+      "AssumeElementChange": "Allow DIM to recommend armor energy element changes",
+      "AssumeMasterworked": "Allow DIM to recommend masterworking armor",
+      "AssumptionsRestricted": "DIM cannot recommend armor energy changes:",
+      "BadSlot": "In the {{bucketName}} slot, none of the allowed items could accommodate these mods:",
+      "Header": "No builds were found. Here are possible reasons DIM couldn't find any builds:",
+      "LowerBoundsFailed": "Many sets did not meet minimum stat tier requirements",
+      "MaybeAllowMoreItems": "Consider allowing other items:",
+      "MaybeDecreaseLowerBounds": "Consider reducing minimum stat tier requirements",
+      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat tier requirements",
+      "MaybeRemoveMods": "Consider removing some mods:",
+      "MaybeRemoveSearchQuery": "Consider clearing or changing the filter in the search bar",
+      "ModAssignmentFailed": "Many sets could not accommodate all requested mods",
+      "RemoveMods": "Remove these mods",
+      "UpperBoundsFailed": "Many sets did not meet maximum stat tier requirements"
+    },
     "NoExotic": "非異域",
     "NoExoticDescription": "等同於搜索「not:exotic」 - 組合不會包含異域護甲。",
     "NoLoadoutsToCompare": "沒有要對比的配裝",
@@ -1105,6 +1123,7 @@
     "YourBestItem": "你的最佳物品"
   },
   "Triumphs": {
+    "GildingTriumph": "Gilding Triumph",
     "HideCompleted": "隱藏已完成的成就",
     "RevealRedacted": "顯示隱藏的成就"
   },

@@ -523,7 +523,25 @@
     "MaxTier": "最大 {{tier}}",
     "MissingClass": "ビルド: {{className}}",
     "MissingClassDescription": "表示しようとしているビルドは、あなたが持っていないキャラクタークラス向けです。",
-    "NoBuildsFoundWithReasons": "ビルドが見つかりません。これは通常、DIMが選択したすべてのMODをどのアーマーセットにも割り当てられなかったためです。",
+    "NoBuildsFoundExplainer": {
+      "ActiveSearchQuery": "アクティブサーチクエリは、DIM がビルドに含めることができる項目を制限しています",
+      "AllowAutoStatMods": "DIM に追加のステータス mod を自動的に含めることを許可する",
+      "AlwaysInvalidMods": "これらの mod は所有しているどのアイテムにも適合しません :",
+      "AssumeElementChange": "DIM が防具のエネルギー要素の変更を推奨できるようにする",
+      "AssumeMasterworked": "DIM がマスターワークしているアーマーを推奨できるようにする",
+      "AssumptionsRestricted": "DIM は防具のエネルギー変更を推奨できません :",
+      "BadSlot": "{{bucketName}} スロットでは、許可されたアイテムのいずれもこれらの mod に対応できません :",
+      "Header": "ビルドが見つかりませんでした。 DIM がビルドを見つけられなかった理由は次のとおりです :",
+      "LowerBoundsFailed": "多くのセットが最小ステータスティアの要件を満たしませんでした",
+      "MaybeAllowMoreItems": "他のアイテムを許可することを検討してください :",
+      "MaybeDecreaseLowerBounds": "最小のステータス要件を減らすことを検討してください",
+      "MaybeIncreaseUpperBounds": "最大のステータス要件を増やすことを検討してください",
+      "MaybeRemoveMods": "mod を削除することを検討してください :",
+      "MaybeRemoveSearchQuery": "検索バーでフィルターをクリアまたは変更することを検討してください",
+      "ModAssignmentFailed": "多くのセットはすべての要求された mod に対応できませんでした",
+      "RemoveMods": "これらの mod を削除",
+      "UpperBoundsFailed": "多くのセットは最大のステータス要件を満たしていません"
+    },
     "NoExotic": "エキゾチックなし",
     "NoExoticDescription": "検索バーで \"not:exotic\" を検索するのと同じです - エキゾチックなアーマーはセットに含まれません。",
     "NoLoadoutsToCompare": "比較するロードアウトはありません。",
@@ -1105,6 +1123,7 @@
     "YourBestItem": "最高のアイテム"
   },
   "Triumphs": {
+    "GildingTriumph": "Gilding Triumph",
     "HideCompleted": "完了した勝利の道のりを隠す",
     "RevealRedacted": "改定された勝利の道のりを表示する"
   },

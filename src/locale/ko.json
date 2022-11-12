@@ -523,7 +523,25 @@
     "MaxTier": "최대 {{tier}}",
     "MissingClass": "빌드 대상: {{className}}",
     "MissingClassDescription": "소지하지 않은 직업의 빌드입니다.",
-    "NoBuildsFoundWithReasons": "빌드를 찾을 수 없습니다. 일반적으로 DIM이 선택된 개조 부품을 어떤 방어구 세트에도 할당할 수 없기 때문입니다.",
+    "NoBuildsFoundExplainer": {
+      "ActiveSearchQuery": "활성화된 검색 쿼리가 DIM이 빌드에 포함할 수 있는 아이템을 제한하고 있습니다.",
+      "AllowAutoStatMods": "DIM이 능력치 개조 부품을 추가할 수 있도록 허용",
+      "AlwaysInvalidMods": "이 개조 부품이 소지한 아이템에 맞지 않음:",
+      "AssumeElementChange": "DIM이 방어구 에너지 유형을 변경할 수 있도록 허용",
+      "AssumeMasterworked": "DIM이 방어구 걸작을 추천하도록 허용",
+      "AssumptionsRestricted": "DIM이 방어구 에너지 유형 변경을 추천할 수 없음:",
+      "BadSlot": "{{bucketName}} 슬롯에서 이 모드를 장착할 수 있는 허용된 아이템이 없음:",
+      "Header": "빌드를 찾을 수 없습니다. DIM에서 빌드를 찾을 수 없는 이유는 다음과 같습니다:",
+      "LowerBoundsFailed": "대부분의 조합이 요청한 능력치 단계를 만족하지 않음",
+      "MaybeAllowMoreItems": "다른 아이템을 허용하는 것을 고려해보세요:",
+      "MaybeDecreaseLowerBounds": "최소 능력치 단계를 줄이는 것을 고려해보세요",
+      "MaybeIncreaseUpperBounds": "최대 능력치 단계를 높이는 것을 고려해보세요",
+      "MaybeRemoveMods": "일부 개조 부품을 제거해 보세요",
+      "MaybeRemoveSearchQuery": "검색 창에서 필터를 지우거나 변경해보세요",
+      "ModAssignmentFailed": "대부분의 조합이 요청한 개조 부품을 장착할 수 없음",
+      "RemoveMods": "이 개조 부품 제거",
+      "UpperBoundsFailed": "대부분의 조합이 최대 능력치 단계를 만족하지 않음"
+    },
     "NoExotic": "경이 없음",
     "NoExoticDescription": "검색 창에 \"not:exotic\"을 검색하는 것과 동일합니다 - 세트에 경이 방어구가 포함되지 않습니다.",
     "NoLoadoutsToCompare": "비교할 로드아웃 없음",
@@ -1105,6 +1123,7 @@
     "YourBestItem": "가장 좋은 아이템"
   },
   "Triumphs": {
+    "GildingTriumph": "금박 업적",
     "HideCompleted": "완료한 업적 숨기기",
     "RevealRedacted": "삭제된 업적 표시"
   },

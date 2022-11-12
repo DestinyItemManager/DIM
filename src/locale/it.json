@@ -523,7 +523,25 @@
     "MaxTier": "Max {{tier}}",
     "MissingClass": "Build per: {{className}}",
     "MissingClassDescription": "La build che stai cercando di visualizzare è per una classe di personaggio che non hai.",
-    "NoBuildsFoundWithReasons": "Nessuna build trovata. Questo succede tipicamente perché DIM non può assegnare tutte le Modifiche selezionate a nessun set di armature.",
+    "NoBuildsFoundExplainer": {
+      "ActiveSearchQuery": "Una query di ricerca attiva sta limitando gli oggetti che DIM può includere nelle build",
+      "AllowAutoStatMods": "Consenti a DIM di includere automaticamente ulteriori Modifiche delle statistiche",
+      "AlwaysInvalidMods": "Queste Modifiche non si adattano a nessuno dei tuoi oggetti:",
+      "AssumeElementChange": "Consenti a DIM di raccomandarti dei cambiamenti al tipo di energia dell'armatura",
+      "AssumeMasterworked": "Consenti a DIM di raccomandarti armature da portare al massimo livello prodigio",
+      "AssumptionsRestricted": "DIM non può raccomandarti dei cambiamenti al tipo di energia dell'armatura:",
+      "BadSlot": "Nello slot {{bucketName}}, nessun oggetto di quelli consentiti poteva alloggiare queste Modifiche:",
+      "Header": "Nessuna build trovata. Queste sono le possibili ragioni per cui DIM non ha trovato nessuna build:",
+      "LowerBoundsFailed": "Molti set non soddisfacevano i requisiti minimi delle statistiche",
+      "MaybeAllowMoreItems": "Considera la possibilità di permettere altri oggetti:",
+      "MaybeDecreaseLowerBounds": "Considera di abbassare i requisiti minimi delle statistiche",
+      "MaybeIncreaseUpperBounds": "Considera di aumentare i requisiti massimi delle statistiche",
+      "MaybeRemoveMods": "Considera di spostare queste Modifiche:",
+      "MaybeRemoveSearchQuery": "Considera di cancellare o cambiare il filtro nella barra di ricerca",
+      "ModAssignmentFailed": "Molti set non potevano alloggiare tutte le Modifiche richieste",
+      "RemoveMods": "Rimuovi queste Modifiche",
+      "UpperBoundsFailed": "Molti set non soddisfacevano i requisiti massimi delle statistiche"
+    },
     "NoExotic": "Nessuna Esotica",
     "NoExoticDescription": "Equivale alla ricerca \"not:exotic\" nella barra di ricerca - nessuna esotica verrà inclusa nei set.",
     "NoLoadoutsToCompare": "Nessun loadout da confrontare",
@@ -1105,6 +1123,7 @@
     "YourBestItem": "Il tuo miglior oggetto"
   },
   "Triumphs": {
+    "GildingTriumph": "Trionfo Indorato",
     "HideCompleted": "Nascondi trionfi completati",
     "RevealRedacted": "Mostra trionfi segreti"
   },

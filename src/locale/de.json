@@ -523,7 +523,25 @@
     "MaxTier": "Max. {{tier}}",
     "MissingClass": "Build ist für: {{className}}",
     "MissingClassDescription": "Der Build, den du sehen möchtest, ist für eine Charakterklasse gedacht, die du nicht hast.",
-    "NoBuildsFoundWithReasons": "Keine Builds gefunden. Dies liegt typischerweise daran, dass DIM nicht alle ausgewählten Mods einem Rüstungsset zuweisen konnte.",
+    "NoBuildsFoundExplainer": {
+      "ActiveSearchQuery": "Eine aktive Suchanfrage beschränkt die Elemente, die DIM in Ausrüstungen einschließen kann",
+      "AllowAutoStatMods": "Erlaube DIM zusätzliche Statistik-Mods automatisch einzubinden",
+      "AlwaysInvalidMods": "Diese Mods passen auf keine deiner Gegenstände:",
+      "AssumeElementChange": "Allow DIM to recommend armor energy element changes",
+      "AssumeMasterworked": "Allow DIM to recommend masterworking armor",
+      "AssumptionsRestricted": "DIM cannot recommend armor energy changes:",
+      "BadSlot": "Im {{bucketName}} Slot konnte keiner der erlaubten Gegenstände diese Mods aufnehmen:",
+      "Header": "Es wurden keine Builds gefunden. Hier sind mögliche Gründe, warum DIM keine Builds finden konnte:",
+      "LowerBoundsFailed": "Many sets did not meet minimum stat tier requirements",
+      "MaybeAllowMoreItems": "Consider allowing other items:",
+      "MaybeDecreaseLowerBounds": "Consider reducing minimum stat tier requirements",
+      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat tier requirements",
+      "MaybeRemoveMods": "Consider removing some mods:",
+      "MaybeRemoveSearchQuery": "Consider clearing or changing the filter in the search bar",
+      "ModAssignmentFailed": "Many sets could not accommodate all requested mods",
+      "RemoveMods": "Diese Mods entfernen",
+      "UpperBoundsFailed": "Many sets did not meet maximum stat tier requirements"
+    },
     "NoExotic": "Kein Exotisches",
     "NoExoticDescription": "Äquivalent zur Suche \"not:exotic\" in der Suchleiste - keine exotische Rüstung wird in Sets verwendet.",
     "NoLoadoutsToCompare": "Keine Ausrüstungen für Vergleich",
@@ -1105,6 +1123,7 @@
     "YourBestItem": "Dein bester Gegenstand"
   },
   "Triumphs": {
+    "GildingTriumph": "Gilding Triumph",
     "HideCompleted": "Abgeschlossene Triumphe ausblenden",
     "RevealRedacted": "Versteckte Triumphe enthüllen"
   },
