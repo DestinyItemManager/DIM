@@ -62,7 +62,7 @@ export default function ClarityDescriptions({
   perk: Perk;
   className?: string;
 }) {
-  const currentLangue = useSelector(languageSelector) as Languages;
+  const language = useSelector(languageSelector) as Languages;
   if (perk.descriptions === undefined) {
     return null;
   }
