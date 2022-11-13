@@ -613,6 +613,13 @@
     "GatherEngrams": "Gather Engrams",
     "GatherEngramsExceptExotics": "Exotics",
     "Generated": "T{{tier}} Loadout",
+    "Import": {
+      "BadURL": "Not a valid loadout share URL.",
+      "Error": "Error getting loadout:",
+      "Error404": "This loadout doesn't exist.",
+      "PasteHere": "Paste a loadout link to open the loadout in DIM."
+    },
+    "ImportLoadout": "Import Loadout",
     "ItemErrorSummary": "1 item error:",
     "ItemErrorSummary_plural": "{{count}} item errors:",
     "ItemLeveling": "Item Leveling",

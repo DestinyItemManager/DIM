@@ -19,7 +19,14 @@ import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-u
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { plainString } from 'app/search/search-filters/freeform';
 import { useSetting } from 'app/settings/hooks';
-import { addIcon, AppIcon, deleteIcon, faCalculator, faCheckCircle } from 'app/shell/icons';
+import {
+  addIcon,
+  AppIcon,
+  deleteIcon,
+  faCalculator,
+  faCheckCircle,
+  uploadIcon,
+} from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
@@ -30,6 +37,7 @@ import _ from 'lodash';
 import { ReactNode, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import styles from './Loadouts.m.scss';
 import LoadoutView from './LoadoutView';
@@ -54,6 +62,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const currentStore = getCurrentStore(stores)!;
   const [selectedStoreId, setSelectedStoreId] = useState(currentStore.id);
   const [sharedLoadout, setSharedLoadout] = useState<Loadout>();
+  const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);
   const selectedStore = getStore(stores, selectedStoreId)!;
   const classType = selectedStore.classType;
   const allLoadouts = useSelector(loadoutsSelector);
@@ -132,6 +141,13 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           <button type="button" className={styles.menuButton} onClick={handleNewLoadout}>
             <AppIcon icon={addIcon} /> <span>{t('Loadouts.Create')}</span>
           </button>
+          <button
+            type="button"
+            className={styles.menuButton}
+            onClick={() => setLoadoutImportOpen(true)}
+          >
+            <AppIcon icon={uploadIcon} /> <span>{t('Loadouts.ImportLoadout')}</span>
+          </button>
           <Link className={styles.menuButton} to={`../optimizer?class=${selectedStore.classType}`}>
             <AppIcon icon={faCalculator} /> {t('LB.LB')}
           </Link>
@@ -168,6 +184,14 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             account={account}
             loadout={sharedLoadout}
             onClose={() => setSharedLoadout(undefined)}
+          />
+        </Portal>
+      )}
+      {loadoutImportOpen && (
+        <Portal>
+          <LoadoutImportSheet
+            currentStoreId={currentStore.id}
+            onClose={() => setLoadoutImportOpen(false)}
           />
         </Portal>
       )}
