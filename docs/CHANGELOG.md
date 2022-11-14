@@ -1,5 +1,7 @@
 ## Next
 
+## 7.43.0 <span class="changelog-date">(2022-11-13)</span>
+
 * Gilding Triumphs for Seals are now denoted with a background, darker colors, and label text.
 * Loadout Optimizer now has Undo/Redo buttons covering all configuration options.
 * When Loadout Optimizer can't find any builds, it will now recommend configuration changes that could allow it to find builds.
