@@ -284,6 +284,7 @@ function SearchBar(
   } = useCombobox<SearchItem>({
     items,
     stateReducer,
+    initialInputValue: liveQuery,
     initialIsOpen: isPhonePortrait && mainSearchBar,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query.fullText || '',
