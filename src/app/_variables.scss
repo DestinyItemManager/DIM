@@ -98,32 +98,6 @@ $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
   }
 }
 
-// Apply spacing between children
-@mixin vertical-space-children($space) {
-  > *:nth-last-child(n + 2) {
-    margin-bottom: $space;
-  }
-}
-
-// Apply spacing between children
-@mixin horizontal-space-children($space) {
-  > *:nth-last-child(n + 2) {
-    margin-right: $space;
-  }
-}
-
-// Emulate the gap property for flexbox. Not all browsers support it (notably
-// iOS Safari < 14.5 and Chrome < 84). Use this instead of
-// horizontal/vertical-space-children only if you'll have wrapping content.
-@mixin flex-gap($gapRow, $gapColumn: $gapRow, $marginBottom: 0, $marginRight: 0) {
-  margin-bottom: -1 * $gapRow + $marginBottom;
-  margin-right: -1 * $gapColumn + $marginRight;
-  > * {
-    margin-bottom: $gapRow;
-    margin-right: $gapColumn;
-  }
-}
-
 // Show visible scrollbars when scrollable, even if the OS (e.g. macOS) prefers hidden scrollbars.
 @mixin visible-scrollbars {
   &::-webkit-scrollbar-track {

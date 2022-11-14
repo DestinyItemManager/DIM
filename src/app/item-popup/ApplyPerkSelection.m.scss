@@ -3,7 +3,7 @@
 .buttons {
   composes: item-details from global;
   composes: flexRow from '../dim-ui/common.m.scss';
-  @include horizontal-space-children(8px);
+  gap: 8px;
 }
 
 .insertButton {
@@ -13,5 +13,5 @@
   align-items: center;
   transition: none;
 
-  @include horizontal-space-children(8px);
+  gap: 8px;
 }

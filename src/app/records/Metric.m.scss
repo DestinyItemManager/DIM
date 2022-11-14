@@ -5,7 +5,7 @@
   margin: 8px 0 16px 0;
   position: relative;
 
-  @include horizontal-space-children(8px);
+  gap: 8px;
 
   p {
     margin: 8px 0 8px 36px;

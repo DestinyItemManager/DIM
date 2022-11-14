@@ -2,7 +2,7 @@
 
 .metrics {
   margin: 6px 10px 8px;
-  @include vertical-space-children(24px);
+  gap: 24px;
 }
 
 .title {

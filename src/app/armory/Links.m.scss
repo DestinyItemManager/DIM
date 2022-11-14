@@ -5,7 +5,7 @@
   margin: 0 0 0 32px;
   padding: 0;
   list-style: none;
-  @include vertical-space-children(4px);
+  gap: 4px;
 
   li {
     white-space: nowrap;

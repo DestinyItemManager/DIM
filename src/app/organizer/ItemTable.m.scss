@@ -41,7 +41,7 @@ $content-cells: 5;
     position: sticky;
     left: calc(4px + env(safe-area-inset-left));
     width: calc(98vw - env(safe-area-inset-left) - env(safe-area-inset-right));
-    @include horizontal-space-children(4px);
+    gap: 4px;
   }
 }
 
@@ -185,7 +185,7 @@ $content-cells: 5;
   columns: 2;
   height: 100%;
   box-sizing: border-box;
-  @include vertical-space-children(4px);
+  gap: 4px;
   column-gap: 8px;
   &.header {
     display: flex;

@@ -13,7 +13,7 @@
 
 .menuButtons {
   margin: 8px 0;
-  @include vertical-space-children(8px);
+  gap: 8px;
   @include phone-portrait {
     padding-left: 10px;
     padding-right: 10px;

@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  @include vertical-space-children(var(--item-margin));
+  gap: var(--item-margin);
 
   :global(.stat-row) {
     justify-content: space-between;
@@ -24,7 +24,7 @@
 
 .itemBucket {
   width: var(--item-size);
-  @include vertical-space-children(var(--item-margin));
+  gap: var(--item-margin);
 }
 
 .items {

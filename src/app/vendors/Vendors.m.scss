@@ -2,5 +2,5 @@
 
 .buttons {
   margin: 8px 0;
-  @include vertical-space-children(8px);
+  gap: 8px;
 }

@@ -46,5 +46,5 @@
   display: flex;
   flex-flow: row wrap;
   margin-top: 8px;
-  @include flex-gap(4px);
+  gap: 4px;
 }

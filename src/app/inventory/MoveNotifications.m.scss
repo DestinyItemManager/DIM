@@ -60,7 +60,7 @@
 }
 
 .errorList {
-  @include vertical-space-children(4px);
+  gap: 4px;
 }
 
 .warning {

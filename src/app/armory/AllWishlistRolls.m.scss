@@ -7,8 +7,5 @@
   border: 1px solid #333;
   border-radius: calc((16 / 50 * var(--item-size)) + 2px);
   padding: 2px;
-
-  &:nth-child(n + 1) {
-    margin-left: 2px;
-  }
+  gap: 2px;
 }
