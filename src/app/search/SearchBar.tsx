@@ -98,7 +98,10 @@ function mapStateToProps() {
     // This is a hack that prevents `searchQuery` from changing if `searchQueryVersion`
     // doesn't change, so we don't trigger an update.
     let manipulatedSearchQuery = prevSearchQuery;
-    if (searchQueryVersion !== prevSearchQueryVersion) {
+    if (searchQueryVersion === undefined) {
+      // OK, they didn't even provide searchQueryVersion, just pass through the original query
+      manipulatedSearchQuery = searchQuery;
+    } else if (searchQueryVersion !== prevSearchQueryVersion) {
       manipulatedSearchQuery = searchQuery;
       prevSearchQuery = searchQuery;
       prevSearchQueryVersion = searchQueryVersion;
@@ -221,7 +224,7 @@ function SearchBar(
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus = !mainSearchBar && !isPhonePortrait && !isiOSBrowser();
 
-  const [liveQueryLive, setLiveQuery] = useState('');
+  const [liveQueryLive, setLiveQuery] = useState(searchQuery ?? '');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
   const [menuMaxHeight, setMenuMaxHeight] = useState<undefined | number>();
   const inputElement = useRef<HTMLInputElement>(null);
