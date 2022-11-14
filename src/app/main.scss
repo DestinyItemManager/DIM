@@ -348,6 +348,9 @@ select {
 
   & .app-icon {
     margin-right: 4px;
+    &:only-child {
+      margin-right: unset;
+    }
   }
 }
 
