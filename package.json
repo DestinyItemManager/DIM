@@ -5,7 +5,7 @@
   "main": "app/index.html",
   "private": true,
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --verbose",
@@ -72,9 +72,7 @@
     "last 2 Opera versions"
   ],
   "resolutions": {
-    "@types/react": "18.0.14",
-    "react-redux": "^8.0.1",
-    "react-is": "^18.1.0"
+    "@types/react": "18.0.25"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
