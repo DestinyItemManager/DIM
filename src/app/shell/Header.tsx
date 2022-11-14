@@ -348,7 +348,7 @@ export default function Header() {
         <div className={styles.headerLinks}>{reverseDestinyLinks}</div>
         <div className={styles.headerRight}>
           {account && !isPhonePortrait && (
-            <span className="search-link">
+            <span className={styles.searchLink}>
               <SearchFilter onClear={hideSearch} ref={searchFilter} />
             </span>
           )}
@@ -358,7 +358,7 @@ export default function Header() {
               <AppIcon icon={settingsIcon} />
             </Link>
           )}
-          <span className={clsx(styles.menuItem, 'search-button')} onClick={toggleSearch}>
+          <span className={clsx(styles.menuItem, styles.searchButton)} onClick={toggleSearch}>
             <AppIcon icon={searchIcon} />
           </span>
         </div>

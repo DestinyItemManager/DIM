@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import styles from './MainSearchBarActions.m.scss';
 import { filteredItemsSelector, queryValidSelector } from './search-filter';
-import './search-filter.scss';
 import SearchResults from './SearchResults';
 
 /**

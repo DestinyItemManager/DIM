@@ -11,17 +11,6 @@
   }
 }
 
-.item-picker-search {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  :global(.search-filter) {
-    flex: 1;
-    margin-left: 0;
-    min-width: 0;
-  }
-}
-
 .item-picker-item {
   position: relative;
 }
