@@ -61,13 +61,13 @@
   },
   "homepage": "https://destinyitemmanager.com",
   "browserslist": [
-    "Chrome >= 79",
+    "Chrome >= 85",
     "last 2 ChromeAndroid versions",
     "last 2 FirefoxAndroid versions",
     "last 2 Firefox versions",
     "Firefox ESR",
     "last 2 Safari versions",
-    "iOS >= 12",
+    "iOS >= 14",
     "last 2 Edge versions",
     "last 2 Opera versions"
   ],
