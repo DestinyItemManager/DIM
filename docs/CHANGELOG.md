@@ -1,5 +1,7 @@
 ## Next
 
+* When using the Compare tool with weapons, enabling the "Assume Masterworked" toggle will show weapon stats as if their masterwork was upgraded to T10.
+
 ## 7.43.0 <span class="changelog-date">(2022-11-13)</span>
 
 * Gilding Triumphs for Seals are now denoted with a background, darker colors, and label text.

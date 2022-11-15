@@ -8,6 +8,7 @@ import {
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { statLabels } from 'app/organizer/Columns';
+import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
@@ -18,6 +19,7 @@ import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -68,6 +70,7 @@ export default function Compare() {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const [compareBaseStats, setCompareBaseStats] = useSetting('compareBaseStats');
+  const [assumeWeaponMasterwork, setAssumeWeaponMasterwork] = useSetting('compareWeaponMasterwork');
   const session = useSelector(compareSessionSelector);
   const rawCompareItems = useSelector(compareItemsSelector(session?.vendorCharacterId));
   const organizerLink = useSelector(compareOrganizerLinkSelector);
@@ -79,14 +82,43 @@ export default function Compare() {
   const [sortBetterFirst, setSortBetterFirst] = useState<boolean>(true);
   const [socketOverrides, onPlugClicked, resetSocketOverrides] = useSocketOverridesForItems();
 
+  const comparingArmor = rawCompareItems[0]?.bucket.inArmor;
+  const comparingWeapons = rawCompareItems[0]?.bucket.inWeapons;
+  const doCompareBaseStats = Boolean(compareBaseStats && comparingArmor);
+  const doAssumeWeaponMasterworks = Boolean(defs && assumeWeaponMasterwork && comparingWeapons);
+
   // Produce new items which have had their sockets changed
-  const compareItems = useMemo(
-    () =>
-      defs
-        ? rawCompareItems.map((i) => applySocketOverrides(defs, i, socketOverrides[i.id]))
-        : rawCompareItems,
-    [defs, rawCompareItems, socketOverrides]
-  );
+  const compareItems = useMemo(() => {
+    let items = rawCompareItems;
+    if (defs) {
+      if (doAssumeWeaponMasterworks) {
+        items = items.map((i) => {
+          const y2MasterworkSocket = i.sockets?.allSockets.find(
+            (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash
+          );
+          const plugSet = y2MasterworkSocket?.plugSet;
+          const plugged = y2MasterworkSocket?.plugged;
+          if (plugSet && plugged) {
+            const fullMasterworkPlug = _.maxBy(
+              plugSet.plugs.filter(
+                (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash
+              ),
+              (plugOption) => plugOption.plugDef.investmentStats[0]?.value
+            );
+            if (fullMasterworkPlug) {
+              return applySocketOverrides(defs, i, {
+                [y2MasterworkSocket.socketIndex]: fullMasterworkPlug.plugDef.hash,
+              });
+            }
+          }
+          return i;
+        });
+      }
+      items = items.map((i) => applySocketOverrides(defs, i, socketOverrides[i.id]));
+    }
+
+    return items;
+  }, [defs, doAssumeWeaponMasterworks, rawCompareItems, socketOverrides]);
 
   const cancel = useCallback(() => {
     // TODO: this is why we need a container, right? So we don't have to reset state
@@ -136,9 +168,6 @@ export default function Compare() {
     () => getAllStats(compareItems, compareBaseStats),
     [compareItems, compareBaseStats]
   );
-
-  const comparingArmor = firstCompareItem?.bucket.inArmor;
-  const doCompareBaseStats = Boolean(compareBaseStats && comparingArmor);
 
   const updateQuery = useCallback(
     (newQuery: string) => {
@@ -214,6 +243,14 @@ export default function Compare() {
           name="compareBaseStats"
           value={compareBaseStats}
           onChange={setCompareBaseStats}
+        />
+      )}
+      {comparingWeapons && defs && (
+        <Checkbox
+          label={t('Compare.AssumeMasterworked')}
+          name="compareWeaponMasterwork"
+          value={assumeWeaponMasterwork}
+          onChange={setAssumeWeaponMasterwork}
         />
       )}
       {exampleItem && <CompareSuggestions exampleItem={exampleItem} onQueryChanged={updateQuery} />}
