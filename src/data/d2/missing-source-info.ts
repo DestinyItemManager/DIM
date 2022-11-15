@@ -831,6 +831,7 @@ const missingSources: { [key: string]: number[] } = {
   ],
   deepstonecrypt: [],
   deluxe: [
+    1952218242, // Sequence Flourish
     2683682447, // Traitor's Fate
   ],
   do: [
@@ -2125,6 +2126,7 @@ const missingSources: { [key: string]: number[] } = {
     4251770245, // Boots of the Emperor's Agent
   ],
   limited: [
+    1952218242, // Sequence Flourish
     2683682447, // Traitor's Fate
   ],
   lost: [],
