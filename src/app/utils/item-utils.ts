@@ -365,3 +365,12 @@ export function isPlugStatActive(
 export function isD1Item(item: DimItem): item is D1Item {
   return item.destinyVersion === 1;
 }
+
+/** turns an item's list of stats into a dictionary of stats, keyed by stat hash */
+export function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value') {
+  const output: NodeJS.Dict<number> = {};
+  for (const stat of item.stats ?? []) {
+    output[stat.statHash] = stat[byWhichValue];
+  }
+  return output;
+}

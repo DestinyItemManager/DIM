@@ -1,7 +1,15 @@
 import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
 import { DimItem } from 'app/inventory/item-types';
-import { CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import {
+  CUSTOM_TOTAL_STAT_HASH,
+  D2ArmorStatHashByName,
+  TOTAL_STAT_HASH,
+} from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
+import { quoteFilterString } from 'app/search/query-parser';
+import { itemTypeFilter } from 'app/search/search-filters/known-values';
+import { getInterestingSocketMetadatas, getStatValuesByHash } from 'app/utils/item-utils';
+import { getIntrinsicArmorPerkSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Factor, factorComboCategories, FactorComboCategory, factorCombos } from './triage-factors';
 
@@ -50,6 +58,47 @@ export function getSimilarItems(
   }
 
   return results;
+}
+
+const armorStatFilterNames = Object.keys(D2ArmorStatHashByName);
+
+export function getBetterWorseItems(
+  exampleItem: DimItem,
+  allItems: DimItem[],
+  filterFactory: (query: string) => ItemFilter
+) {
+  const itemTypeFilterString = itemTypeFilter.fromItem!(exampleItem);
+
+  const exoticFilter = exampleItem.isExotic ? 'is:exotic' : 'not:exotic';
+
+  const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem) ?? [];
+  const modSlotFilter = `${exampleItemModSlotMetadatas
+    .map((m) => `modslot:${m.slotTag || 'none'}`)
+    .join(' ')}`;
+
+  const exampleItemIntrinsic =
+    !exampleItem.isExotic &&
+    getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
+  const intrinsicFilter = exampleItemIntrinsic
+    ? `perk:${quoteFilterString(exampleItemIntrinsic.name)}`
+    : '';
+  const exampleItemStats = getStatValuesByHash(exampleItem, 'base');
+
+  const betterStatsFilter =
+    armorStatFilterNames
+      .map((n) => `basestat:${n}:>=${exampleItemStats[D2ArmorStatHashByName[n]]}`)
+      .join(' ') + ` basestat:total:>${exampleItemStats[TOTAL_STAT_HASH]}`;
+  const betterFilter = `(${itemTypeFilterString} ${exoticFilter} ${modSlotFilter} ${intrinsicFilter} ${betterStatsFilter})`;
+  const betterItems = allItems.filter(filterFactory(betterFilter));
+
+  const worseStatsFilter =
+    armorStatFilterNames
+      .map((n) => `basestat:${n}:<=${exampleItemStats[D2ArmorStatHashByName[n]]}`)
+      .join(' ') + ` basestat:total:>${exampleItemStats[TOTAL_STAT_HASH]}`;
+  const worseFilter = `(${itemTypeFilterString} ${exoticFilter} ((${modSlotFilter}) or modslot:none) ${intrinsicFilter} ${worseStatsFilter})`;
+  const worseItems = allItems.filter(filterFactory(worseFilter));
+
+  return { betterItems, worseItems, betterFilter, worseFilter };
 }
 
 /**

@@ -19,9 +19,7 @@ export interface CompareSession {
    */
   readonly query: string;
 
-  /**
-   * The instance ID of the first item added to compare, so we can highlight it.
-   */
+  /** The instance ID of the first item added to compare, so we can highlight it. */
   readonly initialItemId?: string;
 
   /**
@@ -76,7 +74,12 @@ export const compare: Reducer<CompareState, CompareAction> = (
     }
 
     case getType(actions.compareFilteredItems):
-      return compareFilteredItems(state, action.payload.query, action.payload.filteredItems);
+      return compareFilteredItems(
+        state,
+        action.payload.query,
+        action.payload.filteredItems,
+        action.payload.initialItemId
+      );
 
     default:
       return state;
@@ -175,7 +178,9 @@ function removeCompareItem(state: CompareState, item: DimItem): CompareState {
 function compareFilteredItems(
   state: CompareState,
   query: string,
-  filteredItems: DimItem[]
+  filteredItems: DimItem[],
+  /** The instance ID of the first item added to compare, so we can highlight it. */
+  initialItemId?: string
 ): CompareState {
   // TODO: what if it's already open?
 
@@ -186,6 +191,7 @@ function compareFilteredItems(
     session: {
       query: query,
       itemCategoryHashes,
+      initialItemId,
     },
   };
 }
