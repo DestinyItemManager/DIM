@@ -12,7 +12,7 @@
     "ErrorLoadInventory": "Fehler beim Laden deiner Destiny {{version}} Charaktere und des Inventars",
     "ErrorLoadManifest": "Destiny Info-Datenbank kann nicht von Bungie geladen werden",
     "ErrorLoading": "Destiny Accounts können nicht von Bungie.net geladen werden",
-    "MissingAccountWarning": "Wenn du deinen Account hier nicht siehst, hast du dich möglicherweise nicht mit dem richtigen Bungie.net-Account eingeloggt oder Bungie.net ist wegen Wartungsarbeiten möglicherweise nicht verfügbar.",
+    "MissingAccountWarning": "Wenn du dein Konto hier nicht siehst, hast du dich möglicherweise nicht mit dem richtigen Bungie.net-Konto eingeloggt oder Bungie.net ist wegen Wartungsarbeiten möglicherweise nicht verfügbar.",
     "MissingDescription": "Der Account, den du sehen möchtest, ist kein Account, der mit deinem Bungie.net Profil verknüpft ist.",
     "MissingTitle": "Account nicht gefunden",
     "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen.",
@@ -85,6 +85,7 @@
   },
   "Compare": {
     "Archetype": "Urtyp",
+    "AssumeMasterworked": "Als Meisterwerk ansehen",
     "Button": "Vergleichen",
     "ButtonHelp": "Gegenstände vergleichen",
     "CompareBaseStats": "Basis-Werte anzeigen",
@@ -124,7 +125,7 @@
     "Title": "Ein Fehler ist aufgetreten"
   },
   "ErrorPanel": {
-    "Description": "Lade dein Inventar in der Destiny 2 Companion App um zu sehen, ob Bungie.net nicht verfügbar ist.",
+    "Description": "Versuche dein Inventar in der Destiny 2 Companion App zu laden, um zu sehen, ob Bungie.net nicht verfügbar ist.",
     "Troubleshooting": "Fehlerbehebung"
   },
   "FarmingMode": {
@@ -527,20 +528,20 @@
       "ActiveSearchQuery": "Eine aktive Suchanfrage beschränkt die Elemente, die DIM in Ausrüstungen einschließen kann",
       "AllowAutoStatMods": "Erlaube DIM zusätzliche Statistik-Mods automatisch einzubinden",
       "AlwaysInvalidMods": "Diese Mods passen auf keine deiner Gegenstände:",
-      "AssumeElementChange": "Allow DIM to recommend armor energy element changes",
-      "AssumeMasterworked": "Allow DIM to recommend masterworking armor",
-      "AssumptionsRestricted": "DIM cannot recommend armor energy changes:",
+      "AssumeElementChange": "Erlaube DIM Änderungen an der Rüstungs-Affinität zu empfehlen",
+      "AssumeMasterworked": "Erlaube DIM Rüstungen als Meisterwerk anzunehmen",
+      "AssumptionsRestricted": "DIM kann keine Änderungen an der Rüstungs-Affinität empfehlen:",
       "BadSlot": "Im {{bucketName}} Slot konnte keiner der erlaubten Gegenstände diese Mods aufnehmen:",
       "Header": "Es wurden keine Builds gefunden. Hier sind mögliche Gründe, warum DIM keine Builds finden konnte:",
-      "LowerBoundsFailed": "Many sets did not meet minimum stat tier requirements",
-      "MaybeAllowMoreItems": "Consider allowing other items:",
-      "MaybeDecreaseLowerBounds": "Consider reducing minimum stat tier requirements",
-      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat tier requirements",
-      "MaybeRemoveMods": "Consider removing some mods:",
-      "MaybeRemoveSearchQuery": "Consider clearing or changing the filter in the search bar",
-      "ModAssignmentFailed": "Many sets could not accommodate all requested mods",
+      "LowerBoundsFailed": "Viele Sets erfüllten nicht die Mindestanforderungen für Statusstufen",
+      "MaybeAllowMoreItems": "Erwäge andere Gegenstände zu erlauben:",
+      "MaybeDecreaseLowerBounds": "Ziehe in Betracht, die Mindestanforderungen an Statusstufen zu reduzieren",
+      "MaybeIncreaseUpperBounds": "Ziehe die Erhöhung der Statusstufenanforderung in Betracht",
+      "MaybeRemoveMods": "Erwäge einige Mods zu entfernen:",
+      "MaybeRemoveSearchQuery": "Ziehe in Betracht Filter in der Suchleiste zu löschen oder zu ändern",
+      "ModAssignmentFailed": "Viele Sets konnten nicht alle ausgewählten Mods unterbringen",
       "RemoveMods": "Diese Mods entfernen",
-      "UpperBoundsFailed": "Many sets did not meet maximum stat tier requirements"
+      "UpperBoundsFailed": "Viele Sets erfüllten nicht die maximalen Anforderungen für Statusstufen"
     },
     "NoExotic": "Kein Exotisches",
     "NoExoticDescription": "Äquivalent zur Suche \"not:exotic\" in der Suchleiste - keine exotische Rüstung wird in Sets verwendet.",
@@ -1123,7 +1124,7 @@
     "YourBestItem": "Dein bester Gegenstand"
   },
   "Triumphs": {
-    "GildingTriumph": "Gilding Triumph",
+    "GildingTriumph": "Triumph Vergoldung",
     "HideCompleted": "Abgeschlossene Triumphe ausblenden",
     "RevealRedacted": "Versteckte Triumphe enthüllen"
   },

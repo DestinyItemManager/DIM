@@ -85,6 +85,7 @@
   },
   "Compare": {
     "Archetype": "Archetipo",
+    "AssumeMasterworked": "Presupponi Prodigiosi",
     "Button": "Confronta",
     "ButtonHelp": "Confronta Oggetti",
     "CompareBaseStats": "Mostra statistiche di base",

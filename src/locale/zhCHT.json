@@ -85,6 +85,7 @@
   },
   "Compare": {
     "Archetype": "原型",
+    "AssumeMasterworked": "Assume Masterworked",
     "Button": "對比",
     "ButtonHelp": "對比物品",
     "CompareBaseStats": "顯示基礎屬性",
