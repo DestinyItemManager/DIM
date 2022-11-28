@@ -1,5 +1,7 @@
 ## Next
 
+## 7.45.0 <span class="changelog-date">(2022-11-27)</span>
+
 ## 7.44.1 <span class="changelog-date">(2022-11-22)</span>
 
 * A Rising Tide community event: Updates for new declassified items, and support for new dynamic values in the titles of Items and Vendor Categories.
