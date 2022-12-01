@@ -30,6 +30,10 @@ function applyFormatting(text: string | undefined) {
   if (text === undefined) {
     return;
   }
+  // I will remove this later just need to make this arrow optional in compiler
+  if (text === '🡅') {
+    return '';
+  }
   const segments = [];
 
   const matches = [...text.matchAll(boldTextRegEx)];
@@ -62,12 +66,12 @@ export default function ClarityDescriptions({
   perk: Perk;
   className?: string;
 }) {
-  const language = useSelector(languageSelector) as Languages;
+  const selectedLanguage = useSelector(languageSelector) as Languages;
   if (perk.descriptions === undefined) {
     return null;
   }
 
-  const description = perk.descriptions[currentLangue] || perk.descriptions.en;
+  const description = perk.descriptions[selectedLanguage] || perk.descriptions.en;
 
   const convertedDescription = description?.map((line, i) => (
     <div className={joinClassNames(line.classNames)} key={i}>
