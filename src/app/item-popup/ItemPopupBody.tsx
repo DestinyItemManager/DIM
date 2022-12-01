@@ -3,7 +3,6 @@ import { t } from 'app/i18next-t';
 import { doShowTriage, ItemTriage, TriageTabToggle } from 'app/item-triage/ItemTriage';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
-import React from 'react';
 import { DimItem } from '../inventory/item-types';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemDetails from './ItemDetails';
@@ -27,7 +26,7 @@ export default function ItemPopupBody({
   onTabChanged(tab: ItemPopupTab): void;
 }) {
   const failureStrings = Array.from(extraInfo?.failureStrings || []);
-  if (!item.canPullFromPostmaster && item.location.inPostmaster) {
+  if (item.owner !== 'unknown' && !item.canPullFromPostmaster && item.location.inPostmaster) {
     failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
   }
 
