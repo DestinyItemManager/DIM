@@ -7,7 +7,6 @@ import { loadStores } from 'app/inventory/d2-stores';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { ThunkResult } from 'app/store/types';
 import { download } from 'app/utils/util';
-import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import './settings.scss';
@@ -47,7 +46,7 @@ export function TroubleshootingSettings() {
           {t('Settings.ExportProfile')}
         </button>
 
-        {$DIM_FLAVOR === 'dev' && (
+        {($DIM_FLAVOR === 'dev' || (window as any).enableMockProfile) && (
           <FileUpload
             title="Upload Profile Response JSON"
             accept={{ 'application/json': ['.json'] }}
