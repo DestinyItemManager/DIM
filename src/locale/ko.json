@@ -85,6 +85,7 @@
   },
   "Compare": {
     "Archetype": "아키타입",
+    "AssumeMasterworked": "걸작 가정",
     "Button": "비교",
     "ButtonHelp": "아이템 비교",
     "CompareBaseStats": "기본 능력치 표시",
@@ -124,7 +125,7 @@
     "Title": "문제가 발생했습니다"
   },
   "ErrorPanel": {
-    "Description": "Destiny 2 컴패니언 앱에서 소지품을 불러와서 Bungie.net 서버 상태를 확인하세요.",
+    "Description": "Destiny 2 컴패니언 앱에서 소지품을 불러와서 Bungie.net 서버 상태를 확인해 보세요.",
     "Troubleshooting": "문제 해결 가이드"
   },
   "FarmingMode": {
@@ -537,7 +538,7 @@
       "MaybeDecreaseLowerBounds": "최소 능력치 단계를 줄이는 것을 고려해보세요",
       "MaybeIncreaseUpperBounds": "최대 능력치 단계를 높이는 것을 고려해보세요",
       "MaybeRemoveMods": "일부 개조 부품을 제거해 보세요",
-      "MaybeRemoveSearchQuery": "검색 창에서 필터를 지우거나 변경해보세요",
+      "MaybeRemoveSearchQuery": "검색 창에서 필터를 지우거나 변경해 보세요",
       "ModAssignmentFailed": "대부분의 조합이 요청한 개조 부품을 장착할 수 없음",
       "RemoveMods": "이 개조 부품 제거",
       "UpperBoundsFailed": "대부분의 조합이 최대 능력치 단계를 만족하지 않음"

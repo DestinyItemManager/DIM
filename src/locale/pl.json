@@ -85,6 +85,7 @@
   },
   "Compare": {
     "Archetype": "Archetyp",
+    "AssumeMasterworked": "Assume Masterworked",
     "Button": "Porównaj",
     "ButtonHelp": "Porównaj Przedmioty",
     "CompareBaseStats": "Pokaż podstawowe statystyki",

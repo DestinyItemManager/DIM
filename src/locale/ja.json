@@ -85,6 +85,7 @@
   },
   "Compare": {
     "Archetype": "原型",
+    "AssumeMasterworked": "Assume Masterworked",
     "Button": "比較",
     "ButtonHelp": "アイテムを比較する",
     "CompareBaseStats": "基本Statsを表示",

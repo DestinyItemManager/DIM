@@ -1,6 +1,7 @@
 import ArmorySheet from 'app/armory/ArmorySheet';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
@@ -59,7 +60,9 @@ export default function ItemPopupHeader({
       {noLink || item.destinyVersion === 1 ? (
         <span className={styles.title}>{item.name}</span>
       ) : (
-        <a className={styles.title}>{item.name}</a>
+        <a className={styles.title}>
+          <RichDestinyText text={item.name} ownerId={item.owner} />
+        </a>
       )}
 
       <div className={styles.subtitle}>

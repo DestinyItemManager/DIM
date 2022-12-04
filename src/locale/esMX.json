@@ -85,6 +85,7 @@
   },
   "Compare": {
     "Archetype": "Arquetipo",
+    "AssumeMasterworked": "Asumir Obra Maestra Completa",
     "Button": "Comparar",
     "ButtonHelp": "Comparar Objetos",
     "CompareBaseStats": "Mostrar Estadísticas Base",

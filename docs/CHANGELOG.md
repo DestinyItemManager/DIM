@@ -1,5 +1,13 @@
 ## Next
 
+## 7.45.0 <span class="changelog-date">(2022-11-27)</span>
+
+## 7.44.1 <span class="changelog-date">(2022-11-22)</span>
+
+* A Rising Tide community event: Updates for new declassified items, and support for new dynamic values in the titles of Items and Vendor Categories.
+
+## 7.44.0 <span class="changelog-date">(2022-11-20)</span>
+
 * When using the Compare tool with weapons, enabling the "Assume Masterworked" toggle will show weapon stats as if their masterwork was upgraded to T10.
 
 ## 7.43.0 <span class="changelog-date">(2022-11-13)</span>

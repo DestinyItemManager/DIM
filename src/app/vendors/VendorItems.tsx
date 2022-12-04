@@ -1,3 +1,4 @@
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
@@ -181,7 +182,13 @@ export default function VendorItems({
             !ignoreCategories.includes(vendor.def.displayCategories[categoryIndex].identifier) && (
               <div className={styles.vendorRow} key={categoryIndex}>
                 <h3 className={styles.categoryTitle}>
-                  {vendor.def.displayCategories[categoryIndex]?.displayProperties.name || 'Unknown'}
+                  <RichDestinyText
+                    text={
+                      vendor.def.displayCategories[categoryIndex]?.displayProperties.name ||
+                      'Unknown'
+                    }
+                    ownerId={characterId}
+                  />
                 </h3>
                 <div className={styles.vendorItems}>
                   {items
