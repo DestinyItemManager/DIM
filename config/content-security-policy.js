@@ -40,7 +40,7 @@ module.exports = function csp(env) {
       // DIM Sync
       'https://api.destinyitemmanager.com',
       // Clarity
-      'https://ice-mourne.github.io',
+      'https://database-clarity.github.io',
       // Stream Deck Plugin
       'ws://localhost:9119',
     ],
