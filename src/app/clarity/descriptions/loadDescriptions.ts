@@ -7,8 +7,8 @@ import * as actions from '../actions';
 import { ClarityDescription, ClarityVersions } from './descriptionInterface';
 
 const urls = {
-  descriptions: 'https://ice-mourne.github.io/database-clarity/descriptions.json',
-  version: 'https://ice-mourne.github.io/database-clarity/versions.json',
+  descriptions: 'https://database-clarity.github.io/Live-Clarity-Database/descriptions/dim.json',
+  version: 'https://database-clarity.github.io/Live-Clarity-Database/versions.json',
 } as const;
 
 const fetchClarity = async (type: keyof typeof urls) => {

@@ -1,21 +1,20 @@
+import { languageSelector } from 'app/dim-api/selectors';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
+import { useSelector } from 'react-redux';
 /* eslint-disable css-modules/no-unused-class */
 import styles from './Description.m.scss';
-import { LinesContent, Perk } from './descriptionInterface';
+import { Languages, LinesContent, Perk } from './descriptionInterface';
 
 const customContent = (content: LinesContent) => {
-  if (content.linkUrl) {
-    return <ExternalLink href={content.linkUrl}>{content.linkText}</ExternalLink>;
+  if (content.link) {
+    return <ExternalLink href={content.link}>{content.text}</ExternalLink>;
   }
 };
 
-const joinClassNames = (classNames?: string) =>
-  classNames
-    ?.split(' ')
-    .map((className) => styles[className])
-    .join(' ');
+const joinClassNames = (classNames?: string[]) =>
+  classNames?.map((className) => styles[className]).join(' ');
 
 /*
        (^|\b) : start from the beginning of the string or a word boundary
@@ -27,7 +26,14 @@ const joinClassNames = (classNames?: string) =>
 */
 const boldTextRegEx = /(^|\b)([+-]?(\d*\.)?\d+([xs]|ms|HP)?)(?:[%°+]|\b|$)/g;
 
-function applyFormatting(text: string) {
+function applyFormatting(text: string | undefined) {
+  if (text === undefined) {
+    return;
+  }
+  // I will remove this later just need to make this arrow optional in compiler
+  if (text === '🡅') {
+    return '';
+  }
   const segments = [];
 
   const matches = [...text.matchAll(boldTextRegEx)];
@@ -60,15 +66,18 @@ export default function ClarityDescriptions({
   perk: Perk;
   className?: string;
 }) {
-  if (!perk.simpleDescription) {
+  const selectedLanguage = useSelector(languageSelector) as Languages;
+  if (perk.descriptions === undefined) {
     return null;
   }
 
-  const convertedDescription = perk.simpleDescription.map((line, i) => (
-    <div className={joinClassNames(line.className)} key={i}>
-      {line.lineText?.map((linesContent, i) => (
-        <span className={joinClassNames(linesContent.className)} title={linesContent.title} key={i}>
-          {linesContent.text ? applyFormatting(linesContent.text) : customContent(linesContent)}
+  const description = perk.descriptions[selectedLanguage] || perk.descriptions.en;
+
+  const convertedDescription = description?.map((line, i) => (
+    <div className={joinClassNames(line.classNames)} key={i}>
+      {line.linesContent?.map((linesContent, i) => (
+        <span className={joinClassNames(linesContent.classNames)} key={i}>
+          {linesContent.link ? customContent(linesContent) : applyFormatting(linesContent.text)}
         </span>
       ))}
     </div>

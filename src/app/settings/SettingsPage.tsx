@@ -1,6 +1,6 @@
 import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
-import { clarityDiscordLink, clarityLink, compendiumLink } from 'app/clarity/about';
+import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
@@ -389,7 +389,6 @@ export default function SettingsPage() {
                   dangerouslySetInnerHTML={{
                     __html: t('Views.About.CommunityInsight', {
                       clarityLink,
-                      compendiumLink,
                       clarityDiscordLink,
                     }),
                   }}

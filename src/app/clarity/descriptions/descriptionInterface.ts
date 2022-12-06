@@ -1,33 +1,49 @@
 export interface LinesContent {
   text?: string;
-  className?: string;
-  linkUrl?: string;
-  linkText?: string;
-  title?: string;
+  classNames?: string[];
+  link?: string;
 }
 export interface Line {
-  lineText?: LinesContent[];
-  className?: string;
+  linesContent?: LinesContent[];
+  classNames?: string[];
 }
-type PerkType =
-  | 'armorExotic'
-  | 'armorMod'
-  // ---------
-  | 'weaponPerkExotic'
-  | 'weaponFrameExotic'
-  | 'weaponPerk'
-  | 'weaponPerkEnhanced'
-  | 'weaponFrame'
-  | 'weaponMod'
-  | 'weaponCatalystExotic'
-  // ---------
-  | 'ghostMod';
 
+export type Languages =
+  /** English - English */
+  | 'en'
+  /** German - Deutsch */
+  | 'de'
+  /** French - Français */
+  | 'fr'
+  /** Italian - Italiano */
+  | 'it'
+  /** Polish - Polski */
+  | 'pl'
+  /** Russian - Русский */
+  | 'ru'
+  /** Spanish (Spain) - Español (España) */
+  | 'es'
+  /** Spanish (Mexico) - Español (México) */
+  | 'es-mx'
+  /** Korean - 한국어 */
+  | 'ko'
+  /** Portuguese (Brazil) - Português (Brasil) */
+  | 'pt-rb'
+  /** Japanese - 日本語 */
+  | 'ja'
+  /** Chinese (Traditional) - 繁體中文 */
+  | 'zh-cht'
+  /** Chinese (Simplified) - 简体中文 */
+  | 'zh-chs';
+
+/**
+ * Clarity perk
+ */
 export interface Perk {
   /**
    * Perk hash from inventoryItems
    */
-  id: number;
+  hash: number;
   /**
    * Perk name from inventoryItems
    */
@@ -36,38 +52,15 @@ export interface Perk {
   /**
    * Exotic armor / weapon hash from inventoryItems
    */
-  itemId?: number;
+  itemHash?: number;
   /**
    * Exotic armor / weapon name from inventoryItems
    */
   itemName?: string;
 
-  /**
-   * Basically is this armor mod, exotic weapon perk, catalyst, etc
-   */
-  type: PerkType;
-
-  description: Line[];
-  simpleDescription?: Line[];
-
-  /**
-   * Community gathered stats that are not provided by Bungie
-   */
-  stats?: { [key: string]: any };
-
-  /**
-   * Description with stats only (not needed in DIM)
-   */
-  statOnly?: boolean;
-
-  /**
-   * Then last time perk was updated time in ms (Date.now())
-   */
-  lastUpdate: number;
-  /**
-   * Name of person who updated this perk so we know who to blame
-   */
-  updatedBy: string;
+  descriptions: {
+    [key in Languages]?: Line[];
+  };
 }
 
 export interface ClarityDescription {
@@ -79,7 +72,9 @@ export interface ClarityDescription {
 
 export interface ClarityVersions {
   /**
-   * version format 1.0
+   ** Version format x.y
+   ** x - major version requiring update to DIM
+   ** y - minor version just simple update to description
    */
   descriptions: number;
 }

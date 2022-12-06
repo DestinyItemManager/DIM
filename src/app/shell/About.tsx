@@ -1,5 +1,5 @@
 import { getToken } from 'app/bungie-api/oauth-tokens';
-import { clarityDiscordLink, clarityLink, compendiumLink } from 'app/clarity/about';
+import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { useEffect } from 'react';
@@ -106,7 +106,6 @@ export default function About() {
           dangerouslySetInnerHTML={{
             __html: t('Views.About.CommunityInsight', {
               clarityLink,
-              compendiumLink,
               clarityDiscordLink,
             }),
           }}

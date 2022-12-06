@@ -94,20 +94,8 @@ export function usePlugDescriptions(
         clarityPerk = allClarityDescriptions[regularPerkHash];
       }
     }
-
-    if (clarityPerk && !clarityPerk.statOnly) {
-      // strip out any strings that are used in the Bungie description
-      const communityInsightWithoutBungieStrings = stripUsedStrings(
-        clarityPerk,
-        statAndBungieDescStrings
-      );
-      if (communityInsightWithoutBungieStrings) {
-        // if our stripped community description is truthy, we know it contains at least 1 unique string
-        // we only want to strip out Bungie description strings if we're also showing the Bungie description
-        result.communityInsight = showBungieDescription
-          ? communityInsightWithoutBungieStrings
-          : stripUsedStrings(clarityPerk, statStrings);
-      }
+    if (clarityPerk) {
+      result.communityInsight = clarityPerk;
     }
   }
 
@@ -203,7 +191,7 @@ function getPerkDescriptions(
   Most plugs use the description field to describe their functionality.
 
   Some plugs (e.g. armor mods) store their functionality in their perk descriptions and use the description
-  field for auxiliary info like requirements and caveats. For these plugs, we want to prioritise strings in the
+  field for auxiliary info like requirements and caveats. For these plugs, we want to prioritize strings in the
   perks and only fall back to the actual description if we don't have any perks.
 
   Other plugs (e.g. Exotic catalysts) always use the description field to store their requirements.
@@ -262,34 +250,4 @@ function getPerkDescriptions(
   }
 
   return results;
-}
-
-function stripUsedStrings(
-  communityInsight: Readonly<Perk>,
-  usedStrings: ReadonlySet<string>
-): Perk | undefined {
-  if (!communityInsight.simpleDescription) {
-    return;
-  }
-
-  // todo: only rebuild these arrays if they contain a duplicate line
-
-  const simpleDescription = communityInsight.simpleDescription.map((line) =>
-    line.lineText
-      ? {
-          ...line,
-          lineText: line.lineText.filter(
-            (content) => !content.text || !usedStrings.has(content.text)
-          ),
-        }
-      : line
-  );
-  if (!simpleDescription.some((line) => line.lineText?.length)) {
-    return;
-  }
-
-  return {
-    ...communityInsight,
-    simpleDescription,
-  };
 }
