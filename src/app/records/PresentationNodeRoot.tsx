@@ -88,9 +88,9 @@ export default function PresentationNodeRoot({
 
   const plugSetCollections = [
     // Emotes
-    { hash: 1155321287, displayItem: 3960522253 },
+    { hash: 2860926541, displayItem: 3960522253 },
     // Projections
-    { hash: 499268600, displayItem: 2544954628 },
+    { hash: 2540258701, displayItem: 2544954628 },
   ];
 
   return (

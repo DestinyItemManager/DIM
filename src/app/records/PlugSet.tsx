@@ -3,7 +3,6 @@ import { percent } from 'app/shell/formatters';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
