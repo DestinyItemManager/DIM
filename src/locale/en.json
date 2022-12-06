@@ -1140,7 +1140,7 @@
     "About": {
       "APIHistory": "View the history of all actions taken by DIM (and other Destiny apps)",
       "BungieCopyright": "All images and content are property of Bungie.",
-      "CommunityInsight": "Community Perk Insights courtesy of {{clarityLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
+      "CommunityInsight": "Community Perk Insights courtesy of {{clarityLink}} and {{compendiumLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
       "Discord": "Discord",
       "DiscordHelp": "Ask questions, give feedback, and get support in our Discord channels.",
       "FAQ": "Frequently Asked Questions",
