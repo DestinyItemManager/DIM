@@ -85,7 +85,15 @@ export function usePlugDescriptions(
   const perks = getPerkDescriptions(plug, defs, statAndBungieDescStrings);
 
   if (showCommunityDescription && allClarityDescriptions) {
-    const clarityPerk = allClarityDescriptions[plug.hash];
+    let clarityPerk = allClarityDescriptions[plug.hash];
+
+    // if we couldn't find a Clarity description for this perk, fall back to the non-enhanced perk variant
+    if (!clarityPerk) {
+      const regularPerkHash = enhancedPerkToRegularPerk[plug.hash];
+      if (regularPerkHash) {
+        clarityPerk = allClarityDescriptions[regularPerkHash];
+      }
+    }
     if (clarityPerk) {
       result.communityInsight = clarityPerk;
     }
