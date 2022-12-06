@@ -324,7 +324,9 @@ export function buildStores(
       s,
       defs,
       characterProgress,
-      profileInfo.profileProgression?.data?.seasonalArtifact.powerBonusProgression.progressionHash
+      // optional chaining here accounts for a edge-case possible, but type-unadvertised,
+      // missing artifact power bonus. please keep this here.
+      profileInfo.profileProgression?.data?.seasonalArtifact?.powerBonusProgression?.progressionHash
     );
   }
 
