@@ -11,7 +11,7 @@ export const D2EventInfo = {
   1: {
     name: 'The Dawning',
     shortname: 'dawning',
-    sources: [510530151, 930411416, 3952847349, 4054646289],
+    sources: [464727567, 547767158, 629617846, 2364515524, 3092212681, 3952847349, 4054646289],
     engram: [1170720694, 3151770741],
   },
   2: {
@@ -58,8 +58,11 @@ export const D2EventPredicateLookup = {
 };
 
 export const D2SourcesToEvent = {
-  510530151: D2EventEnum.DAWNING,
-  930411416: D2EventEnum.DAWNING,
+  464727567: D2EventEnum.DAWNING,
+  547767158: D2EventEnum.DAWNING,
+  629617846: D2EventEnum.DAWNING,
+  2364515524: D2EventEnum.DAWNING,
+  3092212681: D2EventEnum.DAWNING,
   3952847349: D2EventEnum.DAWNING,
   4054646289: D2EventEnum.DAWNING,
   2502262376: D2EventEnum.CRIMSON_DAYS,

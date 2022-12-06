@@ -38,9 +38,9 @@ const missingSources: { [key: string]: number[] } = {
     3706457515, // Songbreaker Grips
   ],
   banshee: [
-    1324233016, // Sword Scavenger
-    1324233019, // Scout Rifle Loader
-    2187989977, // Machine Gun Scavenger
+    2092805628, // Pulse Rifle Loader
+    2092805631, // Hand Cannon Targeting
+    4058375013, // Bow Dexterity
   ],
   battlegrounds: [],
   blackarmory: [],
@@ -349,7 +349,6 @@ const missingSources: { [key: string]: number[] } = {
     2162276668, // Cry Defiance
     2165661157, // Baseline Mark
     2183384906, // War Mantis
-    2187989983, // Focusing Strike
     2190967049, // Prophet Snow
     2211544324, // The Outlander's Cloak
     2230522771, // War Mantis
@@ -831,6 +830,11 @@ const missingSources: { [key: string]: number[] } = {
   ],
   deepstonecrypt: [],
   deluxe: [
+    1784442058, //
+    1784442060, //
+    1784442061, //
+    1784442062, //
+    1784442063, //
     1952218242, // Sequence Flourish
     2683682447, // Traitor's Fate
   ],
@@ -1486,9 +1490,9 @@ const missingSources: { [key: string]: number[] } = {
     4050474396, // Descending Echo Mark
   ],
   gunsmith: [
-    1324233016, // Sword Scavenger
-    1324233019, // Scout Rifle Loader
-    2187989977, // Machine Gun Scavenger
+    2092805628, // Pulse Rifle Loader
+    2092805631, // Hand Cannon Targeting
+    4058375013, // Bow Dexterity
   ],
   harbinger: [],
   haunted: [],
@@ -1871,7 +1875,6 @@ const missingSources: { [key: string]: number[] } = {
     1293868684, // Insight Unyielding Helm
     1295776817, // Insight Rover Grips
     1301696822, // Mimetic Savior Greaves
-    1324233017, // Machine Gun Holster
     1330107298, // Thorium Holt Robes
     1330542168, // Tangled Web Bond
     1348658294, // Clandestine Maneuvers
@@ -1930,7 +1933,6 @@ const missingSources: { [key: string]: number[] } = {
     2159363321, // Be Thy Guide
     2173858802, // Prodigal Cloak
     2185500219, // Insight Unyielding Plate
-    2187989980, // Glaive Loader
     2193432605, // Mimetic Savior Helm
     2205604183, // Dead End Cure 2.1
     2206284939, // Tangled Web Strides
@@ -2050,6 +2052,7 @@ const missingSources: { [key: string]: number[] } = {
     3988753671, // Prodigal Cuirass
     3994031968, // Red Moon Phantom Mask
     3999262583, // Terra Concord Fists
+    4058375008, // Grenade Launcher Holster
     4064910796, // Icarus Drifter Legs
     4073580572, // Terra Concord Mark
     4074193483, // Tangled Web Cloak
@@ -2126,6 +2129,11 @@ const missingSources: { [key: string]: number[] } = {
     4251770245, // Boots of the Emperor's Agent
   ],
   limited: [
+    1784442058, //
+    1784442060, //
+    1784442061, //
+    1784442062, //
+    1784442063, //
     1952218242, // Sequence Flourish
     2683682447, // Traitor's Fate
   ],

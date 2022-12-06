@@ -51,7 +51,6 @@ const D2Sources: {
   adventure: {
     itemHashes: [],
     sourceHashes: [
-      80684972, // Source: Complete a Heroic Adventure on Mercury.
       194661944, // Source: Adventure "Siren Song" on Saturn's moon, Titan.
       482012099, // Source: Adventure "Thief of Thieves" on Saturn's Moon, Titan.
       636474187, // Source: Adventure "Deathless" on Saturn's Moon, Titan.
@@ -257,6 +256,7 @@ const D2Sources: {
       1145551111, // Source: Found in Crucible engrams.
       1217831333, // Source: Complete this reward's associated Crucible quest.
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
+      1494513645, // Source: Complete Glory matches in Crucible.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
@@ -301,7 +301,6 @@ const D2Sources: {
       3875444086, // The Emperor's Chosen
     ],
     sourceHashes: [
-      80684972, // Source: Complete a Heroic Adventure on Mercury.
       148542898, // Source: Equip the full Mercury destination set on a Warlock.
       194661944, // Source: Adventure "Siren Song" on Saturn's moon, Titan.
       266896577, // Source: Solve the Norse glyph puzzle.
@@ -350,7 +349,6 @@ const D2Sources: {
       3079246067, // Source: Complete Osiris' Lost Prophecies for Brother Vance on Mercury.
       3147603678, // Acquired from the raid "Crown of Sorrow."
       3257722699, // Source: Complete the "Clean Up on Aisle Five" Triumph.
-      3353456375, // Defeat 25 Final Bosses
       3390164851, // Source: Found by turning in Black Armory bounties.
       3427537854, // Source: Adventure "Road Rage" on Io.
       3534706087, // Source: Complete activities and earn rank-up packages on Saturn's Moon, Titan.
@@ -529,7 +527,6 @@ const D2Sources: {
   ep: {
     itemHashes: [],
     sourceHashes: [
-      3353456375, // Defeat 25 Final Bosses
       4137108180, // Source: Escalation Protocol on Mars.
     ],
     searchString: [],
@@ -551,13 +548,15 @@ const D2Sources: {
     sourceHashes: [
       32323943, // Source: Moments of Triumph.
       151416041, // Source: Solstice
-      510530151, // Source: Dawning 2020
+      464727567, // Source: Earned during the 2021 Dawning event
+      547767158, // Source: Dawning 2018
       611838069, // Source: Earned during the seasonal Guardian Games event.
+      629617846, // Source: Earned during the 2020 Dawning event
       641018908, // Source: Earned during the 2018 Solstice event.
       772619302, // Completed all 8 Moments of Triumph in Destiny's second year.
       923678151, // Source: Upgraded Event Card Reward
-      930411416, // Source: Dawning 2021
       1054169368, // Source: Festival of the Lost 2021.
+      1225476079, // Source: Moments of Triumph 2022
       1360005982, // Completed a Moment of Triumph in Destiny's second year.
       1397119901, // Completed a Moment of Triumph in Destiny's first year.
       1462687159, // Reached level 5 in the Ages of Triumph record book.
@@ -567,8 +566,10 @@ const D2Sources: {
       2006303146, // Source: Guardian Games 2022
       2011810450, // Source: Season 13 Guardian Games
       2187511136, // Source: Earned during the seasonal Revelry event.
+      2364515524, // Source: Earned during the 2022 Dawning event
       2502262376, // Source: Earned during the seasonal Crimson Days event.
       2797674516, // Source: Moments of Triumph 2021
+      3092212681, // Source: Dawning 2019
       3112857249, // Completed all 10 Moments of Triumph in Destiny's first year.
       3190938946, // Source: Festival of the Lost 2019.
       3388021959, // Source: Earned during the Guardian Games event.
@@ -871,7 +872,6 @@ const D2Sources: {
   mercury: {
     itemHashes: [],
     sourceHashes: [
-      80684972, // Source: Complete a Heroic Adventure on Mercury.
       148542898, // Source: Equip the full Mercury destination set on a Warlock.
       1175566043, // Source: Complete Nightfall strike "A Garden World."
       1400219831, // Source: Equip the full Mercury destination set on a Hunter.
@@ -921,6 +921,7 @@ const D2Sources: {
       860666126, // Source: Nightfall
       1175566043, // Source: Complete Nightfall strike "A Garden World."
       1283862526, // Source: Season of the Haunted Nightfall Grandmaster
+      1516560855, // Source: Season of the Seraph Grandmaster Nightfall
       1581680964, // Source: Complete Nightfall strike "Tree of Probabilities."
       1596489410, // Source: Season of the Risen Nightfall Grandmaster
       1618699950, // Source: Season of the Lost Nightfall Grandmaster
@@ -1081,10 +1082,15 @@ const D2Sources: {
   rasputin: {
     itemHashes: [],
     sourceHashes: [
+      504657809, // Source: Season of the Seraph Activities
       1126234343, // Source: Witness Rasputin's Full Power
       1497107113, // Source: Seasonal Quest, "Seraph Warsat Network".
+      1516560855, // Source: Season of the Seraph Grandmaster Nightfall
       2230358252, // Source: End-of-Season event.
+      2422551147, // Source: "Operation Seraph's Shield" Mission
       3492941398, // Source: Complete quest "The Lie"
+      3567813252, // Source: Season of the Seraph Triumph
+      3574140916, // Source: Season of the Seraph
       3937492340, // Source: Complete Seraph bounties.
     ],
     searchString: [],
@@ -1177,6 +1183,7 @@ const D2Sources: {
       1145551111, // Source: Found in Crucible engrams.
       1217831333, // Source: Complete this reward's associated Crucible quest.
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
+      1494513645, // Source: Complete Glory matches in Crucible.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
