@@ -151,15 +151,15 @@ export class VendorItem {
     this.canPurchase = canPurchase;
     this.failureStrings = failureStrings;
     this.key = saleItem ? saleItem.vendorItemIndex : inventoryItem.hash;
-    this.displayProperties = inventoryItem.displayProperties;
-    this.borderless = Boolean(inventoryItem.uiItemDisplayStyle);
-    this.displayTile = inventoryItem.uiItemDisplayStyle === 'ui_display_style_set_container';
+    this.displayProperties = inventoryItem?.displayProperties;
+    this.borderless = Boolean(inventoryItem?.uiItemDisplayStyle);
+    this.displayTile = inventoryItem?.uiItemDisplayStyle === 'ui_display_style_set_container';
     this.owned = Boolean((saleItem?.augments || 0) & DestinyVendorItemState.Owned);
     this.canBeSold = !saleItem || saleItem.failureIndexes.length === 0;
     this.displayCategoryIndex = vendorItemDef ? vendorItemDef.displayCategoryIndex : undefined;
     this.costs = saleItem?.costs || [];
-    if (inventoryItem.preview?.previewVendorHash) {
-      this.previewVendorHash = inventoryItem.preview.previewVendorHash;
+    if (inventoryItem?.preview?.previewVendorHash) {
+      this.previewVendorHash = inventoryItem?.preview.previewVendorHash;
     }
 
     this.item = makeFakeItem(
