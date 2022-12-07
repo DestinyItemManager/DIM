@@ -1,5 +1,7 @@
 ## Next
 
+## 7.46.1 <span class="changelog-date">(2022-12-07)</span>
+
 * Fix an error preventing Collections from being displayed.
 
 ## 7.46.0 <span class="changelog-date">(2022-12-04)</span>
