@@ -1140,7 +1140,7 @@
     "About": {
       "APIHistory": "DIM과 다른 데스티니 앱에서 수행된 모든 작업의 기록 보기",
       "BungieCopyright": "모든 이미지와 컨텐츠는 Bungie의 자산입니다.",
-      "CommunityInsight": "커뮤니티 특성 인사이트는 {{clarityLink}}와 {{compendiumLink}}에서 제공됩니다. 부정확한 정보를 발견하거나 질문이 있는 경우 {{clarityDiscordLink}}에 방문하세요.",
+      "CommunityInsight": "커뮤니티 특성 인사이트는 {{clarityLink}}에서 제공됩니다. 부정확한 정보를 발견하거나 질문이 있는 경우 {{clarityDiscordLink}}에 방문하세요.",
       "Discord": "Discord",
       "DiscordHelp": "저희의 디스코드 채널에서 질문하고, 피드백을 주고, 도움을 받으세요.",
       "FAQ": "자주 묻는 질문",

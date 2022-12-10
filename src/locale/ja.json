@@ -1140,7 +1140,7 @@
     "About": {
       "APIHistory": "DIM (またはその他のDestinyアプリ) で実行されたアクション履歴を表示する",
       "BungieCopyright": "すべての画像とコンテンツはBungieの所有物です。",
-      "CommunityInsight": "コミュニティのパーク評価は {{clarityLink}} と {{compendiumLink}} の提供によるものです。不正確な情報に気づいたり、質問がある場合は、 {{clarityDiscordLink}} に参加してください。",
+      "CommunityInsight": "Community Perk Insights courtesy of {{clarityLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
       "Discord": "Discord",
       "DiscordHelp": "Discordチャネルで質問をしたり、フィードバックをするとサポートを受けられます。",
       "FAQ": "よくある質問",

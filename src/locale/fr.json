@@ -85,7 +85,7 @@
   },
   "Compare": {
     "Archetype": "Archétype",
-    "AssumeMasterworked": "Assume Masterworked",
+    "AssumeMasterworked": "Considérer pièce maîtresse",
     "Button": "Comparer",
     "ButtonHelp": "Comparer des objets",
     "CompareBaseStats": "Afficher les Statistiques de base",
@@ -1140,7 +1140,7 @@
     "About": {
       "APIHistory": "Voir l'historique de toutes les actions effectués par DIM (et d'autre applications liées à Destiny)",
       "BungieCopyright": "Toutes les images et le contenu sont la propriété de Bungie.",
-      "CommunityInsight": "Informations de la communauté sur les attributs, fournis par {{clarityLink}} et {{compendiumLink}}. Si vous remarquez des imprécisions ou si vous avez des questions, rejoignez {{clarityDiscordLink}}.",
+      "CommunityInsight": "Informations de la communauté sur les attributs, fournis par {{clarityLink}}. Si vous remarquez des imprécisions ou si vous avez des questions, rejoignez {{clarityDiscordLink}}.",
       "Discord": "Discord",
       "DiscordHelp": "Posez des questions, donnez des retours, et obtenez du support sur notre Discord.",
       "FAQ": "Questions fréquemment posés",
