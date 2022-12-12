@@ -10,9 +10,18 @@ import _ from 'lodash';
 import { getTag, ItemInfos, tagConfig } from '../inventory/dim-item-info';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 
-export const acquisitionRecencyComparator = reverseComparator(
-  compareBy((item: DimItem) => (item.instanced ? item.id.padStart(20, '0') : 0))
-);
+const INSTANCEID_PADDING = 20;
+
+const getItemRecencyKey = (item: DimItem) =>
+  item.instanced ? item.id.padStart(INSTANCEID_PADDING, '0') : 0;
+
+/**
+ * Sorts items by how recently they were acquired, newest items first.
+ */
+export const acquisitionRecencyComparator = reverseComparator(compareBy(getItemRecencyKey));
+
+export const isNewerThan = (item: DimItem, watermarkInstanceId: string) =>
+  getItemRecencyKey(item) > watermarkInstanceId.padStart(INSTANCEID_PADDING, '0');
 
 const D1_CONSUMABLE_SORT_ORDER = [
   1043138475, // black-wax-idol

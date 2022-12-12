@@ -407,7 +407,10 @@
   },
   "ItemFeed": {
     "Description": "Item Feed",
-    "HideTagged": "Hide Tagged"
+    "HideTagged": "Hide Tagged",
+    "ClearFeed": "Clear Feed",
+    "ShowOlderItems": "Show older items",
+    "NoNewItems": "No new items"
   },
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",

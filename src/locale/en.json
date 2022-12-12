@@ -381,8 +381,11 @@
     "ClickToExpand": "(Click to expand)"
   },
   "ItemFeed": {
+    "ClearFeed": "Clear Feed",
     "Description": "Item Feed",
-    "HideTagged": "Hide Tagged"
+    "HideTagged": "Hide Tagged",
+    "NoNewItems": "No new items",
+    "ShowOlderItems": "Show older items"
   },
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
