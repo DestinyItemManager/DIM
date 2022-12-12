@@ -126,6 +126,9 @@
   },
   "ErrorPanel": {
     "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
+    "EmblemError": "You may be able to fix this by switching your emblems in game on all characters.",
+    "EmblemErrorLink": "Read more about how to fix it.",
+    "SystemDown": "This affects all Destiny apps, and there's nothing the DIM team can do to fix it.",
     "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {

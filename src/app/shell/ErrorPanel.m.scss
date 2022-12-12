@@ -11,9 +11,12 @@
     letter-spacing: normal !important;
     text-transform: none !important;
   }
-  a {
+  :global(.dim-button) {
     color: white;
     font-size: 12px;
+  }
+  p {
+    font-size: 14px;
   }
 }
 
