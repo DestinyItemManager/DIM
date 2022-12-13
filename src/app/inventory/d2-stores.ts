@@ -170,9 +170,7 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         const [defs, , profileInfo] = await Promise.all([
           dispatch(getDefinitions())!,
           dispatch(loadNewItems(account)),
-          mockProfileData
-            ? (JSON.parse(mockProfileData) as DestinyProfileResponse)
-            : getStores(account),
+          mockProfileData ?? getStores(account),
         ]);
 
         // If we switched account since starting this, give up

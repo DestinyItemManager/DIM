@@ -54,10 +54,10 @@ export interface InventoryState {
   readonly readOnly: boolean;
 
   /**
-   * a JSON-encoded API profile response. if this is present,
+   * A JSON-encoded API profile response. if this is present,
    * we use it instead of talking to the Bungie API
    */
-  readonly mockProfileData?: string;
+  readonly mockProfileData?: DestinyProfileResponse;
 }
 
 export type InventoryAction = ActionType<typeof actions>;

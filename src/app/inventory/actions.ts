@@ -216,4 +216,5 @@ function warnNoSync(): ThunkResult {
 export const tagCleanup = createAction('tag_notes/CLEANUP')<string[]>();
 
 /** input a mock profile API response */
-export const setMockProfileResponse = createAction('inventory/MOCK_PROFILE')<string>();
+export const setMockProfileResponse =
+  createAction('inventory/MOCK_PROFILE')<DestinyProfileResponse>();
