@@ -103,7 +103,7 @@ export default function ItemFeed({
         <button
           type="button"
           className={clsx('dim-button', styles.clearButton)}
-          onClick={() => setItemFeedWatermark(items[0].id)}
+          onClick={() => setItemFeedWatermark(allItems[0].id)}
         >
           {t('ItemFeed.ClearFeed')}
         </button>
