@@ -68,6 +68,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   4017959782, // Symmetry
   4036115577, // Sleeper Simulant
   4124984448, // Hard Light
+  4174431791, // Hierarchy of Needs
   4190156464, // Merciless
   4255268456, // Skyburner's Oath
   4289226715, // Vex Mythoclast
