@@ -9,6 +9,7 @@ import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
+import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, timer, warnLog } from 'app/utils/log';
@@ -147,6 +148,58 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
   };
 }
 
+const BUNGIE_CACHE_TTL = 300;
+
+// TODO: maybe move this into another file?
+function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileResponse> {
+  return async (_dispatch, getState) => {
+    const mockProfileData = getState().inventory.mockProfileData;
+    if (mockProfileData) {
+      // TODO: can/should we replace this with profileResponse plus the readOnly flag?
+      return mockProfileData;
+    }
+
+    // TODO: load from IDB first - or race IDB and request?
+    let profileResponse = getState().inventory.profileResponse;
+    if (!profileResponse) {
+      profileResponse = await get<DestinyProfileResponse>(`profile-${account.membershipId}`);
+      if (getState().inventory.profileResponse) {
+        profileResponse = getState().inventory.profileResponse;
+      } else {
+        // TODO: save to redux here?
+      }
+    }
+
+    // If our cached profile is up to date
+    if (profileResponse) {
+      // TODO: seconds? milliseconds?
+      const profileAge = Date.now() - parseInt(profileResponse.responseMintedTimestamp ?? '0');
+      if (profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
+        // TODO: save to redux here?
+        return profileResponse;
+      }
+    }
+
+    try {
+      profileResponse = await getStores(account);
+      set(`profile-${account.membershipId}`, profileResponse); // don't await
+      // TODO: save to redux here?
+      return profileResponse;
+    } catch (e) {
+      // TODO: set store error, readonly - need to make those independent!
+      // dispatch(error(e));
+      // TODO: maybe only want to do this if it's the first load, since there's no point in
+      // re-running the stores update
+      if (profileResponse) {
+        // TODO: save to redux here?
+        return profileResponse;
+      }
+      // rethrow
+      throw e;
+    }
+  };
+}
+
 let latestDateLastPlayedTimestamp = 0;
 
 function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undefined> {
@@ -166,11 +219,11 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
       // TODO: if we've already loaded profile recently, don't load it again
 
       try {
-        const { mockProfileData, readOnly } = getState().inventory;
+        const { readOnly } = getState().inventory;
 
         const [defs, profileInfo] = await Promise.all([
           dispatch(getDefinitions())!,
-          mockProfileData ?? getStores(account),
+          dispatch(loadProfile(account)),
         ]);
 
         // If we switched account since starting this, give up
@@ -221,6 +274,7 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
           }
         }
 
+        // TODO: we can start moving some of this stuff to selectors? characters too
         const currencies = processCurrencies(profileInfo, defs);
 
         stopTimer();
