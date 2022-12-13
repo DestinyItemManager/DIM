@@ -141,6 +141,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
     }
 
     $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
+    await dispatch(loadNewItems(account));
     const stores = await dispatch(loadStoresData(account));
     return stores;
   };
@@ -167,9 +168,8 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
       try {
         const { mockProfileData, readOnly } = getState().inventory;
 
-        const [defs, , profileInfo] = await Promise.all([
+        const [defs, profileInfo] = await Promise.all([
           dispatch(getDefinitions())!,
-          dispatch(loadNewItems(account)),
           mockProfileData ?? getStores(account),
         ]);
 
