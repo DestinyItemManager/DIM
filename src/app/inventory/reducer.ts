@@ -75,6 +75,9 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
   action: InventoryAction | AccountsAction
 ): InventoryState => {
   switch (action.type) {
+    case getType(actions.profileLoaded):
+      return { ...state, profileResponse: action.payload };
+
     case getType(actions.update):
       return updateInventory(state, action.payload);
 
@@ -148,27 +151,21 @@ function updateInventory(
   state: InventoryState,
   {
     stores,
-    profileResponse,
     currencies,
   }: {
     stores: DimStore[];
     currencies: AccountCurrency[];
-    profileResponse?: DestinyProfileResponse;
   }
 ) {
   // TODO: we really want to decompose these, drive out all deep mutation
   // TODO: mark DimItem, DimStore properties as Readonly
-  const newState = {
+  return {
     ...state,
     stores,
     currencies,
     newItems: computeNewItems(state.stores, state.newItems, stores),
     profileError: undefined,
   };
-  if (profileResponse) {
-    newState.profileResponse = profileResponse;
-  }
-  return newState;
 }
 
 /**

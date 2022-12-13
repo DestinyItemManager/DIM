@@ -12,7 +12,7 @@ import { getCharacterProgressions } from 'app/progress/selectors';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
-import { errorLog, timer, warnLog } from 'app/utils/log';
+import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import {
   DestinyCharacterProgressionComponent,
   DestinyCollectibleComponent,
@@ -36,7 +36,15 @@ import { getLight } from '../loadout-drawer/loadout-utils';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/exceptions';
-import { CharacterInfo, charactersUpdated, error, loadNewItems, update } from './actions';
+import {
+  CharacterInfo,
+  charactersUpdated,
+  error,
+  loadNewItems,
+  profileError,
+  profileLoaded,
+  update,
+} from './actions';
 import { ArtifactXP } from './ArtifactXP';
 import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
@@ -152,7 +160,7 @@ const BUNGIE_CACHE_TTL = 300;
 
 // TODO: maybe move this into another file?
 function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileResponse> {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const mockProfileData = getState().inventory.mockProfileData;
     if (mockProfileData) {
       // TODO: can/should we replace this with profileResponse plus the readOnly flag?
@@ -166,32 +174,59 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
       if (getState().inventory.profileResponse) {
         profileResponse = getState().inventory.profileResponse;
       } else {
-        // TODO: save to redux here?
+        infoLog('d2-stores', 'Loaded cached profile from IndexedDB');
+        dispatch(profileLoaded(profileResponse));
       }
     }
 
     // If our cached profile is up to date
     if (profileResponse) {
       // TODO: seconds? milliseconds?
+      // TODO: need to make sure we still load at the right frequency / for manual cache busts?
       const profileAge = Date.now() - parseInt(profileResponse.responseMintedTimestamp ?? '0');
       if (profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
-        // TODO: save to redux here?
+        warnLog(
+          'd2-stores',
+          'Cached profile is within Bungie.net cache time, skipping remote load.',
+          profileAge
+        );
         return profileResponse;
       }
     }
 
     try {
-      profileResponse = await getStores(account);
+      const remoteProfileResponse = await getStores(account);
+
+      // compare new response against cached response, toss if it's not newer!
+      if (
+        profileResponse &&
+        parseInt(remoteProfileResponse.responseMintedTimestamp ?? '0') <
+          parseInt(profileResponse.responseMintedTimestamp ?? '0')
+      ) {
+        warnLog(
+          'd2-stores',
+          'Profile from Bungie.net was not newer than cached profile, discarding.',
+          new Date(parseInt(remoteProfileResponse.responseMintedTimestamp ?? '0')),
+          new Date(parseInt(profileResponse.responseMintedTimestamp ?? '0'))
+        );
+        // TODO: set redux state for out-of-date, or maybe detect that automatically...
+        // TODO: throw a special error for "don't bother reprocessing"? or just null/undefined?
+        return profileResponse;
+      }
+
+      profileResponse = remoteProfileResponse;
       set(`profile-${account.membershipId}`, profileResponse); // don't await
-      // TODO: save to redux here?
+      dispatch(profileLoaded(profileResponse));
       return profileResponse;
     } catch (e) {
-      // TODO: set store error, readonly - need to make those independent!
-      // dispatch(error(e));
-      // TODO: maybe only want to do this if it's the first load, since there's no point in
-      // re-running the stores update
+      // TODO: set store error, readonly - need to make those independent! also need error handling to know about the case where error AND profile are set
+      dispatch(profileError(e));
       if (profileResponse) {
-        // TODO: save to redux here?
+        errorLog(
+          'd2-stores',
+          'Error loading profile from Bungie.net, falling back to cached profile'
+        );
+        // TODO: throw a special error for "don't bother reprocessing"? or just null/undefined?
         return profileResponse;
       }
       // rethrow
@@ -290,7 +325,7 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         }
 
         dispatch(cleanInfos(stores));
-        dispatch(update({ stores, profileResponse: profileInfo, currencies }));
+        dispatch(update({ stores, currencies }));
 
         stopStateTimer();
         stateSpan?.finish();
@@ -313,10 +348,6 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         } else {
           dispatch(error(e));
         }
-        // It's important that we swallow all errors here - otherwise
-        // our observable will fail on the first error. We could work
-        // around that with some rxjs operators, but it's easier to
-        // just make this never fail.
         return undefined;
       } finally {
         transaction?.finish();
