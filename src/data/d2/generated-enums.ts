@@ -718,6 +718,7 @@ export const enum PlugCategoryHashes {
   V620NewFusionRifle0Skins = 964101403,
   V620PursuitGrenadeLauncher0Skins = 1006653369,
   V620RepackageScoutRifle0Skins = 2565240946,
+  V630NewBow0Masterwork = 1131152613,
   V630NewPulseRifle0Skins = 3446925989,
   V630NewSubmachinegun0Masterwork = 725540660,
   V630NewSubmachinegun0Skins = 1942616782,

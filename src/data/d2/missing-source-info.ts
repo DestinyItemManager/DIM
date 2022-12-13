@@ -972,14 +972,20 @@ const missingSources: { [key: string]: number[] } = {
     286271818, // Twisting Echo Cloak
     399065241, // Descending Echo Greaves
     420895300, // Deep Explorer Mark
+    436695703, // TM-Cogburn Custom Plate
+    498918879, // TM-Earp Custom Grips
     587312237, // Twisting Echo Grips
+    708921139, // TM-Cogburn Custom Legguards
     833653807, // Twisting Echo Strides
     1148597205, // Deep Explorer Grasps
+    1349399252, // TM-Earp Custom Cloaked Stetson
     1756483796, // Twisting Echo Mask
     1951355667, // Twisting Echo Vest
     2057955626, // Deep Explorer Vestments
     2244604734, // Corrupting Echo Gloves
+    2341879253, // TM-Moss Custom Bond
     2499351855, // Deep Explorer Gauntlets
+    2565015142, // TM-Cogburn Custom Mark
     2649394513, // Deep Explorer Greaves
     2663987096, // Corrupting Echo Boots
     2694773307, // Deep Explorer Bond
@@ -994,10 +1000,19 @@ const missingSources: { [key: string]: number[] } = {
     3267969345, // Descending Echo Cage
     3270955774, // Deep Explorer Helmet
     3326914239, // Deep Explorer Hood
+    3344225390, // TM-Earp Custom Hood
+    3511740432, // TM-Moss Custom Gloves
     3685276035, // Corrupting Echo Bond
+    3715136417, // TM-Earp Custom Chaps
+    3870375786, // TM-Moss Custom Pants
     3871537958, // Descending Echo Helm
+    3933500353, // TM-Cogburn Custom Gauntlets
+    3946384952, // TM-Moss Custom Duster
+    4039955353, // TM-Moss Custom Hat
     4047213660, // Deep Explorer Mask
     4050474396, // Descending Echo Mark
+    4177293424, // TM-Cogburn Custom Cover
+    4288623897, // TM-Earp Custom Vest
   ],
   edz: [
     10307688, // Wildwood Plate

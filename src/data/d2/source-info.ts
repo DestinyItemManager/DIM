@@ -486,6 +486,7 @@ const D2Sources: {
       506073192, // Source: Season of Arrivals dungeon.
       675740011, // Source: "Grasp of Avarice" Dungeon
       1282207663, // Source: Dungeon Duality
+      1597738585, // Source: "Spire of the Watcher" Dungeon
       1745960977, // Source: Pit of Heresy
       2856954949, // Source: "Let Loose Thy Talons" Exotic quest.
       3597879858, // Source: Presage Exotic Quest
