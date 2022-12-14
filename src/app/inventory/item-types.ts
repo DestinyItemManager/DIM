@@ -229,6 +229,8 @@ export interface DimItem {
   collectibleState?: DestinyCollectibleState;
   /** Extra tooltips to show in the item popup */
   tooltipNotifications?: DestinyItemTooltipNotification[];
+  /** Index assigned to item by Bungie */
+  bungieIndex: number;
 }
 
 /**
