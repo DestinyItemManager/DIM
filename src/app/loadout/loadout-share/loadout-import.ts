@@ -3,6 +3,7 @@ import { getSharedLoadout } from 'app/dim-api/dim-api';
 import { generateMissingLoadoutItemId } from 'app/loadout-drawer/loadout-item-conversion';
 import { convertDimApiLoadoutToLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -32,6 +33,24 @@ export type DecodedShareLink =
       tag: 'urlParameters';
       urlParameters: UrlLoadoutParameters;
     };
+
+export async function getDecodedLoadout(decodedUrl: DecodedShareLink): Promise<Loadout> {
+  switch (decodedUrl.tag) {
+    case 'dimGGShare': {
+      const loadout = await getDimSharedLoadout(decodedUrl.shareId);
+      return loadout;
+    }
+    case 'urlLoadout':
+      return decodedUrl.loadout;
+    case 'urlParameters': {
+      const { classType, notes, parameters } = decodedUrl.urlParameters;
+      const loadout = newLoadout('', [], classType);
+      loadout.notes = notes;
+      loadout.parameters = parameters;
+      return loadout;
+    }
+  }
+}
 
 /**
  * Decode any URL that could be used to share a loadout with DIM.
@@ -101,9 +120,7 @@ export function decodeUrlLoadout(search: string): Loadout | undefined {
 
 export async function getDimSharedLoadout(shareId: string) {
   const loadout = await getSharedLoadout(shareId);
-  if (loadout) {
-    return preprocessReceivedLoadout(convertDimApiLoadoutToLoadout(loadout));
-  }
+  return preprocessReceivedLoadout(convertDimApiLoadoutToLoadout(loadout));
 }
 
 /**

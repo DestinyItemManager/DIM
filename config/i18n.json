@@ -692,7 +692,7 @@
     "Generated": "T{{tier}} Loadout",
     "ImportLoadout": "Import Loadout",
     "Import": {
-      "PasteHere": "Paste a loadout link to open the loadout in DIM.",
+      "PasteHere": "Paste a loadout link to open the loadout.",
       "BadURL": "Not a valid loadout share URL.",
       "Error404": "This loadout doesn't exist.",
       "Error": "Error getting loadout:"

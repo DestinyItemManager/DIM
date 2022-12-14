@@ -2,12 +2,11 @@ import Sheet from 'app/dim-ui/Sheet';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { useEffect, useState } from 'react';
-import { decodeShareUrl, getDimSharedLoadout } from './loadout-import';
+import { decodeShareUrl, getDecodedLoadout } from './loadout-import';
 import styles from './LoadoutImportSheet.m.scss';
 
 const placeHolder = `https://dim.gg/bwipb2a/, https://app.destinyitemmanager.com/loadouts?loadout=...`;
@@ -36,47 +35,24 @@ export default function LoadoutImportSheet({
       return;
     }
     setState('fetching');
-    switch (decodedUrl.tag) {
-      case 'dimGGShare': {
-        let canceled = false;
-        (async () => {
-          try {
-            const loadout = await getDimSharedLoadout(decodedUrl.shareId);
-            if (!canceled && loadout) {
-              setState('ok');
-              editLoadout(loadout, currentStoreId, { isNew: true });
-              onClose();
-            }
-          } catch (e) {
-            if (!canceled) {
-              setState(`${t('Loadouts.Import.Error')} ${e.message}`);
-            }
-          }
-        })();
-        return () => {
-          canceled = true;
-        };
+    let canceled = false;
+    (async () => {
+      try {
+        const loadout = await getDecodedLoadout(decodedUrl);
+        if (!canceled) {
+          setState('ok');
+          editLoadout(loadout, currentStoreId, { isNew: true });
+          onClose();
+        }
+      } catch (e) {
+        if (!canceled) {
+          setState(`${t('Loadouts.Import.Error')} ${e.message}`);
+        }
       }
-      case 'urlLoadout':
-        {
-          setState('ok');
-          const loadout = decodedUrl.loadout;
-          editLoadout(loadout, currentStoreId, { isNew: true });
-          onClose();
-        }
-        break;
-      case 'urlParameters':
-        {
-          setState('ok');
-          const { classType, notes, parameters } = decodedUrl.urlParameters;
-          const loadout = newLoadout('', [], classType);
-          loadout.notes = notes;
-          loadout.parameters = parameters;
-          editLoadout(loadout, currentStoreId, { isNew: true });
-          onClose();
-        }
-        break;
-    }
+    })();
+    return () => {
+      canceled = true;
+    };
   }, [currentStoreId, onClose, shareUrl]);
 
   return (
