@@ -8,12 +8,13 @@ import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { allItemsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { useSetting } from 'app/settings/hooks';
-import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
+import { acquisitionRecencyComparator, isNewerThan } from 'app/shell/item-comparators';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { AnimatePresence, motion, Spring } from 'framer-motion';
 import _ from 'lodash';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import Highlights from './Highlights';
@@ -71,21 +72,58 @@ const filteredItemsSelector = createSelector(allItemsSelector, (allItems) =>
  * have been tagged. The idea is to be able to keep track of what drops you're
  * getting, and ideally to tag them all as they're coming in.
  */
-export default function ItemFeed({ itemsToShow }: { itemsToShow: number }) {
+export default function ItemFeed({
+  itemsToShow,
+  resetItemCount,
+}: {
+  itemsToShow: number;
+  resetItemCount: () => void;
+}) {
   const allItems = useSelector(filteredItemsSelector);
   const itemInfos = useSelector(itemInfosSelector);
   const [hideTagged, setHideTagged] = useSetting('itemFeedHideTagged');
+  const [itemFeedWatermark, setItemFeedWatermark] = useSetting('itemFeedWatermark');
 
-  const items = _.take(
+  const untaggedItems = _.take(
     allItems.filter((i) => !hideTagged || !getTag(i, itemInfos)),
     itemsToShow
   );
+
+  const items =
+    itemFeedWatermark !== undefined
+      ? untaggedItems.filter((i) => isNewerThan(i, itemFeedWatermark))
+      : untaggedItems;
 
   return (
     <>
       <CheckButton name="hideTagged" checked={hideTagged} onChange={setHideTagged}>
         {t('ItemFeed.HideTagged')}
       </CheckButton>
+      {items.length > 0 && (
+        <button
+          type="button"
+          className={clsx('dim-button', styles.clearButton)}
+          onClick={() => setItemFeedWatermark(allItems[0].id)}
+        >
+          {t('ItemFeed.ClearFeed')}
+        </button>
+      )}
+      {items.length === 0 && untaggedItems.length > 0 && (
+        <>
+          <button
+            type="button"
+            className={clsx('dim-button', styles.clearButton)}
+            onClick={() => {
+              setItemFeedWatermark(undefined);
+              // Don't spawn all the items at the same time again
+              resetItemCount();
+            }}
+          >
+            {t('ItemFeed.ShowOlderItems')}
+          </button>
+          <p>{t('ItemFeed.NoNewItems')}</p>
+        </>
+      )}
       <AnimatePresence initial={false}>
         {items.map((item) => (
           <Item key={item.index} item={item} tag={getTag(item, itemInfos)} />
