@@ -28,7 +28,7 @@ function itemSort(vendorHash: number, category: string) {
     );
   } else if (category === 'category_bounties') {
     if (vendorHash === VENDORS.ADA_TRANSMOG) {
-      return compareBy<VendorItem>((item) => item.item?.hash && item.item.bungieIndex);
+      return compareBy<VendorItem>((item) => item.item?.bungieIndex);
     } else {
       return chainComparator<VendorItem>(
         compareBy((item) => item.item?.typeName),
