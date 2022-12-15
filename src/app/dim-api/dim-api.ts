@@ -2,6 +2,8 @@ import {
   DeleteAllResponse,
   DestinyVersion,
   ExportResponse,
+  GetSharedLoadoutRequest,
+  GetSharedLoadoutResponse,
   ImportResponse,
   Loadout,
   LoadoutShareRequest,
@@ -88,6 +90,18 @@ export async function createLoadoutShare(platformMembershipId: string, loadout: 
     body: request,
   });
   return response.shareUrl;
+}
+
+export async function getSharedLoadout(shareId: string) {
+  const params: GetSharedLoadoutRequest = {
+    shareId,
+  };
+  const response = await unauthenticatedApi<GetSharedLoadoutResponse>({
+    url: '/loadout_share',
+    method: 'GET',
+    params,
+  });
+  return response.loadout;
 }
 
 export async function deleteAllData() {

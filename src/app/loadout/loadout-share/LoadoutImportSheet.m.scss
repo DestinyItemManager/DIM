@@ -1,0 +1,21 @@
+.sheet {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.body {
+  padding: 10px;
+  font-size: 14px;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  > input {
+    flex: 1;
+    font-size: 14px;
+  }
+}
