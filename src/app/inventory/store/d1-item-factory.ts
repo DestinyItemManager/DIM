@@ -353,6 +353,7 @@ function makeItem(
     energy: null,
     powerCap: null,
     pursuit: null,
+    bungieIndex: 0,
   };
 
   // *able

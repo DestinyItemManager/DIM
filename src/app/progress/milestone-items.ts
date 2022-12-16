@@ -292,6 +292,7 @@ function makeFakePursuitItem(
     trackable: false,
     energy: null,
     powerCap: null,
+    bungieIndex: 0,
   };
 }
 
