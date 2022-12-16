@@ -552,7 +552,11 @@ function downloadWeapons(
     row.ROF = stats.rof;
     row.Reload = stats.reload;
     row.Mag = stats.magazine;
-    row.Equip = stats.equipSpeed;
+    if (item.destinyVersion === 2) {
+      row.Handling = stats.equipSpeed;
+    } else {
+      row.Equip = stats.equipSpeed;
+    }
     row['Charge Time'] = stats.chargetime;
     if (item.destinyVersion === 2) {
       row['Draw Time'] = stats.drawtime;
