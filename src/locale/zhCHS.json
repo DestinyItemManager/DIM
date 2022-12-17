@@ -125,7 +125,10 @@
     "Title": "发生了一些错误"
   },
   "ErrorPanel": {
-    "Description": "使用命运同伴 App 来尝试加载你的物品栏。如果出现错误，则 Bungie.net 出现了问题。",
+    "Description": "请尝试在命运同伴 App 中加载你的物品栏，以检测是否 Bungie.net 出现了问题。",
+    "EmblemError": "你可以通过在游戏中更换所有角色的徽标以修复这个问题。",
+    "EmblemErrorLink": "阅读更多关于如何修复该问题的信息。",
+    "SystemDown": "这一问题影响所有命运应用程序，DIM团队也无法修复或绕过。",
     "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
@@ -378,8 +381,11 @@
     "ClickToExpand": "（点击展开）"
   },
   "ItemFeed": {
+    "ClearFeed": "清空物品流",
     "Description": "物品流",
-    "HideTagged": "隐藏已标记的物品"
+    "HideTagged": "隐藏已标记的物品",
+    "NoNewItems": "没有新物品",
+    "ShowOlderItems": "显示之前的物品"
   },
   "ItemMove": {
     "Consolidate": "合并{{name}}",
@@ -610,6 +616,13 @@
     "GatherEngrams": "收集记忆水晶",
     "GatherEngramsExceptExotics": "异域",
     "Generated": "T{{tier}} 配装",
+    "Import": {
+      "BadURL": "配装分享链接无效。",
+      "Error": "获取配装失败：",
+      "Error404": "此配装不存在。",
+      "PasteHere": "粘贴链接以打开配装。"
+    },
+    "ImportLoadout": "导入配装",
     "ItemErrorSummary": "1 个物品出错：",
     "ItemErrorSummary_plural": "{{count}} 个物品出错：",
     "ItemLeveling": "物品等级",

@@ -126,6 +126,9 @@
   },
   "ErrorPanel": {
     "Description": "Essayez de charger votre inventaire dans l'application Compagnon de Destiny 2 pour voir si Bungie.net est hors-ligne.",
+    "EmblemError": "Vous pourriez corriger cela en changeant vos emblèmes en jeu sur tous les personnages.",
+    "EmblemErrorLink": "En savoir plus sur la façon de le corriger.",
+    "SystemDown": "Ceci affecte toutes les applications Destiny et l'équipe DIM ne peut pas le réparer ou le contourner.",
     "Troubleshooting": "Guide de Dépannage"
   },
   "FarmingMode": {
@@ -378,8 +381,11 @@
     "ClickToExpand": "(Cliquez pour agrandir)"
   },
   "ItemFeed": {
+    "ClearFeed": "Clear Feed",
     "Description": "Flux d'objets",
-    "HideTagged": "Masquer ceux avec une étiquette"
+    "HideTagged": "Masquer ceux avec une étiquette",
+    "NoNewItems": "No new items",
+    "ShowOlderItems": "Show older items"
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidé",
@@ -610,6 +616,13 @@
     "GatherEngrams": "Réunir les Engrammes",
     "GatherEngramsExceptExotics": "Exotiques",
     "Generated": "P{{tier}} Arsenal",
+    "Import": {
+      "BadURL": "Ce n'est pas une URL de partage d'arsenal valide.",
+      "Error": "Erreur lors de l'obtention de l'arsenal :",
+      "Error404": "Cet arsenal n'existe pas.",
+      "PasteHere": "Collez un lien d'arsenal pour ouvrir l'arsenal."
+    },
+    "ImportLoadout": "Importer un arsenal",
     "ItemErrorSummary": "1 erreur d'objet :",
     "ItemErrorSummary_plural": "{{count}} erreurs d'objet :",
     "ItemLeveling": "Infusion d'objet",

@@ -126,6 +126,9 @@
   },
   "ErrorPanel": {
     "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
+    "EmblemError": "You may be able to fix this by switching your emblems in game on all characters.",
+    "EmblemErrorLink": "Read more about how to fix it.",
+    "SystemDown": "This affects all Destiny apps, and the DIM team cannot fix or bypass it.",
     "Troubleshooting": "Przewodnik rozwiązywania problemów"
   },
   "FarmingMode": {
@@ -378,8 +381,11 @@
     "ClickToExpand": "(Click to expand)"
   },
   "ItemFeed": {
+    "ClearFeed": "Clear Feed",
     "Description": "Kanał produktu",
-    "HideTagged": "Ukryj oznaczone"
+    "HideTagged": "Ukryj oznaczone",
+    "NoNewItems": "No new items",
+    "ShowOlderItems": "Show older items"
   },
   "ItemMove": {
     "Consolidate": "Skonsolidowany {{name}}",
@@ -610,6 +616,13 @@
     "GatherEngrams": "Zbieraj Engramy",
     "GatherEngramsExceptExotics": "Egzotyki",
     "Generated": "Uzbrojenie T{{tier}}",
+    "Import": {
+      "BadURL": "Not a valid loadout share URL.",
+      "Error": "Error getting loadout:",
+      "Error404": "This loadout doesn't exist.",
+      "PasteHere": "Paste a loadout link to open the loadout."
+    },
+    "ImportLoadout": "Import Loadout",
     "ItemErrorSummary": "1 błąd przedmiotu:",
     "ItemErrorSummary_plural": "{{count}} błędów przedmiotu:",
     "ItemLeveling": "Levelowanie Przedmiotów",

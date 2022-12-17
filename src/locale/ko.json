@@ -126,6 +126,9 @@
   },
   "ErrorPanel": {
     "Description": "Destiny 2 컴패니언 앱에서 소지품을 불러와서 Bungie.net 서버 상태를 확인해 보세요.",
+    "EmblemError": "모든 캐릭터의 문양을 교체하여 이 문제를 해결할 수 있습니다.",
+    "EmblemErrorLink": "문제를 해결하려면 다음을 참고하십시오.",
+    "SystemDown": "이 문제는 모든 데스티니 앱에 해당되며, DIM 팀이 고치거나 우회할 수 없습니다.",
     "Troubleshooting": "문제 해결 가이드"
   },
   "FarmingMode": {
@@ -378,8 +381,11 @@
     "ClickToExpand": "(클릭하여 확장)"
   },
   "ItemFeed": {
+    "ClearFeed": "피드 지우기",
     "Description": "최근 아이템",
-    "HideTagged": "태그된 아이템 숨기기"
+    "HideTagged": "태그된 아이템 숨기기",
+    "NoNewItems": "새 아이템 없음",
+    "ShowOlderItems": "오래된 아이템 표시"
   },
   "ItemMove": {
     "Consolidate": "{{name}} 합쳐짐",
@@ -537,7 +543,7 @@
       "MaybeAllowMoreItems": "다른 아이템을 허용하는 것을 고려해보세요:",
       "MaybeDecreaseLowerBounds": "최소 능력치 단계를 줄이는 것을 고려해보세요",
       "MaybeIncreaseUpperBounds": "최대 능력치 단계를 높이는 것을 고려해보세요",
-      "MaybeRemoveMods": "일부 개조 부품을 제거해 보세요",
+      "MaybeRemoveMods": "일부 개조 부품을 제거해보세요:",
       "MaybeRemoveSearchQuery": "검색 창에서 필터를 지우거나 변경해 보세요",
       "ModAssignmentFailed": "대부분의 조합이 요청한 개조 부품을 장착할 수 없음",
       "RemoveMods": "이 개조 부품 제거",
@@ -610,6 +616,13 @@
     "GatherEngrams": "엔그램 모으기",
     "GatherEngramsExceptExotics": "경이",
     "Generated": "T{{tier}} 로드아웃",
+    "Import": {
+      "BadURL": "로드아웃 공유 URL이 유효하지 않음.",
+      "Error": "로드아웃 가져오기 실패:",
+      "Error404": "로드아웃이 존재하지 않습니다.",
+      "PasteHere": "로드아웃을 열려면 로드아웃 주소를 붙여넣으세요."
+    },
+    "ImportLoadout": "로드아웃 가져오기",
     "ItemErrorSummary": "1개의 아이템 오류:",
     "ItemErrorSummary_plural": "{{count}}개의 아이템 오류:",
     "ItemLeveling": "아이템 레벨 올리기",

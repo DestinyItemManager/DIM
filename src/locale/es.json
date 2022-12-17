@@ -126,6 +126,9 @@
   },
   "ErrorPanel": {
     "Description": "Intenta cargar tu inventario en la Aplicación del Acompañante de Destiny 2 para ver si Bungie está caído.",
+    "EmblemError": "Podrías ser capaz de arreglar esto cambiando tus emblemas dentro juego en todos los personajes.",
+    "EmblemErrorLink": "Lee más sobre cómo arreglarlo.",
+    "SystemDown": "Esto afecta a todas las aplicaciones de Destiny, y el equipo de DIM no puede arreglarlo ni evitarlo.",
     "Troubleshooting": "Guía de Solución de Problemas"
   },
   "FarmingMode": {
@@ -378,8 +381,11 @@
     "ClickToExpand": "(Clic para expandir)"
   },
   "ItemFeed": {
+    "ClearFeed": "Limpiar Recientes",
     "Description": "Objetos Recientes",
-    "HideTagged": "Ocultar etiquetados"
+    "HideTagged": "Ocultar etiquetados",
+    "NoNewItems": "No hay nuevos objetos",
+    "ShowOlderItems": "Mostrar objetos más antiguos"
   },
   "ItemMove": {
     "Consolidate": "Consolidado {{name}}",
@@ -610,6 +616,13 @@
     "GatherEngrams": "Juntar engramas",
     "GatherEngramsExceptExotics": "Exóticos",
     "Generated": "Equipación N{{tier}}",
+    "Import": {
+      "BadURL": "No es un enlace válido de compartición de equipación.",
+      "Error": "Error obteniendo equipación:",
+      "Error404": "Esta equipación no existe.",
+      "PasteHere": "Pega un enlace de equipación para abrir la equipación."
+    },
+    "ImportLoadout": "Importar Equipación",
     "ItemErrorSummary": "1 error de objeto:",
     "ItemErrorSummary_plural": "{{count}} errores de objetos:",
     "ItemLeveling": "Nivel de objetos",

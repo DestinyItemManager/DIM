@@ -126,6 +126,9 @@
   },
   "ErrorPanel": {
     "Description": "Destiny 2 Companion App で保管庫をロードして、 Bungie.net がダウンしているかどうか試してみてください。",
+    "EmblemError": "You may be able to fix this by switching your emblems in game on all characters.",
+    "EmblemErrorLink": "Read more about how to fix it.",
+    "SystemDown": "This affects all Destiny apps, and the DIM team cannot fix or bypass it.",
     "Troubleshooting": "トラブルシューティングガイド"
   },
   "FarmingMode": {
@@ -378,8 +381,11 @@
     "ClickToExpand": "(クリックして展開)"
   },
   "ItemFeed": {
+    "ClearFeed": "Clear Feed",
     "Description": "アイテムフィード",
-    "HideTagged": "タグ付けされたものを隠す"
+    "HideTagged": "タグ付けされたものを隠す",
+    "NoNewItems": "No new items",
+    "ShowOlderItems": "Show older items"
   },
   "ItemMove": {
     "Consolidate": "{{name}} が統合されました",
@@ -610,6 +616,13 @@
     "GatherEngrams": "エングラム収集",
     "GatherEngramsExceptExotics": "エキゾチック",
     "Generated": "T{{tier}} ロードアウト",
+    "Import": {
+      "BadURL": "Not a valid loadout share URL.",
+      "Error": "Error getting loadout:",
+      "Error404": "This loadout doesn't exist.",
+      "PasteHere": "Paste a loadout link to open the loadout."
+    },
+    "ImportLoadout": "Import Loadout",
     "ItemErrorSummary": "1 つのアイテムエラー:",
     "ItemErrorSummary_plural": "{{count}} 個のアイテムでエラー:",
     "ItemLeveling": "アイテムのレベルアップ",
