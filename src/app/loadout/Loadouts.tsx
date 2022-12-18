@@ -81,7 +81,9 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             loadout.classType === DestinyClass.Unknown ||
             loadout.classType === classType
         ),
-        loadoutSort === LoadoutSort.ByEditTime ? (l) => -(l.lastUpdatedAt ?? 0) : (l) => l.name
+        loadoutSort === LoadoutSort.ByEditTime
+          ? (l) => -(l.lastUpdatedAt ?? 0)
+          : (l) => l.name.toUpperCase()
       ),
     [allLoadouts, classType, loadoutSort]
   );
