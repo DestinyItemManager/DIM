@@ -290,6 +290,20 @@ const socketFilters: FilterDefinition[] = [
       (item: DimItem) =>
         item.sockets && compare!(countEnhancedPerks(item.sockets)),
   },
+  {
+    keywords: 'discontinuedperk',
+    description: tl('Filter.DiscontinuedPerk'),
+    destinyVersion: 2,
+    filter: () => (item: DimItem) => {
+      if (!(item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary')) {
+        return false;
+      }
+
+      return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable).some(
+        (socket) => socket.plugged?.cannotCurrentlyRoll
+      );
+    },
+  },
 ];
 
 export default socketFilters;

@@ -209,6 +209,7 @@
     "DamageType": "Shows items based on their damage type.",
     "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials. deepsight:complete and deepsight:incomplete refer to the progress of the deepsight objective, while deepsight:pattern shows items that could be progressed to unlock a pattern.",
     "Description": "Description",
+    "DiscontinuedPerk": "Shows weapons with perks that no longer obtainable.",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
     "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe. Only one duplicate is chosen as the highest, and the rest are considered lower.",

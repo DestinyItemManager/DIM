@@ -22,6 +22,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "currentclass",
   "customstatlower",
   "deepsight",
+  "discontinuedperk",
   "dupe",
   "dupelower",
   "emblems",
