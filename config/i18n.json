@@ -1214,9 +1214,11 @@
       "Postmaster": "Choose an item from the Postmaster"
     },
     "Authorization": {
-      "Title": "Pick this number on your Stream Deck",
-      "Error": "Picked number is not the valid one!",
-      "Reset": "DE-AUTHORIZE"
+      "Title": "Do you see the same code on your Stream Deck ?",
+      "Reset": "DE-AUTHORIZE",
+      "Yes": "Yes",
+      "No": "No",
+      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store."
     }
   },
   "Tags": {

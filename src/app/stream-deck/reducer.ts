@@ -18,6 +18,11 @@ export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
         ...state,
         connected: false,
       };
+    case getType(actions.streamDeckUpdatePopupShowed):
+      return {
+        ...state,
+        updatePopupShowed: true,
+      };
     case getType(actions.streamDeckWaitSelection):
       return {
         ...state,

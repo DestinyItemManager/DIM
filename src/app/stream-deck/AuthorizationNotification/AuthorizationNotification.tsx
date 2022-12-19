@@ -1,32 +1,57 @@
 import { t } from 'app/i18next-t';
-import { NotificationError, showNotification } from 'app/notifications/notifications';
+import { showNotification } from 'app/notifications/notifications';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { sendToStreamDeck } from 'app/stream-deck/async-module';
 import { notificationPromise } from 'app/stream-deck/msg-handlers';
+import { setStreamDeckToken } from 'app/stream-deck/util/local-storage';
 import styles from './AuthorizationNotification.m.scss';
 
 interface StreamDeckChallengeProps {
-  challenge: number;
+  mnemonic: string;
 }
 
-function StreamDeckChallenge({ challenge }: StreamDeckChallengeProps) {
+function StreamDeckChallenge({ mnemonic }: StreamDeckChallengeProps) {
+  const dispatch = useThunkDispatch();
   return (
-    <div className={styles.authorization}>
-      <span>{t('StreamDeck.Authorization.Title')}</span>
-      <div className={styles.authorizationChallenge}>{challenge}</div>
+    <div>
+      <div className={styles.authorizationChallenge}>
+        <span>{t('StreamDeck.Authorization.Title')}</span>
+        <div>{mnemonic}</div>
+      </div>
+      <div className={styles.confirmButtons}>
+        <button
+          type="button"
+          className="dim-button"
+          onClick={async () => {
+            const token = 'token';
+            setStreamDeckToken(token);
+            await dispatch(
+              sendToStreamDeck({
+                action: 'authorization:confirm',
+                data: {
+                  token,
+                },
+              })
+            );
+          }}
+        >
+          {t('StreamDeck.Authorization.Yes')}
+        </button>
+        <button type="button" className="dim-button">
+          {t('StreamDeck.Authorization.No')}
+        </button>
+      </div>
     </div>
   );
 }
 
 // Show notification asking for selection
-export function showStreamDeckAuthorizationNotification(challenge: number) {
+export function showStreamDeckAuthorizationNotification(mnemonic: string) {
   showNotification({
     title: `Elgato Stream Deck`,
-    body: <StreamDeckChallenge challenge={challenge} />,
+    body: <StreamDeckChallenge mnemonic={mnemonic} />,
     type: 'progress',
-    duration: 500,
-    promise: notificationPromise.promise?.catch((e) => {
-      throw new NotificationError(e.message, {
-        body: t('StreamDeck.Authorization.Error'),
-      });
-    }),
+    duration: 200,
+    promise: notificationPromise.promise,
   });
 }

@@ -116,9 +116,14 @@ function streamDeckMetricsUpdate(state: RootState): MetricsArgs {
   };
 }
 
+function streamDeckEquippedItems(store?: DimStore) {
+  return store?.items.filter((it) => it.equipment).map((it) => it.id) ?? [];
+}
+
 export default {
   metrics: streamDeckMetricsUpdate,
   vault: streamDeckVaultUpdate,
   maxPower: streamDeckMaxPowerUpdate,
   postmaster: streamDeckPostMasterUpdate,
+  equippedItems: streamDeckEquippedItems,
 };

@@ -12,6 +12,11 @@ export const streamDeckConnected = createAction('stream-deck/CONNECTED')();
 export const streamDeckDisconnected = createAction('stream-deck/DISCONNECTED')();
 
 /**
+ * Set the update popup as already showed
+ */
+export const streamDeckUpdatePopupShowed = createAction('stream-deck/UPDATE-POPUP')();
+
+/**
  * Trigger a notification popup asking the user to select an item/loadout
  */
 export const streamDeckWaitSelection = createAction(
