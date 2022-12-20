@@ -78,7 +78,7 @@ export default function App() {
               ) : (
                 <>
                   <Route path="search-history" element={<SearchHistory />} />
-                  <Route path=":membershipId/d:destinyVersion/*" element={<Destiny />} />
+                  <Route path=":membershipId/:destinyVersion/*" element={<Destiny />} />
                   {[
                     'inventory',
                     'progress',
