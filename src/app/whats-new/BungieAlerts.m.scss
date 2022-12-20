@@ -1,0 +1,42 @@
+@use '../variables.scss' as *;
+
+.bungie-alert {
+  margin: 1em 0;
+  padding: 1em;
+  a {
+    color: white;
+  }
+  h2 {
+    margin: 0 0 8px 0 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    font-size: 14px;
+    font-weight: bold;
+  }
+}
+
+.error {
+  composes: bungie-alert;
+  background: scale-color($red, $lightness: -90%);
+  border-top: 4px solid $red;
+}
+.info {
+  composes: bungie-alert;
+  background: scale-color(#2f96b4, $lightness: -90%);
+  border-top: 4px solid #2f96b4;
+}
+.warn {
+  composes: bungie-alert;
+  background: scale-color(#f89406, $lightness: -90%);
+  border-top: 4px solid #f89406;
+}
+
+:global(.bungie-alert-error) {
+  background: $red !important;
+}
+:global(.bungie-alert-info) {
+  background: #2f96b4 !important;
+}
+:global(.bungie-alert-warn) {
+  background: #f89406 !important;
+}
