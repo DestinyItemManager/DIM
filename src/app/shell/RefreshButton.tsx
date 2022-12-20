@@ -121,10 +121,7 @@ function RefreshButtonTooltip({
         <>
           <b>{t('Header.Refresh') + (autoRefresh ? '\n' + t('Header.AutoRefresh') : '')}</b>
           {profileAge !== undefined && (
-            <div>
-              Your Destiny data was last synced with the game state{' '}
-              {i15dDurationFromMsWithSeconds(profileAge)} ago. Bungie.net's fault.
-            </div>
+            <div>{t('Header.ProfileAge', { age: i15dDurationFromMsWithSeconds(profileAge) })}</div>
           )}
         </>
       )}

@@ -361,6 +361,7 @@
     "KeyboardShortcuts": "Keyboard Shortcuts",
     "MaterialCounts": "Material Counts",
     "Menu": "Menu",
+    "ProfileAge": "Your Destiny data was last synced with the game state {{age}} ago. Refreshing DIM may get newer data, but Bungie.net may also return cached info.",
     "Refresh": "Refresh Destiny Data [R]",
     "ReloadApp": "Reload App",
     "ReportBug": "Report a Bug",

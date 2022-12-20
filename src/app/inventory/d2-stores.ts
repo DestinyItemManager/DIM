@@ -50,7 +50,7 @@ import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { ItemPowerSet } from './ItemPowerSet';
-import { d2BucketsSelector, storesSelector } from './selectors';
+import { d2BucketsSelector, storesLoadedSelector, storesSelector } from './selectors';
 import { DimCharacterStat, DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { processItems } from './store/d2-item-factory';
@@ -158,8 +158,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
 
 const BUNGIE_CACHE_TTL = 5_000;
 
-// TODO: maybe move this into another file?
-function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileResponse> {
+function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileResponse | undefined> {
   return async (dispatch, getState) => {
     const mockProfileData = getState().inventory.mockProfileData;
     if (mockProfileData) {
@@ -167,10 +166,9 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
       return mockProfileData;
     }
 
-    // TODO: load from IDB first - or race IDB and request?
+    // First try loading from IndexedDB
     let profileResponse = getState().inventory.profileResponse;
     if (!profileResponse) {
-      // TODO: set some sort of marker so we only try loading profile from IDB once (or use _.once?)
       profileResponse = await get<DestinyProfileResponse>(`profile-${account.membershipId}`);
       // Check to make sure the profile hadn't been loaded in the meantime
       if (getState().inventory.profileResponse) {
@@ -181,7 +179,7 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
       }
     }
 
-    let cachedProfileMintedDate = new Date();
+    let cachedProfileMintedDate = new Date(0);
 
     // If our cached profile is up to date
     if (profileResponse) {
@@ -194,7 +192,8 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
           'Cached profile is within Bungie.net cache time, skipping remote load.',
           profileAge
         );
-        return profileResponse;
+        // undefined means skip processing, in case we already have computed stores
+        return storesLoadedSelector(getState()) ? undefined : profileResponse;
       }
     }
 
@@ -213,8 +212,8 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
           remoteProfileMintedDate,
           cachedProfileMintedDate
         );
-        // TODO: throw a special error for "don't bother reprocessing"? or just null/undefined?
-        return profileResponse;
+        // undefined means skip processing, in case we already have computed stores
+        return storesLoadedSelector(getState()) ? undefined : profileResponse;
       } else if (profileResponse) {
         infoLog(
           'd2-stores',
@@ -226,7 +225,6 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
 
       profileResponse = remoteProfileResponse;
       set(`profile-${account.membershipId}`, profileResponse); // don't await
-      infoLog('d2-stores', 'Loaded remote profile');
       dispatch(profileLoaded({ profile: profileResponse, live: true }));
       return profileResponse;
     } catch (e) {
@@ -236,9 +234,8 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
           'd2-stores',
           'Error loading profile from Bungie.net, falling back to cached profile'
         );
-        // TODO: throw a special error for "don't bother reprocessing"? or just null/undefined? - check if we've managed to get stores
-        dispatch(profileLoaded({ profile: profileResponse, live: false }));
-        return profileResponse;
+        // undefined means skip processing, in case we already have computed stores
+        return storesLoadedSelector(getState()) ? undefined : profileResponse;
       }
       // rethrow
       throw e;
@@ -260,8 +257,6 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
 
       resetItemIndexGenerator();
 
-      // TODO: if we've already loaded profile recently, don't load it again
-
       try {
         const { readOnly } = getState().inventory;
 
@@ -275,11 +270,11 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
           return;
         }
 
-        const stopTimer = timer('Process inventory');
-
         if (!defs || !profileInfo) {
           return;
         }
+
+        const stopTimer = timer('Process inventory');
 
         const buckets = d2BucketsSelector(getState())!;
         const stores = buildStores(defs, buckets, profileInfo, transaction);

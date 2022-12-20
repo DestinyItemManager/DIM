@@ -51,8 +51,8 @@ export function i15dDurationFromMs(milliseconds: number, compact = false) {
 }
 
 /**
- * print a number of milliseconds as something like "4d 0:51",
- * containing days, minutes, and hours.
+ * print a number of milliseconds as something like "4d 0:51:23",
+ * containing days, minutes, seconds, and hours.
  * uses i18n to choose an appropriate substitute for that "d"
  *
  * negative durations are treated as 0
