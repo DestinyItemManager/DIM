@@ -11,7 +11,12 @@ import styles from './WeaponCatalystInfo.m.scss';
 export function WeaponCatalystInfo({ item }: { item: DimItem }) {
   const { catalystInfo } = item;
 
-  if (!catalystInfo?.unlocked || catalystInfo.complete || !catalystInfo.objectives?.length) {
+  if (
+    !catalystInfo ||
+    !catalystInfo.unlocked ||
+    catalystInfo.complete ||
+    !catalystInfo.objectives?.length
+  ) {
     return null;
   }
 
