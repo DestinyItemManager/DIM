@@ -157,6 +157,20 @@ export function createHttpClient(
       headers: { 'X-API-Key': apiKey, ...(config.body && { 'Content-Type': 'application/json' }) },
       credentials: withCredentials ? 'include' : 'omit',
     });
+
+    if ($featureFlags.simulateBungieMaintenance) {
+      throw new BungieError(
+        {
+          ErrorCode: PlatformErrorCodes.SystemDisabled,
+          ThrottleSeconds: 0,
+          ErrorStatus: 'SystemDisabled',
+          Message: 'This system is temporarily disabled for maintenance.',
+          MessageData: {},
+        },
+        fetchOptions
+      );
+    }
+
     const response = await fetchFunction(fetchOptions);
     let data: ServerResponse<unknown> | undefined;
     let parseError: Error | undefined;
