@@ -156,7 +156,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
   };
 }
 
-const BUNGIE_CACHE_TTL = 300;
+const BUNGIE_CACHE_TTL = 30_000;
 
 // TODO: maybe move this into another file?
 function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileResponse> {
@@ -179,11 +179,15 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
       }
     }
 
+    let cachedProfileMintedDate = new Date();
+
     // If our cached profile is up to date
     if (profileResponse) {
       // TODO: seconds? milliseconds?
       // TODO: need to make sure we still load at the right frequency / for manual cache busts?
-      const profileAge = Date.now() - parseInt(profileResponse.responseMintedTimestamp ?? '0');
+      cachedProfileMintedDate = new Date(profileResponse.responseMintedTimestamp ?? 0);
+      const profileAge = Date.now() - cachedProfileMintedDate.getTime();
+      infoLog('d2-stores', profileAge);
       if (profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
         warnLog(
           'd2-stores',
@@ -196,26 +200,34 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
 
     try {
       const remoteProfileResponse = await getStores(account);
+      const remoteProfileMintedDate = new Date(remoteProfileResponse.responseMintedTimestamp ?? 0);
 
       // compare new response against cached response, toss if it's not newer!
       if (
         profileResponse &&
-        parseInt(remoteProfileResponse.responseMintedTimestamp ?? '0') <
-          parseInt(profileResponse.responseMintedTimestamp ?? '0')
+        remoteProfileMintedDate.getTime() <= cachedProfileMintedDate.getTime()
       ) {
         warnLog(
           'd2-stores',
           'Profile from Bungie.net was not newer than cached profile, discarding.',
-          new Date(parseInt(remoteProfileResponse.responseMintedTimestamp ?? '0')),
-          new Date(parseInt(profileResponse.responseMintedTimestamp ?? '0'))
+          remoteProfileMintedDate,
+          cachedProfileMintedDate
         );
         // TODO: set redux state for out-of-date, or maybe detect that automatically...
         // TODO: throw a special error for "don't bother reprocessing"? or just null/undefined?
         return profileResponse;
+      } else if (profileResponse) {
+        infoLog(
+          'd2-stores',
+          'Profile from Bungie.net was newer than cached profile, using it.',
+          remoteProfileMintedDate,
+          cachedProfileMintedDate
+        );
       }
 
       profileResponse = remoteProfileResponse;
       set(`profile-${account.membershipId}`, profileResponse); // don't await
+      infoLog('d2-stores', 'Loaded remote profile');
       dispatch(profileLoaded(profileResponse));
       return profileResponse;
     } catch (e) {
@@ -226,7 +238,7 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
           'd2-stores',
           'Error loading profile from Bungie.net, falling back to cached profile'
         );
-        // TODO: throw a special error for "don't bother reprocessing"? or just null/undefined?
+        // TODO: throw a special error for "don't bother reprocessing"? or just null/undefined? - check if we've managed to get stores
         return profileResponse;
       }
       // rethrow
@@ -234,8 +246,6 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
     }
   };
 }
-
-let latestDateLastPlayedTimestamp = 0;
 
 function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
@@ -264,28 +274,6 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         // If we switched account since starting this, give up
         if (account !== currentAccountSelector(getState())) {
           return;
-        }
-
-        // dateLastPlayed doesn't advance with every load, nor does it advance
-        // when things are moved via DIM. It appears to only be updated when
-        // something happens in game that affects the user's stored profile.
-        // However, due to some caching or server affinity issue, sometimes it
-        // can go backwards, meaning this profile reflects an earlier state than
-        // one we've seen before. If that is the case, we should ignore this
-        // update.
-        const dateLastPlayed = profileInfo.profile.data?.dateLastPlayed;
-        if (dateLastPlayed && !readOnly) {
-          const dateLastPlayedTimestamp = new Date(dateLastPlayed).getTime();
-          if (dateLastPlayedTimestamp < latestDateLastPlayedTimestamp) {
-            warnLog(
-              'd2-stores',
-              "Profile dateLastPlayed was older than another profile response we've seen - ignoring",
-              latestDateLastPlayedTimestamp,
-              dateLastPlayedTimestamp
-            );
-            return;
-          }
-          latestDateLastPlayedTimestamp = dateLastPlayedTimestamp;
         }
 
         const stopTimer = timer('Process inventory');
