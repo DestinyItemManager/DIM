@@ -25,7 +25,10 @@ export const update = createAction('inventory/UPDATE')<{
   currencies: AccountCurrency[];
 }>();
 
-export const profileLoaded = createAction('inventory/PROFILE_LOADED')<DestinyProfileResponse>();
+export const profileLoaded = createAction('inventory/PROFILE_LOADED')<{
+  profile: DestinyProfileResponse;
+  live: boolean;
+}>();
 export const profileError = createAction('inventory/PROFILE_ERROR')<Error>();
 
 export interface CharacterInfo {

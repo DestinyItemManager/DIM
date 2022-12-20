@@ -2,9 +2,9 @@ import { getPlatforms } from 'app/accounts/platforms';
 import { accountsLoadedSelector, currentAccountSelector } from 'app/accounts/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
+import { blockingProfileErrorSelector } from 'app/inventory/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { RootState } from 'app/store/types';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router';
 import ErrorPanel from './ErrorPanel';
@@ -19,7 +19,7 @@ import ErrorPanel from './ErrorPanel';
 export default function AccountRedirectRoute() {
   const account = useSelector(currentAccountSelector);
   const accountsLoaded = useSelector(accountsLoadedSelector);
-  const profileError = useSelector((state: RootState) => state.inventory.profileError);
+  const profileError = useSelector(blockingProfileErrorSelector);
   const dispatch = useThunkDispatch();
 
   useEffect(() => {

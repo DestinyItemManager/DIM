@@ -76,7 +76,14 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
 ): InventoryState => {
   switch (action.type) {
     case getType(actions.profileLoaded):
-      return { ...state, profileResponse: action.payload };
+      return {
+        ...state,
+        profileResponse: action.payload.profile,
+        profileError: action.payload.live ? undefined : state.profileError,
+      };
+
+    case getType(actions.profileError):
+      return { ...state, profileError: action.payload };
 
     case getType(actions.update):
       return updateInventory(state, action.payload);
@@ -164,7 +171,6 @@ function updateInventory(
     stores,
     currencies,
     newItems: computeNewItems(state.stores, state.newItems, stores),
-    profileError: undefined,
   };
 }
 

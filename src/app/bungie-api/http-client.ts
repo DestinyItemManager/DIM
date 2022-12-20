@@ -227,7 +227,6 @@ export function responsivelyThrottleHttpClient(
           case PlatformErrorCodes.PerApplicationAnonymousThrottleExceeded:
           case PlatformErrorCodes.PerApplicationAuthenticatedThrottleExceeded:
           case PlatformErrorCodes.PerUserThrottleExceeded:
-          case PlatformErrorCodes.SystemDisabled:
             timesThrottled++;
             break;
           default:

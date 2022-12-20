@@ -156,7 +156,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
   };
 }
 
-const BUNGIE_CACHE_TTL = 30_000;
+const BUNGIE_CACHE_TTL = 5_000;
 
 // TODO: maybe move this into another file?
 function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileResponse> {
@@ -170,12 +170,14 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
     // TODO: load from IDB first - or race IDB and request?
     let profileResponse = getState().inventory.profileResponse;
     if (!profileResponse) {
+      // TODO: set some sort of marker so we only try loading profile from IDB once (or use _.once?)
       profileResponse = await get<DestinyProfileResponse>(`profile-${account.membershipId}`);
+      // Check to make sure the profile hadn't been loaded in the meantime
       if (getState().inventory.profileResponse) {
         profileResponse = getState().inventory.profileResponse;
       } else {
         infoLog('d2-stores', 'Loaded cached profile from IndexedDB');
-        dispatch(profileLoaded(profileResponse));
+        dispatch(profileLoaded({ profile: profileResponse, live: false }));
       }
     }
 
@@ -183,11 +185,9 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
 
     // If our cached profile is up to date
     if (profileResponse) {
-      // TODO: seconds? milliseconds?
       // TODO: need to make sure we still load at the right frequency / for manual cache busts?
       cachedProfileMintedDate = new Date(profileResponse.responseMintedTimestamp ?? 0);
       const profileAge = Date.now() - cachedProfileMintedDate.getTime();
-      infoLog('d2-stores', profileAge);
       if (profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
         warnLog(
           'd2-stores',
@@ -213,7 +213,6 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
           remoteProfileMintedDate,
           cachedProfileMintedDate
         );
-        // TODO: set redux state for out-of-date, or maybe detect that automatically...
         // TODO: throw a special error for "don't bother reprocessing"? or just null/undefined?
         return profileResponse;
       } else if (profileResponse) {
@@ -228,10 +227,9 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
       profileResponse = remoteProfileResponse;
       set(`profile-${account.membershipId}`, profileResponse); // don't await
       infoLog('d2-stores', 'Loaded remote profile');
-      dispatch(profileLoaded(profileResponse));
+      dispatch(profileLoaded({ profile: profileResponse, live: true }));
       return profileResponse;
     } catch (e) {
-      // TODO: set store error, readonly - need to make those independent! also need error handling to know about the case where error AND profile are set
       dispatch(profileError(e));
       if (profileResponse) {
         errorLog(
@@ -239,6 +237,7 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
           'Error loading profile from Bungie.net, falling back to cached profile'
         );
         // TODO: throw a special error for "don't bother reprocessing"? or just null/undefined? - check if we've managed to get stores
+        dispatch(profileLoaded({ profile: profileResponse, live: false }));
         return profileResponse;
       }
       // rethrow

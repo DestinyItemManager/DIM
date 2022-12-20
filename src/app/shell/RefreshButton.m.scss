@@ -16,3 +16,35 @@
   bottom: -4px;
   right: -4px;
 }
+
+.outOfDate {
+  color: $red;
+  background-color: #1b1b2d;
+  height: 14px;
+  width: 14px;
+  padding: 2px;
+  font-size: 10px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+}
+
+.errorTooltip {
+  background: scale-color($red, $lightness: -90%);
+  border-color: $red !important;
+  max-width: 800px;
+
+  &::after {
+    background-color: $red !important;
+  }
+}
+
+.errorDetails {
+  h2 {
+    margin: 0 0 8px 0;
+  }
+  p {
+    margin-bottom: 1em;
+  }
+}
