@@ -38,6 +38,8 @@ declare const $featureFlags: {
   skipDimApiFirstLoadIfRecent: boolean;
   /** Pretend that Bungie.net is down for maintenance */
   simulateBungieMaintenance: boolean;
+  /** Pretend that Bungie.net is not returning sockets info */
+  simulateMissingSockets: boolean;
 };
 
 declare function ga(...params: string[]): void;
