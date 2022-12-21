@@ -156,7 +156,9 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
   };
 }
 
-const BUNGIE_CACHE_TTL = 5_000;
+const BUNGIE_CACHE_TTL = 1_000;
+
+let minimumCacheAge = Number.MAX_SAFE_INTEGER;
 
 function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileResponse | undefined> {
   return async (dispatch, getState) => {
@@ -194,6 +196,12 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
         );
         // undefined means skip processing, in case we already have computed stores
         return storesLoadedSelector(getState()) ? undefined : profileResponse;
+      } else {
+        warnLog(
+          'd2-stores',
+          'Cached profile is older than Bungie.net cache time, proceeding.',
+          profileAge
+        );
       }
     }
 
@@ -215,9 +223,15 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
         // undefined means skip processing, in case we already have computed stores
         return storesLoadedSelector(getState()) ? undefined : profileResponse;
       } else if (profileResponse) {
+        minimumCacheAge = Math.min(
+          minimumCacheAge,
+          remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime()
+        );
         infoLog(
           'd2-stores',
           'Profile from Bungie.net was newer than cached profile, using it.',
+          remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime(),
+          minimumCacheAge,
           remoteProfileMintedDate,
           cachedProfileMintedDate
         );

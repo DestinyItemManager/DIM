@@ -69,7 +69,7 @@ export default function RefreshButton({ className }: { className?: string }) {
       >
         <AppIcon icon={refreshIcon} spinning={active} />
         {autoRefresh && <div className={styles.userIsPlaying} />}
-        {(profileError || outOfDate) && (
+        {(profileError || (outOfDate && !active)) && (
           <div className={styles.outOfDate}>
             <AppIcon icon={profileError ? faExclamationTriangle : faClock} />
           </div>
