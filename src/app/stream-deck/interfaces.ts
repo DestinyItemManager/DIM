@@ -124,6 +124,7 @@ export interface MetricsArgs {
   gunsmith: number;
   ironBanner: number;
   triumphs: number;
+  triumphsActive: number;
   battlePass: number;
   artifactIcon?: string;
 }

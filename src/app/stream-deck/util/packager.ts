@@ -92,7 +92,7 @@ function getCurrentSeason(
 function streamDeckMetricsUpdate(state: RootState): MetricsArgs {
   const profile = profileResponseSelector(state);
   const progression = getCharacterProgressions(profile)?.progressions ?? {};
-  const { lifetimeScore } = profile?.profileRecords?.data || {};
+  const { lifetimeScore, activeScore } = profile?.profileRecords?.data || {};
   const [battlePassHash, prestigeLevel, artifactIcon] = getCurrentSeason(state, profile);
 
   // battle pass level calc from src/app/progress/SeasonalRank.tsx
@@ -112,6 +112,7 @@ function streamDeckMetricsUpdate(state: RootState): MetricsArgs {
     gunsmith: progression[1471185389].currentProgress,
     ironBanner: progression[599071390].currentProgress,
     triumphs: lifetimeScore ?? 0,
+    triumphsActive: activeScore ?? 0,
     battlePass: battlePassHash ? seasonalRank : 0,
     artifactIcon,
   };
