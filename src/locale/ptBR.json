@@ -126,6 +126,9 @@
   },
   "ErrorPanel": {
     "Description": "Tente carregar seu inventário no app Destiny 2 Companion para saber se a Bungie.net está fora do ar.",
+    "EmblemError": "Você pode tentar corrigir trocando o emblema de todos os personagens dentro do próprio jogo.",
+    "EmblemErrorLink": "Saiba como corrigir.",
+    "SystemDown": "Este problema afeta todos os apps de Destiny. Sendo assim, nem mesmo o DIM será capaz de resolver.",
     "Troubleshooting": "Guia para Solução de Problemas"
   },
   "FarmingMode": {
@@ -378,8 +381,11 @@
     "ClickToExpand": "(clique para expandir)"
   },
   "ItemFeed": {
+    "ClearFeed": "Limpar lista",
     "Description": "Itens Recentes",
-    "HideTagged": "Ocultar Etiquetados"
+    "HideTagged": "Ocultar Etiquetados",
+    "NoNewItems": "Nenhum item novo",
+    "ShowOlderItems": "Exibir itens antigos"
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidado",
@@ -610,6 +616,13 @@
     "GatherEngrams": "Obter engramas",
     "GatherEngramsExceptExotics": "Exóticos",
     "Generated": "N{{tier}} Set",
+    "Import": {
+      "BadURL": "URL de build inválida.",
+      "Error": "Falha ao carregar build:",
+      "Error404": "Esta build não existe.",
+      "PasteHere": "Cole o link da build para abrí-la."
+    },
+    "ImportLoadout": "Importar build",
     "ItemErrorSummary": "1 erro no item:",
     "ItemErrorSummary_plural": "{{count}} erros no item:",
     "ItemLeveling": "Nivelamento de itens",

@@ -126,6 +126,9 @@
   },
   "ErrorPanel": {
     "Description": "Prova a visualizzare il tuo inventario sulla Companion App di Destiny 2 per vedere se Bungie.net sta funzionando.",
+    "EmblemError": "Potresti essere in grado di risolvere questo problema cambiando nel gioco gli emblemi su tutti i personaggi.",
+    "EmblemErrorLink": "Scopri come risolverlo.",
+    "SystemDown": "Questo influisce su tutte le app di Destiny, e il team di DIM non può né risolverlo né aggirarlo.",
     "Troubleshooting": "Guida alla risoluzione dei problemi"
   },
   "FarmingMode": {
@@ -378,8 +381,11 @@
     "ClickToExpand": "(Clicca per espandere)"
   },
   "ItemFeed": {
+    "ClearFeed": "Cancella Elenco",
     "Description": "Oggetti Recenti",
-    "HideTagged": "Nascondi etichettati"
+    "HideTagged": "Nascondi etichettati",
+    "NoNewItems": "Nessun nuovo oggetto",
+    "ShowOlderItems": "Mostra oggetti più vecchi"
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidati",
@@ -610,6 +616,13 @@
     "GatherEngrams": "Raccogliere Engrammi",
     "GatherEngramsExceptExotics": "Esotici",
     "Generated": "Loadout T{{tier}}",
+    "Import": {
+      "BadURL": "URL di condivisione loadout non valido.",
+      "Error": "Errore caricamento loadout:",
+      "Error404": "Questo loadout non esiste.",
+      "PasteHere": "Incolla un collegamento di un loadout per aprirlo."
+    },
+    "ImportLoadout": "Importa Loadout",
     "ItemErrorSummary": "1 errore oggetto:",
     "ItemErrorSummary_plural": "{{count}} errori oggetti:",
     "ItemLeveling": "Elementi da Livellare",

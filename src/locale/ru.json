@@ -126,6 +126,9 @@
   },
   "ErrorPanel": {
     "Description": "Попробуйте загрузить свой инвентарь в приложении-компаньоне Destiny 2, чтобы убедиться, что Bungie.net недоступен.",
+    "EmblemError": "Возможно, вы сможете исправить это, поменяв свои эмблемы в игре на всех ваших персонажах.",
+    "EmblemErrorLink": "Детальней о том, как это исправить.",
+    "SystemDown": "Это влияет на все приложения Destiny, и команда DIM не может это исправить или обойти.",
     "Troubleshooting": "Устранение неполадок"
   },
   "FarmingMode": {
@@ -378,8 +381,11 @@
     "ClickToExpand": "(Нажмите, чтобы раскрыть)"
   },
   "ItemFeed": {
+    "ClearFeed": "Очистить Ленту",
     "Description": "Лента предметов",
-    "HideTagged": "Скрыть отмеченные"
+    "HideTagged": "Скрыть отмеченные",
+    "NoNewItems": "Нет новых предметов",
+    "ShowOlderItems": "Show older items"
   },
   "ItemMove": {
     "Consolidate": "Собрали {{name}}",
@@ -610,6 +616,13 @@
     "GatherEngrams": "Собрать Энграммы",
     "GatherEngramsExceptExotics": "Экзотический",
     "Generated": "Т{{tier}} Набор",
+    "Import": {
+      "BadURL": "Недопустимая ссылка на набор.",
+      "Error": "Ошибка получения набора:",
+      "Error404": "Этот набор не существует.",
+      "PasteHere": "Вставьте ссылку с набором, чтобы открыть набор."
+    },
+    "ImportLoadout": "Импортировать Набор",
     "ItemErrorSummary": "1 ошибка предмета:",
     "ItemErrorSummary_plural": "{{count}} ошибок предмета:",
     "ItemLeveling": "Прокачивание предмета",

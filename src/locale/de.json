@@ -126,6 +126,9 @@
   },
   "ErrorPanel": {
     "Description": "Versuche dein Inventar in der Destiny 2 Companion App zu laden, um zu sehen, ob Bungie.net nicht verfügbar ist.",
+    "EmblemError": "Möglicherweise kannst du dies beheben, indem du deine Embleme im Spiel auf allen Charakteren wechselst.",
+    "EmblemErrorLink": "Lies mehr darüber, wie man es beheben kann.",
+    "SystemDown": "Dies betrifft alle Destiny Apps, und das DIM Team kann es nicht reparieren oder umgehen.",
     "Troubleshooting": "Fehlerbehebung"
   },
   "FarmingMode": {
@@ -378,8 +381,11 @@
     "ClickToExpand": "(Klicken zum Erweitern)"
   },
   "ItemFeed": {
+    "ClearFeed": "Feed löschen",
     "Description": "Gegenstands-Feed",
-    "HideTagged": "Markierte ausblenden"
+    "HideTagged": "Markierte ausblenden",
+    "NoNewItems": "Keine neuen Gegenstände",
+    "ShowOlderItems": "Zeige ältere Gegenstände"
   },
   "ItemMove": {
     "Consolidate": "{{name}} zusammengeführt",
@@ -432,7 +438,7 @@
       "Discipline": "Disziplin beschleunigt die Granaten-Aufladezeit",
       "DragAndDrop": "Klicke und ziehe Gegenstände in die Felder, um Sets aus nur dieser Ausrüstung zu erstellen",
       "Help": "Brauchst du Hilfe?",
-      "HigherTiers": "Höhere Stufen sind besser",
+      "HigherTiers": "Höhere Tier-Stufen sind besser",
       "Intellect": "Intellekt beschleunigt die Super-Aufladezeit",
       "Lock": "Sperre eine bestimmte Art von Perk, indem du auf sein Feld klickst und den Perk auswählst",
       "MultiPerk": "Um Rüstung mit mehreren Perks zu nutzen, klicke mit Shift+Klick auf die gewünschten Perks",
@@ -442,7 +448,7 @@
       "StatsIncrease": "Wenn sich der Verteidigungswert für ein Rüstungsteil erhöht, nehmen auch die Werte für dieses Rüstungsteil (Int/Dis/Stä) zu.",
       "Strength": "Stärke beschleunigt die Nahkampf-Aufladezeit",
       "Synergy": "Versuche Rüstung zu finden, welche dir mehr Munition für Waffenklassen geben, die du benutzt.",
-      "Tier11Example": "4/5/2 (ein Stufe 11 Set) ist 4 Intellekt, 5 Disziplin, 2 Stärke (4+5+2 = Stufe 11)"
+      "Tier11Example": "4/5/2 (ein Tier-Stufe 11 Set) ist 4 Intellekt, 5 Disziplin, 2 Stärke (4+5+2 = Tier-Stufe 11)"
     },
     "HideAllConfigs": "Verstecke alle Einstellungen",
     "HideConfigs": "Verstecke Einstellungen",
@@ -533,15 +539,15 @@
       "AssumptionsRestricted": "DIM kann keine Änderungen an der Rüstungs-Affinität empfehlen:",
       "BadSlot": "Im {{bucketName}} Slot konnte keiner der erlaubten Gegenstände diese Mods aufnehmen:",
       "Header": "Es wurden keine Builds gefunden. Hier sind mögliche Gründe, warum DIM keine Builds finden konnte:",
-      "LowerBoundsFailed": "Viele Sets erfüllten nicht die Mindestanforderungen für Statusstufen",
+      "LowerBoundsFailed": "Viele Sets erfüllten nicht die Mindestanforderungen für Tier-Stufen",
       "MaybeAllowMoreItems": "Erwäge andere Gegenstände zu erlauben:",
-      "MaybeDecreaseLowerBounds": "Ziehe in Betracht, die Mindestanforderungen an Statusstufen zu reduzieren",
-      "MaybeIncreaseUpperBounds": "Ziehe die Erhöhung der Statusstufenanforderung in Betracht",
+      "MaybeDecreaseLowerBounds": "Ziehe in Betracht, die Mindestanforderungen für Tier-Stufen zu reduzieren",
+      "MaybeIncreaseUpperBounds": "Ziehe die Erhöhung der Tier-Stufen in Betracht",
       "MaybeRemoveMods": "Erwäge einige Mods zu entfernen:",
       "MaybeRemoveSearchQuery": "Ziehe in Betracht Filter in der Suchleiste zu löschen oder zu ändern",
       "ModAssignmentFailed": "Viele Sets konnten nicht alle ausgewählten Mods unterbringen",
       "RemoveMods": "Diese Mods entfernen",
-      "UpperBoundsFailed": "Viele Sets erfüllten nicht die maximalen Anforderungen für Statusstufen"
+      "UpperBoundsFailed": "Viele Sets erfüllten nicht die Maximalanforderungen für Tier-Stufen"
     },
     "NoExotic": "Kein Exotisches",
     "NoExoticDescription": "Äquivalent zur Suche \"not:exotic\" in der Suchleiste - keine exotische Rüstung wird in Sets verwendet.",
@@ -610,6 +616,13 @@
     "GatherEngrams": "Engramme sammeln",
     "GatherEngramsExceptExotics": "Exotische",
     "Generated": "T{{tier}} Ausrüstung",
+    "Import": {
+      "BadURL": "Keine gültige Ausrüstung-Teilen-URL.",
+      "Error": "Fehler beim Laden der Ausrüstung:",
+      "Error404": "Diese Ausrüstung existiert nicht.",
+      "PasteHere": "Füge einen Ausrüstungs-Link ein, um die Ausrüstung zu öffnen."
+    },
+    "ImportLoadout": "Importiere Ausrüstung",
     "ItemErrorSummary": "1 Gegenstands-Fehler:",
     "ItemErrorSummary_plural": "{{count}} Gegenstands-Fehler:",
     "ItemLeveling": "Gegenstand aufwerten",
@@ -1140,7 +1153,7 @@
     "About": {
       "APIHistory": "Übersicht aller Aktionen von DIM (und anderen Destiny-Apps) anzeigen",
       "BungieCopyright": "Alle Bilder und Inhalte sind Eigentum von Bungie.",
-      "CommunityInsight": "Community Perk Insights courtesy of {{clarityLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
+      "CommunityInsight": "Community-Perk-Einblicke mit freundlicher Genehmigung von {{clarityLink}}. Wenn du Ungenauigkeiten bemerkst oder Fragen hast, tritt dem {{clarityDiscordLink}} bei.",
       "Discord": "Discord",
       "DiscordHelp": "Stelle Fragen, gib Feedback und erhalte Unterstützung in unseren Discord-Kanälen.",
       "FAQ": "Häufig Gestellte Fragen",
