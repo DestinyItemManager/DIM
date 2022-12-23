@@ -54,8 +54,8 @@ export interface InventoryState {
   readonly readOnly: boolean;
 
   /**
-   * A JSON-encoded API profile response. if this is present,
-   * we use it instead of talking to the Bungie API
+   * An API profile response. If this is present,
+   * we use it instead of talking to the Bungie API.
    */
   readonly mockProfileData?: DestinyProfileResponse;
 }
