@@ -12,7 +12,7 @@ import {
   DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
 import { createAction } from 'typesafe-actions';
-import { TagValue } from './dim-item-info';
+import { TagCommand, TagValue } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { AccountCurrency, DimCharacterStat, DimStore } from './store-types';
@@ -143,7 +143,7 @@ export const setItemHashNote = createAction('tag_notes/SET_HASH_NOTE')<{
 /**
  * Set the tag for an item regardless of whether it's instanced or not. Prefer this to setItemTag / setItemHashTag.
  */
-export function setTag(item: DimItem, tag: TagValue | undefined): ThunkResult {
+export function setTag(item: DimItem, tag: TagCommand | undefined): ThunkResult {
   return async (dispatch) => {
     if (!item.taggable) {
       return;

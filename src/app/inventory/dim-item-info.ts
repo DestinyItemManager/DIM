@@ -48,15 +48,16 @@ export const tagConfig = {
   },
 };
 
-export type TagValue = keyof typeof tagConfig | 'clear' | 'lock' | 'unlock';
+export type TagValue = keyof typeof tagConfig;
+export type TagCommand = TagValue | 'clear';
 
-const tagValueStrings = [...Object.keys(tagConfig), 'clear', 'lock', 'unlock'];
+const tagCommandStrings = [...Object.keys(tagConfig), 'clear'];
 
 /**
  * Helper function to check if a string is TagValue type and declare it as one.
  */
-export function isTagValue(value: string): value is TagValue {
-  return tagValueStrings.includes(value);
+export function isTagCommand(value: string): value is TagCommand {
+  return tagCommandStrings.includes(value);
 }
 
 /**

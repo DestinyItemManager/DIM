@@ -5,7 +5,7 @@ import { AppIcon, undoIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
 import { setItemHashTag, setItemTagsBulk } from './actions';
-import { getTag, tagConfig, TagValue } from './dim-item-info';
+import { getTag, TagCommand, tagConfig, TagValue } from './dim-item-info';
 import { setItemLockState } from './item-move-service';
 import { DimItem } from './item-types';
 import { itemHashTagsSelector, itemInfosSelector } from './selectors';
@@ -15,7 +15,7 @@ import { itemHashTagsSelector, itemInfosSelector } from './selectors';
  */
 export function bulkTagItems(
   itemsToBeTagged: DimItem[],
-  selectedTag: TagValue,
+  selectedTag: TagCommand,
   notification = true
 ): ThunkResult {
   return async (dispatch, getState) => {
