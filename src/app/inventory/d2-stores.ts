@@ -156,7 +156,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
   };
 }
 
-const BUNGIE_CACHE_TTL = 1_000;
+const BUNGIE_CACHE_TTL = 15_000;
 
 let minimumCacheAge = Number.MAX_SAFE_INTEGER;
 
@@ -188,14 +188,13 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
       // TODO: need to make sure we still load at the right frequency / for manual cache busts?
       cachedProfileMintedDate = new Date(profileResponse.responseMintedTimestamp ?? 0);
       const profileAge = Date.now() - cachedProfileMintedDate.getTime();
-      if (profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
+      if (!storesLoadedSelector(getState()) && profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
         warnLog(
           'd2-stores',
           'Cached profile is within Bungie.net cache time, skipping remote load.',
           profileAge
         );
-        // undefined means skip processing, in case we already have computed stores
-        return storesLoadedSelector(getState()) ? undefined : profileResponse;
+        return profileResponse;
       } else {
         warnLog(
           'd2-stores',

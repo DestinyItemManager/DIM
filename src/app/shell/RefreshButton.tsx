@@ -49,6 +49,7 @@ export default function RefreshButton({ className }: { className?: string }) {
   const profileAge = useProfileAge();
   const outOfDate = profileAge !== undefined && profileAge > STALE_PROFILE_THRESHOLD;
   const profileError = useSelector(profileErrorSelector);
+  const showOutOfDateWarning = outOfDate && !active && !autoRefresh;
 
   return (
     <PressTip
@@ -69,7 +70,7 @@ export default function RefreshButton({ className }: { className?: string }) {
       >
         <AppIcon icon={refreshIcon} spinning={active} />
         {autoRefresh && <div className={styles.userIsPlaying} />}
-        {(profileError || (outOfDate && !active)) && (
+        {(profileError || showOutOfDateWarning) && (
           <div className={styles.outOfDate}>
             <AppIcon icon={profileError ? faExclamationTriangle : faClock} />
           </div>
