@@ -4,7 +4,7 @@ import { tl } from 'app/i18next-t';
 import { RootState, ThunkResult } from 'app/store/types';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
-import { tagCleanup } from './actions';
+import { setItemNote, setItemTag, tagCleanup } from './actions';
 import { DimItem } from './item-types';
 import { itemHashTagsSelector, itemInfosSelector } from './selectors';
 import { DimStore } from './store-types';
@@ -131,6 +131,9 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
       return;
     }
 
+    const infosWithCraftedDate = Object.values(infos).filter((i) => i.craftedDate);
+    const infosByCraftedDate = _.keyBy(infosWithCraftedDate, (i) => i.craftedDate!);
+
     // Tags/notes are stored keyed by instance ID. Start with all the keys of the
     // existing tags and notes and remove the ones that are still here, and the rest
     // should be cleaned up because they refer to deleted items.
@@ -140,6 +143,32 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
         const info = infos[item.id];
         if (info && (info.tag !== undefined || info.notes?.length)) {
           cleanupIds.delete(item.id);
+        } else {
+          // Double-check crafted items - we may have them under a different ID. If so,
+          // patch up the data by re-tagging them under the new ID.
+          if (item.craftedInfo?.craftedDate) {
+            const craftedInfo = infosByCraftedDate[item.craftedInfo.craftedDate];
+            if (craftedInfo) {
+              if (craftedInfo.tag) {
+                dispatch(
+                  setItemTag({
+                    itemId: item.id,
+                    tag: craftedInfo.tag,
+                    craftedDate: item.craftedInfo.craftedDate,
+                  })
+                );
+              }
+              if (craftedInfo.notes) {
+                dispatch(
+                  setItemNote({
+                    itemId: item.id,
+                    note: craftedInfo.notes,
+                    craftedDate: item.craftedInfo.craftedDate,
+                  })
+                );
+              }
+            }
+          }
         }
       }
     }
