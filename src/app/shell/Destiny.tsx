@@ -19,7 +19,6 @@ import SyncTagLock from 'app/inventory/SyncTagLock';
 import ItemFeedPage from 'app/item-feed/ItemFeedPage';
 import LoadoutDrawerContainer from 'app/loadout-drawer/LoadoutDrawerContainer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
-import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import StripSockets from 'app/strip-sockets/StripSockets';
@@ -94,7 +93,7 @@ export default function Destiny() {
     )
   );
   const profileError = useSelector((state: RootState) => state.inventory.profileError);
-  const autoLockTagged = useSetting('autoLockTagged');
+  const autoLockTagged = useSelector(settingSelector('autoLockTagged'));
 
   useEffect(() => {
     if (!accountsLoaded) {
