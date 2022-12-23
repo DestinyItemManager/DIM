@@ -377,18 +377,19 @@ export function backupLoadout(store: DimStore, name: string): Loadout {
 }
 
 /**
- * Converts DimItem or other LoadoutItem-like objects to real loadout items.
+ * Converts DimItem to a LoadoutItem.
  */
 export function convertToLoadoutItem(
-  item: Pick<LoadoutItem, 'id' | 'hash' | 'amount' | 'socketOverrides'>,
-  equip: boolean
+  item: DimItem,
+  equip: boolean,
+  amount = item.amount
 ): LoadoutItem {
   return {
     id: item.id,
     hash: item.hash,
-    amount: item.amount,
-    socketOverrides: item.socketOverrides,
+    amount,
     equip,
+    craftedDate: item.craftedInfo?.craftedDate,
   };
 }
 

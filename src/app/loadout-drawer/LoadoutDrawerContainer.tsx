@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { Loadout } from './loadout-types';
-import { newLoadout, pickBackingStore } from './loadout-utils';
+import { convertToLoadoutItem, newLoadout, pickBackingStore } from './loadout-utils';
 
 const LoadoutDrawer = React.lazy(
   () => import(/* webpackChunkName: "loadout-drawer" */ './LoadoutDrawer2')
@@ -101,12 +101,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           const classType =
             item.classType === DestinyClass.Unknown ? owner.classType : item.classType;
           const draftLoadout = newLoadout('', [], classType);
-          draftLoadout.items.push({
-            id: item.id,
-            hash: item.hash,
-            equip: true,
-            amount: item.amount ?? 1,
-          });
+          draftLoadout.items.push(convertToLoadoutItem(item, true));
           setInitialLoadout({
             loadout: draftLoadout,
             storeId: owner.id,

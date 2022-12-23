@@ -17,6 +17,7 @@ import produce from 'immer';
 import _ from 'lodash';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
 import {
+  convertToLoadoutItem,
   createSocketOverridesFromEquipped,
   extractArmorModHashes,
   findSameLoadoutItemIndex,
@@ -57,12 +58,7 @@ export function addItem(
   equip?: boolean,
   socketOverrides?: SocketOverrides
 ): LoadoutUpdateFunction {
-  const loadoutItem: LoadoutItem = {
-    id: item.id,
-    hash: item.hash,
-    amount: 1,
-    equip: false,
-  };
+  const loadoutItem = convertToLoadoutItem(item, false, 1);
   if (socketOverrides) {
     loadoutItem.socketOverrides = socketOverrides;
   }
@@ -398,12 +394,7 @@ export function fillLoadoutFromEquipped(
     const mods: number[] = [];
     for (const item of newEquippedItems) {
       if (!(item.bucket.hash in equippedItemsByBucket)) {
-        const loadoutItem: LoadoutItem = {
-          id: item.id,
-          hash: item.hash,
-          equip: true,
-          amount: 1,
-        };
+        const loadoutItem = convertToLoadoutItem(item, true, 1);
         if (item.bucket.hash === BucketHashes.Subclass) {
           loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
         }
