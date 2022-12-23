@@ -37,6 +37,7 @@ export function bulkTagItems(
           instanced.map((item) => ({
             itemId: item.id,
             tag: selectedTag === 'clear' ? undefined : selectedTag,
+            craftedDate: item.craftedInfo?.craftedDate,
           }))
         )
       );
@@ -72,6 +73,7 @@ export function bulkTagItems(
                       instanced.map((item) => ({
                         itemId: item.id,
                         tag: previousState.get(item),
+                        craftedDate: item.craftedInfo?.craftedDate,
                       }))
                     )
                   );

@@ -342,22 +342,26 @@ export const dimApi = (
 
     // *** Tags/Notes ***
 
-    case getType(inventoryActions.setItemTag):
+    case getType(inventoryActions.setItemTag): {
+      const { itemId, tag, craftedDate } = action.payload;
       return produce(state, (draft) => {
-        setTag(draft, action.payload.itemId, action.payload.tag as TagValue, account!);
+        setTag(draft, itemId, tag as TagValue, craftedDate, account!);
       });
+    }
 
     case getType(inventoryActions.setItemTagsBulk):
       return produce(state, (draft) => {
         for (const info of action.payload) {
-          setTag(draft, info.itemId, info.tag as TagValue, account!);
+          setTag(draft, info.itemId, info.tag as TagValue, info.craftedDate, account!);
         }
       });
 
-    case getType(inventoryActions.setItemNote):
+    case getType(inventoryActions.setItemNote): {
+      const { itemId, note, craftedDate } = action.payload;
       return produce(state, (draft) => {
-        setNote(draft, action.payload.itemId, action.payload.note, account!);
+        setNote(draft, itemId, note, craftedDate, account!);
       });
+    }
 
     case getType(inventoryActions.tagCleanup):
       return tagCleanup(state, action.payload, account!);
@@ -821,6 +825,7 @@ function setTag(
   draft: Draft<DimApiState>,
   itemId: string,
   tag: TagValue | undefined,
+  craftedDate: number | undefined,
   account: DestinyAccount
 ) {
   if (!itemId || itemId === '0') {
@@ -838,6 +843,7 @@ function setTag(
     payload: {
       id: itemId,
       tag: tag ?? null,
+      craftedDate: craftedDate ?? existingTag?.craftedDate,
     },
     before: existingTag ? { ...existingTag } : undefined,
     platformMembershipId: account.membershipId,
@@ -854,6 +860,7 @@ function setTag(
       tags[itemId] = {
         id: itemId,
         tag,
+        craftedDate,
       };
     }
   } else {
@@ -913,6 +920,7 @@ function setNote(
   draft: Draft<DimApiState>,
   itemId: string,
   notes: string | undefined,
+  craftedDate: number | undefined,
   account: DestinyAccount
 ) {
   if (!itemId || itemId === '0') {
@@ -929,6 +937,7 @@ function setNote(
     payload: {
       id: itemId,
       notes: notes && notes.length > 0 ? notes : null,
+      craftedDate: craftedDate ?? existingTag?.craftedDate,
     },
     before: existingTag ? { ...existingTag } : undefined,
     platformMembershipId: account.membershipId,
@@ -942,6 +951,7 @@ function setNote(
       tags[itemId] = {
         id: itemId,
         notes,
+        craftedDate,
       };
     }
   } else {

@@ -111,6 +111,7 @@ export const setItemTag = createAction('tag_notes/SET_TAG')<{
   /** Item instance ID */
   itemId: string;
   tag?: TagValue;
+  craftedDate?: number;
 }>();
 
 export const setItemTagsBulk = createAction('tag_notes/SET_TAG_BULK')<
@@ -118,6 +119,7 @@ export const setItemTagsBulk = createAction('tag_notes/SET_TAG_BULK')<
     /** Item instance ID */
     itemId: string;
     tag?: TagValue;
+    craftedDate?: number;
   }[]
 >();
 
@@ -125,6 +127,7 @@ export const setItemNote = createAction('tag_notes/SET_NOTE')<{
   /** Item instance ID */
   itemId: string;
   note?: string;
+  craftedDate?: number;
 }>();
 
 /**
@@ -157,6 +160,7 @@ export function setTag(item: DimItem, tag: TagValue | undefined): ThunkResult {
         ? setItemTag({
             itemId: item.id,
             tag: tag === 'clear' ? undefined : tag,
+            craftedDate: item.craftedInfo?.craftedDate,
           })
         : setItemHashTag({
             itemHash: item.hash,
@@ -183,6 +187,7 @@ export function setNote(item: DimItem, note: string | undefined): ThunkResult {
         ? setItemNote({
             itemId: item.id,
             note,
+            craftedDate: item.craftedInfo?.craftedDate,
           })
         : setItemHashNote({
             itemHash: item.hash,
