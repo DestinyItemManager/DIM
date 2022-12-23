@@ -288,7 +288,12 @@ export default function SettingsPage() {
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
             <div className="examples">
-              <InventoryItem item={fakeWeapon as unknown as DimItem} isNew={true} tag="favorite" />
+              <InventoryItem
+                item={fakeWeapon as unknown as DimItem}
+                isNew={true}
+                tag="favorite"
+                autoLockTagged={settings.autoLockTagged}
+              />
             </div>
 
             {!isPhonePortrait && (
