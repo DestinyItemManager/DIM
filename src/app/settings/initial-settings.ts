@@ -19,6 +19,9 @@ export interface Settings extends DimApiSettings {
    * the item feed anymore after the user presses the "clear" button.
    */
   readonly itemFeedWatermark: string | undefined;
+
+  /** Automatically sync lock status with tag */
+  readonly autoLockTagged: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -28,4 +31,5 @@ export const initialSettingsState: Settings = {
   descriptionsToDisplay: 'both',
   compareWeaponMasterwork: false,
   itemFeedWatermark: undefined,
+  autoLockTagged: false,
 };

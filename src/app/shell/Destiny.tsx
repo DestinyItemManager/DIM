@@ -15,9 +15,11 @@ import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
 import { storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import SyncTagLock from 'app/inventory/SyncTagLock';
 import ItemFeedPage from 'app/item-feed/ItemFeedPage';
 import LoadoutDrawerContainer from 'app/loadout-drawer/LoadoutDrawerContainer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
+import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import StripSockets from 'app/strip-sockets/StripSockets';
@@ -92,6 +94,7 @@ export default function Destiny() {
     )
   );
   const profileError = useSelector((state: RootState) => state.inventory.profileError);
+  const autoLockTagged = useSetting('autoLockTagged');
 
   useEffect(() => {
     if (!accountsLoaded) {
@@ -277,6 +280,7 @@ export default function Destiny() {
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
       <GlobalEffects />
+      {autoLockTagged && <SyncTagLock />}
     </>
   );
 }
