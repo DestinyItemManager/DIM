@@ -763,6 +763,7 @@
     },
     "Infuse": "Infuse",
     "LockUnlock": {
+      "AutoLock": "Lock state is synced to this item's tag",
       "Lock": "Lock {{itemType}}",
       "Locked": "Locked",
       "Unlock": "Unlock {{itemType}}",

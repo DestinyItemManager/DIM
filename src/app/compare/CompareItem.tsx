@@ -131,7 +131,7 @@ function VendorItemWarning({ item }: { item: DimItem }) {
         );
       }}
     >
-      <ActionButton onClick={_.noop} disabled title={t('Hotkey.Pull')}>
+      <ActionButton onClick={_.noop} disabled>
         <AppIcon icon={shoppingCart} />
       </ActionButton>
     </PressTip>

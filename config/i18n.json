@@ -856,7 +856,8 @@
       "Lock": "Lock {{itemType}}",
       "Unlock": "Unlock {{itemType}}",
       "Locked": "Locked",
-      "Unlocked": "Unlocked"
+      "Unlocked": "Unlocked",
+      "AutoLock": "Lock state is synced to this item's tag"
     },
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
     "Notes": "Notes:",
