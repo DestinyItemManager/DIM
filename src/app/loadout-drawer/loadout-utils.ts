@@ -541,7 +541,7 @@ export const isMissingItemsSelector = createSelector(
   manifestSelector,
   allItemsSelector,
   (defs, allItems) => (storeId: string, loadout: Loadout) =>
-    isMissingItems(defs, allItems, storeId, loadout)
+    isMissingItems(defs!, allItems, storeId, loadout)
 );
 
 export function isMissingItems(
