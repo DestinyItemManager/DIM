@@ -62,7 +62,6 @@ const inProgressLocks = new Set<string>();
  */
 export default memo(function SyncTagLock() {
   const dispatch = useThunkDispatch();
-  // Hmm, this might not be the same item all the time. Maybe keep track of which ones are locking?
   const [nextItem, lock] = useSelector(getNextItemSelector);
 
   useEffect(() => {
