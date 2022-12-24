@@ -10,13 +10,15 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
 import { streamDeckSelectLoadout } from 'app/stream-deck/stream-deck';
 import _ from 'lodash';
-import { ReactNode, useMemo } from 'react';
+import { memo, ReactNode, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './LoadoutsRow.m.scss';
 import LoadoutView from './LoadoutView';
 
-// TODO: memoize?
-export default function LoadoutRow({
+/**
+ * A single row in the Loadouts page.
+ */
+export default memo(function LoadoutRow({
   loadout,
   store,
   saved,
@@ -101,4 +103,4 @@ export default function LoadoutRow({
       hideShowModPlacements={!equippable}
     />
   );
-}
+});

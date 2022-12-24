@@ -3,35 +3,29 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { apiPermissionGrantedSelector, languageSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
-import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t, tl } from 'app/i18next-t';
-import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import {
-  isMissingItemsSelector,
-  newLoadout,
-  newLoadoutFromEquipped,
-} from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
-import { plainString } from 'app/search/search-filters/freeform';
+import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { useSetting } from 'app/settings/hooks';
 import { addIcon, AppIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { Portal } from 'app/utils/temp-container';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import deprecatedMods from 'data/d2/deprecated-mods.json';
-import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
+import {
+  searchAndSortLoadoutsByQuery,
+  useLoadoutFilterPills,
+  useSavedLoadoutsForClassType,
+} from './loadout-ui/menu-hooks';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
 
@@ -71,25 +65,13 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);
   const selectedStore = getStore(stores, selectedStoreId)!;
   const classType = selectedStore.classType;
-  const allSavedLoadouts = useSelector(loadoutsSelector);
-  const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const isPhonePortrait = useIsPhonePortrait();
   const query = useSelector(querySelector);
+  const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const language = useSelector(languageSelector);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
-  const isMissingItems = useSelector(isMissingItemsSelector);
-  const [selectedFilters, setSelectedFilters] = useState<Option<string>[]>([]);
 
-  const savedLoadouts = useMemo(
-    () =>
-      allSavedLoadouts.filter(
-        (loadout) =>
-          classType === DestinyClass.Unknown ||
-          loadout.classType === DestinyClass.Unknown ||
-          loadout.classType === classType
-      ),
-    [allSavedLoadouts, classType]
-  );
+  const savedLoadouts = useSavedLoadoutsForClassType(classType);
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
   const currentLoadout = useMemo(
@@ -97,81 +79,14 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     [selectedStore]
   );
 
-  const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
-  for (const loadout of savedLoadouts) {
-    const hashtags = [...getHashtagsFromNote(loadout.name), ...getHashtagsFromNote(loadout.notes)];
-    for (const hashtag of hashtags) {
-      (loadoutsByHashtag[hashtag] ??= []).push(loadout);
-    }
-  }
-
-  const filterOptions = Object.keys(loadoutsByHashtag).map(
-    (hashtag): Option<string> => ({
-      key: hashtag,
-      content: hashtag,
-      data: hashtag,
-    })
+  const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
+    savedLoadouts,
+    selectedStoreId,
+    true
   );
 
-  const loadoutsWithMissingItems = savedLoadouts.filter((loadout) =>
-    isMissingItems(selectedStoreId, loadout)
-  );
-
-  if (loadoutsWithMissingItems.length) {
-    filterOptions.push({
-      key: 'missingitems',
-      content: (
-        <>
-          <AlertIcon /> {t('Loadouts.MissingItems')}
-        </>
-      ),
-      data: 'missingitems',
-    });
-  }
-
-  const loadoutsWithDeprecatedMods = savedLoadouts.filter((loadout) =>
-    loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
-  );
-  if (loadoutsWithDeprecatedMods.length) {
-    filterOptions.push({
-      key: 'deprecated',
-      content: (
-        <>
-          <AlertIcon /> {t('Loadouts.DeprecatedMods')}
-        </>
-      ),
-      data: 'deprecated',
-    });
-  }
-
-  function getLoadoutsForSelectedFilters() {
-    return _.intersection(
-      ...selectedFilters.map((f) => {
-        switch (f.data) {
-          case 'deprecated':
-            return loadoutsWithDeprecatedMods;
-          case 'missingitems':
-            return loadoutsWithMissingItems;
-          default:
-            return loadoutsByHashtag[f.data] ?? [];
-        }
-      })
-    );
-  }
-
-  const loadoutQueryPlain = plainString(query, language);
-  const loadouts = _.sortBy(
-    (selectedFilters.length ? getLoadoutsForSelectedFilters() : savedLoadouts).filter(
-      (loadout) =>
-        !query ||
-        plainString(loadout.name, language).includes(loadoutQueryPlain) ||
-        (loadout.notes && plainString(loadout.notes, language).includes(loadoutQueryPlain))
-    ),
-    loadoutSort === LoadoutSort.ByEditTime
-      ? (l) => -(l.lastUpdatedAt ?? 0)
-      : (l) => l.name.toLowerCase()
-  );
-  if (!query && !selectedFilters.length) {
+  const loadouts = searchAndSortLoadoutsByQuery(filteredLoadouts, query, language, loadoutSort);
+  if (!query && !hasSelectedFilters) {
     loadouts.unshift(currentLoadout);
   }
 
@@ -227,13 +142,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
-        {filterOptions.length > 0 && (
-          <FilterPills
-            options={filterOptions}
-            selectedOptions={selectedFilters}
-            onOptionsSelected={setSelectedFilters}
-          />
-        )}
+        {filterPills}
         {loadouts.map((loadout) => (
           <LoadoutRow
             key={loadout.id}
