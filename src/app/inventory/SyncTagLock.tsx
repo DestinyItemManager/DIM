@@ -66,22 +66,29 @@ export default memo(function SyncTagLock() {
 
   useEffect(() => {
     if (nextItem && lock !== undefined && !inProgressLocks.has(nextItem.id)) {
-      infoLog('autoLockTagged', lock ? 'Locking' : 'Unlocking', nextItem.name, 'to match its tag');
-      inProgressLocks.add(nextItem.id);
-      try {
-        dispatch(setItemLockState(nextItem, lock));
-      } catch (e) {
-        errorLog(
+      (async () => {
+        infoLog(
           'autoLockTagged',
-          'Failed to ',
-          lock ? 'lock' : 'unlock',
+          lock ? 'Locking' : 'Unlocking',
           nextItem.name,
-          'to match its tag:',
-          e
+          'to match its tag'
         );
-      } finally {
-        inProgressLocks.delete(nextItem.id);
-      }
+        inProgressLocks.add(nextItem.id);
+        try {
+          await dispatch(setItemLockState(nextItem, lock));
+        } catch (e) {
+          errorLog(
+            'autoLockTagged',
+            'Failed to ',
+            lock ? 'lock' : 'unlock',
+            nextItem.name,
+            'to match its tag:',
+            e
+          );
+        } finally {
+          inProgressLocks.delete(nextItem.id);
+        }
+      })();
     }
   }, [nextItem, lock, dispatch]);
 
