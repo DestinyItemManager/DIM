@@ -287,9 +287,6 @@ function SearchBar(
     onInputValueChange: ({ inputValue, type }) => {
       setLiveQuery(inputValue || '');
       debouncedUpdateQuery(inputValue || '');
-      if (type !== useCombobox.stateChangeTypes.InputChange) {
-        // debouncedUpdateQuery.flush();
-      }
       if (type === useCombobox.stateChangeTypes.FunctionReset) {
         onClear?.();
       }
@@ -304,6 +301,7 @@ function SearchBar(
     const { type, changes } = actionAndChanges;
     switch (type) {
       case useCombobox.stateChangeTypes.ItemClick:
+      case useCombobox.stateChangeTypes.InputKeyDownEnter:
         // exit early if non FilterHelper item was selected
         if (!changes.selectedItem || changes.selectedItem.type !== SearchItemType.Help) {
           return changes;
@@ -543,6 +541,7 @@ function SearchBar(
               </>
             }
             sheetClassName="filterHelp"
+            freezeInitialHeight
           >
             <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
               <LazyFilterHelp />
