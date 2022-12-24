@@ -15,7 +15,7 @@ import { stripSockets } from 'app/strip-sockets/strip-sockets-actions';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { isTagCommand, itemTagSelectorList, TagCommand } from '../inventory/dim-item-info';
+import { itemTagSelectorList, TagCommand } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
   AppIcon,
@@ -65,10 +65,7 @@ export default React.memo(function ItemActionsDropdown({
   const bulkTag = loadingTracker.trackPromise(async (selectedTag: TagCommand) => {
     // Bulk tagging
     const tagItems = filteredItems.filter((i) => i.taggable);
-
-    if (isTagCommand(selectedTag)) {
-      dispatch(bulkTagItems(tagItems, selectedTag));
-    }
+    dispatch(bulkTagItems(tagItems, selectedTag));
   });
 
   const bulkLock = loadingTracker.trackPromise(async (selectedTag: 'lock' | 'unlock') => {
