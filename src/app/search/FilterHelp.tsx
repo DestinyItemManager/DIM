@@ -54,6 +54,7 @@ export default function FilterHelp() {
             query={search}
             onQueryChanged={setSearch}
             placeholder={t('Filter.SearchPrompt')}
+            autoFocus
           />
         </div>
         <table>
