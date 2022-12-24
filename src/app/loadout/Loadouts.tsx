@@ -17,7 +17,11 @@ import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import {
+  isMissingItemsSelector,
+  newLoadout,
+  newLoadoutFromEquipped,
+} from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { plainString } from 'app/search/search-filters/freeform';
 import { useSetting } from 'app/settings/hooks';
@@ -35,6 +39,7 @@ import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
 import { streamDeckSelectLoadout } from 'app/stream-deck/stream-deck';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import deprecatedMods from 'data/d2/deprecated-mods.json';
 import _ from 'lodash';
 import { ReactNode, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -86,6 +91,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const query = useSelector(querySelector);
   const language = useSelector(languageSelector);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
+  const isMissingItems = useSelector(isMissingItemsSelector);
   const [selectedFilters, setSelectedFilters] = useState<Option<string>[]>([]);
 
   const savedLoadouts = useMemo(
@@ -112,6 +118,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
       (loadoutsByHashtag[hashtag] ??= []).push(loadout);
     }
   }
+
   const filterOptions = Object.keys(loadoutsByHashtag).map(
     (hashtag): Option<string> => ({
       key: hashtag,
@@ -120,12 +127,55 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     })
   );
 
+  const loadoutsWithMissingItems = savedLoadouts.filter((loadout) =>
+    isMissingItems(selectedStoreId, loadout)
+  );
+
+  if (loadoutsWithMissingItems.length) {
+    filterOptions.push({
+      key: 'missingitems',
+      content: (
+        <>
+          <AlertIcon /> {t('Loadouts.MissingItems')}
+        </>
+      ),
+      data: 'missingitems',
+    });
+  }
+
+  const loadoutsWithDeprecatedMods = savedLoadouts.filter((loadout) =>
+    loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
+  );
+  if (loadoutsWithDeprecatedMods.length) {
+    filterOptions.push({
+      key: 'deprecated',
+      content: (
+        <>
+          <AlertIcon /> {t('Loadouts.DeprecatedMods')}
+        </>
+      ),
+      data: 'deprecated',
+    });
+  }
+
+  function getLoadoutsForSelectedFilters() {
+    return _.intersection(
+      ...selectedFilters.map((f) => {
+        switch (f.data) {
+          case 'deprecated':
+            return loadoutsWithDeprecatedMods;
+          case 'missingitems':
+            return loadoutsWithMissingItems;
+          default:
+            return loadoutsByHashtag[f.data] ?? [];
+        }
+      })
+    );
+  }
+
   const loadoutQueryPlain = plainString(query, language);
   const loadouts = _.sortBy(
-    (selectedFilters.length
-      ? selectedFilters.flatMap((f) => loadoutsByHashtag[f.data] ?? [])
-      : savedLoadouts
-    ).filter(
+    (selectedFilters.length ? getLoadoutsForSelectedFilters() : savedLoadouts).filter(
       (loadout) =>
         !query ||
         plainString(loadout.name, language).includes(loadoutQueryPlain) ||
@@ -191,11 +241,13 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
-        <FilterPills
-          options={filterOptions}
-          selectedOptions={selectedFilters}
-          onOptionsSelected={setSelectedFilters}
-        />
+        {filterOptions.length > 0 && (
+          <FilterPills
+            options={filterOptions}
+            selectedOptions={selectedFilters}
+            onOptionsSelected={setSelectedFilters}
+          />
+        )}
         {loadouts.map((loadout) => (
           <LoadoutRow
             key={loadout.id}
@@ -229,6 +281,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   );
 }
 
+// TODO: memoize?
 function LoadoutRow({
   loadout,
   store,
