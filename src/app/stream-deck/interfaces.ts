@@ -91,7 +91,7 @@ export interface EquipLoadoutAction {
 export interface AuthorizationInitAction {
   action: 'authorization';
   id: string;
-  mnemonic: string;
+  code: string;
 }
 
 // | FreeBucketSlotAction

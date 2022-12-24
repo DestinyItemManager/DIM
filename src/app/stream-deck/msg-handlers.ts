@@ -228,7 +228,7 @@ function authorizationInitHandler({ msg }: HandlerArgs<AuthorizationInitAction>)
     // hide previous notification
     notificationPromise.resolve();
     // show challenge number
-    showStreamDeckAuthorizationNotification(msg.mnemonic);
+    showStreamDeckAuthorizationNotification(msg.code);
   };
 }
 

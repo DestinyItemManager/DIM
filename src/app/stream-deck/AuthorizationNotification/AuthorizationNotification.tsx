@@ -7,16 +7,16 @@ import { setStreamDeckToken } from 'app/stream-deck/util/local-storage';
 import styles from './AuthorizationNotification.m.scss';
 
 interface StreamDeckChallengeProps {
-  mnemonic: string;
+  code: string;
 }
 
-function StreamDeckChallenge({ mnemonic }: StreamDeckChallengeProps) {
+function StreamDeckChallenge({ code }: StreamDeckChallengeProps) {
   const dispatch = useThunkDispatch();
   return (
     <div>
       <div className={styles.authorizationChallenge}>
         <span>{t('StreamDeck.Authorization.Title')}</span>
-        <div>{mnemonic}</div>
+        <div>{code}</div>
       </div>
       <div className={styles.confirmButtons}>
         <button
@@ -46,10 +46,10 @@ function StreamDeckChallenge({ mnemonic }: StreamDeckChallengeProps) {
 }
 
 // Show notification asking for selection
-export function showStreamDeckAuthorizationNotification(mnemonic: string) {
+export function showStreamDeckAuthorizationNotification(code: string) {
   showNotification({
     title: `Elgato Stream Deck`,
-    body: <StreamDeckChallenge mnemonic={mnemonic} />,
+    body: <StreamDeckChallenge code={code} />,
     type: 'progress',
     duration: 200,
     promise: notificationPromise.promise,
