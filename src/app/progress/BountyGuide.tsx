@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
@@ -11,7 +12,6 @@ import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import pursuitsInfoFile from 'data/d2/pursuits.json';
 import grenade from 'destiny-icons/weapons/grenade.svg';
 import headshot from 'destiny-icons/weapons/headshot.svg';
 import melee from 'destiny-icons/weapons/melee.svg';
@@ -53,15 +53,13 @@ export default function BountyGuide({
   bounties,
   selectedFilters,
   onSelectedFiltersChanged,
-  skipTypes,
-  pursuitsInfo = pursuitsInfoFile,
+  pursuitsInfo,
 }: {
   store: DimStore;
   bounties: DimItem[];
   selectedFilters: BountyFilter[];
   onSelectedFiltersChanged(filters: BountyFilter[]): void;
-  skipTypes?: DefType[]; // Filter to show only specific bounty types
-  pursuitsInfo?: { [hash: string]: { [type in DefType]?: number[] } };
+  pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } };
 }) {
   const defs = useD2Definitions()!;
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
@@ -147,102 +145,84 @@ export default function BountyGuide({
 
   return (
     <div className={styles.guide} onClick={clearSelection}>
-      {flattened.map(
-        ({ type, value, bounties }) =>
-          !skipTypes?.includes(type) && (
-            <div
-              key={type + value}
-              className={clsx(styles.pill, {
-                [styles.selected]: matchPill(type, value, selectedFilters),
-                // Show "synergy" when this category contains at least one bounty that overlaps with at least one of the selected filters
-                [styles.synergy]:
-                  selectedFilters.length > 0 &&
-                  bounties.some((i) => matchBountyFilters(i, selectedFilters, pursuitsInfo)),
-              })}
-              onClick={(e) => onClickPill(e, type, value)}
+      {flattened.map(({ type, value, bounties }) => (
+        <div
+          key={type + value}
+          className={clsx(styles.pill, {
+            [styles.selected]: matchPill(type, value, selectedFilters),
+            // Show "synergy" when this category contains at least one bounty that overlaps with at least one of the selected filters
+            [styles.synergy]:
+              selectedFilters.length > 0 &&
+              bounties.some((i) => matchBountyFilters(i, selectedFilters, pursuitsInfo)),
+          })}
+          onClick={(e) => onClickPill(e, type, value)}
+        >
+          <PillContent defs={defs} type={type} value={value} />
+          <span className={styles.count}>({bounties.length})</span>
+          {type === 'ItemCategory' && (
+            <span
+              className={styles.pullItem}
+              onClick={(e) => {
+                pullItemCategory(e, value);
+              }}
             >
-              {(() => {
-                switch (type) {
-                  case 'ActivityMode':
-                    return (
-                      <>
-                        {defs.ActivityMode[value].displayProperties.hasIcon && (
-                          <BungieImage
-                            height="16"
-                            src={defs.ActivityMode[value].displayProperties.icon}
-                          />
-                        )}
-                        {defs.ActivityMode[value].displayProperties.name}
-                      </>
-                    );
-                  case 'Destination':
-                    return (
-                      <>
-                        {defs.Destination.get(value).displayProperties.hasIcon && (
-                          <BungieImage
-                            height="16"
-                            src={defs.Destination.get(value).displayProperties.icon}
-                          />
-                        )}
-                        {defs.Destination.get(value)?.displayProperties.name}
-                      </>
-                    );
-                  case 'DamageType':
-                    return (
-                      <>
-                        {defs.DamageType.get(value).displayProperties.hasIcon && (
-                          <BungieImage
-                            height="16"
-                            src={defs.DamageType.get(value).displayProperties.icon}
-                          />
-                        )}
-                        {defs.DamageType.get(value)?.displayProperties.name}
-                      </>
-                    );
-                  case 'ItemCategory':
-                    return (
-                      <>
-                        {itemCategoryIcons[value] && (
-                          <img
-                            className={styles.itemCategoryIcon}
-                            height="16"
-                            src={itemCategoryIcons[value]}
-                          />
-                        )}
-                        {defs.ItemCategory.get(value)?.displayProperties.name}
-                      </>
-                    );
-                  case 'KillType':
-                    return (
-                      <>
-                        {killTypeIcons[value] && (
-                          <img
-                            className={styles.itemCategoryIcon}
-                            height="16"
-                            src={killTypeIcons[value]}
-                          />
-                        )}
-                        {KillType[value]}
-                      </>
-                    );
-                }
-              })()}
-              <span className={styles.count}>({bounties.length})</span>
-              {type === 'ItemCategory' && (
-                <span
-                  className={styles.pullItem}
-                  onClick={(e) => {
-                    pullItemCategory(e, value);
-                  }}
-                >
-                  <AppIcon icon={addIcon} />
-                </span>
-              )}
-            </div>
-          )
-      )}
+              <AppIcon icon={addIcon} />
+            </span>
+          )}
+        </div>
+      ))}
     </div>
   );
+}
+
+function PillContent({
+  type,
+  defs,
+  value,
+}: {
+  type: DefType;
+  defs: D2ManifestDefinitions;
+  value: number;
+}) {
+  switch (type) {
+    case 'ActivityMode':
+      return (
+        <>
+          {defs[type][value].displayProperties.hasIcon && (
+            <BungieImage height="16" src={defs[type][value].displayProperties.icon} />
+          )}
+          {defs[type][value].displayProperties.name}
+        </>
+      );
+    case 'Destination':
+    case 'DamageType':
+      return (
+        <>
+          {defs[type].get(value).displayProperties.hasIcon && (
+            <BungieImage height="16" src={defs[type].get(value).displayProperties.icon} />
+          )}
+          {defs[type].get(value).displayProperties.name}
+        </>
+      );
+    case 'ItemCategory':
+      return (
+        <>
+          {itemCategoryIcons[value] && (
+            <img className={styles.itemCategoryIcon} height="16" src={itemCategoryIcons[value]} />
+          )}
+          {defs.ItemCategory.get(value)?.displayProperties.name}
+        </>
+      );
+    case 'KillType':
+      return (
+        <>
+          {killTypeIcons[value] && (
+            <img className={styles.itemCategoryIcon} height="16" src={killTypeIcons[value]} />
+          )}
+          {KillType[value]}
+        </>
+      );
+  }
 }
 
 function matchPill(type: DefType, hash: number, filters: BountyFilter[]) {
@@ -255,7 +235,7 @@ function matchPill(type: DefType, hash: number, filters: BountyFilter[]) {
 export function matchBountyFilters(
   item: DimItem,
   filters: BountyFilter[],
-  pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } } = pursuitsInfoFile
+  pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } }
 ) {
   if (filters.length === 0) {
     return true;

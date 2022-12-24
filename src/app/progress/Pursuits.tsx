@@ -6,6 +6,7 @@ import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import pursuitsInfoFile from 'data/d2/pursuits.json';
 import _ from 'lodash';
 import { useState } from 'react';
 import BountyGuide, { BountyFilter, DefType, matchBountyFilters } from './BountyGuide';
@@ -69,18 +70,19 @@ export default function Pursuits({ store }: { store: DimStore }) {
   );
 }
 
-function PursuitsGroup({
+export function PursuitsGroup({
   store,
   pursuits,
   hideDescriptions,
-  skipTypes,
+  pursuitsInfo = pursuitsInfoFile,
 }: {
   store: DimStore;
   pursuits: DimItem[];
   hideDescriptions?: boolean;
-  skipTypes?: DefType[];
+  pursuitsInfo?: { [hash: string]: { [type in DefType]?: number[] } };
 }) {
   const [bountyFilters, setBountyFilters] = useState<BountyFilter[]>([]);
+
   return (
     <>
       <BountyGuide
@@ -88,14 +90,14 @@ function PursuitsGroup({
         bounties={pursuits}
         selectedFilters={bountyFilters}
         onSelectedFiltersChanged={setBountyFilters}
-        skipTypes={skipTypes}
+        pursuitsInfo={pursuitsInfo}
       />
       <div className="progress-for-character">
         {pursuits.sort(sortPursuits).map((item) => (
           <Pursuit
             item={item}
             key={item.index}
-            searchHidden={!matchBountyFilters(item, bountyFilters)}
+            searchHidden={!matchBountyFilters(item, bountyFilters, pursuitsInfo)}
             hideDescription={hideDescriptions}
           />
         ))}
