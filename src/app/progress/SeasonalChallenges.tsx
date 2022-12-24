@@ -1,7 +1,6 @@
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
@@ -9,30 +8,15 @@ import {
   DimRecord,
   toPresentationNodeTree,
 } from 'app/records/presentation-nodes';
-import { chainComparator, compareBy } from 'app/utils/comparators';
 import {
   DestinyPresentationNodeDefinition,
   DestinyProfileResponse,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import seasonalChallengesInfo from 'data/d2/seasonal-challenges.json';
-import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import BountyGuide, { BountyFilter, DefType, matchBountyFilters } from './BountyGuide';
 import { recordToPursuitItem } from './milestone-items';
-import Pursuit, { showPursuitAsExpired } from './Pursuit';
-
-const defaultExpirationDate = new Date(8640000000000000);
-
-const sortPursuits = chainComparator(
-  compareBy(showPursuitAsExpired),
-  compareBy((item) => !item.tracked),
-  compareBy((item) => item.complete),
-  compareBy((item) => (item.pursuit?.expirationDate || defaultExpirationDate).getTime()),
-  compareBy((item) => item.typeName),
-  compareBy((item) => item.icon),
-  compareBy((item) => item.name)
-);
+import { PursuitsGroup } from './Pursuits';
 
 /**
  * List out all the seasonal challenges for the character, grouped out in a useful way.
@@ -83,7 +67,7 @@ export default function SeasonalChallenges({
         title={seasonalChallengesPresentationNode.displayProperties.name}
         sectionId="seasonal-challenges"
       >
-        <PursuitsGroup pursuits={pursuits} store={store} />
+        <PursuitsGroup pursuits={pursuits} store={store} pursuitsInfo={seasonalChallengesInfo} />
       </CollapsibleTitle>
     </section>
   );
@@ -97,41 +81,4 @@ function flattenRecords(nodeTree: DimPresentationNode): DimRecord[] {
   }
 
   return records;
-}
-
-function PursuitsGroup({
-  store,
-  pursuits,
-  hideDescriptions,
-  skipTypes,
-}: {
-  store: DimStore;
-  pursuits: DimItem[];
-  hideDescriptions?: boolean;
-  skipTypes?: DefType[];
-}) {
-  const [bountyFilters, setBountyFilters] = useState<BountyFilter[]>([]);
-
-  return (
-    <>
-      <BountyGuide
-        store={store}
-        bounties={pursuits}
-        selectedFilters={bountyFilters}
-        onSelectedFiltersChanged={setBountyFilters}
-        skipTypes={skipTypes}
-        pursuitsInfo={seasonalChallengesInfo}
-      />
-      <div className="progress-for-character">
-        {pursuits.sort(sortPursuits).map((item) => (
-          <Pursuit
-            item={item}
-            key={item.index}
-            searchHidden={!matchBountyFilters(item, bountyFilters, seasonalChallengesInfo)}
-            hideDescription={hideDescriptions}
-          />
-        ))}
-      </div>
-    </>
-  );
 }
