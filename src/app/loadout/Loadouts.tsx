@@ -4,9 +4,11 @@ import { apiPermissionGrantedSelector, languageSelector } from 'app/dim-api/sele
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
+import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
+import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
@@ -42,6 +44,19 @@ import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import styles from './Loadouts.m.scss';
 import LoadoutView from './LoadoutView';
 
+const sortOptions = [
+  {
+    key: 'time',
+    content: tl('Loadouts.SortByEditTime'),
+    value: LoadoutSort.ByEditTime,
+  },
+  {
+    key: 'name',
+    content: tl('Loadouts.SortByName'),
+    value: LoadoutSort.ByName,
+  },
+];
+
 /**
  * The Loadouts page is a toplevel page for loadout management. It also provides access to the Loadout Optimizer.
  *
@@ -65,61 +80,69 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);
   const selectedStore = getStore(stores, selectedStoreId)!;
   const classType = selectedStore.classType;
-  const allLoadouts = useSelector(loadoutsSelector);
+  const allSavedLoadouts = useSelector(loadoutsSelector);
   const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const isPhonePortrait = useIsPhonePortrait();
   const query = useSelector(querySelector);
   const language = useSelector(languageSelector);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
+  const [selectedFilters, setSelectedFilters] = useState<Option<string>[]>([]);
 
   const savedLoadouts = useMemo(
     () =>
-      _.sortBy(
-        allLoadouts.filter(
-          (loadout) =>
-            classType === DestinyClass.Unknown ||
-            loadout.classType === DestinyClass.Unknown ||
-            loadout.classType === classType
-        ),
-        loadoutSort === LoadoutSort.ByEditTime
-          ? (l) => -(l.lastUpdatedAt ?? 0)
-          : (l) => l.name.toUpperCase()
+      allSavedLoadouts.filter(
+        (loadout) =>
+          classType === DestinyClass.Unknown ||
+          loadout.classType === DestinyClass.Unknown ||
+          loadout.classType === classType
       ),
-    [allLoadouts, classType, loadoutSort]
+    [allSavedLoadouts, classType]
   );
+  const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
   const currentLoadout = useMemo(
     () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore),
     [selectedStore]
   );
 
-  const loadoutQueryPlain = plainString(query, language);
-  const loadouts = [currentLoadout, ...savedLoadouts].filter(
-    (loadout) =>
-      !query ||
-      plainString(loadout.name, language).includes(loadoutQueryPlain) ||
-      (loadout.notes && plainString(loadout.notes, language).includes(loadoutQueryPlain))
+  const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
+  for (const loadout of savedLoadouts) {
+    const hashtags = [...getHashtagsFromNote(loadout.name), ...getHashtagsFromNote(loadout.notes)];
+    for (const hashtag of hashtags) {
+      (loadoutsByHashtag[hashtag] ??= []).push(loadout);
+    }
+  }
+  const filterOptions = Object.keys(loadoutsByHashtag).map(
+    (hashtag): Option<string> => ({
+      key: hashtag,
+      content: hashtag,
+      data: hashtag,
+    })
   );
 
-  const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
+  const loadoutQueryPlain = plainString(query, language);
+  const loadouts = _.sortBy(
+    (selectedFilters.length
+      ? selectedFilters.flatMap((f) => loadoutsByHashtag[f.data] ?? [])
+      : savedLoadouts
+    ).filter(
+      (loadout) =>
+        !query ||
+        plainString(loadout.name, language).includes(loadoutQueryPlain) ||
+        (loadout.notes && plainString(loadout.notes, language).includes(loadoutQueryPlain))
+    ),
+    loadoutSort === LoadoutSort.ByEditTime
+      ? (l) => -(l.lastUpdatedAt ?? 0)
+      : (l) => l.name.toLowerCase()
+  );
+  if (!query && !selectedFilters.length) {
+    loadouts.unshift(currentLoadout);
+  }
 
   const handleNewLoadout = () => {
     const loadout = newLoadout('', [], selectedStore.classType);
     editLoadout(loadout, selectedStore.id, { isNew: true });
   };
-
-  const sortOptions = [
-    {
-      key: 'time',
-      content: t('Loadouts.SortByEditTime'),
-      value: LoadoutSort.ByEditTime,
-    },
-    {
-      key: 'name',
-      content: t('Loadouts.SortByName'),
-      value: LoadoutSort.ByName,
-    },
-  ];
 
   return (
     <PageWithMenu>
@@ -136,7 +159,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           >
             {sortOptions.map((option) => (
               <option key={option.key} value={option.value}>
-                {option.content}
+                {t(option.content)}
               </option>
             ))}
           </select>
@@ -168,6 +191,11 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
+        <FilterPills
+          options={filterOptions}
+          selectedOptions={selectedFilters}
+          onOptionsSelected={setSelectedFilters}
+        />
         {loadouts.map((loadout) => (
           <LoadoutRow
             key={loadout.id}
