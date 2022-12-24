@@ -527,20 +527,24 @@ export function findItemForLoadout(
     return;
   }
 
-  // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
   if (info.instanced) {
-    const result = allItems.find((item) => item.id === loadoutItem.id);
-    if (result) {
-      return result;
-    }
-
-    // Crafted items get new IDs, but keep their crafted date, so we can match on that
-    if (loadoutItem.craftedDate) {
-      return allItems.find((item) => item.craftedInfo?.craftedDate === loadoutItem.craftedDate);
-    }
+    return getInstancedLoadoutItem(allItems, loadoutItem);
   }
 
   return getUninstancedLoadoutItem(allItems, info.hash, storeId);
+}
+
+export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: LoadoutItem) {
+  // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
+  const result = allItems.find((item) => item.id === loadoutItem.id);
+  if (result) {
+    return result;
+  }
+
+  // Crafted items get new IDs, but keep their crafted date, so we can match on that
+  if (loadoutItem.craftedDate) {
+    return allItems.find((item) => item.craftedInfo?.craftedDate === loadoutItem.craftedDate);
+  }
 }
 
 export function getUninstancedLoadoutItem(
@@ -562,8 +566,23 @@ export function isMissingItems(
   loadout: Loadout
 ): boolean {
   for (const loadoutItem of loadout.items) {
-    if (!findItemForLoadout(defs, allItems, storeId, loadoutItem)) {
+    const info = getResolutionInfo(defs, loadoutItem.hash);
+    if (!info) {
+      // If an item hash is entirely missing from the database, we show that
+      // there is a missing item but can't offer a replacement (or even show
+      // which item went missing), but we can maybe add a migration in `oldToNewItems`?
       return true;
+    }
+    if (info.instanced) {
+      if (!getInstancedLoadoutItem(allItems, loadoutItem)) {
+        return true;
+      }
+    } else {
+      // The vault can't really have uninstanced items like subclasses or emblems, so no point
+      // in reporting a missing item in that case.
+      if (storeId !== 'vault' && !getUninstancedLoadoutItem(allItems, info.hash, storeId)) {
+        return true;
+      }
     }
   }
   return false;

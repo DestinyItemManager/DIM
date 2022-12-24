@@ -8,7 +8,11 @@ import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
 import { Loadout, LoadoutItem } from './loadout-types';
-import { getResolutionInfo, getUninstancedLoadoutItem } from './loadout-utils';
+import {
+  getInstancedLoadoutItem,
+  getResolutionInfo,
+  getUninstancedLoadoutItem,
+} from './loadout-utils';
 
 /** All loadouts relevant to the current account */
 export const loadoutsSelector = createSelector(
@@ -51,9 +55,10 @@ export const loadoutsByItemSelector = createSelector(
         const info = getResolutionInfo(definitions, loadoutItem.hash);
         if (info) {
           if (info.instanced) {
-            // If this item is instanced from a loadouts perspective, we can
-            // simply associate the loadout with the item id here.
-            recordLoadout(loadoutItem.id, loadout, loadoutItem);
+            const result = getInstancedLoadoutItem(allItems, loadoutItem);
+            if (result) {
+              recordLoadout(result.id, loadout, loadoutItem);
+            }
           } else {
             // Otherwise, we resolve the item from the perspective of all
             // applicable stores for the loadout and associate every resolved
