@@ -21,6 +21,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
+import TextareaAutosize from 'react-textarea-autosize';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
@@ -211,7 +212,7 @@ export default function LoadoutDrawer2({
       <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />
       <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
         <summary>{t('MovePopup.Notes')}</summary>
-        <textarea
+        <TextareaAutosize
           onChange={handleNotesChanged}
           value={loadout.notes}
           maxLength={2048}
