@@ -59,7 +59,8 @@
     "array-func",
     "react-redux",
     "css-modules",
-    "radar"
+    "radar",
+    "jsx-expressions"
   ],
   "reportUnusedDisableDirectives": true,
   "rules": {
@@ -270,7 +271,8 @@
     "radar/cognitive-complexity": "off",
     "radar/no-small-switch": "off",
     "radar/no-duplicate-string": "off",
-    "radar/prefer-immediate-return": "off"
+    "radar/prefer-immediate-return": "off",
+    "jsx-expressions/strict-logical-expressions": ["error", { "allowString": true }]
   },
   "overrides": [
     {

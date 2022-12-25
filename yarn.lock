@@ -2326,6 +2326,13 @@
     semver "^7.3.7"
     tsutils "^3.21.0"
 
+"@typescript-eslint/experimental-utils@^5.5.0":
+  version "5.47.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-5.47.0.tgz#60f26e62d948f9977488825730007ec350bc1e44"
+  integrity sha512-DAP8xOaTAJLxouU0QrATiw8o/OHxxbUBXtkf9v+bCCU6tbJUn24xwB1dHFw3b5wYq4XvC1z5lYEN0g/Rx1sjzA==
+  dependencies:
+    "@typescript-eslint/utils" "5.47.0"
+
 "@typescript-eslint/parser@^5.0.0":
   version "5.47.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-5.47.0.tgz#62e83de93499bf4b500528f74bf2e0554e3a6c8d"
@@ -4415,6 +4422,14 @@ eslint-plugin-jsx-a11y@^6.3.1:
     language-tags "^1.0.5"
     minimatch "^3.1.2"
     semver "^6.3.0"
+
+eslint-plugin-jsx-expressions@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsx-expressions/-/eslint-plugin-jsx-expressions-1.3.1.tgz#af3e48e6147e12a4a190c7a3aad0d6e3546d9933"
+  integrity sha512-7PTIx62Oy4l3Igtat361C/SCrJ4yXNNJRh/pzXMbzvPzFkvOpHBkTXITkH8PMLDu1RAdilDpjaOUv1m14DbY7w==
+  dependencies:
+    "@typescript-eslint/experimental-utils" "^5.5.0"
+    tsutils "^3.21.0"
 
 eslint-plugin-lodash@^7.1.0:
   version "7.4.0"

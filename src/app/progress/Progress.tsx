@@ -85,7 +85,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
   const eventCard = eventCardHash && defs.EventCard.get(eventCardHash);
 
   const seasonalChallengesPresentationNode =
-    coreSettings?.seasonalChallengesPresentationNodeHash &&
+    coreSettings?.seasonalChallengesPresentationNodeHash !== undefined &&
     defs.PresentationNode.get(coreSettings.seasonalChallengesPresentationNodeHash);
 
   const menuItems = [
@@ -151,7 +151,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
               </CollapsibleTitle>
             </section>
 
-            {eventCard && (
+            {Boolean(eventCard) && (
               <section id="event">
                 <CollapsibleTitle title={eventCard.displayProperties.name} sectionId="event">
                   <div className="progress-row">

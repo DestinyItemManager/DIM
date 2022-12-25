@@ -108,8 +108,9 @@ export default function SocketDetailsSelectedPlug({
       defs.MaterialRequirementSet.get(plug.plug.insertionMaterialRequirementHash)) ||
     undefined;
 
-  const sourceString =
-    plug.collectibleHash && defs.Collectible.get(plug.collectibleHash)?.sourceString;
+  const sourceString = plug.collectibleHash
+    ? defs.Collectible.get(plug.collectibleHash)?.sourceString
+    : undefined;
 
   const stats = _.compact(
     plug.investmentStats.map((stat) => {

@@ -265,7 +265,7 @@ export default function Sheet({
             onTouchStart={dragHandleDown}
             onTouchEnd={dragHandleUp}
           >
-            {header && (
+            {Boolean(header) && (
               <div className="sheet-header" ref={dragHandle}>
                 {_.isFunction(header) ? header({ onClose: handleClose }) : header}
               </div>
@@ -281,7 +281,7 @@ export default function Sheet({
               {_.isFunction(children) ? children({ onClose: handleClose }) : children}
             </div>
 
-            {footer && (
+            {Boolean(footer) && (
               <div className="sheet-footer">
                 {_.isFunction(footer) ? footer({ onClose: handleClose }) : footer}
               </div>

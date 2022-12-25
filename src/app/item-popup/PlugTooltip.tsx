@@ -238,14 +238,17 @@ export function PlugTooltip({
       )}
 
       <Tooltip.Section>
-        {sourceString && <div className={styles.source}>{sourceString}</div>}
-        {!hideRequirements && defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
-          <div className={styles.objectives}>
-            {filteredPlugObjectives.map((objective) => (
-              <Objective key={objective.objectiveHash} objective={objective} />
-            ))}
-          </div>
-        )}
+        {Boolean(sourceString) && <div className={styles.source}>{sourceString}</div>}
+        {!hideRequirements &&
+          defs &&
+          filteredPlugObjectives &&
+          filteredPlugObjectives.length > 0 && (
+            <div className={styles.objectives}>
+              {filteredPlugObjectives.map((objective) => (
+                <Objective key={objective.objectiveHash} objective={objective} />
+              ))}
+            </div>
+          )}
         {enableFailReasons && <p>{enableFailReasons}</p>}
       </Tooltip.Section>
 
@@ -255,7 +258,7 @@ export function PlugTooltip({
             <p key={r.failureDescription}>{r.failureDescription}</p>
           ))}
           {defs &&
-            craftingData.materialRequirementHashes.length &&
+            craftingData.materialRequirementHashes.length > 0 &&
             craftingData.materialRequirementHashes.flatMap((h) => {
               const materialRequirement = defs?.MaterialRequirementSet.get(h).materials;
               return materialRequirement.map((m) => {

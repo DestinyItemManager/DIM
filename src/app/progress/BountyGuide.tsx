@@ -202,7 +202,7 @@ export default function BountyGuide({
                   case 'ItemCategory':
                     return (
                       <>
-                        {itemCategoryIcons[value] && (
+                        {value in itemCategoryIcons && (
                           <img
                             className={styles.itemCategoryIcon}
                             height="16"
@@ -215,7 +215,7 @@ export default function BountyGuide({
                   case 'KillType':
                     return (
                       <>
-                        {killTypeIcons[value] && (
+                        {value in killTypeIcons && (
                           <img
                             className={styles.itemCategoryIcon}
                             height="16"

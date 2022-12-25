@@ -69,7 +69,7 @@ export default function Record({
   );
   const loreLink =
     !obscured &&
-    recordDef.loreHash &&
+    recordDef.loreHash !== undefined &&
     `http://www.ishtar-collective.net/entries/${recordDef.loreHash}`;
 
   const recordShouldGlow = (recordDef.forTitleGilding && acquired) || trackedInDim;

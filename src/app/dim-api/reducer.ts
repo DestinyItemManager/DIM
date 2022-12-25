@@ -344,13 +344,13 @@ export const dimApi = (
 
     case getType(inventoryActions.setItemTag):
       return produce(state, (draft) => {
-        setTag(draft, action.payload.itemId, action.payload.tag as TagValue, account!);
+        setTag(draft, action.payload.itemId, action.payload.tag, account!);
       });
 
     case getType(inventoryActions.setItemTagsBulk):
       return produce(state, (draft) => {
         for (const info of action.payload) {
-          setTag(draft, info.itemId, info.tag as TagValue, account!);
+          setTag(draft, info.itemId, info.tag, account!);
         }
       });
 
@@ -364,7 +364,7 @@ export const dimApi = (
 
     case getType(inventoryActions.setItemHashTag):
       return produce(state, (draft) => {
-        setItemHashTag(draft, action.payload.itemHash, action.payload.tag as TagValue, account!);
+        setItemHashTag(draft, action.payload.itemHash, action.payload.tag, account!);
       });
 
     case getType(inventoryActions.setItemHashNote):
