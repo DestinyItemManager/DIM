@@ -146,7 +146,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
   };
 }
 
-let latestDateLastPlayedTimestamp = 0;
+let latestProfileMintedTimestamp = 0;
 
 function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
@@ -180,26 +180,20 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
           return;
         }
 
-        // dateLastPlayed doesn't advance with every load, nor does it advance
-        // when things are moved via DIM. It appears to only be updated when
-        // something happens in game that affects the user's stored profile.
-        // However, due to some caching or server affinity issue, sometimes it
-        // can go backwards, meaning this profile reflects an earlier state than
-        // one we've seen before. If that is the case, we should ignore this
-        // update.
-        const dateLastPlayed = profileInfo.profile.data?.dateLastPlayed;
-        if (dateLastPlayed && !readOnly) {
-          const dateLastPlayedTimestamp = new Date(dateLastPlayed).getTime();
-          if (dateLastPlayedTimestamp < latestDateLastPlayedTimestamp) {
+        const newProfileMintedTimestamp = new Date(
+          profileInfo.responseMintedTimestamp ?? 0
+        ).getTime();
+        if (newProfileMintedTimestamp && !readOnly) {
+          if (newProfileMintedTimestamp <= latestProfileMintedTimestamp) {
             warnLog(
               'd2-stores',
-              "Profile dateLastPlayed was older than another profile response we've seen - ignoring",
-              latestDateLastPlayedTimestamp,
-              dateLastPlayedTimestamp
+              "Profile responseMintedTimestamp was not newer than another profile response we've seen - ignoring",
+              latestProfileMintedTimestamp,
+              newProfileMintedTimestamp
             );
             return;
           }
-          latestDateLastPlayedTimestamp = dateLastPlayedTimestamp;
+          latestProfileMintedTimestamp = newProfileMintedTimestamp;
         }
 
         const stopTimer = timer('Process inventory');
