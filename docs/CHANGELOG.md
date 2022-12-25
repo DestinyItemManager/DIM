@@ -1,6 +1,6 @@
 ## Next
 
-* Crafted items will no longer lose their tags/notes or be missing from loadouts after being reshaped. Thisonly affects items that are newly tagged or added to loadouts - crafted weapons that were already tagged or in loadouts will not be preserved when reshaping them.
+* Crafted items will no longer lose their tags/notes or be missing from loadouts after being reshaped. This only affects items that are newly tagged or added to loadouts - crafted weapons that were already tagged or in loadouts will not be preserved when reshaping them.
 
 ## 7.48.0 <span class="changelog-date">(2022-12-18)</span>
 
