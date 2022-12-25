@@ -30,7 +30,9 @@ export function useSavedLoadoutsForClassType(classType: DestinyClass) {
 export function useLoadoutFilterPills(
   savedLoadouts: Loadout[],
   selectedStoreId: string,
-  includeWarningPills: boolean
+  includeWarningPills: boolean,
+  className?: string,
+  darkBackground?: boolean
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
   const isMissingItems = useSelector(isMissingItemsSelector);
   const [selectedFilters, setSelectedFilters] = useState<Option<string>[]>([]);
@@ -109,6 +111,8 @@ export function useLoadoutFilterPills(
         options={filterOptions}
         selectedOptions={selectedFilters}
         onOptionsSelected={setSelectedFilters}
+        className={className}
+        darkBackground={darkBackground}
       />
     ) : null,
     selectedFilters.length > 0,
