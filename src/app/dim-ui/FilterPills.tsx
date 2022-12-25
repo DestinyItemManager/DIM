@@ -16,10 +16,14 @@ export default function FilterPills<T>({
   options,
   selectedOptions,
   onOptionsSelected,
+  className,
+  darkBackground,
 }: {
   options: readonly Option<T>[];
   selectedOptions: readonly Option<T>[];
   onOptionsSelected(options: Option<T>[]): void;
+  className?: string;
+  darkBackground?: boolean;
 }) {
   const onClickPill = (e: React.MouseEvent, option: Option<T>) => {
     e.stopPropagation();
@@ -44,7 +48,10 @@ export default function FilterPills<T>({
   };
 
   return (
-    <div className={styles.guide} onClick={clearSelection}>
+    <div
+      className={clsx(styles.guide, className, { [styles.darkBackground]: darkBackground })}
+      onClick={clearSelection}
+    >
       {options.map((o) => (
         <div
           key={o.key}

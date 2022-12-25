@@ -4,6 +4,7 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-wrap: wrap;
   margin: 8px 0;
+  gap: 4px;
   @include phone-portrait {
     margin: 8px 6px;
   }
@@ -16,11 +17,14 @@
   border-radius: 12px;
   padding: 2px 8px;
   color: white;
-  margin: 0 4px 4px 0;
   border: 1px solid transparent;
   cursor: pointer;
   transition: border-color 150ms;
   white-space: nowrap;
+
+  .darkBackground & {
+    background-color: rgb(255, 255, 255, 0.2);
+  }
 
   img {
     margin-right: 4px;

@@ -40,6 +40,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { queueAction } from 'app/utils/action-queue';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -147,7 +148,9 @@ export default function LoadoutPopup({
   const [pillFilteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     loadouts,
     dimStore.id,
-    false
+    false,
+    styles.filterPills,
+    true
   );
   const filteredLoadouts = searchAndSortLoadoutsByQuery(
     pillFilteredLoadouts,
@@ -166,7 +169,7 @@ export default function LoadoutPopup({
   return (
     <div className={styles.content} onClick={onClick} role="menu">
       {totalLoadouts >= 10 && (
-        <li className={styles.menuItem}>
+        <li className={clsx(styles.menuItem, styles.filterInput)}>
           <form>
             <AppIcon icon={searchIcon} />
             <input
@@ -180,6 +183,9 @@ export default function LoadoutPopup({
           </form>
         </li>
       )}
+
+      {filterPills}
+
       <ul className={styles.list}>
         {!filteringLoadouts && dimStore.isVault && isPhonePortrait && (
           <li className={styles.menuItem}>
@@ -291,8 +297,6 @@ export default function LoadoutPopup({
             )}
           </>
         )}
-
-        {filterPills}
 
         {filteredLoadouts.map((loadout) => (
           <li key={loadout.id} className={styles.menuItem}>
