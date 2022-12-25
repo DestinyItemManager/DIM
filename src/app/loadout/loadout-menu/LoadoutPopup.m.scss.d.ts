@@ -3,8 +3,6 @@
 interface CssExports {
   'altButton': string;
   'content': string;
-  'filterInput': string;
-  'filterPills': string;
   'list': string;
   'loadoutTypeIcon': string;
   'menuItem': string;

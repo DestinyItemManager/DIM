@@ -43,6 +43,7 @@
   flex-direction: row;
   padding-left: 0;
   overflow: hidden;
+  background-color: black;
   cursor: pointer;
 
   @include phone-portrait {
@@ -154,24 +155,10 @@
 }
 
 .content {
-  background-color: black;
+  background-color: #3a4150;
   color: #e4e4e4;
 }
 
 .note {
   color: #888;
-}
-
-.filterInput {
-  margin: 8px 0;
-  &:hover,
-  a:hover {
-    background-color: black;
-    color: white !important;
-    cursor: default;
-  }
-}
-
-.filterPills {
-  margin: 8px;
 }
