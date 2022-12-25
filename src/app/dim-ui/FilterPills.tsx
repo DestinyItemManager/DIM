@@ -2,32 +2,33 @@ import clsx from 'clsx';
 import React from 'react';
 import styles from './FilterPills.m.scss';
 
-export interface Option<T> {
+export interface Option {
   readonly key: string;
   readonly content: React.ReactNode;
-  readonly data: T;
 }
 
 /**
  * A generic interface for showing a row of "pills" that can be used for filtering items. Like the bounty guide, but simpler.
  * This is a controlled component - the state of options should be managed externally.
  */
-export default function FilterPills<T>({
+export default function FilterPills({
   options,
   selectedOptions,
   onOptionsSelected,
   className,
   darkBackground,
+  extra,
 }: {
-  options: readonly Option<T>[];
-  selectedOptions: readonly Option<T>[];
-  onOptionsSelected(options: Option<T>[]): void;
+  options: readonly Option[];
+  selectedOptions: readonly Option[];
+  onOptionsSelected(options: Option[]): void;
   className?: string;
   darkBackground?: boolean;
+  extra?: React.ReactNode;
 }) {
-  const onClickPill = (e: React.MouseEvent, option: Option<T>) => {
+  const onClickPill = (e: React.MouseEvent, option: Option) => {
     e.stopPropagation();
-    const match = (o: Option<T>) => o.key === option.key;
+    const match = (o: Option) => o.key === option.key;
     if (e.shiftKey) {
       const existing = selectedOptions.find(match);
       if (existing) {
@@ -63,6 +64,7 @@ export default function FilterPills<T>({
           {o.content}
         </div>
       ))}
+      {extra}
     </div>
   );
 }

@@ -45,7 +45,11 @@ import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { searchAndSortLoadoutsByQuery, useLoadoutFilterPills } from '../loadout-ui/menu-hooks';
+import {
+  searchAndSortLoadoutsByQuery,
+  useLoadoutFilterPills,
+  useSavedLoadoutsForClassType,
+} from '../loadout-ui/menu-hooks';
 import styles from './LoadoutPopup.m.scss';
 import MaxlightButton from './MaxlightButton';
 

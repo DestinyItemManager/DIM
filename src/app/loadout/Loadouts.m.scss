@@ -24,3 +24,8 @@
   composes: dim-button from global;
   text-align: left;
 }
+
+.hashtagTip {
+  display: flex;
+  align-items: center;
+}

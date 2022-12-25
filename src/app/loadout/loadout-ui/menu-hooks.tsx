@@ -13,6 +13,9 @@ import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
+/**
+ * Get the saved loadouts that apply to the given class type, out of all saved loadouts.
+ */
 export function useSavedLoadoutsForClassType(classType: DestinyClass) {
   const allSavedLoadouts = useSelector(loadoutsSelector);
   return useMemo(
@@ -27,39 +30,57 @@ export function useSavedLoadoutsForClassType(classType: DestinyClass) {
   );
 }
 
+/**
+ * Set up the filter pills for loadouts - allowing for filtering by hashtag and some other special properties.
+ * This returns a component ready to be used in the React tree as well as the list of filtered loadouts.
+ */
 export function useLoadoutFilterPills(
   savedLoadouts: Loadout[],
   selectedStoreId: string,
   includeWarningPills: boolean,
   className?: string,
-  darkBackground?: boolean
+  darkBackground?: boolean,
+  extra?: React.ReactNode
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
   const isMissingItems = useSelector(isMissingItemsSelector);
-  const [selectedFilters, setSelectedFilters] = useState<Option<string>[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<Option[]>([]);
 
-  const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
-  for (const loadout of savedLoadouts) {
-    const hashtags = [...getHashtagsFromNote(loadout.name), ...getHashtagsFromNote(loadout.notes)];
-    for (const hashtag of hashtags) {
-      (loadoutsByHashtag[hashtag] ??= []).push(loadout);
+  const loadoutsByHashtag = useMemo(() => {
+    const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
+    for (const loadout of savedLoadouts) {
+      const hashtags = [
+        ...getHashtagsFromNote(loadout.name),
+        ...getHashtagsFromNote(loadout.notes),
+      ];
+      for (const hashtag of hashtags) {
+        (loadoutsByHashtag[hashtag] ??= []).push(loadout);
+      }
     }
-  }
+    return loadoutsByHashtag;
+  }, [savedLoadouts]);
 
   const filterOptions = Object.keys(loadoutsByHashtag).map(
-    (hashtag): Option<string> => ({
+    (hashtag): Option => ({
       key: hashtag,
       content: hashtag,
-      data: hashtag,
     })
   );
 
   let loadoutsWithMissingItems: Loadout[] = [];
   let loadoutsWithDeprecatedMods: Loadout[] = [];
-  if (includeWarningPills) {
-    loadoutsWithMissingItems = savedLoadouts.filter((loadout) =>
-      isMissingItems(selectedStoreId, loadout)
-    );
+  loadoutsWithMissingItems = useMemo(
+    () => savedLoadouts.filter((loadout) => isMissingItems(selectedStoreId, loadout)),
+    [isMissingItems, savedLoadouts, selectedStoreId]
+  );
+  loadoutsWithDeprecatedMods = useMemo(
+    () =>
+      savedLoadouts.filter((loadout) =>
+        loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
+      ),
+    [savedLoadouts]
+  );
 
+  if (includeWarningPills) {
     if (loadoutsWithMissingItems.length) {
       filterOptions.push({
         key: 'missingitems',
@@ -68,13 +89,9 @@ export function useLoadoutFilterPills(
             <AlertIcon /> {t('Loadouts.MissingItems')}
           </>
         ),
-        data: 'missingitems',
       });
     }
 
-    loadoutsWithDeprecatedMods = savedLoadouts.filter((loadout) =>
-      loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
-    );
     if (loadoutsWithDeprecatedMods.length) {
       filterOptions.push({
         key: 'deprecated',
@@ -83,7 +100,6 @@ export function useLoadoutFilterPills(
             <AlertIcon /> {t('Loadouts.DeprecatedMods')}
           </>
         ),
-        data: 'deprecated',
       });
     }
   }
@@ -92,13 +108,13 @@ export function useLoadoutFilterPills(
     selectedFilters.length > 0
       ? _.intersection(
           ...selectedFilters.map((f) => {
-            switch (f.data) {
+            switch (f.key) {
               case 'deprecated':
                 return loadoutsWithDeprecatedMods;
               case 'missingitems':
                 return loadoutsWithMissingItems;
               default:
-                return loadoutsByHashtag[f.data] ?? [];
+                return loadoutsByHashtag[f.key] ?? [];
             }
           })
         )
@@ -113,12 +129,16 @@ export function useLoadoutFilterPills(
         onOptionsSelected={setSelectedFilters}
         className={className}
         darkBackground={darkBackground}
+        extra={_.isEmpty(loadoutsByHashtag) ? extra : undefined}
       />
     ) : null,
     selectedFilters.length > 0,
   ];
 }
 
+/**
+ * Apply the given query to loadouts, and sort them according to preference.
+ */
 export function searchAndSortLoadoutsByQuery(
   loadouts: Loadout[],
   query: string,

@@ -21,6 +21,7 @@
   cursor: pointer;
   transition: border-color 150ms;
   white-space: nowrap;
+  gap: 4px;
 
   .darkBackground & {
     background-color: rgb(255, 255, 255, 0.2);
@@ -33,6 +34,10 @@
     &:hover {
       border-color: rgba(255, 255, 255, 0.3);
     }
+  }
+
+  :global(.app-icon) {
+    font-size: 10px;
   }
 }
 
