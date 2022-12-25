@@ -156,6 +156,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
   };
 }
 
+// time in milliseconds after which we could expect Bnet to return an updated response
 const BUNGIE_CACHE_TTL = 15_000;
 
 let minimumCacheAge = Number.MAX_SAFE_INTEGER;
@@ -209,31 +210,30 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
       const remoteProfileMintedDate = new Date(remoteProfileResponse.responseMintedTimestamp ?? 0);
 
       // compare new response against cached response, toss if it's not newer!
-      if (
-        profileResponse &&
-        remoteProfileMintedDate.getTime() <= cachedProfileMintedDate.getTime()
-      ) {
-        warnLog(
-          'd2-stores',
-          'Profile from Bungie.net was not newer than cached profile, discarding.',
-          remoteProfileMintedDate,
-          cachedProfileMintedDate
-        );
-        // undefined means skip processing, in case we already have computed stores
-        return storesLoadedSelector(getState()) ? undefined : profileResponse;
-      } else if (profileResponse) {
-        minimumCacheAge = Math.min(
-          minimumCacheAge,
-          remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime()
-        );
-        infoLog(
-          'd2-stores',
-          'Profile from Bungie.net was newer than cached profile, using it.',
-          remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime(),
-          minimumCacheAge,
-          remoteProfileMintedDate,
-          cachedProfileMintedDate
-        );
+      if (profileResponse) {
+        if (remoteProfileMintedDate.getTime() <= cachedProfileMintedDate.getTime()) {
+          warnLog(
+            'd2-stores',
+            'Profile from Bungie.net was not newer than cached profile, discarding.',
+            remoteProfileMintedDate,
+            cachedProfileMintedDate
+          );
+          // undefined means skip processing, in case we already have computed stores
+          return storesLoadedSelector(getState()) ? undefined : profileResponse;
+        } else {
+          minimumCacheAge = Math.min(
+            minimumCacheAge,
+            remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime()
+          );
+          infoLog(
+            'd2-stores',
+            'Profile from Bungie.net was newer than cached profile, using it.',
+            remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime(),
+            minimumCacheAge,
+            remoteProfileMintedDate,
+            cachedProfileMintedDate
+          );
+        }
       }
 
       profileResponse = remoteProfileResponse;
