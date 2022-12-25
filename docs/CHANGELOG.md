@@ -2,6 +2,8 @@
 
 * DIM now loads a saved copy of your inventory even when it is offline or Bungie.net is down. The saved copy is whatever information Bungie.net last successfully provided on that device.
   * The refresh button now has a tooltip showing how recently DIM was able to load your inventory from Bungie.net. This can help identify when DIM's view is out of date, relative to the in-game state.
+* The filter help menu item is now keyboard accessible.
+* Fixed a bug where opening a loadout link could result in the loadout reopening later.
 
 ## 7.48.0 <span class="changelog-date">(2022-12-18)</span>
 

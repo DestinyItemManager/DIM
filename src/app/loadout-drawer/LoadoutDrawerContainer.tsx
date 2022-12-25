@@ -147,9 +147,9 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
         title: t('Loadouts.BadLoadoutShare'),
         body: t('Loadouts.BadLoadoutShareBody', { error: e.message }),
       });
-      // Clear the loadout
-      navigate(pathname, { replace: true });
     }
+    // Clear the loadout
+    navigate(pathname, { replace: true });
   }, [defs, queryString, navigate, pathname, stores]);
 
   // Close the loadout on navigation
