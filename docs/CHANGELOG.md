@@ -1,5 +1,7 @@
 ## Next
 
+## 7.49.0 <span class="changelog-date">(2022-12-25)</span>
+
 * The filter help menu item is now keyboard accessible.
 * Fixed a bug where opening a loadout link could result in the loadout reopening later.
 * DIM should be better at ignoring when Bungie.net sends back outdated inventory data.
