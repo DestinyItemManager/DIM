@@ -16,7 +16,7 @@ export default function ActionButton({
   return (
     <div
       className={clsx(styles.actionButton, { [styles.disabled]: disabled })}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       title={title}
       role="button"
       tabIndex={-1}

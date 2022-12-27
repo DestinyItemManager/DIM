@@ -5,7 +5,6 @@ import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t, tl } from 'app/i18next-t';
 import { setNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
-import { TagInfo } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
@@ -44,7 +43,7 @@ import { useSelector } from 'react-redux';
 import { getColumns, getColumnSelectionId } from './Columns';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
 import { itemIncludesCategories } from './filtering-utils';
-import ItemActions from './ItemActions';
+import ItemActions, { TagCommandInfo } from './ItemActions';
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode } from './ItemTypeSelector';
@@ -301,7 +300,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     }
   };
 
-  const onTagSelectedItems = (tagInfo: TagInfo) => {
+  const onTagSelectedItems = (tagInfo: TagCommandInfo) => {
     if (tagInfo.type && selectedItemIds.length) {
       const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
       dispatch(bulkTagItems(selectedItems, tagInfo.type, false));
