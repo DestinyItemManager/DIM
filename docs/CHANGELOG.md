@@ -5,6 +5,7 @@
 * If DIM Sync is down, the Export Backup button will save a copy of your local data instead of just failing.
 * DIM can now automatically sync an item's log state to its tag - favorite, keep, and archive tags auto lock the item, and junk or infuse tags unlock the item. This option needs to be enabled in settings, and when it's on the item tile will no longer show the lock icon for tagged items.
 * Loadouts can be filtered with buttons that appear on the list of loadouts. These buttons are populated by any hashtags you use in the loadout name or notes.
+* Crafted items will no longer lose their tags/notes or be missing from loadouts after being reshaped. This only affects items that are newly tagged or added to loadouts - crafted weapons that were already tagged or in loadouts will not be preserved when reshaping them.
 
 ## 7.49.0 <span class="changelog-date">(2022-12-25)</span>
 

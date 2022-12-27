@@ -380,18 +380,19 @@ export function backupLoadout(store: DimStore, name: string): Loadout {
 }
 
 /**
- * Converts DimItem or other LoadoutItem-like objects to real loadout items.
+ * Converts DimItem to a LoadoutItem.
  */
 export function convertToLoadoutItem(
-  item: Pick<LoadoutItem, 'id' | 'hash' | 'amount' | 'socketOverrides'>,
-  equip: boolean
+  item: DimItem,
+  equip: boolean,
+  amount = item.amount
 ): LoadoutItem {
   return {
     id: item.id,
     hash: item.hash,
-    amount: item.amount,
-    socketOverrides: item.socketOverrides,
+    amount,
     equip,
+    craftedDate: item.craftedInfo?.craftedDate,
   };
 }
 
@@ -456,7 +457,12 @@ const matchByHash = [
 export function getResolutionInfo(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadoutItemHash: number
-) {
+):
+  | {
+      hash: number;
+      instanced: boolean;
+    }
+  | undefined {
   const hash = oldToNewItems[loadoutItemHash] ?? loadoutItemHash;
 
   const def = defs.InventoryItem.get(hash) as
@@ -474,10 +480,11 @@ export function getResolutionInfo(
   // nice to use "is random rolled or configurable" here instead but that's hard
   // to determine.
   const bucketHash = def.bucketTypeHash || def.inventory?.bucketTypeHash || 0;
-  const instanced =
+  const instanced = Boolean(
     (def.instanced || def.inventory?.isInstanceItem) &&
-    // Subclasses and some other types are technically instanced but should be matched by hash
-    !matchByHash.includes(bucketHash);
+      // Subclasses and some other types are technically instanced but should be matched by hash
+      !matchByHash.includes(bucketHash)
+  );
 
   return {
     hash,
@@ -492,13 +499,19 @@ export function getResolutionInfo(
 export function findSameLoadoutItemIndex(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadoutItems: LoadoutItem[],
-  loadoutItem: Pick<LoadoutItem, 'hash' | 'id'>
+  loadoutItem: Pick<LoadoutItem, 'hash' | 'id' | 'craftedDate'>
 ) {
   const info = getResolutionInfo(defs, loadoutItem.hash)!;
 
   return loadoutItems.findIndex((i) => {
     const newHash = oldToNewItems[i.hash] ?? i.hash;
-    return info.hash === newHash && (!info.instanced || loadoutItem.id === i.id);
+    return (
+      info.hash === newHash &&
+      (!info.instanced ||
+        loadoutItem.id === i.id ||
+        // Crafted items may change ID but keep their date
+        (loadoutItem.craftedDate && loadoutItem.craftedDate === i.craftedDate))
+    );
   });
 }
 
@@ -517,12 +530,24 @@ export function findItemForLoadout(
     return;
   }
 
-  // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
   if (info.instanced) {
-    return allItems.find((item) => item.id === loadoutItem.id);
+    return getInstancedLoadoutItem(allItems, loadoutItem);
   }
 
   return getUninstancedLoadoutItem(allItems, info.hash, storeId);
+}
+
+export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: LoadoutItem) {
+  // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
+  const result = allItems.find((item) => item.id === loadoutItem.id);
+  if (result) {
+    return result;
+  }
+
+  // Crafted items get new IDs, but keep their crafted date, so we can match on that
+  if (loadoutItem.craftedDate) {
+    return allItems.find((item) => item.craftedInfo?.craftedDate === loadoutItem.craftedDate);
+  }
 }
 
 export function getUninstancedLoadoutItem(
@@ -559,7 +584,7 @@ export function isMissingItems(
       return true;
     }
     if (info.instanced) {
-      if (!allItems.some((item) => item.id === loadoutItem.id)) {
+      if (!getInstancedLoadoutItem(allItems, loadoutItem)) {
         return true;
       }
     } else {
