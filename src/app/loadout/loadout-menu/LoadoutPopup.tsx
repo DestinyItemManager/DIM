@@ -82,7 +82,9 @@ export default function LoadoutPopup({
             loadout.classType === DestinyClass.Unknown ||
             loadout.classType === dimStore.classType
         ),
-        loadoutSort === LoadoutSort.ByEditTime ? (l) => -(l.lastUpdatedAt ?? 0) : (l) => l.name
+        loadoutSort === LoadoutSort.ByEditTime
+          ? (l) => -(l.lastUpdatedAt ?? 0)
+          : (l) => l.name.toLocaleUpperCase()
       ),
     [allLoadouts, dimStore.classType, loadoutSort]
   );

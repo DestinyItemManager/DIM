@@ -97,6 +97,7 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.ProfileProgression,
     DestinyComponentType.Craftables,
     DestinyComponentType.Transitory,
+    DestinyComponentType.CharacterActivities,
     // TODO: This is only needed for event progress
     DestinyComponentType.PresentationNodes
   );
