@@ -6,6 +6,7 @@ import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
+import { infoLog, warnLog } from 'app/utils/log';
 import {
   DestinyColor,
   DestinyItemChangeResponse,
@@ -206,6 +207,14 @@ function warnNoSync(): ThunkResult {
       !apiPermissionGrantedSelector(getState()) &&
       localStorage.getItem('warned-no-sync') !== 'true'
     ) {
+      if ('storage' in navigator && 'persist' in navigator.storage) {
+        const isPersisted = await navigator.storage.persist();
+        if (isPersisted) {
+          infoLog('storage', 'Persisted storage granted');
+        } else {
+          warnLog('storage', 'Persisted storage not granted');
+        }
+      }
       localStorage.setItem('warned-no-sync', 'true');
       showNotification({
         type: 'warning',

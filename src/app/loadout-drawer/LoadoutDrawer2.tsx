@@ -15,6 +15,7 @@ import { addIcon, AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { infoLog, warnLog } from 'app/utils/log';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -130,6 +131,21 @@ export default function LoadoutDrawer2({
     }
 
     loadoutToSave = filterLoadoutToAllowedItems(defs, loadoutToSave);
+
+    if (
+      $featureFlags.warnNoSync &&
+      !apiPermissionGranted &&
+      'storage' in navigator &&
+      'persist' in navigator.storage
+    ) {
+      navigator.storage.persist().then((isPersisted) => {
+        if (isPersisted) {
+          infoLog('storage', 'Persisted storage granted');
+        } else {
+          warnLog('storage', 'Persisted storage not granted');
+        }
+      });
+    }
 
     dispatch(updateLoadout(loadoutToSave));
     close();
