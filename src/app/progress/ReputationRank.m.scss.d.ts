@@ -2,10 +2,12 @@
 // Please do not change this file!
 interface CssExports {
   'activityRank': string;
+  'bonusRank': string;
   'crucibleRankIcon': string;
   'crucibleRankProgress': string;
   'crucibleRankTotalProgress': string;
   'faction': string;
+  'factionIcon': string;
   'factionInfo': string;
   'factionLevel': string;
   'factionName': string;

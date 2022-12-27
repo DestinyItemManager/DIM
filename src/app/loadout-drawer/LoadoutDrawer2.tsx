@@ -15,12 +15,14 @@ import { addIcon, AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { infoLog, warnLog } from 'app/utils/log';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
+import TextareaAutosize from 'react-textarea-autosize';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
@@ -130,6 +132,21 @@ export default function LoadoutDrawer2({
 
     loadoutToSave = filterLoadoutToAllowedItems(defs, loadoutToSave);
 
+    if (
+      $featureFlags.warnNoSync &&
+      !apiPermissionGranted &&
+      'storage' in navigator &&
+      'persist' in navigator.storage
+    ) {
+      navigator.storage.persist().then((isPersisted) => {
+        if (isPersisted) {
+          infoLog('storage', 'Persisted storage granted');
+        } else {
+          warnLog('storage', 'Persisted storage not granted');
+        }
+      });
+    }
+
     dispatch(updateLoadout(loadoutToSave));
     close();
   };
@@ -211,7 +228,7 @@ export default function LoadoutDrawer2({
       <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />
       <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
         <summary>{t('MovePopup.Notes')}</summary>
-        <textarea
+        <TextareaAutosize
           onChange={handleNotesChanged}
           value={loadout.notes}
           maxLength={2048}

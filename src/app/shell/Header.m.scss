@@ -181,6 +181,7 @@ $header-height: 44px;
     padding: 4px 2rem 4px 1rem;
     font-size: 16px;
     margin: 0;
+    transition: none;
 
     &.active {
       color: white;
@@ -200,7 +201,6 @@ $header-height: 44px;
     &:focus {
       background-color: $orange;
       color: black;
-      transition: none;
     }
 
     .launchSeparateIcon {

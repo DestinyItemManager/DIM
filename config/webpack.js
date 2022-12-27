@@ -431,6 +431,10 @@ module.exports = (env) => {
         '$featureFlags.apiCookies': JSON.stringify(false),
         // If saved DIM API data in IDB is recent enough, don't bother getting it from the server
         '$featureFlags.skipDimApiFirstLoadIfRecent': JSON.stringify(!env.release),
+        // Pretend that Bungie.net is down for maintenance
+        '$featureFlags.simulateBungieMaintenance': JSON.stringify(false),
+        // Pretend that Bungie.net is not returning sockets info
+        '$featureFlags.simulateMissingSockets': JSON.stringify(false),
       }),
 
       new LodashModuleReplacementPlugin({
