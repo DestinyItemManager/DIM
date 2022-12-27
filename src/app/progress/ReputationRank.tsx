@@ -1,7 +1,7 @@
 import { useDynamicStringReplacer } from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { DestinyProgression } from 'bungie-api-ts/destiny2';
+import { DestinyProgression, DestinyProgressionDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
@@ -15,10 +15,12 @@ export function ReputationRank({
   progress,
   streak,
   resetCount,
+  bonusRank,
 }: {
   progress: DestinyProgression;
   streak?: DestinyProgression;
   resetCount?: number;
+  bonusRank: boolean;
 }) {
   const defs = useD2Definitions()!;
   const replacer = useDynamicStringReplacer();
@@ -38,8 +40,9 @@ export function ReputationRank({
       className={clsx(factionClass, styles.activityRank)}
       title={replacer(progressionDef.displayProperties.description)}
     >
-      <div>
-        <ReputationRankIcon progress={progress} />
+      <div className={styles.factionIcon}>
+        <ReputationRankIcon progress={progress} progressionDef={progressionDef} />
+        {bonusRank && <span className={styles.bonusRank}>2x</span>}
       </div>
       <div className={styles.factionInfo}>
         <div className={styles.factionLevel}>
@@ -73,11 +76,13 @@ export function ReputationRank({
   );
 }
 
-function ReputationRankIcon({ progress }: { progress: DestinyProgression }) {
-  const defs = useD2Definitions()!;
-
-  const progressionDef = defs.Progression.get(progress.progressionHash);
-
+function ReputationRankIcon({
+  progress,
+  progressionDef,
+}: {
+  progress: DestinyProgression;
+  progressionDef: DestinyProgressionDefinition;
+}) {
   const step = progressionDef.steps[Math.min(progress.level, progressionDef.steps.length - 1)];
 
   const rankTotal = _.sumBy(progressionDef.steps, (step) => step.progressTotal);
