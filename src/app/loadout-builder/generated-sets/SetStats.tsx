@@ -40,12 +40,13 @@ function SetStats({
   for (const statHash of statOrder) {
     statDefs[statHash] = defs.Stat.get(statHash);
   }
-  const { enabledBaseTier, totalBaseTier, statsWithAutoMods } = calculateSetStats(
-    defs,
-    stats,
-    autoStatMods,
-    enabledStats
-  );
+  const {
+    enabledBaseTier,
+    totalBaseTier,
+    statsWithAutoMods,
+    totalTierWithAutoMods,
+    enabledTierWithAutoMods,
+  } = calculateSetStats(defs, stats, autoStatMods, enabledStats);
 
   return (
     <div className={clsx(styles.container, className)}>
@@ -63,14 +64,30 @@ function SetStats({
           </span>
         )}
         {autoStatMods.length > 0 && (
-          <div className={clsx(styles.autoModsContainer)}>
-            {autoStatMods.map((modHash, idx) => {
-              const def = defs.InventoryItem.get(modHash);
-              return (
-                isPluggableItem(def) && <PlugDef className={clsx('item')} key={idx} plug={def} />
-              );
-            })}
-          </div>
+          <>
+            <div className={clsx(styles.autoModsContainer)}>
+              {autoStatMods.map((modHash, idx) => {
+                const def = defs.InventoryItem.get(modHash);
+                return (
+                  isPluggableItem(def) && <PlugDef className={clsx('item')} key={idx} plug={def} />
+                );
+              })}
+            </div>
+            <span
+              className={clsx(styles.tier, styles.tierLightSegment, styles.modAdjustedSelectedTier)}
+            >
+              {t('LoadoutBuilder.TierNumber', {
+                tier: enabledTierWithAutoMods,
+              })}
+            </span>
+            {enabledTierWithAutoMods !== totalTierWithAutoMods && (
+              <span className={clsx(styles.tier, styles.nonActiveStat, styles.modAdjustedTier)}>
+                {` (${t('LoadoutBuilder.TierNumber', {
+                  tier: totalTierWithAutoMods,
+                })})`}
+              </span>
+            )}
+          </>
         )}
         <span className={styles.light}>
           <AppIcon icon={powerIndicatorIcon} className={clsx(styles.statIcon)} /> {maxPower}

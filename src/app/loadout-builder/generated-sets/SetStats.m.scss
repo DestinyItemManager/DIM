@@ -88,17 +88,32 @@
 
 .autoModsContainer {
   display: flex;
-  flex-flow: row wrap;
   gap: 4px;
-  margin-right: 20px;
+  margin-right: 5px;
 
+  align-items: center;
   &::before {
     content: '+';
     align-self: center;
+  }
+
+  > span {
+    margin: 0;
   }
 
   --item-icon-size: calc(((var(--item-size) + ((var(--item-size) / 5) + 4px)) / 2) - 1px);
   :global(.item) {
     --item-size: var(--item-icon-size);
   }
+}
+.modAdjustedSelectedTier {
+  white-space: nowrap;
+
+  &::before {
+    content: '= ';
+    align-self: center;
+  }
+}
+.modAdjustedTier {
+  margin-right: 15px;
 }

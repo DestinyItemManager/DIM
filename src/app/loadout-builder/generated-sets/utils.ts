@@ -9,13 +9,19 @@ export function calculateSetStats(
   stats: ArmorStats,
   autoStatMods: number[],
   enabledStats: Set<number>
-): { enabledBaseTier: number; totalBaseTier: number; statsWithAutoMods: ArmorStats } {
+): {
+  enabledBaseTier: number;
+  totalBaseTier: number;
+  statsWithAutoMods: ArmorStats;
+  totalTierWithAutoMods: number;
+  enabledTierWithAutoMods: number;
+} {
   const totalBaseTier = _.sum(Object.values(stats).map(statTier));
   const enabledBaseTier = _.sumBy(armorStats, (statHash) =>
     enabledStats.has(statHash) ? statTier(stats[statHash]) : 0
   );
 
-  const statsWithAutoMods = { ...stats };
+  const statsWithAutoMods: ArmorStats = { ...stats };
   for (const modHash of autoStatMods) {
     const def = defs.InventoryItem.get(modHash);
     if (def?.investmentStats.length) {
@@ -26,10 +32,16 @@ export function calculateSetStats(
       }
     }
   }
+  const totalTierWithAutoMods = _.sum(Object.values(statsWithAutoMods).map(statTier));
+  const enabledTierWithAutoMods = _.sumBy(armorStats, (statHash) =>
+    enabledStats.has(statHash) ? statTier(statsWithAutoMods[statHash]) : 0
+  );
 
   return {
     enabledBaseTier,
     totalBaseTier,
     statsWithAutoMods,
+    totalTierWithAutoMods,
+    enabledTierWithAutoMods,
   };
 }

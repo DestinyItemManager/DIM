@@ -7,6 +7,8 @@ interface CssExports {
   'halfTierValue': string;
   'light': string;
   'loadoutName': string;
+  'modAdjustedSelectedTier': string;
+  'modAdjustedTier': string;
   'nonActiveStat': string;
   'statIcon': string;
   'statSegment': string;
