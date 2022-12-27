@@ -1056,6 +1056,8 @@
     "DimSyncNotEnabled": "DIM Sync is not enabled, so your settings, tags, loadouts, and searches are only stored locally and will be lost if you clear your browser storage. Enable DIM Sync in Settings to back up your data automatically, or regularly back up your data manually.",
     "EnableDimApi": "Enable DIM Sync (recommended)",
     "Export": "Download Data Backup",
+    "ExportError": "Failed to download backup from DIM Sync",
+    "ExportErrorBody": "DIM Sync may be down, or you are having trouble with your connection. We will download a copy of your locally saved data instead.",
     "Import": "Import Data Backup",
     "ImportConfirmDimApi": "Are you sure you want to overwrite your current tags, loadouts, and settings with this version? It will completely replace what you had.",
     "ImportExport": "Backup & Import",
