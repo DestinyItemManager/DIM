@@ -78,6 +78,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
 
   const excludedPlugCategoryHashes = [
     PlugCategoryHashes.GenericAllVfx,
+    PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors,
     !item.catalystInfo && PlugCategoryHashes.V400EmptyExoticMasterwork,
   ];
 

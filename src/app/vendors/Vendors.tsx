@@ -103,17 +103,17 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
 
   if (!vendorsResponse && vendorData?.error) {
     return (
-      <PageWithMenu>
+      <div className="dim-page">
         <ErrorPanel error={vendorData.error} />
-      </PageWithMenu>
+      </div>
     );
   }
 
   if (!stores.length) {
     return (
-      <PageWithMenu>
+      <div className="dim-page">
         <ShowPageLoading message={t('Loading.Profile')} />
-      </PageWithMenu>
+      </div>
     );
   }
 

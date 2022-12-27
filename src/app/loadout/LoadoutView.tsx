@@ -82,6 +82,8 @@ export default function LoadoutView({
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
+  const missingSockets =
+    loadout.name === t('Loadouts.FromEquipped') && allItems.some((i) => i.missingSockets);
   const isPhonePortrait = useIsPhonePortrait();
 
   // TODO: filter down by usable mods?
@@ -143,6 +145,7 @@ export default function LoadoutView({
               allMods={allMods}
               storeId={store.id}
               hideShowModPlacements={hideShowModPlacements}
+              missingSockets={missingSockets}
             />
           </>
         )}

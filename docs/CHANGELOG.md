@@ -1,6 +1,15 @@
 ## Next
 
+* DIM now loads a saved copy of your inventory even when it is offline or Bungie.net is down. The saved copy is whatever information Bungie.net last successfully provided on that device.
+  * The refresh button now has a tooltip showing how recently DIM was able to load your inventory from Bungie.net. This can help identify when DIM's view is out of date, relative to the in-game state.
+* If DIM Sync is down, the Export Backup button will save a copy of your local data instead of just failing.
 * DIM can now automatically sync an item's log state to its tag - favorite, keep, and archive tags auto lock the item, and junk or infuse tags unlock the item. This option needs to be enabled in settings, and when it's on the item tile will no longer show the lock icon for tagged items.
+
+## 7.49.0 <span class="changelog-date">(2022-12-25)</span>
+
+* The filter help menu item is now keyboard accessible.
+* Fixed a bug where opening a loadout link could result in the loadout reopening later.
+* DIM should be better at ignoring when Bungie.net sends back outdated inventory data.
 
 ## 7.48.0 <span class="changelog-date">(2022-12-18)</span>
 

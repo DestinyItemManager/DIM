@@ -13,7 +13,7 @@ import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
-import { storesSelector } from 'app/inventory/selectors';
+import { blockingProfileErrorSelector, storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import SyncTagLock from 'app/inventory/SyncTagLock';
 import ItemFeedPage from 'app/item-feed/ItemFeedPage';
@@ -92,7 +92,7 @@ export default function Destiny() {
         account.membershipId === platformMembershipId && account.destinyVersion === destinyVersion
     )
   );
-  const profileError = useSelector((state: RootState) => state.inventory.profileError);
+  const profileError = useSelector(blockingProfileErrorSelector);
   const autoLockTagged = useSelector(settingSelector('autoLockTagged'));
 
   useEffect(() => {
