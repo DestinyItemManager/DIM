@@ -44,7 +44,9 @@ function PursuitItem(
     showProgressBoolean(item.objectives);
 
   const trackedInGame = item.tracked && (!item.pursuit?.recordHash || item.pursuit.trackedInGame);
-  const trackedInDim = item.tracked && item.pursuit?.recordHash && !item.pursuit.trackedInGame;
+  const trackedInDim = Boolean(
+    item.tracked && item.pursuit?.recordHash && !item.pursuit.trackedInGame
+  );
 
   const itemImageStyles = {
     [styles.tracked]: trackedInGame,

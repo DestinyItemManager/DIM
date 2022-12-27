@@ -90,7 +90,8 @@ export default function VendorItems({
 
   const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
   const rewardVendorHash = faction?.rewardVendorHash || undefined;
-  const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
+  const rewardItem =
+    rewardVendorHash !== undefined ? defs.InventoryItem.get(faction!.rewardItemHash) : undefined;
   const factionProgress = vendor?.component?.progression;
 
   let currencies = vendor.currencies;
@@ -132,7 +133,7 @@ export default function VendorItems({
         </div>
       )}
       <div className={styles.itemCategories}>
-        {((rewardVendorHash && rewardItem) || (factionProgress && faction)) && (
+        {((Boolean(rewardVendorHash) && rewardItem) || (factionProgress && faction)) && (
           <div className={styles.vendorRow}>
             <h3 className={styles.categoryTitle}>{t('Vendors.Engram')}</h3>
             <div className={styles.vendorItems}>
@@ -150,7 +151,7 @@ export default function VendorItems({
                   </div>
                 </PressTip>
               )}
-              {rewardVendorHash && rewardItem && (
+              {Boolean(rewardVendorHash) && rewardItem && (
                 <Link to={`../vendors/${rewardVendorHash}?characterId=${characterId}`}>
                   <div className="item" title={rewardItem.displayProperties.name}>
                     <BungieImage

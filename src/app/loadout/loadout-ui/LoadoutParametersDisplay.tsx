@@ -4,7 +4,6 @@ import { t } from 'app/i18next-t';
 import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, searchIcon } from 'app/shell/icons';
-import React from 'react';
 import styles from './LoadoutParametersDisplay.m.scss';
 
 export function hasVisibleLoadoutParameters(params: LoadoutParameters | undefined) {
@@ -32,7 +31,7 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
           {query}
         </div>
       )}
-      {exoticArmorHash && (
+      {exoticArmorHash !== undefined && (
         <div className={styles.loExotic}>
           <ExoticArmorChoice lockedExoticHash={exoticArmorHash} />
         </div>

@@ -91,7 +91,7 @@ export default function ErrorPanel({
         {error && (
           <span className={styles.errorCode}>
             {name}
-            {code && ' '}
+            {code !== undefined && ' '}
             {code}
           </span>
         )}

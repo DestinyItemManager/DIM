@@ -77,13 +77,14 @@ export default function LoadoutShareSheet({
   const numItems = count(loadout.items, (i) => !i.socketOverrides);
   const hasFashion = Boolean(loadout.parameters?.modsByBucket);
   const hasSubclass = loadout.items.some((i) => i.equip && i.socketOverrides);
-  const hasLoParams =
+  const hasLoParams = Boolean(
     loadout.parameters &&
-    (loadout.parameters.query ||
-      loadout.parameters.exoticArmorHash ||
-      loadout.parameters.statConstraints?.some(
-        (s) => s.maxTier !== undefined || s.minTier !== undefined
-      ));
+      (loadout.parameters.query ||
+        loadout.parameters.exoticArmorHash ||
+        loadout.parameters.statConstraints?.some(
+          (s) => s.maxTier !== undefined || s.minTier !== undefined
+        ))
+  );
 
   return (
     <Sheet

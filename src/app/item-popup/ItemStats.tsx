@@ -29,7 +29,7 @@ export default function ItemStats({
         <ItemStat key={stat.statHash} stat={stat} item={item} />
       ))}
 
-      {item && isD1Item(item) && item.quality?.min && <D1QualitySummaryStat item={item} />}
+      {item && isD1Item(item) && Boolean(item.quality?.min) && <D1QualitySummaryStat item={item} />}
     </div>
   );
 }

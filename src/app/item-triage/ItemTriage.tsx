@@ -100,7 +100,7 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
       extra={wishlistItem ? <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> : '–'}
       disabled={disabled}
     >
-      {wishlistItem?.notes?.length && (
+      {wishlistItem && Boolean(wishlistItem?.notes?.length) && (
         <ExpandableTextBlock
           linesWhenClosed={3}
           className={popupStyles.description}

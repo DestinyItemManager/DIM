@@ -62,7 +62,7 @@ export default function Links({ item }: { item: DimItem }) {
               </li>
             )
         )}
-      {item.loreHash && (
+      {item.loreHash !== undefined && (
         <li>
           <LoreLink loreHash={item.loreHash} />
         </li>

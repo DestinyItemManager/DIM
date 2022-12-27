@@ -119,7 +119,7 @@ export default function Armory({
             )}
             {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
             <ItemTypeName item={item} />
-            {item.pursuit?.questStepNum && (
+            {item.pursuit?.questStepNum !== undefined && (
               <div>
                 {t('MovePopup.Subtitle.QuestProgress', {
                   questStepNum: item.pursuit.questStepNum,
