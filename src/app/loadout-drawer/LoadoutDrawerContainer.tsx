@@ -140,6 +140,8 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           isNew: true,
           showClass: false,
         });
+        // Clear the loadout from params if the URL contained one...
+        navigate(pathname, { replace: true });
       }
     } catch (e) {
       showNotification({
@@ -147,9 +149,9 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
         title: t('Loadouts.BadLoadoutShare'),
         body: t('Loadouts.BadLoadoutShareBody', { error: e.message }),
       });
+      // ... or if it contained errors
+      navigate(pathname, { replace: true });
     }
-    // Clear the loadout
-    navigate(pathname, { replace: true });
   }, [defs, queryString, navigate, pathname, stores]);
 
   // Close the loadout on navigation

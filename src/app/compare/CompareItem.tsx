@@ -107,7 +107,7 @@ export default memo(function CompareItem({
         />
       ))}
       {isD1Item(item) && item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
-      {item.missingSockets && (
+      {item.missingSockets && isInitialItem && (
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}
       {item.sockets && <ItemSockets item={item} minimal={true} onPlugClicked={onPlugClicked} />}
@@ -131,7 +131,7 @@ function VendorItemWarning({ item }: { item: DimItem }) {
         );
       }}
     >
-      <ActionButton onClick={_.noop} disabled title={t('Hotkey.Pull')}>
+      <ActionButton onClick={_.noop} disabled>
         <AppIcon icon={shoppingCart} />
       </ActionButton>
     </PressTip>

@@ -50,6 +50,10 @@ export function buildSockets(
   itemDef: DestinyInventoryItemDefinition
 ) {
   let sockets: DimSockets | null = null;
+  if ($featureFlags.simulateMissingSockets) {
+    itemComponents = undefined;
+  }
+
   const socketData =
     (item.itemInstanceId && itemComponents?.sockets?.data?.[item.itemInstanceId]?.sockets) ||
     undefined;

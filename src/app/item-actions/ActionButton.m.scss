@@ -35,6 +35,5 @@
 
 .disabled {
   filter: contrast(0.5) brightness(0.5);
-  cursor: default;
-  pointer-events: none;
+  cursor: not-allowed;
 }

@@ -36,6 +36,12 @@ declare const $featureFlags: {
   apiCookies: boolean;
   /** If saved DIM API data in IDB is recent enough, don't bother getting it from the server */
   skipDimApiFirstLoadIfRecent: boolean;
+  /** Pretend that Bungie.net is down for maintenance */
+  simulateBungieMaintenance: boolean;
+  /** Pretend that Bungie.net is not returning sockets info */
+  simulateMissingSockets: boolean;
+  /** Show a "pills" UI for filtering loadouts */
+  loadoutFilterPills: boolean;
 };
 
 declare function ga(...params: string[]): void;

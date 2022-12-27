@@ -21,6 +21,11 @@
   cursor: pointer;
   transition: border-color 150ms;
   white-space: nowrap;
+  gap: 4px;
+
+  .darkBackground & {
+    background-color: rgb(255, 255, 255, 0.2);
+  }
 
   img {
     margin-right: 4px;
@@ -30,38 +35,13 @@
       border-color: rgba(255, 255, 255, 0.3);
     }
   }
-}
 
-.itemCategoryIcon {
-  filter: invert(1);
-}
-
-.count {
-  opacity: 0.5;
-  margin-left: 0.3em;
-}
-
-.synergy {
-  border-color: #ccc;
+  :global(.app-icon) {
+    font-size: 10px;
+  }
 }
 
 .selected {
   border-color: $orange;
   background: rgba(0, 0, 0, 0.6);
-}
-
-.pullItem {
-  display: inline-block;
-  margin-left: 6px;
-  margin-right: -2px;
-  padding-left: 6px;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  :global(.app-icon) {
-    transition: transform 150ms ease-in-out;
-  }
-  @media (hover: hover) {
-    &:hover :global(.app-icon) {
-      transform: scale(1.3);
-    }
-  }
 }

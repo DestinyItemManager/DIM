@@ -1,6 +1,7 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
@@ -8,6 +9,7 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
+import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -22,6 +24,7 @@ import {
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
+import { createSelector } from 'reselect';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
@@ -533,6 +536,13 @@ export function getUninstancedLoadoutItem(
     storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined;
   return onCurrent ?? (candidates[0]?.notransfer ? undefined : candidates[0]);
 }
+
+export const isMissingItemsSelector = createSelector(
+  manifestSelector,
+  allItemsSelector,
+  (defs, allItems) => (storeId: string, loadout: Loadout) =>
+    isMissingItems(defs!, allItems, storeId, loadout)
+);
 
 export function isMissingItems(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
