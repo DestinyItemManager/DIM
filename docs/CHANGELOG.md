@@ -1,5 +1,7 @@
 ## Next
 
+* If DIM Sync is down, the Export Backup button will save a copy of your local data instead of just failing.
+
 ## 7.49.0 <span class="changelog-date">(2022-12-25)</span>
 
 * The filter help menu item is now keyboard accessible.

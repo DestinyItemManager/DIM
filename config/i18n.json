@@ -1158,6 +1158,8 @@
     "UpdateQueueLength_plural": "{{count}} new changes will be saved when we can reconnect.",
     "EnableDimApi": "Enable DIM Sync (recommended)",
     "Export": "Download Data Backup",
+    "ExportError": "Failed to download backup from DIM Sync",
+    "ExportErrorBody": "DIM Sync may be down, or you are having trouble with your connection. We will download a copy of your locally saved data instead.",
     "IgnoredUsers": "Ignored reviewers",
     "Import": "Import Data Backup",
     "ImportConfirmDimApi": "Are you sure you want to overwrite your current tags, loadouts, and settings with this version? It will completely replace what you had.",
