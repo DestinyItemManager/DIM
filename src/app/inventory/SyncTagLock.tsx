@@ -1,5 +1,6 @@
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { errorLog, infoLog } from 'app/utils/log';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { memo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -17,7 +18,7 @@ function getNextItemToChangeLockState(
   itemInfos: ItemInfos
 ): [item: DimItem, lock: boolean] | [] {
   for (const item of allItems) {
-    if (item.lockable && item.taggable) {
+    if (item.lockable && item.taggable && item.bucket.hash !== BucketHashes.Finishers) {
       switch (getTag(item, itemInfos)) {
         case 'favorite':
         case 'keep':
