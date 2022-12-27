@@ -42,9 +42,16 @@ export function useLoadoutFilterPills(
   darkBackground?: boolean,
   extra?: React.ReactNode
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
+  if (!$featureFlags.loadoutFilterPills) {
+    return [savedLoadouts, null, false];
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const isMissingItems = useSelector(isMissingItemsSelector);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [selectedFilters, setSelectedFilters] = useState<Option[]>([]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadoutsByHashtag = useMemo(() => {
     const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
     for (const loadout of savedLoadouts) {
@@ -66,10 +73,12 @@ export function useLoadoutFilterPills(
     })
   );
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadoutsWithMissingItems = useMemo(
     () => savedLoadouts.filter((loadout) => isMissingItems(selectedStoreId, loadout)),
     [isMissingItems, savedLoadouts, selectedStoreId]
   );
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadoutsWithDeprecatedMods = useMemo(
     () =>
       savedLoadouts.filter((loadout) =>

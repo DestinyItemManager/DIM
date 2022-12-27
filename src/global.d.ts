@@ -40,6 +40,8 @@ declare const $featureFlags: {
   simulateBungieMaintenance: boolean;
   /** Pretend that Bungie.net is not returning sockets info */
   simulateMissingSockets: boolean;
+  /** Show a "pills" UI for filtering loadouts */
+  loadoutFilterPills: boolean;
 };
 
 declare function ga(...params: string[]): void;
