@@ -1,5 +1,7 @@
 ## Next
 
+* DIM now loads a saved copy of your inventory even when it is offline or Bungie.net is down. The saved copy is whatever information Bungie.net last successfully provided on that device.
+  * The refresh button now has a tooltip showing how recently DIM was able to load your inventory from Bungie.net. This can help identify when DIM's view is out of date, relative to the in-game state.
 * If DIM Sync is down, the Export Backup button will save a copy of your local data instead of just failing.
 
 ## 7.49.0 <span class="changelog-date">(2022-12-25)</span>

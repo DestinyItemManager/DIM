@@ -2,6 +2,7 @@ import { BungieError, HttpStatusError } from 'app/bungie-api/http-client';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import { DimError } from 'app/utils/dim-error';
+import BungieAlerts from 'app/whats-new/BungieAlerts';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import React, { useState } from 'react';
 import { AppIcon, helpIcon, refreshIcon, twitterIcon } from '../shell/icons';
@@ -54,15 +55,15 @@ export default function ErrorPanel({
   error,
   fallbackMessage,
   showTwitters,
-  children,
   showReload,
+  frameless,
 }: {
   title?: string;
   error?: Error | DimError;
   fallbackMessage?: string;
   showTwitters?: boolean;
   showReload?: boolean;
-  children?: React.ReactNode;
+  frameless?: boolean;
 }) {
   const underlyingError = error instanceof DimError ? error.cause : undefined;
 
@@ -82,61 +83,69 @@ export default function ErrorPanel({
     underlyingError instanceof BungieError || underlyingError instanceof HttpStatusError
   );
 
-  return (
-    <div>
-      <div className={styles.errorPanel}>
-        <h2>
-          {title || t('ErrorBoundary.Title')}
+  const content = (
+    <>
+      <h2>
+        {title || t('ErrorBoundary.Title')}
 
-          {error && (
-            <span className={styles.errorCode}>
-              {name}
-              {code && ' '}
-              {code}
-            </span>
-          )}
-        </h2>
-        <p>
-          {message}
-          {underlyingError instanceof BungieError && (
+        {error && (
+          <span className={styles.errorCode}>
+            {name}
+            {code && ' '}
+            {code}
+          </span>
+        )}
+      </h2>
+      <p>
+        {message}
+        {underlyingError instanceof BungieError && (
+          <span>
+            {' '}
+            {underlyingError.code === PlatformErrorCodes.SystemDisabled
+              ? t('ErrorPanel.SystemDown')
+              : t('ErrorPanel.Description')}
+          </span>
+        )}
+        {underlyingError instanceof BungieError &&
+          underlyingError.code === PlatformErrorCodes.DestinyUnexpectedError && (
             <span>
               {' '}
-              {underlyingError.code === PlatformErrorCodes.SystemDisabled
-                ? t('ErrorPanel.SystemDown')
-                : t('ErrorPanel.Description')}
+              {t('ErrorPanel.EmblemError')}{' '}
+              <ExternalLink href={error1618LinkDirect}>
+                {t('ErrorPanel.EmblemErrorLink')}
+              </ExternalLink>
             </span>
           )}
-          {underlyingError instanceof BungieError &&
-            underlyingError.code === PlatformErrorCodes.DestinyUnexpectedError && (
-              <span>
-                {' '}
-                {t('ErrorPanel.EmblemError')}{' '}
-                <ExternalLink href={error1618LinkDirect}>
-                  {t('ErrorPanel.EmblemErrorLink')}
-                </ExternalLink>
-              </span>
-            )}
-        </p>
-        {children}
-        <div className={styles.twitterLinks}>
-          {!ourFault && (
-            <ExternalLink href={bungieHelpLink} className="dim-button">
-              <AppIcon icon={twitterIcon} /> @BungieHelp
-            </ExternalLink>
-          )}
-          <ExternalLink href={dimHelpLink} className="dim-button">
-            <AppIcon icon={twitterIcon} /> @ThisIsDim
+      </p>
+      <div className={styles.twitterLinks}>
+        {!ourFault && (
+          <ExternalLink href={bungieHelpLink} className="dim-button">
+            <AppIcon icon={twitterIcon} /> @BungieHelp
           </ExternalLink>
-          <ExternalLink href={troubleshootingLink} className="dim-button">
-            <AppIcon icon={helpIcon} /> {t('ErrorPanel.Troubleshooting')}
-          </ExternalLink>
-          {showReload && (
-            <div className="dim-button" onClick={() => window.location.reload()}>
-              <AppIcon icon={refreshIcon} /> Reload
-            </div>
-          )}
-        </div>
+        )}
+        <ExternalLink href={dimHelpLink} className="dim-button">
+          <AppIcon icon={twitterIcon} /> @ThisIsDim
+        </ExternalLink>
+        <ExternalLink href={troubleshootingLink} className="dim-button">
+          <AppIcon icon={helpIcon} /> {t('ErrorPanel.Troubleshooting')}
+        </ExternalLink>
+        {showReload && (
+          <div className="dim-button" onClick={() => window.location.reload()}>
+            <AppIcon icon={refreshIcon} /> Reload
+          </div>
+        )}
       </div>
+    </>
+  );
+
+  if (frameless) {
+    return content;
+  }
+
+  return (
+    <div>
+      <div className={styles.errorPanel}>{content}</div>
+      {showTwitters && <BungieAlerts />}
       {showTwitters && <Twitters />}
     </div>
   );
