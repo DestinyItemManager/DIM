@@ -66,13 +66,11 @@ export function useLoadoutFilterPills(
     })
   );
 
-  let loadoutsWithMissingItems: Loadout[] = [];
-  let loadoutsWithDeprecatedMods: Loadout[] = [];
-  loadoutsWithMissingItems = useMemo(
+  const loadoutsWithMissingItems = useMemo(
     () => savedLoadouts.filter((loadout) => isMissingItems(selectedStoreId, loadout)),
     [isMissingItems, savedLoadouts, selectedStoreId]
   );
-  loadoutsWithDeprecatedMods = useMemo(
+  const loadoutsWithDeprecatedMods = useMemo(
     () =>
       savedLoadouts.filter((loadout) =>
         loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
