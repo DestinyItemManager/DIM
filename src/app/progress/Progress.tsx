@@ -82,7 +82,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
   const raidTitle = raidNode?.displayProperties.name;
 
   const eventCardHash = profileInfo.profile.data?.activeEventCardHash;
-  const eventCard = eventCardHash && defs.EventCard.get(eventCardHash);
+  const eventCard = eventCardHash !== undefined && defs.EventCard.get(eventCardHash);
 
   const seasonalChallengesPresentationNode =
     coreSettings?.seasonalChallengesPresentationNodeHash !== undefined &&
@@ -151,7 +151,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
               </CollapsibleTitle>
             </section>
 
-            {Boolean(eventCard) && (
+            {eventCard && (
               <section id="event">
                 <CollapsibleTitle title={eventCard.displayProperties.name} sectionId="event">
                   <div className="progress-row">

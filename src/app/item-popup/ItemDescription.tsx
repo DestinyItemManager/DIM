@@ -23,7 +23,7 @@ export default function ItemDescription({ item }: { item: DimItem }) {
           {Boolean(item.description?.length) && (
             <div className={styles.officialDescription}>
               <RichDestinyText text={item.description} ownerId={item.owner} />
-              {Boolean(item.loreHash) && <LoreLink loreHash={item.loreHash} />}
+              {item.loreHash !== undefined && <LoreLink loreHash={item.loreHash} />}
             </div>
           )}
           {Boolean(item.displaySource?.length) && (

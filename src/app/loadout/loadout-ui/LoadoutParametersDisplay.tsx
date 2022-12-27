@@ -31,7 +31,7 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
           {query}
         </div>
       )}
-      {Boolean(exoticArmorHash) && (
+      {exoticArmorHash !== undefined && (
         <div className={styles.loExotic}>
           <ExoticArmorChoice lockedExoticHash={exoticArmorHash} />
         </div>
