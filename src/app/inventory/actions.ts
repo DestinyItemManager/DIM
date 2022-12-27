@@ -6,25 +6,31 @@ import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
+import { infoLog, warnLog } from 'app/utils/log';
 import {
   DestinyColor,
   DestinyItemChangeResponse,
   DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
 import { createAction } from 'typesafe-actions';
-import { TagValue } from './dim-item-info';
+import { TagCommand, TagValue } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { AccountCurrency, DimCharacterStat, DimStore } from './store-types';
 
 /**
- * Update the current profile (D2 only) and the computed/massaged state of inventory, plus account-wide info like currencies.
+ * Update the computed/massaged state of inventory, plus account-wide info like currencies.
  */
 export const update = createAction('inventory/UPDATE')<{
   stores: DimStore[];
   currencies: AccountCurrency[];
-  profileResponse?: DestinyProfileResponse;
 }>();
+
+export const profileLoaded = createAction('inventory/PROFILE_LOADED')<{
+  profile: DestinyProfileResponse;
+  live: boolean;
+}>();
+export const profileError = createAction('inventory/PROFILE_ERROR')<Error>();
 
 export interface CharacterInfo {
   characterId: string;
@@ -45,7 +51,7 @@ export interface CharacterInfo {
 export const charactersUpdated = createAction('inventory/CHARACTERS')<CharacterInfo[]>();
 
 /**
- * Reflect the old stores service data into the Redux store as a migration aid.
+ * An error that occurred during building the stores
  */
 export const error = createAction('inventory/ERROR')<Error>();
 
@@ -146,7 +152,7 @@ export const setItemHashNote = createAction('tag_notes/SET_HASH_NOTE')<{
 /**
  * Set the tag for an item regardless of whether it's instanced or not. Prefer this to setItemTag / setItemHashTag.
  */
-export function setTag(item: DimItem, tag: TagValue | undefined): ThunkResult {
+export function setTag(item: DimItem, tag: TagCommand | undefined): ThunkResult {
   return async (dispatch) => {
     if (!item.taggable) {
       return;
@@ -206,6 +212,14 @@ function warnNoSync(): ThunkResult {
       !apiPermissionGrantedSelector(getState()) &&
       localStorage.getItem('warned-no-sync') !== 'true'
     ) {
+      if ('storage' in navigator && 'persist' in navigator.storage) {
+        const isPersisted = await navigator.storage.persist();
+        if (isPersisted) {
+          infoLog('storage', 'Persisted storage granted');
+        } else {
+          warnLog('storage', 'Persisted storage not granted');
+        }
+      }
       localStorage.setItem('warned-no-sync', 'true');
       showNotification({
         type: 'warning',
@@ -221,4 +235,5 @@ function warnNoSync(): ThunkResult {
 export const tagCleanup = createAction('tag_notes/CLEANUP')<string[]>();
 
 /** input a mock profile API response */
-export const setMockProfileResponse = createAction('inventory/MOCK_PROFILE')<string>();
+export const setMockProfileResponse =
+  createAction('inventory/MOCK_PROFILE')<DestinyProfileResponse>();

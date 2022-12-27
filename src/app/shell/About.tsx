@@ -49,9 +49,13 @@ function getSystemInfo() {
 }
 
 export default function About() {
+  // The App Store version can't show donation links I guess?
   const iOSApp = document.cookie.includes('app-platform=iOS App Store;');
 
   useEffect(() => {
+    if (iOSApp) {
+      return;
+    }
     const script = document.createElement('script');
 
     script.src =

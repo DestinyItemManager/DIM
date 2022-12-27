@@ -70,6 +70,6 @@ function importMockProfileResponse(file: File): ThunkResult {
     if (!profileResponse?.profileInventory) {
       throw 'uploaded profile response looks invalid';
     }
-    dispatch(setMockProfileResponse(JSON.stringify(profileResponse)));
+    dispatch(setMockProfileResponse(profileResponse));
   };
 }

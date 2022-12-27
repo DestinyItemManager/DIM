@@ -60,6 +60,7 @@ export default function LoadoutEdit({
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
+  const missingSockets = allItems.some((i) => i.missingSockets);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
 
   // TODO: filter down by usable mods?
@@ -210,7 +211,7 @@ export default function LoadoutEdit({
         title={t('Loadouts.Mods')}
         className={styles.mods}
         onClear={handleClearMods}
-        onSyncFromEquipped={handleSyncModsFromEquipped}
+        onSyncFromEquipped={missingSockets ? undefined : handleSyncModsFromEquipped}
       >
         <LoadoutMods
           loadout={loadout}

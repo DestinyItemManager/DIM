@@ -1,9 +1,9 @@
 import { t } from 'app/i18next-t';
 import { bungieAlertsSelector } from 'app/shell/selectors';
-import React from 'react';
+import { GlobalAlertLevel } from 'bungie-api-ts/core';
 import { useSelector } from 'react-redux';
 import ExternalLink from '../dim-ui/ExternalLink';
-import './BungieAlerts.scss';
+import styles from './BungieAlerts.m.scss';
 
 // http://destinydevs.github.io/BungieNetPlatform/docs/Enums
 export const GlobalAlertLevelsToToastLevels = [
@@ -13,6 +13,13 @@ export const GlobalAlertLevelsToToastLevels = [
   'error', // Red
 ];
 
+const AlertLevelStyles = {
+  [GlobalAlertLevel.Unknown]: styles.info,
+  [GlobalAlertLevel.Blue]: styles.info,
+  [GlobalAlertLevel.Yellow]: styles.warn,
+  [GlobalAlertLevel.Red]: styles.error,
+};
+
 /**
  * Displays maintenance alerts from Bungie.net.
  */
@@ -20,15 +27,10 @@ export default function BungieAlerts() {
   const alerts = useSelector(bungieAlertsSelector);
 
   return (
-    <div className="bungie-alerts">
+    <div>
       {alerts.map((alert) => (
-        <div
-          key={alert.AlertKey}
-          className={`bungie-alert bungie-alert-${
-            GlobalAlertLevelsToToastLevels[alert.AlertLevel]
-          }`}
-        >
-          <b>{t('BungieAlert.Title')}</b>
+        <div key={alert.AlertKey} className={AlertLevelStyles[alert.AlertLevel]}>
+          <h2>{t('BungieAlert.Title')}</h2>
           <p dangerouslySetInnerHTML={{ __html: alert.AlertHtml }} />
           <div>
             {t('BungieService.Twitter')}{' '}

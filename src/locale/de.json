@@ -128,7 +128,7 @@
     "Description": "Versuche dein Inventar in der Destiny 2 Companion App zu laden, um zu sehen, ob Bungie.net nicht verfügbar ist.",
     "EmblemError": "Möglicherweise kannst du dies beheben, indem du deine Embleme im Spiel auf allen Charakteren wechselst.",
     "EmblemErrorLink": "Lies mehr darüber, wie man es beheben kann.",
-    "SystemDown": "Dies betrifft alle Destiny Apps, und das DIM Team kann es nicht reparieren oder umgehen.",
+    "SystemDown": "Dies betrifft alle Destiny-Apps, und das DIM-Team kann es nicht reparieren oder umgehen.",
     "Troubleshooting": "Fehlerbehebung"
   },
   "FarmingMode": {
@@ -532,19 +532,19 @@
     "MissingClassDescription": "Der Build, den du sehen möchtest, ist für eine Charakterklasse gedacht, die du nicht hast.",
     "NoBuildsFoundExplainer": {
       "ActiveSearchQuery": "Eine aktive Suchanfrage beschränkt die Elemente, die DIM in Ausrüstungen einschließen kann",
-      "AllowAutoStatMods": "Erlaube DIM zusätzliche Statistik-Mods automatisch einzubinden",
+      "AllowAutoStatMods": "Erlaube DIM, zusätzliche Statistik-Mods automatisch einzubinden",
       "AlwaysInvalidMods": "Diese Mods passen auf keine deiner Gegenstände:",
-      "AssumeElementChange": "Erlaube DIM Änderungen an der Rüstungs-Affinität zu empfehlen",
-      "AssumeMasterworked": "Erlaube DIM Rüstungen als Meisterwerk anzunehmen",
+      "AssumeElementChange": "Erlaube DIM, Änderungen an der Rüstungs-Affinität zu empfehlen",
+      "AssumeMasterworked": "Erlaube DIM, Rüstungen als Meisterwerk anzunehmen",
       "AssumptionsRestricted": "DIM kann keine Änderungen an der Rüstungs-Affinität empfehlen:",
       "BadSlot": "Im {{bucketName}} Slot konnte keiner der erlaubten Gegenstände diese Mods aufnehmen:",
       "Header": "Es wurden keine Builds gefunden. Hier sind mögliche Gründe, warum DIM keine Builds finden konnte:",
       "LowerBoundsFailed": "Viele Sets erfüllten nicht die Mindestanforderungen für Tier-Stufen",
-      "MaybeAllowMoreItems": "Erwäge andere Gegenstände zu erlauben:",
+      "MaybeAllowMoreItems": "Erwäge, andere Gegenstände zu erlauben:",
       "MaybeDecreaseLowerBounds": "Ziehe in Betracht, die Mindestanforderungen für Tier-Stufen zu reduzieren",
       "MaybeIncreaseUpperBounds": "Ziehe die Erhöhung der Tier-Stufen in Betracht",
-      "MaybeRemoveMods": "Erwäge einige Mods zu entfernen:",
-      "MaybeRemoveSearchQuery": "Ziehe in Betracht Filter in der Suchleiste zu löschen oder zu ändern",
+      "MaybeRemoveMods": "Erwäge, einige Mods zu entfernen:",
+      "MaybeRemoveSearchQuery": "Ziehe in Betracht, Filter in der Suchleiste zu löschen oder zu ändern",
       "ModAssignmentFailed": "Viele Sets konnten nicht alle ausgewählten Mods unterbringen",
       "RemoveMods": "Diese Mods entfernen",
       "UpperBoundsFailed": "Viele Sets erfüllten nicht die Maximalanforderungen für Tier-Stufen"
@@ -1137,7 +1137,7 @@
     "YourBestItem": "Dein bester Gegenstand"
   },
   "Triumphs": {
-    "GildingTriumph": "Triumph Vergoldung",
+    "GildingTriumph": "Triumph-Vergoldung",
     "HideCompleted": "Abgeschlossene Triumphe ausblenden",
     "RevealRedacted": "Versteckte Triumphe enthüllen"
   },

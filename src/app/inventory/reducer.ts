@@ -54,10 +54,10 @@ export interface InventoryState {
   readonly readOnly: boolean;
 
   /**
-   * a JSON-encoded API profile response. if this is present,
-   * we use it instead of talking to the Bungie API
+   * An API profile response. If this is present,
+   * we use it instead of talking to the Bungie API.
    */
-  readonly mockProfileData?: string;
+  readonly mockProfileData?: DestinyProfileResponse;
 }
 
 export type InventoryAction = ActionType<typeof actions>;
@@ -75,6 +75,16 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
   action: InventoryAction | AccountsAction
 ): InventoryState => {
   switch (action.type) {
+    case getType(actions.profileLoaded):
+      return {
+        ...state,
+        profileResponse: action.payload.profile,
+        profileError: action.payload.live ? undefined : state.profileError,
+      };
+
+    case getType(actions.profileError):
+      return { ...state, profileError: action.payload };
+
     case getType(actions.update):
       return updateInventory(state, action.payload);
 
@@ -148,27 +158,20 @@ function updateInventory(
   state: InventoryState,
   {
     stores,
-    profileResponse,
     currencies,
   }: {
     stores: DimStore[];
     currencies: AccountCurrency[];
-    profileResponse?: DestinyProfileResponse;
   }
 ) {
   // TODO: we really want to decompose these, drive out all deep mutation
   // TODO: mark DimItem, DimStore properties as Readonly
-  const newState = {
+  return {
     ...state,
     stores,
     currencies,
     newItems: computeNewItems(state.stores, state.newItems, stores),
-    profileError: undefined,
   };
-  if (profileResponse) {
-    newState.profileResponse = profileResponse;
-  }
-  return newState;
 }
 
 /**
