@@ -1,5 +1,5 @@
 @use '../variables' as *;
-@use '../dim-ui/PressTip.m.scss' as *;
+@use '../dim-ui/tooltip-mixins' as *;
 
 .refreshButton {
   composes: resetButton from '../dim-ui/common.m.scss';
