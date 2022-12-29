@@ -7,7 +7,7 @@ import { createSelector } from 'reselect';
 import { getTag, ItemInfos } from './dim-item-info';
 import { setItemLockState } from './item-move-service';
 import { DimItem } from './item-types';
-import { allItemsSelector, itemInfosSelector } from './selectors';
+import { allItemsSelector, itemInfosSelector, profileErrorSelector } from './selectors';
 
 /**
  * Rather than getting all items that need to change lock state, we return just the first.
@@ -48,7 +48,9 @@ function getNextItemToChangeLockState(
 const getNextItemSelector = createSelector(
   allItemsSelector,
   itemInfosSelector,
-  getNextItemToChangeLockState
+  profileErrorSelector,
+  (allItems, itemInfos, profileError) =>
+    profileError ? [] : getNextItemToChangeLockState(allItems, itemInfos)
 );
 
 // Some extra protection against locking the same thing twice in parallel - for example if you
