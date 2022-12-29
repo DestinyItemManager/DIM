@@ -8,6 +8,10 @@
 * Crafted items will no longer lose their tags/notes or be missing from loadouts after being reshaped. This only affects items that are newly tagged or added to loadouts - crafted weapons that were already tagged or in loadouts will not be preserved when reshaping them.
 * Worked around an issue where class item mods from the fourth artifact column would be missing for some players.
 
+### Beta Only
+
+* If you add hashtags to your loadouts' names or notes, DIM will show buttons for quickly filtering down to loadouts that include that hashtag.
+
 ## 7.49.0 <span class="changelog-date">(2022-12-25)</span>
 
 * The filter help menu item is now keyboard accessible.
