@@ -53,7 +53,7 @@ function getWeeklyBonusRankModifier(profileInfo: DestinyProfileResponse) {
   if (profileInfo?.characterActivities?.data) {
     for (const activity of Object.values(profileInfo.characterActivities.data)[0]
       .availableActivities) {
-      if (activity.modifierHashes) {
+      if (activity.activityHash !== 1113451448 && activity.modifierHashes) {
         for (const h of activity.modifierHashes) {
           if (h in WeeklyBonusModifierHashes) {
             return h;
