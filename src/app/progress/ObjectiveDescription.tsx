@@ -1,7 +1,6 @@
 import { D1ObjectiveDefinition } from 'app/destiny1/d1-manifest-types';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { DestinyObjectiveDefinition } from 'bungie-api-ts/destiny2';
-import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 
 export default function ObjectiveDescription({
