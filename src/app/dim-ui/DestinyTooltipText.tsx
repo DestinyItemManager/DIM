@@ -2,8 +2,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faClock } from 'app/shell/icons';
 import { DestinyItemTooltipNotification } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React from 'react';
-import RichDestinyText from './RichDestinyText';
+import RichDestinyText from './destiny-symbols/RichDestinyText';
 
 export function DestinyTooltipText({ item }: { item: DimItem }) {
   if (!item.tooltipNotifications) {

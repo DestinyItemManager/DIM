@@ -3,6 +3,8 @@ import { TextareaEditor } from '@textcomplete/textarea';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import clsx from 'clsx';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { SymbolsMap, symbolsSelector } from '../destiny-symbols/destiny-symbols';
 
 import styles from './text-complete.m.scss';
 
@@ -40,6 +42,29 @@ function createTagsCompleter(
   };
 }
 
+export function createSymbolsAutocompleter(symbols: SymbolsMap): StrategyProps {
+  return {
+    match: /\B:(\p{L}*)$/u,
+    search: (term, callback) => {
+      const termLower = term.toLowerCase();
+      const possibleTags: [string, string][] = [];
+      for (const t of symbols) {
+        const tagLower = t.name;
+        // favor startswith
+        if (tagLower.startsWith(termLower)) {
+          possibleTags.unshift([t.glyph, tagLower]);
+          // over full text search
+        } else if (tagLower.includes(termLower)) {
+          possibleTags.push([t.glyph, tagLower]);
+        }
+      }
+      callback(possibleTags);
+    },
+    template: ([glyph, name]) => `${glyph} :${name}:`,
+    replace: ([glyph]) => `${glyph} `,
+  };
+}
+
 /**
  * Autocomplete a list of hashtags in this <textarea /> or <input type="text" />.
  * `tags` must have a stable object identity when using this hook (unless the set of tags changes).
@@ -49,20 +74,25 @@ export function useAutocomplete(
   textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement>,
   tags: string[]
 ) {
+  const symbols = useSelector(symbolsSelector);
   useEffect(() => {
     if (textArea.current) {
       // commit a type crime here because textcomplete says it only works with
       // TextArea but happens to also work entirely fine with Input[type=text]
       // https://github.com/yuku/textcomplete/issues/355
       const editor = new TextareaEditor(textArea.current as unknown as HTMLTextAreaElement);
-      const textcomplete = new Textcomplete(editor, [createTagsCompleter(textArea, tags)], {
-        dropdown: {
-          className: clsx(styles.dropdownMenu, 'textcomplete-dropdown'),
-        },
-      });
+      const textcomplete = new Textcomplete(
+        editor,
+        [createTagsCompleter(textArea, tags), createSymbolsAutocompleter(symbols)],
+        {
+          dropdown: {
+            className: clsx(styles.dropdownMenu, 'textcomplete-dropdown'),
+          },
+        }
+      );
       return () => {
         textcomplete.destroy();
       };
     }
-  }, [tags, textArea]);
+  }, [symbols, tags, textArea]);
 }

@@ -78,7 +78,7 @@ const TooltipContext = createContext<React.Dispatch<
  *   PressTip context element
  * </PressTip.Control>
  */
-function Control({
+export function Control({
   tooltip,
   open,
   triggerRef,

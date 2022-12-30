@@ -1,0 +1,108 @@
+@use '../../variables.scss' as *;
+@use '../tooltip-mixins' as *;
+
+.symbolsWindow {
+  width: 300px;
+  height: 350px;
+  background-color: black;
+  display: flex;
+  flex-flow: column;
+
+  box-shadow: 0 0 24px 6px #080811;
+}
+
+.symbolsButton {
+  composes: resetButton from '../common.m.scss';
+  font-family: unset;
+  margin: 0 2px;
+  position: absolute;
+  left: -20px;
+  span {
+    font-size: 18px;
+  }
+  &:hover {
+    color: black;
+    background-color: $orange;
+  }
+}
+
+.buttonDiv {
+  flex: 0;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+.symbolsSearch {
+  padding: 10px 10px;
+  flex: 0;
+  > div {
+    min-width: 0;
+  }
+}
+
+.symbolsBody {
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  flex: 1;
+}
+
+.symbolsContainer {
+  padding: 4px 10px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+// Ensure the last row is left-aligned
+.symbolsContainer::after {
+  content: '';
+  flex: auto;
+}
+
+.emojiButton {
+  composes: resetButton from '../common.m.scss';
+  font-family: unset;
+  text-align: center;
+  font-size: 18px;
+  color: white;
+
+  padding: 2px;
+
+  &:hover {
+    color: black;
+    background-color: $orange;
+  }
+}
+
+.symbolsFooter {
+  padding: 10px 10px;
+  font-size: 20px;
+  min-height: 40px;
+  flex: 0;
+  border-top: 1px grey solid;
+
+  display: flex;
+  flex-direction: row;
+
+  > span {
+    flex: 0;
+    align-self: center;
+  }
+
+  > div {
+    padding-left: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    > span {
+      &:first-child {
+        font-size: 16px;
+      }
+      font-size: 12px;
+    }
+  }
+}

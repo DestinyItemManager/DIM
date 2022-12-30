@@ -1,0 +1,434 @@
+{
+  "supers": [
+    {
+      "glyph": 57441,
+      "source": {
+        "tableName": "SandboxPerk",
+        "hash": 3112248479
+      }
+    },
+    {
+      "glyph": 57640,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 4260353952
+      }
+    },
+    {
+      "glyph": 57431,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2722573682
+      }
+    },
+    {
+      "glyph": 57639,
+      "source": {
+        "tableName": "SandboxPerk",
+        "hash": 2999301420
+      }
+    },
+    {
+      "glyph": 57444,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 1656118680
+      }
+    },
+    {
+      "glyph": 57632,
+      "source": {
+        "tableName": "SandboxPerk",
+        "hash": 3484134371
+      }
+    },
+    {
+      "glyph": 57440,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2747500760
+      }
+    },
+    {
+      "glyph": 57638,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2747500761
+      }
+    },
+    {
+      "glyph": 57442,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 375052471
+      }
+    },
+    {
+      "glyph": 57635,
+      "source": {
+        "tableName": "SandboxPerk",
+        "hash": 3205500087
+      }
+    },
+    {
+      "glyph": 57430,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2274196887
+      }
+    },
+    {
+      "glyph": 57625,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2274196886
+      }
+    },
+    {
+      "glyph": 57432,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 119041298
+      }
+    },
+    {
+      "glyph": 57634,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 119041299
+      }
+    },
+    {
+      "glyph": 57443,
+      "source": {
+        "tableName": "SandboxPerk",
+        "hash": 2236497009
+      }
+    },
+    {
+      "glyph": 57633,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 3769507633
+      }
+    },
+    {
+      "glyph": 61181,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 3769507632
+      }
+    },
+    {
+      "glyph": 57625,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2274196886
+      }
+    },
+    {
+      "glyph": 57445,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 1081893461
+      }
+    },
+    {
+      "glyph": 57637,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 1081893460
+      }
+    },
+    {
+      "glyph": 57475,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2021620139
+      }
+    },
+    {
+      "glyph": 57476,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2625980631
+      }
+    },
+    {
+      "glyph": 57477,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 3683904166
+      }
+    }
+  ],
+  "abilities": [
+    {
+      "glyph": 57616
+    },
+    {
+      "glyph": 57617
+    },
+    {
+      "glyph": 57618
+    },
+    {
+      "glyph": 57665
+    },
+    {
+      "glyph": 57493,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 4220332374
+      }
+    },
+    {
+      "glyph": 57447,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 852252789
+      }
+    },
+    {
+      "glyph": 61179,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2708585279
+      }
+    },
+    {
+      "glyph": 57478,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2028772231
+      }
+    },
+    {
+      "glyph": 57620,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2984351206
+      }
+    },
+    {
+      "glyph": 57495
+    },
+    {
+      "glyph": 57636,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 3710811138
+      }
+    },
+    {
+      "glyph": 57621,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 3066103996
+      }
+    },
+    {
+      "glyph": 57479,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 1341767667
+      }
+    },
+    {
+      "glyph": 57491,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2321824287
+      }
+    },
+    {
+      "glyph": 57494,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2299867342
+      }
+    },
+    {
+      "glyph": 57622,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 1470370538
+      }
+    },
+    {
+      "glyph": 57624,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 1293395731
+      }
+    },
+    {
+      "glyph": 61180,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 1293395730
+      }
+    },
+    {
+      "glyph": 57489,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2642597904
+      }
+    },
+    {
+      "glyph": 57480,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 2543177538
+      }
+    },
+    {
+      "glyph": 57492,
+      "source": {
+        "tableName": "Trait",
+        "hash": 2650036230
+      }
+    },
+    {
+      "glyph": 61182,
+      "source": {
+        "tableName": "Trait",
+        "hash": 2228690371
+      }
+    },
+    {
+      "glyph": 57472,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 1399219
+      }
+    },
+    {
+      "glyph": 57473,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 1399216
+      }
+    },
+    {
+      "glyph": 57474,
+      "source": {
+        "tableName": "InventoryItem",
+        "hash": 1399217
+      }
+    },
+    {
+      "glyph": 57481,
+      "source": {
+        "tableName": "Trait",
+        "hash": 4272830254
+      }
+    },
+    {
+      "glyph": 57488,
+      "source": {
+        "tableName": "Trait",
+        "hash": 4272830254
+      }
+    }
+  ],
+  "weapons": [
+    {
+      "glyph": 57497
+    },
+    {
+      "glyph": 57600
+    },
+    {
+      "glyph": 57601
+    },
+    {
+      "glyph": 57602
+    },
+    {
+      "glyph": 57603
+    },
+    {
+      "glyph": 57609
+    },
+    {
+      "glyph": 57607
+    },
+    {
+      "glyph": 57609
+    },
+    {
+      "glyph": 57604
+    },
+    {
+      "glyph": 57605
+    },
+    {
+      "glyph": 57606
+    },
+    {
+      "glyph": 57685
+    },
+    {
+      "glyph": 57686
+    },
+    {
+      "glyph": 57656
+    },
+    {
+      "glyph": 57608
+    },
+    {
+      "glyph": 57619
+    },
+    {
+      "glyph": 57682
+    },
+    {
+      "glyph": 57683
+    },
+    {
+      "glyph": 57684
+    },
+    {
+      "glyph": 57666
+    }
+  ],
+  "misc": [
+    {
+      "glyph": 57667
+    },
+    {
+      "glyph": 57668
+    },
+    {
+      "glyph": 57664
+    },
+    {
+      "glyph": 57657
+    },
+    {
+      "glyph": 57456
+    },
+    {
+      "glyph": 57458
+    },
+    {
+      "glyph": 57457
+    },
+    {
+      "glyph": 57669,
+      "source": {
+        "tableName": "ActivityMode",
+        "hash": 103143560
+      }
+    },
+    {
+      "glyph": 57671
+    },
+    {
+      "glyph": 57461
+    }
+  ]
+}

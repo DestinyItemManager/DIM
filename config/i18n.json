@@ -334,6 +334,14 @@
     "tangled": "tangled",
     "titan": "titan"
   },
+  "Glyphs": {
+    "Missing": "Missing",
+    "Gilded": "Gilded",
+    "Smoke": "Smoke",
+    "Misadventure": "Misadventure",
+    "Quickfall": "Quickfall",
+    "ScorchCannon": "Scorch Cannon"
+  },
   "Header": {
     "About": "About DIM",
     "AutoRefresh": "DIM will automatically reload as long as you are still playing.",

@@ -1,8 +1,7 @@
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
-import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { getEngramPowerBonus } from './engrams';
 import styles from './Reward.m.scss';
