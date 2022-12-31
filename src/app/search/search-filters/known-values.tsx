@@ -6,8 +6,10 @@ import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
+import { BreakerTypeHashes } from 'data/d2/generated-enums';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
+import artifactBreakerMods from '../../../data/d2/artifact-breaker-weapon-types.json';
 import { D1ItemCategoryHashes } from '../d1-known-values';
 import {
   breakerTypes,
@@ -166,11 +168,29 @@ const knownValuesFilters: FilterDefinition[] = [
     suggestions: Object.keys(breakerTypes),
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      const breakerType = breakerTypes[filterValue];
+      const breakerType: BreakerTypeHashes[] | undefined = breakerTypes[filterValue];
       if (!breakerType) {
         throw new Error('Unknown breaker type ' + breakerType);
       }
-      return (item) => breakerType.includes(item.breakerType?.hash);
+      return (item) => item.breakerType && breakerType.includes(item.breakerType.hash);
+    },
+  },
+  {
+    keywords: 'breakermod',
+    description: tl('Filter.BreakerMod'),
+    format: 'query',
+    suggestions: Object.keys(breakerTypes),
+    destinyVersion: 2,
+    filter: ({ filterValue }) => {
+      const breakerType: BreakerTypeHashes[] | undefined = breakerTypes[filterValue];
+      if (!breakerType) {
+        throw new Error('Unknown breaker type ' + breakerType);
+      }
+      const breakingIchs = breakerType.flatMap((ty) => artifactBreakerMods[ty] || []);
+      return (item) =>
+        Boolean(
+          !item.breakerType && item.itemCategoryHashes.some((ich) => breakingIchs.includes(ich))
+        );
     },
   },
   {
