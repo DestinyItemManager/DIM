@@ -80,8 +80,8 @@ export default function ItemPopupHeader({
         <div className={styles.details}>
           {showElementIcon && <ElementIcon element={item.element} className={styles.elementIcon} />}
           <div className={styles.power}>{item.primaryStat?.value}</div>
-          {item.powerCap && <div className={styles.powerCap}>| {item.powerCap} </div>}
-          {item.pursuit?.questStepNum && (
+          {Boolean(item.powerCap) && <div className={styles.powerCap}>| {item.powerCap} </div>}
+          {item.pursuit?.questStepNum !== undefined && (
             <div className={styles.itemType}>
               {t('MovePopup.Subtitle.QuestProgress', {
                 questStepNum: item.pursuit.questStepNum,

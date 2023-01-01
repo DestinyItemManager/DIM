@@ -13,6 +13,7 @@ import { isiOSBrowser } from 'app/utils/browsers';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import TextareaAutosize from 'react-textarea-autosize';
 import styles from './NotesArea.m.scss';
 
 const maxLength = 120;
@@ -122,7 +123,7 @@ function NotesEditor({
 
   return (
     <form name="notes">
-      <textarea
+      <TextareaAutosize
         ref={textArea}
         name="data"
         autoFocus={nativeAutoFocus}

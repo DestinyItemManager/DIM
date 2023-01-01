@@ -44,6 +44,9 @@ function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
   if (item.socketOverrides) {
     result.socketOverrides = item.socketOverrides;
   }
+  if (item.craftedDate) {
+    result.craftedDate = item.craftedDate;
+  }
   return result;
 }
 
@@ -127,10 +130,9 @@ function convertDimApiLoadoutItemToLoadoutItem(
   equipped: boolean
 ): DimLoadoutItem {
   return {
+    ...item,
     id: item.id || '0',
-    hash: item.hash,
     amount: item.amount || 1,
-    socketOverrides: item.socketOverrides,
     equip: equipped,
   };
 }

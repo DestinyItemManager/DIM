@@ -1,7 +1,10 @@
-import { Loadout as DimApiLoadout } from '@destinyitemmanager/dim-api-types';
+import {
+  Loadout as DimApiLoadout,
+  LoadoutItem as DimApiLoadoutItem,
+} from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 
-export interface LoadoutItem {
+export type LoadoutItem = DimApiLoadoutItem & {
   /**
    * The item's id. There's no guarantee that the item this resolves to
    * actually has that id (subclasses, emblems, ...) so avoid accessing
@@ -16,12 +19,7 @@ export interface LoadoutItem {
   amount: number;
   /** Whether or not the item should be equipped when the loadout is applied. */
   equip: boolean;
-  /**
-   * A map of socketIndex's to item hashes for plugs that override the current items plugs in
-   * the loadout.
-   */
-  socketOverrides?: { [socketIndex: number]: number };
-}
+};
 
 /** In memory loadout structure. */
 export type Loadout = Omit<DimApiLoadout, 'equipped' | 'unequipped'> & {

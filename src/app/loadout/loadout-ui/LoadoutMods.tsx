@@ -42,6 +42,7 @@ export default memo(function LoadoutMods({
   allMods,
   storeId,
   clearUnsetMods,
+  missingSockets,
   hideShowModPlacements,
   onUpdateMods,
   onRemoveMod,
@@ -52,6 +53,7 @@ export default memo(function LoadoutMods({
   storeId: string;
   hideShowModPlacements?: boolean;
   clearUnsetMods?: boolean;
+  missingSockets?: boolean;
   /** If present, show an "Add Mod" button */
   onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
   onRemoveMod?(modHash: number): void;
@@ -78,8 +80,18 @@ export default memo(function LoadoutMods({
 
   if (allMods.length === 0 && !onUpdateMods) {
     return !isPhonePortrait ? (
-      <div className={styles.modsPlaceholder}>{t('Loadouts.Mods')}</div>
+      <div className={styles.modsPlaceholder}>
+        {missingSockets ? (
+          <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
+        ) : (
+          t('Loadouts.Mods')
+        )}
+      </div>
     ) : null;
+  }
+
+  if (missingSockets) {
+    return <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>;
   }
 
   return (

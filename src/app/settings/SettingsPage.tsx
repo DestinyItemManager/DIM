@@ -11,6 +11,7 @@ import { itemTagList } from 'app/inventory/dim-item-info';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import TagIcon from 'app/inventory/TagIcon';
 import WishListSettings from 'app/settings/WishListSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
@@ -27,7 +28,7 @@ import { useSelector } from 'react-redux';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
-import { AppIcon, refreshIcon } from '../shell/icons';
+import { AppIcon, lockIcon, refreshIcon, unlockedIcon } from '../shell/icons';
 import { setCharacterOrder } from './actions';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
@@ -36,6 +37,7 @@ import { Settings } from './initial-settings';
 import { itemSortSettingsSelector } from './item-sort';
 import Select, { mapToOptions } from './Select';
 import './settings.scss';
+import styles from './SettingsPage.m.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
@@ -286,7 +288,12 @@ export default function SettingsPage() {
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
             <div className="examples">
-              <InventoryItem item={fakeWeapon as unknown as DimItem} isNew={true} tag="favorite" />
+              <InventoryItem
+                item={fakeWeapon as unknown as DimItem}
+                isNew={true}
+                tag="favorite"
+                autoLockTagged={settings.autoLockTagged}
+              />
             </div>
 
             {!isPhonePortrait && (
@@ -403,6 +410,40 @@ export default function SettingsPage() {
                 onChange={onCheckChange}
               />
             )}
+            <div className="setting">
+              <Checkbox
+                label={t('Settings.AutoLockTagged')}
+                name="autoLockTagged"
+                value={settings.autoLockTagged}
+                onChange={onCheckChange}
+              />
+              <div className="fineprint">{t('Settings.AutoLockTaggedExplanation')}</div>
+              <table className={styles.autoTagTable}>
+                <tbody>
+                  <tr>
+                    <td>
+                      <TagIcon tag="favorite" />
+                      <TagIcon tag="keep" />
+                      <TagIcon tag="archive" />
+                    </td>
+                    <td>→</td>
+                    <td>
+                      <AppIcon icon={lockIcon} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <TagIcon tag="junk" />
+                      <TagIcon tag="infuse" />
+                    </td>
+                    <td>→</td>
+                    <td>
+                      <AppIcon icon={unlockedIcon} />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </section>
 
           <section id="inventory">

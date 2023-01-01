@@ -8,13 +8,14 @@ import { storesSortedByImportanceSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
+import { TagCommandInfo } from 'app/organizer/ItemActions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { stripSockets } from 'app/strip-sockets/strip-sockets-actions';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { isTagValue, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
+import { itemTagSelectorList, TagCommand } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
   AppIcon,
@@ -61,16 +62,13 @@ export default React.memo(function ItemActionsDropdown({
     )
   );
 
-  const bulkTag = loadingTracker.trackPromise(async (selectedTag: TagValue) => {
+  const bulkTag = loadingTracker.trackPromise(async (selectedTag: TagCommand) => {
     // Bulk tagging
     const tagItems = filteredItems.filter((i) => i.taggable);
-
-    if (isTagValue(selectedTag)) {
-      dispatch(bulkTagItems(tagItems, selectedTag));
-    }
+    dispatch(bulkTagItems(tagItems, selectedTag));
   });
 
-  const bulkLock = loadingTracker.trackPromise(async (selectedTag: TagValue) => {
+  const bulkLock = loadingTracker.trackPromise(async (selectedTag: 'lock' | 'unlock') => {
     // Bulk locking/unlocking
     const state = selectedTag === 'lock';
     const lockables = filteredItems.filter((i) => i.lockable);
@@ -96,7 +94,7 @@ export default React.memo(function ItemActionsDropdown({
     dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
 
-  const bulkItemTags = itemTagSelectorList
+  const bulkItemTags: TagCommandInfo[] = itemTagSelectorList
     .filter((t) => t.type)
     .map((tag) => ({
       ...tag,

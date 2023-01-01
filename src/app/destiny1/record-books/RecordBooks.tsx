@@ -207,7 +207,7 @@ export default function RecordBooks({ account }: Props) {
                     >
                       <p>{page.description}</p>
 
-                      {page.records.length && (
+                      {page.records.length > 0 && (
                         <div className="record-page-records">
                           {page.records.map((record) => (
                             <div

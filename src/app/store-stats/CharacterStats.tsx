@@ -78,7 +78,7 @@ export function PowerFormula({ stats, storeId }: { stats: DimStore['stats']; sto
     <>
       {stat.name}
       {stat.statProblems?.hasClassified && `\n\n${t('Loadouts.Classified')}`}
-      {stat.richTooltip && (
+      {Boolean(stat.richTooltip) && (
         <>
           <hr />
           <div className="richTooltipWrapper">

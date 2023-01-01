@@ -126,6 +126,18 @@ export const profileResponseSelector = (state: RootState) => state.inventory.pro
 export const userIsPlayingSelector = (state: RootState) =>
   Boolean(state.inventory.profileResponse?.profileTransitoryData?.data);
 
+/** The time when the currently displayed profile was last refreshed from live game data */
+export const profileMintedSelector = createSelector(
+  profileResponseSelector,
+  (profileResponse) => new Date(profileResponse?.responseMintedTimestamp ?? 0)
+);
+
+export const profileErrorSelector = (state: RootState) => state.inventory.profileError;
+
+/** A variant of profileErrorSelector which returns undefined if we still have a valid profile to use despite the error. */
+export const blockingProfileErrorSelector = (state: RootState) =>
+  state.inventory.profileResponse ? undefined : state.inventory.profileError;
+
 /** Whether DIM will automatically refresh on a schedule */
 export const autoRefreshEnabledSelector = (state: RootState) =>
   userIsPlayingSelector(state) && state.dimApi.globalSettings.autoRefresh;

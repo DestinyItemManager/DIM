@@ -1,5 +1,5 @@
 import { i15dDurationFromMs } from 'app/utils/time';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
  * Render a countdown to a specific date.
@@ -13,20 +13,20 @@ export default function Countdown({
   compact?: boolean;
 }) {
   const [diff, setDiff] = useState(endTime.getTime() - Date.now());
-  const interval = useRef(0);
 
   useEffect(() => {
+    let interval = 0;
     const update = () => {
       const diff = endTime.getTime() - Date.now();
       // We set the diff just to make it re-render. We could just as easily set this to now(), or an incrementing number
       setDiff(diff);
       if (diff <= 0) {
-        clearInterval(interval.current);
+        clearInterval(interval);
       }
     };
-    interval.current = window.setInterval(update, 60000);
+    interval = window.setInterval(update, 60000);
     update();
-    return () => clearInterval(interval.current);
+    return () => clearInterval(interval);
   }, [endTime]);
 
   return (

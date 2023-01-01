@@ -1,4 +1,3 @@
-import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -17,12 +16,11 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
-import { loadoutsSelector, previousLoadoutSelector } from 'app/loadout-drawer/selectors';
+import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';
 import { filteredItemsSelector, searchFilterSelector } from 'app/search/search-filter';
-import { plainString } from 'app/search/search-filters/freeform';
 import {
   addIcon,
   AppIcon,
@@ -42,11 +40,16 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { queueAction } from 'app/utils/action-queue';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
-import _ from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import {
+  searchAndSortLoadoutsByQuery,
+  useLoadoutFilterPills,
+  useSavedLoadoutsForClassType,
+} from '../loadout-ui/menu-hooks';
 import styles from './LoadoutPopup.m.scss';
 import MaxlightButton from './MaxlightButton';
 
@@ -69,24 +72,9 @@ export default function LoadoutPopup({
   const allItems = useSelector(allItemsSelector);
   const filteredItems = useSelector(filteredItemsSelector);
   const loadoutSort = useSelector(settingSelector('loadoutSort'));
-  const allLoadouts = useSelector(loadoutsSelector);
   const dispatch = useThunkDispatch();
 
-  const loadouts = useMemo(
-    () =>
-      _.sortBy(
-        allLoadouts.filter(
-          (loadout) =>
-            dimStore.classType === DestinyClass.Unknown ||
-            loadout.classType === DestinyClass.Unknown ||
-            loadout.classType === dimStore.classType
-        ),
-        loadoutSort === LoadoutSort.ByEditTime
-          ? (l) => -(l.lastUpdatedAt ?? 0)
-          : (l) => l.name.toLocaleUpperCase()
-      ),
-    [allLoadouts, dimStore.classType, loadoutSort]
-  );
+  const loadouts = useSavedLoadoutsForClassType(dimStore.classType);
 
   const [loadoutQuery, setLoadoutQuery] = useState('');
 
@@ -160,26 +148,31 @@ export default function LoadoutPopup({
 
   const totalLoadouts = loadouts.length;
 
-  const loadoutQueryPlain = plainString(loadoutQuery, language);
-  const filteredLoadouts = loadoutQuery
-    ? loadouts.filter(
-        (loadout) =>
-          plainString(loadout.name, language).includes(loadoutQueryPlain) ||
-          (loadout.notes && plainString(loadout.notes, language).includes(loadoutQueryPlain))
-      )
-    : loadouts;
+  const [pillFilteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
+    loadouts,
+    dimStore.id,
+    false,
+    styles.filterPills,
+    true
+  );
+  const filteredLoadouts = searchAndSortLoadoutsByQuery(
+    pillFilteredLoadouts,
+    loadoutQuery,
+    language,
+    loadoutSort
+  );
 
   const blockPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
 
-  const filteringLoadouts = loadoutQuery.length > 0;
+  const filteringLoadouts = loadoutQuery.length > 0 || hasSelectedFilters;
 
   return (
     <div className={styles.content} onClick={onClick} role="menu">
       {totalLoadouts >= 10 && (
-        <li className={styles.menuItem}>
+        <li className={clsx(styles.menuItem, styles.filterInput)}>
           <form>
             <AppIcon icon={searchIcon} />
             <input
@@ -193,6 +186,9 @@ export default function LoadoutPopup({
           </form>
         </li>
       )}
+
+      {filterPills}
+
       <ul className={styles.list}>
         {!filteringLoadouts && dimStore.isVault && isPhonePortrait && (
           <li className={styles.menuItem}>

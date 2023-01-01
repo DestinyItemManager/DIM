@@ -1,0 +1,47 @@
+@use '../variables.scss' as *;
+
+.guide {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  flex-wrap: wrap;
+  margin: 8px 0;
+  gap: 4px;
+  @include phone-portrait {
+    margin: 8px 6px;
+  }
+}
+
+.pill {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  padding: 2px 8px;
+  color: white;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: border-color 150ms;
+  white-space: nowrap;
+  gap: 4px;
+
+  .darkBackground & {
+    background-color: rgb(255, 255, 255, 0.2);
+  }
+
+  img {
+    margin-right: 4px;
+  }
+  @media (hover: hover) {
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  :global(.app-icon) {
+    font-size: 10px;
+  }
+}
+
+.selected {
+  border-color: $orange;
+  background: rgba(0, 0, 0, 0.6);
+}

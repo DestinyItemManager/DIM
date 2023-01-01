@@ -4,7 +4,6 @@ import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { wishListSelector } from 'app/wishlists/selectors';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import ishtarLogo from '../../images/ishtar-collective.svg';
 import styles from './ItemDescription.m.scss';
@@ -24,7 +23,7 @@ export default function ItemDescription({ item }: { item: DimItem }) {
           {Boolean(item.description?.length) && (
             <div className={styles.officialDescription}>
               <RichDestinyText text={item.description} ownerId={item.owner} />
-              {item.loreHash && <LoreLink loreHash={item.loreHash} />}
+              {item.loreHash !== undefined && <LoreLink loreHash={item.loreHash} />}
             </div>
           )}
           {Boolean(item.displaySource?.length) && (
@@ -34,7 +33,7 @@ export default function ItemDescription({ item }: { item: DimItem }) {
           )}
         </>
       )}
-      {!$featureFlags.triage && wishlistItem?.notes?.length && (
+      {!$featureFlags.triage && wishlistItem && Boolean(wishlistItem?.notes?.length) && (
         <ExpandableTextBlock linesWhenClosed={3} className={styles.description}>
           <span className={styles.wishListLabel}>
             {t('WishListRoll.WishListNotes', { notes: '' })}

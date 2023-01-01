@@ -1,6 +1,7 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
@@ -8,6 +9,7 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
+import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -22,6 +24,7 @@ import {
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
+import { createSelector } from 'reselect';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
@@ -377,18 +380,19 @@ export function backupLoadout(store: DimStore, name: string): Loadout {
 }
 
 /**
- * Converts DimItem or other LoadoutItem-like objects to real loadout items.
+ * Converts DimItem to a LoadoutItem.
  */
 export function convertToLoadoutItem(
-  item: Pick<LoadoutItem, 'id' | 'hash' | 'amount' | 'socketOverrides'>,
-  equip: boolean
+  item: DimItem,
+  equip: boolean,
+  amount = item.amount
 ): LoadoutItem {
   return {
     id: item.id,
     hash: item.hash,
-    amount: item.amount,
-    socketOverrides: item.socketOverrides,
+    amount,
     equip,
+    craftedDate: item.craftedInfo?.craftedDate,
   };
 }
 
@@ -453,7 +457,12 @@ const matchByHash = [
 export function getResolutionInfo(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadoutItemHash: number
-) {
+):
+  | {
+      hash: number;
+      instanced: boolean;
+    }
+  | undefined {
   const hash = oldToNewItems[loadoutItemHash] ?? loadoutItemHash;
 
   const def = defs.InventoryItem.get(hash) as
@@ -471,10 +480,11 @@ export function getResolutionInfo(
   // nice to use "is random rolled or configurable" here instead but that's hard
   // to determine.
   const bucketHash = def.bucketTypeHash || def.inventory?.bucketTypeHash || 0;
-  const instanced =
+  const instanced = Boolean(
     (def.instanced || def.inventory?.isInstanceItem) &&
-    // Subclasses and some other types are technically instanced but should be matched by hash
-    !matchByHash.includes(bucketHash);
+      // Subclasses and some other types are technically instanced but should be matched by hash
+      !matchByHash.includes(bucketHash)
+  );
 
   return {
     hash,
@@ -489,13 +499,19 @@ export function getResolutionInfo(
 export function findSameLoadoutItemIndex(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadoutItems: LoadoutItem[],
-  loadoutItem: Pick<LoadoutItem, 'hash' | 'id'>
+  loadoutItem: Pick<LoadoutItem, 'hash' | 'id' | 'craftedDate'>
 ) {
   const info = getResolutionInfo(defs, loadoutItem.hash)!;
 
   return loadoutItems.findIndex((i) => {
     const newHash = oldToNewItems[i.hash] ?? i.hash;
-    return info.hash === newHash && (!info.instanced || loadoutItem.id === i.id);
+    return (
+      info.hash === newHash &&
+      (!info.instanced ||
+        loadoutItem.id === i.id ||
+        // Crafted items may change ID but keep their date
+        (loadoutItem.craftedDate && loadoutItem.craftedDate === i.craftedDate))
+    );
   });
 }
 
@@ -514,12 +530,24 @@ export function findItemForLoadout(
     return;
   }
 
-  // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
   if (info.instanced) {
-    return allItems.find((item) => item.id === loadoutItem.id);
+    return getInstancedLoadoutItem(allItems, loadoutItem);
   }
 
   return getUninstancedLoadoutItem(allItems, info.hash, storeId);
+}
+
+export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: LoadoutItem) {
+  // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
+  const result = allItems.find((item) => item.id === loadoutItem.id);
+  if (result) {
+    return result;
+  }
+
+  // Crafted items get new IDs, but keep their crafted date, so we can match on that
+  if (loadoutItem.craftedDate) {
+    return allItems.find((item) => item.craftedInfo?.craftedDate === loadoutItem.craftedDate);
+  }
 }
 
 export function getUninstancedLoadoutItem(
@@ -533,6 +561,13 @@ export function getUninstancedLoadoutItem(
     storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined;
   return onCurrent ?? (candidates[0]?.notransfer ? undefined : candidates[0]);
 }
+
+export const isMissingItemsSelector = createSelector(
+  manifestSelector,
+  allItemsSelector,
+  (defs, allItems) => (storeId: string, loadout: Loadout) =>
+    isMissingItems(defs!, allItems, storeId, loadout)
+);
 
 export function isMissingItems(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
@@ -549,7 +584,7 @@ export function isMissingItems(
       return true;
     }
     if (info.instanced) {
-      if (!allItems.some((item) => item.id === loadoutItem.id)) {
+      if (!getInstancedLoadoutItem(allItems, loadoutItem)) {
         return true;
       }
     } else {

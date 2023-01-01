@@ -1,3 +1,4 @@
+import { settingSelector } from 'app/dim-api/selectors';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -7,6 +8,8 @@ import { getNotes, getTag } from './dim-item-info';
 import InventoryItem from './InventoryItem';
 import { DimItem } from './item-types';
 import { isNewSelector, itemHashTagsSelector, itemInfosSelector } from './selectors';
+
+const autoLockTaggedSelector = settingSelector('autoLockTagged');
 
 /**
  * An item that can load its auxiliary state directly from Redux. Not suitable
@@ -31,11 +34,13 @@ export default function ConnectedInventoryItem({
   onDoubleClick?(e: React.MouseEvent): void;
   dimArchived?: boolean;
 }) {
+  // TODO: maybe send these down via Context?
   const itemInfos = useSelector(itemInfosSelector);
   const itemHashTags = useSelector(itemHashTagsSelector);
   const tag = getTag(item, itemInfos, itemHashTags);
   const currentFilter = useSelector(searchFilterSelector);
   const validQuery = useSelector(queryValidSelector);
+  const autoLockTagged = useSelector(autoLockTaggedSelector);
   const defaultFilterActive = currentFilter === _.stubTrue;
 
   const isNew = useSelector(isNewSelector(item));
@@ -61,6 +66,7 @@ export default function ConnectedInventoryItem({
         searchHidden={searchHidden}
         hideSelectedSuper={hideSelectedSuper}
         innerRef={innerRef}
+        autoLockTagged={autoLockTagged}
       />
     ),
     [
@@ -75,6 +81,7 @@ export default function ConnectedInventoryItem({
       hideSelectedSuper,
       tag,
       wishlistRoll,
+      autoLockTagged,
     ]
   );
 }
