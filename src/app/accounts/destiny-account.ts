@@ -109,7 +109,6 @@ export function getDestinyAccountsForBungieAccount(
 
 /**
  * Could this account have a D1 account associated with it?
- *
  */
 function couldBeD1Account(destinyAccount: DestinyProfileUserInfoCard | UserInfoCard) {
   // D1 was only available for PS/Xbox

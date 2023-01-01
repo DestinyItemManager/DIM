@@ -50,6 +50,7 @@ import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { ItemPowerSet } from './ItemPowerSet';
+
 import {
   d2BucketsSelector,
   getBucketsWithClassifiedItems,
@@ -57,6 +58,7 @@ import {
   storesLoadedSelector,
   storesSelector,
 } from './selectors';
+
 import { DimCharacterStat, DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { processItems } from './store/d2-item-factory';
