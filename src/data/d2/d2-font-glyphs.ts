@@ -404,5 +404,9 @@ export const enum FontGlyphs {
   mousewheel_up_button = 61176,
   mousewheel_down_button = 61177,
   tofu = 61178,
+  arc_titan_melee2 = 61179,
+  arc_warlock_aspect = 61180,
+  arc_hunter_super = 61181,
+  arc_jolt = 61182,
   UniFFFD = 65533,
 }
