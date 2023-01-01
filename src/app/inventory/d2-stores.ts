@@ -401,7 +401,6 @@ export function buildStores(
   const stores = [...characters, vault];
 
   const allItems = stores.flatMap((s) => s.items);
-
   const bucketsWithClassifieds = getBucketsWithClassifiedItems(allItems);
   const characterProgress = getCharacterProgressions(profileInfo);
 
