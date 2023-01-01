@@ -573,7 +573,6 @@ function updateBasePower(
 
     statProblems.notEquippable = unrestrictedMaxGearPower !== equippableMaxGearPower;
     statProblems.notOnStore = dropPowerLevel !== unrestrictedMaxGearPower;
-
     statProblems.hasClassified = statProblems.hasClassified = hasAffectingClassified(
       unrestricted,
       bucketsWithClassifieds
