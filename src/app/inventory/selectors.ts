@@ -1,6 +1,7 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { currentProfileSelector, settingsSelector } from 'app/dim-api/selectors';
+import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { powerLevelByKeyword, universalOrnamentPlugSetHashes } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
@@ -327,6 +328,18 @@ export const hasClassifiedSelector = createSelector(allItemsSelector, (allItems)
       i.classified &&
       (i.location.inWeapons || i.location.inArmor || i.bucket.hash === BucketHashes.Ghost)
   )
+);
+
+export const maxPowerGearSelector = createSelector(
+  allItemsSelector,
+  storesSelector,
+  (allItems, stores) => {
+    const maxGearByStoreId: Record<string, ReturnType<typeof maxLightItemSet>> = {};
+    for (const store of stores.filter((s) => s.id !== 'vault')) {
+      maxGearByStoreId[store.id] = maxLightItemSet(allItems, store);
+    }
+    return maxGearByStoreId;
+  }
 );
 
 const pinnacleCap = powerLevelByKeyword.pinnaclecap;
