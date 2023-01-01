@@ -2,7 +2,7 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { currentProfileSelector, settingsSelector } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { universalOrnamentPlugSetHashes } from 'app/search/d2-known-values';
+import { powerLevelByKeyword, universalOrnamentPlugSetHashes } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import { emptyObject, emptySet } from 'app/utils/empty';
 import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
@@ -328,6 +328,40 @@ export const hasClassifiedSelector = createSelector(allItemsSelector, (allItems)
       (i.location.inWeapons || i.location.inArmor || i.bucket.hash === BucketHashes.Ghost)
   )
 );
+
+const pinnacleCap = powerLevelByKeyword.pinnaclecap;
+
+/**
+ * Does this store (character) have any classified items that might affect their power level?
+ * Things to consider:
+ * - Classified items don't always lack a power level.
+ * - If a char has an equippable item at pinnacle cap in a particular slot,
+ *   who cares if there's a classified item in that slot?
+ *
+ * This relies on a precalculated set generated from allItems, using getBucketsWithClassifiedItems.
+ */
+export function hasAffectingClassified(
+  unrestrictedMaxLightGear: DimItem[],
+  bucketsWithClassifieds: Set<number>
+) {
+  return unrestrictedMaxLightGear.some(
+    (i) =>
+      // isn't pinnacle cap
+      i.power !== pinnacleCap &&
+      // and shares a bucket with a classified item (which might be higher power)
+      bucketsWithClassifieds.has(i.bucket.hash)
+  );
+}
+
+export function getBucketsWithClassifiedItems(allItems: DimItem[]) {
+  const bucketsWithClassifieds = new Set<number>();
+  for (const i of allItems) {
+    if (i.classified && !i.power && (i.location.inWeapons || i.location.inArmor)) {
+      bucketsWithClassifieds.add(i.bucket.hash);
+    }
+  }
+  return bucketsWithClassifieds;
+}
 
 /** Item infos (tags/notes) */
 export const itemInfosSelector = (state: RootState): ItemInfos =>

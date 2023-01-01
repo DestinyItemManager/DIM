@@ -1,4 +1,5 @@
 import { DestinyEnergyType, TierType } from 'bungie-api-ts/destiny2';
+import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
 import {
   BreakerTypeHashes,
   BucketHashes,
@@ -16,6 +17,14 @@ export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
 //
 // GAME MECHANICS KNOWN VALUES
 //
+
+// shortcuts for power numbers
+export const powerLevelByKeyword = {
+  powerfloor: D2SeasonInfo[D2CalculatedSeason].powerFloor,
+  softcap: D2SeasonInfo[D2CalculatedSeason].softCap,
+  powerfulcap: D2SeasonInfo[D2CalculatedSeason].powerfulCap,
+  pinnaclecap: D2SeasonInfo[D2CalculatedSeason].pinnacleCap,
+};
 
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
 
