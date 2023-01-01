@@ -50,7 +50,13 @@ import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { ItemPowerSet } from './ItemPowerSet';
-import { d2BucketsSelector, storesLoadedSelector, storesSelector } from './selectors';
+import {
+  d2BucketsSelector,
+  getBucketsWithClassifiedItems,
+  hasAffectingClassified,
+  storesLoadedSelector,
+  storesSelector,
+} from './selectors';
 import { DimCharacterStat, DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { processItems } from './store/d2-item-factory';
@@ -394,6 +400,7 @@ export function buildStores(
 
   const allItems = stores.flatMap((s) => s.items);
 
+  const bucketsWithClassifieds = getBucketsWithClassifiedItems(allItems);
   const characterProgress = getCharacterProgressions(profileInfo);
 
   for (const s of stores) {
@@ -404,7 +411,9 @@ export function buildStores(
       characterProgress,
       // optional chaining here accounts for a edge-case possible, but type-unadvertised,
       // missing artifact power bonus. please keep this here.
-      profileInfo.profileProgression?.data?.seasonalArtifact?.powerBonusProgression?.progressionHash
+      profileInfo.profileProgression?.data?.seasonalArtifact?.powerBonusProgression
+        ?.progressionHash,
+      bucketsWithClassifieds
     );
   }
 
@@ -540,7 +549,8 @@ function updateBasePower(
   store: DimStore,
   defs: D2ManifestDefinitions,
   characterProgress: DestinyCharacterProgressionComponent | undefined,
-  bonusPowerProgressionHash: number | undefined
+  bonusPowerProgressionHash: number | undefined,
+  bucketsWithClassifieds: Set<number>
 ) {
   if (!store.isVault) {
     const def = defs.Stat.get(StatHashes.Power);
@@ -563,12 +573,9 @@ function updateBasePower(
     statProblems.notEquippable = unrestrictedMaxGearPower !== equippableMaxGearPower;
     statProblems.notOnStore = dropPowerLevel !== unrestrictedMaxGearPower;
 
-    statProblems.hasClassified = allItems.some(
-      (i) =>
-        i.classified &&
-        (i.location.inWeapons ||
-          i.location.inArmor ||
-          (i.power && i.bucket.hash === BucketHashes.Ghost))
+    statProblems.hasClassified = statProblems.hasClassified = hasAffectingClassified(
+      unrestricted,
+      bucketsWithClassifieds
     );
 
     store.stats.maxGearPower = {
