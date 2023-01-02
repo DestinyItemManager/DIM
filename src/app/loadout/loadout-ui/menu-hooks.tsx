@@ -66,11 +66,14 @@ export function useLoadoutFilterPills(
     return loadoutsByHashtag;
   }, [savedLoadouts]);
 
-  const filterOptions = Object.keys(loadoutsByHashtag).map(
-    (hashtag): Option => ({
-      key: hashtag,
-      content: hashtag,
-    })
+  const filterOptions = _.sortBy(
+    Object.keys(loadoutsByHashtag).map(
+      (hashtag): Option => ({
+        key: hashtag,
+        content: hashtag,
+      })
+    ),
+    (o) => o.key
   );
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -162,6 +165,6 @@ export function searchAndSortLoadoutsByQuery(
     ),
     loadoutSort === LoadoutSort.ByEditTime
       ? (l) => -(l.lastUpdatedAt ?? 0)
-      : (l) => l.name.toLowerCase()
+      : (l) => l.name.toLocaleUpperCase()
   );
 }
