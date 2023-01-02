@@ -1,6 +1,6 @@
 @use '../variables' as *;
 @use 'sass:string';
-@use '../dim-ui/PressTip.m.scss' as *;
+@use '../dim-ui/tooltip-mixins' as *;
 
 .objectives {
   margin: 4px 0;

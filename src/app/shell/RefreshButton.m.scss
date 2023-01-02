@@ -1,5 +1,5 @@
 @use '../variables' as *;
-@use '../dim-ui/PressTip.m.scss' as *;
+@use '../dim-ui/tooltip-mixins' as *;
 
 .refreshButton {
   composes: resetButton from '../dim-ui/common.m.scss';
@@ -32,9 +32,10 @@
 }
 
 .errorTooltip {
+  @include tooltip-background-color(scale-color($red, $lightness: -90%));
+  @include tooltip-border-color($red);
   @include tooltip-ribbon-color($red);
-  background: scale-color($red, $lightness: -90%);
-  border-color: $red !important;
+
   max-width: 800px;
 }
 
