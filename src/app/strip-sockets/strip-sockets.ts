@@ -53,8 +53,9 @@ function identifySocket(
 export const artifactModsSelector = createSelector(
   manifestSelector,
   (state: RootState) =>
-    allItemsSelector(state).find((i) => i.bucket.hash === BucketHashes.SeasonalArtifact)
-      ?.previewVendor,
+    allItemsSelector(state).find(
+      (i) => i.bucket.hash === BucketHashes.SeasonalArtifact && i.previewVendor
+    )?.previewVendor,
   (defs, vendorHash) => {
     if (!defs?.isDestiny2()) {
       return undefined;
