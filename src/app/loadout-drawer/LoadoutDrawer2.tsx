@@ -3,6 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CheckButton from 'app/dim-ui/CheckButton';
+import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
@@ -20,7 +21,7 @@ import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
 import { v4 as uuidv4 } from 'uuid';
@@ -47,6 +48,7 @@ import styles from './LoadoutDrawer2.m.scss';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
+import { loadoutsHashtagsSelector } from './selectors';
 
 // TODO: break out a container from the actual loadout drawer so we can lazy load the drawer
 
@@ -151,6 +153,10 @@ export default function LoadoutDrawer2({
     close();
   };
 
+  const ref = useRef<HTMLTextAreaElement>(null);
+  const tags = useSelector(loadoutsHashtagsSelector);
+  useAutocomplete(ref, tags);
+
   if (!loadout || !store) {
     return null;
   }
@@ -230,6 +236,7 @@ export default function LoadoutDrawer2({
         <summary>{t('MovePopup.Notes')}</summary>
         <TextareaAutosize
           onChange={handleNotesChanged}
+          ref={ref}
           value={loadout.notes}
           maxLength={2048}
           placeholder={t('Loadouts.NotesPlaceholder')}
