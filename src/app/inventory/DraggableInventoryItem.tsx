@@ -20,7 +20,7 @@ export default function DraggableInventoryItem({ children, item }: Props) {
       : item.equipment || item.bucket.hasTransferDestination;
 
   const inPostmasterCantTransfer =
-    item.location.inPostmaster && (item.canPullFromPostmaster || item.notransfer);
+    item.location.inPostmaster && (!item.canPullFromPostmaster || item.notransfer);
 
   const [_collect, dragRef] = useDrag<DimItem>(
     () => ({
