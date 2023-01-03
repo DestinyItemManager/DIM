@@ -3,6 +3,7 @@
 interface CssExports {
   'cantDrag': string;
   'engram': string;
+  'inPostmasterCantTransfer': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -19,6 +19,9 @@ export default function DraggableInventoryItem({ children, item }: Props) {
       ? item.equipment
       : item.equipment || item.bucket.hasTransferDestination;
 
+  const inPostmasterCantTransfer =
+    item.location.inPostmaster && (item.canPullFromPostmaster || item.notransfer);
+
   const [_collect, dragRef] = useDrag<DimItem>(
     () => ({
       type: item.location.inPostmaster
@@ -54,6 +57,7 @@ export default function DraggableInventoryItem({ children, item }: Props) {
       className={clsx('item-drag-container', {
         [styles.engram]: item.isEngram,
         [styles.cantDrag]: !canDrag,
+        [styles.inPostmasterCantTransfer]: inPostmasterCantTransfer,
       })}
     >
       {children}
