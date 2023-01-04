@@ -10,6 +10,8 @@ interface StreamDeckChallengeProps {
   code: string;
 }
 
+export const randomStringToken = () => Math.random().toString(36).slice(2);
+
 function StreamDeckChallenge({ code }: StreamDeckChallengeProps) {
   const dispatch = useThunkDispatch();
   return (
@@ -23,7 +25,7 @@ function StreamDeckChallenge({ code }: StreamDeckChallengeProps) {
           type="button"
           className="dim-button"
           onClick={async () => {
-            const token = 'token';
+            const token = randomStringToken();
             setStreamDeckToken(token);
             await dispatch(
               sendToStreamDeck({

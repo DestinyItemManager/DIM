@@ -16,6 +16,7 @@ import {
   streamDeckDisconnected,
   streamDeckUpdatePopupShowed,
 } from 'app/stream-deck/actions';
+import { randomStringToken } from 'app/stream-deck/AuthorizationNotification/AuthorizationNotification';
 import { SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage, notificationPromise } from 'app/stream-deck/msg-handlers';
 import { streamDeck } from 'app/stream-deck/reducer';
@@ -41,7 +42,7 @@ let refreshInterval: number;
 // generate random client identifier
 function generateIdentifier() {
   if (!clientIdentifier()) {
-    setClientIdentifier(Math.random().toString(36).slice(2));
+    setClientIdentifier(randomStringToken());
   }
 }
 
