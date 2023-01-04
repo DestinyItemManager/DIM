@@ -42,7 +42,7 @@ module.exports = function csp(env) {
       // Clarity
       'https://database-clarity.github.io',
       // Stream Deck Plugin
-      'ws://localhost:9119',
+      'ws://localhost:9120',
     ],
     imgSrc: [
       SELF,
