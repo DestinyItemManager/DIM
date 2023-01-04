@@ -1,9 +1,7 @@
-import { profileResponseSelector } from 'app/inventory/selectors';
 import { rankProgressionHashesSelector } from 'app/manifest/selectors';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { ProgressionHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
-import { createSelector } from 'reselect';
 import { ReputationRank } from './ReputationRank';
 import { getCharacterProgressions } from './selectors';
 
@@ -42,45 +40,12 @@ const rankProgressionToStreakProgression = {
   [ProgressionHashes.StrangeFavor]: 1999336308,
 };
 
-const WeeklyBonusModifierHashes = {
-  745014575: ProgressionHashes.VanguardRank, // Double Vanguard Rank
-  3874605433: ProgressionHashes.CrucibleRank, // Double Crucible Rank
-  3228023383: ProgressionHashes.GambitRank, // Double Gambit Rank
-  1361609633: ProgressionHashes.TrialsRank, // Double Trials Rank
-};
-
-function getWeeklyBonusRankModifier(profileInfo: DestinyProfileResponse) {
-  if (profileInfo?.characterActivities?.data) {
-    for (const activity of Object.values(profileInfo.characterActivities.data)[0]
-      .availableActivities) {
-      if (activity.modifierHashes) {
-        for (const h of activity.modifierHashes) {
-          if (h in WeeklyBonusModifierHashes) {
-            return h;
-          }
-        }
-      }
-    }
-  }
-}
-
-const weeklyBonusProgressionHashSelector = createSelector(
-  profileResponseSelector,
-  (profileInfo): number | undefined => {
-    if (profileInfo) {
-      const weeklyBonusModifier = getWeeklyBonusRankModifier(profileInfo);
-      return weeklyBonusModifier && WeeklyBonusModifierHashes[weeklyBonusModifier];
-    }
-  }
-);
-
 /**
  * Displays all ranks for the account
  */
 export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResponse }) {
   const firstCharacterProgression = getCharacterProgressions(profileInfo)?.progressions ?? {};
   const progressionHashes = useSelector(rankProgressionHashesSelector);
-  const weeklyBonusProgressionHash = useSelector(weeklyBonusProgressionHashSelector);
 
   return (
     <div className="progress-for-character ranks-for-character">
@@ -94,7 +59,6 @@ export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResp
                 firstCharacterProgression[rankProgressionToStreakProgression[progressionHash]]
               }
               resetCount={firstCharacterProgression[progressionHash]?.currentResetCount}
-              bonusRank={progressionHash === weeklyBonusProgressionHash}
             />
           )
       )}
