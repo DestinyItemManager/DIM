@@ -1,30 +1,37 @@
 // async module
 
 // serialize the data and send it if connected
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { currentStoreSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { RootState, ThunkResult } from 'app/store/types';
 import {
   streamDeckClearSelection,
   streamDeckConnected,
   streamDeckDisconnected,
+  streamDeckUpdatePopupShowed,
 } from 'app/stream-deck/actions';
+import { randomStringToken } from 'app/stream-deck/AuthorizationNotification/AuthorizationNotification';
 import { SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage, notificationPromise } from 'app/stream-deck/msg-handlers';
 import { streamDeck } from 'app/stream-deck/reducer';
+import { streamDeckUpdatePopupSelector } from 'app/stream-deck/selectors';
 import {
   clientIdentifier,
   setClientIdentifier,
+  setStreamDeckFlowVersion,
   streamDeckEnabled,
-  streamDeckToken,
+  streamDeckFlowVersion,
 } from 'app/stream-deck/util/local-storage';
 import packager from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux-utils';
+import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 
@@ -35,21 +42,18 @@ let refreshInterval: number;
 // generate random client identifier
 function generateIdentifier() {
   if (!clientIdentifier()) {
-    setClientIdentifier(Math.random().toString(36).slice(2));
+    setClientIdentifier(randomStringToken());
   }
 }
 
-export function sendToStreamDeck(msg: SendToStreamDeckArgs, noAuth = false): ThunkResult {
+export function sendToStreamDeck(msg: SendToStreamDeckArgs): ThunkResult {
   return async () => {
     if (streamDeckWebSocket?.readyState === WebSocket.OPEN) {
-      const token = streamDeckToken();
-      (noAuth || token) &&
-        streamDeckWebSocket.send(
-          JSON.stringify({
-            ...msg,
-            token,
-          })
-        );
+      streamDeckWebSocket.send(
+        JSON.stringify({
+          ...msg,
+        })
+      );
     }
   };
 }
@@ -68,7 +72,7 @@ function streamDeckSelectItem(item: DimItem): ThunkResult {
       // send selection to the Stream Deck
       return dispatch(
         sendToStreamDeck({
-          action: 'dim:update',
+          action: 'dim:selection',
           data: {
             selectionType: 'item',
             selection: {
@@ -77,6 +81,12 @@ function streamDeckSelectItem(item: DimItem): ThunkResult {
               item: item.index.replace(/-.*/, ''),
               icon: item.icon,
               overlay: item.iconOverlay,
+              isExotic: item.isExotic,
+              inventory: item.location.accountWide,
+              element:
+                item.element?.enumValue === DamageType.Kinetic
+                  ? undefined
+                  : item.element?.displayProperties?.icon,
             },
           },
         })
@@ -103,16 +113,17 @@ function streamDeckSelectLoadout(loadout: Loadout, store: DimStore): ThunkResult
     if (state.streamDeck.selection === 'loadout') {
       notificationPromise.resolve();
       dispatch(streamDeckClearSelection());
+      const isAnyClass = loadout.classType === DestinyClass.Unknown;
       return dispatch(
         sendToStreamDeck({
-          action: 'dim:update',
+          action: 'dim:selection',
           data: {
             selectionType: 'loadout',
             selection: {
-              label: loadout.name,
+              label: loadout.name.toUpperCase(),
               loadout: loadout.id,
-              subtitle: store.className ?? loadout.notes,
-              character: store.id,
+              subtitle: (isAnyClass ? '' : store.className) || loadout.notes || '-',
+              character: isAnyClass ? undefined : store.id,
               icon: findSubClass(loadout.items, state),
             },
           },
@@ -155,6 +166,7 @@ export function refreshStreamDeck(): ThunkResult {
             maxPower: packager.maxPower(store, state),
             vault: packager.vault(state),
             metrics: packager.metrics(state),
+            equippedItems: packager.equippedItems(store),
           },
         })
       );
@@ -171,6 +183,27 @@ function stopStreamDeckConnection(): ThunkResult {
     streamDeckWebSocket?.close();
     clearInterval(refreshInterval);
     dispatch(streamDeckDisconnected());
+  };
+}
+
+function checkPluginUpdate(): ThunkResult {
+  return async (dispatch, getState) => {
+    const alreadyShowed = streamDeckUpdatePopupSelector(getState());
+    if (alreadyShowed) {
+      return;
+    }
+    const version = streamDeckFlowVersion();
+    if (version < 2) {
+      showNotification({
+        title: 'Elgato Stream Deck',
+        body: t('StreamDeck.Authorization.Update'),
+        type: 'error',
+        duration: 200,
+        onClick: notificationPromise.resolve,
+        promise: notificationPromise.promise,
+      });
+    }
+    dispatch(streamDeckUpdatePopupShowed());
   };
 }
 
@@ -206,9 +239,14 @@ function startStreamDeckConnection(): ThunkResult {
       }
 
       // try to connect to the stream deck local instance
-      streamDeckWebSocket = new WebSocket('ws://localhost:9119', clientIdentifier());
+      streamDeckWebSocket = new WebSocket(`ws://localhost:9120/${clientIdentifier()}`);
 
       streamDeckWebSocket.onopen = function () {
+        // remove any older notification
+        notificationPromise.resolve();
+        // update the connection flow version
+        setStreamDeckFlowVersion(2);
+        // update the connection status
         dispatch(streamDeckConnected());
         // start refreshing task with interval
         dispatch(refreshStreamDeck());
@@ -230,6 +268,7 @@ function startStreamDeckConnection(): ThunkResult {
       };
 
       streamDeckWebSocket.onerror = function () {
+        dispatch(checkPluginUpdate());
         streamDeckWebSocket.close();
       };
     };

@@ -40,4 +40,5 @@ export const lazyLoadStreamDeck = async () => {
 // initial stream deck store state
 export const streamDeckInitialState: StreamDeckState = {
   connected: false,
+  updatePopupShowed: false,
 };

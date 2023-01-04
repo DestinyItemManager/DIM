@@ -1,14 +1,24 @@
-.authorization {
-  flex-direction: column;
+.authorizationChallenge {
   display: flex;
-  flex: 1;
+  margin-top: 4px;
+
+  & div {
+    margin: 0 8px;
+    font-size: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
+  }
 }
 
-.authorizationChallenge {
-  font-size: 36px;
-  height: 100%;
+.confirmButtons {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   padding: 0 8px;
+  margin: 4px 0;
+
+  & button {
+    margin-right: 16px;
+    text-transform: uppercase;
+  }
 }

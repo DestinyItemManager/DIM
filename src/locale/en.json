@@ -1093,9 +1093,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "Picked number is not the valid one!",
+      "No": "No",
       "Reset": "DE-AUTHORIZE",
-      "Title": "Pick this number on your Stream Deck"
+      "Title": "Do you see the same code on your Stream Deck ?",
+      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
+      "Yes": "Yes"
     },
     "Connected": "Connected",
     "Enable": "Stream Deck Plugin",

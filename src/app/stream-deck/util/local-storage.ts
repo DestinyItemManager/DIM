@@ -8,16 +8,21 @@ export const streamDeckEnabled = () => localStorage.getItem('stream-deck-enabled
 
 export const streamDeckToken = () => localStorage.getItem('stream-deck-authorization') ?? '';
 
+export const streamDeckFlowVersion = () => localStorage.getItem('stream-deck-flow-version') ?? 1;
+
 // Set  Functions
 
-export const setStreamDeckToken = (sharedKey: string) =>
-  localStorage.setItem('stream-deck-authorization', sharedKey);
+export const setClientIdentifier = (id: string) =>
+  localStorage.setItem('stream-deck-identifier', id);
 
 export const setStreamDeckEnabled = (enabled: boolean) =>
   localStorage.setItem('stream-deck-enabled', enabled.toString());
 
-export const setClientIdentifier = (id: string) =>
-  localStorage.setItem('stream-deck-identifier', id);
+export const setStreamDeckToken = (sharedKey: string) =>
+  localStorage.setItem('stream-deck-authorization', sharedKey);
+
+export const setStreamDeckFlowVersion = (version: number) =>
+  localStorage.setItem('stream-deck-flow-version', version.toString());
 
 // Remove Functions
 
