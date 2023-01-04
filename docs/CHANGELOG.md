@@ -1,5 +1,7 @@
 ## Next
 
+## 7.50.2 <span class="changelog-date">(2023-01-04)</span>
+
 ## 7.50.1 <span class="changelog-date">(2023-01-03)</span>
 
 * Removed the "2x" tag on Crucible rank.
