@@ -436,7 +436,7 @@ module.exports = (env) => {
         // Pretend that Bungie.net is not returning sockets info
         '$featureFlags.simulateMissingSockets': JSON.stringify(false),
         // Show a "pills" UI for filtering loadouts
-        '$featureFlags.loadoutFilterPills': JSON.stringify(!env.release),
+        '$featureFlags.loadoutFilterPills': JSON.stringify(true),
       }),
 
       new LodashModuleReplacementPlugin({
