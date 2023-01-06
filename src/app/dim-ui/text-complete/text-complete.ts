@@ -3,7 +3,6 @@ import { TextareaEditor } from '@textcomplete/textarea';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import clsx from 'clsx';
 import { useEffect } from 'react';
-import { InputTextEditor } from './InputTextEditor';
 
 import styles from './text-complete.m.scss';
 
@@ -52,10 +51,10 @@ export function useAutocomplete(
 ) {
   useEffect(() => {
     if (textArea.current) {
-      const isInput = textArea.current instanceof HTMLInputElement;
-      const editor = isInput
-        ? new InputTextEditor(textArea.current)
-        : new TextareaEditor(textArea.current);
+      // commit a type crime here because textcomplete says it only works with
+      // TextArea but happens to also work entirely fine with Input[type=text]
+      // https://github.com/yuku/textcomplete/issues/355
+      const editor = new TextareaEditor(textArea.current as unknown as HTMLTextAreaElement);
       const textcomplete = new Textcomplete(editor, [createTagsCompleter(textArea, tags)], {
         dropdown: {
           className: clsx(styles.dropdownMenu, 'textcomplete-dropdown'),
