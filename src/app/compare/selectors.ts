@@ -70,6 +70,9 @@ export const compareItemsSelector = currySelector(
 );
 
 const organizerTypes = [
+  ItemCategoryHashes.Hunter,
+  ItemCategoryHashes.Titan,
+  ItemCategoryHashes.Warlock,
   ItemCategoryHashes.Armor,
   ItemCategoryHashes.Weapon,
   ItemCategoryHashes.Ghost,
