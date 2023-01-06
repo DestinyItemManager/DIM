@@ -185,8 +185,10 @@ $content-cells: 5;
   columns: 2;
   height: 100%;
   box-sizing: border-box;
-  gap: 4px;
   column-gap: 8px;
+  > *:nth-last-child(n + 2) {
+    margin-bottom: 4px;
+  }
   &.header {
     display: flex;
     flex-direction: column;

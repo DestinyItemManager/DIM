@@ -6,6 +6,8 @@
 }
 
 .presentationNodeOptions {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
   @include phone-portrait {
     padding: 8px var(--inventory-column-padding) 0 var(--inventory-column-padding);

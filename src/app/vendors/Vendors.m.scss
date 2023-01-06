@@ -1,6 +1,8 @@
 @import '../variables';
 
 .buttons {
+  display: flex;
+  flex-direction: column;
   margin: 8px 0;
   gap: 8px;
 }

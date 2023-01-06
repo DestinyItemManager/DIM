@@ -25,6 +25,8 @@
 }
 
 .itemBucket {
+  display: flex;
+  flex-direction: column;
   width: var(--item-size);
   gap: var(--item-margin);
 }
@@ -58,7 +60,7 @@
 .showFashion {
   .equipped {
     :global(.item) {
-      height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
+      height: calc(var(--item-size));
     }
   }
 }

@@ -13,8 +13,6 @@
   @include phone-portrait {
     padding: 0 10px;
   }
-
-  gap: 8px;
 }
 
 .processing {
@@ -46,6 +44,9 @@
 }
 
 .toolbar {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
   box-sizing: border-box;
   @include phone-portrait {
     padding: 0 10px;
