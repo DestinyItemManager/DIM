@@ -11,6 +11,7 @@ import {
   DestinyVendorItemState,
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { DimItem } from '../inventory/item-types';
@@ -188,7 +189,7 @@ export class VendorItem {
       // if this is sold by a vendor, add vendor information
       if (saleItem && characterId) {
         this.item.vendor = { vendorHash, saleIndex: saleItem.vendorItemIndex, characterId };
-        if (this.item.equipment) {
+        if (this.item.equipment && this.item.bucket.hash !== BucketHashes.Emblems) {
           this.item.comparable = true;
         }
       }
