@@ -72,7 +72,9 @@
     "last 2 Opera versions"
   ],
   "resolutions": {
-    "@types/react": "18.0.25"
+    "@types/react": "18.0.25",
+    "react-redux": "^8.0.1",
+    "react-is": "^18.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
