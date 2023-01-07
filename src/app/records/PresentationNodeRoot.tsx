@@ -4,7 +4,7 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useMemo, useState } from 'react';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
-import { itemsForProfilePlugSet } from './plugset-helpers';
+import { unlockedItemsForCharacterOrProfilePlugSet } from './plugset-helpers';
 import { filterPresentationNodesToSearch, toPresentationNodeTree } from './presentation-nodes';
 import PresentationNode from './PresentationNode';
 import PresentationNodeSearchResults from './PresentationNodeSearchResults';
@@ -113,7 +113,11 @@ export default function PresentationNodeRoot({
             <PlugSet
               buckets={buckets}
               plugSetCollection={plugSetCollection}
-              items={itemsForProfilePlugSet(profileResponse, Number(plugSetCollection.hash))}
+              unlockedItems={unlockedItemsForCharacterOrProfilePlugSet(
+                profileResponse,
+                plugSetCollection.hash,
+                ''
+              )}
               path={fullNodePath}
               onNodePathSelected={setNodePath}
             />

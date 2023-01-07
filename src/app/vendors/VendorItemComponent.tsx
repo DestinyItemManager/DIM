@@ -54,7 +54,7 @@ export default function VendorItemComponent({
 
   const mod = item.item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod);
 
-  const unavailable = !item.canPurchase || !item.canBeSold || (owned && ownershipRule);
+  const unavailable = !item.canBeSold || (owned && ownershipRule);
   return (
     <VendorItemDisplay
       item={item.item}

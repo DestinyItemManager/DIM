@@ -20,7 +20,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { VendorItem } from './vendor-item';
+import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
   vendors: D2Vendor[];
@@ -177,7 +177,7 @@ function getVendorItems(
   if (sales) {
     const components = Object.values(sales);
     return components.map((component) =>
-      VendorItem.forVendorSaleItem(
+      vendorItemForSaleItem(
         defs,
         buckets,
         vendorDef,
@@ -199,7 +199,7 @@ function getVendorItems(
           i.exclusivity === BungieMembershipType.All ||
           i.exclusivity === account.originalPlatformType
       )
-      .map((i) => VendorItem.forVendorDefinitionItem(defs, buckets, i, mergedCollectibles));
+      .map((i) => vendorItemForDefinitionItem(defs, buckets, i, mergedCollectibles));
   }
 }
 
