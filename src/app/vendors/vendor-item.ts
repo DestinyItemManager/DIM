@@ -4,7 +4,6 @@ import {
   DestinyDisplayPropertiesDefinition,
   DestinyItemComponentSetOfint32,
   DestinyItemQuantity,
-  DestinyItemSocketEntryPlugItemDefinition,
   DestinyProfileResponse,
   DestinyVendorDefinition,
   DestinyVendorItemDefinition,
@@ -18,35 +17,9 @@ import { DimItem } from '../inventory/item-types';
 import { makeFakeItem } from '../inventory/store/d2-item-factory';
 
 /**
- * Not actually always a vendor item.
- * This represents an item inside a vendor or an item contained in a plugset.
+ * This represents an item inside a vendor.
  */
 export class VendorItem {
-  /**
-   * creates a VendorItem that's not actually at a vendor. it's part of a plug set.
-   * this serves something about the collections interface?
-   */
-  static forPlugSetItem(
-    defs: D2ManifestDefinitions,
-    buckets: InventoryBuckets,
-    plugItemDef: DestinyItemSocketEntryPlugItemDefinition,
-    canPurchase = true
-  ): VendorItem {
-    return new VendorItem(
-      defs,
-      buckets,
-      undefined,
-      plugItemDef.plugItemHash,
-      [],
-      0,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      canPurchase
-    );
-  }
-
   /**
    * creates a VendorItem being sold by a vendor in the API vendors response.
    * this can include "instanced" stats plugs etc which describe the specifics
