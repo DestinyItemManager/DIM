@@ -15,13 +15,8 @@ import { DimError } from 'app/utils/dim-error';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import {
   DestinyCharacterProgressionComponent,
-  DestinyCollectibleComponent,
-  DestinyCollectiblesComponent,
   DestinyItemComponent,
-  DestinyProfileCollectiblesComponent,
   DestinyProfileResponse,
-  DictionaryComponentResponse,
-  SingleComponentResponse,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
@@ -114,27 +109,6 @@ export function updateCharacters(): ThunkResult {
     }
 
     dispatch(charactersUpdated(characters));
-  };
-}
-
-export interface MergedCollectibles {
-  profileCollectibles: {
-    [key: number]: DestinyCollectibleComponent;
-  };
-  characterCollectibles: {
-    [key: number]: DestinyCollectibleComponent;
-  }[];
-}
-
-export function mergeCollectibles(
-  profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
-  characterCollectibles: DictionaryComponentResponse<DestinyCollectiblesComponent>
-): MergedCollectibles {
-  return {
-    profileCollectibles: profileCollectibles?.data?.collectibles ?? {},
-    characterCollectibles: Object.values(characterCollectibles.data ?? {}).map(
-      (c) => c.collectibles ?? {}
-    ),
   };
 }
 

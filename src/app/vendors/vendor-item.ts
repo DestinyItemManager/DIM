@@ -1,6 +1,6 @@
-import { MergedCollectibles } from 'app/inventory/d2-stores';
 import { VENDORS } from 'app/search/d2-known-values';
 import {
+  DestinyCollectibleComponent,
   DestinyCollectibleState,
   DestinyDisplayPropertiesDefinition,
   DestinyInventoryItemDefinition,
@@ -17,6 +17,17 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { DimItem } from '../inventory/item-types';
 import { makeFakeItem } from '../inventory/store/d2-item-factory';
+
+export interface MergedCollectibles {
+  profileCollectibles: {
+    [key: number]: DestinyCollectibleComponent;
+  };
+  characterCollectibles: {
+    [characterId: string]: {
+      [key: number]: DestinyCollectibleComponent;
+    };
+  };
+}
 
 /**
  * This represents an item inside a vendor.
@@ -38,25 +49,22 @@ export interface VendorItem {
 }
 
 /**
- * Find the state of this item in the user's collections. This makes no
- * distinction between items unlocked on different characters or profile-wide.
+ * Find the state of this item in the user's collections. This takes into account
+ * the selected character.
  */
 function getCollectibleState(
   inventoryItem: DestinyInventoryItemDefinition,
-  mergedCollectibles: MergedCollectibles | undefined
+  mergedCollectibles: MergedCollectibles,
+  characterId: string
 ) {
   const collectibleHash = inventoryItem.collectibleHash;
   let collectibleState: DestinyCollectibleState | undefined;
-  if (collectibleHash && mergedCollectibles) {
-    collectibleState = mergedCollectibles?.profileCollectibles[collectibleHash]?.state;
-    if (collectibleState === undefined) {
-      for (const state of mergedCollectibles.characterCollectibles) {
-        collectibleState = state[collectibleHash]?.state;
-        if (collectibleState !== undefined) {
-          break;
-        }
-      }
-    }
+  if (collectibleHash) {
+    collectibleState =
+      mergedCollectibles.profileCollectibles[collectibleHash]?.state ??
+      (characterId
+        ? mergedCollectibles.characterCollectibles[characterId]?.[collectibleHash]?.state
+        : undefined);
   }
   return collectibleState;
 }
@@ -71,9 +79,9 @@ function makeVendorItem(
   vendorItemDef: DestinyVendorItemDefinition | undefined,
   saleItem: DestinyVendorSaleItemComponent | undefined,
   itemComponents: DestinyItemComponentSetOfint32 | undefined,
-  mergedCollectibles: MergedCollectibles | undefined,
+  mergedCollectibles: MergedCollectibles,
   // the character to whom this item is being offered
-  characterId?: string
+  characterId: string
 ): VendorItem {
   const inventoryItem = defs.InventoryItem.get(itemHash);
   const key = saleItem ? saleItem.vendorItemIndex : inventoryItem.hash;
@@ -88,7 +96,7 @@ function makeVendorItem(
     displayCategoryIndex: vendorItemDef ? vendorItemDef.displayCategoryIndex : undefined,
     costs: saleItem?.costs || [],
     previewVendorHash: inventoryItem.preview?.previewVendorHash,
-    collectibleState: getCollectibleState(inventoryItem, mergedCollectibles),
+    collectibleState: getCollectibleState(inventoryItem, mergedCollectibles, characterId),
     item: makeFakeItem(
       defs,
       buckets,
@@ -148,7 +156,7 @@ export function vendorItemForSaleItem(
   // all DIM vendor calls are character-specific. any sale item should have an associated character.
   characterId: string,
   itemComponents: DestinyItemComponentSetOfint32 | undefined,
-  mergedCollectibles: MergedCollectibles | undefined
+  mergedCollectibles: MergedCollectibles
 ): VendorItem {
   const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
   const failureStrings =
@@ -179,7 +187,8 @@ export function vendorItemForDefinitionItem(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   vendorItemDef: DestinyVendorItemDefinition,
-  mergedCollectibles?: MergedCollectibles
+  mergedCollectibles: MergedCollectibles,
+  characterId: string
 ): VendorItem {
   return makeVendorItem(
     defs,
@@ -191,6 +200,7 @@ export function vendorItemForDefinitionItem(
     vendorItemDef,
     undefined,
     undefined,
-    mergedCollectibles
+    mergedCollectibles,
+    characterId
   );
 }

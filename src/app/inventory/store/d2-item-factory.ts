@@ -241,7 +241,6 @@ export function makeItemSingle(
  * @param newItems a set of item IDs representing the previous list of new items
  * @param item "raw" item from the Destiny API
  * @param owner the ID of the owning store
- * @param mergedCollectibles collectible information so each DimItem is self-aware of whether it's already owned
  * @param uninstancedItemObjectives the owning character's dictionary of uninstanced objectives
  */
 // TODO: extract individual item components first!

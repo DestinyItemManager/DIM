@@ -1,6 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { MergedCollectibles } from 'app/inventory/d2-stores';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { VENDORS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
@@ -20,7 +19,12 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
+import {
+  MergedCollectibles,
+  VendorItem,
+  vendorItemForDefinitionItem,
+  vendorItemForSaleItem,
+} from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
   vendors: D2Vendor[];
@@ -44,7 +48,7 @@ export function toVendorGroups(
   buckets: InventoryBuckets,
   account: DestinyAccount,
   characterId: string,
-  mergedCollectibles: MergedCollectibles | undefined
+  mergedCollectibles: MergedCollectibles
 ): D2VendorGroup[] {
   if (!vendorsResponse.vendorGroups.data) {
     return [];
@@ -99,7 +103,7 @@ export function toVendor(
         [key: string]: DestinyVendorSaleItemComponent;
       }
     | undefined,
-  mergedCollectibles: MergedCollectibles | undefined
+  mergedCollectibles: MergedCollectibles
 ): D2Vendor | undefined {
   const vendorDef = defs.Vendor.get(vendorHash);
 
@@ -160,7 +164,7 @@ function getVendorItems(
         [key: string]: DestinyVendorSaleItemComponent;
       }
     | undefined,
-  mergedCollectibles: MergedCollectibles | undefined
+  mergedCollectibles: MergedCollectibles
 ): VendorItem[] {
   if (sales) {
     const components = Object.values(sales);
@@ -187,7 +191,7 @@ function getVendorItems(
           i.exclusivity === BungieMembershipType.All ||
           i.exclusivity === account.originalPlatformType
       )
-      .map((i) => vendorItemForDefinitionItem(defs, buckets, i, mergedCollectibles));
+      .map((i) => vendorItemForDefinitionItem(defs, buckets, i, mergedCollectibles, characterId));
   }
 }
 

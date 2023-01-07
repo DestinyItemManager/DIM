@@ -1,8 +1,8 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getBuckets } from 'app/destiny2/d2-buckets';
-import { mergeCollectibles } from 'app/inventory/d2-stores';
 import { getTestDefinitions, getTestProfile, getTestVendors } from 'testing/test-utils';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
+import { mergeCollectibles } from './selectors';
 
 async function getTestVendorGroups() {
   const defs = await getTestDefinitions();
