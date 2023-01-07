@@ -19,12 +19,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import {
-  MergedCollectibles,
-  VendorItem,
-  vendorItemForDefinitionItem,
-  vendorItemForSaleItem,
-} from './vendor-item';
+import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
   vendors: D2Vendor[];
@@ -47,8 +42,7 @@ export function toVendorGroups(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   account: DestinyAccount,
-  characterId: string,
-  mergedCollectibles: MergedCollectibles
+  characterId: string
 ): D2VendorGroup[] {
   if (!vendorsResponse.vendorGroups.data) {
     return [];
@@ -72,8 +66,7 @@ export function toVendorGroups(
                   account,
                   characterId,
                   vendorsResponse.itemComponents[vendorHash],
-                  vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-                  mergedCollectibles
+                  vendorsResponse.sales.data?.[vendorHash]?.saleItems
                 )
               )
               .filter((vendor) => vendor?.items.length)
@@ -102,8 +95,7 @@ export function toVendor(
     | {
         [key: string]: DestinyVendorSaleItemComponent;
       }
-    | undefined,
-  mergedCollectibles: MergedCollectibles
+    | undefined
 ): D2Vendor | undefined {
   const vendorDef = defs.Vendor.get(vendorHash);
 
@@ -119,8 +111,7 @@ export function toVendor(
     profileResponse,
     characterId,
     itemComponents,
-    sales,
-    mergedCollectibles
+    sales
   );
 
   const destinationDef =
@@ -163,8 +154,7 @@ function getVendorItems(
     | {
         [key: string]: DestinyVendorSaleItemComponent;
       }
-    | undefined,
-  mergedCollectibles: MergedCollectibles
+    | undefined
 ): VendorItem[] {
   if (sales) {
     const components = Object.values(sales);
@@ -176,8 +166,7 @@ function getVendorItems(
         profileResponse,
         component,
         characterId,
-        itemComponents,
-        mergedCollectibles
+        itemComponents
       )
     );
   } else if (vendorDef.returnWithVendorRequest) {
@@ -191,7 +180,7 @@ function getVendorItems(
           i.exclusivity === BungieMembershipType.All ||
           i.exclusivity === account.originalPlatformType
       )
-      .map((i) => vendorItemForDefinitionItem(defs, buckets, i, mergedCollectibles, characterId));
+      .map((i) => vendorItemForDefinitionItem(defs, buckets, i, profileResponse, characterId));
   }
 }
 
