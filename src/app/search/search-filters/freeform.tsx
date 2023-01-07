@@ -268,10 +268,7 @@ function testStringsFromAllSockets(
           plug.plugDef.displayProperties,
           includeDescription
         ) ||
-        test(plug.plugDef.itemTypeDisplayName) ||
-        plug.perks.some((perk) =>
-          testStringsFromDisplayPropertiesMap(test, perk.displayProperties, includeDescription)
-        )
+        test(plug.plugDef.itemTypeDisplayName)
       ) {
         return true;
       }

@@ -390,7 +390,6 @@ function buildPlug(
     enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plugObjectivesData?.[plugHash] || [],
-    perks: plugDef.perks ? plugDef.perks.map((perk) => defs.SandboxPerk.get(perk.perkHash)) : [],
     stats: null,
   };
 }
@@ -406,7 +405,6 @@ export function buildDefinedPlug(defs: D2ManifestDefinitions, plugHash: number):
     enabled: true,
     enableFailReasons: '',
     plugObjectives: [],
-    perks: (plugDef.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash)),
     stats: null,
   };
 }

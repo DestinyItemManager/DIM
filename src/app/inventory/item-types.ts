@@ -19,7 +19,6 @@ import {
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
   DestinyRecordComponent,
-  DestinySandboxPerkDefinition,
   DestinySocketCategoryDefinition,
   DestinyStat,
   DestinyStatDefinition,
@@ -141,6 +140,7 @@ export interface DimItem {
   /** Localized string for where this item comes from... or other stuff like it not being recoverable from collections */
   displaySource?: string;
   collectibleHash?: number;
+  // TODO: pull search-only fields out
   /** The DestinyCollectibleDefinition sourceHash for a specific item (D2). Derived entirely from collectibleHash */
   source?: number;
   /** Information about this item as a plug. Mostly useful for mod collectibles. */
@@ -399,8 +399,6 @@ export interface PluggableInventoryItemDefinition extends DestinyInventoryItemDe
 export interface DimPlug {
   /** The InventoryItem definition associated with this plug. */
   readonly plugDef: PluggableInventoryItemDefinition;
-  /** Perks associated with the use of this plug. TODO: load on demand? */
-  readonly perks: DestinySandboxPerkDefinition[];
   /** Objectives associated with this plug, usually used to unlock it. */
   readonly plugObjectives: DestinyObjectiveProgress[];
   /** Is the plug enabled? For example, some perks only activate on certain planets. */
