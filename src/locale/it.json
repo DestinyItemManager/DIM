@@ -382,7 +382,7 @@
     "ClickToExpand": "(Clicca per espandere)"
   },
   "ItemFeed": {
-    "ClearFeed": "Cancella Elenco",
+    "ClearFeed": "Cancella elenco",
     "Description": "Oggetti Recenti",
     "HideTagged": "Nascondi etichettati",
     "NoNewItems": "Nessun nuovo oggetto",
@@ -1093,9 +1093,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "Il numero scelto non è quello valido!",
+      "No": "No",
       "Reset": "DE-AUTORIZZA",
-      "Title": "Scegli questo numero nel tuo Stream Deck"
+      "Title": "Vedi lo stesso codice sul tuo Stream Deck?",
+      "Update": "Se vedi questo messaggio, stai utilizzanto una vecchia versione del plugin. Scarica l'ultimo aggiornamento dal negozio di Stream Deck.",
+      "Yes": "Si"
     },
     "Connected": "Connesso",
     "Enable": "Plugin Stream Deck",

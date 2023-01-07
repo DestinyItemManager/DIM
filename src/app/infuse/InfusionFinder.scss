@@ -37,16 +37,9 @@
   }
 
   .infuseSearch {
-    margin-left: 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
     flex: 1;
-
-    .search-filter {
-      width: 100%;
-      cursor: default;
-    }
+    margin-left: 16px;
+    margin-top: auto;
 
     @include phone-portrait {
       margin-bottom: 8px;

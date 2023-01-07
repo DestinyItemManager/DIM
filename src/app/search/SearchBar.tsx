@@ -71,6 +71,7 @@ interface ProvidedProps {
   /** An optional menu of actions that can be executed on the search. Always shown. */
   menu?: React.ReactNode;
   instant?: boolean;
+  className?: string;
   /** Fired whenever the query changes (already debounced) */
   onQueryChanged(query: string): void;
   /** Fired whenever the query has been cleared */
@@ -98,7 +99,10 @@ function mapStateToProps() {
     // This is a hack that prevents `searchQuery` from changing if `searchQueryVersion`
     // doesn't change, so we don't trigger an update.
     let manipulatedSearchQuery = prevSearchQuery;
-    if (searchQueryVersion !== prevSearchQueryVersion) {
+    if (searchQueryVersion === undefined) {
+      // OK, they didn't even provide searchQueryVersion, just pass through the original query
+      manipulatedSearchQuery = searchQuery;
+    } else if (searchQueryVersion !== prevSearchQueryVersion) {
       manipulatedSearchQuery = searchQuery;
       prevSearchQuery = searchQuery;
       prevSearchQueryVersion = searchQueryVersion;
@@ -212,6 +216,7 @@ function SearchBar(
     validateQuery,
     autocompleter,
     recentSearches,
+    className,
     menu,
   }: Props,
   ref: React.Ref<SearchFilterRef>
@@ -221,7 +226,7 @@ function SearchBar(
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus = !mainSearchBar && !isPhonePortrait && !isiOSBrowser();
 
-  const [liveQueryLive, setLiveQuery] = useState('');
+  const [liveQueryLive, setLiveQuery] = useState(searchQuery ?? '');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
   const [menuMaxHeight, setMenuMaxHeight] = useState<undefined | number>();
   const inputElement = useRef<HTMLInputElement>(null);
@@ -281,6 +286,7 @@ function SearchBar(
   } = useCombobox<SearchItem>({
     items,
     stateReducer,
+    initialInputValue: liveQuery,
     initialIsOpen: isPhonePortrait && mainSearchBar,
     defaultHighlightedIndex: liveQuery ? 0 : -1,
     itemToString: (i) => i?.query.fullText || '',
@@ -456,7 +462,7 @@ function SearchBar(
 
   return (
     <div
-      className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
+      className={clsx(className, 'search-filter', styles.searchBar, { [styles.open]: isOpen })}
       role="search"
       enterKeyHint="search"
       {...getComboboxProps()}
@@ -491,7 +497,7 @@ function SearchBar(
               animate={{ scale: 1 }}
               key="save"
               type="button"
-              className={clsx('filter-bar-button', styles.saveSearchButton)}
+              className={clsx(styles.filterBarButton, styles.saveSearchButton)}
               onClick={toggleSaved}
               title={t('Header.SaveSearch')}
             >
@@ -507,7 +513,7 @@ function SearchBar(
               animate={{ scale: 1 }}
               key="clear"
               type="button"
-              className="filter-bar-button"
+              className={styles.filterBarButton}
               onClick={clearFilter}
               title={t('Header.Clear')}
             >
@@ -521,7 +527,7 @@ function SearchBar(
             layout
             key="menu"
             type="button"
-            className={clsx('filter-bar-button', styles.openButton)}
+            className={clsx(styles.filterBarButton, styles.openButton)}
             {...getToggleButtonProps()}
             aria-label="toggle menu"
           >
@@ -540,8 +546,8 @@ function SearchBar(
                 <UserGuideLink topic="Item-Search" />
               </>
             }
-            sheetClassName="filterHelp"
             freezeInitialHeight
+            sheetClassName={styles.filterHelp}
           >
             <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
               <LazyFilterHelp />

@@ -1,5 +1,6 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
+import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import { ThunkResult } from 'app/store/types';
@@ -55,6 +56,7 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
   return async (_dispatch, getState) => {
     const stores = storesSelector(getState());
     const itemInfos = itemInfosSelector(getState());
+    const loadoutsForItem = loadoutsByItemSelector(getState());
 
     // perhaps we're loading
     if (stores.length === 0) {
@@ -93,13 +95,13 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
     });
     switch (type) {
       case 'Weapons':
-        downloadWeapons(items, nameMap, itemInfos);
+        downloadWeapons(items, nameMap, itemInfos, loadoutsForItem);
         break;
       case 'Armor':
-        downloadArmor(items, nameMap, itemInfos);
+        downloadArmor(items, nameMap, itemInfos, loadoutsForItem);
         break;
       case 'Ghost':
-        downloadGhost(items, nameMap, itemInfos);
+        downloadGhost(items, nameMap, itemInfos, loadoutsForItem);
         break;
     }
 
@@ -108,6 +110,7 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
 }
 
 interface CSVRow {
+  Loadouts: string;
   Notes: string;
   Tag: string;
   Hash: string;
@@ -251,7 +254,16 @@ function addPerks(row: Record<string, unknown>, item: DimItem, maxPerks: number)
   });
 }
 
-function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
+function formatLoadouts(item: DimItem, loadouts: LoadoutsByItem) {
+  return loadouts[item.id]?.map(({ loadout }) => loadout.name).join(', ') ?? '';
+}
+
+function downloadGhost(
+  items: DimItem[],
+  nameMap: { [key: string]: string },
+  itemInfos: ItemInfos,
+  loadouts: LoadoutsByItem
+) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -266,6 +278,7 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }, ite
       Owner: nameMap[item.owner],
       Locked: item.locked,
       Equipped: item.equipped,
+      Loadouts: formatLoadouts(item, loadouts),
       Notes: getNotes(item, itemInfos),
     };
 
@@ -294,7 +307,12 @@ export function source(item: DimItem) {
   }
 }
 
-function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
+function downloadArmor(
+  items: DimItem[],
+  nameMap: { [key: string]: string },
+  itemInfos: ItemInfos,
+  loadouts: LoadoutsByItem
+) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -387,6 +405,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       }
     }
 
+    row.Loadouts = formatLoadouts(item, loadouts);
     row.Notes = getNotes(item, itemInfos);
 
     addPerks(row, item, maxPerks);
@@ -399,7 +418,8 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
 function downloadWeapons(
   items: DimItem[],
   nameMap: { [key: string]: string },
-  itemInfos: ItemInfos
+  itemInfos: ItemInfos,
+  loadouts: LoadoutsByItem
 ) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
@@ -578,6 +598,8 @@ function downloadWeapons(
       row['Kill Tracker'] = getItemKillTrackerInfo(item)?.count ?? 0;
       row.Foundry = item.foundry?.replace('foundry.', '');
     }
+
+    row.Loadouts = formatLoadouts(item, loadouts);
     row.Notes = getNotes(item, itemInfos);
 
     addPerks(row, item, maxPerks);

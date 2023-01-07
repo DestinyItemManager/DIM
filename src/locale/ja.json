@@ -1093,9 +1093,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "押した番号は正しい数字ではありません！",
+      "No": "No",
       "Reset": "デバイス認証を解除する",
-      "Title": "Stream Deckにて、この番号が表示されているボタンを押してください"
+      "Title": "Do you see the same code on your Stream Deck ?",
+      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
+      "Yes": "Yes"
     },
     "Connected": "接続しました",
     "Enable": "Stream Deck プラグイン",

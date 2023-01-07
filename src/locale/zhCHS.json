@@ -1093,9 +1093,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "选择了错误的号码！",
+      "No": "不一样",
       "Reset": "取消授权",
-      "Title": "在你的 Stream Deck 上选择这个号码"
+      "Title": "你的 Stream Deck 显示的验证码是否一样？",
+      "Update": "看到此消息代表你的插件版本过旧。请从 Stream Deck 商店下载更新版。",
+      "Yes": "一样"
     },
     "Connected": "已连接",
     "Enable": "Stream Deck 插件",

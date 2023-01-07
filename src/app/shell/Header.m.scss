@@ -231,3 +231,23 @@ $header-height: 44px;
   margin: 1em 10px;
   font-size: 14px;
 }
+
+.searchLink {
+  flex: 1;
+  font-size: 13px;
+  margin: 0 8px;
+  @include phone-portrait {
+    margin: 0 12px;
+  }
+
+  :global(.search-filter) {
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+.searchButton {
+  display: none;
+  @include phone-portrait {
+    display: inline-block;
+  }
+}

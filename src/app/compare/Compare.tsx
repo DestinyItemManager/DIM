@@ -200,17 +200,16 @@ export default function Compare() {
   // The example item is the one we'll use for generating suggestion buttons
   const exampleItem = initialItem || firstCompareItem;
 
-  const comparator = sortCompareItemsComparator(
-    sortedHash,
-    sortBetterFirst,
-    doCompareBaseStats,
-    allStats,
-    initialItem
-  );
-  const sortedComparisonItems = Array.from(compareItems).sort(comparator);
-
-  const items = useMemo(
-    () => (
+  const items = useMemo(() => {
+    const comparator = sortCompareItemsComparator(
+      sortedHash,
+      sortBetterFirst,
+      doCompareBaseStats,
+      allStats,
+      session?.initialItemId
+    );
+    const sortedComparisonItems = Array.from(compareItems).sort(comparator);
+    return (
       <CompareItems
         items={sortedComparisonItems}
         allStats={allStats}
@@ -220,16 +219,17 @@ export default function Compare() {
         doCompareBaseStats={doCompareBaseStats}
         initialItemId={session?.initialItemId}
       />
-    ),
-    [
-      allStats,
-      doCompareBaseStats,
-      onPlugClicked,
-      remove,
-      session?.initialItemId,
-      sortedComparisonItems,
-    ]
-  );
+    );
+  }, [
+    allStats,
+    compareItems,
+    doCompareBaseStats,
+    onPlugClicked,
+    remove,
+    session?.initialItemId,
+    sortBetterFirst,
+    sortedHash,
+  ]);
 
   if (!show) {
     return null;
@@ -378,11 +378,11 @@ function sortCompareItemsComparator(
   sortBetterFirst: boolean,
   compareBaseStats: boolean,
   allStats: StatInfo[],
-  initialItem?: DimItem
+  initialItemId?: string
 ) {
   if (!sortedHash) {
     return chainComparator(
-      compareBy((item) => item !== initialItem),
+      compareBy((item) => item.id !== initialItemId),
       acquisitionRecencyComparator
     );
   }

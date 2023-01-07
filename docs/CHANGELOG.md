@@ -2,6 +2,9 @@
 
 * If you add hashtags to your loadouts' names or notes, DIM will show buttons for quickly filtering down to loadouts that include that hashtag.
 * Fixed a bug where the "Show Older Items" button in the Item Feed would not permanently show all old items.
+* The Armor and Weapons CSV export in Organizer and Settings now includes a Loadouts column.
+* Fixed universal ornament unlock detection.
+* Opening the Armory view from a Vendor focusing item now shows the correct weapon with all available perks, not a dummy item.
 
 ## 7.50.3 <span class="changelog-date">(2023-01-04)</span>
 
