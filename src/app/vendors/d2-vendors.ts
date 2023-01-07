@@ -1,11 +1,11 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { MergedCollectibles } from 'app/inventory/d2-stores';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { VENDORS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import {
   BungieMembershipType,
-  DestinyCollectibleComponent,
   DestinyCollectibleState,
   DestinyDestinationDefinition,
   DestinyInventoryItemDefinition,
@@ -44,11 +44,7 @@ export function toVendorGroups(
   buckets: InventoryBuckets,
   account: DestinyAccount,
   characterId: string,
-  mergedCollectibles:
-    | {
-        [hash: number]: DestinyCollectibleComponent;
-      }
-    | undefined
+  mergedCollectibles: MergedCollectibles | undefined
 ): D2VendorGroup[] {
   if (!vendorsResponse.vendorGroups.data) {
     return [];
@@ -103,11 +99,7 @@ export function toVendor(
         [key: string]: DestinyVendorSaleItemComponent;
       }
     | undefined,
-  mergedCollectibles:
-    | {
-        [hash: number]: DestinyCollectibleComponent;
-      }
-    | undefined
+  mergedCollectibles: MergedCollectibles | undefined
 ): D2Vendor | undefined {
   const vendorDef = defs.Vendor.get(vendorHash);
 
@@ -168,11 +160,7 @@ function getVendorItems(
         [key: string]: DestinyVendorSaleItemComponent;
       }
     | undefined,
-  mergedCollectibles:
-    | {
-        [hash: number]: DestinyCollectibleComponent;
-      }
-    | undefined
+  mergedCollectibles: MergedCollectibles | undefined
 ): VendorItem[] {
   if (sales) {
     const components = Object.values(sales);

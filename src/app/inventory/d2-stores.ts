@@ -118,10 +118,14 @@ export function updateCharacters(): ThunkResult {
   };
 }
 
+export interface MergedCollectibles {
+  [x: number]: DestinyCollectibleComponent;
+}
+
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
   characterCollectibles: DictionaryComponentResponse<DestinyCollectiblesComponent>
-) {
+): MergedCollectibles {
   const allCollectibles = {
     ...profileCollectibles?.data?.collectibles,
   };
@@ -434,9 +438,7 @@ function processCharacter(
   buckets: InventoryBuckets,
   characterId: string,
   profileInfo: DestinyProfileResponse,
-  mergedCollectibles: {
-    [hash: number]: DestinyCollectibleComponent;
-  },
+  mergedCollectibles: MergedCollectibles,
   lastPlayedDate: Date
 ): DimStore {
   const character = profileInfo.characters.data![characterId];

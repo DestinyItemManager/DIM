@@ -15,7 +15,6 @@ import {
   ComponentPrivacySetting,
   DestinyAmmunitionType,
   DestinyClass,
-  DestinyCollectibleComponent,
   DestinyCollectibleState,
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
@@ -44,6 +43,7 @@ import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
+import { MergedCollectibles } from '../d2-stores';
 import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
@@ -77,9 +77,7 @@ export function processItems(
   owner: DimStore,
   items: DestinyItemComponent[],
   itemComponents: DestinyItemComponentSetOfint64,
-  mergedCollectibles: {
-    [hash: number]: DestinyCollectibleComponent;
-  },
+  mergedCollectibles: MergedCollectibles,
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   },
@@ -160,9 +158,7 @@ export function makeFakeItem(
   itemHash: number,
   itemInstanceId?: string,
   quantity?: number,
-  mergedCollectibles?: {
-    [hash: number]: DestinyCollectibleComponent;
-  },
+  mergedCollectibles?: MergedCollectibles,
   profileRecords?: DestinyProfileRecordsComponent,
   allowWishList?: boolean
 ): DimItem | null {
@@ -207,9 +203,7 @@ export function makeItemSingle(
   buckets: InventoryBuckets,
   item: DestinyItemResponse,
   stores: DimStore[],
-  mergedCollectibles?: {
-    [hash: number]: DestinyCollectibleComponent;
-  }
+  mergedCollectibles?: MergedCollectibles
 ): DimItem | null {
   if (!item.item.data) {
     return null;
@@ -265,9 +259,7 @@ export function makeItem(
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: DimStore | undefined,
-  mergedCollectibles?: {
-    [hash: number]: DestinyCollectibleComponent;
-  },
+  mergedCollectibles?: MergedCollectibles,
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   },

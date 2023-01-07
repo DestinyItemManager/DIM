@@ -1,6 +1,6 @@
+import { MergedCollectibles } from 'app/inventory/d2-stores';
 import { VENDORS } from 'app/search/d2-known-values';
 import {
-  DestinyCollectibleComponent,
   DestinyDisplayPropertiesDefinition,
   DestinyItemComponentSetOfint32,
   DestinyItemQuantity,
@@ -43,11 +43,7 @@ function makeVendorItem(
   vendorItemDef: DestinyVendorItemDefinition | undefined,
   saleItem: DestinyVendorSaleItemComponent | undefined,
   itemComponents: DestinyItemComponentSetOfint32 | undefined,
-  mergedCollectibles:
-    | {
-        [hash: number]: DestinyCollectibleComponent;
-      }
-    | undefined,
+  mergedCollectibles: MergedCollectibles | undefined,
   // the character to whom this item is being offered
   characterId?: string
 ): VendorItem {
@@ -124,11 +120,7 @@ export function vendorItemForSaleItem(
   // all DIM vendor calls are character-specific. any sale item should have an associated character.
   characterId: string,
   itemComponents: DestinyItemComponentSetOfint32 | undefined,
-  mergedCollectibles:
-    | {
-        [hash: number]: DestinyCollectibleComponent;
-      }
-    | undefined
+  mergedCollectibles: MergedCollectibles | undefined
 ): VendorItem {
   const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
   const failureStrings =
@@ -159,9 +151,7 @@ export function vendorItemForDefinitionItem(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   vendorItemDef: DestinyVendorItemDefinition,
-  mergedCollectibles?: {
-    [hash: number]: DestinyCollectibleComponent;
-  }
+  mergedCollectibles?: MergedCollectibles
 ): VendorItem {
   return makeVendorItem(
     defs,
