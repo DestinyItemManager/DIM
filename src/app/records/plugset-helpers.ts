@@ -1,6 +1,6 @@
 import { DimPlugSet } from 'app/inventory/item-types';
-import { universalOrnamentPlugSetHashes } from 'app/search/d2-known-values';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
 
 /**
  * Get all plugs from the specified plugset. This includes whether the plugs are unlocked or not.
