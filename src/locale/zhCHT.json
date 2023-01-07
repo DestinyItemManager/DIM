@@ -336,7 +336,7 @@
     "LaunchDIMAlone": "獨立視窗",
     "MaterialCounts": "材料數量",
     "Menu": "菜單",
-    "ProfileAge": "Destiny servers last sent updated data {{age}} ago.\nRefreshing from DIM may get newer data, but Bungie.net may also repeat cached information.",
+    "ProfileAge": "數據由《命運》伺服器最後更新於 {{age}} 之前。\n在 DIM 中刷新可能會獲得最新數據，但 Bungie.net 也可能會重複發送緩存的數據。",
     "Refresh": "刷新命運數據 [R]",
     "ReloadApp": "重新載入應用",
     "ReportBug": "報告錯誤",
@@ -601,7 +601,7 @@
     "CurrentlyEquipped": "當前裝備",
     "Deequip": "從其他角色取回物品",
     "Delete": "刪除",
-    "DeprecatedMods": "Deprecated Mods",
+    "DeprecatedMods": "荒廢的模組",
     "Edit": "編輯配裝",
     "EditBrief": "編輯",
     "EquipItems": "正在裝備物品",
@@ -618,7 +618,7 @@
     "GatherEngrams": "收集記憶水晶",
     "GatherEngramsExceptExotics": "異域",
     "Generated": "T{{tier}} 配裝",
-    "HashtagTip": "Tip: Use #hashtags in your loadout names or notes and they'll show up here.",
+    "HashtagTip": "提示：在配裝名稱或備註中使用的#標籤會顯示在這裡.",
     "Import": {
       "BadURL": "不是有效的配裝分享連結。",
       "Error": "獲取配裝失敗：",
@@ -644,7 +644,7 @@
     "MaximizeLight": "最高光等",
     "MaximizePower": "最大能量等級",
     "MaximizeStat": "最高屬性",
-    "MissingItems": "Missing Items",
+    "MissingItems": "遺失物品",
     "MissingItemsWarning": "此配裝中的某些項目不再在您的庫存中。",
     "ModErrorSummary": "1 個模組出錯：",
     "ModErrorSummary_plural": "{{count}} 個模組出錯：",
@@ -654,7 +654,7 @@
     "NoEngrams": "沒有非異域記憶水晶可以轉移.",
     "NoExotics": "沒有記憶水晶可以轉移.",
     "NoSpace": "你的保險庫和其他角色均已滿。",
-    "NoneMatch": "None of your loadouts matched the filters.",
+    "NoneMatch": "沒有與篩檢程式匹配的配裝.",
     "NotStarted": "正在等待其他操作",
     "NotesPlaceholder": "Write some notes about this loadout, or use #hashtags to categorize it",
     "NotificationTitle": "配裝:{{name}}",
@@ -767,7 +767,7 @@
     },
     "Infuse": "灌注",
     "LockUnlock": {
-      "AutoLock": "Lock state is synced to this item's tag",
+      "AutoLock": "該物品的鎖定狀態已與其標籤同步",
       "Lock": "鎖定{{itemType}}",
       "Locked": "已鎖定",
       "Unlock": "解鎖{{itemType}}",
@@ -920,7 +920,7 @@
     "UsageCount": "使用次數"
   },
   "Settings": {
-    "AutoLockTagged": "Sync item lock state with tag",
+    "AutoLockTagged": "將物品鎖定狀態與標記同步.",
     "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
     "BadgePostmaster": "在 App 圖標上顯示當前角色的郵政官物品數量",
     "BadgePostmasterExplanation": "若要此功能生效，你必須將 DIM 安裝為 App，且操作系統必須支持顯示標記",
@@ -1063,8 +1063,8 @@
     "DimSyncNotEnabled": "DIM 同步尚未啓用，因此你的設置、標簽、配裝和搜索只保存在本地，會在清理瀏覽器存儲時丟失。在設置中啓用 DIM 同步以自動或手動備份你的數據。",
     "EnableDimApi": "啟用 DIM 同步（推薦）",
     "Export": "下載資料備份",
-    "ExportError": "Failed to download backup from DIM Sync",
-    "ExportErrorBody": "DIM Sync may be down, or you are having trouble with your connection. We will download a copy of your locally saved data instead.",
+    "ExportError": "無法從 DIM 同步下載備份",
+    "ExportErrorBody": "DIM同步功能或者你的网络连接可能出现了问题。我们会下载你本地保存的数据。",
     "Import": "導入資料備份",
     "ImportConfirmDimApi": "你確定要用此版本的數據覆蓋標籤、配裝和設置嗎？舊數據將被完全覆蓋。",
     "ImportExport": "備份和導入",
@@ -1093,9 +1093,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "選擇了無效的號碼！",
+      "No": "No",
       "Reset": "撤銷授權",
-      "Title": "在你的 Stream Deck 上選擇這個號碼"
+      "Title": "Do you see the same code on your Stream Deck ?",
+      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
+      "Yes": "Yes"
     },
     "Connected": "已連接",
     "Enable": "Stream Deck 插件",

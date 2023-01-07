@@ -336,7 +336,7 @@
     "LaunchDIMAlone": "Nouvelle fenêtre",
     "MaterialCounts": "Quantité de matériaux",
     "Menu": "Menu",
-    "ProfileAge": "Destiny servers last sent updated data {{age}} ago.\nRefreshing from DIM may get newer data, but Bungie.net may also repeat cached information.",
+    "ProfileAge": "Les serveurs de Destiny ont envoyé des données mises à jour il y a {{age}}.\nActualiser DIM peut permettre d'obtenir des données plus récentes, mais Bungie.net pourrait renvoyer des informations mises en cache.",
     "Refresh": "Rafraîchir les données de Destiny [R]",
     "ReloadApp": "Recharger l'application",
     "ReportBug": "Signaler un bug",
@@ -382,11 +382,11 @@
     "ClickToExpand": "(Cliquez pour agrandir)"
   },
   "ItemFeed": {
-    "ClearFeed": "Clear Feed",
+    "ClearFeed": "Vider le flux",
     "Description": "Flux d'objets",
     "HideTagged": "Masquer ceux avec une étiquette",
-    "NoNewItems": "No new items",
-    "ShowOlderItems": "Show older items"
+    "NoNewItems": "Aucun nouveaux objets",
+    "ShowOlderItems": "Afficher les objets plus anciens"
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidé",
@@ -601,7 +601,7 @@
     "CurrentlyEquipped": "Actuellement équipé",
     "Deequip": "Dé-équipement des objets des autres personnages",
     "Delete": "Supprimer",
-    "DeprecatedMods": "Deprecated Mods",
+    "DeprecatedMods": "Mods obsolètes",
     "Edit": "Modifier Arsenal",
     "EditBrief": "Éditer",
     "EquipItems": "Équipement des objets",
@@ -618,7 +618,7 @@
     "GatherEngrams": "Réunir les Engrammes",
     "GatherEngramsExceptExotics": "Exotiques",
     "Generated": "P{{tier}} Arsenal",
-    "HashtagTip": "Tip: Use #hashtags in your loadout names or notes and they'll show up here.",
+    "HashtagTip": "Astuce : Utilisez des #hashtags dans vos noms ou notes d'arsenal et ils apparaîtront ici.",
     "Import": {
       "BadURL": "Ce n'est pas une URL de partage d'arsenal valide.",
       "Error": "Erreur lors de l'obtention de l'arsenal :",
@@ -644,7 +644,7 @@
     "MaximizeLight": "Lumière maximale",
     "MaximizePower": "Puissance maximale",
     "MaximizeStat": "Maximiser la Stat",
-    "MissingItems": "Missing Items",
+    "MissingItems": "Objets manquants",
     "MissingItemsWarning": "Certains des objets dans cet arsenal ne sont plus dans votre inventaire.",
     "ModErrorSummary": "1 erreur de mod :",
     "ModErrorSummary_plural": "{{count}} erreurs de mod :",
@@ -654,9 +654,9 @@
     "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
     "NoExotics": "Aucun engrammes n'est disponible pour le transfert.",
     "NoSpace": "Vous n'avez plus d'espace libre dans le coffre et votre autres personnages.",
-    "NoneMatch": "None of your loadouts matched the filters.",
+    "NoneMatch": "Aucun de vos arsenaux ne correspond aux filtres.",
     "NotStarted": "En attende de la fin d'autres actions",
-    "NotesPlaceholder": "Write some notes about this loadout, or use #hashtags to categorize it",
+    "NotesPlaceholder": "Écrivez quelques notes sur cet arsenal ou utilisez des #hashtags pour le catégoriser",
     "NotificationTitle": "Arsenal: {{name}}",
     "OnWrongCharacterAdvice": "Cliquez ici pour trouver les objets les plus puissants de ce personnage.",
     "OnWrongCharacterWarning": "Les armures les plus puissantes de ce personnage sont sur un autre personnage. Pour qu'ils comptent dans le calcul de puissance des récompenses normales, de puissance, et de prestige, les armures doivent être sur ce personnage ou dans le coffre.",
@@ -767,7 +767,7 @@
     },
     "Infuse": "Infuser",
     "LockUnlock": {
-      "AutoLock": "Lock state is synced to this item's tag",
+      "AutoLock": "L'état du verrouillage est synchronisé avec les étiquettes de cet objet",
       "Lock": "Bloquer {{itemType}}",
       "Locked": "Verrouillé",
       "Unlock": "Débloquer {{itemType}}",
@@ -920,8 +920,8 @@
     "UsageCount": "# Utilisé"
   },
   "Settings": {
-    "AutoLockTagged": "Sync item lock state with tag",
-    "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
+    "AutoLockTagged": "Synchroniser l'état de verrouillage des objets avec leur étiquette",
+    "AutoLockTaggedExplanation": "DIM verrouillera et déverrouillera automatiquement les objets pour correspondre à leur étiquette. Lorsque ce paramètre est activé, l'icône de verrouillage ne sera pas affichée sur l'icône des objets étiquetés.",
     "BadgePostmaster": "Afficher le nombre d'objets au commis des postes pour le personnage actuel sur l'icône de l'application",
     "BadgePostmasterExplanation": "Pour utiliser cette fonctionnalité vous devez installer DIM en tant qu'application et votre système d'exploitation doit supporter l'affichage de badges",
     "BothDescriptions": "Les deux descriptions",
@@ -1063,8 +1063,8 @@
     "DimSyncNotEnabled": "La synchronisation DIM n'est pas activée, donc vos paramètres, étiquettes, arsenaux, et les recherches ne sont stockées que localement et seront perdues si vous effacez le stockage de votre navigateur. Activez la synchronisation DIM dans les paramètres pour sauvegarder automatiquement vos données, ou sauvegardez régulièrement vos données manuellement.",
     "EnableDimApi": "Activer la synchronisation DIM (recommandé)",
     "Export": "Télécharger une sauvegarde de données",
-    "ExportError": "Failed to download backup from DIM Sync",
-    "ExportErrorBody": "DIM Sync may be down, or you are having trouble with your connection. We will download a copy of your locally saved data instead.",
+    "ExportError": "Échec du téléchargement de la sauvegarde à partir de la synchronisation DIM",
+    "ExportErrorBody": "La synchronisation DIM est peut-être en panne, ou vous avez des problèmes avec votre connexion. Nous allons télécharger une copie de vos données enregistrées localement.",
     "Import": "Importer une sauvegarde de données",
     "ImportConfirmDimApi": "Êtes vous sûr de vouloir écraser vos étiquettes, arsenaux et paramètres actuels avec cette version ? Cela remplacera complètement ce que vous aviez.",
     "ImportExport": "Sauvegarde & importation",
@@ -1093,9 +1093,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "Le numéro choisi n'est pas valide !",
+      "No": "No",
       "Reset": "DÉSAUTORISER",
-      "Title": "Choisissez ce numéro sur votre Stream Deck"
+      "Title": "Do you see the same code on your Stream Deck ?",
+      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
+      "Yes": "Yes"
     },
     "Connected": "Connecté",
     "Enable": "Plugin Stream Deck",

@@ -85,7 +85,7 @@
   },
   "Compare": {
     "Archetype": "Архетип",
-    "AssumeMasterworked": "Предположить абсолют",
+    "AssumeMasterworked": "Предположить Абсолют",
     "Button": "Сравнить",
     "ButtonHelp": "Сравнить предметы",
     "CompareBaseStats": "Показать базовые характеристики",
@@ -127,7 +127,7 @@
   "ErrorPanel": {
     "Description": "Попробуйте загрузить свой инвентарь в приложении-компаньоне Destiny 2, чтобы убедиться, что Bungie.net недоступен.",
     "EmblemError": "Возможно, вы сможете исправить это, поменяв свои эмблемы в игре на всех ваших персонажах.",
-    "EmblemErrorLink": "Детальней о том, как это исправить.",
+    "EmblemErrorLink": "Подробнее о том, как это исправить.",
     "SystemDown": "Это влияет на все приложения Destiny, и команда DIM не может это исправить или обойти.",
     "Troubleshooting": "Устранение неполадок"
   },
@@ -336,7 +336,7 @@
     "LaunchDIMAlone": "Отдельное окно",
     "MaterialCounts": "Количество материалов",
     "Menu": "Меню",
-    "ProfileAge": "Destiny servers last sent updated data {{age}} ago.\nRefreshing from DIM may get newer data, but Bungie.net may also repeat cached information.",
+    "ProfileAge": "Сервера Destiny последний раз отправили обновленные данные {{age}} назад.\nОбновление через DIM может получить новые данные, но Bungie.net также может повторять кэшированную информацию.",
     "Refresh": "Обновить данные Destiny [R]",
     "ReloadApp": "Перезагрузить DIM",
     "ReportBug": "Сообщить об ошибке",
@@ -386,7 +386,7 @@
     "Description": "Лента предметов",
     "HideTagged": "Скрыть отмеченные",
     "NoNewItems": "Нет новых предметов",
-    "ShowOlderItems": "Show older items"
+    "ShowOlderItems": "Показывать старые предметы"
   },
   "ItemMove": {
     "Consolidate": "Собрали {{name}}",
@@ -498,7 +498,7 @@
     "All": "Все",
     "AnyExotic": "Любой экзот",
     "AnyExoticDescription": "Наборы должны содержать экзоты, но любой экзот подойдёт.",
-    "AssumeMasterwork": "Предположить абсолют",
+    "AssumeMasterwork": "Предположить Абсолют",
     "AssumeMasterworkOptions": {
       "All": "Все брони будут использовать характеристику абсолюта и иметь 10 единиц энергии.",
       "Legendary": "Легендарные брони будут использовать характеристику абсолюта и иметь 10 единиц энергии.",
@@ -538,7 +538,7 @@
       "AssumeElementChange": "Разрешить DIM рекомендовать изменение элементов энергии брони",
       "AssumeMasterworked": "Разрешить DIM рекомендовать улучшать броню до Абсолюта",
       "AssumptionsRestricted": "DIM не может рекомендовать изменения энергии брони:",
-      "BadSlot": "В слоте {{bucketName}}, ни один из разрешенных предметов не может вместить эти моды:",
+      "BadSlot": "В слоте {{bucketName}}, ни один из разрешённых предметов не может вместить эти моды:",
       "Header": "Не были найдены наборы. Вот возможные причины почему DIM не смог найти какие-либо наборы:",
       "LowerBoundsFailed": "Многие наборы не отвечают минимальным требованиям по уровню характеристик",
       "MaybeAllowMoreItems": "Подумайте о том, чтобы разрешить другие предметы:",
@@ -601,7 +601,7 @@
     "CurrentlyEquipped": "Сейчас экипировано",
     "Deequip": "Снятие экипировки с предметов других персонажей",
     "Delete": "Удалить",
-    "DeprecatedMods": "Deprecated Mods",
+    "DeprecatedMods": "Устаревшие Моды",
     "Edit": "Изменить Набор",
     "EditBrief": "Изменить",
     "EquipItems": "Экипирование предметов",
@@ -618,7 +618,7 @@
     "GatherEngrams": "Собрать Энграммы",
     "GatherEngramsExceptExotics": "Экзотический",
     "Generated": "Т{{tier}} Набор",
-    "HashtagTip": "Tip: Use #hashtags in your loadout names or notes and they'll show up here.",
+    "HashtagTip": "Совет: Используйте #хэштеги в названиях ваших наборов или в заметках и они будут отображаться здесь.",
     "Import": {
       "BadURL": "Недопустимая ссылка на набор.",
       "Error": "Ошибка получения набора:",
@@ -644,7 +644,7 @@
     "MaximizeLight": "Максимальный уровень Силы",
     "MaximizePower": "Максимальный уровень Силы",
     "MaximizeStat": "Максимизировать Характеристику",
-    "MissingItems": "Missing Items",
+    "MissingItems": "Отсутствующие предметы",
     "MissingItemsWarning": "Некоторые предметы из этого набора больше не находятся в вашем инвентаре.",
     "ModErrorSummary": "1 ошибка мода:",
     "ModErrorSummary_plural": "{{count}} ошибки с модами:",
@@ -654,9 +654,9 @@
     "NoEngrams": "Нет доступных для передачи не экзотических энграмм.",
     "NoExotics": "Нет доступных для передачи энграмм.",
     "NoSpace": "Недостаточно места в хранилище и у остальных персонажей.",
-    "NoneMatch": "None of your loadouts matched the filters.",
+    "NoneMatch": "Ни один из ваших наборов не соответствует фильтрам.",
     "NotStarted": "Ожидание других действий",
-    "NotesPlaceholder": "Write some notes about this loadout, or use #hashtags to categorize it",
+    "NotesPlaceholder": "Напишите заметки об этом наборе, или используйте #хэштеги для категоризации",
     "NotificationTitle": "Снаряжение: {{name}}",
     "OnWrongCharacterAdvice": "Нажмите здесь, чтобы найти предметы c наивысшей Силой этого персонажа.",
     "OnWrongCharacterWarning": "Это самая мощная броня персонажа на другом персонаже. Для того чтобы засчитываться в Силу падений, мощных и сверхмощных наград, броня должна быть на этом персонаже или в Хранилище.",
@@ -767,7 +767,7 @@
     },
     "Infuse": "Синтез",
     "LockUnlock": {
-      "AutoLock": "Lock state is synced to this item's tag",
+      "AutoLock": "Состояние блокировки синхронизировано с тегом предмета",
       "Lock": "Заблокировать {{itemType}}",
       "Locked": "Заблокировано",
       "Unlock": "Разблокировать {{itemType}}",
@@ -920,8 +920,8 @@
     "UsageCount": "# Раз"
   },
   "Settings": {
-    "AutoLockTagged": "Sync item lock state with tag",
-    "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
+    "AutoLockTagged": "Синхронизировать состояние блокировки с тегом",
+    "AutoLockTaggedExplanation": "DIM будет автоматически блокировать и разблокировать предметы для соответствия с тегом. Когда эта настройка активирована, значок блокировки не будет отображен на ячейке с предметом для отмеченных тегом предметов.",
     "BadgePostmaster": "Показать количество предметов в почтмейстере для текущего персонажа на значке приложения",
     "BadgePostmasterExplanation": "Для этого необходимо установить DIM в качестве приложения, и ваша система должна поддерживать отображение значков",
     "BothDescriptions": "Оба описания",
@@ -932,7 +932,7 @@
     "CharacterOrderReversed": "активность (реверс)",
     "ColumnSize": "{{num}} предметов",
     "ColumnSizeAuto": "Авто",
-    "CommunityData": "Мнения Перков Сообществом",
+    "CommunityData": "Мнения Перков Сообщества",
     "CommunityDescriptionOnly": "Описания от сообщества",
     "CsvImport": "Импорт CSV",
     "CustomStatDesc": "Укажите какие Характеристики суммируются при подсчёте Своей Суммы для каждого класса. Своя Сумма доступна во всплывающей подсказке, Органайзере и Сравнении. Чтобы найти все предметы со Своей Суммой больше или равной тридцати наберите \"stat:custom:>=30\" в панели поиска.",
@@ -1063,8 +1063,8 @@
     "DimSyncNotEnabled": "DIM Sync не включен, поэтому ваши настройки, тэги, наборы и поиски сохранены только локально и будут потеряны при очистке хранилища браузера. Включите DIM Sync в настройках для автоматического создания резервной копии ваших данных, либо регулярно сохраняйте свои данные вручную.",
     "EnableDimApi": "Включить DIM Sync (рекомендуется)",
     "Export": "Скачать Резервную копию",
-    "ExportError": "Failed to download backup from DIM Sync",
-    "ExportErrorBody": "DIM Sync may be down, or you are having trouble with your connection. We will download a copy of your locally saved data instead.",
+    "ExportError": "Не удалось загрузить резервную копию из DIM Sync",
+    "ExportErrorBody": "DIM Sync может быть отключен, или у вас возникли проблемы с подключением. Вместо этого, мы загрузим копию ваших локально сохранённых данных.",
     "Import": "Импорт из Резервной копии",
     "ImportConfirmDimApi": "Данные Тэгов, Наборов и Настроек обновятся, полностью заменив текущие. Продолжаем?",
     "ImportExport": "Резервное копирование и импорт",
@@ -1093,9 +1093,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "Выбранный номер не является действительным!",
+      "No": "Нет",
       "Reset": "ДЕАВТОРИЗАЦИЯ",
-      "Title": "Выберите этот номер на вашем Stream Deck"
+      "Title": "Вы видите такой же код на вашем Stream Deck?",
+      "Update": "Если вы видите это сообщение, вы используете старую версию плагина. Пожалуйста, загрузите последнее обновление в магазине Stream Deck.",
+      "Yes": "Да"
     },
     "Connected": "Подключено",
     "Enable": "Плагин Stream Deck",
@@ -1146,7 +1148,7 @@
     "YourBestItem": "Ваш лучший предмет"
   },
   "Triumphs": {
-    "GildingTriumph": "Триумф для золочения",
+    "GildingTriumph": "Золотой триумф",
     "HideCompleted": "Скрыть выполненные триумфы",
     "RevealRedacted": "Измененные Триумфы"
   },
@@ -1162,7 +1164,7 @@
     "About": {
       "APIHistory": "История API действий аккаунта bungie.net (Все совершенные через DIM и другие веб-приложения)",
       "BungieCopyright": "Изображения и содержимое являются собственностью Bungie.",
-      "CommunityInsight": "Мнения Перков Сообществом любезно предоставлены {{clarityLink}}. Если вы заметите неточности или у вас возникнут вопросы, присоединитесь к {{clarityDiscordLink}}.",
+      "CommunityInsight": "Мнения Перков Сообщества любезно предоставлены {{clarityLink}}. Если вы заметите неточности или у вас возникли вопросы, присоединитесь к {{clarityDiscordLink}}.",
       "Discord": "Discord",
       "DiscordHelp": "Задавайте вопросы, пишите отзывы и получайте помощь в каналах нашего Discord.",
       "FAQ": "Часто Задаваемые Вопросы (FAQ)",

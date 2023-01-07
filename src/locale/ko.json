@@ -921,7 +921,7 @@
   },
   "Settings": {
     "AutoLockTagged": "태그와 아이템 잠금 상태 동기화",
-    "AutoLockTaggedExplanation": "DIM이 아이템을 태그에 따라 자동으로 잠금과 해제를 진행합니다. 이 설정이 활성화되면, 태그된 아이템에 잠금 아이콘이 표시되지 않습니다.",
+    "AutoLockTaggedExplanation": "DIM이 자동으로 아이템을 태그에 따라 잠그거나 해제합니다. 이 설정이 활성화되면 태그된 아이템에 잠금 아이콘이 표시되지 않습니다.",
     "BadgePostmaster": "앱 아이콘에 현재 캐릭터의 우편 담당자 아이템 수 표시",
     "BadgePostmasterExplanation": "이 기능을 사용하려면 DIM을 앱으로 설치하고 OS가 배지 표시를 지원해야 합니다",
     "BothDescriptions": "두 설명 모두",
@@ -1093,9 +1093,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "잘못된 번호가 선택되었습니다!",
+      "No": "아니오",
       "Reset": "인증 해제",
-      "Title": "스트림덱에서 이 번호 선택"
+      "Title": "스트림덱에서 동일한 코드가 표시되나요?",
+      "Update": "이 메시지가 표시된다면 오래된 버전의 플러그인을 사용하고 있는 것입니다. 스트림덱 스토어에서 최신 업데이트를 다운로드하세요.",
+      "Yes": "예"
     },
     "Connected": "연결됨",
     "Enable": "스트림덱 플러그인",

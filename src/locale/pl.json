@@ -1093,9 +1093,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "Wybrana liczba nie jest prawidłowa!",
+      "No": "No",
       "Reset": "COFNIJ AUTORYZACJE",
-      "Title": "Wybierz ten numer na swoim Stream Decku"
+      "Title": "Do you see the same code on your Stream Deck ?",
+      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
+      "Yes": "Yes"
     },
     "Connected": "Połączony",
     "Enable": "Wtyczka Stream Deck",

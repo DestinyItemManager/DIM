@@ -1093,9 +1093,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "Die gewählte Nummer ist nicht gültig!",
+      "No": "Nein",
       "Reset": "DE-AUTORISIEREN",
-      "Title": "Wähle diese Nummer auf deinem Stream Deck"
+      "Title": "Wird auf deinem Stream Deck der gleiche Code angezeigt?",
+      "Update": "Wenn du diese Nachricht sehen kannst, benutzt du eine veraltete Version des Plugins. Bitte lade das neueste Update aus dem Stream-Deck-Store herunter.",
+      "Yes": "Ja"
     },
     "Connected": "Verbunden",
     "Enable": "Stream Deck Plugin",
