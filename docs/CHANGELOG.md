@@ -2,6 +2,7 @@
 
 * If you add hashtags to your loadouts' names or notes, DIM will show buttons for quickly filtering down to loadouts that include that hashtag.
 * The Armor and Weapons CSV export in Organizer and Settings now includes a Loadouts column.
+* Fixed universal ornament unlock detection.
 
 ## 7.50.3 <span class="changelog-date">(2023-01-04)</span>
 
