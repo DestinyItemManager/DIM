@@ -57,7 +57,6 @@ export class VendorItem {
       saleItem,
       itemComponents,
       mergedCollectibles,
-      true, // why?
       characterId
     );
   }
@@ -89,7 +88,6 @@ export class VendorItem {
   }
 
   readonly item: DimItem | null;
-  readonly canPurchase: boolean;
   readonly failureStrings: string[];
   readonly key: number;
   readonly displayProperties: DestinyDisplayPropertiesDefinition;
@@ -116,13 +114,11 @@ export class VendorItem {
           [hash: number]: DestinyCollectibleComponent;
         }
       | undefined,
-    canPurchase = true,
     // the character to whom this item is being offered
     characterId?: string
   ) {
     const inventoryItem = defs.InventoryItem.get(itemHash);
 
-    this.canPurchase = canPurchase;
     this.failureStrings = failureStrings;
     this.key = saleItem ? saleItem.vendorItemIndex : inventoryItem.hash;
     this.displayProperties = inventoryItem.displayProperties;
