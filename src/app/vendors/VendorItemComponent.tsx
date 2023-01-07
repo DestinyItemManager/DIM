@@ -43,8 +43,8 @@ export default function VendorItemComponent({
   }
 
   const acquired =
-    item.item.collectibleState !== undefined &&
-    !(item.item.collectibleState & DestinyCollectibleState.NotAcquired);
+    item.collectibleState !== undefined &&
+    !(item.collectibleState & DestinyCollectibleState.NotAcquired);
 
   // Can't buy more copies of emblems or bounties other than repeatables.
   const ownershipRule =

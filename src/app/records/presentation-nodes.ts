@@ -309,7 +309,6 @@ function toCollectibles(
         collectibleDef.itemHash,
         undefined,
         undefined,
-        undefined,
         profileResponse.profileRecords.data
       );
       if (!item) {

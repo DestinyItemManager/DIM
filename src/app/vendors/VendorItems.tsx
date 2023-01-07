@@ -188,12 +188,14 @@ export default function VendorItems({
                       )
                     )
                     .map(
-                      (item) =>
-                        item.item && (
+                      (vendorItem) =>
+                        vendorItem.item && (
                           <VendorItemComponent
-                            key={item.key}
-                            item={item}
-                            owned={Boolean(ownedItemHashes?.has(item.item.hash) || item.owned)}
+                            key={vendorItem.key}
+                            item={vendorItem}
+                            owned={Boolean(
+                              ownedItemHashes?.has(vendorItem.item.hash) || vendorItem.owned
+                            )}
                             characterId={characterId}
                           />
                         )

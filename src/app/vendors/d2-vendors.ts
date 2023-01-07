@@ -202,12 +202,12 @@ export function filterVendorGroupsToUnacquired(
         .map((vendor) => ({
           ...vendor,
           items: vendor.items.filter(
-            (item) =>
-              item.item &&
-              (item.item.collectibleState !== undefined
-                ? item.item.collectibleState & DestinyCollectibleState.NotAcquired
-                : item.item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
-                  !ownedItemHashes.has(item.item.hash))
+            ({ item, collectibleState }) =>
+              item &&
+              (collectibleState !== undefined
+                ? collectibleState & DestinyCollectibleState.NotAcquired
+                : item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
+                  !ownedItemHashes.has(item.hash))
           ),
         }))
         .filter((v) => v.items.length),
@@ -228,7 +228,7 @@ export function filterVendorGroupsToSearch(
           ...vendor,
           items: vendor.def.displayProperties.name.toLowerCase().includes(searchQuery.toLowerCase())
             ? vendor.items
-            : vendor.items.filter((i) => i.item && filterItems(i.item)),
+            : vendor.items.filter(({ item }) => item && filterItems(item)),
         }))
         .filter((v) => v.items.length),
     }))

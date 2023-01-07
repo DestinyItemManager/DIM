@@ -15,7 +15,6 @@ import {
   ComponentPrivacySetting,
   DestinyAmmunitionType,
   DestinyClass,
-  DestinyCollectibleState,
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
@@ -43,7 +42,6 @@ import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/exceptions';
-import { MergedCollectibles } from '../d2-stores';
 import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
@@ -77,7 +75,6 @@ export function processItems(
   owner: DimStore,
   items: DestinyItemComponent[],
   itemComponents: DestinyItemComponentSetOfint64,
-  mergedCollectibles: MergedCollectibles,
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   },
@@ -94,7 +91,6 @@ export function processItems(
         itemComponents,
         item,
         owner,
-        mergedCollectibles,
         uninstancedItemObjectives,
         profileRecords
       );
@@ -158,7 +154,6 @@ export function makeFakeItem(
   itemHash: number,
   itemInstanceId?: string,
   quantity?: number,
-  mergedCollectibles?: MergedCollectibles,
   profileRecords?: DestinyProfileRecordsComponent,
   allowWishList?: boolean
 ): DimItem | null {
@@ -183,7 +178,6 @@ export function makeFakeItem(
       versionNumber: defs.InventoryItem.get(itemHash)?.quality?.currentVersion,
     },
     undefined,
-    mergedCollectibles,
     undefined,
     profileRecords
   );
@@ -202,8 +196,7 @@ export function makeItemSingle(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   item: DestinyItemResponse,
-  stores: DimStore[],
-  mergedCollectibles?: MergedCollectibles
+  stores: DimStore[]
 ): DimItem | null {
   if (!item.item.data) {
     return null;
@@ -236,8 +229,7 @@ export function makeItemSingle(
       objectives: m(item.objectives),
     },
     item.item.data,
-    owner,
-    mergedCollectibles
+    owner
   );
 }
 
@@ -259,7 +251,6 @@ export function makeItem(
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: DimStore | undefined,
-  mergedCollectibles?: MergedCollectibles,
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   },
@@ -421,20 +412,8 @@ export function makeItem(
     itemDef.iconWatermarkShelved ||
     undefined;
 
-  // collection stuff: establish a collectedness state, and hashes leading to the collectible and source
-  const { collectibleHash } = itemDef;
-  let collectibleState: DestinyCollectibleState | undefined;
-  if (collectibleHash && mergedCollectibles) {
-    collectibleState = mergedCollectibles?.profileCollectibles[collectibleHash]?.state;
-    if (collectibleState === undefined) {
-      for (const state of mergedCollectibles.characterCollectibles) {
-        collectibleState = state[collectibleHash]?.state;
-        if (collectibleState !== undefined) {
-          break;
-        }
-      }
-    }
-  }
+  const collectibleHash = itemDef.collectibleHash;
+  // Do we need this now?
   const source = collectibleHash
     ? defs.Collectible.get(collectibleHash, itemDef.hash)?.sourceHash
     : undefined;
@@ -536,7 +515,6 @@ export function makeItem(
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source,
-    collectibleState,
     collectibleHash,
     missingSockets: false,
     displaySource: itemDef.displaySource,

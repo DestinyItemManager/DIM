@@ -1,7 +1,9 @@
 import { MergedCollectibles } from 'app/inventory/d2-stores';
 import { VENDORS } from 'app/search/d2-known-values';
 import {
+  DestinyCollectibleState,
   DestinyDisplayPropertiesDefinition,
+  DestinyInventoryItemDefinition,
   DestinyItemComponentSetOfint32,
   DestinyItemQuantity,
   DestinyProfileResponse,
@@ -31,6 +33,32 @@ export interface VendorItem {
   readonly displayCategoryIndex?: number;
   readonly costs: DestinyItemQuantity[];
   readonly previewVendorHash?: number;
+  /** The state of this item in the user's D2 Collection */
+  readonly collectibleState?: DestinyCollectibleState;
+}
+
+/**
+ * Find the state of this item in the user's collections. This makes no
+ * distinction between items unlocked on different characters or profile-wide.
+ */
+function getCollectibleState(
+  inventoryItem: DestinyInventoryItemDefinition,
+  mergedCollectibles: MergedCollectibles | undefined
+) {
+  const collectibleHash = inventoryItem.collectibleHash;
+  let collectibleState: DestinyCollectibleState | undefined;
+  if (collectibleHash && mergedCollectibles) {
+    collectibleState = mergedCollectibles?.profileCollectibles[collectibleHash]?.state;
+    if (collectibleState === undefined) {
+      for (const state of mergedCollectibles.characterCollectibles) {
+        collectibleState = state[collectibleHash]?.state;
+        if (collectibleState !== undefined) {
+          break;
+        }
+      }
+    }
+  }
+  return collectibleState;
 }
 
 function makeVendorItem(
@@ -49,7 +77,7 @@ function makeVendorItem(
 ): VendorItem {
   const inventoryItem = defs.InventoryItem.get(itemHash);
   const key = saleItem ? saleItem.vendorItemIndex : inventoryItem.hash;
-  const vendorItem = {
+  const vendorItem: VendorItem = {
     failureStrings,
     key,
     displayProperties: inventoryItem.displayProperties,
@@ -60,6 +88,7 @@ function makeVendorItem(
     displayCategoryIndex: vendorItemDef ? vendorItemDef.displayCategoryIndex : undefined,
     costs: saleItem?.costs || [],
     previewVendorHash: inventoryItem.preview?.previewVendorHash,
+    collectibleState: getCollectibleState(inventoryItem, mergedCollectibles),
     item: makeFakeItem(
       defs,
       buckets,
@@ -68,7 +97,6 @@ function makeVendorItem(
       // For sale items the item ID needs to be the vendor item index, since that's how we look up item components for perks
       key.toString(),
       vendorItemDef ? vendorItemDef.quantity : 1,
-      mergedCollectibles,
       profileResponse?.profileRecords.data,
       // vendor items are wish list enabled!
       true

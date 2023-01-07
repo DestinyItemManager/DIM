@@ -380,18 +380,13 @@ export function buildStores(
 
   const lastPlayedDate = findLastPlayedDate(profileInfo);
 
-  const mergedCollectibles = mergeCollectibles(
-    profileInfo.profileCollectibles,
-    profileInfo.characterCollectibles
-  );
-
   const processSpan = transaction?.startChild({
     op: 'processItems',
   });
-  const vault = processVault(defs, buckets, profileInfo, mergedCollectibles);
+  const vault = processVault(defs, buckets, profileInfo);
 
   const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
-    processCharacter(defs, buckets, characterId, profileInfo, mergedCollectibles, lastPlayedDate)
+    processCharacter(defs, buckets, characterId, profileInfo, lastPlayedDate)
   );
   processSpan?.finish();
 
@@ -439,7 +434,6 @@ function processCharacter(
   buckets: InventoryBuckets,
   characterId: string,
   profileInfo: DestinyProfileResponse,
-  mergedCollectibles: MergedCollectibles,
   lastPlayedDate: Date
 ): DimStore {
   const character = profileInfo.characters.data![characterId];
@@ -472,7 +466,6 @@ function processCharacter(
     store,
     items,
     itemComponents,
-    mergedCollectibles,
     uninstancedItemObjectives,
     profileRecords
   );
@@ -483,8 +476,7 @@ function processCharacter(
 function processVault(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
-  profileInfo: DestinyProfileResponse,
-  mergedCollectibles: MergedCollectibles
+  profileInfo: DestinyProfileResponse
 ): DimStore {
   const profileInventory = profileInfo.profileInventory.data
     ? profileInfo.profileInventory.data.items
@@ -509,7 +501,6 @@ function processVault(
     store,
     items,
     itemComponents,
-    mergedCollectibles,
     undefined,
     profileRecords
   );
