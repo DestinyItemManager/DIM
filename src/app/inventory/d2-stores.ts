@@ -24,7 +24,6 @@ import {
   SingleComponentResponse,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
@@ -119,22 +118,24 @@ export function updateCharacters(): ThunkResult {
 }
 
 export interface MergedCollectibles {
-  [x: number]: DestinyCollectibleComponent;
+  profileCollectibles: {
+    [key: number]: DestinyCollectibleComponent;
+  };
+  characterCollectibles: {
+    [key: number]: DestinyCollectibleComponent;
+  }[];
 }
 
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
   characterCollectibles: DictionaryComponentResponse<DestinyCollectiblesComponent>
 ): MergedCollectibles {
-  const allCollectibles = {
-    ...profileCollectibles?.data?.collectibles,
+  return {
+    profileCollectibles: profileCollectibles?.data?.collectibles ?? {},
+    characterCollectibles: Object.values(characterCollectibles.data ?? {}).map(
+      (c) => c.collectibles ?? {}
+    ),
   };
-
-  _.forIn(characterCollectibles?.data || {}, ({ collectibles }) => {
-    Object.assign(allCollectibles, collectibles);
-  });
-
-  return allCollectibles;
 }
 
 /**
@@ -483,9 +484,7 @@ function processVault(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   profileInfo: DestinyProfileResponse,
-  mergedCollectibles: {
-    [hash: number]: DestinyCollectibleComponent;
-  }
+  mergedCollectibles: MergedCollectibles
 ): DimStore {
   const profileInventory = profileInfo.profileInventory.data
     ? profileInfo.profileInventory.data.items

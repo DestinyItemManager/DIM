@@ -424,8 +424,16 @@ export function makeItem(
   // collection stuff: establish a collectedness state, and hashes leading to the collectible and source
   const { collectibleHash } = itemDef;
   let collectibleState: DestinyCollectibleState | undefined;
-  if (collectibleHash) {
-    collectibleState = mergedCollectibles?.[collectibleHash]?.state;
+  if (collectibleHash && mergedCollectibles) {
+    collectibleState = mergedCollectibles?.profileCollectibles[collectibleHash]?.state;
+    if (collectibleState === undefined) {
+      for (const state of mergedCollectibles.characterCollectibles) {
+        collectibleState = state[collectibleHash]?.state;
+        if (collectibleState !== undefined) {
+          break;
+        }
+      }
+    }
   }
   const source = collectibleHash
     ? defs.Collectible.get(collectibleHash, itemDef.hash)?.sourceHash

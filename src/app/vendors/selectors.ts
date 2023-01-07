@@ -1,5 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { mergeCollectibles } from 'app/inventory/d2-stores';
+import { mergeCollectibles, MergedCollectibles } from 'app/inventory/d2-stores';
 import {
   bucketsSelector,
   ownedItemsSelector,
@@ -10,12 +10,17 @@ import {
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
-import { emptyArray, emptyObject } from 'app/utils/empty';
+import { emptyArray } from 'app/utils/empty';
 import { currySelector } from 'app/utils/redux-utils';
 import { createSelector } from 'reselect';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
 
 export const vendorsByCharacterSelector = (state: RootState) => state.vendors.vendorsByCharacter;
+
+const emptyCollectibles: MergedCollectibles = {
+  profileCollectibles: {},
+  characterCollectibles: [],
+};
 
 export const mergedCollectiblesSelector = createSelector(
   profileResponseSelector,
@@ -25,7 +30,7 @@ export const mergedCollectiblesSelector = createSelector(
           profileResponse.profileCollectibles,
           profileResponse.characterCollectibles
         )
-      : emptyObject<ReturnType<typeof mergeCollectibles>>()
+      : emptyCollectibles
 );
 
 /**
