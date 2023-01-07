@@ -89,10 +89,7 @@ export default function ItemFeed({
     itemsToShow
   );
 
-  const items =
-    itemFeedWatermark !== undefined
-      ? untaggedItems.filter((i) => isNewerThan(i, itemFeedWatermark))
-      : untaggedItems;
+  const items = untaggedItems.filter((i) => isNewerThan(i, itemFeedWatermark));
 
   return (
     <>
@@ -114,7 +111,7 @@ export default function ItemFeed({
             type="button"
             className={clsx('dim-button', styles.clearButton)}
             onClick={() => {
-              setItemFeedWatermark(undefined);
+              setItemFeedWatermark('0');
               // Don't spawn all the items at the same time again
               resetItemCount();
             }}

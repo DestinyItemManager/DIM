@@ -60,7 +60,7 @@ export default function LoadoutImportSheet({
       onClose={onClose}
       header={
         <>
-          <h1>Import Loadout</h1>
+          <h1>{t('Loadouts.ImportLoadout')}</h1>
           <UserGuideLink topic="Share-Loadouts" />
         </>
       }
