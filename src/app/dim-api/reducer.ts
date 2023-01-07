@@ -420,6 +420,11 @@ function migrateSettings(settings: Settings) {
     settings = { ...settings, itemSize: parseInt(settings.itemSize, 10) };
   }
 
+  // Using undefined for the absence of a watermark was a bad idea
+  if (settings.itemFeedWatermark === undefined) {
+    settings = { ...settings, itemFeedWatermark: initialSettingsState.itemFeedWatermark };
+  }
+
   // Replace 'element' sort with 'elementWeapon' and 'elementArmor'
   const sortOrder = settings.itemSortOrderCustom || [];
   const reversals = settings.itemSortReversals || [];

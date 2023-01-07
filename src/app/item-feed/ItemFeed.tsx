@@ -89,10 +89,7 @@ export default function ItemFeed({
     itemsToShow
   );
 
-  const items =
-    itemFeedWatermark !== undefined
-      ? untaggedItems.filter((i) => isNewerThan(i, itemFeedWatermark))
-      : untaggedItems;
+  const items = untaggedItems.filter((i) => isNewerThan(i, itemFeedWatermark));
 
   return (
     <>
