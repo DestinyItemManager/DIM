@@ -8,7 +8,7 @@
 }
 
 .resultButton {
-  composes: filter-bar-button from global;
+  composes: filterBarButton from '../search/SearchBar.m.scss';
   display: flex;
   align-items: center;
 

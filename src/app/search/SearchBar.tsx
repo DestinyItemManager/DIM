@@ -71,6 +71,7 @@ interface ProvidedProps {
   /** An optional menu of actions that can be executed on the search. Always shown. */
   menu?: React.ReactNode;
   instant?: boolean;
+  className?: string;
   /** Fired whenever the query changes (already debounced) */
   onQueryChanged(query: string): void;
   /** Fired whenever the query has been cleared */
@@ -212,6 +213,7 @@ function SearchBar(
     validateQuery,
     autocompleter,
     recentSearches,
+    className,
     menu,
   }: Props,
   ref: React.Ref<SearchFilterRef>
@@ -456,7 +458,7 @@ function SearchBar(
 
   return (
     <div
-      className={clsx('search-filter', styles.searchBar, { [styles.open]: isOpen })}
+      className={clsx(className, 'search-filter', styles.searchBar, { [styles.open]: isOpen })}
       role="search"
       enterKeyHint="search"
       {...getComboboxProps()}
@@ -491,7 +493,7 @@ function SearchBar(
               animate={{ scale: 1 }}
               key="save"
               type="button"
-              className={clsx('filter-bar-button', styles.saveSearchButton)}
+              className={clsx(styles.filterBarButton, styles.saveSearchButton)}
               onClick={toggleSaved}
               title={t('Header.SaveSearch')}
             >
@@ -507,7 +509,7 @@ function SearchBar(
               animate={{ scale: 1 }}
               key="clear"
               type="button"
-              className="filter-bar-button"
+              className={styles.filterBarButton}
               onClick={clearFilter}
               title={t('Header.Clear')}
             >
@@ -521,7 +523,7 @@ function SearchBar(
             layout
             key="menu"
             type="button"
-            className={clsx('filter-bar-button', styles.openButton)}
+            className={clsx(styles.filterBarButton, styles.openButton)}
             {...getToggleButtonProps()}
             aria-label="toggle menu"
           >
@@ -540,8 +542,8 @@ function SearchBar(
                 <UserGuideLink topic="Item-Search" />
               </>
             }
-            sheetClassName="filterHelp"
             freezeInitialHeight
+            sheetClassName={styles.filterHelp}
           >
             <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
               <LazyFilterHelp />

@@ -150,3 +150,53 @@
 .saveSearchButton > :global(.app-icon) {
   color: $orange !important;
 }
+
+.filterHelp {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.filterBarButton {
+  margin: 0 6px;
+  padding: 0;
+  appearance: none;
+  display: inline-block;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+
+  :focus {
+    outline: 1px solid $orange;
+  }
+
+  @include phone-portrait {
+    margin-right: 8px !important;
+  }
+
+  :global(.mobile-search-link) & {
+    top: 0;
+  }
+
+  :global(.app-icon) {
+    font-size: 14px !important;
+    color: #999 !important;
+    // Increase touch target size
+    padding: 4px;
+    margin: -4px;
+    margin-left: 4px;
+    &:first-child {
+      margin-left: -4px;
+    }
+    &:hover {
+      color: #e8a534 !important;
+    }
+    :global(.mobile-search-link) & {
+      font-size: 18px !important;
+    }
+  }
+
+  span,
+  a {
+    margin: 0 !important;
+  }
+}
