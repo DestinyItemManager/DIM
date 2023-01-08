@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // Variables and mixins that can be used from any SCSS file
 
 // DIM orange and blue, accent colors
@@ -142,4 +144,27 @@ $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
       height: 10px;
     }
   }
+}
+
+/*
+Utility functions to allow for augmenting a hex color value with an alpha component.
+e.g.
+  color: dim-hex-with-alpha(#ff7b00, 0.5);
+produces
+  color: rgba(255, 128, 0, 0.5);
+*/
+
+// Converts a 6-character hex color into a comma-separated list of RGB values, to use within the 'rgba' function.
+@function dim-hex-to-rgb-values($hex) {
+  @return color.red($hex), color.green($hex), color.blue($hex);
+}
+
+// Produces an 'rgba' function usage for the specified comma-separated RGB values and alpha.
+@function dim-rgb-values-to-rgba($values, $alpha: 1) {
+  @return #{'rgba(' + $values + ', ' + $alpha + ')'};
+}
+
+// Augments a hex color with the specified alpha value and returns its 'rgba' representation.
+@function dim-hex-with-alpha($hex, $alpha) {
+  @return dim-rgb-values-to-rgba(dim-hex-to-rgb-values($hex), $alpha);
 }
