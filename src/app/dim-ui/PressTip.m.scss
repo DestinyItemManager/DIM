@@ -15,14 +15,14 @@ $horizontal-padding: 11px;
 .tooltip {
   --tooltip-ribbon-color: #8e8e9e;
   --tooltip-background-color: #151523;
-  --tooltip-border-color: #5d5970;
+  --tooltip-border-color-rgb: #{dim-hex-to-rgb-values(#5d5970)};
 
   position: absolute;
   background-color: var(--tooltip-background-color);
   color: #dadaea;
   width: fit-content;
   max-width: 306px;
-  border: 1px solid var(--tooltip-border-color);
+  border: 1px solid dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb));
   border-top-width: $ribbon-width;
   border-radius: $ribbon-width;
   box-shadow: 0 0 24px 6px #080811;
@@ -51,7 +51,7 @@ $horizontal-padding: 11px;
   }
 
   hr {
-    border-color: var(--tooltip-border-color);
+    border-color: dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb));
   }
 
   p {
@@ -87,7 +87,7 @@ $horizontal-padding: 11px;
     border-width: 0;
     border-style: solid;
     position: absolute;
-    border-color: var(--tooltip-border-color);
+    border-color: dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb));
   }
 
   &[data-popper-placement='top'] .arrow {
@@ -127,8 +127,8 @@ $horizontal-padding: 11px;
 
   &.minimalTooltip {
     border-radius: 3px;
-    --tooltip-ribbon-color: var(--tooltip-border-color);
-    background-color: var(--tooltip-border-color);
+    --tooltip-ribbon-color: #{dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb))};
+    background-color: dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb));
     border: none;
     box-shadow: 0 0 10px 3px #080811;
 
@@ -152,7 +152,7 @@ $horizontal-padding: 11px;
   .section:not(:empty) {
     margin: 8px #{-$horizontal-padding} -8px #{-$horizontal-padding};
     padding: 5px $horizontal-padding 7px $horizontal-padding;
-    border-top: 1px solid rgba(var(--tooltip-border-color), 0.5);
+    border-top: 1px solid dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb), $alpha: 0.5);
 
     > :first-child {
       margin-top: 0;
