@@ -4,6 +4,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import { useMemo } from 'react';
 import Armory from './Armory';
 import styles from './ArmorySheet.m.scss';
@@ -31,16 +32,20 @@ export default function ArmorySheet({ item, onClose }: { item: DimItem; onClose(
   const betterItemHash = useMemo(() => {
     if (item.vendor && item.bucket?.hash === THE_FORBIDDEN_BUCKET) {
       const allItemDefs = Object.values(defs.InventoryItem.getAll());
-      const betterReplacement = allItemDefs.find(
-        (i) =>
-          i.collectibleHash &&
-          i.displayProperties?.name === item.name &&
-          i.itemCategoryHashes?.includes(ItemCategoryHashes.Weapon)
+      const betterReplacement = _.maxBy(
+        allItemDefs.filter(
+          (i) =>
+            i.collectibleHash &&
+            i.displayProperties?.name === item.name &&
+            i.itemCategoryHashes?.includes(ItemCategoryHashes.Weapon)
+        ),
+        // with multiple options, prefer the one that "looks similar"
+        (i) => i.iconWatermark === item.iconOverlay
       );
 
       return betterReplacement?.hash;
     }
-  }, [defs.InventoryItem, item.bucket?.hash, item.name, item.vendor]);
+  }, [defs.InventoryItem, item.bucket?.hash, item.iconOverlay, item.name, item.vendor]);
 
   return (
     <Sheet onClose={onClose} sheetClassName={styles.sheet}>
