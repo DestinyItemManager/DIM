@@ -10,6 +10,7 @@ import { getTag, TagCommand, tagConfig, TagValue } from './dim-item-info';
 import { setItemLockState } from './item-move-service';
 import { DimItem } from './item-types';
 import { itemHashTagsSelector, itemInfosSelector, tagSelector } from './selectors';
+import { canSyncLockState } from './SyncTagLock';
 
 /**
  * Bulk tag items, with an undo button in a notification.
@@ -112,7 +113,9 @@ export function bulkLockItems(items: DimItem[], locked: boolean): ThunkResult {
   return async (dispatch, getState) => {
     // Don't change lock state for items that are having their lock state synced to their tag
     const autoLockTagged = settingSelector('autoLockTagged')(getState());
-    items = autoLockTagged ? items.filter((item) => !tagSelector(item)(getState())) : items;
+    items = autoLockTagged
+      ? items.filter((item) => !tagSelector(item)(getState()) || !canSyncLockState(item))
+      : items;
     try {
       for (const item of items) {
         await dispatch(setItemLockState(item, locked));

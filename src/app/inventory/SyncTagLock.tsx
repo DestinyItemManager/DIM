@@ -9,6 +9,18 @@ import { setItemLockState } from './item-move-service';
 import { DimItem } from './item-types';
 import { allItemsSelector, itemInfosSelector, profileErrorSelector } from './selectors';
 
+/** Whether an item's lock state can be controlled by its tag (irrespective of whether it currently is) */
+export function canSyncLockState(item: DimItem) {
+  return (
+    item.lockable &&
+    item.taggable &&
+    // don't auto-lock crafted items because they must be unlocked to reshape and DIM shouldn't re-lock an item while the user is choosing new perks
+    !item.crafted &&
+    // locking means something very different for finishers
+    item.bucket.hash !== BucketHashes.Finishers
+  );
+}
+
 /**
  * Rather than getting all items that need to change lock state, we return just the first.
  * Once that item changes state, the selector will return the next item, and so on.
@@ -18,7 +30,7 @@ function getNextItemToChangeLockState(
   itemInfos: ItemInfos
 ): [item: DimItem, lock: boolean] | [] {
   for (const item of allItems) {
-    if (item.lockable && item.taggable && item.bucket.hash !== BucketHashes.Finishers) {
+    if (canSyncLockState(item)) {
       switch (getTag(item, itemInfos)) {
         case 'favorite':
         case 'keep':

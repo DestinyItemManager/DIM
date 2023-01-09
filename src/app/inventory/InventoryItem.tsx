@@ -13,6 +13,7 @@ import ItemIcon from './ItemIcon';
 import ItemIconPlaceholder from './ItemIconPlaceholder';
 import NewItemIndicator from './NewItemIndicator';
 import { getSubclassIconInfo } from './subclass';
+import { canSyncLockState } from './SyncTagLock';
 import TagIcon from './TagIcon';
 
 interface Props {
@@ -104,7 +105,7 @@ export default function InventoryItem({
         <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
         {(tag || item.locked || notes) && (
           <div className={styles.icons}>
-            {item.locked && (!autoLockTagged || !tag) && (
+            {item.locked && (!autoLockTagged || !tag || !canSyncLockState(item)) && (
               <AppIcon
                 className={styles.icon}
                 icon={item.bucket.hash !== BucketHashes.Finishers ? lockIcon : starIcon}
