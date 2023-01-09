@@ -596,7 +596,7 @@ function downloadWeapons(
       row['Crafted Level'] = item.craftedInfo?.level ?? 0;
 
       row['Kill Tracker'] = getItemKillTrackerInfo(item)?.count ?? 0;
-      row.Foundry = item.foundry?.replace('foundry.', '');
+      row.Foundry = item.foundry;
     }
 
     row.Loadouts = formatLoadouts(item, loadouts);

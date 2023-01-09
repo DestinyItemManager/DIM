@@ -529,7 +529,6 @@ export function makeItem(
     availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes,
     // These get filled in later
     breakerType: null,
-    foundry: null,
     percentComplete: 0,
     hidePercentage: false,
     stats: null,
@@ -704,15 +703,16 @@ export function makeItem(
     createdItem.breakerType = defs.BreakerType.get(extendedBreaker[createdItem.hash]);
   }
 
-  if (itemDef.traitIds?.some((trait) => trait.startsWith('foundry.'))) {
-    createdItem.foundry = itemDef.traitIds
-      .filter((trait) => trait.startsWith('foundry.'))[0]
-      .replace('_', '-'); // tex_mechanica
-  }
-
-  if (extendedFoundry[createdItem.hash]) {
-    createdItem.foundry = extendedFoundry[createdItem.hash];
-  }
+  // TODO: compute this on demand
+  createdItem.foundry =
+    // TODO: we should generate extendedFoundry without the "foundry." prefix
+    (
+      extendedFoundry[createdItem.hash] ??
+      itemDef.traitIds
+        ?.find((trait) => trait.startsWith('foundry.'))
+        // tex_mechanica
+        ?.replace('_', '-')
+    )?.replace('foundry.', '');
 
   // linear fusion rifles always seem to contain the "fusion rifle" category as well.
   // it's a fascinating "did you know", but ultimately not useful to us, so we remove it
