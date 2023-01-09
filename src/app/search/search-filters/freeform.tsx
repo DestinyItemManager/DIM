@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DIM_LANG_INFOS } from 'app/i18n';
 import { tl } from 'app/i18next-t';
 import { getNotes } from 'app/inventory/dim-item-info';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, DimPlug } from 'app/inventory/item-types';
 import { isD1Item } from 'app/utils/item-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -125,14 +125,14 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'perk',
     description: tl('Filter.Perk'),
     format: 'freeform',
-    filter: ({ filterValue, language }) => {
+    filter: ({ filterValue, language, d2Definitions }) => {
       const startWord = startWordRegexp(plainString(filterValue, language), language);
       const test = (s: string) => startWord.test(plainString(s, language));
       return (item) =>
         (isD1Item(item) &&
           item.talentGrid &&
           testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes)) ||
-        (item.sockets && testStringsFromAllSockets(test, item));
+        (item.sockets && testStringsFromAllSockets(test, item, d2Definitions));
     },
   },
   {
@@ -155,13 +155,13 @@ const freeformFilters: FilterDefinition[] = [
         );
       }
     },
-    filter: ({ filterValue, language }) => {
+    filter: ({ filterValue, language, d2Definitions }) => {
       const startWord = startWordRegexp(plainString(filterValue, language), language);
       const test = (s: string) => startWord.test(plainString(s, language));
       return (item) =>
         (isD1Item(item) &&
           testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes, false)) ||
-        testStringsFromAllSockets(test, item, false);
+        testStringsFromAllSockets(test, item, d2Definitions, false);
     },
   },
   {
@@ -179,7 +179,7 @@ const freeformFilters: FilterDefinition[] = [
           test(item.description) ||
           test(item.typeName) ||
           (isD1Item(item) && testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes)) ||
-          testStringsFromAllSockets(test, item) ||
+          testStringsFromAllSockets(test, item, d2Definitions) ||
           (d2Definitions &&
             (testStringsFromObjectives(test, d2Definitions, item.objectives) ||
               testStringsFromRewards(test, d2Definitions, item.pursuit)))
@@ -255,6 +255,7 @@ function testStringsFromRewards(
 function testStringsFromAllSockets(
   test: (str: string) => boolean,
   item: DimItem,
+  defs: D2ManifestDefinitions | undefined,
   includeDescription = true
 ): boolean {
   if (!item.sockets) {
@@ -268,7 +269,11 @@ function testStringsFromAllSockets(
           plug.plugDef.displayProperties,
           includeDescription
         ) ||
-        test(plug.plugDef.itemTypeDisplayName)
+        test(plug.plugDef.itemTypeDisplayName) ||
+        (defs &&
+          getPlugPerks(plug, defs).some((perk) =>
+            testStringsFromDisplayPropertiesMap(test, perk.displayProperties, includeDescription)
+          ))
       ) {
         return true;
       }
@@ -283,4 +288,8 @@ function testStringsFromAllSockets(
     }
   }
   return false;
+}
+
+function getPlugPerks(plug: DimPlug, defs: D2ManifestDefinitions) {
+  return (plug.plugDef.perks || []).map((perk) => defs.SandboxPerk.get(perk.perkHash));
 }
