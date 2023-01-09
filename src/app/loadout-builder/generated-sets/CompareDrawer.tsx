@@ -1,5 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import Select from 'app/dim-ui/Select';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -222,20 +223,16 @@ export default function CompareDrawer({
             store={selectedStore}
             hideOptimizeArmor={true}
             actionButtons={[
-              <select
+              <Select<Loadout>
                 key="select-loadout"
-                value={selectedLoadout.id}
-                onChange={(event) => {
-                  const selected = useableLoadouts.find((l) => l.id === event.target.value);
-                  setSelectedLoadout(selected);
-                }}
-              >
-                {useableLoadouts.map((l) => (
-                  <option key={l.id} value={l.id}>
-                    {l.name}
-                  </option>
-                ))}
-              </select>,
+                value={selectedLoadout}
+                options={useableLoadouts.map((l) => ({
+                  key: l.id,
+                  value: l,
+                  content: l.name,
+                }))}
+                onChange={(l) => setSelectedLoadout(l)}
+              />,
             ]}
           />
         </div>
