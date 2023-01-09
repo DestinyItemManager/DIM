@@ -3,10 +3,8 @@
 .contents {
   display: flex;
   flex-flow: row wrap;
-  @include flex-gap(12px, $marginBottom: 10px);
-  @include phone-portrait {
-    @include flex-gap(12px, $marginBottom: 10px);
-  }
+  gap: 12px;
+  margin-bottom: 10px;
 }
 
 .mods {
@@ -17,5 +15,5 @@
   display: flex;
   flex-flow: row wrap;
   margin: 10px auto;
-  @include flex-gap(4px);
+  gap: 4px;
 }

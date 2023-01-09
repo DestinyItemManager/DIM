@@ -1,8 +1,10 @@
 @use '../variables.scss' as *;
 
 .metrics {
+  display: flex;
+  flex-direction: column;
   margin: 6px 10px 8px;
-  @include vertical-space-children(24px);
+  gap: 8px;
 }
 
 .title {

@@ -4,6 +4,9 @@
 
 .items {
   composes: items from './LoadoutItemCategorySection.m.scss';
+  :global(.item) {
+    height: var(--item-icon-size) !important;
+  }
 }
 
 .unequipped {

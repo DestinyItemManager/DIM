@@ -26,5 +26,5 @@
   display: flex;
   flex-flow: row wrap;
   align-items: center;
-  @include flex-gap(4px);
+  gap: 4px;
 }

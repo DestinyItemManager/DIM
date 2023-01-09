@@ -15,7 +15,7 @@
   align-self: center;
   display: inline-flex;
   align-items: center;
-  @include horizontal-space-children(4px);
+  gap: 4px;
 
   &:hover .badge {
     background-color: black;
