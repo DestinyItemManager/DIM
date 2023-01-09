@@ -132,12 +132,7 @@ const ITEM_COMPARATORS: {
   basePower: reverseComparator(compareBy((item) => item.power)),
   // This only sorts by D1 item quality
   rating: reverseComparator(
-    compareBy((item: DimItem & { quality: { min: number } }) => {
-      if (item.quality?.min) {
-        return item.quality.min;
-      }
-      return undefined;
-    })
+    compareBy((item: DimItem & { quality: { min: number } }) => item.quality?.min)
   ),
   // Titan -> Hunter -> Warlock -> Unknown
   classType: compareBy((item) => item.classType),
