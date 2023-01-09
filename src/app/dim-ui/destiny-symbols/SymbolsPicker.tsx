@@ -2,7 +2,6 @@ import { t } from 'app/i18next-t';
 import { SearchInput } from 'app/search/SearchInput';
 import { tempContainer } from 'app/utils/temp-container';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
-import _ from 'lodash';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
@@ -48,21 +47,6 @@ export default function SymbolsPicker<T extends HTMLTextAreaElement | HTMLInputE
     return () => i?.removeEventListener('blur', listener);
   });
 
-  const makePopup = () => (
-    <ClickOutside onClickOutside={() => setOpen(false)}>
-      <SymbolsWindow
-        onChooseGlyph={(symbol) => {
-          if (input.current) {
-            const inputText = input.current.value;
-            const insIndex = insertionIndex ?? inputText.length;
-            setValue(inputText.slice(0, insIndex) + symbol + inputText.slice(insIndex));
-            setInsertionIndex(insIndex + symbol.length);
-          }
-        }}
-      />
-    </ClickOutside>
-  );
-
   return (
     <div className={styles.buttonDiv}>
       <button
@@ -76,7 +60,20 @@ export default function SymbolsPicker<T extends HTMLTextAreaElement | HTMLInputE
       </button>
       {open &&
         ReactDOM.createPortal(
-          <div ref={tooltipContents}>{_.isFunction(makePopup) ? makePopup() : makePopup}</div>,
+          <div ref={tooltipContents} style={{ zIndex: 20 }}>
+            <ClickOutside onClickOutside={() => setOpen(false)}>
+              <SymbolsWindow
+                onChooseGlyph={(symbol) => {
+                  if (input.current) {
+                    const inputText = input.current.value;
+                    const insIndex = insertionIndex ?? inputText.length;
+                    setValue(inputText.slice(0, insIndex) + symbol + inputText.slice(insIndex));
+                    setInsertionIndex(insIndex + symbol.length);
+                  }
+                }}
+              />
+            </ClickOutside>
+          </div>,
           pressTipRoot.current || tempContainer
         )}
     </div>
