@@ -1,5 +1,7 @@
 ## Next
 
+## 7.51.0 <span class="changelog-date">(2023-01-08)</span>
+
 * If you add hashtags to your loadouts' names or notes, DIM will show buttons for quickly filtering down to loadouts that include that hashtag.
 * Fixed a bug where the "Show Older Items" button in the Item Feed would not permanently show all old items.
 * The Armor and Weapons CSV export in Organizer and Settings now includes a Loadouts column.
