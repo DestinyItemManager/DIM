@@ -15,16 +15,10 @@ import { DimError } from 'app/utils/dim-error';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import {
   DestinyCharacterProgressionComponent,
-  DestinyCollectibleComponent,
-  DestinyCollectiblesComponent,
   DestinyItemComponent,
-  DestinyProfileCollectiblesComponent,
   DestinyProfileResponse,
-  DictionaryComponentResponse,
-  SingleComponentResponse,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
@@ -116,21 +110,6 @@ export function updateCharacters(): ThunkResult {
 
     dispatch(charactersUpdated(characters));
   };
-}
-
-export function mergeCollectibles(
-  profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
-  characterCollectibles: DictionaryComponentResponse<DestinyCollectiblesComponent>
-) {
-  const allCollectibles = {
-    ...profileCollectibles?.data?.collectibles,
-  };
-
-  _.forIn(characterCollectibles?.data || {}, ({ collectibles }) => {
-    Object.assign(allCollectibles, collectibles);
-  });
-
-  return allCollectibles;
 }
 
 /**
@@ -375,18 +354,13 @@ export function buildStores(
 
   const lastPlayedDate = findLastPlayedDate(profileInfo);
 
-  const mergedCollectibles = mergeCollectibles(
-    profileInfo.profileCollectibles,
-    profileInfo.characterCollectibles
-  );
-
   const processSpan = transaction?.startChild({
     op: 'processItems',
   });
-  const vault = processVault(defs, buckets, profileInfo, mergedCollectibles);
+  const vault = processVault(defs, buckets, profileInfo);
 
   const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
-    processCharacter(defs, buckets, characterId, profileInfo, mergedCollectibles, lastPlayedDate)
+    processCharacter(defs, buckets, characterId, profileInfo, lastPlayedDate)
   );
   processSpan?.finish();
 
@@ -434,9 +408,6 @@ function processCharacter(
   buckets: InventoryBuckets,
   characterId: string,
   profileInfo: DestinyProfileResponse,
-  mergedCollectibles: {
-    [hash: number]: DestinyCollectibleComponent;
-  },
   lastPlayedDate: Date
 ): DimStore {
   const character = profileInfo.characters.data![characterId];
@@ -469,7 +440,6 @@ function processCharacter(
     store,
     items,
     itemComponents,
-    mergedCollectibles,
     uninstancedItemObjectives,
     profileRecords
   );
@@ -480,10 +450,7 @@ function processCharacter(
 function processVault(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
-  profileInfo: DestinyProfileResponse,
-  mergedCollectibles: {
-    [hash: number]: DestinyCollectibleComponent;
-  }
+  profileInfo: DestinyProfileResponse
 ): DimStore {
   const profileInventory = profileInfo.profileInventory.data
     ? profileInfo.profileInventory.data.items
@@ -508,7 +475,6 @@ function processVault(
     store,
     items,
     itemComponents,
-    mergedCollectibles,
     undefined,
     profileRecords
   );

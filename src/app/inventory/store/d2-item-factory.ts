@@ -15,8 +15,6 @@ import {
   ComponentPrivacySetting,
   DestinyAmmunitionType,
   DestinyClass,
-  DestinyCollectibleComponent,
-  DestinyCollectibleState,
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
@@ -77,9 +75,6 @@ export function processItems(
   owner: DimStore,
   items: DestinyItemComponent[],
   itemComponents: DestinyItemComponentSetOfint64,
-  mergedCollectibles: {
-    [hash: number]: DestinyCollectibleComponent;
-  },
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   },
@@ -96,7 +91,6 @@ export function processItems(
         itemComponents,
         item,
         owner,
-        mergedCollectibles,
         uninstancedItemObjectives,
         profileRecords
       );
@@ -160,9 +154,6 @@ export function makeFakeItem(
   itemHash: number,
   itemInstanceId?: string,
   quantity?: number,
-  mergedCollectibles?: {
-    [hash: number]: DestinyCollectibleComponent;
-  },
   profileRecords?: DestinyProfileRecordsComponent,
   allowWishList?: boolean
 ): DimItem | null {
@@ -187,7 +178,6 @@ export function makeFakeItem(
       versionNumber: defs.InventoryItem.get(itemHash)?.quality?.currentVersion,
     },
     undefined,
-    mergedCollectibles,
     undefined,
     profileRecords
   );
@@ -206,10 +196,7 @@ export function makeItemSingle(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   item: DestinyItemResponse,
-  stores: DimStore[],
-  mergedCollectibles?: {
-    [hash: number]: DestinyCollectibleComponent;
-  }
+  stores: DimStore[]
 ): DimItem | null {
   if (!item.item.data) {
     return null;
@@ -242,8 +229,7 @@ export function makeItemSingle(
       objectives: m(item.objectives),
     },
     item.item.data,
-    owner,
-    mergedCollectibles
+    owner
   );
 }
 
@@ -255,7 +241,6 @@ export function makeItemSingle(
  * @param newItems a set of item IDs representing the previous list of new items
  * @param item "raw" item from the Destiny API
  * @param owner the ID of the owning store
- * @param mergedCollectibles collectible information so each DimItem is self-aware of whether it's already owned
  * @param uninstancedItemObjectives the owning character's dictionary of uninstanced objectives
  */
 // TODO: extract individual item components first!
@@ -265,9 +250,6 @@ export function makeItem(
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: DimStore | undefined,
-  mergedCollectibles?: {
-    [hash: number]: DestinyCollectibleComponent;
-  },
   uninstancedItemObjectives?: {
     [key: number]: DestinyObjectiveProgress[];
   },
@@ -429,12 +411,8 @@ export function makeItem(
     itemDef.iconWatermarkShelved ||
     undefined;
 
-  // collection stuff: establish a collectedness state, and hashes leading to the collectible and source
-  const { collectibleHash } = itemDef;
-  let collectibleState: DestinyCollectibleState | undefined;
-  if (collectibleHash) {
-    collectibleState = mergedCollectibles?.[collectibleHash]?.state;
-  }
+  const collectibleHash = itemDef.collectibleHash;
+  // Do we need this now?
   const source = collectibleHash
     ? defs.Collectible.get(collectibleHash, itemDef.hash)?.sourceHash
     : undefined;
@@ -536,7 +514,6 @@ export function makeItem(
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source,
-    collectibleState,
     collectibleHash,
     missingSockets: false,
     displaySource: itemDef.displaySource,

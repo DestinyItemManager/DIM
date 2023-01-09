@@ -18,11 +18,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh-events';
 import { loadAllVendors } from './actions';
 import { toVendor } from './d2-vendors';
-import {
-  mergedCollectiblesSelector,
-  ownedVendorItemsSelector,
-  vendorsByCharacterSelector,
-} from './selectors';
+import { ownedVendorItemsSelector, vendorsByCharacterSelector } from './selectors';
 import styles from './SingleVendor.m.scss';
 import { VendorLocation } from './Vendor';
 import VendorItems from './VendorItems';
@@ -39,7 +35,6 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
   const profileResponse = useSelector(profileResponseSelector);
   const vendors = useSelector(vendorsByCharacterSelector);
   const defs = useD2Definitions();
-  const mergedCollectibles = useSelector(mergedCollectiblesSelector);
   const dispatch = useThunkDispatch();
 
   // TODO: get for all characters, or let people select a character? This is a hack
@@ -122,8 +117,7 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
     account,
     characterId,
     vendorResponse?.itemComponents[vendorHash],
-    vendorResponse?.sales.data?.[vendorHash]?.saleItems,
-    mergedCollectibles
+    vendorResponse?.sales.data?.[vendorHash]?.saleItems
   );
 
   if (!d2Vendor) {

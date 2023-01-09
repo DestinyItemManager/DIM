@@ -4,7 +4,6 @@ import {
   DestinyAmmunitionType,
   DestinyBreakerTypeDefinition,
   DestinyClass,
-  DestinyCollectibleState,
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
   DestinyEnergyTypeDefinition,
@@ -225,8 +224,6 @@ export interface DimItem {
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The foundry this item was made by */
   foundry: string | null;
-  /** The state of this item in the user's D2 Collection */
-  collectibleState?: DestinyCollectibleState;
   /** Extra tooltips to show in the item popup */
   tooltipNotifications?: DestinyItemTooltipNotification[];
   /** Index assigned to item by Bungie */
