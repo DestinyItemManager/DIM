@@ -1,8 +1,7 @@
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { symbolData } from 'data/d2/symbol-name-sources';
 import { createSelector } from 'reselect';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
-
-import { symbolData } from '../../../data/d2/symbol-name-sources';
 
 // matches a bracketed thing in the string
 export const iconPlaceholder = /(\[[^\]]+\])/g;

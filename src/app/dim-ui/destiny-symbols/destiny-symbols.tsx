@@ -1,9 +1,8 @@
-import { symbolData, TranslateManually } from '../../../data/d2/symbol-name-sources';
-
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t, tl } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
+import { symbolData, TranslateManually } from 'data/d2/symbol-name-sources';
 import { createSelector } from 'reselect';
 import { conversionTableSelector } from './rich-destiny-text';
 

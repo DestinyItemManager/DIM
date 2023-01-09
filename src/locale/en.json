@@ -314,8 +314,10 @@
     "Gilded": "Gilded",
     "Misadventure": "Misadventure",
     "Missing": "Missing",
+    "OpenSymbolsPicker": "Open Symbols Picker",
     "Quickfall": "Quickfall",
     "ScorchCannon": "Scorch Cannon",
+    "SearchSymbols": "Search Symbols...",
     "Smoke": "Smoke"
   },
   "Header": {

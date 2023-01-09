@@ -1,17 +1,19 @@
+import { t } from 'app/i18next-t';
+import { SearchInput } from 'app/search/SearchInput';
 import { tempContainer } from 'app/utils/temp-container';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-
+import { FontGlyphs } from 'data/d2/d2-font-glyphs';
 import _ from 'lodash';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
+import ClickOutside from '../ClickOutside';
 import { PressTipRoot } from '../PressTip';
 import { usePopper } from '../usePopper';
-import { symbolsSelector } from './destiny-symbols';
-
-import { SearchInput } from 'app/search/SearchInput';
-import ClickOutside from '../ClickOutside';
 import ColorDestinySymbols from './ColorDestinySymbols';
+import { symbolsSelector } from './destiny-symbols';
 import styles from './SymbolsPicker.m.scss';
+
+const symbolsIcon = String.fromCodePoint(FontGlyphs.gilded_title);
 
 export default function SymbolsPicker<T extends HTMLTextAreaElement | HTMLInputElement>({
   input,
@@ -41,8 +43,9 @@ export default function SymbolsPicker<T extends HTMLTextAreaElement | HTMLInputE
 
   useEffect(() => {
     const i = input.current;
-    i?.addEventListener('blur', updateInsertionIndex);
-    return () => i?.removeEventListener('blur', updateInsertionIndex);
+    const listener = updateInsertionIndex;
+    i?.addEventListener('blur', listener);
+    return () => i?.removeEventListener('blur', listener);
   });
 
   const makePopup = () => (
@@ -67,9 +70,9 @@ export default function SymbolsPicker<T extends HTMLTextAreaElement | HTMLInputE
         ref={controlRef}
         className={styles.symbolsButton}
         onClick={() => setOpen(!open)}
-        title="Open Symbols Picker"
+        title={t('Glyphs.OpenSymbolsPicker')}
       >
-        <span></span>
+        <span>{symbolsIcon}</span>
       </button>
       {open &&
         ReactDOM.createPortal(
@@ -95,7 +98,11 @@ function SymbolsWindow({ onChooseGlyph }: { onChooseGlyph: (unicode: string) => 
       {/* explicitly eat all click events so that clicking in the window doesn't dismiss the item popup */}
       <div className={styles.symbolsWindow} onClick={(e) => e.stopPropagation()}>
         <div className={styles.symbolsSearch}>
-          <SearchInput query={query} onQueryChanged={setQuery} placeholder="Search emoji..." />
+          <SearchInput
+            query={query}
+            onQueryChanged={setQuery}
+            placeholder={t('Glyphs.SearchSymbols')}
+          />
         </div>
         <div className={styles.symbolsBody}>
           <div className={styles.symbolsContainer}>
@@ -118,7 +125,7 @@ function SymbolsWindow({ onChooseGlyph }: { onChooseGlyph: (unicode: string) => 
           </div>
         </div>
         <div className={styles.symbolsFooter}>
-          <ColorDestinySymbols text={preview?.glyph ?? ''} />
+          <ColorDestinySymbols text={preview?.glyph ?? symbolsIcon} />
           {preview && (
             <div>
               <span>{preview.name}</span>
