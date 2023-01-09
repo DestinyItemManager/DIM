@@ -49,7 +49,10 @@ const properties = [
 const isBrowser = typeof window !== 'undefined';
 const isFirefox = isBrowser && (window as any).mozInnerScreenX !== null;
 
-export default function getCaretCoordinates(element: HTMLTextAreaElement, position: number) {
+export default function getCaretCoordinates(
+  element: HTMLTextAreaElement | HTMLInputElement,
+  position: number
+) {
   if (!isBrowser) {
     throw new Error(
       'textarea-caret-position#getCaretCoordinates should only be called in a browser'

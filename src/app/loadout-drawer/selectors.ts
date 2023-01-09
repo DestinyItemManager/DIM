@@ -1,4 +1,5 @@
 import { currentProfileSelector } from 'app/dim-api/selectors';
+import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
@@ -22,6 +23,15 @@ export const loadoutsSelector = createSelector(
       ? Object.values(loadouts).map((loadout) => convertDimApiLoadoutToLoadout(loadout))
       : emptyArray<Loadout>()
 );
+
+export const loadoutsHashtagsSelector = createSelector(loadoutsSelector, (loadouts) => [
+  ...new Set(
+    loadouts.flatMap((loadout) => [
+      ...getHashtagsFromNote(loadout.name),
+      ...getHashtagsFromNote(loadout.notes),
+    ])
+  ),
+]);
 
 export interface LoadoutsByItem {
   [itemId: string]: { loadout: Loadout; loadoutItem: LoadoutItem }[] | undefined;

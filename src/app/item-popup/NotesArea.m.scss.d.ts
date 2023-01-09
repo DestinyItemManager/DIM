@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'addNotesLabel': string;
-  'dropdownMenu': string;
   'editIcon': string;
   'error': string;
   'minimal': string;

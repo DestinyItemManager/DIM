@@ -1,5 +1,7 @@
 ## Next
 
+* Loadout hashtags are now auto-completed in the Loadout name and notes fields. Type `#` to suggest tags used in other Loadouts.
+
 ## 7.51.0 <span class="changelog-date">(2023-01-08)</span>
 
 * If you add hashtags to your loadouts' names or notes, DIM will show buttons for quickly filtering down to loadouts that include that hashtag.
