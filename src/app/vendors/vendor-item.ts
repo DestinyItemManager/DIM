@@ -49,9 +49,10 @@ function getCollectibleState(
   let collectibleState: DestinyCollectibleState | undefined;
   if (collectibleHash) {
     collectibleState =
-      profileResponse?.profileCollectibles?.data?.[collectibleHash]?.state ??
+      profileResponse?.profileCollectibles?.data?.collectibles[collectibleHash]?.state ??
       (characterId
-        ? profileResponse?.characterCollectibles?.data?.[characterId]?.[collectibleHash]?.state
+        ? profileResponse?.characterCollectibles?.data?.[characterId]?.collectibles[collectibleHash]
+            ?.state
         : undefined);
   }
   return collectibleState;
