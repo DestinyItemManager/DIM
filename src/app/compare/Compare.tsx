@@ -427,7 +427,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
     stats.push(
       makeFakeStat(
         firstComparison.primaryStat.statHash,
-        firstComparison.primaryStat.stat.displayProperties,
+        firstComparison.primaryStatDisplayProperties!,
         (item: DimItem) => item.primaryStat || undefined
       )
     );
