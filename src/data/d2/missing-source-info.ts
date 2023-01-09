@@ -2739,6 +2739,23 @@ const missingSources: { [key: string]: number[] } = {
     4125324487, // Bulletsmith's Ire Gauntlets
     4238134294, // Gunsmith's Devotion Robes
   ],
+  sotw: [
+    436695703, // TM-Cogburn Custom Plate
+    498918879, // TM-Earp Custom Grips
+    708921139, // TM-Cogburn Custom Legguards
+    1349399252, // TM-Earp Custom Cloaked Stetson
+    2341879253, // TM-Moss Custom Bond
+    2565015142, // TM-Cogburn Custom Mark
+    3344225390, // TM-Earp Custom Hood
+    3511740432, // TM-Moss Custom Gloves
+    3715136417, // TM-Earp Custom Chaps
+    3870375786, // TM-Moss Custom Pants
+    3933500353, // TM-Cogburn Custom Gauntlets
+    3946384952, // TM-Moss Custom Duster
+    4039955353, // TM-Moss Custom Hat
+    4177293424, // TM-Cogburn Custom Cover
+    4288623897, // TM-Earp Custom Vest
+  ],
   spireofstars: [
     223783885, // Insigne Shade Bond
     503773817, // Insigne Shade Gloves
@@ -2770,6 +2787,23 @@ const missingSources: { [key: string]: number[] } = {
     3867160430, // Insigne Shade Bond
     4135228483, // Turris Shade Plate
     4247935492, // Equitis Shade Cloak
+  ],
+  spireofthewatcher: [
+    436695703, // TM-Cogburn Custom Plate
+    498918879, // TM-Earp Custom Grips
+    708921139, // TM-Cogburn Custom Legguards
+    1349399252, // TM-Earp Custom Cloaked Stetson
+    2341879253, // TM-Moss Custom Bond
+    2565015142, // TM-Cogburn Custom Mark
+    3344225390, // TM-Earp Custom Hood
+    3511740432, // TM-Moss Custom Gloves
+    3715136417, // TM-Earp Custom Chaps
+    3870375786, // TM-Moss Custom Pants
+    3933500353, // TM-Cogburn Custom Gauntlets
+    3946384952, // TM-Moss Custom Duster
+    4039955353, // TM-Moss Custom Hat
+    4177293424, // TM-Cogburn Custom Cover
+    4288623897, // TM-Earp Custom Vest
   ],
   strikes: [
     24244626, // Mark of Shelter
@@ -2941,6 +2975,23 @@ const missingSources: { [key: string]: number[] } = {
   vow: [],
   vowofthedisciple: [],
   wartable: [],
+  watcher: [
+    436695703, // TM-Cogburn Custom Plate
+    498918879, // TM-Earp Custom Grips
+    708921139, // TM-Cogburn Custom Legguards
+    1349399252, // TM-Earp Custom Cloaked Stetson
+    2341879253, // TM-Moss Custom Bond
+    2565015142, // TM-Cogburn Custom Mark
+    3344225390, // TM-Earp Custom Hood
+    3511740432, // TM-Moss Custom Gloves
+    3715136417, // TM-Earp Custom Chaps
+    3870375786, // TM-Moss Custom Pants
+    3933500353, // TM-Cogburn Custom Gauntlets
+    3946384952, // TM-Moss Custom Duster
+    4039955353, // TM-Moss Custom Hat
+    4177293424, // TM-Cogburn Custom Cover
+    4288623897, // TM-Earp Custom Vest
+  ],
   wellspring: [],
   wrathborn: [],
   zavala: [
