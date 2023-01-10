@@ -658,7 +658,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'SandboxPerk',
-      hash: 669536781,
+      hash: 72139184,
       fromRichText: true,
     },
   },
@@ -667,7 +667,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'SandboxPerk',
-      hash: 72139184,
+      hash: 669536781,
       fromRichText: true,
     },
   },
