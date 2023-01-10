@@ -130,16 +130,15 @@ export default function Sheet({
 }: Props) {
   const sheet = useRef<HTMLDivElement>(null);
   const sheetContents = useRef<HTMLDivElement | null>(null);
+  const sheetContentsRefFn = useLockSheetContents(sheetContents);
   const dragHandle = useRef<HTMLDivElement>(null);
 
   const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
+  const [disabled, setParentDisabled] = useDisableParent(forceDisabled);
 
   const reducedMotion = Boolean(useReducedMotion());
   const animationControls = useAnimation();
   const dragControls = useDragControls();
-
-  const [disabled, setParentDisabled] = useDisableParent(forceDisabled);
-  const sheetContentsRefFn = useLockSheetContents(sheetContents);
 
   /**
    * Triggering close starts the animation. The onClose prop is called by the callback
@@ -157,6 +156,9 @@ export default function Sheet({
     [disabled, animationControls]
   );
 
+  // Handle global escape key
+  useGlobalEscapeKey(triggerClose);
+
   // We need to call the onClose callback when then close animation is complete so that
   // the calling component can unmount the sheet
   const handleAnimationComplete = useCallback(
@@ -167,9 +169,6 @@ export default function Sheet({
     },
     [onClose]
   );
-
-  // Handle global escape key
-  useGlobalEscapeKey(triggerClose);
 
   // Determine when to drag. Drags if the touch falls in the header, or if the contents
   // are scrolled all the way to the top.
@@ -226,18 +225,20 @@ export default function Sheet({
     <SheetDisabledContext.Provider value={setParentDisabled}>
       <PressTipRoot.Provider value={sheet}>
         <motion.div
+          // motion props
           initial="close"
           transition={reducedMotion ? reducedMotionTween : spring}
           animate={animationControls}
           variants={animationVariants}
           onAnimationComplete={handleAnimationComplete}
           drag="y"
+          dragControls={dragControls}
+          dragListener={false}
           dragConstraints={dragConstraints}
           dragElastic={0}
-          dragControls={dragControls}
           onDragEnd={handleDragEnd}
-          // old
-          style={{ touchAction: 'none', zIndex }}
+          // regular props
+          style={{ zIndex }}
           className={clsx('sheet', sheetClassName, { [styles.sheetDisabled]: disabled })}
           ref={sheet}
           role="dialog"
