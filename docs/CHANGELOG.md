@@ -1,6 +1,7 @@
 ## Next
 
 * Loadout hashtags are now auto-completed in the Loadout name and notes fields. Type `#` to suggest tags used in other Loadouts.
+* Destiny symbols are now available in Loadout names and notes, and item notes. Type `:` for symbol suggestions or use the symbols picker in the text fields.
 
 ## 7.51.0 <span class="changelog-date">(2023-01-08)</span>
 
