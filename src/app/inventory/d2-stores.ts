@@ -46,7 +46,11 @@ import { DimItem } from './item-types';
 import { ItemPowerSet } from './ItemPowerSet';
 import { d2BucketsSelector, storesLoadedSelector, storesSelector } from './selectors';
 import { DimCharacterStat, DimStore } from './store-types';
-import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
+import {
+  getBucketsWithClassifiedItems,
+  getCharacterStatsData as getD1CharacterStatsData,
+  hasAffectingClassified,
+} from './store/character-utils';
 import { processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
@@ -367,7 +371,7 @@ export function buildStores(
   const stores = [...characters, vault];
 
   const allItems = stores.flatMap((s) => s.items);
-
+  const bucketsWithClassifieds = getBucketsWithClassifiedItems(allItems);
   const characterProgress = getCharacterProgressions(profileInfo);
 
   for (const s of stores) {
@@ -376,9 +380,11 @@ export function buildStores(
       s,
       defs,
       characterProgress,
-      // optional chaining here accounts for a edge-case possible, but type-unadvertised,
+      // optional chaining here accounts for an edge-case, possible, but type-unadvertised,
       // missing artifact power bonus. please keep this here.
-      profileInfo.profileProgression?.data?.seasonalArtifact?.powerBonusProgression?.progressionHash
+      profileInfo.profileProgression?.data?.seasonalArtifact?.powerBonusProgression
+        ?.progressionHash,
+      bucketsWithClassifieds
     );
   }
 
@@ -506,7 +512,9 @@ function updateBasePower(
   store: DimStore,
   defs: D2ManifestDefinitions,
   characterProgress: DestinyCharacterProgressionComponent | undefined,
-  bonusPowerProgressionHash: number | undefined
+  bonusPowerProgressionHash: number | undefined,
+  // calculate this once in the parent function then use it for each store this function assesses
+  bucketsWithClassifieds: Set<number>
 ) {
   if (!store.isVault) {
     const def = defs.Stat.get(StatHashes.Power);
@@ -529,14 +537,7 @@ function updateBasePower(
     statProblems.notEquippable = unrestrictedMaxGearPower !== equippableMaxGearPower;
     statProblems.notOnStore = dropPowerLevel !== unrestrictedMaxGearPower;
 
-    statProblems.hasClassified = allItems.some(
-      (i) =>
-        i.classified &&
-        (i.location.inWeapons ||
-          i.location.inArmor ||
-          (i.power && i.bucket.hash === BucketHashes.Ghost))
-    );
-
+    statProblems.hasClassified = hasAffectingClassified(unrestricted, bucketsWithClassifieds);
     store.stats.maxGearPower = {
       hash: fakeCharacterStatHashes.maxGearPower,
       name: t('Stats.MaxGearPowerAll'),
