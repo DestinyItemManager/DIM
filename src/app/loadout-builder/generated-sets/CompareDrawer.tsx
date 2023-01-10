@@ -186,6 +186,16 @@ export default function CompareDrawer({
 
   const header = <div className={styles.header}>{t('LoadoutBuilder.CompareLoadout')}</div>;
 
+  const loadoutOptions = useMemo(
+    () =>
+      useableLoadouts.map((l) => ({
+        key: l.id,
+        value: l,
+        content: l.name,
+      })),
+    [useableLoadouts]
+  );
+
   // This is likely never to happen but since it is disconnected to the button its here for safety.
   if (!selectedLoadout || !generatedLoadout) {
     return (
@@ -226,11 +236,7 @@ export default function CompareDrawer({
               <Select<Loadout>
                 key="select-loadout"
                 value={selectedLoadout}
-                options={useableLoadouts.map((l) => ({
-                  key: l.id,
-                  value: l,
-                  content: l.name,
-                }))}
+                options={loadoutOptions}
                 onChange={(l) => setSelectedLoadout(l)}
               />,
             ]}
