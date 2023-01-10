@@ -301,10 +301,15 @@ export function optimalItemSet(
   // Solve for the case where our optimizer decided to equip two exotics
   const getLabel = (i: DimItem) => i.equippingLabel;
   // All items that share an equipping label, grouped by label
-  const overlaps = _.groupBy(unrestricted.filter(getLabel), getLabel);
-  _.forIn(overlaps, (overlappingItems) => {
+
+  const overlaps: { [label: string]: DimItem[] } = _.groupBy(
+    unrestricted.filter(getLabel),
+    getLabel
+  );
+
+  for (const overlappingItems of Object.values(overlaps)) {
     if (overlappingItems.length <= 1) {
-      return;
+      continue;
     }
 
     const options: { [x: string]: DimItem }[] = [];
@@ -336,7 +341,7 @@ export function optimalItemSet(
       const bestOption = _.maxBy(options, (opt) => _.sumBy(Object.values(opt), bestItemFn))!;
       items = bestOption;
     }
-  });
+  }
 
   const equippable = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.bucket.hash));
 

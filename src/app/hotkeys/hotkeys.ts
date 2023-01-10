@@ -1,5 +1,4 @@
 import { t, tl } from 'app/i18next-t';
-import _ from 'lodash';
 import Mousetrap from 'mousetrap';
 
 // A unique ID generator
@@ -81,12 +80,12 @@ class HotkeyRegistry {
 
   getAllHotkeys() {
     const combos: { [combo: string]: string } = {};
-    _.forIn(this.hotkeys, (hotkeys) => {
+    for (const hotkeys of Object.values(this.hotkeys)) {
       for (const hotkey of hotkeys) {
         const combo = format(hotkey);
         combos[combo] = hotkey.description;
       }
-    });
+    }
     return combos;
   }
 }

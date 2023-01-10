@@ -50,11 +50,11 @@ const sortDupes = (
     )
   );
 
-  _.forIn(dupes, (dupes) => {
-    if (dupes.length > 1) {
-      dupes.sort(dupeComparator);
+  for (const dupeList of Object.values(dupes)) {
+    if (dupeList.length > 1) {
+      dupeList.sort(dupeComparator);
     }
-  });
+  }
 
   return dupes;
 };
