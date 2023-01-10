@@ -310,6 +310,16 @@
     "Confirm": "Confirm?",
     "UserGuideLink": "User guide"
   },
+  "Glyphs": {
+    "Gilded": "Gilded",
+    "Misadventure": "Misadventure",
+    "Missing": "Missing",
+    "OpenSymbolsPicker": "Open Symbols Picker",
+    "Quickfall": "Quickfall",
+    "ScorchCannon": "Scorch Cannon",
+    "SearchSymbols": "Search Symbols...",
+    "Smoke": "Smoke"
+  },
   "Header": {
     "About": "About DIM",
     "AutoRefresh": "DIM will automatically reload as long as you are still playing.",

@@ -3,6 +3,7 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { apiPermissionGrantedSelector, languageSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t, tl } from 'app/i18next-t';
@@ -134,7 +135,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         {!isPhonePortrait &&
           loadouts.map((loadout) => (
             <PageWithMenu.MenuButton anchor={loadout.id} key={loadout.id}>
-              <span>{loadout.name}</span>
+              <ColorDestinySymbols text={loadout.name} />
             </PageWithMenu.MenuButton>
           ))}
       </PageWithMenu.Menu>

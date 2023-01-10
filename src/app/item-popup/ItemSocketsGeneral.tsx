@@ -1,5 +1,5 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';

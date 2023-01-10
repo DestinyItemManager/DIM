@@ -105,7 +105,7 @@
     width: 24px;
     margin-right: 4px;
   }
-  span:not(:global(.app-icon)) {
+  > span:not(:global(.app-icon)) {
     flex: 1;
     display: block;
     text-transform: uppercase;

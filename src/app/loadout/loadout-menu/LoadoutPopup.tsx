@@ -1,6 +1,7 @@
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import { allItemsSelector, bucketsSelector, hasClassifiedSelector } from 'app/inventory/selectors';
@@ -317,7 +318,7 @@ export default function LoadoutPopup({
                   title={t('Loadouts.MissingItemsWarning')}
                 />
               )}
-              {loadout.name}
+              <ColorDestinySymbols text={loadout.name} />
             </span>
             <span
               className={styles.altButton}
