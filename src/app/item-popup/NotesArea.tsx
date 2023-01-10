@@ -124,22 +124,20 @@ function NotesEditor({
   return (
     <form name="notes">
       <WithSymbolsPicker input={textArea} setValue={(val) => setLiveNotes(val)}>
-        <div>
-          <TextareaAutosize
-            ref={textArea}
-            name="data"
-            autoFocus={nativeAutoFocus}
-            placeholder={t('Notes.Help')}
-            maxLength={maxLength}
-            value={liveNotes}
-            onClick={onClick}
-            onChange={onNotesUpdated}
-            onBlur={stopEvents}
-            onKeyDown={onKeyDown}
-            onTouchStart={stopEvents}
-            onMouseDown={stopEvents}
-          />
-        </div>
+        <TextareaAutosize
+          ref={textArea}
+          name="data"
+          autoFocus={nativeAutoFocus}
+          placeholder={t('Notes.Help')}
+          maxLength={maxLength}
+          value={liveNotes}
+          onClick={onClick}
+          onChange={onNotesUpdated}
+          onBlur={stopEvents}
+          onKeyDown={onKeyDown}
+          onTouchStart={stopEvents}
+          onMouseDown={stopEvents}
+        />
       </WithSymbolsPicker>
       {liveNotes && liveNotes.length > maxLength && (
         <span className={styles.error}>{t('Notes.Error')}</span>
