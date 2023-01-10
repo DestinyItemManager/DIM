@@ -15,8 +15,6 @@
   composes: resetButton from '../common.m.scss';
   font-family: unset;
   margin: 0 2px;
-  position: absolute;
-  left: -20px;
   span {
     font-size: 18px;
   }
@@ -26,11 +24,14 @@
   }
 }
 
-.buttonDiv {
-  flex: 0;
+.wrapperDiv {
   position: relative;
-  width: 0;
-  height: 0;
+}
+
+.buttonDiv {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .symbolsSearch {

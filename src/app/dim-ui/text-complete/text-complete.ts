@@ -69,6 +69,8 @@ export function createSymbolsAutocompleter(symbols: SymbolsMap): StrategyProps {
  * Autocomplete a list of hashtags in this <textarea /> or <input type="text" />.
  * `tags` must have a stable object identity when using this hook (unless the set of tags changes).
  * selectors should ensure this, useMemo doesn't guarantee it per contract but works now.
+ *
+ * When using an input, set an appropriate line-height so that textcomplete doesn't fall back to a slow path...
  */
 export function useAutocomplete(
   textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement>,

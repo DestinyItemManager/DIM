@@ -9,6 +9,7 @@ interface CssExports {
   'symbolsFooter': string;
   'symbolsSearch': string;
   'symbolsWindow': string;
+  'wrapperDiv': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

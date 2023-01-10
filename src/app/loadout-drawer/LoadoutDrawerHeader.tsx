@@ -1,5 +1,5 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
-import SymbolsPicker from 'app/dim-ui/destiny-symbols/SymbolsPicker';
+import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
 import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import React, { useRef } from 'react';
@@ -24,7 +24,7 @@ export default function LoadoutDrawerHeader({
   return (
     <div className={styles.loadoutName}>
       <ClassIcon classType={loadout.classType} />
-      <div className={styles.dimInput}>
+      <WithSymbolsPicker className={styles.dimInput} input={inputRef} setValue={onNameChanged}>
         <input
           name="name"
           ref={inputRef}
@@ -37,8 +37,7 @@ export default function LoadoutDrawerHeader({
           value={loadout.name}
           placeholder={t('Loadouts.LoadoutName')}
         />
-        <SymbolsPicker input={inputRef} setValue={onNameChanged} />
-      </div>
+      </WithSymbolsPicker>
     </div>
   );
 }

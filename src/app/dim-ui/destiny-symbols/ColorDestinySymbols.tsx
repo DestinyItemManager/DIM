@@ -27,7 +27,7 @@ export default function ColorDestinySymbols({
 
 function replaceWithIcon(textSegment: string, index: number) {
   const className = styleTable[textSegment];
-  return styleTable ? (
+  return className ? (
     <span key={textSegment + index} className={className}>
       {textSegment}
     </span>
