@@ -475,9 +475,21 @@ function attachPlugStats(
   socket.plugOptions = plugOptionsWithStats;
 }
 
+// Only compute this once, to avoid repeated translation lookups
+const totalStatTemplate = _.once(() => ({
+  statHash: TOTAL_STAT_HASH,
+  displayProperties: {
+    name: t('Stats.Total'),
+  } as DestinyDisplayPropertiesDefinition,
+  sort: statAllowList.indexOf(TOTAL_STAT_HASH),
+  maximumValue: 1000,
+  bar: false,
+  smallerIsBetter: false,
+  additive: false,
+  isConditionallyActive: false,
+}));
+
 function totalStat(stats: DimStat[]): DimStat {
-  // TODO: base only
-  // TODO: search terms?
   let total = 0;
   let baseTotal = 0;
 
@@ -487,21 +499,26 @@ function totalStat(stats: DimStat[]): DimStat {
   }
 
   return {
+    ...totalStatTemplate(),
     investmentValue: total,
-    statHash: TOTAL_STAT_HASH,
-    displayProperties: {
-      name: t('Stats.Total'),
-    } as DestinyDisplayPropertiesDefinition,
-    sort: statAllowList.indexOf(TOTAL_STAT_HASH),
     value: total,
     base: baseTotal,
-    maximumValue: 1000,
-    bar: false,
-    smallerIsBetter: false,
-    additive: false,
-    isConditionallyActive: false,
   };
 }
+
+const customStatTemplate = _.once(() => ({
+  statHash: CUSTOM_TOTAL_STAT_HASH,
+  displayProperties: {
+    name: t('Stats.Custom'),
+    description: t('Stats.CustomDesc'),
+  } as DestinyDisplayPropertiesDefinition,
+  sort: statAllowList.indexOf(CUSTOM_TOTAL_STAT_HASH),
+  maximumValue: 100,
+  bar: false,
+  smallerIsBetter: false,
+  additive: false,
+  isConditionallyActive: false,
+}));
 
 function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | undefined {
   const customStatDef = settingsSelector(reduxStore.getState()).customTotalStatsByClass[
@@ -522,20 +539,10 @@ function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | und
   }
 
   return {
+    ...customStatTemplate(),
     investmentValue: total,
-    statHash: CUSTOM_TOTAL_STAT_HASH,
-    displayProperties: {
-      name: t('Stats.Custom'),
-      description: t('Stats.CustomDesc'),
-    } as DestinyDisplayPropertiesDefinition,
-    sort: statAllowList.indexOf(CUSTOM_TOTAL_STAT_HASH),
     value: total,
     base: total,
-    maximumValue: 100,
-    bar: false,
-    smallerIsBetter: false,
-    additive: false,
-    isConditionallyActive: false,
   };
 }
 
