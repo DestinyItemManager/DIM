@@ -1,6 +1,7 @@
 const exoticWeaponHashesWithCatalyst = new Set<number>([
   19024058, // Prometheus Lens
   46524085, // Osteo Striga
+  219145368, // The Manticore
   347366834, // Ace of Spades
   374573733, // Delicate Tomb
   400096939, // Outbreak Perfected
