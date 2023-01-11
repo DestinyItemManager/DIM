@@ -175,12 +175,13 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
   };
   lazyTables.forEach((tableShort) => {
     const table = `Destiny${tableShort}Definition` as keyof AllDestinyManifestComponents;
+    const dbTable = db[table];
+    if (!dbTable) {
+      throw new Error(`Table ${table} does not exist in the manifest`);
+    }
+
     defs[tableShort] = {
       get(id: number, requestor?: { hash: number } | string | number) {
-        const dbTable = db[table];
-        if (!dbTable) {
-          throw new Error(`Table ${table} does not exist in the manifest`);
-        }
         const dbEntry = dbTable[id];
         if (!dbEntry && tableShort !== 'Record') {
           // there are valid negative hashes that we have added ourselves via enhanceDBWithFakeEntries,
@@ -199,7 +200,7 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
         return dbEntry;
       },
       getAll() {
-        return db[table];
+        return dbTable;
       },
     };
   });
