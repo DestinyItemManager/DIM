@@ -184,7 +184,7 @@ const knownValuesFilters: FilterDefinition[] = [
         case 'any':
           return (item) => Boolean(item.foundry);
         default:
-          return (item) => item.foundry?.endsWith(filterValue);
+          return (item) => item.foundry === filterValue;
       }
     },
   },

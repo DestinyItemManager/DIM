@@ -275,7 +275,6 @@ function makeFakePursuitItem(
     ammoType: DestinyAmmunitionType.None,
     missingSockets: false,
     breakerType: null,
-    foundry: null,
     pursuit: null,
     taggable: false,
     comparable: false,

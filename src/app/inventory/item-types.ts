@@ -223,7 +223,8 @@ export interface DimItem {
   /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The foundry this item was made by */
-  foundry: string | null;
+  // TODO: only used by search/spreadsheet
+  foundry?: string;
   /** Extra tooltips to show in the item popup */
   tooltipNotifications?: DestinyItemTooltipNotification[];
   /** Index assigned to item by Bungie */
