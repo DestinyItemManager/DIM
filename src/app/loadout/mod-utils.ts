@@ -9,6 +9,7 @@ import {
   DestinyInventoryItemDefinition,
   TierType,
 } from 'bungie-api-ts/destiny2';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { isArmorEnergyLocked } from './armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
@@ -124,15 +125,17 @@ export function getItemEnergyType(
   }
 }
 
-const classItemHash = 912441879;
 function isClassItemOfTier(plugDef: PluggableInventoryItemDefinition, tier: TierType): boolean {
-  return plugDef.plug.plugCategoryHash === classItemHash && plugDef.inventory?.tierType === tier;
+  return (
+    plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2ClassItem &&
+    plugDef.inventory?.tierType === tier
+  );
 }
 
 // XXX: Class Item Artifact Mods are labeled "Class Item Mod" instead of "Class Item Armor Mod"
 function getItemTypeOrTierDisplayName(newDisplayName?: string) {
-  return function (plugDef: PluggableInventoryItemDefinition): string {
-    if (newDisplayName && isClassItemOfTier(plugDef, 5)) {
+  return (plugDef: PluggableInventoryItemDefinition): string => {
+    if (newDisplayName && isClassItemOfTier(plugDef, TierType.Superior)) {
       return newDisplayName;
     } else {
       return plugDef.itemTypeDisplayName;
@@ -146,6 +149,6 @@ function getItemTypeOrTierDisplayName(newDisplayName?: string) {
  * e.g. "General Armor Mod", "Helmet Armor Mod", "Nightmare Mod"
  */
 export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
-  const commonClassItemMod = plugs.find((plugDef) => isClassItemOfTier(plugDef, 2));
+  const commonClassItemMod = plugs.find((plugDef) => isClassItemOfTier(plugDef, TierType.Basic));
   return _.groupBy(plugs, getItemTypeOrTierDisplayName(commonClassItemMod?.itemTypeDisplayName));
 }
