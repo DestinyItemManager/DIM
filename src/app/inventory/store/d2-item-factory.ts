@@ -8,6 +8,7 @@ import {
   uniqueEquipBuckets,
 } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
+import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, warnLog } from 'app/utils/log';
 import { countEnhancedPerks } from 'app/utils/socket-utils';
 import {
@@ -21,7 +22,7 @@ import {
   DestinyItemInstanceComponent,
   DestinyItemResponse,
   DestinyItemSubType,
-  DestinyItemType,
+  DestinyItemTooltipNotification,
   DestinyObjectiveProgress,
   DestinyProfileRecordsComponent,
   DictionaryComponentResponse,
@@ -257,8 +258,9 @@ export function makeItem(
 ): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
 
-  const itemInstanceData: Partial<DestinyItemInstanceComponent> =
-    itemComponents?.instances.data?.[item.itemInstanceId ?? ''] ?? {};
+  const itemInstanceData: Partial<DestinyItemInstanceComponent> = item.itemInstanceId
+    ? itemComponents?.instances.data?.[item.itemInstanceId ?? ''] ?? emptyObject()
+    : emptyObject();
 
   // Missing definition?
   if (!itemDef) {
@@ -334,8 +336,8 @@ export function makeItem(
   const itemType = normalBucket.type || 'Unknown';
 
   const isEngram =
-    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Engrams) ||
     normalBucket.hash === BucketHashes.Engrams ||
+    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Engrams) ||
     false;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
@@ -395,13 +397,14 @@ export function makeItem(
 
   const hiddenOverlay = itemDef.iconWatermark;
 
-  const tooltipNotifications = (item.tooltipNotificationIndexes ?? [])
-    // why the optional chain? well, somehow, an item can return tooltipNotificationIndexes,
-    // but have no tooltipNotifications in its def
-    .map((i) => itemDef.tooltipNotifications?.[i])
-    .filter(Boolean)
-    // a temporary filter because as of witch queen, all tooltips are set to "on"
-    .filter((t) => t && t.displayStyle !== 'ui_display_style_info');
+  const tooltipNotifications = item.tooltipNotificationIndexes?.length
+    ? item.tooltipNotificationIndexes
+        // why the optional chain? well, somehow, an item can return tooltipNotificationIndexes,
+        // but have no tooltipNotifications in its def
+        .map((i) => itemDef.tooltipNotifications?.[i])
+        // a temporary filter because as of witch queen, all tooltips are set to "on"
+        .filter((t) => t && t.displayStyle !== 'ui_display_style_info')
+    : emptyArray<DestinyItemTooltipNotification>();
 
   // null out falsy values like a blank string for a url
   const iconOverlay =
@@ -466,7 +469,7 @@ export function makeItem(
     hash: item.itemHash,
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
-    itemCategoryHashes: itemDef.itemCategoryHashes || [], // see defs.ItemCategory
+    itemCategoryHashes: itemDef.itemCategoryHashes || emptyArray(), // see defs.ItemCategory
     tier: D2ItemTiers[itemDef.inventory!.tierType] || 'Common',
     isExotic: D2ItemTiers[itemDef.inventory!.tierType] === 'Exotic',
     name,
@@ -670,18 +673,6 @@ export function makeItem(
       });
     } else {
       createdItem.hidePercentage = true;
-    }
-  }
-
-  // Secondary Icon
-  if (createdItem.sockets) {
-    const multiEmblem = createdItem.sockets.allSockets.filter(
-      (socket) => socket.plugged?.plugDef.itemType === DestinyItemType.Emblem
-    );
-    const selectedEmblem = multiEmblem[0]?.plugged;
-
-    if (selectedEmblem) {
-      createdItem.secondaryIcon = selectedEmblem.plugDef.secondaryIcon;
     }
   }
 
