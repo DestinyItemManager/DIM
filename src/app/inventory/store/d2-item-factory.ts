@@ -23,7 +23,6 @@ import {
   DestinyItemResponse,
   DestinyItemSubType,
   DestinyItemTooltipNotification,
-  DestinyItemType,
   DestinyObjectiveProgress,
   DestinyProfileRecordsComponent,
   DictionaryComponentResponse,
@@ -675,18 +674,6 @@ export function makeItem(
       });
     } else {
       createdItem.hidePercentage = true;
-    }
-  }
-
-  // Secondary Icon
-  if (createdItem.sockets) {
-    const multiEmblem = createdItem.sockets.allSockets.find(
-      (socket) => socket.plugged?.plugDef.itemType === DestinyItemType.Emblem
-    );
-    const selectedEmblem = multiEmblem?.plugged;
-
-    if (selectedEmblem) {
-      createdItem.secondaryIcon = selectedEmblem.plugDef.secondaryIcon;
     }
   }
 
