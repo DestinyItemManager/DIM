@@ -1,11 +1,13 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D1CharacterResponse } from 'app/destiny1/d1-manifest-types';
+import { powerLevelByKeyword } from 'app/search/d2-known-values';
 import { warnLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import disciplineIcon from 'images/discipline.png';
 import intellectIcon from 'images/intellect.png';
 import strengthIcon from 'images/strength.png';
+import { DimItem } from '../item-types';
 import { DimCharacterStat } from '../store-types';
 
 // Cooldowns
@@ -196,4 +198,39 @@ export function getClass(type: DestinyClass) {
     case DestinyClass.Unknown:
       return 'unknown';
   }
+}
+
+const pinnacleCap = powerLevelByKeyword.pinnaclecap;
+
+/**
+ * Does this store (character) have any classified items that might affect their power level?
+ * Things to consider:
+ * - Classified items don't always lack a power level.
+ * - If a char has an equippable item at pinnacle cap in a particular slot,
+ *   who cares if there's a classified item in that slot? Not like it's higher.
+ *
+ * This relies on a precalculated set generated from allItems, using getBucketsWithClassifiedItems.
+ */
+export function hasAffectingClassified(
+  unrestrictedMaxLightGear: DimItem[],
+  bucketsWithClassifieds: Set<number>
+) {
+  return unrestrictedMaxLightGear.some(
+    (i) =>
+      // isn't pinnacle cap
+      i.power !== pinnacleCap &&
+      // and shares a bucket with a classified item (which might be higher power)
+      bucketsWithClassifieds.has(i.bucket.hash)
+  );
+}
+
+/** figures out which buckets contain classified items */
+export function getBucketsWithClassifiedItems(allItems: DimItem[]) {
+  const bucketsWithClassifieds = new Set<number>();
+  for (const i of allItems) {
+    if (i.classified && !i.power && (i.location.inWeapons || i.location.inArmor)) {
+      bucketsWithClassifieds.add(i.bucket.hash);
+    }
+  }
+  return bucketsWithClassifieds;
 }
