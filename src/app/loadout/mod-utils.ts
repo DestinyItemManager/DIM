@@ -4,7 +4,11 @@ import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
-import { DestinyEnergyType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import {
+  DestinyEnergyType,
+  DestinyInventoryItemDefinition,
+  TierType,
+} from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { isArmorEnergyLocked } from './armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
@@ -120,18 +124,28 @@ export function getItemEnergyType(
   }
 }
 
-function getItemTypeOrTierDisplayName(plugDef: PluggableInventoryItemDefinition): string {
-  // XXX: Class Item Artifact Mods are labeled "Class Item Mod" instead of "Class Item Armor Mod"
-  if (plugDef.itemTypeDisplayName === 'Class Item Mod') {
-    return 'Class Item Armor Mod';
-  } else {
-    return plugDef.itemTypeDisplayName || plugDef.itemTypeAndTierDisplayName;
-  }
+const classItemHash = 912441879;
+function isClassItemOfTier(plugDef: PluggableInventoryItemDefinition, tier: TierType): boolean {
+  return plugDef.plug.plugCategoryHash === classItemHash && plugDef.inventory?.tierType === tier;
+}
+
+// XXX: Class Item Artifact Mods are labeled "Class Item Mod" instead of "Class Item Armor Mod"
+function getItemTypeOrTierDisplayName(newDisplayName?: string) {
+  return function (plugDef: PluggableInventoryItemDefinition): string {
+    if (newDisplayName && isClassItemOfTier(plugDef, 5)) {
+      return newDisplayName;
+    } else {
+      return plugDef.itemTypeDisplayName;
+    }
+  };
 }
 
 /**
- * group a whole variety of mod definitions into related mod-type groups
+ * Group an array of mod definitions into related mod-type groups
+ *
+ * e.g. "General Armor Mod", "Helmet Armor Mod", "Nightmare Mod"
  */
 export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
-  return _.groupBy(plugs, getItemTypeOrTierDisplayName);
+  const commonClassItemMod = plugs.find((plugDef) => isClassItemOfTier(plugDef, 2));
+  return _.groupBy(plugs, getItemTypeOrTierDisplayName(commonClassItemMod?.itemTypeDisplayName));
 }
