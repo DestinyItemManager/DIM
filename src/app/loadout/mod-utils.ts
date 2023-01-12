@@ -120,20 +120,18 @@ export function getItemEnergyType(
   }
 }
 
+function getItemTypeOrTierDisplayName(plugDef: PluggableInventoryItemDefinition): string {
+  // XXX: Class Item Artifact Mods are labeled "Class Item Mod" instead of "Class Item Armor Mod"
+  if (plugDef.itemTypeDisplayName === 'Class Item Mod') {
+    return 'Class Item Armor Mod';
+  } else {
+    return plugDef.itemTypeDisplayName || plugDef.itemTypeAndTierDisplayName;
+  }
+}
+
 /**
  * group a whole variety of mod definitions into related mod-type groups
  */
 export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
-  // allow a plug category hash to be "locked" to
-  // the first itemTypeDisplayName that shows up using it.
-  // this prevents "Class Item Mod" and "Class Item Armor Mod"
-  // from forming two different categories
-  const nameByPCH: NodeJS.Dict<string> = {};
-
-  return _.groupBy(
-    plugs,
-    (plugDef) =>
-      (nameByPCH[plugDef.plug.plugCategoryHash] ??=
-        plugDef.itemTypeDisplayName || plugDef.itemTypeAndTierDisplayName)
-  );
+  return _.groupBy(plugs, getItemTypeOrTierDisplayName);
 }
