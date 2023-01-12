@@ -20,7 +20,6 @@ import {
   DestinyRecordComponent,
   DestinySocketCategoryDefinition,
   DestinyStat,
-  DestinyStatDefinition,
 } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from './inventory-buckets';
 
@@ -176,12 +175,11 @@ export interface DimItem {
   /**
    * The primary stat (Attack, Defense, Speed) of the item. Useful for display and for some weirder stat types. Prefer using "power" if what you want is power.
    */
-  primaryStat:
-    | (DestinyStat & {
-        // TODO: get rid of this
-        stat: DestinyStatDefinition;
-      })
-    | null;
+  primaryStat: DestinyStat | null;
+  /**
+   * Display info for the primary stat (Attack, Defense, Speed, etc).
+   */
+  primaryStatDisplayProperties?: DestinyDisplayPropertiesDefinition;
   /** The power level of the item. This is a synonym for (primaryStat?.value ?? 0) for items with power, and 0 otherwise. */
   power: number;
   /** Is this a masterwork? (D2 only) */

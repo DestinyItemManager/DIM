@@ -348,11 +348,7 @@ export function makeItem(
     itemType !== 'Class' &&
     !itemDef.stats?.disablePrimaryStatDisplay
   ) {
-    primaryStat = {
-      ...itemInstanceData.primaryStat,
-      stat: defs.Stat.get(itemInstanceData.primaryStat.statHash),
-      value: itemInstanceData.primaryStat.value,
-    };
+    primaryStat = itemInstanceData.primaryStat;
   }
 
   if (
@@ -367,7 +363,6 @@ export function makeItem(
         D2Categories.Armor.includes(item.bucketHash)))
   ) {
     primaryStat = {
-      stat: defs.Stat.get(StatHashes.Power),
       statHash: StatHashes.Power,
       value: (itemInstanceData.itemLevel ?? 0) * 10 + (itemInstanceData.quality ?? 0),
     };
@@ -565,8 +560,9 @@ export function makeItem(
   );
 
   if (createdItem.primaryStat) {
-    const statDef = defs.Stat.get(createdItem.primaryStat.statHash);
-    createdItem.primaryStat.stat = statDef;
+    createdItem.primaryStatDisplayProperties = defs.Stat.get(
+      createdItem.primaryStat.statHash
+    ).displayProperties;
   }
 
   if (extendedICH[createdItem.hash]) {
