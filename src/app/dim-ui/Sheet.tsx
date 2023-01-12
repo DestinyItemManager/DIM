@@ -161,6 +161,7 @@ export default function Sheet({
 
   // We need to call the onClose callback when then close animation is complete so that
   // the calling component can unmount the sheet
+  // TODO (ryan/ben) move to using a container component and AnimatePresence
   const handleAnimationComplete = useCallback(
     (animationDefinition: 'close' | 'open') => {
       if (animationDefinition === 'close') {
