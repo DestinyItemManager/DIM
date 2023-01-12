@@ -15,6 +15,7 @@ describe('autocompleteTermSuggestions', () => {
     ['(is:blue jun)', 11],
     ['is:bow is:void', 11],
     ['season:>outl', 12],
+    ['not(', 4],
   ];
 
   test.each(cases)(
@@ -24,6 +25,37 @@ describe('autocompleteTermSuggestions', () => {
         query,
         caretIndex,
         filterComplete,
+        searchConfig
+      );
+      expect(candidates).toMatchSnapshot();
+    }
+  );
+
+  const multiWordCases: [query: string, caretIndex: number, mockCandidate: string][] = [
+    ['arctic haz', 10, 'arctic haze'],
+    ['is:weapon arctic haz -is:exotic', 20, 'arctic haze'],
+    ['name:"foo" arctic haz', 21, 'arctic haze'],
+    ["ager's sce", 10, "ager's scepter"],
+    ['the last word', 13, 'the last word'],
+    ['acd/0 fee', 9, 'acd/0 feedback fence'],
+    ['stat:rpm:200 first in, last', 27, 'first in, last out'],
+    ['two-tail', 8, 'two-tailed fox'],
+    ['(is:a or is:b) and (is:c or multi w)', 35, 'multi word'],
+    ['arctic  haz', 11, 'arctic haze'],
+    ['"rare curio" arctic haz', 23, 'arctic haze'],
+    ['"rare curio" or arctic haz', 26, 'arctic haze'],
+    ['toil and trou', 13, 'toil and trouble'], // todo: not handled due to the `and`
+    ['rare curio or arctic haz', 24, 'arctic haze'], // todo: parser result is unexpected here
+  ];
+
+  test.each(multiWordCases)(
+    'autocomplete within multi-word query for |%s| with caret at position %d with exact match',
+    (query: string, caretIndex: number, mockCandidate: string) => {
+      const candidates = autocompleteTermSuggestions(
+        query,
+        caretIndex,
+        // use mock candidates to simulate exact name-matches for multiword items
+        () => [`name:"${mockCandidate}"`],
         searchConfig
       );
       expect(candidates).toMatchSnapshot();
