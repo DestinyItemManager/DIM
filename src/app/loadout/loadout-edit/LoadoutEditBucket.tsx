@@ -6,7 +6,6 @@ import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-bucke
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
-import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats, singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -156,8 +155,6 @@ function ItemBucket({
   const bucketHash = bucket.hash;
   const [equipped, unequipped] = _.partition(items, (li) => li.loadoutItem.equip);
 
-  const showFashion = LockableBucketHashes.includes(bucketHash);
-
   const handlePlaceholderClick = (equip: boolean) => onClickPlaceholder({ bucket, equip });
 
   // TODO: plumb through API from context??
@@ -180,7 +177,7 @@ function ItemBucket({
   );
 
   return (
-    <div className={clsx(styles.itemBucket, { [styles.showFashion]: showFashion })}>
+    <div className={clsx(styles.itemBucket)}>
       {[equipped, unequipped].map((items, index) =>
         items.length > 0 ? (
           <div

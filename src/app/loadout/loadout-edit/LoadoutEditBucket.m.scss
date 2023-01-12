@@ -57,14 +57,6 @@
   }
 }
 
-.showFashion {
-  .equipped {
-    :global(.item) {
-      height: calc(var(--item-size));
-    }
-  }
-}
-
 @mixin items-width($numItems) {
   width: calc(#{$numItems} * var(--item-size) + #{$numItems - 1} * var(--item-margin));
 }
@@ -86,6 +78,7 @@
 
 .missingItem {
   opacity: 0.3;
+  height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
 }
 
 .buttons {
