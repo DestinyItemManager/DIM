@@ -3,6 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CheckButton from 'app/dim-ui/CheckButton';
+import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
 import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -234,13 +235,15 @@ export default function LoadoutDrawer2({
       <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />
       <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
         <summary>{t('MovePopup.Notes')}</summary>
-        <TextareaAutosize
-          onChange={handleNotesChanged}
-          ref={ref}
-          value={loadout.notes}
-          maxLength={2048}
-          placeholder={t('Loadouts.NotesPlaceholder')}
-        />
+        <WithSymbolsPicker input={ref} setValue={(val) => setLoadout(setNotes(val))}>
+          <TextareaAutosize
+            onChange={handleNotesChanged}
+            ref={ref}
+            value={loadout.notes}
+            maxLength={2048}
+            placeholder={t('Loadouts.NotesPlaceholder')}
+          />
+        </WithSymbolsPicker>
       </details>
     </div>
   );

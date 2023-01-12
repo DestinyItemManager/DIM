@@ -1,6 +1,6 @@
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import ExternalLink from 'app/dim-ui/ExternalLink';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { wishListSelector } from 'app/wishlists/selectors';

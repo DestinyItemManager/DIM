@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
-import { makeCommentString, parseQuery } from './query-parser';
+import { FilterOp, makeCommentString, parseQuery, traverseAST } from './query-parser';
 import { SearchConfig } from './search-config';
 import freeformFilters from './search-filters/freeform';
 
@@ -226,6 +226,51 @@ const lastWordRegex = /(\b[\w:"'<=>]{3,}|#\w*)$/;
 const closingQuoteRegex = /\w["']$/;
 
 /**
+ * Find the position of the last "complete" filter segment of the query before the caretIndex
+ * @returns the start index and term of the last complete filter
+ */
+export function findLastFilter(
+  query: string,
+  caretIndex: number
+): {
+  term: string;
+  index: number;
+} | null {
+  const queryUpToCaret = query.slice(0, caretIndex);
+  const ast = parseQuery(queryUpToCaret);
+  const trailingKeywordArgs: string[] = [];
+  let keepTraversing = true;
+
+  traverseAST(
+    ast,
+    (filter: FilterOp) => {
+      if (keepTraversing && filter.type === 'keyword' && !/\s+/.test(filter.args)) {
+        trailingKeywordArgs.push(filter.args);
+      } else {
+        keepTraversing = false;
+      }
+    },
+    true // traverse in reverse
+  );
+
+  // @TODO: This could be cleaner if the AST parser returned column locations; we wouldn't have to guess at indexes by doing space normalization
+  const trailingKeywordStrings = trailingKeywordArgs.reverse().join(' ');
+  const spaceNormalizedQuery = queryUpToCaret.trim().replace(/\s+/, ' ');
+  const execResult = lastWordRegex.exec(queryUpToCaret);
+
+  if (trailingKeywordStrings && spaceNormalizedQuery.endsWith(trailingKeywordStrings)) {
+    const index = spaceNormalizedQuery.length - trailingKeywordStrings.length;
+    const term = spaceNormalizedQuery.substring(index);
+    return { term, index };
+  } else if (execResult) {
+    const [__, term] = execResult;
+    const { index } = execResult;
+    return { term, index };
+  }
+  return null;
+}
+
+/**
  * Given a query and a cursor position, isolate the term that's being typed and offer reformulated queries
  * that replace that term with one from our filterComplete function.
  */
@@ -242,17 +287,14 @@ export function autocompleteTermSuggestions(
   // Seek to the end of the current part
   caretIndex = (caretEndRegex.exec(query.slice(caretIndex))?.index || 0) + caretIndex;
 
-  // Find the last word that looks like a search
-  const match = lastWordRegex.exec(query.slice(0, caretIndex));
-  if (!match) {
+  const lastFilter = findLastFilter(query, caretIndex);
+
+  if (!lastFilter || closingQuoteRegex.test(lastFilter.term)) {
     return [];
   }
-  const term = match[1];
-  if (closingQuoteRegex.test(term)) {
-    return [];
-  }
-  const candidates = filterComplete(term);
-  const base = query.slice(0, match.index);
+
+  const base = query.slice(0, lastFilter.index);
+  const candidates = filterComplete(lastFilter.term);
 
   // new query is existing query minus match plus suggestion
   return candidates.map((word) => {
@@ -272,7 +314,7 @@ export function autocompleteTermSuggestions(
       type: SearchItemType.Autocomplete,
       highlightRange: {
         section: 'body',
-        range: [match.index, match.index + word.length],
+        range: [lastFilter.index, lastFilter.index + word.length],
       },
     };
   });

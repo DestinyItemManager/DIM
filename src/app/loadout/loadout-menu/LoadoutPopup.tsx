@@ -1,9 +1,10 @@
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
-import { allItemsSelector, bucketsSelector, hasClassifiedSelector } from 'app/inventory/selectors';
+import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import {
   gatherEngramsLoadout,
@@ -69,7 +70,6 @@ export default function LoadoutPopup({
   const query = useSelector(querySelector);
   const searchFilter = useSelector(searchFilterSelector);
   const buckets = useSelector(bucketsSelector)!;
-  const hasClassified = useSelector(hasClassifiedSelector);
   const allItems = useSelector(allItemsSelector);
   const filteredItems = useSelector(filteredItemsSelector);
   const loadoutSort = useSelector(settingSelector('loadoutSort'));
@@ -276,7 +276,7 @@ export default function LoadoutPopup({
               <MaxlightButton
                 allItems={allItems}
                 dimStore={dimStore}
-                hasClassified={hasClassified}
+                hasClassified={Boolean(dimStore.stats.maxGearPower?.statProblems?.hasClassified)}
               />
             </li>
 
@@ -317,7 +317,7 @@ export default function LoadoutPopup({
                   title={t('Loadouts.MissingItemsWarning')}
                 />
               )}
-              {loadout.name}
+              <ColorDestinySymbols text={loadout.name} />
             </span>
             <span
               className={styles.altButton}

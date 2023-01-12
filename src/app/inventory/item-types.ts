@@ -4,7 +4,6 @@ import {
   DestinyAmmunitionType,
   DestinyBreakerTypeDefinition,
   DestinyClass,
-  DestinyCollectibleState,
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
   DestinyEnergyTypeDefinition,
@@ -19,10 +18,8 @@ import {
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
   DestinyRecordComponent,
-  DestinySandboxPerkDefinition,
   DestinySocketCategoryDefinition,
   DestinyStat,
-  DestinyStatDefinition,
 } from 'bungie-api-ts/destiny2';
 import { InventoryBucket } from './inventory-buckets';
 
@@ -141,6 +138,7 @@ export interface DimItem {
   /** Localized string for where this item comes from... or other stuff like it not being recoverable from collections */
   displaySource?: string;
   collectibleHash?: number;
+  // TODO: pull search-only fields out
   /** The DestinyCollectibleDefinition sourceHash for a specific item (D2). Derived entirely from collectibleHash */
   source?: number;
   /** Information about this item as a plug. Mostly useful for mod collectibles. */
@@ -177,12 +175,11 @@ export interface DimItem {
   /**
    * The primary stat (Attack, Defense, Speed) of the item. Useful for display and for some weirder stat types. Prefer using "power" if what you want is power.
    */
-  primaryStat:
-    | (DestinyStat & {
-        // TODO: get rid of this
-        stat: DestinyStatDefinition;
-      })
-    | null;
+  primaryStat: DestinyStat | null;
+  /**
+   * Display info for the primary stat (Attack, Defense, Speed, etc).
+   */
+  primaryStatDisplayProperties?: DestinyDisplayPropertiesDefinition;
   /** The power level of the item. This is a synonym for (primaryStat?.value ?? 0) for items with power, and 0 otherwise. */
   power: number;
   /** Is this a masterwork? (D2 only) */
@@ -224,9 +221,8 @@ export interface DimItem {
   /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The foundry this item was made by */
-  foundry: string | null;
-  /** The state of this item in the user's D2 Collection */
-  collectibleState?: DestinyCollectibleState;
+  // TODO: only used by search/spreadsheet
+  foundry?: string;
   /** Extra tooltips to show in the item popup */
   tooltipNotifications?: DestinyItemTooltipNotification[];
   /** Index assigned to item by Bungie */
@@ -399,8 +395,6 @@ export interface PluggableInventoryItemDefinition extends DestinyInventoryItemDe
 export interface DimPlug {
   /** The InventoryItem definition associated with this plug. */
   readonly plugDef: PluggableInventoryItemDefinition;
-  /** Perks associated with the use of this plug. TODO: load on demand? */
-  readonly perks: DestinySandboxPerkDefinition[];
   /** Objectives associated with this plug, usually used to unlock it. */
   readonly plugObjectives: DestinyObjectiveProgress[];
   /** Is the plug enabled? For example, some perks only activate on certain planets. */

@@ -1,7 +1,8 @@
 import { VENDORS } from 'app/search/d2-known-values';
 import {
-  DestinyCollectibleComponent,
+  DestinyCollectibleState,
   DestinyDisplayPropertiesDefinition,
+  DestinyInventoryItemDefinition,
   DestinyItemComponentSetOfint32,
   DestinyItemQuantity,
   DestinyProfileResponse,
@@ -31,6 +32,30 @@ export interface VendorItem {
   readonly displayCategoryIndex?: number;
   readonly costs: DestinyItemQuantity[];
   readonly previewVendorHash?: number;
+  /** The state of this item in the user's D2 Collection */
+  readonly collectibleState?: DestinyCollectibleState;
+}
+
+/**
+ * Find the state of this item in the user's collections. This takes into account
+ * the selected character.
+ */
+function getCollectibleState(
+  inventoryItem: DestinyInventoryItemDefinition,
+  profileResponse: DestinyProfileResponse | undefined,
+  characterId: string
+) {
+  const collectibleHash = inventoryItem.collectibleHash;
+  let collectibleState: DestinyCollectibleState | undefined;
+  if (collectibleHash) {
+    collectibleState =
+      profileResponse?.profileCollectibles?.data?.collectibles[collectibleHash]?.state ??
+      (characterId
+        ? profileResponse?.characterCollectibles?.data?.[characterId]?.collectibles[collectibleHash]
+            ?.state
+        : undefined);
+  }
+  return collectibleState;
 }
 
 function makeVendorItem(
@@ -43,17 +68,12 @@ function makeVendorItem(
   vendorItemDef: DestinyVendorItemDefinition | undefined,
   saleItem: DestinyVendorSaleItemComponent | undefined,
   itemComponents: DestinyItemComponentSetOfint32 | undefined,
-  mergedCollectibles:
-    | {
-        [hash: number]: DestinyCollectibleComponent;
-      }
-    | undefined,
   // the character to whom this item is being offered
-  characterId?: string
+  characterId: string
 ): VendorItem {
   const inventoryItem = defs.InventoryItem.get(itemHash);
   const key = saleItem ? saleItem.vendorItemIndex : inventoryItem.hash;
-  const vendorItem = {
+  const vendorItem: VendorItem = {
     failureStrings,
     key,
     displayProperties: inventoryItem.displayProperties,
@@ -64,6 +84,7 @@ function makeVendorItem(
     displayCategoryIndex: vendorItemDef ? vendorItemDef.displayCategoryIndex : undefined,
     costs: saleItem?.costs || [],
     previewVendorHash: inventoryItem.preview?.previewVendorHash,
+    collectibleState: getCollectibleState(inventoryItem, profileResponse, characterId),
     item: makeFakeItem(
       defs,
       buckets,
@@ -72,7 +93,6 @@ function makeVendorItem(
       // For sale items the item ID needs to be the vendor item index, since that's how we look up item components for perks
       key.toString(),
       vendorItemDef ? vendorItemDef.quantity : 1,
-      mergedCollectibles,
       profileResponse?.profileRecords.data,
       // vendor items are wish list enabled!
       true
@@ -123,12 +143,7 @@ export function vendorItemForSaleItem(
   saleItem: DestinyVendorSaleItemComponent,
   // all DIM vendor calls are character-specific. any sale item should have an associated character.
   characterId: string,
-  itemComponents: DestinyItemComponentSetOfint32 | undefined,
-  mergedCollectibles:
-    | {
-        [hash: number]: DestinyCollectibleComponent;
-      }
-    | undefined
+  itemComponents: DestinyItemComponentSetOfint32 | undefined
 ): VendorItem {
   const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
   const failureStrings =
@@ -146,7 +161,6 @@ export function vendorItemForSaleItem(
     vendorItemDef,
     saleItem,
     itemComponents,
-    mergedCollectibles,
     characterId
   );
 }
@@ -159,20 +173,19 @@ export function vendorItemForDefinitionItem(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   vendorItemDef: DestinyVendorItemDefinition,
-  mergedCollectibles?: {
-    [hash: number]: DestinyCollectibleComponent;
-  }
+  profileResponse: DestinyProfileResponse | undefined,
+  characterId: string
 ): VendorItem {
   return makeVendorItem(
     defs,
     buckets,
-    undefined,
+    profileResponse,
     vendorItemDef.itemHash,
     [],
     0,
     vendorItemDef,
     undefined,
     undefined,
-    mergedCollectibles
+    characterId
   );
 }

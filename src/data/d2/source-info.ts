@@ -1229,11 +1229,25 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  sotw: {
+    itemHashes: [],
+    sourceHashes: [
+      1597738585, // Source: "Spire of the Watcher" Dungeon
+    ],
+    searchString: [],
+  },
   spireofstars: {
     itemHashes: [],
     sourceHashes: [
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
       2812190367, // Source: Leviathan, Spire of Stars raid lair on Prestige difficulty.
+    ],
+    searchString: [],
+  },
+  spireofthewatcher: {
+    itemHashes: [],
+    sourceHashes: [
+      1597738585, // Source: "Spire of the Watcher" Dungeon
     ],
     searchString: [],
   },
@@ -1447,6 +1461,13 @@ const D2Sources: {
     sourceHashes: [
       2653840925, // Source: Challenger's Proving VII Quest
       4079816474, // Source: War Table
+    ],
+    searchString: [],
+  },
+  watcher: {
+    itemHashes: [],
+    sourceHashes: [
+      1597738585, // Source: "Spire of the Watcher" Dungeon
     ],
     searchString: [],
   },

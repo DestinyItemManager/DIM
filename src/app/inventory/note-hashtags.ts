@@ -18,5 +18,5 @@ export function collectNotesHashtags(itemInfos: ItemInfos) {
 }
 
 export function getHashtagsFromNote(note?: string | null) {
-  return Array.from(note?.matchAll(/#\w+/g) ?? [], (m) => m[0]);
+  return Array.from(note?.matchAll(/#[\w\uE000-\uF8FF]+/g) ?? [], (m) => m[0]);
 }

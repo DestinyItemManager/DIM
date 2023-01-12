@@ -7,7 +7,6 @@ import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
-import { mergedCollectiblesSelector } from 'app/vendors/selectors';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import {
   AwaAuthorizationResult,
@@ -242,8 +241,7 @@ function refreshItemAfterAWA(changes: DestinyItemChangeResponse): ThunkResult {
     const defs = d2ManifestSelector(getState())!;
     const buckets = d2BucketsSelector(getState())!;
     const stores = storesSelector(getState());
-    const mergedCollectibles = mergedCollectiblesSelector(getState());
-    const newItem = makeItemSingle(defs, buckets, changes.item, stores, mergedCollectibles);
+    const newItem = makeItemSingle(defs, buckets, changes.item, stores);
 
     dispatch(
       awaItemChanged({

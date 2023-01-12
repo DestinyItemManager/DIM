@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t } from 'app/i18next-t';
 import { D2BucketCategory, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
@@ -110,7 +111,7 @@ export default function LoadoutView({
           {loadout.classType === DestinyClass.Unknown && (
             <ClassIcon className={styles.classIcon} classType={loadout.classType} />
           )}
-          {loadout.name}
+          <ColorDestinySymbols text={loadout.name} />
           {warnitems.length > 0 && (
             <span className={styles.missingItems}>
               <AlertIcon />
@@ -120,7 +121,9 @@ export default function LoadoutView({
         </h2>
         <div className={styles.actions}>{actionButtons}</div>
       </div>
-      {loadout.notes && <div className={styles.loadoutNotes}>{loadout.notes}</div>}
+      {loadout.notes && (
+        <ColorDestinySymbols className={styles.loadoutNotes} text={loadout.notes} />
+      )}
       <div className={styles.contents}>
         {(items.length > 0 || subclass || allMods.length > 0 || !_.isEmpty(modsByBucket)) && (
           <>

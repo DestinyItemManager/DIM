@@ -1,4 +1,4 @@
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
@@ -188,12 +188,14 @@ export default function VendorItems({
                       )
                     )
                     .map(
-                      (item) =>
-                        item.item && (
+                      (vendorItem) =>
+                        vendorItem.item && (
                           <VendorItemComponent
-                            key={item.key}
-                            item={item}
-                            owned={Boolean(ownedItemHashes?.has(item.item.hash) || item.owned)}
+                            key={vendorItem.key}
+                            item={vendorItem}
+                            owned={Boolean(
+                              ownedItemHashes?.has(vendorItem.item.hash) || vendorItem.owned
+                            )}
                             characterId={characterId}
                           />
                         )

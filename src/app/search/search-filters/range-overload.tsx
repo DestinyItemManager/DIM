@@ -1,9 +1,13 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
-import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
+import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import seasonTags from 'data/d2/season-tags.json';
-import { energyCapacityTypeNames, energyNamesByEnum } from '../d2-known-values';
+import {
+  energyCapacityTypeNames,
+  energyNamesByEnum,
+  powerLevelByKeyword,
+} from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { allStatNames, statHashByName } from '../search-filter-values';
 
@@ -11,14 +15,6 @@ const seasonTagToNumber = {
   ...seasonTags,
   next: D2CalculatedSeason + 1,
   current: D2CalculatedSeason,
-};
-
-// shortcuts for power numbers
-const powerLevelByKeyword = {
-  powerfloor: D2SeasonInfo[D2CalculatedSeason].powerFloor,
-  softcap: D2SeasonInfo[D2CalculatedSeason].softCap,
-  powerfulcap: D2SeasonInfo[D2CalculatedSeason].powerfulCap,
-  pinnaclecap: D2SeasonInfo[D2CalculatedSeason].pinnacleCap,
 };
 
 // overloadedRangeFilters: stuff that may test a range, but also accepts a word

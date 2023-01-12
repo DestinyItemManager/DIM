@@ -19,7 +19,6 @@ import {
   DestinyClass,
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
-  DestinyStatCategory,
   ItemBindStatus,
   ItemLocation,
   ItemState,
@@ -333,7 +332,6 @@ function makeItem(
     quality: null,
     sockets: null,
     breakerType: null,
-    foundry: null,
     hidePercentage: false,
     taggable: false,
     comparable: false,
@@ -370,20 +368,13 @@ function makeItem(
 
   if (item.primaryStat) {
     const statDef = defs.Stat.get(item.primaryStat.statHash);
-    createdItem.primaryStat = {
-      ...item.primaryStat,
-      stat: {
-        ...statDef,
-        statCategory: DestinyStatCategory.Primary,
-        // D2 is much better about display info
-        displayProperties: {
-          name: statDef.statName,
-          description: statDef.statDescription,
-          icon: statDef.icon,
-          hasIcon: Boolean(statDef.icon),
-        } as DestinyDisplayPropertiesDefinition,
-      },
-    };
+    createdItem.primaryStat = item.primaryStat;
+    createdItem.primaryStatDisplayProperties = {
+      name: statDef.statName,
+      description: statDef.statDescription,
+      icon: statDef.icon,
+      hasIcon: Boolean(statDef.icon),
+    } as DestinyDisplayPropertiesDefinition;
 
     if (lightStats.includes(createdItem.primaryStat.statHash)) {
       createdItem.power = createdItem.primaryStat.value;
