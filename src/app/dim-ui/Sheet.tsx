@@ -72,7 +72,7 @@ interface Props {
 
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity,
 // or dragged down more than dismissAmount times the height of the sheet.
-const dismissVelocity = 250; // px/ms
+const dismissVelocity = 150; // px/ms
 const dismissAmount = 0.5;
 
 const spring: Spring = {
