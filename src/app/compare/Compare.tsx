@@ -288,7 +288,7 @@ function CompareItems({
   const ref = useRef<HTMLDivElement>(null);
   const dragStateRef = useRef<{ scrollPosition: number; pointerDownPosition: number }>();
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
-    if (isEventFromFirefoxScrollbar(e)) {
+    if (isEventFromFirefoxScrollbar(e) || hasClickEventAboveParent(ref.current!, e.target)) {
       return;
     }
 
@@ -485,4 +485,15 @@ function makeFakeStat(
     getStat,
     bar,
   };
+}
+
+function hasClickEventAboveParent(parent: HTMLElement, clickTarget: EventTarget) {
+  let currentNode: EventTarget | HTMLElement | null = clickTarget;
+  while (currentNode && parent !== currentNode) {
+    if ('onclick' in currentNode && typeof currentNode.onclick === 'function') {
+      return true;
+    }
+    currentNode = 'parentElement' in currentNode ? currentNode.parentElement : null;
+  }
+  return false;
 }
