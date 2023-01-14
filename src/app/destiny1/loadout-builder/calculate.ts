@@ -226,9 +226,9 @@ export function getSetBucketsStep(
       const tiers = _.groupBy(Array.from(tiersSet.keys()), (tierString: string) =>
         _.sumBy(tierString.split('/'), (num) => parseInt(num, 10))
       );
-      _.forIn(tiers, (tier) => {
+      for (const tier of Object.values(tiers)) {
         tier.sort().reverse();
-      });
+      }
 
       const allSetTiers: string[] = [];
       const tierKeys = Object.keys(tiers);

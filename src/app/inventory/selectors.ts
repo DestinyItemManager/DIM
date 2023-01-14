@@ -8,7 +8,6 @@ import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import { resonantMaterialStringVarHashes } from 'data/d2/crafting-resonant-elements';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
-import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
@@ -231,13 +230,13 @@ export const ownedUncollectiblePlugsSelector = createSelector(
         plugs: { [key: number]: DestinyItemPlug[] },
         insertInto: Set<number>
       ) => {
-        _.forIn(plugs, (plugSet) => {
+        for (const plugSet of Object.values(plugs)) {
           for (const plug of plugSet) {
             if (plug.enabled && !defs.InventoryItem.get(plug.plugItemHash)?.collectibleHash) {
               insertInto.add(plug.plugItemHash);
             }
           }
-        });
+        }
       };
 
       if (profileResponse.profilePlugSets?.data) {

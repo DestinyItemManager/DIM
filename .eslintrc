@@ -121,6 +121,11 @@
         "object": "_",
         "property": "uniqBy",
         "message": "Please use the uniqBy from app/utils/util instead"
+      },
+      {
+        "object": "_",
+        "property": "forIn",
+        "message": "Please use Object.values or Object.entries instead"
       }
     ],
     "no-restricted-imports": [

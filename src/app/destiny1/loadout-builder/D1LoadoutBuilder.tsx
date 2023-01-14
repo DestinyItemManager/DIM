@@ -574,7 +574,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     if (vendors) {
       // Process vendors here
-      _.forIn(vendors, (vendor) => {
+      for (const vendor of Object.values(vendors)) {
         const vendItems = filterItems(
           vendor.allItems
             .map((i) => i.item)
@@ -601,16 +601,16 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
             );
           }
         });
-      });
+      }
 
       // Remove overlapping perks in allPerks from vendorPerks
-      _.forIn(vendorPerks, (perksWithType, classType) => {
-        _.forIn(perksWithType, (perkArr, type) => {
+      for (const [classType, perksWithType] of Object.entries(vendorPerks)) {
+        for (const [type, perkArr] of Object.entries(perksWithType)) {
           vendorPerks[classType][type] = _.reject(perkArr, (perk) =>
             perks[classType][type].map((i: D1GridNode) => i.hash).includes(perk.hash)
           );
-        });
-      });
+        }
+      }
     }
 
     return getActiveBuckets<D1GridNode[]>(
