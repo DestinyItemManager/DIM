@@ -1,4 +1,3 @@
-import { DimPlugSet } from 'app/inventory/item-types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
 
@@ -48,22 +47,6 @@ export function unlockedItemsForCharacterOrProfilePlugSet(
     }
   }
   return unlockedPlugs;
-}
-
-/**
- * Narrow down the passed in plugSet's plugs to only those that are unlocked by the given character.
- */
-export function filterDimPlugsUnlockedOnCharacterOrProfile(
-  profileResponse: DestinyProfileResponse,
-  dimPlugSet: DimPlugSet,
-  characterId: string
-) {
-  const unlockedPlugs = unlockedItemsForCharacterOrProfilePlugSet(
-    profileResponse,
-    dimPlugSet.hash,
-    characterId
-  );
-  return dimPlugSet.plugs.filter((plug) => unlockedPlugs.has(plug.plugDef.hash));
 }
 
 /**

@@ -37,6 +37,7 @@ import {
   fitMostMods,
   pickPlugPositions,
 } from 'app/loadout/mod-assignment-utils';
+import { unlockedByAllModsBeingUnlocked } from 'app/loadout/mod-utils';
 import {
   d2ManifestSelector,
   destiny2CoreSettingsSelector,
@@ -46,6 +47,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
+import { artifactModsSelector } from 'app/strip-sockets/strip-sockets';
 import { queueAction } from 'app/utils/action-queue';
 import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
@@ -247,9 +249,19 @@ function doApplyLoadout(
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
       const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(getState(), store.id));
-      const checkMod = (h: number) =>
-        Boolean(defs.InventoryItem.get(h)) &&
-        (unlockedPlugSetItems().has(h) || h === DEFAULT_SHADER || DEFAULT_ORNAMENTS.includes(h));
+      const artifactMods = artifactModsSelector(getState());
+      const checkMod = (h: number) => {
+        const mod = defs.InventoryItem.get(h);
+        return (
+          Boolean(mod) &&
+          (unlockedPlugSetItems().has(h) ||
+            h === DEFAULT_SHADER ||
+            DEFAULT_ORNAMENTS.includes(h) ||
+            ('plug' in mod &&
+              isPluggableItem(mod) &&
+              unlockedByAllModsBeingUnlocked(mod, artifactMods)))
+        );
+      };
 
       // Don't apply mods when moving to the vault
       const modsToApply = ((!store.isVault && getModHashesFromLoadout(loadout)) || []).filter(
