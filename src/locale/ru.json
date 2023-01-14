@@ -310,6 +310,16 @@
     "Confirm": "Подтвердить?",
     "UserGuideLink": "Руководство"
   },
+  "Glyphs": {
+    "Gilded": "Позолоченный",
+    "Misadventure": "Неудача",
+    "Missing": "Отсутствует",
+    "OpenSymbolsPicker": "Открыть выбор символов",
+    "Quickfall": "Быстрое падение",
+    "ScorchCannon": "Обжигающая Пушка",
+    "SearchSymbols": "Найти символы...",
+    "Smoke": "Дым"
+  },
   "Header": {
     "About": "О Проекте",
     "AutoRefresh": "DIM будет автоматически перезагружаться пока вы играете.",

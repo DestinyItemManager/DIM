@@ -310,6 +310,16 @@
     "Confirm": "Confirmer ?",
     "UserGuideLink": "Mode d'emploi"
   },
+  "Glyphs": {
+    "Gilded": "Doré",
+    "Misadventure": "Mésaventure",
+    "Missing": "Manquant",
+    "OpenSymbolsPicker": "Ouvrir le sélecteur de symboles",
+    "Quickfall": "Chute rapide",
+    "ScorchCannon": "Canon brûleur",
+    "SearchSymbols": "Rechercher des symboles...",
+    "Smoke": "Fumigène"
+  },
   "Header": {
     "About": "À propos de DIM",
     "AutoRefresh": "DIM se rechargera automatiquement tant que vous jouez.",
@@ -586,7 +596,7 @@
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
     "BadLoadoutShare": "Impossible de charger l'arsenal partagé",
     "BadLoadoutShareBody": "L'arsenal que vous essayez de charger est invalide: {{error}}",
-    "Before": "Avant '{{name}}'",
+    "Before": "Annuler '{{name}}'",
     "CannotCustomizeSubclass": "Cette doctrine ne peut pas être configurée",
     "ChooseItem": "Ajouter {{name}}",
     "ClassTypeMismatch": "Un objet pour {{className}} ne peut pas être ajouté à cet arsenal",
@@ -597,7 +607,7 @@
     "ClearSpace": "Déplacer les autres objets ailleurs",
     "ClearUnsetMods": "Retirer les autres mods",
     "ClearingSpace": "Déplacement des autres objets",
-    "Create": "Créer Arsenal",
+    "Create": "Créer un arsenal",
     "CurrentlyEquipped": "Actuellement équipé",
     "Deequip": "Dé-équipement des objets des autres personnages",
     "Delete": "Supprimer",
@@ -1093,11 +1103,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "No": "No",
+      "No": "Non",
       "Reset": "DÉSAUTORISER",
-      "Title": "Do you see the same code on your Stream Deck ?",
-      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
-      "Yes": "Yes"
+      "Title": "Voyez-vous le même code sur votre Stream Deck ?",
+      "Update": "Si vous voyez ce message, vous utilisez une ancienne version du plugin. Veuillez télécharger la dernière mise à jour sur la boutique Stream Deck.",
+      "Yes": "Oui"
     },
     "Connected": "Connecté",
     "Enable": "Plugin Stream Deck",

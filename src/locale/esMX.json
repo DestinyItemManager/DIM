@@ -310,6 +310,16 @@
     "Confirm": "¿Confirmar?",
     "UserGuideLink": "Manual del usuario"
   },
+  "Glyphs": {
+    "Gilded": "Dorado",
+    "Misadventure": "Accidente",
+    "Missing": "Perdido",
+    "OpenSymbolsPicker": "Abrir el Selector de Símbolos",
+    "Quickfall": "Caída en picado",
+    "ScorchCannon": "Cañón Calcinante",
+    "SearchSymbols": "Buscar Símbolos...",
+    "Smoke": "Humo"
+  },
   "Header": {
     "About": "Acerca de DIM",
     "AutoRefresh": "DIM se recargará automáticamente todo el tiempo que estés jugando.",

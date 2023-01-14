@@ -310,6 +310,16 @@
     "Confirm": "确认？",
     "UserGuideLink": "用户指南"
   },
+  "Glyphs": {
+    "Gilded": "镀金",
+    "Misadventure": "意外致死",
+    "Missing": "缺失",
+    "OpenSymbolsPicker": "打开符号选单",
+    "Quickfall": "急坠",
+    "ScorchCannon": "灼烧发射器",
+    "SearchSymbols": "搜索符号...",
+    "Smoke": "烟雾"
+  },
   "Header": {
     "About": "关于DIM",
     "AutoRefresh": "只要你仍在游戏，DIM 就会自动刷新。",
