@@ -277,18 +277,20 @@ export function loadVendorsBucket(
       Ghost: [],
     };
   }
-  return _.map(vendors, (vendor) =>
-    getBuckets(
-      vendor.allItems
-        .filter(
-          (i) =>
-            i.item.stats &&
-            i.item.primaryStat?.statHash === D1_StatHashes.Defense &&
-            itemCanBeEquippedBy(i.item, currentStore)
-        )
-        .map((i) => i.item)
+  return Object.values(vendors)
+    .map((vendor) =>
+      getBuckets(
+        vendor.allItems
+          .filter(
+            (i) =>
+              i.item.stats &&
+              i.item.primaryStat?.statHash === D1_StatHashes.Defense &&
+              itemCanBeEquippedBy(i.item, currentStore)
+          )
+          .map((i) => i.item)
+      )
     )
-  ).reduce(mergeBuckets);
+    .reduce(mergeBuckets);
 }
 
 export function loadBucket(currentStore: DimStore, stores: D1Store[]): ItemBucket {

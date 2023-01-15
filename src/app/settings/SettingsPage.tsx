@@ -218,9 +218,8 @@ export default function SettingsPage() {
   const sortSettings = useSelector(itemSortSettingsSelector);
 
   const itemSortCustom = _.sortBy(
-    _.map(
-      itemSortProperties,
-      (displayName, id): SortProperty => ({
+    Object.entries(itemSortProperties).map(
+      ([id, displayName]): SortProperty => ({
         id,
         displayName,
         enabled: sortSettings.sortOrder.includes(id),

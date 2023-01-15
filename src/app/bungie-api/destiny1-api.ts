@@ -34,7 +34,7 @@ export async function getCharacters(platform: DestinyAccount) {
       })
     );
   }
-  return _.map(response.Response.data.characters, (c) => {
+  return Object.values(response.Response.data.characters).map((c: any) => {
     c.inventory = response.Response.data.inventory;
     return {
       id: c.characterBase.characterId,

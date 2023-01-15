@@ -121,7 +121,7 @@ export function getColumns(
   type ColumnWithStat = ColumnDefinition & { statHash: number };
   const statColumns: ColumnWithStat[] = _.sortBy(
     _.compact(
-      _.map(statHashes, (statInfo, statHashStr): ColumnWithStat | undefined => {
+      Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat | undefined => {
         const statHash = parseInt(statHashStr, 10);
         if (statHash === CUSTOM_TOTAL_STAT_HASH) {
           // Exclude custom total, it has its own column
@@ -195,7 +195,7 @@ export function getColumns(
   const d1ArmorQualityByStat =
     destinyVersion === 1 && isArmor
       ? _.sortBy(
-          _.map(statHashes, (statInfo, statHashStr): ColumnWithStat => {
+          Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat => {
             const statHash = parseInt(statHashStr, 10);
             return {
               statHash,

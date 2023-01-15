@@ -410,7 +410,7 @@ async function processVendor(
   );
   const itemsById = _.keyBy(items, (i) => i.id);
   const categories = _.compact(
-    _.map(vendor.saleItemCategories, (category) => {
+    Object.values(vendor.saleItemCategories).map((category) => {
       const categoryInfo = vendorDef.categories[category.categoryIndex];
       if (categoryDenyList.includes(categoryInfo.categoryHash)) {
         return null;

@@ -114,6 +114,11 @@
       },
       {
         "object": "_",
+        "property": "map",
+        "message": "Please use the native js map."
+      },
+      {
+        "object": "_",
         "property": "uniq",
         "message": "Please use Array.from(new Set(foo)) or [...new Set(foo)] instead."
       },

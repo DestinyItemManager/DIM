@@ -692,7 +692,7 @@ function buildStats(
 
   return _.sortBy(
     _.compact(
-      _.map(itemDef.stats, (stat) => {
+      Object.values(itemDef.stats).map((stat) => {
         const def = statDefs.get(stat.statHash);
         if (!def) {
           return undefined;
