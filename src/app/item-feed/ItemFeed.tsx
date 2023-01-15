@@ -65,7 +65,7 @@ const filteredItemsSelector = createSelector(allItemsSelector, (allItems) =>
   _.sortBy(
     allItems.filter((i) => i.equipment && i.power > 0 && i.taggable),
     getItemRecencyKey
-  )
+  ).reverse()
 );
 
 /**
