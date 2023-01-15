@@ -21,7 +21,7 @@ import produce from 'immer';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ArmorSet, LockableBucketHashes } from '../types';
-import styles from './CompareDrawer.m.scss';
+import styles from './CompareLoadoutsDrawer.m.scss';
 
 interface Props {
   set: ArmorSet;
@@ -113,7 +113,7 @@ function createLoadoutUsingLOItems(
   });
 }
 
-export default function CompareDrawer({
+export default function CompareLoadoutsDrawer({
   loadouts,
   selectedStore,
   initialLoadoutId,
