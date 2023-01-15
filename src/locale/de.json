@@ -168,10 +168,10 @@
     "ClearShadersTitle": "Alle Shader mit \"Keine Präferenz\" markieren",
     "NoPreference": "Keine Präferenz - diese Fassung bleibt unverändert",
     "Reset": "Mode-Auswahl aufheben",
-    "Sync": "Synchronisieren",
+    "Sync": "Synchr.",
     "SyncOrnaments": "Ornamente synchronisieren",
     "SyncOrnamentsTitle": "Ornamente aus demselben Set für alle Gegenstände verwenden, falls freigeschaltet",
-    "SyncShaders": "Shader synchronisieren",
+    "SyncShaders": "Shader synchr.",
     "SyncShadersTitle": "Denselben Shader für alle Gegenstände verwenden",
     "Title": "Shader und Ornamente auswählen",
     "UseEquipped": "Ausgerüstete Mode verwenden"
@@ -309,6 +309,16 @@
     "ClickForDetails": "Für Details klicken",
     "Confirm": "Bestätigen?",
     "UserGuideLink": "Benutzerhandbuch"
+  },
+  "Glyphs": {
+    "Gilded": "Vergoldet",
+    "Misadventure": "Missgeschick",
+    "Missing": "Fehlend",
+    "OpenSymbolsPicker": "Symbolauswahl öffnen",
+    "Quickfall": "Schnellfall",
+    "ScorchCannon": "Scorch-Kanone",
+    "SearchSymbols": "Symbole suchen...",
+    "Smoke": "Rauch"
   },
   "Header": {
     "About": "Über DIM",

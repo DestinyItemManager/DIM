@@ -310,6 +310,16 @@
     "Confirm": "Potwierdzić?",
     "UserGuideLink": "Przewodnik użytkownika"
   },
+  "Glyphs": {
+    "Gilded": "Gilded",
+    "Misadventure": "Misadventure",
+    "Missing": "Missing",
+    "OpenSymbolsPicker": "Open Symbols Picker",
+    "Quickfall": "Quickfall",
+    "ScorchCannon": "Scorch Cannon",
+    "SearchSymbols": "Search Symbols...",
+    "Smoke": "Smoke"
+  },
   "Header": {
     "About": "O DIM",
     "AutoRefresh": "DIM automatycznie przeładuje się, dopóki nadal grasz.",
@@ -1093,11 +1103,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "No": "No",
+      "No": "Nie",
       "Reset": "COFNIJ AUTORYZACJE",
-      "Title": "Do you see the same code on your Stream Deck ?",
-      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
-      "Yes": "Yes"
+      "Title": "Czy widzisz ten sam kod na swoim Stream Decku?",
+      "Update": "Jeśli widzisz ten komunikat, używasz starszej wersji wtyczki. Proszę pobierz najnowszą aktualizację w sklepie Stream Deck.",
+      "Yes": "Tak"
     },
     "Connected": "Połączony",
     "Enable": "Wtyczka Stream Deck",

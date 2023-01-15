@@ -1,5 +1,5 @@
 import { VENDORS } from 'app/search/d2-known-values';
-import { BucketCategory, DestinyInventoryBucketDefinition } from 'bungie-api-ts/destiny2';
+import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import type {
@@ -59,11 +59,11 @@ export const bucketToType: {
 } = bucketToTypeRaw;
 
 const bucketHashToSort: { [bucketHash: number]: D2BucketCategory } = {};
-_.forIn(D2Categories, (bucketHashes, category: D2BucketCategory) => {
-  bucketHashes.forEach((bucketHash) => {
-    bucketHashToSort[bucketHash] = category;
-  });
-});
+for (const [category, bucketHashes] of Object.entries(D2Categories)) {
+  for (const bucketHash of bucketHashes) {
+    bucketHashToSort[bucketHash] = category as D2BucketCategory;
+  }
+}
 
 export function getBuckets(defs: D2ManifestDefinitions) {
   const buckets: InventoryBuckets = {
@@ -84,7 +84,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
       this.byCategory[this.unknown.sort] = [this.unknown];
     },
   };
-  _.forIn(defs.InventoryBucket, (def: DestinyInventoryBucketDefinition) => {
+  for (const def of Object.values(defs.InventoryBucket)) {
     const type = bucketToType[def.hash];
     const sort = bucketHashToSort[def.hash];
     const bucket: InventoryBucket = {
@@ -103,20 +103,20 @@ export function getBuckets(defs: D2ManifestDefinitions) {
       bucket[`in${bucket.sort}`] = true;
     }
     buckets.byHash[bucket.hash] = bucket;
-  });
-  const vaultMappings = {};
+  }
+  const vaultMappings: { [bucketHash: number]: number } = {};
   defs.Vendor.get(VENDORS.VAULT).acceptedItems.forEach((items) => {
     vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
   });
-  _.forIn(buckets.byHash, (bucket: InventoryBucket) => {
+  for (const bucket of Object.values(buckets.byHash)) {
     if (vaultMappings[bucket.hash]) {
       bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];
     }
-  });
-  _.forIn(D2Categories, (bucketHashes, category) => {
+  }
+  for (const [category, bucketHashes] of Object.entries(D2Categories)) {
     buckets.byCategory[category] = _.compact(
       bucketHashes.map((bucketHash) => buckets.byHash[bucketHash])
     );
-  });
+  }
   return buckets;
 }

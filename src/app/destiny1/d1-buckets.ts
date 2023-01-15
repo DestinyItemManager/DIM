@@ -63,11 +63,11 @@ const sortToVault = {
 };
 
 const bucketHashToSort: { [bucketHash: number]: D1BucketCategory } = {};
-_.forIn(D1Categories, (bucketHashes, category: D1BucketCategory) => {
-  bucketHashes.forEach((bucketHash) => {
-    bucketHashToSort[bucketHash] = category;
-  });
-});
+for (const [category, bucketHashes] of Object.entries(D1Categories)) {
+  for (const bucketHash of bucketHashes) {
+    bucketHashToSort[bucketHash] = category as D1BucketCategory;
+  }
+}
 
 export function getBuckets(defs: D1ManifestDefinitions) {
   const buckets: InventoryBuckets = {
@@ -88,7 +88,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
       this.byCategory[this.unknown.sort] = [this.unknown];
     },
   };
-  _.forIn(defs.InventoryBucket, (def) => {
+  for (const def of Object.values(defs.InventoryBucket)) {
     if (def.enabled) {
       const type = bucketToType[def.hash];
       const sort = bucketHashToSort[def.hash] ?? vaultTypes[def.hash];
@@ -109,16 +109,16 @@ export function getBuckets(defs: D1ManifestDefinitions) {
       }
       buckets.byHash[bucket.hash] = bucket;
     }
-  });
-  _.forIn(buckets.byHash, (bucket: InventoryBucket) => {
+  }
+  for (const bucket of Object.values(buckets.byHash)) {
     if (bucket.sort && sortToVault[bucket.sort] && sortToVault[bucket.sort] !== bucket.hash) {
       bucket.vaultBucket = buckets.byHash[sortToVault[bucket.sort]];
     }
-  });
-  _.forIn(D1Categories, (bucketHashes, category) => {
+  }
+  for (const [category, bucketHashes] of Object.entries(D1Categories)) {
     buckets.byCategory[category] = _.compact(
       bucketHashes.map((bucketHash) => buckets.byHash[bucketHash])
     );
-  });
+  }
   return buckets;
 }

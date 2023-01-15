@@ -85,7 +85,7 @@
   },
   "Compare": {
     "Archetype": "原型",
-    "AssumeMasterworked": "Assume Masterworked",
+    "AssumeMasterworked": "マスターワーク済みと仮定",
     "Button": "比較",
     "ButtonHelp": "アイテムを比較する",
     "CompareBaseStats": "基本Statsを表示",
@@ -126,9 +126,9 @@
   },
   "ErrorPanel": {
     "Description": "Destiny 2 Companion App で保管庫をロードして、 Bungie.net がダウンしているかどうか試してみてください。",
-    "EmblemError": "You may be able to fix this by switching your emblems in game on all characters.",
-    "EmblemErrorLink": "Read more about how to fix it.",
-    "SystemDown": "This affects all Destiny apps, and the DIM team cannot fix or bypass it.",
+    "EmblemError": "ゲーム内で全キャラクターのエンブレムを入れ替えると直るかもしれません。",
+    "EmblemErrorLink": "修正方法の詳細を読む",
+    "SystemDown": "これはすべての Destiny アプリに影響し、 DIM チームはこれを修正したり迂回したりすることはできません。",
     "Troubleshooting": "トラブルシューティングガイド"
   },
   "FarmingMode": {
@@ -310,6 +310,16 @@
     "Confirm": "本当に消しますか?",
     "UserGuideLink": "ユーザーガイド"
   },
+  "Glyphs": {
+    "Gilded": "Gilded",
+    "Misadventure": "Misadventure",
+    "Missing": "Missing",
+    "OpenSymbolsPicker": "Open Symbols Picker",
+    "Quickfall": "Quickfall",
+    "ScorchCannon": "Scorch Cannon",
+    "SearchSymbols": "Search Symbols...",
+    "Smoke": "Smoke"
+  },
   "Header": {
     "About": "DIMについて",
     "AutoRefresh": "プレイ中ならば DIM は自動的に再読み込みされます。",
@@ -336,7 +346,7 @@
     "LaunchDIMAlone": "ウィンドウを分割する",
     "MaterialCounts": "素材数",
     "Menu": "メニュー",
-    "ProfileAge": "Destiny servers last sent updated data {{age}} ago.\nRefreshing from DIM may get newer data, but Bungie.net may also repeat cached information.",
+    "ProfileAge": "Destiny のサーバーが最後に更新データを送信したのは {{age}} 年前です。\nDIM から更新すると、より新しいデータが得られるかもしれませんが、 Bungie.net はキャッシュされた情報を繰り返し送信する可能性があります。",
     "Refresh": "Destiny データ [R] を更新",
     "ReloadApp": "アプリの再読み込み",
     "ReportBug": "バグの報告",
@@ -382,11 +392,11 @@
     "ClickToExpand": "(クリックして展開)"
   },
   "ItemFeed": {
-    "ClearFeed": "Clear Feed",
+    "ClearFeed": "フィードをクリア",
     "Description": "アイテムフィード",
     "HideTagged": "タグ付けされたものを隠す",
-    "NoNewItems": "No new items",
-    "ShowOlderItems": "Show older items"
+    "NoNewItems": "新しいアイテムはありません",
+    "ShowOlderItems": "古いアイテムを表示"
   },
   "ItemMove": {
     "Consolidate": "{{name}} が統合されました",
@@ -601,7 +611,7 @@
     "CurrentlyEquipped": "現在装備中",
     "Deequip": "他のキャラクターからアイテムを外す",
     "Delete": "削除",
-    "DeprecatedMods": "Deprecated Mods",
+    "DeprecatedMods": "非推奨 Mod",
     "Edit": "ロードアウトを編集",
     "EditBrief": "編集",
     "EquipItems": "アイテムを装備",
@@ -618,14 +628,14 @@
     "GatherEngrams": "エングラム収集",
     "GatherEngramsExceptExotics": "エキゾチック",
     "Generated": "T{{tier}} ロードアウト",
-    "HashtagTip": "Tip: Use #hashtags in your loadout names or notes and they'll show up here.",
+    "HashtagTip": "ヒント: ロードアウトの名前やメモに #hashtags を使用すると、ここに表示されます。",
     "Import": {
-      "BadURL": "Not a valid loadout share URL.",
-      "Error": "Error getting loadout:",
-      "Error404": "This loadout doesn't exist.",
-      "PasteHere": "Paste a loadout link to open the loadout."
+      "BadURL": "有効なロードアウト共有 URL ではありません",
+      "Error": "ロードアウト取得中のエラー",
+      "Error404": "このロードアウトは存在しません",
+      "PasteHere": "ロードアウトリンクを貼り付けて、ロードアウトを開きます。"
     },
-    "ImportLoadout": "Import Loadout",
+    "ImportLoadout": "ロードアウトをインポート",
     "ItemErrorSummary": "1 つのアイテムエラー:",
     "ItemErrorSummary_plural": "{{count}} 個のアイテムでエラー:",
     "ItemLeveling": "アイテムのレベルアップ",
@@ -644,7 +654,7 @@
     "MaximizeLight": "最大 Light",
     "MaximizePower": "最大パワー",
     "MaximizeStat": "統計を最大化する",
-    "MissingItems": "Missing Items",
+    "MissingItems": "紛失したアイテム",
     "MissingItemsWarning": "このロードアウトに含まれるアイテムの一部は保管庫に存在しません。",
     "ModErrorSummary": "1個のmodエラー",
     "ModErrorSummary_plural": "{{count}} 個のmod エラー:",
@@ -654,9 +664,9 @@
     "NoEngrams": "転送出来る非エキゾチクエングラムがありません。",
     "NoExotics": "エングラムは転送できません。",
     "NoSpace": "保管庫や他のキャラクターの空きスペースがありません。",
-    "NoneMatch": "None of your loadouts matched the filters.",
+    "NoneMatch": "フィルタに一致するロードアウトはありませんでした。",
     "NotStarted": "他のアクションを待っています",
-    "NotesPlaceholder": "Write some notes about this loadout, or use #hashtags to categorize it",
+    "NotesPlaceholder": "このロードアウトに関するメモを書くか、 #hashtag を使用して分類してください",
     "NotificationTitle": "ロードアウト: {{name}}",
     "OnWrongCharacterAdvice": "このキャラクターの最高パワーのアイテムはこちら。",
     "OnWrongCharacterWarning": "このキャラクターの最も強力なアーマーは、別のキャラクターが所持しています。 パワーのドロップ、強力、最高峰の報酬にカウントするには、アーマーはこのキャラクターか保管庫に存在しなければなりません。",
@@ -767,7 +777,7 @@
     },
     "Infuse": "融合する",
     "LockUnlock": {
-      "AutoLock": "Lock state is synced to this item's tag",
+      "AutoLock": "ロック状態はこのアイテムのタグに同期されます",
       "Lock": "ロックする {{itemType}}",
       "Locked": "ロック中",
       "Unlock": "ロックを解除する {{itemType}}",
@@ -920,8 +930,8 @@
     "UsageCount": "# 使用"
   },
   "Settings": {
-    "AutoLockTagged": "Sync item lock state with tag",
-    "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
+    "AutoLockTagged": "アイテムのロック状態とタグを同期",
+    "AutoLockTaggedExplanation": "DIM は、アイテムのタグに合わせて自動的にロックとロックを解除します。この設定を有効にすると、タグ付けされたアイテムのアイテムタイルにロックアイコンが表示されなくなります。",
     "BadgePostmaster": "現在のキャラクターにおけるポストマスターアイテム数をアプリアイコンに表示する",
     "BadgePostmasterExplanation": "この機能を利用するには、DIM をアプリとしてインストールし、OS がバッジの表示に対応している必要があります。",
     "BothDescriptions": "両方の説明",
@@ -1063,8 +1073,8 @@
     "DimSyncNotEnabled": "DIM Syncが有効になっていないため変更した設定、タグ、ロードアウト、検索はPCにのみ保存されています。このままブラウザのストレージをクリアするとデータは失われてしまいます。設定でDIM Syncを有効にしてデータを自動的にバックアップするか、定期的にデータを手動でバックアップしてください。",
     "EnableDimApi": "DIM Sync を有効にする (推奨)",
     "Export": "バックアップのダウンロード",
-    "ExportError": "Failed to download backup from DIM Sync",
-    "ExportErrorBody": "DIM Sync may be down, or you are having trouble with your connection. We will download a copy of your locally saved data instead.",
+    "ExportError": "DIM Sync からのバックアップのダウンロードに失敗しました。",
+    "ExportErrorBody": "DIM Sync がダウンしているか、接続に問題がある可能性があります。代わりにローカルに保存されたデータのコピーをダウンロードします。",
     "Import": "バックアップのインポート",
     "ImportConfirmDimApi": "現在のタグ、ロードアウト、設定をこのバージョンで上書きしても大丈夫ですか？それはあなたが持っていたものを完全に置き換えます。",
     "ImportExport": "バックアップとインポート",
@@ -1093,11 +1103,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "No": "No",
+      "No": "いいえ",
       "Reset": "デバイス認証を解除する",
-      "Title": "Do you see the same code on your Stream Deck ?",
-      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
-      "Yes": "Yes"
+      "Title": "Stream Deck に同じコードが表示されますか？",
+      "Update": "このメッセージが表示される場合、古いバージョンのプラグインを使用しています。Stream Deck ストアで最新のアップデートをダウンロードしてください。",
+      "Yes": "はい"
     },
     "Connected": "接続しました",
     "Enable": "Stream Deck プラグイン",
@@ -1164,7 +1174,7 @@
     "About": {
       "APIHistory": "DIM (またはその他のDestinyアプリ) で実行されたアクション履歴を表示する",
       "BungieCopyright": "すべての画像とコンテンツはBungieの所有物です。",
-      "CommunityInsight": "Community Perk Insights courtesy of {{clarityLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
+      "CommunityInsight": "コミュニティのパーク評価は {{clarityLink}} の提供によるものです。不正確な情報に気づいたり、質問がある場合は、 {{clarityDiscordLink}} に参加してください。",
       "Discord": "Discord",
       "DiscordHelp": "Discordチャネルで質問をしたり、フィードバックをするとサポートを受けられます。",
       "FAQ": "よくある質問",
