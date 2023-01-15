@@ -43,7 +43,7 @@ import ModPicker from '../loadout/ModPicker';
 import EnergyOptions from './filter/EnergyOptions';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import TierSelect from './filter/TierSelect';
-import CompareDrawer from './generated-sets/CompareDrawer';
+import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
@@ -553,7 +553,7 @@ export default memo(function LoadoutBuilder({
         )}
         {compareSet && (
           <Portal>
-            <CompareDrawer
+            <CompareLoadoutsDrawer
               set={compareSet}
               selectedStore={selectedStore}
               loadouts={loadouts}

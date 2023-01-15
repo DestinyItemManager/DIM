@@ -9,7 +9,7 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { Dispatch } from 'react';
+import { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
@@ -166,14 +166,7 @@ export default function GeneratedSetItem({
             )
           )}
         </div>
-        <div className={styles.lockedSockets}>
-          <Sockets
-            item={item}
-            lockedMods={assignedMods}
-            onSocketClick={onSocketClick}
-            size="small"
-          />
-        </div>
+        <Sockets item={item} lockedMods={assignedMods} onSocketClick={onSocketClick} size="small" />
       </div>
     </div>
   );
