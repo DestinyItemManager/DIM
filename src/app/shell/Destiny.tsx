@@ -6,7 +6,7 @@ import {
   currentAccountSelector,
 } from 'app/accounts/selectors';
 import ArmoryPage from 'app/armory/ArmoryPage';
-import Compare from 'app/compare/Compare';
+import CompareContainer from 'app/compare/CompareContainer';
 import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
@@ -272,7 +272,7 @@ export default function Destiny() {
         </Routes>
       </div>
       <LoadoutDrawerContainer account={account} />
-      <Compare />
+      <CompareContainer destinyVersion={account.destinyVersion} />
       {account.destinyVersion === 2 && <StripSockets />}
       <Farming />
       <InfusionFinder />
