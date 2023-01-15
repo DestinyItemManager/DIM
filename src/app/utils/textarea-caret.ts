@@ -1,3 +1,8 @@
+/* eslint-disable */
+// The @textcomplete library uses this, but DIM wants to override it (via an
+// alias in Webpack) to have it append its test element to our tempContainer to
+// avoid expensive layout recalculation.
+
 // We'll copy the properties below into the mirror div.
 // Note that some browsers, such as Firefox, do not concatenate properties
 // into their shorthand (e.g. padding-top, padding-bottom etc. -> padding),
@@ -78,7 +83,7 @@ export default function getCaretCoordinates(
   style.visibility = 'hidden'; // not 'display: none' because we want rendering
 
   // Transfer the element's properties to the div
-  for (const prop of properties) {
+  properties.forEach(function (prop) {
     if (isInput && prop === 'lineHeight') {
       // Special case for <input>s because text is rendered centered and line height may be != height
       if (computed.boxSizing === 'border-box') {
@@ -102,7 +107,7 @@ export default function getCaretCoordinates(
     } else {
       style[prop] = computed[prop];
     }
-  }
+  });
 
   if (isFirefox) {
     // Firefox lies about the overflow property for textareas: https://bugzilla.mozilla.org/show_bug.cgi?id=984275
