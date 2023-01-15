@@ -6,6 +6,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { consolidate, distribute } from 'app/inventory/move-item';
 import { sortedStoresSelector, tagSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
+import { canSyncLockState } from 'app/inventory/SyncTagLock';
 import ActionButton from 'app/item-actions/ActionButton';
 import LockButton from 'app/item-actions/LockButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -55,7 +56,7 @@ export function LockActionButton({ item, label }: ActionButtonProps) {
     return null;
   }
 
-  const disabled = autoLockTagged && tag !== undefined;
+  const disabled = autoLockTagged && tag !== undefined && canSyncLockState(item);
 
   const type = item.lockable ? 'lock' : 'track';
   const title =
