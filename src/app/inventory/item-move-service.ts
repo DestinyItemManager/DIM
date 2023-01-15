@@ -6,7 +6,7 @@ import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { errorLog, infoLog, warnLog } from 'app/utils/log';
+import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
@@ -159,9 +159,14 @@ function updateItemModel(
   amount: number = item.amount
 ): ThunkAction<DimItem, RootState, undefined, AnyAction> {
   return (dispatch, getState) => {
-    dispatch(itemMoved({ item, source, target, equip, amount }));
-    const stores = storesSelector(getState());
-    return getItemAcrossStores(stores, item) || item;
+    const stopTimer = timer('itemMovedUpdate');
+    try {
+      dispatch(itemMoved({ item, source, target, equip, amount }));
+      const stores = storesSelector(getState());
+      return getItemAcrossStores(stores, item) || item;
+    } finally {
+      stopTimer();
+    }
   };
 }
 
@@ -172,6 +177,7 @@ function getItemAcrossStores<Item extends DimItem, Store extends DimStore<Item>>
   stores: Store[],
   params: DimItem
 ) {
+  // TODO: always look in the item's owner store?
   for (const store of stores) {
     for (const item of store.items) {
       if (
