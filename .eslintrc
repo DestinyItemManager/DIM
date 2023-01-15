@@ -60,7 +60,8 @@
     "react-redux",
     "css-modules",
     "radar",
-    "jsx-expressions"
+    "jsx-expressions",
+    "github"
   ],
   "reportUnusedDisableDirectives": true,
   "rules": {
@@ -282,7 +283,10 @@
     "radar/no-small-switch": "off",
     "radar/no-duplicate-string": "off",
     "radar/prefer-immediate-return": "off",
-    "jsx-expressions/strict-logical-expressions": ["error", { "allowString": true }]
+    "jsx-expressions/strict-logical-expressions": ["error", { "allowString": true }],
+    "github/async-currenttarget": "error",
+    "github/async-preventdefault": "error",
+    "github/no-innerText": "error"
   },
   "overrides": [
     {
