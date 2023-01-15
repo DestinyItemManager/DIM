@@ -118,7 +118,8 @@ export const materialsSelector = (state: RootState) =>
   );
 
 /** The actual raw profile response from the Bungie.net profile API */
-export const profileResponseSelector = (state: RootState) => state.inventory.profileResponse;
+export const profileResponseSelector = (state: RootState) =>
+  state.inventory.mockProfileData ?? state.inventory.profileResponse;
 
 /** Whether or not the user is currently playing Destiny 2 */
 export const userIsPlayingSelector = (state: RootState) =>

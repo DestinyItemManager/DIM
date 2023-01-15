@@ -1,7 +1,12 @@
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
-import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
+import {
+  armor2PlugCategoryHashes,
+  armor2PlugCategoryHashesByName,
+  armorBuckets,
+} from 'app/search/d2-known-values';
+import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import {
@@ -9,6 +14,7 @@ import {
   DestinyInventoryItemDefinition,
   TierType,
 } from 'bungie-api-ts/destiny2';
+import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { isArmorEnergyLocked } from './armor-upgrade-utils';
@@ -151,4 +157,20 @@ function getItemTypeOrTierDisplayName(newDisplayName?: string) {
 export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
   const commonClassItemMod = plugs.find((plugDef) => isClassItemOfTier(plugDef, TierType.Basic));
   return _.groupBy(plugs, getItemTypeOrTierDisplayName(commonClassItemMod?.itemTypeDisplayName));
+}
+
+/**
+ * 2023-01-11: All standard Armor Mods (excluding artifact and raid) are unlocked for everyone.
+ * The API was not informed, so we must hardcode the rules here.
+ */
+export function unlockedByAllModsBeingUnlocked(
+  plug: PluggableInventoryItemDefinition,
+  artifactMods: Set<number> | undefined
+) {
+  return (
+    !deprecatedMods.includes(plug.hash) &&
+    !artifactMods?.has(plug.hash) &&
+    (armor2PlugCategoryHashes.includes(plug.plug.plugCategoryHash) ||
+      combatCompatiblePlugCategoryHashes.includes(plug.plug.plugCategoryHash))
+  );
 }
