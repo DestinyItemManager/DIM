@@ -177,7 +177,6 @@ function getItemAcrossStores<Item extends DimItem, Store extends DimStore<Item>>
   stores: Store[],
   params: DimItem
 ) {
-  // TODO: always look in the item's owner store?
   for (const store of stores) {
     for (const item of store.items) {
       if (
