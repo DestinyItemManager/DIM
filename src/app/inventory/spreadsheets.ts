@@ -75,7 +75,7 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
     const items: DimItem[] = [];
     for (const item of allItems) {
       if (!item.primaryStat && type !== 'Ghost') {
-        return;
+        continue;
       }
 
       if (type === 'Weapons') {
