@@ -426,11 +426,11 @@ module.exports = (env) => {
         // Warn when DIM Sync is off and you save some DIM-specific data
         '$featureFlags.warnNoSync': JSON.stringify(true),
         // Expose the "Add required stat mods" Loadout Optimizer toggle
-        '$featureFlags.loAutoStatMods': JSON.stringify(!env.release),
+        '$featureFlags.loAutoStatMods': JSON.stringify(true),
         // Whether to send cookies to the Bungie.net API
         '$featureFlags.apiCookies': JSON.stringify(false),
         // If saved DIM API data in IDB is recent enough, don't bother getting it from the server
-        '$featureFlags.skipDimApiFirstLoadIfRecent': JSON.stringify(!env.release),
+        '$featureFlags.skipDimApiFirstLoadIfRecent': JSON.stringify(true),
         // Pretend that Bungie.net is down for maintenance
         '$featureFlags.simulateBungieMaintenance': JSON.stringify(false),
         // Pretend that Bungie.net is not returning sockets info
