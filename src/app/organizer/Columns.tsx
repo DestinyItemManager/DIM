@@ -60,6 +60,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { StatHashes } from 'data/d2/generated-enums';
+import shapedIcon from 'images/shaped.png';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -245,6 +246,7 @@ export function getColumns(
           {(ref, onClick) => (
             <div ref={ref} onClick={onClick} className="item">
               <ItemIcon item={item} className={styles.itemIcon} />
+              {item.crafted && <img src={shapedIcon} className={styles.shapedIconOverlay} />}
             </div>
           )}
         </ItemPopupTrigger>
@@ -275,7 +277,7 @@ export function getColumns(
         value: isSunset,
         defaultSort: SortDirection.ASC,
         cell: (value) => (value ? <AppIcon icon={faCheck} /> : undefined),
-        filter: (value) => (value ? 'is:sunset' : '-is:sunset'),
+        filter: (value) => (value ? '' : '-') + 'is:sunset',
       }),
     !isGhost &&
       (destinyVersion === 2 || isWeapon) &&
@@ -302,7 +304,7 @@ export function getColumns(
       value: (i) => i.locked,
       cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? 'is:locked' : 'not:locked'),
+      filter: (value) => (value ? '' : '-') + 'is:locked',
     }),
     c({
       id: 'tag',
@@ -318,7 +320,15 @@ export function getColumns(
       value: (item) => newItems.has(item.id),
       cell: (value) => (value ? <NewItemIndicator /> : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? 'is:new' : 'not:new'),
+      filter: (value) => (value ? '' : '-') + 'is:new',
+    }),
+    c({
+      id: 'crafted',
+      header: t('Organizer.Columns.Crafted'),
+      value: (item) => item.crafted,
+      cell: (value) => (value ? <img className={styles.shapedIcon} src={shapedIcon} /> : undefined),
+      defaultSort: SortDirection.DESC,
+      filter: (value) => (value ? '' : '-') + 'is:crafted',
     }),
     c({
       id: 'recency',
@@ -344,7 +354,7 @@ export function getColumns(
           ) : undefined,
         sort: compareBy((wishList) => (wishList === undefined ? 0 : wishList ? -1 : 1)),
         filter: (value) =>
-          value === true ? 'is:wishlist' : value === false ? 'is:trashlist' : 'not:wishlist',
+          value === true ? 'is:wishlist' : value === false ? 'is:trashlist' : '-is:wishlist',
       }),
     c({
       id: 'tier',
