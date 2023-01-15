@@ -422,8 +422,10 @@ function processCharacter(
   const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
   const profileRecords = profileInfo.profileRecords?.data;
   const itemComponents = profileInfo.itemComponents;
-  const uninstancedItemObjectives =
-    getCharacterProgressions(profileInfo, characterId)?.uninstancedItemObjectives || [];
+
+  const characterProgressions = getCharacterProgressions(profileInfo, characterId);
+  const uninstancedItemObjectives = characterProgressions?.uninstancedItemObjectives;
+  const uninstancedItemPerks = characterProgressions?.uninstancedItemPerks;
 
   const store = makeCharacter(defs, character, lastPlayedDate, profileRecords);
 
@@ -447,7 +449,8 @@ function processCharacter(
     items,
     itemComponents,
     uninstancedItemObjectives,
-    profileRecords
+    profileRecords,
+    uninstancedItemPerks
   );
   store.items = processedItems;
   return store;

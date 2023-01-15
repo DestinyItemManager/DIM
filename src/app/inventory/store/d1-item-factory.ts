@@ -328,7 +328,7 @@ function makeItem(
     percentComplete: 0,
     talentGrid: null,
     stats: null,
-    objectives: null,
+    objectives: undefined,
     quality: null,
     sockets: null,
     breakerType: null,
@@ -413,7 +413,7 @@ function makeItem(
           completionValue: defs.Objective.get(o.objectiveHash).completionValue,
           visible: true,
         }))
-      : null;
+      : undefined;
 
   if (createdItem.talentGrid && createdItem.infusable && item.primaryStat) {
     try {

@@ -15,6 +15,7 @@ import {
   BucketCategory,
   ComponentPrivacySetting,
   DestinyAmmunitionType,
+  DestinyCharacterProgressionComponent,
   DestinyClass,
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
@@ -24,6 +25,7 @@ import {
   DestinyItemSubType,
   DestinyItemTooltipNotification,
   DestinyObjectiveProgress,
+  DestinyPerkReference,
   DestinyProfileRecordsComponent,
   DictionaryComponentResponse,
   ItemBindStatus,
@@ -76,15 +78,18 @@ export function processItems(
   owner: DimStore,
   items: DestinyItemComponent[],
   itemComponents: DestinyItemComponentSetOfint64,
-  uninstancedItemObjectives?: {
-    [key: number]: DestinyObjectiveProgress[];
-  },
-  profileRecords?: DestinyProfileRecordsComponent
+  uninstancedItemObjectives?: DestinyCharacterProgressionComponent['uninstancedItemObjectives'],
+  profileRecords?: DestinyProfileRecordsComponent,
+  uninstancedItemPerks?: DestinyCharacterProgressionComponent['uninstancedItemPerks']
 ): DimItem[] {
   const result: DimItem[] = [];
 
   for (const item of items) {
     let createdItem: DimItem | null = null;
+
+    const itemUninstancedObjectives = uninstancedItemObjectives?.[item.itemHash];
+    const itemUninstancedPerks = uninstancedItemPerks?.[item.itemHash]?.perks;
+
     try {
       createdItem = makeItem(
         defs,
@@ -92,7 +97,8 @@ export function processItems(
         itemComponents,
         item,
         owner,
-        uninstancedItemObjectives,
+        itemUninstancedObjectives,
+        itemUninstancedPerks,
         profileRecords
       );
     } catch (e) {
@@ -180,6 +186,7 @@ export function makeFakeItem(
     },
     undefined,
     undefined,
+    undefined,
     profileRecords
   );
 
@@ -251,9 +258,10 @@ export function makeItem(
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: DimStore | undefined,
-  uninstancedItemObjectives?: {
-    [key: number]: DestinyObjectiveProgress[];
-  },
+  /** this item's uninstanced objectives */
+  itemUninstancedObjectives?: DestinyObjectiveProgress[],
+  /** this item's uninstanced perks */
+  itemUninstancedPerks?: DestinyPerkReference[],
   profileRecords?: DestinyProfileRecordsComponent
 ): DimItem | null {
   const itemDef = defs.InventoryItem.get(item.itemHash);
@@ -530,7 +538,7 @@ export function makeItem(
     percentComplete: 0,
     hidePercentage: false,
     stats: null,
-    objectives: null,
+    objectives: undefined,
     pursuit: null,
     taggable: false,
     comparable: false,
@@ -624,12 +632,15 @@ export function makeItem(
   }
 
   try {
+    const itemInstancedObjectives = item.itemInstanceId
+      ? itemComponents?.objectives?.data?.[item.itemInstanceId].objectives
+      : undefined;
+
     createdItem.objectives = buildObjectives(
-      item,
       itemDef,
-      itemComponents?.objectives?.data,
       defs,
-      uninstancedItemObjectives
+      itemInstancedObjectives,
+      itemUninstancedObjectives
     );
   } catch (e) {
     errorLog('d2-stores', `Error building objectives for ${createdItem.name}`, item, itemDef, e);
@@ -638,8 +649,9 @@ export function makeItem(
 
   if (itemDef.perks?.length) {
     const perks = itemDef.perks.filter(
-      (p) =>
+      (p, i) =>
         p.perkVisibility === ItemPerkVisibility.Visible &&
+        itemUninstancedPerks?.[i].visible !== false &&
         defs.SandboxPerk.get(p.perkHash)?.isDisplayable
     );
     if (perks.length) {
