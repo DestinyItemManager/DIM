@@ -7,7 +7,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { pickPlugPositions } from '../mod-assignment-utils';
-import Mod from './Mod';
+import PlugDef from './PlugDef';
 import styles from './Sockets.m.scss';
 
 const undesirablePlugs = [
@@ -32,7 +32,7 @@ interface Props {
 }
 
 /**
- * Show sockets (mod slots) for an armor item with the specified locked mods slotted into
+ * Show sockets (mod slots) for a loadout armor item with the specified locked mods slotted into it.
  */
 function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
   const defs = useD2Definitions()!;
@@ -83,10 +83,9 @@ function Sockets({ item, lockedMods, size, onSocketClick }: Props) {
   return (
     <div className={clsx(styles.lockedItems, { [styles.small]: size === 'small' })}>
       {modsAndWhitelist.map(({ plugDef, whitelist }, index) => (
-        <Mod
+        <PlugDef
           key={index}
-          gridColumn={(index % 2) + 1}
-          plugDef={plugDef}
+          plug={plugDef}
           onClick={onSocketClick ? () => onSocketClick(plugDef, whitelist) : undefined}
         />
       ))}

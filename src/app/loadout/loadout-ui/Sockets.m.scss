@@ -3,6 +3,7 @@
 .lockedItems {
   display: grid;
   gap: 2px;
+  grid-template-columns: repeat(2, auto);
 }
 
 .small {
