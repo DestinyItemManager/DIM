@@ -12,7 +12,9 @@ import { chainComparator, Comparator, compareBy, reverseComparator } from '../ut
 
 const INSTANCEID_PADDING = 20;
 
-const getItemRecencyKey = (item: DimItem) =>
+// TODO: super expensive! Can these be numbers??
+// TODO: weak-memoize?
+export const getItemRecencyKey = (item: DimItem) =>
   item.instanced ? item.id.padStart(INSTANCEID_PADDING, '0') : 0;
 
 /**
