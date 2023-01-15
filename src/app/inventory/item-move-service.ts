@@ -846,14 +846,14 @@ function ensureCanMoveToStore(
 
     // How many items need to be moved away from each store (in amount, not stacks)
     const movesNeeded: { [storeId: string]: number } = {};
-    stores.forEach((s) => {
+    for (const s of stores) {
       if (storeReservations[s.id]) {
         movesNeeded[s.id] = Math.max(
           0,
           storeReservations[s.id] - spaceLeftWithReservations(s, item)
         );
       }
-    });
+    }
 
     if (Object.values(movesNeeded).every((m) => m === 0)) {
       // If there are no moves needed, we're clear to go

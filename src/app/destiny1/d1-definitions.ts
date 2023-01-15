@@ -87,7 +87,7 @@ export function getDefinitions(): ThunkResult<D1ManifestDefinitions> {
       isDestiny2: () => false,
     };
     // Load objects that lazily load their properties from the sqlite DB.
-    lazyTables.forEach((tableShort) => {
+    for (const tableShort of lazyTables) {
       const table = `Destiny${tableShort}Definition`;
       defs[tableShort] = {
         get(id: number, requestor?: any) {
@@ -108,12 +108,12 @@ export function getDefinitions(): ThunkResult<D1ManifestDefinitions> {
           return dbEntry;
         },
       };
-    });
+    }
     // Resources that need to be fully loaded (because they're iterated over)
-    eagerTables.forEach((tableShort) => {
+    for (const tableShort of eagerTables) {
       const table = `Destiny${tableShort}Definition`;
       defs[tableShort] = db[table];
-    });
+    }
     dispatch(setD1Manifest(defs as D1ManifestDefinitions));
     return defs as D1ManifestDefinitions;
   };

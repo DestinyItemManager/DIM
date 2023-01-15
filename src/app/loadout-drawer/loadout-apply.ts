@@ -366,9 +366,9 @@ function doApplyLoadout(
       // If we need to equip many items at once, we'll use a single bulk-equip later
       if (itemsToEquip.length > 1) {
         // TODO: just set a bulkEquip flag
-        itemsToEquip.forEach((i) => {
+        for (const i of itemsToEquip) {
           i.equip = false;
-        });
+        }
       }
 
       // Dequip items from the loadout off of other characters so they can be moved.

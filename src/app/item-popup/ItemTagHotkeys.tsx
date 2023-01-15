@@ -26,7 +26,7 @@ export default function ItemTagHotkeys({ item }: Props) {
       },
     ];
 
-    itemTagList.forEach((tag) => {
+    for (const tag of itemTagList) {
       if (tag.hotkey) {
         hotkeys.push({
           combo: tag.hotkey,
@@ -34,7 +34,7 @@ export default function ItemTagHotkeys({ item }: Props) {
           callback: () => dispatch(setTag(item, itemTag === tag.type ? 'clear' : tag.type)),
         });
       }
-    });
+    }
   }
 
   useHotkeys(hotkeys);

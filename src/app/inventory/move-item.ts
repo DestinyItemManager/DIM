@@ -273,6 +273,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
           const vaultIndex = stores.length - 1;
           const vault = stores[vaultIndex];
 
+          // eslint-disable-next-line github/array-foreach
           deltas.forEach((delta, index) => {
             if (delta < 0 && index !== vaultIndex) {
               vaultMoves.push({

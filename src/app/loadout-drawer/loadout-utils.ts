@@ -244,20 +244,23 @@ export function getLoadoutStats(
 
   // Construct map of stat hash to DimCharacterStat
   const stats: { [hash: number]: DimCharacterStat } = {};
-  statDefs.forEach(({ hash, displayProperties: { description, icon, name } }) => {
+  for (const {
+    hash,
+    displayProperties: { description, icon, name },
+  } of statDefs) {
     stats[hash] = { hash, description, icon: bungieNetPath(icon), name, value: 0 };
-  });
+  }
 
   // Sum the items stats into the stats
-  armor.forEach((item) => {
+  for (const item of armor) {
     const itemStats = _.groupBy(item.stats, (stat) => stat.statHash);
     const energySocket =
       item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
-    Object.entries(stats).forEach(([hash, stat]) => {
+    for (const [hash, stat] of Object.entries(stats)) {
       stat.value += itemStats[hash]?.[0].base ?? 0;
       stat.value += energySocket?.plugged?.stats?.[hash] || 0;
-    });
-  });
+    }
+  }
 
   // Add stats that come from the subclass fragments
   // TODO: Now that we apply socket overrides when we resolve items, do we need to do this calculation?

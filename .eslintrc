@@ -284,6 +284,7 @@
     "radar/no-duplicate-string": "off",
     "radar/prefer-immediate-return": "off",
     "jsx-expressions/strict-logical-expressions": ["error", { "allowString": true }],
+    "github/array-foreach": "error",
     "github/async-currenttarget": "error",
     "github/async-preventdefault": "error",
     "github/no-innerText": "error"

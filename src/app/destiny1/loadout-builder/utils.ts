@@ -186,6 +186,7 @@ export function getBestArmor(
         (item) => !excludedIndices.has(item.index) && hasPerks(item) // Not excluded and has the correct locked perks
       );
 
+      // eslint-disable-next-line github/array-foreach
       statHashes.forEach((hash, index) => {
         if (!fullMode && index > 2) {
           return;
@@ -201,7 +202,7 @@ export function getBestArmor(
     }
 
     bestCombs = [];
-    uniqBy(best, (o) => o.item.index).forEach((obj) => {
+    for (const obj of uniqBy(best, (o) => o.item.index)) {
       obj.bonusType = getBonusType(obj.item);
       if (obj.bonusType === '') {
         bestCombs.push({ item: obj.item, bonusType: '' });
@@ -215,7 +216,7 @@ export function getBestArmor(
       if (obj.bonusType.includes('str')) {
         bestCombs.push({ item: obj.item, bonusType: 'str' });
       }
-    });
+    }
     armor[armortype] = bestCombs;
   }
   return armor;
@@ -227,31 +228,31 @@ export function getActiveHighestSets(
 ): SetType[] {
   let count = 0;
   const topSets: SetType[] = [];
-  Object.values(setMap).forEach((setType) => {
+  for (const setType of Object.values(setMap)) {
     if (count >= 10) {
-      return;
+      continue;
     }
 
     if (setType.tiers[activeSets]) {
       topSets.push(setType);
       count += 1;
     }
-  });
+  }
   return topSets;
 }
 
-export function mergeBuckets<T>(
+export function mergeBuckets<T extends any[]>(
   bucket1: { [armorType in ArmorTypes]: T },
   bucket2: { [armorType in ArmorTypes]: T }
 ): { [armorType in ArmorTypes]: T } {
   const merged = {};
-  Object.keys(bucket1).forEach((type) => {
-    merged[type] = bucket1[type].concat(bucket2[type]);
-  });
+  for (const [type, bucket] of Object.entries(bucket1)) {
+    merged[type] = bucket.concat(bucket2[type]);
+  }
   return merged as { [armorType in ArmorTypes]: T };
 }
 
-export function getActiveBuckets<T>(
+export function getActiveBuckets<T extends any[]>(
   bucket1: { [armorType in ArmorTypes]: T },
   bucket2: { [armorType in ArmorTypes]: T },
   merge: boolean

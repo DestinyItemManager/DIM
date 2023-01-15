@@ -197,18 +197,18 @@ async function fetchVendor(
 function mergeVendors([firstVendor, ...otherVendors]: Vendor[]) {
   const mergedVendor = copy(firstVendor);
 
-  otherVendors.forEach((vendor) => {
+  for (const vendor of otherVendors) {
     Object.assign(mergedVendor.cacheKeys, vendor.cacheKeys);
 
-    vendor.categories.forEach((category) => {
+    for (const category of vendor.categories) {
       const existingCategory = mergedVendor.categories.find((c) => c.title === category.title);
       if (existingCategory) {
         mergeCategory(existingCategory, category);
       } else {
         mergedVendor.categories.push(category);
       }
-    });
-  });
+    }
+  }
 
   mergedVendor.allItems = mergedVendor.categories.flatMap((i) => i.saleItems);
 
@@ -227,7 +227,7 @@ function mergeCategory(
     saleItems: VendorSaleItem[];
   }
 ) {
-  otherCategory.saleItems.forEach((saleItem) => {
+  for (const saleItem of otherCategory.saleItems) {
     const existingSaleItem = mergedCategory.saleItems.find((i) => i.index === saleItem.index);
     if (existingSaleItem) {
       existingSaleItem.unlocked ||= saleItem.unlocked;
@@ -237,7 +237,7 @@ function mergeCategory(
     } else {
       mergedCategory.saleItems.push(saleItem);
     }
-  });
+  }
 }
 
 async function loadVendorForCharacter(
@@ -398,11 +398,11 @@ async function processVendor(
 
   const saleItems = vendor.saleItemCategories.flatMap((categoryData) => categoryData.saleItems);
 
-  saleItems.forEach((saleItem) => {
+  for (const saleItem of saleItems) {
     saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
-  });
+  }
 
-  const items = processItems(
+  const items: (D1Item & { vendorIcon?: string })[] = processItems(
     { id: null } as any,
     saleItems.map((i) => i.item) as any[],
     defs,
@@ -450,9 +450,9 @@ async function processVendor(
       };
     })
   );
-  items.forEach((item: any) => {
+  for (const item of items) {
     item.vendorIcon = createdVendor.icon;
-  });
+  }
   createdVendor.categories = categories;
   return createdVendor;
 }
@@ -480,23 +480,22 @@ export function countCurrencies(
   const costs = saleItems.flatMap((i) => i.costs);
 
   const totalCoins: { [currencyHash: number]: number } = {};
-  costs
-    .map((c) => c.currency.itemHash)
-    .forEach((currencyHash) => {
-      // Legendary marks and glimmer are special cases
-      switch (currencyHash) {
-        case 2534352370:
-        case 3159615086:
-        case 2749350776:
-          totalCoins[currencyHash] =
-            currencies.find((c) => c.itemHash === currencyHash)?.quantity || 0;
-          break;
-        default:
-          totalCoins[currencyHash] = _.sumBy(stores, (store) =>
-            amountOfItem(store, { hash: currencyHash })
-          );
-          break;
-      }
-    });
+  for (const c of costs) {
+    const currencyHash = c.currency.itemHash;
+    // Legendary marks and glimmer are special cases
+    switch (currencyHash) {
+      case 2534352370:
+      case 3159615086:
+      case 2749350776:
+        totalCoins[currencyHash] =
+          currencies.find((c) => c.itemHash === currencyHash)?.quantity || 0;
+        break;
+      default:
+        totalCoins[currencyHash] = _.sumBy(stores, (store) =>
+          amountOfItem(store, { hash: currencyHash })
+        );
+        break;
+    }
+  }
   return totalCoins;
 }

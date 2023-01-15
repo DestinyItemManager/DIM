@@ -78,7 +78,7 @@ export default function getCaretCoordinates(
   style.visibility = 'hidden'; // not 'display: none' because we want rendering
 
   // Transfer the element's properties to the div
-  properties.forEach(function (prop) {
+  for (const prop of properties) {
     if (isInput && prop === 'lineHeight') {
       // Special case for <input>s because text is rendered centered and line height may be != height
       if (computed.boxSizing === 'border-box') {
@@ -102,7 +102,7 @@ export default function getCaretCoordinates(
     } else {
       style[prop] = computed[prop];
     }
-  });
+  }
 
   if (isFirefox) {
     // Firefox lies about the overflow property for textareas: https://bugzilla.mozilla.org/show_bug.cgi?id=984275
