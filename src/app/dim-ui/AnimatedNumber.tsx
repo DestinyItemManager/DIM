@@ -12,7 +12,7 @@ const spring: Tween = {
  */
 export default function AnimatedNumber({ value }: { value: number }) {
   const val = useMotionValue(value);
-  const transformedVal = useTransform(val, (v) => Math.floor(v).toLocaleString());
+  const transformedVal = useTransform(val, (v) => Math.floor(v));
 
   useEffect(() => {
     animate(val, value, spring);
