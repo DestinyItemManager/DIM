@@ -223,7 +223,8 @@ export interface HandlerArgs<T> {
   store: DimStore;
 }
 
-export type MessageHandler = Record<
-  StreamDeckMessage['action'],
-  (args: HandlerArgs<StreamDeckMessage>) => ThunkResult
->;
+type ActionName = StreamDeckMessage['action'];
+type ActionMatching<key> = Extract<StreamDeckMessage, { action: key }>;
+export type MessageHandler = {
+  [key in ActionName]: (args: HandlerArgs<ActionMatching<key>>) => ThunkResult;
+};

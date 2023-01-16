@@ -14,7 +14,7 @@ type I18nInput = Parameters<typeof t>;
 // a filter can return various bool-ish values
 type ValidFilterOutput = boolean | null | undefined;
 
-export type ItemFilter = (item: DimItem) => ValidFilterOutput;
+export type ItemFilter<I = DimItem> = (item: I) => ValidFilterOutput;
 
 /**
  * A slice of data that could be used by filter functions to
@@ -96,7 +96,7 @@ export interface FilterArgs {
  * filter expression itself. We can also use it to drive filter help and filter
  * editor.
  */
-export interface FilterDefinition {
+export interface FilterDefinition<I extends DimItem = DimItem> {
   /**
    * One or more keywords which trigger the filter when typed into search bar.
    * What this means depends on what "format" this filter is.
@@ -135,7 +135,7 @@ export interface FilterDefinition {
    * filter function will be generated once, at the point where the overall
    * query is parsed.
    */
-  filter: (args: FilterArgs & FilterContext) => ItemFilter;
+  filter: (args: FilterArgs & FilterContext) => ItemFilter<I>;
 
   /**
    * A list of suggested keywords, for `query` and `stat` formats.

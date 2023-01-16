@@ -3,7 +3,7 @@ import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t } from 'app/i18next-t';
-import { D2BucketCategory, InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -130,7 +130,7 @@ export default function LoadoutView({
             {(!isPhonePortrait || subclass) && (
               <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
             )}
-            {['Weapons', 'Armor', 'General'].map((category: D2BucketCategory) => (
+            {(['Weapons', 'Armor', 'General'] as const).map((category) => (
               <LoadoutItemCategorySection
                 key={category}
                 category={category}

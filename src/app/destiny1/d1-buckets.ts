@@ -43,7 +43,7 @@ const bucketToTypeRaw = {
   [BucketHashes.Emblems]: 'Emblem',
 } as const;
 
-export type D1BucketTypes = typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw];
+export type D1BucketTypes = (typeof bucketToTypeRaw)[keyof typeof bucketToTypeRaw];
 
 // A mapping from the bucket hash to DIM item types
 const bucketToType: {
@@ -85,7 +85,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
       accountWide: false,
     },
     setHasUnknown() {
-      this.byCategory[this.unknown.sort] = [this.unknown];
+      this.byCategory[this.unknown.sort!] = [this.unknown];
     },
   };
   for (const def of Object.values(defs.InventoryBucket)) {

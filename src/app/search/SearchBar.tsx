@@ -561,6 +561,6 @@ function SearchBar(
   );
 }
 
-export default connect<StoreProps>(mapStateToProps, null, null, { forwardRef: true })(
+export default connect(mapStateToProps, null, null, { forwardRef: true })(
   React.forwardRef(SearchBar)
 );
