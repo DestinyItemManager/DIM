@@ -971,7 +971,7 @@ function canEquip(item: DimItem, store: DimStore): void {
  * in an attempt to make a move possible.
  *
  * This is functionally just ensureCanMoveToStore, with an
- * additional accomodation for equips and the one-exotic rule.
+ * additional accommodation for equips and the one-exotic rule.
  */
 function ensureValidTransfer(
   equip: boolean,

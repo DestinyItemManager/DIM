@@ -296,8 +296,14 @@ export function clearLoadoutParameters(): LoadoutUpdateFunction {
 }
 
 /** Remove the current subclass from the loadout. */
-export function clearSubclass(defs: D2ManifestDefinitions): LoadoutUpdateFunction {
+export function clearSubclass(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions
+): LoadoutUpdateFunction {
   return (loadout) => {
+    if (!defs.isDestiny2()) {
+      return loadout;
+    }
+
     const isSubclass = (i: LoadoutItem) =>
       defs.InventoryItem.get(i.hash)?.inventory?.bucketTypeHash === BucketHashes.Subclass;
 
@@ -333,7 +339,7 @@ export function removeMod(hash: number): LoadoutUpdateFunction {
 
 /** Replace the loadout's subclass with the store's currently equipped subclass */
 export function setLoadoutSubclassFromEquipped(
-  defs: D2ManifestDefinitions,
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore
 ): LoadoutUpdateFunction {
   return (loadout) => {
@@ -342,7 +348,7 @@ export function setLoadoutSubclassFromEquipped(
         item.equipped && item.bucket.hash === BucketHashes.Subclass && itemCanBeInLoadout(item)
     );
 
-    if (!newSubclass) {
+    if (!newSubclass || !defs.isDestiny2()) {
       return loadout;
     }
 

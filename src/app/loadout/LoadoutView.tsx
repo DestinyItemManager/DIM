@@ -130,10 +130,10 @@ export default function LoadoutView({
             {(!isPhonePortrait || subclass) && (
               <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
             )}
-            {['Weapons', 'Armor', 'General'].map((category: D2BucketCategory) => (
+            {['Weapons', 'Armor', 'General'].map((category) => (
               <LoadoutItemCategorySection
                 key={category}
-                category={category}
+                category={category as D2BucketCategory}
                 subclass={subclass}
                 storeId={store.id}
                 items={categories[category]}

@@ -56,6 +56,10 @@ interface Window {
   skipWaiting(): void;
 }
 
+interface WindowEventMap {
+  beforeinstallprompt: BeforeInstallPromptEvent;
+}
+
 interface Navigator {
   /** iOS-only: True if the app is running in installed mode */
   standalone?: boolean;

@@ -20,11 +20,11 @@ export class FatalTokenError extends Error {
  * or bounces us back to login.
  */
 export async function fetchWithBungieOAuth(
-  request: Request | string,
+  request: RequestInfo | URL,
   options?: RequestInit,
   triedRefresh = false
 ): Promise<Response> {
-  if (typeof request === 'string') {
+  if (!(request instanceof Request)) {
     request = new Request(request);
   }
 

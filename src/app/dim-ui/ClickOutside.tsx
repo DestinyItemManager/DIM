@@ -18,11 +18,15 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
  * React DOM hierarchy rather than the real one. This is important for things like sheets
  * spawned through portals from the item popup.
  */
-export default React.forwardRef(function ClickOutside(
-  { onClickOutside, children, extraRef, onClick, ...other }: Props,
-  ref: React.RefObject<HTMLDivElement> | null
+export default React.forwardRef<HTMLDivElement, Props>(function ClickOutside(
+  { onClickOutside, children, extraRef, onClick, ...other },
+  ref
 ) {
   const localRef = useRef<HTMLDivElement>(null);
+  if (ref && !('current' in ref)) {
+    throw new Error('only works with a ref object');
+  }
+
   const wrapperRef = ref || localRef;
   const mouseEvents = useContext(ClickOutsideContext);
 

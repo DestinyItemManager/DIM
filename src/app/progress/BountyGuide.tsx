@@ -105,11 +105,9 @@ export default function BountyGuide({
     }
   }
 
-  const flattened: { type: DefType; value: number; bounties: DimItem[] }[] = Object.entries(
-    mapped
-  ).flatMap(([type, mapping]: [DefType, { [key: number]: DimItem[] }]) =>
+  const flattened = Object.entries(mapped).flatMap(([type, mapping]) =>
     Object.entries(mapping).map(([value, bounties]) => ({
-      type,
+      type: type as DefType,
       value: parseInt(value, 10),
       bounties,
     }))

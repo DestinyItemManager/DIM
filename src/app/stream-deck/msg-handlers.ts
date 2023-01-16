@@ -262,7 +262,7 @@ export function handleStreamDeckMessage(msg: StreamDeckMessage): ThunkResult {
 
     if (store) {
       // handle stream deck actions
-      const handler = handlers[msg.action];
+      const handler = handlers[msg.action] as (args: HandlerArgs<StreamDeckMessage>) => ThunkResult;
       dispatch(handler?.({ msg, state, store }));
     }
   };
