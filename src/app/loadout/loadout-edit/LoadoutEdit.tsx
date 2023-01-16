@@ -1,7 +1,7 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -166,7 +166,10 @@ export default function LoadoutEdit({
           </LoadoutEditBucketDropTarget>
         </LoadoutEditSection>
       )}
-      {(anyClass ? ['Weapons', 'General'] : ['Weapons', 'Armor', 'General']).map((category) => (
+      {(anyClass
+        ? (['Weapons', 'General'] as const)
+        : (['Weapons', 'Armor', 'General'] as const)
+      ).map((category) => (
         <LoadoutEditSection
           key={category}
           title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
@@ -182,7 +185,7 @@ export default function LoadoutEdit({
         >
           <LoadoutEditBucketDropTarget category={category} classType={loadout.classType}>
             <LoadoutEditBucket
-              category={category as D2BucketCategory}
+              category={category}
               storeId={store.id}
               items={categories[category]}
               modsByBucket={modsByBucket}

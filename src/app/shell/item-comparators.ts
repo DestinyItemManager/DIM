@@ -1,10 +1,10 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
-import { D1Item, DimItem } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
 import { ItemSortSettings } from 'app/settings/item-sort';
-import { isSunset } from 'app/utils/item-utils';
+import { isD1Item, isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTag, ItemInfos, tagConfig } from '../inventory/dim-item-info';
@@ -131,7 +131,7 @@ const ITEM_COMPARATORS: {
   // high -> low
   basePower: reverseComparator(compareBy((item) => item.power)),
   // This only sorts by D1 item quality
-  rating: reverseComparator(compareBy((item) => (item as D1Item).quality?.min)),
+  rating: reverseComparator(compareBy((item) => isD1Item(item) && item.quality?.min)),
   // Titan -> Hunter -> Warlock -> Unknown
   classType: compareBy((item) => item.classType),
   // None -> Primary -> Special -> Heavy -> Unknown
