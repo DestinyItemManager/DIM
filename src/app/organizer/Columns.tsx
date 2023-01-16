@@ -61,6 +61,7 @@ import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { StatHashes } from 'data/d2/generated-enums';
 import shapedIcon from 'images/shaped.png';
+import shapedOverlay from 'images/shapedOverlay.png';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -246,7 +247,7 @@ export function getColumns(
           {(ref, onClick) => (
             <div ref={ref} onClick={onClick} className="item">
               <ItemIcon item={item} className={styles.itemIcon} />
-              {item.crafted && <img src={shapedIcon} className={styles.shapedIconOverlay} />}
+              {item.crafted && <img src={shapedOverlay} className={styles.shapedIconOverlay} />}
             </div>
           )}
         </ItemPopupTrigger>
