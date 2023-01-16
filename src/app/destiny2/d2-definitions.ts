@@ -173,7 +173,7 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
     isDestiny1: () => false,
     isDestiny2: () => true,
   };
-  lazyTables.forEach((tableShort) => {
+  for (const tableShort of lazyTables) {
     const table = `Destiny${tableShort}Definition` as keyof AllDestinyManifestComponents;
     const dbTable = db[table];
     if (!dbTable) {
@@ -203,12 +203,12 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
         return dbTable;
       },
     };
-  });
+  }
   // Resources that need to be fully loaded (because they're iterated over)
-  eagerTables.forEach((tableShort) => {
+  for (const tableShort of eagerTables) {
     const table = `Destiny${tableShort}Definition`;
     defs[tableShort] = db[table];
-  });
+  }
 
   return defs as D2ManifestDefinitions;
 }

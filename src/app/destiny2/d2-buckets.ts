@@ -48,7 +48,7 @@ const bucketToTypeRaw = {
   [BucketHashes.ClanBanners]: 'ClanBanner',
 } as const;
 
-export type D2BucketTypes = typeof bucketToTypeRaw[keyof typeof bucketToTypeRaw];
+export type D2BucketTypes = (typeof bucketToTypeRaw)[keyof typeof bucketToTypeRaw];
 
 // these don't have bucket hashes but may be manually assigned to DimItems
 export type D2AdditionalBucketTypes = 'Milestone' | 'Unknown';
@@ -105,9 +105,9 @@ export function getBuckets(defs: D2ManifestDefinitions) {
     buckets.byHash[bucket.hash] = bucket;
   }
   const vaultMappings: { [bucketHash: number]: number } = {};
-  defs.Vendor.get(VENDORS.VAULT).acceptedItems.forEach((items) => {
+  for (const items of defs.Vendor.get(VENDORS.VAULT).acceptedItems) {
     vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
-  });
+  }
   for (const bucket of Object.values(buckets.byHash)) {
     if (vaultMappings[bucket.hash]) {
       bucket.vaultBucket = buckets.byHash[vaultMappings[bucket.hash]];

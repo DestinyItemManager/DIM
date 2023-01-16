@@ -162,7 +162,7 @@ export default function Destiny() {
     },
   ];
 
-  itemTagList.forEach((tag) => {
+  for (const tag of itemTagList) {
     if (tag.hotkey) {
       hotkeys.push({
         combo: tag.hotkey,
@@ -174,7 +174,7 @@ export default function Destiny() {
         },
       });
     }
-  });
+  }
   useHotkeys(hotkeys);
 
   if (

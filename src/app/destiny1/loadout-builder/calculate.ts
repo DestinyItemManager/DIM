@@ -235,9 +235,9 @@ export function getSetBucketsStep(
       for (let t = tierKeys.length; t > tierKeys.length - 3; t--) {
         if (tierKeys[t]) {
           allSetTiers.push(`- Tier ${tierKeys[t]} -`);
-          tiers[tierKeys[t]].forEach((set) => {
+          for (const set of tiers[tierKeys[t]]) {
             allSetTiers.push(set);
-          });
+          }
         }
       }
 

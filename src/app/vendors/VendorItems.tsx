@@ -164,9 +164,8 @@ export default function VendorItems({
             </div>
           </div>
         )}
-        {_.map(
-          itemsByCategory,
-          (items, categoryIndex) =>
+        {Object.entries(itemsByCategory).map(
+          ([categoryIndex, items]) =>
             vendor.def.displayCategories[categoryIndex] &&
             !ignoreCategories.includes(vendor.def.displayCategories[categoryIndex].identifier) && (
               <div className={styles.vendorRow} key={categoryIndex}>

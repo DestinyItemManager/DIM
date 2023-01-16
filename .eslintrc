@@ -60,7 +60,8 @@
     "react-redux",
     "css-modules",
     "radar",
-    "jsx-expressions"
+    "jsx-expressions",
+    "github"
   ],
   "reportUnusedDisableDirectives": true,
   "rules": {
@@ -111,6 +112,11 @@
         "object": "_",
         "property": "filter",
         "message": "Please use the native js filter."
+      },
+      {
+        "object": "_",
+        "property": "map",
+        "message": "Please use the native js map."
       },
       {
         "object": "_",
@@ -277,7 +283,11 @@
     "radar/no-small-switch": "off",
     "radar/no-duplicate-string": "off",
     "radar/prefer-immediate-return": "off",
-    "jsx-expressions/strict-logical-expressions": ["error", { "allowString": true }]
+    "jsx-expressions/strict-logical-expressions": ["error", { "allowString": true }],
+    "github/array-foreach": "error",
+    "github/async-currenttarget": "error",
+    "github/async-preventdefault": "error",
+    "github/no-innerText": "error"
   },
   "overrides": [
     {

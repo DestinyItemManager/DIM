@@ -366,9 +366,9 @@ function doApplyLoadout(
       // If we need to equip many items at once, we'll use a single bulk-equip later
       if (itemsToEquip.length > 1) {
         // TODO: just set a bulkEquip flag
-        itemsToEquip.forEach((i) => {
+        for (const i of itemsToEquip) {
           i.equip = false;
-        });
+        }
       }
 
       // Dequip items from the loadout off of other characters so they can be moved.
@@ -384,9 +384,8 @@ function doApplyLoadout(
       const moveSession = createMoveSession(cancelToken, involvedItems);
 
       // Group dequips per character
-      const dequips = _.map(
-        _.groupBy(realItemsToDequip, (i) => i.owner),
-        async (dequipItems, owner) => {
+      const dequips = Object.entries(_.groupBy(realItemsToDequip, (i) => i.owner)).map(
+        async ([owner, dequipItems]) => {
           // If there's only one item to remove, we don't need to bulk dequip, it'll be handled
           // automatically when we try to move the item.
           if (dequipItems.length === 1) {

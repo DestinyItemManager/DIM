@@ -257,7 +257,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
               {/* TODO: break into its own component */}
               <span>{t('Bucket.Armor')}</span>:{' '}
               <select name="type" value={type} onChange={this.onChange}>
-                {_.map(i18nItemNames, (name, type) => (
+                {Object.entries(i18nItemNames).map(([type, name]) => (
                   <option key={type} value={type}>
                     {name}
                   </option>
@@ -317,19 +317,24 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
               <span>{t('LB.Locked')}</span> - <small>{t('LB.LockedHelp')}</small>
             </p>
             <div className="loadout-builder-section">
-              {_.map(lockeditems, (lockeditem, type: ArmorTypes) => (
-                <LoadoutBuilderLockPerk
-                  key={type}
-                  lockeditem={lockeditem}
-                  activePerks={activePerks}
-                  lockedPerks={lockedperks}
-                  type={type}
-                  i18nItemNames={i18nItemNames}
-                  onRemove={this.onRemove}
-                  onPerkLocked={this.onPerkLocked}
-                  onItemLocked={this.onItemLocked}
-                />
-              ))}
+              {Object.entries(lockeditems).map(
+                ([type, lockeditem]: [
+                  type: ArmorTypes,
+                  lockeditem: D1ItemWithNormalStats | null
+                ]) => (
+                  <LoadoutBuilderLockPerk
+                    key={type}
+                    lockeditem={lockeditem}
+                    activePerks={activePerks}
+                    lockedPerks={lockedperks}
+                    type={type}
+                    i18nItemNames={i18nItemNames}
+                    onRemove={this.onRemove}
+                    onPerkLocked={this.onPerkLocked}
+                    onItemLocked={this.onItemLocked}
+                  />
+                )
+              )}
             </div>
           </div>
           {excludeditems.length > 0 && (
@@ -462,7 +467,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
           {progress >= 1 && (
             <ErrorBoundary name="Generated Sets">
               <div>
-                {_.map(activeHighestSets, (setType) => (
+                {activeHighestSets.map((setType) => (
                   <GeneratedSet
                     key={setType.set.setHash}
                     store={active}
@@ -555,22 +560,22 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     let allItems: D1Item[] = [];
     let vendorItems: D1Item[] = [];
-    stores.forEach((store) => {
+    for (const store of stores) {
       const items = filterItems(store.items);
 
       allItems = allItems.concat(items);
 
       // Build a map of perks
-      items.forEach((item) => {
+      for (const item of items) {
         if (item.classType === DestinyClass.Unknown) {
-          allClassTypes.forEach((classType) => {
+          for (const classType of allClassTypes) {
             perks[classType][item.type] = filterPerks(perks[classType][item.type], item);
-          });
+          }
         } else {
           perks[item.classType][item.type] = filterPerks(perks[item.classType][item.type], item);
         }
-      });
-    });
+      }
+    }
 
     if (vendors) {
       // Process vendors here
@@ -586,21 +591,21 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
         vendorItems = vendorItems.concat(vendItems);
 
         // Build a map of perks
-        vendItems.forEach((item) => {
+        for (const item of vendItems) {
           if (item.classType === DestinyClass.Unknown) {
-            allClassTypes.forEach((classType) => {
+            for (const classType of allClassTypes) {
               vendorPerks[classType][item.type] = filterPerks(
                 vendorPerks[classType][item.type],
                 item
               );
-            });
+            }
           } else {
             vendorPerks[item.classType][item.type] = filterPerks(
               vendorPerks[item.classType][item.type],
               item
             );
           }
-        });
+        }
       }
 
       // Remove overlapping perks in allPerks from vendorPerks

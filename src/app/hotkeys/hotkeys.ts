@@ -64,7 +64,9 @@ class HotkeyRegistry {
 
   register(componentId: number, hotkeys: Hotkey[]) {
     if (hotkeys?.length) {
-      hotkeys.forEach(installHotkey);
+      for (const hotkey of hotkeys) {
+        installHotkey(hotkey);
+      }
       this.hotkeys[componentId] = hotkeys;
     }
   }

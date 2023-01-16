@@ -207,11 +207,11 @@ function makeItem(
   // fix itemDef for defense items with missing nodes
   if (item.primaryStat?.statHash === D1_StatHashes.Defense && numStats > 0 && numStats !== 5) {
     const defaultMinMax = _.find(itemDef.stats, (stat) =>
-      [144602215, 1735777505, 4244567218].includes(stat.statHash)
+      [StatHashes.Intellect, StatHashes.Discipline, StatHashes.Strength].includes(stat.statHash)
     );
 
     if (defaultMinMax) {
-      [144602215, 1735777505, 4244567218].forEach((val) => {
+      for (const val of [StatHashes.Intellect, StatHashes.Discipline, StatHashes.Strength]) {
         if (!itemDef.stats[val]) {
           itemDef.stats[val] = {
             maximum: defaultMinMax.maximum,
@@ -220,7 +220,7 @@ function makeItem(
             value: 0,
           };
         }
-      });
+      }
     }
   }
 
@@ -648,9 +648,9 @@ function buildTalentGrid(
     (n) => n.column
   )!.column;
   if (minColumn > 0) {
-    gridNodes.forEach((node) => {
+    for (const node of gridNodes) {
       node.column -= minColumn;
-    });
+    }
   }
   const maxColumn = _.maxBy(gridNodes, (n) => n.column)!.column;
 
@@ -692,7 +692,7 @@ function buildStats(
 
   return _.sortBy(
     _.compact(
-      _.map(itemDef.stats, (stat) => {
+      Object.values(itemDef.stats).map((stat) => {
         const def = statDefs.get(stat.statHash);
         if (!def) {
           return undefined;

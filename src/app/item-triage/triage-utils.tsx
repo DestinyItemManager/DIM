@@ -82,16 +82,15 @@ function collectRelevantStatMaxes(
     }
 
     let thisItemCustomStatTotal = 0;
-    item.stats.forEach((stat) => {
-      const bestStatSoFar: number =
-        statMaxes[stat.statHash] ?? (stat.smallerIsBetter ? 9999999 : -9999999);
+    for (const stat of item.stats) {
+      const bestStatSoFar = statMaxes[stat.statHash] ?? (stat.smallerIsBetter ? 9999999 : -9999999);
       const newBestStat = (stat.smallerIsBetter ? Math.min : Math.max)(bestStatSoFar, stat.base);
       statMaxes[stat.statHash] = newBestStat;
 
       if (customStatTotalHashes.includes(stat.statHash)) {
         thisItemCustomStatTotal += stat.base;
       }
-    });
+    }
     statMaxes['custom'] = Math.max(statMaxes['custom'], thisItemCustomStatTotal);
   }
 

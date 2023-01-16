@@ -177,14 +177,14 @@ export default function Activities({ account }: Props) {
       return ix === -1 ? 999 : ix;
     }).map((a) => processActivities(defs, stores, a));
 
-    activities.forEach((a) => {
-      a.tiers.forEach((t) => {
+    for (const a of activities) {
+      for (const t of a.tiers) {
         if (t.hash === stores[0].advisors.activities!.weeklyfeaturedraid.display.activityHash) {
           a.featured = true;
           t.name = t.hash === 1387993552 ? '390' : t.name;
         }
-      });
-    });
+      }
+    }
 
     return activities;
   };
@@ -290,7 +290,7 @@ function i18nActivitySkulls(skulls: Skull[], defs: D1ManifestDefinitions): Skull
     epic: defs.Activity.get(2234107290),
   };
 
-  skulls.forEach((skull) => {
+  for (const skull of skulls) {
     const hash = skullHashesByName[skull.displayName];
     if (hash) {
       if (hash === 20) {
@@ -301,6 +301,6 @@ function i18nActivitySkulls(skulls: Skull[], defs: D1ManifestDefinitions): Skull
         skull.description = activity.heroic.skulls[hash].description;
       }
     }
-  });
+  }
   return skulls;
 }

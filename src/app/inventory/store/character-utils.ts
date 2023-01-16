@@ -113,10 +113,10 @@ export function getCharacterStatsData(
   data: D1CharacterResponse['character']['base']['characterBase']
 ) {
   const ret: { [statHash: string]: DimCharacterStat } = {};
-  stats.forEach((statId) => {
+  for (const statId of stats) {
     const rawStat = data.stats[statId];
     if (!rawStat) {
-      return;
+      continue;
     }
 
     const stat: DimCharacterStat = {
@@ -155,7 +155,7 @@ export function getCharacterStatsData(
     }
 
     ret[stat.hash] = stat;
-  });
+  }
   return ret;
 }
 

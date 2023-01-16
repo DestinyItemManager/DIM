@@ -18,7 +18,9 @@ const expectSortedDescending = (array: number[]) => {
 };
 
 const expectAllSorted = (picks: ModsPick[]) => {
-  picks.forEach((pick) => expectSortedDescending(pick.costs));
+  for (const pick of picks) {
+    expectSortedDescending(pick.costs);
+  }
 };
 
 describe('lo process auto stat mod pick generation', () => {

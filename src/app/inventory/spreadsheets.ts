@@ -65,17 +65,17 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
     }
     const nameMap = {};
     let allItems: DimItem[] = [];
-    stores.forEach((store) => {
+    for (const store of stores) {
       allItems = allItems.concat(store.items);
       nameMap[store.id] =
         store.id === 'vault'
           ? 'Vault'
           : `${capitalizeFirstLetter(getClass(store.classType))}(${store.powerLevel})`;
-    });
+    }
     const items: DimItem[] = [];
-    allItems.forEach((item) => {
+    for (const item of allItems) {
       if (!item.primaryStat && type !== 'Ghost') {
-        return;
+        continue;
       }
 
       if (type === 'Weapons') {
@@ -92,7 +92,7 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
       } else if (type === 'Ghost' && item.bucket.hash === BucketHashes.Ghost) {
         items.push(item);
       }
-    });
+    }
     switch (type) {
       case 'Weapons':
         downloadWeapons(items, nameMap, itemInfos, loadoutsForItem);
@@ -360,7 +360,7 @@ function downloadArmor(
     const stats: { [name: string]: { value: number; pct: number; base: number } } = {};
     if (item.stats) {
       if (isD1Item(item)) {
-        item.stats.forEach((stat) => {
+        for (const stat of item.stats) {
           let pct = 0;
           if (stat.scaled?.min) {
             pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
@@ -370,15 +370,15 @@ function downloadArmor(
             pct,
             base: 0,
           };
-        });
+        }
       } else {
-        item.stats.forEach((stat) => {
+        for (const stat of item.stats) {
           stats[stat.statHash] = {
             value: stat.value,
             base: stat.base,
             pct: 0,
           };
-        });
+        }
       }
     }
     if (item.destinyVersion === 1) {
@@ -393,12 +393,12 @@ function downloadArmor(
         name: statName,
         stat: stats[dimArmorStatHashByName[statName]],
       }));
-      armorStats.forEach((stat) => {
+      for (const stat of armorStats) {
         row[capitalizeFirstLetter(stat.name)] = stat.stat?.value ?? 0;
-      });
-      armorStats.forEach((stat) => {
+      }
+      for (const stat of armorStats) {
         row[`${capitalizeFirstLetter(stat.name)} (Base)`] = stat.stat?.base ?? 0;
-      });
+      }
 
       if (item.sockets) {
         row['Seasonal Mod'] = getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag) ?? '';
@@ -486,7 +486,7 @@ function downloadWeapons(
     };
 
     if (item.stats) {
-      item.stats.forEach((stat) => {
+      for (const stat of item.stats) {
         if (stat.value) {
           switch (stat.statHash) {
             case StatHashes.RecoilDirection:
@@ -558,7 +558,7 @@ function downloadWeapons(
               break;
           }
         }
-      });
+      }
     }
 
     row.Recoil = stats.recoil;

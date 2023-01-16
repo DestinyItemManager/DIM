@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import { Settings } from './initial-settings';
 
@@ -33,7 +32,7 @@ export default function Select({
 }
 
 export function mapToOptions(map: { [key: string]: string }) {
-  return _.map(map, (value, key) => ({
+  return Object.values(map).map(([key, value]) => ({
     name: value,
     value: key,
   }));
