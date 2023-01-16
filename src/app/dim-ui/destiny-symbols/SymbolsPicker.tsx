@@ -55,7 +55,7 @@ const SymbolsWindow = React.memo(function ({
     glyph,
   }));
   const [query, setQuery] = useState('');
-  const [preview, setPreview] = useState<typeof emojis[number] | undefined>(undefined);
+  const [preview, setPreview] = useState<(typeof emojis)[number] | undefined>(undefined);
   return (
     <>
       {/* explicitly eat all click events so that clicking in the window doesn't dismiss the item popup */}
@@ -80,7 +80,7 @@ const SymbolsWindow = React.memo(function ({
                     e.stopPropagation();
                     onChooseGlyph(emoji.glyph);
                   }}
-                  onMouseOver={() => setPreview(emoji)}
+                  onPointerEnter={() => setPreview(emoji)}
                 >
                   {emoji.glyph}
                 </button>
