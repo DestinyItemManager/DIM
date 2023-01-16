@@ -30,7 +30,7 @@ export const profileLoaded = createAction('inventory/PROFILE_LOADED')<{
   profile: DestinyProfileResponse;
   live: boolean;
 }>();
-export const profileError = createAction('inventory/PROFILE_ERROR')<Error>();
+export const profileError = createAction('inventory/PROFILE_ERROR')<Error | undefined>();
 
 export interface CharacterInfo {
   characterId: string;
