@@ -1,14 +1,11 @@
 {
   "compilerOptions": {
+    "strict": true,
+    "useUnknownInCatchVariables": false,
     "esModuleInterop": true,
     "outDir": "./dist/",
     "sourceMap": true,
-    "strictNullChecks": true,
-    "strictBindCallApply": true,
-    "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
-    "strictPropertyInitialization": true,
-    "strictFunctionTypes": true,
     "module": "ESNext",
     "target": "ESNext",
     "jsx": "preserve",
