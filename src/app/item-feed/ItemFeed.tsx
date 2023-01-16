@@ -8,7 +8,7 @@ import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { allItemsSelector, itemInfosSelector } from 'app/inventory/selectors';
 import { useSetting } from 'app/settings/hooks';
-import { acquisitionRecencyComparator, isNewerThan } from 'app/shell/item-comparators';
+import { getItemRecencyKey, isNewerThan } from 'app/shell/item-comparators';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -62,9 +62,10 @@ const Item = memo(function Item({ item, tag }: { item: DimItem; tag: TagValue | 
 });
 
 const filteredItemsSelector = createSelector(allItemsSelector, (allItems) =>
-  allItems
-    .filter((i) => i.equipment && i.power > 0 && i.taggable)
-    .sort(acquisitionRecencyComparator)
+  _.sortBy(
+    allItems.filter((i) => i.equipment && i.power > 0 && i.taggable),
+    getItemRecencyKey
+  ).reverse()
 );
 
 /**

@@ -27,16 +27,17 @@ export const wishListFunctionSelector = createSelector(
   wishListsByHashSelector,
   (wishlists): ((item: DimItem) => InventoryWishListRoll | undefined) => {
     // Cache of inventory item id to roll. For this to work, make sure vendor/collections rolls have unique ids.
-    const cache = new Map<string, InventoryWishListRoll | undefined>();
+    const cache = new Map<string, InventoryWishListRoll | null>();
     return (item: DimItem) => {
       if (!($featureFlags.wishLists && wishlists && item.wishListEnabled)) {
         return undefined;
       }
-      if (cache.has(item.id)) {
-        return cache.get(item.id);
+      const cachedRoll = cache.get(item.id);
+      if (cachedRoll !== undefined) {
+        return cachedRoll || undefined;
       }
       const roll = getInventoryWishListRoll(item, wishlists);
-      cache.set(item.id, roll);
+      cache.set(item.id, roll ?? null);
       return roll;
     };
   }
