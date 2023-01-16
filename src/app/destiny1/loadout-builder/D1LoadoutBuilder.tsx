@@ -317,24 +317,19 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
               <span>{t('LB.Locked')}</span> - <small>{t('LB.LockedHelp')}</small>
             </p>
             <div className="loadout-builder-section">
-              {Object.entries(lockeditems).map(
-                ([type, lockeditem]: [
-                  type: ArmorTypes,
-                  lockeditem: D1ItemWithNormalStats | null
-                ]) => (
-                  <LoadoutBuilderLockPerk
-                    key={type}
-                    lockeditem={lockeditem}
-                    activePerks={activePerks}
-                    lockedPerks={lockedperks}
-                    type={type}
-                    i18nItemNames={i18nItemNames}
-                    onRemove={this.onRemove}
-                    onPerkLocked={this.onPerkLocked}
-                    onItemLocked={this.onItemLocked}
-                  />
-                )
-              )}
+              {Object.entries(lockeditems).map(([type, lockeditem]) => (
+                <LoadoutBuilderLockPerk
+                  key={type}
+                  lockeditem={lockeditem}
+                  activePerks={activePerks}
+                  lockedPerks={lockedperks}
+                  type={type as ArmorTypes}
+                  i18nItemNames={i18nItemNames}
+                  onRemove={this.onRemove}
+                  onPerkLocked={this.onPerkLocked}
+                  onItemLocked={this.onItemLocked}
+                />
+              ))}
             </div>
           </div>
           {excludeditems.length > 0 && (
