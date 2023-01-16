@@ -322,14 +322,16 @@ export function getColumns(
       defaultSort: SortDirection.DESC,
       filter: (value) => (value ? '' : '-') + 'is:new',
     }),
-    c({
-      id: 'crafted',
-      header: t('Organizer.Columns.Crafted'),
-      value: (item) => item.crafted,
-      cell: (value) => (value ? <img className={styles.shapedIcon} src={shapedIcon} /> : undefined),
-      defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? '' : '-') + 'is:crafted',
-    }),
+    destinyVersion === 2 &&
+      c({
+        id: 'crafted',
+        header: t('Organizer.Columns.Crafted'),
+        value: (item) => item.craftedInfo?.craftedDate,
+        cell: (craftedDate) =>
+          craftedDate ? <>{new Date(craftedDate * 1000).toLocaleString()}</> : undefined,
+        defaultSort: SortDirection.DESC,
+        filter: (value) => (value ? '' : '-') + 'is:crafted',
+      }),
     c({
       id: 'recency',
       header: t('Organizer.Columns.Recency'),
