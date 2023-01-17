@@ -97,8 +97,8 @@ export interface DefinitionTable<T> {
    * and sentry can gather info about the source of the invalid hash.
    * `requestor` ideally a string/number, or a definition including a "hash" key
    */
-  get: (hash: number, requestor?: { hash: number } | string | number) => T;
-  getAll: () => { [hash: number]: T };
+  readonly get: (hash: number, requestor?: { hash: number } | string | number) => T;
+  readonly getAll: () => { [hash: number]: T };
 }
 
 export interface D2ManifestDefinitions extends ManifestDefinitions {
