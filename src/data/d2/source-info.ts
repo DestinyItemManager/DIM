@@ -970,6 +970,25 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  'pinnacle-weapon': {
+    itemHashes: [
+      578459533, // Wendigo GL3
+      654608616, // Revoker
+      1584643826, // Hush
+      1600633250, // 21% Delirium
+      3354242550, // The Recluse
+      3907337522, // Oxygen SR3
+    ],
+    sourceHashes: [
+      598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
+      1162859311, // Source: Complete the "Clean Getaway" quest.
+      1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
+      2317365255, // Source: Complete the "A Loud Racket" quest.
+      2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
+      2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+    ],
+    searchString: [],
+  },
   pit: {
     itemHashes: [],
     sourceHashes: [
@@ -1093,6 +1112,25 @@ const D2Sources: {
       3567813252, // Source: Season of the Seraph Triumph
       3574140916, // Source: Season of the Seraph
       3937492340, // Source: Complete Seraph bounties.
+    ],
+    searchString: [],
+  },
+  'ritual-weapon': {
+    itemHashes: [
+      805677041, // Buzzard
+      838556752, // Python
+      847329160, // Edgewise
+      1179141605, // Felwinter's Lie
+      1644680957, // Null Composure
+      2697058914, // Komodo-4FR
+      3434944005, // Point of the Stag
+      3535742959, // Randy's Throwing Knife
+      4184808992, // Adored
+      4227181568, // Exit Strategy
+    ],
+    sourceHashes: [
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
+      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
     ],
     searchString: [],
   },
