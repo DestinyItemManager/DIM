@@ -1,5 +1,7 @@
 ## Next
 
+* Added a `crafteddupe` search filter. This allows you to find duplicate weapons where at least one of the duplicates is crafted.
+
 ## 7.52.0 <span class="changelog-date">(2023-01-15)</span>
 
 * Loadout hashtags are now auto-completed in the Loadout name and notes fields. Type `#` to suggest tags used in other Loadouts.
