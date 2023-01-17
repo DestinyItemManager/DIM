@@ -2308,6 +2308,7 @@ const missingSources: { [key: string]: number[] } = {
     3323316553, // Sovereign Vest
     4083497488, // Sovereign Gloves
   ],
+  'pinnacle-weapon': [],
   pit: [],
   plunder: [],
   presage: [],
@@ -2542,6 +2543,7 @@ const missingSources: { [key: string]: number[] } = {
     4251770245, // Boots of the Emperor's Agent
   ],
   rasputin: [],
+  'ritual-weapon': [],
   saint14: [],
   scourge: [
     350056552, // Bladesmith's Memory Mask
