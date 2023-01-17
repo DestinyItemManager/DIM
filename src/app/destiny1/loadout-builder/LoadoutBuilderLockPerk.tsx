@@ -17,9 +17,9 @@ interface Props {
   lockedPerks: { [armorType in ArmorTypes]: LockedPerkHash };
   activePerks: PerkCombination;
   i18nItemNames: { [key: string]: string };
-  onRemove({ type }: { type: string }): void;
-  onPerkLocked(perk: D1GridNode, type: ArmorTypes, $event: React.MouseEvent): void;
-  onItemLocked(item: DimItem): void;
+  onRemove: ({ type }: { type: string }) => void;
+  onPerkLocked: (perk: D1GridNode, type: ArmorTypes, $event: React.MouseEvent) => void;
+  onItemLocked: (item: DimItem) => void;
 }
 
 const typeToHash: { [key in ArmorTypes]: BucketHashes | D1BucketHashes } = {

@@ -13,8 +13,8 @@ export class RateLimiterQueue {
     fetcher: typeof fetch;
     request: RequestInfo | URL;
     options?: RequestInit;
-    resolver(value?: any): void;
-    rejecter(value?: any): void;
+    resolver: (value?: any) => void;
+    rejecter: (value?: any) => void;
   }[] = [];
   /** number of requests in the current period */
   count = 0;

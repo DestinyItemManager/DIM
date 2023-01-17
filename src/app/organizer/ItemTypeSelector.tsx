@@ -4,7 +4,6 @@ import { filteredItemsSelector } from 'app/search/search-filter';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { itemIncludesCategories } from './filtering-utils';
 import { itemCategoryIcons } from './item-category-icons';
@@ -345,7 +344,7 @@ export default function ItemTypeSelector({
 }: {
   selectionTree: ItemCategoryTreeNode;
   selection: ItemCategoryTreeNode[];
-  onSelection(selection: ItemCategoryTreeNode[]): void;
+  onSelection: (selection: ItemCategoryTreeNode[]) => void;
 }) {
   const defs = useDefinitions()!;
   const filteredItems = useSelector(filteredItemsSelector);

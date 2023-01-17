@@ -19,7 +19,7 @@ interface Props {
   store: DimStore;
   setType: SetType;
   activesets: string;
-  excludeItem(item: D1Item): void;
+  excludeItem: (item: D1Item) => void;
 }
 
 export default function GeneratedSet({ setType, store, activesets, excludeItem }: Props) {

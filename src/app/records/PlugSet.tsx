@@ -24,7 +24,7 @@ interface Props {
   };
   unlockedItems: Set<number>;
   path: number[];
-  onNodePathSelected(nodePath: number[]): void;
+  onNodePathSelected: (nodePath: number[]) => void;
 }
 
 /**

@@ -35,10 +35,10 @@ function ItemActions({
 }: {
   stores: DimStore[];
   itemsAreSelected: boolean;
-  onLock(locked: boolean): void;
-  onNote(note?: string): void;
-  onTagSelectedItems(tagInfo: TagCommandInfo): void;
-  onMoveSelectedItems(store: DimStore): void;
+  onLock: (locked: boolean) => void;
+  onNote: (note?: string) => void;
+  onTagSelectedItems: (tagInfo: TagCommandInfo) => void;
+  onMoveSelectedItems: (store: DimStore) => void;
 }) {
   const tagItems: Option[] = bulkItemTags.map((tagInfo) => ({
     key: tagInfo.label,

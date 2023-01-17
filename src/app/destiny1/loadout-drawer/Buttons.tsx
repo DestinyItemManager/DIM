@@ -1,12 +1,11 @@
 import { addIcon, AppIcon } from 'app/shell/icons';
 import clsx from 'clsx';
-import React from 'react';
 import styles from './Buttons.m.scss';
 
 interface AddButtonProps {
   /** An additional className to be passed to the component. */
   className?: string;
-  onClick(): void;
+  onClick: () => void;
 }
 
 /**

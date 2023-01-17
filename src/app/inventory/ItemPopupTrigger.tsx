@@ -17,7 +17,10 @@ interface Props {
   extraData?: ItemPopupExtraInfo;
   /** Don't allow adding to compare */
   noCompare?: boolean;
-  children(ref: React.Ref<HTMLDivElement>, onClick: (e: React.MouseEvent) => void): React.ReactNode;
+  children: (
+    ref: React.Ref<HTMLDivElement>,
+    onClick: (e: React.MouseEvent) => void
+  ) => React.ReactNode;
 }
 
 /**

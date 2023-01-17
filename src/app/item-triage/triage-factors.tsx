@@ -35,9 +35,9 @@ import styles from './TriageFactors.m.scss';
 export interface Factor {
   id: string;
   /** bother checking this factor, if the seed item (the one in the item popup) returns truthy */
-  runIf(item: DimItem): unknown;
-  render(item: DimItem): React.ReactElement | null;
-  filter(item: DimItem): string;
+  runIf: (item: DimItem) => unknown;
+  render: (item: DimItem) => React.ReactElement | null;
+  filter: (item: DimItem) => string;
 }
 
 export type FactorComboCategory = keyof typeof factorCombos;

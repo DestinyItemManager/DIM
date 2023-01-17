@@ -82,11 +82,11 @@ function BasicItemTrigger({
   children,
 }: {
   item: DimItem;
-  onShowPopup(state: PopupState): void;
-  children(
+  onShowPopup: (state: PopupState) => void;
+  children: (
     ref: React.Ref<HTMLDivElement>,
     showPopup: (e: React.MouseEvent) => void
-  ): React.ReactNode;
+  ) => React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 

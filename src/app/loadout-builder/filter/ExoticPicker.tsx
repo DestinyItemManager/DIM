@@ -16,7 +16,7 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import anyExoticIcon from 'images/anyExotic.svg';
 import noExoticIcon from 'images/noExotic.svg';
 import _ from 'lodash';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LockableBucketHashes, LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC } from '../types';
 import styles from './ExoticPicker.m.scss';
@@ -25,8 +25,8 @@ import ExoticTile, { FakeExoticTile, LockedExoticWithPlugs } from './ExoticTile'
 interface Props {
   lockedExoticHash?: number;
   classType: DestinyClass;
-  onSelected(lockedExoticHash: number): void;
-  onClose(): void;
+  onSelected: (lockedExoticHash: number) => void;
+  onClose: () => void;
 }
 
 /**

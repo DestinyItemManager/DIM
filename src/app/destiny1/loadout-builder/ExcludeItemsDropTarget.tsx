@@ -8,7 +8,7 @@ import { DimItem } from '../../inventory/item-types';
 interface Props {
   className?: string;
   children?: React.ReactNode;
-  onExcluded(lockedItem: DimItem): void;
+  onExcluded: (lockedItem: DimItem) => void;
 }
 
 export default function ExcludeItemsDropTarget({ className, children, onExcluded }: Props) {

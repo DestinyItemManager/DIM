@@ -573,7 +573,7 @@ interface MoveContext {
   /** Bucket hash */
   originalItemType: number;
   excludes: readonly Exclusion[];
-  spaceLeft(s: DimStore, i: DimItem): number;
+  spaceLeft: (s: DimStore, i: DimItem) => number;
 }
 
 /**

@@ -47,7 +47,7 @@ export default function ItemPopup({
   zIndex?: number;
   /** Don't allow opening Armory from the header link */
   noLink?: boolean;
-  onClose(): void;
+  onClose: () => void;
 }) {
   const [tab, setTab] = useState(ItemPopupTab.Overview);
   const stores = useSelector(sortedStoresSelector);

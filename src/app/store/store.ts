@@ -5,6 +5,7 @@ import { RootState } from './types';
 
 declare global {
   interface Window {
+    // eslint-disable-next-line @typescript-eslint/method-signature-style
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__(options: any): typeof compose;
   }
 }

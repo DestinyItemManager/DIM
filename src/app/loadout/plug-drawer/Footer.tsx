@@ -10,8 +10,8 @@ interface Props {
   isPhonePortrait: boolean;
   plugSets: PlugSet[];
   acceptButtonText: string;
-  onSubmit(event: React.FormEvent | KeyboardEvent): void;
-  handlePlugSelected(plug: PluggableInventoryItemDefinition): void;
+  onSubmit: (event: React.FormEvent | KeyboardEvent) => void;
+  handlePlugSelected: (plug: PluggableInventoryItemDefinition) => void;
 }
 
 export default function Footer({

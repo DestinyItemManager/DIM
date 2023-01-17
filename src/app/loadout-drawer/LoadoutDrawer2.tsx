@@ -73,7 +73,7 @@ export default function LoadoutDrawer2({
    */
   storeId: string;
   isNew: boolean;
-  onClose(): void;
+  onClose: () => void;
 }) {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
@@ -248,7 +248,7 @@ export default function LoadoutDrawer2({
     </div>
   );
 
-  const footer = ({ onClose }: { onClose(): void }) => (
+  const footer = ({ onClose }: { onClose: () => void }) => (
     <LoadoutDrawerFooter
       loadout={loadout}
       isNew={isNew}

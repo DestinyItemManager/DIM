@@ -24,7 +24,7 @@ export default React.memo(function EnabledColumnsSelector({
   columns: ColumnDefinition[];
   enabledColumns: string[];
   forClass: DestinyClass;
-  onChangeEnabledColumn(item: { checked: boolean; id: string }): void;
+  onChangeEnabledColumn: (item: { checked: boolean; id: string }) => void;
 }) {
   const items: { [id: string]: DropDownItem } = {};
 

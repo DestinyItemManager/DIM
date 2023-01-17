@@ -6,7 +6,7 @@ import { DimItem } from '../../inventory/item-types';
 interface Props {
   bucketHash: number;
   children?: React.ReactNode;
-  onItemLocked(lockedItem: DimItem): void;
+  onItemLocked: (lockedItem: DimItem) => void;
 }
 
 export default function LoadoutBucketDropTarget({ bucketHash, children, onItemLocked }: Props) {

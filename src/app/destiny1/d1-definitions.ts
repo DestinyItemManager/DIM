@@ -41,7 +41,7 @@ const lazyTables = [
 const eagerTables = ['InventoryBucket', 'Class', 'Race', 'Faction', 'Vendor'];
 
 export interface DefinitionTable<T> {
-  get(hash: number): T;
+  get: (hash: number) => T;
 }
 
 // D1 types don't exist yet

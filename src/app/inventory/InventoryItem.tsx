@@ -33,9 +33,9 @@ interface Props {
   hideSelectedSuper?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   /** TODO: item locked needs to be passed in */
-  onClick?(e: React.MouseEvent): void;
-  onShiftClick?(e: React.MouseEvent): void;
-  onDoubleClick?(e: React.MouseEvent): void;
+  onClick?: (e: React.MouseEvent) => void;
+  onShiftClick?: (e: React.MouseEvent) => void;
+  onDoubleClick?: (e: React.MouseEvent) => void;
 }
 
 export default function InventoryItem({

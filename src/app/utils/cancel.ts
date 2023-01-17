@@ -5,7 +5,7 @@
  */
 export interface CancelToken {
   readonly canceled: boolean;
-  checkCanceled(): void;
+  checkCanceled: () => void;
 }
 
 /**

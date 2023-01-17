@@ -27,7 +27,7 @@ const LoadoutModMemo = memo(function LoadoutMod({
 }: {
   mod: PluggableInventoryItemDefinition;
   className: string;
-  onRemoveMod?(modHash: number): void;
+  onRemoveMod?: (modHash: number) => void;
 }) {
   // We need this to be undefined if `onRemoveMod` is not present as the presence of the onClose
   // callback determines whether the close icon is displayed on hover
@@ -56,9 +56,9 @@ export default memo(function LoadoutMods({
   clearUnsetMods?: boolean;
   missingSockets?: boolean;
   /** If present, show an "Add Mod" button */
-  onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
-  onRemoveMod?(modHash: number): void;
-  onClearUnsetModsChanged?(checked: boolean): void;
+  onUpdateMods?: (newMods: PluggableInventoryItemDefinition[]) => void;
+  onRemoveMod?: (modHash: number) => void;
+  onClearUnsetModsChanged?: (checked: boolean) => void;
 }) {
   const defs = useD2Definitions()!;
   const isPhonePortrait = useIsPhonePortrait();

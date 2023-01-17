@@ -597,7 +597,7 @@ function PerksCell({
 }: {
   item: DimItem;
   traitsOnly?: boolean;
-  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
   if (!item.sockets) {
     return null;

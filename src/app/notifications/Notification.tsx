@@ -19,7 +19,7 @@ const showErrorDuration = 5000;
 
 interface Props extends MotionProps {
   notification: Notify;
-  onClose(notification: Notify): void;
+  onClose: (notification: Notify) => void;
 }
 
 export default function Notification({ notification, onClose, ...animation }: Props) {

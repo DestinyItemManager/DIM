@@ -10,8 +10,8 @@ interface Props {
   activePerks: PerkCombination;
   lockedPerks: { [armorType in ArmorTypes]: LockedPerkHash };
   type: ArmorTypes;
-  onPerkLocked(perk: D1GridNode, type: ArmorTypes, $event: React.MouseEvent): void;
-  onClose(): void;
+  onPerkLocked: (perk: D1GridNode, type: ArmorTypes, $event: React.MouseEvent) => void;
+  onClose: () => void;
 }
 
 export default function LoadoutBuilderLocksDialog({

@@ -13,7 +13,7 @@ export default function LoadoutDrawerHeader({
   onNameChanged,
 }: {
   loadout: Readonly<Loadout>;
-  onNameChanged(name: string): void;
+  onNameChanged: (name: string) => void;
 }) {
   const setName = (e: React.ChangeEvent<HTMLInputElement>) => onNameChanged(e.target.value);
   const inputRef = useRef<HTMLInputElement>(null);

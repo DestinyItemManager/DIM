@@ -14,7 +14,7 @@ export default function CheckButton({
   checked: boolean;
   className?: string;
   children: React.ReactNode;
-  onChange(checked: boolean): void;
+  onChange: (checked: boolean) => void;
 }) {
   return (
     <label className={clsx(styles.checkButton, className)}>

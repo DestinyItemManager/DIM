@@ -10,7 +10,7 @@ interface Option {
   label: string;
   tooltip: string;
   selected: boolean;
-  onChange(): void;
+  onChange: () => void;
 }
 
 const RadioSetting = React.memo(function RadioSetting({

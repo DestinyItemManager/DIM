@@ -16,8 +16,8 @@ export interface NotifyInput {
   /** The notification will show for the given number of milliseconds. */
   duration?: number;
   /** Return false to not close the notification on click. */
-  onClick?(event: React.MouseEvent): boolean | void;
-  onCancel?(): void;
+  onClick?: (event: React.MouseEvent) => boolean | void;
+  onCancel?: () => void;
 }
 
 export interface Notify {
@@ -30,8 +30,8 @@ export interface Notify {
   promise?: Promise<unknown>;
   /** The notification will show for either the given number of milliseconds, or when the provided promise completes. */
   duration: number;
-  onClick?(event: React.MouseEvent): boolean | void;
-  onCancel?(): void;
+  onClick?: (event: React.MouseEvent) => boolean | void;
+  onCancel?: () => void;
 }
 
 /**

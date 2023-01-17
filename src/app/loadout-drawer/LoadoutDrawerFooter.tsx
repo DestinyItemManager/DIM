@@ -49,8 +49,8 @@ export default function LoadoutDrawerFooter({
   redo?: () => void;
   hasUndo?: boolean;
   hasRedo?: boolean;
-  onSaveLoadout(e: React.FormEvent, saveAsNew: boolean): void;
-  onDeleteLoadout(): void;
+  onSaveLoadout: (e: React.FormEvent, saveAsNew: boolean) => void;
+  onDeleteLoadout: () => void;
 }) {
   const clashingLoadout = useSelector(clashingLoadoutSelector(loadout));
   // There's an existing loadout with the same name & class and it's not the loadout we are currently editing

@@ -29,9 +29,9 @@ export default function ConnectedInventoryItem({
   allowFilter?: boolean;
   hideSelectedSuper?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
-  onClick?(e: React.MouseEvent): void;
-  onShiftClick?(e: React.MouseEvent): void;
-  onDoubleClick?(e: React.MouseEvent): void;
+  onClick?: (e: React.MouseEvent) => void;
+  onShiftClick?: (e: React.MouseEvent) => void;
+  onDoubleClick?: (e: React.MouseEvent) => void;
   dimArchived?: boolean;
 }) {
   // TODO: maybe send these down via Context?

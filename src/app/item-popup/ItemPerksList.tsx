@@ -15,7 +15,7 @@ import { DimPlugTooltip } from './PlugTooltip';
 interface Props {
   item: DimItem;
   perks: DimSocketCategory;
-  onClick?(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
+  onClick?: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
 }
 
 export default function ItemPerksList({ item, perks, onClick }: Props) {
@@ -69,7 +69,7 @@ function PerkSocket({
   socket: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
   selectedPerk?: { socketIndex: number; perkHash: number };
-  onPerkSelected(socketInfo: DimSocket, plug: DimPlug): void;
+  onPerkSelected: (socketInfo: DimSocket, plug: DimPlug) => void;
 }) {
   if (!socket.plugOptions.length) {
     return null;
@@ -110,7 +110,7 @@ function PerkPlug({
   // TODO: maybe use an enum
   selectedSocket: boolean;
   selectedPerk: boolean;
-  onPerkSelected(socketInfo: DimSocket, plug: DimPlug): void;
+  onPerkSelected: (socketInfo: DimSocket, plug: DimPlug) => void;
 }) {
   if (!plug.plugDef.plug) {
     return null;
