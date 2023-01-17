@@ -55,7 +55,7 @@ export default function InventoryItem({
   let enhancedOnClick = onClick;
 
   if (onShiftClick) {
-    enhancedOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    enhancedOnClick = (e: React.MouseEvent) => {
       if (e.shiftKey) {
         onShiftClick(e);
       } else if (onClick) {

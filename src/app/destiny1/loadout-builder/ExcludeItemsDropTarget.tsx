@@ -3,17 +3,17 @@ import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import { DimItem } from '../../inventory/item-types';
+import { D1Item } from '../../inventory/item-types';
 
 interface Props {
   className?: string;
   children?: React.ReactNode;
-  onExcluded: (lockedItem: DimItem) => void;
+  onExcluded: (lockedItem: D1Item) => void;
 }
 
 export default function ExcludeItemsDropTarget({ className, children, onExcluded }: Props) {
   const [{ isOver, canDrop }, dropRef] = useDrop<
-    DimItem,
+    D1Item,
     unknown,
     { isOver: Boolean; canDrop: boolean }
   >(

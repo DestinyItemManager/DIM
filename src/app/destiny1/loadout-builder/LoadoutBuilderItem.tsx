@@ -13,7 +13,7 @@ interface Props {
 export default function LoadoutBuilderItem({ item, shiftClickCallback }: Props) {
   const onShiftClick =
     shiftClickCallback &&
-    ((e: React.MouseEvent<HTMLDivElement>) => {
+    ((e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       shiftClickCallback(item);
