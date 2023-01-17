@@ -1,5 +1,5 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
+import { PressTip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { isDragging$ } from 'app/inventory/drag-events';
@@ -103,11 +103,14 @@ function RefreshButtonTooltip({
   const isManifestError = profileError?.name === 'ManifestError';
   const destinyVersion = useSelector(destinyVersionSelector);
 
+  useTooltipCustomization({
+    className: profileError ? styles.errorTooltip : null,
+  });
+
   return (
     <>
       {profileError ? (
         <div className={styles.errorDetails}>
-          <Tooltip.Customize className={styles.errorTooltip} />
           <ErrorPanel
             title={
               isManifestError
