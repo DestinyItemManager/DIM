@@ -326,7 +326,17 @@ function buildDefinedSocket(
       }
     }
   }
-
+  // if there's crafting data, sort plugs by their required level
+  // TO-DO: the order is correct in the original plugset def,
+  // we should address whatever is changing plug order in DIM
+  if (!_.isEmpty(craftingData)) {
+    plugOptions.sort(
+      compareBy((p) =>
+        // shove retired perks to the bottom (our choice) and consider requiredLevel:undefined to be 0 (bungie data works this way)
+        p.cannotCurrentlyRoll ? 999 : craftingData[p.plugDef.hash]?.requiredLevel ?? 0
+      )
+    );
+  }
   // If the socket category is the intrinsic trait, assume that there is only one option and plug it.
   let plugged: DimPlug | null = null;
   if (
