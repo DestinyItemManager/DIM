@@ -197,7 +197,7 @@ export interface DimItem {
   /** Detailed stats for the item. */
   stats: DimStat[] | null;
   /** Any objectives associated with the item. */
-  objectives: DestinyObjectiveProgress[] | null;
+  objectives?: DestinyObjectiveProgress[];
   /** Stat Tracker */
   metricHash?: number;
   /** Stat Tracker Progress */

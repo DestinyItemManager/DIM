@@ -271,7 +271,7 @@ function makeFakePursuitItem(
     percentComplete: 0, // filled in later
     hidePercentage: false,
     stats: null, // filled in later
-    objectives: null, // filled in later
+    objectives: undefined, // filled in later
     ammoType: DestinyAmmunitionType.None,
     missingSockets: false,
     breakerType: null,
