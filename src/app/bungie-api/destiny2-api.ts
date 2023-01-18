@@ -95,10 +95,12 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.Metrics,
     DestinyComponentType.StringVariables,
     DestinyComponentType.ProfileProgression,
-    DestinyComponentType.Craftables,
-    DestinyComponentType.Transitory,
-    // TODO: This is only needed for event progress
-    DestinyComponentType.PresentationNodes
+    // This is a lot of data and currently not used.
+    // DestinyComponentType.Craftables,
+    DestinyComponentType.Transitory
+    // TODO: This is only needed for Solstice with its weird one node per character
+    // Re-enable this before Solstice
+    // DestinyComponentType.PresentationNodes
   );
 }
 
