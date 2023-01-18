@@ -1,5 +1,7 @@
 ## Next
 
+* On the Records and Armory pages, perks only shown on the collections/"curated" roll will now correctly be marked as unavailable on randomly rolled versions.
+
 ## 7.52.0 <span class="changelog-date">(2023-01-15)</span>
 
 * Loadout hashtags are now auto-completed in the Loadout name and notes fields. Type `#` to suggest tags used in other Loadouts.
