@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { eventArmorRerollSocketIdentifiers } from 'app/utils/socket-utils';
+import { hasKeys } from 'app/utils/util';
 import {
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
@@ -335,7 +336,7 @@ function buildDefinedSocket(
     isPerk,
     isReusable,
     socketDefinition: socketDef,
-    craftingData: Object.keys(craftingData).length ? craftingData : undefined,
+    craftingData: hasKeys(craftingData) ? craftingData : undefined,
   };
 }
 

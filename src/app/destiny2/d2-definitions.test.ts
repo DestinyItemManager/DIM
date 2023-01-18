@@ -1,3 +1,4 @@
+import { hasKeys } from 'app/utils/util';
 import { getTestDefinitions } from 'testing/test-utils';
 import { D2ManifestDefinitions } from './d2-definitions';
 
@@ -8,5 +9,5 @@ beforeAll(async () => {
 });
 
 test('something', () => {
-  expect(Object.keys(defs.InventoryItem).length).toBeGreaterThan(0);
+  expect(hasKeys(defs.InventoryItem)).toBe(true);
 });

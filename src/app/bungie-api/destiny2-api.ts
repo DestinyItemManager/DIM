@@ -1,6 +1,7 @@
 import { t } from 'app/i18next-t';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
+import { hasKeys } from 'app/utils/util';
 import {
   AwaAuthorizationResult,
   awaGetActionToken,
@@ -148,7 +149,7 @@ async function getProfile(
     components,
   });
   // TODO: what does it actually look like to not have an account?
-  if (Object.keys(response.Response).length === 0) {
+  if (!hasKeys(response.Response)) {
     throw new DimError(
       'BungieService.NoAccountForPlatform',
       t('BungieService.NoAccountForPlatform', {

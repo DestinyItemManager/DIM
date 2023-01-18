@@ -26,6 +26,7 @@ import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
 import { getDefaultAbilityChoiceHash, getSocketsByCategoryHashes } from 'app/utils/socket-utils';
 import { useHistory } from 'app/utils/undo-redo-history';
+import { hasKeys } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -511,9 +512,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
             ...state.subclass,
             loadoutItem: {
               ...state.subclass.loadoutItem,
-              socketOverrides: Object.keys(newSocketOverrides).length
-                ? newSocketOverrides
-                : undefined,
+              socketOverrides: hasKeys(newSocketOverrides) ? newSocketOverrides : undefined,
             },
           },
         };

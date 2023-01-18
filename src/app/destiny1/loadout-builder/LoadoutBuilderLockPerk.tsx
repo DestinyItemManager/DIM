@@ -1,6 +1,7 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
+import { hasKeys } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
@@ -53,7 +54,7 @@ export default function LoadoutBuilderLockPerk({
   };
 
   const firstPerk = lockedPerks[type][Object.keys(lockedPerks[type])[0]];
-  const hasLockedPerks = Object.keys(lockedPerks[type]).length > 0;
+  const hasLockedPerks = hasKeys(lockedPerks[type]);
 
   return (
     <div className="locked-item">

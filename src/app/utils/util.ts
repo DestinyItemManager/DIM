@@ -125,3 +125,11 @@ export function uniqBy<T, K>(data: Iterable<T>, iteratee: (input: T) => K): T[] 
   }
   return result;
 }
+
+/** checks if an object has contents or is just empty */
+export function hasKeys(obj: object) {
+  for (const _k in obj) {
+    return true;
+  }
+  return false;
+}

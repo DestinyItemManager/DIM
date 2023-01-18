@@ -2,6 +2,7 @@ import { Vendor } from 'app/destiny1/vendors/vendor.service';
 import { t } from 'app/i18next-t';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
+import { hasKeys } from 'app/utils/util';
 import {
   DestinyEquipItemResults,
   PlatformErrorCodes,
@@ -26,7 +27,7 @@ export async function getCharacters(platform: DestinyAccount) {
       `/D1/Platform/Destiny/${platform.originalPlatformType}/Account/${platform.membershipId}/`
     )
   );
-  if (!response || Object.keys(response.Response).length === 0) {
+  if (!response || !hasKeys(response.Response)) {
     throw new DimError(
       'BungieService.NoAccountForPlatform',
       t('BungieService.NoAccountForPlatform', {
