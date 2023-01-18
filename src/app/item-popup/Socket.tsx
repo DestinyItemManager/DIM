@@ -2,7 +2,6 @@ import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import { compareBy } from 'app/utils/comparators';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
-import React from 'react';
 import Plug from './Plug';
 
 /**
@@ -30,7 +29,10 @@ export default function Socket({
   // we should address whatever is changing plug order in DIM
   if (socket.craftingData) {
     plugOptions = [...plugOptions].sort(
-      compareBy((p) => socket.craftingData![p.plugDef.hash]?.requiredLevel ?? 0)
+      compareBy((p) =>
+        // shove retired perks to the bottom (our choice) and consider requiredLevel:undefined to be 0 (bungie data works this way)
+        p.cannotCurrentlyRoll ? 999 : socket.craftingData![p.plugDef.hash]?.requiredLevel ?? 0
+      )
     );
   }
 

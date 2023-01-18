@@ -1,3 +1,4 @@
+import { getCraftingTemplate } from 'app/armory/crafting-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
@@ -152,13 +153,19 @@ function buildDefinedSockets(
   if (!socketDefEntries?.length) {
     return null;
   }
-
+  const craftingTemplateSockets = getCraftingTemplate(defs, itemDef.hash)?.sockets!.socketEntries;
   const createdSockets: DimSocket[] = [];
   // TODO: check out intrinsicsockets as well
 
   for (let i = 0; i < socketDefEntries.length; i++) {
     const socketDef = socketDefEntries[i];
-    const built = buildDefinedSocket(defs, socketDef, i, itemDef);
+    const built = buildDefinedSocket(
+      defs,
+      socketDef,
+      i,
+      craftingTemplateSockets?.[i].reusablePlugSetHash,
+      itemDef
+    );
 
     // There are a bunch of garbage sockets that we ignore
     if (built) {
@@ -197,6 +204,7 @@ function buildDefinedSocket(
   defs: D2ManifestDefinitions,
   socketDef: DestinyItemSocketEntryDefinition,
   index: number,
+  craftingReusablePlugSetHash: number | undefined,
   forThisItem?: DestinyInventoryItemDefinition
 ): DimSocket | undefined {
   if (!socketDef) {
@@ -225,6 +233,7 @@ function buildDefinedSocket(
   const reusablePlugs: DimPlug[] = [];
 
   const craftingData: NonNullable<DimSocket['craftingData']> = {};
+
   function addCraftingReqs(plugEntry: DestinyItemSocketEntryPlugItemRandomizedDefinition) {
     if (
       plugEntry.craftingRequirements &&
@@ -251,14 +260,23 @@ function buildDefinedSocket(
         }
       }
     } else if (socketDef.randomizedPlugSetHash) {
-      const plugSet = defs.PlugSet.get(socketDef.randomizedPlugSetHash, forThisItem);
-      if (plugSet) {
+      const craftingPlugSetItems = craftingReusablePlugSetHash
+        ? defs.PlugSet.get(craftingReusablePlugSetHash, forThisItem).reusablePlugItems
+        : [];
+      const randomizedPlugSetItems =
+        defs.PlugSet.get(socketDef.randomizedPlugSetHash, forThisItem)?.reusablePlugItems ?? [];
+      // if they're available, process crafted plugs first, because they have level requirements attached
+      // then process things from the randomizedPlugSetItems (can include retired perks)
+      // this would duplicate some plug options, but they are uniqued in a for loop a few lines below
+      // and first (crafted) is preferred in the uniquing
+      const plugSetItems = [...craftingPlugSetItems, ...randomizedPlugSetItems];
+      if (plugSetItems.length) {
         // Unique the plugs by hash, but also consider the perk rollable if there's a copy with currentlyCanRoll = true
         // See https://github.com/DestinyItemManager/DIM/issues/7272
         const plugs: {
           [plugItemHash: number]: DestinyItemSocketEntryPlugItemRandomizedDefinition;
         } = {};
-        for (const randomPlug of plugSet.reusablePlugItems) {
+        for (const randomPlug of plugSetItems) {
           const existing = plugs[randomPlug.plugItemHash];
           if (!existing || (!existing.currentlyCanRoll && randomPlug.currentlyCanRoll)) {
             plugs[randomPlug.plugItemHash] = randomPlug;
