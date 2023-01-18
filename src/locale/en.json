@@ -808,7 +808,7 @@
       "Untracked": "Untracked"
     },
     "TriageTab": "Triage",
-    "UnreliablePerkOption": "This perk appears only in the collections view, it might not actually roll on this item.",
+    "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
     "Vault": "Vault",
     "WeaponLevel": "Weapon Level {{level}}"
   },
