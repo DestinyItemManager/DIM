@@ -71,8 +71,7 @@ export async function getLinkedAccounts(
  * Get the user's stores on this platform. This includes characters, vault, and item information.
  */
 export function getStores(platform: DestinyAccount): Promise<DestinyProfileResponse> {
-  return getProfile(
-    platform,
+  const components = [
     DestinyComponentType.Profiles,
     DestinyComponentType.ProfileInventories,
     DestinyComponentType.ProfileCurrencies,
@@ -95,13 +94,16 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.Metrics,
     DestinyComponentType.StringVariables,
     DestinyComponentType.ProfileProgression,
+    DestinyComponentType.Transitory,
+
     // This is a lot of data and currently not used.
     // DestinyComponentType.Craftables,
-    DestinyComponentType.Transitory
-    // TODO: This is only needed for Solstice with its weird one node per character
-    // Re-enable this before Solstice
-    // DestinyComponentType.PresentationNodes
-  );
+  ];
+
+  if ($featureFlags.solsticePresentationNodes) {
+    components.push(DestinyComponentType.PresentationNodes);
+  }
+  return getProfile(platform, ...components);
 }
 
 /**

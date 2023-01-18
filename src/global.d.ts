@@ -42,6 +42,11 @@ declare const $featureFlags: {
   simulateMissingSockets: boolean;
   /** Show a "pills" UI for filtering loadouts */
   loadoutFilterPills: boolean;
+  /**
+   * Request the PresentationNodes component only needed during
+   * Solstice to associate each character with a set of triumphs.
+   */
+  solsticePresentationNodes: boolean;
 };
 
 declare function ga(...params: string[]): void;

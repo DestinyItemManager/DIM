@@ -437,6 +437,9 @@ module.exports = (env) => {
         '$featureFlags.simulateMissingSockets': JSON.stringify(false),
         // Show a "pills" UI for filtering loadouts
         '$featureFlags.loadoutFilterPills': JSON.stringify(true),
+        // Request the PresentationNodes component only needed during
+        // Solstice to associate each character with a set of triumphs.
+        '$featureFlags.solsticePresentationNodes': JSON.stringify(false),
       }),
 
       new LodashModuleReplacementPlugin({
