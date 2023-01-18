@@ -25,6 +25,7 @@ export default function Plug({
   plugged,
   selected,
   cannotRoll,
+  unreliablePerkOption,
   notSelected,
 }: {
   plug: DimPlug;
@@ -71,6 +72,7 @@ export default function Plug({
           plugged={plugged}
           selected={selected}
           cannotRoll={cannotRoll}
+          unreliablePerkOption={unreliablePerkOption}
           notSelected={notSelected}
         />
       ) : (
@@ -107,6 +109,7 @@ export function PerkCircleWithTooltip({
   plugged,
   selected,
   cannotRoll,
+  unreliablePerkOption,
   notSelected,
 }: {
   item: DimItem;
@@ -120,6 +123,7 @@ export function PerkCircleWithTooltip({
   // This has been selected by the user but isn't the original plugged item
   selected ??= socketInfo.actuallyPlugged && plugged;
   cannotRoll ??= plug.cannotCurrentlyRoll;
+  unreliablePerkOption ??= plug.unreliablePerkOption;
 
   const tooltip = () => (
     <DimPlugTooltip
@@ -141,6 +145,7 @@ export function PerkCircleWithTooltip({
           notSelected={notSelected}
           selected={selected}
           cannotRoll={cannotRoll}
+          unreliablePerkOption={unreliablePerkOption}
         />
       </PressTip>
       {isRecommendedPerk && (
@@ -155,6 +160,7 @@ interface PlugStatuses {
   selected?: boolean;
   cannotRoll?: boolean;
   notSelected?: boolean;
+  unreliablePerkOption?: boolean;
 }
 
 /**
@@ -169,6 +175,7 @@ function PerkCircle({
   selected,
   cannotRoll,
   notSelected,
+  unreliablePerkOption,
 }: {
   plug: DimPlug;
   className?: string;
@@ -178,7 +185,7 @@ function PerkCircle({
     clsx({
       [styles.plugged]: plugged,
       [styles.selected]: selected,
-      [styles.cannotRoll]: cannotRoll,
+      [styles.cannotRoll]: cannotRoll || unreliablePerkOption,
       [styles.notSelected]: notSelected,
     }) || styles.none;
   return (

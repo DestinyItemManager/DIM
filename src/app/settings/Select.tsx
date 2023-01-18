@@ -32,7 +32,7 @@ export default function Select({
 }
 
 export function mapToOptions(map: { [key: string]: string }) {
-  return Object.values(map).map(([key, value]) => ({
+  return Object.entries(map).map(([key, value]) => ({
     name: value,
     value: key,
   }));
