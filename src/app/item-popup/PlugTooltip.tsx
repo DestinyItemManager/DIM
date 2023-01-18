@@ -94,6 +94,7 @@ export function DimPlugTooltip({
       plugObjectives={plug.plugObjectives}
       enableFailReasons={plug.enableFailReasons}
       cannotCurrentlyRoll={plug.cannotCurrentlyRoll}
+      unreliablePerkOption={plug.unreliablePerkOption}
       wishListTip={wishListTip}
       hideRequirements={hideRequirements}
       craftingData={craftingData}
@@ -116,6 +117,7 @@ export function PlugTooltip({
   plugObjectives,
   enableFailReasons,
   cannotCurrentlyRoll,
+  unreliablePerkOption,
   wishListTip,
   hideRequirements,
   craftingData,
@@ -125,6 +127,7 @@ export function PlugTooltip({
   plugObjectives?: DestinyObjectiveProgress[];
   enableFailReasons?: string;
   cannotCurrentlyRoll?: boolean;
+  unreliablePerkOption?: boolean;
   wishListTip?: string;
   hideRequirements?: boolean;
   craftingData?: DestinyPlugItemCraftingRequirements;
@@ -278,6 +281,11 @@ export function PlugTooltip({
       {cannotCurrentlyRoll && (
         <Tooltip.Section className={styles.cannotRollSection}>
           <p>{t('MovePopup.CannotCurrentlyRoll')}</p>
+        </Tooltip.Section>
+      )}
+      {unreliablePerkOption && (
+        <Tooltip.Section className={styles.cannotRollSection}>
+          <p>{t('MovePopup.UnreliablePerkOption')}</p>
         </Tooltip.Section>
       )}
       {wishListTip && (

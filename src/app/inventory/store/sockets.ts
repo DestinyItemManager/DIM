@@ -310,7 +310,10 @@ function buildDefinedSocket(
   ) {
     const built = buildCachedDefinedPlug(defs, socketDef.singleInitialItemHash);
     if (built) {
-      reusablePlugs.unshift(built);
+      reusablePlugs.push({
+        ...built,
+        unreliablePerkOption: reusablePlugs.length > 0,
+      });
     }
   }
 

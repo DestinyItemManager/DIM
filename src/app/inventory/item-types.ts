@@ -407,6 +407,8 @@ export interface DimPlug {
   } | null;
   /** This plug is one of the random roll options but the current version of this item cannot roll this perk. */
   readonly cannotCurrentlyRoll?: boolean;
+  /** This plug is one of the collections perks and may not 100% roll */
+  readonly unreliablePerkOption?: boolean;
 }
 
 export interface DimPlugSet {
