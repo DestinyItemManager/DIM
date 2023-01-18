@@ -182,6 +182,21 @@ const dupeFilters: FilterDefinition[] = [
       return (item) => item.bucket.inArmor && duplicates.has(item.id);
     },
   },
+  {
+    keywords: ['crafteddupe', 'shapeddupe'],
+    description: tl('Filter.CraftedDupe'),
+    filter: ({ allItems }) => {
+      const duplicates = computeDupes(allItems);
+      return (item) => {
+        const dupeId = makeDupeID(item);
+        if (!checkIfIsDupe(duplicates, dupeId, item)) {
+          return false;
+        }
+        const itemDupes = duplicates?.[dupeId];
+        return itemDupes?.some((d) => d.crafted);
+      };
+    },
+  },
 ];
 
 export default dupeFilters;

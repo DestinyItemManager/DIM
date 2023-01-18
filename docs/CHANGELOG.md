@@ -1,6 +1,7 @@
 ## Next
 
 * On the Records and Armory pages, perks only shown on the collections/"curated" roll will now correctly be marked as unavailable on randomly rolled versions.
+* Added a `crafteddupe` search filter. This allows you to find duplicate weapons where at least one of the duplicates is crafted.
 
 ## 7.52.0 <span class="changelog-date">(2023-01-15)</span>
 
