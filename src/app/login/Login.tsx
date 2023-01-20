@@ -3,8 +3,8 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import { exportBackupData, exportLocalData } from 'app/storage/export-data';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import styles from './Login.m.scss';
@@ -14,16 +14,21 @@ const loginHelpLink = 'https://github.com/DestinyItemManager/DIM/wiki/Accounts-a
 
 export default function Login() {
   const dispatch = useThunkDispatch();
-  const authorizationState = uuidv4();
-  localStorage.setItem('authorizationState', authorizationState);
+  const authorizationState = useMemo(() => uuidv4(), []);
   const clientId = oauthClientId();
+  const { state } = useLocation();
+  const previousPath = state?.path;
 
-  const isStandalone =
-    window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
-  // iOS versions before 12.2 don't support logging in via standalone mode.
-  const isOldiOS =
-    /iPad|iPhone|iPod/.test(navigator.userAgent) &&
-    !/(OS (?!12_[0-1](_|\s))[1-9]+[2-9]+_\d?\d)/.test(navigator.userAgent);
+  useEffect(() => {
+    localStorage.setItem('authorizationState', authorizationState);
+  }, [authorizationState]);
+
+  // Save the path we were originally on, so we can restore it after login in the DefaultAccount component.
+  useEffect(() => {
+    if (previousPath) {
+      localStorage.setItem('returnPath', previousPath);
+    }
+  }, [previousPath]);
 
   const authorizationURL = (reauth?: string) => {
     const queryParams = new URLSearchParams({
@@ -57,15 +62,6 @@ export default function Login() {
       e.preventDefault();
     }
   };
-
-  if (isOldiOS && isStandalone) {
-    return (
-      <div className={styles.billboard}>
-        <h1>{t('Views.Login.UpgradeiOS')}</h1>
-        <p>{t('Views.Login.UpgradeExplanation')}</p>
-      </div>
-    );
-  }
 
   const onApiPermissionChange = (checked: boolean) => {
     localStorage.setItem('dim-api-enabled', JSON.stringify(checked));

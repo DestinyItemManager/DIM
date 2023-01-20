@@ -13,7 +13,7 @@ import { accountsSelector } from './selectors';
 /**
  * The large "select accounts" page shown when the user has not yet selected an account.
  */
-export default function SelectAccount() {
+export default function SelectAccount({ path }: { path?: string }) {
   const accounts = useSelector(accountsSelector);
   const sortedAccounts = _.sortBy(
     accounts,
@@ -34,7 +34,7 @@ export default function SelectAccount() {
           <Link
             key={`${account.membershipId}-${account.destinyVersion}`}
             className={styles.account}
-            to={`${accountRoute(account)}/inventory`}
+            to={accountRoute(account) + (path ?? '')}
           >
             <Account className={styles.accountDetails} account={account} />
           </Link>

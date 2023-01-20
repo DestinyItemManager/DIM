@@ -1329,9 +1329,7 @@
       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
       "LearnMore": "Learn more about accounts and login",
       "NewAccount": "Log in with a different Bungie.net account",
-      "Permission": "We need your permission...",
-      "UpgradeExplanation": "Home screen apps on your version of iOS don't allow you to log in to DIM. Please upgrade to iOS 12.2 or newer and re-add DIM to your home screen.",
-      "UpgradeiOS": "Please upgrade iOS"
+      "Permission": "We need your permission..."
     },
     "Support": {
       "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",
