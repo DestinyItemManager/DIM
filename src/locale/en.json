@@ -666,7 +666,7 @@
     "NoExotics": "No engrams are available to transfer.",
     "NoSpace": "You're out of space in the vault and any other characters.",
     "NoneMatch": "None of your loadouts matched the filters.",
-    "NotStarted": "Waiting for other actions",
+    "NotStarted": "Waiting for other actions or profile loading to finish",
     "NotesPlaceholder": "Write some notes about this loadout, or use #hashtags to categorize it",
     "NotificationTitle": "Loadout: {{name}}",
     "OnWrongCharacterAdvice": "Click here to find this character's highest Power items.",
