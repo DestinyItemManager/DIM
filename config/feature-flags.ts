@@ -1,3 +1,11 @@
+/**
+ * Return a set of compile time feature flags. These values will be inlined into
+ * the code at build time, based on the version of the app being built. This
+ * will then allow Webpack/Terser to fully remove code if the feature flag is
+ * off. We build features behind these feature flags so we can easily remove
+ * them from the app, or keep them in beta/dev for a longer time without
+ * releasing to app.
+ */
 export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: boolean }) {
   return {
     // Print debug info to console about item moves
