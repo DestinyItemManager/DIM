@@ -1,12 +1,12 @@
-const builder = require('content-security-policy-builder');
+import builder from 'content-security-policy-builder';
 
 const SELF = "'self'";
 
 /**
  * Generate a Content Security Policy directive for a particular DIM environment (beta, release)
  */
-module.exports = function csp(env) {
-  const baseCSP = {
+export default function csp(env: 'release' | 'beta' | 'dev') {
+  const baseCSP: Record<string, string[] | string | boolean> = {
     defaultSrc: ["'none'"],
     scriptSrc: [
       SELF,
@@ -88,4 +88,4 @@ module.exports = function csp(env) {
   return builder({
     directives: baseCSP,
   });
-};
+}
