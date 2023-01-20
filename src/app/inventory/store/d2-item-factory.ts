@@ -633,7 +633,7 @@ export function makeItem(
 
   try {
     const itemInstancedObjectives = item.itemInstanceId
-      ? itemComponents?.objectives?.data?.[item.itemInstanceId].objectives
+      ? itemComponents?.objectives?.data?.[item.itemInstanceId]?.objectives
       : undefined;
 
     createdItem.objectives = buildObjectives(
@@ -644,7 +644,6 @@ export function makeItem(
     );
   } catch (e) {
     errorLog('d2-stores', `Error building objectives for ${createdItem.name}`, item, itemDef, e);
-    reportException('Objectives', e, { itemHash: item.itemHash });
   }
 
   if (itemDef.perks?.length) {
