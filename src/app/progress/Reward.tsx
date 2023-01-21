@@ -1,9 +1,7 @@
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { DimStore } from 'app/inventory/store-types';
-import { wellRestedSelector } from 'app/inventory/store/well-rested';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
-import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
 import { getEngramPowerBonus } from './engrams';
 import styles from './Reward.m.scss';
@@ -30,8 +28,7 @@ export function Reward({
     itemHash
   );
 
-  const wellRestedInfo = useSelector(wellRestedSelector);
-  const xpValue = getXPValue(reward.itemHash, wellRestedInfo);
+  const xpValue = getXPValue(reward.itemHash);
 
   return (
     <div className={styles.reward}>

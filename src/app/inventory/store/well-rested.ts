@@ -1,5 +1,3 @@
-import { d2ManifestSelector } from 'app/manifest/selectors';
-import { getCharacterProgressions } from 'app/progress/selectors';
 import {
   DestinyCharacterProgressionComponent,
   DestinyProgressionDefinition,
@@ -7,37 +5,7 @@ import {
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import { createSelector } from 'reselect';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
-import { profileResponseSelector } from '../selectors';
-
-export type WellRestedInfo =
-  | {
-      wellRested: false;
-    }
-  | {
-      wellRested: boolean;
-      progress: number;
-      requiredXP: number;
-    };
-
-export const wellRestedSelector = createSelector(
-  d2ManifestSelector,
-  profileResponseSelector,
-  (defs, profileInfo): WellRestedInfo => {
-    const characterProgressions = getCharacterProgressions(profileInfo);
-    if (!profileInfo || !defs || !characterProgressions) {
-      return { wellRested: false };
-    }
-    const season = profileInfo.profile?.data?.currentSeasonHash
-      ? defs.Season.get(profileInfo.profile.data.currentSeasonHash)
-      : undefined;
-    const seasonPass = season?.seasonPassHash
-      ? defs.SeasonPass.get(season.seasonPassHash)
-      : undefined;
-    return isWellRested(defs, season, seasonPass, characterProgressions);
-  }
-);
 
 /**
  * Figure out whether a character has the "well rested" buff, which applies a 2x XP boost
@@ -49,7 +17,11 @@ export function isWellRested(
   season: DestinySeasonDefinition | undefined,
   seasonPass: DestinySeasonPassDefinition | undefined,
   characterProgression: DestinyCharacterProgressionComponent
-): WellRestedInfo {
+): {
+  wellRested: boolean;
+  progress?: number;
+  requiredXP?: number;
+} {
   if (!season?.seasonPassProgressionHash) {
     return {
       wellRested: false,
