@@ -98,16 +98,15 @@ export function process(
 
   const setTracker = new SetTracker(10_000);
 
-  const { activityMods, combatMods, generalMods } = lockedMods;
+  const { activityMods, generalMods } = lockedMods;
 
   const precalculatedInfo = precalculateStructures(
     generalMods,
-    combatMods,
     activityMods,
     autoStatMods,
     statOrder
   );
-  const hasMods = Boolean(combatMods.length || activityMods.length || generalMods.length);
+  const hasMods = Boolean(activityMods.length || generalMods.length);
 
   const setStatistics = {
     skipReasons: {
@@ -281,7 +280,7 @@ export function process(
               );
 
               if (modsPick) {
-                statMods = modsPick.modHashes;
+                statMods = modsPick.flatMap((mod) => mod.modHashes);
               } else {
                 continue;
               }
@@ -359,11 +358,6 @@ export function process(
     setStatistics.modsStatistics.autoModsPick,
     setStatistics.modsStatistics
   );
-  infoLog('loadout optimizer', 'auto stat mods', {
-    cacheHits: precalculatedInfo.cache.cacheHits,
-    cacheMisses: precalculatedInfo.cache.cacheMisses,
-    cacheSuccesses: precalculatedInfo.cache.cacheSuccesses,
-  });
 
   const sets = finalSets.map(({ armor, stats, statMods }) => ({
     armor: armor.map((item) => item.id),

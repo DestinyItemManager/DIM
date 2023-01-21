@@ -1,6 +1,5 @@
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
@@ -9,15 +8,10 @@ import {
 import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
-import {
-  DestinyEnergyType,
-  DestinyInventoryItemDefinition,
-  TierType,
-} from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { isArmorEnergyLocked } from './armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
 
 export const plugCategoryHashToBucketHash = {
@@ -97,38 +91,6 @@ export function createGetModRenderKey() {
 
     return `${mod.hash}-${counts[mod.hash]++}`;
   };
-}
-
-/**
- * This is used to figure out the energy type of an item used in mod assignments.
- *
- * If the item's energy is locked given the upgrade options, this returns the item's
- * current energy. If not locked, this returns the energy as restricted by the first not-Any
- * mod in `bucketSpecificMods`
- *
- * This does not validate that all the mods match that element.
- *
- * It can return the Any energy type if armour upgrade options allow energy changes
- * and no mods require a specific element.
- */
-export function getItemEnergyType(
-  item: DimItem,
-  armorEnergyRules: ArmorEnergyRules,
-  bucketSpecificMods?: PluggableInventoryItemDefinition[]
-) {
-  if (!item.energy) {
-    return DestinyEnergyType.Any;
-  }
-
-  if (isArmorEnergyLocked(item, armorEnergyRules)) {
-    return item.energy.energyType;
-  } else {
-    const bucketSpecificModType = bucketSpecificMods?.find(
-      (mod) => mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any
-    )?.plug.energyCost?.energyType;
-
-    return bucketSpecificModType ?? DestinyEnergyType.Any;
-  }
 }
 
 function isClassItemOfTier(plugDef: PluggableInventoryItemDefinition, tier: TierType): boolean {
