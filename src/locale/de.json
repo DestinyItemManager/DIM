@@ -199,7 +199,8 @@
     "ContributePower": "Zeige Gegenstände, die Power haben und zu deinem Power-Level beitragen können.",
     "Cosmetic": "Zeigt Gegenstände, die Flair oder Kosmetika sind.",
     "Craftable": "Zeigt formbare Gegenstände an.",
-    "Curated": "Zeigt Gegenstände, welche empfohlene Perks besitzen.",
+    "CraftedDupe": "",
+    "Curated": "Zeigt Gegenstände die ein kuratierter Roll sind.",
     "CurrentClass": "Zeigt Gegenstände an, die auf dem derzeit eingeloggten Hüter ausrüstbar sind.",
     "CustomStatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs, wobei nur die Werte in der benutzerdefinierten Statistik-Gesamtliste dieser Klasse berücksichtigt werden.",
     "DamageType": "Zeigt Gegenstände basierend auf deren Schadenstyp.",
@@ -808,6 +809,7 @@
       "Untracked": "Unverfolgt"
     },
     "TriageTab": "Vorselektieren",
+    "UnreliablePerkOption": "Dieser Perk erscheint nur in der Sammlungsansicht. Möglicherweise wird er nicht zufällig auf dieses Element rollen.",
     "Vault": "Tresor",
     "WeaponLevel": "Waffen-Level {{level}}"
   },
@@ -831,6 +833,7 @@
       "Archetype": "Archetyp",
       "BaseStats": "Grundwerte",
       "Breaker": "Brecher",
+      "Crafted": "Formdatum",
       "CustomTotal": "Benutzerdefinierte Summe",
       "Damage": "Schaden",
       "Element": "Affinität",
@@ -931,7 +934,7 @@
   },
   "Settings": {
     "AutoLockTagged": "Sperrstatus mit Markierung synchronisieren",
-    "AutoLockTaggedExplanation": "DIM wird Gegenstände automatisch je nach Markierung sperren oder entsperren. Wenn diese Einstellung aktiviert ist, wird das Schloss-Symbol nicht auf Gegenständen mit einer Markierung angezeigt.",
+    "AutoLockTaggedExplanation": "DIM wird Gegenstände automatisch je nach Markierung sperren oder entsperren. Hergestellte Gegenstände bleiben freigeschaltet, um eine Umformung zu ermöglichen. Wenn diese Einstellung aktiviert ist, wird das Schloss-Symbol nicht auf Gegenständen mit einer Markierung angezeigt.",
     "BadgePostmaster": "Zeige die Anzahl der Poststellen-Gegenstände für den aktuellen Charakter auf dem App-Symbol",
     "BadgePostmasterExplanation": "Damit dies funktioniert, musst du DIM als App installieren und dein Betriebssystem muss die Anzeige von Abzeichen unterstützen",
     "BothDescriptions": "Beide Beschreibungen",

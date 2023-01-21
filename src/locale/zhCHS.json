@@ -199,6 +199,7 @@
     "ContributePower": "显示拥有光等的物品.",
     "Cosmetic": "显示饰品或装饰物品。",
     "Craftable": "显示可制作的物品。",
+    "CraftedDupe": "",
     "Curated": "显示拥有指定特性的物品。",
     "CurrentClass": "显示当前登录的守护者可装备的物品。",
     "CustomStatLower": "显示相比其他同类别护甲而言属性全面更低的护甲，但只考虑对应职业的自定义属性总和里的属性。",
@@ -808,6 +809,7 @@
       "Untracked": "未跟踪"
     },
     "TriageTab": "分类",
+    "UnreliablePerkOption": "该特性仅出现在收藏品界面中。随机掉落的物品可能不会带有该特性。",
     "Vault": "保险库",
     "WeaponLevel": "武器等级 {{level}}"
   },
@@ -831,6 +833,7 @@
       "Archetype": "原型",
       "BaseStats": "基础数值",
       "Breaker": "对抗勇士",
+      "Crafted": "铸造日期",
       "CustomTotal": "自定义总计",
       "Damage": "伤害",
       "Element": "元素",
@@ -931,7 +934,7 @@
   },
   "Settings": {
     "AutoLockTagged": "将物品锁定状态与标签同步",
-    "AutoLockTaggedExplanation": "DIM将自动锁定和解锁物品以匹配它们的标签。当启用此设置时，锁定图标将不会显示在标签物品的详情界面上。",
+    "AutoLockTaggedExplanation": "DIM 将自动锁定和解锁物品以匹配它们的标签。制作获得的武器将不会锁定，以便你进行重塑。当启用此设置时，锁定图标不会显示在带标签的物品图标上。",
     "BadgePostmaster": "在 App 图标上显示当前角色的邮政官物品数量",
     "BadgePostmasterExplanation": "若要此功能生效，你必须将 DIM 安装为 App，且操作系统必须支持显示标记",
     "BothDescriptions": "Bungie 与社区描述",

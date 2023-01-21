@@ -199,6 +199,7 @@
     "ContributePower": "パワー値があり、合計パワーレベルの変動要素となるアイテムを表示します。",
     "Cosmetic": "フレアや装飾アイテムのみに絞り込みます。",
     "Craftable": "クラフト可能なアイテムを表示",
+    "CraftedDupe": "",
     "Curated": "キュレートされたロールのアイテムを表示。",
     "CurrentClass": "現在ログインしているガーディアンが装備可能なアイテムを表示します。",
     "CustomStatLower": "カスタム後のステータス合計値のみを考慮して、同じサブクラス防具でも厳密に低いステータス値を持つ防具を表示します。",
@@ -808,6 +809,7 @@
       "Untracked": "追跡をやめる"
     },
     "TriageTab": "トリアージ",
+    "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
     "Vault": "保管庫",
     "WeaponLevel": "武器レベル {{level}}"
   },
@@ -831,6 +833,7 @@
       "Archetype": "内在特性",
       "BaseStats": "基本データ",
       "Breaker": "ブレイカー",
+      "Crafted": "Shaped Date",
       "CustomTotal": "カスタム合計",
       "Damage": "ダメージ",
       "Element": "属性",
@@ -931,7 +934,7 @@
   },
   "Settings": {
     "AutoLockTagged": "アイテムのロック状態とタグを同期",
-    "AutoLockTaggedExplanation": "DIM は、アイテムのタグに合わせて自動的にロックとロックを解除します。この設定を有効にすると、タグ付けされたアイテムのアイテムタイルにロックアイコンが表示されなくなります。",
+    "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. Crafted items will remain unlocked to allow reshaping. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
     "BadgePostmaster": "現在のキャラクターにおけるポストマスターアイテム数をアプリアイコンに表示する",
     "BadgePostmasterExplanation": "この機能を利用するには、DIM をアプリとしてインストールし、OS がバッジの表示に対応している必要があります。",
     "BothDescriptions": "両方の説明",

@@ -199,6 +199,7 @@
     "ContributePower": "Mostra gli oggetti che hanno Potere e possono contribuire al tuo livello Potere.",
     "Cosmetic": "Mostra gli oggetti di stile o cosmetici.",
     "Craftable": "Mostra gli oggetti che sono forgiabili.",
+    "CraftedDupe": "",
     "Curated": "Mostra gli oggetti che hanno un roll curato.",
     "CurrentClass": "Mostra tutti gli oggetti che sono equipaggiabili sul Guardiano attualmente in uso.",
     "CustomStatLower": "Mostra le armature le cui statistiche sono rigorosamente più basse di un'altra dello stesso tipo, considerando soltanto il tipo di statistica di classe specificata.",
@@ -808,6 +809,7 @@
       "Untracked": "Non seguito"
     },
     "TriageTab": "Triage",
+    "UnreliablePerkOption": "Questo perk compare solo nella vista delle Collezioni. Potrebbe non comparire casualmente su questo oggetto.",
     "Vault": "Deposito",
     "WeaponLevel": "Livello Arma {{level}}"
   },
@@ -831,6 +833,7 @@
       "Archetype": "Archetipo",
       "BaseStats": "Statistiche Base",
       "Breaker": "Modifica anti-campioni",
+      "Crafted": "Data di forgiatura",
       "CustomTotal": "Totale Personalizzato",
       "Damage": "Tipo di Danno",
       "Element": "Elemento",
@@ -931,7 +934,7 @@
   },
   "Settings": {
     "AutoLockTagged": "Sincronizza il blocco dell'oggetto con l'etichetta",
-    "AutoLockTaggedExplanation": "DIM bloccherà e sbloccherà automaticamente gli oggetti per corrispondere alle loro etichette. Quando questa impostazione è attiva, l'icona di blocco non sarà mostrata nelle tessere degli oggetti etichettati.",
+    "AutoLockTaggedExplanation": "DIM bloccherà e sbloccherà automaticamente gli oggetti per corrispondere alle loro etichette. Gli oggetti forgiati resteranno sbloccati per consentire la ri-forgiatura. Quando questa impostazione è attiva, l'icona di blocco non sarà mostrata nelle tessere degli oggetti etichettati.",
     "BadgePostmaster": "Mostra il numero degli oggetti dall'Amministratrice per il personaggio attuale sull'icona dell'app",
     "BadgePostmasterExplanation": "Affinché questo funzioni devi installare DIM come app e il tuo sistema operativo deve supportare la visualizzazione dei badge",
     "BothDescriptions": "Entrambe le descrizioni",

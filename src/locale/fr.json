@@ -199,6 +199,7 @@
     "ContributePower": "Affiche les objets qui ont de la puissance et qui peuvent contribuer à votre niveau de puissance.",
     "Cosmetic": "Affiche les objets de style ou cosmétiques.",
     "Craftable": "Affiche les objets pouvant être fabriqués.",
+    "CraftedDupe": "",
     "Curated": "Affiche les objets qui ont des attributs prédéterminés.",
     "CurrentClass": "Affiche les objets qui peuvent être équipés sur le personnage actuellement connecté.",
     "CustomStatLower": "Affiche les armures dont les statistiques sont strictement plus basses que celles d'une autre armure du même type, en ne prenant en compte que les statistiques dans le total de statistiques personnalisé de cette classe.",
@@ -808,6 +809,7 @@
       "Untracked": "Non suivi"
     },
     "TriageTab": "Triage",
+    "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
     "Vault": "Coffre",
     "WeaponLevel": "Niveau d'arme {{level}}"
   },
@@ -831,6 +833,7 @@
       "Archetype": "Archétype",
       "BaseStats": "Statistiques de Base",
       "Breaker": "Anti-champion",
+      "Crafted": "Shaped Date",
       "CustomTotal": "Total Personnalisé",
       "Damage": "Dégâts",
       "Element": "Élément",
@@ -931,7 +934,7 @@
   },
   "Settings": {
     "AutoLockTagged": "Synchroniser l'état de verrouillage des objets avec leur étiquette",
-    "AutoLockTaggedExplanation": "DIM verrouillera et déverrouillera automatiquement les objets pour correspondre à leur étiquette. Lorsque ce paramètre est activé, l'icône de verrouillage ne sera pas affichée sur l'icône des objets étiquetés.",
+    "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. Crafted items will remain unlocked to allow reshaping. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
     "BadgePostmaster": "Afficher le nombre d'objets au commis des postes pour le personnage actuel sur l'icône de l'application",
     "BadgePostmasterExplanation": "Pour utiliser cette fonctionnalité vous devez installer DIM en tant qu'application et votre système d'exploitation doit supporter l'affichage de badges",
     "BothDescriptions": "Les deux descriptions",

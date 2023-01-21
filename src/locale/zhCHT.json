@@ -199,6 +199,7 @@
     "ContributePower": "顯示擁有光等的物品.",
     "Cosmetic": "顯示飾品或裝飾物品。",
     "Craftable": "顯示可製作的物品。",
+    "CraftedDupe": "",
     "Curated": "顯示擁有指定特性的物品。",
     "CurrentClass": "顯示當前登錄的守護者可裝備的物品。",
     "CustomStatLower": "顯示相比其他同類別護甲而言屬性全面更低的護甲，但只考慮對應職業的自定義屬性總和里的屬性。",
@@ -311,14 +312,14 @@
     "UserGuideLink": "使用說明"
   },
   "Glyphs": {
-    "Gilded": "Gilded",
-    "Misadventure": "Misadventure",
-    "Missing": "Missing",
-    "OpenSymbolsPicker": "Open Symbols Picker",
-    "Quickfall": "Quickfall",
-    "ScorchCannon": "Scorch Cannon",
-    "SearchSymbols": "Search Symbols...",
-    "Smoke": "Smoke"
+    "Gilded": "镀金",
+    "Misadventure": "意外致死",
+    "Missing": "缺失",
+    "OpenSymbolsPicker": "打開符號選單",
+    "Quickfall": "急坠",
+    "ScorchCannon": "灼燒加農炮",
+    "SearchSymbols": "搜索符號...",
+    "Smoke": "烟霧"
   },
   "Header": {
     "About": "關於DIM",
@@ -666,7 +667,7 @@
     "NoSpace": "你的保險庫和其他角色均已滿。",
     "NoneMatch": "沒有與篩檢程式匹配的配裝.",
     "NotStarted": "正在等待其他操作",
-    "NotesPlaceholder": "Write some notes about this loadout, or use #hashtags to categorize it",
+    "NotesPlaceholder": "爲此配裝添加備注，或使用 #標簽 分類 （目前不支持中文）",
     "NotificationTitle": "配裝:{{name}}",
     "OnWrongCharacterAdvice": "點此查找此角色最高光等的物品。",
     "OnWrongCharacterWarning": "當前角色的光等最高的防具在其他角色的物品欄中，要使强大裝備和巔峰裝備掉落時的光等達到最高，這些防具必須存儲在當前角色的物品欄或是保險庫中。",
@@ -808,6 +809,7 @@
       "Untracked": "未跟蹤"
     },
     "TriageTab": "分類",
+    "UnreliablePerkOption": "該特性僅出現在收藏品界面，隨機掉落的物品可能不會帶有該特性。",
     "Vault": "保險庫",
     "WeaponLevel": "武器等级{{level}}"
   },
@@ -831,6 +833,7 @@
       "Archetype": "原型",
       "BaseStats": "基礎數值",
       "Breaker": "對抗勇士",
+      "Crafted": "鑄造日期",
       "CustomTotal": "自定義總計",
       "Damage": "傷害",
       "Element": "元素",
@@ -931,7 +934,7 @@
   },
   "Settings": {
     "AutoLockTagged": "將物品鎖定狀態與標記同步.",
-    "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
+    "AutoLockTaggedExplanation": "DIM 將自動鎖定和解鎖物品以匹配它們的標簽。製作獲得的武器將不會鎖定，以便你進行重塑。當啓用此設置時，鎖定圖標不會顯示在帶標簽的物品圖標上。",
     "BadgePostmaster": "在 App 圖標上顯示當前角色的郵政官物品數量",
     "BadgePostmasterExplanation": "若要此功能生效，你必須將 DIM 安裝為 App，且操作系統必須支持顯示標記",
     "BothDescriptions": "全部顯示",
@@ -1103,11 +1106,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "No": "No",
+      "No": "否",
       "Reset": "撤銷授權",
-      "Title": "Do you see the same code on your Stream Deck ?",
-      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
-      "Yes": "Yes"
+      "Title": "你的 Steam Deck 上顯示的驗證碼是否一致？",
+      "Update": "看到此消息代表你的插件版本過舊。請從 Steam Deck 商店下載更新。",
+      "Yes": "是"
     },
     "Connected": "已連接",
     "Enable": "Stream Deck 插件",
