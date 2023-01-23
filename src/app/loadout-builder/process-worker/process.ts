@@ -103,7 +103,7 @@ export function process(
   const precalculatedInfo = precalculateStructures(
     generalMods,
     activityMods,
-    autoStatMods,
+    5 - generalMods.length,
     statOrder
   );
   const hasMods = Boolean(activityMods.length || generalMods.length);

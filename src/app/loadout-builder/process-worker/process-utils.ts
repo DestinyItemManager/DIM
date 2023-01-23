@@ -1,10 +1,10 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { ArmorStatHashes } from '../types';
-import { buildCacheV2, CacheV2, ModsPickV2 } from './auto-stat-mod-utils';
+import { AutoModsMap, buildCacheV2, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
 import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 export interface PrecalculatedInfo {
-  cache: CacheV2;
+  cache: AutoModsMap;
   statOrder: ArmorStatHashes[];
   hasActivityMods: boolean;
   generalModCosts: number[];
@@ -15,11 +15,11 @@ export interface PrecalculatedInfo {
 export function precalculateStructures(
   generalMods: ProcessMod[],
   activityMods: ProcessMod[],
-  autoStatMods: boolean,
+  numAutoStatMods: number,
   statOrder: ArmorStatHashes[]
 ): PrecalculatedInfo {
   return {
-    cache: buildCacheV2(autoStatMods),
+    cache: buildCacheV2(numAutoStatMods),
     statOrder,
     hasActivityMods: activityMods.length > 0,
     generalModCosts: generalMods.map((m) => m.energy?.val || 0),
@@ -49,7 +49,7 @@ export function pickAndAssignSlotIndependentMods(
   modStatistics: ModAssignmentStatistics,
   items: ProcessItem[],
   neededStats: number[] | undefined
-): ModsPickV2[] | undefined {
+): ModsPick[] | undefined {
   modStatistics.earlyModsCheck.timesChecked++;
 
   // An early check to ensure we have enough activity mod combos
@@ -110,14 +110,11 @@ export function pickAndAssignSlotIndependentMods(
     remainingEnergyCapacities.sort((a, b) => b - a);
 
     if (neededStats) {
-      const result = recursivelyChooseMods(
+      const result = chooseAutoMods(
         info,
         neededStats,
-        0,
-        5 - info.generalModCosts.length,
         items.filter((i) => i.isArtifice).length,
-        remainingEnergyCapacities,
-        []
+        remainingEnergyCapacities
       );
 
       if (result) {
@@ -136,61 +133,6 @@ export function pickAndAssignSlotIndependentMods(
     modStatistics.finalAssignment.modsAssignmentFailed++;
   }
   return undefined;
-}
-
-function recursivelyChooseMods(
-  info: PrecalculatedInfo,
-  neededStats: number[],
-  statIndex: number,
-  remainingGeneralSlots: number,
-  remainingArtificeSlots: number,
-  remainingEnergyCapacities: number[],
-  pickedMods: ModsPickV2[]
-): ModsPickV2[] | undefined {
-  while (neededStats[statIndex] === 0) {
-    if (++statIndex === info.statOrder.length) {
-      // We've hit the end of our needed stats, check if this is possible
-      const modCosts = [...info.generalModCosts, ...pickedMods.flatMap((m) => m.generalModsCosts)];
-      modCosts.sort((a, b) => b - a);
-      if (modCosts.every((cost, index) => cost <= remainingEnergyCapacities[index])) {
-        return pickedMods;
-      } else {
-        return undefined;
-      }
-    }
-  }
-
-  const possiblePicks =
-    info.cache.statCaches[info.statOrder[statIndex]].waysToGetThisStat[neededStats[statIndex]];
-  if (!possiblePicks) {
-    // we can't possibly hit our target stats
-    return undefined;
-  }
-
-  const subArray = pickedMods.slice();
-  subArray.push(subArray[0]);
-
-  for (const pick of possiblePicks) {
-    if (
-      pick.numArtificeMods > remainingArtificeSlots ||
-      pick.numGeneralMods > remainingGeneralSlots
-    ) {
-      continue;
-    }
-    subArray[subArray.length - 1] = pick;
-    const solution = recursivelyChooseMods(
-      info,
-      neededStats,
-      statIndex + 1,
-      remainingGeneralSlots - pick.numGeneralMods,
-      remainingArtificeSlots - pick.numArtificeMods,
-      remainingEnergyCapacities,
-      subArray
-    );
-    if (solution) {
-      return solution;
-    }
-  }
 }
 
 export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {

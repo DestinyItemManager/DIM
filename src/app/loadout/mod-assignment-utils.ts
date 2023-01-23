@@ -335,7 +335,7 @@ function getArmorSocketsAndMods(
 }
 
 /**
- * Assign bucket specific mods based on assumed energy type, assumed mod energy capacity, and available sockets,
+ * Assign bucket specific mods based on assumed mod energy capacity and available sockets,
  * partitioning mods based whether it could fit them into the item.
  * Socket choice for mod assignment is greedy, but uses a heuristic based on the number of sockets a mod could
  * fit into, since mods that can fit into fewer sockets must be prioritized.
