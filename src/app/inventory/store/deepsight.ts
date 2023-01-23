@@ -29,7 +29,7 @@ export function buildDeepsightInfo(item: DimItem): DimDeepsight | undefined {
 }
 
 function getResonanceSocket(item: DimItem): DimSocket | undefined {
-  if (item.bucket.inWeapons && item.sockets) {
+  if (item.sockets && (item.bucket.inWeapons || item.vendor)) {
     return item.sockets.allSockets.find(isDeepsightResonanceSocket);
   }
 }
