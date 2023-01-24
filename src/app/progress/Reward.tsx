@@ -5,6 +5,7 @@ import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
 import BungieImage from '../dim-ui/BungieImage';
 import { getEngramPowerBonus } from './engrams';
 import styles from './Reward.m.scss';
+import { getXPValue } from './xp';
 
 export function Reward({
   reward,
@@ -27,6 +28,8 @@ export function Reward({
     itemHash
   );
 
+  const xpValue = getXPValue(reward.itemHash);
+
   return (
     <div className={styles.reward}>
       <BungieImage src={rewardDisplay.icon} alt="" />
@@ -34,6 +37,7 @@ export function Reward({
         {powerBonus !== undefined && `+${powerBonus} `}
         <RichDestinyText text={rewardDisplay.name} ownerId={store?.id} />
         {reward.quantity > 1 && ` +${reward.quantity.toLocaleString()}`}
+        {xpValue !== undefined && ` (${xpValue.toLocaleString()} XP)`}
       </span>
     </div>
   );

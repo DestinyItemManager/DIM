@@ -21,16 +21,14 @@
 .outOfDate {
   color: $red;
   background-color: #1b1b2d;
-  height: 14px;
-  width: 14px;
   padding: 2px;
   border-radius: 50%;
   position: absolute;
   bottom: -8px;
   right: -8px;
-
   :global(.app-icon) {
     font-size: 10px;
+    display: block;
   }
 }
 

@@ -199,6 +199,7 @@
     "ContributePower": "Pokazuje przedmioty, które mają moc i mogą przyczynić się do twojego poziomu mocy.",
     "Cosmetic": "Pokazuje przedmioty, które są znaczkami lub kosmetykami.",
     "Craftable": "Pokazuje przedmioty, które można stworzyć.",
+    "CraftedDupe": "",
     "Curated": "Pokazuje przedmioty, które są kurowanym rollem.",
     "CurrentClass": "Pokazuje przedmioty, które można założyć na aktualnie zalogowanym strażniku.",
     "CustomStatLower": "Pokazuje zbroję, której statystyki są niższe niż inna tego samego typu zbroi, tylko biorąc pod uwagę statystyki na liście niestandardowych sum statystyk dla tej klasy.",
@@ -311,14 +312,14 @@
     "UserGuideLink": "Przewodnik użytkownika"
   },
   "Glyphs": {
-    "Gilded": "Gilded",
-    "Misadventure": "Misadventure",
-    "Missing": "Missing",
-    "OpenSymbolsPicker": "Open Symbols Picker",
-    "Quickfall": "Quickfall",
-    "ScorchCannon": "Scorch Cannon",
-    "SearchSymbols": "Search Symbols...",
-    "Smoke": "Smoke"
+    "Gilded": "Pozłocone",
+    "Misadventure": "Nieszczęście",
+    "Missing": "Brakujące",
+    "OpenSymbolsPicker": "Otwórz Wybór Symboli",
+    "Quickfall": "Pikowanie",
+    "ScorchCannon": "Działo Spopielające",
+    "SearchSymbols": "Szukaj symboli...",
+    "Smoke": "Dym"
   },
   "Header": {
     "About": "O DIM",
@@ -808,6 +809,7 @@
       "Untracked": "Nieśledzone"
     },
     "TriageTab": "Triaż",
+    "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
     "Vault": "Schowek",
     "WeaponLevel": "Poziom Broni {{level}}"
   },
@@ -831,6 +833,7 @@
       "Archetype": "Archetyp",
       "BaseStats": "Podstawowe statystyki",
       "Breaker": "Przełamanie",
+      "Crafted": "Shaped Date",
       "CustomTotal": "Niestandardowa suma",
       "Damage": "Obrażenia",
       "Element": "Element",
@@ -931,7 +934,7 @@
   },
   "Settings": {
     "AutoLockTagged": "Zsynchronizuj stan blokady przedmiotu z tagiem",
-    "AutoLockTaggedExplanation": "DIM będzie automatycznie blokował i odblokowywał przedmioty, aby dopasować je do ich tagów. Gdy to ustawienie jest włączone, ikona blokady nie będzie wyświetlana na kafelku przedmiotu dla otagowanych przedmiotów.",
+    "AutoLockTaggedExplanation": "DIM będzie automatycznie blokował i odblokowywał przedmioty, aby dopasować je do ich tagów. Stworzone przedmioty pozostaną odblokowane, aby umożliwić przemodelowanie. Gdy to ustawienie jest włączone, ikona blokady nie będzie wyświetlana na kafelku przedmiotu dla otagowanych przedmiotów.",
     "BadgePostmaster": "Pokarz liczbę przedmiotów u kuriera dla obecnej postaci w ikonie aplikacji",
     "BadgePostmasterExplanation": "Aby to zadziałało, musisz zainstalować DIM jako aplikację, a system operacyjny musi obsługiwać wyświetlanie powiadomień",
     "BothDescriptions": "Oba opisy",

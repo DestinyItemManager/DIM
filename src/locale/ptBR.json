@@ -199,6 +199,7 @@
     "ContributePower": "Mostra os itens que tem poder e que podem contribuir para o seu nível de poder.",
     "Cosmetic": "Exibe itens que são de estilo ou cosméticos.",
     "Craftable": "Exibe itens que são fabricáveis.",
+    "CraftedDupe": "",
     "Curated": "Exibe itens que possuem valores curados.",
     "CurrentClass": "Exibe itens que podem ser equipados no guardião que está jogando atualmente.",
     "CustomStatLower": "Exibe as armaduras nas quais seus atributos são necessariamente menores que as outras do mesmo tipo, levando em conta somente os atributos da lista personalizada de atributos daquela classe.",
@@ -808,6 +809,7 @@
       "Untracked": "Não rastreado"
     },
     "TriageTab": "Triagem",
+    "UnreliablePerkOption": "Este perk aparece apenas na visualização de coleções. Pode não ocorrer aleatoriamente neste item.",
     "Vault": "Cofre",
     "WeaponLevel": "Nível da Arma {{level}}"
   },
@@ -831,6 +833,7 @@
       "Archetype": "Arquétipo",
       "BaseStats": "Atributos base",
       "Breaker": "Quebra-guarda",
+      "Crafted": "Data Formação",
       "CustomTotal": "Total Personalizado",
       "Damage": "Dano",
       "Element": "Elemento",
@@ -931,7 +934,7 @@
   },
   "Settings": {
     "AutoLockTagged": "Sincronizar estado de bloqueio de item com etiqueta",
-    "AutoLockTaggedExplanation": "DIM vai travar e destravar automaticamente os itens para que combinem com suas etiquetas. Quando esta configuração estiver ativada, o ícone de bloqueio não será mostrado na imagem do item para itens marcados.",
+    "AutoLockTaggedExplanation": "DIM irá travar e destravar automaticamente os itens para que combinem com suas etiquetas. Itens criados permanecerão desbloqueados para permitir sua remodelagem. Quando esta configuração estiver ativada, o ícone de bloqueio não será mostrado na imagem do item para itens marcados.",
     "BadgePostmaster": "Exibir a quantidade de itens disponíveis com o Chefe do Correio do personagem atual no ícone do aplicativo",
     "BadgePostmasterExplanation": "Esta opção só funcionará se você instalar o DIM como um app e seu Sistema Operacional suportar este recurso de exibição",
     "BothDescriptions": "Ambas as Descrições",
