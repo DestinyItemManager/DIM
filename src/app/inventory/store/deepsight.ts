@@ -1,3 +1,4 @@
+import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
 import { socketContainsPlugWithCategory } from 'app/utils/socket-utils';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import { resonantElementTagsByObjectiveHash } from 'data/d2/crafting-resonant-elements';
@@ -29,7 +30,7 @@ export function buildDeepsightInfo(item: DimItem): DimDeepsight | undefined {
 }
 
 function getResonanceSocket(item: DimItem): DimSocket | undefined {
-  if (item.sockets && (item.bucket.inWeapons || item.vendor)) {
+  if (item.sockets && (item.bucket.inWeapons || item.bucket.hash === THE_FORBIDDEN_BUCKET)) {
     return item.sockets.allSockets.find(isDeepsightResonanceSocket);
   }
 }
