@@ -811,7 +811,7 @@
     "Unequipped": "Unequipped",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
     "WeaponsOnly": "Weapons Only",
-    "NotStarted": "Waiting for other actions or profile loading to finish",
+    "NotStarted": "Waiting for other actions to complete, or an inventory refresh to finish loading",
     "Deequip": "De-equipping items from other characters",
     "MoveItems": "Moving items",
     "EquipItems": "Equipping items",
