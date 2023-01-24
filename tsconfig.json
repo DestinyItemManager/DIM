@@ -28,5 +28,10 @@
       "*.css": ["config/css-stub.js"]
     }
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*", "config/feature-flags.ts"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
 }

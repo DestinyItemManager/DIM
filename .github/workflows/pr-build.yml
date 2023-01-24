@@ -52,7 +52,7 @@ jobs:
             build-pipeline:
               - package.json
               - yarn.lock
-              - config/webpack.js
+              - config/webpack.ts
 
       - name: Send webpack stats to RelativeCI
         if: ${{ steps.filter.outputs.build-pipeline == 'true' }}

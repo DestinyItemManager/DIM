@@ -1,47 +1,63 @@
-const webpack = require('webpack');
+import webpack from 'webpack';
 
-const path = require('path');
-const fs = require('fs');
-const zlib = require('zlib');
-const { execSync } = require('child_process');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { InjectManifest } = require('workbox-webpack-plugin');
-const WebpackNotifierPlugin = require('webpack-notifier');
-const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const GenerateJsonPlugin = require('generate-json-webpack-plugin');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-const csp = require('./content-security-policy');
-const browserslist = require('browserslist');
-const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const svgToMiniDataURI = require('mini-svg-data-uri');
-const marked = require('marked');
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import browserslist from 'browserslist';
+import { execSync } from 'child_process';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import CompressionPlugin from 'compression-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import ForkTsCheckerNotifierWebpackPlugin from 'fork-ts-checker-notifier-webpack-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import fs from 'fs';
+import GenerateJsonPlugin from 'generate-json-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import _ from 'lodash';
+import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
+import marked from 'marked';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import svgToMiniDataURI from 'mini-svg-data-uri';
+import path from 'path';
+import TerserPlugin from 'terser-webpack-plugin';
+import 'webpack-dev-server';
+import WebpackNotifierPlugin from 'webpack-notifier';
+import { InjectManifest } from 'workbox-webpack-plugin';
+import zlib from 'zlib';
+import csp from './content-security-policy';
+import { makeFeatureFlags } from './feature-flags';
 const renderer = new marked.Renderer();
-const _ = require('lodash');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
 
-const NotifyPlugin = require('notify-webpack-plugin');
-const { StatsWriterPlugin } = require('webpack-stats-plugin');
+import { StatsWriterPlugin } from 'webpack-stats-plugin';
+import NotifyPlugin from './notify-webpack-plugin';
 
 const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
-const packageJson = require('../package.json');
+import packageJson from '../package.json';
 
-const splash = require('../icons/splash.json');
+import splash from '../icons/splash.json';
 
-module.exports = (env) => {
+// https://stackoverflow.com/questions/69584268/what-is-the-type-of-the-webpack-config-function-when-it-comes-to-typescript
+type CLIValues = boolean | string;
+type EnvValues = Record<string, CLIValues | Record<string, Env>>;
+interface Env extends EnvValues {
+  release: boolean;
+  beta: boolean;
+  dev: boolean;
+  name: 'release' | 'beta' | 'dev';
+}
+type Argv = Record<string, CLIValues>;
+export interface WebpackConfigurationGenerator {
+  (env?: Env, argv?: Argv): webpack.Configuration | Promise<webpack.Configuration>;
+}
+
+export default (env: Env) => {
   if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
     console.log('Generating certificate');
     execSync('mkcert create-ca --validity 825');
     execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
   }
 
-  env.name = Object.keys(env)[0];
-  ['release', 'beta', 'dev'].forEach((e) => {
+  env.name = Object.keys(env)[0] as Env['name'];
+  (['release', 'beta', 'dev'] as const).forEach((e) => {
     // set booleans based on env
     env[e] = Boolean(env[e]);
     if (env[e]) {
@@ -57,8 +73,8 @@ module.exports = (env) => {
 
   const buildTime = Date.now();
 
-  const config = {
-    mode: env.dev ? 'development' : 'production',
+  const config: webpack.Configuration = {
+    mode: env.dev ? ('development' as const) : ('production' as const),
 
     entry: {
       main: './src/Index.tsx',
@@ -129,9 +145,9 @@ module.exports = (env) => {
         new TerserPlugin({
           parallel: true,
           terserOptions: {
-            ecma: 8,
+            ecma: 2020,
             module: true,
-            compress: { warnings: false, passes: 3, toplevel: true },
+            compress: { passes: 3, toplevel: true },
             mangle: { safari10: true, toplevel: true },
             output: { safari10: true },
           },
@@ -161,7 +177,7 @@ module.exports = (env) => {
           exclude: /data\/webfonts\//,
           type: 'asset',
           generator: {
-            dataUrl: (content) => svgToMiniDataURI(content.toString()),
+            dataUrl: (content: any) => svgToMiniDataURI(content.toString()),
           },
           parser: {
             dataUrlCondition: {
@@ -315,145 +331,115 @@ module.exports = (env) => {
       },
     },
 
-    plugins: [
-      new webpack.IgnorePlugin({ resourceRegExp: /caniuse-lite\/data\/regions/ }),
-
-      new NotifyPlugin('DIM', !env.dev),
-
-      new MiniCssExtractPlugin({
-        filename: env.dev ? '[name]-[contenthash].css' : '[name]-[contenthash:8].css',
-        chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:8].css',
-      }),
-
-      new HtmlWebpackPlugin({
-        inject: true,
-        filename: 'index.html',
-        template: 'src/index.html',
-        chunks: ['main', 'browsercheck'],
-        templateParameters: {
-          version,
-          date: new Date(buildTime).toString(),
-          splash,
-        },
-        minify: env.dev
-          ? false
-          : {
-              collapseWhitespace: true,
-              keepClosingSlash: true,
-              removeComments: false,
-              removeRedundantAttributes: true,
-              removeScriptTypeAttributes: true,
-              removeStyleLinkTypeAttributes: true,
-              useShortDoctype: true,
-            },
-      }),
-
-      new HtmlWebpackPlugin({
-        inject: true,
-        filename: 'return.html',
-        template: 'src/return.html',
-        chunks: ['authReturn'],
-      }),
-
-      new HtmlWebpackPlugin({
-        inject: false,
-        filename: '404.html',
-        template: 'src/404.html',
-      }),
-
-      // Generate the .htaccess file (kind of an abuse of HtmlWebpack plugin just for templating)
-      new HtmlWebpackPlugin({
-        filename: '.htaccess',
-        template: 'src/htaccess',
-        inject: false,
-        minify: false,
-        templateParameters: {
-          csp: csp(env.name),
-        },
-      }),
-
-      // Generate a version info JSON file we can poll. We could theoretically add more info here too.
-      new GenerateJsonPlugin('./version.json', {
-        version,
-        buildTime,
-      }),
-
-      new CopyWebpackPlugin({
-        patterns: [
-          { from: './src/manifest-webapp.json' },
-          // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
-          { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
-          { from: `./icons/${env.name}/` },
-          { from: `./icons/splash`, to: 'splash/' },
-          { from: './src/safari-pinned-tab.svg' },
-        ],
-      }),
-
-      new webpack.DefinePlugin({
-        $DIM_VERSION: JSON.stringify(version),
-        $DIM_FLAVOR: JSON.stringify(env.name),
-        $DIM_BUILD_DATE: JSON.stringify(buildTime),
-        // These are set from the GitHub secrets
-        $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
-        $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
-        $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
-        $DIM_API_KEY: JSON.stringify(process.env.DIM_API_KEY),
-
-        $BROWSERS: JSON.stringify(browserslist(packageJson.browserslist)),
-
-        // Feature flags!
-
-        // Print debug info to console about item moves
-        '$featureFlags.debugMoves': JSON.stringify(!env.release),
-        // Debug Service Worker
-        '$featureFlags.debugSW': JSON.stringify(!env.release),
-        // Send exception reports to Sentry.io on beta/prod only
-        '$featureFlags.sentry': JSON.stringify(!env.dev),
-        // Community-curated wish lists
-        '$featureFlags.wishLists': JSON.stringify(true),
-        // Show a banner for supporting a charitable cause
-        '$featureFlags.issueBanner': JSON.stringify(false),
-        // Show the triage tab in the item popup
-        '$featureFlags.triage': JSON.stringify(!env.release),
-        // Advanced Write Actions (inserting mods)
-        '$featureFlags.awa': JSON.stringify(process.env.USER === 'brh'), // Only Ben has the keys...
-        // Item feed sidebar
-        '$featureFlags.itemFeed': JSON.stringify(true),
-        // Clarity perk descriptions
-        '$featureFlags.clarityDescriptions': JSON.stringify(true),
-        // Elgato Stream Deck integration
-        '$featureFlags.elgatoStreamDeck': JSON.stringify(true),
-        // Warn when DIM Sync is off and you save some DIM-specific data
-        '$featureFlags.warnNoSync': JSON.stringify(true),
-        // Expose the "Add required stat mods" Loadout Optimizer toggle
-        '$featureFlags.loAutoStatMods': JSON.stringify(!env.release),
-        // Whether to send cookies to the Bungie.net API
-        '$featureFlags.apiCookies': JSON.stringify(false),
-        // If saved DIM API data in IDB is recent enough, don't bother getting it from the server
-        '$featureFlags.skipDimApiFirstLoadIfRecent': JSON.stringify(!env.release),
-        // Pretend that Bungie.net is down for maintenance
-        '$featureFlags.simulateBungieMaintenance': JSON.stringify(false),
-        // Pretend that Bungie.net is not returning sockets info
-        '$featureFlags.simulateMissingSockets': JSON.stringify(false),
-        // Show a "pills" UI for filtering loadouts
-        '$featureFlags.loadoutFilterPills': JSON.stringify(true),
-        // Request the PresentationNodes component only needed during
-        // Solstice to associate each character with a set of triumphs.
-        '$featureFlags.solsticePresentationNodes': JSON.stringify(false),
-      }),
-
-      new LodashModuleReplacementPlugin({
-        collections: true,
-        memoizing: true,
-        shorthands: true,
-        flattening: true,
-      }),
-    ],
+    plugins: [],
   };
+
+  const plugins: any[] = [
+    new webpack.IgnorePlugin({ resourceRegExp: /caniuse-lite\/data\/regions/ }),
+
+    new NotifyPlugin('DIM', !env.dev),
+
+    new MiniCssExtractPlugin({
+      filename: env.dev ? '[name]-[contenthash].css' : '[name]-[contenthash:8].css',
+      chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:8].css',
+    }),
+
+    new HtmlWebpackPlugin({
+      inject: true,
+      filename: 'index.html',
+      template: 'src/index.html',
+      chunks: ['main', 'browsercheck'],
+      templateParameters: {
+        version,
+        date: new Date(buildTime).toString(),
+        splash,
+      },
+      minify: env.dev
+        ? false
+        : {
+            collapseWhitespace: true,
+            keepClosingSlash: true,
+            removeComments: false,
+            removeRedundantAttributes: true,
+            removeScriptTypeAttributes: true,
+            removeStyleLinkTypeAttributes: true,
+            useShortDoctype: true,
+          },
+    }),
+
+    new HtmlWebpackPlugin({
+      inject: true,
+      filename: 'return.html',
+      template: 'src/return.html',
+      chunks: ['authReturn'],
+    }),
+
+    new HtmlWebpackPlugin({
+      inject: false,
+      filename: '404.html',
+      template: 'src/404.html',
+    }),
+
+    // Generate the .htaccess file (kind of an abuse of HtmlWebpack plugin just for templating)
+    new HtmlWebpackPlugin({
+      filename: '.htaccess',
+      template: 'src/htaccess',
+      inject: false,
+      minify: false,
+      templateParameters: {
+        csp: csp(env.name),
+      },
+    }),
+
+    // Generate a version info JSON file we can poll. We could theoretically add more info here too.
+    new GenerateJsonPlugin('./version.json', {
+      version,
+      buildTime,
+    }),
+
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: './src/manifest-webapp.json' },
+        // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
+        { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
+        { from: `./icons/${env.name}/` },
+        { from: `./icons/splash`, to: 'splash/' },
+        { from: './src/safari-pinned-tab.svg' },
+      ],
+    }),
+
+    new webpack.DefinePlugin({
+      $DIM_VERSION: JSON.stringify(version),
+      $DIM_FLAVOR: JSON.stringify(env.name),
+      $DIM_BUILD_DATE: JSON.stringify(buildTime),
+      // These are set from the GitHub secrets
+      $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
+      $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
+      $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
+      $DIM_API_KEY: JSON.stringify(process.env.DIM_API_KEY),
+
+      $BROWSERS: JSON.stringify(browserslist(packageJson.browserslist)),
+
+      // Feature flags!
+      ...Object.fromEntries(
+        Object.entries(makeFeatureFlags(env)).map(([key, value]) => [
+          `$featureFlags.${key}`,
+          JSON.stringify(value),
+        ])
+      ),
+    }),
+
+    new LodashModuleReplacementPlugin({
+      collections: true,
+      memoizing: true,
+      shorthands: true,
+      flattening: true,
+    }),
+  ];
 
   if (env.dev) {
     // In dev we use babel to compile TS, and fork off a separate typechecker
-    config.plugins.push(
+    plugins.push(
       new ForkTsCheckerWebpackPlugin({
         eslint: { files: './src/**/*.{ts,tsx,js,jsx}' },
       })
@@ -462,7 +448,7 @@ module.exports = (env) => {
     if (process.env.SNORETOAST_DISABLE) {
       console.log("Disabling build notifications as 'SNORETOAST_DISABLE' was defined");
     } else {
-      config.plugins.push(
+      plugins.push(
         new WebpackNotifierPlugin({
           title: 'DIM',
           excludeWarnings: false,
@@ -470,19 +456,18 @@ module.exports = (env) => {
           contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
         })
       );
-      config.plugins.push(
+      plugins.push(
         new ForkTsCheckerNotifierWebpackPlugin({
           title: 'DIM TypeScript',
           excludeWarnings: false,
-          contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
         })
       );
     }
 
-    config.plugins.push(new ReactRefreshWebpackPlugin({ overlay: false }));
+    plugins.push(new ReactRefreshWebpackPlugin({ overlay: false }));
   } else {
     // env.beta and env.release
-    config.plugins.push(
+    plugins.push(
       new StatsWriterPlugin({
         filename: '../webpack-stats.json',
         stats: {
@@ -541,7 +526,7 @@ module.exports = (env) => {
 
     // Skip brotli compression for PR builds
     if (!process.env.PR_BUILD) {
-      config.plugins.push(
+      plugins.push(
         // Brotli-compress all assets. We used to gzip too but everything supports brotli now
         new CompressionPlugin({
           filename: '[path][base].br',
@@ -550,15 +535,15 @@ module.exports = (env) => {
           // Skip .woff and .woff2, they're already well compressed
           test: /\.js$|\.css$|\.html$|\.json$|\.map$|\.ttf$|\.eot$|\.svg$|\.wasm$/,
           compressionOptions: {
-            params: {
-              [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
-            },
+            [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
           },
           minRatio: Infinity,
         })
       );
     }
   }
+
+  config.plugins = plugins;
 
   return config;
 };

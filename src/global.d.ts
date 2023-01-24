@@ -7,47 +7,7 @@ declare const $DIM_WEB_CLIENT_SECRET: string;
 declare const $DIM_API_KEY: string;
 declare const $BROWSERS: string[];
 
-declare const $featureFlags: {
-  /** Print debug info to console about item moves */
-  debugMoves: boolean;
-  /** Debug Service Worker */
-  debugSW: boolean;
-  /** Send exception reports to Sentry.io */
-  sentry: boolean;
-  /** Community-curated wish lists */
-  wishLists: boolean;
-  /** Show a banner for supporting a charitable cause */
-  issueBanner: boolean;
-  /** Show the triage tab in the item popup */
-  triage: boolean;
-  /** Advanced Write Actions (inserting mods) */
-  awa: boolean;
-  /** Item feed sidebar */
-  itemFeed: boolean;
-  /** Clarity perk descriptions */
-  clarityDescriptions: boolean;
-  /** Elgato Stream Deck integration */
-  elgatoStreamDeck: boolean;
-  /** Warn when DIM Sync is off and you save some DIM-specific data */
-  warnNoSync: boolean;
-  /** Expose the "Add required stat mods" Loadout Optimizer toggle */
-  loAutoStatMods: boolean;
-  /** Whether to send cookies to the Bungie.net API */
-  apiCookies: boolean;
-  /** If saved DIM API data in IDB is recent enough, don't bother getting it from the server */
-  skipDimApiFirstLoadIfRecent: boolean;
-  /** Pretend that Bungie.net is down for maintenance */
-  simulateBungieMaintenance: boolean;
-  /** Pretend that Bungie.net is not returning sockets info */
-  simulateMissingSockets: boolean;
-  /** Show a "pills" UI for filtering loadouts */
-  loadoutFilterPills: boolean;
-  /**
-   * Request the PresentationNodes component only needed during
-   * Solstice to associate each character with a set of triumphs.
-   */
-  solsticePresentationNodes: boolean;
-};
+declare const $featureFlags: ReturnType<typeof import('../config/feature-flags').makeFeatureFlags>;
 
 declare function ga(...params: string[]): void;
 
