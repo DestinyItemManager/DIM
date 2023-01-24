@@ -201,6 +201,8 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
             remoteProfileMintedDate,
             cachedProfileMintedDate
           );
+          // Clear the error since we did load correctly
+          dispatch(profileError(undefined));
           // undefined means skip processing, in case we already have computed stores
           return storesLoadedSelector(getState()) ? undefined : profileResponse;
         } else {

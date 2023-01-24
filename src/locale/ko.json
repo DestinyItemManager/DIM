@@ -199,6 +199,7 @@
     "ContributePower": "전투력을 높일 수 있는 아이템 표시",
     "Cosmetic": "장식 및 기타 아이템 표시",
     "Craftable": "제작 가능한 아이템 표시",
+    "CraftedDupe": "",
     "Curated": "고정 특성 조합이 있는 아이템 표시",
     "CurrentClass": "현재 접속한 수호자에게 장착할 수 있는 아이템 표시",
     "CustomStatLower": "사용자 정의 총합의 능력치만 고려하여 동일한 종류의 다른 방어구보다 능력치가 확실하게 낮은 방어구 표시",
@@ -808,6 +809,7 @@
       "Untracked": "추적 안됨"
     },
     "TriageTab": "분류",
+    "UnreliablePerkOption": "이 특성은 수집품에서만 표시되며, 이 아이템에서 얻지 못하는 특성일 수 있습니다.",
     "Vault": "금고",
     "WeaponLevel": "무기 레벨 {{level}}"
   },
@@ -831,6 +833,7 @@
       "Archetype": "아키타입",
       "BaseStats": "기본 능력치",
       "Breaker": "용사 차단기",
+      "Crafted": "제작일",
       "CustomTotal": "사용자 정의 총합",
       "Damage": "피해 유형",
       "Element": "에너지 유형",
@@ -931,7 +934,7 @@
   },
   "Settings": {
     "AutoLockTagged": "태그와 아이템 잠금 상태 동기화",
-    "AutoLockTaggedExplanation": "DIM이 자동으로 아이템을 태그에 따라 잠그거나 해제합니다. 이 설정이 활성화되면 태그된 아이템에 잠금 아이콘이 표시되지 않습니다.",
+    "AutoLockTaggedExplanation": "DIM이 자동으로 아이템을 태그에 따라 잠그거나 해제합니다. 제작된 아이템은 재형성을 위해 잠금 해제된 상태로 유지됩니다. 이 설정이 활성화되면 태그된 아이템에 잠금 아이콘이 표시되지 않습니다.",
     "BadgePostmaster": "앱 아이콘에 현재 캐릭터의 우편 담당자 아이템 수 표시",
     "BadgePostmasterExplanation": "이 기능을 사용하려면 DIM을 앱으로 설치하고 OS가 배지 표시를 지원해야 합니다",
     "BothDescriptions": "두 설명 모두",
@@ -1144,7 +1147,7 @@
     "Favorite": "즐겨찾기",
     "Infuse": "주입",
     "Junk": "쓰레기",
-    "Keep": "보관",
+    "Keep": "유지",
     "LockAll": "아이템 잠금",
     "TagItem": "태그 추가",
     "UnlockAll": "아이템 잠금 해제"
