@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
-import { FilterOp, makeCommentString, parseQuery, traverseAST } from './query-parser';
+import { makeCommentString, parseQuery, traverseAST } from './query-parser';
 import { SearchConfig } from './search-config';
 import freeformFilters from './search-filters/freeform';
 
@@ -19,7 +19,6 @@ export const enum SearchItemType {
   Autocomplete,
   /** Open help */
   Help,
-  // TODO: add types for exact-match item or perk that adds them to the query?
 }
 
 export interface SearchQuery {
@@ -167,14 +166,8 @@ function normalizeRecency(timestamp: number) {
 
 export function filterSortRecentSearches(query: string, recentSearches: Search[]): SearchItem[] {
   // Recent/saved searches
-  // TODO: Filter recent searches by query
-  // TODO: Sort recent searches by relevance (time+usage+saved)
-  // TODO: don't show results that exactly match the input
-  // TODO: need a better way to search recent queries
-  // TODO: if there are a ton of recent/saved searches, this sorting might get expensive. Maybe sort them in the Redux store if
-  //       we aren't going to do different sorts for query vs. non-query
   const recentSearchesForQuery = query
-    ? recentSearches.filter((s) => s.query.includes(query))
+    ? recentSearches.filter((s) => s.query !== query && s.query.includes(query))
     : Array.from(recentSearches);
   return recentSearchesForQuery.sort(recentSearchComparator).map((s) => {
     const ast = parseQuery(s.query);
@@ -226,7 +219,12 @@ const lastWordRegex = /(\b[\w:"'<=>]{3,}|#\w*)$/;
 const closingQuoteRegex = /\w["']$/;
 
 /**
- * Find the position of the last "complete" filter segment of the query before the caretIndex
+ * Find the position of the last "complete" filter segment of the query before the caretIndex.
+ *
+ * For example, given the query (with the caret at |):
+ * name:foo bar| baz
+ * This should return { term: "bar", index: 9 }
+ *
  * @returns the start index and term of the last complete filter
  */
 export function findLastFilter(
@@ -236,25 +234,28 @@ export function findLastFilter(
   term: string;
   index: number;
 } | null {
+  // TODO: maybe include non-whitespace after the caret?
   const queryUpToCaret = query.slice(0, caretIndex);
   const ast = parseQuery(queryUpToCaret);
-  const trailingKeywordArgs: string[] = [];
-  let keepTraversing = true;
 
+  // Find all the "bare" keywords at the end of the query. For example if the query is:
+  // name:foo bar baz
+  // then the trailingKeywordStrings are 'bar baz'
+  const trailingKeywordArgs: string[] = [];
   traverseAST(
     ast,
-    (filter: FilterOp) => {
-      if (keepTraversing && filter.type === 'keyword' && !/\s+/.test(filter.args)) {
+    (filter) => {
+      if (filter.type === 'keyword' && !/\s+/.test(filter.args)) {
         trailingKeywordArgs.push(filter.args);
       } else {
-        keepTraversing = false;
+        return false;
       }
     },
     true // traverse in reverse
   );
+  const trailingKeywordStrings = trailingKeywordArgs.reverse().join(' ');
 
   // @TODO: This could be cleaner if the AST parser returned column locations; we wouldn't have to guess at indexes by doing space normalization
-  const trailingKeywordStrings = trailingKeywordArgs.reverse().join(' ');
   const spaceNormalizedQuery = queryUpToCaret.trim().replace(/\s+/, ' ');
   const execResult = lastWordRegex.exec(queryUpToCaret);
 
