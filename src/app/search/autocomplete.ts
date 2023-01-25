@@ -260,37 +260,34 @@ function findLastFilter(
 } | null {
   // TODO: maybe include non-whitespace after the caret?
   const queryUpToCaret = query.slice(0, caretIndex);
+  // TODO: maybe just lex it?
   const ast = parseQuery(queryUpToCaret);
 
   // Find all the "bare" keywords at the end of the query. For example if the query is:
   // name:foo bar baz
   // then the trailingKeywordStrings are 'bar baz'
-  const trailingKeywordArgs: string[] = [];
+  let index = -1;
   traverseAST(
     ast,
     (filter) => {
       if (filter.type === 'keyword' && !/\s+/.test(filter.args)) {
-        trailingKeywordArgs.push(filter.args);
+        index = filter.startIndex;
       } else {
         return false;
       }
     },
     true // traverse in reverse
   );
-  const trailingKeywordStrings = trailingKeywordArgs.reverse().join(' ');
-
-  // @TODO: This could be cleaner if the AST parser returned column locations; we wouldn't have to guess at indexes by doing space normalization
-  const spaceNormalizedQuery = queryUpToCaret.trim().replace(/\s+/, ' ');
-  const execResult = lastWordRegex.exec(queryUpToCaret);
-
-  if (trailingKeywordStrings && spaceNormalizedQuery.endsWith(trailingKeywordStrings)) {
-    const index = spaceNormalizedQuery.length - trailingKeywordStrings.length;
-    const term = spaceNormalizedQuery.substring(index);
-    return { term, index };
-  } else if (execResult) {
-    const [__, term] = execResult;
-    const { index } = execResult;
-    return { term, index };
+  if (index >= 0) {
+    const term = queryUpToCaret.substring(index);
+    return { index, term };
+  } else {
+    const execResult = lastWordRegex.exec(queryUpToCaret);
+    if (execResult) {
+      const [__, term] = execResult;
+      const { index } = execResult;
+      return { term, index };
+    }
   }
   return null;
 }

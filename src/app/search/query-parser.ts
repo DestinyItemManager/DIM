@@ -20,11 +20,7 @@
 
 /* **** Parser **** */
 
-/**
- * A tree of the parsed query. Boolean/unary operators have children (operands) that
- * describe their relationship.
- */
-export type QueryAST = (AndOp | OrOp | NotOp | FilterOp | NoOp) & {
+interface QueryASTCommon {
   error?: Error;
   comment?: string;
 
@@ -33,28 +29,34 @@ export type QueryAST = (AndOp | OrOp | NotOp | FilterOp | NoOp) & {
 
   /** The length of the portion of the query string that this operator consists of, including its sub-expressions/operands. */
   length: number;
-};
+}
+
+/**
+ * A tree of the parsed query. Boolean/unary operators have children (operands) that
+ * describe their relationship.
+ */
+export type QueryAST = AndOp | OrOp | NotOp | FilterOp | NoOp;
 
 /** If ALL of of the operands are true, this resolves to true. There may be any number of operands. */
-export interface AndOp {
+export interface AndOp extends QueryASTCommon {
   op: 'and';
   operands: QueryAST[];
 }
 
 /** If any of the operands is true, this resolves to true. There may be any number of operands. */
-export interface OrOp {
+export interface OrOp extends QueryASTCommon {
   op: 'or';
   operands: QueryAST[];
 }
 
 /** An operator which negates the result of its only operand. */
-export interface NotOp {
+export interface NotOp extends QueryASTCommon {
   op: 'not';
   operand: QueryAST;
 }
 
 /** This represents one of our filter function definitions, such as is:, season:, etc. */
-export interface FilterOp {
+export interface FilterOp extends QueryASTCommon {
   op: 'filter';
   /**
    * The name of the filter function, without any trailing :. The only weird case is
@@ -68,7 +70,7 @@ export interface FilterOp {
 }
 
 /** This is mostly for error cases and empty string */
-export interface NoOp {
+export interface NoOp extends QueryASTCommon {
   op: 'noop';
 }
 
@@ -279,15 +281,7 @@ export function parseQuery(query: string): QueryAST {
   return ast;
 }
 
-function isSameOp<T extends 'and' | 'or'>(
-  binOp: T,
-  op: QueryAST
-): op is (AndOp | OrOp) & {
-  error?: Error | undefined;
-  comment?: string | undefined;
-  startIndex: number;
-  length: number;
-} {
+function isSameOp<T extends 'and' | 'or'>(binOp: T, op: QueryAST): op is AndOp | OrOp {
   return binOp === op.op;
 }
 
