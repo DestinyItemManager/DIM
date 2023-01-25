@@ -11,9 +11,9 @@ import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
 import ErrorPanel from './ErrorPanel';
 
 /**
@@ -29,6 +29,21 @@ export default function DefaultAccount() {
 
   const currentAccountMembershipId = useSelector(currentAccountMembershipIdSelector);
   const destinyVersion = useSelector(destinyVersionSelector);
+
+  const { search, pathname } = useLocation();
+
+  // Figure out where we'll go when we select a character
+  const resultPath = useMemo(() => {
+    // If we have a stored path from before we logged in (e.g. a loadout or armory link), send them back to that
+    const returnPath = localStorage.getItem('returnPath');
+    if (returnPath) {
+      localStorage.removeItem('returnPath');
+      return returnPath;
+    } else {
+      // Otherwise send them to wherever the current path says
+      return `${pathname}${search}`;
+    }
+  }, [pathname, search]);
 
   useEffect(() => {
     // If currentAccountMembershipId is set we'll redirect immediately, we don't need to load accounts
@@ -49,7 +64,9 @@ export default function DefaultAccount() {
   // all the accounts.
   if (currentAccountMembershipId) {
     return (
-      <Navigate to={accountRoute({ membershipId: currentAccountMembershipId, destinyVersion })} />
+      <Navigate
+        to={accountRoute({ membershipId: currentAccountMembershipId, destinyVersion }) + resultPath}
+      />
     );
   }
 
@@ -58,7 +75,7 @@ export default function DefaultAccount() {
   if (accounts.length > 0) {
     return (
       <div className="dim-page">
-        <SelectAccount />
+        <SelectAccount path={resultPath} />
       </div>
     );
   }
