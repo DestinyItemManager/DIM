@@ -9,6 +9,7 @@ import { isMissingItemsSelector } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { plainString } from 'app/search/search-filters/freeform';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
@@ -90,8 +91,22 @@ export function useLoadoutFilterPills(
       ),
     [savedLoadouts]
   );
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const loadoutsFromPreviousSeasons = useMemo(() => {
+    const currentSeasonStart = new Date(D2SeasonInfo[D2CalculatedSeason].releaseDate).getTime();
+    return savedLoadouts.filter(
+      (loadout) => loadout.lastUpdatedAt !== undefined && loadout.lastUpdatedAt < currentSeasonStart
+    );
+  }, [savedLoadouts]);
 
   if (includeWarningPills) {
+    if (loadoutsFromPreviousSeasons.length) {
+      filterOptions.push({
+        key: 'previous',
+        content: <>{t('Loadouts.PreviousSeasons')}</>,
+      });
+    }
+
     if (loadoutsWithMissingItems.length) {
       filterOptions.push({
         key: 'missingitems',
@@ -124,6 +139,8 @@ export function useLoadoutFilterPills(
                 return loadoutsWithDeprecatedMods;
               case 'missingitems':
                 return loadoutsWithMissingItems;
+              case 'previous':
+                return loadoutsFromPreviousSeasons;
               default:
                 return loadoutsByHashtag[f.key] ?? [];
             }
