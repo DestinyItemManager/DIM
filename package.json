@@ -242,7 +242,7 @@
     "reselect": "^4.0.0",
     "safari-14-idb-fix": "^3.0.0",
     "typesafe-actions": "^5.1.0",
-    "ua-parser-js": "^1.0.2",
+    "ua-parser-js": "^1.0.33",
     "use-subscription": "^1.5.1",
     "uuid": "^9.0.0",
     "valid-url": "^1.0.9",
