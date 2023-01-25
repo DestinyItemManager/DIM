@@ -1,4 +1,16 @@
-import { canonicalizeQuery, lexer, parseQuery, quoteFilterString, Token } from './query-parser';
+import {
+  AndOp,
+  canonicalizeQuery,
+  FilterOp,
+  lexer,
+  NoOp,
+  NotOp,
+  OrOp,
+  parseQuery,
+  QueryAST,
+  quoteFilterString,
+  Token,
+} from './query-parser';
 
 // To update the snapshots, run:
 // npx jest --updateSnapshot src/app/search/query-parser.test.ts
@@ -134,7 +146,18 @@ test.each(cases)('parse |%s|', (query) => {
   for (const t of lexer(query)) {
     tokens.push(t);
   }
-  expect(tokens).toMatchSnapshot('lexer');
+  expect(
+    tokens.map((t) => {
+      switch (t.type) {
+        case 'comment':
+          return [t.type, t.content];
+        case 'filter':
+          return [t.type, t.keyword, t.args];
+        default:
+          return [t.type];
+      }
+    })
+  ).toMatchSnapshot('lexer');
 
   // Test the full parse tree
   const ast = parseQuery(query);
@@ -144,8 +167,28 @@ test.each(cases)('parse |%s|', (query) => {
 test.each(equivalentSearches)('|%s| is equivalent to |%s|', (firstQuery, secondQuery) => {
   const firstAST = parseQuery(firstQuery);
   const secondAST = parseQuery(secondQuery);
-  expect(firstAST).toEqual(secondAST);
+  expect(stripIndexes(firstAST)).toEqual(stripIndexes(secondAST));
 });
+
+/** Remove the startIndex and length from the AST to make them comparable */
+function stripIndexes(ast: QueryAST): AndOp | OrOp | NotOp | FilterOp | NoOp {
+  delete (ast as any).startIndex;
+  delete (ast as any).length;
+
+  switch (ast.op) {
+    case 'and':
+    case 'or':
+      for (const op of ast.operands) {
+        stripIndexes(op);
+      }
+      break;
+    case 'not':
+      stripIndexes(ast.operand);
+      break;
+  }
+
+  return ast;
+}
 
 test.each(canonicalize)('|%s| is canonically |%s|', (query, canonical) => {
   const canonicalized = canonicalizeQuery(parseQuery(query));
