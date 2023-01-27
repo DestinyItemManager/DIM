@@ -12,7 +12,6 @@ import { useSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './DesktopItemActions.m.scss';
 import { ItemActionsModel } from './item-popup-actions';
@@ -38,13 +37,13 @@ export default function DesktopItemActions({
   useHotkey('p', t('Hotkey.Pull'), () => {
     // TODO: if movable
     const currentChar = getCurrentStore(stores)!;
-    dispatch(moveItemTo(item, currentChar, false, item.maxStackSize));
+    dispatch(moveItemTo(item, currentChar, false, item.amount));
     hideItemPopup();
   });
   useHotkey('v', t('Hotkey.Vault'), () => {
     // TODO: if vaultable
     const vault = getVault(stores)!;
-    dispatch(moveItemTo(item, vault, false, item.maxStackSize));
+    dispatch(moveItemTo(item, vault, false, item.amount));
     hideItemPopup();
   });
   useHotkey('c', t('Compare.ButtonHelp'), () => {
