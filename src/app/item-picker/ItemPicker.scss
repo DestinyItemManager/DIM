@@ -3,8 +3,14 @@
 // These classes are used in item-picker, mod-picker, exotic-picker and search results
 
 .item-picker {
-  .sheet-contents > div {
+  .sheet-contents {
     padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .sub-bucket {
+    padding: 0;
   }
   .item {
     cursor: pointer;

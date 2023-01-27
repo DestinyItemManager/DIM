@@ -1,15 +1,12 @@
 @import '../../variables';
 
 .plug {
-  > * {
-    margin-right: 8px;
-  }
-
   border: 1px solid #666;
   cursor: pointer;
   padding: 8px;
   display: flex;
   flex-direction: row;
+  gap: 8px;
   height: 100%;
   box-sizing: border-box;
   &:hover {
