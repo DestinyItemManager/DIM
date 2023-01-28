@@ -52,8 +52,8 @@ if ($featureFlags.sentry) {
     attachStacktrace: true,
     integrations: [
       new TracingIntegrations.BrowserTracing({
-        // We add tracing to bungie.net client manually - it can't handle the automatic sentry trace header
-        tracingOrigins: ['localhost', 'api.destinyitemmanager.com', /^\//],
+        // Only send trace headers to our own server
+        tracePropagationTargets: ['api.destinyitemmanager.com'],
         beforeNavigate: (context) => ({
           ...context,
           // We could use the React-Router integration but it's annoying

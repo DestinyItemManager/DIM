@@ -15,7 +15,6 @@ import {
   createHttpClient,
   HttpStatusError,
   responsivelyThrottleHttpClient,
-  sentryTraceHttpClient,
 } from './http-client';
 import { rateLimitedFetch } from './rate-limiter';
 
@@ -52,16 +51,14 @@ const logThrottle = (timesThrottled: number, waitTime: number, url: string) =>
 /** used for most Bungie API requests */
 export const authenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
-    sentryTraceHttpClient(
-      createHttpClient(
-        createFetchWithNonStoppingTimeout(
-          rateLimitedFetch(fetchWithBungieOAuth),
-          TIMEOUT,
-          notifyTimeout
-        ),
-        API_KEY,
-        $featureFlags.apiCookies
-      )
+    createHttpClient(
+      createFetchWithNonStoppingTimeout(
+        rateLimitedFetch(fetchWithBungieOAuth),
+        TIMEOUT,
+        notifyTimeout
+      ),
+      API_KEY,
+      $featureFlags.apiCookies
     ),
     logThrottle
   )
@@ -70,12 +67,10 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
 /** used to get manifest and global alerts */
 export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
-    sentryTraceHttpClient(
-      createHttpClient(
-        createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout),
-        API_KEY,
-        false
-      )
+    createHttpClient(
+      createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout),
+      API_KEY,
+      false
     ),
     logThrottle
   )
