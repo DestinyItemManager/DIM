@@ -13,7 +13,7 @@ import { Portal } from 'app/utils/temp-container';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
-import Mod from '../loadout-ui/Mod';
+import PlugDef from '../loadout-ui/PlugDef';
 import Sockets from '../loadout-ui/Sockets';
 import { fitMostMods } from '../mod-assignment-utils';
 import { createGetModRenderKey } from '../mod-utils';
@@ -57,8 +57,8 @@ export default function ModAssignmentDrawer({
 }: {
   loadout: Loadout;
   storeId: string;
-  onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
-  onClose(): void;
+  onUpdateMods?: (newMods: PluggableInventoryItemDefinition[]) => void;
+  onClose: () => void;
 }) {
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 
@@ -153,7 +153,7 @@ export default function ModAssignmentDrawer({
               <h3>{t('Loadouts.UnassignedMods')}</h3>
               <div className={styles.unassigned}>
                 {unassignedMods.map((mod) => (
-                  <Mod key={getModRenderKey(mod)} plugDef={mod} />
+                  <PlugDef key={getModRenderKey(mod)} plug={mod} />
                 ))}
               </div>
             </>

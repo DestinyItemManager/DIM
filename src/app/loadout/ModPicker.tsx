@@ -6,13 +6,14 @@ import {
   profileResponseSelector,
 } from 'app/inventory/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { filterDimPlugsUnlockedOnCharacterOrProfile } from 'app/records/plugset-helpers';
+import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import {
   armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
   MAX_ARMOR_ENERGY_CAPACITY,
 } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
+import { artifactModsSelector } from 'app/strip-sockets/strip-sockets';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
@@ -21,7 +22,7 @@ import { uniqBy } from 'app/utils/util';
 import { DestinyClass, DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { isLoadoutBuilderItem } from './item-utils';
@@ -30,7 +31,12 @@ import {
   knownModPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
 } from './known-values';
-import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
+import {
+  isInsertableArmor2Mod,
+  sortModGroups,
+  sortMods,
+  unlockedByAllModsBeingUnlocked,
+} from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
 import { PlugSet } from './plug-drawer/types';
 
@@ -53,9 +59,9 @@ interface ProvidedProps {
   /** Only show mods that are in these categories. No restriction if this is not provided. */
   plugCategoryHashWhitelist?: number[];
   /** Called with the complete list of lockedMods when the user accepts the new mod selections. */
-  onAccept(newLockedMods: PluggableInventoryItemDefinition[]): void;
+  onAccept: (newLockedMods: PluggableInventoryItemDefinition[]) => void;
   /** Called when the user accepts the new modset of closes the sheet. */
-  onClose(): void;
+  onClose: () => void;
 }
 
 interface StoreProps {
@@ -73,6 +79,7 @@ function mapStateToProps() {
     profileResponseSelector,
     allItemsSelector,
     d2ManifestSelector,
+    artifactModsSelector,
     (_state: RootState, props: ProvidedProps) => props.classType,
     (_state: RootState, props: ProvidedProps) => props.owner,
     (_state: RootState, props: ProvidedProps) => props.plugCategoryHashWhitelist,
@@ -82,6 +89,7 @@ function mapStateToProps() {
       profileResponse,
       allItems,
       defs,
+      artifactMods,
       classType,
       owner,
       plugCategoryHashWhitelist,
@@ -130,11 +138,17 @@ function mapStateToProps() {
         // and the maximum number of those sockets that can appear on a single item.
         for (const [hashAsString, sockets] of Object.entries(socketsGroupedByPlugSetHash)) {
           const plugSetHash = parseInt(hashAsString, 10);
-          const dimPlugs = filterDimPlugsUnlockedOnCharacterOrProfile(
+          const unlockedPlugs = unlockedItemsForCharacterOrProfilePlugSet(
             profileResponse,
-            sockets[0].plugSet!,
+            sockets[0].plugSet!.hash,
             // TODO: For vaulted items, union all the unlocks and then be smart about picking the right store
             owner ?? currentStore!.id
+          );
+
+          const dimPlugs = sockets[0].plugSet!.plugs.filter(
+            (p) =>
+              unlockedPlugs.has(p.plugDef.hash) ||
+              unlockedByAllModsBeingUnlocked(p.plugDef, artifactMods)
           );
 
           // Filter down to plugs that match the plugCategoryHashWhitelist
@@ -285,7 +299,7 @@ function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Pr
   );
 }
 
-export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(ModPicker);
+export default connect<StoreProps, {}, ProvidedProps, RootState>(mapStateToProps)(ModPicker);
 
 /**
  * Determine whether an armor mod can still be selected, given that the `selected` mods have already been selected.

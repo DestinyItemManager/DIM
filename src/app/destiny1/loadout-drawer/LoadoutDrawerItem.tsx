@@ -11,8 +11,8 @@ export default function LoadoutDrawerItem({
   remove,
 }: {
   resolvedLoadoutItem: ResolvedLoadoutItem;
-  equip(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
-  remove(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
+  equip: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
+  remove: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
 }) {
   const onClose = (e: React.MouseEvent) => {
     e.stopPropagation();

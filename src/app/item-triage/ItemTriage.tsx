@@ -3,6 +3,7 @@ import { collapsedSelector, settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import { SetFilterButton } from 'app/dim-ui/SetFilterButton';
 import filterButtonStyles from 'app/dim-ui/SetFilterButton.m.scss';
@@ -100,7 +101,7 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
       extra={wishlistItem ? <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> : '–'}
       disabled={disabled}
     >
-      {wishlistItem?.notes?.length && (
+      {wishlistItem && Boolean(wishlistItem?.notes?.length) && (
         <ExpandableTextBlock
           linesWhenClosed={3}
           className={popupStyles.description}
@@ -141,7 +142,7 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
           return (
             <li className={styles.loadoutRow} key={l.loadout.id}>
               <ClassIcon classType={l.loadout.classType} className={styles.inlineIcon} />
-              <span className={styles.loadoutName}>{l.loadout.name}</span>
+              <ColorDestinySymbols text={l.loadout.name} className={styles.loadoutName} />
               <span className={styles.controls}>
                 <a
                   onClick={edit}

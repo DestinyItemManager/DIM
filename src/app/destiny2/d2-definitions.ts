@@ -97,8 +97,8 @@ export interface DefinitionTable<T> {
    * and sentry can gather info about the source of the invalid hash.
    * `requestor` ideally a string/number, or a definition including a "hash" key
    */
-  get(hash: number, requestor?: { hash: number } | string | number): T;
-  getAll(): { [hash: number]: T };
+  readonly get: (hash: number, requestor?: { hash: number } | string | number) => T;
+  readonly getAll: () => { [hash: number]: T };
 }
 
 export interface D2ManifestDefinitions extends ManifestDefinitions {
@@ -173,14 +173,15 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
     isDestiny1: () => false,
     isDestiny2: () => true,
   };
-  lazyTables.forEach((tableShort) => {
+  for (const tableShort of lazyTables) {
     const table = `Destiny${tableShort}Definition` as keyof AllDestinyManifestComponents;
+    const dbTable = db[table];
+    if (!dbTable) {
+      throw new Error(`Table ${table} does not exist in the manifest`);
+    }
+
     defs[tableShort] = {
       get(id: number, requestor?: { hash: number } | string | number) {
-        const dbTable = db[table];
-        if (!dbTable) {
-          throw new Error(`Table ${table} does not exist in the manifest`);
-        }
         const dbEntry = dbTable[id];
         if (!dbEntry && tableShort !== 'Record') {
           // there are valid negative hashes that we have added ourselves via enhanceDBWithFakeEntries,
@@ -199,15 +200,15 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
         return dbEntry;
       },
       getAll() {
-        return db[table];
+        return dbTable;
       },
     };
-  });
+  }
   // Resources that need to be fully loaded (because they're iterated over)
-  eagerTables.forEach((tableShort) => {
+  for (const tableShort of eagerTables) {
     const table = `Destiny${tableShort}Definition`;
     defs[tableShort] = db[table];
-  });
+  }
 
   return defs as D2ManifestDefinitions;
 }

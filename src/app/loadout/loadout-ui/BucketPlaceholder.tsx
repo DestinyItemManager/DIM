@@ -25,7 +25,7 @@ export function BucketPlaceholder({
       onClick={onClick}
       type={onClick ? 'button' : undefined}
     >
-      {bucketHashToItemCategoryHash[bucketHash] && (
+      {bucketHash in bucketHashToItemCategoryHash && (
         <img
           className={styles.placeholder}
           src={itemCategoryIcons[bucketHashToItemCategoryHash[bucketHash]]}

@@ -199,6 +199,7 @@
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "Cosmetic": "Shows items that are flair or cosmetic.",
     "Craftable": "Shows items that are craftable.",
+    "CraftedDupe": "",
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
@@ -311,6 +312,16 @@
     "Confirm": "Confirm?",
     "UserGuideLink": "User guide"
   },
+  "Glyphs": {
+    "Gilded": "Gilded",
+    "Misadventure": "Misadventure",
+    "Missing": "Missing",
+    "OpenSymbolsPicker": "Open Symbols Picker",
+    "Quickfall": "Quickfall",
+    "ScorchCannon": "Scorch Cannon",
+    "SearchSymbols": "Search Symbols...",
+    "Smoke": "Smoke"
+  },
   "Header": {
     "About": "About DIM",
     "AutoRefresh": "DIM will automatically reload as long as you are still playing.",
@@ -337,6 +348,7 @@
     "LaunchDIMAlone": "Separate Window",
     "MaterialCounts": "Material Counts",
     "Menu": "Menu",
+    "ProfileAge": "Destiny servers last sent updated data {{age}} ago.\nRefreshing from DIM may get newer data, but Bungie.net may also repeat cached information.",
     "Refresh": "Refresh Destiny Data [R]",
     "ReloadApp": "Reload App",
     "ReportBug": "Report a Bug",
@@ -601,6 +613,7 @@
     "CurrentlyEquipped": "Currently Equipped",
     "Deequip": "De-equipping items from other characters",
     "Delete": "Delete",
+    "DeprecatedMods": "Deprecated Mods",
     "Edit": "Edit Loadout",
     "EditBrief": "Edit",
     "EquipItems": "Equipping items",
@@ -617,6 +630,7 @@
     "GatherEngrams": "Gather Engrams",
     "GatherEngramsExceptExotics": "Exotics",
     "Generated": "T{{tier}} Loadout",
+    "HashtagTip": "Tip: Use #hashtags in your loadout names or notes and they'll show up here.",
     "Import": {
       "BadURL": "Not a valid loadout share URL.",
       "Error": "Error getting loadout:",
@@ -642,6 +656,7 @@
     "MaximizeLight": "Max Light",
     "MaximizePower": "Max Power",
     "MaximizeStat": "Maximize Stat",
+    "MissingItems": "Missing Items",
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
     "ModErrorSummary": "1 mod error:",
     "ModErrorSummary_plural": "{{count}} mod errors:",
@@ -651,9 +666,9 @@
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
     "NoSpace": "You're out of space in the vault and any other characters.",
-    "NoneMatch": "None of your loadouts' names or notes match '{{query}}'.",
-    "NotStarted": "Waiting for other actions",
-    "NotesPlaceholder": "Write some notes about this loadout",
+    "NoneMatch": "None of your loadouts matched the filters.",
+    "NotStarted": "Waiting for other actions to complete, or an inventory refresh to finish loading",
+    "NotesPlaceholder": "Write some notes about this loadout, or use #hashtags to categorize it",
     "NotificationTitle": "Loadout: {{name}}",
     "OnWrongCharacterAdvice": "Click here to find this character's highest Power items.",
     "OnWrongCharacterWarning": "This character's most powerful armor is on another character. To count toward the Power of drops, powerful, and pinnacle rewards, armor must be on this character or in the Vault.",
@@ -764,6 +779,7 @@
     },
     "Infuse": "Infuse",
     "LockUnlock": {
+      "AutoLock": "Lock state is synced to this item's tag",
       "Lock": "Lock {{itemType}}",
       "Locked": "Locked",
       "Unlock": "Unlock {{itemType}}",
@@ -794,6 +810,7 @@
       "Untracked": "Untracked"
     },
     "TriageTab": "Triage",
+    "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
     "Vault": "Vault",
     "WeaponLevel": "Weapon Level {{level}}"
   },
@@ -817,6 +834,7 @@
       "Archetype": "Archetype",
       "BaseStats": "Base Stats",
       "Breaker": "Breaker",
+      "Crafted": "Shaped Date",
       "CustomTotal": "Custom Total",
       "Damage": "Damage",
       "Element": "Element",
@@ -916,6 +934,8 @@
     "UsageCount": "# Used"
   },
   "Settings": {
+    "AutoLockTagged": "Sync item lock state with tag",
+    "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. Crafted items will remain unlocked to allow reshaping. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
     "BadgePostmaster": "Show the number of postmaster items for the current character on app icon",
     "BadgePostmasterExplanation": "For this to work you must install DIM as an app and your OS must support displaying badges",
     "BothDescriptions": "Both Descriptions",
@@ -1057,6 +1077,8 @@
     "DimSyncNotEnabled": "DIM Sync is not enabled, so your settings, tags, loadouts, and searches are only stored locally and will be lost if you clear your browser storage. Enable DIM Sync in Settings to back up your data automatically, or regularly back up your data manually.",
     "EnableDimApi": "Enable DIM Sync (recommended)",
     "Export": "Download Data Backup",
+    "ExportError": "Failed to download backup from DIM Sync",
+    "ExportErrorBody": "DIM Sync may be down, or you are having trouble with your connection. We will download a copy of your locally saved data instead.",
     "Import": "Import Data Backup",
     "ImportConfirmDimApi": "Are you sure you want to overwrite your current tags, loadouts, and settings with this version? It will completely replace what you had.",
     "ImportExport": "Backup & Import",
@@ -1085,9 +1107,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "Picked number is not the valid one!",
+      "No": "No",
       "Reset": "DE-AUTHORIZE",
-      "Title": "Pick this number on your Stream Deck"
+      "Title": "Do you see the same code on your Stream Deck ?",
+      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
+      "Yes": "Yes"
     },
     "Connected": "Connected",
     "Enable": "Stream Deck Plugin",
@@ -1195,9 +1219,7 @@
       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
       "LearnMore": "Learn more about accounts and login",
       "NewAccount": "Log in with a different Bungie.net account",
-      "Permission": "We need your permission...",
-      "UpgradeExplanation": "Home screen apps on your version of iOS don't allow you to log in to DIM. Please upgrade to iOS 12.2 or newer and re-add DIM to your home screen.",
-      "UpgradeiOS": "Please upgrade iOS"
+      "Permission": "We need your permission..."
     },
     "Support": {
       "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",

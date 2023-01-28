@@ -18,7 +18,10 @@ export interface Settings extends DimApiSettings {
    * Cutoff point; the instance ID of the newest item that isn't shown in
    * the item feed anymore after the user presses the "clear" button.
    */
-  readonly itemFeedWatermark: string | undefined;
+  readonly itemFeedWatermark: string;
+
+  /** Automatically sync lock status with tag */
+  readonly autoLockTagged: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -27,5 +30,6 @@ export const initialSettingsState: Settings = {
   itemSortReversals: [],
   descriptionsToDisplay: 'both',
   compareWeaponMasterwork: false,
-  itemFeedWatermark: undefined,
+  itemFeedWatermark: '0',
+  autoLockTagged: false,
 };

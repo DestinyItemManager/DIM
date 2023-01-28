@@ -8,6 +8,7 @@ import {
   showMaterialCount,
 } from 'app/material-counts/MaterialCountsWrappers';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { emptyObject } from 'app/utils/empty';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import vaultIcon from 'destiny-icons/armor_types/helmet.svg';
@@ -48,7 +49,15 @@ interface VaultCounts {
  * buckets are, for display. We could calculate this straight from the profile, but we want to be able to recompute it
  * when items move without reloading the profile.
  */
-function computeVaultCounts(activeStore: DimStore, vault: DimStore, buckets: InventoryBuckets) {
+function computeVaultCounts(
+  activeStore: DimStore | undefined,
+  vault: DimStore | undefined,
+  buckets: InventoryBuckets | undefined
+) {
+  if (!activeStore || !vault || !buckets) {
+    return emptyObject<VaultCounts>();
+  }
+
   const vaultCounts: VaultCounts = {};
 
   for (const bucket of Object.values(buckets.byHash)) {

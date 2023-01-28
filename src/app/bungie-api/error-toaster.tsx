@@ -17,8 +17,8 @@ export function bungieErrorToaster(e: Error): NotifyInput {
         {e ? e.message : t('BungieService.Difficulties')}{' '}
         <div>
           {t('BungieService.Twitter')}{' '}
-          <ExternalLink href="http://twitter.com/ThisIsDIM">Twitter</ExternalLink>{' '}
-          <ExternalLink href="http://twitter.com/ThisIsDIM">
+          <ExternalLink href="http://twitter.com/BungieHelp">Twitter</ExternalLink>{' '}
+          <ExternalLink href="http://twitter.com/BungieHelp">
             <span style={{ fontSize: '1.5em', verticalAlign: 'middle' }}>
               <AppIcon icon={twitterIcon} />
             </span>

@@ -23,7 +23,7 @@
 .twitterLinks {
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-wrap: wrap;
-  @include horizontal-space-children(8px);
+  gap: 8px;
   gap: 8px 0;
 
   :global(.fa-twitter) {
@@ -43,7 +43,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  @include flex-gap(16px);
+  gap: 16px;
 
   @include phone-portrait {
     flex-direction: column;

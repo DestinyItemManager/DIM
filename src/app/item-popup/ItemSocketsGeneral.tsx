@@ -1,5 +1,5 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
@@ -27,7 +27,7 @@ interface Props {
   item: DimItem;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
-  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }
 
 export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Props) {

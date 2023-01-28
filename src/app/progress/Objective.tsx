@@ -1,5 +1,5 @@
 import { D1ObjectiveDefinition, D1ObjectiveProgress } from 'app/destiny1/d1-manifest-types';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import {
   getValueStyle,

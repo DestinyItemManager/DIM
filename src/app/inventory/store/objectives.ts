@@ -2,8 +2,6 @@ import { D1ObjectiveDefinition } from 'app/destiny1/d1-manifest-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   DestinyInventoryItemDefinition,
-  DestinyItemComponent,
-  DestinyItemObjectivesComponent,
   DestinyObjectiveDefinition,
   DestinyObjectiveProgress,
   DestinyUnlockValueUIStyle,
@@ -20,23 +18,15 @@ import trialsHashes from 'data/d2/d2-trials-objectives.json';
  * Build regular item-level objectives.
  */
 export function buildObjectives(
-  item: DestinyItemComponent,
   itemDef: DestinyInventoryItemDefinition,
-  objectivesMap: { [key: string]: DestinyItemObjectivesComponent } | undefined,
   defs: D2ManifestDefinitions,
-  uninstancedItemObjectives?: {
-    [key: number]: DestinyObjectiveProgress[];
-  }
-): DestinyObjectiveProgress[] | null {
-  const objectives =
-    item.itemInstanceId && objectivesMap?.[item.itemInstanceId]
-      ? objectivesMap[item.itemInstanceId].objectives
-      : uninstancedItemObjectives
-      ? uninstancedItemObjectives[item.itemHash]
-      : [];
+  itemInstancedObjectives: DestinyObjectiveProgress[] | undefined,
+  itemUninstancedObjectives: DestinyObjectiveProgress[] | undefined
+): DestinyObjectiveProgress[] | undefined {
+  const objectives = itemInstancedObjectives ?? itemUninstancedObjectives ?? [];
 
   if (!objectives?.length) {
-    // Hmm, it should have objectives
+    // fill in objectives from its definition. not sure why if there's no available progression data? what case does this catch?
     if (itemDef.objectives) {
       return itemDef.objectives.objectiveHashes.map((o) => ({
         objectiveHash: o,
@@ -46,7 +36,7 @@ export function buildObjectives(
       }));
     }
 
-    return null;
+    return;
   }
 
   // TODO: we could make a tooltip with the location + activities for each objective (and maybe offer a ghost?)
@@ -88,7 +78,7 @@ export function isTrialsPassage(itemHash: number) {
 /**
  * Checks if the trials passage is flawless
  */
-export function isFlawlessPassage(objectives: DestinyObjectiveProgress[] | null) {
+export function isFlawlessPassage(objectives: DestinyObjectiveProgress[] | undefined) {
   return objectives?.some((obj) => isFlawlessObjective(obj.objectiveHash) && obj.complete);
 }
 

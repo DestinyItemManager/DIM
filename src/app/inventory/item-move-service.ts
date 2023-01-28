@@ -6,7 +6,7 @@ import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { errorLog, infoLog, warnLog } from 'app/utils/log';
+import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
@@ -159,9 +159,14 @@ function updateItemModel(
   amount: number = item.amount
 ): ThunkAction<DimItem, RootState, undefined, AnyAction> {
   return (dispatch, getState) => {
-    dispatch(itemMoved({ item, source, target, equip, amount }));
-    const stores = storesSelector(getState());
-    return getItemAcrossStores(stores, item) || item;
+    const stopTimer = timer('itemMovedUpdate');
+    try {
+      dispatch(itemMoved({ item, source, target, equip, amount }));
+      const stores = storesSelector(getState());
+      return getItemAcrossStores(stores, item) || item;
+    } finally {
+      stopTimer();
+    }
   };
 }
 
@@ -568,7 +573,7 @@ interface MoveContext {
   /** Bucket hash */
   originalItemType: number;
   excludes: readonly Exclusion[];
-  spaceLeft(s: DimStore, i: DimItem): number;
+  spaceLeft: (s: DimStore, i: DimItem) => number;
 }
 
 /**
@@ -846,14 +851,14 @@ function ensureCanMoveToStore(
 
     // How many items need to be moved away from each store (in amount, not stacks)
     const movesNeeded: { [storeId: string]: number } = {};
-    stores.forEach((s) => {
+    for (const s of stores) {
       if (storeReservations[s.id]) {
         movesNeeded[s.id] = Math.max(
           0,
           storeReservations[s.id] - spaceLeftWithReservations(s, item)
         );
       }
-    });
+    }
 
     if (Object.values(movesNeeded).every((m) => m === 0)) {
       // If there are no moves needed, we're clear to go
@@ -966,7 +971,7 @@ function canEquip(item: DimItem, store: DimStore): void {
  * in an attempt to make a move possible.
  *
  * This is functionally just ensureCanMoveToStore, with an
- * additional accomodation for equips and the one-exotic rule.
+ * additional accommodation for equips and the one-exotic rule.
  */
 function ensureValidTransfer(
   equip: boolean,

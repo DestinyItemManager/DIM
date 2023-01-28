@@ -20,7 +20,7 @@ export interface LockedExoticWithPlugs {
 interface Props {
   exotic: LockedExoticWithPlugs;
   selected: boolean;
-  onSelected(): void;
+  onSelected: () => void;
 }
 
 /**

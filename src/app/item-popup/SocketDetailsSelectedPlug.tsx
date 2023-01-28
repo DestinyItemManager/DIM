@@ -95,9 +95,9 @@ export default function SocketDetailsSelectedPlug({
   currentPlug: DimPlug | null;
   equippable: boolean;
   allowInsertPlug: boolean;
-  closeMenu(): void;
+  closeMenu: () => void;
   /** If this is set, instead of offering to slot the mod, we just notify above */
-  onPlugSelected?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  onPlugSelected?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
@@ -108,8 +108,9 @@ export default function SocketDetailsSelectedPlug({
       defs.MaterialRequirementSet.get(plug.plug.insertionMaterialRequirementHash)) ||
     undefined;
 
-  const sourceString =
-    plug.collectibleHash && defs.Collectible.get(plug.collectibleHash)?.sourceString;
+  const sourceString = plug.collectibleHash
+    ? defs.Collectible.get(plug.collectibleHash)?.sourceString
+    : undefined;
 
   const stats = _.compact(
     plug.investmentStats.map((stat) => {

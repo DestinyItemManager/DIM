@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  @include vertical-space-children(var(--item-margin));
+  gap: var(--item-margin);
 
   :global(.stat-row) {
     justify-content: space-between;
@@ -23,8 +23,10 @@
 }
 
 .itemBucket {
+  display: flex;
+  flex-direction: column;
   width: var(--item-size);
-  @include vertical-space-children(var(--item-margin));
+  gap: var(--item-margin);
 }
 
 .items {
@@ -51,14 +53,6 @@
   }
 }
 
-.showFashion {
-  .equipped {
-    :global(.item) {
-      height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
-    }
-  }
-}
-
 .categoryWeapons {
   width: calc(3 * var(--item-size) + 2 * var(--item-margin));
 }
@@ -71,6 +65,15 @@
 
 .missingItem {
   opacity: 0.3;
+}
+
+.categoryWeapons,
+.categoryArmor {
+  .equipped {
+    :global(.item-drag-container) {
+      height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
+    }
+  }
 }
 
 .placeholder {

@@ -1,4 +1,3 @@
-import React from 'react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from '../inventory/DraggableInventoryItem';
 import { DimItem } from '../inventory/item-types';
@@ -12,7 +11,7 @@ export default function LoadoutBuilderItem({
   onShiftClick,
 }: {
   item: DimItem;
-  onShiftClick(): void;
+  onShiftClick: () => void;
 }) {
   return (
     <DraggableInventoryItem item={item}>

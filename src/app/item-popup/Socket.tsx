@@ -1,8 +1,6 @@
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
-import { compareBy } from 'app/utils/comparators';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
-import React from 'react';
 import Plug from './Plug';
 
 /**
@@ -17,21 +15,11 @@ export default function Socket({
   item: DimItem;
   socket: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
-  onClick?(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
+  onClick?: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
 }) {
   const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
   if (!socket.plugOptions.length) {
     return null;
-  }
-  let plugOptions = socket.plugOptions;
-
-  // if this is a crafted item's plugset, sort plugs by their required level.
-  // TO-DO: the order is correct in the original plugset def,
-  // we should address whatever is changing plug order in DIM
-  if (socket.craftingData) {
-    plugOptions = [...plugOptions].sort(
-      compareBy((p) => socket.craftingData![p.plugDef.hash]?.requiredLevel ?? 0)
-    );
   }
 
   return (
@@ -40,7 +28,7 @@ export default function Socket({
         hasMenu,
       })}
     >
-      {plugOptions.map((plug) => (
+      {socket.plugOptions.map((plug) => (
         <Plug
           key={plug.plugDef.hash}
           plug={plug}

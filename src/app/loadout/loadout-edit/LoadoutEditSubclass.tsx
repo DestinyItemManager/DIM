@@ -24,8 +24,8 @@ export default function LoadoutEditSubclass({
   defs: D2ManifestDefinitions;
   subclass?: ResolvedLoadoutItem;
   power: number;
-  onRemove(): void;
-  onPick(): void;
+  onRemove: () => void;
+  onPick: () => void;
 }) {
   const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);

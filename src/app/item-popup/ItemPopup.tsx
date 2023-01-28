@@ -8,7 +8,7 @@ import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import clsx from 'clsx';
-import React, { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import DesktopItemActions, { menuClassName } from './DesktopItemActions';
 import { ItemPopupExtraInfo } from './item-popup';
@@ -47,7 +47,7 @@ export default function ItemPopup({
   zIndex?: number;
   /** Don't allow opening Armory from the header link */
   noLink?: boolean;
-  onClose(): void;
+  onClose: () => void;
 }) {
   const [tab, setTab] = useState(ItemPopupTab.Overview);
   const stores = useSelector(sortedStoresSelector);
@@ -78,7 +78,7 @@ export default function ItemPopup({
     />
   );
 
-  const header = <ItemPopupHeader item={item} key={`header${item.index}`} noLink={noLink} />;
+  const header = <ItemPopupHeader item={item} key={`header${item.hash}`} noLink={noLink} />;
 
   return isPhonePortrait ? (
     <Sheet

@@ -199,6 +199,7 @@
     "ContributePower": "Muestra los objetos que tienen poder y contribuyen a subir tu nivel de poder.",
     "Cosmetic": "Muestra objetos que son cosméticos o estilo.",
     "Craftable": "Muestra objetos que son fabricables.",
+    "CraftedDupe": "",
     "Curated": "Muestra objetos que tengan una tirada de curador.",
     "CurrentClass": "Muestra objetos que sean equipables en el personaje actualmente conectado.",
     "CustomStatLower": "Muestra armadura cuyas estadísticas son estríctamente más bajas que cualquier otra del mismo del mismo tipo de armadura, tomando cuenta sólo las estadísticas en es lista total de estadísticas personalizadas.",
@@ -310,6 +311,16 @@
     "Confirm": "¿Confirmar?",
     "UserGuideLink": "Guía de usuario"
   },
+  "Glyphs": {
+    "Gilded": "Dorado",
+    "Misadventure": "Accidente",
+    "Missing": "Desaparecido",
+    "OpenSymbolsPicker": "Abrir el Selector de Símbolos",
+    "Quickfall": "Caída en picado",
+    "ScorchCannon": "Cañón Calcinante",
+    "SearchSymbols": "Buscar Símbolos...",
+    "Smoke": "Humo"
+  },
   "Header": {
     "About": "Acerca de DIM",
     "AutoRefresh": "DIM se recargará automáticamente mientras todavía estés jugando.",
@@ -336,6 +347,7 @@
     "LaunchDIMAlone": "Separar Ventana",
     "MaterialCounts": "Recuento de Materiales",
     "Menu": "Menú",
+    "ProfileAge": "Los servidores de Destiny enviaron por última vez información hace {{age}}.\nActualizar desde DIM podría obtener nuevos datos, pero Bungie.net también podría repetir información en la caché.",
     "Refresh": "Actualizar Datos de Destiny [R]",
     "ReloadApp": "Recargar App",
     "ReportBug": "Informar de un Error",
@@ -600,6 +612,7 @@
     "CurrentlyEquipped": "Actualmente Equipado",
     "Deequip": "Desequipando objetos de otros personajes",
     "Delete": "Borrar",
+    "DeprecatedMods": "Modificadores Obsoletos",
     "Edit": "Editar equipación",
     "EditBrief": "Editar",
     "EquipItems": "Equipando objetos",
@@ -616,6 +629,7 @@
     "GatherEngrams": "Juntar engramas",
     "GatherEngramsExceptExotics": "Exóticos",
     "Generated": "Equipación N{{tier}}",
+    "HashtagTip": "Consejo: Usa #hashtags en los nombres o notas de tu equipación y se mostrarán aquí.",
     "Import": {
       "BadURL": "No es un enlace válido de compartición de equipación.",
       "Error": "Error obteniendo equipación:",
@@ -641,6 +655,7 @@
     "MaximizeLight": "Luz Máxima",
     "MaximizePower": "Poder Máximo",
     "MaximizeStat": "Maximizar Estadística",
+    "MissingItems": "Faltan Objetos",
     "MissingItemsWarning": "Algunos de los objetos en esta equipación ya no están en tu inventario.",
     "ModErrorSummary": "1 error de modificador:",
     "ModErrorSummary_plural": "{{count}} errores de modificadores:",
@@ -650,9 +665,9 @@
     "NoEngrams": "No hay engramas no exóticos disponibles para transferir.",
     "NoExotics": "No hay engramas disponibles para transferir.",
     "NoSpace": "Te has quedado sin espacio en tu depósito o cualquiera de tus personajes.",
-    "NoneMatch": "Ninguno de los nombres o notas de tus equipaciones coinciden con '{{query}}'.",
+    "NoneMatch": "Ninguna de tus equipaciones coincidió con los filtros.",
     "NotStarted": "Esperando a otras acciones",
-    "NotesPlaceholder": "Escribe algunas notas sobre esta equipación",
+    "NotesPlaceholder": "Escribe algunas notas sobre esta equipación, o usa #hashtags para categorizarla",
     "NotificationTitle": "Equipación: {{name}}",
     "OnWrongCharacterAdvice": "Haga clic aquí para encontrar los objetos de Poder más altos para este personaje.",
     "OnWrongCharacterWarning": "La armadura más poderosa de este personaje está en otro personaje. Para contar el Poder del botín, recompensas poderosas e hito, la armadura debe estar en este personaje o en el Depósito.",
@@ -763,6 +778,7 @@
     },
     "Infuse": "Infundir",
     "LockUnlock": {
+      "AutoLock": "El estado de bloqueo se sincronizó con la etiqueta de este objeto",
       "Lock": "Bloquear {{itemType}}",
       "Locked": "Bloqueado",
       "Unlock": "Desbloquear {{itemType}}",
@@ -793,6 +809,7 @@
       "Untracked": "No seguido"
     },
     "TriageTab": "Triaje",
+    "UnreliablePerkOption": "Esta ventaja sólo aparece en la vista de colecciones. Podría no aparecer aleatoriamente como tirada en este objeto.",
     "Vault": "Depósito",
     "WeaponLevel": "Nivel de arma {{level}}"
   },
@@ -816,6 +833,7 @@
       "Archetype": "Arquetipo",
       "BaseStats": "Estadísticas Base",
       "Breaker": "Rompedor",
+      "Crafted": "Fecha Formación",
       "CustomTotal": "Total Personalizado",
       "Damage": "Daño",
       "Element": "Elemento",
@@ -824,7 +842,7 @@
       "Icon": "Icono",
       "KillTracker": "Contador de Bajas",
       "Loadouts": "Equipaciones",
-      "Location": "Localización",
+      "Location": "Ubicación",
       "Locked": "Bloqueado",
       "MasterworkStat": "Estadística Obra Maestra",
       "MasterworkTier": "Nivel de Obra Maestra",
@@ -915,6 +933,8 @@
     "UsageCount": "# Usado"
   },
   "Settings": {
+    "AutoLockTagged": "Sincronizar el estado de bloqueo del objeto con la etiqueta",
+    "AutoLockTaggedExplanation": "DIM automáticamente bloqueará y desbloqueará objetos que coincidan con su etiqueta. Los objetos fabricados se mantendrán desbloqueados para permitir reformarse. Cuando esta configuración esté habilitada, el icono de bloqueo no se mostrará en el mosaico para los objetos etiquetados.",
     "BadgePostmaster": "Muestra el número de objetos en Administración para el personaje actual en el icono de la app",
     "BadgePostmasterExplanation": "Para que esto funcione necesitas instalar DIM como app y tu sistema operativo debe soportar mostrar insignias",
     "BothDescriptions": "Ambas Descripciones",
@@ -1027,7 +1047,7 @@
     "Prestige": "Nivel de Prestigio: {{level}}\n{{exp}}xp para 5 motas de luz.",
     "Quality": "Calidad de las estadísticas",
     "Strength": "Fuerza",
-    "Sunset": "Caducado",
+    "Sunset": "Caducado/a",
     "Tier": "Nivel {{tier}}",
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
@@ -1056,6 +1076,8 @@
     "DimSyncNotEnabled": "Sincronización DIM no está activada, así que tus configuraciones, etiquetas, equipaciones y búsquedas sólo son almacenadas localmente y se perderán si limpias el almacenamiento del navegador. Activa Sincronización DIM en Configuración para hacer una copia de tu información automáticamente, o hacer una copia de tu información manualmente.",
     "EnableDimApi": "Activar Sincronización DIM (recomendado)",
     "Export": "Descargar Información de la Copia de Seguridad",
+    "ExportError": "Error al descargar la copia de seguridad desde Sincronización DIM",
+    "ExportErrorBody": "Sincronización DIM puede estar caído, o puede que estés teniendo problemas con tu conexión. Descargaremos una copia de tus datos guardados localmente en su lugar.",
     "Import": "Importar Información de la Copia de Seguridad",
     "ImportConfirmDimApi": "¿Estás seguro de que quieres sobreescribir tus etiquetas actuales, equipaciones y configuraciones con esta versión? Reemplazará completamente todo lo que tenías.",
     "ImportExport": "Copia de Seguridad e Importación",
@@ -1084,9 +1106,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "¡El número escogido no es el válido!",
+      "No": "No",
       "Reset": "DESAUTORIZAR",
-      "Title": "Elige este número en tu Stream Deck"
+      "Title": "¿Ves el mismo código en tu Stream Deck?",
+      "Update": "Si estás viendo este mensaje, estás usando una versión antigua del plugin. Por favor descarga la última actualización en la tienda de Stream Deck.",
+      "Yes": "Sí"
     },
     "Connected": "Conectado",
     "Enable": "Complemento del Stream Deck",

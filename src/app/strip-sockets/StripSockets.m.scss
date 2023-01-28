@@ -7,7 +7,7 @@
   align-items: center;
   transition: none;
 
-  @include horizontal-space-children(8px);
+  gap: 8px;
 }
 
 .stripSheet {

@@ -72,13 +72,14 @@ export function makeCharacter(
 }
 
 export function makeVault(): DimStore {
+  const vaultName = t('Bucket.Vault');
   return {
     destinyVersion: 2,
     id: 'vault',
-    name: t('Bucket.Vault'),
+    name: vaultName,
     classType: DestinyClass.Unknown,
     current: false,
-    className: t('Bucket.Vault'),
+    className: vaultName,
     genderName: '',
     lastPlayed: new Date(-1),
     icon: vaultIcon,
@@ -112,7 +113,7 @@ export function getCharacterStatsData(
   // TODO: Fill in effect and countdown for D2 stats
 
   // Fill in missing stats
-  statAllowList.forEach((statHash) => {
+  for (const statHash of statAllowList) {
     const def = defs.Stat.get(statHash);
     const value = stats[statHash] || 0;
     const stat: DimCharacterStat = {
@@ -123,7 +124,7 @@ export function getCharacterStatsData(
       icon: bungieNetPath(def.displayProperties.icon),
     };
     ret[statHash] = stat;
-  });
+  }
 
   return ret;
 }

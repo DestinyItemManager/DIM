@@ -11,10 +11,10 @@ export class RateLimiterQueue {
   timeLimit: number;
   queue: {
     fetcher: typeof fetch;
-    request: Request | string;
+    request: RequestInfo | URL;
     options?: RequestInit;
-    resolver(value?: any): void;
-    rejecter(value?: any): void;
+    resolver: (value?: any) => void;
+    rejecter: (value?: any) => void;
   }[] = [];
   /** number of requests in the current period */
   count = 0;
@@ -32,7 +32,7 @@ export class RateLimiterQueue {
   }
 
   // Add a request to the queue, acting on it immediately if possible
-  add<T>(fetcher: typeof fetch, request: Request | string, options?: RequestInit): Promise<T> {
+  add<T>(fetcher: typeof fetch, request: RequestInfo | URL, options?: RequestInit): Promise<T> {
     let resolver: (value?: any) => void = _.noop;
     let rejecter: (value?: any) => void = _.noop;
     const promise = new Promise<T>((resolve, reject) => {
@@ -103,8 +103,8 @@ export function addLimiter(queue: RateLimiterQueue) {
  * Produce a version of "fetch" that respects global rate limiting rules.
  */
 export function rateLimitedFetch(fetcher: typeof fetch): typeof fetch {
-  return (request: Request | string, options?: RequestInit) => {
-    const url = typeof request === 'string' ? request : request.url;
+  return (request: RequestInfo | URL, options?: RequestInit) => {
+    const url = request instanceof Request ? request.url : request.toString();
     let limiter;
     for (const possibleLimiter of limiters) {
       if (possibleLimiter.matches(url)) {

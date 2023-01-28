@@ -28,7 +28,7 @@
     flex: 1;
   }
 
-  @include horizontal-space-children(4px);
+  gap: 4px;
 }
 
 // TODO: dedupe this

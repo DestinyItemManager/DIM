@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { Loadout } from './loadout-types';
-import { newLoadout, pickBackingStore } from './loadout-utils';
+import { convertToLoadoutItem, newLoadout, pickBackingStore } from './loadout-utils';
 
 const LoadoutDrawer = React.lazy(
   () => import(/* webpackChunkName: "loadout-drawer" */ './LoadoutDrawer2')
@@ -101,12 +101,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           const classType =
             item.classType === DestinyClass.Unknown ? owner.classType : item.classType;
           const draftLoadout = newLoadout('', [], classType);
-          draftLoadout.items.push({
-            id: item.id,
-            hash: item.hash,
-            equip: true,
-            amount: item.amount ?? 1,
-          });
+          draftLoadout.items.push(convertToLoadoutItem(item, true));
           setInitialLoadout({
             loadout: draftLoadout,
             storeId: owner.id,
@@ -140,6 +135,8 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           isNew: true,
           showClass: false,
         });
+        // Clear the loadout from params if the URL contained one...
+        navigate(pathname, { replace: true });
       }
     } catch (e) {
       showNotification({
@@ -147,7 +144,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
         title: t('Loadouts.BadLoadoutShare'),
         body: t('Loadouts.BadLoadoutShareBody', { error: e.message }),
       });
-      // Clear the loadout
+      // ... or if it contained errors
       navigate(pathname, { replace: true });
     }
   }, [defs, queryString, navigate, pathname, stores]);

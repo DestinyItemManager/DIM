@@ -1,9 +1,7 @@
 import { dimNeedsUpdate$ } from 'app/register-service-worker';
 import { GlobalAlertLevelsToToastLevels } from 'app/whats-new/BungieAlerts';
 import { DimVersions } from 'app/whats-new/versions';
-import { GlobalAlertLevel } from 'bungie-api-ts/core';
 import clsx from 'clsx';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import { AppIcon, updateIcon } from './icons';
@@ -30,7 +28,7 @@ export default function MenuBadge() {
       <span
         className={clsx(
           styles.badgeNew,
-          `bungie-alert-${GlobalAlertLevelsToToastLevels[GlobalAlertLevel.Blue]}`
+          `bungie-alert-${GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]}`
         )}
       />
     );

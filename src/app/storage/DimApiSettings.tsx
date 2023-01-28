@@ -43,15 +43,25 @@ export default function DimApiSettings() {
 
   const onExportData = async () => {
     setHasBackedUp(true);
+    let data: ExportResponse;
     if (apiPermissionGranted) {
       // Export from the server
-      const data = await exportDimApiData();
-      exportBackupData(data);
+      try {
+        data = await exportDimApiData();
+      } catch (e) {
+        showNotification({
+          type: 'error',
+          title: t('Storage.ExportError'),
+          body: t('Storage.ExportErrorBody', { error: e.message }),
+          duration: 15000,
+        });
+        data = await dispatch(exportLocalData());
+      }
     } else {
       // Export from local data
-      const data = await dispatch(exportLocalData());
-      exportBackupData(data);
+      data = await dispatch(exportLocalData());
     }
+    exportBackupData(data);
   };
 
   const onImportData = async (data: ExportResponse) => {

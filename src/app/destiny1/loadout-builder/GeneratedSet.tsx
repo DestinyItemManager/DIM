@@ -5,7 +5,7 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import D1CharacterStats from 'app/store-stats/D1CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { D1Item } from '../../inventory/item-types';
 import { DimStore } from '../../inventory/store-types';
 import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
@@ -19,7 +19,7 @@ interface Props {
   store: DimStore;
   setType: SetType;
   activesets: string;
-  excludeItem(item: D1Item): void;
+  excludeItem: (item: D1Item) => void;
 }
 
 export default function GeneratedSet({ setType, store, activesets, excludeItem }: Props) {
@@ -69,7 +69,7 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
         </div>
       </div>
       <div className="loadout-builder-section">
-        {_.map(setType.set.armor, (armorpiece, type) => (
+        {Object.entries(setType.set.armor).map(([type, armorpiece]) => (
           <div key={type} className="set-item">
             <LoadoutBuilderItem shiftClickCallback={excludeItem} item={armorpiece.item} />
             <div className="smaller">

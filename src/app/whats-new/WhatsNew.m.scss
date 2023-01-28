@@ -1,20 +1,25 @@
 @use '../variables.scss' as *;
 
-.twitter {
-  float: right;
-  height: 80vh;
-  max-width: 300px;
+.timeline {
+  width: 300px;
   margin-left: 1em;
-
-  div {
-    height: 100%;
-    overflow: hidden;
-  }
+  float: right;
+  box-sizing: border-box;
+  position: relative;
+  border: 4px solid rgba(255, 255, 255, 0.3);
 
   @include phone-portrait {
-    max-width: 100%;
+    width: 100%;
     float: none;
     margin: 1em 0;
-    height: 50vh;
+  }
+
+  [twdiv='yes'] {
+    overflow: auto;
+    height: 80vh;
+    background-color: black;
+    @include phone-portrait {
+      height: 50vh;
+    }
   }
 }

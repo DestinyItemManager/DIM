@@ -23,7 +23,7 @@
     margin-bottom: 0;
   }
 
-  @include horizontal-space-children(4px);
+  gap: 4px;
 }
 
 .loadoutName {

@@ -33,7 +33,7 @@ const SheetDisabledContext = createContext<(shown: boolean) => void>(() => {
  * takes an "onClose" function that can be used to close the sheet. Using onClose to close
  * the sheet ensures that it will animate away rather than simply disappearing.
  */
-type SheetContent = React.ReactNode | ((args: { onClose(): void }) => React.ReactNode);
+type SheetContent = React.ReactNode | ((args: { onClose: () => void }) => React.ReactNode);
 
 interface Props {
   /** A static, non-scrollable header shown in line with the close button. */
@@ -62,7 +62,7 @@ interface Props {
    * item popup don't close the popup they were spawned from!
    */
   allowClickThrough?: boolean;
-  onClose(): void;
+  onClose: () => void;
 }
 
 const spring: SpringConfig = {
@@ -265,7 +265,7 @@ export default function Sheet({
             onTouchStart={dragHandleDown}
             onTouchEnd={dragHandleUp}
           >
-            {header && (
+            {Boolean(header) && (
               <div className="sheet-header" ref={dragHandle}>
                 {_.isFunction(header) ? header({ onClose: handleClose }) : header}
               </div>
@@ -281,7 +281,7 @@ export default function Sheet({
               {_.isFunction(children) ? children({ onClose: handleClose }) : children}
             </div>
 
-            {footer && (
+            {Boolean(footer) && (
               <div className="sheet-footer">
                 {_.isFunction(footer) ? footer({ onClose: handleClose }) : footer}
               </div>

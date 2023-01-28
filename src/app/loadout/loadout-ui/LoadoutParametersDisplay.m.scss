@@ -2,14 +2,14 @@
 
 .loParams {
   max-width: 100%;
-  @include vertical-space-children(4px);
+  gap: 4px;
 }
 
 .loStats {
   composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: center;
   width: 100%;
-  @include horizontal-space-children(8px);
+  gap: 8px;
 }
 
 .loStat {

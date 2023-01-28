@@ -30,8 +30,8 @@ export default function TierSelect({
   /** The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility */
   statRangesFiltered?: Readonly<StatRanges>;
   order: number[]; // stat hashes in user order
-  onStatOrderChanged(order: ArmorStatHashes[]): void;
-  onStatFiltersChanged(stats: StatFilters): void;
+  onStatOrderChanged: (order: ArmorStatHashes[]) => void;
+  onStatFiltersChanged: (stats: StatFilters) => void;
 }) {
   const defs = useD2Definitions()!;
   const handleTierChange = (
@@ -168,14 +168,14 @@ function MinMaxSelectInner({
   type: 'Min' | 'Max';
   /** Filter config for a single stat */
   stat: MinMaxIgnored;
-  handleTierChange(
+  handleTierChange: (
     statHash: number,
     changed: {
       min: number;
       max: number;
       ignored: boolean;
     }
-  ): void;
+  ) => void;
 }) {
   const min = 0;
   const max = 10;

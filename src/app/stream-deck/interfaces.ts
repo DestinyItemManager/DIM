@@ -12,6 +12,8 @@ export type StreamDeckSelectionType = 'loadout' | 'item';
 export interface StreamDeckState {
   // WebSocket status
   readonly connected: boolean;
+  // Update popup already showed
+  readonly updatePopupShowed: boolean;
   // Selection type
   readonly selection?: 'item' | 'loadout' | 'postmaster' | undefined;
 }
@@ -68,12 +70,7 @@ export interface PullItemAction {
   action: 'pullItem';
   item: string;
   equip: boolean;
-}
-
-// the stream deck request specific items instances info update ex. element, power, etc
-export interface PullItemsInfoAction {
-  action: 'pullItem:items-request';
-  ids: string[];
+  context: string;
 }
 
 // allow the user to pick a specific "thing" and send it to the Stream Deck
@@ -88,36 +85,30 @@ export interface SelectionAction {
 export interface EquipLoadoutAction {
   action: 'loadout';
   loadout: string;
-  character: string;
+  character?: string;
 }
 
 export interface AuthorizationInitAction {
-  action: 'authorization:init';
+  action: 'authorization';
+  id: string;
+  code: string;
 }
 
-export interface AuthorizationConfirmAction {
-  action: 'authorization:confirm';
-  challenge?: number;
-}
-
+// | FreeBucketSlotAction
 export type StreamDeckMessage = (
   | AuthorizationInitAction
-  | AuthorizationConfirmAction
   | SearchAction
   | RandomizeAction
   | CollectPostmasterAction
   | RefreshAction
   | FarmingModeAction
   | MaxPowerAction
-  // | FreeBucketSlotAction
   | PullItemAction
-  | PullItemsInfoAction
   | SelectionAction
   | EquipLoadoutAction
 ) & { token?: string };
 
 // Types of messages sent to Stream Deck
-
 export interface VaultArgs {
   vault: number;
   shards?: number;
@@ -133,6 +124,7 @@ export interface MetricsArgs {
   gunsmith: number;
   ironBanner: number;
   triumphs: number;
+  triumphsActive: number;
   battlePass: number;
   artifactIcon?: string;
 }
@@ -158,6 +150,18 @@ export interface Challenge {
 export interface SendUpdateArgs {
   action: 'dim:update';
   data?: {
+    farmingMode?: boolean;
+    postmaster?: PostmasterArgs;
+    maxPower?: MaxPowerArgs;
+    vault?: VaultArgs;
+    metrics?: MetricsArgs;
+    equippedItems?: string[];
+  };
+}
+
+export interface SelectionArgs {
+  action: 'dim:selection';
+  data?: {
     selectionType?: StreamDeckSelectionType;
     selection?: {
       label: string;
@@ -167,32 +171,27 @@ export interface SendUpdateArgs {
       item?: string;
       loadout?: string;
       character?: string;
-    };
-    farmingMode?: boolean;
-    postmaster?: PostmasterArgs;
-    maxPower?: MaxPowerArgs;
-    vault?: VaultArgs;
-    metrics?: MetricsArgs;
-  };
-}
-
-export interface SendAuthorizationChallengesArgs {
-  action: 'authorization:challenges';
-  data?: {
-    challenges?: Challenge[];
-  };
-}
-
-export interface SendItemsInfoArgs {
-  action: 'items:info';
-  data: {
-    info: {
-      overlay?: string;
-      isExotic: boolean;
-      identifier: string;
-      power: number;
+      isExotic?: boolean;
       element?: string;
-    }[];
+      inventory?: boolean;
+    };
+  };
+}
+
+export interface SendAuthorizationConfirm {
+  action: 'authorization:confirm';
+  data?: {
+    token: string;
+  };
+}
+
+export interface SendItemUpdateArgs {
+  action: 'dim:item-update';
+  data: {
+    context: string;
+    equipped: boolean;
+    element?: string;
+    // power: number;
   };
 }
 
@@ -202,8 +201,9 @@ export interface SendAuthorizationResetArgs {
 
 export type SendToStreamDeckArgs =
   | SendUpdateArgs
-  | SendItemsInfoArgs
-  | SendAuthorizationChallengesArgs
+  | SelectionArgs
+  | SendItemUpdateArgs
+  | SendAuthorizationConfirm
   | SendAuthorizationResetArgs;
 
 export interface LazyStreamDeck {
@@ -223,7 +223,8 @@ export interface HandlerArgs<T> {
   store: DimStore;
 }
 
-export type MessageHandler = Record<
-  StreamDeckMessage['action'],
-  (args: HandlerArgs<StreamDeckMessage>) => ThunkResult
->;
+type ActionName = StreamDeckMessage['action'];
+type ActionMatching<key> = Extract<StreamDeckMessage, { action: key }>;
+export type MessageHandler = {
+  [key in ActionName]: (args: HandlerArgs<ActionMatching<key>>) => ThunkResult;
+};

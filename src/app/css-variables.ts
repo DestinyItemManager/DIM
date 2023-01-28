@@ -2,7 +2,7 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import { isPhonePortraitSelector } from './shell/selectors';
 import { observeStore } from './utils/redux-utils';
 
-function setCSSVariable(property: string, value: { toString(): string }) {
+function setCSSVariable(property: string, value: { toString: () => string }) {
   if (value) {
     document.querySelector('html')!.style.setProperty(property, value.toString());
   }

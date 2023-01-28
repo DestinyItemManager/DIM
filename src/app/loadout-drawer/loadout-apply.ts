@@ -37,6 +37,7 @@ import {
   fitMostMods,
   pickPlugPositions,
 } from 'app/loadout/mod-assignment-utils';
+import { unlockedByAllModsBeingUnlocked } from 'app/loadout/mod-utils';
 import {
   d2ManifestSelector,
   destiny2CoreSettingsSelector,
@@ -46,6 +47,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
+import { artifactModsSelector } from 'app/strip-sockets/strip-sockets';
 import { queueAction } from 'app/utils/action-queue';
 import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
@@ -247,9 +249,19 @@ function doApplyLoadout(
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
       const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(getState(), store.id));
-      const checkMod = (h: number) =>
-        Boolean(defs.InventoryItem.get(h)) &&
-        (unlockedPlugSetItems().has(h) || h === DEFAULT_SHADER || DEFAULT_ORNAMENTS.includes(h));
+      const artifactMods = artifactModsSelector(getState());
+      const checkMod = (h: number) => {
+        const mod = defs.InventoryItem.get(h);
+        return (
+          Boolean(mod) &&
+          (unlockedPlugSetItems().has(h) ||
+            h === DEFAULT_SHADER ||
+            DEFAULT_ORNAMENTS.includes(h) ||
+            ('plug' in mod &&
+              isPluggableItem(mod) &&
+              unlockedByAllModsBeingUnlocked(mod, artifactMods)))
+        );
+      };
 
       // Don't apply mods when moving to the vault
       const modsToApply = ((!store.isVault && getModHashesFromLoadout(loadout)) || []).filter(
@@ -354,9 +366,9 @@ function doApplyLoadout(
       // If we need to equip many items at once, we'll use a single bulk-equip later
       if (itemsToEquip.length > 1) {
         // TODO: just set a bulkEquip flag
-        itemsToEquip.forEach((i) => {
+        for (const i of itemsToEquip) {
           i.equip = false;
-        });
+        }
       }
 
       // Dequip items from the loadout off of other characters so they can be moved.
@@ -372,9 +384,8 @@ function doApplyLoadout(
       const moveSession = createMoveSession(cancelToken, involvedItems);
 
       // Group dequips per character
-      const dequips = _.map(
-        _.groupBy(realItemsToDequip, (i) => i.owner),
-        async (dequipItems, owner) => {
+      const dequips = Object.entries(_.groupBy(realItemsToDequip, (i) => i.owner)).map(
+        async ([owner, dequipItems]) => {
           // If there's only one item to remove, we don't need to bulk dequip, it'll be handled
           // automatically when we try to move the item.
           if (dequipItems.length === 1) {

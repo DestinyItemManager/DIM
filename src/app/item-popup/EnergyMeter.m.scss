@@ -22,7 +22,7 @@
   overflow: hidden;
   box-sizing: border-box;
 
-  @include horizontal-space-children(8px);
+  gap: 8px;
 
   > :first-child {
     flex: 1;

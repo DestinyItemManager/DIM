@@ -20,12 +20,12 @@ export default function LoadoutEditSection({
   title: string;
   children: React.ReactNode;
   className?: string;
-  onClear(): void;
-  onFillFromEquipped?(): void;
-  onSyncFromEquipped?(): void;
+  onClear: () => void;
+  onFillFromEquipped?: () => void;
+  onSyncFromEquipped?: () => void;
   fillFromInventoryCount?: number;
-  onFillFromInventory?(): void;
-  onClearLoadoutParameters?(): void;
+  onFillFromInventory?: () => void;
+  onClearLoadoutParameters?: () => void;
 }) {
   const options: Option[] = _.compact([
     onFillFromEquipped

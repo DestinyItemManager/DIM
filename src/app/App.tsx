@@ -3,7 +3,7 @@ import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import React, { Suspense } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate, Route, Routes } from 'react-router';
+import { Navigate, Route, Routes, useLocation } from 'react-router';
 import styles from './App.m.scss';
 import Developer from './developer/Developer';
 import AutoRefresh from './dim-ui/AutoRefresh';
@@ -16,7 +16,6 @@ import { t } from './i18next-t';
 import Login from './login/Login';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import About from './shell/About';
-import AccountRedirectRoute from './shell/AccountRedirectRoute';
 import DefaultAccount from './shell/DefaultAccount';
 import Destiny from './shell/Destiny';
 import GATracker from './shell/GATracker';
@@ -41,6 +40,7 @@ export default function App() {
   const charColMobile = useSelector(settingSelector('charColMobile'));
   const needsLogin = useSelector((state: RootState) => state.accounts.needsLogin);
   const needsDeveloper = useSelector((state: RootState) => state.accounts.needsDeveloper);
+  const { pathname, search } = useLocation();
 
   return (
     <div
@@ -71,43 +71,15 @@ export default function App() {
                     $DIM_FLAVOR === 'dev' && needsDeveloper ? (
                       <Navigate to="/developer" />
                     ) : (
-                      <Navigate to="/login" />
+                      <Navigate to="/login" state={{ path: `${pathname}${search}` }} />
                     )
                   }
                 />
               ) : (
                 <>
                   <Route path="search-history" element={<SearchHistory />} />
-                  <Route path=":membershipId/d:destinyVersion/*" element={<Destiny />} />
-                  {[
-                    'inventory',
-                    'progress',
-                    'records',
-                    'optimizer',
-                    'loadouts',
-                    'organizer',
-                    'vendors/:vendorId',
-                    'vendors',
-                    'record-books',
-                    'activities',
-                    'armory/:itemHash',
-                  ].map((path) => (
-                    <Route key={path} path={path} element={<AccountRedirectRoute />} />
-                  ))}
-                  <Route
-                    path="*"
-                    element={
-                      needsLogin ? (
-                        $DIM_FLAVOR === 'dev' && needsDeveloper ? (
-                          <Navigate to="developer" />
-                        ) : (
-                          <Navigate to="login" />
-                        )
-                      ) : (
-                        <DefaultAccount />
-                      )
-                    }
-                  />
+                  <Route path=":membershipId/:destinyVersion/*" element={<Destiny />} />
+                  <Route path="*" element={<DefaultAccount />} />
                 </>
               )}
             </Routes>

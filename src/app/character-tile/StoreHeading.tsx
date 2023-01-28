@@ -18,7 +18,7 @@ interface Props {
   /** For mobile, this is whichever store is visible at the time. */
   selectedStore?: DimStore;
   /** Fires if a store other than the selected store is tapped. */
-  onTapped?(storeId: string): void;
+  onTapped?: (storeId: string) => void;
 }
 
 // Wrap the {CharacterTile} with a button for the loadout menu and the D1 XP progress bar

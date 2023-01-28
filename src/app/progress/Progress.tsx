@@ -82,10 +82,10 @@ export default function Progress({ account }: { account: DestinyAccount }) {
   const raidTitle = raidNode?.displayProperties.name;
 
   const eventCardHash = profileInfo.profile.data?.activeEventCardHash;
-  const eventCard = eventCardHash && defs.EventCard.get(eventCardHash);
+  const eventCard = eventCardHash !== undefined && defs.EventCard.get(eventCardHash);
 
   const seasonalChallengesPresentationNode =
-    coreSettings?.seasonalChallengesPresentationNodeHash &&
+    coreSettings?.seasonalChallengesPresentationNodeHash !== undefined &&
     defs.PresentationNode.get(coreSettings.seasonalChallengesPresentationNodeHash);
 
   const menuItems = [

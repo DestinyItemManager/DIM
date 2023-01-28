@@ -37,7 +37,7 @@ export default function GeneratedSetButtons({
   params: LoadoutParameters;
   canCompareLoadouts: boolean;
   halfTierMods: PluggableInventoryItemDefinition[];
-  onLoadoutSet(loadout: Loadout): void;
+  onLoadoutSet: (loadout: Loadout) => void;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const dispatch = useThunkDispatch();

@@ -33,18 +33,18 @@ interface Props {
   /** The label for the "accept" button in the footer. */
   acceptButtonText: string;
   /** A function to determine if a given plug is currently selectable. */
-  isPlugSelectable(
+  isPlugSelectable: (
     plug: PluggableInventoryItemDefinition,
     selected: PluggableInventoryItemDefinition[]
-  ): boolean;
+  ) => boolean;
   /** How plug groups (e.g. PlugSets) should be sorted in the display. */
   sortPlugGroups?: Comparator<PlugSet>;
   /** How to sort plugs within a group (PlugSet) */
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
   /** Called with the full list of selected plugs when the user clicks the accept button. */
-  onAccept(selectedPlugs: PluggableInventoryItemDefinition[]): void;
+  onAccept: (selectedPlugs: PluggableInventoryItemDefinition[]) => void;
   /** Called when the user accepts the new plugset or closes the sheet. */
-  onClose(): void;
+  onClose: () => void;
 }
 
 /**
@@ -171,7 +171,7 @@ export default function PlugDrawer({
     [internalPlugSets, isPlugSelectable]
   );
 
-  const footer = ({ onClose }: { onClose(): void }) => (
+  const footer = ({ onClose }: { onClose: () => void }) => (
     <Footer
       plugSets={internalPlugSets}
       isPhonePortrait={isPhonePortrait}

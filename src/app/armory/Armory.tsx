@@ -1,9 +1,9 @@
 import ItemGrid from 'app/armory/ItemGrid';
 import { addCompareItem } from 'app/compare/actions';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import ElementIcon from 'app/dim-ui/ElementIcon';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import ItemIcon from 'app/inventory/ItemIcon';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
@@ -119,7 +119,7 @@ export default function Armory({
             )}
             {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
             <ItemTypeName item={item} />
-            {item.pursuit?.questStepNum && (
+            {item.pursuit?.questStepNum !== undefined && (
               <div>
                 {t('MovePopup.Subtitle.QuestProgress', {
                   questStepNum: item.pursuit.questStepNum,

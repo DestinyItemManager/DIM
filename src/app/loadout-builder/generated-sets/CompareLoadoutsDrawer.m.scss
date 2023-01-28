@@ -7,7 +7,6 @@
 
 .content {
   margin: 16px;
-  display: inline-block;
 
   @include phone-portrait {
     display: flex;

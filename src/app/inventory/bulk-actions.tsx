@@ -1,3 +1,4 @@
+import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import NotificationButton from 'app/notifications/NotificationButton';
 import { showNotification } from 'app/notifications/notifications';
@@ -5,17 +6,18 @@ import { AppIcon, undoIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
 import { setItemHashTag, setItemTagsBulk } from './actions';
-import { getTag, tagConfig, TagValue } from './dim-item-info';
+import { getTag, TagCommand, tagConfig, TagValue } from './dim-item-info';
 import { setItemLockState } from './item-move-service';
 import { DimItem } from './item-types';
-import { itemHashTagsSelector, itemInfosSelector } from './selectors';
+import { itemHashTagsSelector, itemInfosSelector, tagSelector } from './selectors';
+import { canSyncLockState } from './SyncTagLock';
 
 /**
  * Bulk tag items, with an undo button in a notification.
  */
 export function bulkTagItems(
   itemsToBeTagged: DimItem[],
-  selectedTag: TagValue,
+  selectedTag: TagCommand,
   notification = true
 ): ThunkResult {
   return async (dispatch, getState) => {
@@ -37,6 +39,7 @@ export function bulkTagItems(
           instanced.map((item) => ({
             itemId: item.id,
             tag: selectedTag === 'clear' ? undefined : selectedTag,
+            craftedDate: item.craftedInfo?.craftedDate,
           }))
         )
       );
@@ -72,6 +75,7 @@ export function bulkTagItems(
                       instanced.map((item) => ({
                         itemId: item.id,
                         tag: previousState.get(item),
+                        craftedDate: item.craftedInfo?.craftedDate,
                       }))
                     )
                   );
@@ -106,7 +110,12 @@ export function bulkTagItems(
  * Bulk lock/unlock items
  */
 export function bulkLockItems(items: DimItem[], locked: boolean): ThunkResult {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    // Don't change lock state for items that are having their lock state synced to their tag
+    const autoLockTagged = settingSelector('autoLockTagged')(getState());
+    items = autoLockTagged
+      ? items.filter((item) => !tagSelector(item)(getState()) || !canSyncLockState(item))
+      : items;
     try {
       for (const item of items) {
         await dispatch(setItemLockState(item, locked));

@@ -92,7 +92,7 @@ function makeSearchFilterFactory(
   { isFilters, kvFilters }: SearchConfig,
   stores: DimStore[],
   allItems: DimItem[],
-  currentStore: DimStore,
+  currentStore: DimStore | undefined,
   loadoutsByItem: LoadoutsByItem,
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined,
   wishListsByHash: _.Dictionary<WishListRoll[]>,
@@ -103,12 +103,12 @@ function makeSearchFilterFactory(
   },
   language: string,
   customStats: Settings['customTotalStatsByClass'],
-  d2Definitions: D2ManifestDefinitions
+  d2Definitions: D2ManifestDefinitions | undefined
 ) {
   const filterContext: FilterContext = {
     stores,
     allItems,
-    currentStore,
+    currentStore: currentStore!,
     loadoutsByItem,
     wishListFunction,
     newItems,

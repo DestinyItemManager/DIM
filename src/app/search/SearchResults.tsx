@@ -20,7 +20,7 @@ export default memo(function SearchResults({
   onClose,
 }: {
   items: DimItem[];
-  onClose(): void;
+  onClose: () => void;
 }) {
   const sortItems = useSelector(itemSorterSelector);
 

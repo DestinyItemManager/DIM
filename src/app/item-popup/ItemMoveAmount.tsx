@@ -11,7 +11,7 @@ export default function ItemMoveAmount({
 }: {
   amount: number;
   maximum: number;
-  onAmountChanged(amount: number): void;
+  onAmountChanged: (amount: number) => void;
 }) {
   const constrain = () => {
     const constrained = _.clamp(amount, 1, maximum);

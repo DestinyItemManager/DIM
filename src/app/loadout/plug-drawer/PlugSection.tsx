@@ -1,5 +1,5 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { groupModsByModType } from '../mod-utils';
 import styles from './PlugSection.m.scss';
 import SelectablePlug from './SelectablePlug';
@@ -20,13 +20,13 @@ export default function PlugSection({
   /** A restricted list of stat hashes to display for each plug. If not specified, all stats will be shown. */
   displayedStatHashes?: number[];
   /** A function to determine if a given plug is currently selectable. */
-  isPlugSelectable(plug: PluggableInventoryItemDefinition): boolean;
-  onPlugSelected(
+  isPlugSelectable: (plug: PluggableInventoryItemDefinition) => boolean;
+  onPlugSelected: (
     plugSetHash: number,
     mod: PluggableInventoryItemDefinition,
     selectionType: 'multi' | 'single'
-  ): void;
-  onPlugRemoved(plugSetHash: number, mod: PluggableInventoryItemDefinition): void;
+  ) => void;
+  onPlugRemoved: (plugSetHash: number, mod: PluggableInventoryItemDefinition) => void;
 }) {
   const { plugs, maxSelectable, plugSetHash, headerSuffix, selectionType } = plugSet;
 

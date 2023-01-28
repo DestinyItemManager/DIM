@@ -3,7 +3,7 @@ import { kebabIcon, moveDownIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
-import React, { ReactNode, useRef } from 'react';
+import { ReactNode, useRef } from 'react';
 import styles from './Dropdown.m.scss';
 import { usePopper } from './usePopper';
 
@@ -15,7 +15,7 @@ interface DropdownOption {
   key: string;
   content: ReactNode;
   disabled?: boolean;
-  onSelected(): void;
+  onSelected: () => void;
 }
 
 export type Option = Separator | DropdownOption;

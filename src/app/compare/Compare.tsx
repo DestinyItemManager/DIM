@@ -22,7 +22,6 @@ import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimSocket } from '../inventory/item-types';
@@ -32,11 +31,8 @@ import styles from './Compare.m.scss';
 import './compare.scss';
 import CompareItem from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
-import {
-  compareItemsSelector,
-  compareOrganizerLinkSelector,
-  compareSessionSelector,
-} from './selectors';
+import { CompareSession } from './reducer';
+import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
 
 export interface StatInfo {
   id: number | 'EnergyCapacity';
@@ -65,14 +61,12 @@ const isTouch = 'ontouchstart' in window;
 // TODO: dropdowns for query buttons
 // TODO: freeform query
 // TODO: Allow minimizing the sheet (to make selection easier)
-// TODO: memoize
-export default function Compare() {
+export default function Compare({ session }: { session: CompareSession }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const [compareBaseStats, setCompareBaseStats] = useSetting('compareBaseStats');
   const [assumeWeaponMasterwork, setAssumeWeaponMasterwork] = useSetting('compareWeaponMasterwork');
-  const session = useSelector(compareSessionSelector);
-  const rawCompareItems = useSelector(compareItemsSelector(session?.vendorCharacterId));
+  const rawCompareItems = useSelector(compareItemsSelector(session.vendorCharacterId));
   const organizerLink = useSelector(compareOrganizerLinkSelector);
 
   /** The stat row to highlight */
@@ -80,7 +74,7 @@ export default function Compare() {
   /** The stat row to sort by */
   const [sortedHash, setSortedHash] = useState<string | number>();
   const [sortBetterFirst, setSortBetterFirst] = useState<boolean>(true);
-  const [socketOverrides, onPlugClicked, resetSocketOverrides] = useSocketOverridesForItems();
+  const [socketOverrides, onPlugClicked] = useSocketOverridesForItems();
 
   const comparingArmor = rawCompareItems[0]?.bucket.inArmor;
   const comparingWeapons = rawCompareItems[0]?.bucket.inWeapons;
@@ -121,45 +115,16 @@ export default function Compare() {
   }, [defs, doAssumeWeaponMasterworks, rawCompareItems, socketOverrides]);
 
   const cancel = useCallback(() => {
-    // TODO: this is why we need a container, right? So we don't have to reset state
-    setHighlight(undefined);
-    setSortedHash(undefined);
-    resetSocketOverrides();
     dispatch(endCompareSession());
-  }, [dispatch, resetSocketOverrides]);
-
-  const hasSession = Boolean(session);
-  const hasItems = compareItems.length > 0;
-  const show = hasSession && hasItems;
-
-  const firstCompareItem = compareItems.length > 0 ? compareItems[0] : undefined;
-  const destinyVersion = show ? firstCompareItem?.destinyVersion : 2;
-  useEffect(() => {
-    if (show && destinyVersion !== undefined) {
-      ga('send', 'pageview', `/profileMembershipId/d${destinyVersion}/compare`);
-    }
-  }, [show, destinyVersion]);
-
-  // Reset on path changes
-  const { pathname } = useLocation();
-  useEffect(() => {
-    cancel();
-  }, [pathname, cancel]);
-
-  // Clear the session on unmount
-  useEffect(
-    () => () => {
-      cancel();
-    },
-    [cancel]
-  );
+  }, [dispatch]);
 
   // Reset if there ever are no items
+  const hasItems = compareItems.length > 0;
   useEffect(() => {
-    if (hasSession && !hasItems) {
+    if (!hasItems) {
       cancel();
     }
-  }, [cancel, hasItems, hasSession]);
+  }, [cancel, hasItems]);
 
   // TODO: make a function that takes items and perk overrides and produces new items!
 
@@ -194,23 +159,23 @@ export default function Compare() {
   };
 
   // If the session was started with a specific item, this is it
-  const initialItem = session?.initialItemId
+  const initialItem = session.initialItemId
     ? compareItems.find((i) => i.id === session.initialItemId)
     : undefined;
+  const firstCompareItem = compareItems[0];
   // The example item is the one we'll use for generating suggestion buttons
   const exampleItem = initialItem || firstCompareItem;
 
-  const comparator = sortCompareItemsComparator(
-    sortedHash,
-    sortBetterFirst,
-    doCompareBaseStats,
-    allStats,
-    initialItem
-  );
-  const sortedComparisonItems = Array.from(compareItems).sort(comparator);
-
-  const items = useMemo(
-    () => (
+  const items = useMemo(() => {
+    const comparator = sortCompareItemsComparator(
+      sortedHash,
+      sortBetterFirst,
+      doCompareBaseStats,
+      allStats,
+      session.initialItemId
+    );
+    const sortedComparisonItems = Array.from(compareItems).sort(comparator);
+    return (
       <CompareItems
         items={sortedComparisonItems}
         allStats={allStats}
@@ -218,22 +183,19 @@ export default function Compare() {
         setHighlight={isTouch ? undefined : setHighlight}
         onPlugClicked={onPlugClicked}
         doCompareBaseStats={doCompareBaseStats}
-        initialItemId={session?.initialItemId}
+        initialItemId={session.initialItemId}
       />
-    ),
-    [
-      allStats,
-      doCompareBaseStats,
-      onPlugClicked,
-      remove,
-      session?.initialItemId,
-      sortedComparisonItems,
-    ]
-  );
-
-  if (!show) {
-    return null;
-  }
+    );
+  }, [
+    allStats,
+    compareItems,
+    doCompareBaseStats,
+    onPlugClicked,
+    remove,
+    session.initialItemId,
+    sortBetterFirst,
+    sortedHash,
+  ]);
 
   const header = (
     <div className={styles.options}>
@@ -378,11 +340,11 @@ function sortCompareItemsComparator(
   sortBetterFirst: boolean,
   compareBaseStats: boolean,
   allStats: StatInfo[],
-  initialItem?: DimItem
+  initialItemId?: string
 ) {
   if (!sortedHash) {
     return chainComparator(
-      compareBy((item) => item !== initialItem),
+      compareBy((item) => item.id !== initialItemId),
       acquisitionRecencyComparator
     );
   }
@@ -427,7 +389,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
     stats.push(
       makeFakeStat(
         firstComparison.primaryStat.statHash,
-        firstComparison.primaryStat.stat.displayProperties,
+        firstComparison.primaryStatDisplayProperties!,
         (item: DimItem) => item.primaryStat || undefined
       )
     );

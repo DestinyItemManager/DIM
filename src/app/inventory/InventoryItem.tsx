@@ -13,6 +13,7 @@ import ItemIcon from './ItemIcon';
 import ItemIconPlaceholder from './ItemIconPlaceholder';
 import NewItemIndicator from './NewItemIndicator';
 import { getSubclassIconInfo } from './subclass';
+import { canSyncLockState } from './SyncTagLock';
 import TagIcon from './TagIcon';
 
 interface Props {
@@ -25,14 +26,16 @@ interface Props {
   notes?: boolean;
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
+  /** Is the setting to automatically lock tagged items on? */
+  autoLockTagged: boolean;
   wishlistRoll?: InventoryWishListRoll;
   /** Hide the selected Super ability on subclasses? */
   hideSelectedSuper?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
   /** TODO: item locked needs to be passed in */
-  onClick?(e: React.MouseEvent): void;
-  onShiftClick?(e: React.MouseEvent): void;
-  onDoubleClick?(e: React.MouseEvent): void;
+  onClick?: (e: React.MouseEvent) => void;
+  onShiftClick?: (e: React.MouseEvent) => void;
+  onDoubleClick?: (e: React.MouseEvent) => void;
 }
 
 export default function InventoryItem({
@@ -41,6 +44,7 @@ export default function InventoryItem({
   tag,
   notes,
   searchHidden,
+  autoLockTagged,
   wishlistRoll,
   hideSelectedSuper,
   onClick,
@@ -51,7 +55,7 @@ export default function InventoryItem({
   let enhancedOnClick = onClick;
 
   if (onShiftClick) {
-    enhancedOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    enhancedOnClick = (e: React.MouseEvent) => {
       if (e.shiftKey) {
         onShiftClick(e);
       } else if (onClick) {
@@ -101,7 +105,7 @@ export default function InventoryItem({
         <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
         {(tag || item.locked || notes) && (
           <div className={styles.icons}>
-            {item.locked && (
+            {item.locked && (!autoLockTagged || !tag || !canSyncLockState(item)) && (
               <AppIcon
                 className={styles.icon}
                 icon={item.bucket.hash !== BucketHashes.Finishers ? lockIcon : starIcon}
@@ -114,7 +118,7 @@ export default function InventoryItem({
         {isNew && <NewItemIndicator />}
       </>
     );
-  }, [isNew, item, notes, subclassIconInfo, tag, wishlistRoll]);
+  }, [isNew, item, notes, subclassIconInfo, tag, wishlistRoll, autoLockTagged]);
 
   return (
     <div

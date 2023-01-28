@@ -1,4 +1,5 @@
 import { DestinyEnergyType, TierType } from 'bungie-api-ts/destiny2';
+import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
 import {
   BreakerTypeHashes,
   BucketHashes,
@@ -16,6 +17,14 @@ export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
 //
 // GAME MECHANICS KNOWN VALUES
 //
+
+// shortcuts for power numbers
+export const powerLevelByKeyword = {
+  powerfloor: D2SeasonInfo[D2CalculatedSeason].powerFloor,
+  softcap: D2SeasonInfo[D2CalculatedSeason].softCap,
+  powerfulcap: D2SeasonInfo[D2CalculatedSeason].powerfulCap,
+  pinnaclecap: D2SeasonInfo[D2CalculatedSeason].pinnacleCap,
+};
 
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
 
@@ -69,12 +78,6 @@ export const killTrackerObjectivesByHash: Record<number, 'pvp' | 'pve' | undefin
 export const killTrackerSocketTypeHash = 1282012138;
 
 export const weaponMasterworkY2SocketTypeHash = 2218962841;
-
-export const universalOrnamentPlugSetHashes: number[] = [
-  26360131, 71785814, 709078552, 1133647128, 1323117612, 1742798175, 2093871133, 2203626505,
-  2425516788, 2568801218, 2733810650, 3024995628, 3479876793, 4014441445, 4178224051,
-];
-
 //
 // STATS KNOWN VALUES
 //

@@ -7,14 +7,13 @@ import {
   ItemLocation,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import produce, { Draft, original } from 'immer';
+import produce, { Draft } from 'immer';
 import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import { setCurrentAccount } from '../accounts/actions';
 import type { AccountsAction } from '../accounts/reducer';
 import * as actions from './actions';
-import { mergeCollectibles } from './d2-stores';
 import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { AccountCurrency, DimStore } from './store-types';
@@ -54,10 +53,10 @@ export interface InventoryState {
   readonly readOnly: boolean;
 
   /**
-   * a JSON-encoded API profile response. if this is present,
-   * we use it instead of talking to the Bungie API
+   * An API profile response. If this is present,
+   * we use it instead of talking to the Bungie API.
    */
-  readonly mockProfileData?: string;
+  readonly mockProfileData?: DestinyProfileResponse;
 }
 
 export type InventoryAction = ActionType<typeof actions>;
@@ -75,6 +74,16 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
   action: InventoryAction | AccountsAction
 ): InventoryState => {
   switch (action.type) {
+    case getType(actions.profileLoaded):
+      return {
+        ...state,
+        profileResponse: action.payload.profile,
+        profileError: action.payload.live ? undefined : state.profileError,
+      };
+
+    case getType(actions.profileError):
+      return { ...state, profileError: action.payload };
+
     case getType(actions.update):
       return updateInventory(state, action.payload);
 
@@ -148,27 +157,20 @@ function updateInventory(
   state: InventoryState,
   {
     stores,
-    profileResponse,
     currencies,
   }: {
     stores: DimStore[];
     currencies: AccountCurrency[];
-    profileResponse?: DestinyProfileResponse;
   }
 ) {
   // TODO: we really want to decompose these, drive out all deep mutation
   // TODO: mark DimItem, DimStore properties as Readonly
-  const newState = {
+  return {
     ...state,
     stores,
     currencies,
     newItems: computeNewItems(state.stores, state.newItems, stores),
-    profileError: undefined,
   };
-  if (profileResponse) {
-    newState.profileResponse = profileResponse;
-  }
-  return newState;
 }
 
 /**
@@ -435,12 +437,6 @@ function awaItemChanged(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets
 ) {
-  const { profileResponse } = original(draft)!;
-
-  const mergedCollectibles = profileResponse
-    ? mergeCollectibles(profileResponse.profileCollectibles, profileResponse.characterCollectibles)
-    : {};
-
   // Replace item
   if (!item) {
     warnLog('awaChange', 'No item produced from change');
@@ -531,14 +527,7 @@ function awaItemChanged(
       currency.quantity = Math.min(max, currency.quantity + addedItemComponent.quantity);
     } else if (addedItemComponent.itemInstanceId) {
       const addedOwner = getSource(addedItemComponent);
-      const addedItem = makeItem(
-        defs,
-        buckets,
-        undefined,
-        addedItemComponent,
-        addedOwner,
-        mergedCollectibles
-      );
+      const addedItem = makeItem(defs, buckets, undefined, addedItemComponent, addedOwner);
       if (addedItem) {
         addItem(addedOwner, addedItem);
       }
@@ -550,14 +539,7 @@ function awaItemChanged(
         (i) => i.amount
       );
       let addAmount = addedItemComponent.quantity;
-      const addedItem = makeItem(
-        defs,
-        buckets,
-        undefined,
-        addedItemComponent,
-        target,
-        mergedCollectibles
-      );
+      const addedItem = makeItem(defs, buckets, undefined, addedItemComponent, target);
       if (!addedItem) {
         continue;
       }

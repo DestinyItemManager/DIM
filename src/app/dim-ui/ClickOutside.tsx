@@ -8,7 +8,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
   /** An optional second ref that will be excluded from being considered "outside". This is good for preventing the triggering button from double-counting clicks. */
   extraRef?: React.RefObject<HTMLElement>;
-  onClickOutside(event: React.MouseEvent | MouseEvent): void;
+  onClickOutside: (event: React.MouseEvent | MouseEvent) => void;
 };
 
 /**
@@ -18,11 +18,15 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
  * React DOM hierarchy rather than the real one. This is important for things like sheets
  * spawned through portals from the item popup.
  */
-export default React.forwardRef(function ClickOutside(
-  { onClickOutside, children, extraRef, onClick, ...other }: Props,
-  ref: React.RefObject<HTMLDivElement> | null
+export default React.forwardRef<HTMLDivElement, Props>(function ClickOutside(
+  { onClickOutside, children, extraRef, onClick, ...other },
+  ref
 ) {
   const localRef = useRef<HTMLDivElement>(null);
+  if (ref && !('current' in ref)) {
+    throw new Error('only works with a ref object');
+  }
+
   const wrapperRef = ref || localRef;
   const mouseEvents = useContext(ClickOutsideContext);
 

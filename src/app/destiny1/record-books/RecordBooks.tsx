@@ -150,7 +150,7 @@ export default function RecordBooks({ account }: Props) {
 
   const rawRecordBooks = stores[0].advisors.recordBooks;
   const recordBooks = _.sortBy(
-    _.map(rawRecordBooks, (rb) => processRecordBook(defs, rb)),
+    rawRecordBooks?.map((rb) => processRecordBook(defs, rb)),
     (rb) => [rb.complete, new Date(rb.startDate).getTime()]
   );
 
@@ -207,7 +207,7 @@ export default function RecordBooks({ account }: Props) {
                     >
                       <p>{page.description}</p>
 
-                      {page.records.length && (
+                      {page.records.length > 0 && (
                         <div className="record-page-records">
                           {page.records.map((record) => (
                             <div

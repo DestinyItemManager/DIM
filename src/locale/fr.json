@@ -199,6 +199,7 @@
     "ContributePower": "Affiche les objets qui ont de la puissance et qui peuvent contribuer à votre niveau de puissance.",
     "Cosmetic": "Affiche les objets de style ou cosmétiques.",
     "Craftable": "Affiche les objets pouvant être fabriqués.",
+    "CraftedDupe": "",
     "Curated": "Affiche les objets qui ont des attributs prédéterminés.",
     "CurrentClass": "Affiche les objets qui peuvent être équipés sur le personnage actuellement connecté.",
     "CustomStatLower": "Affiche les armures dont les statistiques sont strictement plus basses que celles d'une autre armure du même type, en ne prenant en compte que les statistiques dans le total de statistiques personnalisé de cette classe.",
@@ -310,6 +311,16 @@
     "Confirm": "Confirmer ?",
     "UserGuideLink": "Mode d'emploi"
   },
+  "Glyphs": {
+    "Gilded": "Doré",
+    "Misadventure": "Mésaventure",
+    "Missing": "Manquant",
+    "OpenSymbolsPicker": "Ouvrir le sélecteur de symboles",
+    "Quickfall": "Chute rapide",
+    "ScorchCannon": "Canon brûleur",
+    "SearchSymbols": "Rechercher des symboles...",
+    "Smoke": "Fumigène"
+  },
   "Header": {
     "About": "À propos de DIM",
     "AutoRefresh": "DIM se rechargera automatiquement tant que vous jouez.",
@@ -336,6 +347,7 @@
     "LaunchDIMAlone": "Nouvelle fenêtre",
     "MaterialCounts": "Quantité de matériaux",
     "Menu": "Menu",
+    "ProfileAge": "Les serveurs de Destiny ont envoyé des données mises à jour il y a {{age}}.\nActualiser DIM peut permettre d'obtenir des données plus récentes, mais Bungie.net pourrait renvoyer des informations mises en cache.",
     "Refresh": "Rafraîchir les données de Destiny [R]",
     "ReloadApp": "Recharger l'application",
     "ReportBug": "Signaler un bug",
@@ -381,11 +393,11 @@
     "ClickToExpand": "(Cliquez pour agrandir)"
   },
   "ItemFeed": {
-    "ClearFeed": "Clear Feed",
+    "ClearFeed": "Vider le flux",
     "Description": "Flux d'objets",
     "HideTagged": "Masquer ceux avec une étiquette",
-    "NoNewItems": "No new items",
-    "ShowOlderItems": "Show older items"
+    "NoNewItems": "Aucun nouveaux objets",
+    "ShowOlderItems": "Afficher les objets plus anciens"
   },
   "ItemMove": {
     "Consolidate": "{{name}} consolidé",
@@ -585,7 +597,7 @@
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
     "BadLoadoutShare": "Impossible de charger l'arsenal partagé",
     "BadLoadoutShareBody": "L'arsenal que vous essayez de charger est invalide: {{error}}",
-    "Before": "Avant '{{name}}'",
+    "Before": "Annuler '{{name}}'",
     "CannotCustomizeSubclass": "Cette doctrine ne peut pas être configurée",
     "ChooseItem": "Ajouter {{name}}",
     "ClassTypeMismatch": "Un objet pour {{className}} ne peut pas être ajouté à cet arsenal",
@@ -596,10 +608,11 @@
     "ClearSpace": "Déplacer les autres objets ailleurs",
     "ClearUnsetMods": "Retirer les autres mods",
     "ClearingSpace": "Déplacement des autres objets",
-    "Create": "Créer Arsenal",
+    "Create": "Créer un arsenal",
     "CurrentlyEquipped": "Actuellement équipé",
     "Deequip": "Dé-équipement des objets des autres personnages",
     "Delete": "Supprimer",
+    "DeprecatedMods": "Mods obsolètes",
     "Edit": "Modifier Arsenal",
     "EditBrief": "Éditer",
     "EquipItems": "Équipement des objets",
@@ -616,6 +629,7 @@
     "GatherEngrams": "Réunir les Engrammes",
     "GatherEngramsExceptExotics": "Exotiques",
     "Generated": "P{{tier}} Arsenal",
+    "HashtagTip": "Astuce : Utilisez des #hashtags dans vos noms ou notes d'arsenal et ils apparaîtront ici.",
     "Import": {
       "BadURL": "Ce n'est pas une URL de partage d'arsenal valide.",
       "Error": "Erreur lors de l'obtention de l'arsenal :",
@@ -641,6 +655,7 @@
     "MaximizeLight": "Lumière maximale",
     "MaximizePower": "Puissance maximale",
     "MaximizeStat": "Maximiser la Stat",
+    "MissingItems": "Objets manquants",
     "MissingItemsWarning": "Certains des objets dans cet arsenal ne sont plus dans votre inventaire.",
     "ModErrorSummary": "1 erreur de mod :",
     "ModErrorSummary_plural": "{{count}} erreurs de mod :",
@@ -650,9 +665,9 @@
     "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
     "NoExotics": "Aucun engrammes n'est disponible pour le transfert.",
     "NoSpace": "Vous n'avez plus d'espace libre dans le coffre et votre autres personnages.",
-    "NoneMatch": "Aucun des noms ou notes de vos arsenaux ne correspond à '{{query}}'.",
+    "NoneMatch": "Aucun de vos arsenaux ne correspond aux filtres.",
     "NotStarted": "En attende de la fin d'autres actions",
-    "NotesPlaceholder": "Écrire des notes sur cet arsenal",
+    "NotesPlaceholder": "Écrivez quelques notes sur cet arsenal ou utilisez des #hashtags pour le catégoriser",
     "NotificationTitle": "Arsenal: {{name}}",
     "OnWrongCharacterAdvice": "Cliquez ici pour trouver les objets les plus puissants de ce personnage.",
     "OnWrongCharacterWarning": "Les armures les plus puissantes de ce personnage sont sur un autre personnage. Pour qu'ils comptent dans le calcul de puissance des récompenses normales, de puissance, et de prestige, les armures doivent être sur ce personnage ou dans le coffre.",
@@ -763,6 +778,7 @@
     },
     "Infuse": "Infuser",
     "LockUnlock": {
+      "AutoLock": "L'état du verrouillage est synchronisé avec les étiquettes de cet objet",
       "Lock": "Bloquer {{itemType}}",
       "Locked": "Verrouillé",
       "Unlock": "Débloquer {{itemType}}",
@@ -793,6 +809,7 @@
       "Untracked": "Non suivi"
     },
     "TriageTab": "Triage",
+    "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
     "Vault": "Coffre",
     "WeaponLevel": "Niveau d'arme {{level}}"
   },
@@ -816,6 +833,7 @@
       "Archetype": "Archétype",
       "BaseStats": "Statistiques de Base",
       "Breaker": "Anti-champion",
+      "Crafted": "Shaped Date",
       "CustomTotal": "Total Personnalisé",
       "Damage": "Dégâts",
       "Element": "Élément",
@@ -915,6 +933,8 @@
     "UsageCount": "# Utilisé"
   },
   "Settings": {
+    "AutoLockTagged": "Synchroniser l'état de verrouillage des objets avec leur étiquette",
+    "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. Crafted items will remain unlocked to allow reshaping. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
     "BadgePostmaster": "Afficher le nombre d'objets au commis des postes pour le personnage actuel sur l'icône de l'application",
     "BadgePostmasterExplanation": "Pour utiliser cette fonctionnalité vous devez installer DIM en tant qu'application et votre système d'exploitation doit supporter l'affichage de badges",
     "BothDescriptions": "Les deux descriptions",
@@ -1056,6 +1076,8 @@
     "DimSyncNotEnabled": "La synchronisation DIM n'est pas activée, donc vos paramètres, étiquettes, arsenaux, et les recherches ne sont stockées que localement et seront perdues si vous effacez le stockage de votre navigateur. Activez la synchronisation DIM dans les paramètres pour sauvegarder automatiquement vos données, ou sauvegardez régulièrement vos données manuellement.",
     "EnableDimApi": "Activer la synchronisation DIM (recommandé)",
     "Export": "Télécharger une sauvegarde de données",
+    "ExportError": "Échec du téléchargement de la sauvegarde à partir de la synchronisation DIM",
+    "ExportErrorBody": "La synchronisation DIM est peut-être en panne, ou vous avez des problèmes avec votre connexion. Nous allons télécharger une copie de vos données enregistrées localement.",
     "Import": "Importer une sauvegarde de données",
     "ImportConfirmDimApi": "Êtes vous sûr de vouloir écraser vos étiquettes, arsenaux et paramètres actuels avec cette version ? Cela remplacera complètement ce que vous aviez.",
     "ImportExport": "Sauvegarde & importation",
@@ -1084,9 +1106,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "Le numéro choisi n'est pas valide !",
+      "No": "Non",
       "Reset": "DÉSAUTORISER",
-      "Title": "Choisissez ce numéro sur votre Stream Deck"
+      "Title": "Voyez-vous le même code sur votre Stream Deck ?",
+      "Update": "Si vous voyez ce message, vous utilisez une ancienne version du plugin. Veuillez télécharger la dernière mise à jour sur la boutique Stream Deck.",
+      "Yes": "Oui"
     },
     "Connected": "Connecté",
     "Enable": "Plugin Stream Deck",

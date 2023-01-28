@@ -31,8 +31,8 @@ export default function SubclassPlugDrawer({
 }: {
   subclass: DimItem;
   socketOverrides: SocketOverrides;
-  onAccept(overrides: SocketOverrides): void;
-  onClose(): void;
+  onAccept: (overrides: SocketOverrides) => void;
+  onClose: () => void;
 }) {
   const defs = useD2Definitions()!;
   const profileResponse = useSelector(profileResponseSelector);

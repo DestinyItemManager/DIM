@@ -58,7 +58,7 @@ export function getQualityRating(
   };
 
   let pure = 0;
-  stats.forEach((stat) => {
+  for (const stat of stats) {
     let scaled = {
       min: 0,
       max: 0,
@@ -76,10 +76,10 @@ export function getQualityRating(
     };
     ret.total.min += scaled.min || 0;
     ret.total.max += scaled.max || 0;
-  });
+  }
 
   if (pure === ret.total.min) {
-    stats.forEach((stat) => {
+    for (const stat of stats) {
       if (stat.scaled) {
         stat.scaled = {
           min: Math.floor(stat.scaled.min / 2),
@@ -93,7 +93,7 @@ export function getQualityRating(
           };
         }
       }
-    });
+    }
   }
 
   let quality = {
@@ -103,7 +103,7 @@ export function getQualityRating(
   };
 
   if (type.toLowerCase() !== 'artifact') {
-    stats.forEach((stat) => {
+    for (const stat of stats) {
       if (stat.qualityPercentage) {
         stat.qualityPercentage = {
           range: '',
@@ -111,7 +111,7 @@ export function getQualityRating(
           max: Math.min(100, stat.qualityPercentage.max),
         };
       }
-    });
+    }
     quality = {
       min: Math.min(100, quality.min),
       max: Math.min(100, quality.max),
@@ -119,11 +119,11 @@ export function getQualityRating(
     };
   }
 
-  stats.forEach((stat) => {
+  for (const stat of stats) {
     if (stat.qualityPercentage) {
       stat.qualityPercentage.range = getQualityRange(light.value, stat.qualityPercentage);
     }
-  });
+  }
   quality.range = getQualityRange(light.value, quality);
 
   return quality;

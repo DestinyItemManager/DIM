@@ -1,8 +1,9 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t } from 'app/i18next-t';
-import { D2BucketCategory, InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -82,6 +83,8 @@ export default function LoadoutView({
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
+  const missingSockets =
+    loadout.name === t('Loadouts.FromEquipped') && allItems.some((i) => i.missingSockets);
   const isPhonePortrait = useIsPhonePortrait();
 
   // TODO: filter down by usable mods?
@@ -108,7 +111,7 @@ export default function LoadoutView({
           {loadout.classType === DestinyClass.Unknown && (
             <ClassIcon className={styles.classIcon} classType={loadout.classType} />
           )}
-          {loadout.name}
+          <ColorDestinySymbols text={loadout.name} />
           {warnitems.length > 0 && (
             <span className={styles.missingItems}>
               <AlertIcon />
@@ -118,14 +121,16 @@ export default function LoadoutView({
         </h2>
         <div className={styles.actions}>{actionButtons}</div>
       </div>
-      {loadout.notes && <div className={styles.loadoutNotes}>{loadout.notes}</div>}
+      {loadout.notes && (
+        <ColorDestinySymbols className={styles.loadoutNotes} text={loadout.notes} />
+      )}
       <div className={styles.contents}>
         {(items.length > 0 || subclass || allMods.length > 0 || !_.isEmpty(modsByBucket)) && (
           <>
             {(!isPhonePortrait || subclass) && (
               <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
             )}
-            {['Weapons', 'Armor', 'General'].map((category: D2BucketCategory) => (
+            {(['Weapons', 'Armor', 'General'] as const).map((category) => (
               <LoadoutItemCategorySection
                 key={category}
                 category={category}
@@ -143,6 +148,7 @@ export default function LoadoutView({
               allMods={allMods}
               storeId={store.id}
               hideShowModPlacements={hideShowModPlacements}
+              missingSockets={missingSockets}
             />
           </>
         )}

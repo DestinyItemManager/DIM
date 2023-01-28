@@ -2,7 +2,6 @@ import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React from 'react';
 import styles from './EmoteSockets.m.scss';
 import Socket from './Socket';
 
@@ -20,7 +19,7 @@ export default function EmoteSockets({
   item: DimItem;
   itemDef: DestinyInventoryItemDefinition;
   sockets: DimSocket[];
-  onClick?(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
+  onClick?: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
 }) {
   const selectorIcon = <DefItemIcon itemDef={itemDef} />;
 

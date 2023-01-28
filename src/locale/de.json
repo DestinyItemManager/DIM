@@ -128,7 +128,7 @@
     "Description": "Versuche dein Inventar in der Destiny 2 Companion App zu laden, um zu sehen, ob Bungie.net nicht verfügbar ist.",
     "EmblemError": "Möglicherweise kannst du dies beheben, indem du deine Embleme im Spiel auf allen Charakteren wechselst.",
     "EmblemErrorLink": "Lies mehr darüber, wie man es beheben kann.",
-    "SystemDown": "Dies betrifft alle Destiny Apps, und das DIM Team kann es nicht reparieren oder umgehen.",
+    "SystemDown": "Dies betrifft alle Destiny-Apps, und das DIM-Team kann es nicht reparieren oder umgehen.",
     "Troubleshooting": "Fehlerbehebung"
   },
   "FarmingMode": {
@@ -168,10 +168,10 @@
     "ClearShadersTitle": "Alle Shader mit \"Keine Präferenz\" markieren",
     "NoPreference": "Keine Präferenz - diese Fassung bleibt unverändert",
     "Reset": "Mode-Auswahl aufheben",
-    "Sync": "Synchronisieren",
+    "Sync": "Synchr.",
     "SyncOrnaments": "Ornamente synchronisieren",
     "SyncOrnamentsTitle": "Ornamente aus demselben Set für alle Gegenstände verwenden, falls freigeschaltet",
-    "SyncShaders": "Shader synchronisieren",
+    "SyncShaders": "Shader synchr.",
     "SyncShadersTitle": "Denselben Shader für alle Gegenstände verwenden",
     "Title": "Shader und Ornamente auswählen",
     "UseEquipped": "Ausgerüstete Mode verwenden"
@@ -199,7 +199,8 @@
     "ContributePower": "Zeige Gegenstände, die Power haben und zu deinem Power-Level beitragen können.",
     "Cosmetic": "Zeigt Gegenstände, die Flair oder Kosmetika sind.",
     "Craftable": "Zeigt formbare Gegenstände an.",
-    "Curated": "Zeigt Gegenstände, welche empfohlene Perks besitzen.",
+    "CraftedDupe": "",
+    "Curated": "Zeigt Gegenstände die ein kuratierter Roll sind.",
     "CurrentClass": "Zeigt Gegenstände an, die auf dem derzeit eingeloggten Hüter ausrüstbar sind.",
     "CustomStatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs, wobei nur die Werte in der benutzerdefinierten Statistik-Gesamtliste dieser Klasse berücksichtigt werden.",
     "DamageType": "Zeigt Gegenstände basierend auf deren Schadenstyp.",
@@ -310,6 +311,16 @@
     "Confirm": "Bestätigen?",
     "UserGuideLink": "Benutzerhandbuch"
   },
+  "Glyphs": {
+    "Gilded": "Vergoldet",
+    "Misadventure": "Missgeschick",
+    "Missing": "Fehlend",
+    "OpenSymbolsPicker": "Symbolauswahl öffnen",
+    "Quickfall": "Schnellfall",
+    "ScorchCannon": "Scorch-Kanone",
+    "SearchSymbols": "Symbole suchen...",
+    "Smoke": "Rauch"
+  },
   "Header": {
     "About": "Über DIM",
     "AutoRefresh": "DIM wird automatisch aktualisieren, solange du noch spielst.",
@@ -336,6 +347,7 @@
     "LaunchDIMAlone": "Separates Fenster",
     "MaterialCounts": "Materialanzahl",
     "Menu": "Menü",
+    "ProfileAge": "Die Destiny-Server haben ihre Daten zuletzt vor {{age}} aktualisiert.\nWenn du DIM aktualisierst, könntest du neuere Daten erhalten, aber Bungie.net könnte auch veraltete Informationen wiederholen.",
     "Refresh": "Aktualisiere Destiny Daten [R]",
     "ReloadApp": "App neu laden",
     "ReportBug": "Fehler melden",
@@ -532,19 +544,19 @@
     "MissingClassDescription": "Der Build, den du sehen möchtest, ist für eine Charakterklasse gedacht, die du nicht hast.",
     "NoBuildsFoundExplainer": {
       "ActiveSearchQuery": "Eine aktive Suchanfrage beschränkt die Elemente, die DIM in Ausrüstungen einschließen kann",
-      "AllowAutoStatMods": "Erlaube DIM zusätzliche Statistik-Mods automatisch einzubinden",
+      "AllowAutoStatMods": "Erlaube DIM, zusätzliche Statistik-Mods automatisch einzubinden",
       "AlwaysInvalidMods": "Diese Mods passen auf keine deiner Gegenstände:",
-      "AssumeElementChange": "Erlaube DIM Änderungen an der Rüstungs-Affinität zu empfehlen",
-      "AssumeMasterworked": "Erlaube DIM Rüstungen als Meisterwerk anzunehmen",
+      "AssumeElementChange": "Erlaube DIM, Änderungen an der Rüstungs-Affinität zu empfehlen",
+      "AssumeMasterworked": "Erlaube DIM, Rüstungen als Meisterwerk anzunehmen",
       "AssumptionsRestricted": "DIM kann keine Änderungen an der Rüstungs-Affinität empfehlen:",
       "BadSlot": "Im {{bucketName}} Slot konnte keiner der erlaubten Gegenstände diese Mods aufnehmen:",
       "Header": "Es wurden keine Builds gefunden. Hier sind mögliche Gründe, warum DIM keine Builds finden konnte:",
       "LowerBoundsFailed": "Viele Sets erfüllten nicht die Mindestanforderungen für Tier-Stufen",
-      "MaybeAllowMoreItems": "Erwäge andere Gegenstände zu erlauben:",
+      "MaybeAllowMoreItems": "Erwäge, andere Gegenstände zu erlauben:",
       "MaybeDecreaseLowerBounds": "Ziehe in Betracht, die Mindestanforderungen für Tier-Stufen zu reduzieren",
       "MaybeIncreaseUpperBounds": "Ziehe die Erhöhung der Tier-Stufen in Betracht",
-      "MaybeRemoveMods": "Erwäge einige Mods zu entfernen:",
-      "MaybeRemoveSearchQuery": "Ziehe in Betracht Filter in der Suchleiste zu löschen oder zu ändern",
+      "MaybeRemoveMods": "Erwäge, einige Mods zu entfernen:",
+      "MaybeRemoveSearchQuery": "Ziehe in Betracht, Filter in der Suchleiste zu löschen oder zu ändern",
       "ModAssignmentFailed": "Viele Sets konnten nicht alle ausgewählten Mods unterbringen",
       "RemoveMods": "Diese Mods entfernen",
       "UpperBoundsFailed": "Viele Sets erfüllten nicht die Maximalanforderungen für Tier-Stufen"
@@ -600,6 +612,7 @@
     "CurrentlyEquipped": "Zurzeit ausgerüstet",
     "Deequip": "Lege Gegenstände von anderen Charakteren ab",
     "Delete": "Löschen",
+    "DeprecatedMods": "Veraltete Mods",
     "Edit": "Ausrüstung bearbeiten",
     "EditBrief": "Bearbeiten",
     "EquipItems": "Rüste Gegenstände aus",
@@ -616,6 +629,7 @@
     "GatherEngrams": "Engramme sammeln",
     "GatherEngramsExceptExotics": "Exotische",
     "Generated": "T{{tier}} Ausrüstung",
+    "HashtagTip": "Tipp: Du kannst #Hashtags in deinen Ausrüstungsnamen oder -notizen verwenden, um sie hier angezeigt zu bekommen.",
     "Import": {
       "BadURL": "Keine gültige Ausrüstung-Teilen-URL.",
       "Error": "Fehler beim Laden der Ausrüstung:",
@@ -641,6 +655,7 @@
     "MaximizeLight": "Max Licht",
     "MaximizePower": "Max Power",
     "MaximizeStat": "Maximiere Werte",
+    "MissingItems": "Fehlende Gegenstände",
     "MissingItemsWarning": "Einige der Gegenstände in dieser Ausrüstung befinden sich nicht mehr in deinem Inventar.",
     "ModErrorSummary": "1 Mod-Fehler:",
     "ModErrorSummary_plural": "{{count}} Mod-Fehler:",
@@ -650,9 +665,9 @@
     "NoEngrams": "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
     "NoExotics": "Es sind keine Engramme zum Transfer verfügbar.",
     "NoSpace": "Du hast keinen Platz im Tresor und allen anderen Charakteren.",
-    "NoneMatch": "Keine deiner Ausrüstungs-Namen oder -Notizen beinhalten '{{query}}'.",
+    "NoneMatch": "Keiner deiner Ausrüstungen entsprach den Filtern.",
     "NotStarted": "Warte auf andere Aktionen",
-    "NotesPlaceholder": "Schreibe ein paar Notizen zu dieser Ausrüstung",
+    "NotesPlaceholder": "Schreibe ein paar Notizen über diese Ausrüstung – oder benutze #Hashtags, um sie in Kategorien einzuordnen",
     "NotificationTitle": "Ausrüstung: {{name}}",
     "OnWrongCharacterAdvice": "Klicke hier, um die Gegenstände dieses Charakters mit der höchsten Power zu finden.",
     "OnWrongCharacterWarning": "Die mächtigste Rüstung dieses Charakters ist auf einem anderen Charakter. Um zur Power für Drops und für mächtige und Spitzen-Belohnungen zu zählen, muss die Rüstung auf diesem Charakter oder im Tresor sein.",
@@ -763,6 +778,7 @@
     },
     "Infuse": "Infundieren",
     "LockUnlock": {
+      "AutoLock": "Sperrstatus ist mit der Markierung dieses Gegenstands synchronisiert",
       "Lock": "{{itemType}} sperren",
       "Locked": "Gesperrt",
       "Unlock": "{{itemType}} entsperren",
@@ -793,6 +809,7 @@
       "Untracked": "Unverfolgt"
     },
     "TriageTab": "Vorselektieren",
+    "UnreliablePerkOption": "Dieser Perk erscheint nur in der Sammlungsansicht. Möglicherweise wird er nicht zufällig auf dieses Element rollen.",
     "Vault": "Tresor",
     "WeaponLevel": "Waffen-Level {{level}}"
   },
@@ -816,6 +833,7 @@
       "Archetype": "Archetyp",
       "BaseStats": "Grundwerte",
       "Breaker": "Brecher",
+      "Crafted": "Formdatum",
       "CustomTotal": "Benutzerdefinierte Summe",
       "Damage": "Schaden",
       "Element": "Affinität",
@@ -915,6 +933,8 @@
     "UsageCount": "# Verwendet"
   },
   "Settings": {
+    "AutoLockTagged": "Sperrstatus mit Markierung synchronisieren",
+    "AutoLockTaggedExplanation": "DIM wird Gegenstände automatisch je nach Markierung sperren oder entsperren. Hergestellte Gegenstände bleiben freigeschaltet, um eine Umformung zu ermöglichen. Wenn diese Einstellung aktiviert ist, wird das Schloss-Symbol nicht auf Gegenständen mit einer Markierung angezeigt.",
     "BadgePostmaster": "Zeige die Anzahl der Poststellen-Gegenstände für den aktuellen Charakter auf dem App-Symbol",
     "BadgePostmasterExplanation": "Damit dies funktioniert, musst du DIM als App installieren und dein Betriebssystem muss die Anzeige von Abzeichen unterstützen",
     "BothDescriptions": "Beide Beschreibungen",
@@ -1056,6 +1076,8 @@
     "DimSyncNotEnabled": "DIM Sync ist nicht aktiviert. Dies bedeutet, dass deine Einstellungen, Markierungen, Ausrüstungen und Suchanfragen nur lokal gespeichert sind und verlorengehen werden, wenn du deinen Browserspeicher löschst. Du kannst DIM Sync in den Einstellungen aktivieren, um deine Daten automatisch zu sichern; oder sie regelmäßig zum Sichern manuell herunterladen.",
     "EnableDimApi": "DIM Sync aktivieren (empfohlen)",
     "Export": "Datensicherung herunterladen",
+    "ExportError": "Fehler beim Herunterladen des Backups von DIM Sync",
+    "ExportErrorBody": "DIM Sync ist möglicherweise offline, oder du hast Probleme mit deiner Verbindung. Wir werden stattdessen eine Kopie deiner lokal gespeicherten Daten herunterladen.",
     "Import": "Datensicherung importieren",
     "ImportConfirmDimApi": "Bist du sicher, dass du deine aktuellen Tags, Ausrüstungen und Einstellungen mit dieser Version überschreiben möchtest? Dies wird deine aktuelle Version komplett ersetzen.",
     "ImportExport": "Backup & Import",
@@ -1084,9 +1106,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "Die gewählte Nummer ist nicht gültig!",
+      "No": "Nein",
       "Reset": "DE-AUTORISIEREN",
-      "Title": "Wähle diese Nummer auf deinem Stream Deck"
+      "Title": "Wird auf deinem Stream Deck der gleiche Code angezeigt?",
+      "Update": "Wenn du diese Nachricht sehen kannst, benutzt du eine veraltete Version des Plugins. Bitte lade das neueste Update aus dem Stream-Deck-Store herunter.",
+      "Yes": "Ja"
     },
     "Connected": "Verbunden",
     "Enable": "Stream Deck Plugin",
@@ -1137,7 +1161,7 @@
     "YourBestItem": "Dein bester Gegenstand"
   },
   "Triumphs": {
-    "GildingTriumph": "Triumph Vergoldung",
+    "GildingTriumph": "Triumph-Vergoldung",
     "HideCompleted": "Abgeschlossene Triumphe ausblenden",
     "RevealRedacted": "Versteckte Triumphe enthüllen"
   },

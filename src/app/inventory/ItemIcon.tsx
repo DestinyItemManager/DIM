@@ -11,7 +11,7 @@ import {
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import pursuitComplete from 'images/highlightedObjective.svg';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
@@ -119,8 +119,10 @@ export function DefItemIcon({
   }
   const itemCategoryHashes = itemDef.itemCategoryHashes || [];
   borderless ||=
+    itemDef.plug?.plugCategoryHash === PlugCategoryHashes.Intrinsics ||
     itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||
     itemCategoryHashes.includes(ItemCategoryHashes.Engrams);
+
   const itemImageStyles = clsx(
     'item-img',
     className,

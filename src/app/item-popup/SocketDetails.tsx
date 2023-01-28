@@ -10,12 +10,14 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isValidMasterworkStat } from 'app/inventory/store/masterwork';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { unlockedByAllModsBeingUnlocked } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { collectionsVisibleShadersSelector } from 'app/records/selectors';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { SearchInput } from 'app/search/SearchInput';
+import { artifactModsSelector } from 'app/strip-sockets/strip-sockets';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
 import {
@@ -103,7 +105,7 @@ export const SocketDetailsMod = memo(
   }: {
     itemDef: PluggableInventoryItemDefinition;
     className?: string;
-    onClick?(mod: PluggableInventoryItemDefinition): void;
+    onClick?: (mod: PluggableInventoryItemDefinition) => void;
   }) => {
     const onClickFn = onClick && (() => onClick(itemDef));
 
@@ -132,10 +134,11 @@ export default function SocketDetails({
   socket: DimSocket;
   /** Set to true if you want to insert the plug when it's selected, rather than returning it. */
   allowInsertPlug: boolean;
-  onClose(): void;
-  onPlugSelected?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  onClose: () => void;
+  onPlugSelected?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
   const defs = useD2Definitions()!;
+  const artifactMods = useSelector(artifactModsSelector);
   const plugged = socket.plugged?.plugDef;
   const actuallyPlugged = (socket.actuallyPlugged || socket.plugged)?.plugDef;
   const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
@@ -202,7 +205,8 @@ export default function SocketDetails({
   const unlocked = (i: PluggableInventoryItemDefinition) =>
     i.hash === socket.emptyPlugItemHash ||
     unlockedPlugs.has(i.hash) ||
-    otherUnlockedPlugs.has(i.hash);
+    otherUnlockedPlugs.has(i.hash) ||
+    unlockedByAllModsBeingUnlocked(i, artifactMods);
 
   const searchFilter = createPlugSearchPredicate(query, language, defs);
 
@@ -301,7 +305,7 @@ export default function SocketDetails({
   const footer =
     selectedPlug &&
     isPluggableItem(selectedPlug) &&
-    (({ onClose }: { onClose(): void }) => (
+    (({ onClose }: { onClose: () => void }) => (
       <SocketDetailsSelectedPlug
         plug={selectedPlug}
         item={item}

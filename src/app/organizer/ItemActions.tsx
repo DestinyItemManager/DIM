@@ -1,6 +1,7 @@
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { t } from 'app/i18next-t';
-import { itemTagList, TagInfo } from 'app/inventory/dim-item-info';
+import { itemTagList, TagCommand } from 'app/inventory/dim-item-info';
 import { DimStore } from 'app/inventory/store-types';
 import {
   AppIcon,
@@ -10,10 +11,18 @@ import {
   tagIcon,
   unlockedIcon,
 } from 'app/shell/icons';
-import React from 'react';
 import styles from './ItemActions.m.scss';
 
-const bulkItemTags = Array.from(itemTagList);
+export interface TagCommandInfo {
+  type?: TagCommand;
+  label: string;
+  sortOrder?: number;
+  displacePriority?: number;
+  hotkey?: string;
+  icon?: string | IconDefinition;
+}
+
+const bulkItemTags: TagCommandInfo[] = Array.from(itemTagList);
 bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
 
 function ItemActions({
@@ -26,10 +35,10 @@ function ItemActions({
 }: {
   stores: DimStore[];
   itemsAreSelected: boolean;
-  onLock(locked: boolean): void;
-  onNote(note?: string): void;
-  onTagSelectedItems(tagInfo: TagInfo): void;
-  onMoveSelectedItems(store: DimStore): void;
+  onLock: (locked: boolean) => void;
+  onNote: (note?: string) => void;
+  onTagSelectedItems: (tagInfo: TagCommandInfo) => void;
+  onMoveSelectedItems: (store: DimStore) => void;
 }) {
   const tagItems: Option[] = bulkItemTags.map((tagInfo) => ({
     key: tagInfo.label,

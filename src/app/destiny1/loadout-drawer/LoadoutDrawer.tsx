@@ -25,6 +25,7 @@ import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import TextareaAutosize from 'react-textarea-autosize';
 import { v4 as uuidv4 } from 'uuid';
 import './loadout-drawer.scss';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
@@ -50,7 +51,7 @@ export default function LoadoutDrawer({
   storeId: string;
   isNew: boolean;
   showClass: boolean;
-  onClose(): void;
+  onClose: () => void;
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD1Definitions()!;
@@ -162,7 +163,7 @@ export default function LoadoutDrawer({
       <h1>{isNew ? t('Loadouts.Create') : t('Loadouts.Edit')}</h1>
       <LoadoutDrawerOptions loadout={loadout} showClass={showClass} setLoadout={setLoadout} />
       {loadout.notes !== undefined && (
-        <textarea
+        <TextareaAutosize
           onChange={handleNotesChanged}
           value={loadout.notes}
           placeholder={t('Loadouts.NotesPlaceholder')}
@@ -172,7 +173,7 @@ export default function LoadoutDrawer({
     </div>
   );
 
-  const footer = ({ onClose }: { onClose(): void }) => (
+  const footer = ({ onClose }: { onClose: () => void }) => (
     <LoadoutDrawerFooter
       loadout={loadout}
       isNew={isNew}

@@ -92,7 +92,7 @@
     margin-top: 4px;
     display: flex;
     flex-flow: row wrap;
-    @include horizontal-space-children(8px);
+    gap: 8px;
   }
 }
 

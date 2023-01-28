@@ -41,6 +41,16 @@
     "declaration-block-no-duplicate-properties": [
       true,
       { "ignore": ["consecutive-duplicates-with-different-values"] }
+    ],
+    "scss/function-no-unknown": [
+      true,
+      { "ignoreFunctions": "/^dim-([a-z][a-z0-9]*)(-[a-z0-9]+)*$/" }
+    ],
+    "scss/at-function-pattern": [
+      "^dim-([a-z][a-z0-9]*)(-[a-z0-9]+)*$",
+      {
+        "message": "Expected function name to be kebab-case and prefixed with 'dim-'"
+      }
     ]
   }
 }

@@ -192,7 +192,7 @@ export default memo(function LockArmorAndPerks({
       )}
       {/* Locked exotic */}
       <div className={styles.area}>
-        {lockedExoticHash && (
+        {lockedExoticHash !== undefined && (
           <div className={styles.notItemGrid}>
             <ExoticArmorChoice
               lockedExoticHash={lockedExoticHash}

@@ -12,8 +12,10 @@
 }
 
 .menuButtons {
+  display: flex;
+  flex-direction: column;
   margin: 8px 0;
-  @include vertical-space-children(8px);
+  gap: 8px;
   @include phone-portrait {
     padding-left: 10px;
     padding-right: 10px;
@@ -25,6 +27,7 @@
   text-align: left;
 }
 
-.iconLabel {
-  margin-right: 8px;
+.hashtagTip {
+  display: flex;
+  align-items: center;
 }

@@ -32,12 +32,6 @@
   display: flex;
   flex-flow: row wrap;
   padding: 0;
-  max-width: 800px;
-
-  // Prevents odd number of columns messing up the layout
-  @media (max-width: 1079px) {
-    max-width: 500px;
-  }
 
   > * {
     margin-right: 14px;

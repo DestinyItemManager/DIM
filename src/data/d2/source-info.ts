@@ -83,7 +83,10 @@ const D2Sources: {
     searchString: [],
   },
   battlegrounds: {
-    itemHashes: [],
+    itemHashes: [
+      2121785039, // Brass Attacks
+      3075224551, // Threaded Needle
+    ],
     sourceHashes: [
       3391325445, // Source: Battlegrounds
     ],
@@ -709,9 +712,13 @@ const D2Sources: {
     searchString: [],
   },
   haunted: {
-    itemHashes: [],
+    itemHashes: [
+      1478986057, // Without Remorse
+      2778013407, // Firefright
+    ],
     sourceHashes: [
       620369433, // Source: Season of the Haunted Triumph
+      976328308, // Source: The Derelict Leviathan
       1283862526, // Source: Season of the Haunted Nightfall Grandmaster
       2273761598, // Source: Season of the Haunted Activities
       2676881949, // Source: Season of the Haunted
@@ -963,6 +970,25 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  'pinnacle-weapon': {
+    itemHashes: [
+      578459533, // Wendigo GL3
+      654608616, // Revoker
+      1584643826, // Hush
+      1600633250, // 21% Delirium
+      3354242550, // The Recluse
+      3907337522, // Oxygen SR3
+    ],
+    sourceHashes: [
+      598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
+      1162859311, // Source: Complete the "Clean Getaway" quest.
+      1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
+      2317365255, // Source: Complete the "A Loud Racket" quest.
+      2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
+      2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+    ],
+    searchString: [],
+  },
   pit: {
     itemHashes: [],
     sourceHashes: [
@@ -973,17 +999,7 @@ const D2Sources: {
   plunder: {
     itemHashes: [
       820890091, // Planck's Stride
-      910459310, // Brigand's Law
       1298815317, // Brigand's Law
-      2144363076, // Brigand's Law
-      2192971810, // Brigand's Law
-      2559599505, // Planck's Stride
-      2611964593, // Brigand's Law
-      2839071082, // Planck's Stride
-      3417523187, // Planck's Stride
-      3575589837, // Planck's Stride
-      3904579395, // Brigand's Law
-      4229502516, // Planck's Stride
     ],
     sourceHashes: [
       790152021, // Source: Season of Plunder Triumph
@@ -1020,7 +1036,10 @@ const D2Sources: {
     searchString: [],
   },
   psiops: {
-    itemHashes: [],
+    itemHashes: [
+      2097055732, // Piece of Mind
+      4067556514, // Thoughtless
+    ],
     sourceHashes: [
       450719423, // Source: Season of the Risen
       2075569025, // PsiOps
@@ -1096,6 +1115,25 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  'ritual-weapon': {
+    itemHashes: [
+      805677041, // Buzzard
+      838556752, // Python
+      847329160, // Edgewise
+      1179141605, // Felwinter's Lie
+      1644680957, // Null Composure
+      2697058914, // Komodo-4FR
+      3434944005, // Point of the Stag
+      3535742959, // Randy's Throwing Knife
+      4184808992, // Adored
+      4227181568, // Exit Strategy
+    ],
+    sourceHashes: [
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
+      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
+    ],
+    searchString: [],
+  },
   saint14: {
     itemHashes: [],
     sourceHashes: [
@@ -1139,7 +1177,10 @@ const D2Sources: {
     searchString: [],
   },
   servitor: {
-    itemHashes: [],
+    itemHashes: [
+      599895591, // Sojourner's Tale
+      2434225986, // Shattered Cipher
+    ],
     sourceHashes: [
       139160732, // Source: Season of the Splicer
       277706045, // Source: Season of the Splicer Nightfall Grandmaster
@@ -1226,11 +1267,25 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  sotw: {
+    itemHashes: [],
+    sourceHashes: [
+      1597738585, // Source: "Spire of the Watcher" Dungeon
+    ],
+    searchString: [],
+  },
   spireofstars: {
     itemHashes: [],
     sourceHashes: [
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
       2812190367, // Source: Leviathan, Spire of Stars raid lair on Prestige difficulty.
+    ],
+    searchString: [],
+  },
+  spireofthewatcher: {
+    itemHashes: [],
+    sourceHashes: [
+      1597738585, // Source: "Spire of the Watcher" Dungeon
     ],
     searchString: [],
   },
@@ -1444,6 +1499,13 @@ const D2Sources: {
     sourceHashes: [
       2653840925, // Source: Challenger's Proving VII Quest
       4079816474, // Source: War Table
+    ],
+    searchString: [],
+  },
+  watcher: {
+    itemHashes: [],
+    sourceHashes: [
+      1597738585, // Source: "Spire of the Watcher" Dungeon
     ],
     searchString: [],
   },

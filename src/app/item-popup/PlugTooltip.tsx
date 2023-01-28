@@ -1,8 +1,8 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { isPluggableItem } from 'app/inventory/store/sockets';
@@ -94,6 +94,7 @@ export function DimPlugTooltip({
       plugObjectives={plug.plugObjectives}
       enableFailReasons={plug.enableFailReasons}
       cannotCurrentlyRoll={plug.cannotCurrentlyRoll}
+      unreliablePerkOption={plug.unreliablePerkOption}
       wishListTip={wishListTip}
       hideRequirements={hideRequirements}
       craftingData={craftingData}
@@ -116,6 +117,7 @@ export function PlugTooltip({
   plugObjectives,
   enableFailReasons,
   cannotCurrentlyRoll,
+  unreliablePerkOption,
   wishListTip,
   hideRequirements,
   craftingData,
@@ -125,6 +127,7 @@ export function PlugTooltip({
   plugObjectives?: DestinyObjectiveProgress[];
   enableFailReasons?: string;
   cannotCurrentlyRoll?: boolean;
+  unreliablePerkOption?: boolean;
   wishListTip?: string;
   hideRequirements?: boolean;
   craftingData?: DestinyPlugItemCraftingRequirements;
@@ -238,14 +241,17 @@ export function PlugTooltip({
       )}
 
       <Tooltip.Section>
-        {sourceString && <div className={styles.source}>{sourceString}</div>}
-        {!hideRequirements && defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
-          <div className={styles.objectives}>
-            {filteredPlugObjectives.map((objective) => (
-              <Objective key={objective.objectiveHash} objective={objective} />
-            ))}
-          </div>
-        )}
+        {Boolean(sourceString) && <div className={styles.source}>{sourceString}</div>}
+        {!hideRequirements &&
+          defs &&
+          filteredPlugObjectives &&
+          filteredPlugObjectives.length > 0 && (
+            <div className={styles.objectives}>
+              {filteredPlugObjectives.map((objective) => (
+                <Objective key={objective.objectiveHash} objective={objective} />
+              ))}
+            </div>
+          )}
         {enableFailReasons && <p>{enableFailReasons}</p>}
       </Tooltip.Section>
 
@@ -255,7 +261,7 @@ export function PlugTooltip({
             <p key={r.failureDescription}>{r.failureDescription}</p>
           ))}
           {defs &&
-            craftingData.materialRequirementHashes.length &&
+            craftingData.materialRequirementHashes.length > 0 &&
             craftingData.materialRequirementHashes.flatMap((h) => {
               const materialRequirement = defs?.MaterialRequirementSet.get(h).materials;
               return materialRequirement.map((m) => {
@@ -275,6 +281,11 @@ export function PlugTooltip({
       {cannotCurrentlyRoll && (
         <Tooltip.Section className={styles.cannotRollSection}>
           <p>{t('MovePopup.CannotCurrentlyRoll')}</p>
+        </Tooltip.Section>
+      )}
+      {unreliablePerkOption && (
+        <Tooltip.Section className={styles.cannotRollSection}>
+          <p>{t('MovePopup.UnreliablePerkOption')}</p>
         </Tooltip.Section>
       )}
       {wishListTip && (

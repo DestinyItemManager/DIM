@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'deleteIcon': string;
+  'filterBarButton': string;
+  'filterHelp': string;
   'highlightedItem': string;
   'invalid': string;
   'keyHelp': string;

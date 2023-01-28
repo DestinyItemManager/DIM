@@ -7,7 +7,6 @@ import { useLocation } from 'react-router';
 import { setSearchQuery } from '../shell/actions';
 import MainSearchBarActions from './MainSearchBarActions';
 import MainSearchBarMenu from './MainSearchBarMenu';
-import './search-filter.scss';
 import SearchBar, { SearchFilterRef } from './SearchBar';
 import { SearchInput } from './SearchInput';
 
@@ -18,7 +17,7 @@ export function SearchFilter(
   {
     onClear,
   }: {
-    onClear?(): void;
+    onClear?: () => void;
   },
   ref: React.Ref<SearchFilterRef>
 ) {

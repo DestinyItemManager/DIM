@@ -5,10 +5,10 @@ export interface ItemPickerOptions {
   /** Override the default "Choose an Item" prompt. */
   prompt?: string;
   /** Optionally restrict items to a particular subset. */
-  filterItems?(item: DimItem): boolean;
+  filterItems?: (item: DimItem) => boolean;
   /** An extra sort function that items will be sorted by (beyond the default sort chosen by the user)  */
-  sortBy?(item: DimItem): unknown;
-  uniqueBy?(item: DimItem): unknown;
+  sortBy?: (item: DimItem) => unknown;
+  uniqueBy?: (item: DimItem) => unknown;
 }
 
 interface ItemSelectResult {
@@ -16,8 +16,8 @@ interface ItemSelectResult {
 }
 
 export type ItemPickerState = ItemPickerOptions & {
-  onItemSelected(result: ItemSelectResult): void;
-  onCancel(reason?: Error): void;
+  onItemSelected: (result: ItemSelectResult) => void;
+  onCancel: (reason?: Error) => void;
 };
 
 export const showItemPicker$ = new EventBus<ItemPickerState | undefined>();

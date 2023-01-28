@@ -126,7 +126,7 @@
   },
   "ErrorPanel": {
     "Description": "Destiny 2 컴패니언 앱에서 소지품을 불러와서 Bungie.net 서버 상태를 확인해 보세요.",
-    "EmblemError": "모든 캐릭터의 문양을 교체하여 이 문제를 해결할 수 있습니다.",
+    "EmblemError": "게임 내 모든 캐릭터의 문양을 교체하여 이 문제를 해결할 수 있습니다.",
     "EmblemErrorLink": "문제를 해결하려면 다음을 참고하십시오.",
     "SystemDown": "이 문제는 모든 데스티니 앱에 해당되며, DIM 팀이 고치거나 우회할 수 없습니다.",
     "Troubleshooting": "문제 해결 가이드"
@@ -199,6 +199,7 @@
     "ContributePower": "전투력을 높일 수 있는 아이템 표시",
     "Cosmetic": "장식 및 기타 아이템 표시",
     "Craftable": "제작 가능한 아이템 표시",
+    "CraftedDupe": "",
     "Curated": "고정 특성 조합이 있는 아이템 표시",
     "CurrentClass": "현재 접속한 수호자에게 장착할 수 있는 아이템 표시",
     "CustomStatLower": "사용자 정의 총합의 능력치만 고려하여 동일한 종류의 다른 방어구보다 능력치가 확실하게 낮은 방어구 표시",
@@ -310,6 +311,16 @@
     "Confirm": "확인?",
     "UserGuideLink": "사용 설명서"
   },
+  "Glyphs": {
+    "Gilded": "금박",
+    "Misadventure": "사고사",
+    "Missing": "누락",
+    "OpenSymbolsPicker": "기호 선택기 열기",
+    "Quickfall": "빠른 착지",
+    "ScorchCannon": "소각 대포",
+    "SearchSymbols": "기호 검색...",
+    "Smoke": "연막"
+  },
   "Header": {
     "About": "DIM에 관하여",
     "AutoRefresh": "플레이하는 동안 DIM을 자동으로 새로고침합니다.",
@@ -336,6 +347,7 @@
     "LaunchDIMAlone": "다른 창",
     "MaterialCounts": "재료 수",
     "Menu": "메뉴",
+    "ProfileAge": "데스티니 서버에서 마지막으로 업데이트된 데이터를 {{age}} 전에 보냈습니다.\nDIM을 새로고침하면 새로운 데이터를 받을 수 있으나, 캐시된 정보를 다시 보낼 수도 있습니다.",
     "Refresh": "데스티니 데이터 새로고침 [R]",
     "ReloadApp": "앱 새로고침",
     "ReportBug": "버그 제보",
@@ -590,7 +602,7 @@
     "ChooseItem": "{{name}} 추가",
     "ClassTypeMismatch": "{{className}} 아이템을 이 로드아웃에 추가할 수 없습니다.",
     "ClassTypeMissing": "로드아웃을 생성할 {{className}}이(가) 없습니다",
-    "Classified": "당신의 아이템중 몇몇은 기밀 상태라서 최대 파워 계산에는 포함 될 수가 없습니다.",
+    "Classified": "일부 아이템이 비공개 상태이며 최대 전투력 계산에 포함되지 않았습니다.",
     "ClearLoadoutParameters": "로드아웃 최적화 설정 제거",
     "ClearSection": "모두 제거",
     "ClearSpace": "다른 아이템 이동",
@@ -600,6 +612,7 @@
     "CurrentlyEquipped": "현재 장착됨",
     "Deequip": "다른 캐릭터의 아이템 장착 해제 중",
     "Delete": "삭제",
+    "DeprecatedMods": "만료된 개조 부품",
     "Edit": "로드아웃 편집",
     "EditBrief": "수정",
     "EquipItems": "장비 장착 중",
@@ -616,6 +629,7 @@
     "GatherEngrams": "엔그램 모으기",
     "GatherEngramsExceptExotics": "경이",
     "Generated": "T{{tier}} 로드아웃",
+    "HashtagTip": "팁: 로드아웃 이름이나 메모에 #해시태그를 사용하면 이곳에 표시됩니다.",
     "Import": {
       "BadURL": "로드아웃 공유 URL이 유효하지 않음.",
       "Error": "로드아웃 가져오기 실패:",
@@ -641,6 +655,7 @@
     "MaximizeLight": "최대 전투력",
     "MaximizePower": "최대 전투력",
     "MaximizeStat": "능력치 최대화",
+    "MissingItems": "누락된 아이템",
     "MissingItemsWarning": "이 로드아웃의 일부 아이템이 더 이상 소지품에 없습니다.",
     "ModErrorSummary": "1개의 개조 부품 오류:",
     "ModErrorSummary_plural": "{{count}}개의 개조 부품 오류:",
@@ -650,9 +665,9 @@
     "NoEngrams": "경의 등급이 아닌 이동 가능한 엔그램이 없습니다.",
     "NoExotics": "이동할 수 있는 엔그램이 없습니다.",
     "NoSpace": "금고와 다른 캐릭터의 빈 공간이 없습니다.",
-    "NoneMatch": "'{{query}}'와(과) 일치하는 로드아웃 이름이나 메모가 없습니다.",
+    "NoneMatch": "필터와 일치하는 로드아웃이 없습니다.",
     "NotStarted": "다른 작업 대기 중",
-    "NotesPlaceholder": "이 로드아웃에 메모 입력하기",
+    "NotesPlaceholder": "이 로드아웃에 메모를 작성하거나 #해시태그를 사용하여 그룹화합니다.",
     "NotificationTitle": "로드아웃: {{name}}",
     "OnWrongCharacterAdvice": "이 캐릭터에서 전투력이 가장 높은 아이템을 찾으려면 여기를 클릭하세요.",
     "OnWrongCharacterWarning": "이 캐릭터에서 전투력이 가장 높은 방어구가 다른 캐릭터에 있습니다. 떨어지는 아이템, 강력한 보상, 최고조 보상의 전투력 계산에 포함되려면 방어구가 이 캐릭터나 창고에 있어야 합니다.",
@@ -763,6 +778,7 @@
     },
     "Infuse": "주입",
     "LockUnlock": {
+      "AutoLock": "잠금 상태가 아이템의 태그와 동기화됨",
       "Lock": "{{itemType}} 잠금",
       "Locked": "잠김",
       "Unlock": "{{itemType}} 잠금 해제",
@@ -793,6 +809,7 @@
       "Untracked": "추적 안됨"
     },
     "TriageTab": "분류",
+    "UnreliablePerkOption": "이 특성은 수집품에서만 표시되며, 이 아이템에서 얻지 못하는 특성일 수 있습니다.",
     "Vault": "금고",
     "WeaponLevel": "무기 레벨 {{level}}"
   },
@@ -816,6 +833,7 @@
       "Archetype": "아키타입",
       "BaseStats": "기본 능력치",
       "Breaker": "용사 차단기",
+      "Crafted": "제작일",
       "CustomTotal": "사용자 정의 총합",
       "Damage": "피해 유형",
       "Element": "에너지 유형",
@@ -915,6 +933,8 @@
     "UsageCount": "사용 횟수"
   },
   "Settings": {
+    "AutoLockTagged": "태그와 아이템 잠금 상태 동기화",
+    "AutoLockTaggedExplanation": "DIM이 자동으로 아이템을 태그에 따라 잠그거나 해제합니다. 제작된 아이템은 재형성을 위해 잠금 해제된 상태로 유지됩니다. 이 설정이 활성화되면 태그된 아이템에 잠금 아이콘이 표시되지 않습니다.",
     "BadgePostmaster": "앱 아이콘에 현재 캐릭터의 우편 담당자 아이템 수 표시",
     "BadgePostmasterExplanation": "이 기능을 사용하려면 DIM을 앱으로 설치하고 OS가 배지 표시를 지원해야 합니다",
     "BothDescriptions": "두 설명 모두",
@@ -1056,6 +1076,8 @@
     "DimSyncNotEnabled": "DIM 동기화가 활성화되지 않았으며, 설정, 태그, 로드아웃, 검색 기록이 로컬에만 저장되고 브라우저 저장소를 비울 경우 삭제됩니다. DIM 동기화를 활성화하여 데이터를 자동으로 백업하거나, 정기적으로 데이터를 수동으로 백업하세요.",
     "EnableDimApi": "DIM 동기화 활성화 (권장)",
     "Export": "데이터 백업 다운로드",
+    "ExportError": "DIM 동기화에서 백업된 파일을 다운로드하지 못하였습니다.",
+    "ExportErrorBody": "DIM 동기화 서버가 비활성화되었거나, 연결에 문제가 있을 수 있습니다. 대신 로컬에 저장된 데이터를 다운로드합니다.",
     "Import": "데이터 백업 불러오기",
     "ImportConfirmDimApi": "정말로 현재 태그, 로드아웃, 설정을 이 버전으로 덮어쓰시겠습니까? 기존 데이터를 완전히 대체할 것입니다.",
     "ImportExport": "백업 & 복원",
@@ -1084,9 +1106,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "잘못된 번호가 선택되었습니다!",
+      "No": "아니오",
       "Reset": "인증 해제",
-      "Title": "스트림덱에서 이 번호 선택"
+      "Title": "스트림덱에서 동일한 코드가 표시되나요?",
+      "Update": "이 메시지가 표시된다면 오래된 버전의 플러그인을 사용하고 있는 것입니다. 스트림덱 스토어에서 최신 업데이트를 다운로드하세요.",
+      "Yes": "예"
     },
     "Connected": "연결됨",
     "Enable": "스트림덱 플러그인",
@@ -1123,7 +1147,7 @@
     "Favorite": "즐겨찾기",
     "Infuse": "주입",
     "Junk": "쓰레기",
-    "Keep": "보관",
+    "Keep": "유지",
     "LockAll": "아이템 잠금",
     "TagItem": "태그 추가",
     "UnlockAll": "아이템 잠금 해제"

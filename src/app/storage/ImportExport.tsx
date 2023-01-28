@@ -6,21 +6,13 @@ import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
 import './storage.scss';
 
-const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-const supportsExport = !iOS;
-
 export default function ImportExport({
   onExportData,
   onImportData,
 }: {
-  onExportData(): void;
-  onImportData(data: ExportResponse): Promise<void>;
+  onExportData: () => void;
+  onImportData: (data: ExportResponse) => Promise<void>;
 }) {
-  if (!supportsExport) {
-    return null;
-  }
-
-  // TODO: definitely a redux action
   const importData: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     if (acceptedFiles.length < 1) {
       alert(t('Storage.ImportWrongFileType'));

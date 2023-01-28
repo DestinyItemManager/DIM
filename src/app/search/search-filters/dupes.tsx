@@ -50,11 +50,11 @@ const sortDupes = (
     )
   );
 
-  _.forIn(dupes, (dupes) => {
-    if (dupes.length > 1) {
-      dupes.sort(dupeComparator);
+  for (const dupeList of Object.values(dupes)) {
+    if (dupeList.length > 1) {
+      dupeList.sort(dupeComparator);
     }
-  });
+  }
 
   return dupes;
 };
@@ -180,6 +180,21 @@ const dupeFilters: FilterDefinition[] = [
     filter: ({ allItems, customStats }) => {
       const duplicates = computeStatDupeLower(allItems, customStats);
       return (item) => item.bucket.inArmor && duplicates.has(item.id);
+    },
+  },
+  {
+    keywords: ['crafteddupe', 'shapeddupe'],
+    description: tl('Filter.CraftedDupe'),
+    filter: ({ allItems }) => {
+      const duplicates = computeDupes(allItems);
+      return (item) => {
+        const dupeId = makeDupeID(item);
+        if (!checkIfIsDupe(duplicates, dupeId, item)) {
+          return false;
+        }
+        const itemDupes = duplicates?.[dupeId];
+        return itemDupes?.some((d) => d.crafted);
+      };
     },
   },
 ];

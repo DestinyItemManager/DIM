@@ -126,8 +126,8 @@
   },
   "ErrorPanel": {
     "Description": "Tente carregar seu inventário no app Destiny 2 Companion para saber se a Bungie.net está fora do ar.",
-    "EmblemError": "Você pode tentar corrigir trocando o emblema de todos os personagens dentro do próprio jogo.",
-    "EmblemErrorLink": "Saiba como corrigir.",
+    "EmblemError": "Você pode tentar corrigir isso trocando o emblema de todos os personagens por dentro do próprio jogo.",
+    "EmblemErrorLink": "Leia mais sobre como corrigir isso.",
     "SystemDown": "Este problema afeta todos os apps de Destiny. Sendo assim, nem mesmo o DIM será capaz de resolver.",
     "Troubleshooting": "Guia para Solução de Problemas"
   },
@@ -199,6 +199,7 @@
     "ContributePower": "Mostra os itens que tem poder e que podem contribuir para o seu nível de poder.",
     "Cosmetic": "Exibe itens que são de estilo ou cosméticos.",
     "Craftable": "Exibe itens que são fabricáveis.",
+    "CraftedDupe": "",
     "Curated": "Exibe itens que possuem valores curados.",
     "CurrentClass": "Exibe itens que podem ser equipados no guardião que está jogando atualmente.",
     "CustomStatLower": "Exibe as armaduras nas quais seus atributos são necessariamente menores que as outras do mesmo tipo, levando em conta somente os atributos da lista personalizada de atributos daquela classe.",
@@ -310,6 +311,16 @@
     "Confirm": "Confirmar?",
     "UserGuideLink": "Guia do usuário"
   },
+  "Glyphs": {
+    "Gilded": "Dourado",
+    "Misadventure": "Acidente",
+    "Missing": "Ausente",
+    "OpenSymbolsPicker": "Abrir Seletor de Símbolos",
+    "Quickfall": "Queda rápida",
+    "ScorchCannon": "Canhão Causticante",
+    "SearchSymbols": "Buscar Símbolos...",
+    "Smoke": "Fumaça"
+  },
   "Header": {
     "About": "Sobre o DIM",
     "AutoRefresh": "DIM atualizará automaticamente enquanto você estiver jogando.",
@@ -336,6 +347,7 @@
     "LaunchDIMAlone": "Em Janela Separada",
     "MaterialCounts": "Contagem de Materiais",
     "Menu": "Menu",
+    "ProfileAge": "Os servidores do Destiny enviaram os dados atualizados pela última vez há {{age}}.\nAtualizar o DIM pode trazer dados mais recentes, mas o Bungie.net também pode repetir informações em cache.",
     "Refresh": "Atualizar dados do Destiny [R]",
     "ReloadApp": "Recarregar o App",
     "ReportBug": "Relatar Falhas",
@@ -600,6 +612,7 @@
     "CurrentlyEquipped": "Atualmente Equipado",
     "Deequip": "Desequipando itens de outros personagens",
     "Delete": "Remover",
+    "DeprecatedMods": "Mods descontinuados",
     "Edit": "Editar set",
     "EditBrief": "Editar",
     "EquipItems": "Equipando itens",
@@ -616,13 +629,14 @@
     "GatherEngrams": "Obter engramas",
     "GatherEngramsExceptExotics": "Exóticos",
     "Generated": "N{{tier}} Set",
+    "HashtagTip": "Dica: use #hashtags nos nomes ou anotações de seus sets e elas aparecerão aqui.",
     "Import": {
-      "BadURL": "URL de build inválida.",
-      "Error": "Falha ao carregar build:",
-      "Error404": "Esta build não existe.",
-      "PasteHere": "Cole o link da build para abrí-la."
+      "BadURL": "Não é uma URL de compartilhamento de set válida.",
+      "Error": "Falha ao carregar o set:",
+      "Error404": "Este set não existe.",
+      "PasteHere": "Cole o link do set para abri-lo."
     },
-    "ImportLoadout": "Importar build",
+    "ImportLoadout": "Importar Set",
     "ItemErrorSummary": "1 erro no item:",
     "ItemErrorSummary_plural": "{{count}} erros no item:",
     "ItemLeveling": "Nivelamento de itens",
@@ -641,6 +655,7 @@
     "MaximizeLight": "Maximizar Luz",
     "MaximizePower": "Maximizar Poder",
     "MaximizeStat": "Maximizar atributos",
+    "MissingItems": "Itens Faltantes",
     "MissingItemsWarning": "Alguns itens deste set não estão mais em seu inventário.",
     "ModErrorSummary": "1 erro no mod:",
     "ModErrorSummary_plural": "{{count}} erros no mod:",
@@ -650,9 +665,9 @@
     "NoEngrams": "Nenhum engrama não-exótico disponível para transferir.",
     "NoExotics": "Nenhum engrama disponível para transferir.",
     "NoSpace": "Você está sem espaço no cofre e em quaisquer outros personagens.",
-    "NoneMatch": "Nenhum nome de set ou anotações relacionadas a '{{query}}'.",
+    "NoneMatch": "Nenhum dos seus sets combinaram com os filtros.",
     "NotStarted": "Aguardando outras ações",
-    "NotesPlaceholder": "Escreva algumas anotações sobre este set",
+    "NotesPlaceholder": "Escreva algumas anotações sobre este set ou use #hashtags para categorizá-lo",
     "NotificationTitle": "Set: {{name}}",
     "OnWrongCharacterAdvice": "Clique aqui para encontrar os itens com maior Poder deste personagem.",
     "OnWrongCharacterWarning": "A armadura mais poderosa deste personagem está em outro personagem. Para garantir um maior Poder nos drops e recompensas pináculo, a armadura deve estar neste personagem ou no Cofre.",
@@ -763,6 +778,7 @@
     },
     "Infuse": "Infundir",
     "LockUnlock": {
+      "AutoLock": "Estado do bloqueio está sincronizado com a etiqueta deste item",
       "Lock": "Travar {{itemType}}",
       "Locked": "Bloqueado",
       "Unlock": "Destravar {{itemType}}",
@@ -793,6 +809,7 @@
       "Untracked": "Não rastreado"
     },
     "TriageTab": "Triagem",
+    "UnreliablePerkOption": "Este perk aparece apenas na visualização de coleções. Pode não ocorrer aleatoriamente neste item.",
     "Vault": "Cofre",
     "WeaponLevel": "Nível da Arma {{level}}"
   },
@@ -816,6 +833,7 @@
       "Archetype": "Arquétipo",
       "BaseStats": "Atributos base",
       "Breaker": "Quebra-guarda",
+      "Crafted": "Data Formação",
       "CustomTotal": "Total Personalizado",
       "Damage": "Dano",
       "Element": "Elemento",
@@ -915,6 +933,8 @@
     "UsageCount": "Nº de Usos"
   },
   "Settings": {
+    "AutoLockTagged": "Sincronizar estado de bloqueio de item com etiqueta",
+    "AutoLockTaggedExplanation": "DIM irá travar e destravar automaticamente os itens para que combinem com suas etiquetas. Itens criados permanecerão desbloqueados para permitir sua remodelagem. Quando esta configuração estiver ativada, o ícone de bloqueio não será mostrado na imagem do item para itens marcados.",
     "BadgePostmaster": "Exibir a quantidade de itens disponíveis com o Chefe do Correio do personagem atual no ícone do aplicativo",
     "BadgePostmasterExplanation": "Esta opção só funcionará se você instalar o DIM como um app e seu Sistema Operacional suportar este recurso de exibição",
     "BothDescriptions": "Ambas as Descrições",
@@ -1056,6 +1076,8 @@
     "DimSyncNotEnabled": "A Sincronização DIM está desativada, portanto, suas configurações, etiquetas, sets e históricos de pesquisas só serão armazenados localmente e se perderão caso você limpe o armazenamento do seu navegador. Ative a Sincronização DIM nas configurações para guardar seus dados automaticamente ou faça backups manual regularmente.",
     "EnableDimApi": "Ativar a Sincronização DIM (recomendado)",
     "Export": "Baixar Dados de Backup",
+    "ExportError": "Falha ao baixar o backup da Sincronização DIM",
+    "ExportErrorBody": "A Sincronização DIM pode estar fora do ar no momento ou você pode estar enfrentando problemas de conexão. Iremos utilizar uma cópia dos seus dados salvos localmente, enquanto isso.",
     "Import": "Importar Dados de Backup",
     "ImportConfirmDimApi": "Você confirma que quer substituir suas etiquetas, sets e configurações atuais com esta versão? Esta opção sobrescreverá totalmente tudo o que você tiver atualmente.",
     "ImportExport": "Backup e Importação",
@@ -1084,9 +1106,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "Número escolhido não foi o correto!",
+      "No": "Não",
       "Reset": "DESAUTORIZAR",
-      "Title": "Obtenha este número em seu Stream Deck"
+      "Title": "Você consegue ver este mesmo código em seu Stream Deck?",
+      "Update": "Caso não esteja vendo esta mensagem, provavelmente você esteja usando uma versão antiga deste plugin. Por favor, atualize para a última versão disponível na loja do Stream Deck.",
+      "Yes": "Sim"
     },
     "Connected": "Conectado",
     "Enable": "Plugin do Stream Deck",

@@ -34,6 +34,8 @@ interface CssExports {
   'rating': string;
   'season': string;
   'selection': string;
+  'shapedIcon': string;
+  'shapedIconOverlay': string;
   'shiftHeld': string;
   'sorter': string;
   'stat2715839340': string;

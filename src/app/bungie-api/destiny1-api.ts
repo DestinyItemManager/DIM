@@ -9,8 +9,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { D1Item, DimItem } from '../inventory/item-types';
-import { D1Store } from '../inventory/store-types';
+import { DimItem } from '../inventory/item-types';
+import { D1Store, DimStore } from '../inventory/store-types';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 import { authenticatedHttpClient, handleUniquenessViolation } from './bungie-service-helper';
 
@@ -34,7 +34,7 @@ export async function getCharacters(platform: DestinyAccount) {
       })
     );
   }
-  return _.map(response.Response.data.characters, (c) => {
+  return Object.values(response.Response.data.characters).map((c: any) => {
     c.inventory = response.Response.data.inventory;
     return {
       id: c.characterBase.characterId,
@@ -143,8 +143,8 @@ export async function getVendorForCharacter(
 
 export async function transfer(
   account: DestinyAccount,
-  item: D1Item,
-  store: D1Store,
+  item: DimItem,
+  store: DimStore,
   amount: number
 ) {
   try {
@@ -178,8 +178,8 @@ export function equip(account: DestinyAccount, item: DimItem) {
  */
 export async function equipItems(
   account: DestinyAccount,
-  store: D1Store,
-  items: D1Item[]
+  store: DimStore,
+  items: DimItem[]
 ): Promise<{ [itemInstanceId: string]: PlatformErrorCodes }> {
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
   items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));

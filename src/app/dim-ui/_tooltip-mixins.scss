@@ -1,0 +1,24 @@
+@use '../variables' as *;
+@use 'sass:color';
+
+// These mixins are used to customize tooltips hosted within a PressTip (see PressTip.m.scss)
+
+@mixin tooltip-background-color($color) {
+  --tooltip-background-color: #{$color};
+}
+
+@mixin tooltip-border-color($color) {
+  --tooltip-border-color-rgb: #{dim-hex-to-rgb-values($color)};
+}
+
+@mixin tooltip-ribbon-color($color) {
+  --tooltip-ribbon-color: #{$color};
+}
+
+@mixin tooltip-section-color($color) {
+  &:not(:empty) {
+    color: color.mix(white, $color, 80%);
+    background-color: rgba($color, 0.175);
+    border-top-color: var(--tooltip-background-color);
+  }
+}

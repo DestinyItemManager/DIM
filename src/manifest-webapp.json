@@ -39,5 +39,8 @@
   "background_color": "black",
   "display": "standalone",
   "categories": ["games", "entertainment", "productivity", "utilities"],
-  "start_url": "/index.html?utm_source=homescreen"
+  "start_url": "/index.html?utm_source=homescreen",
+  "launch_handler": {
+    "client_mode": ["navigate-existing"]
+  }
 }

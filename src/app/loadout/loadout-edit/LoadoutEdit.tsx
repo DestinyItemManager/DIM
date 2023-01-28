@@ -1,7 +1,7 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -60,6 +60,7 @@ export default function LoadoutEdit({
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
+  const missingSockets = allItems.some((i) => i.missingSockets);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
 
   // TODO: filter down by usable mods?
@@ -165,52 +166,53 @@ export default function LoadoutEdit({
           </LoadoutEditBucketDropTarget>
         </LoadoutEditSection>
       )}
-      {(anyClass ? ['Weapons', 'General'] : ['Weapons', 'Armor', 'General']).map(
-        (category: D2BucketCategory) => (
-          <LoadoutEditSection
-            key={category}
-            title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
-            onClear={() => handleClearCategory(category)}
-            onFillFromEquipped={() => handleFillCategoryFromEquipped(category)}
-            fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
-            onFillFromInventory={() => handleFillCategoryFromUnequipped(category)}
-            onClearLoadoutParameters={
-              category === 'Armor' && hasVisibleLoadoutParameters(loadout.parameters)
-                ? handleClearLoadoutParameters
-                : undefined
-            }
-          >
-            <LoadoutEditBucketDropTarget category={category} classType={loadout.classType}>
-              <LoadoutEditBucket
-                category={category}
-                storeId={store.id}
-                items={categories[category]}
-                modsByBucket={modsByBucket}
-                onClickPlaceholder={onClickPlaceholder}
-                onClickWarnItem={onClickWarnItem}
-                onRemoveItem={onRemoveItem}
-                onToggleEquipped={handleToggleEquipped}
-              >
-                {category === 'Armor' && (
-                  <ArmorExtras
-                    loadout={loadout}
-                    storeId={store.id}
-                    subclass={subclass}
-                    items={categories[category]}
-                    allMods={allMods}
-                    onModsByBucketUpdated={handleModsByBucketUpdated}
-                  />
-                )}
-              </LoadoutEditBucket>
-            </LoadoutEditBucketDropTarget>
-          </LoadoutEditSection>
-        )
-      )}
+      {(anyClass
+        ? (['Weapons', 'General'] as const)
+        : (['Weapons', 'Armor', 'General'] as const)
+      ).map((category) => (
+        <LoadoutEditSection
+          key={category}
+          title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
+          onClear={() => handleClearCategory(category)}
+          onFillFromEquipped={() => handleFillCategoryFromEquipped(category)}
+          fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
+          onFillFromInventory={() => handleFillCategoryFromUnequipped(category)}
+          onClearLoadoutParameters={
+            category === 'Armor' && hasVisibleLoadoutParameters(loadout.parameters)
+              ? handleClearLoadoutParameters
+              : undefined
+          }
+        >
+          <LoadoutEditBucketDropTarget category={category} classType={loadout.classType}>
+            <LoadoutEditBucket
+              category={category}
+              storeId={store.id}
+              items={categories[category]}
+              modsByBucket={modsByBucket}
+              onClickPlaceholder={onClickPlaceholder}
+              onClickWarnItem={onClickWarnItem}
+              onRemoveItem={onRemoveItem}
+              onToggleEquipped={handleToggleEquipped}
+            >
+              {category === 'Armor' && (
+                <ArmorExtras
+                  loadout={loadout}
+                  storeId={store.id}
+                  subclass={subclass}
+                  items={categories[category]}
+                  allMods={allMods}
+                  onModsByBucketUpdated={handleModsByBucketUpdated}
+                />
+              )}
+            </LoadoutEditBucket>
+          </LoadoutEditBucketDropTarget>
+        </LoadoutEditSection>
+      ))}
       <LoadoutEditSection
         title={t('Loadouts.Mods')}
         className={styles.mods}
         onClear={handleClearMods}
-        onSyncFromEquipped={handleSyncModsFromEquipped}
+        onSyncFromEquipped={missingSockets ? undefined : handleSyncModsFromEquipped}
       >
         <LoadoutMods
           loadout={loadout}

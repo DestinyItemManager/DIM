@@ -335,6 +335,16 @@
     "tangled": "tangled",
     "titan": "titan"
   },
+  "Glyphs": {
+    "Missing": "Missing",
+    "Gilded": "Gilded",
+    "Smoke": "Smoke",
+    "Misadventure": "Misadventure",
+    "Quickfall": "Quickfall",
+    "ScorchCannon": "Scorch Cannon",
+    "OpenSymbolsPicker": "Open Symbols Picker",
+    "SearchSymbols": "Search Symbols..."
+  },
   "Header": {
     "About": "About DIM",
     "AutoRefresh": "DIM will automatically reload as long as you are still playing.",
@@ -362,6 +372,7 @@
     "KeyboardShortcuts": "Keyboard Shortcuts",
     "MaterialCounts": "Material Counts",
     "Menu": "Menu",
+    "ProfileAge": "Destiny servers last sent updated data {{age}} ago.\nRefreshing from DIM may get newer data, but Bungie.net may also repeat cached information.",
     "Refresh": "Refresh Destiny Data [R]",
     "ReloadApp": "Reload App",
     "ReportBug": "Report a Bug",
@@ -682,6 +693,7 @@
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
     "Delete": "Delete",
+    "DeprecatedMods": "Deprecated Mods",
     "Edit": "Edit Loadout",
     "EditBrief": "Edit",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
@@ -694,6 +706,7 @@
     "GatherEngrams": "Gather Engrams",
     "GatherEngramsExceptExotics": "Exotics",
     "Generated": "T{{tier}} Loadout",
+    "HashtagTip": "Tip: Use #hashtags in your loadout names or notes and they'll show up here.",
     "ImportLoadout": "Import Loadout",
     "Import": {
       "PasteHere": "Paste a loadout link to open the loadout.",
@@ -719,6 +732,7 @@
     "MaximizeStat": "Maximize Stat",
     "ModPlacement": "Mod Placement",
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
+    "MissingItems": "Missing Items",
     "ModErrorSummary": "1 mod error:",
     "ModErrorSummary_plural": "{{count}} mod errors:",
     "ItemErrorSummary": "1 item error:",
@@ -727,8 +741,8 @@
     "ModsInfo": "DIM cannot equip mods, it must be done in game.",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
-    "NoneMatch": "None of your loadouts' names or notes match '{{query}}'.",
-    "NotesPlaceholder": "Write some notes about this loadout",
+    "NoneMatch": "None of your loadouts matched the filters.",
+    "NotesPlaceholder": "Write some notes about this loadout, or use #hashtags to categorize it",
     "NotificationTitle": "Loadout: {{name}}",
     "NoTokens": "No reputation items are available to transfer.",
     "OnlyItems": "Only equippable items, materials, and consumables can be added to a loadout.",
@@ -798,7 +812,7 @@
     "Unequipped": "Unequipped",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
     "WeaponsOnly": "Weapons Only",
-    "NotStarted": "Waiting for other actions",
+    "NotStarted": "Waiting for other actions to complete, or an inventory refresh to finish loading",
     "Deequip": "De-equipping items from other characters",
     "MoveItems": "Moving items",
     "EquipItems": "Equipping items",
@@ -837,6 +851,7 @@
     "All": "All",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
+    "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
     "Consolidate": "Consolidate",
     "CommunityData": "Community Insight",
     "CraftingPattern": "Crafting Pattern",
@@ -857,7 +872,8 @@
       "Lock": "Lock {{itemType}}",
       "Unlock": "Unlock {{itemType}}",
       "Locked": "Locked",
-      "Unlocked": "Unlocked"
+      "Unlocked": "Unlocked",
+      "AutoLock": "Lock state is synced to this item's tag"
     },
     "MissingSockets": "Perk and mod details are unavailable while Bungie is updating their services. It will return when they are done, usually in a few hours.",
     "Notes": "Notes:",
@@ -958,7 +974,8 @@
       "WishListNotes": "Wish List Notes",
       "Ghost": "Ghost Tag",
       "New": "New",
-      "Recency": "Recency"
+      "Recency": "Recency",
+      "Crafted": "Shaped Date"
     },
     "Stats": {
       "RPM": "RPM",
@@ -1010,6 +1027,8 @@
     "Title": "Search History"
   },
   "Settings": {
+    "AutoLockTagged": "Sync item lock state with tag",
+    "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. Crafted items will remain unlocked to allow reshaping. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
     "BadgePostmaster": "Show the number of postmaster items for the current character on app icon",
     "BadgePostmasterExplanation": "For this to work you must install DIM as an app and your OS must support displaying badges",
     "BungieDescriptionOnly": "Bungie Descriptions",
@@ -1159,6 +1178,8 @@
     "UpdateQueueLength_plural": "{{count}} new changes will be saved when we can reconnect.",
     "EnableDimApi": "Enable DIM Sync (recommended)",
     "Export": "Download Data Backup",
+    "ExportError": "Failed to download backup from DIM Sync",
+    "ExportErrorBody": "DIM Sync may be down, or you are having trouble with your connection. We will download a copy of your locally saved data instead.",
     "IgnoredUsers": "Ignored reviewers",
     "Import": "Import Data Backup",
     "ImportConfirmDimApi": "Are you sure you want to overwrite your current tags, loadouts, and settings with this version? It will completely replace what you had.",
@@ -1215,9 +1236,11 @@
       "Postmaster": "Choose an item from the Postmaster"
     },
     "Authorization": {
-      "Title": "Pick this number on your Stream Deck",
-      "Error": "Picked number is not the valid one!",
-      "Reset": "DE-AUTHORIZE"
+      "Title": "Do you see the same code on your Stream Deck ?",
+      "Reset": "DE-AUTHORIZE",
+      "Yes": "Yes",
+      "No": "No",
+      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store."
     }
   },
   "Tags": {
@@ -1307,9 +1330,7 @@
       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
       "LearnMore": "Learn more about accounts and login",
       "NewAccount": "Log in with a different Bungie.net account",
-      "Permission": "We need your permission...",
-      "UpgradeExplanation": "Home screen apps on your version of iOS don't allow you to log in to DIM. Please upgrade to iOS 12.2 or newer and re-add DIM to your home screen.",
-      "UpgradeiOS": "Please upgrade iOS"
+      "Permission": "We need your permission..."
     },
     "Support": {
       "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",

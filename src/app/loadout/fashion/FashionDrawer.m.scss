@@ -5,13 +5,13 @@
   flex-flow: row wrap;
   margin: 10px;
   justify-content: center;
-  @include horizontal-space-children(10px);
+  gap: 10px;
 }
 
 .item {
   display: flex;
   flex-direction: column;
-  @include vertical-space-children(4px);
+  gap: 4px;
 }
 
 .buttons {

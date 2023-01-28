@@ -43,8 +43,8 @@ export default function VendorItemComponent({
   }
 
   const acquired =
-    item.item.collectibleState !== undefined &&
-    !(item.item.collectibleState & DestinyCollectibleState.NotAcquired);
+    item.collectibleState !== undefined &&
+    !(item.collectibleState & DestinyCollectibleState.NotAcquired);
 
   // Can't buy more copies of emblems or bounties other than repeatables.
   const ownershipRule =
@@ -54,7 +54,7 @@ export default function VendorItemComponent({
 
   const mod = item.item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod);
 
-  const unavailable = !item.canPurchase || !item.canBeSold || (owned && ownershipRule);
+  const unavailable = !item.canBeSold || (owned && ownershipRule);
   return (
     <VendorItemDisplay
       item={item.item}

@@ -1,6 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getBuckets } from 'app/destiny2/d2-buckets';
-import { mergeCollectibles } from 'app/inventory/d2-stores';
 import { getTestDefinitions, getTestProfile, getTestVendors } from 'testing/test-utils';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
 
@@ -9,10 +8,6 @@ async function getTestVendorGroups() {
   const profileResponse = getTestProfile();
   const vendorsResponse = getTestVendors();
   const buckets = getBuckets(defs);
-  const mergedCollectibles = mergeCollectibles(
-    profileResponse.profileCollectibles,
-    profileResponse.characterCollectibles
-  );
   const account: DestinyAccount = {
     displayName: '',
     originalPlatformType: 2,
@@ -24,15 +19,7 @@ async function getTestVendorGroups() {
   };
   const characterId = Object.keys(profileResponse.characters.data!)[0];
 
-  return toVendorGroups(
-    vendorsResponse,
-    profileResponse,
-    defs,
-    buckets,
-    account,
-    characterId,
-    mergedCollectibles
-  );
+  return toVendorGroups(vendorsResponse, profileResponse, defs, buckets, account, characterId);
 }
 
 function* allSaleItems(vendorGroups: D2VendorGroup[]) {

@@ -19,7 +19,6 @@ import {
   DestinyClass,
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
-  DestinyStatCategory,
   ItemBindStatus,
   ItemLocation,
   ItemState,
@@ -208,11 +207,11 @@ function makeItem(
   // fix itemDef for defense items with missing nodes
   if (item.primaryStat?.statHash === D1_StatHashes.Defense && numStats > 0 && numStats !== 5) {
     const defaultMinMax = _.find(itemDef.stats, (stat) =>
-      [144602215, 1735777505, 4244567218].includes(stat.statHash)
+      [StatHashes.Intellect, StatHashes.Discipline, StatHashes.Strength].includes(stat.statHash)
     );
 
     if (defaultMinMax) {
-      [144602215, 1735777505, 4244567218].forEach((val) => {
+      for (const val of [StatHashes.Intellect, StatHashes.Discipline, StatHashes.Strength]) {
         if (!itemDef.stats[val]) {
           itemDef.stats[val] = {
             maximum: defaultMinMax.maximum,
@@ -221,7 +220,7 @@ function makeItem(
             value: 0,
           };
         }
-      });
+      }
     }
   }
 
@@ -329,11 +328,10 @@ function makeItem(
     percentComplete: 0,
     talentGrid: null,
     stats: null,
-    objectives: null,
+    objectives: undefined,
     quality: null,
     sockets: null,
     breakerType: null,
-    foundry: null,
     hidePercentage: false,
     taggable: false,
     comparable: false,
@@ -370,20 +368,13 @@ function makeItem(
 
   if (item.primaryStat) {
     const statDef = defs.Stat.get(item.primaryStat.statHash);
-    createdItem.primaryStat = {
-      ...item.primaryStat,
-      stat: {
-        ...statDef,
-        statCategory: DestinyStatCategory.Primary,
-        // D2 is much better about display info
-        displayProperties: {
-          name: statDef.statName,
-          description: statDef.statDescription,
-          icon: statDef.icon,
-          hasIcon: Boolean(statDef.icon),
-        } as DestinyDisplayPropertiesDefinition,
-      },
-    };
+    createdItem.primaryStat = item.primaryStat;
+    createdItem.primaryStatDisplayProperties = {
+      name: statDef.statName,
+      description: statDef.statDescription,
+      icon: statDef.icon,
+      hasIcon: Boolean(statDef.icon),
+    } as DestinyDisplayPropertiesDefinition;
 
     if (lightStats.includes(createdItem.primaryStat.statHash)) {
       createdItem.power = createdItem.primaryStat.value;
@@ -422,7 +413,7 @@ function makeItem(
           completionValue: defs.Objective.get(o.objectiveHash).completionValue,
           visible: true,
         }))
-      : null;
+      : undefined;
 
   if (createdItem.talentGrid && createdItem.infusable && item.primaryStat) {
     try {
@@ -657,9 +648,9 @@ function buildTalentGrid(
     (n) => n.column
   )!.column;
   if (minColumn > 0) {
-    gridNodes.forEach((node) => {
+    for (const node of gridNodes) {
       node.column -= minColumn;
-    });
+    }
   }
   const maxColumn = _.maxBy(gridNodes, (n) => n.column)!.column;
 
@@ -701,7 +692,7 @@ function buildStats(
 
   return _.sortBy(
     _.compact(
-      _.map(itemDef.stats, (stat) => {
+      Object.values(itemDef.stats).map((stat) => {
         const def = statDefs.get(stat.statHash);
         if (!def) {
           return undefined;

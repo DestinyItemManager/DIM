@@ -3,44 +3,45 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { apiPermissionGrantedSelector, languageSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
-import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { sortedStoresSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { deleteLoadout } from 'app/loadout-drawer/actions';
-import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
-import { plainString } from 'app/search/search-filters/freeform';
 import { useSetting } from 'app/settings/hooks';
-import {
-  addIcon,
-  AppIcon,
-  deleteIcon,
-  faCalculator,
-  faCheckCircle,
-  uploadIcon,
-} from 'app/shell/icons';
+import { addIcon, AppIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
-import { streamDeckSelectLoadout } from 'app/stream-deck/stream-deck';
 import { Portal } from 'app/utils/temp-container';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
-import { ReactNode, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
+import {
+  searchAndSortLoadoutsByQuery,
+  useLoadoutFilterPills,
+  useSavedLoadoutsForClassType,
+} from './loadout-ui/menu-hooks';
 import styles from './Loadouts.m.scss';
-import LoadoutView from './LoadoutView';
+import LoadoutRow from './LoadoutsRow';
+
+const sortOptions = [
+  {
+    key: 'time',
+    content: tl('Loadouts.SortByEditTime'),
+    value: LoadoutSort.ByEditTime,
+  },
+  {
+    key: 'name',
+    content: tl('Loadouts.SortByName'),
+    value: LoadoutSort.ByName,
+  },
+];
 
 /**
  * The Loadouts page is a toplevel page for loadout management. It also provides access to the Loadout Optimizer.
@@ -65,59 +66,38 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);
   const selectedStore = getStore(stores, selectedStoreId)!;
   const classType = selectedStore.classType;
-  const allLoadouts = useSelector(loadoutsSelector);
-  const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const isPhonePortrait = useIsPhonePortrait();
   const query = useSelector(querySelector);
+  const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const language = useSelector(languageSelector);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
 
-  const savedLoadouts = useMemo(
-    () =>
-      _.sortBy(
-        allLoadouts.filter(
-          (loadout) =>
-            classType === DestinyClass.Unknown ||
-            loadout.classType === DestinyClass.Unknown ||
-            loadout.classType === classType
-        ),
-        loadoutSort === LoadoutSort.ByEditTime ? (l) => -(l.lastUpdatedAt ?? 0) : (l) => l.name
-      ),
-    [allLoadouts, classType, loadoutSort]
-  );
+  const savedLoadouts = useSavedLoadoutsForClassType(classType);
+  const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
   const currentLoadout = useMemo(
     () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore),
     [selectedStore]
   );
 
-  const loadoutQueryPlain = plainString(query, language);
-  const loadouts = [currentLoadout, ...savedLoadouts].filter(
-    (loadout) =>
-      !query ||
-      plainString(loadout.name, language).includes(loadoutQueryPlain) ||
-      (loadout.notes && plainString(loadout.notes, language).includes(loadoutQueryPlain))
+  const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
+    savedLoadouts,
+    selectedStoreId,
+    true,
+    undefined,
+    undefined,
+    <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>
   );
 
-  const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
+  const loadouts = searchAndSortLoadoutsByQuery(filteredLoadouts, query, language, loadoutSort);
+  if (!query && !hasSelectedFilters) {
+    loadouts.unshift(currentLoadout);
+  }
 
   const handleNewLoadout = () => {
     const loadout = newLoadout('', [], selectedStore.classType);
     editLoadout(loadout, selectedStore.id, { isNew: true });
   };
-
-  const sortOptions = [
-    {
-      key: 'time',
-      content: t('Loadouts.SortByEditTime'),
-      value: LoadoutSort.ByEditTime,
-    },
-    {
-      key: 'name',
-      content: t('Loadouts.SortByName'),
-      value: LoadoutSort.ByName,
-    },
-  ];
 
   return (
     <PageWithMenu>
@@ -134,7 +114,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           >
             {sortOptions.map((option) => (
               <option key={option.key} value={option.value}>
-                {option.content}
+                {t(option.content)}
               </option>
             ))}
           </select>
@@ -155,7 +135,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         {!isPhonePortrait &&
           loadouts.map((loadout) => (
             <PageWithMenu.MenuButton anchor={loadout.id} key={loadout.id}>
-              <span>{loadout.name}</span>
+              <ColorDestinySymbols text={loadout.name} />
             </PageWithMenu.MenuButton>
           ))}
       </PageWithMenu.Menu>
@@ -166,6 +146,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
+        {filterPills}
         {loadouts.map((loadout) => (
           <LoadoutRow
             key={loadout.id}
@@ -196,92 +177,5 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         </Portal>
       )}
     </PageWithMenu>
-  );
-}
-
-function LoadoutRow({
-  loadout,
-  store,
-  saved,
-  equippable,
-  onShare,
-}: {
-  loadout: Loadout;
-  store: DimStore;
-  saved: boolean;
-  equippable: boolean;
-  onShare: (loadout: Loadout) => void;
-}) {
-  const dispatch = useThunkDispatch();
-
-  const streamDeckSelection = $featureFlags.elgatoStreamDeck
-    ? // eslint-disable-next-line
-      useSelector(streamDeckSelectionSelector)
-    : null;
-
-  const actionButtons = useMemo(() => {
-    const handleDeleteClick = (loadout: Loadout) => dispatch(deleteLoadout(loadout.id));
-
-    const handleApply = () =>
-      dispatch(applyLoadout(store, loadout, { allowUndo: true, onlyMatchingClass: true }));
-
-    const handleEdit = () => editLoadout(loadout, store.id, { isNew: !saved });
-    const actionButtons: ReactNode[] = [];
-
-    if (equippable) {
-      if (streamDeckSelection === 'loadout') {
-        const handleSelection = () => dispatch(streamDeckSelectLoadout(loadout, store));
-        return [
-          <button
-            key="select-for-stream-deck"
-            type="button"
-            className="dim-button"
-            onClick={handleSelection}
-          >
-            <span className={styles.iconLabel}>{t('StreamDeck.SelectLoadout')}</span>
-            <AppIcon icon={faCheckCircle} title={t('StreamDeck.SelectLoadout')} />
-          </button>,
-        ];
-      }
-
-      actionButtons.push(
-        <button key="apply" type="button" className="dim-button" onClick={handleApply}>
-          {t('Loadouts.Apply')}
-        </button>
-      );
-    }
-
-    actionButtons.push(
-      <button key="edit" type="button" className="dim-button" onClick={handleEdit}>
-        {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
-      </button>
-    );
-
-    if (loadout.parameters && !_.isEmpty(loadout.parameters)) {
-      actionButtons.push(
-        <button key="share" type="button" className="dim-button" onClick={() => onShare(loadout)}>
-          {t('Loadouts.ShareLoadout')}
-        </button>
-      );
-    }
-
-    if (saved) {
-      actionButtons.push(
-        <ConfirmButton key="delete" danger onClick={() => handleDeleteClick(loadout)}>
-          <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
-        </ConfirmButton>
-      );
-    }
-
-    return actionButtons;
-  }, [dispatch, equippable, loadout, onShare, saved, store, streamDeckSelection]);
-
-  return (
-    <LoadoutView
-      loadout={loadout}
-      store={store}
-      actionButtons={actionButtons}
-      hideShowModPlacements={!equippable}
-    />
   );
 }

@@ -3,6 +3,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CheckButton from 'app/dim-ui/CheckButton';
+import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
+import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
@@ -15,12 +17,14 @@ import { addIcon, AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { infoLog, warnLog } from 'app/utils/log';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import TextareaAutosize from 'react-textarea-autosize';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
@@ -45,6 +49,7 @@ import styles from './LoadoutDrawer2.m.scss';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
+import { loadoutsHashtagsSelector } from './selectors';
 
 // TODO: break out a container from the actual loadout drawer so we can lazy load the drawer
 
@@ -68,7 +73,7 @@ export default function LoadoutDrawer2({
    */
   storeId: string;
   isNew: boolean;
-  onClose(): void;
+  onClose: () => void;
 }) {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
@@ -130,9 +135,28 @@ export default function LoadoutDrawer2({
 
     loadoutToSave = filterLoadoutToAllowedItems(defs, loadoutToSave);
 
+    if (
+      $featureFlags.warnNoSync &&
+      !apiPermissionGranted &&
+      'storage' in navigator &&
+      'persist' in navigator.storage
+    ) {
+      navigator.storage.persist().then((isPersisted) => {
+        if (isPersisted) {
+          infoLog('storage', 'Persisted storage granted');
+        } else {
+          warnLog('storage', 'Persisted storage not granted');
+        }
+      });
+    }
+
     dispatch(updateLoadout(loadoutToSave));
     close();
   };
+
+  const ref = useRef<HTMLTextAreaElement>(null);
+  const tags = useSelector(loadoutsHashtagsSelector);
+  useAutocomplete(ref, tags);
 
   if (!loadout || !store) {
     return null;
@@ -211,17 +235,20 @@ export default function LoadoutDrawer2({
       <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />
       <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
         <summary>{t('MovePopup.Notes')}</summary>
-        <textarea
-          onChange={handleNotesChanged}
-          value={loadout.notes}
-          maxLength={2048}
-          placeholder={t('Loadouts.NotesPlaceholder')}
-        />
+        <WithSymbolsPicker input={ref} setValue={(val) => setLoadout(setNotes(val))}>
+          <TextareaAutosize
+            onChange={handleNotesChanged}
+            ref={ref}
+            value={loadout.notes}
+            maxLength={2048}
+            placeholder={t('Loadouts.NotesPlaceholder')}
+          />
+        </WithSymbolsPicker>
       </details>
     </div>
   );
 
-  const footer = ({ onClose }: { onClose(): void }) => (
+  const footer = ({ onClose }: { onClose: () => void }) => (
     <LoadoutDrawerFooter
       loadout={loadout}
       isNew={isNew}

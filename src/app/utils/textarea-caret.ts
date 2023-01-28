@@ -1,3 +1,8 @@
+/* eslint-disable */
+// The @textcomplete library uses this, but DIM wants to override it (via an
+// alias in Webpack) to have it append its test element to our tempContainer to
+// avoid expensive layout recalculation.
+
 // We'll copy the properties below into the mirror div.
 // Note that some browsers, such as Firefox, do not concatenate properties
 // into their shorthand (e.g. padding-top, padding-bottom etc. -> padding),
@@ -49,7 +54,10 @@ const properties = [
 const isBrowser = typeof window !== 'undefined';
 const isFirefox = isBrowser && (window as any).mozInnerScreenX !== null;
 
-export default function getCaretCoordinates(element: HTMLTextAreaElement, position: number) {
+export default function getCaretCoordinates(
+  element: HTMLTextAreaElement | HTMLInputElement,
+  position: number
+) {
   if (!isBrowser) {
     throw new Error(
       'textarea-caret-position#getCaretCoordinates should only be called in a browser'

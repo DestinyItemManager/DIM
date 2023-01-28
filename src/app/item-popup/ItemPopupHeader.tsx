@@ -1,7 +1,7 @@
 import ArmorySheet from 'app/armory/ArmorySheet';
 import BungieImage from 'app/dim-ui/BungieImage';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import ElementIcon from 'app/dim-ui/ElementIcon';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
@@ -80,8 +80,8 @@ export default function ItemPopupHeader({
         <div className={styles.details}>
           {showElementIcon && <ElementIcon element={item.element} className={styles.elementIcon} />}
           <div className={styles.power}>{item.primaryStat?.value}</div>
-          {item.powerCap && <div className={styles.powerCap}>| {item.powerCap} </div>}
-          {item.pursuit?.questStepNum && (
+          {Boolean(item.powerCap) && <div className={styles.powerCap}>| {item.powerCap} </div>}
+          {item.pursuit?.questStepNum !== undefined && (
             <div className={styles.itemType}>
               {t('MovePopup.Subtitle.QuestProgress', {
                 questStepNum: item.pursuit.questStepNum,
