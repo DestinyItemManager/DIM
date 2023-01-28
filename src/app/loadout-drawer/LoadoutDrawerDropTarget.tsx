@@ -35,7 +35,7 @@ export default function LoadoutDrawerDropTarget({
   children?: React.ReactNode;
   className?: string;
   classType: DestinyClass;
-  onDroppedItem(item: DimItem, equip?: boolean): void;
+  onDroppedItem: (item: DimItem, equip?: boolean) => void;
 }) {
   const bucketTypes = useSelector(bucketTypesSelector);
 

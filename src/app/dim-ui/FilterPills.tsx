@@ -21,7 +21,7 @@ export default function FilterPills({
 }: {
   options: readonly Option[];
   selectedOptions: readonly Option[];
-  onOptionsSelected(options: Option[]): void;
+  onOptionsSelected: (options: Option[]) => void;
   className?: string;
   darkBackground?: boolean;
   extra?: React.ReactNode;

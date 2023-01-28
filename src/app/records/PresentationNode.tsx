@@ -5,7 +5,7 @@ import { percent } from 'app/shell/formatters';
 import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { deepEqual } from 'fast-equals';
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
@@ -21,7 +21,7 @@ interface Props {
   isInTriumphs?: boolean;
   overrideName?: string;
   isRootNode?: boolean;
-  onNodePathSelected(nodePath: number[]): void;
+  onNodePathSelected: (nodePath: number[]) => void;
 }
 
 export default function PresentationNode({

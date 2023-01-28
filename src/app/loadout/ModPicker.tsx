@@ -59,9 +59,9 @@ interface ProvidedProps {
   /** Only show mods that are in these categories. No restriction if this is not provided. */
   plugCategoryHashWhitelist?: number[];
   /** Called with the complete list of lockedMods when the user accepts the new mod selections. */
-  onAccept(newLockedMods: PluggableInventoryItemDefinition[]): void;
+  onAccept: (newLockedMods: PluggableInventoryItemDefinition[]) => void;
   /** Called when the user accepts the new modset of closes the sheet. */
-  onClose(): void;
+  onClose: () => void;
 }
 
 interface StoreProps {

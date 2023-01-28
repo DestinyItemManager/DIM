@@ -105,7 +105,7 @@ export const SocketDetailsMod = memo(
   }: {
     itemDef: PluggableInventoryItemDefinition;
     className?: string;
-    onClick?(mod: PluggableInventoryItemDefinition): void;
+    onClick?: (mod: PluggableInventoryItemDefinition) => void;
   }) => {
     const onClickFn = onClick && (() => onClick(itemDef));
 
@@ -134,8 +134,8 @@ export default function SocketDetails({
   socket: DimSocket;
   /** Set to true if you want to insert the plug when it's selected, rather than returning it. */
   allowInsertPlug: boolean;
-  onClose(): void;
-  onPlugSelected?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  onClose: () => void;
+  onPlugSelected?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
   const defs = useD2Definitions()!;
   const artifactMods = useSelector(artifactModsSelector);
@@ -305,7 +305,7 @@ export default function SocketDetails({
   const footer =
     selectedPlug &&
     isPluggableItem(selectedPlug) &&
-    (({ onClose }: { onClose(): void }) => (
+    (({ onClose }: { onClose: () => void }) => (
       <SocketDetailsSelectedPlug
         plug={selectedPlug}
         item={item}

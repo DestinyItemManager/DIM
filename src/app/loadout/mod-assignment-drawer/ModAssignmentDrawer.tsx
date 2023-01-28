@@ -57,8 +57,8 @@ export default function ModAssignmentDrawer({
 }: {
   loadout: Loadout;
   storeId: string;
-  onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
-  onClose(): void;
+  onUpdateMods?: (newMods: PluggableInventoryItemDefinition[]) => void;
+  onClose: () => void;
 }) {
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 

@@ -8,7 +8,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
   /** An optional second ref that will be excluded from being considered "outside". This is good for preventing the triggering button from double-counting clicks. */
   extraRef?: React.RefObject<HTMLElement>;
-  onClickOutside(event: React.MouseEvent | MouseEvent): void;
+  onClickOutside: (event: React.MouseEvent | MouseEvent) => void;
 };
 
 /**

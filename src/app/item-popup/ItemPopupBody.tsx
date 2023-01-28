@@ -23,7 +23,7 @@ export default function ItemPopupBody({
   item: DimItem;
   extraInfo?: ItemPopupExtraInfo;
   tab: ItemPopupTab;
-  onTabChanged(tab: ItemPopupTab): void;
+  onTabChanged: (tab: ItemPopupTab) => void;
 }) {
   const failureStrings = Array.from(extraInfo?.failureStrings || []);
   if (item.owner !== 'unknown' && !item.canPullFromPostmaster && item.location.inPostmaster) {

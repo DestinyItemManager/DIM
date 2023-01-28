@@ -24,7 +24,7 @@ export default function ItemPicker({
   onCancel,
   onSheetClosed,
 }: ItemPickerState & {
-  onSheetClosed(): void;
+  onSheetClosed: () => void;
 }) {
   const [liveQuery, setQuery] = useState('');
   const query = useDeferredValue(liveQuery);

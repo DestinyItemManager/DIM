@@ -32,7 +32,7 @@ interface Props {
   classType: DestinyClass;
   params: LoadoutParameters;
   notes?: string;
-  onClose(): void;
+  onClose: () => void;
 }
 
 function chooseInitialLoadout(

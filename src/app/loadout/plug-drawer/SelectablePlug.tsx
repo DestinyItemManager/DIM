@@ -28,8 +28,8 @@ export default function SelectablePlug({
   selectionType: 'multi' | 'single';
   removable: boolean;
   displayedStatHashes?: number[];
-  onPlugSelected(plug: PluggableInventoryItemDefinition): void;
-  onPlugRemoved(plug: PluggableInventoryItemDefinition): void;
+  onPlugSelected: (plug: PluggableInventoryItemDefinition) => void;
+  onPlugRemoved: (plug: PluggableInventoryItemDefinition) => void;
 }) {
   const handleClick = useCallback(() => {
     selectable && onPlugSelected(plug);

@@ -4,7 +4,6 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import anyExoticIcon from 'images/anyExotic.svg';
 import noExoticIcon from 'images/noExotic.svg';
-import React from 'react';
 import { LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC } from '../types';
 import styles from './ExoticArmorChoice.m.scss';
 
@@ -13,7 +12,7 @@ export default function ExoticArmorChoice({
   onClose,
 }: {
   lockedExoticHash: number;
-  onClose?(): void;
+  onClose?: () => void;
 }) {
   const defs = useD2Definitions()!;
   const exoticArmor =

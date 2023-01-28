@@ -10,7 +10,7 @@ interface ProvidedProps {
   minimal?: boolean;
   /** Force grid style */
   grid?: boolean;
-  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }
 
 type Props = ProvidedProps;

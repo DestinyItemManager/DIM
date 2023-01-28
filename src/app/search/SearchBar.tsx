@@ -73,9 +73,9 @@ interface ProvidedProps {
   instant?: boolean;
   className?: string;
   /** Fired whenever the query changes (already debounced) */
-  onQueryChanged(query: string): void;
+  onQueryChanged: (query: string) => void;
   /** Fired whenever the query has been cleared */
-  onClear?(): void;
+  onClear?: () => void;
 }
 
 interface StoreProps {
@@ -133,7 +133,7 @@ const Row = React.memo(
     item: SearchItem;
     isPhonePortrait: boolean;
     isTabAutocompleteItem: boolean;
-    onClick(e: React.MouseEvent, item: SearchItem): void;
+    onClick: (e: React.MouseEvent, item: SearchItem) => void;
   }) => {
     function highlight(text: string, section: string) {
       return item.highlightRange?.section === section ? (
@@ -190,9 +190,9 @@ const Row = React.memo(
 /** An interface for interacting with the search filter through a ref */
 export interface SearchFilterRef {
   /** Switch focus to the filter field */
-  focusFilterInput(): void;
+  focusFilterInput: () => void;
   /** Clear the filter field */
-  clearFilter(): void;
+  clearFilter: () => void;
 }
 
 /**

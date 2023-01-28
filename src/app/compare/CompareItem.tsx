@@ -37,10 +37,10 @@ export default memo(function CompareItem({
   item: DimItem;
   stats: StatInfo[];
   compareBaseStats?: boolean;
-  itemClick(item: DimItem): void;
-  remove(item: DimItem): void;
-  setHighlight?(value?: string | number): void;
-  onPlugClicked(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  itemClick: (item: DimItem) => void;
+  remove: (item: DimItem) => void;
+  setHighlight?: (value?: string | number) => void;
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
   isInitialItem: boolean;
 }) {
   const headerRef = useRef<HTMLDivElement>(null);

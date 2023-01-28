@@ -30,7 +30,7 @@ export default function PhoneStoresHeader({
   // The direction we changed stores in - positive for an increasing index, negative for decreasing
   direction: number;
   loadoutMenuRef: React.RefObject<HTMLElement>;
-  setSelectedStoreId(id: string, direction: number): void;
+  setSelectedStoreId: (id: string, direction: number) => void;
 }) {
   const onIndexChanged = (index: number, dir: number) => {
     const originalIndex = stores.indexOf(selectedStore);

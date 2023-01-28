@@ -58,7 +58,7 @@ export default function BountyGuide({
   store: DimStore;
   bounties: DimItem[];
   selectedFilters: BountyFilter[];
-  onSelectedFiltersChanged(filters: BountyFilter[]): void;
+  onSelectedFiltersChanged: (filters: BountyFilter[]) => void;
   pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } };
 }) {
   const defs = useD2Definitions()!;
