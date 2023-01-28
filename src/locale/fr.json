@@ -666,7 +666,7 @@
     "NoExotics": "Aucun engrammes n'est disponible pour le transfert.",
     "NoSpace": "Vous n'avez plus d'espace libre dans le coffre et votre autres personnages.",
     "NoneMatch": "Aucun de vos arsenaux ne correspond aux filtres.",
-    "NotStarted": "En attende de la fin d'autres actions",
+    "NotStarted": "Waiting for other actions to complete, or an inventory refresh to finish loading",
     "NotesPlaceholder": "Écrivez quelques notes sur cet arsenal ou utilisez des #hashtags pour le catégoriser",
     "NotificationTitle": "Arsenal: {{name}}",
     "OnWrongCharacterAdvice": "Cliquez ici pour trouver les objets les plus puissants de ce personnage.",
@@ -1218,9 +1218,7 @@
       "Explanation": "Permettre à DIM de visualiser et de modifier vos personnages Destiny, coffre et sa progression.",
       "LearnMore": "En savoir plus sur les comptes et la connexion",
       "NewAccount": "Se connecter avec un autre compte Bungie.net",
-      "Permission": "Nous avons besoin de votre permission...",
-      "UpgradeExplanation": "Les applications d'écran d'accueil de votre version d'iOS ne vous permettent pas de vous connecter à DIM. Veuillez mettre à jour vers iOS 12.2 ou plus et ré ajouter DIM à votre écran d'accueil.",
-      "UpgradeiOS": "Veuillez mettre à jour iOS"
+      "Permission": "Nous avons besoin de votre permission..."
     },
     "Support": {
       "BackersDetail": "Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre notre développement actif.",

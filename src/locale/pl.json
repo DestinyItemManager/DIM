@@ -666,7 +666,7 @@
     "NoExotics": "Brak engramów do przeniesienia.",
     "NoSpace": "Nie masz miejsca w schowku ani na każdej innej postaci.",
     "NoneMatch": "Żadne z Twoich Uzbrojeń nie pasowało do filtrów.",
-    "NotStarted": "Oczekiwanie na pozostałe działania",
+    "NotStarted": "Waiting for other actions to complete, or an inventory refresh to finish loading",
     "NotesPlaceholder": "Napisz kilka notatek na temat tego Uzbrojenia albo użyj #hashtagów, aby go skategoryzować",
     "NotificationTitle": "Uzbrojenie: {{name}}",
     "OnWrongCharacterAdvice": "Kliknij tutaj, aby znaleźć przedmioty o najwyższej Mocy dla tej postaci.",
@@ -1218,9 +1218,7 @@
       "Explanation": "Pozwól, aby DIM mógł wyświetlać i modyfikować postacie, schowek i postęp w Destiny.",
       "LearnMore": "Dowiedz się więcej o kontach i logowaniu",
       "NewAccount": "Zaloguj się przy użyciu innego konta Bungie.net",
-      "Permission": "Potrzebujemy Twojej zgody...",
-      "UpgradeExplanation": "Aplikacje na ekranie głównym w Twojej wersji iOS nie pozwalają na logowanie się do DIM. Zaktualizuj system do wersji iOS 12.2 lub nowszej i ponownie dodaj DIM do ekranu głównego.",
-      "UpgradeiOS": "Proszę zaktualizuj iOS"
+      "Permission": "Potrzebujemy Twojej zgody..."
     },
     "Support": {
       "BackersDetail": "Wesprzyj nas darowizną jednorazową lub miesięczną i pomóż nam kontynuować nasz aktywny rozwój.",

@@ -666,7 +666,7 @@
     "NoExotics": "Non ci sono engrammi da trasferire.",
     "NoSpace": "Non hai più spazio nel Deposito e nei personaggi.",
     "NoneMatch": "Nessuno dei tuoi loadout corrisponde ai filtri.",
-    "NotStarted": "In attesa di altre operazioni",
+    "NotStarted": "In attesa del completamento di altre azioni, o la fine del caricamento di un aggiornamento dell'inventario",
     "NotesPlaceholder": "Scrivi alcune note riguardo questo loadout, oppure usa gli #hashtag per categorizzarli",
     "NotificationTitle": "Loadout: {{name}}",
     "OnWrongCharacterAdvice": "Clicca qui per trovare gli oggetti con il più alto Potere di questo personaggio.",
@@ -1218,9 +1218,7 @@
       "Explanation": "Permetti a DIM di consultare e modificare i tuoi personaggi, deposito e progresso di Destiny.",
       "LearnMore": "Informazioni sugli account e accesso",
       "NewAccount": "Accedi con un diverso account Bungie.net",
-      "Permission": "Ci serve il tuo permesso...",
-      "UpgradeExplanation": "Le app sulla schermata Home della tua versione di iOS non consentono l'accesso a DIM. Aggiorna a iOS 12.2 o più recente e aggiungi nuovamente DIM alla tua schermata iniziale.",
-      "UpgradeiOS": "Aggiorna iOS"
+      "Permission": "Ci serve il tuo permesso..."
     },
     "Support": {
       "BackersDetail": "Supportaci con una donazione singola oppure con una mensile e aiutaci a continuare il nostro sviluppo.",

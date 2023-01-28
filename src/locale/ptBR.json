@@ -666,7 +666,7 @@
     "NoExotics": "Nenhum engrama disponível para transferir.",
     "NoSpace": "Você está sem espaço no cofre e em quaisquer outros personagens.",
     "NoneMatch": "Nenhum dos seus sets combinaram com os filtros.",
-    "NotStarted": "Aguardando outras ações",
+    "NotStarted": "Aguardando para que as outras ações terminem ou uma atualização do inventário para finalizar o carregamento",
     "NotesPlaceholder": "Escreva algumas anotações sobre este set ou use #hashtags para categorizá-lo",
     "NotificationTitle": "Set: {{name}}",
     "OnWrongCharacterAdvice": "Clique aqui para encontrar os itens com maior Poder deste personagem.",
@@ -1218,9 +1218,7 @@
       "Explanation": "Dar permissão ao DIM para ver e modificar os seus personagens, cofre e progressão.",
       "LearnMore": "Saiba mais sobre contas e login",
       "NewAccount": "Inicie a sessão com uma conta diferente da Bungie.net",
-      "Permission": "Precisamos da sua permissão...",
-      "UpgradeExplanation": "Os aplicativos da tela inicial na sua versão do iOS não permitem que você inicie uma sessão no DIM. Por favor, atualize para o iOS 12.2 ou mais novo e readicione o DIM à sua tela inicial.",
-      "UpgradeiOS": "Por favor, atualize o iOS"
+      "Permission": "Precisamos da sua permissão..."
     },
     "Support": {
       "BackersDetail": "Apoie-nos com uma única doação, ou doação mensal e ajude-nos a continuar o nosso desenvolvimento ativo.",
