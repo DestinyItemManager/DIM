@@ -21,7 +21,9 @@ const LoadoutDrawer = React.lazy(
 );
 const D1LoadoutDrawer = React.lazy(
   () =>
-    import(/* webpackChunkName: "d1-loadout-drawer" */ 'app/destiny1/loadout-drawer/LoadoutDrawer')
+    import(
+      /* webpackChunkName: "d1-loadout-drawer" */ 'app/destiny1/loadout-drawer/D1LoadoutDrawer'
+    )
 );
 
 /**
