@@ -15,7 +15,7 @@ import { buildSearchConfig } from './search-config';
 function extractCaret(stringWithCaretPlaceholder: string): [caretIndex: number, query: string] {
   const caretIndex = stringWithCaretPlaceholder.indexOf('|');
   if (caretIndex == -1) {
-    return [stringWithCaretPlaceholder.length - 1, stringWithCaretPlaceholder];
+    return [stringWithCaretPlaceholder.length, stringWithCaretPlaceholder];
   }
   return [caretIndex, stringWithCaretPlaceholder.replace('|', '')];
 }
