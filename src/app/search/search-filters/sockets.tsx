@@ -75,8 +75,7 @@ const socketFilters: FilterDefinition[] = [
         return false;
       }
 
-      const legendaryWeapon =
-        item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
+      const legendaryWeapon = item.bucket?.sort === 'Weapons' && item.tier === 'Legendary';
 
       if (!legendaryWeapon) {
         return false;
@@ -101,7 +100,7 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.ExtraPerk'),
     destinyVersion: 2,
     filter: () => (item: DimItem) => {
-      if (!(item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary')) {
+      if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
         return false;
       }
 
@@ -295,7 +294,7 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.DiscontinuedPerk'),
     destinyVersion: 2,
     filter: () => (item: DimItem) => {
-      if (!(item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary')) {
+      if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
         return false;
       }
 
