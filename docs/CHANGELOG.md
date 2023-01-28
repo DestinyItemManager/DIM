@@ -1,5 +1,7 @@
 ## Next
 
+* Add `is:retiredperk` search that highlights items that have a perk which can no longer drop for that item.
+
 ## 7.53.0 <span class="changelog-date">(2023-01-22)</span>
 
 * On the Records and Armory pages, perks only shown on the collections/"curated" roll will now correctly be marked as unavailable on randomly rolled versions.

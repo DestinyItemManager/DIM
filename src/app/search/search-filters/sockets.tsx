@@ -290,8 +290,8 @@ const socketFilters: FilterDefinition[] = [
         item.sockets && compare!(countEnhancedPerks(item.sockets)),
   },
   {
-    keywords: 'discontinuedperk',
-    description: tl('Filter.DiscontinuedPerk'),
+    keywords: 'retiredperk',
+    description: tl('Filter.RetiredPerk'),
     destinyVersion: 2,
     filter: () => (item: DimItem) => {
       if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
