@@ -165,7 +165,6 @@ const Row = React.memo(
             </span>
           )}
         </p>
-        <span className={styles.menuItemHelp} />
         {!isPhonePortrait && isTabAutocompleteItem && (
           <KeyHelp className={styles.keyHelp} combo="tab" />
         )}
@@ -277,7 +276,6 @@ function SearchBar(
     getMenuProps,
     getInputProps,
     getLabelProps,
-    getComboboxProps,
     highlightedIndex,
     getItemProps,
     setInputValue,
@@ -464,8 +462,6 @@ function SearchBar(
     <div
       className={clsx(className, 'search-filter', styles.searchBar, { [styles.open]: isOpen })}
       role="search"
-      enterKeyHint="search"
-      {...getComboboxProps()}
     >
       <AppIcon icon={searchIcon} className="search-bar-icon" {...getLabelProps()} />
       <input
@@ -484,6 +480,7 @@ function SearchBar(
           type: 'text',
           name: 'filter',
         })}
+        enterKeyHint="search"
       />
       <LayoutGroup>
         <AnimatePresence>

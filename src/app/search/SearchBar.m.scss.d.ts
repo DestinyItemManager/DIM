@@ -9,7 +9,6 @@ interface CssExports {
   'keyHelp': string;
   'menu': string;
   'menuItem': string;
-  'menuItemHelp': string;
   'menuItemIcon': string;
   'menuItemQuery': string;
   'namedQueryBody': string;
