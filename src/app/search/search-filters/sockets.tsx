@@ -300,7 +300,7 @@ const socketFilters: FilterDefinition[] = [
       }
 
       return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable).some(
-        (socket) => socket.plugged?.cannotCurrentlyRoll
+        (socket) => socket.plugOptions.some((p) => p.cannotCurrentlyRoll)
       );
     },
   },

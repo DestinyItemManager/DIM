@@ -630,7 +630,13 @@ function buildSocket(
       if (plugSet) {
         for (const reusablePlug of plugSet.reusablePlugItems) {
           const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
-          addPlugOption(built, plugged, plugOptions);
+          if (built) {
+            addPlugOption(
+              { ...built, cannotCurrentlyRoll: !reusablePlug.currentlyCanRoll },
+              plugged,
+              plugOptions
+            );
+          }
         }
         curatedRoll = plugSet.reusablePlugItems.map((p) => p.plugItemHash);
       }
