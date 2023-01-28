@@ -1,4 +1,3 @@
-import { getCurrentHub } from '@sentry/browser';
 import { delay } from 'app/utils/util';
 import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
@@ -234,50 +233,6 @@ export function responsivelyThrottleHttpClient(
         }
       }
       throw e;
-    }
-  };
-}
-
-/**
- * accepts an HttpClient and returns it with sentry performance tracking
- *
- * @param httpClient use this client to make the API request
- */
-export function sentryTraceHttpClient(httpClient: HttpClient): HttpClient {
-  return async (config: HttpClientConfig) => {
-    if (!$featureFlags.sentry) {
-      return httpClient(config);
-    }
-
-    const activeTransaction = getCurrentHub()?.getScope()?.getTransaction();
-    if (!activeTransaction) {
-      return httpClient(config);
-    }
-
-    const span = activeTransaction.startChild({
-      data: {
-        ...config,
-        type: 'fetch',
-      },
-      description: `${config.method} ${config.url}`,
-      op: 'http',
-    });
-
-    try {
-      const result = await httpClient(config);
-      if (result) {
-        span.setHttpStatus(200);
-      }
-      return result;
-    } catch (e) {
-      if (e instanceof HttpStatusError) {
-        span.setHttpStatus(e.status);
-      } else {
-        span.setHttpStatus(200);
-      }
-      throw e;
-    } finally {
-      span.finish();
     }
   };
 }

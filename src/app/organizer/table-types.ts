@@ -19,6 +19,8 @@ export interface ColumnGroup {
 
 // TODO: column groupings?
 // TODO: custom configs like the total column?
+// prop methods make this invariant over V, so disable the rule here
+/* eslint-disable @typescript-eslint/method-signature-style */
 export interface ColumnDefinition<V extends Value = Value> {
   /** Unique ID for this column. */
   id: string;

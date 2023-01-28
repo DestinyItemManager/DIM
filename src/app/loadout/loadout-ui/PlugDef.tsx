@@ -8,8 +8,8 @@ import clsx from 'clsx';
 interface Props {
   plug: PluggableInventoryItemDefinition;
   className?: string;
-  onClick?(): void;
-  onClose?(): void;
+  onClick?: () => void;
+  onClose?: () => void;
 }
 
 /**

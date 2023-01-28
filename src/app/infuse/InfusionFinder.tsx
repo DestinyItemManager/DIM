@@ -219,7 +219,7 @@ export default function InfusionFinder() {
     </div>
   );
 
-  const header = ({ onClose }: { onClose(): void }) => (
+  const header = ({ onClose }: { onClose: () => void }) => (
     <div className="infuseHeader">
       <h1>
         {direction === InfuseDirection.INFUSE

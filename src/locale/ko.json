@@ -666,7 +666,7 @@
     "NoExotics": "이동할 수 있는 엔그램이 없습니다.",
     "NoSpace": "금고와 다른 캐릭터의 빈 공간이 없습니다.",
     "NoneMatch": "필터와 일치하는 로드아웃이 없습니다.",
-    "NotStarted": "다른 작업 대기 중",
+    "NotStarted": "다른 작업이 완료되거나 소지품을 새로고침하여 불러오기를 기다리는 중",
     "NotesPlaceholder": "이 로드아웃에 메모를 작성하거나 #해시태그를 사용하여 그룹화합니다.",
     "NotificationTitle": "로드아웃: {{name}}",
     "OnWrongCharacterAdvice": "이 캐릭터에서 전투력이 가장 높은 아이템을 찾으려면 여기를 클릭하세요.",
@@ -1218,9 +1218,7 @@
       "Explanation": "DIM이 데스티니 캐릭터, 금고, 진척도를 확인하고 수정할 수 있도록 허용해주세요.",
       "LearnMore": "계정과 로그인에 대해 더 알아보기",
       "NewAccount": "다른 Bungie.net 계정으로 로그인",
-      "Permission": "당신의 허락이 필요합니다...",
-      "UpgradeExplanation": "해당 버전의 iOS에서는 홈 화면 앱에서 DIM에 로그인할 수 없습니다. iOS 12.2 이상으로 업그레이드한 후 DIM을 홈 화면에 다시 추가해주세요.",
-      "UpgradeiOS": "iOS를 업그레이드하세요"
+      "Permission": "당신의 허락이 필요합니다..."
     },
     "Support": {
       "BackersDetail": "일회성 혹은 월간 기부를 하여 저희가 적극적인 개발을 계속할 수 있도록 도와주세요.",

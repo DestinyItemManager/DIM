@@ -95,9 +95,9 @@ export default function SocketDetailsSelectedPlug({
   currentPlug: DimPlug | null;
   equippable: boolean;
   allowInsertPlug: boolean;
-  closeMenu(): void;
+  closeMenu: () => void;
   /** If this is set, instead of offering to slot the mod, we just notify above */
-  onPlugSelected?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  onPlugSelected?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;

@@ -105,7 +105,7 @@ export function ArmorExtras({
   subclass?: ResolvedLoadoutItem;
   allMods: PluggableInventoryItemDefinition[];
   items?: ResolvedLoadoutItem[];
-  onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
+  onModsByBucketUpdated: (modsByBucket: LoadoutParameters['modsByBucket']) => void;
 }) {
   const defs = useD2Definitions()!;
   const equippedItems =
@@ -241,7 +241,7 @@ function FashionButton({
   loadout: Loadout;
   items: ResolvedLoadoutItem[];
   storeId: string;
-  onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
+  onModsByBucketUpdated: (modsByBucket: LoadoutParameters['modsByBucket']) => void;
 }) {
   const [showFashionDrawer, setShowFashionDrawer] = useState(false);
 

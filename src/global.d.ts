@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/method-signature-style */
 declare const $DIM_VERSION: string;
 declare const $DIM_FLAVOR: 'release' | 'beta' | 'dev' | 'test';
 declare const $DIM_BUILD_DATE: string;

@@ -611,10 +611,10 @@ function TableRow({
 }: {
   row: Row;
   filteredColumns: ColumnDefinition[];
-  onRowClick(
+  onRowClick: (
     row: Row,
     column: ColumnDefinition
-  ): ((event: React.MouseEvent<HTMLTableCellElement>) => void) | undefined;
+  ) => ((event: React.MouseEvent<HTMLTableCellElement>) => void) | undefined;
 }) {
   return (
     <>

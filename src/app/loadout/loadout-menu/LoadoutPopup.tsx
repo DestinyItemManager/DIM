@@ -59,7 +59,7 @@ export default function LoadoutPopup({
   onClick,
 }: {
   dimStore: DimStore;
-  onClick?(e: React.MouseEvent): void;
+  onClick?: (e: React.MouseEvent) => void;
 }) {
   // For the most part we don't need to memoize this - this menu is destroyed when closed
   const defs = useDefinitions()!;

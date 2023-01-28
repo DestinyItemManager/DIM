@@ -174,7 +174,7 @@
     "SyncShaders": "Shader synchr.",
     "SyncShadersTitle": "Denselben Shader für alle Gegenstände verwenden",
     "Title": "Shader und Ornamente auswählen",
-    "UseEquipped": "Ausgerüstete Mode verwenden"
+    "UseEquipped": "Ausger. Mode nutzen"
   },
   "FileUpload": {
     "Instructions": "Klicke oder ziehe Dateien"
@@ -666,7 +666,7 @@
     "NoExotics": "Es sind keine Engramme zum Transfer verfügbar.",
     "NoSpace": "Du hast keinen Platz im Tresor und allen anderen Charakteren.",
     "NoneMatch": "Keiner deiner Ausrüstungen entsprach den Filtern.",
-    "NotStarted": "Warte auf andere Aktionen",
+    "NotStarted": "Warte auf den Abschluss anderer Aktionen oder auf die Aktualisierung des Inventars",
     "NotesPlaceholder": "Schreibe ein paar Notizen über diese Ausrüstung – oder benutze #Hashtags, um sie in Kategorien einzuordnen",
     "NotificationTitle": "Ausrüstung: {{name}}",
     "OnWrongCharacterAdvice": "Klicke hier, um die Gegenstände dieses Charakters mit der höchsten Power zu finden.",
@@ -1218,9 +1218,7 @@
       "Explanation": "Erlaube DIM, deine Destiny-Charaktere, deinen Tresor und Fortschritt einzusehen und zu bearbeiten.",
       "LearnMore": "Erfahre mehr über Konten und Login",
       "NewAccount": "Mit einem anderen Bungie.net-Konto anmelden",
-      "Permission": "Wir brauchen dein Einverständnis...",
-      "UpgradeExplanation": "Home-Bildschirm-Apps in deiner iOS-Version erlauben es nicht, sich bei DIM anzumelden. Bitte aktualisiere auf iOS 12.2 oder neuer und füge DIM deinem Home-Bildschirm neu hinzu.",
-      "UpgradeiOS": "Bitte aktualisiere iOS"
+      "Permission": "Wir brauchen dein Einverständnis..."
     },
     "Support": {
       "BackersDetail": "Unterstütze uns mit einer einmaligen oder monatlichen Spende, um uns zu helfen aktiv weiterzuentwickeln.",

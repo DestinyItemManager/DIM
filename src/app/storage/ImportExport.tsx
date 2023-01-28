@@ -10,8 +10,8 @@ export default function ImportExport({
   onExportData,
   onImportData,
 }: {
-  onExportData(): void;
-  onImportData(data: ExportResponse): Promise<void>;
+  onExportData: () => void;
+  onImportData: (data: ExportResponse) => Promise<void>;
 }) {
   const importData: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     if (acceptedFiles.length < 1) {

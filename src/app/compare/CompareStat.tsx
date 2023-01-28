@@ -4,7 +4,6 @@ import { t } from 'app/i18next-t';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { getColor, percent } from 'app/shell/formatters';
 import { StatHashes } from 'data/d2/generated-enums';
-import React from 'react';
 import { D1Stat, DimItem } from '../inventory/item-types';
 import { MinimalStat, StatInfo } from './Compare';
 import styles from './CompareStat.m.scss';
@@ -18,7 +17,7 @@ export default function CompareStat({
   stat: StatInfo;
   compareBaseStats?: boolean;
   item: DimItem;
-  setHighlight?(value?: string | number): void;
+  setHighlight?: (value?: string | number) => void;
 }) {
   const itemStat = stat.getStat(item);
 

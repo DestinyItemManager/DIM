@@ -18,7 +18,7 @@ import { accountsSelector, currentAccountSelector } from './selectors';
 export default function MenuAccounts({
   closeDropdown,
 }: {
-  closeDropdown(e: React.MouseEvent<HTMLElement>): void;
+  closeDropdown: (e: React.MouseEvent<HTMLElement>) => void;
 }) {
   const dispatch = useThunkDispatch();
   const currentAccount = useSelector(currentAccountSelector);

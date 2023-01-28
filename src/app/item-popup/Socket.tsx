@@ -15,7 +15,7 @@ export default function Socket({
   item: DimItem;
   socket: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
-  onClick?(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
+  onClick?: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
 }) {
   const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
   if (!socket.plugOptions.length) {

@@ -56,7 +56,7 @@ export interface Hotkey {
   description: string;
   action?: 'keypress' | 'keydown' | 'keyup';
   allowIn?: string[];
-  callback(event: KeyboardEvent): void;
+  callback: (event: KeyboardEvent) => void;
 }
 
 class HotkeyRegistry {

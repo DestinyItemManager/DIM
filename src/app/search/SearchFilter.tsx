@@ -17,7 +17,7 @@ export function SearchFilter(
   {
     onClear,
   }: {
-    onClear?(): void;
+    onClear?: () => void;
   },
   ref: React.Ref<SearchFilterRef>
 ) {

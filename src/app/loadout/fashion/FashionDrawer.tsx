@@ -48,7 +48,7 @@ export default function FashionDrawer({
   loadout: Loadout;
   storeId?: string;
   items: ResolvedLoadoutItem[];
-  onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
+  onModsByBucketUpdated: (modsByBucket: LoadoutParameters['modsByBucket']) => void;
   onClose: () => void;
 }) {
   const defs = useD2Definitions()!;
@@ -114,7 +114,7 @@ export default function FashionDrawer({
     </>
   );
 
-  const footer = ({ onClose }: { onClose(): void }) => (
+  const footer = ({ onClose }: { onClose: () => void }) => (
     <>
       <button
         type="button"
@@ -421,8 +421,8 @@ function FashionItem({
   bucketHash: number;
   mods?: number[];
   storeId?: string;
-  onPickPlug(params: PickPlugState): void;
-  onRemovePlug(bucketHash: number, modHash: number): void;
+  onPickPlug: (params: PickPlugState) => void;
+  onRemovePlug: (bucketHash: number, modHash: number) => void;
 }) {
   const defs = useD2Definitions()!;
   const isShader = (m: number) =>
@@ -498,8 +498,8 @@ function FashionSocket({
   exampleItem: DimItem;
   storeId?: string;
   defaultPlug: DestinyInventoryItemDefinition;
-  onPickPlug(params: PickPlugState): void;
-  onRemovePlug(bucketHash: number, modHash: number): void;
+  onPickPlug: (params: PickPlugState) => void;
+  onRemovePlug: (bucketHash: number, modHash: number) => void;
 }) {
   const unlockedPlugSetItems = useSelector((state: RootState) =>
     unlockedPlugSetItemsSelector(state, storeId)

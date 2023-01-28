@@ -7,13 +7,13 @@ import ItemPopupTrigger from '../../inventory/ItemPopupTrigger';
 
 interface Props {
   item: D1Item & { vendorIcon?: string };
-  shiftClickCallback?(item: D1Item): void;
+  shiftClickCallback?: (item: D1Item) => void;
 }
 
 export default function LoadoutBuilderItem({ item, shiftClickCallback }: Props) {
   const onShiftClick =
     shiftClickCallback &&
-    ((e: React.MouseEvent<HTMLDivElement>) => {
+    ((e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       shiftClickCallback(item);

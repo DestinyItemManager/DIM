@@ -33,7 +33,7 @@ export default function Plug({
   socketInfo: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
   hasMenu: boolean;
-  onClick?(plug: DimPlug): void;
+  onClick?: (plug: DimPlug) => void;
 } & PlugStatuses) {
   const defs = useD2Definitions()!;
 

@@ -35,7 +35,7 @@ import LoadoutDrawerOptions from './LoadoutDrawerOptions';
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit
  * loadouts from this interface. This one is only used for D1, see LoadoutDrawer2 for D2's new loadout editor.
  */
-export default function LoadoutDrawer({
+export default function D1LoadoutDrawer({
   initialLoadout,
   storeId,
   isNew,
@@ -51,7 +51,7 @@ export default function LoadoutDrawer({
   storeId: string;
   isNew: boolean;
   showClass: boolean;
-  onClose(): void;
+  onClose: () => void;
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD1Definitions()!;
@@ -173,7 +173,7 @@ export default function LoadoutDrawer({
     </div>
   );
 
-  const footer = ({ onClose }: { onClose(): void }) => (
+  const footer = ({ onClose }: { onClose: () => void }) => (
     <LoadoutDrawerFooter
       loadout={loadout}
       isNew={isNew}

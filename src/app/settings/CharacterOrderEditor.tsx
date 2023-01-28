@@ -11,7 +11,7 @@ import styles from './CharacterOrderEditor.m.scss';
 export default function CharacterOrderEditor({
   onSortOrderChanged,
 }: {
-  onSortOrderChanged(order: string[]): void;
+  onSortOrderChanged: (order: string[]) => void;
 }) {
   const characters = useSelector(sortedStoresSelector);
 

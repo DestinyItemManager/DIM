@@ -666,7 +666,7 @@
     "NoExotics": "没有记忆水晶可以转移.",
     "NoSpace": "你的保险库和其他角色均已满。",
     "NoneMatch": "没有与过滤器匹配的配装。",
-    "NotStarted": "正在等待其他操作",
+    "NotStarted": "正在等待其他操作完成或物品栏刷新完毕",
     "NotesPlaceholder": "为此配装添加备注，或使用 #标签 进行分类（标签不支持中文）",
     "NotificationTitle": "配装:{{name}}",
     "OnWrongCharacterAdvice": "点此查找当前角色的最高光等物品。",
@@ -1218,9 +1218,7 @@
       "Explanation": "允许DIM查看并修改您的命运角色，保险库和进度。",
       "LearnMore": "了解账户与登录",
       "NewAccount": "使用其他 Bungie.net 账户登录",
-      "Permission": "我们需要您的授权",
-      "UpgradeExplanation": "您的iOS版本的主屏幕应用程序不允许您登录到 DIM。请升级到 iOS 12.2 或更新，并重新添加 DIM 到您的主屏幕。",
-      "UpgradeiOS": "请升级 iOS"
+      "Permission": "我们需要您的授权"
     },
     "Support": {
       "BackersDetail": "您可以选择一次性捐助或者每月捐助，以便我们能更加积极地开发。",

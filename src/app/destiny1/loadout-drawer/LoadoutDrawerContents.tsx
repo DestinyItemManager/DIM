@@ -61,10 +61,10 @@ export default function LoadoutDrawerContents({
   loadout: Loadout;
   items: ResolvedLoadoutItem[];
   setLoadout: (updater: LoadoutUpdateFunction) => void;
-  equip(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
-  remove(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
-  add(item: DimItem, equip?: boolean): void;
-  onShowItemPicker(shown: boolean): void;
+  equip: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
+  remove: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
+  add: (item: DimItem, equip?: boolean) => void;
+  onShowItemPicker: (shown: boolean) => void;
 }) {
   const defs = useD1Definitions()!;
   const buckets = useSelector(bucketsSelector)!;

@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 import Armory from './Armory';
 import styles from './ArmorySheet.m.scss';
 
-export default function ArmorySheet({ item, onClose }: { item: DimItem; onClose(): void }) {
+export default function ArmorySheet({ item, onClose }: { item: DimItem; onClose: () => void }) {
   const defs = useD2Definitions()!;
   const realItemSockets = useMemo(
     () =>

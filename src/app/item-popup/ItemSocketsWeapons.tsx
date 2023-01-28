@@ -37,7 +37,7 @@ interface Props {
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
   grid?: boolean;
-  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }
 
 export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked }: Props) {
