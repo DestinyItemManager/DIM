@@ -35,7 +35,7 @@ const openCollectiveLink = `<a href='${openCollectiveLinkDirect}' target='_blank
 const storeLink = `<a href='${storeLinkDirect}' target='_blank' rel='noopener noreferrer'>DesignByHumans</a>`;
 const youTubeLink = 'https://www.youtube.com/channel/UCsNRmUfaeIi5Tk7U0mlZ6UQ';
 const twitterLink = 'https://twitter.com/ThisIsDIM';
-const mastodonLink = 'https://mstdn.games/ThisIsDIM';
+const mastodonLink = 'https://mstdn.games/@ThisIsDIM';
 const redditLink = 'https://destinyitemmanager.reddit.com';
 const discordLink = 'https://discord.gg/UK2GWC7';
 const wikiLink = 'https://github.com/DestinyItemManager/DIM/wiki';

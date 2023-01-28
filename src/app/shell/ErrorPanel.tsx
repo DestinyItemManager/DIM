@@ -10,7 +10,7 @@ import styles from './ErrorPanel.m.scss';
 
 const bungieHelpLink = 'http://twitter.com/BungieHelp';
 const dimHelpLink = 'http://twitter.com/ThisIsDIM';
-const dimHelpMastodonLink = 'http://mstdn.games/ThisIsDIM';
+const dimHelpMastodonLink = 'http://mstdn.games/@ThisIsDIM';
 const troubleshootingLink = 'https://github.com/DestinyItemManager/DIM/wiki/Troubleshooting';
 const Timeline = React.lazy(async () => {
   const m = await import(/* webpackChunkName: "twitter" */ 'react-twitter-widgets');
