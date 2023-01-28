@@ -17,7 +17,7 @@ import { Loadout } from './loadout-types';
 import { convertToLoadoutItem, newLoadout, pickBackingStore } from './loadout-utils';
 
 const LoadoutDrawer = React.lazy(
-  () => import(/* webpackChunkName: "loadout-drawer" */ './LoadoutDrawer2')
+  () => import(/* webpackChunkName: "loadout-drawer" */ './LoadoutDrawer')
 );
 const D1LoadoutDrawer = React.lazy(
   () =>
