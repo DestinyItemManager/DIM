@@ -45,6 +45,27 @@ module.exports = {
       progress: { list: ['Bounties', 'Items', 'Quests'] },
       sockets: { list: ['Mod', 'Ability', 'Shader', 'Ornament', 'Fragment', 'Aspect', 'Projection', 'Transmat', 'Super'] },
       unsupported: { list: ['Unsupported', 'Steam'] },
+      modeffect: {list: [
+        "Finder",
+        "Targeting",
+        "Dexterity",
+        "Loader",
+        "Reserves",
+        "Unflinching",
+        "Holster",
+        "Scavenger",
+        "Resistance",
+        "Super",
+        "ClassAbility",
+        "Grenade",
+        "Orbs",
+        "Finisher",
+        "Champion",
+        "ChargedWithLight",
+        "ElementalWell",
+        "WarmindCell",
+        "ArmorCharge",
+      ]}
     };
 
     parser.parseFuncFromString(content, { list: ['t', 'tl', 'DimError'] }, (key, options) => {

@@ -766,6 +766,27 @@
     "Unknown": "Challenge",
     "Weekly": "Weekly Challenge"
   },
+  "ModEffect": {
+    "Finder": "Finder",
+    "Targeting": "Targeting",
+    "Dexterity": "Dexterity",
+    "Loader": "Loader",
+    "Reserves": "Reserves",
+    "Unflinching": "Unflinching",
+    "Holster": "Holster",
+    "Scavenger": "Scavenger",
+    "Resistance": "Resistance",
+    "Super": "Super",
+    "ClassAbility": "Class Ability",
+    "Grenade": "Grenade",
+    "Orbs": "Orbs",
+    "Finisher": "Finisher",
+    "Champion": "Champion",
+    "ChargedWithLight": "Charged with Light",
+    "ElementalWell": "Elemental Well",
+    "WarmindCell": "Warmind Cell",
+    "ArmorCharge": "Armor Charge"
+  },
   "MoveAmount": {
     "Amount": "Amount:"
   },

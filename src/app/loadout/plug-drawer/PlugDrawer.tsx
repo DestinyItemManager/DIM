@@ -13,6 +13,7 @@ import { Comparator } from 'app/utils/comparators';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import modsInfoFile from 'data/d2/mods.json';
+import { t } from 'i18next';
 import { produce } from 'immer';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -274,8 +275,6 @@ export enum ModEffect {
   ElementalWell,
   WarmindCell,
   ArmorCharge,
-  // There is no benefit from multiple copies
-  NoStack,
 }
 
 /** Interesting things about mods that we can't figure out from the translated defs */
@@ -331,19 +330,26 @@ function modFilterPillOptions(
     let content: React.ReactNode;
     switch (type) {
       case 'effects':
-        content = ModEffect[value];
+        content = t(`ModEffect.${ModEffect[value]}`, { metadata: { keys: 'modeffect' } });
         break;
-      case 'element':
+      case 'element': {
+        const damageType = Object.values(defs.DamageType.getAll()).find(
+          (d) => d.enumValue === value
+        )!;
         content = (
-          <ElementIcon
-            className={styles.elementIcon}
-            element={Object.values(defs.DamageType.getAll()).find((d) => d.enumValue === value)!}
-          />
+          <>
+            <ElementIcon className={styles.elementIcon} element={damageType} />
+            {damageType.displayProperties.name}
+          </>
         );
         break;
+      }
       case 'weapon':
         content = (
-          <img height="16" className={styles.itemCategoryIcon} src={itemCategoryIcons[value]} />
+          <>
+            <img height="16" className={styles.itemCategoryIcon} src={itemCategoryIcons[value]} />
+            {defs.ItemCategory.get(value)?.displayProperties.name}
+          </>
         );
         break;
     }
