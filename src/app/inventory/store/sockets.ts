@@ -745,17 +745,15 @@ function buildCachedDefinedPlug(
   const cachedValue = definedPlugCache[plugHash];
   // The result of buildDefinedPlug can be null, we still consider that a cached value.
   if (cachedValue !== undefined) {
-    // We mutate cannotCurrentlyRoll and attach stats in this module so we need to spread the object
-    // We also run DimItems through immer in the store, which means these get frozen. This essentially
-    // unfreezes it in that situation. It only seems to be an issue for fake items in loadouts.
-    // TODO (ryan) lets find a way around this
-    return cachedValue ? { ...cachedValue, cannotCurrentlyRoll: currentlyCanRoll === false } : null;
+    return cachedValue
+      ? currentlyCanRoll === false
+        ? { ...cachedValue, cannotCurrentlyRoll: true }
+        : cachedValue
+      : null;
   }
 
   const plug = buildDefinedPlug(defs, plugHash);
   definedPlugCache[plugHash] = plug;
 
-  // We mutate cannotCurrentlyRoll and attach stats in this module so we need to spread the object
-  // TODO (ryan) lets find a way around this
-  return plug ? { ...plug, cannotCurrentlyRoll: currentlyCanRoll === false } : null;
+  return plug ? (currentlyCanRoll === false ? { ...plug, cannotCurrentlyRoll: true } : plug) : null;
 }
