@@ -14,7 +14,7 @@ import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { isEventFromFirefoxScrollbar } from 'app/utils/browsers';
+import { isiOSBrowser } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -288,7 +288,7 @@ function CompareItems({
   const ref = useRef<HTMLDivElement>(null);
   const dragStateRef = useRef<{ scrollPosition: number; pointerDownPosition: number }>();
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
-    if (isEventFromFirefoxScrollbar(e) || hasClickEventAboveParent(ref.current!, e.target)) {
+    if (!isiOSBrowser()) {
       return;
     }
 
@@ -485,15 +485,4 @@ function makeFakeStat(
     getStat,
     bar,
   };
-}
-
-function hasClickEventAboveParent(parent: HTMLElement, clickTarget: EventTarget) {
-  let currentNode: EventTarget | HTMLElement | null = clickTarget;
-  while (currentNode && parent !== currentNode) {
-    if ('onclick' in currentNode && typeof currentNode.onclick === 'function') {
-      return true;
-    }
-    currentNode = 'parentElement' in currentNode ? currentNode.parentElement : null;
-  }
-  return false;
 }
