@@ -320,15 +320,6 @@ export const dynamicStringsSelector = (state: RootState) => {
   }
 };
 
-/** Does the user have an classified items? */
-export const hasClassifiedSelector = createSelector(allItemsSelector, (allItems) =>
-  allItems.some(
-    (i) =>
-      i.classified &&
-      (i.location.inWeapons || i.location.inArmor || i.bucket.hash === BucketHashes.Ghost)
-  )
-);
-
 /** Item infos (tags/notes) */
 export const itemInfosSelector = (state: RootState): ItemInfos =>
   currentProfileSelector(state)?.tags || emptyObject();

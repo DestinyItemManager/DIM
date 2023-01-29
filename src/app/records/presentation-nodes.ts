@@ -272,7 +272,7 @@ export function searchDisplayProperties(
     displayProperties.description.toLowerCase().includes(searchQuery)
   );
 }
-export function searchRewards(
+function searchRewards(
   record: DestinyRecordDefinition,
   searchQuery: string,
   defs: D2ManifestDefinitions

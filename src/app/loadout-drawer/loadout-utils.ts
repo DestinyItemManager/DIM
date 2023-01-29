@@ -635,7 +635,7 @@ export function getModsFromLoadout(
   return mods.sort(sortMods);
 }
 
-export function getSubclassFragmentCapacity(subclassItem: DimItem): number {
+function getSubclassFragmentCapacity(subclassItem: DimItem): number {
   const aspects = getSocketsByCategoryHash(subclassItem.sockets, SocketCategoryHashes.Aspects);
   return _.sumBy(
     aspects,

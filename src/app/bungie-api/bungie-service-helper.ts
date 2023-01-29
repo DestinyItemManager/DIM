@@ -79,7 +79,7 @@ export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
 /**
  * wrap HttpClient in handling specific to DIM, using i18n strings, bounce to login, etc
  */
-export function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
+function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
   return async (config: HttpClientConfig) => {
     try {
       return await httpClient(config);
@@ -92,7 +92,7 @@ export function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
 /**
  * if HttpClient throws an error (js, Bungie, http) this enriches it with DIM concepts and then re-throws it
  */
-export function handleErrors(error: Error) {
+function handleErrors(error: Error) {
   if (error instanceof DOMException && error.name === 'AbortError') {
     throw (
       navigator.onLine
