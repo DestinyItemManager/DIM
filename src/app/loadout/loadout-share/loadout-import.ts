@@ -118,7 +118,7 @@ export function decodeUrlLoadout(search: string): Loadout | undefined {
   }
 }
 
-export async function getDimSharedLoadout(shareId: string) {
+async function getDimSharedLoadout(shareId: string) {
   const loadout = await getSharedLoadout(shareId);
   return preprocessReceivedLoadout(convertDimApiLoadoutToLoadout(loadout));
 }
@@ -126,7 +126,7 @@ export async function getDimSharedLoadout(shareId: string) {
 /**
  * Ensure received loadouts and their items have a unique ID.
  */
-export function preprocessReceivedLoadout(loadout: Loadout): Loadout {
+function preprocessReceivedLoadout(loadout: Loadout): Loadout {
   loadout.id = uuidv4();
   loadout.items = loadout.items.map((item) => ({
     ...item,

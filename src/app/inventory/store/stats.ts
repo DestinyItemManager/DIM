@@ -595,9 +595,9 @@ function bankersRound(x: number) {
   return (x > 0 ? x : -x) % 1 === 0.5 ? (0 === r % 2 ? r : r - 1) : r;
 }
 
-export function keyByStatHash(stats: DimStat[]): StatLookup;
-export function keyByStatHash(stats: DestinyStatDisplayDefinition[]): StatDisplayLookup;
-export function keyByStatHash(stats: (DimStat | DestinyStatDisplayDefinition)[]): {
+function keyByStatHash(stats: DimStat[]): StatLookup;
+function keyByStatHash(stats: DestinyStatDisplayDefinition[]): StatDisplayLookup;
+function keyByStatHash(stats: (DimStat | DestinyStatDisplayDefinition)[]): {
   [statHash: number]: DimStat | DestinyStatDisplayDefinition | undefined;
 } {
   return _.keyBy(stats, (s) => s.statHash);

@@ -13,7 +13,7 @@ export const energyStyles: { [energy in DestinyEnergyType]?: string } = {
 } as const;
 
 /** this accepts either an item, or a partial DimItem.energy */
-export function EnergyIncrements({
+function EnergyIncrements({
   item,
   energy,
 }:

@@ -23,7 +23,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useSubscription } from 'use-subscription';
 import ClickOutside from '../dim-ui/ClickOutside';
 import ExternalLink from '../dim-ui/ExternalLink';
-import { default as SearchFilter } from '../search/SearchFilter';
+import SearchFilter from '../search/SearchFilter';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import { setSearchQuery } from './actions';
 import { installPrompt$ } from './app-install';

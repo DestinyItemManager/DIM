@@ -150,7 +150,7 @@ const installFarmingObserver = _.once((dispatch) => {
 });
 
 // collect and send data to the stream deck
-export function refreshStreamDeck(): ThunkResult {
+function refreshStreamDeck(): ThunkResult {
   return async (dispatch, getState) => {
     const refreshAction = () => {
       const state = getState();

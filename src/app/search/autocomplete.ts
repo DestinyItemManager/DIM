@@ -227,7 +227,7 @@ const closingQuoteRegex = /\w["']$/;
  *
  * @returns the start index and term of the last complete filter
  */
-export function findLastFilter(
+function findLastFilter(
   query: string,
   caretIndex: number
 ): {

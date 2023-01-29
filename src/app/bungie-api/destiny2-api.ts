@@ -7,22 +7,16 @@ import {
   awaInitializeRequest,
   AwaType,
   BungieMembershipType,
-  DestinyCharacterResponse,
   DestinyComponentType,
-  DestinyItemResponse,
   DestinyLinkedProfilesResponse,
   DestinyManifest,
   DestinyProfileResponse,
-  DestinyVendorResponse,
   DestinyVendorsResponse,
   equipItem,
   equipItems as equipItemsApi,
-  getCharacter as getCharacterApi,
   getDestinyManifest,
-  getItem,
   getLinkedProfiles,
   getProfile as getProfileApi,
-  getVendor as getVendorApi,
   getVendors as getVendorsApi,
   PlatformErrorCodes,
   pullFromPostmaster,
@@ -114,31 +108,6 @@ export function getCharacters(platform: DestinyAccount): Promise<DestinyProfileR
 }
 
 /**
- * Get character info for on the given platform. No inventory, just enough to refresh activity.
- */
-export function getCurrentActivity(
-  platform: DestinyAccount,
-  characterId: string
-): Promise<DestinyCharacterResponse> {
-  return getCharacter(platform, characterId, DestinyComponentType.CharacterActivities);
-}
-
-async function getCharacter(
-  platform: DestinyAccount,
-  characterId: string,
-  ...components: DestinyComponentType[]
-): Promise<DestinyCharacterResponse> {
-  const response = await getCharacterApi(authenticatedHttpClient, {
-    destinyMembershipId: platform.membershipId,
-    characterId,
-    membershipType: platform.originalPlatformType,
-    components,
-  });
-
-  return response.Response;
-}
-
-/**
  * Get parameterized profile information for the whole account. Pass in components to select what
  * you want. This can handle just characters, full inventory, vendors, kiosks, activities, etc.
  */
@@ -160,77 +129,6 @@ async function getProfile(
       })
     );
   }
-  return response.Response;
-}
-
-/**
- * Get extra information about a single instanced item. This should be called from the
- * item popup only.
- */
-export async function getItemPopupDetails(
-  itemInstanceId: string,
-  account: DestinyAccount
-): Promise<DestinyItemResponse> {
-  const response = await getItem(authenticatedHttpClient, {
-    destinyMembershipId: account.membershipId,
-    membershipType: account.originalPlatformType,
-    itemInstanceId,
-    components: [
-      // Get plug objectives (kill trackers and catalysts)
-      DestinyComponentType.ItemPlugObjectives,
-    ],
-  });
-  return response.Response;
-}
-
-/**
- * Get all information about a single instanced item.
- */
-export async function getSingleItem(
-  itemInstanceId: string,
-  account: DestinyAccount
-): Promise<DestinyItemResponse> {
-  const response = await getItem(authenticatedHttpClient, {
-    destinyMembershipId: account.membershipId,
-    membershipType: account.originalPlatformType,
-    itemInstanceId,
-    components: [
-      DestinyComponentType.ItemInstances,
-      DestinyComponentType.ItemObjectives,
-      DestinyComponentType.ItemSockets,
-      DestinyComponentType.ItemCommonData,
-      DestinyComponentType.ItemPlugStates,
-      DestinyComponentType.ItemReusablePlugs,
-      DestinyComponentType.ItemPlugObjectives,
-    ],
-  });
-  return response.Response;
-}
-
-export async function getVendor(
-  account: DestinyAccount,
-  characterId: string,
-  vendorHash: number
-): Promise<DestinyVendorResponse> {
-  const response = await getVendorApi(authenticatedHttpClient, {
-    characterId,
-    destinyMembershipId: account.membershipId,
-    membershipType: account.originalPlatformType,
-    components: [
-      DestinyComponentType.Vendors,
-      DestinyComponentType.VendorSales,
-      DestinyComponentType.ItemInstances,
-      DestinyComponentType.ItemObjectives,
-      DestinyComponentType.ItemSockets,
-      DestinyComponentType.ItemCommonData,
-      DestinyComponentType.CurrencyLookups,
-      DestinyComponentType.ItemPlugStates,
-      DestinyComponentType.ItemReusablePlugs,
-      // TODO: We should try to defer this until the popup is open!
-      DestinyComponentType.ItemPlugObjectives,
-    ],
-    vendorHash,
-  });
   return response.Response;
 }
 

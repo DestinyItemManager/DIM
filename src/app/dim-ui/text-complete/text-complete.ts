@@ -42,7 +42,7 @@ function createTagsCompleter(
   };
 }
 
-export function createSymbolsAutocompleter(symbols: SymbolsMap): StrategyProps {
+function createSymbolsAutocompleter(symbols: SymbolsMap): StrategyProps {
   return {
     match: /\B:(\p{L}*)$/u,
     search: (term, callback) => {
