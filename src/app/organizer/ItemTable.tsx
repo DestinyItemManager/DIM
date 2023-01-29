@@ -8,6 +8,7 @@ import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
+  createItemContextSelector,
   itemInfosSelector,
   newItemsSelector,
   storesSelector,
@@ -101,11 +102,13 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const wishList = useSelector(wishListFunctionSelector);
   const hasWishList = useSelector(hasWishListSelector);
   const enabledColumns = useSelector(settingSelector(columnSetting(itemType)));
-  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
+  const createItemContext = useSelector(createItemContextSelector);
   const loadoutsByItem = useSelector(loadoutsByItemSelector);
   const newItems = useSelector(newItemsSelector);
   const destinyVersion = useSelector(destinyVersionSelector);
   const dispatch = useThunkDispatch();
+
+  const { customTotalStatsByClass } = createItemContext;
 
   const classCategoryHash =
     categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
@@ -136,10 +139,10 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     () =>
       defs
         ? originalItems.map((item) =>
-            applySocketOverrides(defs, item, customTotalStatsByClass, socketOverrides[item.id])
+            applySocketOverrides(createItemContext, item, socketOverrides[item.id])
           )
         : originalItems,
-    [defs, originalItems, socketOverrides, customTotalStatsByClass]
+    [createItemContext, defs, originalItems, socketOverrides]
   );
 
   // Build a list of all the stats relevant to this set of items

@@ -1,6 +1,5 @@
 import ItemGrid from 'app/armory/ItemGrid';
 import { addCompareItem } from 'app/compare/actions';
-import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
@@ -55,7 +54,6 @@ export default function Armory({
   const allItems = useSelector(allItemsSelector);
   const isPhonePortrait = useIsPhonePortrait();
   const [socketOverrides, onPlugClicked] = useSocketOverrides();
-  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
   const createItemContext = useSelector(createItemContextSelector);
 
   const itemDef = defs.InventoryItem.get(itemHash);
@@ -70,13 +68,12 @@ export default function Armory({
     );
   }
 
-  // We apply socket overrides *twice* - once to set the original sockets, then to apply the user's chosen overrides
-  const item = applySocketOverrides(
-    defs,
-    applySocketOverrides(defs, itemWithoutSockets, customTotalStatsByClass, realItemSockets),
-    customTotalStatsByClass,
-    socketOverrides
-  );
+  const item = applySocketOverrides(createItemContext, itemWithoutSockets, {
+    // Start with the item's current sockets
+    ...realItemSockets,
+    // Then apply whatever the user chose in the Armory UI
+    ...socketOverrides,
+  });
 
   const storeItems = allItems.filter((i) => i.hash === itemHash);
 

@@ -30,7 +30,7 @@ export function getItemsFromLoadoutItems(
     return [emptyArray(), emptyArray()];
   }
 
-  const { defs, buckets, customTotalStatsByClass } = createItemContext;
+  const { defs, buckets } = createItemContext;
 
   const items: ResolvedLoadoutItem[] = [];
   const warnitems: ResolvedLoadoutItem[] = [];
@@ -53,7 +53,7 @@ export function getItemsFromLoadoutItems(
 
       // Apply socket overrides so the item appears as it should be configured in the loadout
       const overriddenItem = defs.isDestiny2()
-        ? applySocketOverrides(defs, item, customTotalStatsByClass, overrides)
+        ? applySocketOverrides(createItemContext, item, overrides)
         : item;
 
       items.push({
