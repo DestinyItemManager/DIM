@@ -35,7 +35,7 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     // Whether to send cookies to the Bungie.net API
     apiCookies: false,
     // If saved DIM API data in IDB is recent enough, don't bother getting it from the server
-    skipDimApiFirstLoadIfRecent: !env.release,
+    skipDimApiFirstLoadIfRecent: true,
     // Pretend that Bungie.net is down for maintenance
     simulateBungieMaintenance: false,
     // Pretend that Bungie.net is not returning sockets info
