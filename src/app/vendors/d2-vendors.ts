@@ -42,7 +42,10 @@ export function toVendorGroups(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   account: DestinyAccount,
-  characterId: string
+  characterId: string,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): D2VendorGroup[] {
   if (!vendorsResponse.vendorGroups.data) {
     return [];
@@ -66,7 +69,8 @@ export function toVendorGroups(
                   account,
                   characterId,
                   vendorsResponse.itemComponents[vendorHash],
-                  vendorsResponse.sales.data?.[vendorHash]?.saleItems
+                  vendorsResponse.sales.data?.[vendorHash]?.saleItems,
+                  customTotalStatsByClass
                 )
               )
               .filter((vendor) => vendor?.items.length)
@@ -95,7 +99,10 @@ export function toVendor(
     | {
         [key: string]: DestinyVendorSaleItemComponent;
       }
-    | undefined
+    | undefined,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): D2Vendor | undefined {
   const vendorDef = defs.Vendor.get(vendorHash);
 
@@ -111,7 +118,8 @@ export function toVendor(
     profileResponse,
     characterId,
     itemComponents,
-    sales
+    sales,
+    customTotalStatsByClass
   );
 
   const destinationDef =
@@ -154,7 +162,10 @@ function getVendorItems(
     | {
         [key: string]: DestinyVendorSaleItemComponent;
       }
-    | undefined
+    | undefined,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): VendorItem[] {
   if (sales) {
     const components = Object.values(sales);
@@ -166,7 +177,8 @@ function getVendorItems(
         profileResponse,
         component,
         characterId,
-        itemComponents
+        itemComponents,
+        customTotalStatsByClass
       )
     );
   } else if (vendorDef.returnWithVendorRequest) {
@@ -180,7 +192,16 @@ function getVendorItems(
           i.exclusivity === BungieMembershipType.All ||
           i.exclusivity === account.originalPlatformType
       )
-      .map((i) => vendorItemForDefinitionItem(defs, buckets, i, profileResponse, characterId));
+      .map((i) =>
+        vendorItemForDefinitionItem(
+          defs,
+          buckets,
+          i,
+          profileResponse,
+          characterId,
+          customTotalStatsByClass
+        )
+      );
   }
 }
 

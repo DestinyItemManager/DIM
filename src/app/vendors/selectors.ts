@@ -25,10 +25,19 @@ export const nonCurriedVendorGroupsForCharacterSelector = createSelector(
   bucketsSelector,
   currentAccountSelector,
   profileResponseSelector,
+  (state: RootState) => state.dimApi.settings.customTotalStatsByClass,
   // get character ID from props not state
   (state: any, characterId: string | undefined) =>
     characterId || getCurrentStore(sortedStoresSelector(state))?.id,
-  (defs, vendors, buckets, currentAccount, profileResponse, selectedStoreId) => {
+  (
+    defs,
+    vendors,
+    buckets,
+    currentAccount,
+    profileResponse,
+    customTotalStatsByClass,
+    selectedStoreId
+  ) => {
     const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
     const vendorsResponse = vendorData?.vendorsResponse;
 
@@ -44,7 +53,8 @@ export const nonCurriedVendorGroupsForCharacterSelector = createSelector(
           defs,
           buckets,
           currentAccount,
-          selectedStoreId
+          selectedStoreId,
+          customTotalStatsByClass
         )
       : emptyArray<D2VendorGroup>();
   }

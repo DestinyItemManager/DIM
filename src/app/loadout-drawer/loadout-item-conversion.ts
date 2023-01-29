@@ -26,6 +26,9 @@ export function getItemsFromLoadoutItems(
   storeId: string | undefined,
   buckets: InventoryBuckets,
   allItems: DimItem[],
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  },
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
   }
@@ -54,7 +57,9 @@ export function getItemsFromLoadoutItems(
       }
 
       // Apply socket overrides so the item appears as it should be configured in the loadout
-      const overriddenItem = defs.isDestiny2() ? applySocketOverrides(defs, item, overrides) : item;
+      const overriddenItem = defs.isDestiny2()
+        ? applySocketOverrides(defs, item, customTotalStatsByClass, overrides)
+        : item;
 
       items.push({
         item: overriddenItem,
@@ -66,7 +71,7 @@ export function getItemsFromLoadoutItems(
       });
     } else {
       const fakeItem: DimItem | null = defs.isDestiny2()
-        ? makeFakeItem(defs, buckets, undefined, loadoutItem.hash)
+        ? makeFakeItem(defs, buckets, undefined, loadoutItem.hash, customTotalStatsByClass)
         : makeFakeD1Item(defs, buckets, loadoutItem.hash);
       if (fakeItem) {
         fakeItem.id = generateMissingLoadoutItemId();

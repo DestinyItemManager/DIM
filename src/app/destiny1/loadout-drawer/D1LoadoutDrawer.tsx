@@ -1,3 +1,4 @@
+import { settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import Sheet from 'app/dim-ui/Sheet';
@@ -60,13 +61,22 @@ export default function D1LoadoutDrawer({
   const buckets = useSelector(bucketsSelector)!;
   const [showingItemPicker, setShowingItemPicker] = useState(false);
   const [loadout, setLoadout] = useState(initialLoadout);
+  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
 
   const loadoutItems = loadout?.items;
 
   // Turn loadout items into real DimItems
   const [items, warnitems] = useMemo(
-    () => getItemsFromLoadoutItems(loadoutItems, defs, storeId, buckets, allItems),
-    [loadoutItems, defs, storeId, buckets, allItems]
+    () =>
+      getItemsFromLoadoutItems(
+        loadoutItems,
+        defs,
+        storeId,
+        buckets,
+        allItems,
+        customTotalStatsByClass
+      ),
+    [loadoutItems, defs, storeId, buckets, allItems, customTotalStatsByClass]
   );
 
   const onAddItem = useCallback(

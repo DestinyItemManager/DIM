@@ -19,7 +19,7 @@ async function getTestVendorGroups() {
   };
   const characterId = Object.keys(profileResponse.characters.data!)[0];
 
-  return toVendorGroups(vendorsResponse, profileResponse, defs, buckets, account, characterId);
+  return toVendorGroups(vendorsResponse, profileResponse, defs, buckets, account, characterId, {});
 }
 
 function* allSaleItems(vendorGroups: D2VendorGroup[]) {

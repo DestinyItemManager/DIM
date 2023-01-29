@@ -72,7 +72,10 @@ export function toPresentationNodeTree(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets | undefined,
   profileResponse: DestinyProfileResponse,
-  node: number
+  node: number,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): DimPresentationNode | null {
   const presentationNodeDef = defs.PresentationNode.get(node);
   if (presentationNodeDef.redacted) {
@@ -83,7 +86,8 @@ export function toPresentationNodeTree(
       defs,
       buckets,
       profileResponse,
-      presentationNodeDef.children.collectibles
+      presentationNodeDef.children.collectibles,
+      customTotalStatsByClass
     );
     const visible = collectibles.length;
     const acquired = count(collectibles, (c) => !(c.state & DestinyCollectibleState.NotAcquired));
@@ -114,7 +118,8 @@ export function toPresentationNodeTree(
       defs,
       buckets,
       profileResponse,
-      presentationNodeDef.children.craftables
+      presentationNodeDef.children.craftables,
+      customTotalStatsByClass
     );
 
     const visible = craftables.length;
@@ -150,7 +155,8 @@ export function toPresentationNodeTree(
         defs,
         buckets,
         profileResponse,
-        presentationNode.presentationNodeHash
+        presentationNode.presentationNodeHash,
+        customTotalStatsByClass
       );
       if (subnode) {
         acquired += subnode.acquired;
@@ -286,7 +292,10 @@ function toCollectibles(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   profileResponse: DestinyProfileResponse,
-  collectibleHashes: DestinyPresentationNodeCollectibleChildEntry[]
+  collectibleHashes: DestinyPresentationNodeCollectibleChildEntry[],
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): DimCollectible[] {
   return _.compact(
     collectibleHashes.map(({ collectibleHash }) => {
@@ -307,6 +316,7 @@ function toCollectibles(
         buckets,
         profileResponse.itemComponents,
         collectibleDef.itemHash,
+        customTotalStatsByClass,
         undefined,
         undefined,
         profileResponse.profileRecords.data
@@ -363,11 +373,14 @@ function toCraftables(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   profileResponse: DestinyProfileResponse,
-  craftableChildren: DestinyPresentationNodeCraftableChildEntry[]
+  craftableChildren: DestinyPresentationNodeCraftableChildEntry[],
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): DimCraftable[] {
   return _.compact(
     _.sortBy(craftableChildren, (c) => c.nodeDisplayPriority).map((c) =>
-      toCraftable(defs, buckets, profileResponse, c.craftableItemHash)
+      toCraftable(defs, buckets, profileResponse, c.craftableItemHash, customTotalStatsByClass)
     )
   );
 }
@@ -376,9 +389,18 @@ function toCraftable(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   profileResponse: DestinyProfileResponse,
-  itemHash: number
+  itemHash: number,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): DimCraftable | undefined {
-  const item = makeFakeItem(defs, buckets, profileResponse.itemComponents, itemHash);
+  const item = makeFakeItem(
+    defs,
+    buckets,
+    profileResponse.itemComponents,
+    itemHash,
+    customTotalStatsByClass
+  );
 
   if (!item) {
     return;

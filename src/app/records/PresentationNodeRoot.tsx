@@ -1,7 +1,9 @@
+import { settingSelector } from 'app/dim-api/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import { unlockedItemsForCharacterOrProfilePlugSet } from './plugset-helpers';
@@ -41,6 +43,7 @@ export default function PresentationNodeRoot({
   overrideName,
   completedRecordsHidden,
 }: Props) {
+  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
   const defs = useD2Definitions()!;
   const [nodePath, setNodePath] = useState<number[]>([]);
 
@@ -58,8 +61,15 @@ export default function PresentationNodeRoot({
   }
 
   const nodeTree = useMemo(
-    () => toPresentationNodeTree(defs, buckets, profileResponse, presentationNodeHash),
-    [defs, buckets, profileResponse, presentationNodeHash]
+    () =>
+      toPresentationNodeTree(
+        defs,
+        buckets,
+        profileResponse,
+        presentationNodeHash,
+        customTotalStatsByClass
+      ),
+    [defs, buckets, profileResponse, presentationNodeHash, customTotalStatsByClass]
   );
   // console.log(nodeTree);
 

@@ -1,3 +1,4 @@
+import { settingSelector } from 'app/dim-api/selectors';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { sortedStoresSelector } from 'app/inventory/selectors';
@@ -23,6 +24,7 @@ interface Props {
 export default function ItemPopupContainer({ boundarySelector }: Props) {
   const stores = useSelector(sortedStoresSelector);
   const defs = useD2Definitions();
+  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
 
   const currentItem = useSubscription(showItemPopup$);
 
@@ -39,7 +41,12 @@ export default function ItemPopupContainer({ boundarySelector }: Props) {
   let item = currentItem?.item && maybeFindItem(currentItem.item, stores);
   // Apply socket overrides to customize the item (e.g. from a loadout)
   if (item && defs && currentItem?.extraInfo?.socketOverrides) {
-    item = applySocketOverrides(defs, item, currentItem.extraInfo.socketOverrides);
+    item = applySocketOverrides(
+      defs,
+      item,
+      customTotalStatsByClass,
+      currentItem.extraInfo.socketOverrides
+    );
   }
 
   if (!currentItem || !item) {

@@ -135,9 +135,11 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const items = useMemo(
     () =>
       defs
-        ? originalItems.map((item) => applySocketOverrides(defs, item, socketOverrides[item.id]))
+        ? originalItems.map((item) =>
+            applySocketOverrides(defs, item, customTotalStatsByClass, socketOverrides[item.id])
+          )
         : originalItems,
-    [defs, originalItems, socketOverrides]
+    [defs, originalItems, socketOverrides, customTotalStatsByClass]
   );
 
   // Build a list of all the stats relevant to this set of items

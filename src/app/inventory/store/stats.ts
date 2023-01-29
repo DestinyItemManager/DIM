@@ -1,5 +1,4 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
@@ -18,7 +17,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import reduxStore from '../../store/store';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
 import { DimItem, DimPlug, DimSocket, DimStat } from '../item-types';
 
@@ -105,6 +103,9 @@ interface StatLookup {
 export function buildStats(
   defs: D2ManifestDefinitions,
   createdItem: DimItem,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  },
   itemDef = defs.InventoryItem.get(createdItem.hash)
 ) {
   if (!itemDef.stats?.statGroupHash) {
@@ -151,7 +152,7 @@ export function buildStats(
     investmentStats.push(tStat);
     const cStat =
       createdItem.bucket.hash !== BucketHashes.ClassArmor &&
-      customStat(investmentStats, createdItem.classType);
+      customStat(investmentStats, customTotalStatsByClass, createdItem.classType);
     if (cStat) {
       investmentStats.push(cStat);
     }
@@ -520,10 +521,14 @@ const customStatTemplate = _.once(() => ({
   isConditionallyActive: false,
 }));
 
-function customStat(stats: DimStat[], destinyClass: DestinyClass): DimStat | undefined {
-  const customStatDef = settingsSelector(reduxStore.getState()).customTotalStatsByClass[
-    destinyClass
-  ];
+function customStat(
+  stats: DimStat[],
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  },
+  destinyClass: DestinyClass
+): DimStat | undefined {
+  const customStatDef = customTotalStatsByClass[destinyClass];
 
   if (!customStatDef || customStatDef.length === 0 || customStatDef.length === 6) {
     return undefined;

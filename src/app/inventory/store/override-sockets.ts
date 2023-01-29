@@ -22,7 +22,10 @@ export interface SocketOverrides {
 export function applySocketOverrides(
   defs: D2ManifestDefinitions,
   item: DimItem,
-  socketOverrides?: SocketOverrides
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  },
+  socketOverrides: SocketOverrides | undefined
 ): DimItem {
   if (!socketOverrides || _.isEmpty(socketOverrides) || !item.sockets) {
     return item;
@@ -103,7 +106,7 @@ export function applySocketOverrides(
   };
 
   // Recalculate the entire item's stats from scratch given the new plugs
-  updatedItem.stats = buildStats(defs, updatedItem);
+  updatedItem.stats = buildStats(defs, updatedItem, customTotalStatsByClass);
 
   return updatedItem;
 }

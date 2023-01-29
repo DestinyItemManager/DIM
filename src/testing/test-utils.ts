@@ -87,6 +87,6 @@ export const getTestVendors = () => (vendors as any).Response as DestinyVendorsR
 export const getTestStores = _.once(async () => {
   const manifest = await getTestDefinitions();
 
-  const stores = buildStores(manifest, getBuckets(manifest), getTestProfile());
+  const stores = buildStores(manifest, getBuckets(manifest), getTestProfile(), {});
   return stores;
 });

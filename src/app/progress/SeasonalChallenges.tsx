@@ -1,4 +1,4 @@
-import { trackedTriumphsSelector } from 'app/dim-api/selectors';
+import { settingSelector, trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
@@ -33,11 +33,13 @@ export default function SeasonalChallenges({
   profileResponse: DestinyProfileResponse;
 }) {
   const defs = useD2Definitions()!;
+  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
   const nodeTree = toPresentationNodeTree(
     defs,
     buckets,
     profileResponse,
-    seasonalChallengesPresentationNode.hash
+    seasonalChallengesPresentationNode.hash,
+    customTotalStatsByClass
   );
 
   const allRecords = nodeTree ? flattenRecords(nodeTree) : [];

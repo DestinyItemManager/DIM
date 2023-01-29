@@ -101,8 +101,10 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     }
 
     case getType(actions.awaItemChanged): {
-      const { changes, item, defs, buckets } = action.payload;
-      return produce(state, (draft) => awaItemChanged(draft, changes, item, defs, buckets));
+      const { changes, item, defs, buckets, customTotalStatsByClass } = action.payload;
+      return produce(state, (draft) =>
+        awaItemChanged(draft, changes, item, defs, buckets, customTotalStatsByClass)
+      );
     }
 
     case getType(actions.error):
@@ -435,7 +437,10 @@ function awaItemChanged(
   changes: DestinyItemChangeResponse,
   item: DimItem | null,
   defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets
+  buckets: InventoryBuckets,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ) {
   // Replace item
   if (!item) {
@@ -527,7 +532,14 @@ function awaItemChanged(
       currency.quantity = Math.min(max, currency.quantity + addedItemComponent.quantity);
     } else if (addedItemComponent.itemInstanceId) {
       const addedOwner = getSource(addedItemComponent);
-      const addedItem = makeItem(defs, buckets, undefined, addedItemComponent, addedOwner);
+      const addedItem = makeItem(
+        defs,
+        buckets,
+        undefined,
+        addedItemComponent,
+        addedOwner,
+        customTotalStatsByClass
+      );
       if (addedItem) {
         addItem(addedOwner, addedItem);
       }
@@ -539,7 +551,14 @@ function awaItemChanged(
         (i) => i.amount
       );
       let addAmount = addedItemComponent.quantity;
-      const addedItem = makeItem(defs, buckets, undefined, addedItemComponent, target);
+      const addedItem = makeItem(
+        defs,
+        buckets,
+        undefined,
+        addedItemComponent,
+        target,
+        customTotalStatsByClass
+      );
       if (!addedItem) {
         continue;
       }

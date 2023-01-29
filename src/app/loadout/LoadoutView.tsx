@@ -31,6 +31,9 @@ export function getItemsAndSubclassFromLoadout(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   allItems: DimItem[],
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  },
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
   }
@@ -45,6 +48,7 @@ export function getItemsAndSubclassFromLoadout(
     store.id,
     buckets,
     allItems,
+    customTotalStatsByClass,
     modsByBucket
   );
   const subclass = items

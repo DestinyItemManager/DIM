@@ -78,6 +78,9 @@ export function processItems(
   owner: DimStore,
   items: DestinyItemComponent[],
   itemComponents: DestinyItemComponentSetOfint64,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  },
   uninstancedItemObjectives?: DestinyCharacterProgressionComponent['uninstancedItemObjectives'],
   profileRecords?: DestinyProfileRecordsComponent,
   uninstancedItemPerks?: DestinyCharacterProgressionComponent['uninstancedItemPerks']
@@ -97,6 +100,7 @@ export function processItems(
         itemComponents,
         item,
         owner,
+        customTotalStatsByClass,
         itemUninstancedObjectives,
         itemUninstancedPerks,
         profileRecords
@@ -159,6 +163,9 @@ export function makeFakeItem(
   buckets: InventoryBuckets,
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   itemHash: number,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  },
   itemInstanceId?: string,
   quantity?: number,
   profileRecords?: DestinyProfileRecordsComponent,
@@ -185,6 +192,7 @@ export function makeFakeItem(
       versionNumber: defs.InventoryItem.get(itemHash)?.quality?.currentVersion,
     },
     undefined,
+    customTotalStatsByClass,
     undefined,
     undefined,
     profileRecords
@@ -204,7 +212,10 @@ export function makeItemSingle(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   item: DestinyItemResponse,
-  stores: DimStore[]
+  stores: DimStore[],
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): DimItem | null {
   if (!item.item.data) {
     return null;
@@ -237,7 +248,8 @@ export function makeItemSingle(
       objectives: m(item.objectives),
     },
     item.item.data,
-    owner
+    owner,
+    customTotalStatsByClass
   );
 }
 
@@ -258,6 +270,9 @@ export function makeItem(
   itemComponents: DestinyItemComponentSetOfint64 | undefined,
   item: DestinyItemComponent,
   owner: DimStore | undefined,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  },
   /** this item's uninstanced objectives */
   itemUninstancedObjectives?: DestinyObjectiveProgress[],
   /** this item's uninstanced perks */
@@ -625,7 +640,7 @@ export function makeItem(
   }
 
   try {
-    createdItem.stats = buildStats(defs, createdItem, itemDef);
+    createdItem.stats = buildStats(defs, createdItem, customTotalStatsByClass, itemDef);
   } catch (e) {
     errorLog('d2-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });

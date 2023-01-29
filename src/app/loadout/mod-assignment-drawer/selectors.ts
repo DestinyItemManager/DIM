@@ -1,3 +1,4 @@
+import { settingSelector } from 'app/dim-api/selectors';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, bucketsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
@@ -39,6 +40,7 @@ export function useEquippedLoadoutArmorAndSubclass(
       const allItems = allItemsSelector(state);
       const defs = manifestSelector(state)!;
       const buckets = bucketsSelector(state)!;
+      const customTotalStatsByClass = settingSelector('customTotalStatsByClass')(state);
       const modsByBucket = loadout.parameters?.modsByBucket;
 
       const [loadoutItems] = getItemsFromLoadoutItems(
@@ -47,6 +49,7 @@ export function useEquippedLoadoutArmorAndSubclass(
         storeId,
         buckets,
         allItems,
+        customTotalStatsByClass,
         modsByBucket
       );
 

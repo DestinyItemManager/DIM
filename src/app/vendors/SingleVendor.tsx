@@ -1,3 +1,4 @@
+import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
@@ -35,6 +36,7 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
   const profileResponse = useSelector(profileResponseSelector);
   const vendors = useSelector(vendorsByCharacterSelector);
   const defs = useD2Definitions();
+  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
   const dispatch = useThunkDispatch();
 
   // TODO: get for all characters, or let people select a character? This is a hack
@@ -117,7 +119,8 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
     account,
     characterId,
     vendorResponse?.itemComponents[vendorHash],
-    vendorResponse?.sales.data?.[vendorHash]?.saleItems
+    vendorResponse?.sales.data?.[vendorHash]?.saleItems,
+    customTotalStatsByClass
   );
 
   if (!d2Vendor) {

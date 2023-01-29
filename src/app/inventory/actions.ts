@@ -75,6 +75,9 @@ export const awaItemChanged = createAction('inventory/AWA_CHANGE')<{
   changes: DestinyItemChangeResponse;
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  };
 }>();
 
 /*

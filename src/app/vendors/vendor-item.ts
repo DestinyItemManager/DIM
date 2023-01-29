@@ -69,7 +69,10 @@ function makeVendorItem(
   saleItem: DestinyVendorSaleItemComponent | undefined,
   itemComponents: DestinyItemComponentSetOfint32 | undefined,
   // the character to whom this item is being offered
-  characterId: string
+  characterId: string,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): VendorItem {
   const inventoryItem = defs.InventoryItem.get(itemHash);
   const key = saleItem ? saleItem.vendorItemIndex : inventoryItem.hash;
@@ -90,6 +93,7 @@ function makeVendorItem(
       buckets,
       itemComponents,
       itemHash,
+      customTotalStatsByClass,
       // For sale items the item ID needs to be the vendor item index, since that's how we look up item components for perks
       key.toString(),
       vendorItemDef ? vendorItemDef.quantity : 1,
@@ -143,7 +147,10 @@ export function vendorItemForSaleItem(
   saleItem: DestinyVendorSaleItemComponent,
   // all DIM vendor calls are character-specific. any sale item should have an associated character.
   characterId: string,
-  itemComponents: DestinyItemComponentSetOfint32 | undefined
+  itemComponents: DestinyItemComponentSetOfint32 | undefined,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): VendorItem {
   const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
   const failureStrings =
@@ -161,7 +168,8 @@ export function vendorItemForSaleItem(
     vendorItemDef,
     saleItem,
     itemComponents,
-    characterId
+    characterId,
+    customTotalStatsByClass
   );
 }
 
@@ -174,7 +182,10 @@ export function vendorItemForDefinitionItem(
   buckets: InventoryBuckets,
   vendorItemDef: DestinyVendorItemDefinition,
   profileResponse: DestinyProfileResponse | undefined,
-  characterId: string
+  characterId: string,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): VendorItem {
   return makeVendorItem(
     defs,
@@ -186,6 +197,7 @@ export function vendorItemForDefinitionItem(
     vendorItemDef,
     undefined,
     undefined,
-    characterId
+    characterId,
+    customTotalStatsByClass
   );
 }

@@ -5,6 +5,7 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
+import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
@@ -275,7 +276,14 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         const stopTimer = timer('Process inventory');
 
         const buckets = d2BucketsSelector(getState())!;
-        const stores = buildStores(defs, buckets, profileInfo, transaction);
+        const customTotalStatsByClass = settingSelector('customTotalStatsByClass')(getState());
+        const stores = buildStores(
+          defs,
+          buckets,
+          profileInfo,
+          customTotalStatsByClass,
+          transaction
+        );
 
         if (readOnly) {
           for (const store of stores) {
@@ -342,6 +350,9 @@ export function buildStores(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
   profileInfo: DestinyProfileResponse,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  },
   transaction?: Transaction
 ): DimStore[] {
   // TODO: components may be hidden (privacy)
@@ -363,10 +374,17 @@ export function buildStores(
   const processSpan = transaction?.startChild({
     op: 'processItems',
   });
-  const vault = processVault(defs, buckets, profileInfo);
+  const vault = processVault(defs, buckets, profileInfo, customTotalStatsByClass);
 
   const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
-    processCharacter(defs, buckets, characterId, profileInfo, lastPlayedDate)
+    processCharacter(
+      defs,
+      buckets,
+      characterId,
+      profileInfo,
+      lastPlayedDate,
+      customTotalStatsByClass
+    )
   );
   processSpan?.finish();
 
@@ -416,7 +434,10 @@ function processCharacter(
   buckets: InventoryBuckets,
   characterId: string,
   profileInfo: DestinyProfileResponse,
-  lastPlayedDate: Date
+  lastPlayedDate: Date,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): DimStore {
   const character = profileInfo.characters.data![characterId];
   const characterInventory = profileInfo.characterInventories.data?.[characterId]?.items || [];
@@ -450,6 +471,7 @@ function processCharacter(
     store,
     items,
     itemComponents,
+    customTotalStatsByClass,
     uninstancedItemObjectives,
     profileRecords,
     uninstancedItemPerks
@@ -461,7 +483,10 @@ function processCharacter(
 function processVault(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
-  profileInfo: DestinyProfileResponse
+  profileInfo: DestinyProfileResponse,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ): DimStore {
   const profileInventory = profileInfo.profileInventory.data
     ? profileInfo.profileInventory.data.items
@@ -486,6 +511,7 @@ function processVault(
     store,
     items,
     itemComponents,
+    customTotalStatsByClass,
     undefined,
     profileRecords
   );

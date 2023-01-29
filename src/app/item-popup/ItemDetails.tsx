@@ -1,3 +1,4 @@
+import { settingSelector } from 'app/dim-api/selectors';
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { WeaponCatalystInfo } from 'app/dim-ui/WeaponCatalystInfo';
@@ -44,9 +45,10 @@ export default function ItemDetails({
   extraInfo?: ItemPopupExtraInfo;
 }) {
   const defs = useDefinitions()!;
+  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
   const [socketOverrides, onPlugClicked, resetSocketOverrides] = useSocketOverrides();
   const item = defs.isDestiny2()
-    ? applySocketOverrides(defs, originalItem, socketOverrides)
+    ? applySocketOverrides(defs, originalItem, customTotalStatsByClass, socketOverrides)
     : originalItem;
   const modTypeIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
     ? helmetIcon

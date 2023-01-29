@@ -1,5 +1,6 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -62,6 +63,7 @@ export default function LoadoutEdit({
   const allItems = useSelector(allItemsSelector);
   const missingSockets = allItems.some((i) => i.missingSockets);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
+  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
 
   // TODO: filter down by usable mods?
   const modsByBucket: {
@@ -71,8 +73,16 @@ export default function LoadoutEdit({
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(
     () =>
-      getItemsAndSubclassFromLoadout(loadout.items, store, defs, buckets, allItems, modsByBucket),
-    [loadout.items, defs, buckets, allItems, store, modsByBucket]
+      getItemsAndSubclassFromLoadout(
+        loadout.items,
+        store,
+        defs,
+        buckets,
+        allItems,
+        customTotalStatsByClass,
+        modsByBucket
+      ),
+    [loadout.items, defs, buckets, allItems, store, customTotalStatsByClass, modsByBucket]
   );
 
   const allMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);

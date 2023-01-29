@@ -1,5 +1,6 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
@@ -241,7 +242,8 @@ function refreshItemAfterAWA(changes: DestinyItemChangeResponse): ThunkResult {
     const defs = d2ManifestSelector(getState())!;
     const buckets = d2BucketsSelector(getState())!;
     const stores = storesSelector(getState());
-    const newItem = makeItemSingle(defs, buckets, changes.item, stores);
+    const customTotalStatsByClass = settingSelector('customTotalStatsByClass')(getState());
+    const newItem = makeItemSingle(defs, buckets, changes.item, stores, customTotalStatsByClass);
 
     dispatch(
       awaItemChanged({
@@ -249,6 +251,7 @@ function refreshItemAfterAWA(changes: DestinyItemChangeResponse): ThunkResult {
         changes,
         defs: d2ManifestSelector(getState())!,
         buckets: d2BucketsSelector(getState())!,
+        customTotalStatsByClass,
       })
     );
   };

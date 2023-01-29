@@ -1,3 +1,4 @@
+import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
@@ -66,6 +67,7 @@ export default function Compare({ session }: { session: CompareSession }) {
   const defs = useD2Definitions()!;
   const [compareBaseStats, setCompareBaseStats] = useSetting('compareBaseStats');
   const [assumeWeaponMasterwork, setAssumeWeaponMasterwork] = useSetting('compareWeaponMasterwork');
+  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
   const rawCompareItems = useSelector(compareItemsSelector(session.vendorCharacterId));
   const organizerLink = useSelector(compareOrganizerLinkSelector);
 
@@ -100,7 +102,7 @@ export default function Compare({ session }: { session: CompareSession }) {
               (plugOption) => plugOption.plugDef.investmentStats[0]?.value
             );
             if (fullMasterworkPlug) {
-              return applySocketOverrides(defs, i, {
+              return applySocketOverrides(defs, i, customTotalStatsByClass, {
                 [y2MasterworkSocket.socketIndex]: fullMasterworkPlug.plugDef.hash,
               });
             }
@@ -108,11 +110,13 @@ export default function Compare({ session }: { session: CompareSession }) {
           return i;
         });
       }
-      items = items.map((i) => applySocketOverrides(defs, i, socketOverrides[i.id]));
+      items = items.map((i) =>
+        applySocketOverrides(defs, i, customTotalStatsByClass, socketOverrides[i.id])
+      );
     }
 
     return items;
-  }, [defs, doAssumeWeaponMasterworks, rawCompareItems, socketOverrides]);
+  }, [defs, doAssumeWeaponMasterworks, rawCompareItems, socketOverrides, customTotalStatsByClass]);
 
   const cancel = useCallback(() => {
     dispatch(endCompareSession());

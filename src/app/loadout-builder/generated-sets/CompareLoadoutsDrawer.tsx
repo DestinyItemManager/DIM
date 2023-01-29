@@ -1,5 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { settingSelector } from 'app/dim-api/selectors';
 import Select from 'app/dim-ui/Select';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
@@ -66,7 +67,10 @@ function createLoadoutUsingLOItems(
   subclass: ResolvedLoadoutItem | undefined,
   loadout: Loadout | undefined,
   params: LoadoutParameters,
-  notes: string | undefined
+  notes: string | undefined,
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  }
 ) {
   return produce(loadout, (draftLoadout) => {
     if (draftLoadout) {
@@ -75,7 +79,8 @@ function createLoadoutUsingLOItems(
         defs,
         storeId,
         buckets,
-        allItems
+        allItems,
+        customTotalStatsByClass
       );
       const newItems = setItems.map((item) => convertToLoadoutItem(item, true));
       if (subclass) {
@@ -126,6 +131,7 @@ export default function CompareLoadoutsDrawer({
 }: Props) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
+  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
   const useableLoadouts = loadouts.filter((l) => l.classType === classType);
 
   const setItems = set.armor.map((items) => items[0]);
@@ -150,7 +156,8 @@ export default function CompareLoadoutsDrawer({
         subclass,
         selectedLoadout,
         params,
-        notes
+        notes,
+        customTotalStatsByClass
       ),
     [
       defs,
@@ -163,6 +170,7 @@ export default function CompareLoadoutsDrawer({
       selectedLoadout,
       params,
       notes,
+      customTotalStatsByClass,
     ]
   );
 
