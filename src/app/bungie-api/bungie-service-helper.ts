@@ -57,8 +57,7 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
         TIMEOUT,
         notifyTimeout
       ),
-      API_KEY,
-      $featureFlags.apiCookies
+      API_KEY
     ),
     logThrottle
   )
@@ -67,11 +66,7 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
 /** used to get manifest and global alerts */
 export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
-    createHttpClient(
-      createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout),
-      API_KEY,
-      false
-    ),
+    createHttpClient(createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout), API_KEY),
     logThrottle
   )
 );

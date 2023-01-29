@@ -222,10 +222,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       profileLastLoaded(getState().dimApi, currentAccount) >
       getState().dimApi.globalSettings.dimProfileMinimumRefreshInterval * 1000;
 
-    const needsFirstLoad =
-      !getState().dimApi.profileLoaded && !$featureFlags.skipDimApiFirstLoadIfRecent;
-
-    if (forceLoad || needsFirstLoad || profileOutOfDateOrMissing) {
+    if (forceLoad || profileOutOfDateOrMissing) {
       try {
         const profileResponse = await getDimApiProfile(currentAccount);
         dispatch(profileLoaded({ profileResponse, account: currentAccount }));
