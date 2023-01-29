@@ -5,7 +5,6 @@ import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
-  checkForOverFill,
   createMoveSession,
   equipItems,
   Exclusion,
@@ -621,7 +620,6 @@ function doApplyLoadout(
       // Update the characters to get the latest stats
       dispatch(updateCharacters());
       dispatch(resumeFarming());
-      dispatch(checkForOverFill());
     }
   };
 }
