@@ -1,10 +1,9 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import {
   applySocketOverrides,
@@ -59,11 +58,10 @@ export default function LoadoutEdit({
   onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
 }) {
   const defs = useD2Definitions()!;
-  const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const missingSockets = allItems.some((i) => i.missingSockets);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
-  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
+  const createItemContext = useSelector(createItemContextSelector);
 
   // TODO: filter down by usable mods?
   const modsByBucket: {
@@ -74,15 +72,13 @@ export default function LoadoutEdit({
   const [items, subclass, warnitems] = useMemo(
     () =>
       getItemsAndSubclassFromLoadout(
+        createItemContext,
         loadout.items,
         store,
-        defs,
-        buckets,
         allItems,
-        customTotalStatsByClass,
         modsByBucket
       ),
-    [loadout.items, defs, buckets, allItems, store, customTotalStatsByClass, modsByBucket]
+    [createItemContext, loadout.items, store, allItems, modsByBucket]
   );
 
   const allMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);

@@ -1,4 +1,3 @@
-import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
@@ -14,7 +13,12 @@ import { useLocation, useParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import Countdown from '../dim-ui/Countdown';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { bucketsSelector, profileResponseSelector, storesSelector } from '../inventory/selectors';
+import {
+  bucketsSelector,
+  createItemContextSelector,
+  profileResponseSelector,
+  storesSelector,
+} from '../inventory/selectors';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh-events';
 import { loadAllVendors } from './actions';
@@ -36,7 +40,7 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
   const profileResponse = useSelector(profileResponseSelector);
   const vendors = useSelector(vendorsByCharacterSelector);
   const defs = useD2Definitions();
-  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
+  const createItemContext = useSelector(createItemContextSelector);
   const dispatch = useThunkDispatch();
 
   // TODO: get for all characters, or let people select a character? This is a hack
@@ -111,16 +115,11 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
   // TODO: there's a cool background image but I'm not sure how to use it
 
   const d2Vendor = toVendor(
+    { ...createItemContext, itemComponents: vendorResponse?.itemComponents[vendorHash] },
     vendorHash,
-    defs,
-    buckets,
-    profileResponse,
     vendor,
-    account,
     characterId,
-    vendorResponse?.itemComponents[vendorHash],
-    vendorResponse?.sales.data?.[vendorHash]?.saleItems,
-    customTotalStatsByClass
+    vendorResponse?.sales.data?.[vendorHash]?.saleItems
   );
 
   if (!d2Vendor) {

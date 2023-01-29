@@ -1,6 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
@@ -28,8 +27,8 @@ import { showNotification } from '../notifications/notifications';
 import { awaItemChanged } from './actions';
 import { DimItem, DimSocket } from './item-types';
 import {
+  createItemContextSelector,
   currentStoreSelector,
-  d2BucketsSelector,
   profileResponseSelector,
   storesSelector,
 } from './selectors';
@@ -239,19 +238,15 @@ async function awaInsertSocketPlug(
  */
 function refreshItemAfterAWA(changes: DestinyItemChangeResponse): ThunkResult {
   return async (dispatch, getState) => {
-    const defs = d2ManifestSelector(getState())!;
-    const buckets = d2BucketsSelector(getState())!;
+    const createItemContext = createItemContextSelector(getState());
     const stores = storesSelector(getState());
-    const customTotalStatsByClass = settingSelector('customTotalStatsByClass')(getState());
-    const newItem = makeItemSingle(defs, buckets, changes.item, stores, customTotalStatsByClass);
+    const newItem = makeItemSingle(createItemContext, changes.item, stores);
 
     dispatch(
       awaItemChanged({
         item: newItem,
         changes,
-        defs: d2ManifestSelector(getState())!,
-        buckets: d2BucketsSelector(getState())!,
-        customTotalStatsByClass,
+        createItemContext,
       })
     );
   };

@@ -1,5 +1,5 @@
-import { settingSelector } from 'app/dim-api/selectors';
 import { DimItem } from 'app/inventory/item-types';
+import { createItemContextSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
@@ -9,7 +9,6 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import { count } from '../utils/util';
 
@@ -19,7 +18,6 @@ const plugSetOrder = chainComparator<DimItem>(
 );
 
 interface Props {
-  buckets: InventoryBuckets;
   plugSetCollection: {
     hash: number;
     displayItem: number;
@@ -33,7 +31,6 @@ interface Props {
  * A single plug set.
  */
 export default function PlugSet({
-  buckets,
   plugSetCollection,
   unlockedItems,
   path,
@@ -42,12 +39,10 @@ export default function PlugSet({
   const defs = useD2Definitions()!;
   const plugSetHash = plugSetCollection.hash;
   const plugSetDef = defs.PlugSet.get(plugSetHash);
-  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
+  const createItemContext = useSelector(createItemContextSelector);
 
   const plugSetItems = _.compact(
-    plugSetDef.reusablePlugItems.map((i) =>
-      makeFakeItem(defs, buckets, undefined, i.plugItemHash, customTotalStatsByClass)
-    )
+    plugSetDef.reusablePlugItems.map((i) => makeFakeItem(createItemContext, i.plugItemHash))
   );
 
   plugSetItems.sort(plugSetOrder);

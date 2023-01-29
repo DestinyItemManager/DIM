@@ -9,10 +9,8 @@ export const getCharacterProgressions = (
   characterId?: string
 ) => {
   // try to fill in missing character ID with a valid value
-  characterId =
-    characterId ||
-    (profileResponse?.characterProgressions?.data
-      ? Object.keys(profileResponse.characterProgressions.data)[0]
-      : '');
+  characterId ??= profileResponse?.characterProgressions?.data
+    ? Object.keys(profileResponse.characterProgressions.data)[0]
+    : '';
   return profileResponse?.characterProgressions?.data?.[characterId];
 };

@@ -1,9 +1,9 @@
 import { VENDORS } from 'app/search/d2-known-values';
+import { emptyArray } from 'app/utils/empty';
 import {
   DestinyCollectibleState,
   DestinyDisplayPropertiesDefinition,
   DestinyInventoryItemDefinition,
-  DestinyItemComponentSetOfint32,
   DestinyItemQuantity,
   DestinyProfileResponse,
   DestinyVendorDefinition,
@@ -12,10 +12,8 @@ import {
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { DimItem } from '../inventory/item-types';
-import { makeFakeItem } from '../inventory/store/d2-item-factory';
+import { CreateItemContext, makeFakeItem } from '../inventory/store/d2-item-factory';
 
 /**
  * This represents an item inside a vendor.
@@ -59,21 +57,17 @@ function getCollectibleState(
 }
 
 function makeVendorItem(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  profileResponse: DestinyProfileResponse | undefined,
+  context: CreateItemContext,
   itemHash: number,
   failureStrings: string[],
   vendorHash: number,
-  vendorItemDef: DestinyVendorItemDefinition | undefined,
+  vendorItemDef: DestinyVendorItemDefinition,
   saleItem: DestinyVendorSaleItemComponent | undefined,
-  itemComponents: DestinyItemComponentSetOfint32 | undefined,
   // the character to whom this item is being offered
-  characterId: string,
-  customTotalStatsByClass: {
-    [key: number]: number[];
-  }
+  characterId: string
 ): VendorItem {
+  const { defs, profileResponse } = context;
+
   const inventoryItem = defs.InventoryItem.get(itemHash);
   const key = saleItem ? saleItem.vendorItemIndex : inventoryItem.hash;
   const vendorItem: VendorItem = {
@@ -89,15 +83,11 @@ function makeVendorItem(
     previewVendorHash: inventoryItem.preview?.previewVendorHash,
     collectibleState: getCollectibleState(inventoryItem, profileResponse, characterId),
     item: makeFakeItem(
-      defs,
-      buckets,
-      itemComponents,
+      context,
       itemHash,
-      customTotalStatsByClass,
       // For sale items the item ID needs to be the vendor item index, since that's how we look up item components for perks
       key.toString(),
       vendorItemDef ? vendorItemDef.quantity : 1,
-      profileResponse?.profileRecords.data,
       // vendor items are wish list enabled!
       true
     ),
@@ -140,36 +130,26 @@ function makeVendorItem(
  * of that copy they're selling
  */
 export function vendorItemForSaleItem(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
+  context: CreateItemContext,
   vendorDef: DestinyVendorDefinition,
-  profileResponse: DestinyProfileResponse | undefined,
   saleItem: DestinyVendorSaleItemComponent,
-  // all DIM vendor calls are character-specific. any sale item should have an associated character.
-  characterId: string,
-  itemComponents: DestinyItemComponentSetOfint32 | undefined,
-  customTotalStatsByClass: {
-    [key: number]: number[];
-  }
+  /** all DIM vendor calls are character-specific. any sale item should have an associated character. */
+  characterId: string
 ): VendorItem {
   const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
   const failureStrings =
-    saleItem && vendorDef
+    saleItem && vendorDef && saleItem.failureIndexes
       ? (saleItem.failureIndexes || []).map((i) => vendorDef.failureStrings[i])
-      : [];
+      : emptyArray<string>();
 
   return makeVendorItem(
-    defs,
-    buckets,
-    profileResponse,
+    context,
     saleItem.itemHash,
     failureStrings,
     vendorDef.hash,
     vendorItemDef,
     saleItem,
-    itemComponents,
-    characterId,
-    customTotalStatsByClass
+    characterId
   );
 }
 
@@ -178,26 +158,17 @@ export function vendorItemForSaleItem(
  * some vendors are set up so statically, that they have no data in the live Vendors response
  */
 export function vendorItemForDefinitionItem(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
+  context: CreateItemContext,
   vendorItemDef: DestinyVendorItemDefinition,
-  profileResponse: DestinyProfileResponse | undefined,
-  characterId: string,
-  customTotalStatsByClass: {
-    [key: number]: number[];
-  }
+  characterId: string
 ): VendorItem {
   return makeVendorItem(
-    defs,
-    buckets,
-    profileResponse,
+    context,
     vendorItemDef.itemHash,
     [],
     0,
     vendorItemDef,
     undefined,
-    undefined,
-    characterId,
-    customTotalStatsByClass
+    characterId
   );
 }

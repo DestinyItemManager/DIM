@@ -42,7 +42,6 @@ import {
 } from './actions';
 import { ArtifactXP } from './ArtifactXP';
 import { cleanInfos } from './dim-item-info';
-import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { ItemPowerSet } from './ItemPowerSet';
 import { d2BucketsSelector, storesLoadedSelector, storesSelector } from './selectors';
@@ -52,7 +51,7 @@ import {
   getCharacterStatsData as getD1CharacterStatsData,
   hasAffectingClassified,
 } from './store/character-utils';
-import { processItems } from './store/d2-item-factory';
+import { CreateItemContext, processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
 import { getArtifactBonus } from './stores-helpers';
@@ -259,7 +258,7 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
       try {
         const { readOnly } = getState().inventory;
 
-        const [defs, profileInfo] = await Promise.all([
+        const [defs, profileResponse] = await Promise.all([
           dispatch(getDefinitions())!,
           dispatch(loadProfile(account)),
         ]);
@@ -269,7 +268,7 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
           return;
         }
 
-        if (!defs || !profileInfo) {
+        if (!defs || !profileResponse) {
           return;
         }
 
@@ -278,10 +277,12 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         const buckets = d2BucketsSelector(getState())!;
         const customTotalStatsByClass = settingSelector('customTotalStatsByClass')(getState());
         const stores = buildStores(
-          defs,
-          buckets,
-          profileInfo,
-          customTotalStatsByClass,
+          {
+            defs,
+            buckets,
+            customTotalStatsByClass,
+            profileResponse,
+          },
           transaction
         );
 
@@ -298,7 +299,7 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         }
 
         // TODO: we can start moving some of this stuff to selectors? characters too
-        const currencies = processCurrencies(profileInfo, defs);
+        const currencies = processCurrencies(profileResponse, defs);
 
         stopTimer();
 
@@ -347,20 +348,17 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
 }
 
 export function buildStores(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  profileInfo: DestinyProfileResponse,
-  customTotalStatsByClass: {
-    [key: number]: number[];
-  },
+  createItemContext: CreateItemContext,
   transaction?: Transaction
 ): DimStore[] {
   // TODO: components may be hidden (privacy)
 
+  const { defs, profileResponse } = createItemContext;
+
   if (
-    !profileInfo.profileInventory.data ||
-    !profileInfo.characterInventories.data ||
-    !profileInfo.characters.data
+    !profileResponse.profileInventory.data ||
+    !profileResponse.characterInventories.data ||
+    !profileResponse.characters.data
   ) {
     errorLog(
       'd2-stores',
@@ -369,22 +367,15 @@ export function buildStores(
     throw new DimError('BungieService.MissingInventory');
   }
 
-  const lastPlayedDate = findLastPlayedDate(profileInfo);
+  const lastPlayedDate = findLastPlayedDate(profileResponse);
 
   const processSpan = transaction?.startChild({
     op: 'processItems',
   });
-  const vault = processVault(defs, buckets, profileInfo, customTotalStatsByClass);
+  const vault = processVault(createItemContext);
 
-  const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
-    processCharacter(
-      defs,
-      buckets,
-      characterId,
-      profileInfo,
-      lastPlayedDate,
-      customTotalStatsByClass
-    )
+  const characters = Object.keys(profileResponse.characters.data).map((characterId) =>
+    processCharacter(createItemContext, characterId, lastPlayedDate)
   );
   processSpan?.finish();
 
@@ -392,7 +383,7 @@ export function buildStores(
 
   const allItems = stores.flatMap((s) => s.items);
   const bucketsWithClassifieds = getBucketsWithClassifiedItems(allItems);
-  const characterProgress = getCharacterProgressions(profileInfo);
+  const characterProgress = getCharacterProgressions(profileResponse);
 
   for (const s of stores) {
     updateBasePower(
@@ -402,7 +393,7 @@ export function buildStores(
       characterProgress,
       // optional chaining here accounts for an edge-case, possible, but type-unadvertised,
       // missing artifact power bonus. please keep this here.
-      profileInfo.profileProgression?.data?.seasonalArtifact?.powerBonusProgression
+      profileResponse.profileProgression?.data?.seasonalArtifact?.powerBonusProgression
         ?.progressionHash,
       bucketsWithClassifieds
     );
@@ -430,25 +421,16 @@ function processCurrencies(profileInfo: DestinyProfileResponse, defs: D2Manifest
  * Process a single character from its raw form to a DIM store, with all the items.
  */
 function processCharacter(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
+  createItemContext: CreateItemContext,
   characterId: string,
-  profileInfo: DestinyProfileResponse,
-  lastPlayedDate: Date,
-  customTotalStatsByClass: {
-    [key: number]: number[];
-  }
+  lastPlayedDate: Date
 ): DimStore {
-  const character = profileInfo.characters.data![characterId];
-  const characterInventory = profileInfo.characterInventories.data?.[characterId]?.items || [];
-  const profileInventory = profileInfo.profileInventory.data?.items || [];
-  const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
-  const profileRecords = profileInfo.profileRecords?.data;
-  const itemComponents = profileInfo.itemComponents;
-
-  const characterProgressions = getCharacterProgressions(profileInfo, characterId);
-  const uninstancedItemObjectives = characterProgressions?.uninstancedItemObjectives;
-  const uninstancedItemPerks = characterProgressions?.uninstancedItemPerks;
+  const { defs, buckets, profileResponse } = createItemContext;
+  const character = profileResponse.characters.data![characterId];
+  const characterInventory = profileResponse.characterInventories.data?.[characterId]?.items || [];
+  const profileInventory = profileResponse.profileInventory.data?.items || [];
+  const characterEquipment = profileResponse.characterEquipment.data?.[characterId]?.items || [];
+  const profileRecords = profileResponse.profileRecords?.data;
 
   const store = makeCharacter(defs, character, lastPlayedDate, profileRecords);
 
@@ -465,34 +447,15 @@ function processCharacter(
     }
   }
 
-  const processedItems = processItems(
-    defs,
-    buckets,
-    store,
-    items,
-    itemComponents,
-    customTotalStatsByClass,
-    uninstancedItemObjectives,
-    profileRecords,
-    uninstancedItemPerks
-  );
-  store.items = processedItems;
+  store.items = processItems(createItemContext, store, items);
   return store;
 }
 
-function processVault(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  profileInfo: DestinyProfileResponse,
-  customTotalStatsByClass: {
-    [key: number]: number[];
-  }
-): DimStore {
-  const profileInventory = profileInfo.profileInventory.data
-    ? profileInfo.profileInventory.data.items
+function processVault(createItemContext: CreateItemContext): DimStore {
+  const { buckets, profileResponse } = createItemContext;
+  const profileInventory = profileResponse.profileInventory.data
+    ? profileResponse.profileInventory.data.items
     : [];
-  const profileRecords = profileInfo.profileRecords?.data; // Not present in the initial load
-  const itemComponents = profileInfo.itemComponents;
 
   const store = makeVault();
 
@@ -505,18 +468,7 @@ function processVault(
     }
   }
 
-  const processedItems = processItems(
-    defs,
-    buckets,
-    store,
-    items,
-    itemComponents,
-    customTotalStatsByClass,
-    undefined,
-    profileRecords
-  );
-  store.items = processedItems;
-
+  store.items = processItems(createItemContext, store, items);
   return store;
 }
 

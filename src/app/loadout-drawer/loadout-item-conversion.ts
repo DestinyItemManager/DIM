@@ -1,8 +1,5 @@
-import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { makeFakeItem as makeFakeD1Item } from 'app/inventory/store/d1-item-factory';
-import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
+import { CreateItemContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import { emptyArray } from 'app/utils/empty';
 import { warnLog } from 'app/utils/log';
@@ -21,14 +18,10 @@ export function generateMissingLoadoutItemId() {
  * are returned as warnitems.
  */
 export function getItemsFromLoadoutItems(
+  createItemContext: CreateItemContext,
   loadoutItems: LoadoutItem[] | undefined,
-  defs: D1ManifestDefinitions | D2ManifestDefinitions,
   storeId: string | undefined,
-  buckets: InventoryBuckets,
   allItems: DimItem[],
-  customTotalStatsByClass: {
-    [key: number]: number[];
-  },
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
   }
@@ -36,6 +29,8 @@ export function getItemsFromLoadoutItems(
   if (!loadoutItems) {
     return [emptyArray(), emptyArray()];
   }
+
+  const { defs, buckets, customTotalStatsByClass } = createItemContext;
 
   const items: ResolvedLoadoutItem[] = [];
   const warnitems: ResolvedLoadoutItem[] = [];
@@ -71,7 +66,7 @@ export function getItemsFromLoadoutItems(
       });
     } else {
       const fakeItem: DimItem | null = defs.isDestiny2()
-        ? makeFakeItem(defs, buckets, undefined, loadoutItem.hash, customTotalStatsByClass)
+        ? makeFakeItem(createItemContext, loadoutItem.hash)
         : makeFakeD1Item(defs, buckets, loadoutItem.hash);
       if (fakeItem) {
         fakeItem.id = generateMissingLoadoutItemId();

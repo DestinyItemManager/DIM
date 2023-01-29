@@ -7,7 +7,7 @@ import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
 import ItemIcon from 'app/inventory/ItemIcon';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import {
   applySocketOverrides,
@@ -52,21 +52,15 @@ export default function Armory({
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
-  const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const isPhonePortrait = useIsPhonePortrait();
   const [socketOverrides, onPlugClicked] = useSocketOverrides();
   const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
+  const createItemContext = useSelector(createItemContextSelector);
 
   const itemDef = defs.InventoryItem.get(itemHash);
 
-  const itemWithoutSockets = makeFakeItem(
-    defs,
-    buckets,
-    undefined,
-    itemHash,
-    customTotalStatsByClass
-  );
+  const itemWithoutSockets = makeFakeItem(createItemContext, itemHash);
 
   if (!itemWithoutSockets) {
     return (
@@ -217,13 +211,7 @@ export default function Armory({
           {itemDef.setData?.itemList && (
             <ol>
               {itemDef.setData.itemList.map((h) => {
-                const stepItem = makeFakeItem(
-                  defs,
-                  buckets,
-                  undefined,
-                  h.itemHash,
-                  customTotalStatsByClass
-                );
+                const stepItem = makeFakeItem(createItemContext, h.itemHash);
                 return (
                   stepItem && (
                     <li

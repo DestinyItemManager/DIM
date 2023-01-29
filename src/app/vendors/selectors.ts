@@ -1,13 +1,10 @@
-import { currentAccountSelector } from 'app/accounts/selectors';
 import {
-  bucketsSelector,
+  createItemContextSelector,
   ownedItemsSelector,
   ownedUncollectiblePlugsSelector,
-  profileResponseSelector,
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { currySelector } from 'app/utils/redux-utils';
@@ -20,42 +17,17 @@ export const vendorsByCharacterSelector = (state: RootState) => state.vendors.ve
  * returns a character's vendors and their sale items
  */
 export const nonCurriedVendorGroupsForCharacterSelector = createSelector(
-  d2ManifestSelector,
+  createItemContextSelector,
   vendorsByCharacterSelector,
-  bucketsSelector,
-  currentAccountSelector,
-  profileResponseSelector,
-  (state: RootState) => state.dimApi.settings.customTotalStatsByClass,
   // get character ID from props not state
-  (state: any, characterId: string | undefined) =>
+  (state: RootState, characterId: string | undefined) =>
     characterId || getCurrentStore(sortedStoresSelector(state))?.id,
-  (
-    defs,
-    vendors,
-    buckets,
-    currentAccount,
-    profileResponse,
-    customTotalStatsByClass,
-    selectedStoreId
-  ) => {
+  (context, vendors, selectedStoreId) => {
     const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
     const vendorsResponse = vendorData?.vendorsResponse;
 
-    return vendorsResponse &&
-      defs &&
-      buckets &&
-      currentAccount &&
-      selectedStoreId &&
-      profileResponse
-      ? toVendorGroups(
-          vendorsResponse,
-          profileResponse,
-          defs,
-          buckets,
-          currentAccount,
-          selectedStoreId,
-          customTotalStatsByClass
-        )
+    return vendorsResponse && vendorData && selectedStoreId
+      ? toVendorGroups(context, vendorsResponse, selectedStoreId)
       : emptyArray<D2VendorGroup>();
   }
 );

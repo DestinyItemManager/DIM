@@ -1,19 +1,16 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { settingSelector } from 'app/dim-api/selectors';
 import Select from 'app/dim-ui/Select';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { CreateItemContext } from 'app/inventory/store/d2-item-factory';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
 import LoadoutView from 'app/loadout/LoadoutView';
-import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -58,29 +55,23 @@ function chooseInitialLoadout(
  * replaced with `subclass`, and the given `params` and `notes`.
  */
 function createLoadoutUsingLOItems(
-  defs: D2ManifestDefinitions,
+  createItemContext: CreateItemContext,
   allItems: DimItem[],
   autoMods: number[],
   storeId: string | undefined,
-  buckets: InventoryBuckets,
   setItems: DimItem[],
   subclass: ResolvedLoadoutItem | undefined,
   loadout: Loadout | undefined,
   params: LoadoutParameters,
-  notes: string | undefined,
-  customTotalStatsByClass: {
-    [key: number]: number[];
-  }
+  notes: string | undefined
 ) {
   return produce(loadout, (draftLoadout) => {
     if (draftLoadout) {
       const [resolvedItems, warnItems] = getItemsFromLoadoutItems(
+        createItemContext,
         draftLoadout.items,
-        defs,
         storeId,
-        buckets,
-        allItems,
-        customTotalStatsByClass
+        allItems
       );
       const newItems = setItems.map((item) => convertToLoadoutItem(item, true));
       if (subclass) {
@@ -130,47 +121,41 @@ export default function CompareLoadoutsDrawer({
   onClose,
 }: Props) {
   const dispatch = useThunkDispatch();
-  const defs = useD2Definitions()!;
-  const customTotalStatsByClass = useSelector(settingSelector('customTotalStatsByClass'));
-  const useableLoadouts = loadouts.filter((l) => l.classType === classType);
+  const usableLoadouts = loadouts.filter((l) => l.classType === classType);
 
   const setItems = set.armor.map((items) => items[0]);
 
   const [selectedLoadout, setSelectedLoadout] = useState<Loadout | undefined>(() =>
-    chooseInitialLoadout(setItems, useableLoadouts, initialLoadoutId)
+    chooseInitialLoadout(setItems, usableLoadouts, initialLoadoutId)
   );
 
   const allItems = useSelector(allItemsSelector);
-  const buckets = useSelector(bucketsSelector)!;
+  const createItemContext = useSelector(createItemContextSelector);
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const generatedLoadout = useMemo(
     () =>
       createLoadoutUsingLOItems(
-        defs,
+        createItemContext,
         allItems,
         set.statMods,
         selectedStore.id,
-        buckets,
         setItems,
         subclass,
         selectedLoadout,
         params,
-        notes,
-        customTotalStatsByClass
+        notes
       ),
     [
-      defs,
+      createItemContext,
       allItems,
       set.statMods,
       selectedStore.id,
-      buckets,
       setItems,
       subclass,
       selectedLoadout,
       params,
       notes,
-      customTotalStatsByClass,
     ]
   );
 
@@ -196,12 +181,12 @@ export default function CompareLoadoutsDrawer({
 
   const loadoutOptions = useMemo(
     () =>
-      useableLoadouts.map((l) => ({
+      usableLoadouts.map((l) => ({
         key: l.id,
         value: l,
         content: l.name,
       })),
-    [useableLoadouts]
+    [usableLoadouts]
   );
 
   // This is likely never to happen but since it is disconnected to the button its here for safety.
