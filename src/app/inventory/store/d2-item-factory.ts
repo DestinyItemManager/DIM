@@ -240,10 +240,6 @@ export function makeItem(
   const profileRecords = profileResponse.profileRecords?.data;
   const characterProgressions =
     owner && !owner?.isVault ? profileResponse.characterProgressions?.data?.[owner.id] : undefined;
-  const uninstancedItemObjectives = characterProgressions?.uninstancedItemObjectives;
-  const uninstancedItemPerks = characterProgressions?.uninstancedItemPerks;
-  const itemUninstancedObjectives = uninstancedItemObjectives?.[item.itemHash];
-  const itemUninstancedPerks = uninstancedItemPerks?.[item.itemHash]?.perks;
 
   const itemInstanceData: Partial<DestinyItemInstanceComponent> = item.itemInstanceId
     ? itemComponents?.instances.data?.[item.itemInstanceId] ?? emptyObject()
@@ -614,6 +610,8 @@ export function makeItem(
     const itemInstancedObjectives = item.itemInstanceId
       ? itemComponents?.objectives?.data?.[item.itemInstanceId]?.objectives
       : undefined;
+    const uninstancedItemObjectives = characterProgressions?.uninstancedItemObjectives;
+    const itemUninstancedObjectives = uninstancedItemObjectives?.[item.itemHash];
 
     createdItem.objectives = buildObjectives(
       itemDef,
@@ -626,6 +624,8 @@ export function makeItem(
   }
 
   if (itemDef.perks?.length) {
+    const uninstancedItemPerks = characterProgressions?.uninstancedItemPerks;
+    const itemUninstancedPerks = uninstancedItemPerks?.[item.itemHash]?.perks;
     const perks = itemDef.perks.filter(
       (p, i) =>
         p.perkVisibility === ItemPerkVisibility.Visible &&
