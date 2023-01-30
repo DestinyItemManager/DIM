@@ -1,5 +1,7 @@
 ## Next
 
+## 7.54.0 <span class="changelog-date">(2023-01-29)</span>
+
 ## 7.53.0 <span class="changelog-date">(2023-01-22)</span>
 
 * On the Records and Armory pages, perks only shown on the collections/"curated" roll will now correctly be marked as unavailable on randomly rolled versions.
