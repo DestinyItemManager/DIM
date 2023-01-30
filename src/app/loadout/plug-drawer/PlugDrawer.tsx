@@ -7,7 +7,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { Comparator } from 'app/utils/comparators';
 import { produce } from 'immer';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { ComponentType, PropsWithChildren, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
@@ -171,13 +171,20 @@ export default function PlugDrawer({
     [internalPlugSets, isPlugSelectable]
   );
 
-  const footer = ({ onClose }: { onClose: () => void }) => (
+  const footer = ({
+    onClose,
+    HorizontalScroller,
+  }: {
+    onClose: () => void;
+    HorizontalScroller: ComponentType<PropsWithChildren>;
+  }) => (
     <Footer
       plugSets={internalPlugSets}
       isPhonePortrait={isPhonePortrait}
       acceptButtonText={acceptButtonText}
       onSubmit={(e) => onSubmit(e, onClose)}
       handlePlugSelected={handlePlugRemovedFromFooter}
+      HorizontalScroller={HorizontalScroller}
     />
   );
 

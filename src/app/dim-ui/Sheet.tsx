@@ -11,7 +11,9 @@ import {
 } from 'framer-motion';
 import _ from 'lodash';
 import React, {
+  ComponentType,
   createContext,
+  PropsWithChildren,
   useCallback,
   useContext,
   useEffect,
@@ -38,7 +40,12 @@ const SheetDisabledContext = createContext<(shown: boolean) => void>(() => {
  * takes an "onClose" function that can be used to close the sheet. Using onClose to close
  * the sheet ensures that it will animate away rather than simply disappearing.
  */
-type SheetContent = React.ReactNode | ((args: { onClose: () => void }) => React.ReactNode);
+type SheetContent =
+  | React.ReactNode
+  | ((args: {
+      onClose: () => void;
+      HorizontalScroller: ComponentType<PropsWithChildren>;
+    }) => React.ReactNode);
 
 interface Props {
   /** A static, non-scrollable header shown in line with the close button. */
@@ -260,7 +267,9 @@ export default function Sheet({
           <div className="sheet-container" onPointerDown={dragHandleDown}>
             {Boolean(header) && (
               <div className="sheet-header" ref={dragHandle}>
-                {_.isFunction(header) ? header({ onClose: triggerClose }) : header}
+                {_.isFunction(header)
+                  ? header({ onClose: triggerClose, HorizontalScroller })
+                  : header}
               </div>
             )}
 
@@ -271,12 +280,16 @@ export default function Sheet({
               style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
               ref={sheetContentsRefFn}
             >
-              {_.isFunction(children) ? children({ onClose: triggerClose }) : children}
+              {_.isFunction(children)
+                ? children({ onClose: triggerClose, HorizontalScroller })
+                : children}
             </div>
 
             {Boolean(footer) && (
               <div className="sheet-footer">
-                {_.isFunction(footer) ? footer({ onClose: triggerClose }) : footer}
+                {_.isFunction(footer)
+                  ? footer({ onClose: triggerClose, HorizontalScroller })
+                  : footer}
               </div>
             )}
           </div>
@@ -284,6 +297,49 @@ export default function Sheet({
         </motion.div>
       </PressTipRoot.Provider>
     </SheetDisabledContext.Provider>
+  );
+}
+
+function HorizontalScroller({ children }: PropsWithChildren) {
+  // This uses pointer events to directly set the scroll position based on
+  // dragging the items. This works around an iOS bug around nested draggables.
+  // I wasn't able to get it to do an inertial animation after releasing.
+
+  const ref = useRef<HTMLDivElement>(null);
+  const dragStateRef = useRef<{ scrollPosition: number; pointerDownPosition: number }>();
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    if (!isiOSBrowser()) {
+      return;
+    }
+
+    dragStateRef.current = {
+      pointerDownPosition: e.clientX,
+      scrollPosition: ref.current!.scrollLeft,
+    };
+    ref.current!.setPointerCapture(e.pointerId);
+  }, []);
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
+    dragStateRef.current = undefined;
+    ref.current!.releasePointerCapture(e.pointerId);
+  }, []);
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (dragStateRef.current !== undefined) {
+      const { scrollPosition, pointerDownPosition } = dragStateRef.current;
+      ref.current!.scrollLeft = scrollPosition - (e.clientX - pointerDownPosition);
+    }
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={styles.horizontalScroller}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+    >
+      {children}
+    </div>
   );
 }
 
