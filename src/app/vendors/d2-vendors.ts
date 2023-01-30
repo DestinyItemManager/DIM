@@ -1,16 +1,11 @@
-import { DestinyAccount } from 'app/accounts/destiny-account';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { CreateItemContext } from 'app/inventory/store/d2-item-factory';
 import { VENDORS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import {
-  BungieMembershipType,
   DestinyCollectibleState,
   DestinyDestinationDefinition,
   DestinyInventoryItemDefinition,
-  DestinyItemComponentSetOfint32,
   DestinyPlaceDefinition,
-  DestinyProfileResponse,
   DestinyVendorComponent,
   DestinyVendorDefinition,
   DestinyVendorGroupDefinition,
@@ -37,16 +32,15 @@ export interface D2Vendor {
 const vendorOrder = [VENDORS.SPIDER, VENDORS.ADA_TRANSMOG, VENDORS.BANSHEE, VENDORS.EVERVERSE];
 
 export function toVendorGroups(
+  context: CreateItemContext,
   vendorsResponse: DestinyVendorsResponse,
-  profileResponse: DestinyProfileResponse,
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  account: DestinyAccount,
   characterId: string
 ): D2VendorGroup[] {
   if (!vendorsResponse.vendorGroups.data) {
     return [];
   }
+
+  const { defs } = context;
 
   return _.sortBy(
     Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => {
@@ -58,14 +52,11 @@ export function toVendorGroups(
             group.vendorHashes
               .map((vendorHash) =>
                 toVendor(
+                  // Override the item components from the profile with this vendor's item components
+                  { ...context, itemComponents: vendorsResponse.itemComponents[vendorHash] },
                   vendorHash,
-                  defs,
-                  buckets,
-                  profileResponse,
                   vendorsResponse.vendors.data?.[vendorHash],
-                  account,
                   characterId,
-                  vendorsResponse.itemComponents[vendorHash],
                   vendorsResponse.sales.data?.[vendorHash]?.saleItems
                 )
               )
@@ -83,36 +74,24 @@ export function toVendorGroups(
 }
 
 export function toVendor(
+  context: CreateItemContext,
   vendorHash: number,
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  profileResponse: DestinyProfileResponse | undefined,
   vendor: DestinyVendorComponent | undefined,
-  account: DestinyAccount,
   characterId: string,
-  itemComponents: DestinyItemComponentSetOfint32 | undefined,
   sales:
     | {
         [key: string]: DestinyVendorSaleItemComponent;
       }
     | undefined
 ): D2Vendor | undefined {
+  const { defs } = context;
   const vendorDef = defs.Vendor.get(vendorHash);
 
   if (!vendorDef) {
     return undefined;
   }
 
-  const vendorItems = getVendorItems(
-    account,
-    defs,
-    buckets,
-    vendorDef,
-    profileResponse,
-    characterId,
-    itemComponents,
-    sales
-  );
+  const vendorItems = getVendorItems(context, vendorDef, characterId, sales);
 
   const destinationDef =
     typeof vendor?.vendorLocationIndex === 'number' && vendor.vendorLocationIndex >= 0
@@ -143,13 +122,9 @@ export function toVendor(
 }
 
 function getVendorItems(
-  account: DestinyAccount,
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
+  context: CreateItemContext,
   vendorDef: DestinyVendorDefinition,
-  profileResponse: DestinyProfileResponse | undefined,
   characterId: string,
-  itemComponents: DestinyItemComponentSetOfint32 | undefined,
   sales:
     | {
         [key: string]: DestinyVendorSaleItemComponent;
@@ -159,28 +134,13 @@ function getVendorItems(
   if (sales) {
     const components = Object.values(sales);
     return components.map((component) =>
-      vendorItemForSaleItem(
-        defs,
-        buckets,
-        vendorDef,
-        profileResponse,
-        component,
-        characterId,
-        itemComponents
-      )
+      vendorItemForSaleItem(context, vendorDef, component, characterId)
     );
   } else if (vendorDef.returnWithVendorRequest) {
     // If the sales should come from the server, don't show anything until we have them
     return [];
   } else {
-    return vendorDef.itemList
-      .filter(
-        (i) =>
-          !i.exclusivity ||
-          i.exclusivity === BungieMembershipType.All ||
-          i.exclusivity === account.originalPlatformType
-      )
-      .map((i) => vendorItemForDefinitionItem(defs, buckets, i, profileResponse, characterId));
+    return vendorDef.itemList.map((i) => vendorItemForDefinitionItem(context, i, characterId));
   }
 }
 

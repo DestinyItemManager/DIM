@@ -15,7 +15,6 @@ import {
   BucketCategory,
   ComponentPrivacySetting,
   DestinyAmmunitionType,
-  DestinyCharacterProgressionComponent,
   DestinyClass,
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
@@ -25,8 +24,7 @@ import {
   DestinyItemSubType,
   DestinyItemTooltipNotification,
   DestinyObjectiveProgress,
-  DestinyPerkReference,
-  DestinyProfileRecordsComponent,
+  DestinyProfileResponse,
   DictionaryComponentResponse,
   ItemBindStatus,
   ItemLocation,
@@ -66,41 +64,18 @@ const collectiblesByItemHash = memoizeOne(
 
 /**
  * Process an entire list of items into DIM items.
- * @param owner the ID of the owning store.
- * @param items a list of "raw" items from the Destiny API
- * @param previousItems a set of item IDs representing the previous store's items
- * @param newItems a set of item IDs representing the previous list of new items
- * @return a promise for the list of items
  */
 export function processItems(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
+  context: CreateItemContext,
   owner: DimStore,
-  items: DestinyItemComponent[],
-  itemComponents: DestinyItemComponentSetOfint64,
-  uninstancedItemObjectives?: DestinyCharacterProgressionComponent['uninstancedItemObjectives'],
-  profileRecords?: DestinyProfileRecordsComponent,
-  uninstancedItemPerks?: DestinyCharacterProgressionComponent['uninstancedItemPerks']
+  items: DestinyItemComponent[]
 ): DimItem[] {
   const result: DimItem[] = [];
 
   for (const item of items) {
     let createdItem: DimItem | null = null;
-
-    const itemUninstancedObjectives = uninstancedItemObjectives?.[item.itemHash];
-    const itemUninstancedPerks = uninstancedItemPerks?.[item.itemHash]?.perks;
-
     try {
-      createdItem = makeItem(
-        defs,
-        buckets,
-        itemComponents,
-        item,
-        owner,
-        itemUninstancedObjectives,
-        itemUninstancedPerks,
-        profileRecords
-      );
+      createdItem = makeItem(context, item, owner);
     } catch (e) {
       errorLog('d2-stores', 'Error processing item', item, e);
       reportException('Processing Dim item', e);
@@ -119,7 +94,7 @@ export function processItems(
       // an exception occurred, or the item lacks a definition
       // not all of these should cause the store to consider itself hadErrors.
       // dummies and invisible items are not a big deal
-
+      const defs = context.defs;
       const bucketDef = defs.InventoryBucket[item.bucketHash];
       // if it's a named, non-invisible bucket, it may be a problem that the item wasn't generated
       if (
@@ -155,22 +130,17 @@ const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D2Manifes
 
 /** Make a "fake" item from other information - used for Collectibles, etc. */
 export function makeFakeItem(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  itemComponents: DestinyItemComponentSetOfint64 | undefined,
+  context: CreateItemContext,
   itemHash: number,
-  itemInstanceId?: string,
-  quantity?: number,
-  profileRecords?: DestinyProfileRecordsComponent,
-  allowWishList?: boolean
+  itemInstanceId = '0',
+  quantity = 1,
+  allowWishList = false
 ): DimItem | null {
   const item = makeItem(
-    defs,
-    buckets,
-    itemComponents,
+    context,
     {
       itemHash,
-      itemInstanceId: itemInstanceId ?? '0',
+      itemInstanceId: itemInstanceId,
       quantity: quantity ?? 1,
       bindStatus: ItemBindStatus.NotBound,
       location: ItemLocation.Vendor,
@@ -182,12 +152,9 @@ export function makeFakeItem(
       isWrapper: false,
       tooltipNotificationIndexes: [],
       metricObjective: {} as DestinyObjectiveProgress,
-      versionNumber: defs.InventoryItem.get(itemHash)?.quality?.currentVersion,
+      versionNumber: context.defs.InventoryItem.get(itemHash)?.quality?.currentVersion,
     },
-    undefined,
-    undefined,
-    undefined,
-    profileRecords
+    undefined
   );
 
   if (item && !allowWishList) {
@@ -201,18 +168,19 @@ export function makeFakeItem(
  * We can use this item to refresh a single item in the store from this response.
  */
 export function makeItemSingle(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  item: DestinyItemResponse,
+  context: CreateItemContext,
+  itemResponse: DestinyItemResponse,
   stores: DimStore[]
 ): DimItem | null {
-  if (!item.item.data) {
+  if (!itemResponse.item.data) {
     return null;
   }
 
-  const owner = item.characterId ? stores.find((s) => s.id === item.characterId) : getVault(stores);
+  const owner = itemResponse.characterId
+    ? stores.find((s) => s.id === itemResponse.characterId)
+    : getVault(stores);
 
-  const itemId = item.item.data.itemInstanceId;
+  const itemId = itemResponse.item.data.itemInstanceId;
 
   // Convert a single component response into a dictionary component response
   const empty = { privacy: ComponentPrivacySetting.Public, data: {} };
@@ -220,54 +188,61 @@ export function makeItemSingle(
     ? (v) => (v ? { privacy: v.privacy, data: v.data ? { [itemId]: v.data } : {} } : empty)
     : () => empty;
 
+  // We'll override our item components with these ones
+  const itemComponents = {
+    instances: m(itemResponse.instance),
+    perks: m(itemResponse.perks),
+    renderData: m(itemResponse.renderData),
+    stats: m(itemResponse.stats),
+    sockets: m(itemResponse.sockets),
+    reusablePlugs: m(itemResponse.reusablePlugs),
+    plugObjectives: m(itemResponse.plugObjectives),
+    talentGrids: m(itemResponse.talentGrid),
+    plugStates: empty,
+    objectives: m(itemResponse.objectives),
+  };
+
   // Make it look like a full response
-  return makeItem(
-    defs,
-    buckets,
-    {
-      instances: m(item.instance),
-      perks: m(item.perks),
-      renderData: m(item.renderData),
-      stats: m(item.stats),
-      sockets: m(item.sockets),
-      reusablePlugs: m(item.reusablePlugs),
-      plugObjectives: m(item.plugObjectives),
-      talentGrids: m(item.talentGrid),
-      plugStates: empty,
-      objectives: m(item.objectives),
-    },
-    item.item.data,
-    owner
-  );
+  return makeItem({ ...context, itemComponents }, itemResponse.item.data, owner);
+}
+
+/**
+ * Stuff that's required to create a DimItem.
+ */
+export interface CreateItemContext {
+  defs: D2ManifestDefinitions;
+  buckets: InventoryBuckets;
+  profileResponse: DestinyProfileResponse;
+  customTotalStatsByClass: {
+    [key: number]: number[];
+  };
+  /**
+   * Sometimes comes from the profile response, but also sometimes from vendors response or mocked out.
+   * If not present, use the one from profileInfo.
+   */
+  itemComponents?: DestinyItemComponentSetOfint64;
 }
 
 /**
  * Process a single raw item into a DIM item.
- * @param defs the manifest definitions
- * @param buckets the bucket definitions
- * @param previousItems a set of item IDs representing the previous store's items
- * @param newItems a set of item IDs representing the previous list of new items
- * @param item "raw" item from the Destiny API
- * @param owner the ID of the owning store
- * @param uninstancedItemObjectives the owning character's dictionary of uninstanced objectives
  */
-// TODO: extract individual item components first!
 export function makeItem(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  itemComponents: DestinyItemComponentSetOfint64 | undefined,
+  { defs, buckets, itemComponents, customTotalStatsByClass, profileResponse }: CreateItemContext,
   item: DestinyItemComponent,
-  owner: DimStore | undefined,
-  /** this item's uninstanced objectives */
-  itemUninstancedObjectives?: DestinyObjectiveProgress[],
-  /** this item's uninstanced perks */
-  itemUninstancedPerks?: DestinyPerkReference[],
-  profileRecords?: DestinyProfileRecordsComponent
+  /** the ID of the owning store - can be undefined for fake collections items */
+  owner: DimStore | undefined
 ): DimItem | null {
+  itemComponents ??= profileResponse.itemComponents;
+
   const itemDef = defs.InventoryItem.get(item.itemHash);
 
+  // Fish relevant data out of the profile.
+  const profileRecords = profileResponse.profileRecords?.data;
+  const characterProgressions =
+    owner && !owner?.isVault ? profileResponse.characterProgressions?.data?.[owner.id] : undefined;
+
   const itemInstanceData: Partial<DestinyItemInstanceComponent> = item.itemInstanceId
-    ? itemComponents?.instances.data?.[item.itemInstanceId ?? ''] ?? emptyObject()
+    ? itemComponents?.instances.data?.[item.itemInstanceId] ?? emptyObject()
     : emptyObject();
 
   // Missing definition?
@@ -625,7 +600,7 @@ export function makeItem(
   }
 
   try {
-    createdItem.stats = buildStats(defs, createdItem, itemDef);
+    createdItem.stats = buildStats(defs, createdItem, customTotalStatsByClass, itemDef);
   } catch (e) {
     errorLog('d2-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
@@ -635,6 +610,8 @@ export function makeItem(
     const itemInstancedObjectives = item.itemInstanceId
       ? itemComponents?.objectives?.data?.[item.itemInstanceId]?.objectives
       : undefined;
+    const uninstancedItemObjectives = characterProgressions?.uninstancedItemObjectives;
+    const itemUninstancedObjectives = uninstancedItemObjectives?.[item.itemHash];
 
     createdItem.objectives = buildObjectives(
       itemDef,
@@ -647,6 +624,8 @@ export function makeItem(
   }
 
   if (itemDef.perks?.length) {
+    const uninstancedItemPerks = characterProgressions?.uninstancedItemPerks;
+    const itemUninstancedPerks = uninstancedItemPerks?.[item.itemHash]?.perks;
     const perks = itemDef.perks.filter(
       (p, i) =>
         p.perkVisibility === ItemPerkVisibility.Visible &&

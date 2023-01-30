@@ -6,7 +6,7 @@ import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
 import ItemIcon from 'app/inventory/ItemIcon';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import {
   applySocketOverrides,
@@ -51,14 +51,14 @@ export default function Armory({
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
-  const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const isPhonePortrait = useIsPhonePortrait();
   const [socketOverrides, onPlugClicked] = useSocketOverrides();
+  const createItemContext = useSelector(createItemContextSelector);
 
   const itemDef = defs.InventoryItem.get(itemHash);
 
-  const itemWithoutSockets = makeFakeItem(defs, buckets, undefined, itemHash);
+  const itemWithoutSockets = makeFakeItem(createItemContext, itemHash);
 
   if (!itemWithoutSockets) {
     return (
@@ -68,12 +68,12 @@ export default function Armory({
     );
   }
 
-  // We apply socket overrides *twice* - once to set the original sockets, then to apply the user's chosen overrides
-  const item = applySocketOverrides(
-    defs,
-    applySocketOverrides(defs, itemWithoutSockets, realItemSockets),
-    socketOverrides
-  );
+  const item = applySocketOverrides(createItemContext, itemWithoutSockets, {
+    // Start with the item's current sockets
+    ...realItemSockets,
+    // Then apply whatever the user chose in the Armory UI
+    ...socketOverrides,
+  });
 
   const storeItems = allItems.filter((i) => i.hash === itemHash);
 
@@ -208,7 +208,7 @@ export default function Armory({
           {itemDef.setData?.itemList && (
             <ol>
               {itemDef.setData.itemList.map((h) => {
-                const stepItem = makeFakeItem(defs, buckets, undefined, h.itemHash);
+                const stepItem = makeFakeItem(createItemContext, h.itemHash);
                 return (
                   stepItem && (
                     <li

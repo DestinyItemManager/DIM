@@ -4,7 +4,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import ItemIcon from 'app/inventory/ItemIcon';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { deleteLoadout, updateLoadout } from 'app/loadout-drawer/actions';
 import {
@@ -57,16 +57,16 @@ export default function D1LoadoutDrawer({
   const defs = useD1Definitions()!;
 
   const allItems = useSelector(allItemsSelector);
-  const buckets = useSelector(bucketsSelector)!;
   const [showingItemPicker, setShowingItemPicker] = useState(false);
   const [loadout, setLoadout] = useState(initialLoadout);
+  const createItemContext = useSelector(createItemContextSelector);
 
   const loadoutItems = loadout?.items;
 
   // Turn loadout items into real DimItems
   const [items, warnitems] = useMemo(
-    () => getItemsFromLoadoutItems(loadoutItems, defs, storeId, buckets, allItems),
-    [loadoutItems, defs, storeId, buckets, allItems]
+    () => getItemsFromLoadoutItems(createItemContext, loadoutItems, storeId, allItems),
+    [createItemContext, loadoutItems, storeId, allItems]
   );
 
   const onAddItem = useCallback(

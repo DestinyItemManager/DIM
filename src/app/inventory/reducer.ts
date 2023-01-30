@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { warnLog } from 'app/utils/log';
 import {
   DestinyItemChangeResponse,
@@ -14,10 +13,9 @@ import { ActionType, getType } from 'typesafe-actions';
 import { setCurrentAccount } from '../accounts/actions';
 import type { AccountsAction } from '../accounts/reducer';
 import * as actions from './actions';
-import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { AccountCurrency, DimStore } from './store-types';
-import { makeItem } from './store/d2-item-factory';
+import { CreateItemContext, makeItem } from './store/d2-item-factory';
 import { createItemIndex } from './store/item-index';
 import { findItemsByBucket, getCurrentStore, getStore, getVault } from './stores-helpers';
 
@@ -101,8 +99,8 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     }
 
     case getType(actions.awaItemChanged): {
-      const { changes, item, defs, buckets } = action.payload;
-      return produce(state, (draft) => awaItemChanged(draft, changes, item, defs, buckets));
+      const { changes, item, createItemContext } = action.payload;
+      return produce(state, (draft) => awaItemChanged(draft, changes, item, createItemContext));
     }
 
     case getType(actions.error):
@@ -434,9 +432,10 @@ function awaItemChanged(
   draft: Draft<InventoryState>,
   changes: DestinyItemChangeResponse,
   item: DimItem | null,
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets
+  createItemContext: CreateItemContext
 ) {
+  const { defs, buckets } = createItemContext;
+
   // Replace item
   if (!item) {
     warnLog('awaChange', 'No item produced from change');
@@ -527,7 +526,7 @@ function awaItemChanged(
       currency.quantity = Math.min(max, currency.quantity + addedItemComponent.quantity);
     } else if (addedItemComponent.itemInstanceId) {
       const addedOwner = getSource(addedItemComponent);
-      const addedItem = makeItem(defs, buckets, undefined, addedItemComponent, addedOwner);
+      const addedItem = makeItem(createItemContext, addedItemComponent, addedOwner);
       if (addedItem) {
         addItem(addedOwner, addedItem);
       }
@@ -539,7 +538,7 @@ function awaItemChanged(
         (i) => i.amount
       );
       let addAmount = addedItemComponent.quantity;
-      const addedItem = makeItem(defs, buckets, undefined, addedItemComponent, target);
+      const addedItem = makeItem(createItemContext, addedItemComponent, target);
       if (!addedItem) {
         continue;
       }

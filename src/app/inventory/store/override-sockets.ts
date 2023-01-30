@@ -1,10 +1,10 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
 import produce from 'immer';
 import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { DimItem, DimPlug, DimSocket } from '../item-types';
+import { CreateItemContext } from './d2-item-factory';
 import { buildDefinedPlug } from './sockets';
 import { buildStats } from './stats';
 
@@ -20,9 +20,10 @@ export interface SocketOverrides {
  * Transform an item into a new item whose properties (mostly stats) reflect the chosen socket overrides.
  */
 export function applySocketOverrides(
-  defs: D2ManifestDefinitions,
+  // We don't need everything here but I'm assuming over time we'll want to plumb more stuff into stats calculations?
+  { defs, customTotalStatsByClass }: CreateItemContext,
   item: DimItem,
-  socketOverrides?: SocketOverrides
+  socketOverrides: SocketOverrides | undefined
 ): DimItem {
   if (!socketOverrides || _.isEmpty(socketOverrides) || !item.sockets) {
     return item;
@@ -103,7 +104,7 @@ export function applySocketOverrides(
   };
 
   // Recalculate the entire item's stats from scratch given the new plugs
-  updatedItem.stats = buildStats(defs, updatedItem);
+  updatedItem.stats = buildStats(defs, updatedItem, customTotalStatsByClass);
 
   return updatedItem;
 }

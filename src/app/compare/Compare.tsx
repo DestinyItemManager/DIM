@@ -1,6 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
+import { createItemContextSelector } from 'app/inventory/selectors';
 import {
   applySocketOverrides,
   useSocketOverridesForItems,
@@ -66,6 +67,7 @@ export default function Compare({ session }: { session: CompareSession }) {
   const defs = useD2Definitions()!;
   const [compareBaseStats, setCompareBaseStats] = useSetting('compareBaseStats');
   const [assumeWeaponMasterwork, setAssumeWeaponMasterwork] = useSetting('compareWeaponMasterwork');
+  const createItemContext = useSelector(createItemContextSelector);
   const rawCompareItems = useSelector(compareItemsSelector(session.vendorCharacterId));
   const organizerLink = useSelector(compareOrganizerLinkSelector);
 
@@ -84,35 +86,33 @@ export default function Compare({ session }: { session: CompareSession }) {
   // Produce new items which have had their sockets changed
   const compareItems = useMemo(() => {
     let items = rawCompareItems;
-    if (defs) {
-      if (doAssumeWeaponMasterworks) {
-        items = items.map((i) => {
-          const y2MasterworkSocket = i.sockets?.allSockets.find(
-            (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash
+    if (doAssumeWeaponMasterworks) {
+      items = items.map((i) => {
+        const y2MasterworkSocket = i.sockets?.allSockets.find(
+          (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash
+        );
+        const plugSet = y2MasterworkSocket?.plugSet;
+        const plugged = y2MasterworkSocket?.plugged;
+        if (plugSet && plugged) {
+          const fullMasterworkPlug = _.maxBy(
+            plugSet.plugs.filter(
+              (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash
+            ),
+            (plugOption) => plugOption.plugDef.investmentStats[0]?.value
           );
-          const plugSet = y2MasterworkSocket?.plugSet;
-          const plugged = y2MasterworkSocket?.plugged;
-          if (plugSet && plugged) {
-            const fullMasterworkPlug = _.maxBy(
-              plugSet.plugs.filter(
-                (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash
-              ),
-              (plugOption) => plugOption.plugDef.investmentStats[0]?.value
-            );
-            if (fullMasterworkPlug) {
-              return applySocketOverrides(defs, i, {
-                [y2MasterworkSocket.socketIndex]: fullMasterworkPlug.plugDef.hash,
-              });
-            }
+          if (fullMasterworkPlug) {
+            return applySocketOverrides(createItemContext, i, {
+              [y2MasterworkSocket.socketIndex]: fullMasterworkPlug.plugDef.hash,
+            });
           }
-          return i;
-        });
-      }
-      items = items.map((i) => applySocketOverrides(defs, i, socketOverrides[i.id]));
+        }
+        return i;
+      });
     }
+    items = items.map((i) => applySocketOverrides(createItemContext, i, socketOverrides[i.id]));
 
     return items;
-  }, [defs, doAssumeWeaponMasterworks, rawCompareItems, socketOverrides]);
+  }, [createItemContext, doAssumeWeaponMasterworks, rawCompareItems, socketOverrides]);
 
   const cancel = useCallback(() => {
     dispatch(endCompareSession());

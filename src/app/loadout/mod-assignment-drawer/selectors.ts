@@ -1,10 +1,13 @@
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector, sortedStoresSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  createItemContextSelector,
+  sortedStoresSelector,
+} from 'app/inventory/selectors';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -37,15 +40,13 @@ export function useEquippedLoadoutArmorAndSubclass(
         storeToHydrateFrom?.items.filter((item) => item.equipped && item.bucket.inArmor) ?? [];
       const classType = storeToHydrateFrom?.classType ?? loadout.classType;
       const allItems = allItemsSelector(state);
-      const defs = manifestSelector(state)!;
-      const buckets = bucketsSelector(state)!;
+      const createItemContext = createItemContextSelector(state);
       const modsByBucket = loadout.parameters?.modsByBucket;
 
       const [loadoutItems] = getItemsFromLoadoutItems(
+        createItemContext,
         loadout.items.filter((i) => i.equip),
-        defs,
         storeId,
-        buckets,
         allItems,
         modsByBucket
       );

@@ -1,4 +1,3 @@
-import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { getTestDefinitions, getTestProfile, getTestVendors } from 'testing/test-utils';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
@@ -8,18 +7,18 @@ async function getTestVendorGroups() {
   const profileResponse = getTestProfile();
   const vendorsResponse = getTestVendors();
   const buckets = getBuckets(defs);
-  const account: DestinyAccount = {
-    displayName: '',
-    originalPlatformType: 2,
-    platformLabel: '',
-    membershipId: '',
-    destinyVersion: 1,
-    platforms: [],
-    lastPlayed: new Date(),
-  };
   const characterId = Object.keys(profileResponse.characters.data!)[0];
 
-  return toVendorGroups(vendorsResponse, profileResponse, defs, buckets, account, characterId);
+  return toVendorGroups(
+    {
+      defs,
+      buckets,
+      profileResponse,
+      customTotalStatsByClass: {},
+    },
+    vendorsResponse,
+    characterId
+  );
 }
 
 function* allSaleItems(vendorGroups: D2VendorGroup[]) {

@@ -1,7 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
-import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
+import { CreateItemContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ItemFilter } from 'app/search/filter-types';
 import { count } from 'app/utils/util';
 import {
@@ -69,20 +68,17 @@ export interface DimPresentationNodeSearchResult extends DimPresentationNodeLeaf
 
 /** Process the live data into DIM types that collect everything in one place and can be filtered/searched. */
 export function toPresentationNodeTree(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets | undefined,
-  profileResponse: DestinyProfileResponse,
+  createItemContext: CreateItemContext,
   node: number
 ): DimPresentationNode | null {
+  const { defs, buckets, profileResponse } = createItemContext;
   const presentationNodeDef = defs.PresentationNode.get(node);
   if (presentationNodeDef.redacted) {
     return null;
   }
-  if (buckets && presentationNodeDef.children.collectibles?.length) {
+  if (presentationNodeDef.children.collectibles?.length) {
     const collectibles = toCollectibles(
-      defs,
-      buckets,
-      profileResponse,
+      createItemContext,
       presentationNodeDef.children.collectibles
     );
     const visible = collectibles.length;
@@ -110,12 +106,7 @@ export function toPresentationNodeTree(
       records,
     };
   } else if (buckets && presentationNodeDef.children.craftables?.length) {
-    const craftables = toCraftables(
-      defs,
-      buckets,
-      profileResponse,
-      presentationNodeDef.children.craftables
-    );
+    const craftables = toCraftables(createItemContext, presentationNodeDef.children.craftables);
 
     const visible = craftables.length;
 
@@ -147,9 +138,7 @@ export function toPresentationNodeTree(
     let visible = 0;
     for (const presentationNode of presentationNodeDef.children.presentationNodes) {
       const subnode = toPresentationNodeTree(
-        defs,
-        buckets,
-        profileResponse,
+        createItemContext,
         presentationNode.presentationNodeHash
       );
       if (subnode) {
@@ -283,11 +272,10 @@ function searchRewards(
 }
 
 function toCollectibles(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  profileResponse: DestinyProfileResponse,
+  createItemContext: CreateItemContext,
   collectibleHashes: DestinyPresentationNodeCollectibleChildEntry[]
 ): DimCollectible[] {
+  const { defs, profileResponse } = createItemContext;
   return _.compact(
     collectibleHashes.map(({ collectibleHash }) => {
       const collectibleDef = defs.Collectible.get(collectibleHash);
@@ -302,15 +290,7 @@ function toCollectibles(
       ) {
         return null;
       }
-      const item = makeFakeItem(
-        defs,
-        buckets,
-        profileResponse.itemComponents,
-        collectibleDef.itemHash,
-        undefined,
-        undefined,
-        profileResponse.profileRecords.data
-      );
+      const item = makeFakeItem(createItemContext, collectibleDef.itemHash);
       if (!item) {
         return null;
       }
@@ -360,31 +340,27 @@ export function toRecord(
 }
 
 function toCraftables(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  profileResponse: DestinyProfileResponse,
+  createItemContext: CreateItemContext,
   craftableChildren: DestinyPresentationNodeCraftableChildEntry[]
 ): DimCraftable[] {
   return _.compact(
     _.sortBy(craftableChildren, (c) => c.nodeDisplayPriority).map((c) =>
-      toCraftable(defs, buckets, profileResponse, c.craftableItemHash)
+      toCraftable(createItemContext, c.craftableItemHash)
     )
   );
 }
 
 function toCraftable(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  profileResponse: DestinyProfileResponse,
+  createItemContext: CreateItemContext,
   itemHash: number
 ): DimCraftable | undefined {
-  const item = makeFakeItem(defs, buckets, profileResponse.itemComponents, itemHash);
+  const item = makeFakeItem(createItemContext, itemHash);
 
   if (!item) {
     return;
   }
 
-  const info = getCraftableInfo(item.hash, profileResponse);
+  const info = getCraftableInfo(item.hash, createItemContext.profileResponse);
   if (!info?.visible) {
     return;
   }

@@ -1,6 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
@@ -14,9 +13,9 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { createAction } from 'typesafe-actions';
 import { TagCommand, TagValue } from './dim-item-info';
-import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { AccountCurrency, DimCharacterStat, DimStore } from './store-types';
+import { CreateItemContext } from './store/d2-item-factory';
 
 /**
  * Update the computed/massaged state of inventory, plus account-wide info like currencies.
@@ -73,8 +72,7 @@ export const itemMoved = createAction('inventory/MOVE_ITEM')<{
 export const awaItemChanged = createAction('inventory/AWA_CHANGE')<{
   item: DimItem | null;
   changes: DestinyItemChangeResponse;
-  defs: D2ManifestDefinitions;
-  buckets: InventoryBuckets;
+  createItemContext: CreateItemContext;
 }>();
 
 /*

@@ -1,18 +1,13 @@
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { useD2Definitions } from 'app/manifest/selectors';
 import {
   DimPresentationNode,
   DimRecord,
   toPresentationNodeTree,
 } from 'app/records/presentation-nodes';
-import {
-  DestinyPresentationNodeDefinition,
-  DestinyProfileResponse,
-  DestinyRecordState,
-} from 'bungie-api-ts/destiny2';
+import { DestinyPresentationNodeDefinition, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import seasonalChallengesInfo from 'data/d2/seasonal-challenges.json';
 import { useSelector } from 'react-redux';
 import { recordToPursuitItem } from './milestone-items';
@@ -24,19 +19,13 @@ import { PursuitsGroup } from './Pursuits';
 export default function SeasonalChallenges({
   seasonalChallengesPresentationNode,
   store,
-  buckets,
-  profileResponse,
 }: {
   seasonalChallengesPresentationNode: DestinyPresentationNodeDefinition;
   store: DimStore;
-  buckets: InventoryBuckets;
-  profileResponse: DestinyProfileResponse;
 }) {
-  const defs = useD2Definitions()!;
+  const createItemContext = useSelector(createItemContextSelector);
   const nodeTree = toPresentationNodeTree(
-    defs,
-    buckets,
-    profileResponse,
+    createItemContext,
     seasonalChallengesPresentationNode.hash
   );
 
@@ -54,7 +43,7 @@ export default function SeasonalChallenges({
     .map((r) =>
       recordToPursuitItem(
         r,
-        buckets,
+        createItemContext.buckets,
         store,
         seasonalChallengesPresentationNode.displayProperties.name,
         trackedRecords.includes(r.recordDef.hash)
