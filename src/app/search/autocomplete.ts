@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
+import { ArmoryEntry, getArmorySuggestions } from './armory-search';
 import { makeCommentString, parseQuery, traverseAST } from './query-parser';
 import { SearchConfig } from './search-config';
 import freeformFilters from './search-filters/freeform';
@@ -19,6 +20,8 @@ export const enum SearchItemType {
   Autocomplete,
   /** Open help */
   Help,
+  /** Open the armory view for a page */
+  ArmoryEntry,
 }
 
 export interface SearchQuery {
@@ -43,6 +46,8 @@ export interface SearchItem {
     /** The indices of the first and last character that should be highlighted */
     range: [number, number];
   };
+  /** For type === SearchItemType.ArmoryEntry */
+  armoryItem?: ArmoryEntry;
 }
 
 /** matches a keyword that's probably a math comparison */
@@ -107,6 +112,8 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
       },
     };
 
+    const armorySuggestions = getArmorySuggestions(searchConfig.armorySuggestions, query);
+
     // mix them together
     return [
       ..._.take(
@@ -116,6 +123,7 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
         ),
         7
       ),
+      ...armorySuggestions,
       helpItem,
     ];
   };

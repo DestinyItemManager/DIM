@@ -30,6 +30,7 @@
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
   "Armory": {
+    "OpenInArmory": "view in Armory",
     "WishlistedRolls": "Wishlisted Roll",
     "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
     "TrashlistedRolls": "Trashlisted Roll",

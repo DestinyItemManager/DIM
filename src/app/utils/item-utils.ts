@@ -1,4 +1,5 @@
 import { factionItemAligns } from 'app/destiny1/d1-factions';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   D1Item,
   DimItem,
@@ -237,9 +238,12 @@ const d1YearSourceHashes = {
 /**
  * Which "Year" of Destiny did this item come from?
  */
-export function getItemYear(item: DimItem) {
-  if (item.destinyVersion === 2) {
-    const season = getSeason(item);
+export function getItemYear(
+  item: DimItem | DestinyInventoryItemDefinition,
+  defs?: D2ManifestDefinitions
+) {
+  if (('destinyVersion' in item && item.destinyVersion === 2) || 'displayProperties' in item) {
+    const season = getSeason(item, defs);
     return season ? Math.floor(season / 4) + 1 : 0;
   } else if (isD1Item(item)) {
     if (!item.sourceHashes) {

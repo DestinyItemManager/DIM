@@ -1,6 +1,7 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { createSelector } from 'reselect';
+import { ArmoryEntry, buildArmoryIndex } from './armory-search';
 import { canonicalFilterFormats, FilterDefinition, SuggestionsContext } from './filter-types';
 import advancedFilters from './search-filters/advanced';
 import d1Filters from './search-filters/d1-filters';
@@ -52,6 +53,7 @@ export interface SearchConfig {
   /* `keyword:value` filters */
   kvFilters: Record<string, FilterDefinition>;
   suggestions: string[];
+  armorySuggestions?: ArmoryEntry[];
 }
 
 /** Builds an object that describes the available search keywords and filter definitions. */
@@ -98,10 +100,14 @@ export function buildSearchConfig(
     }
   }
 
+  const armorySuggestions =
+    suggestionsContext.d2Manifest && buildArmoryIndex(suggestionsContext.d2Manifest);
+
   return {
     allFilters: allApplicableFilters,
     suggestions: Array.from(suggestions),
     isFilters,
     kvFilters,
+    armorySuggestions,
   };
 }

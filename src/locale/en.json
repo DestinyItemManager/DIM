@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "No Notes",
+    "OpenInArmory": "view in Armory",
     "Season": "Season {{season}}, Year {{year}}",
     "TrashlistedRolls": "Trashlisted Roll",
     "TrashlistedRolls_plural": "{{count, number}} Trashlisted Rolls",
