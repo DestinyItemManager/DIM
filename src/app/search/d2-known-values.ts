@@ -245,6 +245,7 @@ export const uniqueEquipBuckets = [
 
 export const RAID_NODE = 4025982223; // PresentationNode "Raids"
 export const SHADER_NODE = 1516796296; // PresentationNode "Shaders"
+export const ARMOR_NODE = 1605042242; // PresentationNode "Armor"
 
 //
 // MISC KNOWN HASHES / ENUMS

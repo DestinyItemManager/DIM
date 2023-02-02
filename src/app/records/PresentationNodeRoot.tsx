@@ -8,6 +8,7 @@ import PresentationNode from './PresentationNode';
 import styles from './PresentationNodeRoot.m.scss';
 import PresentationNodeSearchResults from './PresentationNodeSearchResults';
 import { filterPresentationNodesToSearch, toPresentationNodeTree } from './presentation-nodes';
+import UniversalOrnaments from './universal-ornaments/UniversalOrnaments';
 
 interface Props {
   presentationNodeHash: number;
@@ -111,6 +112,7 @@ export default function PresentationNodeRoot({
         isInTriumphs={isTriumphs}
         overrideName={overrideName}
       />
+      {showPlugSets && <UniversalOrnaments />}
     </div>
   );
 }
