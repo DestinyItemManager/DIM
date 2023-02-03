@@ -24,12 +24,6 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-wrap: wrap;
   gap: 8px;
-  gap: 8px 0;
-
-  :global(.fa-twitter) {
-    font-size: 1.5em;
-    vertical-align: bottom;
-  }
 }
 
 .errorCode {
