@@ -304,6 +304,12 @@ function SearchBar(
   ) {
     const { type, changes } = actionAndChanges;
     switch (type) {
+      // FIXME: Do not act on focus because it interacts badly with autofocus
+      // Downshift will likely switch away from using focus because too
+      // https://github.com/downshift-js/downshift/issues/1439
+      // (Also see onFocus below)
+      case useCombobox.stateChangeTypes.InputFocus:
+        return state;
       case useCombobox.stateChangeTypes.ItemClick:
       case useCombobox.stateChangeTypes.InputKeyDownEnter:
         // exit early if non FilterHelper item was selected
@@ -316,7 +322,6 @@ function SearchBar(
         return {
           ...changes,
           selectedItem: state.selectedItem, // keep the last selected item (i.e. the edit field stays unchanged)
-          closeMenu: true, // close the menu
         };
 
       default:
@@ -324,6 +329,8 @@ function SearchBar(
     }
   }
 
+  // FIXME: Maybe follow suit when Downshift changes opening behavior to
+  // just use clicks and not focus (see stateReducer above)
   const onFocus = () => {
     if (!liveQuery && !isOpen && !autoFocus) {
       openMenu();
