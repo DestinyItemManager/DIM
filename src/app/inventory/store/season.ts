@@ -27,17 +27,18 @@ export function getSeason(
   }
 
   if (
-    item.itemCategoryHashes?.includes(ItemCategoryHashes.Materials) ||
-    item.itemCategoryHashes?.includes(ItemCategoryHashes.Dummies) ||
-    item.itemCategoryHashes?.length === 0
+    !item.itemCategoryHashes ||
+    item.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
+    item.itemCategoryHashes.includes(ItemCategoryHashes.Dummies) ||
+    item.itemCategoryHashes.length === 0
   ) {
     return -1;
   }
 
   if (asDef) {
     const source =
-      asDef?.collectibleHash && defs?.Collectible.get(asDef.collectibleHash)?.sourceHash;
-    const currentVersion = asDef && defs?.InventoryItem.get(asDef.hash)?.quality?.currentVersion;
+      asDef.collectibleHash && defs?.Collectible.get(asDef.collectibleHash)?.sourceHash;
+    const currentVersion = asDef.quality?.currentVersion;
     const iconOverlay =
       (currentVersion !== undefined &&
         asDef.quality?.displayVersionWatermarkIcons?.[currentVersion]) ||
