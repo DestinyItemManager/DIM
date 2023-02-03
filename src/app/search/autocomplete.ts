@@ -79,7 +79,12 @@ const filterNames = [
 export default function createAutocompleter(searchConfig: SearchConfig) {
   const filterComplete = makeFilterComplete(searchConfig);
 
-  return (query: string, caretIndex: number, recentSearches: Search[]): SearchItem[] => {
+  return (
+    query: string,
+    caretIndex: number,
+    recentSearches: Search[],
+    includeArmory?: boolean
+  ): SearchItem[] => {
     // If there's a query, it's always the first entry
     const queryItem: SearchItem | undefined = query
       ? {
@@ -112,7 +117,9 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
       },
     };
 
-    const armorySuggestions = getArmorySuggestions(searchConfig.armorySuggestions, query);
+    const armorySuggestions = includeArmory
+      ? getArmorySuggestions(searchConfig.armorySuggestions, query)
+      : [];
 
     // mix them together
     return [

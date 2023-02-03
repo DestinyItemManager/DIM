@@ -85,7 +85,12 @@ interface ProvidedProps {
 interface StoreProps {
   recentSearches: Search[];
   validateQuery: ReturnType<typeof validateQuerySelector>;
-  autocompleter: (query: string, caretIndex: number, recentSearches: Search[]) => SearchItem[];
+  autocompleter: (
+    query: string,
+    caretIndex: number,
+    recentSearches: Search[],
+    includeArmory: boolean
+  ) => SearchItem[];
 }
 
 type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
@@ -310,8 +315,8 @@ function SearchBar(
 
   const caretPosition = inputElement.current?.selectionStart || liveQuery.length;
   const items = useMemo(
-    () => autocompleter(liveQuery, caretPosition, recentSearches),
-    [autocompleter, caretPosition, liveQuery, recentSearches]
+    () => autocompleter(liveQuery, caretPosition, recentSearches, Boolean(mainSearchBar)),
+    [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches]
   );
 
   // useCombobox from Downshift manages the state of the dropdown
