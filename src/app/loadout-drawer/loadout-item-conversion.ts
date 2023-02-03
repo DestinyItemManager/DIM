@@ -1,5 +1,5 @@
 import { makeFakeItem as makeFakeD1Item } from 'app/inventory/store/d1-item-factory';
-import { CreateItemContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
+import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import { emptyArray } from 'app/utils/empty';
 import { warnLog } from 'app/utils/log';
@@ -18,7 +18,7 @@ export function generateMissingLoadoutItemId() {
  * are returned as warnitems.
  */
 export function getItemsFromLoadoutItems(
-  createItemContext: CreateItemContext,
+  itemCreationContext: ItemCreationContext,
   loadoutItems: LoadoutItem[] | undefined,
   storeId: string | undefined,
   allItems: DimItem[],
@@ -30,7 +30,7 @@ export function getItemsFromLoadoutItems(
     return [emptyArray(), emptyArray()];
   }
 
-  const { defs, buckets } = createItemContext;
+  const { defs, buckets } = itemCreationContext;
 
   const items: ResolvedLoadoutItem[] = [];
   const warnitems: ResolvedLoadoutItem[] = [];
@@ -53,7 +53,7 @@ export function getItemsFromLoadoutItems(
 
       // Apply socket overrides so the item appears as it should be configured in the loadout
       const overriddenItem = defs.isDestiny2()
-        ? applySocketOverrides(createItemContext, item, overrides)
+        ? applySocketOverrides(itemCreationContext, item, overrides)
         : item;
 
       items.push({
@@ -66,7 +66,7 @@ export function getItemsFromLoadoutItems(
       });
     } else {
       const fakeItem: DimItem | null = defs.isDestiny2()
-        ? makeFakeItem(createItemContext, loadoutItem.hash)
+        ? makeFakeItem(itemCreationContext, loadoutItem.hash)
         : makeFakeD1Item(defs, buckets, loadoutItem.hash);
       if (fakeItem) {
         fakeItem.id = generateMissingLoadoutItemId();

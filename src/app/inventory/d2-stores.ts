@@ -51,7 +51,7 @@ import {
   getCharacterStatsData as getD1CharacterStatsData,
   hasAffectingClassified,
 } from './store/character-utils';
-import { CreateItemContext, processItems } from './store/d2-item-factory';
+import { ItemCreationContext, processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
 import { getArtifactBonus } from './stores-helpers';
@@ -348,12 +348,12 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
 }
 
 export function buildStores(
-  createItemContext: CreateItemContext,
+  itemCreationContext: ItemCreationContext,
   transaction?: Transaction
 ): DimStore[] {
   // TODO: components may be hidden (privacy)
 
-  const { defs, profileResponse } = createItemContext;
+  const { defs, profileResponse } = itemCreationContext;
 
   if (
     !profileResponse.profileInventory.data ||
@@ -372,10 +372,10 @@ export function buildStores(
   const processSpan = transaction?.startChild({
     op: 'processItems',
   });
-  const vault = processVault(createItemContext);
+  const vault = processVault(itemCreationContext);
 
   const characters = Object.keys(profileResponse.characters.data).map((characterId) =>
-    processCharacter(createItemContext, characterId, lastPlayedDate)
+    processCharacter(itemCreationContext, characterId, lastPlayedDate)
   );
   processSpan?.finish();
 
@@ -421,11 +421,11 @@ function processCurrencies(profileInfo: DestinyProfileResponse, defs: D2Manifest
  * Process a single character from its raw form to a DIM store, with all the items.
  */
 function processCharacter(
-  createItemContext: CreateItemContext,
+  itemCreationContext: ItemCreationContext,
   characterId: string,
   lastPlayedDate: Date
 ): DimStore {
-  const { defs, buckets, profileResponse } = createItemContext;
+  const { defs, buckets, profileResponse } = itemCreationContext;
   const character = profileResponse.characters.data![characterId];
   const characterInventory = profileResponse.characterInventories.data?.[characterId]?.items || [];
   const profileInventory = profileResponse.profileInventory.data?.items || [];
@@ -447,12 +447,12 @@ function processCharacter(
     }
   }
 
-  store.items = processItems(createItemContext, store, items);
+  store.items = processItems(itemCreationContext, store, items);
   return store;
 }
 
-function processVault(createItemContext: CreateItemContext): DimStore {
-  const { buckets, profileResponse } = createItemContext;
+function processVault(itemCreationContext: ItemCreationContext): DimStore {
+  const { buckets, profileResponse } = itemCreationContext;
   const profileInventory = profileResponse.profileInventory.data
     ? profileResponse.profileInventory.data.items
     : [];
@@ -468,7 +468,7 @@ function processVault(createItemContext: CreateItemContext): DimStore {
     }
   }
 
-  store.items = processItems(createItemContext, store, items);
+  store.items = processItems(itemCreationContext, store, items);
   return store;
 }
 

@@ -59,14 +59,14 @@ export default function D1LoadoutDrawer({
   const allItems = useSelector(allItemsSelector);
   const [showingItemPicker, setShowingItemPicker] = useState(false);
   const [loadout, setLoadout] = useState(initialLoadout);
-  const createItemContext = useSelector(createItemContextSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
 
   const loadoutItems = loadout?.items;
 
   // Turn loadout items into real DimItems
   const [items, warnitems] = useMemo(
-    () => getItemsFromLoadoutItems(createItemContext, loadoutItems, storeId, allItems),
-    [createItemContext, loadoutItems, storeId, allItems]
+    () => getItemsFromLoadoutItems(itemCreationContext, loadoutItems, storeId, allItems),
+    [itemCreationContext, loadoutItems, storeId, allItems]
   );
 
   const onAddItem = useCallback(

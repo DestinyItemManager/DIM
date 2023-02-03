@@ -40,7 +40,7 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
   const profileResponse = useSelector(profileResponseSelector);
   const vendors = useSelector(vendorsByCharacterSelector);
   const defs = useD2Definitions();
-  const createItemContext = useSelector(createItemContextSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
   const dispatch = useThunkDispatch();
 
   // TODO: get for all characters, or let people select a character? This is a hack
@@ -115,7 +115,7 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
   // TODO: there's a cool background image but I'm not sure how to use it
 
   const d2Vendor = toVendor(
-    { ...createItemContext, itemComponents: vendorResponse?.itemComponents[vendorHash] },
+    { ...itemCreationContext, itemComponents: vendorResponse?.itemComponents[vendorHash] },
     vendorHash,
     vendor,
     characterId,

@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
-import { CreateItemContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
+import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ItemFilter } from 'app/search/filter-types';
 import { count } from 'app/utils/util';
 import {
@@ -68,17 +68,17 @@ export interface DimPresentationNodeSearchResult extends DimPresentationNodeLeaf
 
 /** Process the live data into DIM types that collect everything in one place and can be filtered/searched. */
 export function toPresentationNodeTree(
-  createItemContext: CreateItemContext,
+  itemCreationContext: ItemCreationContext,
   node: number
 ): DimPresentationNode | null {
-  const { defs, buckets, profileResponse } = createItemContext;
+  const { defs, buckets, profileResponse } = itemCreationContext;
   const presentationNodeDef = defs.PresentationNode.get(node);
   if (presentationNodeDef.redacted) {
     return null;
   }
   if (presentationNodeDef.children.collectibles?.length) {
     const collectibles = toCollectibles(
-      createItemContext,
+      itemCreationContext,
       presentationNodeDef.children.collectibles
     );
     const visible = collectibles.length;
@@ -106,7 +106,7 @@ export function toPresentationNodeTree(
       records,
     };
   } else if (buckets && presentationNodeDef.children.craftables?.length) {
-    const craftables = toCraftables(createItemContext, presentationNodeDef.children.craftables);
+    const craftables = toCraftables(itemCreationContext, presentationNodeDef.children.craftables);
 
     const visible = craftables.length;
 
@@ -138,7 +138,7 @@ export function toPresentationNodeTree(
     let visible = 0;
     for (const presentationNode of presentationNodeDef.children.presentationNodes) {
       const subnode = toPresentationNodeTree(
-        createItemContext,
+        itemCreationContext,
         presentationNode.presentationNodeHash
       );
       if (subnode) {
@@ -272,10 +272,10 @@ function searchRewards(
 }
 
 function toCollectibles(
-  createItemContext: CreateItemContext,
+  itemCreationContext: ItemCreationContext,
   collectibleHashes: DestinyPresentationNodeCollectibleChildEntry[]
 ): DimCollectible[] {
-  const { defs, profileResponse } = createItemContext;
+  const { defs, profileResponse } = itemCreationContext;
   return _.compact(
     collectibleHashes.map(({ collectibleHash }) => {
       const collectibleDef = defs.Collectible.get(collectibleHash);
@@ -290,7 +290,7 @@ function toCollectibles(
       ) {
         return null;
       }
-      const item = makeFakeItem(createItemContext, collectibleDef.itemHash);
+      const item = makeFakeItem(itemCreationContext, collectibleDef.itemHash);
       if (!item) {
         return null;
       }
@@ -340,27 +340,27 @@ export function toRecord(
 }
 
 function toCraftables(
-  createItemContext: CreateItemContext,
+  itemCreationContext: ItemCreationContext,
   craftableChildren: DestinyPresentationNodeCraftableChildEntry[]
 ): DimCraftable[] {
   return _.compact(
     _.sortBy(craftableChildren, (c) => c.nodeDisplayPriority).map((c) =>
-      toCraftable(createItemContext, c.craftableItemHash)
+      toCraftable(itemCreationContext, c.craftableItemHash)
     )
   );
 }
 
 function toCraftable(
-  createItemContext: CreateItemContext,
+  itemCreationContext: ItemCreationContext,
   itemHash: number
 ): DimCraftable | undefined {
-  const item = makeFakeItem(createItemContext, itemHash);
+  const item = makeFakeItem(itemCreationContext, itemHash);
 
   if (!item) {
     return;
   }
 
-  const info = getCraftableInfo(item.hash, createItemContext.profileResponse);
+  const info = getCraftableInfo(item.hash, itemCreationContext.profileResponse);
   if (!info?.visible) {
     return;
   }

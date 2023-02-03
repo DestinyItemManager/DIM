@@ -15,7 +15,7 @@ import { createAction } from 'typesafe-actions';
 import { TagCommand, TagValue } from './dim-item-info';
 import { DimItem } from './item-types';
 import { AccountCurrency, DimCharacterStat, DimStore } from './store-types';
-import { CreateItemContext } from './store/d2-item-factory';
+import { ItemCreationContext } from './store/d2-item-factory';
 
 /**
  * Update the computed/massaged state of inventory, plus account-wide info like currencies.
@@ -72,7 +72,7 @@ export const itemMoved = createAction('inventory/MOVE_ITEM')<{
 export const awaItemChanged = createAction('inventory/AWA_CHANGE')<{
   item: DimItem | null;
   changes: DestinyItemChangeResponse;
-  createItemContext: CreateItemContext;
+  itemCreationContext: ItemCreationContext;
 }>();
 
 /*

@@ -4,7 +4,7 @@ import produce from 'immer';
 import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { DimItem, DimPlug, DimSocket } from '../item-types';
-import { CreateItemContext } from './d2-item-factory';
+import { ItemCreationContext } from './d2-item-factory';
 import { buildDefinedPlug } from './sockets';
 import { buildStats } from './stats';
 
@@ -21,7 +21,7 @@ export interface SocketOverrides {
  */
 export function applySocketOverrides(
   // We don't need everything here but I'm assuming over time we'll want to plumb more stuff into stats calculations?
-  { defs, customTotalStatsByClass }: CreateItemContext,
+  { defs, customTotalStatsByClass }: ItemCreationContext,
   item: DimItem,
   socketOverrides: SocketOverrides | undefined
 ): DimItem {

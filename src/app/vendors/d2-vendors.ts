@@ -1,4 +1,4 @@
-import { CreateItemContext } from 'app/inventory/store/d2-item-factory';
+import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { VENDORS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import {
@@ -32,7 +32,7 @@ export interface D2Vendor {
 const vendorOrder = [VENDORS.SPIDER, VENDORS.ADA_TRANSMOG, VENDORS.BANSHEE, VENDORS.EVERVERSE];
 
 export function toVendorGroups(
-  context: CreateItemContext,
+  context: ItemCreationContext,
   vendorsResponse: DestinyVendorsResponse,
   characterId: string
 ): D2VendorGroup[] {
@@ -74,7 +74,7 @@ export function toVendorGroups(
 }
 
 export function toVendor(
-  context: CreateItemContext,
+  context: ItemCreationContext,
   vendorHash: number,
   vendor: DestinyVendorComponent | undefined,
   characterId: string,
@@ -122,7 +122,7 @@ export function toVendor(
 }
 
 function getVendorItems(
-  context: CreateItemContext,
+  context: ItemCreationContext,
   vendorDef: DestinyVendorDefinition,
   characterId: string,
   sales:

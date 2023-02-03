@@ -67,7 +67,7 @@ export default function Compare({ session }: { session: CompareSession }) {
   const defs = useD2Definitions()!;
   const [compareBaseStats, setCompareBaseStats] = useSetting('compareBaseStats');
   const [assumeWeaponMasterwork, setAssumeWeaponMasterwork] = useSetting('compareWeaponMasterwork');
-  const createItemContext = useSelector(createItemContextSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
   const rawCompareItems = useSelector(compareItemsSelector(session.vendorCharacterId));
   const organizerLink = useSelector(compareOrganizerLinkSelector);
 
@@ -101,7 +101,7 @@ export default function Compare({ session }: { session: CompareSession }) {
             (plugOption) => plugOption.plugDef.investmentStats[0]?.value
           );
           if (fullMasterworkPlug) {
-            return applySocketOverrides(createItemContext, i, {
+            return applySocketOverrides(itemCreationContext, i, {
               [y2MasterworkSocket.socketIndex]: fullMasterworkPlug.plugDef.hash,
             });
           }
@@ -109,10 +109,10 @@ export default function Compare({ session }: { session: CompareSession }) {
         return i;
       });
     }
-    items = items.map((i) => applySocketOverrides(createItemContext, i, socketOverrides[i.id]));
+    items = items.map((i) => applySocketOverrides(itemCreationContext, i, socketOverrides[i.id]));
 
     return items;
-  }, [createItemContext, doAssumeWeaponMasterworks, rawCompareItems, socketOverrides]);
+  }, [itemCreationContext, doAssumeWeaponMasterworks, rawCompareItems, socketOverrides]);
 
   const cancel = useCallback(() => {
     dispatch(endCompareSession());
