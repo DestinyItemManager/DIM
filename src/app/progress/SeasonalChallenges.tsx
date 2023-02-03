@@ -23,9 +23,9 @@ export default function SeasonalChallenges({
   seasonalChallengesPresentationNode: DestinyPresentationNodeDefinition;
   store: DimStore;
 }) {
-  const createItemContext = useSelector(createItemContextSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
   const nodeTree = toPresentationNodeTree(
-    createItemContext,
+    itemCreationContext,
     seasonalChallengesPresentationNode.hash
   );
 
@@ -43,7 +43,7 @@ export default function SeasonalChallenges({
     .map((r) =>
       recordToPursuitItem(
         r,
-        createItemContext.buckets,
+        itemCreationContext.buckets,
         store,
         seasonalChallengesPresentationNode.displayProperties.name,
         trackedRecords.includes(r.recordDef.hash)

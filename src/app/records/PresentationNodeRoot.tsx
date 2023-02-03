@@ -43,7 +43,7 @@ export default function PresentationNodeRoot({
   overrideName,
   completedRecordsHidden,
 }: Props) {
-  const createItemContext = useSelector(createItemContextSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
   const defs = useD2Definitions()!;
   const [nodePath, setNodePath] = useState<number[]>([]);
 
@@ -61,8 +61,8 @@ export default function PresentationNodeRoot({
   }
 
   const nodeTree = useMemo(
-    () => toPresentationNodeTree(createItemContext, presentationNodeHash),
-    [presentationNodeHash, createItemContext]
+    () => toPresentationNodeTree(itemCreationContext, presentationNodeHash),
+    [presentationNodeHash, itemCreationContext]
   );
   // console.log(nodeTree);
 

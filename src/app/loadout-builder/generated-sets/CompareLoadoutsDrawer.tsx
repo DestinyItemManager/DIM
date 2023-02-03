@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { CreateItemContext } from 'app/inventory/store/d2-item-factory';
+import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { updateLoadout } from 'app/loadout-drawer/actions';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
@@ -55,7 +55,7 @@ function chooseInitialLoadout(
  * replaced with `subclass`, and the given `params` and `notes`.
  */
 function createLoadoutUsingLOItems(
-  createItemContext: CreateItemContext,
+  itemCreationContext: ItemCreationContext,
   allItems: DimItem[],
   autoMods: number[],
   storeId: string | undefined,
@@ -68,7 +68,7 @@ function createLoadoutUsingLOItems(
   return produce(loadout, (draftLoadout) => {
     if (draftLoadout) {
       const [resolvedItems, warnItems] = getItemsFromLoadoutItems(
-        createItemContext,
+        itemCreationContext,
         draftLoadout.items,
         storeId,
         allItems
@@ -130,13 +130,13 @@ export default function CompareLoadoutsDrawer({
   );
 
   const allItems = useSelector(allItemsSelector);
-  const createItemContext = useSelector(createItemContextSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const generatedLoadout = useMemo(
     () =>
       createLoadoutUsingLOItems(
-        createItemContext,
+        itemCreationContext,
         allItems,
         set.statMods,
         selectedStore.id,
@@ -147,7 +147,7 @@ export default function CompareLoadoutsDrawer({
         notes
       ),
     [
-      createItemContext,
+      itemCreationContext,
       allItems,
       set.statMods,
       selectedStore.id,

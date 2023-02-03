@@ -40,11 +40,11 @@ export function useEquippedLoadoutArmorAndSubclass(
         storeToHydrateFrom?.items.filter((item) => item.equipped && item.bucket.inArmor) ?? [];
       const classType = storeToHydrateFrom?.classType ?? loadout.classType;
       const allItems = allItemsSelector(state);
-      const createItemContext = createItemContextSelector(state);
+      const itemCreationContext = createItemContextSelector(state);
       const modsByBucket = loadout.parameters?.modsByBucket;
 
       const [loadoutItems] = getItemsFromLoadoutItems(
-        createItemContext,
+        itemCreationContext,
         loadout.items.filter((i) => i.equip),
         storeId,
         allItems,

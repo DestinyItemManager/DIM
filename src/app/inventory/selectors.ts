@@ -15,7 +15,7 @@ import { characterSortImportanceSelector, characterSortSelector } from '../setti
 import { getTag, ItemInfos } from './dim-item-info';
 import { DimItem } from './item-types';
 import { collectNotesHashtags } from './note-hashtags';
-import { CreateItemContext } from './store/d2-item-factory';
+import { ItemCreationContext } from './store/d2-item-factory';
 import { getCurrentStore, getVault } from './stores-helpers';
 
 /** All stores, unsorted. */
@@ -175,7 +175,7 @@ export const createItemContextSelector = createSelector(
   profileResponseSelector,
   bucketsSelector,
   (state: RootState) => settingSelector('customTotalStatsByClass')(state),
-  (defs, profileResponse, buckets, customTotalStatsByClass): CreateItemContext => ({
+  (defs, profileResponse, buckets, customTotalStatsByClass): ItemCreationContext => ({
     defs: defs!,
     buckets: buckets!,
     profileResponse: profileResponse!,

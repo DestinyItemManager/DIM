@@ -39,10 +39,10 @@ export default function PlugSet({
   const defs = useD2Definitions()!;
   const plugSetHash = plugSetCollection.hash;
   const plugSetDef = defs.PlugSet.get(plugSetHash);
-  const createItemContext = useSelector(createItemContextSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
 
   const plugSetItems = _.compact(
-    plugSetDef.reusablePlugItems.map((i) => makeFakeItem(createItemContext, i.plugItemHash))
+    plugSetDef.reusablePlugItems.map((i) => makeFakeItem(itemCreationContext, i.plugItemHash))
   );
 
   plugSetItems.sort(plugSetOrder);

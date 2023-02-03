@@ -13,7 +13,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
-import { CreateItemContext, makeFakeItem } from '../inventory/store/d2-item-factory';
+import { ItemCreationContext, makeFakeItem } from '../inventory/store/d2-item-factory';
 
 /**
  * This represents an item inside a vendor.
@@ -57,7 +57,7 @@ function getCollectibleState(
 }
 
 function makeVendorItem(
-  context: CreateItemContext,
+  context: ItemCreationContext,
   itemHash: number,
   failureStrings: string[],
   vendorHash: number,
@@ -130,7 +130,7 @@ function makeVendorItem(
  * of that copy they're selling
  */
 export function vendorItemForSaleItem(
-  context: CreateItemContext,
+  context: ItemCreationContext,
   vendorDef: DestinyVendorDefinition,
   saleItem: DestinyVendorSaleItemComponent,
   /** all DIM vendor calls are character-specific. any sale item should have an associated character. */
@@ -139,7 +139,7 @@ export function vendorItemForSaleItem(
   const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
   const failureStrings =
     saleItem && vendorDef && saleItem.failureIndexes
-      ? (saleItem.failureIndexes || []).map((i) => vendorDef.failureStrings[i])
+      ? saleItem.failureIndexes.map((i) => vendorDef.failureStrings[i])
       : emptyArray<string>();
 
   return makeVendorItem(
@@ -158,7 +158,7 @@ export function vendorItemForSaleItem(
  * some vendors are set up so statically, that they have no data in the live Vendors response
  */
 export function vendorItemForDefinitionItem(
-  context: CreateItemContext,
+  context: ItemCreationContext,
   vendorItemDef: DestinyVendorItemDefinition,
   characterId: string
 ): VendorItem {

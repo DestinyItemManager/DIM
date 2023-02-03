@@ -66,7 +66,7 @@ const collectiblesByItemHash = memoizeOne(
  * Process an entire list of items into DIM items.
  */
 export function processItems(
-  context: CreateItemContext,
+  context: ItemCreationContext,
   owner: DimStore,
   items: DestinyItemComponent[]
 ): DimItem[] {
@@ -130,7 +130,7 @@ const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D2Manifes
 
 /** Make a "fake" item from other information - used for Collectibles, etc. */
 export function makeFakeItem(
-  context: CreateItemContext,
+  context: ItemCreationContext,
   itemHash: number,
   itemInstanceId = '0',
   quantity = 1,
@@ -168,7 +168,7 @@ export function makeFakeItem(
  * We can use this item to refresh a single item in the store from this response.
  */
 export function makeItemSingle(
-  context: CreateItemContext,
+  context: ItemCreationContext,
   itemResponse: DestinyItemResponse,
   stores: DimStore[]
 ): DimItem | null {
@@ -209,7 +209,7 @@ export function makeItemSingle(
 /**
  * Stuff that's required to create a DimItem.
  */
-export interface CreateItemContext {
+export interface ItemCreationContext {
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
   profileResponse: DestinyProfileResponse;
@@ -218,7 +218,7 @@ export interface CreateItemContext {
   };
   /**
    * Sometimes comes from the profile response, but also sometimes from vendors response or mocked out.
-   * If not present, use the one from profileInfo.
+   * If not present, the itemComponents from the DestinyProfileResponse should be used.
    */
   itemComponents?: DestinyItemComponentSetOfint64;
 }
@@ -227,7 +227,7 @@ export interface CreateItemContext {
  * Process a single raw item into a DIM item.
  */
 export function makeItem(
-  { defs, buckets, itemComponents, customTotalStatsByClass, profileResponse }: CreateItemContext,
+  { defs, buckets, itemComponents, customTotalStatsByClass, profileResponse }: ItemCreationContext,
   item: DestinyItemComponent,
   /** the ID of the owning store - can be undefined for fake collections items */
   owner: DimStore | undefined

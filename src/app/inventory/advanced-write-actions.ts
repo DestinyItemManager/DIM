@@ -238,15 +238,15 @@ async function awaInsertSocketPlug(
  */
 function refreshItemAfterAWA(changes: DestinyItemChangeResponse): ThunkResult {
   return async (dispatch, getState) => {
-    const createItemContext = createItemContextSelector(getState());
+    const itemCreationContext = createItemContextSelector(getState());
     const stores = storesSelector(getState());
-    const newItem = makeItemSingle(createItemContext, changes.item, stores);
+    const newItem = makeItemSingle(itemCreationContext, changes.item, stores);
 
     dispatch(
       awaItemChanged({
         item: newItem,
         changes,
-        createItemContext,
+        itemCreationContext: itemCreationContext,
       })
     );
   };

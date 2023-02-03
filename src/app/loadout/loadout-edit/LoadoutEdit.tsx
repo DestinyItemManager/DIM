@@ -61,7 +61,7 @@ export default function LoadoutEdit({
   const allItems = useSelector(allItemsSelector);
   const missingSockets = allItems.some((i) => i.missingSockets);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
-  const createItemContext = useSelector(createItemContextSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
 
   // TODO: filter down by usable mods?
   const modsByBucket: {
@@ -72,13 +72,13 @@ export default function LoadoutEdit({
   const [items, subclass, warnitems] = useMemo(
     () =>
       getItemsAndSubclassFromLoadout(
-        createItemContext,
+        itemCreationContext,
         loadout.items,
         store,
         allItems,
         modsByBucket
       ),
-    [createItemContext, loadout.items, store, allItems, modsByBucket]
+    [itemCreationContext, loadout.items, store, allItems, modsByBucket]
   );
 
   const allMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);

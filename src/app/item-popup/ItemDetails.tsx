@@ -44,10 +44,10 @@ export default function ItemDetails({
   extraInfo?: ItemPopupExtraInfo;
 }) {
   const defs = useDefinitions()!;
-  const createItemContext = useSelector(createItemContextSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
   const [socketOverrides, onPlugClicked, resetSocketOverrides] = useSocketOverrides();
   const item = defs.isDestiny2()
-    ? applySocketOverrides(createItemContext, originalItem, socketOverrides)
+    ? applySocketOverrides(itemCreationContext, originalItem, socketOverrides)
     : originalItem;
   const modTypeIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
     ? helmetIcon

@@ -15,7 +15,7 @@ import type { AccountsAction } from '../accounts/reducer';
 import * as actions from './actions';
 import { DimItem } from './item-types';
 import { AccountCurrency, DimStore } from './store-types';
-import { CreateItemContext, makeItem } from './store/d2-item-factory';
+import { ItemCreationContext, makeItem } from './store/d2-item-factory';
 import { createItemIndex } from './store/item-index';
 import { findItemsByBucket, getCurrentStore, getStore, getVault } from './stores-helpers';
 
@@ -99,8 +99,8 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     }
 
     case getType(actions.awaItemChanged): {
-      const { changes, item, createItemContext } = action.payload;
-      return produce(state, (draft) => awaItemChanged(draft, changes, item, createItemContext));
+      const { changes, item, itemCreationContext: itemCreationContext } = action.payload;
+      return produce(state, (draft) => awaItemChanged(draft, changes, item, itemCreationContext));
     }
 
     case getType(actions.error):
@@ -432,9 +432,9 @@ function awaItemChanged(
   draft: Draft<InventoryState>,
   changes: DestinyItemChangeResponse,
   item: DimItem | null,
-  createItemContext: CreateItemContext
+  itemCreationContext: ItemCreationContext
 ) {
-  const { defs, buckets } = createItemContext;
+  const { defs, buckets } = itemCreationContext;
 
   // Replace item
   if (!item) {
@@ -526,7 +526,7 @@ function awaItemChanged(
       currency.quantity = Math.min(max, currency.quantity + addedItemComponent.quantity);
     } else if (addedItemComponent.itemInstanceId) {
       const addedOwner = getSource(addedItemComponent);
-      const addedItem = makeItem(createItemContext, addedItemComponent, addedOwner);
+      const addedItem = makeItem(itemCreationContext, addedItemComponent, addedOwner);
       if (addedItem) {
         addItem(addedOwner, addedItem);
       }
@@ -538,7 +538,7 @@ function awaItemChanged(
         (i) => i.amount
       );
       let addAmount = addedItemComponent.quantity;
-      const addedItem = makeItem(createItemContext, addedItemComponent, target);
+      const addedItem = makeItem(itemCreationContext, addedItemComponent, target);
       if (!addedItem) {
         continue;
       }

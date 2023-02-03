@@ -54,11 +54,11 @@ export default function Armory({
   const allItems = useSelector(allItemsSelector);
   const isPhonePortrait = useIsPhonePortrait();
   const [socketOverrides, onPlugClicked] = useSocketOverrides();
-  const createItemContext = useSelector(createItemContextSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
 
   const itemDef = defs.InventoryItem.get(itemHash);
 
-  const itemWithoutSockets = makeFakeItem(createItemContext, itemHash);
+  const itemWithoutSockets = makeFakeItem(itemCreationContext, itemHash);
 
   if (!itemWithoutSockets) {
     return (
@@ -68,7 +68,7 @@ export default function Armory({
     );
   }
 
-  const item = applySocketOverrides(createItemContext, itemWithoutSockets, {
+  const item = applySocketOverrides(itemCreationContext, itemWithoutSockets, {
     // Start with the item's current sockets
     ...realItemSockets,
     // Then apply whatever the user chose in the Armory UI
@@ -208,7 +208,7 @@ export default function Armory({
           {itemDef.setData?.itemList && (
             <ol>
               {itemDef.setData.itemList.map((h) => {
-                const stepItem = makeFakeItem(createItemContext, h.itemHash);
+                const stepItem = makeFakeItem(itemCreationContext, h.itemHash);
                 return (
                   stepItem && (
                     <li

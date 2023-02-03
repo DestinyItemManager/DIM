@@ -102,13 +102,13 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const wishList = useSelector(wishListFunctionSelector);
   const hasWishList = useSelector(hasWishListSelector);
   const enabledColumns = useSelector(settingSelector(columnSetting(itemType)));
-  const createItemContext = useSelector(createItemContextSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
   const loadoutsByItem = useSelector(loadoutsByItemSelector);
   const newItems = useSelector(newItemsSelector);
   const destinyVersion = useSelector(destinyVersionSelector);
   const dispatch = useThunkDispatch();
 
-  const { customTotalStatsByClass } = createItemContext;
+  const { customTotalStatsByClass } = itemCreationContext;
 
   const classCategoryHash =
     categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
@@ -139,10 +139,10 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     () =>
       defs
         ? originalItems.map((item) =>
-            applySocketOverrides(createItemContext, item, socketOverrides[item.id])
+            applySocketOverrides(itemCreationContext, item, socketOverrides[item.id])
           )
         : originalItems,
-    [createItemContext, defs, originalItems, socketOverrides]
+    [itemCreationContext, defs, originalItems, socketOverrides]
   );
 
   // Build a list of all the stats relevant to this set of items
