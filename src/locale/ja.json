@@ -125,10 +125,10 @@
     "Title": "何か問題が発生したようです"
   },
   "ErrorPanel": {
-    "Description": "Destiny 2 Companion App で保管庫をロードして、 Bungie.net がダウンしているかどうか試してみてください。",
+    "Description": "Destiny 2のコンパニオンアプリで保管庫データにアクセスして、 Bungie.net がダウンしているかどうか試してみてください。",
     "EmblemError": "ゲーム内で全キャラクターのエンブレムを入れ替えると直るかもしれません。",
     "EmblemErrorLink": "修正方法の詳細を読む",
-    "SystemDown": "これはすべての Destiny アプリに影響し、 DIM チームはこれを修正したり迂回したりすることはできません。",
+    "SystemDown": "これはすべての Destiny アプリに影響し、 DIM チームで修正したり回避ができません。",
     "Troubleshooting": "トラブルシューティングガイド"
   },
   "FarmingMode": {
@@ -160,7 +160,7 @@
   },
   "FashionDrawer": {
     "Accept": "ファッションを保存",
-    "CannotFitOrnament": "このアイテムにはオーナメントソケットが無いか、オーナメントを保有していません。",
+    "CannotFitOrnament": "このアイテムには装飾用のソケットがないか、装飾そのものがありません。",
     "CannotFitShader": "このアイテムはシェーダーを装備できません",
     "ClearOrnaments": "装備品をクリア",
     "ClearOrnamentsTitle": "全ての装飾品を「優先なし」にリセット",
@@ -958,7 +958,7 @@
     "ExportSS": "所持品のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
     "ExportSSNoStores": "このボタンをクリックする前に、所持品を一度ロードする必要があります。",
-    "HidePullFromPostmaster": "\"ポストマスターから取得\" ボタンを隠す",
+    "HidePullFromPostmaster": "\"$t(Loadouts.PullFromPostmaster)\" ボタンを隠す",
     "Inventory": "所持品の表示",
     "InventoryColumns": "キャラクターの所持品の広さ",
     "InventoryColumnsMobile": "モバイルポートレートのキャラクターの所持品の広さ",
@@ -1077,7 +1077,7 @@
     "EnableDimApi": "DIM Sync を有効にする (推奨)",
     "Export": "バックアップのダウンロード",
     "ExportError": "DIM Sync からのバックアップのダウンロードに失敗しました。",
-    "ExportErrorBody": "DIM Sync がダウンしているか、接続に問題がある可能性があります。代わりにローカルに保存されたデータのコピーをダウンロードします。",
+    "ExportErrorBody": "DIM Sync がダウンしているか、通信に問題がある可能性があります。代わりにローカルに保存されたデータのコピーをダウンロードします。",
     "Import": "バックアップのインポート",
     "ImportConfirmDimApi": "現在のタグ、ロードアウト、設定をこのバージョンで上書きしても大丈夫ですか？それはあなたが持っていたものを完全に置き換えます。",
     "ImportExport": "バックアップとインポート",
@@ -1203,7 +1203,6 @@
       },
       "Translation": "翻訳チームに参加してください！",
       "TranslationText": "簡単に翻訳をするため {{link}} を使用しています。DIM の翻訳を改善したい場合は、チームに参加してください。",
-      "Twitter": "Twitter",
       "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
       "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}",
       "Wiki": "DIMユーザーガイドWiki",

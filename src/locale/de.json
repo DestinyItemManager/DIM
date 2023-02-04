@@ -174,7 +174,7 @@
     "SyncShaders": "Shader synchr.",
     "SyncShadersTitle": "Denselben Shader für alle Gegenstände verwenden",
     "Title": "Shader und Ornamente auswählen",
-    "UseEquipped": "Ausger. Mode nutzen"
+    "UseEquipped": "Ausgerüstete Mode verwenden"
   },
   "FileUpload": {
     "Instructions": "Klicke oder ziehe Dateien"
@@ -522,7 +522,7 @@
     "CopiedBuild": "URL für Ausrüstung in Zwischenablage kopiert",
     "CreateLoadout": "Ausrüstung speichern",
     "DisabledDueToMaintenance": "Der Ausrüstungs-Optimierer ist derzeit aufgrund der Bungie API Wartung deaktiviert.",
-    "EquipItems": "Equip",
+    "EquipItems": "Ausrüsten",
     "ExcludeItem": "Gegenstand ausschließen",
     "ExistingLoadout": "Bestehende Ausrüstung",
     "ExoticSpecialCategory": "Spezial",
@@ -958,7 +958,7 @@
     "ExportSS": "Inventar-Tabellen",
     "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
     "ExportSSNoStores": "Du musst dein Inventar einmal laden, bevor du diesen Knopf drückst.",
-    "HidePullFromPostmaster": "Den \"Poststelle einsammeln\"-Button ausblenden",
+    "HidePullFromPostmaster": "Zeige den \"$t(Loadouts.PullFromPostmaster)\"-Knopf nicht an",
     "Inventory": "Inventar-Anzeige",
     "InventoryColumns": "Charakter-Inventar-Breite",
     "InventoryColumnsMobile": "Charakter-Inventar-Breite auf Mobilgeräten (Portrait)",
@@ -1203,7 +1203,6 @@
       },
       "Translation": "Tritt dem Übersetzer-Team bei!",
       "TranslationText": "Wir benutzen {{link}} für eine unkomplizierte Übersetzung. Wenn du die DIM-Übersetzung in einer Sprache verbessern möchtest, tritt dem Team bei.",
-      "Twitter": "Twitter",
       "TwitterHelp": "Folge uns, um immer auf dem Laufenden zu bleiben und aktuelle Informationen zum Anwendungsstatus zu erhalten.",
       "Version": "Version {{version}} ({{flavor}}), erstellt am {{date}}",
       "Wiki": "DIM Benutzerhandbuch Wiki",
