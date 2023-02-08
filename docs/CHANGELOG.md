@@ -8,6 +8,7 @@
 ## 7.56.0 <span class="changelog-date">(2023-02-12)</span>
 
 * Fixed the Compare tool for items with quotation marks in their name.
+* The `inloadout` filter now finds hashtags in Loadout notes.
 
 ## 7.55.0 <span class="changelog-date">(2023-02-05)</span>
 
@@ -602,5 +603,3 @@
 ## v6 CHANGELOG
 
 * v6 CHANGELOG available [here](https://github.com/DestinyItemManager/DIM/blob/master/docs/OLD_CHANGELOG/OLD_CHANGELOG_6.X.X.md)
-
-
