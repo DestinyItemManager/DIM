@@ -188,6 +188,7 @@
   "Filter": {
     "Adept": "\\(Adept\\)",
     "AmmoType": "Shows items based on their ammo type.",
+    "ArchiveDupe": "Shows duplicate items, not counting items tagged as Archive.",
     "ArmorCategory": "Shows armors based on their category.",
     "ArmorIntrinsic": "Shows legendary armor which has an intrinsic perk, such as Artifice Armor.",
     "Ascended": "Shows items that have an ascend node which have been ascended.",
@@ -204,6 +205,7 @@
     "Combine": "Filters can be combined or grouped with parentheses, \"or\" and \"and\" to narrow down your search, for example \"{{example}}\".",
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "Craftable": "Shows items that are craftable.",
+    "CraftedDupe": "Shows duplicate items, that also have a crafted version available.",
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Shows items based on their damage type.",

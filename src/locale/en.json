@@ -182,6 +182,7 @@
   "Filter": {
     "Adept": "\\(Adept\\)",
     "AmmoType": "Shows items based on their ammo type.",
+    "ArchiveDupe": "Shows duplicate items, not counting items tagged as Archive.",
     "Armor": "Shows items that are armor.",
     "ArmorCategory": "Shows armors based on their category.",
     "ArmorIntrinsic": "Shows legendary armor which has an intrinsic perk, such as Artifice Armor.",
@@ -199,7 +200,7 @@
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "Cosmetic": "Shows items that are flair or cosmetic.",
     "Craftable": "Shows items that are craftable.",
-    "CraftedDupe": "",
+    "CraftedDupe": "Shows duplicate items, that also have a crafted version available.",
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
