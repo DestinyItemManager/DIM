@@ -197,6 +197,22 @@ const dupeFilters: FilterDefinition[] = [
       };
     },
   },
+  {
+    keywords: 'archivedupe',
+    description: tl('Filter.ArchiveDupe'),
+    filter: ({ allItems, itemInfos, itemHashTags }) => {
+      const duplicates = computeDupes(allItems);
+      return (item) => {
+        const tag = getTag(item, itemInfos, itemHashTags);
+        const dupeId = makeDupeID(item);
+        if (!checkIfIsArchivedDupe(duplicates, dupeId, item, tag)) {
+          return false;
+        }
+        const archivedDupe = checkIfIsArchivedDupe(duplicates, dupeId, item, tag);
+        return archivedDupe;
+      };
+    },
+  },
 ];
 
 export default dupeFilters;
@@ -212,6 +228,22 @@ export function checkIfIsDupe(
     duplicates[dupeId]?.length > 1 &&
     item.hash !== DEFAULT_SHADER &&
     item.bucket.hash !== BucketHashes.SeasonalArtifact
+  );
+}
+
+export function checkIfIsArchivedDupe(
+  duplicates: {
+    [dupeID: string]: DimItem[];
+  },
+  dupeId: string,
+  item: DimItem,
+  tag: 'favorite' | 'keep' | 'infuse' | 'junk' | 'archive' | undefined
+) {
+  return (
+    duplicates[dupeId]?.length > 1 &&
+    item.hash !== DEFAULT_SHADER &&
+    item.bucket.hash !== BucketHashes.SeasonalArtifact &&
+    tag === 'archive'
   );
 }
 
