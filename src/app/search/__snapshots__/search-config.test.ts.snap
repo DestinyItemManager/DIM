@@ -3,6 +3,7 @@
 exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
 [
   "arc",
+  "archivedupe",
   "armor",
   "armor2.0",
   "armorintrinsic",
