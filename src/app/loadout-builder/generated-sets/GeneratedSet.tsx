@@ -130,6 +130,19 @@ function GeneratedSet({
     }
   }
 
+  const autoMods = set.statMods.slice();
+  const autoModsPerItem = _.mapValues(itemModAssignments, (mods) => {
+    const autoModHashes = [];
+    for (const mod of mods) {
+      const modIdx = autoMods.findIndex((m) => m === mod.hash);
+      if (modIdx !== -1) {
+        autoModHashes.push(mod.hash);
+        autoMods.splice(modIdx, 1);
+      }
+    }
+    return autoModHashes;
+  });
+
   const canCompareLoadouts =
     set.armor.every((items) => items[0].classType === selectedStore.classType) &&
     loadouts.some((l) => l.classType === selectedStore.classType);
@@ -156,6 +169,7 @@ function GeneratedSet({
               pinned={pinnedItems[item.bucket.hash] === item}
               lbDispatch={lbDispatch}
               assignedMods={itemModAssignments[item.id]}
+              automaticallyPickedMods={autoModsPerItem[item.id]}
               showEnergyChanges={Boolean(lockedMods.length || set.statMods.length)}
             />
           ))}

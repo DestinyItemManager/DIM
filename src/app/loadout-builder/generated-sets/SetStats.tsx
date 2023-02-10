@@ -1,8 +1,6 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { isPluggableItem } from 'app/inventory/store/sockets';
-import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
@@ -61,16 +59,6 @@ function SetStats({
               tier: totalBaseTier,
             })})`}
           </span>
-        )}
-        {autoStatMods.length > 0 && (
-          <div className={clsx(styles.autoModsContainer)}>
-            {autoStatMods.map((modHash, idx) => {
-              const def = defs.InventoryItem.get(modHash);
-              return (
-                isPluggableItem(def) && <PlugDef className={clsx('item')} key={idx} plug={def} />
-              );
-            })}
-          </div>
         )}
         <span className={styles.light}>
           <AppIcon icon={powerIndicatorIcon} className={clsx(styles.statIcon)} /> {maxPower}

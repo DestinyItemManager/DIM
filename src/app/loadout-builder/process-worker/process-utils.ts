@@ -1,3 +1,4 @@
+import { StatHashes } from 'app/../data/d2/generated-enums';
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { ArmorStatHashes, MinMaxIgnored } from '../types';
 import { AutoModsMap, buildCacheV2, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
@@ -8,6 +9,7 @@ export interface PrecalculatedInfo {
   statOrder: ArmorStatHashes[];
   hasActivityMods: boolean;
   generalModCosts: number[];
+  numAvailableStatMods: number;
   activityModPermutations: (ProcessMod | null)[][];
   activityTagCounts: { [tag: string]: number };
 }
@@ -15,14 +17,16 @@ export interface PrecalculatedInfo {
 export function precalculateStructures(
   generalMods: ProcessMod[],
   activityMods: ProcessMod[],
-  numAutoStatMods: number,
+  autoStatMods: boolean,
   statOrder: ArmorStatHashes[]
 ): PrecalculatedInfo {
+  const numAvailableStatMods = autoStatMods ? 5 - generalMods.length : 0;
   return {
-    cache: buildCacheV2(numAutoStatMods),
+    cache: buildCacheV2(numAvailableStatMods),
     statOrder,
     hasActivityMods: activityMods.length > 0,
-    generalModCosts: generalMods.map((m) => m.energy?.val || 0),
+    numAvailableStatMods,
+    generalModCosts: generalMods.map((m) => m.energy?.val || 0).sort((a, b) => b - a),
     activityModPermutations: generateProcessModPermutations(activityMods),
     activityTagCounts: activityMods.reduce((acc, mod) => {
       if (mod.tag) {
@@ -137,29 +141,15 @@ export function pickAndAssignSlotIndependentMods(
   return undefined;
 }
 
-/*
- * Algorithm: Search tree of stat bumps. All left = highest prioritized stat is bumped as much as possible, all right = lowest prioritized stat.
- * Invariant: stat bump node does not have children bumping a lower-index stat (to avoid duplication).
- * Then exhaustively search this tree.
- * Easy prunes when optimal (partial) solution already found. Solution is optimal if
- * ALL OF:
- * * it does not use the same +5 mod or the same artifice mod twice
- * * it doesn't use a +5 and an artifice for the same stat?
- * * all artifice slots are filled
- * * EITHER:
- *   * all free mod slots and artifice slots are filled
- *   * all mod energy is spent and all artifice slots are filled
- */
-
 /**
- * Optimizes the auto stat mod picks to maximize the prioritized stats.
+ * Optimizes the auto stat mod picks to maximize total tier, prioritizing stats earlier in the stat order.
  */
 export function pickOptimalStatMods(
   info: PrecalculatedInfo,
   items: ProcessItem[],
   setStats: number[],
   statFiltersInStatOrder: MinMaxIgnored[]
-): number[] | undefined {
+): { mods: number[]; numPoints: number } | undefined {
   const remainingEnergiesPerAssignment: number[][] = [];
 
   // This loop is copy-pasted from above because we need to do the same thing as above
@@ -198,6 +188,7 @@ export function pickOptimalStatMods(
   // The amount of additional stat points after which stats don't give us a benefit anymore.
   const maxAddedStats = [0, 0, 0, 0, 0, 0];
   const explorationStats = [0, 0, 0, 0, 0, 0];
+  const pointsNeededForNextTier: number[] = [];
 
   for (let statIndex = setStats.length - 1; statIndex >= 0; statIndex--) {
     const value = Math.min(Math.max(setStats[statIndex], 0), 100);
@@ -209,77 +200,207 @@ export function pickOptimalStatMods(
         explorationStats[statIndex] = neededValue;
       }
       maxAddedStats[statIndex] = filter.max * 10 - value;
+      if (setStats[statIndex] < filter.max * 10) {
+        pointsNeededForNextTier.push(Math.ceil((10 - (setStats[statIndex] % 10)) / 3));
+      }
     }
   }
 
-  const numArtificeMods = items.filter((i) => i.isArtifice).length;
+  // Calculate an upper bound for how many bonus tiers auto stat mods can give to this set.
+  // A single stat mod will always give one bonus tier, but not more.
+  let optimisticBonusTiers = info.numAvailableStatMods;
 
-  const bestBoosts = exploreSearchTree(
+  // While artifact mods need
+  const numArtificeMods = items.filter((i) => i.isArtifice).length;
+  let checkArtificeMods = numArtificeMods;
+  pointsNeededForNextTier.sort((a, b) => a - b);
+  while ((pointsNeededForNextTier[0] ?? 4) <= checkArtificeMods) {
+    optimisticBonusTiers += 1;
+    checkArtificeMods -= pointsNeededForNextTier[0] ?? 4;
+    pointsNeededForNextTier.splice(0, 1);
+  }
+
+  const bestBoosts = exploreAutoModsSearchTree(
     info,
     setStats,
     explorationStats,
     maxAddedStats,
     numArtificeMods,
     remainingEnergiesPerAssignment,
+    optimisticBonusTiers,
+    0,
     0
   );
 
-  return bestBoosts?.picks.flatMap((pick) => pick.modHashes);
+  return (
+    bestBoosts && {
+      mods: bestBoosts?.picks.flatMap((pick) => pick.modHashes),
+      numPoints: bestBoosts?.depth,
+    }
+  );
 }
 
 interface SearchResult {
   picks: ModsPick[];
-  numTierBoosts: number;
+  depth: number;
 }
 
-function exploreSearchTree(
+/**
+ * An exhaustive search over all possible stat boosts achievable by mods,
+ * finding the best pick of mods when ordering by total tier > first stat > second stat > ...
+ *
+ * This is essentially performs a backtracking search over a search tree.
+ * Let's see what the tree looks like when considering two stats;
+ * assume our set has stats [86, 71]:
+ *
+ * T0  T1  T2  T3  T4 ...
+ * |   |   |   |   |
+ * [0, 0]
+ * ├── [4, 0]
+ * │   ├── [14, 0]
+ * │   │   ├── [24, 0]
+ * │   |   |   ├── [34, 0]
+ * │   |   |   |   └── ...
+ * │   |   |   └── [24, 9]
+ * │   |   |       └── ...
+ * │   │   └── [14, 9]
+ * │   │       └── [14, 19]
+ * │   │           └── ...
+ * │   └── [4, 9]
+ * │       └── [4, 19]
+ * │           └── [4, 29]
+ * │               └── ...
+ * └── [0, 9]
+ *     └── [0, 19]
+ *         └── [0, 29]
+ *             └── [0, 39]
+ *                 └── ...
+ *
+ * I.e. we recursively enumerate all combinations of stat boosts.
+ * (For easy of reading, consider transposing the tree so that up is left and left is up)
+ * The depth of a node indicates the number of tier boosts this gave us, and subtrees are better the further left they are
+ * since the leftmost stat is the highest-prioritized one and the rightmost stat is the least-prioritized one
+ *
+ * The first time we boost a stat we only take as many points are needed based on set stats that already exist;
+ * subsequent boosts will always boost by +10.
+ *
+ * The fact that the first criterion is tree depth produces some really nice builds because it allows the process
+ * to make use of ".5s" (NB the .5s aren't really .5s because with artifice mods, a .7 could also be useful) when it allows
+ * finding higher total tiers, but still prioritizes leftmost stats. E.g. if we have a bunch of ".5s" in low-priority stats,
+ * LO will only assign half-tier mods to them if boosting higher-priority stats would result in a lower total tier
+ * E.g. for [res = 80, dis = 85, str = 85], what we really want to do with two mod slots is (in order):
+ *   [+10 res, +10 res] = 2 tiers # if these fit, getting 2 tiers from resilience is best.
+ *   ...
+ *   [+5 dis, +5 str] = 2 tiers # otherwise, using the +5s is better than...
+ *   ...
+ *   [+5 res, +5 res] = 1 tier # only getting one tier from resilience
+ *
+ * As an optimization for the backtracking search, we do a dominance check so that we can skip evaluating subbranches if further-right stats
+ * bring nothing new to the table. E.g. if we tried +10 resilience, then there's no point in seeing if +10 recovery instead
+ * could give us a better set, since their mods cost the same and that stat needed the same number of points for the next tier.
+ *
+ * If there's an optimistic estimate of how many tiers can be gained by stat mods +
+ */
+function exploreAutoModsSearchTree(
   info: PrecalculatedInfo,
   /** The base stats from our set + fragments + ... */
   setStats: number[],
-  /** The stats we have explored in this search tree */
+  /** The stats we have explored in this search process */
   explorationStats: number[],
-  /** The highest allowed stat values */
+  /** The highest allowed additional stat values */
   maxAddedStats: number[],
   /** How many artifice mods this set has */
   numArtificeMods: number,
   /** The different permutations of leftover energy after assigning activity mods permutations */
   remainingEnergyCapacities: number[][],
+  /** An upper bound for how many tiers we can gain given our artifice and general mods */
+  optimisticMaxDepth: number,
   /** The stat index this branch of the search tree starts at */
-  statIndex: number
+  statIndex: number,
+  /** How many boosts we have chosen before in explorationStats */
+  depth: number
 ): SearchResult | undefined {
-  let bestResult: SearchResult | undefined = undefined;
+  const picks = chooseAutoMods(info, explorationStats, numArtificeMods, remainingEnergyCapacities);
+  if (!picks) {
+    return undefined;
+  } else if (depth === optimisticMaxDepth) {
+    return {
+      depth,
+      picks,
+    };
+  }
+
+  let bestResult: SearchResult = {
+    depth,
+    picks,
+  };
+  const previousCosts: {
+    expensive: boolean;
+    cost: number;
+  }[] = [];
+
   while (statIndex < setStats.length) {
     if (explorationStats[statIndex] >= maxAddedStats[statIndex]) {
+      statIndex += 1;
+      continue;
+    }
+
+    const subTreeCost = explorationStats[statIndex] === 0 ? 10 - (setStats[statIndex] % 10) : 10;
+    const subTreeExpensive = isExpensiveMod(info.statOrder[statIndex]);
+
+    // If an earlier branch strictly cost less, skip. Earlier branches are higher-prioritized stats,
+    // so they're better anyway, and the strictly less cost condition ensures later branches can't end
+    // up producing a better total tier.
+    if (
+      previousCosts.some(
+        (previousSubtree) =>
+          (!previousSubtree.expensive || (previousSubtree.expensive && subTreeExpensive)) &&
+          previousSubtree.cost <= subTreeCost
+      )
+    ) {
+      statIndex += 1;
       continue;
     }
 
     const subTreeStats = explorationStats.slice();
-    if (explorationStats[statIndex] === 0) {
-      subTreeStats[statIndex] = 10 - (setStats[statIndex] % 10);
-    } else {
-      subTreeStats[statIndex] += 10;
-    }
-    const picks = chooseAutoMods(info, subTreeStats, numArtificeMods, remainingEnergyCapacities);
-    if (picks) {
-      const subTreeResult = exploreSearchTree(
-        info,
-        setStats,
-        subTreeStats,
-        maxAddedStats,
-        numArtificeMods,
-        remainingEnergyCapacities,
-        statIndex
-      ) ?? {
-        picks: picks,
-        numTierBoosts: 1,
-      };
-      if (!bestResult || bestResult.numTierBoosts < subTreeResult.numTierBoosts) {
-        bestResult = subTreeResult;
-      }
-    }
-  }
+    subTreeStats[statIndex] += subTreeCost;
 
+    const explorationResult = exploreAutoModsSearchTree(
+      info,
+      setStats,
+      subTreeStats,
+      maxAddedStats,
+      numArtificeMods,
+      remainingEnergyCapacities,
+      optimisticMaxDepth,
+      statIndex,
+      depth + 1
+    );
+    // If this branch yielded an optimal solution, just pass it back up
+    if (explorationResult?.depth === optimisticMaxDepth) {
+      return explorationResult;
+    }
+    // Otherwise, it could be a better solution than what we already have
+    if (explorationResult && bestResult.depth < explorationResult.depth) {
+      bestResult = explorationResult;
+    }
+    // Remember that we checked a stat like this so we can skip dominated branches in later iterations.
+    previousCosts.push({
+      cost: subTreeCost,
+      expensive: subTreeExpensive,
+    });
+    statIndex += 1;
+  }
   return bestResult;
+}
+
+/*@__INLINE__*/
+function isExpensiveMod(statHash: number) {
+  return (
+    statHash === StatHashes.Recovery ||
+    statHash === StatHashes.Resilience ||
+    statHash === StatHashes.Intellect
+  );
 }
 
 export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {

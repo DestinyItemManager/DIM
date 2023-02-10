@@ -101,8 +101,9 @@ function recursivelyChooseMods(
   remainingEnergyCapacities: number[][],
   pickedMods: ModsPick[]
 ): ModsPick[] | undefined {
-  while (neededStats[statIndex] === 0) {
-    if (++statIndex === info.statOrder.length) {
+  // TODO Ugh this first condition has to catch the case where the recursive call happens with statIndex === neededStats.length...
+  while (statIndex >= info.statOrder.length || neededStats[statIndex] === 0) {
+    if (++statIndex >= info.statOrder.length) {
       // We've hit the end of our needed stats, check if this is possible
       const modCosts = [...info.generalModCosts, ...pickedMods.flatMap((m) => m.generalModsCosts)];
       modCosts.sort((a, b) => b - a);

@@ -91,6 +91,7 @@ export default function GeneratedSetItem({
   pinned,
   itemOptions,
   assignedMods,
+  automaticallyPickedMods,
   showEnergyChanges,
   lbDispatch,
 }: {
@@ -98,6 +99,7 @@ export default function GeneratedSetItem({
   pinned: boolean;
   itemOptions: DimItem[];
   assignedMods?: PluggableInventoryItemDefinition[];
+  automaticallyPickedMods?: number[];
   showEnergyChanges: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
@@ -166,7 +168,13 @@ export default function GeneratedSetItem({
             )
           )}
         </div>
-        <Sockets item={item} lockedMods={assignedMods} onSocketClick={onSocketClick} size="small" />
+        <Sockets
+          item={item}
+          lockedMods={assignedMods}
+          automaticallyPickedMods={automaticallyPickedMods}
+          onSocketClick={onSocketClick}
+          size="small"
+        />
       </div>
     </div>
   );

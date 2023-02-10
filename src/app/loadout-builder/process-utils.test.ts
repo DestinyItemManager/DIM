@@ -158,7 +158,7 @@ describe('process-utils', () => {
       StatHashes.Strength,
     ];
     const neededStats = [0, 0, 0, 0, 0, 0];
-    const precalculatedInfo = precalculateStructures(generalMods, activityMods, 0, statOrder);
+    const precalculatedInfo = precalculateStructures(generalMods, activityMods, false, statOrder);
     const modStatistics: ModAssignmentStatistics = {
       earlyModsCheck: { timesChecked: 0, timesFailed: 0 },
       autoModsPick: { timesChecked: 0, timesFailed: 0 },

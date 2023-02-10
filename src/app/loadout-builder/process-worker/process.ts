@@ -75,6 +75,12 @@ export function process(
     );
   }
 
+  /*
+  let correctPredictions = 0;
+  let overPredictions = 0;
+  let underPredictions = 0;
+  */
+
   // Each of these groups has already been reduced (in useProcess.ts) to the
   // minimum number of examples that are worth considering.
   const helms = filteredItems[LockableBuckets.helmet];
@@ -82,6 +88,13 @@ export function process(
   const chests = filteredItems[LockableBuckets.chest];
   const legs = filteredItems[LockableBuckets.leg];
   const classItems = filteredItems[LockableBuckets.classitem];
+
+  // Highest possible energy capacity per slot.
+  const energy = [helms, gauntlets, chests, legs, classItems].map(
+    (items) => _.max(items.map((e) => (e.energy?.capacity || 0) - (e.energy?.val || 0))) || 0
+  );
+  // How many slots could fit a small mod but not a large mod?
+  const numConstrainedSlots = autoStatMods ? energy.filter((e) => e <= 2).length : 0;
 
   // The maximum possible combos we could have
   const combos = helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
@@ -107,7 +120,7 @@ export function process(
   const precalculatedInfo = precalculateStructures(
     generalMods,
     activityMods,
-    5 - generalMods.length,
+    autoStatMods,
     statOrder
   );
   const hasMods = Boolean(activityMods.length || generalMods.length);
@@ -294,6 +307,10 @@ export function process(
             // A string version of the tier-level of each stat, must be lexically comparable
             // TODO: It seems like constructing and comparing tiersString would be expensive but it's less so
             // than comparing stat arrays element by element
+
+            const numArtifice = armor.filter((item) => item.isArtifice).length;
+            const pointsNeededForTiers: number[] = [];
+
             let tiersString = '';
             for (let index = 0; index < 6; index++) {
               const tier = tiers[index];
@@ -302,6 +319,13 @@ export function process(
               if (!filter.ignored) {
                 // using a power of 2 (16) instead of 11 is faster
                 tiersString += tier.toString(16);
+
+                if (stats[index] < filter.max * 10) {
+                  pointsNeededForTiers.push(Math.ceil((10 - (stats[index] % 10)) / 3));
+                } else {
+                  // We really don't want to optimize this stat further...
+                  pointsNeededForTiers.push(100);
+                }
               }
 
               // Track the stat ranges of sets that made it through all our filters
@@ -315,8 +339,54 @@ export function process(
               }
             }
 
+            // This is where stuff gets mathematically impossible. We cannot assign more stat mods to
+            // exploit this set to its full potential yet -- that'd be too expensive. So we have to compute a
+            // value that predicts how much this set can gain from good auto mods later when we take a closer look
+            // at 200 sets.
+            // This is not that straightforward and will probably only behave well if sets aren't too different from one
+            // another. The core idea is that:
+            // * A free general mod slot with 3+ energy gives a full tier
+            // * Every three stat points a stat is missing to the next tier costs 1 point
+            // * An artifice mod gives 1 point
+            // * A free general mod slot with 1 or 2 energy gives 1.5 points.
+            //
+            // For the case where auto mods are turned off, this is super accurate for artifice slots.
+            let pointsAvailable = numArtifice + 1.5 * numConstrainedSlots;
+            pointsNeededForTiers.sort((a, b) => a - b);
+            const predictedExtraTiers =
+              pointsNeededForTiers.reduce((numTiers, pointsNeeded) => {
+                if (pointsNeeded <= pointsAvailable) {
+                  pointsAvailable -= pointsNeeded;
+                  return numTiers + 1;
+                }
+                return numTiers;
+              }, 0) + Math.max(0, precalculatedInfo.numAvailableStatMods - numConstrainedSlots);
+
+            // This code can be used to compare predictions vs actual stat boosts
+            /*
+            if (Math.random() < 0.002) {
+              const result = pickOptimalStatMods(
+                precalculatedInfo,
+                armor,
+                stats,
+                statFiltersInStatOrder
+              );
+              const actualExtraTiers = result?.numPoints ?? 0;
+
+              const difference = actualExtraTiers - predictedExtraTiers;
+              if (difference === 0) {
+                correctPredictions += 1;
+              } else if (difference < 0) {
+                overPredictions += 1;
+              } else if (difference > 0) {
+                underPredictions += 1;
+              }
+            }
+            */
+
             processStatistics.numValidSets++;
-            setTracker.insert(totalTier, tiersString, armor, stats, statMods);
+            tiersString = totalTier.toString(16) + tiersString;
+            setTracker.insert(totalTier + predictedExtraTiers, tiersString, armor, stats, statMods);
           }
         }
       }
@@ -363,6 +433,10 @@ export function process(
     setStatistics.modsStatistics
   );
 
+  // infoLog('loadout optimizer', { correctPredictions, overPredictions, underPredictions });
+
+  const finalstart = performance.now();
+
   const sets = finalSets.map(({ armor, stats, statMods }) => {
     const statsWithoutAutoMods = statOrder.reduce((statObj, statHash, i) => {
       statObj[statHash] = stats[i];
@@ -370,8 +444,7 @@ export function process(
     }, {}) as ArmorStats;
 
     const allStatMods =
-      (autoStatMods &&
-        pickOptimalStatMods(precalculatedInfo, armor, stats, statFiltersInStatOrder)) ||
+      pickOptimalStatMods(precalculatedInfo, armor, stats, statFiltersInStatOrder)?.mods ||
       statMods;
 
     return {
@@ -380,6 +453,9 @@ export function process(
       statMods: allStatMods,
     };
   });
+
+  const finalTime = performance.now() - finalstart;
+  infoLog('loadout optimizer', 'final assignment', finalTime, 'ms');
 
   return {
     sets,
