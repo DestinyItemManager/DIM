@@ -207,10 +207,10 @@ export function pickOptimalStatMods(
   }
 
   // Calculate an upper bound for how many bonus tiers auto stat mods can give to this set.
-  // A single stat mod will always give one bonus tier, but not more.
+  // A single general stat mod will always give one bonus tier, but not more.
   let optimisticBonusTiers = info.numAvailableStatMods;
 
-  // While artifact mods need
+  // While artifact mods need give bonuses in multiples of three points.
   const numArtificeMods = items.filter((i) => i.isArtifice).length;
   let checkArtificeMods = numArtificeMods;
   pointsNeededForNextTier.sort((a, b) => a - b);
@@ -249,9 +249,8 @@ interface SearchResult {
  * An exhaustive search over all possible stat boosts achievable by mods,
  * finding the best pick of mods when ordering by total tier > first stat > second stat > ...
  *
- * This is essentially performs a backtracking search over a search tree.
- * Let's see what the tree looks like when considering two stats;
- * assume our set has stats [86, 71]:
+ * This essentially performs a backtracking search over a search tree.
+ * Let's see what the tree looks like when considering two stats where our set has stats [86, 71]:
  *
  * T0  T1  T2  T3  T4 ...
  * |   |   |   |   |
@@ -276,18 +275,19 @@ interface SearchResult {
  *             └── [0, 39]
  *                 └── ...
  *
- * I.e. we recursively enumerate all combinations of stat boosts.
- * (For easy of reading, consider transposing the tree so that up is left and left is up)
- * The depth of a node indicates the number of tier boosts this gave us, and subtrees are better the further left they are
- * since the leftmost stat is the highest-prioritized one and the rightmost stat is the least-prioritized one
+ * Note how this recursively enumerates all combinations of stat boosts.
+ * (For easy of reading, this tree is transposed so that up is left and left is up)
+ * The depth of a node indicates the number of tier boosts this gave us, and subtrees of equal depth are better the further
+ * left they are since the leftmost stat is the highest-prioritized one and the rightmost stat is the least-prioritized one.
+ * Observe how the nodes within a tier keep shifting stats to the right as we move from left to right.
  *
- * The first time we boost a stat we only take as many points are needed based on set stats that already exist;
+ * The first time we boost a stat we only take as many points as are needed based on set stats that already exist;
  * subsequent boosts will always boost by +10.
  *
  * The fact that the first criterion is tree depth produces some really nice builds because it allows the process
  * to make use of ".5s" (NB the .5s aren't really .5s because with artifice mods, a .7 could also be useful) when it allows
- * finding higher total tiers, but still prioritizes leftmost stats. E.g. if we have a bunch of ".5s" in low-priority stats,
- * LO will only assign half-tier mods to them if boosting higher-priority stats would result in a lower total tier
+ * reaching higher total tiers, but still prioritizes leftmost stats. E.g. if we have a bunch of ".5s" in low-priority stats,
+ * LO will only assign half-tier mods to them if boosting higher-priority stats would result in a lower total tier.
  * E.g. for [res = 80, dis = 85, str = 85], what we really want to do with two mod slots is (in order):
  *   [+10 res, +10 res] = 2 tiers # if these fit, getting 2 tiers from resilience is best.
  *   ...
@@ -299,7 +299,8 @@ interface SearchResult {
  * bring nothing new to the table. E.g. if we tried +10 resilience, then there's no point in seeing if +10 recovery instead
  * could give us a better set, since their mods cost the same and that stat needed the same number of points for the next tier.
  *
- * If there's an optimistic estimate of how many tiers can be gained by stat mods +
+ * If there's an optimistic estimate of how many tiers can be gained by stat mods + artifice mods, this also aborts as soon
+ * as a node with this tier total is reached. This gives a small efficiency boost when there aren't many slot-specific mods.
  */
 function exploreAutoModsSearchTree(
   info: PrecalculatedInfo,
@@ -348,9 +349,9 @@ function exploreAutoModsSearchTree(
     const subTreeCost = explorationStats[statIndex] === 0 ? 10 - (setStats[statIndex] % 10) : 10;
     const subTreeExpensive = isExpensiveMod(info.statOrder[statIndex]);
 
-    // If an earlier branch strictly cost less, skip. Earlier branches are higher-prioritized stats,
-    // so they're better anyway, and the strictly less cost condition ensures later branches can't end
-    // up producing a better total tier.
+    // Dominance check: If an earlier branch strictly cost less, skip. Earlier branches are
+    // higher-prioritized stats, so they're better when depth is equal, and the strictly less
+    // cost condition ensures later branches can't end up producing a better total tier.
     if (
       previousCosts.some(
         (previousSubtree) =>
