@@ -73,7 +73,7 @@ export function chooseAutoMods(
   info: PrecalculatedInfo,
   neededStats: number[],
   numArtificeMods: number,
-  remainingEnergyCapacities: number[]
+  remainingEnergyCapacities: number[][]
 ) {
   return recursivelyChooseMods(
     info,
@@ -98,7 +98,7 @@ function recursivelyChooseMods(
   statIndex: number,
   remainingGeneralSlots: number,
   remainingArtificeSlots: number,
-  remainingEnergyCapacities: number[],
+  remainingEnergyCapacities: number[][],
   pickedMods: ModsPick[]
 ): ModsPick[] | undefined {
   while (neededStats[statIndex] === 0) {
@@ -106,7 +106,11 @@ function recursivelyChooseMods(
       // We've hit the end of our needed stats, check if this is possible
       const modCosts = [...info.generalModCosts, ...pickedMods.flatMap((m) => m.generalModsCosts)];
       modCosts.sort((a, b) => b - a);
-      if (modCosts.every((cost, index) => cost <= remainingEnergyCapacities[index])) {
+      if (
+        remainingEnergyCapacities.some((capacities) =>
+          modCosts.every((cost, index) => cost <= capacities[index])
+        )
+      ) {
         return pickedMods;
       } else {
         return undefined;

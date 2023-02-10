@@ -8,7 +8,11 @@ import {
   StatFilters,
   StatRanges,
 } from '../types';
-import { pickAndAssignSlotIndependentMods, precalculateStructures } from './process-utils';
+import {
+  pickAndAssignSlotIndependentMods,
+  pickOptimalStatMods,
+  precalculateStructures,
+} from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
   LockedProcessMods,
@@ -359,14 +363,23 @@ export function process(
     setStatistics.modsStatistics
   );
 
-  const sets = finalSets.map(({ armor, stats, statMods }) => ({
-    armor: armor.map((item) => item.id),
-    stats: statOrder.reduce((statObj, statHash, i) => {
+  const sets = finalSets.map(({ armor, stats, statMods }) => {
+    const statsWithoutAutoMods = statOrder.reduce((statObj, statHash, i) => {
       statObj[statHash] = stats[i];
       return statObj;
-    }, {}) as ArmorStats,
-    statMods,
-  }));
+    }, {}) as ArmorStats;
+
+    const allStatMods =
+      (autoStatMods &&
+        pickOptimalStatMods(precalculatedInfo, armor, stats, statFiltersInStatOrder)) ||
+      statMods;
+
+    return {
+      armor: armor.map((item) => item.id),
+      stats: statsWithoutAutoMods,
+      statMods: allStatMods,
+    };
+  });
 
   return {
     sets,
