@@ -484,7 +484,7 @@ export function getColumns(
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) =>
-        typeof value === 'string' ? `inloadout:${quoteFilterString(value)}` : undefined,
+        typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
     }),
     destinyVersion === 2 &&
       isWeapon &&
