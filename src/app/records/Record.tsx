@@ -32,6 +32,8 @@ interface Props {
   record: DimRecord;
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
+  unobtainableRecordsHidden?: boolean;
+  isParentLegacy?: boolean;
   hideRecordIcon?: boolean;
 }
 
@@ -49,6 +51,8 @@ export default function Record({
   record,
   completedRecordsHidden,
   redactedRecordsRevealed,
+  unobtainableRecordsHidden,
+  isParentLegacy,
   hideRecordIcon,
 }: Props) {
   const defs = useD2Definitions()!;
@@ -59,6 +63,7 @@ export default function Record({
 
   const acquired = Boolean(state & DestinyRecordState.RecordRedeemed);
   const unlocked = !acquired && !(state & DestinyRecordState.ObjectiveNotCompleted);
+  const unobtainable = !acquired && isParentLegacy && state && DestinyRecordState.RewardUnavailable;
   const obscured =
     !redactedRecordsRevealed &&
     !unlocked &&
@@ -85,6 +90,9 @@ export default function Record({
     : recordDef.displayProperties.icon;
 
   if (completedRecordsHidden && acquired) {
+    return null;
+  }
+  if (unobtainableRecordsHidden && unobtainable) {
     return null;
   }
 

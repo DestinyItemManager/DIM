@@ -1,6 +1,5 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { DimPresentationNodeSearchResult } from './presentation-nodes';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
@@ -19,6 +18,7 @@ export default function PresentationNodeSearchResults({
   // TODO: make each node in path linkable
   const completedRecordsHidden = useSelector(settingSelector('completedRecordsHidden'));
   const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
+  const unobtainableRecordsHidden = useSelector(settingSelector('unobtainableRecordsHidden'));
 
   return (
     <div>
@@ -49,6 +49,7 @@ export default function PresentationNodeSearchResults({
                     ownedItemHashes={ownedItemHashes}
                     completedRecordsHidden={completedRecordsHidden}
                     redactedRecordsRevealed={redactedRecordsRevealed}
+                    unobtainableRecordsHidden={unobtainableRecordsHidden}
                   />
                 );
               })()}
@@ -57,6 +58,7 @@ export default function PresentationNodeSearchResults({
               ownedItemHashes={ownedItemHashes}
               completedRecordsHidden={completedRecordsHidden}
               redactedRecordsRevealed={redactedRecordsRevealed}
+              unobtainableRecordsHidden={unobtainableRecordsHidden}
             />
           </div>
         </div>

@@ -21,6 +21,7 @@ interface Props {
   isTriumphs?: boolean;
   overrideName?: string;
   completedRecordsHidden?: boolean;
+  unobtainableRecordsHidden?: boolean;
 
   /** Whether to show extra plugsets */
   showPlugSets?: boolean;
@@ -42,6 +43,7 @@ export default function PresentationNodeRoot({
   isTriumphs,
   overrideName,
   completedRecordsHidden,
+  unobtainableRecordsHidden,
 }: Props) {
   const itemCreationContext = useSelector(createItemContextSelector);
   const defs = useD2Definitions()!;
@@ -76,6 +78,7 @@ export default function PresentationNodeRoot({
       searchQuery.toLowerCase(),
       searchFilter,
       Boolean(completedRecordsHidden),
+      Boolean(unobtainableRecordsHidden),
       undefined,
       defs
     );

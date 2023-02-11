@@ -5,6 +5,9 @@ import { defaultLanguage } from 'app/i18n';
  * We extend the settings interface so we can try out new settings before committing them to dim-api-types
  */
 export interface Settings extends DimApiSettings {
+  /** allows hiding unobtainable triumphs and seals */
+  unobtainableRecordsHidden: boolean;
+
   /** supplements itemSortOrderCustom by allowing each sort to be reversed */
   itemSortReversals: string[];
 
@@ -27,6 +30,7 @@ export interface Settings extends DimApiSettings {
 export const initialSettingsState: Settings = {
   ...defaultSettings,
   language: defaultLanguage(),
+  unobtainableRecordsHidden: false,
   itemSortReversals: [],
   descriptionsToDisplay: 'both',
   compareWeaponMasterwork: false,

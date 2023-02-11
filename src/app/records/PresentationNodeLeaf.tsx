@@ -1,4 +1,3 @@
-import React from 'react';
 import Collectible from './Collectible';
 import Craftable from './Craftable';
 import Metrics from './Metrics';
@@ -13,11 +12,15 @@ export default function PresentationNodeLeaf({
   ownedItemHashes,
   completedRecordsHidden,
   redactedRecordsRevealed,
+  unobtainableRecordsHidden,
+  isParentLegacy,
 }: {
   node: DimPresentationNodeLeaf;
   ownedItemHashes?: Set<number>;
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
+  unobtainableRecordsHidden: boolean;
+  isParentLegacy?: boolean;
 }) {
   const seenRecords = new Set<number>();
 
@@ -48,6 +51,8 @@ export default function PresentationNodeLeaf({
                 record={record}
                 completedRecordsHidden={completedRecordsHidden}
                 redactedRecordsRevealed={redactedRecordsRevealed}
+                unobtainableRecordsHidden={unobtainableRecordsHidden}
+                isParentLegacy={isParentLegacy}
               />
             );
           })}

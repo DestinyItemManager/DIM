@@ -21,6 +21,7 @@ interface Props {
   isInTriumphs?: boolean;
   overrideName?: string;
   isRootNode?: boolean;
+  isParentLegacy?: boolean;
   onNodePathSelected: (nodePath: number[]) => void;
 }
 
@@ -33,10 +34,12 @@ export default function PresentationNode({
   isInTriumphs,
   isRootNode,
   overrideName,
+  isParentLegacy,
 }: Props) {
   const defs = useD2Definitions()!;
   const completedRecordsHidden = useSelector(settingSelector('completedRecordsHidden'));
   const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
+  const unobtainableRecordsHidden = useSelector(settingSelector('unobtainableRecordsHidden'));
   const headerRef = useRef<HTMLDivElement>(null);
   const lastPath = useRef<number[]>();
   const presentationNodeHash = node.nodeDef.hash;
@@ -66,6 +69,10 @@ export default function PresentationNode({
   };
 
   const { visible, acquired, nodeDef } = node;
+  // Hack to indicate children are no longer obtainable
+  const isLegacy =
+    isParentLegacy ||
+    ['Legacy Triumphs', 'Legacy Seals'].includes(node.nodeDef.displayProperties?.name);
   const completed = Boolean(acquired >= visible);
 
   if (!visible) {
@@ -158,6 +165,7 @@ export default function PresentationNode({
             parents={thisAndParents}
             onNodePathSelected={onNodePathSelected}
             isInTriumphs={isInTriumphs}
+            isParentLegacy={isLegacy}
           />
         ))}
       {childrenExpanded && visible > 0 && (
@@ -166,6 +174,8 @@ export default function PresentationNode({
           ownedItemHashes={ownedItemHashes}
           completedRecordsHidden={completedRecordsHidden}
           redactedRecordsRevealed={redactedRecordsRevealed}
+          unobtainableRecordsHidden={unobtainableRecordsHidden}
+          isParentLegacy={isLegacy}
         />
       )}
     </div>

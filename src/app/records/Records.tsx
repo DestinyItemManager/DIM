@@ -10,7 +10,6 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import _ from 'lodash';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -47,6 +46,9 @@ export default function Records({ account }: Props) {
   const [completedRecordsHidden, setCompletedRecordsHidden] = useSetting('completedRecordsHidden');
   const [redactedRecordsRevealed, setRedactedRecordsRevealed] =
     useSetting('redactedRecordsRevealed');
+  const [unobtainableRecordsHidden, setUnobtainableRecordsHidden] = useSetting(
+    'unobtainableRecordsHidden'
+  );
 
   const defs = useD2Definitions();
 
@@ -105,6 +107,8 @@ export default function Records({ account }: Props) {
 
   const onToggleCompletedRecordsHidden = (checked: boolean) => setCompletedRecordsHidden(checked);
   const onToggleRedactedRecordsRevealed = (checked: boolean) => setRedactedRecordsRevealed(checked);
+  const onToggleUnobtainableRecordsHidden = (checked: boolean) =>
+    setUnobtainableRecordsHidden(checked);
 
   return (
     <PageWithMenu className="d2-vendors">
@@ -132,6 +136,13 @@ export default function Records({ account }: Props) {
             onChange={onToggleRedactedRecordsRevealed}
           >
             {t('Triumphs.RevealRedacted')}
+          </CheckButton>
+          <CheckButton
+            name="hide-unobtainable"
+            checked={unobtainableRecordsHidden}
+            onChange={onToggleUnobtainableRecordsHidden}
+          >
+            {t('Triumphs.HideUnobtainableTriumphs')}
           </CheckButton>
         </div>
       </PageWithMenu.Menu>

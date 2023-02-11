@@ -164,6 +164,7 @@ export function filterPresentationNodesToSearch(
   searchQuery: string,
   filterItems: ItemFilter,
   completedRecordsHidden: boolean,
+  unobtainableRecordsHidden: boolean,
   path: DimPresentationNode[] = [],
   defs: D2ManifestDefinitions
 ): DimPresentationNodeSearchResult[] {
@@ -181,6 +182,7 @@ export function filterPresentationNodesToSearch(
         searchQuery,
         filterItems,
         completedRecordsHidden,
+        unobtainableRecordsHidden,
         [...path, node],
         defs
       )
