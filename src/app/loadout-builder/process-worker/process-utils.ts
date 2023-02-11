@@ -132,12 +132,10 @@ export function pickAndAssignSlotIndependentMods(
           (activityPermutation[idx]?.energy?.val || 0))
     );
 
-    // Sort the costs array descending, same as our auto stat mod picks
-    remainingEnergyCapacities.sort((a, b) => b - a);
-
     if (neededStats) {
       const result = chooseAutoMods(
         info,
+        items,
         neededStats,
         items.filter((i) => i.isArtifice).length,
         [remainingEnergyCapacities],
@@ -209,8 +207,6 @@ export function pickOptimalStatMods(
         (activityPermutation[idx]?.energy?.val || 0)
     );
 
-    // Sort the costs array descending, same as our auto stat mod picks
-    remainingEnergyCapacities.sort((a, b) => b - a);
     remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
   }
   // The amount of additional stat points after which stats don't give us a benefit anymore.
@@ -250,6 +246,7 @@ export function pickOptimalStatMods(
 
   const bestBoosts = exploreAutoModsSearchTree(
     info,
+    items,
     setStats,
     explorationStats,
     maxAddedStats,
@@ -333,6 +330,7 @@ interface SearchResult {
  */
 function exploreAutoModsSearchTree(
   info: PrecalculatedInfo,
+  items: ProcessItem[],
   /** The base stats from our set + fragments + ... */
   setStats: number[],
   /** The stats we have explored in this search process */
@@ -354,6 +352,7 @@ function exploreAutoModsSearchTree(
 ): SearchResult | undefined {
   const picks = chooseAutoMods(
     info,
+    items,
     explorationStats,
     numArtificeMods,
     remainingEnergyCapacities,
@@ -405,6 +404,7 @@ function exploreAutoModsSearchTree(
 
     const explorationResult = exploreAutoModsSearchTree(
       info,
+      items,
       setStats,
       subTreeStats,
       maxAddedStats,

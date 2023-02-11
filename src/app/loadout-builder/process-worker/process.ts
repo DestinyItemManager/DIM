@@ -89,13 +89,6 @@ export function process(
   const legs = filteredItems[LockableBuckets.leg];
   const classItems = filteredItems[LockableBuckets.classitem];
 
-  // Highest possible energy capacity per slot.
-  const energy = [helms, gauntlets, chests, legs, classItems].map(
-    (items) => _.max(items.map((e) => (e.energy?.capacity || 0) - (e.energy?.val || 0))) || 0
-  );
-  // How many slots could fit a small mod but not a large mod?
-  const numConstrainedSlots = autoStatMods ? energy.filter((e) => e <= 2).length : 0;
-
   // The maximum possible combos we could have
   const combos = helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
   const numItems =
@@ -284,7 +277,7 @@ export function process(
             }
 
             setStatistics.lowerBoundsExceeded.timesChecked++;
-            if (needSomeStats && !autoStatMods) {
+            if (needSomeStats && !autoStatMods && numArtifice === 0) {
               setStatistics.lowerBoundsExceeded.timesFailed++;
               continue;
             }
@@ -349,13 +342,14 @@ export function process(
             // at 200 sets.
             // This is not that straightforward and will probably only behave well if sets aren't too different from one
             // another. The core idea is that:
-            // * A free general mod slot with 3+ energy gives a full tier
+            // * A free general mod slot energy gives a full tier
             // * Every three stat points a stat is missing to the next tier costs 1 point
             // * An artifice mod gives 1 point
-            // * A free general mod slot with 1 or 2 energy gives 1.5 points.
             //
             // For the case where auto mods are turned off, this is super accurate for artifice slots.
-            let pointsAvailable = numArtifice + 1.5 * numConstrainedSlots;
+            // Unfortunately this is inaccurate when sets don't have a ton of energy available, since this doesn't
+            // take into account that mods have a cost.
+            let pointsAvailable = numArtifice;
             pointsNeededForTiers.sort((a, b) => a - b);
             const predictedExtraTiers =
               pointsNeededForTiers.reduce((numTiers, pointsNeeded) => {
@@ -364,7 +358,7 @@ export function process(
                   return numTiers + 1;
                 }
                 return numTiers;
-              }, 0) + Math.max(0, precalculatedInfo.numAvailableGeneralMods - numConstrainedSlots);
+              }, 0) + precalculatedInfo.numAvailableGeneralMods;
 
             // This code can be used to compare predictions vs actual stat boosts
             /*
