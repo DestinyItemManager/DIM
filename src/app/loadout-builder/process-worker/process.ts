@@ -247,8 +247,15 @@ export function process(
               }
             }
 
-            // Drop this set if it could never make it
-            if (!setTracker.couldInsert(totalTier)) {
+            const armor = [helm, gaunt, chest, leg, classItem];
+            const numArtifice = armor.filter((item) => item.isArtifice).length;
+
+            // Drop this set if it could never make it. Very cheap optimistic tier check.
+            if (
+              !setTracker.couldInsert(
+                totalTier + numArtifice + precalculatedInfo.numAvailableGeneralMods
+              )
+            ) {
               setStatistics.skipReasons.skippedLowTier++;
               continue;
             }
@@ -258,8 +265,6 @@ export function process(
               setStatistics.upperBoundsExceeded.timesFailed++;
               continue;
             }
-
-            const armor = [helm, gaunt, chest, leg, classItem];
 
             const neededStats = [0, 0, 0, 0, 0, 0];
             let needSomeStats = false;
@@ -308,7 +313,6 @@ export function process(
             // TODO: It seems like constructing and comparing tiersString would be expensive but it's less so
             // than comparing stat arrays element by element
 
-            const numArtifice = armor.filter((item) => item.isArtifice).length;
             const pointsNeededForTiers: number[] = [];
 
             let tiersString = '';
@@ -360,7 +364,7 @@ export function process(
                   return numTiers + 1;
                 }
                 return numTiers;
-              }, 0) + Math.max(0, precalculatedInfo.numAvailableStatMods - numConstrainedSlots);
+              }, 0) + Math.max(0, precalculatedInfo.numAvailableGeneralMods - numConstrainedSlots);
 
             // This code can be used to compare predictions vs actual stat boosts
             /*

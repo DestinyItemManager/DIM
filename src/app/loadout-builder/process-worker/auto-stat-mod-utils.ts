@@ -46,6 +46,7 @@ export interface ModsPick {
   numGeneralMods: number;
   generalModsCosts: number[];
   modHashes: number[];
+  modEnergyCost: number;
 }
 
 /**
@@ -73,15 +74,17 @@ export function chooseAutoMods(
   info: PrecalculatedInfo,
   neededStats: number[],
   numArtificeMods: number,
-  remainingEnergyCapacities: number[][]
+  remainingEnergyCapacities: number[][],
+  remainingTotalEnergy: number
 ) {
   return recursivelyChooseMods(
     info,
     neededStats,
     0,
-    5 - info.generalModCosts.length,
+    info.numAvailableGeneralMods,
     numArtificeMods,
     remainingEnergyCapacities,
+    remainingTotalEnergy,
     []
   );
 }
@@ -99,23 +102,25 @@ function recursivelyChooseMods(
   remainingGeneralSlots: number,
   remainingArtificeSlots: number,
   remainingEnergyCapacities: number[][],
+  remainingTotalEnergy: number,
   pickedMods: ModsPick[]
 ): ModsPick[] | undefined {
-  // TODO Ugh this first condition has to catch the case where the recursive call happens with statIndex === neededStats.length...
-  while (statIndex >= info.statOrder.length || neededStats[statIndex] === 0) {
-    if (++statIndex >= info.statOrder.length) {
-      // We've hit the end of our needed stats, check if this is possible
-      const modCosts = [...info.generalModCosts, ...pickedMods.flatMap((m) => m.generalModsCosts)];
-      modCosts.sort((a, b) => b - a);
-      if (
-        remainingEnergyCapacities.some((capacities) =>
-          modCosts.every((cost, index) => cost <= capacities[index])
-        )
-      ) {
-        return pickedMods;
-      } else {
-        return undefined;
-      }
+  while (statIndex < info.statOrder.length && neededStats[statIndex] === 0) {
+    statIndex++;
+  }
+
+  if (statIndex === info.statOrder.length) {
+    // We've hit the end of our needed stats, check if this is possible
+    const modCosts = [...info.generalModCosts, ...pickedMods.flatMap((m) => m.generalModsCosts)];
+    modCosts.sort((a, b) => b - a);
+    if (
+      remainingEnergyCapacities.some((capacities) =>
+        modCosts.every((cost, index) => cost <= capacities[index])
+      )
+    ) {
+      return pickedMods;
+    } else {
+      return undefined;
     }
   }
 
@@ -134,7 +139,8 @@ function recursivelyChooseMods(
   for (const pick of possiblePicks) {
     if (
       pick.numArtificeMods > remainingArtificeSlots ||
-      pick.numGeneralMods > remainingGeneralSlots
+      pick.numGeneralMods > remainingGeneralSlots ||
+      pick.modEnergyCost > remainingTotalEnergy
     ) {
       continue;
     }
@@ -146,6 +152,7 @@ function recursivelyChooseMods(
       remainingGeneralSlots - pick.numGeneralMods,
       remainingArtificeSlots - pick.numArtificeMods,
       remainingEnergyCapacities,
+      remainingTotalEnergy - pick.modEnergyCost,
       subArray
     );
     if (solution) {
@@ -204,6 +211,7 @@ function buildCacheForStat(statHash: ArmorStatHashes, availableGeneralStatMods: 
             ...Array(numMinorMods).fill(minorMod.hash),
             // ...Array(numArtificeMods).fill(artificeMod.hash),
           ],
+          modEnergyCost: numMinorMods * minorMod.cost + numMajorMods + majorMod.cost,
         };
         for (let achievableValue = lowerRange; achievableValue <= statValue; achievableValue++) {
           (cache.statMap[achievableValue] ??= []).push(obj);

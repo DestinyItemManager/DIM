@@ -1,5 +1,6 @@
 import { StatHashes } from 'app/../data/d2/generated-enums';
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
+import _ from 'lodash';
 import { ArmorStatHashes, MinMaxIgnored } from '../types';
 import { AutoModsMap, buildCacheV2, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
 import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
@@ -8,8 +9,9 @@ export interface PrecalculatedInfo {
   cache: AutoModsMap;
   statOrder: ArmorStatHashes[];
   hasActivityMods: boolean;
+  totalModEnergyCost: number;
   generalModCosts: number[];
-  numAvailableStatMods: number;
+  numAvailableGeneralMods: number;
   activityModPermutations: (ProcessMod | null)[][];
   activityTagCounts: { [tag: string]: number };
 }
@@ -20,13 +22,16 @@ export function precalculateStructures(
   autoStatMods: boolean,
   statOrder: ArmorStatHashes[]
 ): PrecalculatedInfo {
-  const numAvailableStatMods = autoStatMods ? 5 - generalMods.length : 0;
+  const numAvailableGeneralMods = autoStatMods ? 5 - generalMods.length : 0;
+  const generalModCosts = generalMods.map((m) => m.energy?.val || 0).sort((a, b) => b - a);
   return {
-    cache: buildCacheV2(numAvailableStatMods),
+    cache: buildCacheV2(numAvailableGeneralMods),
     statOrder,
     hasActivityMods: activityMods.length > 0,
-    numAvailableStatMods,
-    generalModCosts: generalMods.map((m) => m.energy?.val || 0).sort((a, b) => b - a),
+    numAvailableGeneralMods,
+    generalModCosts,
+    totalModEnergyCost:
+      _.sum(generalModCosts) + _.sumBy(activityMods, (act) => act.energy?.val ?? 0),
     activityModPermutations: generateProcessModPermutations(activityMods),
     activityTagCounts: activityMods.reduce((acc, mod) => {
       if (mod.tag) {
@@ -56,18 +61,30 @@ export function pickAndAssignSlotIndependentMods(
 ): ModsPick[] | undefined {
   modStatistics.earlyModsCheck.timesChecked++;
 
+  let setEnergy = 0;
+  for (const item of items) {
+    if (item.energy) {
+      setEnergy += item.energy.capacity - item.energy.val;
+    }
+  }
+
+  if (setEnergy < info.totalModEnergyCost) {
+    modStatistics.earlyModsCheck.timesFailed++;
+    return undefined;
+  }
+
   // An early check to ensure we have enough activity mod combos
   // It works by creating an index of tags to totals of said tag
   // we can then ensure we have enough items with said tags.
   if (info.hasActivityMods) {
-    for (const tag of Object.keys(info.activityTagCounts)) {
+    for (const [tag, tagCount] of Object.entries(info.activityTagCounts)) {
       let socketsCount = 0;
       for (const item of items) {
         if (item.compatibleModSeasons?.includes(tag)) {
           socketsCount++;
         }
       }
-      if (socketsCount < info.activityTagCounts[tag]) {
+      if (socketsCount < tagCount) {
         modStatistics.earlyModsCheck.timesFailed++;
         return undefined;
       }
@@ -108,10 +125,10 @@ export function pickAndAssignSlotIndependentMods(
     // This is a valid activity and combat mod assignment. See how much energy is left over per piece
     // eslint-disable-next-line github/array-foreach
     items.forEach(
-      (i, idx) =>
+      (item, idx) =>
         (remainingEnergyCapacities[idx] =
-          (i.energy?.capacity || 0) -
-          (i.energy?.val || 0) -
+          (item.energy?.capacity || 0) -
+          (item.energy?.val || 0) -
           (activityPermutation[idx]?.energy?.val || 0))
     );
 
@@ -119,9 +136,13 @@ export function pickAndAssignSlotIndependentMods(
     remainingEnergyCapacities.sort((a, b) => b - a);
 
     if (neededStats) {
-      const result = chooseAutoMods(info, neededStats, items.filter((i) => i.isArtifice).length, [
-        remainingEnergyCapacities,
-      ]);
+      const result = chooseAutoMods(
+        info,
+        neededStats,
+        items.filter((i) => i.isArtifice).length,
+        [remainingEnergyCapacities],
+        setEnergy
+      );
 
       if (result) {
         return result;
@@ -151,6 +172,13 @@ export function pickOptimalStatMods(
   statFiltersInStatOrder: MinMaxIgnored[]
 ): { mods: number[]; numPoints: number } | undefined {
   const remainingEnergiesPerAssignment: number[][] = [];
+
+  let setEnergy = 0;
+  for (const item of items) {
+    if (item.energy) {
+      setEnergy += item.energy.capacity - item.energy.val;
+    }
+  }
 
   // This loop is copy-pasted from above because we need to do the same thing as above
   // We don't have to do any of the early exits though, since we know they succeed.
@@ -208,7 +236,7 @@ export function pickOptimalStatMods(
 
   // Calculate an upper bound for how many bonus tiers auto stat mods can give to this set.
   // A single general stat mod will always give one bonus tier, but not more.
-  let optimisticBonusTiers = info.numAvailableStatMods;
+  let optimisticBonusTiers = info.numAvailableGeneralMods;
 
   // While artifact mods need give bonuses in multiples of three points.
   const numArtificeMods = items.filter((i) => i.isArtifice).length;
@@ -227,6 +255,7 @@ export function pickOptimalStatMods(
     maxAddedStats,
     numArtificeMods,
     remainingEnergiesPerAssignment,
+    setEnergy,
     optimisticBonusTiers,
     0,
     0
@@ -234,8 +263,8 @@ export function pickOptimalStatMods(
 
   return (
     bestBoosts && {
-      mods: bestBoosts?.picks.flatMap((pick) => pick.modHashes),
-      numPoints: bestBoosts?.depth,
+      mods: bestBoosts.picks.flatMap((pick) => pick.modHashes),
+      numPoints: bestBoosts.depth,
     }
   );
 }
@@ -314,6 +343,8 @@ function exploreAutoModsSearchTree(
   numArtificeMods: number,
   /** The different permutations of leftover energy after assigning activity mods permutations */
   remainingEnergyCapacities: number[][],
+  /** The total amount of energy left over in this set */
+  totalModEnergyCapacity: number,
   /** An upper bound for how many tiers we can gain given our artifice and general mods */
   optimisticMaxDepth: number,
   /** The stat index this branch of the search tree starts at */
@@ -321,7 +352,13 @@ function exploreAutoModsSearchTree(
   /** How many boosts we have chosen before in explorationStats */
   depth: number
 ): SearchResult | undefined {
-  const picks = chooseAutoMods(info, explorationStats, numArtificeMods, remainingEnergyCapacities);
+  const picks = chooseAutoMods(
+    info,
+    explorationStats,
+    numArtificeMods,
+    remainingEnergyCapacities,
+    totalModEnergyCapacity
+  );
   if (!picks) {
     return undefined;
   } else if (depth === optimisticMaxDepth) {
@@ -373,6 +410,7 @@ function exploreAutoModsSearchTree(
       maxAddedStats,
       numArtificeMods,
       remainingEnergyCapacities,
+      totalModEnergyCapacity,
       optimisticMaxDepth,
       statIndex,
       depth + 1
