@@ -92,6 +92,71 @@ export function chooseAutoMods(
   );
 }
 
+function doGeneralModsFit(
+  info: PrecalculatedInfo,
+  items: ProcessItem[],
+  /** variants of remaining energy capacities given our activity mod assignment. In same order as items */
+  remainingEnergyCapacities: number[][],
+  pickedMods: ModsPick[]
+) {
+  // FIXME: In the event that artifice mods are free, this can be reduced to greedy checks.
+  // No need to check the items for their artifice status (since location doesn't matter and we check total number already),
+  // no need to incorporate their costs. We can even sort all remaining capacities before sending them here.
+  const generalModCosts = [
+    ...info.generalModCosts,
+    ...pickedMods.flatMap((m) => m.generalModsCosts),
+  ];
+  generalModCosts.sort((a, b) => b - a);
+  const artificeModCosts = [...pickedMods.flatMap((m) => m.artificeModCosts)];
+
+  // First, try a fast path that just creates an arbitrary permutation and see if that works.
+  // This is often hit when runs have few mods and high-energy armor.
+  const fastPathArtificeCosts = Array(items.length).fill(0);
+  let artificeIndex = 0;
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].isArtifice) {
+      fastPathArtificeCosts[i] = artificeModCosts[artificeIndex];
+      artificeIndex++;
+    }
+  }
+
+  if (
+    remainingEnergyCapacities.some((capacities) => {
+      const copy = capacities.slice();
+      for (let i = 0; i < items.length; i++) {
+        copy[i] -= fastPathArtificeCosts[i];
+      }
+      copy.sort((a, b) => b - a);
+      return generalModCosts.every((cost, index) => cost <= copy[index]);
+    })
+  ) {
+    return true;
+  }
+
+  // Otherwise, try all permutations.
+  const artificePermutations = generatePermutationsOfFive(artificeModCosts, (x) =>
+    x.map((x) => x?.toString(16) ?? '0').join('')
+  );
+  artificePermutationLoop: for (const artificePermutation of artificePermutations) {
+    for (let i = 0; i < items.length; i++) {
+      if (artificePermutation[i] !== null && !items[i].isArtifice) {
+        continue artificePermutationLoop;
+      }
+    }
+    for (const remainingCapacity of remainingEnergyCapacities) {
+      const copy = remainingCapacity.slice();
+      for (let i = 0; i < items.length; i++) {
+        copy[i] -= artificePermutation[i] ?? 0;
+      }
+      copy.sort((a, b) => b - a);
+      if (generalModCosts.every((cost, index) => cost <= copy[index])) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 /**
  * Find a combination of artifice and general mods that can
  * help hit the `neededStats` starting from `statIndex` by recursively
@@ -116,34 +181,11 @@ function recursivelyChooseMods(
 
   if (statIndex === info.statOrder.length) {
     // We've hit the end of our needed stats, check if this is possible
-    // debugger;
-    // FIXME: In the event that artifice mods are free, this can be reduced to greedy checks.
-    // No need to check the items for their artifice status (since location doesn't matter and we check total number already),
-    // no need to incorporate their costs.
-    const modCosts = [...info.generalModCosts, ...pickedMods.flatMap((m) => m.generalModsCosts)];
-    modCosts.sort((a, b) => b - a);
-    const artificeModCosts = [...pickedMods.flatMap((m) => m.artificeModCosts)];
-    const artificePermutations = generatePermutationsOfFive(artificeModCosts, (x) =>
-      x.map((x) => x?.toString(16) ?? '0').join('')
-    );
-    artificePermutationLoop: for (const artificePermutation of artificePermutations) {
-      for (let i = 0; i < items.length; i++) {
-        if (artificePermutation[i] !== null && !items[i].isArtifice) {
-          continue artificePermutationLoop;
-        }
-      }
-      for (const remainingCapacity of remainingEnergyCapacities) {
-        const copy = remainingCapacity.slice();
-        for (let i = 0; i < items.length; i++) {
-          copy[i] -= artificePermutation[i] ?? 0;
-        }
-        copy.sort((a, b) => b - a);
-        if (modCosts.every((cost, index) => cost <= copy[index])) {
-          return pickedMods;
-        }
-      }
+    if (doGeneralModsFit(info, items, remainingEnergyCapacities, pickedMods)) {
+      return pickedMods;
+    } else {
+      return undefined;
     }
-    return undefined;
   }
 
   const possiblePicks =
