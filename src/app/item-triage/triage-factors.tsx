@@ -1,4 +1,4 @@
-import { stripAdept } from 'app/compare/compare-buttons';
+import { compareNameQuery } from 'app/compare/compare-buttons';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { PressTip } from 'app/dim-ui/PressTip';
@@ -60,7 +60,7 @@ const itemFactors: Record<string, Factor> = {
         <span>{item.name}</span>
       </>
     ),
-    filter: (item) => `name:"${stripAdept(item.name)}"`,
+    filter: (item) => compareNameQuery(item),
   },
   element: {
     id: 'element', //             don't compare exotic weapon elements, that's silly.

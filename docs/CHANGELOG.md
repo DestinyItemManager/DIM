@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed the Compare tool for items with quotation marks in their name.
+
 ## 7.55.0 <span class="changelog-date">(2023-02-05)</span>
 
 ## 7.54.0 <span class="changelog-date">(2023-01-29)</span>
