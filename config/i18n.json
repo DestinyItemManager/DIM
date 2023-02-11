@@ -229,7 +229,7 @@
     "HasNotes": "Show items that have notes applied.",
     "HasShader": "Shows items that have a shader applied.",
     "HasOrnament": "Shows items that have an ornament applied.",
-    "InLoadout": "Shows items that are included in any loadout.",
+    "InLoadout": "Shows items that are included in any loadout. When used as a search, shows items in matching loadouts. You can either search by loadout name or by a #hashtag included in the loadout name or notes.",
     "Infusable": "Shows items that can be infused.",
     "IsCrafted": "Shows weapons that have been crafted.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
