@@ -316,7 +316,7 @@
     "Misadventure": "Accidente",
     "Missing": "Perdido",
     "OpenSymbolsPicker": "Abrir el Selector de Símbolos",
-    "Quickfall": "Caída en picado",
+    "Quickfall": "Caída Rápida",
     "ScorchCannon": "Cañón Calcinante",
     "SearchSymbols": "Buscar Símbolos...",
     "Smoke": "Humo"
@@ -958,7 +958,7 @@
     "ExportSS": "Hojas de cálculo de inventario",
     "ExportSSHelp": "Descargar una lista CSV de tus objetos que puede ser vista fácilmente en la aplicación de hojas de cálculo de tu preferencia.",
     "ExportSSNoStores": "Necesitas cargar tu inventario una vez antes de pulsar este botón.",
-    "HidePullFromPostmaster": "Esconder el botón \"$t(Loadouts.PullFromPostmaster)\"",
+    "HidePullFromPostmaster": "Ocultar el botón \"$t(Loadouts.PullFromPostmaster)\"",
     "Inventory": "Visualización del Inventario",
     "InventoryColumns": "Ancho de inventario de personaje",
     "InventoryColumnsMobile": "Ancho del Inventario del personaje en el celular modo retrato",
