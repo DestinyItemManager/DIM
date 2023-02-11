@@ -577,7 +577,7 @@ export function getColumns(
         return (
           inloadouts &&
           inloadouts.length > 0 && (
-            <LoadoutsCell loadouts={inloadouts.map(({ loadout }) => loadout)} owner={item.owner} />
+            <LoadoutsCell loadouts={inloadouts.map((l) => l.loadout)} owner={item.owner} />
           )
         );
       },
