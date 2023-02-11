@@ -291,6 +291,14 @@ $modslotSize: 30px;
   }
 }
 
+// Indicate things that can be clicked to bring something up
+.loadout {
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
 .noItems {
   text-align: center;
   grid-column: 1 / -1;
