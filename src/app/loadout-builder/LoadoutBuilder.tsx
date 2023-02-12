@@ -45,6 +45,7 @@ import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import TierSelect from './filter/TierSelect';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
+import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
@@ -327,7 +328,10 @@ export default memo(function LoadoutBuilder({
     [loadoutParameters, searchQuery, statFilters, statOrder]
   );
 
-  const filteredSets = result?.sets;
+  const filteredSets = useMemo(
+    () => result?.sets && sortGeneratedSets(result.sets, statOrder, enabledStats),
+    [enabledStats, result?.sets, statOrder]
+  );
 
   const shareBuild = async (notes?: string) => {
     // TODO: replace this with a new share tool
@@ -503,9 +507,9 @@ export default memo(function LoadoutBuilder({
             </p>
           </div>
         )}
-        {result && result.sets.length > 0 ? (
+        {result && filteredSets && filteredSets.length > 0 ? (
           <GeneratedSets
-            sets={result.sets}
+            sets={filteredSets}
             subclass={subclass}
             lockedMods={result.mods}
             pinnedItems={pinnedItems}

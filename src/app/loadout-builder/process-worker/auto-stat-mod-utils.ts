@@ -29,7 +29,7 @@ const minorStatMods: { [statHash in ArmorStatHashes]: { hash: number; cost: numb
 };
 
 // Artifice mods add 3
-const artificeStatMods: { [statHash in ArmorStatHashes]: { hash: number; cost: number } } = {
+export const artificeStatMods: { [statHash in ArmorStatHashes]: { hash: number; cost: number } } = {
   [StatHashes.Mobility]: { hash: 11111111, cost: 1 },
   [StatHashes.Resilience]: { hash: 22222222, cost: 2 },
   [StatHashes.Recovery]: { hash: 33333333, cost: 2 },
@@ -92,7 +92,7 @@ export function chooseAutoMods(
   );
 }
 
-function doGeneralModsFit(
+function doModsFit(
   info: PrecalculatedInfo,
   items: ProcessItem[],
   /** variants of remaining energy capacities given our activity mod assignment. In same order as items */
@@ -181,7 +181,7 @@ function recursivelyChooseMods(
 
   if (statIndex === info.statOrder.length) {
     // We've hit the end of our needed stats, check if this is possible
-    if (doGeneralModsFit(info, items, remainingEnergyCapacities, pickedMods)) {
+    if (doModsFit(info, items, remainingEnergyCapacities, pickedMods)) {
       return pickedMods;
     } else {
       return undefined;
@@ -238,6 +238,9 @@ function recursivelyChooseMods(
  * we cannot efficiently cache the results since every single point matters and cache entries for 50^6 values would
  * mean our cache would simply explode. So instead we separate the caches by stat and then piece together the mod
  * picks when actually looking at sets.
+ *
+ * This unfortunately means a lot of `flatMap`ing down the road and is a lot less efficient. Improvements here
+ * could make things a bit faster, especially when they remove equivalent combinations.
  */
 function buildCacheForStat(statHash: ArmorStatHashes, availableGeneralStatMods: number) {
   const cache: CacheForStat = { statHash, statMap: {} };
@@ -275,7 +278,7 @@ function buildCacheForStat(statHash: ArmorStatHashes, availableGeneralStatMods: 
           modHashes: [
             ...Array(numMajorMods).fill(majorMod.hash),
             ...Array(numMinorMods).fill(minorMod.hash),
-            // ...Array(numArtificeMods).fill(artificeMod.hash),
+            ...Array(numArtificeMods).fill(artificeMod.hash),
           ],
           modEnergyCost:
             numMinorMods * minorMod.cost +

@@ -9,11 +9,12 @@ import clsx from 'clsx';
 import { ArmorStatHashes, ArmorStats } from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
-import { calculateSetStats } from './utils';
 
 interface Props {
   stats: ArmorStats;
-  autoStatMods: number[];
+  tier: number;
+  enabledTier: number;
+  artificeStats: ArmorStats;
   maxPower: number;
   statOrder: ArmorStatHashes[];
   enabledStats: Set<ArmorStatHashes>;
@@ -26,7 +27,9 @@ interface Props {
  */
 function SetStats({
   stats,
-  autoStatMods,
+  tier,
+  enabledTier,
+  artificeStats,
   maxPower,
   statOrder,
   enabledStats,
@@ -38,30 +41,31 @@ function SetStats({
   for (const statHash of statOrder) {
     statDefs[statHash] = defs.Stat.get(statHash);
   }
-  const { enabledBaseTier, totalBaseTier, statsWithAutoMods } = calculateSetStats(
-    defs,
-    stats,
-    autoStatMods,
-    enabledStats
-  );
 
   return (
     <div className={clsx(styles.container, className)}>
       <div className={styles.tierLightContainer}>
         <span className={clsx(styles.tier, styles.tierLightSegment)}>
           {t('LoadoutBuilder.TierNumber', {
-            tier: enabledBaseTier,
+            tier: enabledTier,
           })}
         </span>
-        {enabledBaseTier !== totalBaseTier && (
+        {enabledTier !== tier && (
           <span className={clsx(styles.tier, styles.nonActiveStat)}>
             {` (${t('LoadoutBuilder.TierNumber', {
-              tier: totalBaseTier,
+              tier: tier,
             })})`}
           </span>
         )}
         <span className={styles.light}>
           <AppIcon icon={powerIndicatorIcon} className={clsx(styles.statIcon)} /> {maxPower}
+        </span>
+        <span>
+          {/* FIXME remove this when artifice mods have defs */}
+          Artifice:{' '}
+          {Object.entries(artificeStats).map(
+            ([statHash, val]) => val > 0 && `${statDefs[statHash].displayProperties.name}: ${val}, `
+          )}
         </span>
         {existingLoadoutName ? (
           <span className={styles.existingLoadout}>
@@ -79,7 +83,7 @@ function SetStats({
                 stat={{
                   hash: statHash,
                   name: statDefs[statHash].displayProperties.name,
-                  value: statsWithAutoMods[statHash],
+                  value: stats[statHash],
                   description: statDefs[statHash].displayProperties.description,
                 }}
               />
@@ -88,7 +92,7 @@ function SetStats({
             <Stat
               isActive={enabledStats.has(statHash)}
               stat={statDefs[statHash]}
-              value={statsWithAutoMods[statHash]}
+              value={stats[statHash]}
             />
           </PressTip>
         ))}

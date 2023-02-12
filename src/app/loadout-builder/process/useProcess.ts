@@ -4,6 +4,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
+import { armorStats } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { getModTypeTagByPlugCategoryHash } from 'app/utils/item-utils';
@@ -11,7 +12,7 @@ import { infoLog } from 'app/utils/log';
 import { proxy, releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ProcessItem, ProcessItemsByBucket, ProcessStatistics } from '../process-worker/types';
 import {
   ArmorEnergyRules,
@@ -83,6 +84,11 @@ export function useProcess({
     resultStoreId: selectedStore.id,
     result: null,
   });
+
+  const enabledStats = useMemo(
+    () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
+    [statFilters]
+  );
 
   const cleanupRef = useRef<(() => void) | null>();
 
@@ -174,7 +180,7 @@ export function useProcess({
           'loadout optimizer',
           `useProcess: worker time ${performance.now() - workerStart}ms`
         );
-        const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
+        const hydratedSets = sets.map((set) => hydrateArmorSet(defs, set, itemsById, enabledStats));
 
         setState((oldState) => ({
           ...oldState,
@@ -209,6 +215,7 @@ export function useProcess({
     armorEnergyRules,
     autoStatMods,
     lockedModMap,
+    enabledStats,
   ]);
 
   return { result, processing, remainingTime };

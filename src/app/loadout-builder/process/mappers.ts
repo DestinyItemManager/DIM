@@ -1,9 +1,14 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
 } from 'app/loadout/known-values';
-import { MAX_ARMOR_ENERGY_CAPACITY, modsWithConditionalStats } from 'app/search/d2-known-values';
+import {
+  armorStats,
+  MAX_ARMOR_ENERGY_CAPACITY,
+  modsWithConditionalStats,
+} from 'app/search/d2-known-values';
 import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
 import {
   DestinyClass,
@@ -17,8 +22,10 @@ import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
+import { artificeStatMods } from '../process-worker/auto-stat-mod-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
 import { ArmorEnergyRules, ArmorSet, ArmorStats, ItemGroup } from '../types';
+import { statTier } from '../utils';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
@@ -168,8 +175,10 @@ export function mapDimItemToProcessItem({
 }
 
 export function hydrateArmorSet(
+  defs: D2ManifestDefinitions,
   processed: ProcessArmorSet,
-  itemsById: Map<string, ItemGroup>
+  itemsById: Map<string, ItemGroup>,
+  enabledStats: Set<number>
 ): ArmorSet {
   const armor: DimItem[][] = [];
 
@@ -177,9 +186,50 @@ export function hydrateArmorSet(
     armor.push(itemsById.get(itemId)!.items);
   }
 
+  const statMods = [];
+  const artificeMods = [];
+  for (const mod of processed.statMods) {
+    if (Object.values(artificeStatMods).some(({ hash }) => hash === mod)) {
+      artificeMods.push(mod);
+    } else {
+      statMods.push(mod);
+    }
+  }
+
+  const statsWithAutoMods = { ...processed.stats };
+  for (const modHash of statMods) {
+    const def = defs.InventoryItem.get(modHash);
+    if (def?.investmentStats.length) {
+      for (const stat of def.investmentStats) {
+        if (statsWithAutoMods[stat.statTypeHash] !== undefined) {
+          statsWithAutoMods[stat.statTypeHash] += stat.value;
+        }
+      }
+    }
+  }
+
+  const artificeBoostedStats = _.mapValues(processed.stats, () => 0);
+
+  for (const artificeModHash of artificeMods) {
+    const [statHash] = Object.entries(artificeStatMods).find(
+      ([_statHash, { hash }]) => hash === artificeModHash
+    )!;
+    artificeBoostedStats[statHash] += 3;
+    statsWithAutoMods[statHash] += 3;
+  }
+
+  const totalTier = _.sum(Object.values(statsWithAutoMods).map(statTier));
+  const enabledTier = _.sumBy(armorStats, (statHash) =>
+    enabledStats.has(statHash) ? statTier(statsWithAutoMods[statHash]) : 0
+  );
+
   return {
     armor,
-    stats: processed.stats,
-    statMods: processed.statMods,
+    totalTier,
+    enabledTier,
+    stats: statsWithAutoMods,
+    artificeBoostedStats,
+    statMods,
+    artificeMods,
   };
 }

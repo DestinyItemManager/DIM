@@ -153,7 +153,9 @@ function GeneratedSet({
         <div className={styles.header}>
           <SetStats
             stats={set.stats}
-            autoStatMods={set.statMods}
+            artificeStats={set.artificeBoostedStats}
+            enabledTier={set.enabledTier}
+            tier={set.totalTier}
             maxPower={getPower(displayedItems)}
             statOrder={statOrder}
             enabledStats={enabledStats}
