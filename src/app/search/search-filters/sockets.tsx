@@ -25,6 +25,7 @@ import {
   emptySocketHashes,
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
+import { plainString } from './freeform';
 
 export const modslotFilter: FilterDefinition = {
   keywords: 'modslot',
@@ -189,9 +190,24 @@ const socketFilters: FilterDefinition[] = [
   },
   {
     keywords: 'armorintrinsic',
+    format: ['simple', 'query'],
+    suggestions: ['none'],
     description: tl('Filter.ArmorIntrinsic'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) => Boolean(!item.isExotic && getIntrinsicArmorPerkSocket(item)),
+    filter: ({ filterValue, language }) => {
+      if (filterValue === 'armorintrinsic') {
+        return (item: DimItem) => Boolean(!item.isExotic && getIntrinsicArmorPerkSocket(item));
+      }
+      if (filterValue === 'none') {
+        return (item: DimItem) =>
+          Boolean(!item.isExotic && item.bucket.inArmor && !getIntrinsicArmorPerkSocket(item));
+      }
+      return (item: DimItem) => {
+        const intrinsic =
+          getIntrinsicArmorPerkSocket(item)?.plugged?.plugDef.displayProperties.name;
+        return Boolean(intrinsic && plainString(intrinsic, language).includes(filterValue));
+      };
+    },
   },
   {
     keywords: 'holdsmod',

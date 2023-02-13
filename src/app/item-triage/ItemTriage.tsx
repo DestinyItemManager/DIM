@@ -29,7 +29,12 @@ import { DimItem } from '../inventory/item-types';
 import popupStyles from '../item-popup/ItemDescription.m.scss';
 import styles from './ItemTriage.m.scss';
 import { Factor } from './triage-factors';
-import { getNotableStats, getSimilarItems, getValueColors } from './triage-utils';
+import {
+  getBetterWorseItems,
+  getNotableStats,
+  getSimilarItems,
+  getValueColors,
+} from './triage-utils';
 
 /** whether an item's popup should contain the triage tab */
 export function doShowTriage(item: DimItem) {
@@ -78,9 +83,12 @@ export function ItemTriage({ item }: { item: DimItem }) {
     <div className={styles.itemTriagePane}>
       {item.bucket.inWeapons && <WishlistTriageSection item={item} />}
       <LoadoutsTriageSection item={item} />
-      <FactorsTriageSection item={item} />
+      <SimilarItemsTriageSection item={item} />
       {item.bucket.inArmor && item.bucket.hash !== BucketHashes.ClassArmor && (
-        <ArmorStatsTriageSection item={item} />
+        <>
+          <ArmorStatsTriageSection item={item} />
+          <BetterItemsTriageSection item={item} />
+        </>
       )}
     </div>
   );
@@ -164,7 +172,7 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
 /**
  * we don't include this section if there's nothing "interesting" to share about this item
  */
-function FactorsTriageSection({ item }: { item: DimItem }) {
+function SimilarItemsTriageSection({ item }: { item: DimItem }) {
   const filterFactory = useSelector(filterFactorySelector);
   const allItems = useSelector(allItemsSelector);
   const itemFactors = getSimilarItems(item, allItems, filterFactory);
@@ -200,6 +208,59 @@ function FactorsTriageSection({ item }: { item: DimItem }) {
               </span>
             </div>
           ))}
+      </div>
+    </CollapsibleTitle>
+  );
+}
+
+/**
+ * we don't include this section if there's no strictly better or worse items
+ */
+function BetterItemsTriageSection({ item }: { item: DimItem }) {
+  const filterFactory = useSelector(filterFactorySelector);
+  const allItems = useSelector(allItemsSelector);
+  const { betterItems, worseItems, betterFilter, worseFilter } = getBetterWorseItems(
+    item,
+    allItems,
+    filterFactory
+  );
+  console.log({ betterItems, worseItems, betterFilter, worseFilter });
+  // nothing interesting = no display
+  if (!betterItems.length && !worseItems.length) {
+    return null;
+  }
+
+  return (
+    <CollapsibleTitle
+      title={t('Better/Worse Items')}
+      sectionId="beter-worse-items"
+      defaultCollapsed={false}
+      extra={<span className={styles.factorCollapsedValue}>!!</span>}
+      showExtraOnlyWhenCollapsed
+    >
+      <div className={styles.similarItemsTable}>
+        {(
+          [
+            ['Strictly Better Items', betterFilter, betterItems],
+            ['Strictly Worse Items', worseFilter, worseItems],
+          ] as const
+        ).map(
+          ([label, filter, collection]) =>
+            collection.length > 0 && (
+              <div className={styles.tableRow} key={label}>
+                <div>{label}</div>
+                <span className={styles.count}>{collection.length}</span>
+                <span className={styles.controls}>
+                  <StartCompareButton
+                    filter={`id:${item.id} or ` + filter}
+                    items={collection}
+                    initialItemId={item.id}
+                  />
+                  <SetFilterButton filter={`id:${item.id} or ${filter}`} />
+                </span>
+              </div>
+            )
+        )}
       </div>
     </CollapsibleTitle>
   );
@@ -285,10 +346,19 @@ function FactorCombo({
   );
 }
 
-function StartCompareButton({ filter, items }: { filter: string; items: DimItem[] }) {
+function StartCompareButton({
+  filter,
+  items,
+  initialItemId,
+}: {
+  filter: string;
+  items: DimItem[];
+  /** The instance ID of the first item added to compare, so we can highlight it. */
+  initialItemId?: string;
+}) {
   const dispatch = useDispatch();
   const compare = () => {
-    dispatch(compareFilteredItems(filter, items));
+    dispatch(compareFilteredItems(filter, items, initialItemId));
     hideItemPopup();
   };
   const type = items[0]?.typeName;

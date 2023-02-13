@@ -1,7 +1,15 @@
 import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
 import { DimItem } from 'app/inventory/item-types';
-import { CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import {
+  CUSTOM_TOTAL_STAT_HASH,
+  D2ArmorStatHashByName,
+  TOTAL_STAT_HASH,
+} from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
+import { quoteFilterString } from 'app/search/query-parser';
+import { classFilter, itemTypeFilter } from 'app/search/search-filters/known-values';
+import { getInterestingSocketMetadatas, getStatValuesByHash } from 'app/utils/item-utils';
+import { getIntrinsicArmorPerkSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Factor, factorComboCategories, FactorComboCategory, factorCombos } from './triage-factors';
 
@@ -50,6 +58,77 @@ export function getSimilarItems(
   }
 
   return results;
+}
+
+const armorStatFilterNames = Object.keys(D2ArmorStatHashByName);
+
+/**
+ * this collects strictly better, and strictly worse items.
+ * a strictly worse item is statlower,
+ * and also has no special modslot or other factor,
+ * compared to the item(s) it's statlower than.
+ *
+ * a strictly better piece is one that another piece is strictly worse than.
+ */
+export function getBetterWorseItems(
+  exampleItem: DimItem,
+  allItems: DimItem[],
+  filterFactory: (query: string) => ItemFilter
+) {
+  const itemTypeFilterString = itemTypeFilter.fromItem!(exampleItem);
+  const guardianClassFilterString = classFilter.fromItem!(exampleItem);
+
+  // only compare exotics to exotics, and non- to non-
+  const exoticnessFilter = exampleItem.isExotic ? 'is:exotic' : 'not:exotic';
+
+  // always only compare to similar item types, exoticness, and class
+  const alwaysFilters = `${itemTypeFilterString} ${exoticnessFilter} ${guardianClassFilterString}`;
+
+  const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem);
+  // if defined, this perfectly matches the modslots of the example item
+  const modSlotFilter =
+    exampleItemModSlotMetadatas &&
+    `(${exampleItemModSlotMetadatas.map((m) => `modslot:${m.slotTag || 'none'}`).join(' ')})`;
+
+  const exampleItemIntrinsic =
+    !exampleItem.isExotic &&
+    getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
+
+  const exampleItemStats = getStatValuesByHash(exampleItem, 'base');
+
+  // better or equal individual stats, and better total
+  const betterStatsFilter =
+    armorStatFilterNames
+      .map((n) => `basestat:${n}:>=${exampleItemStats[D2ArmorStatHashByName[n]]}`)
+      .join(' ') + ` basestat:total:>${exampleItemStats[TOTAL_STAT_HASH]}`;
+
+  // the better item must have the same intrinsic (or example must have none) to be better than example
+  const betterIntrinsicFilter = exampleItemIntrinsic
+    ? `perk:${quoteFilterString(exampleItemIntrinsic.name)}`
+    : '';
+
+  const betterFilter = `(${alwaysFilters} ${
+    modSlotFilter ?? ''
+  } ${betterIntrinsicFilter} ${betterStatsFilter})`;
+  const betterItems = allItems.filter(filterFactory(betterFilter));
+
+  // worse or equal individual stats, and worse total
+  const worseStatsFilter =
+    armorStatFilterNames
+      .map((n) => `basestat:${n}:<=${exampleItemStats[D2ArmorStatHashByName[n]]}`)
+      .join(' ') + ` basestat:total:<${exampleItemStats[TOTAL_STAT_HASH]}`;
+
+  // a worse item must have the same intrinsic or none to be worse than this example
+  const worseIntrinsicFilter = exampleItemIntrinsic
+    ? `(perk:${quoteFilterString(exampleItemIntrinsic.name)} or armorintrinsic:none)`
+    : '';
+
+  // a worse item's modslot can either be equal to the better item's, or missing
+  const worseModSlotFilter = modSlotFilter ? `(${modSlotFilter} or modslot:none)` : '';
+  const worseFilter = `(${alwaysFilters} ${worseModSlotFilter} ${worseIntrinsicFilter} ${worseStatsFilter})`;
+  const worseItems = allItems.filter(filterFactory(worseFilter));
+
+  return { betterItems, worseItems, betterFilter, worseFilter };
 }
 
 /**
