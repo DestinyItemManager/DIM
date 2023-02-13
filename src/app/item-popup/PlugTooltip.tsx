@@ -26,6 +26,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
+import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { DimItem, DimPlug } from '../inventory/item-types';
@@ -140,6 +141,19 @@ export function PlugTooltip({
         statHash: parseInt(statHash, 10),
       }))) ||
     [];
+
+  // HACK Loadout plugs operate on defs very often and they show their stats via perks,
+  // which are handled below. But the number of fragment slots is just a direct stat.
+  const aspectCapacityStat = def.investmentStats?.find(
+    (stat) => stat.statTypeHash === StatHashes.AspectEnergyCapacity
+  );
+  if (aspectCapacityStat) {
+    statsArray.push({
+      statHash: aspectCapacityStat.statTypeHash,
+      value: aspectCapacityStat.value,
+    });
+  }
+
   const plugDescriptions = usePlugDescriptions(def, statsArray);
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
