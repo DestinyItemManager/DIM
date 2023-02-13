@@ -1,5 +1,7 @@
 ## Next
 
+* You can now click a Loadout name in Organizer's Loadouts column to quickly bring up this loadout for editing.
+
 ## 7.56.0 <span class="changelog-date">(2023-02-12)</span>
 
 * Fixed the Compare tool for items with quotation marks in their name.

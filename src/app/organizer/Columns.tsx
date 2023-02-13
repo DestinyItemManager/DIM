@@ -23,6 +23,8 @@ import { ItemStatValue } from 'app/item-popup/ItemStat';
 import NotesArea from 'app/item-popup/NotesArea';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { recoilValue } from 'app/item-popup/RecoilStat';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
@@ -574,11 +576,19 @@ export function getColumns(
         const inloadouts = loadoutsByItem[item.id];
         return (
           inloadouts &&
-          inloadouts.length > 0 &&
-          inloadouts.map((l) => <div key={l.loadout.id}>{l.loadout.name}</div>)
+          inloadouts.length > 0 && (
+            <LoadoutsCell loadouts={inloadouts.map((l) => l.loadout)} owner={item.owner} />
+          )
         );
       },
       noSort: true,
+      filter: (value, item) => {
+        if (typeof value === 'string') {
+          const inloadouts = loadoutsByItem[item.id];
+          const loadout = inloadouts?.find(({ loadout }) => loadout.id === value);
+          return loadout && `inloadout:${quoteFilterString(loadout.loadout.name)}`;
+        }
+      },
     }),
     c({
       id: 'notes',
@@ -600,6 +610,23 @@ export function getColumns(
   ]);
 
   return columns;
+}
+
+function LoadoutsCell({ loadouts, owner }: { loadouts: Loadout[]; owner: string }) {
+  return (
+    <>
+      {loadouts.map((loadout) => (
+        <div key={loadout.id}>
+          <a
+            data-perk-name={loadout.id}
+            onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
+          >
+            {loadout.name}
+          </a>
+        </div>
+      ))}
+    </>
+  );
 }
 
 function PerksCell({
