@@ -781,10 +781,13 @@ AddEncoding br .br
     Header set Content-Encoding gzip
 </FilesMatch>
 
-
 <FilesMatch \.map\.gz$>
     ForceType application/json
     Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch apple-app-site-association$>
+    ForceType application/json
 </FilesMatch>
 
 # ----------------------------------------------------------------------
