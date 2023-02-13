@@ -6,7 +6,7 @@ import { getItemYear } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
-import { SearchItem, SearchItemType } from './autocomplete';
+import { ArmorySearchItem, SearchItemType } from './autocomplete';
 
 export interface ArmoryEntry {
   name: string;
@@ -61,20 +61,31 @@ export const buildArmoryIndex = memoizeOne((defs: D2ManifestDefinitions) => {
   return results;
 });
 
-export function getArmorySuggestions(armoryIndex: ArmoryEntry[] | undefined, query: string) {
+export function getArmorySuggestions(
+  armoryIndex: ArmoryEntry[] | undefined,
+  query: string
+): ArmorySearchItem[] {
   const armoryEntries = query.length
     ? armoryIndex?.filter((armoryItem) => armoryItem.name.toLocaleLowerCase().includes(query))
     : undefined;
 
+  if (!armoryEntries) {
+    return emptyArray();
+  }
+
+  // Prefer suggestions that start with the query as opposed to those where it's in the middle
+  const sortedEntries = _.sortBy(
+    armoryEntries,
+    (entry) => !entry.name.toLocaleLowerCase().startsWith(query)
+  );
+
   // If there are more than 10 entries, the user's query is probably not descriptive enough to show many items,
   // But if they've typed enough characters, maybe show some?
   const limitedEntries =
-    (armoryEntries &&
-      (armoryEntries.length <= 10
-        ? armoryEntries
-        : query.length >= 5 && _.take(armoryEntries, 3))) ||
-    emptyArray<ArmoryEntry>();
-  const armorySuggestions: SearchItem[] = limitedEntries.map((armoryItem) => ({
+    (sortedEntries.length <= 10 ? sortedEntries : query.length >= 5 && _.take(sortedEntries, 3)) ||
+    emptyArray();
+
+  return limitedEntries.map((armoryItem) => ({
     type: SearchItemType.ArmoryEntry,
     query: {
       fullText: query || '',
@@ -82,10 +93,4 @@ export function getArmorySuggestions(armoryIndex: ArmoryEntry[] | undefined, que
     },
     armoryItem,
   }));
-
-  // Prefer suggestions that start with the query as opposed to those where it's in the middle
-  armorySuggestions.sort(
-    compareBy((entry) => (entry.armoryItem!.name.toLocaleLowerCase().startsWith(query) ? 0 : 1))
-  );
-  return armorySuggestions;
 }

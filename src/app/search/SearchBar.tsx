@@ -130,6 +130,52 @@ const LazyFilterHelp = React.lazy(
   () => import(/* webpackChunkName: "filter-help" */ './FilterHelp')
 );
 
+const RowContents = React.memo(({ item }: { item: SearchItem }) => {
+  function highlight(text: string, section: string) {
+    return item.highlightRange?.section === section ? (
+      <HighlightedText
+        text={text}
+        startIndex={item.highlightRange.range[0]}
+        endIndex={item.highlightRange.range[1]}
+        className={styles.textHighlight}
+      />
+    ) : (
+      text
+    );
+  }
+
+  switch (item.type) {
+    case SearchItemType.Help:
+      return <>{t('Header.FilterHelpMenuItem')}</>;
+    case SearchItemType.ArmoryEntry:
+      return (
+        <>
+          {item.armoryItem.name}
+          <span className={styles.openInArmoryLabel}>{` - ${t('Armory.OpenInArmory')}`}</span>
+          <span className={styles.namedQueryBody}>
+            {`${item.armoryItem.seasonName} (${t('Armory.Season', {
+              season: item.armoryItem.season,
+              year: item.armoryItem.year,
+            })})`}
+          </span>
+        </>
+      );
+    default:
+      return (
+        <>
+          {item.query.header && highlight(item.query.header, 'header')}
+          <span
+            className={clsx({
+              [styles.namedQueryBody]: item.query.header !== undefined,
+            })}
+          >
+            {highlight(item.query.body, 'body')}
+          </span>
+        </>
+      );
+  }
+});
+
 const Row = React.memo(
   ({
     highlighted,
@@ -143,82 +189,32 @@ const Row = React.memo(
     isPhonePortrait: boolean;
     isTabAutocompleteItem: boolean;
     onClick: (e: React.MouseEvent, item: SearchItem) => void;
-  }) => {
-    function highlight(text: string, section: string) {
-      return item.highlightRange?.section === section ? (
-        <HighlightedText
-          text={text}
-          startIndex={item.highlightRange.range[0]}
-          endIndex={item.highlightRange.range[1]}
-          className={styles.textHighlight}
-        />
+  }) => (
+    <>
+      {item.type === SearchItemType.ArmoryEntry ? (
+        <BungieImage className={styles.armoryItemIcon} src={item.armoryItem.icon} />
       ) : (
-        text
-      );
-    }
-
-    const rowContents = () => {
-      switch (item.type) {
-        case SearchItemType.Help:
-          return t('Header.FilterHelpMenuItem');
-        case SearchItemType.ArmoryEntry:
-          return (
-            <>
-              {item.armoryItem!.name}
-              <span className={styles.openInArmoryLabel}>{' - ' + t('Armory.OpenInArmory')}</span>
-              <span className={styles.namedQueryBody}>
-                {item.armoryItem &&
-                  item.armoryItem.seasonName +
-                    ' (' +
-                    t('Armory.Season', {
-                      season: item.armoryItem.season,
-                      year: item.armoryItem.year,
-                    }) +
-                    ')'}
-              </span>
-            </>
-          );
-        default:
-          return (
-            <>
-              {item.query.header && highlight(item.query.header, 'header')}
-              <span
-                className={clsx({
-                  [styles.namedQueryBody]: item.query.header !== undefined,
-                })}
-              >
-                {highlight(item.query.body, 'body')}
-              </span>
-            </>
-          );
-      }
-    };
-
-    return (
-      <>
-        {item.type === SearchItemType.ArmoryEntry ? (
-          <BungieImage className={styles.armoryItemIcon} src={item.armoryItem!.icon} />
-        ) : (
-          <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
-        )}
-        <p className={styles.menuItemQuery}>{rowContents()}</p>
-        {!isPhonePortrait && isTabAutocompleteItem && (
-          <KeyHelp className={styles.keyHelp} combo="tab" />
-        )}
-        {!isPhonePortrait && highlighted && <KeyHelp className={styles.keyHelp} combo="enter" />}
-        {(item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
-          <button
-            type="button"
-            className={styles.deleteIcon}
-            onClick={(e) => onClick(e, item)}
-            title={t('Header.DeleteSearch')}
-          >
-            <AppIcon icon={closeIcon} />
-          </button>
-        )}
-      </>
-    );
-  }
+        <AppIcon className={styles.menuItemIcon} icon={searchItemIcons[item.type]} />
+      )}
+      <p className={styles.menuItemQuery}>
+        <RowContents item={item} />
+      </p>
+      {!isPhonePortrait && isTabAutocompleteItem && (
+        <KeyHelp className={styles.keyHelp} combo="tab" />
+      )}
+      {!isPhonePortrait && highlighted && <KeyHelp className={styles.keyHelp} combo="enter" />}
+      {(item.type === SearchItemType.Recent || item.type === SearchItemType.Saved) && (
+        <button
+          type="button"
+          className={styles.deleteIcon}
+          onClick={(e) => onClick(e, item)}
+          title={t('Header.DeleteSearch')}
+        >
+          <AppIcon icon={closeIcon} />
+        </button>
+      )}
+    </>
+  )
 );
 
 // TODO: break filter autocomplete into its own object/helpers... with tests
@@ -371,7 +367,7 @@ function SearchBar(
             setFilterHelpOpen(true);
             break;
           case SearchItemType.ArmoryEntry:
-            setArmoryItemHash(changes.selectedItem.armoryItem!.hash);
+            setArmoryItemHash(changes.selectedItem.armoryItem.hash);
             break;
           default:
             // exit early if non FilterHelper item was selected
@@ -497,7 +493,9 @@ function SearchBar(
               className={clsx(styles.menuItem, {
                 [styles.highlightedItem]: highlightedIndex === index,
               })}
-              key={`${item.type}${item.query.fullText}${item.armoryItem?.hash}`}
+              key={`${item.type}${item.query.fullText}${
+                item.type === SearchItemType.ArmoryEntry && item.armoryItem.hash
+              }`}
               {...getItemProps({ item, index })}
             >
               <Row

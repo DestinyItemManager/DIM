@@ -35,8 +35,7 @@ export interface SearchQuery {
   helpText?: string;
 }
 
-/** An item in the search autocompleter */
-export interface SearchItem {
+interface BaseSearchItem {
   type: SearchItemType;
   /** The suggested query */
   query: SearchQuery;
@@ -46,9 +45,19 @@ export interface SearchItem {
     /** The indices of the first and last character that should be highlighted */
     range: [number, number];
   };
-  /** For type === SearchItemType.ArmoryEntry */
-  armoryItem?: ArmoryEntry;
 }
+
+export interface ArmorySearchItem extends BaseSearchItem {
+  type: SearchItemType.ArmoryEntry;
+  armoryItem: ArmoryEntry;
+}
+
+/** An item in the search autocompleter */
+export type SearchItem =
+  | ArmorySearchItem
+  | (BaseSearchItem & {
+      type: Exclude<SearchItemType, SearchItemType.ArmoryEntry>;
+    });
 
 /** matches a keyword that's probably a math comparison */
 const mathCheck = /[\d<>=]/;
