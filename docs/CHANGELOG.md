@@ -2,6 +2,7 @@
 
 * You can now click a Loadout name in Organizer's Loadouts column to quickly bring up this loadout for editing.
 * When hovering over subclass Aspects in Loadouts and Loadout Optimizer, the tooltip will now show the number of Fragment slots granted.
+* You can now bring up the Armory page for a weapon directly from the search bar by typing a weapon name there and clicking the corresponding entry.
 
 ## 7.56.0 <span class="changelog-date">(2023-02-12)</span>
 
