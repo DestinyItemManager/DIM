@@ -616,13 +616,13 @@ function LoadoutsCell({ loadouts, owner }: { loadouts: Loadout[]; owner: string 
   return (
     <>
       {loadouts.map((loadout) => (
-        <div
-          key={loadout.id}
-          className={styles.loadout}
-          data-perk-name={loadout.id}
-          onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
-        >
-          {loadout.name}
+        <div key={loadout.id}>
+          <a
+            data-perk-name={loadout.id}
+            onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
+          >
+            {loadout.name}
+          </a>
         </div>
       ))}
     </>
