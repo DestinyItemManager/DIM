@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "stylelint-config-standard-scss",
-    "stylelint-config-css-modules",
-    "stylelint-config-prettier"
-  ],
+  "extends": ["stylelint-config-standard-scss", "stylelint-config-css-modules"],
   "rules": {
     "alpha-value-notation": "number",
     "shorthand-property-no-redundant-values": null,
