@@ -8,6 +8,7 @@ import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
 import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
+import { loadCoreSettings } from 'app/manifest/actions';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { get, set } from 'app/storage/idb-keyval';
@@ -132,6 +133,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
       }
     }
 
+    dispatch(loadCoreSettings()); // no need to wait
     $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
     await dispatch(loadNewItems(account));
     const stores = await dispatch(loadStoresData(account));
