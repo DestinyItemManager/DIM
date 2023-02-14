@@ -1012,7 +1012,21 @@ AddEncoding br .br
 <FilesMatch "manifest-webapp">
     <IfModule mod_headers.c>
         Header set Cache-Control "max-age=900, s-maxage=86400"
-        Header set Vary "User-Agent"
+        Header unset Expires
+    </IfModule>
+</FilesMatch>
+
+
+<FilesMatch "apple-app-site-association">
+    <IfModule mod_headers.c>
+        Header set Cache-Control "max-age=900, s-maxage=86400"
+        Header unset Expires
+    </IfModule>
+</FilesMatch>
+
+<FilesMatch "assetlinks\.json">
+    <IfModule mod_headers.c>
+        Header set Cache-Control "max-age=900, s-maxage=86400"
         Header unset Expires
     </IfModule>
 </FilesMatch>
