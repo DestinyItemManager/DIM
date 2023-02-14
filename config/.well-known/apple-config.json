@@ -2,10 +2,7 @@
   "applinks": {
     "details": [
       {
-        "appIDs": [
-          "P7G764E7RR.com.destinyitemmanager.app",
-          "G6C8S25WLN.com.destinyitemmanager.app"
-        ],
+        "appIDs": ["P7G764E7RR.com.destinyitemmanager.app"],
         "components": [
           {
             "#": "no_universal_links",
