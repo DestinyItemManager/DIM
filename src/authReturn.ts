@@ -4,15 +4,15 @@ import { setToken } from './app/bungie-api/oauth-tokens';
 import { reportException } from './app/utils/exceptions';
 
 function handleAuthReturn() {
-  const iOSApp = navigator.userAgent.includes('DIM AppStore');
+  const queryParams = new URL(window.location.href).searchParams;
+  const code = queryParams.get('code');
+  const state = queryParams.get('state');
+
+  const iOSApp = state?.startsWith('dimauth-');
   if (iOSApp) {
     window.location.href = window.location.href.replace('https', 'dimauth');
     return;
   }
-
-  const queryParams = new URL(window.location.href).searchParams;
-  const code = queryParams.get('code');
-  const state = queryParams.get('state');
 
   if (!code?.length) {
     setError("We expected an authorization code parameter from Bungie.net, but didn't get one.");
@@ -53,6 +53,7 @@ function setError(error: string) {
   document.getElementById('error-message')!.textContent = error;
   document.getElementById('error-display')!.style.display = 'block';
   document.getElementById('loading')!.style.display = 'none';
+  document.getElementById('user-agent')!.textContent = navigator.userAgent;
 }
 
 handleAuthReturn();

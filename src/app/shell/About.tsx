@@ -48,12 +48,12 @@ function getSystemInfo() {
   const { name: osName, version: osVersion } = parser.getOS();
   const userAgent = parser.getUA();
   const dimAppStoreIndex = userAgent.indexOf('DIM AppStore');
-  let modifiedBrowserName = browserName;
+  let browserInfo = `${browserName} ${browserVersion}`;
   if (dimAppStoreIndex >= 0) {
-    modifiedBrowserName = userAgent.substring(dimAppStoreIndex);
+    browserInfo = userAgent.substring(dimAppStoreIndex);
   }
 
-  const info = `${modifiedBrowserName} ${browserVersion} - ${osName} ${osVersion}`;
+  const info = `${browserInfo} - ${osName} ${osVersion}`;
   return info;
 }
 
