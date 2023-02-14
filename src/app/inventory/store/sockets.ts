@@ -2,6 +2,7 @@ import { getCraftingTemplate } from 'app/armory/crafting-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
+import { emptyArray } from 'app/utils/empty';
 import { eventArmorRerollSocketIdentifiers } from 'app/utils/socket-utils';
 import {
   DestinyInventoryItemDefinition,
@@ -429,8 +430,10 @@ function buildPlug(
       ).join('\n')
     : '';
 
+  const matchingPlugs =
+    plugSet?.plugs.filter((p) => p.plugDef.hash === plugDef.hash) ?? emptyArray();
   const cannotCurrentlyRoll = Boolean(
-    plugSet?.plugs.find((p) => p.plugDef.hash === plugDef.hash)?.cannotCurrentlyRoll
+    matchingPlugs.length && matchingPlugs.every((p) => p.cannotCurrentlyRoll)
   );
 
   return {
