@@ -2,6 +2,7 @@ import { getCraftingTemplate } from 'app/armory/crafting-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
+import { emptyArray } from 'app/utils/empty';
 import { eventArmorRerollSocketIdentifiers } from 'app/utils/socket-utils';
 import {
   DestinyInventoryItemDefinition,
@@ -252,9 +253,13 @@ function buildDefinedSocket(
       const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
       if (plugSet) {
         for (const reusablePlug of plugSet.reusablePlugItems) {
-          const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
+          const built = buildCachedDefinedPlug(
+            defs,
+            reusablePlug.plugItemHash,
+            reusablePlug.currentlyCanRoll
+          );
           if (built) {
-            reusablePlugs.push({ ...built, cannotCurrentlyRoll: !reusablePlug.currentlyCanRoll });
+            reusablePlugs.push(built);
             addCraftingReqs(reusablePlug);
           }
         }
@@ -284,12 +289,16 @@ function buildDefinedSocket(
         }
 
         for (const randomPlug of Object.values(plugs)) {
-          const built = buildCachedDefinedPlug(defs, randomPlug.plugItemHash);
+          const built = buildCachedDefinedPlug(
+            defs,
+            randomPlug.plugItemHash,
+            randomPlug.currentlyCanRoll
+          );
           // we don't want "stat roll" plugs to count as reusablePlugs, but they're almost
           // indistinguishable from exotic intrinsic armor perks, so we stop them here based
           // on the fact that they have no name
           if (built?.plugDef.displayProperties.name) {
-            reusablePlugs.push({ ...built, cannotCurrentlyRoll: !randomPlug.currentlyCanRoll });
+            reusablePlugs.push(built);
             addCraftingReqs(randomPlug);
           }
         }
@@ -351,6 +360,8 @@ function buildDefinedSocket(
 
   const plugSet = socketDef.reusablePlugSetHash
     ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
+    : socketDef.randomizedPlugSetHash
+    ? buildCachedDimPlugSet(defs, socketDef.randomizedPlugSetHash)
     : undefined;
 
   return {
@@ -390,9 +401,12 @@ function buildPlug(
   defs: D2ManifestDefinitions,
   plug: DestinyItemPlugBase | DestinyItemSocketState,
   socketDef: DestinyItemSocketEntryDefinition,
-  plugObjectivesData?: {
-    [plugItemHash: number]: DestinyObjectiveProgress[];
-  }
+  plugObjectivesData:
+    | {
+        [plugItemHash: number]: DestinyObjectiveProgress[];
+      }
+    | undefined,
+  plugSet: DimPlugSet | undefined
 ): DimPlug | null {
   const plugHash = isDestinyItemPlug(plug) ? plug.plugItemHash : plug.plugHash;
   const enabled = isDestinyItemPlug(plug) ? plug.enabled : plug.isEnabled;
@@ -416,12 +430,19 @@ function buildPlug(
       ).join('\n')
     : '';
 
+  const matchingPlugs =
+    plugSet?.plugs.filter((p) => p.plugDef.hash === plugDef.hash) ?? emptyArray();
+  const cannotCurrentlyRoll = Boolean(
+    matchingPlugs.length && matchingPlugs.every((p) => p.cannotCurrentlyRoll)
+  );
+
   return {
     plugDef,
     enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plugObjectivesData?.[plugHash] || [],
     stats: null,
+    cannotCurrentlyRoll,
   };
 }
 
@@ -607,8 +628,14 @@ function buildSocket(
 
   const isReusable = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable;
 
+  const plugSet = socketDef.reusablePlugSetHash
+    ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
+    : socketDef.randomizedPlugSetHash
+    ? buildCachedDimPlugSet(defs, socketDef.randomizedPlugSetHash)
+    : undefined;
+
   // The currently equipped plug, if any.
-  const plugged = buildPlug(defs, socket, socketDef, plugObjectivesData);
+  const plugged = buildPlug(defs, socket, socketDef, plugObjectivesData, plugSet);
   // TODO: not sure if this should always be included!
   const plugOptions = plugged ? [plugged] : [];
 
@@ -620,7 +647,7 @@ function buildSocket(
     if (reusablePlugs) {
       // Get options from live info
       for (const reusablePlug of reusablePlugs) {
-        const built = buildPlug(defs, reusablePlug, socketDef, plugObjectivesData);
+        const built = buildPlug(defs, reusablePlug, socketDef, plugObjectivesData, plugSet);
         addPlugOption(built, plugged, plugOptions);
       }
       curatedRoll = socketDef.reusablePlugItems.map((p) => p.plugItemHash);
@@ -629,7 +656,11 @@ function buildSocket(
       const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
       if (plugSet) {
         for (const reusablePlug of plugSet.reusablePlugItems) {
-          const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
+          const built = buildCachedDefinedPlug(
+            defs,
+            reusablePlug.plugItemHash,
+            reusablePlug.currentlyCanRoll
+          );
           addPlugOption(built, plugged, plugOptions);
         }
         curatedRoll = plugSet.reusablePlugItems.map((p) => p.plugItemHash);
@@ -647,10 +678,6 @@ function buildSocket(
   // TODO: is this still true? also, should this be ?? instead of ||
   const hasRandomizedPlugItems =
     Boolean(socketDef?.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets;
-
-  const plugSet = socketDef.reusablePlugSetHash
-    ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
-    : undefined;
 
   return {
     socketIndex: index,
@@ -689,7 +716,7 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
   const plugs: DimPlug[] = [];
   const defPlugSet = defs.PlugSet.get(plugSetHash);
   for (const plugEntry of defPlugSet.reusablePlugItems) {
-    const plug = buildCachedDefinedPlug(defs, plugEntry.plugItemHash);
+    const plug = buildCachedDefinedPlug(defs, plugEntry.plugItemHash, plugEntry.currentlyCanRoll);
     if (plug) {
       plugs.push(plug);
     }
@@ -710,7 +737,11 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
 /**
  * This builds DimPlugs and caches their values so we reduce the number of instances in memory.
  */
-function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): DimPlug | null {
+function buildCachedDefinedPlug(
+  defs: D2ManifestDefinitions,
+  plugHash: number,
+  currentlyCanRoll?: boolean
+): DimPlug | null {
   const cachedValue = definedPlugCache[plugHash];
   // The result of buildDefinedPlug can be null, we still consider that a cached value.
   if (cachedValue !== undefined) {
@@ -718,7 +749,7 @@ function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): 
     // We also run DimItems through immer in the store, which means these get frozen. This essentially
     // unfreezes it in that situation. It only seems to be an issue for fake items in loadouts.
     // TODO (ryan) lets find a way around this
-    return cachedValue ? { ...cachedValue } : null;
+    return cachedValue ? { ...cachedValue, cannotCurrentlyRoll: currentlyCanRoll === false } : null;
   }
 
   const plug = buildDefinedPlug(defs, plugHash);
@@ -726,5 +757,5 @@ function buildCachedDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): 
 
   // We mutate cannotCurrentlyRoll and attach stats in this module so we need to spread the object
   // TODO (ryan) lets find a way around this
-  return plug ? { ...plug } : null;
+  return plug ? { ...plug, cannotCurrentlyRoll: currentlyCanRoll === false } : null;
 }

@@ -273,6 +273,7 @@
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
     "RequiredLevel": "Shows items based on their required level.",
+    "RetiredPerk": "Shows weapons with perks that no longer obtainable.",
     "SearchPrompt": "Search available filter commands",
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",

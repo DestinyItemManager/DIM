@@ -75,8 +75,7 @@ const socketFilters: FilterDefinition[] = [
         return false;
       }
 
-      const legendaryWeapon =
-        item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
+      const legendaryWeapon = item.bucket?.sort === 'Weapons' && item.tier === 'Legendary';
 
       if (!legendaryWeapon) {
         return false;
@@ -101,7 +100,7 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.ExtraPerk'),
     destinyVersion: 2,
     filter: () => (item: DimItem) => {
-      if (!(item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary')) {
+      if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
         return false;
       }
 
@@ -289,6 +288,20 @@ const socketFilters: FilterDefinition[] = [
       ({ compare }) =>
       (item: DimItem) =>
         item.sockets && compare!(countEnhancedPerks(item.sockets)),
+  },
+  {
+    keywords: 'retiredperk',
+    description: tl('Filter.RetiredPerk'),
+    destinyVersion: 2,
+    filter: () => (item: DimItem) => {
+      if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
+        return false;
+      }
+
+      return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable).some(
+        (socket) => socket.plugOptions.some((p) => p.cannotCurrentlyRoll)
+      );
+    },
   },
 ];
 
