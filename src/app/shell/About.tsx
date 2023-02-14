@@ -46,13 +46,20 @@ function getSystemInfo() {
   const parser = new UAParser();
   const { name: browserName, version: browserVersion } = parser.getBrowser();
   const { name: osName, version: osVersion } = parser.getOS();
-  const info = `${browserName} ${browserVersion} - ${osName} ${osVersion}`;
+  const userAgent = parser.getUA();
+  const dimAppStoreIndex = userAgent.indexOf('DIM AppStore');
+  let modifiedBrowserName = browserName;
+  if (dimAppStoreIndex >= 0) {
+    modifiedBrowserName = userAgent.substring(dimAppStoreIndex);
+  }
+
+  const info = `${modifiedBrowserName} ${browserVersion} - ${osName} ${osVersion}`;
   return info;
 }
 
 export default function About() {
   // The App Store version can't show donation links I guess?
-  const iOSApp = document.cookie.includes('app-platform=iOS App Store;');
+  const iOSApp = navigator.userAgent.includes('DIM AppStore');
 
   useEffect(() => {
     if (iOSApp) {

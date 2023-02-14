@@ -4,6 +4,12 @@ import { setToken } from './app/bungie-api/oauth-tokens';
 import { reportException } from './app/utils/exceptions';
 
 function handleAuthReturn() {
+  const iOSApp = navigator.userAgent.includes('DIM AppStore');
+  if (iOSApp) {
+    window.location.href = window.location.href.replace('https', 'dimauth');
+    return;
+  }
+
   const queryParams = new URL(window.location.href).searchParams;
   const code = queryParams.get('code');
   const state = queryParams.get('state');
