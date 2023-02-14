@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
+import { ArmoryEntry, getArmorySuggestions } from './armory-search';
 import { makeCommentString, parseQuery, traverseAST } from './query-parser';
 import { SearchConfig } from './search-config';
 import freeformFilters from './search-filters/freeform';
@@ -19,6 +20,8 @@ export const enum SearchItemType {
   Autocomplete,
   /** Open help */
   Help,
+  /** Open the armory view for a page */
+  ArmoryEntry,
 }
 
 export interface SearchQuery {
@@ -32,8 +35,7 @@ export interface SearchQuery {
   helpText?: string;
 }
 
-/** An item in the search autocompleter */
-export interface SearchItem {
+interface BaseSearchItem {
   type: SearchItemType;
   /** The suggested query */
   query: SearchQuery;
@@ -44,6 +46,18 @@ export interface SearchItem {
     range: [number, number];
   };
 }
+
+export interface ArmorySearchItem extends BaseSearchItem {
+  type: SearchItemType.ArmoryEntry;
+  armoryItem: ArmoryEntry;
+}
+
+/** An item in the search autocompleter */
+export type SearchItem =
+  | ArmorySearchItem
+  | (BaseSearchItem & {
+      type: Exclude<SearchItemType, SearchItemType.ArmoryEntry>;
+    });
 
 /** matches a keyword that's probably a math comparison */
 const mathCheck = /[\d<>=]/;
@@ -74,7 +88,12 @@ const filterNames = [
 export default function createAutocompleter(searchConfig: SearchConfig) {
   const filterComplete = makeFilterComplete(searchConfig);
 
-  return (query: string, caretIndex: number, recentSearches: Search[]): SearchItem[] => {
+  return (
+    query: string,
+    caretIndex: number,
+    recentSearches: Search[],
+    includeArmory?: boolean
+  ): SearchItem[] => {
     // If there's a query, it's always the first entry
     const queryItem: SearchItem | undefined = query
       ? {
@@ -107,6 +126,10 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
       },
     };
 
+    const armorySuggestions = includeArmory
+      ? getArmorySuggestions(searchConfig.armorySuggestions, query)
+      : [];
+
     // mix them together
     return [
       ..._.take(
@@ -116,6 +139,7 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
         ),
         7
       ),
+      ...armorySuggestions,
       helpItem,
     ];
   };
