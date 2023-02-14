@@ -1,10 +1,22 @@
 {
   "applinks": {
-    "apps": [],
     "details": [
       {
-        "appID": "P7G764E7RR.com.destinyitemmanager.app",
-        "paths": ["*"]
+        "appIDs": [
+          "P7G764E7RR.com.destinyitemmanager.app",
+          "G6C8S25WLN.com.destinyitemmanager.app"
+        ],
+        "components": [
+          {
+            "#": "no_universal_links",
+            "exclude": true,
+            "comment": "Matches any URL with a fragment that equals no_universal_links and instructs the system not to open it as a universal link."
+          },
+          {
+            "/": "*",
+            "comment": "Matches any URL."
+          }
+        ]
       }
     ]
   }
