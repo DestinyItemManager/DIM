@@ -8,7 +8,8 @@ function handleAuthReturn() {
   const code = queryParams.get('code');
   const state = queryParams.get('state');
 
-  const iOSApp = state?.startsWith('dimauth-');
+  // Detect when we're in the iOS app's auth popup (but not in the app itself)
+  const iOSApp = state?.startsWith('dimauth-') && !navigator.userAgent.includes('DIM AppStore');
   if (iOSApp) {
     window.location.href = window.location.href.replace('https', 'dimauth');
     return;
