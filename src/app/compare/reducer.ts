@@ -4,7 +4,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { getSelectionTree } from 'app/organizer/ItemTypeSelector';
 import { ActionType, getType, Reducer } from 'typesafe-actions';
 import * as actions from './actions';
-import { stripAdept } from './compare-buttons';
+import { compareNameQuery } from './compare-buttons';
 
 export interface CompareSession {
   /**
@@ -129,9 +129,7 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
     // Start a new session
     const itemCategoryHashes = getItemCategoryHashesFromExampleItem(item);
 
-    const itemNameQuery = item.bucket.inWeapons
-      ? `name:"${stripAdept(item.name)}"`
-      : `name:"${item.name}"`;
+    const itemNameQuery = compareNameQuery(item);
 
     const vendorCharacterId = item.vendor?.characterId;
 

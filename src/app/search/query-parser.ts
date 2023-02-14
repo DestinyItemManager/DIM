@@ -483,17 +483,29 @@ export function canonicalizeQuery(query: QueryAST, depth = 0): string {
  */
 export const traverseAST = (
   ast: QueryAST,
-  callback: (ast: FilterOp) => void,
+  /** A callback to run on each filter op. Return false to stop traversing. */
+  callback: (ast: FilterOp) => boolean | undefined,
   reverse = false
-): void => {
-  if ('operand' in ast) {
-    traverseAST(ast.operand, callback, reverse);
-  } else if ('operands' in ast) {
-    const operands = reverse ? [...ast.operands].reverse() : ast.operands;
-    for (const operand of operands) {
-      traverseAST(operand, callback, reverse);
+): boolean | undefined => {
+  switch (ast.op) {
+    case 'filter':
+      return callback(ast);
+
+    case 'not':
+      return traverseAST(ast.operand, callback, reverse);
+
+    case 'and':
+    case 'or': {
+      const operands = reverse ? [...ast.operands].reverse() : ast.operands;
+      for (const operand of operands) {
+        if (traverseAST(operand, callback, reverse) === false) {
+          return false;
+        }
+      }
+      break;
     }
-  } else if ('type' in ast) {
-    callback(ast);
+
+    case 'noop':
+      break;
   }
 };

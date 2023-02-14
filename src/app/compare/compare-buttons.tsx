@@ -129,7 +129,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     {
       buttonLabel: [exampleItem.name],
       // TODO: I'm gonna get in trouble for this but I think it should just match on name which includes reissues. The old logic used dupeID which is more discriminating.
-      query: `name:"${exampleItem.name}"`,
+      query: compareNameQuery(exampleItem),
     },
   ]);
 
@@ -162,6 +162,12 @@ export const stripAdept = (name: string) =>
     .trim()
     .replace(new RegExp(t('Filter.Timelost'), 'gi'), '')
     .trim();
+
+export function compareNameQuery(item: DimItem) {
+  return item.bucket.inWeapons
+    ? `name:${quoteFilterString(stripAdept(item.name))}`
+    : `name:${quoteFilterString(item.name)}`;
+}
 
 /**
  * Generate possible comparisons for weapons, given a reference item.
@@ -232,7 +238,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     // exact same weapon, judging by name. might span multiple expansions.
     {
       buttonLabel: [adeptStripped],
-      query: `name:"${adeptStripped}"`,
+      query: compareNameQuery(exampleItem),
     },
   ]);
 
@@ -254,7 +260,7 @@ export function defaultComparisons(exampleItem: DimItem): CompareButton[] {
     // exact same item, judging by name. might span multiple expansions.
     {
       buttonLabel: [exampleItem.name],
-      query: `name:"${exampleItem.name}"`,
+      query: compareNameQuery(exampleItem),
     },
   ]);
 

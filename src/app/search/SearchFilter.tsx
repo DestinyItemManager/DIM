@@ -13,7 +13,7 @@ import { SearchInput } from './SearchInput';
 /**
  * The main search filter that's in the header.
  */
-export function SearchFilter(
+export default React.forwardRef(function SearchFilter(
   {
     onClear,
   }: {
@@ -80,6 +80,4 @@ export function SearchFilter(
   ) : (
     <SearchInput onQueryChanged={onQueryChanged} placeholder={placeholder} query={searchQuery} />
   );
-}
-
-export default React.forwardRef(SearchFilter);
+});

@@ -1,6 +1,6 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import { currentProfileSelector, settingsSelector } from 'app/dim-api/selectors';
+import { currentProfileSelector, settingSelector, settingsSelector } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyObject, emptySet } from 'app/utils/empty';
@@ -15,6 +15,7 @@ import { characterSortImportanceSelector, characterSortSelector } from '../setti
 import { getTag, ItemInfos } from './dim-item-info';
 import { DimItem } from './item-types';
 import { collectNotesHashtags } from './note-hashtags';
+import { ItemCreationContext } from './store/d2-item-factory';
 import { getCurrentStore, getVault } from './stores-helpers';
 
 /** All stores, unsorted. */
@@ -164,6 +165,22 @@ export const craftingMaterialCountsSelector = createSelector(
     }
     return results;
   }
+);
+
+/**
+ * All the dependencies for item creation. Don't use this before profile is loaded...
+ */
+export const createItemContextSelector = createSelector(
+  d2ManifestSelector,
+  profileResponseSelector,
+  bucketsSelector,
+  (state: RootState) => settingSelector('customTotalStatsByClass')(state),
+  (defs, profileResponse, buckets, customTotalStatsByClass): ItemCreationContext => ({
+    defs: defs!,
+    buckets: buckets!,
+    profileResponse: profileResponse!,
+    customTotalStatsByClass,
+  })
 );
 
 const STORE_SPECIFIC_OWNERSHIP_BUCKETS = [
@@ -319,15 +336,6 @@ export const dynamicStringsSelector = (state: RootState) => {
     };
   }
 };
-
-/** Does the user have an classified items? */
-export const hasClassifiedSelector = createSelector(allItemsSelector, (allItems) =>
-  allItems.some(
-    (i) =>
-      i.classified &&
-      (i.location.inWeapons || i.location.inArmor || i.bucket.hash === BucketHashes.Ghost)
-  )
-);
 
 /** Item infos (tags/notes) */
 export const itemInfosSelector = (state: RootState): ItemInfos =>

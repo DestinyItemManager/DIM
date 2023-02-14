@@ -29,7 +29,7 @@ const statNameAliases = {
   [StatHashes.ReloadSpeed]: ['Reload'],
 };
 
-export const enhancedPerkToRegularPerk = _.mapValues(_.invert(perkToEnhanced), Number);
+const enhancedPerkToRegularPerk = _.mapValues(_.invert(perkToEnhanced), Number);
 
 export function usePlugDescriptions(
   plug?: DestinyInventoryItemDefinition,

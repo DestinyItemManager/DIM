@@ -32,10 +32,6 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     warnNoSync: true,
     // Expose the "Add required stat mods" Loadout Optimizer toggle
     loAutoStatMods: !env.release,
-    // Whether to send cookies to the Bungie.net API
-    apiCookies: false,
-    // If saved DIM API data in IDB is recent enough, don't bother getting it from the server
-    skipDimApiFirstLoadIfRecent: !env.release,
     // Pretend that Bungie.net is down for maintenance
     simulateBungieMaintenance: false,
     // Pretend that Bungie.net is not returning sockets info

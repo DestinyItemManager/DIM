@@ -492,6 +492,7 @@ export default (env: Env) => {
           {
             from: `./config/.well-known/apple-config.json`,
             to: '.well-known/apple-app-site-association',
+            toType: 'file',
           },
         ],
       }),

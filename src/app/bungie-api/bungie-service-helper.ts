@@ -57,8 +57,7 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
         TIMEOUT,
         notifyTimeout
       ),
-      API_KEY,
-      $featureFlags.apiCookies
+      API_KEY
     ),
     logThrottle
   )
@@ -67,11 +66,7 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
 /** used to get manifest and global alerts */
 export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
-    createHttpClient(
-      createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout),
-      API_KEY,
-      false
-    ),
+    createHttpClient(createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout), API_KEY),
     logThrottle
   )
 );
@@ -79,7 +74,7 @@ export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
 /**
  * wrap HttpClient in handling specific to DIM, using i18n strings, bounce to login, etc
  */
-export function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
+function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
   return async (config: HttpClientConfig) => {
     try {
       return await httpClient(config);
@@ -92,7 +87,7 @@ export function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
 /**
  * if HttpClient throws an error (js, Bungie, http) this enriches it with DIM concepts and then re-throws it
  */
-export function handleErrors(error: Error) {
+function handleErrors(error: Error) {
   if (error instanceof DOMException && error.name === 'AbortError') {
     throw (
       navigator.onLine

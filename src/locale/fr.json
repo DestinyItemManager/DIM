@@ -666,7 +666,7 @@
     "NoExotics": "Aucun engrammes n'est disponible pour le transfert.",
     "NoSpace": "Vous n'avez plus d'espace libre dans le coffre et votre autres personnages.",
     "NoneMatch": "Aucun de vos arsenaux ne correspond aux filtres.",
-    "NotStarted": "En attende de la fin d'autres actions",
+    "NotStarted": "En attente que d'autres actions soient terminées, ou que l'inventaire soit actualisé pour terminer le chargement",
     "NotesPlaceholder": "Écrivez quelques notes sur cet arsenal ou utilisez des #hashtags pour le catégoriser",
     "NotificationTitle": "Arsenal: {{name}}",
     "OnWrongCharacterAdvice": "Cliquez ici pour trouver les objets les plus puissants de ce personnage.",
@@ -809,7 +809,7 @@
       "Untracked": "Non suivi"
     },
     "TriageTab": "Triage",
-    "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
+    "UnreliablePerkOption": "Cet attribut n'apparait que dans les collections. Il se peut qu'il ne puisse pas être aléatoirement obtenu sur cet objet.",
     "Vault": "Coffre",
     "WeaponLevel": "Niveau d'arme {{level}}"
   },
@@ -833,7 +833,7 @@
       "Archetype": "Archétype",
       "BaseStats": "Statistiques de Base",
       "Breaker": "Anti-champion",
-      "Crafted": "Shaped Date",
+      "Crafted": "Date de façonnage",
       "CustomTotal": "Total Personnalisé",
       "Damage": "Dégâts",
       "Element": "Élément",
@@ -934,7 +934,7 @@
   },
   "Settings": {
     "AutoLockTagged": "Synchroniser l'état de verrouillage des objets avec leur étiquette",
-    "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. Crafted items will remain unlocked to allow reshaping. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
+    "AutoLockTaggedExplanation": "DIM verrouillera et déverrouillera automatiquement les objets pour correspondre à leur étiquette. Les objets façonnés resteront déverrouillés pour permettre le refaçonnage. Lorsque ce paramètre est activé, l'icône de verrouillage ne sera pas affichée sur l'icône des objets étiquetés.",
     "BadgePostmaster": "Afficher le nombre d'objets au commis des postes pour le personnage actuel sur l'icône de l'application",
     "BadgePostmasterExplanation": "Pour utiliser cette fonctionnalité vous devez installer DIM en tant qu'application et votre système d'exploitation doit supporter l'affichage de badges",
     "BothDescriptions": "Les deux descriptions",
@@ -958,7 +958,7 @@
     "ExportSS": "Tableur de l'inventaire",
     "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
     "ExportSSNoStores": "Vous devez charger votre inventaire une première fois avant de cliquer sur ce bouton.",
-    "HidePullFromPostmaster": "Masquer le bouton \"Collecter le commis des postes\"",
+    "HidePullFromPostmaster": "Masquer le bouton \"$t(Loadouts.PullFromPostmaster)\"",
     "Inventory": "Affichage de l'inventaire",
     "InventoryColumns": "Nombre de colonne d'inventaire de personnage",
     "InventoryColumnsMobile": "Longueur de l'inventaire du personnage sur téléphone en mode portrait",
@@ -1203,7 +1203,6 @@
       },
       "Translation": "Rejoignez l'équipe de traduction!",
       "TranslationText": "Nous utilisons {{link}} pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe.",
-      "Twitter": "Twitter",
       "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
       "Wiki": "Wiki Mode d'Emploi DIM",
@@ -1218,9 +1217,7 @@
       "Explanation": "Permettre à DIM de visualiser et de modifier vos personnages Destiny, coffre et sa progression.",
       "LearnMore": "En savoir plus sur les comptes et la connexion",
       "NewAccount": "Se connecter avec un autre compte Bungie.net",
-      "Permission": "Nous avons besoin de votre permission...",
-      "UpgradeExplanation": "Les applications d'écran d'accueil de votre version d'iOS ne vous permettent pas de vous connecter à DIM. Veuillez mettre à jour vers iOS 12.2 ou plus et ré ajouter DIM à votre écran d'accueil.",
-      "UpgradeiOS": "Veuillez mettre à jour iOS"
+      "Permission": "Nous avons besoin de votre permission..."
     },
     "Support": {
       "BackersDetail": "Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre notre développement actif.",

@@ -666,7 +666,7 @@
     "NoExotics": "Nenhum engrama disponível para transferir.",
     "NoSpace": "Você está sem espaço no cofre e em quaisquer outros personagens.",
     "NoneMatch": "Nenhum dos seus sets combinaram com os filtros.",
-    "NotStarted": "Aguardando outras ações",
+    "NotStarted": "Aguardando para que as outras ações terminem ou uma atualização do inventário para finalizar o carregamento",
     "NotesPlaceholder": "Escreva algumas anotações sobre este set ou use #hashtags para categorizá-lo",
     "NotificationTitle": "Set: {{name}}",
     "OnWrongCharacterAdvice": "Clique aqui para encontrar os itens com maior Poder deste personagem.",
@@ -958,7 +958,7 @@
     "ExportSS": "Planilhas do inventário",
     "ExportSSHelp": "Baixe a planilha CSV de todos os seus itens para que você possa visualizar no software de sua preferência.",
     "ExportSSNoStores": "Você precisa carregar seu inventário uma vez antes de clicar neste botão.",
-    "HidePullFromPostmaster": "Ocultar o botão \"Resgatar do Chefe do Correio\"",
+    "HidePullFromPostmaster": "Ocultar o botão \"$t(Loadouts.PullFromPostmaster)\"",
     "Inventory": "Exibição Inventário",
     "InventoryColumns": "Largura do inventário de personagem",
     "InventoryColumnsMobile": "Tamanho do inventário do personagem em dispositivos móveis em modo retrato",
@@ -1203,7 +1203,6 @@
       },
       "Translation": "Junte-se à equipe de tradução!",
       "TranslationText": "Nós usamos o {{link}} para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time.",
-      "Twitter": "Twitter",
       "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
       "Version": "Versão {{version}} ({{flavor}}), construído em {{date}}",
       "Wiki": "Wiki Guia do Usuário do DIM",
@@ -1218,9 +1217,7 @@
       "Explanation": "Dar permissão ao DIM para ver e modificar os seus personagens, cofre e progressão.",
       "LearnMore": "Saiba mais sobre contas e login",
       "NewAccount": "Inicie a sessão com uma conta diferente da Bungie.net",
-      "Permission": "Precisamos da sua permissão...",
-      "UpgradeExplanation": "Os aplicativos da tela inicial na sua versão do iOS não permitem que você inicie uma sessão no DIM. Por favor, atualize para o iOS 12.2 ou mais novo e readicione o DIM à sua tela inicial.",
-      "UpgradeiOS": "Por favor, atualize o iOS"
+      "Permission": "Precisamos da sua permissão..."
     },
     "Support": {
       "BackersDetail": "Apoie-nos com uma única doação, ou doação mensal e ajude-nos a continuar o nosso desenvolvimento ativo.",

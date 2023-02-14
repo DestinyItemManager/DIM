@@ -5,8 +5,10 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
+import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
+import { loadCoreSettings } from 'app/manifest/actions';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { get, set } from 'app/storage/idb-keyval';
@@ -41,7 +43,6 @@ import {
 } from './actions';
 import { ArtifactXP } from './ArtifactXP';
 import { cleanInfos } from './dim-item-info';
-import { InventoryBuckets } from './inventory-buckets';
 import { DimItem } from './item-types';
 import { ItemPowerSet } from './ItemPowerSet';
 import { d2BucketsSelector, storesLoadedSelector, storesSelector } from './selectors';
@@ -51,7 +52,7 @@ import {
   getCharacterStatsData as getD1CharacterStatsData,
   hasAffectingClassified,
 } from './store/character-utils';
-import { processItems } from './store/d2-item-factory';
+import { ItemCreationContext, processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
 import { getArtifactBonus } from './stores-helpers';
@@ -132,6 +133,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
       }
     }
 
+    dispatch(loadCoreSettings()); // no need to wait
     $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
     await dispatch(loadNewItems(account));
     const stores = await dispatch(loadStoresData(account));
@@ -258,7 +260,7 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
       try {
         const { readOnly } = getState().inventory;
 
-        const [defs, profileInfo] = await Promise.all([
+        const [defs, profileResponse] = await Promise.all([
           dispatch(getDefinitions())!,
           dispatch(loadProfile(account)),
         ]);
@@ -268,14 +270,23 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
           return;
         }
 
-        if (!defs || !profileInfo) {
+        if (!defs || !profileResponse) {
           return;
         }
 
         const stopTimer = timer('Process inventory');
 
         const buckets = d2BucketsSelector(getState())!;
-        const stores = buildStores(defs, buckets, profileInfo, transaction);
+        const customTotalStatsByClass = settingSelector('customTotalStatsByClass')(getState());
+        const stores = buildStores(
+          {
+            defs,
+            buckets,
+            customTotalStatsByClass,
+            profileResponse,
+          },
+          transaction
+        );
 
         if (readOnly) {
           for (const store of stores) {
@@ -290,7 +301,7 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         }
 
         // TODO: we can start moving some of this stuff to selectors? characters too
-        const currencies = processCurrencies(profileInfo, defs);
+        const currencies = processCurrencies(profileResponse, defs);
 
         stopTimer();
 
@@ -339,17 +350,17 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
 }
 
 export function buildStores(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  profileInfo: DestinyProfileResponse,
+  itemCreationContext: ItemCreationContext,
   transaction?: Transaction
 ): DimStore[] {
   // TODO: components may be hidden (privacy)
 
+  const { defs, profileResponse } = itemCreationContext;
+
   if (
-    !profileInfo.profileInventory.data ||
-    !profileInfo.characterInventories.data ||
-    !profileInfo.characters.data
+    !profileResponse.profileInventory.data ||
+    !profileResponse.characterInventories.data ||
+    !profileResponse.characters.data
   ) {
     errorLog(
       'd2-stores',
@@ -358,15 +369,15 @@ export function buildStores(
     throw new DimError('BungieService.MissingInventory');
   }
 
-  const lastPlayedDate = findLastPlayedDate(profileInfo);
+  const lastPlayedDate = findLastPlayedDate(profileResponse);
 
   const processSpan = transaction?.startChild({
     op: 'processItems',
   });
-  const vault = processVault(defs, buckets, profileInfo);
+  const vault = processVault(itemCreationContext);
 
-  const characters = Object.keys(profileInfo.characters.data).map((characterId) =>
-    processCharacter(defs, buckets, characterId, profileInfo, lastPlayedDate)
+  const characters = Object.keys(profileResponse.characters.data).map((characterId) =>
+    processCharacter(itemCreationContext, characterId, lastPlayedDate)
   );
   processSpan?.finish();
 
@@ -374,7 +385,7 @@ export function buildStores(
 
   const allItems = stores.flatMap((s) => s.items);
   const bucketsWithClassifieds = getBucketsWithClassifiedItems(allItems);
-  const characterProgress = getCharacterProgressions(profileInfo);
+  const characterProgress = getCharacterProgressions(profileResponse);
 
   for (const s of stores) {
     updateBasePower(
@@ -384,7 +395,7 @@ export function buildStores(
       characterProgress,
       // optional chaining here accounts for an edge-case, possible, but type-unadvertised,
       // missing artifact power bonus. please keep this here.
-      profileInfo.profileProgression?.data?.seasonalArtifact?.powerBonusProgression
+      profileResponse.profileProgression?.data?.seasonalArtifact?.powerBonusProgression
         ?.progressionHash,
       bucketsWithClassifieds
     );
@@ -412,22 +423,16 @@ function processCurrencies(profileInfo: DestinyProfileResponse, defs: D2Manifest
  * Process a single character from its raw form to a DIM store, with all the items.
  */
 function processCharacter(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
+  itemCreationContext: ItemCreationContext,
   characterId: string,
-  profileInfo: DestinyProfileResponse,
   lastPlayedDate: Date
 ): DimStore {
-  const character = profileInfo.characters.data![characterId];
-  const characterInventory = profileInfo.characterInventories.data?.[characterId]?.items || [];
-  const profileInventory = profileInfo.profileInventory.data?.items || [];
-  const characterEquipment = profileInfo.characterEquipment.data?.[characterId]?.items || [];
-  const profileRecords = profileInfo.profileRecords?.data;
-  const itemComponents = profileInfo.itemComponents;
-
-  const characterProgressions = getCharacterProgressions(profileInfo, characterId);
-  const uninstancedItemObjectives = characterProgressions?.uninstancedItemObjectives;
-  const uninstancedItemPerks = characterProgressions?.uninstancedItemPerks;
+  const { defs, buckets, profileResponse } = itemCreationContext;
+  const character = profileResponse.characters.data![characterId];
+  const characterInventory = profileResponse.characterInventories.data?.[characterId]?.items || [];
+  const profileInventory = profileResponse.profileInventory.data?.items || [];
+  const characterEquipment = profileResponse.characterEquipment.data?.[characterId]?.items || [];
+  const profileRecords = profileResponse.profileRecords?.data;
 
   const store = makeCharacter(defs, character, lastPlayedDate, profileRecords);
 
@@ -444,30 +449,15 @@ function processCharacter(
     }
   }
 
-  const processedItems = processItems(
-    defs,
-    buckets,
-    store,
-    items,
-    itemComponents,
-    uninstancedItemObjectives,
-    profileRecords,
-    uninstancedItemPerks
-  );
-  store.items = processedItems;
+  store.items = processItems(itemCreationContext, store, items);
   return store;
 }
 
-function processVault(
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  profileInfo: DestinyProfileResponse
-): DimStore {
-  const profileInventory = profileInfo.profileInventory.data
-    ? profileInfo.profileInventory.data.items
+function processVault(itemCreationContext: ItemCreationContext): DimStore {
+  const { buckets, profileResponse } = itemCreationContext;
+  const profileInventory = profileResponse.profileInventory.data
+    ? profileResponse.profileInventory.data.items
     : [];
-  const profileRecords = profileInfo.profileRecords?.data; // Not present in the initial load
-  const itemComponents = profileInfo.itemComponents;
 
   const store = makeVault();
 
@@ -480,17 +470,7 @@ function processVault(
     }
   }
 
-  const processedItems = processItems(
-    defs,
-    buckets,
-    store,
-    items,
-    itemComponents,
-    undefined,
-    profileRecords
-  );
-  store.items = processedItems;
-
+  store.items = processItems(itemCreationContext, store, items);
   return store;
 }
 

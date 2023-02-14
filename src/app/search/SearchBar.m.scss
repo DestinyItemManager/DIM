@@ -49,6 +49,7 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: flex-start;
   padding: 6px 9px 6px 9px;
+  gap: 6px;
 
   @include phone-portrait {
     align-items: center;
@@ -58,9 +59,32 @@
 
 .menuItemIcon {
   font-size: 12px !important;
+  margin-top: 4px;
+  color: #999;
+}
+
+.armoryItemIcon {
   margin-right: 6px;
   margin-top: 5px;
-  color: #999;
+  width: 24px;
+  height: 24px;
+}
+
+.armorySheet {
+  max-width: 900px;
+  margin: 0 auto;
+  z-index: 14; // higher than item popup
+
+  :global(.sheet-close) {
+    right: 16px;
+  }
+}
+
+.openInArmoryLabel {
+  font-style: italic;
+  color: grey;
+  margin-left: 2px;
+  margin-right: 4px;
 }
 
 .deleteIcon {
@@ -99,7 +123,7 @@
 
 .menuItemQuery {
   white-space: normal;
-  margin: 0;
+  margin: 0 auto 0 0;
   padding: 1px 0;
   overflow: hidden;
   max-height: 4em;
@@ -107,21 +131,6 @@
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-}
-
-.menuItemHelp {
-  flex: 1;
-  color: #999;
-  span {
-    margin: 0 8px 0 24px;
-    @include phone-portrait {
-      // TODO: I don't have a good way to show these on mobile yet
-      display: none;
-    }
-  }
-  .highlightedItem & {
-    color: #222;
-  }
 }
 
 /* Highlighted spans of text in the autocompleter */
@@ -140,10 +149,6 @@
   .highlightedItem & {
     color: #222;
     border-color: #222;
-  }
-
-  .menuItem:hover & {
-    display: none;
   }
 }
 

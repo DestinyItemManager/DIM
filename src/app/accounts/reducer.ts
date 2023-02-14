@@ -38,7 +38,7 @@ export interface AccountsState {
 
 export type AccountsAction = ActionType<typeof actions>;
 
-export function getLastAccountFromLocalStorage() {
+function getLastAccountFromLocalStorage() {
   const currentAccountMembershipId = localStorage.getItem('dim-last-membership-id') ?? undefined;
   const destinyVersionStr = localStorage.getItem('dim-last-destiny-version') ?? undefined;
   const currentAccountDestinyVersion = destinyVersionStr

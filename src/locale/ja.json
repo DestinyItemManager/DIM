@@ -125,10 +125,10 @@
     "Title": "何か問題が発生したようです"
   },
   "ErrorPanel": {
-    "Description": "Destiny 2 Companion App で保管庫をロードして、 Bungie.net がダウンしているかどうか試してみてください。",
+    "Description": "Destiny 2のコンパニオンアプリで保管庫データにアクセスして、 Bungie.net がダウンしているかどうか試してみてください。",
     "EmblemError": "ゲーム内で全キャラクターのエンブレムを入れ替えると直るかもしれません。",
     "EmblemErrorLink": "修正方法の詳細を読む",
-    "SystemDown": "これはすべての Destiny アプリに影響し、 DIM チームはこれを修正したり迂回したりすることはできません。",
+    "SystemDown": "これはすべての Destiny アプリに影響し、 DIM チームで修正したり回避ができません。",
     "Troubleshooting": "トラブルシューティングガイド"
   },
   "FarmingMode": {
@@ -160,7 +160,7 @@
   },
   "FashionDrawer": {
     "Accept": "ファッションを保存",
-    "CannotFitOrnament": "このアイテムにはオーナメントソケットが無いか、オーナメントを保有していません。",
+    "CannotFitOrnament": "このアイテムには装飾用のソケットがないか、装飾そのものがありません。",
     "CannotFitShader": "このアイテムはシェーダーを装備できません",
     "ClearOrnaments": "装備品をクリア",
     "ClearOrnamentsTitle": "全ての装飾品を「優先なし」にリセット",
@@ -312,14 +312,14 @@
     "UserGuideLink": "ユーザーガイド"
   },
   "Glyphs": {
-    "Gilded": "Gilded",
-    "Misadventure": "Misadventure",
-    "Missing": "Missing",
-    "OpenSymbolsPicker": "Open Symbols Picker",
-    "Quickfall": "Quickfall",
-    "ScorchCannon": "Scorch Cannon",
-    "SearchSymbols": "Search Symbols...",
-    "Smoke": "Smoke"
+    "Gilded": "金",
+    "Misadventure": "不運",
+    "Missing": "紛失",
+    "OpenSymbolsPicker": "シンボルピッカーを開く",
+    "Quickfall": "クイックフォール",
+    "ScorchCannon": "スコーチキャノン",
+    "SearchSymbols": "シンボルを検索...",
+    "Smoke": "煙幕"
   },
   "Header": {
     "About": "DIMについて",
@@ -666,7 +666,7 @@
     "NoExotics": "エングラムは転送できません。",
     "NoSpace": "保管庫や他のキャラクターの空きスペースがありません。",
     "NoneMatch": "フィルタに一致するロードアウトはありませんでした。",
-    "NotStarted": "他のアクションを待っています",
+    "NotStarted": "他のアクションの完了、もしくは保管庫の更新による読み込みの終了を待っています。",
     "NotesPlaceholder": "このロードアウトに関するメモを書くか、 #hashtag を使用して分類してください",
     "NotificationTitle": "ロードアウト: {{name}}",
     "OnWrongCharacterAdvice": "このキャラクターの最高パワーのアイテムはこちら。",
@@ -809,7 +809,7 @@
       "Untracked": "追跡をやめる"
     },
     "TriageTab": "トリアージ",
-    "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
+    "UnreliablePerkOption": "このパークは、コレクション ビューにのみ表示されます。 このアイテムではランダムにロールしない場合があります。",
     "Vault": "保管庫",
     "WeaponLevel": "武器レベル {{level}}"
   },
@@ -833,7 +833,7 @@
       "Archetype": "内在特性",
       "BaseStats": "基本データ",
       "Breaker": "ブレイカー",
-      "Crafted": "Shaped Date",
+      "Crafted": "構成された日付",
       "CustomTotal": "カスタム合計",
       "Damage": "ダメージ",
       "Element": "属性",
@@ -934,7 +934,7 @@
   },
   "Settings": {
     "AutoLockTagged": "アイテムのロック状態とタグを同期",
-    "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. Crafted items will remain unlocked to allow reshaping. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
+    "AutoLockTaggedExplanation": "DIMはタグに合わせて自動的にアイテムのロックとアンロックを行います。クラフトされたアイテムは、再構成できる様にロックが解除されたままになります。この設定を有効にすると、タグ付けされたアイテムのタイルにロックアイコンが表示されなくなります。",
     "BadgePostmaster": "現在のキャラクターにおけるポストマスターアイテム数をアプリアイコンに表示する",
     "BadgePostmasterExplanation": "この機能を利用するには、DIM をアプリとしてインストールし、OS がバッジの表示に対応している必要があります。",
     "BothDescriptions": "両方の説明",
@@ -958,7 +958,7 @@
     "ExportSS": "所持品のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
     "ExportSSNoStores": "このボタンをクリックする前に、所持品を一度ロードする必要があります。",
-    "HidePullFromPostmaster": "\"ポストマスターから取得\" ボタンを隠す",
+    "HidePullFromPostmaster": "\"$t(Loadouts.PullFromPostmaster)\" ボタンを隠す",
     "Inventory": "所持品の表示",
     "InventoryColumns": "キャラクターの所持品の広さ",
     "InventoryColumnsMobile": "モバイルポートレートのキャラクターの所持品の広さ",
@@ -1077,7 +1077,7 @@
     "EnableDimApi": "DIM Sync を有効にする (推奨)",
     "Export": "バックアップのダウンロード",
     "ExportError": "DIM Sync からのバックアップのダウンロードに失敗しました。",
-    "ExportErrorBody": "DIM Sync がダウンしているか、接続に問題がある可能性があります。代わりにローカルに保存されたデータのコピーをダウンロードします。",
+    "ExportErrorBody": "DIM Sync がダウンしているか、通信に問題がある可能性があります。代わりにローカルに保存されたデータのコピーをダウンロードします。",
     "Import": "バックアップのインポート",
     "ImportConfirmDimApi": "現在のタグ、ロードアウト、設定をこのバージョンで上書きしても大丈夫ですか？それはあなたが持っていたものを完全に置き換えます。",
     "ImportExport": "バックアップとインポート",
@@ -1161,7 +1161,7 @@
     "YourBestItem": "最高のアイテム"
   },
   "Triumphs": {
-    "GildingTriumph": "Gilding Triumph",
+    "GildingTriumph": "金の勝利",
     "HideCompleted": "完了した勝利の道のりを隠す",
     "RevealRedacted": "改定された勝利の道のりを表示する"
   },
@@ -1203,7 +1203,6 @@
       },
       "Translation": "翻訳チームに参加してください！",
       "TranslationText": "簡単に翻訳をするため {{link}} を使用しています。DIM の翻訳を改善したい場合は、チームに参加してください。",
-      "Twitter": "Twitter",
       "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
       "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}",
       "Wiki": "DIMユーザーガイドWiki",
@@ -1218,9 +1217,7 @@
       "Explanation": "DIMでDestinyのキャラクター、保管庫、進捗状況などを閲覧や編集するには権限が必要です。",
       "LearnMore": "アカウントとログインについての詳細",
       "NewAccount": "別の Bungie.net アカウントでログイン",
-      "Permission": "許可が必要です。",
-      "UpgradeExplanation": "あなたのiOSのバージョンのホーム画面アプリでは、DIMにログインできません。 iOS 12.2以降にアップグレードし、DIMをホーム画面に再度追加してください。",
-      "UpgradeiOS": "今すぐiOSを更新してください"
+      "Permission": "許可が必要です。"
     },
     "Support": {
       "BackersDetail": "1回または毎月の寄付で私たちをサポートし、積極的な開発を続けてください。",

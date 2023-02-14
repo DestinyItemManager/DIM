@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "No Notes",
+    "OpenInArmory": "view in Armory",
     "Season": "Season {{season}}, Year {{year}}",
     "TrashlistedRolls": "Trashlisted Roll",
     "TrashlistedRolls_plural": "{{count, number}} Trashlisted Rolls",
@@ -959,7 +960,7 @@
     "ExportSS": "Inventory spreadsheets",
     "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
     "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
-    "HidePullFromPostmaster": "Hide the \"Pull From Postmaster\" button",
+    "HidePullFromPostmaster": "Hide the \"$t(Loadouts.PullFromPostmaster)\" button",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",

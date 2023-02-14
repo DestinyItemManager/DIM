@@ -178,8 +178,6 @@ export default function Progress({ account }: { account: DestinyAccount }) {
                 <SeasonalChallenges
                   seasonalChallengesPresentationNode={seasonalChallengesPresentationNode}
                   store={selectedStore}
-                  buckets={buckets}
-                  profileResponse={profileInfo}
                 />
               </ErrorBoundary>
             )}

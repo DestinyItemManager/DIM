@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |"rare curio" arctic haz| with caret at position 23 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {"rare curio" arctic haz} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -20,7 +20,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |"
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |"rare curio" or arctic haz| with caret at position 26 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {"rare curio" or arctic haz} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -40,7 +40,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |"
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |(is:a or is:b) and (is:c or multi w)| with caret at position 35 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {(is:a or is:b) and (is:c or multi w|)} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -60,7 +60,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |(
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |acd/0 fee| with caret at position 9 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {acd/0 fee} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -80,7 +80,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |a
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |ager's sce| with caret at position 10 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {ager's sce} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -100,7 +100,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |a
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |arctic  haz| with caret at position 11 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {arctic  haz} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -120,7 +120,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |a
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |arctic haz| with caret at position 10 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {arctic haz} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -140,7 +140,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |a
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |is:weapon arctic haz -is:exotic| with caret at position 20 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {is:weapon arctic haz| -is:exotic} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -160,7 +160,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |i
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |name:"foo" arctic haz| with caret at position 21 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {name:"foo" arctic haz} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -180,7 +180,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |n
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |rare curio or arctic haz| with caret at position 24 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {rare curio or arctic haz} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -200,7 +200,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |r
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |stat:rpm:200 first in, last| with caret at position 27 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {stat:rpm:200 first in, last} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -220,7 +220,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |s
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |the last word| with caret at position 13 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {the last word} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -240,7 +240,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |t
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |toil and trou| with caret at position 13 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {toil and trou} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -260,7 +260,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |t
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within multi-word query for |two-tail| with caret at position 8 with exact match 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within multi-word query for {two-tail} with exact match 1`] = `
 [
   {
     "highlightRange": {
@@ -280,7 +280,7 @@ exports[`autocompleteTermSuggestions autocomplete within multi-word query for |t
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within query for |(is:blue jun)| with caret at position 11 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within query for {(is:blue ju|n)} 1`] = `
 [
   {
     "highlightRange": {
@@ -300,7 +300,7 @@ exports[`autocompleteTermSuggestions autocomplete within query for |(is:blue jun
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within query for |is:bow is:void| with caret at position 11 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within query for {is:bow is:v|oid} 1`] = `
 [
   {
     "highlightRange": {
@@ -320,7 +320,7 @@ exports[`autocompleteTermSuggestions autocomplete within query for |is:bow is:vo
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within query for |is:haspower is:b| with caret at position 16 1`] = `
+exports[`autocompleteTermSuggestions autocomplete within query for {is:haspower is:b} 1`] = `
 [
   {
     "highlightRange": {
@@ -355,9 +355,9 @@ exports[`autocompleteTermSuggestions autocomplete within query for |is:haspower 
 ]
 `;
 
-exports[`autocompleteTermSuggestions autocomplete within query for |not(| with caret at position 4 1`] = `[]`;
+exports[`autocompleteTermSuggestions autocomplete within query for {not(} 1`] = `[]`;
 
-exports[`autocompleteTermSuggestions autocomplete within query for |season:>outl| with caret at position 12 1`] = `[]`;
+exports[`autocompleteTermSuggestions autocomplete within query for {season:>outl} 1`] = `[]`;
 
 exports[`filterComplete autocomplete terms for |is:b| 1`] = `
 [

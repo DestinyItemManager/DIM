@@ -67,7 +67,7 @@ export const artifactModsSelector = createSelector(
 
 export function collectSocketsToStrip(
   filteredItems: DimItem[],
-  destiny2CoreSettings: Destiny2CoreSettings,
+  destiny2CoreSettings: Destiny2CoreSettings | undefined,
   defs: D2ManifestDefinitions,
   artifactMods: Set<number> | undefined
 ) {

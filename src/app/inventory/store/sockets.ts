@@ -163,7 +163,7 @@ function buildDefinedSockets(
       defs,
       socketDef,
       i,
-      craftingTemplateSockets?.[i].reusablePlugSetHash,
+      craftingTemplateSockets?.[i]?.reusablePlugSetHash,
       itemDef
     );
 

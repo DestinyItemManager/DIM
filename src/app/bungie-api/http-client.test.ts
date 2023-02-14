@@ -33,7 +33,7 @@ const makePretendFetch = (response?: any) => (req: any) => ({
   json: () => ({ req: req as Request, ErrorCode: 1, ...response }),
 });
 const pretendHttpClient = (response?: any) =>
-  createHttpClient(makePretendFetch(response) as any as typeof fetch, '123', false);
+  createHttpClient(makePretendFetch(response) as any as typeof fetch, '123');
 
 const cases: [(...params: any) => any, object | undefined][] = [
   [

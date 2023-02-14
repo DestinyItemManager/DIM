@@ -39,7 +39,6 @@ import {
 import { DimItem } from './item-types';
 import { getLastManuallyMoved } from './manual-moves';
 import {
-  bucketsSelector,
   currentStoreSelector,
   itemHashTagsSelector,
   itemInfosSelector,
@@ -1193,29 +1192,4 @@ export function sortMoveAsideCandidatesForStore(
   // Sort all candidates
   moveAsideCandidates.sort(itemValueComparator);
   return moveAsideCandidates;
-}
-
-/**
- * Check if any bucket in the active store has "overfilled" and trigger a refresh if so.
- */
-export function checkForOverFill(): ThunkResult {
-  return async (_dispatch, getState) => {
-    const store = currentStoreSelector(getState());
-    const buckets = bucketsSelector(getState());
-
-    if (!store || !buckets) {
-      return;
-    }
-
-    const countByBucket = _.countBy(store.items, (i) => i.location.hash);
-    for (const [bucketHashStr, amount] of Object.entries(countByBucket)) {
-      const bucket = buckets.byHash[parseInt(bucketHashStr, 10)];
-      if (amount > bucket.capacity) {
-        // Request a refresh of the store, this bucket is overfilled
-        // refresh();
-        infoLog('move', 'Bucket', bucket.name, 'overfilled');
-        return;
-      }
-    }
-  };
 }

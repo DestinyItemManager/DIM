@@ -27,8 +27,8 @@ import { showNotification } from '../notifications/notifications';
 import { awaItemChanged } from './actions';
 import { DimItem, DimSocket } from './item-types';
 import {
+  createItemContextSelector,
   currentStoreSelector,
-  d2BucketsSelector,
   profileResponseSelector,
   storesSelector,
 } from './selectors';
@@ -41,7 +41,7 @@ let awaCache: {
 export function canInsertPlug(
   socket: DimSocket,
   plugItemHash: number,
-  destiny2CoreSettings: Destiny2CoreSettings,
+  destiny2CoreSettings: Destiny2CoreSettings | undefined,
   defs: D2ManifestDefinitions
 ) {
   return $featureFlags.awa || canInsertForFree(socket, plugItemHash, destiny2CoreSettings, defs);
@@ -61,15 +61,18 @@ function hasInsertionCost(defs: D2ManifestDefinitions, plug: DestinyInventoryIte
 function canInsertForFree(
   socket: DimSocket,
   plugItemHash: number,
-  destiny2CoreSettings: Destiny2CoreSettings,
+  destiny2CoreSettings: Destiny2CoreSettings | undefined,
   defs: D2ManifestDefinitions
 ) {
-  const { insertPlugFreeProtectedPlugItemHashes, insertPlugFreeBlockedSocketTypeHashes } =
-    destiny2CoreSettings;
   const pluggedDef = (socket.actuallyPlugged || socket.plugged)?.plugDef;
   if (
-    (pluggedDef && (insertPlugFreeProtectedPlugItemHashes || []).includes(pluggedDef.hash)) ||
-    (insertPlugFreeBlockedSocketTypeHashes || []).includes(socket.socketDefinition.socketTypeHash)
+    (pluggedDef &&
+      (destiny2CoreSettings?.insertPlugFreeProtectedPlugItemHashes || []).includes(
+        pluggedDef.hash
+      )) ||
+    (destiny2CoreSettings?.insertPlugFreeBlockedSocketTypeHashes || []).includes(
+      socket.socketDefinition.socketTypeHash
+    )
   ) {
     return false;
   }
@@ -136,7 +139,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
   return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
     const defs = d2ManifestSelector(getState())!;
-    const coreSettings = getState().manifest.destiny2CoreSettings!;
+    const coreSettings = getState().manifest.destiny2CoreSettings;
 
     // This is a special case for transmog ornaments - you can't apply a
     // transmog ornament to the same item it was created with. So instead we
@@ -238,17 +241,15 @@ async function awaInsertSocketPlug(
  */
 function refreshItemAfterAWA(changes: DestinyItemChangeResponse): ThunkResult {
   return async (dispatch, getState) => {
-    const defs = d2ManifestSelector(getState())!;
-    const buckets = d2BucketsSelector(getState())!;
+    const itemCreationContext = createItemContextSelector(getState());
     const stores = storesSelector(getState());
-    const newItem = makeItemSingle(defs, buckets, changes.item, stores);
+    const newItem = makeItemSingle(itemCreationContext, changes.item, stores);
 
     dispatch(
       awaItemChanged({
         item: newItem,
         changes,
-        defs: d2ManifestSelector(getState())!,
-        buckets: d2BucketsSelector(getState())!,
+        itemCreationContext: itemCreationContext,
       })
     );
   };

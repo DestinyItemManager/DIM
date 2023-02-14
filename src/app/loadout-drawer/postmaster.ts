@@ -17,7 +17,6 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
-  checkForOverFill,
   createMoveSession,
   executeMoveItem,
   MoveReservations,
@@ -92,8 +91,6 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
         throw e;
       }
     }
-
-    dispatch(checkForOverFill());
   };
 }
 
@@ -220,8 +217,6 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
       if (!succeeded) {
         throw new Error(t('Loadouts.PullFromPostmasterGeneralError'));
       }
-
-      dispatch(checkForOverFill());
     })();
 
     showNotification(postmasterNotification(items.length, store, promise, cancel));

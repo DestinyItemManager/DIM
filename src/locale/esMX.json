@@ -316,7 +316,7 @@
     "Misadventure": "Accidente",
     "Missing": "Perdido",
     "OpenSymbolsPicker": "Abrir el Selector de Símbolos",
-    "Quickfall": "Caída en picado",
+    "Quickfall": "Caída Rápida",
     "ScorchCannon": "Cañón Calcinante",
     "SearchSymbols": "Buscar Símbolos...",
     "Smoke": "Humo"
@@ -666,7 +666,7 @@
     "NoExotics": "No hay engramas disponibles para transferir.",
     "NoSpace": "Estas sin espacio en el depósito y en cualquier otro personaje.",
     "NoneMatch": "Ninguna de tus equipaciones coincidió con los filtros.",
-    "NotStarted": "Esperando a otras acciones",
+    "NotStarted": "Esperando a que otras acciones se completen, o a que se actualice el inventario para terminar de cargar",
     "NotesPlaceholder": "Escribe algunas notas sobre esta equipación, o usa #hashtags para categorizarla",
     "NotificationTitle": "Equipación: {{name}}",
     "OnWrongCharacterAdvice": "Haz clic aquí para encontrar los objetos de mayor potencia de este personaje.",
@@ -809,7 +809,7 @@
       "Untracked": "Sin Seguimiento"
     },
     "TriageTab": "Triaje",
-    "UnreliablePerkOption": "Esta ventaja sólo aparece en la vista de colecciones. Podría no aparecer aleatoriamente como tirada en este objeto.",
+    "UnreliablePerkOption": "Esta perk sólo aparece en la vista de colecciones. Podría no aparecer aleatoriamente como roll en este objeto.",
     "Vault": "Depósito",
     "WeaponLevel": "Nivel de arma {{level}}"
   },
@@ -833,7 +833,7 @@
       "Archetype": "Arquetipo",
       "BaseStats": "Estadísticas Base",
       "Breaker": "Triturador",
-      "Crafted": "Fecha Formación",
+      "Crafted": "Fecha de Creación",
       "CustomTotal": "Total Personalizado",
       "Damage": "Daño",
       "Element": "Elemento",
@@ -958,7 +958,7 @@
     "ExportSS": "Hojas de cálculo de inventario",
     "ExportSSHelp": "Descargar una lista CSV de tus objetos que puede ser vista fácilmente en la aplicación de hojas de cálculo de tu preferencia.",
     "ExportSSNoStores": "Necesitas cargar tu inventario una vez antes de pulsar este botón.",
-    "HidePullFromPostmaster": "Ocultar el botón \"Extraer de Administración\"",
+    "HidePullFromPostmaster": "Ocultar el botón \"$t(Loadouts.PullFromPostmaster)\"",
     "Inventory": "Visualización del Inventario",
     "InventoryColumns": "Ancho de inventario de personaje",
     "InventoryColumnsMobile": "Ancho del Inventario del personaje en el celular modo retrato",
@@ -1203,7 +1203,6 @@
       },
       "Translation": "¡Únete al Equipo Traductor!",
       "TranslationText": "Utilizamos {{link}} para facilitar la traducción. Si quieres mejorar alguna de las traducciones de DIM, únete al equipo.",
-      "Twitter": "Twitter",
       "TwitterHelp": "Asegúrate de seguirnos para estar al tanto de actualizaciones e informaciones de estado en tiempo real de la aplicación.",
       "Version": "Versión {{version}} ({{flavor}}), construida en {{date}}",
       "Wiki": "Wiki Guía del Usuario de DIM",
@@ -1218,9 +1217,7 @@
       "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, depósito y progreso.",
       "LearnMore": "Más información sobre cuentas e inicia sesión",
       "NewAccount": "Iniciar sesión con una cuenta diferente de Bungie.net",
-      "Permission": "Necesitamos tu permiso...",
-      "UpgradeExplanation": "Las aplicaciones de la pantalla de inicio en tu versión de iOS no permiten que inicies sesión en DIM. Por favor actualiza a iOS 12.2 o posterior y reañade DIM a tu pantalla de inicio.",
-      "UpgradeiOS": "Por favor actualiza iOS"
+      "Permission": "Necesitamos tu permiso..."
     },
     "Support": {
       "BackersDetail": "Apóyanos con una donación única o mensual, y ayuda a que podamos continuar con nuestro desarrollo activo.",

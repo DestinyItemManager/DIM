@@ -5,7 +5,7 @@ import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-h
  * Get all plugs from the specified plugset. This includes whether the plugs are unlocked or not.
  * This returns unlocked plugs for a specific character or account-wide.
  */
-export function itemsForCharacterOrProfilePlugSet(
+function itemsForCharacterOrProfilePlugSet(
   profileResponse: DestinyProfileResponse,
   plugSetHash: number,
   characterId: string
@@ -47,15 +47,4 @@ export function unlockedItemsForCharacterOrProfilePlugSet(
     }
   }
   return unlockedPlugs;
-}
-
-/**
- * Get all plugs from the specified plugset. This includes whether the plugs are unlocked or not.
- * This only returns plugsets that are account-wide.
- */
-export function itemsForProfilePlugSet(
-  profileResponse: DestinyProfileResponse,
-  plugSetHash: number
-) {
-  return profileResponse.profilePlugSets.data?.plugs[plugSetHash] ?? [];
 }

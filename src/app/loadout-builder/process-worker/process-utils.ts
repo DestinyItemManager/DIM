@@ -34,7 +34,7 @@ export interface PrecalculatedInfo {
 /**
  * This sorts process mods and items in the same manner as we try for greedy results.
  */
-export function sortProcessModsOrItems(a: SortParam, b: SortParam) {
+function sortProcessModsOrItems(a: SortParam, b: SortParam) {
   if (a.energy && b.energy) {
     if (a.energy.type === b.energy.type) {
       return b.energy.val - a.energy.val;

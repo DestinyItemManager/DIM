@@ -1,12 +1,11 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t } from 'app/i18next-t';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
@@ -26,10 +25,9 @@ import LoadoutSubclassSection from './loadout-ui/LoadoutSubclassSection';
 import styles from './LoadoutView.m.scss';
 
 export function getItemsAndSubclassFromLoadout(
+  itemCreationContext: ItemCreationContext,
   loadoutItems: LoadoutItem[],
   store: DimStore,
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
   allItems: DimItem[],
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
@@ -40,10 +38,9 @@ export function getItemsAndSubclassFromLoadout(
   warnitems: ResolvedLoadoutItem[]
 ] {
   let [items, warnitems] = getItemsFromLoadoutItems(
+    itemCreationContext,
     loadoutItems,
-    defs,
     store.id,
-    buckets,
     allItems,
     modsByBucket
   );
@@ -81,8 +78,8 @@ export default function LoadoutView({
   hideShowModPlacements?: boolean;
 }) {
   const defs = useD2Definitions()!;
-  const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
   const missingSockets =
     loadout.name === t('Loadouts.FromEquipped') && allItems.some((i) => i.missingSockets);
   const isPhonePortrait = useIsPhonePortrait();
@@ -95,8 +92,14 @@ export default function LoadoutView({
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(
     () =>
-      getItemsAndSubclassFromLoadout(loadout.items, store, defs, buckets, allItems, modsByBucket),
-    [loadout.items, defs, buckets, allItems, store, modsByBucket]
+      getItemsAndSubclassFromLoadout(
+        itemCreationContext,
+        loadout.items,
+        store,
+        allItems,
+        modsByBucket
+      ),
+    [itemCreationContext, loadout.items, store, allItems, modsByBucket]
   );
 
   const allMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);

@@ -1,7 +1,9 @@
+import { createItemContextSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
 import { unlockedItemsForCharacterOrProfilePlugSet } from './plugset-helpers';
@@ -41,6 +43,7 @@ export default function PresentationNodeRoot({
   overrideName,
   completedRecordsHidden,
 }: Props) {
+  const itemCreationContext = useSelector(createItemContextSelector);
   const defs = useD2Definitions()!;
   const [nodePath, setNodePath] = useState<number[]>([]);
 
@@ -58,8 +61,8 @@ export default function PresentationNodeRoot({
   }
 
   const nodeTree = useMemo(
-    () => toPresentationNodeTree(defs, buckets, profileResponse, presentationNodeHash),
-    [defs, buckets, profileResponse, presentationNodeHash]
+    () => toPresentationNodeTree(itemCreationContext, presentationNodeHash),
+    [presentationNodeHash, itemCreationContext]
   );
   // console.log(nodeTree);
 
@@ -111,7 +114,6 @@ export default function PresentationNodeRoot({
         plugSetCollections.map((plugSetCollection) => (
           <div key={plugSetCollection.hash} className="presentation-node">
             <PlugSet
-              buckets={buckets}
               plugSetCollection={plugSetCollection}
               unlockedItems={unlockedItemsForCharacterOrProfilePlugSet(
                 profileResponse,

@@ -59,7 +59,6 @@ export default function Dropdown({
     useSelect({
       items,
       itemToString: (i) => i?.key || 'none',
-      circularNavigation: true,
       onSelectedItemChange: ({ selectedItem }) => {
         if (selectedItem && isDropdownOption(selectedItem) && !selectedItem.disabled) {
           selectedItem.onSelected();

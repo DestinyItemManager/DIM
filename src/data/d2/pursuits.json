@@ -649,25 +649,34 @@
     "KillType": [3]
   },
   "709535744": {
+    "Destination": [677774031],
     "DamageType": [2303181850, 1847026933, 3454344768]
   },
   "709535745": {
+    "Destination": [677774031],
     "DamageType": [3373582085]
   },
   "709535746": {
+    "Destination": [677774031],
     "ItemCategory": [5]
   },
   "709535747": {
     "Destination": [677774031]
   },
   "709535748": {
+    "Destination": [677774031],
     "ItemCategory": [9]
   },
   "709535749": {
+    "Destination": [677774031],
     "ItemCategory": [3954685534]
   },
   "709535750": {
+    "Destination": [677774031],
     "ItemCategory": [6]
+  },
+  "709535751": {
+    "Destination": [677774031]
   },
   "711076968": {
     "ActivityMode": [1848252830],

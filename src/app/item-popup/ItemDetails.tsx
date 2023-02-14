@@ -4,7 +4,7 @@ import { WeaponCatalystInfo } from 'app/dim-ui/WeaponCatalystInfo';
 import { WeaponCraftedInfo } from 'app/dim-ui/WeaponCraftedInfo';
 import { WeaponDeepsightInfo } from 'app/dim-ui/WeaponDeepsightInfo';
 import { t } from 'app/i18next-t';
-import { storesSelector } from 'app/inventory/selectors';
+import { createItemContextSelector, storesSelector } from 'app/inventory/selectors';
 import { isTrialsPassage } from 'app/inventory/store/objectives';
 import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/override-sockets';
 import { getStore } from 'app/inventory/stores-helpers';
@@ -44,9 +44,10 @@ export default function ItemDetails({
   extraInfo?: ItemPopupExtraInfo;
 }) {
   const defs = useDefinitions()!;
+  const itemCreationContext = useSelector(createItemContextSelector);
   const [socketOverrides, onPlugClicked, resetSocketOverrides] = useSocketOverrides();
   const item = defs.isDestiny2()
-    ? applySocketOverrides(defs, originalItem, socketOverrides)
+    ? applySocketOverrides(itemCreationContext, originalItem, socketOverrides)
     : originalItem;
   const modTypeIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
     ? helmetIcon

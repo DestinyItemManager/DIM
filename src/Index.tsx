@@ -2,7 +2,6 @@ import { saveAccountsToIndexedDB } from 'app/accounts/observers';
 import updateCSSVariables from 'app/css-variables';
 import { loadDimApiData } from 'app/dim-api/actions';
 import { saveItemInfosOnStateChange } from 'app/inventory/observers';
-import { loadCoreSettings } from 'app/manifest/actions';
 import { pollForBungieAlerts } from 'app/shell/alerts';
 import store from 'app/store/store';
 import { lazyLoadStreamDeck, startStreamDeckConnection } from 'app/stream-deck/stream-deck';
@@ -58,7 +57,6 @@ const i18nPromise = initi18n();
   updateCSSVariables();
 
   store.dispatch(loadDimApiData());
-  store.dispatch(loadCoreSettings());
   store.dispatch(pollForBungieAlerts());
 
   if ($featureFlags.elgatoStreamDeck && streamDeckEnabled()) {
