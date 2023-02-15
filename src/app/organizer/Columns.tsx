@@ -160,10 +160,10 @@ export function getColumns(
             return <ItemStatValue stat={stat} item={item} />;
           },
           defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
-          filter: (value) =>
-            `stat:${_.invert(statHashByName)[statHash]}:${
-              _.invert(statHashByName)[statHash] === `rof` ? `` : `>`
-            }=${value}`,
+          filter: (value) => {
+            const statName = _.invert(statHashByName)[statHash];
+            return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
+          },
         };
       })
     ),
