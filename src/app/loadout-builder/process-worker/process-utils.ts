@@ -146,6 +146,7 @@ export function pickAndAssignSlotIndependentMods(
         return result;
       }
     } else {
+      remainingEnergyCapacities.sort((a, b) => b - a);
       if (info.generalModCosts.every((cost, index) => cost <= remainingEnergyCapacities[index])) {
         return [];
       }
