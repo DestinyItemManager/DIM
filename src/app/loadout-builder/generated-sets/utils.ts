@@ -1,13 +1,18 @@
 import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
-import { ArmorSet } from '../types';
+import { ArmorSet, ArmorStatHashes, StatFilters } from '../types';
 import { statTier } from '../utils';
 
-function getComparatorsForMatchedSetSorting(statOrder: number[], enabledStats: Set<number>) {
+function getComparatorsForMatchedSetSorting(
+  statOrder: ArmorStatHashes[],
+  statFilters: StatFilters
+) {
   const comparators: Comparator<ArmorSet>[] = [];
 
   for (const statHash of statOrder) {
-    if (enabledStats.has(statHash)) {
-      comparators.push(compareBy((s: ArmorSet) => -statTier(s.stats[statHash])));
+    if (!statFilters[statHash].ignored) {
+      comparators.push(
+        compareBy((s: ArmorSet) => -statTier(s.stats[statHash], statFilters[statHash].max))
+      );
     }
   }
   return comparators;
@@ -20,13 +25,13 @@ function getComparatorsForMatchedSetSorting(statOrder: number[], enabledStats: S
  */
 export function sortGeneratedSets(
   sets: ArmorSet[],
-  statOrder: number[],
-  enabledStats: Set<number>
+  statOrder: ArmorStatHashes[],
+  statFilters: StatFilters
 ): ArmorSet[] {
   return sets.sort(
     chainComparator(
       compareBy((set) => -set.enabledTier),
-      ...getComparatorsForMatchedSetSorting(statOrder, enabledStats)
+      ...getComparatorsForMatchedSetSorting(statOrder, statFilters)
     )
   );
 }

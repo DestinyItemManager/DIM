@@ -6,8 +6,8 @@ import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { ArmorStatHashes, ArmorStats } from '../types';
-import { remEuclid, statTierWithHalf } from '../utils';
+import { ArmorStatHashes, ArmorStats, StatFilters } from '../types';
+import { remEuclid, statTier, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
   artificeStats: ArmorStats;
   maxPower: number;
   statOrder: ArmorStatHashes[];
-  enabledStats: Set<ArmorStatHashes>;
+  statFilters: StatFilters;
   className?: string;
   existingLoadoutName?: string;
 }
@@ -32,7 +32,7 @@ function SetStats({
   artificeStats,
   maxPower,
   statOrder,
-  enabledStats,
+  statFilters,
   className,
   existingLoadoutName,
 }: Props) {
@@ -90,9 +90,10 @@ function SetStats({
             )}
           >
             <Stat
-              isActive={enabledStats.has(statHash)}
+              ignored={statFilters[statHash].ignored}
               stat={statDefs[statHash]}
               value={stats[statHash]}
+              maxTier={statFilters[statHash].max}
             />
           </PressTip>
         ))}
@@ -103,22 +104,26 @@ function SetStats({
 
 function Stat({
   stat,
-  isActive,
+  ignored,
   value,
+  maxTier,
 }: {
   stat: DestinyStatDefinition;
-  isActive: boolean;
+  ignored: boolean;
   value: number;
+  maxTier: number;
 }) {
+  const effectiveTier = statTier(value, maxTier);
+  const totalTier = statTier(value, 10);
   return (
     <span
       className={clsx(styles.statSegment, {
-        [styles.nonActiveStat]: !isActive,
+        [styles.nonActiveStat]: ignored || effectiveTier !== totalTier,
       })}
     >
       <span
         className={clsx(styles.tier, {
-          [styles.halfTierValue]: isActive && remEuclid(value, 10) >= 5,
+          [styles.halfTierValue]: !ignored && totalTier < maxTier && remEuclid(value, 10) >= 5,
         })}
       >
         {t('LoadoutBuilder.TierNumber', {

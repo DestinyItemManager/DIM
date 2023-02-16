@@ -10,7 +10,7 @@ import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorEnergyRules, ArmorSet, ArmorStatHashes, PinnedItems } from '../types';
+import { ArmorEnergyRules, ArmorSet, ArmorStatHashes, PinnedItems, StatFilters } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
@@ -27,7 +27,7 @@ interface Props {
   style: React.CSSProperties;
   statOrder: ArmorStatHashes[];
   forwardedRef?: React.Ref<HTMLDivElement>;
-  enabledStats: Set<number>;
+  statFilters: StatFilters;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
@@ -48,7 +48,7 @@ function GeneratedSet({
   pinnedItems,
   style,
   statOrder,
-  enabledStats,
+  statFilters,
   forwardedRef,
   loadouts,
   lbDispatch,
@@ -158,7 +158,7 @@ function GeneratedSet({
             tier={set.totalTier}
             maxPower={getPower(displayedItems)}
             statOrder={statOrder}
-            enabledStats={enabledStats}
+            statFilters={statFilters}
             existingLoadoutName={existingLoadout?.name}
           />
         </div>

@@ -24,7 +24,7 @@ import {
 } from '../../utils/item-utils';
 import { artificeStatMods } from '../process-worker/auto-stat-mod-utils';
 import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import { ArmorEnergyRules, ArmorSet, ArmorStats, ItemGroup } from '../types';
+import { ArmorEnergyRules, ArmorSet, ArmorStats, ItemGroup, StatFilters } from '../types';
 import { statTier } from '../utils';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
@@ -178,7 +178,7 @@ export function hydrateArmorSet(
   defs: D2ManifestDefinitions,
   processed: ProcessArmorSet,
   itemsById: Map<string, ItemGroup>,
-  enabledStats: Set<number>
+  statFilters: StatFilters
 ): ArmorSet {
   const armor: DimItem[][] = [];
 
@@ -218,9 +218,14 @@ export function hydrateArmorSet(
     statsWithAutoMods[statHash] += 3;
   }
 
-  const totalTier = _.sum(Object.values(statsWithAutoMods).map(statTier));
+  const totalTier = _.sum(
+    Object.values(statsWithAutoMods).map((statValue) => statTier(statValue, 10))
+  );
   const enabledTier = _.sumBy(armorStats, (statHash) =>
-    enabledStats.has(statHash) ? statTier(statsWithAutoMods[statHash]) : 0
+    statTier(
+      statsWithAutoMods[statHash],
+      statFilters[statHash].ignored ? 0 : statFilters[statHash].max
+    )
   );
 
   return {

@@ -11,7 +11,7 @@ interface Stat {
 }
 
 function StatTooltip({ stat }: { stat: Stat }) {
-  const tier = statTier(stat.value);
+  const tier = statTier(stat.value, 10);
 
   return (
     <div>

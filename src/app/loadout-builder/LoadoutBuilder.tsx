@@ -251,11 +251,6 @@ export default memo(function LoadoutBuilder({
   // TODO: maybe load from URL state async and fire a dispatch?
   // TODO: save params to URL when they change? or leave it for the share...
 
-  const enabledStats = useMemo(
-    () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
-    [statFilters]
-  );
-
   const loadouts = useMemo(() => {
     const equippedLoadout: Loadout | undefined = newLoadoutFromEquipped(
       t('Loadouts.CurrentlyEquipped'),
@@ -329,8 +324,8 @@ export default memo(function LoadoutBuilder({
   );
 
   const filteredSets = useMemo(
-    () => result?.sets && sortGeneratedSets(result.sets, statOrder, enabledStats),
-    [enabledStats, result?.sets, statOrder]
+    () => result?.sets && sortGeneratedSets(result.sets, statOrder, statFilters),
+    [result?.sets, statFilters, statOrder]
   );
 
   const shareBuild = async (notes?: string) => {
@@ -516,7 +511,7 @@ export default memo(function LoadoutBuilder({
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
             statOrder={statOrder}
-            enabledStats={enabledStats}
+            statFilters={statFilters}
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}

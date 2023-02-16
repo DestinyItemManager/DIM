@@ -228,13 +228,13 @@ export function process(
 
             // Check whether the set exceeds our stat constraints
             let totalTier = 0;
-            let statRangeExceeded = false;
             for (let index = 0; index < 6; index++) {
-              const tier = tiers[index];
+              let tier = tiers[index];
               const filter = statFiltersInStatOrder[index];
               if (!filter.ignored) {
                 if (tier > filter.max) {
-                  statRangeExceeded = true;
+                  tier = filter.max;
+                  tiers[index] = tier;
                 }
                 totalTier += tier;
               }
@@ -250,12 +250,6 @@ export function process(
               )
             ) {
               setStatistics.skipReasons.skippedLowTier++;
-              continue;
-            }
-
-            setStatistics.upperBoundsExceeded.timesChecked++;
-            if (statRangeExceeded) {
-              setStatistics.upperBoundsExceeded.timesFailed++;
               continue;
             }
 
