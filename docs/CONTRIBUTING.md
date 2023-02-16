@@ -21,7 +21,7 @@ Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 
 * Install [Git](https://git-scm.com/downloads)
 * Install [NodeJS](https://nodejs.org/).
-* Install [Yarn](https://yarnpkg.com/en/docs/install). If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)".
+* Install [Yarn](https://yarnpkg.com/en/docs/install). Use Yarn 1.x as DIM is not guaranteed to be compatible with later versions of Yarn. If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)".
 * Windows-based developers will need to install `windows-build-tools` (run `yarn global add windows-build-tools` in your terminal) globally prior to running `yarn install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
 * It is highly recommended to use [VSCode](https://code.visualstudio.com/) to work on DIM. When you open DIM in VSCode, accept the recommended plugins it suggests (find them manually by searching "@recommended" in the Extensions window).
 * Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to running `yarn install`.
@@ -31,7 +31,6 @@ Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 
 ### Clone the repo
 
-To locally **run a copy** of DIM, you can simply clone the code repository:
 If you only want to **run a copy** of DIM locally and are not interested in contributing changes to the project, you can directly clone the original repository to your local machine using
 ```sh
 git clone https://github.com/DestinyItemManager/DIM.git
