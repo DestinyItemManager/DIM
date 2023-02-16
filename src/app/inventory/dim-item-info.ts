@@ -86,6 +86,19 @@ export const vaultDisplacePriority: (TagValue | 'none')[] = [
   'archive',
 ];
 
+/**
+ * Priority order for which items should get chosen to replace an equipped item.
+ * Tag values earlier in this list are more likely to be chosen.
+ */
+export const equipReplacePriority: (TagValue | 'none')[] = [
+  'favorite',
+  'keep',
+  'none',
+  'infuse',
+  'junk',
+  'archive',
+];
+
 export interface ItemInfos {
   [itemId: string]: ItemAnnotation;
 }
