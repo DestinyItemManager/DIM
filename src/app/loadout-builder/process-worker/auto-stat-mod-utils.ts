@@ -1,4 +1,3 @@
-import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -29,13 +28,13 @@ const minorStatMods: { [statHash in ArmorStatHashes]: { hash: number; cost: numb
 };
 
 // Artifice mods add 3
-export const artificeStatMods: { [statHash in ArmorStatHashes]: { hash: number; cost: number } } = {
-  [StatHashes.Mobility]: { hash: 11111111, cost: 1 },
-  [StatHashes.Resilience]: { hash: 22222222, cost: 2 },
-  [StatHashes.Recovery]: { hash: 33333333, cost: 2 },
-  [StatHashes.Discipline]: { hash: 44444444, cost: 1 },
-  [StatHashes.Intellect]: { hash: 55555555, cost: 2 },
-  [StatHashes.Strength]: { hash: 66666666, cost: 1 },
+export const artificeStatMods: { [statHash in ArmorStatHashes]: { hash: number } } = {
+  [StatHashes.Mobility]: { hash: 11111111 },
+  [StatHashes.Resilience]: { hash: 22222222 },
+  [StatHashes.Recovery]: { hash: 33333333 },
+  [StatHashes.Discipline]: { hash: 44444444 },
+  [StatHashes.Intellect]: { hash: 55555555 },
+  [StatHashes.Strength]: { hash: 66666666 },
 };
 
 /**
@@ -45,7 +44,6 @@ export interface ModsPick {
   numArtificeMods: number;
   numGeneralMods: number;
   generalModsCosts: number[];
-  artificeModCosts: number[];
   modHashes: number[];
   modEnergyCost: number;
 }
@@ -94,67 +92,19 @@ export function chooseAutoMods(
 
 function doModsFit(
   info: PrecalculatedInfo,
-  items: ProcessItem[],
-  /** variants of remaining energy capacities given our activity mod assignment. In same order as items */
+  /** variants of remaining energy capacities given our activity mod assignment, each sorted descendingly */
   remainingEnergyCapacities: number[][],
   pickedMods: ModsPick[]
 ) {
-  // FIXME: In the event that artifice mods are free, this can be reduced to greedy checks.
-  // No need to check the items for their artifice status (since location doesn't matter and we check total number already),
-  // no need to incorporate their costs. We can even sort all remaining capacities before sending them here.
   const generalModCosts = [
     ...info.generalModCosts,
     ...pickedMods.flatMap((m) => m.generalModsCosts),
   ];
   generalModCosts.sort((a, b) => b - a);
-  const artificeModCosts = [...pickedMods.flatMap((m) => m.artificeModCosts)];
 
-  // First, try a fast path that just creates an arbitrary permutation and see if that works.
-  // This is often hit when runs have few mods and high-energy armor.
-  const fastPathArtificeCosts = Array(items.length).fill(0);
-  let artificeIndex = 0;
-  for (let i = 0; i < items.length; i++) {
-    if (items[i].isArtifice) {
-      fastPathArtificeCosts[i] = artificeModCosts[artificeIndex];
-      artificeIndex++;
-    }
-  }
-
-  if (
-    remainingEnergyCapacities.some((capacities) => {
-      const copy = capacities.slice();
-      for (let i = 0; i < items.length; i++) {
-        copy[i] -= fastPathArtificeCosts[i];
-      }
-      copy.sort((a, b) => b - a);
-      return generalModCosts.every((cost, index) => cost <= copy[index]);
-    })
-  ) {
-    return true;
-  }
-
-  // Otherwise, try all permutations.
-  const artificePermutations = generatePermutationsOfFive(artificeModCosts, (x) =>
-    x.map((x) => x?.toString(16) ?? '0').join('')
+  return remainingEnergyCapacities.some((capacities) =>
+    generalModCosts.every((cost, index) => cost <= capacities[index])
   );
-  artificePermutationLoop: for (const artificePermutation of artificePermutations) {
-    for (let i = 0; i < items.length; i++) {
-      if (artificePermutation[i] !== null && !items[i].isArtifice) {
-        continue artificePermutationLoop;
-      }
-    }
-    for (const remainingCapacity of remainingEnergyCapacities) {
-      const copy = remainingCapacity.slice();
-      for (let i = 0; i < items.length; i++) {
-        copy[i] -= artificePermutation[i] ?? 0;
-      }
-      copy.sort((a, b) => b - a);
-      if (generalModCosts.every((cost, index) => cost <= copy[index])) {
-        return true;
-      }
-    }
-  }
-  return false;
 }
 
 /**
@@ -170,7 +120,7 @@ function recursivelyChooseMods(
   statIndex: number,
   remainingGeneralSlots: number,
   remainingArtificeSlots: number,
-  /** variants of remaining energy capacities given our activity mod assignment. In same order as items */
+  /** variants of remaining energy capacities given our activity mod assignment, each sorted descendingly */
   remainingEnergyCapacities: number[][],
   remainingTotalEnergy: number,
   pickedMods: ModsPick[]
@@ -181,7 +131,7 @@ function recursivelyChooseMods(
 
   if (statIndex === info.statOrder.length) {
     // We've hit the end of our needed stats, check if this is possible
-    if (doModsFit(info, items, remainingEnergyCapacities, pickedMods)) {
+    if (doModsFit(info, remainingEnergyCapacities, pickedMods)) {
       return pickedMods;
     } else {
       return undefined;
@@ -274,16 +224,12 @@ function buildCacheForStat(statHash: ArmorStatHashes, availableGeneralStatMods: 
             ...Array(numMajorMods).fill(majorMod.cost),
             ...Array(numMinorMods).fill(minorMod.cost),
           ],
-          artificeModCosts: [...Array(numArtificeMods).fill(artificeMod.cost)],
           modHashes: [
             ...Array(numMajorMods).fill(majorMod.hash),
             ...Array(numMinorMods).fill(minorMod.hash),
             ...Array(numArtificeMods).fill(artificeMod.hash),
           ],
-          modEnergyCost:
-            numMinorMods * minorMod.cost +
-            numMajorMods +
-            majorMod.cost * numArtificeMods * artificeMod.cost,
+          modEnergyCost: numMinorMods * minorMod.cost + numMajorMods,
         };
         for (let achievableValue = lowerRange; achievableValue <= statValue; achievableValue++) {
           (cache.statMap[achievableValue] ??= []).push(obj);

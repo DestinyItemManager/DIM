@@ -131,6 +131,7 @@ export function pickAndAssignSlotIndependentMods(
           (item.energy?.val || 0) -
           (activityPermutation[idx]?.energy?.val || 0))
     );
+    remainingEnergyCapacities.sort((a, b) => b - a);
 
     if (neededStats) {
       const result = chooseAutoMods(
@@ -207,7 +208,7 @@ export function pickOptimalStatMods(
         (i.energy?.val || 0) -
         (activityPermutation[idx]?.energy?.val || 0)
     );
-
+    remainingEnergyCapacities.sort((a, b) => b - a);
     remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
   }
   // The amount of additional stat points after which stats don't give us a benefit anymore.
