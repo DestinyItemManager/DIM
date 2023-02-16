@@ -1,3 +1,4 @@
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { makeFakeItem as makeFakeD1Item } from 'app/inventory/store/d1-item-factory';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
@@ -24,7 +25,9 @@ export function getItemsFromLoadoutItems(
   allItems: DimItem[],
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
-  }
+  },
+  /** needs passing in if this is d1 mode */
+  d1Defs?: D1ManifestDefinitions
 ): [items: ResolvedLoadoutItem[], warnitems: ResolvedLoadoutItem[]] {
   if (!loadoutItems) {
     return [emptyArray(), emptyArray()];
@@ -36,7 +39,7 @@ export function getItemsFromLoadoutItems(
   const warnitems: ResolvedLoadoutItem[] = [];
   for (const loadoutItem of loadoutItems) {
     // TODO: filter down to the class type of the loadout
-    const item = findItemForLoadout(defs, allItems, storeId, loadoutItem);
+    const item = findItemForLoadout(d1Defs ?? defs, allItems, storeId, loadoutItem);
     if (item) {
       // If there are any mods for this item's bucket, and the item is equipped, add them to socket overrides
       const modsForBucket =
