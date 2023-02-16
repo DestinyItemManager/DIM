@@ -78,11 +78,11 @@ export function getBetterWorseItems(
   const itemTypeFilterString = itemTypeFilter.fromItem!(exampleItem);
   const guardianClassFilterString = classFilter.fromItem!(exampleItem);
 
-  // only compare exotics to exotics, and non- to non-
-  const exoticnessFilter = exampleItem.isExotic ? 'is:exotic' : 'not:exotic';
+  // only compare exotics to exotics, and non- to non-                  don't compare old weird stuff
+  const rarityFilter = exampleItem.isExotic ? 'is:exotic' : '(not:exotic not:green not:white)';
 
-  // always only compare to similar item types, exoticness, and class
-  const alwaysFilters = `${itemTypeFilterString} ${exoticnessFilter} ${guardianClassFilterString}`;
+  // always only compare to similar item types, rarity, and class
+  const alwaysFilters = `${itemTypeFilterString} ${rarityFilter} ${guardianClassFilterString}`;
 
   const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem);
   // if defined, this perfectly matches the modslots of the example item

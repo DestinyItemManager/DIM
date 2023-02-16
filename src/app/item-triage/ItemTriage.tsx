@@ -224,7 +224,7 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
     allItems,
     filterFactory
   );
-  console.log({ betterItems, worseItems, betterFilter, worseFilter });
+
   // nothing interesting = no display
   if (!betterItems.length && !worseItems.length) {
     return null;
@@ -233,7 +233,7 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
   return (
     <CollapsibleTitle
       title={t('Better/Worse Items')}
-      sectionId="beter-worse-items"
+      sectionId="better-worse-items"
       defaultCollapsed={false}
       extra={<span className={styles.factorCollapsedValue}>!!</span>}
       showExtraOnlyWhenCollapsed
@@ -256,7 +256,6 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
                     items={collection}
                     initialItemId={item.id}
                   />
-                  <SetFilterButton filter={`id:${item.id} or ${filter}`} />
                 </span>
               </div>
             )
