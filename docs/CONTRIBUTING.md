@@ -31,7 +31,7 @@ Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 
 ### Clone the repo
 
-If you only want to **run a copy** of DIM locally and are not interested in contributing changes to the project, you can directly clone the original repository to your local machine using
+To locally **run a copy** of DIM, you can simply clone the code repository:
 ```sh
 git clone https://github.com/DestinyItemManager/DIM.git
 ```
