@@ -1,14 +1,11 @@
 import { StatHashListsKeyedByDestinyClass } from 'app/dim-ui/CustomStatTotal';
 import { DimItem } from 'app/inventory/item-types';
-import {
-  CUSTOM_TOTAL_STAT_HASH,
-  D2ArmorStatHashByName,
-  TOTAL_STAT_HASH,
-} from 'app/search/d2-known-values';
+import { keyByStatHash, StatLookup } from 'app/inventory/store/stats';
+import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import { classFilter, itemTypeFilter } from 'app/search/search-filters/known-values';
-import { getInterestingSocketMetadatas, getStatValuesByHash } from 'app/utils/item-utils';
+import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
 import { getIntrinsicArmorPerkSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Factor, factorComboCategories, FactorComboCategory, factorCombos } from './triage-factors';
@@ -60,8 +57,6 @@ export function getSimilarItems(
   return results;
 }
 
-const armorStatFilterNames = Object.keys(D2ArmorStatHashByName);
-
 /**
  * this collects strictly better, and strictly worse items.
  * a strictly worse item is statlower,
@@ -75,6 +70,11 @@ export function getBetterWorseItems(
   allItems: DimItem[],
   filterFactory: (query: string) => ItemFilter
 ) {
+  // none of this makes sense without stats
+  if (!exampleItem.stats) {
+    return;
+  }
+
   const itemTypeFilterString = itemTypeFilter.fromItem!(exampleItem);
   const guardianClassFilterString = classFilter.fromItem!(exampleItem);
 
@@ -84,51 +84,110 @@ export function getBetterWorseItems(
   // always only compare to similar item types, rarity, and class
   const alwaysFilters = `${itemTypeFilterString} ${rarityFilter} ${guardianClassFilterString}`;
 
+  // do some base filtering first
+  const comparableItems = allItems.filter(filterFactory(alwaysFilters));
+
+  // items that were judged to be stat better or statworse than exampleItem
+  const betterStatItems: DimItem[] = [];
+  const worseStatItems: DimItem[] = [];
+
+  // items that were judged to be stat better or statworse than exampleItem,
+  // based on artifice rules
+  const artificeBetterStatItems: DimItem[] = [];
+  const artificeWorseStatItems: DimItem[] = [];
+
+  const exampleItemStats = keyByStatHash(exampleItem.stats);
+  const exampleIsArtifice = isArtifice(exampleItem);
+  for (const thisItem of comparableItems) {
+    if (thisItem.stats) {
+      const itemIsArtifice = isArtifice(thisItem);
+      const thisItemStats = keyByStatHash(thisItem.stats);
+      let result: false | StatLookup = false;
+      let resultDueToArtifice = false;
+      if (exampleIsArtifice === itemIsArtifice) {
+        result = compareBetterStats(exampleItemStats, thisItemStats);
+      } else {
+        // there's unequal artificeness
+        const artPieceStats = exampleIsArtifice ? exampleItemStats : thisItemStats;
+        const normPieceStats = exampleIsArtifice ? thisItemStats : exampleItemStats;
+        // see if artifice is better without any adjustment
+        if (compareBetterStats(artPieceStats, normPieceStats) === artPieceStats) {
+          result = artPieceStats;
+        } else {
+          result = compareArtificeStats(artPieceStats, normPieceStats);
+          resultDueToArtifice = true;
+        }
+      }
+      // did one of them turn out better than the other?
+      if (result) {
+        // if exampleItem won, then thisItem goes into a worse array.
+        // otherwise thisItem won, so it goes into a better array
+        const insertInto =
+          result === exampleItemStats
+            ? resultDueToArtifice
+              ? artificeWorseStatItems
+              : worseStatItems
+            : resultDueToArtifice
+            ? artificeBetterStatItems
+            : betterStatItems;
+
+        // expose artifice measurer in beta,
+        // but keep it out of prod til lightfall ultimately confirms what we know from previews:
+        // artifice mods cost 0 and have no downside
+        if (
+          $DIM_FLAVOR !== 'release' ||
+          insertInto === betterStatItems ||
+          insertInto === worseStatItems
+        ) {
+          insertInto.push(thisItem);
+        }
+      }
+    }
+  }
+
   const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem);
-  // if defined, this perfectly matches the modslots of the example item
+
+  // if defined, this is a filter string that perfectly matches the modslots of the example item
   const modSlotFilter =
     exampleItemModSlotMetadatas &&
     `(${exampleItemModSlotMetadatas.map((m) => `modslot:${m.slotTag || 'none'}`).join(' ')})`;
 
+  // the intrinsic that the example item has, if it has one
   const exampleItemIntrinsic =
     !exampleItem.isExotic &&
     getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
 
-  const exampleItemStats = getStatValuesByHash(exampleItem, 'base');
+  const betterFilterParts: string[] = [];
+  // if example item has an intrinsic, the better item must have the same intrinsic to be better
+  if (exampleItemIntrinsic) {
+    betterFilterParts.push(`perk:${quoteFilterString(exampleItemIntrinsic.name)}`);
+  }
+  // if this has a special modslot, the better item must also have that same modslot
+  if (modSlotFilter) {
+    betterFilterParts.push(modSlotFilter);
+  }
 
-  // better or equal individual stats, and better total
-  const betterStatsFilter =
-    armorStatFilterNames
-      .map((n) => `basestat:${n}:>=${exampleItemStats[D2ArmorStatHashByName[n]]}`)
-      .join(' ') + ` basestat:total:>${exampleItemStats[TOTAL_STAT_HASH]}`;
+  const betterFilter = filterFactory(betterFilterParts.join(' '));
+  const betterItems = betterStatItems.filter(betterFilter);
+  const artificeBetterItems = artificeBetterStatItems.filter(betterFilter);
 
-  // the better item must have the same intrinsic (or example must have none) to be better than example
-  const betterIntrinsicFilter = exampleItemIntrinsic
-    ? `perk:${quoteFilterString(exampleItemIntrinsic.name)}`
-    : '';
-
-  const betterFilter = `(${alwaysFilters} ${
-    modSlotFilter ?? ''
-  } ${betterIntrinsicFilter} ${betterStatsFilter})`;
-  const betterItems = allItems.filter(filterFactory(betterFilter));
-
-  // worse or equal individual stats, and worse total
-  const worseStatsFilter =
-    armorStatFilterNames
-      .map((n) => `basestat:${n}:<=${exampleItemStats[D2ArmorStatHashByName[n]]}`)
-      .join(' ') + ` basestat:total:<${exampleItemStats[TOTAL_STAT_HASH]}`;
-
-  // a worse item must have the same intrinsic or none to be worse than this example
-  const worseIntrinsicFilter = exampleItemIntrinsic
-    ? `(perk:${quoteFilterString(exampleItemIntrinsic.name)} or armorintrinsic:none)`
-    : '';
-
+  const worseFilterParts: string[] = [];
+  // a worse item must have the same intrinsic or none, to be worse than the example
+  if (exampleItemIntrinsic) {
+    worseFilterParts.push(
+      `(perk:${quoteFilterString(exampleItemIntrinsic.name)} or armorintrinsic:none)`
+    );
+  }
   // a worse item's modslot can either be equal to the better item's, or missing
-  const worseModSlotFilter = modSlotFilter ? `(${modSlotFilter} or modslot:none)` : '';
-  const worseFilter = `(${alwaysFilters} ${worseModSlotFilter} ${worseIntrinsicFilter} ${worseStatsFilter})`;
-  const worseItems = allItems.filter(filterFactory(worseFilter));
+  if (modSlotFilter) {
+    worseFilterParts.push(`(${modSlotFilter} or modslot:none)`);
+  }
 
-  return { betterItems, worseItems, betterFilter, worseFilter };
+  const worseFilter = filterFactory(worseFilterParts.join(' '));
+  const worseItems = worseStatItems.filter(worseFilter);
+  const artificeWorseItems = artificeWorseStatItems.filter(worseFilter);
+
+  return { betterItems, artificeBetterItems, worseItems, artificeWorseItems };
 }
 
 /**
@@ -230,4 +289,126 @@ export function getNotableStats(
       percent: Math.floor(customRatio * 100),
     },
   };
+}
+
+/**
+ * checks if statsA or statsB is just plain better than the other,
+ * measuring only by the given stats
+ *
+ * returns the winning stat dict, or false for neither was completely better
+ */
+function compareBetterStats(
+  statsA: StatLookup,
+  statsB: StatLookup,
+  whichStatHashes = armorStats // default to all 6 armor stats
+): StatLookup | false {
+  let aWins = 0;
+  let bWins = 0;
+  let ties = 0;
+
+  for (const h of whichStatHashes) {
+    const valueA = statsA[h]?.base ?? 0;
+    const valueB = statsB[h]?.base ?? 0;
+    if (valueA > valueB) {
+      aWins++;
+    } else if (valueA < valueB) {
+      bWins++;
+    } else {
+      ties++;
+    }
+
+    // if at any point, both have some wins, we're done here. neither is completely lower than the other.
+    if (aWins && bWins) {
+      return false;
+    }
+  }
+
+  // if they're all ties, we have a tie.
+  // this also catches the case of an empty stat hashes array.
+  if (ties === whichStatHashes.length) {
+    return false;
+  }
+  // we dealt with ties and if both pieces had advantages,
+  // so we should have a winner at this point.
+
+  return aWins ? statsA : bWins ? statsB : false;
+  // this false fallback shouldn't crop up, but just in case, we make no judgement
+}
+
+/**
+ * checks if artificeStats or normalStats is just plain better than the other,
+ * measuring only by the given stats.
+ *
+ * allows an artifice piece to assume one stat is bumped up by 3,
+ * to try and surpass the non-artifice piece. gives artifice an extra change to "win".
+ *
+ * this might claim a specific normal piece is statbetter than a specific artifice piece.
+ * but that doesn't mean we should recommend deleting the artifice piece,
+ * because configurable stats are sort of their own advantage. at worst it's a trade-off.
+ *
+ * returns the winning stat dict, or false for neither was completely better
+ */
+function compareArtificeStats(
+  artificeStats: StatLookup,
+  normalStats: StatLookup,
+  whichStatHashes = armorStats // default to all 6 armor stats
+): StatLookup | false {
+  let artificeWins = 0;
+  let normalWins = 0;
+  let ties = 0;
+
+  for (const h of whichStatHashes) {
+    const art = artificeStats[h]?.base ?? 0;
+    const norm = normalStats[h]?.base ?? 0;
+    if (art > norm) {
+      artificeWins++;
+    } else if (art < norm) {
+      normalWins++;
+    } else {
+      ties++;
+    }
+
+    // if both have some wins, and normal piece won in 2 stats,
+    // we're done here. neither is completely lower than the other,
+    // and artifice piece can't fix 2 stats to compensate
+    if (artificeWins && normalWins > 1) {
+      return false;
+    }
+  }
+
+  // if they're all ties, artifice wins.
+  // this also catches the case of an empty stat hashes array.
+  if (ties === whichStatHashes.length) {
+    return artificeStats;
+  }
+
+  // here's the special case:
+  // if normal armor won in only 1 stat, artifice could make up for that.
+  // in fact, if artifice's +3 brings it exactly equal to a normal piece's stats,
+  // the artifice piece is still better to own, because its stats are more flexible.
+  if (normalWins === 1) {
+    // loop til we find the hash of the stat normal won at
+    for (const h of whichStatHashes) {
+      const art = artificeStats[h]?.base ?? 0;
+      const norm = normalStats[h]?.base ?? 0;
+
+      if (norm > art) {
+        // this is the stat hash we could try putting a +3 in.
+        // if the gap is less than 4, artifice can meet or exceed it
+        return norm - art < 4 ? artificeStats : false;
+      }
+    }
+  }
+  // we returned in the early loop if both pieces had advantages,
+  // we've returned if there was a perfect tie,
+  // we've returned if there was a possibility of a +3 fix,
+  // at this point one of them clearly won out.
+  return artificeWins ? artificeStats : normalWins ? normalStats : false;
+  // this false fallback shouldn't crop up, but just in case, we make no judgement
+}
+
+function isArtifice(item: DimItem) {
+  return Boolean(
+    item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === 3727270518)
+  );
 }

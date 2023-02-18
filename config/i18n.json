@@ -1255,6 +1255,17 @@
     "UnlockAll": "Unlock Items"
   },
   "Triage": {
+    "BetterWorseArmor": "Better/Worse Armor",
+    "BetterWorseIncludes": "Identifies armor pieces with:",
+    "WorseArmor": "Strictly Worse Armor",
+    "WorseArtificeArmor": "Worse Non-Artifice Armor",
+    "StatWorseArmorDesc": "No better stats, and at least one worse stat.",
+    "PerkWorseArmorDesc": "The same intrinsic perk, or none.",
+    "BetterArmor": "Strictly Better Armor",
+    "BetterArtificeArmor": "Better Artifice Armor",
+    "StatBetterArmorDesc": "All stats at least as high, and at least one stat better.",
+    "PerkBetterArmorDesc": "The same, or more, intrinsic perks.",
+    "AccountsForArtifice": "This tests whether an Artifice armor piece could be better, if a +3 stat mod were used.",
     "YourBestItem": "Your best item",
     "ThisItem": "This item",
     "SimilarItems": "Similar Items",

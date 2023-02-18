@@ -5,10 +5,11 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { SetFilterButton } from 'app/dim-ui/SetFilterButton';
 import filterButtonStyles from 'app/dim-ui/SetFilterButton.m.scss';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemPopupTab } from 'app/item-popup/ItemPopupBody';
@@ -41,7 +42,7 @@ export function doShowTriage(item: DimItem) {
   return (
     item.destinyVersion === 2 &&
     (item.bucket.inArmor ||
-      (item.bucket.sort === 'Weapons' &&
+      (item.bucket.sort === 'Weapons' && // there's some reason not to use inWeapons
         item.bucket.hash !== BucketHashes.SeasonalArtifact &&
         item.bucket.hash !== BucketHashes.Subclass))
   );
@@ -182,11 +183,14 @@ function SimilarItemsTriageSection({ item }: { item: DimItem }) {
     return null;
   }
 
+  // separate section IDs allows separate settings saves
+  const sectionId = `${item.bucket.inArmor ? 'armor' : 'weapon'}-triage-itemcount`;
+
   const fewestSimilar = _.minBy(itemFactors, (f) => f.count)!.count;
   return (
     <CollapsibleTitle
       title={t('Triage.SimilarItems')}
-      sectionId="triage-itemcount"
+      sectionId={sectionId}
       defaultCollapsed={false}
       extra={<span className={styles.factorCollapsedValue}>{fewestSimilar}</span>}
       showExtraOnlyWhenCollapsed
@@ -213,53 +217,91 @@ function SimilarItemsTriageSection({ item }: { item: DimItem }) {
   );
 }
 
+const descriptionBulletPoints = {
+  worse: [tl('Triage.StatWorseArmorDesc'), tl('Triage.PerkWorseArmorDesc')],
+  better: [tl('Triage.StatBetterArmorDesc'), tl('Triage.PerkBetterArmorDesc')],
+} as const;
+
 /**
  * we don't include this section if there's no strictly better or worse items
  */
 function BetterItemsTriageSection({ item }: { item: DimItem }) {
   const filterFactory = useSelector(filterFactorySelector);
   const allItems = useSelector(allItemsSelector);
-  const { betterItems, worseItems, betterFilter, worseFilter } = getBetterWorseItems(
-    item,
-    allItems,
-    filterFactory
-  );
+  const betterWorseResults = getBetterWorseItems(item, allItems, filterFactory);
 
+  // turns out exampleItem had no stats... weird?
+  if (!betterWorseResults) {
+    return null;
+  }
+  const { betterItems, artificeBetterItems, worseItems, artificeWorseItems } = betterWorseResults;
   // nothing interesting = no display
-  if (!betterItems.length && !worseItems.length) {
+  if (
+    !(
+      betterItems.length ||
+      artificeBetterItems.length ||
+      worseItems.length ||
+      artificeWorseItems.length
+    )
+  ) {
     return null;
   }
 
+  const rows = [
+    [t('Triage.BetterArmor'), descriptionBulletPoints.better, betterItems],
+    [t('Triage.BetterArtificeArmor'), descriptionBulletPoints.better, artificeBetterItems, true],
+    [t('Triage.WorseArmor'), descriptionBulletPoints.worse, worseItems],
+    [t('Triage.WorseArtificeArmor'), descriptionBulletPoints.worse, artificeWorseItems, true],
+  ] as const;
+
   return (
     <CollapsibleTitle
-      title={t('Better/Worse Items')}
-      sectionId="better-worse-items"
+      title={t('Triage.BetterWorseArmor')}
+      sectionId="better-worse-armor"
       defaultCollapsed={false}
       extra={<span className={styles.factorCollapsedValue}>!!</span>}
       showExtraOnlyWhenCollapsed
     >
       <div className={styles.similarItemsTable}>
-        {(
-          [
-            ['Strictly Better Items', betterFilter, betterItems],
-            ['Strictly Worse Items', worseFilter, worseItems],
-          ] as const
-        ).map(
-          ([label, filter, collection]) =>
-            collection.length > 0 && (
+        {rows.map(([label, [statDesc, perkDesc], itemCollection, showArtificeDesc]) => {
+          const tooltip = (
+            <>
+              {t('Triage.BetterWorseIncludes')}
+              <ul>
+                <li>
+                  {t(statDesc)}
+                  {showArtificeDesc && (
+                    <span className={styles.artificeExplanation}>
+                      <br />
+                      {t('Triage.AccountsForArtifice')}
+                    </span>
+                  )}
+                </li>
+                <li>{t(perkDesc)}</li>
+              </ul>
+            </>
+          );
+          if (itemCollection.length) {
+            const filter = itemCollection.map((i) => `id:${i.id}`).join(' or ');
+            return (
               <div className={styles.tableRow} key={label}>
-                <div>{label}</div>
-                <span className={styles.count}>{collection.length}</span>
+                <span>
+                  <PressTip tooltip={tooltip} elementType="span" placement="top">
+                    {label}
+                  </PressTip>
+                </span>
+                <span className={styles.count}>{itemCollection.length}</span>
                 <span className={styles.controls}>
                   <StartCompareButton
                     filter={`id:${item.id} or ` + filter}
-                    items={collection}
+                    items={itemCollection}
                     initialItemId={item.id}
                   />
                 </span>
               </div>
-            )
-        )}
+            );
+          }
+        })}
       </div>
     </CollapsibleTitle>
   );

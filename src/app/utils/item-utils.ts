@@ -92,7 +92,7 @@ export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[]
 
 /**
  * combat and legacy slots are boring now. everything has them.
- * this focuses on narrower stuff: raid & nightmare mod
+ * this focuses on narrower stuff: raid & nightmare modslots
  */
 export const getInterestingSocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
   const specialtySockets = getSpecialtySocketMetadatas(item)?.filter(
