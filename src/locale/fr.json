@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "Aucune notes",
+    "OpenInArmory": "voir dans l'armurerie",
     "Season": "Saison {{season}}, Année {{year}}",
     "TrashlistedRolls": "Arme indésirable",
     "TrashlistedRolls_plural": "{{count, number}} Armes indésirables",
@@ -272,6 +273,7 @@
     "Reforgeable": "Affiche les objets qui peuvent être reforgés à l'armurier.",
     "Release": "Disponible depuis la sortie de <i>{{release}}</i>",
     "RequiredLevel": "Affiche les objets selon leur niveau requis.",
+    "RetiredPerk": "Affiche les armes avec des attributs qui ne sont plus obtenable.",
     "SearchPrompt": "Rechercher les commandes de filtre disponibles",
     "Season": "Affiche les objets en fonction de la saison de Destiny 2 pendant lequel ils sont apparu.",
     "SeasonalDupe": "Affiche les doublons, en ne comptant pas les rééditions d'une saison différente comme le même objet.",
@@ -1153,11 +1155,22 @@
     "UnlockAll": "Déverrouillez les objets"
   },
   "Triage": {
+    "AccountsForArtifice": "This tests whether an Artifice armor piece could be better, if a +3 stat mod were used.",
+    "BetterArmor": "Strictly Better Armor",
+    "BetterArtificeArmor": "Better Artifice Armor",
+    "BetterWorseArmor": "Better/Worse Armor",
+    "BetterWorseIncludes": "Identifies armor pieces with:",
     "HighStats": "Stats élevés",
     "InLoadouts": "Dans les arsenaux",
     "OwnedCount": "# Possédés",
+    "PerkBetterArmorDesc": "The same, or more, intrinsic perks.",
+    "PerkWorseArmorDesc": "The same intrinsic perk, or none.",
     "SimilarItems": "Objets similaires",
+    "StatBetterArmorDesc": "All stats at least as high, and at least one stat better.",
+    "StatWorseArmorDesc": "No better stats, and at least one worse stat.",
     "ThisItem": "Cet objet",
+    "WorseArmor": "Strictly Worse Armor",
+    "WorseArtificeArmor": "Worse Non-Artifice Armor",
     "YourBestItem": "Votre meilleur objet"
   },
   "Triumphs": {

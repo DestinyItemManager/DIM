@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "Keine Notizen",
+    "OpenInArmory": "im Arsenal ansehen",
     "Season": "Saison {{season}}, Jahr {{year}}",
     "TrashlistedRolls": "Mülllisten-Roll",
     "TrashlistedRolls_plural": "{{count, number}} Mülllisten Rolls",
@@ -272,6 +273,7 @@
     "Reforgeable": "Zeigt Items, die beim Waffenmeister umgeschmiedet werden können.",
     "Release": "Verfügbar seit Veröffentlichung <i>{{release}}</i>",
     "RequiredLevel": "Zeigt Items basierend auf deren Mindestlevel.",
+    "RetiredPerk": "Zeigt Waffen mit Perks, die nicht mehr erhältlich sind.",
     "SearchPrompt": "Verfügbare Filterbefehle durchsuchen",
     "Season": "Zeigt Items nach der Saison in der sie in Destiny 2 erschienen sind an.",
     "SeasonalDupe": "Zeigt doppelte Gegenstände, gleiche Items aus einer anderen Saison sind ausgeschlossen.",
@@ -1153,11 +1155,22 @@
     "UnlockAll": "Entsperre Gegenstände"
   },
   "Triage": {
+    "AccountsForArtifice": "This tests whether an Artifice armor piece could be better, if a +3 stat mod were used.",
+    "BetterArmor": "Strictly Better Armor",
+    "BetterArtificeArmor": "Better Artifice Armor",
+    "BetterWorseArmor": "Better/Worse Armor",
+    "BetterWorseIncludes": "Identifies armor pieces with:",
     "HighStats": "Hohe Werte",
     "InLoadouts": "In Ausrüstungen",
     "OwnedCount": "# In Besitz",
+    "PerkBetterArmorDesc": "The same, or more, intrinsic perks.",
+    "PerkWorseArmorDesc": "The same intrinsic perk, or none.",
     "SimilarItems": "Ähnliche Gegenstände",
+    "StatBetterArmorDesc": "All stats at least as high, and at least one stat better.",
+    "StatWorseArmorDesc": "No better stats, and at least one worse stat.",
     "ThisItem": "Dieser Gegenstand",
+    "WorseArmor": "Strictly Worse Armor",
+    "WorseArtificeArmor": "Worse Non-Artifice Armor",
     "YourBestItem": "Dein bester Gegenstand"
   },
   "Triumphs": {
