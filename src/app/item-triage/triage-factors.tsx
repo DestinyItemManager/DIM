@@ -63,8 +63,8 @@ const itemFactors: Record<string, Factor> = {
     filter: (item) => compareNameQuery(item),
   },
   element: {
-    id: 'element', //             don't compare exotic weapon elements, that's silly.
-    runIf: (item) => item.element && !(item.isExotic && item.bucket.inWeapons),
+    id: 'element', // we're done using this for armor as of lightfall
+    runIf: (item) => item.element && item.bucket.inWeapons,
     render: (item) => (
       <PressTip minimal elementType="span" tooltip={item.element?.displayProperties.name}>
         <ElementIcon className={clsx(styles.factorIcon)} element={item.element} />
@@ -177,8 +177,8 @@ export const factorCombos = {
     [itemFactors.name],
   ],
   Armor: [
-    [itemFactors.class, itemFactors.element, itemFactors.specialtySocket, itemFactors.armorSlot],
-    [itemFactors.class, itemFactors.element, itemFactors.specialtySocket],
+    [itemFactors.class, itemFactors.specialtySocket, itemFactors.armorSlot],
+    [itemFactors.class, itemFactors.specialtySocket],
     [itemFactors.class, itemFactors.name],
   ],
   General: [[itemFactors.element]],
