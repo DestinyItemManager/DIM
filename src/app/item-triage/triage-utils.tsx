@@ -340,7 +340,8 @@ function compareBetterStats(
  * measuring only by the given stats.
  *
  * allows an artifice piece to assume one stat is bumped up by 3,
- * to try and surpass the non-artifice piece. gives artifice an extra change to "win".
+ * to try and surpass the non-artifice piece.
+ * this gives artifice an extra chance to "win".
  *
  * this might claim a specific normal piece is statbetter than a specific artifice piece.
  * but that doesn't mean we should recommend deleting the artifice piece,

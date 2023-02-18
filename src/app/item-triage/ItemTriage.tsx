@@ -237,12 +237,10 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
   const { betterItems, artificeBetterItems, worseItems, artificeWorseItems } = betterWorseResults;
   // nothing interesting = no display
   if (
-    !(
-      betterItems.length ||
-      artificeBetterItems.length ||
-      worseItems.length ||
-      artificeWorseItems.length
-    )
+    !betterItems.length &&
+    !artificeBetterItems.length &&
+    !worseItems.length &&
+    !artificeWorseItems.length
   ) {
     return null;
   }
