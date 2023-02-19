@@ -97,6 +97,13 @@
   padding: 4px 10px 4px;
   background: #333;
 
+  display: flex;
+  align-items: center;
+
+  > :nth-child(n + 2) {
+    margin-left: 4px;
+  }
+
   .objective-progress {
     background: #222;
   }
