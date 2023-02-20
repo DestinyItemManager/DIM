@@ -203,7 +203,7 @@ export function isKillTrackerSocket(socket: DimSocket) {
 }
 
 export interface KillTracker {
-  type: 'pve' | 'pvp';
+  type: 'pve' | 'pvp' | 'gambit';
   count: number;
   trackerDef: PluggableInventoryItemDefinition;
 }
