@@ -105,16 +105,16 @@ export function getBetterWorseItems(
       let result: false | StatLookup = false;
       let resultDueToArtifice = false;
       if (exampleIsArtifice === itemIsArtifice) {
-        result = compareBetterStats(exampleItemStats, thisItemStats);
+        result = compareBetterStats(exampleItemStats, thisItemStats, false);
       } else {
         // there's unequal artificeness
         const artPieceStats = exampleIsArtifice ? exampleItemStats : thisItemStats;
         const normPieceStats = exampleIsArtifice ? thisItemStats : exampleItemStats;
         // see if artifice is better without any adjustment
-        if (compareBetterStats(artPieceStats, normPieceStats) === artPieceStats) {
+        if (compareBetterStats(artPieceStats, normPieceStats, false) === artPieceStats) {
           result = artPieceStats;
         } else {
-          result = compareArtificeStats(artPieceStats, normPieceStats);
+          result = compareBetterStats(artPieceStats, normPieceStats, true);
           resultDueToArtifice = true;
         }
       }
@@ -295,20 +295,37 @@ export function getNotableStats(
  * checks if statsA or statsB is just plain better than the other,
  * measuring only by the given stats
  *
+ * if `aIsArtifice`, then allow assuming one stat of `A` is bumped up by 3,
+ * to try and surpass the non-artifice piece.
+ * this gives artifice an extra chance to "win".
+ *
+ * this might claim a specific normal piece is statbetter than a specific artifice piece.
+ * but that doesn't mean we should recommend deleting the artifice piece,
+ * because configurable stats are sort of their own advantage. at worst it's a trade-off.
+ *
  * returns the winning stat dict, or false for neither was completely better
  */
 function compareBetterStats(
   statsA: StatLookup,
   statsB: StatLookup,
+  aIsArtifice: boolean,
   whichStatHashes = armorStats // default to all 6 armor stats
 ): StatLookup | false {
   let aWins = 0;
   let bWins = 0;
   let ties = 0;
+  let aArtificeToken = aIsArtifice;
 
   for (const h of whichStatHashes) {
-    const valueA = statsA[h]?.base ?? 0;
+    let valueA = statsA[h]?.base ?? 0;
     const valueB = statsB[h]?.base ?? 0;
+
+    // if B beats A in a stat, A expends its artifice token to try and make up for it
+    if (valueB > valueA && aArtificeToken) {
+      valueA += 3;
+      aArtificeToken = false;
+    }
+
     if (valueA > valueB) {
       aWins++;
     } else if (valueA < valueB) {
@@ -326,85 +343,15 @@ function compareBetterStats(
   // if they're all ties, we have a tie.
   // this also catches the case of an empty stat hashes array.
   if (ties === whichStatHashes.length) {
-    return false;
+    // If A still has its artifice token available, it's definitely better.
+    // But if A caused a tie with its artifice slot, it's still better because it's more flexible.
+    // So in case of ties A wins if it's an artifice piece even if it used its token.
+    return aIsArtifice ? statsA : false;
   }
   // we dealt with ties and if both pieces had advantages,
   // so we should have a winner at this point.
 
   return aWins ? statsA : bWins ? statsB : false;
-  // this false fallback shouldn't crop up, but just in case, we make no judgement
-}
-
-/**
- * checks if artificeStats or normalStats is just plain better than the other,
- * measuring only by the given stats.
- *
- * allows an artifice piece to assume one stat is bumped up by 3,
- * to try and surpass the non-artifice piece.
- * this gives artifice an extra chance to "win".
- *
- * this might claim a specific normal piece is statbetter than a specific artifice piece.
- * but that doesn't mean we should recommend deleting the artifice piece,
- * because configurable stats are sort of their own advantage. at worst it's a trade-off.
- *
- * returns the winning stat dict, or false for neither was completely better
- */
-function compareArtificeStats(
-  artificeStats: StatLookup,
-  normalStats: StatLookup,
-  whichStatHashes = armorStats // default to all 6 armor stats
-): StatLookup | false {
-  let artificeWins = 0;
-  let normalWins = 0;
-  let ties = 0;
-
-  for (const h of whichStatHashes) {
-    const art = artificeStats[h]?.base ?? 0;
-    const norm = normalStats[h]?.base ?? 0;
-    if (art > norm) {
-      artificeWins++;
-    } else if (art < norm) {
-      normalWins++;
-    } else {
-      ties++;
-    }
-
-    // if both have some wins, and normal piece won in 2 stats,
-    // we're done here. neither is completely lower than the other,
-    // and artifice piece can't fix 2 stats to compensate
-    if (artificeWins && normalWins > 1) {
-      return false;
-    }
-  }
-
-  // if they're all ties, artifice wins.
-  // this also catches the case of an empty stat hashes array.
-  if (ties === whichStatHashes.length) {
-    return artificeStats;
-  }
-
-  // here's the special case:
-  // if normal armor won in only 1 stat, artifice could make up for that.
-  // in fact, if artifice's +3 brings it exactly equal to a normal piece's stats,
-  // the artifice piece is still better to own, because its stats are more flexible.
-  if (normalWins === 1) {
-    // loop til we find the hash of the stat normal won at
-    for (const h of whichStatHashes) {
-      const art = artificeStats[h]?.base ?? 0;
-      const norm = normalStats[h]?.base ?? 0;
-
-      if (norm > art) {
-        // this is the stat hash we could try putting a +3 in.
-        // if the gap is less than 4, artifice can meet or exceed it
-        return norm - art < 4 ? artificeStats : false;
-      }
-    }
-  }
-  // we returned in the early loop if both pieces had advantages,
-  // we've returned if there was a perfect tie,
-  // we've returned if there was a possibility of a +3 fix,
-  // at this point one of them clearly won out.
-  return artificeWins ? artificeStats : normalWins ? normalStats : false;
   // this false fallback shouldn't crop up, but just in case, we make no judgement
 }
 
