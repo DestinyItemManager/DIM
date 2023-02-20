@@ -1,6 +1,7 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { compareFilteredItems } from 'app/compare/actions';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
+import { InputModal } from 'app/dim-ui/InputModal';
 import { t } from 'app/i18next-t';
 import { setNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
@@ -13,7 +14,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { stripSockets } from 'app/strip-sockets/strip-sockets-actions';
 import _ from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { itemTagSelectorList, TagCommand } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
@@ -49,6 +50,7 @@ export default React.memo(function ItemActionsDropdown({
   const isPhonePortrait = useIsPhonePortrait();
   const stores = useSelector(storesSortedByImportanceSelector);
   const destinyVersion = useSelector(destinyVersionSelector);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   let isComparable = false;
   if (filteredItems.length) {
@@ -75,13 +77,19 @@ export default React.memo(function ItemActionsDropdown({
     dispatch(bulkLockItems(lockables, state));
   });
 
-  const bulkNote = () => {
-    const note = prompt(t('Organizer.NotePrompt'));
-    if (note !== null && filteredItems.length) {
+  const changeModalInput = (input: string) => {
+    setIsModalOpen(false);
+    if (input !== null && filteredItems.length) {
       for (const item of filteredItems) {
-        dispatch(setNote(item, note));
+        dispatch(setNote(item, input));
       }
     }
+  };
+  const exitModal = () => {
+    setIsModalOpen(false);
+  };
+  const bulkNote = () => {
+    setIsModalOpen(true);
   };
 
   const compareMatching = () => {
@@ -181,12 +189,20 @@ export default React.memo(function ItemActionsDropdown({
   ]);
 
   return (
-    <Dropdown
-      options={dropdownOptions}
-      kebab={true}
-      className={styles.dropdownButton}
-      offset={isPhonePortrait ? 10 : 3}
-      fixed={fixed}
-    />
+    <>
+      <Dropdown
+        options={dropdownOptions}
+        kebab={true}
+        className={styles.dropdownButton}
+        offset={isPhonePortrait ? 10 : 3}
+        fixed={fixed}
+      />
+      <InputModal
+        isModalOpen={isModalOpen}
+        placeholder={t('Organizer.NotePrompt')}
+        changeModalInput={(input) => changeModalInput(input)}
+        exitModal={exitModal}
+      />
+    </>
   );
 });

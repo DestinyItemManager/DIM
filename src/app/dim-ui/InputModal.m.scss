@@ -1,0 +1,34 @@
+.inputModal {
+  position: absolute;
+  padding: 15px 25px;
+  left: 0;
+  z-index: 100;
+  background: #313233;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  .label {
+    height: 24px;
+  }
+  .input {
+    height: 24px;
+    width: 250px;
+  }
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    .submit {
+      height: 24px;
+      width: 100px;
+      margin: 1px 2px;
+    }
+    .cancel {
+      height: 24px;
+      width: 100px;
+      margin: 1px 2px;
+    }
+  }
+}
