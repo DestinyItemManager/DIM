@@ -13,6 +13,7 @@ import { timerDurationFromMs } from 'app/utils/time';
 import {
   DestinyObjectiveDefinition,
   DestinyObjectiveProgress,
+  DestinyObjectiveUiStyle,
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -52,13 +53,12 @@ export default function Objective({
     'completionValue' in objective ? objective.completionValue : objectiveDef.completionValue;
 
   const complete = 'complete' in objective ? objective.complete : objective.isComplete;
+  const isD2Def = 'progressDescription' in objectiveDef;
 
   const progressDescription =
     // D1 display description
-    ('displayDescription' in objectiveDef && objectiveDef.displayDescription) ||
-    (!suppressObjectiveDescription &&
-      'progressDescription' in objectiveDef &&
-      objectiveDef.progressDescription) ||
+    (!isD2Def && objectiveDef.displayDescription) ||
+    (!suppressObjectiveDescription && isD2Def && objectiveDef.progressDescription) ||
     (complete ? t('Objectives.Complete') : t('Objectives.Incomplete'));
 
   const valueStyle = getValueStyle(objectiveDef, progress, completionValue);
@@ -76,6 +76,17 @@ export default function Objective({
           />
           <div className="objective-text">{progress.toLocaleString()}</div>
         </div>
+      </div>
+    );
+  }
+
+  if (isD2Def && objectiveDef.uiStyle === DestinyObjectiveUiStyle.CraftingWeaponTimestamp) {
+    return (
+      <div className="objective-row">
+        <div className="objective-description">
+          <RichDestinyText text={progressDescription} />
+        </div>
+        <div className="objective-counter">{new Date(progress * 1000).toLocaleString()}</div>
       </div>
     );
   }

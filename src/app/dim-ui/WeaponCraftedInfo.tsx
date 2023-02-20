@@ -65,7 +65,6 @@ export function CraftedDataMedallion({ item }: { item: DimItem }) {
               className="masterwork-progress"
             />
           ))}
-          {item.craftedInfo!.craftedDate}
         </>
       }
     >
