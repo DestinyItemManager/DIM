@@ -30,6 +30,7 @@
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
   "Armory": {
+    "OpenInArmory": "view in Armory",
     "WishlistedRolls": "Wishlisted Roll",
     "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
     "TrashlistedRolls": "Trashlisted Roll",
@@ -209,6 +210,7 @@
     "DamageType": "Shows items based on their damage type.",
     "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials. deepsight:complete and deepsight:incomplete refer to the progress of the deepsight objective, while deepsight:pattern shows items that could be progressed to unlock a pattern.",
     "Description": "Description",
+    "RetiredPerk": "Shows weapons with perks that no longer obtainable.",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
     "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe. Only one duplicate is chosen as the highest, and the rest are considered lower.",
@@ -1255,6 +1257,17 @@
     "UnlockAll": "Unlock Items"
   },
   "Triage": {
+    "BetterWorseArmor": "Better/Worse Armor",
+    "BetterWorseIncludes": "Identifies armor pieces with:",
+    "WorseArmor": "Strictly Worse Armor",
+    "WorseArtificeArmor": "Worse Non-Artifice Armor",
+    "StatWorseArmorDesc": "No better stats, and at least one worse stat.",
+    "PerkWorseArmorDesc": "The same intrinsic perk, or none.",
+    "BetterArmor": "Strictly Better Armor",
+    "BetterArtificeArmor": "Better Artifice Armor",
+    "StatBetterArmorDesc": "All stats at least as high, and at least one stat better.",
+    "PerkBetterArmorDesc": "The same, or more, intrinsic perks.",
+    "AccountsForArtifice": "This tests whether an Artifice armor piece could be better, if a +3 stat mod were used.",
     "YourBestItem": "Your best item",
     "ThisItem": "This item",
     "SimilarItems": "Similar Items",

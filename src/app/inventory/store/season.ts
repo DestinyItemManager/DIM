@@ -1,3 +1,5 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { D2EventIndex, D2SourcesToEvent } from 'data/d2/d2-event-info';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import D2Events from 'data/d2/events.json';
@@ -14,12 +16,18 @@ import { DimItem } from '../item-types';
 
 const SourceToD2Season: Record<number, number> = D2SeasonFromSource.sources;
 
-export function getSeason(item: DimItem): number {
-  if (item.classified) {
+export function getSeason(
+  item: DimItem | DestinyInventoryItemDefinition,
+  defs?: D2ManifestDefinitions
+): number {
+  const asDimItem = ('destinyVersion' in item && item) || undefined;
+  const asDef = ('displayProperties' in item && item) || undefined;
+  if (asDimItem?.classified || asDef?.redacted) {
     return D2CalculatedSeason;
   }
 
   if (
+    !item.itemCategoryHashes ||
     item.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
     item.itemCategoryHashes.includes(ItemCategoryHashes.Dummies) ||
     item.itemCategoryHashes.length === 0
@@ -27,17 +35,41 @@ export function getSeason(item: DimItem): number {
     return -1;
   }
 
-  // iconOverlay has precedence for season
-  const overlay = item.iconOverlay || item.hiddenOverlay;
+  if (asDef) {
+    const source =
+      asDef.collectibleHash && defs?.Collectible.get(asDef.collectibleHash)?.sourceHash;
+    const currentVersion = asDef.quality?.currentVersion;
+    const iconOverlay =
+      (currentVersion !== undefined &&
+        asDef.quality?.displayVersionWatermarkIcons?.[currentVersion]) ||
+      asDef.iconWatermark ||
+      asDef.iconWatermarkShelved ||
+      undefined;
+    return getSeasonFromOverlayAndSource(iconOverlay, source, asDef.hash);
+  } else if (asDimItem) {
+    return getSeasonFromOverlayAndSource(
+      asDimItem.iconOverlay || asDimItem.hiddenOverlay,
+      asDimItem.source,
+      asDimItem.hash
+    );
+  } else {
+    return D2CalculatedSeason;
+  }
+}
 
-  if (item.source && SourceToD2Season[item.source] && !overlay) {
-    return SourceToD2Season[item.source];
+function getSeasonFromOverlayAndSource(
+  overlay: string | undefined,
+  source: number | undefined,
+  hash: number
+) {
+  if (source && SourceToD2Season[source] && !overlay) {
+    return SourceToD2Season[source];
   }
 
   return overlay
     ? Number((D2SeasonFromOverlay as Record<string, number>)[overlay]) ||
-        (D2SeasonBackup as Record<number, number>)[item.hash]
-    : (D2Season as Record<number, number>)[item.hash] || D2CalculatedSeason;
+        (D2SeasonBackup as Record<number, number>)[hash]
+    : (D2Season as Record<number, number>)[hash] || D2CalculatedSeason;
 }
 
 /** The Destiny event (D2) that a specific item belongs to. */

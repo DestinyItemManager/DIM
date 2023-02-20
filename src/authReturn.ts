@@ -8,6 +8,13 @@ function handleAuthReturn() {
   const code = queryParams.get('code');
   const state = queryParams.get('state');
 
+  // Detect when we're in the iOS app's auth popup (but not in the app itself)
+  const iOSApp = state?.startsWith('dimauth-') && !navigator.userAgent.includes('DIM AppStore');
+  if (iOSApp) {
+    window.location.href = window.location.href.replace('https', 'dimauth');
+    return;
+  }
+
   if (!code?.length) {
     setError("We expected an authorization code parameter from Bungie.net, but didn't get one.");
     return;
@@ -47,6 +54,7 @@ function setError(error: string) {
   document.getElementById('error-message')!.textContent = error;
   document.getElementById('error-display')!.style.display = 'block';
   document.getElementById('loading')!.style.display = 'none';
+  document.getElementById('user-agent')!.textContent = navigator.userAgent;
 }
 
 handleAuthReturn();

@@ -95,7 +95,7 @@ interface StatDisplayLookup {
 }
 
 /** a dictionary to look up an item's DimStats by statHash */
-interface StatLookup {
+export interface StatLookup {
   [statHash: number]: DimStat | undefined;
 }
 
@@ -600,9 +600,9 @@ function bankersRound(x: number) {
   return (x > 0 ? x : -x) % 1 === 0.5 ? (0 === r % 2 ? r : r - 1) : r;
 }
 
-function keyByStatHash(stats: DimStat[]): StatLookup;
-function keyByStatHash(stats: DestinyStatDisplayDefinition[]): StatDisplayLookup;
-function keyByStatHash(stats: (DimStat | DestinyStatDisplayDefinition)[]): {
+export function keyByStatHash(stats: DimStat[]): StatLookup;
+export function keyByStatHash(stats: DestinyStatDisplayDefinition[]): StatDisplayLookup;
+export function keyByStatHash(stats: (DimStat | DestinyStatDisplayDefinition)[]): {
   [statHash: number]: DimStat | DestinyStatDisplayDefinition | undefined;
 } {
   return _.keyBy(stats, (s) => s.statHash);

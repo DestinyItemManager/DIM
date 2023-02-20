@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "無注釋",
+    "OpenInArmory": "view in Armory",
     "Season": "年 {{year}}，第 {{season}} 賽季",
     "TrashlistedRolls": "垃圾列表特性組合",
     "TrashlistedRolls_plural": "{{count, number}} 個垃圾列表特性組合",
@@ -272,6 +273,7 @@
     "Reforgeable": "顯示可以在造槍匠那裡重新鍛造的物品.",
     "Release": "可從<i>{{release}}</i>發行版本獲得",
     "RequiredLevel": "根據需要的等級顯示物品.",
+    "RetiredPerk": "Shows weapons with perks that no longer obtainable.",
     "SearchPrompt": "搜索可用的過濾器命令",
     "Season": "按照物品推出季度顯示.",
     "SeasonalDupe": "顯示重複物品，不包括同一物品在不同賽季的版本。",
@@ -1153,11 +1155,22 @@
     "UnlockAll": "解鎖物品"
   },
   "Triage": {
+    "AccountsForArtifice": "This tests whether an Artifice armor piece could be better, if a +3 stat mod were used.",
+    "BetterArmor": "Strictly Better Armor",
+    "BetterArtificeArmor": "Better Artifice Armor",
+    "BetterWorseArmor": "Better/Worse Armor",
+    "BetterWorseIncludes": "Identifies armor pieces with:",
     "HighStats": "高屬性",
     "InLoadouts": "包含該物品的配裝",
     "OwnedCount": "數量",
+    "PerkBetterArmorDesc": "The same, or more, intrinsic perks.",
+    "PerkWorseArmorDesc": "The same intrinsic perk, or none.",
     "SimilarItems": "相似物品",
+    "StatBetterArmorDesc": "All stats at least as high, and at least one stat better.",
+    "StatWorseArmorDesc": "No better stats, and at least one worse stat.",
     "ThisItem": "當前物品",
+    "WorseArmor": "Strictly Worse Armor",
+    "WorseArtificeArmor": "Worse Non-Artifice Armor",
     "YourBestItem": "你的最佳物品"
   },
   "Triumphs": {

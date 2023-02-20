@@ -14,7 +14,10 @@ const loginHelpLink = 'https://github.com/DestinyItemManager/DIM/wiki/Accounts-a
 
 export default function Login() {
   const dispatch = useThunkDispatch();
-  const authorizationState = useMemo(() => uuidv4(), []);
+  const authorizationState = useMemo(
+    () => (navigator.userAgent.includes('DIM AppStore') ? 'dimauth-' : '') + uuidv4(),
+    []
+  );
   const clientId = oauthClientId();
   const { state } = useLocation();
   const previousPath = state?.path;

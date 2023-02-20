@@ -33,12 +33,14 @@ $header-height: 44px;
   background-position: center top;
   background-repeat: no-repeat;
   background-size: 100vw 100vh;
+
   @include phone-portrait {
     background: #000;
   }
 
   :global(.app-icon) {
     font-size: 1.33em;
+
     @include phone-portrait {
       font-size: 24px;
     }
@@ -52,6 +54,7 @@ $header-height: 44px;
 
 .logoLink {
   height: 24px;
+
   @include phone-portrait {
     height: 44px;
     margin: 0 4px !important;
@@ -68,6 +71,7 @@ $header-height: 44px;
   user-select: none;
   outline: none;
   white-space: nowrap;
+
   @include phone-portrait {
     margin: 0 12px;
   }
@@ -102,6 +106,7 @@ $header-height: 44px;
 .logo {
   height: 24px;
   width: 68px;
+
   @include phone-portrait {
     height: 24px * 1.2;
     width: 68px * 1.2;
@@ -130,6 +135,7 @@ $header-height: 44px;
   @include phone-portrait {
     display: none;
   }
+
   @media (max-width: 1200px) {
     display: none;
   }
@@ -150,6 +156,7 @@ $header-height: 44px;
 
 .dropdown {
   @include below-header;
+  box-sizing: border-box;
   position: absolute;
   display: flex;
   overflow: auto;
@@ -236,6 +243,7 @@ $header-height: 44px;
   flex: 1;
   font-size: 13px;
   margin: 0 8px;
+
   @include phone-portrait {
     margin: 0 12px;
   }
@@ -247,6 +255,7 @@ $header-height: 44px;
 
 .searchButton {
   display: none;
+
   @include phone-portrait {
     display: inline-block;
   }

@@ -25,6 +25,7 @@ import {
   emptySocketHashes,
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
+import { plainString } from './freeform';
 
 export const modslotFilter: FilterDefinition = {
   keywords: 'modslot',
@@ -75,8 +76,7 @@ const socketFilters: FilterDefinition[] = [
         return false;
       }
 
-      const legendaryWeapon =
-        item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary';
+      const legendaryWeapon = item.bucket?.sort === 'Weapons' && item.tier === 'Legendary';
 
       if (!legendaryWeapon) {
         return false;
@@ -101,7 +101,7 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.ExtraPerk'),
     destinyVersion: 2,
     filter: () => (item: DimItem) => {
-      if (!(item.bucket?.sort === 'Weapons' && item.tier.toLowerCase() === 'legendary')) {
+      if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
         return false;
       }
 
@@ -189,9 +189,24 @@ const socketFilters: FilterDefinition[] = [
   },
   {
     keywords: 'armorintrinsic',
+    format: ['simple', 'query'],
+    suggestions: ['none'],
     description: tl('Filter.ArmorIntrinsic'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) => Boolean(!item.isExotic && getIntrinsicArmorPerkSocket(item)),
+    filter: ({ filterValue, language }) => {
+      if (filterValue === 'armorintrinsic') {
+        return (item: DimItem) => Boolean(!item.isExotic && getIntrinsicArmorPerkSocket(item));
+      }
+      if (filterValue === 'none') {
+        return (item: DimItem) =>
+          Boolean(!item.isExotic && item.bucket.inArmor && !getIntrinsicArmorPerkSocket(item));
+      }
+      return (item: DimItem) => {
+        const intrinsic =
+          getIntrinsicArmorPerkSocket(item)?.plugged?.plugDef.displayProperties.name;
+        return Boolean(intrinsic && plainString(intrinsic, language).includes(filterValue));
+      };
+    },
   },
   {
     keywords: 'holdsmod',
@@ -289,6 +304,20 @@ const socketFilters: FilterDefinition[] = [
       ({ compare }) =>
       (item: DimItem) =>
         item.sockets && compare!(countEnhancedPerks(item.sockets)),
+  },
+  {
+    keywords: 'retiredperk',
+    description: tl('Filter.RetiredPerk'),
+    destinyVersion: 2,
+    filter: () => (item: DimItem) => {
+      if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
+        return false;
+      }
+
+      return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable).some(
+        (socket) => socket.plugOptions.some((p) => p.cannotCurrentlyRoll)
+      );
+    },
   },
 ];
 

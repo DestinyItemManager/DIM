@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "无注释",
+    "OpenInArmory": "查看武器详情",
     "Season": "年 {{year}}，第 {{season}} 赛季",
     "TrashlistedRolls": "垃圾列表特性组合",
     "TrashlistedRolls_plural": "{{count, number}} 个垃圾列表特性组合",
@@ -272,6 +273,7 @@
     "Reforgeable": "显示可以在造枪匠那里重新锻造的物品.",
     "Release": "可从<i>{{release}}</i>发行版本获得",
     "RequiredLevel": "根据需要的等级显示物品.",
+    "RetiredPerk": "显示带有已无法获取特性的武器",
     "SearchPrompt": "搜索可用的过滤器命令",
     "Season": "按照物品推出季度显示.",
     "SeasonalDupe": "显示重复物品，不包括同一物品在不同赛季的版本。",
@@ -319,7 +321,7 @@
     "Quickfall": "急坠",
     "ScorchCannon": "灼烧发射器",
     "SearchSymbols": "搜索符号...",
-    "Smoke": "烟雾"
+    "Smoke": "烟幕"
   },
   "Header": {
     "About": "关于DIM",
@@ -551,7 +553,7 @@
       "AssumptionsRestricted": "DIM 无法建议更改护甲能量：",
       "BadSlot": "这些模组无法装上{{bucketName}}槽位所允许的任何物品：",
       "Header": "找不到配装。以下是 DIM 找不到配装的可能原因：",
-      "LowerBoundsFailed": "很多配装的属性等级少于属性等级下限",
+      "LowerBoundsFailed": "很多配装的属性等级未达到最低要求",
       "MaybeAllowMoreItems": "尝试允许其他物品：",
       "MaybeDecreaseLowerBounds": "尝试降低属性等级下限",
       "MaybeIncreaseUpperBounds": "尝试提高属性等级上限",
@@ -1153,11 +1155,22 @@
     "UnlockAll": "解锁物品"
   },
   "Triage": {
+    "AccountsForArtifice": "This tests whether an Artifice armor piece could be better, if a +3 stat mod were used.",
+    "BetterArmor": "Strictly Better Armor",
+    "BetterArtificeArmor": "Better Artifice Armor",
+    "BetterWorseArmor": "Better/Worse Armor",
+    "BetterWorseIncludes": "Identifies armor pieces with:",
     "HighStats": "高属性",
     "InLoadouts": "在配装中",
     "OwnedCount": "# 已拥有",
+    "PerkBetterArmorDesc": "The same, or more, intrinsic perks.",
+    "PerkWorseArmorDesc": "The same intrinsic perk, or none.",
     "SimilarItems": "相似物品",
+    "StatBetterArmorDesc": "All stats at least as high, and at least one stat better.",
+    "StatWorseArmorDesc": "No better stats, and at least one worse stat.",
     "ThisItem": "当前物品",
+    "WorseArmor": "Strictly Worse Armor",
+    "WorseArtificeArmor": "Worse Non-Artifice Armor",
     "YourBestItem": "你的最佳物品"
   },
   "Triumphs": {

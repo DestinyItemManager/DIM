@@ -31,7 +31,11 @@
 
 .logout {
   composes: account from './Account.m.scss';
-  margin-top: 20px;
+  padding: 10px 2rem 10px 1rem;
+
+  :global(.app-icon) {
+    margin: 0;
+  }
 }
 
 .accountName {
