@@ -66,14 +66,17 @@ export const armor2PlugCategoryHashesByName = {
 /** The consistent armour 2 mod category hashes. This excludes raid, combat and legacy slots as they tend to change. */
 export const armor2PlugCategoryHashes: number[] = Object.values(armor2PlugCategoryHashesByName);
 
-export const killTrackerObjectivesByHash: Record<number, 'pvp' | 'pve' | undefined> = {
-  74070459: 'pvp', // Objective "Crucible Opponents Defeated" found inside InventoryItem[38912240] "Crucible Tracker"
-  1501870536: 'pvp', // Objective "Crucible Opponents Defeated" found inside InventoryItem[2285636663] "Crucible Tracker"
-  2439952408: 'pvp', // Objective "Crucible Opponents Defeated" found inside InventoryItem[3244015567] "Crucible Tracker"
-  73837075: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[905869860] "Kill Tracker"
-  90275515: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[2240097604] "Kill Tracker"
-  2579044636: 'pve', // Objective "Enemies Defeated" found inside InventoryItem[2302094943] "Kill Tracker"
-  2285418970: undefined, //
+export const killTrackerObjectivesByHash: Record<number, 'pvp' | 'pve' | 'gambit' | undefined> = {
+  1501870536: 'pvp', // Objective "Crucible Opponents Defeated" inside 2285636663 "Crucible Tracker"
+  2439952408: 'pvp', // Objective "Crucible Opponents Defeated" inside 3244015567 "Crucible Tracker"
+  74070459: 'pvp', // Objective "Crucible Opponents Defeated" inside 38912240 "Crucible Tracker"
+  890482414: 'pvp', // Objective "Crucible opponents defeated" inside 1187045864 "Crucible Memento Tracker"
+  90275515: 'pve', // Objective "Enemies Defeated" inside 2240097604 "Kill Tracker"
+  2579044636: 'pve', // Objective "Enemies Defeated" inside 2302094943 "Kill Tracker"
+  73837075: 'pve', // Objective "Enemies Defeated" inside 905869860 "Kill Tracker"
+  345540971: 'gambit', // Objective "Gambit targets defeated" inside 3915764593 "Gambit Memento Tracker"
+  3387796140: 'pve', // Objective "Nightfall combatants defeated" inside 3915764594 "Nightfall Memento Tracker"
+  2109364169: 'pvp', // Objective "Trials opponents defeated" inside 3915764595 "Trials Memento Tracker"
 };
 export const killTrackerSocketTypeHash = 1282012138;
 
