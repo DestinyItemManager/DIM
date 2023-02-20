@@ -93,7 +93,7 @@ export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[]
 
 /**
  * combat and legacy slots are boring now. everything has them.
- * this focuses on narrower stuff: raid & nightmare mod
+ * this focuses on narrower stuff: raid & nightmare modslots
  */
 export const getInterestingSocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
   const specialtySockets = getSpecialtySocketMetadatas(item)?.filter(
@@ -202,7 +202,7 @@ export function isKillTrackerSocket(socket: DimSocket) {
 }
 
 export interface KillTracker {
-  type: 'pve' | 'pvp';
+  type: 'pve' | 'pvp' | 'gambit';
   count: number;
   trackerDef: PluggableInventoryItemDefinition;
 }
@@ -368,4 +368,13 @@ export function isPlugStatActive(
  */
 export function isD1Item(item: DimItem): item is D1Item {
   return item.destinyVersion === 1;
+}
+
+/** turns an item's list of stats into a dictionary of stats, keyed by stat hash */
+export function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value') {
+  const output: NodeJS.Dict<number> = {};
+  for (const stat of item.stats ?? []) {
+    output[stat.statHash] = stat[byWhichValue];
+  }
+  return output;
 }

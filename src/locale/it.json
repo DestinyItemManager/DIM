@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "Nessuna Nota",
+    "OpenInArmory": "mostra in Armeria",
     "Season": "Stagione {{season}}, Anno {{year}}",
     "TrashlistedRolls": "Roll Lista degli Scarti",
     "TrashlistedRolls_plural": "{{count, number}} Roll Lista degli Scarti",
@@ -272,6 +273,7 @@
     "Reforgeable": "Mostra gli oggetti che possono essere riforgiati dall'Armaiolo.",
     "Release": "Disponibile dalla release <i>{{release}}</i>",
     "RequiredLevel": "Mostra gli oggetti in base al livello richiesto.",
+    "RetiredPerk": "Mostra le armi con perk non più ottenibili.",
     "SearchPrompt": "Cerca tra comandi per filtri disponibili",
     "Season": "Mostra oggetti in base a quale stagione di Destiny 2 sono comparsi.",
     "SeasonalDupe": "Mostra gli oggetti duplicati, senza contare quelli ri-emessi in una stagione diversa come stesso oggetto.",
@@ -1153,11 +1155,22 @@
     "UnlockAll": "Sblocca Oggetti"
   },
   "Triage": {
+    "AccountsForArtifice": "Controlla se un pezzo di Armatura dell'Artificio potrebbe essere migliore, se una Modifica statistiche +3 fosse utilizzata.",
+    "BetterArmor": "Armatura Strettamente Migliore",
+    "BetterArtificeArmor": "Miglior Armatura Artificio",
+    "BetterWorseArmor": "Migliore/Peggiore Armatura",
+    "BetterWorseIncludes": "Identifica i pezzi di armatura con:",
     "HighStats": "Statistiche alte",
     "InLoadouts": "In loadout",
     "OwnedCount": "# in possesso",
+    "PerkBetterArmorDesc": "Lo stesso, o più, perk intrinseci.",
+    "PerkWorseArmorDesc": "Lo stesso perk intrinseco, o nessuno.",
     "SimilarItems": "Oggetti simili",
+    "StatBetterArmorDesc": "Tutte le statistiche egualmente alte, e almeno una statistica migliore.",
+    "StatWorseArmorDesc": "Nessuna statistica migliore, e almeno una statistica peggiore.",
     "ThisItem": "Questo oggetto",
+    "WorseArmor": "Armatura Strettamente Peggiore",
+    "WorseArtificeArmor": "Peggior Armatura Non-Artificio",
     "YourBestItem": "Il tuo miglior oggetto"
   },
   "Triumphs": {

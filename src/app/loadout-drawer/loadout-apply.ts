@@ -394,7 +394,7 @@ function doApplyLoadout(
           // else - so choose an appropriate replacement for each item.
           const itemsToEquip = _.compact(
             dequipItems.map((i) =>
-              getSimilarItem(getStores(), i, {
+              getSimilarItem(getState, getStores(), i, {
                 exclusions: applicableLoadoutItems,
                 excludeExotic: i.isExotic,
               })
