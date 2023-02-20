@@ -13,7 +13,6 @@ import { timerDurationFromMs } from 'app/utils/time';
 import {
   DestinyObjectiveDefinition,
   DestinyObjectiveProgress,
-  DestinyObjectiveUiStyle,
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -65,6 +64,7 @@ export default function Objective({
   if (!showHidden && valueStyle === DestinyUnlockValueUIStyle.Hidden) {
     return null;
   }
+  const isDate = isD2Def && valueStyle === DestinyUnlockValueUIStyle.DateTime;
 
   if (valueStyle === DestinyUnlockValueUIStyle.Integer) {
     return (
@@ -80,26 +80,16 @@ export default function Objective({
     );
   }
 
-  if (isD2Def && objectiveDef.uiStyle === DestinyObjectiveUiStyle.CraftingWeaponTimestamp) {
-    return (
-      <div className="objective-row">
-        <div className="objective-description">
-          <RichDestinyText text={progressDescription} />
-        </div>
-        <div className="objective-counter">{new Date(progress * 1000).toLocaleString()}</div>
-      </div>
-    );
-  }
-
   const isBoolean = isBooleanObjective(objectiveDef, progress, completionValue);
   const showAsCounter = isTrialsPassage && isRoundsWonObjective(objective.objectiveHash);
   const passageFlawed =
     isTrialsPassage && isFlawlessObjective(objective.objectiveHash) && !complete;
 
   const classes = clsx('objective-row', {
-    'objective-complete': complete && !showAsCounter,
+    'objective-complete': complete && !showAsCounter && !isDate,
     'objective-boolean': isBoolean,
     'passage-flawed': passageFlawed,
+    'date-time': isDate,
   });
 
   const progressBarStyle = {
@@ -110,9 +100,11 @@ export default function Objective({
 
   return (
     <div className={classes}>
-      {!showAsCounter && <div className="objective-checkbox" />}
+      {!showAsCounter && !isDate && <div className="objective-checkbox" />}
       <div className="objective-progress">
-        {!isBoolean && <div className="objective-progress-bar" style={progressBarStyle} />}
+        {!isBoolean && !isDate && (
+          <div className="objective-progress-bar" style={progressBarStyle} />
+        )}
         <div className="objective-description">
           <RichDestinyText text={progressDescription} />
         </div>
@@ -146,7 +138,7 @@ export function ObjectiveValue({
 
   switch (valueStyle) {
     case DestinyUnlockValueUIStyle.DateTime:
-      return <>{new Date(progress).toLocaleString()}</>;
+      return <>{new Date(progress * 1000).toLocaleString()}</>;
     case DestinyUnlockValueUIStyle.Percentage:
       if (completionValue === 100) {
         return <>{percent(progress / completionValue)}</>;
