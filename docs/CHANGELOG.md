@@ -1,5 +1,7 @@
 ## Next
 
+* The `inloadout` filter now finds hashtags in Loadout notes.
+
 ## 7.57.0 <span class="changelog-date">(2023-02-19)</span>
 
 * Add `is:retiredperk` search that highlights items that have a perk which can no longer drop for that item.
@@ -605,5 +607,3 @@
 ## v6 CHANGELOG
 
 * v6 CHANGELOG available [here](https://github.com/DestinyItemManager/DIM/blob/master/docs/OLD_CHANGELOG/OLD_CHANGELOG_6.X.X.md)
-
-
