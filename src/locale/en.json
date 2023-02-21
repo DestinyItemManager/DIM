@@ -225,7 +225,7 @@
     "HasOrnament": "Shows items that have an ornament applied.",
     "HasShader": "Shows items that have a shader applied.",
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
-    "InLoadout": "Shows items that are included in any loadout.",
+    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes.",
     "Infusable": "Shows items that can be infused.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "IsCrafted": "Shows weapons that have been crafted.",
