@@ -1,6 +1,7 @@
 ## Next
 
 * The `inloadout` filter now finds hashtags in Loadout notes.
+* Support for non-English hashtags.
 
 ## 7.57.0 <span class="changelog-date">(2023-02-19)</span>
 
