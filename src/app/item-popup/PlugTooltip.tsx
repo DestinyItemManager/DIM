@@ -6,7 +6,7 @@ import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { statAllowList } from 'app/inventory/store/stats';
+import { getStatSortOrder, isAllowedStat } from 'app/inventory/store/stats';
 import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
@@ -58,7 +58,7 @@ export function DimPlugTooltip({
           .map((statHashStr) => parseInt(statHashStr, 10))
           .filter(
             (statHash) =>
-              statAllowList.includes(statHash) &&
+              isAllowedStat(statHash) &&
               isPlugStatActive(
                 item,
                 plug.plugDef,
@@ -69,7 +69,7 @@ export function DimPlugTooltip({
                 )
               )
           ),
-        (h) => statAllowList.indexOf(h)
+        getStatSortOrder
       )
     : [];
 

@@ -108,7 +108,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const destinyVersion = useSelector(destinyVersionSelector);
   const dispatch = useThunkDispatch();
 
-  const { customTotalStatsByClass } = itemCreationContext;
+  const { customStats } = itemCreationContext;
 
   const classCategoryHash =
     categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
@@ -156,8 +156,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     [terminal, items]
   );
 
-  const customStatTotal = customTotalStatsByClass[classIfAny] ?? emptyArray();
-
   const columns: ColumnDefinition[] = useMemo(
     () =>
       getColumns(
@@ -167,7 +165,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         itemInfos,
         wishList,
         hasWishList,
-        customStatTotal,
+        customStats,
         loadoutsByItem,
         newItems,
         destinyVersion,
@@ -179,7 +177,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       statHashes,
       itemType,
       itemInfos,
-      customStatTotal,
+      customStats,
       classIfAny,
       loadoutsByItem,
       newItems,

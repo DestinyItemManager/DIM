@@ -362,3 +362,9 @@ a.dim-button {
 .horizontal-swipable {
   touch-action: pan-y;
 }
+
+// bungie's stat icons are semitransparent... boooo.
+// when applied to an armor stat icon, this bolsters their visibility with a same-size dropshadow
+.stat-icon {
+  filter: drop-shadow(0 0 0 #fff);
+}

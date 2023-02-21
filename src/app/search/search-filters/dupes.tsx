@@ -215,10 +215,7 @@ export function checkIfIsDupe(
   );
 }
 
-function computeStatDupeLower(
-  allItems: DimItem[],
-  customStats: Settings['customTotalStatsByClass'] = {}
-) {
+function computeStatDupeLower(allItems: DimItem[], customStats: Settings['customStats'] = []) {
   // disregard no-class armor
   const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== -1);
 
@@ -232,7 +229,10 @@ function computeStatDupeLower(
 
   for (const item of armor) {
     if (item.stats && item.power && item.bucket.hash !== BucketHashes.ClassArmor) {
-      const statsToConsider = customStats[item.classType] ?? armorStats;
+      const customStatsToConsider = customStats.filter((c) => c.class === item.classType);
+      const statsToConsider = customStatsToConsider.length
+        ? customStatsToConsider.map((c) => c.statHash)
+        : armorStats;
       statsCache.set(
         item,
         _.sortBy(

@@ -5,6 +5,8 @@ import { matchFilter } from './search-filter';
 const rangeStringRegex = /^([<=>]{0,2})(\d+(?:\.\d+)?)$/;
 const overloadedRangeStringRegex = /^([<=>]{0,2})(\w+)$/;
 
+// this turns a string like "<=2" into a function like (x)=>x <= 2
+// the produced function returns false if it was fed undefined
 export function rangeStringToComparator(
   rangeString?: string,
   overloads?: { [key: string]: number }
@@ -18,15 +20,15 @@ export function rangeStringToComparator(
   switch (operator) {
     case '=':
     case '':
-      return (compare: number) => compare === comparisonValue;
+      return (compare: number | undefined) => compare !== undefined && compare === comparisonValue;
     case '<':
-      return (compare: number) => compare < comparisonValue;
+      return (compare: number | undefined) => compare !== undefined && compare < comparisonValue;
     case '<=':
-      return (compare: number) => compare <= comparisonValue;
+      return (compare: number | undefined) => compare !== undefined && compare <= comparisonValue;
     case '>':
-      return (compare: number) => compare > comparisonValue;
+      return (compare: number | undefined) => compare !== undefined && compare > comparisonValue;
     case '>=':
-      return (compare: number) => compare >= comparisonValue;
+      return (compare: number | undefined) => compare !== undefined && compare >= comparisonValue;
   }
   throw new Error('Unknown range operator ' + operator);
 }

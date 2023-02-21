@@ -1,6 +1,6 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
+import { languageSelector, normalizedCustomStatsSelector } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { errorLog } from 'app/utils/log';
@@ -54,7 +54,7 @@ export const filterFactorySelector = createSelector(
   itemInfosSelector,
   itemHashTagsSelector,
   languageSelector,
-  customStatsSelector,
+  normalizedCustomStatsSelector,
   d2ManifestSelector,
   makeSearchFilterFactory
 );
@@ -102,7 +102,7 @@ function makeSearchFilterFactory(
     [itemHash: string]: ItemHashTag;
   },
   language: string,
-  customStats: Settings['customTotalStatsByClass'],
+  customStats: Settings['customStats'],
   d2Definitions: D2ManifestDefinitions | undefined
 ) {
   const filterContext: FilterContext = {
@@ -188,7 +188,8 @@ function makeSearchFilterFactory(
             return undefined;
           } else {
             const filterDef = kvFilters[filterName];
-            const matchedFilter = filterDef && matchFilter(filterDef, filterName, filterValue);
+            const matchedFilter =
+              filterDef && matchFilter(filterDef, filterName, filterValue, filterContext);
             if (matchedFilter) {
               try {
                 return matchedFilter(filterContext);
@@ -221,7 +222,8 @@ function makeSearchFilterFactory(
 export function matchFilter(
   filterDef: FilterDefinition,
   lhs: string,
-  filterValue: string
+  filterValue: string,
+  currentFilterContext?: FilterContext
 ): ((args: FilterContext) => ItemFilter) | undefined {
   for (const format of canonicalFilterFormats(filterDef.format)) {
     switch (format) {
@@ -261,7 +263,8 @@ export function matchFilter(
         const [stat, rangeString] = filterValue.split(':', 2);
         try {
           const compare = rangeStringToComparator(rangeString, filterDef.overload);
-          if (!filterDef.validateStat || filterDef.validateStat(stat)) {
+          const validator = currentFilterContext && filterDef.validateStat?.(currentFilterContext);
+          if (!validator || validator(stat)) {
             return (filterContext) =>
               filterDef.filter({
                 lhs,

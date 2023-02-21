@@ -14,7 +14,7 @@ async function getTestVendorGroups() {
       defs,
       buckets,
       profileResponse,
-      customTotalStatsByClass: {},
+      customStats: [],
     },
     vendorsResponse,
     characterId

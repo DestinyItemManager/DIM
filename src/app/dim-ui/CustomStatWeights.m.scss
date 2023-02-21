@@ -1,0 +1,23 @@
+.statWeightRow {
+  display: flex;
+  align-items: center;
+
+  & > :nth-child(n + 2) {
+    margin-left: 2px;
+  }
+
+  & > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .divider::after {
+    content: '+';
+    opacity: 0.7;
+  }
+
+  img {
+    height: 1.5em;
+  }
+}

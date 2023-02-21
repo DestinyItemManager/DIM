@@ -1,8 +1,7 @@
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { StoreIcon } from 'app/character-tile/StoreIcon';
 import { StatInfo } from 'app/compare/Compare';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
@@ -16,7 +15,7 @@ import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { storesSelector } from 'app/inventory/selectors';
 import { source } from 'app/inventory/spreadsheets';
 import { getEvent, getSeason } from 'app/inventory/store/season';
-import { statAllowList } from 'app/inventory/store/stats';
+import { getStatSortOrder } from 'app/inventory/store/stats';
 import { getStore } from 'app/inventory/stores-helpers';
 import TagIcon from 'app/inventory/TagIcon';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
@@ -26,7 +25,6 @@ import { recoilValue } from 'app/item-popup/RecoilStat';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
-import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/formatters';
@@ -66,6 +64,7 @@ import shapedOverlay from 'images/shapedOverlay.png';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { createCustomStatColumns } from './CustomStatColumns';
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from './table-types';
@@ -102,12 +101,13 @@ export function getColumns(
   itemInfos: ItemInfos,
   wishList: (item: DimItem) => InventoryWishListRoll | undefined,
   hasWishList: boolean,
-  customTotalStat: number[],
+  customStatDefs: CustomStatDef[],
   loadoutsByItem: LoadoutsByItem,
   newItems: Set<string>,
   destinyVersion: DestinyVersion,
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void
 ): ColumnDefinition[] {
+  const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
     id: 'stats',
     header: t('Organizer.Columns.Stats'),
@@ -126,7 +126,7 @@ export function getColumns(
     _.compact(
       Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat | undefined => {
         const statHash = parseInt(statHashStr, 10);
-        if (statHash === CUSTOM_TOTAL_STAT_HASH) {
+        if (customStatHashes.includes(statHash)) {
           // Exclude custom total, it has its own column
           return undefined;
         }
@@ -167,7 +167,7 @@ export function getColumns(
         };
       })
     ),
-    (s) => statAllowList.indexOf(s.statHash)
+    (s) => getStatSortOrder(s.statHash)
   );
 
   const isGhost = itemsType === 'ghost';
@@ -226,7 +226,7 @@ export function getColumns(
               },
             };
           }),
-          (s) => statAllowList.indexOf(s.statHash)
+          (s) => getStatSortOrder(s.statHash)
         )
       : [];
 
@@ -240,6 +240,8 @@ export function getColumns(
   function c<V extends Value>(columnDef: ColumnDefinition<V>): ColumnDefinition<V> {
     return columnDef;
   }
+
+  const customStats = createCustomStatColumns(customStatDefs, classType);
 
   const columns: ColumnDefinition[] = _.compact([
     c({
@@ -515,21 +517,7 @@ export function getColumns(
         cell: (value) => <span style={getColor(value, 'color')}>{value}%</span>,
         filter: (value) => `quality:>=${value}`,
       }),
-    destinyVersion === 2 &&
-      isArmor &&
-      c({
-        id: 'customstat',
-        header: (
-          <>
-            {t('Organizer.Columns.CustomTotal')}
-            <StatTotalToggle forClass={classType} readOnly={true} />
-          </>
-        ),
-        value: (item) =>
-          _.sumBy(item.stats, (s) => (customTotalStat.includes(s.statHash) ? s.base : 0)),
-        defaultSort: SortDirection.DESC,
-        filter: (value) => `stat:custom:>=${value}`,
-      }),
+    ...(destinyVersion === 2 && isArmor ? customStats : []),
     destinyVersion === 2 &&
       isWeapon &&
       c({

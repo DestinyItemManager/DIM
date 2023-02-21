@@ -1,3 +1,4 @@
+import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
 import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
@@ -119,14 +120,16 @@ export function processItems(
   return result;
 }
 
-const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D2ManifestDefinitions) => {
-  const klass = Object.values(defs.Class).find((c) => c.classType === type);
-  if (klass) {
-    return klass.displayProperties.name;
-  } else {
-    return t('Loadouts.Any');
+export const getClassTypeNameLocalized = _.memoize(
+  (type: DestinyClass, defs: D2ManifestDefinitions) => {
+    const klass = Object.values(defs.Class).find((c) => c.classType === type);
+    if (klass) {
+      return klass.displayProperties.name;
+    } else {
+      return t('Loadouts.Any');
+    }
   }
-});
+);
 
 /** Make a "fake" item from other information - used for Collectibles, etc. */
 export function makeFakeItem(
@@ -213,9 +216,7 @@ export interface ItemCreationContext {
   defs: D2ManifestDefinitions;
   buckets: InventoryBuckets;
   profileResponse: DestinyProfileResponse;
-  customTotalStatsByClass: {
-    [key: number]: number[];
-  };
+  customStats: CustomStatDef[];
   /**
    * Sometimes comes from the profile response, but also sometimes from vendors response or mocked out.
    * If not present, the itemComponents from the DestinyProfileResponse should be used.
@@ -227,7 +228,7 @@ export interface ItemCreationContext {
  * Process a single raw item into a DIM item.
  */
 export function makeItem(
-  { defs, buckets, itemComponents, customTotalStatsByClass, profileResponse }: ItemCreationContext,
+  { defs, buckets, itemComponents, customStats, profileResponse }: ItemCreationContext,
   item: DestinyItemComponent,
   /** the ID of the owning store - can be undefined for fake collections items */
   owner: DimStore | undefined
@@ -600,7 +601,7 @@ export function makeItem(
   }
 
   try {
-    createdItem.stats = buildStats(defs, createdItem, customTotalStatsByClass, itemDef);
+    createdItem.stats = buildStats(defs, createdItem, customStats, itemDef);
   } catch (e) {
     errorLog('d2-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });

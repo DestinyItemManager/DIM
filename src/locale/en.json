@@ -950,7 +950,15 @@
     "CommunityData": "Community Perk Insights",
     "CommunityDescriptionOnly": "Community Descriptions",
     "CsvImport": "Import CSV",
-    "CustomStatDesc": "Choose armor stats to make a custom total stat that will show on the item popup, Organizer, and Compare. Search with stat:custom:>=30.",
+    "CustomErrorLabel": "A stat name must contain word characters, and be different from other stat names for this Guardian class.",
+    "CustomErrorValues": "Stat weights must be positive numbers.\nAt least 2 stat weights must be above zero.",
+    "CustomStatChooseName": "Choose a Custom Stat name",
+    "CustomStatCreate": "Create a new custom stat",
+    "CustomStatDelete": "Delete this Custom Stat",
+    "CustomStatDeleteConfirm": "Delete this Custom Stat?",
+    "CustomStatDesc1": "Choose desired armor stats to make a custom total stat.",
+    "CustomStatDesc3": "Custom stats will appear in the Item Popup, Organizer, and Compare.",
+    "CustomStatTitle": "Custom Stat",
     "Data": "Spreadsheets",
     "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
     "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool or organizer to evaluate related items.",
@@ -1264,6 +1272,7 @@
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from across the Destiny community. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
   },
+  "dont do that": "",
   "no-space": "",
   "wrong-level": ""
 }
