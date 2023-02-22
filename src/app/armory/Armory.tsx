@@ -27,6 +27,7 @@ import { AppIcon, compareIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getItemYear } from 'app/utils/item-utils';
+import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
@@ -94,7 +95,7 @@ export default function Armory({
 
   return (
     <div
-      className={styles.armory}
+      className={clsx(styles.armory, 'armory')}
       style={
         screenshot && !isPhonePortrait
           ? {
