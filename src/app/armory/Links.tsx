@@ -9,7 +9,7 @@ import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums'
 import destinysets from 'images/destinysets.svg';
 import destinytracker from 'images/destinytracker.png';
 import logo from 'images/dimlogo.svg';
-import gunsmith from 'images/gunsmith.png';
+import foundry from 'images/foundry.png';
 import lightgg from 'images/lightgg.png';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
@@ -30,10 +30,9 @@ const links = [
   },
   { name: 'DestinyTracker', icon: destinytracker, link: destinyDBLink },
   {
-    name: 'Gunsmith',
-    icon: gunsmith,
-    link: (item: DimItem) =>
-      `https://d2gunsmith.com/w/${item.hash}?s=${buildGunsmithSockets(item)}`,
+    name: 'Foundry',
+    icon: foundry,
+    link: (item: DimItem) => `https://d2foundry.gg/w/${item.hash}?s=${buildGunsmithSockets(item)}`,
   },
   {
     name: 'data.destinysets.com',
