@@ -8,6 +8,14 @@
 @import 'variables.scss';
 
 @font-face {
+  font-family: 'DIM Symbols';
+  src: url('../data/d2/DIMSymbols.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: fallback;
+}
+
+@font-face {
   font-family: 'Destiny Symbols';
   src: url('../data/d2/DestinySymbols.woff2') format('woff2');
   font-weight: 400;
@@ -178,7 +186,7 @@ body {
   margin: 0 auto;
   background-color: #313233;
   color: white;
-  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
+  font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'DIM Symbols';
   font-size: 12px;
   line-height: calc(16 / 12);
   accent-color: $orange;
@@ -207,7 +215,7 @@ h4 {
 input,
 select,
 option {
-  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
+  font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'DIM Symbols';
 }
 
 input[type='search'] {
@@ -223,7 +231,7 @@ textarea {
   outline: none;
   color: white;
   box-sizing: border-box;
-  font-family: monospace, 'Destiny Symbols';
+  font-family: monospace, 'Destiny Symbols', 'DIM Symbols';
   font-size: inherit;
   // Setting this makes yuku/textcomplete faster because it doesn't need to make a fake element to measure line height (incorrectly, too)
   line-height: calc(16 / 12);
@@ -285,7 +293,7 @@ select {
   color: white;
   font-size: 12px;
   line-height: calc(16 / 12);
-  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
+  font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'DIM Symbols';
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   border: 1px solid transparent;
   transition: all 150ms ease-out;
