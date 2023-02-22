@@ -32,7 +32,7 @@ const links = [
   {
     name: 'Foundry',
     icon: foundry,
-    link: (item: DimItem) => `https://d2foundry.gg/w/${item.hash}?s=${buildGunsmithSockets(item)}`,
+    link: (item: DimItem) => `https://d2foundry.gg/w/${item.hash}${buildFoundrySockets(item)}`,
   },
   {
     name: 'data.destinysets.com',
@@ -123,13 +123,20 @@ function buildLightGGSockets(item: DimItem) {
 }
 
 /**
- * D2Gunsmith's socket format is: [...<first four perks, padded out if necessary, masterwork, weapon mod].join(',')
+ * Foundry's socket format is: ?p=perkHashes,...&mw=masterworkStatHash&mw_l=masterworkLevel&m=weaponMod
  */
-function buildGunsmithSockets(item: DimItem) {
+function buildFoundrySockets(item: DimItem) {
   const perkValues = getWeaponSocketInfo(item);
 
   if (perkValues) {
-    return `${perkValues.traits.join(',')},${perkValues.masterwork},${perkValues.weaponMod}`;
+    const primaryMasterworkStat =
+      item.sockets?.allSockets.find(isWeaponMasterworkSocket)?.plugged?.plugDef
+        .investmentStats?.[0];
+    const mwStatHash = primaryMasterworkStat?.statTypeHash;
+    const mwVal = primaryMasterworkStat?.value;
+    return `?p=${perkValues.traits.join(',')},${
+      perkValues.originTrait
+    }&mw=${mwStatHash}&mw_l=${mwVal}&m=${perkValues.weaponMod}`;
   }
 
   return '';
