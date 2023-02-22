@@ -1,5 +1,10 @@
 ## Next
 
+* The `inloadout` filter now finds hashtags in Loadout notes.
+* Support for non-English hashtags.
+
+## 7.57.0 <span class="changelog-date">(2023-02-19)</span>
+
 * Add `is:retiredperk` search that highlights items that have a perk which can no longer drop for that item.
 * You can now click a Loadout name in Organizer's Loadouts column to quickly bring up this loadout for editing.
 * When hovering over subclass Aspects in Loadouts and Loadout Optimizer, the tooltip will now show the number of Fragment slots granted.
@@ -603,5 +608,3 @@
 ## v6 CHANGELOG
 
 * v6 CHANGELOG available [here](https://github.com/DestinyItemManager/DIM/blob/master/docs/OLD_CHANGELOG/OLD_CHANGELOG_6.X.X.md)
-
-
