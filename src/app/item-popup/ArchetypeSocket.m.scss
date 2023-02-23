@@ -40,6 +40,11 @@
     padding: 0;
   }
 
+  :global(.armory) & {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(6px);
+  }
+
   &.isWeapons {
     align-items: center;
   }
