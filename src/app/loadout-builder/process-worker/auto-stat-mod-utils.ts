@@ -2,7 +2,7 @@ import { armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { StatHashes } from 'data/d2/generated-enums';
 import { ArmorStatHashes } from '../types';
-import { PrecalculatedInfo } from './process-utils';
+import { LoSessionInfo } from './process-utils';
 import { ProcessItem } from './types';
 
 // Regular stat mods add 10
@@ -41,10 +41,15 @@ export const artificeStatMods: { [statHash in ArmorStatHashes]: { hash: number }
  * A particular way of achieving a target stat value (for a single stat).
  */
 export interface ModsPick {
+  /** The number of artifice mods this pick contains. */
   numArtificeMods: number;
+  /** The number of general mods this pick contains. */
   numGeneralMods: number;
+  /** The cost of the general mods this pick contains, sorted descending. */
   generalModsCosts: number[];
+  /** General + artifice mod hashes */
   modHashes: number[];
+  /** Sum of generalModCosts */
   modEnergyCost: number;
 }
 
@@ -52,7 +57,6 @@ export interface ModsPick {
  * Precalculated ways of hitting all possible stat values for a single stat.
  */
 interface CacheForStat {
-  statHash: number;
   statMap: {
     [targetStat: number]: ModsPick[] | undefined;
   };
@@ -70,7 +74,7 @@ export interface AutoModsMap {
  * that satisfy the given `neededStats` in `statOrder`.
  */
 export function chooseAutoMods(
-  info: PrecalculatedInfo,
+  info: LoSessionInfo,
   items: ProcessItem[],
   neededStats: number[],
   numArtificeMods: number,
@@ -90,8 +94,8 @@ export function chooseAutoMods(
   );
 }
 
-function doModsFit(
-  info: PrecalculatedInfo,
+function doGeneralModsFit(
+  info: LoSessionInfo,
   /** variants of remaining energy capacities given our activity mod assignment, each sorted descendingly */
   remainingEnergyCapacities: number[][],
   pickedMods: ModsPick[]
@@ -114,7 +118,7 @@ function doModsFit(
  * `pickedMods` contains the mods chosen for earlier stats.
  */
 function recursivelyChooseMods(
-  info: PrecalculatedInfo,
+  info: LoSessionInfo,
   items: ProcessItem[],
   neededStats: number[],
   statIndex: number,
@@ -131,7 +135,7 @@ function recursivelyChooseMods(
 
   if (statIndex === info.statOrder.length) {
     // We've hit the end of our needed stats, check if this is possible
-    if (doModsFit(info, remainingEnergyCapacities, pickedMods)) {
+    if (doGeneralModsFit(info, remainingEnergyCapacities, pickedMods)) {
       return pickedMods;
     } else {
       return undefined;
@@ -193,7 +197,7 @@ function recursivelyChooseMods(
  * could make things a bit faster, especially when they remove equivalent combinations.
  */
 function buildCacheForStat(statHash: ArmorStatHashes, availableGeneralStatMods: number) {
-  const cache: CacheForStat = { statHash, statMap: {} };
+  const cache: CacheForStat = { statMap: {} };
   const artificeMod = artificeStatMods[statHash];
   const minorMod = minorStatMods[statHash];
   const majorMod = largeStatMods[statHash];
@@ -245,7 +249,7 @@ function buildCacheForStat(statHash: ArmorStatHashes, availableGeneralStatMods: 
   return cache;
 }
 
-export function buildCacheV2(availableGeneralStatMods: number): AutoModsMap {
+export function buildAutoModsMap(availableGeneralStatMods: number): AutoModsMap {
   return {
     statCaches: Object.fromEntries(
       armorStats.map((statHash) => [

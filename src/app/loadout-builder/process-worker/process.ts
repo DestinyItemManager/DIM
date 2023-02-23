@@ -75,11 +75,9 @@ export function process(
     );
   }
 
-  /*
-  let correctPredictions = 0;
-  let overPredictions = 0;
-  let underPredictions = 0;
-  */
+  const correctPredictions = 0;
+  const overPredictions = 0;
+  const underPredictions = 0;
 
   // Each of these groups has already been reduced (in useProcess.ts) to the
   // minimum number of examples that are worth considering.
@@ -110,12 +108,21 @@ export function process(
 
   const { activityMods, generalMods } = lockedMods;
 
+  // Highest possible energy capacity per slot.
+  const energy = [helms, gauntlets, chests, legs, classItems].map(
+    (items) => _.max(items.map((e) => (e.energy?.capacity || 0) - (e.energy?.val || 0))) || 0
+  );
+
   const precalculatedInfo = precalculateStructures(
     generalMods,
     activityMods,
     autoStatMods,
-    statOrder
+    statOrder,
+    energy
   );
+
+  infoLog('loadout optimizer', precalculatedInfo);
+
   const hasMods = Boolean(activityMods.length || generalMods.length);
 
   const setStatistics = {
@@ -334,16 +341,9 @@ export function process(
             // exploit this set to its full potential yet -- that'd be too expensive. So we have to compute a
             // value that predicts how much this set can gain from good auto mods later when we take a closer look
             // at 200 sets.
-            // This is not that straightforward and will probably only behave well if sets aren't too different from one
-            // another. The core idea is that:
-            // * A free general mod slot energy gives a full tier
-            // * Every three stat points a stat is missing to the next tier costs 1 point
-            // * An artifice mod gives 1 point
-            //
-            // For the case where auto mods are turned off, this is super accurate for artifice slots.
-            // Unfortunately this is inaccurate when sets don't have a ton of energy available, since this doesn't
-            // take into account that mods have a cost.
-            let pointsAvailable = numArtifice;
+            // So instead we need to look at this set's features to see how much it can gain in terms of tiers.
+            // Artifice items are useful, and also useful are .5s if the set has constrained slots that can't fit a full mod.
+            let pointsAvailable = numArtifice + 2 * precalculatedInfo.numConstrainedSlots;
             pointsNeededForTiers.sort((a, b) => a - b);
             const predictedExtraTiers =
               pointsNeededForTiers.reduce((numTiers, pointsNeeded) => {
@@ -352,11 +352,15 @@ export function process(
                   return numTiers + 1;
                 }
                 return numTiers;
-              }, 0) + precalculatedInfo.numAvailableGeneralMods;
+              }, 0) +
+              Math.max(
+                0,
+                precalculatedInfo.numAvailableGeneralMods - precalculatedInfo.numConstrainedSlots
+              );
 
-            // This code can be used to compare predictions vs actual stat boosts
             /*
-            if (Math.random() < 0.002) {
+            // This code can be used to compare predictions vs actual stat boosts
+            if (Math.random() < 0.1) {
               const result = pickOptimalStatMods(
                 precalculatedInfo,
                 armor,
@@ -375,7 +379,6 @@ export function process(
               }
             }
             */
-
             processStatistics.numValidSets++;
             tiersString = totalTier.toString(16) + tiersString;
             setTracker.insert(totalTier + predictedExtraTiers, tiersString, armor, stats, statMods);
@@ -425,7 +428,7 @@ export function process(
     setStatistics.modsStatistics
   );
 
-  // infoLog('loadout optimizer', { correctPredictions, overPredictions, underPredictions });
+  infoLog('loadout optimizer', { correctPredictions, overPredictions, underPredictions });
 
   const finalstart = performance.now();
 

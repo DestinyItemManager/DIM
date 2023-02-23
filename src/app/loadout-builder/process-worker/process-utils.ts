@@ -2,17 +2,27 @@ import { StatHashes } from 'app/../data/d2/generated-enums';
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import _ from 'lodash';
 import { ArmorStatHashes, MinMaxIgnored } from '../types';
-import { AutoModsMap, buildCacheV2, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
+import { AutoModsMap, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
 import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
-export interface PrecalculatedInfo {
+/**
+ * Data that stays the same in a given LO run.
+ */
+export interface LoSessionInfo {
   cache: AutoModsMap;
   statOrder: ArmorStatHashes[];
   hasActivityMods: boolean;
+  /** The total cost of all user-picked general and activity mods. */
   totalModEnergyCost: number;
+  /** The cost of user-picked general mods, sorted descending. */
   generalModCosts: number[];
+  /** How many general mod slots are available for auto stat mods. */
   numAvailableGeneralMods: number;
+  /** How many general mod slots have a remaining energy capacity of 2 or lower, so that only small mods can fit. */
+  numConstrainedSlots: number;
+  /** All uniquely distinguishable activity mod permutations */
   activityModPermutations: (ProcessMod | null)[][];
+  /** How many activity mods we have per tag. */
   activityTagCounts: { [tag: string]: number };
 }
 
@@ -20,16 +30,29 @@ export function precalculateStructures(
   generalMods: ProcessMod[],
   activityMods: ProcessMod[],
   autoStatMods: boolean,
-  statOrder: ArmorStatHashes[]
-): PrecalculatedInfo {
-  const numAvailableGeneralMods = autoStatMods ? 5 - generalMods.length : 0;
+  statOrder: ArmorStatHashes[],
+  remainingEnergyMaxima: number[]
+): LoSessionInfo {
   const generalModCosts = generalMods.map((m) => m.energy?.val || 0).sort((a, b) => b - a);
+  let numConstrainedSlots: number, numAvailableGeneralMods: number;
+  if (autoStatMods) {
+    // How many slots could fit a small mod but not a large mod?
+    const numZeroEnergyPieces = remainingEnergyMaxima.filter((e) => e === 0).length;
+    const numPiecesForSmallMods = remainingEnergyMaxima.filter((e) => e >= 1 && e <= 2).length;
+    numAvailableGeneralMods = 5 - numZeroEnergyPieces - generalModCosts.length;
+    numConstrainedSlots = Math.min(numPiecesForSmallMods, numAvailableGeneralMods);
+  } else {
+    numConstrainedSlots = 0;
+    numAvailableGeneralMods = 0;
+  }
+
   return {
-    cache: buildCacheV2(numAvailableGeneralMods),
+    cache: buildAutoModsMap(numAvailableGeneralMods),
     statOrder,
     hasActivityMods: activityMods.length > 0,
-    numAvailableGeneralMods,
     generalModCosts,
+    numAvailableGeneralMods,
+    numConstrainedSlots,
     totalModEnergyCost:
       _.sum(generalModCosts) + _.sumBy(activityMods, (act) => act.energy?.val ?? 0),
     activityModPermutations: generateProcessModPermutations(activityMods),
@@ -54,7 +77,7 @@ export function precalculateStructures(
  * if no auto stat mods were requested/needed, in which case the arrays will be empty.
  */
 export function pickAndAssignSlotIndependentMods(
-  info: PrecalculatedInfo,
+  info: LoSessionInfo,
   modStatistics: ModAssignmentStatistics,
   items: ProcessItem[],
   neededStats: number[] | undefined
@@ -166,7 +189,7 @@ export function pickAndAssignSlotIndependentMods(
  * Optimizes the auto stat mod picks to maximize total tier, prioritizing stats earlier in the stat order.
  */
 export function pickOptimalStatMods(
-  info: PrecalculatedInfo,
+  info: LoSessionInfo,
   items: ProcessItem[],
   setStats: number[],
   statFiltersInStatOrder: MinMaxIgnored[]
@@ -214,7 +237,6 @@ export function pickOptimalStatMods(
   // The amount of additional stat points after which stats don't give us a benefit anymore.
   const maxAddedStats = [0, 0, 0, 0, 0, 0];
   const explorationStats = [0, 0, 0, 0, 0, 0];
-  const pointsNeededForNextTier: number[] = [];
 
   for (let statIndex = setStats.length - 1; statIndex >= 0; statIndex--) {
     const value = Math.min(Math.max(setStats[statIndex], 0), 100);
@@ -226,26 +248,10 @@ export function pickOptimalStatMods(
         explorationStats[statIndex] = neededValue;
       }
       maxAddedStats[statIndex] = filter.max * 10 - value;
-      if (setStats[statIndex] < filter.max * 10) {
-        pointsNeededForNextTier.push(Math.ceil((10 - (setStats[statIndex] % 10)) / 3));
-      }
     }
   }
 
-  // Calculate an upper bound for how many bonus tiers auto stat mods can give to this set.
-  // A single general stat mod will always give one bonus tier, but not more.
-  let optimisticBonusTiers = info.numAvailableGeneralMods;
-
-  // While artifact mods need give bonuses in multiples of three points.
   const numArtificeMods = items.filter((i) => i.isArtifice).length;
-  let checkArtificeMods = numArtificeMods;
-  pointsNeededForNextTier.sort((a, b) => a - b);
-  while ((pointsNeededForNextTier[0] ?? 4) <= checkArtificeMods) {
-    optimisticBonusTiers += 1;
-    checkArtificeMods -= pointsNeededForNextTier[0] ?? 4;
-    pointsNeededForNextTier.splice(0, 1);
-  }
-
   const bestBoosts = exploreAutoModsSearchTree(
     info,
     items,
@@ -255,7 +261,6 @@ export function pickOptimalStatMods(
     numArtificeMods,
     remainingEnergiesPerAssignment,
     setEnergy,
-    optimisticBonusTiers,
     0,
     0
   );
@@ -331,7 +336,7 @@ interface SearchResult {
  * as a node with this tier total is reached. This gives a small efficiency boost when there aren't many slot-specific mods.
  */
 function exploreAutoModsSearchTree(
-  info: PrecalculatedInfo,
+  info: LoSessionInfo,
   items: ProcessItem[],
   /** The base stats from our set + fragments + ... */
   setStats: number[],
@@ -345,8 +350,6 @@ function exploreAutoModsSearchTree(
   remainingEnergyCapacities: number[][],
   /** The total amount of energy left over in this set */
   totalModEnergyCapacity: number,
-  /** An upper bound for how many tiers we can gain given our artifice and general mods */
-  optimisticMaxDepth: number,
   /** The stat index this branch of the search tree starts at */
   statIndex: number,
   /** How many boosts we have chosen before in explorationStats */
@@ -362,11 +365,6 @@ function exploreAutoModsSearchTree(
   );
   if (!picks) {
     return undefined;
-  } else if (depth === optimisticMaxDepth) {
-    return {
-      depth,
-      picks,
-    };
   }
 
   let bestResult: SearchResult = {
@@ -413,15 +411,10 @@ function exploreAutoModsSearchTree(
       numArtificeMods,
       remainingEnergyCapacities,
       totalModEnergyCapacity,
-      optimisticMaxDepth,
       statIndex,
       depth + 1
     );
-    // If this branch yielded an optimal solution, just pass it back up
-    if (explorationResult?.depth === optimisticMaxDepth) {
-      return explorationResult;
-    }
-    // Otherwise, it could be a better solution than what we already have
+    // Is this a better solution than what we already have?
     if (explorationResult && bestResult.depth < explorationResult.depth) {
       bestResult = explorationResult;
     }
