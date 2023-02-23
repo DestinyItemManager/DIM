@@ -12,7 +12,7 @@
     }
   }
   :global(.collapse-content) {
-    margin: 0 15px 8px;
+    margin: 0 15px 20px;
   }
 }
 
@@ -24,13 +24,8 @@
 
   // and make the compare/search buttons bigger
   .controls {
-    align-items: stretch !important;
     > a {
       font-size: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
     }
   }
 }
@@ -85,9 +80,10 @@
   display: contents;
   &:nth-child(n + 2) > * {
     border-top: 1px solid #5555;
+    padding: 4px;
   }
   & > * {
-    height: 25px;
+    height: 30px;
     display: flex;
     align-items: center;
   }
@@ -135,7 +131,7 @@
 
 .loadoutRow {
   display: flex;
-  height: 25px;
+  height: 30px;
   align-items: center;
   .loadoutName {
     flex-grow: 1;
@@ -147,10 +143,14 @@
 
 .controls {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   align-self: stretch;
-  & > :nth-child(n + 2) {
-    margin-left: 2px;
+  column-gap: 4px;
+  > a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 }
 
