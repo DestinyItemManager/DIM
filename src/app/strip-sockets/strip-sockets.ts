@@ -2,15 +2,12 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { tl } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector } from 'app/inventory/selectors';
-import { manifestSelector } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
-import { RootState, ThunkResult } from 'app/store/types';
+import { ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
 import { uniqBy } from 'app/utils/util';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
-import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import { createSelector } from 'reselect';
+import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 
 export interface StripAction {
   item: DimItem;
@@ -23,15 +20,13 @@ export type SocketKind =
   | 'shaders'
   | 'ornaments'
   | 'weaponmods'
-  | 'artifactmods'
   | 'armormods'
   | 'subclass'
   | 'others';
 
 function identifySocket(
   socket: DimSocket,
-  plugDef: PluggableInventoryItemDefinition,
-  artifactMods: Set<number> | undefined
+  plugDef: PluggableInventoryItemDefinition
 ): SocketKind | undefined {
   if (plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders)) {
     return 'shaders';
@@ -39,8 +34,6 @@ function identifySocket(
     return 'ornaments';
   } else if (plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage)) {
     return 'weaponmods';
-  } else if (artifactMods?.has(plugDef.hash)) {
-    return 'artifactmods';
   } else if (plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) {
     return 'armormods';
   } else if (plugDef.plug.plugCategoryHash === PlugCategoryHashes.Hologram) {
@@ -50,26 +43,10 @@ function identifySocket(
   // if they'd be useful, so they're intentionally left out here.
 }
 
-export const artifactModsSelector = createSelector(
-  manifestSelector,
-  (state: RootState) =>
-    allItemsSelector(state).find(
-      (i) => i.bucket.hash === BucketHashes.SeasonalArtifact && i.previewVendor
-    )?.previewVendor,
-  (defs, vendorHash) => {
-    if (!defs?.isDestiny2()) {
-      return undefined;
-    }
-    const vendor = vendorHash && defs.Vendor.get(vendorHash);
-    return vendor ? new Set(vendor.itemList.map((i) => i.itemHash)) : undefined;
-  }
-);
-
 export function collectSocketsToStrip(
   filteredItems: DimItem[],
   destiny2CoreSettings: Destiny2CoreSettings | undefined,
-  defs: D2ManifestDefinitions,
-  artifactMods: Set<number> | undefined
+  defs: D2ManifestDefinitions
 ) {
   const socketsByKind: {
     [kind in SocketKind]: {
@@ -85,9 +62,6 @@ export function collectSocketsToStrip(
     },
     weaponmods: {
       name: tl('StripSockets.WeaponMods'),
-    },
-    artifactmods: {
-      name: tl('StripSockets.ArtifactMods'),
     },
     armormods: {
       name: tl('StripSockets.ArmorMods'),
@@ -109,7 +83,7 @@ export function collectSocketsToStrip(
         canInsertPlug(socket, socket.emptyPlugItemHash, destiny2CoreSettings, defs)
       ) {
         const plugDef = socket.plugged.plugDef;
-        const kind = identifySocket(socket, plugDef, artifactMods);
+        const kind = identifySocket(socket, plugDef);
         if (kind) {
           (socketsByKind[kind].items ??= []).push({
             item,
