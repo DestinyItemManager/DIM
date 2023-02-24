@@ -21,7 +21,6 @@ export interface ProcessItemSubset extends SortParam {
 
 export interface PrecalculatedInfo {
   cache: GeneralModsCache;
-  combatModPermutations: (ProcessMod | null)[][];
   hasActivityMods: boolean;
   activityModPermutations: (ProcessMod | null)[][];
   activityTagCounts: { [tag: string]: number };
@@ -42,14 +41,12 @@ function sortProcessModsOrItems(a: SortParam, b: SortParam) {
 
 export function precalculateStructures(
   generalMods: ProcessMod[],
-  combatMods: ProcessMod[],
   activityMods: ProcessMod[],
   autoStatMods: boolean,
   statOrder: ArmorStatHashes[]
 ): PrecalculatedInfo {
   return {
     cache: createGeneralModsCache(generalMods, statOrder, autoStatMods),
-    combatModPermutations: generateProcessModPermutations(combatMods.sort(sortProcessModsOrItems)),
     hasActivityMods: activityMods.length > 0,
     activityModPermutations: generateProcessModPermutations(
       activityMods.sort(sortProcessModsOrItems)
@@ -70,21 +67,15 @@ const defaultModEnergy = { val: 0 };
  * This figures out if all general, combat and activity mods can be assigned to an armour set and auto stat mods
  * can be picked to provide the neededStats.
  *
- * The params combatModPermutations, activityModPermutations are assumed to be the results
- * from processUtils.ts#generateModPermutations, i.e. all permutations of combat or activity mods.
+ * The param activityModPermutations is assumed to be the results
+ * from processUtils.ts#generateModPermutations, i.e. all permutations of activity mods.
  * By preprocessing all the assignments we skip a lot of work in the middle of the big process algorithm.
  *
  * Returns a ModsPick representing the automatically picked stat mods in the success case, even
  * if no auto stat mods were requested/needed, in which case the arrays will be empty.
  */
 export function pickAndAssignSlotIndependentMods(
-  {
-    activityModPermutations,
-    activityTagCounts,
-    cache,
-    combatModPermutations,
-    hasActivityMods,
-  }: PrecalculatedInfo,
+  { activityModPermutations, activityTagCounts, cache, hasActivityMods }: PrecalculatedInfo,
   modStatistics: ModAssignmentStatistics,
   items: ProcessItem[],
   neededStats: number[] | undefined
@@ -161,66 +152,36 @@ export function pickAndAssignSlotIndependentMods(
       }
     }
 
-    combatModLoop: for (const combatPermutation of combatModPermutations) {
-      combatItemLoop: for (let i = 0; i < sortedItems.length; i++) {
-        const combatMod = combatPermutation[i];
+    assignedModsAtLeastOnce = true;
 
-        // If a mod is null there is nothing being socketed into the item so move on
-        if (!combatMod) {
-          continue combatItemLoop;
-        }
+    // This is a valid activity and combat mod assignment. See how much energy is left over per piece
+    // eslint-disable-next-line github/array-foreach
+    sortedItems.forEach(
+      (i, idx) =>
+        (remainingEnergyCapacities[idx] =
+          (i.energy?.capacity || 0) -
+          (i.energy?.val || 0) -
+          (activityPermutation[idx]?.energy?.val || 0))
+    );
 
-        const item = sortedItems[i];
-        const combatEnergy = combatMod.energy || defaultModEnergy;
-        const tag = combatMod.tag!;
-        const activityEnergy = activityPermutation[i]?.energy || defaultModEnergy;
+    // Sort the costs array descending, same as our auto stat mod picks
+    remainingEnergyCapacities.sort((a, b) => b - a);
 
-        // Energy is valid when the item has enough energy capacity for the activity and combat
-        // mods, the items energy type accommodates the mods energy, and if an activity mod is
-        // present the energy types of each mod are compatible, eg incompatible could be arc + void.
-        const combatEnergyIsValid =
-          item.energy &&
-          item.energy.val + combatEnergy.val + activityEnergy.val <= item.energy.capacity;
-        // The combat mods wont fit in the item set so move on to the next set of mods
-        if (!combatEnergyIsValid || !item.compatibleModSeasons?.includes(tag)) {
-          continue combatModLoop;
-        }
-      }
+    let validPick: ModsPick | undefined;
 
-      assignedModsAtLeastOnce = true;
-
-      // This is a valid activity and combat mod assignment. See how much energy is left over per piece
-      // eslint-disable-next-line github/array-foreach
-      sortedItems.forEach(
-        (i, idx) =>
-          (remainingEnergyCapacities[idx] =
-            (i.energy?.capacity || 0) -
-            (i.energy?.val || 0) -
-            (activityPermutation[idx]?.energy?.val || 0) -
-            (combatPermutation[idx]?.energy?.val || 0))
+    if (validGeneralModPicks) {
+      validPick = validGeneralModPicks.find((pick) =>
+        pick.costs.every((cost, idx) => cost <= remainingEnergyCapacities[idx])
       );
+    } else {
+      // We don't need any stats, so just verify we can assign the general mods
+      validPick = cache.generalModCosts.every((cost, idx) => cost <= remainingEnergyCapacities[idx])
+        ? { costs: cache.generalModCosts, modHashes: [] }
+        : undefined;
+    }
 
-      // Sort the costs array descending, same as our auto stat mod picks
-      remainingEnergyCapacities.sort((a, b) => b - a);
-
-      let validPick: ModsPick | undefined;
-
-      if (validGeneralModPicks) {
-        validPick = validGeneralModPicks.find((pick) =>
-          pick.costs.every((cost, idx) => cost <= remainingEnergyCapacities[idx])
-        );
-      } else {
-        // We don't need any stats, so just verify we can assign the general mods
-        validPick = cache.generalModCosts.every(
-          (cost, idx) => cost <= remainingEnergyCapacities[idx]
-        )
-          ? { costs: cache.generalModCosts, modHashes: [] }
-          : undefined;
-      }
-
-      if (validPick) {
-        return validPick;
-      }
+    if (validPick) {
+      return validPick;
     }
   }
 

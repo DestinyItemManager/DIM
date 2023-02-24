@@ -36,10 +36,9 @@ const UPPER_STAT_BOUNDS_WARN_RATIO = 0.8;
  */
 const LOWER_STAT_BOUNDS_WARN_RATIO = 0.95;
 /**
- * >98% usually only happens when you select activity mods or restrictive mod settings and tons
- * of combat mods with the same element
+ * Pretty much only from activity mods or too many expensive mods.
  */
-const EARLY_MOD_REJECTION_WARN_RATIO = 0.98;
+const EARLY_MOD_REJECTION_WARN_RATIO = 0.8;
 
 export default function NoBuildsFoundExplainer({
   defs,
@@ -187,11 +186,7 @@ export default function NoBuildsFoundExplainer({
 
   const anyStatMinimums = Object.values(statFilters).some((f) => !f.ignored && f.min > 0);
 
-  const bucketIndependentMods = [
-    ...lockedModMap.generalMods,
-    ...lockedModMap.combatMods,
-    ...lockedModMap.activityMods,
-  ];
+  const bucketIndependentMods = [...lockedModMap.generalMods, ...lockedModMap.activityMods];
 
   const capacityMayCauseProblems =
     armorEnergyRules.assumeArmorMasterwork !== AssumeArmorMasterwork.All &&
@@ -351,14 +346,14 @@ export default function NoBuildsFoundExplainer({
       const suggestions: (ActionableSuggestion | false | undefined)[] = [];
 
       if (isInteresting(modsStats.earlyModsCheck, EARLY_MOD_REJECTION_WARN_RATIO)) {
-        // Early mod rejection is armor elements / mod tags
+        // Early mod rejection is mod tags
         suggestions.push(
-          (lockedModMap.combatMods.length > 0 || lockedModMap.activityMods.length > 0) && {
+          lockedModMap.activityMods.length > 0 && {
             id: 'removeElementOrTagMods',
             contents: (
               <>
                 {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveMods')}
-                {modRow([...lockedModMap.combatMods, ...lockedModMap.activityMods])}
+                {modRow([...lockedModMap.activityMods])}
               </>
             ),
           },

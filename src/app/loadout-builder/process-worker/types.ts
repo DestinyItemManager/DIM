@@ -60,7 +60,6 @@ export interface ProcessMod {
 
 export interface LockedProcessMods {
   generalMods: ProcessMod[];
-  combatMods: ProcessMod[];
   activityMods: ProcessMod[];
 }
 

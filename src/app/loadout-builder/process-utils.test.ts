@@ -3,7 +3,6 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import {
-  elementalLightModHash,
   enhancedOperatorAugmentModHash,
   isArmor2Arms,
   isArmor2Chest,
@@ -22,14 +21,24 @@ import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './process-work
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
 import { ArmorStatHashes, MIN_LO_ITEM_ENERGY } from './types';
 
-function modifyMod({ mod, energyVal, tag }: { mod: ProcessMod; energyVal?: number; tag?: string }) {
+function modifyMod({
+  mod,
+  energyVal,
+  tag,
+}: {
+  mod: ProcessMod;
+  energyVal?: number;
+  tag?: string | null;
+}) {
   const newMod = _.cloneDeep(mod);
 
   if (energyVal !== undefined) {
     newMod.energy!.val = energyVal;
   }
 
-  newMod.tag = tag;
+  if (tag !== undefined) {
+    newMod.tag = tag !== null ? tag : undefined;
+  }
 
   return newMod;
 }
@@ -59,7 +68,6 @@ function modifyItem({
 // The tsconfig in the process worker folder messes with tests so they live outside of it.
 describe('process-utils', () => {
   let generalMod: ProcessMod;
-  let combatMod: ProcessMod;
   let activityMod: ProcessMod;
 
   let helmet: ProcessItem;
@@ -71,7 +79,6 @@ describe('process-utils', () => {
   // use these for testing as they are reset after each test
   let items: ProcessItem[];
   let generalMods: ProcessMod[];
-  let combatMods: ProcessMod[];
   let activityMods: ProcessMod[];
 
   const armorEnergyRules = {
@@ -123,22 +130,17 @@ describe('process-utils', () => {
     generalMod = mapArmor2ModToProcessMod(
       defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition
     );
-    combatMod = mapArmor2ModToProcessMod(
-      defs.InventoryItem.get(elementalLightModHash) as PluggableInventoryItemDefinition
-    );
     activityMod = mapArmor2ModToProcessMod(
       defs.InventoryItem.get(enhancedOperatorAugmentModHash) as PluggableInventoryItemDefinition
     );
 
     items = [helmet, arms, chest, legs, classItem];
     generalMods = [generalMod, generalMod, generalMod, generalMod, generalMod];
-    combatMods = [combatMod, combatMod, combatMod, combatMod, combatMod];
     activityMods = [activityMod, activityMod, activityMod, activityMod, activityMod];
   });
 
   const canTakeSlotIndependentMods = (
     generalMods: ProcessMod[],
-    combatMods: ProcessMod[],
     activityMods: ProcessMod[],
     items: ProcessItem[]
   ) => {
@@ -151,13 +153,7 @@ describe('process-utils', () => {
       StatHashes.Strength,
     ];
     const neededStats = [0, 0, 0, 0, 0, 0];
-    const precalculatedInfo = precalculateStructures(
-      generalMods,
-      combatMods,
-      activityMods,
-      false,
-      statOrder
-    );
+    const precalculatedInfo = precalculateStructures(generalMods, activityMods, false, statOrder);
     const modStatistics: ModAssignmentStatistics = {
       earlyModsCheck: { timesChecked: 0, timesFailed: 0 },
       autoModsPick: { timesChecked: 0, timesFailed: 0 },
@@ -189,14 +185,14 @@ describe('process-utils', () => {
   });
 
   it('can fit all mods when there are no mods', () => {
-    expect(canTakeSlotIndependentMods([], [], [], items)).toBe(true);
+    expect(canTakeSlotIndependentMods([], [], items)).toBe(true);
   });
 
   it('can fit five general mods', () => {
     const modifiedItems = items.map((item) =>
       modifyItem({ item, energyVal: item.energy!.capacity - generalMod.energy!.val })
     );
-    expect(canTakeSlotIndependentMods(generalMods, [], [], modifiedItems)).toBe(true);
+    expect(canTakeSlotIndependentMods(generalMods, [], modifiedItems)).toBe(true);
   });
 
   test.each([0, 1, 2, 3, 4])(
@@ -211,36 +207,7 @@ describe('process-utils', () => {
               : item.energy!.capacity,
         })
       );
-      expect(canTakeSlotIndependentMods([], [combatMod], [], modifiedItems)).toBe(true);
-    }
-  );
-
-  test.each([
-    ['can', 'combat'],
-    ["can't", 'not-a-tag'],
-  ])('it %s fit five combat mods', (canFit, tag) => {
-    const modifiedItems = items.map((item) =>
-      modifyItem({
-        item,
-        energyVal: item.energy!.capacity - combatMod.energy!.val,
-        compatibleModSeasons: [tag],
-      })
-    );
-    // sanity check
-    expect(canTakeSlotIndependentMods([], combatMods, [], modifiedItems)).toBe(canFit === 'can');
-  });
-
-  test.each([0, 1, 2, 3, 4])(
-    'it can fit a combat mod into a single item at index %i',
-    (itemIndex) => {
-      const modifiedItems = items.map((item, i) =>
-        modifyItem({
-          item,
-          energyVal: item.energy!.capacity - combatMod.energy!.val,
-          compatibleModSeasons: i === itemIndex ? [combatMod.tag!] : [],
-        })
-      );
-      expect(canTakeSlotIndependentMods([], [combatMod], [], modifiedItems)).toBe(true);
+      expect(canTakeSlotIndependentMods([], [], modifiedItems)).toBe(true);
     }
   );
 
@@ -256,7 +223,7 @@ describe('process-utils', () => {
       })
     );
     // sanity check
-    expect(canTakeSlotIndependentMods([], [], activityMods, modifiedItems)).toBe(canFit === 'can');
+    expect(canTakeSlotIndependentMods([], activityMods, modifiedItems)).toBe(canFit === 'can');
   });
 
   test.each([0, 1, 2, 3, 4])(
@@ -265,11 +232,11 @@ describe('process-utils', () => {
       const modifiedItems = items.map((item, i) =>
         modifyItem({
           item,
-          energyVal: item.energy!.capacity - combatMod.energy!.val,
+          energyVal: item.energy!.capacity - 2,
           compatibleModSeasons: i === itemIndex ? [activityMod.tag!] : [],
         })
       );
-      expect(canTakeSlotIndependentMods([], [], [activityMod], modifiedItems)).toBe(true);
+      expect(canTakeSlotIndependentMods([], [activityMod], modifiedItems)).toBe(true);
     }
   );
 
@@ -277,16 +244,12 @@ describe('process-utils', () => {
     const modifiedItems: ProcessItem[] = [...items];
     modifiedItems[4] = modifyItem({
       item: modifiedItems[4],
-      energyVal: 9,
-      compatibleModSeasons: [activityMod.tag!, combatMod.tag!],
+      energyVal: 4,
+      compatibleModSeasons: [activityMod.tag!],
     });
 
     const modifiedGeneralMod = modifyMod({
       mod: generalMod,
-      energyVal: 3,
-    });
-    const modifiedCombatMod = modifyMod({
-      mod: combatMod,
       energyVal: 3,
     });
     const modifiedActivityMod = modifyMod({
@@ -295,12 +258,29 @@ describe('process-utils', () => {
     });
 
     expect(
-      canTakeSlotIndependentMods(
-        [modifiedGeneralMod],
-        [modifiedCombatMod],
-        [modifiedActivityMod],
-        modifiedItems
-      )
+      canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems)
+    ).toBe(true);
+  });
+
+  it("can't fit general, activity, and combat mods if there is enough energy", () => {
+    const modifiedItems: ProcessItem[] = [...items];
+    modifiedItems[4] = modifyItem({
+      item: modifiedItems[4],
+      energyVal: 9,
+      compatibleModSeasons: [activityMod.tag!],
+    });
+
+    const modifiedGeneralMod = modifyMod({
+      mod: generalMod,
+      energyVal: 3,
+    });
+    const modifiedActivityMod = modifyMod({
+      mod: activityMod,
+      energyVal: 3,
+    });
+
+    expect(
+      canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems)
     ).toBe(false);
   });
 
@@ -311,29 +291,20 @@ describe('process-utils', () => {
       modifiedItems[4] = modifyItem({
         item: modifiedItems[4],
         energyVal: 9,
-        compatibleModSeasons: [activityMod.tag!, combatMod.tag!],
+        compatibleModSeasons: [activityMod.tag!],
       });
 
       const modifiedGeneralMod = modifyMod({
         mod: generalMod,
-        energyVal: modType === 'general' ? 4 : 3,
-      });
-      const modifiedCombatMod = modifyMod({
-        mod: combatMod,
-        energyVal: modType === 'combat' ? 4 : 3,
+        energyVal: modType === 'general' ? 6 : 5,
       });
       const modifiedActivityMod = modifyMod({
         mod: activityMod,
-        energyVal: modType === 'activity' ? 4 : 3,
+        energyVal: modType === 'activity' ? 6 : 5,
       });
 
       expect(
-        canTakeSlotIndependentMods(
-          [modifiedGeneralMod],
-          [modifiedCombatMod],
-          [modifiedActivityMod],
-          modifiedItems
-        )
+        canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems)
       ).toBe(false);
     }
   );

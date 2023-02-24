@@ -114,14 +114,3 @@ export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
   const commonClassItemMod = plugs.find((plugDef) => isClassItemOfTier(plugDef, TierType.Basic));
   return _.groupBy(plugs, getItemTypeOrTierDisplayName(commonClassItemMod?.itemTypeDisplayName));
 }
-
-/**
- * 2023-01-11: All standard Armor Mods (excluding artifact and raid) are unlocked for everyone.
- * The API was not informed, so we must hardcode the rules here.
- */
-export function unlockedByAllModsBeingUnlocked(
-  _plug: PluggableInventoryItemDefinition,
-  _artifactMods: Set<number> | undefined
-) {
-  return false;
-}

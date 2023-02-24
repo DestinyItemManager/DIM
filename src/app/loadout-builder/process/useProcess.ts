@@ -116,11 +116,10 @@ export function useProcess({
       currentCleanup: cleanup,
     }));
 
-    const { allMods, bucketSpecificMods, activityMods, combatMods, generalMods } = lockedModMap;
+    const { allMods, bucketSpecificMods, activityMods, generalMods } = lockedModMap;
 
     const lockedProcessMods = {
       generalMods: generalMods.map(mapArmor2ModToProcessMod),
-      combatMods: combatMods.map(mapArmor2ModToProcessMod),
       activityMods: activityMods.map(mapArmor2ModToProcessMod),
     };
 
@@ -140,7 +139,6 @@ export function useProcess({
         items,
         statOrder,
         armorEnergyRules,
-        combatMods,
         activityMods,
         bucketSpecificMods[bucketHash] || []
       );
@@ -271,7 +269,6 @@ function mapItemsToGroups(
   items: readonly DimItem[],
   statOrder: number[],
   armorEnergyRules: ArmorEnergyRules,
-  combatMods: PluggableInventoryItemDefinition[],
   activityMods: PluggableInventoryItemDefinition[],
   modsForSlot: PluggableInventoryItemDefinition[]
 ): ItemGroup[] {
@@ -280,7 +277,7 @@ function mapItemsToGroups(
   // and there may be legacy items that can slot CWL/Warmind Cell mods but not
   // Elemental Well mods?
   const requiredModTags = new Set<string>();
-  for (const mod of [...combatMods, ...activityMods]) {
+  for (const mod of activityMods) {
     const modTag = getModTypeTagByPlugCategoryHash(mod.plug.plugCategoryHash);
     if (modTag) {
       requiredModTags.add(modTag);

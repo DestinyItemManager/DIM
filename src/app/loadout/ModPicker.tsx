@@ -13,7 +13,6 @@ import {
   MAX_ARMOR_ENERGY_CAPACITY,
 } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
-import { artifactModsSelector } from 'app/strip-sockets/strip-sockets';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
@@ -31,12 +30,7 @@ import {
   knownModPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
 } from './known-values';
-import {
-  isInsertableArmor2Mod,
-  sortModGroups,
-  sortMods,
-  unlockedByAllModsBeingUnlocked,
-} from './mod-utils';
+import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
 import { PlugSet } from './plug-drawer/types';
 
@@ -79,7 +73,6 @@ function mapStateToProps() {
     profileResponseSelector,
     allItemsSelector,
     d2ManifestSelector,
-    artifactModsSelector,
     (_state: RootState, props: ProvidedProps) => props.classType,
     (_state: RootState, props: ProvidedProps) => props.owner,
     (_state: RootState, props: ProvidedProps) => props.plugCategoryHashWhitelist,
@@ -89,7 +82,6 @@ function mapStateToProps() {
       profileResponse,
       allItems,
       defs,
-      artifactMods,
       classType,
       owner,
       plugCategoryHashWhitelist,
@@ -145,10 +137,8 @@ function mapStateToProps() {
             owner ?? currentStore!.id
           );
 
-          const dimPlugs = sockets[0].plugSet!.plugs.filter(
-            (p) =>
-              unlockedPlugs.has(p.plugDef.hash) ||
-              unlockedByAllModsBeingUnlocked(p.plugDef, artifactMods)
+          const dimPlugs = sockets[0].plugSet!.plugs.filter((p) =>
+            unlockedPlugs.has(p.plugDef.hash)
           );
 
           // Filter down to plugs that match the plugCategoryHashWhitelist
