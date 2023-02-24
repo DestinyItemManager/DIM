@@ -8,7 +8,6 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { getModTypeTagByPlugCategoryHash } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { proxy, releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -141,7 +140,6 @@ export function useProcess({
         items,
         statOrder,
         armorEnergyRules,
-        generalMods,
         combatMods,
         activityMods,
         bucketSpecificMods[bucketHash] || []
@@ -273,23 +271,10 @@ function mapItemsToGroups(
   items: readonly DimItem[],
   statOrder: number[],
   armorEnergyRules: ArmorEnergyRules,
-  generalMods: PluggableInventoryItemDefinition[],
   combatMods: PluggableInventoryItemDefinition[],
   activityMods: PluggableInventoryItemDefinition[],
   modsForSlot: PluggableInventoryItemDefinition[]
 ): ItemGroup[] {
-  // Figure out all the energy types that have been requested across all mods.
-  // Purposefully not including bucket-specific mods here, because in either case it doesn't matter:
-  //   1. modsForSlot has no elemental mods. They have no effect on the loop.
-  //   2. modsForSlot has elemental mods. All items will be forced to that element type anyway,
-  //      so elemental affinity doesn't create separate groups.
-  const requiredEnergyTypes = new Set<DestinyEnergyType>();
-  for (const mod of [...combatMods, ...generalMods, ...activityMods]) {
-    if (mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any) {
-      requiredEnergyTypes.add(mod.plug.energyCost.energyType);
-    }
-  }
-
   // Figure out all the interesting mod slots required by mods are.
   // This includes combat mod tags because blue-quality items don't have them
   // and there may be legacy items that can slot CWL/Warmind Cell mods but not
@@ -308,28 +293,9 @@ function mapItemsToGroups(
     processItem: mapDimItemToProcessItem({ dimItem, armorEnergyRules, modsForSlot }),
   }));
 
-  // First, group by exoticness and energy type.
-  const firstPassGroupingFn = ({ hash, isExotic, energy }: ProcessItem) => {
-    // Ensure exotics always form a distinct group
-    let groupId = isExotic ? `${hash}-` : 'legendary-';
-
-    if (requiredEnergyTypes.size) {
-      groupId +=
-        energy &&
-        // We group all items locked to an energy type we don't care about
-        // by using an `X` instead of the numerical energy type -- if we only
-        // want to assign Solar mods, we can put all items locked to Void,
-        // Stasis and Arc into their own group (apart from the Any items and
-        // apart from the items locked to Solar)
-        (energy.type !== DestinyEnergyType.Any
-          ? requiredEnergyTypes.has(energy.type)
-            ? energy.type
-            : 'X'
-          : DestinyEnergyType.Any);
-    }
-
-    return groupId;
-  };
+  // First, group by exoticness to ensure exotics always form a distinct group
+  const firstPassGroupingFn = ({ hash, isExotic }: ProcessItem) =>
+    isExotic ? `${hash}-` : 'legendary-';
 
   // Second pass -- cache the worker-relevant information, except the one we used in the first pass.
   const cache = new Map<

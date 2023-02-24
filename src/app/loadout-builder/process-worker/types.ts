@@ -1,4 +1,3 @@
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { ArmorStats, LockableBucketHash } from '../types';
 
 export interface ProcessItem {
@@ -7,7 +6,6 @@ export interface ProcessItem {
   name: string;
   isExotic: boolean;
   energy?: {
-    type: DestinyEnergyType;
     /** The maximum energy capacity for the item, e.g. if masterworked this will be 10. */
     capacity: number;
     /**
@@ -52,7 +50,6 @@ export interface ProcessMod {
   hash: number;
   plugCategoryHash: number;
   energy?: {
-    type: DestinyEnergyType;
     /** The energy cost of the mod. */
     val: number;
   };

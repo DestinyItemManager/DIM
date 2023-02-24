@@ -3,7 +3,6 @@ import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
 } from 'app/loadout/known-values';
-import { getItemEnergyType } from 'app/loadout/mod-utils';
 import { MAX_ARMOR_ENERGY_CAPACITY, modsWithConditionalStats } from 'app/search/d2-known-values';
 import { DestinyClass, DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -21,7 +20,6 @@ export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition):
     hash: mod.hash,
     plugCategoryHash: mod.plug.plugCategoryHash,
     energy: mod.plug.energyCost && {
-      type: mod.plug.energyCost.energyType,
       val: mod.plug.energyCost.energyCost,
     },
     investmentStats: mod.investmentStats,
@@ -138,9 +136,6 @@ export function mapDimItemToProcessItem({
     ? _.sumBy(modsForSlot, (mod) => mod.plug.energyCost?.energyCost || 0)
     : 0;
 
-  // Bucket specific mods have been validated
-  const energyType = getItemEnergyType(dimItem, armorEnergyRules, modsForSlot);
-
   return {
     id,
     hash,
@@ -150,7 +145,6 @@ export function mapDimItemToProcessItem({
     stats: statMap,
     energy: energy
       ? {
-          type: energyType ?? energy.energyType,
           capacity,
           val: modsCost,
         }

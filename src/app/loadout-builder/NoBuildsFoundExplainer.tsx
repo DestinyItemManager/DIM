@@ -1,4 +1,4 @@
-import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import { t } from 'app/i18next-t';
@@ -7,7 +7,6 @@ import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { AppIcon, banIcon } from 'app/shell/icons';
 import { uniqBy } from 'app/utils/util';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Dispatch } from 'react';
 import ExoticArmorChoice from './filter/ExoticArmorChoice';
@@ -194,14 +193,6 @@ export default function NoBuildsFoundExplainer({
     ...lockedModMap.activityMods,
   ];
 
-  const elementMayCauseProblems =
-    armorEnergyRules.lockArmorEnergyType !== LockArmorEnergyType.None &&
-    (processInfo?.statistics.modsStatistics.earlyModsCheck.timesFailed ||
-      processInfo?.statistics.modsStatistics.finalAssignment.modsAssignmentFailed ||
-      failedModsInBucket) &&
-    lockedModMap.allMods.some(
-      (mod) => mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any
-    );
   const capacityMayCauseProblems =
     armorEnergyRules.assumeArmorMasterwork !== AssumeArmorMasterwork.All &&
     (processInfo?.statistics.modsStatistics.finalAssignment.modsAssignmentFailed ||
@@ -209,10 +200,7 @@ export default function NoBuildsFoundExplainer({
       failedModsInBucket) &&
     (lockedModMap.allMods.length || anyStatMinimums);
 
-  if (
-    (!alwaysInvalidMods || alwaysInvalidMods.length === 0) &&
-    (elementMayCauseProblems || capacityMayCauseProblems)
-  ) {
+  if ((!alwaysInvalidMods || alwaysInvalidMods.length === 0) && capacityMayCauseProblems) {
     // If we might have problems assigning bucket specific mods or mods in the
     // process worker, offer some advice.
     problems.push({
@@ -234,24 +222,6 @@ export default function NoBuildsFoundExplainer({
               }
             >
               {t('LoadoutBuilder.NoBuildsFoundExplainer.AssumeMasterworked')}
-            </button>
-          ),
-        },
-        elementMayCauseProblems && {
-          id: 'allowEnergyChanges',
-          contents: (
-            <button
-              key="allowEnergyChanges"
-              type="button"
-              className="dim-button"
-              onClick={() =>
-                dispatch({
-                  type: 'lockArmorEnergyTypeChanged',
-                  lockArmorEnergyType: LockArmorEnergyType.None,
-                })
-              }
-            >
-              {t('LoadoutBuilder.NoBuildsFoundExplainer.AssumeElementChange')}
             </button>
           ),
         },

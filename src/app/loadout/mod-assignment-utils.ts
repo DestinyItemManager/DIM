@@ -22,7 +22,7 @@ import _ from 'lodash';
 import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
 import { activityModPlugCategoryHashes } from './known-values';
 import { generateModPermutations } from './mod-permutations';
-import { getItemEnergyType, plugCategoryHashToBucketHash } from './mod-utils';
+import { plugCategoryHashToBucketHash } from './mod-utils';
 
 /**
  * a temporary structure, keyed by item ID,
@@ -410,10 +410,6 @@ export function assignBucketSpecificMods({
 } {
   // given spending rules, what we can assume this item's energy is
   let itemEnergyCapacity = calculateAssumedItemEnergy(item, armorEnergyRules);
-  // given spending/element rules & current assignments, what element is this armor?
-  // NB if the mods have different elements, this returns the first best not-Any type.
-  // The others will be rejected below.
-  const itemEnergyType = getItemEnergyType(item, armorEnergyRules, modsToAssign);
 
   const { orderedSockets, orderedMods } = getArmorSocketsAndMods(item.sockets, modsToAssign);
 
@@ -430,10 +426,8 @@ export function assignBucketSpecificMods({
 
     // cost of inserting this new proposed mod
     const modCost = mod.plug.energyCost?.energyCost || 0;
-    // element of this new proposed mod
-    const modEnergyType = mod.plug.energyCost?.energyType || DestinyEnergyType.Any;
 
-    if (modCost > itemEnergyCapacity || !energyTypesAreCompatible(itemEnergyType, modEnergyType)) {
+    if (modCost > itemEnergyCapacity) {
       // The mod is incompatible with the item or the existing mods we have already assigned
       unassigned.push(mod);
       continue;
@@ -657,44 +651,17 @@ function isCombatModValid(
 }
 
 /**
- * A cost heuristic for upgrading / changing armor elements.
- * Costs modelled are upgrading the energy capacity and changing the element.
+ * A cost heuristic for upgrading armor.
  */
 function calculateEnergyChange(
   itemEnergy: ItemEnergy,
   assignedMods: PluggableInventoryItemDefinition[]
 ) {
-  let finalEnergy = itemEnergy.derivedType;
-
-  for (const mod of assignedMods) {
-    if (finalEnergy !== DestinyEnergyType.Any) {
-      break;
-    } else if (mod.plug.energyCost?.energyType) {
-      finalEnergy = mod.plug.energyCost.energyType;
-    }
-  }
-
   const modCost =
     itemEnergy.used + _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
-  const mustChangeAffinity =
-    finalEnergy !== DestinyEnergyType.Any && finalEnergy !== itemEnergy.originalType;
 
-  if (mustChangeAffinity) {
-    if (itemEnergy.originalCapacity < 10) {
-      // If we must change the affinity on an item not already masterworked,
-      // add the wasted energy
-      return modCost + itemEnergy.originalCapacity;
-    } else {
-      // Changing the affinity is reasonably inexpensive for masterworked items.
-      // For class items, we may have alternatives in LO and they're the
-      // easiest to replace, so there's a small tiebreaker here to nudge LO into
-      // preferring changing class item affinity over others.
-      return itemEnergy.isClassItem ? 4 : 5;
-    }
-  } else {
-    // Otherwise just check how many levels of upgrade we need
-    return Math.max(0, modCost - itemEnergy.originalCapacity);
-  }
+  // Otherwise check how many levels of upgrade we need
+  return Math.max(0, modCost - itemEnergy.originalCapacity);
 }
 
 /**
@@ -777,8 +744,6 @@ function buildItemEnergy({
     used: _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0),
     originalCapacity: item.energy?.energyCapacity || 0,
     derivedCapacity: calculateAssumedItemEnergy(item, armorEnergyRules),
-    originalType: item.energy?.energyType || DestinyEnergyType.Any,
-    derivedType: getItemEnergyType(item, armorEnergyRules, assignedMods),
     isClassItem: item.bucket.hash === BucketHashes.ClassArmor,
   };
 }
@@ -787,8 +752,6 @@ interface ItemEnergy {
   used: number;
   originalCapacity: number;
   derivedCapacity: number;
-  originalType: DestinyEnergyType;
-  derivedType: DestinyEnergyType;
   isClassItem: boolean;
 }
 /**
@@ -805,23 +768,9 @@ function isModEnergyValid(
   ...assignedMods: (PluggableInventoryItemDefinition | null)[]
 ) {
   const modToAssignCost = modToAssign.plug.energyCost?.energyCost || 0;
-  const modToAssignType = modToAssign.plug.energyCost?.energyType || DestinyEnergyType.Any;
   const assignedModsCost = _.sumBy(assignedMods, (mod) => mod?.plug.energyCost?.energyCost || 0);
 
-  return (
-    itemEnergy.used + modToAssignCost + assignedModsCost <= itemEnergy.derivedCapacity &&
-    energyTypesAreCompatible(itemEnergy.derivedType, modToAssignType) &&
-    assignedMods.every((mod) =>
-      energyTypesAreCompatible(
-        modToAssignType,
-        mod?.plug.energyCost?.energyType || DestinyEnergyType.Any
-      )
-    )
-  );
-}
-
-function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnergyType) {
-  return first === second || first === DestinyEnergyType.Any || second === DestinyEnergyType.Any;
+  return itemEnergy.used + modToAssignCost + assignedModsCost <= itemEnergy.derivedCapacity;
 }
 
 function isAssigningToDefault(item: DimItem, assignment: Assignment) {

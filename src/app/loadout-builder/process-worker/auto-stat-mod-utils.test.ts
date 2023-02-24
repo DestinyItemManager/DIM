@@ -1,5 +1,4 @@
 import { StatHashes } from 'app/../data/d2/generated-enums';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { ArmorStatHashes } from '../types';
 import { createGeneralModsCache, getViableGeneralModPicks, ModsPick } from './auto-stat-mod-utils';
 import { ProcessMod } from './types';
@@ -104,7 +103,6 @@ describe('lo process auto stat mod pick generation with 1 existing mod', () => {
     investmentStats: [],
     plugCategoryHash: -456,
     energy: {
-      type: DestinyEnergyType.Any,
       val: 5,
     },
   };

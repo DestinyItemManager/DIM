@@ -1,6 +1,5 @@
-import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import {
@@ -23,21 +22,8 @@ import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './process-work
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
 import { ArmorStatHashes, MIN_LO_ITEM_ENERGY } from './types';
 
-function modifyMod({
-  mod,
-  energyType,
-  energyVal,
-  tag,
-}: {
-  mod: ProcessMod;
-  energyType?: DestinyEnergyType;
-  energyVal?: number;
-  tag?: string;
-}) {
+function modifyMod({ mod, energyVal, tag }: { mod: ProcessMod; energyVal?: number; tag?: string }) {
   const newMod = _.cloneDeep(mod);
-  if (energyType !== undefined) {
-    newMod.energy!.type = energyType;
-  }
 
   if (energyVal !== undefined) {
     newMod.energy!.val = energyVal;
@@ -50,19 +36,14 @@ function modifyMod({
 
 function modifyItem({
   item,
-  energyType,
   energyVal,
   compatibleModSeasons,
 }: {
   item: ProcessItem;
-  energyType?: DestinyEnergyType;
   energyVal?: number;
   compatibleModSeasons?: string[];
 }) {
   const newItem = _.cloneDeep(item);
-  if (energyType !== undefined) {
-    newItem.energy!.type = energyType;
-  }
 
   if (energyVal !== undefined) {
     newItem.energy!.val = energyVal;
@@ -95,7 +76,6 @@ describe('process-utils', () => {
 
   const armorEnergyRules = {
     assumeArmorMasterwork: AssumeArmorMasterwork.None,
-    lockArmorEnergyType: LockArmorEnergyType.All,
     minItemEnergy: MIN_LO_ITEM_ENERGY,
   };
 
@@ -225,7 +205,6 @@ describe('process-utils', () => {
       const modifiedItems = items.map((item, i) =>
         modifyItem({
           item,
-          energyType: generalMod.energy!.type,
           energyVal:
             itemIndex === i
               ? item.energy!.capacity - generalMod.energy!.val
@@ -243,7 +222,6 @@ describe('process-utils', () => {
     const modifiedItems = items.map((item) =>
       modifyItem({
         item,
-        energyType: combatMod.energy!.type,
         energyVal: item.energy!.capacity - combatMod.energy!.val,
         compatibleModSeasons: [tag],
       })
@@ -258,7 +236,6 @@ describe('process-utils', () => {
       const modifiedItems = items.map((item, i) =>
         modifyItem({
           item,
-          energyType: combatMod.energy!.type,
           energyVal: item.energy!.capacity - combatMod.energy!.val,
           compatibleModSeasons: i === itemIndex ? [combatMod.tag!] : [],
         })
@@ -274,7 +251,6 @@ describe('process-utils', () => {
     const modifiedItems = items.map((item) =>
       modifyItem({
         item,
-        energyType: activityMod.energy!.type,
         energyVal: item.energy!.capacity - activityMod.energy!.val,
         compatibleModSeasons: [tag],
       })
@@ -289,7 +265,6 @@ describe('process-utils', () => {
       const modifiedItems = items.map((item, i) =>
         modifyItem({
           item,
-          energyType: combatMod.energy!.type,
           energyVal: item.energy!.capacity - combatMod.energy!.val,
           compatibleModSeasons: i === itemIndex ? [activityMod.tag!] : [],
         })
@@ -302,7 +277,6 @@ describe('process-utils', () => {
     const modifiedItems: ProcessItem[] = [...items];
     modifiedItems[4] = modifyItem({
       item: modifiedItems[4],
-      energyType: DestinyEnergyType.Void,
       energyVal: 9,
       compatibleModSeasons: [activityMod.tag!, combatMod.tag!],
     });
@@ -313,12 +287,10 @@ describe('process-utils', () => {
     });
     const modifiedCombatMod = modifyMod({
       mod: combatMod,
-      energyType: DestinyEnergyType.Void,
       energyVal: 3,
     });
     const modifiedActivityMod = modifyMod({
       mod: activityMod,
-      energyType: DestinyEnergyType.Void,
       energyVal: 3,
     });
 
@@ -338,7 +310,6 @@ describe('process-utils', () => {
       const modifiedItems: ProcessItem[] = [...items];
       modifiedItems[4] = modifyItem({
         item: modifiedItems[4],
-        energyType: DestinyEnergyType.Void,
         energyVal: 9,
         compatibleModSeasons: [activityMod.tag!, combatMod.tag!],
       });
@@ -349,50 +320,11 @@ describe('process-utils', () => {
       });
       const modifiedCombatMod = modifyMod({
         mod: combatMod,
-        energyType: DestinyEnergyType.Void,
         energyVal: modType === 'combat' ? 4 : 3,
       });
       const modifiedActivityMod = modifyMod({
         mod: activityMod,
-        energyType: DestinyEnergyType.Void,
         energyVal: modType === 'activity' ? 4 : 3,
-      });
-
-      expect(
-        canTakeSlotIndependentMods(
-          [modifiedGeneralMod],
-          [modifiedCombatMod],
-          [modifiedActivityMod],
-          modifiedItems
-        )
-      ).toBe(false);
-    }
-  );
-
-  test.each(['general', 'combat', 'activity'])(
-    "can't fit mods if a %s mod has the wrong element",
-    (modType) => {
-      const modifiedItems: ProcessItem[] = [...items];
-      modifiedItems[4] = modifyItem({
-        item: modifiedItems[4],
-        energyType: DestinyEnergyType.Void,
-        energyVal: 9,
-        compatibleModSeasons: [activityMod.tag!, combatMod.tag!],
-      });
-
-      const modifiedGeneralMod = modifyMod({
-        mod: generalMod,
-        energyVal: 3,
-      });
-      const modifiedCombatMod = modifyMod({
-        mod: combatMod,
-        energyType: modType === 'combat' ? DestinyEnergyType.Arc : DestinyEnergyType.Void,
-        energyVal: 3,
-      });
-      const modifiedActivityMod = modifyMod({
-        mod: activityMod,
-        energyType: modType === 'activity' ? DestinyEnergyType.Arc : DestinyEnergyType.Void,
-        energyVal: 3,
       });
 
       expect(

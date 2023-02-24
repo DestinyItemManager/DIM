@@ -1,5 +1,4 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import { ArmorStatHashes } from '../types';
 import {
   createGeneralModsCache,
@@ -11,7 +10,6 @@ import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 interface SortParam {
   energy?: {
-    type: DestinyEnergyType;
     val: number;
   };
 }
@@ -24,10 +22,8 @@ export interface ProcessItemSubset extends SortParam {
 export interface PrecalculatedInfo {
   cache: GeneralModsCache;
   combatModPermutations: (ProcessMod | null)[][];
-  combatModEnergyCounts: EnergyTypeCounts;
   hasActivityMods: boolean;
   activityModPermutations: (ProcessMod | null)[][];
-  activityModEnergyCounts: EnergyTypeCounts;
   activityTagCounts: { [tag: string]: number };
 }
 
@@ -36,25 +32,13 @@ export interface PrecalculatedInfo {
  */
 function sortProcessModsOrItems(a: SortParam, b: SortParam) {
   if (a.energy && b.energy) {
-    if (a.energy.type === b.energy.type) {
-      return b.energy.val - a.energy.val;
-    } else {
-      return b.energy.type - a.energy.type;
-    }
+    return b.energy.val - a.energy.val;
   } else if (!a.energy) {
     return 1;
   }
 
   return -1;
 }
-
-type EnergyTypeCounts = [
-  arcCount: number,
-  solarCount: number,
-  voidCount: number,
-  stasisCount: number,
-  anyCount: number
-];
 
 export function precalculateStructures(
   generalMods: ProcessMod[],
@@ -66,12 +50,10 @@ export function precalculateStructures(
   return {
     cache: createGeneralModsCache(generalMods, statOrder, autoStatMods),
     combatModPermutations: generateProcessModPermutations(combatMods.sort(sortProcessModsOrItems)),
-    combatModEnergyCounts: getEnergyCounts(combatMods),
     hasActivityMods: activityMods.length > 0,
     activityModPermutations: generateProcessModPermutations(
       activityMods.sort(sortProcessModsOrItems)
     ),
-    activityModEnergyCounts: getEnergyCounts(activityMods),
     activityTagCounts: activityMods.reduce((acc, mod) => {
       if (mod.tag) {
         acc[mod.tag] = (acc[mod.tag] || 0) + 1;
@@ -81,40 +63,8 @@ export function precalculateStructures(
   };
 }
 
-function getEnergyCounts(modsOrItems: (ProcessMod | ProcessItemSubset)[]): EnergyTypeCounts {
-  let arcCount = 0;
-  let solarCount = 0;
-  let voidCount = 0;
-  let stasisCount = 0;
-  let anyCount = 0;
-
-  for (const item of modsOrItems) {
-    switch (item?.energy?.type) {
-      case DestinyEnergyType.Arc:
-        arcCount += 1;
-        break;
-      case DestinyEnergyType.Thermal:
-        solarCount += 1;
-        break;
-      case DestinyEnergyType.Void:
-        voidCount += 1;
-        break;
-      case DestinyEnergyType.Any:
-        anyCount += 1;
-        break;
-      case DestinyEnergyType.Stasis:
-        stasisCount += 1;
-        break;
-      default:
-        break;
-    }
-  }
-
-  return [arcCount, solarCount, voidCount, stasisCount, anyCount];
-}
-
 // Used for null values
-const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
+const defaultModEnergy = { val: 0 };
 
 /**
  * This figures out if all general, combat and activity mods can be assigned to an armour set and auto stat mods
@@ -129,11 +79,9 @@ const defaultModEnergy = { val: 0, type: DestinyEnergyType.Any };
  */
 export function pickAndAssignSlotIndependentMods(
   {
-    activityModEnergyCounts,
     activityModPermutations,
     activityTagCounts,
     cache,
-    combatModEnergyCounts,
     combatModPermutations,
     hasActivityMods,
   }: PrecalculatedInfo,
@@ -146,27 +94,7 @@ export function pickAndAssignSlotIndependentMods(
   // highest cost to the items with the highest amount of energy available will find results faster
   const sortedItems = Array.from(items).sort(sortProcessModsOrItems);
 
-  const [arcItems, solarItems, voidItems, stasisItems, anyItems] = getEnergyCounts(sortedItems);
-  const [arcCombatMods, solarCombatMods, voidCombatMods, stasisCombatMods] = combatModEnergyCounts;
-  const [arcActivityMods, solarActivityMods, voidActivityMods, stasisActivityMods] =
-    activityModEnergyCounts;
-
   modStatistics.earlyModsCheck.timesChecked++;
-
-  // A quick check to see if we have enough of each energy type for the mods so we can exit early if not
-  if (
-    voidItems + anyItems < voidCombatMods ||
-    voidItems + anyItems < voidActivityMods ||
-    solarItems + anyItems < solarCombatMods ||
-    solarItems + anyItems < solarActivityMods ||
-    arcItems + anyItems < arcCombatMods ||
-    arcItems + anyItems < arcActivityMods ||
-    stasisItems + anyItems < stasisCombatMods ||
-    stasisItems + anyItems < stasisActivityMods
-  ) {
-    modStatistics.earlyModsCheck.timesFailed++;
-    return undefined;
-  }
 
   // An early check to ensure we have enough activity mod combos
   // It works by creating an index of tags to totals of said tag
@@ -225,11 +153,7 @@ export function pickAndAssignSlotIndependentMods(
       // accommodates the mods energy. When we allow energy changes the item can have the Any
       // energy type
       const activityEnergyIsValid =
-        item.energy &&
-        item.energy.val + activityEnergy.val <= item.energy.capacity &&
-        (item.energy.type === activityEnergy.type ||
-          activityEnergy.type === DestinyEnergyType.Any ||
-          item.energy.type === DestinyEnergyType.Any);
+        item.energy && item.energy.val + activityEnergy.val <= item.energy.capacity;
 
       // The activity mods wont fit in the item set so move on to the next set of mods
       if (!activityEnergyIsValid || !item.compatibleModSeasons?.includes(tag)) {
@@ -256,14 +180,7 @@ export function pickAndAssignSlotIndependentMods(
         // present the energy types of each mod are compatible, eg incompatible could be arc + void.
         const combatEnergyIsValid =
           item.energy &&
-          item.energy.val + combatEnergy.val + activityEnergy.val <= item.energy.capacity &&
-          (item.energy.type === combatEnergy.type ||
-            combatEnergy.type === DestinyEnergyType.Any ||
-            item.energy.type === DestinyEnergyType.Any) &&
-          (activityEnergy.type === combatEnergy.type ||
-            combatEnergy.type === DestinyEnergyType.Any ||
-            activityEnergy.type === DestinyEnergyType.Any);
-
+          item.energy.val + combatEnergy.val + activityEnergy.val <= item.energy.capacity;
         // The combat mods wont fit in the item set so move on to the next set of mods
         if (!combatEnergyIsValid || !item.compatibleModSeasons?.includes(tag)) {
           continue combatModLoop;
@@ -326,9 +243,8 @@ export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {
     permutation
       .map((mod) => {
         if (mod) {
-          const energyType = mod.energy?.type || DestinyEnergyType.Any;
           const energyCost = mod.energy?.val || 0;
-          return `${energyType}${energyCost}${mod.tag}`;
+          return `${energyCost}${mod.tag}`;
         }
       })
       .join(',');

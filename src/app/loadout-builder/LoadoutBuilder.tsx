@@ -15,7 +15,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsByItemSelector, loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
@@ -125,7 +125,6 @@ export default memo(function LoadoutBuilder({
   const defs = useD2Definitions()!;
   const allLoadouts = useSelector(loadoutsSelector);
   const allItems = useSelector(allItemsSelector);
-  const loadoutsByItem = useSelector(loadoutsByItemSelector);
   const searchFilter = useSelector(searchFilterSelector);
   const searchQuery = useSelector(querySelector);
   const halfTierMods = useSelector(halfTierModsSelector);
@@ -214,11 +213,7 @@ export default memo(function LoadoutBuilder({
       })),
       statOrder
     );
-    const newSavedLoadoutParams = _.pick(
-      newLoadoutParameters,
-      'assumeArmorMasterwork',
-      'lockArmorEnergyType'
-    );
+    const newSavedLoadoutParams = _.pick(newLoadoutParameters, 'assumeArmorMasterwork');
 
     setSetting('loParameters', newSavedLoadoutParams);
     setSetting('loStatConstraintsByClass', {
@@ -269,14 +264,7 @@ export default memo(function LoadoutBuilder({
   const [armorEnergyRules, filteredItems, filterInfo] = useMemo(() => {
     const armorEnergyRules: ArmorEnergyRules = {
       ...loDefaultArmorEnergyRules,
-      loadouts: {
-        loadoutsByItem,
-        optimizingLoadoutId,
-      },
     };
-    if (loadoutParameters.lockArmorEnergyType !== undefined) {
-      armorEnergyRules.lockArmorEnergyType = loadoutParameters.lockArmorEnergyType;
-    }
     if (loadoutParameters.assumeArmorMasterwork !== undefined) {
       armorEnergyRules.assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
     }
@@ -293,9 +281,6 @@ export default memo(function LoadoutBuilder({
     });
     return [armorEnergyRules, items, filterInfo];
   }, [
-    loadoutsByItem,
-    optimizingLoadoutId,
-    loadoutParameters.lockArmorEnergyType,
     loadoutParameters.assumeArmorMasterwork,
     defs,
     characterItems,
@@ -395,8 +380,6 @@ export default memo(function LoadoutBuilder({
       />
       <EnergyOptions
         assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
-        lockArmorEnergyType={loadoutParameters.lockArmorEnergyType}
-        optimizingLoadoutName={preloadedLoadout?.name}
         lbDispatch={lbDispatch}
       />
       <LockArmorAndPerks
