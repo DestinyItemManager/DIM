@@ -18,7 +18,7 @@ export interface LoSessionInfo {
   generalModCosts: number[];
   /** How many general mod slots are available for auto stat mods. */
   numAvailableGeneralMods: number;
-  /** How many general mod slots have a remaining energy capacity of 2 or lower, so that only small mods can fit. */
+  /** How many general mod slots never have a remaining energy capacity of 3 or higher, so that only small mods can fit. */
   numConstrainedSlots: number;
   /** All uniquely distinguishable activity mod permutations */
   activityModPermutations: (ProcessMod | null)[][];
@@ -80,7 +80,8 @@ export function pickAndAssignSlotIndependentMods(
   info: LoSessionInfo,
   modStatistics: ModAssignmentStatistics,
   items: ProcessItem[],
-  neededStats: number[] | undefined
+  neededStats: number[] | undefined,
+  numArtifice: number
 ): ModsPick[] | undefined {
   modStatistics.earlyModsCheck.timesChecked++;
 
@@ -161,9 +162,9 @@ export function pickAndAssignSlotIndependentMods(
         info,
         items,
         neededStats,
-        items.filter((i) => i.isArtifice).length,
+        numArtifice,
         [remainingEnergyCapacities],
-        setEnergy
+        setEnergy - info.totalModEnergyCost
       );
 
       if (result) {
@@ -260,7 +261,7 @@ export function pickOptimalStatMods(
     maxAddedStats,
     numArtificeMods,
     remainingEnergiesPerAssignment,
-    setEnergy,
+    setEnergy - info.totalModEnergyCost,
     0,
     0
   );

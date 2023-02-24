@@ -261,7 +261,7 @@ export function process(
             }
 
             const neededStats = [0, 0, 0, 0, 0, 0];
-            let needSomeStats = false;
+            let totalNeededStats = 0;
 
             // Check in which stats we're lacking
             for (let index = 0; index < 6; index++) {
@@ -271,14 +271,14 @@ export function process(
               if (!filter.ignored) {
                 const neededValue = filter.min * 10 - value;
                 if (neededValue > 0) {
+                  totalNeededStats += neededValue;
                   neededStats[index] = neededValue;
-                  needSomeStats = true;
                 }
               }
             }
 
             setStatistics.lowerBoundsExceeded.timesChecked++;
-            if (needSomeStats && !autoStatMods && numArtifice === 0) {
+            if (!autoStatMods && totalNeededStats > numArtifice * 3) {
               setStatistics.lowerBoundsExceeded.timesFailed++;
               continue;
             }
@@ -287,12 +287,13 @@ export function process(
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
             // TODO: this isn't a big part of the overall cost of the loop, but we could consider trying to slot
             // mods at every level (e.g. just helmet, just helmet+arms) and skipping this if they already fit.
-            if (hasMods || needSomeStats) {
+            if (hasMods || totalNeededStats > 0) {
               const modsPick = pickAndAssignSlotIndependentMods(
                 precalculatedInfo,
                 setStatistics.modsStatistics,
                 armor,
-                needSomeStats ? neededStats : undefined
+                totalNeededStats > 0 ? neededStats : undefined,
+                numArtifice
               );
 
               if (modsPick) {
