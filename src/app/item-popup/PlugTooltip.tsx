@@ -225,6 +225,7 @@ export function PlugTooltip({
       [styles.tooltipElementStasis]:
         energyCost?.energyType === DestinyEnergyType.Stasis ||
         subclassDamageType === DamageType.Stasis,
+      [styles.tooltipElementStrand]: subclassDamageType === DamageType.Strand,
     }),
   });
 

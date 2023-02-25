@@ -18,12 +18,13 @@ import {
 // this correlation is solely for element filter names
 export const damageNamesByEnum: { [key in DamageType]: string | null } = {
   0: null,
-  1: 'kinetic',
-  2: 'arc',
-  3: 'solar',
-  4: 'void',
-  5: 'raid',
-  6: 'stasis',
+  [DamageType.Kinetic]: 'kinetic',
+  [DamageType.Arc]: 'arc',
+  [DamageType.Thermal]: 'solar',
+  [DamageType.Void]: 'void',
+  [DamageType.Raid]: 'raid',
+  [DamageType.Stasis]: 'stasis',
+  [DamageType.Strand]: 'strand',
 };
 
 // typescript doesn't understand array.filter
