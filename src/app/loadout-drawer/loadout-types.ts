@@ -3,6 +3,7 @@ import {
   LoadoutItem as DimApiLoadoutItem,
 } from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DestinyLoadoutComponent } from 'bungie-api-ts/destiny2';
 
 export type LoadoutItem = DimApiLoadoutItem & {
   /**
@@ -25,6 +26,14 @@ export type LoadoutItem = DimApiLoadoutItem & {
 export type Loadout = Omit<DimApiLoadout, 'equipped' | 'unequipped'> & {
   // All items are flattened out into LoadoutItems that keep track of whether they're equipped.
   items: LoadoutItem[];
+};
+
+/**
+ * An in-game D2 loadout (post-Lightfall) decorated with enough data to equip it.
+ */
+export type InGameLoadout = DestinyLoadoutComponent & {
+  index: number;
+  characterId: string;
 };
 
 /**

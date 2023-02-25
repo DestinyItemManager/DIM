@@ -36,6 +36,8 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     simulateBungieMaintenance: false,
     // Pretend that Bungie.net is not returning sockets info
     simulateMissingSockets: false,
+    // Pretend that Bungie.net is returning Lightfall loadouts
+    simulateInGameLoadouts: true,
     // Show a "pills" UI for filtering loadouts
     loadoutFilterPills: true,
     // Request the PresentationNodes component only needed during

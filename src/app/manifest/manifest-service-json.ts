@@ -12,6 +12,9 @@ import {
   DestinyItemActionBlockDefinition,
   DestinyItemTalentGridBlockDefinition,
   DestinyItemTranslationBlockDefinition,
+  DestinyLoadoutColorDefinition,
+  DestinyLoadoutIconDefinition,
+  DestinyLoadoutNameDefinition,
 } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
@@ -229,6 +232,44 @@ export async function downloadManifestComponents(
       let response: Response | null = null;
       let error = null;
       let body = null;
+
+      if (!components[table]) {
+        // TODO: rip this out after lightfall releases
+        if (table === 'DestinyLoadoutNameDefinition') {
+          manifest[table] = {
+            1: {
+              name: 'Test Name',
+              hash: 1,
+              index: 1,
+              redacted: false,
+            } satisfies DestinyLoadoutNameDefinition,
+          };
+          return;
+        }
+        if (table === 'DestinyLoadoutIconDefinition') {
+          manifest[table] = {
+            1: {
+              iconImagePath: '/common/destiny2_content/icons/32301dcfb9758fae4830c7b9f7cba1d3.jpg',
+              hash: 1,
+              index: 1,
+              redacted: false,
+            } satisfies DestinyLoadoutIconDefinition,
+          };
+          return;
+        }
+        if (table === 'DestinyLoadoutColorDefinition') {
+          manifest[table] = {
+            1: {
+              colorImagePath: '/common/destiny2_content/icons/32301dcfb9758fae4830c7b9f7cba1d3.jpg',
+              hash: 1,
+              index: 1,
+              redacted: false,
+            } satisfies DestinyLoadoutColorDefinition,
+          };
+          return;
+        }
+        throw new Error('Unknown table ' + table);
+      }
 
       for (const query of cacheBusterStrings) {
         try {

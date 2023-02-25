@@ -13,13 +13,16 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { inGameLoadoutsForCharacterSelector } from 'app/loadout-drawer/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { addIcon, AppIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { RootState } from 'app/store/types';
 import { Portal } from 'app/utils/temp-container';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import InGameLoadoutRow from './InGameLoadoutRow';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import {
@@ -74,6 +77,10 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const savedLoadouts = useSavedLoadoutsForClassType(classType);
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
+
+  const inGameLoadouts = useSelector((state: RootState) =>
+    inGameLoadoutsForCharacterSelector(state, selectedStoreId)
+  );
 
   const currentLoadout = useMemo(
     () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore),
@@ -147,6 +154,13 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           </p>
         )}
         {filterPills}
+        {inGameLoadouts.map((inGameLoadout) => (
+          <InGameLoadoutRow
+            key={inGameLoadout.index}
+            loadout={inGameLoadout}
+            store={selectedStore}
+          />
+        ))}
         {loadouts.map((loadout) => (
           <LoadoutRow
             key={loadout.id}

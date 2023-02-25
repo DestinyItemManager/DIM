@@ -1,14 +1,24 @@
 import { currentProfileSelector } from 'app/dim-api/selectors';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { DimItem } from 'app/inventory/item-types';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  bucketsSelector,
+  profileResponseSelector,
+  storesSelector,
+} from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import { getStore } from 'app/inventory/stores-helpers';
 import { manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { DestinyClass, DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
-import { Loadout, LoadoutItem } from './loadout-types';
+import { InGameLoadout, Loadout, LoadoutItem } from './loadout-types';
 import {
   getInstancedLoadoutItem,
   getResolutionInfo,
@@ -102,3 +112,71 @@ export const previousLoadoutSelector =
     }
     return undefined;
   };
+
+/** All loadouts supported directly by D2 (post-Lightfall), on any character */
+export const allInGameLoadoutsSelector = $featureFlags.simulateInGameLoadouts
+  ? createSelector(allItemsSelector, storesSelector, bucketsSelector, (items, stores, buckets) =>
+      stores.flatMap((s) =>
+        s.isVault
+          ? []
+          : new Array(4).fill(0).map((_, i) => generateFakeLoadout(items, s, buckets!, i))
+      )
+    )
+  : createSelector(
+      (state: RootState) => profileResponseSelector(state)?.characterLoadouts?.data,
+      (loadouts): InGameLoadout[] =>
+        loadouts
+          ? Object.entries(loadouts).flatMap(([characterId, c]) =>
+              c.loadouts.map((l, i) => ({ ...l, characterId, index: i }))
+            )
+          : emptyArray<InGameLoadout>()
+    );
+
+/** Loadouts supported directly by D2 (post-Lightfall), for a specific character */
+export const inGameLoadoutsForCharacterSelector = $featureFlags.simulateInGameLoadouts
+  ? createSelector(
+      allItemsSelector,
+      storesSelector,
+      bucketsSelector,
+      (_state: RootState, characterId: string) => characterId,
+      (items, stores, buckets, characterId) => {
+        const store = getStore(stores, characterId)!;
+        return new Array(4).fill(0).map((_, i) => generateFakeLoadout(items, store, buckets!, i));
+      }
+    )
+  : createSelector(
+      (state: RootState) => profileResponseSelector(state)?.characterLoadouts?.data,
+      (_state: RootState, characterId: string) => characterId,
+      (loadouts, characterId): InGameLoadout[] =>
+        loadouts?.[characterId]?.loadouts.map((l, i) => ({ ...l, characterId, index: i })) ??
+        emptyArray<InGameLoadout>()
+    );
+
+function generateFakeLoadout(
+  items: DimItem[],
+  store: DimStore,
+  buckets: InventoryBuckets,
+  index: number
+): InGameLoadout {
+  const loadoutItems = [...buckets.byCategory.Weapons, ...buckets.byCategory.Armor].map(
+    (b): DestinyLoadoutItemComponent => {
+      const item = _.shuffle(
+        items.filter((i) => i.bucket.hash === b.hash && itemCanBeEquippedBy(i, store, false))
+      )[0]!;
+      return {
+        itemInstanceId: item.id,
+        // TODO: extrack hashes?
+        plugItemHashes: [],
+      };
+    }
+  );
+
+  return {
+    iconHash: 1,
+    nameHash: 1,
+    colorHash: 1,
+    items: loadoutItems,
+    characterId: store.id,
+    index,
+  };
+}

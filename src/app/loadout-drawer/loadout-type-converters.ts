@@ -136,3 +136,9 @@ function convertDimApiLoadoutItemToLoadoutItem(
     equip: equipped,
   };
 }
+
+/*
+function convertInGameLoadoutToDimLoadout(inGameLoadout: InGameLoadout): DimLoadout {}
+
+function convertDimLoadoutToInGameLoadout(dimLoadout: DimLoadout): InGameLoadout {}
+*/
