@@ -13,7 +13,7 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
-import { inGameLoadoutsForCharacterSelector } from 'app/loadout-drawer/selectors';
+import { inGameLoadoutsForCharacterSelector } from 'app/loadout/ingame/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { addIcon, AppIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';

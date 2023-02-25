@@ -547,6 +547,7 @@ export function findItemForLoadout(
 
 export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: LoadoutItem) {
   // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
+  // yup
   const result = allItems.find((item) => item.id === loadoutItem.id);
   if (result) {
     return result;

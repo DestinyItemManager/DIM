@@ -17,10 +17,7 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
-import {
-  inGameLoadoutsForCharacterSelector,
-  previousLoadoutSelector,
-} from 'app/loadout-drawer/selectors';
+import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';
@@ -53,6 +50,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { applyInGameLoadout } from '../ingame/ingame-loadout-apply';
 import InGameLoadoutIcon from '../ingame/InGameLoadoutIcon';
+import { inGameLoadoutsForCharacterSelector } from '../ingame/selectors';
 import {
   searchAndSortLoadoutsByQuery,
   useLoadoutFilterPills,

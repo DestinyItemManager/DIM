@@ -1,6 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { FilterDefinition } from '../filter-types';
 import { quoteFilterString } from '../query-parser';
 
@@ -44,6 +44,7 @@ const loadoutFilters: FilterDefinition[] = [
           (l) =>
             l.loadout.name.toLowerCase().includes(filterValue) ||
             (filterValue.startsWith('#') && // short circuit for less load
+              !isInGameLoadout(l.loadout) &&
               getHashtagsFromNote(l.loadout.notes).includes(filterValue))
         );
     },
