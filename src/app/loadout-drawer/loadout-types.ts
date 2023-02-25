@@ -32,8 +32,23 @@ export type Loadout = Omit<DimApiLoadout, 'equipped' | 'unequipped'> & {
  * An in-game D2 loadout (post-Lightfall) decorated with enough data to equip it.
  */
 export type InGameLoadout = DestinyLoadoutComponent & {
+  /** The index of the loadout in the list of the user's loadouts */
   index: number;
+
+  /** What character this loadout is bound to. */
   characterId: string;
+
+  /** The name of the loadout. From nameHash + DestinyLoadoutNameDefinition. */
+  name: string;
+
+  /** The loadout's icon foreground. From iconHash + DestinyLoadoutIconDefinition. */
+  icon: string;
+
+  /** The loadout's color / icon background. From colorHash + DestinyLoadoutColorDefinition. */
+  colorIcon: string;
+
+  /** An ID that should be unique among ingame and DIM loadouts. */
+  id: string;
 };
 
 /**
@@ -85,4 +100,8 @@ export interface PluggingAction extends Assignment {
    * If not, this is an optional action which clears out other mod slots.
    */
   required: boolean;
+}
+
+export function isInGameLoadout(loadout: Loadout | InGameLoadout): loadout is InGameLoadout {
+  return `colorHash` in loadout;
 }

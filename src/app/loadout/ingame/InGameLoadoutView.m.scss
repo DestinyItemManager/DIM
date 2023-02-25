@@ -1,16 +1,16 @@
-@use '../variables.scss' as *;
+@use '../../variables.scss' as *;
 
 // TODO: dedup with LoadoutView
 
 .loadout {
-  composes: flexColumn from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../../dim-ui/common.m.scss';
   margin-bottom: 10px;
   padding: 15px;
   background: rgba(0, 0, 0, 0.25);
 }
 
 .title {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: center;
 
   h2 {
@@ -47,7 +47,7 @@
 }
 
 .actions {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexRow from '../../dim-ui/common.m.scss';
   flex-flow: row wrap;
   gap: 4px;
 

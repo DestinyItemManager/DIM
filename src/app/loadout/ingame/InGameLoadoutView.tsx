@@ -1,4 +1,3 @@
-import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import { DimItem, DimSocket, DimSocketCategory } from 'app/inventory/item-types';
@@ -16,8 +15,9 @@ import { t } from 'i18next';
 import _ from 'lodash';
 import { ReactNode, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import PlugDef from '../loadout-ui/PlugDef';
+import InGameLoadoutIcon from './InGameLoadoutIcon';
 import styles from './InGameLoadoutView.m.scss';
-import PlugDef from './loadout-ui/PlugDef';
 
 const categoryStyles = {
   Weapons: styles.categoryWeapons,
@@ -59,10 +59,6 @@ export default function InGameLoadoutView({
   const categories = _.groupBy(items, (item) => item.bucket.sort);
   const power = loadoutPower(store, categories);
 
-  const name = defs.LoadoutName.get(loadout.nameHash)?.name ?? 'Unknown';
-  const color = defs.LoadoutColor.get(loadout.colorHash)?.colorImagePath ?? '';
-  const icon = defs.LoadoutIcon.get(loadout.iconHash)?.iconImagePath ?? '';
-
   const canDisplayCategory = (item: DimItem, category: DimSocketCategory) =>
     category.category.uiCategoryStyle !== 2251952357 &&
     getSocketsByIndexes(item.sockets!, category.socketIndexes).length > 0;
@@ -89,22 +85,8 @@ export default function InGameLoadoutView({
     <div className={styles.loadout} id={`ingame-${loadout.index}`}>
       <div className={styles.title}>
         <h2>
-          {loadoutConstants && (
-            <BungieImage
-              className={styles.icon}
-              src={loadoutConstants.blackIconImagePath}
-              height={32}
-              width={32}
-            />
-          )}
-          <BungieImage
-            className={styles.icon}
-            style={bungieBackgroundStyle(color)}
-            src={icon}
-            height={32}
-            width={32}
-          />
-          {name}
+          <InGameLoadoutIcon className={styles.icon} loadout={loadout} />
+          {loadout.name}
           {power !== 0 && (
             <div className={styles.power}>
               <AppIcon icon={powerActionIcon} />

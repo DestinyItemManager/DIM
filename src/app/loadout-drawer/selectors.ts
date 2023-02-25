@@ -10,14 +10,17 @@ import {
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
-import { manifestSelector } from 'app/manifest/selectors';
+import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass, DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
+import {
+  convertDestinyLoadoutComponentToInGameLoadout,
+  convertDimApiLoadoutToLoadout,
+} from './loadout-type-converters';
 import { InGameLoadout, Loadout, LoadoutItem } from './loadout-types';
 import {
   getInstancedLoadoutItem,
@@ -123,11 +126,14 @@ export const allInGameLoadoutsSelector = $featureFlags.simulateInGameLoadouts
       )
     )
   : createSelector(
+      d2ManifestSelector,
       (state: RootState) => profileResponseSelector(state)?.characterLoadouts?.data,
-      (loadouts): InGameLoadout[] =>
-        loadouts
+      (defs, loadouts): InGameLoadout[] =>
+        defs && loadouts
           ? Object.entries(loadouts).flatMap(([characterId, c]) =>
-              c.loadouts.map((l, i) => ({ ...l, characterId, index: i }))
+              c.loadouts.map((l, i) =>
+                convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
+              )
             )
           : emptyArray<InGameLoadout>()
     );
@@ -145,10 +151,14 @@ export const inGameLoadoutsForCharacterSelector = $featureFlags.simulateInGameLo
       }
     )
   : createSelector(
+      d2ManifestSelector,
       (state: RootState) => profileResponseSelector(state)?.characterLoadouts?.data,
       (_state: RootState, characterId: string) => characterId,
-      (loadouts, characterId): InGameLoadout[] =>
-        loadouts?.[characterId]?.loadouts.map((l, i) => ({ ...l, characterId, index: i })) ??
+      (defs, loadouts, characterId): InGameLoadout[] =>
+        (defs &&
+          loadouts?.[characterId]?.loadouts.map((l, i) =>
+            convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
+          )) ??
         emptyArray<InGameLoadout>()
     );
 
@@ -171,11 +181,15 @@ function generateFakeLoadout(
   );
 
   return {
+    name: 'Test Name',
+    icon: '/common/destiny2_content/icons/32301dcfb9758fae4830c7b9f7cba1d3.jpg',
+    colorIcon: '/common/destiny2_content/icons/32301dcfb9758fae4830c7b9f7cba1d3.jpg',
     iconHash: 1,
     nameHash: 1,
     colorHash: 1,
     items: loadoutItems,
     characterId: store.id,
     index,
+    id: `ingame-${store.id}-${index}`,
   };
 }
