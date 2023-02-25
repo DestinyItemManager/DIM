@@ -8,6 +8,7 @@ import {
   awaInitializeRequest,
   AwaType,
   BungieMembershipType,
+  clearLoadout,
   DestinyComponentType,
   DestinyLinkedProfilesResponse,
   DestinyManifest,
@@ -25,6 +26,7 @@ import {
   ServerResponse,
   setItemLockState,
   setQuestTrackedState,
+  snapshotLoadout,
   transferItem,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -283,6 +285,24 @@ export async function requestAdvancedWriteActionToken(
 
 export async function equipInGameLoadout(account: DestinyAccount, loadout: InGameLoadout) {
   const result = equipLoadout(authenticatedHttpClient, {
+    loadoutIndex: loadout.index,
+    characterId: loadout.characterId,
+    membershipType: account.originalPlatformType,
+  });
+  return result;
+}
+
+export async function snapshotInGameLoadout(account: DestinyAccount, loadout: InGameLoadout) {
+  const result = snapshotLoadout(authenticatedHttpClient, {
+    loadoutIndex: loadout.index,
+    characterId: loadout.characterId,
+    membershipType: account.originalPlatformType,
+  });
+  return result;
+}
+
+export async function clearInGameLoadout(account: DestinyAccount, loadout: InGameLoadout) {
+  const result = clearLoadout(authenticatedHttpClient, {
     loadoutIndex: loadout.index,
     characterId: loadout.characterId,
     membershipType: account.originalPlatformType,

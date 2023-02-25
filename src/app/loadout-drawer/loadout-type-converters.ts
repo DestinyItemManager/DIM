@@ -151,10 +151,14 @@ export function convertDestinyLoadoutComponentToInGameLoadout(
   index: number,
   characterId: string,
   defs: D2ManifestDefinitions
-): InGameLoadout {
+): InGameLoadout | undefined {
   const name = defs.LoadoutName.get(loadoutComponent.nameHash)?.name ?? 'Unknown';
   const colorIcon = defs.LoadoutColor.get(loadoutComponent.colorHash)?.colorImagePath ?? '';
   const icon = defs.LoadoutIcon.get(loadoutComponent.iconHash)?.iconImagePath ?? '';
+
+  if (loadoutComponent.items === undefined || loadoutComponent.items.length === 0) {
+    return undefined;
+  }
 
   return {
     ...loadoutComponent,

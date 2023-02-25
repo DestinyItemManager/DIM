@@ -131,8 +131,10 @@ export const allInGameLoadoutsSelector = $featureFlags.simulateInGameLoadouts
       (defs, loadouts): InGameLoadout[] =>
         defs && loadouts
           ? Object.entries(loadouts).flatMap(([characterId, c]) =>
-              c.loadouts.map((l, i) =>
-                convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
+              _.compact(
+                c.loadouts.map((l, i) =>
+                  convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
+                )
               )
             )
           : emptyArray<InGameLoadout>()
@@ -156,8 +158,10 @@ export const inGameLoadoutsForCharacterSelector = $featureFlags.simulateInGameLo
       (_state: RootState, characterId: string) => characterId,
       (defs, loadouts, characterId): InGameLoadout[] =>
         (defs &&
-          loadouts?.[characterId]?.loadouts.map((l, i) =>
-            convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
+          _.compact(
+            loadouts?.[characterId]?.loadouts.map((l, i) =>
+              convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
+            )
           )) ??
         emptyArray<InGameLoadout>()
     );

@@ -1,5 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { equipInGameLoadout } from 'app/bungie-api/destiny2-api';
+import { clearInGameLoadout, equipInGameLoadout } from 'app/bungie-api/destiny2-api';
 import { itemMoved } from 'app/inventory/actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import { inGameLoadoutNotification } from 'app/inventory/MoveNotifications';
@@ -61,5 +61,16 @@ export function applyInGameLoadout(loadout: InGameLoadout): ThunkResult {
         reportException('inGameLoadout', e);
       }
     }
+  };
+}
+
+export function deleteInGameLoadout(loadout: InGameLoadout): ThunkResult {
+  return async (_dispatch, getState) => {
+    const account = currentAccountSelector(getState())!;
+    await clearInGameLoadout(account, loadout);
+
+    showNotification({ title: 'Loadout deleted' });
+
+    // TODO: I guess reload stores? Maybe we need a redux copy of the data
   };
 }
