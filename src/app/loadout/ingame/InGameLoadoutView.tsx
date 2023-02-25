@@ -2,20 +2,19 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import { DimItem, DimSocket, DimSocketCategory } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { loadoutConstantsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
-import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { t } from 'i18next';
 import _ from 'lodash';
-import { ReactNode, useMemo } from 'react';
+import { ReactNode } from 'react';
 import { useSelector } from 'react-redux';
 import PlugDef from '../loadout-ui/PlugDef';
+import { useItemsFromInGameLoadout } from './ingame-loadout-utils';
 import InGameLoadoutIcon from './InGameLoadoutIcon';
 import styles from './InGameLoadoutView.m.scss';
 
@@ -23,14 +22,6 @@ const categoryStyles = {
   Weapons: styles.categoryWeapons,
   Armor: styles.categoryArmor,
 };
-
-export function getItemsFromLoadout(
-  loadoutItems: DestinyLoadoutItemComponent[],
-  allItems: DimItem[]
-): DimItem[] {
-  const itemIds = new Set([...loadoutItems.map((li) => li.itemInstanceId)]);
-  return allItems.filter((i) => (i.bucket.inWeapons || i.bucket.inArmor) && itemIds.has(i.id));
-}
 
 /**
  * A presentational component for a single in-game loadout.
@@ -45,16 +36,12 @@ export default function InGameLoadoutView({
   actionButtons: ReactNode[];
 }) {
   const defs = useD2Definitions()!;
-  const allItems = useSelector(allItemsSelector);
   const loadoutConstants = useSelector(loadoutConstantsSelector);
 
   const itemByInstanceId = _.keyBy(loadout.items, (i) => i.itemInstanceId);
 
   // Turn loadout items into real DimItems
-  const items = useMemo(
-    () => getItemsFromLoadout(loadout.items, allItems),
-    [loadout.items, allItems]
-  );
+  const items = useItemsFromInGameLoadout(loadout);
 
   const categories = _.groupBy(items, (item) => item.bucket.sort);
   const power = loadoutPower(store, categories);
@@ -82,7 +69,7 @@ export default function InGameLoadoutView({
   };
 
   return (
-    <div className={styles.loadout} id={`ingame-${loadout.index}`}>
+    <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
         <h2>
           <InGameLoadoutIcon className={styles.icon} loadout={loadout} />

@@ -415,6 +415,9 @@
     "SwitchDirection": "Switch",
     "TransferItems": "Transfer"
   },
+  "InGameLoadout": {
+    "Applying": "Equipping loadout..."
+  },
   "Inventory": {
     "ClickToExpand": "(Click to expand)"
   },

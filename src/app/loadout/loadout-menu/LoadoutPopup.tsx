@@ -51,6 +51,7 @@ import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { applyInGameLoadout } from '../ingame/ingame-loadout-apply';
 import InGameLoadoutIcon from '../ingame/InGameLoadoutIcon';
 import {
   searchAndSortLoadoutsByQuery,
@@ -101,10 +102,8 @@ export default function LoadoutPopup({
     dispatch(applyLoadout(dimStore, loadout, { allowUndo: true, onlyMatchingClass: true }));
   };
 
-  const handleApplyInGameLoadout = (_loadout: InGameLoadout) => {
-    alert('Not implemented yet!');
-    // dispatch(applyInGameLoadout(dimStore, loadout));
-  };
+  const handleApplyInGameLoadout = (loadout: InGameLoadout) =>
+    dispatch(applyInGameLoadout(loadout));
 
   // A D1 dynamic loadout set up to level weapons and armor
   const makeItemLevelingLoadout = () => {
