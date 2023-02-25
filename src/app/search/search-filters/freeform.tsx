@@ -235,7 +235,7 @@ function testStringsFromObjectives(
   objectives: DimItem['objectives']
 ): boolean {
   return Boolean(
-    objectives?.some((o) => test(defs.Objective.get(o.objectiveHash).progressDescription))
+    objectives?.some((o) => test(defs.Objective.get(o.objectiveHash)?.progressDescription ?? ''))
   );
 }
 
