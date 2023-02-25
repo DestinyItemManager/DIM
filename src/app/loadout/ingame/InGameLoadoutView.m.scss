@@ -34,18 +34,6 @@
 }
 
 // TODO: extract common
-.power {
-  display: inline;
-  color: $gold;
-  flex: inherit;
-  font-size: 12px;
-  letter-spacing: normal;
-  svg {
-    margin-right: 2px;
-    font-size: 10px;
-  }
-}
-
 .actions {
   composes: flexRow from '../../dim-ui/common.m.scss';
   flex-flow: row wrap;

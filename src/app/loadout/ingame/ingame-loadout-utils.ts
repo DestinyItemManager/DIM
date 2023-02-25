@@ -15,7 +15,8 @@ export function getItemsFromInGameLoadout(
   allItems: DimItem[]
 ): DimItem[] {
   const itemIds = new Set([...loadoutItems.map((li) => li.itemInstanceId)]);
-  return allItems.filter((i) => (i.bucket.inWeapons || i.bucket.inArmor) && itemIds.has(i.id));
+  // TODO: apply socket overrides once we know what those are?
+  return allItems.filter((i) => itemIds.has(i.id));
 }
 
 /**

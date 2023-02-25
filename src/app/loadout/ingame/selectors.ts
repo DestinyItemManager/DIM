@@ -15,6 +15,7 @@ import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 
@@ -85,6 +86,14 @@ function generateFakeLoadout(
       };
     }
   );
+
+  const subclass = store.items.find((i) => i.bucket.hash === BucketHashes.Subclass);
+  if (subclass) {
+    loadoutItems.unshift({
+      itemInstanceId: subclass.id,
+      plugItemHashes: _.compact(subclass.sockets?.allSockets.map((s) => s.plugged?.plugDef.hash)),
+    });
+  }
 
   return {
     name: 'Test Name',

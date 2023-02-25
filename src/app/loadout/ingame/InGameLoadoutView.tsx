@@ -1,19 +1,15 @@
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
-import { DimItem, DimSocket, DimSocketCategory } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { DimStore } from 'app/inventory/store-types';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
-import { loadoutConstantsSelector, useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, powerActionIcon } from 'app/shell/icons';
-import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { t } from 'i18next';
 import _ from 'lodash';
 import { ReactNode } from 'react';
-import { useSelector } from 'react-redux';
-import PlugDef from '../loadout-ui/PlugDef';
+import LoadoutSubclassSection from '../loadout-ui/LoadoutSubclassSection';
 import { useItemsFromInGameLoadout } from './ingame-loadout-utils';
 import InGameLoadoutIcon from './InGameLoadoutIcon';
 import styles from './InGameLoadoutView.m.scss';
@@ -35,37 +31,23 @@ export default function InGameLoadoutView({
   store: DimStore;
   actionButtons: ReactNode[];
 }) {
-  const defs = useD2Definitions()!;
-  const loadoutConstants = useSelector(loadoutConstantsSelector);
-
-  const itemByInstanceId = _.keyBy(loadout.items, (i) => i.itemInstanceId);
-
   // Turn loadout items into real DimItems
   const items = useItemsFromInGameLoadout(loadout);
 
   const categories = _.groupBy(items, (item) => item.bucket.sort);
   const power = loadoutPower(store, categories);
 
-  const canDisplayCategory = (item: DimItem, category: DimSocketCategory) =>
-    category.category.uiCategoryStyle !== 2251952357 &&
-    getSocketsByIndexes(item.sockets!, category.socketIndexes).length > 0;
-
-  const canDisplaySocket = (socket: DimSocket) => {
-    const socketTypeHash = socket.socketDefinition.socketTypeHash;
-    const socketType = defs.SocketType.get(socketTypeHash);
-    console.log({ socketType, socketTypeHash });
-    return (
-      !loadoutConstants?.loadoutPreviewFilterOutSocketTypeHashes.includes(socketTypeHash) &&
-      !loadoutConstants?.loadoutPreviewFilterOutSocketCategoryHashes.includes(
-        socketType.socketCategoryHash
-      )
-    );
-  };
-
-  const getPluggedItem = (item: DimItem, socket: DimSocket) => {
-    const pluggedItemHashes = itemByInstanceId[item.id]?.plugItemHashes ?? [];
-    // TODO: Not sure if the plugItemHashes are by socket index or what. If not, we have to do a weird assignment dance to handle 2x of the same mod.
-    return socket.plugOptions.find((p) => pluggedItemHashes.includes(p.plugDef.hash));
+  const subclassItem = categories['General']?.[0];
+  const subclass: ResolvedLoadoutItem | undefined = subclassItem && {
+    item: subclassItem,
+    loadoutItem: {
+      hash: subclassItem.hash,
+      id: subclassItem.id,
+      amount: 1,
+      equip: true,
+      socketOverrides: loadout.items.find((i) => i.itemInstanceId === subclassItem.id)
+        ?.plugItemHashes,
+    },
   };
 
   return (
@@ -74,55 +56,18 @@ export default function InGameLoadoutView({
         <h2>
           <InGameLoadoutIcon className={styles.icon} loadout={loadout} />
           {loadout.name}
-          {power !== 0 && (
-            <div className={styles.power}>
-              <AppIcon icon={powerActionIcon} />
-              <span>{power}</span>
-            </div>
-          )}
         </h2>
         <div className={styles.actions}>{actionButtons}</div>
       </div>
       <div className={styles.contents}>
+        {subclass && <LoadoutSubclassSection subclass={subclass} power={power} />}
         {items.length > 0 &&
           (['Weapons', 'Armor'] as const).map((category) => (
             <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
               {categories[category] ? (
                 <div className={styles.itemsInCategory}>
                   {categories[category]?.map((item) => (
-                    <div className={styles.item} key={item.id}>
-                      <DraggableInventoryItem item={item}>
-                        <ItemPopupTrigger item={item}>
-                          {(ref, onClick) => (
-                            <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
-                          )}
-                        </ItemPopupTrigger>
-                      </DraggableInventoryItem>
-                      {item.sockets?.categories.map(
-                        (c) =>
-                          canDisplayCategory(item, c) &&
-                          getSocketsByIndexes(item.sockets!, c.socketIndexes).map((s) => {
-                            if (canDisplaySocket(s)) {
-                              const plugItem = getPluggedItem(item, s);
-                              if (plugItem) {
-                                // TODO: can do a better plug?
-                                return (
-                                  <PlugDef
-                                    key={s.socketIndex}
-                                    plug={plugItem.plugDef}
-                                    onClick={() =>
-                                      console.log(
-                                        s,
-                                        defs.SocketType.get(s.socketDefinition.socketTypeHash)
-                                      )
-                                    }
-                                  />
-                                );
-                              }
-                            }
-                          })
-                      )}
-                    </div>
+                    <InGameLoadoutItem key={item.id} item={item} />
                   ))}
                 </div>
               ) : (
@@ -133,6 +78,21 @@ export default function InGameLoadoutView({
             </div>
           ))}
       </div>
+    </div>
+  );
+}
+
+function InGameLoadoutItem({ item }: { item: DimItem }) {
+  // TODO: we should show plugged sockets eventually
+  return (
+    <div>
+      <DraggableInventoryItem item={item}>
+        <ItemPopupTrigger item={item}>
+          {(ref, onClick) => (
+            <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+          )}
+        </ItemPopupTrigger>
+      </DraggableInventoryItem>
     </div>
   );
 }

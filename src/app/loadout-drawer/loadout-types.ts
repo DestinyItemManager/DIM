@@ -70,7 +70,6 @@ export interface ResolvedLoadoutItem {
    * this item in the loadout. Note that this loadoutItem may not have the same
    * id or even hash as the resolved item!
    */
-  // TODO: remove this in favor of just equip/socketOverrides/amount?
   readonly loadoutItem: LoadoutItem;
 
   /** This item wasn't found in inventory. This means `item` is a fake placeholder. */

@@ -10,7 +10,6 @@ interface CssExports {
   'itemsInCategory': string;
   'loadout': string;
   'placeholder': string;
-  'power': string;
   'title': string;
 }
 export const cssExports: CssExports;
