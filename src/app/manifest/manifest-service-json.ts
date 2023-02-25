@@ -13,9 +13,11 @@ import {
   DestinyItemTalentGridBlockDefinition,
   DestinyItemTranslationBlockDefinition,
   DestinyLoadoutColorDefinition,
+  DestinyLoadoutConstantsDefinition,
   DestinyLoadoutIconDefinition,
   DestinyLoadoutNameDefinition,
 } from 'bungie-api-ts/destiny2';
+import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
@@ -265,6 +267,34 @@ export async function downloadManifestComponents(
               index: 1,
               redacted: false,
             } satisfies DestinyLoadoutColorDefinition,
+          };
+          return;
+        }
+        if (table === 'DestinyLoadoutConstantsDefinition') {
+          manifest[table] = {
+            1: {
+              whiteIconImagePath:
+                '/common/destiny2_content/icons/df7279bf5cd0f99fe5f1e0b8a8967e5e.png',
+              blackIconImagePath:
+                '/common/destiny2_content/icons/df7279bf5cd0f99fe5f1e0b8a8967e5e.png',
+              displayProperties: {
+                name: 'Loadouts',
+                icon: '/common/destiny2_content/icons/df7279bf5cd0f99fe5f1e0b8a8967e5e.png',
+                hasIcon: true,
+                highResIcon: '/common/destiny2_content/icons/df7279bf5cd0f99fe5f1e0b8a8967e5e.png',
+                description: 'Loadouts',
+                iconSequences: [],
+              },
+              loadoutCountPerCharacter: 10,
+              loadoutPreviewFilterOutSocketCategoryHashes: [SocketCategoryHashes.IntrinsicTraits],
+              loadoutPreviewFilterOutSocketTypeHashes: [],
+              loadoutColorHashes: [1],
+              loadoutIconHashes: [1],
+              loadoutNameHashes: [1],
+              hash: 1,
+              index: 1,
+              redacted: false,
+            } satisfies DestinyLoadoutConstantsDefinition,
           };
           return;
         }

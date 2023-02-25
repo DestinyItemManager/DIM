@@ -165,8 +165,7 @@ function generateFakeLoadout(
       )[0]!;
       return {
         itemInstanceId: item.id,
-        // TODO: extrack hashes?
-        plugItemHashes: [],
+        plugItemHashes: _.compact(item.sockets?.allSockets.map((s) => s.plugged?.plugDef.hash)),
       };
     }
   );
