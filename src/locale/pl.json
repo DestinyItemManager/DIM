@@ -225,7 +225,7 @@
     "HasOrnament": "Pokazuje przedmioty, które mają zastosowaną ozdobę.",
     "HasShader": "Pokaż przedmioty z nałożoną barwą.",
     "HoldsMod": "Pokazuje zbroję kompatybilną z określonym typem Modyfikacji Sezonowej.",
-    "InLoadout": "Pokaż przedmioty zawarte w dowolnym uzbrojeniu.",
+    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes.",
     "Infusable": "Pokaż przedmioty, które można nasycić.",
     "InfusionFodder": "Pokazuje przedmioty, które mogą być użyte do nasycenia przedmiotu tego samego typu o niższej mocy tylko za migot.",
     "IsCrafted": "Pokazuje bronie, które zostały stworzone.",
