@@ -21,6 +21,7 @@ import {
   getSocketsByIndexes,
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
+import { weakMemoize } from 'app/utils/util';
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -263,7 +264,8 @@ export function getLoadoutStats(
   }
 
   // Add stats that come from the subclass fragments
-  // TODO: Now that we apply socket overrides when we resolve items, do we need to do this calculation?
+  // Question: Now that we apply socket overrides when we resolve items, do we need to do this calculation?
+  // Answer: Yes, because subclasses don't have armor stats
   if (subclass?.loadoutItem.socketOverrides) {
     for (const plugHash of Object.values(subclass.loadoutItem.socketOverrides)) {
       const plug = defs.InventoryItem.get(plugHash);
@@ -545,19 +547,52 @@ export function findItemForLoadout(
   return getUninstancedLoadoutItem(allItems, info.hash, storeId);
 }
 
+/**
+ * Get a mapping from item id to item, for items that could be in loadouts. Used for
+ * looking up items from loadouts.
+ */
+export const potentialLoadoutItemsByItemId = weakMemoize((allItems: DimItem[]) =>
+  _.keyBy(
+    allItems.filter((i) => i.id !== '0' && itemCanBeInLoadout(i)),
+    (i) => i.id
+  )
+);
+
+/**
+ * Get a mapping from crafted date to item, for items that could be in loadouts. Used for
+ * looking up items from loadouts.
+ */
+export const potentialLoadoutItemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
+  _.keyBy(
+    allItems.filter((i) => i.id !== '0' && i.craftedInfo?.craftedDate && itemCanBeInLoadout(i)),
+    (i) => i.craftedInfo!.craftedDate!
+  )
+);
+
 export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: LoadoutItem) {
   // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
   // yup
-  const result = allItems.find((item) => item.id === loadoutItem.id);
+  const result = potentialLoadoutItemsByItemId(allItems)[loadoutItem.id];
   if (result) {
     return result;
   }
 
   // Crafted items get new IDs, but keep their crafted date, so we can match on that
   if (loadoutItem.craftedDate) {
-    return allItems.find((item) => item.craftedInfo?.craftedDate === loadoutItem.craftedDate);
+    return potentialLoadoutItemsByCraftedDate(allItems)[loadoutItem.craftedDate];
   }
 }
+
+/**
+ * Get a mapping from item hash to item, for ininstanced items that could be in loadouts. Used for
+ * looking up items from loadouts.
+ */
+export const potentialUninstancedLoadoutItemsByHash = weakMemoize((allItems: DimItem[]) =>
+  _.groupBy(
+    allItems.filter((i) => itemCanBeInLoadout(i)),
+    (i) => i.hash
+  )
+);
 
 export function getUninstancedLoadoutItem(
   allItems: DimItem[],
@@ -565,7 +600,7 @@ export function getUninstancedLoadoutItem(
   storeId: string | undefined
 ) {
   // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
-  const candidates = allItems.filter((item) => item.hash === hash);
+  const candidates = potentialUninstancedLoadoutItemsByHash(allItems)[hash] ?? [];
   const onCurrent =
     storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined;
   return onCurrent ?? (candidates[0]?.notransfer ? undefined : candidates[0]);

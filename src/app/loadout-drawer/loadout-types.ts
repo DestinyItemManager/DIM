@@ -30,6 +30,8 @@ export type Loadout = Omit<DimApiLoadout, 'equipped' | 'unequipped'> & {
 
 /**
  * An in-game D2 loadout (post-Lightfall) decorated with enough data to equip it.
+ *
+ * TODO: Maybe converge this with DimLoadout instead of maintaining two. Especially if we add the icon/color/name to DimLoadout.
  */
 export type InGameLoadout = DestinyLoadoutComponent & {
   /** The index of the loadout in the list of the user's loadouts */

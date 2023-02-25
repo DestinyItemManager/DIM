@@ -1,7 +1,9 @@
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { potentialLoadoutItemsByItemId } from 'app/loadout-drawer/loadout-utils';
 import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -14,9 +16,10 @@ export function getItemsFromInGameLoadout(
   loadoutItems: DestinyLoadoutItemComponent[],
   allItems: DimItem[]
 ): DimItem[] {
-  const itemIds = new Set([...loadoutItems.map((li) => li.itemInstanceId)]);
   // TODO: apply socket overrides once we know what those are?
-  return allItems.filter((i) => itemIds.has(i.id));
+  return _.compact(
+    loadoutItems.map((li) => potentialLoadoutItemsByItemId(allItems)[li.itemInstanceId])
+  );
 }
 
 /**
