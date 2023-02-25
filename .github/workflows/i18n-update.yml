@@ -29,17 +29,7 @@ jobs:
       - name: yarn i18n
         run: yarn i18n
 
-      - name: porcelain check
-        uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          base: HEAD
-          filters: |
-            changed:
-              - '**'
-
       - name: Commit files
-        if: steps.filter.outputs.changed
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Apply i18n updates
