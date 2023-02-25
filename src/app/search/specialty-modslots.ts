@@ -42,6 +42,8 @@ export const modTypeTagByPlugCategoryHash = {
   [PlugCategoryHashes.EnhancementsRaidV520]: 'vaultofglass',
   [PlugCategoryHashes.EnhancementsRaidV600]: 'vowofthedisciple',
   [PlugCategoryHashes.EnhancementsRaidV620]: 'kingsfall',
+  // FIXME(Lightfall)
+  [99999999]: 'artifice',
 };
 
 // FIXME(Lightfall) what about legacy?
@@ -130,6 +132,15 @@ const modSocketMetadata: ModSocketMetadata[] = [
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsSeasonMaverick],
     emptyModSocketHashes: [1180997867],
     emptyModSocketHash: 1180997867,
+  },
+  // FIXME(Lightfall)
+  {
+    slotTag: 'artifice',
+    compatibleModTags: ['artifice'],
+    socketTypeHashes: [99999999],
+    compatiblePlugCategoryHashes: [99999999],
+    emptyModSocketHashes: [99999999],
+    emptyModSocketHash: 99999999,
   },
 ];
 

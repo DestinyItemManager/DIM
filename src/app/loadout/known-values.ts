@@ -13,7 +13,10 @@ export const slotSpecificPlugCategoryHashes = [
   armor2PlugCategoryHashesByName.classitem,
 ];
 
-/** The plug category hashes that belong to the 5th mod slot, such as raid and nightmare mods. */
+/**
+ * The plug category hashes that belong to the 5th mod slot, such as raid and nightmare mods.
+ * Note that while artifice mod slots are also the 5th slot, we don't model them as activity mods.
+ */
 export const activityModPlugCategoryHashes = [
   ...raidModPlugCategoryHashes,
   PlugCategoryHashes.EnhancementsSeasonMaverick,
@@ -22,4 +25,6 @@ export const activityModPlugCategoryHashes = [
 export const knownModPlugCategoryHashes = [
   ...armor2PlugCategoryHashes,
   ...activityModPlugCategoryHashes,
+  // FIXME add artifice here
+  99999999,
 ];

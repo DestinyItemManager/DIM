@@ -12,6 +12,7 @@ import {
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import {
@@ -20,6 +21,7 @@ import {
   pickBackingStore,
 } from 'app/loadout-drawer/loadout-utils';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
+import { isArtificeMod } from 'app/loadout/mod-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
@@ -172,6 +174,13 @@ const lbConfigInit = ({
 
   // FIXME: Always require turning on auto mods explicitly for now...
   loadoutParameters = { ...loadoutParameters, autoStatMods: undefined };
+  // Also delete artifice mods -- artifice mods are always picked automatically per set.
+  if (loadoutParameters.mods) {
+    loadoutParameters.mods = loadoutParameters.mods.filter((modHash) => {
+      const def = defs.InventoryItem.get(modHash);
+      return !def || !isPluggableItem(def) || !isArtificeMod(def);
+    });
+  }
   delete loadoutParameters.lockArmorEnergyType;
 
   return {

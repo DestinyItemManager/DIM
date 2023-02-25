@@ -114,3 +114,8 @@ export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
   const commonClassItemMod = plugs.find((plugDef) => isClassItemOfTier(plugDef, TierType.Basic));
   return _.groupBy(plugs, getItemTypeOrTierDisplayName(commonClassItemMod?.itemTypeDisplayName));
 }
+
+export function isArtificeMod(plug: PluggableInventoryItemDefinition) {
+  // FIXME(Lightfall)
+  return plug.hash === 11111111;
+}
