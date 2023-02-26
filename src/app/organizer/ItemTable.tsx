@@ -562,7 +562,11 @@ function sortRows(
         const compare = column.sort
           ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
           : compareBy((row: Row) => row.values[column.id] ?? 0);
-        return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
+        // Always sort undefined values to the end
+        return chainComparator(
+          compareBy((row: Row) => row.values[column.id] === undefined),
+          sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare)
+        );
       }
       return compareBy(() => 0);
     })
