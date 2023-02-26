@@ -144,6 +144,7 @@ function CustomStatEditor({
   // controls whether the button says "save" or "cancel editing"
   const somethingChanged = JSON.stringify(weights) !== originalWeights || originalLabel !== label;
   const isNewStat = originalLabel === '';
+  const weightedStatCount = Object.values(weights).filter(Boolean).length;
 
   return (
     <div className={clsx(className, styles.customStatEditor)}>
@@ -212,7 +213,7 @@ function CustomStatEditor({
                 onDoneEditing();
             }}
             title={t('Loadouts.Update')}
-            disabled={!label}
+            disabled={!label || weightedStatCount < 2 || weightedStatCount > 5}
           >
             <AppIcon icon={saveIcon} />
           </button>
