@@ -5,8 +5,18 @@
   flex-direction: row;
   align-items: flex-start;
   align-self: start;
-  cursor: pointer;
   transition: opacity 0.2s;
+
+  // copied from resetButton in common.m.scss:
+  text-align: left;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
 
   .complete {
     color: #a1a2a2;

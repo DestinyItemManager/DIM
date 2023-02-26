@@ -47,7 +47,7 @@ export default function RefreshButton({ className }: { className?: string }) {
   useHotkey('r', t('Hotkey.RefreshInventory'), refresh);
 
   const profileAge = useProfileAge();
-  const outOfDate = (profileAge !== undefined && profileAge > STALE_PROFILE_THRESHOLD) || true;
+  const outOfDate = profileAge !== undefined && profileAge > STALE_PROFILE_THRESHOLD;
   const profileError = useSelector(profileErrorSelector);
   const showOutOfDateWarning = outOfDate && !active && !autoRefresh;
 
