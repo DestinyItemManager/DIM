@@ -7,7 +7,7 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { setSearchQuery } from 'app/shell/actions';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import ItemTable from './ItemTable';
@@ -19,8 +19,9 @@ interface Props {
 }
 
 /**
- * Given a list of item category hashes and a tree of categories, translate the hashes
- * into a list of ItemCategoryTreeNodes.
+ * Given a tree of item categories, and a flat list of item category hashes that
+ * describe a path through that tree, return the nodes from the tree along that
+ * path.
  */
 function drillToSelection(
   selectionTree: ItemCategoryTreeNode | undefined,
@@ -58,6 +59,7 @@ export default function Organizer({ account }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
+  // Get selected categories from URL
   const selectedItemCategoryHashes = [
     0,
     ...(params.get('category') || '').split('~').map((s) => parseInt(s, 10) || 0),
@@ -88,6 +90,9 @@ export default function Organizer({ account }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
+  // When new item categories are selected, set the URL to the new selection, and
+  // allow the URL to set the state. The URL is our state store, and this means
+  // it's easy to link to a selection or preserve state across reloads.
   const onSelection = (selection: ItemCategoryTreeNode[]) => {
     params.set(
       'category',
