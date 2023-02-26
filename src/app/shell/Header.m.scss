@@ -69,7 +69,6 @@ $header-height: 44px;
   font-size: 13px;
   -webkit-touch-callout: none;
   user-select: none;
-  outline: none;
   white-space: nowrap;
 
   @include phone-portrait {
@@ -98,6 +97,7 @@ $header-height: 44px;
 }
 
 .menu {
+  composes: resetButton from '../dim-ui/common.m.scss';
   position: relative;
   margin-right: none !important;
   margin-left: 16px !important;
@@ -129,7 +129,6 @@ $header-height: 44px;
   height: $header-height;
   align-items: center;
   overflow: hidden;
-  direction: rtl;
   justify-content: flex-end;
 
   @include phone-portrait {
@@ -144,7 +143,6 @@ $header-height: 44px;
     height: 26px;
     display: flex;
     align-items: center;
-    direction: ltr;
     border-bottom: 2px solid transparent;
     box-sizing: border-box;
 

@@ -46,11 +46,11 @@ export default function MenuAccounts({
           <Account account={account} selected={account === currentAccount} />
         </Link>
       ))}
-      <div className={clsx(styles.logout)} onClick={onLogOut} role="button">
+      <button type="button" className={clsx(styles.logout)} onClick={onLogOut}>
         <AppIcon icon={signOutIcon} />
         &nbsp;
         {t('Settings.LogOut')}
-      </div>
+      </button>
     </div>
   );
 }

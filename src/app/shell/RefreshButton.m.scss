@@ -27,7 +27,7 @@
   bottom: -8px;
   right: -8px;
   :global(.app-icon) {
-    font-size: 10px;
+    font-size: 10px !important;
     display: block;
   }
 }
