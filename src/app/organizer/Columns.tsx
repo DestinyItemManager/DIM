@@ -295,7 +295,7 @@ export function getColumns(
         cell: (_val, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
         filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
       }),
-    isArmor &&
+    (isArmor || isGhost) &&
       destinyVersion === 2 &&
       c({
         id: 'energy',

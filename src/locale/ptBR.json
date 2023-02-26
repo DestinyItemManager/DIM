@@ -225,7 +225,7 @@
     "HasOrnament": "Mostra itens que tem um ornamento aplicado.",
     "HasShader": "Mostra itens que tem um tonalizador aplicado.",
     "HoldsMod": "Exibe armaduras compatíveis com um tipo específico de Mod de Temporada.",
-    "InLoadout": "Mostra itens que estão incluídos em qualquer tipo de set pré-configurado.",
+    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes.",
     "Infusable": "Mostra itens que podem ser infundidos.",
     "InfusionFodder": "Exibe itens que podem ser infundidos em versões de menor poder do mesmo item usando apenas lúmen.",
     "IsCrafted": "Mostra armas que foram criadas.",
