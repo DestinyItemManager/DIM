@@ -1,5 +1,6 @@
+import { t } from 'i18next';
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
-import Dialog, { DialogRef } from './Dialog';
+import Dialog, { Buttons, DialogRef, Title } from './Dialog';
 
 // Redecalare forwardRef
 declare module 'react' {
@@ -8,31 +9,47 @@ declare module 'react' {
   ): (props: P & RefAttributes<T>) => ReactElement | null;
 }
 
+export interface ConfirmOpts {
+  okLabel?: React.ReactNode;
+  cancelLabel?: React.ReactNode;
+}
+
 export interface ConfirmRef {
-  confirm: (message: string) => Promise<boolean>;
+  confirm: (message: React.ReactNode, opts?: ConfirmOpts) => Promise<boolean>;
 }
 
 const Confirm = forwardRef(function Confirm(_props, ref: React.ForwardedRef<ConfirmRef>) {
-  const dialogRef = useRef<DialogRef<string, boolean>>(null);
+  const dialogRef = useRef<
+    DialogRef<
+      ConfirmOpts & {
+        message: React.ReactNode;
+      },
+      boolean
+    >
+  >(null);
 
   useImperativeHandle(
     ref,
-    () => ({ confirm: (message) => dialogRef.current!.showDialog(message) }),
+    () => ({ confirm: (message, opts) => dialogRef.current!.showDialog({ message, ...opts }) }),
     [dialogRef]
   );
 
   return (
     <Dialog ref={dialogRef}>
       {(args, close) => (
-        <div>
-          Title: {args}
-          <button type="button" onClick={() => close(true)}>
-            OK
-          </button>
-          <button type="button" onClick={() => close(false)}>
-            Cancel
-          </button>
-        </div>
+        <>
+          <Title>
+            <h2>{args.message}</h2>
+          </Title>
+          <Buttons>
+            <button className="dim-button" type="button" onClick={() => close(true)}>
+              {args.okLabel ?? t('Notification.OK')}
+            </button>
+            <button className="dim-button" type="button" onClick={() => close(false)}>
+              {args.cancelLabel ?? t('Notification.Cancel')}
+            </button>
+          </Buttons>
+        </>
       )}
     </Dialog>
   );
@@ -42,12 +59,12 @@ const Confirm = forwardRef(function Confirm(_props, ref: React.ForwardedRef<Conf
  * Replacement for window.confirm, returns an element you need to render, and a
  * confirm function you can use to show confirm dialogs.
  */
-export default function useConfirm(): [
-  element: React.ReactNode,
-  confirm: (message: string) => Promise<boolean>
-] {
+export default function useConfirm(): [element: React.ReactNode, confirm: ConfirmRef['confirm']] {
   const ref = useRef<ConfirmRef>(null);
-  const confirm = useCallback((message: string) => ref.current!.confirm(message), []);
+  const confirm = useCallback(
+    (message: React.ReactNode, opts?: ConfirmOpts) => ref.current!.confirm(message, opts),
+    []
+  );
   // eslint-disable-next-line react/jsx-key
   return [<Confirm ref={ref} />, confirm];
 }

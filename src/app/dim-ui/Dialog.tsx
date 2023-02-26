@@ -99,3 +99,15 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
 });
 
 export default Dialog;
+
+export function Title({ children }: { children: React.ReactNode }) {
+  return <div className={styles.title}>{children}</div>;
+}
+
+export function Buttons({ children }: { children: React.ReactNode }) {
+  return <div className={styles.buttons}>{children}</div>;
+}
+
+export function Body({ children }: { children: React.ReactNode }) {
+  return <div className={styles.body}>{children}</div>;
+}

@@ -1,5 +1,6 @@
+import { t } from 'app/i18next-t';
 import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
-import Dialog, { DialogRef } from './Dialog';
+import Dialog, { Body, Buttons, DialogRef, Title } from './Dialog';
 
 // Redecalare forwardRef
 declare module 'react' {
@@ -8,23 +9,27 @@ declare module 'react' {
   ): (props: P & RefAttributes<T>) => ReactElement | null;
 }
 
+export interface PromptOpts {
+  defaultValue?: string;
+  okLabel?: React.ReactNode;
+  cancelLabel?: React.ReactNode;
+}
+
 export interface PromptRef {
-  prompt: (message: string, defaultValue?: string) => Promise<string | null>;
+  prompt: (message: React.ReactNode, opts?: PromptOpts) => Promise<string | null>;
 }
 
 const Prompt = forwardRef(function Prompt(_props, ref: React.ForwardedRef<PromptRef>) {
   const dialogRef =
-    useRef<DialogRef<{ message: string; defaultValue?: string }, string | null>>(null);
+    useRef<DialogRef<PromptOpts & { message: React.ReactNode }, string | null>>(null);
 
   useImperativeHandle(
     ref,
     () => ({
-      prompt: (message, defaultValue) => dialogRef.current!.showDialog({ message, defaultValue }),
+      prompt: (message, opts) => dialogRef.current!.showDialog({ message, ...opts }),
     }),
     [dialogRef]
   );
-
-  // TODO: reverse buttons on windows?
 
   const [value, setValue] = useState<string>();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
@@ -32,16 +37,26 @@ const Prompt = forwardRef(function Prompt(_props, ref: React.ForwardedRef<Prompt
   return (
     <Dialog ref={dialogRef}>
       {(args, close) => (
-        <div>
-          Title: {args.message}
-          <input type="text" value={value ?? args.defaultValue ?? ''} onChange={handleChange} />
-          <button type="button" onClick={() => close(value ?? args.defaultValue ?? '')}>
-            OK
-          </button>
-          <button type="button" onClick={() => close(null)}>
-            Cancel
-          </button>
-        </div>
+        <>
+          <Title>
+            <h2>{args.message}</h2>
+          </Title>
+          <Body>
+            <input type="text" value={value ?? args.defaultValue ?? ''} onChange={handleChange} />
+          </Body>
+          <Buttons>
+            <button
+              className="dim-button"
+              type="button"
+              onClick={() => close(value ?? args.defaultValue ?? '')}
+            >
+              {args.okLabel ?? t('Notification.OK')}
+            </button>
+            <button className="dim-button" type="button" onClick={() => close(null)}>
+              {args.cancelLabel ?? t('Notification.Cancel')}
+            </button>
+          </Buttons>
+        </>
       )}
     </Dialog>
   );
@@ -53,11 +68,11 @@ const Prompt = forwardRef(function Prompt(_props, ref: React.ForwardedRef<Prompt
  */
 export default function usePrompt(): [
   element: React.ReactNode,
-  prompt: (message: string, defaultValue?: string) => Promise<string | null>
+  prompt: (message: string, opts?: PromptOpts) => Promise<string | null>
 ] {
   const ref = useRef<PromptRef>(null);
   const prompt = useCallback(
-    (message: string, defaultValue?: string) => ref.current!.prompt(message, defaultValue),
+    (message: string, opts?: PromptOpts) => ref.current!.prompt(message, opts),
     []
   );
   // eslint-disable-next-line react/jsx-key
