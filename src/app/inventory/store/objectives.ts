@@ -4,6 +4,7 @@ import {
   DestinyInventoryItemDefinition,
   DestinyObjectiveDefinition,
   DestinyObjectiveProgress,
+  DestinyObjectiveUiStyle,
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
 import trialsHashes from 'data/d2/d2-trials-objectives.json';
@@ -61,13 +62,20 @@ export function isBooleanObjective(
   progress: number | undefined,
   completionValue: number
 ) {
+  const isD2Def = 'allowOvercompletion' in objectiveDef;
+  // shaping dates weirdly claim they shouldn't be shown
+  const isShapingDate =
+    isD2Def && objectiveDef.uiStyle === DestinyObjectiveUiStyle.CraftingWeaponTimestamp;
+  // objectives that increment just once
+  const singleTick =
+    !isD2Def || !objectiveDef.allowOvercompletion || !objectiveDef.showValueOnComplete;
+
   return (
+    // if its value style is a checkbox, obviously it's boolean
     getValueStyle(objectiveDef, progress ?? 0, completionValue) ===
       DestinyUnlockValueUIStyle.Checkbox ||
-    (completionValue === 1 &&
-      (!('allowOvercompletion' in objectiveDef) ||
-        !objectiveDef.allowOvercompletion ||
-        !objectiveDef.showValueOnComplete))
+    // or if it's completed after 1 tick and isn't a shaping date
+    (completionValue === 1 && singleTick && !isShapingDate)
   );
 }
 

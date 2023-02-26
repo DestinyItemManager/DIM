@@ -4,6 +4,7 @@ import {
   D1Item,
   DimItem,
   DimMasterwork,
+  DimPlug,
   DimSocket,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
@@ -208,24 +209,27 @@ export interface KillTracker {
 }
 
 /** returns a socket's kill tracker info */
-const getSocketKillTrackerInfo = (socket: DimSocket | undefined): KillTracker | undefined => {
-  const installedKillTracker = socket?.plugged;
-  if (installedKillTracker) {
-    // getKillTrackerSocket's find() ensures that objectiveHash is in killTrackerObjectivesByHash
-    const type = killTrackerObjectivesByHash[installedKillTracker.plugObjectives[0].objectiveHash];
-    const count = installedKillTracker.plugObjectives[0]?.progress;
-    if (type && count !== undefined) {
-      return {
-        type,
-        count,
-        trackerDef: installedKillTracker.plugDef,
-      };
-    }
-  }
+const getSocketKillTrackerInfo = (
+  socket: DimSocket | undefined
+): KillTracker | null | undefined => {
+  const killTrackerPlug = socket?.plugged;
+  return killTrackerPlug && plugToKillTracker(killTrackerPlug);
 };
 
+export function plugToKillTracker(killTrackerPlug: DimPlug) {
+  const type = killTrackerObjectivesByHash[killTrackerPlug.plugObjectives[0].objectiveHash];
+  const count = killTrackerPlug.plugObjectives[0]?.progress;
+  if (type && count !== undefined) {
+    return {
+      type,
+      count,
+      trackerDef: killTrackerPlug.plugDef,
+    };
+  }
+}
+
 /** returns an item's kill tracker info */
-export const getItemKillTrackerInfo = (item: DimItem): KillTracker | undefined =>
+export const getItemKillTrackerInfo = (item: DimItem): KillTracker | null | undefined =>
   getSocketKillTrackerInfo(getKillTrackerSocket(item));
 
 const d1YearSourceHashes = {
