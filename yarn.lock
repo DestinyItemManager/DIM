@@ -1067,10 +1067,10 @@
   resolved "https://registry.yarnpkg.com/@csstools/selector-specificity/-/selector-specificity-2.1.1.tgz#c9c61d9fe5ca5ac664e1153bb0aa0eba1c6d6308"
   integrity sha512-jwx+WCqszn53YHOfvFMJJRd/B2GqkCBt+1MJSG6o5/s8+ytHMvDZXsJgUEWLk12UnLd7HYKac4BYU5i/Ron1Cw==
 
-"@destinyitemmanager/dim-api-types@^1.0.0":
-  version "1.23.0"
-  resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.23.0.tgz#17d3741d2fbfebd6d17b153fa3213c88eb4b5303"
-  integrity sha512-hTOUxLuxucT92yMBb36/e5x/T3W0Cdvk5EfTeNSqqbqQmLjD++CH6r2iEf5a+vhG0A2Wzvr4tEYwPZP5ea+qTg==
+"@destinyitemmanager/dim-api-types@^1.24.0":
+  version "1.24.0"
+  resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.24.0.tgz#489541b1c44486610e41564b3977a0d7d5a4c076"
+  integrity sha512-XRicCZ0SUUPIhbyfhLM5SVJ8NnOy+nZszsHZc8prF50w3GpZd5TUa9kRpVWNbkZOhiwQ7IcBtLvnOsfB8dVxRA==
 
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.7"
