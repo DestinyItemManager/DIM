@@ -1,6 +1,6 @@
 import dialogPolyfill from 'dialog-polyfill';
 import 'dialog-polyfill/dist/dialog-polyfill.css';
-import styles from './Dialog.m.scss';
+import styles from './useDialog.m.scss';
 
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
@@ -22,6 +22,9 @@ export interface DialogRef<Args, Result> {
   showDialog: (args: Args) => Promise<Result>;
 }
 
+/**
+ * A generic dialog component that uses the system native dialog component.
+ */
 const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
   {
     children,
@@ -63,12 +66,6 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
         resolve = res;
         reject = rej;
       });
-      console.log({
-        args,
-        promise,
-        resolve: resolve!,
-        reject: reject!,
-      });
       setDialogState({
         args,
         promise,
@@ -98,16 +95,41 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
   );
 });
 
-export default Dialog;
+/**
+ * A generic dialog component that uses the system native dialog component.
+ *
+ * Use this hook to get both an element that you should render, and a
+ * `showDialog` function that can be used to invoke the dialog. The render
+ * function provided to the hook gets called when the dialog is shown, with the
+ * args from `showDialog`. Call `close` with the results to resolve the promise
+ * from `showDialog`.
+ */
+export default function useDialog<Args = [], Result = void>(
+  children: (args: Args, close: (result: Result) => void) => React.ReactNode
+): [element: React.ReactNode, showDialog: (args: Args) => Promise<Result>] {
+  const dialogRef = useRef<DialogRef<Args, Result>>(null);
+  const showDialog = useCallback((args: Args) => dialogRef.current!.showDialog(args), []);
+  // eslint-disable-next-line react/jsx-key
+  return [<Dialog ref={dialogRef}>{children}</Dialog>, showDialog];
+}
 
+/**
+ * A standardized title area for the dialog. Use H2 for title string.
+ */
 export function Title({ children }: { children: React.ReactNode }) {
   return <div className={styles.title}>{children}</div>;
 }
 
+/**
+ * A standardized buttons area for the dialog.
+ */
 export function Buttons({ children }: { children: React.ReactNode }) {
   return <div className={styles.buttons}>{children}</div>;
 }
 
+/**
+ * A standardized body for the dialog.
+ */
 export function Body({ children }: { children: React.ReactNode }) {
   return <div className={styles.body}>{children}</div>;
 }

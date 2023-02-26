@@ -10,10 +10,17 @@
   box-shadow: 0 0 24px 6px #080811;
   padding: 0;
   min-width: 40em;
+  box-sizing: border-box;
+
+  @include phone-portrait {
+    min-width: 100%;
+    border-left: none;
+    border-right: none;
+  }
 
   &::backdrop,
   & + :global(.backdrop) {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8);
   }
 }
 
@@ -36,7 +43,7 @@
   flex-direction: row-reverse;
   gap: 8px;
   background-color: #151523;
-  padding: 8px;
+  padding: 16px;
   align-items: center;
 }
 
