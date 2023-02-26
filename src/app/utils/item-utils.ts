@@ -217,7 +217,7 @@ const getSocketKillTrackerInfo = (
 };
 
 export function plugToKillTracker(killTrackerPlug: DimPlug) {
-  const type = killTrackerObjectivesByHash[killTrackerPlug.plugObjectives[0].objectiveHash];
+  const type = killTrackerObjectivesByHash[killTrackerPlug.plugObjectives[0]?.objectiveHash];
   const count = killTrackerPlug.plugObjectives[0]?.progress;
   if (type && count !== undefined) {
     return {
