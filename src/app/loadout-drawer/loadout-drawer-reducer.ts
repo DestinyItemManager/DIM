@@ -4,6 +4,7 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
+import { D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
@@ -379,7 +380,7 @@ export function fillLoadoutFromEquipped(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore,
   /** Fill in from only this specific category */
-  category?: string
+  category?: D2BucketCategory
 ): LoadoutUpdateFunction {
   return produce((loadout) => {
     const equippedItemsByBucket = _.keyBy(
@@ -444,7 +445,7 @@ export function fillLoadoutFromUnequipped(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore,
   /** Fill in from only this specific category */
-  category?: string
+  category?: D2BucketCategory
 ): LoadoutUpdateFunction {
   return (loadout) => {
     const items = getUnequippedItemsForLoadout(store, category);
