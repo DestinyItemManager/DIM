@@ -511,8 +511,8 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
                 className={styles.sorter}
                 icon={
                   columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
-                    ? faCaretUp
-                    : faCaretDown
+                    ? faCaretDown
+                    : faCaretUp
                 }
               />
             )}
