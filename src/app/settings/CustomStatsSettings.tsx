@@ -437,11 +437,12 @@ function warnInvalidCustomStat(errorMsg: string) {
 }
 
 function simplifyStatLabel(s: string) {
+  s = s.toLocaleLowerCase().trim();
   // do a special intercession here: if it's the default name
   // "Custom Total" (or i18n'd equivalent) then return just "custom"
   // so that people's saved `stat:custom:>30` filters work as they used to
   if (s === t('Stats.Custom')) {
     return 'custom';
   }
-  return s.toLocaleLowerCase().replace(/\W/gu, '');
+  return s.toLocaleLowerCase().replace(/[^\p{L}\p{N}_]/gu, '');
 }
