@@ -19,9 +19,9 @@ import { canonicalFilterFormats, FilterDefinition, SuggestionsContext } from './
 //
 
 /**
- * A selector for the search config for a particular destiny version. This must
- * depend on every bit of data in FilterContext so that we regenerate the filter
- * function whenever any of them changes.
+ * A selector for the suggestionsContext for a particular destiny version.
+ * This must depend on every bit of data in suggestionsContext so that we
+ * regenerate filter suggestions whenever any of them changes.
  */
 export const suggestionsContextSelector = createSelector(
   allItemsSelector,

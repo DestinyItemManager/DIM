@@ -1,3 +1,4 @@
+import { FilterContext } from './filter-types';
 import { canonicalizeQuery, parseQuery, QueryAST } from './query-parser';
 import { SearchConfig } from './search-config';
 import { matchFilter } from './search-filter';
@@ -49,7 +50,8 @@ function extractOpAndValue(rangeString: string, overloads?: { [key: string]: num
 
 export function parseAndValidateQuery(
   query: string,
-  searchConfig: SearchConfig
+  searchConfig: SearchConfig,
+  filterContext?: FilterContext
 ): {
   /** Is the query valid at all? */
   valid: boolean;
@@ -66,7 +68,7 @@ export function parseAndValidateQuery(
   let canonical = query;
   try {
     const ast = parseQuery(query);
-    if (!validateQuery(ast, searchConfig)) {
+    if (!validateQuery(ast, searchConfig, filterContext)) {
       valid = false;
     } else {
       if (ast.op === 'noop' || (ast.op === 'filter' && ast.type === 'keyword')) {
@@ -95,7 +97,11 @@ export function parseAndValidateQuery(
  * Return whether the query is completely valid - syntactically, and where every term matches a known filter
  * and every filter RHS matches the declared format and options for the filter syntax.
  */
-function validateQuery(query: QueryAST, searchConfig: SearchConfig): boolean {
+function validateQuery(
+  query: QueryAST,
+  searchConfig: SearchConfig,
+  filterContext?: FilterContext
+): boolean {
   if (query.error) {
     return false;
   }
@@ -109,14 +115,14 @@ function validateQuery(query: QueryAST, searchConfig: SearchConfig): boolean {
         return Boolean(searchConfig.isFilters[filterValue]);
       } else {
         const filterDef = searchConfig.kvFilters[filterName];
-        return Boolean(filterDef && matchFilter(filterDef, filterName, filterValue));
+        return Boolean(filterDef && matchFilter(filterDef, filterName, filterValue, filterContext));
       }
     }
     case 'not':
-      return validateQuery(query.operand, searchConfig);
+      return validateQuery(query.operand, searchConfig, filterContext);
     case 'and':
     case 'or': {
-      return query.operands.every((q) => validateQuery(q, searchConfig));
+      return query.operands.every((q) => validateQuery(q, searchConfig, filterContext));
     }
     case 'noop':
       return true;

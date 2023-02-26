@@ -151,7 +151,7 @@ export interface FilterDefinition<I extends DimItem = DimItem> {
   /**
    * For stat filters, check whether this is a valid stat name or combination.
    */
-  validateStat?: (filterContext: FilterContext) => (stat: string) => boolean;
+  validateStat?: (filterContext?: FilterContext) => (stat: string) => boolean;
 
   /**
    * A custom function used to generate (additional) suggestions.

@@ -9,7 +9,8 @@ export function makeCustomStat(
   statWeights: CustomStatWeights,
   customStatHash: number,
   customStatName: string,
-  customStatDesc: string
+  customStatDesc: string,
+  baseOnly: boolean
 ): DimStat | undefined {
   // what's averageNonZeroStatWeight for?
   // we want the effect of all the non-zero multipliers to average out to 1x
@@ -52,7 +53,7 @@ export function makeCustomStat(
       description: customStatDesc,
     } as DestinyDisplayPropertiesDefinition,
     sort: getStatSortOrder(customStatHash),
-    value: weightedTotal,
+    value: baseOnly ? weightedBaseTotal : weightedTotal,
     base: weightedBaseTotal,
     maximumValue: 1000,
     bar: false,

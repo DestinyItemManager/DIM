@@ -70,7 +70,7 @@ export const normalizedCustomStatsSelector = (state: RootState) => {
         shortLabel: 'custom',
         class: classEnum,
         weights,
-        // converted old stats get special permission to use stat hashses higher than CUSTOM_TOTAL_STAT_HASH
+        // converted old stats get special permission to use stat hashes higher than CUSTOM_TOTAL_STAT_HASH
         // other are decremented from CUSTOM_TOTAL_STAT_HASH
         statHash: CUSTOM_TOTAL_STAT_HASH + 1 + classEnum,
       });

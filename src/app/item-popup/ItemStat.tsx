@@ -87,6 +87,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     [styles.modded]: Boolean(modEffectsTotal && modEffectsTotal > 0 && stat.value !== stat.base),
     [styles.negativeModded]: Boolean(modEffectsTotal < 0 && stat.value !== stat.base),
     [styles.totalRow]: Boolean(totalDetails),
+    [styles.customTotal]: customStatHashes.includes(stat.statHash),
   };
 
   return (
@@ -139,7 +140,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
       {item && customStatHashes.includes(stat.statHash) && (
         <CustomStatWeightsFromHash
-          className={styles.smallStatToggle}
+          className={clsx(styles.smallStatToggle, styles.nonDimmedStatIcons)}
           customStatHash={stat.statHash}
         />
       )}

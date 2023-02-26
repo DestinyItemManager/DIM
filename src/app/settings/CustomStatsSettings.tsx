@@ -15,7 +15,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { armorStats, CUSTOM_TOTAL_STAT_HASH, evenStatWeights } from 'app/search/d2-known-values';
 import { allAtomicStats } from 'app/search/search-filter-values';
-import { addIcon, AppIcon, deleteIcon, editIcon, saveIcon } from 'app/shell/icons';
+import { addIcon, AppIcon, banIcon, deleteIcon, editIcon, saveIcon } from 'app/shell/icons';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -123,7 +123,8 @@ function CustomStatEditor({
   const [classType, setClassType] = useState(statDef.class);
   const [label, setLabel] = useState(statDef.label);
   const [weights, setWeight] = useStatWeightsEditor(statDef.weights);
-  const [originalSetup] = useState(JSON.stringify(weights));
+  const [originalWeights] = useState(JSON.stringify(weights));
+  const [originalLabel] = useState(statDef.label);
   const saveStat = useSaveStat();
   const removeStat = useRemoveStat();
   const options = classes.map((c) => ({
@@ -136,9 +137,13 @@ function CustomStatEditor({
     ),
     value: c,
   }));
-  const onClassChange = ({ target }: React.ChangeEvent<HTMLInputElement>) =>
+  const onLabelChange = ({ target }: React.ChangeEvent<HTMLInputElement>) =>
     setLabel(target.value.slice(0, 30));
   const shortLabel = simplifyStatLabel(label);
+
+  // controls whether the button says "save" or "cancel editing"
+  const somethingChanged = JSON.stringify(weights) !== originalWeights || originalLabel !== label;
+  const isNewStat = originalLabel === '';
 
   return (
     <div className={clsx(className, styles.customStatEditor)}>
@@ -152,7 +157,7 @@ function CustomStatEditor({
           placeholder={t('Settings.CustomStatChooseName')}
           className={styles.inputlike}
           value={label}
-          onChange={onClassChange}
+          onChange={onLabelChange}
         />
       </div>
 
@@ -197,7 +202,7 @@ function CustomStatEditor({
             </>
           )}
         </span>
-        {JSON.stringify(weights) !== originalSetup && (
+        {(isNewStat || somethingChanged) && (
           <button
             type="button"
             className="dim-button"
@@ -207,18 +212,31 @@ function CustomStatEditor({
                 onDoneEditing();
             }}
             title={t('Loadouts.Update')}
+            disabled={!label}
           >
             <AppIcon icon={saveIcon} />
           </button>
         )}
+
         <button
           type="button"
-          className="dim-button danger"
-          onClick={() => removeStat(statDef) && onDoneEditing()}
-          title={t('Settings.CustomStatDelete')}
+          className="dim-button"
+          onClick={onDoneEditing}
+          title={t('Loadouts.CancelEditing')}
         >
-          <AppIcon icon={deleteIcon} />
+          <AppIcon icon={banIcon} />
         </button>
+
+        {!isNewStat && (
+          <button
+            type="button"
+            className="dim-button danger"
+            onClick={() => removeStat(statDef) && onDoneEditing()}
+            title={t('Settings.CustomStatDelete')}
+          >
+            <AppIcon icon={deleteIcon} />
+          </button>
+        )}
       </div>
     </div>
   );
@@ -411,12 +429,18 @@ export function normalizeStatLabel(s: string) {
 function warnInvalidCustomStat(errorMsg: string) {
   showNotification({
     type: 'warning',
-    title: t('dont do that'),
+    title: t('Settings.CustomStatTitle'),
     body: errorMsg,
     duration: 5000,
   });
 }
 
 function simplifyStatLabel(s: string) {
+  // do a special intercession here: if it's the default name
+  // "Custom Total" (or i18n'd equivalent) then return just "custom"
+  // so that people's saved `stat:custom:>30` filters work as they used to
+  if (s === t('Stats.Custom')) {
+    return 'custom';
+  }
   return s.toLocaleLowerCase().replace(/\W/gu, '');
 }

@@ -54,7 +54,10 @@ export const statHashByName: Record<string, number> = {
   ...swordStatsByName,
   ...dimArmorStatHashByName,
 };
-
+export const weaponStatNames = [
+  ...Object.keys(D2WeaponStatHashByName),
+  ...Object.keys(swordStatsByName),
+];
 /** all-stat list, to generate filters from */
 export const allStatNames = [...Object.keys(statHashByName), 'any'];
 

@@ -12,6 +12,7 @@ import {
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { recentSearchComparator } from 'app/search/autocomplete';
+import { FilterContext } from 'app/search/filter-types';
 import { searchConfigSelector } from 'app/search/search-config';
 import { parseAndValidateQuery } from 'app/search/search-utils';
 import { RootState } from 'app/store/types';
@@ -1070,7 +1071,7 @@ function stubSearchRootState(account: DestinyAccount) {
       currentAccount: 0,
     },
     inventory: { stores: [] },
-    dimApi: { profiles: {} },
+    dimApi: { profiles: {}, settings: { customStats: [], customTotalStatsByClass: {} } },
     manifest: {},
   } as any as RootState;
 }
@@ -1080,7 +1081,9 @@ function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: s
   const searchConfigs = searchConfigSelector(stubSearchRootState(account));
 
   // Canonicalize the query so we always save it the same way
-  const { canonical, saveInHistory } = parseAndValidateQuery(query, searchConfigs);
+  const { canonical, saveInHistory } = parseAndValidateQuery(query, searchConfigs, {
+    customStats: draft.settings.customStats ?? [],
+  } as FilterContext);
   if (!saveInHistory) {
     errorLog('searchUsed', 'Query not eligible to be saved in history', query);
     return;
@@ -1138,7 +1141,7 @@ function saveSearch(
   const searchConfigs = searchConfigSelector(stubSearchRootState(account));
 
   // Canonicalize the query so we always save it the same way
-  const { canonical, saveable } = parseAndValidateQuery(query, searchConfigs);
+  const { canonical, saveable } = parseAndValidateQuery(query, searchConfigs, {} as any);
   if (!saveable) {
     errorLog('searchUsed', 'Query not eligible to be saved', query);
     return;
@@ -1210,7 +1213,7 @@ function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccou
       continue;
     }
 
-    const { saveInHistory } = parseAndValidateQuery(search.query, searchConfigs);
+    const { saveInHistory } = parseAndValidateQuery(search.query, searchConfigs, {} as any);
     if (!saveInHistory) {
       deleteSearch(draft, account.destinyVersion, search.query);
     }

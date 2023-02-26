@@ -600,6 +600,7 @@
     "BadLoadoutShare": "Unable to load shared loadout",
     "BadLoadoutShareBody": "The loadout you're trying to load is invalid: {{error}}",
     "Before": "Before '{{name}}'",
+    "CancelEditing": "Cancel Editing",
     "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "Add {{name}}",
     "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
@@ -1272,7 +1273,6 @@
     "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from across the Destiny community. We ship with this by default.",
     "WishListNotes": "Wish List Notes: {{notes}}"
   },
-  "dont do that": "",
   "no-space": "",
   "wrong-level": ""
 }

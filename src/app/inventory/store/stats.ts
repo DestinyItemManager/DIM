@@ -160,7 +160,8 @@ export function buildStats(
       evenStatWeights,
       TOTAL_STAT_HASH,
       t('Stats.Total'),
-      ''
+      '',
+      false
     );
     investmentStats.push(tStat!);
 
@@ -176,7 +177,8 @@ export function buildStats(
             customStat.weights,
             customStat.statHash,
             customStat.label,
-            t('Stats.CustomDesc')
+            t('Stats.CustomDesc'),
+            true
           );
           if (cStat) {
             investmentStats.push(cStat);
