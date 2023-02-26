@@ -95,7 +95,9 @@
     background-color: $xp;
   }
 }
-
+.date-time .objective-progress {
+  background-color: transparent;
+}
 .objective-description {
   position: relative;
   display: flex;
