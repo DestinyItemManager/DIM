@@ -1,6 +1,7 @@
 import MenuAccounts from 'app/accounts/MenuAccounts';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import Sheet from 'app/dim-ui/Sheet';
+import useConfirm from 'app/dim-ui/useConfirm';
 import { Hotkey } from 'app/hotkeys/hotkeys';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
@@ -56,6 +57,8 @@ export default function Header() {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
   const account = useSelector(currentAccountSelector);
+
+  const [confirmDialog, confirm] = useConfirm();
 
   // Hamburger menu
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -274,9 +277,16 @@ export default function Header() {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--header-height');
 
+  const handleConfirm = async () => {
+    const result = await confirm('Whaaat?');
+    console.log('Confirm', result);
+  };
+
   return (
     <header className={styles.container} ref={headerRef}>
+      {confirmDialog}
       <div className={styles.header}>
+        <div onClick={handleConfirm}>Foobar</div>
         <a
           className={clsx(styles.menuItem, styles.menu)}
           ref={dropdownToggler}
