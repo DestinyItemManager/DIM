@@ -107,6 +107,10 @@ export interface StatLookup {
   [statHash: number]: DimStat | undefined;
 }
 
+// apparently worth it, when needing this 100s of times per inv build
+const memoTotalName = _.once(() => t('Stats.Total'));
+const memoCustomDesc = _.once(() => t('Stats.CustomDesc'));
+
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
   defs: D2ManifestDefinitions,
@@ -159,7 +163,7 @@ export function buildStats(
       investmentStats,
       evenStatWeights,
       TOTAL_STAT_HASH,
-      t('Stats.Total'),
+      memoTotalName(),
       '',
       false
     );
@@ -177,7 +181,7 @@ export function buildStats(
             customStat.weights,
             customStat.statHash,
             customStat.label,
-            t('Stats.CustomDesc'),
+            memoCustomDesc(),
             true
           );
           if (cStat) {
