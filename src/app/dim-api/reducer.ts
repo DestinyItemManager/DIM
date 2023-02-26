@@ -1141,7 +1141,7 @@ function saveSearch(
   const searchConfigs = searchConfigSelector(stubSearchRootState(account));
 
   // Canonicalize the query so we always save it the same way
-  const { canonical, saveable } = parseAndValidateQuery(query, searchConfigs, {} as any);
+  const { canonical, saveable } = parseAndValidateQuery(query, searchConfigs);
   if (!saveable) {
     errorLog('searchUsed', 'Query not eligible to be saved', query);
     return;
@@ -1213,7 +1213,7 @@ function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccou
       continue;
     }
 
-    const { saveInHistory } = parseAndValidateQuery(search.query, searchConfigs, {} as any);
+    const { saveInHistory } = parseAndValidateQuery(search.query, searchConfigs);
     if (!saveInHistory) {
       deleteSearch(draft, account.destinyVersion, search.query);
     }
