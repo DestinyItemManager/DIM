@@ -1,8 +1,6 @@
 import MenuAccounts from 'app/accounts/MenuAccounts';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import Sheet from 'app/dim-ui/Sheet';
-import useConfirm from 'app/dim-ui/useConfirm';
-import usePrompt from 'app/dim-ui/usePrompt';
 import { Hotkey } from 'app/hotkeys/hotkeys';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
@@ -58,9 +56,6 @@ export default function Header() {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
   const account = useSelector(currentAccountSelector);
-
-  const [confirmDialog, confirm] = useConfirm();
-  const [promptDialog, prompt] = usePrompt();
 
   // Hamburger menu
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -279,22 +274,9 @@ export default function Header() {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--header-height');
 
-  const handleConfirm = async () => {
-    const result = await confirm('Whaaat?');
-    console.log('Confirm', result);
-  };
-  const handlePrompt = async () => {
-    const result = await prompt('Whaaat?');
-    console.log('Prompt', result);
-  };
-
   return (
     <header className={styles.container} ref={headerRef}>
-      {confirmDialog}
-      {promptDialog}
       <div className={styles.header}>
-        <div onClick={handleConfirm}>Foobar</div>
-        <div onClick={handlePrompt}>Prompt</div>
         <a
           className={clsx(styles.menuItem, styles.menu)}
           ref={dropdownToggler}

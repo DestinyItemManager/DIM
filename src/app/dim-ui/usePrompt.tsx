@@ -39,10 +39,10 @@ export default function usePrompt(): [
             type="button"
             onClick={() => close(value ?? args.defaultValue ?? '')}
           >
-            {args.okLabel ?? t('Notification.OK')}
+            {args.okLabel ?? t('Dialog.OK')}
           </button>
           <button className="dim-button" type="button" onClick={() => close(null)}>
-            {args.cancelLabel ?? t('Notification.Cancel')}
+            {args.cancelLabel ?? t('Dialog.Cancel')}
           </button>
         </Buttons>
       </>

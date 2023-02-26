@@ -1,6 +1,7 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { compareFilteredItems } from 'app/compare/actions';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
+import { PromptOpts } from 'app/dim-ui/usePrompt';
 import { t } from 'app/i18next-t';
 import { setNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
@@ -34,6 +35,7 @@ interface Props {
   filteredItems: DimItem[];
   searchActive: boolean;
   fixed?: boolean;
+  prompt: (message: string, opts?: PromptOpts | undefined) => Promise<string | null>;
 }
 
 /**
@@ -44,6 +46,7 @@ export default React.memo(function ItemActionsDropdown({
   filteredItems,
   searchQuery,
   fixed,
+  prompt,
 }: Props) {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
@@ -75,8 +78,9 @@ export default React.memo(function ItemActionsDropdown({
     dispatch(bulkLockItems(lockables, state));
   });
 
-  const bulkNote = () => {
-    const note = prompt(t('Organizer.NotePrompt'));
+  // TODO: replace with rich-text dialog, and an "append" option
+  const bulkNote = async () => {
+    const note = await prompt(t('Organizer.NotePrompt'));
     if (note !== null && filteredItems.length) {
       for (const item of filteredItems) {
         dispatch(setNote(item, note));

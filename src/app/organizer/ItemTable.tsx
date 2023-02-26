@@ -1,6 +1,7 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { StatInfo } from 'app/compare/Compare';
 import { settingSelector } from 'app/dim-api/selectors';
+import useConfirm from 'app/dim-ui/useConfirm';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t, tl } from 'app/i18next-t';
 import { setNote } from 'app/inventory/actions';
@@ -23,6 +24,7 @@ import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSettingAction } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
@@ -418,20 +420,21 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     );
   }
 
+  const [confirmDialog, confirm] = useConfirm();
   const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
     if (acceptedFiles.length < 1) {
-      alert(t('Csv.ImportWrongFileType'));
+      showNotification({ type: 'error', title: t('Csv.ImportWrongFileType') });
       return;
     }
 
-    if (!confirm(t('Csv.ImportConfirm'))) {
+    if (!(await confirm(t('Csv.ImportConfirm')))) {
       return;
     }
     try {
       const result = await dispatch(importTagsNotesFromCsv(acceptedFiles));
-      alert(t('Csv.ImportSuccess', { count: result }));
+      showNotification({ type: 'success', title: t('Csv.ImportSuccess', { count: result }) });
     } catch (e) {
-      alert(t('Csv.ImportFailed', { error: e.message }));
+      showNotification({ type: 'error', title: t('Csv.ImportFailed', { error: e.message }) });
     }
   };
 
@@ -445,6 +448,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       role="table"
       ref={tableRef}
     >
+      {confirmDialog}
       <div className={styles.toolbar} ref={toolbarRef}>
         <div>
           <ItemActions

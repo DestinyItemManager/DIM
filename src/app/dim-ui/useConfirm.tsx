@@ -26,10 +26,10 @@ export default function useConfirm(): [
       </Title>
       <Buttons>
         <button className="dim-button" type="button" onClick={() => close(true)}>
-          {args.okLabel ?? t('Notification.OK')}
+          {args.okLabel ?? t('Dialog.OK')}
         </button>
         <button className="dim-button" type="button" onClick={() => close(false)}>
-          {args.cancelLabel ?? t('Notification.Cancel')}
+          {args.cancelLabel ?? t('Dialog.Cancel')}
         </button>
       </Buttons>
     </>
