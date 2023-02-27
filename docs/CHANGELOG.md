@@ -4,6 +4,8 @@
 
 * The `inloadout` filter now finds hashtags in Loadout notes.
 * Support for non-English hashtags.
+* Added a popup on crafted weapons that shows all their kill tracker stats at once.
+* Switched D2Gunsmith link to D2Foundry.
 
 ## 7.57.0 <span class="changelog-date">(2023-02-19)</span>
 
