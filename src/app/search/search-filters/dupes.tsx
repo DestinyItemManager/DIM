@@ -228,21 +228,34 @@ function computeStatDupeLower(
     _.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`)
   );
 
-  const statsCache = new Map<DimItem, number[]>();
   const dupes = new Set<string>();
 
-  // Run through all the armor once to get their stats, so we don't have to
-  // compute item => stats more than once
+  // A mapping from an item to a list of all of its stat configurations
+  // (Artifice armor can have multiple). This is just a cache to prevent
+  // recalculating it.
+  const statsCache = new Map<DimItem, number[][]>();
   for (const item of armor) {
     if (item.stats && item.power && item.bucket.hash !== BucketHashes.ClassArmor) {
       const statsToConsider = customStats[item.classType] ?? armorStats;
-      statsCache.set(
-        item,
-        item.stats
-          .filter((s) => statsToConsider.includes(s.statHash))
-          .sort((a, b) => a.statHash - b.statHash)
-          .map((s) => s.base)
-      );
+      const statValues = item.stats
+        .filter((s) => statsToConsider.includes(s.statHash))
+        .sort((a, b) => a.statHash - b.statHash)
+        .map((s) => s.base);
+      if (isArtifice(item)) {
+        statsCache.set(
+          item,
+          // Artifice armor can be +3 in any one stat, so we compute a separate
+          // version of the stats for each stat considered
+          statsToConsider.map((_s, i) => {
+            const modifiedStats = [...statValues];
+            // One stat gets +3
+            modifiedStats[i] += 3;
+            return modifiedStats;
+          })
+        );
+      } else {
+        statsCache.set(item, [statValues]);
+      }
     }
   }
 
@@ -253,18 +266,8 @@ function computeStatDupeLower(
     for (const item of group) {
       const stats = statsCache.get(item);
       if (stats) {
-        if (isArtifice(item)) {
-          // Artifice armor can be +3 in any one stat, so we insert a separate
-          // version of the stats for each stat considered
-          const statsToConsider = customStats[item.classType] ?? armorStats;
-          for (let i = 0; i < statsToConsider.length; i++) {
-            const modifiedStats = [...stats];
-            // One stat gets +3
-            modifiedStats[i] += 3;
-            statSet.insert(modifiedStats, item);
-          }
-        } else {
-          statSet.insert(stats, item);
+        for (const statValues of stats) {
+          statSet.insert(statValues, item);
         }
       }
     }
@@ -273,26 +276,9 @@ function computeStatDupeLower(
     // populated stats set to see if there's something better
     for (const item of group) {
       const stats = statsCache.get(item);
-      if (stats) {
-        if (isArtifice(item)) {
-          // For artifice, we have to check and see if there's a better piece for every configuration
-          let betterExists = true;
-          const statsToConsider = customStats[item.classType] ?? armorStats;
-          for (let i = 0; i < statsToConsider.length; i++) {
-            const modifiedStats = [...stats];
-            modifiedStats[i] += 3;
-            // If there's any configuration that isn't beaten, we're done
-            if (!statSet.doBetterStatsExist(modifiedStats)) {
-              betterExists = false;
-              break;
-            }
-          }
-          if (betterExists) {
-            dupes.add(item.id);
-          }
-        } else if (statSet.doBetterStatsExist(stats)) {
-          dupes.add(item.id);
-        }
+      // All configurations must have a better version somewhere for this to count as statlower
+      if (stats?.every((statValues) => statSet.doBetterStatsExist(statValues))) {
+        dupes.add(item.id);
       }
     }
   }
