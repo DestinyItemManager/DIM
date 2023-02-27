@@ -202,9 +202,12 @@ export function fitMostMods({
   // Artifice mods are free and thus can be greedily assigned.
   const artificeItems = items.filter(isArtifice);
   for (const artificeMod of artificeMods) {
-    const targetItem = artificeItems.pop();
-    if (targetItem) {
-      bucketSpecificAssignments[targetItem.id].assigned.push(artificeMod);
+    const targetItemIndex = artificeItems.findIndex((item) =>
+      item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === artificeMod.hash)
+    );
+    if (targetItemIndex !== -1) {
+      bucketSpecificAssignments[artificeItems[targetItemIndex].id].assigned.push(artificeMod);
+      artificeItems.splice(targetItemIndex, 1);
     } else {
       unassignedMods.push(artificeMod);
     }
