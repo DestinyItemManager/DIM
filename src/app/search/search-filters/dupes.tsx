@@ -3,6 +3,7 @@ import { tl } from 'app/i18next-t';
 import { getTag, ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
+import { isArtifice } from 'app/item-triage/triage-utils';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
 import { Settings } from 'app/settings/initial-settings';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -230,27 +231,46 @@ function computeStatDupeLower(
   const statsCache = new Map<DimItem, number[]>();
   const dupes = new Set<string>();
 
+  // Run through all the armor once to get their stats, so we don't have to
+  // compute item => stats more than once
   for (const item of armor) {
     if (item.stats && item.power && item.bucket.hash !== BucketHashes.ClassArmor) {
       const statsToConsider = customStats[item.classType] ?? armorStats;
       statsCache.set(
         item,
-        _.sortBy(
-          item.stats.filter((s) => statsToConsider.includes(s.statHash)),
-          (s) => s.statHash
-        ).map((s) => s.base)
+        item.stats
+          .filter((s) => statsToConsider.includes(s.statHash))
+          .sort((a, b) => a.statHash - b.statHash)
+          .map((s) => s.base)
       );
     }
   }
 
+  // For each group of items that should be compared against each other
   for (const group of grouped) {
     const statSet = new StatsSet<DimItem>();
+    // Add a mapping from stats => item to the statsSet for each item in the group
     for (const item of group) {
       const stats = statsCache.get(item);
       if (stats) {
-        statSet.insert(stats, item);
+        if (isArtifice(item)) {
+          // Artifice armor can be +3 in any one stat, so we insert a separate
+          // version of the stats for each stat considered
+          const statsToConsider = customStats[item.classType] ?? armorStats;
+          for (let i = 0; i < statsToConsider.length; i++) {
+            const modifiedStats = [...stats];
+            // One stat gets +3
+            modifiedStats[i] += 3;
+            statSet.insert(modifiedStats, item);
+          }
+        } else {
+          statSet.insert(stats, item);
+        }
       }
     }
+
+    // Now run through the items in the group again, checking against the fully
+    // populated stats set to see if there's something better
     for (const item of group) {
       const stats = statsCache.get(item);
       if (stats && statSet.doBetterStatsExist(stats)) {
