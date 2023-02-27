@@ -1,5 +1,7 @@
 ## Next
 
+* Added a Triage tab to the item popup better changelog description TBD
+
 ## 7.58.0 <span class="changelog-date">(2023-02-26)</span>
 
 * The `inloadout` filter now finds hashtags in Loadout notes.
