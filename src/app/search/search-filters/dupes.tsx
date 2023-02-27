@@ -273,8 +273,26 @@ function computeStatDupeLower(
     // populated stats set to see if there's something better
     for (const item of group) {
       const stats = statsCache.get(item);
-      if (stats && statSet.doBetterStatsExist(stats)) {
-        dupes.add(item.id);
+      if (stats) {
+        if (isArtifice(item)) {
+          // For artifice, we have to check and see if there's a better piece for every configuration
+          let betterExists = true;
+          const statsToConsider = customStats[item.classType] ?? armorStats;
+          for (let i = 0; i < statsToConsider.length; i++) {
+            const modifiedStats = [...stats];
+            modifiedStats[i] += 3;
+            // If there's any configuration that isn't beaten, we're done
+            if (!statSet.doBetterStatsExist(modifiedStats)) {
+              betterExists = false;
+              break;
+            }
+          }
+          if (betterExists) {
+            dupes.add(item.id);
+          }
+        } else if (statSet.doBetterStatsExist(stats)) {
+          dupes.add(item.id);
+        }
       }
     }
   }
