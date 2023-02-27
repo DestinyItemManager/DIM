@@ -149,8 +149,12 @@ function CustomStatEditor({
   return (
     <div className={clsx(className, styles.customStatEditor)}>
       <div className={styles.identifyingInfo}>
-        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion */}
-        <Select options={options} onChange={(c) => setClassType(c!)} value={classType} hideSelected>
+        <Select
+          options={options}
+          onChange={(c) => setClassType(c ?? DestinyClass.Unknown)}
+          value={classType}
+          hideSelected
+        >
           <ClassIcon classType={classType} className={styles.classDropdownIcon} />
         </Select>
         <input
