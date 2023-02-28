@@ -8,7 +8,6 @@ import {
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import {
-  armor2PlugCategoryHashes,
   armor2PlugCategoryHashesByName,
   MAX_ARMOR_ENERGY_CAPACITY,
 } from 'app/search/d2-known-values';
@@ -93,9 +92,6 @@ function mapStateToProps() {
         return emptyArray();
       }
 
-      // We need the name of the Artifice armor perk to show in one of the headers
-      const artificeString = defs.InventoryItem.get(3727270518)?.displayProperties.name;
-
       // Look at every armor item and see what sockets it has
       for (const item of allItems) {
         if (
@@ -137,8 +133,10 @@ function mapStateToProps() {
             owner ?? currentStore!.id
           );
 
-          const dimPlugs = sockets[0].plugSet!.plugs.filter((p) =>
-            unlockedPlugs.has(p.plugDef.hash)
+          const dimPlugs = sockets[0].plugSet!.plugs.filter(
+            (p) =>
+              unlockedPlugs.has(p.plugDef.hash) &&
+              p.plugDef.hash !== sockets[0].plugSet!.precomputedEmptyPlugItemHash
           );
 
           // Filter down to plugs that match the plugCategoryHashWhitelist
@@ -184,14 +182,6 @@ function mapStateToProps() {
                   plugSetsByHash[plugSetHash].headerSuffix = activityName;
                 }
               }
-            }
-
-            // Artificer armor has a single extra slot that can take slot-specific mods. Give it a special header
-            if (
-              maxSelectable === 1 &&
-              armor2PlugCategoryHashes.includes(plugs[0].plug.plugCategoryHash)
-            ) {
-              plugSetsByHash[plugSetHash].headerSuffix = artificeString;
             }
           } else if (plugs.length && plugSetsByHash[plugSetHash].maxSelectable < sockets.length) {
             plugSetsByHash[plugSetHash].maxSelectable = sockets.length;

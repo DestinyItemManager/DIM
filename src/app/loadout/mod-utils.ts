@@ -3,7 +3,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
-import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { knownModPlugCategoryHashes } from './known-values';
@@ -65,7 +65,10 @@ export function isInsertableArmor2Mod(
       // is the plugCategoryHash is in one of our known plugCategoryHashes (relies on d2ai).
       isArmor2Mod(def) &&
       // is plug.insertionMaterialRequirementHash non zero or is plug.energyCost a thing. This rules out deprecated mods.
-      (def.plug.insertionMaterialRequirementHash !== 0 || def.plug.energyCost) &&
+      (def.plug.insertionMaterialRequirementHash !== 0 ||
+        def.plug.energyCost ||
+        // FIXME turns out this is a bad condition
+        def.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice) &&
       // this rules out classified items
       def.itemTypeDisplayName !== undefined
   );
@@ -87,30 +90,11 @@ export function createGetModRenderKey() {
   };
 }
 
-function isClassItemOfTier(plugDef: PluggableInventoryItemDefinition, tier: TierType): boolean {
-  return (
-    plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2ClassItem &&
-    plugDef.inventory?.tierType === tier
-  );
-}
-
-// XXX: Class Item Artifact Mods are labeled "Class Item Mod" instead of "Class Item Armor Mod"
-function getItemTypeOrTierDisplayName(newDisplayName?: string) {
-  return (plugDef: PluggableInventoryItemDefinition): string => {
-    if (newDisplayName && isClassItemOfTier(plugDef, TierType.Superior)) {
-      return newDisplayName;
-    } else {
-      return plugDef.itemTypeDisplayName;
-    }
-  };
-}
-
 /**
  * Group an array of mod definitions into related mod-type groups
  *
  * e.g. "General Armor Mod", "Helmet Armor Mod", "Nightmare Mod"
  */
 export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
-  const commonClassItemMod = plugs.find((plugDef) => isClassItemOfTier(plugDef, TierType.Basic));
-  return _.groupBy(plugs, getItemTypeOrTierDisplayName(commonClassItemMod?.itemTypeDisplayName));
+  return _.groupBy(plugs, (plugDef) => plugDef.itemTypeDisplayName);
 }
