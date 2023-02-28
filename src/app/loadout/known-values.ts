@@ -25,6 +25,5 @@ export const activityModPlugCategoryHashes = [
 export const knownModPlugCategoryHashes = [
   ...armor2PlugCategoryHashes,
   ...activityModPlugCategoryHashes,
-  // FIXME add artifice here
-  99999999,
+  PlugCategoryHashes.EnhancementsArtifice,
 ];
