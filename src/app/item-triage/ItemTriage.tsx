@@ -219,7 +219,9 @@ function SimilarItemsTriageSection({ item }: { item: DimItem }) {
 
 const descriptionBulletPoints = {
   worse: [tl('Triage.StatWorseArmorDesc'), tl('Triage.PerkWorseArmorDesc')],
+  worseStats: [tl('Triage.StatWorseArmorDesc'), tl('Triage.StatNotPerkArmorDesc')],
   better: [tl('Triage.StatBetterArmorDesc'), tl('Triage.PerkBetterArmorDesc')],
+  betterStats: [tl('Triage.StatBetterArmorDesc'), tl('Triage.StatNotPerkArmorDesc')],
 } as const;
 
 /**
@@ -228,29 +230,48 @@ const descriptionBulletPoints = {
 function BetterItemsTriageSection({ item }: { item: DimItem }) {
   const filterFactory = useSelector(filterFactorySelector);
   const allItems = useSelector(allItemsSelector);
+
+  if (!item.stats) {
+    return null;
+  }
   const betterWorseResults = getBetterWorseItems(item, allItems, filterFactory);
 
-  // turns out exampleItem had no stats... weird?
-  if (!betterWorseResults) {
-    return null;
-  }
-  const { betterItems, artificeBetterItems, worseItems, artificeWorseItems } = betterWorseResults;
-  // nothing interesting = no display
-  if (
-    !betterItems.length &&
-    !artificeBetterItems.length &&
-    !worseItems.length &&
-    !artificeWorseItems.length
-  ) {
+  // done here if no array contains anything
+  if (!Object.values(betterWorseResults).some((a) => a.length)) {
     return null;
   }
 
-  const rows = [
-    [t('Triage.BetterArmor'), descriptionBulletPoints.better, betterItems],
+  const {
+    betterItems,
+    betterStatItems,
+    artificeBetterItems,
+    artificeBetterStatItems,
+    worseItems,
+    worseStatItems,
+    artificeWorseItems,
+    artificeWorseStatItems,
+  } = betterWorseResults;
+
+  const rows: [string, readonly [string, string], DimItem[], boolean][] = [
+    [t('Triage.BetterArmor'), descriptionBulletPoints.better, betterItems, false],
+    [t('Triage.WorseStatArmor'), descriptionBulletPoints.betterStats, betterStatItems, false],
     [t('Triage.BetterArtificeArmor'), descriptionBulletPoints.better, artificeBetterItems, true],
-    [t('Triage.WorseArmor'), descriptionBulletPoints.worse, worseItems],
+    [
+      t('Triage.BetterStatArtificeArmor'),
+      descriptionBulletPoints.betterStats,
+      artificeBetterStatItems,
+      true,
+    ],
+    [t('Triage.WorseArmor'), descriptionBulletPoints.worse, worseItems, false],
+    [t('Triage.BetterStatArmor'), descriptionBulletPoints.worseStats, worseStatItems, false],
     [t('Triage.WorseArtificeArmor'), descriptionBulletPoints.worse, artificeWorseItems, true],
-  ] as const;
+    [
+      t('Triage.WorseStatArtificeArmor'),
+      descriptionBulletPoints.worseStats,
+      artificeWorseStatItems,
+      true,
+    ],
+  ];
 
   return (
     <CollapsibleTitle

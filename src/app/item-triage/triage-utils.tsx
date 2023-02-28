@@ -8,6 +8,7 @@ import { classFilter, itemTypeFilter } from 'app/search/search-filters/known-val
 import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
 import { getIntrinsicArmorPerkSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import { Factor, factorComboCategories, FactorComboCategory, factorCombos } from './triage-factors';
 
 /** returns [dimmed, bright] variations along a 1->100  red->yellow->green line */
@@ -70,10 +71,8 @@ export function getBetterWorseItems(
   allItems: DimItem[],
   filterFactory: (query: string) => ItemFilter
 ) {
-  // none of this makes sense without stats
-  if (!exampleItem.stats) {
-    return;
-  }
+  // example DimItem MUST HAVE STATS but making the return type |undefined
+  // just to do that check is annoying, so it's pre-checked in BetterItemsTriageSection
 
   const itemTypeFilterString = itemTypeFilter.fromItem!(exampleItem);
   const guardianClassFilterString = classFilter.fromItem!(exampleItem);
@@ -88,15 +87,15 @@ export function getBetterWorseItems(
   const comparableItems = allItems.filter(filterFactory(alwaysFilters));
 
   // items that were judged to be stat better or statworse than exampleItem
-  const betterStatItems: DimItem[] = [];
-  const worseStatItems: DimItem[] = [];
+  const rawBetterStatItems: DimItem[] = [];
+  const rawWorseStatItems: DimItem[] = [];
 
   // items that were judged to be stat better or statworse than exampleItem,
   // based on artifice rules
-  const artificeBetterStatItems: DimItem[] = [];
-  const artificeWorseStatItems: DimItem[] = [];
+  const rawArtificeBetterStatItems: DimItem[] = [];
+  const rawArtificeWorseStatItems: DimItem[] = [];
 
-  const exampleItemStats = keyByStatHash(exampleItem.stats);
+  const exampleItemStats = keyByStatHash(exampleItem.stats!);
   const exampleIsArtifice = isArtifice(exampleItem);
   for (const thisItem of comparableItems) {
     if (thisItem.stats) {
@@ -125,19 +124,19 @@ export function getBetterWorseItems(
         const insertInto =
           result === exampleItemStats
             ? resultDueToArtifice
-              ? artificeWorseStatItems
-              : worseStatItems
+              ? rawArtificeWorseStatItems
+              : rawWorseStatItems
             : resultDueToArtifice
-            ? artificeBetterStatItems
-            : betterStatItems;
+            ? rawArtificeBetterStatItems
+            : rawBetterStatItems;
 
         // expose artifice measurer in beta,
         // but keep it out of prod til lightfall ultimately confirms what we know from previews:
         // artifice mods cost 0 and have no downside
         if (
           $DIM_FLAVOR !== 'release' ||
-          insertInto === betterStatItems ||
-          insertInto === worseStatItems
+          insertInto === rawBetterStatItems ||
+          insertInto === rawWorseStatItems
         ) {
           insertInto.push(thisItem);
         }
@@ -168,8 +167,11 @@ export function getBetterWorseItems(
   }
 
   const betterFilter = filterFactory(betterFilterParts.join(' '));
-  const betterItems = betterStatItems.filter(betterFilter);
-  const artificeBetterItems = artificeBetterStatItems.filter(betterFilter);
+  const [betterItems, betterStatItems] = _.partition(rawBetterStatItems, betterFilter);
+  const [artificeBetterItems, artificeBetterStatItems] = _.partition(
+    rawArtificeBetterStatItems,
+    betterFilter
+  );
 
   const worseFilterParts: string[] = [];
   // a worse item must have the same intrinsic or none, to be worse than the example
@@ -184,10 +186,22 @@ export function getBetterWorseItems(
   }
 
   const worseFilter = filterFactory(worseFilterParts.join(' '));
-  const worseItems = worseStatItems.filter(worseFilter);
-  const artificeWorseItems = artificeWorseStatItems.filter(worseFilter);
+  const [worseItems, worseStatItems] = _.partition(rawBetterStatItems, worseFilter);
+  const [artificeWorseItems, artificeWorseStatItems] = _.partition(
+    rawArtificeWorseStatItems,
+    worseFilter
+  );
 
-  return { betterItems, artificeBetterItems, worseItems, artificeWorseItems };
+  return {
+    betterItems,
+    betterStatItems,
+    artificeBetterItems,
+    artificeBetterStatItems,
+    worseItems,
+    worseStatItems,
+    artificeWorseItems,
+    artificeWorseStatItems,
+  };
 }
 
 /**
@@ -355,7 +369,7 @@ function compareBetterStats(
   // this false fallback shouldn't crop up, but just in case, we make no judgement
 }
 
-function isArtifice(item: DimItem) {
+export function isArtifice(item: DimItem) {
   return Boolean(
     item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === 3727270518)
   );
