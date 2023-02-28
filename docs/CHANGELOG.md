@@ -1,5 +1,6 @@
 ## Next
 
+* Bright Dust and XP have been added to the filter pills on bounties and seasonal challenges.
 * `is:statlower` knows about the new artifice armor rules and will consider the artifice +3 stat boost in a single stat when comparing against other armor.
 
 ## 7.58.0 <span class="changelog-date">(2023-02-26)</span>
