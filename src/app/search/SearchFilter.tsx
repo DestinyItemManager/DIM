@@ -50,7 +50,7 @@ export default React.forwardRef(function SearchFilter(
         : onProgress
         ? t('Header.FilterHelpProgress')
         : onOptimizer
-        ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, modslot:combatstyle' })
+        ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, modslot:nightmare' })
         : onLoadouts
         ? t('Header.FilterHelpLoadouts')
         : isPhonePortrait

@@ -3,7 +3,6 @@ import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
 } from 'app/loadout/known-values';
-import { getItemEnergyType } from 'app/loadout/mod-utils';
 import { MAX_ARMOR_ENERGY_CAPACITY, modsWithConditionalStats } from 'app/search/d2-known-values';
 import { DestinyClass, DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -21,7 +20,6 @@ export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition):
     hash: mod.hash,
     plugCategoryHash: mod.plug.plugCategoryHash,
     energy: mod.plug.energyCost && {
-      type: mod.plug.energyCost.energyType,
       val: mod.plug.energyCost.energyCost,
     },
     investmentStats: mod.investmentStats,
@@ -40,21 +38,10 @@ export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition):
 export function isModStatActive(
   characterClass: DestinyClass,
   plugHash: number,
-  stat: DestinyItemInvestmentStatDefinition,
-  _lockedMods: PluggableInventoryItemDefinition[]
+  stat: DestinyItemInvestmentStatDefinition
 ): boolean {
   if (!stat.isConditionallyActive) {
     return true;
-  } else if (
-    plugHash === modsWithConditionalStats.powerfulFriends ||
-    plugHash === modsWithConditionalStats.radiantLight
-  ) {
-    // Powerful Friends & Radiant Light
-    // True if another arc charged with light mod is found
-    // Note the this is not entirely correct as another arc mod slotted into the same item would
-    // also trigger it but we don't know that until we try to socket them. Basically it is too hard
-    // to figure that condition out so lets leave it as a known issue for now.
-    return false;
   } else if (
     plugHash === modsWithConditionalStats.chargeHarvester ||
     plugHash === modsWithConditionalStats.echoOfPersistence ||
@@ -92,10 +79,7 @@ export function getTotalModStatChanges(
 
   for (const mod of lockedMods.concat(subclassPlugs)) {
     for (const stat of mod.investmentStats) {
-      if (
-        stat.statTypeHash in totals &&
-        isModStatActive(characterClass, mod.hash, stat, lockedMods)
-      ) {
+      if (stat.statTypeHash in totals && isModStatActive(characterClass, mod.hash, stat)) {
         totals[stat.statTypeHash] += stat.value;
       }
     }
@@ -138,9 +122,6 @@ export function mapDimItemToProcessItem({
     ? _.sumBy(modsForSlot, (mod) => mod.plug.energyCost?.energyCost || 0)
     : 0;
 
-  // Bucket specific mods have been validated
-  const energyType = getItemEnergyType(dimItem, armorEnergyRules, modsForSlot);
-
   return {
     id,
     hash,
@@ -150,7 +131,6 @@ export function mapDimItemToProcessItem({
     stats: statMap,
     energy: energy
       ? {
-          type: energyType ?? energy.energyType,
           capacity,
           val: modsCost,
         }

@@ -21,13 +21,7 @@ export interface ModSocketMetadata {
   modGroupNameOverrideActivityHash?: number;
 }
 
-const legacyCompatibleTags = [
-  'warmindcell',
-  'chargedwithlight',
-  'nightmare',
-  'gardenofsalvation',
-  'lastwish',
-];
+const legacyCompatibleTags = ['nightmare', 'gardenofsalvation', 'lastwish'];
 
 /** The plug categories that will fit in "legacy" sockets */
 export const legacyCompatiblePlugCategoryHashes = [
@@ -48,8 +42,10 @@ export const modTypeTagByPlugCategoryHash = {
   [PlugCategoryHashes.EnhancementsRaidV520]: 'vaultofglass',
   [PlugCategoryHashes.EnhancementsRaidV600]: 'vowofthedisciple',
   [PlugCategoryHashes.EnhancementsRaidV620]: 'kingsfall',
-  [PlugCategoryHashes.EnhancementsSeasonV500]: 'combat',
+  [PlugCategoryHashes.EnhancementsArtifice]: 'artifice',
 };
+
+// FIXME(Lightfall) what about legacy?
 
 const legacySocketTypeHashes = [
   1540673283, // an outlaw-looking one, that's on S11 LW/Reverie,
@@ -129,20 +125,20 @@ const modSocketMetadata: ModSocketMetadata[] = [
     emptyModSocketHash: 1728096240,
   },
   {
-    slotTag: 'combatstyle',
-    compatibleModTags: ['chargedwithlight', 'warmindcell', 'combat'],
-    socketTypeHashes: [2955889001],
-    compatiblePlugCategoryHashes: [],
-    emptyModSocketHashes: [2493100093],
-    emptyModSocketHash: 2493100093,
-  },
-  {
     slotTag: 'nightmare',
     compatibleModTags: ['nightmare'],
     socketTypeHashes: [2701840022],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsSeasonMaverick],
     emptyModSocketHashes: [1180997867],
     emptyModSocketHash: 1180997867,
+  },
+  {
+    slotTag: 'artifice',
+    compatibleModTags: ['artifice'],
+    socketTypeHashes: [1719555937],
+    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsArtifice],
+    emptyModSocketHashes: [4173924323],
+    emptyModSocketHash: 4173924323,
   },
 ];
 

@@ -283,7 +283,7 @@ export function getLoadoutStats(
   // Add the mod stats
   for (const mod of mods) {
     for (const stat of mod.investmentStats) {
-      if (stat.statTypeHash in stats && isModStatActive(classType, mod.hash, stat, mods)) {
+      if (stat.statTypeHash in stats && isModStatActive(classType, mod.hash, stat)) {
         stats[stat.statTypeHash].value += stat.value;
       }
     }

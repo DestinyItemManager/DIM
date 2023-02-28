@@ -8,22 +8,22 @@ import { ProcessMod } from './types';
 const largeStatMods: {
   [statHash in ArmorStatHashes]: { hash: number; cost: number; statHash: ArmorStatHashes };
 } = {
-  [StatHashes.Mobility]: { hash: 3961599962, cost: 3, statHash: StatHashes.Mobility },
-  [StatHashes.Resilience]: { hash: 2850583378, cost: 3, statHash: StatHashes.Resilience },
-  [StatHashes.Recovery]: { hash: 2645858828, cost: 4, statHash: StatHashes.Recovery },
-  [StatHashes.Discipline]: { hash: 4048838440, cost: 3, statHash: StatHashes.Discipline },
-  [StatHashes.Intellect]: { hash: 3355995799, cost: 5, statHash: StatHashes.Intellect },
-  [StatHashes.Strength]: { hash: 3253038666, cost: 3, statHash: StatHashes.Strength },
+  [StatHashes.Mobility]: { hash: 4183296050, cost: 3, statHash: StatHashes.Mobility },
+  [StatHashes.Resilience]: { hash: 1180408010, cost: 4, statHash: StatHashes.Resilience },
+  [StatHashes.Recovery]: { hash: 4204488676, cost: 4, statHash: StatHashes.Recovery },
+  [StatHashes.Discipline]: { hash: 1435557120, cost: 3, statHash: StatHashes.Discipline },
+  [StatHashes.Intellect]: { hash: 2724608735, cost: 4, statHash: StatHashes.Intellect },
+  [StatHashes.Strength]: { hash: 4287799666, cost: 3, statHash: StatHashes.Strength },
 };
 
 // Minor stat mods add 5
 const minorStatMods: { [statHash in ArmorStatHashes]: { hash: number; cost: number } } = {
-  [StatHashes.Mobility]: { hash: 204137529, cost: 1 },
-  [StatHashes.Resilience]: { hash: 3682186345, cost: 1 },
-  [StatHashes.Recovery]: { hash: 555005975, cost: 2 },
-  [StatHashes.Discipline]: { hash: 2623485440, cost: 1 },
-  [StatHashes.Intellect]: { hash: 1227870362, cost: 2 },
-  [StatHashes.Strength]: { hash: 3699676109, cost: 1 },
+  [StatHashes.Mobility]: { hash: 1703647492, cost: 1 },
+  [StatHashes.Resilience]: { hash: 2532323436, cost: 2 },
+  [StatHashes.Recovery]: { hash: 1237786518, cost: 2 },
+  [StatHashes.Discipline]: { hash: 4021790309, cost: 1 },
+  [StatHashes.Intellect]: { hash: 350061697, cost: 2 },
+  [StatHashes.Strength]: { hash: 2639422088, cost: 1 },
 };
 
 // If we can split an intellect mod (5 cost into 2, 2 cost), then we don't need to bother with
