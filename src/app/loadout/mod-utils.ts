@@ -1,12 +1,7 @@
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
-import {
-  armor2PlugCategoryHashes,
-  armor2PlugCategoryHashesByName,
-  armorBuckets,
-} from 'app/search/d2-known-values';
-import { combatCompatiblePlugCategoryHashes } from 'app/search/specialty-modslots';
+import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import {
@@ -14,7 +9,6 @@ import {
   DestinyInventoryItemDefinition,
   TierType,
 } from 'bungie-api-ts/destiny2';
-import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { isArmorEnergyLocked } from './armor-upgrade-utils';
@@ -164,13 +158,8 @@ export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
  * The API was not informed, so we must hardcode the rules here.
  */
 export function unlockedByAllModsBeingUnlocked(
-  plug: PluggableInventoryItemDefinition,
-  artifactMods: Set<number> | undefined
+  _plug: PluggableInventoryItemDefinition,
+  _artifactMods: Set<number> | undefined
 ) {
-  return (
-    !deprecatedMods.includes(plug.hash) &&
-    !artifactMods?.has(plug.hash) &&
-    (armor2PlugCategoryHashes.includes(plug.plug.plugCategoryHash) ||
-      combatCompatiblePlugCategoryHashes.includes(plug.plug.plugCategoryHash))
-  );
+  return false;
 }

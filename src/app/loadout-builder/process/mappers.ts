@@ -5,12 +5,7 @@ import {
 } from 'app/loadout/known-values';
 import { getItemEnergyType } from 'app/loadout/mod-utils';
 import { MAX_ARMOR_ENERGY_CAPACITY, modsWithConditionalStats } from 'app/search/d2-known-values';
-import { chargedWithLightPlugCategoryHashes } from 'app/search/specialty-modslots';
-import {
-  DestinyClass,
-  DestinyEnergyType,
-  DestinyItemInvestmentStatDefinition,
-} from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
@@ -46,7 +41,7 @@ export function isModStatActive(
   characterClass: DestinyClass,
   plugHash: number,
   stat: DestinyItemInvestmentStatDefinition,
-  lockedMods: PluggableInventoryItemDefinition[]
+  _lockedMods: PluggableInventoryItemDefinition[]
 ): boolean {
   if (!stat.isConditionallyActive) {
     return true;
@@ -59,13 +54,7 @@ export function isModStatActive(
     // Note the this is not entirely correct as another arc mod slotted into the same item would
     // also trigger it but we don't know that until we try to socket them. Basically it is too hard
     // to figure that condition out so lets leave it as a known issue for now.
-    return Boolean(
-      lockedMods.find(
-        (mod) =>
-          mod.plug.energyCost?.energyType === DestinyEnergyType.Arc &&
-          chargedWithLightPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
-      )
-    );
+    return false;
   } else if (
     plugHash === modsWithConditionalStats.chargeHarvester ||
     plugHash === modsWithConditionalStats.echoOfPersistence ||

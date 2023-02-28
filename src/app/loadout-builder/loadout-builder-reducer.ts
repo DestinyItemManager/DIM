@@ -24,10 +24,14 @@ import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
-import { getDefaultAbilityChoiceHash, getSocketsByCategoryHashes } from 'app/utils/socket-utils';
+import {
+  getDefaultAbilityChoiceHash,
+  getSocketsByCategoryHashes,
+  subclassAbilitySocketCategoryHashes,
+} from 'app/utils/socket-utils';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
@@ -473,11 +477,10 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         }
 
         const { plug } = action;
-        const abilityAndSuperSockets = getSocketsByCategoryHashes(state.subclass.item.sockets, [
-          SocketCategoryHashes.Abilities_Abilities,
-          SocketCategoryHashes.Abilities_Abilities_LightSubclass,
-          SocketCategoryHashes.Super,
-        ]);
+        const abilityAndSuperSockets = getSocketsByCategoryHashes(
+          state.subclass.item.sockets,
+          subclassAbilitySocketCategoryHashes
+        );
         const newSocketOverrides = { ...state.subclass?.loadoutItem.socketOverrides };
         let socketIndexToRemove: number | undefined;
 

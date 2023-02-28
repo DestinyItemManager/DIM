@@ -282,19 +282,19 @@ export const D2SeasonInfo: Record<
     numWeeks: 12,
   },
   20: {
-    DLCName: 'Light Fall',
-    seasonName: 'Season of [Redacted]',
-    seasonTag: '[redacted]',
+    DLCName: 'Lightfall',
+    seasonName: 'Season of Defiance',
+    seasonTag: 'defiance',
     season: 20,
     maxLevel: 50,
-    powerFloor: 1350,
-    softCap: 1540,
-    powerfulCap: 1590,
-    pinnacleCap: 1600,
+    powerFloor: 1600,
+    softCap: 1750,
+    powerfulCap: 1790,
+    pinnacleCap: 1800,
     releaseDate: '2023-02-28',
     resetTime: '17:00:00Z',
-    numWeeks: -1,
+    numWeeks: 12,
   },
 };
 
-export const D2CalculatedSeason = 19;
+export const D2CalculatedSeason = 20;
