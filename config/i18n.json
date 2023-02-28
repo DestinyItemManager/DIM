@@ -416,7 +416,8 @@
     "TransferItems": "Transfer"
   },
   "InGameLoadout": {
-    "Applying": "Equipping loadout..."
+    "Applying": "Equipping loadout...",
+    "LoadoutSlotNum": "Slot {{index}}"
   },
   "Inventory": {
     "ClickToExpand": "(Click to expand)"
@@ -721,7 +722,6 @@
     "ItemLeveling": "Item Leveling",
     "LoadoutName": "Loadout name",
     "Loadouts": "Loadouts",
-    "LoadoutSlotNum": "Slot {{index}}",
     "MakeRoom": "Make Room for Postmaster",
     "MakeRoomDone": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",
     "MakeRoomDone_female": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",

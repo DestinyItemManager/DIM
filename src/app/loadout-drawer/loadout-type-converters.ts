@@ -156,8 +156,6 @@ export function convertDestinyLoadoutComponentToInGameLoadout(
   const colorIcon = defs.LoadoutColor.get(loadoutComponent.colorHash)?.colorImagePath ?? '';
   const icon = defs.LoadoutIcon.get(loadoutComponent.iconHash)?.iconImagePath ?? '';
 
-  console.log(loadoutComponent);
-
   if (
     loadoutComponent.items === undefined ||
     loadoutComponent.items.length === 0 ||
@@ -176,9 +174,3 @@ export function convertDestinyLoadoutComponentToInGameLoadout(
     id: `ingame-${characterId}-${index}`,
   };
 }
-
-/*
-function convertInGameLoadoutToDimLoadout(inGameLoadout: InGameLoadout): DimLoadout {}
-
-function convertDimLoadoutToInGameLoadout(dimLoadout: DimLoadout): InGameLoadout {}
-*/

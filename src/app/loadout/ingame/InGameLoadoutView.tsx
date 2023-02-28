@@ -57,7 +57,7 @@ export default function InGameLoadoutView({
           <InGameLoadoutIcon className={styles.icon} loadout={loadout} />
           {loadout.name}
           <span className={styles.loadoutSlot}>
-            {t('Loadouts.LoadoutSlotNum', { index: loadout.index + 1 })}
+            {t('InGameLoadout.LoadoutSlotNum', { index: loadout.index + 1 })}
           </span>
         </h2>
         <div className={styles.actions}>{actionButtons}</div>

@@ -382,7 +382,8 @@
     "Vault": "Send item to vault"
   },
   "InGameLoadout": {
-    "Applying": "Equipping loadout..."
+    "Applying": "Equipping loadout...",
+    "LoadoutSlotNum": "Slot {{index}}"
   },
   "Infusion": {
     "Filter": "Filter items",
@@ -646,7 +647,6 @@
     "ItemErrorSummary_plural": "{{count}} item errors:",
     "ItemLeveling": "Item Leveling",
     "LoadoutName": "Loadout name",
-    "LoadoutSlotNum": "Slot {{index}}",
     "Loadouts": "Loadouts",
     "MakeRoom": "Make Room for Postmaster",
     "MakeRoomDone": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",
