@@ -5,7 +5,6 @@ import Sockets from 'app/loadout/loadout-ui/Sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -31,29 +30,9 @@ function EnergySwap({
   const armorEnergy = defs.EnergyType.get(item.energy!.energyTypeHash);
 
   const modCost = _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
-  const modEnergyHashNotAny = assignedMods?.find(
-    (mod) =>
-      mod.plug.energyCost &&
-      mod.plug.energyCost.energyCost > 0 &&
-      mod.plug.energyCost.energyType !== DestinyEnergyType.Any
-  )?.plug.energyCost?.energyTypeHash;
-  const modEnergy = (modEnergyHashNotAny && defs.EnergyType.get(modEnergyHashNotAny)) || null;
+  const resultingEnergyCapacity = Math.max(armorEnergyCapacity, modCost);
 
-  // The armor energy type and capacity needed for the mods
-  const resultingEnergy = modEnergy ?? armorEnergy;
-  let resultingEnergyCapacity = armorEnergyCapacity;
-
-  // If there is a mod energy type and it's different to the armor energy type
-  // we always use the mod cost as we are swapping energy types on the armor
-  if (modEnergyHashNotAny && modEnergyHashNotAny !== armorEnergy.hash) {
-    resultingEnergyCapacity = modCost;
-  } else {
-    // Otherwise we just take the max of armor capacity and mod cost
-    resultingEnergyCapacity = Math.max(armorEnergyCapacity, modCost);
-  }
-
-  const noEnergyChange =
-    resultingEnergyCapacity === armorEnergyCapacity && resultingEnergy === armorEnergy;
+  const noEnergyChange = resultingEnergyCapacity === armorEnergyCapacity;
 
   return (
     <div className={clsx(styles.energySwapContainer, { [styles.energyHidden]: noEnergyChange })}>
@@ -76,7 +55,7 @@ function EnergySwap({
         >
           {resultingEnergyCapacity}
         </div>
-        <BungieImage className={styles.energyIcon} src={resultingEnergy.displayProperties.icon} />
+        <BungieImage className={styles.energyIcon} src={armorEnergy.displayProperties.icon} />
       </div>
     </div>
   );

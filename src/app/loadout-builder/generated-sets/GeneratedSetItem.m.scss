@@ -86,6 +86,7 @@
   composes: dim-button from global;
   justify-self: center;
   margin-top: 4px;
+
   @include phone-portrait {
     padding: 8px 20px;
   }
@@ -94,6 +95,7 @@
 .swapButtonContainer {
   display: grid;
   min-height: 24px;
+
   @include phone-portrait {
     min-height: 32px;
   }

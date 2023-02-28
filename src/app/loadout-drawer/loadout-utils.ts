@@ -285,7 +285,7 @@ export function getLoadoutStats(
   // Add the mod stats
   for (const mod of mods) {
     for (const stat of mod.investmentStats) {
-      if (stat.statTypeHash in stats && isModStatActive(classType, mod.hash, stat, mods)) {
+      if (stat.statTypeHash in stats && isModStatActive(classType, mod.hash, stat)) {
         stats[stat.statTypeHash].value += stat.value;
       }
     }
@@ -663,9 +663,11 @@ export function getModsFromLoadout(
   if (defs?.isDestiny2()) {
     for (const modHash of getModHashesFromLoadout(loadout, includeAutoMods)) {
       const item = defs.InventoryItem.get(modHash);
-
       if (isPluggableItem(item)) {
         mods.push(item);
+      } else {
+        const deprecatedPlaceholderMod = defs.InventoryItem.get(3947616002);
+        isPluggableItem(deprecatedPlaceholderMod) && mods.push(deprecatedPlaceholderMod);
       }
     }
   }

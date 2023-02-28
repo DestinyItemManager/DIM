@@ -1,17 +1,11 @@
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
-import {
-  DestinyEnergyType,
-  DestinyInventoryItemDefinition,
-  TierType,
-} from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { isArmorEnergyLocked } from './armor-upgrade-utils';
 import { knownModPlugCategoryHashes } from './known-values';
 
 export const plugCategoryHashToBucketHash = {
@@ -71,7 +65,10 @@ export function isInsertableArmor2Mod(
       // is the plugCategoryHash is in one of our known plugCategoryHashes (relies on d2ai).
       isArmor2Mod(def) &&
       // is plug.insertionMaterialRequirementHash non zero or is plug.energyCost a thing. This rules out deprecated mods.
-      (def.plug.insertionMaterialRequirementHash !== 0 || def.plug.energyCost) &&
+      (def.plug.insertionMaterialRequirementHash !== 0 ||
+        def.plug.energyCost ||
+        // FIXME turns out this is a bad condition
+        def.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice) &&
       // this rules out classified items
       def.itemTypeDisplayName !== undefined
   );
@@ -94,72 +91,10 @@ export function createGetModRenderKey() {
 }
 
 /**
- * This is used to figure out the energy type of an item used in mod assignments.
- *
- * If the item's energy is locked given the upgrade options, this returns the item's
- * current energy. If not locked, this returns the energy as restricted by the first not-Any
- * mod in `bucketSpecificMods`
- *
- * This does not validate that all the mods match that element.
- *
- * It can return the Any energy type if armour upgrade options allow energy changes
- * and no mods require a specific element.
- */
-export function getItemEnergyType(
-  item: DimItem,
-  armorEnergyRules: ArmorEnergyRules,
-  bucketSpecificMods?: PluggableInventoryItemDefinition[]
-) {
-  if (!item.energy) {
-    return DestinyEnergyType.Any;
-  }
-
-  if (isArmorEnergyLocked(item, armorEnergyRules)) {
-    return item.energy.energyType;
-  } else {
-    const bucketSpecificModType = bucketSpecificMods?.find(
-      (mod) => mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any
-    )?.plug.energyCost?.energyType;
-
-    return bucketSpecificModType ?? DestinyEnergyType.Any;
-  }
-}
-
-function isClassItemOfTier(plugDef: PluggableInventoryItemDefinition, tier: TierType): boolean {
-  return (
-    plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2ClassItem &&
-    plugDef.inventory?.tierType === tier
-  );
-}
-
-// XXX: Class Item Artifact Mods are labeled "Class Item Mod" instead of "Class Item Armor Mod"
-function getItemTypeOrTierDisplayName(newDisplayName?: string) {
-  return (plugDef: PluggableInventoryItemDefinition): string => {
-    if (newDisplayName && isClassItemOfTier(plugDef, TierType.Superior)) {
-      return newDisplayName;
-    } else {
-      return plugDef.itemTypeDisplayName;
-    }
-  };
-}
-
-/**
  * Group an array of mod definitions into related mod-type groups
  *
  * e.g. "General Armor Mod", "Helmet Armor Mod", "Nightmare Mod"
  */
 export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
-  const commonClassItemMod = plugs.find((plugDef) => isClassItemOfTier(plugDef, TierType.Basic));
-  return _.groupBy(plugs, getItemTypeOrTierDisplayName(commonClassItemMod?.itemTypeDisplayName));
-}
-
-/**
- * 2023-01-11: All standard Armor Mods (excluding artifact and raid) are unlocked for everyone.
- * The API was not informed, so we must hardcode the rules here.
- */
-export function unlockedByAllModsBeingUnlocked(
-  _plug: PluggableInventoryItemDefinition,
-  _artifactMods: Set<number> | undefined
-) {
-  return false;
+  return _.groupBy(plugs, (plugDef) => plugDef.itemTypeDisplayName);
 }

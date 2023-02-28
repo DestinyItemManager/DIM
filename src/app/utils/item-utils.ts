@@ -23,11 +23,7 @@ import modSocketMetadata, {
   ModSocketMetadata,
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
-import {
-  DestinyClass,
-  DestinyEnergyType,
-  DestinyInventoryItemDefinition,
-} from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
@@ -97,9 +93,7 @@ export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[]
  * this focuses on narrower stuff: raid & nightmare modslots
  */
 export const getInterestingSocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
-  const specialtySockets = getSpecialtySocketMetadatas(item)?.filter(
-    (m) => m.slotTag !== 'legacy' && m.slotTag !== 'combatstyle'
-  );
+  const specialtySockets = getSpecialtySocketMetadatas(item)?.filter((m) => m.slotTag !== 'legacy');
   if (specialtySockets?.length) {
     return specialtySockets;
   }
@@ -299,8 +293,7 @@ export function isPlugStatActive(
   item: DimItem,
   plug: DestinyInventoryItemDefinition,
   statHash: number,
-  isConditionallyActive: boolean,
-  modsOnOtherItems?: PluggableInventoryItemDefinition[]
+  isConditionallyActive: boolean
 ): boolean {
   /*
   Some Exotic weapon catalysts can be inserted even though the catalyst objectives are incomplete.
@@ -323,25 +316,6 @@ export function isPlugStatActive(
     return false;
   }
 
-  if (
-    plugHash === modsWithConditionalStats.powerfulFriends ||
-    plugHash === modsWithConditionalStats.radiantLight
-  ) {
-    // Powerful Friends & Radiant Light
-    // True if a second arc mod is socketed or a arc charged with light mod  is found in modsOnOtherItems.
-    return Boolean(
-      item.sockets?.allSockets.some(
-        (s) =>
-          s.plugged?.plugDef.hash !== plugHash &&
-          s.plugged?.plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
-      ) ||
-        modsOnOtherItems?.some(
-          (plugDef) =>
-            modTypeTagByPlugCategoryHash[plugDef.plug.plugCategoryHash] === 'chargedwithlight' &&
-            plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
-        )
-    );
-  }
   if (
     plugHash === modsWithConditionalStats.chargeHarvester ||
     plugHash === modsWithConditionalStats.echoOfPersistence ||

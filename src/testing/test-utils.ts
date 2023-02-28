@@ -14,7 +14,7 @@ import _ from 'lodash';
 import path from 'path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
 import profile from './data/profile-2023-02-28.json';
-import vendors from './data/vendors-2022-12-07.json';
+import vendors from './data/vendors-2023-02-28.json';
 
 /**
  * Get the current manifest as JSON. Downloads the manifest if not cached.

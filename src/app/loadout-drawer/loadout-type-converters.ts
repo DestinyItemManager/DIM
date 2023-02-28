@@ -92,9 +92,6 @@ function migrateUpgradeSpendTierAndLockItemEnergy(
       return {
         ...migrated,
         assumeArmorMasterwork: AssumeArmorMasterwork.All,
-        lockArmorEnergyType: lockItemEnergyType
-          ? LockArmorEnergyType.All
-          : LockArmorEnergyType.Masterworked,
       };
     case UpgradeSpendTier.AscendantShardsLockEnergyType:
     case UpgradeSpendTier.EnhancementPrisms:
@@ -104,9 +101,6 @@ function migrateUpgradeSpendTierAndLockItemEnergy(
       return {
         ...migrated,
         assumeArmorMasterwork: AssumeArmorMasterwork.None,
-        lockArmorEnergyType: lockItemEnergyType
-          ? LockArmorEnergyType.All
-          : LockArmorEnergyType.None,
       };
   }
 }

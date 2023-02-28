@@ -1,4 +1,4 @@
-import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
 
@@ -14,25 +14,4 @@ export function calculateAssumedItemEnergy(
       ? 10
       : minItemEnergy;
   return Math.max(itemEnergy, assumedEnergy);
-}
-
-export function isArmorEnergyLocked(
-  item: DimItem,
-  { lockArmorEnergyType, loadouts }: ArmorEnergyRules
-) {
-  switch (lockArmorEnergyType) {
-    default:
-    case LockArmorEnergyType.None: {
-      return false;
-    }
-    case LockArmorEnergyType.Masterworked: {
-      const { loadoutsByItem, optimizingLoadoutId } = loadouts!;
-      return loadoutsByItem[item.id]?.some(
-        (l) => l.loadoutItem.equip && l.loadout.id !== optimizingLoadoutId
-      );
-    }
-    case LockArmorEnergyType.All: {
-      return true;
-    }
-  }
 }
