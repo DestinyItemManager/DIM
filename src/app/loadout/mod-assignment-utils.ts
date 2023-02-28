@@ -14,12 +14,12 @@ import {
   getSocketsByCategoryHash,
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
-import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
 import { activityModPlugCategoryHashes } from './known-values';
 import { generateModPermutations } from './mod-permutations';
-import { isArtificeMod, plugCategoryHashToBucketHash } from './mod-utils';
+import { plugCategoryHashToBucketHash } from './mod-utils';
 
 /**
  * a temporary structure, keyed by item ID,
@@ -96,7 +96,7 @@ export function categorizeArmorMods(
     } else if (activityModPlugCategoryHashes.includes(pch)) {
       activityMods.push(plannedMod);
       validMods.push(plannedMod);
-    } else if (isArtificeMod(plannedMod)) {
+    } else if (plannedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice) {
       artificeMods.push(plannedMod);
       validMods.push(plannedMod);
     } else {
@@ -162,8 +162,6 @@ export function fitMostMods({
   let assignmentEnergyCost = Number.MAX_SAFE_INTEGER;
   // The total number of mods that couldn't be assigned to the items
   let assignmentUnassignedModCount = Number.MAX_SAFE_INTEGER;
-  // The total number of conditional mods that are activated in the assignment
-  let assignmentActiveConditionalMods = Number.MIN_SAFE_INTEGER;
   // The total number of bucket independent mods that are changed in the assignment
   let assignmentModChangeCount = Number.MAX_SAFE_INTEGER;
 
@@ -270,28 +268,6 @@ export function fitMostMods({
         continue;
       }
 
-      let totalActiveConditionalMods = 0;
-      const allAssignedMods = Object.values(assignments).flatMap(
-        (assignment) => assignment.assigned
-      );
-      for (const item of items) {
-        totalActiveConditionalMods += calculateTotalActivatedModsScore(
-          bucketSpecificAssignments[item.id].assigned,
-          assignments[item.id].assigned,
-          allAssignedMods
-        );
-      }
-
-      // Skip further checks if we have less active condition mods and we have an equal amount
-      // of unassigned mods. If we have less unassigned mods we should continue because its a better
-      // assignment
-      if (
-        unassignedModCount === assignmentUnassignedModCount &&
-        totalActiveConditionalMods < assignmentActiveConditionalMods
-      ) {
-        continue;
-      }
-
       let energyUsedAndWasted = 0;
       for (const [itemId, { assigned }] of Object.entries(assignments)) {
         energyUsedAndWasted += calculateEnergyChange(itemEnergies[itemId], assigned);
@@ -300,7 +276,6 @@ export function fitMostMods({
       // Skip further checks if we are spending more energy that we were previously.
       if (
         unassignedModCount === assignmentUnassignedModCount &&
-        totalActiveConditionalMods === assignmentActiveConditionalMods &&
         energyUsedAndWasted > assignmentEnergyCost
       ) {
         continue;
@@ -318,16 +293,11 @@ export function fitMostMods({
       if (
         // Less unassigned mods
         unassignedModCount < assignmentUnassignedModCount ||
-        // The same amount of unassigned mods and more active conditional mods
+        // The same amount of unassigned mods but the assignment is cheaper
         (unassignedModCount === assignmentUnassignedModCount &&
-          totalActiveConditionalMods > assignmentActiveConditionalMods) ||
-        // The same amount of unassigned and active mods but the assignment is cheaper
-        (unassignedModCount === assignmentUnassignedModCount &&
-          totalActiveConditionalMods === assignmentActiveConditionalMods &&
           energyUsedAndWasted < assignmentEnergyCost) ||
         // The assignment costs the same but we are changing fewer mods
         (unassignedModCount === assignmentUnassignedModCount &&
-          totalActiveConditionalMods === assignmentActiveConditionalMods &&
           energyUsedAndWasted === assignmentEnergyCost &&
           modChangeCount < assignmentModChangeCount)
       ) {
@@ -335,7 +305,6 @@ export function fitMostMods({
         bucketIndependentAssignments = assignments;
         assignmentEnergyCost = energyUsedAndWasted;
         assignmentUnassignedModCount = unassignedModCount;
-        assignmentActiveConditionalMods = totalActiveConditionalMods;
         assignmentModChangeCount = modChangeCount;
       }
     }
@@ -654,44 +623,6 @@ function calculateEnergyChange(
 
   // Otherwise check how many levels of upgrade we need
   return Math.max(0, modCost - itemEnergy.originalCapacity);
-}
-
-/**
- * Calculates the total number of active conditional mods on the item.
- * Used to ensure mod assignments favor results that activate these mods.
- */
-function calculateTotalActivatedModsScore(
-  bucketSpecificAssignments: PluggableInventoryItemDefinition[],
-  bucketIndependentAssignmentsForItem: PluggableInventoryItemDefinition[],
-  allAssignedMods: PluggableInventoryItemDefinition[]
-) {
-  let activeModsScore = 0;
-
-  for (const mod of bucketIndependentAssignmentsForItem) {
-    activeModsScore += plugActivationScore(
-      mod,
-      bucketSpecificAssignments,
-      bucketIndependentAssignmentsForItem,
-      allAssignedMods
-    );
-  }
-
-  return activeModsScore;
-}
-
-/**
- * Determines whether a mod has had its requirements met by the other mods. Right now this is used
- * to score statful Charged With Light mods (powerful friends, radiant light is activated) and other
- * CWL mods with conditionally active perks.
- */
-function plugActivationScore(
-  _mod: PluggableInventoryItemDefinition,
-  _bucketSpecificAssignments: PluggableInventoryItemDefinition[],
-  _bucketIndependentAssignmentsForItem: PluggableInventoryItemDefinition[],
-  _allMods: PluggableInventoryItemDefinition[]
-) {
-  // FIXME(Lightfall): Are there still "combo" mods?
-  return 0;
 }
 
 function buildItemEnergy({
