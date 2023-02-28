@@ -19,7 +19,7 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     // Show a banner for supporting a charitable cause
     issueBanner: false,
     // Show the triage tab in the item popup
-    triage: !env.release,
+    triage: true,
     // Advanced Write Actions (inserting mods)
     awa: process.env.USER === 'brh', // Only Ben has the keys...
     // Item feed sidebar

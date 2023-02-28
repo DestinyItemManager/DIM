@@ -315,7 +315,7 @@ export function getColumns(
     c({
       id: 'tag',
       header: t('Organizer.Columns.Tag'),
-      value: (item) => getTag(item, itemInfos),
+      value: (item) => getTag(item, itemInfos) ?? '',
       cell: (value) => value && <TagIcon tag={value} />,
       sort: compareBy((tag) => (tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000)),
       filter: (value) => `tag:${value || 'none'}`,
@@ -575,17 +575,26 @@ export function getColumns(
     c({
       id: 'loadouts',
       header: t('Organizer.Columns.Loadouts'),
-      value: () => 0,
+      value: (item) =>
+        loadoutsByItem[item.id]
+          ?.map((l) => l.loadout.name)
+          .sort()
+          .join(','),
       cell: (_val, item) => {
         const inloadouts = loadoutsByItem[item.id];
         return (
           inloadouts &&
           inloadouts.length > 0 && (
-            <LoadoutsCell loadouts={inloadouts.map((l) => l.loadout)} owner={item.owner} />
+            <LoadoutsCell
+              loadouts={_.sortBy(
+                inloadouts.map((l) => l.loadout),
+                (l) => l.name
+              )}
+              owner={item.owner}
+            />
           )
         );
       },
-      noSort: true,
       filter: (value, item) => {
         if (typeof value === 'string') {
           const inloadouts = loadoutsByItem[item.id];

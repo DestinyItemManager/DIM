@@ -52,21 +52,26 @@ function PatternUnlockedIndicator({ record }: { record: DestinyRecordComponent |
   if (!record) {
     return null;
   }
+
+  let allObjectivesComplete = true;
+  const tootipContent = (
+    <>
+      <Tooltip.Header text={t('MovePopup.CraftingPattern')} />
+      {record.objectives.map((objective) => {
+        // check objectives' status while we are already looping this
+        allObjectivesComplete &&= objective.complete;
+        return <Objective key={objective.objectiveHash} objective={objective} />;
+      })}
+    </>
+  );
   return (
     <PressTip
       className={clsx(styles.patternProgress, styles.deepsightProgressSection)}
-      tooltip={
-        <>
-          <Tooltip.Header text={t('MovePopup.CraftingPattern')} />
-          {record?.objectives.map((objective) => (
-            <Objective key={objective.objectiveHash} objective={objective} />
-          ))}
-        </>
-      }
+      tooltip={tootipContent}
     >
       <BungieImage className={styles.patternIcon} src={weaponPatternIcon} />
       <span>
-        {record.objectives.every((o) => o.complete) ? (
+        {allObjectivesComplete ? (
           <AppIcon className={styles.patternOwned} icon={faCheck} />
         ) : (
           <>

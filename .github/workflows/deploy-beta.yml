@@ -92,3 +92,4 @@ jobs:
         with:
           environment: beta
           version: ${{ env.VERSION }}
+          ignore_missing: true
