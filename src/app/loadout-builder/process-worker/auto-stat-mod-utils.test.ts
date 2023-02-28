@@ -72,16 +72,16 @@ describe('lo process auto stat mod pick generation', () => {
   ])('for same stats %j generates %i different picks', check);
 
   test.each([
-    [[30, 10, 0, 0, 0, 0], 2],
-    [[10, 20, 0, 0, 0, 0], 3],
-    [[10, 10, 0, 0, 0, 0], 3],
+    [[30, 0, 0, 0, 0, 10], 2],
+    [[10, 0, 0, 0, 0, 20], 3],
+    [[10, 0, 0, 0, 0, 10], 3],
   ])('for stats %j with same mod costs generates minimal equivalent picks %i', check);
 
   test.each([
     // split [none, int, int+rec] (but not rec alone)
     [[0, 0, 10, 0, 10, 0], 3],
-    // split [none, int, res, int+rec, int+res] (but not rec+res)
-    [[0, 10, 10, 0, 10, 0], 5],
+    // split [none, int, str, int+rec, int+str] (but not rec+str)
+    [[0, 10, 0, 0, 10, 10], 5],
     // split [none, rec, mob, mob+mob, rec+mob]
     [[20, 0, 10, 0, 0, 0], 5],
   ])('does not split recovery if intellect can be split for stats %j, generating %i picks', check);
@@ -89,10 +89,10 @@ describe('lo process auto stat mod pick generation', () => {
   test.each([
     [[10, 0, 5, 5, 0, 0], 2],
     [[10, 0, 5, 5, 5, 0], 2],
-    [[10, 10, 5, 5, 0, 0], 2],
-    [[10, 10, 5, 0, 0, 0], 3],
-    [[15, 15, 0, 0, 0, 0], 2],
-    [[10, 15, 0, 0, 0, 0], 3],
+    [[10, 0, 5, 5, 0, 10], 2],
+    [[10, 0, 5, 0, 0, 10], 3],
+    [[15, 0, 0, 0, 0, 15], 2],
+    [[10, 0, 0, 0, 0, 15], 3],
   ])('obeys required minor mods %j to generate %i picks', check);
 });
 
