@@ -1,5 +1,9 @@
 ## Next
 
+* Triage tab is now available outside of DIM Beta. This feature provides information to help quickly compare and judge a new (or old) item.
+  * Whether am armor piece is high or low among your others, or is completely better or worse than another.
+  * How many other similar weapons you have, and weapon Wishlist status.
+  * Whether an item is included in loadouts, and which.
 * Bright Dust and XP have been added to the filter pills on bounties and seasonal challenges.
 * `is:statlower` knows about the new artifice armor rules and will consider the artifice +3 stat boost in a single stat when comparing against other armor.
 * Sorting in the Organizer is a bit more reliable, and the arrows point the right way.
