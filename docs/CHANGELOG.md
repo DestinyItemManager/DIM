@@ -1,6 +1,9 @@
 ## Next
 
-* Added a Triage tab to the item popup better changelog description TBD
+* Triage tab is now available outside of DIM Beta. This feature provides information to help quickly compare and judge a new (or old) item.
+  * Whether am armor piece is high or low among your others, or is completely better or worse than another.
+  * How many other similar weapons you have, and weapon Wishlist status.
+  * Whether an item is included in loadouts, and which.
 
 ## 7.58.0 <span class="changelog-date">(2023-02-26)</span>
 
