@@ -4,11 +4,15 @@
   * Whether am armor piece is high or low among your others, or is completely better or worse than another.
   * How many other similar weapons you have, and weapon Wishlist status.
   * Whether an item is included in loadouts, and which.
+* Bright Dust and XP have been added to the filter pills on bounties and seasonal challenges.
+* `is:statlower` knows about the new artifice armor rules and will consider the artifice +3 stat boost in a single stat when comparing against other armor.
 
 ## 7.58.0 <span class="changelog-date">(2023-02-26)</span>
 
 * The `inloadout` filter now finds hashtags in Loadout notes.
 * Support for non-English hashtags.
+* Added a popup on crafted weapons that shows all their kill tracker stats at once.
+* Switched D2Gunsmith link to D2Foundry.
 
 ## 7.57.0 <span class="changelog-date">(2023-02-19)</span>
 

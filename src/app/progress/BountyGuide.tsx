@@ -18,6 +18,7 @@ import melee from 'destiny-icons/weapons/melee.svg';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import styles from './BountyGuide.m.scss';
+import { xpItems } from './xp';
 
 enum KillType {
   Melee,
@@ -36,7 +37,20 @@ const killTypeIcons: { [key in KillType]: string | undefined } = {
   [KillType.ClassAbilities]: undefined,
 } as const;
 
-export type DefType = 'ActivityMode' | 'Destination' | 'DamageType' | 'ItemCategory' | 'KillType';
+export type DefType =
+  | 'ActivityMode'
+  | 'Destination'
+  | 'DamageType'
+  | 'ItemCategory'
+  | 'KillType'
+  | 'Reward';
+
+// Reward types we'll show in the bounty guide. Could be expanded (e.g. to seasonal mats)
+const rewardAllowList = [
+  ...Object.keys(xpItems).map((i) => parseInt(i, 10)),
+  2817410917, // bright dust
+  3168101969, // bright dust
+];
 
 export interface BountyFilter {
   type: DefType;
@@ -87,6 +101,7 @@ export default function BountyGuide({
     DamageType: {},
     ItemCategory: {},
     KillType: {},
+    Reward: {},
   };
   for (const i of bounties) {
     const expired = i.pursuit?.expirationDate
@@ -97,8 +112,14 @@ export default function BountyGuide({
       if (info) {
         for (const key in info) {
           for (const value of info[key]) {
-            mapped[key][value] ||= [];
-            mapped[key][value].push(i);
+            (mapped[key][value] ??= []).push(i);
+          }
+        }
+        if (i.pursuit) {
+          for (const reward of i.pursuit.rewards) {
+            if (rewardAllowList.includes(reward.itemHash)) {
+              (mapped.Reward[reward.itemHash] ??= []).push(i);
+            }
           }
         }
       }
@@ -220,6 +241,15 @@ function PillContent({
           {KillType[value]}
         </>
       );
+    case 'Reward':
+      return (
+        <>
+          {defs.InventoryItem.get(value).displayProperties.hasIcon && (
+            <BungieImage height="16" src={defs.InventoryItem.get(value).displayProperties.icon} />
+          )}
+          {defs.InventoryItem.get(value).displayProperties.name}
+        </>
+      );
   }
 }
 
@@ -239,12 +269,15 @@ export function matchBountyFilters(
     return true;
   }
   const info = pursuitsInfo[item.hash];
-  if (info) {
-    for (const filter of filters) {
-      if (info[filter.type]?.includes(filter.hash)) {
+  for (const filter of filters) {
+    if (filter.type === 'Reward') {
+      if (item.pursuit?.rewards.some((r) => r.itemHash === filter.hash)) {
         return true;
       }
+    } else if (info?.[filter.type]?.includes(filter.hash)) {
+      return true;
     }
   }
+
   return false;
 }
