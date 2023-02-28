@@ -18,7 +18,11 @@ export function getItemsFromInGameLoadout(
 ): DimItem[] {
   // TODO: apply socket overrides once we know what those are?
   return _.compact(
-    loadoutItems.map((li) => potentialLoadoutItemsByItemId(allItems)[li.itemInstanceId])
+    loadoutItems.map((li) =>
+      li.itemInstanceId !== '0'
+        ? potentialLoadoutItemsByItemId(allItems)[li.itemInstanceId]
+        : undefined
+    )
   );
 }
 

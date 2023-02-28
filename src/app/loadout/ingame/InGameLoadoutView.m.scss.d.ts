@@ -9,6 +9,7 @@ interface CssExports {
   'itemCategory': string;
   'itemsInCategory': string;
   'loadout': string;
+  'loadoutSlot': string;
   'placeholder': string;
   'title': string;
 }

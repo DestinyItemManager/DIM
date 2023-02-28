@@ -156,7 +156,13 @@ export function convertDestinyLoadoutComponentToInGameLoadout(
   const colorIcon = defs.LoadoutColor.get(loadoutComponent.colorHash)?.colorImagePath ?? '';
   const icon = defs.LoadoutIcon.get(loadoutComponent.iconHash)?.iconImagePath ?? '';
 
-  if (loadoutComponent.items === undefined || loadoutComponent.items.length === 0) {
+  console.log(loadoutComponent);
+
+  if (
+    loadoutComponent.items === undefined ||
+    loadoutComponent.items.length === 0 ||
+    loadoutComponent.items.every((i) => i.itemInstanceId === '0')
+  ) {
     return undefined;
   }
 
