@@ -6,9 +6,13 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
-import { getDefaultAbilityChoiceHash, getSocketsByIndexes } from 'app/utils/socket-utils';
+import {
+  aspectSocketCategoryHashes,
+  fragmentSocketCategoryHashes,
+  getDefaultAbilityChoiceHash,
+  getSocketsByIndexes,
+} from 'app/utils/socket-utils';
 import clsx from 'clsx';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';
 import { createGetModRenderKey } from '../mod-utils';
 import EmptySubclass from './EmptySubclass';
@@ -24,8 +28,8 @@ export function getSubclassPlugs(
   if (subclass?.item.sockets?.categories) {
     for (const category of subclass.item.sockets.categories) {
       const showInitial =
-        category.category.hash !== SocketCategoryHashes.Aspects &&
-        category.category.hash !== SocketCategoryHashes.Fragments;
+        !aspectSocketCategoryHashes.includes(category.category.hash) &&
+        !fragmentSocketCategoryHashes.includes(category.category.hash);
       const sockets = getSocketsByIndexes(subclass.item.sockets, category.socketIndexes);
 
       for (const socket of sockets) {

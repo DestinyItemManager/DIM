@@ -6,11 +6,7 @@ import {
   armor2PlugCategoryHashesByName,
   modsWithConditionalStats,
 } from 'app/search/d2-known-values';
-import {
-  combatCompatiblePlugCategoryHashes,
-  ModSocketMetadata,
-  modTypeTagByPlugCategoryHash,
-} from 'app/search/specialty-modslots';
+import { ModSocketMetadata, modTypeTagByPlugCategoryHash } from 'app/search/specialty-modslots';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
@@ -88,9 +84,6 @@ export function categorizeArmorMods(
       unassignedMods.push(plannedMod);
     } else if (pch === armor2PlugCategoryHashesByName.general) {
       generalMods.push(plannedMod);
-      validMods.push(plannedMod);
-    } else if (combatCompatiblePlugCategoryHashes.includes(pch)) {
-      combatMods.push(plannedMod);
       validMods.push(plannedMod);
     } else if (activityModPlugCategoryHashes.includes(pch)) {
       activityMods.push(plannedMod);
