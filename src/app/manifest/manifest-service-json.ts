@@ -12,12 +12,7 @@ import {
   DestinyItemActionBlockDefinition,
   DestinyItemTalentGridBlockDefinition,
   DestinyItemTranslationBlockDefinition,
-  DestinyLoadoutColorDefinition,
-  DestinyLoadoutConstantsDefinition,
-  DestinyLoadoutIconDefinition,
-  DestinyLoadoutNameDefinition,
 } from 'bungie-api-ts/destiny2';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
@@ -234,72 +229,6 @@ export async function downloadManifestComponents(
       let response: Response | null = null;
       let error = null;
       let body = null;
-
-      if (!components[table]) {
-        // TODO: rip this out after lightfall releases
-        if (table === 'DestinyLoadoutNameDefinition') {
-          manifest[table] = {
-            1: {
-              name: 'Test Name',
-              hash: 1,
-              index: 1,
-              redacted: false,
-            } satisfies DestinyLoadoutNameDefinition,
-          };
-          return;
-        }
-        if (table === 'DestinyLoadoutIconDefinition') {
-          manifest[table] = {
-            1: {
-              iconImagePath: '/common/destiny2_content/icons/32301dcfb9758fae4830c7b9f7cba1d3.jpg',
-              hash: 1,
-              index: 1,
-              redacted: false,
-            } satisfies DestinyLoadoutIconDefinition,
-          };
-          return;
-        }
-        if (table === 'DestinyLoadoutColorDefinition') {
-          manifest[table] = {
-            1: {
-              colorImagePath: '/common/destiny2_content/icons/32301dcfb9758fae4830c7b9f7cba1d3.jpg',
-              hash: 1,
-              index: 1,
-              redacted: false,
-            } satisfies DestinyLoadoutColorDefinition,
-          };
-          return;
-        }
-        if (table === 'DestinyLoadoutConstantsDefinition') {
-          manifest[table] = {
-            1: {
-              whiteIconImagePath:
-                '/common/destiny2_content/icons/df7279bf5cd0f99fe5f1e0b8a8967e5e.png',
-              blackIconImagePath:
-                '/common/destiny2_content/icons/df7279bf5cd0f99fe5f1e0b8a8967e5e.png',
-              displayProperties: {
-                name: 'Loadouts',
-                icon: '/common/destiny2_content/icons/df7279bf5cd0f99fe5f1e0b8a8967e5e.png',
-                hasIcon: true,
-                highResIcon: '/common/destiny2_content/icons/df7279bf5cd0f99fe5f1e0b8a8967e5e.png',
-                description: 'Loadouts',
-                iconSequences: [],
-              },
-              loadoutCountPerCharacter: 10,
-              loadoutPreviewFilterOutSocketCategoryHashes: [SocketCategoryHashes.IntrinsicTraits],
-              loadoutPreviewFilterOutSocketTypeHashes: [],
-              loadoutColorHashes: [1],
-              loadoutIconHashes: [1],
-              loadoutNameHashes: [1],
-              hash: 1,
-              index: 1,
-              redacted: false,
-            } satisfies DestinyLoadoutConstantsDefinition,
-          };
-          return;
-        }
-        throw new Error('Unknown table ' + table);
-      }
 
       for (const query of cacheBusterStrings) {
         try {
