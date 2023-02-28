@@ -3,6 +3,7 @@ import { tl } from 'app/i18next-t';
 import { getTag, ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
+import { isArtifice } from 'app/item-triage/triage-utils';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
 import { Settings } from 'app/settings/initial-settings';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -227,33 +228,56 @@ function computeStatDupeLower(
     _.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`)
   );
 
-  const statsCache = new Map<DimItem, number[]>();
   const dupes = new Set<string>();
 
+  // A mapping from an item to a list of all of its stat configurations
+  // (Artifice armor can have multiple). This is just a cache to prevent
+  // recalculating it.
+  const statsCache = new Map<DimItem, number[][]>();
   for (const item of armor) {
     if (item.stats && item.power && item.bucket.hash !== BucketHashes.ClassArmor) {
       const statsToConsider = customStats[item.classType] ?? armorStats;
-      statsCache.set(
-        item,
-        _.sortBy(
-          item.stats.filter((s) => statsToConsider.includes(s.statHash)),
-          (s) => s.statHash
-        ).map((s) => s.base)
-      );
+      const statValues = item.stats
+        .filter((s) => statsToConsider.includes(s.statHash))
+        .sort((a, b) => a.statHash - b.statHash)
+        .map((s) => s.base);
+      if (isArtifice(item)) {
+        statsCache.set(
+          item,
+          // Artifice armor can be +3 in any one stat, so we compute a separate
+          // version of the stats for each stat considered
+          statsToConsider.map((_s, i) => {
+            const modifiedStats = [...statValues];
+            // One stat gets +3
+            modifiedStats[i] += 3;
+            return modifiedStats;
+          })
+        );
+      } else {
+        statsCache.set(item, [statValues]);
+      }
     }
   }
 
+  // For each group of items that should be compared against each other
   for (const group of grouped) {
     const statSet = new StatsSet<DimItem>();
+    // Add a mapping from stats => item to the statsSet for each item in the group
     for (const item of group) {
       const stats = statsCache.get(item);
       if (stats) {
-        statSet.insert(stats, item);
+        for (const statValues of stats) {
+          statSet.insert(statValues, item);
+        }
       }
     }
+
+    // Now run through the items in the group again, checking against the fully
+    // populated stats set to see if there's something better
     for (const item of group) {
       const stats = statsCache.get(item);
-      if (stats && statSet.doBetterStatsExist(stats)) {
+      // All configurations must have a better version somewhere for this to count as statlower
+      if (stats?.every((statValues) => statSet.doBetterStatsExist(statValues))) {
         dupes.add(item.id);
       }
     }
