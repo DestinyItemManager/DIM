@@ -13,7 +13,7 @@ import fs from 'fs/promises';
 import _ from 'lodash';
 import path from 'path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
-import profile from './data/profile-2022-06-27.json';
+import profile from './data/profile-2023-02-28.json';
 import vendors from './data/vendors-2022-12-07.json';
 
 /**
