@@ -14,12 +14,15 @@ import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
+  aspectSocketCategoryHashes,
+  fragmentSocketCategoryHashes,
   getDefaultAbilityChoiceHash,
   getFirstSocketByCategoryHash,
   getSocketsByCategoryHash,
   getSocketsByCategoryHashes,
   getSocketsByIndexes,
   plugFitsIntoSocket,
+  subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { weakMemoize } from 'app/utils/util';
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -94,7 +97,7 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
         // in a fragment socket index >= capacity
         // (so with three fragment slots and fragments [1, 2, empty, 4] the last
         // fragment will be inactive)
-        if (category.category.hash === SocketCategoryHashes.Fragments) {
+        if (fragmentSocketCategoryHashes.includes(category.category.hash)) {
           if (fragmentCapacity > 0) {
             fragmentCapacity--;
           } else {
@@ -125,11 +128,10 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
 export function createSubclassDefaultSocketOverrides(item: DimItem) {
   if (item.bucket.hash === BucketHashes.Subclass && item.sockets) {
     const socketOverrides: SocketOverrides = {};
-    const abilityAndSuperSockets = getSocketsByCategoryHashes(item.sockets, [
-      SocketCategoryHashes.Abilities_Abilities,
-      SocketCategoryHashes.Abilities_Abilities_LightSubclass,
-      SocketCategoryHashes.Super,
-    ]);
+    const abilityAndSuperSockets = getSocketsByCategoryHashes(
+      item.sockets,
+      subclassAbilitySocketCategoryHashes
+    );
 
     for (const socket of abilityAndSuperSockets) {
       socketOverrides[socket.socketIndex] =
@@ -672,7 +674,7 @@ export function getModsFromLoadout(
 }
 
 function getSubclassFragmentCapacity(subclassItem: DimItem): number {
-  const aspects = getSocketsByCategoryHash(subclassItem.sockets, SocketCategoryHashes.Aspects);
+  const aspects = getSocketsByCategoryHashes(subclassItem.sockets, aspectSocketCategoryHashes);
   return _.sumBy(
     aspects,
     (aspect) => aspect.plugged?.plugDef.plug.energyCapacity?.capacityValue || 0

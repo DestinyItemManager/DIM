@@ -222,6 +222,24 @@ export function countEnhancedPerks(sockets: DimSockets) {
   return sockets.allSockets.filter((s) => s.plugged && isEnhancedPerk(s.plugged.plugDef)).length;
 }
 
+export const aspectSocketCategoryHashes: SocketCategoryHashes[] = [
+  SocketCategoryHashes.Aspects_Abilities_Ikora,
+  SocketCategoryHashes.Aspects_Abilities_Neomuna,
+  SocketCategoryHashes.Aspects_Abilities_Stranger,
+];
+
+export const fragmentSocketCategoryHashes: SocketCategoryHashes[] = [
+  SocketCategoryHashes.Fragments_Abilities_Ikora,
+  SocketCategoryHashes.Fragments_Abilities_Stranger,
+  SocketCategoryHashes.Fragments_Abilities_Neomuna,
+];
+
+export const subclassAbilitySocketCategoryHashes: SocketCategoryHashes[] = [
+  SocketCategoryHashes.Abilities_Abilities,
+  SocketCategoryHashes.Abilities_Abilities_Ikora,
+  SocketCategoryHashes.Super,
+];
+
 export function isModCostVisible(
   defs: D2ManifestDefinitions,
   plug: DestinyItemPlugDefinition
@@ -233,7 +251,10 @@ export function isModCostVisible(
 
   // hide cost for Subclass 3.0 fragments as these are currently always set to 1
   const subclassPlugCategory = getSubclassPlugCategories(defs).get(plug.plugCategoryHash);
-  if (subclassPlugCategory?.socketCategoryHash === SocketCategoryHashes.Fragments) {
+  if (
+    subclassPlugCategory?.socketCategoryHash &&
+    fragmentSocketCategoryHashes.includes(subclassPlugCategory.socketCategoryHash)
+  ) {
     return false;
   }
 
