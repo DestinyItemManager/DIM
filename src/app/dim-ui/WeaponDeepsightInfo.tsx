@@ -16,7 +16,7 @@ import styles from './WeaponDeepsightInfo.m.scss';
 export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
   const deepsightInfo = item.deepsightInfo;
   const record = item.patternUnlockRecord;
-  const relevantObjectives = record?.objectives.filter((o) => !o.complete);
+  const relevantObjectives = record?.objectives;
 
   if (!deepsightInfo && !relevantObjectives?.length) {
     return null;
@@ -33,7 +33,8 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
         </>
       ) : (
         relevantObjectives &&
-        relevantObjectives.length > 0 && (
+        relevantObjectives.length > 0 &&
+        !item.crafted && (
           <div className={styles.deepsightProgressSection}>
             {relevantObjectives.map((objective) => (
               <Objective key={objective.objectiveHash} objective={objective} showHidden />
