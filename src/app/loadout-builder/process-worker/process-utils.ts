@@ -136,12 +136,9 @@ export function pickAndAssignSlotIndependentMods(
       const tag = activityMod.tag!;
       const energyCost = activityMod.energy?.val || 0;
       const itemEnergy = (item.energy && item.energy.capacity - item.energy.val) || 0;
-      if (energyCost >= itemEnergy) {
-        continue;
-      }
 
       // The activity mods wont fit in the item set so move on to the next set of mods
-      if (!item.compatibleModSeasons?.includes(tag)) {
+      if (energyCost > itemEnergy || !item.compatibleModSeasons?.includes(tag)) {
         continue activityModLoop;
       }
     }
