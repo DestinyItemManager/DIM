@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
-import ElementIcon from 'app/dim-ui/ElementIcon';
+import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import 'app/inventory-page/StoreBucket.scss';
@@ -18,12 +18,7 @@ import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { SearchInput } from 'app/search/SearchInput';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
-import {
-  DestinyEnergyType,
-  DestinyProfileResponse,
-  PlugUiStyles,
-  SocketPlugSources,
-} from 'bungie-api-ts/destiny2';
+import { DestinyProfileResponse, PlugUiStyles, SocketPlugSources } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { memo, useMemo, useState } from 'react';
@@ -206,14 +201,7 @@ export default function SocketDetails({
 
   const searchFilter = createPlugSearchPredicate(query, language, defs);
 
-  let mods = Array.from(modHashes, (h) => defs.InventoryItem.get(h))
-    .filter(isPluggableItem)
-    .filter(
-      (i) =>
-        !i.plug.energyCost ||
-        (energyType && i.plug.energyCost.energyTypeHash === energyType.hash) ||
-        i.plug.energyCost.energyType === DestinyEnergyType.Any
-    );
+  let mods = Array.from(modHashes, (h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
 
   if (socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash) {
     const matchesMasterwork = (plugOption: PluggableInventoryItemDefinition) => {
@@ -283,7 +271,7 @@ export default function SocketDetails({
           />
         )}
         {requiresEnergy && energyType && (
-          <ElementIcon className={styles.energyElement} element={energyType} />
+          <EnergyCostIcon className={styles.energyElement} element={energyType} />
         )}
         <div>{socketCategory.displayProperties.name}</div>
       </h1>

@@ -6,7 +6,6 @@ import {
   DestinyClass,
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
-  DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemInstanceEnergy,
   DestinyItemPerkEntryDefinition,
@@ -144,7 +143,6 @@ export interface DimItem {
   /** Information about this item as a plug. Mostly useful for mod collectibles. */
   plug?: {
     energyCost: number;
-    costElementIcon?: string;
   };
   /** Extra pursuit info, if this item is a quest or bounty. */
   pursuit: DimPursuit | null;
@@ -164,8 +162,8 @@ export interface DimItem {
 
   // Dynamic data - this may change between profile updates
 
-  /** The damage type this weapon deals, or energy type of armor, or damage type corresponding to the item's elemental resistance. */
-  element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | null;
+  /** The damage type this weapon deals, or damage type corresponding to the item's elemental resistance. */
+  element: DestinyDamageTypeDefinition | null;
   /** Whether this item CANNOT be transferred. */
   notransfer: boolean;
   /** Is this item complete (leveled, unlocked, objectives complete)? */

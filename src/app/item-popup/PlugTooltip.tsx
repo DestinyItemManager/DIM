@@ -1,7 +1,7 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
-import ElementIcon from 'app/dim-ui/ElementIcon';
+import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
@@ -18,7 +18,6 @@ import { isEnhancedPerk, isModCostVisible } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DamageType,
-  DestinyEnergyType,
   DestinyInventoryItemDefinition,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
@@ -204,7 +203,7 @@ export function PlugTooltip({
           <span>{def.itemTypeDisplayName}</span>
           {energyType && (
             <span className={styles.energyCost}>
-              <ElementIcon element={energyType} className={styles.elementIcon} />
+              <EnergyCostIcon element={energyType} className={styles.elementIcon} />
               {energyCost.energyCost}
             </span>
           )}
@@ -215,16 +214,11 @@ export function PlugTooltip({
       [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
       [styles.tooltipEnhanced]:
         enhancedIntrinsics.has(def.hash) || (isPluggable && isEnhancedPerk(def)),
-      [styles.tooltipElementArc]:
-        energyCost?.energyType === DestinyEnergyType.Arc || subclassDamageType === DamageType.Arc,
-      [styles.tooltipElementSolar]:
-        energyCost?.energyType === DestinyEnergyType.Thermal ||
-        subclassDamageType === DamageType.Thermal,
-      [styles.tooltipElementVoid]:
-        energyCost?.energyType === DestinyEnergyType.Void || subclassDamageType === DamageType.Void,
-      [styles.tooltipElementStasis]:
-        energyCost?.energyType === DestinyEnergyType.Stasis ||
-        subclassDamageType === DamageType.Stasis,
+      [styles.tooltipElementArc]: subclassDamageType === DamageType.Arc,
+      [styles.tooltipElementSolar]: subclassDamageType === DamageType.Thermal,
+      [styles.tooltipElementVoid]: subclassDamageType === DamageType.Void,
+      [styles.tooltipElementStasis]: subclassDamageType === DamageType.Stasis,
+      [styles.tooltipElementStrand]: subclassDamageType === DamageType.Strand,
     }),
   });
 

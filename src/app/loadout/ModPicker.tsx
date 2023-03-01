@@ -17,7 +17,7 @@ import { emptyArray } from 'app/utils/empty';
 import { modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { uniqBy } from 'app/utils/util';
-import { DestinyClass, DestinyEnergyType } from 'bungie-api-ts/destiny2';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
@@ -310,7 +310,7 @@ function isModSelectable(
     );
   }
 
-  // Slot-specific mods (e.g. chest mods) can slot 2 per piece, so make sure the sum of energy doesn't
+  // Slot-specific mods (e.g. chest mods) can slot 3 per piece, so make sure the sum of energy doesn't
   // exceed the maximum and that energy all aligns. This doesn't check other mods that could be on the
   // item because we haven't assigned those to specific pieces.
   // TODO: This also doesn't check whether we add 5 1-cost chest mods?
@@ -318,22 +318,9 @@ function isModSelectable(
     const lockedModCost = isSlotSpecificCategory
       ? _.sumBy(associatedLockedMods, (mod) => mod.plug.energyCost?.energyCost || 0)
       : 0;
-
-    // Traction has no energy type so it's basically Any energy and 0 cost
     const modCost = energyCost?.energyCost || 0;
-    const modEnergyType = energyCost?.energyType || DestinyEnergyType.Any;
 
-    return (
-      lockedModCost + modCost <= MAX_ARMOR_ENERGY_CAPACITY &&
-      (modEnergyType === DestinyEnergyType.Any || // Any energy works with everything
-        associatedLockedMods.every(
-          (l) =>
-            // Matches energy
-            l.plug.energyCost?.energyType === modEnergyType ||
-            // or Any energy
-            (l.plug.energyCost?.energyType ?? DestinyEnergyType.Any) === DestinyEnergyType.Any
-        ))
-    );
+    return lockedModCost + modCost <= MAX_ARMOR_ENERGY_CAPACITY;
   } else {
     // Just check that we haven't locked too many
     return associatedLockedMods.length < MAX_SLOT_INDEPENDENT_MODS;
