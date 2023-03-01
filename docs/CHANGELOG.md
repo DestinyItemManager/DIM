@@ -8,6 +8,12 @@
 * `is:statlower` knows about the new artifice armor rules and will consider the artifice +3 stat boost in a single stat when comparing against other armor.
 * Sorting in the Organizer is a bit more reliable, and the arrows point the right way.
 * DIM should be more resistant to being logged out during API maintenance.
+* Loadout Optimizer will now automatically use Artifice mod slots to improve build stats.
+
+### Beta Only
+
+* Loadout Optimizer's toggle to include required stat mods has been changed to optimize all builds using as many stat mods as possible. This is a consequence of the artifice changes.
+
 
 ## 7.58.0 <span class="changelog-date">(2023-02-26)</span>
 

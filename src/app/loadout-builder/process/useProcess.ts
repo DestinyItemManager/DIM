@@ -173,7 +173,7 @@ export function useProcess({
           'loadout optimizer',
           `useProcess: worker time ${performance.now() - workerStart}ms`
         );
-        const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
+        const hydratedSets = sets.map((set) => hydrateArmorSet(defs, set, itemsById));
 
         setState((oldState) => ({
           ...oldState,
