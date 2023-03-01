@@ -4,7 +4,9 @@ import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-know
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import deprecatedMods from 'data/d2/deprecated-mods.json';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { knownModPlugCategoryHashes } from './known-values';
 
@@ -62,11 +64,11 @@ export function isInsertableArmor2Mod(
     isPluggableItem(def) &&
       // is the plugCategoryHash is in one of our known plugCategoryHashes (relies on d2ai).
       isArmor2Mod(def) &&
-      // is plug.insertionMaterialRequirementHash non zero or is plug.energyCost a thing. This rules out deprecated mods.
-      (def.plug.insertionMaterialRequirementHash !== 0 ||
-        def.plug.energyCost ||
-        // FIXME turns out this is a bad condition
-        def.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice) &&
+      // is it actually something relevant
+      !emptyPlugHashes.has(def.hash) &&
+      !deprecatedMods.includes(def.hash) &&
+      // Exclude consumable mods
+      def.inventory?.bucketTypeHash !== BucketHashes.Modifications &&
       // this rules out classified items
       def.itemTypeDisplayName !== undefined
   );

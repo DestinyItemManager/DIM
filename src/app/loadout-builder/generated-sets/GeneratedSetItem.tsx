@@ -102,7 +102,7 @@ export default function GeneratedSetItem({
       if (item.isExotic) {
         lbDispatch({ type: 'lockExotic', lockedExoticHash: item.hash });
       }
-    } else {
+    } else if (plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice) {
       lbDispatch({
         type: 'openModPicker',
         plugCategoryHashWhitelist,
