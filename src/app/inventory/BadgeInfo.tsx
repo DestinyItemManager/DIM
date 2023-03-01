@@ -59,7 +59,9 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
 
   const fixContrast =
     item.element &&
-    (item.element.enumValue === DamageType.Arc || item.element.enumValue === DamageType.Void);
+    (item.element.enumValue === DamageType.Arc ||
+      item.element.enumValue === DamageType.Void ||
+      item.element.enumValue === DamageType.Strand);
 
   const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
   const summaryIcon = item.crafted ? (
