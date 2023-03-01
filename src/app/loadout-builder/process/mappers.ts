@@ -1,3 +1,4 @@
+import { isArtifice } from 'app/item-triage/triage-utils';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import {
   activityModPlugCategoryHashes,
@@ -127,6 +128,7 @@ export function mapDimItemToProcessItem({
     hash,
     name,
     isExotic,
+    isArtifice: isArtifice(dimItem),
     power,
     stats: statMap,
     energy: energy

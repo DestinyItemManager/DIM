@@ -204,7 +204,7 @@ export function fitMostMods({
       item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === artificeMod.hash)
     );
     if (targetItemIndex === -1) {
-      targetItemIndex = artificeItems.length - 1;
+      targetItemIndex = artificeItems.length ? 0 : -1;
     }
 
     if (targetItemIndex !== -1) {

@@ -230,6 +230,9 @@ export function process(
               }
             }
 
+            const armor = [helm, gaunt, chest, leg, classItem];
+            const numArtifice = armor.filter((item) => item.isArtifice).length;
+
             // Drop this set if it could never make it
             if (!setTracker.couldInsert(totalTier)) {
               setStatistics.skipReasons.skippedLowTier++;
@@ -241,8 +244,6 @@ export function process(
               setStatistics.upperBoundsExceeded.timesFailed++;
               continue;
             }
-
-            const armor = [helm, gaunt, chest, leg, classItem];
 
             const neededStats = [0, 0, 0, 0, 0, 0];
             let needSomeStats = false;
@@ -276,11 +277,12 @@ export function process(
                 precalculatedInfo,
                 setStatistics.modsStatistics,
                 armor,
-                needSomeStats ? neededStats : undefined
+                needSomeStats ? neededStats : undefined,
+                numArtifice
               );
 
               if (modsPick) {
-                statMods = modsPick.modHashes;
+                statMods = modsPick.flatMap((pick) => pick.modHashes);
               } else {
                 continue;
               }
@@ -358,11 +360,6 @@ export function process(
     setStatistics.modsStatistics.autoModsPick,
     setStatistics.modsStatistics
   );
-  infoLog('loadout optimizer', 'auto stat mods', {
-    cacheHits: precalculatedInfo.cache.cacheHits,
-    cacheMisses: precalculatedInfo.cache.cacheMisses,
-    cacheSuccesses: precalculatedInfo.cache.cacheSuccesses,
-  });
 
   const sets = finalSets.map(({ armor, stats, statMods }) => ({
     armor: armor.map((item) => item.id),
