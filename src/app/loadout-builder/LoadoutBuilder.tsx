@@ -30,7 +30,7 @@ import { isArmor2Mod } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import { memo, useCallback, useEffect, useMemo } from 'react';
@@ -58,6 +58,9 @@ import {
   LOCKED_EXOTIC_ANY_EXOTIC,
   loDefaultArmorEnergyRules,
 } from './types';
+
+/** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
+const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
 
 const statOrderSelector = (state: RootState) =>
   savedLoadoutParametersSelector(state).statConstraints!.map((c) => c.statHash);
@@ -524,6 +527,7 @@ export default memo(function LoadoutBuilder({
               owner={selectedStore.id}
               lockedMods={lockedMods}
               plugCategoryHashWhitelist={modPicker.plugCategoryHashWhitelist}
+              plugCategoryHashDenyList={autoAssignmentPCHs}
               onAccept={(newLockedMods) =>
                 lbDispatch({
                   type: 'lockedModsChanged',

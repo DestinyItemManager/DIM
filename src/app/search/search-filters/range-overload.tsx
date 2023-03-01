@@ -1,13 +1,8 @@
 import { tl } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import seasonTags from 'data/d2/season-tags.json';
-import {
-  energyCapacityTypeNames,
-  energyNamesByEnum,
-  powerLevelByKeyword,
-} from '../d2-known-values';
+import { powerLevelByKeyword } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { allStatNames, statHashByName } from '../search-filter-values';
 
@@ -51,16 +46,12 @@ const overloadedRangeFilters: FilterDefinition[] = [
   {
     keywords: 'energycapacity',
     description: tl('Filter.Energy'),
-    format: ['range', 'query'],
+    format: 'range',
     destinyVersion: 2,
-    suggestions: energyCapacityTypeNames,
-    filter: ({ filterValue, compare }) => {
-      if (compare) {
-        return (item: DimItem) => item.energy && compare(item.energy.energyCapacity);
-      }
-      return (item: DimItem) =>
-        item.energy && filterValue === energyNamesByEnum[item.energy.energyType];
-    },
+    filter:
+      ({ compare }) =>
+      (item) =>
+        item.energy && compare!(item.energy.energyCapacity),
   },
   {
     keywords: 'season',
@@ -70,7 +61,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     overload: Object.fromEntries(Object.entries(seasonTagToNumber).reverse()),
     filter:
       ({ compare }) =>
-      (item: DimItem) =>
+      (item) =>
         compare!(getSeason(item)),
   },
   {

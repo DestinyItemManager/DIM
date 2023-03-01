@@ -1,4 +1,3 @@
-import { energyCapacityTypeNames } from './d2-known-values';
 import { FilterDefinition } from './filter-types';
 import { allStatNames, searchableArmorStatNames } from './search-filter-values';
 import { generateSuggestionsForFilter } from './suggestions-generation';
@@ -20,7 +19,7 @@ describe('generateSuggestionsForFilter', () => {
     ['stat', 'stat', allStatNames, undefined],
     ['query', 'maxstatvalue', searchableArmorStatNames, undefined],
     ['query', 'maxstatvalue', searchableArmorStatNames, undefined],
-    [['range', 'query'], 'energycapacity', energyCapacityTypeNames, undefined],
+    ['range', 'energycapacity', undefined, undefined],
   ];
 
   test.each(cases)(

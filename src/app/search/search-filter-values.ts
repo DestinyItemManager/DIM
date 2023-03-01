@@ -17,7 +17,7 @@ import {
 
 // this correlation is solely for element filter names
 export const damageNamesByEnum: { [key in DamageType]: string | null } = {
-  0: null,
+  [DamageType.None]: null,
   [DamageType.Kinetic]: 'kinetic',
   [DamageType.Arc]: 'arc',
   [DamageType.Thermal]: 'solar',

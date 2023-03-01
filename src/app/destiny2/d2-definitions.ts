@@ -12,7 +12,6 @@ import {
   DestinyCollectibleDefinition,
   DestinyDamageTypeDefinition,
   DestinyDestinationDefinition,
-  DestinyEnergyTypeDefinition,
   DestinyEventCardDefinition,
   DestinyFactionDefinition,
   DestinyGenderDefinition,
@@ -57,7 +56,6 @@ const lazyTables = [
   'SandboxPerk',
   'Stat',
   'StatGroup',
-  'EnergyType',
   'DamageType',
   'Progression',
   'ItemCategory',
@@ -115,7 +113,6 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   SandboxPerk: DefinitionTable<DestinySandboxPerkDefinition>;
   Stat: DefinitionTable<DestinyStatDefinition>;
   StatGroup: DefinitionTable<DestinyStatGroupDefinition>;
-  EnergyType: DefinitionTable<DestinyEnergyTypeDefinition>;
   Progression: DefinitionTable<DestinyProgressionDefinition>;
   ItemCategory: DefinitionTable<DestinyItemCategoryDefinition>;
   Activity: DefinitionTable<DestinyActivityDefinition>;
