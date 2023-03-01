@@ -5,6 +5,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import {
   aspectSocketCategoryHashes,
@@ -49,14 +50,13 @@ export function getSubclassPlugs(
 
 /** The subclass section used in the loadouts page and drawer */
 export default function LoadoutSubclassSection({
-  defs,
   subclass,
   power,
 }: {
-  defs: D2ManifestDefinitions;
   subclass?: ResolvedLoadoutItem;
   power: number;
 }) {
+  const defs = useD2Definitions()!;
   const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);
 

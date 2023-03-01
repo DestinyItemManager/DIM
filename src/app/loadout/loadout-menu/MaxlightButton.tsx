@@ -16,10 +16,9 @@ interface Props {
   allItems: DimItem[];
   dimStore: DimStore;
   hasClassified: boolean;
-  hideIcon?: boolean;
 }
 
-export default function MaxlightButton({ allItems, dimStore, hasClassified, hideIcon }: Props) {
+export default function MaxlightButton({ allItems, dimStore, hasClassified }: Props) {
   const dispatch = useThunkDispatch();
 
   const maxLight = getLight(dimStore, maxLightItemSet(allItems, dimStore).equippable);
@@ -32,9 +31,19 @@ export default function MaxlightButton({ allItems, dimStore, hasClassified, hide
   };
 
   return (
-    <span onClick={makeMaxLightLoadout} className={styles.container}>
-      <PressTip tooltip={hasClassified ? t('Loadouts.Classified') : ''}>
-        <span className={styles.light}>
+    <>
+      <span onClick={makeMaxLightLoadout}>
+        <AppIcon icon={powerActionIcon} />
+        <span>
+          {dimStore.destinyVersion === 2
+            ? t('Loadouts.MaximizePower')
+            : t('Loadouts.MaximizeLight')}
+        </span>
+        <PressTip
+          tooltip={hasClassified ? t('Loadouts.Classified') : undefined}
+          elementType="span"
+          className={styles.light}
+        >
           {dimStore.destinyVersion === 1 ? (
             <>
               <AppIcon icon={powerIndicatorIcon} />
@@ -51,12 +60,8 @@ export default function MaxlightButton({ allItems, dimStore, hasClassified, hide
           )}
 
           {hasClassified && <sup>*</sup>}
-        </span>
-      </PressTip>
-      {!hideIcon && <AppIcon icon={powerActionIcon} />}
-      <span>
-        {dimStore.destinyVersion === 2 ? t('Loadouts.MaximizePower') : t('Loadouts.MaximizeLight')}
+        </PressTip>
       </span>
-    </span>
+    </>
   );
 }

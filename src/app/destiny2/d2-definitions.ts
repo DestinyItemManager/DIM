@@ -19,6 +19,10 @@ import {
   DestinyInventoryItemDefinition,
   DestinyItemCategoryDefinition,
   DestinyItemTierTypeDefinition,
+  DestinyLoadoutColorDefinition,
+  DestinyLoadoutConstantsDefinition,
+  DestinyLoadoutIconDefinition,
+  DestinyLoadoutNameDefinition,
   DestinyMaterialRequirementSetDefinition,
   DestinyMetricDefinition,
   DestinyMilestoneDefinition,
@@ -76,6 +80,9 @@ const lazyTables = [
   'PowerCap',
   'BreakerType',
   'EventCard',
+  'LoadoutName',
+  'LoadoutIcon',
+  'LoadoutColor',
 ];
 
 const eagerTables = [
@@ -86,6 +93,7 @@ const eagerTables = [
   'Faction',
   'ItemTierType',
   'ActivityMode',
+  'LoadoutConstants',
 ];
 
 /** These aren't really lazy */
@@ -129,6 +137,9 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   DamageType: DefinitionTable<DestinyDamageTypeDefinition>;
   Collectible: DefinitionTable<DestinyCollectibleDefinition>;
   EventCard: DefinitionTable<DestinyEventCardDefinition>;
+  LoadoutName: DefinitionTable<DestinyLoadoutNameDefinition>;
+  LoadoutColor: DefinitionTable<DestinyLoadoutColorDefinition>;
+  LoadoutIcon: DefinitionTable<DestinyLoadoutIconDefinition>;
 
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };
@@ -137,6 +148,7 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   Faction: { [hash: number]: DestinyFactionDefinition };
   ItemTierType: { [hash: number]: DestinyItemTierTypeDefinition };
   ActivityMode: { [hash: number]: DestinyActivityModeDefinition };
+  LoadoutConstants: { [hash: number]: DestinyLoadoutConstantsDefinition };
 }
 
 export const allTables = [...eagerTables, ...lazyTables];
@@ -170,6 +182,7 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
     isDestiny1: () => false,
     isDestiny2: () => true,
   };
+
   for (const tableShort of lazyTables) {
     const table = `Destiny${tableShort}Definition` as keyof AllDestinyManifestComponents;
     const dbTable = db[table];

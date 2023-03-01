@@ -4,7 +4,13 @@ import {
   LoadoutItem,
   UpgradeSpendTier,
 } from '@destinyitemmanager/dim-api-types';
-import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from './loadout-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { DestinyLoadoutComponent } from 'bungie-api-ts/destiny2';
+import {
+  InGameLoadout,
+  Loadout as DimLoadout,
+  LoadoutItem as DimLoadoutItem,
+} from './loadout-types';
 
 /**
  * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. These functions convert
@@ -117,5 +123,37 @@ function convertDimApiLoadoutItemToLoadoutItem(
     id: item.id || '0',
     amount: item.amount || 1,
     equip: equipped,
+  };
+}
+
+/**
+ * Given what the API returns for loadouts, return an enhanced object that tells us a little more about the loadout.
+ */
+export function convertDestinyLoadoutComponentToInGameLoadout(
+  loadoutComponent: DestinyLoadoutComponent,
+  index: number,
+  characterId: string,
+  defs: D2ManifestDefinitions
+): InGameLoadout | undefined {
+  const name = defs.LoadoutName.get(loadoutComponent.nameHash)?.name ?? 'Unknown';
+  const colorIcon = defs.LoadoutColor.get(loadoutComponent.colorHash)?.colorImagePath ?? '';
+  const icon = defs.LoadoutIcon.get(loadoutComponent.iconHash)?.iconImagePath ?? '';
+
+  if (
+    loadoutComponent.items === undefined ||
+    loadoutComponent.items.length === 0 ||
+    loadoutComponent.items.every((i) => i.itemInstanceId === '0')
+  ) {
+    return undefined;
+  }
+
+  return {
+    ...loadoutComponent,
+    characterId,
+    index,
+    name,
+    colorIcon,
+    icon,
+    id: `ingame-${characterId}-${index}`,
   };
 }

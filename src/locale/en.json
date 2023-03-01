@@ -381,6 +381,10 @@
     "Tab": "TAB",
     "Vault": "Send item to vault"
   },
+  "InGameLoadout": {
+    "Applying": "Equipping loadout...",
+    "LoadoutSlotNum": "Slot {{index}}"
+  },
   "Infusion": {
     "Filter": "Filter items",
     "InfuseSource": "Select item to infuse {{name}} into",

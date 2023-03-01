@@ -3,6 +3,7 @@ import {
   LoadoutItem as DimApiLoadoutItem,
 } from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DestinyLoadoutComponent } from 'bungie-api-ts/destiny2';
 
 export type LoadoutItem = DimApiLoadoutItem & {
   /**
@@ -28,6 +29,31 @@ export type Loadout = Omit<DimApiLoadout, 'equipped' | 'unequipped'> & {
 };
 
 /**
+ * An in-game D2 loadout (post-Lightfall) decorated with enough data to equip it.
+ *
+ * TODO: Maybe converge this with DimLoadout instead of maintaining two. Especially if we add the icon/color/name to DimLoadout.
+ */
+export type InGameLoadout = DestinyLoadoutComponent & {
+  /** The index of the loadout in the list of the user's loadouts */
+  index: number;
+
+  /** What character this loadout is bound to. */
+  characterId: string;
+
+  /** The name of the loadout. From nameHash + DestinyLoadoutNameDefinition. */
+  name: string;
+
+  /** The loadout's icon foreground. From iconHash + DestinyLoadoutIconDefinition. */
+  icon: string;
+
+  /** The loadout's color / icon background. From colorHash + DestinyLoadoutColorDefinition. */
+  colorIcon: string;
+
+  /** An ID that should be unique among ingame and DIM loadouts. */
+  id: string;
+};
+
+/**
  * Once we resolve a loadout item specifier to an actual item in inventory, we
  * can pass them around together. This represents the pair of the loadout item
  * specifier and the item in inventory (or fake placeholder item) that goes
@@ -46,7 +72,6 @@ export interface ResolvedLoadoutItem {
    * this item in the loadout. Note that this loadoutItem may not have the same
    * id or even hash as the resolved item!
    */
-  // TODO: remove this in favor of just equip/socketOverrides/amount?
   readonly loadoutItem: LoadoutItem;
 
   /** This item wasn't found in inventory. This means `item` is a fake placeholder. */
@@ -76,4 +101,8 @@ export interface PluggingAction extends Assignment {
    * If not, this is an optional action which clears out other mod slots.
    */
   required: boolean;
+}
+
+export function isInGameLoadout(loadout: Loadout | InGameLoadout): loadout is InGameLoadout {
+  return `colorHash` in loadout;
 }

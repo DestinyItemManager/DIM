@@ -11,15 +11,19 @@ import { sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { inGameLoadoutsForCharacterSelector } from 'app/loadout/ingame/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { addIcon, AppIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { RootState } from 'app/store/types';
 import { Portal } from 'app/utils/temp-container';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import InGameLoadoutIcon from './ingame/InGameLoadoutIcon';
+import InGameLoadoutRow from './ingame/InGameLoadoutRow';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import {
@@ -75,6 +79,10 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const savedLoadouts = useSavedLoadoutsForClassType(classType);
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
+  const inGameLoadouts = useSelector((state: RootState) =>
+    inGameLoadoutsForCharacterSelector(state, selectedStoreId)
+  );
+
   const currentLoadout = useMemo(
     () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore),
     [selectedStore]
@@ -82,6 +90,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     savedLoadouts,
+    inGameLoadouts,
     selectedStoreId,
     true,
     undefined,
@@ -135,6 +144,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         {!isPhonePortrait &&
           loadouts.map((loadout) => (
             <PageWithMenu.MenuButton anchor={loadout.id} key={loadout.id}>
+              {isInGameLoadout(loadout) && <InGameLoadoutIcon loadout={loadout} />}
               <ColorDestinySymbols text={loadout.name} />
             </PageWithMenu.MenuButton>
           ))}
@@ -147,16 +157,20 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           </p>
         )}
         {filterPills}
-        {loadouts.map((loadout) => (
-          <LoadoutRow
-            key={loadout.id}
-            loadout={loadout}
-            store={selectedStore}
-            saved={savedLoadoutIds.has(loadout.id)}
-            equippable={loadout !== currentLoadout}
-            onShare={setSharedLoadout}
-          />
-        ))}
+        {loadouts.map((loadout) =>
+          isInGameLoadout(loadout) ? (
+            <InGameLoadoutRow key={loadout.index} loadout={loadout} store={selectedStore} />
+          ) : (
+            <LoadoutRow
+              key={loadout.id}
+              loadout={loadout}
+              store={selectedStore}
+              saved={savedLoadoutIds.has(loadout.id)}
+              equippable={loadout !== currentLoadout}
+              onShare={setSharedLoadout}
+            />
+          )
+        )}
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
       {sharedLoadout && (

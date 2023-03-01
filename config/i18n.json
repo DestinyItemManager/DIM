@@ -390,6 +390,10 @@
     "SwitchDirection": "Switch",
     "TransferItems": "Transfer"
   },
+  "InGameLoadout": {
+    "Applying": "Equipping loadout...",
+    "LoadoutSlotNum": "Slot {{index}}"
+  },
   "Inventory": {
     "ClickToExpand": "(Click to expand)"
   },

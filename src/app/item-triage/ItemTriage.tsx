@@ -14,7 +14,9 @@ import { allItemsSelector } from 'app/inventory/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemPopupTab } from 'app/item-popup/ItemPopupBody';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
+import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { loadoutToSearchString } from 'app/search/search-filters/loadouts';
 import { AppIcon, compareIcon, editIcon, thumbsUpIcon } from 'app/shell/icons';
@@ -142,25 +144,35 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
     >
       <ul className={styles.loadoutList}>
         {inLoadouts.map((l) => {
-          const edit = () => {
-            editLoadout(l.loadout, item.owner, {
-              isNew: false,
+          const loadout = l.loadout;
+          const isDimLoadout = !isInGameLoadout(loadout);
+          const edit =
+            isDimLoadout &&
+            (() => {
+              editLoadout(loadout, item.owner, {
+                isNew: false,
+              });
+              hideItemPopup();
             });
-            hideItemPopup();
-          };
           return (
-            <li className={styles.loadoutRow} key={l.loadout.id}>
-              <ClassIcon classType={l.loadout.classType} className={styles.inlineIcon} />
-              <ColorDestinySymbols text={l.loadout.name} className={styles.loadoutName} />
+            <li className={styles.loadoutRow} key={loadout.id}>
+              {isDimLoadout ? (
+                <ClassIcon classType={loadout.classType} className={styles.inlineIcon} />
+              ) : (
+                <InGameLoadoutIcon loadout={loadout} />
+              )}
+              <ColorDestinySymbols text={loadout.name} className={styles.loadoutName} />
               <span className={styles.controls}>
-                <a
-                  onClick={edit}
-                  title={t('Loadouts.Edit')}
-                  className={filterButtonStyles.setFilterButton}
-                >
-                  <AppIcon icon={editIcon} />
-                </a>
-                <SetFilterButton filter={loadoutToSearchString(l.loadout)} />
+                {edit && (
+                  <a
+                    onClick={edit}
+                    title={t('Loadouts.Edit')}
+                    className={filterButtonStyles.setFilterButton}
+                  >
+                    <AppIcon icon={editIcon} />
+                  </a>
+                )}
+                <SetFilterButton filter={loadoutToSearchString(loadout)} />
               </span>
             </li>
           );

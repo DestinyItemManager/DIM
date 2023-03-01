@@ -24,8 +24,9 @@ import NotesArea from 'app/item-popup/NotesArea';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
+import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
@@ -624,17 +625,30 @@ export function getColumns(
   return columns;
 }
 
-function LoadoutsCell({ loadouts, owner }: { loadouts: Loadout[]; owner: string }) {
+function LoadoutsCell({
+  loadouts,
+  owner,
+}: {
+  loadouts: (Loadout | InGameLoadout)[];
+  owner: string;
+}) {
   return (
     <>
       {loadouts.map((loadout) => (
-        <div key={loadout.id}>
-          <a
-            data-perk-name={loadout.id}
-            onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
-          >
-            {loadout.name}
-          </a>
+        <div key={loadout.id} className={styles.loadout}>
+          {isInGameLoadout(loadout) ? (
+            <a data-perk-name={loadout.id}>
+              {isInGameLoadout(loadout) && <InGameLoadoutIcon loadout={loadout} />}
+              {loadout.name}
+            </a>
+          ) : (
+            <a
+              data-perk-name={loadout.id}
+              onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
+            >
+              {loadout.name}
+            </a>
+          )}
         </div>
       ))}
     </>

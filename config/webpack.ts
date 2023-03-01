@@ -305,6 +305,13 @@ export default (env: Env) => {
             },
           ],
         },
+        // https://github.com/pmndrs/react-spring/issues/2097, remove after react-spring is gone
+        {
+          test: /react-spring/i,
+          resolve: {
+            fullySpecified: false,
+          },
+        },
       ],
 
       noParse: /manifests/,
