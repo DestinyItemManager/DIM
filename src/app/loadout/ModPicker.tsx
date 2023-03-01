@@ -18,7 +18,7 @@ import { modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { uniqBy } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
@@ -51,6 +51,8 @@ interface ProvidedProps {
   initialQuery?: string;
   /** Only show mods that are in these categories. No restriction if this is not provided. */
   plugCategoryHashWhitelist?: number[];
+  /** Never show mods in these categories */
+  plugCategoryHashDenyList?: number[];
   /** Called with the complete list of lockedMods when the user accepts the new mod selections. */
   onAccept: (newLockedMods: PluggableInventoryItemDefinition[]) => void;
   /** Called when the user accepts the new modset of closes the sheet. */
@@ -66,7 +68,7 @@ type Props = ProvidedProps & StoreProps;
 function mapStateToProps() {
   /**
    * Build up a list of PlugSets used by armor in the user's inventory, and the
-   * plug items contained within them, restricted to an optional plugCategoryHashWhitelist
+   * plug items contained within them, restricted to an optional plugCategoryHashWhitelist and plugCategoryHashDenyList
    */
   const unlockedPlugSetsSelector = createSelector(
     profileResponseSelector,
@@ -75,6 +77,7 @@ function mapStateToProps() {
     (_state: RootState, props: ProvidedProps) => props.classType,
     (_state: RootState, props: ProvidedProps) => props.owner,
     (_state: RootState, props: ProvidedProps) => props.plugCategoryHashWhitelist,
+    (_state: RootState, props: ProvidedProps) => props.plugCategoryHashDenyList,
     (_state: RootState, props: ProvidedProps) => props.lockedMods,
     currentStoreSelector,
     (
@@ -84,6 +87,7 @@ function mapStateToProps() {
       classType,
       owner,
       plugCategoryHashWhitelist,
+      plugCategoryHashDenyList,
       lockedMods,
       currentStore
     ): PlugSet[] => {
@@ -91,6 +95,11 @@ function mapStateToProps() {
       if (!profileResponse || !defs) {
         return emptyArray();
       }
+
+      // For some reason there are six identical copies of the artifice plugSet, so
+      // let's stop after the first one. It doesn't really matter which particular set we get
+      // since the contained mods are the same.
+      let usedArtifice = false;
 
       // Look at every armor item and see what sockets it has
       for (const item of allItems) {
@@ -133,10 +142,12 @@ function mapStateToProps() {
             owner ?? currentStore!.id
           );
 
-          const dimPlugs = sockets[0].plugSet!.plugs.filter(
-            (p) =>
-              unlockedPlugs.has(p.plugDef.hash) &&
-              p.plugDef.hash !== sockets[0].plugSet!.precomputedEmptyPlugItemHash
+          const isArtificePlugSet = sockets[0].plugSet!.plugs.some(
+            (p) => p?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice
+          );
+
+          const dimPlugs = sockets[0].plugSet!.plugs.filter((p) =>
+            unlockedPlugs.has(p.plugDef.hash)
           );
 
           // Filter down to plugs that match the plugCategoryHashWhitelist
@@ -145,7 +156,8 @@ function mapStateToProps() {
             if (
               isInsertableArmor2Mod(dimPlug.plugDef) &&
               (!plugCategoryHashWhitelist ||
-                plugCategoryHashWhitelist.includes(dimPlug.plugDef.plug.plugCategoryHash))
+                plugCategoryHashWhitelist.includes(dimPlug.plugDef.plug.plugCategoryHash)) &&
+              !plugCategoryHashDenyList?.includes(dimPlug.plugDef.plug.plugCategoryHash)
             ) {
               plugsWithDuplicates.push(dimPlug.plugDef);
             }
@@ -162,7 +174,12 @@ function mapStateToProps() {
             ? sockets.length
             : MAX_SLOT_INDEPENDENT_MODS;
 
-          if (plugs.length && !plugSetsByHash[plugSetHash]) {
+          if (
+            plugs.length &&
+            !plugSetsByHash[plugSetHash] &&
+            !(isArtificePlugSet && usedArtifice)
+          ) {
+            usedArtifice ||= isArtificePlugSet;
             plugSetsByHash[plugSetHash] = {
               plugSetHash,
               maxSelectable,
@@ -183,7 +200,7 @@ function mapStateToProps() {
                 }
               }
             }
-          } else if (plugs.length && plugSetsByHash[plugSetHash].maxSelectable < sockets.length) {
+          } else if (plugs.length && plugSetsByHash[plugSetHash]?.maxSelectable < sockets.length) {
             plugSetsByHash[plugSetHash].maxSelectable = sockets.length;
           }
         }
