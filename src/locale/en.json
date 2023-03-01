@@ -205,7 +205,7 @@
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
     "DamageType": "Shows items based on their damage type.",
-    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials. deepsight:complete and deepsight:incomplete refer to the progress of the deepsight objective, while deepsight:pattern shows items that could be progressed to unlock a pattern.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted.",
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
@@ -763,7 +763,6 @@
     "CatalystProgress": "Catalyst Progress",
     "CommunityData": "Community Insight",
     "Consolidate": "Consolidate",
-    "CraftingPattern": "Crafting Pattern",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
     "FavoriteUnFavorite": {

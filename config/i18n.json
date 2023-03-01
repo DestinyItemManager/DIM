@@ -202,7 +202,7 @@
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Shows items based on their damage type.",
-    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials. deepsight:complete and deepsight:incomplete refer to the progress of the deepsight objective, while deepsight:pattern shows items that could be progressed to unlock a pattern.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted.",
     "Description": "Description",
     "RetiredPerk": "Shows weapons with perks that no longer obtainable.",
     "Dupe": "Shows duplicate items, including reissues",
@@ -766,7 +766,6 @@
     "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
     "Consolidate": "Consolidate",
     "CommunityData": "Community Insight",
-    "CraftingPattern": "Crafting Pattern",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
     "FavoriteUnFavorite": {
