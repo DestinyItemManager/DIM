@@ -288,7 +288,7 @@ export function getColumns(
       (destinyVersion === 2 || isWeapon) &&
       c({
         id: 'dmg',
-        header: isArmor ? t('Organizer.Columns.Element') : t('Organizer.Columns.Damage'),
+        header: t('Organizer.Columns.Damage'),
         value: (item) => item.element?.displayProperties.name,
         cell: (_val, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
         filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
