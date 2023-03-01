@@ -235,7 +235,12 @@ export function process(
             }
 
             const armor = [helm, gaunt, chest, leg, classItem];
-            const numArtifice = armor.filter((item) => item.isArtifice).length;
+            const numArtifice =
+              Number(helm.isArtifice) +
+              Number(gaunt.isArtifice) +
+              Number(chest.isArtifice) +
+              Number(leg.isArtifice) +
+              Number(classItem.isArtifice);
 
             // Drop this set if it could never make it
             if (

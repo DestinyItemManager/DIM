@@ -20,7 +20,7 @@ export interface ProcessItemSubset extends SortParam {
  * Data that stays the same in a given LO run.
  */
 export interface LoSessionInfo {
-  cache: AutoModsMap;
+  autoModOptions: AutoModsMap;
   statOrder: ArmorStatHashes[];
   hasActivityMods: boolean;
   /** The total cost of all user-picked general and activity mods. */
@@ -42,15 +42,10 @@ export function precalculateStructures(
   statOrder: ArmorStatHashes[]
 ): LoSessionInfo {
   const generalModCosts = generalMods.map((m) => m.energy?.val || 0).sort((a, b) => b - a);
-  let numAvailableGeneralMods: number;
-  if (autoStatMods) {
-    numAvailableGeneralMods = 5 - generalModCosts.length;
-  } else {
-    numAvailableGeneralMods = 0;
-  }
+  const numAvailableGeneralMods = autoStatMods ? 5 - generalModCosts.length : 0;
 
   return {
-    cache: buildAutoModsMap(numAvailableGeneralMods),
+    autoModOptions: buildAutoModsMap(numAvailableGeneralMods),
     statOrder,
     hasActivityMods: activityMods.length > 0,
     generalModCosts,
@@ -331,18 +326,18 @@ interface SearchResult {
  * As an optimization for the backtracking search, we do a dominance check so that we can skip evaluating subbranches if further-right stats
  * bring nothing new to the table. E.g. if we tried +10 resilience, then there's no point in seeing if +10 recovery instead
  * could give us a better set, since their mods cost the same and that stat needed the same number of points for the next tier.
- *
- * If there's an optimistic estimate of how many tiers can be gained by stat mods + artifice mods, this also aborts as soon
- * as a node with this tier total is reached. This gives a small efficiency boost when there aren't many slot-specific mods.
  */
 function exploreAutoModsSearchTree(
   info: LoSessionInfo,
   items: ProcessItem[],
   /** The base stats from our set + fragments + ... */
   setStats: number[],
-  /** The stats we have explored in this search process */
+  /** The stat boosts in the current search tree node */
   explorationStats: number[],
-  /** The highest allowed additional stat values */
+  /**
+   * The highest allowed additional stat values. we are not allowed to boost stats beyond this,
+   * otherwise we would go over the stats' tier maxes (or T10 if no max)
+   */
   maxAddedStats: number[],
   /** How many artifice mods this set has */
   numArtificeMods: number,
@@ -371,36 +366,40 @@ function exploreAutoModsSearchTree(
     depth,
     picks,
   };
+
+  // The cost to get to the next tier has two dimensions:
+  // * cost of individual stat mods (boolean `couldUseExpensiveMod` since mod costs fall into two sets)
+  // * number of stat points missing to go to the next tier (`pointsMissing`)
   const previousCosts: {
-    expensive: boolean;
-    cost: number;
+    couldUseExpensiveMod: boolean;
+    pointsMissing: number;
   }[] = [];
 
-  while (statIndex < setStats.length) {
+  for (; statIndex < setStats.length; statIndex++) {
     if (explorationStats[statIndex] >= maxAddedStats[statIndex]) {
-      statIndex += 1;
       continue;
     }
 
-    const subTreeCost = explorationStats[statIndex] === 0 ? 10 - (setStats[statIndex] % 10) : 10;
-    const subTreeExpensive = isExpensiveMod(info.statOrder[statIndex]);
+    const pointsMissing = explorationStats[statIndex] === 0 ? 10 - (setStats[statIndex] % 10) : 10;
+    const couldUseExpensiveMod =
+      info.numAvailableGeneralMods > 0 && isExpensiveMod(info.statOrder[statIndex]);
 
-    // Dominance check: If an earlier branch strictly cost less, skip. Earlier branches are
-    // higher-prioritized stats, so they're better when depth is equal, and the strictly less
-    // cost condition ensures later branches can't end up producing a better total tier.
+    // Dominance check: If an earlier-explored (=higher-priority) branch needs fewer stat points
+    // to the next tier AND doesn't have more expensive mods than this current one, we don't even need to
+    // look at this branch.
     if (
       previousCosts.some(
         (previousSubtree) =>
-          (!previousSubtree.expensive || (previousSubtree.expensive && subTreeExpensive)) &&
-          previousSubtree.cost <= subTreeCost
+          (!previousSubtree.couldUseExpensiveMod ||
+            (previousSubtree.couldUseExpensiveMod && couldUseExpensiveMod)) &&
+          previousSubtree.pointsMissing <= pointsMissing
       )
     ) {
-      statIndex += 1;
       continue;
     }
 
     const subTreeStats = explorationStats.slice();
-    subTreeStats[statIndex] += subTreeCost;
+    subTreeStats[statIndex] += pointsMissing;
 
     const explorationResult = exploreAutoModsSearchTree(
       info,
@@ -420,10 +419,9 @@ function exploreAutoModsSearchTree(
     }
     // Remember that we checked a stat like this so we can skip dominated branches in later iterations.
     previousCosts.push({
-      cost: subTreeCost,
-      expensive: subTreeExpensive,
+      pointsMissing,
+      couldUseExpensiveMod,
     });
-    statIndex += 1;
   }
   return bestResult;
 }

@@ -96,7 +96,7 @@ export function chooseAutoMods(
 
 function doGeneralModsFit(
   info: LoSessionInfo,
-  /** variants of remaining energy capacities given our activity mod assignment, each sorted descendingly */
+  /** variants of remaining energy capacities given our activity mod assignment, each sorted descending */
   remainingEnergyCapacities: number[][],
   pickedMods: ModsPick[]
 ) {
@@ -124,7 +124,7 @@ function recursivelyChooseMods(
   statIndex: number,
   remainingGeneralSlots: number,
   remainingArtificeSlots: number,
-  /** variants of remaining energy capacities given our activity mod assignment, each sorted descendingly */
+  /** variants of remaining energy capacities given our activity mod assignment, each sorted descending */
   remainingEnergyCapacities: number[][],
   remainingTotalEnergy: number,
   pickedMods: ModsPick[]
@@ -143,7 +143,7 @@ function recursivelyChooseMods(
   }
 
   const possiblePicks =
-    info.cache.statCaches[info.statOrder[statIndex]].statMap[neededStats[statIndex]];
+    info.autoModOptions.statCaches[info.statOrder[statIndex]].statMap[neededStats[statIndex]];
   if (!possiblePicks) {
     // we can't possibly hit our target stats
     return undefined;
