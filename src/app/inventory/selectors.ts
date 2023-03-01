@@ -115,7 +115,8 @@ export const materialsSelector = (state: RootState) =>
     (i) =>
       i.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
       i.itemCategoryHashes.includes(ItemCategoryHashes.ReputationTokens) ||
-      i.hash === 3702027555 // Spoils of Conquest do not have item category hashes
+      i.hash === 3702027555 || // Spoils of Conquest do not have item category hashes
+      i.hash === 1289622079 // neither do Strand Meditations
   );
 
 /** The actual raw profile response from the Bungie.net profile API */
