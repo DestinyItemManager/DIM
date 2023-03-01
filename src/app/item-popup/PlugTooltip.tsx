@@ -196,20 +196,20 @@ export function PlugTooltip({
 
   const isInTooltip = useTooltipCustomization({
     getHeader: useCallback(() => def.displayProperties.name, [def.displayProperties.name]),
-    getSubheader: useCallback(() => {
-      const energyType = energyCost && defs?.EnergyType.get(energyCost.energyTypeHash);
-      return (
+    getSubheader: useCallback(
+      () => (
         <div className={styles.subheader}>
           <span>{def.itemTypeDisplayName}</span>
-          {energyType && (
+          {energyCost?.energyCost !== undefined && energyCost.energyCost > 0 && (
             <span className={styles.energyCost}>
-              <EnergyCostIcon element={energyType} className={styles.elementIcon} />
+              <EnergyCostIcon className={styles.elementIcon} />
               {energyCost.energyCost}
             </span>
           )}
         </div>
-      );
-    }, [def.itemTypeDisplayName, energyCost, defs]),
+      ),
+      [def.itemTypeDisplayName, energyCost]
+    ),
     className: clsx(styles.tooltip, {
       [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
       [styles.tooltipEnhanced]:

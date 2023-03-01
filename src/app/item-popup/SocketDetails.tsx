@@ -190,9 +190,6 @@ export default function SocketDetails({
     }
   }
 
-  const energyTypeHash = item.energy?.energyTypeHash;
-  const energyType = energyTypeHash !== undefined && defs.EnergyType.get(energyTypeHash);
-
   // Is this plug available to use?
   const unlocked = (i: PluggableInventoryItemDefinition) =>
     i.hash === socket.emptyPlugItemHash ||
@@ -270,9 +267,7 @@ export default function SocketDetails({
             alt=""
           />
         )}
-        {requiresEnergy && energyType && (
-          <EnergyCostIcon className={styles.energyElement} element={energyType} />
-        )}
+        {requiresEnergy && <EnergyCostIcon className={styles.energyElement} />}
         <div>{socketCategory.displayProperties.name}</div>
       </h1>
       <div className="item-picker-search">
