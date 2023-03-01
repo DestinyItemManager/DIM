@@ -12,7 +12,6 @@ import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import {
   armor2PlugCategoryHashes,
-  energyNamesByEnum,
   EXOTIC_CATALYST_TRAIT,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
@@ -32,13 +31,11 @@ import _ from 'lodash';
 import { objectifyArray } from './util';
 
 // damage is a mess!
-// this function supports turning a destiny DamageType or EnergyType into a known english name
+// this function supports turning a destiny DamageType into a known english name
 // mainly for css purposes and the "is:arc" style filter names
 
 export const getItemDamageShortName = (item: DimItem): string | undefined =>
-  item.energy
-    ? energyNamesByEnum[item.element?.enumValue ?? -1]
-    : damageNamesByEnum[item.element?.enumValue ?? -1];
+  damageNamesByEnum[item.element?.enumValue ?? -1];
 
 // these are helpers for identifying SpecialtySockets (combat style/raid mods). See specialty-modslots.ts
 

@@ -6,7 +6,6 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -81,7 +80,7 @@ function GeneratedSet({
     }
   }
 
-  let itemModAssignments = useMemo(() => {
+  const itemModAssignments = useMemo(() => {
     const statMods = set.statMods.map(
       (d) => defs.InventoryItem.get(d) as PluggableInventoryItemDefinition
     );
@@ -105,30 +104,6 @@ function GeneratedSet({
 
     return itemModAssignments;
   }, [set.statMods, lockedMods, displayedItems, armorEnergyRules, defs.InventoryItem]);
-
-  if (!existingLoadout) {
-    itemModAssignments = { ...itemModAssignments };
-    // If we have a bucket with alternatives, pick an alternative
-    // item of the correct element. This is mostly for class items,
-    // and works because fitMostMods prefers changing class item
-    // elements over other pieces
-    for (let i = 0; i < set.armor.length; i++) {
-      if (set.armor[i].length > 1) {
-        const targetEnergy = itemModAssignments[displayedItems[i].id]
-          .map((m) => m.plug.energyCost?.energyType)
-          .find((e) => e !== DestinyEnergyType.Any);
-        if (targetEnergy !== undefined && targetEnergy !== displayedItems[i].energy?.energyType) {
-          const replacementItem = set.armor[i].find((i) => i.energy?.energyType === targetEnergy);
-          if (replacementItem) {
-            const mods = itemModAssignments[displayedItems[i].id];
-            delete itemModAssignments[displayedItems[i].id];
-            itemModAssignments[replacementItem.id] = mods;
-            displayedItems[i] = replacementItem;
-          }
-        }
-      }
-    }
-  }
 
   const canCompareLoadouts =
     set.armor.every((items) => items[0].classType === selectedStore.classType) &&

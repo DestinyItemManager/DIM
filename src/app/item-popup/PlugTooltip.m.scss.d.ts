@@ -16,6 +16,7 @@ interface CssExports {
   'tooltipElementArc': string;
   'tooltipElementSolar': string;
   'tooltipElementStasis': string;
+  'tooltipElementStrand': string;
   'tooltipElementVoid': string;
   'tooltipEnhanced': string;
   'tooltipExotic': string;

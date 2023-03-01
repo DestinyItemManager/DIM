@@ -1,8 +1,6 @@
-import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
-import { useD2Definitions } from 'app/manifest/selectors';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import clsx from 'clsx';
@@ -24,10 +22,7 @@ function EnergySwap({
   item: DimItem;
   assignedMods?: PluggableInventoryItemDefinition[];
 }) {
-  const defs = useD2Definitions()!;
-
   const armorEnergyCapacity = item.energy?.energyCapacity || 0;
-  const armorEnergy = defs.EnergyType.get(item.energy!.energyTypeHash);
 
   const modCost = _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
   const resultingEnergyCapacity = Math.max(armorEnergyCapacity, modCost);
@@ -44,7 +39,6 @@ function EnergySwap({
         >
           {armorEnergyCapacity}
         </div>
-        <BungieImage className={styles.energyIcon} src={armorEnergy.displayProperties.icon} />
       </div>
       <div className={styles.arrow}>➜</div>
       <div className={styles.energyValue}>
@@ -55,7 +49,6 @@ function EnergySwap({
         >
           {resultingEnergyCapacity}
         </div>
-        <BungieImage className={styles.energyIcon} src={armorEnergy.displayProperties.icon} />
       </div>
     </div>
   );

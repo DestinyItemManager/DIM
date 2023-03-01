@@ -111,6 +111,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "stackfull",
   "stasis",
   "statlower",
+  "strand",
   "submachine",
   "sunset",
   "sword",

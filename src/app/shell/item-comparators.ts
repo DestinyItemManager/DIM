@@ -157,12 +157,6 @@ const ITEM_COMPARATORS: {
       return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
     }
   }),
-  // Any -> Arc -> Thermal -> Void -> Ghost -> Subclass -> Stasis
-  elementArmor: compareBy((item) => {
-    if (item.bucket.inArmor) {
-      return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
-    }
-  }),
   // masterwork -> not masterwork
   masterworked: compareBy((item) => (item.masterwork ? 0 : 1)),
   // crafted -> not crafted

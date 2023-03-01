@@ -3335,9 +3335,9 @@ builtin-modules@^3.1.0:
   integrity sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==
 
 bungie-api-ts@^4.12.0:
-  version "4.21.0"
-  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-4.21.0.tgz#035b2f15b3119ea5f360268ea6799b58b55de067"
-  integrity sha512-9PzlK4LP8gMx2ndlQEt66n0p+M90PaZWw3XdtDytlZR5b0VSfMjuM/r2K5DFSdY30j/gaBEPw/213C3llpPw1A==
+  version "4.22.2"
+  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-4.22.2.tgz#91b32af6556bff2c750e829ead01b954640dcbb7"
+  integrity sha512-lOgV7K4ejivK7/voYME+3bgdNKK+XdjM42qflfnVEabCshwwwldb/DyNCg9IUjG3TZeGXxqjDECOW6OIM9b+VQ==
 
 bytes@3.0.0:
   version "3.0.0"

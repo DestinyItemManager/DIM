@@ -2,7 +2,6 @@ import {
   AssumeArmorMasterwork,
   Loadout,
   LoadoutItem,
-  LockArmorEnergyType,
   UpgradeSpendTier,
 } from '@destinyitemmanager/dim-api-types';
 import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from './loadout-types';
@@ -54,11 +53,11 @@ function migrateUpgradeSpendTierAndLockItemEnergy(
   parameters: DimLoadout['parameters']
 ): DimLoadout['parameters'] {
   const migrated = { ...parameters };
-  const { upgradeSpendTier, lockItemEnergyType, assumeArmorMasterwork, lockArmorEnergyType } =
-    migrated;
+  const { upgradeSpendTier, assumeArmorMasterwork, lockArmorEnergyType } = migrated;
 
   delete migrated.upgradeSpendTier;
   delete migrated.lockItemEnergyType;
+  delete migrated.lockArmorEnergyType;
   delete migrated.assumeMasterworked;
 
   if (assumeArmorMasterwork || lockArmorEnergyType) {
@@ -70,22 +69,12 @@ function migrateUpgradeSpendTierAndLockItemEnergy(
       return {
         ...migrated,
         assumeArmorMasterwork: AssumeArmorMasterwork.All,
-        lockArmorEnergyType: lockItemEnergyType
-          ? LockArmorEnergyType.All
-          : LockArmorEnergyType.None,
       };
     case UpgradeSpendTier.AscendantShardsNotExotic:
-      return {
-        ...migrated,
-        assumeArmorMasterwork: AssumeArmorMasterwork.Legendary,
-        lockArmorEnergyType: lockItemEnergyType
-          ? LockArmorEnergyType.All
-          : LockArmorEnergyType.None,
-      };
     case UpgradeSpendTier.AscendantShardsNotMasterworked:
       return {
         ...migrated,
-        assumeArmorMasterwork: AssumeArmorMasterwork.All,
+        assumeArmorMasterwork: AssumeArmorMasterwork.Legendary,
       };
     case UpgradeSpendTier.AscendantShardsLockEnergyType:
     case UpgradeSpendTier.EnhancementPrisms:

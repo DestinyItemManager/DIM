@@ -1,15 +1,11 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import BungieImage, { bungieBackgroundStyle, bungieNetPath } from 'app/dim-ui/BungieImage';
+import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { d2MissingIcon } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
 import { isModCostVisible } from 'app/utils/socket-utils';
-import {
-  DestinyEnergyTypeDefinition,
-  DestinyInventoryItemDefinition,
-  DestinyRecordState,
-} from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import pursuitComplete from 'images/highlightedObjective.svg';
@@ -73,12 +69,9 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           })}
         />
       )}
-      {item.plug?.costElementIcon && (
+      {item.plug?.energyCost !== undefined && item.plug.energyCost > 0 && (
         <>
-          <div
-            style={bungieBackgroundStyle(item.plug.costElementIcon)}
-            className={styles.energyCostOverlay}
-          />
+          <div className={styles.energyCostOverlay} />
           <svg viewBox="0 0 100 100" className={styles.energyCost}>
             <text x="87" y="26" fontSize="18px" textAnchor="end">
               {item.plug.energyCost}
@@ -133,7 +126,7 @@ export function DefItemIcon({
       !itemDef.plug &&
       itemDef.inventory && [itemTierStyles[itemDef.inventory.tierType]]
   );
-  const modInfo = defs && getModCostInfo(itemDef, defs);
+  const energyCost = defs && getModCostInfo(itemDef, defs);
 
   const iconOverlay = itemDef.iconWatermark || itemDef.iconWatermarkShelved || undefined;
 
@@ -141,15 +134,12 @@ export function DefItemIcon({
     <>
       <BungieImage src={itemDef.displayProperties.icon} className={itemImageStyles} alt="" />
       {iconOverlay && <BungieImage src={iconOverlay} className={styles.iconOverlay} alt="" />}
-      {modInfo?.energyCostElementOverlay && (
+      {energyCost !== undefined && energyCost > 0 && (
         <>
-          <div
-            style={{ backgroundImage: `url("${bungieNetPath(modInfo.energyCostElementOverlay)}")` }}
-            className={styles.energyCostOverlay}
-          />
+          <div className={styles.energyCostOverlay} />
           <svg viewBox="0 0 100 100" className={styles.energyCost}>
             <text x="87" y="26" fontSize="18px" textAnchor="end">
-              {modInfo.energyCost}
+              {energyCost}
             </text>
           </svg>
         </>
@@ -159,31 +149,12 @@ export function DefItemIcon({
 }
 
 /**
- * given a mod definition or hash, returns destructurable energy cost information
+ * given a mod definition or hash, returns its energy cost if it should be shown
  */
-function getModCostInfo(mod: DestinyInventoryItemDefinition | number, defs: D2ManifestDefinitions) {
-  const modCostInfo: {
-    energyCost?: number;
-    energyCostElement?: DestinyEnergyTypeDefinition;
-    energyCostElementOverlay?: string;
-  } = {};
-
-  if (typeof mod === 'number') {
-    mod = defs.InventoryItem.get(mod);
-  }
-
+function getModCostInfo(mod: DestinyInventoryItemDefinition, defs: D2ManifestDefinitions) {
   if (mod?.plug && isModCostVisible(defs, mod.plug)) {
-    modCostInfo.energyCost = mod.plug.energyCost.energyCost;
-
-    if (mod.plug.energyCost?.energyTypeHash) {
-      modCostInfo.energyCostElement = defs.EnergyType.get(mod.plug.energyCost.energyTypeHash);
-    }
-    if (modCostInfo.energyCostElement?.costStatHash) {
-      modCostInfo.energyCostElementOverlay = defs.Stat.get(
-        modCostInfo.energyCostElement.costStatHash
-      )?.displayProperties.icon;
-    }
+    return mod.plug.energyCost.energyCost;
   }
 
-  return modCostInfo;
+  return undefined;
 }
