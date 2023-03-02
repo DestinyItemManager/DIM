@@ -319,7 +319,7 @@ export function getNotableStats(
  *
  * returns the winning stat dict, or false for neither was completely better
  */
-function compareBetterStats(
+export function compareBetterStats(
   statsA: StatLookup,
   statsB: StatLookup,
   aIsArtifice: boolean,
@@ -330,19 +330,22 @@ function compareBetterStats(
   let ties = 0;
   let aArtificeToken = aIsArtifice;
 
-  for (const h of whichStatHashes) {
-    let valueA = statsA[h]?.base ?? 0;
-    const valueB = statsB[h]?.base ?? 0;
-
+  // The differences in considered stats A - B, sorted descending so that the artifice token
+  // is spent on a stat where A *can* be better than B
+  const statDifferences = whichStatHashes.map(
+    (statHash) => (statsA[statHash]?.base ?? 0) - (statsB[statHash]?.base ?? 0)
+  );
+  statDifferences.sort((a, b) => b - a);
+  for (let diff of statDifferences) {
     // if B beats A in a stat, A expends its artifice token to try and make up for it
-    if (valueB > valueA && aArtificeToken) {
-      valueA += 3;
+    if (diff < 0 && aArtificeToken) {
+      diff += 3;
       aArtificeToken = false;
     }
 
-    if (valueA > valueB) {
+    if (diff > 0) {
       aWins++;
-    } else if (valueA < valueB) {
+    } else if (diff < 0) {
       bWins++;
     } else {
       ties++;
