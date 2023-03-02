@@ -18,6 +18,11 @@
   flex-direction: row;
   justify-content: flex-start;
   margin: 4px 0 0 0;
+  gap: 8px;
+
+  @include phone-portrait {
+    gap: 5px;
+  }
 }
 
 .move,
@@ -36,13 +41,6 @@
     height: calc((100vw - 40px - 5 * 5px) / 7);
     max-width: 55px;
     max-height: 55px;
-  }
-
-  &:nth-child(n + 2) {
-    margin-left: 8px;
-    @include phone-portrait {
-      margin-left: 5px;
-    }
   }
 
   img {
@@ -104,6 +102,7 @@
 .vaultButton {
   align-self: flex-end;
   margin-left: 8px;
+
   @include phone-portrait {
     margin-left: 5px;
   }

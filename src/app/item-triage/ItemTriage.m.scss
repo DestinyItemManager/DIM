@@ -95,9 +95,8 @@
 }
 
 .factorCombo {
-  & > :nth-child(n + 2) {
-    margin-left: 2px;
-  }
+  display: flex;
+  gap: 2px;
 }
 
 .statsHeaderLeft {
@@ -138,11 +137,10 @@
   display: flex;
   height: 30px;
   align-items: center;
+  gap: 2px;
+
   .loadoutName {
     flex-grow: 1;
-  }
-  & > :nth-child(n + 2) {
-    margin-left: 2px;
   }
   img {
     height: 16px;

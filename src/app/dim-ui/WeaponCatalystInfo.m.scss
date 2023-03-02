@@ -13,12 +13,10 @@
   display: flex;
   flex-direction: column;
   background: #222;
+  gap: 4px;
 
   :global(.objective-progress) {
     background: #222;
-  }
-  > :nth-child(n + 2) {
-    margin-left: 4px;
   }
 }
 
