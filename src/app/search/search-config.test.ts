@@ -1,9 +1,9 @@
 import { canonicalFilterFormats } from './filter-types';
-import { buildSearchConfig } from './search-config';
+import { buildFiltersMap } from './search-config';
 import { parseAndValidateQuery } from './search-utils';
 
 describe('buildSearchConfig', () => {
-  const searchConfig = buildSearchConfig(2);
+  const searchConfig = buildFiltersMap(2);
 
   test('generates a reasonable filter map', () => {
     expect(Object.keys(searchConfig.isFilters).sort()).toMatchSnapshot('is filters');
@@ -46,7 +46,7 @@ describe('buildSearchConfig', () => {
  * exhaustively is not a goal of this test.
  */
 describe('validateQuery', () => {
-  const searchConfig = buildSearchConfig(2);
+  const searchConfig = buildFiltersMap(2);
 
   const simpleCases: [filterString: string, valid: boolean][] = [
     ['is:crafted', true],

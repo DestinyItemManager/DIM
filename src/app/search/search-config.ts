@@ -1,5 +1,6 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
+import memoizeOne from 'memoize-one';
 import { createSelector } from 'reselect';
 import { ArmoryEntry, buildArmoryIndex } from './armory-search';
 import { canonicalFilterFormats, FilterDefinition, SuggestionsContext } from './filter-types';
@@ -46,33 +47,26 @@ export const searchConfigSelector = createSelector(
 // SearchConfig
 //
 
-export interface SearchConfig {
+export interface FiltersMap {
   allFilters: FilterDefinition[];
   /* `is:keyword` filters */
   isFilters: Record<string, FilterDefinition>;
   /* `keyword:value` filters */
   kvFilters: Record<string, FilterDefinition>;
+}
+
+export interface SearchConfig {
+  filtersMap: FiltersMap;
   suggestions: string[];
   armorySuggestions?: ArmoryEntry[];
 }
 
-/** Builds an object that describes the available search keywords and filter definitions. */
-export function buildSearchConfig(
-  destinyVersion: DestinyVersion,
-  suggestionsContext: SuggestionsContext = {}
-): SearchConfig {
-  const suggestions = new Set<string>();
+export const buildFiltersMap = memoizeOne((destinyVersion: DestinyVersion): FiltersMap => {
   const isFilters: Record<string, FilterDefinition> = {};
   const kvFilters: Record<string, FilterDefinition> = {};
   const allApplicableFilters: FilterDefinition[] = [];
   for (const filter of allFilters) {
     if (!filter.destinyVersion || filter.destinyVersion === destinyVersion) {
-      for (const suggestion of generateSuggestionsForFilter(filter)) {
-        suggestions.add(suggestion);
-      }
-      for (const suggestion of filter.suggestionsGenerator?.(suggestionsContext) ?? []) {
-        suggestions.add(suggestion);
-      }
       allApplicableFilters.push(filter);
       const filterKeywords = Array.isArray(filter.keywords) ? filter.keywords : [filter.keywords];
       const filterFormats = canonicalFilterFormats(filter.format);
@@ -100,14 +94,35 @@ export function buildSearchConfig(
     }
   }
 
+  return {
+    isFilters,
+    kvFilters,
+    allFilters: allApplicableFilters,
+  };
+});
+
+/** Builds an object that describes the available search keywords and filter definitions. */
+export function buildSearchConfig(
+  destinyVersion: DestinyVersion,
+  suggestionsContext: SuggestionsContext = {}
+): SearchConfig {
+  const suggestions = new Set<string>();
+  const filtersMap = buildFiltersMap(destinyVersion);
+  for (const filter of filtersMap.allFilters) {
+    for (const suggestion of generateSuggestionsForFilter(filter)) {
+      suggestions.add(suggestion);
+    }
+    for (const suggestion of filter.suggestionsGenerator?.(suggestionsContext) ?? []) {
+      suggestions.add(suggestion);
+    }
+  }
+
   const armorySuggestions =
     suggestionsContext.d2Manifest && buildArmoryIndex(suggestionsContext.d2Manifest);
 
   return {
-    allFilters: allApplicableFilters,
+    filtersMap,
     suggestions: Array.from(suggestions),
-    isFilters,
-    kvFilters,
     armorySuggestions,
   };
 }

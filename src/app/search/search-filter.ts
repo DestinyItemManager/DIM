@@ -121,7 +121,7 @@ export const validateQuerySelector = createSelector(
   searchConfigSelector,
   filterContextSelector,
   (searchConfig, filterContext) => (query: string) =>
-    parseAndValidateQuery(query, searchConfig, filterContext)
+    parseAndValidateQuery(query, searchConfig.filtersMap, filterContext)
 );
 
 /** Whether the current search query is valid. */
@@ -132,7 +132,7 @@ export const queryValidSelector = createSelector(
 );
 
 function makeSearchFilterFactory(
-  { isFilters, kvFilters }: SearchConfig,
+  { filtersMap: { isFilters, kvFilters } }: SearchConfig,
   filterContext: FilterContext
 ) {
   return (query: string): ItemFilter => {
