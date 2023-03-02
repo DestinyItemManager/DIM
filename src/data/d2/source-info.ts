@@ -32,7 +32,6 @@ const D2Sources: {
       1286332045, // Source: Found by completing Izanami Forge ignitions.
       1457456824, // Source: Complete the "Reunited Siblings" Triumph.
       1465990789, // Source: Solve the Japanese glyph puzzle.
-      1546689276, // Source: Acquired from Ada-1
       1596507419, // Source: Complete a Gofannon Forge ignition.
       2062058385, // Source: Crafted in a Black Armory forge.
       2384327872, // Source: Solve the French glyph puzzle.
@@ -112,7 +111,6 @@ const D2Sources: {
       1286332045, // Source: Found by completing Izanami Forge ignitions.
       1457456824, // Source: Complete the "Reunited Siblings" Triumph.
       1465990789, // Source: Solve the Japanese glyph puzzle.
-      1546689276, // Source: Acquired from Ada-1
       1596507419, // Source: Complete a Gofannon Forge ignition.
       2062058385, // Source: Crafted in a Black Armory forge.
       2384327872, // Source: Solve the French glyph puzzle.
@@ -159,15 +157,17 @@ const D2Sources: {
       569214265, // Source: Earned over the course of the Red War campaign.
       677167936, // Source: Complete the campaign as a Warlock.
       736336644, // Source: "A Spark of Hope" quest.
+      901482731, // Source: Lightfall Campaign
       918840100, // Source: Complete the Shadowkeep campaign.
+      923708784, // Requires Guardian Rank 7: Threats and Surges
       1076222895, // Source: Defeat bosses in Flashpoints.
       1103518848, // Source: Earned over the course of the Warmind campaign.
       1118966764, // Source: Dismantle an item with this shader applied to it.
       1281387702, // Source: Unlock your Void subclass.
       1670837732, // Source: Found in Legendary world engrams.
       1701477406, // Source: Flashpoint milestones; Legendary engrams.
-      2130345705, // Source: Unlocked by default.
       2242939082, // Requires Hunter Class
+      2278847330, // Requires Guardian Rank 5
       2308290458, // Requires 1,000 Warlock Kills
       2744321951, // Source: Complete a heroic Public Event.
       2892963218, // Source: Earned while leveling.
@@ -177,6 +177,7 @@ const D2Sources: {
       3083076965, // Source: Unlocked by default.
       3099553329, // Source: Complete the campaign as a Titan.
       3126774631, // Requires 1,000 Hunter Kills
+      3174947771, // Requires Guardian Rank 6: Powerful Rewards
       3431853656, // Achieved a Grimoire score of over 5000 in Destiny.
       3532642391, // Source: Earned over the course of the Forsaken campaign.
       3704442923, // Source: Earned over the course of the Curse of Osiris campaign.
@@ -197,7 +198,6 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       164083100, // Source: Display of Supremacy, Weekly Challenge
-      2939318890, // Source: Wayfinder's Compass
       3100439379, // Source: Mission Exorcism
     ],
     searchString: [],
@@ -947,6 +947,7 @@ const D2Sources: {
       3022766747, // Source: Complete Nightfall strike "The Insight Terminus."
       3067146211, // Source: Complete Nightfall strike "Exodus Crash."
       3142874552, // Source: Nightfall
+      3229688794, // Source: Grandmaster Nightfall
       3528789901, // Source: Season of the Chosen Nightfall Grandmaster
       3874934421, // Source: Complete Nightfall strike "The Corrupted."
       3964663093, // Source: Rare drop from high-scoring Nightfall strikes on Mercury.
@@ -960,6 +961,7 @@ const D2Sources: {
     sourceHashes: [
       550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
       2778435282, // Source: Nightmare Hunts
+      3190710249, // Source: "Root of Nightmares" Raid
     ],
     searchString: [],
   },
@@ -1082,6 +1084,7 @@ const D2Sources: {
       2937902448, // Source: Leviathan, Eater of Worlds raid lair.
       3098906085, // Source: Complete a Guided Game raid as a guide.
       3147603678, // Acquired from the raid "Crown of Sorrow."
+      3190710249, // Source: "Root of Nightmares" Raid
       3390269646, // Source: Guided Games Final Encounters
       4009509410, // Source: Complete challenges in the Leviathan raid.
       4066007318, // Source: Leviathan, Eater of Worlds raid lair on Prestige difficulty.
@@ -1117,6 +1120,7 @@ const D2Sources: {
   },
   'ritual-weapon': {
     itemHashes: [
+      213264394, // Buzzard
       805677041, // Buzzard
       838556752, // Python
       847329160, // Edgewise
@@ -1181,6 +1185,7 @@ const D2Sources: {
     ],
     sourceHashes: [
       450719423, // Source: Season of the Risen
+      1560428737, // Source: Season of Defiance
       1593696611, // Source: Season Pass Reward
       1763998430, // Source: Season Pass
       1838401392, // Source: Earned as a Season Pass reward.
@@ -1200,7 +1205,6 @@ const D2Sources: {
       139160732, // Source: Season of the Splicer
       277706045, // Source: Season of the Splicer Nightfall Grandmaster
       1600754038, // Source: Season of the Splicer Activities
-      1828592460, // Source: Splicer Servitor
       2040801502, // Source: Season of the Splicer Triumph
       2694738712, // Source: Season of the Splicer Quest
       2967385539, // Source: Season of the Splicer Seasonal Challenges
@@ -1513,6 +1517,7 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       2653840925, // Source: Challenger's Proving VII Quest
+      3818317874, // Source: War Table Reputation Reset
       4079816474, // Source: War Table
     ],
     searchString: [],

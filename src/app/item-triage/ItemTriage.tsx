@@ -14,7 +14,9 @@ import { allItemsSelector } from 'app/inventory/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemPopupTab } from 'app/item-popup/ItemPopupBody';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
+import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { loadoutToSearchString } from 'app/search/search-filters/loadouts';
 import { AppIcon, compareIcon, editIcon, thumbsUpIcon } from 'app/shell/icons';
@@ -142,25 +144,35 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
     >
       <ul className={styles.loadoutList}>
         {inLoadouts.map((l) => {
-          const edit = () => {
-            editLoadout(l.loadout, item.owner, {
-              isNew: false,
+          const loadout = l.loadout;
+          const isDimLoadout = !isInGameLoadout(loadout);
+          const edit =
+            isDimLoadout &&
+            (() => {
+              editLoadout(loadout, item.owner, {
+                isNew: false,
+              });
+              hideItemPopup();
             });
-            hideItemPopup();
-          };
           return (
-            <li className={styles.loadoutRow} key={l.loadout.id}>
-              <ClassIcon classType={l.loadout.classType} className={styles.inlineIcon} />
-              <ColorDestinySymbols text={l.loadout.name} className={styles.loadoutName} />
+            <li className={styles.loadoutRow} key={loadout.id}>
+              {isDimLoadout ? (
+                <ClassIcon classType={loadout.classType} className={styles.inlineIcon} />
+              ) : (
+                <InGameLoadoutIcon loadout={loadout} />
+              )}
+              <ColorDestinySymbols text={loadout.name} className={styles.loadoutName} />
               <span className={styles.controls}>
-                <a
-                  onClick={edit}
-                  title={t('Loadouts.Edit')}
-                  className={filterButtonStyles.setFilterButton}
-                >
-                  <AppIcon icon={editIcon} />
-                </a>
-                <SetFilterButton filter={loadoutToSearchString(l.loadout)} />
+                {edit && (
+                  <a
+                    onClick={edit}
+                    title={t('Loadouts.Edit')}
+                    className={filterButtonStyles.setFilterButton}
+                  >
+                    <AppIcon icon={editIcon} />
+                  </a>
+                )}
+                <SetFilterButton filter={loadoutToSearchString(loadout)} />
               </span>
             </li>
           );
@@ -219,7 +231,9 @@ function SimilarItemsTriageSection({ item }: { item: DimItem }) {
 
 const descriptionBulletPoints = {
   worse: [tl('Triage.StatWorseArmorDesc'), tl('Triage.PerkWorseArmorDesc')],
+  worseStats: [tl('Triage.StatWorseArmorDesc'), tl('Triage.StatNotPerkArmorDesc')],
   better: [tl('Triage.StatBetterArmorDesc'), tl('Triage.PerkBetterArmorDesc')],
+  betterStats: [tl('Triage.StatBetterArmorDesc'), tl('Triage.StatNotPerkArmorDesc')],
 } as const;
 
 /**
@@ -228,29 +242,48 @@ const descriptionBulletPoints = {
 function BetterItemsTriageSection({ item }: { item: DimItem }) {
   const filterFactory = useSelector(filterFactorySelector);
   const allItems = useSelector(allItemsSelector);
+
+  if (!item.stats) {
+    return null;
+  }
   const betterWorseResults = getBetterWorseItems(item, allItems, filterFactory);
 
-  // turns out exampleItem had no stats... weird?
-  if (!betterWorseResults) {
-    return null;
-  }
-  const { betterItems, artificeBetterItems, worseItems, artificeWorseItems } = betterWorseResults;
-  // nothing interesting = no display
-  if (
-    !betterItems.length &&
-    !artificeBetterItems.length &&
-    !worseItems.length &&
-    !artificeWorseItems.length
-  ) {
+  // done here if no array contains anything
+  if (!Object.values(betterWorseResults).some((a) => a.length)) {
     return null;
   }
 
-  const rows = [
-    [t('Triage.BetterArmor'), descriptionBulletPoints.better, betterItems],
+  const {
+    betterItems,
+    betterStatItems,
+    artificeBetterItems,
+    artificeBetterStatItems,
+    worseItems,
+    worseStatItems,
+    artificeWorseItems,
+    artificeWorseStatItems,
+  } = betterWorseResults;
+
+  const rows: [string, readonly [string, string], DimItem[], boolean][] = [
+    [t('Triage.BetterArmor'), descriptionBulletPoints.better, betterItems, false],
+    [t('Triage.WorseStatArmor'), descriptionBulletPoints.betterStats, betterStatItems, false],
     [t('Triage.BetterArtificeArmor'), descriptionBulletPoints.better, artificeBetterItems, true],
-    [t('Triage.WorseArmor'), descriptionBulletPoints.worse, worseItems],
+    [
+      t('Triage.BetterStatArtificeArmor'),
+      descriptionBulletPoints.betterStats,
+      artificeBetterStatItems,
+      true,
+    ],
+    [t('Triage.WorseArmor'), descriptionBulletPoints.worse, worseItems, false],
+    [t('Triage.BetterStatArmor'), descriptionBulletPoints.worseStats, worseStatItems, false],
     [t('Triage.WorseArtificeArmor'), descriptionBulletPoints.worse, artificeWorseItems, true],
-  ] as const;
+    [
+      t('Triage.WorseStatArtificeArmor'),
+      descriptionBulletPoints.worseStats,
+      artificeWorseStatItems,
+      true,
+    ],
+  ];
 
   return (
     <CollapsibleTitle

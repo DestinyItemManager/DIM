@@ -16,7 +16,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsByItemSelector, loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
@@ -31,7 +31,7 @@ import { isArmor2Mod } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
 import { memo, useCallback, useEffect, useMemo } from 'react';
@@ -46,6 +46,7 @@ import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import TierSelect from './filter/TierSelect';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
+import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
@@ -59,6 +60,9 @@ import {
   LOCKED_EXOTIC_ANY_EXOTIC,
   loDefaultArmorEnergyRules,
 } from './types';
+
+/** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
+const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
 
 const statOrderSelector = (state: RootState) =>
   savedLoadoutParametersSelector(state).statConstraints!.map((c) => c.statHash);
@@ -126,7 +130,6 @@ export default memo(function LoadoutBuilder({
   const defs = useD2Definitions()!;
   const allLoadouts = useSelector(loadoutsSelector);
   const allItems = useSelector(allItemsSelector);
-  const loadoutsByItem = useSelector(loadoutsByItemSelector);
   const searchFilter = useSelector(searchFilterSelector);
   const searchQuery = useSelector(querySelector);
   const halfTierMods = useSelector(halfTierModsSelector);
@@ -215,11 +218,7 @@ export default memo(function LoadoutBuilder({
       })),
       statOrder
     );
-    const newSavedLoadoutParams = _.pick(
-      newLoadoutParameters,
-      'assumeArmorMasterwork',
-      'lockArmorEnergyType'
-    );
+    const newSavedLoadoutParams = _.pick(newLoadoutParameters, 'assumeArmorMasterwork');
 
     setSetting('loParameters', newSavedLoadoutParams);
     setSetting('loStatConstraintsByClass', {
@@ -270,14 +269,7 @@ export default memo(function LoadoutBuilder({
   const [armorEnergyRules, filteredItems, filterInfo] = useMemo(() => {
     const armorEnergyRules: ArmorEnergyRules = {
       ...loDefaultArmorEnergyRules,
-      loadouts: {
-        loadoutsByItem,
-        optimizingLoadoutId,
-      },
     };
-    if (loadoutParameters.lockArmorEnergyType !== undefined) {
-      armorEnergyRules.lockArmorEnergyType = loadoutParameters.lockArmorEnergyType;
-    }
     if (loadoutParameters.assumeArmorMasterwork !== undefined) {
       armorEnergyRules.assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
     }
@@ -294,9 +286,6 @@ export default memo(function LoadoutBuilder({
     });
     return [armorEnergyRules, items, filterInfo];
   }, [
-    loadoutsByItem,
-    optimizingLoadoutId,
-    loadoutParameters.lockArmorEnergyType,
     loadoutParameters.assumeArmorMasterwork,
     defs,
     characterItems,
@@ -328,7 +317,12 @@ export default memo(function LoadoutBuilder({
     [loadoutParameters, searchQuery, statFilters, statOrder]
   );
 
-  const filteredSets = result?.sets;
+  const resultSets = result?.sets;
+
+  const filteredSets = useMemo(
+    () => resultSets && sortGeneratedSets(resultSets, statOrder, enabledStats),
+    [statOrder, enabledStats, resultSets]
+  );
 
   const shareBuild = async (notes?: string) => {
     // TODO: replace this with a new share tool
@@ -399,8 +393,6 @@ export default memo(function LoadoutBuilder({
       />
       <EnergyOptions
         assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
-        lockArmorEnergyType={loadoutParameters.lockArmorEnergyType}
-        optimizingLoadoutName={preloadedLoadout?.name}
         lbDispatch={lbDispatch}
       />
       <LockArmorAndPerks
@@ -507,9 +499,9 @@ export default memo(function LoadoutBuilder({
             </p>
           </div>
         )}
-        {result && result.sets.length > 0 ? (
+        {result && filteredSets?.length ? (
           <GeneratedSets
-            sets={result.sets}
+            sets={filteredSets}
             subclass={subclass}
             lockedMods={result.mods}
             pinnedItems={pinnedItems}
@@ -545,6 +537,7 @@ export default memo(function LoadoutBuilder({
               owner={selectedStore.id}
               lockedMods={lockedMods}
               plugCategoryHashWhitelist={modPicker.plugCategoryHashWhitelist}
+              plugCategoryHashDenyList={autoAssignmentPCHs}
               onAccept={(newLockedMods) =>
                 lbDispatch({
                   type: 'lockedModsChanged',

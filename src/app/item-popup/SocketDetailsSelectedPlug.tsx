@@ -47,9 +47,13 @@ const whitelistPlugCategoryToLocKey = {
 const socketCategoryToLocKey = {
   [SocketCategoryHashes.Super]: 'Super',
   [SocketCategoryHashes.Abilities_Abilities]: 'Ability',
-  [SocketCategoryHashes.Abilities_Abilities_LightSubclass]: 'Ability',
-  [SocketCategoryHashes.Aspects]: 'Aspect',
-  [SocketCategoryHashes.Fragments]: 'Fragment',
+  [SocketCategoryHashes.Abilities_Abilities_Ikora]: 'Ability',
+  [SocketCategoryHashes.Aspects_Abilities_Ikora]: 'Aspect',
+  [SocketCategoryHashes.Aspects_Abilities_Neomuna]: 'Aspect',
+  [SocketCategoryHashes.Aspects_Abilities_Stranger]: 'Aspect',
+  [SocketCategoryHashes.Fragments_Abilities_Ikora]: 'Fragment',
+  [SocketCategoryHashes.Fragments_Abilities_Neomuna]: 'Fragment',
+  [SocketCategoryHashes.Fragments_Abilities_Stranger]: 'Fragment',
 };
 
 /** Figures out what kind of socket this is so that the "Apply" button can name the correct thing

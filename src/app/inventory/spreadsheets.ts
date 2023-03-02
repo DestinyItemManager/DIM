@@ -334,15 +334,11 @@ function downloadArmor(
       row['Power Limit'] = item.powerCap;
     }
     if (item.destinyVersion === 2) {
-      row['Masterwork Type'] = item.element?.displayProperties.name;
-      row['Masterwork Tier'] = item.masterworkInfo?.tier || undefined;
+      row['Energy Capacity'] = item.energy?.energyCapacity || undefined;
     }
     row.Owner = nameMap[item.owner];
     if (item.destinyVersion === 1) {
       row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
-    }
-    if (item.destinyVersion === 2) {
-      row['Armor2.0'] = Boolean(item.energy) && item.bucket.inArmor;
     }
     row.Locked = item.locked;
     row.Equipped = item.equipped;

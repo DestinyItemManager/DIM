@@ -79,6 +79,8 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
   const excludedPlugCategoryHashes = [
     PlugCategoryHashes.GenericAllVfx,
     PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors,
+    // Not sure what this is - it says you can level weapons?
+    PlugCategoryHashes.CraftingPlugsWeaponsModsTransfusersLevel,
     !item.catalystInfo && PlugCategoryHashes.V400EmptyExoticMasterwork,
   ];
 

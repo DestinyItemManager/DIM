@@ -447,7 +447,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 49808967,
+      hash: 60057218,
       fromRichText: true,
     },
   },
@@ -465,7 +465,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 8272054,
+      hash: 75057024,
       fromRichText: true,
     },
   },
@@ -474,7 +474,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 612360742,
+      hash: 671993070,
       fromRichText: true,
     },
   },
@@ -537,7 +537,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 714581758,
+      hash: 1089624989,
       fromRichText: true,
     },
   },
@@ -546,7 +546,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 364984909,
+      hash: 704693244,
       fromRichText: true,
     },
   },
@@ -582,7 +582,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1260068656,
+      hash: 1250089450,
       fromRichText: true,
     },
   },
@@ -713,6 +713,7 @@ export type TranslateManually = typeof translateManually[number];
  * [Heavy Attack]
  * [Super]
  * [Sprint]
+ * [Light Level]
  * [Block]
  * [Shoot]
  * [Boost]

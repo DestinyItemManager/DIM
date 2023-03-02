@@ -144,6 +144,10 @@
   & > :nth-child(n + 2) {
     margin-left: 2px;
   }
+  img {
+    height: 16px;
+    width: 16px;
+  }
 }
 
 .controls {

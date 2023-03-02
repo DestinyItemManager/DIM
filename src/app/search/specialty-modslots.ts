@@ -21,33 +21,15 @@ export interface ModSocketMetadata {
   modGroupNameOverrideActivityHash?: number;
 }
 
-const legacyCompatibleTags = [
-  'warmindcell',
-  'chargedwithlight',
-  'nightmare',
-  'gardenofsalvation',
-  'lastwish',
-];
+const legacyCompatibleTags = ['nightmare', 'gardenofsalvation', 'lastwish'];
 
 /** The plug categories that will fit in "legacy" sockets */
 export const legacyCompatiblePlugCategoryHashes = [
   PlugCategoryHashes.EnhancementsSeasonMaverick, // nightmare
   PlugCategoryHashes.EnhancementsSeasonOutlaw, // taken/lw
   PlugCategoryHashes.EnhancementsRaidGarden,
-  PlugCategoryHashes.EnhancementsSeasonV470, // dawn cwl
   PlugCategoryHashes.EnhancementsSeasonOpulence, // opulent
-  PlugCategoryHashes.EnhancementsSeasonV480, // warmind
-  PlugCategoryHashes.EnhancementsSeasonV490, // arrivals cwl
   PlugCategoryHashes.EnhancementsSeasonForge, // fallen
-];
-
-/** The plug categories that will fit in combat sockets */
-export const combatCompatiblePlugCategoryHashes = [
-  PlugCategoryHashes.EnhancementsSeasonV470, // dawn cwl
-  PlugCategoryHashes.EnhancementsSeasonV500, // elemental well, but technically any "combat" mods
-  PlugCategoryHashes.EnhancementsSeasonV480, // warmind cell
-  PlugCategoryHashes.EnhancementsSeasonV490, // s11 charged with light
-  PlugCategoryHashes.EnhancementsElemental, // 5 deprecated weapon-specific super regen mods
 ];
 
 // EnhancementsSeasonV500 has a one-to-many relationship here,
@@ -56,20 +38,14 @@ export const modTypeTagByPlugCategoryHash = {
   [PlugCategoryHashes.EnhancementsSeasonOutlaw]: 'lastwish',
   [PlugCategoryHashes.EnhancementsSeasonMaverick]: 'nightmare',
   [PlugCategoryHashes.EnhancementsRaidGarden]: 'gardenofsalvation',
-  [PlugCategoryHashes.EnhancementsSeasonV470]: 'chargedwithlight',
-  [PlugCategoryHashes.EnhancementsSeasonV480]: 'warmindcell',
-  [PlugCategoryHashes.EnhancementsSeasonV490]: 'chargedwithlight',
   [PlugCategoryHashes.EnhancementsRaidDescent]: 'deepstonecrypt',
   [PlugCategoryHashes.EnhancementsRaidV520]: 'vaultofglass',
   [PlugCategoryHashes.EnhancementsRaidV600]: 'vowofthedisciple',
   [PlugCategoryHashes.EnhancementsRaidV620]: 'kingsfall',
-  [PlugCategoryHashes.EnhancementsSeasonV500]: 'combat',
+  [PlugCategoryHashes.EnhancementsArtifice]: 'artifice',
 };
 
-export const chargedWithLightPlugCategoryHashes = [
-  PlugCategoryHashes.EnhancementsSeasonV470,
-  PlugCategoryHashes.EnhancementsSeasonV490,
-];
+// FIXME(Lightfall) what about legacy?
 
 const legacySocketTypeHashes = [
   1540673283, // an outlaw-looking one, that's on S11 LW/Reverie,
@@ -149,20 +125,20 @@ const modSocketMetadata: ModSocketMetadata[] = [
     emptyModSocketHash: 1728096240,
   },
   {
-    slotTag: 'combatstyle',
-    compatibleModTags: ['chargedwithlight', 'warmindcell', 'combat'],
-    socketTypeHashes: [2955889001],
-    compatiblePlugCategoryHashes: combatCompatiblePlugCategoryHashes,
-    emptyModSocketHashes: [2493100093],
-    emptyModSocketHash: 2493100093,
-  },
-  {
     slotTag: 'nightmare',
     compatibleModTags: ['nightmare'],
     socketTypeHashes: [2701840022],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsSeasonMaverick],
     emptyModSocketHashes: [1180997867],
     emptyModSocketHash: 1180997867,
+  },
+  {
+    slotTag: 'artifice',
+    compatibleModTags: ['artifice'],
+    socketTypeHashes: [1719555937],
+    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsArtifice],
+    emptyModSocketHashes: [4173924323],
+    emptyModSocketHash: 4173924323,
   },
 ];
 

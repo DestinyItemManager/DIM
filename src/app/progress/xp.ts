@@ -1,5 +1,5 @@
 /** Map inventory item ID to XP value */
-const xpItems = {
+export const xpItems = {
   1858002338: 4000, // XP
   3348653032: 6000, // XP+
   3582080006: 12000, // XP++

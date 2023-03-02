@@ -60,6 +60,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   3628991658, // Graviton Lance
   3628991659, // Vigilance Wing
   3654674561, // Dead Man's Tale
+  3659414143, // Verglas Curve
   3664831848, // Heartshadow
   3761898871, // Lorentz Driver
   3766045777, // Black Talon
@@ -73,6 +74,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   4190156464, // Merciless
   4255268456, // Skyburner's Oath
   4289226715, // Vex Mythoclast
+  4293613902, // Quicksilver Storm
 ]);
 
 export default exoticWeaponHashesWithCatalyst;
