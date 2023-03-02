@@ -186,7 +186,7 @@ export function getBetterWorseItems(
   }
 
   const worseFilter = filterFactory(worseFilterParts.join(' '));
-  const [worseItems, worseStatItems] = _.partition(rawBetterStatItems, worseFilter);
+  const [worseItems, worseStatItems] = _.partition(rawWorseStatItems, worseFilter);
   const [artificeWorseItems, artificeWorseStatItems] = _.partition(
     rawArtificeWorseStatItems,
     worseFilter
