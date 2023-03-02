@@ -6,6 +6,7 @@ import { importDataBackup } from 'app/dim-api/import';
 import { apiPermissionGrantedSelector, dimSyncErrorSelector } from 'app/dim-api/selectors';
 import HelpLink from 'app/dim-ui/HelpLink';
 import Switch from 'app/dim-ui/Switch';
+import useConfirm from 'app/dim-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { dimApiHelpLink } from 'app/login/Login';
 import { showNotification } from 'app/notifications/notifications';
@@ -64,23 +65,25 @@ export default function DimApiSettings() {
     exportBackupData(data);
   };
 
+  const [confirmDialog, confirm] = useConfirm();
   const onImportData = async (data: ExportResponse) => {
-    if (confirm(t('Storage.ImportConfirmDimApi'))) {
+    if (await confirm(t('Storage.ImportConfirmDimApi'))) {
       await dispatch(importDataBackup(data));
     }
   };
 
-  const deleteAllData = (e: React.MouseEvent) => {
+  const deleteAllData = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (apiPermissionGranted && !hasBackedUp) {
-      alert(t('Storage.BackUpFirst'));
-    } else if (confirm(t('Storage.DeleteAllDataConfirm'))) {
+      showNotification({ type: 'warning', title: t('Storage.BackUpFirst') });
+    } else if (await confirm(t('Storage.DeleteAllDataConfirm'))) {
       dispatch(deleteAllApiData());
     }
   };
 
   return (
     <section className={styles.storage} id="storage">
+      {confirmDialog}
       <h2>{t('Storage.MenuTitle')}</h2>
 
       <div className="setting">

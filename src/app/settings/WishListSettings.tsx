@@ -79,7 +79,7 @@ export default function WishListSettings() {
     if (file) {
       reader.readAsText(file);
     } else {
-      alert(t('WishListRoll.ImportNoFile'));
+      showNotification({ type: 'error', title: t('WishListRoll.ImportNoFile') });
     }
     return false;
   };

@@ -117,6 +117,10 @@
     "ImportWrongFileType": "File is not a CSV file.",
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
+  "Dialog": {
+    "Cancel": "Cancel",
+    "OK": "OK"
+  },
   "EnergyMeter": {
     "Energy": "Energy",
     "Unused": "Unused",

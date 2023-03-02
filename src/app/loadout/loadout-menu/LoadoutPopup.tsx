@@ -2,6 +2,7 @@ import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
+import useConfirm from 'app/dim-ui/useConfirm';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
@@ -121,17 +122,20 @@ export default function LoadoutPopup({
     dispatch(applyLoadout(dimStore, loadout, { allowUndo: true }));
   };
 
-  const applyRandomLoadout = (e: React.MouseEvent, weaponsOnly = false) => {
+  const [confirmDialog, confirm] = useConfirm();
+  const applyRandomLoadout = async (e: React.MouseEvent, weaponsOnly = false) => {
+    e.stopPropagation();
     if (
-      !window.confirm(
+      !(await confirm(
         weaponsOnly
           ? t('Loadouts.RandomizeWeapons')
           : query.length > 0
           ? t('Loadouts.RandomizeSearchPrompt', { query })
           : t('Loadouts.RandomizePrompt')
-      )
+      ))
     ) {
       e.preventDefault();
+      onClick?.(e);
       return;
     }
     try {
@@ -145,8 +149,8 @@ export default function LoadoutPopup({
       }
     } catch (e) {
       showNotification({ type: 'warning', title: t('Loadouts.Random'), body: e.message });
-      return;
     }
+    onClick?.(e);
   };
 
   // Move items matching the current search. Max 9 per type.
@@ -186,6 +190,7 @@ export default function LoadoutPopup({
 
   return (
     <div className={styles.content} onClick={onClick} role="menu">
+      {confirmDialog}
       {totalLoadouts >= 10 && (
         <li className={clsx(styles.menuItem, styles.filterInput)}>
           <form>

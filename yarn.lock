@@ -1929,6 +1929,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/dialog-polyfill@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@types/dialog-polyfill/-/dialog-polyfill-0.5.2.tgz#a15cb192ada1575dd744dfbd6430d2a7de37e90e"
+  integrity sha512-ejMJBdOA2e61jwhlm7XoVwMImy9a6v2zKjrCL5VFrhQvykjYSy7kTgAIPGW9yeETJI6iUhLCiGMx4d58lQFMzA==
+  dependencies:
+    dialog-polyfill "*"
+
 "@types/eslint-scope@^3.7.3":
   version "3.7.4"
   resolved "https://registry.yarnpkg.com/@types/eslint-scope/-/eslint-scope-3.7.4.tgz#37fc1223f0786c39627068a12e94d6e6fc61de16"
@@ -4138,6 +4145,11 @@ detect-node@^2.0.4:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.1.0.tgz#c9c70775a49c3d03bc2c06d9a73be550f978f8b1"
   integrity sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==
+
+dialog-polyfill@*, dialog-polyfill@^0.5.6:
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/dialog-polyfill/-/dialog-polyfill-0.5.6.tgz#7507b4c745a82fcee0fa07ce64d835979719599a"
+  integrity sha512-ZbVDJI9uvxPAKze6z146rmfUZjBqNEwcnFTVamQzXH+svluiV7swmVIGr7miwADgfgt1G2JQIytypM9fbyhX4w==
 
 diff-sequences@^29.4.3:
   version "29.4.3"

@@ -33,8 +33,10 @@ export function TroubleshootingSettings() {
     try {
       await dispatch(importMockProfileResponse(files[0]));
       await dispatch(loadStores());
+      // eslint-disable-next-line no-alert
       alert('succeeded');
     } catch (e) {
+      // eslint-disable-next-line no-alert
       alert(e.message);
     }
   };

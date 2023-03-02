@@ -8,6 +8,7 @@ import {
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import usePrompt from 'app/dim-ui/usePrompt';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -339,8 +340,10 @@ export default memo(function LoadoutBuilder({
     });
   };
 
-  const shareBuildWithNotes = () => {
-    const newNotes = prompt(t('MovePopup.Notes'), notes);
+  // TODO: replace with rich-text dialog, and an "append" option
+  const [promptDialog, prompt] = usePrompt();
+  const shareBuildWithNotes = async () => {
+    const newNotes = await prompt(t('MovePopup.Notes'), { defaultValue: notes });
     if (newNotes) {
       shareBuild(newNotes);
     }
@@ -353,6 +356,7 @@ export default memo(function LoadoutBuilder({
 
   const menuContent = (
     <>
+      {promptDialog}
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol>

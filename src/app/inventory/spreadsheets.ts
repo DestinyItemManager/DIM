@@ -60,7 +60,6 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
 
     // perhaps we're loading
     if (stores.length === 0) {
-      alert(t('Settings.ExportSSNoStores'));
       return;
     }
     const nameMap = {};

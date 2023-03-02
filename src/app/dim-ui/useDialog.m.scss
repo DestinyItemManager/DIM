@@ -1,0 +1,52 @@
+@use '../variables.scss' as *;
+
+.dialog {
+  background-color: black;
+  color: white;
+  top: 0;
+  margin-top: 0;
+  border: 1px solid #707070;
+  border-top-width: 6px;
+  box-shadow: 0 0 24px 6px #080811;
+  padding: 0;
+  min-width: 40em;
+  box-sizing: border-box;
+
+  @include phone-portrait {
+    min-width: 100%;
+    border-left: none;
+    border-right: none;
+  }
+
+  &::backdrop,
+  & + :global(.backdrop) {
+    background: rgba(0, 0, 0, 0.8);
+  }
+}
+
+.title {
+  background-color: #0a0a0f;
+  background-color: #151523;
+  padding: 6px 11px;
+
+  h2 {
+    font-size: 14px;
+    margin: 0;
+    color: white;
+
+    @include destiny-header;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 8px;
+  background-color: #151523;
+  padding: 16px;
+  align-items: center;
+}
+
+.body {
+  padding: 2em;
+}

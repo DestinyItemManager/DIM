@@ -1,5 +1,6 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
+import usePrompt from 'app/dim-ui/usePrompt';
 import { t } from 'app/i18next-t';
 import { itemTagList, TagCommand } from 'app/inventory/dim-item-info';
 import { DimStore } from 'app/inventory/store-types';
@@ -60,8 +61,10 @@ function ItemActions({
     onSelected: () => onMoveSelectedItems(store),
   }));
 
-  const noted = () => {
-    const note = prompt(t('Organizer.NotePrompt'));
+  // TODO: replace with rich-text dialog, and an "append" option
+  const [promptDialog, prompt] = usePrompt();
+  const noted = async () => {
+    const note = await prompt(t('Organizer.NotePrompt'));
     if (note !== null) {
       onNote(note || undefined);
     }
@@ -69,6 +72,7 @@ function ItemActions({
 
   return (
     <div className={styles.itemActions}>
+      {promptDialog}
       <button
         type="button"
         className={`dim-button ${styles.actionButton}`}

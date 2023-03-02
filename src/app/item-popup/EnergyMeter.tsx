@@ -49,6 +49,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
     }
 
     // TODO: i18n, maybe check to see if we have enough currency
+    // eslint-disable-next-line no-alert
     if (!confirm('Pay the costs to upgrade?')) {
       return;
     }
