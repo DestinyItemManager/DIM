@@ -14,7 +14,7 @@
 .pill {
   composes: resetButton from '../dim-ui/common.m.scss';
   composes: flexRow from '../dim-ui/common.m.scss';
-  align-items: flex-end;
+  align-items: center;
   background: rgba(0, 0, 0, 0.4);
   border-radius: 12px;
   padding: 2px 8px;
