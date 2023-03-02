@@ -100,7 +100,7 @@ export const D2ArmorStatHashByName = {
   discipline: StatHashes.Discipline,
   intellect: StatHashes.Intellect,
   strength: StatHashes.Strength,
-};
+} as const;
 
 /** Stats that all (D2) armor should have. */
 export const armorStats = Object.values(D2ArmorStatHashByName);

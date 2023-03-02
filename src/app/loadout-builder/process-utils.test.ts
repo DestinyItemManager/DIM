@@ -164,7 +164,7 @@ describe('process-utils', () => {
       },
     };
     return (
-      pickAndAssignSlotIndependentMods(precalculatedInfo, modStatistics, items, neededStats) !==
+      pickAndAssignSlotIndependentMods(precalculatedInfo, modStatistics, items, neededStats, 0) !==
       undefined
     );
   };

@@ -1,3 +1,5 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { isArtifice } from 'app/item-triage/triage-utils';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import {
   activityModPlugCategoryHashes,
@@ -127,6 +129,7 @@ export function mapDimItemToProcessItem({
     hash,
     name,
     isExotic,
+    isArtifice: isArtifice(dimItem),
     power,
     stats: statMap,
     energy: energy
@@ -140,6 +143,7 @@ export function mapDimItemToProcessItem({
 }
 
 export function hydrateArmorSet(
+  defs: D2ManifestDefinitions,
   processed: ProcessArmorSet,
   itemsById: Map<string, ItemGroup>
 ): ArmorSet {
@@ -149,9 +153,22 @@ export function hydrateArmorSet(
     armor.push(itemsById.get(itemId)!.items);
   }
 
+  const statsWithAutoMods = { ...processed.stats };
+
+  for (const modHash of processed.statMods) {
+    const def = defs.InventoryItem.get(modHash);
+    if (def?.investmentStats.length) {
+      for (const stat of def.investmentStats) {
+        if (statsWithAutoMods[stat.statTypeHash] !== undefined) {
+          statsWithAutoMods[stat.statTypeHash] += stat.value;
+        }
+      }
+    }
+  }
+
   return {
     armor,
-    stats: processed.stats,
+    stats: statsWithAutoMods,
     statMods: processed.statMods,
   };
 }

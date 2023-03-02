@@ -173,7 +173,7 @@ export function useProcess({
           'loadout optimizer',
           `useProcess: worker time ${performance.now() - workerStart}ms`
         );
-        const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
+        const hydratedSets = sets.map((set) => hydrateArmorSet(defs, set, itemsById));
 
         setState((oldState) => ({
           ...oldState,
@@ -297,7 +297,12 @@ function mapItemsToGroups(
   // Second pass -- cache the worker-relevant information, except the one we used in the first pass.
   const cache = new Map<
     DimItem,
-    { stats: number[]; energyCapacity: number; relevantModSeasons: Set<string> }
+    {
+      stats: number[];
+      energyCapacity: number;
+      relevantModSeasons: Set<string>;
+      isArtifice: boolean;
+    }
   >();
   for (const item of mappedItems) {
     // Id, name are not important, exoticness+hash and energy type were grouped by in phase 1.
@@ -316,6 +321,7 @@ function mapItemsToGroups(
       stats: statValues,
       energyCapacity,
       relevantModSeasons: new Set(relevantModSeasons),
+      isArtifice: item.processItem.isArtifice,
     });
   }
 
@@ -348,6 +354,7 @@ function mapItemsToGroups(
       const betterOrEqual =
         testInfo.stats.every((statValue, idx) => statValue >= existingInfo.stats[idx]) &&
         testInfo.energyCapacity >= existingInfo.energyCapacity &&
+        (testItem.processItem.isArtifice || !existingInfo.isArtifice) &&
         isSuperset(testInfo.relevantModSeasons, existingInfo.relevantModSeasons);
       if (!betterOrEqual) {
         return false;
@@ -357,6 +364,7 @@ function mapItemsToGroups(
       const isDifferent =
         testInfo.stats.some((statValue, idx) => statValue !== existingInfo.stats[idx]) ||
         testInfo.energyCapacity !== existingInfo.energyCapacity ||
+        testInfo.isArtifice !== existingInfo.isArtifice ||
         testInfo.relevantModSeasons.size !== existingInfo.relevantModSeasons.size;
       return isDifferent;
     };

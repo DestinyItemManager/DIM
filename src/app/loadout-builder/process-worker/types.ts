@@ -5,6 +5,7 @@ export interface ProcessItem {
   hash: number;
   name: string;
   isExotic: boolean;
+  isArtifice: boolean;
   energy?: {
     /** The maximum energy capacity for the item, e.g. if masterworked this will be 10. */
     capacity: number;
