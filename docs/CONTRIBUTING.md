@@ -21,7 +21,8 @@ Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 
 * Install [Git](https://git-scm.com/downloads)
 * Install [NodeJS](https://nodejs.org/)
-* Install [Yarn](https://yarnpkg.com/en/docs/install). Use Yarn 1.x as DIM is not guaranteed to be compatible with later versions of Yarn. If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)".
+* Install [Yarn](https://yarnpkg.com/en/docs/install)
+  * Use Yarn 1.x as DIM is not guaranteed to be compatible with later versions of Yarn. If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)".
 * Windows-based developers will need to install `windows-build-tools` (run `yarn global add windows-build-tools` in your terminal) globally prior to running `yarn install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
 * It is highly recommended to use [VSCode](https://code.visualstudio.com/) to work on DIM. When you open DIM in VSCode, accept the recommended plugins it suggests (find them manually by searching "@recommended" in the Extensions window).
 * Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to running `yarn install`.
@@ -53,7 +54,7 @@ Once you have cloned the repository or a fork of the repository to your local ma
 * Run `yarn install`
 * Run `yarn start`
 
-On Windows machines this will also install SnoreToast to provide notifications for parts of the development process, like when a build completes.
+On Windows machines, this will also install SnoreToast to provide notifications for parts of the development process, like when a build completes.
 
 ### Get your own API key:
 
@@ -80,7 +81,7 @@ if the app can't load them from local storage when it starts.
 
 **Overview**
 
-The `yarn start` step will create a hot-loading webserver, and a TLS cert/key pair. You will access your local development site by visiting https://localhost:8080.
+The `yarn start` step will create a hot-loading web server and a TLS cert/key pair. You will access your local development site by visiting https://localhost:8080.
 You will likely get a security warning about the certificate not being trusted. This is because it's a self-signed cert generated dynamically for your environment
 and is not signed by a recognized authority. Dismiss/advance past this warning to view your local DIM application.
 
@@ -93,4 +94,4 @@ Check out the [docs]() folder for more tips.
 
 * We use [i18next](https://github.com/i18next/i18next) for all our translated strings, so if you want to translate something that's currently English-only, take a look at that. Usually it's as simple as replacing some text with `<span>{t('KEY')}</span>` and then defining KEY in the `config\i18n.json` file.
 
-* `yarn i18n` will add, sort, and prune `src/locale/en.json`. You should never manually edit `src/locale/en.json`. Some keys are obfuscated by code and will need to be added as comments into the code such as `// t('LoadoutBuilder.ObfuscatedKey1')`. If you have any questions ping @delphiactual via GitHub, Slack, or Discord.
+* `yarn i18n` will add, sort, and prune `src/locale/en.json`. You should never manually edit `src/locale/en.json`. Some keys are obfuscated by code and will need to be added as comments into the code such as `// t('LoadoutBuilder.ObfuscatedKey1')`. If you have any questions, ping @delphiactual via GitHub, Slack, or Discord.
