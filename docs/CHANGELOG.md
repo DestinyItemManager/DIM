@@ -1,9 +1,36 @@
 ## Next
 
+* DIM supports displaying and equipping in-game loadouts.
+* Triage tab is now available outside of DIM Beta. This feature provides information to help quickly compare and judge a new (or old) item.
+  * Whether am armor piece is high or low among your others, or is completely better or worse than another.
+  * How many other similar weapons you have, and weapon Wishlist status.
+  * Whether an item is included in loadouts, and which.
+* Bright Dust and XP have been added to the filter pills on bounties and seasonal challenges.
+* `is:statlower` knows about the new artifice armor rules and will consider the artifice +3 stat boost in a single stat when comparing against other armor.
+* Sorting in the Organizer is a bit more reliable.
+* DIM should be more resistant to being logged out during API maintenance.
+* Loadout Optimizer will now automatically use Artifice mod slots to improve build stats.
+* The tooltip for enhanced intrinsics or adept masterworks will now only show the stat boosts actually relevant to the item.
+
+### Beta Only
+
+* Loadout Optimizer's toggle to include required stat mods has been changed to optimize all builds using as many stat mods as possible. This is a consequence of the artifice changes.
+
+
+## 7.58.0 <span class="changelog-date">(2023-02-26)</span>
+
+* The `inloadout` filter now finds hashtags in Loadout notes.
+* Support for non-English hashtags.
+* Added a popup on crafted weapons that shows all their kill tracker stats at once.
+* Switched D2Gunsmith link to D2Foundry.
+
+## 7.57.0 <span class="changelog-date">(2023-02-19)</span>
+
+* Add `is:retiredperk` search that highlights items that have a perk which can no longer drop for that item.
 * You can now click a Loadout name in Organizer's Loadouts column to quickly bring up this loadout for editing.
 * When hovering over subclass Aspects in Loadouts and Loadout Optimizer, the tooltip will now show the number of Fragment slots granted.
 * You can now bring up the Armory page for a weapon directly from the search bar by typing a weapon name there and clicking the corresponding entry.
-* The tooltip for enhanced intrinsics or adept masterworks will now only show the stat boosts actually relevant to the item.
+* Improved the logic for choosing what item to equip when de-equipping an item. DIM will now generally avoid equipping exotics as replacements, and will pay attention to the type of item and your tags.
 
 ## 7.56.0 <span class="changelog-date">(2023-02-12)</span>
 
@@ -602,5 +629,3 @@
 ## v6 CHANGELOG
 
 * v6 CHANGELOG available [here](https://github.com/DestinyItemManager/DIM/blob/master/docs/OLD_CHANGELOG/OLD_CHANGELOG_6.X.X.md)
-
-

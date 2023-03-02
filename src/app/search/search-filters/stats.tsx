@@ -2,6 +2,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout-drawer/auto-loadouts';
+import { getStatValuesByHash } from 'app/utils/item-utils';
 import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 import {
@@ -204,15 +205,6 @@ function createStatCombiner(statString: string, byWhichValue: 'base' | 'value') 
       _.meanBy(averageGroup, (statFn) => statFn(statValuesByHash, sortStats, item))
     );
   };
-}
-
-// this seems worth doing instead of multiple array.find
-function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value') {
-  const output: NodeJS.Dict<number> = {};
-  for (const stat of item.stats ?? []) {
-    output[stat.statHash] = stat[byWhichValue];
-  }
-  return output;
 }
 
 function findMaxStatLoadout(stores: DimStore[], allItems: DimItem[], statName: string) {

@@ -127,7 +127,10 @@ function getPerkDescriptions(
       plug.hash === modsWithConditionalStats.sparkOfFocus
     ) {
       const chargeHarvesterDef = defs.InventoryItem.get(modsWithConditionalStats.chargeHarvester);
-      perks.push(chargeHarvesterDef.perks[1]);
+      const perk = chargeHarvesterDef?.perks?.[1];
+      if (perk) {
+        perks.push(perk);
+      }
     }
 
     // filter out things with no displayable text, or that are meant to be hidden

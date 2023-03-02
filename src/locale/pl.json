@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "Brak notatek",
+    "OpenInArmory": "view in Armory",
     "Season": "Sezon {{season}}, rok {{year}}",
     "TrashlistedRolls": "Roll z listy śmieci",
     "TrashlistedRolls_plural": "{{count, number}} Rolli z listy śmieci",
@@ -224,7 +225,7 @@
     "HasOrnament": "Pokazuje przedmioty, które mają zastosowaną ozdobę.",
     "HasShader": "Pokaż przedmioty z nałożoną barwą.",
     "HoldsMod": "Pokazuje zbroję kompatybilną z określonym typem Modyfikacji Sezonowej.",
-    "InLoadout": "Pokaż przedmioty zawarte w dowolnym uzbrojeniu.",
+    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes.",
     "Infusable": "Pokaż przedmioty, które można nasycić.",
     "InfusionFodder": "Pokazuje przedmioty, które mogą być użyte do nasycenia przedmiotu tego samego typu o niższej mocy tylko za migot.",
     "IsCrafted": "Pokazuje bronie, które zostały stworzone.",
@@ -272,6 +273,7 @@
     "Reforgeable": "Pokazuje przedmioty, które można przekuć u Rusznikarza.",
     "Release": "Dostępne od wydania <i>{{release}}</i>",
     "RequiredLevel": "Pokazuje przedmioty na podstawie wymaganego przez nich poziomu.",
+    "RetiredPerk": "Shows weapons with perks that no longer obtainable.",
     "SearchPrompt": "Wyszukaj dostępne komendy filtrujące",
     "Season": "Pokazuje przedmioty na podstawie którego sezonu z Destiny 2 pochodzą.",
     "SeasonalDupe": "Pokazuje zduplikowane przedmioty, nie licząc powtórzeń z innego sezonu jako tego samego przedmiotu.",
@@ -1153,11 +1155,22 @@
     "UnlockAll": "Odblokuj Przedmioty"
   },
   "Triage": {
+    "AccountsForArtifice": "This tests whether an Artifice armor piece could be better, if a +3 stat mod were used.",
+    "BetterArmor": "Strictly Better Armor",
+    "BetterArtificeArmor": "Better Artifice Armor",
+    "BetterWorseArmor": "Better/Worse Armor",
+    "BetterWorseIncludes": "Identifies armor pieces with:",
     "HighStats": "Wysokie statystyki",
     "InLoadouts": "W Uzbrojeniu",
     "OwnedCount": "# Posiadane",
+    "PerkBetterArmorDesc": "The same, or more, intrinsic perks.",
+    "PerkWorseArmorDesc": "The same intrinsic perk, or none.",
     "SimilarItems": "Podobne przedmioty",
+    "StatBetterArmorDesc": "All stats at least as high, and at least one stat better.",
+    "StatWorseArmorDesc": "No better stats, and at least one worse stat.",
     "ThisItem": "Ten przedmiot",
+    "WorseArmor": "Strictly Worse Armor",
+    "WorseArtificeArmor": "Worse Non-Artifice Armor",
     "YourBestItem": "Twój najlepszy przedmiot"
   },
   "Triumphs": {

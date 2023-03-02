@@ -323,3 +323,12 @@ $modslotSize: 30px;
   left: 1px;
   width: calc(var(--item-size) - ($item-border-width * 2));
 }
+
+.loadout {
+  img {
+    height: 16px;
+    width: 16px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+}

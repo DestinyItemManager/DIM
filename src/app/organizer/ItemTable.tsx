@@ -47,7 +47,7 @@ import { itemIncludesCategories } from './filtering-utils';
 import ItemActions, { TagCommandInfo } from './ItemActions';
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
-import { ItemCategoryTreeNode } from './ItemTypeSelector';
+import { armorTopLevelCatHashes, ItemCategoryTreeNode } from './ItemTypeSelector';
 import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
 
 const categoryToClass = {
@@ -84,7 +84,11 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     if (!terminal) {
       return emptyArray<DimItem>();
     }
-    const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h !== 0);
+    const categoryHashes = categories.map((s) => s.itemCategoryHash).filter(Boolean);
+    // a top level class-specific category implies armor
+    if (armorTopLevelCatHashes.some((h) => categoryHashes.includes(h))) {
+      categoryHashes.push(ItemCategoryHashes.Armor);
+    }
     const items = allItems.filter(
       (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i)
     );
@@ -507,8 +511,8 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
                 className={styles.sorter}
                 icon={
                   columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
-                    ? faCaretUp
-                    : faCaretDown
+                    ? faCaretDown
+                    : faCaretUp
                 }
               />
             )}
@@ -562,7 +566,11 @@ function sortRows(
         const compare = column.sort
           ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
           : compareBy((row: Row) => row.values[column.id] ?? 0);
-        return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
+        // Always sort undefined values to the end
+        return chainComparator(
+          compareBy((row: Row) => row.values[column.id] === undefined),
+          sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare)
+        );
       }
       return compareBy(() => 0);
     })

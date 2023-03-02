@@ -17,13 +17,7 @@ import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import { DefItemIcon } from '../inventory/ItemIcon';
 import { allItemsSelector } from '../inventory/selectors';
-import {
-  artifactModsSelector,
-  collectSocketsToStrip,
-  doStripSockets,
-  SocketKind,
-  StripAction,
-} from './strip-sockets';
+import { collectSocketsToStrip, doStripSockets, SocketKind, StripAction } from './strip-sockets';
 import { stripSocketsQuery$ } from './strip-sockets-actions';
 import styles from './StripSockets.m.scss';
 
@@ -291,8 +285,6 @@ function StripSocketsChoose({
   const destiny2CoreSettings = useSelector(destiny2CoreSettingsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const filterFactory = useSelector(filterFactorySelector);
-  const artifactMods = useSelector(artifactModsSelector);
-
   const [activeKinds, setActiveKinds] = useState<SocketKind[]>([]);
 
   const socketKinds = useMemo(() => {
@@ -302,8 +294,8 @@ function StripSocketsChoose({
 
     const filterFunc = filterFactory(query);
     const filteredItems = allItems.filter((i) => i.sockets && filterFunc(i));
-    return collectSocketsToStrip(filteredItems, destiny2CoreSettings, defs, artifactMods);
-  }, [allItems, artifactMods, defs, destiny2CoreSettings, filterFactory, query]);
+    return collectSocketsToStrip(filteredItems, destiny2CoreSettings, defs);
+  }, [allItems, defs, destiny2CoreSettings, filterFactory, query]);
 
   useEffect(() => {
     reportSockets(

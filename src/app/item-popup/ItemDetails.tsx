@@ -89,9 +89,7 @@ export default function ItemDetails({
         </div>
       )}
 
-      {item.crafted && item.craftedInfo && defs.isDestiny2() && (
-        <WeaponCraftedInfo craftInfo={item.craftedInfo} className="crafted-progress" />
-      )}
+      {defs.isDestiny2() && <WeaponCraftedInfo item={item} className="crafted-progress" />}
 
       {defs.isDestiny2() && <WeaponDeepsightInfo item={item} />}
 

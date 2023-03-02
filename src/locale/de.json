@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "Keine Notizen",
+    "OpenInArmory": "im Arsenal ansehen",
     "Season": "Saison {{season}}, Jahr {{year}}",
     "TrashlistedRolls": "Mülllisten-Roll",
     "TrashlistedRolls_plural": "{{count, number}} Mülllisten Rolls",
@@ -224,7 +225,7 @@
     "HasOrnament": "Zeigt Gegenstände an, die ein Ornament haben.",
     "HasShader": "Zeigt Gegenstände, die einen Shader angewendet haben.",
     "HoldsMod": "Zeigt Rüstung, die kompatibel mit einem bestimmten saisonalem Mod Typen ist.",
-    "InLoadout": "Zeigt Gegenstände, welche in einer Ausrüstung verwendet werden.",
+    "InLoadout": "is:inloadout zeigt Gegenstände, die in einem beliebigen Loadout enthalten sind. Eine Suche mit inloadout: zeigt Gegenstände, die in Loadouts mit passenden Titeln enthalten sind. Bei Verwendung eines Hashtags zeigt inloadout: Gegenstände an, deren Loadouts den Hashtag in Titel oder Notizen haben.",
     "Infusable": "Zeigt Gegenstände, die infundiert werden können.",
     "InfusionFodder": "Zeigt Gegenstände, die für Glimmer, in einen gleichen Gegenstand, mit nicht so viel Power, infundiert werden können.",
     "IsCrafted": "Zeigt Waffen, die hergestellt wurden.",
@@ -272,6 +273,7 @@
     "Reforgeable": "Zeigt Items, die beim Waffenmeister umgeschmiedet werden können.",
     "Release": "Verfügbar seit Veröffentlichung <i>{{release}}</i>",
     "RequiredLevel": "Zeigt Items basierend auf deren Mindestlevel.",
+    "RetiredPerk": "Zeigt Waffen mit nicht mehr erhältlichen Perks.",
     "SearchPrompt": "Verfügbare Filterbefehle durchsuchen",
     "Season": "Zeigt Items nach der Saison in der sie in Destiny 2 erschienen sind an.",
     "SeasonalDupe": "Zeigt doppelte Gegenstände, gleiche Items aus einer anderen Saison sind ausgeschlossen.",
@@ -1153,11 +1155,22 @@
     "UnlockAll": "Entsperre Gegenstände"
   },
   "Triage": {
+    "AccountsForArtifice": "Dies testet, ob eine Kunstvolle Rüstung besser sein könnte, wenn diese einen +3-Werte-Mod verwendet.",
+    "BetterArmor": "Strikt bessere Rüstung",
+    "BetterArtificeArmor": "Bessere Kunstvolle Rüstung",
+    "BetterWorseArmor": "Bessere/Schlechtere Rüstung",
+    "BetterWorseIncludes": "Zeigt Rüstungen mit:",
     "HighStats": "Hohe Werte",
     "InLoadouts": "In Ausrüstungen",
     "OwnedCount": "# In Besitz",
+    "PerkBetterArmorDesc": "Den gleichen intrinsischen Perks, oder mehr.",
+    "PerkWorseArmorDesc": "Dem gleichen intrinsischen Perk, oder keinen.",
     "SimilarItems": "Ähnliche Gegenstände",
+    "StatBetterArmorDesc": "Allen Werten mindestens gleich hoch, und mindestens einem Wert besser.",
+    "StatWorseArmorDesc": "Keinen besseren Werten, und mindestens einem schlechteren Wert.",
     "ThisItem": "Dieser Gegenstand",
+    "WorseArmor": "Strikt schlechtere Rüstung",
+    "WorseArtificeArmor": "Schlechtere Nicht-Kunstvolle Rüstung",
     "YourBestItem": "Dein bester Gegenstand"
   },
   "Triumphs": {

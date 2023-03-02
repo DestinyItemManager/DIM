@@ -2,12 +2,10 @@
 
 .deepsightProgress {
   display: flex;
+  gap: 4px;
 
   :global(.objective-progress) {
     background: #222;
-  }
-  > :nth-child(n + 2) {
-    margin-left: 4px;
   }
 }
 
@@ -15,21 +13,4 @@
   padding: 4px 10px 4px;
   background: #333;
   flex-grow: 1;
-}
-
-.patternProgress {
-  display: flex;
-  align-items: center;
-  flex-grow: 0;
-}
-
-.patternIcon {
-  width: 15px;
-  height: 15px;
-  border: 1px solid #999;
-  margin-right: 4px;
-}
-
-.patternOwned {
-  color: $acquiredGreen;
 }

@@ -1,15 +1,7 @@
 @use '../../variables.scss' as *;
 
-.container {
-  flex: 1;
-  padding: 0 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap !important;
-}
-
 .light {
-  float: right;
+  margin-left: auto;
 
   :global(.app-icon) & {
     font-size: 10px;

@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "Sin Notas",
+    "OpenInArmory": "ver en la Armería",
     "Season": "Temporada {{season}}, Año {{year}}",
     "TrashlistedRolls": "Tirada en lista de basura",
     "TrashlistedRolls_plural": "{{count, number}} Tiradas en Lista de Basura",
@@ -224,7 +225,7 @@
     "HasOrnament": "Muestra objeto que tengan el diseño aplicado.",
     "HasShader": "Mostrar objetos que tengan shader aplicado.",
     "HoldsMod": "Muestra armadura compatible con un tipo específico de Modificador de Temporada.",
-    "InLoadout": "Muestra objetos que estén incluidos en cualquier equipamiento.",
+    "InLoadout": "is:inloadout muestra objetos que están incluidos en cualquier equipación. Buscando con inloadout: muestra objetos que están incluidos con títulos coincidentes. Cuando se usa con un hashtag, inloadout: muestra objetos cuyas equipaciones tienen el hashtag en el título o en las notas.",
     "Infusable": "Muestra objetos que pueden ser infundidos.",
     "InfusionFodder": "Muestra objetos que podrían ser infundidos en versiones más bajas de poder del mismo objeto sólo por lumen.",
     "IsCrafted": "Mostrar armas que han sido fabricadas.",
@@ -272,6 +273,7 @@
     "Reforgeable": "Muestra objetos que pueden ser reforjados en el armero.",
     "Release": "Disponible desde el lanzamiento <i>{{release}}</i>",
     "RequiredLevel": "Muestra objetos basado en su nivel requerido.",
+    "RetiredPerk": "Muestra armas con ventajas que ya no se pueden obtener.",
     "SearchPrompt": "Buscar filtros de comandos disponibles",
     "Season": "Mostrar objetos en cuya temporada de Destiny 2 aparecieron.",
     "SeasonalDupe": "Muestra objetos duplicados, sin contar reincidencias de una temporada diferente como el mismo objeto.",
@@ -1153,11 +1155,22 @@
     "UnlockAll": "Desbloquear objetos"
   },
   "Triage": {
+    "AccountsForArtifice": "Esto prueba si una pieza de armadura Artificiosa pudiera ser mejor, si un modificador de estadística +3 fuera usado.",
+    "BetterArmor": "Estrictamente Mejor Armadura",
+    "BetterArtificeArmor": "Mejor Armadura Artificiosa",
+    "BetterWorseArmor": "Mejor/Peor Armadura",
+    "BetterWorseIncludes": "Identifica piezas de armadura con:",
     "HighStats": "Estadísticas Altas",
     "InLoadouts": "En Equipaciones",
     "OwnedCount": "# En Propiedad",
+    "PerkBetterArmorDesc": "Las mismas, o más, ventajas intrínsicas.",
+    "PerkWorseArmorDesc": "La misma ventaja intrínsica, o ninguna.",
     "SimilarItems": "Objetos similares",
+    "StatBetterArmorDesc": "Todas las estadísticas al menos tan altas, y al menos una estadística mejor.",
+    "StatWorseArmorDesc": "Sin mejores estadísticas, y al menos una estadística peor.",
     "ThisItem": "Este objeto",
+    "WorseArmor": "Estrictamente Peor Armadura",
+    "WorseArtificeArmor": "Peor Armadura No-Artificiosa",
     "YourBestItem": "Tu mejor objeto"
   },
   "Triumphs": {

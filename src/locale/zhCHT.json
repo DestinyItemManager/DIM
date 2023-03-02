@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "無注釋",
+    "OpenInArmory": "查看武器詳情",
     "Season": "年 {{year}}，第 {{season}} 賽季",
     "TrashlistedRolls": "垃圾列表特性組合",
     "TrashlistedRolls_plural": "{{count, number}} 個垃圾列表特性組合",
@@ -224,7 +225,7 @@
     "HasOrnament": "顯示已應用皮膚的物品",
     "HasShader": "顯示已應用著色器的物品",
     "HoldsMod": "顯示與某種賽季模組相兼容的護甲。",
-    "InLoadout": "顯示已被用於配裝的物品.",
+    "InLoadout": "is:inloadout 用於篩選在任何配裝中的物品。使用inloadout: 篩選在配裝中且具有匹配名稱的物品。當使用 #標簽 時，inloadout: 會篩選在具有對應標籤或備忘錄的配裝中的物品。",
     "Infusable": "顯示可以灌注的物品.",
     "InfusionFodder": "顯示可用於灌注同類物品且只消耗微光的物品。",
     "IsCrafted": "顯示製作獲取的武器。",
@@ -272,6 +273,7 @@
     "Reforgeable": "顯示可以在造槍匠那裡重新鍛造的物品.",
     "Release": "可從<i>{{release}}</i>發行版本獲得",
     "RequiredLevel": "根據需要的等級顯示物品.",
+    "RetiredPerk": "显示带有已无法获取的特性的武器。",
     "SearchPrompt": "搜索可用的過濾器命令",
     "Season": "按照物品推出季度顯示.",
     "SeasonalDupe": "顯示重複物品，不包括同一物品在不同賽季的版本。",
@@ -1153,11 +1155,22 @@
     "UnlockAll": "解鎖物品"
   },
   "Triage": {
+    "AccountsForArtifice": "判斷精巧防具在添加 +3 屬性模組后是否會變得更好。",
+    "BetterArmor": "全面更優的防具",
+    "BetterArtificeArmor": "更好的精巧防具",
+    "BetterWorseArmor": "更優/更差的防具",
+    "BetterWorseIncludes": "分析防具所用條件：",
     "HighStats": "高屬性",
     "InLoadouts": "包含該物品的配裝",
     "OwnedCount": "數量",
+    "PerkBetterArmorDesc": "固有特性相同或更多。",
+    "PerkWorseArmorDesc": "固有特性相同或不存在。",
     "SimilarItems": "相似物品",
+    "StatBetterArmorDesc": "所有屬性均持平，并至少有一個屬性更高。",
+    "StatWorseArmorDesc": "所有屬性均持平或更低。",
     "ThisItem": "當前物品",
+    "WorseArmor": "全面更劣的防具",
+    "WorseArtificeArmor": "更劣的非精巧防具",
     "YourBestItem": "你的最佳物品"
   },
   "Triumphs": {

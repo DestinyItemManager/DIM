@@ -1,3 +1,4 @@
+import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { makeFakeItem as makeFakeD1Item } from 'app/inventory/store/d1-item-factory';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
@@ -24,19 +25,21 @@ export function getItemsFromLoadoutItems(
   allItems: DimItem[],
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
-  }
+  },
+  /** needs passing in if this is d1 mode */
+  d1Defs?: D1ManifestDefinitions
 ): [items: ResolvedLoadoutItem[], warnitems: ResolvedLoadoutItem[]] {
   if (!loadoutItems) {
     return [emptyArray(), emptyArray()];
   }
 
   const { defs, buckets } = itemCreationContext;
-
+  const useTheseDefs = d1Defs ?? defs;
   const items: ResolvedLoadoutItem[] = [];
   const warnitems: ResolvedLoadoutItem[] = [];
   for (const loadoutItem of loadoutItems) {
     // TODO: filter down to the class type of the loadout
-    const item = findItemForLoadout(defs, allItems, storeId, loadoutItem);
+    const item = findItemForLoadout(useTheseDefs, allItems, storeId, loadoutItem);
     if (item) {
       // If there are any mods for this item's bucket, and the item is equipped, add them to socket overrides
       const modsForBucket =
@@ -52,7 +55,7 @@ export function getItemsFromLoadoutItems(
       }
 
       // Apply socket overrides so the item appears as it should be configured in the loadout
-      const overriddenItem = defs.isDestiny2()
+      const overriddenItem = useTheseDefs.isDestiny2()
         ? applySocketOverrides(itemCreationContext, item, overrides)
         : item;
 
@@ -65,9 +68,9 @@ export function getItemsFromLoadoutItems(
             : { ...loadoutItem, socketOverrides: overrides },
       });
     } else {
-      const fakeItem: DimItem | null = defs.isDestiny2()
+      const fakeItem: DimItem | null = useTheseDefs.isDestiny2()
         ? makeFakeItem(itemCreationContext, loadoutItem.hash)
-        : makeFakeD1Item(defs, buckets, loadoutItem.hash);
+        : makeFakeD1Item(useTheseDefs, buckets, loadoutItem.hash);
       if (fakeItem) {
         fakeItem.id = generateMissingLoadoutItemId();
         warnitems.push({ item: fakeItem, loadoutItem, missing: true });

@@ -99,3 +99,4 @@ jobs:
         with:
           environment: release
           version: ${{ env.VERSION }}
+          ignore_missing: true

@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import {
@@ -7,6 +8,7 @@ import {
   awaInitializeRequest,
   AwaType,
   BungieMembershipType,
+  clearLoadout,
   DestinyComponentType,
   DestinyLinkedProfilesResponse,
   DestinyManifest,
@@ -14,6 +16,7 @@ import {
   DestinyVendorsResponse,
   equipItem,
   equipItems as equipItemsApi,
+  equipLoadout,
   getDestinyManifest,
   getLinkedProfiles,
   getProfile as getProfileApi,
@@ -23,6 +26,7 @@ import {
   ServerResponse,
   setItemLockState,
   setQuestTrackedState,
+  snapshotLoadout,
   transferItem,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
@@ -89,6 +93,7 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.StringVariables,
     DestinyComponentType.ProfileProgression,
     DestinyComponentType.Transitory,
+    DestinyComponentType.CharacterLoadouts,
 
     // This is a lot of data and currently not used.
     // DestinyComponentType.Craftables,
@@ -276,4 +281,31 @@ export async function requestAdvancedWriteActionToken(
     correlationId: awaInitResult.Response.correlationId,
   });
   return awaTokenResult.Response;
+}
+
+export async function equipInGameLoadout(account: DestinyAccount, loadout: InGameLoadout) {
+  const result = equipLoadout(authenticatedHttpClient, {
+    loadoutIndex: loadout.index,
+    characterId: loadout.characterId,
+    membershipType: account.originalPlatformType,
+  });
+  return result;
+}
+
+export async function snapshotInGameLoadout(account: DestinyAccount, loadout: InGameLoadout) {
+  const result = snapshotLoadout(authenticatedHttpClient, {
+    loadoutIndex: loadout.index,
+    characterId: loadout.characterId,
+    membershipType: account.originalPlatformType,
+  });
+  return result;
+}
+
+export async function clearInGameLoadout(account: DestinyAccount, loadout: InGameLoadout) {
+  const result = clearLoadout(authenticatedHttpClient, {
+    loadoutIndex: loadout.index,
+    characterId: loadout.characterId,
+    membershipType: account.originalPlatformType,
+  });
+  return result;
 }

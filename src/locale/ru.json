@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "Нет заметок",
+    "OpenInArmory": "просмотреть в Оружейной",
     "Season": "Сезон {{season}}, год {{year}}",
     "TrashlistedRolls": "Мусорный ролл",
     "TrashlistedRolls_plural": "{{count, number}} мусорных роллов",
@@ -224,7 +225,7 @@
     "HasOrnament": "Показывает предметы с применённым орнаментом.",
     "HasShader": "Покрашенные шейдерами.",
     "HoldsMod": "Показывает броню, совместимую с указанным типом сезонного мода.",
-    "InLoadout": "В Наборе.",
+    "InLoadout": "is:inloadout показывает предметы, которые включены в любые наборы. Поиск при помощи inloadout: показывает предметы, которые включены в наборы с совпадающими названиями. При использовании вместе с хэштегом, inloadout: показывает предметы, чьи наборы имеют хэштег в названии или заметках.",
     "Infusable": "Доступные для Синтеза.",
     "InfusionFodder": "Показывает предметы, которые доступные для синтеза к менее мощным версиям одного и того же предмета только для Блеска.",
     "IsCrafted": "Показывает оружия, которые были изготовлены.",
@@ -272,6 +273,7 @@
     "Reforgeable": "Перековываемые у Оружейника.",
     "Release": "Доступно начиная с <i>{{release}}</i>",
     "RequiredLevel": "По требуемому уровню.",
+    "RetiredPerk": "Показать оружия с перками, которые больше нельзя получить.",
     "SearchPrompt": "Искать среди Фильтров",
     "Season": "По сезонам Destiny 2.",
     "SeasonalDupe": "Одинаковые, Исключая перевыпуски разных сезонов.",
@@ -1153,11 +1155,22 @@
     "UnlockAll": "Разблокировать предметы"
   },
   "Triage": {
+    "AccountsForArtifice": "This tests whether an Artifice armor piece could be better, if a +3 stat mod were used.",
+    "BetterArmor": "Strictly Better Armor",
+    "BetterArtificeArmor": "Better Artifice Armor",
+    "BetterWorseArmor": "Better/Worse Armor",
+    "BetterWorseIncludes": "Identifies armor pieces with:",
     "HighStats": "Высокие хар-ки",
     "InLoadouts": "В наборах",
     "OwnedCount": "# В инвентаре",
+    "PerkBetterArmorDesc": "The same, or more, intrinsic perks.",
+    "PerkWorseArmorDesc": "The same intrinsic perk, or none.",
     "SimilarItems": "Похожие предметы",
+    "StatBetterArmorDesc": "All stats at least as high, and at least one stat better.",
+    "StatWorseArmorDesc": "No better stats, and at least one worse stat.",
     "ThisItem": "Этот предмет",
+    "WorseArmor": "Strictly Worse Armor",
+    "WorseArtificeArmor": "Worse Non-Artifice Armor",
     "YourBestItem": "Ваш лучший предмет"
   },
   "Triumphs": {

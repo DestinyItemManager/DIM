@@ -14,7 +14,7 @@ import {
 } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
@@ -38,14 +38,19 @@ import {
 } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { RootState } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { isiOSBrowser } from 'app/utils/browsers';
+import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { applyInGameLoadout } from '../ingame/ingame-loadout-apply';
+import InGameLoadoutIcon from '../ingame/InGameLoadoutIcon';
+import { inGameLoadoutsForCharacterSelector } from '../ingame/selectors';
 import {
   searchAndSortLoadoutsByQuery,
   useLoadoutFilterPills,
@@ -76,6 +81,11 @@ export default function LoadoutPopup({
   const dispatch = useThunkDispatch();
 
   const loadouts = useSavedLoadoutsForClassType(dimStore.classType);
+  const inGameLoadouts = useSelector((state: RootState) =>
+    dimStore.isVault
+      ? emptyArray<InGameLoadout>()
+      : inGameLoadoutsForCharacterSelector(state, dimStore.id)
+  );
 
   const [loadoutQuery, setLoadoutQuery] = useState('');
 
@@ -89,6 +99,9 @@ export default function LoadoutPopup({
 
     dispatch(applyLoadout(dimStore, loadout, { allowUndo: true, onlyMatchingClass: true }));
   };
+
+  const handleApplyInGameLoadout = (loadout: InGameLoadout) =>
+    dispatch(applyInGameLoadout(loadout));
 
   // A D1 dynamic loadout set up to level weapons and armor
   const makeItemLevelingLoadout = () => {
@@ -151,6 +164,7 @@ export default function LoadoutPopup({
 
   const [pillFilteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     loadouts,
+    inGameLoadouts,
     dimStore.id,
     false,
     styles.filterPills,
@@ -302,32 +316,41 @@ export default function LoadoutPopup({
           </>
         )}
 
-        {filteredLoadouts.map((loadout) => (
-          <li key={loadout.id} className={styles.menuItem}>
-            <span
-              title={loadout.notes ? loadout.notes : loadout.name}
-              onClick={() => applySavedLoadout(loadout)}
-            >
-              {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
-                <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
-              )}
-              {isMissingItems(defs, allItems, dimStore.id, loadout) && (
-                <AlertIcon
-                  className={styles.warningIcon}
-                  title={t('Loadouts.MissingItemsWarning')}
-                />
-              )}
-              <ColorDestinySymbols text={loadout.name} />
-            </span>
-            <span
-              className={styles.altButton}
-              title={t('Loadouts.Edit')}
-              onClick={() => editLoadout(loadout, dimStore.id, { isNew: false })}
-            >
-              <AppIcon icon={editIcon} />
-            </span>
-          </li>
-        ))}
+        {filteredLoadouts.map((loadout) =>
+          isInGameLoadout(loadout) ? (
+            <li key={loadout.id} className={styles.menuItem}>
+              <span title={loadout.name} onClick={() => handleApplyInGameLoadout(loadout)}>
+                <InGameLoadoutIcon className={styles.inGameLoadoutIcon} loadout={loadout} />
+                {loadout.name}
+              </span>
+            </li>
+          ) : (
+            <li key={loadout.id} className={styles.menuItem}>
+              <span
+                title={loadout.notes ? loadout.notes : loadout.name}
+                onClick={() => applySavedLoadout(loadout)}
+              >
+                {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
+                  <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
+                )}
+                {isMissingItems(defs, allItems, dimStore.id, loadout) && (
+                  <AlertIcon
+                    className={styles.warningIcon}
+                    title={t('Loadouts.MissingItemsWarning')}
+                  />
+                )}
+                <ColorDestinySymbols text={loadout.name} />
+              </span>
+              <span
+                className={styles.altButton}
+                title={t('Loadouts.Edit')}
+                onClick={() => editLoadout(loadout, dimStore.id, { isNew: false })}
+              >
+                <AppIcon icon={editIcon} />
+              </span>
+            </li>
+          )
+        )}
 
         {!dimStore.isVault && !loadoutQuery && (
           <li className={styles.menuItem}>

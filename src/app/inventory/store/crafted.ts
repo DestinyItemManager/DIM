@@ -27,7 +27,7 @@ export function buildCraftedInfo(
 }
 
 /** find the item socket that could contain the "this weapon was crafted" plug with its objectives */
-function getCraftedSocket(item: DimItem): DimSocket | undefined {
+export function getCraftedSocket(item: DimItem): DimSocket | undefined {
   if (item.bucket.inWeapons && item.sockets) {
     return getFirstSocketByCategoryHash(item.sockets, craftedSocketCategoryHash);
   }

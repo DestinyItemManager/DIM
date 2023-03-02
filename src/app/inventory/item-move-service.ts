@@ -32,6 +32,7 @@ import { chainComparator, compareBy, reverseComparator } from '../utils/comparat
 import { itemLockStateChanged, itemMoved } from './actions';
 import {
   characterDisplacePriority,
+  equipReplacePriority,
   getTag,
   ItemInfos,
   vaultDisplacePriority,
@@ -195,6 +196,7 @@ function getItemAcrossStores<Item extends DimItem, Store extends DimStore<Item>>
  * Finds an item similar to "item" which can be equipped on the item's owner in order to move "item".
  */
 export function getSimilarItem(
+  getState: () => RootState,
   stores: DimStore[],
   item: DimItem,
   {
@@ -220,82 +222,14 @@ export function getSimilarItem(
   });
 
   let result: DimItem | null = null;
-  sortedStores.find((store) => {
-    result = searchForSimilarItem(item, store, exclusions, target, excludeExotic);
-    return result !== null;
-  });
+  for (const store of sortedStores) {
+    result = searchForSimilarItem(getState, item, store, exclusions, target, excludeExotic);
+    if (result) {
+      break;
+    }
+  }
 
   return result;
-}
-
-// weight "find a replacement item" options, according to their rarity
-const replacementWeighting: Record<ItemTierName, number> = {
-  Legendary: 4,
-  Rare: 3,
-  Uncommon: 2,
-  Common: 1,
-  Exotic: 0,
-  Currency: 0,
-  Unknown: 0,
-};
-
-/**
- * Find an item in store like "item", excluding the exclusions, to be equipped
- * on target.
- * @param exclusions a list of {id, hash} objects that won't be considered for equipping.
- * @param excludeExotic exclude any item matching the equippingLabel of item, used when dequipping an exotic so we can equip an exotic in another slot.
- */
-function searchForSimilarItem(
-  item: DimItem,
-  store: DimStore,
-  exclusions: readonly Exclusion[] | undefined,
-  target: DimStore,
-  excludeExotic: boolean
-): DimItem | null {
-  const exclusionsList = exclusions || [];
-
-  let candidates = store.items.filter(
-    (i) =>
-      itemCanBeEquippedBy(i, target) &&
-      i.location.hash === item.location.hash &&
-      !i.equipped &&
-      // Not the same item
-      i.id !== item.id &&
-      // Not on the exclusion list
-      !exclusionsList.some((item) => item.id === i.id && item.hash === i.hash)
-  );
-
-  if (!candidates.length) {
-    return null;
-  }
-
-  if (excludeExotic) {
-    candidates = candidates.filter((c) => c.equippingLabel !== item.equippingLabel);
-  }
-
-  // TODO: unify this value function w/ the others!
-  const sortedCandidates = _.sortBy(candidates, (i) => {
-    let value = replacementWeighting[i.tier];
-    if (item.isExotic && i.isExotic) {
-      value += 5;
-    }
-    if (i.primaryStat) {
-      value += i.primaryStat.value / 1000;
-    }
-    return value;
-  }).reverse();
-
-  return (
-    sortedCandidates.find((result) => {
-      if (result.equippingLabel) {
-        const otherExotic = getOtherExoticThatNeedsDequipping(result, store);
-        // If there aren't other exotics equipped, or the equipped one is the one we're dequipping, we're good
-        return !otherExotic || otherExotic.id === item.id;
-      } else {
-        return true;
-      }
-    }) || null
-  );
 }
 
 /**
@@ -321,7 +255,7 @@ export function equipItems(
           const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
           // If we aren't already equipping into that slot...
           if (otherExotic && !items.find((i) => i.bucket.hash === otherExotic.bucket.hash)) {
-            const similarItem = getSimilarItem(getStores(), otherExotic, {
+            const similarItem = getSimilarItem(getState, getStores(), otherExotic, {
               excludeExotic: true,
               exclusions,
             });
@@ -412,7 +346,7 @@ function dequipItem(
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const stores = storesSelector(getState());
-    const similarItem = getSimilarItem(stores, item, { excludeExotic });
+    const similarItem = getSimilarItem(getState, stores, item, { excludeExotic });
     if (!similarItem) {
       throw new DimError('ItemService.Deequip', t('ItemService.Deequip', { itemname: item.name }));
     }
@@ -1158,9 +1092,9 @@ export function sortMoveAsideCandidatesForStore(
     chainComparator(
       // Try our hardest never to unequip something
       compareBy((i) => !i.equipped),
-      // prefer same type over everything
+      // prefer same bucket over everything
       compareBy((i) => item && i.bucket.hash === item.bucket.hash),
-      // or at least same category
+      // or at least same category (weapons, armor)
       compareBy((i) => item && i.bucket.sort === item.bucket.sort),
       // Always prefer keeping something that was manually moved where it is
       compareBy((i) => -getLastManuallyMoved(i)),
@@ -1192,4 +1126,74 @@ export function sortMoveAsideCandidatesForStore(
   // Sort all candidates
   moveAsideCandidates.sort(itemValueComparator);
   return moveAsideCandidates;
+}
+
+/**
+ * Find an item in store like "item", excluding the exclusions, to be equipped
+ * on target. Generally used to help with de-equipping item.
+ * @param exclusions a list of {id, hash} objects that won't be considered for equipping.
+ * @param excludeExotic exclude any item matching the equippingLabel of item, used when dequipping an exotic so we can equip an exotic in another slot.
+ */
+function searchForSimilarItem(
+  getState: () => RootState,
+  item: DimItem,
+  store: DimStore,
+  exclusions: readonly Exclusion[] = [],
+  target: DimStore,
+  excludeExotic: boolean
+): DimItem | null {
+  const candidates = store.items.filter(
+    (i) =>
+      i.location.hash === item.location.hash &&
+      !i.equipped &&
+      // Not the same item
+      i.id !== item.id &&
+      itemCanBeEquippedBy(i, target) &&
+      // Not on the exclusion list
+      !exclusions.some((item) => item.id === i.id && item.hash === i.hash) &&
+      (!excludeExotic || i.equippingLabel !== item.equippingLabel)
+  );
+
+  if (!candidates.length) {
+    return null;
+  }
+
+  const itemInfos = itemInfosSelector(getState());
+  const itemHashTags = itemHashTagsSelector(getState());
+
+  // A sort for items to use for ranking which item to use to replace the
+  // already equipped item. The highest ranked items are the most likely to be
+  // used. Note that this is reversed, so higher values (including true over
+  // false) come first in the list.
+  const itemValueComparator: (a: DimItem, b: DimItem) => number = reverseComparator(
+    chainComparator(
+      // Try hard not to choose exotics - it's weird to replace an exotic with another random exotic.
+      // But we might have to if there's no other option.
+      compareBy((i) => !i.equippingLabel),
+      // try to match type (e.g. scout rifle). TODO: look into using ItemSubType instead
+      compareBy((i) => i.typeName === item.typeName),
+      compareBy((i) => {
+        const tag = getTag(i, itemInfos, itemHashTags);
+        return -equipReplacePriority.indexOf(tag || 'none');
+      }),
+      // Prefer higher-tier items
+      compareBy((i) => moveAsideWeighting[i.tier]),
+      // Prefer higher-stat items
+      compareBy((i) => i.primaryStat?.value ?? 0)
+    )
+  );
+
+  const sortedCandidates = candidates.sort(itemValueComparator);
+
+  return (
+    sortedCandidates.find((result) => {
+      if (result.equippingLabel) {
+        const otherExotic = getOtherExoticThatNeedsDequipping(result, store);
+        // If there aren't other exotics equipped, or the equipped one is the one we're dequipping, we're good
+        return !otherExotic || otherExotic.id === item.id;
+      } else {
+        return true;
+      }
+    }) || null
+  );
 }

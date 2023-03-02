@@ -4,6 +4,7 @@ import {
   D1Item,
   DimItem,
   DimMasterwork,
+  DimPlug,
   DimSocket,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
@@ -11,7 +12,6 @@ import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import {
   armor2PlugCategoryHashes,
-  energyNamesByEnum,
   EXOTIC_CATALYST_TRAIT,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
@@ -22,11 +22,7 @@ import modSocketMetadata, {
   ModSocketMetadata,
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
-import {
-  DestinyClass,
-  DestinyEnergyType,
-  DestinyInventoryItemDefinition,
-} from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
@@ -35,13 +31,11 @@ import _ from 'lodash';
 import { objectifyArray } from './util';
 
 // damage is a mess!
-// this function supports turning a destiny DamageType or EnergyType into a known english name
+// this function supports turning a destiny DamageType into a known english name
 // mainly for css purposes and the "is:arc" style filter names
 
 export const getItemDamageShortName = (item: DimItem): string | undefined =>
-  item.energy
-    ? energyNamesByEnum[item.element?.enumValue ?? -1]
-    : damageNamesByEnum[item.element?.enumValue ?? -1];
+  damageNamesByEnum[item.element?.enumValue ?? -1];
 
 // these are helpers for identifying SpecialtySockets (combat style/raid mods). See specialty-modslots.ts
 
@@ -93,12 +87,10 @@ export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[]
 
 /**
  * combat and legacy slots are boring now. everything has them.
- * this focuses on narrower stuff: raid & nightmare mod
+ * this focuses on narrower stuff: raid & nightmare modslots
  */
 export const getInterestingSocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
-  const specialtySockets = getSpecialtySocketMetadatas(item)?.filter(
-    (m) => m.slotTag !== 'legacy' && m.slotTag !== 'combatstyle'
-  );
+  const specialtySockets = getSpecialtySocketMetadatas(item)?.filter((m) => m.slotTag !== 'legacy');
   if (specialtySockets?.length) {
     return specialtySockets;
   }
@@ -202,30 +194,33 @@ export function isKillTrackerSocket(socket: DimSocket) {
 }
 
 export interface KillTracker {
-  type: 'pve' | 'pvp';
+  type: 'pve' | 'pvp' | 'gambit';
   count: number;
   trackerDef: PluggableInventoryItemDefinition;
 }
 
 /** returns a socket's kill tracker info */
-const getSocketKillTrackerInfo = (socket: DimSocket | undefined): KillTracker | undefined => {
-  const installedKillTracker = socket?.plugged;
-  if (installedKillTracker) {
-    // getKillTrackerSocket's find() ensures that objectiveHash is in killTrackerObjectivesByHash
-    const type = killTrackerObjectivesByHash[installedKillTracker.plugObjectives[0].objectiveHash];
-    const count = installedKillTracker.plugObjectives[0]?.progress;
-    if (type && count !== undefined) {
-      return {
-        type,
-        count,
-        trackerDef: installedKillTracker.plugDef,
-      };
-    }
-  }
+const getSocketKillTrackerInfo = (
+  socket: DimSocket | undefined
+): KillTracker | null | undefined => {
+  const killTrackerPlug = socket?.plugged;
+  return killTrackerPlug && plugToKillTracker(killTrackerPlug);
 };
 
+export function plugToKillTracker(killTrackerPlug: DimPlug) {
+  const type = killTrackerObjectivesByHash[killTrackerPlug.plugObjectives[0]?.objectiveHash];
+  const count = killTrackerPlug.plugObjectives[0]?.progress;
+  if (type && count !== undefined) {
+    return {
+      type,
+      count,
+      trackerDef: killTrackerPlug.plugDef,
+    };
+  }
+}
+
 /** returns an item's kill tracker info */
-export const getItemKillTrackerInfo = (item: DimItem): KillTracker | undefined =>
+export const getItemKillTrackerInfo = (item: DimItem): KillTracker | null | undefined =>
   getSocketKillTrackerInfo(getKillTrackerSocket(item));
 
 const d1YearSourceHashes = {
@@ -295,8 +290,7 @@ export function isPlugStatActive(
   item: DimItem,
   plug: DestinyInventoryItemDefinition,
   statHash: number,
-  isConditionallyActive: boolean,
-  modsOnOtherItems?: PluggableInventoryItemDefinition[]
+  isConditionallyActive: boolean
 ): boolean {
   /*
   Some Exotic weapon catalysts can be inserted even though the catalyst objectives are incomplete.
@@ -319,25 +313,6 @@ export function isPlugStatActive(
     return false;
   }
 
-  if (
-    plugHash === modsWithConditionalStats.powerfulFriends ||
-    plugHash === modsWithConditionalStats.radiantLight
-  ) {
-    // Powerful Friends & Radiant Light
-    // True if a second arc mod is socketed or a arc charged with light mod  is found in modsOnOtherItems.
-    return Boolean(
-      item.sockets?.allSockets.some(
-        (s) =>
-          s.plugged?.plugDef.hash !== plugHash &&
-          s.plugged?.plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
-      ) ||
-        modsOnOtherItems?.some(
-          (plugDef) =>
-            modTypeTagByPlugCategoryHash[plugDef.plug.plugCategoryHash] === 'chargedwithlight' &&
-            plugDef.plug.energyCost?.energyType === DestinyEnergyType.Arc
-        )
-    );
-  }
   if (
     plugHash === modsWithConditionalStats.chargeHarvester ||
     plugHash === modsWithConditionalStats.echoOfPersistence ||
@@ -368,4 +343,13 @@ export function isPlugStatActive(
  */
 export function isD1Item(item: DimItem): item is D1Item {
   return item.destinyVersion === 1;
+}
+
+/** turns an item's list of stats into a dictionary of stats, keyed by stat hash */
+export function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value') {
+  const output: NodeJS.Dict<number> = {};
+  for (const stat of item.stats ?? []) {
+    output[stat.statHash] = stat[byWhichValue];
+  }
+  return output;
 }
