@@ -10,6 +10,7 @@
 * Sorting in the Organizer is a bit more reliable.
 * DIM should be more resistant to being logged out during API maintenance.
 * Loadout Optimizer will now automatically use Artifice mod slots to improve build stats.
+* The tooltip for enhanced intrinsics or adept masterworks will now only show the stat boosts actually relevant to the item.
 
 ### Beta Only
 

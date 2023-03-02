@@ -33,6 +33,23 @@ import Objective from '../progress/Objective';
 import './ItemSockets.scss';
 import styles from './PlugTooltip.m.scss';
 
+function isVisibleStat(item: DimItem, plug: DimPlug, statHash: number) {
+  return (
+    statAllowList.includes(statHash) &&
+    // Stats are only shown if the item can actually benefit from them
+    item.stats?.some((stat) => stat.statHash === statHash) &&
+    isPlugStatActive(
+      item,
+      plug.plugDef,
+      statHash,
+      Boolean(
+        plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
+          ?.isConditionallyActive
+      )
+    )
+  );
+}
+
 // TODO: Connect this to redux
 export function DimPlugTooltip({
   item,
@@ -55,19 +72,7 @@ export function DimPlugTooltip({
     ? _.sortBy(
         Object.keys(plug.stats)
           .map((statHashStr) => parseInt(statHashStr, 10))
-          .filter(
-            (statHash) =>
-              statAllowList.includes(statHash) &&
-              isPlugStatActive(
-                item,
-                plug.plugDef,
-                statHash,
-                Boolean(
-                  plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
-                    ?.isConditionallyActive
-                )
-              )
-          ),
+          .filter((statHash) => isVisibleStat(item, plug, statHash)),
         (h) => statAllowList.indexOf(h)
       )
     : [];
