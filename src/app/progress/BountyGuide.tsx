@@ -165,7 +165,8 @@ export default function BountyGuide({
   return (
     <div className={styles.guide} onClick={clearSelection}>
       {flattened.map(({ type, value, bounties }) => (
-        <div
+        <button
+          type="button"
           key={type + value}
           className={clsx(styles.pill, {
             [styles.selected]: matchPill(type, value, selectedFilters),
@@ -188,7 +189,7 @@ export default function BountyGuide({
               <AppIcon icon={addIcon} />
             </span>
           )}
-        </div>
+        </button>
       ))}
     </div>
   );

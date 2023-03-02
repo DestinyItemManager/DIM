@@ -14,13 +14,13 @@
 }
 
 .resetButton {
+  text-align: left;
   appearance: none;
   background: transparent;
   border: 0;
   padding: 0;
   margin: 0;
   cursor: pointer;
-  &:focus {
-    outline: none;
-  }
+  font-size: inherit;
+  font-family: inherit;
 }

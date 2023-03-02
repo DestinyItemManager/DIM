@@ -5,31 +5,14 @@
   flex-wrap: wrap;
   margin: 8px 0;
   gap: 4px;
+
   @include phone-portrait {
     margin: 8px 6px;
   }
 }
 
 .pill {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  align-items: center;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 12px;
-  padding: 2px 8px;
-  color: white;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: border-color 150ms;
-  white-space: nowrap;
-
-  img {
-    margin-right: 4px;
-  }
-  @media (hover: hover) {
-    &:hover {
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-  }
+  composes: pill from '../dim-ui/FilterPills.m.scss';
 }
 
 .itemCategoryIcon {
@@ -38,7 +21,6 @@
 
 .count {
   opacity: 0.5;
-  margin-left: 0.3em;
 }
 
 .synergy {
@@ -59,6 +41,7 @@
   :global(.app-icon) {
     transition: transform 150ms ease-in-out;
   }
+
   @media (hover: hover) {
     &:hover :global(.app-icon) {
       transform: scale(1.3);

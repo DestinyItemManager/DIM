@@ -49,7 +49,8 @@ export default function FilterPills({
   };
 
   return (
-    <div
+    <button
+      type="button"
       className={clsx(styles.guide, className, { [styles.darkBackground]: darkBackground })}
       onClick={clearSelection}
     >
@@ -65,6 +66,6 @@ export default function FilterPills({
         </div>
       ))}
       {extra}
-    </div>
+    </button>
   );
 }
