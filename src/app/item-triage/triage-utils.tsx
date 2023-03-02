@@ -372,7 +372,7 @@ export function compareBetterStats(
   // this false fallback shouldn't crop up, but just in case, we make no judgement
 }
 
-function isArtifice(item: DimItem) {
+export function isArtifice(item: DimItem) {
   return Boolean(
     item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === 3727270518)
   );

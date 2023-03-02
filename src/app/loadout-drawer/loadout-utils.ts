@@ -14,13 +14,17 @@ import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
+  aspectSocketCategoryHashes,
+  fragmentSocketCategoryHashes,
   getDefaultAbilityChoiceHash,
   getFirstSocketByCategoryHash,
   getSocketsByCategoryHash,
   getSocketsByCategoryHashes,
   getSocketsByIndexes,
   plugFitsIntoSocket,
+  subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
+import { weakMemoize } from 'app/utils/util';
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -93,7 +97,7 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
         // in a fragment socket index >= capacity
         // (so with three fragment slots and fragments [1, 2, empty, 4] the last
         // fragment will be inactive)
-        if (category.category.hash === SocketCategoryHashes.Fragments) {
+        if (fragmentSocketCategoryHashes.includes(category.category.hash)) {
           if (fragmentCapacity > 0) {
             fragmentCapacity--;
           } else {
@@ -124,11 +128,10 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
 export function createSubclassDefaultSocketOverrides(item: DimItem) {
   if (item.bucket.hash === BucketHashes.Subclass && item.sockets) {
     const socketOverrides: SocketOverrides = {};
-    const abilityAndSuperSockets = getSocketsByCategoryHashes(item.sockets, [
-      SocketCategoryHashes.Abilities_Abilities,
-      SocketCategoryHashes.Abilities_Abilities_LightSubclass,
-      SocketCategoryHashes.Super,
-    ]);
+    const abilityAndSuperSockets = getSocketsByCategoryHashes(
+      item.sockets,
+      subclassAbilitySocketCategoryHashes
+    );
 
     for (const socket of abilityAndSuperSockets) {
       socketOverrides[socket.socketIndex] =
@@ -263,7 +266,8 @@ export function getLoadoutStats(
   }
 
   // Add stats that come from the subclass fragments
-  // TODO: Now that we apply socket overrides when we resolve items, do we need to do this calculation?
+  // Question: Now that we apply socket overrides when we resolve items, do we need to do this calculation?
+  // Answer: Yes, because subclasses don't have armor stats
   if (subclass?.loadoutItem.socketOverrides) {
     for (const plugHash of Object.values(subclass.loadoutItem.socketOverrides)) {
       const plug = defs.InventoryItem.get(plugHash);
@@ -281,7 +285,7 @@ export function getLoadoutStats(
   // Add the mod stats
   for (const mod of mods) {
     for (const stat of mod.investmentStats) {
-      if (stat.statTypeHash in stats && isModStatActive(classType, mod.hash, stat, mods)) {
+      if (stat.statTypeHash in stats && isModStatActive(classType, mod.hash, stat)) {
         stats[stat.statTypeHash].value += stat.value;
       }
     }
@@ -545,18 +549,52 @@ export function findItemForLoadout(
   return getUninstancedLoadoutItem(allItems, info.hash, storeId);
 }
 
+/**
+ * Get a mapping from item id to item, for items that could be in loadouts. Used for
+ * looking up items from loadouts.
+ */
+export const potentialLoadoutItemsByItemId = weakMemoize((allItems: DimItem[]) =>
+  _.keyBy(
+    allItems.filter((i) => i.id !== '0' && itemCanBeInLoadout(i)),
+    (i) => i.id
+  )
+);
+
+/**
+ * Get a mapping from crafted date to item, for items that could be in loadouts. Used for
+ * looking up items from loadouts.
+ */
+export const potentialLoadoutItemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
+  _.keyBy(
+    allItems.filter((i) => i.id !== '0' && i.craftedInfo?.craftedDate && itemCanBeInLoadout(i)),
+    (i) => i.craftedInfo!.craftedDate!
+  )
+);
+
 export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: LoadoutItem) {
   // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
-  const result = allItems.find((item) => item.id === loadoutItem.id);
+  // yup
+  const result = potentialLoadoutItemsByItemId(allItems)[loadoutItem.id];
   if (result) {
     return result;
   }
 
   // Crafted items get new IDs, but keep their crafted date, so we can match on that
   if (loadoutItem.craftedDate) {
-    return allItems.find((item) => item.craftedInfo?.craftedDate === loadoutItem.craftedDate);
+    return potentialLoadoutItemsByCraftedDate(allItems)[loadoutItem.craftedDate];
   }
 }
+
+/**
+ * Get a mapping from item hash to item, for ininstanced items that could be in loadouts. Used for
+ * looking up items from loadouts.
+ */
+export const potentialUninstancedLoadoutItemsByHash = weakMemoize((allItems: DimItem[]) =>
+  _.groupBy(
+    allItems.filter((i) => itemCanBeInLoadout(i)),
+    (i) => i.hash
+  )
+);
 
 export function getUninstancedLoadoutItem(
   allItems: DimItem[],
@@ -564,7 +602,7 @@ export function getUninstancedLoadoutItem(
   storeId: string | undefined
 ) {
   // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
-  const candidates = allItems.filter((item) => item.hash === hash);
+  const candidates = potentialUninstancedLoadoutItemsByHash(allItems)[hash] ?? [];
   const onCurrent =
     storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined;
   return onCurrent ?? (candidates[0]?.notransfer ? undefined : candidates[0]);
@@ -625,9 +663,11 @@ export function getModsFromLoadout(
   if (defs?.isDestiny2()) {
     for (const modHash of getModHashesFromLoadout(loadout, includeAutoMods)) {
       const item = defs.InventoryItem.get(modHash);
-
       if (isPluggableItem(item)) {
         mods.push(item);
+      } else {
+        const deprecatedPlaceholderMod = defs.InventoryItem.get(3947616002);
+        isPluggableItem(deprecatedPlaceholderMod) && mods.push(deprecatedPlaceholderMod);
       }
     }
   }
@@ -636,7 +676,7 @@ export function getModsFromLoadout(
 }
 
 function getSubclassFragmentCapacity(subclassItem: DimItem): number {
-  const aspects = getSocketsByCategoryHash(subclassItem.sockets, SocketCategoryHashes.Aspects);
+  const aspects = getSocketsByCategoryHashes(subclassItem.sockets, aspectSocketCategoryHashes);
   return _.sumBy(
     aspects,
     (aspect) => aspect.plugged?.plugDef.plug.energyCapacity?.capacityValue || 0

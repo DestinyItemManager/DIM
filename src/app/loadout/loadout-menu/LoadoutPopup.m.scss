@@ -66,8 +66,8 @@
   }
 
   > span,
-  a,
-  form {
+  > a,
+  > form {
     &:first-child {
       flex: 1;
       padding: 0 10px;
@@ -75,18 +75,18 @@
       text-overflow: ellipsis;
       white-space: nowrap !important;
       line-height: 35px;
-      :global(.app-icon),
-      img {
+      display: inline-flex;
+      align-items: center;
+      > :global(.app-icon),
+      > img {
         width: 12px;
         margin-right: 5px;
         text-align: center;
+
         @include phone-portrait {
           width: 14px;
           margin-right: 8px;
         }
-      }
-      > img:first-child {
-        filter: invert(1);
       }
     }
   }
@@ -122,6 +122,7 @@
     display: flex;
     align-items: center;
     text-align: center;
+
     @include phone-portrait {
       margin: 4px 4px 4px 2px;
     }
@@ -135,6 +136,7 @@
   /* stylelint-disable-next-line no-descending-specificity */
   :global(.app-icon) {
     font-size: 13px;
+
     @include phone-portrait {
       font-size: 15px;
     }
@@ -174,4 +176,10 @@
 
 .filterPills {
   margin: 8px;
+}
+
+.inGameLoadoutIcon {
+  height: 16px !important;
+  width: 16px !important;
+  vertical-align: middle;
 }

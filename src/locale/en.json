@@ -381,6 +381,10 @@
     "Tab": "TAB",
     "Vault": "Send item to vault"
   },
+  "InGameLoadout": {
+    "Applying": "Equipping loadout...",
+    "LoadoutSlotNum": "Slot {{index}}"
+  },
   "Infusion": {
     "Filter": "Filter items",
     "InfuseSource": "Select item to infuse {{name}} into",
@@ -517,7 +521,7 @@
       "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
       "None": "All armor will use its current stats and will have a minimum energy level of 7."
     },
-    "AutoStatMods": "Add required stat mods",
+    "AutoStatMods": "Automatically add stat mods",
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
@@ -529,16 +533,7 @@
     "ExistingLoadout": "Existing Loadout",
     "ExoticSpecialCategory": "Special",
     "Filter": "Filters",
-    "InLoadouts": "In Loadouts",
-    "InOtherLoadouts": "Other Loadouts",
     "Legendary": "Legendary",
-    "LockElement": "Lock Element",
-    "LockElementOptions": {
-      "All": "All armor will be locked to its current element.",
-      "InLoadouts": "Armor will be locked to its current element if it is equipped in any existing Loadouts.",
-      "InOtherLoadouts": "You are currently optimizing Loadout {{loadoutName}}. Armor will be locked to its current element if it is equipped in any Loadouts other than {{loadoutName}}.",
-      "None": "Armor element will be changed as needed to fit the selected mods."
-    },
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
     "MaxTier": "Max {{tier}}",
@@ -548,7 +543,6 @@
       "ActiveSearchQuery": "An active search query is restricting the items DIM can include in builds",
       "AllowAutoStatMods": "Allow DIM to automatically include additional stat mods",
       "AlwaysInvalidMods": "These mods don't fit into any of your owned items:",
-      "AssumeElementChange": "Allow DIM to recommend armor energy element changes",
       "AssumeMasterworked": "Allow DIM to recommend masterworking armor",
       "AssumptionsRestricted": "DIM cannot recommend armor energy changes:",
       "BadSlot": "In the {{bucketName}} slot, none of the allowed items could accommodate these mods:",
@@ -571,7 +565,7 @@
     "OptimizerExplanationMods": "Choose an exotic and any mods you want to use. Loadout Optimizer only includes stat bonuses from mods you choose - all mods already on the armor are ignored.",
     "OptimizerExplanationSearch": "Use the search bar to filter the items Loadout Optimizer uses.",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
-    "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
+    "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades to fit your requested mods.",
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Processing sets for\n{{character}} ({{remainingTime}}s)",
     "SaveAs": "Save as",
@@ -838,7 +832,6 @@
       "Crafted": "Shaped Date",
       "CustomTotal": "Custom Total",
       "Damage": "Damage",
-      "Element": "Element",
       "Energy": "Energy",
       "Event": "Event",
       "Icon": "Icon",
@@ -985,7 +978,6 @@
     "SizeItem": "Item size",
     "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Stack Size",
-    "SortByArmorElement": "Armor Element (D2)",
     "SortByClassType": "Required Class",
     "SortByCrafted": "Crafted (D2)",
     "SortByDeepsight": "Deepsight (D2)",
@@ -1129,7 +1121,6 @@
   "StripSockets": {
     "Action": "Strip Sockets",
     "ArmorMods": "{{count}}x Armor Mod",
-    "ArtifactMods": "{{count}}x Artifact Mod",
     "Button": "Strip {{numSockets}} Sockets",
     "Cancel": "Cancel",
     "Choose": "Choose Sockets to strip",

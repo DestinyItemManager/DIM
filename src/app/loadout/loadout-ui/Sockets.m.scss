@@ -12,3 +12,9 @@
     --item-size: var(--item-icon-size);
   }
 }
+
+.automaticallyPicked {
+  :global(.item-img) {
+    border: 1px solid $orange;
+  }
+}

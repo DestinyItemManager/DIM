@@ -1,4 +1,4 @@
-import { DestinyEnergyType, TierType } from 'bungie-api-ts/destiny2';
+import { TierType } from 'bungie-api-ts/destiny2';
 import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
 import {
   BreakerTypeHashes,
@@ -100,7 +100,7 @@ export const D2ArmorStatHashByName = {
   discipline: StatHashes.Discipline,
   intellect: StatHashes.Intellect,
   strength: StatHashes.Strength,
-};
+} as const;
 
 /** Stats that all (D2) armor should have. */
 export const armorStats = Object.values(D2ArmorStatHashByName);
@@ -266,16 +266,6 @@ export const ALL_TRAIT = 1434215347;
 /** the trait hash that is used to identify Exotic weapon catalyst plugs */
 export const EXOTIC_CATALYST_TRAIT = 1505531793;
 
-export const energyNamesByEnum: Record<DestinyEnergyType, string> = {
-  [DestinyEnergyType.Any]: 'any',
-  [DestinyEnergyType.Arc]: 'arc',
-  [DestinyEnergyType.Thermal]: 'solar',
-  [DestinyEnergyType.Void]: 'void',
-  [DestinyEnergyType.Ghost]: 'ghost',
-  [DestinyEnergyType.Subclass]: 'subclass',
-  [DestinyEnergyType.Stasis]: 'stasis',
-};
-
 /**
  * Maps TierType to tierTypeName in English and vice versa.
  * The Bungie.net version of this enum is not representative of real game strings.
@@ -307,8 +297,6 @@ export type ItemTierName =
   | 'Rare'
   | 'Legendary'
   | 'Exotic';
-
-export const energyCapacityTypeNames = Object.values(energyNamesByEnum);
 
 export const breakerTypes = {
   any: [BreakerTypeHashes.Stagger, BreakerTypeHashes.Disruption, BreakerTypeHashes.ShieldPiercing],

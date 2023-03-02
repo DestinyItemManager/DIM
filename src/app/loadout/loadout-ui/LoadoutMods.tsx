@@ -9,13 +9,12 @@ import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
-import { artifactModsSelector } from 'app/strip-sockets/strip-sockets';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ModAssignmentDrawer from '../mod-assignment-drawer/ModAssignmentDrawer';
-import { createGetModRenderKey, unlockedByAllModsBeingUnlocked } from '../mod-utils';
+import { createGetModRenderKey } from '../mod-utils';
 import ModPicker from '../ModPicker';
 import styles from './LoadoutMods.m.scss';
 import PlugDef from './PlugDef';
@@ -69,7 +68,6 @@ export default memo(function LoadoutMods({
   const unlockedPlugSetItems = useSelector((state: RootState) =>
     unlockedPlugSetItemsSelector(state, storeId)
   );
-  const artifactMods = useSelector(artifactModsSelector);
 
   // Explicitly show only actual saved mods in the mods picker, not auto mods,
   // otherwise we'd duplicate auto mods into loadout parameter mods when coonfirming
@@ -104,7 +102,6 @@ export default memo(function LoadoutMods({
             className={clsx({
               [styles.missingItem]: !(
                 unlockedPlugSetItems.has(mod.hash) ||
-                unlockedByAllModsBeingUnlocked(mod, artifactMods) ||
                 mod.hash === DEFAULT_SHADER ||
                 DEFAULT_ORNAMENTS.includes(mod.hash)
               ),

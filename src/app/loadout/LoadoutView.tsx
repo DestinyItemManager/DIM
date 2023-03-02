@@ -131,7 +131,7 @@ export default function LoadoutView({
         {(items.length > 0 || subclass || allMods.length > 0 || !_.isEmpty(modsByBucket)) && (
           <>
             {(!isPhonePortrait || subclass) && (
-              <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
+              <LoadoutSubclassSection subclass={subclass} power={power} />
             )}
             {(['Weapons', 'Armor', 'General'] as const).map((category) => (
               <LoadoutItemCategorySection

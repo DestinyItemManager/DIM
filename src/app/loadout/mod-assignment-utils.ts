@@ -1,16 +1,10 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSockets, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { isArtifice } from 'app/item-triage/triage-utils';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
-import {
-  armor2PlugCategoryHashesByName,
-  modsWithConditionalStats,
-} from 'app/search/d2-known-values';
-import {
-  combatCompatiblePlugCategoryHashes,
-  ModSocketMetadata,
-  modTypeTagByPlugCategoryHash,
-} from 'app/search/specialty-modslots';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { ModSocketMetadata } from 'app/search/specialty-modslots';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
@@ -20,13 +14,12 @@ import {
   getSocketsByCategoryHash,
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
-import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
 import { activityModPlugCategoryHashes } from './known-values';
 import { generateModPermutations } from './mod-permutations';
-import { getItemEnergyType, plugCategoryHashToBucketHash } from './mod-utils';
+import { plugCategoryHashToBucketHash } from './mod-utils';
 
 /**
  * a temporary structure, keyed by item ID,
@@ -46,11 +39,22 @@ interface ModAssignments {
  * Armor mods, split into general, combat, activity, and bucket-specific mods.
  */
 export interface ModMap {
+  /** Flat copy of all the mods below */
   allMods: PluggableInventoryItemDefinition[];
+  /** Mods that always go into armor pieces of a given slot */
   bucketSpecificMods: { [bucketHash: number]: PluggableInventoryItemDefinition[] };
+  /** General mods, mostly the +5 and +10 stat mods */
   generalMods: PluggableInventoryItemDefinition[];
-  combatMods: PluggableInventoryItemDefinition[];
+  /** Activity mods like raid or nightmare mods */
   activityMods: PluggableInventoryItemDefinition[];
+  /**
+   * Master dungeon artifice mods granting a +3 to a stat.
+   * Theoretically these could be modeled as activity mods but
+   * that's unlikely to be useful since artifice mods are free
+   * so there's no permutation checking involved; and we probably
+   * also don't want to ever pass these to the Loadout Optimizer process.
+   */
+  artificeMods: PluggableInventoryItemDefinition[];
 }
 
 /**
@@ -63,8 +67,8 @@ export function categorizeArmorMods(
   referenceItems: DimItem[]
 ): { modMap: ModMap; unassignedMods: PluggableInventoryItemDefinition[] } {
   const generalMods: PluggableInventoryItemDefinition[] = [];
-  const combatMods: PluggableInventoryItemDefinition[] = [];
   const activityMods: PluggableInventoryItemDefinition[] = [];
+  const artificeMods: PluggableInventoryItemDefinition[] = [];
   const bucketSpecificMods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] } = {};
 
   const validMods: PluggableInventoryItemDefinition[] = [];
@@ -89,11 +93,11 @@ export function categorizeArmorMods(
     } else if (pch === armor2PlugCategoryHashesByName.general) {
       generalMods.push(plannedMod);
       validMods.push(plannedMod);
-    } else if (combatCompatiblePlugCategoryHashes.includes(pch)) {
-      combatMods.push(plannedMod);
-      validMods.push(plannedMod);
     } else if (activityModPlugCategoryHashes.includes(pch)) {
       activityMods.push(plannedMod);
+      validMods.push(plannedMod);
+    } else if (plannedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice) {
+      artificeMods.push(plannedMod);
       validMods.push(plannedMod);
     } else {
       const bucketHash = plugCategoryHashToBucketHash[pch];
@@ -110,8 +114,8 @@ export function categorizeArmorMods(
     modMap: {
       allMods: validMods,
       generalMods,
-      combatMods,
       activityMods,
+      artificeMods,
       bucketSpecificMods,
     },
     unassignedMods,
@@ -158,8 +162,6 @@ export function fitMostMods({
   let assignmentEnergyCost = Number.MAX_SAFE_INTEGER;
   // The total number of mods that couldn't be assigned to the items
   let assignmentUnassignedModCount = Number.MAX_SAFE_INTEGER;
-  // The total number of conditional mods that are activated in the assignment
-  let assignmentActiveConditionalMods = Number.MIN_SAFE_INTEGER;
   // The total number of bucket independent mods that are changed in the assignment
   let assignmentModChangeCount = Number.MAX_SAFE_INTEGER;
 
@@ -176,7 +178,7 @@ export function fitMostMods({
   );
 
   const {
-    modMap: { activityMods, combatMods, generalMods, bucketSpecificMods },
+    modMap: { activityMods, generalMods, artificeMods, bucketSpecificMods },
     unassignedMods,
   } = categorizeArmorMods(plannedMods, items);
 
@@ -195,6 +197,24 @@ export function fitMostMods({
     }
   }
 
+  // Artifice mods are free and thus can be greedily assigned.
+  const artificeItems = items.filter(isArtifice);
+  for (const artificeMod of artificeMods) {
+    let targetItemIndex = artificeItems.findIndex((item) =>
+      item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === artificeMod.hash)
+    );
+    if (targetItemIndex === -1) {
+      targetItemIndex = artificeItems.length ? 0 : -1;
+    }
+
+    if (targetItemIndex !== -1) {
+      bucketSpecificAssignments[artificeItems[targetItemIndex].id].assigned.push(artificeMod);
+      artificeItems.splice(targetItemIndex, 1);
+    } else {
+      unassignedMods.push(artificeMod);
+    }
+  }
+
   // A object of item id's to energy information. This is so we can precalculate
   // working energy used, capacity and type and use this to validate whether a mod
   // can be used in an item.
@@ -209,134 +229,87 @@ export function fitMostMods({
   );
 
   const generalModPermutations = generateModPermutations(generalMods);
-  const combatModPermutations = generateModPermutations(combatMods);
   const activityModPermutations = generateModPermutations(activityMods);
 
   for (const activityPermutation of activityModPermutations) {
-    for (const combatPermutation of combatModPermutations) {
-      modLoop: for (const generalPermutation of generalModPermutations) {
-        let unassignedModCount = 0;
-        const assignments: ModAssignments = {};
+    modLoop: for (const generalPermutation of generalModPermutations) {
+      let unassignedModCount = 0;
+      const assignments: ModAssignments = {};
 
-        for (let i = 0; i < items.length; i++) {
-          const assigned = [];
-          const unassigned = [];
-          const item = items[i];
+      for (let i = 0; i < items.length; i++) {
+        const assigned = [];
+        const unassigned = [];
+        const item = items[i];
 
-          const activityMod = activityPermutation[i];
-          if (
-            activityMod &&
-            isActivityModValid(activityMod, itemSocketMetadata[item.id], itemEnergies[item.id])
-          ) {
-            assigned.push(activityMod);
-          } else if (activityMod) {
-            unassigned.push(activityMod);
-          }
-
-          const combatMod = combatPermutation[i];
-          if (
-            combatMod &&
-            isCombatModValid(
-              combatMod,
-              assigned,
-              itemSocketMetadata[item.id],
-              itemEnergies[item.id]
-            )
-          ) {
-            assigned.push(combatMod);
-          } else if (combatMod) {
-            unassigned.push(combatMod);
-          }
-
-          const generalMod = generalPermutation[i];
-          if (generalMod && isModEnergyValid(itemEnergies[item.id], generalMod, ...assigned)) {
-            assigned.push(generalMod);
-          } else if (generalMod) {
-            unassigned.push(generalMod);
-          }
-
-          if (unassignedModCount + unassigned.length > assignmentUnassignedModCount) {
-            continue modLoop;
-          }
-
-          unassignedModCount += unassigned.length;
-          assignments[item.id] = { assigned, unassigned };
+        const activityMod = activityPermutation[i];
+        if (
+          activityMod &&
+          isActivityModValid(activityMod, itemSocketMetadata[item.id], itemEnergies[item.id])
+        ) {
+          assigned.push(activityMod);
+        } else if (activityMod) {
+          unassigned.push(activityMod);
         }
 
-        // This is after the item loop
-        // Skip further checks if we have more unassigned mods in this assignment
-        if (unassignedModCount > assignmentUnassignedModCount) {
-          continue;
+        const generalMod = generalPermutation[i];
+        if (generalMod && isModEnergyValid(itemEnergies[item.id], generalMod, ...assigned)) {
+          assigned.push(generalMod);
+        } else if (generalMod) {
+          unassigned.push(generalMod);
         }
 
-        let totalActiveConditionalMods = 0;
-        const allAssignedMods = Object.values(assignments).flatMap(
-          (assignment) => assignment.assigned
+        if (unassignedModCount + unassigned.length > assignmentUnassignedModCount) {
+          continue modLoop;
+        }
+
+        unassignedModCount += unassigned.length;
+        assignments[item.id] = { assigned, unassigned };
+      }
+
+      // This is after the item loop
+      // Skip further checks if we have more unassigned mods in this assignment
+      if (unassignedModCount > assignmentUnassignedModCount) {
+        continue;
+      }
+
+      let energyUsedAndWasted = 0;
+      for (const [itemId, { assigned }] of Object.entries(assignments)) {
+        energyUsedAndWasted += calculateEnergyChange(itemEnergies[itemId], assigned);
+      }
+
+      // Skip further checks if we are spending more energy that we were previously.
+      if (
+        unassignedModCount === assignmentUnassignedModCount &&
+        energyUsedAndWasted > assignmentEnergyCost
+      ) {
+        continue;
+      }
+
+      let modChangeCount = 0;
+      for (const item of items) {
+        modChangeCount += countBucketIndependentModChangesForItem(
+          item,
+          assignments[item.id].assigned
         );
-        for (const item of items) {
-          totalActiveConditionalMods += calculateTotalActivatedModsScore(
-            bucketSpecificAssignments[item.id].assigned,
-            assignments[item.id].assigned,
-            allAssignedMods
-          );
-        }
+      }
 
-        // Skip further checks if we have less active condition mods and we have an equal amount
-        // of unassigned mods. If we have less unassigned mods we should continue because its a better
-        // assignment
-        if (
-          unassignedModCount === assignmentUnassignedModCount &&
-          totalActiveConditionalMods < assignmentActiveConditionalMods
-        ) {
-          continue;
-        }
-
-        let energyUsedAndWasted = 0;
-        for (const [itemId, { assigned }] of Object.entries(assignments)) {
-          energyUsedAndWasted += calculateEnergyChange(itemEnergies[itemId], assigned);
-        }
-
-        // Skip further checks if we are spending more energy that we were previously.
-        if (
-          unassignedModCount === assignmentUnassignedModCount &&
-          totalActiveConditionalMods === assignmentActiveConditionalMods &&
-          energyUsedAndWasted > assignmentEnergyCost
-        ) {
-          continue;
-        }
-
-        let modChangeCount = 0;
-        for (const item of items) {
-          modChangeCount += countBucketIndependentModChangesForItem(
-            item,
-            assignments[item.id].assigned
-          );
-        }
-
-        // One of the following three conditions needs to be true for the assignment to be better
-        if (
-          // Less unassigned mods
-          unassignedModCount < assignmentUnassignedModCount ||
-          // The same amount of unassigned mods and more active conditional mods
-          (unassignedModCount === assignmentUnassignedModCount &&
-            totalActiveConditionalMods > assignmentActiveConditionalMods) ||
-          // The same amount of unassigned and active mods but the assignment is cheaper
-          (unassignedModCount === assignmentUnassignedModCount &&
-            totalActiveConditionalMods === assignmentActiveConditionalMods &&
-            energyUsedAndWasted < assignmentEnergyCost) ||
-          // The assignment costs the same but we are changing fewer mods
-          (unassignedModCount === assignmentUnassignedModCount &&
-            totalActiveConditionalMods === assignmentActiveConditionalMods &&
-            energyUsedAndWasted === assignmentEnergyCost &&
-            modChangeCount < assignmentModChangeCount)
-        ) {
-          // We save this assignment and its metadata because it is determined to be better
-          bucketIndependentAssignments = assignments;
-          assignmentEnergyCost = energyUsedAndWasted;
-          assignmentUnassignedModCount = unassignedModCount;
-          assignmentActiveConditionalMods = totalActiveConditionalMods;
-          assignmentModChangeCount = modChangeCount;
-        }
+      // One of the following three conditions needs to be true for the assignment to be better
+      if (
+        // Less unassigned mods
+        unassignedModCount < assignmentUnassignedModCount ||
+        // The same amount of unassigned mods but the assignment is cheaper
+        (unassignedModCount === assignmentUnassignedModCount &&
+          energyUsedAndWasted < assignmentEnergyCost) ||
+        // The assignment costs the same but we are changing fewer mods
+        (unassignedModCount === assignmentUnassignedModCount &&
+          energyUsedAndWasted === assignmentEnergyCost &&
+          modChangeCount < assignmentModChangeCount)
+      ) {
+        // We save this assignment and its metadata because it is determined to be better
+        bucketIndependentAssignments = assignments;
+        assignmentEnergyCost = energyUsedAndWasted;
+        assignmentUnassignedModCount = unassignedModCount;
+        assignmentModChangeCount = modChangeCount;
       }
     }
   }
@@ -417,10 +390,6 @@ export function assignBucketSpecificMods({
 } {
   // given spending rules, what we can assume this item's energy is
   let itemEnergyCapacity = calculateAssumedItemEnergy(item, armorEnergyRules);
-  // given spending/element rules & current assignments, what element is this armor?
-  // NB if the mods have different elements, this returns the first best not-Any type.
-  // The others will be rejected below.
-  const itemEnergyType = getItemEnergyType(item, armorEnergyRules, modsToAssign);
 
   const { orderedSockets, orderedMods } = getArmorSocketsAndMods(item.sockets, modsToAssign);
 
@@ -437,10 +406,8 @@ export function assignBucketSpecificMods({
 
     // cost of inserting this new proposed mod
     const modCost = mod.plug.energyCost?.energyCost || 0;
-    // element of this new proposed mod
-    const modEnergyType = mod.plug.energyCost?.energyType || DestinyEnergyType.Any;
 
-    if (modCost > itemEnergyCapacity || !energyTypesAreCompatible(itemEnergyType, modEnergyType)) {
+    if (modCost > itemEnergyCapacity) {
       // The mod is incompatible with the item or the existing mods we have already assigned
       unassigned.push(mod);
       continue;
@@ -648,127 +615,18 @@ function isActivityModValid(
   );
 }
 
-function isCombatModValid(
-  combatMod: PluggableInventoryItemDefinition,
-  assignedMods: PluggableInventoryItemDefinition[],
-  itemSocketMetadata: ModSocketMetadata[] | undefined,
-  itemEnergy: ItemEnergy
-) {
-  const modTag = getModTypeTagByPlugCategoryHash(combatMod.plug.plugCategoryHash);
-
-  return (
-    isModEnergyValid(itemEnergy, combatMod, ...assignedMods) &&
-    modTag &&
-    itemSocketMetadata?.some((metadata) => metadata.compatibleModTags.includes(modTag))
-  );
-}
-
 /**
- * A cost heuristic for upgrading / changing armor elements.
- * Costs modelled are upgrading the energy capacity and changing the element.
+ * A cost heuristic for upgrading armor.
  */
 function calculateEnergyChange(
   itemEnergy: ItemEnergy,
   assignedMods: PluggableInventoryItemDefinition[]
 ) {
-  let finalEnergy = itemEnergy.derivedType;
-
-  for (const mod of assignedMods) {
-    if (finalEnergy !== DestinyEnergyType.Any) {
-      break;
-    } else if (mod.plug.energyCost?.energyType) {
-      finalEnergy = mod.plug.energyCost.energyType;
-    }
-  }
-
   const modCost =
     itemEnergy.used + _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
-  const mustChangeAffinity =
-    finalEnergy !== DestinyEnergyType.Any && finalEnergy !== itemEnergy.originalType;
 
-  if (mustChangeAffinity) {
-    if (itemEnergy.originalCapacity < 10) {
-      // If we must change the affinity on an item not already masterworked,
-      // add the wasted energy
-      return modCost + itemEnergy.originalCapacity;
-    } else {
-      // Changing the affinity is reasonably inexpensive for masterworked items.
-      // For class items, we may have alternatives in LO and they're the
-      // easiest to replace, so there's a small tiebreaker here to nudge LO into
-      // preferring changing class item affinity over others.
-      return itemEnergy.isClassItem ? 4 : 5;
-    }
-  } else {
-    // Otherwise just check how many levels of upgrade we need
-    return Math.max(0, modCost - itemEnergy.originalCapacity);
-  }
-}
-
-/**
- * Calculates the total number of active conditional mods on the item.
- * Used to ensure mod assignments favor results that activate these mods.
- */
-function calculateTotalActivatedModsScore(
-  bucketSpecificAssignments: PluggableInventoryItemDefinition[],
-  bucketIndependentAssignmentsForItem: PluggableInventoryItemDefinition[],
-  allAssignedMods: PluggableInventoryItemDefinition[]
-) {
-  let activeModsScore = 0;
-
-  for (const mod of bucketIndependentAssignmentsForItem) {
-    activeModsScore += plugActivationScore(
-      mod,
-      bucketSpecificAssignments,
-      bucketIndependentAssignmentsForItem,
-      allAssignedMods
-    );
-  }
-
-  return activeModsScore;
-}
-
-/**
- * Determines whether a mod has had its requirements met by the other mods. Right now this is used
- * to score statful Charged With Light mods (powerful friends, radiant light is activated) and other
- * CWL mods with conditionally active perks.
- */
-function plugActivationScore(
-  mod: PluggableInventoryItemDefinition,
-  bucketSpecificAssignments: PluggableInventoryItemDefinition[],
-  bucketIndependentAssignmentsForItem: PluggableInventoryItemDefinition[],
-  allMods: PluggableInventoryItemDefinition[]
-) {
-  const isArc = (mod: PluggableInventoryItemDefinition) =>
-    mod.plug.energyCost?.energyType === DestinyEnergyType.Arc;
-  const isCWL = (mod: PluggableInventoryItemDefinition) =>
-    modTypeTagByPlugCategoryHash[mod.plug.plugCategoryHash] === 'chargedwithlight';
-
-  // Powerful Friends and Radiant Light provide stat bonuses if activated, every(!) other
-  // Arc CWL mod provides some other additional perk.
-  //
-  // Because Arc CWL mods can activate each others' perks, this prioritization is almost pointless,
-  // except for when there's no feasible assignment for all mods and DIM has to decide which mods to drop.
-  // Not sure if this is useful in any way, but it at provides a rule where there otherwise isn't one.
-  const potentialValue =
-    mod.hash === modsWithConditionalStats.powerfulFriends ||
-    mod.hash === modsWithConditionalStats.radiantLight
-      ? 1
-      : isArc(mod) && isCWL(mod)
-      ? 0.9
-      : 0;
-
-  // Arc bucket-specific mod on this piece, Arc activity mod was put on this piece, or
-  // there's a different Arc CWL mod assigned too.
-  if (
-    potentialValue > 0 &&
-    (bucketSpecificAssignments.some((m) => m.hash !== mod.hash && isArc(m)) ||
-      bucketIndependentAssignmentsForItem.some((m) => m.hash !== mod.hash && isArc(m)) ||
-      allMods?.some((plugDef) => plugDef !== mod && isCWL(plugDef) && isArc(plugDef)))
-  ) {
-    return potentialValue;
-  }
-
-  return 0;
+  // Otherwise check how many levels of upgrade we need
+  return Math.max(0, modCost - itemEnergy.originalCapacity);
 }
 
 function buildItemEnergy({
@@ -784,8 +642,6 @@ function buildItemEnergy({
     used: _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0),
     originalCapacity: item.energy?.energyCapacity || 0,
     derivedCapacity: calculateAssumedItemEnergy(item, armorEnergyRules),
-    originalType: item.energy?.energyType || DestinyEnergyType.Any,
-    derivedType: getItemEnergyType(item, armorEnergyRules, assignedMods),
     isClassItem: item.bucket.hash === BucketHashes.ClassArmor,
   };
 }
@@ -794,8 +650,6 @@ interface ItemEnergy {
   used: number;
   originalCapacity: number;
   derivedCapacity: number;
-  originalType: DestinyEnergyType;
-  derivedType: DestinyEnergyType;
   isClassItem: boolean;
 }
 /**
@@ -812,23 +666,9 @@ function isModEnergyValid(
   ...assignedMods: (PluggableInventoryItemDefinition | null)[]
 ) {
   const modToAssignCost = modToAssign.plug.energyCost?.energyCost || 0;
-  const modToAssignType = modToAssign.plug.energyCost?.energyType || DestinyEnergyType.Any;
   const assignedModsCost = _.sumBy(assignedMods, (mod) => mod?.plug.energyCost?.energyCost || 0);
 
-  return (
-    itemEnergy.used + modToAssignCost + assignedModsCost <= itemEnergy.derivedCapacity &&
-    energyTypesAreCompatible(itemEnergy.derivedType, modToAssignType) &&
-    assignedMods.every((mod) =>
-      energyTypesAreCompatible(
-        modToAssignType,
-        mod?.plug.energyCost?.energyType || DestinyEnergyType.Any
-      )
-    )
-  );
-}
-
-function energyTypesAreCompatible(first: DestinyEnergyType, second: DestinyEnergyType) {
-  return first === second || first === DestinyEnergyType.Any || second === DestinyEnergyType.Any;
+  return itemEnergy.used + modToAssignCost + assignedModsCost <= itemEnergy.derivedCapacity;
 }
 
 function isAssigningToDefault(item: DimItem, assignment: Assignment) {
