@@ -130,16 +130,7 @@ export function getBetterWorseItems(
             ? rawArtificeBetterStatItems
             : rawBetterStatItems;
 
-        // expose artifice measurer in beta,
-        // but keep it out of prod til lightfall ultimately confirms what we know from previews:
-        // artifice mods cost 0 and have no downside
-        if (
-          $DIM_FLAVOR !== 'release' ||
-          insertInto === rawBetterStatItems ||
-          insertInto === rawWorseStatItems
-        ) {
-          insertInto.push(thisItem);
-        }
+        insertInto.push(thisItem);
       }
     }
   }
