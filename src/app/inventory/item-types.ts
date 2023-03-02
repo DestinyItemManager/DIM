@@ -212,8 +212,8 @@ export interface DimItem {
    * Optional in case we ever fail to match items to their record.
    */
   patternUnlockRecord?: DestinyRecordComponent;
-  /** If this item has Deepsight Resonance, this includes info about its Deepsight properties. */
-  deepsightInfo?: DimDeepsight;
+  /** If this item has Deepsight Resonance (a pattern can be extracted). */
+  deepsightInfo?: boolean;
   /** If this item has a catalyst, this includes info about its catalyst properties. */
   catalystInfo?: DimCatalyst;
   /** an item's current breaker type, if it has one */
@@ -266,11 +266,6 @@ export interface DimCrafted {
   progress?: number;
   /** when this weapon was crafted, UTC epoch seconds timestamp */
   craftedDate?: number;
-}
-
-export interface DimDeepsight {
-  /** Progress of attuning the item - when complete, a resonant material can be extracted */
-  attunementObjective: DestinyObjectiveProgress;
 }
 
 export interface DimCatalyst {

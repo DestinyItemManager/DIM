@@ -161,11 +161,8 @@ const ITEM_COMPARATORS: {
   masterworked: compareBy((item) => (item.masterwork ? 0 : 1)),
   // crafted -> not crafted
   crafted: compareBy((item) => (item.crafted ? 0 : 1)),
-  // deepsight incomplete -> deepsight complete -> no deepsight
-  // in order of "needs addressing"? ish?
-  deepsight: compareBy((item) =>
-    item.deepsightInfo ? (item.deepsightInfo.attunementObjective.complete ? 2 : 1) : 3
-  ),
+  // deepsight -> no deepsight
+  deepsight: compareBy((item) => (item.deepsightInfo ? 1 : 2)),
   default: () => 0,
 };
 

@@ -9,7 +9,6 @@ interface CssExports {
   'complete': string;
   'deepsight': string;
   'deepsightBorder': string;
-  'deepsightPattern': string;
   'energyCost': string;
   'energyCostOverlay': string;
   'exotic': string;

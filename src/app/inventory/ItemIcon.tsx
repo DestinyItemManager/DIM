@@ -5,7 +5,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { d2MissingIcon } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
 import { isModCostVisible } from 'app/utils/socket-utils';
-import { DestinyInventoryItemDefinition, DestinyRecordState } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import pursuitComplete from 'images/highlightedObjective.svg';
@@ -79,16 +79,9 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           </svg>
         </>
       )}
-      {item.highlightedObjective &&
-        (!item.deepsightInfo || item.deepsightInfo.attunementObjective.complete) && (
-          <img className={styles.highlightedObjective} src={pursuitComplete} />
-        )}
-      {Boolean(
-        item.deepsightInfo &&
-          !item.deepsightInfo.attunementObjective.complete &&
-          item.patternUnlockRecord &&
-          item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
-      ) && <div className={styles.deepsightPattern} />}
+      {item.highlightedObjective && !item.deepsightInfo && (
+        <img className={styles.highlightedObjective} src={pursuitComplete} />
+      )}
     </>
   );
 }
