@@ -9,8 +9,11 @@
 * `is:statlower` knows about the new artifice armor rules and will consider the artifice +3 stat boost in a single stat when comparing against other armor.
 * Sorting in the Organizer is a bit more reliable.
 * DIM should be more resistant to being logged out during API maintenance.
-* Loadout Optimizer will now automatically use Artifice mod slots to improve build stats.
+* Loadout Optimizer will now automatically use Artifice mod slots to improve build stats, and the arrows point the right way.
 * The tooltip for enhanced intrinsics or adept masterworks will now only show the stat boosts actually relevant to the item.
+* The materials popup has been updated for Lightfall.
+* Deepsight weapons once again appear with a red border. The deepsight search terms have been collapsed into just `is:deepsight` as there is no longer deepsight progress on items.
+* Removed useless energy indicators on armor.
 
 ### Beta Only
 
