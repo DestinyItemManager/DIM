@@ -108,6 +108,12 @@ const toD2DamageType = _.memoize(
       enumValue: damageType.enumValue,
       index: damageType.index,
       redacted: damageType.redacted,
+      color: {
+        red: 0,
+        green: 0,
+        blue: 0,
+        alpha: 0,
+      },
     }
 );
 

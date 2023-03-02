@@ -6,7 +6,6 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { errorLog } from 'app/utils/log';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React, { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -81,7 +80,7 @@ function GeneratedSet({
     }
   }
 
-  let itemModAssignments = useMemo(() => {
+  const itemModAssignments = useMemo(() => {
     const statMods = set.statMods.map(
       (d) => defs.InventoryItem.get(d) as PluggableInventoryItemDefinition
     );
@@ -106,29 +105,20 @@ function GeneratedSet({
     return itemModAssignments;
   }, [set.statMods, lockedMods, displayedItems, armorEnergyRules, defs.InventoryItem]);
 
-  if (!existingLoadout) {
-    itemModAssignments = { ...itemModAssignments };
-    // If we have a bucket with alternatives, pick an alternative
-    // item of the correct element. This is mostly for class items,
-    // and works because fitMostMods prefers changing class item
-    // elements over other pieces
-    for (let i = 0; i < set.armor.length; i++) {
-      if (set.armor[i].length > 1) {
-        const targetEnergy = itemModAssignments[displayedItems[i].id]
-          .map((m) => m.plug.energyCost?.energyType)
-          .find((e) => e !== DestinyEnergyType.Any);
-        if (targetEnergy !== undefined && targetEnergy !== displayedItems[i].energy?.energyType) {
-          const replacementItem = set.armor[i].find((i) => i.energy?.energyType === targetEnergy);
-          if (replacementItem) {
-            const mods = itemModAssignments[displayedItems[i].id];
-            delete itemModAssignments[displayedItems[i].id];
-            itemModAssignments[replacementItem.id] = mods;
-            displayedItems[i] = replacementItem;
-          }
-        }
+  // Distribute our automatically picked mods across the items so that item components
+  // can highlight them
+  const autoMods = set.statMods.slice();
+  const autoModsPerItem = _.mapValues(itemModAssignments, (mods) => {
+    const autoModHashes = [];
+    for (const mod of mods) {
+      const modIdx = autoMods.findIndex((m) => m === mod.hash);
+      if (modIdx !== -1) {
+        autoModHashes.push(mod.hash);
+        autoMods.splice(modIdx, 1);
       }
     }
-  }
+    return autoModHashes;
+  });
 
   const canCompareLoadouts =
     set.armor.every((items) => items[0].classType === selectedStore.classType) &&
@@ -140,7 +130,6 @@ function GeneratedSet({
         <div className={styles.header}>
           <SetStats
             stats={set.stats}
-            autoStatMods={set.statMods}
             maxPower={getPower(displayedItems)}
             statOrder={statOrder}
             enabledStats={enabledStats}
@@ -156,6 +145,7 @@ function GeneratedSet({
               pinned={pinnedItems[item.bucket.hash] === item}
               lbDispatch={lbDispatch}
               assignedMods={itemModAssignments[item.id]}
+              automaticallyPickedMods={autoModsPerItem[item.id]}
               showEnergyChanges={Boolean(lockedMods.length || set.statMods.length)}
             />
           ))}

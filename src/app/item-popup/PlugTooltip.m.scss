@@ -95,3 +95,6 @@
 .tooltipElementStasis {
   @include tooltip-ribbon-color($stasis);
 }
+.tooltipElementStrand {
+  @include tooltip-ribbon-color($strand);
+}

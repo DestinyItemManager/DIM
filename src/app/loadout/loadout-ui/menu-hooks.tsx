@@ -4,7 +4,7 @@ import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols'
 import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItemsSelector } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { plainString } from 'app/search/search-filters/freeform';
@@ -37,14 +37,23 @@ export function useSavedLoadoutsForClassType(classType: DestinyClass) {
  */
 export function useLoadoutFilterPills(
   savedLoadouts: Loadout[],
+  inGameLoadouts: InGameLoadout[] | undefined,
   selectedStoreId: string,
   includeWarningPills: boolean,
   className?: string,
   darkBackground?: boolean,
   extra?: React.ReactNode
-): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
+): [
+  filteredLoadouts: (Loadout | InGameLoadout)[],
+  filterPillsElement: React.ReactNode,
+  hasSelectedFilters: boolean
+] {
   if (!$featureFlags.loadoutFilterPills) {
-    return [savedLoadouts, null, false];
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useMemo(
+      () => [[...(inGameLoadouts ?? []), ...savedLoadouts], null, false],
+      [inGameLoadouts, savedLoadouts]
+    );
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -54,7 +63,7 @@ export function useLoadoutFilterPills(
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadoutsByHashtag = useMemo(() => {
-    const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
+    const loadoutsByHashtag: { [hashtag: string]: (Loadout | InGameLoadout)[] } = {};
     for (const loadout of savedLoadouts) {
       const hashtags = [
         ...getHashtagsFromNote(loadout.name),
@@ -115,21 +124,32 @@ export function useLoadoutFilterPills(
     }
   }
 
-  const filteredLoadouts =
-    selectedFilters.length > 0
-      ? _.intersection(
-          ...selectedFilters.map((f) => {
-            switch (f.key) {
-              case 'deprecated':
-                return loadoutsWithDeprecatedMods;
-              case 'missingitems':
-                return loadoutsWithMissingItems;
-              default:
-                return loadoutsByHashtag[f.key] ?? [];
-            }
-          })
-        )
-      : savedLoadouts;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const filteredLoadouts = useMemo(
+    () =>
+      selectedFilters.length > 0
+        ? _.intersection(
+            ...selectedFilters.map((f) => {
+              switch (f.key) {
+                case 'deprecated':
+                  return loadoutsWithDeprecatedMods;
+                case 'missingitems':
+                  return loadoutsWithMissingItems;
+                default:
+                  return loadoutsByHashtag[f.key] ?? [];
+              }
+            })
+          )
+        : [...(inGameLoadouts ?? []), ...savedLoadouts],
+    [
+      savedLoadouts,
+      inGameLoadouts,
+      loadoutsByHashtag,
+      loadoutsWithDeprecatedMods,
+      loadoutsWithMissingItems,
+      selectedFilters,
+    ]
+  );
 
   return [
     filteredLoadouts,
@@ -151,7 +171,7 @@ export function useLoadoutFilterPills(
  * Apply the given query to loadouts, and sort them according to preference.
  */
 export function searchAndSortLoadoutsByQuery(
-  loadouts: Loadout[],
+  loadouts: (Loadout | InGameLoadout)[],
   query: string,
   language: string,
   loadoutSort: LoadoutSort
@@ -162,10 +182,13 @@ export function searchAndSortLoadoutsByQuery(
       (loadout) =>
         !query ||
         plainString(loadout.name, language).includes(loadoutQueryPlain) ||
-        (loadout.notes && plainString(loadout.notes, language).includes(loadoutQueryPlain))
+        (!isInGameLoadout(loadout) &&
+          loadout.notes &&
+          plainString(loadout.notes, language).includes(loadoutQueryPlain))
     ),
+    (l) => (isInGameLoadout(l) ? 0 : 1),
     loadoutSort === LoadoutSort.ByEditTime
-      ? (l) => -(l.lastUpdatedAt ?? 0)
+      ? (l) => (isInGameLoadout(l) ? l.index : -(l.lastUpdatedAt ?? 0))
       : (l) => l.name.toLocaleUpperCase()
   );
 }

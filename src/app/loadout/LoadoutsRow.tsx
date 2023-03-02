@@ -39,12 +39,14 @@ export default memo(function LoadoutRow({
     : null;
 
   const actionButtons = useMemo(() => {
-    const handleDeleteClick = (loadout: Loadout) => dispatch(deleteLoadout(loadout.id));
+    const handleDeleteClick = () => dispatch(deleteLoadout(loadout.id));
 
     const handleApply = () =>
       dispatch(applyLoadout(store, loadout, { allowUndo: true, onlyMatchingClass: true }));
 
     const handleEdit = () => editLoadout(loadout, store.id, { isNew: !saved });
+    const handleShare = () => onShare(loadout);
+
     const actionButtons: ReactNode[] = [];
 
     if (equippable) {
@@ -78,7 +80,7 @@ export default memo(function LoadoutRow({
 
     if (loadout.parameters && !_.isEmpty(loadout.parameters)) {
       actionButtons.push(
-        <button key="share" type="button" className="dim-button" onClick={() => onShare(loadout)}>
+        <button key="share" type="button" className="dim-button" onClick={handleShare}>
           {t('Loadouts.ShareLoadout')}
         </button>
       );
@@ -86,7 +88,7 @@ export default memo(function LoadoutRow({
 
     if (saved) {
       actionButtons.push(
-        <ConfirmButton key="delete" danger onClick={() => handleDeleteClick(loadout)}>
+        <ConfirmButton key="delete" danger onClick={handleDeleteClick}>
           <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
         </ConfirmButton>
       );

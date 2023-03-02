@@ -1,11 +1,8 @@
-import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
-import { useD2Definitions } from 'app/manifest/selectors';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -25,35 +22,12 @@ function EnergySwap({
   item: DimItem;
   assignedMods?: PluggableInventoryItemDefinition[];
 }) {
-  const defs = useD2Definitions()!;
-
   const armorEnergyCapacity = item.energy?.energyCapacity || 0;
-  const armorEnergy = defs.EnergyType.get(item.energy!.energyTypeHash);
 
   const modCost = _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
-  const modEnergyHashNotAny = assignedMods?.find(
-    (mod) =>
-      mod.plug.energyCost &&
-      mod.plug.energyCost.energyCost > 0 &&
-      mod.plug.energyCost.energyType !== DestinyEnergyType.Any
-  )?.plug.energyCost?.energyTypeHash;
-  const modEnergy = (modEnergyHashNotAny && defs.EnergyType.get(modEnergyHashNotAny)) || null;
+  const resultingEnergyCapacity = Math.max(armorEnergyCapacity, modCost);
 
-  // The armor energy type and capacity needed for the mods
-  const resultingEnergy = modEnergy ?? armorEnergy;
-  let resultingEnergyCapacity = armorEnergyCapacity;
-
-  // If there is a mod energy type and it's different to the armor energy type
-  // we always use the mod cost as we are swapping energy types on the armor
-  if (modEnergyHashNotAny && modEnergyHashNotAny !== armorEnergy.hash) {
-    resultingEnergyCapacity = modCost;
-  } else {
-    // Otherwise we just take the max of armor capacity and mod cost
-    resultingEnergyCapacity = Math.max(armorEnergyCapacity, modCost);
-  }
-
-  const noEnergyChange =
-    resultingEnergyCapacity === armorEnergyCapacity && resultingEnergy === armorEnergy;
+  const noEnergyChange = resultingEnergyCapacity === armorEnergyCapacity;
 
   return (
     <div className={clsx(styles.energySwapContainer, { [styles.energyHidden]: noEnergyChange })}>
@@ -65,7 +39,6 @@ function EnergySwap({
         >
           {armorEnergyCapacity}
         </div>
-        <BungieImage className={styles.energyIcon} src={armorEnergy.displayProperties.icon} />
       </div>
       <div className={styles.arrow}>➜</div>
       <div className={styles.energyValue}>
@@ -76,7 +49,6 @@ function EnergySwap({
         >
           {resultingEnergyCapacity}
         </div>
-        <BungieImage className={styles.energyIcon} src={resultingEnergy.displayProperties.icon} />
       </div>
     </div>
   );
@@ -91,6 +63,7 @@ export default function GeneratedSetItem({
   pinned,
   itemOptions,
   assignedMods,
+  automaticallyPickedMods,
   showEnergyChanges,
   lbDispatch,
 }: {
@@ -98,6 +71,7 @@ export default function GeneratedSetItem({
   pinned: boolean;
   itemOptions: DimItem[];
   assignedMods?: PluggableInventoryItemDefinition[];
+  automaticallyPickedMods?: number[];
   showEnergyChanges: boolean;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
@@ -130,7 +104,7 @@ export default function GeneratedSetItem({
       if (item.isExotic) {
         lbDispatch({ type: 'lockExotic', lockedExoticHash: item.hash });
       }
-    } else {
+    } else if (plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice) {
       lbDispatch({
         type: 'openModPicker',
         plugCategoryHashWhitelist,
@@ -166,7 +140,13 @@ export default function GeneratedSetItem({
             )
           )}
         </div>
-        <Sockets item={item} lockedMods={assignedMods} onSocketClick={onSocketClick} size="small" />
+        <Sockets
+          item={item}
+          lockedMods={assignedMods}
+          automaticallyPickedMods={automaticallyPickedMods}
+          onSocketClick={onSocketClick}
+          size="small"
+        />
       </div>
     </div>
   );

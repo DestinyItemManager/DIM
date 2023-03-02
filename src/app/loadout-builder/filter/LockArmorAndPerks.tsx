@@ -18,9 +18,9 @@ import {
   getDefaultAbilityChoiceHash,
   getSocketByIndex,
   getSocketsByCategoryHashes,
+  subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -149,11 +149,10 @@ export default memo(function LockArmorAndPerks({
     for (const socketIndexString of Object.keys(subclass?.loadoutItem.socketOverrides)) {
       const socketIndex = parseInt(socketIndexString, 10);
       const socket = getSocketByIndex(subclass.item.sockets, socketIndex);
-      const abilityAndSuperSockets = getSocketsByCategoryHashes(subclass.item.sockets, [
-        SocketCategoryHashes.Abilities_Abilities,
-        SocketCategoryHashes.Abilities_Abilities_LightSubclass,
-        SocketCategoryHashes.Super,
-      ]);
+      const abilityAndSuperSockets = getSocketsByCategoryHashes(
+        subclass.item.sockets,
+        subclassAbilitySocketCategoryHashes
+      );
 
       const overridePlug = defs.InventoryItem.get(
         subclass.loadoutItem.socketOverrides[socketIndex]

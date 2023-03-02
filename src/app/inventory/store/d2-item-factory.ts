@@ -357,8 +357,6 @@ export function makeItem(
       defs.DamageType.get(itemInstanceData.damageTypeHash)) ||
     (itemDef.defaultDamageTypeHash !== undefined &&
       defs.DamageType.get(itemDef.defaultDamageTypeHash)) ||
-    (itemInstanceData.energy?.energyTypeHash !== undefined &&
-      defs.EnergyType.get(itemInstanceData.energy.energyTypeHash)) ||
     null;
 
   const powerCapHash =
@@ -500,10 +498,6 @@ export function makeItem(
     displaySource: itemDef.displaySource,
     plug: itemDef.plug && {
       energyCost: itemDef.plug.energyCost?.energyCost || 0,
-      costElementIcon: itemDef.plug.energyCost
-        ? defs.Stat.get(defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash)
-            .displayProperties.icon
-        : undefined,
     },
     metricHash: item.metricHash,
     metricObjective: item.metricObjective,

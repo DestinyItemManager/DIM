@@ -8,10 +8,16 @@ import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import { PlugSet } from 'app/loadout/plug-drawer/types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { compareBy } from 'app/utils/comparators';
-import { getDefaultAbilityChoiceHash, getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import {
+  aspectSocketCategoryHashes,
+  fragmentSocketCategoryHashes,
+  getDefaultAbilityChoiceHash,
+  getSocketsByCategoryHash,
+  subclassAbilitySocketCategoryHashes,
+} from 'app/utils/socket-utils';
 import { uniqBy } from 'app/utils/util';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -179,10 +185,9 @@ function getPlugsForSubclass(
       if (socketGroup.length) {
         const firstSocket = socketGroup[0];
 
-        const isAbilityLikeSocket =
-          category.category.hash === SocketCategoryHashes.Abilities_Abilities ||
-          category.category.hash === SocketCategoryHashes.Abilities_Abilities_LightSubclass ||
-          category.category.hash === SocketCategoryHashes.Super;
+        const isAbilityLikeSocket = subclassAbilitySocketCategoryHashes.includes(
+          category.category.hash
+        );
 
         const defaultPlugHash = isAbilityLikeSocket
           ? getDefaultAbilityChoiceHash(firstSocket)
@@ -204,8 +209,8 @@ function getPlugsForSubclass(
             profileResponse,
             firstSocket.plugSet
           )) {
-            const isAspect = category.category.hash === SocketCategoryHashes.Aspects;
-            const isFragment = category.category.hash === SocketCategoryHashes.Fragments;
+            const isAspect = aspectSocketCategoryHashes.includes(category.category.hash);
+            const isFragment = fragmentSocketCategoryHashes.includes(category.category.hash);
             const isEmptySocket =
               (isAspect || isFragment) && dimPlug.plugDef.hash === defaultPlugHash;
 

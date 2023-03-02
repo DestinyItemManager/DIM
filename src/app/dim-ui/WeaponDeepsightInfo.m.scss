@@ -14,20 +14,3 @@
   background: #333;
   flex-grow: 1;
 }
-
-.patternProgress {
-  display: flex;
-  align-items: center;
-  flex-grow: 0;
-}
-
-.patternIcon {
-  width: 15px;
-  height: 15px;
-  border: 1px solid #999;
-  margin-right: 4px;
-}
-
-.patternOwned {
-  color: $acquiredGreen;
-}

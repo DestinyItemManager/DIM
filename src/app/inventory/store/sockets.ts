@@ -3,7 +3,10 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import { eventArmorRerollSocketIdentifiers } from 'app/utils/socket-utils';
+import {
+  eventArmorRerollSocketIdentifiers,
+  subclassAbilitySocketCategoryHashes,
+} from 'app/utils/socket-utils';
 import {
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
@@ -490,9 +493,7 @@ function isKnownEmptyPlugItemHash(plugItemHash: number) {
 
 // These socket categories never have any empty-able sockets.
 const noDefaultSocketCategoryHashes: SocketCategoryHashes[] = [
-  SocketCategoryHashes.Abilities_Abilities,
-  SocketCategoryHashes.Abilities_Abilities_LightSubclass,
-  SocketCategoryHashes.Super,
+  ...subclassAbilitySocketCategoryHashes,
   SocketCategoryHashes.WeaponPerks_Reusable,
   SocketCategoryHashes.IntrinsicTraits,
   SocketCategoryHashes.ArmorPerks_LargePerk,
