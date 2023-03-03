@@ -1,7 +1,5 @@
 ## Next
 
-* Fixed minor punctuation and consistency errors in CONTRIBUTING.md
-
 ## 7.58.1 <span class="changelog-date">(2023-03-02)</span>
 
 * DIM supports displaying and equipping in-game loadouts.
