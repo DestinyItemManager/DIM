@@ -71,7 +71,10 @@ export default memo(function LoadoutMods({
 
   // Explicitly show only actual saved mods in the mods picker, not auto mods,
   // otherwise we'd duplicate auto mods into loadout parameter mods when coonfirming
-  const savedMods = useMemo(() => getModsFromLoadout(defs, loadout, false), [defs, loadout]);
+  const savedMods = useMemo(
+    () => getModsFromLoadout(defs, loadout, unlockedPlugSetItems, false),
+    [defs, loadout, unlockedPlugSetItems]
+  );
 
   // TODO: filter down by usable mods?
   // TODO: Hide the "Add Mod" button when no more mods can fit

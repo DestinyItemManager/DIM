@@ -8,7 +8,11 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
-import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
+import {
+  isInsertableArmor2Mod,
+  mapToAvailableModCostVariant,
+  sortMods,
+} from 'app/loadout/mod-utils';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats } from 'app/search/d2-known-values';
@@ -645,23 +649,28 @@ export function isMissingItems(
 }
 
 /** Returns a flat list of mods hashes in the Loadout, by default including auto stat mods */
-export function getModHashesFromLoadout(loadout: Loadout, includeAutoMods = true) {
+export function getModHashesFromLoadout(
+  loadout: Loadout,
+  unlockedPlugs: Set<number>,
+  includeAutoMods = true
+) {
   return [
     ...(loadout.parameters?.mods ?? []),
     ...((includeAutoMods && loadout.autoStatMods) || []),
-  ];
+  ].map((hash) => mapToAvailableModCostVariant(hash, unlockedPlugs));
 }
 
 /** Returns a flat list of mods as PluggableInventoryItemDefinitions in the Loadout, by default including auto stat mods */
 export function getModsFromLoadout(
   defs: D1ManifestDefinitions | D2ManifestDefinitions | undefined,
   loadout: Loadout,
+  unlockedPlugs: Set<number>,
   includeAutoMods = true
 ) {
   const mods: PluggableInventoryItemDefinition[] = [];
 
   if (defs?.isDestiny2()) {
-    for (const modHash of getModHashesFromLoadout(loadout, includeAutoMods)) {
+    for (const modHash of getModHashesFromLoadout(loadout, unlockedPlugs, includeAutoMods)) {
       const item = defs.InventoryItem.get(modHash);
       if (isPluggableItem(item)) {
         mods.push(item);

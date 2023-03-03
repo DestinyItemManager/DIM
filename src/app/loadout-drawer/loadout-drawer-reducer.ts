@@ -8,6 +8,7 @@ import { D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
+import { mapToNonReducedModCostVariant, mapToOtherModCostVariant } from 'app/loadout/mod-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
@@ -320,8 +321,12 @@ export function clearSubclass(
  */
 export function removeMod(hash: number): LoadoutUpdateFunction {
   return produce((loadout) => {
+    const otherCostVersion = mapToOtherModCostVariant(hash);
     if (loadout.autoStatMods) {
-      const index = loadout.autoStatMods.indexOf(hash);
+      let index = loadout.autoStatMods.indexOf(hash);
+      if (index === -1 && otherCostVersion !== undefined) {
+        index = loadout.autoStatMods.indexOf(otherCostVersion);
+      }
       if (index !== -1) {
         loadout.autoStatMods.splice(index, 1);
         return;
@@ -329,7 +334,10 @@ export function removeMod(hash: number): LoadoutUpdateFunction {
     }
 
     if (loadout.parameters?.mods) {
-      const index = loadout.parameters.mods.indexOf(hash);
+      let index = loadout.parameters.mods.indexOf(hash);
+      if (index === -1 && otherCostVersion !== undefined) {
+        index = loadout.parameters.mods.indexOf(otherCostVersion);
+      }
       if (index !== -1) {
         loadout.parameters.mods.splice(index, 1);
         return;
@@ -406,7 +414,7 @@ export function fillLoadoutFromEquipped(
           loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
         }
         loadout.items.push(loadoutItem);
-        mods.push(...extractArmorModHashes(item));
+        mods.push(...extractArmorModHashes(item).map(mapToNonReducedModCostVariant));
       }
     }
     if (mods.length && (loadout.parameters?.mods ?? []).length === 0) {
@@ -502,7 +510,7 @@ export function syncModsFromEquipped(store: DimStore): LoadoutUpdateFunction {
     (item) => item.equipped && itemCanBeInLoadout(item) && item.bucket.sort === 'Armor'
   );
   for (const item of equippedArmor) {
-    mods.push(...extractArmorModHashes(item));
+    mods.push(...extractArmorModHashes(item).map(mapToNonReducedModCostVariant));
   }
 
   return setLoadoutParameters({
@@ -555,7 +563,7 @@ export function changeClearMods(enabled: boolean): LoadoutUpdateFunction {
 
 export function updateMods(mods: number[]): LoadoutUpdateFunction {
   return setLoadoutParameters({
-    mods,
+    mods: mods.map(mapToNonReducedModCostVariant),
   });
 }
 

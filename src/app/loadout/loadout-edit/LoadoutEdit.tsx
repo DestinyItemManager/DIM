@@ -3,7 +3,11 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  createItemContextSelector,
+  unlockedPlugSetItemsSelector,
+} from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import {
   applySocketOverrides,
@@ -28,6 +32,7 @@ import { getModsFromLoadout, getUnequippedItemsForLoadout } from 'app/loadout-dr
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import { getItemsAndSubclassFromLoadout, loadoutPower } from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { RootState } from 'app/store/types';
 import { emptyObject } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -81,7 +86,14 @@ export default function LoadoutEdit({
     [itemCreationContext, loadout.items, store, allItems, modsByBucket]
   );
 
-  const allMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
+  const unlockedPlugSetItems = useSelector((state: RootState) =>
+    unlockedPlugSetItemsSelector(state, store.id)
+  );
+
+  const allMods = useMemo(
+    () => getModsFromLoadout(defs, loadout, unlockedPlugSetItems),
+    [defs, loadout, unlockedPlugSetItems]
+  );
   const clearUnsetMods = loadout.parameters?.clearMods;
   const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
   const power = loadoutPower(store, categories);

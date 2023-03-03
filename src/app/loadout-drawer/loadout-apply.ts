@@ -257,9 +257,10 @@ function doApplyLoadout(
       };
 
       // Don't apply mods when moving to the vault
-      const modsToApply = ((!store.isVault && getModHashesFromLoadout(loadout)) || []).filter(
-        checkMod
-      );
+      const modsToApply = (
+        (!store.isVault && getModHashesFromLoadout(loadout, unlockedPlugSetItems())) ||
+        []
+      ).filter(checkMod);
       // Mods specific to a bucket but not an item - fashion mods (shader/ornament)
       const modsByBucketToApply: {
         [bucketHash: number]: number[];

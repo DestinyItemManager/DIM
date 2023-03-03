@@ -18,6 +18,7 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
+import { mapToAvailableModCostVariant } from 'app/loadout/mod-utils';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
@@ -37,7 +38,7 @@ import _ from 'lodash';
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { allItemsSelector } from '../inventory/selectors';
+import { allItemsSelector, unlockedPlugSetItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import ModPicker from '../loadout/ModPicker';
@@ -180,14 +181,20 @@ export default memo(function LoadoutBuilder({
 
   const autoStatMods = loadoutParameters.autoStatMods ?? false;
 
-  const lockedMods = useMemo(
-    () =>
-      (loadoutParameters.mods ?? []).map((m) => defs.InventoryItem.get(m)).filter(isPluggableItem),
-    [defs, loadoutParameters.mods]
-  );
-
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
+  const unlockedPlugs = useSelector((state: RootState) =>
+    unlockedPlugSetItemsSelector(state, selectedStoreId)
+  );
+
+  const lockedMods = useMemo(
+    () =>
+      (loadoutParameters.mods ?? [])
+        .map((hash) => mapToAvailableModCostVariant(hash, unlockedPlugs))
+        .map((m) => defs.InventoryItem.get(m))
+        .filter(isPluggableItem),
+    [defs.InventoryItem, loadoutParameters.mods, unlockedPlugs]
+  );
 
   const characterItems = items[classType];
 

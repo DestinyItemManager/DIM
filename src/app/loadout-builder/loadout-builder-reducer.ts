@@ -21,6 +21,7 @@ import {
   pickBackingStore,
 } from 'app/loadout-drawer/loadout-utils';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
+import { mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
@@ -360,7 +361,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           ...state,
           loadoutParameters: {
             ...state.loadoutParameters,
-            mods: action.lockedMods.map((m) => m.hash),
+            mods: action.lockedMods.map((m) => m.hash).map(mapToNonReducedModCostVariant),
           },
         };
       }

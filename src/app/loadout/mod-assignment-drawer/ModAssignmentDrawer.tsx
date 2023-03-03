@@ -4,15 +4,18 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { inGameArmorEnergyRules } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
+import { RootState } from 'app/store/types';
 import { Portal } from 'app/utils/temp-container';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import PlugDef from '../loadout-ui/PlugDef';
 import Sockets from '../loadout-ui/Sockets';
 import { fitMostMods } from '../mod-assignment-utils';
@@ -63,13 +66,16 @@ export default function ModAssignmentDrawer({
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 
   const defs = useD2Definitions()!;
+  const unlockedPlugs = useSelector((state: RootState) =>
+    unlockedPlugSetItemsSelector(state, storeId)
+  );
   const { armor, subclass } = useEquippedLoadoutArmorAndSubclass(loadout, storeId);
   const getModRenderKey = createGetModRenderKey();
 
   const [itemModAssignments, unassignedMods, mods] = useMemo(() => {
     let mods: PluggableInventoryItemDefinition[] = [];
     if (defs) {
-      mods = getModsFromLoadout(defs, loadout);
+      mods = getModsFromLoadout(defs, loadout, unlockedPlugs);
     }
     const { itemModAssignments, unassignedMods } = fitMostMods({
       items: armor,
@@ -78,7 +84,7 @@ export default function ModAssignmentDrawer({
     });
 
     return [itemModAssignments, unassignedMods, mods];
-  }, [defs, loadout, armor]);
+  }, [defs, armor, loadout, unlockedPlugs]);
 
   const onSocketClick = useCallback(
     (plugDef: PluggableInventoryItemDefinition, plugCategoryHashWhitelist: number[]) => {
