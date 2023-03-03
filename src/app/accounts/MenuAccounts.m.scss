@@ -27,6 +27,7 @@
 .logout {
   composes: account from './Account.m.scss';
   composes: resetButton from '../dim-ui/common.m.scss';
+  text-align: left;
   padding: 10px 2rem 10px 1rem;
 
   :global(.app-icon) {
