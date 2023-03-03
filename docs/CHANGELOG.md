@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed deepsight border showing up for weapons whose pattern has already been unlocked.
+
 ## 7.58.1 <span class="changelog-date">(2023-03-02)</span>
 
 * DIM supports displaying and equipping in-game loadouts.
