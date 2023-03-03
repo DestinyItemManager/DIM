@@ -2,6 +2,7 @@
 
 .progress-panel {
   margin-top: 8px;
+
   @include phone-portrait {
     margin-top: 0;
   }
@@ -37,8 +38,10 @@
     margin: 16px 0;
     width: 100%;
     box-sizing: border-box;
+
     @include phone-portrait {
       margin: 16px 10px;
+      gap: 16px;
       width: auto;
       &.ranks-for-character {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
