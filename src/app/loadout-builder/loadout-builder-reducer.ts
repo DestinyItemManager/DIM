@@ -21,7 +21,7 @@ import {
   pickBackingStore,
 } from 'app/loadout-drawer/loadout-utils';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
-import { mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
+import { mapToNonReducedModCostVariant, mapToOtherModCostVariant } from 'app/loadout/mod-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
@@ -416,7 +416,9 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       }
       case 'removeLockedMod': {
         const newMods = [...(state.loadoutParameters.mods ?? [])];
-        const indexToRemove = newMods.findIndex((mod) => mod === action.mod.hash);
+        const indexToRemove = newMods.findIndex(
+          (mod) => mod === action.mod.hash || mod === mapToOtherModCostVariant(action.mod.hash)
+        );
         if (indexToRemove >= 0) {
           newMods.splice(indexToRemove, 1);
         }
@@ -431,7 +433,11 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       }
       case 'removeLockedMods': {
         const newMods = [...(state.loadoutParameters.mods ?? [])].filter(
-          (mod) => !action.mods.some((excludedMod) => excludedMod.hash === mod)
+          (mod) =>
+            !action.mods.some(
+              (excludedMod) =>
+                excludedMod.hash === mod || mod === mapToOtherModCostVariant(excludedMod.hash)
+            )
         );
 
         return {
