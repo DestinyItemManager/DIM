@@ -117,6 +117,10 @@
     "ImportWrongFileType": "此檔案不是一個CSV檔案。",
     "WrongFields": "CSV檔案中必須有'Id'，'Notes'，'Tag'，'Hash'列（編號，注釋，標籤，雜湊）"
   },
+  "Dialog": {
+    "Cancel": "取消",
+    "OK": "OK"
+  },
   "EnergyMeter": {
     "Energy": "能量",
     "Unused": "未使用",
@@ -205,7 +209,7 @@
     "CurrentClass": "顯示當前登錄的守護者可裝備的物品。",
     "CustomStatLower": "顯示相比其他同類別護甲而言屬性全面更低的護甲，但只考慮對應職業的自定義屬性總和里的屬性。",
     "DamageType": "按照傷害類型顯示.",
-    "Deepsight": "顯示具有深視共鳴的武器。deepsight:complete 和 deepsight:incomplete 指的是深視共鳴的進度，而 deepsight:pattern 顯示可以解鎖武器樣式的深視共鳴",
+    "Deepsight": "顯示帶有深視共振的武器，可用於提取樣式。",
     "Description": "描述",
     "Dupe": "顯示重複的物品，包含不同賽季版本",
     "DupeCount": "擁有指定重複數量的物品。",
@@ -381,6 +385,10 @@
     "Tab": "TAB",
     "Vault": "將物品存入保險庫"
   },
+  "InGameLoadout": {
+    "Applying": "正在應用配裝...",
+    "LoadoutSlotNum": "插槽 {{index}}"
+  },
   "Infusion": {
     "Filter": "過濾物品",
     "InfuseSource": "選擇需要用 {{name}} 進行灌注的物品",
@@ -517,7 +525,7 @@
       "Legendary": "傳說護甲會使用大師杰作内容和10點能量等級。",
       "None": "所有護甲會使用大師之作內容和10點能量等級。"
     },
-    "AutoStatMods": "添加所需屬性模組",
+    "AutoStatMods": "自動添加屬性模組",
     "ChooseAlternateTitle": "選擇另一個物品",
     "CompareLoadout": "對比配裝",
     "ConfirmOverwrite": "你確定要用這套新的護甲來替換配裝「{{name}}」里的護甲嗎？",
@@ -529,16 +537,7 @@
     "ExistingLoadout": "已有配裝",
     "ExoticSpecialCategory": "特殊",
     "Filter": "過濾",
-    "InLoadouts": "在配裝中",
-    "InOtherLoadouts": "其他配裝",
     "Legendary": "传说",
-    "LockElement": "鎖定元素",
-    "LockElementOptions": {
-      "All": "所有護甲將被鎖定為當前元素。",
-      "InLoadouts": "如果防具已用於任何現有的配裝中，防具的元素將被鎖定",
-      "InOtherLoadouts": "當前正在優化配裝 {{loadoutName}}. 如果防具還用在任意除 {{loadoutName}} 之外的配裝中，防具的元素將被鎖定",
-      "None": "防具元素將根據需要進行更改以適合所選模組。"
-    },
     "LockEquipped": "固定已裝備",
     "LockItem": "固定物品",
     "MaxTier": "最大 {{tier}}",
@@ -548,7 +547,6 @@
       "ActiveSearchQuery": "搜索條件導致 DIM 無法將部分物品包含在配裝中",
       "AllowAutoStatMods": "允許 DIM 自動添加額外的屬性模組",
       "AlwaysInvalidMods": "這些模組無法裝備于你擁有的任何物品上：",
-      "AssumeElementChange": "允許 DIM 建議更改護甲能量元素",
       "AssumeMasterworked": "允許DIM建議防禦大師之作",
       "AssumptionsRestricted": "DIM 無法建議更改防具能量：",
       "BadSlot": "在 {{bucketName}} 槽位，沒有合適的物品可以容納以下模組：",
@@ -571,7 +569,7 @@
     "OptimizerExplanationMods": "選擇你想使用的異域裝備和模組。配裝優化器只會包括你選定的模組帶來的屬性加成——護甲上其他現存的模組都會被忽略。",
     "OptimizerExplanationSearch": "使用搜索欄來過濾配裝優化器使用的物品。",
     "OptimizerExplanationStats": "將最重要的屬性拖動到頂部，並將你不在乎的屬性設為忽略。",
-    "OptimizerExplanationUpgrades": "選擇允許配裝優化器花費材料的護甲升級。它可能建議用大師傑作來提升屬性，或用能量升級或更換元素來裝下你想要的模組。",
+    "OptimizerExplanationUpgrades": "選擇允許配裝優化器花費材料的護甲升級。它可能建議用大師傑作來提升屬性或用能量升級來裝下你想要的模組。",
     "OptimizerSet": "優化器組合",
     "ProcessingSets": "正在處理{{character}}的組合（{{remainingTime}} s）",
     "SaveAs": "保存為",
@@ -769,7 +767,6 @@
     "CatalystProgress": "催化劑進度",
     "CommunityData": "社区描述",
     "Consolidate": "合併",
-    "CraftingPattern": "製作樣式",
     "DistributeEvenly": "均勻分配",
     "Equip": "裝備",
     "FavoriteUnFavorite": {
@@ -838,7 +835,6 @@
       "Crafted": "鑄造日期",
       "CustomTotal": "自定義總計",
       "Damage": "傷害",
-      "Element": "元素",
       "Energy": "能量",
       "Event": "事件",
       "Icon": "圖示",
@@ -985,7 +981,6 @@
     "SizeItem": "物品顯示大小",
     "SortByAmmoType": "彈藥類型",
     "SortByAmount": "堆疊大小",
-    "SortByArmorElement": "防具元素 (D2)",
     "SortByClassType": "必要的類",
     "SortByCrafted": "已製造 (D2)",
     "SortByDeepsight": "深視共振 (D2)",
@@ -1129,7 +1124,6 @@
   "StripSockets": {
     "Action": "清空插槽",
     "ArmorMods": "{{count}}x 防具模組",
-    "ArtifactMods": "{{count}}x 神器模組",
     "Button": "清空 {{numSockets}} 個插槽",
     "Cancel": "取消",
     "Choose": "選擇要清空的插槽",
@@ -1158,19 +1152,24 @@
     "AccountsForArtifice": "判斷精巧防具在添加 +3 屬性模組后是否會變得更好。",
     "BetterArmor": "全面更優的防具",
     "BetterArtificeArmor": "更好的精巧防具",
+    "BetterStatArmor": "更优的防具",
+    "BetterStatArtificeArmor": "更好的精巧防具",
     "BetterWorseArmor": "更優/更差的防具",
     "BetterWorseIncludes": "分析防具所用條件：",
     "HighStats": "高屬性",
     "InLoadouts": "包含該物品的配裝",
     "OwnedCount": "數量",
-    "PerkBetterArmorDesc": "固有特性相同或更多。",
+    "PerkBetterArmorDesc": "相同或更多特性，或特殊模組槽位的護甲。",
     "PerkWorseArmorDesc": "固有特性相同或不存在。",
     "SimilarItems": "相似物品",
     "StatBetterArmorDesc": "所有屬性均持平，并至少有一個屬性更高。",
+    "StatNotPerkArmorDesc": "僅用自身數值來檢測。部分包含特殊的模組槽位或内置特性。",
     "StatWorseArmorDesc": "所有屬性均持平或更低。",
     "ThisItem": "當前物品",
     "WorseArmor": "全面更劣的防具",
     "WorseArtificeArmor": "更劣的非精巧防具",
+    "WorseStatArmor": "更差的防具",
+    "WorseStatArtificeArmor": "更劣的非精巧防具",
     "YourBestItem": "你的最佳物品"
   },
   "Triumphs": {

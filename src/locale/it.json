@@ -117,6 +117,10 @@
     "ImportWrongFileType": "Il file non è un file CSV.",
     "WrongFields": "Il CSV deve avere le colonne 'Id', 'Notes', 'Tags' e 'Hash'."
   },
+  "Dialog": {
+    "Cancel": "Annulla",
+    "OK": "OK"
+  },
   "EnergyMeter": {
     "Energy": "Energia",
     "Unused": "Inutilizzata",
@@ -205,7 +209,7 @@
     "CurrentClass": "Mostra tutti gli oggetti che sono equipaggiabili sul Guardiano attualmente in uso.",
     "CustomStatLower": "Mostra le armature le cui statistiche sono rigorosamente più basse di un'altra dello stesso tipo, considerando soltanto il tipo di statistica di classe specificata.",
     "DamageType": "Mostra gli oggetti basandosi sul tipo di danno.",
-    "Deepsight": "Mostra le armi con Risonanza Profonda, che possono essere armonizzate per materiali.\ndeepsight:complete e deepsight:incomplete si riferiscono al progresso dell'obbiettivo della Vista Profonda, mentre deepsight:pattern mostra gli oggetti che possono essere progrediti per sbloccare un modello.",
+    "Deepsight": "Mostra le armi con Vista Profonda, per le quali può essere estratto il modello.",
     "Description": "Descrizione",
     "Dupe": "Mostra gli oggetti duplicati, compresi quelli ri-emessi",
     "DupeCount": "Oggetti che hanno un numero specifico di duplicati.",
@@ -381,6 +385,10 @@
     "Tab": "TAB",
     "Vault": "Invia l'oggetto al deposito"
   },
+  "InGameLoadout": {
+    "Applying": "Equipaggiamento dotazione...",
+    "LoadoutSlotNum": "Alloggiamento {{index}}"
+  },
   "Infusion": {
     "Filter": "Filtra oggetti",
     "InfuseSource": "Seleziona gli oggetti in cui infondere {{name}}",
@@ -517,7 +525,7 @@
       "Legendary": "Le armature leggendarie utilizzeranno statistiche prodigiose e avranno un livello energia 10.",
       "None": "Tutte le armature utilizzeranno le loro statistiche attuali ed avranno un livello minimo di energia 7."
     },
-    "AutoStatMods": "Aggiungi le Modifiche statistiche necessarie",
+    "AutoStatMods": "Aggiungi Modifiche statistiche automaticamente",
     "ChooseAlternateTitle": "Scegli un altro oggetto",
     "CompareLoadout": "Confronta dotazioni",
     "ConfirmOverwrite": "Sei sicuro di voler sostituire l'armatura nella dotazione \"{{name}}\" con questo nuovo set di armature?",
@@ -529,16 +537,7 @@
     "ExistingLoadout": "Dotazione Esistente",
     "ExoticSpecialCategory": "Speciale",
     "Filter": "Filtri",
-    "InLoadouts": "In dotazione",
-    "InOtherLoadouts": "Altre dotazioni",
     "Legendary": "Leggendaria",
-    "LockElement": "Blocca Elemento",
-    "LockElementOptions": {
-      "All": "Tutte le armature saranno bloccate al loro elemento attuale.",
-      "InLoadouts": "L'armatura sarà bloccata al suo elemento attuale se è equipaggiata in qualsiasi dotazione esistente.",
-      "InOtherLoadouts": "Stai ottimizzando la dotazione {{loadoutName}}. L'armatura verrà bloccata al suo elemento attuale se è equipaggiata in qualsiasi dotazione diversa da {{loadoutName}}.",
-      "None": "Il tipo di elemento dell'armatura sarà cambiato in modo da poter inserire le Modifiche selezionate."
-    },
     "LockEquipped": "Blocca equipaggiato",
     "LockItem": "Blocca oggetto",
     "MaxTier": "Max {{tier}}",
@@ -548,7 +547,6 @@
       "ActiveSearchQuery": "Una query di ricerca attiva sta limitando gli oggetti che DIM può includere nelle build",
       "AllowAutoStatMods": "Consenti a DIM di includere automaticamente ulteriori Modifiche delle statistiche",
       "AlwaysInvalidMods": "Queste Modifiche non si adattano a nessuno dei tuoi oggetti:",
-      "AssumeElementChange": "Consenti a DIM di raccomandarti dei cambiamenti al tipo di energia dell'armatura",
       "AssumeMasterworked": "Consenti a DIM di raccomandarti armature da portare al massimo livello prodigio",
       "AssumptionsRestricted": "DIM non può raccomandarti dei cambiamenti al tipo di energia dell'armatura:",
       "BadSlot": "Nello slot {{bucketName}}, nessun oggetto di quelli consentiti poteva alloggiare queste Modifiche:",
@@ -571,7 +569,7 @@
     "OptimizerExplanationMods": "Scegli una Esotica e le Modifiche che vuoi usare. L'Ottimizzatore di Dotazioni include solo i bonus statistiche delle Modifiche che scegli - tutte quelle già sull'armatura vengono ignorate.",
     "OptimizerExplanationSearch": "Usa la barra di ricerca per filtrare gli oggetti che l'Ottimizzatore di Dotazioni usa.",
     "OptimizerExplanationStats": "Trascina le statistiche più importanti in alto, e imposta quelle che non ti interessano su \"Ignora\".",
-    "OptimizerExplanationUpgrades": "Seleziona su quali potenziamenti armatura l'Ottimizzatore di Dotazioni può spendere materiali. Potrebbe suggerire di renderla prodigiosa per aumentare le statistiche, oppure potenziamenti di energia e cambio di elemento per adattarla alle Modifiche richieste.",
+    "OptimizerExplanationUpgrades": "Seleziona su quali potenziamenti armatura l'Ottimizzatore di Dotazioni può spendere materiali. Potrebbe suggerire di renderla prodigiosa per aumentare le statistiche, oppure potenziamenti di energia per adattarla alle Modifiche richieste.",
     "OptimizerSet": "Set Ottimizzatore",
     "ProcessingSets": "Elaborazione set per\n{{character}} ({{remainingTime}}s)",
     "SaveAs": "Salva come",
@@ -721,7 +719,7 @@
       "Title": "Condividi \"{{name}}\""
     },
     "ShareLoadout": "Condividi dotazione",
-    "ShowModPlacement": "Mostra Posizionamento Modifiche",
+    "ShowModPlacement": "Mostra posizionamento Modifiche",
     "SocketOverrides": "Cambiamento opzioni sottoclasse",
     "SortByEditTime": "Ordina per ultima modifica",
     "SortByName": "Ordina per nome",
@@ -769,7 +767,6 @@
     "CatalystProgress": "Progresso Catalizzatore",
     "CommunityData": "Spiegazione della community",
     "Consolidate": "Consolida",
-    "CraftingPattern": "Modello per forgiatura",
     "DistributeEvenly": "Distribuisci Equamente",
     "Equip": "Usa",
     "FavoriteUnFavorite": {
@@ -838,7 +835,6 @@
       "Crafted": "Data di forgiatura",
       "CustomTotal": "Totale Personalizzato",
       "Damage": "Tipo di Danno",
-      "Element": "Elemento",
       "Energy": "Energia",
       "Event": "Evento",
       "Icon": "Icona",
@@ -985,7 +981,6 @@
     "SizeItem": "Dimensione oggetti",
     "SortByAmmoType": "Tipo di munizioni",
     "SortByAmount": "Dimensione della pila",
-    "SortByArmorElement": "Elemento Armatura (D2)",
     "SortByClassType": "Classe Richiesta",
     "SortByCrafted": "Oggetti Forgiati (D2)",
     "SortByDeepsight": "Vista Profonda",
@@ -1129,7 +1124,6 @@
   "StripSockets": {
     "Action": "Svuota alloggiamenti",
     "ArmorMods": "{{count}}x Modifiche armatura",
-    "ArtifactMods": "{{count}}x Modifiche artefatto",
     "Button": "Svuotamento {{numSockets}} alloggiamenti",
     "Cancel": "Annulla",
     "Choose": "Scegli gli alloggiamenti da svuotare",
@@ -1158,19 +1152,24 @@
     "AccountsForArtifice": "Controlla se un pezzo di Armatura dell'Artificio potrebbe essere migliore, se una Modifica statistiche +3 fosse utilizzata.",
     "BetterArmor": "Armatura Strettamente Migliore",
     "BetterArtificeArmor": "Miglior Armatura Artificio",
+    "BetterStatArmor": "Migliori Statistiche Armatura",
+    "BetterStatArtificeArmor": "Migliori Statistiche Armatura Artificio",
     "BetterWorseArmor": "Migliore/Peggiore Armatura",
     "BetterWorseIncludes": "Identifica i pezzi di armatura con:",
     "HighStats": "Statistiche alte",
     "InLoadouts": "In dotazione",
     "OwnedCount": "# in possesso",
-    "PerkBetterArmorDesc": "Lo stesso, o più, perk intrinseci.",
+    "PerkBetterArmorDesc": "Gli stessi, o più, perk intrinseci o alloggiamenti Modifiche speciali.",
     "PerkWorseArmorDesc": "Lo stesso perk intrinseco, o nessuno.",
     "SimilarItems": "Oggetti simili",
     "StatBetterArmorDesc": "Tutte le statistiche egualmente alte, e almeno una statistica migliore.",
+    "StatNotPerkArmorDesc": "Controlla solo le statistiche. Un pezzo inferiore potrebbe comunque avere un alloggiamento Modifiche speciale o perk intrinseco.",
     "StatWorseArmorDesc": "Nessuna statistica migliore, e almeno una statistica peggiore.",
     "ThisItem": "Questo oggetto",
     "WorseArmor": "Armatura Strettamente Peggiore",
     "WorseArtificeArmor": "Peggior Armatura Non-Artificio",
+    "WorseStatArmor": "Peggiori Statistiche Armatura",
+    "WorseStatArtificeArmor": "Peggiori Statistiche Armatura non-Artificio",
     "YourBestItem": "Il tuo miglior oggetto"
   },
   "Triumphs": {

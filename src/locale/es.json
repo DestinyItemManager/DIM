@@ -117,6 +117,10 @@
     "ImportWrongFileType": "El archivo no es un archivo CSV.",
     "WrongFields": "El CSV debe tener las columnas 'Id', 'Notes', y 'Hash'."
   },
+  "Dialog": {
+    "Cancel": "Cancelar",
+    "OK": "OK"
+  },
   "EnergyMeter": {
     "Energy": "Energía",
     "Unused": "Sin usar",
@@ -205,7 +209,7 @@
     "CurrentClass": "Muestra objetos que sean equipables en el personaje actualmente conectado.",
     "CustomStatLower": "Muestra armadura cuyas estadísticas son estríctamente más bajas que cualquier otra del mismo del mismo tipo de armadura, tomando cuenta sólo las estadísticas en es lista total de estadísticas personalizadas.",
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
-    "Deepsight": "Muestra armas con Resonancia de Visión Profunda, que puede ser armonizada para materiales. deepsight:complete y deepsight:incomplete se refieren al progreso del objetivo de visión profunda, mientras deepsight:pattern muestra objetos que se pueden progresar para desbloquear un patrón.",
+    "Deepsight": "Muestra armas con Resonancia de Visión Profunda, de las cuales se puede extraer su patrón.",
     "Description": "Descripción",
     "Dupe": "Muestra objetos duplicados, incluyendo reincidencias",
     "DupeCount": "Objetos que tienen el número especificado de duplicados.",
@@ -381,6 +385,10 @@
     "Tab": "TABULADOR",
     "Vault": "Enviar objeto al depósito"
   },
+  "InGameLoadout": {
+    "Applying": "Equipando equipación...",
+    "LoadoutSlotNum": "Ranura {{index}}"
+  },
   "Infusion": {
     "Filter": "Filtrar objetos",
     "InfuseSource": "Selecciona objeto para infundir {{name}} en",
@@ -517,7 +525,7 @@
       "Legendary": "Las armaduras legendarias usarán estadísticas de obras maestras completas y tendrán un nivel de energía de 10.",
       "None": "Todas las armaduras usarán sus estadísticas actuales y tendrán un nivel de energía mínimo de 7."
     },
-    "AutoStatMods": "Añadir modificadores de estadísticas requeridos",
+    "AutoStatMods": "Añadir automáticamente modificadores de estadísticas",
     "ChooseAlternateTitle": "Elige otro objeto",
     "CompareLoadout": "Comparar Equipación",
     "ConfirmOverwrite": "¿Estás seguro de que quieres reemplazar la armadura en la equipación \"{{name}}\" con este nuevo set de armadura?",
@@ -529,16 +537,7 @@
     "ExistingLoadout": "Equipación Existente",
     "ExoticSpecialCategory": "Especial",
     "Filter": "Filtros",
-    "InLoadouts": "En Equipaciones",
-    "InOtherLoadouts": "Otras Equipaciones",
     "Legendary": "Legendarias",
-    "LockElement": "Bloquear Elemento",
-    "LockElementOptions": {
-      "All": "Todas las armaduras serán bloqueadas a sus elementos actuales.",
-      "InLoadouts": "La armadura será bloqueada al elemento actual si está equipada en cualquier Equipación existente.",
-      "InOtherLoadouts": "Actualmente estás optimizando la Equipación {{loadoutName}}. La armadura será bloqueada a su elemento actual si está equipada en cualquiero otra Equipación que no sea {{loadoutName}}.",
-      "None": "El elemento de armadura será cambiado según sea necesario para encajar los modificadores seleccionados."
-    },
     "LockEquipped": "Equipar anclados",
     "LockItem": "Anclar objeto",
     "MaxTier": "Máximo {{tier}}",
@@ -548,7 +547,6 @@
       "ActiveSearchQuery": "Una consulta de búsqueda activa está restringiendo los objetos que DIM puede incluir en sus equipaciones",
       "AllowAutoStatMods": "Permitir que DIM incluya automáticamente modificadores adicionales de estadística",
       "AlwaysInvalidMods": "Estos modificadores no encajan en ninguno de los objetos que te pertenecen:",
-      "AssumeElementChange": "Permitir que DIM recomiende cambios de elemento de energía de armadura",
       "AssumeMasterworked": "Permitir que DIM recomiende convertir en obra maestra armadura",
       "AssumptionsRestricted": "DIM no puede recomendar cambios de energía de armadura:",
       "BadSlot": "En la ranura {{bucketName}} ninguno de los objetos permitidos pudieron acomodar estos modificadores:",
@@ -571,7 +569,7 @@
     "OptimizerExplanationMods": "Elige un exótico y los cualquier modificador que quieras usar. El Optimizador de Equipaciones sólo incluirá los bonus de estadísticas desde los modificadores que elijas (todos los modificadores actuales en la armadura serán ignorados).",
     "OptimizerExplanationSearch": "Usa la barra de búsqueda para filtrar los objetos que el Optimizador de Equipaciones use.",
     "OptimizerExplanationStats": "Arrastra las estadísticas más importantes arriba, y el set de estadísticas que no te importen a Ignorar.",
-    "OptimizerExplanationUpgrades": "Selecciona en qué Actualizaciones de Armadura puede gastar gastar el Optimizador de Equipaciones los materiales. Podría sugerir Obra Maestra Completa para aumentar las estadísticas, o mejoras de energía y cambios de elemento para encajar tus modificadores solicitados.",
+    "OptimizerExplanationUpgrades": "Selecciona en cuales Mejoras de Armadura puede gastar el Optimizador de Equipaciones los materiales. Podría sugerir obras maestras completas para aumentar estadísticas, o mejoras de energía que encajen tus modificadores solicitados.",
     "OptimizerSet": "Set Optimizador",
     "ProcessingSets": "Procesando equipaciones para {{character}} ({{remainingTime}}segundos)",
     "SaveAs": "Guardar como",
@@ -769,7 +767,6 @@
     "CatalystProgress": "Progreso del Catalizador",
     "CommunityData": "Información de la Comunidad",
     "Consolidate": "Consolidar",
-    "CraftingPattern": "Patrón de Fabricación",
     "DistributeEvenly": "Distribuye Equitativamente",
     "Equip": "Equipar",
     "FavoriteUnFavorite": {
@@ -838,7 +835,6 @@
       "Crafted": "Fecha Formación",
       "CustomTotal": "Total Personalizado",
       "Damage": "Daño",
-      "Element": "Elemento",
       "Energy": "Energía",
       "Event": "Evento",
       "Icon": "Icono",
@@ -985,7 +981,6 @@
     "SizeItem": "Tamaño de objeto",
     "SortByAmmoType": "Tipo de Munición",
     "SortByAmount": "Tamaño del Montón",
-    "SortByArmorElement": "Elemento de Armadura (D2)",
     "SortByClassType": "Clase Requerida",
     "SortByCrafted": "Fabricados (D2)",
     "SortByDeepsight": "Resonancia Profunda (D2)",
@@ -1129,7 +1124,6 @@
   "StripSockets": {
     "Action": "Despejar Ranuras",
     "ArmorMods": "{{count}}x Modificadores de Armadura",
-    "ArtifactMods": "{{count}}x Modificadores de Artefacto",
     "Button": "Despejar {{numSockets}} Ranuras",
     "Cancel": "Cancelar",
     "Choose": "Elige Ranuras para despejar",
@@ -1158,19 +1152,24 @@
     "AccountsForArtifice": "Esto prueba si una pieza de armadura Artificiosa pudiera ser mejor, si un modificador de estadística +3 fuera usado.",
     "BetterArmor": "Estrictamente Mejor Armadura",
     "BetterArtificeArmor": "Mejor Armadura Artificiosa",
+    "BetterStatArmor": "Armadura de Mejores Estadísticas",
+    "BetterStatArtificeArmor": "Armadura Artificiosa de Mejores Estadísticas",
     "BetterWorseArmor": "Mejor/Peor Armadura",
     "BetterWorseIncludes": "Identifica piezas de armadura con:",
     "HighStats": "Estadísticas Altas",
     "InLoadouts": "En Equipaciones",
     "OwnedCount": "# En Propiedad",
-    "PerkBetterArmorDesc": "Las mismas, o más, ventajas intrínsicas.",
+    "PerkBetterArmorDesc": "Las mismas, o más, ventajas intrínsicas o espacios especiales de modificador.",
     "PerkWorseArmorDesc": "La misma ventaja intrínsica, o ninguna.",
     "SimilarItems": "Objetos similares",
     "StatBetterArmorDesc": "Todas las estadísticas al menos tan altas, y al menos una estadística mejor.",
+    "StatNotPerkArmorDesc": "Esto solo prueba estadísticas. Una pieza más baja todavía puede tener espacios de modificador especiales o ventajas intrínsicas.",
     "StatWorseArmorDesc": "Sin mejores estadísticas, y al menos una estadística peor.",
     "ThisItem": "Este objeto",
     "WorseArmor": "Estrictamente Peor Armadura",
     "WorseArtificeArmor": "Peor Armadura No-Artificiosa",
+    "WorseStatArmor": "Armadura de Peores Estadísticas",
+    "WorseStatArtificeArmor": "Armadura No-Artificiosa de Peores Estadísticas",
     "YourBestItem": "Tu mejor objeto"
   },
   "Triumphs": {

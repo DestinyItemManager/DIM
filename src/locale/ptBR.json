@@ -117,6 +117,10 @@
     "ImportWrongFileType": "Arquivo não é um arquivo CSV.",
     "WrongFields": "CSV deve conter colunas 'Id', 'Notes', 'Tag' e 'Hash'."
   },
+  "Dialog": {
+    "Cancel": "Cancelar",
+    "OK": "OK"
+  },
   "EnergyMeter": {
     "Energy": "Energia",
     "Unused": "Não usado",
@@ -205,7 +209,7 @@
     "CurrentClass": "Exibe itens que podem ser equipados no guardião que está jogando atualmente.",
     "CustomStatLower": "Exibe as armaduras nas quais seus atributos são necessariamente menores que as outras do mesmo tipo, levando em conta somente os atributos da lista personalizada de atributos daquela classe.",
     "DamageType": "Mostra itens baseado no seu tipo de dano.",
-    "Deepsight": "Exibe armas com Ressonância de Visão Penetrante que podem ser sincronizadas por materiais. Os termos de busca \"deepsight:complete\" e \"deepsight:incomplete\" referem-se ao progresso da ressonância, enquanto \"deepsight:pattern\" exibe itens que podem ser progredidos para desbloquear o seu padrão.",
+    "Deepsight": "Mostra armas com Visão Penetrante, que podem ter seus padrões extraídos.",
     "Description": "Descrição",
     "Dupe": "Exibe itens duplicados, incluindo revisões",
     "DupeCount": "Itens que tenham o número especificado de duplicatas.",
@@ -225,7 +229,7 @@
     "HasOrnament": "Mostra itens que tem um ornamento aplicado.",
     "HasShader": "Mostra itens que tem um tonalizador aplicado.",
     "HoldsMod": "Exibe armaduras compatíveis com um tipo específico de Mod de Temporada.",
-    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes.",
+    "InLoadout": "is:inloadout mostra os itens que estão incluídos em qualquer set. Buscando com inloadout: mostra os itens que estão inclusos nos sets com títulos correspondentes. Quando usado com uma hashtag, inloadout: mostrará itens cujos sets possuem a hashtag no título ou nas anotações.",
     "Infusable": "Mostra itens que podem ser infundidos.",
     "InfusionFodder": "Exibe itens que podem ser infundidos em versões de menor poder do mesmo item usando apenas lúmen.",
     "IsCrafted": "Mostra armas que foram criadas.",
@@ -381,6 +385,10 @@
     "Tab": "TAB",
     "Vault": "Enviar item para o cofre"
   },
+  "InGameLoadout": {
+    "Applying": "Equipando set...",
+    "LoadoutSlotNum": "Slot {{index}}"
+  },
   "Infusion": {
     "Filter": "Filtrar itens",
     "InfuseSource": "Selecione o item para infundir {{name}} em",
@@ -517,7 +525,7 @@
       "Legendary": "Armaduras lendárias serão consideradas obras-primas com nível de energia 10.",
       "None": "Todas as armaduras serão consideradas com os atributos atuais e terão um nível mínimo de energia de 7."
     },
-    "AutoStatMods": "Adicionar mods de atributos ncessários",
+    "AutoStatMods": "Adiciona mods de atributo automaticamente",
     "ChooseAlternateTitle": "Escolher outro item",
     "CompareLoadout": "Comparar Sets",
     "ConfirmOverwrite": "Você tem certeza que deseja substituir a armadura do set \"{{name}}\" com este novo conjunto de armaduras?",
@@ -529,16 +537,7 @@
     "ExistingLoadout": "Set Existente",
     "ExoticSpecialCategory": "Especial",
     "Filter": "Filtros",
-    "InLoadouts": "Em Sets",
-    "InOtherLoadouts": "Outros Sets",
     "Legendary": "Lendária",
-    "LockElement": "Manter o elemento",
-    "LockElementOptions": {
-      "All": "Todas as armaduras manterão seu elemento atual.",
-      "InLoadouts": "Peças de armaduras equipadas em outros Sets manterão seus elementos atuais.",
-      "InOtherLoadouts": "Você está otimizado o Set {{loadoutName}}. As peças de armadura manterão seus respectivos elementos caso estejam equipadas em outros sets além de {{loadoutName}}.",
-      "None": "Os elementos das armaduras serão mudados se necessário para se encaixar aos mods selecionados."
-    },
     "LockEquipped": "Fixar equipado",
     "LockItem": "Fixar item",
     "MaxTier": "Máx. {{tier}}",
@@ -548,7 +547,6 @@
       "ActiveSearchQuery": "A pesquisa atual está restringindo os itens que o DIM pode incluir nas builds",
       "AllowAutoStatMods": "Permitir que o DIM automaticamente inclua mods de atributos adicionais",
       "AlwaysInvalidMods": "Estes mods não se encaixam em nenhum dos itens que você possui:",
-      "AssumeElementChange": "Permitir ao DIM recomendar alterações no tipo de elemento das armaduras",
       "AssumeMasterworked": "Permitir ao DIM recomendar a transformação de armaduras em obra-prima",
       "AssumptionsRestricted": "DIM não pode sugerir alterações no tipo de energia de armadura:",
       "BadSlot": "No slot {{bucketName}}, nenhum dos itens permitidos puderam acomodar estes mods:",
@@ -571,7 +569,7 @@
     "OptimizerExplanationMods": "Escolha um exótico e quaisquer mods que queira usar. O Otimizador de Set incluirá apenas os bônus de atributos dos mods que você escolher. Todos os mods que já estão nas armaduras serão ignorados.",
     "OptimizerExplanationSearch": "Use a barra de pesquisa para filtrar os itens no Otimizador de Set.",
     "OptimizerExplanationStats": "Arraste os atributos mais importantes para o topo, e escolha também os atributos que podem ser ignorados.",
-    "OptimizerExplanationUpgrades": "Selecione em quais melhorias de armadura o Otimizador de Set pode gastar materiais. O Otimizador poderá sugerir obras-primas para aumentar atributos, aumento de energia ou troca do tipo de energia para permitir usar os mods solicitados.",
+    "OptimizerExplanationUpgrades": "Selecione em quais Melhorias de Armadura o Otimizador de Set pode gastar materiais. O Otimizador poderá sugerir obras-primas para aumentar atributos ou aumento de energia para permitir usar os mods solicitados.",
     "OptimizerSet": "Set do Otimizador",
     "ProcessingSets": "Processando sets para\n{{character}} ({{remainingTime}}s)",
     "SaveAs": "Salvar como",
@@ -769,7 +767,6 @@
     "CatalystProgress": "Progresso do Catalisador",
     "CommunityData": "Conhecimento da Comunidade",
     "Consolidate": "Consolidar",
-    "CraftingPattern": "Padrão de Criação",
     "DistributeEvenly": "Distribuir igualmente",
     "Equip": "Equip",
     "FavoriteUnFavorite": {
@@ -838,7 +835,6 @@
       "Crafted": "Data Formação",
       "CustomTotal": "Total Personalizado",
       "Damage": "Dano",
-      "Element": "Elemento",
       "Energy": "Energia",
       "Event": "Evento",
       "Icon": "Ícone",
@@ -985,7 +981,6 @@
     "SizeItem": "Tamanho do item",
     "SortByAmmoType": "Tipo de Munição",
     "SortByAmount": "Tamanho da Pilha",
-    "SortByArmorElement": "Elemento da Armadura (D2)",
     "SortByClassType": "Classe Requerida",
     "SortByCrafted": "Produzida (D2)",
     "SortByDeepsight": "Visão Penetrante (D2)",
@@ -1129,7 +1124,6 @@
   "StripSockets": {
     "Action": "Limpar Soquetes",
     "ArmorMods": "{{count}}x Mod de Armaduras",
-    "ArtifactMods": "{{count}}x Mod de Artefatos",
     "Button": "Limpar {{numSockets}} Soquetes",
     "Cancel": "Cancelar",
     "Choose": "Escolha os Soquetes para limpar",
@@ -1155,22 +1149,27 @@
     "UnlockAll": "Destravar itens"
   },
   "Triage": {
-    "AccountsForArtifice": "This tests whether an Artifice armor piece could be better, if a +3 stat mod were used.",
-    "BetterArmor": "Strictly Better Armor",
-    "BetterArtificeArmor": "Better Artifice Armor",
-    "BetterWorseArmor": "Better/Worse Armor",
-    "BetterWorseIncludes": "Identifies armor pieces with:",
+    "AccountsForArtifice": "Isto testa se uma peça de armadura Artífice poderia ser melhor, caso um mod de +3 atributo fosse usado.",
+    "BetterArmor": "Armadura Estritamente Melhor",
+    "BetterArtificeArmor": "Armadura Artífice Melhor",
+    "BetterStatArmor": "Armadura com Melhores Atributos",
+    "BetterStatArtificeArmor": "Armadura Artífice com Melhores Atributos",
+    "BetterWorseArmor": "Armadura Pior/Melhor",
+    "BetterWorseIncludes": "Identifica peças de armaduras com:",
     "HighStats": "Atributos Altos",
     "InLoadouts": "Vinculado aos Sets",
     "OwnedCount": "# Possuído",
-    "PerkBetterArmorDesc": "The same, or more, intrinsic perks.",
-    "PerkWorseArmorDesc": "The same intrinsic perk, or none.",
+    "PerkBetterArmorDesc": "O mesmo, ou mais, perks intrínsecas ou slots especiais de mods.",
+    "PerkWorseArmorDesc": "O mesmo perk intrínseco, ou nenhum.",
     "SimilarItems": "Itens Similares",
-    "StatBetterArmorDesc": "All stats at least as high, and at least one stat better.",
-    "StatWorseArmorDesc": "No better stats, and at least one worse stat.",
+    "StatBetterArmorDesc": "Todos os atributos são tão altos quanto, e pelo menos um atributo melhor.",
+    "StatNotPerkArmorDesc": "Isto testa somente os atributos. Uma peça inferior ainda pode ter slots especiais ou perks intrínsecos.",
+    "StatWorseArmorDesc": "Nenhum atributo melhor, e pelo menos um atributo pior.",
     "ThisItem": "Este item",
-    "WorseArmor": "Strictly Worse Armor",
-    "WorseArtificeArmor": "Worse Non-Artifice Armor",
+    "WorseArmor": "Armadura Estritamente Pior",
+    "WorseArtificeArmor": "Pior Armadura Não-Artífice",
+    "WorseStatArmor": "Armadura com Atributos Piores",
+    "WorseStatArtificeArmor": "Armadura Não Artifície com Atributos Piores",
     "YourBestItem": "Seu melhor item"
   },
   "Triumphs": {

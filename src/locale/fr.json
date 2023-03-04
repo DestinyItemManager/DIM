@@ -1,7 +1,7 @@
 {
   "AWA": {
     "ConfirmDescription": "Veuillez utiliser l'application Compagnon de Destiny 2 pour donner à DIM l'autorisation de modifier vos objets.",
-    "ConfirmTitle": "Confirmer L'Action",
+    "ConfirmTitle": "Confirmer l'action",
     "Error": "Erreur lors du changement des mods ou des attributs",
     "ErrorMessage": "Nous n'avons pas pu équiper {{plug}} dans {{item}}.\n\n{{error}}",
     "FailedToken": "Impossible d'obtenir la permission de modifier l'objet",
@@ -117,6 +117,10 @@
     "ImportWrongFileType": "Le fichier n'est pas un fichier CSV.",
     "WrongFields": "Le CSV doit avoir les colonnes \"Id\", \"Notes\", \"Tag\", et \"Hash\"."
   },
+  "Dialog": {
+    "Cancel": "Annuler",
+    "OK": "OK"
+  },
   "EnergyMeter": {
     "Energy": "Énergie",
     "Unused": "Libre",
@@ -146,7 +150,7 @@
     "Desc_male_plural": "DIM transfère des engrammes et objets de lumen du {{store}} au coffre et laisse {{count}} espaces disponibles pour chaque type d'objet afin que rien ne soit envoyé au commis des postes.",
     "Desc_plural": "DIM transfère des engrammes et objets de lumen du {{store}} au coffre et laisse {{count}} espaces disponibles pour chaque type d'objet afin que rien ne soit envoyé au commis des postes.",
     "FarmingMode": "Mode farming",
-    "FarmingModeNote": "(garder de la place)",
+    "FarmingModeNote": "(garde de la place)",
     "MakeRoom": {
       "Desc": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
       "Desc_female": "DIM est entrain de transférer uniquement les engrammes et objets de lumen du {{store}} au coffre ou autres personnages afin d'éviter que rien ne soit envoyé au commis des postes.",
@@ -205,7 +209,7 @@
     "CurrentClass": "Affiche les objets qui peuvent être équipés sur le personnage actuellement connecté.",
     "CustomStatLower": "Affiche les armures dont les statistiques sont strictement plus basses que celles d'une autre armure du même type, en ne prenant en compte que les statistiques dans le total de statistiques personnalisé de cette classe.",
     "DamageType": "Affiche les objets selon leur type de dégât.",
-    "Deepsight": "Affiche les armes avec une résonance de souvenance, qui peut être harmonisé pour obtenir des matériaux. deepsight:complete et deepsight:incomplete font référence à la progression de l'objective de souvenance, tandis que deepsight:pattern affiche les objets qui pourraient débloquer un modèle s'ils sont harmonisés.",
+    "Deepsight": "Affiche les armes avec une résonance de souvenance dont le modèle peut être extrait.",
     "Description": "Description",
     "Dupe": "Affiche les doublons, y compris les rééditions",
     "DupeCount": "Objets qui ont le nombre spécifié de doublons.",
@@ -334,7 +338,7 @@
     "FilterHelp": "Rechercher objet/attribut, {{example}}, et plus",
     "FilterHelpBrief": "Éléments de recherche",
     "FilterHelpLoadouts": "Rechercher les noms et les notes d'équipement",
-    "FilterHelpMenuItem": "Aide Filtres...",
+    "FilterHelpMenuItem": "Aide des filtres...",
     "FilterHelpOptimizer": "Filtrer les armures depuis les équipements : {{example}}",
     "FilterHelpProgress": "Rechercher des jalons et des contrats",
     "FilterHelpRecords": "Rechercher triomphes et collections",
@@ -381,6 +385,10 @@
     "Tab": "TAB",
     "Vault": "Envoyer un objet au coffre"
   },
+  "InGameLoadout": {
+    "Applying": "Équipement de l'équipement...",
+    "LoadoutSlotNum": "Emplacement {{index}}"
+  },
   "Infusion": {
     "Filter": "Filtrer les objets",
     "InfuseSource": "Sélectionnez l'objet dans lequel infuser {{name}}",
@@ -395,9 +403,9 @@
     "ClickToExpand": "(Cliquez pour agrandir)"
   },
   "ItemFeed": {
-    "ClearFeed": "Vider le flux",
-    "Description": "Flux d'objets",
-    "HideTagged": "Masquer ceux avec une étiquette",
+    "ClearFeed": "Vider la liste",
+    "Description": "Objets récents",
+    "HideTagged": "Masquer étiquetés",
     "NoNewItems": "Aucun nouveaux objets",
     "ShowOlderItems": "Afficher les objets plus anciens"
   },
@@ -517,7 +525,7 @@
       "Legendary": "Les armures légendaires utiliseront leurs stats de pièce maîtresse et auront un niveau d'énergie de 10.",
       "None": "Toutes les armures utiliseront leurs stats actuelles et auront un niveau d'énergie minimum de 7."
     },
-    "AutoStatMods": "Ajouter les mods de stat requis",
+    "AutoStatMods": "Ajouter automatiquement les mods de statistiques",
     "ChooseAlternateTitle": "Choisir un autre objet",
     "CompareLoadout": "Comparer l'équipement",
     "ConfirmOverwrite": "Êtes-vous sûr de vouloir remplacer l'armure dans l'équipement \"{{name}}\" par ce nouvel ensemble d'armure ?",
@@ -529,16 +537,7 @@
     "ExistingLoadout": "Équipement existant",
     "ExoticSpecialCategory": "Spécial",
     "Filter": "Filtres",
-    "InLoadouts": "Dans un équipement",
-    "InOtherLoadouts": "Autres équipements",
     "Legendary": "Légendaire",
-    "LockElement": "Verrouiller l'élément",
-    "LockElementOptions": {
-      "All": "Toutes les armures seront verrouillées à leur élément actuel.",
-      "InLoadouts": "L'élément de l'armure sera verrouillé si elle est équipée dans un autre équipement.",
-      "InOtherLoadouts": "Vous optimisez actuellement l'équipement {{loadoutName}}. L'élément de l'armure sera verrouillé si elle est équipée dans un équipement autre que {{loadoutName}}.",
-      "None": "L'élément de l'armure sera modifié si besoin pour s'adapter aux mods sélectionnés."
-    },
     "LockEquipped": "Inc. équipés",
     "LockItem": "Inclure objet",
     "MaxTier": "Max {{tier}}",
@@ -548,7 +547,6 @@
       "ActiveSearchQuery": "Une recherche active restreint les éléments que DIM peut inclure dans les builds",
       "AllowAutoStatMods": "Autoriser DIM à inclure automatiquement des mods de stat supplémentaires",
       "AlwaysInvalidMods": "Ces mods ne rentrent dans aucun des objets que vous possédez :",
-      "AssumeElementChange": "Autoriser DIM à recommander des changements d'élément d'armure",
       "AssumeMasterworked": "Autoriser DIM à recommander le passage en pièce maîtresse d'une armure",
       "AssumptionsRestricted": "DIM ne peut pas recommander des changements d'élément d'armure :",
       "BadSlot": "Dans l'emplacement {{bucketName}}, aucun des objets autorisés ne peut être adapté à ces mods :",
@@ -571,7 +569,7 @@
     "OptimizerExplanationMods": "Choisissez un exotique et les mods que vous souhaitez utiliser. L'optimiseur n'inclus que les bonus de statistiques des mods que vous choisissez - les mods déjà présents sur l'armure sont ignorés.",
     "OptimizerExplanationSearch": "Utilisez la barre de recherche pour filtrer les objets que l'optimiseur utilisera.",
     "OptimizerExplanationStats": "Déplacez les statistiques les plus importantes vers le haut, et mettez les statistiques qui ne vous intéressent pas sur Ignorer.",
-    "OptimizerExplanationUpgrades": "Sélectionnez sur quelles améliorations d'armures vous souhaitez dépenser des matériaux. L'optimiseur pourra suggérer des pièces maîtresses pour améliorer les statistiques, ou des augmentations d'énergie et changements d'élément pour permettre l'utilisation des mods souhaités.",
+    "OptimizerExplanationUpgrades": "Sélectionnez sur quelles améliorations d'armures vous souhaitez dépenser des matériaux. L'optimiseur pourra suggérer des pièces maîtresses pour améliorer les statistiques, ou des augmentations d'énergie pour permettre l'utilisation des mods souhaités.",
     "OptimizerSet": "Ensemble de l'optimiseur",
     "ProcessingSets": "Traitement des possibilités pour {{character}} ({{remainingTime}}s)",
     "SaveAs": "Enregistrer sous",
@@ -638,7 +636,7 @@
       "Error404": "Cet équipement n'existe pas.",
       "PasteHere": "Collez un lien d'équipement pour ouvrir l'équipement."
     },
-    "ImportLoadout": "Importer l'équipement",
+    "ImportLoadout": "Importer équipement",
     "ItemErrorSummary": "1 erreur d'objet :",
     "ItemErrorSummary_plural": "{{count}} erreurs d'objet :",
     "ItemLeveling": "Infusion d'objet",
@@ -769,7 +767,6 @@
     "CatalystProgress": "Progression du catalyseur",
     "CommunityData": "Informations de la communauté",
     "Consolidate": "Réunir",
-    "CraftingPattern": "Modèle de façonnage",
     "DistributeEvenly": "Distribuer équitablement",
     "Equip": "Équiper",
     "FavoriteUnFavorite": {
@@ -791,7 +788,7 @@
     "OverviewTab": "Vue d'ensemble",
     "Owned": "Cet élément est dans votre inventaire.",
     "OwnedMod": "Ce mod est dans votre inventaire de modifications.",
-    "PullItem": "Retirez depuis {{bucket}} vers {{store}}",
+    "PullItem": "Déplacer de {{bucket}} vers {{store}}",
     "PullPostmaster": "Récupérer du commis des postes",
     "ReadLore": "Lire le lore de Ishtar Collective",
     "ReadLoreLink": "Lire l'histoire",
@@ -838,7 +835,6 @@
       "Crafted": "Date de façonnage",
       "CustomTotal": "Total Personnalisé",
       "Damage": "Dégâts",
-      "Element": "Élément",
       "Energy": "Énergie",
       "Event": "Evènement",
       "Icon": "Icône",
@@ -985,7 +981,6 @@
     "SizeItem": "Taille des objets",
     "SortByAmmoType": "Type de munitions",
     "SortByAmount": "Taille de la pile",
-    "SortByArmorElement": "Élément d'armure (D2)",
     "SortByClassType": "Classe requise",
     "SortByCrafted": "Façonné (D2)",
     "SortByDeepsight": "Résonnance (D2)",
@@ -1129,7 +1124,6 @@
   "StripSockets": {
     "Action": "Vider les emplacements",
     "ArmorMods": "{{count}}x Mod d'armure",
-    "ArtifactMods": "{{count}}x Mod d'artefact",
     "Button": "Vider {{numSockets}} emplacements",
     "Cancel": "Annuler",
     "Choose": "Choisissez les emplacements à vider",
@@ -1158,19 +1152,24 @@
     "AccountsForArtifice": "Cela vérifie si une armure d'artifice pourrait être meilleure si un mod de statistique +3 était utilisé.",
     "BetterArmor": "Armure strictement meilleure",
     "BetterArtificeArmor": "Meilleure armure d'artifice",
+    "BetterStatArmor": "Armure avec meilleures statistiques",
+    "BetterStatArtificeArmor": "Armure d'artifice avec meilleures statistiques",
     "BetterWorseArmor": "Meilleure/Pire armure",
     "BetterWorseIncludes": "Identifie les pièces d'armure avec :",
     "HighStats": "Statistiques hautes",
     "InLoadouts": "Dans les équipements",
     "OwnedCount": "# Possédés",
-    "PerkBetterArmorDesc": "Les mêmes, ou plus, attributs intrinsèques.",
+    "PerkBetterArmorDesc": "Les mêmes, ou plus, attributs intrinsèques ou emplacement de mod spécial.",
     "PerkWorseArmorDesc": "Le même attribut intrinsèque, ou aucun.",
     "SimilarItems": "Objets similaires",
     "StatBetterArmorDesc": "Toutes les statistiques au moins aussi élevées, et au moins une meilleure statistique.",
+    "StatNotPerkArmorDesc": "Cela ne vérifie que les statistiques. Une moins bonne pièce d'armure pourrait quand même avoir un emplacement de mod spécial ou un attribut intrinsèque.",
     "StatWorseArmorDesc": "Aucune meilleure statistique, et au moins une moins bonne statistique.",
     "ThisItem": "Cet objet",
     "WorseArmor": "Armure strictement moins bonne",
     "WorseArtificeArmor": "Armure non-artifice moins bonne",
+    "WorseStatArmor": "Armure avec pires statistiques",
+    "WorseStatArtificeArmor": "Armure d'artifice avec pires statistiques",
     "YourBestItem": "Votre meilleur objet"
   },
   "Triumphs": {
