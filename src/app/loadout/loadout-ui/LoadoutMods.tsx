@@ -8,7 +8,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState } from 'app/store/types';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { memo, useMemo, useState } from 'react';
@@ -65,9 +64,7 @@ export default memo(function LoadoutMods({
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
   const [showModPicker, setShowModPicker] = useState(false);
 
-  const unlockedPlugSetItems = useSelector((state: RootState) =>
-    unlockedPlugSetItemsSelector(state, storeId)
-  );
+  const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(storeId));
 
   // Explicitly show only actual saved mods in the mods picker, not auto mods,
   // otherwise we'd duplicate auto mods into loadout parameter mods when coonfirming

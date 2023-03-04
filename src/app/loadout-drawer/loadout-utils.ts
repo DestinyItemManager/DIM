@@ -648,7 +648,11 @@ export function isMissingItems(
   return false;
 }
 
-/** Returns a flat list of mods hashes in the Loadout, by default including auto stat mods */
+/**
+ * Returns a flat list of mods hashes in the Loadout, by default including auto stat mods.
+ * This INCLUDES both locked and unlocked mods; `unlockedPlugs` is used to identify if the expensive or cheap copy of an
+ * armor mod should be used.
+ */
 export function getModHashesFromLoadout(
   loadout: Loadout,
   unlockedPlugs: Set<number>,
@@ -660,7 +664,11 @@ export function getModHashesFromLoadout(
   ].map((hash) => mapToAvailableModCostVariant(hash, unlockedPlugs));
 }
 
-/** Returns a flat list of mods as PluggableInventoryItemDefinitions in the Loadout, by default including auto stat mods */
+/**
+ * Returns a flat list of mods as PluggableInventoryItemDefinitions in the Loadout, by default including auto stat mods.
+ * This INCLUDES both locked and unlocked mods; `unlockedPlugs` is used to identify if the expensive or cheap copy of an
+ * armor mod should be used.
+ */
 export function getModsFromLoadout(
   defs: D1ManifestDefinitions | D2ManifestDefinitions | undefined,
   loadout: Loadout,

@@ -183,9 +183,7 @@ export default memo(function LoadoutBuilder({
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
-  const unlockedPlugs = useSelector((state: RootState) =>
-    unlockedPlugSetItemsSelector(state, selectedStoreId)
-  );
+  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(selectedStoreId));
 
   const lockedMods = useMemo(
     () =>

@@ -32,7 +32,6 @@ import { getModsFromLoadout, getUnequippedItemsForLoadout } from 'app/loadout-dr
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import { getItemsAndSubclassFromLoadout, loadoutPower } from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { RootState } from 'app/store/types';
 import { emptyObject } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -86,9 +85,7 @@ export default function LoadoutEdit({
     [itemCreationContext, loadout.items, store, allItems, modsByBucket]
   );
 
-  const unlockedPlugSetItems = useSelector((state: RootState) =>
-    unlockedPlugSetItemsSelector(state, store.id)
-  );
+  const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(store.id));
 
   const allMods = useMemo(
     () => getModsFromLoadout(defs, loadout, unlockedPlugSetItems),

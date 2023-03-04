@@ -15,7 +15,6 @@ import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/lo
 import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState } from 'app/store/types';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
@@ -107,9 +106,7 @@ export default function LoadoutView({
     [itemCreationContext, loadout.items, store, allItems, modsByBucket]
   );
 
-  const unlockedPlugs = useSelector((state: RootState) =>
-    unlockedPlugSetItemsSelector(state, store.id)
-  );
+  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(store.id));
 
   const allMods = useMemo(
     () => getModsFromLoadout(defs, loadout, unlockedPlugs),
