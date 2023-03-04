@@ -10,6 +10,7 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isValidMasterworkStat } from 'app/inventory/store/masterwork';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { collectionsVisibleShadersSelector } from 'app/records/selectors';
@@ -191,10 +192,9 @@ export default function SocketDetails({
   }
 
   // Is this plug available to use?
-  const unlocked = (i: PluggableInventoryItemDefinition) =>
-    i.hash === socket.emptyPlugItemHash ||
-    unlockedPlugs.has(i.hash) ||
-    otherUnlockedPlugs.has(i.hash);
+  const unlocked = (i: number | undefined) =>
+    i !== undefined &&
+    (i === socket.emptyPlugItemHash || unlockedPlugs.has(i) || otherUnlockedPlugs.has(i));
 
   const searchFilter = createPlugSearchPredicate(query, language, defs);
 
@@ -227,11 +227,18 @@ export default function SocketDetails({
 
   mods = mods
     .filter(searchFilter)
-    .filter((i) => unlocked(i) || !shownLockedPlugs || shownLockedPlugs.has(i.hash))
+    .filter(
+      (i) =>
+        unlocked(i.hash) ||
+        (shownLockedPlugs
+          ? shownLockedPlugs.has(i.hash)
+          : // hide the regular-cost copies if the reduced is available, and vice versa
+            !unlocked(mapToOtherModCostVariant(i.hash)))
+    )
     .sort(
       chainComparator(
         compareBy((i) => i.hash !== socket.emptyPlugItemHash),
-        reverseComparator(compareBy(unlocked)),
+        reverseComparator(compareBy((i) => unlocked(i.hash))),
         compareBy((i) => i.plug?.energyCost?.energyCost),
         compareBy((i) => -i.inventory!.tierType),
         compareBy((i) => i.displayProperties.name)
@@ -290,7 +297,7 @@ export default function SocketDetails({
         item={item}
         socket={socket}
         currentPlug={socket.plugged}
-        equippable={unlocked(selectedPlug)}
+        equippable={unlocked(selectedPlug.hash)}
         allowInsertPlug={allowInsertPlug}
         onPlugSelected={onPlugSelected}
         closeMenu={onClose}
@@ -311,7 +318,7 @@ export default function SocketDetails({
             key={mod.hash}
             className={clsx(styles.clickableMod, {
               [styles.selected]: selectedPlug === mod,
-              [styles.notUnlocked]: !unlocked(mod),
+              [styles.notUnlocked]: !unlocked(mod.hash),
             })}
             itemDef={mod}
             onClick={setSelectedPlug}
