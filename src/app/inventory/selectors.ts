@@ -4,7 +4,7 @@ import { currentProfileSelector, settingSelector, settingsSelector } from 'app/d
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyObject, emptySet } from 'app/utils/empty';
-import { currySelector } from 'app/utils/redux-utils';
+import { currySelector } from 'app/utils/selector-utils';
 import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import { resonantMaterialStringVarHashes } from 'data/d2/crafting-resonant-elements';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
