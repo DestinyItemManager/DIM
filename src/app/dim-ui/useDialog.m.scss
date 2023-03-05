@@ -1,6 +1,7 @@
 @use '../variables.scss' as *;
 
 .dialog {
+  position: fixed;
   background-color: black;
   color: white;
   top: 0;
@@ -9,11 +10,12 @@
   border-top-width: 6px;
   box-shadow: 0 0 24px 6px #080811;
   padding: 0;
-  min-width: 40em;
+  width: 40em;
   box-sizing: border-box;
 
   @include phone-portrait {
     min-width: 100%;
+    max-width: 100%;
     border-left: none;
     border-right: none;
   }
