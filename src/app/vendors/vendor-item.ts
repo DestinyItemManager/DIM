@@ -64,7 +64,9 @@ function makeVendorItem(
   vendorItemDef: DestinyVendorItemDefinition,
   saleItem: DestinyVendorSaleItemComponent | undefined,
   // the character to whom this item is being offered
-  characterId: string
+  characterId: string,
+  // the index in the vendor's items array
+  saleIndex: number
 ): VendorItem {
   const { defs, profileResponse } = context;
 
@@ -102,12 +104,10 @@ function makeVendorItem(
     vendorItem.item.index = vendorItem.item.id;
     vendorItem.item.instanced = false;
 
-    // if this is sold by a vendor, add vendor information
-    if (saleItem && characterId) {
-      vendorItem.item.vendor = { vendorHash, saleIndex: saleItem.vendorItemIndex, characterId };
-      if (vendorItem.item.equipment && vendorItem.item.bucket.hash !== BucketHashes.Emblems) {
-        vendorItem.item.comparable = true;
-      }
+    // since this is sold by a vendor, add vendor information
+    vendorItem.item.vendor = { vendorHash, saleIndex, characterId };
+    if (vendorItem.item.equipment && vendorItem.item.bucket.hash !== BucketHashes.Emblems) {
+      vendorItem.item.comparable = true;
     }
   }
 
@@ -149,7 +149,8 @@ export function vendorItemForSaleItem(
     vendorDef.hash,
     vendorItemDef,
     saleItem,
-    characterId
+    characterId,
+    saleItem.vendorItemIndex
   );
 }
 
@@ -160,15 +161,25 @@ export function vendorItemForSaleItem(
 export function vendorItemForDefinitionItem(
   context: ItemCreationContext,
   vendorItemDef: DestinyVendorItemDefinition,
-  characterId: string
+  characterId: string,
+  // the index in the vendor's items array
+  saleIndex: number
 ): VendorItem {
-  return makeVendorItem(
+  const item = makeVendorItem(
     context,
     vendorItemDef.itemHash,
     [],
     0,
     vendorItemDef,
     undefined,
-    characterId
+    characterId,
+    saleIndex
   );
+  // items from vendors must have a unique ID, which causes makeItem
+  // to think there's gotta be socket info, but there's not for vendors
+  // set up statically through defs
+  if (item.item) {
+    item.item.missingSockets = false;
+  }
+  return item;
 }
