@@ -78,6 +78,17 @@ export interface ResolvedLoadoutItem {
   readonly missing?: boolean;
 }
 
+/**
+ * Similarly to loadout items, mods can resolve to something different than what the hash says.
+ * E.g. magic deprecated replacements, or reduced-cost copies.
+ */
+export interface ResolvedLoadoutMod {
+  /** The original hash in the loadout. */
+  readonly originalModHash: number;
+  /** The resolved mod */
+  readonly resolvedMod: PluggableInventoryItemDefinition;
+}
+
 /** represents a single mod, and where to place it (on a non-specific item) */
 export interface Assignment {
   /** what item to plug */

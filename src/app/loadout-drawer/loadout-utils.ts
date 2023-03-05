@@ -36,7 +36,7 @@ import { createSelector } from 'reselect';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { Loadout, LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics
 export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
@@ -649,22 +649,6 @@ export function isMissingItems(
 }
 
 /**
- * Returns a flat list of mods hashes in the Loadout, by default including auto stat mods.
- * This INCLUDES both locked and unlocked mods; `unlockedPlugs` is used to identify if the expensive or cheap copy of an
- * armor mod should be used.
- */
-export function getModHashesFromLoadout(
-  loadout: Loadout,
-  unlockedPlugs: Set<number>,
-  includeAutoMods = true
-) {
-  return [
-    ...(loadout.parameters?.mods ?? []),
-    ...((includeAutoMods && loadout.autoStatMods) || []),
-  ].map((hash) => mapToAvailableModCostVariant(hash, unlockedPlugs));
-}
-
-/**
  * Returns a flat list of mods as PluggableInventoryItemDefinitions in the Loadout, by default including auto stat mods.
  * This INCLUDES both locked and unlocked mods; `unlockedPlugs` is used to identify if the expensive or cheap copy of an
  * armor mod should be used.
@@ -675,21 +659,35 @@ export function getModsFromLoadout(
   unlockedPlugs: Set<number>,
   includeAutoMods = true
 ) {
-  const mods: PluggableInventoryItemDefinition[] = [];
+  const internalModHashes = [
+    ...(loadout.parameters?.mods ?? []),
+    ...((includeAutoMods && loadout.autoStatMods) || []),
+  ];
 
+  return resolveLoadoutModHashes(defs, internalModHashes, unlockedPlugs);
+}
+
+export function resolveLoadoutModHashes(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions | undefined,
+  modHashes: number[],
+  unlockedPlugs: Set<number>
+) {
+  const mods: ResolvedLoadoutMod[] = [];
   if (defs?.isDestiny2()) {
-    for (const modHash of getModHashesFromLoadout(loadout, unlockedPlugs, includeAutoMods)) {
-      const item = defs.InventoryItem.get(modHash);
+    for (const originalModHash of modHashes) {
+      const resolvedModHash = mapToAvailableModCostVariant(originalModHash, unlockedPlugs);
+      const item = defs.InventoryItem.get(resolvedModHash);
       if (isPluggableItem(item)) {
-        mods.push(item);
+        mods.push({ originalModHash, resolvedMod: item });
       } else {
         const deprecatedPlaceholderMod = defs.InventoryItem.get(deprecatedPlaceholderArmorModHash);
-        isPluggableItem(deprecatedPlaceholderMod) && mods.push(deprecatedPlaceholderMod);
+        isPluggableItem(deprecatedPlaceholderMod) &&
+          mods.push({ originalModHash, resolvedMod: deprecatedPlaceholderMod });
       }
     }
   }
 
-  return mods.sort(sortMods);
+  return mods.sort((a, b) => sortMods(a.resolvedMod, b.resolvedMod));
 }
 
 function getSubclassFragmentCapacity(subclassItem: DimItem): number {

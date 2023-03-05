@@ -8,9 +8,8 @@ import { D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import { mapToNonReducedModCostVariant, mapToOtherModCostVariant } from 'app/loadout/mod-utils';
+import { mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
 import { showNotification } from 'app/notifications/notifications';
-import { deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
@@ -18,7 +17,7 @@ import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
-import { Loadout, LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 import {
   convertToLoadoutItem,
   createSocketOverridesFromEquipped,
@@ -320,21 +319,10 @@ export function clearSubclass(
 /**
  * Remove a specific mod by its inventory item hash.
  */
-export function removeMod(
-  defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  hash: number
-): LoadoutUpdateFunction {
+export function removeMod(mod: ResolvedLoadoutMod): LoadoutUpdateFunction {
   return produce((loadout) => {
-    const otherCostVersion = mapToOtherModCostVariant(hash);
     if (loadout.autoStatMods) {
-      let index = loadout.autoStatMods.findIndex(
-        (existingHash) => existingHash === hash || otherCostVersion === hash
-      );
-      if (index === -1 && defs.isDestiny2() && hash === deprecatedPlaceholderArmorModHash) {
-        index = loadout.autoStatMods.findIndex(
-          (existingHash) => !defs.InventoryItem.get(existingHash)
-        );
-      }
+      const index = loadout.autoStatMods.indexOf(mod.originalModHash);
       if (index !== -1) {
         loadout.autoStatMods.splice(index, 1);
         return;
@@ -342,14 +330,7 @@ export function removeMod(
     }
 
     if (loadout.parameters?.mods) {
-      let index = loadout.parameters.mods.findIndex(
-        (existingHash) => existingHash === hash || otherCostVersion === hash
-      );
-      if (index === -1 && defs.isDestiny2() && hash === deprecatedPlaceholderArmorModHash) {
-        index = loadout.parameters.mods.findIndex(
-          (existingHash) => !defs.InventoryItem.get(existingHash)
-        );
-      }
+      const index = loadout.parameters?.mods.indexOf(mod.originalModHash);
       if (index !== -1) {
         loadout.parameters.mods.splice(index, 1);
         return;

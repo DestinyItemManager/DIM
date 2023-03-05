@@ -2,17 +2,16 @@ import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
-import { useD2Definitions } from 'app/manifest/selectors';
+import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import { memo, useMemo, useState } from 'react';
+import { memo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ModAssignmentDrawer from '../mod-assignment-drawer/ModAssignmentDrawer';
+import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
 import { createGetModRenderKey } from '../mod-utils';
 import ModPicker from '../ModPicker';
 import styles from './LoadoutMods.m.scss';
@@ -23,14 +22,14 @@ const LoadoutModMemo = memo(function LoadoutMod({
   className,
   onRemoveMod,
 }: {
-  mod: PluggableInventoryItemDefinition;
+  mod: ResolvedLoadoutMod;
   className: string;
-  onRemoveMod?: (modHash: number) => void;
+  onRemoveMod?: (mod: ResolvedLoadoutMod) => void;
 }) {
   // We need this to be undefined if `onRemoveMod` is not present as the presence of the onClose
   // callback determines whether the close icon is displayed on hover
-  const onClose = onRemoveMod && (() => onRemoveMod(mod.hash));
-  return <PlugDef className={className} plug={mod} onClose={onClose} />;
+  const onClose = onRemoveMod && (() => onRemoveMod(mod));
+  return <PlugDef className={className} plug={mod.resolvedMod} onClose={onClose} />;
 });
 
 /**
@@ -48,17 +47,16 @@ export default memo(function LoadoutMods({
   onClearUnsetModsChanged,
 }: {
   loadout: Loadout;
-  allMods: PluggableInventoryItemDefinition[];
+  allMods: ResolvedLoadoutMod[];
   storeId: string;
   hideShowModPlacements?: boolean;
   clearUnsetMods?: boolean;
   missingSockets?: boolean;
   /** If present, show an "Add Mod" button */
   onUpdateMods?: (newMods: PluggableInventoryItemDefinition[]) => void;
-  onRemoveMod?: (modHash: number) => void;
+  onRemoveMod?: (mod: ResolvedLoadoutMod) => void;
   onClearUnsetModsChanged?: (checked: boolean) => void;
 }) {
-  const defs = useD2Definitions()!;
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
   const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
@@ -68,10 +66,7 @@ export default memo(function LoadoutMods({
 
   // Explicitly show only actual saved mods in the mods picker, not auto mods,
   // otherwise we'd duplicate auto mods into loadout parameter mods when coonfirming
-  const savedMods = useMemo(
-    () => getModsFromLoadout(defs, loadout, unlockedPlugSetItems, false),
-    [defs, loadout, unlockedPlugSetItems]
-  );
+  const [, mappedMods] = useLoadoutMods(loadout, storeId, false);
 
   // TODO: filter down by usable mods?
   // TODO: Hide the "Add Mod" button when no more mods can fit
@@ -101,12 +96,12 @@ export default memo(function LoadoutMods({
           <LoadoutModMemo
             className={clsx({
               [styles.missingItem]: !(
-                unlockedPlugSetItems.has(mod.hash) ||
-                mod.hash === DEFAULT_SHADER ||
-                DEFAULT_ORNAMENTS.includes(mod.hash)
+                unlockedPlugSetItems.has(mod.resolvedMod.hash) ||
+                mod.resolvedMod.hash === DEFAULT_SHADER ||
+                DEFAULT_ORNAMENTS.includes(mod.resolvedMod.hash)
               ),
             })}
-            key={getModRenderKey(mod)}
+            key={getModRenderKey(mod.resolvedMod)}
             mod={mod}
             onRemoveMod={onRemoveMod}
           />
@@ -159,7 +154,7 @@ export default memo(function LoadoutMods({
           <ModPicker
             classType={loadout.classType}
             owner={storeId}
-            lockedMods={savedMods}
+            lockedMods={mappedMods}
             onAccept={onUpdateMods}
             onClose={() => setShowModPicker(false)}
           />

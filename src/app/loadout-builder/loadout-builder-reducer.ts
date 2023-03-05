@@ -14,14 +14,14 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import {
   createSubclassDefaultSocketOverrides,
   findItemForLoadout,
   pickBackingStore,
 } from 'app/loadout-drawer/loadout-utils';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
-import { mapToNonReducedModCostVariant, mapToOtherModCostVariant } from 'app/loadout/mod-utils';
+import { mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
@@ -217,8 +217,7 @@ type LoadoutBuilderConfigAction =
   | { type: 'unexcludeItem'; item: DimItem }
   | { type: 'autoStatModsChanged'; autoStatMods: boolean }
   | { type: 'lockedModsChanged'; lockedMods: PluggableInventoryItemDefinition[] }
-  | { type: 'removeLockedMod'; mod: PluggableInventoryItemDefinition }
-  | { type: 'removeLockedMods'; mods: PluggableInventoryItemDefinition[] }
+  | { type: 'removeLockedMod'; mod: ResolvedLoadoutMod }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'updateSubclass'; item: DimItem }
   | { type: 'removeSubclass' }
@@ -410,35 +409,16 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           ...state,
           loadoutParameters: {
             ...state.loadoutParameters,
-            mods: newMods,
+            mods: newMods.map(mapToNonReducedModCostVariant),
           },
         };
       }
       case 'removeLockedMod': {
         const newMods = [...(state.loadoutParameters.mods ?? [])];
-        const indexToRemove = newMods.findIndex(
-          (mod) => mod === action.mod.hash || mod === mapToOtherModCostVariant(action.mod.hash)
-        );
+        const indexToRemove = newMods.findIndex((mod) => mod === action.mod.originalModHash);
         if (indexToRemove >= 0) {
           newMods.splice(indexToRemove, 1);
         }
-
-        return {
-          ...state,
-          loadoutParameters: {
-            ...state.loadoutParameters,
-            mods: newMods,
-          },
-        };
-      }
-      case 'removeLockedMods': {
-        const newMods = [...(state.loadoutParameters.mods ?? [])].filter(
-          (mod) =>
-            !action.mods.some(
-              (excludedMod) =>
-                excludedMod.hash === mod || mod === mapToOtherModCostVariant(excludedMod.hash)
-            )
-        );
 
         return {
           ...state,

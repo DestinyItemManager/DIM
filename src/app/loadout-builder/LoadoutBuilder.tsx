@@ -14,11 +14,14 @@ import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
+import {
+  newLoadout,
+  newLoadoutFromEquipped,
+  resolveLoadoutModHashes,
+} from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
-import { mapToAvailableModCostVariant } from 'app/loadout/mod-utils';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
@@ -185,21 +188,18 @@ export default memo(function LoadoutBuilder({
   const classType = selectedStore.classType;
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(selectedStoreId));
 
-  const lockedMods = useMemo(
-    () =>
-      (loadoutParameters.mods ?? [])
-        .map((hash) => mapToAvailableModCostVariant(hash, unlockedPlugs))
-        .map((m) => defs.InventoryItem.get(m))
-        .filter(isPluggableItem),
-    [defs.InventoryItem, loadoutParameters.mods, unlockedPlugs]
+  const resolvedMods: ResolvedLoadoutMod[] = useMemo(
+    () => resolveLoadoutModHashes(defs, loadoutParameters.mods ?? [], unlockedPlugs),
+    [defs, loadoutParameters.mods, unlockedPlugs]
   );
+  const modsToAssign = useMemo(() => resolvedMods.map((mod) => mod.resolvedMod), [resolvedMods]);
 
   const characterItems = items[classType];
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
     () =>
-      categorizeArmorMods(lockedMods, characterItems ? Object.values(characterItems).flat() : []),
-    [characterItems, lockedMods]
+      categorizeArmorMods(modsToAssign, characterItems ? Object.values(characterItems).flat() : []),
+    [characterItems, modsToAssign]
   );
 
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
@@ -404,7 +404,7 @@ export default memo(function LoadoutBuilder({
         selectedStore={selectedStore}
         pinnedItems={pinnedItems}
         excludedItems={excludedItems}
-        lockedMods={lockedMods}
+        lockedMods={resolvedMods}
         subclass={subclass}
         lockedExoticHash={lockedExoticHash}
         searchFilter={searchFilter}
@@ -524,6 +524,7 @@ export default memo(function LoadoutBuilder({
           <NoBuildsFoundExplainer
             defs={defs}
             dispatch={lbDispatch}
+            resolvedMods={resolvedMods}
             lockedModMap={lockedModMap}
             alwaysInvalidMods={unassignedMods}
             autoAssignStatMods={autoStatMods}
@@ -540,7 +541,7 @@ export default memo(function LoadoutBuilder({
             <ModPicker
               classType={classType}
               owner={selectedStore.id}
-              lockedMods={lockedMods}
+              lockedMods={modsToAssign}
               plugCategoryHashWhitelist={modPicker.plugCategoryHashWhitelist}
               plugCategoryHashDenyList={autoAssignmentPCHs}
               onAccept={(newLockedMods) =>

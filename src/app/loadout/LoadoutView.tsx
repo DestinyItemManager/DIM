@@ -3,17 +3,12 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import {
-  allItemsSelector,
-  createItemContextSelector,
-  unlockedPlugSetItemsSelector,
-} from 'app/inventory/selectors';
+import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
-import { useD2Definitions } from 'app/manifest/selectors';
+import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -27,6 +22,7 @@ import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection'
 import LoadoutMods from './loadout-ui/LoadoutMods';
 import LoadoutSubclassSection from './loadout-ui/LoadoutSubclassSection';
 import styles from './LoadoutView.m.scss';
+import { useLoadoutMods } from './mod-assignment-drawer/selectors';
 
 export function getItemsAndSubclassFromLoadout(
   itemCreationContext: ItemCreationContext,
@@ -81,7 +77,6 @@ export default function LoadoutView({
   hideOptimizeArmor?: boolean;
   hideShowModPlacements?: boolean;
 }) {
-  const defs = useD2Definitions()!;
   const allItems = useSelector(allItemsSelector);
   const itemCreationContext = useSelector(createItemContextSelector);
   const missingSockets =
@@ -106,12 +101,7 @@ export default function LoadoutView({
     [itemCreationContext, loadout.items, store, allItems, modsByBucket]
   );
 
-  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(store.id));
-
-  const allMods = useMemo(
-    () => getModsFromLoadout(defs, loadout, unlockedPlugs),
-    [defs, loadout, unlockedPlugs]
-  );
+  const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
 
   const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
   const power = loadoutPower(store, categories);
@@ -149,7 +139,7 @@ export default function LoadoutView({
                 subclass={subclass}
                 storeId={store.id}
                 items={categories[category]}
-                allMods={allMods}
+                allMods={modDefinitions}
                 modsByBucket={modsByBucket}
                 loadout={loadout}
                 hideOptimizeArmor={hideOptimizeArmor}
