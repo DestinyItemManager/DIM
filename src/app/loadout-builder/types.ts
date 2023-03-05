@@ -87,7 +87,7 @@ export type ArmorStats = { [statHash in ArmorStatHashes]: number };
  * The reusablePlugSetHash from armour 2.0's general socket.
  * TODO: Find a way to generate this in d2ai.
  */
-export const generalSocketReusablePlugSetHash = 3559124992;
+export const generalSocketReusablePlugSetHash = 731468111;
 
 /**
  * Special value for lockedExoticHash indicating the user would not like any exotics included in their loadouts.

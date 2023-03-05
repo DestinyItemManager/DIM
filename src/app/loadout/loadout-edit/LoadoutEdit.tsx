@@ -117,7 +117,7 @@ export default function LoadoutEdit({
 
   const handleUpdateMods = (newMods: PluggableInventoryItemDefinition[]) =>
     setLoadout(updateMods(newMods.map((mod) => mod.hash)));
-  const handleRemoveMod = withUpdater(removeMod);
+  const handleRemoveMod = withDefsUpdater(removeMod);
   const handleClearCategory = withDefsUpdater(clearBucketCategory);
   const handleModsByBucketUpdated = withUpdater(updateModsByBucket);
   const handleApplySocketOverrides = withUpdater(applySocketOverrides);

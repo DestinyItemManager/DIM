@@ -10,6 +10,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { mapToNonReducedModCostVariant, mapToOtherModCostVariant } from 'app/loadout/mod-utils';
 import { showNotification } from 'app/notifications/notifications';
+import { deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
@@ -319,13 +320,20 @@ export function clearSubclass(
 /**
  * Remove a specific mod by its inventory item hash.
  */
-export function removeMod(hash: number): LoadoutUpdateFunction {
+export function removeMod(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  hash: number
+): LoadoutUpdateFunction {
   return produce((loadout) => {
     const otherCostVersion = mapToOtherModCostVariant(hash);
     if (loadout.autoStatMods) {
-      let index = loadout.autoStatMods.indexOf(hash);
-      if (index === -1 && otherCostVersion !== undefined) {
-        index = loadout.autoStatMods.indexOf(otherCostVersion);
+      let index = loadout.autoStatMods.findIndex(
+        (existingHash) => existingHash === hash || otherCostVersion === hash
+      );
+      if (index === -1 && defs.isDestiny2() && hash === deprecatedPlaceholderArmorModHash) {
+        index = loadout.autoStatMods.findIndex(
+          (existingHash) => !defs.InventoryItem.get(existingHash)
+        );
       }
       if (index !== -1) {
         loadout.autoStatMods.splice(index, 1);
@@ -334,9 +342,13 @@ export function removeMod(hash: number): LoadoutUpdateFunction {
     }
 
     if (loadout.parameters?.mods) {
-      let index = loadout.parameters.mods.indexOf(hash);
-      if (index === -1 && otherCostVersion !== undefined) {
-        index = loadout.parameters.mods.indexOf(otherCostVersion);
+      let index = loadout.parameters.mods.findIndex(
+        (existingHash) => existingHash === hash || otherCostVersion === hash
+      );
+      if (index === -1 && defs.isDestiny2() && hash === deprecatedPlaceholderArmorModHash) {
+        index = loadout.parameters.mods.findIndex(
+          (existingHash) => !defs.InventoryItem.get(existingHash)
+        );
       }
       if (index !== -1) {
         loadout.parameters.mods.splice(index, 1);

@@ -15,7 +15,7 @@ import {
 } from 'app/loadout/mod-utils';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
-import { armorStats } from 'app/search/d2-known-values';
+import { armorStats, deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
 import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
@@ -683,7 +683,7 @@ export function getModsFromLoadout(
       if (isPluggableItem(item)) {
         mods.push(item);
       } else {
-        const deprecatedPlaceholderMod = defs.InventoryItem.get(3947616002);
+        const deprecatedPlaceholderMod = defs.InventoryItem.get(deprecatedPlaceholderArmorModHash);
         isPluggableItem(deprecatedPlaceholderMod) && mods.push(deprecatedPlaceholderMod);
       }
     }
