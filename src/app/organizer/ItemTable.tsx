@@ -499,30 +499,33 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
           />
         </div>
       </div>
-      {filteredColumns.map((column: ColumnDefinition) => (
-        <div
-          key={column.id}
-          className={clsx(styles[column.id], styles.header, {
-            [styles.stats]: ['stats', 'baseStats'].includes(column.columnGroup?.id ?? ''),
-          })}
-          role="columnheader"
-          aria-sort="none"
-        >
-          <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
-            {column.header}
-            {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
-              <AppIcon
-                className={styles.sorter}
-                icon={
-                  columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
-                    ? faCaretDown
-                    : faCaretUp
-                }
-              />
-            )}
+      {filteredColumns.map((column: ColumnDefinition) => {
+        const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
+        return (
+          <div
+            key={column.id}
+            className={clsx(styles[column.id], styles.header, {
+              [styles.stats]: isStatsColumn,
+            })}
+            role="columnheader"
+            aria-sort="none"
+          >
+            <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
+              {column.header}
+              {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
+                <AppIcon
+                  className={styles.sorter}
+                  icon={
+                    columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
+                      ? faCaretDown
+                      : faCaretUp
+                  }
+                />
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
       {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
       {rows.map((row) => (
         <React.Fragment key={row.item.id}>
