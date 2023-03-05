@@ -216,7 +216,7 @@ type LoadoutBuilderConfigAction =
   | { type: 'excludeItem'; item: DimItem }
   | { type: 'unexcludeItem'; item: DimItem }
   | { type: 'autoStatModsChanged'; autoStatMods: boolean }
-  | { type: 'lockedModsChanged'; lockedMods: PluggableInventoryItemDefinition[] }
+  | { type: 'lockedModsChanged'; lockedMods: number[] }
   | { type: 'removeLockedMod'; mod: ResolvedLoadoutMod }
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'updateSubclass'; item: DimItem }
@@ -360,7 +360,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           ...state,
           loadoutParameters: {
             ...state.loadoutParameters,
-            mods: action.lockedMods.map((m) => m.hash).map(mapToNonReducedModCostVariant),
+            mods: action.lockedMods.map(mapToNonReducedModCostVariant),
           },
         };
       }

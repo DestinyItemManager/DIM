@@ -112,7 +112,7 @@ export default function NoBuildsFoundExplainer({
                   dispatch({
                     type: 'lockedModsChanged',
                     // Drop all invalid mods by setting current mods to only the valid mods
-                    lockedMods: lockedModMap.allMods,
+                    lockedMods: lockedModMap.allMods.map((mod) => mod.hash),
                   })
                 }
               >

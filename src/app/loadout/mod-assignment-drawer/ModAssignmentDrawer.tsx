@@ -57,7 +57,7 @@ export default function ModAssignmentDrawer({
 }: {
   loadout: Loadout;
   storeId: string;
-  onUpdateMods?: (newMods: PluggableInventoryItemDefinition[]) => void;
+  onUpdateMods?: (newMods: number[]) => void;
   onClose: () => void;
 }) {
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
@@ -66,17 +66,17 @@ export default function ModAssignmentDrawer({
   const { armor, subclass } = useEquippedLoadoutArmorAndSubclass(loadout, storeId);
   const getModRenderKey = createGetModRenderKey();
 
-  const [, resolvedMods] = useLoadoutMods(loadout, storeId);
+  const [resolvedMods, modDefinitions] = useLoadoutMods(loadout, storeId);
 
   const [itemModAssignments, unassignedMods] = useMemo(() => {
     const { itemModAssignments, unassignedMods } = fitMostMods({
       items: armor,
-      plannedMods: resolvedMods,
+      plannedMods: modDefinitions,
       armorEnergyRules: inGameArmorEnergyRules,
     });
 
     return [itemModAssignments, unassignedMods];
-  }, [armor, resolvedMods]);
+  }, [armor, modDefinitions]);
 
   const onSocketClick = useCallback(
     (plugDef: PluggableInventoryItemDefinition, plugCategoryHashWhitelist: number[]) => {

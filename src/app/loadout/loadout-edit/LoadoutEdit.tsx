@@ -2,7 +2,7 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import {
@@ -107,8 +107,7 @@ export default function LoadoutEdit({
     return (...args: T) => setLoadout(fn(defs, store, ...args));
   }
 
-  const handleUpdateMods = (newMods: PluggableInventoryItemDefinition[]) =>
-    setLoadout(updateMods(newMods.map((mod) => mod.hash)));
+  const handleUpdateMods = (newMods: number[]) => setLoadout(updateMods(newMods));
   const handleRemoveMod = withUpdater(removeMod);
   const handleClearCategory = withDefsUpdater(clearBucketCategory);
   const handleModsByBucketUpdated = withUpdater(updateModsByBucket);

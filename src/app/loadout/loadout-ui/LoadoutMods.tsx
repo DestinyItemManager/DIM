@@ -1,6 +1,5 @@
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
@@ -53,7 +52,7 @@ export default memo(function LoadoutMods({
   clearUnsetMods?: boolean;
   missingSockets?: boolean;
   /** If present, show an "Add Mod" button */
-  onUpdateMods?: (newMods: PluggableInventoryItemDefinition[]) => void;
+  onUpdateMods?: (newMods: number[]) => void;
   onRemoveMod?: (mod: ResolvedLoadoutMod) => void;
   onClearUnsetModsChanged?: (checked: boolean) => void;
 }) {
@@ -65,8 +64,8 @@ export default memo(function LoadoutMods({
   const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(storeId));
 
   // Explicitly show only actual saved mods in the mods picker, not auto mods,
-  // otherwise we'd duplicate auto mods into loadout parameter mods when coonfirming
-  const [, mappedMods] = useLoadoutMods(loadout, storeId, false);
+  // otherwise we'd duplicate auto mods into loadout parameter mods when confirming
+  const [resolvedMods] = useLoadoutMods(loadout, storeId, false);
 
   // TODO: filter down by usable mods?
   // TODO: Hide the "Add Mod" button when no more mods can fit
@@ -154,7 +153,7 @@ export default memo(function LoadoutMods({
           <ModPicker
             classType={loadout.classType}
             owner={storeId}
-            lockedMods={mappedMods}
+            lockedMods={resolvedMods}
             onAccept={onUpdateMods}
             onClose={() => setShowModPicker(false)}
           />

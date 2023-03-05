@@ -541,7 +541,7 @@ export default memo(function LoadoutBuilder({
             <ModPicker
               classType={classType}
               owner={selectedStore.id}
-              lockedMods={modsToAssign}
+              lockedMods={resolvedMods}
               plugCategoryHashWhitelist={modPicker.plugCategoryHashWhitelist}
               plugCategoryHashDenyList={autoAssignmentPCHs}
               onAccept={(newLockedMods) =>
