@@ -8,6 +8,7 @@ const styleTable = {
   [String.fromCodePoint(FontGlyphs.arc)]: styles.arc,
   [String.fromCodePoint(FontGlyphs.void)]: styles.void,
   [String.fromCodePoint(FontGlyphs.stasis)]: styles.stasis,
+  [String.fromCodePoint(FontGlyphs.strand_kill)]: styles.strand,
 };
 
 export default function ColorDestinySymbols({
