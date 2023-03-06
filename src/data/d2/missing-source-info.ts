@@ -2318,6 +2318,7 @@ const missingSources: { [key: string]: number[] } = {
     3571441640, // Dreambane Grips
     3692187003, // Dreambane Robes
   ],
+  neomuna: [],
   nessus: [
     11686457, // Unethical Experiments Cloak
     56157064, // Exodus Down Gauntlets
