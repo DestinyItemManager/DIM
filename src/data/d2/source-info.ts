@@ -903,6 +903,21 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  neomuna: {
+    itemHashes: [],
+    sourceHashes: [
+      281362298, // Source: Strider Exotic Quest
+      454251931, // Source: "What Remains" Exotic Quest
+      483798855, // Source: "The Final Strand" Exotic Quest
+      1750523507, // Source: Terminal Overload (Ahimsa Park)
+      2697389955, // Source: "Neomuna Sightseeing" Triumph
+      3041847664, // Source: Found by Exploring Neomuna
+      3773376290, // Source: Terminal Overload (Zephyr Concourse)
+      4006434081, // Source: Terminal Overload
+      4110186790, // Source: Terminal Overload (Límíng Harbor)
+    ],
+    searchString: [],
+  },
   nessus: {
     itemHashes: [],
     sourceHashes: [
