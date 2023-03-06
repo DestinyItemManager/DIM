@@ -35,6 +35,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   2362471601, // Rat King
   2591746970, // Leviathan's Breath
   2603483885, // Cloudstrike
+  2694576561, // Two-Tailed Fox
   2812324401, // Dead Messenger
   2816212794, // Bad Juju
   2856683562, // SUROS Regime
