@@ -1,12 +1,12 @@
+import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
-import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { armorStats, evenStatWeights, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import {
   DestinyClass,
-  DestinyDisplayPropertiesDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemInvestmentStatDefinition,
   DestinyStatAggregationType,
@@ -15,10 +15,11 @@ import {
   DestinyStatDisplayDefinition,
   DestinyStatGroupDefinition,
 } from 'bungie-api-ts/destiny2';
-import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
 import { DimItem, DimPlug, DimSocket, DimStat } from '../item-types';
+import { makeCustomStat } from './stats-custom';
 
 /**
  * These are the utilities that deal with Stats on items - specifically, how to calculate them.
@@ -41,7 +42,7 @@ import { DimItem, DimPlug, DimSocket, DimStat } from '../item-types';
 /**
  * Which stats to display, and in which order.
  */
-export const statAllowList = [
+const statAllowList = [
   StatHashes.RoundsPerMinute,
   StatHashes.ChargeTime,
   StatHashes.DrawTime,
@@ -67,8 +68,15 @@ export const statAllowList = [
   StatHashes.AmmoCapacity,
   ...armorStats,
   TOTAL_STAT_HASH,
-  CUSTOM_TOTAL_STAT_HASH,
 ];
+export function getStatSortOrder(statHash: number) {
+  const order = statAllowList.indexOf(statHash);
+  return order === -1 ? 999999 + Math.abs(statHash) : order;
+}
+
+export function isAllowedStat(statHash: number) {
+  return statAllowList.includes(statHash) || statHash < 0;
+}
 
 /** Stats that are measured in milliseconds. */
 export const statsMs = [StatHashes.DrawTime, StatHashes.ChargeTime];
@@ -99,13 +107,15 @@ export interface StatLookup {
   [statHash: number]: DimStat | undefined;
 }
 
+// apparently worth it, when needing this 100s of times per inv build
+const memoTotalName = _.once(() => t('Stats.Total'));
+const memoCustomDesc = _.once(() => t('Stats.CustomDesc'));
+
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
 export function buildStats(
   defs: D2ManifestDefinitions,
   createdItem: DimItem,
-  customTotalStatsByClass: {
-    [key: number]: number[];
-  },
+  customStats: CustomStatDef[],
   itemDef = defs.InventoryItem.get(createdItem.hash)
 ) {
   if (!itemDef.stats?.statGroupHash) {
@@ -148,13 +158,37 @@ export function buildStats(
     }
 
     // synthesize the "Total" stat for armor
-    const tStat = totalStat(investmentStats);
-    investmentStats.push(tStat);
-    const cStat =
-      createdItem.bucket.hash !== BucketHashes.ClassArmor &&
-      customStat(investmentStats, customTotalStatsByClass, createdItem.classType);
-    if (cStat) {
-      investmentStats.push(cStat);
+    // it's effectively just a custom total with 6 stats evenly weighted
+    const tStat = makeCustomStat(
+      investmentStats,
+      evenStatWeights,
+      TOTAL_STAT_HASH,
+      memoTotalName(),
+      '',
+      false
+    );
+    investmentStats.push(tStat!);
+
+    // synthesize custom stats for meaningfully stat-bearing items
+    if (createdItem.type !== 'ClassItem') {
+      for (const customStat of customStats) {
+        if (
+          customStat.class === createdItem.classType ||
+          customStat.class === DestinyClass.Unknown
+        ) {
+          const cStat = makeCustomStat(
+            investmentStats,
+            customStat.weights,
+            customStat.statHash,
+            customStat.label,
+            memoCustomDesc(),
+            true
+          );
+          if (cStat) {
+            investmentStats.push(cStat);
+          }
+        }
+      }
     }
   }
 
@@ -181,8 +215,8 @@ function shouldShowStat(
   const includeHiddenStats = !itemDef.itemCategoryHashes?.includes(D1ItemCategoryHashes.sword);
 
   return Boolean(
-    // Must be on the AllowList
-    statAllowList.includes(statHash) &&
+    // Must be a stat we want to display
+    isAllowedStat(statHash) &&
       // Must be on the list of interpolated stats, or included in the hardcoded hidden stats list
       (statDisplaysByStatHash[statHash] ||
         (includeHiddenStats && hiddenStatsAllowList.includes(statHash)))
@@ -254,7 +288,7 @@ function buildStat(
     investmentValue: itemStat.value || 0,
     statHash,
     displayProperties: statDef.displayProperties,
-    sort: statAllowList.indexOf(statHash),
+    sort: getStatSortOrder(statHash),
     value,
     base: value,
     maximumValue,
@@ -474,81 +508,6 @@ function attachPlugStats(
   // TODO (ryan) stop mutating sockets, we need to change the order of operation between
   // item stat generation and socket generation.
   socket.plugOptions = plugOptionsWithStats;
-}
-
-// Only compute this once, to avoid repeated translation lookups
-const totalStatTemplate = _.once(() => ({
-  statHash: TOTAL_STAT_HASH,
-  displayProperties: {
-    name: t('Stats.Total'),
-  } as DestinyDisplayPropertiesDefinition,
-  sort: statAllowList.indexOf(TOTAL_STAT_HASH),
-  maximumValue: 1000,
-  bar: false,
-  smallerIsBetter: false,
-  additive: false,
-  isConditionallyActive: false,
-}));
-
-function totalStat(stats: DimStat[]): DimStat {
-  let total = 0;
-  let baseTotal = 0;
-
-  for (const stat of stats) {
-    total += stat.value;
-    baseTotal += stat.base;
-  }
-
-  return {
-    ...totalStatTemplate(),
-    investmentValue: total,
-    value: total,
-    base: baseTotal,
-  };
-}
-
-const customStatTemplate = _.once(() => ({
-  statHash: CUSTOM_TOTAL_STAT_HASH,
-  displayProperties: {
-    name: t('Stats.Custom'),
-    description: t('Stats.CustomDesc'),
-  } as DestinyDisplayPropertiesDefinition,
-  sort: statAllowList.indexOf(CUSTOM_TOTAL_STAT_HASH),
-  maximumValue: 100,
-  bar: false,
-  smallerIsBetter: false,
-  additive: false,
-  isConditionallyActive: false,
-}));
-
-function customStat(
-  stats: DimStat[],
-  customTotalStatsByClass: {
-    [key: number]: number[];
-  },
-  destinyClass: DestinyClass
-): DimStat | undefined {
-  const customStatDef = customTotalStatsByClass[destinyClass];
-
-  if (!customStatDef || customStatDef.length === 0 || customStatDef.length === 6) {
-    return undefined;
-  }
-
-  // Custom stat is always base stat
-  let total = 0;
-
-  for (const stat of stats) {
-    if (customStatDef.includes(stat.statHash)) {
-      total += stat.base;
-    }
-  }
-
-  return {
-    ...customStatTemplate(),
-    investmentValue: total,
-    value: total,
-    base: total,
-  };
 }
 
 /**

@@ -3,7 +3,6 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import { D1BucketHashes, D1LightStats } from './d1-known-values';
 import {
   armorStats,
-  CUSTOM_TOTAL_STAT_HASH,
   D2ArmorStatHashByName,
   D2LightStats,
   D2WeaponStatHashByName,
@@ -39,7 +38,6 @@ export const damageTypeNames = Object.values(damageNamesByEnum).filter(
 export const dimArmorStatHashByName = {
   ...D2ArmorStatHashByName,
   total: TOTAL_STAT_HASH,
-  custom: CUSTOM_TOTAL_STAT_HASH,
 };
 
 /** stats names used to create armor-specific filters, real ones plus an "any" keyword */
@@ -57,9 +55,26 @@ export const statHashByName: Record<string, number> = {
   ...swordStatsByName,
   ...dimArmorStatHashByName,
 };
-
+export const weaponStatNames = [
+  ...Object.keys(D2WeaponStatHashByName),
+  ...Object.keys(swordStatsByName),
+];
 /** all-stat list, to generate filters from */
 export const allStatNames = [...Object.keys(statHashByName), 'any'];
+
+// Support (for armor) these aliases for the stat in the nth rank
+export const est = {
+  highest: 0,
+  secondhighest: 1,
+  thirdhighest: 2,
+  fourthhighest: 3,
+  fifthhighest: 4,
+  sixthhighest: 5,
+};
+
+export const estStatNames = Object.keys(est);
+
+export const allAtomicStats = [...allStatNames, ...estStatNames];
 
 export const lightStats = [...D2LightStats, ...D1LightStats];
 

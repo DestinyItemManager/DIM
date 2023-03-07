@@ -5,7 +5,6 @@ import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { isArtifice } from 'app/item-triage/triage-utils';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
-import { Settings } from 'app/settings/initial-settings';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
@@ -179,8 +178,29 @@ const dupeFilters: FilterDefinition[] = [
     keywords: 'customstatlower',
     description: tl('Filter.CustomStatLower'),
     filter: ({ allItems, customStats }) => {
-      const duplicates = computeStatDupeLower(allItems, customStats);
-      return (item) => item.bucket.inArmor && duplicates.has(item.id);
+      const duplicateSetsByClass: Partial<Record<DimItem['classType'], Set<string>[]>> = {};
+
+      for (const customStat of customStats) {
+        const relevantStatHashes: number[] = [];
+        const statWeights = customStat.weights;
+        for (const statHash in statWeights) {
+          const weight = statWeights[statHash];
+          if (weight && weight > 0) {
+            relevantStatHashes.push(parseInt(statHash));
+          }
+        }
+        (duplicateSetsByClass[customStat.class] ||= []).push(
+          computeStatDupeLower(allItems, relevantStatHashes)
+        );
+      }
+
+      return (item) =>
+        item.bucket.inArmor &&
+        // highlight the item if it's statlower for all class-relevant custom stats.
+        // this duplicates existing behavior for old style default-named custom stat,
+        // but should be extended to also be a stat name-based filter
+        // for users with multiple stats per class, a la customstatlower:pve
+        duplicateSetsByClass[item.classType]?.every((dupeSet) => dupeSet.has(item.id));
     },
   },
   {
@@ -216,10 +236,7 @@ export function checkIfIsDupe(
   );
 }
 
-function computeStatDupeLower(
-  allItems: DimItem[],
-  customStats: Settings['customTotalStatsByClass'] = {}
-) {
+function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] = armorStats) {
   // disregard no-class armor
   const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== -1);
 
@@ -236,9 +253,8 @@ function computeStatDupeLower(
   const statsCache = new Map<DimItem, number[][]>();
   for (const item of armor) {
     if (item.stats && item.power && item.bucket.hash !== BucketHashes.ClassArmor) {
-      const statsToConsider = customStats[item.classType] ?? armorStats;
       const statValues = item.stats
-        .filter((s) => statsToConsider.includes(s.statHash))
+        .filter((s) => relevantStatHashes.includes(s.statHash))
         .sort((a, b) => a.statHash - b.statHash)
         .map((s) => s.base);
       if (isArtifice(item)) {
@@ -246,7 +262,7 @@ function computeStatDupeLower(
           item,
           // Artifice armor can be +3 in any one stat, so we compute a separate
           // version of the stats for each stat considered
-          statsToConsider.map((_s, i) => {
+          relevantStatHashes.map((_s, i) => {
             const modifiedStats = [...statValues];
             // One stat gets +3
             modifiedStats[i] += 3;

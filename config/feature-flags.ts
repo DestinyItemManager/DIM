@@ -41,5 +41,7 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     // Request the PresentationNodes component only needed during
     // Solstice to associate each character with a set of triumphs.
     solsticePresentationNodes: false,
+    // not ready to turn these on but the code is there
+    customStatWeights: false,
   };
 }

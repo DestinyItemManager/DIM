@@ -1,6 +1,10 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import { currentProfileSelector, settingSelector, settingsSelector } from 'app/dim-api/selectors';
+import {
+  currentProfileSelector,
+  customStatsSelector,
+  settingsSelector,
+} from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyObject, emptySet } from 'app/utils/empty';
@@ -176,12 +180,12 @@ export const createItemContextSelector = createSelector(
   d2ManifestSelector,
   profileResponseSelector,
   bucketsSelector,
-  (state: RootState) => settingSelector('customTotalStatsByClass')(state),
-  (defs, profileResponse, buckets, customTotalStatsByClass): ItemCreationContext => ({
+  customStatsSelector,
+  (defs, profileResponse, buckets, customStats): ItemCreationContext => ({
     defs: defs!,
     buckets: buckets!,
     profileResponse: profileResponse!,
-    customTotalStatsByClass,
+    customStats,
   })
 );
 

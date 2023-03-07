@@ -1,4 +1,5 @@
 import {
+  CustomStatWeights,
   defaultGlobalSettings,
   DestinyVersion,
   GlobalSettings,
@@ -10,8 +11,11 @@ import {
   TagValue,
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { t } from 'app/i18next-t';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { recentSearchComparator } from 'app/search/autocomplete';
+import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { FilterContext } from 'app/search/filter-types';
 import { searchConfigSelector } from 'app/search/search-config';
 import { parseAndValidateQuery } from 'app/search/search-utils';
 import { RootState } from 'app/store/types';
@@ -19,6 +23,7 @@ import { emptyArray } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
 import { count } from 'app/utils/util';
 import { clearWishLists } from 'app/wishlists/actions';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
 import produce, { Draft } from 'immer';
 import _ from 'lodash';
@@ -435,6 +440,38 @@ function migrateSettings(settings: Settings) {
 
   if (reversals.includes('element')) {
     reversals.splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor');
+  }
+
+  // converts any old custom stats stored in the old settings key, to the new format
+  const oldCustomStats = settings.customTotalStatsByClass;
+  if (!_.isEmpty(oldCustomStats)) {
+    // this existing array should 100% be empty if the user's stats are in old format...
+    // but not taking any chances. we'll preserve what's there.
+    const customStats = [...settings.customStats];
+
+    for (const classEnumString in oldCustomStats) {
+      const classEnum: DestinyClass = parseInt(classEnumString);
+      const statHashList = oldCustomStats[classEnum];
+
+      if (classEnum !== DestinyClass.Unknown && statHashList?.length > 0) {
+        const weights: CustomStatWeights = {};
+        for (const statHash of statHashList) {
+          weights[statHash] = 1;
+        }
+        customStats.push({
+          label: t('Stats.Custom'),
+          shortLabel: 'custom',
+          class: classEnum,
+          weights,
+          // converted old stats get special permission to use stat hashes higher than CUSTOM_TOTAL_STAT_HASH
+          // other are decremented from CUSTOM_TOTAL_STAT_HASH
+          statHash: CUSTOM_TOTAL_STAT_HASH + 1 + classEnum,
+        });
+      }
+    }
+
+    // empty out the old-format setting. eventually phase out this old settings key?
+    settings = { ...settings, customStats, customTotalStatsByClass: {} };
   }
 
   settings = { ...settings, itemSortOrderCustom: sortOrder, itemSortReversals: reversals };
@@ -1070,7 +1107,7 @@ function stubSearchRootState(account: DestinyAccount) {
       currentAccount: 0,
     },
     inventory: { stores: [] },
-    dimApi: { profiles: {} },
+    dimApi: { profiles: {}, settings: { customStats: [], customTotalStatsByClass: {} } },
     manifest: {},
   } as any as RootState;
 }
@@ -1080,7 +1117,9 @@ function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: s
   const searchConfigs = searchConfigSelector(stubSearchRootState(account));
 
   // Canonicalize the query so we always save it the same way
-  const { canonical, saveInHistory } = parseAndValidateQuery(query, searchConfigs);
+  const { canonical, saveInHistory } = parseAndValidateQuery(query, searchConfigs, {
+    customStats: draft.settings.customStats ?? [],
+  } as FilterContext);
   if (!saveInHistory) {
     errorLog('searchUsed', 'Query not eligible to be saved in history', query);
     return;

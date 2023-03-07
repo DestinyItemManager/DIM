@@ -5,6 +5,12 @@
   grid-column: 1;
   text-align: right;
   margin-right: 8px;
+  max-width: 130px;
+  @include phone-portrait {
+    max-width: 40vw;
+  }
+  text-overflow: ellipsis;
+  overflow-x: clip;
 }
 
 // The numeric value of the stat
@@ -129,6 +135,16 @@
 
 .totalStatMasterwork {
   color: $orange;
+}
+
+.customTotal {
+  color: #bbb;
+}
+.nonDimmedStatIcons {
+  color: #bbb;
+  :global(.stat-icon) {
+    filter: none;
+  }
 }
 
 .smallStatToggle {

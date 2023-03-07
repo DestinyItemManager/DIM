@@ -21,7 +21,7 @@ export interface SocketOverrides {
  */
 export function applySocketOverrides(
   // We don't need everything here but I'm assuming over time we'll want to plumb more stuff into stats calculations?
-  { defs, customTotalStatsByClass }: ItemCreationContext,
+  { defs, customStats }: ItemCreationContext,
   item: DimItem,
   socketOverrides: SocketOverrides | undefined
 ): DimItem {
@@ -104,7 +104,7 @@ export function applySocketOverrides(
   };
 
   // Recalculate the entire item's stats from scratch given the new plugs
-  updatedItem.stats = buildStats(defs, updatedItem, customTotalStatsByClass);
+  updatedItem.stats = buildStats(defs, updatedItem, customStats);
 
   return updatedItem;
 }

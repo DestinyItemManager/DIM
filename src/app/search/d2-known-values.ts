@@ -1,4 +1,6 @@
+import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
 import { TierType } from 'bungie-api-ts/destiny2';
+
 import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
 import {
   BreakerTypeHashes,
@@ -87,7 +89,7 @@ export const weaponMasterworkY2SocketTypeHash = 2218962841;
 
 /** the stat hash for DIM's artificial armor stat, "Total" */
 export const TOTAL_STAT_HASH = -1000;
-export const CUSTOM_TOTAL_STAT_HASH = -1100;
+export const CUSTOM_TOTAL_STAT_HASH = -111000;
 
 /** hashes representing D2 PL stats */
 export const D2LightStats = [StatHashes.Attack, StatHashes.Defense, StatHashes.Power];
@@ -104,6 +106,12 @@ export const D2ArmorStatHashByName = {
 
 /** Stats that all (D2) armor should have. */
 export const armorStats = Object.values(D2ArmorStatHashByName);
+
+// a set of base stat weights, all worth the same, "switched on"
+export const evenStatWeights = armorStats.reduce<CustomStatWeights>(
+  (o, statHash) => Object.assign(o, { [statHash]: 1 }),
+  {}
+);
 
 export const D2WeaponStatHashByName = {
   rpm: StatHashes.RoundsPerMinute,

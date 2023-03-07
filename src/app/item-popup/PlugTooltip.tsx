@@ -6,7 +6,7 @@ import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { statAllowList } from 'app/inventory/store/stats';
+import { getStatSortOrder, isAllowedStat } from 'app/inventory/store/stats';
 import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
@@ -35,7 +35,7 @@ import styles from './PlugTooltip.m.scss';
 
 function isVisibleStat(item: DimItem, plug: DimPlug, statHash: number) {
   return (
-    statAllowList.includes(statHash) &&
+    isAllowedStat(statHash) &&
     // Stats are only shown if the item can actually benefit from them
     item.stats?.some((stat) => stat.statHash === statHash) &&
     isPlugStatActive(
@@ -49,7 +49,6 @@ function isVisibleStat(item: DimItem, plug: DimPlug, statHash: number) {
     )
   );
 }
-
 // TODO: Connect this to redux
 export function DimPlugTooltip({
   item,
@@ -73,10 +72,9 @@ export function DimPlugTooltip({
         Object.keys(plug.stats)
           .map((statHashStr) => parseInt(statHashStr, 10))
           .filter((statHash) => isVisibleStat(item, plug, statHash)),
-        (h) => statAllowList.indexOf(h)
+        getStatSortOrder
       )
     : [];
-
   const stats: { [statHash: string]: number } = {};
 
   for (const statHash of visibleStats) {

@@ -32,4 +32,5 @@ export const initialSettingsState: Settings = {
   compareWeaponMasterwork: false,
   itemFeedWatermark: '0',
   autoLockTagged: false,
+  customStats: [],
 };

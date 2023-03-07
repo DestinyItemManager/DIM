@@ -91,7 +91,7 @@ export const getTestStores = _.once(async () => {
     defs: manifest,
     buckets: getBuckets(manifest),
     profileResponse: getTestProfile(),
-    customTotalStatsByClass: {},
+    customStats: [],
   });
   return stores;
 });

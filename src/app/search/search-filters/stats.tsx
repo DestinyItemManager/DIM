@@ -1,30 +1,32 @@
+import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { tl } from 'app/i18next-t';
 import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { getStatValuesByHash } from 'app/utils/item-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
 import {
-  allStatNames,
+  allAtomicStats,
   armorAnyStatHashes,
   armorStatHashes,
   dimArmorStatHashByName,
+  est,
+  estStatNames,
   searchableArmorStatNames,
   statHashByName,
+  weaponStatNames,
 } from '../search-filter-values';
+import { generateSuggestionsForFilter } from '../suggestions-generation';
 
-// Support (for armor) these aliases for the stat in the nth rank
-const est = {
-  highest: 0,
-  secondhighest: 1,
-  thirdhighest: 2,
-  fourthhighest: 3,
-  fifthhighest: 4,
-  sixthhighest: 5,
+const validateStat: FilterDefinition['validateStat'] = (filterContext) => {
+  const customStatLabels = filterContext?.customStats?.map((c) => c.shortLabel) ?? [];
+  const possibleStatNames = [...allAtomicStats, ...customStatLabels];
+  return (stat) =>
+    possibleStatNames.includes(stat) ||
+    stat.split(/&|\+/).every((s) => s !== 'any' && possibleStatNames.includes(s));
 };
-
-const allAtomicStats = [...allStatNames, ...Object.keys(est)];
 
 // filters that operate on stats, several of which calculate values from all items beforehand
 const statFilters: FilterDefinition[] = [
@@ -33,11 +35,15 @@ const statFilters: FilterDefinition[] = [
     // t('Filter.StatsExtras')
     description: tl('Filter.Stats'),
     format: 'stat',
-    suggestions: allAtomicStats,
-    validateStat: (stat) =>
-      allAtomicStats.includes(stat) ||
-      stat.split(/&|\+/).every((s) => s !== 'any' && allAtomicStats.includes(s)),
-    filter: ({ filterValue, compare }) => statFilterFromString(filterValue, compare!),
+    suggestionsGenerator: ({ customStats }) =>
+      generateSuggestionsForFilter({
+        keywords: 'stat',
+        format: 'stat',
+        suggestions: [...allAtomicStats, ...(customStats?.map((c) => c.shortLabel) ?? [])],
+      }),
+    validateStat,
+    filter: ({ filterValue, compare, customStats }) =>
+      statFilterFromString(filterValue, compare!, customStats),
   },
   {
     keywords: 'basestat',
@@ -47,11 +53,10 @@ const statFilters: FilterDefinition[] = [
     // Note: weapons of the same hash also have the same base stats, so this is only useful for
     // armor really, so the suggestions only list armor stats. But `validateStats` does allow
     // other stats too because there's no good reason to forbid it...
-    suggestions: [...searchableArmorStatNames, ...Object.keys(est)],
-    validateStat: (stat) =>
-      allAtomicStats.includes(stat) ||
-      stat.split(/&|\+/).every((s) => s !== 'any' && allAtomicStats.includes(s)),
-    filter: ({ filterValue, compare }) => statFilterFromString(filterValue, compare!, true),
+    suggestions: [...searchableArmorStatNames, ...estStatNames],
+    validateStat,
+    filter: ({ filterValue, compare, customStats }) =>
+      statFilterFromString(filterValue, compare!, customStats, true),
   },
   {
     // looks for a loadout (simultaneously equippable) maximized for this stat
@@ -128,6 +133,7 @@ export default statFilters;
 function statFilterFromString(
   statNames: string,
   compare: (value: number) => boolean,
+  customStats: CustomStatDef[],
   byBaseValue = false
 ): (item: DimItem) => boolean {
   // this will be used to index into the right property of a DimStat
@@ -149,17 +155,28 @@ function statFilterFromString(
         .sort((a, b) => b - a);
       return compare(sortedStats[est[statNames]]);
     };
+  } else if (weaponStatNames.includes(statNames)) {
+    // return earlier for weapon stats. these shouldn't do addition/averaging.
+    return (item) => {
+      const statValuesByHash = getStatValuesByHash(item, byWhichValue);
+      return compare(statValuesByHash[statNames] || 0);
+    };
   }
-
-  const statCombiner = createStatCombiner(statNames, byWhichValue);
+  const statCombiner = createStatCombiner(statNames, byWhichValue, customStats);
   // the filter computes combined values of requested stats and runs the total against comparator
-  return (item) => compare(statCombiner(item));
+  return (item) => Boolean(item.bucket.inArmor) && compare(statCombiner(item));
 }
 
 // converts the string "mobility+strength&discipline" into a function which
 // returns an item's MOB + average( STR, DIS )
-function createStatCombiner(statString: string, byWhichValue: 'base' | 'value') {
-  // an array of arrays of stat hashes. inner arrays are averaged, then outer array totaled
+// this should only be run on armor stats
+function createStatCombiner(
+  statString: string,
+  byWhichValue: 'base' | 'value',
+  customStats: CustomStatDef[]
+) {
+  // an array of arrays of stat retrieval functions.
+  // inner arrays are averaged, then outer array is totaled
   const nestedAddends = statString.split('+').map((addendString) => {
     const averagedHashes = addendString.split('&').map((statName) => {
       // Support "highest&secondhighest"
@@ -182,11 +199,32 @@ function createStatCombiner(statString: string, byWhichValue: 'base' | 'value') 
       }
 
       const statHash = statHashByName[statName];
-      if (!statHash) {
-        throw new Error(`invalid stat name: "${statName}"`);
+      // if we found a statHash here, this is a normal real stat, like discipline
+      if (statHash) {
+        // would ideally be "?? 0" but polyfills are big and || works fine
+        return (statValuesByHash: NodeJS.Dict<number>) => statValuesByHash[statHash] || 0;
       }
-      // would ideally be "?? 0" but polyfills are big and || works fine
-      return (statValuesByHash: NodeJS.Dict<number>) => statValuesByHash[statHash] || 0;
+
+      // custom stats this string represents
+      const namedCustomStats = customStats.filter((c) => c.shortLabel === statName);
+
+      if (namedCustomStats.length) {
+        return (statValuesByHash: NodeJS.Dict<number>, _: any, item: DimItem) => {
+          const thisClassCustomStat = namedCustomStats.find(
+            (c) => c.class === item.classType || c.class === DestinyClass.Unknown
+          );
+          // if this item's guardian class doesn't have a custom stat named statName
+          // return false to not match
+          if (!thisClassCustomStat) {
+            return 0;
+          }
+
+          // otherwise, check the stat value against this custom stat's value
+          return statValuesByHash[thisClassCustomStat.statHash] || 0;
+        };
+      }
+
+      throw new Error(`invalid stat name: "${statName}"`);
     });
     return averagedHashes;
   });
@@ -201,9 +239,13 @@ function createStatCombiner(statString: string, byWhichValue: 'base' | 'value') 
         .sort((a, b) => b[1] - a[1])
     );
 
-    return _.sumBy(nestedAddends, (averageGroup) =>
-      _.meanBy(averageGroup, (statFn) => statFn(statValuesByHash, sortStats, item))
-    );
+    return _.sumBy(nestedAddends, (averageGroup) => {
+      const averaged = _.meanBy(averageGroup, (statFn) =>
+        statFn(statValuesByHash, sortStats, item)
+      );
+
+      return averaged;
+    });
   };
 }
 

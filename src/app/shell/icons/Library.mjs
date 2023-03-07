@@ -85,3 +85,4 @@ export const faYoutube = 'fab fa-youtube';
 export const faDiscord = 'fab fa-discord';
 export const faGithub = 'fab fa-github';
 export const faReddit = 'fab fa-reddit';
+export const saveIcon = 'fas fa-save';

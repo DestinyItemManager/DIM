@@ -1,4 +1,6 @@
+import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { customStatsSelector } from 'app/dim-api/selectors';
 import { ItemInfos } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
@@ -17,9 +19,9 @@ import { canonicalFilterFormats, FilterDefinition, SuggestionsContext } from './
 //
 
 /**
- * A selector for the search config for a particular destiny version. This must
- * depend on every bit of data in FilterContext so that we regenerate the filter
- * function whenever any of them changes.
+ * A selector for the suggestionsContext for a particular destiny version.
+ * This must depend on every bit of data in suggestionsContext so that we
+ * regenerate filter suggestions whenever any of them changes.
  */
 export const suggestionsContextSelector = createSelector(
   allItemsSelector,
@@ -27,6 +29,7 @@ export const suggestionsContextSelector = createSelector(
   d2ManifestSelector,
   itemInfosSelector,
   allNotesHashtagsSelector,
+  customStatsSelector,
   makeSuggestionsContext
 );
 
@@ -35,7 +38,8 @@ function makeSuggestionsContext(
   loadouts: Loadout[],
   d2Manifest: D2ManifestDefinitions | undefined,
   itemInfos: ItemInfos,
-  allNotesHashtags: string[]
+  allNotesHashtags: string[],
+  customStats: CustomStatDef[]
 ): SuggestionsContext {
   return {
     allItems,
@@ -43,6 +47,7 @@ function makeSuggestionsContext(
     d2Manifest,
     itemInfos,
     allNotesHashtags,
+    customStats,
   };
 }
 

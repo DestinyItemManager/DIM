@@ -37,7 +37,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     format: ['range', 'stat'],
     destinyVersion: 2,
     suggestions: ['pve', 'pvp', 'gambit'],
-    validateStat: (stat) => ['pve', 'pvp', 'gambit'].includes(stat),
+    validateStat: () => (stat) => ['pve', 'pvp', 'gambit'].includes(stat),
     filter:
       ({ filterValue, compare }) =>
       (item) => {

@@ -2,14 +2,11 @@ import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
 import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
-import ClassIcon from 'app/dim-ui/ClassIcon';
-import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
-import { sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import TagIcon from 'app/inventory/TagIcon';
 import WishListSettings from 'app/settings/WishListSettings';
@@ -19,7 +16,6 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import StreamDeckSettings from 'app/stream-deck/StreamDeckSettings/StreamDeckSettings';
 import { clearAppBadge } from 'app/utils/app-badge';
 import { errorLog } from 'app/utils/log';
-import { uniqBy } from 'app/utils/util';
 import i18next from 'i18next';
 import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
@@ -32,6 +28,7 @@ import { AppIcon, lockIcon, refreshIcon, unlockedIcon } from '../shell/icons';
 import { setCharacterOrder } from './actions';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
+import { CustomStatsSettings } from './CustomStatsSettings';
 import { useSetSetting } from './hooks';
 import { Settings } from './initial-settings';
 import { itemSortSettingsSelector } from './item-sort';
@@ -86,7 +83,6 @@ let languageChanged = false;
 export default function SettingsPage() {
   const dispatch = useThunkDispatch();
   const settings = useSelector(settingsSelector);
-  const stores = useSelector(sortedStoresSelector);
   const currentAccount = useSelector(currentAccountSelector);
   const hasD1Account = useSelector(hasD1AccountSelector);
   const isPhonePortrait = useIsPhonePortrait();
@@ -243,13 +239,6 @@ export default function SettingsPage() {
       : undefined,
   ]);
 
-  const uniqChars =
-    stores &&
-    uniqBy(
-      stores.filter((s) => !s.isVault),
-      (s) => s.classType
-    );
-
   return (
     <PageWithMenu>
       <PageWithMenu.Menu>
@@ -338,23 +327,9 @@ export default function SettingsPage() {
               <SortOrderEditor order={itemSortCustom} onSortOrderChanged={itemSortOrderChanged} />
               <div className="fineprint">{t('Settings.DontForgetDupes')}</div>
             </div>
-            <div className="setting">
-              <label htmlFor="">{t('Organizer.Columns.CustomTotal')}</label>
-              <div className="fineprint">{t('Settings.CustomStatDesc')}</div>
-              <div className="customStats">
-                {uniqChars.map(
-                  (store) =>
-                    !store.isVault && (
-                      <React.Fragment key={store.classType}>
-                        <div>
-                          <ClassIcon classType={store.classType} /> {store.className}:{' '}
-                        </div>
-                        <StatTotalToggle forClass={store.classType} />
-                      </React.Fragment>
-                    )
-                )}
-              </div>
-            </div>
+
+            <CustomStatsSettings />
+
             <div className="setting">
               <label>{t('Settings.PerkDisplay')}</label>
               <div className="radioOptions">
