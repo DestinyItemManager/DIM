@@ -21,9 +21,7 @@ export default function useConfirm(): [
     boolean
   >((args, close) => (
     <>
-      <Title>
-        <h2>{args.message}</h2>
-      </Title>
+      <Title>{args.message}</Title>
       <Buttons>
         <button className="dim-button" type="button" onClick={() => close(true)}>
           {args.okLabel ?? t('Dialog.OK')}

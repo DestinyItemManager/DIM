@@ -117,6 +117,10 @@
     "ImportWrongFileType": "Файл не является CSV-файлом.",
     "WrongFields": "Обязательные столбцы файла CSV: 'Id', 'Notes', 'Tag', 'Hash'."
   },
+  "Dialog": {
+    "Cancel": "Отмена",
+    "OK": "ОК"
+  },
   "EnergyMeter": {
     "Energy": "Энергия",
     "Unused": "Не использовано",
@@ -205,7 +209,7 @@
     "CurrentClass": "Показывает предметы, которые могут быть экипированы текущим стражем.",
     "CustomStatLower": "Показывает броню, статистики которой строго ниже другого типа брони, учитывая только статистику в общем списке этого класса.",
     "DamageType": "По типу стихии.",
-    "Deepsight": "Показывает оружие с Резонансом Глубинного Зрения, которое может быть настроено для получения материалов. deepsight:complete и deepsight:incomplete относятся к прогрессу цели глубокого зрения, а deepsight:pattern показывает предметы, которые могут быть прогрессированы для разблокировки образца.",
+    "Deepsight": "Показывает оружия с Резонансом Глубинного зрения, из которых можно извлечь образ.",
     "Description": "Описание",
     "Dupe": "Одинаковые, Включая перевыпуски разных сезонов",
     "DupeCount": "Предметы, которые имеют указанное количество дубликатов.",
@@ -381,6 +385,10 @@
     "Tab": "[TAB]",
     "Vault": "Отправить в Хранилище"
   },
+  "InGameLoadout": {
+    "Applying": "Экипирование набора...",
+    "LoadoutSlotNum": "Слот {{index}}"
+  },
   "Infusion": {
     "Filter": "Фильтры предметов",
     "InfuseSource": "Выберите предмет для синтеза {{name}}",
@@ -517,7 +525,7 @@
       "Legendary": "Легендарные брони будут использовать характеристику абсолюта и иметь 10 единиц энергии.",
       "None": "Все брони будут использовать свою текущую характеристику и иметь минимальный единиц энергии 7."
     },
-    "AutoStatMods": "Добавить необходимые моды характеристик",
+    "AutoStatMods": "Автоматически добавлять моды характеристик",
     "ChooseAlternateTitle": "Заменить",
     "CompareLoadout": "Сравнить Наборы",
     "ConfirmOverwrite": "Выбранные предметы заменят аналоги в Наборе \"{{name}}\". Продолжаем? ",
@@ -529,16 +537,7 @@
     "ExistingLoadout": "Существующий Набор",
     "ExoticSpecialCategory": "Специальные",
     "Filter": "Фильтр",
-    "InLoadouts": "В Наборах",
-    "InOtherLoadouts": "Другие Наборы",
     "Legendary": "Легендарный",
-    "LockElement": "Заблокировать Элемент",
-    "LockElementOptions": {
-      "All": "Вся броня будет заблокирована к своему текущему элементу.",
-      "InLoadouts": "Броня будет заблокирована к её текущему элементу, если она экипирована в существующих Наборах.",
-      "InOtherLoadouts": "Сейчас вы оптимизируете Набор {{loadoutName}}. Броня будет заблокирована к её текущему элементу, если она экипирована в любом Наборе кроме {{loadoutName}}.",
-      "None": "Элемент брони будет изменён по мере необходимости чтобы поместить выбранные моды."
-    },
     "LockEquipped": "Закрепить экипированное",
     "LockItem": "Закрепить",
     "MaxTier": "Макс. {{tier}}",
@@ -548,7 +547,6 @@
       "ActiveSearchQuery": "Активный поисковой запрос ограничивает предметы, которые DIM может включить в наборы",
       "AllowAutoStatMods": "Разрешить DIM автоматически добавлять дополнительные моды характеристик",
       "AlwaysInvalidMods": "Эти моды не помещаются ни в один из ваших предметов:",
-      "AssumeElementChange": "Разрешить DIM рекомендовать изменение элементов энергии брони",
       "AssumeMasterworked": "Разрешить DIM рекомендовать улучшать броню до Абсолюта",
       "AssumptionsRestricted": "DIM не может рекомендовать изменения энергии брони:",
       "BadSlot": "В слоте {{bucketName}}, ни один из разрешённых предметов не может вместить эти моды:",
@@ -571,7 +569,7 @@
     "OptimizerExplanationMods": "Выберите экзот и моды, которые хотите использовать. Конструктор Наборов учитывает только бонусы к характеристикам от выбранных модов - любые уже надетые на броню моды игнорируются.",
     "OptimizerExplanationSearch": "Используйте поисковую строку, чтобы отфильтровать то, какие предметы будет учитывать Конструктор Наборов.",
     "OptimizerExplanationStats": "Перетащите самые важные характеристики наверх, а всем не интересующим установите значение \"Не учитывать\".",
-    "OptimizerExplanationUpgrades": "Выберите, на какие улучшения брони Конструктор Наборов сможеть потратить ресурсы. Он может предложить улучшение до Абсолюта, чтобы увеличить характеристики, или увеличение уровня энергии и смену элемента, чтобы уместить выбранные моды.",
+    "OptimizerExplanationUpgrades": "Выберите, на какие улучшения брони Конструктор Наборов сможет потратить ресурсы. Он может предложить улучшение до Абсолюта, чтобы увеличить характеристики, или увеличение уровня энергии, чтобы уместить выбранные моды.",
     "OptimizerSet": "Набор Оптимизатора",
     "ProcessingSets": "Обрабатываем наборы для {{character}} ({{remainingTime}}сек)",
     "SaveAs": "Сохранить как",
@@ -769,7 +767,6 @@
     "CatalystProgress": "Прогресс Катализатора",
     "CommunityData": "Мнение Сообщества",
     "Consolidate": "Собрать все",
-    "CraftingPattern": "Образ Изготовления",
     "DistributeEvenly": "Распределить равномерно",
     "Equip": "Надеть",
     "FavoriteUnFavorite": {
@@ -838,7 +835,6 @@
       "Crafted": "Дата Формирования",
       "CustomTotal": "Своя Сумма",
       "Damage": "Стихия",
-      "Element": "Стихия",
       "Energy": "Энергия",
       "Event": "Мероприятие",
       "Icon": "Значок",
@@ -985,7 +981,6 @@
     "SizeItem": "Размер предмета",
     "SortByAmmoType": "Тип боеприпасов",
     "SortByAmount": "Количество",
-    "SortByArmorElement": "Стихия Брони (D2)",
     "SortByClassType": "Класс",
     "SortByCrafted": "Изготовленное (D2)",
     "SortByDeepsight": "Резонанс Глубинного зрения (D2)",
@@ -1129,7 +1124,6 @@
   "StripSockets": {
     "Action": "Очистить Ячейки",
     "ArmorMods": "{{count}}x Мод Брони",
-    "ArtifactMods": "{{count}}x Мод Артефакта",
     "Button": "Очистить {{numSockets}} Ячеек",
     "Cancel": "Отмена",
     "Choose": "Выберите Ячейки для очищения",
@@ -1155,22 +1149,27 @@
     "UnlockAll": "Разблокировать предметы"
   },
   "Triage": {
-    "AccountsForArtifice": "This tests whether an Artifice armor piece could be better, if a +3 stat mod were used.",
-    "BetterArmor": "Strictly Better Armor",
-    "BetterArtificeArmor": "Better Artifice Armor",
-    "BetterWorseArmor": "Better/Worse Armor",
-    "BetterWorseIncludes": "Identifies armor pieces with:",
+    "AccountsForArtifice": "Это проверяет, может ли Искусная Броня быть лучше, если бы использовался мод на +3 характеристики.",
+    "BetterArmor": "Строго лучшая Броня",
+    "BetterArtificeArmor": "Лучшая Искусная Броня",
+    "BetterStatArmor": "Броня с лучшими характеристиками",
+    "BetterStatArtificeArmor": "Искусная Броня с лучшими характеристиками",
+    "BetterWorseArmor": "Худшая/Лучшая Броня",
+    "BetterWorseIncludes": "Находит части брони с:",
     "HighStats": "Высокие хар-ки",
     "InLoadouts": "В наборах",
     "OwnedCount": "# В инвентаре",
-    "PerkBetterArmorDesc": "The same, or more, intrinsic perks.",
-    "PerkWorseArmorDesc": "The same intrinsic perk, or none.",
+    "PerkBetterArmorDesc": "Одинаковое или большее количество изначальных перков или слотов под специальные моды.",
+    "PerkWorseArmorDesc": "Одинаковый изначальный перк, либо он отсутствует.",
     "SimilarItems": "Похожие предметы",
-    "StatBetterArmorDesc": "All stats at least as high, and at least one stat better.",
-    "StatWorseArmorDesc": "No better stats, and at least one worse stat.",
+    "StatBetterArmorDesc": "Все характеристики по крайней мере такие же высокие, и хотя бы одна характеристика лучше.",
+    "StatNotPerkArmorDesc": "Это проверяет только характеристики. Худший предмет всё еще может иметь слоты под специальные моды или изначальные перки.",
+    "StatWorseArmorDesc": "Нет лучших характеристик, и есть хотя бы одна худшая характеристика.",
     "ThisItem": "Этот предмет",
-    "WorseArmor": "Strictly Worse Armor",
-    "WorseArtificeArmor": "Worse Non-Artifice Armor",
+    "WorseArmor": "Строго худшая Броня",
+    "WorseArtificeArmor": "Худшая не-искусная Броня",
+    "WorseStatArmor": "Броня с худшими характеристиками",
+    "WorseStatArtificeArmor": "Худшая по характеристикам не-искусная Броня",
     "YourBestItem": "Ваш лучший предмет"
   },
   "Triumphs": {

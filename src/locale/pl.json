@@ -117,6 +117,10 @@
     "ImportWrongFileType": "Plik nie jest jest plikiem CSV.",
     "WrongFields": "CSV musi posiadać kolumny 'Id', 'Notes', 'Tag' i 'Hash'."
   },
+  "Dialog": {
+    "Cancel": "Cancel",
+    "OK": "OK"
+  },
   "EnergyMeter": {
     "Energy": "Energia",
     "Unused": "Nieużywane",
@@ -205,7 +209,7 @@
     "CurrentClass": "Pokazuje przedmioty, które można założyć na aktualnie zalogowanym strażniku.",
     "CustomStatLower": "Pokazuje zbroję, której statystyki są niższe niż inna tego samego typu zbroi, tylko biorąc pod uwagę statystyki na liście niestandardowych sum statystyk dla tej klasy.",
     "DamageType": "Pokazuje przedmioty na podstawie rodzaju obrażeń.",
-    "Deepsight": "Pokazuje bronie z Rezonansem Głębokiego Wglądu, które można dostroić dla materiałów. deepsight:complete i deepsight:incomplete odwołują się do postępu celu Rezonansu Głębokiego Wglądu, podczas gdy deepsight:pattern pokazuje przedmioty, w których można uzyskać postęp w celu odblokowania wzorca.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted.",
     "Description": "Opis",
     "Dupe": "Pokazuje zduplikowane przedmioty, włącznie z powtórzeniami",
     "DupeCount": "Przedmioty, które mają określoną liczbę duplikatów.",
@@ -381,6 +385,10 @@
     "Tab": "TAB",
     "Vault": "Wyślij przedmiot do schowka"
   },
+  "InGameLoadout": {
+    "Applying": "Equipping loadout...",
+    "LoadoutSlotNum": "Slot {{index}}"
+  },
   "Infusion": {
     "Filter": "Filtruj przedmioty",
     "InfuseSource": "Wybierz przedmiot do nasycenia używając {{name}}",
@@ -517,7 +525,7 @@
       "Legendary": "Legendarna zbroja będzie używała mistrzowskich statystyk i będzie miała poziom energii 10.",
       "None": "Wszystkie zbroje wykorzystają swoje obecne statystyki i będą miały minimalny poziom wynoszący 7 energii."
     },
-    "AutoStatMods": "Dodaj wymagane Modyfikacje statystyk",
+    "AutoStatMods": "Automatically add stat mods",
     "ChooseAlternateTitle": "Wybierz inny przedmiot",
     "CompareLoadout": "Porównaj uzbrojenie",
     "ConfirmOverwrite": "Czy na pewno chcesz zastąpić pancerz w uzbrojeniu \"{{name}}\" tym nowym zestawem pancerza?",
@@ -529,16 +537,7 @@
     "ExistingLoadout": "Istniejące uzbrojenie",
     "ExoticSpecialCategory": "Specjalne",
     "Filter": "Filtry",
-    "InLoadouts": "W Uzbrojeniu",
-    "InOtherLoadouts": "Inne Uzbrojenia",
     "Legendary": "Legendarny",
-    "LockElement": "Zablokuj przedmiot",
-    "LockElementOptions": {
-      "All": "Wszystkie pancerze zostaną zablokowane do ich aktualnego elementu.",
-      "InLoadouts": "Pancerz zostanie zablokowany do swojego aktualnego elementu, jeśli jest wyposażony w jakimkolwiek istniejącym Uzbrojeniu.",
-      "InOtherLoadouts": "Aktualnie optymalizujesz Uzbrojenie {{loadoutName}}. Pancerz zostanie zablokowany do jego bieżącego elementu, jeśli jest założony w jakimkolwiek Uzbrojeniu innym niż {{loadoutName}}.",
-      "None": "Element zbroi zostanie zmieniony tak, aby pasował do wybranych modyfikacji."
-    },
     "LockEquipped": "Przypnij założone",
     "LockItem": "Przypnij przedmiot",
     "MaxTier": "Max {{tier}}",
@@ -548,7 +547,6 @@
       "ActiveSearchQuery": "Aktywne zapytanie ogranicza elementy, które DIM może umieścić w zestawach",
       "AllowAutoStatMods": "Zezwalaj DIM na automatyczne dołączanie dodatkowych Modyfikacji statystyk",
       "AlwaysInvalidMods": "Te Modyfikacje nie pasują do żadnego z twoich przedmiotów:",
-      "AssumeElementChange": "Zezwalaj DIM na rekomendowanie zmian elementu energii pancerza",
       "AssumeMasterworked": "Zezwól DIM na rekomendowanie ulepszenie pancerza do poziomu mistrzowskiego",
       "AssumptionsRestricted": "DIM nie może zalecać zmian energii pancerza:",
       "BadSlot": "W gnieździe {{bucketName}} żaden z dozwolonych przedmiotów nie może pomieścić tych Modyfikacji:",
@@ -571,7 +569,7 @@
     "OptimizerExplanationMods": "Wybierz egzotyk i dowolne modyfikacje, których chcesz użyć. Optymalizator uzbrojenia uwzględnia premie statystyk tylko z wybranych modyfikacji - wszystkie modyfikacje już założone na zbroi są ignorowane.",
     "OptimizerExplanationSearch": "Użyj paska wyszukiwania, aby filtrować przedmioty używane przez Optymalizator uzbrojenia.",
     "OptimizerExplanationStats": "Przeciągnij najważniejsze statystyki na górę i ustaw Ignoruj na statystykach które Cię nie obchodzą.",
-    "OptimizerExplanationUpgrades": "Wybierz na które ulepszenia zbroi Optymalizator może wydać materiały. Może on zasugerować ulepszenie do mistrzostwa aby zwiększyć statystyki lub ulepszenia energii i wymiany żywiołów w celu dopasowania żądanych modyfikacji.",
+    "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades to fit your requested mods.",
     "OptimizerSet": "Zestaw optymalizatora",
     "ProcessingSets": "Przetwarzanie zestawów dla\n{{character}} ({{remainingTime}}s)",
     "SaveAs": "Zapisz jako",
@@ -769,7 +767,6 @@
     "CatalystProgress": "Postęp Katalizatora",
     "CommunityData": "Spostrzeżenia społeczności",
     "Consolidate": "Połącz",
-    "CraftingPattern": "Wzorzec",
     "DistributeEvenly": "Rozdziel po równo",
     "Equip": "Załóż",
     "FavoriteUnFavorite": {
@@ -838,7 +835,6 @@
       "Crafted": "Data utworzenia",
       "CustomTotal": "Niestandardowa suma",
       "Damage": "Obrażenia",
-      "Element": "Element",
       "Energy": "Energia",
       "Event": "Zdarzenie",
       "Icon": "Ikona",
@@ -985,7 +981,6 @@
     "SizeItem": "Rozmiar elementu",
     "SortByAmmoType": "Rodzaj amunicji",
     "SortByAmount": "Rozmiar stosu",
-    "SortByArmorElement": "Element Pancerza (D2)",
     "SortByClassType": "Wymagana klasa",
     "SortByCrafted": "Stworzone (D2)",
     "SortByDeepsight": "Rezonans Głębokiego Wglądu (D2)",
@@ -1129,7 +1124,6 @@
   "StripSockets": {
     "Action": "Opróżnij Gniazda",
     "ArmorMods": "{{count}}x Modyfikacja Pancerza",
-    "ArtifactMods": "{{count}}x Modyfikacja Artefaktu",
     "Button": "Opróżnij {{numSockets}} Gniazd(a)",
     "Cancel": "Anuluj",
     "Choose": "Wybierz Gniazda do opróżnienia",
@@ -1158,19 +1152,24 @@
     "AccountsForArtifice": "This tests whether an Artifice armor piece could be better, if a +3 stat mod were used.",
     "BetterArmor": "Strictly Better Armor",
     "BetterArtificeArmor": "Better Artifice Armor",
+    "BetterStatArmor": "Better Stats Armor",
+    "BetterStatArtificeArmor": "Better Stat Artifice Armor",
     "BetterWorseArmor": "Better/Worse Armor",
     "BetterWorseIncludes": "Identifies armor pieces with:",
     "HighStats": "Wysokie statystyki",
     "InLoadouts": "W Uzbrojeniu",
     "OwnedCount": "# Posiadane",
-    "PerkBetterArmorDesc": "The same, or more, intrinsic perks.",
+    "PerkBetterArmorDesc": "The same, or more, intrinsic perks or special mod slots.",
     "PerkWorseArmorDesc": "The same intrinsic perk, or none.",
     "SimilarItems": "Podobne przedmioty",
     "StatBetterArmorDesc": "All stats at least as high, and at least one stat better.",
+    "StatNotPerkArmorDesc": "This tests only stats. A lower piece may still have special mod slots or intrinsic perks.",
     "StatWorseArmorDesc": "No better stats, and at least one worse stat.",
     "ThisItem": "Ten przedmiot",
     "WorseArmor": "Strictly Worse Armor",
     "WorseArtificeArmor": "Worse Non-Artifice Armor",
+    "WorseStatArmor": "Worse Stat Armor",
+    "WorseStatArtificeArmor": "Worse Stat Non-Artifice Armor",
     "YourBestItem": "Twój najlepszy przedmiot"
   },
   "Triumphs": {
