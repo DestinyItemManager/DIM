@@ -140,7 +140,9 @@ function getVendorItems(
     // If the sales should come from the server, don't show anything until we have them
     return [];
   } else {
-    return vendorDef.itemList.map((i) => vendorItemForDefinitionItem(context, i, characterId));
+    return vendorDef.itemList.map((i, index) =>
+      vendorItemForDefinitionItem(context, i, characterId, index)
+    );
   }
 }
 

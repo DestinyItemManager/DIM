@@ -117,6 +117,10 @@
     "ImportWrongFileType": "此文件不是一个CSV文件。",
     "WrongFields": "CSV文件中必须有'Id', 'Notes', 'Tag', 'Hash'列 (编号, 注释, 标签, 哈希)"
   },
+  "Dialog": {
+    "Cancel": "Cancel",
+    "OK": "OK"
+  },
   "EnergyMeter": {
     "Energy": "能量",
     "Unused": "未使用",
@@ -205,7 +209,7 @@
     "CurrentClass": "显示当前登录的守护者可装备的物品。",
     "CustomStatLower": "显示相比其他同类别护甲而言属性全面更低的护甲，但只考虑对应职业的自定义属性总和里的属性。",
     "DamageType": "按照伤害类型显示.",
-    "Deepsight": "显示带有深视共振的武器，可用于提取材料。可用 deepsight:complete 或 deepsight:incomplete 来筛选深视目标的进度，或用 deepsight:pattern 来筛选能解锁制作样式的物品。",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted.",
     "Description": "描述",
     "Dupe": "显示重复的物品，包含不同赛季版本",
     "DupeCount": "拥有指定重复数量的物品。",
@@ -225,7 +229,7 @@
     "HasOrnament": "显示已应用皮肤的物品。",
     "HasShader": "显示已应用着色器的物品",
     "HoldsMod": "显示与某种赛季模组相兼容的护甲。",
-    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes.",
+    "InLoadout": "is:inloadout 显示在任意配装中所包含的物品。使用 inloadout: 搜索在配装中的指定物品。当使用 hashtag 时，inloadout: 显示在名称或注释中包含指定 hashtag 物品的配装。",
     "Infusable": "显示可以灌注的物品.",
     "InfusionFodder": "显示可用于灌注同类物品且只消耗微光的物品。",
     "IsCrafted": "显示制作获取的武器。",
@@ -381,6 +385,10 @@
     "Tab": "TAB",
     "Vault": "将物品存入保险库"
   },
+  "InGameLoadout": {
+    "Applying": "正在装备配装...",
+    "LoadoutSlotNum": "插槽 {{index}}"
+  },
   "Infusion": {
     "Filter": "过滤物品",
     "InfuseSource": "选择需要用 {{name}} 进行灌注的物品",
@@ -517,7 +525,7 @@
       "Legendary": "传说护甲会使用大师之作属性和 10 点能量等级。",
       "None": "所有护甲会使用当前的属性和至少 7 点能量等级。"
     },
-    "AutoStatMods": "添加所需的属性模组",
+    "AutoStatMods": "自动添加属性模组",
     "ChooseAlternateTitle": "选择另一个物品",
     "CompareLoadout": "对比配装",
     "ConfirmOverwrite": "你确定要用这套新的护甲来替换配装“{{name}}”里的护甲吗？",
@@ -529,16 +537,7 @@
     "ExistingLoadout": "已有配装",
     "ExoticSpecialCategory": "特殊",
     "Filter": "过滤",
-    "InLoadouts": "在配装中",
-    "InOtherLoadouts": "其他配装",
     "Legendary": "传说",
-    "LockElement": "锁定元素",
-    "LockElementOptions": {
-      "All": "所有护甲将被锁定为当前元素。",
-      "InLoadouts": "装备在配装里的护甲会被锁定为当前元素。",
-      "InOtherLoadouts": "你正在优化配装“{{loadoutName}}”。如有护甲被装备在“{{loadoutName}}”外的其他配装里，则会被锁定为当前元素。",
-      "None": "将按需更改护甲元素来适合选定的模组。"
-    },
     "LockEquipped": "固定已装备",
     "LockItem": "固定物品",
     "MaxTier": "最大 {{tier}}",
@@ -548,7 +547,6 @@
       "ActiveSearchQuery": "搜索条件导致 DIM 不能将部分物品包含在配装中",
       "AllowAutoStatMods": "允许 DIM 自动添加额外的属性模组",
       "AlwaysInvalidMods": "这些模组无法装上你拥有的任何物品：",
-      "AssumeElementChange": "允许 DIM 建议更改护甲能量元素",
       "AssumeMasterworked": "允许 DIM 建议护甲大师之作",
       "AssumptionsRestricted": "DIM 无法建议更改护甲能量：",
       "BadSlot": "这些模组无法装上{{bucketName}}槽位所允许的任何物品：",
@@ -571,7 +569,7 @@
     "OptimizerExplanationMods": "选择你想使用的异域装备和模组。配装优化器只会包括你选定的模组带来的属性加成——护甲上其他现存的模组都会被忽略。",
     "OptimizerExplanationSearch": "使用搜索栏来过滤配装优化器使用的物品。",
     "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并将你不在乎的属性设为忽略。",
-    "OptimizerExplanationUpgrades": "选择允许配装优化器花费材料的护甲升级。它可能建议用大师杰作来提升属性，或用能量升级或更换元素来装下你想要的模组。",
+    "OptimizerExplanationUpgrades": "选择允许配装优化器花费材料的护甲升级。它可能建议用大师杰作来提升属性，或用能量升级来装下你想要的模组。",
     "OptimizerSet": "优化器组合",
     "ProcessingSets": "正在处理{{character}}的组合（{{remainingTime}} s）",
     "SaveAs": "保存为",
@@ -769,7 +767,6 @@
     "CatalystProgress": "催化剂进度",
     "CommunityData": "社区见解",
     "Consolidate": "合并",
-    "CraftingPattern": "制作样式",
     "DistributeEvenly": "均匀分配",
     "Equip": "装备",
     "FavoriteUnFavorite": {
@@ -838,7 +835,6 @@
       "Crafted": "铸造日期",
       "CustomTotal": "自定义总计",
       "Damage": "伤害",
-      "Element": "元素",
       "Energy": "能量",
       "Event": "活动",
       "Icon": "图标",
@@ -985,7 +981,6 @@
     "SizeItem": "物品显示大小",
     "SortByAmmoType": "弹药类型",
     "SortByAmount": "堆叠大小",
-    "SortByArmorElement": "护甲元素（D2）",
     "SortByClassType": "必要的类",
     "SortByCrafted": "已制造（D2）",
     "SortByDeepsight": "深视共振（D2）",
@@ -1129,7 +1124,6 @@
   "StripSockets": {
     "Action": "清空插槽",
     "ArmorMods": "{{count}}x 护甲模组",
-    "ArtifactMods": "{{count}}x 神器模组",
     "Button": "清空 {{numSockets}} 个插槽",
     "Cancel": "取消",
     "Choose": "选择要清空的插槽",
@@ -1158,19 +1152,24 @@
     "AccountsForArtifice": "判断诡计护甲在使用 +3 属性模组后是否会变得更好。",
     "BetterArmor": "全面更优的护甲",
     "BetterArtificeArmor": "更优的诡计护甲",
+    "BetterStatArmor": "更优的护甲",
+    "BetterStatArtificeArmor": "更优的诡计护甲",
     "BetterWorseArmor": "更优/更劣的护甲",
     "BetterWorseIncludes": "分析护甲所用条件：",
     "HighStats": "高属性",
     "InLoadouts": "在配装中",
     "OwnedCount": "# 已拥有",
-    "PerkBetterArmorDesc": "固有特性相同或更多。",
+    "PerkBetterArmorDesc": "相同、更多特性，或特殊模组槽位的护甲",
     "PerkWorseArmorDesc": "固有特性相同或不存在。",
     "SimilarItems": "相似物品",
     "StatBetterArmorDesc": "所有属性均持平，并有至少一个属性更高。",
+    "StatNotPerkArmorDesc": "仅用自身数值来检测。部分包含特殊的模组槽位或内置特性。",
     "StatWorseArmorDesc": "所有属性均持平或更低。",
     "ThisItem": "当前物品",
     "WorseArmor": "全面更劣的护甲",
     "WorseArtificeArmor": "更劣的诡计护甲",
+    "WorseStatArmor": "更劣的护甲",
+    "WorseStatArtificeArmor": "更劣的诡计护甲",
     "YourBestItem": "你的最佳物品"
   },
   "Triumphs": {

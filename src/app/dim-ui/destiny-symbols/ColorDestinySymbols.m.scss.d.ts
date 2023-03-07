@@ -3,6 +3,7 @@
 interface CssExports {
   'arc': string;
   'stasis': string;
+  'strand': string;
   'thermal': string;
   'void': string;
 }

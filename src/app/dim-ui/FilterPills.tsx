@@ -54,7 +54,8 @@ export default function FilterPills({
       onClick={clearSelection}
     >
       {options.map((o) => (
-        <div
+        <button
+          type="button"
           key={o.key}
           className={clsx(styles.pill, {
             [styles.selected]: selectedOptions.some((other) => other.key === o.key),
@@ -62,7 +63,7 @@ export default function FilterPills({
           onClick={(e) => onClickPill(e, o)}
         >
           {o.content}
-        </div>
+        </button>
       ))}
       {extra}
     </div>

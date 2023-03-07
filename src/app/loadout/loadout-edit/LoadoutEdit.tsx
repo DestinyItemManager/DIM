@@ -2,7 +2,7 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import {
@@ -24,7 +24,7 @@ import {
   updateModsByBucket,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getModsFromLoadout, getUnequippedItemsForLoadout } from 'app/loadout-drawer/loadout-utils';
+import { getUnequippedItemsForLoadout } from 'app/loadout-drawer/loadout-utils';
 import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import { getItemsAndSubclassFromLoadout, loadoutPower } from 'app/loadout/LoadoutView';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -35,6 +35,7 @@ import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisplay';
+import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
 import SubclassPlugDrawer from '../SubclassPlugDrawer';
 import styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
@@ -81,7 +82,7 @@ export default function LoadoutEdit({
     [itemCreationContext, loadout.items, store, allItems, modsByBucket]
   );
 
-  const allMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
+  const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
   const clearUnsetMods = loadout.parameters?.clearMods;
   const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
   const power = loadoutPower(store, categories);
@@ -106,8 +107,7 @@ export default function LoadoutEdit({
     return (...args: T) => setLoadout(fn(defs, store, ...args));
   }
 
-  const handleUpdateMods = (newMods: PluggableInventoryItemDefinition[]) =>
-    setLoadout(updateMods(newMods.map((mod) => mod.hash)));
+  const handleUpdateMods = (newMods: number[]) => setLoadout(updateMods(newMods));
   const handleRemoveMod = withUpdater(removeMod);
   const handleClearCategory = withDefsUpdater(clearBucketCategory);
   const handleModsByBucketUpdated = withUpdater(updateModsByBucket);
@@ -206,7 +206,7 @@ export default function LoadoutEdit({
                   storeId={store.id}
                   subclass={subclass}
                   items={categories[category]}
-                  allMods={allMods}
+                  allMods={modDefinitions}
                   onModsByBucketUpdated={handleModsByBucketUpdated}
                 />
               )}

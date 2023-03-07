@@ -14,6 +14,7 @@ interface CssExports {
   'isPerk': string;
   'itemIcon': string;
   'killTrackerDisplay': string;
+  'loadout': string;
   'loadouts': string;
   'locationCell': string;
   'locked': string;

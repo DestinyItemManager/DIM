@@ -23,8 +23,9 @@ import NotesArea from 'app/item-popup/NotesArea';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
+import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/formatters';
@@ -290,7 +291,7 @@ export function getColumns(
       (destinyVersion === 2 || isWeapon) &&
       c({
         id: 'dmg',
-        header: isArmor ? t('Organizer.Columns.Element') : t('Organizer.Columns.Damage'),
+        header: t('Organizer.Columns.Damage'),
         value: (item) => item.element?.displayProperties.name,
         cell: (_val, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
         filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
@@ -316,7 +317,7 @@ export function getColumns(
     c({
       id: 'tag',
       header: t('Organizer.Columns.Tag'),
-      value: (item) => getTag(item, itemInfos),
+      value: (item) => getTag(item, itemInfos) ?? '',
       cell: (value) => value && <TagIcon tag={value} />,
       sort: compareBy((tag) => (tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000)),
       filter: (value) => `tag:${value || 'none'}`,
@@ -562,17 +563,26 @@ export function getColumns(
     c({
       id: 'loadouts',
       header: t('Organizer.Columns.Loadouts'),
-      value: () => 0,
+      value: (item) =>
+        loadoutsByItem[item.id]
+          ?.map((l) => l.loadout.name)
+          .sort()
+          .join(','),
       cell: (_val, item) => {
         const inloadouts = loadoutsByItem[item.id];
         return (
           inloadouts &&
           inloadouts.length > 0 && (
-            <LoadoutsCell loadouts={inloadouts.map((l) => l.loadout)} owner={item.owner} />
+            <LoadoutsCell
+              loadouts={_.sortBy(
+                inloadouts.map((l) => l.loadout),
+                (l) => l.name
+              )}
+              owner={item.owner}
+            />
           )
         );
       },
-      noSort: true,
       filter: (value, item) => {
         if (typeof value === 'string') {
           const inloadouts = loadoutsByItem[item.id];
@@ -603,17 +613,30 @@ export function getColumns(
   return columns;
 }
 
-function LoadoutsCell({ loadouts, owner }: { loadouts: Loadout[]; owner: string }) {
+function LoadoutsCell({
+  loadouts,
+  owner,
+}: {
+  loadouts: (Loadout | InGameLoadout)[];
+  owner: string;
+}) {
   return (
     <>
       {loadouts.map((loadout) => (
-        <div key={loadout.id}>
-          <a
-            data-perk-name={loadout.id}
-            onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
-          >
-            {loadout.name}
-          </a>
+        <div key={loadout.id} className={styles.loadout}>
+          {isInGameLoadout(loadout) ? (
+            <a data-perk-name={loadout.id}>
+              {isInGameLoadout(loadout) && <InGameLoadoutIcon loadout={loadout} />}
+              {loadout.name}
+            </a>
+          ) : (
+            <a
+              data-perk-name={loadout.id}
+              onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
+            >
+              {loadout.name}
+            </a>
+          )}
         </div>
       ))}
     </>

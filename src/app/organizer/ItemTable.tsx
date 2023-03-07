@@ -1,6 +1,7 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { StatInfo } from 'app/compare/Compare';
 import { settingSelector } from 'app/dim-api/selectors';
+import useConfirm from 'app/dim-ui/useConfirm';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t, tl } from 'app/i18next-t';
 import { setNote } from 'app/inventory/actions';
@@ -23,6 +24,7 @@ import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { setSettingAction } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
@@ -47,7 +49,7 @@ import { itemIncludesCategories } from './filtering-utils';
 import ItemActions, { TagCommandInfo } from './ItemActions';
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
-import { ItemCategoryTreeNode } from './ItemTypeSelector';
+import { armorTopLevelCatHashes, ItemCategoryTreeNode } from './ItemTypeSelector';
 import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
 
 const categoryToClass = {
@@ -84,7 +86,11 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     if (!terminal) {
       return emptyArray<DimItem>();
     }
-    const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h !== 0);
+    const categoryHashes = categories.map((s) => s.itemCategoryHash).filter(Boolean);
+    // a top level class-specific category implies armor
+    if (armorTopLevelCatHashes.some((h) => categoryHashes.includes(h))) {
+      categoryHashes.push(ItemCategoryHashes.Armor);
+    }
     const items = allItems.filter(
       (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i)
     );
@@ -416,20 +422,21 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     );
   }
 
+  const [confirmDialog, confirm] = useConfirm();
   const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
     if (acceptedFiles.length < 1) {
-      alert(t('Csv.ImportWrongFileType'));
+      showNotification({ type: 'error', title: t('Csv.ImportWrongFileType') });
       return;
     }
 
-    if (!confirm(t('Csv.ImportConfirm'))) {
+    if (!(await confirm(t('Csv.ImportConfirm')))) {
       return;
     }
     try {
       const result = await dispatch(importTagsNotesFromCsv(acceptedFiles));
-      alert(t('Csv.ImportSuccess', { count: result }));
+      showNotification({ type: 'success', title: t('Csv.ImportSuccess', { count: result }) });
     } catch (e) {
-      alert(t('Csv.ImportFailed', { error: e.message }));
+      showNotification({ type: 'error', title: t('Csv.ImportFailed', { error: e.message }) });
     }
   };
 
@@ -443,6 +450,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       role="table"
       ref={tableRef}
     >
+      {confirmDialog}
       <div className={styles.toolbar} ref={toolbarRef}>
         <div>
           <ItemActions
@@ -489,30 +497,33 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
           />
         </div>
       </div>
-      {filteredColumns.map((column: ColumnDefinition) => (
-        <div
-          key={column.id}
-          className={clsx(styles[column.id], styles.header, {
-            [styles.stats]: ['stats', 'baseStats'].includes(column.columnGroup?.id ?? ''),
-          })}
-          role="columnheader"
-          aria-sort="none"
-        >
-          <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
-            {column.header}
-            {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
-              <AppIcon
-                className={styles.sorter}
-                icon={
-                  columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
-                    ? faCaretUp
-                    : faCaretDown
-                }
-              />
-            )}
+      {filteredColumns.map((column: ColumnDefinition) => {
+        const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
+        return (
+          <div
+            key={column.id}
+            className={clsx(styles[column.id], styles.header, {
+              [styles.stats]: isStatsColumn,
+            })}
+            role="columnheader"
+            aria-sort="none"
+          >
+            <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
+              {column.header}
+              {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
+                <AppIcon
+                  className={styles.sorter}
+                  icon={
+                    columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
+                      ? faCaretDown
+                      : faCaretUp
+                  }
+                />
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
       {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
       {rows.map((row) => (
         <React.Fragment key={row.item.id}>
@@ -560,7 +571,11 @@ function sortRows(
         const compare = column.sort
           ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
           : compareBy((row: Row) => row.values[column.id] ?? 0);
-        return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
+        // Always sort undefined values to the end
+        return chainComparator(
+          compareBy((row: Row) => row.values[column.id] === undefined),
+          sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare)
+        );
       }
       return compareBy(() => 0);
     })

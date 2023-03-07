@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
-import ElementIcon from 'app/dim-ui/ElementIcon';
+import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import 'app/inventory-page/StoreBucket.scss';
@@ -10,22 +10,16 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isValidMasterworkStat } from 'app/inventory/store/masterwork';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { unlockedByAllModsBeingUnlocked } from 'app/loadout/mod-utils';
+import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { collectionsVisibleShadersSelector } from 'app/records/selectors';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { SearchInput } from 'app/search/SearchInput';
-import { artifactModsSelector } from 'app/strip-sockets/strip-sockets';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
-import {
-  DestinyEnergyType,
-  DestinyProfileResponse,
-  PlugUiStyles,
-  SocketPlugSources,
-} from 'bungie-api-ts/destiny2';
+import { DestinyProfileResponse, PlugUiStyles, SocketPlugSources } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { memo, useMemo, useState } from 'react';
@@ -138,7 +132,6 @@ export default function SocketDetails({
   onPlugSelected?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
   const defs = useD2Definitions()!;
-  const artifactMods = useSelector(artifactModsSelector);
   const plugged = socket.plugged?.plugDef;
   const actuallyPlugged = (socket.actuallyPlugged || socket.plugged)?.plugDef;
   const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
@@ -198,26 +191,14 @@ export default function SocketDetails({
     }
   }
 
-  const energyTypeHash = item.energy?.energyTypeHash;
-  const energyType = energyTypeHash !== undefined && defs.EnergyType.get(energyTypeHash);
-
   // Is this plug available to use?
-  const unlocked = (i: PluggableInventoryItemDefinition) =>
-    i.hash === socket.emptyPlugItemHash ||
-    unlockedPlugs.has(i.hash) ||
-    otherUnlockedPlugs.has(i.hash) ||
-    unlockedByAllModsBeingUnlocked(i, artifactMods);
+  const unlocked = (i: number | undefined) =>
+    i !== undefined &&
+    (i === socket.emptyPlugItemHash || unlockedPlugs.has(i) || otherUnlockedPlugs.has(i));
 
   const searchFilter = createPlugSearchPredicate(query, language, defs);
 
-  let mods = Array.from(modHashes, (h) => defs.InventoryItem.get(h))
-    .filter(isPluggableItem)
-    .filter(
-      (i) =>
-        !i.plug.energyCost ||
-        (energyType && i.plug.energyCost.energyTypeHash === energyType.hash) ||
-        i.plug.energyCost.energyType === DestinyEnergyType.Any
-    );
+  let mods = Array.from(modHashes, (h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
 
   if (socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash) {
     const matchesMasterwork = (plugOption: PluggableInventoryItemDefinition) => {
@@ -246,11 +227,18 @@ export default function SocketDetails({
 
   mods = mods
     .filter(searchFilter)
-    .filter((i) => unlocked(i) || !shownLockedPlugs || shownLockedPlugs.has(i.hash))
+    .filter(
+      (i) =>
+        unlocked(i.hash) ||
+        (shownLockedPlugs
+          ? shownLockedPlugs.has(i.hash)
+          : // hide the regular-cost copies if the reduced is available, and vice versa
+            !unlocked(mapToOtherModCostVariant(i.hash)))
+    )
     .sort(
       chainComparator(
         compareBy((i) => i.hash !== socket.emptyPlugItemHash),
-        reverseComparator(compareBy(unlocked)),
+        reverseComparator(compareBy((i) => unlocked(i.hash))),
         compareBy((i) => i.plug?.energyCost?.energyCost),
         compareBy((i) => -i.inventory!.tierType),
         compareBy((i) => i.displayProperties.name)
@@ -286,9 +274,7 @@ export default function SocketDetails({
             alt=""
           />
         )}
-        {requiresEnergy && energyType && (
-          <ElementIcon className={styles.energyElement} element={energyType} />
-        )}
+        {requiresEnergy && <EnergyCostIcon className={styles.energyElement} />}
         <div>{socketCategory.displayProperties.name}</div>
       </h1>
       <div className="item-picker-search">
@@ -311,7 +297,7 @@ export default function SocketDetails({
         item={item}
         socket={socket}
         currentPlug={socket.plugged}
-        equippable={unlocked(selectedPlug)}
+        equippable={unlocked(selectedPlug.hash)}
         allowInsertPlug={allowInsertPlug}
         onPlugSelected={onPlugSelected}
         closeMenu={onClose}
@@ -332,7 +318,7 @@ export default function SocketDetails({
             key={mod.hash}
             className={clsx(styles.clickableMod, {
               [styles.selected]: selectedPlug === mod,
-              [styles.notUnlocked]: !unlocked(mod),
+              [styles.notUnlocked]: !unlocked(mod.hash),
             })}
             itemDef={mod}
             onClick={setSelectedPlug}

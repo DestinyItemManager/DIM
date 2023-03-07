@@ -5,12 +5,14 @@
   flex-wrap: wrap;
   margin: 8px 0;
   gap: 4px;
+
   @include phone-portrait {
     margin: 8px 6px;
   }
 }
 
 .pill {
+  composes: resetButton from '../dim-ui/common.m.scss';
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
   background: rgba(0, 0, 0, 0.4);
@@ -22,14 +24,12 @@
   transition: border-color 150ms;
   white-space: nowrap;
   gap: 4px;
+  user-select: none;
 
   .darkBackground & {
     background-color: rgb(255, 255, 255, 0.2);
   }
 
-  img {
-    margin-right: 4px;
-  }
   @media (hover: hover) {
     &:hover {
       border-color: rgba(255, 255, 255, 0.3);

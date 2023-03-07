@@ -1,6 +1,7 @@
 import { ExportResponse } from '@destinyitemmanager/dim-api-types';
 import FileUpload from 'app/dim-ui/FileUpload';
 import { t } from 'app/i18next-t';
+import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, downloadIcon } from 'app/shell/icons';
 import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
@@ -15,11 +16,11 @@ export default function ImportExport({
 }) {
   const importData: DropzoneOptions['onDrop'] = (acceptedFiles) => {
     if (acceptedFiles.length < 1) {
-      alert(t('Storage.ImportWrongFileType'));
+      showNotification({ type: 'error', title: t('Storage.ImportWrongFileType') });
       return;
     }
     if (acceptedFiles.length > 1) {
-      alert(t('Storage.ImportTooManyFiles'));
+      showNotification({ type: 'error', title: t('Storage.ImportTooManyFiles') });
       return;
     }
     const reader = new FileReader();
@@ -31,7 +32,10 @@ export default function ImportExport({
 
           await onImportData(data);
         } catch (e) {
-          alert(t('Storage.ImportFailed', { error: e.message }));
+          showNotification({
+            type: 'error',
+            title: t('Storage.ImportFailed', { error: e.message }),
+          });
         }
       }
     };
@@ -40,7 +44,7 @@ export default function ImportExport({
     if (file) {
       reader.readAsText(file);
     } else {
-      alert(t('Storage.ImportNoFile'));
+      showNotification({ type: 'error', title: t('Storage.ImportNoFile') });
     }
     return false;
   };

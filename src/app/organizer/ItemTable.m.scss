@@ -75,7 +75,7 @@ $content-cells: 5;
   }
 
   &.stats {
-    text-align: left;
+    text-align: right;
   }
 }
 
@@ -322,4 +322,13 @@ $modslotSize: 30px;
   bottom: 1px;
   left: 1px;
   width: calc(var(--item-size) - ($item-border-width * 2));
+}
+
+.loadout {
+  img {
+    height: 16px;
+    width: 16px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
 }

@@ -93,11 +93,6 @@
   }
 }
 
-// Suppress outline on focusable divs
-div[tabindex='-1']:focus {
-  outline: 0;
-}
-
 h1,
 h2,
 h3,
@@ -108,11 +103,6 @@ h5 {
 
 label {
   cursor: inherit;
-}
-
-div:focus,
-span:focus {
-  outline-width: 0;
 }
 
 @keyframes browser-warning {

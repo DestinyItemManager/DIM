@@ -59,7 +59,7 @@ export default function Header() {
 
   // Hamburger menu
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownToggler = useRef<HTMLAnchorElement>(null);
+  const dropdownToggler = useRef<HTMLButtonElement>(null);
   const toggleDropdown = useCallback((e: React.MouseEvent | KeyboardEvent) => {
     e.preventDefault();
     setDropdownOpen((dropdownOpen) => !dropdownOpen);
@@ -223,7 +223,6 @@ export default function Header() {
 
   // Links about the current Destiny version
   const destinyLinks = linkNodes;
-  const reverseDestinyLinks = <>{linkNodes.slice().reverse()}</>;
 
   const hotkeys: Hotkey[] = [
     {
@@ -277,18 +276,18 @@ export default function Header() {
   return (
     <header className={styles.container} ref={headerRef}>
       <div className={styles.header}>
-        <a
+        <button
+          type="button"
           className={clsx(styles.menuItem, styles.menu)}
           ref={dropdownToggler}
           onClick={toggleDropdown}
-          role="button"
           aria-haspopup="menu"
           aria-label={t('Header.Menu')}
           aria-expanded={dropdownOpen}
         >
           <AppIcon icon={menuIcon} />
           <MenuBadge />
-        </a>
+        </button>
         <TransitionGroup component={null}>
           {dropdownOpen && (
             <CSSTransition
@@ -345,7 +344,7 @@ export default function Header() {
             aria-label="dim"
           />
         </Link>
-        <div className={styles.headerLinks}>{reverseDestinyLinks}</div>
+        <div className={styles.headerLinks}>{destinyLinks}</div>
         <div className={styles.headerRight}>
           {account && !isPhonePortrait && (
             <span className={styles.searchLink}>

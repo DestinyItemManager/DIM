@@ -179,6 +179,33 @@ export const symbolData: {
     },
   },
   {
+    codepoint: 61196,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 3574662354,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61195,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 2463983862,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61197,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 1885339915,
+      fromRichText: false,
+    },
+  },
+  {
     codepoint: 57475,
     glyph: '',
     source: {
@@ -434,6 +461,105 @@ export const symbolData: {
     },
   },
   {
+    codepoint: 61183,
+    glyph: '',
+    source: {
+      tableName: 'Trait',
+      hash: 2147987161,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61184,
+    glyph: '',
+    source: {
+      tableName: 'Trait',
+      hash: 910120115,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61185,
+    glyph: '',
+    source: {
+      tableName: 'Trait',
+      hash: 3214358168,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61186,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 2809342386,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61187,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 4228170798,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61188,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 2470512752,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61191,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 4094417246,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61194,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 988980152,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61190,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 1680616210,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61193,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 4249729126,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61192,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 2307689415,
+      fromRichText: false,
+    },
+  },
+  {
     codepoint: 57497,
     glyph: '',
     source: {
@@ -447,7 +573,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 49808967,
+      hash: 60057218,
       fromRichText: true,
     },
   },
@@ -465,7 +591,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 8272054,
+      hash: 75057024,
       fromRichText: true,
     },
   },
@@ -474,7 +600,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 612360742,
+      hash: 671993070,
       fromRichText: true,
     },
   },
@@ -537,7 +663,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 714581758,
+      hash: 1089624989,
       fromRichText: true,
     },
   },
@@ -546,7 +672,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 364984909,
+      hash: 704693244,
       fromRichText: true,
     },
   },
@@ -582,7 +708,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1260068656,
+      hash: 1250089450,
       fromRichText: true,
     },
   },
@@ -645,6 +771,15 @@ export const symbolData: {
     },
   },
   {
+    codepoint: 61198,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 2269884985,
+      fromRichText: false,
+    },
+  },
+  {
     codepoint: 57456,
     glyph: '',
     source: {
@@ -698,10 +833,10 @@ const translateManually = [57618, 57665, 57495, 57654, 57671] as const;
 export type TranslateManually = typeof translateManually[number];
 
 /*
- * Could not find a source for (did the definitions disappear?): 
+ * Could not find a source for (did the definitions disappear?):
 
 
- * Unused rich text replacements (these should only be input actions replaced with the mapped buttons by the game): 
+ * Unused rich text replacements (these should only be input actions replaced with the mapped buttons by the game):
  * [Stasis: Glyph 0]
  * [Stasis: Glyph 3 Locked]
  * [Stasis: Glyph 1 Locked]
@@ -713,6 +848,7 @@ export type TranslateManually = typeof translateManually[number];
  * [Heavy Attack]
  * [Super]
  * [Sprint]
+ * [Light Level]
  * [Block]
  * [Shoot]
  * [Boost]

@@ -1,3 +1,4 @@
+import usePrompt from 'app/dim-ui/usePrompt';
 import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
 import { querySelector } from 'app/shell/selectors';
 import { motion } from 'framer-motion';
@@ -16,6 +17,8 @@ export default function MainSearchBarMenu() {
   const filteredItems = useSelector(filteredItemsSelector);
   const onInventory = location.pathname.endsWith('inventory');
 
+  const [promptDialog, prompt] = usePrompt();
+
   const showSearchActions = onInventory;
   if (!showSearchActions) {
     return null;
@@ -29,11 +32,13 @@ export default function MainSearchBarMenu() {
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
     >
+      {promptDialog}
       <ItemActionsDropdown
         filteredItems={filteredItems}
         searchActive={showSearchCount}
         searchQuery={searchQuery}
         fixed={true}
+        prompt={prompt}
       />
     </motion.div>
   );

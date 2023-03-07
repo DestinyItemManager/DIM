@@ -8,19 +8,27 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
-import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
+import {
+  isInsertableArmor2Mod,
+  mapToAvailableModCostVariant,
+  sortMods,
+} from 'app/loadout/mod-utils';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
-import { armorStats } from 'app/search/d2-known-values';
+import { armorStats, deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
 import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
+  aspectSocketCategoryHashes,
+  fragmentSocketCategoryHashes,
   getDefaultAbilityChoiceHash,
   getFirstSocketByCategoryHash,
   getSocketsByCategoryHash,
   getSocketsByCategoryHashes,
   getSocketsByIndexes,
   plugFitsIntoSocket,
+  subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
+import { weakMemoize } from 'app/utils/util';
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -28,7 +36,7 @@ import { createSelector } from 'reselect';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { Loadout, LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics
 export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
@@ -93,7 +101,7 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
         // in a fragment socket index >= capacity
         // (so with three fragment slots and fragments [1, 2, empty, 4] the last
         // fragment will be inactive)
-        if (category.category.hash === SocketCategoryHashes.Fragments) {
+        if (fragmentSocketCategoryHashes.includes(category.category.hash)) {
           if (fragmentCapacity > 0) {
             fragmentCapacity--;
           } else {
@@ -124,11 +132,10 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
 export function createSubclassDefaultSocketOverrides(item: DimItem) {
   if (item.bucket.hash === BucketHashes.Subclass && item.sockets) {
     const socketOverrides: SocketOverrides = {};
-    const abilityAndSuperSockets = getSocketsByCategoryHashes(item.sockets, [
-      SocketCategoryHashes.Abilities_Abilities,
-      SocketCategoryHashes.Abilities_Abilities_LightSubclass,
-      SocketCategoryHashes.Super,
-    ]);
+    const abilityAndSuperSockets = getSocketsByCategoryHashes(
+      item.sockets,
+      subclassAbilitySocketCategoryHashes
+    );
 
     for (const socket of abilityAndSuperSockets) {
       socketOverrides[socket.socketIndex] =
@@ -263,7 +270,8 @@ export function getLoadoutStats(
   }
 
   // Add stats that come from the subclass fragments
-  // TODO: Now that we apply socket overrides when we resolve items, do we need to do this calculation?
+  // Question: Now that we apply socket overrides when we resolve items, do we need to do this calculation?
+  // Answer: Yes, because subclasses don't have armor stats
   if (subclass?.loadoutItem.socketOverrides) {
     for (const plugHash of Object.values(subclass.loadoutItem.socketOverrides)) {
       const plug = defs.InventoryItem.get(plugHash);
@@ -281,7 +289,7 @@ export function getLoadoutStats(
   // Add the mod stats
   for (const mod of mods) {
     for (const stat of mod.investmentStats) {
-      if (stat.statTypeHash in stats && isModStatActive(classType, mod.hash, stat, mods)) {
+      if (stat.statTypeHash in stats && isModStatActive(classType, mod.hash, stat)) {
         stats[stat.statTypeHash].value += stat.value;
       }
     }
@@ -545,18 +553,52 @@ export function findItemForLoadout(
   return getUninstancedLoadoutItem(allItems, info.hash, storeId);
 }
 
+/**
+ * Get a mapping from item id to item, for items that could be in loadouts. Used for
+ * looking up items from loadouts.
+ */
+export const potentialLoadoutItemsByItemId = weakMemoize((allItems: DimItem[]) =>
+  _.keyBy(
+    allItems.filter((i) => i.id !== '0' && itemCanBeInLoadout(i)),
+    (i) => i.id
+  )
+);
+
+/**
+ * Get a mapping from crafted date to item, for items that could be in loadouts. Used for
+ * looking up items from loadouts.
+ */
+export const potentialLoadoutItemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
+  _.keyBy(
+    allItems.filter((i) => i.id !== '0' && i.craftedInfo?.craftedDate && itemCanBeInLoadout(i)),
+    (i) => i.craftedInfo!.craftedDate!
+  )
+);
+
 export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: LoadoutItem) {
   // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
-  const result = allItems.find((item) => item.id === loadoutItem.id);
+  // yup
+  const result = potentialLoadoutItemsByItemId(allItems)[loadoutItem.id];
   if (result) {
     return result;
   }
 
   // Crafted items get new IDs, but keep their crafted date, so we can match on that
   if (loadoutItem.craftedDate) {
-    return allItems.find((item) => item.craftedInfo?.craftedDate === loadoutItem.craftedDate);
+    return potentialLoadoutItemsByCraftedDate(allItems)[loadoutItem.craftedDate];
   }
 }
+
+/**
+ * Get a mapping from item hash to item, for ininstanced items that could be in loadouts. Used for
+ * looking up items from loadouts.
+ */
+export const potentialUninstancedLoadoutItemsByHash = weakMemoize((allItems: DimItem[]) =>
+  _.groupBy(
+    allItems.filter((i) => itemCanBeInLoadout(i)),
+    (i) => i.hash
+  )
+);
 
 export function getUninstancedLoadoutItem(
   allItems: DimItem[],
@@ -564,7 +606,7 @@ export function getUninstancedLoadoutItem(
   storeId: string | undefined
 ) {
   // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
-  const candidates = allItems.filter((item) => item.hash === hash);
+  const candidates = potentialUninstancedLoadoutItemsByHash(allItems)[hash] ?? [];
   const onCurrent =
     storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined;
   return onCurrent ?? (candidates[0]?.notransfer ? undefined : candidates[0]);
@@ -606,37 +648,50 @@ export function isMissingItems(
   return false;
 }
 
-/** Returns a flat list of mods hashes in the Loadout, by default including auto stat mods */
-export function getModHashesFromLoadout(loadout: Loadout, includeAutoMods = true) {
-  return [
+/**
+ * Returns a flat list of mods as PluggableInventoryItemDefinitions in the Loadout, by default including auto stat mods.
+ * This INCLUDES both locked and unlocked mods; `unlockedPlugs` is used to identify if the expensive or cheap copy of an
+ * armor mod should be used.
+ */
+export function getModsFromLoadout(
+  defs: D2ManifestDefinitions | undefined,
+  loadout: Loadout,
+  unlockedPlugs: Set<number>,
+  includeAutoMods = true
+) {
+  const internalModHashes = [
     ...(loadout.parameters?.mods ?? []),
     ...((includeAutoMods && loadout.autoStatMods) || []),
   ];
+
+  return resolveLoadoutModHashes(defs, internalModHashes, unlockedPlugs);
 }
 
-/** Returns a flat list of mods as PluggableInventoryItemDefinitions in the Loadout, by default including auto stat mods */
-export function getModsFromLoadout(
-  defs: D1ManifestDefinitions | D2ManifestDefinitions | undefined,
-  loadout: Loadout,
-  includeAutoMods = true
+export function resolveLoadoutModHashes(
+  defs: D2ManifestDefinitions | undefined,
+  modHashes: number[],
+  unlockedPlugs: Set<number>
 ) {
-  const mods: PluggableInventoryItemDefinition[] = [];
-
-  if (defs?.isDestiny2()) {
-    for (const modHash of getModHashesFromLoadout(loadout, includeAutoMods)) {
-      const item = defs.InventoryItem.get(modHash);
-
+  const mods: ResolvedLoadoutMod[] = [];
+  if (defs) {
+    for (const originalModHash of modHashes) {
+      const resolvedModHash = mapToAvailableModCostVariant(originalModHash, unlockedPlugs);
+      const item = defs.InventoryItem.get(resolvedModHash);
       if (isPluggableItem(item)) {
-        mods.push(item);
+        mods.push({ originalModHash, resolvedMod: item });
+      } else {
+        const deprecatedPlaceholderMod = defs.InventoryItem.get(deprecatedPlaceholderArmorModHash);
+        isPluggableItem(deprecatedPlaceholderMod) &&
+          mods.push({ originalModHash, resolvedMod: deprecatedPlaceholderMod });
       }
     }
   }
 
-  return mods.sort(sortMods);
+  return mods.sort((a, b) => sortMods(a.resolvedMod, b.resolvedMod));
 }
 
 function getSubclassFragmentCapacity(subclassItem: DimItem): number {
-  const aspects = getSocketsByCategoryHash(subclassItem.sockets, SocketCategoryHashes.Aspects);
+  const aspects = getSocketsByCategoryHashes(subclassItem.sockets, aspectSocketCategoryHashes);
   return _.sumBy(
     aspects,
     (aspect) => aspect.plugged?.plugDef.plug.energyCapacity?.capacityValue || 0

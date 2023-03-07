@@ -1,6 +1,7 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import Select from 'app/dim-ui/Select';
 import Sheet from 'app/dim-ui/Sheet';
+import useConfirm from 'app/dim-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
@@ -159,12 +160,13 @@ export default function CompareLoadoutsDrawer({
     ]
   );
 
-  const onSaveLoadout = (e: React.MouseEvent) => {
+  const [confirmDialog, confirm] = useConfirm();
+  const onSaveLoadout = async (e: React.MouseEvent) => {
     e.preventDefault();
 
     if (
       selectedLoadout &&
-      !confirm(t('LoadoutBuilder.ConfirmOverwrite', { name: selectedLoadout.name }))
+      !(await confirm(t('LoadoutBuilder.ConfirmOverwrite', { name: selectedLoadout.name })))
     ) {
       return;
     }
@@ -200,6 +202,7 @@ export default function CompareLoadoutsDrawer({
 
   return (
     <Sheet onClose={onClose} header={header}>
+      {confirmDialog}
       <div className={styles.content}>
         <div>
           <div className={clsx(styles.fillRow, styles.setHeader)}>

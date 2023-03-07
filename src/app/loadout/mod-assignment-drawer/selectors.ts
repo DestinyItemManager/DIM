@@ -3,15 +3,18 @@ import {
   allItemsSelector,
   createItemContextSelector,
   sortedStoresSelector,
+  unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 
 /**
@@ -71,4 +74,21 @@ export function useEquippedLoadoutArmorAndSubclass(
   );
 
   return useSelector(loadoutItemSelector, shallowEqual);
+}
+
+/**
+ * Returns a list of resolved loadout mods for the loadout, for convenience paired
+ * with a (memoized) list of just the defs (for the components that need it).
+ * Loadout mod resolution may choose different versions of mods depending on artifact unlocks
+ * and may replace defs that no longer exist with a placeholder deprecated mod.
+ */
+export function useLoadoutMods(loadout: Loadout, storeId: string, includeAutoMods?: boolean) {
+  const defs = useD2Definitions();
+  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(storeId));
+
+  return useMemo(() => {
+    const allMods = getModsFromLoadout(defs, loadout, unlockedPlugs, includeAutoMods);
+    const modDefinitions = allMods.map((mod) => mod.resolvedMod);
+    return [allMods, modDefinitions] as const;
+  }, [defs, includeAutoMods, loadout, unlockedPlugs]);
 }

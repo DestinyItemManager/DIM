@@ -84,7 +84,9 @@ function getCurrentSeason(
   return [
     seasonPass?.rewardProgressionHash,
     seasonPass?.prestigeProgressionHash,
-    defs?.InventoryItem.get(season.artifactItemHash!).displayProperties.icon,
+    season.artifactItemHash
+      ? defs?.InventoryItem.get(season.artifactItemHash).displayProperties.icon
+      : undefined,
   ];
 }
 

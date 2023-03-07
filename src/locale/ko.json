@@ -117,6 +117,10 @@
     "ImportWrongFileType": "이 파일은 CSV 파일이 아닙니다.",
     "WrongFields": "CSV는 'Id', 'Notes', 'Tag', 'Hash' 열을 포함해야 합니다."
   },
+  "Dialog": {
+    "Cancel": "취소",
+    "OK": "확인"
+  },
   "EnergyMeter": {
     "Energy": "에너지",
     "Unused": "사용되지 않음",
@@ -205,7 +209,7 @@
     "CurrentClass": "현재 접속한 수호자에게 장착할 수 있는 아이템을 표시합니다.",
     "CustomStatLower": "사용자 정의 총합 능력치만 고려하여 동일한 종류의 다른 방어구보다 능력치가 확실하게 낮은 방어구를 표시합니다.",
     "DamageType": "공격 속성에 따라 아이템을 표시합니다.",
-    "Deepsight": "조율하여 재료를 획득할 수 있는 심안 공명이 담긴 무기를 표시합니다. deepsight:complete와 deepsight:incomplete는 심안 목표의 진척도를 나타내며, deepsight:pattern는 패턴을 잠금 해제할 수 있는 아이템을 표시합니다.",
+    "Deepsight": "패턴을 추출할 수 있는 심안 공명이 담긴 무기 표시",
     "Description": "설명",
     "Dupe": "재출시를 포함하여 중복된 아이템을 표시합니다.",
     "DupeCount": "특정 개수만큼 중복된 아이템 표시",
@@ -381,6 +385,10 @@
     "Tab": "탭",
     "Vault": "아이템을 창고로 이동"
   },
+  "InGameLoadout": {
+    "Applying": "로드아웃을 장착하는 중...",
+    "LoadoutSlotNum": "슬롯 {{index}}"
+  },
   "Infusion": {
     "Filter": "아이템 필터",
     "InfuseSource": "{{name}}을(를) 주입할 아이템 선택",
@@ -517,7 +525,7 @@
       "Legendary": "전설 방어구의 걸작 능력치를 사용하며 10의 에너지 수용량을 가집니다.",
       "None": "모든 방어구의 현재 능력치를 사용하며 최소 7의 에너지 수용량을 가집니다."
     },
-    "AutoStatMods": "필요한 능력치 개조 부품 추가",
+    "AutoStatMods": "능력치 개조 부품 자동 추가",
     "ChooseAlternateTitle": "다른 아이템 선택",
     "CompareLoadout": "로드아웃 비교",
     "ConfirmOverwrite": "로드아웃 \"{{name}}\"의 방어구를 새로운 방어구 조합으로 변경하시겠습니까?",
@@ -529,16 +537,7 @@
     "ExistingLoadout": "기존 로드아웃",
     "ExoticSpecialCategory": "특수",
     "Filter": "필터",
-    "InLoadouts": "로드아웃",
-    "InOtherLoadouts": "다른 로드아웃",
     "Legendary": "전설",
-    "LockElement": "에너지 유형 잠금",
-    "LockElementOptions": {
-      "All": "모든 방어구의 에너지 유형이 고정됩니다.",
-      "InLoadouts": "방어구가 기존 로드아웃에 포함된 경우 현재 에너지 유형으로 고정됩니다.",
-      "InOtherLoadouts": "현재 \"{{loadoutName}}\" 로드아웃을 최적화하고 있습니다. 방어구가 \"{{loadoutName}}\"이(가) 아닌 다른 로드아웃에 장착된 경우 현재 에너지 유형으로 고정됩니다.",
-      "None": "선택된 개조 부품에 맞추기 위해 방어구의 에너지 유형이 변경됩니다."
-    },
     "LockEquipped": "장착된 아이템 고정",
     "LockItem": "아이템 잠금",
     "MaxTier": "최대 {{tier}}",
@@ -548,7 +547,6 @@
       "ActiveSearchQuery": "활성화된 검색 쿼리가 DIM이 빌드에 포함할 수 있는 아이템을 제한하고 있습니다.",
       "AllowAutoStatMods": "DIM이 능력치 개조 부품을 추가할 수 있도록 허용",
       "AlwaysInvalidMods": "이 개조 부품이 소지한 아이템에 맞지 않음:",
-      "AssumeElementChange": "DIM이 방어구 에너지 유형을 변경할 수 있도록 허용",
       "AssumeMasterworked": "DIM이 방어구 걸작을 추천하도록 허용",
       "AssumptionsRestricted": "DIM이 방어구 에너지 유형 변경을 추천할 수 없음:",
       "BadSlot": "{{bucketName}} 슬롯에서 이 모드를 장착할 수 있는 허용된 아이템이 없음:",
@@ -571,7 +569,7 @@
     "OptimizerExplanationMods": "사용하고 싶은 경이 아이템과 개조 부품을 선택하세요. 로드아웃 최적화는 선택된 개조 부품의 능력치 증가량만 반영하며 이미 방어구에 장착된 개조 부품은 무시합니다.",
     "OptimizerExplanationSearch": "검색 창을 사용해서 로드아웃 최적화가 사용할 아이템을 필터링하세요.",
     "OptimizerExplanationStats": "가장 중요한 능력치를 위로 끌어서 놓고, 필요 없는 능력치는 무시로 설정하세요.",
-    "OptimizerExplanationUpgrades": "로드아웃 최적화가 재료를 사용할 수 있는 방어구 업그레이드를 선택하세요. 걸작을 제작하여 능력치를 증가시키거나, 에너지 업그레이드나 속성을 변경하여 요청된 개조 부품에 맞추도록 제안할 수 있습니다.",
+    "OptimizerExplanationUpgrades": "로드아웃 최적화가 재료를 사용할 수 있는 방어구 업그레이드를 선택하세요. 걸작을 제작하여 능력치를 증가시키거나, 에너지를 업그레이드하여 요청된 개조 부품에 맞추도록 제안할 수 있습니다.",
     "OptimizerSet": "최적화 조합",
     "ProcessingSets": "{{character}}의 장비 조합 처리 중\n({{remainingTime}}초)",
     "SaveAs": "다른 이름으로 저장",
@@ -769,7 +767,6 @@
     "CatalystProgress": "촉매제 진척도",
     "CommunityData": "커뮤니티 인사이트",
     "Consolidate": "모으기",
-    "CraftingPattern": "형성 패턴",
     "DistributeEvenly": "균등하게 분배",
     "Equip": "장착",
     "FavoriteUnFavorite": {
@@ -838,7 +835,6 @@
       "Crafted": "제작일",
       "CustomTotal": "사용자 정의 총합",
       "Damage": "피해 유형",
-      "Element": "에너지 유형",
       "Energy": "에너지",
       "Event": "이벤트",
       "Icon": "아이콘",
@@ -985,7 +981,6 @@
     "SizeItem": "아이템 크기",
     "SortByAmmoType": "탄약 유형",
     "SortByAmount": "수량",
-    "SortByArmorElement": "방어구 에너지 유형 (D2)",
     "SortByClassType": "필요한 직업",
     "SortByCrafted": "제작됨 (D2)",
     "SortByDeepsight": "심안 (D2)",
@@ -1129,7 +1124,6 @@
   "StripSockets": {
     "Action": "소켓 해제",
     "ArmorMods": "{{count}}x 방어구 개조 부품",
-    "ArtifactMods": "{{count}}x 유물 개조 부품",
     "Button": "{{numSockets}}개의 소켓 해제",
     "Cancel": "취소",
     "Choose": "해제할 소켓 선택",
@@ -1158,19 +1152,24 @@
     "AccountsForArtifice": "+3 능력치 개조 부품이 사용되었을 때 계략 방어구가 더 나은지 확인합니다.",
     "BetterArmor": "엄격하게 더 나은 방어구",
     "BetterArtificeArmor": "더 나은 계략 방어구",
+    "BetterStatArmor": "더 나은 능력치의 방어구",
+    "BetterStatArtificeArmor": "더 나은 능력치의 계략 방어구",
     "BetterWorseArmor": "더 나은/나쁜 방어구",
     "BetterWorseIncludes": "다음을 사용하여 방어구 분석:",
     "HighStats": "높은 능력치",
     "InLoadouts": "로드아웃에 포함됨",
     "OwnedCount": "# 소지 수",
-    "PerkBetterArmorDesc": "본질 특성이 동일하거나 더 많습니다.",
+    "PerkBetterArmorDesc": "본질 특성이나 특수한 개조 부품 슬롯이 동일하거나 더 많습니다.",
     "PerkWorseArmorDesc": "본질 특성이 동일하거나 없습니다.",
     "SimilarItems": "유사한 아이템",
     "StatBetterArmorDesc": "모든 능력치가 최소한 동일하며, 적어도 하나의 능력치가 더 좋습니다.",
+    "StatNotPerkArmorDesc": "이 옵션은 능력치만 확인합니다. 더 나쁜 방어구에 특수한 개조 부품 슬롯이나 본질 특성이 있을 수 있습니다.",
     "StatWorseArmorDesc": "더 좋은 능력치가 없으며, 적어도 하나의 능력치가 더 낮습니다.",
     "ThisItem": "이 아이템",
     "WorseArmor": "엄격하게 더 나쁜 방어구",
     "WorseArtificeArmor": "더 나쁜 일반 방어구",
+    "WorseStatArmor": "더 나쁜 능력치의 방어구",
+    "WorseStatArtificeArmor": "더 나쁜 능력치의 일반 방어구",
     "YourBestItem": "가장 좋은 아이템"
   },
   "Triumphs": {

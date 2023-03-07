@@ -36,7 +36,6 @@ import {
   fitMostMods,
   pickPlugPositions,
 } from 'app/loadout/mod-assignment-utils';
-import { unlockedByAllModsBeingUnlocked } from 'app/loadout/mod-utils';
 import {
   d2ManifestSelector,
   destiny2CoreSettingsSelector,
@@ -46,7 +45,6 @@ import { showNotification } from 'app/notifications/notifications';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
-import { artifactModsSelector } from 'app/strip-sockets/strip-sockets';
 import { queueAction } from 'app/utils/action-queue';
 import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
@@ -54,6 +52,8 @@ import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import {
+  aspectSocketCategoryHashes,
+  fragmentSocketCategoryHashes,
   getDefaultAbilityChoiceHash,
   getSocketByIndex,
   getSocketsByIndexes,
@@ -61,7 +61,7 @@ import {
 } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
@@ -79,7 +79,7 @@ import {
   setSocketOverrideResult,
 } from './loadout-apply-state';
 import { Assignment, Loadout, LoadoutItem } from './loadout-types';
-import { backupLoadout, findItemForLoadout, getModHashesFromLoadout } from './loadout-utils';
+import { backupLoadout, findItemForLoadout, getModsFromLoadout } from './loadout-utils';
 
 // TODO: move this whole file to "loadouts" folder
 
@@ -247,25 +247,25 @@ function doApplyLoadout(
       });
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
-      const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(getState(), store.id));
-      const artifactMods = artifactModsSelector(getState());
+      const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(store.id)(getState()));
       const checkMod = (h: number) => {
         const mod = defs.InventoryItem.get(h);
         return (
           Boolean(mod) &&
-          (unlockedPlugSetItems().has(h) ||
-            h === DEFAULT_SHADER ||
-            DEFAULT_ORNAMENTS.includes(h) ||
-            ('plug' in mod &&
-              isPluggableItem(mod) &&
-              unlockedByAllModsBeingUnlocked(mod, artifactMods)))
+          (unlockedPlugSetItems().has(h) || h === DEFAULT_SHADER || DEFAULT_ORNAMENTS.includes(h))
         );
       };
 
       // Don't apply mods when moving to the vault
-      const modsToApply = ((!store.isVault && getModHashesFromLoadout(loadout)) || []).filter(
-        checkMod
-      );
+      const modsToApply = (
+        (defs.isDestiny2() &&
+          !store.isVault &&
+          getModsFromLoadout(defs, loadout, unlockedPlugSetItems()).map(
+            (mod) => mod.resolvedMod.hash
+          )) ||
+        []
+      ).filter(checkMod);
+
       // Mods specific to a bucket but not an item - fashion mods (shader/ornament)
       const modsByBucketToApply: {
         [bucketHash: number]: number[];
@@ -972,15 +972,15 @@ function applySocketOverrides(
             }
           };
 
-          if (category.category.hash === SocketCategoryHashes.Aspects) {
+          if (aspectSocketCategoryHashes.includes(category.category.hash)) {
             handleShuffledSockets(category.socketIndexes);
-          } else if (category.category.hash === SocketCategoryHashes.Fragments) {
+          } else if (fragmentSocketCategoryHashes.includes(category.category.hash)) {
             // For fragments, we first need to figure out how many sockets we have available.
             // If the loadout specifies overrides for aspects, we use all override aspects to calculate
             // fragment capacity, otherwise we look at the item itself because we don't unplug any aspects
             // if the overrides don't list any.
-            const aspectSocketIndices = dimItem.sockets!.categories.find(
-              (c) => c.category.hash === SocketCategoryHashes.Aspects
+            const aspectSocketIndices = dimItem.sockets!.categories.find((c) =>
+              aspectSocketCategoryHashes.includes(c.category.hash)
             )!.socketIndexes;
             let aspectDefs = _.compact(
               aspectSocketIndices.map((aspectSocketIndex) => {

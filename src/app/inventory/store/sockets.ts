@@ -3,7 +3,10 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import { eventArmorRerollSocketIdentifiers } from 'app/utils/socket-utils';
+import {
+  eventArmorRerollSocketIdentifiers,
+  subclassAbilitySocketCategoryHashes,
+} from 'app/utils/socket-utils';
 import {
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
@@ -17,6 +20,7 @@ import {
   DestinySocketTypeDefinition,
   SocketPlugSources,
 } from 'bungie-api-ts/destiny2';
+import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import {
   ItemCategoryHashes,
@@ -490,9 +494,7 @@ function isKnownEmptyPlugItemHash(plugItemHash: number) {
 
 // These socket categories never have any empty-able sockets.
 const noDefaultSocketCategoryHashes: SocketCategoryHashes[] = [
-  SocketCategoryHashes.Abilities_Abilities,
-  SocketCategoryHashes.Abilities_Abilities_LightSubclass,
-  SocketCategoryHashes.Super,
+  ...subclassAbilitySocketCategoryHashes,
   SocketCategoryHashes.WeaponPerks_Reusable,
   SocketCategoryHashes.IntrinsicTraits,
   SocketCategoryHashes.ArmorPerks_LargePerk,
@@ -716,9 +718,13 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
   const plugs: DimPlug[] = [];
   const defPlugSet = defs.PlugSet.get(plugSetHash);
   for (const plugEntry of defPlugSet.reusablePlugItems) {
-    const plug = buildCachedDefinedPlug(defs, plugEntry.plugItemHash, plugEntry.currentlyCanRoll);
-    if (plug) {
-      plugs.push(plug);
+    // Deprecated mods should not actually be in any PlugSets, but here we are
+    // https://github.com/Bungie-net/api/issues/1801
+    if (!deprecatedMods.includes(plugEntry.plugItemHash)) {
+      const plug = buildCachedDefinedPlug(defs, plugEntry.plugItemHash, plugEntry.currentlyCanRoll);
+      if (plug) {
+        plugs.push(plug);
+      }
     }
   }
 

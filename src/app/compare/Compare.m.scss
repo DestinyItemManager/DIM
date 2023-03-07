@@ -38,6 +38,7 @@
 .organizerLink {
   composes: dim-button from global;
   margin-left: auto;
+
   @include phone-portrait {
     margin-left: 0;
   }
@@ -77,9 +78,7 @@
     padding: 4px 10px;
     font-size: 12px;
     // button's children's spacing margin
-    :nth-child(n + 2) {
-      margin-left: 4px;
-    }
+    gap: 4px;
     img {
       margin: 0;
     }

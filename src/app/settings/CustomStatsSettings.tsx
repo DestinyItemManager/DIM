@@ -5,6 +5,7 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import { CustomStatWeightsDisplay } from 'app/dim-ui/CustomStatWeights';
 import Select from 'app/dim-ui/Select';
 import Switch from 'app/dim-ui/Switch';
+import useConfirm from 'app/dim-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { getClassTypeNameLocalized } from 'app/inventory/store/d2-item-factory';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -127,7 +128,7 @@ function CustomStatEditor({
   const originalLabel = useRef(statDef.label);
   const originalClass = useRef(statDef.class);
   const saveStat = useSaveStat();
-  const removeStat = useRemoveStat();
+  const [removeStat, removeStatDialog] = useRemoveStat();
   const options = classes.map((c) => ({
     key: `${c}`,
     content: (
@@ -152,6 +153,7 @@ function CustomStatEditor({
 
   return (
     <div className={clsx(className, styles.customStatEditor)}>
+      {removeStatDialog}
       <div className={styles.identifyingInfo}>
         <Select
           options={options}
@@ -240,7 +242,7 @@ function CustomStatEditor({
           <button
             type="button"
             className="dim-button danger"
-            onClick={() => removeStat(statDef) && onDoneEditing()}
+            onClick={async () => (await removeStat(statDef)) && onDoneEditing()}
             title={t('Settings.CustomStatDelete')}
           >
             <AppIcon icon={deleteIcon} />
@@ -364,12 +366,13 @@ function useSaveStat() {
 function useRemoveStat() {
   const setSetting = useSetSetting();
   const customStatList = useSelector(customStatsSelector);
-  return (stat: CustomStatDef) => {
+  const [removeStatDialog, confirm] = useConfirm();
+  const removeStat = async (stat: CustomStatDef) => {
     if (
       // user is deleting a provisional stat, or already cleared out the name field
       stat.label === '' ||
       // user is deleting a full-fledged stat, let's confirm whether they are sure
-      confirm(t('Settings.CustomStatDeleteConfirm'))
+      (await confirm(t('Settings.CustomStatDeleteConfirm')))
     ) {
       setSetting(
         'customStats',
@@ -380,6 +383,7 @@ function useRemoveStat() {
     // reached here if they clicked NO on the confirm
     return false;
   };
+  return [removeStat, removeStatDialog] as const;
 }
 
 function isLegacyStat(stat: CustomStatDef) {

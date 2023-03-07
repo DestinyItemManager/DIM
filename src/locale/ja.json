@@ -117,6 +117,10 @@
     "ImportWrongFileType": "CSV ファイルではありません。",
     "WrongFields": "CSVには「Id」、「Notes」、「Tag」、および「Hash」の列が必要です"
   },
+  "Dialog": {
+    "Cancel": "Cancel",
+    "OK": "OK"
+  },
   "EnergyMeter": {
     "Energy": "エネルギー",
     "Unused": "不使用",
@@ -205,7 +209,7 @@
     "CurrentClass": "現在ログインしているガーディアンが装備可能なアイテムを表示します。",
     "CustomStatLower": "カスタム後のステータス合計値のみを考慮して、同じサブクラス防具でも厳密に低いステータス値を持つ防具を表示します。",
     "DamageType": "ダメージタイプ別にアイテムを表示",
-    "Deepsight": "素材が抽出できるディープサイトの共振を持つ武器を表示します。 deepsight:completeとdeepsight:incompleteはディープサイトの同調の進行状況を示し、deepsight:patternはパターンロックを解除する可能性があるものを示します。",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted.",
     "Description": "説明",
     "Dupe": "再登場版も含む、重複アイテムを表示します。",
     "DupeCount": "指定された数の重複があるアイテム。",
@@ -381,6 +385,10 @@
     "Tab": "タブ",
     "Vault": "アイテムを保管庫に送る"
   },
+  "InGameLoadout": {
+    "Applying": "ロードアウトを装備中",
+    "LoadoutSlotNum": "スロット {{index}}"
+  },
   "Infusion": {
     "Filter": "アイテムをフィルタする",
     "InfuseSource": "{{name}} に融合するアイテムを選択してください",
@@ -517,7 +525,7 @@
       "Legendary": "レジェンダリーアーマーはマスターワーク済みのステータスを使用し、エネルギーレベルが 10 になります。",
       "None": "全てのアーマーは現在のステータスを使用し、最低エネルギーレベルは 7 になります。"
     },
-    "AutoStatMods": "必要なステータスの mod を追加",
+    "AutoStatMods": "自動的にステータス mod を追加する",
     "ChooseAlternateTitle": "別のアイテムを選択してください。",
     "CompareLoadout": "ロードアウトを比較",
     "ConfirmOverwrite": "ロードアウト「{{name}}」のアーマーをこの新しいアーマーセットに置き換えてもよろしいですか？",
@@ -529,16 +537,7 @@
     "ExistingLoadout": "既存のロードアウト",
     "ExoticSpecialCategory": "スペシャル",
     "Filter": "フィルター",
-    "InLoadouts": "ロードアウト内",
-    "InOtherLoadouts": "他ロードアウト",
     "Legendary": "レジェンダリー",
-    "LockElement": "属性をロックする",
-    "LockElementOptions": {
-      "All": "全てのアーマーは現在のエレメントにロックされます。",
-      "InLoadouts": "アーマーが既存のロードアウトにて装備されている場合、現在の属性でロックされます。",
-      "InOtherLoadouts": "現在、{{loadoutName}} を最適化しています。 {{loadoutName}} 以外のロードアウトでアーマーを装備すると、アーマーは現在の属性にロックされます。",
-      "None": "アーマー属性は、選択したmodが取り付けられるよう適宜変更されます。"
-    },
     "LockEquipped": "ピン留めされたアイテムを装備",
     "LockItem": "アイテムをピン留めする",
     "MaxTier": "最大 {{tier}}",
@@ -548,7 +547,6 @@
       "ActiveSearchQuery": "アクティブサーチクエリは、DIM がビルドに含めることができる項目を制限しています",
       "AllowAutoStatMods": "DIM に追加のステータス mod を自動的に含めることを許可する",
       "AlwaysInvalidMods": "これらの mod は所有しているどのアイテムにも適合しません :",
-      "AssumeElementChange": "DIM が防具のエネルギー要素の変更を推奨できるようにする",
       "AssumeMasterworked": "DIM がマスターワークしているアーマーを推奨できるようにする",
       "AssumptionsRestricted": "DIM は防具のエネルギー変更を推奨できません :",
       "BadSlot": "{{bucketName}} スロットでは、許可されたアイテムのいずれもこれらの mod に対応できません :",
@@ -571,7 +569,7 @@
     "OptimizerExplanationMods": "エキゾチック防具と使用するmodを選択してください。 ロードアウト最適化機能では、選択したmodボーナスだけでステータス値が計算されます。装備に固定されている特殊modはすべて無視されます。",
     "OptimizerExplanationSearch": "検索バーを使用して、ロードアウト最適化機能で使用したいアイテムを組み合わせ候補をフィルタリングします。",
     "OptimizerExplanationStats": "左ペインにある各ステータス優先度をドラッグして設定します。上ほど重要度は高く優先され、下になるほど後回しにされます。プルダウンから優先しないよう無視する設定もできます。",
-    "OptimizerExplanationUpgrades": "ロードアウト最適化機能でアップグレードさせたい装備を選択します。この時、指定したModを取り付けられるようにマスターワーク化、エネルギーのアップグレードや防具のクラス変更(アーク→ボイドなど) を提案することもあります。",
+    "OptimizerExplanationUpgrades": "ロードアウト最適化機能が素材を消費できるアーマーアップグレードを選択します。ステータスを向上させるマスターワークや、要求された mod に適合するエネルギーアップグレードが提案されるかもしれません。",
     "OptimizerSet": "最適化セット",
     "ProcessingSets": "{{character}} のセットを処理中 ({{remainingTime}}秒)",
     "SaveAs": "名前をつけて保存",
@@ -769,7 +767,6 @@
     "CatalystProgress": "媒体の進行",
     "CommunityData": "コミュニティの評価",
     "Consolidate": "統合する",
-    "CraftingPattern": "クラフトパターン",
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
     "FavoriteUnFavorite": {
@@ -838,7 +835,6 @@
       "Crafted": "構成された日付",
       "CustomTotal": "カスタム合計",
       "Damage": "ダメージ",
-      "Element": "属性",
       "Energy": "エネルギー",
       "Event": "イベント",
       "Icon": "アイコン",
@@ -985,7 +981,6 @@
     "SizeItem": "アイテムサイズ",
     "SortByAmmoType": "弾のタイプ",
     "SortByAmount": "スタックサイズ",
-    "SortByArmorElement": "アーマー属性 (D2)",
     "SortByClassType": "必須クラス",
     "SortByCrafted": "クラフト済 (D2)",
     "SortByDeepsight": "ディープサイト (D2)",
@@ -1129,7 +1124,6 @@
   "StripSockets": {
     "Action": "ソケットからアイテムを外す",
     "ArmorMods": "{{count}} 個のアイテムにアーマーModが適用されています",
-    "ArtifactMods": "{{count}} 個のアイテムにアーティファクトModが適用されています",
     "Button": "{{numSockets}} 個のアイテムを外す",
     "Cancel": "キャンセル",
     "Choose": "取り外すアイテムを選択してください",
@@ -1158,19 +1152,24 @@
     "AccountsForArtifice": "アーティフィスアーマーが +3 のステータス修正を使用した場合に、より良くなるかテストする。",
     "BetterArmor": "厳密に良い防具",
     "BetterArtificeArmor": "より良いアーティフィスアーマー",
+    "BetterStatArmor": "良いステータスの防具",
+    "BetterStatArtificeArmor": "良いステータスのアーティフィスアーマー",
     "BetterWorseArmor": "より良い/悪いアーマー",
     "BetterWorseIncludes": "防具のピースを次から識別 : ",
     "HighStats": "高ステータス",
     "InLoadouts": "ロードアウト中",
     "OwnedCount": "所持",
-    "PerkBetterArmorDesc": "同一もしくはそれ以上の固有パーク",
+    "PerkBetterArmorDesc": "同じかそれ以上の、固有パークや特別 mod スロット",
     "PerkWorseArmorDesc": "同一の固有パーク、か否か。",
     "SimilarItems": "類似のアイテム",
     "StatBetterArmorDesc": "すべてのステータスが同等以上で、かつ少なくとも1つが優れている。",
+    "StatNotPerkArmorDesc": "ステータスのみテストします。下位のピースでも、特別な mod スロットや固有パークを持つ場合があります。",
     "StatWorseArmorDesc": "より良ステータスは無く、少なくとも1つは悪いステータス。",
     "ThisItem": "このアイテム",
     "WorseArmor": "厳密に悪い防具",
     "WorseArtificeArmor": "悪いアーティフィスアーマー以外",
+    "WorseStatArmor": "悪いステータスの防具",
+    "WorseStatArtificeArmor": "悪いステータスの非アーティフィスアーマー",
     "YourBestItem": "最高のアイテム"
   },
   "Triumphs": {

@@ -229,35 +229,22 @@ const socketFilters: FilterDefinition[] = [
   {
     keywords: 'deepsight',
     description: tl('Filter.Deepsight'),
-    format: ['simple', 'query'],
+    format: 'simple',
     destinyVersion: 2,
-    suggestions: ['complete', 'incomplete', 'pattern'],
-    filter:
-      ({ filterValue }) =>
-      (item: DimItem) => {
-        if (!item.deepsightInfo) {
-          return false;
-        }
-
-        switch (filterValue) {
-          case 'deepsight':
-            return true;
-          case 'complete':
-            return item.deepsightInfo.attunementObjective.complete;
-          case 'incomplete':
-            return !item.deepsightInfo.attunementObjective.complete;
-          case 'pattern':
-            return Boolean(
-              item.patternUnlockRecord &&
-                item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
-            );
-        }
-      },
+    filter: () => (item: DimItem) => {
+      if (!item.deepsightInfo) {
+        return false;
+      }
+      return Boolean(
+        item.patternUnlockRecord &&
+          item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
+      );
+    },
   },
   {
     keywords: 'memento',
     description: tl('Filter.HasMemento'),
-    format: ['query'],
+    format: 'query',
     destinyVersion: 2,
     suggestions: ['any', ...Object.keys(craftingMementos)],
     filter: ({ filterValue }) => {
@@ -273,7 +260,7 @@ const socketFilters: FilterDefinition[] = [
   {
     keywords: 'catalyst',
     description: tl('Filter.Catalyst'),
-    format: ['query'],
+    format: 'query',
     destinyVersion: 2,
     suggestions: ['complete', 'incomplete', 'missing'],
     filter:

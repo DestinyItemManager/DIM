@@ -65,6 +65,7 @@
   ],
   "reportUnusedDisableDirectives": true,
   "rules": {
+    "no-alert": "error",
     "no-console": "error",
     "no-debugger": "error",
     "no-empty": "off",
