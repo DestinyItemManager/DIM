@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed deepsight border showing up for weapons whose pattern has already been unlocked.
+* DIM now correctly handles reduced mod costs via artifact unlocks.
 
 ## 7.59.0 <span class="changelog-date">(2023-03-05)</span>
 
