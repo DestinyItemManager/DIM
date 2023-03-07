@@ -6,7 +6,7 @@ import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { Portal } from 'app/utils/temp-container';
-import { DamageType, DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import heavy from 'destiny-icons/general/ammo-heavy.svg';
@@ -34,8 +34,7 @@ export default function ItemPopupHeader({
 }) {
   const [showArmory, setShowArmory] = useState(false);
 
-  const showElementIcon =
-    item.element && item.bucket.inWeapons && item.element.enumValue !== DamageType.Kinetic;
+  const showElementIcon = Boolean(item.element);
 
   const linkToArmory = item.destinyVersion === 2;
 
