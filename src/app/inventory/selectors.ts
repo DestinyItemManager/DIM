@@ -182,9 +182,9 @@ export const createItemContextSelector = createSelector(
   bucketsSelector,
   customStatsSelector,
   (defs, profileResponse, buckets, customStats): ItemCreationContext => ({
-    defs: defs,
-    buckets: buckets,
-    profileResponse: profileResponse,
+    defs: defs!,
+    buckets: buckets!,
+    profileResponse: profileResponse!,
     customStats,
   })
 );
