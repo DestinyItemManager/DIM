@@ -10,7 +10,7 @@ import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
-import { useDefinitions } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -83,7 +83,7 @@ export function useEquippedLoadoutArmorAndSubclass(
  * and may replace defs that no longer exist with a placeholder deprecated mod.
  */
 export function useLoadoutMods(loadout: Loadout, storeId: string, includeAutoMods?: boolean) {
-  const defs = useDefinitions();
+  const defs = useD2Definitions();
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(storeId));
 
   return useMemo(() => {

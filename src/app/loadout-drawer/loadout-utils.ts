@@ -654,7 +654,7 @@ export function isMissingItems(
  * armor mod should be used.
  */
 export function getModsFromLoadout(
-  defs: D1ManifestDefinitions | D2ManifestDefinitions | undefined,
+  defs: D2ManifestDefinitions | undefined,
   loadout: Loadout,
   unlockedPlugs: Set<number>,
   includeAutoMods = true
@@ -668,12 +668,12 @@ export function getModsFromLoadout(
 }
 
 export function resolveLoadoutModHashes(
-  defs: D1ManifestDefinitions | D2ManifestDefinitions | undefined,
+  defs: D2ManifestDefinitions | undefined,
   modHashes: number[],
   unlockedPlugs: Set<number>
 ) {
   const mods: ResolvedLoadoutMod[] = [];
-  if (defs?.isDestiny2()) {
+  if (defs) {
     for (const originalModHash of modHashes) {
       const resolvedModHash = mapToAvailableModCostVariant(originalModHash, unlockedPlugs);
       const item = defs.InventoryItem.get(resolvedModHash);
