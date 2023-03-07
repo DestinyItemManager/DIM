@@ -502,9 +502,14 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         return (
           <div
             key={column.id}
-            className={clsx(styles[column.id], styles.header, {
-              [styles.stats]: isStatsColumn,
-            })}
+            className={clsx(
+              styles[column.id],
+              column.id.startsWith('customstat_') && styles.customstat,
+              styles.header,
+              {
+                [styles.stats]: isStatsColumn,
+              }
+            )}
             role="columnheader"
             aria-sort="none"
           >
@@ -643,6 +648,7 @@ function TableRow({
           onClick={onRowClick(row, column)}
           className={clsx(styles[column.id], {
             [styles.hasFilter]: column.filter,
+            [styles.customstat]: column.id.startsWith('customstat_'),
           })}
           role="cell"
         >

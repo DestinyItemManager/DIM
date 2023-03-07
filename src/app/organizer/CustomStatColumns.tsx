@@ -11,7 +11,7 @@ export function createCustomStatColumns(
   return customStatDefs.map((c) => {
     if (c.class === classType || c.class === DestinyClass.Unknown) {
       return {
-        id: c.shortLabel + c.statHash,
+        id: 'customstat_' + c.shortLabel + c.statHash,
         header: (
           <>
             {c.label}
