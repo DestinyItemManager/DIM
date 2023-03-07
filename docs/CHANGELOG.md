@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed deepsight border showing up for weapons whose pattern has already been unlocked.
+
 ## 7.59.0 <span class="changelog-date">(2023-03-05)</span>
 
 ## 7.58.1 <span class="changelog-date">(2023-03-02)</span>
