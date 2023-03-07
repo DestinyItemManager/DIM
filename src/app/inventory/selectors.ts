@@ -2,7 +2,7 @@ import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import {
   currentProfileSelector,
-  normalizedCustomStatsSelector,
+  customStatsSelector,
   settingsSelector,
 } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
@@ -178,11 +178,11 @@ export const createItemContextSelector = createSelector(
   d2ManifestSelector,
   profileResponseSelector,
   bucketsSelector,
-  normalizedCustomStatsSelector,
+  customStatsSelector,
   (defs, profileResponse, buckets, customStats): ItemCreationContext => ({
-    defs: defs!,
-    buckets: buckets!,
-    profileResponse: profileResponse!,
+    defs: defs,
+    buckets: buckets,
+    profileResponse: profileResponse,
     customStats,
   })
 );

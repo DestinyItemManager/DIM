@@ -4,6 +4,15 @@ import _ from 'lodash';
 import { DimStat } from '../item-types';
 import { getStatSortOrder } from './stats';
 
+/**
+ * given a set of stat weights, builds a valid armor DimStat
+ * by adding up several existing stats (like DIS, MOB, REC)
+ * into a stat with the provided name and description.
+ *
+ * baseOnly true is used to do the classic "custom stat",
+ * a user defined stat meant specifically for comparing armor rolls.
+ * but it can be false to build a combination stat like "Total"
+ */
 export function makeCustomStat(
   stats: DimStat[],
   statWeights: CustomStatWeights,
@@ -12,6 +21,8 @@ export function makeCustomStat(
   customStatDesc: string,
   baseOnly: boolean
 ): DimStat | undefined {
+  // the following SEVERAL comment lines are regarding weighted stats, which are not enabled right now
+
   // what's averageNonZeroStatWeight for?
   // we want the effect of all the non-zero multipliers to average out to 1x
   // like STR x 1 / DIS x 2 / MOB x 3 --- to do this --- STR x .5 / DIS x 1 / MOB x 1.5

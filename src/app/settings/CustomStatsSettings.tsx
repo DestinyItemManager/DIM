@@ -1,9 +1,5 @@
 import { CustomStatDef, CustomStatWeights } from '@destinyitemmanager/dim-api-types';
-import {
-  newCustomStatsSelector,
-  normalizedCustomStatsSelector,
-  oldCustomTotalSelector,
-} from 'app/dim-api/selectors';
+import { customStatsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { CustomStatWeightsDisplay } from 'app/dim-ui/CustomStatWeights';
@@ -19,7 +15,7 @@ import { addIcon, AppIcon, banIcon, deleteIcon, editIcon, saveIcon } from 'app/s
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 // eslint-disable-next-line css-modules/no-unused-class
 import weightsStyles from '../dim-ui/CustomStatWeights.m.scss';
@@ -38,17 +34,21 @@ const classes = [
  * a list of user-defined custom stat displays. each can be switched into editing mode.
  */
 export function CustomStatsSettings() {
-  const customStatList = useSelector(normalizedCustomStatsSelector);
+  const customStatList = useSelector(customStatsSelector);
+  // which custom stat is currently being edited (identified by its hash)
   const [editing, setEditing] = useState(0);
+  // disabled by a feature flag right now. really don't trust the math of this
   const [weightsMode, setWeightsMode] = useState(false);
+  // if a stat is pending its first save, it lives here, not in customStatList
   const [provisionalStat, setProvisionalStat] = useState<CustomStatDef>();
 
-  const defs = useD2Definitions();
-  if (!defs) {
+  // this component  lives on the settings page, which can load
+  // before definitions. without them, don't bother rendering
+  if (!useD2Definitions()) {
     return null;
   }
 
-  // provisional stat, if there is one, is displayed above the
+  // the provisional stat, if there is one, is displayed above the
   // others in the list, and hasn't been saved to settings yet
   const onAddNew = () => {
     const newStat = createNewStat(customStatList);
@@ -64,43 +64,43 @@ export function CustomStatsSettings() {
 
   return (
     <div className="setting">
-      <button
-        type="button"
-        className={clsx('dim-button', styles.addNew)}
-        onClick={onAddNew}
-        disabled={Boolean(editing)}
-        title={t('Settings.CustomStatCreate')}
-      >
-        <AppIcon icon={addIcon} />
-      </button>
-      {$DIM_FLAVOR === 'dev' && (
-        <span className={styles.addNew}>
-          stat weights{' '}
-          <Switch
-            checked={weightsMode}
-            name="weightsMode"
-            onChange={() => setWeightsMode(!weightsMode)}
-          />
-        </span>
-      )}
-      <label htmlFor="">{t('Settings.CustomStatTitle')}</label>
+      <div className={styles.headerRow}>
+        <label htmlFor="">{t('Settings.CustomStatTitle')}</label>
+        {$featureFlags.customStatWeights && (
+          <span>
+            stat weights{' '}
+            <Switch
+              checked={weightsMode}
+              name="weightsMode"
+              onChange={() => setWeightsMode(!weightsMode)}
+            />
+          </span>
+        )}
+        <button
+          type="button"
+          className="dim-button"
+          onClick={onAddNew}
+          disabled={Boolean(editing)}
+          title={t('Settings.CustomStatCreate')}
+        >
+          <AppIcon icon={addIcon} />
+        </button>
+      </div>
       <div className={clsx(styles.customDesc, 'fineprint')}>
         {t('Settings.CustomStatDesc1')} {t('Settings.CustomStatDesc3')}
       </div>
-      <div className={styles.customStatsSettings}>
-        {[...(provisionalStat ? [provisionalStat] : []), ...customStatList].map((c) =>
-          c.statHash === editing ? (
-            <CustomStatEditor
-              onDoneEditing={onDoneEditing}
-              weightsMode={$DIM_FLAVOR === 'dev' && weightsMode}
-              statDef={c}
-              key={c.statHash}
-            />
-          ) : (
-            <CustomStatView setEditing={setEditing} statDef={c} key={c.statHash} />
-          )
-        )}
-      </div>
+      {[...(provisionalStat ? [provisionalStat] : []), ...customStatList].map((c) =>
+        c.statHash === editing ? (
+          <CustomStatEditor
+            onDoneEditing={onDoneEditing}
+            weightsMode={$featureFlags.customStatWeights && weightsMode}
+            statDef={c}
+            key={c.statHash}
+          />
+        ) : (
+          <CustomStatView setEditing={setEditing} statDef={c} key={c.statHash} />
+        )
+      )}
     </div>
   );
 }
@@ -123,8 +123,9 @@ function CustomStatEditor({
   const [classType, setClassType] = useState(statDef.class);
   const [label, setLabel] = useState(statDef.label);
   const [weights, setWeight] = useStatWeightsEditor(statDef.weights);
-  const [originalWeights] = useState(JSON.stringify(weights));
-  const [originalLabel] = useState(statDef.label);
+  const originalWeights = useRef(JSON.stringify(weights));
+  const originalLabel = useRef(statDef.label);
+  const originalClass = useRef(statDef.class);
   const saveStat = useSaveStat();
   const removeStat = useRemoveStat();
   const options = classes.map((c) => ({
@@ -141,9 +142,12 @@ function CustomStatEditor({
     setLabel(target.value.slice(0, 30));
   const shortLabel = simplifyStatLabel(label);
 
-  // controls whether the button says "save" or "cancel editing"
-  const somethingChanged = JSON.stringify(weights) !== originalWeights || originalLabel !== label;
-  const isNewStat = originalLabel === '';
+  // controls whether "save" button shows up, or just "cancel editing"
+  const somethingChanged =
+    JSON.stringify(weights) !== originalWeights.current ||
+    originalLabel.current !== label.trim() ||
+    originalClass.current !== classType;
+  const isNewStat = originalLabel.current === '';
   const weightedStatCount = Object.values(weights).filter(Boolean).length;
 
   return (
@@ -301,10 +305,10 @@ const customStatSort = chainComparator(
 
 function useSaveStat() {
   const setSetting = useSetSetting();
-  const customStatList = useSelector(newCustomStatsSelector);
-  const oldCustomTotals = useSelector(oldCustomTotalSelector);
+  const customStatList = useSelector(customStatsSelector);
 
   return (newStat: CustomStatDef) => {
+    newStat.label = newStat.label.trim();
     // when trying to save, update the short label to match the submitted long label
     newStat.shortLabel = simplifyStatLabel(newStat.label);
     const weightValues = Object.values(newStat.weights);
@@ -343,8 +347,6 @@ function useSaveStat() {
     }
 
     if (isLegacyStat(newStat)) {
-      // wipe out the old-style custom stat for this class
-      setSetting('customTotalStatsByClass', { ...oldCustomTotals, [newStat.class]: [] });
       // upgrade its statHash to a non-legacy
       const statHash = createNewStatHash(customStatList);
       newStat = { ...newStat, statHash };
@@ -361,8 +363,7 @@ function useSaveStat() {
 
 function useRemoveStat() {
   const setSetting = useSetSetting();
-  const customStatList = useSelector(newCustomStatsSelector);
-  const oldCustomTotals = useSelector(oldCustomTotalSelector);
+  const customStatList = useSelector(customStatsSelector);
   return (stat: CustomStatDef) => {
     if (
       // user is deleting a provisional stat, or already cleared out the name field
@@ -370,10 +371,6 @@ function useRemoveStat() {
       // user is deleting a full-fledged stat, let's confirm whether they are sure
       confirm(t('Settings.CustomStatDeleteConfirm'))
     ) {
-      if (isLegacyStat(stat)) {
-        // also clean up the old settings
-        setSetting('customTotalStatsByClass', { ...oldCustomTotals, [stat.class]: [] });
-      }
       setSetting(
         'customStats',
         customStatList.filter((s) => s.statHash !== stat.statHash).sort(customStatSort)

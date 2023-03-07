@@ -1,5 +1,5 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
-import { normalizedCustomStatsSelector } from 'app/dim-api/selectors';
+import { customStatsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
@@ -15,7 +15,7 @@ export function CustomStatWeightsFromHash({
   customStatHash: number;
   className?: string;
 }) {
-  const customStatsList = useSelector(normalizedCustomStatsSelector);
+  const customStatsList = useSelector(customStatsSelector);
   const customStat = customStatsList.find((c) => c.statHash === customStatHash);
   if (!customStat) {
     return null;

@@ -1,6 +1,6 @@
 import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { languageSelector, normalizedCustomStatsSelector } from 'app/dim-api/selectors';
+import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { errorLog } from 'app/utils/log';
@@ -53,7 +53,7 @@ export const filterContextSelector = createSelector(
   itemInfosSelector,
   itemHashTagsSelector,
   languageSelector,
-  normalizedCustomStatsSelector,
+  customStatsSelector,
   d2ManifestSelector,
   makeFilterContext
 );

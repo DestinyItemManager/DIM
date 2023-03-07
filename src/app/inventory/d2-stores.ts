@@ -5,7 +5,7 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
-import { normalizedCustomStatsSelector } from 'app/dim-api/selectors';
+import { customStatsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { loadCoreSettings } from 'app/manifest/actions';
@@ -277,7 +277,7 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         const stopTimer = timer('Process inventory');
 
         const buckets = d2BucketsSelector(getState())!;
-        const customStats = normalizedCustomStatsSelector(getState());
+        const customStats = customStatsSelector(getState());
         const stores = buildStores(
           {
             defs,

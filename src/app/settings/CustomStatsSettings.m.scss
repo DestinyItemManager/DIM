@@ -1,100 +1,98 @@
-// the add new stat button
-.addNew {
-  float: right;
+.headerRow {
+  display: flex;
+
+  label {
+    flex-grow: 1;
+  }
 }
 
 .customDesc {
   margin-top: 12px;
 }
 
-.customStatsSettings {
-  // a style for inputs or input wrappers
-  .inputlike {
-    color: white;
-    align-items: center;
-    background: #4443;
-    border-radius: 4px;
-    box-sizing: border-box;
-    border: 1px solid transparent;
-    flex-grow: 1;
+// a style for inputs or input wrappers
+.inputlike {
+  color: white;
+  align-items: center;
+  background: #4443;
+  border-radius: 4px;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  flex-grow: 1;
 
-    input {
-      margin: 0;
-      background-color: transparent;
-      border: none;
-      color: inherit;
-      text-align: center;
-      // remove default focus highlight
-      outline: none;
-    }
-    // a replacement focus highlight
-    &:focus-within {
-      border-color: #fff9;
-    }
-  }
-
-  .classOption {
-    display: flex;
-    gap: 7px;
-    font-size: 16px !important;
-    align-items: center;
-    cursor: default;
-    user-select: none;
-  }
-
-  .classDropdownIcon {
+  input {
     margin: 0;
-    height: 18px;
-    width: 18px;
-    font-size: 18px !important;
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    text-align: center;
+    // remove default focus highlight
+    outline: none;
   }
+  // a replacement focus highlight
+  &:focus-within {
+    border-color: #fff9;
+  }
+}
 
-  // editor for a single stat
-  .customStatEditor {
-    border: 1px solid;
-    margin: 8px 0;
-    padding: 6px;
-    animation-name: pulseBorder;
-    animation-duration: 2s;
-    animation-timing-function: ease-in-out;
-    animation-iteration-count: infinite;
+.classOption {
+  display: flex;
+  gap: 7px;
+  font-size: 16px !important;
+  align-items: center;
+  cursor: default;
+  user-select: none;
+}
 
-    display: flex;
-    flex-direction: column;
-    & > :nth-child(n + 2) {
-      margin-top: 4px;
-    }
-    .editableStatsRow {
-      justify-content: space-between;
-      gap: 0.5em;
-      label {
-        padding: 3px 0;
-        display: flex;
-        margin: 0;
-      }
-    }
-    .identifyingInfo {
+.classDropdownIcon {
+  margin: 0;
+  height: 18px;
+  width: 18px;
+  font-size: 18px !important;
+}
+
+// editor for a single stat
+.customStatEditor {
+  border: 1px solid;
+  margin: 8px 0;
+  padding: 6px;
+  animation-name: pulseBorder;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px 0;
+
+  .editableStatsRow {
+    justify-content: space-between;
+    gap: 0.5em;
+    label {
+      padding: 3px 0;
       display: flex;
-      align-items: center;
-      & > :nth-child(n + 2) {
-        margin-left: 4px;
-      }
-      input {
-        flex-grow: 1;
-      }
-      img {
-        height: 1.5em;
-      }
-      .filter {
-        flex-grow: 1;
-      }
-      code {
-        background-color: #000;
-      }
+      margin: 0;
     }
-    .zero {
-      opacity: 0.4;
+  }
+  .identifyingInfo {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    input {
+      flex-grow: 1;
     }
+    img {
+      height: 1.5em;
+    }
+    .filter {
+      flex-grow: 1;
+    }
+    code {
+      background-color: #000;
+    }
+  }
+  .zero {
+    opacity: 0.4;
   }
 }
 

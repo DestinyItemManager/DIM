@@ -1,10 +1,7 @@
 .statWeightRow {
   display: flex;
   align-items: center;
-
-  & > :nth-child(n + 2) {
-    margin-left: 2px;
-  }
+  gap: 2px;
 
   & > * {
     display: flex;
