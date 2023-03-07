@@ -79,7 +79,7 @@ import {
   setSocketOverrideResult,
 } from './loadout-apply-state';
 import { Assignment, Loadout, LoadoutItem } from './loadout-types';
-import { backupLoadout, findItemForLoadout, getModHashesFromLoadout } from './loadout-utils';
+import { backupLoadout, findItemForLoadout, getModsFromLoadout } from './loadout-utils';
 
 // TODO: move this whole file to "loadouts" folder
 
@@ -247,7 +247,7 @@ function doApplyLoadout(
       });
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
-      const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(getState(), store.id));
+      const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(store.id)(getState()));
       const checkMod = (h: number) => {
         const mod = defs.InventoryItem.get(h);
         return (
@@ -257,9 +257,15 @@ function doApplyLoadout(
       };
 
       // Don't apply mods when moving to the vault
-      const modsToApply = ((!store.isVault && getModHashesFromLoadout(loadout)) || []).filter(
-        checkMod
-      );
+      const modsToApply = (
+        (defs.isDestiny2() &&
+          !store.isVault &&
+          getModsFromLoadout(defs, loadout, unlockedPlugSetItems()).map(
+            (mod) => mod.resolvedMod.hash
+          )) ||
+        []
+      ).filter(checkMod);
+
       // Mods specific to a bucket but not an item - fashion mods (shader/ornament)
       const modsByBucketToApply: {
         [bucketHash: number]: number[];

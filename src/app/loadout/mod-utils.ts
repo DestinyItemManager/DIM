@@ -7,6 +7,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { normalToReducedMod, reducedToNormalMod } from 'data/d2/reduced-cost-mod-mappings';
 import _ from 'lodash';
 import { knownModPlugCategoryHashes } from './known-values';
 
@@ -97,4 +98,38 @@ export function createGetModRenderKey() {
  */
 export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
   return _.groupBy(plugs, (plugDef) => plugDef.itemTypeDisplayName);
+}
+
+/**
+ * Some mods have two copies, a regular version and a reduced-cost version.
+ * Only some of them are seasonally available, depending on artifact mods/unlocks.
+ * This maps to whichever version is available, otherwise returns plugHash unmodified.
+ */
+export function mapToAvailableModCostVariant(plugHash: number, unlockedPlugs: Set<number>) {
+  if (unlockedPlugs.has(plugHash)) {
+    return plugHash;
+  }
+  const toReduced = normalToReducedMod[plugHash];
+  if (toReduced !== undefined && unlockedPlugs.has(toReduced)) {
+    return toReduced;
+  }
+  const toNormal = reducedToNormalMod[plugHash];
+  if (toNormal !== undefined && unlockedPlugs.has(toNormal)) {
+    return toNormal;
+  }
+  return plugHash;
+}
+
+/**
+ * Internally we should try to always store the normal version of the mod though.
+ */
+export function mapToNonReducedModCostVariant(plugHash: number): number {
+  return reducedToNormalMod[plugHash] ?? plugHash;
+}
+
+/**
+ * Find the complementary cost variant.
+ */
+export function mapToOtherModCostVariant(plugHash: number): number | undefined {
+  return reducedToNormalMod[plugHash] ?? normalToReducedMod[plugHash];
 }

@@ -15,7 +15,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState } from 'app/store/types';
 import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
 import {
@@ -52,9 +51,7 @@ export default function FashionDrawer({
   onClose: () => void;
 }) {
   const defs = useD2Definitions()!;
-  const unlockedPlugs = useSelector((state: RootState) =>
-    unlockedPlugSetItemsSelector(state, storeId)
-  );
+  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(storeId));
   const isPhonePortrait = useIsPhonePortrait();
   const [pickPlug, setPickPlug] = useState<PickPlugState>();
   const allItems = useSelector(allItemsSelector);
@@ -501,9 +498,7 @@ function FashionSocket({
   onPickPlug: (params: PickPlugState) => void;
   onRemovePlug: (bucketHash: number, modHash: number) => void;
 }) {
-  const unlockedPlugSetItems = useSelector((state: RootState) =>
-    unlockedPlugSetItemsSelector(state, storeId)
-  );
+  const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(storeId));
   const handleOrnamentClick = socket && (() => onPickPlug({ item: exampleItem, socket }));
 
   const unlockedPlugsWithoutTheDefault = Array.from(unlockedPlugSetItems).filter(

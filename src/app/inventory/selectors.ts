@@ -4,6 +4,7 @@ import { currentProfileSelector, settingSelector, settingsSelector } from 'app/d
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyObject, emptySet } from 'app/utils/empty';
+import { currySelector } from 'app/utils/selector-utils';
 import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import { resonantMaterialStringVarHashes } from 'data/d2/crafting-resonant-elements';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -280,37 +281,39 @@ export const ownedUncollectiblePlugsSelector = createSelector(
 
 /** A set containing all the hashes of unlocked PlugSet items (mods, shaders, ornaments, etc) for the given character. */
 // TODO: reconcile with other owned/unlocked selectors
-export const unlockedPlugSetItemsSelector = createSelector(
-  (_state: RootState, characterId?: string) => characterId,
-  profileResponseSelector,
-  (characterId, profileResponse) => {
-    const unlockedPlugs = new Set<number>();
-    if (profileResponse?.profilePlugSets.data?.plugs) {
-      for (const plugSetHashStr in profileResponse.profilePlugSets.data.plugs) {
-        const plugSetHash = parseInt(plugSetHashStr, 10);
-        const plugs = profileResponse.profilePlugSets.data.plugs[plugSetHash];
-        for (const plugSetItem of plugs) {
-          const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
-          if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
-            unlockedPlugs.add(plugSetItem.plugItemHash);
+export const unlockedPlugSetItemsSelector = currySelector(
+  createSelector(
+    (_state: RootState, characterId?: string) => characterId,
+    profileResponseSelector,
+    (characterId, profileResponse) => {
+      const unlockedPlugs = new Set<number>();
+      if (profileResponse?.profilePlugSets.data?.plugs) {
+        for (const plugSetHashStr in profileResponse.profilePlugSets.data.plugs) {
+          const plugSetHash = parseInt(plugSetHashStr, 10);
+          const plugs = profileResponse.profilePlugSets.data.plugs[plugSetHash];
+          for (const plugSetItem of plugs) {
+            const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
+            if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
+              unlockedPlugs.add(plugSetItem.plugItemHash);
+            }
           }
         }
       }
-    }
-    if (characterId && profileResponse?.characterPlugSets.data?.[characterId]?.plugs) {
-      for (const plugSetHashStr in profileResponse.characterPlugSets.data[characterId].plugs) {
-        const plugSetHash = parseInt(plugSetHashStr, 10);
-        const plugs = profileResponse.characterPlugSets.data[characterId].plugs[plugSetHash];
-        for (const plugSetItem of plugs) {
-          const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
-          if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
-            unlockedPlugs.add(plugSetItem.plugItemHash);
+      if (characterId && profileResponse?.characterPlugSets.data?.[characterId]?.plugs) {
+        for (const plugSetHashStr in profileResponse.characterPlugSets.data[characterId].plugs) {
+          const plugSetHash = parseInt(plugSetHashStr, 10);
+          const plugs = profileResponse.characterPlugSets.data[characterId].plugs[plugSetHash];
+          for (const plugSetItem of plugs) {
+            const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
+            if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
+              unlockedPlugs.add(plugSetItem.plugItemHash);
+            }
           }
         }
       }
+      return unlockedPlugs;
     }
-    return unlockedPlugs;
-  }
+  )
 );
 
 /** gets all the dynamic strings from a profile response */

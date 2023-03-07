@@ -8,10 +8,14 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
-import { isInsertableArmor2Mod, sortMods } from 'app/loadout/mod-utils';
+import {
+  isInsertableArmor2Mod,
+  mapToAvailableModCostVariant,
+  sortMods,
+} from 'app/loadout/mod-utils';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
-import { armorStats } from 'app/search/d2-known-values';
+import { armorStats, deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
 import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
@@ -32,7 +36,7 @@ import { createSelector } from 'reselect';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
-import { Loadout, LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics
 export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
@@ -644,35 +648,46 @@ export function isMissingItems(
   return false;
 }
 
-/** Returns a flat list of mods hashes in the Loadout, by default including auto stat mods */
-export function getModHashesFromLoadout(loadout: Loadout, includeAutoMods = true) {
-  return [
+/**
+ * Returns a flat list of mods as PluggableInventoryItemDefinitions in the Loadout, by default including auto stat mods.
+ * This INCLUDES both locked and unlocked mods; `unlockedPlugs` is used to identify if the expensive or cheap copy of an
+ * armor mod should be used.
+ */
+export function getModsFromLoadout(
+  defs: D2ManifestDefinitions | undefined,
+  loadout: Loadout,
+  unlockedPlugs: Set<number>,
+  includeAutoMods = true
+) {
+  const internalModHashes = [
     ...(loadout.parameters?.mods ?? []),
     ...((includeAutoMods && loadout.autoStatMods) || []),
   ];
+
+  return resolveLoadoutModHashes(defs, internalModHashes, unlockedPlugs);
 }
 
-/** Returns a flat list of mods as PluggableInventoryItemDefinitions in the Loadout, by default including auto stat mods */
-export function getModsFromLoadout(
-  defs: D1ManifestDefinitions | D2ManifestDefinitions | undefined,
-  loadout: Loadout,
-  includeAutoMods = true
+export function resolveLoadoutModHashes(
+  defs: D2ManifestDefinitions | undefined,
+  modHashes: number[],
+  unlockedPlugs: Set<number>
 ) {
-  const mods: PluggableInventoryItemDefinition[] = [];
-
-  if (defs?.isDestiny2()) {
-    for (const modHash of getModHashesFromLoadout(loadout, includeAutoMods)) {
-      const item = defs.InventoryItem.get(modHash);
+  const mods: ResolvedLoadoutMod[] = [];
+  if (defs) {
+    for (const originalModHash of modHashes) {
+      const resolvedModHash = mapToAvailableModCostVariant(originalModHash, unlockedPlugs);
+      const item = defs.InventoryItem.get(resolvedModHash);
       if (isPluggableItem(item)) {
-        mods.push(item);
+        mods.push({ originalModHash, resolvedMod: item });
       } else {
-        const deprecatedPlaceholderMod = defs.InventoryItem.get(3947616002);
-        isPluggableItem(deprecatedPlaceholderMod) && mods.push(deprecatedPlaceholderMod);
+        const deprecatedPlaceholderMod = defs.InventoryItem.get(deprecatedPlaceholderArmorModHash);
+        isPluggableItem(deprecatedPlaceholderMod) &&
+          mods.push({ originalModHash, resolvedMod: deprecatedPlaceholderMod });
       }
     }
   }
 
-  return mods.sort(sortMods);
+  return mods.sort((a, b) => sortMods(a.resolvedMod, b.resolvedMod));
 }
 
 function getSubclassFragmentCapacity(subclassItem: DimItem): number {

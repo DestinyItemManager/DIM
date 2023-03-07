@@ -14,8 +14,12 @@ import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
+import {
+  newLoadout,
+  newLoadoutFromEquipped,
+  resolveLoadoutModHashes,
+} from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
@@ -37,7 +41,7 @@ import _ from 'lodash';
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { allItemsSelector } from '../inventory/selectors';
+import { allItemsSelector, unlockedPlugSetItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import ModPicker from '../loadout/ModPicker';
@@ -180,21 +184,22 @@ export default memo(function LoadoutBuilder({
 
   const autoStatMods = loadoutParameters.autoStatMods ?? false;
 
-  const lockedMods = useMemo(
-    () =>
-      (loadoutParameters.mods ?? []).map((m) => defs.InventoryItem.get(m)).filter(isPluggableItem),
-    [defs, loadoutParameters.mods]
-  );
-
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
+  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(selectedStoreId));
+
+  const resolvedMods: ResolvedLoadoutMod[] = useMemo(
+    () => resolveLoadoutModHashes(defs, loadoutParameters.mods ?? [], unlockedPlugs),
+    [defs, loadoutParameters.mods, unlockedPlugs]
+  );
+  const modsToAssign = useMemo(() => resolvedMods.map((mod) => mod.resolvedMod), [resolvedMods]);
 
   const characterItems = items[classType];
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
     () =>
-      categorizeArmorMods(lockedMods, characterItems ? Object.values(characterItems).flat() : []),
-    [characterItems, lockedMods]
+      categorizeArmorMods(modsToAssign, characterItems ? Object.values(characterItems).flat() : []),
+    [characterItems, modsToAssign]
   );
 
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
@@ -399,7 +404,7 @@ export default memo(function LoadoutBuilder({
         selectedStore={selectedStore}
         pinnedItems={pinnedItems}
         excludedItems={excludedItems}
-        lockedMods={lockedMods}
+        lockedMods={resolvedMods}
         subclass={subclass}
         lockedExoticHash={lockedExoticHash}
         searchFilter={searchFilter}
@@ -519,6 +524,7 @@ export default memo(function LoadoutBuilder({
           <NoBuildsFoundExplainer
             defs={defs}
             dispatch={lbDispatch}
+            resolvedMods={resolvedMods}
             lockedModMap={lockedModMap}
             alwaysInvalidMods={unassignedMods}
             autoAssignStatMods={autoStatMods}
@@ -535,7 +541,7 @@ export default memo(function LoadoutBuilder({
             <ModPicker
               classType={classType}
               owner={selectedStore.id}
-              lockedMods={lockedMods}
+              lockedMods={resolvedMods}
               plugCategoryHashWhitelist={modPicker.plugCategoryHashWhitelist}
               plugCategoryHashDenyList={autoAssignmentPCHs}
               onAccept={(newLockedMods) =>

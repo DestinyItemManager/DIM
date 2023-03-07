@@ -4,7 +4,7 @@ import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { AppIcon, deleteIcon, redoIcon, undoIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
-import { currySelector } from 'app/utils/redux-utils';
+import { currySelector } from 'app/utils/selector-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';

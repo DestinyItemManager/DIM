@@ -7,7 +7,7 @@ import {
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { currySelector } from 'app/utils/redux-utils';
+import { currySelector } from 'app/utils/selector-utils';
 import { createSelector } from 'reselect';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
 

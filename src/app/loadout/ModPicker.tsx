@@ -5,6 +5,7 @@ import {
   currentStoreSelector,
   profileResponseSelector,
 } from 'app/inventory/selectors';
+import { ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import {
@@ -40,7 +41,7 @@ const sortModPickerPlugGroups = (a: PlugSet, b: PlugSet) => sortModGroups(a.plug
 
 interface ProvidedProps {
   /** An array of mods that are already selected by the user. */
-  lockedMods: PluggableInventoryItemDefinition[];
+  lockedMods: ResolvedLoadoutMod[];
   /** The character class we'll show unlocked mods for. */
   classType?: DestinyClass;
   /**
@@ -54,7 +55,7 @@ interface ProvidedProps {
   /** Never show mods in these categories */
   plugCategoryHashDenyList?: number[];
   /** Called with the complete list of lockedMods when the user accepts the new mod selections. */
-  onAccept: (newLockedMods: PluggableInventoryItemDefinition[]) => void;
+  onAccept: (newLockedMods: number[]) => void;
   /** Called when the user accepts the new modset of closes the sheet. */
   onClose: () => void;
 }
@@ -213,7 +214,7 @@ function mapStateToProps() {
       // essentially the same logic that actual mod assignment uses.
       const orderedMods = _.sortBy(
         lockedMods,
-        (mod) => plugSets.filter((s) => s.plugs.some((p) => p.hash === mod.hash)).length
+        (mod) => plugSets.filter((s) => s.plugs.some((p) => p.hash === mod.resolvedMod.hash)).length
       );
 
       // However, sort the plugSets so that regular armor plugsets are preferred.
@@ -225,12 +226,12 @@ function mapStateToProps() {
       // Now we populate the plugsets with their corresponding plugs.
       for (const initiallySelected of orderedMods) {
         const possiblePlugSets = plugSets.filter((set) =>
-          set.plugs.some((plug) => plug.hash === initiallySelected.hash)
+          set.plugs.some((plug) => plug.hash === initiallySelected.resolvedMod.hash)
         );
 
         for (const possiblePlugSet of possiblePlugSets) {
           if (possiblePlugSet.selected.length < possiblePlugSet.maxSelectable) {
-            possiblePlugSet.selected.push(initiallySelected);
+            possiblePlugSet.selected.push(initiallySelected.resolvedMod);
             break;
           }
         }
@@ -258,7 +259,7 @@ function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Pr
   const [_visibleSelectedMods, hiddenSelectedMods] = useMemo(
     () =>
       _.partition(lockedMods, (mod) =>
-        plugSets.some((plugSet) => plugSet.plugs.some((plug) => plug.hash === mod.hash))
+        plugSets.some((plugSet) => plugSet.plugs.some((plug) => plug.hash === mod.resolvedMod.hash))
       ),
     [lockedMods, plugSets]
   );
@@ -266,7 +267,10 @@ function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Pr
   const onAcceptWithHiddenSelectedMods = useCallback(
     (newLockedMods: PluggableInventoryItemDefinition[]) => {
       // Put back the mods that were filtered out of the display
-      onAccept([...hiddenSelectedMods, ...newLockedMods]);
+      onAccept([
+        ...hiddenSelectedMods.map((mod) => mod.originalModHash),
+        ...newLockedMods.map((mod) => mod.hash),
+      ]);
     },
     [hiddenSelectedMods, onAccept]
   );

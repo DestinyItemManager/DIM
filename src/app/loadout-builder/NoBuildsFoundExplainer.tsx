@@ -3,6 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { AppIcon, banIcon } from 'app/shell/icons';
@@ -44,6 +45,7 @@ export default function NoBuildsFoundExplainer({
   defs,
   dispatch,
   autoAssignStatMods,
+  resolvedMods,
   lockedModMap,
   alwaysInvalidMods,
   armorEnergyRules,
@@ -56,6 +58,7 @@ export default function NoBuildsFoundExplainer({
   defs: D2ManifestDefinitions;
   dispatch: Dispatch<LoadoutBuilderAction>;
   autoAssignStatMods: boolean;
+  resolvedMods: ResolvedLoadoutMod[];
   lockedModMap: ModMap;
   alwaysInvalidMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
@@ -67,13 +70,23 @@ export default function NoBuildsFoundExplainer({
 }) {
   const problems: ProblemDescription[] = [];
 
+  // Note: This component looks at what happened to mods when they were assigned, and offers ways to
+  // remove them based on that. Unfortunately removal needs ResolvedLoadoutMods, but we don't really want
+  // to make all mod assignment code operate on ResolvedLoadoutMods, so instead we find the original mod
+  // using a search through `resolvedMods`. We should avoid this, so maybe look at using ResolvedLoadoutMod more?
+
   const modRow = (mods: PluggableInventoryItemDefinition[]) => (
     <div key="modsDisplay" className={styles.modRow}>
       {mods.map((mod, index) => (
         <PlugDef
           key={index}
           plug={mod}
-          onClose={() => dispatch({ type: 'removeLockedMod', mod })}
+          onClose={() =>
+            dispatch({
+              type: 'removeLockedMod',
+              mod: resolvedMods.find((resolved) => resolved.resolvedMod === mod)!,
+            })
+          }
         />
       ))}
     </div>
@@ -95,7 +108,13 @@ export default function NoBuildsFoundExplainer({
                 key="removeAllInvalid"
                 type="button"
                 className="dim-button"
-                onClick={() => dispatch({ type: 'removeLockedMods', mods: alwaysInvalidMods })}
+                onClick={() =>
+                  dispatch({
+                    type: 'lockedModsChanged',
+                    // Drop all invalid mods by setting current mods to only the valid mods
+                    lockedMods: lockedModMap.allMods.map((mod) => mod.hash),
+                  })
+                }
               >
                 <AppIcon icon={banIcon} /> {t('LoadoutBuilder.NoBuildsFoundExplainer.RemoveMods')}
               </button>
@@ -329,6 +348,16 @@ export default function NoBuildsFoundExplainer({
                 >
                   {t('LoadoutBuilder.NoBuildsFoundExplainer.AllowAutoStatMods')}
                 </button>
+              ),
+            },
+          autoAssignStatMods &&
+            lockedModMap.generalMods.length > 0 && {
+              id: 'removeGeneralMods',
+              contents: (
+                <>
+                  {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveMods')}
+                  {modRow(lockedModMap.generalMods)}
+                </>
               ),
             },
           {

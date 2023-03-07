@@ -183,6 +183,9 @@ export const pinnacleSources = [
   73143230, // Pinnacle
 ];
 
+// For loadout mods obliterated from the defs, we instead return this def
+export const deprecatedPlaceholderArmorModHash = 3947616002;
+
 //
 // BUCKETS KNOWN VALUES
 //
