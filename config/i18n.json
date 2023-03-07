@@ -946,7 +946,7 @@
     "ColumnSizeAuto": "Auto",
     "CommunityData": "Community Perk Insights",
     "CsvImport": "Import CSV",
-    "CustomStatTitle": "Custom Stat Totals",
+    "CustomStatTitle": "Custom Stat Total",
     "CustomStatDesc1": "Choose desired armor stats to make a custom total stat.",
     "CustomStatDesc3": "Custom stats will appear in the Item Popup, Organizer, and Compare.",
     "CustomDesc": "Custom weighted total of stats. Visit Settings to configure which stats are included.",
