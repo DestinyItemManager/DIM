@@ -1,16 +1,8 @@
-import {
-  CustomStatDef,
-  CustomStatWeights,
-  defaultLoadoutParameters,
-  DestinyVersion,
-} from '@destinyitemmanager/dim-api-types';
+import { defaultLoadoutParameters, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
-import { t } from 'app/i18next-t';
-import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { Settings } from 'app/settings/initial-settings';
 import { RootState } from 'app/store/types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { createSelector } from 'reselect';
 
 export function makeProfileKeyFromAccount(account: DestinyAccount) {
@@ -49,35 +41,7 @@ export const collapsedSelector =
 export const oldCustomTotalSelector = (state: RootState) =>
   settingsSelector(state).customTotalStatsByClass;
 
-export const newCustomStatsSelector = (state: RootState) => settingsSelector(state).customStats;
-
-// converts any old stats stored in the old setting, to the new format
-export const normalizedCustomStatsSelector = (state: RootState) => {
-  const oldCustomStats = oldCustomTotalSelector(state);
-  const convertedOldStats: CustomStatDef[] = [];
-
-  for (const classEnumString in oldCustomStats) {
-    const classEnum: DestinyClass = parseInt(classEnumString);
-    const statHashList = oldCustomStats[classEnum];
-
-    if (classEnum !== DestinyClass.Unknown && statHashList?.length > 0) {
-      const weights: CustomStatWeights = {};
-      for (const statHash of statHashList) {
-        weights[statHash] = 1;
-      }
-      convertedOldStats.push({
-        label: t('Stats.Custom'),
-        shortLabel: 'custom',
-        class: classEnum,
-        weights,
-        // converted old stats get special permission to use stat hashes higher than CUSTOM_TOTAL_STAT_HASH
-        // other are decremented from CUSTOM_TOTAL_STAT_HASH
-        statHash: CUSTOM_TOTAL_STAT_HASH + 1 + classEnum,
-      });
-    }
-  }
-  return [...convertedOldStats, ...newCustomStatsSelector(state)];
-};
+export const customStatsSelector = (state: RootState) => settingsSelector(state).customStats;
 
 export const apiPermissionGrantedSelector = (state: RootState) =>
   state.dimApi.apiPermissionGranted === true;
