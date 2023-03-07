@@ -9,10 +9,8 @@ export interface ModSocketMetadata {
   socketTypeHashes: number[];
   /** mod items have a plugCategoryHash. this mod slot can hold these plugCategoryHashes */
   compatiblePlugCategoryHashes: number[];
-  /** this helps us look up the "empty socket" definition, for its icon & name */
+  /** this helps us look up an "empty socket" definition, for its icon & name only */
   emptyModSocketHash: number;
-  /** so you can look these entries up if all you're given is an "Empty Mod Slot" plug item */
-  emptyModSocketHashes: number[];
   /**
    * the year is 2022. the raid is Vow of the Disciple. bungie forgot to give raid mods a itemTypeDisplayName.
    * let's use this Activity name instead.
@@ -58,22 +56,12 @@ const legacySocketTypeHashes = [
   3267328333, // arrivals
 ];
 
-const legacyEmptyModSocketHashes = [
-  720857, // forge
-  2357307006, // dawn
-  2620967748, // undying
-  2655746324, // worthy
-  4153634494, // arrivals
-  4106547009, // opulent
-];
-
 const modSocketMetadata: ModSocketMetadata[] = [
   {
     slotTag: 'legacy',
     compatibleModTags: legacyCompatibleTags,
     socketTypeHashes: legacySocketTypeHashes,
     compatiblePlugCategoryHashes: legacyCompatiblePlugCategoryHashes,
-    emptyModSocketHashes: legacyEmptyModSocketHashes,
     emptyModSocketHash: 4153634494, // the arrivals icon. i don't know.
   },
   {
@@ -81,7 +69,6 @@ const modSocketMetadata: ModSocketMetadata[] = [
     compatibleModTags: ['lastwish'],
     socketTypeHashes: [1444083081],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsSeasonOutlaw],
-    emptyModSocketHashes: [1679876242],
     emptyModSocketHash: 1679876242, // ARGH, this is the wrong image in the game/manifest
   },
   {
@@ -89,7 +76,6 @@ const modSocketMetadata: ModSocketMetadata[] = [
     compatibleModTags: ['gardenofsalvation'],
     socketTypeHashes: [1764679361],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidGarden],
-    emptyModSocketHashes: [706611068],
     emptyModSocketHash: 706611068,
   },
   {
@@ -97,7 +83,6 @@ const modSocketMetadata: ModSocketMetadata[] = [
     compatibleModTags: ['deepstonecrypt'],
     socketTypeHashes: [1269555732],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidDescent],
-    emptyModSocketHashes: [4055462131],
     emptyModSocketHash: 4055462131,
   },
   {
@@ -105,7 +90,6 @@ const modSocketMetadata: ModSocketMetadata[] = [
     compatibleModTags: ['vaultofglass'],
     socketTypeHashes: [3372624220],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV520],
-    emptyModSocketHashes: [3738398030],
     emptyModSocketHash: 3738398030,
   },
   {
@@ -113,7 +97,6 @@ const modSocketMetadata: ModSocketMetadata[] = [
     compatibleModTags: ['vowofthedisciple'],
     socketTypeHashes: [2381877427],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV600],
-    emptyModSocketHashes: [2447143568],
     emptyModSocketHash: 2447143568,
   },
   {
@@ -121,7 +104,6 @@ const modSocketMetadata: ModSocketMetadata[] = [
     compatibleModTags: ['kingsfall'],
     socketTypeHashes: [3344538838],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV620],
-    emptyModSocketHashes: [1728096240],
     emptyModSocketHash: 1728096240,
   },
   {
@@ -129,15 +111,13 @@ const modSocketMetadata: ModSocketMetadata[] = [
     compatibleModTags: ['nightmare'],
     socketTypeHashes: [2701840022],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsSeasonMaverick],
-    emptyModSocketHashes: [1180997867],
     emptyModSocketHash: 1180997867,
   },
   {
     slotTag: 'artifice',
     compatibleModTags: ['artifice'],
-    socketTypeHashes: [1719555937],
+    socketTypeHashes: [1719555937, 2770223926, 3642670483, 2831858578, 4096670123, 3136585661],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsArtifice],
-    emptyModSocketHashes: [4173924323],
     emptyModSocketHash: 4173924323,
   },
 ];

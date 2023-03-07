@@ -17,7 +17,7 @@ import { DEFAULT_ORNAMENTS, EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-va
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { emptySpecialtySocketHashes, isPlugStatActive } from 'app/utils/item-utils';
+import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -229,10 +229,7 @@ export default function SocketDetailsSelectedPlug({
       <div className={styles.modDescription}>
         <h3>
           {plug.displayProperties.name}
-          {/* TODO: Use emptyPlugItemHash here? */}
-          {emptySpecialtySocketHashes.includes(plug.hash) && (
-            <> &mdash; {plug.itemTypeDisplayName}</>
-          )}
+          {plug.hash === socket.emptyPlugItemHash && <> &mdash; {plug.itemTypeDisplayName}</>}
         </h3>
         {plugDescriptions.perks.map((perkDesc) => (
           <React.Fragment key={perkDesc.perkHash}>
