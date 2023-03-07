@@ -964,7 +964,6 @@
     "ExportProfile": "Export API profile response",
     "ExportSS": "Inventory spreadsheets",
     "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
-    "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
     "HidePullFromPostmaster": "Hide the \"$t(Loadouts.PullFromPostmaster)\" button",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
@@ -1233,7 +1232,7 @@
     },
     "Login": {
       "Auth": "Authorize with Bungie.net",
-      "BackupPrompt": "Are you sure you want to enable DIM Sync without a backup?",
+      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "You had previously disabled DIM Sync and were only using local data storage. Enabling DIM Sync will replace any local data with the data from DIM Sync. You should back up your data before enabling DIM Sync. You can restore from that backup in Settings.",
       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
       "LearnMore": "Learn more about accounts and login",
