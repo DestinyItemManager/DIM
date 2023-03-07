@@ -45,7 +45,9 @@ const loadoutFilters: FilterDefinition[] = [
             l.loadout.name.toLowerCase().includes(filterValue) ||
             (filterValue.startsWith('#') && // short circuit for less load
               !isInGameLoadout(l.loadout) &&
-              getHashtagsFromNote(l.loadout.notes).includes(filterValue))
+              getHashtagsFromNote(l.loadout.notes)
+                .map((t) => t.toLowerCase())
+                .includes(filterValue))
         );
     },
   },
