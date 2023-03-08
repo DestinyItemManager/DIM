@@ -34,6 +34,7 @@ const statFilters: FilterDefinition[] = [
     // t('Filter.StatsExtras')
     description: tl('Filter.Stats'),
     format: 'stat',
+    suggestionKeywords: allAtomicStats,
     suggestionKeywordGenerator: ({ customStats }) => customStats?.map((c) => c.shortLabel),
     validateStat,
     filter: ({ filterValue, compare, customStats }) =>
