@@ -1,6 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { RootState, ThunkResult } from 'app/store/types';
 import * as actions from 'app/stream-deck/actions';
 import { Reducer } from 'redux';
@@ -174,6 +174,8 @@ export interface SelectionArgs {
       isExotic?: boolean;
       element?: string;
       inventory?: boolean;
+      background?: string;
+      gameIcon?: string;
     };
   };
 }
@@ -199,6 +201,16 @@ export interface SendAuthorizationResetArgs {
   action: 'authorization:reset';
 }
 
+export type LoadoutSelection =
+  | {
+      type: 'dim';
+      loadout: Loadout;
+    }
+  | {
+      type: 'game';
+      loadout: InGameLoadout;
+    };
+
 export type SendToStreamDeckArgs =
   | SendUpdateArgs
   | SelectionArgs
@@ -212,7 +224,7 @@ export interface LazyStreamDeck {
     startStreamDeckConnection: () => ThunkResult;
     stopStreamDeckConnection: () => ThunkResult;
     streamDeckSelectItem: (item: DimItem) => ThunkResult;
-    streamDeckSelectLoadout: (loadout: Loadout, store: DimStore) => ThunkResult;
+    streamDeckSelectLoadout: (loadout: LoadoutSelection, store: DimStore) => ThunkResult;
     resetIdentifierOnStreamDeck: () => void;
   };
 }
