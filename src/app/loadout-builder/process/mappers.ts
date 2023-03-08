@@ -155,7 +155,6 @@ export function mapDimItemToProcessItem({
 }
 
 export function hydrateArmorSet(
-  defs: D2ManifestDefinitions,
   processed: ProcessArmorSet,
   itemsById: Map<string, ItemGroup>
 ): ArmorSet {
@@ -165,22 +164,9 @@ export function hydrateArmorSet(
     armor.push(itemsById.get(itemId)!.items);
   }
 
-  const statsWithAutoMods = { ...processed.stats };
-
-  for (const modHash of processed.statMods) {
-    const def = defs.InventoryItem.get(modHash);
-    if (def?.investmentStats.length) {
-      for (const stat of def.investmentStats) {
-        if (statsWithAutoMods[stat.statTypeHash] !== undefined) {
-          statsWithAutoMods[stat.statTypeHash] += stat.value;
-        }
-      }
-    }
-  }
-
   return {
     armor,
-    stats: statsWithAutoMods,
+    stats: processed.stats,
     statMods: processed.statMods,
   };
 }

@@ -188,7 +188,7 @@ export function pickOptimalStatMods(
   items: ProcessItem[],
   setStats: number[],
   statFiltersInStatOrder: MinMaxIgnored[]
-): { mods: number[]; numPoints: number } | undefined {
+): { mods: number[]; numBonusTiers: number; bonusStats: number[] } | undefined {
   const remainingEnergiesPerAssignment: number[][] = [];
 
   let setEnergy = 0;
@@ -263,7 +263,8 @@ export function pickOptimalStatMods(
   return (
     bestBoosts && {
       mods: bestBoosts.picks.flatMap((pick) => pick.modHashes),
-      numPoints: bestBoosts.depth,
+      numBonusTiers: bestBoosts.depth,
+      bonusStats: bestBoosts.bonusStats,
     }
   );
 }
@@ -271,6 +272,7 @@ export function pickOptimalStatMods(
 interface SearchResult {
   picks: ModsPick[];
   depth: number;
+  bonusStats: number[];
 }
 
 /**
@@ -365,6 +367,7 @@ function exploreAutoModsSearchTree(
   let bestResult: SearchResult = {
     depth,
     picks,
+    bonusStats: explorationStats,
   };
 
   // The cost to get to the next tier has two dimensions:

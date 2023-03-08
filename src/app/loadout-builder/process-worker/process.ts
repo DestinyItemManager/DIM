@@ -382,20 +382,36 @@ export function process(
 
   const finalSets = setTracker.getArmorSets(RETURNED_ARMOR_SETS);
 
-  const sets = finalSets.map(({ armor, stats, statMods }) => {
-    const statsWithoutAutoMods = statOrder.reduce((statObj, statHash, i) => {
-      statObj[statHash] = stats[i];
+  const sets = finalSets.map(({ armor, stats }) => {
+    // This only fails if minimum tier requirements cannot be hit, but we know they can because
+    // we ensured it internally.
+    const { mods, bonusStats } = pickOptimalStatMods(
+      precalculatedInfo,
+      armor,
+      stats,
+      statFiltersInStatOrder
+    )!;
+
+    const totalStats = statOrder.reduce((statObj, statHash, i) => {
+      const value = stats[i] + bonusStats[i];
+      statObj[statHash] = value;
+
+      // Track the stat ranges after our auto mods picks
+      const range = statRangesFilteredInStatOrder[i];
+      if (value > range.max) {
+        range.max = value;
+      }
+      if (value < range.min) {
+        range.min = value;
+      }
+
       return statObj;
     }, {}) as ArmorStats;
 
-    const allStatMods =
-      pickOptimalStatMods(precalculatedInfo, armor, stats, statFiltersInStatOrder)?.mods ||
-      statMods;
-
     return {
       armor: armor.map((item) => item.id),
-      stats: statsWithoutAutoMods,
-      statMods: allStatMods,
+      stats: totalStats,
+      statMods: mods,
     };
   });
 
