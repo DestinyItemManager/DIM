@@ -1,0 +1,75 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { armorStats } from 'app/search/d2-known-values';
+import { emptySet } from 'app/utils/empty';
+import { StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
+import { getTestDefinitions } from 'testing/test-utils';
+import { precalculateStructures } from './process-worker/process-utils';
+import { ProcessMod } from './process-worker/types';
+import { getAutoMods, mapAutoMods } from './process/mappers';
+import { generalSocketReusablePlugSetHash } from './types';
+
+// The tsconfig in the process worker folder messes with tests so they live outside of it.
+describe('process-utils auto mod structure', () => {
+  let defs: D2ManifestDefinitions;
+  beforeAll(async () => {
+    defs = await getTestDefinitions();
+  });
+
+  const generalMods: ProcessMod[] = [
+    { hash: 7, energy: { val: 3 } },
+    { hash: 8, energy: { val: 5 } },
+    { hash: 9, energy: { val: 2 } },
+    { hash: 10, energy: { val: 1 } },
+    { hash: 11, energy: { val: 2 } },
+  ];
+
+  test.each(['general', 'cheapgeneral'] as const)(
+    'snapshot of mod defs when assuming %s for auto mods',
+    (n) => {
+      const unlockedPlugs =
+        n === 'cheapgeneral'
+          ? new Set([
+              ...defs.PlugSet.get(generalSocketReusablePlugSetHash).reusablePlugItems.map(
+                (entry) => entry.plugItemHash
+              ),
+            ])
+          : emptySet<number>();
+      const autoModData = mapAutoMods(getAutoMods(defs, unlockedPlugs));
+      expect(autoModData).toMatchSnapshot();
+      const sessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
+      expect(sessionInfo.autoModOptions.cheaperStatsPerStat).toMatchSnapshot();
+    }
+  );
+
+  test.each([
+    [5, false],
+    [3, false],
+    [1, true],
+    [0, true],
+    [5, true],
+  ] as const)(
+    'different ways of hitting target stats with %s remaining general mods (using artifice mods: %s)',
+    (numGeneralMods, useArtificeMods) => {
+      const unlockedPlugs = emptySet<number>();
+      const autoModData = mapAutoMods(getAutoMods(defs, unlockedPlugs));
+      if (!useArtificeMods) {
+        autoModData.artificeMods = {};
+      }
+      const sessionInfo = precalculateStructures(
+        autoModData,
+        generalMods.slice(0, 5 - numGeneralMods),
+        [],
+        true,
+        armorStats
+      );
+      const waysOfHittingStat = _.mapValues(
+        sessionInfo.autoModOptions.statCaches[StatHashes.Recovery].statMap,
+        (y) => y?.length
+      );
+      // Things to watch out for in the snapshot: Keys are contiguous, values first ascend
+      // to around the halfway point before descending in a vaguely binomial-coefficient-like fashion
+      expect(waysOfHittingStat).toMatchSnapshot();
+    }
+  );
+});

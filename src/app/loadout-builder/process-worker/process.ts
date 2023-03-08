@@ -15,6 +15,7 @@ import {
 } from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
+  AutoModData,
   LockedProcessMods,
   ProcessArmorSet,
   ProcessItem,
@@ -41,6 +42,8 @@ export function process(
   statFilters: StatFilters,
   /** Ensure every set includes one exotic */
   anyExotic: boolean,
+  /** Which artifice mods, large, and small stat mods are available */
+  autoModOptions: AutoModData,
   /** Use stat mods to hit stat minimums */
   autoStatMods: boolean,
   onProgress: (remainingTime: number) => void
@@ -105,6 +108,7 @@ export function process(
   const { activityMods, generalMods } = lockedMods;
 
   const precalculatedInfo = precalculateStructures(
+    autoModOptions,
     generalMods,
     activityMods,
     autoStatMods,

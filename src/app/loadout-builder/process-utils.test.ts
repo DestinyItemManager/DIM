@@ -1,6 +1,6 @@
 import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { StatHashes } from 'data/d2/generated-enums';
+import { armorStats } from 'app/search/d2-known-values';
 import _ from 'lodash';
 import {
   enhancedOperatorAugmentModHash,
@@ -19,7 +19,7 @@ import {
 } from './process-worker/process-utils';
 import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './process-worker/types';
 import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
-import { ArmorStatHashes, MIN_LO_ITEM_ENERGY } from './types';
+import { MIN_LO_ITEM_ENERGY } from './types';
 
 function modifyMod({
   mod,
@@ -66,7 +66,7 @@ function modifyItem({
 }
 
 // The tsconfig in the process worker folder messes with tests so they live outside of it.
-describe('process-utils', () => {
+describe('process-utils mod assignment', () => {
   let generalMod: ProcessMod;
   let activityMod: ProcessMod;
 
@@ -144,16 +144,15 @@ describe('process-utils', () => {
     activityMods: ProcessMod[],
     items: ProcessItem[]
   ) => {
-    const statOrder: ArmorStatHashes[] = [
-      StatHashes.Mobility,
-      StatHashes.Resilience,
-      StatHashes.Recovery,
-      StatHashes.Discipline,
-      StatHashes.Intellect,
-      StatHashes.Strength,
-    ];
+    const autoMods = { largeMods: {}, smallMods: {}, artificeMods: {} };
     const neededStats = [0, 0, 0, 0, 0, 0];
-    const precalculatedInfo = precalculateStructures(generalMods, activityMods, false, statOrder);
+    const precalculatedInfo = precalculateStructures(
+      autoMods,
+      generalMods,
+      activityMods,
+      false,
+      armorStats
+    );
     const modStatistics: ModAssignmentStatistics = {
       earlyModsCheck: { timesChecked: 0, timesFailed: 0 },
       autoModsPick: { timesChecked: 0, timesFailed: 0 },

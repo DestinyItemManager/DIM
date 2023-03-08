@@ -1,41 +1,8 @@
 import { armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
-import { StatHashes } from 'data/d2/generated-enums';
 import { ArmorStatHashes } from '../types';
 import { LoSessionInfo } from './process-utils';
-import { ProcessItem } from './types';
-
-// Regular stat mods add 10
-const largeStatMods: {
-  [statHash in ArmorStatHashes]: { hash: number; cost: number };
-} = {
-  [StatHashes.Mobility]: { hash: 4183296050, cost: 3 },
-  [StatHashes.Resilience]: { hash: 1180408010, cost: 4 },
-  [StatHashes.Recovery]: { hash: 4204488676, cost: 4 },
-  [StatHashes.Discipline]: { hash: 1435557120, cost: 3 },
-  [StatHashes.Intellect]: { hash: 2724608735, cost: 4 },
-  [StatHashes.Strength]: { hash: 4287799666, cost: 3 },
-};
-
-// Minor stat mods add 5
-const minorStatMods: { [statHash in ArmorStatHashes]: { hash: number; cost: number } } = {
-  [StatHashes.Mobility]: { hash: 1703647492, cost: 1 },
-  [StatHashes.Resilience]: { hash: 2532323436, cost: 2 },
-  [StatHashes.Recovery]: { hash: 1237786518, cost: 2 },
-  [StatHashes.Discipline]: { hash: 4021790309, cost: 1 },
-  [StatHashes.Intellect]: { hash: 350061697, cost: 2 },
-  [StatHashes.Strength]: { hash: 2639422088, cost: 1 },
-};
-
-// Artifice mods add 3
-export const artificeStatMods: { [statHash in ArmorStatHashes]: { hash: number } } = {
-  [StatHashes.Mobility]: { hash: 2322202118 },
-  [StatHashes.Resilience]: { hash: 199176566 },
-  [StatHashes.Recovery]: { hash: 539459624 },
-  [StatHashes.Discipline]: { hash: 617569843 },
-  [StatHashes.Intellect]: { hash: 3160845295 },
-  [StatHashes.Strength]: { hash: 2507624050 },
-};
+import { AutoModData, ProcessItem } from './types';
 
 /**
  * A particular way of achieving a target stat value (for a single stat).
@@ -67,6 +34,11 @@ interface CacheForStat {
  */
 export interface AutoModsMap {
   statCaches: { [statHash in ArmorStatHashes]: CacheForStat };
+  /**
+   * A list of stats where the mods are better or equal than the mods for `statHash`,
+   * better defined as "not more expensive".
+   */
+  cheaperStatsPerStat: { [statHash in ArmorStatHashes]: ArmorStatHashes[] };
 }
 
 /**
@@ -196,17 +168,27 @@ function recursivelyChooseMods(
  * This unfortunately means a lot of `flatMap`ing down the road and is a lot less efficient. Improvements here
  * could make things a bit faster, especially when they remove equivalent combinations.
  */
-function buildCacheForStat(statHash: ArmorStatHashes, availableGeneralStatMods: number) {
+function buildCacheForStat(
+  autoModOptions: AutoModData,
+  statHash: ArmorStatHashes,
+  availableGeneralStatMods: number
+) {
   const cache: CacheForStat = { statMap: {} };
-  const artificeMod = artificeStatMods[statHash];
-  const minorMod = minorStatMods[statHash];
-  const majorMod = largeStatMods[statHash];
+  // Note: All of these could be undefined for whatever reason.
+  // In that case, the loop bounds are 0 <= numMods <= 0.
+  const artificeMod = autoModOptions.artificeMods[statHash];
+  const minorMod = autoModOptions.smallMods[statHash];
+  const majorMod = autoModOptions.largeMods[statHash];
 
-  for (let numArtificeMods = 0; numArtificeMods <= 5; numArtificeMods++) {
-    for (let numMinorMods = 0; numMinorMods <= availableGeneralStatMods; numMinorMods++) {
+  for (let numArtificeMods = 0; numArtificeMods <= (artificeMod ? 5 : 0); numArtificeMods++) {
+    for (
+      let numMinorMods = 0;
+      numMinorMods <= (minorMod ? availableGeneralStatMods : 0);
+      numMinorMods++
+    ) {
       for (
         let numMajorMods = 0;
-        numMajorMods <= availableGeneralStatMods - numMinorMods;
+        numMajorMods <= (majorMod ? availableGeneralStatMods - numMinorMods : 0);
         numMajorMods++
       ) {
         const statValue = numArtificeMods * 3 + numMinorMods * 5 + numMajorMods * 10;
@@ -215,25 +197,26 @@ function buildCacheForStat(statHash: ArmorStatHashes, availableGeneralStatMods: 
         }
         // We are allowed to provide more stat points than needed -- within reason.
         // If we have a major mod, this satisfies stat needs of 6,7,8,9,10
-        // 5 can be satisfied by a strictly better pick that includes only a minor mod.
+        // 5 can be satisfied by a strictly better pick that includes only a minor mod
+        // (if there is one, otherwise this also satisfies 1,2,3,4,5)
         // If we have a major mod and an artifice mod, this satisfies 11,12,13.
         // 10 can be satisfied by dropping the artifice mod.
         // So if we have any artifice pieces, we are allowed to overshoot by 2, and if
-        // not then we're allowed to overshoot by 4.
-        const lowerRange = statValue - (numArtificeMods > 0 ? 2 : 4);
+        // not then we're allowed to overshoot by 4 or 9.
+        const lowerRange = statValue - (numArtificeMods > 0 ? 2 : minorMod ? 4 : 9);
         const obj: ModsPick = {
           numArtificeMods,
           numGeneralMods: numMinorMods + numMajorMods,
           generalModsCosts: [
-            ...Array(numMajorMods).fill(majorMod.cost),
-            ...Array(numMinorMods).fill(minorMod.cost),
+            ...Array(numMajorMods).fill(majorMod?.cost),
+            ...Array(numMinorMods).fill(minorMod?.cost),
           ],
           modHashes: [
-            ...Array(numMajorMods).fill(majorMod.hash),
-            ...Array(numMinorMods).fill(minorMod.hash),
-            ...Array(numArtificeMods).fill(artificeMod.hash),
+            ...Array(numMajorMods).fill(majorMod?.hash),
+            ...Array(numMinorMods).fill(minorMod?.hash),
+            ...Array(numArtificeMods).fill(artificeMod?.hash),
           ],
-          modEnergyCost: numMinorMods * minorMod.cost + numMajorMods,
+          modEnergyCost: numMinorMods * (minorMod?.cost || 0) + numMajorMods,
         };
         for (let achievableValue = lowerRange; achievableValue <= statValue; achievableValue++) {
           (cache.statMap[achievableValue] ??= []).push(obj);
@@ -249,13 +232,51 @@ function buildCacheForStat(statHash: ArmorStatHashes, availableGeneralStatMods: 
   return cache;
 }
 
-export function buildAutoModsMap(availableGeneralStatMods: number): AutoModsMap {
+function buildLessCostlyRelations(autoModOptions: AutoModData, availableGeneralStatMods: number) {
+  return Object.fromEntries(
+    armorStats.map((armorStat1) => {
+      const hashes: ArmorStatHashes[] = [];
+      for (const armorStat2 of armorStats) {
+        if (availableGeneralStatMods === 0) {
+          // No general mods means it doesn't matter how much our general mods actually cost
+          hashes.push(armorStat2);
+        } else {
+          const large1Cost = autoModOptions.largeMods[armorStat1]?.cost;
+          const large2Cost = autoModOptions.largeMods[armorStat2]?.cost;
+          // If the small mods are undefined and the large ones aren't,
+          // then we compare against the large cost.
+          const small1Cost = autoModOptions.smallMods[armorStat1]?.cost ?? large1Cost;
+          const small2Cost = autoModOptions.smallMods[armorStat2]?.cost ?? large2Cost;
+          // mods for armorStat2 are cheaper (dominate armorStat1) if
+          // * their availability matches (a large mod can pretend to be a small one if it's missing)
+          // * for each of [large, small] mods armorStat1's mods cost the same or more than armorStat2's
+          if (
+            (small2Cost === undefined) === (small1Cost === undefined) &&
+            (large2Cost === undefined) === (large1Cost === undefined) &&
+            (small1Cost === undefined || small1Cost >= small2Cost!) &&
+            (large1Cost === undefined || large1Cost >= large2Cost!)
+          ) {
+            hashes.push(armorStat2);
+          }
+        }
+      }
+
+      return [armorStat1, hashes];
+    })
+  ) as AutoModsMap['cheaperStatsPerStat'];
+}
+
+export function buildAutoModsMap(
+  autoModOptions: AutoModData,
+  availableGeneralStatMods: number
+): AutoModsMap {
   return {
     statCaches: Object.fromEntries(
       armorStats.map((statHash) => [
         statHash,
-        buildCacheForStat(statHash, availableGeneralStatMods),
+        buildCacheForStat(autoModOptions, statHash, availableGeneralStatMods),
       ])
     ) as AutoModsMap['statCaches'],
+    cheaperStatsPerStat: buildLessCostlyRelations(autoModOptions, availableGeneralStatMods),
   };
 }

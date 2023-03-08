@@ -1,4 +1,4 @@
-import { ArmorStats, LockableBucketHash } from '../types';
+import { ArmorStatHashes, ArmorStats, LockableBucketHash } from '../types';
 
 export interface ProcessItem {
   id: string;
@@ -42,21 +42,23 @@ export interface IntermediateProcessArmorSet {
   statMods: number[];
 }
 
-interface ProcessStat {
-  statTypeHash: number;
-  value: number;
-}
-
 export interface ProcessMod {
   hash: number;
-  plugCategoryHash: number;
   energy?: {
     /** The energy cost of the mod. */
     val: number;
   };
-  investmentStats: ProcessStat[];
   /** This should only be available in legacy, combat and raid mods */
   tag?: string;
+}
+
+/**
+ * Data describing the mods that can be automatically picked.
+ */
+export interface AutoModData {
+  largeMods: { [key in ArmorStatHashes]?: { hash: number; cost: number } };
+  smallMods: { [key in ArmorStatHashes]?: { hash: number; cost: number } };
+  artificeMods: { [key in ArmorStatHashes]?: { hash: number } };
 }
 
 export interface LockedProcessMods {
