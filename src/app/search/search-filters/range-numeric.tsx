@@ -36,7 +36,7 @@ const simpleRangeFilters: FilterDefinition[] = [
     description: tl('Filter.MasterworkKills'),
     format: ['range', 'stat'],
     destinyVersion: 2,
-    suggestions: ['pve', 'pvp', 'gambit'],
+    suggestionKeywords: ['pve', 'pvp', 'gambit'],
     validateStat: () => (stat) => ['pve', 'pvp', 'gambit'].includes(stat),
     filter:
       ({ filterValue, compare }) =>

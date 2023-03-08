@@ -35,7 +35,7 @@ export interface FilterContext {
     [itemHash: string]: ItemHashTag;
   };
   language: string;
-  customStats: Settings['customStats'];
+  customStats: Settings['customStats'] | undefined;
   d2Definitions: D2ManifestDefinitions | undefined;
 }
 
@@ -140,8 +140,20 @@ export interface FilterDefinition<I extends DimItem = DimItem> {
 
   /**
    * A list of suggested keywords, for `query` and `stat` formats.
+   * note these are KEYWORDS not full valid filters.
+   * i.e. for a `tag` filter, this would be
+   * `[junk, keep, etc]` not `[tag:junk, tag:keep, etc]`
+   *
+   * based on the filter format being `query`,
+   * buildSearchConfig will automatically create the latter
    */
-  suggestions?: string[];
+  suggestionKeywords?: string[];
+
+  /**
+   * for `query` and `stat` formats, this provides a way
+   * to dynamically create keywords. see suggestionKeywords docs.
+   */
+  suggestionKeywordGenerator?: (args: SuggestionsContext) => string[] | undefined;
 
   /**
    * For range-like filters, a mapping of strings to numbers (like season names or power cap aliases)

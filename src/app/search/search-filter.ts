@@ -248,7 +248,7 @@ export function matchFilter(
         break;
       }
       case 'query': {
-        if (filterDef.suggestions!.includes(filterValue)) {
+        if (filterDef.suggestionKeywords!.includes(filterValue)) {
           return (filterContext) =>
             filterDef.filter({
               lhs,

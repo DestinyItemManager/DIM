@@ -180,7 +180,7 @@ const dupeFilters: FilterDefinition[] = [
     filter: ({ allItems, customStats }) => {
       const duplicateSetsByClass: Partial<Record<DimItem['classType'], Set<string>[]>> = {};
 
-      for (const customStat of customStats) {
+      for (const customStat of customStats ?? []) {
         const relevantStatHashes: number[] = [];
         const statWeights = customStat.weights;
         for (const statHash in statWeights) {

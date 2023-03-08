@@ -62,7 +62,7 @@ const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
 export function generateSuggestionsForFilter(
   filterDefinition: Pick<
     FilterDefinition,
-    'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated'
+    'keywords' | 'suggestionKeywords' | 'format' | 'overload' | 'deprecated'
   >
 ) {
   return generateGroupedSuggestionsForFilter(filterDefinition, false).flatMap(
@@ -79,18 +79,17 @@ export function generateSuggestionsForFilter(
 export function generateGroupedSuggestionsForFilter(
   filterDefinition: Pick<
     FilterDefinition,
-    'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated'
+    'keywords' | 'suggestionKeywords' | 'format' | 'overload' | 'deprecated'
   >,
   forHelp?: boolean
 ): { keyword: string; ops?: string[] }[] {
   if (filterDefinition.deprecated) {
     return [];
   }
-
-  const { suggestions, keywords } = filterDefinition;
+  const { suggestionKeywords, keywords } = filterDefinition;
   const thisFilterKeywords = Array.isArray(keywords) ? keywords : [keywords];
 
-  const filterSuggestions = suggestions === undefined ? [] : suggestions;
+  const filterSuggestions = suggestionKeywords === undefined ? [] : suggestionKeywords;
 
   const allSuggestions = [];
 

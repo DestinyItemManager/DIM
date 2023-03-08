@@ -18,7 +18,6 @@ import {
   statHashByName,
   weaponStatNames,
 } from '../search-filter-values';
-import { generateSuggestionsForFilter } from '../suggestions-generation';
 
 const validateStat: FilterDefinition['validateStat'] = (filterContext) => {
   const customStatLabels = filterContext?.customStats?.map((c) => c.shortLabel) ?? [];
@@ -35,12 +34,7 @@ const statFilters: FilterDefinition[] = [
     // t('Filter.StatsExtras')
     description: tl('Filter.Stats'),
     format: 'stat',
-    suggestionsGenerator: ({ customStats }) =>
-      generateSuggestionsForFilter({
-        keywords: 'stat',
-        format: 'stat',
-        suggestions: [...allAtomicStats, ...(customStats?.map((c) => c.shortLabel) ?? [])],
-      }),
+    suggestionKeywordGenerator: ({ customStats }) => customStats?.map((c) => c.shortLabel),
     validateStat,
     filter: ({ filterValue, compare, customStats }) =>
       statFilterFromString(filterValue, compare!, customStats),
@@ -53,7 +47,7 @@ const statFilters: FilterDefinition[] = [
     // Note: weapons of the same hash also have the same base stats, so this is only useful for
     // armor really, so the suggestions only list armor stats. But `validateStats` does allow
     // other stats too because there's no good reason to forbid it...
-    suggestions: [...searchableArmorStatNames, ...estStatNames],
+    suggestionKeywords: [...searchableArmorStatNames, ...estStatNames],
     validateStat,
     filter: ({ filterValue, compare, customStats }) =>
       statFilterFromString(filterValue, compare!, customStats, true),
@@ -63,7 +57,7 @@ const statFilters: FilterDefinition[] = [
     keywords: 'maxstatloadout',
     description: tl('Filter.StatsLoadout'),
     format: 'query',
-    suggestions: Object.keys(dimArmorStatHashByName),
+    suggestionKeywords: Object.keys(dimArmorStatHashByName),
     destinyVersion: 2,
     filter: ({ filterValue, stores, allItems }) => {
       const maxStatLoadout = findMaxStatLoadout(stores, allItems, filterValue);
@@ -80,24 +74,39 @@ const statFilters: FilterDefinition[] = [
     keywords: 'maxstatvalue',
     description: tl('Filter.StatsMax'),
     format: 'query',
-    suggestions: searchableArmorStatNames,
+    suggestionKeywords: searchableArmorStatNames,
+    suggestionKeywordGenerator: ({ customStats }) => customStats?.map((c) => c.shortLabel),
     destinyVersion: 2,
-    filter: ({ filterValue, allItems }) => {
+    filter: ({ filterValue: statName, allItems, customStats }) => {
       const highestStatsPerSlotPerTier = gatherHighestStats(allItems);
+      const statHashes: number[] =
+        statName === 'any'
+          ? armorStatHashes
+          : [
+              statHashByName[statName] ??
+                customStats?.find((c) => c.shortLabel === statName)?.statHash,
+            ];
       return (item: DimItem) =>
-        checkIfStatMatchesMaxValue(highestStatsPerSlotPerTier, item, filterValue);
+        checkIfStatMatchesMaxValue(highestStatsPerSlotPerTier, item, statHashes);
     },
   },
   {
     keywords: 'maxbasestatvalue',
     description: tl('Filter.StatsMax'),
     format: 'query',
-    suggestions: searchableArmorStatNames,
+    suggestionKeywords: searchableArmorStatNames,
+    suggestionKeywordGenerator: ({ customStats }) => customStats?.map((c) => c.shortLabel),
     destinyVersion: 2,
-    filter: ({ filterValue, allItems }) => {
+    filter: ({ filterValue: statName, allItems, customStats }) => {
       const highestStatsPerSlotPerTier = gatherHighestStats(allItems);
+      const statHashes: number[] =
+        statName === 'any'
+          ? armorStatHashes
+          : statHashByName[statName]
+          ? [statHashByName[statName]]
+          : customStats?.filter((c) => c.shortLabel === statName)?.map((c) => c.statHash) ?? [];
       return (item: DimItem) =>
-        checkIfStatMatchesMaxValue(highestStatsPerSlotPerTier, item, filterValue, true);
+        checkIfStatMatchesMaxValue(highestStatsPerSlotPerTier, item, statHashes, true);
     },
   },
   {
@@ -133,7 +142,7 @@ export default statFilters;
 function statFilterFromString(
   statNames: string,
   compare: (value: number) => boolean,
-  customStats: CustomStatDef[],
+  customStats: CustomStatDef[] | undefined,
   byBaseValue = false
 ): (item: DimItem) => boolean {
   // this will be used to index into the right property of a DimStat
@@ -173,7 +182,7 @@ function statFilterFromString(
 function createStatCombiner(
   statString: string,
   byWhichValue: 'base' | 'value',
-  customStats: CustomStatDef[]
+  customStats: CustomStatDef[] | undefined
 ) {
   // an array of arrays of stat retrieval functions.
   // inner arrays are averaged, then outer array is totaled
@@ -206,7 +215,7 @@ function createStatCombiner(
       }
 
       // custom stats this string represents
-      const namedCustomStats = customStats.filter((c) => c.shortLabel === statName);
+      const namedCustomStats = customStats?.filter((c) => c.shortLabel === statName) ?? [];
 
       if (namedCustomStats.length) {
         return (statValuesByHash: NodeJS.Dict<number>, _: any, item: DimItem) => {
@@ -267,14 +276,19 @@ type MaxValuesDict = Record<
 function checkIfStatMatchesMaxValue(
   maxStatValues: MaxValuesDict,
   item: DimItem,
-  statName: string,
+  statHashes: number[],
+  /**
+   * currently, this will either be one stat hash in an array
+   * (highlight an item if it's the highest discipline in slot)
+   * or all 6 armor stat hashes plus total in an array
+   * (highlights an item if it's the best at *any* of these stats))
+   */
   byBaseValue = false
 ) {
   // this must be armor with stats
   if (!item.bucket.inArmor || !item.stats) {
     return false;
   }
-  const statHashes: number[] = statName === 'any' ? armorStatHashes : [statHashByName[statName]];
   const byWhichValue = byBaseValue ? 'base' : 'value';
   const useWhichMaxes = item.isExotic ? 'all' : 'nonexotic';
   const itemSlot = `${item.classType}${item.type}`;

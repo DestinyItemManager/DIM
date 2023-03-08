@@ -16,7 +16,7 @@ const itemInfosFilters: FilterDefinition[] = [
     keywords: 'tag',
     description: tl('Filter.Tags.Tag'),
     format: 'query',
-    suggestions: itemTagSelectorList.map((tag) => tag.type ?? 'none'),
+    suggestionKeywords: itemTagSelectorList.map((tag) => tag.type ?? 'none'),
     filter:
       ({ filterValue, itemInfos, itemHashTags }) =>
       (item) =>

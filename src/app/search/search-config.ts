@@ -67,6 +67,16 @@ export function buildSearchConfig(
   const allApplicableFilters: FilterDefinition[] = [];
   for (const filter of allFilters) {
     if (!filter.destinyVersion || filter.destinyVersion === destinyVersion) {
+      // augment filter's suggestionKeywords with dynamic additions
+      if (filter.suggestionKeywordGenerator) {
+        const suggestionKeywords = new Set(filter.suggestionKeywords ?? []);
+        for (const keyword of filter.suggestionKeywordGenerator(suggestionsContext) ?? []) {
+          suggestionKeywords.add(keyword);
+        }
+        if (suggestionKeywords.size) {
+          filter.suggestionKeywords = Array.from(suggestionKeywords);
+        }
+      }
       for (const suggestion of generateSuggestionsForFilter(filter)) {
         suggestions.add(suggestion);
       }

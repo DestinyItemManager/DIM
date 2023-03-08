@@ -23,7 +23,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
     description: tl('Filter.Masterwork'),
     format: ['simple', 'query', 'range'],
     destinyVersion: 2,
-    suggestions: allStatNames,
+    suggestionKeywords: allStatNames,
     filter: ({ lhs, filterValue, compare }) => {
       // the "is:masterwork" case
       if (lhs === 'is') {

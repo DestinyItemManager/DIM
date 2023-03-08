@@ -163,7 +163,7 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: 'breaker',
     description: tl('Filter.Breaker'),
     format: 'query',
-    suggestions: Object.keys(breakerTypes),
+    suggestionKeywords: Object.keys(breakerTypes),
     destinyVersion: 2,
     filter: ({ filterValue }) => {
       const breakerType = breakerTypes[filterValue];
@@ -177,7 +177,7 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: 'foundry',
     description: tl('Filter.Foundry'),
     format: 'query',
-    suggestions: ['daito', 'hakke', 'omolon', 'suros', 'tex-mechanica', 'veist', 'any'],
+    suggestionKeywords: ['daito', 'hakke', 'omolon', 'suros', 'tex-mechanica', 'veist', 'any'],
     destinyVersion: 2,
     filter: ({ filterValue }) => {
       switch (filterValue) {
@@ -218,7 +218,7 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: 'source',
     description: tl('Filter.Event'), // or 'Filter.Source'
     format: 'query',
-    suggestions: [...Object.keys(D2Sources), ...Object.keys(D2EventPredicateLookup)],
+    suggestionKeywords: [...Object.keys(D2Sources), ...Object.keys(D2EventPredicateLookup)],
     destinyVersion: 2,
     filter: ({ filterValue }) => {
       if (D2Sources[filterValue]) {

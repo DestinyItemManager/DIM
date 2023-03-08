@@ -31,7 +31,7 @@ export const modslotFilter: FilterDefinition = {
   keywords: 'modslot',
   description: tl('Filter.ModSlot'),
   format: 'query',
-  suggestions: modSlotTags.concat(['any', 'none', 'activity']),
+  suggestionKeywords: modSlotTags.concat(['any', 'none', 'activity']),
   destinyVersion: 2,
   filter:
     ({ filterValue }) =>
@@ -190,7 +190,7 @@ const socketFilters: FilterDefinition[] = [
   {
     keywords: 'armorintrinsic',
     format: ['simple', 'query'],
-    suggestions: ['none'],
+    suggestionKeywords: ['none'],
     description: tl('Filter.ArmorIntrinsic'),
     destinyVersion: 2,
     filter: ({ filterValue, language }) => {
@@ -212,7 +212,7 @@ const socketFilters: FilterDefinition[] = [
     keywords: 'holdsmod',
     description: tl('Filter.HoldsMod'),
     format: 'query',
-    suggestions: modTypeTags.concat(['any', 'none']),
+    suggestionKeywords: modTypeTags.concat(['any', 'none']),
     destinyVersion: 2,
     filter:
       ({ filterValue }) =>
@@ -246,7 +246,7 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.HasMemento'),
     format: 'query',
     destinyVersion: 2,
-    suggestions: ['any', ...Object.keys(craftingMementos)],
+    suggestionKeywords: ['any', ...Object.keys(craftingMementos)],
     filter: ({ filterValue }) => {
       const list: number[] | undefined = craftingMementos[filterValue];
       return (item: DimItem) =>
@@ -262,7 +262,7 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.Catalyst'),
     format: 'query',
     destinyVersion: 2,
-    suggestions: ['complete', 'incomplete', 'missing'],
+    suggestionKeywords: ['complete', 'incomplete', 'missing'],
     filter:
       ({ filterValue }) =>
       (item: DimItem) => {
