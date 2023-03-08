@@ -154,7 +154,6 @@ export function pickAndAssignSlotIndependentMods(
     if (neededStats) {
       const result = chooseAutoMods(
         info,
-        items,
         neededStats,
         numArtifice,
         [remainingEnergyCapacities],
@@ -354,7 +353,6 @@ function exploreAutoModsSearchTree(
 ): SearchResult | undefined {
   const picks = chooseAutoMods(
     info,
-    items,
     explorationStats,
     numArtificeMods,
     remainingEnergyCapacities,

@@ -2,7 +2,7 @@ import { armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { ArmorStatHashes } from '../types';
 import { LoSessionInfo } from './process-utils';
-import { AutoModData, ProcessItem } from './types';
+import { AutoModData } from './types';
 
 /**
  * A particular way of achieving a target stat value (for a single stat).
@@ -47,7 +47,6 @@ export interface AutoModsMap {
  */
 export function chooseAutoMods(
   info: LoSessionInfo,
-  items: ProcessItem[],
   neededStats: number[],
   numArtificeMods: number,
   remainingEnergyCapacities: number[][],
@@ -55,7 +54,6 @@ export function chooseAutoMods(
 ) {
   return recursivelyChooseMods(
     info,
-    items,
     neededStats,
     0,
     info.numAvailableGeneralMods,
@@ -91,7 +89,6 @@ function doGeneralModsFit(
  */
 function recursivelyChooseMods(
   info: LoSessionInfo,
-  items: ProcessItem[],
   neededStats: number[],
   statIndex: number,
   remainingGeneralSlots: number,
@@ -137,7 +134,6 @@ function recursivelyChooseMods(
     subArray[subArray.length - 1] = pick;
     const solution = recursivelyChooseMods(
       info,
-      items,
       neededStats,
       statIndex + 1,
       remainingGeneralSlots - pick.numGeneralMods,
