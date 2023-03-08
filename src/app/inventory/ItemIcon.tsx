@@ -1,7 +1,5 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
-import { useD2Definitions } from 'app/manifest/selectors';
 import { d2MissingIcon } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
 import { isModCostVisible } from 'app/utils/socket-utils';
@@ -98,7 +96,6 @@ export function DefItemIcon({
   className?: string;
   borderless?: boolean;
 }) {
-  const defs = useD2Definitions();
   if (!itemDef) {
     errorLog('temp-deficon', new Error('DefItemIcon was called with a missing def'));
     return null;
@@ -119,7 +116,7 @@ export function DefItemIcon({
       !itemDef.plug &&
       itemDef.inventory && [itemTierStyles[itemDef.inventory.tierType]]
   );
-  const energyCost = defs && getModCostInfo(itemDef, defs);
+  const energyCost = getModCostInfo(itemDef);
 
   const iconOverlay = itemDef.iconWatermark || itemDef.iconWatermarkShelved || undefined;
 
@@ -144,8 +141,8 @@ export function DefItemIcon({
 /**
  * given a mod definition or hash, returns its energy cost if it should be shown
  */
-function getModCostInfo(mod: DestinyInventoryItemDefinition, defs: D2ManifestDefinitions) {
-  if (mod?.plug && isModCostVisible(defs, mod.plug)) {
+function getModCostInfo(mod: DestinyInventoryItemDefinition) {
+  if (mod?.plug && isModCostVisible(mod.plug)) {
     return mod.plug.energyCost.energyCost;
   }
 

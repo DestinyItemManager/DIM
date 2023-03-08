@@ -2,9 +2,13 @@ import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
-import { AppIcon, deleteIcon } from 'app/shell/icons';
+import styles from 'app/loadout/LoadoutsRow.m.scss';
+import { AppIcon, deleteIcon, faCheckCircle } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
+import { streamDeckSelectLoadout } from 'app/stream-deck/stream-deck';
 import { memo, ReactNode, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { applyInGameLoadout, deleteInGameLoadout } from './ingame-loadout-apply';
 import InGameLoadoutView from './InGameLoadoutView';
 
@@ -20,9 +24,39 @@ export default memo(function InGameLoadoutRow({
 }) {
   const dispatch = useThunkDispatch();
 
+  const streamDeckSelection = $featureFlags.elgatoStreamDeck
+    ? // eslint-disable-next-line
+      useSelector(streamDeckSelectionSelector)
+    : null;
+
   const actionButtons = useMemo(() => {
     const handleApply = () => dispatch(applyInGameLoadout(loadout));
     const handleDelete = () => dispatch(deleteInGameLoadout(loadout));
+
+    if (streamDeckSelection === 'loadout') {
+      const handleSelection = () =>
+        dispatch(
+          streamDeckSelectLoadout(
+            {
+              type: 'game',
+              loadout,
+            },
+            store
+          )
+        );
+
+      return [
+        <button
+          key="stream-deck-selection"
+          type="button"
+          className="dim-button"
+          onClick={handleSelection}
+        >
+          <span className={styles.iconLabel}>{t('StreamDeck.SelectLoadout')}</span>
+          <AppIcon icon={faCheckCircle} title={t('StreamDeck.SelectLoadout')} />
+        </button>,
+      ];
+    }
 
     const actionButtons: ReactNode[] = [
       <button key="apply" type="button" className="dim-button" onClick={handleApply}>
@@ -38,7 +72,7 @@ export default memo(function InGameLoadoutRow({
     // TODO: figure out whether this loadout is currently equippable (all items on character or in vault)
 
     return actionButtons;
-  }, [dispatch, loadout]);
+  }, [dispatch, loadout, store, streamDeckSelection]);
 
   return <InGameLoadoutView loadout={loadout} store={store} actionButtons={actionButtons} />;
 });

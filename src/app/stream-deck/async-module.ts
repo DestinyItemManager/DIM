@@ -3,10 +3,11 @@
 // serialize the data and send it if connected
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { currentStoreSelector } from 'app/inventory/selectors';
+import { allItemsSelector, currentStoreSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { getItemsFromInGameLoadout } from 'app/loadout/ingame/ingame-loadout-utils';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { RootState, ThunkResult } from 'app/store/types';
@@ -17,7 +18,7 @@ import {
   streamDeckUpdatePopupShowed,
 } from 'app/stream-deck/actions';
 import { randomStringToken } from 'app/stream-deck/AuthorizationNotification/AuthorizationNotification';
-import { SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
+import { LoadoutSelection, SelectionArgs, SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage, notificationPromise } from 'app/stream-deck/msg-handlers';
 import { streamDeck } from 'app/stream-deck/reducer';
 import { streamDeckUpdatePopupSelector } from 'app/stream-deck/selectors';
@@ -32,6 +33,7 @@ import packager from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux-utils';
 import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2/interfaces';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 
@@ -106,26 +108,56 @@ function findSubClass(items: LoadoutItem[], state: RootState) {
   }
 }
 
+function findSubClassInGame(items: DestinyLoadoutItemComponent[], state: RootState) {
+  const allItems = allItemsSelector(state);
+  const mappedItems = getItemsFromInGameLoadout(items, allItems);
+  const categories = _.groupBy(mappedItems, (item) => item.bucket.sort);
+  const subclassItem = categories['General']?.[0];
+  return subclassItem?.icon;
+}
+
 // on click on LoadoutView send the selected loadout and the related character identifier to the Stream Deck
-function streamDeckSelectLoadout(loadout: Loadout, store: DimStore): ThunkResult {
+function streamDeckSelectLoadout(
+  { type, loadout }: LoadoutSelection,
+  store: DimStore
+): ThunkResult {
   return async (dispatch, getState) => {
+    let selection: NonNullable<SelectionArgs['data']>['selection'];
     const state = getState();
     if (state.streamDeck.selection === 'loadout') {
       notificationPromise.resolve();
       dispatch(streamDeckClearSelection());
-      const isAnyClass = loadout.classType === DestinyClass.Unknown;
+      switch (type) {
+        case 'game':
+          selection = {
+            label: loadout.name.toUpperCase(),
+            loadout: loadout.id,
+            subtitle: '-',
+            character: loadout.characterId,
+            // future stream deck plugin update
+            background: loadout.colorIcon,
+            gameIcon: loadout.icon,
+            // current plugin version
+            icon: findSubClassInGame(loadout.items, state) ?? loadout.icon,
+          };
+          break;
+        default: {
+          const isAnyClass = loadout.classType === DestinyClass.Unknown;
+          selection = {
+            label: loadout.name.toUpperCase(),
+            loadout: loadout.id,
+            subtitle: (isAnyClass ? '' : store.className) || loadout.notes || '-',
+            character: isAnyClass ? undefined : store.id,
+            icon: findSubClass(loadout.items, state),
+          };
+        }
+      }
       return dispatch(
         sendToStreamDeck({
           action: 'dim:selection',
           data: {
             selectionType: 'loadout',
-            selection: {
-              label: loadout.name.toUpperCase(),
-              loadout: loadout.id,
-              subtitle: (isAnyClass ? '' : store.className) || loadout.notes || '-',
-              character: isAnyClass ? undefined : store.id,
-              icon: findSubClass(loadout.items, state),
-            },
+            selection,
           },
         })
       );

@@ -51,7 +51,8 @@ export default memo(function LoadoutRow({
 
     if (equippable) {
       if (streamDeckSelection === 'loadout') {
-        const handleSelection = () => dispatch(streamDeckSelectLoadout(loadout, store));
+        const handleSelection = () =>
+          dispatch(streamDeckSelectLoadout({ type: 'dim', loadout }, store));
         return [
           <button
             key="select-for-stream-deck"

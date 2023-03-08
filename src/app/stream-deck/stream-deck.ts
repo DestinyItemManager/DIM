@@ -1,8 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { ThunkResult } from 'app/store/types';
-import { LazyStreamDeck, StreamDeckState } from 'app/stream-deck/interfaces';
+import { LazyStreamDeck, LoadoutSelection, StreamDeckState } from 'app/stream-deck/interfaces';
 import { removeClientIdentifier, removeStreamDeckToken } from 'app/stream-deck/util/local-storage';
 
 export const lazyStreamDeck: LazyStreamDeck = {};
@@ -18,7 +17,7 @@ export const stopStreamDeckConnection = (): ThunkResult =>
 export const streamDeckSelectItem = (item: DimItem): ThunkResult =>
   lazyStreamDeck.core!.streamDeckSelectItem(item);
 
-export const streamDeckSelectLoadout = (loadout: Loadout, store: DimStore) =>
+export const streamDeckSelectLoadout = (loadout: LoadoutSelection, store: DimStore) =>
   lazyStreamDeck.core!.streamDeckSelectLoadout(loadout, store);
 
 // reset AuthorizationNotification token and regenerate client identifier

@@ -16,6 +16,8 @@ import { itemMoveLoadout, maxLightLoadout, randomLoadout } from 'app/loadout-dra
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { pullFromPostmaster } from 'app/loadout-drawer/postmaster';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { applyInGameLoadout } from 'app/loadout/ingame/ingame-loadout-apply';
+import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { accountRoute } from 'app/routes';
 import { filteredItemsSelector } from 'app/search/search-filter';
@@ -150,13 +152,24 @@ function selectionHandler({ msg, state }: HandlerArgs<SelectionAction>): ThunkRe
 
 function equipLoadoutHandler({ msg, state }: HandlerArgs<EquipLoadoutAction>): ThunkResult {
   return async (dispatch) => {
-    const loadouts = loadoutsSelector(state);
     const stores = storesSelector(state);
     const store = msg.character ? getStore(stores, msg.character) : currentStoreSelector(state);
-    const loadout = loadouts.find((it) => it.id === msg.loadout);
-    if (store && loadout) {
-      return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
+
+    if (!store) {
+      return;
     }
+
+    // In Game Loadouts
+    if (msg.loadout.startsWith('ingame')) {
+      const loadouts = allInGameLoadoutsSelector(state);
+      const loadout = loadouts.find((it) => it.id === msg.loadout);
+      return loadout && dispatch(applyInGameLoadout(loadout));
+    }
+
+    // DIM Loadouts
+    const loadouts = loadoutsSelector(state);
+    const loadout = loadouts.find((it) => it.id === msg.loadout);
+    return loadout && dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
 }
 
