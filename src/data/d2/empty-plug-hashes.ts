@@ -94,5 +94,6 @@ export const emptyPlugHashes = new Set<number>([
   819232495, // Empty Tubes Socket (crafting.recipes.empty_socket)
   4043342755, // Empty Weapon Level Boost Socket (crafting.plugs.weapons.mods.transfusers.level)
   4216349042, // Experience Mod Socket (Experience Ghost Mod, enhancements.ghosts_experience)
+  1692473496, // Protocol Socket (v700.weapons.mods.mission_avalon)
   760030801, // Tracking Mod Socket (Tracking Ghost Mod, enhancements.ghosts_tracking)
 ]);
