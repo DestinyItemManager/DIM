@@ -69,6 +69,9 @@ const enhancedIntrinsics = new Set<number>([
   878620401, // Pinpoint Slug Frame
   2426674025, // Pinpoint Slug Frame
   2410819063, // Pinpoint Slug Frame
+  167794220, // Aggressive Frame
+  2105054824, // Lightweight Frame
+  40492375, // Vortex Frame
   378204240, // Adaptive Glaive
   2696719570, // Adaptive Glaive
   1338909520, // Adaptive Glaive
@@ -266,6 +269,10 @@ const enhancedIntrinsics = new Set<number>([
   4113841443, // Precision Frame
   1034287523, // Precision Frame
   886865893, // Precision Frame
+  4074888076, // Aggressive Frame
+  3615521782, // Aggressive Frame
+  757651572, // Aggressive Frame
+  2662827496, // Aggressive Frame
   621911507, // Wave Frame
   1220310607, // Wave Frame
   1713394949, // Wave Frame
