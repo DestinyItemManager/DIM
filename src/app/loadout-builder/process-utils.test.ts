@@ -162,7 +162,7 @@ describe('process-utils mod assignment', () => {
     activityMods: ProcessMod[],
     items: ProcessItem[]
   ) => {
-    const autoMods = { largeMods: {}, smallMods: {}, artificeMods: {} };
+    const autoMods = { generalMods: {}, artificeMods: {} };
     const neededStats = [0, 0, 0, 0, 0, 0];
     const precalculatedInfo = precalculateStructures(
       autoMods,

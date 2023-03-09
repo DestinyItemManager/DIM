@@ -172,9 +172,10 @@ function buildCacheForStat(
   const cache: CacheForStat = { statMap: {} };
   // Note: All of these could be undefined for whatever reason.
   // In that case, the loop bounds are 0 <= numMods <= 0.
+  // Major and minor mod always exist together or not at all.
   const artificeMod = autoModOptions.artificeMods[statHash];
-  const minorMod = autoModOptions.smallMods[statHash];
-  const majorMod = autoModOptions.largeMods[statHash];
+  const minorMod = autoModOptions.generalMods[statHash]?.minorMod;
+  const majorMod = autoModOptions.generalMods[statHash]?.majorMod;
 
   for (let numArtificeMods = 0; numArtificeMods <= (artificeMod ? 5 : 0); numArtificeMods++) {
     for (
@@ -194,12 +195,11 @@ function buildCacheForStat(
         // We are allowed to provide more stat points than needed -- within reason.
         // If we have a major mod, this satisfies stat needs of 6,7,8,9,10
         // 5 can be satisfied by a strictly better pick that includes only a minor mod
-        // (if there is one, otherwise this also satisfies 1,2,3,4,5)
         // If we have a major mod and an artifice mod, this satisfies 11,12,13.
         // 10 can be satisfied by dropping the artifice mod.
         // So if we have any artifice pieces, we are allowed to overshoot by 2, and if
-        // not then we're allowed to overshoot by 4 or 9.
-        const lowerRange = statValue - (numArtificeMods > 0 ? 2 : minorMod ? 4 : 9);
+        // not then we're allowed to overshoot by 4.
+        const lowerRange = statValue - (numArtificeMods > 0 ? 2 : 4);
         const obj: ModsPick = {
           numArtificeMods,
           numGeneralMods: numMinorMods + numMajorMods,
@@ -237,22 +237,22 @@ function buildLessCostlyRelations(autoModOptions: AutoModData, availableGeneralS
           // No general mods means it doesn't matter how much our general mods actually cost
           hashes.push(armorStat2);
         } else {
-          const large1Cost = autoModOptions.largeMods[armorStat1]?.cost;
-          const large2Cost = autoModOptions.largeMods[armorStat2]?.cost;
-          // If the small mods are undefined and the large ones aren't,
-          // then we compare against the large cost.
-          const small1Cost = autoModOptions.smallMods[armorStat1]?.cost ?? large1Cost;
-          const small2Cost = autoModOptions.smallMods[armorStat2]?.cost ?? large2Cost;
-          // mods for armorStat2 are cheaper (dominate armorStat1) if
-          // * their availability matches (a large mod can pretend to be a small one if it's missing)
-          // * for each of [large, small] mods armorStat1's mods cost the same or more than armorStat2's
-          if (
-            (small2Cost === undefined) === (small1Cost === undefined) &&
-            (large2Cost === undefined) === (large1Cost === undefined) &&
-            (small1Cost === undefined || small1Cost >= small2Cost!) &&
-            (large1Cost === undefined || large1Cost >= large2Cost!)
-          ) {
+          const mods1 = autoModOptions.generalMods[armorStat1];
+          const mods2 = autoModOptions.generalMods[armorStat2];
+
+          if (!mods1) {
+            // Stat1 has no mods, so Stat2 can always do equal or better
             hashes.push(armorStat2);
+          } else if (!mods2) {
+            // Stat1 has mods, Stat2 doesn't, so Stat2 is worse
+          } else {
+            const [large1Cost, large2Cost] = [mods1.majorMod.cost, mods2.majorMod.cost];
+            const [small1Cost, small2Cost] = [mods1.minorMod.cost, mods2.minorMod.cost];
+            // mods for armorStat2 are cheaper (dominate armorStat1) if
+            // they're cheaper or same
+            if (small1Cost >= small2Cost && large1Cost >= large2Cost) {
+              hashes.push(armorStat2);
+            }
           }
         }
       }

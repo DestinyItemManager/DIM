@@ -45,8 +45,12 @@ export type ItemsByBucket = Readonly<{
  * Data describing the mods that can be automatically picked.
  */
 export interface AutoModDefs {
-  largeMods: { [key in ArmorStatHashes]?: PluggableInventoryItemDefinition };
-  smallMods: { [key in ArmorStatHashes]?: PluggableInventoryItemDefinition };
+  generalMods: {
+    [key in ArmorStatHashes]?: {
+      majorMod: PluggableInventoryItemDefinition;
+      minorMod: PluggableInventoryItemDefinition;
+    };
+  };
   artificeMods: { [key in ArmorStatHashes]?: PluggableInventoryItemDefinition };
 }
 

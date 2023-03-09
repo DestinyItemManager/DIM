@@ -181,8 +181,9 @@ export function mapAutoMods(defs: AutoModDefs): AutoModData {
   });
   return {
     artificeMods: _.mapValues(defs.artificeMods, defToArtificeMod),
-    largeMods: _.mapValues(defs.largeMods, defToAutoMod),
-    smallMods: _.mapValues(defs.smallMods, defToAutoMod),
+    generalMods: _.mapValues(defs.generalMods, (modsForStat) =>
+      _.mapValues(modsForStat, defToAutoMod)
+    ),
   };
 }
 
@@ -193,7 +194,7 @@ export function mapAutoMods(defs: AutoModDefs): AutoModData {
  * Re-evaluate this in future seasons if general mods can be affected by artifact cost reductions.
  */
 export function getAutoMods(defs: D2ManifestDefinitions, allUnlockedPlugs: Set<number>) {
-  const autoMods: AutoModDefs = { largeMods: {}, smallMods: {}, artificeMods: {} };
+  const autoMods: AutoModDefs = { generalMods: {}, artificeMods: {} };
   // Only consider plugs that give stats
   const mapPlugSet = (plugSetHash: number) =>
     _.compact(
@@ -217,40 +218,20 @@ export function getAutoMods(defs: D2ManifestDefinitions, allUnlockedPlugs: Set<n
       autoMods.artificeMods[statHash] = artificeMod;
     }
 
-    // Get all general mods for this stat and sort descending by cost, then group by provided stat value
-    const generalModsByValue = _.groupBy(
-      generalPlugSet
-        .map((def) => {
-          const stat =
-            def.investmentStats.find((stat) => stat.statTypeHash === statHash) || undefined;
-          const cost = def.plug.energyCost?.energyCost ?? 0;
-          return { def, stat, cost };
-        })
-        .sort(compareBy(({ cost }) => -cost)),
-      ({ stat }) => stat?.value
-    );
-    if (!generalModsByValue[10]) {
-      continue;
-    }
-    // Should now be grouped by 5, 10, and undefined
-    const [regularPlus10Mod, cheapPlus10Mod] = generalModsByValue[10];
-    // Use the cheap +10 mod if available, otherwise the regular
-    const usedPlus10Mod =
-      cheapPlus10Mod && allUnlockedPlugs.has(cheapPlus10Mod.def.hash)
-        ? cheapPlus10Mod
-        : regularPlus10Mod;
-    autoMods.largeMods[statHash] = usedPlus10Mod.def;
+    const findUnlockedModByValue = (value: number) => {
+      const relevantMods = generalPlugSet.filter((def) =>
+        def.investmentStats.find((stat) => stat.statTypeHash === statHash && stat.value === value)
+      );
+      relevantMods.sort(compareBy((def) => -(def.plug.energyCost?.energyCost ?? 0)));
+      const [largeMod, smallMod] = relevantMods;
+      return smallMod && allUnlockedPlugs.has(smallMod.hash) ? smallMod : largeMod;
+    };
 
-    if (!generalModsByValue[5]) {
-      continue;
+    const majorMod = findUnlockedModByValue(10);
+    const minorMod = findUnlockedModByValue(5);
+    if (majorMod && minorMod) {
+      autoMods.generalMods[statHash] = { majorMod, minorMod };
     }
-    const [regularPlus5Mod, cheapPlus5Mod] = generalModsByValue[5];
-    // Use the cheap +5 mod if available, otherwise the regular
-    const usedPlus5Mod =
-      cheapPlus5Mod && allUnlockedPlugs.has(cheapPlus5Mod.def.hash)
-        ? cheapPlus5Mod
-        : regularPlus5Mod;
-    autoMods.smallMods[statHash] = usedPlus5Mod.def;
   }
 
   return autoMods;

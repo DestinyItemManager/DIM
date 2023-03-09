@@ -55,9 +55,14 @@ export interface ProcessMod {
 /**
  * Data describing the mods that can be automatically picked.
  */
+
 export interface AutoModData {
-  largeMods: { [key in ArmorStatHashes]?: { hash: number; cost: number } };
-  smallMods: { [key in ArmorStatHashes]?: { hash: number; cost: number } };
+  generalMods: {
+    [key in ArmorStatHashes]?: {
+      majorMod: { hash: number; cost: number };
+      minorMod: { hash: number; cost: number };
+    };
+  };
   artificeMods: { [key in ArmorStatHashes]?: { hash: number } };
 }
 

@@ -214,10 +214,10 @@ export default memo(function LoadoutBuilder({
           (statHash) =>
             !loadoutParameters.autoStatMods &&
             enabledStats.has(statHash) &&
-            autoMods.smallMods[statHash]
+            autoMods.generalMods[statHash]?.minorMod
         )
       ),
-    [autoMods.smallMods, enabledStats, loadoutParameters.autoStatMods, statOrder]
+    [autoMods.generalMods, enabledStats, loadoutParameters.autoStatMods, statOrder]
   );
 
   const loadouts = useMemo(() => {

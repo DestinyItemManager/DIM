@@ -232,56 +232,66 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming che
       "hash": 2507624050,
     },
   },
-  "largeMods": {
+  "generalMods": {
     "144602215": {
-      "cost": 4,
-      "hash": 2724608735,
+      "majorMod": {
+        "cost": 4,
+        "hash": 2724608735,
+      },
+      "minorMod": {
+        "cost": 2,
+        "hash": 350061697,
+      },
     },
     "1735777505": {
-      "cost": 3,
-      "hash": 1435557120,
+      "majorMod": {
+        "cost": 3,
+        "hash": 1435557120,
+      },
+      "minorMod": {
+        "cost": 1,
+        "hash": 4021790309,
+      },
     },
     "1943323491": {
-      "cost": 4,
-      "hash": 4204488676,
+      "majorMod": {
+        "cost": 4,
+        "hash": 4204488676,
+      },
+      "minorMod": {
+        "cost": 2,
+        "hash": 1237786518,
+      },
     },
     "2996146975": {
-      "cost": 3,
-      "hash": 4183296050,
+      "majorMod": {
+        "cost": 3,
+        "hash": 4183296050,
+      },
+      "minorMod": {
+        "cost": 1,
+        "hash": 1703647492,
+      },
     },
     "392767087": {
-      "cost": 4,
-      "hash": 1180408010,
+      "majorMod": {
+        "cost": 4,
+        "hash": 1180408010,
+      },
+      "minorMod": {
+        "cost": 2,
+        "hash": 2532323436,
+      },
     },
     "4244567218": {
-      "cost": 3,
-      "hash": 4287799666,
-    },
-  },
-  "smallMods": {
-    "144602215": {
-      "cost": 2,
-      "hash": 350061697,
-    },
-    "1735777505": {
-      "cost": 1,
-      "hash": 4021790309,
-    },
-    "1943323491": {
-      "cost": 2,
-      "hash": 1237786518,
-    },
-    "2996146975": {
-      "cost": 1,
-      "hash": 1703647492,
-    },
-    "392767087": {
-      "cost": 2,
-      "hash": 2532323436,
-    },
-    "4244567218": {
-      "cost": 1,
-      "hash": 2639422088,
+      "majorMod": {
+        "cost": 3,
+        "hash": 4287799666,
+      },
+      "minorMod": {
+        "cost": 1,
+        "hash": 2639422088,
+      },
     },
   },
 }
@@ -353,56 +363,66 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming gen
       "hash": 2507624050,
     },
   },
-  "largeMods": {
+  "generalMods": {
     "144602215": {
-      "cost": 4,
-      "hash": 2724608735,
+      "majorMod": {
+        "cost": 4,
+        "hash": 2724608735,
+      },
+      "minorMod": {
+        "cost": 2,
+        "hash": 350061697,
+      },
     },
     "1735777505": {
-      "cost": 3,
-      "hash": 1435557120,
+      "majorMod": {
+        "cost": 3,
+        "hash": 1435557120,
+      },
+      "minorMod": {
+        "cost": 1,
+        "hash": 4021790309,
+      },
     },
     "1943323491": {
-      "cost": 4,
-      "hash": 4204488676,
+      "majorMod": {
+        "cost": 4,
+        "hash": 4204488676,
+      },
+      "minorMod": {
+        "cost": 2,
+        "hash": 1237786518,
+      },
     },
     "2996146975": {
-      "cost": 3,
-      "hash": 4183296050,
+      "majorMod": {
+        "cost": 3,
+        "hash": 4183296050,
+      },
+      "minorMod": {
+        "cost": 1,
+        "hash": 1703647492,
+      },
     },
     "392767087": {
-      "cost": 4,
-      "hash": 1180408010,
+      "majorMod": {
+        "cost": 4,
+        "hash": 1180408010,
+      },
+      "minorMod": {
+        "cost": 2,
+        "hash": 2532323436,
+      },
     },
     "4244567218": {
-      "cost": 3,
-      "hash": 4287799666,
-    },
-  },
-  "smallMods": {
-    "144602215": {
-      "cost": 2,
-      "hash": 350061697,
-    },
-    "1735777505": {
-      "cost": 1,
-      "hash": 4021790309,
-    },
-    "1943323491": {
-      "cost": 2,
-      "hash": 1237786518,
-    },
-    "2996146975": {
-      "cost": 1,
-      "hash": 1703647492,
-    },
-    "392767087": {
-      "cost": 2,
-      "hash": 2532323436,
-    },
-    "4244567218": {
-      "cost": 1,
-      "hash": 2639422088,
+      "majorMod": {
+        "cost": 3,
+        "hash": 4287799666,
+      },
+      "minorMod": {
+        "cost": 1,
+        "hash": 2639422088,
+      },
     },
   },
 }
