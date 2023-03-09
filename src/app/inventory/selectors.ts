@@ -17,7 +17,7 @@ import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
 import { characterSortImportanceSelector, characterSortSelector } from '../settings/character-sort';
-import { getTag, ItemInfos } from './dim-item-info';
+import { getNotes, getTag, ItemInfos } from './dim-item-info';
 import { DimItem } from './item-types';
 import { collectNotesHashtags } from './note-hashtags';
 import { ItemCreationContext } from './store/d2-item-factory';
@@ -355,9 +355,28 @@ export const itemInfosSelector = (state: RootState): ItemInfos =>
 export const itemHashTagsSelector = (state: RootState): { [itemHash: string]: ItemHashTag } =>
   state.dimApi.itemHashTags;
 
+/* Returns a function that can be used to get the tag for a particular item. */
+export const getTagSelector = createSelector(
+  itemInfosSelector,
+  itemHashTagsSelector,
+  (itemInfos, itemHashTags) => (item: DimItem) => getTag(item, itemInfos, itemHashTags)
+);
+
+/* Returns a function that can be used to get the notes for a particular item. */
+export const getNotesSelector = createSelector(
+  itemInfosSelector,
+  itemHashTagsSelector,
+  (itemInfos, itemHashTags) => (item: DimItem) => getNotes(item, itemInfos, itemHashTags)
+);
+
 /** Get a specific item's tag */
-export const tagSelector = (item: DimItem) => (state: RootState) =>
-  getTag(item, itemInfosSelector(state), itemHashTagsSelector(state));
+export const tagSelector = (item: DimItem) => (state: RootState) => getTagSelector(state)(item);
+
+/** Get a specific item's notes */
+export const notesSelector = (item: DimItem) => (state: RootState) => getNotesSelector(state)(item);
+
+export const hasNotesSelector = (item: DimItem) => (state: RootState) =>
+  Boolean(getNotesSelector(state)(item));
 
 /**
  * all hashtags used in existing item notes, with (case-insensitive) dupes removed

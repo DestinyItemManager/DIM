@@ -7,7 +7,7 @@ import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t, tl } from 'app/i18next-t';
-import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
+import { tagConfig, TagValue } from 'app/inventory/dim-item-info';
 import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
@@ -99,7 +99,8 @@ export function getColumns(
     [statHash: number]: StatInfo;
   },
   classType: DestinyClass,
-  itemInfos: ItemInfos,
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
   wishList: (item: DimItem) => InventoryWishListRoll | undefined,
   hasWishList: boolean,
   customStatDefs: CustomStatDef[],
@@ -317,7 +318,7 @@ export function getColumns(
     c({
       id: 'tag',
       header: t('Organizer.Columns.Tag'),
-      value: (item) => getTag(item, itemInfos) ?? '',
+      value: (item) => getTag(item) ?? '',
       cell: (value) => value && <TagIcon tag={value} />,
       sort: compareBy((tag) => (tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000)),
       filter: (value) => `tag:${value || 'none'}`,
@@ -594,7 +595,7 @@ export function getColumns(
     c({
       id: 'notes',
       header: t('Organizer.Columns.Notes'),
-      value: (item) => getNotes(item, itemInfos) ?? '',
+      value: (item) => getNotes(item) ?? '',
       cell: (_val, item) => <NotesArea item={item} minimal={true} />,
       gridWidth: 'minmax(200px, 1fr)',
       filter: (value) => `notes:${quoteFilterString(value)}`,

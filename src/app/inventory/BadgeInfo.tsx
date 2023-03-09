@@ -8,9 +8,9 @@ import shapedIcon from 'images/shaped.png';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
 import styles from './BadgeInfo.m.scss';
-import { itemNoteSelector } from './dim-item-info';
 import { DimItem } from './item-types';
 import RatingIcon from './RatingIcon';
+import { notesSelector } from './selectors';
 
 interface Props {
   item: DimItem;
@@ -108,6 +108,6 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
  * subscription for notes only happens for classified items.
  */
 function ClassifiedNotes({ item }: { item: DimItem }) {
-  const savedNotes = useSelector(itemNoteSelector(item));
+  const savedNotes = useSelector(notesSelector(item));
   return <>{savedNotes ?? '???'}</>;
 }
