@@ -241,11 +241,13 @@ function buildLessCostlyRelations(autoModOptions: AutoModData, availableGeneralS
           const mods1 = autoModOptions.generalMods[armorStat1];
           const mods2 = autoModOptions.generalMods[armorStat2];
 
-          if (!mods1) {
+          if (autoModOptions.artificeMods[armorStat1] && !autoModOptions.artificeMods[armorStat2]) {
+            // Stat1 has artifice mods, Stat2 doesn't, so Stat2 is worse in that aspect
+          } else if (!mods1) {
             // Stat1 has no mods, so Stat2 can always do equal or better
             hashes.push(armorStat2);
           } else if (!mods2) {
-            // Stat1 has mods, Stat2 doesn't, so Stat2 is worse
+            // Stat1 has mods, Stat2 doesn't, so Stat2 is worse in that aspect
           } else {
             const [large1Cost, large2Cost] = [mods1.majorMod.cost, mods2.majorMod.cost];
             const [small1Cost, small2Cost] = [mods1.minorMod.cost, mods2.minorMod.cost];
