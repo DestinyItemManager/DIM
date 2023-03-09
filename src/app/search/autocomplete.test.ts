@@ -4,6 +4,7 @@ import {
   filterSortRecentSearches,
   makeFilterComplete,
 } from './autocomplete';
+import { quoteFilterString } from './query-parser';
 import { buildSearchConfig } from './search-config';
 
 /**
@@ -24,49 +25,99 @@ describe('autocompleteTermSuggestions', () => {
   const searchConfig = buildSearchConfig(2);
   const filterComplete = makeFilterComplete(searchConfig);
 
-  const cases: string[] = [
-    'is:haspower is:b',
-    '(is:blue ju|n)',
-    'is:bow is:v|oid',
-    'season:>outl',
-    'not(',
+  const cases: [query: string, expected: string][] = [
+    ['is:haspower is:b', 'is:haspower is:bow'],
+    ['(is:blue ju|n)', '(is:blue tag:junk)'],
+    ['is:bow is:v|oid', 'is:bow is:void'],
+    // TODO: range overloads should really work
+    ['season:>outl', 'Expected failure'],
+    ['not(', 'Expected failure'],
   ];
 
-  test.each(cases)('autocomplete within query for {%s}', (queryWithCaret) => {
-    const [caretIndex, query] = extractCaret(queryWithCaret);
-    const candidates = autocompleteTermSuggestions(query, caretIndex, filterComplete, searchConfig);
-    expect(candidates).toMatchSnapshot();
-  });
-
-  const multiWordCases: [query: string, mockCandidate: string][] = [
-    ['arctic haz', 'arctic haze'],
-    ['is:weapon arctic haz| -is:exotic', 'arctic haze'],
-    ['name:"foo" arctic haz', 'arctic haze'],
-    ["ager's sce", "ager's scepter"],
-    ['the last word', 'the last word'],
-    ['acd/0 fee', 'acd/0 feedback fence'],
-    ['stat:rpm:200 first in, last', 'first in, last out'],
-    ['two-tail', 'two-tailed fox'],
-    ['(is:a or is:b) and (is:c or multi w|)', 'multi word'],
-    ['arctic  haz', 'arctic haze'], // two spaces inbetween words
-    ['"rare curio" arctic haz', 'arctic haze'],
-    ['"rare curio" or arctic haz', 'arctic haze'],
-    ['toil and trou', 'toil and trouble'], // todo: not handled due to the `and`
-    ['rare curio or arctic haz', 'arctic haze'], // todo: parser result is unexpected here
-  ];
-
-  test.each(multiWordCases)(
-    'autocomplete within multi-word query for {%s} with exact match',
-    (queryWithCaret: string, mockCandidate: string) => {
+  test.each(cases)(
+    'autocomplete within query for {%s}',
+    (queryWithCaret: string, expected: string) => {
       const [caretIndex, query] = extractCaret(queryWithCaret);
       const candidates = autocompleteTermSuggestions(
         query,
         caretIndex,
-        // use mock candidates to simulate exact name-matches for multiword items
-        () => [`name:"${mockCandidate}"`],
+        filterComplete,
         searchConfig
       );
-      expect(candidates).toMatchSnapshot();
+      expect(candidates[0]?.query.body ?? 'Expected failure').toBe(expected);
+    }
+  );
+
+  const multiWordCases: [query: string, expected: string][] = [
+    ['arctic haz', 'name:"arctic haze"'],
+    ['is:weapon arctic haz| -is:exotic', 'is:weapon name:"arctic haze" -is:exotic'],
+    ['name:"arctic haz', 'name:"arctic haze"'],
+    ["name:'arctic haz", 'name:"arctic haze"'],
+    ['name:"foo" arctic haz', 'name:"foo" name:"arctic haze"'],
+    ["ager's sce", 'name:"ager\'s scepter"'],
+    ['the last word', 'name:"the last word"'],
+    ['acd/0 fee', 'name:"acd/0 feedback fence"'],
+    ['stat:rpm:200 first in, last', 'stat:rpm:200 name:"first in, last out"'],
+    ['two-tail', 'name:"two-tailed fox"'],
+    ['(is:a or is:b) and (is:c or multi w|)', '(is:a or is:b) and (is:c or name:"multi word")'],
+    ['"rare curio" arctic haz', '"rare curio" name:"arctic haze"'],
+    ['"rare curio" or arctic haz', '"rare curio" or name:"arctic haze"'],
+    ['toil and trou', 'name:"toil and trouble"'],
+    ['perkname:"fate of', 'perkname:"fate of all fools"'],
+    ['perkname:fate of', 'perkname:"fate of all fools"'],
+    // Expected (or at least not yet supported) failures:
+    ['rare curio or arctic haz', 'No fake autocomplete for: rare curio or arctic haz'], // no way to know that isn't one name
+    ['name:heritage arctic haze', 'No fake autocomplete for: name:heritage arctic haze'], // this actually works in the app but relies on the full manifest
+  ];
+
+  // Item names the autocompleter should know about for the above multiWordCases to complete
+  const itemNames = [
+    'heritage',
+    'arctic haze',
+    "ager's scepter",
+    'the last word',
+    'acd/0 feedback fence',
+    'first in, last out',
+    'two-tailed fox',
+    'multi word',
+    'toil and trouble',
+    'not forgotten',
+    'fate of all fools',
+  ];
+
+  // Mocked out filterComplete function that only knows a few tricks
+  const filterCompleteMock = (term: string) => {
+    console.log('TERM', term);
+    const parts = term.split(':');
+    let filter = 'name';
+    if (parts.length > 1) {
+      filter = parts.shift()!;
+    }
+
+    let value = parts[0];
+    if (value.startsWith("'") || value.startsWith('"')) {
+      value = value.slice(1);
+    }
+    if (value.endsWith("'") || value.endsWith('"')) {
+      value = value.slice(0, value.length - 1);
+    }
+    const result = itemNames.find((i) => i.startsWith(value));
+    return result
+      ? [`${filter}:${quoteFilterString(result)}`]
+      : [`No fake autocomplete for: ${term}`];
+  };
+
+  test.each(multiWordCases)(
+    'autocomplete within multi-word query for {%s} should suggest {%s}',
+    (queryWithCaret: string, expected: string) => {
+      const [caretIndex, query] = extractCaret(queryWithCaret);
+      const candidates = autocompleteTermSuggestions(
+        query,
+        caretIndex,
+        filterCompleteMock,
+        searchConfig
+      );
+      expect(candidates[0]?.query.body).toBe(expected);
     }
   );
 });

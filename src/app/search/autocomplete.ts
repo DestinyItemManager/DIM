@@ -4,7 +4,7 @@ import { chainComparator, compareBy, reverseComparator } from 'app/utils/compara
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
-import { makeCommentString, parseQuery, traverseAST } from './query-parser';
+import { lexer, makeCommentString, parseQuery, QueryLexerOpenQuotesError } from './query-parser';
 import { SearchConfig } from './search-config';
 import freeformFilters from './search-filters/freeform';
 
@@ -235,15 +235,12 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
   });
 }
 
-const caretEndRegex = /([\s)]|$)/;
-
 // most times, insist on at least 3 typed characters, but for #, start suggesting immediately
 const lastWordRegex = /(\b[\w:"'<=>]{3,}|#\w*)$/;
-// matches a string that seems to end with a closing, not opening, quote
-const closingQuoteRegex = /\w["']$/;
+const caretEndRegex = /([\s)]|$)/;
 
 /**
- * Find the position of the last "complete" filter segment of the query before the caretIndex.
+ * Find the position of the last "incomplete" filter segment of the query before the caretIndex.
  *
  * For example, given the query (with the caret at |):
  * name:foo bar| baz
@@ -253,34 +250,65 @@ const closingQuoteRegex = /\w["']$/;
  */
 function findLastFilter(
   query: string,
-  caretIndex: number
+  caretIndex: number,
+  searchConfig: SearchConfig
 ): {
   term: string;
   index: number;
 } | null {
   // TODO: maybe include non-whitespace after the caret?
   const queryUpToCaret = query.slice(0, caretIndex);
-  // TODO: maybe just lex it?
-  const ast = parseQuery(queryUpToCaret);
 
-  // Find all the "bare" keywords at the end of the query. For example if the query is:
-  // name:foo bar baz
-  // then the trailingKeywordStrings are 'bar baz'
-  let index = -1;
-  traverseAST(
-    ast,
-    (filter) => {
-      if (filter.type === 'keyword' && !/\s+/.test(filter.args)) {
-        index = filter.startIndex;
-      } else {
-        return false;
+  // Find the index where an incomplete filter starts. For example if the query is:
+  // name:"foo" bar baz
+  // then the open keywords are "bar baz"
+  let earliestIncompleteFilter = -1;
+  try {
+    // We can use the query lexer for this to scan through tokens in the query without parsing the whole AST.
+    for (const token of lexer(queryUpToCaret)) {
+      switch (token.type) {
+        case 'filter': {
+          if (
+            // Ignore complete quoted tokens, they're definitively finished.
+            !token.quoted &&
+            // Match either bare words ...
+            (token.keyword === 'keyword' ||
+              // ... or name:foo style keywords
+              (searchConfig.kvFilters[token.keyword]?.format === 'freeform' &&
+                // Unless they already perfectly match a suggestion without quotes, e.g. name:heritage
+                !searchConfig.suggestions.includes(`${token.keyword}:${token.args}`)))
+          ) {
+            // Only set the index for the first keyword (we're looking for the earliest)
+            if (earliestIncompleteFilter < 0) {
+              // Set it to the beginning of the whole token (including the keyword e.g. name:foo)
+              earliestIncompleteFilter = token.startIndex;
+            }
+          } else {
+            earliestIncompleteFilter = -1;
+          }
+          break;
+        }
+        case 'and':
+        case 'or':
+        case 'implicit_and':
+          // ignore these - they neither start an incomplete filter section, nor end it
+          break;
+        default:
+          // reset, we saw something that's definitely not part of a filter
+          earliestIncompleteFilter = -1;
+          break;
       }
-    },
-    true // traverse in reverse
-  );
-  if (index >= 0) {
-    const term = queryUpToCaret.substring(index);
-    return { index, term };
+    }
+  } catch (e) {
+    // If the lexer failed because of unmatched quotes, that's *definitely* something to autocomplete!
+    if (e instanceof QueryLexerOpenQuotesError) {
+      earliestIncompleteFilter = e.startIndex; // + 1;
+    }
+  }
+
+  if (earliestIncompleteFilter >= 0) {
+    const term = queryUpToCaret.substring(earliestIncompleteFilter);
+    return { index: earliestIncompleteFilter, term };
   } else {
     const execResult = lastWordRegex.exec(queryUpToCaret);
     if (execResult) {
@@ -309,9 +337,8 @@ export function autocompleteTermSuggestions(
   // Seek to the end of the current part
   caretIndex = (caretEndRegex.exec(query.slice(caretIndex))?.index || 0) + caretIndex;
 
-  const lastFilter = findLastFilter(query, caretIndex);
-
-  if (!lastFilter || closingQuoteRegex.test(lastFilter.term)) {
+  const lastFilter = findLastFilter(query, caretIndex, searchConfig);
+  if (!lastFilter) {
     return [];
   }
 
@@ -362,7 +389,6 @@ const freeformTerms = freeformFilters.flatMap((f) => f.keywords).map((s) => `${s
  */
 export function makeFilterComplete(searchConfig: SearchConfig) {
   // TODO: also search filter descriptions
-  // TODO: also search individual items from the manifest???
   return (typed: string): string[] => {
     if (!typed) {
       return [];

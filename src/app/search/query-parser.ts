@@ -289,7 +289,7 @@ function isSameOp<T extends 'and' | 'or'>(binOp: T, op: QueryAST): op is AndOp |
 
 // Lexer token types
 type NoArgTokenType = '(' | ')' | 'not' | 'or' | 'and' | 'implicit_and';
-export type Token = { startIndex: number; length: number } & (
+export type Token = { startIndex: number; length: number; quoted?: boolean } & (
   | { type: NoArgTokenType }
   | { type: 'filter'; keyword: string; args: string }
   | { type: 'comment'; content: string }
@@ -313,6 +313,27 @@ const whitespace = /\s+/y;
 const comment = /\/\*(.*?)\*\/\s*/y;
 export function makeCommentString(text: string) {
   return `/* ${text} */`;
+}
+
+export class QueryLexerError extends Error {
+  // The index and length of the range within the query string where the error occurred
+  startIndex: number;
+  length: number;
+
+  constructor(message: string, startIndex: number, length: number) {
+    super(message);
+    this.startIndex = startIndex;
+    this.length = length;
+    this.name = 'QueryLexerError';
+  }
+}
+
+/** A special version of QueryLexerError for when quotes aren't closed. */
+export class QueryLexerOpenQuotesError extends QueryLexerError {
+  constructor(message: string, startIndex: number, length: number) {
+    super(message, startIndex, length);
+    this.name = 'QueryLexerError';
+  }
 }
 
 /**
@@ -378,13 +399,18 @@ export function* lexer(query: string): Generator<Token> {
       consume(char);
       // Handle character escapes e.g. \", \', \\
       if (char === '\\') {
+        const escapeStart = i;
         if (i < query.length) {
           const escaped = query[i];
           if (escaped === '"' || escaped === "'" || escaped === '\\') {
             str += escaped;
             consume(escaped);
           } else {
-            throw new Error('Unrecognized escape sequence \\' + escaped);
+            throw new QueryLexerError(
+              'Unrecognized escape sequence \\' + escaped,
+              escapeStart,
+              i - escapeStart
+            );
           }
         } else {
           str = str + char;
@@ -396,7 +422,11 @@ export function* lexer(query: string): Generator<Token> {
       }
     }
 
-    throw new Error('Unterminated quotes: |' + query.slice(initial) + '| ' + initial);
+    throw new QueryLexerOpenQuotesError(
+      `Unterminated quotes: |${query.slice(initial)}| ${initial}`,
+      initial,
+      i - initial
+    );
   };
 
   while (i < query.length) {
@@ -415,6 +445,7 @@ export function* lexer(query: string): Generator<Token> {
         type: 'filter',
         keyword: 'keyword',
         args: quotedString,
+        quoted: true,
       };
     } else if ((match = extract(negation)) !== undefined) {
       // minus sign is the same as "not"
@@ -435,13 +466,28 @@ export function* lexer(query: string): Generator<Token> {
       const nextChar = query[i];
 
       let args = '';
+      let quoted = false;
 
       if (nextChar === '"' || nextChar === "'") {
-        args = consumeString(nextChar);
+        try {
+          quoted = true;
+          args = consumeString(nextChar);
+        } catch (e) {
+          if (e instanceof QueryLexerOpenQuotesError) {
+            // Rethrow but include the filter prefix (e.g. name:) in the range
+            throw new QueryLexerOpenQuotesError(e.message, startIndex, e.length + match.length);
+          } else {
+            throw e;
+          }
+        }
       } else if ((match = extract(filterArgs)) !== undefined) {
         args = match;
       } else {
-        throw new Error('missing keyword arguments for ' + keyword);
+        throw new QueryLexerError(
+          'missing keyword arguments for ' + keyword,
+          startIndex,
+          query.length - startIndex
+        );
       }
 
       yield {
@@ -450,6 +496,7 @@ export function* lexer(query: string): Generator<Token> {
         type: 'filter',
         keyword,
         args,
+        quoted,
       };
     } else if ((match = extract(bareWords)) !== undefined) {
       // bare words that aren't keywords are effectively "keyword" type filters
@@ -463,7 +510,11 @@ export function* lexer(query: string): Generator<Token> {
     } else if ((match = extract(whitespace)) !== undefined) {
       yield { startIndex, length: i - startIndex, type: 'implicit_and' };
     } else {
-      throw new Error('unrecognized tokens: |' + query.slice(i) + '| ' + i);
+      throw new QueryLexerError(
+        'unrecognized tokens: |' + query.slice(i) + '| ' + i,
+        startIndex,
+        query.length - startIndex
+      );
     }
 
     if (startIndex === i) {
@@ -531,36 +582,3 @@ export function canonicalizeQuery(query: QueryAST, depth = 0): string {
 
   return result;
 }
-
-/**
- * Invoke `callback` on each FilterOp of the `ast` in depth-first order (ie, left-to-right)
- * If optional `reverse` argument is true, traversal goes the other way
- */
-export const traverseAST = (
-  ast: QueryAST,
-  /** A callback to run on each filter op. Return false to stop traversing. */
-  callback: (ast: FilterOp) => boolean | undefined,
-  reverse = false
-): boolean | undefined => {
-  switch (ast.op) {
-    case 'filter':
-      return callback(ast);
-
-    case 'not':
-      return traverseAST(ast.operand, callback, reverse);
-
-    case 'and':
-    case 'or': {
-      const operands = reverse ? [...ast.operands].reverse() : ast.operands;
-      for (const operand of operands) {
-        if (traverseAST(operand, callback, reverse) === false) {
-          return false;
-        }
-      }
-      break;
-    }
-
-    case 'noop':
-      break;
-  }
-};
