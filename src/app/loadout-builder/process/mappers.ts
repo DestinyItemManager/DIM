@@ -26,9 +26,12 @@ import {
   ArmorSet,
   ArmorStats,
   artificeSocketReusablePlugSetHash,
+  artificeStatBoost,
   AutoModDefs,
   generalSocketReusablePlugSetHash,
   ItemGroup,
+  majorStatBoost,
+  minorStatBoost,
 } from '../types';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
@@ -207,9 +210,11 @@ export function getAutoMods(defs: D2ManifestDefinitions, allUnlockedPlugs: Set<n
   const artificePlugSet = mapPlugSet(artificeSocketReusablePlugSetHash);
 
   for (const statHash of armorStats) {
-    // Artifice mods give +3 in a single stat, so find the mod for that stat
+    // Artifice mods give a small boost in a single stat, so find the mod for that stat
     const artificeMod = artificePlugSet.find((modDef) =>
-      modDef.investmentStats.some((stat) => stat.statTypeHash === statHash && stat.value === 3)
+      modDef.investmentStats.some(
+        (stat) => stat.statTypeHash === statHash && stat.value === artificeStatBoost
+      )
     );
     if (
       artificeMod &&
@@ -227,8 +232,8 @@ export function getAutoMods(defs: D2ManifestDefinitions, allUnlockedPlugs: Set<n
       return smallMod && allUnlockedPlugs.has(smallMod.hash) ? smallMod : largeMod;
     };
 
-    const majorMod = findUnlockedModByValue(10);
-    const minorMod = findUnlockedModByValue(5);
+    const majorMod = findUnlockedModByValue(majorStatBoost);
+    const minorMod = findUnlockedModByValue(minorStatBoost);
     if (majorMod && minorMod) {
       autoMods.generalMods[statHash] = { majorMod, minorMod };
     }

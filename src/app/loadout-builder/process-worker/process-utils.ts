@@ -4,17 +4,6 @@ import { ArmorStatHashes, MinMaxIgnored } from '../types';
 import { AutoModsMap, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
-interface SortParam {
-  energy?: {
-    val: number;
-  };
-}
-
-export interface ProcessItemSubset extends SortParam {
-  id: string;
-  compatibleModSeasons?: string[];
-}
-
 /**
  * Data that stays the same in a given LO run.
  */
@@ -369,7 +358,7 @@ function exploreAutoModsSearchTree(
   };
 
   // The cost to get to the next tier has two dimensions:
-  // * cost of individual stat mods (boolean `couldUseExpensiveMod` since mod costs fall into two sets)
+  // * the cost of individual mods (via cheaperStatRelations)
   // * number of stat points missing to go to the next tier (`pointsMissing`)
   const previousCosts: {
     statHash: number;
@@ -390,7 +379,7 @@ function exploreAutoModsSearchTree(
     if (
       previousCosts.some(
         (previousSubtree) =>
-          info.autoModOptions.cheaperStatsPerStat[statHash].includes(previousSubtree.statHash) &&
+          info.autoModOptions.cheaperStatRelations[statHash].includes(previousSubtree.statHash) &&
           previousSubtree.pointsMissing <= pointsMissing
       )
     ) {

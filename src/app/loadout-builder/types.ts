@@ -108,6 +108,17 @@ export const generalSocketReusablePlugSetHash = 731468111;
  */
 export const artificeSocketReusablePlugSetHash = 4285066582;
 
+/** Bonus to a single stat given by plugs in artifice armor's exclusive mod slot */
+export const artificeStatBoost = 3;
+/** Bonus to a single stat given by the "half tier mods" plugs in all armor's general mod slot */
+export const minorStatBoost = 5;
+/**
+ * Bonus to a single stat given by the "full tier mods" plugs in all armor's general mod slot.
+ * The fact that a major mod gives exactly 1 tier without changing the number of remainder points
+ * is fairly engrained in some of the algorithms, so it wouldn't be quite trivial to change this.
+ */
+export const majorStatBoost = 10;
+
 /**
  * Special value for lockedExoticHash indicating the user would not like any exotics included in their loadouts.
  */

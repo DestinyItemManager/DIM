@@ -209,14 +209,13 @@ export default memo(function LoadoutBuilder({
   // but for stats we care about (and only if we're not adding mods ourselves)
   const halfTierMods = useMemo(
     () =>
-      _.compact(
-        statOrder.map(
-          (statHash) =>
-            !loadoutParameters.autoStatMods &&
-            enabledStats.has(statHash) &&
-            autoMods.generalMods[statHash]?.minorMod
-        )
-      ),
+      (!loadoutParameters.autoStatMods &&
+        _.compact(
+          statOrder.map(
+            (statHash) => enabledStats.has(statHash) && autoMods.generalMods[statHash]?.minorMod
+          )
+        )) ||
+      [],
     [autoMods.generalMods, enabledStats, loadoutParameters.autoStatMods, statOrder]
   );
 

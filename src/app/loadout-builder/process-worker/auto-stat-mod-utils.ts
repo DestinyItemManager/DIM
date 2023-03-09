@@ -1,6 +1,6 @@
 import { armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
-import { ArmorStatHashes } from '../types';
+import { ArmorStatHashes, artificeStatBoost, majorStatBoost, minorStatBoost } from '../types';
 import { LoSessionInfo } from './process-utils';
 import { AutoModData } from './types';
 
@@ -35,10 +35,13 @@ interface CacheForStat {
 export interface AutoModsMap {
   statCaches: { [statHash in ArmorStatHashes]: CacheForStat };
   /**
-   * A list of stats where the mods are better or equal than the mods for `statHash`,
-   * better defined as "not more expensive".
+   * See comments in pickOptimalStatMods. That function optimizes for total tier first,
+   * so if a less-prioritized stat also has more costly mods, then it cannot result in a higher
+   * total tier.
+   * So for each ArmorStatHash, this contains a list of stats where the stat mods are better
+   * for purposes of optimizing total tier, by having cheaper or more mods available.
    */
-  cheaperStatsPerStat: { [statHash in ArmorStatHashes]: ArmorStatHashes[] };
+  cheaperStatRelations: { [statHash in ArmorStatHashes]: ArmorStatHashes[] };
 }
 
 /**
@@ -188,7 +191,10 @@ function buildCacheForStat(
         numMajorMods <= (majorMod ? availableGeneralStatMods - numMinorMods : 0);
         numMajorMods++
       ) {
-        const statValue = numArtificeMods * 3 + numMinorMods * 5 + numMajorMods * 10;
+        const statValue =
+          numArtificeMods * artificeStatBoost +
+          numMinorMods * minorStatBoost +
+          numMajorMods * majorStatBoost;
         if (statValue === 0) {
           continue;
         }
@@ -199,7 +205,11 @@ function buildCacheForStat(
         // 10 can be satisfied by dropping the artifice mod.
         // So if we have any artifice pieces, we are allowed to overshoot by 2, and if
         // not then we're allowed to overshoot by 4.
-        const lowerRange = statValue - (numArtificeMods > 0 ? 2 : 4);
+        // This ensures pareto-optimality of the various ways of hitting a stat target.
+        // Note: Assumptions here are artificeStatBoost < minorStatBoost
+        // and majorStatBoost = 2 * minorStatBoost
+        const lowerRange =
+          statValue - (numArtificeMods > 0 ? artificeStatBoost - 1 : minorStatBoost - 1);
         const obj: ModsPick = {
           numArtificeMods,
           numGeneralMods: numMinorMods + numMajorMods,
@@ -229,6 +239,13 @@ function buildCacheForStat(
   return cache;
 }
 
+/**
+ * See comments in pickOptimalStatMods. That function optimizes for total tier first,
+ * so if a less-prioritized stat also has more costly mods, then it cannot result in a higher
+ * total tier.
+ * So for each ArmorStatHash, this builds a list of stats where the stat mods are better
+ * for purposes of optimizing total tier, by having cheaper or more mods available.
+ */
 function buildLessCostlyRelations(autoModOptions: AutoModData, availableGeneralStatMods: number) {
   return Object.fromEntries(
     armorStats.map((armorStat1) => {
@@ -262,7 +279,7 @@ function buildLessCostlyRelations(autoModOptions: AutoModData, availableGeneralS
 
       return [armorStat1, hashes];
     })
-  ) as AutoModsMap['cheaperStatsPerStat'];
+  ) as AutoModsMap['cheaperStatRelations'];
 }
 
 export function buildAutoModsMap(
@@ -276,6 +293,6 @@ export function buildAutoModsMap(
         buildCacheForStat(autoModOptions, statHash, availableGeneralStatMods),
       ])
     ) as AutoModsMap['statCaches'],
-    cheaperStatsPerStat: buildLessCostlyRelations(autoModOptions, availableGeneralStatMods),
+    cheaperStatRelations: buildLessCostlyRelations(autoModOptions, availableGeneralStatMods),
   };
 }

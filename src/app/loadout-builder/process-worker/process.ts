@@ -3,8 +3,10 @@ import { infoLog } from '../../utils/log';
 import {
   ArmorStatHashes,
   ArmorStats,
+  artificeStatBoost,
   LockableBucketHashes,
   LockableBuckets,
+  majorStatBoost,
   StatFilters,
   StatRanges,
 } from '../types';
@@ -282,7 +284,8 @@ export function process(
             setStatistics.lowerBoundsExceeded.timesChecked++;
             if (
               totalNeededStats >
-              numArtifice * 3 + precalculatedInfo.numAvailableGeneralMods * 10
+              numArtifice * artificeStatBoost +
+                precalculatedInfo.numAvailableGeneralMods * majorStatBoost
             ) {
               setStatistics.lowerBoundsExceeded.timesFailed++;
               continue;
@@ -324,7 +327,9 @@ export function process(
                 tiersString += tier.toString(16);
 
                 if (stats[index] < filter.max * 10) {
-                  pointsNeededForTiers.push(Math.ceil((10 - (stats[index] % 10)) / 3));
+                  pointsNeededForTiers.push(
+                    Math.ceil((10 - (stats[index] % 10)) / artificeStatBoost)
+                  );
                 } else {
                   // We really don't want to optimize this stat further...
                   pointsNeededForTiers.push(100);
