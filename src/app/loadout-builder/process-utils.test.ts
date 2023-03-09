@@ -329,7 +329,7 @@ describe('process-utils mod assignment', () => {
  *   * We need 4 mobility, 0 resilience, 10 recovery, 12 discipline, 4 intellect, 0 strength.
  *   * Our armor pieces have [3, 4, 1, 3, 4] energy left
  *   * the activity pieces are   ^     ^
- *     (one of them is a trap; the 4-cost piece must hold one of the 4-cost general mods and can't hold the activity piece)
+ *     (one of them is a trap; the 4-cost piece must hold one of the 4-cost general mods and can't hold the activity mod)
  *
  * The expected solution uses 4 artifice discipline mods, a 4 cost major recovery mod, a 1 cost small mobility mod and a 2 cost small intellect mod.
  * The activity mod goes into the 3-energy piece for the mods to fit.
@@ -402,9 +402,15 @@ describe('process-utils auto mods', () => {
   });
 
   it('the problem is solvable', () => {
-    expect(
-      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, items, neededStats, 4)
-    ).not.toBe(undefined);
+    const solution = pickAndAssignSlotIndependentMods(
+      loSessionInfo,
+      modStatistics,
+      items,
+      neededStats,
+      4
+    );
+    expect(solution).not.toBe(undefined);
+    expect(solution).toMatchSnapshot();
   });
 
   it('higher stats means we cannot find a viable set of picks', () => {

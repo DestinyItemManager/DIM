@@ -212,7 +212,8 @@ function buildCacheForStat(
             ...Array(numMinorMods).fill(minorMod?.hash),
             ...Array(numArtificeMods).fill(artificeMod?.hash),
           ],
-          modEnergyCost: numMinorMods * (minorMod?.cost || 0) + numMajorMods,
+          modEnergyCost:
+            numMinorMods * (minorMod?.cost || 0) + numMajorMods * (majorMod?.cost || 0),
         };
         for (let achievableValue = lowerRange; achievableValue <= statValue; achievableValue++) {
           (cache.statMap[achievableValue] ??= []).push(obj);

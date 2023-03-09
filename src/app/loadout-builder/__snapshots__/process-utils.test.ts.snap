@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`process-utils auto mods the problem is solvable 1`] = `
+[
+  {
+    "generalModsCosts": [
+      1,
+    ],
+    "modEnergyCost": 1,
+    "modHashes": [
+      1703647492,
+    ],
+    "numArtificeMods": 0,
+    "numGeneralMods": 1,
+  },
+  {
+    "generalModsCosts": [
+      4,
+    ],
+    "modEnergyCost": 4,
+    "modHashes": [
+      4204488676,
+    ],
+    "numArtificeMods": 0,
+    "numGeneralMods": 1,
+  },
+  {
+    "generalModsCosts": [],
+    "modEnergyCost": 0,
+    "modHashes": [
+      617569843,
+      617569843,
+      617569843,
+      617569843,
+    ],
+    "numArtificeMods": 4,
+    "numGeneralMods": 0,
+  },
+  {
+    "generalModsCosts": [
+      2,
+    ],
+    "modEnergyCost": 2,
+    "modHashes": [
+      350061697,
+    ],
+    "numArtificeMods": 0,
+    "numGeneralMods": 1,
+  },
+]
+`;
