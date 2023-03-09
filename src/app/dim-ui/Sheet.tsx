@@ -72,14 +72,14 @@ interface Props {
 
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity,
 // or dragged down more than dismissAmount times the height of the sheet.
-const dismissVelocity = 150; // px/ms
+const dismissVelocity = 120; // px/ms
 const dismissAmount = 0.5;
 
 const spring: Spring = {
   type: 'spring',
-  stiffness: 180,
+  stiffness: 280,
   damping: 20,
-  mass: 0.5,
+  mass: 0.2,
 } as const;
 
 const reducedMotionTween = { type: 'tween', duration: 0.01 } as const;
