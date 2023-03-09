@@ -17,6 +17,7 @@ import {
   generateProcessModPermutations,
   LoSessionInfo,
   pickAndAssignSlotIndependentMods,
+  pickOptimalStatMods,
   precalculateStructures,
 } from './process-worker/process-utils';
 import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './process-worker/types';
@@ -26,7 +27,8 @@ import {
   mapAutoMods,
   mapDimItemToProcessItem,
 } from './process/mappers';
-import { MIN_LO_ITEM_ENERGY } from './types';
+import { MinMaxIgnored, MIN_LO_ITEM_ENERGY } from './types';
+import { statTier } from './utils';
 
 // We don't really pay attention to this in the tests but the parameter is needed
 const modStatistics: ModAssignmentStatistics = {
@@ -65,10 +67,12 @@ function modifyItem({
   item,
   energyVal,
   compatibleModSeasons,
+  isArtifice,
 }: {
   item: ProcessItem;
   energyVal?: number;
   compatibleModSeasons?: string[];
+  isArtifice?: boolean;
 }) {
   const newItem = _.cloneDeep(item);
 
@@ -78,6 +82,10 @@ function modifyItem({
 
   if (compatibleModSeasons !== undefined) {
     newItem.compatibleModSeasons = compatibleModSeasons;
+  }
+
+  if (isArtifice !== undefined) {
+    newItem.isArtifice = isArtifice;
   }
 
   return newItem;
@@ -444,4 +452,91 @@ describe('process-utils auto mods', () => {
       pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4)
     ).toBe(undefined);
   });
+});
+
+/**
+ * To test optimal stat mod picking, we set up a bunch of sets defined by armor stats, remaining energies, and artifice slots,
+ * and expect it to correctly find the highest total tier.
+ */
+describe('process-utils optimal mods', () => {
+  let helmet: ProcessItem;
+  let arms: ProcessItem;
+  let chest: ProcessItem;
+  let legs: ProcessItem;
+  let classItem: ProcessItem;
+
+  // use these for testing as they are reset after each test
+  let items: ProcessItem[];
+  let statFilters: MinMaxIgnored[];
+  let loSessionInfo: LoSessionInfo;
+
+  beforeAll(async () => {
+    const defs = await getTestDefinitions();
+    const makeItem = (index: number) => ({
+      hash: index,
+      id: index.toString(),
+      isArtifice: false,
+      isExotic: false,
+      name: `Item ${index}`,
+      power: 1500,
+      stats: [0, 0, 0, 0, 0, 0],
+      compatibleModSeasons: [],
+      energy: { capacity: 10, val: 0 },
+    });
+    helmet = makeItem(1);
+    arms = makeItem(2);
+    chest = makeItem(3);
+    legs = makeItem(4);
+    classItem = makeItem(5);
+
+    items = [helmet, arms, chest, legs, classItem];
+
+    const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
+    loSessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
+
+    statFilters = armorStats.map(() => ({
+      ignored: false,
+      max: 8,
+      min: 3,
+    }));
+  });
+
+  const cases: [
+    setStats: number[],
+    remainingEnergy: number[],
+    numArtifice: number,
+    expectedTiers: number[]
+  ][] = [
+    // the trick here is that we can use two small mods to boost resilience by a tier,
+    // but it's better to use two large mods to boost discipline (cheaper mods...)
+    [[80, 70, 80, 40, 30, 30], [0, 3, 0, 3, 0], 0, [8, 7, 8, 6, 3, 3]],
+    // ensure we combine artifice and small mods if needed
+    [[63, 70, 59, 35, 30, 30], [2, 0, 0, 0, 0], 3, [7, 7, 6, 3, 3, 3]],
+    // ensure we can use a cheap +5 mod to bump the 35 dis to 4 while using artifice on resilience
+    [[80, 65, 80, 35, 30, 30], [1, 0, 0, 0, 0], 2, [8, 7, 8, 4, 3, 3]],
+    // ensure we get two tiers in mobility
+    [[68, 66, 30, 30, 30, 30], [0, 0, 0, 0, 0], 4, [8, 6, 3, 3, 3, 3]],
+    // do everything we can to hit min bounds
+    [[68, 66, 30, 30, 11, 30], [2, 2, 0, 0, 0], 4, [7, 6, 3, 3, 3, 3]],
+  ];
+
+  test.each(cases)(
+    'set with stats %p, energies %p, numArtifice %p yields tiers %p',
+    (setStats, remainingEnergy, numArtifice, expectedTiers) => {
+      const ourItems = [...items];
+      for (let i = 0; i < ourItems.length; i++) {
+        ourItems[i] = modifyItem({
+          item: ourItems[i],
+          energyVal: 10 - remainingEnergy[i],
+          isArtifice: i < numArtifice,
+        });
+      }
+      const statMods = pickOptimalStatMods(loSessionInfo, ourItems, setStats, statFilters)!;
+      const finalStats = [...setStats];
+      for (let i = 0; i < armorStats.length; i++) {
+        finalStats[i] += statMods.bonusStats[i];
+      }
+      expect(finalStats.map(statTier)).toStrictEqual(expectedTiers);
+    }
+  );
 });
