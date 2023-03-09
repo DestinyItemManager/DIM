@@ -28,13 +28,13 @@ const engrams = {
     cap: PowerCap.Powerful,
     bonus: 3,
   },
-  // Powerful Legacy
-  2246571627: {
-    cap: PowerCap.Powerful,
-    bonus: 3,
-  },
   // Tier 2
   3114385606: {
+    cap: PowerCap.Powerful,
+    bonus: 4,
+  },
+  // Rose (from Competitive)
+  882778888: {
     cap: PowerCap.Powerful,
     bonus: 4,
   },
@@ -45,27 +45,13 @@ const engrams = {
   },
 };
 
-// Milestone hashes for milestones that reward +1 pinnacles instead of +2
-const plusOnePinnacles = [
-  3448738070, // Weekly Gambit Challenge
-  1437935813, // Weekly Vanguard Strikes
-  3312774044, // Crucible Playlist Challenge
-  3603098564, // Clan Rewards (Hawthorne's 5,000 clan XP challenge)
-];
-
 /**
  * How much above the player's current max power will this reward drop?
  */
 export function getEngramPowerBonus(itemHash: number, maxPower?: number, parentItemHash?: number) {
-  // Hawthorne's Clan Rewards gives out a +1 pinnacle even though it's listed as a powerful
+  // Hawthorne's Clan Rewards gives out a +2 pinnacle even though it's listed as a powerful
   if (parentItemHash === 3603098564) {
     itemHash = 73143230;
-  }
-
-  // Season of Plunder vendor 8 bounties challenge (The Astral Seas) gives a T1 powerful
-  // even though it's listed as a pinnacle in the API
-  if (parentItemHash === 1194402836) {
-    itemHash = 3114385605;
   }
 
   const engramInfo: {
@@ -84,12 +70,8 @@ export function getEngramPowerBonus(itemHash: number, maxPower?: number, parentI
     // Powerful engrams can't go above the powerful cap
     return _.clamp(powerfulCap - maxPower, 0, engramInfo.bonus);
   } else if (engramInfo.cap === PowerCap.Pinnacle) {
-    const pinnacleBonus = parentItemHash && plusOnePinnacles.includes(parentItemHash) ? 1 : 2;
     // Once you're at or above the powerful cap, pinnacles only give +2, up to the hard cap
-    const pinnacleCap = Math.min(
-      season.pinnacleCap,
-      Math.max(maxPower, powerfulCap) + pinnacleBonus
-    );
+    const pinnacleCap = Math.min(season.pinnacleCap, Math.max(maxPower, powerfulCap) + 2);
     return _.clamp(pinnacleCap - maxPower, 0, engramInfo.bonus);
   }
 }
