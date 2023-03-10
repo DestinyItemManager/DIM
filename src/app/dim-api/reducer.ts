@@ -181,13 +181,13 @@ export const dimApi = (
         ? [...action.payload.updateQueue, ...state.updateQueue]
         : [];
       return action.payload
-        ? {
+        ? migrateSettings({
             ...state,
             profileLoadedFromIndexedDb: true,
-            settings: migrateSettings({
+            settings: {
               ...state.settings,
               ...action.payload.settings,
-            }),
+            },
             profiles: {
               ...state.profiles,
               ...action.payload.profiles,
@@ -198,7 +198,7 @@ export const dimApi = (
               ...state.searches,
               ...action.payload.searches,
             },
-          }
+          })
         : {
             ...state,
             profileLoadedFromIndexedDb: true,
@@ -212,15 +212,15 @@ export const dimApi = (
       const existingProfile = account ? state.profiles[profileKey] : undefined;
 
       // TODO: clean out invalid/simple searches on first load?
-      const newState: DimApiState = {
+      const newState: DimApiState = migrateSettings({
         ...state,
         profileLoaded: true,
         profileLoadedError: undefined,
         profileLastLoaded: Date.now(),
-        settings: migrateSettings({
+        settings: {
           ...state.settings,
           ...profileResponse.settings,
-        }),
+        },
         itemHashTags: profileResponse.itemHashTags
           ? _.keyBy(profileResponse.itemHashTags, (t) => t.hash)
           : state.itemHashTags,
@@ -249,7 +249,7 @@ export const dimApi = (
                 [account.destinyVersion]: profileResponse.searches || [],
               }
             : state.searches,
-      };
+      });
 
       // If this is the first load, cleanup searches
       if (
@@ -410,44 +410,60 @@ export const dimApi = (
   }
 };
 
-function migrateSettings(settings: Settings) {
+/**
+ * Migrates deprecated settings to their new equivalent, and erroneous settings values to their correct value.
+ * This updates the settings state and adds their updates to the update queue
+ */
+function migrateSettings(state: DimApiState) {
   // Fix some integer settings being stored as strings
-  if (typeof settings.charCol === 'string') {
-    settings = { ...settings, charCol: parseInt(settings.charCol, 10) };
+  if (typeof state.settings.charCol === 'string') {
+    state = changeSetting(state, 'charCol', parseInt(state.settings.charCol, 10));
   }
-  if (typeof settings.charColMobile === 'string') {
-    settings = { ...settings, charColMobile: parseInt(settings.charColMobile, 10) };
+  if (typeof state.settings.charColMobile === 'string') {
+    state = changeSetting(state, 'charColMobile', parseInt(state.settings.charColMobile, 10));
   }
-  if (typeof settings.inventoryClearSpaces === 'string') {
-    settings = { ...settings, inventoryClearSpaces: parseInt(settings.inventoryClearSpaces, 10) };
+  if (typeof state.settings.inventoryClearSpaces === 'string') {
+    state = changeSetting(
+      state,
+      'inventoryClearSpaces',
+      parseInt(state.settings.inventoryClearSpaces, 10)
+    );
   }
-  if (typeof settings.itemSize === 'string') {
-    settings = { ...settings, itemSize: parseInt(settings.itemSize, 10) };
+  if (typeof state.settings.itemSize === 'string') {
+    state = changeSetting(state, 'itemSize', parseInt(state.settings.itemSize, 10));
   }
 
   // Using undefined for the absence of a watermark was a bad idea
-  if (settings.itemFeedWatermark === undefined) {
-    settings = { ...settings, itemFeedWatermark: initialSettingsState.itemFeedWatermark };
+  if (state.settings.itemFeedWatermark === undefined) {
+    state = changeSetting(state, 'itemFeedWatermark', initialSettingsState.itemFeedWatermark);
   }
 
   // Replace 'element' sort with 'elementWeapon' and 'elementArmor'
-  const sortOrder = settings.itemSortOrderCustom || [];
-  const reversals = settings.itemSortReversals || [];
+  const sortOrder = state.settings.itemSortOrderCustom || [];
+  const reversals = state.settings.itemSortReversals || [];
 
   if (sortOrder.includes('element')) {
-    sortOrder.splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor');
+    state = changeSetting(
+      state,
+      'itemSortOrderCustom',
+      [...sortOrder].splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor')
+    );
   }
 
   if (reversals.includes('element')) {
-    reversals.splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor');
+    state = changeSetting(
+      state,
+      'itemSortReversals',
+      [...reversals].splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor')
+    );
   }
 
   // converts any old custom stats stored in the old settings key, to the new format
-  const oldCustomStats = settings.customTotalStatsByClass;
+  const oldCustomStats = state.settings.customTotalStatsByClass;
   if (!_.isEmpty(oldCustomStats)) {
     // this existing array should 100% be empty if the user's stats are in old format...
     // but not taking any chances. we'll preserve what's there.
-    const customStats = [...settings.customStats];
+    const customStats = [...state.settings.customStats];
 
     for (const classEnumString in oldCustomStats) {
       const classEnum: DestinyClass = parseInt(classEnumString);
@@ -471,12 +487,11 @@ function migrateSettings(settings: Settings) {
     }
 
     // empty out the old-format setting. eventually phase out this old settings key?
-    settings = { ...settings, customStats, customTotalStatsByClass: {} };
+    state = changeSetting(state, 'customStats', customStats);
+    state = changeSetting(state, 'customTotalStatsByClass', {});
   }
 
-  settings = { ...settings, itemSortOrderCustom: sortOrder, itemSortReversals: reversals };
-
-  return settings;
+  return state;
 }
 
 function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, value: Settings[V]) {
