@@ -21,7 +21,7 @@ import { parseAndValidateQuery } from 'app/search/search-utils';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
-import { count } from 'app/utils/util';
+import { count, uniqBy } from 'app/utils/util';
 import { clearWishLists } from 'app/wishlists/actions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
@@ -489,6 +489,14 @@ function migrateSettings(state: DimApiState) {
     // empty out the old-format setting. eventually phase out this old settings key?
     state = changeSetting(state, 'customStats', customStats);
     state = changeSetting(state, 'customTotalStatsByClass', {});
+  }
+
+  // A previous bug ins settings migration could cause duplicate custom stats
+  if (state.settings.customStats.length) {
+    const uniqCustomStats = uniqBy(state.settings.customStats, (stat) => stat.statHash);
+    if (uniqCustomStats.length !== state.settings.customStats.length) {
+      state = changeSetting(state, 'customStats', uniqCustomStats);
+    }
   }
 
   return state;
