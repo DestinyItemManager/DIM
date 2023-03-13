@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed the `stat`/`basestat` filters for weapon stats.
+
 ## 7.60.0 <span class="changelog-date">(2023-03-12)</span>
 
 * Fixed deepsight border showing up for weapons whose pattern has already been unlocked.
