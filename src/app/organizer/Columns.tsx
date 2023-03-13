@@ -57,7 +57,6 @@ import {
   isUsedArmorModSocket,
 } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -98,7 +97,6 @@ export function getColumns(
   statHashes: {
     [statHash: number]: StatInfo;
   },
-  classType: DestinyClass,
   itemInfos: ItemInfos,
   wishList: (item: DimItem) => InventoryWishListRoll | undefined,
   hasWishList: boolean,
@@ -242,7 +240,7 @@ export function getColumns(
     return columnDef;
   }
 
-  const customStats = createCustomStatColumns(customStatDefs, classType);
+  const customStats = createCustomStatColumns(customStatDefs);
 
   const columns: ColumnDefinition[] = _.compact([
     c({

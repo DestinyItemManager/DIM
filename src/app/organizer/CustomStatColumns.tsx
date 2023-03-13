@@ -5,27 +5,23 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ColumnDefinition, SortDirection } from './table-types';
 
 export function createCustomStatColumns(
-  customStatDefs: CustomStatDef[],
-  classType: DestinyClass
+  customStatDefs: CustomStatDef[]
 ): (ColumnDefinition | undefined)[] {
-  return customStatDefs.map((c) => {
-    if (c.class === classType || c.class === DestinyClass.Unknown) {
-      return {
-        id: 'customstat_' + c.shortLabel + c.statHash,
-        header: (
-          <>
-            {c.label}
-            <CustomStatWeightsDisplay customStat={c} />
-          </>
-        ),
-        value: (item: DimItem) => item.stats?.find((s) => s.statHash === c.statHash)?.value,
-        defaultSort: SortDirection.DESC,
-        filter: (value) => `stat:${c.label}:>=${value}`,
-        columnGroup: {
-          id: c.shortLabel + c.statHash,
-          header: c.label,
-        },
-      };
-    }
-  });
+  return customStatDefs.map((c) => ({
+    id: 'customstat_' + c.shortLabel + c.statHash,
+    header: (
+      <>
+        {c.label}
+        <CustomStatWeightsDisplay customStat={c} />
+      </>
+    ),
+    value: (item: DimItem) => item.stats?.find((s) => s.statHash === c.statHash)?.value,
+    defaultSort: SortDirection.DESC,
+    filter: (value) => `stat:${c.label}:>=${value}`,
+    columnGroup: {
+      id: c.shortLabel + c.statHash,
+      header: c.label,
+    },
+    limitToClass: c.class === DestinyClass.Unknown ? undefined : c.class,
+  }));
 }

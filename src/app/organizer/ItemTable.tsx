@@ -167,7 +167,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       getColumns(
         itemType,
         statHashes,
-        classIfAny,
         itemInfos,
         wishList,
         hasWishList,
@@ -184,7 +183,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       itemType,
       itemInfos,
       customStats,
-      classIfAny,
       loadoutsByItem,
       newItems,
       destinyVersion,
@@ -197,10 +195,14 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     () =>
       _.compact(
         enabledColumns.flatMap((id) =>
-          columns.filter((column) => id === getColumnSelectionId(column))
+          columns.filter(
+            (column) =>
+              id === getColumnSelectionId(column) &&
+              (column.limitToClass === undefined || column.limitToClass === classIfAny)
+          )
         )
       ),
-    [columns, enabledColumns]
+    [columns, enabledColumns, classIfAny]
   );
 
   // process items into Rows
