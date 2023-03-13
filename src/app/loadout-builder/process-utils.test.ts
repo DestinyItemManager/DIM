@@ -1,6 +1,7 @@
 import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { StatHashes } from 'data/d2/generated-enums';
+import { armorStats } from 'app/search/d2-known-values';
+import { emptySet } from 'app/utils/empty';
 import _ from 'lodash';
 import {
   enhancedOperatorAugmentModHash,
@@ -14,12 +15,31 @@ import {
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import {
   generateProcessModPermutations,
+  LoSessionInfo,
   pickAndAssignSlotIndependentMods,
+  pickOptimalStatMods,
   precalculateStructures,
 } from './process-worker/process-utils';
 import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './process-worker/types';
-import { mapArmor2ModToProcessMod, mapDimItemToProcessItem } from './process/mappers';
-import { ArmorStatHashes, MIN_LO_ITEM_ENERGY } from './types';
+import {
+  getAutoMods,
+  mapArmor2ModToProcessMod,
+  mapAutoMods,
+  mapDimItemToProcessItem,
+} from './process/mappers';
+import { MinMaxIgnored, MIN_LO_ITEM_ENERGY } from './types';
+import { statTier } from './utils';
+
+// We don't really pay attention to this in the tests but the parameter is needed
+const modStatistics: ModAssignmentStatistics = {
+  earlyModsCheck: { timesChecked: 0, timesFailed: 0 },
+  autoModsPick: { timesChecked: 0, timesFailed: 0 },
+  finalAssignment: {
+    modAssignmentAttempted: 0,
+    modsAssignmentFailed: 0,
+    autoModsAssignmentFailed: 0,
+  },
+};
 
 function modifyMod({
   mod,
@@ -47,10 +67,12 @@ function modifyItem({
   item,
   energyVal,
   compatibleModSeasons,
+  isArtifice,
 }: {
   item: ProcessItem;
   energyVal?: number;
   compatibleModSeasons?: string[];
+  isArtifice?: boolean;
 }) {
   const newItem = _.cloneDeep(item);
 
@@ -62,11 +84,15 @@ function modifyItem({
     newItem.compatibleModSeasons = compatibleModSeasons;
   }
 
+  if (isArtifice !== undefined) {
+    newItem.isArtifice = isArtifice;
+  }
+
   return newItem;
 }
 
 // The tsconfig in the process worker folder messes with tests so they live outside of it.
-describe('process-utils', () => {
+describe('process-utils mod assignment', () => {
   let generalMod: ProcessMod;
   let activityMod: ProcessMod;
 
@@ -144,25 +170,16 @@ describe('process-utils', () => {
     activityMods: ProcessMod[],
     items: ProcessItem[]
   ) => {
-    const statOrder: ArmorStatHashes[] = [
-      StatHashes.Mobility,
-      StatHashes.Resilience,
-      StatHashes.Recovery,
-      StatHashes.Discipline,
-      StatHashes.Intellect,
-      StatHashes.Strength,
-    ];
+    const autoMods = { generalMods: {}, artificeMods: {} };
     const neededStats = [0, 0, 0, 0, 0, 0];
-    const precalculatedInfo = precalculateStructures(generalMods, activityMods, false, statOrder);
-    const modStatistics: ModAssignmentStatistics = {
-      earlyModsCheck: { timesChecked: 0, timesFailed: 0 },
-      autoModsPick: { timesChecked: 0, timesFailed: 0 },
-      finalAssignment: {
-        modAssignmentAttempted: 0,
-        modsAssignmentFailed: 0,
-        autoModsAssignmentFailed: 0,
-      },
-    };
+    const precalculatedInfo = precalculateStructures(
+      autoMods,
+      generalMods,
+      activityMods,
+      false,
+      armorStats
+    );
+
     return (
       pickAndAssignSlotIndependentMods(precalculatedInfo, modStatistics, items, neededStats, 0) !==
       undefined
@@ -306,6 +323,220 @@ describe('process-utils', () => {
       expect(
         canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems)
       ).toBe(false);
+    }
+  );
+});
+
+/**
+ * To test auto mod picks to hit certain stats, we set up some constraints that give us one solution,
+ * and then constrain the problem some more and expect no solution.
+ *
+ * Our constraints/picked mods+stats are:
+ *   * The user picked two general mods (cost 4 and 3) and one activity mod (cost 1).
+ *   * We have 4 artifice slots, and 3 remaining general mod slots.
+ *   * We need 4 mobility, 0 resilience, 10 recovery, 12 discipline, 4 intellect, 0 strength.
+ *   * Our armor pieces have [3, 4, 1, 3, 4] energy left
+ *   * the activity pieces are   ^     ^
+ *     (one of them is a trap; the 4-cost piece must hold one of the 4-cost general mods and can't hold the activity mod)
+ *
+ * The expected solution uses 4 artifice discipline mods, a 4 cost major recovery mod, a 1 cost small mobility mod and a 2 cost small intellect mod.
+ * The activity mod goes into the 3-energy piece for the mods to fit.
+ */
+describe('process-utils auto mods', () => {
+  let generalMod: ProcessMod;
+  let generalModCopy: ProcessMod;
+  let activityMod: ProcessMod;
+
+  let helmet: ProcessItem;
+  let arms: ProcessItem;
+  let chest: ProcessItem;
+  let legs: ProcessItem;
+  let classItem: ProcessItem;
+
+  // use these for testing as they are reset after each test
+  let items: ProcessItem[];
+  let generalMods: ProcessMod[];
+  let activityMods: ProcessMod[];
+
+  let loSessionInfo: LoSessionInfo;
+  let neededStats: number[];
+
+  beforeAll(async () => {
+    const defs = await getTestDefinitions();
+    const makeItem = (
+      artifice: boolean,
+      index: number,
+      energyCapacity: number,
+      seasons: string[]
+    ) => ({
+      hash: index,
+      id: index.toString(),
+      isArtifice: artifice,
+      isExotic: false,
+      name: `Item ${index}`,
+      power: 1500,
+      stats: [0, 0, 0, 0, 0, 0],
+      compatibleModSeasons: seasons,
+      energy: { capacity: 10, val: 10 - energyCapacity },
+    });
+    helmet = makeItem(true, 1, 3, []);
+    arms = makeItem(true, 2, 4, ['deepstonecrypt']);
+    chest = makeItem(false, 3, 1, []);
+    legs = makeItem(true, 4, 3, ['deepstonecrypt']);
+    classItem = makeItem(true, 5, 4, []);
+    generalMod = mapArmor2ModToProcessMod(
+      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition
+    );
+    generalMod.energy!.val = 4;
+    generalModCopy = { ...generalMod, energy: { ...generalMod.energy!, val: 3 } };
+    activityMod = mapArmor2ModToProcessMod(
+      defs.InventoryItem.get(enhancedOperatorAugmentModHash) as PluggableInventoryItemDefinition
+    );
+    activityMod.energy!.val = 1;
+
+    items = [helmet, arms, chest, legs, classItem];
+    generalMods = [generalModCopy, generalMod];
+    activityMods = [activityMod];
+
+    const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
+    loSessionInfo = precalculateStructures(
+      autoModData,
+      generalMods,
+      activityMods,
+      true,
+      armorStats
+    );
+    neededStats = [4, 0, 10, 12, 4, 0];
+  });
+
+  it('the problem is solvable', () => {
+    const solution = pickAndAssignSlotIndependentMods(
+      loSessionInfo,
+      modStatistics,
+      items,
+      neededStats,
+      4
+    );
+    expect(solution).not.toBe(undefined);
+    expect(solution).toMatchSnapshot();
+  });
+
+  it('higher stats means we cannot find a viable set of picks', () => {
+    for (let i = 0; i < 6; i++) {
+      const newNeededStats = [...neededStats];
+      newNeededStats[i] += 2;
+      expect(
+        pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, items, newNeededStats, 4)
+      ).toBe(undefined);
+    }
+  });
+
+  it('we need all artifice mod slots', () => {
+    expect(
+      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, items, neededStats, 3)
+    ).toBe(undefined);
+  });
+
+  it('we need all the energy capacity in all general mod slots', () => {
+    const ourItems = [...items];
+    ourItems[1] = modifyItem({ item: items[1], energyVal: 10 - 3 });
+    expect(
+      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4)
+    ).toBe(undefined);
+  });
+
+  it('activity mod cannot go into the other item if we want to hit stats', () => {
+    const ourItems = [...items];
+    ourItems[1] = modifyItem({ item: items[3], compatibleModSeasons: [] });
+    expect(
+      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4)
+    ).toBe(undefined);
+  });
+});
+
+/**
+ * To test optimal stat mod picking, we set up a bunch of sets defined by armor stats, remaining energies, and artifice slots,
+ * and expect it to correctly find the highest total tier.
+ */
+describe('process-utils optimal mods', () => {
+  let helmet: ProcessItem;
+  let arms: ProcessItem;
+  let chest: ProcessItem;
+  let legs: ProcessItem;
+  let classItem: ProcessItem;
+
+  // use these for testing as they are reset after each test
+  let items: ProcessItem[];
+  let statFilters: MinMaxIgnored[];
+  let loSessionInfo: LoSessionInfo;
+
+  beforeAll(async () => {
+    const defs = await getTestDefinitions();
+    const makeItem = (index: number) => ({
+      hash: index,
+      id: index.toString(),
+      isArtifice: false,
+      isExotic: false,
+      name: `Item ${index}`,
+      power: 1500,
+      stats: [0, 0, 0, 0, 0, 0],
+      compatibleModSeasons: [],
+      energy: { capacity: 10, val: 0 },
+    });
+    helmet = makeItem(1);
+    arms = makeItem(2);
+    chest = makeItem(3);
+    legs = makeItem(4);
+    classItem = makeItem(5);
+
+    items = [helmet, arms, chest, legs, classItem];
+
+    const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
+    loSessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
+
+    statFilters = armorStats.map(() => ({
+      ignored: false,
+      max: 8,
+      min: 3,
+    }));
+  });
+
+  const cases: [
+    setStats: number[],
+    remainingEnergy: number[],
+    numArtifice: number,
+    expectedTiers: number[]
+  ][] = [
+    // the trick here is that we can use two small mods to boost resilience by a tier,
+    // but it's better to use two large mods to boost discipline (cheaper mods...)
+    [[80, 70, 80, 40, 30, 30], [0, 3, 0, 3, 0], 0, [8, 7, 8, 6, 3, 3]],
+    // ensure we combine artifice and small mods if needed
+    [[63, 70, 59, 35, 30, 30], [2, 0, 0, 0, 0], 3, [7, 7, 6, 3, 3, 3]],
+    // ensure we can use a cheap +5 mod to bump the 35 dis to 4 while using artifice on resilience
+    [[80, 65, 80, 35, 30, 30], [1, 0, 0, 0, 0], 2, [8, 7, 8, 4, 3, 3]],
+    // ensure we get two tiers in mobility
+    [[68, 66, 30, 30, 30, 30], [0, 0, 0, 0, 0], 4, [8, 6, 3, 3, 3, 3]],
+    // do everything we can to hit min bounds
+    [[68, 66, 30, 30, 11, 30], [2, 2, 0, 0, 0], 4, [7, 6, 3, 3, 3, 3]],
+  ];
+
+  test.each(cases)(
+    'set with stats %p, energies %p, numArtifice %p yields tiers %p',
+    (setStats, remainingEnergy, numArtifice, expectedTiers) => {
+      const ourItems = [...items];
+      for (let i = 0; i < ourItems.length; i++) {
+        ourItems[i] = modifyItem({
+          item: ourItems[i],
+          energyVal: 10 - remainingEnergy[i],
+          isArtifice: i < numArtifice,
+        });
+      }
+      const statMods = pickOptimalStatMods(loSessionInfo, ourItems, setStats, statFilters)!;
+      const finalStats = [...setStats];
+      for (let i = 0; i < armorStats.length; i++) {
+        finalStats[i] += statMods.bonusStats[i];
+      }
+      expect(finalStats.map(statTier)).toStrictEqual(expectedTiers);
     }
   );
 });

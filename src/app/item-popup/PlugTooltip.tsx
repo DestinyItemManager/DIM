@@ -105,6 +105,18 @@ export function DimPlugTooltip({
   );
 }
 
+export interface ExtraPlugTooltipInfo {
+  stats?: { [statHash: string]: number };
+  plugObjectives?: DestinyObjectiveProgress[];
+  enableFailReasons?: string;
+  cannotCurrentlyRoll?: boolean;
+  unreliablePerkOption?: boolean;
+  wishListTip?: string;
+  automaticallyPicked?: boolean;
+  hideRequirements?: boolean;
+  craftingData?: DestinyPlugItemCraftingRequirements;
+}
+
 /**
  * This creates a tooltip for a plug with various levels of content.
  *
@@ -122,19 +134,12 @@ export function PlugTooltip({
   cannotCurrentlyRoll,
   unreliablePerkOption,
   wishListTip,
+  automaticallyPicked,
   hideRequirements,
   craftingData,
 }: {
   def: DestinyInventoryItemDefinition;
-  stats?: { [statHash: string]: number };
-  plugObjectives?: DestinyObjectiveProgress[];
-  enableFailReasons?: string;
-  cannotCurrentlyRoll?: boolean;
-  unreliablePerkOption?: boolean;
-  wishListTip?: string;
-  hideRequirements?: boolean;
-  craftingData?: DestinyPlugItemCraftingRequirements;
-}) {
+} & ExtraPlugTooltipInfo) {
   const defs = useD2Definitions();
   const statsArray =
     (stats &&
@@ -296,6 +301,11 @@ export function PlugTooltip({
       {unreliablePerkOption && (
         <Tooltip.Section className={styles.cannotRollSection}>
           <p>{t('MovePopup.UnreliablePerkOption')}</p>
+        </Tooltip.Section>
+      )}
+      {automaticallyPicked && (
+        <Tooltip.Section className={styles.automaticallyPickedSection}>
+          <p>{t('LoadoutBuilder.AutomaticallyPicked')}</p>
         </Tooltip.Section>
       )}
       {wishListTip && (

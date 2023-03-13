@@ -1,20 +1,8 @@
-import { StatHashes } from 'app/../data/d2/generated-enums';
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import _ from 'lodash';
 import { ArmorStatHashes, MinMaxIgnored } from '../types';
 import { AutoModsMap, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
-import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
-
-interface SortParam {
-  energy?: {
-    val: number;
-  };
-}
-
-export interface ProcessItemSubset extends SortParam {
-  id: string;
-  compatibleModSeasons?: string[];
-}
+import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 /**
  * Data that stays the same in a given LO run.
@@ -36,6 +24,7 @@ export interface LoSessionInfo {
 }
 
 export function precalculateStructures(
+  autoModOptions: AutoModData,
   generalMods: ProcessMod[],
   activityMods: ProcessMod[],
   autoStatMods: boolean,
@@ -45,7 +34,7 @@ export function precalculateStructures(
   const numAvailableGeneralMods = autoStatMods ? 5 - generalModCosts.length : 0;
 
   return {
-    autoModOptions: buildAutoModsMap(numAvailableGeneralMods),
+    autoModOptions: buildAutoModsMap(autoModOptions, numAvailableGeneralMods),
     statOrder,
     hasActivityMods: activityMods.length > 0,
     generalModCosts,
@@ -154,7 +143,6 @@ export function pickAndAssignSlotIndependentMods(
     if (neededStats) {
       const result = chooseAutoMods(
         info,
-        items,
         neededStats,
         numArtifice,
         [remainingEnergyCapacities],
@@ -188,7 +176,7 @@ export function pickOptimalStatMods(
   items: ProcessItem[],
   setStats: number[],
   statFiltersInStatOrder: MinMaxIgnored[]
-): { mods: number[]; numPoints: number } | undefined {
+): { mods: number[]; numBonusTiers: number; bonusStats: number[] } | undefined {
   const remainingEnergiesPerAssignment: number[][] = [];
 
   let setEnergy = 0;
@@ -263,7 +251,8 @@ export function pickOptimalStatMods(
   return (
     bestBoosts && {
       mods: bestBoosts.picks.flatMap((pick) => pick.modHashes),
-      numPoints: bestBoosts.depth,
+      numBonusTiers: bestBoosts.depth,
+      bonusStats: bestBoosts.bonusStats,
     }
   );
 }
@@ -271,6 +260,7 @@ export function pickOptimalStatMods(
 interface SearchResult {
   picks: ModsPick[];
   depth: number;
+  bonusStats: number[];
 }
 
 /**
@@ -352,7 +342,6 @@ function exploreAutoModsSearchTree(
 ): SearchResult | undefined {
   const picks = chooseAutoMods(
     info,
-    items,
     explorationStats,
     numArtificeMods,
     remainingEnergyCapacities,
@@ -365,13 +354,14 @@ function exploreAutoModsSearchTree(
   let bestResult: SearchResult = {
     depth,
     picks,
+    bonusStats: explorationStats,
   };
 
   // The cost to get to the next tier has two dimensions:
-  // * cost of individual stat mods (boolean `couldUseExpensiveMod` since mod costs fall into two sets)
+  // * the cost of individual mods (via cheaperStatRelations)
   // * number of stat points missing to go to the next tier (`pointsMissing`)
   const previousCosts: {
-    couldUseExpensiveMod: boolean;
+    statHash: number;
     pointsMissing: number;
   }[] = [];
 
@@ -381,8 +371,7 @@ function exploreAutoModsSearchTree(
     }
 
     const pointsMissing = explorationStats[statIndex] === 0 ? 10 - (setStats[statIndex] % 10) : 10;
-    const couldUseExpensiveMod =
-      info.numAvailableGeneralMods > 0 && isExpensiveMod(info.statOrder[statIndex]);
+    const statHash = info.statOrder[statIndex];
 
     // Dominance check: If an earlier-explored (=higher-priority) branch needs fewer stat points
     // to the next tier AND doesn't have more expensive mods than this current one, we don't even need to
@@ -390,8 +379,7 @@ function exploreAutoModsSearchTree(
     if (
       previousCosts.some(
         (previousSubtree) =>
-          (!previousSubtree.couldUseExpensiveMod ||
-            (previousSubtree.couldUseExpensiveMod && couldUseExpensiveMod)) &&
+          info.autoModOptions.cheaperStatRelations[statHash].includes(previousSubtree.statHash) &&
           previousSubtree.pointsMissing <= pointsMissing
       )
     ) {
@@ -420,19 +408,10 @@ function exploreAutoModsSearchTree(
     // Remember that we checked a stat like this so we can skip dominated branches in later iterations.
     previousCosts.push({
       pointsMissing,
-      couldUseExpensiveMod,
+      statHash,
     });
   }
   return bestResult;
-}
-
-/*@__INLINE__*/
-function isExpensiveMod(statHash: number) {
-  return (
-    statHash === StatHashes.Recovery ||
-    statHash === StatHashes.Resilience ||
-    statHash === StatHashes.Intellect
-  );
 }
 
 export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {

@@ -1,11 +1,17 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isArtifice } from 'app/item-triage/triage-utils';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
 } from 'app/loadout/known-values';
-import { MAX_ARMOR_ENERGY_CAPACITY, modsWithConditionalStats } from 'app/search/d2-known-values';
+import {
+  armorStats,
+  MAX_ARMOR_ENERGY_CAPACITY,
+  modsWithConditionalStats,
+} from 'app/search/d2-known-values';
+import { compareBy } from 'app/utils/comparators';
 import { DestinyClass, DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -14,22 +20,31 @@ import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
 } from '../../utils/item-utils';
-import { ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
-import { ArmorEnergyRules, ArmorSet, ArmorStats, ItemGroup } from '../types';
+import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
+import {
+  ArmorEnergyRules,
+  ArmorSet,
+  ArmorStats,
+  artificeSocketReusablePlugSetHash,
+  artificeStatBoost,
+  AutoModDefs,
+  generalSocketReusablePlugSetHash,
+  ItemGroup,
+  majorStatBoost,
+  minorStatBoost,
+} from '../types';
 
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
     hash: mod.hash,
-    plugCategoryHash: mod.plug.plugCategoryHash,
     energy: mod.plug.energyCost && {
       val: mod.plug.energyCost.energyCost,
     },
-    investmentStats: mod.investmentStats,
   };
 
   if (
-    activityModPlugCategoryHashes.includes(processMod.plugCategoryHash) ||
-    !knownModPlugCategoryHashes.includes(processMod.plugCategoryHash)
+    activityModPlugCategoryHashes.includes(mod.plug.plugCategoryHash) ||
+    !knownModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
   ) {
     processMod.tag = getModTypeTagByPlugCategoryHash(mod.plug.plugCategoryHash);
   }
@@ -143,7 +158,6 @@ export function mapDimItemToProcessItem({
 }
 
 export function hydrateArmorSet(
-  defs: D2ManifestDefinitions,
   processed: ProcessArmorSet,
   itemsById: Map<string, ItemGroup>
 ): ArmorSet {
@@ -153,22 +167,77 @@ export function hydrateArmorSet(
     armor.push(itemsById.get(itemId)!.items);
   }
 
-  const statsWithAutoMods = { ...processed.stats };
+  return {
+    armor,
+    stats: processed.stats,
+    statMods: processed.statMods,
+  };
+}
 
-  for (const modHash of processed.statMods) {
-    const def = defs.InventoryItem.get(modHash);
-    if (def?.investmentStats.length) {
-      for (const stat of def.investmentStats) {
-        if (statsWithAutoMods[stat.statTypeHash] !== undefined) {
-          statsWithAutoMods[stat.statTypeHash] += stat.value;
-        }
-      }
+export function mapAutoMods(defs: AutoModDefs): AutoModData {
+  const defToAutoMod = (def: PluggableInventoryItemDefinition) => ({
+    hash: def.hash,
+    cost: def.plug.energyCost?.energyCost ?? 0,
+  });
+  const defToArtificeMod = (def: PluggableInventoryItemDefinition) => ({
+    hash: def.hash,
+  });
+  return {
+    artificeMods: _.mapValues(defs.artificeMods, defToArtificeMod),
+    generalMods: _.mapValues(defs.generalMods, (modsForStat) =>
+      _.mapValues(modsForStat, defToAutoMod)
+    ),
+  };
+}
+
+/**
+ * Build the automatically pickable mods for the store.
+ * FIXME: Bungie created cheap copies of some mods, but they don't have stats, so
+ * this code will not extract the reduced-cost copies even if they become available.
+ * Re-evaluate this in future seasons if general mods can be affected by artifact cost reductions.
+ */
+export function getAutoMods(defs: D2ManifestDefinitions, allUnlockedPlugs: Set<number>) {
+  const autoMods: AutoModDefs = { generalMods: {}, artificeMods: {} };
+  // Only consider plugs that give stats
+  const mapPlugSet = (plugSetHash: number) =>
+    _.compact(
+      defs.PlugSet.get(plugSetHash)?.reusablePlugItems.map((plugEntry) => {
+        const def = defs.InventoryItem.get(plugEntry.plugItemHash);
+        return isPluggableItem(def) && def.investmentStats?.length && def;
+      }) ?? []
+    );
+  const generalPlugSet = mapPlugSet(generalSocketReusablePlugSetHash);
+  const artificePlugSet = mapPlugSet(artificeSocketReusablePlugSetHash);
+
+  for (const statHash of armorStats) {
+    // Artifice mods give a small boost in a single stat, so find the mod for that stat
+    const artificeMod = artificePlugSet.find((modDef) =>
+      modDef.investmentStats.some(
+        (stat) => stat.statTypeHash === statHash && stat.value === artificeStatBoost
+      )
+    );
+    if (
+      artificeMod &&
+      (artificeMod.plug.energyCost === undefined || artificeMod.plug.energyCost.energyCost === 0)
+    ) {
+      autoMods.artificeMods[statHash] = artificeMod;
+    }
+
+    const findUnlockedModByValue = (value: number) => {
+      const relevantMods = generalPlugSet.filter((def) =>
+        def.investmentStats.find((stat) => stat.statTypeHash === statHash && stat.value === value)
+      );
+      relevantMods.sort(compareBy((def) => -(def.plug.energyCost?.energyCost ?? 0)));
+      const [largeMod, smallMod] = relevantMods;
+      return smallMod && allUnlockedPlugs.has(smallMod.hash) ? smallMod : largeMod;
+    };
+
+    const majorMod = findUnlockedModByValue(majorStatBoost);
+    const minorMod = findUnlockedModByValue(minorStatBoost);
+    if (majorMod && minorMod) {
+      autoMods.generalMods[statHash] = { majorMod, minorMod };
     }
   }
 
-  return {
-    armor,
-    stats: statsWithAutoMods,
-    statMods: processed.statMods,
-  };
+  return autoMods;
 }

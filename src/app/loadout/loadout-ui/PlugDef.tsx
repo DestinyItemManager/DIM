@@ -2,7 +2,7 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
-import { PlugTooltip } from 'app/item-popup/PlugTooltip';
+import { ExtraPlugTooltipInfo, PlugTooltip } from 'app/item-popup/PlugTooltip';
 import clsx from 'clsx';
 
 interface Props {
@@ -10,12 +10,13 @@ interface Props {
   className?: string;
   onClick?: () => void;
   onClose?: () => void;
+  extraProps?: ExtraPlugTooltipInfo;
 }
 
 /**
  * Displays a plug (mod, perk) based on just its definition, with optional close button.
  */
-export default function PlugDef({ plug, className, onClick, onClose }: Props) {
+export default function PlugDef({ plug, className, onClick, onClose, extraProps }: Props) {
   const contents = (
     <div
       role={onClick ? 'button' : undefined}
@@ -24,7 +25,7 @@ export default function PlugDef({ plug, className, onClick, onClose }: Props) {
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex={onClick ? 0 : undefined}
     >
-      <PressTip tooltip={() => <PlugTooltip def={plug} />}>
+      <PressTip tooltip={() => <PlugTooltip def={plug} {...extraProps} />}>
         <DefItemIcon itemDef={plug} />
       </PressTip>
     </div>

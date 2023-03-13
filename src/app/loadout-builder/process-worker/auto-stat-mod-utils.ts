@@ -1,41 +1,8 @@
 import { armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
-import { StatHashes } from 'data/d2/generated-enums';
-import { ArmorStatHashes } from '../types';
+import { ArmorStatHashes, artificeStatBoost, majorStatBoost, minorStatBoost } from '../types';
 import { LoSessionInfo } from './process-utils';
-import { ProcessItem } from './types';
-
-// Regular stat mods add 10
-const largeStatMods: {
-  [statHash in ArmorStatHashes]: { hash: number; cost: number };
-} = {
-  [StatHashes.Mobility]: { hash: 4183296050, cost: 3 },
-  [StatHashes.Resilience]: { hash: 1180408010, cost: 4 },
-  [StatHashes.Recovery]: { hash: 4204488676, cost: 4 },
-  [StatHashes.Discipline]: { hash: 1435557120, cost: 3 },
-  [StatHashes.Intellect]: { hash: 2724608735, cost: 4 },
-  [StatHashes.Strength]: { hash: 4287799666, cost: 3 },
-};
-
-// Minor stat mods add 5
-const minorStatMods: { [statHash in ArmorStatHashes]: { hash: number; cost: number } } = {
-  [StatHashes.Mobility]: { hash: 1703647492, cost: 1 },
-  [StatHashes.Resilience]: { hash: 2532323436, cost: 2 },
-  [StatHashes.Recovery]: { hash: 1237786518, cost: 2 },
-  [StatHashes.Discipline]: { hash: 4021790309, cost: 1 },
-  [StatHashes.Intellect]: { hash: 350061697, cost: 2 },
-  [StatHashes.Strength]: { hash: 2639422088, cost: 1 },
-};
-
-// Artifice mods add 3
-export const artificeStatMods: { [statHash in ArmorStatHashes]: { hash: number } } = {
-  [StatHashes.Mobility]: { hash: 2322202118 },
-  [StatHashes.Resilience]: { hash: 199176566 },
-  [StatHashes.Recovery]: { hash: 539459624 },
-  [StatHashes.Discipline]: { hash: 617569843 },
-  [StatHashes.Intellect]: { hash: 3160845295 },
-  [StatHashes.Strength]: { hash: 2507624050 },
-};
+import { AutoModData } from './types';
 
 /**
  * A particular way of achieving a target stat value (for a single stat).
@@ -67,6 +34,14 @@ interface CacheForStat {
  */
 export interface AutoModsMap {
   statCaches: { [statHash in ArmorStatHashes]: CacheForStat };
+  /**
+   * See comments in pickOptimalStatMods. That function optimizes for total tier first,
+   * so if a less-prioritized stat also has more costly mods, then it cannot result in a higher
+   * total tier.
+   * So for each ArmorStatHash, this contains a list of stats where the stat mods are better
+   * for purposes of optimizing total tier, by having cheaper or more mods available.
+   */
+  cheaperStatRelations: { [statHash in ArmorStatHashes]: ArmorStatHashes[] };
 }
 
 /**
@@ -75,7 +50,6 @@ export interface AutoModsMap {
  */
 export function chooseAutoMods(
   info: LoSessionInfo,
-  items: ProcessItem[],
   neededStats: number[],
   numArtificeMods: number,
   remainingEnergyCapacities: number[][],
@@ -83,7 +57,6 @@ export function chooseAutoMods(
 ) {
   return recursivelyChooseMods(
     info,
-    items,
     neededStats,
     0,
     info.numAvailableGeneralMods,
@@ -119,7 +92,6 @@ function doGeneralModsFit(
  */
 function recursivelyChooseMods(
   info: LoSessionInfo,
-  items: ProcessItem[],
   neededStats: number[],
   statIndex: number,
   remainingGeneralSlots: number,
@@ -165,7 +137,6 @@ function recursivelyChooseMods(
     subArray[subArray.length - 1] = pick;
     const solution = recursivelyChooseMods(
       info,
-      items,
       neededStats,
       statIndex + 1,
       remainingGeneralSlots - pick.numGeneralMods,
@@ -196,44 +167,63 @@ function recursivelyChooseMods(
  * This unfortunately means a lot of `flatMap`ing down the road and is a lot less efficient. Improvements here
  * could make things a bit faster, especially when they remove equivalent combinations.
  */
-function buildCacheForStat(statHash: ArmorStatHashes, availableGeneralStatMods: number) {
+function buildCacheForStat(
+  autoModOptions: AutoModData,
+  statHash: ArmorStatHashes,
+  availableGeneralStatMods: number
+) {
   const cache: CacheForStat = { statMap: {} };
-  const artificeMod = artificeStatMods[statHash];
-  const minorMod = minorStatMods[statHash];
-  const majorMod = largeStatMods[statHash];
+  // Note: All of these could be undefined for whatever reason.
+  // In that case, the loop bounds are 0 <= numMods <= 0.
+  // Major and minor mod always exist together or not at all.
+  const artificeMod = autoModOptions.artificeMods[statHash];
+  const minorMod = autoModOptions.generalMods[statHash]?.minorMod;
+  const majorMod = autoModOptions.generalMods[statHash]?.majorMod;
 
-  for (let numArtificeMods = 0; numArtificeMods <= 5; numArtificeMods++) {
-    for (let numMinorMods = 0; numMinorMods <= availableGeneralStatMods; numMinorMods++) {
+  for (let numArtificeMods = 0; numArtificeMods <= (artificeMod ? 5 : 0); numArtificeMods++) {
+    for (
+      let numMinorMods = 0;
+      numMinorMods <= (minorMod ? availableGeneralStatMods : 0);
+      numMinorMods++
+    ) {
       for (
         let numMajorMods = 0;
-        numMajorMods <= availableGeneralStatMods - numMinorMods;
+        numMajorMods <= (majorMod ? availableGeneralStatMods - numMinorMods : 0);
         numMajorMods++
       ) {
-        const statValue = numArtificeMods * 3 + numMinorMods * 5 + numMajorMods * 10;
+        const statValue =
+          numArtificeMods * artificeStatBoost +
+          numMinorMods * minorStatBoost +
+          numMajorMods * majorStatBoost;
         if (statValue === 0) {
           continue;
         }
         // We are allowed to provide more stat points than needed -- within reason.
         // If we have a major mod, this satisfies stat needs of 6,7,8,9,10
-        // 5 can be satisfied by a strictly better pick that includes only a minor mod.
+        // 5 can be satisfied by a strictly better pick that includes only a minor mod
         // If we have a major mod and an artifice mod, this satisfies 11,12,13.
         // 10 can be satisfied by dropping the artifice mod.
         // So if we have any artifice pieces, we are allowed to overshoot by 2, and if
         // not then we're allowed to overshoot by 4.
-        const lowerRange = statValue - (numArtificeMods > 0 ? 2 : 4);
+        // This ensures pareto-optimality of the various ways of hitting a stat target.
+        // Note: Assumptions here are artificeStatBoost < minorStatBoost
+        // and majorStatBoost = 2 * minorStatBoost
+        const lowerRange =
+          statValue - (numArtificeMods > 0 ? artificeStatBoost - 1 : minorStatBoost - 1);
         const obj: ModsPick = {
           numArtificeMods,
           numGeneralMods: numMinorMods + numMajorMods,
           generalModsCosts: [
-            ...Array(numMajorMods).fill(majorMod.cost),
-            ...Array(numMinorMods).fill(minorMod.cost),
+            ...Array(numMajorMods).fill(majorMod?.cost),
+            ...Array(numMinorMods).fill(minorMod?.cost),
           ],
           modHashes: [
-            ...Array(numMajorMods).fill(majorMod.hash),
-            ...Array(numMinorMods).fill(minorMod.hash),
-            ...Array(numArtificeMods).fill(artificeMod.hash),
+            ...Array(numMajorMods).fill(majorMod?.hash),
+            ...Array(numMinorMods).fill(minorMod?.hash),
+            ...Array(numArtificeMods).fill(artificeMod?.hash),
           ],
-          modEnergyCost: numMinorMods * minorMod.cost + numMajorMods,
+          modEnergyCost:
+            numMinorMods * (minorMod?.cost || 0) + numMajorMods * (majorMod?.cost || 0),
         };
         for (let achievableValue = lowerRange; achievableValue <= statValue; achievableValue++) {
           (cache.statMap[achievableValue] ??= []).push(obj);
@@ -249,13 +239,63 @@ function buildCacheForStat(statHash: ArmorStatHashes, availableGeneralStatMods: 
   return cache;
 }
 
-export function buildAutoModsMap(availableGeneralStatMods: number): AutoModsMap {
+/**
+ * See comments in pickOptimalStatMods. That function optimizes for total tier first,
+ * so if a less-prioritized stat also has more costly mods, then it cannot result in a higher
+ * total tier.
+ * So for each ArmorStatHash, this builds a list of stats where the stat mods are better
+ * for purposes of optimizing total tier, by having cheaper or more mods available.
+ */
+function buildLessCostlyRelations(autoModOptions: AutoModData, availableGeneralStatMods: number) {
+  return Object.fromEntries(
+    armorStats.map((armorStat1) => {
+      const hashes: ArmorStatHashes[] = [];
+      for (const armorStat2 of armorStats) {
+        if (availableGeneralStatMods === 0) {
+          // No general mods means it doesn't matter how much our general mods actually cost
+          if (!autoModOptions.artificeMods[armorStat1] || autoModOptions.artificeMods[armorStat2]) {
+            // So if Stat1 has no artifice mods, or Stat2 has them, Stat2 can do equal or better
+            hashes.push(armorStat2);
+          }
+        } else {
+          const mods1 = autoModOptions.generalMods[armorStat1];
+          const mods2 = autoModOptions.generalMods[armorStat2];
+
+          if (autoModOptions.artificeMods[armorStat1] && !autoModOptions.artificeMods[armorStat2]) {
+            // Stat1 has artifice mods, Stat2 doesn't, so Stat2 is worse in that aspect
+          } else if (!mods1) {
+            // Stat1 has no mods, so Stat2 can always do equal or better
+            hashes.push(armorStat2);
+          } else if (!mods2) {
+            // Stat1 has mods, Stat2 doesn't, so Stat2 is worse in that aspect
+          } else {
+            const [large1Cost, large2Cost] = [mods1.majorMod.cost, mods2.majorMod.cost];
+            const [small1Cost, small2Cost] = [mods1.minorMod.cost, mods2.minorMod.cost];
+            // mods for armorStat2 are cheaper (dominate armorStat1) if
+            // they're cheaper or same
+            if (small1Cost >= small2Cost && large1Cost >= large2Cost) {
+              hashes.push(armorStat2);
+            }
+          }
+        }
+      }
+
+      return [armorStat1, hashes];
+    })
+  ) as AutoModsMap['cheaperStatRelations'];
+}
+
+export function buildAutoModsMap(
+  autoModOptions: AutoModData,
+  availableGeneralStatMods: number
+): AutoModsMap {
   return {
     statCaches: Object.fromEntries(
       armorStats.map((statHash) => [
         statHash,
-        buildCacheForStat(statHash, availableGeneralStatMods),
+        buildCacheForStat(autoModOptions, statHash, availableGeneralStatMods),
       ])
     ) as AutoModsMap['statCaches'],
+    cheaperStatRelations: buildLessCostlyRelations(autoModOptions, availableGeneralStatMods),
   };
 }
