@@ -1,5 +1,7 @@
 ## Next
 
+## 7.60.0 <span class="changelog-date">(2023-03-12)</span>
+
 * Fixed deepsight border showing up for weapons whose pattern has already been unlocked.
 * DIM now correctly handles reduced mod costs via artifact unlocks.
 * Support added for named and multiple custom total stats. Sort and judge your your armor pieces by multiple situations, like a PVE and PVP stat. Sort by these values in Compare and Organizer, and search by them with stat filters like `stat:pve:>40`.
