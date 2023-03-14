@@ -30,8 +30,6 @@ export const legacyCompatiblePlugCategoryHashes = [
   PlugCategoryHashes.EnhancementsSeasonForge, // fallen
 ];
 
-// EnhancementsSeasonV500 has a one-to-many relationship here,
-// but it's most accurate to call the category "combat" not "elemental well"
 export const modTypeTagByPlugCategoryHash = {
   [PlugCategoryHashes.EnhancementsSeasonOutlaw]: 'lastwish',
   [PlugCategoryHashes.EnhancementsSeasonMaverick]: 'nightmare',
@@ -41,6 +39,7 @@ export const modTypeTagByPlugCategoryHash = {
   [PlugCategoryHashes.EnhancementsRaidV600]: 'vowofthedisciple',
   [PlugCategoryHashes.EnhancementsRaidV620]: 'kingsfall',
   [PlugCategoryHashes.EnhancementsArtifice]: 'artifice',
+  [PlugCategoryHashes.EnhancementsRaidV700]: 'rootofnightmares',
 };
 
 // FIXME(Lightfall) what about legacy?
@@ -105,6 +104,13 @@ const modSocketMetadata: ModSocketMetadata[] = [
     socketTypeHashes: [3344538838],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV620],
     emptyModSocketHash: 1728096240,
+  },
+  {
+    slotTag: 'rootofnightmares',
+    compatibleModTags: ['rootofnightmares'],
+    socketTypeHashes: [1956816524],
+    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV700],
+    emptyModSocketHash: 4144354978,
   },
   {
     slotTag: 'nightmare',
