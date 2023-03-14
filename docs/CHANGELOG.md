@@ -1,6 +1,11 @@
 ## Next
 
-* Fixed the `stat`/`basestat` filters for weapon stats.
+* Custom stat fixes
+  * Fixed the `stat`/`basestat` filters for weapon stats.
+  * Fixed custom stat columns unchecking themselves in Organizer.
+* Loadout Optimizer improvements:
+  * The tooltip for stat mods now explains when a mod was picked automatically.
+  * Mins/Maxes displayed in the stat tier picker now better match the stat rangees found in results.
 
 ## 7.60.0 <span class="changelog-date">(2023-03-12)</span>
 
