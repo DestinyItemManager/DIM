@@ -1,5 +1,7 @@
 ## Next
 
+## 7.60.1 <span class="changelog-date">(2023-03-14)</span>
+
 * Custom stat fixes
   * Fixed the `stat`/`basestat` filters for weapon stats.
   * Fixed custom stat columns unchecking themselves in Organizer.
