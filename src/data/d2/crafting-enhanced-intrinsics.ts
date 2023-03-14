@@ -141,6 +141,15 @@ const enhancedIntrinsics = new Set<number>([
   2419864979, // Aggressive Burst
   1068043187, // Aggressive Burst
   1020196213, // Aggressive Burst
+  3355499393, // Adaptive Frame
+  2490530085, // Adaptive Frame
+  141515518, // Adaptive Frame
+  3435239180, // Adaptive Frame
+  4249817697, // Adaptive Frame
+  2178772051, // Adaptive Frame
+  489506521, // Adaptive Frame
+  1900989425, // Adaptive Frame
+  3133077199, // Adaptive Frame
   1069611115, // Aggressive Frame
   2097693203, // Aggressive Frame
   4036525828, // Aggressive Frame
@@ -220,6 +229,10 @@ const enhancedIntrinsics = new Set<number>([
   489506521, // Adaptive Frame
   1900989425, // Adaptive Frame
   3133077199, // Adaptive Frame
+  1576423267, // Rapid-Fire Frame
+  3688301727, // Rapid-Fire Frame
+  1894749743, // Rapid-Fire Frame
+  1707990417, // Rapid-Fire Frame
   1472963920, // High-Impact Frame
   4231246084, // High-Impact Frame
   302702765, // High-Impact Frame
@@ -322,6 +335,10 @@ const enhancedIntrinsics = new Set<number>([
   2170254329, // Aggressive Burst
   749936529, // Aggressive Burst
   2732540911, // Aggressive Burst
+  1564126489, // Rapid-Fire Frame
+  2984571381, // Rapid-Fire Frame
+  762801111, // Rapid-Fire Frame
+  680193725, // Rapid-Fire Frame
   3355499393, // Adaptive Frame
   2490530085, // Adaptive Frame
   141515518, // Adaptive Frame
@@ -371,6 +388,11 @@ const enhancedIntrinsics = new Set<number>([
   3249407402, // Rapid-Fire Frame
   2164888232, // Rapid-Fire Frame
   3841661468, // Rapid-Fire Frame
+  3049431773, // Aggressive Frame
+  451371216, // Aggressive Frame
+  4269485650, // Aggressive Frame
+  1655963600, // Aggressive Frame
+  1063261332, // Aggressive Frame
   2897981193, // Pinpoint Slug Frame
   878620401, // Pinpoint Slug Frame
   2426674025, // Pinpoint Slug Frame
@@ -487,11 +509,24 @@ const enhancedIntrinsics = new Set<number>([
   489506521, // Adaptive Frame
   1900989425, // Adaptive Frame
   3133077199, // Adaptive Frame
+  2897981193, // Pinpoint Slug Frame
+  878620401, // Pinpoint Slug Frame
+  2426674025, // Pinpoint Slug Frame
+  2410819063, // Pinpoint Slug Frame
   4000302358, // Precision Frame
   3665558569, // Precision Frame
   3114731754, // Precision Frame
   1827389998, // Precision Frame
   3252839262, // Precision Frame
+  2806361224, // Rapid-Fire Frame
+  1483339932, // Rapid-Fire Frame
+  4188742693, // Rapid-Fire Frame
+  872207875, // Rapid-Fire Frame
+  3478030936, // Rapid-Fire Frame
+  3095041770, // Rapid-Fire Frame
+  3249407402, // Rapid-Fire Frame
+  2164888232, // Rapid-Fire Frame
+  3841661468, // Rapid-Fire Frame
   2806361224, // Rapid-Fire Frame
   1483339932, // Rapid-Fire Frame
   4188742693, // Rapid-Fire Frame

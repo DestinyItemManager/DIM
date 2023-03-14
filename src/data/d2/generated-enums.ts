@@ -57,6 +57,7 @@ export const enum PlugCategoryHashes {
   EnhancementsRaidV520 = 2274750776,
   EnhancementsRaidV600 = 2207493141,
   EnhancementsRaidV620 = 2173937871,
+  EnhancementsRaidV700 = 2106680364,
   EnhancementsRivensCurse = 2149155760,
   EnhancementsSeasonForge = 65589297,
   EnhancementsSeasonMaverick = 1081029832,
