@@ -6,6 +6,7 @@
   align-items: flex-start;
   align-self: start;
   transition: opacity 0.2s;
+  overflow: hidden;
 
   // copied from resetButton in common.m.scss:
   color: inherit;
@@ -64,6 +65,7 @@
     line-height: 1.3;
     max-height: 3.9em;
     overflow: hidden;
+    word-break: break-word;
   }
 
   .milestone-info {
