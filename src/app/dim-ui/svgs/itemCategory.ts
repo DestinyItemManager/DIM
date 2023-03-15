@@ -5,8 +5,6 @@ import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';
 import gauntlets from 'destiny-icons/armor_types/gloves.svg';
 import helmet from 'destiny-icons/armor_types/helmet.svg';
-import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
-import powerWeapon from 'destiny-icons/general/power_weapon.svg';
 import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
 import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
@@ -25,7 +23,9 @@ import smg from 'destiny-icons/weapons/smg.svg';
 import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg';
 import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
-import kineticSlot from 'images/kinetic-slot.svg';
+import energyWeaponSlot from 'images/weapon-slot-energy.svg';
+import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
+import powerWeaponSlot from 'images/weapon-slot-power.svg';
 
 const weaponTypeSvgByCategoryHash = {
   [ItemCategoryHashes.AutoRifle]: autoRifle,
@@ -49,9 +49,9 @@ const weaponTypeSvgByCategoryHash = {
 };
 
 const weaponSlotSvgByCategoryHash = {
-  [ItemCategoryHashes.KineticWeapon]: kineticSlot,
-  [ItemCategoryHashes.EnergyWeapon]: energyWeapon,
-  [ItemCategoryHashes.PowerWeapon]: powerWeapon,
+  [ItemCategoryHashes.KineticWeapon]: kineticWeaponSlot,
+  [ItemCategoryHashes.EnergyWeapon]: energyWeaponSlot,
+  [ItemCategoryHashes.PowerWeapon]: powerWeaponSlot,
 };
 
 const armorSlotSvgByCategoryHash = {

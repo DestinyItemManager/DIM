@@ -8,15 +8,12 @@ import hunter from 'destiny-icons/general/class_hunter.svg';
 import titan from 'destiny-icons/general/class_titan.svg';
 import warlock from 'destiny-icons/general/class_warlock.svg';
 import emblem from 'destiny-icons/general/emblem.svg';
-import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
 import ghost from 'destiny-icons/general/ghost.svg';
-import powerWeapon from 'destiny-icons/general/power_weapon.svg';
 import ship from 'destiny-icons/general/ship.svg';
 import sparrow from 'destiny-icons/general/sparrow.svg';
 import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
 import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
-import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg';
 import glaive from 'destiny-icons/weapons/glaive.svg';
 import gLauncherFF from 'destiny-icons/weapons/grenade_launcher-field_forged.svg';
@@ -32,6 +29,9 @@ import smg from 'destiny-icons/weapons/smg.svg';
 import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg';
 import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
+import energyWeaponSlot from 'images/weapon-slot-energy.svg';
+import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
+import powerWeaponSlot from 'images/weapon-slot-power.svg';
 
 /**
  * A mapping from known item category hashes to an appropriate icon
@@ -42,9 +42,9 @@ export const itemCategoryIcons: { [itemCategoryHash: number]: string } = {
   [ItemCategoryHashes.Chest]: chest,
   [ItemCategoryHashes.Legs]: legs,
   [ItemCategoryHashes.ClassItems]: classItem,
-  [ItemCategoryHashes.KineticWeapon]: dmgKinetic,
-  [ItemCategoryHashes.EnergyWeapon]: energyWeapon,
-  [ItemCategoryHashes.PowerWeapon]: powerWeapon,
+  [ItemCategoryHashes.KineticWeapon]: kineticWeaponSlot,
+  [ItemCategoryHashes.EnergyWeapon]: energyWeaponSlot,
+  [ItemCategoryHashes.PowerWeapon]: powerWeaponSlot,
   [ItemCategoryHashes.Weapon]: handCannon,
   [ItemCategoryHashes.AutoRifle]: autoRifle,
   [ItemCategoryHashes.HandCannon]: handCannon,
