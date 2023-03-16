@@ -176,6 +176,7 @@ body {
   -webkit-user-drag: none;
   // Don't let iOS Safari mess with font sizes
   text-size-adjust: none;
+  overflow-wrap: break-word;
 }
 
 h2,
