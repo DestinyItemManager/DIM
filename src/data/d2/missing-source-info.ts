@@ -2662,6 +2662,9 @@ const missingSources: { [key: string]: number[] } = {
     4074251943, // Hung Jury SR4 (Adept)
   ],
   'ritual-weapon': [],
+  ron: [],
+  root: [],
+  rootofnightmares: [],
   saint14: [],
   scourge: [
     350056552, // Bladesmith's Memory Mask

@@ -1,9 +1,11 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { getModTypeTagByPlugCategoryHash } from 'app/utils/item-utils';
@@ -11,7 +13,8 @@ import { infoLog } from 'app/utils/log';
 import { proxy, releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { ProcessItem, ProcessItemsByBucket, ProcessStatistics } from '../process-worker/types';
 import {
   ArmorEnergyRules,
@@ -22,9 +25,11 @@ import {
   StatRanges,
 } from '../types';
 import {
+  getAutoMods,
   getTotalModStatChanges,
   hydrateArmorSet,
   mapArmor2ModToProcessMod,
+  mapAutoMods,
   mapDimItemToProcessItem,
 } from './mappers';
 
@@ -97,6 +102,8 @@ export function useProcess({
     []
   );
 
+  const autoModOptions = useAutoMods(selectedStore.id);
+
   useEffect(() => {
     const processStart = performance.now();
 
@@ -122,6 +129,8 @@ export function useProcess({
       generalMods: generalMods.map(mapArmor2ModToProcessMod),
       activityMods: activityMods.map(mapArmor2ModToProcessMod),
     };
+
+    const autoModsData = mapAutoMods(autoModOptions);
 
     const processItems: ProcessItemsByBucket = {
       [BucketHashes.Helmet]: [],
@@ -165,6 +174,7 @@ export function useProcess({
         statOrder,
         statFilters,
         anyExotic,
+        autoModsData,
         autoStatMods,
         proxy(setRemainingTime)
       )
@@ -173,7 +183,7 @@ export function useProcess({
           'loadout optimizer',
           `useProcess: worker time ${performance.now() - workerStart}ms`
         );
-        const hydratedSets = sets.map((set) => hydrateArmorSet(defs, set, itemsById));
+        const hydratedSets = sets.map((set) => hydrateArmorSet(set, itemsById));
 
         setState((oldState) => ({
           ...oldState,
@@ -208,6 +218,7 @@ export function useProcess({
     armorEnergyRules,
     autoStatMods,
     lockedModMap,
+    autoModOptions,
   ]);
 
   return { result, processing, remainingTime };
@@ -397,4 +408,10 @@ function mapItemsToGroups(
   }
 
   return groups;
+}
+
+export function useAutoMods(storeId: string) {
+  const defs = useD2Definitions()!;
+  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(storeId));
+  return useMemo(() => getAutoMods(defs, unlockedPlugs), [defs, unlockedPlugs]);
 }

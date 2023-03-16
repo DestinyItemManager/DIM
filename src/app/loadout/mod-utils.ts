@@ -106,12 +106,12 @@ export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
  * This maps to whichever version is available, otherwise returns plugHash unmodified.
  */
 export function mapToAvailableModCostVariant(plugHash: number, unlockedPlugs: Set<number>) {
-  if (unlockedPlugs.has(plugHash)) {
-    return plugHash;
-  }
   const toReduced = normalToReducedMod[plugHash];
   if (toReduced !== undefined && unlockedPlugs.has(toReduced)) {
     return toReduced;
+  }
+  if (unlockedPlugs.has(plugHash)) {
+    return plugHash;
   }
   const toNormal = reducedToNormalMod[plugHash];
   if (toNormal !== undefined && unlockedPlugs.has(toNormal)) {

@@ -157,9 +157,10 @@ function statFilterFromString(
     };
   } else if (weaponStatNames.includes(statNames)) {
     // return earlier for weapon stats. these shouldn't do addition/averaging.
+    const statHash = statHashByName[statNames];
     return (item) => {
       const statValuesByHash = getStatValuesByHash(item, byWhichValue);
-      return compare(statValuesByHash[statNames] || 0);
+      return compare(statValuesByHash[statHash] || 0);
     };
   }
   const statCombiner = createStatCombiner(statNames, byWhichValue, customStats);

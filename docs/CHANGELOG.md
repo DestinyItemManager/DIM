@@ -1,8 +1,20 @@
 ## Next
 
+## 7.60.1 <span class="changelog-date">(2023-03-14)</span>
+
+* Custom stat fixes
+  * Fixed the `stat`/`basestat` filters for weapon stats.
+  * Fixed custom stat columns unchecking themselves in Organizer.
+* Loadout Optimizer improvements:
+  * The tooltip for stat mods now explains when a mod was picked automatically.
+  * Mins/Maxes displayed in the stat tier picker now better match the stat rangees found in results.
+
+## 7.60.0 <span class="changelog-date">(2023-03-12)</span>
+
 * Fixed deepsight border showing up for weapons whose pattern has already been unlocked.
 * DIM now correctly handles reduced mod costs via artifact unlocks.
 * Support added for named and multiple custom total stats. Sort and judge your your armor pieces by multiple situations, like a PVE and PVP stat. Sort by these values in Compare and Organizer, and search by them with stat filters like `stat:pve:>40`.
+* Fixed powerful and pinnacle reward calculations.
 
 ## 7.59.0 <span class="changelog-date">(2023-03-05)</span>
 

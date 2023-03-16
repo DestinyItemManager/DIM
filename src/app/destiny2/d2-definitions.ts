@@ -204,7 +204,10 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
               failedComponent: table,
             });
           } else {
-            warnLogCollapsedStack('hashLookupFailure', `${table}[${id}]`, requestor);
+            // an invalid hash that, in new loadouts, just means lookup should fail
+            if (id !== 2166136261) {
+              warnLogCollapsedStack('hashLookupFailure', `${table}[${id}]`, requestor);
+            }
           }
         }
         return dbEntry;

@@ -526,6 +526,7 @@
       "None": "All armor will use its current stats and will have a minimum energy level of 7."
     },
     "AutoStatMods": "Automatically add stat mods",
+    "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",

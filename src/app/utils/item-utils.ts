@@ -68,8 +68,10 @@ export const emptySpecialtySocketHashes = modSocketMetadata.map(
 /** verifies an item is d2 armor and has one or more specialty mod sockets, which are returned */
 const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
   if (item?.bucket.inArmor) {
-    const specialtySockets = item.sockets?.allSockets.filter((socket) =>
-      specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
+    const specialtySockets = item.sockets?.allSockets.filter(
+      (socket) =>
+        // check plugged -- non-artifice GoA armor still has the socket but nothing in it
+        socket.plugged && specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
     );
     if (specialtySockets?.length) {
       return specialtySockets;

@@ -1,4 +1,4 @@
-import { ArmorStats, LockableBucketHash } from '../types';
+import { ArmorStatHashes, ArmorStats, LockableBucketHash } from '../types';
 
 export interface ProcessItem {
   id: string;
@@ -25,7 +25,7 @@ export type ProcessItemsByBucket = {
 };
 
 export interface ProcessArmorSet {
-  /** The overall stats for the loadout as a whole, but excluding auto stat mods. */
+  /** The overall stats for the loadout as a whole, including auto stat mods. */
   readonly stats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly string[];
@@ -34,7 +34,7 @@ export interface ProcessArmorSet {
 }
 
 export interface IntermediateProcessArmorSet {
-  /** The overall stats for the loadout as a whole, but excluding auto stat mods. */
+  /** The overall stats for the loadout as a whole, EXCLUDING auto stat mods. */
   stats: number[];
   /** The first (highest-power) valid set from this stat mix. */
   armor: ProcessItem[];
@@ -42,21 +42,28 @@ export interface IntermediateProcessArmorSet {
   statMods: number[];
 }
 
-interface ProcessStat {
-  statTypeHash: number;
-  value: number;
-}
-
 export interface ProcessMod {
   hash: number;
-  plugCategoryHash: number;
   energy?: {
     /** The energy cost of the mod. */
     val: number;
   };
-  investmentStats: ProcessStat[];
   /** This should only be available in legacy, combat and raid mods */
   tag?: string;
+}
+
+/**
+ * Data describing the mods that can be automatically picked.
+ */
+
+export interface AutoModData {
+  generalMods: {
+    [key in ArmorStatHashes]?: {
+      majorMod: { hash: number; cost: number };
+      minorMod: { hash: number; cost: number };
+    };
+  };
+  artificeMods: { [key in ArmorStatHashes]?: { hash: number } };
 }
 
 export interface LockedProcessMods {

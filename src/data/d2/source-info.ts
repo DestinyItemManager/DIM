@@ -1153,6 +1153,27 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  ron: {
+    itemHashes: [],
+    sourceHashes: [
+      3190710249, // Source: "Root of Nightmares" Raid
+    ],
+    searchString: [],
+  },
+  root: {
+    itemHashes: [],
+    sourceHashes: [
+      3190710249, // Source: "Root of Nightmares" Raid
+    ],
+    searchString: [],
+  },
+  rootofnightmares: {
+    itemHashes: [],
+    sourceHashes: [
+      3190710249, // Source: "Root of Nightmares" Raid
+    ],
+    searchString: [],
+  },
   saint14: {
     itemHashes: [],
     sourceHashes: [

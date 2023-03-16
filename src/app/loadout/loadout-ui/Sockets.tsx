@@ -101,6 +101,7 @@ function Sockets({ item, lockedMods, size, onSocketClick, automaticallyPickedMod
           key={index}
           plug={plugDef}
           onClick={onSocketClick ? () => onSocketClick(plugDef, whitelist) : undefined}
+          extraProps={{ automaticallyPicked }}
         />
       ))}
     </div>

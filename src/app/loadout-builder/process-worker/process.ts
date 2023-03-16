@@ -3,8 +3,10 @@ import { infoLog } from '../../utils/log';
 import {
   ArmorStatHashes,
   ArmorStats,
+  artificeStatBoost,
   LockableBucketHashes,
   LockableBuckets,
+  majorStatBoost,
   StatFilters,
   StatRanges,
 } from '../types';
@@ -15,6 +17,7 @@ import {
 } from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
+  AutoModData,
   LockedProcessMods,
   ProcessArmorSet,
   ProcessItem,
@@ -41,6 +44,8 @@ export function process(
   statFilters: StatFilters,
   /** Ensure every set includes one exotic */
   anyExotic: boolean,
+  /** Which artifice mods, large, and small stat mods are available */
+  autoModOptions: AutoModData,
   /** Use stat mods to hit stat minimums */
   autoStatMods: boolean,
   onProgress: (remainingTime: number) => void
@@ -105,6 +110,7 @@ export function process(
   const { activityMods, generalMods } = lockedMods;
 
   const precalculatedInfo = precalculateStructures(
+    autoModOptions,
     generalMods,
     activityMods,
     autoStatMods,
@@ -278,7 +284,8 @@ export function process(
             setStatistics.lowerBoundsExceeded.timesChecked++;
             if (
               totalNeededStats >
-              numArtifice * 3 + precalculatedInfo.numAvailableGeneralMods * 10
+              numArtifice * artificeStatBoost +
+                precalculatedInfo.numAvailableGeneralMods * majorStatBoost
             ) {
               setStatistics.lowerBoundsExceeded.timesFailed++;
               continue;
@@ -320,7 +327,9 @@ export function process(
                 tiersString += tier.toString(16);
 
                 if (stats[index] < filter.max * 10) {
-                  pointsNeededForTiers.push(Math.ceil((10 - (stats[index] % 10)) / 3));
+                  pointsNeededForTiers.push(
+                    Math.ceil((10 - (stats[index] % 10)) / artificeStatBoost)
+                  );
                 } else {
                   // We really don't want to optimize this stat further...
                   pointsNeededForTiers.push(100);
@@ -378,20 +387,36 @@ export function process(
 
   const finalSets = setTracker.getArmorSets(RETURNED_ARMOR_SETS);
 
-  const sets = finalSets.map(({ armor, stats, statMods }) => {
-    const statsWithoutAutoMods = statOrder.reduce((statObj, statHash, i) => {
-      statObj[statHash] = stats[i];
+  const sets = finalSets.map(({ armor, stats }) => {
+    // This only fails if minimum tier requirements cannot be hit, but we know they can because
+    // we ensured it internally.
+    const { mods, bonusStats } = pickOptimalStatMods(
+      precalculatedInfo,
+      armor,
+      stats,
+      statFiltersInStatOrder
+    )!;
+
+    const totalStats = statOrder.reduce((statObj, statHash, i) => {
+      const value = stats[i] + bonusStats[i];
+      statObj[statHash] = value;
+
+      // Track the stat ranges after our auto mods picks
+      const range = statRangesFilteredInStatOrder[i];
+      if (value > range.max) {
+        range.max = value;
+      }
+      if (value < range.min) {
+        range.min = value;
+      }
+
       return statObj;
     }, {}) as ArmorStats;
 
-    const allStatMods =
-      pickOptimalStatMods(precalculatedInfo, armor, stats, statFiltersInStatOrder)?.mods ||
-      statMods;
-
     return {
       armor: armor.map((item) => item.id),
-      stats: statsWithoutAutoMods,
-      statMods: allStatMods,
+      stats: totalStats,
+      statMods: mods,
     };
   });
 
