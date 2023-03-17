@@ -85,7 +85,6 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
     "@testing-library/react": "^14.0.0",
     "@types/body-scroll-lock": "^3.1.0",
-    "@types/circuit-breaker-js": "^0.0.2",
     "@types/dialog-polyfill": "^0.5.2",
     "@types/generate-json-webpack-plugin": "^0.3.4",
     "@types/jest": "^29.0.0",

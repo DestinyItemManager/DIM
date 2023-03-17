@@ -1832,11 +1832,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/circuit-breaker-js@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@types/circuit-breaker-js/-/circuit-breaker-js-0.0.2.tgz#c6b8679875f408422cc04a3a781aaa6dfc80578a"
-  integrity sha512-vlvQ2ze9II+5BGdZCdPwwCvp+UjCcR/Qy+S5MiohSOS0QevDlWYpvowh5Pnh9ASU58XqObdWAHU1OH6i4v9ddQ==
-
 "@types/connect-history-api-fallback@^1.3.5":
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/@types/connect-history-api-fallback/-/connect-history-api-fallback-1.3.5.tgz#d1f7a8a09d0ed5a57aee5ae9c18ab9b803205dae"
