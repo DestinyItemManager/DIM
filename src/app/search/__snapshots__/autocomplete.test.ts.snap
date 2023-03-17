@@ -357,7 +357,25 @@ exports[`autocompleteTermSuggestions autocomplete within query for {is:haspower 
 
 exports[`autocompleteTermSuggestions autocomplete within query for {not(} 1`] = `[]`;
 
-exports[`autocompleteTermSuggestions autocomplete within query for {season:>outl} 1`] = `[]`;
+exports[`autocompleteTermSuggestions autocomplete within query for {season:>outl} 1`] = `
+[
+  {
+    "highlightRange": {
+      "range": [
+        0,
+        14,
+      ],
+      "section": "body",
+    },
+    "query": {
+      "body": "season:>outlaw",
+      "fullText": "season:>outlaw",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
 
 exports[`filterComplete autocomplete terms for |is:b| 1`] = `
 [

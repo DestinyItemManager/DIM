@@ -137,9 +137,23 @@ export function generateGroupedSuggestionsForFilter(
       case 'range':
         allSuggestions.push(...expandOps([thisFilterKeywords], operators));
         if (filterDefinition.overload) {
-          allSuggestions.push(
-            ...expandFlat([thisFilterKeywords, Object.keys(filterDefinition.overload)], 1)
-          );
+          const overloadNames = Object.keys(filterDefinition.overload);
+          allSuggestions.push(...expandFlat([thisFilterKeywords, overloadNames], 1));
+
+          // Outside of filter help (i.e. only for autocompletion), also expand overloaded ranges like season:<current
+          if (!forHelp) {
+            allSuggestions.push(
+              ...expandFlat(
+                [
+                  thisFilterKeywords,
+                  operators.flatMap((op) =>
+                    overloadNames.map((overloadName) => `${op}${overloadName}`)
+                  ),
+                ],
+                1
+              )
+            );
+          }
         }
         break;
       case 'stat':
