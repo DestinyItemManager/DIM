@@ -3,6 +3,7 @@
 exports[`process-utils auto mods the problem is solvable 1`] = `
 [
   {
+    "exactStatPoints": 5,
     "generalModsCosts": [
       1,
     ],
@@ -12,8 +13,10 @@ exports[`process-utils auto mods the problem is solvable 1`] = `
     ],
     "numArtificeMods": 0,
     "numGeneralMods": 1,
+    "targetStatIndex": 0,
   },
   {
+    "exactStatPoints": 10,
     "generalModsCosts": [
       4,
     ],
@@ -23,8 +26,10 @@ exports[`process-utils auto mods the problem is solvable 1`] = `
     ],
     "numArtificeMods": 0,
     "numGeneralMods": 1,
+    "targetStatIndex": 2,
   },
   {
+    "exactStatPoints": 12,
     "generalModsCosts": [],
     "modEnergyCost": 0,
     "modHashes": [
@@ -35,8 +40,10 @@ exports[`process-utils auto mods the problem is solvable 1`] = `
     ],
     "numArtificeMods": 4,
     "numGeneralMods": 0,
+    "targetStatIndex": 3,
   },
   {
+    "exactStatPoints": 5,
     "generalModsCosts": [
       2,
     ],
@@ -46,6 +53,7 @@ exports[`process-utils auto mods the problem is solvable 1`] = `
     ],
     "numArtificeMods": 0,
     "numGeneralMods": 1,
+    "targetStatIndex": 4,
   },
 ]
 `;

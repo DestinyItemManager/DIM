@@ -1,4 +1,3 @@
-import { armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { ArmorStatHashes, artificeStatBoost, majorStatBoost, minorStatBoost } from '../types';
 import { LoSessionInfo } from './process-utils';
@@ -18,6 +17,10 @@ export interface ModsPick {
   modHashes: number[];
   /** Sum of generalModCosts */
   modEnergyCost: number;
+  /** Which stat this set of mods targets */
+  targetStatIndex: number;
+  /** The exact number of points this set of mods provides (if we ask for 1 stat point, an artifice mod might give 3) */
+  exactStatPoints: number;
 }
 
 /**
@@ -33,7 +36,7 @@ interface CacheForStat {
  * Precalculated ways of hitting stat values, separated by stat hash.
  */
 export interface AutoModsMap {
-  statCaches: { [statHash in ArmorStatHashes]: CacheForStat };
+  statCaches: { [targetStatIndex: number]: CacheForStat };
   /**
    * See comments in pickOptimalStatMods. That function optimizes for total tier first,
    * so if a less-prioritized stat also has more costly mods, then it cannot result in a higher
@@ -101,11 +104,11 @@ function recursivelyChooseMods(
   remainingTotalEnergy: number,
   pickedMods: ModsPick[]
 ): ModsPick[] | undefined {
-  while (statIndex < info.statOrder.length && neededStats[statIndex] === 0) {
+  while (statIndex < neededStats.length && neededStats[statIndex] === 0) {
     statIndex++;
   }
 
-  if (statIndex === info.statOrder.length) {
+  if (statIndex === neededStats.length) {
     // We've hit the end of our needed stats, check if this is possible
     if (doGeneralModsFit(info, remainingEnergyCapacities, pickedMods)) {
       return pickedMods;
@@ -114,8 +117,7 @@ function recursivelyChooseMods(
     }
   }
 
-  const possiblePicks =
-    info.autoModOptions.statCaches[info.statOrder[statIndex]].statMap[neededStats[statIndex]];
+  const possiblePicks = info.autoModOptions.statCaches[statIndex].statMap[neededStats[statIndex]];
   if (!possiblePicks) {
     // we can't possibly hit our target stats
     return undefined;
@@ -170,6 +172,7 @@ function recursivelyChooseMods(
 function buildCacheForStat(
   autoModOptions: AutoModData,
   statHash: ArmorStatHashes,
+  statIndex: number,
   availableGeneralStatMods: number
 ) {
   const cache: CacheForStat = { statMap: {} };
@@ -224,6 +227,8 @@ function buildCacheForStat(
           ],
           modEnergyCost:
             numMinorMods * (minorMod?.cost || 0) + numMajorMods * (majorMod?.cost || 0),
+          targetStatIndex: statIndex,
+          exactStatPoints: statValue,
         };
         for (let achievableValue = lowerRange; achievableValue <= statValue; achievableValue++) {
           (cache.statMap[achievableValue] ??= []).push(obj);
@@ -246,16 +251,21 @@ function buildCacheForStat(
  * So for each ArmorStatHash, this builds a list of stats where the stat mods are better
  * for purposes of optimizing total tier, by having cheaper or more mods available.
  */
-function buildLessCostlyRelations(autoModOptions: AutoModData, availableGeneralStatMods: number) {
+function buildLessCostlyRelations(
+  autoModOptions: AutoModData,
+  availableGeneralStatMods: number,
+  statOrder: number[]
+) {
   return Object.fromEntries(
-    armorStats.map((armorStat1) => {
-      const hashes: ArmorStatHashes[] = [];
-      for (const armorStat2 of armorStats) {
+    statOrder.map((armorStat1, statIndex1) => {
+      const betterStatIndices: number[] = [];
+      // eslint-disable-next-line github/array-foreach
+      statOrder.forEach((armorStat2, statIndex2) => {
         if (availableGeneralStatMods === 0) {
           // No general mods means it doesn't matter how much our general mods actually cost
           if (!autoModOptions.artificeMods[armorStat1] || autoModOptions.artificeMods[armorStat2]) {
             // So if Stat1 has no artifice mods, or Stat2 has them, Stat2 can do equal or better
-            hashes.push(armorStat2);
+            betterStatIndices.push(statIndex2);
           }
         } else {
           const mods1 = autoModOptions.generalMods[armorStat1];
@@ -265,7 +275,7 @@ function buildLessCostlyRelations(autoModOptions: AutoModData, availableGeneralS
             // Stat1 has artifice mods, Stat2 doesn't, so Stat2 is worse in that aspect
           } else if (!mods1) {
             // Stat1 has no mods, so Stat2 can always do equal or better
-            hashes.push(armorStat2);
+            betterStatIndices.push(statIndex2);
           } else if (!mods2) {
             // Stat1 has mods, Stat2 doesn't, so Stat2 is worse in that aspect
           } else {
@@ -274,28 +284,33 @@ function buildLessCostlyRelations(autoModOptions: AutoModData, availableGeneralS
             // mods for armorStat2 are cheaper (dominate armorStat1) if
             // they're cheaper or same
             if (small1Cost >= small2Cost && large1Cost >= large2Cost) {
-              hashes.push(armorStat2);
+              betterStatIndices.push(statIndex2);
             }
           }
         }
-      }
+      });
 
-      return [armorStat1, hashes];
+      return [statIndex1, betterStatIndices];
     })
   ) as AutoModsMap['cheaperStatRelations'];
 }
 
 export function buildAutoModsMap(
   autoModOptions: AutoModData,
-  availableGeneralStatMods: number
+  availableGeneralStatMods: number,
+  statOrder: number[]
 ): AutoModsMap {
   return {
     statCaches: Object.fromEntries(
-      armorStats.map((statHash) => [
-        statHash,
-        buildCacheForStat(autoModOptions, statHash, availableGeneralStatMods),
+      statOrder.map((statHash, statIndex) => [
+        statIndex,
+        buildCacheForStat(autoModOptions, statHash, statIndex, availableGeneralStatMods),
       ])
     ) as AutoModsMap['statCaches'],
-    cheaperStatRelations: buildLessCostlyRelations(autoModOptions, availableGeneralStatMods),
+    cheaperStatRelations: buildLessCostlyRelations(
+      autoModOptions,
+      availableGeneralStatMods,
+      statOrder
+    ),
   };
 }
