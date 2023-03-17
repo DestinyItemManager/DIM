@@ -42,7 +42,7 @@ import { makeCustomStat } from './stats-custom';
 /**
  * Which stats to display, and in which order.
  */
-const statAllowList = [
+const itemStatAllowList = [
   StatHashes.RoundsPerMinute,
   StatHashes.ChargeTime,
   StatHashes.DrawTime,
@@ -70,12 +70,21 @@ const statAllowList = [
   TOTAL_STAT_HASH,
 ];
 export function getStatSortOrder(statHash: number) {
-  const order = statAllowList.indexOf(statHash);
+  const order = itemStatAllowList.indexOf(statHash);
   return order === -1 ? 999999 + Math.abs(statHash) : order;
 }
 
-export function isAllowedStat(statHash: number) {
-  return statAllowList.includes(statHash) || statHash < 0;
+export function isAllowedItemStat(statHash: number) {
+  return itemStatAllowList.includes(statHash) || statHash < 0;
+}
+
+/**
+ * Stats that are allowed for plugs, in addition to stats their items own.
+ */
+const plugStatAllowList = [StatHashes.AspectEnergyCapacity];
+
+export function isAllowedPlugStat(statHash: number) {
+  return plugStatAllowList.includes(statHash);
 }
 
 /** Stats that are measured in milliseconds. */
@@ -216,7 +225,7 @@ function shouldShowStat(
 
   return Boolean(
     // Must be a stat we want to display
-    isAllowedStat(statHash) &&
+    isAllowedItemStat(statHash) &&
       // Must be on the list of interpolated stats, or included in the hardcoded hidden stats list
       (statDisplaysByStatHash[statHash] ||
         (includeHiddenStats && hiddenStatsAllowList.includes(statHash)))

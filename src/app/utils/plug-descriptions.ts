@@ -2,13 +2,22 @@ import { Perk } from 'app/clarity/descriptions/descriptionInterface';
 import { clarityDescriptionsSelector } from 'app/clarity/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';
+import { DimItem, DimPlug, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { getStatSortOrder, isAllowedItemStat, isAllowedPlugStat } from 'app/inventory/store/stats';
+import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { EXOTIC_CATALYST_TRAIT, modsWithConditionalStats } from 'app/search/d2-known-values';
-import { DestinyInventoryItemDefinition, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
+import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
+import {
+  DestinyClass,
+  DestinyInventoryItemDefinition,
+  ItemPerkVisibility,
+} from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
+import { compareBy } from './comparators';
+import { isPlugStatActive } from './item-utils';
 
 interface DimPlugPerkDescription {
   perkHash: number;
@@ -118,23 +127,8 @@ function getPerkDescriptions(
   const plugDescription = plug.displayProperties.description || undefined;
 
   function addPerkDescriptions() {
-    // Terrible hack here: Some subclass fragments behave like Charge Harvester, but use a number of hidden perks
-    // (which we can't associate with stats), But we also can't get the relevant classType in here,
-    // so just copy the "-10 to the stat that governs your class ability recharge rate" perk from Charge Harvester.
-    const perks = [...plug.perks];
-    if (
-      plug.hash === modsWithConditionalStats.echoOfPersistence ||
-      plug.hash === modsWithConditionalStats.sparkOfFocus
-    ) {
-      const chargeHarvesterDef = defs.InventoryItem.get(modsWithConditionalStats.chargeHarvester);
-      const perk = chargeHarvesterDef?.perks?.[1];
-      if (perk) {
-        perks.push(perk);
-      }
-    }
-
     // filter out things with no displayable text, or that are meant to be hidden
-    for (const perk of perks) {
+    for (const perk of plug.perks) {
       if (perk.perkVisibility === ItemPerkVisibility.Hidden) {
         continue;
       }
@@ -253,4 +247,48 @@ function getPerkDescriptions(
   }
 
   return results;
+}
+
+export function getPlugDefStats(
+  plugDef: PluggableInventoryItemDefinition,
+  classType: DestinyClass | undefined
+) {
+  return plugDef.investmentStats
+    .filter(
+      (stat) =>
+        (isAllowedItemStat(stat.statTypeHash) || isAllowedPlugStat(stat.statTypeHash)) &&
+        (classType === undefined || isModStatActive(classType, plugDef.hash, stat))
+    )
+    .map((stat) => ({
+      statHash: stat.statTypeHash,
+      value: stat.value,
+    }))
+    .sort(compareBy((stat) => getStatSortOrder(stat.statHash)));
+}
+
+export function getDimPlugStats(item: DimItem, plug: DimPlug) {
+  if (plug.stats) {
+    return Object.entries(plug.stats)
+      .map(([statHash, value]) => ({
+        statHash: parseInt(statHash, 10),
+        value,
+      }))
+      .filter(
+        (stat) =>
+          // Item stats are only shown if the item can actually benefit from them
+          ((isAllowedItemStat(stat.statHash) &&
+            item.stats?.some((itemStat) => itemStat.statHash === stat.statHash)) ||
+            isAllowedPlugStat(stat.statHash)) &&
+          isPlugStatActive(
+            item,
+            plug.plugDef,
+            stat.statHash,
+            Boolean(
+              plug.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statHash)
+                ?.isConditionallyActive
+            )
+          )
+      )
+      .sort(compareBy((stat) => getStatSortOrder(stat.statHash)));
+  }
 }

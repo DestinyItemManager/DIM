@@ -321,11 +321,8 @@ export const breakerTypes = {
 };
 
 export const modsWithConditionalStats = {
-  powerfulFriends: 1484685887,
-  radiantLight: 2979815167,
-  chargeHarvester: 2263321587,
-  elementalCapacitor: 3511092054,
-  echoOfPersistence: 2272984671,
-  enhancedElementalCapacitor: 711234314,
-  sparkOfFocus: 1727069360,
+  elementalCapacitor: 3511092054, // InventoryItem "Elemental Capacitor"
+  echoOfPersistence: 2272984671, // InventoryItem "Echo of Persistence"
+  enhancedElementalCapacitor: 711234314, // InventoryItem "Elemental Capacitor"
+  sparkOfFocus: 1727069360, // InventoryItem "Spark of Focus"
 } as const;

@@ -523,7 +523,11 @@ function FashionSocket({
       showCloseIconOnHover
     >
       {plug && canSlotOrnament ? (
-        <PlugDef onClick={handleOrnamentClick} plug={plug as PluggableInventoryItemDefinition} />
+        <PlugDef
+          onClick={handleOrnamentClick}
+          plug={plug as PluggableInventoryItemDefinition}
+          forClassType={undefined}
+        />
       ) : (
         <PressTip
           tooltip={
