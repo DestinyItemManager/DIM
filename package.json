@@ -249,7 +249,6 @@
     "workbox-expiration": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0",
-    "workbox-strategies": "^6.1.0",
-    "workbox-window": "^6.1.0"
+    "workbox-strategies": "^6.1.0"
   }
 }
