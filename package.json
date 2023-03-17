@@ -179,7 +179,6 @@
     "svgo-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.0.2",
     "ts-loader": "^9.1.1",
-    "ts-node": "^10.9.1",
     "ts-unused-exports": "^9.0.1",
     "typescript": "^4.0.2",
     "webpack": "^5.1.3",
