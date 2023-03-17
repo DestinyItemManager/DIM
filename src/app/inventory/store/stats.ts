@@ -15,7 +15,7 @@ import {
   DestinyStatDisplayDefinition,
   DestinyStatGroupDefinition,
 } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
 import { DimItem, DimPlug, DimSocket, DimStat } from '../item-types';
@@ -146,8 +146,8 @@ export function buildStats(
   // Include the contributions from perks and mods
   applyPlugsToStats(itemDef, investmentStats, createdItem, defs, statGroup, statDisplaysByStatHash);
 
-  if (createdItem.bucket.inArmor) {
-    // one last check for missing stats on armor
+  if (createdItem.bucket.hash === BucketHashes.Subclass || createdItem.bucket.inArmor) {
+    // one last check for missing stats on armor or subclasses
     const existingStatHashes = investmentStats.map((s) => s.statHash);
     for (const armorStat of armorStats) {
       if (!existingStatHashes.includes(armorStat)) {
@@ -165,7 +165,9 @@ export function buildStats(
         );
       }
     }
+  }
 
+  if (createdItem.bucket.inArmor) {
     // synthesize the "Total" stat for armor
     // it's effectively just a custom total with 6 stats evenly weighted
     const tStat = makeCustomStat(
