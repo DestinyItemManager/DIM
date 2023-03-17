@@ -1,0 +1,29 @@
+@use '../variables.scss' as *;
+.powercaps {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 1rem;
+  padding-top: 0;
+}
+.powercap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.powercap-label {
+  color: #a1a2a2;
+}
+
+.powercap-value {
+  font-weight: bold;
+  font-size: 1.6rem;
+}
+
+.powerfulcap {
+  color: white;
+}
+
+.pinnaclecap {
+  color: $gold;
+}
