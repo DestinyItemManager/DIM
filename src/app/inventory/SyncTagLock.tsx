@@ -1,13 +1,13 @@
+import { TagValue } from '@destinyitemmanager/dim-api-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { errorLog, infoLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { memo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { getTag, ItemInfos } from './dim-item-info';
 import { setItemLockState } from './item-move-service';
 import { DimItem } from './item-types';
-import { allItemsSelector, itemInfosSelector, profileErrorSelector } from './selectors';
+import { allItemsSelector, getTagSelector, profileErrorSelector } from './selectors';
 
 /** Whether an item's lock state can be controlled by its tag (irrespective of whether it currently is) */
 export function canSyncLockState(item: DimItem) {
@@ -27,11 +27,11 @@ export function canSyncLockState(item: DimItem) {
  */
 function getNextItemToChangeLockState(
   allItems: DimItem[],
-  itemInfos: ItemInfos
+  getTag: (item: DimItem) => TagValue | undefined
 ): [item: DimItem, lock: boolean] | [] {
   for (const item of allItems) {
     if (canSyncLockState(item)) {
-      switch (getTag(item, itemInfos)) {
+      switch (getTag(item)) {
         case 'favorite':
         case 'keep':
         case 'archive': {
@@ -59,10 +59,10 @@ function getNextItemToChangeLockState(
 
 const getNextItemSelector = createSelector(
   allItemsSelector,
-  itemInfosSelector,
+  getTagSelector,
   profileErrorSelector,
-  (allItems, itemInfos, profileError) =>
-    profileError ? [] : getNextItemToChangeLockState(allItems, itemInfos)
+  (allItems, getTag, profileError) =>
+    profileError ? [] : getNextItemToChangeLockState(allItems, getTag)
 );
 
 // Some extra protection against locking the same thing twice in parallel - for example if you

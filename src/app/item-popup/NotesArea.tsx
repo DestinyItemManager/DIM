@@ -2,9 +2,8 @@ import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
 import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import { setNote } from 'app/inventory/actions';
-import { itemNoteSelector } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import { allNotesHashtagsSelector } from 'app/inventory/selectors';
+import { allNotesHashtagsSelector, notesSelector } from 'app/inventory/selectors';
 import { AppIcon, editIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -26,7 +25,7 @@ export default function NotesArea({
   className?: string;
   minimal?: boolean;
 }) {
-  const savedNotes = useSelector(itemNoteSelector(item));
+  const savedNotes = useSelector(notesSelector(item));
   const [notesOpen, setNotesOpen] = useState(false);
 
   // nothing to do if it can't be tagged (/noted)

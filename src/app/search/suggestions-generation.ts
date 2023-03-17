@@ -1,7 +1,7 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { customStatsSelector } from 'app/dim-api/selectors';
-import { ItemInfos } from 'app/inventory/dim-item-info';
+import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
@@ -9,7 +9,8 @@ import { createSelector } from 'reselect';
 import {
   allItemsSelector,
   allNotesHashtagsSelector,
-  itemInfosSelector,
+  getNotesSelector,
+  getTagSelector,
 } from '../inventory/selectors';
 import { loadoutsSelector } from '../loadout-drawer/selectors';
 import { canonicalFilterFormats, FilterDefinition, SuggestionsContext } from './filter-types';
@@ -27,7 +28,8 @@ export const suggestionsContextSelector = createSelector(
   allItemsSelector,
   loadoutsSelector,
   d2ManifestSelector,
-  itemInfosSelector,
+  getTagSelector,
+  getNotesSelector,
   allNotesHashtagsSelector,
   customStatsSelector,
   makeSuggestionsContext
@@ -37,7 +39,8 @@ function makeSuggestionsContext(
   allItems: DimItem[],
   loadouts: Loadout[],
   d2Manifest: D2ManifestDefinitions | undefined,
-  itemInfos: ItemInfos,
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
   allNotesHashtags: string[],
   customStats: CustomStatDef[]
 ): SuggestionsContext {
@@ -45,7 +48,8 @@ function makeSuggestionsContext(
     allItems,
     loadouts,
     d2Manifest,
-    itemInfos,
+    getTag,
+    getNotes,
     allNotesHashtags,
     customStats,
   };

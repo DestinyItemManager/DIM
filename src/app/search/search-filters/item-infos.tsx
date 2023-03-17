@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { getNotes, getTag, itemTagSelectorList } from 'app/inventory/dim-item-info';
+import { itemTagSelectorList } from 'app/inventory/dim-item-info';
 import { FilterDefinition } from '../filter-types';
 
 // check item tags or presence of notes
@@ -8,9 +8,9 @@ const itemInfosFilters: FilterDefinition[] = [
     keywords: 'tagged',
     description: tl('Filter.Tags.Tagged'),
     filter:
-      ({ itemInfos, itemHashTags }) =>
+      ({ getTag }) =>
       (item) =>
-        getTag(item, itemInfos, itemHashTags) !== undefined,
+        getTag(item) !== undefined,
   },
   {
     keywords: 'tag',
@@ -18,17 +18,17 @@ const itemInfosFilters: FilterDefinition[] = [
     format: 'query',
     suggestions: itemTagSelectorList.map((tag) => tag.type ?? 'none'),
     filter:
-      ({ filterValue, itemInfos, itemHashTags }) =>
+      ({ filterValue, getTag }) =>
       (item) =>
-        (getTag(item, itemInfos, itemHashTags) || 'none') === filterValue,
+        (getTag(item) || 'none') === filterValue,
   },
   {
     keywords: 'hasnotes',
     description: tl('Filter.HasNotes'),
     filter:
-      ({ itemInfos, itemHashTags }) =>
+      ({ getNotes }) =>
       (item) =>
-        Boolean(getNotes(item, itemInfos, itemHashTags)),
+        Boolean(getNotes(item)),
   },
 ];
 

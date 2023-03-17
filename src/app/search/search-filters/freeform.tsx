@@ -1,7 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DIM_LANG_INFOS } from 'app/i18n';
 import { tl } from 'app/i18next-t';
-import { getNotes } from 'app/inventory/dim-item-info';
 import { DimItem, DimPlug } from 'app/inventory/item-types';
 import { isD1Item } from 'app/utils/item-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -104,10 +103,10 @@ const freeformFilters: FilterDefinition[] = [
     description: tl('Filter.Notes'),
     format: 'freeform',
     suggestionsGenerator: ({ allNotesHashtags }) => allNotesHashtags,
-    filter: ({ filterValue, itemInfos, itemHashTags, language }) => {
+    filter: ({ filterValue, getNotes, language }) => {
       filterValue = plainString(filterValue, language);
       return (item) => {
-        const notes = getNotes(item, itemInfos, itemHashTags);
+        const notes = getNotes(item);
         return Boolean(notes && plainString(notes, language).includes(filterValue));
       };
     },
@@ -168,11 +167,11 @@ const freeformFilters: FilterDefinition[] = [
     keywords: 'keyword',
     description: tl('Filter.PartialMatch'),
     format: 'freeform',
-    filter: ({ filterValue, itemInfos, itemHashTags, language, d2Definitions }) => {
+    filter: ({ filterValue, getNotes, language, d2Definitions }) => {
       filterValue = plainString(filterValue, language);
       const test = (s: string) => plainString(s, language).includes(filterValue);
       return (item) => {
-        const notes = getNotes(item, itemInfos, itemHashTags);
+        const notes = getNotes(item);
         return (
           (notes && test(notes)) ||
           test(item.name) ||
