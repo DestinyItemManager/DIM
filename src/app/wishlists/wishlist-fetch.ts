@@ -1,9 +1,9 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
+import { isValidWishListUrlDomain, wishListAllowedHosts } from 'app/settings/WishListSettings';
 import { setSettingAction } from 'app/settings/actions';
 import { settingsReady } from 'app/settings/settings';
-import { isValidWishListUrlDomain, wishListAllowedPrefixes } from 'app/settings/WishListSettings';
 import { get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
@@ -52,7 +52,9 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       showNotification({
         type: 'warning',
         title: t('WishListRoll.Header'),
-        body: `${t('WishListRoll.InvalidExternalSource')}\n${wishListAllowedPrefixes.join('\n')}`,
+        body: `${t('WishListRoll.InvalidExternalSource')}\n${wishListAllowedHosts
+          .map((h) => `https://${h}`)
+          .join('\n')}`,
         duration: 10000,
       });
       return;
