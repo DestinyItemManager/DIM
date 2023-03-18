@@ -527,7 +527,6 @@ function findEmptyPlug(
     // Y2+ weapon masterworks don't have an "empty" entry.
     socket.socketTypeHash === weaponMasterworkY2SocketTypeHash ||
     // Socket categories that have no empty plug
-    // TODO: set
     noDefaultSocketCategoryHashes.includes(socketType.socketCategoryHash)
   ) {
     return undefined;
@@ -612,8 +611,6 @@ function buildSocket(
 
   // The currently equipped plug, if any.
   const plugged = buildPlug(defs, socket, plugObjectivesData, plugSet);
-  // TODO: not sure if this should always be included!
-  // TODO: remove?
   const plugOptions: DimPlug[] = [];
 
   // We only build a larger list of plug options if this is a perk socket, since users would
