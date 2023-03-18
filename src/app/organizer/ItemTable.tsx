@@ -10,7 +10,8 @@ import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
   createItemContextSelector,
-  itemInfosSelector,
+  getNotesSelector,
+  getTagSelector,
   newItemsSelector,
   storesSelector,
 } from 'app/inventory/selectors';
@@ -104,7 +105,8 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
 
   const stores = useSelector(storesSelector);
-  const itemInfos = useSelector(itemInfosSelector);
+  const getTag = useSelector(getTagSelector);
+  const getNotes = useSelector(getNotesSelector);
   const wishList = useSelector(wishListFunctionSelector);
   const hasWishList = useSelector(hasWishListSelector);
   const enabledColumns = useSelector(settingSelector(columnSetting(itemType)));
@@ -167,7 +169,8 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       getColumns(
         itemType,
         statHashes,
-        itemInfos,
+        getTag,
+        getNotes,
         wishList,
         hasWishList,
         customStats,
@@ -181,7 +184,8 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       hasWishList,
       statHashes,
       itemType,
-      itemInfos,
+      getTag,
+      getNotes,
       customStats,
       loadoutsByItem,
       newItems,

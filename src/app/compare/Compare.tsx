@@ -263,6 +263,9 @@ export default function Compare({ session }: { session: CompareSession }) {
   );
 }
 
+// After this many pixels of dragging in either direction, we consider ourselves to be part of a scrolling gesture.
+const HORIZ_SCROLL_DRAG_THRESHOLD = 20;
+
 function CompareItems({
   items,
   doCompareBaseStats,
@@ -286,17 +289,26 @@ function CompareItems({
   // inertial animation after releasing.
 
   const ref = useRef<HTMLDivElement>(null);
-  const dragStateRef = useRef<{ scrollPosition: number; pointerDownPosition: number }>();
+  const dragStateRef = useRef<{
+    scrollPosition: number;
+    pointerDownPosition: number;
+    scrolling: boolean;
+  }>();
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     if (isEventFromFirefoxScrollbar(e)) {
+      return;
+    }
+
+    // Don't do any of this if the view isn't scrollable in the first place
+    if (ref.current!.scrollWidth <= ref.current!.clientWidth) {
       return;
     }
 
     dragStateRef.current = {
       pointerDownPosition: e.clientX,
       scrollPosition: ref.current!.scrollLeft,
+      scrolling: false,
     };
-    ref.current!.setPointerCapture(e.pointerId);
   }, []);
   const handlePointerUp = useCallback((e: React.PointerEvent) => {
     dragStateRef.current = undefined;
@@ -305,6 +317,19 @@ function CompareItems({
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (dragStateRef.current !== undefined) {
       const { scrollPosition, pointerDownPosition } = dragStateRef.current;
+      // Once we've moved HORIZ_SCROLL_DRAG_THRESHOLD in either direction,
+      // constrain to horizontal scrolling only
+      dragStateRef.current.scrolling ||=
+        Math.abs(e.clientX - pointerDownPosition) > HORIZ_SCROLL_DRAG_THRESHOLD;
+      if (dragStateRef.current.scrolling) {
+        // Only set the pointer capture once we've moved enough. This allows you
+        // to still keep scrolling even if the pointer leaves the scrollable
+        // area (which feels nice) but buttons still work. If we always capture
+        // in handlePointerDown, buttons won't work because all events get
+        // retargeted to the scroll area.
+        ref.current!.setPointerCapture(e.pointerId);
+        e.stopPropagation();
+      }
       ref.current!.scrollLeft = scrollPosition - (e.clientX - pointerDownPosition);
     }
   }, []);

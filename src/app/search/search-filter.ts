@@ -1,20 +1,19 @@
-import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
+import { TagValue } from 'app/inventory/dim-item-info';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { errorLog } from 'app/utils/log';
 import { WishListRoll } from 'app/wishlists/types';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { ItemInfos } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
   allItemsSelector,
   currentStoreSelector,
   displayableBucketHashesSelector,
-  itemHashTagsSelector,
-  itemInfosSelector,
+  getNotesSelector,
+  getTagSelector,
   newItemsSelector,
   sortedStoresSelector,
 } from '../inventory/selectors';
@@ -50,8 +49,8 @@ export const filterContextSelector = createSelector(
   wishListFunctionSelector,
   wishListsByHashSelector,
   newItemsSelector,
-  itemInfosSelector,
-  itemHashTagsSelector,
+  getTagSelector,
+  getNotesSelector,
   languageSelector,
   customStatsSelector,
   d2ManifestSelector,
@@ -66,10 +65,8 @@ function makeFilterContext(
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined,
   wishListsByHash: _.Dictionary<WishListRoll[]>,
   newItems: Set<string>,
-  itemInfos: ItemInfos,
-  itemHashTags: {
-    [itemHash: string]: ItemHashTag;
-  },
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
   language: string,
   customStats: Settings['customStats'],
   d2Definitions: D2ManifestDefinitions | undefined
@@ -81,8 +78,8 @@ function makeFilterContext(
     loadoutsByItem,
     wishListFunction,
     newItems,
-    itemInfos,
-    itemHashTags,
+    getTag,
+    getNotes,
     language,
     customStats,
     wishListsByHash,

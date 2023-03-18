@@ -1,9 +1,8 @@
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { itemNoteSelector } from 'app/inventory/dim-item-info';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';
-import { currentStoreSelector } from 'app/inventory/selectors';
+import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
 import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -45,7 +44,7 @@ export default memo(function CompareItem({
 }) {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--compare-item-height');
-  const itemNotes = useSelector(itemNoteSelector(item));
+  const itemNotes = useSelector(notesSelector(item));
   const dispatch = useThunkDispatch();
   const currentStore = useSelector(currentStoreSelector)!;
   const pullItem = useCallback(() => {

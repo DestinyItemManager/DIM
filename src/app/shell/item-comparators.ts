@@ -1,4 +1,3 @@
-import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { D1BucketHashes } from 'app/search/d1-known-values';
@@ -7,7 +6,7 @@ import { ItemSortSettings } from 'app/settings/item-sort';
 import { isD1Item, isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { getTag, ItemInfos, tagConfig } from '../inventory/dim-item-info';
+import { tagConfig, TagValue } from '../inventory/dim-item-info';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 
 const INSTANCEID_PADDING = 20;
@@ -98,25 +97,16 @@ const ITEM_SORT_DENYLIST = new Set([
 
 // These comparators require knowledge of the tag state/database
 const TAG_ITEM_COMPARATORS: {
-  [key: string]: (
-    itemInfos: ItemInfos,
-    itemHashTags: {
-      [itemHash: string]: ItemHashTag;
-    }
-  ) => Comparator<DimItem>;
+  [key: string]: (getTag: (item: DimItem) => TagValue | undefined) => Comparator<DimItem>;
 } = {
   // see tagConfig
-  tag: (itemInfos, itemHashTags) =>
+  tag: (getTag) =>
     compareBy((item) => {
-      const tag = getTag(item, itemInfos, itemHashTags);
-      return tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000;
+      const tag = getTag(item);
+      return (tag && tagConfig[tag]?.sortOrder) ?? 1000;
     }),
   // not archive -> archive
-  archive: (itemInfos, itemHashTags) =>
-    compareBy((item) => {
-      const tag = getTag(item, itemInfos, itemHashTags);
-      return tag === 'archive';
-    }),
+  archive: (getTag) => compareBy((item) => getTag(item) === 'archive'),
 };
 
 const ITEM_COMPARATORS: {
@@ -174,10 +164,7 @@ const ITEM_COMPARATORS: {
 export function sortItems(
   items: readonly DimItem[],
   itemSortSettings: ItemSortSettings,
-  itemInfos: ItemInfos,
-  itemHashTags: {
-    [itemHash: string]: ItemHashTag;
-  }
+  getTag: (item: DimItem) => TagValue | undefined
 ): readonly DimItem[] {
   if (!items.length) {
     return items;
@@ -238,7 +225,7 @@ export function sortItems(
     ...['archive', ...itemSortSettings.sortOrder].map((comparatorName) => {
       let comparator = ITEM_COMPARATORS[comparatorName];
       if (!comparator) {
-        const tagComparator = TAG_ITEM_COMPARATORS[comparatorName]?.(itemInfos, itemHashTags);
+        const tagComparator = TAG_ITEM_COMPARATORS[comparatorName]?.(getTag);
 
         if (!tagComparator) {
           return ITEM_COMPARATORS.default;

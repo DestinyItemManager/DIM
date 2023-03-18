@@ -22,8 +22,8 @@ interface Props {
   isNew?: boolean;
   /** User defined tag */
   tag?: TagValue;
-  /**  */
-  notes?: boolean;
+  /** Does this item have notes? Used to show the icon. */
+  hasNotes?: boolean;
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
   /** Is the setting to automatically lock tagged items on? */
@@ -42,7 +42,7 @@ export default function InventoryItem({
   item,
   isNew,
   tag,
-  notes,
+  hasNotes,
   searchHidden,
   autoLockTagged,
   wishlistRoll,
@@ -103,7 +103,7 @@ export default function InventoryItem({
         )}
         <ItemIcon item={item} />
         <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
-        {(tag || item.locked || notes) && (
+        {(tag || item.locked || hasNotes) && (
           <div className={styles.icons}>
             {item.locked && (!autoLockTagged || !tag || !canSyncLockState(item)) && (
               <AppIcon
@@ -112,13 +112,13 @@ export default function InventoryItem({
               />
             )}
             {tag && <TagIcon className={styles.icon} tag={tag} />}
-            {notes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
+            {hasNotes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
           </div>
         )}
         {isNew && <NewItemIndicator />}
       </>
     );
-  }, [isNew, item, notes, subclassIconInfo, tag, wishlistRoll, autoLockTagged]);
+  }, [isNew, item, hasNotes, subclassIconInfo, tag, wishlistRoll, autoLockTagged]);
 
   return (
     <div

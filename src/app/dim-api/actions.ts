@@ -2,7 +2,6 @@ import { DeleteAllResponse } from '@destinyitemmanager/dim-api-types';
 import { needsDeveloper } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { accountsSelector, currentAccountSelector } from 'app/accounts/selectors';
-import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
@@ -161,12 +160,6 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
     // operational controls in case the API is knocked over.
     if (!getState().dimApi.globalSettingsLoaded) {
       await dispatch(loadGlobalSettings());
-    }
-
-    // Check if we're even logged into Bungie.net. Don't need to load or sync if not.
-    const bungieToken = await getBungieToken();
-    if (!bungieToken) {
-      return;
     }
 
     // Don't let actions pile up blocked on the approval UI

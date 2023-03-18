@@ -59,8 +59,8 @@ export type SearchItem =
       type: Exclude<SearchItemType, SearchItemType.ArmoryEntry>;
     });
 
-/** matches a keyword that's probably a math comparison */
-const mathCheck = /[\d<>=]/;
+/** matches a keyword that's probably a math comparison, but not with a value on the RHS */
+const mathCheck = /[\d<>=]$/;
 
 /** if one of these has been typed, stop guessing which filter and just offer this filter's values */
 // TODO: Generate this from the search config
@@ -450,7 +450,9 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
 
         // push "not" and "<=" and ">=" to the bottom if they are present
         // we discourage "not", and "<=" and ">=" are highly discoverable from "<" and ">"
-        compareBy((word) => word.startsWith('not:') || word.endsWith('<=') || word.endsWith('>=')),
+        compareBy(
+          (word) => word.startsWith('not:') || word.includes(':<=') || word.includes(':>=')
+        ),
 
         // sort more-basic incomplete terms (fewer colons) to the front
         // i.e. suggest "stat:" before "stat:magazine:"

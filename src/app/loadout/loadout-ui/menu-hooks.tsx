@@ -70,7 +70,7 @@ export function useLoadoutFilterPills(
         ...getHashtagsFromNote(loadout.notes),
       ];
       for (const hashtag of hashtags) {
-        (loadoutsByHashtag[hashtag] ??= []).push(loadout);
+        (loadoutsByHashtag[hashtag.replace('#', '')] ??= []).push(loadout);
       }
     }
     return loadoutsByHashtag;

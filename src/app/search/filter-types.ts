@@ -1,7 +1,7 @@
-import { CustomStatDef, ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { ItemInfos } from 'app/inventory/dim-item-info';
+import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
@@ -30,10 +30,8 @@ export interface FilterContext {
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined;
   wishListsByHash: _.Dictionary<WishListRoll[]>;
   newItems: Set<string>;
-  itemInfos: ItemInfos;
-  itemHashTags: {
-    [itemHash: string]: ItemHashTag;
-  };
+  getTag: (item: DimItem) => TagValue | undefined;
+  getNotes: (item: DimItem) => string | undefined;
   language: string;
   customStats: Settings['customStats'];
   d2Definitions: D2ManifestDefinitions | undefined;
@@ -46,7 +44,8 @@ export interface FilterContext {
 export interface SuggestionsContext {
   allItems?: DimItem[];
   loadouts?: Loadout[];
-  itemInfos?: ItemInfos;
+  getTag?: (item: DimItem) => TagValue | undefined;
+  getNotes?: (item: DimItem) => string | undefined;
   d2Manifest?: D2ManifestDefinitions;
   allNotesHashtags?: string[];
   customStats?: CustomStatDef[];
