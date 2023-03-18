@@ -72,14 +72,13 @@ const gearSlotOrder: BucketHashes[] = [...D2Categories.Weapons, ...D2Categories.
 /**
  * Creates a new loadout, with all of the items equipped and the items inserted mods saved.
  */
-export function newLoadout(
-  name: string,
-  items: LoadoutItem[],
-  classType?: DestinyClass | -1
-): Loadout {
+export function newLoadout(name: string, items: LoadoutItem[], classType?: DestinyClass): Loadout {
   return {
     id: uuidv4(),
-    classType: classType !== undefined && classType !== -1 ? classType : DestinyClass.Unknown,
+    classType:
+      classType !== undefined && classType !== DestinyClass.Classified
+        ? classType
+        : DestinyClass.Unknown,
     name,
     items,
     clearSpace: false,
@@ -725,9 +724,9 @@ export function getUnequippedItemsForLoadout(dimStore: DimStore, category?: stri
 export function pickBackingStore(
   stores: DimStore[],
   preferredStoreId: string | undefined,
-  classType: DestinyClass | -1
+  classType: DestinyClass
 ) {
-  classType = classType === -1 ? DestinyClass.Unknown : classType;
+  classType = classType === DestinyClass.Classified ? DestinyClass.Unknown : classType;
   const requestedStore =
     !preferredStoreId || preferredStoreId === 'vault'
       ? getCurrentStore(stores)

@@ -8,6 +8,20 @@ declare const $DIM_WEB_CLIENT_SECRET: string;
 declare const $DIM_API_KEY: string;
 declare const $BROWSERS: string[];
 
+import 'bungie-api-ts/destiny2';
+
+module 'bungie-api-ts/destiny2' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const enum DestinyClass {
+    /*
+     * The class cannot be known because the item is classified.
+     * DestinyClass.Unknown really means "not specific to a class", so we invent this
+     * value to represent classified items.
+     */
+    Classified = -1,
+  }
+}
+
 declare const $featureFlags: ReturnType<typeof import('../config/feature-flags').makeFeatureFlags>;
 
 declare function ga(...params: string[]): void;
