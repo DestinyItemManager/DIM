@@ -1,4 +1,5 @@
 import { rankProgressionHashesSelector } from 'app/manifest/selectors';
+import { LookupTable } from 'app/utils/util-types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { ProgressionHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
@@ -32,7 +33,7 @@ import { getCharacterProgressions } from './selectors';
 //   }))
 // );
 
-const rankProgressionToStreakProgression = {
+const rankProgressionToStreakProgression: LookupTable<ProgressionHashes, number> = {
   [ProgressionHashes.CrucibleRank]: 2203850209,
   [ProgressionHashes.GloryRank]: 2572719399,
   [ProgressionHashes.GambitRank]: 2939151659,
@@ -50,13 +51,13 @@ export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResp
   return (
     <div className="progress-for-character ranks-for-character">
       {progressionHashes.map(
-        (progressionHash) =>
+        (progressionHash: ProgressionHashes) =>
           firstCharacterProgression[progressionHash] && (
             <ReputationRank
               key={progressionHash}
               progress={firstCharacterProgression[progressionHash]}
               streak={
-                firstCharacterProgression[rankProgressionToStreakProgression[progressionHash]]
+                firstCharacterProgression[rankProgressionToStreakProgression[progressionHash] ?? 0]
               }
               resetCount={firstCharacterProgression[progressionHash]?.currentResetCount}
             />

@@ -3,15 +3,16 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
+import { LookupTable } from 'app/utils/util-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { normalToReducedMod, reducedToNormalMod } from 'data/d2/reduced-cost-mod-mappings';
 import _ from 'lodash';
 import { knownModPlugCategoryHashes } from './known-values';
 
-export const plugCategoryHashToBucketHash = {
+export const plugCategoryHashToBucketHash: LookupTable<PlugCategoryHashes, BucketHashes> = {
   [armor2PlugCategoryHashesByName.helmet]: armorBuckets.helmet,
   [armor2PlugCategoryHashesByName.gauntlets]: armorBuckets.gauntlets,
   [armor2PlugCategoryHashesByName.chest]: armorBuckets.chest,
@@ -81,13 +82,10 @@ export function isInsertableArmor2Mod(
  * number to its hash to make it unique.
  */
 export function createGetModRenderKey() {
-  const counts = {};
+  const counts: { [modHash: string]: number | undefined } = {};
   return (mod: PluggableInventoryItemDefinition) => {
-    if (!counts[mod.hash]) {
-      counts[mod.hash] = 0;
-    }
-
-    return `${mod.hash}-${counts[mod.hash]++}`;
+    counts[mod.hash] ||= 0;
+    return `${mod.hash}-${counts[mod.hash]!++}`;
   };
 }
 

@@ -1,3 +1,4 @@
+import { LookupTable } from 'app/utils/util-types';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
@@ -74,7 +75,7 @@ export const itemCategoryIcons: { [itemCategoryHash: number]: string } = {
 } as const;
 
 /** A mapping from bucket hash to item category */
-export const bucketHashToItemCategoryHash = {
+export const bucketHashToItemCategoryHash: LookupTable<BucketHashes, ItemCategoryHashes> = {
   [BucketHashes.KineticWeapons]: ItemCategoryHashes.KineticWeapon,
   [BucketHashes.EnergyWeapons]: ItemCategoryHashes.EnergyWeapon,
   [BucketHashes.PowerWeapons]: ItemCategoryHashes.PowerWeapon,

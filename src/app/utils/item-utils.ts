@@ -11,8 +11,8 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import {
-  EXOTIC_CATALYST_TRAIT,
   armor2PlugCategoryHashes,
+  EXOTIC_CATALYST_TRAIT,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
   modsWithConditionalStats,
@@ -25,7 +25,7 @@ import modSocketMetadata, {
 import { DamageType, DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
 import { objectifyArray } from './util';
@@ -102,7 +102,7 @@ export const getInterestingSocketMetadatas = (item?: DimItem): ModSocketMetadata
  * returns mod type tag if the plugCategoryHash (from a mod definition's .plug) is known
  */
 export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): string | undefined =>
-  modTypeTagByPlugCategoryHash[plugCategoryHash];
+  modTypeTagByPlugCategoryHash[plugCategoryHash as PlugCategoryHashes];
 
 /** feed a **mod** definition into this */
 export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>

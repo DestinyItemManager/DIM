@@ -6,14 +6,17 @@ import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
+import { LookupTable } from 'app/utils/util-types';
 import {
   AllDestinyManifestComponents,
   DestinyInventoryItemDefinition,
   DestinyItemActionBlockDefinition,
   DestinyItemTalentGridBlockDefinition,
   DestinyItemTranslationBlockDefinition,
+  DestinyManifestComponentName,
 } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
+import { Draft } from 'immer';
 import _ from 'lodash';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
@@ -28,27 +31,26 @@ import { reportException } from '../utils/exceptions';
 // Testing flags
 const alwaysLoadRemote = false;
 
-type Mutable<T> = { -readonly [P in keyof T]: Mutable<T[P]> };
 /** Functions that can reduce the size of a table after it's downloaded but before it's saved to cache. */
-const tableTrimmers = {
-  DestinyInventoryItemDefinition(table: { [hash: number]: DestinyInventoryItemDefinition }) {
+const tableTrimmers: LookupTable<DestinyManifestComponentName, (table: any) => any> = {
+  DestinyInventoryItemDefinition: (table: { [hash: number]: DestinyInventoryItemDefinition }) => {
     for (const key in table) {
-      const def = table[key] as Mutable<DestinyInventoryItemDefinition>;
+      const def = table[key] as Draft<DestinyInventoryItemDefinition>;
 
       // Deleting properties can actually make memory usage go up as V8 replaces some efficient
       // structures from JSON parsing. Only replace objects with empties, and always test with the
       // memory profiler. Don't assume that deleting something makes this smaller.
 
-      def.action = emptyObject<Mutable<DestinyItemActionBlockDefinition>>();
+      def.action = emptyObject<Draft<DestinyItemActionBlockDefinition>>();
       def.backgroundColor = emptyObject();
-      def.translationBlock = emptyObject<Mutable<DestinyItemTranslationBlockDefinition>>();
+      def.translationBlock = emptyObject<Draft<DestinyItemTranslationBlockDefinition>>();
       if (def.equippingBlock?.displayStrings?.length) {
         def.equippingBlock.displayStrings = emptyArray();
       }
       if (def.preview?.derivedItemCategories?.length) {
         def.preview.derivedItemCategories = emptyArray();
       }
-      def.talentGrid = emptyObject<Mutable<DestinyItemTalentGridBlockDefinition>>();
+      def.talentGrid = emptyObject<Draft<DestinyItemTalentGridBlockDefinition>>();
 
       if (def.sockets) {
         def.sockets.intrinsicSockets = emptyArray();
@@ -219,12 +221,12 @@ export async function downloadManifestComponents(
     `?dim-${Math.random().toString().split('.')[1] ?? 'dimCacheBust'}`,
   ];
 
-  const manifest = {};
+  const manifest: Partial<AllDestinyManifestComponents> = {};
 
   // Load the manifest tables we want table-by-table, in parallel. This is
   // faster and downloads less data than the single huge file.
   const futures = tableAllowList
-    .map((t) => `Destiny${t}Definition`)
+    .map((t) => `Destiny${t}Definition` as DestinyManifestComponentName)
     .map(async (table) => {
       let response: Response | null = null;
       let error = null;
@@ -246,7 +248,7 @@ export async function downloadManifestComponents(
       if (!body && error) {
         throw error;
       }
-      manifest[table] = tableTrimmers[table] ? tableTrimmers[table](body) : body;
+      manifest[table] = table in tableTrimmers ? tableTrimmers[table]!(body) : body;
     });
 
   await Promise.all(futures);

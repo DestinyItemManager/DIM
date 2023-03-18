@@ -4,7 +4,7 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { D2BucketCategory } from 'app/inventory/inventory-buckets';
+import { D1BucketCategory, D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
@@ -417,7 +417,7 @@ export function fillLoadoutFromEquipped(
       };
     }
     // Save "fashion" mods for equipped items
-    const modsByBucket = {};
+    const modsByBucket: { [bucketHash: number]: number[] } = {};
     for (const item of newEquippedItems.filter((i) => i.bucket.inArmor)) {
       const plugs = item.sockets
         ? _.compact(
@@ -513,9 +513,14 @@ export function syncModsFromEquipped(store: DimStore): LoadoutUpdateFunction {
 
 export function clearBucketCategory(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  category: string
+  category: D2BucketCategory | D1BucketCategory
 ) {
-  return clearBuckets(defs, defs.isDestiny2() ? D2Categories[category] : D1Categories[category]);
+  return clearBuckets(
+    defs,
+    defs.isDestiny2()
+      ? D2Categories[category as D2BucketCategory]
+      : D1Categories[category as D1BucketCategory]
+  );
 }
 
 /**

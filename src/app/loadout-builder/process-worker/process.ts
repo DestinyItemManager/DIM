@@ -397,7 +397,7 @@ export function process(
       statFiltersInStatOrder
     )!;
 
-    const totalStats = statOrder.reduce((statObj, statHash, i) => {
+    const totalStats = statOrder.reduce<Partial<ArmorStats>>((statObj, statHash, i) => {
       const value = stats[i] + bonusStats[i];
       statObj[statHash] = value;
 

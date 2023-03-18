@@ -83,7 +83,8 @@ function Sockets({ item, lockedMods, size, onSocketClick, automaticallyPickedMod
       // account for plugs that look exotic-ish but are nothings
       // but always include specialty mod slots, Vow mods don't have
       // an itemTypeDisplayName https://github.com/Bungie-net/api/issues/1620
-      (toSave.itemTypeDisplayName || modTypeTagByPlugCategoryHash[toSave.plug.plugCategoryHash])
+      (toSave.itemTypeDisplayName ||
+        modTypeTagByPlugCategoryHash[toSave.plug.plugCategoryHash as PlugCategoryHashes])
     ) {
       modsAndWhitelist.push({
         plugDef: toSave,

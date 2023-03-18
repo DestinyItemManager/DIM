@@ -4,7 +4,6 @@ import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { isArtifice } from 'app/item-triage/triage-utils';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
-import { LookupTable } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -176,7 +175,7 @@ const dupeFilters: FilterDefinition[] = [
     keywords: 'customstatlower',
     description: tl('Filter.CustomStatLower'),
     filter: ({ allItems, customStats }) => {
-      const duplicateSetsByClass: LookupTable<DimItem['classType'], Set<string>[]> = {};
+      const duplicateSetsByClass: Partial<Record<DimItem['classType'], Set<string>[]>> = {};
 
       for (const customStat of customStats) {
         const relevantStatHashes: number[] = [];

@@ -42,6 +42,7 @@ import {
   manifestSelector,
 } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
@@ -60,9 +61,10 @@ import {
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
+import { LookupTable } from 'app/utils/util-types';
 import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import produce from 'immer';
+import produce, { Draft } from 'immer';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import {
@@ -91,7 +93,7 @@ const outOfSpaceWarning = _.throttle((store) => {
   });
 }, 60000);
 
-const sortedBucketHashes = [
+const sortedBucketHashes: (BucketHashes | D1BucketHashes)[] = [
   ...D2Categories.Weapons,
   ...D2Categories.Armor,
   ...D2Categories.General,
@@ -100,9 +102,9 @@ const sortedBucketHashes = [
   ...D1Categories.Armor,
   ...D1Categories.General,
 ];
-const bucketHashToIndex = {};
+const bucketHashToIndex: LookupTable<BucketHashes | D1BucketHashes, number> = {};
 for (let i = 0; i < sortedBucketHashes.length; i++) {
-  bucketHashToIndex[sortedBucketHashes[i]] = i;
+  (bucketHashToIndex as Draft<typeof bucketHashToIndex>)[sortedBucketHashes[i]] = i;
 }
 
 /**

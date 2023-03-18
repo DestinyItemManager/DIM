@@ -41,10 +41,10 @@ export interface AutoModsMap {
    * See comments in pickOptimalStatMods. That function optimizes for total tier first,
    * so if a less-prioritized stat also has more costly mods, then it cannot result in a higher
    * total tier.
-   * So for each ArmorStatHash, this contains a list of stats where the stat mods are better
+   * So for each stat index, this contains a list of stats where the stat mods are better
    * for purposes of optimizing total tier, by having cheaper or more mods available.
    */
-  cheaperStatRelations: { [statHash in ArmorStatHashes]: ArmorStatHashes[] };
+  cheaperStatRelations: { [statIndex: number]: ArmorStatHashes[] };
 }
 
 /**

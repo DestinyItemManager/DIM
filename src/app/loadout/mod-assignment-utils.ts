@@ -81,7 +81,7 @@ export function categorizeArmorMods(
   // Divide up the locked mods into general, combat and activity mod arrays, and put
   // bucket specific mods into a map keyed by bucket hash.
   for (const plannedMod of allMods) {
-    const pch = plannedMod.plug.plugCategoryHash;
+    const pch = plannedMod.plug.plugCategoryHash as PlugCategoryHashes;
     if (!allActiveModSockets.some((s) => plugFitsIntoSocket(s, plannedMod.hash))) {
       // Eagerly reject mods that can't possibly fit into any socket at all under
       // any circumstances, such as deprecated (artifact) armor mods.

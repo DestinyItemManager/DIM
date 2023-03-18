@@ -126,7 +126,7 @@ export function getColumns(
   const statColumns: ColumnWithStat[] = _.sortBy(
     _.compact(
       Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat | undefined => {
-        const statHash = parseInt(statHashStr, 10);
+        const statHash = parseInt(statHashStr, 10) as StatHashes;
         if (customStatHashes.includes(statHash)) {
           // Exclude custom total, it has its own column
           return undefined;
