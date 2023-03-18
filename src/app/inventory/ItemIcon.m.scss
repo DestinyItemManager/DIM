@@ -142,7 +142,7 @@ $commonBg: #366f42;
   pointer-events: none;
 }
 
-.bucketIcon {
+.bucketIcon:not(:global(.colorized)) {
   filter: invert(1);
   border-color: #222;
 }

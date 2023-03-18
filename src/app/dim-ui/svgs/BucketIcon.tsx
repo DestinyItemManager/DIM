@@ -1,5 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
 import { d2MissingIcon } from 'app/search/d2-known-values';
+import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
@@ -24,6 +25,7 @@ const bucketIcons = {
   [BucketHashes.ClassArmor]: classItem,
   [BucketHashes.Ghost]: ghost,
 };
+const colorizedIcons = [kineticWeaponSlot, energyWeaponSlot, heavyAmmo];
 
 type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   item: DimItem;
@@ -34,7 +36,13 @@ export default function BucketIcon(props: BucketIconProps) {
   const { item, ...otherProps } = props;
   const svg = bucketIcons[item.bucket.hash];
   return svg ? (
-    <img src={svg} {...otherProps} />
+    <img
+      src={svg}
+      {...otherProps}
+      className={clsx(props.className, {
+        ['colorized']: colorizedIcons.includes(svg),
+      })}
+    />
   ) : (
     <BungieImage src={d2MissingIcon} {...otherProps} />
   );
