@@ -6,6 +6,7 @@
     "outDir": "./dist/",
     "sourceMap": true,
     "suppressImplicitAnyIndexErrors": true,
+    "ignoreDeprecations": "5.0",
     "module": "ESNext",
     "target": "ESNext",
     "jsx": "preserve",
