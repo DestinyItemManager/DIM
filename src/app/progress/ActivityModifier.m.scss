@@ -1,0 +1,23 @@
+.modifier {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 2px;
+
+  img {
+    width: 16px;
+    height: 16px;
+    margin: 1px 6px 0 2px;
+  }
+
+  &.small {
+    opacity: 0.5;
+    margin-bottom: 0;
+
+    img {
+      width: 12px;
+      height: 12px;
+    }
+  }
+}

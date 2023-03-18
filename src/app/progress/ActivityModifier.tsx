@@ -1,29 +1,34 @@
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
+import clsx from 'clsx';
 import BungieImage from '../dim-ui/BungieImage';
 import { PressTip } from '../dim-ui/PressTip';
-import './ActivityModifier.scss';
+import styles from './ActivityModifier.m.scss';
 
-export function ActivityModifier({ modifierHash }: { modifierHash: number }) {
+export function ActivityModifier({
+  modifierHash,
+  small,
+}: {
+  modifierHash: number;
+  small?: boolean;
+}) {
   const defs = useD2Definitions()!;
 
   const modifier = defs.ActivityModifier.get(modifierHash);
   const modifierName = modifier.displayProperties.name;
   const modifierIcon = modifier.displayProperties.icon;
 
-  if (!modifier || (!modifierName && !modifierIcon)) {
+  if (!modifier?.displayInActivitySelection) {
     return null;
   }
 
   return (
-    <div className="milestone-modifier">
+    <div className={clsx(styles.modifier, { [styles.small]: small })}>
       {Boolean(modifierIcon) && <BungieImage src={modifierIcon} />}
       {Boolean(modifierName) && (
-        <div className="milestone-modifier-info">
-          <PressTip tooltip={<RichDestinyText text={modifier.displayProperties.description} />}>
-            <div className="milestone-modifier-name">{modifierName}</div>
-          </PressTip>
-        </div>
+        <PressTip tooltip={<RichDestinyText text={modifier.displayProperties.description} />}>
+          <div>{modifierName}</div>
+        </PressTip>
       )}
     </div>
   );
