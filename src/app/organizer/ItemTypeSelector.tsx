@@ -1,4 +1,5 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { colorizedIcons } from 'app/dim-ui/svgs/BucketIcon';
 import { useDefinitions } from 'app/manifest/selectors';
 import { filteredItemsSelector } from 'app/search/search-filter';
 import clsx from 'clsx';
@@ -368,6 +369,7 @@ export default function ItemTypeSelector({
                 }
 
                 const itemCategory = defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash));
+                const icon = itemCategoryIcons[subCategory.itemCategoryHash];
 
                 return (
                   <label
@@ -384,8 +386,13 @@ export default function ItemTypeSelector({
                       readOnly={true}
                       onClick={(_e) => handleSelection(depth, subCategory)}
                     />
-                    {itemCategoryIcons[subCategory.itemCategoryHash] && (
-                      <img src={itemCategoryIcons[subCategory.itemCategoryHash]} />
+                    {icon && (
+                      <img
+                        src={icon}
+                        className={clsx({
+                          [styles.dontInvert]: colorizedIcons.includes(icon),
+                        })}
+                      />
                     )}
                     {'displayProperties' in itemCategory
                       ? itemCategory.displayProperties.name

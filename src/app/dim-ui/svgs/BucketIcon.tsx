@@ -30,7 +30,7 @@ const bucketIcons = {
   [BucketHashes.Ships]: ship,
   [BucketHashes.Emblems]: emblem,
 };
-const colorizedIcons = [kineticWeaponSlot, energyWeaponSlot, heavyAmmo];
+export const colorizedIcons = [kineticWeaponSlot, energyWeaponSlot, heavyAmmo];
 
 type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   bucketHash: number;

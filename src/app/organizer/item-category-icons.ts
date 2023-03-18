@@ -1,4 +1,4 @@
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';
@@ -71,20 +71,4 @@ export const itemCategoryIcons: { [itemCategoryHash: number]: string } = {
   [ItemCategoryHashes.Ships]: ship,
   [ItemCategoryHashes.Emblems]: emblem,
   [ItemCategoryHashes.Glaives]: glaive,
-} as const;
-
-/** A mapping from bucket hash to item category */
-export const bucketHashToItemCategoryHash = {
-  [BucketHashes.KineticWeapons]: ItemCategoryHashes.KineticWeapon,
-  [BucketHashes.EnergyWeapons]: ItemCategoryHashes.EnergyWeapon,
-  [BucketHashes.PowerWeapons]: ItemCategoryHashes.PowerWeapon,
-  [BucketHashes.Helmet]: ItemCategoryHashes.Helmets,
-  [BucketHashes.Gauntlets]: ItemCategoryHashes.Arms,
-  [BucketHashes.ChestArmor]: ItemCategoryHashes.Chest,
-  [BucketHashes.LegArmor]: ItemCategoryHashes.Legs,
-  [BucketHashes.ClassArmor]: ItemCategoryHashes.ClassItems,
-  [BucketHashes.Ghost]: ItemCategoryHashes.Ghost,
-  [BucketHashes.Vehicle]: ItemCategoryHashes.Sparrows,
-  [BucketHashes.Ships]: ItemCategoryHashes.Ships,
-  [BucketHashes.Emblems]: ItemCategoryHashes.Emblems,
 } as const;
