@@ -6,17 +6,17 @@ import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';
 import gauntlets from 'destiny-icons/armor_types/gloves.svg';
 import helmet from 'destiny-icons/armor_types/helmet.svg';
+import heavyAmmo from 'destiny-icons/general/ammo-heavy.svg';
 import ghost from 'destiny-icons/general/ghost.svg';
 import energyWeaponSlot from 'images/weapon-slot-energy.svg';
 import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
-import powerWeaponSlot from 'images/weapon-slot-power.svg';
 import React from 'react';
 import BungieImage from '../BungieImage';
 
 const bucketIcons = {
   [BucketHashes.KineticWeapons]: kineticWeaponSlot,
   [BucketHashes.EnergyWeapons]: energyWeaponSlot,
-  [BucketHashes.PowerWeapons]: powerWeaponSlot,
+  [BucketHashes.PowerWeapons]: heavyAmmo,
   [BucketHashes.Helmet]: helmet,
   [BucketHashes.Gauntlets]: gauntlets,
   [BucketHashes.ChestArmor]: chest,

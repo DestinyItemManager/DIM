@@ -4,6 +4,7 @@ import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';
 import gauntlets from 'destiny-icons/armor_types/gloves.svg';
 import helmet from 'destiny-icons/armor_types/helmet.svg';
+import heavyAmmo from 'destiny-icons/general/ammo-heavy.svg';
 import hunter from 'destiny-icons/general/class_hunter.svg';
 import titan from 'destiny-icons/general/class_titan.svg';
 import warlock from 'destiny-icons/general/class_warlock.svg';
@@ -31,7 +32,6 @@ import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 import energyWeaponSlot from 'images/weapon-slot-energy.svg';
 import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
-import powerWeaponSlot from 'images/weapon-slot-power.svg';
 
 /**
  * A mapping from known item category hashes to an appropriate icon
@@ -44,7 +44,7 @@ export const itemCategoryIcons: { [itemCategoryHash: number]: string } = {
   [ItemCategoryHashes.ClassItems]: classItem,
   [ItemCategoryHashes.KineticWeapon]: kineticWeaponSlot,
   [ItemCategoryHashes.EnergyWeapon]: energyWeaponSlot,
-  [ItemCategoryHashes.PowerWeapon]: powerWeaponSlot,
+  [ItemCategoryHashes.PowerWeapon]: heavyAmmo,
   [ItemCategoryHashes.Weapon]: handCannon,
   [ItemCategoryHashes.AutoRifle]: autoRifle,
   [ItemCategoryHashes.HandCannon]: handCannon,
