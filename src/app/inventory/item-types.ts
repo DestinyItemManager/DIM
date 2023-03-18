@@ -419,6 +419,9 @@ export interface DimPlugSet {
    * want to access DimSocket.emptyPlugItemHash instead!
    */
   readonly precomputedEmptyPlugItemHash?: number;
+
+  /** A precomputed list of plug hashes that can not roll on current versions of the item. */
+  readonly plugHashesThatCannotRoll: number[];
 }
 
 export interface DimSocket {

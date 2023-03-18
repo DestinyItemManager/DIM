@@ -406,13 +406,12 @@ export function isPluggableItem(
 function isDestinyItemPlug(
   plug: DestinyItemPlugBase | DestinyItemSocketState
 ): plug is DestinyItemPlugBase {
-  return Boolean((plug as DestinyItemPlugBase).plugItemHash);
+  return 'plugItemHash' in plug;
 }
 
 function buildPlug(
   defs: D2ManifestDefinitions,
   plug: DestinyItemPlugBase | DestinyItemSocketState,
-  socketDef: DestinyItemSocketEntryDefinition,
   plugObjectivesData:
     | {
         [plugItemHash: number]: DestinyObjectiveProgress[];
@@ -420,41 +419,33 @@ function buildPlug(
     | undefined,
   plugSet: DimPlugSet | undefined
 ): DimPlug | null {
-  const plugHash = isDestinyItemPlug(plug) ? plug.plugItemHash : plug.plugHash;
-  const enabled = isDestinyItemPlug(plug) ? plug.enabled : plug.isEnabled;
+  const destinyItemPlug = isDestinyItemPlug(plug);
+  const plugHash = destinyItemPlug ? plug.plugItemHash : plug.plugHash;
 
   if (!plugHash) {
     return null;
   }
 
-  let plugDef = defs.InventoryItem.get(plugHash);
-  if (!plugDef && socketDef.singleInitialItemHash) {
-    plugDef = defs.InventoryItem.get(socketDef.singleInitialItemHash);
-  }
-
+  const plugDef = defs.InventoryItem.get(plugHash);
   if (!plugDef || !isPluggableItem(plugDef)) {
     return null;
   }
 
+  // These are almost never present
   const failReasons = plug.enableFailIndexes
     ? _.compact(
-        plug.enableFailIndexes.map((index) => plugDef.plug!.enabledRules[index]?.failureMessage)
+        plug.enableFailIndexes.map((index) => plugDef.plug.enabledRules[index]?.failureMessage)
       ).join('\n')
     : '';
 
-  const matchingPlugs =
-    plugSet?.plugs.filter((p) => p.plugDef.hash === plugDef.hash) ?? emptyArray();
-  const cannotCurrentlyRoll = Boolean(
-    matchingPlugs.length && matchingPlugs.every((p) => p.cannotCurrentlyRoll)
-  );
-
+  const enabled = destinyItemPlug ? plug.enabled : plug.isEnabled;
   return {
     plugDef,
-    enabled: enabled && (!isDestinyItemPlug(plug) || plug.canInsert),
+    enabled: enabled && (!destinyItemPlug || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plugObjectivesData?.[plugHash] || emptyArray(),
     stats: null,
-    cannotCurrentlyRoll,
+    cannotCurrentlyRoll: plugSet?.plugHashesThatCannotRoll.includes(plugDef.hash),
   };
 }
 
@@ -620,7 +611,7 @@ function buildSocket(
     : undefined;
 
   // The currently equipped plug, if any.
-  const plugged = buildPlug(defs, socket, socketDef, plugObjectivesData, plugSet);
+  const plugged = buildPlug(defs, socket, plugObjectivesData, plugSet);
   // TODO: not sure if this should always be included!
   // TODO: remove?
   const plugOptions: DimPlug[] = [];
@@ -636,7 +627,7 @@ function buildSocket(
         if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
           plugOptions.push(plugged);
         } else {
-          const built = buildPlug(defs, reusablePlug, socketDef, plugObjectivesData, plugSet);
+          const built = buildPlug(defs, reusablePlug, plugObjectivesData, plugSet);
           if (built && filterReusablePlug(built)) {
             plugOptions.push(built);
           }
@@ -738,6 +729,9 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
     precomputedEmptyPlugItemHash: defPlugSet.reusablePlugItems.find((p) =>
       isKnownEmptyPlugItemHash(p.plugItemHash)
     )?.plugItemHash,
+    plugHashesThatCannotRoll: plugs
+      .filter((p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash))
+      .map((p) => p.plugDef.hash),
   };
   reusablePlugSetCache[plugSetHash] = dimPlugSet;
 
@@ -766,4 +760,23 @@ function buildCachedDefinedPlug(
   definedPlugCache[plugHash] = plug;
 
   return plug ? (currentlyCanRoll === false ? { ...plug, cannotCurrentlyRoll: true } : plug) : null;
+}
+
+/**
+ * Determine if, given a plugSet, a given plug hash cannot roll. For this to be
+ * true, the plug hash must appear in the list of plugs in the plugSet, and all
+ * versions of that plug in the plugSet cannot currently roll.
+ */
+function plugCannotCurrentlyRoll(plugs: DimPlug[], plugHash: number) {
+  let matchingPlugs = false;
+  for (const p of plugs) {
+    if (p.plugDef.hash === plugHash) {
+      matchingPlugs = true;
+      if (!p.cannotCurrentlyRoll) {
+        return false; // we don't need to continue, we know it *can* roll
+      }
+    }
+  }
+  // There is at least one copy of the plug, and all matching copies cannot roll
+  return matchingPlugs;
 }
