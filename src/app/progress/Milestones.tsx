@@ -77,9 +77,7 @@ export default function Milestones({
             season={season}
             seasonPass={seasonPass}
           />
-          <PowerCaps powercap="softcap" label="Soft Cap" />
-          <PowerCaps powercap="powerfulcap" label="Powerful Cap" />
-          <PowerCaps powercap="pinnaclecap" label="Pinnacle Cap" />
+          <PowerCaps />
         </div>
       )}
       {Object.keys(milestonesByPower)
