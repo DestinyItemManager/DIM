@@ -18,6 +18,7 @@ import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { compareBy } from './comparators';
 import { isPlugStatActive } from './item-utils';
+import { LookupTable } from './util-types';
 
 interface DimPlugPerkDescription {
   perkHash: number;
@@ -33,7 +34,7 @@ interface DimPlugDescriptions {
 
 // some stats are often referred to using different names
 // TODO: these need to be localized?
-const statNameAliases: { [statHash: number]: string[] | undefined } = {
+const statNameAliases: LookupTable<StatHashes, string[]> = {
   [StatHashes.AimAssistance]: ['Aim Assist'],
   [StatHashes.AmmoCapacity]: ['Magazine Stat'],
   [StatHashes.ReloadSpeed]: ['Reload'],
@@ -77,7 +78,7 @@ export function usePlugDescriptions(
       const statDef = defs.Stat.get(stat.statHash);
       if (statDef) {
         const statNames = [statDef.displayProperties.name].concat(
-          statNameAliases[stat.statHash] ?? []
+          statNameAliases[stat.statHash as StatHashes] ?? []
         );
         for (const statName of statNames) {
           if (stat.value < 0) {

@@ -1,3 +1,4 @@
+import { LookupTable } from 'app/utils/util-types';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 
 export interface ModSocketMetadata {
@@ -30,7 +31,7 @@ export const legacyCompatiblePlugCategoryHashes = [
   PlugCategoryHashes.EnhancementsSeasonForge, // fallen
 ];
 
-export const modTypeTagByPlugCategoryHash: { [plugCategoryHash: number]: string | undefined } = {
+export const modTypeTagByPlugCategoryHash: LookupTable<PlugCategoryHashes, string> = {
   [PlugCategoryHashes.EnhancementsSeasonOutlaw]: 'lastwish',
   [PlugCategoryHashes.EnhancementsSeasonMaverick]: 'nightmare',
   [PlugCategoryHashes.EnhancementsRaidGarden]: 'gardenofsalvation',

@@ -56,6 +56,7 @@ import {
   isEmptyArmorModSocket,
   isUsedArmorModSocket,
 } from 'app/utils/socket-utils';
+import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
@@ -77,7 +78,7 @@ export function getColumnSelectionId(column: ColumnDefinition) {
 }
 
 // Some stat labels are long. This lets us replace them with i18n
-export const statLabels: Record<number, string | undefined> = {
+export const statLabels: LookupTable<StatHashes, string> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
   [StatHashes.ReloadSpeed]: tl('Organizer.Stats.Reload'),
   [StatHashes.AimAssistance]: tl('Organizer.Stats.Aim'),

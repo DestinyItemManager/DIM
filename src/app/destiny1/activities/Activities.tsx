@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
+import { StringLookup } from 'app/utils/util-types';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
@@ -261,7 +262,7 @@ export default function Activities({ account }: Props) {
   );
 }
 
-const skullHashesByName: { [name: string]: number | undefined } = {
+const skullHashesByName: StringLookup<number> = {
   Heroic: 0,
   'Arc Burn': 1,
   'Solar Burn': 2,

@@ -1,5 +1,6 @@
 import { damageNamesByEnum } from 'app/search/search-filter-values';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
+import { LookupTable } from 'app/utils/util-types';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -11,7 +12,7 @@ import subclassVoid from 'images/subclass-void.png';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from './item-types';
 
-const baseImagesByDamageType: Partial<Record<DamageType, string>> = {
+const baseImagesByDamageType: LookupTable<DamageType, string> = {
   [DamageType.Arc]: subclassArc,
   [DamageType.Thermal]: subclassSolar,
   [DamageType.Void]: subclassVoid,

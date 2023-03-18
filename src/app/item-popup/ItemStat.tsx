@@ -11,6 +11,7 @@ import { armorStats, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { getColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { isPlugStatActive } from 'app/utils/item-utils';
+import { LookupTable } from 'app/utils/util-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -28,7 +29,7 @@ const modItemCategoryHashes = [
 ];
 
 // Some stat labels are long. This lets us replace them with i18n
-const statLabels: Record<number, string | undefined> = {
+const statLabels: LookupTable<StatHashes, string> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
 };

@@ -9,6 +9,7 @@ import {
 } from 'app/material-counts/MaterialCountsWrappers';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
+import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import vaultIcon from 'destiny-icons/armor_types/helmet.svg';
@@ -20,22 +21,21 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import styles from './VaultCapacity.m.scss';
 
-const bucketIcons: { [bucketHash: number | string]: string | undefined } = {
-  3313201758: modificationsIcon,
-  1469714392: consumablesIcon,
-  138197802: vaultIcon,
+const bucketIcons: LookupTable<BucketHashes, string> = {
+  [BucketHashes.Modifications]: modificationsIcon,
+  [BucketHashes.Consumables]: consumablesIcon,
+  [BucketHashes.General]: vaultIcon,
 };
 
 const vaultBucketOrder = [
   // D1
   3003523923, // Armor
   4046403665, // Weapons
-  138197802, // General
 
   // D2
-  138197802,
-  1469714392,
-  3313201758,
+  BucketHashes.General,
+  BucketHashes.Consumables,
+  BucketHashes.Modifications,
 ];
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
@@ -105,9 +105,10 @@ export default React.memo(function VaultCapacity() {
   return (
     <>
       {_.sortBy(Object.keys(vaultCounts), (id) => vaultBucketOrder.indexOf(parseInt(id, 10))).map(
-        (bucketId) => {
+        (bucketIdStr) => {
+          const bucketId = parseInt(bucketIdStr, 10) as BucketHashes;
           const { count, bucket } = vaultCounts[bucketId];
-          const isConsumables = bucketId === String(BucketHashes.Consumables);
+          const isConsumables = bucketId === BucketHashes.Consumables;
           const title = isConsumables ? undefined : bucket.name;
           return (
             <React.Fragment key={bucketId}>

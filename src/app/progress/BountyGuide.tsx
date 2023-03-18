@@ -11,6 +11,7 @@ import { addIcon, AppIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import grenade from 'destiny-icons/weapons/grenade.svg';
 import headshot from 'destiny-icons/weapons/headshot.svg';
@@ -28,14 +29,11 @@ enum KillType {
   Precision,
   ClassAbilities,
 }
-const killTypeIcons: { [key in KillType]: string | undefined } = {
+const killTypeIcons: LookupTable<KillType, string> = {
   [KillType.Melee]: melee,
-  [KillType.Super]: undefined,
   [KillType.Grenade]: grenade,
-  [KillType.Finisher]: undefined,
   [KillType.Precision]: headshot,
-  [KillType.ClassAbilities]: undefined,
-} as const;
+};
 
 export type DefType =
   | 'ActivityMode'
@@ -111,8 +109,12 @@ export default function BountyGuide({
       const info = pursuitsInfo[i.hash];
       if (info) {
         for (const key in info) {
-          for (const value of info[key]) {
-            (mapped[key][value] ??= []).push(i);
+          const infoKey = key as keyof typeof info;
+          const values = info[infoKey];
+          if (values) {
+            for (const value of values) {
+              (mapped[infoKey][value] ??= []).push(i);
+            }
           }
         }
         if (i.pursuit) {
@@ -237,7 +239,11 @@ function PillContent({
       return (
         <>
           {value in killTypeIcons && (
-            <img className={styles.itemCategoryIcon} height="16" src={killTypeIcons[value]} />
+            <img
+              className={styles.itemCategoryIcon}
+              height="16"
+              src={killTypeIcons[value as KillType]}
+            />
           )}
           {KillType[value]}
         </>

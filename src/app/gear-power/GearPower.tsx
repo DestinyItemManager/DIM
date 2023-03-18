@@ -9,6 +9,7 @@ import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { classFilter } from 'app/search/search-filters/known-values';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
+import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
@@ -18,7 +19,7 @@ import { allItemsSelector, storesSelector } from '../inventory/selectors';
 import { showGearPower$ } from './gear-power';
 import styles from './GearPower.m.scss';
 
-const bucketClassNames: Partial<Record<BucketHashes, string>> = {
+const bucketClassNames: LookupTable<BucketHashes, string> = {
   [BucketHashes.KineticWeapons]: styles.kinetic,
   [BucketHashes.EnergyWeapons]: styles.energy,
   [BucketHashes.PowerWeapons]: styles.power,

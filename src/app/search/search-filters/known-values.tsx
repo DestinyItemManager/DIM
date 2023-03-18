@@ -4,6 +4,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
+import { StringLookup } from 'app/utils/util-types';
 import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import { D2EventEnum, D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import { BreakerTypeHashes } from 'data/d2/generated-enums';
@@ -20,7 +21,7 @@ import {
 import { FilterDefinition } from '../filter-types';
 import { cosmeticTypes, damageTypeNames } from '../search-filter-values';
 
-const d2EventPredicates: { [event: string]: D2EventEnum | undefined } = D2EventPredicateLookup;
+const d2EventPredicates: StringLookup<D2EventEnum> = D2EventPredicateLookup;
 
 // filters relying on curated known values (class names, rarities, elements)
 

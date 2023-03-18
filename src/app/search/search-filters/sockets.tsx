@@ -10,6 +10,7 @@ import {
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
 } from 'app/utils/socket-utils';
+import { StringLookup } from 'app/utils/util-types';
 import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import craftingMementos from 'data/d2/crafting-mementos.json';
 import {
@@ -247,9 +248,7 @@ const socketFilters: FilterDefinition[] = [
     destinyVersion: 2,
     suggestions: ['any', ...Object.keys(craftingMementos)],
     filter: ({ filterValue }) => {
-      const list = (craftingMementos as { [filterValue: string]: number[] | undefined })[
-        filterValue
-      ];
+      const list = (craftingMementos as StringLookup<number[]>)[filterValue];
       return (item) =>
         item.sockets?.allSockets.some(
           (s) =>

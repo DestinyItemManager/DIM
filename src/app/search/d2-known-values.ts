@@ -1,4 +1,5 @@
 import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
+import { HashLookup } from 'app/utils/util-types';
 import { TierType } from 'bungie-api-ts/destiny2';
 
 import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
@@ -68,7 +69,7 @@ export const armor2PlugCategoryHashesByName = {
 /** The consistent armour 2 mod category hashes. This excludes raid, combat and legacy slots as they tend to change. */
 export const armor2PlugCategoryHashes: number[] = Object.values(armor2PlugCategoryHashesByName);
 
-export const killTrackerObjectivesByHash: Record<number, 'pvp' | 'pve' | 'gambit' | undefined> = {
+export const killTrackerObjectivesByHash: HashLookup<'pvp' | 'pve' | 'gambit'> = {
   1501870536: 'pvp', // Objective "Crucible Opponents Defeated" inside 2285636663 "Crucible Tracker"
   2439952408: 'pvp', // Objective "Crucible Opponents Defeated" inside 3244015567 "Crucible Tracker"
   74070459: 'pvp', // Objective "Crucible Opponents Defeated" inside 38912240 "Crucible Tracker"
