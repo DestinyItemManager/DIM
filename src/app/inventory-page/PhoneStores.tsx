@@ -112,7 +112,7 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
       role="main"
       aria-label={t('Header.Inventory')}
     >
-      <HeaderShadowDiv className="store-row store-header" onTouchStart={(e) => e.stopPropagation()}>
+      <HeaderShadowDiv className="store-row store-header">
         <PhoneStoresHeader
           selectedStore={selectedStore}
           direction={direction}
