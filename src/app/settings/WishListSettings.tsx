@@ -7,19 +7,23 @@ import { toWishList } from 'app/wishlists/wishlist-file';
 import React, { useEffect, useState } from 'react';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { isUri } from 'valid-url';
 import FileUpload from '../dim-ui/FileUpload';
 import HelpLink from '../dim-ui/HelpLink';
 import { clearWishLists } from '../wishlists/actions';
 import { wishListsLastFetchedSelector, wishListsSelector } from '../wishlists/selectors';
 
 // config/content-security-policy.js must be edited alongside this list
-export const wishListAllowedPrefixes = [
-  'https://raw.githubusercontent.com/',
-  'https://gist.githubusercontent.com/',
-];
+export const wishListAllowedHosts = ['raw.githubusercontent.com', 'gist.githubusercontent.com'];
 export function isValidWishListUrlDomain(url: string) {
-  return isUri(url) && wishListAllowedPrefixes.some((p) => url.startsWith(p));
+  try {
+    const parsedUrl = new URL(url); // throws if invalid
+    if (parsedUrl.protocol !== 'https:') {
+      return false;
+    }
+    return wishListAllowedHosts.includes(parsedUrl.host);
+  } catch (e) {
+    return false;
+  }
 }
 
 const voltronLocation =
