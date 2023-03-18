@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { colorizedIcons } from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
@@ -224,20 +225,28 @@ function PillContent({
           {defs[type].get(value).displayProperties.name}
         </>
       );
-    case 'ItemCategory':
+    case 'ItemCategory': {
+      const icon = value in itemCategoryIcons && itemCategoryIcons[value];
       return (
         <>
-          {value in itemCategoryIcons && (
-            <img className={styles.itemCategoryIcon} height="16" src={itemCategoryIcons[value]} />
+          {icon && (
+            <img
+              src={icon}
+              height="16"
+              className={clsx({
+                [styles.invert]: !colorizedIcons.includes(icon),
+              })}
+            />
           )}
           {defs.ItemCategory.get(value)?.displayProperties.name}
         </>
       );
+    }
     case 'KillType':
       return (
         <>
           {value in killTypeIcons && (
-            <img className={styles.itemCategoryIcon} height="16" src={killTypeIcons[value]} />
+            <img className={styles.invert} height="16" src={killTypeIcons[value]} />
           )}
           {KillType[value]}
         </>
