@@ -1,10 +1,11 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { DimLanguage } from 'app/i18n';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { startWordRegexp } from './search-filters/freeform';
 
 export function createPlugSearchPredicate(
   query: string,
-  language: string,
+  language: DimLanguage,
   defs: D2ManifestDefinitions
 ) {
   if (!query.length) {

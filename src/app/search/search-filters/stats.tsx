@@ -153,7 +153,7 @@ function statFilterFromString(
         .filter((s) => armorAnyStatHashes.includes(s.statHash))
         .map((s) => s[byWhichValue])
         .sort((a, b) => b - a);
-      return compare(sortedStats[est[statNames]]);
+      return compare(sortedStats[est[statNames as keyof typeof est]]);
     };
   } else if (weaponStatNames.includes(statNames)) {
     // return earlier for weapon stats. these shouldn't do addition/averaging.
@@ -191,7 +191,7 @@ function createStatCombiner(
             return 0;
           }
           const sortedStats = sortStats();
-          const statHash = sortedStats[est[statName]][0];
+          const statHash = sortedStats[est[statName as keyof typeof est]][0];
           if (!statHash) {
             throw new Error(`invalid stat name: "${statName}"`);
           }

@@ -31,11 +31,13 @@ export const DIM_LANG_INFOS = {
   'zh-cht': { pluralOverride: true, latinBased: false },
 };
 
-const DIM_LANGS = Object.keys(DIM_LANG_INFOS);
+export type DimLanguage = keyof typeof DIM_LANG_INFOS;
+
+const DIM_LANGS = Object.keys(DIM_LANG_INFOS) as DimLanguage[];
 
 // Try to pick a nice default language
-export function defaultLanguage(): string {
-  const storedLanguage = localStorage.getItem('dimLanguage');
+export function defaultLanguage(): DimLanguage {
+  const storedLanguage = localStorage.getItem('dimLanguage') as DimLanguage;
   if (storedLanguage && DIM_LANGS.includes(storedLanguage)) {
     return storedLanguage;
   }

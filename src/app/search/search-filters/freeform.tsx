@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DIM_LANG_INFOS } from 'app/i18n';
+import { DimLanguage, DIM_LANG_INFOS } from 'app/i18n';
 import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug } from 'app/inventory/item-types';
 import { isD1Item } from 'app/utils/item-utils';
@@ -10,7 +10,7 @@ import { FilterDefinition } from '../filter-types';
 import { quoteFilterString } from '../query-parser';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
-const isLatinBased = (language: string) => DIM_LANG_INFOS[language].latinBased;
+const isLatinBased = (language: DimLanguage) => DIM_LANG_INFOS[language].latinBased;
 
 /** escape special characters for a regex */
 function escapeRegExp(s: string) {
@@ -18,18 +18,18 @@ function escapeRegExp(s: string) {
 }
 
 /** Remove diacritics from latin-based string */
-function latinize(s: string, language: string) {
+function latinize(s: string, language: DimLanguage) {
   return isLatinBased(language) ? s.normalize('NFD').replace(/\p{Diacritic}/gu, '') : s;
 }
 
 /** Make a Regexp that searches starting at a word boundary */
-export function startWordRegexp(s: string, language: string) {
+export function startWordRegexp(s: string, language: DimLanguage) {
   // Only some languages effectively use the \b regex word boundary
   return new RegExp(`${isLatinBased(language) ? '\\b' : ''}${escapeRegExp(s)}`, 'i');
 }
 
 /** returns input string toLower, and stripped of accents if it's a latin language */
-export const plainString = (s: string, language: string): string =>
+export const plainString = (s: string, language: DimLanguage): string =>
   latinize(s, language).toLowerCase();
 
 const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);

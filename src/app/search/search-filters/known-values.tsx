@@ -5,7 +5,8 @@ import { DimItem } from 'app/inventory/item-types';
 import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-api-ts/destiny2';
-import { D2EventPredicateLookup } from 'data/d2/d2-event-info';
+import { D2EventEnum, D2EventPredicateLookup } from 'data/d2/d2-event-info';
+import { BreakerTypeHashes } from 'data/d2/generated-enums';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
 import { D1ItemCategoryHashes } from '../d1-known-values';
@@ -18,6 +19,8 @@ import {
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { cosmeticTypes, damageTypeNames } from '../search-filter-values';
+
+const d2EventPredicates: { [event: string]: D2EventEnum | undefined } = D2EventPredicateLookup;
 
 // filters relying on curated known values (class names, rarities, elements)
 
@@ -145,7 +148,7 @@ const knownValuesFilters: FilterDefinition[] = [
     description: tl('Filter.AmmoType'),
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      const ammoType = d2AmmoTypes[filterValue];
+      const ammoType = d2AmmoTypes[filterValue as keyof typeof d2AmmoTypes];
       return (item: DimItem) => item.ammoType === ammoType;
     },
   },
@@ -166,11 +169,11 @@ const knownValuesFilters: FilterDefinition[] = [
     suggestions: Object.keys(breakerTypes),
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      const breakerType = breakerTypes[filterValue];
+      const breakerType = breakerTypes[filterValue as keyof typeof breakerTypes];
       if (!breakerType) {
         throw new Error('Unknown breaker type ' + breakerType);
       }
-      return (item) => breakerType.includes(item.breakerType?.hash);
+      return (item) => breakerType.includes(item.breakerType?.hash as BreakerTypeHashes);
     },
   },
   {
@@ -228,8 +231,8 @@ const knownValuesFilters: FilterDefinition[] = [
           (item.source && sourceInfo.sourceHashes.includes(item.source)) ||
           sourceInfo.itemHashes.includes(item.hash) ||
           missingSource?.includes(item.hash);
-      } else if (D2EventPredicateLookup[filterValue]) {
-        const predicate = D2EventPredicateLookup[filterValue];
+      } else if (d2EventPredicates[filterValue]) {
+        const predicate = d2EventPredicates[filterValue];
         return (item: DimItem) => getEvent(item) === predicate;
       } else {
         throw new Error('Unknown item source ' + filterValue);

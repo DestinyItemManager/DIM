@@ -10,7 +10,6 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import _ from 'lodash';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -87,7 +86,7 @@ export default function Records({ account }: Props) {
   const otherHashes = destiny2CoreSettings
     ? Object.keys(destiny2CoreSettings)
         .filter((k) => k.includes('RootNode') && k !== 'craftingRootNodeHash')
-        .map((k) => destiny2CoreSettings[k] as number)
+        .map((k) => (destiny2CoreSettings as unknown as { [key: string]: number })[k])
     : [];
 
   // We put the hashes we know about from profile first

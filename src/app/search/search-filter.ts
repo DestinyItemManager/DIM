@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
+import { DimLanguage } from 'app/i18n';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { Settings } from 'app/settings/initial-settings';
@@ -67,7 +68,7 @@ function makeFilterContext(
   newItems: Set<string>,
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
-  language: string,
+  language: DimLanguage,
   customStats: Settings['customStats'],
   d2Definitions: D2ManifestDefinitions | undefined
 ): FilterContext {

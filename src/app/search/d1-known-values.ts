@@ -113,7 +113,14 @@ export const vendorHashes: Record<'required' | 'restricted', NodeJS.Dict<number[
 /** for D1 items: used to calculate which activity an item could have come from
  * "vanilla" has no hash but checks for year == 1
  */
-export const D1ActivityHashes = {
+export const D1ActivityHashes: {
+  restricted: {
+    [keyword: string]: number[] | undefined;
+  };
+  required: {
+    [keyword: string]: number[] | undefined;
+  };
+} = {
   required: {
     trials: [2650556703], // SOURCE_TRIALS_OF_OSIRIS / Trials
     ib: [1322283879], // SOURCE_IRON_BANNER / Iron Banner

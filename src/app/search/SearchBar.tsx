@@ -457,7 +457,7 @@ function SearchBar(
       e.preventDefault();
       setInputValue(tabAutocompleteItem.query.fullText);
       if (tabAutocompleteItem.highlightRange) {
-        selectionRef.current = tabAutocompleteItem.highlightRange[1];
+        selectionRef.current = tabAutocompleteItem.highlightRange.range[1];
       }
     } else if (e.key === 'Home' || e.key === 'End') {
       // Disable the use of Home/End to select items in the menu

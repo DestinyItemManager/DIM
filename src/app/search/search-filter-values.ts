@@ -2,12 +2,12 @@ import { DamageType } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { D1BucketHashes, D1LightStats } from './d1-known-values';
 import {
+  armorStats,
   D2ArmorStatHashByName,
   D2LightStats,
   D2WeaponStatHashByName,
-  TOTAL_STAT_HASH,
-  armorStats,
   swordStatsByName,
+  TOTAL_STAT_HASH,
 } from './d2-known-values';
 
 // ✨ magic values ✨
@@ -28,7 +28,7 @@ export const damageNamesByEnum: { [key in DamageType]: string | undefined } = {
 
 // typescript doesn't understand array.filter
 export const damageTypeNames = Object.values(damageNamesByEnum).filter(
-  (d) => ![null, 'raid'].includes(d)
+  (d) => d && d !== 'raid'
 ) as string[];
 
 /**
@@ -70,7 +70,7 @@ export const est = {
   fourthhighest: 3,
   fifthhighest: 4,
   sixthhighest: 5,
-};
+} as const;
 
 export const estStatNames = Object.keys(est);
 
