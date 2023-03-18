@@ -1,9 +1,5 @@
 @use '../variables.scss' as *;
 .powercaps {
-  // display: flex;
-  // flex-direction: row;
-  // justify-content: space-between;
-  // padding-top: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   row-gap: 0.5rem;
