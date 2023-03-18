@@ -15,7 +15,7 @@ import {
   DestinyStatDisplayDefinition,
   DestinyStatGroupDefinition,
 } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
 import { DimItem, DimPlug, DimSocket, DimStat } from '../item-types';
@@ -42,7 +42,7 @@ import { makeCustomStat } from './stats-custom';
 /**
  * Which stats to display, and in which order.
  */
-const statAllowList = [
+const itemStatAllowList = [
   StatHashes.RoundsPerMinute,
   StatHashes.ChargeTime,
   StatHashes.DrawTime,
@@ -70,12 +70,21 @@ const statAllowList = [
   TOTAL_STAT_HASH,
 ];
 export function getStatSortOrder(statHash: number) {
-  const order = statAllowList.indexOf(statHash);
+  const order = itemStatAllowList.indexOf(statHash);
   return order === -1 ? 999999 + Math.abs(statHash) : order;
 }
 
-export function isAllowedStat(statHash: number) {
-  return statAllowList.includes(statHash) || statHash < 0;
+export function isAllowedItemStat(statHash: number) {
+  return itemStatAllowList.includes(statHash) || statHash < 0;
+}
+
+/**
+ * Stats that are allowed for plugs, in addition to stats their items own.
+ */
+const plugStatAllowList = [StatHashes.AspectEnergyCapacity];
+
+export function isAllowedPlugStat(statHash: number) {
+  return plugStatAllowList.includes(statHash);
 }
 
 /** Stats that are measured in milliseconds. */
@@ -137,8 +146,8 @@ export function buildStats(
   // Include the contributions from perks and mods
   applyPlugsToStats(itemDef, investmentStats, createdItem, defs, statGroup, statDisplaysByStatHash);
 
-  if (createdItem.bucket.inArmor) {
-    // one last check for missing stats on armor
+  if (createdItem.bucket.hash === BucketHashes.Subclass || createdItem.bucket.inArmor) {
+    // one last check for missing stats on armor or subclasses
     const existingStatHashes = investmentStats.map((s) => s.statHash);
     for (const armorStat of armorStats) {
       if (!existingStatHashes.includes(armorStat)) {
@@ -156,7 +165,9 @@ export function buildStats(
         );
       }
     }
+  }
 
+  if (createdItem.bucket.inArmor) {
     // synthesize the "Total" stat for armor
     // it's effectively just a custom total with 6 stats evenly weighted
     const tStat = makeCustomStat(
@@ -216,7 +227,7 @@ function shouldShowStat(
 
   return Boolean(
     // Must be a stat we want to display
-    isAllowedStat(statHash) &&
+    isAllowedItemStat(statHash) &&
       // Must be on the list of interpolated stats, or included in the hardcoded hidden stats list
       (statDisplaysByStatHash[statHash] ||
         (includeHiddenStats && hiddenStatsAllowList.includes(statHash)))

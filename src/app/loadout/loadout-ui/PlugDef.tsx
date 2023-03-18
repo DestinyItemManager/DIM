@@ -2,7 +2,8 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
-import { ExtraPlugTooltipInfo, PlugTooltip } from 'app/item-popup/PlugTooltip';
+import { PlugDefTooltip } from 'app/item-popup/PlugTooltip';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import styles from './PlugDef.m.scss';
@@ -12,7 +13,8 @@ interface Props {
   className?: string;
   onClick?: () => void;
   onClose?: () => void;
-  extraProps?: ExtraPlugTooltipInfo;
+  automaticallyPicked?: boolean;
+  forClassType: DestinyClass | undefined;
 }
 
 const strandWrongColorPlugCategoryHashes = [
@@ -27,7 +29,14 @@ const strandWrongColorPlugCategoryHashes = [
 /**
  * Displays a plug (mod, perk) based on just its definition, with optional close button.
  */
-export default function PlugDef({ plug, className, onClick, onClose, extraProps }: Props) {
+export default function PlugDef({
+  plug,
+  className,
+  onClick,
+  onClose,
+  automaticallyPicked,
+  forClassType,
+}: Props) {
   const needsStrandColorFix = strandWrongColorPlugCategoryHashes.includes(
     plug.plug.plugCategoryHash
   );
@@ -39,7 +48,15 @@ export default function PlugDef({ plug, className, onClick, onClose, extraProps 
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex={onClick ? 0 : undefined}
     >
-      <PressTip tooltip={() => <PlugTooltip def={plug} {...extraProps} />}>
+      <PressTip
+        tooltip={() => (
+          <PlugDefTooltip
+            def={plug}
+            automaticallyPicked={automaticallyPicked}
+            classType={forClassType}
+          />
+        )}
+      >
         <DefItemIcon itemDef={plug} />
       </PressTip>
     </div>

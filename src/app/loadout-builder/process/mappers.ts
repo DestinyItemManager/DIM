@@ -60,7 +60,6 @@ export function isModStatActive(
   if (!stat.isConditionallyActive) {
     return true;
   } else if (
-    plugHash === modsWithConditionalStats.chargeHarvester ||
     plugHash === modsWithConditionalStats.echoOfPersistence ||
     plugHash === modsWithConditionalStats.sparkOfFocus
   ) {

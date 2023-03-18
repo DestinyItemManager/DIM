@@ -22,8 +22,6 @@ import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-const DISPLAYED_PLUG_STATS = [StatHashes.AspectEnergyCapacity];
-
 type PlugSetWithDefaultPlug = PlugSet & { defaultPlug: PluggableInventoryItemDefinition };
 
 /**
@@ -144,7 +142,7 @@ export default function SubclassPlugDrawer({
       searchPlaceholder={t('Loadouts.SubclassOptionsSearch', { subclass: subclass.name })}
       acceptButtonText={t('Loadouts.Apply')}
       plugSets={plugSets}
-      displayedStatHashes={DISPLAYED_PLUG_STATS}
+      classType={subclass.classType}
       onAccept={handleAccept}
       onClose={onClose}
       isPlugSelectable={isPlugSelectable}
