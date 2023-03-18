@@ -2,12 +2,12 @@ import { DamageType } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { D1BucketHashes, D1LightStats } from './d1-known-values';
 import {
-  armorStats,
   D2ArmorStatHashByName,
   D2LightStats,
   D2WeaponStatHashByName,
-  swordStatsByName,
   TOTAL_STAT_HASH,
+  armorStats,
+  swordStatsByName,
 } from './d2-known-values';
 
 // ✨ magic values ✨
@@ -15,8 +15,8 @@ import {
 // hashes, names, & enums, hand-crafted and chosen by us
 
 // this correlation is solely for element filter names
-export const damageNamesByEnum: { [key in DamageType]: string | null } = {
-  [DamageType.None]: null,
+export const damageNamesByEnum: { [key in DamageType]: string | undefined } = {
+  [DamageType.None]: undefined,
   [DamageType.Kinetic]: 'kinetic',
   [DamageType.Arc]: 'arc',
   [DamageType.Thermal]: 'solar',

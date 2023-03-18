@@ -30,7 +30,7 @@ export const legacyCompatiblePlugCategoryHashes = [
   PlugCategoryHashes.EnhancementsSeasonForge, // fallen
 ];
 
-export const modTypeTagByPlugCategoryHash = {
+export const modTypeTagByPlugCategoryHash: { [plugCategoryHash: number]: string | undefined } = {
   [PlugCategoryHashes.EnhancementsSeasonOutlaw]: 'lastwish',
   [PlugCategoryHashes.EnhancementsSeasonMaverick]: 'nightmare',
   [PlugCategoryHashes.EnhancementsRaidGarden]: 'gardenofsalvation',

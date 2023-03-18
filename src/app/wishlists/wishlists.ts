@@ -125,7 +125,7 @@ function allDesiredPerksExist(item: DimItem, wishListRoll: WishListRoll): boolea
           for (const plug of s.plugOptions) {
             if (
               plug.plugDef.hash === recommendedPerk ||
-              perkToEnhanced[recommendedPerk] === plug.plugDef.hash
+              (perkToEnhanced as NodeJS.Dict<number>)[recommendedPerk] === plug.plugDef.hash
             ) {
               included = true;
               break outer;

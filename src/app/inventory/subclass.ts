@@ -31,7 +31,7 @@ export function getSubclassIconInfo(item: DimItem): SubclassIconInfo | undefined
     if (superIcon) {
       const damageType = getDamageTypeForSubclassPlug(superPlug);
       if (damageType && baseImagesByDamageType[damageType]) {
-        const base = baseImagesByDamageType[damageType];
+        const base = baseImagesByDamageType[damageType]!;
         return {
           base: base,
           super: superIcon,
@@ -56,7 +56,7 @@ export function getDamageTypeForSubclassPlug(item: PluggableInventoryItemDefinit
 
   for (const name in nameToDamageType) {
     if (item.plug.plugCategoryIdentifier.includes(name)) {
-      return parseInt(nameToDamageType[name], 10);
+      return parseInt(nameToDamageType[name], 10) as DamageType;
     }
   }
   return null;

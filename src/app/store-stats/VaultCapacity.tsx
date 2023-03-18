@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import styles from './VaultCapacity.m.scss';
 
-const bucketIcons = {
+const bucketIcons: { [bucketHash: number | string]: string | undefined } = {
   3313201758: modificationsIcon,
   1469714392: consumablesIcon,
   138197802: vaultIcon,
