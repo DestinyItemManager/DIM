@@ -51,7 +51,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   return (
     <>
       {useClassifiedPlaceholder ? (
-        <BucketIcon item={item} className={itemImageStyles} />
+        <BucketIcon bucketHash={item.bucket.hash} className={itemImageStyles} />
       ) : (
         <div style={bungieBackgroundStyle(item.icon)} className={itemImageStyles} />
       )}

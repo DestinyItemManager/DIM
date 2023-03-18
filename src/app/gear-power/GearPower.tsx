@@ -81,7 +81,7 @@ export default function GearPower() {
                 <div className={styles.gearItemInfo}>
                   <div className={styles.power}>{i.power}</div>
                   <div className={styles.statMeta}>
-                    <BucketIcon className={styles.bucketImage} item={i} />
+                    <BucketIcon className={styles.bucketImage} bucketHash={i.bucket.hash} />
                     <div className={diffClass}>
                       {diffSymbol}
                       {powerDiff}

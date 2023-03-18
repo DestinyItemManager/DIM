@@ -1,4 +1,3 @@
-import { DimItem } from 'app/inventory/item-types';
 import { d2MissingIcon } from 'app/search/d2-known-values';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -8,7 +7,10 @@ import classItem from 'destiny-icons/armor_types/class.svg';
 import gauntlets from 'destiny-icons/armor_types/gloves.svg';
 import helmet from 'destiny-icons/armor_types/helmet.svg';
 import heavyAmmo from 'destiny-icons/general/ammo-heavy.svg';
+import emblem from 'destiny-icons/general/emblem.svg';
 import ghost from 'destiny-icons/general/ghost.svg';
+import ship from 'destiny-icons/general/ship.svg';
+import sparrow from 'destiny-icons/general/sparrow.svg';
 import energyWeaponSlot from 'images/weapon-slot-energy.svg';
 import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
 import React from 'react';
@@ -24,17 +26,20 @@ const bucketIcons = {
   [BucketHashes.LegArmor]: legs,
   [BucketHashes.ClassArmor]: classItem,
   [BucketHashes.Ghost]: ghost,
+  [BucketHashes.Vehicle]: sparrow,
+  [BucketHashes.Ships]: ship,
+  [BucketHashes.Emblems]: emblem,
 };
 const colorizedIcons = [kineticWeaponSlot, energyWeaponSlot, heavyAmmo];
 
 type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> & {
-  item: DimItem;
+  bucketHash: number;
 };
 
 /** given an item, returns an img. ideally an svg img icon for the item's bucket */
 export default function BucketIcon(props: BucketIconProps) {
-  const { item, ...otherProps } = props;
-  const svg = bucketIcons[item.bucket.hash];
+  const { bucketHash, ...otherProps } = props;
+  const svg = bucketIcons[bucketHash];
   return svg ? (
     <img
       src={svg}

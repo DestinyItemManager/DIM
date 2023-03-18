@@ -359,7 +359,11 @@ function ArmorStatsTriageSection({ item }: { item: DimItem }) {
           <div className={styles.header}>
             <div className={styles.statsHeaderLeft}>
               {t('Triage.YourBestItem')} (
-              <BucketIcon className={clsx(styles.inlineIcon, styles.weaponSvg)} item={item} />)
+              <BucketIcon
+                className={clsx(styles.inlineIcon, styles.weaponSvg)}
+                bucketHash={item.bucket.hash}
+              />
+              )
             </div>
             <div className={styles.statsHeaderRight}>{t('Triage.ThisItem')}</div>
           </div>

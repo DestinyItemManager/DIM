@@ -21,7 +21,7 @@ export function ItemPowerSet(items: DimItem[], powerFloor: number) {
               </span>
             )}
             <span className={styles.bucketName}>{i.bucket.name}</span>
-            <BucketIcon className={styles.invert} item={i} />
+            <BucketIcon className={styles.invert} bucketHash={i.bucket.hash} />
             <span>{i.power}</span>
             <span
               className={clsx(styles.powerDiff, {
