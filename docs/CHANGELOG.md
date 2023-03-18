@@ -7,6 +7,7 @@
 * Fixed the color of Strand movement and class abilities on Loadouts screen.
 * Fixed an issue where DIM Sync data might not be available when Bungie.net is down.
 * Added `source:rootofnightmares`/`source:ron` and `modslot:rootofnightmares` searches.
+* DIM now correctly allows you to unsave previously saved queries that later became invalid.
 
 ## 7.60.1 <span class="changelog-date">(2023-03-14)</span>
 
