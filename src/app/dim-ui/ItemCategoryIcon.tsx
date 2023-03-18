@@ -20,7 +20,7 @@ export function WeaponSlotIcon({ item, className }: { item: DimItem; className?:
   const slotIcon = getWeaponSlotSvgIcon(item)!;
   return (
     <PressTip minimal elementType="span" tooltip={item.bucket.name}>
-      <img src={slotIcon} className={clsx(styles.itemCategoryIcon, className)} />
+      <img src={slotIcon} className={clsx(styles.itemCategoryIcon, styles.dontInvert, className)} />
     </PressTip>
   );
 }
