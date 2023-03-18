@@ -245,15 +245,14 @@ function buildDefinedSocket(
   // The currently equipped plug, if any
   const reusablePlugs: DimPlug[] = [];
 
-  const craftingData: NonNullable<DimSocket['craftingData']> = {};
-
+  let craftingData: DimSocket['craftingData'];
   function addCraftingReqs(plugEntry: DestinyItemSocketEntryPlugItemRandomizedDefinition) {
     if (
       plugEntry.craftingRequirements &&
       (plugEntry.craftingRequirements.materialRequirementHashes.length ||
         plugEntry.craftingRequirements.unlockRequirements.length)
     ) {
-      craftingData[plugEntry.plugItemHash] = plugEntry.craftingRequirements;
+      (craftingData ??= {})[plugEntry.plugItemHash] = plugEntry.craftingRequirements;
     }
   }
 
@@ -350,11 +349,12 @@ function buildDefinedSocket(
   // if there's crafting data, sort plugs by their required level
   // TO-DO: the order is correct in the original plugset def,
   // we should address whatever is changing plug order in DIM
-  if (!_.isEmpty(craftingData)) {
+  if (craftingData) {
+    const cd = craftingData;
     plugOptions.sort(
-      compareBy((p) =>
+      compareBy((p: DimPlug) =>
         // shove retired perks to the bottom (our choice) and consider requiredLevel:undefined to be 0 (bungie data works this way)
-        p.cannotCurrentlyRoll ? 999 : craftingData[p.plugDef.hash]?.requiredLevel ?? 0
+        p.cannotCurrentlyRoll ? 999 : cd[p.plugDef.hash]?.requiredLevel ?? 0
       )
     );
   }
@@ -389,7 +389,7 @@ function buildDefinedSocket(
     isPerk,
     isReusable,
     socketDefinition: socketDef,
-    craftingData: Object.keys(craftingData).length ? craftingData : undefined,
+    craftingData,
   };
 }
 
