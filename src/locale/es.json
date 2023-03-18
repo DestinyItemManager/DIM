@@ -526,6 +526,7 @@
       "None": "Todas las armaduras usarán sus estadísticas actuales y tendrán un nivel de energía mínimo de 7."
     },
     "AutoStatMods": "Añadir automáticamente modificadores de estadísticas",
+    "AutomaticallyPicked": "Este modificador fue añadido automáticamente para mejorar las estadísticas de la equipación.",
     "ChooseAlternateTitle": "Elige otro objeto",
     "CompareLoadout": "Comparar Equipación",
     "ConfirmOverwrite": "¿Estás seguro de que quieres reemplazar la armadura en la equipación \"{{name}}\" con este nuevo set de armadura?",

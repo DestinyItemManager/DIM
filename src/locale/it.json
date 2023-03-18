@@ -526,6 +526,7 @@
       "None": "Tutte le armature utilizzeranno le loro statistiche attuali ed avranno un livello minimo di energia 7."
     },
     "AutoStatMods": "Aggiungi Modifiche statistiche automaticamente",
+    "AutomaticallyPicked": "Questa Modifica è stata aggiunta automaticamente per migliorare le statistiche della build.",
     "ChooseAlternateTitle": "Scegli un altro oggetto",
     "CompareLoadout": "Confronta dotazioni",
     "ConfirmOverwrite": "Sei sicuro di voler sostituire l'armatura nella dotazione \"{{name}}\" con questo nuovo set di armature?",

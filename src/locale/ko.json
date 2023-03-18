@@ -526,6 +526,7 @@
       "None": "모든 방어구의 현재 능력치를 사용하며 최소 7의 에너지 수용량을 가집니다."
     },
     "AutoStatMods": "능력치 개조 부품 자동 추가",
+    "AutomaticallyPicked": "이 개조 부품은 빌드 능력치를 향상시키기 위해 자동으로 추가되었습니다.",
     "ChooseAlternateTitle": "다른 아이템 선택",
     "CompareLoadout": "로드아웃 비교",
     "ConfirmOverwrite": "로드아웃 \"{{name}}\"의 방어구를 새로운 방어구 조합으로 변경하시겠습니까?",
