@@ -9,6 +9,7 @@ const classIcons = {
   [DestinyClass.Titan]: titanIcon,
   [DestinyClass.Warlock]: warlockIcon,
   [DestinyClass.Unknown]: globeIcon,
+  [-1]: globeIcon,
 } as const;
 
 const classIconsProportional = {
@@ -16,6 +17,7 @@ const classIconsProportional = {
   [DestinyClass.Titan]: dimTitanProportionalIcon,
   [DestinyClass.Warlock]: dimWarlockProportionalIcon,
   [DestinyClass.Unknown]: globeIcon,
+  [-1]: globeIcon,
 } as const;
 
 /**
@@ -26,7 +28,7 @@ export default function ClassIcon({
   proportional,
   className,
 }: {
-  classType: DestinyClass;
+  classType: DestinyClass | -1;
   proportional?: boolean;
   className?: string;
 }) {

@@ -100,10 +100,7 @@ export function getSocketsByCategoryHashes(
 }
 
 /** Special case of getSocketsByCategoryHash that returns the first (presumably only) socket that matches the category hash */
-export function getFirstSocketByCategoryHash(
-  sockets: DimSockets,
-  categoryHash: SocketCategoryHashes
-) {
+export function getFirstSocketByCategoryHash(sockets: DimSockets, categoryHash: number) {
   const category = sockets?.categories.find((c) => c.category.hash === categoryHash);
   if (!category) {
     return undefined;
