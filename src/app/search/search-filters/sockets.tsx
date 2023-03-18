@@ -88,9 +88,7 @@ const socketFilters: FilterDefinition[] = [
         .every(
           (socket) =>
             socket.curatedRoll!.length === socket.plugOptions.length &&
-            socket.plugOptions.every(function (e, i) {
-              return e.plugDef.hash === socket.curatedRoll![i];
-            })
+            socket.plugOptions.every((e, i) => e.plugDef.hash === socket.curatedRoll![i])
         );
 
       return matchesCollectionsRoll;
