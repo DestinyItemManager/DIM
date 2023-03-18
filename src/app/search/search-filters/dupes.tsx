@@ -1,10 +1,9 @@
-import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { tl } from 'app/i18next-t';
-import { getTag, ItemInfos } from 'app/inventory/dim-item-info';
+import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
+import { isArtifice } from 'app/item-triage/triage-utils';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
-import { Settings } from 'app/settings/initial-settings';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
@@ -30,10 +29,7 @@ const sortDupes = (
   dupes: {
     [dupeID: string]: DimItem[];
   },
-  itemInfos: ItemInfos,
-  itemHashTags?: {
-    [itemHash: string]: ItemHashTag;
-  }
+  getTag: (item: DimItem) => TagValue | undefined
 ) => {
   // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
   const dupeComparator = reverseComparator(
@@ -43,18 +39,18 @@ const sortDupes = (
       compareBy((item) => item.masterwork),
       compareBy((item) => item.locked),
       compareBy((item) => {
-        const tag = getTag(item, itemInfos, itemHashTags);
+        const tag = getTag(item);
         return Boolean(tag && notableTags.includes(tag));
       }),
       compareBy((i) => i.id) // tiebreak by ID
     )
   );
 
-  _.forIn(dupes, (dupes) => {
-    if (dupes.length > 1) {
-      dupes.sort(dupeComparator);
+  for (const dupeList of Object.values(dupes)) {
+    if (dupeList.length > 1) {
+      dupeList.sort(dupeComparator);
     }
-  });
+  }
 
   return dupes;
 };
@@ -75,12 +71,12 @@ const computeDupesByIdFn = (allItems: DimItem[], makeDupeIdFn: (item: DimItem) =
 };
 
 /**
- * A memoized function to find a map of duplicate items using the makeDupeID function.
+ * Find a map of duplicate items using the makeDupeID function.
  */
 export const computeDupes = (allItems: DimItem[]) => computeDupesByIdFn(allItems, makeDupeID);
 
 /**
- * A memoized function to find a map of duplicate items using the makeSeasonalDupeID function.
+ * Find a map of duplicate items using the makeSeasonalDupeID function.
  */
 const computeSeasonalDupes = (allItems: DimItem[]) =>
   computeDupesByIdFn(allItems, makeSeasonalDupeID);
@@ -112,8 +108,8 @@ const dupeFilters: FilterDefinition[] = [
   {
     keywords: 'dupelower',
     description: tl('Filter.DupeLower'),
-    filter: ({ allItems, itemInfos, itemHashTags }) => {
-      const duplicates = sortDupes(computeDupes(allItems), itemInfos, itemHashTags);
+    filter: ({ allItems, getTag }) => {
+      const duplicates = sortDupes(computeDupes(allItems), getTag);
       return (item) => {
         if (
           !(
@@ -178,8 +174,44 @@ const dupeFilters: FilterDefinition[] = [
     keywords: 'customstatlower',
     description: tl('Filter.CustomStatLower'),
     filter: ({ allItems, customStats }) => {
-      const duplicates = computeStatDupeLower(allItems, customStats);
-      return (item) => item.bucket.inArmor && duplicates.has(item.id);
+      const duplicateSetsByClass: Partial<Record<DimItem['classType'], Set<string>[]>> = {};
+
+      for (const customStat of customStats) {
+        const relevantStatHashes: number[] = [];
+        const statWeights = customStat.weights;
+        for (const statHash in statWeights) {
+          const weight = statWeights[statHash];
+          if (weight && weight > 0) {
+            relevantStatHashes.push(parseInt(statHash));
+          }
+        }
+        (duplicateSetsByClass[customStat.class] ||= []).push(
+          computeStatDupeLower(allItems, relevantStatHashes)
+        );
+      }
+
+      return (item) =>
+        item.bucket.inArmor &&
+        // highlight the item if it's statlower for all class-relevant custom stats.
+        // this duplicates existing behavior for old style default-named custom stat,
+        // but should be extended to also be a stat name-based filter
+        // for users with multiple stats per class, a la customstatlower:pve
+        duplicateSetsByClass[item.classType]?.every((dupeSet) => dupeSet.has(item.id));
+    },
+  },
+  {
+    keywords: ['crafteddupe', 'shapeddupe'],
+    description: tl('Filter.CraftedDupe'),
+    filter: ({ allItems }) => {
+      const duplicates = computeDupes(allItems);
+      return (item) => {
+        const dupeId = makeDupeID(item);
+        if (!checkIfIsDupe(duplicates, dupeId, item)) {
+          return false;
+        }
+        const itemDupes = duplicates?.[dupeId];
+        return itemDupes?.some((d) => d.crafted);
+      };
     },
   },
 ];
@@ -200,10 +232,7 @@ export function checkIfIsDupe(
   );
 }
 
-function computeStatDupeLower(
-  allItems: DimItem[],
-  customStats: Settings['customTotalStatsByClass'] = {}
-) {
+function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] = armorStats) {
   // disregard no-class armor
   const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== -1);
 
@@ -212,33 +241,55 @@ function computeStatDupeLower(
     _.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`)
   );
 
-  const statsCache = new Map<DimItem, number[]>();
   const dupes = new Set<string>();
 
+  // A mapping from an item to a list of all of its stat configurations
+  // (Artifice armor can have multiple). This is just a cache to prevent
+  // recalculating it.
+  const statsCache = new Map<DimItem, number[][]>();
   for (const item of armor) {
     if (item.stats && item.power && item.bucket.hash !== BucketHashes.ClassArmor) {
-      const statsToConsider = customStats[item.classType] ?? armorStats;
-      statsCache.set(
-        item,
-        _.sortBy(
-          item.stats.filter((s) => statsToConsider.includes(s.statHash)),
-          (s) => s.statHash
-        ).map((s) => s.base)
-      );
+      const statValues = item.stats
+        .filter((s) => relevantStatHashes.includes(s.statHash))
+        .sort((a, b) => a.statHash - b.statHash)
+        .map((s) => s.base);
+      if (isArtifice(item)) {
+        statsCache.set(
+          item,
+          // Artifice armor can be +3 in any one stat, so we compute a separate
+          // version of the stats for each stat considered
+          relevantStatHashes.map((_s, i) => {
+            const modifiedStats = [...statValues];
+            // One stat gets +3
+            modifiedStats[i] += 3;
+            return modifiedStats;
+          })
+        );
+      } else {
+        statsCache.set(item, [statValues]);
+      }
     }
   }
 
+  // For each group of items that should be compared against each other
   for (const group of grouped) {
     const statSet = new StatsSet<DimItem>();
+    // Add a mapping from stats => item to the statsSet for each item in the group
     for (const item of group) {
       const stats = statsCache.get(item);
       if (stats) {
-        statSet.insert(stats, item);
+        for (const statValues of stats) {
+          statSet.insert(statValues, item);
+        }
       }
     }
+
+    // Now run through the items in the group again, checking against the fully
+    // populated stats set to see if there's something better
     for (const item of group) {
       const stats = statsCache.get(item);
-      if (stats && statSet.doBetterStatsExist(stats)) {
+      // All configurations must have a better version somewhere for this to count as statlower
+      if (stats?.every((statValues) => statSet.doBetterStatsExist(statValues))) {
         dupes.add(item.id);
       }
     }

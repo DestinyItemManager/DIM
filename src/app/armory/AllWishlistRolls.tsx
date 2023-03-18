@@ -6,7 +6,6 @@ import { compareBy } from 'app/utils/comparators';
 import { wishListRollsForItemHashSelector } from 'app/wishlists/selectors';
 import { WishListRoll } from 'app/wishlists/types';
 import _ from 'lodash';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './AllWishlistRolls.m.scss';
 import { getCraftingTemplate } from './crafting-utils';
@@ -117,7 +116,7 @@ function WishlistRolls({
 
   return (
     <>
-      {_.map(groupedWishlistRolls, (rolls, notes) => {
+      {Object.entries(groupedWishlistRolls).map(([notes, rolls]) => {
         const consolidatedRolls = consolidateRollsForOneWeapon(defs, item, rolls);
 
         return (

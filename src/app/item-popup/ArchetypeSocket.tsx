@@ -17,7 +17,7 @@ export default function ArchetypeSocket({
   archetypeSocket?: DimSocket;
   item: DimItem;
   children?: React.ReactNode;
-  onClick?(item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean): void;
+  onClick?: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
 }) {
   if (!archetypeSocket?.plugged) {
     return null;

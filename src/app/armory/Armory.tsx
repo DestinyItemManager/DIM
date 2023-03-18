@@ -2,12 +2,12 @@ import ItemGrid from 'app/armory/ItemGrid';
 import { clarityAttribute } from 'app/clarity/integration/attributes';
 import { addCompareItem } from 'app/compare/actions';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import ElementIcon from 'app/dim-ui/ElementIcon';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import ItemIcon from 'app/inventory/ItemIcon';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import {
   applySocketOverrides,
@@ -28,6 +28,7 @@ import { AppIcon, compareIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getItemYear } from 'app/utils/item-utils';
+import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
@@ -52,14 +53,14 @@ export default function Armory({
 }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
-  const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const isPhonePortrait = useIsPhonePortrait();
   const [socketOverrides, onPlugClicked] = useSocketOverrides();
+  const itemCreationContext = useSelector(createItemContextSelector);
 
   const itemDef = defs.InventoryItem.get(itemHash);
 
-  const itemWithoutSockets = makeFakeItem(defs, buckets, undefined, itemHash);
+  const itemWithoutSockets = makeFakeItem(itemCreationContext, itemHash);
 
   if (!itemWithoutSockets) {
     return (
@@ -69,12 +70,12 @@ export default function Armory({
     );
   }
 
-  // We apply socket overrides *twice* - once to set the original sockets, then to apply the user's chosen overrides
-  const item = applySocketOverrides(
-    defs,
-    applySocketOverrides(defs, itemWithoutSockets, realItemSockets),
-    socketOverrides
-  );
+  const item = applySocketOverrides(itemCreationContext, itemWithoutSockets, {
+    // Start with the item's current sockets
+    ...realItemSockets,
+    // Then apply whatever the user chose in the Armory UI
+    ...socketOverrides,
+  });
 
   const storeItems = allItems.filter((i) => i.hash === itemHash);
 
@@ -95,7 +96,7 @@ export default function Armory({
 
   return (
     <div
-      className={styles.armory}
+      className={clsx(styles.armory, 'armory')}
       style={
         screenshot && !isPhonePortrait
           ? {
@@ -120,7 +121,7 @@ export default function Armory({
             )}
             {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
             <ItemTypeName item={item} />
-            {item.pursuit?.questStepNum && (
+            {item.pursuit?.questStepNum !== undefined && (
               <div>
                 {t('MovePopup.Subtitle.QuestProgress', {
                   questStepNum: item.pursuit.questStepNum,
@@ -209,7 +210,7 @@ export default function Armory({
           {itemDef.setData?.itemList && (
             <ol>
               {itemDef.setData.itemList.map((h) => {
-                const stepItem = makeFakeItem(defs, buckets, undefined, h.itemHash);
+                const stepItem = makeFakeItem(itemCreationContext, h.itemHash);
                 return (
                   stepItem && (
                     <li

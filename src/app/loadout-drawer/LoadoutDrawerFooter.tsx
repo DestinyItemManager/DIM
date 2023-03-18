@@ -4,7 +4,7 @@ import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { AppIcon, deleteIcon, redoIcon, undoIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
-import { currySelector } from 'app/utils/redux-utils';
+import { currySelector } from 'app/utils/selector-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import React from 'react';
@@ -49,8 +49,8 @@ export default function LoadoutDrawerFooter({
   redo?: () => void;
   hasUndo?: boolean;
   hasRedo?: boolean;
-  onSaveLoadout(e: React.FormEvent, saveAsNew: boolean): void;
-  onDeleteLoadout(): void;
+  onSaveLoadout: (e: React.FormEvent, saveAsNew: boolean) => void;
+  onDeleteLoadout: () => void;
 }) {
   const clashingLoadout = useSelector(clashingLoadoutSelector(loadout));
   // There's an existing loadout with the same name & class and it's not the loadout we are currently editing

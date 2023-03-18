@@ -1,0 +1,44 @@
+@use '../../variables.scss' as *;
+
+.header {
+  font-size: 20px;
+  margin: 4px;
+}
+
+.content {
+  margin: 16px;
+
+  @include phone-portrait {
+    display: flex;
+    flex-flow: row nowrap;
+  }
+}
+
+.fillRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.setHeader {
+  margin: 0 4px 4px 0;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
+}
+
+.setTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.noLoadouts {
+  margin: 16px;
+  font-size: 14px;
+}
+
+.loadoutName {
+  font-weight: 600;
+}

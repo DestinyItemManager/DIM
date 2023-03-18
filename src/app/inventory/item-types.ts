@@ -4,10 +4,8 @@ import {
   DestinyAmmunitionType,
   DestinyBreakerTypeDefinition,
   DestinyClass,
-  DestinyCollectibleState,
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
-  DestinyEnergyTypeDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemInstanceEnergy,
   DestinyItemPerkEntryDefinition,
@@ -19,12 +17,10 @@ import {
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
   DestinyRecordComponent,
-  DestinySandboxPerkDefinition,
   DestinySocketCategoryDefinition,
   DestinyStat,
-  DestinyStatDefinition,
 } from 'bungie-api-ts/destiny2';
-import { InventoryBucket } from './inventory-buckets';
+import { DimBucketType, InventoryBucket } from './inventory-buckets';
 
 /**
  * A generic DIM item, representing almost anything. This completely represents any D2 item, and most D1 items,
@@ -51,7 +47,7 @@ export interface DimItem {
   /** The version of Destiny this comes from. */
   destinyVersion: DestinyVersion;
   /** This is the type of the item (see InventoryBuckets) regardless of location. This string is a DIM concept with no direct correlation to the API types. It should generally be avoided in favor of using bucket hash. */
-  type: NonNullable<InventoryBucket['type']>;
+  type: DimBucketType;
   /** Localized name of this item's type. */
   typeName: string;
   /** The bucket the item normally resides in (even though it may currently be elsewhere, such as in the postmaster). */
@@ -141,12 +137,12 @@ export interface DimItem {
   /** Localized string for where this item comes from... or other stuff like it not being recoverable from collections */
   displaySource?: string;
   collectibleHash?: number;
+  // TODO: pull search-only fields out
   /** The DestinyCollectibleDefinition sourceHash for a specific item (D2). Derived entirely from collectibleHash */
   source?: number;
   /** Information about this item as a plug. Mostly useful for mod collectibles. */
   plug?: {
     energyCost: number;
-    costElementIcon?: string;
   };
   /** Extra pursuit info, if this item is a quest or bounty. */
   pursuit: DimPursuit | null;
@@ -166,8 +162,8 @@ export interface DimItem {
 
   // Dynamic data - this may change between profile updates
 
-  /** The damage type this weapon deals, or energy type of armor, or damage type corresponding to the item's elemental resistance. */
-  element: DestinyDamageTypeDefinition | DestinyEnergyTypeDefinition | null;
+  /** The damage type this weapon deals, or damage type corresponding to the item's elemental resistance. */
+  element: DestinyDamageTypeDefinition | null;
   /** Whether this item CANNOT be transferred. */
   notransfer: boolean;
   /** Is this item complete (leveled, unlocked, objectives complete)? */
@@ -177,12 +173,11 @@ export interface DimItem {
   /**
    * The primary stat (Attack, Defense, Speed) of the item. Useful for display and for some weirder stat types. Prefer using "power" if what you want is power.
    */
-  primaryStat:
-    | (DestinyStat & {
-        // TODO: get rid of this
-        stat: DestinyStatDefinition;
-      })
-    | null;
+  primaryStat: DestinyStat | null;
+  /**
+   * Display info for the primary stat (Attack, Defense, Speed, etc).
+   */
+  primaryStatDisplayProperties?: DestinyDisplayPropertiesDefinition;
   /** The power level of the item. This is a synonym for (primaryStat?.value ?? 0) for items with power, and 0 otherwise. */
   power: number;
   /** Is this a masterwork? (D2 only) */
@@ -200,7 +195,7 @@ export interface DimItem {
   /** Detailed stats for the item. */
   stats: DimStat[] | null;
   /** Any objectives associated with the item. */
-  objectives: DestinyObjectiveProgress[] | null;
+  objectives?: DestinyObjectiveProgress[];
   /** Stat Tracker */
   metricHash?: number;
   /** Stat Tracker Progress */
@@ -217,18 +212,19 @@ export interface DimItem {
    * Optional in case we ever fail to match items to their record.
    */
   patternUnlockRecord?: DestinyRecordComponent;
-  /** If this item has Deepsight Resonance, this includes info about its Deepsight properties. */
-  deepsightInfo?: DimDeepsight;
+  /** If this item has Deepsight Resonance (a pattern can be extracted). */
+  deepsightInfo?: boolean;
   /** If this item has a catalyst, this includes info about its catalyst properties. */
   catalystInfo?: DimCatalyst;
   /** an item's current breaker type, if it has one */
   breakerType: DestinyBreakerTypeDefinition | null;
   /** The foundry this item was made by */
-  foundry: string | null;
-  /** The state of this item in the user's D2 Collection */
-  collectibleState?: DestinyCollectibleState;
+  // TODO: only used by search/spreadsheet
+  foundry?: string;
   /** Extra tooltips to show in the item popup */
   tooltipNotifications?: DestinyItemTooltipNotification[];
+  /** Index assigned to item by Bungie */
+  bungieIndex: number;
 }
 
 /**
@@ -270,11 +266,6 @@ export interface DimCrafted {
   progress?: number;
   /** when this weapon was crafted, UTC epoch seconds timestamp */
   craftedDate?: number;
-}
-
-export interface DimDeepsight {
-  /** Progress of attuning the item - when complete, a resonant material can be extracted */
-  attunementObjective: DestinyObjectiveProgress;
 }
 
 export interface DimCatalyst {
@@ -397,8 +388,6 @@ export interface PluggableInventoryItemDefinition extends DestinyInventoryItemDe
 export interface DimPlug {
   /** The InventoryItem definition associated with this plug. */
   readonly plugDef: PluggableInventoryItemDefinition;
-  /** Perks associated with the use of this plug. TODO: load on demand? */
-  readonly perks: DestinySandboxPerkDefinition[];
   /** Objectives associated with this plug, usually used to unlock it. */
   readonly plugObjectives: DestinyObjectiveProgress[];
   /** Is the plug enabled? For example, some perks only activate on certain planets. */
@@ -411,6 +400,8 @@ export interface DimPlug {
   } | null;
   /** This plug is one of the random roll options but the current version of this item cannot roll this perk. */
   readonly cannotCurrentlyRoll?: boolean;
+  /** This plug is one of the collections perks and may not 100% roll */
+  readonly unreliablePerkOption?: boolean;
 }
 
 export interface DimPlugSet {

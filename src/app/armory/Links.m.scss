@@ -1,11 +1,13 @@
 @import '../variables';
 
 .links {
+  display: flex;
+  flex-direction: column;
   float: right;
   margin: 0 0 0 32px;
   padding: 0;
   list-style: none;
-  @include vertical-space-children(4px);
+  gap: 4px;
 
   li {
     white-space: nowrap;
@@ -18,7 +20,6 @@
   @media (max-width: 675px) {
     margin: 0 0 8px 0;
     float: none;
-    display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     > li {

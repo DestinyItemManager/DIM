@@ -20,13 +20,17 @@ import {
 import ActionButton from './ActionButton';
 import styles from './LockButton.m.scss';
 
-interface Props {
+export default function LockButton({
+  type,
+  item,
+  disabled,
+  children,
+}: {
   item: DimItem;
   type: 'lock' | 'track';
+  disabled?: boolean;
   children?: React.ReactNode;
-}
-
-export default function LockButton({ type, item, children }: Props) {
+}) {
   const [locking, setLocking] = useState(false);
   const dispatch = useThunkDispatch();
 
@@ -76,7 +80,11 @@ export default function LockButton({ type, item, children }: Props) {
   const iconElem = <AppIcon className={clsx({ [styles.inProgress]: locking })} icon={icon} />;
 
   return (
-    <ActionButton onClick={lockUnlock} title={title}>
+    <ActionButton
+      onClick={lockUnlock}
+      title={disabled ? t('MovePopup.LockUnlock.AutoLock') : title}
+      disabled={disabled}
+    >
       {children ? (
         <>
           {iconElem} {children}

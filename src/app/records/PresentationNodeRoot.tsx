@@ -1,10 +1,12 @@
+import { createItemContextSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
-import { itemsForProfilePlugSet } from './plugset-helpers';
+import { unlockedItemsForCharacterOrProfilePlugSet } from './plugset-helpers';
 import { filterPresentationNodesToSearch, toPresentationNodeTree } from './presentation-nodes';
 import PresentationNode from './PresentationNode';
 import PresentationNodeSearchResults from './PresentationNodeSearchResults';
@@ -41,6 +43,7 @@ export default function PresentationNodeRoot({
   overrideName,
   completedRecordsHidden,
 }: Props) {
+  const itemCreationContext = useSelector(createItemContextSelector);
   const defs = useD2Definitions()!;
   const [nodePath, setNodePath] = useState<number[]>([]);
 
@@ -58,8 +61,8 @@ export default function PresentationNodeRoot({
   }
 
   const nodeTree = useMemo(
-    () => toPresentationNodeTree(defs, buckets, profileResponse, presentationNodeHash),
-    [defs, buckets, profileResponse, presentationNodeHash]
+    () => toPresentationNodeTree(itemCreationContext, presentationNodeHash),
+    [presentationNodeHash, itemCreationContext]
   );
   // console.log(nodeTree);
 
@@ -88,9 +91,9 @@ export default function PresentationNodeRoot({
 
   const plugSetCollections = [
     // Emotes
-    { hash: 1155321287, displayItem: 3960522253 },
+    { hash: 2860926541, displayItem: 3960522253 },
     // Projections
-    { hash: 499268600, displayItem: 2544954628 },
+    { hash: 2540258701, displayItem: 2544954628 },
   ];
 
   return (
@@ -111,9 +114,12 @@ export default function PresentationNodeRoot({
         plugSetCollections.map((plugSetCollection) => (
           <div key={plugSetCollection.hash} className="presentation-node">
             <PlugSet
-              buckets={buckets}
               plugSetCollection={plugSetCollection}
-              items={itemsForProfilePlugSet(profileResponse, Number(plugSetCollection.hash))}
+              unlockedItems={unlockedItemsForCharacterOrProfilePlugSet(
+                profileResponse,
+                plugSetCollection.hash,
+                ''
+              )}
               path={fullNodePath}
               onNodePathSelected={setNodePath}
             />

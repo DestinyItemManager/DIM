@@ -1,6 +1,6 @@
 import { trackTriumph } from 'app/dim-api/basic-actions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -69,7 +69,7 @@ export default function Record({
   );
   const loreLink =
     !obscured &&
-    recordDef.loreHash &&
+    recordDef.loreHash !== undefined &&
     `http://www.ishtar-collective.net/entries/${recordDef.loreHash}`;
 
   const recordShouldGlow = (recordDef.forTitleGilding && acquired) || trackedInDim;

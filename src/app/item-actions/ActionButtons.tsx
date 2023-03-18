@@ -1,10 +1,12 @@
 import { addCompareItem } from 'app/compare/actions';
+import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showInfuse } from 'app/infuse/infuse';
 import { DimItem } from 'app/inventory/item-types';
 import { consolidate, distribute } from 'app/inventory/move-item';
-import { sortedStoresSelector } from 'app/inventory/selectors';
+import { sortedStoresSelector, tagSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
+import { canSyncLockState } from 'app/inventory/SyncTagLock';
 import ActionButton from 'app/item-actions/ActionButton';
 import LockButton from 'app/item-actions/LockButton';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -15,7 +17,6 @@ import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
 import arrowsOut from '../../images/arrows-out.png';
@@ -48,9 +49,14 @@ export function CompareActionButton({ item, label }: ActionButtonProps) {
 }
 
 export function LockActionButton({ item, label }: ActionButtonProps) {
+  const autoLockTagged = useSelector(settingSelector('autoLockTagged'));
+  const tag = useSelector(tagSelector(item));
+
   if (!item.lockable && !item.trackable) {
     return null;
   }
+
+  const disabled = autoLockTagged && tag !== undefined && canSyncLockState(item);
 
   const type = item.lockable ? 'lock' : 'track';
   const title =
@@ -67,7 +73,7 @@ export function LockActionButton({ item, label }: ActionButtonProps) {
       : t('MovePopup.TrackUntrack.Untracked');
 
   return (
-    <LockButton item={item} type={type}>
+    <LockButton item={item} type={type} disabled={disabled}>
       {label && <span className={styles.label}>{title}</span>}
     </LockButton>
   );

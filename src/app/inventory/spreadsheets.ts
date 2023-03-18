@@ -1,5 +1,6 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
+import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import { ThunkResult } from 'app/store/types';
@@ -19,9 +20,9 @@ import D2Sources from 'data/d2/source-info';
 import _ from 'lodash';
 import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
-import { getNotes, getTag, ItemInfos, tagConfig } from './dim-item-info';
+import { tagConfig, TagValue } from './dim-item-info';
 import { D1GridNode, DimItem, DimSockets } from './item-types';
-import { itemInfosSelector, storesSelector } from './selectors';
+import { getNotesSelector, getTagSelector, storesSelector } from './selectors';
 import { getClass } from './store/character-utils';
 import { getEvent, getSeason } from './store/season';
 
@@ -54,26 +55,27 @@ const sourceKeys = Object.keys(D2Sources).filter((k) => !['raid', 'calus'].inclu
 export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResult {
   return async (_dispatch, getState) => {
     const stores = storesSelector(getState());
-    const itemInfos = itemInfosSelector(getState());
+    const getTag = getTagSelector(getState());
+    const getNotes = getNotesSelector(getState());
+    const loadoutsForItem = loadoutsByItemSelector(getState());
 
     // perhaps we're loading
     if (stores.length === 0) {
-      alert(t('Settings.ExportSSNoStores'));
       return;
     }
     const nameMap = {};
     let allItems: DimItem[] = [];
-    stores.forEach((store) => {
+    for (const store of stores) {
       allItems = allItems.concat(store.items);
       nameMap[store.id] =
         store.id === 'vault'
           ? 'Vault'
           : `${capitalizeFirstLetter(getClass(store.classType))}(${store.powerLevel})`;
-    });
+    }
     const items: DimItem[] = [];
-    allItems.forEach((item) => {
+    for (const item of allItems) {
       if (!item.primaryStat && type !== 'Ghost') {
-        return;
+        continue;
       }
 
       if (type === 'Weapons') {
@@ -90,16 +92,16 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
       } else if (type === 'Ghost' && item.bucket.hash === BucketHashes.Ghost) {
         items.push(item);
       }
-    });
+    }
     switch (type) {
       case 'Weapons':
-        downloadWeapons(items, nameMap, itemInfos);
+        downloadWeapons(items, nameMap, getTag, getNotes, loadoutsForItem);
         break;
       case 'Armor':
-        downloadArmor(items, nameMap, itemInfos);
+        downloadArmor(items, nameMap, getTag, getNotes, loadoutsForItem);
         break;
       case 'Ghost':
-        downloadGhost(items, nameMap, itemInfos);
+        downloadGhost(items, nameMap, getTag, getNotes, loadoutsForItem);
         break;
     }
 
@@ -108,6 +110,7 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
 }
 
 interface CSVRow {
+  Loadouts: string;
   Notes: string;
   Tag: string;
   Hash: string;
@@ -251,7 +254,17 @@ function addPerks(row: Record<string, unknown>, item: DimItem, maxPerks: number)
   });
 }
 
-function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
+function formatLoadouts(item: DimItem, loadouts: LoadoutsByItem) {
+  return loadouts[item.id]?.map(({ loadout }) => loadout.name).join(', ') ?? '';
+}
+
+function downloadGhost(
+  items: DimItem[],
+  nameMap: { [key: string]: string },
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
+  loadouts: LoadoutsByItem
+) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -260,13 +273,14 @@ function downloadGhost(items: DimItem[], nameMap: { [key: string]: string }, ite
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
-      Tag: getTag(item, itemInfos),
+      Tag: getTag(item),
       Tier: item.tier,
       Source: source(item),
       Owner: nameMap[item.owner],
       Locked: item.locked,
       Equipped: item.equipped,
-      Notes: getNotes(item, itemInfos),
+      Loadouts: formatLoadouts(item, loadouts),
+      Notes: getNotes(item),
     };
 
     addPerks(row, item, maxPerks);
@@ -294,7 +308,13 @@ export function source(item: DimItem) {
   }
 }
 
-function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, itemInfos: ItemInfos) {
+function downloadArmor(
+  items: DimItem[],
+  nameMap: { [key: string]: string },
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
+  loadouts: LoadoutsByItem
+) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
 
@@ -306,7 +326,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
-      Tag: getTag(item, itemInfos),
+      Tag: getTag(item),
       Tier: item.tier,
       Type: item.typeName,
       Source: source(item),
@@ -317,15 +337,11 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
       row['Power Limit'] = item.powerCap;
     }
     if (item.destinyVersion === 2) {
-      row['Masterwork Type'] = item.element?.displayProperties.name;
-      row['Masterwork Tier'] = item.masterworkInfo?.tier || undefined;
+      row['Energy Capacity'] = item.energy?.energyCapacity || undefined;
     }
     row.Owner = nameMap[item.owner];
     if (item.destinyVersion === 1) {
       row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
-    }
-    if (item.destinyVersion === 2) {
-      row['Armor2.0'] = Boolean(item.energy) && item.bucket.inArmor;
     }
     row.Locked = item.locked;
     row.Equipped = item.equipped;
@@ -342,7 +358,7 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
     const stats: { [name: string]: { value: number; pct: number; base: number } } = {};
     if (item.stats) {
       if (isD1Item(item)) {
-        item.stats.forEach((stat) => {
+        for (const stat of item.stats) {
           let pct = 0;
           if (stat.scaled?.min) {
             pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
@@ -352,15 +368,15 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
             pct,
             base: 0,
           };
-        });
+        }
       } else {
-        item.stats.forEach((stat) => {
+        for (const stat of item.stats) {
           stats[stat.statHash] = {
             value: stat.value,
             base: stat.base,
             pct: 0,
           };
-        });
+        }
       }
     }
     if (item.destinyVersion === 1) {
@@ -375,19 +391,20 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
         name: statName,
         stat: stats[dimArmorStatHashByName[statName]],
       }));
-      armorStats.forEach((stat) => {
+      for (const stat of armorStats) {
         row[capitalizeFirstLetter(stat.name)] = stat.stat?.value ?? 0;
-      });
-      armorStats.forEach((stat) => {
+      }
+      for (const stat of armorStats) {
         row[`${capitalizeFirstLetter(stat.name)} (Base)`] = stat.stat?.base ?? 0;
-      });
+      }
 
       if (item.sockets) {
         row['Seasonal Mod'] = getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag) ?? '';
       }
     }
 
-    row.Notes = getNotes(item, itemInfos);
+    row.Loadouts = formatLoadouts(item, loadouts);
+    row.Notes = getNotes(item);
 
     addPerks(row, item, maxPerks);
 
@@ -399,7 +416,9 @@ function downloadArmor(items: DimItem[], nameMap: { [key: string]: string }, ite
 function downloadWeapons(
   items: DimItem[],
   nameMap: { [key: string]: string },
-  itemInfos: ItemInfos
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
+  loadouts: LoadoutsByItem
 ) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
@@ -412,7 +431,7 @@ function downloadWeapons(
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
-      Tag: getTag(item, itemInfos),
+      Tag: getTag(item),
       Tier: item.tier,
       Type: item.typeName,
       Source: source(item),
@@ -466,7 +485,7 @@ function downloadWeapons(
     };
 
     if (item.stats) {
-      item.stats.forEach((stat) => {
+      for (const stat of item.stats) {
         if (stat.value) {
           switch (stat.statHash) {
             case StatHashes.RecoilDirection:
@@ -538,7 +557,7 @@ function downloadWeapons(
               break;
           }
         }
-      });
+      }
     }
 
     row.Recoil = stats.recoil;
@@ -552,7 +571,11 @@ function downloadWeapons(
     row.ROF = stats.rof;
     row.Reload = stats.reload;
     row.Mag = stats.magazine;
-    row.Equip = stats.equipSpeed;
+    if (item.destinyVersion === 2) {
+      row.Handling = stats.equipSpeed;
+    } else {
+      row.Equip = stats.equipSpeed;
+    }
     row['Charge Time'] = stats.chargetime;
     if (item.destinyVersion === 2) {
       row['Draw Time'] = stats.drawtime;
@@ -572,9 +595,11 @@ function downloadWeapons(
       row['Crafted Level'] = item.craftedInfo?.level ?? 0;
 
       row['Kill Tracker'] = getItemKillTrackerInfo(item)?.count ?? 0;
-      row.Foundry = item.foundry?.replace('foundry.', '');
+      row.Foundry = item.foundry;
     }
-    row.Notes = getNotes(item, itemInfos);
+
+    row.Loadouts = formatLoadouts(item, loadouts);
+    row.Notes = getNotes(item);
 
     addPerks(row, item, maxPerks);
 

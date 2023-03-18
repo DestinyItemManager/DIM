@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "メモなし",
+    "OpenInArmory": "アーマリーで見る",
     "Season": "シーズン {{season}}, イヤー {{year}}",
     "TrashlistedRolls": "トラッシュリストのロール",
     "TrashlistedRolls_plural": "{{count, number}} ウイッシュリストのロール",
@@ -84,10 +85,11 @@
     "VendorNotFound": "ベンダー情報が取得できません。"
   },
   "Compare": {
-    "Archetype": "原型",
+    "Archetype": "内在特性",
+    "AssumeMasterworked": "マスターワーク済みと仮定",
     "Button": "比較",
     "ButtonHelp": "アイテムを比較する",
-    "CompareBaseStats": "基本Statsを表示",
+    "CompareBaseStats": "基本ステータス値を表示",
     "Error": {
       "Unmatched": "このアイテムは比較されているアイテムのタイプと一致しません。"
     },
@@ -115,6 +117,10 @@
     "ImportWrongFileType": "CSV ファイルではありません。",
     "WrongFields": "CSVには「Id」、「Notes」、「Tag」、および「Hash」の列が必要です"
   },
+  "Dialog": {
+    "Cancel": "キャンセル",
+    "OK": "OK"
+  },
   "EnergyMeter": {
     "Energy": "エネルギー",
     "Unused": "不使用",
@@ -124,7 +130,10 @@
     "Title": "何か問題が発生したようです"
   },
   "ErrorPanel": {
-    "Description": "Destiny 2 Companion App で保管庫をロードして、 Bungie.net がダウンしているかどうか試してみてください。",
+    "Description": "Destiny 2のコンパニオンアプリで保管庫データにアクセスして、 Bungie.net がダウンしているかどうか試してみてください。",
+    "EmblemError": "ゲーム内で全キャラクターのエンブレムを入れ替えると直るかもしれません。",
+    "EmblemErrorLink": "修正方法の詳細を読む",
+    "SystemDown": "これはすべての Destiny アプリに影響し、 DIM チームで修正したり回避ができません。",
     "Troubleshooting": "トラブルシューティングガイド"
   },
   "FarmingMode": {
@@ -156,7 +165,7 @@
   },
   "FashionDrawer": {
     "Accept": "ファッションを保存",
-    "CannotFitOrnament": "このアイテムにはオーナメントソケットが無いか、オーナメントを保有していません。",
+    "CannotFitOrnament": "このアイテムには装飾用のソケットがないか、装飾そのものがありません。",
     "CannotFitShader": "このアイテムはシェーダーを装備できません",
     "ClearOrnaments": "装備品をクリア",
     "ClearOrnamentsTitle": "全ての装飾品を「優先なし」にリセット",
@@ -195,11 +204,12 @@
     "ContributePower": "パワー値があり、合計パワーレベルの変動要素となるアイテムを表示します。",
     "Cosmetic": "フレアや装飾アイテムのみに絞り込みます。",
     "Craftable": "クラフト可能なアイテムを表示",
+    "CraftedDupe": "",
     "Curated": "キュレートされたロールのアイテムを表示。",
     "CurrentClass": "現在ログインしているガーディアンが装備可能なアイテムを表示します。",
     "CustomStatLower": "カスタム後のステータス合計値のみを考慮して、同じサブクラス防具でも厳密に低いステータス値を持つ防具を表示します。",
     "DamageType": "ダメージタイプ別にアイテムを表示",
-    "Deepsight": "素材が抽出できるディープサイトの共振を持つ武器を表示します。 deepsight:completeとdeepsight:incompleteはディープサイトの同調の進行状況を示し、deepsight:patternはパターンロックを解除する可能性があるものを示します。",
+    "Deepsight": "パターンを抽出可能な、ディープサイト共振成分のある武器を表示。",
     "Description": "説明",
     "Dupe": "再登場版も含む、重複アイテムを表示します。",
     "DupeCount": "指定された数の重複があるアイテム。",
@@ -219,7 +229,7 @@
     "HasOrnament": "装飾品が施されているアイテムが表示されます。",
     "HasShader": "シェーダが適用されている項目を表示します。",
     "HoldsMod": "特定のタイプの季節MODに対応した防具が表示されます。",
-    "InLoadout": "ロードアウトにて使用されているアイテムを表示します。",
+    "InLoadout": "is:inloadout は、任意のロードアウトに含まれるアイテムを表示します。inloadout: で検索すると、タイトルが一致するロードアウトに含まれるアイテムが表示されます。ハッシュタグと一緒に使うと、inloadout:  はタイトルやノートにハッシュタグが含まれるロードアウトを持つアイテムを表示します。",
     "Infusable": "融合可能なアイテムを表示",
     "InfusionFodder": "高パワーの同じアイテムとグリマーだけで融合できる、低パワーのアイテムを表示します。",
     "IsCrafted": "クラフトされた武器を表示",
@@ -267,6 +277,7 @@
     "Reforgeable": "銃器技師で融合可能なアイテムを表示",
     "Release": "<i>{{release}}</i>から入手可能",
     "RequiredLevel": "必要なレベルに応じてアイテムを表示",
+    "RetiredPerk": "入手不可のパークが付与された武器を表示します",
     "SearchPrompt": "利用可能なフィルタコマンドを検索",
     "Season": "Destiny 2のシーズンに登場したアイテムを表示します。",
     "SeasonalDupe": "同シーズンの重複アイテムのみ表示します。異なるシーズンの同アイテムは別物としてカウントします。",
@@ -306,6 +317,16 @@
     "Confirm": "本当に消しますか?",
     "UserGuideLink": "ユーザーガイド"
   },
+  "Glyphs": {
+    "Gilded": "金",
+    "Misadventure": "不運",
+    "Missing": "紛失",
+    "OpenSymbolsPicker": "シンボルピッカーを開く",
+    "Quickfall": "クイックフォール",
+    "ScorchCannon": "スコーチキャノン",
+    "SearchSymbols": "シンボルを検索...",
+    "Smoke": "煙幕"
+  },
   "Header": {
     "About": "DIMについて",
     "AutoRefresh": "プレイ中ならば DIM は自動的に再読み込みされます。",
@@ -332,6 +353,7 @@
     "LaunchDIMAlone": "ウィンドウを分割する",
     "MaterialCounts": "素材数",
     "Menu": "メニュー",
+    "ProfileAge": "Destinyサーバーが最後にデータ更新したのは {{age}} (時/分/秒)前です。\nDIM から更新できるかもしれませんが、 Bungie.net は過去の情報を繰り返し送信しているだけのおそれがあります。",
     "Refresh": "Destiny データ [R] を更新",
     "ReloadApp": "アプリの再読み込み",
     "ReportBug": "バグの報告",
@@ -363,6 +385,10 @@
     "Tab": "タブ",
     "Vault": "アイテムを保管庫に送る"
   },
+  "InGameLoadout": {
+    "Applying": "ロードアウトを装備中",
+    "LoadoutSlotNum": "スロット {{index}}"
+  },
   "Infusion": {
     "Filter": "アイテムをフィルタする",
     "InfuseSource": "{{name}} に融合するアイテムを選択してください",
@@ -377,8 +403,11 @@
     "ClickToExpand": "(クリックして展開)"
   },
   "ItemFeed": {
+    "ClearFeed": "フィードをクリア",
     "Description": "アイテムフィード",
-    "HideTagged": "タグ付けされたものを隠す"
+    "HideTagged": "タグ付けされたものを隠す",
+    "NoNewItems": "新しいアイテムはありません",
+    "ShowOlderItems": "古いアイテムを表示"
   },
   "ItemMove": {
     "Consolidate": "{{name}} が統合されました",
@@ -496,7 +525,7 @@
       "Legendary": "レジェンダリーアーマーはマスターワーク済みのステータスを使用し、エネルギーレベルが 10 になります。",
       "None": "全てのアーマーは現在のステータスを使用し、最低エネルギーレベルは 7 になります。"
     },
-    "AutoStatMods": "必要なステータスの mod を追加",
+    "AutoStatMods": "自動的にステータス mod を追加する",
     "ChooseAlternateTitle": "別のアイテムを選択してください。",
     "CompareLoadout": "ロードアウトを比較",
     "ConfirmOverwrite": "ロードアウト「{{name}}」のアーマーをこの新しいアーマーセットに置き換えてもよろしいですか？",
@@ -508,22 +537,30 @@
     "ExistingLoadout": "既存のロードアウト",
     "ExoticSpecialCategory": "スペシャル",
     "Filter": "フィルター",
-    "InLoadouts": "ロードアウト内",
-    "InOtherLoadouts": "他ロードアウト",
     "Legendary": "レジェンダリー",
-    "LockElement": "属性をロックする",
-    "LockElementOptions": {
-      "All": "全てのアーマーは現在のエレメントにロックされます。",
-      "InLoadouts": "アーマーが既存のロードアウトにて装備されている場合、現在の属性でロックされます。",
-      "InOtherLoadouts": "現在、{{loadoutName}} を最適化しています。 {{loadoutName}} 以外のロードアウトでアーマーを装備すると、アーマーは現在の属性にロックされます。",
-      "None": "アーマー属性は、選択したmodが取り付けられるよう適宜変更されます。"
-    },
     "LockEquipped": "ピン留めされたアイテムを装備",
     "LockItem": "アイテムをピン留めする",
     "MaxTier": "最大 {{tier}}",
     "MissingClass": "ビルド: {{className}}",
     "MissingClassDescription": "表示しようとしているビルドは、あなたが持っていないキャラクタークラス向けです。",
-    "NoBuildsFoundWithReasons": "ビルドが見つかりません。これは通常、DIMが選択したすべてのMODをどのアーマーセットにも割り当てられなかったためです。",
+    "NoBuildsFoundExplainer": {
+      "ActiveSearchQuery": "アクティブサーチクエリは、DIM がビルドに含めることができる項目を制限しています",
+      "AllowAutoStatMods": "DIM に追加のステータス mod を自動的に含めることを許可する",
+      "AlwaysInvalidMods": "これらの mod は所有しているどのアイテムにも適合しません :",
+      "AssumeMasterworked": "DIM がマスターワークしているアーマーを推奨できるようにする",
+      "AssumptionsRestricted": "DIM は防具のエネルギー変更を推奨できません :",
+      "BadSlot": "{{bucketName}} スロットでは、許可されたアイテムのいずれもこれらの mod に対応できません :",
+      "Header": "ビルドが見つかりませんでした。 DIM がビルドを見つけられなかった理由は次のとおりです :",
+      "LowerBoundsFailed": "多くのセットが最小ステータスティアの要件を満たしませんでした",
+      "MaybeAllowMoreItems": "他のアイテムを許可することを検討してください :",
+      "MaybeDecreaseLowerBounds": "最小のステータス要件を減らすことを検討してください",
+      "MaybeIncreaseUpperBounds": "最大のステータス要件を増やすことを検討してください",
+      "MaybeRemoveMods": "mod を削除することを検討してください :",
+      "MaybeRemoveSearchQuery": "検索バーでフィルターをクリアまたは変更することを検討してください",
+      "ModAssignmentFailed": "多くのセットはすべての要求された mod に対応できませんでした",
+      "RemoveMods": "これらの mod を削除",
+      "UpperBoundsFailed": "多くのセットは最大のステータス要件を満たしていません"
+    },
     "NoExotic": "エキゾチックなし",
     "NoExoticDescription": "検索バーで \"not:exotic\" を検索するのと同じです - エキゾチックなアーマーはセットに含まれません。",
     "NoLoadoutsToCompare": "比較するロードアウトはありません。",
@@ -532,7 +569,7 @@
     "OptimizerExplanationMods": "エキゾチック防具と使用するmodを選択してください。 ロードアウト最適化機能では、選択したmodボーナスだけでステータス値が計算されます。装備に固定されている特殊modはすべて無視されます。",
     "OptimizerExplanationSearch": "検索バーを使用して、ロードアウト最適化機能で使用したいアイテムを組み合わせ候補をフィルタリングします。",
     "OptimizerExplanationStats": "左ペインにある各ステータス優先度をドラッグして設定します。上ほど重要度は高く優先され、下になるほど後回しにされます。プルダウンから優先しないよう無視する設定もできます。",
-    "OptimizerExplanationUpgrades": "ロードアウト最適化機能でアップグレードさせたい装備を選択します。この時、指定したModを取り付けられるようにマスターワーク化、エネルギーのアップグレードや防具のクラス変更(アーク→ボイドなど) を提案することもあります。",
+    "OptimizerExplanationUpgrades": "ロードアウト最適化機能が素材を消費できるアーマーアップグレードを選択します。ステータスを向上させるマスターワークや、要求された mod に適合するエネルギーアップグレードが提案されるかもしれません。",
     "OptimizerSet": "最適化セット",
     "ProcessingSets": "{{character}} のセットを処理中 ({{remainingTime}}秒)",
     "SaveAs": "名前をつけて保存",
@@ -561,6 +598,7 @@
     "BadLoadoutShare": "シェアしたロードアウトを読み込めません",
     "BadLoadoutShareBody": "読み込もうとしているロードアウトは無効です: {{error}}",
     "Before": "前 '{{name}}'",
+    "CancelEditing": "Cancel Editing",
     "CannotCustomizeSubclass": "このサブクラスは設定することができません",
     "ChooseItem": "{{name}} を追加します。",
     "ClassTypeMismatch": "{{className}} アイテムはこのロードアウトに追加できません",
@@ -575,6 +613,7 @@
     "CurrentlyEquipped": "現在装備中",
     "Deequip": "他のキャラクターからアイテムを外す",
     "Delete": "削除",
+    "DeprecatedMods": "非推奨 Mod",
     "Edit": "ロードアウトを編集",
     "EditBrief": "編集",
     "EquipItems": "アイテムを装備",
@@ -591,6 +630,14 @@
     "GatherEngrams": "エングラム収集",
     "GatherEngramsExceptExotics": "エキゾチック",
     "Generated": "T{{tier}} ロードアウト",
+    "HashtagTip": "ヒント: ロードアウトの名前やメモに #hashtags を使用すると、ここに表示されます。",
+    "Import": {
+      "BadURL": "有効なロードアウト共有 URL ではありません",
+      "Error": "ロードアウト取得中のエラー",
+      "Error404": "このロードアウトは存在しません",
+      "PasteHere": "ロードアウトリンクを貼り付けて、ロードアウトを開きます。"
+    },
+    "ImportLoadout": "ロードアウトをインポート",
     "ItemErrorSummary": "1 つのアイテムエラー:",
     "ItemErrorSummary_plural": "{{count}} 個のアイテムでエラー:",
     "ItemLeveling": "アイテムのレベルアップ",
@@ -609,6 +656,7 @@
     "MaximizeLight": "最大 Light",
     "MaximizePower": "最大パワー",
     "MaximizeStat": "統計を最大化する",
+    "MissingItems": "紛失したアイテム",
     "MissingItemsWarning": "このロードアウトに含まれるアイテムの一部は保管庫に存在しません。",
     "ModErrorSummary": "1個のmodエラー",
     "ModErrorSummary_plural": "{{count}} 個のmod エラー:",
@@ -618,9 +666,9 @@
     "NoEngrams": "転送出来る非エキゾチクエングラムがありません。",
     "NoExotics": "エングラムは転送できません。",
     "NoSpace": "保管庫や他のキャラクターの空きスペースがありません。",
-    "NoneMatch": "ロードアウトの名前やノートに'{{query}}'と一致するものがありません。",
-    "NotStarted": "他のアクションを待っています",
-    "NotesPlaceholder": "この装備に関するメモを書く",
+    "NoneMatch": "フィルタに一致するロードアウトはありませんでした。",
+    "NotStarted": "他のアクションの完了、もしくは保管庫の更新による読み込みの終了を待っています。",
+    "NotesPlaceholder": "このロードアウトに関するメモを書くか、 #hashtag を使用して分類してください",
     "NotificationTitle": "ロードアウト: {{name}}",
     "OnWrongCharacterAdvice": "このキャラクターの最高パワーのアイテムはこちら。",
     "OnWrongCharacterWarning": "このキャラクターの最も強力なアーマーは、別のキャラクターが所持しています。 パワーのドロップ、強力、最高峰の報酬にカウントするには、アーマーはこのキャラクターか保管庫に存在しなければなりません。",
@@ -720,7 +768,6 @@
     "CatalystProgress": "媒体の進行",
     "CommunityData": "コミュニティの評価",
     "Consolidate": "統合する",
-    "CraftingPattern": "クラフトパターン",
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備する",
     "FavoriteUnFavorite": {
@@ -731,6 +778,7 @@
     },
     "Infuse": "融合する",
     "LockUnlock": {
+      "AutoLock": "ロック状態はこのアイテムのタグに同期されます",
       "Lock": "ロックする {{itemType}}",
       "Locked": "ロック中",
       "Unlock": "ロックを解除する {{itemType}}",
@@ -761,6 +809,7 @@
       "Untracked": "追跡をやめる"
     },
     "TriageTab": "トリアージ",
+    "UnreliablePerkOption": "このパークは、コレクション ビューにのみ表示されます。 このアイテムではランダムにロールしない場合があります。",
     "Vault": "保管庫",
     "WeaponLevel": "武器レベル {{level}}"
   },
@@ -784,9 +833,9 @@
       "Archetype": "内在特性",
       "BaseStats": "基本データ",
       "Breaker": "ブレイカー",
+      "Crafted": "構成された日付",
       "CustomTotal": "カスタム合計",
       "Damage": "ダメージ",
-      "Element": "属性",
       "Energy": "エネルギー",
       "Event": "イベント",
       "Icon": "アイコン",
@@ -883,6 +932,8 @@
     "UsageCount": "# 使用"
   },
   "Settings": {
+    "AutoLockTagged": "アイテムのロック状態とタグを同期",
+    "AutoLockTaggedExplanation": "DIMはタグに合わせて自動的にアイテムのロックとアンロックを行います。クラフトされたアイテムは、再構成できる様にロックが解除されたままになります。この設定を有効にすると、タグ付けされたアイテムのタイルにロックアイコンが表示されなくなります。",
     "BadgePostmaster": "現在のキャラクターにおけるポストマスターアイテム数をアプリアイコンに表示する",
     "BadgePostmasterExplanation": "この機能を利用するには、DIM をアプリとしてインストールし、OS がバッジの表示に対応している必要があります。",
     "BothDescriptions": "両方の説明",
@@ -896,25 +947,32 @@
     "CommunityData": "コミュニティのパーク評価",
     "CommunityDescriptionOnly": "コミュニティの説明",
     "CsvImport": "CSV の取り込み",
-    "CustomStatDesc": "アーマーのステータス値を選択して、アイテムポップアップ、オーガナイザー、比較に表示するカスタムの合計値を作成します。stat:custom:>=30で検索します。",
+    "CustomErrorLabel": "A stat name must contain word characters, and be different from other stat names for this Guardian class.",
+    "CustomErrorValues": "Stat weights must be positive numbers.\nAt least 2 stat weights must be above zero.",
+    "CustomStatChooseName": "Choose a Custom Stat name",
+    "CustomStatCreate": "Create a new custom stat",
+    "CustomStatDelete": "Delete this Custom Stat",
+    "CustomStatDeleteConfirm": "Delete this Custom Stat?",
+    "CustomStatDesc1": "Choose desired armor stats to make a custom total stat.",
+    "CustomStatDesc3": "Custom stats will appear in the Item Popup, Organizer, and Compare.",
+    "CustomStatTitle": "Custom Stat Total",
     "Data": "スプレッドシート",
     "DefaultItemSizeNote": "サイズを50pxにすると、アイテム画像やテキストをぼかすことなく、最もシャープに見れます。",
     "DontForgetDupes": "重複アイテムは is:dupe で素早く検索でき、比較ツールやオーガナイザーを使用して関連アイテムを評価できます。",
-    "EnableAdvancedStats": "アーマーの品質評価を表示します(D1)",
+    "EnableAdvancedStats": "アーマーの品質評価を表示する(D1)",
     "ExpandSingleCharacter": "全てのキャラクターを表示",
     "ExportProfile": "APIプロファイルの応答をエクスポート",
     "ExportSS": "所持品のスプレッドシート",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
-    "ExportSSNoStores": "このボタンをクリックする前に、所持品を一度ロードする必要があります。",
-    "HidePullFromPostmaster": "\"ポストマスターから取得\" ボタンを隠す",
+    "HidePullFromPostmaster": "\"$t(Loadouts.PullFromPostmaster)\" ボタンを隠す",
     "Inventory": "所持品の表示",
-    "InventoryColumns": "キャラクターの所持品の広さ",
+    "InventoryColumns": "キャラクターごとの所持アイテム表示幅",
     "InventoryColumnsMobile": "モバイルポートレートのキャラクターの所持品の広さ",
     "InventoryColumnsMobileLine2": "新しい設定に合わせてアイテムのサイズが変更されます",
     "InventoryNumberOfSpacesToClear": "ファーミングモードを使用する時に作成する空きスペース数",
     "Items": "アイテムの表示",
     "Language": "言語",
-    "LoadoutSort": "ロードアウト順:",
+    "LoadoutSort": "ロードアウトの表示順:",
     "LogOut": "ログアウト",
     "Masterworked": "マスターワーク済み",
     "PerkDisplay": "アイテムポップアップに Perk 表示を表示",
@@ -927,20 +985,19 @@
     "Settings": "設定",
     "ShowNewItems": "新しいアイテムに赤い点を表示する",
     "SingleCharacter": "キャラクター単体表示",
-    "SingleCharacterExplanation": "DIMは、最後にプレイしたキャラクターだけを表示します。\n表示されてないキャラクターが持っているアイテムで、現在のキャラクターが使用できる場合、保管庫に表示されます。 \n他のクラス固有のアイテムは、完全に隠されます。",
+    "SingleCharacterExplanation": "所持品のページで最後にプレイしたキャラクターだけを表示するよう設定します。\n非プレイのキャラクターが持っているアイテムで現在のキャラも使用できる場合、保管庫に表示されます。 \nクラス固有のアイテムは表示されません。",
     "SizeItem": "アイテムサイズ",
     "SortByAmmoType": "弾のタイプ",
     "SortByAmount": "スタックサイズ",
-    "SortByArmorElement": "アーマー属性 (D2)",
     "SortByClassType": "必須クラス",
-    "SortByCrafted": "クラフト済み (D2)",
+    "SortByCrafted": "クラフト済 (D2)",
     "SortByDeepsight": "ディープサイト (D2)",
     "SortByPrimary": "パワーレベル",
     "SortByRarity": "希少性",
     "SortByRating": "防具の品質 (D1)",
     "SortByRecent": "最近獲得したもの (D2)",
     "SortBySeason": "シーズン (D2)",
-    "SortBySunset": "リタイヤ済み (D2)",
+    "SortBySunset": "退役済 (D2)",
     "SortByTag": "タグ ({{taglist}})",
     "SortByType": "種類",
     "SortByWeaponElement": "ダメージタイプ",
@@ -1024,6 +1081,8 @@
     "DimSyncNotEnabled": "DIM Syncが有効になっていないため変更した設定、タグ、ロードアウト、検索はPCにのみ保存されています。このままブラウザのストレージをクリアするとデータは失われてしまいます。設定でDIM Syncを有効にしてデータを自動的にバックアップするか、定期的にデータを手動でバックアップしてください。",
     "EnableDimApi": "DIM Sync を有効にする (推奨)",
     "Export": "バックアップのダウンロード",
+    "ExportError": "DIM Sync からのバックアップのダウンロードに失敗しました。",
+    "ExportErrorBody": "DIM Sync がダウンしているか、通信に問題がある可能性があります。代わりにローカルに保存されたデータのコピーをダウンロードします。",
     "Import": "バックアップのインポート",
     "ImportConfirmDimApi": "現在のタグ、ロードアウト、設定をこのバージョンで上書きしても大丈夫ですか？それはあなたが持っていたものを完全に置き換えます。",
     "ImportExport": "バックアップとインポート",
@@ -1052,9 +1111,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "押した番号は正しい数字ではありません！",
+      "No": "いいえ",
       "Reset": "デバイス認証を解除する",
-      "Title": "Stream Deckにて、この番号が表示されているボタンを押してください"
+      "Title": "Stream Deck に同じコードが表示されますか？",
+      "Update": "このメッセージが表示される場合、古いバージョンのプラグインを使用しています。Stream Deck ストアで最新のアップデートをダウンロードしてください。",
+      "Yes": "はい"
     },
     "Connected": "接続しました",
     "Enable": "Stream Deck プラグイン",
@@ -1071,7 +1132,6 @@
   "StripSockets": {
     "Action": "ソケットからアイテムを外す",
     "ArmorMods": "{{count}} 個のアイテムにアーマーModが適用されています",
-    "ArtifactMods": "{{count}} 個のアイテムにアーティファクトModが適用されています",
     "Button": "{{numSockets}} 個のアイテムを外す",
     "Cancel": "キャンセル",
     "Choose": "取り外すアイテムを選択してください",
@@ -1097,14 +1157,31 @@
     "UnlockAll": "アイテムのロックを解除"
   },
   "Triage": {
+    "AccountsForArtifice": "アーティフィスアーマーが +3 のステータス修正を使用した場合に、より良くなるかテストする。",
+    "BetterArmor": "厳密に良い防具",
+    "BetterArtificeArmor": "より良いアーティフィスアーマー",
+    "BetterStatArmor": "良いステータスの防具",
+    "BetterStatArtificeArmor": "良いステータスのアーティフィスアーマー",
+    "BetterWorseArmor": "より良い/悪いアーマー",
+    "BetterWorseIncludes": "防具のピースを次から識別 : ",
     "HighStats": "高ステータス",
     "InLoadouts": "ロードアウト中",
     "OwnedCount": "所持",
+    "PerkBetterArmorDesc": "同じかそれ以上の、固有パークや特別 mod スロット",
+    "PerkWorseArmorDesc": "同一の固有パーク、か否か。",
     "SimilarItems": "類似のアイテム",
+    "StatBetterArmorDesc": "すべてのステータスが同等以上で、かつ少なくとも1つが優れている。",
+    "StatNotPerkArmorDesc": "ステータスのみテストします。下位のピースでも、特別な mod スロットや固有パークを持つ場合があります。",
+    "StatWorseArmorDesc": "より良ステータスは無く、少なくとも1つは悪いステータス。",
     "ThisItem": "このアイテム",
+    "WorseArmor": "厳密に悪い防具",
+    "WorseArtificeArmor": "悪いアーティフィスアーマー以外",
+    "WorseStatArmor": "悪いステータスの防具",
+    "WorseStatArtificeArmor": "悪いステータスの非アーティフィスアーマー",
     "YourBestItem": "最高のアイテム"
   },
   "Triumphs": {
+    "GildingTriumph": "金の勝利",
     "HideCompleted": "完了した勝利の道のりを隠す",
     "RevealRedacted": "改定された勝利の道のりを表示する"
   },
@@ -1120,7 +1197,7 @@
     "About": {
       "APIHistory": "DIM (またはその他のDestinyアプリ) で実行されたアクション履歴を表示する",
       "BungieCopyright": "すべての画像とコンテンツはBungieの所有物です。",
-      "CommunityInsight": "コミュニティのパーク評価は {{clarityLink}} と {{compendiumLink}} の提供によるものです。不正確な情報に気づいたり、質問がある場合は、 {{clarityDiscordLink}} に参加してください。",
+      "CommunityInsight": "コミュニティのパーク評価は {{clarityLink}} の提供によるものです。不正確な情報に気づいたり、質問がある場合は、 {{clarityDiscordLink}} に参加してください。",
       "Discord": "Discord",
       "DiscordHelp": "Discordチャネルで質問をしたり、フィードバックをするとサポートを受けられます。",
       "FAQ": "よくある質問",
@@ -1146,7 +1223,6 @@
       },
       "Translation": "翻訳チームに参加してください！",
       "TranslationText": "簡単に翻訳をするため {{link}} を使用しています。DIM の翻訳を改善したい場合は、チームに参加してください。",
-      "Twitter": "Twitter",
       "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
       "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}",
       "Wiki": "DIMユーザーガイドWiki",
@@ -1156,14 +1232,12 @@
     },
     "Login": {
       "Auth": "Bungie.net で認証する",
-      "BackupPrompt": "本当にバックアップなしで DIM Sync を有効にしますか?",
+      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "以前、 DIM Sync を無効にして、ローカルデータストレージのみを使用していました。DIM Sync を有効にすると、ローカルデータが DIM Sync のデータで置き換えられます。DIM Sync を有効にする前に、データをバックアップしておく必要があります。”設定” のバックアップから復元することができます。",
       "Explanation": "DIMでDestinyのキャラクター、保管庫、進捗状況などを閲覧や編集するには権限が必要です。",
       "LearnMore": "アカウントとログインについての詳細",
       "NewAccount": "別の Bungie.net アカウントでログイン",
-      "Permission": "許可が必要です。",
-      "UpgradeExplanation": "あなたのiOSのバージョンのホーム画面アプリでは、DIMにログインできません。 iOS 12.2以降にアップグレードし、DIMをホーム画面に再度追加してください。",
-      "UpgradeiOS": "今すぐiOSを更新してください"
+      "Permission": "許可が必要です。"
     },
     "Support": {
       "BackersDetail": "1回または毎月の寄付で私たちをサポートし、積極的な開発を続けてください。",

@@ -17,7 +17,6 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
-  checkForOverFill,
   createMoveSession,
   executeMoveItem,
   MoveReservations,
@@ -48,7 +47,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
 
     // If any category is full, we'll move enough aside
     const itemsToMove: DimItem[] = [];
-    _.forIn(postmasterItemCountsByType, (count, bucket) => {
+    for (const [bucket, count] of Object.entries(postmasterItemCountsByType)) {
       const bucketHash = parseInt(bucket, 10);
       if (count > 0 && findItemsByBucket(store, bucketHash).length > 0) {
         const items: DimItem[] = findItemsByBucket(store, bucketHash);
@@ -68,7 +67,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
           itemsToMove.push(..._.take(candidates, numNeededToMove));
         }
       }
-    });
+    }
     try {
       await dispatch(moveItemsToVault(store, itemsToMove, cancelToken));
       showNotification({
@@ -92,8 +91,6 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
         throw e;
       }
     }
-
-    dispatch(checkForOverFill());
   };
 }
 
@@ -220,8 +217,6 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
       if (!succeeded) {
         throw new Error(t('Loadouts.PullFromPostmasterGeneralError'));
       }
-
-      dispatch(checkForOverFill());
     })();
 
     showNotification(postmasterNotification(items.length, store, promise, cancel));

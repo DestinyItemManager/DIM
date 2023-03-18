@@ -84,7 +84,9 @@ function getCurrentSeason(
   return [
     seasonPass?.rewardProgressionHash,
     seasonPass?.prestigeProgressionHash,
-    defs?.InventoryItem.get(season.artifactItemHash!).displayProperties.icon,
+    season.artifactItemHash
+      ? defs?.InventoryItem.get(season.artifactItemHash).displayProperties.icon
+      : undefined,
   ];
 }
 
@@ -92,6 +94,7 @@ function getCurrentSeason(
 function streamDeckMetricsUpdate(state: RootState): MetricsArgs {
   const profile = profileResponseSelector(state);
   const progression = getCharacterProgressions(profile)?.progressions ?? {};
+  const { lifetimeScore, activeScore } = profile?.profileRecords?.data || {};
   const [battlePassHash, prestigeLevel, artifactIcon] = getCurrentSeason(state, profile);
 
   // battle pass level calc from src/app/progress/SeasonalRank.tsx
@@ -110,10 +113,15 @@ function streamDeckMetricsUpdate(state: RootState): MetricsArgs {
     trials: progression[2755675426].currentProgress,
     gunsmith: progression[1471185389].currentProgress,
     ironBanner: progression[599071390].currentProgress,
-    triumphs: 0, // TODO to be implemented
+    triumphs: lifetimeScore ?? 0,
+    triumphsActive: activeScore ?? 0,
     battlePass: battlePassHash ? seasonalRank : 0,
     artifactIcon,
   };
+}
+
+function streamDeckEquippedItems(store?: DimStore) {
+  return store?.items.filter((it) => it.equipment).map((it) => it.id) ?? [];
 }
 
 export default {
@@ -121,4 +129,5 @@ export default {
   vault: streamDeckVaultUpdate,
   maxPower: streamDeckMaxPowerUpdate,
   postmaster: streamDeckPostMasterUpdate,
+  equippedItems: streamDeckEquippedItems,
 };

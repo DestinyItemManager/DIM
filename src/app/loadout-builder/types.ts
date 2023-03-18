@@ -1,8 +1,7 @@
-import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
-import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
+import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { armorBuckets } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { ProcessItem } from './process-worker/types';
 
 export interface MinMax {
@@ -30,7 +29,7 @@ export interface ExcludedItems {
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.
  */
 export interface ArmorSet {
-  /** The overall stats for the loadout as a whole, but excluding auto stat mods. */
+  /** The overall stats for the loadout as a whole, including auto stat mods. */
   readonly stats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly DimItem[][];
@@ -41,6 +40,19 @@ export interface ArmorSet {
 export type ItemsByBucket = Readonly<{
   [bucketHash in LockableBucketHash]: readonly DimItem[];
 }>;
+
+/**
+ * Data describing the mods that can be automatically picked.
+ */
+export interface AutoModDefs {
+  generalMods: {
+    [key in ArmorStatHashes]?: {
+      majorMod: PluggableInventoryItemDefinition;
+      minorMod: PluggableInventoryItemDefinition;
+    };
+  };
+  artificeMods: { [key in ArmorStatHashes]?: PluggableInventoryItemDefinition };
+}
 
 /**
  * An item group mapping to the same process item. All items in this group
@@ -88,7 +100,24 @@ export type ArmorStats = { [statHash in ArmorStatHashes]: number };
  * The reusablePlugSetHash from armour 2.0's general socket.
  * TODO: Find a way to generate this in d2ai.
  */
-export const generalSocketReusablePlugSetHash = 3559124992;
+export const generalSocketReusablePlugSetHash = 731468111;
+
+/**
+ * The reusablePlugSetHash for artifice armor's artifice socket, with +3 mods.
+ * TODO: Find a way to generate this in d2ai.
+ */
+export const artificeSocketReusablePlugSetHash = 4285066582;
+
+/** Bonus to a single stat given by plugs in artifice armor's exclusive mod slot */
+export const artificeStatBoost = 3;
+/** Bonus to a single stat given by the "half tier mods" plugs in all armor's general mod slot */
+export const minorStatBoost = 5;
+/**
+ * Bonus to a single stat given by the "full tier mods" plugs in all armor's general mod slot.
+ * The fact that a major mod gives exactly 1 tier without changing the number of remainder points
+ * is fairly engrained in some of the algorithms, so it wouldn't be quite trivial to change this.
+ */
+export const majorStatBoost = 10;
 
 /**
  * Special value for lockedExoticHash indicating the user would not like any exotics included in their loadouts.
@@ -107,7 +136,6 @@ export const MIN_LO_ITEM_ENERGY = 7;
  * Requires a reasonable and inexpensive amount of upgrade materials.
  */
 export const loDefaultArmorEnergyRules: ArmorEnergyRules = {
-  lockArmorEnergyType: LockArmorEnergyType.None,
   assumeArmorMasterwork: AssumeArmorMasterwork.None,
   minItemEnergy: MIN_LO_ITEM_ENERGY,
 };
@@ -116,7 +144,6 @@ export const loDefaultArmorEnergyRules: ArmorEnergyRules = {
  * make in-game -- none as of now.
  */
 export const inGameArmorEnergyRules: ArmorEnergyRules = {
-  lockArmorEnergyType: LockArmorEnergyType.All,
   assumeArmorMasterwork: AssumeArmorMasterwork.None,
   minItemEnergy: 1,
 };
@@ -126,18 +153,9 @@ export const inGameArmorEnergyRules: ArmorEnergyRules = {
  * to accommodate mods and hit optimal stats.
  */
 export interface ArmorEnergyRules {
-  lockArmorEnergyType: LockArmorEnergyType;
   assumeArmorMasterwork: AssumeArmorMasterwork;
   /**
    * How much energy capacity items have at least.
    */
   minItemEnergy: number;
-  /**
-   * Info about other loadouts. This must be specified if `lockArmorEnergyType`
-   * can be `LockArmorEnergyType.OtherLoadouts`.
-   */
-  loadouts?: {
-    loadoutsByItem: LoadoutsByItem;
-    optimizingLoadoutId: string | undefined;
-  };
 }

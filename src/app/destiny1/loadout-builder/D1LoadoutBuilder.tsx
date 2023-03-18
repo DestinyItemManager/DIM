@@ -257,7 +257,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
               {/* TODO: break into its own component */}
               <span>{t('Bucket.Armor')}</span>:{' '}
               <select name="type" value={type} onChange={this.onChange}>
-                {_.map(i18nItemNames, (name, type) => (
+                {Object.entries(i18nItemNames).map(([type, name]) => (
                   <option key={type} value={type}>
                     {name}
                   </option>
@@ -317,13 +317,13 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
               <span>{t('LB.Locked')}</span> - <small>{t('LB.LockedHelp')}</small>
             </p>
             <div className="loadout-builder-section">
-              {_.map(lockeditems, (lockeditem, type: ArmorTypes) => (
+              {Object.entries(lockeditems).map(([type, lockeditem]) => (
                 <LoadoutBuilderLockPerk
                   key={type}
                   lockeditem={lockeditem}
                   activePerks={activePerks}
                   lockedPerks={lockedperks}
-                  type={type}
+                  type={type as ArmorTypes}
                   i18nItemNames={i18nItemNames}
                   onRemove={this.onRemove}
                   onPerkLocked={this.onPerkLocked}
@@ -462,7 +462,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
           {progress >= 1 && (
             <ErrorBoundary name="Generated Sets">
               <div>
-                {_.map(activeHighestSets, (setType) => (
+                {activeHighestSets.map((setType) => (
                   <GeneratedSet
                     key={setType.set.setHash}
                     store={active}
@@ -555,26 +555,26 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
     let allItems: D1Item[] = [];
     let vendorItems: D1Item[] = [];
-    stores.forEach((store) => {
+    for (const store of stores) {
       const items = filterItems(store.items);
 
       allItems = allItems.concat(items);
 
       // Build a map of perks
-      items.forEach((item) => {
+      for (const item of items) {
         if (item.classType === DestinyClass.Unknown) {
-          allClassTypes.forEach((classType) => {
+          for (const classType of allClassTypes) {
             perks[classType][item.type] = filterPerks(perks[classType][item.type], item);
-          });
+          }
         } else {
           perks[item.classType][item.type] = filterPerks(perks[item.classType][item.type], item);
         }
-      });
-    });
+      }
+    }
 
     if (vendors) {
       // Process vendors here
-      _.forIn(vendors, (vendor) => {
+      for (const vendor of Object.values(vendors)) {
         const vendItems = filterItems(
           vendor.allItems
             .map((i) => i.item)
@@ -586,31 +586,31 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
         vendorItems = vendorItems.concat(vendItems);
 
         // Build a map of perks
-        vendItems.forEach((item) => {
+        for (const item of vendItems) {
           if (item.classType === DestinyClass.Unknown) {
-            allClassTypes.forEach((classType) => {
+            for (const classType of allClassTypes) {
               vendorPerks[classType][item.type] = filterPerks(
                 vendorPerks[classType][item.type],
                 item
               );
-            });
+            }
           } else {
             vendorPerks[item.classType][item.type] = filterPerks(
               vendorPerks[item.classType][item.type],
               item
             );
           }
-        });
-      });
+        }
+      }
 
       // Remove overlapping perks in allPerks from vendorPerks
-      _.forIn(vendorPerks, (perksWithType, classType) => {
-        _.forIn(perksWithType, (perkArr, type) => {
+      for (const [classType, perksWithType] of Object.entries(vendorPerks)) {
+        for (const [type, perkArr] of Object.entries(perksWithType)) {
           vendorPerks[classType][type] = _.reject(perkArr, (perk) =>
             perks[classType][type].map((i: D1GridNode) => i.hash).includes(perk.hash)
           );
-        });
-      });
+        }
+      }
     }
 
     return getActiveBuckets<D1GridNode[]>(
@@ -797,7 +797,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
   };
 }
 
-export default connect<StoreProps>(mapStateToProps)(D1LoadoutBuilder);
+export default connect(mapStateToProps)(D1LoadoutBuilder);
 
 function isInputElement(element: HTMLElement): element is HTMLInputElement {
   return element.nodeName === 'INPUT';

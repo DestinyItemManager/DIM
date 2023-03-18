@@ -49,3 +49,24 @@ export function i15dDurationFromMs(milliseconds: number, compact = false) {
       })} ${hhMM}`
     : `${hhMM}`;
 }
+
+/**
+ * print a number of milliseconds as something like "4d 0:51:23",
+ * containing days, minutes, seconds, and hours.
+ * uses i18n to choose an appropriate substitute for that "d"
+ *
+ * negative durations are treated as 0
+ */
+export function i15dDurationFromMsWithSeconds(milliseconds: number) {
+  const [days, hours, minutes, seconds] = durationFromMs(milliseconds);
+  const hhMM = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds
+    .toString()
+    .padStart(2, '0')}`;
+  return days
+    ? `${t('Countdown.Days', {
+        count: days,
+        context: '',
+        metadata: { context: ['compact'] },
+      })} ${hhMM}`
+    : `${hhMM}`;
+}

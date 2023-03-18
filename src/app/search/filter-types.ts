@@ -1,7 +1,7 @@
-import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { ItemInfos } from 'app/inventory/dim-item-info';
+import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
@@ -14,7 +14,7 @@ type I18nInput = Parameters<typeof t>;
 // a filter can return various bool-ish values
 type ValidFilterOutput = boolean | null | undefined;
 
-export type ItemFilter = (item: DimItem) => ValidFilterOutput;
+export type ItemFilter<I = DimItem> = (item: I) => ValidFilterOutput;
 
 /**
  * A slice of data that could be used by filter functions to
@@ -30,12 +30,10 @@ export interface FilterContext {
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined;
   wishListsByHash: _.Dictionary<WishListRoll[]>;
   newItems: Set<string>;
-  itemInfos: ItemInfos;
-  itemHashTags: {
-    [itemHash: string]: ItemHashTag;
-  };
+  getTag: (item: DimItem) => TagValue | undefined;
+  getNotes: (item: DimItem) => string | undefined;
   language: string;
-  customStats: Settings['customTotalStatsByClass'];
+  customStats: Settings['customStats'];
   d2Definitions: D2ManifestDefinitions | undefined;
 }
 
@@ -46,9 +44,11 @@ export interface FilterContext {
 export interface SuggestionsContext {
   allItems?: DimItem[];
   loadouts?: Loadout[];
-  itemInfos?: ItemInfos;
+  getTag?: (item: DimItem) => TagValue | undefined;
+  getNotes?: (item: DimItem) => string | undefined;
   d2Manifest?: D2ManifestDefinitions;
   allNotesHashtags?: string[];
+  customStats?: CustomStatDef[];
 }
 
 // TODO: FilterCategory
@@ -96,7 +96,7 @@ export interface FilterArgs {
  * filter expression itself. We can also use it to drive filter help and filter
  * editor.
  */
-export interface FilterDefinition {
+export interface FilterDefinition<I extends DimItem = DimItem> {
   /**
    * One or more keywords which trigger the filter when typed into search bar.
    * What this means depends on what "format" this filter is.
@@ -135,7 +135,7 @@ export interface FilterDefinition {
    * filter function will be generated once, at the point where the overall
    * query is parsed.
    */
-  filter: (args: FilterArgs & FilterContext) => ItemFilter;
+  filter: (args: FilterArgs & FilterContext) => ItemFilter<I>;
 
   /**
    * A list of suggested keywords, for `query` and `stat` formats.
@@ -150,7 +150,7 @@ export interface FilterDefinition {
   /**
    * For stat filters, check whether this is a valid stat name or combination.
    */
-  validateStat?: (stat: string) => boolean;
+  validateStat?: (filterContext?: FilterContext) => (stat: string) => boolean;
 
   /**
    * A custom function used to generate (additional) suggestions.

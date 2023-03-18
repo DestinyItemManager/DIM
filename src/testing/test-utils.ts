@@ -13,8 +13,8 @@ import fs from 'fs/promises';
 import _ from 'lodash';
 import path from 'path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
-import profile from './data/profile-2022-06-27.json';
-import vendors from './data/vendors-2022-10-16.json';
+import profile from './data/profile-2023-02-28.json';
+import vendors from './data/vendors-2023-02-28.json';
 
 /**
  * Get the current manifest as JSON. Downloads the manifest if not cached.
@@ -87,6 +87,11 @@ export const getTestVendors = () => (vendors as any).Response as DestinyVendorsR
 export const getTestStores = _.once(async () => {
   const manifest = await getTestDefinitions();
 
-  const stores = buildStores(manifest, getBuckets(manifest), getTestProfile());
+  const stores = buildStores({
+    defs: manifest,
+    buckets: getBuckets(manifest),
+    profileResponse: getTestProfile(),
+    customStats: [],
+  });
   return stores;
 });

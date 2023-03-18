@@ -4,7 +4,6 @@ import { filteredItemsSelector } from 'app/search/search-filter';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { itemIncludesCategories } from './filtering-utils';
 import { itemCategoryIcons } from './item-category-icons';
@@ -17,7 +16,7 @@ import styles from './ItemTypeSelector.m.scss';
  */
 export interface ItemCategoryTreeNode {
   id: string;
-  itemCategoryHash: number;
+  itemCategoryHash: ItemCategoryHashes;
   subCategories?: ItemCategoryTreeNode[];
   /** A terminal node can have items displayed for it. It may still have other drilldowns available. */
   terminal?: boolean;
@@ -165,12 +164,6 @@ const d2SelectionTree: ItemCategoryTreeNode = {
           terminal: true,
         },
         {
-          id: 'grenadelauncherFF',
-          itemCategoryHash: -ItemCategoryHashes.GrenadeLaunchers,
-          subCategories: [kinetic, energy],
-          terminal: true,
-        },
-        {
           id: 'rocketlauncher',
           itemCategoryHash: ItemCategoryHashes.RocketLauncher,
           terminal: true,
@@ -193,21 +186,23 @@ const d2SelectionTree: ItemCategoryTreeNode = {
       id: 'hunter',
       itemCategoryHash: ItemCategoryHashes.Hunter,
       subCategories: armorCategories,
+      terminal: true,
     },
     {
       id: 'titan',
       itemCategoryHash: ItemCategoryHashes.Titan,
       subCategories: armorCategories,
+      terminal: true,
     },
     {
       id: 'warlock',
       itemCategoryHash: ItemCategoryHashes.Warlock,
       subCategories: armorCategories,
+      terminal: true,
     },
     {
       id: 'ghosts',
       itemCategoryHash: ItemCategoryHashes.Ghost,
-
       terminal: true,
     },
   ],
@@ -328,7 +323,7 @@ export function getSelectionTree(destinyVersion: DestinyVersion) {
   return destinyVersion === 2 ? d2SelectionTree : d1SelectionTree;
 }
 
-const armorTopLevelCatHashes = [
+export const armorTopLevelCatHashes: ItemCategoryHashes[] = [
   ItemCategoryHashes.Hunter,
   ItemCategoryHashes.Titan,
   ItemCategoryHashes.Warlock,
@@ -345,7 +340,7 @@ export default function ItemTypeSelector({
 }: {
   selectionTree: ItemCategoryTreeNode;
   selection: ItemCategoryTreeNode[];
-  onSelection(selection: ItemCategoryTreeNode[]): void;
+  onSelection: (selection: ItemCategoryTreeNode[]) => void;
 }) {
   const defs = useDefinitions()!;
   const filteredItems = useSelector(filteredItemsSelector);

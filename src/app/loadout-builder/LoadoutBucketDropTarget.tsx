@@ -9,7 +9,7 @@ import styles from './LoadoutBucketDropTarget.m.scss';
 interface Props {
   className?: string;
   children?: React.ReactNode;
-  onItemLocked(lockedItem: DimItem): void;
+  onItemLocked: (lockedItem: DimItem) => void;
 }
 
 /**

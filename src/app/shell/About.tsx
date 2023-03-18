@@ -1,5 +1,5 @@
 import { getToken } from 'app/bungie-api/oauth-tokens';
-import { clarityDiscordLink, clarityLink, compendiumLink } from 'app/clarity/about';
+import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { useEffect } from 'react';
@@ -17,6 +17,7 @@ import {
   faYoutube,
   heartIcon,
   helpIcon,
+  mastodonIcon,
   twitterIcon,
 } from './icons';
 
@@ -34,6 +35,7 @@ const openCollectiveLink = `<a href='${openCollectiveLinkDirect}' target='_blank
 const storeLink = `<a href='${storeLinkDirect}' target='_blank' rel='noopener noreferrer'>DesignByHumans</a>`;
 const youTubeLink = 'https://www.youtube.com/channel/UCsNRmUfaeIi5Tk7U0mlZ6UQ';
 const twitterLink = 'https://twitter.com/ThisIsDIM';
+const mastodonLink = 'https://mstdn.games/@ThisIsDIM';
 const redditLink = 'https://destinyitemmanager.reddit.com';
 const discordLink = 'https://discord.gg/UK2GWC7';
 const wikiLink = 'https://github.com/DestinyItemManager/DIM/wiki';
@@ -44,14 +46,25 @@ function getSystemInfo() {
   const parser = new UAParser();
   const { name: browserName, version: browserVersion } = parser.getBrowser();
   const { name: osName, version: osVersion } = parser.getOS();
-  const info = `${browserName} ${browserVersion} - ${osName} ${osVersion}`;
+  const userAgent = parser.getUA();
+  const dimAppStoreIndex = userAgent.indexOf('DIM AppStore');
+  let browserInfo = `${browserName} ${browserVersion}`;
+  if (dimAppStoreIndex >= 0) {
+    browserInfo = userAgent.substring(dimAppStoreIndex);
+  }
+
+  const info = `${browserInfo} - ${osName} ${osVersion}`;
   return info;
 }
 
 export default function About() {
-  const iOSApp = document.cookie.includes('app-platform=iOS App Store;');
+  // The App Store version can't show donation links I guess?
+  const iOSApp = navigator.userAgent.includes('DIM AppStore');
 
   useEffect(() => {
+    if (iOSApp) {
+      return;
+    }
     const script = document.createElement('script');
 
     script.src =
@@ -106,7 +119,6 @@ export default function About() {
           dangerouslySetInnerHTML={{
             __html: t('Views.About.CommunityInsight', {
               clarityLink,
-              compendiumLink,
               clarityDiscordLink,
             }),
           }}
@@ -144,11 +156,17 @@ export default function About() {
         <div>
           <h2>
             <ExternalLink href={twitterLink}>
-              <AppIcon icon={twitterIcon} /> {t('Views.About.Twitter')}
+              <AppIcon icon={twitterIcon} /> Twitter
+            </ExternalLink>
+            {' / '}
+            <ExternalLink href={mastodonLink}>
+              <AppIcon icon={mastodonIcon} /> Mastodon
             </ExternalLink>
           </h2>
           {t('Views.About.TwitterHelp')} <br />
           <ExternalLink href={twitterLink}>@ThisIsDIM</ExternalLink>
+          {' / '}
+          <ExternalLink href={mastodonLink}>@ThisIsDIM@mstdn.games</ExternalLink>
         </div>
         <div>
           <h2>
@@ -160,12 +178,11 @@ export default function About() {
         </div>
         <div>
           <h2>
-            <ExternalLink href={youTubeLink}>
-              <AppIcon icon={faYoutube} /> {t('Views.About.YouTube')}
+            <ExternalLink href={discordLink}>
+              <AppIcon icon={faDiscord} /> {t('Views.About.Discord')}
             </ExternalLink>
           </h2>
-          {t('Views.About.YouTubeHelp')} <br />
-          <ExternalLink href={youTubeLink}>Destiny Item Manager</ExternalLink>
+          {t('Views.About.DiscordHelp')}
         </div>
         <div>
           <h2>
@@ -178,11 +195,12 @@ export default function About() {
         </div>
         <div>
           <h2>
-            <ExternalLink href={discordLink}>
-              <AppIcon icon={faDiscord} /> {t('Views.About.Discord')}
+            <ExternalLink href={youTubeLink}>
+              <AppIcon icon={faYoutube} /> {t('Views.About.YouTube')}
             </ExternalLink>
           </h2>
-          {t('Views.About.DiscordHelp')}
+          {t('Views.About.YouTubeHelp')} <br />
+          <ExternalLink href={youTubeLink}>Destiny Item Manager</ExternalLink>
         </div>
         <div>
           <h2>

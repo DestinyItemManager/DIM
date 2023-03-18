@@ -1,16 +1,12 @@
 import ArmorySheet from 'app/armory/ArmorySheet';
 import BungieImage from 'app/dim-ui/BungieImage';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { Portal } from 'app/utils/temp-container';
-import {
-  DamageType,
-  DestinyAmmunitionType,
-  DestinyClass,
-  DestinyEnergyType,
-} from 'bungie-api-ts/destiny2';
+import { DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import heavy from 'destiny-icons/general/ammo-heavy.svg';
@@ -38,12 +34,7 @@ export default function ItemPopupHeader({
 }) {
   const [showArmory, setShowArmory] = useState(false);
 
-  const showElementIcon =
-    item.element &&
-    (item.bucket.inWeapons
-      ? item.element.enumValue !== DamageType.Kinetic
-      : item.element.enumValue !== DestinyEnergyType.Ghost &&
-        item.element.enumValue !== DestinyEnergyType.Subclass);
+  const showElementIcon = Boolean(item.element);
 
   const linkToArmory = item.destinyVersion === 2;
 
@@ -59,7 +50,9 @@ export default function ItemPopupHeader({
       {noLink || item.destinyVersion === 1 ? (
         <span className={styles.title}>{item.name}</span>
       ) : (
-        <a className={styles.title}>{item.name}</a>
+        <a className={styles.title}>
+          <RichDestinyText text={item.name} ownerId={item.owner} />
+        </a>
       )}
 
       <div className={styles.subtitle}>
@@ -77,8 +70,8 @@ export default function ItemPopupHeader({
         <div className={styles.details}>
           {showElementIcon && <ElementIcon element={item.element} className={styles.elementIcon} />}
           <div className={styles.power}>{item.primaryStat?.value}</div>
-          {item.powerCap && <div className={styles.powerCap}>| {item.powerCap} </div>}
-          {item.pursuit?.questStepNum && (
+          {Boolean(item.powerCap) && <div className={styles.powerCap}>| {item.powerCap} </div>}
+          {item.pursuit?.questStepNum !== undefined && (
             <div className={styles.itemType}>
               {t('MovePopup.Subtitle.QuestProgress', {
                 questStepNum: item.pursuit.questStepNum,

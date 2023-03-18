@@ -19,9 +19,9 @@ export default function LoadoutDrawerBucket({
 }: {
   bucket: InventoryBucket;
   items: ResolvedLoadoutItem[];
-  pickLoadoutItem(bucket: InventoryBucket): void;
-  equip(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
-  remove(resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent): void;
+  pickLoadoutItem: (bucket: InventoryBucket) => void;
+  equip: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
+  remove: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
 }) {
   const [equippedItems, unequippedItems] = _.partition(items, (li) => li.loadoutItem.equip);
 

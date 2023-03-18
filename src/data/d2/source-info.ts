@@ -32,7 +32,6 @@ const D2Sources: {
       1286332045, // Source: Found by completing Izanami Forge ignitions.
       1457456824, // Source: Complete the "Reunited Siblings" Triumph.
       1465990789, // Source: Solve the Japanese glyph puzzle.
-      1546689276, // Source: Acquired from Ada-1
       1596507419, // Source: Complete a Gofannon Forge ignition.
       2062058385, // Source: Crafted in a Black Armory forge.
       2384327872, // Source: Solve the French glyph puzzle.
@@ -51,7 +50,6 @@ const D2Sources: {
   adventure: {
     itemHashes: [],
     sourceHashes: [
-      80684972, // Source: Complete a Heroic Adventure on Mercury.
       194661944, // Source: Adventure "Siren Song" on Saturn's moon, Titan.
       482012099, // Source: Adventure "Thief of Thieves" on Saturn's Moon, Titan.
       636474187, // Source: Adventure "Deathless" on Saturn's Moon, Titan.
@@ -84,7 +82,10 @@ const D2Sources: {
     searchString: [],
   },
   battlegrounds: {
-    itemHashes: [],
+    itemHashes: [
+      2121785039, // Brass Attacks
+      3075224551, // Threaded Needle
+    ],
     sourceHashes: [
       3391325445, // Source: Battlegrounds
     ],
@@ -110,7 +111,6 @@ const D2Sources: {
       1286332045, // Source: Found by completing Izanami Forge ignitions.
       1457456824, // Source: Complete the "Reunited Siblings" Triumph.
       1465990789, // Source: Solve the Japanese glyph puzzle.
-      1546689276, // Source: Acquired from Ada-1
       1596507419, // Source: Complete a Gofannon Forge ignition.
       2062058385, // Source: Crafted in a Black Armory forge.
       2384327872, // Source: Solve the French glyph puzzle.
@@ -157,15 +157,17 @@ const D2Sources: {
       569214265, // Source: Earned over the course of the Red War campaign.
       677167936, // Source: Complete the campaign as a Warlock.
       736336644, // Source: "A Spark of Hope" quest.
+      901482731, // Source: Lightfall Campaign
       918840100, // Source: Complete the Shadowkeep campaign.
+      923708784, // Requires Guardian Rank 7: Threats and Surges
       1076222895, // Source: Defeat bosses in Flashpoints.
       1103518848, // Source: Earned over the course of the Warmind campaign.
       1118966764, // Source: Dismantle an item with this shader applied to it.
       1281387702, // Source: Unlock your Void subclass.
       1670837732, // Source: Found in Legendary world engrams.
       1701477406, // Source: Flashpoint milestones; Legendary engrams.
-      2130345705, // Source: Unlocked by default.
       2242939082, // Requires Hunter Class
+      2278847330, // Requires Guardian Rank 5
       2308290458, // Requires 1,000 Warlock Kills
       2744321951, // Source: Complete a heroic Public Event.
       2892963218, // Source: Earned while leveling.
@@ -175,6 +177,7 @@ const D2Sources: {
       3083076965, // Source: Unlocked by default.
       3099553329, // Source: Complete the campaign as a Titan.
       3126774631, // Requires 1,000 Hunter Kills
+      3174947771, // Requires Guardian Rank 6: Powerful Rewards
       3431853656, // Achieved a Grimoire score of over 5000 in Destiny.
       3532642391, // Source: Earned over the course of the Forsaken campaign.
       3704442923, // Source: Earned over the course of the Curse of Osiris campaign.
@@ -195,7 +198,6 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       164083100, // Source: Display of Supremacy, Weekly Challenge
-      2939318890, // Source: Wayfinder's Compass
       3100439379, // Source: Mission Exorcism
     ],
     searchString: [],
@@ -257,6 +259,7 @@ const D2Sources: {
       1145551111, // Source: Found in Crucible engrams.
       1217831333, // Source: Complete this reward's associated Crucible quest.
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
+      1494513645, // Source: Complete Glory matches in Crucible.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
@@ -301,7 +304,6 @@ const D2Sources: {
       3875444086, // The Emperor's Chosen
     ],
     sourceHashes: [
-      80684972, // Source: Complete a Heroic Adventure on Mercury.
       148542898, // Source: Equip the full Mercury destination set on a Warlock.
       194661944, // Source: Adventure "Siren Song" on Saturn's moon, Titan.
       266896577, // Source: Solve the Norse glyph puzzle.
@@ -350,7 +352,6 @@ const D2Sources: {
       3079246067, // Source: Complete Osiris' Lost Prophecies for Brother Vance on Mercury.
       3147603678, // Acquired from the raid "Crown of Sorrow."
       3257722699, // Source: Complete the "Clean Up on Aisle Five" Triumph.
-      3353456375, // Defeat 25 Final Bosses
       3390164851, // Source: Found by turning in Black Armory bounties.
       3427537854, // Source: Adventure "Road Rage" on Io.
       3534706087, // Source: Complete activities and earn rank-up packages on Saturn's Moon, Titan.
@@ -488,6 +489,7 @@ const D2Sources: {
       506073192, // Source: Season of Arrivals dungeon.
       675740011, // Source: "Grasp of Avarice" Dungeon
       1282207663, // Source: Dungeon Duality
+      1597738585, // Source: "Spire of the Watcher" Dungeon
       1745960977, // Source: Pit of Heresy
       2856954949, // Source: "Let Loose Thy Talons" Exotic quest.
       3597879858, // Source: Presage Exotic Quest
@@ -529,7 +531,6 @@ const D2Sources: {
   ep: {
     itemHashes: [],
     sourceHashes: [
-      3353456375, // Defeat 25 Final Bosses
       4137108180, // Source: Escalation Protocol on Mars.
     ],
     searchString: [],
@@ -551,13 +552,15 @@ const D2Sources: {
     sourceHashes: [
       32323943, // Source: Moments of Triumph.
       151416041, // Source: Solstice
-      510530151, // Source: Dawning 2020
+      464727567, // Source: Earned during the 2021 Dawning event
+      547767158, // Source: Dawning 2018
       611838069, // Source: Earned during the seasonal Guardian Games event.
+      629617846, // Source: Earned during the 2020 Dawning event
       641018908, // Source: Earned during the 2018 Solstice event.
       772619302, // Completed all 8 Moments of Triumph in Destiny's second year.
       923678151, // Source: Upgraded Event Card Reward
-      930411416, // Source: Dawning 2021
       1054169368, // Source: Festival of the Lost 2021.
+      1225476079, // Source: Moments of Triumph 2022
       1360005982, // Completed a Moment of Triumph in Destiny's second year.
       1397119901, // Completed a Moment of Triumph in Destiny's first year.
       1462687159, // Reached level 5 in the Ages of Triumph record book.
@@ -567,8 +570,10 @@ const D2Sources: {
       2006303146, // Source: Guardian Games 2022
       2011810450, // Source: Season 13 Guardian Games
       2187511136, // Source: Earned during the seasonal Revelry event.
+      2364515524, // Source: Earned during the 2022 Dawning event
       2502262376, // Source: Earned during the seasonal Crimson Days event.
       2797674516, // Source: Moments of Triumph 2021
+      3092212681, // Source: Dawning 2019
       3112857249, // Completed all 10 Moments of Triumph in Destiny's first year.
       3190938946, // Source: Festival of the Lost 2019.
       3388021959, // Source: Earned during the Guardian Games event.
@@ -707,9 +712,13 @@ const D2Sources: {
     searchString: [],
   },
   haunted: {
-    itemHashes: [],
+    itemHashes: [
+      1478986057, // Without Remorse
+      2778013407, // Firefright
+    ],
     sourceHashes: [
       620369433, // Source: Season of the Haunted Triumph
+      976328308, // Source: The Derelict Leviathan
       1283862526, // Source: Season of the Haunted Nightfall Grandmaster
       2273761598, // Source: Season of the Haunted Activities
       2676881949, // Source: Season of the Haunted
@@ -871,7 +880,6 @@ const D2Sources: {
   mercury: {
     itemHashes: [],
     sourceHashes: [
-      80684972, // Source: Complete a Heroic Adventure on Mercury.
       148542898, // Source: Equip the full Mercury destination set on a Warlock.
       1175566043, // Source: Complete Nightfall strike "A Garden World."
       1400219831, // Source: Equip the full Mercury destination set on a Hunter.
@@ -892,6 +900,21 @@ const D2Sources: {
       1253026984, // Source: Among the lost Ghosts of the Moon.
       1999000205, // Source: Found by exploring the Moon.
       3589340943, // Source: Altars of Sorrow
+    ],
+    searchString: [],
+  },
+  neomuna: {
+    itemHashes: [],
+    sourceHashes: [
+      281362298, // Source: Strider Exotic Quest
+      454251931, // Source: "What Remains" Exotic Quest
+      483798855, // Source: "The Final Strand" Exotic Quest
+      1750523507, // Source: Terminal Overload (Ahimsa Park)
+      2697389955, // Source: "Neomuna Sightseeing" Triumph
+      3041847664, // Source: Found by Exploring Neomuna
+      3773376290, // Source: Terminal Overload (Zephyr Concourse)
+      4006434081, // Source: Terminal Overload
+      4110186790, // Source: Terminal Overload (Límíng Harbor)
     ],
     searchString: [],
   },
@@ -921,6 +944,7 @@ const D2Sources: {
       860666126, // Source: Nightfall
       1175566043, // Source: Complete Nightfall strike "A Garden World."
       1283862526, // Source: Season of the Haunted Nightfall Grandmaster
+      1516560855, // Source: Season of the Seraph Grandmaster Nightfall
       1581680964, // Source: Complete Nightfall strike "Tree of Probabilities."
       1596489410, // Source: Season of the Risen Nightfall Grandmaster
       1618699950, // Source: Season of the Lost Nightfall Grandmaster
@@ -938,6 +962,7 @@ const D2Sources: {
       3022766747, // Source: Complete Nightfall strike "The Insight Terminus."
       3067146211, // Source: Complete Nightfall strike "Exodus Crash."
       3142874552, // Source: Nightfall
+      3229688794, // Source: Grandmaster Nightfall
       3528789901, // Source: Season of the Chosen Nightfall Grandmaster
       3874934421, // Source: Complete Nightfall strike "The Corrupted."
       3964663093, // Source: Rare drop from high-scoring Nightfall strikes on Mercury.
@@ -951,6 +976,7 @@ const D2Sources: {
     sourceHashes: [
       550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
       2778435282, // Source: Nightmare Hunts
+      3190710249, // Source: "Root of Nightmares" Raid
     ],
     searchString: [],
   },
@@ -958,6 +984,25 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       1464399708, // Source: Earn rank-up packages from Executor Hideo.
+    ],
+    searchString: [],
+  },
+  'pinnacle-weapon': {
+    itemHashes: [
+      578459533, // Wendigo GL3
+      654608616, // Revoker
+      1584643826, // Hush
+      1600633250, // 21% Delirium
+      3354242550, // The Recluse
+      3907337522, // Oxygen SR3
+    ],
+    sourceHashes: [
+      598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
+      1162859311, // Source: Complete the "Clean Getaway" quest.
+      1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
+      2317365255, // Source: Complete the "A Loud Racket" quest.
+      2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
+      2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
     ],
     searchString: [],
   },
@@ -971,17 +1016,7 @@ const D2Sources: {
   plunder: {
     itemHashes: [
       820890091, // Planck's Stride
-      910459310, // Brigand's Law
       1298815317, // Brigand's Law
-      2144363076, // Brigand's Law
-      2192971810, // Brigand's Law
-      2559599505, // Planck's Stride
-      2611964593, // Brigand's Law
-      2839071082, // Planck's Stride
-      3417523187, // Planck's Stride
-      3575589837, // Planck's Stride
-      3904579395, // Brigand's Law
-      4229502516, // Planck's Stride
     ],
     sourceHashes: [
       790152021, // Source: Season of Plunder Triumph
@@ -1018,7 +1053,10 @@ const D2Sources: {
     searchString: [],
   },
   psiops: {
-    itemHashes: [],
+    itemHashes: [
+      2097055732, // Piece of Mind
+      4067556514, // Thoughtless
+    ],
     sourceHashes: [
       450719423, // Source: Season of the Risen
       2075569025, // PsiOps
@@ -1061,6 +1099,7 @@ const D2Sources: {
       2937902448, // Source: Leviathan, Eater of Worlds raid lair.
       3098906085, // Source: Complete a Guided Game raid as a guide.
       3147603678, // Acquired from the raid "Crown of Sorrow."
+      3190710249, // Source: "Root of Nightmares" Raid
       3390269646, // Source: Guided Games Final Encounters
       4009509410, // Source: Complete challenges in the Leviathan raid.
       4066007318, // Source: Leviathan, Eater of Worlds raid lair on Prestige difficulty.
@@ -1081,11 +1120,57 @@ const D2Sources: {
   rasputin: {
     itemHashes: [],
     sourceHashes: [
+      504657809, // Source: Season of the Seraph Activities
       1126234343, // Source: Witness Rasputin's Full Power
       1497107113, // Source: Seasonal Quest, "Seraph Warsat Network".
+      1516560855, // Source: Season of the Seraph Grandmaster Nightfall
       2230358252, // Source: End-of-Season event.
+      2422551147, // Source: "Operation Seraph's Shield" Mission
       3492941398, // Source: Complete quest "The Lie"
+      3567813252, // Source: Season of the Seraph Triumph
+      3574140916, // Source: Season of the Seraph
       3937492340, // Source: Complete Seraph bounties.
+    ],
+    searchString: [],
+  },
+  'ritual-weapon': {
+    itemHashes: [
+      213264394, // Buzzard
+      805677041, // Buzzard
+      838556752, // Python
+      847329160, // Edgewise
+      1179141605, // Felwinter's Lie
+      1644680957, // Null Composure
+      2697058914, // Komodo-4FR
+      3434944005, // Point of the Stag
+      3535742959, // Randy's Throwing Knife
+      4184808992, // Adored
+      4227181568, // Exit Strategy
+    ],
+    sourceHashes: [
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
+      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
+    ],
+    searchString: [],
+  },
+  ron: {
+    itemHashes: [],
+    sourceHashes: [
+      3190710249, // Source: "Root of Nightmares" Raid
+    ],
+    searchString: [],
+  },
+  root: {
+    itemHashes: [],
+    sourceHashes: [
+      3190710249, // Source: "Root of Nightmares" Raid
+    ],
+    searchString: [],
+  },
+  rootofnightmares: {
+    itemHashes: [],
+    sourceHashes: [
+      3190710249, // Source: "Root of Nightmares" Raid
     ],
     searchString: [],
   },
@@ -1122,22 +1207,40 @@ const D2Sources: {
     searchString: [],
   },
   seasonpass: {
-    itemHashes: [],
+    itemHashes: [
+      599895591, // Sojourner's Tale
+      820890091, // Planck's Stride
+      1298815317, // Brigand's Law
+      1478986057, // Without Remorse
+      2097055732, // Piece of Mind
+      2121785039, // Brass Attacks
+      2434225986, // Shattered Cipher
+      2778013407, // Firefright
+      3075224551, // Threaded Needle
+      4067556514, // Thoughtless
+    ],
     sourceHashes: [
+      450719423, // Source: Season of the Risen
+      1560428737, // Source: Season of Defiance
       1593696611, // Source: Season Pass Reward
       1763998430, // Source: Season Pass
       1838401392, // Source: Earned as a Season Pass reward.
       2379344669, // Source: Season Pass.
+      2676881949, // Source: Season of the Haunted
+      3308438907, // Source: Season of Plunder
+      3574140916, // Source: Season of the Seraph
     ],
     searchString: [],
   },
   servitor: {
-    itemHashes: [],
+    itemHashes: [
+      599895591, // Sojourner's Tale
+      2434225986, // Shattered Cipher
+    ],
     sourceHashes: [
       139160732, // Source: Season of the Splicer
       277706045, // Source: Season of the Splicer Nightfall Grandmaster
       1600754038, // Source: Season of the Splicer Activities
-      1828592460, // Source: Splicer Servitor
       2040801502, // Source: Season of the Splicer Triumph
       2694738712, // Source: Season of the Splicer Quest
       2967385539, // Source: Season of the Splicer Seasonal Challenges
@@ -1177,6 +1280,7 @@ const D2Sources: {
       1145551111, // Source: Found in Crucible engrams.
       1217831333, // Source: Complete this reward's associated Crucible quest.
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
+      1494513645, // Source: Complete Glory matches in Crucible.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
       2641169841, // Source: Purchased from Lord Shaxx.
@@ -1218,11 +1322,25 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  sotw: {
+    itemHashes: [],
+    sourceHashes: [
+      1597738585, // Source: "Spire of the Watcher" Dungeon
+    ],
+    searchString: [],
+  },
   spireofstars: {
     itemHashes: [],
     sourceHashes: [
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
       2812190367, // Source: Leviathan, Spire of Stars raid lair on Prestige difficulty.
+    ],
+    searchString: [],
+  },
+  spireofthewatcher: {
+    itemHashes: [],
+    sourceHashes: [
+      1597738585, // Source: "Spire of the Watcher" Dungeon
     ],
     searchString: [],
   },
@@ -1435,7 +1553,15 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       2653840925, // Source: Challenger's Proving VII Quest
+      3818317874, // Source: War Table Reputation Reset
       4079816474, // Source: War Table
+    ],
+    searchString: [],
+  },
+  watcher: {
+    itemHashes: [],
+    sourceHashes: [
+      1597738585, // Source: "Spire of the Watcher" Dungeon
     ],
     searchString: [],
   },

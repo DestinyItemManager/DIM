@@ -12,7 +12,6 @@ import {
   DestinyCollectibleDefinition,
   DestinyDamageTypeDefinition,
   DestinyDestinationDefinition,
-  DestinyEnergyTypeDefinition,
   DestinyEventCardDefinition,
   DestinyFactionDefinition,
   DestinyGenderDefinition,
@@ -20,6 +19,10 @@ import {
   DestinyInventoryItemDefinition,
   DestinyItemCategoryDefinition,
   DestinyItemTierTypeDefinition,
+  DestinyLoadoutColorDefinition,
+  DestinyLoadoutConstantsDefinition,
+  DestinyLoadoutIconDefinition,
+  DestinyLoadoutNameDefinition,
   DestinyMaterialRequirementSetDefinition,
   DestinyMetricDefinition,
   DestinyMilestoneDefinition,
@@ -53,7 +56,6 @@ const lazyTables = [
   'SandboxPerk',
   'Stat',
   'StatGroup',
-  'EnergyType',
   'DamageType',
   'Progression',
   'ItemCategory',
@@ -78,6 +80,9 @@ const lazyTables = [
   'PowerCap',
   'BreakerType',
   'EventCard',
+  'LoadoutName',
+  'LoadoutIcon',
+  'LoadoutColor',
 ];
 
 const eagerTables = [
@@ -88,6 +93,7 @@ const eagerTables = [
   'Faction',
   'ItemTierType',
   'ActivityMode',
+  'LoadoutConstants',
 ];
 
 /** These aren't really lazy */
@@ -97,8 +103,8 @@ export interface DefinitionTable<T> {
    * and sentry can gather info about the source of the invalid hash.
    * `requestor` ideally a string/number, or a definition including a "hash" key
    */
-  get(hash: number, requestor?: { hash: number } | string | number): T;
-  getAll(): { [hash: number]: T };
+  readonly get: (hash: number, requestor?: { hash: number } | string | number) => T;
+  readonly getAll: () => { [hash: number]: T };
 }
 
 export interface D2ManifestDefinitions extends ManifestDefinitions {
@@ -107,7 +113,6 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   SandboxPerk: DefinitionTable<DestinySandboxPerkDefinition>;
   Stat: DefinitionTable<DestinyStatDefinition>;
   StatGroup: DefinitionTable<DestinyStatGroupDefinition>;
-  EnergyType: DefinitionTable<DestinyEnergyTypeDefinition>;
   Progression: DefinitionTable<DestinyProgressionDefinition>;
   ItemCategory: DefinitionTable<DestinyItemCategoryDefinition>;
   Activity: DefinitionTable<DestinyActivityDefinition>;
@@ -132,6 +137,9 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   DamageType: DefinitionTable<DestinyDamageTypeDefinition>;
   Collectible: DefinitionTable<DestinyCollectibleDefinition>;
   EventCard: DefinitionTable<DestinyEventCardDefinition>;
+  LoadoutName: DefinitionTable<DestinyLoadoutNameDefinition>;
+  LoadoutColor: DefinitionTable<DestinyLoadoutColorDefinition>;
+  LoadoutIcon: DefinitionTable<DestinyLoadoutIconDefinition>;
 
   InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
   Class: { [hash: number]: DestinyClassDefinition };
@@ -140,6 +148,7 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   Faction: { [hash: number]: DestinyFactionDefinition };
   ItemTierType: { [hash: number]: DestinyItemTierTypeDefinition };
   ActivityMode: { [hash: number]: DestinyActivityModeDefinition };
+  LoadoutConstants: { [hash: number]: DestinyLoadoutConstantsDefinition };
 }
 
 export const allTables = [...eagerTables, ...lazyTables];
@@ -173,14 +182,16 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
     isDestiny1: () => false,
     isDestiny2: () => true,
   };
-  lazyTables.forEach((tableShort) => {
+
+  for (const tableShort of lazyTables) {
     const table = `Destiny${tableShort}Definition` as keyof AllDestinyManifestComponents;
+    const dbTable = db[table];
+    if (!dbTable) {
+      throw new Error(`Table ${table} does not exist in the manifest`);
+    }
+
     defs[tableShort] = {
       get(id: number, requestor?: { hash: number } | string | number) {
-        const dbTable = db[table];
-        if (!dbTable) {
-          throw new Error(`Table ${table} does not exist in the manifest`);
-        }
         const dbEntry = dbTable[id];
         if (!dbEntry && tableShort !== 'Record') {
           // there are valid negative hashes that we have added ourselves via enhanceDBWithFakeEntries,
@@ -193,21 +204,24 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
               failedComponent: table,
             });
           } else {
-            warnLogCollapsedStack('hashLookupFailure', `${table}[${id}]`, requestor);
+            // an invalid hash that, in new loadouts, just means lookup should fail
+            if (id !== 2166136261) {
+              warnLogCollapsedStack('hashLookupFailure', `${table}[${id}]`, requestor);
+            }
           }
         }
         return dbEntry;
       },
       getAll() {
-        return db[table];
+        return dbTable;
       },
     };
-  });
+  }
   // Resources that need to be fully loaded (because they're iterated over)
-  eagerTables.forEach((tableShort) => {
+  for (const tableShort of eagerTables) {
     const table = `Destiny${tableShort}Definition`;
     defs[tableShort] = db[table];
-  });
+  }
 
   return defs as D2ManifestDefinitions;
 }

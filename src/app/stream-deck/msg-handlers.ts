@@ -16,6 +16,8 @@ import { itemMoveLoadout, maxLightLoadout, randomLoadout } from 'app/loadout-dra
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { pullFromPostmaster } from 'app/loadout-drawer/postmaster';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { applyInGameLoadout } from 'app/loadout/ingame/ingame-loadout-apply';
+import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { accountRoute } from 'app/routes';
 import { filteredItemsSelector } from 'app/search/search-filter';
@@ -23,11 +25,10 @@ import { setRouterLocation, setSearchQuery } from 'app/shell/actions';
 import { refresh } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
 import { streamDeckClearSelection, streamDeckWaitSelection } from 'app/stream-deck/actions';
-import { refreshStreamDeck, sendToStreamDeck } from 'app/stream-deck/async-module';
+import { sendToStreamDeck } from 'app/stream-deck/async-module';
 import { showStreamDeckAuthorizationNotification } from 'app/stream-deck/AuthorizationNotification/AuthorizationNotification';
 import {
-  AuthorizationConfirmAction,
-  Challenge,
+  AuthorizationInitAction,
   CollectPostmasterAction,
   EquipLoadoutAction,
   FarmingModeAction,
@@ -35,21 +36,17 @@ import {
   MaxPowerAction,
   MessageHandler,
   PullItemAction,
-  PullItemsInfoAction,
   RandomizeAction,
   SearchAction,
   SelectionAction,
   StreamDeckMessage,
 } from 'app/stream-deck/interfaces';
 import { DeferredPromise } from 'app/stream-deck/util/deferred';
-import { setStreamDeckToken, streamDeckToken } from 'app/stream-deck/util/local-storage';
+import { clientIdentifier, streamDeckToken } from 'app/stream-deck/util/local-storage';
 import { DamageType } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 
 // Deferred promise used with selections notifications and actions
 export const notificationPromise = new DeferredPromise();
-
-let onGoingAuthorizationChallenge: Challenge | undefined;
 
 // Calc location path
 function routeTo(state: RootState, path: string) {
@@ -153,38 +150,26 @@ function selectionHandler({ msg, state }: HandlerArgs<SelectionAction>): ThunkRe
   };
 }
 
-function itemsInfoRequestHandler({ msg, state }: HandlerArgs<PullItemsInfoAction>): ThunkResult {
-  return async (dispatch) => {
-    const items = allItemsSelector(state).filter((it) => msg.ids?.includes(it.index));
-    return dispatch(
-      sendToStreamDeck({
-        action: 'items:info',
-        data: {
-          info: items.map((it) => ({
-            identifier: it.index,
-            power: it.power,
-            overlay: it.iconOverlay,
-            isExotic: it.isExotic,
-            element:
-              it.element?.enumValue === DamageType.Kinetic
-                ? undefined
-                : it.element?.displayProperties?.icon,
-          })),
-        },
-      })
-    );
-  };
-}
-
 function equipLoadoutHandler({ msg, state }: HandlerArgs<EquipLoadoutAction>): ThunkResult {
   return async (dispatch) => {
-    const loadouts = loadoutsSelector(state);
     const stores = storesSelector(state);
-    const store = getStore(stores, msg.character);
-    const loadout = loadouts.find((it) => it.id === msg.loadout);
-    if (store && loadout) {
-      return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
+    const store = msg.character ? getStore(stores, msg.character) : currentStoreSelector(state);
+
+    if (!store) {
+      return;
     }
+
+    // In Game Loadouts
+    if (msg.loadout.startsWith('ingame')) {
+      const loadouts = allInGameLoadoutsSelector(state);
+      const loadout = loadouts.find((it) => it.id === msg.loadout);
+      return loadout && dispatch(applyInGameLoadout(loadout));
+    }
+
+    // DIM Loadouts
+    const loadouts = loadoutsSelector(state);
+    const loadout = loadouts.find((it) => it.id === msg.loadout);
+    return loadout && dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
 }
 
@@ -215,6 +200,10 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
       // no matching item found
       return;
     }
+
+    // new state after the move
+    let equipped = false;
+
     // move to vault only if the action is not a long press (EQUIP action)
     // this will equip item even if it is already in the character inventory
     if (!msg.equip && moveToVaultItem) {
@@ -222,70 +211,37 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
     } else {
       const item = selected[0];
       await dispatch(moveItemTo(item, store, msg.equip, item.amount));
+      equipped = true;
     }
+
+    const item = moveToVaultItem ?? selected[0];
+
+    await dispatch(
+      sendToStreamDeck({
+        action: 'dim:item-update',
+        data: {
+          equipped,
+          context: msg.context,
+          element:
+            item.element?.enumValue === DamageType.Kinetic
+              ? undefined
+              : item.element?.displayProperties?.icon,
+        },
+      })
+    );
   };
 }
 
-function authorizationConfirmHandler(args: HandlerArgs<AuthorizationConfirmAction>): ThunkResult {
-  const { msg } = args;
-  return async (dispatch) => {
-    const { label, value } = onGoingAuthorizationChallenge || {};
-    // handle confirmation
-    if (label && label === msg.challenge) {
-      // if label exist then also the values is defined
-      setStreamDeckToken(value!);
-      // hide the notification
-      notificationPromise.resolve();
-      // refresh stream deck state
-      await dispatch(refreshStreamDeck());
-      // the current challenge is no more valid
-      onGoingAuthorizationChallenge = undefined;
+function authorizationInitHandler({ msg }: HandlerArgs<AuthorizationInitAction>): ThunkResult {
+  return async () => {
+    // ignore invalid id
+    if (msg.id !== clientIdentifier()) {
       return;
     }
-    // if the user tapped the error challenge number
-    // hide the notification
-    notificationPromise.reject('invalid-challenge');
-    // trigger the challenges again
-    return dispatch(authorizationInitHandler());
-  };
-}
-
-// generate 3 challenges for the authorization flow
-function generateChallenges() {
-  const added = new Set();
-  const challenges = [];
-  while (challenges.length < 3) {
-    const label = _.random(100, 999, false);
-    if (!added.has(label)) {
-      added.add(label);
-      challenges.push({
-        label,
-        value: _.random(true).toString(36).slice(2),
-      });
-    }
-  }
-  return challenges;
-}
-
-function authorizationInitHandler(): ThunkResult {
-  return async (dispatch) => {
-    const challenges = generateChallenges();
-    const challenge = challenges[_.random(2, false)];
-    // keep track of current challenge
-    onGoingAuthorizationChallenge = challenge;
     // hide previous notification
     notificationPromise.resolve();
     // show challenge number
-    showStreamDeckAuthorizationNotification(challenge.label);
-    return dispatch(
-      sendToStreamDeck(
-        {
-          action: 'authorization:challenges',
-          data: { challenges },
-        },
-        true
-      )
-    );
+    showStreamDeckAuthorizationNotification(msg.code);
   };
 }
 
@@ -298,11 +254,9 @@ const handlers: MessageHandler = {
   farmingMode: farmingModeHandler,
   selection: selectionHandler,
   loadout: equipLoadoutHandler,
-  // freeBucketSlot: freeBucketSlotHandler,
   pullItem: pullItemHandler,
-  'pullItem:items-request': itemsInfoRequestHandler,
-  'authorization:init': authorizationInitHandler,
-  'authorization:confirm': authorizationConfirmHandler,
+  authorization: authorizationInitHandler,
+  // freeBucketSlot: freeBucketSlotHandler,
 };
 
 // handle actions coming from the stream deck instance
@@ -321,7 +275,7 @@ export function handleStreamDeckMessage(msg: StreamDeckMessage): ThunkResult {
 
     if (store) {
       // handle stream deck actions
-      const handler = handlers[msg.action];
+      const handler = handlers[msg.action] as (args: HandlerArgs<StreamDeckMessage>) => ThunkResult;
       dispatch(handler?.({ msg, state, store }));
     }
   };

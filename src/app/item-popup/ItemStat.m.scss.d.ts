@@ -3,12 +3,14 @@
 interface CssExports {
   'barContainer': string;
   'barInner': string;
+  'customTotal': string;
   'icon': string;
   'masterworkStatBar': string;
   'masterworked': string;
   'modded': string;
   'moddedStatBar': string;
   'negativeModded': string;
+  'nonDimmedStatIcons': string;
   'quality': string;
   'qualitySummary': string;
   'smallStatToggle': string;

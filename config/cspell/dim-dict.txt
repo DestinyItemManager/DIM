@@ -63,3 +63,4 @@ wayyyyy
 Xbox
 xpcomplete
 xpincomplete
+hashta

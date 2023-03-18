@@ -15,7 +15,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState } from 'app/store/types';
 import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
 import {
@@ -48,13 +47,11 @@ export default function FashionDrawer({
   loadout: Loadout;
   storeId?: string;
   items: ResolvedLoadoutItem[];
-  onModsByBucketUpdated(modsByBucket: LoadoutParameters['modsByBucket']): void;
+  onModsByBucketUpdated: (modsByBucket: LoadoutParameters['modsByBucket']) => void;
   onClose: () => void;
 }) {
   const defs = useD2Definitions()!;
-  const unlockedPlugs = useSelector((state: RootState) =>
-    unlockedPlugSetItemsSelector(state, storeId)
-  );
+  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(storeId));
   const isPhonePortrait = useIsPhonePortrait();
   const [pickPlug, setPickPlug] = useState<PickPlugState>();
   const allItems = useSelector(allItemsSelector);
@@ -114,7 +111,7 @@ export default function FashionDrawer({
     </>
   );
 
-  const footer = ({ onClose }: { onClose(): void }) => (
+  const footer = ({ onClose }: { onClose: () => void }) => (
     <>
       <button
         type="button"
@@ -421,8 +418,8 @@ function FashionItem({
   bucketHash: number;
   mods?: number[];
   storeId?: string;
-  onPickPlug(params: PickPlugState): void;
-  onRemovePlug(bucketHash: number, modHash: number): void;
+  onPickPlug: (params: PickPlugState) => void;
+  onRemovePlug: (bucketHash: number, modHash: number) => void;
 }) {
   const defs = useD2Definitions()!;
   const isShader = (m: number) =>
@@ -498,12 +495,10 @@ function FashionSocket({
   exampleItem: DimItem;
   storeId?: string;
   defaultPlug: DestinyInventoryItemDefinition;
-  onPickPlug(params: PickPlugState): void;
-  onRemovePlug(bucketHash: number, modHash: number): void;
+  onPickPlug: (params: PickPlugState) => void;
+  onRemovePlug: (bucketHash: number, modHash: number) => void;
 }) {
-  const unlockedPlugSetItems = useSelector((state: RootState) =>
-    unlockedPlugSetItemsSelector(state, storeId)
-  );
+  const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(storeId));
   const handleOrnamentClick = socket && (() => onPickPlug({ item: exampleItem, socket }));
 
   const unlockedPlugsWithoutTheDefault = Array.from(unlockedPlugSetItems).filter(

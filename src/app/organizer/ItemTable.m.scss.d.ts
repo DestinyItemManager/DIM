@@ -14,6 +14,7 @@ interface CssExports {
   'isPerk': string;
   'itemIcon': string;
   'killTrackerDisplay': string;
+  'loadout': string;
   'loadouts': string;
   'locationCell': string;
   'locked': string;
@@ -34,6 +35,8 @@ interface CssExports {
   'rating': string;
   'season': string;
   'selection': string;
+  'shapedIcon': string;
+  'shapedIconOverlay': string;
   'shiftHeld': string;
   'sorter': string;
   'stat2715839340': string;

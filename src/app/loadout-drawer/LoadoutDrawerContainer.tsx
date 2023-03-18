@@ -4,6 +4,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { warnMissingClass } from 'app/loadout-builder/loadout-builder-reducer';
+import { decodeUrlLoadout } from 'app/loadout/loadout-share/loadout-import';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -11,19 +12,18 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
-import { v4 as uuidv4 } from 'uuid';
 import { addItem$, editLoadout$ } from './loadout-events';
-import { generateMissingLoadoutItemId } from './loadout-item-conversion';
-import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
 import { Loadout } from './loadout-types';
-import { newLoadout, pickBackingStore } from './loadout-utils';
+import { convertToLoadoutItem, newLoadout, pickBackingStore } from './loadout-utils';
 
 const LoadoutDrawer = React.lazy(
-  () => import(/* webpackChunkName: "loadout-drawer" */ './LoadoutDrawer2')
+  () => import(/* webpackChunkName: "loadout-drawer" */ './LoadoutDrawer')
 );
 const D1LoadoutDrawer = React.lazy(
   () =>
-    import(/* webpackChunkName: "d1-loadout-drawer" */ 'app/destiny1/loadout-drawer/LoadoutDrawer')
+    import(
+      /* webpackChunkName: "d1-loadout-drawer" */ 'app/destiny1/loadout-drawer/D1LoadoutDrawer'
+    )
 );
 
 /**
@@ -103,12 +103,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           const classType =
             item.classType === DestinyClass.Unknown ? owner.classType : item.classType;
           const draftLoadout = newLoadout('', [], classType);
-          draftLoadout.items.push({
-            id: item.id,
-            hash: item.hash,
-            equip: true,
-            amount: item.amount ?? 1,
-          });
+          draftLoadout.items.push(convertToLoadoutItem(item, true));
           setInitialLoadout({
             loadout: draftLoadout,
             storeId: owner.id,
@@ -126,46 +121,32 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
     if (!stores.length || !defs?.isDestiny2()) {
       return;
     }
-    const searchParams = new URLSearchParams(queryString);
-    const loadoutJSON = searchParams.get('loadout');
-    if (loadoutJSON) {
-      try {
-        const parsedLoadout = convertDimApiLoadoutToLoadout(JSON.parse(loadoutJSON));
-        if (parsedLoadout) {
-          const storeId = pickBackingStore(stores, undefined, parsedLoadout.classType)?.id;
+    try {
+      const parsedLoadout = decodeUrlLoadout(queryString);
+      if (parsedLoadout) {
+        const storeId = pickBackingStore(stores, undefined, parsedLoadout.classType)?.id;
 
-          if (!storeId) {
-            warnMissingClass(parsedLoadout.classType, defs);
-            return;
-          }
-
-          parsedLoadout.id = uuidv4();
-          parsedLoadout.items = parsedLoadout.items.map((item) => ({
-            ...item,
-            id:
-              item.id === '0'
-                ? // We don't save consumables in D2 loadouts, but we may omit ids in shared loadouts
-                  // (because they'll never match someone else's inventory). So
-                  // instead, pick an ID.
-                  generateMissingLoadoutItemId()
-                : item.id,
-          }));
-
-          setInitialLoadout({
-            loadout: parsedLoadout,
-            storeId,
-            isNew: true,
-            showClass: false,
-          });
+        if (!storeId) {
+          warnMissingClass(parsedLoadout.classType, defs);
+          return;
         }
-      } catch (e) {
-        showNotification({
-          type: 'error',
-          title: t('Loadouts.BadLoadoutShare'),
-          body: t('Loadouts.BadLoadoutShareBody', { error: e.message }),
+
+        setInitialLoadout({
+          loadout: parsedLoadout,
+          storeId,
+          isNew: true,
+          showClass: false,
         });
+        // Clear the loadout from params if the URL contained one...
+        navigate(pathname, { replace: true });
       }
-      // Clear the loadout
+    } catch (e) {
+      showNotification({
+        type: 'error',
+        title: t('Loadouts.BadLoadoutShare'),
+        body: t('Loadouts.BadLoadoutShareBody', { error: e.message }),
+      });
+      // ... or if it contained errors
       navigate(pathname, { replace: true });
     }
   }, [defs, queryString, navigate, pathname, stores]);

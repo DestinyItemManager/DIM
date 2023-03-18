@@ -41,7 +41,7 @@
 .seasonalRewards {
   display: flex;
   flex-direction: row;
-  @include horizontal-space-children(2px);
+  gap: 2px;
 }
 
 .progressBar {

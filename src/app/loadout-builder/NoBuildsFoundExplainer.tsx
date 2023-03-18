@@ -1,13 +1,13 @@
-import { AssumeArmorMasterwork, LockArmorEnergyType } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { AppIcon, banIcon } from 'app/shell/icons';
 import { uniqBy } from 'app/utils/util';
-import { DestinyEnergyType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Dispatch } from 'react';
 import ExoticArmorChoice from './filter/ExoticArmorChoice';
@@ -37,15 +37,15 @@ const UPPER_STAT_BOUNDS_WARN_RATIO = 0.8;
  */
 const LOWER_STAT_BOUNDS_WARN_RATIO = 0.95;
 /**
- * >98% usually only happens when you select activity mods or restrictive mod settings and tons
- * of combat mods with the same element
+ * Pretty much only from activity mods or too many expensive mods.
  */
-const EARLY_MOD_REJECTION_WARN_RATIO = 0.98;
+const EARLY_MOD_REJECTION_WARN_RATIO = 0.8;
 
 export default function NoBuildsFoundExplainer({
   defs,
   dispatch,
   autoAssignStatMods,
+  resolvedMods,
   lockedModMap,
   alwaysInvalidMods,
   armorEnergyRules,
@@ -58,6 +58,7 @@ export default function NoBuildsFoundExplainer({
   defs: D2ManifestDefinitions;
   dispatch: Dispatch<LoadoutBuilderAction>;
   autoAssignStatMods: boolean;
+  resolvedMods: ResolvedLoadoutMod[];
   lockedModMap: ModMap;
   alwaysInvalidMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
@@ -69,13 +70,23 @@ export default function NoBuildsFoundExplainer({
 }) {
   const problems: ProblemDescription[] = [];
 
+  // Note: This component looks at what happened to mods when they were assigned, and offers ways to
+  // remove them based on that. Unfortunately removal needs ResolvedLoadoutMods, but we don't really want
+  // to make all mod assignment code operate on ResolvedLoadoutMods, so instead we find the original mod
+  // using a search through `resolvedMods`. We should avoid this, so maybe look at using ResolvedLoadoutMod more?
+
   const modRow = (mods: PluggableInventoryItemDefinition[]) => (
     <div key="modsDisplay" className={styles.modRow}>
       {mods.map((mod, index) => (
         <PlugDef
           key={index}
           plug={mod}
-          onClose={() => dispatch({ type: 'removeLockedMod', mod })}
+          onClose={() =>
+            dispatch({
+              type: 'removeLockedMod',
+              mod: resolvedMods.find((resolved) => resolved.resolvedMod === mod)!,
+            })
+          }
         />
       ))}
     </div>
@@ -97,7 +108,13 @@ export default function NoBuildsFoundExplainer({
                 key="removeAllInvalid"
                 type="button"
                 className="dim-button"
-                onClick={() => dispatch({ type: 'removeLockedMods', mods: alwaysInvalidMods })}
+                onClick={() =>
+                  dispatch({
+                    type: 'lockedModsChanged',
+                    // Drop all invalid mods by setting current mods to only the valid mods
+                    lockedMods: lockedModMap.allMods.map((mod) => mod.hash),
+                  })
+                }
               >
                 <AppIcon icon={banIcon} /> {t('LoadoutBuilder.NoBuildsFoundExplainer.RemoveMods')}
               </button>
@@ -188,20 +205,8 @@ export default function NoBuildsFoundExplainer({
 
   const anyStatMinimums = Object.values(statFilters).some((f) => !f.ignored && f.min > 0);
 
-  const bucketIndependentMods = [
-    ...lockedModMap.generalMods,
-    ...lockedModMap.combatMods,
-    ...lockedModMap.activityMods,
-  ];
+  const bucketIndependentMods = [...lockedModMap.generalMods, ...lockedModMap.activityMods];
 
-  const elementMayCauseProblems =
-    armorEnergyRules.lockArmorEnergyType !== LockArmorEnergyType.None &&
-    (processInfo?.statistics.modsStatistics.earlyModsCheck.timesFailed ||
-      processInfo?.statistics.modsStatistics.finalAssignment.modsAssignmentFailed ||
-      failedModsInBucket) &&
-    lockedModMap.allMods.some(
-      (mod) => mod.plug.energyCost && mod.plug.energyCost.energyType !== DestinyEnergyType.Any
-    );
   const capacityMayCauseProblems =
     armorEnergyRules.assumeArmorMasterwork !== AssumeArmorMasterwork.All &&
     (processInfo?.statistics.modsStatistics.finalAssignment.modsAssignmentFailed ||
@@ -209,10 +214,7 @@ export default function NoBuildsFoundExplainer({
       failedModsInBucket) &&
     (lockedModMap.allMods.length || anyStatMinimums);
 
-  if (
-    (!alwaysInvalidMods || alwaysInvalidMods.length === 0) &&
-    (elementMayCauseProblems || capacityMayCauseProblems)
-  ) {
+  if ((!alwaysInvalidMods || alwaysInvalidMods.length === 0) && capacityMayCauseProblems) {
     // If we might have problems assigning bucket specific mods or mods in the
     // process worker, offer some advice.
     problems.push({
@@ -234,24 +236,6 @@ export default function NoBuildsFoundExplainer({
               }
             >
               {t('LoadoutBuilder.NoBuildsFoundExplainer.AssumeMasterworked')}
-            </button>
-          ),
-        },
-        elementMayCauseProblems && {
-          id: 'allowEnergyChanges',
-          contents: (
-            <button
-              key="allowEnergyChanges"
-              type="button"
-              className="dim-button"
-              onClick={() =>
-                dispatch({
-                  type: 'lockArmorEnergyTypeChanged',
-                  lockArmorEnergyType: LockArmorEnergyType.None,
-                })
-              }
-            >
-              {t('LoadoutBuilder.NoBuildsFoundExplainer.AssumeElementChange')}
             </button>
           ),
         },
@@ -366,6 +350,16 @@ export default function NoBuildsFoundExplainer({
                 </button>
               ),
             },
+          autoAssignStatMods &&
+            lockedModMap.generalMods.length > 0 && {
+              id: 'removeGeneralMods',
+              contents: (
+                <>
+                  {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveMods')}
+                  {modRow(lockedModMap.generalMods)}
+                </>
+              ),
+            },
           {
             id: 'hint2',
             contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeDecreaseLowerBounds'),
@@ -381,14 +375,14 @@ export default function NoBuildsFoundExplainer({
       const suggestions: (ActionableSuggestion | false | undefined)[] = [];
 
       if (isInteresting(modsStats.earlyModsCheck, EARLY_MOD_REJECTION_WARN_RATIO)) {
-        // Early mod rejection is armor elements / mod tags
+        // Early mod rejection is mod tags
         suggestions.push(
-          (lockedModMap.combatMods.length > 0 || lockedModMap.activityMods.length > 0) && {
+          lockedModMap.activityMods.length > 0 && {
             id: 'removeElementOrTagMods',
             contents: (
               <>
                 {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveMods')}
-                {modRow([...lockedModMap.combatMods, ...lockedModMap.activityMods])}
+                {modRow([...lockedModMap.activityMods])}
               </>
             ),
           },

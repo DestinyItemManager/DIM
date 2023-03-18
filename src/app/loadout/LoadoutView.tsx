@@ -1,15 +1,14 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t } from 'app/i18next-t';
-import { D2BucketCategory, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
-import { useD2Definitions } from 'app/manifest/selectors';
+import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -23,12 +22,12 @@ import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection'
 import LoadoutMods from './loadout-ui/LoadoutMods';
 import LoadoutSubclassSection from './loadout-ui/LoadoutSubclassSection';
 import styles from './LoadoutView.m.scss';
+import { useLoadoutMods } from './mod-assignment-drawer/selectors';
 
 export function getItemsAndSubclassFromLoadout(
+  itemCreationContext: ItemCreationContext,
   loadoutItems: LoadoutItem[],
   store: DimStore,
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
   allItems: DimItem[],
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
@@ -39,10 +38,9 @@ export function getItemsAndSubclassFromLoadout(
   warnitems: ResolvedLoadoutItem[]
 ] {
   let [items, warnitems] = getItemsFromLoadoutItems(
+    itemCreationContext,
     loadoutItems,
-    defs,
     store.id,
-    buckets,
     allItems,
     modsByBucket
   );
@@ -79,9 +77,10 @@ export default function LoadoutView({
   hideOptimizeArmor?: boolean;
   hideShowModPlacements?: boolean;
 }) {
-  const defs = useD2Definitions()!;
-  const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
+  const missingSockets =
+    loadout.name === t('Loadouts.FromEquipped') && allItems.some((i) => i.missingSockets);
   const isPhonePortrait = useIsPhonePortrait();
 
   // TODO: filter down by usable mods?
@@ -92,11 +91,17 @@ export default function LoadoutView({
   // Turn loadout items into real DimItems, filtering out unequippable items
   const [items, subclass, warnitems] = useMemo(
     () =>
-      getItemsAndSubclassFromLoadout(loadout.items, store, defs, buckets, allItems, modsByBucket),
-    [loadout.items, defs, buckets, allItems, store, modsByBucket]
+      getItemsAndSubclassFromLoadout(
+        itemCreationContext,
+        loadout.items,
+        store,
+        allItems,
+        modsByBucket
+      ),
+    [itemCreationContext, loadout.items, store, allItems, modsByBucket]
   );
 
-  const allMods = useMemo(() => getModsFromLoadout(defs, loadout), [defs, loadout]);
+  const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
 
   const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
   const power = loadoutPower(store, categories);
@@ -108,7 +113,7 @@ export default function LoadoutView({
           {loadout.classType === DestinyClass.Unknown && (
             <ClassIcon className={styles.classIcon} classType={loadout.classType} />
           )}
-          {loadout.name}
+          <ColorDestinySymbols text={loadout.name} />
           {warnitems.length > 0 && (
             <span className={styles.missingItems}>
               <AlertIcon />
@@ -118,21 +123,23 @@ export default function LoadoutView({
         </h2>
         <div className={styles.actions}>{actionButtons}</div>
       </div>
-      {loadout.notes && <div className={styles.loadoutNotes}>{loadout.notes}</div>}
+      {loadout.notes && (
+        <ColorDestinySymbols className={styles.loadoutNotes} text={loadout.notes} />
+      )}
       <div className={styles.contents}>
         {(items.length > 0 || subclass || allMods.length > 0 || !_.isEmpty(modsByBucket)) && (
           <>
             {(!isPhonePortrait || subclass) && (
-              <LoadoutSubclassSection defs={defs} subclass={subclass} power={power} />
+              <LoadoutSubclassSection subclass={subclass} power={power} />
             )}
-            {['Weapons', 'Armor', 'General'].map((category: D2BucketCategory) => (
+            {(['Weapons', 'Armor', 'General'] as const).map((category) => (
               <LoadoutItemCategorySection
                 key={category}
                 category={category}
                 subclass={subclass}
                 storeId={store.id}
                 items={categories[category]}
-                allMods={allMods}
+                allMods={modDefinitions}
                 modsByBucket={modsByBucket}
                 loadout={loadout}
                 hideOptimizeArmor={hideOptimizeArmor}
@@ -143,6 +150,7 @@ export default function LoadoutView({
               allMods={allMods}
               storeId={store.id}
               hideShowModPlacements={hideShowModPlacements}
+              missingSockets={missingSockets}
             />
           </>
         )}

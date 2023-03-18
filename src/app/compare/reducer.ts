@@ -4,7 +4,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { getSelectionTree } from 'app/organizer/ItemTypeSelector';
 import { ActionType, getType, Reducer } from 'typesafe-actions';
 import * as actions from './actions';
-import { stripAdept } from './compare-buttons';
+import { compareNameQuery } from './compare-buttons';
 
 export interface CompareSession {
   /**
@@ -76,7 +76,12 @@ export const compare: Reducer<CompareState, CompareAction> = (
     }
 
     case getType(actions.compareFilteredItems):
-      return compareFilteredItems(state, action.payload.query, action.payload.filteredItems);
+      return compareFilteredItems(
+        state,
+        action.payload.query,
+        action.payload.filteredItems,
+        action.payload.initialItemId
+      );
 
     default:
       return state;
@@ -129,9 +134,7 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
     // Start a new session
     const itemCategoryHashes = getItemCategoryHashesFromExampleItem(item);
 
-    const itemNameQuery = item.bucket.inWeapons
-      ? `name:"${stripAdept(item.name)}"`
-      : `name:"${item.name}"`;
+    const itemNameQuery = compareNameQuery(item);
 
     const vendorCharacterId = item.vendor?.characterId;
 
@@ -175,7 +178,9 @@ function removeCompareItem(state: CompareState, item: DimItem): CompareState {
 function compareFilteredItems(
   state: CompareState,
   query: string,
-  filteredItems: DimItem[]
+  filteredItems: DimItem[],
+  /** The instance ID of the first item added to compare, so we can highlight it. */
+  initialItemId?: string
 ): CompareState {
   // TODO: what if it's already open?
 
@@ -186,6 +191,7 @@ function compareFilteredItems(
     session: {
       query: query,
       itemCategoryHashes,
+      initialItemId,
     },
   };
 }

@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { infoLog, warnLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { getAccessTokenFromRefreshToken } from './oauth';
-import { getToken, hasTokenExpired, removeAccessToken, removeToken, Tokens } from './oauth-tokens';
+import { getToken, hasTokenExpired, removeAccessToken, Tokens } from './oauth-tokens';
 
 /**
  * A fatal token error means we have to log in again.
@@ -20,11 +20,11 @@ export class FatalTokenError extends Error {
  * or bounces us back to login.
  */
 export async function fetchWithBungieOAuth(
-  request: Request | string,
+  request: RequestInfo | URL,
   options?: RequestInit,
   triedRefresh = false
 ): Promise<Response> {
-  if (typeof request === 'string') {
+  if (!(request instanceof Request)) {
     request = new Request(request);
   }
 
@@ -34,12 +34,7 @@ export async function fetchWithBungieOAuth(
   } catch (e) {
     // Note: instanceof doesn't work due to a babel bug:
     if (e.name === 'FatalTokenError') {
-      warnLog(
-        'bungie auth',
-        'Unable to get auth token, clearing auth tokens & going to login: ',
-        e
-      );
-      removeToken();
+      warnLog('bungie auth', 'Unable to get auth token', e);
     }
     throw e;
   }
@@ -49,7 +44,6 @@ export async function fetchWithBungieOAuth(
   if (await responseIndicatesBadToken(response)) {
     if (triedRefresh) {
       // Give up
-      removeToken();
       throw new FatalTokenError(
         "Access token expired, and we've already tried to refresh. Failing."
       );
@@ -94,7 +88,6 @@ async function responseIndicatesBadToken(response: Response) {
 export async function getActiveToken(): Promise<Tokens> {
   const token = getToken();
   if (!token) {
-    removeToken();
     throw new FatalTokenError('No auth token exists, redirect to login');
   }
 
@@ -106,7 +99,6 @@ export async function getActiveToken(): Promise<Tokens> {
   // Get a new token from refresh token
   const refreshTokenIsValid = token && !hasTokenExpired(token.refreshToken);
   if (!refreshTokenIsValid) {
-    removeToken();
     throw new FatalTokenError('Refresh token invalid, clearing auth tokens & going to login');
   }
 
@@ -169,7 +161,6 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
       throw new Error(
         "Error getting auth token from refresh token because there's no internet connection. Not clearing token."
       );
-    case 400:
     case 401:
     case 403: {
       throw new FatalTokenError('Refresh token expired or not valid, status ' + response.status);

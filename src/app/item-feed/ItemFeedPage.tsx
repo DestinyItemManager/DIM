@@ -26,7 +26,7 @@ export default function ItemFeedPage({ account }: { account: DestinyAccount }) {
   return (
     <div className={styles.page}>
       <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
-        <ItemFeed itemsToShow={itemsToShow} />
+        <ItemFeed itemsToShow={itemsToShow} resetItemCount={() => setItemsToShow(10)} />
       </Suspense>
       <motion.div onViewportEnter={handlePaginate} />
     </div>

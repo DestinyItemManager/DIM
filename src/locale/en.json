@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "No Notes",
+    "OpenInArmory": "view in Armory",
     "Season": "Season {{season}}, Year {{year}}",
     "TrashlistedRolls": "Trashlisted Roll",
     "TrashlistedRolls_plural": "{{count, number}} Trashlisted Rolls",
@@ -85,6 +86,7 @@
   },
   "Compare": {
     "Archetype": "Archetype",
+    "AssumeMasterworked": "Assume Masterworked",
     "Button": "Compare",
     "ButtonHelp": "Compare Items",
     "CompareBaseStats": "Show Base Stats",
@@ -115,6 +117,10 @@
     "ImportWrongFileType": "File is not a CSV file.",
     "WrongFields": "CSV must have 'Id', 'Notes', 'Tag', and 'Hash' columns."
   },
+  "Dialog": {
+    "Cancel": "Cancel",
+    "OK": "OK"
+  },
   "EnergyMeter": {
     "Energy": "Energy",
     "Unused": "Unused",
@@ -125,6 +131,9 @@
   },
   "ErrorPanel": {
     "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
+    "EmblemError": "You may be able to fix this by switching your emblems in game on all characters.",
+    "EmblemErrorLink": "Read more about how to fix it.",
+    "SystemDown": "This affects all Destiny apps, and the DIM team cannot fix or bypass it.",
     "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {
@@ -195,11 +204,12 @@
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "Cosmetic": "Shows items that are flair or cosmetic.",
     "Craftable": "Shows items that are craftable.",
+    "CraftedDupe": "",
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
     "DamageType": "Shows items based on their damage type.",
-    "Deepsight": "Shows weapons with Deepsight Resonance, which can be attuned for materials. deepsight:complete and deepsight:incomplete refer to the progress of the deepsight objective, while deepsight:pattern shows items that could be progressed to unlock a pattern.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted.",
     "Description": "Description",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
@@ -219,7 +229,7 @@
     "HasOrnament": "Shows items that have an ornament applied.",
     "HasShader": "Shows items that have a shader applied.",
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
-    "InLoadout": "Shows items that are included in any loadout.",
+    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes.",
     "Infusable": "Shows items that can be infused.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "IsCrafted": "Shows weapons that have been crafted.",
@@ -267,6 +277,7 @@
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
     "RequiredLevel": "Shows items based on their required level.",
+    "RetiredPerk": "Shows weapons with perks that no longer obtainable.",
     "SearchPrompt": "Search available filter commands",
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
     "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
@@ -306,6 +317,16 @@
     "Confirm": "Confirm?",
     "UserGuideLink": "User guide"
   },
+  "Glyphs": {
+    "Gilded": "Gilded",
+    "Misadventure": "Misadventure",
+    "Missing": "Missing",
+    "OpenSymbolsPicker": "Open Symbols Picker",
+    "Quickfall": "Quickfall",
+    "ScorchCannon": "Scorch Cannon",
+    "SearchSymbols": "Search Symbols...",
+    "Smoke": "Smoke"
+  },
   "Header": {
     "About": "About DIM",
     "AutoRefresh": "DIM will automatically reload as long as you are still playing.",
@@ -332,6 +353,7 @@
     "LaunchDIMAlone": "Separate Window",
     "MaterialCounts": "Material Counts",
     "Menu": "Menu",
+    "ProfileAge": "Destiny servers last sent updated data {{age}} ago.\nRefreshing from DIM may get newer data, but Bungie.net may also repeat cached information.",
     "Refresh": "Refresh Destiny Data [R]",
     "ReloadApp": "Reload App",
     "ReportBug": "Report a Bug",
@@ -363,6 +385,10 @@
     "Tab": "TAB",
     "Vault": "Send item to vault"
   },
+  "InGameLoadout": {
+    "Applying": "Equipping loadout...",
+    "LoadoutSlotNum": "Slot {{index}}"
+  },
   "Infusion": {
     "Filter": "Filter items",
     "InfuseSource": "Select item to infuse {{name}} into",
@@ -377,8 +403,11 @@
     "ClickToExpand": "(Click to expand)"
   },
   "ItemFeed": {
+    "ClearFeed": "Clear Feed",
     "Description": "Item Feed",
-    "HideTagged": "Hide Tagged"
+    "HideTagged": "Hide Tagged",
+    "NoNewItems": "No new items",
+    "ShowOlderItems": "Show older items"
   },
   "ItemMove": {
     "Consolidate": "Consolidated {{name}}",
@@ -496,7 +525,8 @@
       "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
       "None": "All armor will use its current stats and will have a minimum energy level of 7."
     },
-    "AutoStatMods": "Add required stat mods",
+    "AutoStatMods": "Automatically add stat mods",
+    "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
@@ -508,16 +538,7 @@
     "ExistingLoadout": "Existing Loadout",
     "ExoticSpecialCategory": "Special",
     "Filter": "Filters",
-    "InLoadouts": "In Loadouts",
-    "InOtherLoadouts": "Other Loadouts",
     "Legendary": "Legendary",
-    "LockElement": "Lock Element",
-    "LockElementOptions": {
-      "All": "All armor will be locked to its current element.",
-      "InLoadouts": "Armor will be locked to its current element if it is equipped in any existing Loadouts.",
-      "InOtherLoadouts": "You are currently optimizing Loadout {{loadoutName}}. Armor will be locked to its current element if it is equipped in any Loadouts other than {{loadoutName}}.",
-      "None": "Armor element will be changed as needed to fit the selected mods."
-    },
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
     "MaxTier": "Max {{tier}}",
@@ -527,7 +548,6 @@
       "ActiveSearchQuery": "An active search query is restricting the items DIM can include in builds",
       "AllowAutoStatMods": "Allow DIM to automatically include additional stat mods",
       "AlwaysInvalidMods": "These mods don't fit into any of your owned items:",
-      "AssumeElementChange": "Allow DIM to recommend armor energy element changes",
       "AssumeMasterworked": "Allow DIM to recommend masterworking armor",
       "AssumptionsRestricted": "DIM cannot recommend armor energy changes:",
       "BadSlot": "In the {{bucketName}} slot, none of the allowed items could accommodate these mods:",
@@ -550,7 +570,7 @@
     "OptimizerExplanationMods": "Choose an exotic and any mods you want to use. Loadout Optimizer only includes stat bonuses from mods you choose - all mods already on the armor are ignored.",
     "OptimizerExplanationSearch": "Use the search bar to filter the items Loadout Optimizer uses.",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
-    "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades and element swaps to fit your requested mods.",
+    "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades to fit your requested mods.",
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Processing sets for\n{{character}} ({{remainingTime}}s)",
     "SaveAs": "Save as",
@@ -579,6 +599,7 @@
     "BadLoadoutShare": "Unable to load shared loadout",
     "BadLoadoutShareBody": "The loadout you're trying to load is invalid: {{error}}",
     "Before": "Before '{{name}}'",
+    "CancelEditing": "Cancel Editing",
     "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "Add {{name}}",
     "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
@@ -593,6 +614,7 @@
     "CurrentlyEquipped": "Currently Equipped",
     "Deequip": "De-equipping items from other characters",
     "Delete": "Delete",
+    "DeprecatedMods": "Deprecated Mods",
     "Edit": "Edit Loadout",
     "EditBrief": "Edit",
     "EquipItems": "Equipping items",
@@ -609,6 +631,14 @@
     "GatherEngrams": "Gather Engrams",
     "GatherEngramsExceptExotics": "Exotics",
     "Generated": "T{{tier}} Loadout",
+    "HashtagTip": "Tip: Use #hashtags in your loadout names or notes and they'll show up here.",
+    "Import": {
+      "BadURL": "Not a valid loadout share URL.",
+      "Error": "Error getting loadout:",
+      "Error404": "This loadout doesn't exist.",
+      "PasteHere": "Paste a loadout link to open the loadout."
+    },
+    "ImportLoadout": "Import Loadout",
     "ItemErrorSummary": "1 item error:",
     "ItemErrorSummary_plural": "{{count}} item errors:",
     "ItemLeveling": "Item Leveling",
@@ -627,6 +657,7 @@
     "MaximizeLight": "Max Light",
     "MaximizePower": "Max Power",
     "MaximizeStat": "Maximize Stat",
+    "MissingItems": "Missing Items",
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
     "ModErrorSummary": "1 mod error:",
     "ModErrorSummary_plural": "{{count}} mod errors:",
@@ -636,9 +667,9 @@
     "NoEngrams": "No non-exotic engrams are available to transfer.",
     "NoExotics": "No engrams are available to transfer.",
     "NoSpace": "You're out of space in the vault and any other characters.",
-    "NoneMatch": "None of your loadouts' names or notes match '{{query}}'.",
-    "NotStarted": "Waiting for other actions",
-    "NotesPlaceholder": "Write some notes about this loadout",
+    "NoneMatch": "None of your loadouts matched the filters.",
+    "NotStarted": "Waiting for other actions to complete, or an inventory refresh to finish loading",
+    "NotesPlaceholder": "Write some notes about this loadout, or use #hashtags to categorize it",
     "NotificationTitle": "Loadout: {{name}}",
     "OnWrongCharacterAdvice": "Click here to find this character's highest Power items.",
     "OnWrongCharacterWarning": "This character's most powerful armor is on another character. To count toward the Power of drops, powerful, and pinnacle rewards, armor must be on this character or in the Vault.",
@@ -738,7 +769,6 @@
     "CatalystProgress": "Catalyst Progress",
     "CommunityData": "Community Insight",
     "Consolidate": "Consolidate",
-    "CraftingPattern": "Crafting Pattern",
     "DistributeEvenly": "Distribute Evenly",
     "Equip": "Equip",
     "FavoriteUnFavorite": {
@@ -749,6 +779,7 @@
     },
     "Infuse": "Infuse",
     "LockUnlock": {
+      "AutoLock": "Lock state is synced to this item's tag",
       "Lock": "Lock {{itemType}}",
       "Locked": "Locked",
       "Unlock": "Unlock {{itemType}}",
@@ -779,6 +810,7 @@
       "Untracked": "Untracked"
     },
     "TriageTab": "Triage",
+    "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
     "Vault": "Vault",
     "WeaponLevel": "Weapon Level {{level}}"
   },
@@ -802,9 +834,9 @@
       "Archetype": "Archetype",
       "BaseStats": "Base Stats",
       "Breaker": "Breaker",
+      "Crafted": "Shaped Date",
       "CustomTotal": "Custom Total",
       "Damage": "Damage",
-      "Element": "Element",
       "Energy": "Energy",
       "Event": "Event",
       "Icon": "Icon",
@@ -901,6 +933,8 @@
     "UsageCount": "# Used"
   },
   "Settings": {
+    "AutoLockTagged": "Sync item lock state with tag",
+    "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. Crafted items will remain unlocked to allow reshaping. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
     "BadgePostmaster": "Show the number of postmaster items for the current character on app icon",
     "BadgePostmasterExplanation": "For this to work you must install DIM as an app and your OS must support displaying badges",
     "BothDescriptions": "Both Descriptions",
@@ -914,7 +948,15 @@
     "CommunityData": "Community Perk Insights",
     "CommunityDescriptionOnly": "Community Descriptions",
     "CsvImport": "Import CSV",
-    "CustomStatDesc": "Choose armor stats to make a custom total stat that will show on the item popup, Organizer, and Compare. Search with stat:custom:>=30.",
+    "CustomErrorLabel": "A stat name must contain word characters, and be different from other stat names for this Guardian class.",
+    "CustomErrorValues": "Stat weights must be positive numbers.\nAt least 2 stat weights must be above zero.",
+    "CustomStatChooseName": "Choose a Custom Stat name",
+    "CustomStatCreate": "Create a new custom stat",
+    "CustomStatDelete": "Delete this Custom Stat",
+    "CustomStatDeleteConfirm": "Delete this Custom Stat?",
+    "CustomStatDesc1": "Choose desired armor stats to make a custom total stat.",
+    "CustomStatDesc3": "Custom stats will appear in the Item Popup, Organizer, and Compare.",
+    "CustomStatTitle": "Custom Stat Total",
     "Data": "Spreadsheets",
     "DefaultItemSizeNote": "An item size of 50px will look the sharpest, without blurring the item picture or text.",
     "DontForgetDupes": "Don't forget you can search is:dupe to quickly find duplicate items, and you can use the comparison tool or organizer to evaluate related items.",
@@ -923,8 +965,7 @@
     "ExportProfile": "Export API profile response",
     "ExportSS": "Inventory spreadsheets",
     "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
-    "ExportSSNoStores": "You need to load your inventory once before clicking this button.",
-    "HidePullFromPostmaster": "Hide the \"Pull From Postmaster\" button",
+    "HidePullFromPostmaster": "Hide the \"$t(Loadouts.PullFromPostmaster)\" button",
     "Inventory": "Inventory Display",
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
@@ -949,7 +990,6 @@
     "SizeItem": "Item size",
     "SortByAmmoType": "Ammo Type",
     "SortByAmount": "Stack Size",
-    "SortByArmorElement": "Armor Element (D2)",
     "SortByClassType": "Required Class",
     "SortByCrafted": "Crafted (D2)",
     "SortByDeepsight": "Deepsight (D2)",
@@ -1042,6 +1082,8 @@
     "DimSyncNotEnabled": "DIM Sync is not enabled, so your settings, tags, loadouts, and searches are only stored locally and will be lost if you clear your browser storage. Enable DIM Sync in Settings to back up your data automatically, or regularly back up your data manually.",
     "EnableDimApi": "Enable DIM Sync (recommended)",
     "Export": "Download Data Backup",
+    "ExportError": "Failed to download backup from DIM Sync",
+    "ExportErrorBody": "DIM Sync may be down, or you are having trouble with your connection. We will download a copy of your locally saved data instead.",
     "Import": "Import Data Backup",
     "ImportConfirmDimApi": "Are you sure you want to overwrite your current tags, loadouts, and settings with this version? It will completely replace what you had.",
     "ImportExport": "Backup & Import",
@@ -1070,9 +1112,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "Picked number is not the valid one!",
+      "No": "No",
       "Reset": "DE-AUTHORIZE",
-      "Title": "Pick this number on your Stream Deck"
+      "Title": "Do you see the same code on your Stream Deck ?",
+      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
+      "Yes": "Yes"
     },
     "Connected": "Connected",
     "Enable": "Stream Deck Plugin",
@@ -1089,7 +1133,6 @@
   "StripSockets": {
     "Action": "Strip Sockets",
     "ArmorMods": "{{count}}x Armor Mod",
-    "ArtifactMods": "{{count}}x Artifact Mod",
     "Button": "Strip {{numSockets}} Sockets",
     "Cancel": "Cancel",
     "Choose": "Choose Sockets to strip",
@@ -1115,11 +1158,27 @@
     "UnlockAll": "Unlock Items"
   },
   "Triage": {
+    "AccountsForArtifice": "This tests whether an Artifice armor piece could be better, if a +3 stat mod were used.",
+    "BetterArmor": "Strictly Better Armor",
+    "BetterArtificeArmor": "Better Artifice Armor",
+    "BetterStatArmor": "Better Stats Armor",
+    "BetterStatArtificeArmor": "Better Stat Artifice Armor",
+    "BetterWorseArmor": "Better/Worse Armor",
+    "BetterWorseIncludes": "Identifies armor pieces with:",
     "HighStats": "High Stats",
     "InLoadouts": "In Loadouts",
     "OwnedCount": "# Owned",
+    "PerkBetterArmorDesc": "The same, or more, intrinsic perks or special mod slots.",
+    "PerkWorseArmorDesc": "The same intrinsic perk, or none.",
     "SimilarItems": "Similar Items",
+    "StatBetterArmorDesc": "All stats at least as high, and at least one stat better.",
+    "StatNotPerkArmorDesc": "This tests only stats. A lower piece may still have special mod slots or intrinsic perks.",
+    "StatWorseArmorDesc": "No better stats, and at least one worse stat.",
     "ThisItem": "This item",
+    "WorseArmor": "Strictly Worse Armor",
+    "WorseArtificeArmor": "Worse Non-Artifice Armor",
+    "WorseStatArmor": "Worse Stat Armor",
+    "WorseStatArtificeArmor": "Worse Stat Non-Artifice Armor",
     "YourBestItem": "Your best item"
   },
   "Triumphs": {
@@ -1139,7 +1198,7 @@
     "About": {
       "APIHistory": "View the history of all actions taken by DIM (and other Destiny apps)",
       "BungieCopyright": "All images and content are property of Bungie.",
-      "CommunityInsight": "Community Perk Insights courtesy of {{clarityLink}} and {{compendiumLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
+      "CommunityInsight": "Community Perk Insights courtesy of {{clarityLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
       "Discord": "Discord",
       "DiscordHelp": "Ask questions, give feedback, and get support in our Discord channels.",
       "FAQ": "Frequently Asked Questions",
@@ -1165,7 +1224,6 @@
       },
       "Translation": "Join the Translation Team!",
       "TranslationText": "We use {{link}} for ease of translation. If you want to improve one of DIM's translations, join the team.",
-      "Twitter": "Twitter",
       "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
       "Wiki": "DIM User Guide Wiki",
@@ -1175,14 +1233,12 @@
     },
     "Login": {
       "Auth": "Authorize with Bungie.net",
-      "BackupPrompt": "Are you sure you want to enable DIM Sync without a backup?",
+      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "You had previously disabled DIM Sync and were only using local data storage. Enabling DIM Sync will replace any local data with the data from DIM Sync. You should back up your data before enabling DIM Sync. You can restore from that backup in Settings.",
       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
       "LearnMore": "Learn more about accounts and login",
       "NewAccount": "Log in with a different Bungie.net account",
-      "Permission": "We need your permission...",
-      "UpgradeExplanation": "Home screen apps on your version of iOS don't allow you to log in to DIM. Please upgrade to iOS 12.2 or newer and re-add DIM to your home screen.",
-      "UpgradeiOS": "Please upgrade iOS"
+      "Permission": "We need your permission..."
     },
     "Support": {
       "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",

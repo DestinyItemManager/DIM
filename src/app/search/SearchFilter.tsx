@@ -7,18 +7,17 @@ import { useLocation } from 'react-router';
 import { setSearchQuery } from '../shell/actions';
 import MainSearchBarActions from './MainSearchBarActions';
 import MainSearchBarMenu from './MainSearchBarMenu';
-import './search-filter.scss';
 import SearchBar, { SearchFilterRef } from './SearchBar';
 import { SearchInput } from './SearchInput';
 
 /**
  * The main search filter that's in the header.
  */
-export function SearchFilter(
+export default React.forwardRef(function SearchFilter(
   {
     onClear,
   }: {
-    onClear?(): void;
+    onClear?: () => void;
   },
   ref: React.Ref<SearchFilterRef>
 ) {
@@ -51,7 +50,7 @@ export function SearchFilter(
         : onProgress
         ? t('Header.FilterHelpProgress')
         : onOptimizer
-        ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, modslot:combatstyle' })
+        ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, modslot:nightmare' })
         : onLoadouts
         ? t('Header.FilterHelpLoadouts')
         : isPhonePortrait
@@ -81,6 +80,4 @@ export function SearchFilter(
   ) : (
     <SearchInput onQueryChanged={onQueryChanged} placeholder={placeholder} query={searchQuery} />
   );
-}
-
-export default React.forwardRef(SearchFilter);
+});

@@ -1,28 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`generateSuggestionsForFilter full suggestions for filter format '[ 'range', 'query' ]', keyword 'energycapacity' with suggestions [
-  'any',    'arc',
-  'solar',  'void',
-  'ghost',  'subclass',
-  'stasis'
-], overload undefined 1`] = `
-[
-  "energycapacity:",
-  "energycapacity:<",
-  "energycapacity:>",
-  "energycapacity:<=",
-  "energycapacity:>=",
-  "energycapacity:",
-  "energycapacity:any",
-  "energycapacity:arc",
-  "energycapacity:solar",
-  "energycapacity:void",
-  "energycapacity:ghost",
-  "energycapacity:subclass",
-  "energycapacity:stasis",
-]
-`;
-
 exports[`generateSuggestionsForFilter full suggestions for filter format 'freeform', keyword 'a' with suggestions [ 'b', 'c' ], overload undefined 1`] = `
 [
   "a:",
@@ -38,10 +15,13 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'query'
 `;
 
 exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'maxstatvalue' with suggestions [
-  'mobility',  'resilience',
-  'recovery',  'discipline',
-  'intellect', 'strength',
-  'total',     'custom',
+  'mobility',
+  'resilience',
+  'recovery',
+  'discipline',
+  'intellect',
+  'strength',
+  'total',
   'any'
 ], overload undefined 1`] = `
 [
@@ -53,16 +33,18 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'query'
   "maxstatvalue:intellect",
   "maxstatvalue:strength",
   "maxstatvalue:total",
-  "maxstatvalue:custom",
   "maxstatvalue:any",
 ]
 `;
 
 exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'maxstatvalue' with suggestions [
-  'mobility',  'resilience',
-  'recovery',  'discipline',
-  'intellect', 'strength',
-  'total',     'custom',
+  'mobility',
+  'resilience',
+  'recovery',
+  'discipline',
+  'intellect',
+  'strength',
+  'total',
   'any'
 ], overload undefined 2`] = `
 [
@@ -74,7 +56,6 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'query'
   "maxstatvalue:intellect",
   "maxstatvalue:strength",
   "maxstatvalue:total",
-  "maxstatvalue:custom",
   "maxstatvalue:any",
 ]
 `;
@@ -88,6 +69,14 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'range'
   "a:>=",
   "a:worthy",
   "a:arrivals",
+  "a:<worthy",
+  "a:<arrivals",
+  "a:>worthy",
+  "a:>arrivals",
+  "a:<=worthy",
+  "a:<=arrivals",
+  "a:>=worthy",
+  "a:>=arrivals",
 ]
 `;
 
@@ -98,6 +87,16 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'range'
   "a:>",
   "a:<=",
   "a:>=",
+]
+`;
+
+exports[`generateSuggestionsForFilter full suggestions for filter format 'range', keyword 'energycapacity' with suggestions undefined, overload undefined 1`] = `
+[
+  "energycapacity:",
+  "energycapacity:<",
+  "energycapacity:>",
+  "energycapacity:<=",
+  "energycapacity:>=",
 ]
 `;
 
@@ -118,17 +117,22 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
 `;
 
 exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'stat' with suggestions [
-  'rpm',             'rof',         'charge',
-  'impact',          'handling',    'range',
-  'stability',       'reload',      'magazine',
-  'aimassist',       'equipspeed',  'shieldduration',
-  'velocity',        'blastradius', 'recoildirection',
-  'drawtime',        'zoom',        'airborne',
-  'accuracy',        'swingspeed',  'guardefficiency',
-  'guardresistance', 'chargerate',  'guardendurance',
-  'ammocapacity',    'mobility',    'resilience',
-  'recovery',        'discipline',  'intellect',
-  'strength',        'total',       'custom',
+  'rpm',             'rof',
+  'charge',          'impact',
+  'handling',        'range',
+  'stability',       'reload',
+  'magazine',        'aimassist',
+  'equipspeed',      'shieldduration',
+  'velocity',        'blastradius',
+  'recoildirection', 'drawtime',
+  'zoom',            'airborne',
+  'accuracy',        'swingspeed',
+  'guardefficiency', 'guardresistance',
+  'chargerate',      'guardendurance',
+  'ammocapacity',    'mobility',
+  'resilience',      'recovery',
+  'discipline',      'intellect',
+  'strength',        'total',
   'any'
 ], overload undefined 1`] = `
 [
@@ -293,11 +297,6 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
   "stat:total:>",
   "stat:total:<=",
   "stat:total:>=",
-  "stat:custom:",
-  "stat:custom:<",
-  "stat:custom:>",
-  "stat:custom:<=",
-  "stat:custom:>=",
   "stat:any:",
   "stat:any:<",
   "stat:any:>",

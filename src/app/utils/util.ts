@@ -17,6 +17,10 @@ type PropertiesOfType<T, PropType> = keyof {
   [K in keyof T as T[K] extends PropType ? K : never]: T[K];
 };
 
+/** Extracts the type of elements of an array */
+export type ArrayElement<ArrayType extends readonly unknown[]> =
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+
 /**
  * This is similar to _.keyBy, but it specifically handles keying multiple times per item, where
  * the keys come from an array property.

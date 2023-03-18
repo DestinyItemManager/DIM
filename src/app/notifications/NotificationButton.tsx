@@ -11,7 +11,7 @@ export default function NotificationButton({
   onClick,
 }: {
   children: React.ReactChild | React.ReactChild[];
-  onClick(e: React.MouseEvent): void;
+  onClick: (e: React.MouseEvent) => void;
 }) {
   return (
     <span className={styles.button} onClick={onClick}>

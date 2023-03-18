@@ -6,20 +6,20 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { inGameArmorEnergyRules } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getLoadoutStats, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
+import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { Portal } from 'app/utils/temp-container';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
-import Mod from '../loadout-ui/Mod';
+import PlugDef from '../loadout-ui/PlugDef';
 import Sockets from '../loadout-ui/Sockets';
 import { fitMostMods } from '../mod-assignment-utils';
 import { createGetModRenderKey } from '../mod-utils';
 import ModPicker from '../ModPicker';
 import styles from './ModAssignmentDrawer.m.scss';
-import { useEquippedLoadoutArmorAndSubclass } from './selectors';
+import { useEquippedLoadoutArmorAndSubclass, useLoadoutMods } from './selectors';
 
 function Header({
   defs,
@@ -57,8 +57,8 @@ export default function ModAssignmentDrawer({
 }: {
   loadout: Loadout;
   storeId: string;
-  onUpdateMods?(newMods: PluggableInventoryItemDefinition[]): void;
-  onClose(): void;
+  onUpdateMods?: (newMods: number[]) => void;
+  onClose: () => void;
 }) {
   const [plugCategoryHashWhitelist, setPlugCategoryHashWhitelist] = useState<number[]>();
 
@@ -66,19 +66,17 @@ export default function ModAssignmentDrawer({
   const { armor, subclass } = useEquippedLoadoutArmorAndSubclass(loadout, storeId);
   const getModRenderKey = createGetModRenderKey();
 
-  const [itemModAssignments, unassignedMods, mods] = useMemo(() => {
-    let mods: PluggableInventoryItemDefinition[] = [];
-    if (defs) {
-      mods = getModsFromLoadout(defs, loadout);
-    }
+  const [resolvedMods, modDefinitions] = useLoadoutMods(loadout, storeId);
+
+  const [itemModAssignments, unassignedMods] = useMemo(() => {
     const { itemModAssignments, unassignedMods } = fitMostMods({
       items: armor,
-      plannedMods: mods,
+      plannedMods: modDefinitions,
       armorEnergyRules: inGameArmorEnergyRules,
     });
 
-    return [itemModAssignments, unassignedMods, mods];
-  }, [defs, loadout, armor]);
+    return [itemModAssignments, unassignedMods];
+  }, [armor, modDefinitions]);
 
   const onSocketClick = useCallback(
     (plugDef: PluggableInventoryItemDefinition, plugCategoryHashWhitelist: number[]) => {
@@ -153,7 +151,7 @@ export default function ModAssignmentDrawer({
               <h3>{t('Loadouts.UnassignedMods')}</h3>
               <div className={styles.unassigned}>
                 {unassignedMods.map((mod) => (
-                  <Mod key={getModRenderKey(mod)} plugDef={mod} />
+                  <PlugDef key={getModRenderKey(mod)} plug={mod} />
                 ))}
               </div>
             </>
@@ -165,7 +163,7 @@ export default function ModAssignmentDrawer({
           <ModPicker
             classType={loadout.classType}
             owner={storeId}
-            lockedMods={mods}
+            lockedMods={resolvedMods}
             plugCategoryHashWhitelist={plugCategoryHashWhitelist}
             onAccept={onUpdateMods}
             onClose={() => setPlugCategoryHashWhitelist(undefined)}

@@ -93,11 +93,6 @@
   }
 }
 
-// Suppress outline on focusable divs
-div[tabindex='-1']:focus {
-  outline: 0;
-}
-
 h1,
 h2,
 h3,
@@ -108,11 +103,6 @@ h5 {
 
 label {
   cursor: inherit;
-}
-
-div:focus,
-span:focus {
-  outline-width: 0;
 }
 
 @keyframes browser-warning {
@@ -168,6 +158,7 @@ html,
 body {
   // Disable pull to refresh in Android
   overscroll-behavior: none;
+
   @include phone-portrait {
     user-select: none;
   }
@@ -185,6 +176,7 @@ body {
   -webkit-user-drag: none;
   // Don't let iOS Safari mess with font sizes
   text-size-adjust: none;
+  overflow-wrap: break-word;
 }
 
 h2,
@@ -348,6 +340,9 @@ select {
 
   & .app-icon {
     margin-right: 4px;
+    &:only-child {
+      margin-right: unset;
+    }
   }
 }
 
@@ -357,4 +352,10 @@ a.dim-button {
 
 .horizontal-swipable {
   touch-action: pan-y;
+}
+
+// bungie's stat icons are semitransparent... boooo.
+// when applied to an armor stat icon, this bolsters their visibility with a same-size dropshadow
+.stat-icon {
+  filter: drop-shadow(0 0 0 #fff);
 }

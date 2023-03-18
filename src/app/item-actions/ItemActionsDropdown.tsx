@@ -1,6 +1,7 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { compareFilteredItems } from 'app/compare/actions';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
+import { PromptOpts } from 'app/dim-ui/usePrompt';
 import { t } from 'app/i18next-t';
 import { setNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
@@ -8,13 +9,14 @@ import { storesSortedByImportanceSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
+import { TagCommandInfo } from 'app/organizer/ItemActions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { stripSockets } from 'app/strip-sockets/strip-sockets-actions';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { isTagValue, itemTagSelectorList, TagValue } from '../inventory/dim-item-info';
+import { itemTagSelectorList, TagCommand } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
   AppIcon,
@@ -33,6 +35,7 @@ interface Props {
   filteredItems: DimItem[];
   searchActive: boolean;
   fixed?: boolean;
+  prompt: (message: string, opts?: PromptOpts | undefined) => Promise<string | null>;
 }
 
 /**
@@ -43,6 +46,7 @@ export default React.memo(function ItemActionsDropdown({
   filteredItems,
   searchQuery,
   fixed,
+  prompt,
 }: Props) {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
@@ -61,24 +65,22 @@ export default React.memo(function ItemActionsDropdown({
     )
   );
 
-  const bulkTag = loadingTracker.trackPromise(async (selectedTag: TagValue) => {
+  const bulkTag = loadingTracker.trackPromise(async (selectedTag: TagCommand) => {
     // Bulk tagging
     const tagItems = filteredItems.filter((i) => i.taggable);
-
-    if (isTagValue(selectedTag)) {
-      dispatch(bulkTagItems(tagItems, selectedTag));
-    }
+    dispatch(bulkTagItems(tagItems, selectedTag));
   });
 
-  const bulkLock = loadingTracker.trackPromise(async (selectedTag: TagValue) => {
+  const bulkLock = loadingTracker.trackPromise(async (selectedTag: 'lock' | 'unlock') => {
     // Bulk locking/unlocking
     const state = selectedTag === 'lock';
     const lockables = filteredItems.filter((i) => i.lockable);
     dispatch(bulkLockItems(lockables, state));
   });
 
-  const bulkNote = () => {
-    const note = prompt(t('Organizer.NotePrompt'));
+  // TODO: replace with rich-text dialog, and an "append" option
+  const bulkNote = async () => {
+    const note = await prompt(t('Organizer.NotePrompt'));
     if (note !== null && filteredItems.length) {
       for (const item of filteredItems) {
         dispatch(setNote(item, note));
@@ -96,7 +98,7 @@ export default React.memo(function ItemActionsDropdown({
     dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
 
-  const bulkItemTags = itemTagSelectorList
+  const bulkItemTags: TagCommandInfo[] = itemTagSelectorList
     .filter((t) => t.type)
     .map((tag) => ({
       ...tag,

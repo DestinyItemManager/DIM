@@ -1,58 +1,53 @@
+import { DimItem } from 'app/inventory/item-types';
+import { createItemContextSelector } from 'app/inventory/selectors';
+import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
+import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
 import clsx from 'clsx';
-import React from 'react';
+import _ from 'lodash';
+import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
-import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import { count } from '../utils/util';
-import { VendorItem } from '../vendors/vendor-item';
-import VendorItemComponent from '../vendors/VendorItemComponent';
 
-const plugSetOrder = chainComparator<VendorItem>(
-  compareBy((i) => i.item?.tier),
-  compareBy((i) => i.item?.name)
+const plugSetOrder = chainComparator<DimItem>(
+  compareBy((i) => i.tier),
+  compareBy((i) => i.name)
 );
 
 interface Props {
-  buckets: InventoryBuckets;
   plugSetCollection: {
     hash: number;
     displayItem: number;
   };
-  items: DestinyItemPlug[];
+  unlockedItems: Set<number>;
   path: number[];
-  onNodePathSelected(nodePath: number[]): void;
+  onNodePathSelected: (nodePath: number[]) => void;
 }
 
 /**
  * A single plug set.
  */
 export default function PlugSet({
-  buckets,
   plugSetCollection,
-  items,
+  unlockedItems,
   path,
   onNodePathSelected,
 }: Props) {
   const defs = useD2Definitions()!;
   const plugSetHash = plugSetCollection.hash;
   const plugSetDef = defs.PlugSet.get(plugSetHash);
+  const itemCreationContext = useSelector(createItemContextSelector);
 
-  const vendorItems = plugSetDef.reusablePlugItems.map((i) =>
-    VendorItem.forPlugSetItem(
-      defs,
-      buckets,
-      i,
-      items.some((k) => k.plugItemHash === i.plugItemHash && k.enabled)
-    )
+  const plugSetItems = _.compact(
+    plugSetDef.reusablePlugItems.map((i) => makeFakeItem(itemCreationContext, i.plugItemHash))
   );
 
-  vendorItems.sort(plugSetOrder);
+  plugSetItems.sort(plugSetOrder);
 
-  const acquired = count(vendorItems, (i) => i.canPurchase);
+  const acquired = count(plugSetItems, (i) => unlockedItems.has(i.hash));
   const childrenExpanded = path.includes(plugSetHash);
   const displayItem = defs.InventoryItem.get(plugSetCollection.displayItem);
 
@@ -74,20 +69,25 @@ export default function PlugSet({
         </span>
         <div className="node-progress">
           <div className="node-progress-count">
-            {acquired} / {vendorItems.length}
+            {acquired} / {plugSetItems.length}
           </div>
           <div className="node-progress-bar">
             <div
               className="node-progress-bar-amount"
-              style={{ width: percent(acquired / vendorItems.length) }}
+              style={{ width: percent(acquired / plugSetItems.length) }}
             />
           </div>
         </div>
       </div>
       {childrenExpanded && (
         <div className="collectibles plugset">
-          {vendorItems.map((item) => (
-            <VendorItemComponent key={item.key} item={item} owned={false} />
+          {plugSetItems.map((item) => (
+            <VendorItemDisplay
+              key={item.index}
+              item={item}
+              unavailable={!unlockedItems.has(item.hash)}
+              owned={false}
+            />
           ))}
         </div>
       )}

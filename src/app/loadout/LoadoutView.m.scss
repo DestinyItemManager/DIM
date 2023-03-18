@@ -15,6 +15,7 @@
     flex: 1;
     display: block;
     margin: 0 !important;
+    font-size: 16px;
   }
 
   @include phone-portrait {
@@ -26,7 +27,8 @@
 .actions {
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-flow: row wrap;
-  @include flex-gap(4px);
+  gap: 4px;
+
   @include phone-portrait {
     margin-top: 16px;
     margin-bottom: 16px;
@@ -50,9 +52,10 @@
   flex-flow: row wrap;
   margin-top: 10px;
   min-height: 16px;
-  @include flex-gap(24px);
+  gap: 24px;
+
   @include phone-portrait {
-    @include flex-gap(12px);
+    gap: 12px;
   }
 }
 
@@ -65,7 +68,5 @@
 .loadoutNotes {
   margin: 4px 0;
   white-space: pre-wrap;
-  overflow-wrap: break-word;
-  word-break: break-word;
   user-select: text;
 }

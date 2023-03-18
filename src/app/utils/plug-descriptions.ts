@@ -29,7 +29,7 @@ const statNameAliases = {
   [StatHashes.ReloadSpeed]: ['Reload'],
 };
 
-export const enhancedPerkToRegularPerk = _.mapValues(_.invert(perkToEnhanced), Number);
+const enhancedPerkToRegularPerk = _.mapValues(_.invert(perkToEnhanced), Number);
 
 export function usePlugDescriptions(
   plug?: DestinyInventoryItemDefinition,
@@ -85,7 +85,15 @@ export function usePlugDescriptions(
   const perks = getPerkDescriptions(plug, defs, statAndBungieDescStrings);
 
   if (showCommunityDescription && allClarityDescriptions) {
-    const clarityPerk = allClarityDescriptions[plug.hash];
+    let clarityPerk = allClarityDescriptions[plug.hash];
+
+    // if we couldn't find a Clarity description for this perk, fall back to the non-enhanced perk variant
+    if (!clarityPerk) {
+      const regularPerkHash = enhancedPerkToRegularPerk[plug.hash];
+      if (regularPerkHash) {
+        clarityPerk = allClarityDescriptions[regularPerkHash];
+      }
+    }
     if (clarityPerk) {
       result.communityInsight = clarityPerk;
     }
@@ -119,7 +127,10 @@ function getPerkDescriptions(
       plug.hash === modsWithConditionalStats.sparkOfFocus
     ) {
       const chargeHarvesterDef = defs.InventoryItem.get(modsWithConditionalStats.chargeHarvester);
-      perks.push(chargeHarvesterDef.perks[1]);
+      const perk = chargeHarvesterDef?.perks?.[1];
+      if (perk) {
+        perks.push(perk);
+      }
     }
 
     // filter out things with no displayable text, or that are meant to be hidden

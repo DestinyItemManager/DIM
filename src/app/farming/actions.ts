@@ -1,10 +1,5 @@
-import { settingsSelector } from 'app/dim-api/selectors';
-import {
-  bucketsSelector,
-  itemHashTagsSelector,
-  itemInfosSelector,
-  storesSelector,
-} from 'app/inventory/selectors';
+import { settingSelector, settingsSelector } from 'app/dim-api/selectors';
+import { bucketsSelector, getTagSelector, storesSelector } from 'app/inventory/selectors';
 import {
   capacityForItem,
   findItemsByBucket,
@@ -166,10 +161,9 @@ function makeRoomForItemsInBuckets(
   return async (dispatch, getState) => {
     // If any category is full, we'll move one aside
     const itemsToMove: DimItem[] = [];
-    const itemInfos = itemInfosSelector(getState());
-    const itemHashTags = itemHashTagsSelector(getState());
-    const inventoryClearSpaces = settingsSelector(getState()).inventoryClearSpaces;
-    makeRoomBuckets.forEach((bucket) => {
+    const getTag = getTagSelector(getState());
+    const inventoryClearSpaces = settingSelector('inventoryClearSpaces')(getState());
+    for (const bucket of makeRoomBuckets) {
       const items = findItemsByBucket(store, bucket.hash);
       if (items.length > 0) {
         const capacityIncludingClearSpacesSetting =
@@ -180,8 +174,7 @@ function makeRoomForItemsInBuckets(
             moveAsideCandidates,
             store,
             getVault(stores)!,
-            itemInfos,
-            itemHashTags
+            getTag
           );
           // We'll move the first one to the vault
           const itemToMove = prioritizedMoveAsideCandidates[0];
@@ -190,7 +183,7 @@ function makeRoomForItemsInBuckets(
           }
         }
       }
-    });
+    }
 
     if (itemsToMove.length === 0) {
       return;
@@ -209,9 +202,9 @@ function moveItemsToVault(
   const reservations: MoveReservations = {};
   // reserve one space in the active character
   reservations[store.id] = {};
-  makeRoomBuckets.forEach((bucket) => {
+  for (const bucket of makeRoomBuckets) {
     reservations[store.id][bucket.hash] = 1;
-  });
+  }
 
   return clearItemsOffCharacter(store, items, createMoveSession(cancelToken, items), reservations);
 }

@@ -1,12 +1,14 @@
+import { settingSelector } from 'app/dim-api/selectors';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { queryValidSelector, searchFilterSelector } from '../search/search-filter';
 import { wishListSelector } from '../wishlists/selectors';
-import { getNotes, getTag } from './dim-item-info';
 import InventoryItem from './InventoryItem';
 import { DimItem } from './item-types';
-import { isNewSelector, itemHashTagsSelector, itemInfosSelector } from './selectors';
+import { hasNotesSelector, isNewSelector, tagSelector } from './selectors';
+
+const autoLockTaggedSelector = settingSelector('autoLockTagged');
 
 /**
  * An item that can load its auxiliary state directly from Redux. Not suitable
@@ -26,20 +28,20 @@ export default function ConnectedInventoryItem({
   allowFilter?: boolean;
   hideSelectedSuper?: boolean;
   innerRef?: React.Ref<HTMLDivElement>;
-  onClick?(e: React.MouseEvent): void;
-  onShiftClick?(e: React.MouseEvent): void;
-  onDoubleClick?(e: React.MouseEvent): void;
+  onClick?: (e: React.MouseEvent) => void;
+  onShiftClick?: (e: React.MouseEvent) => void;
+  onDoubleClick?: (e: React.MouseEvent) => void;
   dimArchived?: boolean;
 }) {
-  const itemInfos = useSelector(itemInfosSelector);
-  const itemHashTags = useSelector(itemHashTagsSelector);
-  const tag = getTag(item, itemInfos, itemHashTags);
+  // TODO: maybe send these down via Context?
+  const tag = useSelector(tagSelector(item));
   const currentFilter = useSelector(searchFilterSelector);
   const validQuery = useSelector(queryValidSelector);
+  const autoLockTagged = useSelector(autoLockTaggedSelector);
   const defaultFilterActive = currentFilter === _.stubTrue;
 
   const isNew = useSelector(isNewSelector(item));
-  const notes = getNotes(item, itemInfos, itemHashTags) ? true : false;
+  const hasNotes = useSelector(hasNotesSelector(item));
   const wishlistRoll = useSelector(wishListSelector(item));
   const searchHidden =
     // dim this item if there's no search filter and it's archived
@@ -53,7 +55,7 @@ export default function ConnectedInventoryItem({
         item={item}
         isNew={isNew}
         tag={tag}
-        notes={notes}
+        hasNotes={hasNotes}
         wishlistRoll={wishlistRoll}
         onClick={onClick}
         onShiftClick={onShiftClick}
@@ -61,13 +63,14 @@ export default function ConnectedInventoryItem({
         searchHidden={searchHidden}
         hideSelectedSuper={hideSelectedSuper}
         innerRef={innerRef}
+        autoLockTagged={autoLockTagged}
       />
     ),
     [
       innerRef,
       isNew,
       item,
-      notes,
+      hasNotes,
       onClick,
       onDoubleClick,
       onShiftClick,
@@ -75,6 +78,7 @@ export default function ConnectedInventoryItem({
       hideSelectedSuper,
       tag,
       wishlistRoll,
+      autoLockTagged,
     ]
   );
 }

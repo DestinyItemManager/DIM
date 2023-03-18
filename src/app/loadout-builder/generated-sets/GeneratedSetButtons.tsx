@@ -37,7 +37,7 @@ export default function GeneratedSetButtons({
   params: LoadoutParameters;
   canCompareLoadouts: boolean;
   halfTierMods: PluggableInventoryItemDefinition[];
-  onLoadoutSet(loadout: Loadout): void;
+  onLoadoutSet: (loadout: Loadout) => void;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const dispatch = useThunkDispatch();
@@ -87,7 +87,7 @@ export default function GeneratedSetButtons({
       <button type="button" className="dim-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
-      {Boolean(statsWithPlus5.length) && (
+      {Boolean(statsWithPlus5.length) && Boolean(halfTierMods.length) && (
         <button type="button" className="dim-button" onClick={onQuickAddHalfTierMods}>
           {t('LoadoutBuilder.AddHalfTierMods')}
         </button>

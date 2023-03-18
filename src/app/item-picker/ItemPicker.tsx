@@ -24,7 +24,7 @@ export default function ItemPicker({
   onCancel,
   onSheetClosed,
 }: ItemPickerState & {
-  onSheetClosed(): void;
+  onSheetClosed: () => void;
 }) {
   const [liveQuery, setQuery] = useState('');
   const query = useDeferredValue(liveQuery);
@@ -48,13 +48,11 @@ export default function ItemPicker({
   const header = (
     <div>
       <h1>{prompt || t('ItemPicker.ChooseItem')}</h1>
-      <div className="item-picker-search">
-        <SearchBar
-          placeholder={t('ItemPicker.SearchPlaceholder')}
-          onQueryChanged={setQuery}
-          instant
-        />
-      </div>
+      <SearchBar
+        placeholder={t('ItemPicker.SearchPlaceholder')}
+        onQueryChanged={setQuery}
+        instant
+      />
     </div>
   );
 

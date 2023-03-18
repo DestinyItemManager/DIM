@@ -13,7 +13,7 @@ export default function CategoryStrip({
 }: {
   buckets: InventoryBuckets;
   category: string;
-  onCategorySelected(category: string): void;
+  onCategorySelected: (category: string) => void;
 }) {
   return (
     <div className={styles.options}>

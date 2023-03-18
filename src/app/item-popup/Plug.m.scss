@@ -19,4 +19,12 @@
 
 .cannotRoll {
   fill: #ba594880;
+
+  &.plugged {
+    fill: #ba5948b8;
+  }
+
+  &.selected {
+    fill: #ba5948;
+  }
 }

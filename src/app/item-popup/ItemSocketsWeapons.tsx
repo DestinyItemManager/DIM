@@ -38,7 +38,7 @@ interface Props {
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
   grid?: boolean;
-  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }
 
 export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked }: Props) {
@@ -79,6 +79,9 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
 
   const excludedPlugCategoryHashes = [
     PlugCategoryHashes.GenericAllVfx,
+    PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors,
+    // Not sure what this is - it says you can level weapons?
+    PlugCategoryHashes.CraftingPlugsWeaponsModsTransfusersLevel,
     !item.catalystInfo && PlugCategoryHashes.V400EmptyExoticMasterwork,
   ];
 

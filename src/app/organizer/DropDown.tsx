@@ -12,7 +12,7 @@ export interface DropDownItem {
   content: ReactNode;
   dropdownLabel?: ReactNode;
   checked?: boolean;
-  onItemSelect?(e: React.MouseEvent): void;
+  onItemSelect?: (e: React.MouseEvent) => void;
 }
 
 function MenuItem({ item, forClass }: { item: DropDownItem; forClass?: DestinyClass }) {

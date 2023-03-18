@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
@@ -11,13 +12,13 @@ import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import pursuitsInfoFile from 'data/d2/pursuits.json';
 import grenade from 'destiny-icons/weapons/grenade.svg';
 import headshot from 'destiny-icons/weapons/headshot.svg';
 import melee from 'destiny-icons/weapons/melee.svg';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import styles from './BountyGuide.m.scss';
+import { xpItems } from './xp';
 
 enum KillType {
   Melee,
@@ -36,7 +37,20 @@ const killTypeIcons: { [key in KillType]: string | undefined } = {
   [KillType.ClassAbilities]: undefined,
 } as const;
 
-export type DefType = 'ActivityMode' | 'Destination' | 'DamageType' | 'ItemCategory' | 'KillType';
+export type DefType =
+  | 'ActivityMode'
+  | 'Destination'
+  | 'DamageType'
+  | 'ItemCategory'
+  | 'KillType'
+  | 'Reward';
+
+// Reward types we'll show in the bounty guide. Could be expanded (e.g. to seasonal mats)
+const rewardAllowList = [
+  ...Object.keys(xpItems).map((i) => parseInt(i, 10)),
+  2817410917, // bright dust
+  3168101969, // bright dust
+];
 
 export interface BountyFilter {
   type: DefType;
@@ -53,15 +67,13 @@ export default function BountyGuide({
   bounties,
   selectedFilters,
   onSelectedFiltersChanged,
-  skipTypes,
-  pursuitsInfo = pursuitsInfoFile,
+  pursuitsInfo,
 }: {
   store: DimStore;
   bounties: DimItem[];
   selectedFilters: BountyFilter[];
-  onSelectedFiltersChanged(filters: BountyFilter[]): void;
-  skipTypes?: DefType[]; // Filter to show only specific bounty types
-  pursuitsInfo?: { [hash: string]: { [type in DefType]?: number[] } };
+  onSelectedFiltersChanged: (filters: BountyFilter[]) => void;
+  pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } };
 }) {
   const defs = useD2Definitions()!;
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
@@ -89,6 +101,7 @@ export default function BountyGuide({
     DamageType: {},
     ItemCategory: {},
     KillType: {},
+    Reward: {},
   };
   for (const i of bounties) {
     const expired = i.pursuit?.expirationDate
@@ -99,19 +112,23 @@ export default function BountyGuide({
       if (info) {
         for (const key in info) {
           for (const value of info[key]) {
-            mapped[key][value] ||= [];
-            mapped[key][value].push(i);
+            (mapped[key][value] ??= []).push(i);
+          }
+        }
+        if (i.pursuit) {
+          for (const reward of i.pursuit.rewards) {
+            if (rewardAllowList.includes(reward.itemHash)) {
+              (mapped.Reward[reward.itemHash] ??= []).push(i);
+            }
           }
         }
       }
     }
   }
 
-  const flattened: { type: DefType; value: number; bounties: DimItem[] }[] = Object.entries(
-    mapped
-  ).flatMap(([type, mapping]: [DefType, { [key: number]: DimItem[] }]) =>
+  const flattened = Object.entries(mapped).flatMap(([type, mapping]) =>
     Object.entries(mapping).map(([value, bounties]) => ({
-      type,
+      type: type as DefType,
       value: parseInt(value, 10),
       bounties,
     }))
@@ -147,102 +164,94 @@ export default function BountyGuide({
 
   return (
     <div className={styles.guide} onClick={clearSelection}>
-      {flattened.map(
-        ({ type, value, bounties }) =>
-          !skipTypes?.includes(type) && (
-            <div
-              key={type + value}
-              className={clsx(styles.pill, {
-                [styles.selected]: matchPill(type, value, selectedFilters),
-                // Show "synergy" when this category contains at least one bounty that overlaps with at least one of the selected filters
-                [styles.synergy]:
-                  selectedFilters.length > 0 &&
-                  bounties.some((i) => matchBountyFilters(i, selectedFilters, pursuitsInfo)),
-              })}
-              onClick={(e) => onClickPill(e, type, value)}
+      {flattened.map(({ type, value, bounties }) => (
+        <button
+          type="button"
+          key={type + value}
+          className={clsx(styles.pill, {
+            [styles.selected]: matchPill(type, value, selectedFilters),
+            // Show "synergy" when this category contains at least one bounty that overlaps with at least one of the selected filters
+            [styles.synergy]:
+              selectedFilters.length > 0 &&
+              bounties.some((i) => matchBountyFilters(i, selectedFilters, pursuitsInfo)),
+          })}
+          onClick={(e) => onClickPill(e, type, value)}
+        >
+          <PillContent defs={defs} type={type} value={value} />
+          <span className={styles.count}>({bounties.length})</span>
+          {type === 'ItemCategory' && (
+            <span
+              className={styles.pullItem}
+              onClick={(e) => {
+                pullItemCategory(e, value);
+              }}
             >
-              {(() => {
-                switch (type) {
-                  case 'ActivityMode':
-                    return (
-                      <>
-                        {defs.ActivityMode[value].displayProperties.hasIcon && (
-                          <BungieImage
-                            height="16"
-                            src={defs.ActivityMode[value].displayProperties.icon}
-                          />
-                        )}
-                        {defs.ActivityMode[value].displayProperties.name}
-                      </>
-                    );
-                  case 'Destination':
-                    return (
-                      <>
-                        {defs.Destination.get(value).displayProperties.hasIcon && (
-                          <BungieImage
-                            height="16"
-                            src={defs.Destination.get(value).displayProperties.icon}
-                          />
-                        )}
-                        {defs.Destination.get(value)?.displayProperties.name}
-                      </>
-                    );
-                  case 'DamageType':
-                    return (
-                      <>
-                        {defs.DamageType.get(value).displayProperties.hasIcon && (
-                          <BungieImage
-                            height="16"
-                            src={defs.DamageType.get(value).displayProperties.icon}
-                          />
-                        )}
-                        {defs.DamageType.get(value)?.displayProperties.name}
-                      </>
-                    );
-                  case 'ItemCategory':
-                    return (
-                      <>
-                        {itemCategoryIcons[value] && (
-                          <img
-                            className={styles.itemCategoryIcon}
-                            height="16"
-                            src={itemCategoryIcons[value]}
-                          />
-                        )}
-                        {defs.ItemCategory.get(value)?.displayProperties.name}
-                      </>
-                    );
-                  case 'KillType':
-                    return (
-                      <>
-                        {killTypeIcons[value] && (
-                          <img
-                            className={styles.itemCategoryIcon}
-                            height="16"
-                            src={killTypeIcons[value]}
-                          />
-                        )}
-                        {KillType[value]}
-                      </>
-                    );
-                }
-              })()}
-              <span className={styles.count}>({bounties.length})</span>
-              {type === 'ItemCategory' && (
-                <span
-                  className={styles.pullItem}
-                  onClick={(e) => {
-                    pullItemCategory(e, value);
-                  }}
-                >
-                  <AppIcon icon={addIcon} />
-                </span>
-              )}
-            </div>
-          )
-      )}
+              <AppIcon icon={addIcon} />
+            </span>
+          )}
+        </button>
+      ))}
     </div>
   );
+}
+
+function PillContent({
+  type,
+  defs,
+  value,
+}: {
+  type: DefType;
+  defs: D2ManifestDefinitions;
+  value: number;
+}) {
+  switch (type) {
+    case 'ActivityMode':
+      return (
+        <>
+          {defs[type][value].displayProperties.hasIcon && (
+            <BungieImage height="16" src={defs[type][value].displayProperties.icon} />
+          )}
+          {defs[type][value].displayProperties.name}
+        </>
+      );
+    case 'Destination':
+    case 'DamageType':
+      return (
+        <>
+          {defs[type].get(value).displayProperties.hasIcon && (
+            <BungieImage height="16" src={defs[type].get(value).displayProperties.icon} />
+          )}
+          {defs[type].get(value).displayProperties.name}
+        </>
+      );
+    case 'ItemCategory':
+      return (
+        <>
+          {value in itemCategoryIcons && (
+            <img className={styles.itemCategoryIcon} height="16" src={itemCategoryIcons[value]} />
+          )}
+          {defs.ItemCategory.get(value)?.displayProperties.name}
+        </>
+      );
+    case 'KillType':
+      return (
+        <>
+          {value in killTypeIcons && (
+            <img className={styles.itemCategoryIcon} height="16" src={killTypeIcons[value]} />
+          )}
+          {KillType[value]}
+        </>
+      );
+    case 'Reward':
+      return (
+        <>
+          {defs.InventoryItem.get(value).displayProperties.hasIcon && (
+            <BungieImage height="16" src={defs.InventoryItem.get(value).displayProperties.icon} />
+          )}
+          {defs.InventoryItem.get(value).displayProperties.name}
+        </>
+      );
+  }
 }
 
 function matchPill(type: DefType, hash: number, filters: BountyFilter[]) {
@@ -255,18 +264,21 @@ function matchPill(type: DefType, hash: number, filters: BountyFilter[]) {
 export function matchBountyFilters(
   item: DimItem,
   filters: BountyFilter[],
-  pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } } = pursuitsInfoFile
+  pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } }
 ) {
   if (filters.length === 0) {
     return true;
   }
   const info = pursuitsInfo[item.hash];
-  if (info) {
-    for (const filter of filters) {
-      if (info[filter.type]?.includes(filter.hash)) {
+  for (const filter of filters) {
+    if (filter.type === 'Reward') {
+      if (item.pursuit?.rewards.some((r) => r.itemHash === filter.hash)) {
         return true;
       }
+    } else if (info?.[filter.type]?.includes(filter.hash)) {
+      return true;
     }
   }
+
   return false;
 }

@@ -2,10 +2,15 @@ import {
   AssumeArmorMasterwork,
   Loadout,
   LoadoutItem,
-  LockArmorEnergyType,
   UpgradeSpendTier,
 } from '@destinyitemmanager/dim-api-types';
-import { Loadout as DimLoadout, LoadoutItem as DimLoadoutItem } from './loadout-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { DestinyLoadoutComponent } from 'bungie-api-ts/destiny2';
+import {
+  InGameLoadout,
+  Loadout as DimLoadout,
+  LoadoutItem as DimLoadoutItem,
+} from './loadout-types';
 
 /**
  * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. These functions convert
@@ -44,6 +49,9 @@ function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
   if (item.socketOverrides) {
     result.socketOverrides = item.socketOverrides;
   }
+  if (item.craftedDate) {
+    result.craftedDate = item.craftedDate;
+  }
   return result;
 }
 
@@ -51,11 +59,11 @@ function migrateUpgradeSpendTierAndLockItemEnergy(
   parameters: DimLoadout['parameters']
 ): DimLoadout['parameters'] {
   const migrated = { ...parameters };
-  const { upgradeSpendTier, lockItemEnergyType, assumeArmorMasterwork, lockArmorEnergyType } =
-    migrated;
+  const { upgradeSpendTier, assumeArmorMasterwork, lockArmorEnergyType } = migrated;
 
   delete migrated.upgradeSpendTier;
   delete migrated.lockItemEnergyType;
+  delete migrated.lockArmorEnergyType;
   delete migrated.assumeMasterworked;
 
   if (assumeArmorMasterwork || lockArmorEnergyType) {
@@ -67,25 +75,12 @@ function migrateUpgradeSpendTierAndLockItemEnergy(
       return {
         ...migrated,
         assumeArmorMasterwork: AssumeArmorMasterwork.All,
-        lockArmorEnergyType: lockItemEnergyType
-          ? LockArmorEnergyType.All
-          : LockArmorEnergyType.None,
       };
     case UpgradeSpendTier.AscendantShardsNotExotic:
-      return {
-        ...migrated,
-        assumeArmorMasterwork: AssumeArmorMasterwork.Legendary,
-        lockArmorEnergyType: lockItemEnergyType
-          ? LockArmorEnergyType.All
-          : LockArmorEnergyType.None,
-      };
     case UpgradeSpendTier.AscendantShardsNotMasterworked:
       return {
         ...migrated,
-        assumeArmorMasterwork: AssumeArmorMasterwork.All,
-        lockArmorEnergyType: lockItemEnergyType
-          ? LockArmorEnergyType.All
-          : LockArmorEnergyType.Masterworked,
+        assumeArmorMasterwork: AssumeArmorMasterwork.Legendary,
       };
     case UpgradeSpendTier.AscendantShardsLockEnergyType:
     case UpgradeSpendTier.EnhancementPrisms:
@@ -95,9 +90,6 @@ function migrateUpgradeSpendTierAndLockItemEnergy(
       return {
         ...migrated,
         assumeArmorMasterwork: AssumeArmorMasterwork.None,
-        lockArmorEnergyType: lockItemEnergyType
-          ? LockArmorEnergyType.All
-          : LockArmorEnergyType.None,
       };
   }
 }
@@ -127,10 +119,41 @@ function convertDimApiLoadoutItemToLoadoutItem(
   equipped: boolean
 ): DimLoadoutItem {
   return {
+    ...item,
     id: item.id || '0',
-    hash: item.hash,
     amount: item.amount || 1,
-    socketOverrides: item.socketOverrides,
     equip: equipped,
+  };
+}
+
+/**
+ * Given what the API returns for loadouts, return an enhanced object that tells us a little more about the loadout.
+ */
+export function convertDestinyLoadoutComponentToInGameLoadout(
+  loadoutComponent: DestinyLoadoutComponent,
+  index: number,
+  characterId: string,
+  defs: D2ManifestDefinitions
+): InGameLoadout | undefined {
+  const name = defs.LoadoutName.get(loadoutComponent.nameHash)?.name ?? 'Unknown';
+  const colorIcon = defs.LoadoutColor.get(loadoutComponent.colorHash)?.colorImagePath ?? '';
+  const icon = defs.LoadoutIcon.get(loadoutComponent.iconHash)?.iconImagePath ?? '';
+
+  if (
+    loadoutComponent.items === undefined ||
+    loadoutComponent.items.length === 0 ||
+    loadoutComponent.items.every((i) => i.itemInstanceId === '0')
+  ) {
+    return undefined;
+  }
+
+  return {
+    ...loadoutComponent,
+    characterId,
+    index,
+    name,
+    colorIcon,
+    icon,
+    id: `ingame-${characterId}-${index}`,
   };
 }

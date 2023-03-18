@@ -476,3 +476,36 @@ export function canonicalizeQuery(query: QueryAST, depth = 0): string {
 
   return result;
 }
+
+/**
+ * Invoke `callback` on each FilterOp of the `ast` in depth-first order (ie, left-to-right)
+ * If optional `reverse` argument is true, traversal goes the other way
+ */
+export const traverseAST = (
+  ast: QueryAST,
+  /** A callback to run on each filter op. Return false to stop traversing. */
+  callback: (ast: FilterOp) => boolean | undefined,
+  reverse = false
+): boolean | undefined => {
+  switch (ast.op) {
+    case 'filter':
+      return callback(ast);
+
+    case 'not':
+      return traverseAST(ast.operand, callback, reverse);
+
+    case 'and':
+    case 'or': {
+      const operands = reverse ? [...ast.operands].reverse() : ast.operands;
+      for (const operand of operands) {
+        if (traverseAST(operand, callback, reverse) === false) {
+          return false;
+        }
+      }
+      break;
+    }
+
+    case 'noop':
+      break;
+  }
+};

@@ -3,7 +3,8 @@ import { t } from 'app/i18next-t';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
-import { makeCommentString, parseQuery } from './query-parser';
+import { ArmoryEntry, getArmorySuggestions } from './armory-search';
+import { makeCommentString, parseQuery, traverseAST } from './query-parser';
 import { SearchConfig } from './search-config';
 import freeformFilters from './search-filters/freeform';
 
@@ -19,7 +20,8 @@ export const enum SearchItemType {
   Autocomplete,
   /** Open help */
   Help,
-  // TODO: add types for exact-match item or perk that adds them to the query?
+  /** Open the armory view for a page */
+  ArmoryEntry,
 }
 
 export interface SearchQuery {
@@ -33,8 +35,7 @@ export interface SearchQuery {
   helpText?: string;
 }
 
-/** An item in the search autocompleter */
-export interface SearchItem {
+interface BaseSearchItem {
   type: SearchItemType;
   /** The suggested query */
   query: SearchQuery;
@@ -46,8 +47,20 @@ export interface SearchItem {
   };
 }
 
-/** matches a keyword that's probably a math comparison */
-const mathCheck = /[\d<>=]/;
+export interface ArmorySearchItem extends BaseSearchItem {
+  type: SearchItemType.ArmoryEntry;
+  armoryItem: ArmoryEntry;
+}
+
+/** An item in the search autocompleter */
+export type SearchItem =
+  | ArmorySearchItem
+  | (BaseSearchItem & {
+      type: Exclude<SearchItemType, SearchItemType.ArmoryEntry>;
+    });
+
+/** matches a keyword that's probably a math comparison, but not with a value on the RHS */
+const mathCheck = /[\d<>=]$/;
 
 /** if one of these has been typed, stop guessing which filter and just offer this filter's values */
 // TODO: Generate this from the search config
@@ -75,7 +88,12 @@ const filterNames = [
 export default function createAutocompleter(searchConfig: SearchConfig) {
   const filterComplete = makeFilterComplete(searchConfig);
 
-  return (query: string, caretIndex: number, recentSearches: Search[]): SearchItem[] => {
+  return (
+    query: string,
+    caretIndex: number,
+    recentSearches: Search[],
+    includeArmory?: boolean
+  ): SearchItem[] => {
     // If there's a query, it's always the first entry
     const queryItem: SearchItem | undefined = query
       ? {
@@ -108,6 +126,10 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
       },
     };
 
+    const armorySuggestions = includeArmory
+      ? getArmorySuggestions(searchConfig.armorySuggestions, query)
+      : [];
+
     // mix them together
     return [
       ..._.take(
@@ -117,6 +139,7 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
         ),
         7
       ),
+      ...armorySuggestions,
       helpItem,
     ];
   };
@@ -167,14 +190,8 @@ function normalizeRecency(timestamp: number) {
 
 export function filterSortRecentSearches(query: string, recentSearches: Search[]): SearchItem[] {
   // Recent/saved searches
-  // TODO: Filter recent searches by query
-  // TODO: Sort recent searches by relevance (time+usage+saved)
-  // TODO: don't show results that exactly match the input
-  // TODO: need a better way to search recent queries
-  // TODO: if there are a ton of recent/saved searches, this sorting might get expensive. Maybe sort them in the Redux store if
-  //       we aren't going to do different sorts for query vs. non-query
   const recentSearchesForQuery = query
-    ? recentSearches.filter((s) => s.query.includes(query))
+    ? recentSearches.filter((s) => s.query !== query && s.query.includes(query))
     : Array.from(recentSearches);
   return recentSearchesForQuery.sort(recentSearchComparator).map((s) => {
     const ast = parseQuery(s.query);
@@ -226,6 +243,59 @@ const lastWordRegex = /(\b[\w:"'<=>]{3,}|#\w*)$/;
 const closingQuoteRegex = /\w["']$/;
 
 /**
+ * Find the position of the last "complete" filter segment of the query before the caretIndex.
+ *
+ * For example, given the query (with the caret at |):
+ * name:foo bar| baz
+ * This should return { term: "bar", index: 9 }
+ *
+ * @returns the start index and term of the last complete filter
+ */
+function findLastFilter(
+  query: string,
+  caretIndex: number
+): {
+  term: string;
+  index: number;
+} | null {
+  // TODO: maybe include non-whitespace after the caret?
+  const queryUpToCaret = query.slice(0, caretIndex);
+  const ast = parseQuery(queryUpToCaret);
+
+  // Find all the "bare" keywords at the end of the query. For example if the query is:
+  // name:foo bar baz
+  // then the trailingKeywordStrings are 'bar baz'
+  const trailingKeywordArgs: string[] = [];
+  traverseAST(
+    ast,
+    (filter) => {
+      if (filter.type === 'keyword' && !/\s+/.test(filter.args)) {
+        trailingKeywordArgs.push(filter.args);
+      } else {
+        return false;
+      }
+    },
+    true // traverse in reverse
+  );
+  const trailingKeywordStrings = trailingKeywordArgs.reverse().join(' ');
+
+  // @TODO: This could be cleaner if the AST parser returned column locations; we wouldn't have to guess at indexes by doing space normalization
+  const spaceNormalizedQuery = queryUpToCaret.trim().replace(/\s+/, ' ');
+  const execResult = lastWordRegex.exec(queryUpToCaret);
+
+  if (trailingKeywordStrings && spaceNormalizedQuery.endsWith(trailingKeywordStrings)) {
+    const index = spaceNormalizedQuery.length - trailingKeywordStrings.length;
+    const term = spaceNormalizedQuery.substring(index);
+    return { term, index };
+  } else if (execResult) {
+    const [__, term] = execResult;
+    const { index } = execResult;
+    return { term, index };
+  }
+  return null;
+}
+
+/**
  * Given a query and a cursor position, isolate the term that's being typed and offer reformulated queries
  * that replace that term with one from our filterComplete function.
  */
@@ -242,17 +312,14 @@ export function autocompleteTermSuggestions(
   // Seek to the end of the current part
   caretIndex = (caretEndRegex.exec(query.slice(caretIndex))?.index || 0) + caretIndex;
 
-  // Find the last word that looks like a search
-  const match = lastWordRegex.exec(query.slice(0, caretIndex));
-  if (!match) {
+  const lastFilter = findLastFilter(query, caretIndex);
+
+  if (!lastFilter || closingQuoteRegex.test(lastFilter.term)) {
     return [];
   }
-  const term = match[1];
-  if (closingQuoteRegex.test(term)) {
-    return [];
-  }
-  const candidates = filterComplete(term);
-  const base = query.slice(0, match.index);
+
+  const base = query.slice(0, lastFilter.index);
+  const candidates = filterComplete(lastFilter.term);
 
   // new query is existing query minus match plus suggestion
   return candidates.map((word) => {
@@ -272,7 +339,7 @@ export function autocompleteTermSuggestions(
       type: SearchItemType.Autocomplete,
       highlightRange: {
         section: 'body',
-        range: [match.index, match.index + word.length],
+        range: [lastFilter.index, lastFilter.index + word.length],
       },
     };
   });
@@ -383,7 +450,9 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
 
         // push "not" and "<=" and ">=" to the bottom if they are present
         // we discourage "not", and "<=" and ">=" are highly discoverable from "<" and ">"
-        compareBy((word) => word.startsWith('not:') || word.endsWith('<=') || word.endsWith('>=')),
+        compareBy(
+          (word) => word.startsWith('not:') || word.includes(':<=') || word.includes(':>=')
+        ),
 
         // sort more-basic incomplete terms (fewer colons) to the front
         // i.e. suggest "stat:" before "stat:magazine:"

@@ -38,6 +38,7 @@
 .organizerLink {
   composes: dim-button from global;
   margin-left: auto;
+
   @include phone-portrait {
     margin-left: 0;
   }
@@ -63,25 +64,21 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  min-height: 30px;
+  gap: 4px;
+
   :global(.setting) {
     margin-right: 4px;
   }
   :global(.dim-button) {
     display: flex;
     align-items: center;
-    margin-bottom: 2px;
-    margin-top: 2px;
+    min-height: 26px;
     // Undo the general mobile "big-buttons"
     padding: 4px 10px;
     font-size: 12px;
-    // button outer spacing margin
-    &:nth-last-child(n + 2) {
-      margin-right: 3px;
-    }
     // button's children's spacing margin
-    :nth-child(n + 2) {
-      margin-left: 4px;
-    }
+    gap: 4px;
     img {
       margin: 0;
     }

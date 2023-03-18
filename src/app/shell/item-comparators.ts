@@ -1,18 +1,26 @@
-import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
 import { ItemSortSettings } from 'app/settings/item-sort';
-import { isSunset } from 'app/utils/item-utils';
+import { isD1Item, isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { getTag, ItemInfos, tagConfig } from '../inventory/dim-item-info';
+import { tagConfig, TagValue } from '../inventory/dim-item-info';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 
-export const acquisitionRecencyComparator = reverseComparator(
-  compareBy((item: DimItem) => (item.instanced ? item.id.padStart(20, '0') : 0))
-);
+const INSTANCEID_PADDING = 20;
+
+export const getItemRecencyKey = (item: DimItem) =>
+  item.instanced ? item.id.padStart(INSTANCEID_PADDING, '0') : 0;
+
+/**
+ * Sorts items by how recently they were acquired, newest items first.
+ */
+export const acquisitionRecencyComparator = reverseComparator(compareBy(getItemRecencyKey));
+
+export const isNewerThan = (item: DimItem, watermarkInstanceId: string) =>
+  getItemRecencyKey(item) > watermarkInstanceId.padStart(INSTANCEID_PADDING, '0');
 
 const D1_CONSUMABLE_SORT_ORDER = [
   1043138475, // black-wax-idol
@@ -89,25 +97,16 @@ const ITEM_SORT_DENYLIST = new Set([
 
 // These comparators require knowledge of the tag state/database
 const TAG_ITEM_COMPARATORS: {
-  [key: string]: (
-    itemInfos: ItemInfos,
-    itemHashTags: {
-      [itemHash: string]: ItemHashTag;
-    }
-  ) => Comparator<DimItem>;
+  [key: string]: (getTag: (item: DimItem) => TagValue | undefined) => Comparator<DimItem>;
 } = {
   // see tagConfig
-  tag: (itemInfos, itemHashTags) =>
+  tag: (getTag) =>
     compareBy((item) => {
-      const tag = getTag(item, itemInfos, itemHashTags);
-      return tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000;
+      const tag = getTag(item);
+      return (tag && tagConfig[tag]?.sortOrder) ?? 1000;
     }),
   // not archive -> archive
-  archive: (itemInfos, itemHashTags) =>
-    compareBy((item) => {
-      const tag = getTag(item, itemInfos, itemHashTags);
-      return tag === 'archive';
-    }),
+  archive: (getTag) => compareBy((item) => getTag(item) === 'archive'),
 };
 
 const ITEM_COMPARATORS: {
@@ -122,14 +121,7 @@ const ITEM_COMPARATORS: {
   // high -> low
   basePower: reverseComparator(compareBy((item) => item.power)),
   // This only sorts by D1 item quality
-  rating: reverseComparator(
-    compareBy((item: DimItem & { quality: { min: number } }) => {
-      if (item.quality?.min) {
-        return item.quality.min;
-      }
-      return undefined;
-    })
-  ),
+  rating: reverseComparator(compareBy((item) => isD1Item(item) && item.quality?.min)),
   // Titan -> Hunter -> Warlock -> Unknown
   classType: compareBy((item) => item.classType),
   // None -> Primary -> Special -> Heavy -> Unknown
@@ -155,21 +147,12 @@ const ITEM_COMPARATORS: {
       return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
     }
   }),
-  // Any -> Arc -> Thermal -> Void -> Ghost -> Subclass -> Stasis
-  elementArmor: compareBy((item) => {
-    if (item.bucket.inArmor) {
-      return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
-    }
-  }),
   // masterwork -> not masterwork
   masterworked: compareBy((item) => (item.masterwork ? 0 : 1)),
   // crafted -> not crafted
   crafted: compareBy((item) => (item.crafted ? 0 : 1)),
-  // deepsight incomplete -> deepsight complete -> no deepsight
-  // in order of "needs addressing"? ish?
-  deepsight: compareBy((item) =>
-    item.deepsightInfo ? (item.deepsightInfo.attunementObjective.complete ? 2 : 1) : 3
-  ),
+  // deepsight -> no deepsight
+  deepsight: compareBy((item) => (item.deepsightInfo ? 1 : 2)),
   default: () => 0,
 };
 
@@ -181,10 +164,7 @@ const ITEM_COMPARATORS: {
 export function sortItems(
   items: readonly DimItem[],
   itemSortSettings: ItemSortSettings,
-  itemInfos: ItemInfos,
-  itemHashTags: {
-    [itemHash: string]: ItemHashTag;
-  }
+  getTag: (item: DimItem) => TagValue | undefined
 ): readonly DimItem[] {
   if (!items.length) {
     return items;
@@ -245,7 +225,7 @@ export function sortItems(
     ...['archive', ...itemSortSettings.sortOrder].map((comparatorName) => {
       let comparator = ITEM_COMPARATORS[comparatorName];
       if (!comparator) {
-        const tagComparator = TAG_ITEM_COMPARATORS[comparatorName]?.(itemInfos, itemHashTags);
+        const tagComparator = TAG_ITEM_COMPARATORS[comparatorName]?.(getTag);
 
         if (!tagComparator) {
           return ITEM_COMPARATORS.default;

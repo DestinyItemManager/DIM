@@ -33,12 +33,14 @@ $header-height: 44px;
   background-position: center top;
   background-repeat: no-repeat;
   background-size: 100vw 100vh;
+
   @include phone-portrait {
     background: #000;
   }
 
   :global(.app-icon) {
     font-size: 1.33em;
+
     @include phone-portrait {
       font-size: 24px;
     }
@@ -52,6 +54,7 @@ $header-height: 44px;
 
 .logoLink {
   height: 24px;
+
   @include phone-portrait {
     height: 44px;
     margin: 0 4px !important;
@@ -66,8 +69,8 @@ $header-height: 44px;
   font-size: 13px;
   -webkit-touch-callout: none;
   user-select: none;
-  outline: none;
   white-space: nowrap;
+
   @include phone-portrait {
     margin: 0 12px;
   }
@@ -94,6 +97,7 @@ $header-height: 44px;
 }
 
 .menu {
+  composes: resetButton from '../dim-ui/common.m.scss';
   position: relative;
   margin-right: none !important;
   margin-left: 16px !important;
@@ -102,6 +106,7 @@ $header-height: 44px;
 .logo {
   height: 24px;
   width: 68px;
+
   @include phone-portrait {
     height: 24px * 1.2;
     width: 68px * 1.2;
@@ -124,12 +129,12 @@ $header-height: 44px;
   height: $header-height;
   align-items: center;
   overflow: hidden;
-  direction: rtl;
   justify-content: flex-end;
 
   @include phone-portrait {
     display: none;
   }
+
   @media (max-width: 1200px) {
     display: none;
   }
@@ -138,7 +143,6 @@ $header-height: 44px;
     height: 26px;
     display: flex;
     align-items: center;
-    direction: ltr;
     border-bottom: 2px solid transparent;
     box-sizing: border-box;
 
@@ -150,6 +154,7 @@ $header-height: 44px;
 
 .dropdown {
   @include below-header;
+  box-sizing: border-box;
   position: absolute;
   display: flex;
   overflow: auto;
@@ -181,6 +186,7 @@ $header-height: 44px;
     padding: 4px 2rem 4px 1rem;
     font-size: 16px;
     margin: 0;
+    transition: none;
 
     &.active {
       color: white;
@@ -200,7 +206,6 @@ $header-height: 44px;
     &:focus {
       background-color: $orange;
       color: black;
-      transition: none;
     }
 
     .launchSeparateIcon {
@@ -230,4 +235,26 @@ $header-height: 44px;
 .pwaPrompt {
   margin: 1em 10px;
   font-size: 14px;
+}
+
+.searchLink {
+  flex: 1;
+  font-size: 13px;
+  margin: 0 8px;
+
+  @include phone-portrait {
+    margin: 0 12px;
+  }
+
+  :global(.search-filter) {
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+.searchButton {
+  display: none;
+
+  @include phone-portrait {
+    display: inline-block;
+  }
 }

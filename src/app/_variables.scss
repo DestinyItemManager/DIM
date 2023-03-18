@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // Variables and mixins that can be used from any SCSS file
 
 // DIM orange and blue, accent colors
@@ -22,6 +24,7 @@ $arc: #79bbe8;
 $solar: #f0631e;
 $void: #8e749e;
 $stasis: #4d88ff;
+$strand: #35e366;
 
 // Item rarities
 $common: #dcdcdc;
@@ -98,32 +101,6 @@ $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
   }
 }
 
-// Apply spacing between children
-@mixin vertical-space-children($space) {
-  > *:nth-last-child(n + 2) {
-    margin-bottom: $space;
-  }
-}
-
-// Apply spacing between children
-@mixin horizontal-space-children($space) {
-  > *:nth-last-child(n + 2) {
-    margin-right: $space;
-  }
-}
-
-// Emulate the gap property for flexbox. Not all browsers support it (notably
-// iOS Safari < 14.5 and Chrome < 84). Use this instead of
-// horizontal/vertical-space-children only if you'll have wrapping content.
-@mixin flex-gap($gapRow, $gapColumn: $gapRow, $marginBottom: 0, $marginRight: 0) {
-  margin-bottom: -1 * $gapRow + $marginBottom;
-  margin-right: -1 * $gapColumn + $marginRight;
-  > * {
-    margin-bottom: $gapRow;
-    margin-right: $gapColumn;
-  }
-}
-
 // Show visible scrollbars when scrollable, even if the OS (e.g. macOS) prefers hidden scrollbars.
 @mixin visible-scrollbars {
   &::-webkit-scrollbar-track {
@@ -142,4 +119,31 @@ $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
       height: 10px;
     }
   }
+}
+
+/*
+Utility functions to allow for augmenting a hex color value with an alpha component.
+
+e.g.
+
+  --my-base-color-rgb: #{dim-hex-to-rgb-values(#ff7b00)};
+  background-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb));
+  border-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb), $alpha: 0.75);
+
+produces
+
+  --my-base-color-rgb: 255, 128, 0;
+  background-color: rgba(255, 128, 0, 1);
+  border-color: rgba(255, 128, 0, 0.75);
+
+*/
+
+// Converts a 6-character hex color into a comma-separated list of RGB values, to use within the 'rgba' function.
+@function dim-hex-to-rgb-values($hex) {
+  @return color.red($hex), color.green($hex), color.blue($hex);
+}
+
+// Produces an 'rgba' function usage for the specified comma-separated RGB values and alpha.
+@function dim-rgb-values-to-rgba($values, $alpha: 1) {
+  @return #{'rgba(' + $values + ', ' + $alpha + ')'};
 }

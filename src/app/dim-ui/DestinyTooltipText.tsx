@@ -2,8 +2,9 @@ import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faClock } from 'app/shell/icons';
 import { DestinyItemTooltipNotification } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React from 'react';
-import RichDestinyText from './RichDestinyText';
+import shapedIcon from 'images/shaped.png';
+import RichDestinyText from './destiny-symbols/RichDestinyText';
+import styles from './DestinyTooltipText.m.scss';
 
 export function DestinyTooltipText({ item }: { item: DimItem }) {
   if (!item.tooltipNotifications) {
@@ -15,10 +16,13 @@ export function DestinyTooltipText({ item }: { item: DimItem }) {
         <div
           key={tip.displayString}
           className={clsx('quest-expiration item-details', {
-            'seasonal-expiration': isExpirationTooltip(tip),
+            [styles.seasonalExpiration]: isExpirationTooltip(tip),
           })}
         >
           {isExpirationTooltip(tip) && <AppIcon icon={faClock} />}
+          {isPatternTooltip(tip) && (
+            <img className={styles.shapedIcon} src={shapedIcon} height={12} width={12} alt="" />
+          )}
           <RichDestinyText text={tip.displayString} ownerId={item.owner} />
         </div>
       ))}
@@ -28,4 +32,8 @@ export function DestinyTooltipText({ item }: { item: DimItem }) {
 
 function isExpirationTooltip(tip: DestinyItemTooltipNotification) {
   return tip.displayStyle.endsWith('_expiration') || tip.displayStyle.endsWith('_seasonal');
+}
+
+function isPatternTooltip(tip: DestinyItemTooltipNotification) {
+  return tip.displayStyle === 'ui_display_style_deepsight';
 }

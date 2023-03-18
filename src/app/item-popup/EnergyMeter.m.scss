@@ -4,13 +4,6 @@
   margin: 10px;
 }
 
-.icon {
-  margin: 0 2px 0 0;
-  vertical-align: middle;
-  height: 15px;
-  width: 15px;
-}
-
 .clickable {
   cursor: pointer;
 }
@@ -22,7 +15,7 @@
   overflow: hidden;
   box-sizing: border-box;
 
-  @include horizontal-space-children(8px);
+  gap: 8px;
 
   > :first-child {
     flex: 1;
@@ -37,18 +30,4 @@
 
 .cost {
   font-size: 12px !important;
-}
-
-.elementSelect {
-  > button {
-    appearance: none;
-    background: transparent;
-    border: 0;
-    padding: 0;
-    margin: 0;
-    > span:nth-child(2) {
-      display: none;
-    }
-    cursor: pointer;
-  }
 }

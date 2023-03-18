@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import React from 'react';
 import { DimStore } from '../inventory/store-types';
 import CharacterTile from './CharacterTile';
 import './StoreHeading.scss';
@@ -10,7 +9,7 @@ export default function CharacterTileButton({
   onClick,
 }: {
   character: DimStore;
-  onClick?(id: string): void;
+  onClick?: (id: string) => void;
 }) {
   const handleClick = () => onClick?.(character.id);
 

@@ -1,8 +1,8 @@
-import { defaultLoadoutParameters, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { decodeUrlLoadoutParameters } from 'app/loadout/loadout-share/loadout-import';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { setSearchQuery } from 'app/shell/actions';
 import ErrorPanel from 'app/shell/ErrorPanel';
@@ -37,22 +37,13 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   const disabledDueToMaintenance = useSelector(disabledDueToMaintenanceSelector);
   useLoadStores(account);
 
-  const searchParams = new URLSearchParams(location.search);
-  const urlClassTypeString = searchParams.get('class');
-  const urlLoadoutParametersJSON = searchParams.get('p');
-  const urlNotes = searchParams.get('n');
-
-  const urlClassType = urlClassTypeString ? parseInt(urlClassTypeString) : undefined;
-
-  let query = '';
-  let urlLoadoutParameters: LoadoutParameters | undefined;
-  if (urlLoadoutParametersJSON) {
-    urlLoadoutParameters = JSON.parse(urlLoadoutParametersJSON);
-    urlLoadoutParameters = { ...defaultLoadoutParameters, ...urlLoadoutParameters };
-    if (urlLoadoutParameters?.query) {
-      query = urlLoadoutParameters.query;
-    }
-  }
+  const decodedParameters = decodeUrlLoadoutParameters(location.search);
+  const {
+    classType: urlClassType,
+    notes: urlNotes,
+    parameters: urlLoadoutParameters,
+  } = decodedParameters;
+  let query = decodedParameters.query;
 
   const preloadedLoadout = (location.state as { loadout: Loadout } | undefined)?.loadout;
   if (preloadedLoadout?.parameters?.query) {

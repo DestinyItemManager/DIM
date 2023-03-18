@@ -3,9 +3,13 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
-/* eslint-disable css-modules/no-unused-class */
+
 import styles from './Description.m.scss';
 import { Languages, LinesContent, Perk } from './descriptionInterface';
+
+/* eslint-disable css-modules/no-unused-class */
+
+
 
 const customContent = (content: LinesContent) => {
   if (content.link) {
@@ -29,6 +33,10 @@ const boldTextRegEx = /(^|\b)([+-]?(\d*\.)?\d+([xs]|ms|HP)?)(?:[%°+]|\b|$)/g;
 function applyFormatting(text: string | undefined) {
   if (text === undefined) {
     return;
+  }
+  // I will remove this later just need to make this arrow optional in compiler
+  if (text === '🡅') {
+    return '';
   }
   const segments = [];
 
@@ -62,12 +70,12 @@ export default function ClarityDescriptions({
   perk: Perk;
   className?: string;
 }) {
-  const currentLangue = useSelector(languageSelector) as Languages;
+  const selectedLanguage = useSelector(languageSelector) as Languages;
   if (perk.descriptions === undefined) {
     return null;
   }
 
-  const description = perk.descriptions[currentLangue] || perk.descriptions.en;
+  const description = perk.descriptions[selectedLanguage] || perk.descriptions.en;
 
   const convertedDescription = description?.map((line, i) => (
     <div className={joinClassNames(line.classNames)} key={i}>

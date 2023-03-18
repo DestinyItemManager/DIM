@@ -24,7 +24,7 @@ export default React.memo(function EnabledColumnsSelector({
   columns: ColumnDefinition[];
   enabledColumns: string[];
   forClass: DestinyClass;
-  onChangeEnabledColumn(item: { checked: boolean; id: string }): void;
+  onChangeEnabledColumn: (item: { checked: boolean; id: string }) => void;
 }) {
   const items: { [id: string]: DropDownItem } = {};
 
@@ -34,7 +34,11 @@ export default React.memo(function EnabledColumnsSelector({
     const dropdownLabel = column.columnGroup
       ? column.columnGroup.dropdownLabel
       : column.dropdownLabel;
-    if (id === 'selection' || column.noHide) {
+    if (
+      id === 'selection' ||
+      column.noHide ||
+      (column.limitToClass !== undefined && column.limitToClass !== forClass)
+    ) {
       continue;
     }
 

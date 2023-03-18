@@ -19,7 +19,7 @@ const showErrorDuration = 5000;
 
 interface Props extends MotionProps {
   notification: Notify;
-  onClose(notification: Notify): void;
+  onClose: (notification: Notify) => void;
 }
 
 export default function Notification({ notification, onClose, ...animation }: Props) {
@@ -118,17 +118,17 @@ export default function Notification({ notification, onClose, ...animation }: Pr
         )}
       >
         <div className={styles.contents}>
-          {icon && <div className={styles.icon}>{icon}</div>}
+          {Boolean(icon) && <div className={styles.icon}>{icon}</div>}
           <div className={styles.details}>
             <div className={styles.title}>{title}</div>
-            {body && <div>{body}</div>}
+            {Boolean(body) && <div>{body}</div>}
             {!error && notification.onCancel && (
               <NotificationButton onClick={notification.onCancel}>
                 {success || error ? t('Notification.OK') : t('Notification.Cancel')}
               </NotificationButton>
             )}
           </div>
-          {trailer && <div className={styles.trailer}>{trailer}</div>}
+          {Boolean(trailer) && <div className={styles.trailer}>{trailer}</div>}
         </div>
         {(success || error || !notification.promise) &&
           typeof notification.duration === 'number' && (

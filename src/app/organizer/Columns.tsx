@@ -1,14 +1,13 @@
-import { DestinyVersion, TagValue } from '@destinyitemmanager/dim-api-types';
+import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { StoreIcon } from 'app/character-tile/StoreIcon';
 import { StatInfo } from 'app/compare/Compare';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t, tl } from 'app/i18next-t';
-import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
+import { tagConfig, TagValue } from 'app/inventory/dim-item-info';
 import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
@@ -16,15 +15,17 @@ import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { storesSelector } from 'app/inventory/selectors';
 import { source } from 'app/inventory/spreadsheets';
 import { getEvent, getSeason } from 'app/inventory/store/season';
-import { statAllowList } from 'app/inventory/store/stats';
+import { getStatSortOrder } from 'app/inventory/store/stats';
 import { getStore } from 'app/inventory/stores-helpers';
 import TagIcon from 'app/inventory/TagIcon';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
 import NotesArea from 'app/item-popup/NotesArea';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { recoilValue } from 'app/item-popup/RecoilStat';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
-import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/formatters';
@@ -56,16 +57,17 @@ import {
   isUsedArmorModSocket,
 } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { StatHashes } from 'data/d2/generated-enums';
+import shapedOverlay from 'images/shapedOverlay.png';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { createCustomStatColumns } from './CustomStatColumns';
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
-import { ColumnDefinition, ColumnGroup, SortDirection } from './table-types';
+import { ColumnDefinition, ColumnGroup, SortDirection, Value } from './table-types';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -95,16 +97,17 @@ export function getColumns(
   statHashes: {
     [statHash: number]: StatInfo;
   },
-  classType: DestinyClass,
-  itemInfos: ItemInfos,
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
   wishList: (item: DimItem) => InventoryWishListRoll | undefined,
   hasWishList: boolean,
-  customTotalStat: number[],
+  customStatDefs: CustomStatDef[],
   loadoutsByItem: LoadoutsByItem,
   newItems: Set<string>,
   destinyVersion: DestinyVersion,
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void
 ): ColumnDefinition[] {
+  const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
     id: 'stats',
     header: t('Organizer.Columns.Stats'),
@@ -121,9 +124,9 @@ export function getColumns(
   type ColumnWithStat = ColumnDefinition & { statHash: number };
   const statColumns: ColumnWithStat[] = _.sortBy(
     _.compact(
-      _.map(statHashes, (statInfo, statHashStr): ColumnWithStat | undefined => {
+      Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat | undefined => {
         const statHash = parseInt(statHashStr, 10);
-        if (statHash === CUSTOM_TOTAL_STAT_HASH) {
+        if (customStatHashes.includes(statHash)) {
           // Exclude custom total, it has its own column
           return undefined;
         }
@@ -157,11 +160,14 @@ export function getColumns(
             return <ItemStatValue stat={stat} item={item} />;
           },
           defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
-          filter: (value) => `stat:${_.invert(statHashByName)[statHash]}:>=${value}`,
+          filter: (value) => {
+            const statName = _.invert(statHashByName)[statHash];
+            return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
+          },
         };
       })
     ),
-    (s) => statAllowList.indexOf(s.statHash)
+    (s) => getStatSortOrder(s.statHash)
   );
 
   const isGhost = itemsType === 'ghost';
@@ -195,7 +201,7 @@ export function getColumns(
   const d1ArmorQualityByStat =
     destinyVersion === 1 && isArmor
       ? _.sortBy(
-          _.map(statHashes, (statInfo, statHashStr): ColumnWithStat => {
+          Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat => {
             const statHash = parseInt(statHashStr, 10);
             return {
               statHash,
@@ -220,12 +226,25 @@ export function getColumns(
               },
             };
           }),
-          (s) => statAllowList.indexOf(s.statHash)
+          (s) => getStatSortOrder(s.statHash)
         )
       : [];
 
+  /**
+   * This helper allows TypeScript to perform type inference to determine the
+   * type of V based on its arguments. This allows us to automatically type the
+   * various column methods like `cell` and `filter` automatically based on the
+   * return type of `value`.
+   */
+  /*@__INLINE__*/
+  function c<V extends Value>(columnDef: ColumnDefinition<V>): ColumnDefinition<V> {
+    return columnDef;
+  }
+
+  const customStats = createCustomStatColumns(customStatDefs);
+
   const columns: ColumnDefinition[] = _.compact([
-    {
+    c({
       id: 'icon',
       header: t('Organizer.Columns.Icon'),
       value: (i) => i.icon,
@@ -234,85 +253,101 @@ export function getColumns(
           {(ref, onClick) => (
             <div ref={ref} onClick={onClick} className="item">
               <ItemIcon item={item} className={styles.itemIcon} />
+              {item.crafted && <img src={shapedOverlay} className={styles.shapedIconOverlay} />}
             </div>
           )}
         </ItemPopupTrigger>
       ),
       noSort: true,
       noHide: true,
-    },
-    {
+    }),
+    c({
       id: 'name',
       header: t('Organizer.Columns.Name'),
       value: (i) => i.name,
-      filter: (name: string) => `name:${quoteFilterString(name)}`,
-    },
-    !isGhost && {
-      id: 'power',
-      header: <AppIcon icon={powerIndicatorIcon} />,
-      dropdownLabel: t('Organizer.Columns.Power'),
-      value: (item) => item.power,
-      defaultSort: SortDirection.DESC,
-      filter: (value) => `power:>=${value}`,
-    },
+      filter: (name) => `name:${quoteFilterString(name)}`,
+    }),
     !isGhost &&
-      destinyVersion === 2 && {
+      c({
+        id: 'power',
+        header: <AppIcon icon={powerIndicatorIcon} />,
+        dropdownLabel: t('Organizer.Columns.Power'),
+        value: (item) => item.power,
+        defaultSort: SortDirection.DESC,
+        filter: (value) => `power:>=${value}`,
+      }),
+    !isGhost &&
+      destinyVersion === 2 &&
+      c({
         id: 'sunset',
         header: t('Stats.Sunset'),
         value: isSunset,
         defaultSort: SortDirection.ASC,
         cell: (value) => (value ? <AppIcon icon={faCheck} /> : undefined),
-        filter: (value) => (value ? 'is:sunset' : '-is:sunset'),
-      },
+        filter: (value) => (value ? '' : '-') + 'is:sunset',
+      }),
     !isGhost &&
-      (destinyVersion === 2 || isWeapon) && {
+      (destinyVersion === 2 || isWeapon) &&
+      c({
         id: 'dmg',
-        header: isArmor ? t('Organizer.Columns.Element') : t('Organizer.Columns.Damage'),
+        header: t('Organizer.Columns.Damage'),
         value: (item) => item.element?.displayProperties.name,
         cell: (_val, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
         filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
-      },
-    isArmor &&
-      destinyVersion === 2 && {
+      }),
+    (isArmor || isGhost) &&
+      destinyVersion === 2 &&
+      c({
         id: 'energy',
         header: t('Organizer.Columns.Energy'),
         value: (item) => item.energy?.energyCapacity,
         defaultSort: SortDirection.DESC,
         filter: (value) => `energycapacity:>=${value}`,
-      },
-    {
+      }),
+    c({
       id: 'locked',
       header: <AppIcon icon={lockIcon} />,
       dropdownLabel: t('Organizer.Columns.Locked'),
       value: (i) => i.locked,
       cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? 'is:locked' : 'not:locked'),
-    },
-    {
+      filter: (value) => (value ? '' : '-') + 'is:locked',
+    }),
+    c({
       id: 'tag',
       header: t('Organizer.Columns.Tag'),
-      value: (item) => getTag(item, itemInfos),
-      cell: (value: TagValue) => <TagIcon tag={value} />,
-      sort: compareBy((tag: TagValue) => (tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000)),
+      value: (item) => getTag(item) ?? '',
+      cell: (value) => value && <TagIcon tag={value} />,
+      sort: compareBy((tag) => (tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000)),
       filter: (value) => `tag:${value || 'none'}`,
-    },
-    {
+    }),
+    c({
       id: 'new',
       header: t('Organizer.Columns.New'),
       value: (item) => newItems.has(item.id),
       cell: (value) => (value ? <NewItemIndicator /> : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? 'is:new' : 'not:new'),
-    },
-    {
+      filter: (value) => (value ? '' : '-') + 'is:new',
+    }),
+    destinyVersion === 2 &&
+      c({
+        id: 'crafted',
+        header: t('Organizer.Columns.Crafted'),
+        value: (item) => item.craftedInfo?.craftedDate,
+        cell: (craftedDate) =>
+          craftedDate ? <>{new Date(craftedDate * 1000).toLocaleString()}</> : undefined,
+        defaultSort: SortDirection.DESC,
+        filter: (value) => (value ? '' : '-') + 'is:crafted',
+      }),
+    c({
       id: 'recency',
       header: t('Organizer.Columns.Recency'),
       value: (item) => item.id,
       cell: () => '',
-    },
+    }),
     destinyVersion === 2 &&
-      isWeapon && {
+      isWeapon &&
+      c({
         id: 'wishList',
         header: t('Organizer.Columns.WishList'),
         value: (item) => {
@@ -326,45 +361,49 @@ export function getColumns(
               className={value ? styles.positive : styles.negative}
             />
           ) : undefined,
-        sort: compareBy((wishList) => (wishList === undefined ? 0 : wishList === true ? -1 : 1)),
+        sort: compareBy((wishList) => (wishList === undefined ? 0 : wishList ? -1 : 1)),
         filter: (value) =>
-          value === true ? 'is:wishlist' : value === false ? 'is:trashlist' : 'not:wishlist',
-      },
-    {
+          value === true ? 'is:wishlist' : value === false ? 'is:trashlist' : '-is:wishlist',
+      }),
+    c({
       id: 'tier',
       header: t('Organizer.Columns.Tier'),
       value: (i) => i.tier,
       filter: (value) => `is:${value}`,
-    },
-    destinyVersion === 2 && {
-      id: 'source',
-      header: t('Organizer.Columns.Source'),
-      value: source,
-      filter: (value) => `source:${value}`,
-    },
-    {
+    }),
+    destinyVersion === 2 &&
+      c({
+        id: 'source',
+        header: t('Organizer.Columns.Source'),
+        value: source,
+        filter: (value) => `source:${value}`,
+      }),
+    c({
       id: 'year',
       header: t('Organizer.Columns.Year'),
       value: (item) => getItemYear(item),
       filter: (value) => `year:${value}`,
-    },
-    destinyVersion === 2 && {
-      id: 'season',
-      header: t('Organizer.Columns.Season'),
-      value: (i) => getSeason(i),
-      filter: (value) => `season:${value}`,
-    },
-    destinyVersion === 2 && {
-      id: 'event',
-      header: t('Organizer.Columns.Event'),
-      value: (item) => {
-        const event = getEvent(item);
-        return event ? D2EventInfo[event].name : undefined;
-      },
-      filter: (value) => `event:${value}`,
-    },
+    }),
     destinyVersion === 2 &&
-      isArmor && {
+      c({
+        id: 'season',
+        header: t('Organizer.Columns.Season'),
+        value: (i) => getSeason(i),
+        filter: (value) => `season:${value}`,
+      }),
+    destinyVersion === 2 &&
+      c({
+        id: 'event',
+        header: t('Organizer.Columns.Event'),
+        value: (item) => {
+          const event = getEvent(item);
+          return event ? D2EventInfo[event].name : undefined;
+        },
+        filter: (value) => `event:${value}`,
+      }),
+    destinyVersion === 2 &&
+      isArmor &&
+      c({
         id: 'modslot',
         header: t('Organizer.Columns.ModSlot'),
         // TODO: only show if there are mod slots
@@ -380,23 +419,25 @@ export function getColumns(
               excludeStandardD2ModSockets
             />
           ),
-        filter: (value: string) =>
+        filter: (value) =>
           value !== undefined
             ? value
                 .split(',')
                 .map((m) => `modslot:${m}`)
                 .join(' ')
             : ``,
-      },
-    destinyVersion === 1 && {
-      id: 'percentComplete',
-      header: t('Organizer.Columns.PercentComplete'),
-      value: (item) => item.percentComplete,
-      cell: (value: number) => percent(value),
-      filter: (value) => `percentage:>=${value}`,
-    },
+      }),
+    destinyVersion === 1 &&
+      c({
+        id: 'percentComplete',
+        header: t('Organizer.Columns.PercentComplete'),
+        value: (item) => item.percentComplete,
+        cell: (value) => percent(value),
+        filter: (value) => `percentage:>=${value}`,
+      }),
     destinyVersion === 2 &&
-      isWeapon && {
+      isWeapon &&
+      c({
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
         value: (item) => getWeaponArchetype(item)?.displayProperties.name,
@@ -418,22 +459,23 @@ export function getColumns(
             )
           );
         },
-        filter: (value: string) => `perkname:${quoteFilterString(value)}`,
-      },
-    (destinyVersion === 2 || isWeapon) && {
-      id: 'breaker',
-      header: t('Organizer.Columns.Breaker'),
-      value: (item) => item.breakerType?.displayProperties.name,
-      cell: (value, item) =>
-        value && (
-          <BungieImage
-            className={styles.inlineIcon}
-            src={item.breakerType!.displayProperties.icon}
-          />
-        ),
-      filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
-    },
-    {
+        filter: (value) => (value ? `perkname:${quoteFilterString(value)}` : undefined),
+      }),
+    (destinyVersion === 2 || isWeapon) &&
+      c({
+        id: 'breaker',
+        header: t('Organizer.Columns.Breaker'),
+        value: (item) => item.breakerType?.displayProperties.name,
+        cell: (value, item) =>
+          value && (
+            <BungieImage
+              className={styles.inlineIcon}
+              src={item.breakerType!.displayProperties.icon}
+            />
+          ),
+        filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
+      }),
+    c({
       id: 'perks',
       header:
         destinyVersion === 2 ? t('Organizer.Columns.PerksMods') : t('Organizer.Columns.Perks'),
@@ -448,9 +490,10 @@ export function getColumns(
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) =>
         typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
-    },
+    }),
     destinyVersion === 2 &&
-      isWeapon && {
+      isWeapon &&
+      c({
         id: 'traits',
         header: t('Organizer.Columns.Traits'),
         value: () => 0, // TODO: figure out a way to sort perks
@@ -461,48 +504,39 @@ export function getColumns(
         gridWidth: 'minmax(180px,max-content)',
         filter: (value) =>
           typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
-      },
+      }),
     ...statColumns,
     ...baseStatColumns,
     ...d1ArmorQualityByStat,
     destinyVersion === 1 &&
-      isArmor && {
+      isArmor &&
+      c({
         id: 'quality',
         header: t('Organizer.Columns.Quality'),
         value: (item) => (isD1Item(item) && item.quality ? item.quality.min : 0),
-        cell: (value: number) => <span style={getColor(value, 'color')}>{value}%</span>,
+        cell: (value) => <span style={getColor(value, 'color')}>{value}%</span>,
         filter: (value) => `quality:>=${value}`,
-      },
+      }),
+    ...(destinyVersion === 2 && isArmor ? customStats : []),
     destinyVersion === 2 &&
-      isArmor && {
-        id: 'customstat',
-        header: (
-          <>
-            {t('Organizer.Columns.CustomTotal')}
-            <StatTotalToggle forClass={classType} readOnly={true} />
-          </>
-        ),
-        value: (item) =>
-          _.sumBy(item.stats, (s) => (customTotalStat.includes(s.statHash) ? s.base : 0)),
-        defaultSort: SortDirection.DESC,
-        filter: (value) => `stat:custom:>=${value}`,
-      },
-    destinyVersion === 2 &&
-      isWeapon && {
+      isWeapon &&
+      c({
         id: 'masterworkTier',
         header: t('Organizer.Columns.MasterworkTier'),
         value: (item) => item.masterworkInfo?.tier,
         defaultSort: SortDirection.DESC,
         filter: (value) => `masterwork:>=${value}`,
-      },
+      }),
     destinyVersion === 2 &&
-      isWeapon && {
+      isWeapon &&
+      c({
         id: 'masterworkStat',
         header: t('Organizer.Columns.MasterworkStat'),
         value: (item) => getMasterworkStatNames(item.masterworkInfo),
-      },
+      }),
     destinyVersion === 2 &&
-      isWeapon && {
+      isWeapon &&
+      c({
         id: 'killTracker',
         header: t('Organizer.Columns.KillTracker'),
         value: (item) => {
@@ -518,46 +552,94 @@ export function getColumns(
           );
         },
         defaultSort: SortDirection.DESC,
-      },
-    {
+      }),
+    c({
       id: 'location',
       header: t('Organizer.Columns.Location'),
       value: (item) => item.owner,
       cell: (_val, item) => <StoreLocation storeId={item.owner} />,
-    },
-    {
+    }),
+    c({
       id: 'loadouts',
       header: t('Organizer.Columns.Loadouts'),
-      value: () => 0,
+      value: (item) =>
+        loadoutsByItem[item.id]
+          ?.map((l) => l.loadout.name)
+          .sort()
+          .join(','),
       cell: (_val, item) => {
         const inloadouts = loadoutsByItem[item.id];
         return (
           inloadouts &&
-          inloadouts.length > 0 &&
-          inloadouts.map((l) => <div key={l.loadout.id}>{l.loadout.name}</div>)
+          inloadouts.length > 0 && (
+            <LoadoutsCell
+              loadouts={_.sortBy(
+                inloadouts.map((l) => l.loadout),
+                (l) => l.name
+              )}
+              owner={item.owner}
+            />
+          )
         );
       },
-      noSort: true,
-    },
-    {
+      filter: (value, item) => {
+        if (typeof value === 'string') {
+          const inloadouts = loadoutsByItem[item.id];
+          const loadout = inloadouts?.find(({ loadout }) => loadout.id === value);
+          return loadout && `inloadout:${quoteFilterString(loadout.loadout.name)}`;
+        }
+      },
+    }),
+    c({
       id: 'notes',
       header: t('Organizer.Columns.Notes'),
-      value: (item) => getNotes(item, itemInfos) ?? '',
+      value: (item) => getNotes(item) ?? '',
       cell: (_val, item) => <NotesArea item={item} minimal={true} />,
       gridWidth: 'minmax(200px, 1fr)',
-      filter: (value: string) => `notes:${quoteFilterString(value)}`,
-    },
+      filter: (value) => `notes:${quoteFilterString(value)}`,
+    }),
     isWeapon &&
-      hasWishList && {
+      hasWishList &&
+      c({
         id: 'wishListNote',
         header: t('Organizer.Columns.WishListNotes'),
         value: (item) => wishList(item)?.notes?.trim() ?? '',
         gridWidth: 'minmax(200px, 1fr)',
-        filter: (value: string) => `wishlistnotes:${quoteFilterString(value)}`,
-      },
+        filter: (value) => `wishlistnotes:${quoteFilterString(value)}`,
+      }),
   ]);
 
   return columns;
+}
+
+function LoadoutsCell({
+  loadouts,
+  owner,
+}: {
+  loadouts: (Loadout | InGameLoadout)[];
+  owner: string;
+}) {
+  return (
+    <>
+      {loadouts.map((loadout) => (
+        <div key={loadout.id} className={styles.loadout}>
+          {isInGameLoadout(loadout) ? (
+            <a data-perk-name={loadout.id}>
+              {isInGameLoadout(loadout) && <InGameLoadoutIcon loadout={loadout} />}
+              {loadout.name}
+            </a>
+          ) : (
+            <a
+              data-perk-name={loadout.id}
+              onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
+            >
+              {loadout.name}
+            </a>
+          )}
+        </div>
+      ))}
+    </>
+  );
 }
 
 function PerksCell({
@@ -567,7 +649,7 @@ function PerksCell({
 }: {
   item: DimItem;
   traitsOnly?: boolean;
-  onPlugClicked?(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
   if (!item.sockets) {
     return null;

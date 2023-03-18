@@ -3,16 +3,20 @@ import { collapsedSelector, settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { SetFilterButton } from 'app/dim-ui/SetFilterButton';
 import filterButtonStyles from 'app/dim-ui/SetFilterButton.m.scss';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemPopupTab } from 'app/item-popup/ItemPopupBody';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
+import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { loadoutToSearchString } from 'app/search/search-filters/loadouts';
 import { AppIcon, compareIcon, editIcon, thumbsUpIcon } from 'app/shell/icons';
@@ -28,14 +32,19 @@ import { DimItem } from '../inventory/item-types';
 import popupStyles from '../item-popup/ItemDescription.m.scss';
 import styles from './ItemTriage.m.scss';
 import { Factor } from './triage-factors';
-import { getNotableStats, getSimilarItems, getValueColors } from './triage-utils';
+import {
+  getBetterWorseItems,
+  getNotableStats,
+  getSimilarItems,
+  getValueColors,
+} from './triage-utils';
 
 /** whether an item's popup should contain the triage tab */
 export function doShowTriage(item: DimItem) {
   return (
     item.destinyVersion === 2 &&
     (item.bucket.inArmor ||
-      (item.bucket.sort === 'Weapons' &&
+      (item.bucket.sort === 'Weapons' && // there's some reason not to use inWeapons
         item.bucket.hash !== BucketHashes.SeasonalArtifact &&
         item.bucket.hash !== BucketHashes.Subclass))
   );
@@ -77,9 +86,12 @@ export function ItemTriage({ item }: { item: DimItem }) {
     <div className={styles.itemTriagePane}>
       {item.bucket.inWeapons && <WishlistTriageSection item={item} />}
       <LoadoutsTriageSection item={item} />
-      <FactorsTriageSection item={item} />
+      <SimilarItemsTriageSection item={item} />
       {item.bucket.inArmor && item.bucket.hash !== BucketHashes.ClassArmor && (
-        <ArmorStatsTriageSection item={item} />
+        <>
+          <ArmorStatsTriageSection item={item} />
+          <BetterItemsTriageSection item={item} />
+        </>
       )}
     </div>
   );
@@ -100,7 +112,7 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
       extra={wishlistItem ? <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> : '–'}
       disabled={disabled}
     >
-      {wishlistItem?.notes?.length && (
+      {wishlistItem && Boolean(wishlistItem?.notes?.length) && (
         <ExpandableTextBlock
           linesWhenClosed={3}
           className={popupStyles.description}
@@ -132,25 +144,35 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
     >
       <ul className={styles.loadoutList}>
         {inLoadouts.map((l) => {
-          const edit = () => {
-            editLoadout(l.loadout, item.owner, {
-              isNew: false,
+          const loadout = l.loadout;
+          const isDimLoadout = !isInGameLoadout(loadout);
+          const edit =
+            isDimLoadout &&
+            (() => {
+              editLoadout(loadout, item.owner, {
+                isNew: false,
+              });
+              hideItemPopup();
             });
-            hideItemPopup();
-          };
           return (
-            <li className={styles.loadoutRow} key={l.loadout.id}>
-              <ClassIcon classType={l.loadout.classType} className={styles.inlineIcon} />
-              <span className={styles.loadoutName}>{l.loadout.name}</span>
+            <li className={styles.loadoutRow} key={loadout.id}>
+              {isDimLoadout ? (
+                <ClassIcon classType={loadout.classType} className={styles.inlineIcon} />
+              ) : (
+                <InGameLoadoutIcon loadout={loadout} />
+              )}
+              <ColorDestinySymbols text={loadout.name} className={styles.loadoutName} />
               <span className={styles.controls}>
-                <a
-                  onClick={edit}
-                  title={t('Loadouts.Edit')}
-                  className={filterButtonStyles.setFilterButton}
-                >
-                  <AppIcon icon={editIcon} />
-                </a>
-                <SetFilterButton filter={loadoutToSearchString(l.loadout)} />
+                {edit && (
+                  <a
+                    onClick={edit}
+                    title={t('Loadouts.Edit')}
+                    className={filterButtonStyles.setFilterButton}
+                  >
+                    <AppIcon icon={editIcon} />
+                  </a>
+                )}
+                <SetFilterButton filter={loadoutToSearchString(loadout)} />
               </span>
             </li>
           );
@@ -163,7 +185,7 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
 /**
  * we don't include this section if there's nothing "interesting" to share about this item
  */
-function FactorsTriageSection({ item }: { item: DimItem }) {
+function SimilarItemsTriageSection({ item }: { item: DimItem }) {
   const filterFactory = useSelector(filterFactorySelector);
   const allItems = useSelector(allItemsSelector);
   const itemFactors = getSimilarItems(item, allItems, filterFactory);
@@ -173,11 +195,14 @@ function FactorsTriageSection({ item }: { item: DimItem }) {
     return null;
   }
 
+  // separate section IDs allows separate settings saves
+  const sectionId = `${item.bucket.inArmor ? 'armor' : 'weapon'}-triage-itemcount`;
+
   const fewestSimilar = _.minBy(itemFactors, (f) => f.count)!.count;
   return (
     <CollapsibleTitle
       title={t('Triage.SimilarItems')}
-      sectionId="triage-itemcount"
+      sectionId={sectionId}
       defaultCollapsed={false}
       extra={<span className={styles.factorCollapsedValue}>{fewestSimilar}</span>}
       showExtraOnlyWhenCollapsed
@@ -199,6 +224,115 @@ function FactorsTriageSection({ item }: { item: DimItem }) {
               </span>
             </div>
           ))}
+      </div>
+    </CollapsibleTitle>
+  );
+}
+
+const descriptionBulletPoints = {
+  worse: [tl('Triage.StatWorseArmorDesc'), tl('Triage.PerkWorseArmorDesc')],
+  worseStats: [tl('Triage.StatWorseArmorDesc'), tl('Triage.StatNotPerkArmorDesc')],
+  better: [tl('Triage.StatBetterArmorDesc'), tl('Triage.PerkBetterArmorDesc')],
+  betterStats: [tl('Triage.StatBetterArmorDesc'), tl('Triage.StatNotPerkArmorDesc')],
+} as const;
+
+/**
+ * we don't include this section if there's no strictly better or worse items
+ */
+function BetterItemsTriageSection({ item }: { item: DimItem }) {
+  const filterFactory = useSelector(filterFactorySelector);
+  const allItems = useSelector(allItemsSelector);
+
+  if (!item.stats) {
+    return null;
+  }
+  const betterWorseResults = getBetterWorseItems(item, allItems, filterFactory);
+
+  // done here if no array contains anything
+  if (!Object.values(betterWorseResults).some((a) => a.length)) {
+    return null;
+  }
+
+  const {
+    betterItems,
+    betterStatItems,
+    artificeBetterItems,
+    artificeBetterStatItems,
+    worseItems,
+    worseStatItems,
+    artificeWorseItems,
+    artificeWorseStatItems,
+  } = betterWorseResults;
+
+  const rows: [string, readonly [string, string], DimItem[], boolean][] = [
+    [t('Triage.BetterArmor'), descriptionBulletPoints.better, betterItems, false],
+    [t('Triage.WorseStatArmor'), descriptionBulletPoints.betterStats, betterStatItems, false],
+    [t('Triage.BetterArtificeArmor'), descriptionBulletPoints.better, artificeBetterItems, true],
+    [
+      t('Triage.BetterStatArtificeArmor'),
+      descriptionBulletPoints.betterStats,
+      artificeBetterStatItems,
+      true,
+    ],
+    [t('Triage.WorseArmor'), descriptionBulletPoints.worse, worseItems, false],
+    [t('Triage.BetterStatArmor'), descriptionBulletPoints.worseStats, worseStatItems, false],
+    [t('Triage.WorseArtificeArmor'), descriptionBulletPoints.worse, artificeWorseItems, true],
+    [
+      t('Triage.WorseStatArtificeArmor'),
+      descriptionBulletPoints.worseStats,
+      artificeWorseStatItems,
+      true,
+    ],
+  ];
+
+  return (
+    <CollapsibleTitle
+      title={t('Triage.BetterWorseArmor')}
+      sectionId="better-worse-armor"
+      defaultCollapsed={false}
+      extra={<span className={styles.factorCollapsedValue}>!!</span>}
+      showExtraOnlyWhenCollapsed
+    >
+      <div className={styles.similarItemsTable}>
+        {rows.map(([label, [statDesc, perkDesc], itemCollection, showArtificeDesc]) => {
+          const tooltip = (
+            <>
+              {t('Triage.BetterWorseIncludes')}
+              <ul>
+                <li>
+                  {t(statDesc)}
+                  {showArtificeDesc && (
+                    <span className={styles.artificeExplanation}>
+                      <br />
+                      {t('Triage.AccountsForArtifice')}
+                    </span>
+                  )}
+                </li>
+                <li>{t(perkDesc)}</li>
+              </ul>
+            </>
+          );
+          if (itemCollection.length) {
+            const filter = itemCollection.map((i) => `id:${i.id}`).join(' or ');
+            return (
+              <div className={styles.tableRow} key={label}>
+                <span>
+                  <PressTip tooltip={tooltip} elementType="span" placement="top">
+                    {label}
+                  </PressTip>
+                </span>
+                <span className={styles.count}>{itemCollection.length}</span>
+                <span className={styles.controls}>
+                  <StartCompareButton
+                    filter={`id:${item.id} or ` + filter}
+                    items={itemCollection}
+                    initialItemId={item.id}
+                  />
+                </span>
+              </div>
+            );
+          }
+        })}
       </div>
     </CollapsibleTitle>
   );
@@ -284,10 +418,19 @@ function FactorCombo({
   );
 }
 
-function StartCompareButton({ filter, items }: { filter: string; items: DimItem[] }) {
+function StartCompareButton({
+  filter,
+  items,
+  initialItemId,
+}: {
+  filter: string;
+  items: DimItem[];
+  /** The instance ID of the first item added to compare, so we can highlight it. */
+  initialItemId?: string;
+}) {
   const dispatch = useDispatch();
   const compare = () => {
-    dispatch(compareFilteredItems(filter, items));
+    dispatch(compareFilteredItems(filter, items, initialItemId));
     hideItemPopup();
   };
   const type = items[0]?.typeName;

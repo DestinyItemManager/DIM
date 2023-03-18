@@ -5,8 +5,6 @@
   cursor: pointer;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
-  overflow-wrap: break-word;
-  word-break: break-word;
   &:hover {
     color: $orange;
   }
@@ -43,50 +41,4 @@
   color: #c66;
   width: 100%;
   text-align: right;
-}
-
-/* Textcomplete */
-
-.dropdownMenu {
-  color: black;
-  background-color: white;
-  border-radius: 4px;
-  overflow: hidden;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-
-  :global(.textcomplete-header),
-  :global(.textcomplete-footer) {
-    display: none;
-  }
-  li {
-    padding: 4px 8px;
-    &:nth-child(2) {
-      border-top: none;
-    }
-    &:hover {
-      background-color: #e8a534;
-    }
-  }
-  :global(.active) {
-    background-color: #e8a534;
-  }
-  a {
-    color: black;
-    font-size: 12px;
-    &:hover {
-      cursor: pointer;
-    }
-    text-decoration-line: none;
-  }
-
-  @include phone-portrait {
-    a {
-      font-size: 16px;
-    }
-    li {
-      padding: 8px 10px;
-    }
-  }
 }

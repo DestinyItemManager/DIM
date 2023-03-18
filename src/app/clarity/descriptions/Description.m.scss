@@ -1,5 +1,7 @@
-/* stylelint-disable selector-class-pattern */
+@use '../../variables' as *;
+@use 'sass:string';
 
+/* stylelint-disable selector-class-pattern */
 .communityDescription {
   h3 {
     margin: 0;
@@ -30,8 +32,23 @@
   color: hsl(300, 100%, 81%);
 }
 
+// copy pasted from src/app/item-popup/PlugTooltip.m.scss
 .enhancedArrow {
-  color: hsl(46, 100%, 50%);
+  color: $enhancedYellow;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 11px;
+
+    // We need to encode the '#' prefix in the color in order to use it within the SVG.
+    /* prettier-ignore */
+    $escapedColorStr: '%23#{string.slice('#{$enhancedYellow}', 2)}';
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 33"><path d="M6,33 L6,16 L0,16 L9,0 L18,16 L12,16 L12,33 z" fill="#{$escapedColorStr}" /></svg>');
+    background-size: 6px 11px;
+    margin-right: 3px;
+  }
 }
 
 // --- random styling

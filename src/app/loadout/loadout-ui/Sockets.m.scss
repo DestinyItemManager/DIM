@@ -3,11 +3,18 @@
 .lockedItems {
   display: grid;
   gap: 2px;
+  grid-template-columns: repeat(2, auto);
 }
 
 .small {
   --item-icon-size: calc(((var(--item-size) + ((var(--item-size) / 5) + 4px)) / 2) - 1px);
   :global(.item) {
     --item-size: var(--item-icon-size);
+  }
+}
+
+.automaticallyPicked {
+  :global(.item-img) {
+    border: 1px solid $orange;
   }
 }

@@ -1,3 +1,4 @@
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { VENDORS } from 'app/search/d2-known-values';
@@ -19,16 +20,6 @@ function vendorItemIndex(item: VendorItem) {
   return item.key;
 }
 
-// Fix for ada-1 bounties ... https://github.com/Bungie-net/api/issues/1522
-// changes their sort to match the game
-const transmogBountyOrder = [
-  1455474223, // Vanguard
-  3675595381, // Crucible
-  2259349108, // Gambit
-  4187422269, // Destination
-  171866827, // Raid/Dungeon
-];
-
 function itemSort(vendorHash: number, category: string) {
   if (category === 'category.rank_rewards_seasonal') {
     return chainComparator<VendorItem>(
@@ -37,9 +28,7 @@ function itemSort(vendorHash: number, category: string) {
     );
   } else if (category === 'category_bounties') {
     if (vendorHash === VENDORS.ADA_TRANSMOG) {
-      return compareBy<VendorItem>(
-        (item) => item.item?.hash && transmogBountyOrder.indexOf(item.item.hash)
-      );
+      return compareBy<VendorItem>((item) => item.item?.bungieIndex);
     } else {
       return chainComparator<VendorItem>(
         compareBy((item) => item.item?.typeName),
@@ -101,7 +90,8 @@ export default function VendorItems({
 
   const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
   const rewardVendorHash = faction?.rewardVendorHash || undefined;
-  const rewardItem = rewardVendorHash && defs.InventoryItem.get(faction!.rewardItemHash);
+  const rewardItem =
+    rewardVendorHash !== undefined ? defs.InventoryItem.get(faction!.rewardItemHash) : undefined;
   const factionProgress = vendor?.component?.progression;
 
   let currencies = vendor.currencies;
@@ -143,7 +133,7 @@ export default function VendorItems({
         </div>
       )}
       <div className={styles.itemCategories}>
-        {((rewardVendorHash && rewardItem) || (factionProgress && faction)) && (
+        {((Boolean(rewardVendorHash) && rewardItem) || (factionProgress && faction)) && (
           <div className={styles.vendorRow}>
             <h3 className={styles.categoryTitle}>{t('Vendors.Engram')}</h3>
             <div className={styles.vendorItems}>
@@ -161,7 +151,7 @@ export default function VendorItems({
                   </div>
                 </PressTip>
               )}
-              {rewardVendorHash && rewardItem && (
+              {Boolean(rewardVendorHash) && rewardItem && (
                 <Link to={`../vendors/${rewardVendorHash}?characterId=${characterId}`}>
                   <div className="item" title={rewardItem.displayProperties.name}>
                     <BungieImage
@@ -174,14 +164,19 @@ export default function VendorItems({
             </div>
           </div>
         )}
-        {_.map(
-          itemsByCategory,
-          (items, categoryIndex) =>
+        {Object.entries(itemsByCategory).map(
+          ([categoryIndex, items]) =>
             vendor.def.displayCategories[categoryIndex] &&
             !ignoreCategories.includes(vendor.def.displayCategories[categoryIndex].identifier) && (
               <div className={styles.vendorRow} key={categoryIndex}>
                 <h3 className={styles.categoryTitle}>
-                  {vendor.def.displayCategories[categoryIndex]?.displayProperties.name || 'Unknown'}
+                  <RichDestinyText
+                    text={
+                      vendor.def.displayCategories[categoryIndex]?.displayProperties.name ||
+                      'Unknown'
+                    }
+                    ownerId={characterId}
+                  />
                 </h3>
                 <div className={styles.vendorItems}>
                   {items
@@ -192,12 +187,14 @@ export default function VendorItems({
                       )
                     )
                     .map(
-                      (item) =>
-                        item.item && (
+                      (vendorItem) =>
+                        vendorItem.item && (
                           <VendorItemComponent
-                            key={item.key}
-                            item={item}
-                            owned={Boolean(ownedItemHashes?.has(item.item.hash) || item.owned)}
+                            key={vendorItem.key}
+                            item={vendorItem}
+                            owned={Boolean(
+                              ownedItemHashes?.has(vendorItem.item.hash) || vendorItem.owned
+                            )}
                             characterId={characterId}
                           />
                         )

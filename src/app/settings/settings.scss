@@ -78,7 +78,7 @@
     margin: 0 0 4px 0;
     display: flex;
     flex-direction: row;
-    @include horizontal-space-children(4px);
+    gap: 4px;
   }
 
   .radioOptions {
@@ -87,11 +87,6 @@
       display: block;
       margin-bottom: 2px;
     }
-  }
-
-  td:nth-child(2) {
-    white-space: nowrap;
-    min-width: 20em;
   }
 
   .ratings-key {

@@ -11,22 +11,19 @@
     letter-spacing: normal !important;
     text-transform: none !important;
   }
-  a {
+  :global(.dim-button) {
     color: white;
     font-size: 12px;
+  }
+  p {
+    font-size: 14px;
   }
 }
 
 .twitterLinks {
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-wrap: wrap;
-  @include horizontal-space-children(8px);
-  gap: 8px 0;
-
-  :global(.fa-twitter) {
-    font-size: 1.5em;
-    vertical-align: bottom;
-  }
+  gap: 8px;
 }
 
 .errorCode {
@@ -40,7 +37,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  @include flex-gap(16px);
+  gap: 16px;
 
   @include phone-portrait {
     flex-direction: column;

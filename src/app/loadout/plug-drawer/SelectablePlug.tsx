@@ -1,6 +1,6 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { StatValue } from 'app/item-popup/PlugTooltip';
@@ -29,8 +29,8 @@ export default function SelectablePlug({
   selectionType: 'multi' | 'single';
   removable: boolean;
   displayedStatHashes?: number[];
-  onPlugSelected(plug: PluggableInventoryItemDefinition): void;
-  onPlugRemoved(plug: PluggableInventoryItemDefinition): void;
+  onPlugSelected: (plug: PluggableInventoryItemDefinition) => void;
+  onPlugRemoved: (plug: PluggableInventoryItemDefinition) => void;
 }) {
   const handleClick = useCallback(() => {
     selectable && onPlugSelected(plug);

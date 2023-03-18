@@ -11,7 +11,7 @@ import { DimItem } from '../item-types';
 /**
  * Generate a table from item name to the record for their crafting pattern.
  */
-export const itemNameToCraftingPatternRecordHash = memoizeOne((defs: D2ManifestDefinitions) => {
+const itemNameToCraftingPatternRecordHash = memoizeOne((defs: D2ManifestDefinitions) => {
   const recordHashesByName: { [itemName: string]: number } = {};
   if (defs) {
     for (const record of Object.values(defs.Record.getAll())) {

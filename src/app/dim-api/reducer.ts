@@ -1,4 +1,5 @@
 import {
+  CustomStatWeights,
   defaultGlobalSettings,
   DestinyVersion,
   GlobalSettings,
@@ -10,15 +11,19 @@ import {
   TagValue,
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
+import { t } from 'app/i18next-t';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { recentSearchComparator } from 'app/search/autocomplete';
+import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { FilterContext } from 'app/search/filter-types';
 import { searchConfigSelector } from 'app/search/search-config';
 import { parseAndValidateQuery } from 'app/search/search-utils';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
-import { count } from 'app/utils/util';
+import { count, uniqBy } from 'app/utils/util';
 import { clearWishLists } from 'app/wishlists/actions';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
 import produce, { Draft } from 'immer';
 import _ from 'lodash';
@@ -176,13 +181,13 @@ export const dimApi = (
         ? [...action.payload.updateQueue, ...state.updateQueue]
         : [];
       return action.payload
-        ? {
+        ? migrateSettings({
             ...state,
             profileLoadedFromIndexedDb: true,
-            settings: migrateSettings({
+            settings: {
               ...state.settings,
               ...action.payload.settings,
-            }),
+            },
             profiles: {
               ...state.profiles,
               ...action.payload.profiles,
@@ -193,7 +198,7 @@ export const dimApi = (
               ...state.searches,
               ...action.payload.searches,
             },
-          }
+          })
         : {
             ...state,
             profileLoadedFromIndexedDb: true,
@@ -207,15 +212,15 @@ export const dimApi = (
       const existingProfile = account ? state.profiles[profileKey] : undefined;
 
       // TODO: clean out invalid/simple searches on first load?
-      const newState: DimApiState = {
+      const newState: DimApiState = migrateSettings({
         ...state,
         profileLoaded: true,
         profileLoadedError: undefined,
         profileLastLoaded: Date.now(),
-        settings: migrateSettings({
+        settings: {
           ...state.settings,
           ...profileResponse.settings,
-        }),
+        },
         itemHashTags: profileResponse.itemHashTags
           ? _.keyBy(profileResponse.itemHashTags, (t) => t.hash)
           : state.itemHashTags,
@@ -244,7 +249,7 @@ export const dimApi = (
                 [account.destinyVersion]: profileResponse.searches || [],
               }
             : state.searches,
-      };
+      });
 
       // If this is the first load, cleanup searches
       if (
@@ -342,29 +347,33 @@ export const dimApi = (
 
     // *** Tags/Notes ***
 
-    case getType(inventoryActions.setItemTag):
+    case getType(inventoryActions.setItemTag): {
+      const { itemId, tag, craftedDate } = action.payload;
       return produce(state, (draft) => {
-        setTag(draft, action.payload.itemId, action.payload.tag as TagValue, account!);
+        setTag(draft, itemId, tag, craftedDate, account!);
       });
+    }
 
     case getType(inventoryActions.setItemTagsBulk):
       return produce(state, (draft) => {
         for (const info of action.payload) {
-          setTag(draft, info.itemId, info.tag as TagValue, account!);
+          setTag(draft, info.itemId, info.tag, info.craftedDate, account!);
         }
       });
 
-    case getType(inventoryActions.setItemNote):
+    case getType(inventoryActions.setItemNote): {
+      const { itemId, note, craftedDate } = action.payload;
       return produce(state, (draft) => {
-        setNote(draft, action.payload.itemId, action.payload.note, account!);
+        setNote(draft, itemId, note, craftedDate, account!);
       });
+    }
 
     case getType(inventoryActions.tagCleanup):
       return tagCleanup(state, action.payload, account!);
 
     case getType(inventoryActions.setItemHashTag):
       return produce(state, (draft) => {
-        setItemHashTag(draft, action.payload.itemHash, action.payload.tag as TagValue, account!);
+        setItemHashTag(draft, action.payload.itemHash, action.payload.tag, account!);
       });
 
     case getType(inventoryActions.setItemHashNote):
@@ -401,36 +410,96 @@ export const dimApi = (
   }
 };
 
-function migrateSettings(settings: Settings) {
+/**
+ * Migrates deprecated settings to their new equivalent, and erroneous settings values to their correct value.
+ * This updates the settings state and adds their updates to the update queue
+ */
+function migrateSettings(state: DimApiState) {
   // Fix some integer settings being stored as strings
-  if (typeof settings.charCol === 'string') {
-    settings = { ...settings, charCol: parseInt(settings.charCol, 10) };
+  if (typeof state.settings.charCol === 'string') {
+    state = changeSetting(state, 'charCol', parseInt(state.settings.charCol, 10));
   }
-  if (typeof settings.charColMobile === 'string') {
-    settings = { ...settings, charColMobile: parseInt(settings.charColMobile, 10) };
+  if (typeof state.settings.charColMobile === 'string') {
+    state = changeSetting(state, 'charColMobile', parseInt(state.settings.charColMobile, 10));
   }
-  if (typeof settings.inventoryClearSpaces === 'string') {
-    settings = { ...settings, inventoryClearSpaces: parseInt(settings.inventoryClearSpaces, 10) };
+  if (typeof state.settings.inventoryClearSpaces === 'string') {
+    state = changeSetting(
+      state,
+      'inventoryClearSpaces',
+      parseInt(state.settings.inventoryClearSpaces, 10)
+    );
   }
-  if (typeof settings.itemSize === 'string') {
-    settings = { ...settings, itemSize: parseInt(settings.itemSize, 10) };
+  if (typeof state.settings.itemSize === 'string') {
+    state = changeSetting(state, 'itemSize', parseInt(state.settings.itemSize, 10));
+  }
+
+  // Using undefined for the absence of a watermark was a bad idea
+  if (state.settings.itemFeedWatermark === undefined) {
+    state = changeSetting(state, 'itemFeedWatermark', initialSettingsState.itemFeedWatermark);
   }
 
   // Replace 'element' sort with 'elementWeapon' and 'elementArmor'
-  const sortOrder = settings.itemSortOrderCustom || [];
-  const reversals = settings.itemSortReversals || [];
+  const sortOrder = state.settings.itemSortOrderCustom || [];
+  const reversals = state.settings.itemSortReversals || [];
 
   if (sortOrder.includes('element')) {
-    sortOrder.splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor');
+    state = changeSetting(
+      state,
+      'itemSortOrderCustom',
+      [...sortOrder].splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor')
+    );
   }
 
   if (reversals.includes('element')) {
-    reversals.splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor');
+    state = changeSetting(
+      state,
+      'itemSortReversals',
+      [...reversals].splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor')
+    );
   }
 
-  settings = { ...settings, itemSortOrderCustom: sortOrder, itemSortReversals: reversals };
+  // converts any old custom stats stored in the old settings key, to the new format
+  const oldCustomStats = state.settings.customTotalStatsByClass;
+  if (!_.isEmpty(oldCustomStats)) {
+    // this existing array should 100% be empty if the user's stats are in old format...
+    // but not taking any chances. we'll preserve what's there.
+    const customStats = [...state.settings.customStats];
 
-  return settings;
+    for (const classEnumString in oldCustomStats) {
+      const classEnum: DestinyClass = parseInt(classEnumString);
+      const statHashList = oldCustomStats[classEnum];
+
+      if (classEnum !== DestinyClass.Unknown && statHashList?.length > 0) {
+        const weights: CustomStatWeights = {};
+        for (const statHash of statHashList) {
+          weights[statHash] = 1;
+        }
+        customStats.push({
+          label: t('Stats.Custom'),
+          shortLabel: 'custom',
+          class: classEnum,
+          weights,
+          // converted old stats get special permission to use stat hashes higher than CUSTOM_TOTAL_STAT_HASH
+          // other are decremented from CUSTOM_TOTAL_STAT_HASH
+          statHash: CUSTOM_TOTAL_STAT_HASH + 1 + classEnum,
+        });
+      }
+    }
+
+    // empty out the old-format setting. eventually phase out this old settings key?
+    state = changeSetting(state, 'customStats', customStats);
+    state = changeSetting(state, 'customTotalStatsByClass', {});
+  }
+
+  // A previous bug ins settings migration could cause duplicate custom stats
+  if (state.settings.customStats.length) {
+    const uniqCustomStats = uniqBy(state.settings.customStats, (stat) => stat.statHash);
+    if (uniqCustomStats.length !== state.settings.customStats.length) {
+      state = changeSetting(state, 'customStats', uniqCustomStats);
+    }
+  }
+
+  return state;
 }
 
 function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, value: Settings[V]) {
@@ -821,6 +890,7 @@ function setTag(
   draft: Draft<DimApiState>,
   itemId: string,
   tag: TagValue | undefined,
+  craftedDate: number | undefined,
   account: DestinyAccount
 ) {
   if (!itemId || itemId === '0') {
@@ -838,6 +908,7 @@ function setTag(
     payload: {
       id: itemId,
       tag: tag ?? null,
+      craftedDate: craftedDate ?? existingTag?.craftedDate,
     },
     before: existingTag ? { ...existingTag } : undefined,
     platformMembershipId: account.membershipId,
@@ -854,6 +925,7 @@ function setTag(
       tags[itemId] = {
         id: itemId,
         tag,
+        craftedDate,
       };
     }
   } else {
@@ -913,6 +985,7 @@ function setNote(
   draft: Draft<DimApiState>,
   itemId: string,
   notes: string | undefined,
+  craftedDate: number | undefined,
   account: DestinyAccount
 ) {
   if (!itemId || itemId === '0') {
@@ -929,6 +1002,7 @@ function setNote(
     payload: {
       id: itemId,
       notes: notes && notes.length > 0 ? notes : null,
+      craftedDate: craftedDate ?? existingTag?.craftedDate,
     },
     before: existingTag ? { ...existingTag } : undefined,
     platformMembershipId: account.membershipId,
@@ -942,6 +1016,7 @@ function setNote(
       tags[itemId] = {
         id: itemId,
         notes,
+        craftedDate,
       };
     }
   } else {
@@ -1055,7 +1130,7 @@ function stubSearchRootState(account: DestinyAccount) {
       currentAccount: 0,
     },
     inventory: { stores: [] },
-    dimApi: { profiles: {} },
+    dimApi: { profiles: {}, settings: { customStats: [], customTotalStatsByClass: {} } },
     manifest: {},
   } as any as RootState;
 }
@@ -1065,7 +1140,9 @@ function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: s
   const searchConfigs = searchConfigSelector(stubSearchRootState(account));
 
   // Canonicalize the query so we always save it the same way
-  const { canonical, saveInHistory } = parseAndValidateQuery(query, searchConfigs);
+  const { canonical, saveInHistory } = parseAndValidateQuery(query, searchConfigs, {
+    customStats: draft.settings.customStats ?? [],
+  } as FilterContext);
   if (!saveInHistory) {
     errorLog('searchUsed', 'Query not eligible to be saved in history', query);
     return;
@@ -1123,7 +1200,9 @@ function saveSearch(
   const searchConfigs = searchConfigSelector(stubSearchRootState(account));
 
   // Canonicalize the query so we always save it the same way
-  const { canonical, saveable } = parseAndValidateQuery(query, searchConfigs);
+  const { canonical, saveable } = parseAndValidateQuery(query, searchConfigs, {
+    customStats: draft.settings.customStats ?? [],
+  } as FilterContext);
   if (!saveable) {
     errorLog('searchUsed', 'Query not eligible to be saved', query);
     return;
@@ -1195,7 +1274,9 @@ function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccou
       continue;
     }
 
-    const { saveInHistory } = parseAndValidateQuery(search.query, searchConfigs);
+    const { saveInHistory } = parseAndValidateQuery(search.query, searchConfigs, {
+      customStats: draft.settings.customStats ?? [],
+    } as FilterContext);
     if (!saveInHistory) {
       deleteSearch(draft, account.destinyVersion, search.query);
     }

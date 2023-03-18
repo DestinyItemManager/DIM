@@ -1,6 +1,6 @@
 @use '../variables' as *;
 @use 'sass:string';
-@use '../dim-ui/PressTip.m.scss' as *;
+@use '../dim-ui/tooltip-mixins' as *;
 
 .objectives {
   margin: 4px 0;
@@ -58,6 +58,9 @@
   .cannotRollSection {
     @include tooltip-section-color($red);
   }
+  .automaticallyPickedSection {
+    @include tooltip-section-color($orange);
+  }
 }
 .tooltipExotic {
   @include tooltip-ribbon-color($exotic);
@@ -94,4 +97,7 @@
 }
 .tooltipElementStasis {
   @include tooltip-ribbon-color($stasis);
+}
+.tooltipElementStrand {
+  @include tooltip-ribbon-color($strand);
 }

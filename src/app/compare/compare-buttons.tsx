@@ -25,13 +25,6 @@ interface CompareButton {
  * Generate possible comparisons for armor, given a reference item.
  */
 export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
-  const exampleItemElementIcon = (
-    <ElementIcon
-      key={exampleItem.id}
-      element={exampleItem.element}
-      className={styles.inlineImageIcon}
-    />
-  );
   const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem);
   const exampleItemIntrinsic =
     !exampleItem.isExotic &&
@@ -65,7 +58,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
 
     // above but also the same seasonal mod slot, if it has one
     exampleItem.destinyVersion === 2 &&
-      exampleItem.element &&
       exampleItemModSlotMetadatas && {
         buttonLabel: [
           <SpecialtyModSlotIcon
@@ -84,7 +76,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
 
     // above but also the same special intrinsic, if it has one
     exampleItem.destinyVersion === 2 &&
-      exampleItem.element &&
       exampleItemIntrinsic && {
         buttonLabel: [
           <PressTip minimal tooltip={exampleItemIntrinsic.name} key="1">
@@ -95,41 +86,11 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         query: `not:sunset perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
       },
 
-    // armor 2.0 and needs to match energy capacity element
-    exampleItem.destinyVersion === 2 &&
-      exampleItem.element && {
-        buttonLabel: [
-          exampleItemElementIcon,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        ],
-        query: `not:sunset is:${getItemDamageShortName(exampleItem)}`,
-      },
-
-    // above but also the same seasonal mod slot, if it has one
-    exampleItem.destinyVersion === 2 &&
-      exampleItem.element &&
-      exampleItemModSlotMetadatas && {
-        buttonLabel: [
-          exampleItemElementIcon,
-          <SpecialtyModSlotIcon
-            excludeStandardD2ModSockets
-            className={styles.inlineImageIcon}
-            key="1"
-            lowRes
-            item={exampleItem}
-          />,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        ],
-        query: `not:sunset is:${getItemDamageShortName(exampleItem)} ${exampleItemModSlotMetadatas
-          .map((m) => `modslot:${m.slotTag || 'none'}`)
-          .join(' ')}`,
-      },
-
     // basically stuff with the same name & categories
     {
       buttonLabel: [exampleItem.name],
       // TODO: I'm gonna get in trouble for this but I think it should just match on name which includes reissues. The old logic used dupeID which is more discriminating.
-      query: `name:"${exampleItem.name}"`,
+      query: compareNameQuery(exampleItem),
     },
   ]);
 
@@ -162,6 +123,12 @@ export const stripAdept = (name: string) =>
     .trim()
     .replace(new RegExp(t('Filter.Timelost'), 'gi'), '')
     .trim();
+
+export function compareNameQuery(item: DimItem) {
+  return item.bucket.inWeapons
+    ? `name:${quoteFilterString(stripAdept(item.name))}`
+    : `name:${quoteFilterString(item.name)}`;
+}
 
 /**
  * Generate possible comparisons for weapons, given a reference item.
@@ -232,7 +199,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     // exact same weapon, judging by name. might span multiple expansions.
     {
       buttonLabel: [adeptStripped],
-      query: `name:"${adeptStripped}"`,
+      query: compareNameQuery(exampleItem),
     },
   ]);
 
@@ -254,7 +221,7 @@ export function defaultComparisons(exampleItem: DimItem): CompareButton[] {
     // exact same item, judging by name. might span multiple expansions.
     {
       buttonLabel: [exampleItem.name],
-      query: `name:"${exampleItem.name}"`,
+      query: compareNameQuery(exampleItem),
     },
   ]);
 

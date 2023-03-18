@@ -1,7 +1,11 @@
-import { Loadout as DimApiLoadout } from '@destinyitemmanager/dim-api-types';
+import {
+  Loadout as DimApiLoadout,
+  LoadoutItem as DimApiLoadoutItem,
+} from '@destinyitemmanager/dim-api-types';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DestinyLoadoutComponent } from 'bungie-api-ts/destiny2';
 
-export interface LoadoutItem {
+export type LoadoutItem = DimApiLoadoutItem & {
   /**
    * The item's id. There's no guarantee that the item this resolves to
    * actually has that id (subclasses, emblems, ...) so avoid accessing
@@ -16,17 +20,37 @@ export interface LoadoutItem {
   amount: number;
   /** Whether or not the item should be equipped when the loadout is applied. */
   equip: boolean;
-  /**
-   * A map of socketIndex's to item hashes for plugs that override the current items plugs in
-   * the loadout.
-   */
-  socketOverrides?: { [socketIndex: number]: number };
-}
+};
 
 /** In memory loadout structure. */
 export type Loadout = Omit<DimApiLoadout, 'equipped' | 'unequipped'> & {
   // All items are flattened out into LoadoutItems that keep track of whether they're equipped.
   items: LoadoutItem[];
+};
+
+/**
+ * An in-game D2 loadout (post-Lightfall) decorated with enough data to equip it.
+ *
+ * TODO: Maybe converge this with DimLoadout instead of maintaining two. Especially if we add the icon/color/name to DimLoadout.
+ */
+export type InGameLoadout = DestinyLoadoutComponent & {
+  /** The index of the loadout in the list of the user's loadouts */
+  index: number;
+
+  /** What character this loadout is bound to. */
+  characterId: string;
+
+  /** The name of the loadout. From nameHash + DestinyLoadoutNameDefinition. */
+  name: string;
+
+  /** The loadout's icon foreground. From iconHash + DestinyLoadoutIconDefinition. */
+  icon: string;
+
+  /** The loadout's color / icon background. From colorHash + DestinyLoadoutColorDefinition. */
+  colorIcon: string;
+
+  /** An ID that should be unique among ingame and DIM loadouts. */
+  id: string;
 };
 
 /**
@@ -48,11 +72,21 @@ export interface ResolvedLoadoutItem {
    * this item in the loadout. Note that this loadoutItem may not have the same
    * id or even hash as the resolved item!
    */
-  // TODO: remove this in favor of just equip/socketOverrides/amount?
   readonly loadoutItem: LoadoutItem;
 
   /** This item wasn't found in inventory. This means `item` is a fake placeholder. */
   readonly missing?: boolean;
+}
+
+/**
+ * Similarly to loadout items, mods can resolve to something different than what the hash says.
+ * E.g. magic deprecated replacements, or reduced-cost copies.
+ */
+export interface ResolvedLoadoutMod {
+  /** The original hash in the loadout. */
+  readonly originalModHash: number;
+  /** The resolved mod */
+  readonly resolvedMod: PluggableInventoryItemDefinition;
 }
 
 /** represents a single mod, and where to place it (on a non-specific item) */
@@ -78,4 +112,8 @@ export interface PluggingAction extends Assignment {
    * If not, this is an optional action which clears out other mod slots.
    */
   required: boolean;
+}
+
+export function isInGameLoadout(loadout: Loadout | InGameLoadout): loadout is InGameLoadout {
+  return `colorHash` in loadout;
 }

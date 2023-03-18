@@ -7,7 +7,6 @@ import { loadStores } from 'app/inventory/d2-stores';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { ThunkResult } from 'app/store/types';
 import { download } from 'app/utils/util';
-import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import './settings.scss';
@@ -34,8 +33,10 @@ export function TroubleshootingSettings() {
     try {
       await dispatch(importMockProfileResponse(files[0]));
       await dispatch(loadStores());
+      // eslint-disable-next-line no-alert
       alert('succeeded');
     } catch (e) {
+      // eslint-disable-next-line no-alert
       alert(e.message);
     }
   };
@@ -47,7 +48,7 @@ export function TroubleshootingSettings() {
           {t('Settings.ExportProfile')}
         </button>
 
-        {$DIM_FLAVOR === 'dev' && (
+        {($DIM_FLAVOR === 'dev' || (window as any).enableMockProfile) && (
           <FileUpload
             title="Upload Profile Response JSON"
             accept={{ 'application/json': ['.json'] }}
@@ -71,6 +72,6 @@ function importMockProfileResponse(file: File): ThunkResult {
     if (!profileResponse?.profileInventory) {
       throw 'uploaded profile response looks invalid';
     }
-    dispatch(setMockProfileResponse(JSON.stringify(profileResponse)));
+    dispatch(setMockProfileResponse(profileResponse));
   };
 }

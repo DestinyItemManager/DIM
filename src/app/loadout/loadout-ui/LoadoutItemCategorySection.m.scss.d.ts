@@ -11,7 +11,6 @@ interface CssExports {
   'itemsInCategory': string;
   'missingItem': string;
   'placeholder': string;
-  'showFashion': string;
   'unequipped': string;
 }
 export const cssExports: CssExports;

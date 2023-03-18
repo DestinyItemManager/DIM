@@ -1,12 +1,13 @@
+import { customStatsSelector } from 'app/dim-api/selectors';
 import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
+import { CustomStatWeightsFromHash } from 'app/dim-ui/CustomStatWeights';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t, tl } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
-import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { armorStats, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { getColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { isPlugStatActive } from 'app/utils/item-utils';
@@ -14,6 +15,7 @@ import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
+import { useSelector } from 'react-redux';
 import { getSocketsWithStyle, socketContainsIntrinsicPlug } from '../utils/socket-utils';
 import styles from './ItemStat.m.scss';
 import RecoilStat from './RecoilStat';
@@ -35,6 +37,8 @@ const statLabels: Record<number, string | undefined> = {
  * A single stat line.
  */
 export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem }) {
+  const customStatsList = useSelector(customStatsSelector);
+  const customStatHashes = customStatsList.map((c) => c.statHash);
   const armor2MasterworkSockets =
     item?.sockets && getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
   const armor2MasterworkValue =
@@ -83,6 +87,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     [styles.modded]: Boolean(modEffectsTotal && modEffectsTotal > 0 && stat.value !== stat.base),
     [styles.negativeModded]: Boolean(modEffectsTotal < 0 && stat.value !== stat.base),
     [styles.totalRow]: Boolean(totalDetails),
+    [styles.customTotal]: customStatHashes.includes(stat.statHash),
   };
 
   return (
@@ -106,15 +111,18 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
       {stat.displayProperties.hasIcon && (
         <div className={styles.icon}>
-          <BungieImage src={stat.displayProperties.icon} alt="" />
+          <BungieImage className="stat-icon" src={stat.displayProperties.icon} alt="" />
         </div>
       )}
 
-      {item && isD1Stat(item, stat) && stat.qualityPercentage && stat.qualityPercentage.min !== 0 && (
-        <div className={styles.quality} style={getColor(stat.qualityPercentage.min, 'color')}>
-          ({stat.qualityPercentage.range})
-        </div>
-      )}
+      {item &&
+        isD1Stat(item, stat) &&
+        stat.qualityPercentage &&
+        stat.qualityPercentage.min !== 0 && (
+          <div className={styles.quality} style={getColor(stat.qualityPercentage.min, 'color')}>
+            ({stat.qualityPercentage.range})
+          </div>
+        )}
 
       {stat.statHash === StatHashes.RecoilDirection && (
         <div className={styles.statBar}>
@@ -130,11 +138,10 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
           <StatTotal totalDetails={totalDetails} optionalClasses={optionalClasses} stat={stat} />
         )}
 
-      {item && stat.statHash === CUSTOM_TOTAL_STAT_HASH && (
-        <StatTotalToggle
-          forClass={item.classType}
-          readOnly={true}
-          className={styles.smallStatToggle}
+      {item && customStatHashes.includes(stat.statHash) && (
+        <CustomStatWeightsFromHash
+          className={clsx(styles.smallStatToggle, styles.nonDimmedStatIcons)}
+          customStatHash={stat.statHash}
         />
       )}
     </>

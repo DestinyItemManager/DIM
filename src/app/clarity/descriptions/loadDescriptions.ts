@@ -7,10 +7,8 @@ import * as actions from '../actions';
 import { ClarityDescription, ClarityVersions } from './descriptionInterface';
 
 const urls = {
-  // TODO: change links after merging with main branch
-  descriptions:
-    'https://raw.githubusercontent.com/Ice-mourne/database-clarity/test/descriptions/dim.json',
-  version: 'https://raw.githubusercontent.com/Ice-mourne/database-clarity/test/versions.json',
+  descriptions: 'https://database-clarity.github.io/Live-Clarity-Database/descriptions/dim.json',
+  version: 'https://database-clarity.github.io/Live-Clarity-Database/versions.json',
 } as const;
 
 const fetchClarity = async (type: keyof typeof urls) => {

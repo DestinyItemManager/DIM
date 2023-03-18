@@ -33,5 +33,5 @@ export interface InventoryBuckets {
   byHash: { [hash: number]: InventoryBucket };
   byCategory: { [category: string]: InventoryBucket[] };
   unknown: InventoryBucket; // TODO: get rid of this?
-  setHasUnknown(): void;
+  setHasUnknown: () => void;
 }

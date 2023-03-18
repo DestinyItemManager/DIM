@@ -12,10 +12,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './MaterialCounts.m.scss';
 
-const retiredMats = [31293053, 49145143, 1305274547, 2014411539];
-const showMats = spiderMats.filter((m) => !retiredMats.includes(m));
+const showMats = spiderMats;
 const goodMats = [2979281381, 4257549984, 3853748946, 4257549985, 3702027555];
-const seasonal = [747321467, 178490507, 2206486079, 2181364647, 1928904870, 770194505];
+const seasonal = [1224079819, 1289622079, 1471199156];
 const crafting = [2497395625, 353704689, 2708128607];
 
 export function MaterialCounts({
@@ -42,7 +41,7 @@ export function MaterialCounts({
             <span>{currency.displayProperties.name}</span>
           </div>
         ))}
-      {[showMats, seasonal, goodMats, crafting].map((matgroup, i) => (
+      {[seasonal, goodMats, crafting, showMats].map((matgroup, i) => (
         <React.Fragment key={matgroup[0]}>
           {(includeCurrencies || i > 0) && (
             <span className={styles.spanGrid}>

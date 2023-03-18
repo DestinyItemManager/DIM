@@ -269,8 +269,8 @@ export const D2SeasonInfo: Record<
   },
   19: {
     DLCName: '',
-    seasonName: 'Season of [Redacted]',
-    seasonTag: '[redacted]',
+    seasonName: 'Season of the Seraph',
+    seasonTag: 'seraph',
     season: 19,
     maxLevel: 50,
     powerFloor: 1350,
@@ -279,8 +279,22 @@ export const D2SeasonInfo: Record<
     pinnacleCap: 1590,
     releaseDate: '2022-12-06',
     resetTime: '17:00:00Z',
-    numWeeks: -1,
+    numWeeks: 12,
+  },
+  20: {
+    DLCName: 'Lightfall',
+    seasonName: 'Season of Defiance',
+    seasonTag: 'defiance',
+    season: 20,
+    maxLevel: 50,
+    powerFloor: 1600,
+    softCap: 1750,
+    powerfulCap: 1800,
+    pinnacleCap: 1810,
+    releaseDate: '2023-02-28',
+    resetTime: '17:00:00Z',
+    numWeeks: 12,
   },
 };
 
-export const D2CalculatedSeason = 18;
+export const D2CalculatedSeason = 20;

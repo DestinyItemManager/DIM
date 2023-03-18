@@ -13,7 +13,7 @@ export default memo(function CompareSuggestions({
   onQueryChanged,
 }: {
   exampleItem: DimItem;
-  onQueryChanged(query: string): void;
+  onQueryChanged: (query: string) => void;
 }) {
   const categoryItems = useSelector(compareCategoryItemsSelector);
   const filterFactory = useSelector(filterFactorySelector);

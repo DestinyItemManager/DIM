@@ -4,9 +4,11 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
+import { D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
+import { mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
@@ -15,8 +17,9 @@ import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
-import { Loadout, LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 import {
+  convertToLoadoutItem,
   createSocketOverridesFromEquipped,
   extractArmorModHashes,
   findSameLoadoutItemIndex,
@@ -57,12 +60,7 @@ export function addItem(
   equip?: boolean,
   socketOverrides?: SocketOverrides
 ): LoadoutUpdateFunction {
-  const loadoutItem: LoadoutItem = {
-    id: item.id,
-    hash: item.hash,
-    amount: 1,
-    equip: false,
-  };
+  const loadoutItem = convertToLoadoutItem(item, false, 1);
   if (socketOverrides) {
     loadoutItem.socketOverrides = socketOverrides;
   }
@@ -300,8 +298,14 @@ export function clearLoadoutParameters(): LoadoutUpdateFunction {
 }
 
 /** Remove the current subclass from the loadout. */
-export function clearSubclass(defs: D2ManifestDefinitions): LoadoutUpdateFunction {
+export function clearSubclass(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions
+): LoadoutUpdateFunction {
   return (loadout) => {
+    if (!defs.isDestiny2()) {
+      return loadout;
+    }
+
     const isSubclass = (i: LoadoutItem) =>
       defs.InventoryItem.get(i.hash)?.inventory?.bucketTypeHash === BucketHashes.Subclass;
 
@@ -315,10 +319,10 @@ export function clearSubclass(defs: D2ManifestDefinitions): LoadoutUpdateFunctio
 /**
  * Remove a specific mod by its inventory item hash.
  */
-export function removeMod(hash: number): LoadoutUpdateFunction {
+export function removeMod(mod: ResolvedLoadoutMod): LoadoutUpdateFunction {
   return produce((loadout) => {
     if (loadout.autoStatMods) {
-      const index = loadout.autoStatMods.indexOf(hash);
+      const index = loadout.autoStatMods.indexOf(mod.originalModHash);
       if (index !== -1) {
         loadout.autoStatMods.splice(index, 1);
         return;
@@ -326,7 +330,7 @@ export function removeMod(hash: number): LoadoutUpdateFunction {
     }
 
     if (loadout.parameters?.mods) {
-      const index = loadout.parameters.mods.indexOf(hash);
+      const index = loadout.parameters?.mods.indexOf(mod.originalModHash);
       if (index !== -1) {
         loadout.parameters.mods.splice(index, 1);
         return;
@@ -337,7 +341,7 @@ export function removeMod(hash: number): LoadoutUpdateFunction {
 
 /** Replace the loadout's subclass with the store's currently equipped subclass */
 export function setLoadoutSubclassFromEquipped(
-  defs: D2ManifestDefinitions,
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore
 ): LoadoutUpdateFunction {
   return (loadout) => {
@@ -346,7 +350,7 @@ export function setLoadoutSubclassFromEquipped(
         item.equipped && item.bucket.hash === BucketHashes.Subclass && itemCanBeInLoadout(item)
     );
 
-    if (!newSubclass) {
+    if (!newSubclass || !defs.isDestiny2()) {
       return loadout;
     }
 
@@ -377,7 +381,7 @@ export function fillLoadoutFromEquipped(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore,
   /** Fill in from only this specific category */
-  category?: string
+  category?: D2BucketCategory
 ): LoadoutUpdateFunction {
   return produce((loadout) => {
     const equippedItemsByBucket = _.keyBy(
@@ -398,17 +402,12 @@ export function fillLoadoutFromEquipped(
     const mods: number[] = [];
     for (const item of newEquippedItems) {
       if (!(item.bucket.hash in equippedItemsByBucket)) {
-        const loadoutItem: LoadoutItem = {
-          id: item.id,
-          hash: item.hash,
-          equip: true,
-          amount: 1,
-        };
+        const loadoutItem = convertToLoadoutItem(item, true, 1);
         if (item.bucket.hash === BucketHashes.Subclass) {
           loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
         }
         loadout.items.push(loadoutItem);
-        mods.push(...extractArmorModHashes(item));
+        mods.push(...extractArmorModHashes(item).map(mapToNonReducedModCostVariant));
       }
     }
     if (mods.length && (loadout.parameters?.mods ?? []).length === 0) {
@@ -447,7 +446,7 @@ export function fillLoadoutFromUnequipped(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore,
   /** Fill in from only this specific category */
-  category?: string
+  category?: D2BucketCategory
 ): LoadoutUpdateFunction {
   return (loadout) => {
     const items = getUnequippedItemsForLoadout(store, category);
@@ -504,7 +503,7 @@ export function syncModsFromEquipped(store: DimStore): LoadoutUpdateFunction {
     (item) => item.equipped && itemCanBeInLoadout(item) && item.bucket.sort === 'Armor'
   );
   for (const item of equippedArmor) {
-    mods.push(...extractArmorModHashes(item));
+    mods.push(...extractArmorModHashes(item).map(mapToNonReducedModCostVariant));
   }
 
   return setLoadoutParameters({
@@ -557,7 +556,7 @@ export function changeClearMods(enabled: boolean): LoadoutUpdateFunction {
 
 export function updateMods(mods: number[]): LoadoutUpdateFunction {
   return setLoadoutParameters({
-    mods,
+    mods: mods.map(mapToNonReducedModCostVariant),
   });
 }
 

@@ -16,5 +16,10 @@ export const updateCompareQuery = createAction('compare/UPDATE_QUERY')<string>()
 export const compareFilteredItems = createAction(
   'compare/FILTERED_ITEMS',
   // Do we really need the items?
-  (query: string, filteredItems: DimItem[]) => ({ query, filteredItems })
+  (
+    query: string,
+    filteredItems: DimItem[],
+    /** The instance ID of the first item added to compare, so we can highlight it. */
+    initialItemId?: string
+  ) => ({ query, filteredItems, initialItemId })
 )();

@@ -1,4 +1,4 @@
-import { stripAdept } from 'app/compare/compare-buttons';
+import { compareNameQuery } from 'app/compare/compare-buttons';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { PressTip } from 'app/dim-ui/PressTip';
@@ -35,9 +35,9 @@ import styles from './TriageFactors.m.scss';
 export interface Factor {
   id: string;
   /** bother checking this factor, if the seed item (the one in the item popup) returns truthy */
-  runIf(item: DimItem): unknown;
-  render(item: DimItem): React.ReactElement | null;
-  filter(item: DimItem): string;
+  runIf: (item: DimItem) => unknown;
+  render: (item: DimItem) => React.ReactElement | null;
+  filter: (item: DimItem) => string;
 }
 
 export type FactorComboCategory = keyof typeof factorCombos;
@@ -60,11 +60,11 @@ const itemFactors: Record<string, Factor> = {
         <span>{item.name}</span>
       </>
     ),
-    filter: (item) => `name:"${stripAdept(item.name)}"`,
+    filter: (item) => compareNameQuery(item),
   },
   element: {
-    id: 'element', //             don't compare exotic weapon elements, that's silly.
-    runIf: (item) => item.element && !(item.isExotic && item.bucket.inWeapons),
+    id: 'element', // we're done using this for armor as of lightfall
+    runIf: (item) => item.element && item.bucket.inWeapons,
     render: (item) => (
       <PressTip minimal elementType="span" tooltip={item.element?.displayProperties.name}>
         <ElementIcon className={clsx(styles.factorIcon)} element={item.element} />
@@ -177,8 +177,8 @@ export const factorCombos = {
     [itemFactors.name],
   ],
   Armor: [
-    [itemFactors.class, itemFactors.element, itemFactors.specialtySocket, itemFactors.armorSlot],
-    [itemFactors.class, itemFactors.element, itemFactors.specialtySocket],
+    [itemFactors.class, itemFactors.specialtySocket, itemFactors.armorSlot],
+    [itemFactors.class, itemFactors.specialtySocket],
     [itemFactors.class, itemFactors.name],
   ],
   General: [[itemFactors.element]],

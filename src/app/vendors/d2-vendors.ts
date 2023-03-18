@@ -1,17 +1,11 @@
-import { DestinyAccount } from 'app/accounts/destiny-account';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { VENDORS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import {
-  BungieMembershipType,
-  DestinyCollectibleComponent,
   DestinyCollectibleState,
   DestinyDestinationDefinition,
   DestinyInventoryItemDefinition,
-  DestinyItemComponentSetOfint32,
   DestinyPlaceDefinition,
-  DestinyProfileResponse,
   DestinyVendorComponent,
   DestinyVendorDefinition,
   DestinyVendorGroupDefinition,
@@ -20,7 +14,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { VendorItem } from './vendor-item';
+import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
   vendors: D2Vendor[];
@@ -38,21 +32,15 @@ export interface D2Vendor {
 const vendorOrder = [VENDORS.SPIDER, VENDORS.ADA_TRANSMOG, VENDORS.BANSHEE, VENDORS.EVERVERSE];
 
 export function toVendorGroups(
+  context: ItemCreationContext,
   vendorsResponse: DestinyVendorsResponse,
-  profileResponse: DestinyProfileResponse,
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  account: DestinyAccount,
-  characterId: string,
-  mergedCollectibles:
-    | {
-        [hash: number]: DestinyCollectibleComponent;
-      }
-    | undefined
+  characterId: string
 ): D2VendorGroup[] {
   if (!vendorsResponse.vendorGroups.data) {
     return [];
   }
+
+  const { defs } = context;
 
   return _.sortBy(
     Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => {
@@ -64,16 +52,12 @@ export function toVendorGroups(
             group.vendorHashes
               .map((vendorHash) =>
                 toVendor(
+                  // Override the item components from the profile with this vendor's item components
+                  { ...context, itemComponents: vendorsResponse.itemComponents[vendorHash] },
                   vendorHash,
-                  defs,
-                  buckets,
-                  profileResponse,
                   vendorsResponse.vendors.data?.[vendorHash],
-                  account,
                   characterId,
-                  vendorsResponse.itemComponents[vendorHash],
-                  vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-                  mergedCollectibles
+                  vendorsResponse.sales.data?.[vendorHash]?.saleItems
                 )
               )
               .filter((vendor) => vendor?.items.length)
@@ -90,42 +74,24 @@ export function toVendorGroups(
 }
 
 export function toVendor(
+  context: ItemCreationContext,
   vendorHash: number,
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
-  profileResponse: DestinyProfileResponse | undefined,
   vendor: DestinyVendorComponent | undefined,
-  account: DestinyAccount,
   characterId: string,
-  itemComponents: DestinyItemComponentSetOfint32 | undefined,
   sales:
     | {
         [key: string]: DestinyVendorSaleItemComponent;
       }
-    | undefined,
-  mergedCollectibles:
-    | {
-        [hash: number]: DestinyCollectibleComponent;
-      }
     | undefined
 ): D2Vendor | undefined {
+  const { defs } = context;
   const vendorDef = defs.Vendor.get(vendorHash);
 
   if (!vendorDef) {
     return undefined;
   }
 
-  const vendorItems = getVendorItems(
-    account,
-    defs,
-    buckets,
-    vendorDef,
-    profileResponse,
-    characterId,
-    itemComponents,
-    sales,
-    mergedCollectibles
-  );
+  const vendorItems = getVendorItems(context, vendorDef, characterId, sales);
 
   const destinationDef =
     typeof vendor?.vendorLocationIndex === 'number' && vendor.vendorLocationIndex >= 0
@@ -156,50 +122,27 @@ export function toVendor(
 }
 
 function getVendorItems(
-  account: DestinyAccount,
-  defs: D2ManifestDefinitions,
-  buckets: InventoryBuckets,
+  context: ItemCreationContext,
   vendorDef: DestinyVendorDefinition,
-  profileResponse: DestinyProfileResponse | undefined,
   characterId: string,
-  itemComponents: DestinyItemComponentSetOfint32 | undefined,
   sales:
     | {
         [key: string]: DestinyVendorSaleItemComponent;
-      }
-    | undefined,
-  mergedCollectibles:
-    | {
-        [hash: number]: DestinyCollectibleComponent;
       }
     | undefined
 ): VendorItem[] {
   if (sales) {
     const components = Object.values(sales);
     return components.map((component) =>
-      VendorItem.forVendorSaleItem(
-        defs,
-        buckets,
-        vendorDef,
-        profileResponse,
-        component,
-        characterId,
-        itemComponents,
-        mergedCollectibles
-      )
+      vendorItemForSaleItem(context, vendorDef, component, characterId)
     );
   } else if (vendorDef.returnWithVendorRequest) {
     // If the sales should come from the server, don't show anything until we have them
     return [];
   } else {
-    return vendorDef.itemList
-      .filter(
-        (i) =>
-          !i.exclusivity ||
-          i.exclusivity === BungieMembershipType.All ||
-          i.exclusivity === account.originalPlatformType
-      )
-      .map((i) => VendorItem.forVendorDefinitionItem(defs, buckets, i, mergedCollectibles));
+    return vendorDef.itemList.map((i, index) =>
+      vendorItemForDefinitionItem(context, i, characterId, index)
+    );
   }
 }
 
@@ -214,12 +157,12 @@ export function filterVendorGroupsToUnacquired(
         .map((vendor) => ({
           ...vendor,
           items: vendor.items.filter(
-            (item) =>
-              item.item &&
-              (item.item.collectibleState !== undefined
-                ? item.item.collectibleState & DestinyCollectibleState.NotAcquired
-                : item.item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
-                  !ownedItemHashes.has(item.item.hash))
+            ({ item, collectibleState }) =>
+              item &&
+              (collectibleState !== undefined
+                ? collectibleState & DestinyCollectibleState.NotAcquired
+                : item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
+                  !ownedItemHashes.has(item.hash))
           ),
         }))
         .filter((v) => v.items.length),
@@ -240,7 +183,7 @@ export function filterVendorGroupsToSearch(
           ...vendor,
           items: vendor.def.displayProperties.name.toLowerCase().includes(searchQuery.toLowerCase())
             ? vendor.items
-            : vendor.items.filter((i) => i.item && filterItems(i.item)),
+            : vendor.items.filter(({ item }) => item && filterItems(item)),
         }))
         .filter((v) => v.items.length),
     }))

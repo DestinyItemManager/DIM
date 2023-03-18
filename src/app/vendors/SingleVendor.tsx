@@ -13,16 +13,17 @@ import { useLocation, useParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import Countdown from '../dim-ui/Countdown';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { bucketsSelector, profileResponseSelector, storesSelector } from '../inventory/selectors';
+import {
+  bucketsSelector,
+  createItemContextSelector,
+  profileResponseSelector,
+  storesSelector,
+} from '../inventory/selectors';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh-events';
 import { loadAllVendors } from './actions';
 import { toVendor } from './d2-vendors';
-import {
-  mergedCollectiblesSelector,
-  ownedVendorItemsSelector,
-  vendorsByCharacterSelector,
-} from './selectors';
+import { ownedVendorItemsSelector, vendorsByCharacterSelector } from './selectors';
 import styles from './SingleVendor.m.scss';
 import { VendorLocation } from './Vendor';
 import VendorItems from './VendorItems';
@@ -39,7 +40,7 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
   const profileResponse = useSelector(profileResponseSelector);
   const vendors = useSelector(vendorsByCharacterSelector);
   const defs = useD2Definitions();
-  const mergedCollectibles = useSelector(mergedCollectiblesSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
   const dispatch = useThunkDispatch();
 
   // TODO: get for all characters, or let people select a character? This is a hack
@@ -114,16 +115,11 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
   // TODO: there's a cool background image but I'm not sure how to use it
 
   const d2Vendor = toVendor(
+    { ...itemCreationContext, itemComponents: vendorResponse?.itemComponents[vendorHash] },
     vendorHash,
-    defs,
-    buckets,
-    profileResponse,
     vendor,
-    account,
     characterId,
-    vendorResponse?.itemComponents[vendorHash],
-    vendorResponse?.sales.data?.[vendorHash]?.saleItems,
-    mergedCollectibles
+    vendorResponse?.sales.data?.[vendorHash]?.saleItems
   );
 
   if (!d2Vendor) {

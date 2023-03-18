@@ -28,6 +28,7 @@
   },
   "Armory": {
     "NoNotes": "无注释",
+    "OpenInArmory": "查看武器详情",
     "Season": "年 {{year}}，第 {{season}} 赛季",
     "TrashlistedRolls": "垃圾列表特性组合",
     "TrashlistedRolls_plural": "{{count, number}} 个垃圾列表特性组合",
@@ -85,6 +86,7 @@
   },
   "Compare": {
     "Archetype": "原型",
+    "AssumeMasterworked": "假定大师之作",
     "Button": "对比",
     "ButtonHelp": "对比物品",
     "CompareBaseStats": "显示基础属性",
@@ -115,6 +117,10 @@
     "ImportWrongFileType": "此文件不是一个CSV文件。",
     "WrongFields": "CSV文件中必须有'Id', 'Notes', 'Tag', 'Hash'列 (编号, 注释, 标签, 哈希)"
   },
+  "Dialog": {
+    "Cancel": "取消",
+    "OK": "确定"
+  },
   "EnergyMeter": {
     "Energy": "能量",
     "Unused": "未使用",
@@ -124,7 +130,10 @@
     "Title": "发生了一些错误"
   },
   "ErrorPanel": {
-    "Description": "使用命运同伴 App 来尝试加载你的物品栏。如果出现错误，则 Bungie.net 出现了问题。",
+    "Description": "请尝试在命运同伴 App 中加载你的物品栏，以检测是否 Bungie.net 出现了问题。",
+    "EmblemError": "你可以通过在游戏中更换所有角色的徽标以修复这个问题。",
+    "EmblemErrorLink": "阅读更多关于如何修复该问题的信息。",
+    "SystemDown": "这一问题影响所有命运应用程序，DIM团队也无法修复或绕过。",
     "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
@@ -195,11 +204,12 @@
     "ContributePower": "显示拥有光等的物品.",
     "Cosmetic": "显示饰品或装饰物品。",
     "Craftable": "显示可制作的物品。",
+    "CraftedDupe": "",
     "Curated": "显示拥有指定特性的物品。",
     "CurrentClass": "显示当前登录的守护者可装备的物品。",
     "CustomStatLower": "显示相比其他同类别护甲而言属性全面更低的护甲，但只考虑对应职业的自定义属性总和里的属性。",
     "DamageType": "按照伤害类型显示.",
-    "Deepsight": "显示带有深视共振的武器，可用于提取材料。可用 deepsight:complete 或 deepsight:incomplete 来筛选深视目标的进度，或用 deepsight:pattern 来筛选能解锁制作样式的物品。",
+    "Deepsight": "显示带有深视共振的武器，可用于提取模式。",
     "Description": "描述",
     "Dupe": "显示重复的物品，包含不同赛季版本",
     "DupeCount": "拥有指定重复数量的物品。",
@@ -219,7 +229,7 @@
     "HasOrnament": "显示已应用皮肤的物品。",
     "HasShader": "显示已应用着色器的物品",
     "HoldsMod": "显示与某种赛季模组相兼容的护甲。",
-    "InLoadout": "显示已被用于配装的物品.",
+    "InLoadout": "is:inloadout 显示在任意配装中所包含的物品。使用 inloadout: 搜索在配装中的指定物品。当使用 hashtag 时，inloadout: 显示在名称或注释中包含指定 hashtag 物品的配装。",
     "Infusable": "显示可以灌注的物品.",
     "InfusionFodder": "显示可用于灌注同类物品且只消耗微光的物品。",
     "IsCrafted": "显示制作获取的武器。",
@@ -267,6 +277,7 @@
     "Reforgeable": "显示可以在造枪匠那里重新锻造的物品.",
     "Release": "可从<i>{{release}}</i>发行版本获得",
     "RequiredLevel": "根据需要的等级显示物品.",
+    "RetiredPerk": "显示带有已无法获取特性的武器",
     "SearchPrompt": "搜索可用的过滤器命令",
     "Season": "按照物品推出季度显示.",
     "SeasonalDupe": "显示重复物品，不包括同一物品在不同赛季的版本。",
@@ -306,6 +317,16 @@
     "Confirm": "确认？",
     "UserGuideLink": "用户指南"
   },
+  "Glyphs": {
+    "Gilded": "镀金",
+    "Misadventure": "意外致死",
+    "Missing": "缺失",
+    "OpenSymbolsPicker": "打开符号选单",
+    "Quickfall": "急坠",
+    "ScorchCannon": "灼烧发射器",
+    "SearchSymbols": "搜索符号...",
+    "Smoke": "烟幕"
+  },
   "Header": {
     "About": "关于DIM",
     "AutoRefresh": "只要你仍在游戏，DIM 就会自动刷新。",
@@ -332,6 +353,7 @@
     "LaunchDIMAlone": "独立窗口",
     "MaterialCounts": "材料数量",
     "Menu": "菜单",
+    "ProfileAge": "数据由《命运》服务器最后更新于 {{age}} 之前。\n在 DIM 中刷新可能会获得最新数据，但 Bungie.net 也可能会重复发送缓存的数据。",
     "Refresh": "刷新命运数据 [R]",
     "ReloadApp": "重新载入应用",
     "ReportBug": "报告错误",
@@ -363,6 +385,10 @@
     "Tab": "TAB",
     "Vault": "将物品存入保险库"
   },
+  "InGameLoadout": {
+    "Applying": "正在装备配装...",
+    "LoadoutSlotNum": "插槽 {{index}}"
+  },
   "Infusion": {
     "Filter": "过滤物品",
     "InfuseSource": "选择需要用 {{name}} 进行灌注的物品",
@@ -377,8 +403,11 @@
     "ClickToExpand": "（点击展开）"
   },
   "ItemFeed": {
+    "ClearFeed": "清空物品流",
     "Description": "物品流",
-    "HideTagged": "隐藏已标记的物品"
+    "HideTagged": "隐藏已标记的物品",
+    "NoNewItems": "没有新物品",
+    "ShowOlderItems": "显示之前的物品"
   },
   "ItemMove": {
     "Consolidate": "合并{{name}}",
@@ -496,7 +525,7 @@
       "Legendary": "传说护甲会使用大师之作属性和 10 点能量等级。",
       "None": "所有护甲会使用当前的属性和至少 7 点能量等级。"
     },
-    "AutoStatMods": "添加所需的属性模组",
+    "AutoStatMods": "自动添加属性模组",
     "ChooseAlternateTitle": "选择另一个物品",
     "CompareLoadout": "对比配装",
     "ConfirmOverwrite": "你确定要用这套新的护甲来替换配装“{{name}}”里的护甲吗？",
@@ -508,22 +537,30 @@
     "ExistingLoadout": "已有配装",
     "ExoticSpecialCategory": "特殊",
     "Filter": "过滤",
-    "InLoadouts": "在配装中",
-    "InOtherLoadouts": "其他配装",
     "Legendary": "传说",
-    "LockElement": "锁定元素",
-    "LockElementOptions": {
-      "All": "所有护甲将被锁定为当前元素。",
-      "InLoadouts": "装备在配装里的护甲会被锁定为当前元素。",
-      "InOtherLoadouts": "你正在优化配装“{{loadoutName}}”。如有护甲被装备在“{{loadoutName}}”外的其他配装里，则会被锁定为当前元素。",
-      "None": "将按需更改护甲元素来适合选定的模组。"
-    },
     "LockEquipped": "固定已装备",
     "LockItem": "固定物品",
     "MaxTier": "最大 {{tier}}",
     "MissingClass": "配装适用于：{{className}}",
     "MissingClassDescription": "你正试图查看的配装适用于一个你未拥有的角色职业。",
-    "NoBuildsFoundWithReasons": "找不到配装。这通常是因为 DIM 找不到能装上所有选定模组的护甲组合。",
+    "NoBuildsFoundExplainer": {
+      "ActiveSearchQuery": "搜索条件导致 DIM 不能将部分物品包含在配装中",
+      "AllowAutoStatMods": "允许 DIM 自动添加额外的属性模组",
+      "AlwaysInvalidMods": "这些模组无法装上你拥有的任何物品：",
+      "AssumeMasterworked": "允许 DIM 建议护甲大师之作",
+      "AssumptionsRestricted": "DIM 无法建议更改护甲能量：",
+      "BadSlot": "这些模组无法装上{{bucketName}}槽位所允许的任何物品：",
+      "Header": "找不到配装。以下是 DIM 找不到配装的可能原因：",
+      "LowerBoundsFailed": "很多配装的属性等级未达到最低要求",
+      "MaybeAllowMoreItems": "尝试允许其他物品：",
+      "MaybeDecreaseLowerBounds": "尝试降低属性等级下限",
+      "MaybeIncreaseUpperBounds": "尝试提高属性等级上限",
+      "MaybeRemoveMods": "尝试移除一些模组：",
+      "MaybeRemoveSearchQuery": "尝试清除搜索栏或更改过滤器条件",
+      "ModAssignmentFailed": "很多配装无法装下所有请求的模组",
+      "RemoveMods": "移除这些模组",
+      "UpperBoundsFailed": "很多配装的属性等级高于属性等级上限"
+    },
     "NoExotic": "非异域",
     "NoExoticDescription": "等同于搜索“not:exotic” - 组合不会包含异域护甲。",
     "NoLoadoutsToCompare": "没有要对比的配装",
@@ -532,7 +569,7 @@
     "OptimizerExplanationMods": "选择你想使用的异域装备和模组。配装优化器只会包括你选定的模组带来的属性加成——护甲上其他现存的模组都会被忽略。",
     "OptimizerExplanationSearch": "使用搜索栏来过滤配装优化器使用的物品。",
     "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并将你不在乎的属性设为忽略。",
-    "OptimizerExplanationUpgrades": "选择允许配装优化器花费材料的护甲升级。它可能建议用大师杰作来提升属性，或用能量升级或更换元素来装下你想要的模组。",
+    "OptimizerExplanationUpgrades": "选择允许配装优化器花费材料的护甲升级。它可能建议用大师杰作来提升属性，或用能量升级来装下你想要的模组。",
     "OptimizerSet": "优化器组合",
     "ProcessingSets": "正在处理{{character}}的组合（{{remainingTime}} s）",
     "SaveAs": "保存为",
@@ -561,6 +598,7 @@
     "BadLoadoutShare": "无法载入共享配装",
     "BadLoadoutShareBody": "你试图载入的配装无效：{{error}}",
     "Before": "撤销 '{{name}}'",
+    "CancelEditing": "取消编辑",
     "CannotCustomizeSubclass": "无法配置此子职业",
     "ChooseItem": "添加 {{name}}",
     "ClassTypeMismatch": "不能将{{className}}物品添加到此配装",
@@ -575,6 +613,7 @@
     "CurrentlyEquipped": "当前装备",
     "Deequip": "正在从其他角色取回物品",
     "Delete": "删除",
+    "DeprecatedMods": "已废弃的模组",
     "Edit": "编辑配装",
     "EditBrief": "编辑",
     "EquipItems": "正在装备物品",
@@ -591,6 +630,14 @@
     "GatherEngrams": "收集记忆水晶",
     "GatherEngramsExceptExotics": "异域",
     "Generated": "T{{tier}} 配装",
+    "HashtagTip": "提示：在配装名称或备注中使用的#标签会显示在这里。(标签不支持中文)",
+    "Import": {
+      "BadURL": "配装分享链接无效。",
+      "Error": "获取配装失败：",
+      "Error404": "此配装不存在。",
+      "PasteHere": "粘贴链接以打开配装。"
+    },
+    "ImportLoadout": "导入配装",
     "ItemErrorSummary": "1 个物品出错：",
     "ItemErrorSummary_plural": "{{count}} 个物品出错：",
     "ItemLeveling": "物品等级",
@@ -609,6 +656,7 @@
     "MaximizeLight": "最大光等",
     "MaximizePower": "最大能量等级",
     "MaximizeStat": "最高属性",
+    "MissingItems": "缺少物品",
     "MissingItemsWarning": "此配装里的一些物品不在库存里了。",
     "ModErrorSummary": "1 个模组出错：",
     "ModErrorSummary_plural": "{{count}} 个模组出错：",
@@ -618,9 +666,9 @@
     "NoEngrams": "没有非异域记忆水晶可以转移.",
     "NoExotics": "没有记忆水晶可以转移.",
     "NoSpace": "你的保险库和其他角色均已满。",
-    "NoneMatch": "你没有任何配装的名称或备注匹配“{{query}}”。",
-    "NotStarted": "正在等待其他操作",
-    "NotesPlaceholder": "为这个配装添加备注",
+    "NoneMatch": "没有与过滤器匹配的配装。",
+    "NotStarted": "正在等待其他操作完成或物品栏刷新完毕",
+    "NotesPlaceholder": "为此配装添加备注，或使用 #标签 进行分类（标签不支持中文）",
     "NotificationTitle": "配装:{{name}}",
     "OnWrongCharacterAdvice": "点此查找当前角色的最高光等物品。",
     "OnWrongCharacterWarning": "当前角色光等最高的护甲在其他角色上。要使强力装备和巅峰装备掉落时的光等达到最高，这些护甲必须存储在当前角色上或是保险库中。",
@@ -720,7 +768,6 @@
     "CatalystProgress": "催化剂进度",
     "CommunityData": "社区见解",
     "Consolidate": "合并",
-    "CraftingPattern": "制作样式",
     "DistributeEvenly": "均匀分配",
     "Equip": "装备",
     "FavoriteUnFavorite": {
@@ -731,6 +778,7 @@
     },
     "Infuse": "灌注",
     "LockUnlock": {
+      "AutoLock": "该物品的锁定状态已与其标签同步",
       "Lock": "锁定{{itemType}}",
       "Locked": "已锁定",
       "Unlock": "解锁{{itemType}}",
@@ -761,6 +809,7 @@
       "Untracked": "未跟踪"
     },
     "TriageTab": "分类",
+    "UnreliablePerkOption": "该特性仅出现在收藏品界面中。随机掉落的物品可能不会带有该特性。",
     "Vault": "保险库",
     "WeaponLevel": "武器等级 {{level}}"
   },
@@ -784,9 +833,9 @@
       "Archetype": "原型",
       "BaseStats": "基础数值",
       "Breaker": "对抗勇士",
+      "Crafted": "铸造日期",
       "CustomTotal": "自定义总计",
       "Damage": "伤害",
-      "Element": "元素",
       "Energy": "能量",
       "Event": "活动",
       "Icon": "图标",
@@ -883,6 +932,8 @@
     "UsageCount": "使用次数"
   },
   "Settings": {
+    "AutoLockTagged": "将物品锁定状态与标签同步",
+    "AutoLockTaggedExplanation": "DIM 将自动锁定和解锁物品以匹配它们的标签。制作获得的武器将不会锁定，以便你进行重塑。当启用此设置时，锁定图标不会显示在带标签的物品图标上。",
     "BadgePostmaster": "在 App 图标上显示当前角色的邮政官物品数量",
     "BadgePostmasterExplanation": "若要此功能生效，你必须将 DIM 安装为 App，且操作系统必须支持显示标记",
     "BothDescriptions": "Bungie 与社区描述",
@@ -896,7 +947,15 @@
     "CommunityData": "社区特性见解",
     "CommunityDescriptionOnly": "社区描述",
     "CsvImport": "导入 CSV",
-    "CustomStatDesc": "选择护甲属性来自定义在物品弹窗、管理器和对比中显示的属性总和。用 stat:custom:>=30 来搜索。",
+    "CustomErrorLabel": "A stat name must contain word characters, and be different from other stat names for this Guardian class.",
+    "CustomErrorValues": "Stat weights must be positive numbers.\nAt least 2 stat weights must be above zero.",
+    "CustomStatChooseName": "Choose a Custom Stat name",
+    "CustomStatCreate": "Create a new custom stat",
+    "CustomStatDelete": "Delete this Custom Stat",
+    "CustomStatDeleteConfirm": "Delete this Custom Stat?",
+    "CustomStatDesc1": "Choose desired armor stats to make a custom total stat.",
+    "CustomStatDesc3": "Custom stats will appear in the Item Popup, Organizer, and Compare.",
+    "CustomStatTitle": "Custom Stat Total",
     "Data": "试算表",
     "DefaultItemSizeNote": "50 px 的物品大小看起来最清晰, 而不会模糊物品图片或文本。",
     "DontForgetDupes": "别忘了，你可以搜索 is:dupe 来快速找到重复的物品，也可以用对比工具或管理器来比较相关物品。",
@@ -905,8 +964,7 @@
     "ExportProfile": "导出 API 返回的账户资料",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下载您物品的 CSV 列表, 可以在您选择的电子表格应用程序中轻松查看。",
-    "ExportSSNoStores": "请在刷新一次库存后点击此按钮",
-    "HidePullFromPostmaster": "隐藏“从邮政官处取回物品”按钮",
+    "HidePullFromPostmaster": "隐藏“$t(Loadouts.PullFromPostmaster)”按钮",
     "Inventory": "物品栏显示模式",
     "InventoryColumns": "物品栏显示宽度",
     "InventoryColumnsMobile": "移动端物品栏显示宽度",
@@ -931,7 +989,6 @@
     "SizeItem": "物品显示大小",
     "SortByAmmoType": "弹药类型",
     "SortByAmount": "堆叠大小",
-    "SortByArmorElement": "护甲元素（D2）",
     "SortByClassType": "必要的类",
     "SortByCrafted": "已制造（D2）",
     "SortByDeepsight": "深视共振（D2）",
@@ -1024,6 +1081,8 @@
     "DimSyncNotEnabled": "DIM 同步未启用，所以你的设置、标签、配装和搜索将仅在本地保存，会在清理浏览器存储时丢失。在设置中启用 DIM 同步便可自动或随时手动备份你的数据。",
     "EnableDimApi": "启用 DIM 同步（推荐）",
     "Export": "下载数据备份",
+    "ExportError": "无法从 DIM 同步下载备份",
+    "ExportErrorBody": "DIM 同步或者你的网络连接可能出现了问题。我们会下载你本地保存的数据。",
     "Import": "导入数据备份",
     "ImportConfirmDimApi": "你确定要用此版本的数据覆盖标签、配装和设置吗？旧数据将被完全覆盖。",
     "ImportExport": "备份和导入",
@@ -1052,9 +1111,11 @@
   },
   "StreamDeck": {
     "Authorization": {
-      "Error": "选择了错误的号码！",
+      "No": "不一样",
       "Reset": "取消授权",
-      "Title": "在你的 Stream Deck 上选择这个号码"
+      "Title": "你的 Stream Deck 显示的验证码是否一样？",
+      "Update": "看到此消息代表你的插件版本过旧。请从 Stream Deck 商店下载更新版。",
+      "Yes": "一样"
     },
     "Connected": "已连接",
     "Enable": "Stream Deck 插件",
@@ -1071,7 +1132,6 @@
   "StripSockets": {
     "Action": "清空插槽",
     "ArmorMods": "{{count}}x 护甲模组",
-    "ArtifactMods": "{{count}}x 神器模组",
     "Button": "清空 {{numSockets}} 个插槽",
     "Cancel": "取消",
     "Choose": "选择要清空的插槽",
@@ -1097,14 +1157,31 @@
     "UnlockAll": "解锁物品"
   },
   "Triage": {
+    "AccountsForArtifice": "判断诡计护甲在使用 +3 属性模组后是否会变得更好。",
+    "BetterArmor": "全面更优的护甲",
+    "BetterArtificeArmor": "更优的诡计护甲",
+    "BetterStatArmor": "属性更优的护甲",
+    "BetterStatArtificeArmor": "属性更优的诡计护甲",
+    "BetterWorseArmor": "更优/更劣的护甲",
+    "BetterWorseIncludes": "分析护甲所用条件：",
     "HighStats": "高属性",
     "InLoadouts": "在配装中",
     "OwnedCount": "# 已拥有",
+    "PerkBetterArmorDesc": "相同、更多特性，或特殊模组槽位的护甲",
+    "PerkWorseArmorDesc": "固有特性相同或不存在。",
     "SimilarItems": "相似物品",
+    "StatBetterArmorDesc": "所有属性均持平，并有至少一个属性更高。",
+    "StatNotPerkArmorDesc": "仅检查护甲属性。低属性护甲可能仍有特殊模组槽位或固有特性。",
+    "StatWorseArmorDesc": "所有属性均持平或更低。",
     "ThisItem": "当前物品",
+    "WorseArmor": "全面更劣的护甲",
+    "WorseArtificeArmor": "更劣的非诡计护甲",
+    "WorseStatArmor": "属性更劣的护甲",
+    "WorseStatArtificeArmor": "属性更劣的非诡计护甲",
     "YourBestItem": "你的最佳物品"
   },
   "Triumphs": {
+    "GildingTriumph": "镀金成就",
     "HideCompleted": "隐藏已完成的成就",
     "RevealRedacted": "显示隐藏的成就"
   },
@@ -1120,7 +1197,7 @@
     "About": {
       "APIHistory": "查看DIM（及其他命运2app）的历史记录",
       "BungieCopyright": "所有图像和内容都归Bungie所有。",
-      "CommunityInsight": "社区特性见解取自 {{clarityLink}} 和 {{compendiumLink}}。如果你发现了问题或有疑问，可加入 {{clarityDiscordLink}}。",
+      "CommunityInsight": "社区特性见解取自 {{clarityLink}}。如果你发现了问题或有疑问，可加入 {{clarityDiscordLink}}。",
       "Discord": "Discord",
       "DiscordHelp": "报告问题,回馈建议,或在Discord频道中获得支援。",
       "FAQ": "常见问题",
@@ -1146,7 +1223,6 @@
       },
       "Translation": "加入翻译小组！",
       "TranslationText": "我们使用{{link}} 工具来使得翻译工作更加简便。 如果您希望为DIM的任意语言翻译语言出一份力，那么请加入我们的翻译小组吧( • ̀ω•́)✧！",
-      "Twitter": "Twitter",
       "TwitterHelp": "请务必关注我们，以便了解我们的最新动向和即时状态更新资讯。",
       "Version": "当前版本Ver{{version}}({{flavor}})，编译于：{{date}}",
       "Wiki": "DIM 用户指南百科",
@@ -1156,14 +1232,12 @@
     },
     "Login": {
       "Auth": "用Bungie.Net授权",
-      "BackupPrompt": "你确定要启用 DIM 同步，并不备份吗？",
+      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "你曾禁用过 DIM 同步，仅使用本地数据存储。启用 DIM 同步将用 DIM 同步数据替换本地数据。在启用 DIM 同步前，应该备份你的数据。你可以在设置中恢复备份。",
       "Explanation": "允许DIM查看并修改您的命运角色，保险库和进度。",
       "LearnMore": "了解账户与登录",
       "NewAccount": "使用其他 Bungie.net 账户登录",
-      "Permission": "我们需要您的授权",
-      "UpgradeExplanation": "您的iOS版本的主屏幕应用程序不允许您登录到 DIM。请升级到 iOS 12.2 或更新，并重新添加 DIM 到您的主屏幕。",
-      "UpgradeiOS": "请升级 iOS"
+      "Permission": "我们需要您的授权"
     },
     "Support": {
       "BackersDetail": "您可以选择一次性捐助或者每月捐助，以便我们能更加积极地开发。",

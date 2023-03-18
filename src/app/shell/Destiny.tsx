@@ -8,15 +8,16 @@ import {
 import ArmoryPage from 'app/armory/ArmoryPage';
 import ClarityPage from 'app/clarity/integration/ClarityPage';
 import { clarityActive } from 'app/clarity/selectors';
-import Compare from 'app/compare/Compare';
+import CompareContainer from 'app/compare/CompareContainer';
 import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
-import { storesSelector } from 'app/inventory/selectors';
+import { blockingProfileErrorSelector, storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import SyncTagLock from 'app/inventory/SyncTagLock';
 import ItemFeedPage from 'app/item-feed/ItemFeedPage';
 import LoadoutDrawerContainer from 'app/loadout-drawer/LoadoutDrawerContainer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
@@ -28,6 +29,7 @@ import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
+
 import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
@@ -81,7 +83,10 @@ const Loadouts = React.lazy(
 export default function Destiny() {
   const dispatch = useThunkDispatch();
   const { destinyVersion: destinyVersionString, membershipId: platformMembershipId } = useParams();
-  const destinyVersion = parseInt(destinyVersionString || '2', 10) as DestinyVersion;
+  const destinyVersion = parseInt(
+    (destinyVersionString || 'd2').replace('d', ''),
+    10
+  ) as DestinyVersion;
   const accountsLoaded = useSelector(accountsLoadedSelector);
   const currentAccount = useSelector(currentAccountSelector);
   const account = useSelector((state: RootState) =>
@@ -90,7 +95,8 @@ export default function Destiny() {
         account.membershipId === platformMembershipId && account.destinyVersion === destinyVersion
     )
   );
-  const profileError = useSelector((state: RootState) => state.inventory.profileError);
+  const profileError = useSelector(blockingProfileErrorSelector);
+  const autoLockTagged = useSelector(settingSelector('autoLockTagged'));
 
   useEffect(() => {
     if (!accountsLoaded) {
@@ -162,7 +168,7 @@ export default function Destiny() {
     },
   ];
 
-  itemTagList.forEach((tag) => {
+  for (const tag of itemTagList) {
     if (tag.hotkey) {
       hotkeys.push({
         combo: tag.hotkey,
@@ -174,7 +180,7 @@ export default function Destiny() {
         },
       });
     }
-  });
+  }
   useHotkeys(hotkeys);
 
   if (
@@ -275,13 +281,14 @@ export default function Destiny() {
         </Routes>
       </div>
       <LoadoutDrawerContainer account={account} />
-      <Compare />
+      <CompareContainer destinyVersion={account.destinyVersion} />
       {account.destinyVersion === 2 && <StripSockets />}
       <Farming />
       <InfusionFinder />
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
       <GlobalEffects />
+      {autoLockTagged && <SyncTagLock />}
     </>
   );
 }

@@ -1,9 +1,8 @@
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { itemNoteSelector } from 'app/inventory/dim-item-info';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';
-import { currentStoreSelector } from 'app/inventory/selectors';
+import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
 import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -37,15 +36,15 @@ export default memo(function CompareItem({
   item: DimItem;
   stats: StatInfo[];
   compareBaseStats?: boolean;
-  itemClick(item: DimItem): void;
-  remove(item: DimItem): void;
-  setHighlight?(value?: string | number): void;
-  onPlugClicked(value: { item: DimItem; socket: DimSocket; plugHash: number }): void;
+  itemClick: (item: DimItem) => void;
+  remove: (item: DimItem) => void;
+  setHighlight?: (value?: string | number) => void;
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
   isInitialItem: boolean;
 }) {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--compare-item-height');
-  const itemNotes = useSelector(itemNoteSelector(item));
+  const itemNotes = useSelector(notesSelector(item));
   const dispatch = useThunkDispatch();
   const currentStore = useSelector(currentStoreSelector)!;
   const pullItem = useCallback(() => {
@@ -107,7 +106,7 @@ export default memo(function CompareItem({
         />
       ))}
       {isD1Item(item) && item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
-      {item.missingSockets && (
+      {item.missingSockets && isInitialItem && (
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}
       {item.sockets && <ItemSockets item={item} minimal={true} onPlugClicked={onPlugClicked} />}
@@ -131,7 +130,7 @@ function VendorItemWarning({ item }: { item: DimItem }) {
         );
       }}
     >
-      <ActionButton onClick={_.noop} disabled title={t('Hotkey.Pull')}>
+      <ActionButton onClick={_.noop} disabled>
         <AppIcon icon={shoppingCart} />
       </ActionButton>
     </PressTip>

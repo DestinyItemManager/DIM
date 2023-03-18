@@ -1,18 +1,17 @@
-import { Textcomplete } from '@textcomplete/core';
-import { TextareaEditor } from '@textcomplete/textarea';
+import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
+import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import { setNote } from 'app/inventory/actions';
-import { itemNoteSelector } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { allNotesHashtagsSelector } from 'app/inventory/selectors';
+import { allNotesHashtagsSelector, notesSelector } from 'app/inventory/selectors';
 import { AppIcon, editIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
 import clsx from 'clsx';
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import TextareaAutosize from 'react-textarea-autosize';
 import styles from './NotesArea.m.scss';
 
 const maxLength = 120;
@@ -26,7 +25,7 @@ export default function NotesArea({
   className?: string;
   minimal?: boolean;
 }) {
-  const savedNotes = useSelector(itemNoteSelector(item));
+  const savedNotes = useSelector(notesSelector(item));
   const [notesOpen, setNotesOpen] = useState(false);
 
   // nothing to do if it can't be tagged (/noted)
@@ -115,82 +114,33 @@ function NotesEditor({
     e.stopPropagation();
   };
 
-  useTagsAutocomplete(textArea);
+  const tags = useSelector(allNotesHashtagsSelector);
+  useAutocomplete(textArea, tags);
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
 
   return (
     <form name="notes">
-      <textarea
-        ref={textArea}
-        name="data"
-        autoFocus={nativeAutoFocus}
-        placeholder={t('Notes.Help')}
-        maxLength={maxLength}
-        value={liveNotes}
-        onClick={onClick}
-        onChange={onNotesUpdated}
-        onBlur={stopEvents}
-        onKeyDown={onKeyDown}
-        onTouchStart={stopEvents}
-        onMouseDown={stopEvents}
-      />
+      <WithSymbolsPicker input={textArea} setValue={(val) => setLiveNotes(val)}>
+        <TextareaAutosize
+          ref={textArea}
+          name="data"
+          autoFocus={nativeAutoFocus}
+          placeholder={t('Notes.Help')}
+          maxLength={maxLength}
+          value={liveNotes}
+          onClick={onClick}
+          onChange={onNotesUpdated}
+          onBlur={stopEvents}
+          onKeyDown={onKeyDown}
+          onTouchStart={stopEvents}
+          onMouseDown={stopEvents}
+        />
+      </WithSymbolsPicker>
       {liveNotes && liveNotes.length > maxLength && (
         <span className={styles.error}>{t('Notes.Error')}</span>
       )}
     </form>
   );
-}
-
-function useTagsAutocomplete(textArea: React.RefObject<HTMLTextAreaElement>) {
-  const tags = useSelector(allNotesHashtagsSelector);
-  useEffect(() => {
-    if (textArea.current) {
-      const editor = new TextareaEditor(textArea.current);
-      const textcomplete = new Textcomplete(
-        editor,
-        [
-          {
-            match: /#(\w*)$/,
-            search: (term, callback) => {
-              const termLower = term.toLowerCase();
-              // need to build this list from the element ref, because relying
-              // on liveNotes state would re-instantiate Textcomplete every keystroke
-              const existingTags = getHashtagsFromNote(textArea.current!.value).map((t) =>
-                t.toLowerCase()
-              );
-              const possibleTags: string[] = [];
-              for (const t of tags) {
-                const tagLower = t.toLowerCase();
-                // don't suggest duplicate tags
-                if (existingTags.includes(tagLower)) {
-                  continue;
-                }
-                // favor startswith
-                if (tagLower.startsWith('#' + termLower)) {
-                  possibleTags.unshift(t);
-                  // over full text search
-                } else if (tagLower.includes(termLower)) {
-                  possibleTags.push(t);
-                }
-              }
-              callback(possibleTags);
-            },
-            replace: (key) => `${key} `,
-            // to-do: for major tags, gonna use this to show what the notes icon will change to
-            // template: (key) => `<img src="${url}"/>&nbsp;<small>:${key}:</small>`,
-          },
-        ],
-        {
-          dropdown: {
-            className: clsx(styles.dropdownMenu, 'textcomplete-dropdown'),
-          },
-        }
-      );
-      return () => {
-        textcomplete.destroy();
-      };
-    }
-  }, [textArea, tags]);
 }

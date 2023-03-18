@@ -59,10 +59,13 @@
     "array-func",
     "react-redux",
     "css-modules",
-    "radar"
+    "radar",
+    "jsx-expressions",
+    "github"
   ],
   "reportUnusedDisableDirectives": true,
   "rules": {
+    "no-alert": "error",
     "no-console": "error",
     "no-debugger": "error",
     "no-empty": "off",
@@ -113,6 +116,11 @@
       },
       {
         "object": "_",
+        "property": "map",
+        "message": "Please use the native js map."
+      },
+      {
+        "object": "_",
         "property": "uniq",
         "message": "Please use Array.from(new Set(foo)) or [...new Set(foo)] instead."
       },
@@ -120,6 +128,11 @@
         "object": "_",
         "property": "uniqBy",
         "message": "Please use the uniqBy from app/utils/util instead"
+      },
+      {
+        "object": "_",
+        "property": "forIn",
+        "message": "Please use Object.values or Object.entries instead"
       }
     ],
     "no-restricted-imports": [
@@ -222,6 +235,7 @@
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/method-signature-style": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
@@ -270,7 +284,12 @@
     "radar/cognitive-complexity": "off",
     "radar/no-small-switch": "off",
     "radar/no-duplicate-string": "off",
-    "radar/prefer-immediate-return": "off"
+    "radar/prefer-immediate-return": "off",
+    "jsx-expressions/strict-logical-expressions": ["error", { "allowString": true }],
+    "github/array-foreach": "error",
+    "github/async-currenttarget": "error",
+    "github/async-preventdefault": "error",
+    "github/no-innerText": "error"
   },
   "overrides": [
     {

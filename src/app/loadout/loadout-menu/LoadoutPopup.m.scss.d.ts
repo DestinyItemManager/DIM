@@ -3,6 +3,9 @@
 interface CssExports {
   'altButton': string;
   'content': string;
+  'filterInput': string;
+  'filterPills': string;
+  'inGameLoadoutIcon': string;
   'list': string;
   'loadoutTypeIcon': string;
   'menuItem': string;

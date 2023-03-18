@@ -1,12 +1,12 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
-import ElementIcon from 'app/dim-ui/ElementIcon';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { statAllowList } from 'app/inventory/store/stats';
+import { getStatSortOrder, isAllowedStat } from 'app/inventory/store/stats';
 import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
@@ -18,7 +18,6 @@ import { isEnhancedPerk, isModCostVisible } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DamageType,
-  DestinyEnergyType,
   DestinyInventoryItemDefinition,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
@@ -26,6 +25,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
+import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { DimItem, DimPlug } from '../inventory/item-types';
@@ -33,6 +33,22 @@ import Objective from '../progress/Objective';
 import './ItemSockets.scss';
 import styles from './PlugTooltip.m.scss';
 
+function isVisibleStat(item: DimItem, plug: DimPlug, statHash: number) {
+  return (
+    isAllowedStat(statHash) &&
+    // Stats are only shown if the item can actually benefit from them
+    item.stats?.some((stat) => stat.statHash === statHash) &&
+    isPlugStatActive(
+      item,
+      plug.plugDef,
+      statHash,
+      Boolean(
+        plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
+          ?.isConditionallyActive
+      )
+    )
+  );
+}
 // TODO: Connect this to redux
 export function DimPlugTooltip({
   item,
@@ -55,23 +71,10 @@ export function DimPlugTooltip({
     ? _.sortBy(
         Object.keys(plug.stats)
           .map((statHashStr) => parseInt(statHashStr, 10))
-          .filter(
-            (statHash) =>
-              statAllowList.includes(statHash) &&
-              isPlugStatActive(
-                item,
-                plug.plugDef,
-                statHash,
-                Boolean(
-                  plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
-                    ?.isConditionallyActive
-                )
-              )
-          ),
-        (h) => statAllowList.indexOf(h)
+          .filter((statHash) => isVisibleStat(item, plug, statHash)),
+        getStatSortOrder
       )
     : [];
-
   const stats: { [statHash: string]: number } = {};
 
   for (const statHash of visibleStats) {
@@ -94,11 +97,24 @@ export function DimPlugTooltip({
       plugObjectives={plug.plugObjectives}
       enableFailReasons={plug.enableFailReasons}
       cannotCurrentlyRoll={plug.cannotCurrentlyRoll}
+      unreliablePerkOption={plug.unreliablePerkOption}
       wishListTip={wishListTip}
       hideRequirements={hideRequirements}
       craftingData={craftingData}
     />
   );
+}
+
+export interface ExtraPlugTooltipInfo {
+  stats?: { [statHash: string]: number };
+  plugObjectives?: DestinyObjectiveProgress[];
+  enableFailReasons?: string;
+  cannotCurrentlyRoll?: boolean;
+  unreliablePerkOption?: boolean;
+  wishListTip?: string;
+  automaticallyPicked?: boolean;
+  hideRequirements?: boolean;
+  craftingData?: DestinyPlugItemCraftingRequirements;
 }
 
 /**
@@ -116,19 +132,14 @@ export function PlugTooltip({
   plugObjectives,
   enableFailReasons,
   cannotCurrentlyRoll,
+  unreliablePerkOption,
   wishListTip,
+  automaticallyPicked,
   hideRequirements,
   craftingData,
 }: {
   def: DestinyInventoryItemDefinition;
-  stats?: { [statHash: string]: number };
-  plugObjectives?: DestinyObjectiveProgress[];
-  enableFailReasons?: string;
-  cannotCurrentlyRoll?: boolean;
-  wishListTip?: string;
-  hideRequirements?: boolean;
-  craftingData?: DestinyPlugItemCraftingRequirements;
-}) {
+} & ExtraPlugTooltipInfo) {
   const defs = useD2Definitions();
   const statsArray =
     (stats &&
@@ -137,6 +148,19 @@ export function PlugTooltip({
         statHash: parseInt(statHash, 10),
       }))) ||
     [];
+
+  // HACK Loadout plugs operate on defs very often and they show their stats via perks,
+  // which are handled below. But the number of fragment slots is just a direct stat.
+  const aspectCapacityStat = def.investmentStats?.find(
+    (stat) => stat.statTypeHash === StatHashes.AspectEnergyCapacity
+  );
+  if (aspectCapacityStat) {
+    statsArray.push({
+      statHash: aspectCapacityStat.statTypeHash,
+      value: aspectCapacityStat.value,
+    });
+  }
+
   const plugDescriptions = usePlugDescriptions(def, statsArray);
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
@@ -174,40 +198,34 @@ export function PlugTooltip({
   );
 
   const isPluggable = isPluggableItem(def);
-  const energyCost =
-    isPluggable && defs && isModCostVisible(defs, def.plug) ? def.plug.energyCost : null;
-  const subclassDamageType = isPluggable && defs && getDamageTypeForSubclassPlug(defs, def);
+  const energyCost = isPluggable && isModCostVisible(def.plug) ? def.plug.energyCost : null;
+  const subclassDamageType = isPluggable && getDamageTypeForSubclassPlug(def);
 
   const isInTooltip = useTooltipCustomization({
     getHeader: useCallback(() => def.displayProperties.name, [def.displayProperties.name]),
-    getSubheader: useCallback(() => {
-      const energyType = energyCost && defs?.EnergyType.get(energyCost.energyTypeHash);
-      return (
+    getSubheader: useCallback(
+      () => (
         <div className={styles.subheader}>
           <span>{def.itemTypeDisplayName}</span>
-          {energyType && (
+          {energyCost?.energyCost !== undefined && energyCost.energyCost > 0 && (
             <span className={styles.energyCost}>
-              <ElementIcon element={energyType} className={styles.elementIcon} />
+              <EnergyCostIcon className={styles.elementIcon} />
               {energyCost.energyCost}
             </span>
           )}
         </div>
-      );
-    }, [def.itemTypeDisplayName, energyCost, defs]),
+      ),
+      [def.itemTypeDisplayName, energyCost]
+    ),
     className: clsx(styles.tooltip, {
       [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
       [styles.tooltipEnhanced]:
         enhancedIntrinsics.has(def.hash) || (isPluggable && isEnhancedPerk(def)),
-      [styles.tooltipElementArc]:
-        energyCost?.energyType === DestinyEnergyType.Arc || subclassDamageType === DamageType.Arc,
-      [styles.tooltipElementSolar]:
-        energyCost?.energyType === DestinyEnergyType.Thermal ||
-        subclassDamageType === DamageType.Thermal,
-      [styles.tooltipElementVoid]:
-        energyCost?.energyType === DestinyEnergyType.Void || subclassDamageType === DamageType.Void,
-      [styles.tooltipElementStasis]:
-        energyCost?.energyType === DestinyEnergyType.Stasis ||
-        subclassDamageType === DamageType.Stasis,
+      [styles.tooltipElementArc]: subclassDamageType === DamageType.Arc,
+      [styles.tooltipElementSolar]: subclassDamageType === DamageType.Thermal,
+      [styles.tooltipElementVoid]: subclassDamageType === DamageType.Void,
+      [styles.tooltipElementStasis]: subclassDamageType === DamageType.Stasis,
+      [styles.tooltipElementStrand]: subclassDamageType === DamageType.Strand,
     }),
   });
 
@@ -238,14 +256,17 @@ export function PlugTooltip({
       )}
 
       <Tooltip.Section>
-        {sourceString && <div className={styles.source}>{sourceString}</div>}
-        {!hideRequirements && defs && filteredPlugObjectives && filteredPlugObjectives.length > 0 && (
-          <div className={styles.objectives}>
-            {filteredPlugObjectives.map((objective) => (
-              <Objective key={objective.objectiveHash} objective={objective} />
-            ))}
-          </div>
-        )}
+        {Boolean(sourceString) && <div className={styles.source}>{sourceString}</div>}
+        {!hideRequirements &&
+          defs &&
+          filteredPlugObjectives &&
+          filteredPlugObjectives.length > 0 && (
+            <div className={styles.objectives}>
+              {filteredPlugObjectives.map((objective) => (
+                <Objective key={objective.objectiveHash} objective={objective} />
+              ))}
+            </div>
+          )}
         {enableFailReasons && <p>{enableFailReasons}</p>}
       </Tooltip.Section>
 
@@ -255,7 +276,7 @@ export function PlugTooltip({
             <p key={r.failureDescription}>{r.failureDescription}</p>
           ))}
           {defs &&
-            craftingData.materialRequirementHashes.length &&
+            craftingData.materialRequirementHashes.length > 0 &&
             craftingData.materialRequirementHashes.flatMap((h) => {
               const materialRequirement = defs?.MaterialRequirementSet.get(h).materials;
               return materialRequirement.map((m) => {
@@ -275,6 +296,16 @@ export function PlugTooltip({
       {cannotCurrentlyRoll && (
         <Tooltip.Section className={styles.cannotRollSection}>
           <p>{t('MovePopup.CannotCurrentlyRoll')}</p>
+        </Tooltip.Section>
+      )}
+      {unreliablePerkOption && (
+        <Tooltip.Section className={styles.cannotRollSection}>
+          <p>{t('MovePopup.UnreliablePerkOption')}</p>
+        </Tooltip.Section>
+      )}
+      {automaticallyPicked && (
+        <Tooltip.Section className={styles.automaticallyPickedSection}>
+          <p>{t('LoadoutBuilder.AutomaticallyPicked')}</p>
         </Tooltip.Section>
       )}
       {wishListTip && (

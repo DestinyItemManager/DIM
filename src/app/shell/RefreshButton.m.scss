@@ -1,4 +1,5 @@
 @use '../variables' as *;
+@use '../dim-ui/tooltip-mixins' as *;
 
 .refreshButton {
   composes: resetButton from '../dim-ui/common.m.scss';
@@ -15,4 +16,35 @@
   position: absolute;
   bottom: -4px;
   right: -4px;
+}
+
+.outOfDate {
+  color: $red;
+  background-color: #1b1b2d;
+  padding: 2px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  :global(.app-icon) {
+    font-size: 10px !important;
+    display: block;
+  }
+}
+
+.errorTooltip {
+  @include tooltip-background-color(scale-color($red, $lightness: -90%));
+  @include tooltip-border-color($red);
+  @include tooltip-ribbon-color($red);
+
+  max-width: 800px;
+}
+
+.errorDetails {
+  h2 {
+    margin: 0 0 8px 0;
+  }
+  p {
+    margin-bottom: 1em;
+  }
 }

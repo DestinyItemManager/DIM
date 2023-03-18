@@ -41,7 +41,7 @@ $content-cells: 5;
     position: sticky;
     left: calc(4px + env(safe-area-inset-left));
     width: calc(98vw - env(safe-area-inset-left) - env(safe-area-inset-right));
-    @include horizontal-space-children(4px);
+    gap: 4px;
   }
 }
 
@@ -185,8 +185,10 @@ $content-cells: 5;
   columns: 2;
   height: 100%;
   box-sizing: border-box;
-  @include vertical-space-children(4px);
   column-gap: 8px;
+  > *:nth-last-child(n + 2) {
+    margin-bottom: 4px;
+  }
   &.header {
     display: flex;
     flex-direction: column;
@@ -307,5 +309,26 @@ $modslotSize: 30px;
   > svg {
     vertical-align: middle;
     margin-left: 4px;
+  }
+}
+
+.shapedIcon {
+  width: calc((16 / 50) * var(--item-size));
+  height: calc((16 / 50) * var(--item-size));
+}
+
+.shapedIconOverlay {
+  position: absolute;
+  bottom: 1px;
+  left: 1px;
+  width: calc(var(--item-size) - ($item-border-width * 2));
+}
+
+.loadout {
+  img {
+    height: 16px;
+    width: 16px;
+    margin-right: 4px;
+    vertical-align: middle;
   }
 }

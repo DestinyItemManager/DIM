@@ -214,7 +214,7 @@ function StoreBucket({
   );
 }
 
-export default connect<StoreProps, {}, ProvidedProps>(mapStateToProps)(
+export default connect<StoreProps, {}, ProvidedProps, RootState>(mapStateToProps)(
   StoreBucket
 ) as ConnectedComponent<
   typeof StoreBucket,

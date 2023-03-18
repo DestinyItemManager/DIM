@@ -18,7 +18,7 @@ import { accountsSelector, currentAccountSelector } from './selectors';
 export default function MenuAccounts({
   closeDropdown,
 }: {
-  closeDropdown(e: React.MouseEvent<HTMLElement>): void;
+  closeDropdown: (e: React.MouseEvent<HTMLElement>) => void;
 }) {
   const dispatch = useThunkDispatch();
   const currentAccount = useSelector(currentAccountSelector);
@@ -46,11 +46,11 @@ export default function MenuAccounts({
           <Account account={account} selected={account === currentAccount} />
         </Link>
       ))}
-      <div className={clsx(styles.logout)} onClick={onLogOut} role="button">
+      <button type="button" className={clsx(styles.logout)} onClick={onLogOut}>
         <AppIcon icon={signOutIcon} />
         &nbsp;
         {t('Settings.LogOut')}
-      </div>
+      </button>
     </div>
   );
 }

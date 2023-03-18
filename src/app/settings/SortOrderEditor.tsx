@@ -41,7 +41,7 @@ export default function SortOrderEditor({
   onSortOrderChanged,
 }: {
   order: SortProperty[];
-  onSortOrderChanged(order: SortProperty[]): void;
+  onSortOrderChanged: (order: SortProperty[]) => void;
 }) {
   const moveItem = (oldIndex: number, newIndex: number, fromDrag = false) => {
     newIndex = _.clamp(newIndex, 0, order.length);

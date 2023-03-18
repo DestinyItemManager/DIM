@@ -1,16 +1,14 @@
 import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
-import { clarityDiscordLink, clarityLink, compendiumLink } from 'app/clarity/about';
+import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
-import ClassIcon from 'app/dim-ui/ClassIcon';
-import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
 import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
-import { sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import TagIcon from 'app/inventory/TagIcon';
 import WishListSettings from 'app/settings/WishListSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
@@ -18,7 +16,6 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import StreamDeckSettings from 'app/stream-deck/StreamDeckSettings/StreamDeckSettings';
 import { clearAppBadge } from 'app/utils/app-badge';
 import { errorLog } from 'app/utils/log';
-import { uniqBy } from 'app/utils/util';
 import i18next from 'i18next';
 import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
@@ -27,15 +24,17 @@ import { useSelector } from 'react-redux';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
-import { AppIcon, refreshIcon } from '../shell/icons';
+import { AppIcon, lockIcon, refreshIcon, unlockedIcon } from '../shell/icons';
 import { setCharacterOrder } from './actions';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
+import { CustomStatsSettings } from './CustomStatsSettings';
 import { useSetSetting } from './hooks';
 import { Settings } from './initial-settings';
 import { itemSortSettingsSelector } from './item-sort';
 import Select, { mapToOptions } from './Select';
 import './settings.scss';
+import styles from './SettingsPage.m.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
@@ -84,7 +83,6 @@ let languageChanged = false;
 export default function SettingsPage() {
   const dispatch = useThunkDispatch();
   const settings = useSelector(settingsSelector);
-  const stores = useSelector(sortedStoresSelector);
   const currentAccount = useSelector(currentAccountSelector);
   const hasD1Account = useSelector(hasD1AccountSelector);
   const isPhonePortrait = useIsPhonePortrait();
@@ -186,7 +184,6 @@ export default function SettingsPage() {
     sunset: t('Settings.SortBySunset'),
     acquisitionRecency: t('Settings.SortByRecent'),
     elementWeapon: t('Settings.SortByWeaponElement'),
-    elementArmor: t('Settings.SortByArmorElement'),
     masterworked: t('Settings.Masterworked'),
     crafted: t('Settings.SortByCrafted'),
     deepsight: t('Settings.SortByDeepsight'),
@@ -216,9 +213,8 @@ export default function SettingsPage() {
   const sortSettings = useSelector(itemSortSettingsSelector);
 
   const itemSortCustom = _.sortBy(
-    _.map(
-      itemSortProperties,
-      (displayName, id): SortProperty => ({
+    Object.entries(itemSortProperties).map(
+      ([id, displayName]): SortProperty => ({
         id,
         displayName,
         enabled: sortSettings.sortOrder.includes(id),
@@ -242,13 +238,6 @@ export default function SettingsPage() {
       ? { id: 'stream-deck', title: 'Elgato Stream Deck' }
       : undefined,
   ]);
-
-  const uniqChars =
-    stores &&
-    uniqBy(
-      stores.filter((s) => !s.isVault),
-      (s) => s.classType
-    );
 
   return (
     <PageWithMenu>
@@ -286,7 +275,12 @@ export default function SettingsPage() {
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
             <div className="examples">
-              <InventoryItem item={fakeWeapon as unknown as DimItem} isNew={true} tag="favorite" />
+              <InventoryItem
+                item={fakeWeapon as unknown as DimItem}
+                isNew={true}
+                tag="favorite"
+                autoLockTagged={settings.autoLockTagged}
+              />
             </div>
 
             {!isPhonePortrait && (
@@ -333,23 +327,9 @@ export default function SettingsPage() {
               <SortOrderEditor order={itemSortCustom} onSortOrderChanged={itemSortOrderChanged} />
               <div className="fineprint">{t('Settings.DontForgetDupes')}</div>
             </div>
-            <div className="setting">
-              <label htmlFor="">{t('Organizer.Columns.CustomTotal')}</label>
-              <div className="fineprint">{t('Settings.CustomStatDesc')}</div>
-              <div className="customStats">
-                {uniqChars.map(
-                  (store) =>
-                    !store.isVault && (
-                      <React.Fragment key={store.classType}>
-                        <div>
-                          <ClassIcon classType={store.classType} /> {store.className}:{' '}
-                        </div>
-                        <StatTotalToggle forClass={store.classType} />
-                      </React.Fragment>
-                    )
-                )}
-              </div>
-            </div>
+
+            <CustomStatsSettings />
+
             <div className="setting">
               <label>{t('Settings.PerkDisplay')}</label>
               <div className="radioOptions">
@@ -389,7 +369,6 @@ export default function SettingsPage() {
                   dangerouslySetInnerHTML={{
                     __html: t('Views.About.CommunityInsight', {
                       clarityLink,
-                      compendiumLink,
                       clarityDiscordLink,
                     }),
                   }}
@@ -404,6 +383,40 @@ export default function SettingsPage() {
                 onChange={onCheckChange}
               />
             )}
+            <div className="setting">
+              <Checkbox
+                label={t('Settings.AutoLockTagged')}
+                name="autoLockTagged"
+                value={settings.autoLockTagged}
+                onChange={onCheckChange}
+              />
+              <div className="fineprint">{t('Settings.AutoLockTaggedExplanation')}</div>
+              <table className={styles.autoTagTable}>
+                <tbody>
+                  <tr>
+                    <td>
+                      <TagIcon tag="favorite" />
+                      <TagIcon tag="keep" />
+                      <TagIcon tag="archive" />
+                    </td>
+                    <td>→</td>
+                    <td>
+                      <AppIcon icon={lockIcon} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <TagIcon tag="junk" />
+                      <TagIcon tag="infuse" />
+                    </td>
+                    <td>→</td>
+                    <td>
+                      <AppIcon icon={unlockedIcon} />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </section>
 
           <section id="inventory">

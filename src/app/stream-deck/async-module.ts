@@ -1,30 +1,39 @@
 // async module
 
 // serialize the data and send it if connected
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { currentStoreSelector } from 'app/inventory/selectors';
+import { allItemsSelector, currentStoreSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { Loadout, LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { getItemsFromInGameLoadout } from 'app/loadout/ingame/ingame-loadout-utils';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { RootState, ThunkResult } from 'app/store/types';
 import {
   streamDeckClearSelection,
   streamDeckConnected,
   streamDeckDisconnected,
+  streamDeckUpdatePopupShowed,
 } from 'app/stream-deck/actions';
-import { SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
+import { randomStringToken } from 'app/stream-deck/AuthorizationNotification/AuthorizationNotification';
+import { LoadoutSelection, SelectionArgs, SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage, notificationPromise } from 'app/stream-deck/msg-handlers';
 import { streamDeck } from 'app/stream-deck/reducer';
+import { streamDeckUpdatePopupSelector } from 'app/stream-deck/selectors';
 import {
   clientIdentifier,
   setClientIdentifier,
+  setStreamDeckFlowVersion,
   streamDeckEnabled,
-  streamDeckToken,
+  streamDeckFlowVersion,
 } from 'app/stream-deck/util/local-storage';
 import packager from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux-utils';
+import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2/interfaces';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 
@@ -35,21 +44,18 @@ let refreshInterval: number;
 // generate random client identifier
 function generateIdentifier() {
   if (!clientIdentifier()) {
-    setClientIdentifier(Math.random().toString(36).slice(2));
+    setClientIdentifier(randomStringToken());
   }
 }
 
-export function sendToStreamDeck(msg: SendToStreamDeckArgs, noAuth = false): ThunkResult {
+export function sendToStreamDeck(msg: SendToStreamDeckArgs): ThunkResult {
   return async () => {
     if (streamDeckWebSocket?.readyState === WebSocket.OPEN) {
-      const token = streamDeckToken();
-      (noAuth || token) &&
-        streamDeckWebSocket.send(
-          JSON.stringify({
-            ...msg,
-            token,
-          })
-        );
+      streamDeckWebSocket.send(
+        JSON.stringify({
+          ...msg,
+        })
+      );
     }
   };
 }
@@ -68,7 +74,7 @@ function streamDeckSelectItem(item: DimItem): ThunkResult {
       // send selection to the Stream Deck
       return dispatch(
         sendToStreamDeck({
-          action: 'dim:update',
+          action: 'dim:selection',
           data: {
             selectionType: 'item',
             selection: {
@@ -77,6 +83,12 @@ function streamDeckSelectItem(item: DimItem): ThunkResult {
               item: item.index.replace(/-.*/, ''),
               icon: item.icon,
               overlay: item.iconOverlay,
+              isExotic: item.isExotic,
+              inventory: item.location.accountWide,
+              element:
+                item.element?.enumValue === DamageType.Kinetic
+                  ? undefined
+                  : item.element?.displayProperties?.icon,
             },
           },
         })
@@ -96,25 +108,56 @@ function findSubClass(items: LoadoutItem[], state: RootState) {
   }
 }
 
+function findSubClassInGame(items: DestinyLoadoutItemComponent[], state: RootState) {
+  const allItems = allItemsSelector(state);
+  const mappedItems = getItemsFromInGameLoadout(items, allItems);
+  const categories = _.groupBy(mappedItems, (item) => item.bucket.sort);
+  const subclassItem = categories['General']?.[0];
+  return subclassItem?.icon;
+}
+
 // on click on LoadoutView send the selected loadout and the related character identifier to the Stream Deck
-function streamDeckSelectLoadout(loadout: Loadout, store: DimStore): ThunkResult {
+function streamDeckSelectLoadout(
+  { type, loadout }: LoadoutSelection,
+  store: DimStore
+): ThunkResult {
   return async (dispatch, getState) => {
+    let selection: NonNullable<SelectionArgs['data']>['selection'];
     const state = getState();
     if (state.streamDeck.selection === 'loadout') {
       notificationPromise.resolve();
       dispatch(streamDeckClearSelection());
+      switch (type) {
+        case 'game':
+          selection = {
+            label: loadout.name.toUpperCase(),
+            loadout: loadout.id,
+            subtitle: '-',
+            character: loadout.characterId,
+            // future stream deck plugin update
+            background: loadout.colorIcon,
+            gameIcon: loadout.icon,
+            // current plugin version
+            icon: findSubClassInGame(loadout.items, state) ?? loadout.icon,
+          };
+          break;
+        default: {
+          const isAnyClass = loadout.classType === DestinyClass.Unknown;
+          selection = {
+            label: loadout.name.toUpperCase(),
+            loadout: loadout.id,
+            subtitle: (isAnyClass ? '' : store.className) || loadout.notes || '-',
+            character: isAnyClass ? undefined : store.id,
+            icon: findSubClass(loadout.items, state),
+          };
+        }
+      }
       return dispatch(
         sendToStreamDeck({
-          action: 'dim:update',
+          action: 'dim:selection',
           data: {
             selectionType: 'loadout',
-            selection: {
-              label: loadout.name,
-              loadout: loadout.id,
-              subtitle: store.className ?? loadout.notes,
-              character: store.id,
-              icon: findSubClass(loadout.items, state),
-            },
+            selection,
           },
         })
       );
@@ -139,7 +182,7 @@ const installFarmingObserver = _.once((dispatch) => {
 });
 
 // collect and send data to the stream deck
-export function refreshStreamDeck(): ThunkResult {
+function refreshStreamDeck(): ThunkResult {
   return async (dispatch, getState) => {
     const refreshAction = () => {
       const state = getState();
@@ -155,6 +198,7 @@ export function refreshStreamDeck(): ThunkResult {
             maxPower: packager.maxPower(store, state),
             vault: packager.vault(state),
             metrics: packager.metrics(state),
+            equippedItems: packager.equippedItems(store),
           },
         })
       );
@@ -171,6 +215,27 @@ function stopStreamDeckConnection(): ThunkResult {
     streamDeckWebSocket?.close();
     clearInterval(refreshInterval);
     dispatch(streamDeckDisconnected());
+  };
+}
+
+function checkPluginUpdate(): ThunkResult {
+  return async (dispatch, getState) => {
+    const alreadyShowed = streamDeckUpdatePopupSelector(getState());
+    if (alreadyShowed) {
+      return;
+    }
+    const version = streamDeckFlowVersion();
+    if (version < 2) {
+      showNotification({
+        title: 'Elgato Stream Deck',
+        body: t('StreamDeck.Authorization.Update'),
+        type: 'error',
+        duration: 200,
+        onClick: notificationPromise.resolve,
+        promise: notificationPromise.promise,
+      });
+    }
+    dispatch(streamDeckUpdatePopupShowed());
   };
 }
 
@@ -206,9 +271,14 @@ function startStreamDeckConnection(): ThunkResult {
       }
 
       // try to connect to the stream deck local instance
-      streamDeckWebSocket = new WebSocket('ws://localhost:9119', clientIdentifier());
+      streamDeckWebSocket = new WebSocket(`ws://localhost:9120/${clientIdentifier()}`);
 
       streamDeckWebSocket.onopen = function () {
+        // remove any older notification
+        notificationPromise.resolve();
+        // update the connection flow version
+        setStreamDeckFlowVersion(2);
+        // update the connection status
         dispatch(streamDeckConnected());
         // start refreshing task with interval
         dispatch(refreshStreamDeck());
@@ -230,6 +300,7 @@ function startStreamDeckConnection(): ThunkResult {
       };
 
       streamDeckWebSocket.onerror = function () {
+        dispatch(checkPluginUpdate());
         streamDeckWebSocket.close();
       };
     };

@@ -17,6 +17,7 @@ $commonBg: #366f42;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+  pointer-events: none;
   &:focus {
     outline: none;
   }
@@ -74,6 +75,7 @@ $commonBg: #366f42;
   height: calc(var(--item-size) - #{2 * $new-border-width});
   width: calc(var(--item-size) - #{2 * $new-border-width});
   position: absolute;
+  pointer-events: none;
   background-repeat: no-repeat;
   background-position: center;
   background-size: calc((var(--item-size) - #{2 * $new-border-width}) * (96 / 90))
@@ -101,6 +103,7 @@ $commonBg: #366f42;
   width: calc(var(--item-size) - #{2 * $item-border-width});
   background-size: contain;
   position: absolute;
+  pointer-events: none;
 }
 
 .energyCostOverlay {
@@ -135,20 +138,7 @@ $commonBg: #366f42;
   height: calc((var(--item-size) + 1px) / 2) !important;
   right: 0;
   top: calc(var(--item-size) - ((var(--item-size) + 1px) / 2) - 1px);
-  pointer-events: none;
-}
-
-.deepsightPattern {
-  $size: 12;
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border: calc(var(--item-size) * #{math.div($size, 100)}) solid $deepsight-border-color;
-  border-top-color: transparent;
-  border-left-color: transparent;
-  right: 0;
-  top: calc(var(--item-size) - (var(--item-size) * #{math.div($size, 50)}) - 1px);
+  // Seems to fix https://github.com/DestinyItemManager/DIM/issues/7974
   pointer-events: none;
 }
 

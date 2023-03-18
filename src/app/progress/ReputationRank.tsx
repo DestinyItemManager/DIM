@@ -1,4 +1,4 @@
-import { useDynamicStringReplacer } from 'app/dim-ui/RichDestinyText';
+import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
@@ -92,7 +92,7 @@ function ReputationRankIcon({ progress }: { progress: DestinyProgression }) {
         <circle r="21" cx="27" cy="27" fill="#222" />
         {progress.progressToNextLevel > 0 && (
           <circle
-            r="22"
+            r="22.5"
             cx="-27"
             cy="27"
             transform="rotate(-90)"
@@ -106,7 +106,7 @@ function ReputationRankIcon({ progress }: { progress: DestinyProgression }) {
         )}
         {progress.currentProgress > 0 && (
           <circle
-            r="25"
+            r="25.5"
             cx="-27"
             cy="27"
             transform="rotate(-90)"

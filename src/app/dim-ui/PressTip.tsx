@@ -55,7 +55,7 @@ type ControlProps = Props &
 interface TooltipCustomization {
   header?: React.ReactNode;
   subheader?: React.ReactNode;
-  className?: string;
+  className?: string | null;
 }
 const TooltipContext = createContext<React.Dispatch<
   React.SetStateAction<TooltipCustomization>
@@ -92,7 +92,7 @@ function Control({
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
   const pressTipRoot = useContext(PressTipRoot);
-  const [customization, customizeTooltip] = useState<TooltipCustomization>({});
+  const [customization, customizeTooltip] = useState<TooltipCustomization>({ className: null });
 
   usePopper({
     contents: tooltipContents,
@@ -124,10 +124,10 @@ function Control({
             })}
             ref={tooltipContents}
           >
-            {customization.header && (
+            {Boolean(customization.header) && (
               <div className={styles.header}>
                 <h2>{customization.header}</h2>
-                {customization.subheader && <h3>{customization.subheader}</h3>}
+                {Boolean(customization.subheader) && <h3>{customization.subheader}</h3>}
               </div>
             )}
             <div className={styles.content}>
@@ -167,7 +167,7 @@ export function useTooltipCustomization({
   getSubheader?: () => React.ReactNode;
 
   /** The CSS class(es) to be applied to the tooltip's root element. */
-  className?: string;
+  className?: string | null;
 }) {
   const customizeTooltip = useContext(TooltipContext);
   useEffect(() => {
@@ -176,7 +176,7 @@ export function useTooltipCustomization({
         ...existing,
         ...(getHeader && { header: getHeader() }),
         ...(getSubheader && { subheader: getSubheader() }),
-        ...(className && { className }),
+        ...(className !== undefined && { className }),
       }));
     }
   }, [customizeTooltip, getHeader, getSubheader, className]);
@@ -214,7 +214,7 @@ export const Tooltip = {
    * This does not render anything and has no effect if the calling component is not currently hosted within
    * a tooltip.
    */
-  Customize: ({ className }: { className: string }) => {
+  Customize: ({ className }: { className: string | null }) => {
     useTooltipCustomization({ className });
     return null;
   },

@@ -23,9 +23,10 @@ import { useLocation } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useSubscription } from 'use-subscription';
+
 import ClickOutside from '../dim-ui/ClickOutside';
 import ExternalLink from '../dim-ui/ExternalLink';
-import { default as SearchFilter } from '../search/SearchFilter';
+import SearchFilter from '../search/SearchFilter';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import { setSearchQuery } from './actions';
 import { installPrompt$ } from './app-install';
@@ -61,7 +62,7 @@ export default function Header() {
 
   // Hamburger menu
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownToggler = useRef<HTMLAnchorElement>(null);
+  const dropdownToggler = useRef<HTMLButtonElement>(null);
   const toggleDropdown = useCallback((e: React.MouseEvent | KeyboardEvent) => {
     e.preventDefault();
     setDropdownOpen((dropdownOpen) => !dropdownOpen);
@@ -233,7 +234,6 @@ export default function Header() {
 
   // Links about the current Destiny version
   const destinyLinks = linkNodes;
-  const reverseDestinyLinks = <>{linkNodes.slice().reverse()}</>;
 
   const hotkeys: Hotkey[] = [
     {
@@ -287,18 +287,18 @@ export default function Header() {
   return (
     <header className={styles.container} ref={headerRef}>
       <div className={styles.header} {...clarityAttribute('background')}>
-        <a
+        <button
+          type="button"
           className={clsx(styles.menuItem, styles.menu)}
           ref={dropdownToggler}
           onClick={toggleDropdown}
-          role="button"
           aria-haspopup="menu"
           aria-label={t('Header.Menu')}
           aria-expanded={dropdownOpen}
         >
           <AppIcon icon={menuIcon} />
           <MenuBadge />
-        </a>
+        </button>
         <TransitionGroup component={null}>
           {dropdownOpen && (
             <CSSTransition
@@ -355,10 +355,10 @@ export default function Header() {
             aria-label="dim"
           />
         </Link>
-        <div className={styles.headerLinks}>{reverseDestinyLinks}</div>
+        <div className={styles.headerLinks}>{destinyLinks}</div>
         <div className={styles.headerRight}>
           {account && !isPhonePortrait && (
-            <span className="search-link">
+            <span className={styles.searchLink}>
               <SearchFilter onClear={hideSearch} ref={searchFilter} />
             </span>
           )}
@@ -368,7 +368,7 @@ export default function Header() {
               <AppIcon icon={settingsIcon} />
             </Link>
           )}
-          <span className={clsx(styles.menuItem, 'search-button')} onClick={toggleSearch}>
+          <span className={clsx(styles.menuItem, styles.searchButton)} onClick={toggleSearch}>
             <AppIcon icon={searchIcon} />
           </span>
         </div>

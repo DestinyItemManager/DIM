@@ -1,4 +1,4 @@
-import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { isNewSelector } from 'app/inventory/selectors';
@@ -51,7 +51,8 @@ export default function Pursuit({
   return (
     <ItemPopupTrigger item={item}>
       {(ref, onClick) => (
-        <div
+        <button
+          type="button"
           className={clsx('milestone-quest', { 'search-hidden': searchHidden })}
           key={item.index}
           onClick={onClick}
@@ -83,7 +84,7 @@ export default function Pursuit({
               </div>
             </div>
           )}
-        </div>
+        </button>
       )}
     </ItemPopupTrigger>
   );

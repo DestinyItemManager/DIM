@@ -2,7 +2,7 @@ import { moveDownIcon, moveUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
-import React, { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
+import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
 import styles from './Select.m.scss';
 import { usePopper } from './usePopper';
 
@@ -33,7 +33,7 @@ interface Props<T> {
   options: Option<T>[];
   /** Optional override for the button content */
   children?: ReactNode;
-  onChange(value?: T): void;
+  onChange: (value?: T) => void;
 }
 
 /**

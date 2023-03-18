@@ -3,11 +3,9 @@
 interface CssExports {
   'arrow': string;
   'energyHidden': string;
-  'energyIcon': string;
   'energySwapContainer': string;
   'energyValue': string;
   'item': string;
-  'lockedSockets': string;
   'masterworked': string;
   'swapButton': string;
   'swapButtonContainer': string;

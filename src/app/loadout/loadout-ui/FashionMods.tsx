@@ -5,7 +5,6 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
-import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
@@ -21,9 +20,7 @@ export function FashionMods({
   storeId?: string;
 }) {
   const defs = useD2Definitions()!;
-  const unlockedPlugSetItems = useSelector((state: RootState) =>
-    unlockedPlugSetItemsSelector(state, storeId)
-  );
+  const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(storeId));
   const isShader = (m: number) =>
     defs.InventoryItem.get(m)?.plug?.plugCategoryHash === PlugCategoryHashes.Shader;
   const shader = modsForBucket.find(isShader);

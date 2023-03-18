@@ -5,7 +5,7 @@ import { accountRoute } from 'app/routes';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { currySelector } from 'app/utils/redux-utils';
+import { currySelector } from 'app/utils/selector-utils';
 import { nonCurriedVendorGroupsForCharacterSelector } from 'app/vendors/selectors';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -70,6 +70,9 @@ export const compareItemsSelector = currySelector(
 );
 
 const organizerTypes = [
+  ItemCategoryHashes.Hunter,
+  ItemCategoryHashes.Titan,
+  ItemCategoryHashes.Warlock,
   ItemCategoryHashes.Armor,
   ItemCategoryHashes.Weapon,
   ItemCategoryHashes.Ghost,

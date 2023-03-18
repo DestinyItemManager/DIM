@@ -6,11 +6,6 @@
   font-size: 13px;
 }
 
-.filterHelp {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
 .search-filter {
   display: flex;
   flex-direction: row;
@@ -27,12 +22,6 @@
     color: #999;
   }
 
-  .search-bar-icon {
-    color: #999;
-    margin: 0 6px 0 4px;
-    font-size: 12px !important;
-  }
-
   @include phone-portrait {
     width: auto;
     height: 34px;
@@ -43,7 +32,7 @@
     outline: none;
   }
 
-  input[type='text'] {
+  > input[type='text'] {
     border: none;
     color: white;
     background: transparent;
@@ -54,24 +43,10 @@
   }
 }
 
-.search-link {
-  flex: 1;
-  font-size: 13px;
-  margin: 0 8px;
-  @include phone-portrait {
-    margin: 0 12px;
-  }
-
-  .search-filter {
-    background: rgba(0, 0, 0, 0.4);
-  }
-}
-
-.search-button {
-  display: none;
-  @include phone-portrait {
-    display: inline-block;
-  }
+.search-bar-icon {
+  color: #999;
+  margin: 0 6px 0 4px;
+  font-size: 12px !important;
 }
 
 .mobile-search-link {
@@ -100,50 +75,5 @@
   input,
   select:focus {
     font-size: 16px; // so iOS doesn't zoom
-  }
-}
-
-.filter-bar-button {
-  margin: 0 6px;
-  padding: 0;
-  appearance: none;
-  display: inline-block;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-
-  :focus {
-    outline: 1px solid $orange;
-  }
-
-  @include phone-portrait {
-    margin-right: 8px !important;
-  }
-
-  .mobile-search-link & {
-    top: 0;
-  }
-
-  .app-icon {
-    font-size: 14px !important;
-    color: #999 !important;
-    // Increase touch target size
-    padding: 4px;
-    margin: -4px;
-    margin-left: 4px;
-    &:first-child {
-      margin-left: -4px;
-    }
-    &:hover {
-      color: #e8a534 !important;
-    }
-    .mobile-search-link & {
-      font-size: 18px !important;
-    }
-  }
-
-  span,
-  a {
-    margin: 0 !important;
   }
 }

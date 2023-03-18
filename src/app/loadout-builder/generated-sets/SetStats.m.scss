@@ -85,20 +85,3 @@
 .halfTierValue {
   color: $gold;
 }
-
-.autoModsContainer {
-  display: flex;
-  flex-flow: row wrap;
-  gap: 4px;
-  margin-right: 20px;
-
-  &::before {
-    content: '+';
-    align-self: center;
-  }
-
-  --item-icon-size: calc(((var(--item-size) + ((var(--item-size) / 5) + 4px)) / 2) - 1px);
-  :global(.item) {
-    --item-size: var(--item-icon-size);
-  }
-}
