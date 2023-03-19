@@ -609,7 +609,10 @@ function buildSocket(
     : undefined;
 
   // The currently equipped plug, if any.
+  // This will always be one of the plugOptions -- either it's added
+  // as we look at all available plugs, or it's added after the loops.
   const plugged = buildPlug(defs, socket, plugObjectivesData, plugSet);
+  let foundPluggedInOptions = false;
   const plugOptions: DimPlug[] = [];
 
   // We only build a larger list of plug options if this is a perk socket, since users would
@@ -621,6 +624,7 @@ function buildSocket(
       for (const reusablePlug of reusablePlugs) {
         if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
           plugOptions.push(plugged);
+          foundPluggedInOptions = true;
         } else {
           const built = buildPlug(defs, reusablePlug, plugObjectivesData, plugSet);
           if (built && filterReusablePlug(built)) {
@@ -635,6 +639,7 @@ function buildSocket(
         for (const reusablePlug of plugSet.reusablePlugItems) {
           if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
             plugOptions.push(plugged);
+            foundPluggedInOptions = true;
           } else {
             const built = buildCachedDefinedPlug(
               defs,
@@ -652,6 +657,7 @@ function buildSocket(
       for (const reusablePlug of socketDef.reusablePlugItems) {
         if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
           plugOptions.push(plugged);
+          foundPluggedInOptions = true;
         } else {
           const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
           if (built && filterReusablePlug(built)) {
@@ -661,7 +667,8 @@ function buildSocket(
       }
     }
   }
-  if (plugged && !plugOptions.length) {
+
+  if (plugged && !foundPluggedInOptions) {
     plugOptions.push(plugged);
   }
 
