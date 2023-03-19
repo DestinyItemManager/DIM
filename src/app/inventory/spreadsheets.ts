@@ -20,11 +20,25 @@ import D2Sources from 'data/d2/source-info';
 import _ from 'lodash';
 import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
-import { tagConfig, TagValue } from './dim-item-info';
+import { TagValue, tagConfig } from './dim-item-info';
 import { D1GridNode, DimItem, DimSockets } from './item-types';
 import { getNotesSelector, getTagSelector, storesSelector } from './selectors';
-import { getClass } from './store/character-utils';
 import { getEvent, getSeason } from './store/season';
+
+function getClass(type: DestinyClass) {
+  switch (type) {
+    case DestinyClass.Titan:
+      return 'titan';
+    case DestinyClass.Hunter:
+      return 'hunter';
+    case DestinyClass.Warlock:
+      return 'warlock';
+    case DestinyClass.Unknown:
+      return 'unknown';
+    case DestinyClass.Classified:
+      return 'classified';
+  }
+}
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [

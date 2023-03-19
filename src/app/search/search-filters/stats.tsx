@@ -328,7 +328,7 @@ function calculateMaxPowerPerBucket(allItems: DimItem[]) {
   return _.mapValues(
     _.groupBy(
       // disregard no-class armor
-      allItems.filter((i) => i.classType !== -1),
+      allItems.filter((i) => i.classType !== DestinyClass.Classified),
       (i) => maxPowerKey(i)
     ),
     (items) => _.maxBy(items, (i) => i.power)?.power ?? 0
