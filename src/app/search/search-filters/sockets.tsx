@@ -3,7 +3,6 @@ import { DimItem } from 'app/inventory/item-types';
 import {
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
-  isKillTrackerSocket,
   modSlotTags,
   modTypeTags,
 } from 'app/utils/item-utils';
@@ -11,6 +10,7 @@ import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
+  matchesCuratedRoll,
 } from 'app/utils/socket-utils';
 import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import craftingMementos from 'data/d2/crafting-mementos.json';
@@ -66,39 +66,20 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.RandomRoll'),
     destinyVersion: 2,
     filter: () => (item: DimItem) =>
-      Boolean(item.energy) || item.sockets?.allSockets.some((s) => s.hasRandomizedPlugItems),
+      Boolean(item.bucket.inArmor && item.energy) ||
+      (!item.crafted &&
+        item.sockets?.allSockets.some(
+          (s) => s.isPerk && s.plugOptions.length > 0 && s.hasRandomizedPlugItems
+        )),
   },
   {
     keywords: 'curated',
     description: tl('Filter.Curated'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) => {
-      if (!item) {
-        return false;
-      }
-
-      const legendaryWeapon = item.bucket?.sort === 'Weapons' && item.tier === 'Legendary';
-
-      if (!legendaryWeapon) {
-        return false;
-      }
-
-      const matchesCollectionsRoll = item.sockets?.allSockets
-        // curatedRoll is only set for perk-style sockets
-        .filter(
-          (socket) =>
-            socket.plugOptions.length && socket.curatedRoll && !isKillTrackerSocket(socket)
-        )
-        .every(
-          (socket) =>
-            socket.curatedRoll!.length === socket.plugOptions.length &&
-            socket.plugOptions.every(
-              (option, idx) => option.plugDef.hash === socket.curatedRoll![idx]
-            )
-        );
-
-      return matchesCollectionsRoll;
-    },
+    filter:
+      ({ d2Definitions }) =>
+      (item: DimItem) =>
+        matchesCuratedRoll(d2Definitions!, item),
   },
   {
     keywords: 'extraperk',

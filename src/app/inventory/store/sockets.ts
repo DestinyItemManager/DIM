@@ -245,15 +245,14 @@ function buildDefinedSocket(
   // The currently equipped plug, if any
   const reusablePlugs: DimPlug[] = [];
 
-  const craftingData: NonNullable<DimSocket['craftingData']> = {};
-
+  let craftingData: DimSocket['craftingData'];
   function addCraftingReqs(plugEntry: DestinyItemSocketEntryPlugItemRandomizedDefinition) {
     if (
       plugEntry.craftingRequirements &&
       (plugEntry.craftingRequirements.materialRequirementHashes.length ||
         plugEntry.craftingRequirements.unlockRequirements.length)
     ) {
-      craftingData[plugEntry.plugItemHash] = plugEntry.craftingRequirements;
+      (craftingData ??= {})[plugEntry.plugItemHash] = plugEntry.craftingRequirements;
     }
   }
 
@@ -350,11 +349,12 @@ function buildDefinedSocket(
   // if there's crafting data, sort plugs by their required level
   // TO-DO: the order is correct in the original plugset def,
   // we should address whatever is changing plug order in DIM
-  if (!_.isEmpty(craftingData)) {
+  if (craftingData) {
+    const cd = craftingData;
     plugOptions.sort(
-      compareBy((p) =>
+      compareBy((p: DimPlug) =>
         // shove retired perks to the bottom (our choice) and consider requiredLevel:undefined to be 0 (bungie data works this way)
-        p.cannotCurrentlyRoll ? 999 : craftingData[p.plugDef.hash]?.requiredLevel ?? 0
+        p.cannotCurrentlyRoll ? 999 : cd[p.plugDef.hash]?.requiredLevel ?? 0
       )
     );
   }
@@ -381,15 +381,14 @@ function buildDefinedSocket(
     plugged,
     plugOptions,
     plugSet,
-    curatedRoll: null,
     emptyPlugItemHash: findEmptyPlug(socketDef, socketTypeDef, plugSet),
-    reusablePlugItems: [],
+    reusablePlugItems: emptyArray(),
     hasRandomizedPlugItems:
       Boolean(socketDef.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets,
     isPerk,
     isReusable,
     socketDefinition: socketDef,
-    craftingData: Object.keys(craftingData).length ? craftingData : undefined,
+    craftingData,
   };
 }
 
@@ -616,7 +615,6 @@ function buildSocket(
   // We only build a larger list of plug options if this is a perk socket, since users would
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
   // we will only populate plugOptions with the currently inserted plug.
-  let curatedRoll: number[] | null = null;
   if (isPerk) {
     if (reusablePlugs) {
       // Get options from live info
@@ -630,7 +628,6 @@ function buildSocket(
           }
         }
       }
-      curatedRoll = socketDef.reusablePlugItems.map((p) => p.plugItemHash);
     } else if (socketDef.reusablePlugSetHash) {
       // Get options from plug set, instead of live info
       const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
@@ -649,7 +646,6 @@ function buildSocket(
             }
           }
         }
-        curatedRoll = plugSet.reusablePlugItems.map((p) => p.plugItemHash);
       }
     } else if (socketDef.reusablePlugItems) {
       // Get options from definition itself
@@ -663,9 +659,9 @@ function buildSocket(
           }
         }
       }
-      curatedRoll = socketDef.reusablePlugItems.map((p) => p.plugItemHash);
     }
-  } else if (plugged) {
+  }
+  if (plugged && !plugOptions.length) {
     plugOptions.push(plugged);
   }
 
@@ -678,7 +674,6 @@ function buildSocket(
     plugged,
     plugOptions,
     plugSet,
-    curatedRoll,
     emptyPlugItemHash: findEmptyPlug(socketDef, socketTypeDef, plugSet, reusablePlugs),
     hasRandomizedPlugItems,
     reusablePlugItems: reusablePlugs,
