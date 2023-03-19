@@ -12,6 +12,7 @@ import { lightStats } from 'app/search/search-filter-values';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
 import { uniqBy } from 'app/utils/util';
+import { HashLookup } from 'app/utils/util-types';
 import {
   BucketCategory,
   DamageType,
@@ -24,7 +25,7 @@ import {
   ItemState,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
-import missingSources from 'data/d1/missing_sources.json';
+import missingSourcesFile from 'data/d1/missing_sources.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { vaultTypes } from '../../destiny1/d1-buckets';
@@ -36,6 +37,8 @@ import { D1Store, DimStore } from '../store-types';
 import { getQualityRating } from './armor-quality';
 import { getBonus } from './character-utils';
 import { createItemIndex } from './item-index';
+
+const missingSources: HashLookup<number[]> = missingSourcesFile;
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Unknown', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;

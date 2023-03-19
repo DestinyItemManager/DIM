@@ -12,6 +12,7 @@ import { lightStats } from 'app/search/search-filter-values';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, warnLog } from 'app/utils/log';
 import { countEnhancedPerks } from 'app/utils/socket-utils';
+import { HashLookup } from 'app/utils/util-types';
 import {
   BucketCategory,
   ComponentPrivacySetting,
@@ -35,9 +36,9 @@ import {
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import extendedBreaker from 'data/d2/extended-breaker.json';
-import extendedFoundry from 'data/d2/extended-foundry.json';
-import extendedICH from 'data/d2/extended-ich.json';
+import extendedBreakerFile from 'data/d2/extended-breaker.json';
+import extendedFoundryFile from 'data/d2/extended-foundry.json';
+import extendedICHFile from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
@@ -57,6 +58,10 @@ import { buildObjectives } from './objectives';
 import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
+
+const extendedBreaker: HashLookup<number> = extendedBreakerFile;
+const extendedFoundry: HashLookup<string> = extendedFoundryFile;
+const extendedICH: HashLookup<number> = extendedICHFile;
 
 const collectiblesByItemHash = memoizeOne(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
@@ -543,10 +548,10 @@ export function makeItem(
     ).displayProperties;
   }
 
-  if (extendedICH[createdItem.hash]) {
+  if (createdItem.hash in extendedICH) {
     createdItem.itemCategoryHashes = [
       ...createdItem.itemCategoryHashes,
-      extendedICH[createdItem.hash],
+      extendedICH[createdItem.hash]!,
     ];
     // Masks are helmets too
     if (extendedICH[createdItem.hash] === ItemCategoryHashes.Mask) {
@@ -671,8 +676,8 @@ export function makeItem(
     }
   }
 
-  if (extendedBreaker[createdItem.hash]) {
-    createdItem.breakerType = defs.BreakerType.get(extendedBreaker[createdItem.hash]);
+  if (createdItem.hash in extendedBreaker) {
+    createdItem.breakerType = defs.BreakerType.get(extendedBreaker[createdItem.hash]!);
   }
 
   // TODO: compute this on demand

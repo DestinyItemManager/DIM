@@ -2,20 +2,20 @@ import { D1Categories } from 'app/destiny1/d1-bucket-categories';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
 import { t } from 'app/i18next-t';
+import { loadoutNotification } from 'app/inventory/MoveNotifications';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import {
-  createMoveSession,
-  equipItems,
   Exclusion,
-  executeMoveItem,
-  getSimilarItem,
   MoveReservations,
   MoveSession,
+  createMoveSession,
+  equipItems,
+  executeMoveItem,
+  getSimilarItem,
 } from 'app/inventory/item-move-service';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { updateManualMoveTimestamp } from 'app/inventory/manual-moves';
-import { loadoutNotification } from 'app/inventory/MoveNotifications';
 import {
   allItemsSelector,
   storesSelector,
@@ -30,7 +30,7 @@ import {
   getVault,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
-import { inGameArmorEnergyRules, LockableBucketHashes } from 'app/loadout-builder/types';
+import { LockableBucketHashes, inGameArmorEnergyRules } from 'app/loadout-builder/types';
 import {
   createPluggingStrategy,
   fitMostMods,
@@ -47,7 +47,7 @@ import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
-import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
+import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -61,20 +61,20 @@ import {
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
-import { LookupTable } from 'app/utils/util-types';
+import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import produce, { Draft } from 'immer';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import {
-  anyActionFailed,
   LoadoutApplyPhase,
   LoadoutItemState,
   LoadoutModState,
   LoadoutSocketOverrideState,
   LoadoutStateGetter,
   LoadoutStateUpdater,
+  anyActionFailed,
   makeLoadoutApplyState,
   setLoadoutApplyPhase,
   setModResult,
@@ -102,7 +102,7 @@ const sortedBucketHashes: (BucketHashes | D1BucketHashes)[] = [
   ...D1Categories.Armor,
   ...D1Categories.General,
 ];
-const bucketHashToIndex: LookupTable<BucketHashes | D1BucketHashes, number> = {};
+const bucketHashToIndex: HashLookup<number> = {};
 for (let i = 0; i < sortedBucketHashes.length; i++) {
   (bucketHashToIndex as Draft<typeof bucketHashToIndex>)[sortedBucketHashes[i]] = i;
 }
@@ -230,7 +230,7 @@ function doApplyLoadout(
 
       // Sort loadout items by their bucket so we move items in the order that DIM displays them
       const applicableLoadoutItems = _.sortBy(resolvedItems, ({ item }) => {
-        const sortIndex = bucketHashToIndex[item.bucket.hash];
+        const sortIndex = bucketHashToIndex[item.bucket.hash as BucketHashes];
         return sortIndex === undefined ? Number.MAX_SAFE_INTEGER : sortIndex;
       }).map(({ loadoutItem }) => loadoutItem);
 

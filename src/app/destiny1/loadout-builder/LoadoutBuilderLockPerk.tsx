@@ -52,7 +52,7 @@ export default function LoadoutBuilderLockPerk({
     onPerkLocked(perk, type, $event);
   };
 
-  const firstPerk = lockedPerks[type][Object.keys(lockedPerks[type])[0]];
+  const firstPerk = lockedPerks[type][parseInt(Object.keys(lockedPerks[type])[0], 10)];
   const hasLockedPerks = Object.keys(lockedPerks[type]).length > 0;
 
   return (

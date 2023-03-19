@@ -27,11 +27,11 @@ import { Link } from 'react-router-dom';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
 import styles from './Compare.m.scss';
-import './compare.scss';
 import CompareItem from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
+import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
+import './compare.scss';
 import { CompareSession } from './reducer';
 import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
 
@@ -243,7 +243,9 @@ export default function Compare({ session }: { session: CompareSession }) {
                     <BungieImage src={stat.displayProperties.icon} />
                   </span>
                 )}
-                {stat.id in statLabels ? t(statLabels[stat.id]) : stat.displayProperties.name}{' '}
+                {stat.id in statLabels
+                  ? t(statLabels[stat.id as StatHashes]!)
+                  : stat.displayProperties.name}{' '}
                 {stat.id === sortedHash && (
                   <AppIcon icon={sortBetterFirst ? faAngleRight : faAngleLeft} />
                 )}

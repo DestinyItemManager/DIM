@@ -1,7 +1,10 @@
+import { HashLookup } from 'app/utils/util-types';
 import { DestinyProfileRecordsComponent, DestinyRecordState } from 'bungie-api-ts/destiny2';
-import exoticToCatalystRecordHash from 'data/d2/exotic-to-catalyst-record.json';
+import exoticToCatalystRecordHashFile from 'data/d2/exotic-to-catalyst-record.json';
 import exoticsWithCatalysts from 'data/d2/exotics-with-catalysts';
 import { DimCatalyst } from '../item-types';
+
+const exoticToCatalystRecordHash: HashLookup<number> = exoticToCatalystRecordHashFile;
 
 export function buildCatalystInfo(
   itemHash: number,
@@ -12,7 +15,7 @@ export function buildCatalystInfo(
   }
 
   const recordHash = exoticToCatalystRecordHash[itemHash];
-  const record = profileRecords?.records[recordHash];
+  const record = recordHash && profileRecords?.records[recordHash];
   if (!record) {
     return undefined;
   }

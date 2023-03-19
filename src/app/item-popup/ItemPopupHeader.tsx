@@ -1,7 +1,7 @@
 import ArmorySheet from 'app/armory/ArmorySheet';
 import BungieImage from 'app/dim-ui/BungieImage';
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import ElementIcon from 'app/dim-ui/ElementIcon';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
@@ -91,7 +91,7 @@ export default function ItemPopupHeader({
   );
 }
 
-const ammoIcons = {
+const ammoIcons: LookupTable<DestinyAmmunitionType, string> = {
   [DestinyAmmunitionType.Primary]: primary,
   [DestinyAmmunitionType.Special]: special,
   [DestinyAmmunitionType.Heavy]: heavy,

@@ -5,12 +5,12 @@ import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, undoIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
+import { canSyncLockState } from './SyncTagLock';
 import { setItemHashTag, setItemTagsBulk } from './actions';
-import { TagCommand, tagConfig, TagValue } from './dim-item-info';
+import { TagCommand, TagValue, tagConfig } from './dim-item-info';
 import { setItemLockState } from './item-move-service';
 import { DimItem } from './item-types';
 import { getTagSelector, tagSelector } from './selectors';
-import { canSyncLockState } from './SyncTagLock';
 
 /**
  * Bulk tag items, with an undo button in a notification.
@@ -21,7 +21,6 @@ export function bulkTagItems(
   notification = true
 ): ThunkResult {
   return async (dispatch, getState) => {
-    const appliedTagInfo: { label: string } = tagConfig[selectedTag];
     const getTag = getTagSelector(getState());
 
     // existing tags are later passed to buttonEffect so the notification button knows what to revert
@@ -64,7 +63,7 @@ export function bulkTagItems(
                 })
               : t('Filter.BulkTag', {
                   count: itemsToBeTagged.length,
-                  tag: t(appliedTagInfo.label),
+                  tag: t(tagConfig[selectedTag].label),
                 })}
             <NotificationButton
               onClick={async () => {

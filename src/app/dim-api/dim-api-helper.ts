@@ -29,7 +29,7 @@ export async function unauthenticatedApi<T>(
     url = `${url}?${new URLSearchParams(config.params)}`;
   }
 
-  const headers = {};
+  const headers: RequestInit['headers'] = {};
   if (config.body) {
     headers['Content-Type'] = 'application/json';
   }
@@ -80,7 +80,7 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
     url = `${url}?${new URLSearchParams(config.params)}`;
   }
 
-  const headers = {
+  const headers: RequestInit['headers'] = {
     Authorization: `Bearer ${token.accessToken}`,
     'X-API-Key': API_KEY,
   };

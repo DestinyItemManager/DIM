@@ -7,7 +7,7 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { t, tl } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
-import { armorStats, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { TOTAL_STAT_HASH, armorStats } from 'app/search/d2-known-values';
 import { getColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { isPlugStatActive } from 'app/utils/item-utils';
@@ -98,7 +98,9 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         aria-label={stat.displayProperties.name}
         title={stat.displayProperties.description}
       >
-        {stat.statHash in statLabels ? t(statLabels[stat.statHash]!) : stat.displayProperties.name}
+        {stat.statHash in statLabels
+          ? t(statLabels[stat.statHash as StatHashes]!)
+          : stat.displayProperties.name}
       </div>
 
       <div className={clsx(styles.value, optionalClasses)}>

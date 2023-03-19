@@ -29,13 +29,13 @@ export default function TierSelect({
   stats: StatFilters;
   /** The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility */
   statRangesFiltered?: Readonly<StatRanges>;
-  order: number[]; // stat hashes in user order
+  order: ArmorStatHashes[]; // stat hashes in user order
   onStatOrderChanged: (order: ArmorStatHashes[]) => void;
   onStatFiltersChanged: (stats: StatFilters) => void;
 }) {
   const defs = useD2Definitions()!;
   const handleTierChange = (
-    statHash: number,
+    statHash: ArmorStatHashes,
     changed: { min?: number; max?: number; ignored: boolean }
   ) => {
     const newTiers = {
@@ -65,7 +65,7 @@ export default function TierSelect({
       <Droppable droppableId="droppable">
         {(provided) => (
           <div ref={provided.innerRef}>
-            {order.map((statHash: number, index) => (
+            {order.map((statHash: ArmorStatHashes, index) => (
               <DraggableItem
                 key={statHash}
                 id={statHash.toString()}

@@ -1,21 +1,23 @@
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
-import { d2MissingIcon } from 'app/search/d2-known-values';
+import { D2ItemTiers, ItemTierName, d2MissingIcon } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
 import { isModCostVisible } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import pursuitComplete from 'images/highlightedObjective.svg';
-import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
+import { DimItem } from './item-types';
 
-const itemTierStyles = {
+const itemTierStyles: Record<ItemTierName, string> = {
   Legendary: styles.legendary,
   Exotic: styles.exotic,
   Common: styles.basic,
   Rare: styles.rare,
   Uncommon: styles.common,
+  Unknown: styles.common,
+  Currency: styles.common,
 };
 
 export function getItemImageStyles(item: DimItem, className?: string) {
@@ -114,7 +116,7 @@ export function DefItemIcon({
     },
     !borderless &&
       !itemDef.plug &&
-      itemDef.inventory && [itemTierStyles[itemDef.inventory.tierType]]
+      itemDef.inventory && [itemTierStyles[D2ItemTiers[itemDef.inventory.tierType]]]
   );
   const energyCost = getModCostInfo(itemDef);
 

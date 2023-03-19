@@ -5,8 +5,8 @@ import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import usePrompt from 'app/dim-ui/usePrompt';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import usePrompt from 'app/dim-ui/usePrompt';
 import { t } from 'app/i18next-t';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
@@ -29,13 +29,16 @@ import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Draft } from 'immer';
 import _ from 'lodash';
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { allItemsSelector, unlockedPlugSetItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
-import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import ModPicker from '../loadout/ModPicker';
+import { isLoadoutBuilderItem } from '../loadout/item-utils';
+import styles from './LoadoutBuilder.m.scss';
+import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import EnergyOptions from './filter/EnergyOptions';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import TierSelect from './filter/TierSelect';
@@ -45,13 +48,12 @@ import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
-import styles from './LoadoutBuilder.m.scss';
-import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import { useAutoMods, useProcess } from './process/useProcess';
 import {
   ArmorEnergyRules,
   ItemsByBucket,
   LOCKED_EXOTIC_ANY_EXOTIC,
+  LockableBucketHash,
   loDefaultArmorEnergyRules,
 } from './types';
 
@@ -85,9 +87,7 @@ export default memo(function LoadoutBuilder({
 
   /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
   const items = useMemo(() => {
-    const items: {
-      [classType: number]: ItemsByBucket;
-    } = {};
+    const items: Partial<Record<DestinyClass, Draft<ItemsByBucket>>> = {};
     for (const item of allItems) {
       if (!item || !isLoadoutBuilderItem(item)) {
         continue;
@@ -99,9 +99,9 @@ export default memo(function LoadoutBuilder({
         [BucketHashes.ChestArmor]: [],
         [BucketHashes.LegArmor]: [],
         [BucketHashes.ClassArmor]: [],
-      })[bucket.hash].push(item);
+      })[bucket.hash as LockableBucketHash].push(item);
     }
-    return items;
+    return items as Partial<Record<DestinyClass, ItemsByBucket>>;
   }, [allItems]);
 
   const optimizingLoadoutId = preloadedLoadout?.id;

@@ -1,4 +1,5 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { t } from 'app/i18next-t';
 import {
   battleNetIcon,
@@ -31,7 +32,9 @@ import { loggedOut } from './actions';
 /**
  * Platform types (membership types) in the Bungie API.
  */
-const PLATFORM_LABELS = {
+const PLATFORM_LABELS: Record<BungieMembershipType, string> = {
+  [BungieMembershipType.None]: 'None',
+  [BungieMembershipType.All]: 'All',
   [BungieMembershipType.TigerXbox]: 'Xbox',
   [BungieMembershipType.TigerPsn]: 'PlayStation',
   [BungieMembershipType.TigerBlizzard]: 'Blizzard',
@@ -42,7 +45,9 @@ const PLATFORM_LABELS = {
   [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 
-export const PLATFORM_ICONS = {
+export const PLATFORM_ICONS: Record<BungieMembershipType, string | IconDefinition> = {
+  [BungieMembershipType.None]: 'None',
+  [BungieMembershipType.All]: 'All',
   [BungieMembershipType.TigerXbox]: faXbox,
   [BungieMembershipType.TigerPsn]: faPlayStation,
   [BungieMembershipType.TigerBlizzard]: battleNetIcon,

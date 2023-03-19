@@ -1,13 +1,14 @@
+import { StringLookup } from 'app/utils/util-types';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { D1BucketHashes, D1LightStats } from './d1-known-values';
 import {
-  armorStats,
   D2ArmorStatHashByName,
   D2LightStats,
   D2WeaponStatHashByName,
-  swordStatsByName,
   TOTAL_STAT_HASH,
+  armorStats,
+  swordStatsByName,
 } from './d2-known-values';
 
 // ✨ magic values ✨
@@ -35,7 +36,7 @@ export const damageTypeNames = Object.values(damageNamesByEnum).filter(
  * these stats exist on DIM armor. the 6 real API ones, supplemented by a synthetic Total stat.
  * these are the armor stats that can be looked up by name
  */
-export const dimArmorStatHashByName = {
+export const dimArmorStatHashByName: StringLookup<number> = {
   ...D2ArmorStatHashByName,
   total: TOTAL_STAT_HASH,
 };
@@ -47,7 +48,7 @@ export const searchableArmorStatNames = [...Object.keys(dimArmorStatHashByName),
 export const armorAnyStatHashes = armorStats;
 
 /** stat hashes to calculate max values for */
-export const armorStatHashes = Object.values(dimArmorStatHashByName);
+export const armorStatHashes = Object.values(dimArmorStatHashByName) as number[];
 
 /** all-stat table, for looking up stat hashes given a queried stat name */
 export const statHashByName: Record<string, number> = {

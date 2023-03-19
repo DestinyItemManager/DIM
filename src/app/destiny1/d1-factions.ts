@@ -1,27 +1,28 @@
 import { D1Item } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
+import { HashLookup } from 'app/utils/util-types';
 
 // In D1 there were exotic ghosts that you could only equip if you also had a "Faction Badge" equipped
 // that matched that faction. These functions help identify what faction badge is equipped on the character
 // and what badge a particular item requires.
 
 // Maps inventory item hash to faction
-const factionBadges = {
+const factionBadges: HashLookup<string> = {
   969832704: 'Future War Cult',
   27411484: 'Dead Orbit',
   2954371221: 'New Monarchy',
 };
 
 // Maps talent grid node to faction
-const factionNodes = {
+const factionNodes: HashLookup<string> = {
   2669659850: 'Future War Cult',
   2794386410: 'Dead Orbit',
   652505621: 'New Monarchy',
 };
 
 // Maps faction definition hash to faction name
-const factionsByHash = {
+const factionsByHash: HashLookup<string> = {
   489342053: 'Future War Cult',
   2397602219: 'Dead Orbit',
   3197190122: 'New Monarchy',
@@ -34,7 +35,7 @@ function factionAlignment(store: DimStore): string | null {
     return null;
   }
 
-  return factionBadges[badge.hash];
+  return factionBadges[badge.hash] ?? null;
 }
 
 /**

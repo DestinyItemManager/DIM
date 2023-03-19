@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 /* eslint-disable css-modules/no-unused-class */
+import { StringLookup } from 'app/utils/util-types';
 import styles from './Description.m.scss';
 import { Languages, LinesContent, Perk } from './descriptionInterface';
 
@@ -14,7 +15,7 @@ const customContent = (content: LinesContent) => {
 };
 
 const joinClassNames = (classNames?: string[]) =>
-  classNames?.map((className) => styles[className]).join(' ');
+  classNames?.map((className) => (styles as unknown as StringLookup<string>)[className]).join(' ');
 
 /*
        (^|\b) : start from the beginning of the string or a word boundary

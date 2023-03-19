@@ -78,7 +78,7 @@ export function getSetBucketsStep(
     item: D1Item;
     bonusType: string;
   }[] = bestArmor.Artifact || [];
-  const setMap: { [setHash: number]: SetType } = {};
+  const setMap: { [setHash: string]: SetType } = {};
   const tiersSet = new Set<string>();
   const combos =
     helms.length *

@@ -254,7 +254,7 @@ function buildCacheForStat(
 function buildLessCostlyRelations(
   autoModOptions: AutoModData,
   availableGeneralStatMods: number,
-  statOrder: number[]
+  statOrder: ArmorStatHashes[]
 ) {
   return Object.fromEntries(
     statOrder.map((armorStat1, statIndex1) => {

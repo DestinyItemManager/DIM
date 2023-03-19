@@ -1,5 +1,6 @@
 import { ThunkResult } from 'app/store/types';
 import { reportException } from 'app/utils/exceptions';
+import { AllDestinyManifestComponents, DestinyManifestComponentName } from 'bungie-api-ts/destiny2';
 import { HashLookupFailure, ManifestDefinitions } from '../destiny2/definitions';
 import { setD1Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/d1-manifest-service';
@@ -77,18 +78,18 @@ export function getDefinitions(): ThunkResult<D1ManifestDefinitions> {
     if (existingManifest) {
       return existingManifest;
     }
-    const db = await dispatch(getManifest());
+    const db = (await dispatch(getManifest())) as AllDestinyManifestComponents;
     existingManifest = getState().manifest.d1Manifest;
     if (existingManifest) {
       return existingManifest;
     }
-    const defs = {
+    const defs: any = {
       isDestiny1: () => true,
       isDestiny2: () => false,
     };
     // Load objects that lazily load their properties from the sqlite DB.
     for (const tableShort of lazyTables) {
-      const table = `Destiny${tableShort}Definition`;
+      const table = `Destiny${tableShort}Definition` as DestinyManifestComponentName;
       defs[tableShort] = {
         get(id: number, requestor?: any) {
           const dbTable = db[table];
@@ -111,7 +112,7 @@ export function getDefinitions(): ThunkResult<D1ManifestDefinitions> {
     }
     // Resources that need to be fully loaded (because they're iterated over)
     for (const tableShort of eagerTables) {
-      const table = `Destiny${tableShort}Definition`;
+      const table = `Destiny${tableShort}Definition` as DestinyManifestComponentName;
       defs[tableShort] = db[table];
     }
     dispatch(setD1Manifest(defs as D1ManifestDefinitions));

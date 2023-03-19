@@ -12,6 +12,7 @@ import {
   getWeaponArchetypeSocket,
 } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
+import { LookupTable } from 'app/utils/util-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import {
@@ -109,7 +110,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
     );
 
   // Some stat labels are long. This lets us replace them with i18n
-  const statLabels = {
+  const statLabels: LookupTable<StatHashes, string> = {
     [StatHashes.RoundsPerMinute]: t('Organizer.Stats.RPM'),
   };
 
@@ -135,7 +136,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
                     ?.map(
                       (s) =>
                         `${s.value} ${(
-                          statLabels[s.statHash] || s.displayProperties.name
+                          statLabels[s.statHash as StatHashes] || s.displayProperties.name
                         ).toLowerCase()}`
                     )
                     ?.join(' / ')}

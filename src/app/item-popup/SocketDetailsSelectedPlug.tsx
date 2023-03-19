@@ -19,6 +19,7 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
+import { LookupTable } from 'app/utils/util-types';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -38,13 +39,13 @@ const costStatHashes = [
   StatHashes.ArcCost,
 ];
 
-const whitelistPlugCategoryToLocKey = {
+const whitelistPlugCategoryToLocKey: LookupTable<PlugCategoryHashes, string> = {
   [PlugCategoryHashes.Shader]: 'Shader',
   [PlugCategoryHashes.ShipSpawnfx]: 'Transmat',
   [PlugCategoryHashes.Hologram]: 'Projection',
 };
 
-const socketCategoryToLocKey = {
+const socketCategoryToLocKey: LookupTable<SocketCategoryHashes, string> = {
   [SocketCategoryHashes.Super]: 'Super',
   [SocketCategoryHashes.Abilities_Abilities]: 'Ability',
   [SocketCategoryHashes.Abilities_Abilities_Ikora]: 'Ability',
@@ -63,14 +64,14 @@ const socketCategoryToLocKey = {
 function uiCategorizeSocket(defs: D2ManifestDefinitions, socket: DestinyItemSocketEntryDefinition) {
   const socketTypeDef = socket.socketTypeHash && defs.SocketType.get(socket.socketTypeHash);
   if (socketTypeDef) {
-    if (socketCategoryToLocKey[socketTypeDef.socketCategoryHash]) {
-      return socketCategoryToLocKey[socketTypeDef.socketCategoryHash];
+    if (socketCategoryToLocKey[socketTypeDef.socketCategoryHash as SocketCategoryHashes]) {
+      return socketCategoryToLocKey[socketTypeDef.socketCategoryHash as SocketCategoryHashes];
     } else {
       const plug = socketTypeDef.plugWhitelist.find(
-        (p) => whitelistPlugCategoryToLocKey[p.categoryHash]
+        (p) => whitelistPlugCategoryToLocKey[p.categoryHash as PlugCategoryHashes]
       );
       if (plug) {
-        return whitelistPlugCategoryToLocKey[plug.categoryHash];
+        return whitelistPlugCategoryToLocKey[plug.categoryHash as PlugCategoryHashes];
       }
     }
   }

@@ -6,7 +6,7 @@ import {
 } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
-import { initialSettingsState } from 'app/settings/initial-settings';
+import { Settings, initialSettingsState } from 'app/settings/initial-settings';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux-utils';
@@ -129,7 +129,7 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
 
       dispatch(
         profileLoadedFromIDB({
-          settings: { ...initialSettingsState, ...settings },
+          settings: { ...initialSettingsState, ...settings } as Settings,
           profiles,
           itemHashTags: _.keyBy(itemHashTags, (t) => t.hash),
           searches,

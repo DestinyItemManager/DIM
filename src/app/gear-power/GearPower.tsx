@@ -16,8 +16,8 @@ import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import Sheet from '../dim-ui/Sheet';
 import { allItemsSelector, storesSelector } from '../inventory/selectors';
-import { showGearPower$ } from './gear-power';
 import styles from './GearPower.m.scss';
+import { showGearPower$ } from './gear-power';
 
 const bucketClassNames: LookupTable<BucketHashes, string> = {
   [BucketHashes.KineticWeapons]: styles.kinetic,
@@ -75,7 +75,10 @@ export default function GearPower() {
             const diffClass =
               powerDiff > 0 ? styles.positive : powerDiff < 0 ? styles.negative : styles.neutral;
             return (
-              <div key={i.id} className={clsx(bucketClassNames[i.bucket.hash], styles.gearItem)}>
+              <div
+                key={i.id}
+                className={clsx(bucketClassNames[i.bucket.hash as BucketHashes], styles.gearItem)}
+              >
                 <div onClick={() => locateItem(i)}>
                   <BungieImage src={i.icon} className={styles.itemImage} />
                 </div>

@@ -1,8 +1,9 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t, tl } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { StringLookup } from 'app/utils/util-types';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
-import { symbolData, TranslateManually } from 'data/d2/symbol-name-sources';
+import { TranslateManually, symbolData } from 'data/d2/symbol-name-sources';
 import { createSelector } from 'reselect';
 import { conversionTableSelector } from './rich-destiny-text';
 
@@ -45,8 +46,9 @@ export const symbolsSelector = createSelector(
     }
 
     for (const { codepoint, glyph, source } of symbolData) {
-      const hardCodedName = t(manualTranslations[codepoint]);
-      if (hardCodedName) {
+      const manualTranslation = (manualTranslations as StringLookup<string>)[codepoint];
+      if (manualTranslation) {
+        const hardCodedName = t(manualTranslation);
         list.push({
           glyph,
           fullName: hardCodedName,

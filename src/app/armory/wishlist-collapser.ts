@@ -1,10 +1,13 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
+import { HashLookup } from 'app/utils/util-types';
 import { WishListRoll } from 'app/wishlists/types';
 import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
+import perkToEnhancedFile from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
+
+const perkToEnhanced: HashLookup<number> = perkToEnhancedFile;
 
 export const enhancedToPerk = _.mapValues(_.invert(perkToEnhanced), Number);
 
@@ -255,8 +258,8 @@ interface PerkMeta {
 export type PerkColumnsMeta = PerkMeta[][];
 
 function getBaseEnhancedPerkPair(perkHash: number) {
-  let base: number = enhancedToPerk[perkHash];
-  let enhanced: number = perkToEnhanced[perkHash];
+  let base = enhancedToPerk[perkHash];
+  let enhanced = perkToEnhanced[perkHash];
   if (!base && !enhanced) {
     return;
   }

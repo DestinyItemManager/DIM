@@ -4,6 +4,7 @@ import {
   D1VaultResponse,
 } from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
+import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
@@ -13,7 +14,7 @@ import { D1Progression, D1Store, DimStore } from '../store-types';
 import { getCharacterStatsData } from './character-utils';
 
 // Label isn't used, but it helps us understand what each one is
-const progressionMeta = {
+const progressionMeta: HashLookup<{ label: string; order: number }> = {
   529303302: { label: 'Cryptarch', order: 0 },
   3233510749: { label: 'Vanguard', order: 1 },
   1357277120: { label: 'Crucible', order: 2 },
