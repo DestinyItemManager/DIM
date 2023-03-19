@@ -3,15 +3,14 @@ import { DimItem } from 'app/inventory/item-types';
 import {
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
-  isKillTrackerSocket,
   modSlotTags,
   modTypeTags,
 } from 'app/utils/item-utils';
 import {
   countEnhancedPerks,
-  getCuratedRollForSocket,
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
+  matchesCuratedRoll,
 } from 'app/utils/socket-utils';
 import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import craftingMementos from 'data/d2/crafting-mementos.json';
@@ -75,35 +74,8 @@ const socketFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter:
       ({ d2Definitions }) =>
-      (item: DimItem) => {
-        if (!item) {
-          return false;
-        }
-
-        const legendaryWeapon = item.bucket?.sort === 'Weapons' && item.tier === 'Legendary';
-
-        if (!legendaryWeapon) {
-          return false;
-        }
-
-        const matchesCollectionsRoll = item.sockets?.allSockets
-          // curatedRoll is only set for perk-style sockets
-          .filter(
-            (socket) => socket.isPerk && socket.plugOptions.length && !isKillTrackerSocket(socket)
-          )
-          .map((socket) => ({
-            socket,
-            curatedRoll: getCuratedRollForSocket(d2Definitions!, socket),
-          }))
-          .filter(({ curatedRoll }) => curatedRoll)
-          .every(
-            ({ socket, curatedRoll }) =>
-              curatedRoll!.length === socket.plugOptions.length &&
-              socket.plugOptions.every((option, idx) => option.plugDef.hash === curatedRoll![idx])
-          );
-
-        return matchesCollectionsRoll;
-      },
+      (item: DimItem) =>
+        matchesCuratedRoll(d2Definitions!, item),
   },
   {
     keywords: 'extraperk',
