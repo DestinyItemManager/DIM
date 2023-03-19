@@ -95,7 +95,11 @@ export default function LoadoutSubclassSection({
       {plugs.length ? (
         <div className={styles.subclassMods}>
           {plugs?.map((plug) => (
-            <PlugDef key={getModRenderKey(plug)} plug={plug} />
+            <PlugDef
+              key={getModRenderKey(plug)}
+              plug={plug}
+              forClassType={subclass?.item.classType}
+            />
           ))}
         </div>
       ) : (

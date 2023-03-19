@@ -9,6 +9,7 @@ const classIcons = {
   [DestinyClass.Titan]: titanIcon,
   [DestinyClass.Warlock]: warlockIcon,
   [DestinyClass.Unknown]: globeIcon,
+  [DestinyClass.Classified]: globeIcon,
 } as const;
 
 const classIconsProportional = {
@@ -16,6 +17,7 @@ const classIconsProportional = {
   [DestinyClass.Titan]: dimTitanProportionalIcon,
   [DestinyClass.Warlock]: dimWarlockProportionalIcon,
   [DestinyClass.Unknown]: globeIcon,
+  [DestinyClass.Classified]: globeIcon,
 } as const;
 
 /**

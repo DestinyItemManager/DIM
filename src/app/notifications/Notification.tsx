@@ -23,7 +23,7 @@ interface Props extends MotionProps {
 }
 
 export default function Notification({ notification, onClose, ...animation }: Props) {
-  const [mouseover, setMouseover] = useState(false);
+  const [hovering, setHovering] = useState(false);
   const [success, setSuccess] = useState<boolean | undefined>();
   const [error, setError] = useState<NotificationError | undefined>();
 
@@ -41,7 +41,7 @@ export default function Notification({ notification, onClose, ...animation }: Pr
     } else if (notification.duration || error) {
       timer.current = window.setTimeout(
         () => {
-          if (!mouseover) {
+          if (!hovering) {
             onClose(notification);
           }
         },
@@ -50,7 +50,7 @@ export default function Notification({ notification, onClose, ...animation }: Pr
     } else {
       window.setTimeout(() => onClose(notification), 0);
     }
-  }, [error, success, notification, mouseover, onClose]);
+  }, [error, success, notification, hovering, onClose]);
 
   const clearTimer = () => {
     if (timer.current) {
@@ -70,20 +70,20 @@ export default function Notification({ notification, onClose, ...animation }: Pr
     }
   };
 
-  const onMouseOver = () => {
+  const hover = () => {
     clearTimer();
-    setMouseover(true);
+    setHovering(true);
   };
 
-  const onMouseOut = () => {
-    setMouseover(false);
+  const stopHover = () => {
+    setHovering(false);
     setupTimer();
   };
 
   const progressTarget =
-    mouseover || Boolean(!error && !success && notification.promise) ? '0%' : '100%';
+    hovering || Boolean(!error && !success && notification.promise) ? '0%' : '100%';
 
-  const transition: Transition = mouseover
+  const transition: Transition = hovering
     ? {
         type: 'tween',
         ease: 'easeOut',
@@ -107,9 +107,9 @@ export default function Notification({ notification, onClose, ...animation }: Pr
       role="alert"
       onClick={onClick}
       {...animation}
-      onHoverStart={onMouseOver}
-      onHoverEnd={onMouseOut}
-      onTapStart={onMouseOver}
+      onPointerEnter={hover}
+      onPointerLeave={stopHover}
+      onPointerDown={hover}
     >
       <div
         className={clsx(

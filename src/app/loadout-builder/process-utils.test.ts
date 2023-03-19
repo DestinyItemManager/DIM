@@ -501,7 +501,7 @@ describe('process-utils optimal mods', () => {
     }));
   });
 
-  const cases: [
+  const tierCases: [
     setStats: number[],
     remainingEnergy: number[],
     numArtifice: number,
@@ -520,23 +520,50 @@ describe('process-utils optimal mods', () => {
     [[68, 66, 30, 30, 11, 30], [2, 2, 0, 0, 0], 4, [7, 6, 3, 3, 3, 3]],
   ];
 
-  test.each(cases)(
+  const pickMods = (setStats: number[], remainingEnergy: number[], numArtifice: number) => {
+    const ourItems = [...items];
+    for (let i = 0; i < ourItems.length; i++) {
+      ourItems[i] = modifyItem({
+        item: ourItems[i],
+        energyVal: 10 - remainingEnergy[i],
+        isArtifice: i < numArtifice,
+      });
+    }
+    const statMods = pickOptimalStatMods(loSessionInfo, ourItems, setStats, statFilters)!;
+    const finalStats = [...setStats];
+    for (let i = 0; i < armorStats.length; i++) {
+      finalStats[i] += statMods.bonusStats[i];
+    }
+    return finalStats;
+  };
+
+  test.each(tierCases)(
     'set with stats %p, energies %p, numArtifice %p yields tiers %p',
     (setStats, remainingEnergy, numArtifice, expectedTiers) => {
-      const ourItems = [...items];
-      for (let i = 0; i < ourItems.length; i++) {
-        ourItems[i] = modifyItem({
-          item: ourItems[i],
-          energyVal: 10 - remainingEnergy[i],
-          isArtifice: i < numArtifice,
-        });
-      }
-      const statMods = pickOptimalStatMods(loSessionInfo, ourItems, setStats, statFilters)!;
-      const finalStats = [...setStats];
-      for (let i = 0; i < armorStats.length; i++) {
-        finalStats[i] += statMods.bonusStats[i];
-      }
+      const finalStats = pickMods(setStats, remainingEnergy, numArtifice);
       expect(finalStats.map(statTier)).toStrictEqual(expectedTiers);
+    }
+  );
+
+  // Tests that our algorithm, and thus the worker accurately reports the resulting stats
+  const exactStatCases: [
+    setStats: number[],
+    remainingEnergy: number[],
+    numArtifice: number,
+    expectedStats: number[]
+  ][] = [
+    // Nice
+    [[18, 80, 80, 26, 80, 30], [0, 0, 0, 3, 0], 4, [30, 80, 80, 31, 80, 30]],
+    // TODO: This is the same problem as above, only with reordered stats. The solution
+    // is still optimal in terms of reached stats, but worse in terms of mod usage
+    [[26, 80, 80, 18, 80, 30], [0, 0, 0, 3, 0], 4, [32, 80, 80, 31, 80, 30]],
+  ];
+
+  test.each(exactStatCases)(
+    'set with stats %p, energies %p, numArtifice %p produces exact stats %p',
+    (setStats, remainingEnergy, numArtifice, expectedStats) => {
+      const finalStats = pickMods(setStats, remainingEnergy, numArtifice);
+      expect(finalStats).toStrictEqual(expectedStats);
     }
   );
 });

@@ -482,6 +482,7 @@ export default memo(function LoadoutBuilder({
         ) : (
           <NoBuildsFoundExplainer
             defs={defs}
+            classType={classType}
             dispatch={lbDispatch}
             resolvedMods={resolvedMods}
             lockedModMap={lockedModMap}

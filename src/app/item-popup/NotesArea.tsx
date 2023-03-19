@@ -134,8 +134,7 @@ function NotesEditor({
           onChange={onNotesUpdated}
           onBlur={stopEvents}
           onKeyDown={onKeyDown}
-          onTouchStart={stopEvents}
-          onMouseDown={stopEvents}
+          onPointerDown={stopEvents}
         />
       </WithSymbolsPicker>
       {liveNotes && liveNotes.length > maxLength && (

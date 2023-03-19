@@ -6,6 +6,7 @@ import { SearchInput } from 'app/search/SearchInput';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { Comparator } from 'app/utils/comparators';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { produce } from 'immer';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -22,8 +23,8 @@ interface Props {
    * drawer are the union of plugs from these plug sets.
    */
   plugSets: PlugSet[];
-  /** A restricted list of stat hashes to display for each plug. If not specified, no stats will be shown. */
-  displayedStatHashes?: number[];
+  /** The class type we're choosing mods for */
+  classType: DestinyClass;
   /** Title of the sheet, displayed in the header. */
   title: string;
   /** The placeholder text for the search bar. */
@@ -55,7 +56,7 @@ interface Props {
  */
 export default function PlugDrawer({
   plugSets,
-  displayedStatHashes,
+  classType,
   title,
   searchPlaceholder,
   initialQuery,
@@ -174,6 +175,7 @@ export default function PlugDrawer({
   const footer = ({ onClose }: { onClose: () => void }) => (
     <Footer
       plugSets={internalPlugSets}
+      classType={classType}
       isPhonePortrait={isPhonePortrait}
       acceptButtonText={acceptButtonText}
       onSubmit={(e) => onSubmit(e, onClose)}
@@ -210,7 +212,7 @@ export default function PlugDrawer({
         <PlugSection
           key={plugSet.plugSetHash}
           plugSet={plugSet}
-          displayedStatHashes={displayedStatHashes}
+          classType={classType}
           isPlugSelectable={handleIsPlugSelectable}
           onPlugSelected={handlePlugSelected}
           onPlugRemoved={handlePlugRemoved}

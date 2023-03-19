@@ -1,5 +1,15 @@
 ## Next
 
+* Hashtags for items and loadouts can now contain emoji.
+* Removed # from loadout filter pills.
+* Overloaded range filters (e.g. season:>outlaw) now autocomplete.
+* Stat effects for mods/aspects in the mod picker are now both more accurate and more attractive.
+* Fixed the color of Strand movement and class abilities on Loadouts screen.
+* Fixed an issue where DIM Sync data might not be available when Bungie.net is down.
+* Added `source:rootofnightmares`/`source:ron` and `modslot:rootofnightmares` searches.
+* DIM now correctly allows you to unsave previously saved queries that later became invalid.
+* Fixed the `is:curated` filter never matching weapons without an equipped kill tracker.
+
 ## 7.60.1 <span class="changelog-date">(2023-03-14)</span>
 
 * Custom stat fixes

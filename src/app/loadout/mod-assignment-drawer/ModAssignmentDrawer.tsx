@@ -151,7 +151,7 @@ export default function ModAssignmentDrawer({
               <h3>{t('Loadouts.UnassignedMods')}</h3>
               <div className={styles.unassigned}>
                 {unassignedMods.map((mod) => (
-                  <PlugDef key={getModRenderKey(mod)} plug={mod} />
+                  <PlugDef key={getModRenderKey(mod)} plug={mod} forClassType={loadout.classType} />
                 ))}
               </div>
             </>

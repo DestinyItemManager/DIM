@@ -38,7 +38,7 @@ export default memo(function CompareItem({
   compareBaseStats?: boolean;
   itemClick: (item: DimItem) => void;
   remove: (item: DimItem) => void;
-  setHighlight?: (value?: string | number) => void;
+  setHighlight: (value?: string | number) => void;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
   isInitialItem: boolean;
 }) {

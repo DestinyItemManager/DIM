@@ -75,7 +75,10 @@ const gearSlotOrder: BucketHashes[] = [...D2Categories.Weapons, ...D2Categories.
 export function newLoadout(name: string, items: LoadoutItem[], classType?: DestinyClass): Loadout {
   return {
     id: uuidv4(),
-    classType: classType ?? DestinyClass.Unknown,
+    classType:
+      classType !== undefined && classType !== DestinyClass.Classified
+        ? classType
+        : DestinyClass.Unknown,
     name,
     items,
     clearSpace: false,
@@ -723,6 +726,7 @@ export function pickBackingStore(
   preferredStoreId: string | undefined,
   classType: DestinyClass
 ) {
+  classType = classType === DestinyClass.Classified ? DestinyClass.Unknown : classType;
   const requestedStore =
     !preferredStoreId || preferredStoreId === 'vault'
       ? getCurrentStore(stores)

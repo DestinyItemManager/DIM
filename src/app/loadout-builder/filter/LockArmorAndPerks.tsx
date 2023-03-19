@@ -214,6 +214,7 @@ export default memo(function LockArmorAndPerks({
                 key={getModRenderKey(mod.resolvedMod)}
                 plug={mod.resolvedMod}
                 onClose={() => onModClicked(mod)}
+                forClassType={selectedStore.classType}
               />
             ))}
           </div>
@@ -245,6 +246,7 @@ export default memo(function LockArmorAndPerks({
                     ? undefined
                     : () => lbDispatch({ type: 'removeSingleSubclassSocketOverride', plug })
                 }
+                forClassType={selectedStore.classType}
               />
             ))}
           </div>

@@ -8,6 +8,7 @@ import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { AppIcon, banIcon } from 'app/shell/icons';
 import { uniqBy } from 'app/utils/util';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Dispatch } from 'react';
 import ExoticArmorChoice from './filter/ExoticArmorChoice';
@@ -44,6 +45,7 @@ const EARLY_MOD_REJECTION_WARN_RATIO = 0.8;
 export default function NoBuildsFoundExplainer({
   defs,
   dispatch,
+  classType,
   autoAssignStatMods,
   resolvedMods,
   lockedModMap,
@@ -57,6 +59,7 @@ export default function NoBuildsFoundExplainer({
 }: {
   defs: D2ManifestDefinitions;
   dispatch: Dispatch<LoadoutBuilderAction>;
+  classType: DestinyClass;
   autoAssignStatMods: boolean;
   resolvedMods: ResolvedLoadoutMod[];
   lockedModMap: ModMap;
@@ -87,6 +90,7 @@ export default function NoBuildsFoundExplainer({
               mod: resolvedMods.find((resolved) => resolved.resolvedMod === mod)!,
             })
           }
+          forClassType={classType}
         />
       ))}
     </div>
