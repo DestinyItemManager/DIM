@@ -234,13 +234,16 @@ function buildDefinedSocket(
     return undefined;
   }
 
+  const isReusable = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable;
+  // This covers the visible intrinsic perks and armor stat plugs,
+  // for all of which everything but the currently plugged thing are distractions
+  const isIntrinsic = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.LargePerk;
+
   // Is this socket a perk-style socket, or something more general (mod-like)?
   const isPerk =
-    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable ||
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Unlockable ||
-    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.LargePerk;
-
-  const isReusable = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable;
+    isIntrinsic ||
+    isReusable;
 
   // The currently equipped plug, if any
   const reusablePlugs: DimPlug[] = [];
@@ -259,7 +262,7 @@ function buildDefinedSocket(
   // We only build a larger list of plug options if this is a perk socket, since users would
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
   // we will only populate plugOptions with the currently inserted plug.
-  if (isPerk) {
+  if (isPerk && !isIntrinsic) {
     if (socketDef.reusablePlugSetHash) {
       const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
       if (plugSet) {
@@ -594,13 +597,16 @@ function buildSocket(
     return undefined;
   }
 
+  const isReusable = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable;
+  // This covers the visible intrinsic perks and armor stat plugs,
+  // for all of which everything but the currently plugged thing are distractions
+  const isIntrinsic = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.LargePerk;
+
   // Is this socket a perk-style socket, or something more general (mod-like)?
   const isPerk =
-    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable ||
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Unlockable ||
-    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.LargePerk;
-
-  const isReusable = socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Reusable;
+    isIntrinsic ||
+    isReusable;
 
   const plugSet = socketDef.reusablePlugSetHash
     ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
@@ -618,7 +624,7 @@ function buildSocket(
   // We only build a larger list of plug options if this is a perk socket, since users would
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
   // we will only populate plugOptions with the currently inserted plug.
-  if (isPerk) {
+  if (isPerk && !isIntrinsic) {
     if (reusablePlugs) {
       // Get options from live info
       for (const reusablePlug of reusablePlugs) {
