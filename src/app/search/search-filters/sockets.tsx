@@ -66,7 +66,11 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.RandomRoll'),
     destinyVersion: 2,
     filter: () => (item: DimItem) =>
-      Boolean(item.energy) || item.sockets?.allSockets.some((s) => s.hasRandomizedPlugItems),
+      Boolean(item.bucket.inArmor && item.energy) ||
+      (!item.crafted &&
+        item.sockets?.allSockets.some(
+          (s) => s.isPerk && s.plugOptions.length > 0 && s.hasRandomizedPlugItems
+        )),
   },
   {
     keywords: 'curated',
