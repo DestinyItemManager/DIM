@@ -660,7 +660,8 @@ function buildSocket(
         }
       }
     }
-  } else if (plugged) {
+  }
+  if (plugged && !plugOptions.length) {
     plugOptions.push(plugged);
   }
 
