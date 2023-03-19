@@ -7,6 +7,7 @@
 * Fixed the color of Strand movement and class abilities on Loadouts screen.
 * Fixed an issue where DIM Sync data might not be available when Bungie.net is down.
 * Added `source:rootofnightmares`/`source:ron` and `modslot:rootofnightmares` searches.
+* Fixed the `is:curated` filter never matching weapons without an equipped kill tracker.
 
 ## 7.60.1 <span class="changelog-date">(2023-03-14)</span>
 
