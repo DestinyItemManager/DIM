@@ -3,6 +3,7 @@ import { DimItem } from 'app/inventory/item-types';
 import {
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
+  isKillTrackerSocket,
   modSlotTags,
   modTypeTags,
 } from 'app/utils/item-utils';
@@ -84,13 +85,16 @@ const socketFilters: FilterDefinition[] = [
 
       const matchesCollectionsRoll = item.sockets?.allSockets
         // curatedRoll is only set for perk-style sockets
-        .filter((socket) => socket.plugOptions.length && socket.curatedRoll)
+        .filter(
+          (socket) =>
+            socket.plugOptions.length && socket.curatedRoll && !isKillTrackerSocket(socket)
+        )
         .every(
           (socket) =>
             socket.curatedRoll!.length === socket.plugOptions.length &&
-            socket.plugOptions.every(function (e, i) {
-              return e.plugDef.hash === socket.curatedRoll![i];
-            })
+            socket.plugOptions.every(
+              (option, idx) => option.plugDef.hash === socket.curatedRoll![idx]
+            )
         );
 
       return matchesCollectionsRoll;

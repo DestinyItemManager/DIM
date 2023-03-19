@@ -2,7 +2,6 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D1CharacterResponse } from 'app/destiny1/d1-manifest-types';
 import { powerLevelByKeyword } from 'app/search/d2-known-values';
 import { warnLog } from 'app/utils/log';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import disciplineIcon from 'images/discipline.png';
 import intellectIcon from 'images/intellect.png';
@@ -184,19 +183,6 @@ function getAbilityCooldown(subclass: number, ability: string, tier: number) {
       }
     default:
       return '-:--';
-  }
-}
-
-export function getClass(type: DestinyClass) {
-  switch (type) {
-    case DestinyClass.Titan:
-      return 'titan';
-    case DestinyClass.Hunter:
-      return 'hunter';
-    case DestinyClass.Warlock:
-      return 'warlock';
-    case DestinyClass.Unknown:
-      return 'unknown';
   }
 }
 
