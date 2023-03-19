@@ -1,20 +1,20 @@
+import { t } from 'app/i18next-t';
 import { powerLevelByKeyword } from 'app/search/d2-known-values';
 import clsx from 'clsx';
-import { DefaultTFuncReturn, t } from 'i18next';
 import styles from './powercaps.m.scss';
 
 interface PowerCapValue {
   powercap: keyof typeof powerLevelByKeyword;
-  label: DefaultTFuncReturn | null;
+  label: String | null;
 }
-const caps: PowerCapValue[] = [
-  { powercap: 'powerfloor', label: t('Power Floor') },
-  { powercap: 'softcap', label: t('Soft Cap') },
-  { powercap: 'powerfulcap', label: t('Powerful Cap') },
-  { powercap: 'pinnaclecap', label: t('Pinnacle Cap') },
-];
 
 export function PowerCaps() {
+  const caps: PowerCapValue[] = [
+    { powercap: 'powerfloor', label: t('Power Floor') },
+    { powercap: 'softcap', label: t('Soft Cap') },
+    { powercap: 'powerfulcap', label: t('Powerful Cap') },
+    { powercap: 'pinnaclecap', label: t('Pinnacle Cap') },
+  ];
   return (
     <div className={styles.powercaps}>
       {caps.map(({ powercap, label }) => (
