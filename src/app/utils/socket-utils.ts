@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   DimItem,
   DimSocketCategory,
@@ -250,4 +251,27 @@ export function isModCostVisible(
   }
 
   return true;
+}
+
+/**
+ * Determine the perk selections that correspond to the "curated" roll for this socket.
+ */
+export function getCuratedRollForSocket(defs: D2ManifestDefinitions, socket: DimSocket) {
+  // We only build a larger list of plug options if this is a perk socket, since users would
+  // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
+  // we will only populate plugOptions with the currently inserted plug.
+  const socketDef = socket.socketDefinition;
+  let curatedRoll: number[] | null = null;
+  if (socket.isPerk) {
+    if (socketDef.reusablePlugSetHash) {
+      // Get options from plug set, instead of live info
+      const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash);
+      if (plugSet) {
+        curatedRoll = plugSet.reusablePlugItems.map((p) => p.plugItemHash);
+      }
+    } else if (socketDef.reusablePlugItems) {
+      curatedRoll = socketDef.reusablePlugItems.map((p) => p.plugItemHash);
+    }
+  }
+  return curatedRoll;
 }

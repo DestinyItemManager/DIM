@@ -9,6 +9,7 @@ import {
 } from 'app/utils/item-utils';
 import {
   countEnhancedPerks,
+  getCuratedRollForSocket,
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
 } from 'app/utils/socket-utils';
@@ -72,33 +73,37 @@ const socketFilters: FilterDefinition[] = [
     keywords: 'curated',
     description: tl('Filter.Curated'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) => {
-      if (!item) {
-        return false;
-      }
+    filter:
+      ({ d2Definitions }) =>
+      (item: DimItem) => {
+        if (!item) {
+          return false;
+        }
 
-      const legendaryWeapon = item.bucket?.sort === 'Weapons' && item.tier === 'Legendary';
+        const legendaryWeapon = item.bucket?.sort === 'Weapons' && item.tier === 'Legendary';
 
-      if (!legendaryWeapon) {
-        return false;
-      }
+        if (!legendaryWeapon) {
+          return false;
+        }
 
-      const matchesCollectionsRoll = item.sockets?.allSockets
-        // curatedRoll is only set for perk-style sockets
-        .filter(
-          (socket) =>
-            socket.plugOptions.length && socket.curatedRoll && !isKillTrackerSocket(socket)
-        )
-        .every(
-          (socket) =>
-            socket.curatedRoll!.length === socket.plugOptions.length &&
-            socket.plugOptions.every(
-              (option, idx) => option.plugDef.hash === socket.curatedRoll![idx]
-            )
-        );
+        const matchesCollectionsRoll = item.sockets?.allSockets
+          // curatedRoll is only set for perk-style sockets
+          .filter(
+            (socket) => socket.isPerk && socket.plugOptions.length && !isKillTrackerSocket(socket)
+          )
+          .map((socket) => ({
+            socket,
+            curatedRoll: getCuratedRollForSocket(d2Definitions!, socket),
+          }))
+          .filter(({ curatedRoll }) => curatedRoll)
+          .every(
+            ({ socket, curatedRoll }) =>
+              curatedRoll!.length === socket.plugOptions.length &&
+              socket.plugOptions.every((option, idx) => option.plugDef.hash === curatedRoll![idx])
+          );
 
-      return matchesCollectionsRoll;
-    },
+        return matchesCollectionsRoll;
+      },
   },
   {
     keywords: 'extraperk',

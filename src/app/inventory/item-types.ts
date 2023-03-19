@@ -475,8 +475,6 @@ export interface DimSocket {
    */
   craftingData?: { [plugHash: number]: DestinyPlugItemCraftingRequirements | undefined };
 
-  /** Plug hashes in this item visible in the collections roll, if this is a perk */
-  curatedRoll: number[] | null;
   /**
    * The plug item hash used to reset this plug to an empty default plug.
    * This is a heuristic improvement over singleInitialItemHash, but it's
