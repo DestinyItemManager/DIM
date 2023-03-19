@@ -10,10 +10,10 @@ interface PowerCapValue {
 
 export function PowerCaps() {
   const caps: PowerCapValue[] = [
-    { powercap: 'powerfloor', label: t('Power Floor') },
-    { powercap: 'softcap', label: t('Soft Cap') },
-    { powercap: 'powerfulcap', label: t('Powerful Cap') },
-    { powercap: 'pinnaclecap', label: t('Pinnacle Cap') },
+    { powercap: 'powerfloor', label: t('Milestone.PowerFloor') },
+    { powercap: 'softcap', label: t('Milestone.SoftCap') },
+    { powercap: 'powerfulcap', label: t('Milestone.PowerfulCap') },
+    { powercap: 'pinnaclecap', label: t('Milestone.PinnacleCap') },
   ];
   return (
     <div className={styles.powercaps}>
