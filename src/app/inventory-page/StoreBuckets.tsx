@@ -1,8 +1,12 @@
-import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { PullFromPostmaster } from 'app/inventory/PullFromPostmaster';
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
-import { postmasterAlmostFull } from 'app/loadout-drawer/postmaster';
+import {
+  POSTMASTER_SIZE,
+  postmasterAlmostFull,
+  postmasterSpaceUsed,
+} from 'app/loadout-drawer/postmaster';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
@@ -33,6 +37,12 @@ export function StoreBuckets({
     !stores.some((s) => findItemsByBucket(s, bucket.hash).length > 0)
   ) {
     return null;
+  }
+
+  const checkPostmaster = bucket.hash === BucketHashes.LostItems;
+  if (!checkPostmaster) {
+    // Only the postmaster needs a header per store, the rest span across all stores
+    stores = [stores[0]];
   }
 
   if (bucket.accountWide) {
@@ -74,11 +84,22 @@ export function StoreBuckets({
     ));
   }
 
+  const postMasterSpaceUsed = postmasterSpaceUsed(stores[0]);
+
   return (
     <div
       className={clsx('store-row', `bucket-${bucket.hash}`, { 'account-wide': bucket.accountWide })}
     >
-      {labels && <div className={clsx(styles.bucketLabel)}>{bucket.name}</div>}
+      {labels && (
+        <div className={clsx(styles.bucketLabel)}>
+          {bucket.name}
+          {checkPostmaster && (
+            <span>
+              ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
+            </span>
+          )}
+        </div>
+      )}
       {content}
     </div>
   );
