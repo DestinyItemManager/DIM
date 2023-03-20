@@ -4,9 +4,8 @@ import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 /* eslint-disable css-modules/no-unused-class */
-import { StringLookup } from 'app/utils/util-types';
 import styles from './Description.m.scss';
-import { Languages, LinesContent, Perk } from './descriptionInterface';
+import { LinesContent, Perk } from './descriptionInterface';
 
 const customContent = (content: LinesContent) => {
   if (content.link) {
@@ -14,8 +13,8 @@ const customContent = (content: LinesContent) => {
   }
 };
 
-const joinClassNames = (classNames?: string[]) =>
-  classNames?.map((className) => (styles as unknown as StringLookup<string>)[className]).join(' ');
+const joinClassNames = (classNames?: (keyof typeof styles)[]) =>
+  classNames?.map((className) => styles[className]).join(' ');
 
 /*
        (^|\b) : start from the beginning of the string or a word boundary
@@ -67,7 +66,7 @@ export default function ClarityDescriptions({
   perk: Perk;
   className?: string;
 }) {
-  const selectedLanguage = useSelector(languageSelector) as Languages;
+  const selectedLanguage = useSelector(languageSelector);
   if (perk.descriptions === undefined) {
     return null;
   }
