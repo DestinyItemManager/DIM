@@ -1,5 +1,7 @@
 ## Next
 
+## 7.61.0 <span class="changelog-date">(2023-03-19)</span>
+
 * Hashtags for items and loadouts can now contain emoji.
 * Removed # from loadout filter pills.
 * Overloaded range filters (e.g. season:>outlaw) now autocomplete.
