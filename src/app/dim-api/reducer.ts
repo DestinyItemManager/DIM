@@ -1204,7 +1204,7 @@ function saveSearch(
   const { canonical, saveable } = parseAndValidateQuery(query, searchConfigs, {
     customStats: draft.settings.customStats ?? [],
   } as FilterContext);
-  if (!saveable) {
+  if (!saveable && saved) {
     errorLog('searchUsed', 'Query not eligible to be saved', query);
     return;
   }
@@ -1224,7 +1224,7 @@ function saveSearch(
 
   if (existingSearch) {
     existingSearch.saved = saved;
-  } else {
+  } else if (saveable) {
     // Save this as a "used" search first. This may happen if it's a type of search we
     // wouldn't normally save to history like a "simple" filter.
     searches.push({

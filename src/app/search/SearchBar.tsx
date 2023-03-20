@@ -15,7 +15,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift';
+import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, {
@@ -44,13 +44,13 @@ import {
   starOutlineIcon,
   unTrackedIcon,
 } from '../shell/icons';
-import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
 import HighlightedText from './HighlightedText';
+import styles from './SearchBar.m.scss';
+import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
 import { canonicalizeQuery, parseQuery } from './query-parser';
 import { searchConfigSelector } from './search-config';
 import { validateQuerySelector } from './search-filter';
 import './search-filter.scss';
-import styles from './SearchBar.m.scss';
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Recent]: faClock,
@@ -551,7 +551,7 @@ function SearchBar(
           <AnimatePresence>
             {children}
 
-            {liveQuery.length > 0 && saveable && (
+            {liveQuery.length > 0 && (saveable || saved) && (
               <motion.button
                 layout
                 exit={{ scale: 0 }}

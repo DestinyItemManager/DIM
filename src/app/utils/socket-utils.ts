@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   DimItem,
   DimSocketCategory,
@@ -11,7 +12,7 @@ import {
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimSocket, DimSockets } from '../inventory/item-types';
-import { isArmor2Mod } from './item-utils';
+import { isArmor2Mod, isKillTrackerSocket } from './item-utils';
 
 type WithRequiredProperty<T, K extends keyof T> = T & {
   [P in K]-?: NonNullable<T[P]>;
@@ -250,4 +251,52 @@ export function isModCostVisible(
   }
 
   return true;
+}
+
+/**
+ * Determine the perk selections that correspond to the "curated" roll for this socket.
+ */
+function getCuratedRollForSocket(defs: D2ManifestDefinitions, socket: DimSocket) {
+  // We only build a larger list of plug options if this is a perk socket, since users would
+  // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
+  // we will only populate plugOptions with the currently inserted plug.
+  const socketDef = socket.socketDefinition;
+  let curatedRoll: number[] | null = null;
+  if (socket.isPerk) {
+    if (socketDef.reusablePlugSetHash) {
+      // Get options from plug set, instead of live info
+      const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash);
+      if (plugSet) {
+        curatedRoll = plugSet.reusablePlugItems.map((p) => p.plugItemHash);
+      }
+    } else if (socketDef.reusablePlugItems) {
+      curatedRoll = socketDef.reusablePlugItems.map((p) => p.plugItemHash);
+    }
+  }
+  return curatedRoll;
+}
+
+/** Determine if the item has a curated roll, and if all of its perks match that curated roll. */
+export function matchesCuratedRoll(defs: D2ManifestDefinitions, item: DimItem) {
+  const legendaryWeapon = item.bucket?.sort === 'Weapons' && item.tier === 'Legendary';
+
+  if (!legendaryWeapon) {
+    return false;
+  }
+
+  const matchesCollectionsRoll = item.sockets?.allSockets
+    // curatedRoll is only set for perk-style sockets
+    .filter((socket) => socket.isPerk && socket.plugOptions.length && !isKillTrackerSocket(socket))
+    .map((socket) => ({
+      socket,
+      curatedRoll: getCuratedRollForSocket(defs, socket),
+    }))
+    .filter(({ curatedRoll }) => curatedRoll)
+    .every(
+      ({ socket, curatedRoll }) =>
+        curatedRoll!.length === socket.plugOptions.length &&
+        socket.plugOptions.every((option, idx) => option.plugDef.hash === curatedRoll![idx])
+    );
+
+  return matchesCollectionsRoll;
 }
