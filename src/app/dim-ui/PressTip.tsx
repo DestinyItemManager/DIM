@@ -3,9 +3,9 @@ import { tempContainer } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import _ from 'lodash';
 import {
-  createContext,
-  default as React,
   MutableRefObject,
+  default as React,
+  createContext,
   useCallback,
   useContext,
   useEffect,
@@ -291,15 +291,14 @@ export function PressTip(props: Props) {
 
   const events = hoverable
     ? {
-        onPointerOver: hover,
-        onPointerOut: closeToolTip,
-        onPointerUp: closeToolTip,
+        onPointerEnter: hover,
+        onPointerLeave: closeToolTip,
+        onPointerCancel: closeToolTip,
       }
     : {
-        onPointerOver: hover,
         onPointerDown: hover,
-        onPointerOut: closeToolTip,
         onPointerUp: closeToolTip,
+        onPointerCancel: closeToolTip,
         onClick: absorbClick,
       };
 
