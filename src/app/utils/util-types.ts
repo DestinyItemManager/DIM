@@ -22,6 +22,6 @@ export type LookupTable<K extends keyof any, V> = {
 export type HashLookup<V> = LookupTable<number | string, V>;
 
 /**
- * A convenience for a lookup table keyed by a string. This
+ * A convenience for a lookup table keyed by a string. Equivalent to NodeJS.ReadonlyDict.
  */
 export type StringLookup<V> = LookupTable<string, V>;
