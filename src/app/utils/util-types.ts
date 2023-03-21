@@ -25,3 +25,15 @@ export type HashLookup<V> = LookupTable<number | string, V>;
  * A convenience for a lookup table keyed by a string. Equivalent to NodeJS.ReadonlyDict.
  */
 export type StringLookup<V> = LookupTable<string, V>;
+
+/** performs `key in obj` but properly narrows `key` */
+/*@__INLINE__*/
+export function isIn<O extends Record<string | number, any>>(key: keyof O, obj: O): key is keyof O {
+  return key in obj;
+}
+
+/** performs `Object.keys()` but properly narrows `key` */
+/*@__INLINE__*/
+export function objectKeys<O extends Record<string | number, any>>(obj: O) {
+  return Object.keys(obj) as (keyof O)[];
+}

@@ -11,7 +11,7 @@ import { addIcon, AppIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { LookupTable } from 'app/utils/util-types';
+import { isIn, LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import grenade from 'destiny-icons/weapons/grenade.svg';
 import headshot from 'destiny-icons/weapons/headshot.svg';
@@ -238,12 +238,8 @@ function PillContent({
     case 'KillType':
       return (
         <>
-          {value in killTypeIcons && (
-            <img
-              className={styles.itemCategoryIcon}
-              height="16"
-              src={killTypeIcons[value as KillType]}
-            />
+          {isIn(value, killTypeIcons) && (
+            <img className={styles.itemCategoryIcon} height="16" src={killTypeIcons[value]} />
           )}
           {KillType[value]}
         </>
