@@ -29,7 +29,7 @@
     top: calc(100% + 1px);
     overflow-y: auto;
     overscroll-behavior: none;
-    max-height: calc(var(--viewport-height) - var(--header-height));
+    max-height: calc(var(--viewport-height) - var(--header-height)) !important;
   }
 }
 
@@ -94,6 +94,7 @@
   color: #999;
   padding: 0 2px;
   visibility: hidden;
+
   @media (hover: none) {
     visibility: visible;
   }
