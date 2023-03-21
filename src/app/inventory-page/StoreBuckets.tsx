@@ -39,12 +39,6 @@ export function StoreBuckets({
     return null;
   }
 
-  const checkPostmaster = bucket.hash === BucketHashes.LostItems;
-  if (!checkPostmaster) {
-    // Only the postmaster needs a header per store, the rest span across all stores
-    stores = [stores[0]];
-  }
-
   if (bucket.accountWide) {
     // If we're in mobile view, we only render one store
     const allStoresView = stores.length > 1;
@@ -85,6 +79,11 @@ export function StoreBuckets({
   }
 
   const postMasterSpaceUsed = postmasterSpaceUsed(stores[0]);
+  const checkPostmaster = bucket.hash === BucketHashes.LostItems;
+  if (!checkPostmaster) {
+    // Only the postmaster needs a header per store, the rest span across all stores
+    stores = [stores[0]];
+  }
 
   return (
     <div
