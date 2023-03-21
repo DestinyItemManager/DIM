@@ -260,6 +260,7 @@ export function PressTip(props: Props) {
   const touchStartTime = useRef<number>(0);
   const ref = useRef<HTMLDivElement>(null);
   const startEvent = useRef<'pointerdown' | 'pointerenter'>();
+  const suppressClickUntil = useRef<number>(0);
   const [open, setOpen] = useState<boolean>(false);
 
   const closeToolTip = useCallback((e: React.PointerEvent) => {
@@ -272,12 +273,16 @@ export function PressTip(props: Props) {
       return;
     }
     setOpen(false);
+    // click fires after pointerup, but we want to suppress click if we'd shown the presstip
+    if (
+      startEvent.current === 'pointerdown' &&
+      performance.now() - touchStartTime.current > pressTime
+    ) {
+      suppressClickUntil.current = performance.now() + 100;
+    }
     clearTimeout(timer.current);
-    // Don't clear these for 500ms to give the click event time to suppress - pointerup fires before click
-    setTimeout(() => {
-      timer.current = 0;
-      startEvent.current = undefined;
-    }, 500);
+    timer.current = 0;
+    startEvent.current = undefined;
   }, []);
 
   const hover = useCallback((e: React.PointerEvent) => {
@@ -310,10 +315,7 @@ export function PressTip(props: Props) {
   // we end the gesture. If the presstip was opened via hovering we want to allow clicks
   // through.
   const absorbClick = useCallback((e: React.MouseEvent) => {
-    if (
-      startEvent.current === 'pointerdown' &&
-      performance.now() - touchStartTime.current > pressTime
-    ) {
+    if (performance.now() < suppressClickUntil.current) {
       e.stopPropagation();
     }
   }, []);
