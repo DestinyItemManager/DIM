@@ -80,11 +80,6 @@ export function StoreBuckets({
 
   const postMasterSpaceUsed = postmasterSpaceUsed(stores[0]);
   const checkPostmaster = bucket.hash === BucketHashes.LostItems;
-  if (!checkPostmaster) {
-    // Only the postmaster needs a header per store, the rest span across all stores
-    stores = [stores[0]];
-  }
-
   return (
     <div
       className={clsx('store-row', `bucket-${bucket.hash}`, { 'account-wide': bucket.accountWide })}
