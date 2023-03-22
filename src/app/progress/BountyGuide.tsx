@@ -1,7 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { colorizedIcons } from 'app/dim-ui/svgs/BucketIcon';
-import { itemCategoryIcons } from 'app/dim-ui/svgs/itemCategory';
+import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
@@ -226,18 +225,9 @@ function PillContent({
         </>
       );
     case 'ItemCategory': {
-      const icon = value in itemCategoryIcons && itemCategoryIcons[value];
       return (
         <>
-          {icon && (
-            <img
-              src={icon}
-              height="16"
-              className={clsx({
-                [styles.invert]: !colorizedIcons.includes(icon),
-              })}
-            />
-          )}
+          <BucketIcon itemCategoryHash={value} height="16" />
           {defs.ItemCategory.get(value)?.displayProperties.name}
         </>
       );
