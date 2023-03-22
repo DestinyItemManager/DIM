@@ -34,6 +34,8 @@ import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 import energyWeaponSlot from 'images/weapon-slot-energy.svg';
 import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
 
+export const colorizedIcons = [kineticWeaponSlot, energyWeaponSlot, heavyAmmo];
+
 const weaponTypeSvgByCategoryHash = {
   [ItemCategoryHashes.AutoRifle]: autoRifle,
   [ItemCategoryHashes.HandCannon]: handCannon,
