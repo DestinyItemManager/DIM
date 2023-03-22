@@ -8,26 +8,52 @@ import {
   getWeaponTypeSvgIcon,
 } from './svgs/itemCategory';
 
-export function ArmorSlotIcon({ item, className }: { item: DimItem; className?: string }) {
+export function ArmorSlotIcon({
+  item,
+  className,
+  wrapperClassName,
+}: {
+  item: DimItem;
+  className?: string;
+  wrapperClassName?: string;
+}) {
   return (
-    <PressTip minimal elementType="span" tooltip={item.typeName}>
+    <PressTip minimal elementType="span" tooltip={item.typeName} className={wrapperClassName}>
       <img src={getArmorSlotSvgIcon(item)} className={clsx(styles.itemCategoryIcon, className)} />
     </PressTip>
   );
 }
 
-export function WeaponSlotIcon({ item, className }: { item: DimItem; className?: string }) {
-  const slotIcon = getWeaponSlotSvgIcon(item)!;
+export function WeaponSlotIcon({
+  item,
+  className,
+  wrapperClassName,
+}: {
+  item: DimItem;
+  className?: string;
+  wrapperClassName?: string;
+}) {
   return (
-    <PressTip minimal elementType="span" tooltip={item.bucket.name}>
-      <img src={slotIcon} className={clsx(styles.itemCategoryIcon, styles.dontInvert, className)} />
+    <PressTip minimal elementType="span" tooltip={item.bucket.name} className={wrapperClassName}>
+      <img
+        src={getWeaponSlotSvgIcon(item)}
+        className={clsx(styles.itemCategoryIcon, styles.dontInvert, className)}
+      />
     </PressTip>
   );
 }
 
-export function WeaponTypeIcon({ item, className }: { item: DimItem; className?: string }) {
+export function WeaponTypeIcon({
+  item,
+  className,
+  wrapperClassName,
+}: {
+  item: DimItem;
+  className?: string;
+  wrapperClassName?: string;
+}) {
   return (
-    <PressTip minimal elementType="span" tooltip={item.typeName}>
+    <PressTip minimal elementType="span" tooltip={item.typeName} className={wrapperClassName}>
       <img src={getWeaponTypeSvgIcon(item)} className={clsx(styles.itemCategoryIcon, className)} />
     </PressTip>
   );

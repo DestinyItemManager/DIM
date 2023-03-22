@@ -34,7 +34,12 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     // same slot on the same class
     {
       buttonLabel: [
-        <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+        <ArmorSlotIcon
+          key="slot"
+          item={exampleItem}
+          className={styles.svgIcon}
+          wrapperClassName={styles.svgIconWrapper}
+        />,
         '+ ' + t('Stats.Sunset'),
       ],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
@@ -42,7 +47,14 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
 
     // above but also has to be armor 2.0
     exampleItem.destinyVersion === 2 && {
-      buttonLabel: [<ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />],
+      buttonLabel: [
+        <ArmorSlotIcon
+          key="slot"
+          item={exampleItem}
+          className={styles.svgIcon}
+          wrapperClassName={styles.svgIconWrapper}
+        />,
+      ],
       query: 'not:sunset',
     },
 
@@ -51,7 +63,12 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       exampleItem.tier === 'Legendary' && {
         buttonLabel: [
           <BungieImage key="rarity" src={rarityIcons.Legendary} />,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+          <ArmorSlotIcon
+            key="slot"
+            item={exampleItem}
+            className={styles.svgIcon}
+            wrapperClassName={styles.svgIconWrapper}
+          />,
         ],
         query: 'not:sunset is:legendary',
       },
@@ -67,7 +84,12 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
             lowRes
             item={exampleItem}
           />,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+          <ArmorSlotIcon
+            key="slot"
+            item={exampleItem}
+            className={styles.svgIcon}
+            wrapperClassName={styles.svgIconWrapper}
+          />,
         ],
         query: `not:sunset ${exampleItemModSlotMetadatas
           .map((m) => `modslot:${m.slotTag || 'none'}`)
@@ -81,7 +103,12 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           <PressTip minimal tooltip={exampleItemIntrinsic.name} key="1">
             <BungieImage key="2" className={styles.intrinsicIcon} src={exampleItemIntrinsic.icon} />
           </PressTip>,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+          <ArmorSlotIcon
+            key="slot"
+            item={exampleItem}
+            className={styles.svgIcon}
+            wrapperClassName={styles.svgIconWrapper}
+          />,
         ],
         query: `not:sunset perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
       },
@@ -142,7 +169,14 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     // same weapon type
     {
       // TODO: replace typeName with a lookup of itemCategoryHash
-      buttonLabel: [<WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />],
+      buttonLabel: [
+        <WeaponTypeIcon
+          key="type"
+          item={exampleItem}
+          className={styles.svgIcon}
+          wrapperClassName={styles.svgIconWrapper}
+        />,
+      ],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
 
@@ -151,7 +185,12 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
       exampleItem.tier === 'Legendary' && {
         buttonLabel: [
           <BungieImage key="rarity" src={rarityIcons.Legendary} />,
-          <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
+          <WeaponTypeIcon
+            key="type"
+            item={exampleItem}
+            className={styles.svgIcon}
+            wrapperClassName={styles.svgIconWrapper}
+          />,
         ],
         query: 'is:legendary',
       },
@@ -160,8 +199,18 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     {
       buttonLabel: [
         intrinsicName,
-        <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
+        <WeaponSlotIcon
+          key="slot"
+          item={exampleItem}
+          className={styles.svgIcon}
+          wrapperClassName={styles.svgIconWrapper}
+        />,
+        <WeaponTypeIcon
+          key="type"
+          item={exampleItem}
+          className={styles.svgIcon}
+          wrapperClassName={styles.svgIconWrapper}
+        />,
       ],
       query:
         '(' +
@@ -177,8 +226,18 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     // above, but also same (kinetic/energy/heavy) slot
     {
       buttonLabel: [
-        <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
+        <WeaponSlotIcon
+          key="slot"
+          item={exampleItem}
+          className={styles.svgIcon}
+          wrapperClassName={styles.svgIconWrapper}
+        />,
+        <WeaponTypeIcon
+          key="type"
+          item={exampleItem}
+          className={styles.svgIcon}
+          wrapperClassName={styles.svgIconWrapper}
+        />,
       ],
       query: bucketToSearch[exampleItem.bucket.hash],
     },
@@ -191,7 +250,12 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
           element={exampleItem.element}
           className={styles.inlineImageIcon}
         />,
-        <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
+        <WeaponTypeIcon
+          key="type"
+          item={exampleItem}
+          className={styles.svgIcon}
+          wrapperClassName={styles.svgIconWrapper}
+        />,
       ],
       query: `is:${getItemDamageShortName(exampleItem)}`,
     },

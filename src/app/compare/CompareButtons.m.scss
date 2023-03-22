@@ -1,6 +1,10 @@
 .svgIcon {
   height: 1.3em;
   margin: 2.5px;
+  filter: invert(1) !important;
+}
+.svgIconWrapper {
+  filter: drop-shadow(0 0 1px black);
 }
 
 .inlineImageIcon {
