@@ -6,6 +6,13 @@ import classItem from 'destiny-icons/armor_types/class.svg';
 import gauntlets from 'destiny-icons/armor_types/gloves.svg';
 import helmet from 'destiny-icons/armor_types/helmet.svg';
 import heavyAmmo from 'destiny-icons/general/ammo-heavy.svg';
+import hunter from 'destiny-icons/general/class_hunter.svg';
+import titan from 'destiny-icons/general/class_titan.svg';
+import warlock from 'destiny-icons/general/class_warlock.svg';
+import emblem from 'destiny-icons/general/emblem.svg';
+import ghost from 'destiny-icons/general/ghost.svg';
+import ship from 'destiny-icons/general/ship.svg';
+import sparrow from 'destiny-icons/general/sparrow.svg';
 import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
 import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
@@ -61,6 +68,25 @@ const armorSlotSvgByCategoryHash = {
   [ItemCategoryHashes.Legs]: legs,
   [ItemCategoryHashes.ClassItems]: classItem,
 };
+
+/**
+ * A mapping from known item category hashes to an appropriate icon
+ */
+export const itemCategoryIcons: { [itemCategoryHash: number]: string } = {
+  ...armorSlotSvgByCategoryHash,
+  ...weaponSlotSvgByCategoryHash,
+  ...weaponTypeSvgByCategoryHash,
+
+  [ItemCategoryHashes.Weapon]: handCannon,
+  [ItemCategoryHashes.Ghost]: ghost,
+  [ItemCategoryHashes.Sparrows]: sparrow,
+  [ItemCategoryHashes.Ships]: ship,
+  [ItemCategoryHashes.Emblems]: emblem,
+
+  [ItemCategoryHashes.Hunter]: hunter,
+  [ItemCategoryHashes.Titan]: titan,
+  [ItemCategoryHashes.Warlock]: warlock,
+} as const;
 
 /** an SVG of the weapon's type, if determinable */
 export function getWeaponTypeSvgIcon(item: DimItem) {

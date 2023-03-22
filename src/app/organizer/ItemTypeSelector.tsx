@@ -1,5 +1,6 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { colorizedIcons } from 'app/dim-ui/svgs/BucketIcon';
+import { itemCategoryIcons } from 'app/dim-ui/svgs/itemCategory';
 import { useDefinitions } from 'app/manifest/selectors';
 import { filteredItemsSelector } from 'app/search/search-filter';
 import clsx from 'clsx';
@@ -8,7 +9,6 @@ import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './ItemTypeSelector.m.scss';
 import { itemIncludesCategories } from './filtering-utils';
-import { itemCategoryIcons } from './item-category-icons';
 
 /**
  * Each branch of the drilldown options is represented by a SelectionTreeNode

@@ -1,13 +1,13 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { colorizedIcons } from 'app/dim-ui/svgs/BucketIcon';
+import { itemCategoryIcons } from 'app/dim-ui/svgs/itemCategory';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { itemCategoryIcons } from 'app/organizer/item-category-icons';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
