@@ -4,7 +4,7 @@ import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import BungieImage from '../BungieImage';
 import styles from './BucketIcon.m.scss';
-import { colorizedIcons, itemCategoryIcons } from './itemCategory';
+import { itemCategoryIcons } from './itemCategory';
 
 const bucketHashToItemCategoryHash = {
   [BucketHashes.KineticWeapons]: ItemCategoryHashes.KineticWeapon,
@@ -34,14 +34,18 @@ type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> &
 function resolveIcon(props: BucketIconProps) {
   if ('bucketHash' in props) {
     const { bucketHash, ...otherProps } = props;
+    const { svg, colorized } = itemCategoryIcons[bucketHashToItemCategoryHash[bucketHash]];
     return {
-      svg: itemCategoryIcons[bucketHashToItemCategoryHash[bucketHash]],
+      svg,
+      colorized,
       otherProps,
     };
   } else {
     const { itemCategoryHash, ...otherProps } = props;
+    const { svg, colorized } = itemCategoryIcons[itemCategoryHash];
     return {
-      svg: itemCategoryIcons[itemCategoryHash],
+      svg,
+      colorized,
       otherProps,
     };
   }
@@ -55,8 +59,8 @@ export default function BucketIcon(props: BucketIconProps) {
       src={icon.svg}
       {...icon.otherProps}
       className={clsx(props.className, styles.icon, {
-        [styles.colorized]: colorizedIcons.includes(icon.svg),
-        ['colorized']: colorizedIcons.includes(icon.svg),
+        [styles.colorized]: icon.colorized,
+        ['colorized']: icon.colorized,
       })}
     />
   ) : (

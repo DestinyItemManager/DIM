@@ -34,90 +34,99 @@ import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 import energyWeaponSlot from 'images/weapon-slot-energy.svg';
 import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
 
-export const colorizedIcons = [kineticWeaponSlot, energyWeaponSlot, heavyAmmo];
+interface ItemCategoryIcon {
+  svg: string;
+  colorized: boolean;
+}
+function monochrome(svg: string): ItemCategoryIcon {
+  return { svg, colorized: false };
+}
+function colorized(svg: string): ItemCategoryIcon {
+  return { svg, colorized: true };
+}
 
 const weaponTypeSvgByCategoryHash = {
-  [ItemCategoryHashes.AutoRifle]: autoRifle,
-  [ItemCategoryHashes.HandCannon]: handCannon,
-  [ItemCategoryHashes.PulseRifle]: pulseRifle,
-  [ItemCategoryHashes.ScoutRifle]: scoutRifle,
-  [ItemCategoryHashes.FusionRifle]: fusionRifle,
-  [ItemCategoryHashes.SniperRifle]: sniperRifle,
-  [ItemCategoryHashes.Shotgun]: shotgun,
-  [ItemCategoryHashes.MachineGun]: machinegun,
-  [ItemCategoryHashes.RocketLauncher]: rLauncher,
-  [ItemCategoryHashes.Sidearm]: sidearm,
-  [ItemCategoryHashes.Sword]: sword,
-  [ItemCategoryHashes.GrenadeLaunchers]: gLauncher,
-  [-ItemCategoryHashes.GrenadeLaunchers]: gLauncher_special,
-  [ItemCategoryHashes.TraceRifles]: traceRifle,
-  [ItemCategoryHashes.LinearFusionRifles]: lFusionRifle,
-  [ItemCategoryHashes.SubmachineGuns]: smg,
-  [ItemCategoryHashes.Bows]: bow,
-  [ItemCategoryHashes.Glaives]: glaive,
+  [ItemCategoryHashes.AutoRifle]: monochrome(autoRifle),
+  [ItemCategoryHashes.HandCannon]: monochrome(handCannon),
+  [ItemCategoryHashes.PulseRifle]: monochrome(pulseRifle),
+  [ItemCategoryHashes.ScoutRifle]: monochrome(scoutRifle),
+  [ItemCategoryHashes.FusionRifle]: monochrome(fusionRifle),
+  [ItemCategoryHashes.SniperRifle]: monochrome(sniperRifle),
+  [ItemCategoryHashes.Shotgun]: monochrome(shotgun),
+  [ItemCategoryHashes.MachineGun]: monochrome(machinegun),
+  [ItemCategoryHashes.RocketLauncher]: monochrome(rLauncher),
+  [ItemCategoryHashes.Sidearm]: monochrome(sidearm),
+  [ItemCategoryHashes.Sword]: monochrome(sword),
+  [ItemCategoryHashes.GrenadeLaunchers]: monochrome(gLauncher),
+  [-ItemCategoryHashes.GrenadeLaunchers]: monochrome(gLauncher_special),
+  [ItemCategoryHashes.TraceRifles]: monochrome(traceRifle),
+  [ItemCategoryHashes.LinearFusionRifles]: monochrome(lFusionRifle),
+  [ItemCategoryHashes.SubmachineGuns]: monochrome(smg),
+  [ItemCategoryHashes.Bows]: monochrome(bow),
+  [ItemCategoryHashes.Glaives]: monochrome(glaive),
 };
 
 const weaponSlotSvgByCategoryHash = {
-  [ItemCategoryHashes.KineticWeapon]: kineticWeaponSlot,
-  [ItemCategoryHashes.EnergyWeapon]: energyWeaponSlot,
-  [ItemCategoryHashes.PowerWeapon]: heavyAmmo,
+  [ItemCategoryHashes.KineticWeapon]: colorized(kineticWeaponSlot),
+  [ItemCategoryHashes.EnergyWeapon]: colorized(energyWeaponSlot),
+  [ItemCategoryHashes.PowerWeapon]: colorized(heavyAmmo),
 };
 
 const armorSlotSvgByCategoryHash = {
-  [ItemCategoryHashes.Helmets]: helmet,
-  [ItemCategoryHashes.Arms]: gauntlets,
-  [ItemCategoryHashes.Chest]: chest,
-  [ItemCategoryHashes.Legs]: legs,
-  [ItemCategoryHashes.ClassItems]: classItem,
+  [ItemCategoryHashes.Helmets]: monochrome(helmet),
+  [ItemCategoryHashes.Arms]: monochrome(gauntlets),
+  [ItemCategoryHashes.Chest]: monochrome(chest),
+  [ItemCategoryHashes.Legs]: monochrome(legs),
+  [ItemCategoryHashes.ClassItems]: monochrome(classItem),
 };
 
 /**
  * A mapping from known item category hashes to an appropriate icon
  */
-export const itemCategoryIcons: { [itemCategoryHash: number]: string } = {
+export const itemCategoryIcons: { [itemCategoryHash: number]: ItemCategoryIcon } = {
   ...armorSlotSvgByCategoryHash,
   ...weaponSlotSvgByCategoryHash,
   ...weaponTypeSvgByCategoryHash,
 
-  [ItemCategoryHashes.Weapon]: handCannon,
-  [ItemCategoryHashes.Ghost]: ghost,
-  [ItemCategoryHashes.Sparrows]: sparrow,
-  [ItemCategoryHashes.Ships]: ship,
-  [ItemCategoryHashes.Emblems]: emblem,
+  [ItemCategoryHashes.Weapon]: monochrome(handCannon),
+  [ItemCategoryHashes.Ghost]: monochrome(ghost),
+  [ItemCategoryHashes.Sparrows]: monochrome(sparrow),
+  [ItemCategoryHashes.Ships]: monochrome(ship),
+  [ItemCategoryHashes.Emblems]: monochrome(emblem),
 
-  [ItemCategoryHashes.Hunter]: hunter,
-  [ItemCategoryHashes.Titan]: titan,
-  [ItemCategoryHashes.Warlock]: warlock,
+  [ItemCategoryHashes.Hunter]: monochrome(hunter),
+  [ItemCategoryHashes.Titan]: monochrome(titan),
+  [ItemCategoryHashes.Warlock]: monochrome(warlock),
 } as const;
 
 /** an SVG of the weapon's type, if determinable */
-export function getWeaponTypeSvgIcon(item: DimItem) {
+export function getWeaponTypeSvgIcon(item: DimItem): ItemCategoryIcon | undefined {
   // reverse through the ICHs because most specific is last,
   // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const svg: string = weaponTypeSvgByCategoryHash[ich];
-    if (svg) {
-      return svg;
+    const icon = weaponTypeSvgByCategoryHash[ich];
+    if (icon) {
+      return icon;
     }
   }
 }
 
 /** an SVG of the weapon's slot, if possible */
-export function getWeaponSlotSvgIcon(item: DimItem) {
+export function getWeaponSlotSvgIcon(item: DimItem): ItemCategoryIcon | undefined {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const svg: string = weaponSlotSvgByCategoryHash[ich];
-    if (svg) {
-      return svg;
+    const icon = weaponSlotSvgByCategoryHash[ich];
+    if (icon) {
+      return icon;
     }
   }
 }
 
 /** an SVG of the armor's slot, if determinable */
-export function getArmorSlotSvgIcon(item: DimItem) {
+export function getArmorSlotSvgIcon(item: DimItem): ItemCategoryIcon | undefined {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const svg: string = armorSlotSvgByCategoryHash[ich];
-    if (svg) {
-      return svg;
+    const icon = armorSlotSvgByCategoryHash[ich];
+    if (icon) {
+      return icon;
     }
   }
 }
