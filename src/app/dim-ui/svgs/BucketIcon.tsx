@@ -45,7 +45,7 @@ export default function BucketIcon(props: BucketIconProps) {
     <img
       src={svg}
       {...otherProps}
-      className={clsx(props.className, {
+      className={clsx(props.className, styles.icon, {
         [styles.colorized]: colorizedIcons.includes(svg),
         ['colorized']: colorizedIcons.includes(svg),
       })}
