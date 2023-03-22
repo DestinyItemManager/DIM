@@ -17,10 +17,13 @@ export function ArmorSlotIcon({
   className?: string;
   wrapperClassName?: string;
 }) {
-  return (
+  const icon = getArmorSlotSvgIcon(item);
+  return icon ? (
     <PressTip minimal elementType="span" tooltip={item.typeName} className={wrapperClassName}>
-      <img src={getArmorSlotSvgIcon(item)} className={clsx(styles.itemCategoryIcon, className)} />
+      <img src={icon} className={clsx(styles.itemCategoryIcon, className)} />
     </PressTip>
+  ) : (
+    <>{item.typeName}</>
   );
 }
 
@@ -33,13 +36,13 @@ export function WeaponSlotIcon({
   className?: string;
   wrapperClassName?: string;
 }) {
-  return (
+  const icon = getWeaponSlotSvgIcon(item);
+  return icon ? (
     <PressTip minimal elementType="span" tooltip={item.bucket.name} className={wrapperClassName}>
-      <img
-        src={getWeaponSlotSvgIcon(item)}
-        className={clsx(styles.itemCategoryIcon, styles.dontInvert, className)}
-      />
+      <img src={icon} className={clsx(styles.itemCategoryIcon, styles.dontInvert, className)} />
     </PressTip>
+  ) : (
+    <>{item.bucket.name}</>
   );
 }
 
@@ -52,9 +55,12 @@ export function WeaponTypeIcon({
   className?: string;
   wrapperClassName?: string;
 }) {
-  return (
+  const icon = getWeaponTypeSvgIcon(item);
+  return icon ? (
     <PressTip minimal elementType="span" tooltip={item.typeName} className={wrapperClassName}>
-      <img src={getWeaponTypeSvgIcon(item)} className={clsx(styles.itemCategoryIcon, className)} />
+      <img src={icon} className={clsx(styles.itemCategoryIcon, className)} />
     </PressTip>
+  ) : (
+    <>{item.typeName}</>
   );
 }
