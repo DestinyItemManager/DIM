@@ -16,6 +16,7 @@ import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
 import React from 'react';
 import BungieImage from '../BungieImage';
 import styles from './BucketIcon.m.scss';
+import { itemCategoryIcons } from './itemCategory';
 
 const bucketIcons = {
   [BucketHashes.KineticWeapons]: kineticWeaponSlot,
@@ -33,24 +34,45 @@ const bucketIcons = {
 };
 export const colorizedIcons = [kineticWeaponSlot, energyWeaponSlot, heavyAmmo];
 
-type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> & {
-  bucketHash: number;
-};
+type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> &
+  (
+    | {
+        bucketHash: number;
+      }
+    | {
+        itemCategoryHash: number;
+      }
+  );
+
+function resolveIcon(props: BucketIconProps) {
+  if ('bucketHash' in props) {
+    const { bucketHash, ...otherProps } = props;
+    return {
+      svg: bucketIcons[bucketHash],
+      otherProps,
+    };
+  } else {
+    const { itemCategoryHash, ...otherProps } = props;
+    return {
+      svg: itemCategoryIcons[itemCategoryHash],
+      otherProps,
+    };
+  }
+}
 
 /** given an item, returns an img. ideally an svg img icon for the item's bucket */
 export default function BucketIcon(props: BucketIconProps) {
-  const { bucketHash, ...otherProps } = props;
-  const svg = bucketIcons[bucketHash];
-  return svg ? (
+  const icon = resolveIcon(props);
+  return icon.svg ? (
     <img
-      src={svg}
-      {...otherProps}
+      src={icon.svg}
+      {...icon.otherProps}
       className={clsx(props.className, styles.icon, {
-        [styles.colorized]: colorizedIcons.includes(svg),
-        ['colorized']: colorizedIcons.includes(svg),
+        [styles.colorized]: colorizedIcons.includes(icon.svg),
+        ['colorized']: colorizedIcons.includes(icon.svg),
       })}
     />
   ) : (
-    <BungieImage src={d2MissingIcon} {...otherProps} />
+    <BungieImage src={d2MissingIcon} {...icon.otherProps} />
   );
 }

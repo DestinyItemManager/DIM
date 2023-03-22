@@ -4,7 +4,6 @@ interface CssExports {
   'button': string;
   'buttonItemCount': string;
   'checked': string;
-  'dontInvert': string;
   'level': string;
   'selector': string;
 }
