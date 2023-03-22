@@ -8,14 +8,14 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
-import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import styles from './GeneratedSetItem.m.scss';
 
 /**
  * Shows how we recommend the energy of this armor be changed in order to fit its mods.
  */
-function EnergySwap({
+export function EnergySwap({
   item,
   assignedMods,
 }: {

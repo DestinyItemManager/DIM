@@ -4,12 +4,14 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { inGameArmorEnergyRules } from 'app/loadout-builder/types';
+import { EnergySwap } from 'app/loadout-builder/generated-sets/GeneratedSetItem';
+import { permissiveArmorEnergyRules } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { Portal } from 'app/utils/temp-container';
+import Cost from 'app/vendors/Cost';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
@@ -68,15 +70,17 @@ export default function ModAssignmentDrawer({
 
   const [resolvedMods, modDefinitions] = useLoadoutMods(loadout, storeId);
 
-  const [itemModAssignments, unassignedMods] = useMemo(() => {
-    const { itemModAssignments, unassignedMods } = fitMostMods({
+  const [itemModAssignments, unassignedMods, upgradeCosts] = useMemo(() => {
+    const { itemModAssignments, unassignedMods, upgradeCosts } = fitMostMods({
       defs,
       items: armor,
       plannedMods: modDefinitions,
-      armorEnergyRules: inGameArmorEnergyRules,
+      // assume everything is masterworked here -- fitMostMods will
+      // ensure to use as few materials as possible
+      armorEnergyRules: permissiveArmorEnergyRules,
     });
 
-    return [itemModAssignments, unassignedMods];
+    return [itemModAssignments, unassignedMods, upgradeCosts];
   }, [armor, defs, modDefinitions]);
 
   const onSocketClick = useCallback(
@@ -136,6 +140,7 @@ export default function ModAssignmentDrawer({
                         wrapperClass={styles.energyMeter}
                       />
                     )}
+                    <EnergySwap item={item} assignedMods={itemModAssignments[item.id]} />
                   </div>
 
                   <Sockets
@@ -147,6 +152,25 @@ export default function ModAssignmentDrawer({
               );
             })}
           </div>
+          {upgradeCosts.length > 0 && (
+            <>
+              <h3>{t('Loadouts.UpgradeCosts')}</h3>
+              <div className={styles.costs}>
+                {upgradeCosts.map((cost) => (
+                  <div key={cost.materialHash}>
+                    <Cost
+                      className={styles.cost}
+                      cost={{
+                        itemHash: cost.materialHash,
+                        quantity: cost.amount,
+                        hasConditionalVisibility: false,
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
           {unassignedMods.length > 0 && (
             <>
               <h3>{t('Loadouts.UnassignedMods')}</h3>

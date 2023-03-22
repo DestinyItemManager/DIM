@@ -37,6 +37,16 @@
   composes: sub-bucket from global;
 }
 
+.costs {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+
+  .cost {
+    font-size: 12px !important;
+  }
+}
+
 .headerInfo {
   display: flex;
   flex-flow: row wrap;

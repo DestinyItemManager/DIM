@@ -128,7 +128,7 @@ export function categorizeArmorMods(
   };
 }
 
-const materialsByRarity = [
+const materialsInRarityOrder = [
   3159615086, // InventoryItem "Glimmer"
   1022552290, // InventoryItem "Legendary Shards"
   3853748946, // InventoryItem "Enhancement Core"
@@ -158,7 +158,7 @@ function getUpgradeCost(
       const previousTierCosts = costsPerTier[i - 1];
       costsPerTier[i] = previousTierCosts
         ? [...previousTierCosts]
-        : Array(materialsByRarity.length).fill(0);
+        : Array(materialsInRarityOrder.length).fill(0);
       const plug = plugs.find((plug) => plug.plug.energyCapacity!.capacityValue === i);
       if (!plug) {
         continue;
@@ -167,7 +167,7 @@ function getUpgradeCost(
         plug.plug.insertionMaterialRequirementHash
       );
       for (const material of materials.materials) {
-        const idx = materialsByRarity.findIndex((mat) => mat === material.itemHash);
+        const idx = materialsInRarityOrder.findIndex((mat) => mat === material.itemHash);
         if (idx !== -1) {
           costsPerTier[i][idx] += material.count;
         }
@@ -248,13 +248,16 @@ export function fitMostMods({
     [itemInstanceId: string]: PluggableInventoryItemDefinition[];
   };
   unassignedMods: PluggableInventoryItemDefinition[];
+  upgradeCosts: { materialHash: number; amount: number }[];
 } {
   let bucketIndependentAssignments: ModAssignments = {};
   const bucketSpecificAssignments: ModAssignments = {};
 
   // just an arbitrarily large number
   // The total cost to upgrade armor to assign all the mods to a set
-  let assignmentUpgradeCost = Array(materialsByRarity.length).fill(Number.MAX_SAFE_INTEGER);
+  let assignmentUpgradeCost: number[] = Array(materialsInRarityOrder.length).fill(
+    Number.MAX_SAFE_INTEGER
+  );
   // The total number of mods that couldn't be assigned to the items
   let assignmentUnassignedModCount = Number.MAX_SAFE_INTEGER;
   // The total number of bucket independent mods that are changed in the assignment
@@ -443,7 +446,17 @@ export function fitMostMods({
     itemModAssignments[item.id] = [...bucketIndependent, ...bucketSpecific];
   }
 
-  return { itemModAssignments, unassignedMods };
+  return {
+    itemModAssignments,
+    unassignedMods,
+    upgradeCosts: assignmentUpgradeCost
+      .map((amount, idx) => ({
+        amount,
+        materialHash: materialsInRarityOrder[idx],
+      }))
+      .filter(({ amount }) => amount > 0)
+      .reverse(),
+  };
 }
 
 /**
