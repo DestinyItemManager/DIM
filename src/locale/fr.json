@@ -526,6 +526,7 @@
       "None": "Toutes les armures utiliseront leurs stats actuelles et auront un niveau d'énergie minimum de 7."
     },
     "AutoStatMods": "Ajouter automatiquement les mods de statistiques",
+    "AutomaticallyPicked": "Ce mod a été ajouté automatiquement pour améliorer les statistiques de l'équipement.",
     "ChooseAlternateTitle": "Choisir un autre objet",
     "CompareLoadout": "Comparer l'équipement",
     "ConfirmOverwrite": "Êtes-vous sûr de vouloir remplacer l'armure dans l'équipement \"{{name}}\" par ce nouvel ensemble d'armure ?",
@@ -947,7 +948,7 @@
     "CommunityData": "Informations de la communauté sur les attributs",
     "CommunityDescriptionOnly": "Description de la communauté",
     "CsvImport": "Importer CSV",
-    "CustomErrorLabel": "A stat name must contain word characters, and be different from other stat names for this Guardian class.",
+    "CustomErrorLabel": "Un nom de statistique doit contenir des mots, et être différent des autres noms de statistique pour cette classe de gardien.",
     "CustomErrorValues": "Les poids des statistiques doivent être des nombres positifs. Au moins 2 poids de statistique doivent être au dessus de zéro.",
     "CustomStatChooseName": "Choisissez un nom de statistique personnalisée",
     "CustomStatCreate": "Créer une nouvelle statistique personnalisée",

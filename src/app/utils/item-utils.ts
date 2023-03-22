@@ -281,10 +281,8 @@ export function getItemYear(
 /**
  * This function indicates whether a mod's stat effect is active on the item.
  *
- * For example, powerful friends only gives its stat effect if another arc mod is
- * slotted or some other item has a charged with light arc mod slotted.
- * This will return true if another arc mod is slotted or if we can pass in the
- * other slotted mods via modsOnOtherItems, an arc charged with light mod is found.
+ * For example, some subclass plugs reduce a different stat per character class,
+ * which we identify using the passed subclass item.
  *
  * If the plugHash isn't recognized then the default is to return true.
  */
@@ -316,7 +314,6 @@ export function isPlugStatActive(
   }
 
   if (
-    plugHash === modsWithConditionalStats.chargeHarvester ||
     plugHash === modsWithConditionalStats.echoOfPersistence ||
     plugHash === modsWithConditionalStats.sparkOfFocus
   ) {

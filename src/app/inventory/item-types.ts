@@ -96,9 +96,9 @@ export interface DimItem {
   uniqueStack: boolean;
   /**
    * The class this item is restricted to. DestinyClass.Unknown means it can be used by any class.
-   * -1 is for classified armor, which, until proven otherwise, can't be equipped by any class.
+   * DestinyClass.Classified is for classified armor, which, until proven otherwise, can't be equipped by any class.
    * */
-  classType: DestinyClass | -1;
+  classType: DestinyClass;
   /** The localized name of the class this item is restricted to. */
   classTypeNameLocalized: string;
   /** Whether this item can be locked. */
@@ -419,6 +419,9 @@ export interface DimPlugSet {
    * want to access DimSocket.emptyPlugItemHash instead!
    */
   readonly precomputedEmptyPlugItemHash?: number;
+
+  /** A precomputed list of plug hashes that can not roll on current versions of the item. */
+  readonly plugHashesThatCannotRoll: number[];
 }
 
 export interface DimSocket {
@@ -472,8 +475,6 @@ export interface DimSocket {
    */
   craftingData?: { [plugHash: number]: DestinyPlugItemCraftingRequirements | undefined };
 
-  /** Plug hashes in this item visible in the collections roll, if this is a perk */
-  curatedRoll: number[] | null;
   /**
    * The plug item hash used to reset this plug to an empty default plug.
    * This is a heuristic improvement over singleInitialItemHash, but it's

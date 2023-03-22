@@ -526,6 +526,7 @@
       "None": "Wszystkie zbroje wykorzystają swoje obecne statystyki i będą miały minimalny poziom wynoszący 7 energii."
     },
     "AutoStatMods": "Automatycznie dodaj modyfikacje statystyk",
+    "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
     "ChooseAlternateTitle": "Wybierz inny przedmiot",
     "CompareLoadout": "Porównaj uzbrojenie",
     "ConfirmOverwrite": "Czy na pewno chcesz zastąpić pancerz w uzbrojeniu \"{{name}}\" tym nowym zestawem pancerza?",

@@ -3,9 +3,9 @@ import { tempContainer } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import _ from 'lodash';
 import {
-  createContext,
-  default as React,
   MutableRefObject,
+  default as React,
+  createContext,
   useCallback,
   useContext,
   useEffect,
@@ -232,8 +232,6 @@ export const Tooltip = {
   },
 };
 
-const isPointerEvents = 'onpointerdown' in window;
-const isTouch = 'ontouchstart' in window;
 const hoverable = window.matchMedia?.('(hover: hover)').matches;
 const hoverDelay = hoverable ? 100 : 300;
 
@@ -269,19 +267,14 @@ export function PressTip(props: Props) {
     timer.current = 0;
   }, []);
 
-  const hover = useCallback(
-    (
-      e: React.MouseEvent | React.TouchEvent | TouchEvent | React.FocusEvent | React.PointerEvent
-    ) => {
-      e.preventDefault();
-      clearTimeout(timer.current);
-      timer.current = window.setTimeout(() => {
-        setOpen(true);
-      }, hoverDelay);
-      touchStartTime.current = performance.now();
-    },
-    []
-  );
+  const hover = useCallback((e: React.PointerEvent) => {
+    e.preventDefault();
+    clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => {
+      setOpen(true);
+    }, hoverDelay);
+    touchStartTime.current = performance.now();
+  }, []);
 
   // Stop the hover timer when the component unmounts
   useEffect(() => () => clearTimeout(timer.current), []);
@@ -296,47 +289,17 @@ export function PressTip(props: Props) {
     []
   );
 
-  // A combination of React's global event handling strategy and a Safari bug in touch handling
-  // means that relying on binding onTouchStart directly will fail to fire touchstart if this
-  // element has been scrolled within a position: fixed element - like we frequently do in Sheets.
-  useEffect(() => {
-    // It's important that this be a passive event handler
-    if (!isPointerEvents && isTouch && ref.current) {
-      const triggerElement = ref.current;
-      triggerElement.addEventListener('touchstart', hover, { passive: true });
-      return () => triggerElement.removeEventListener('touchstart', hover);
-    }
-  }, [hover]);
-
-  const events = isPointerEvents
-    ? hoverable
-      ? // Mouse/hoverpen based devices with pointer events
-        {
-          onPointerOver: hover,
-          onPointerLeave: closeToolTip,
-          onPointerUp: closeToolTip,
-        }
-      : // Touch-based devices with pointer events
-        {
-          onPointerOver: hover,
-          onPointerDown: hover,
-          onPointerLeave: closeToolTip,
-          onPointerUp: closeToolTip,
-          onClick: absorbClick,
-        }
-    : isTouch
-    ? // Touch-based devices without pointer events
-      {
-        // onTouchStart is handled specially above
-        onTouchEnd: closeToolTip,
-        onTouchCancel: closeToolTip,
-        onClick: absorbClick,
+  const events = hoverable
+    ? {
+        onPointerEnter: hover,
+        onPointerLeave: closeToolTip,
+        onPointerCancel: closeToolTip,
       }
-    : // Mouse based devices without pointer events
-      {
-        onMouseEnter: hover,
-        onMouseUp: closeToolTip,
-        onMouseLeave: closeToolTip,
+    : {
+        onPointerDown: hover,
+        onPointerUp: closeToolTip,
+        onPointerCancel: closeToolTip,
+        onClick: absorbClick,
       };
 
   return <Control open={open} triggerRef={ref} {...events} {...props} />;

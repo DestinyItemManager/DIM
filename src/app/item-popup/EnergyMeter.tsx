@@ -35,8 +35,8 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
     .fill('unused', 0, Math.max(minCapacity, hoverEnergyCapacity || previewCapacity || 0))
     .fill('used', 0, item.energy.energyUsed);
 
-  const onMouseOver = (i: number) => setHoverEnergyCapacity(i);
-  const onMouseOut = () => setHoverEnergyCapacity(0);
+  const handleHoverStart = (i: number) => setHoverEnergyCapacity(i);
+  const handleHoverEnd = () => setHoverEnergyCapacity(0);
   const previewUpgrade = (i: number) => setPreviewCapacity(Math.max(minCapacity, i));
   const resetPreview = () => setPreviewCapacity(energyCapacity);
 
@@ -83,8 +83,8 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
               className={clsx(incrementStyle, {
                 [styles.clickable]: i + 1 > energyCapacity,
               })}
-              onMouseOver={() => onMouseOver(i + 1)}
-              onMouseOut={onMouseOut}
+              onPointerEnter={() => handleHoverStart(i + 1)}
+              onPointerLeave={handleHoverEnd}
               onClick={() => previewUpgrade(i + 1)}
             />
           ))}

@@ -6,9 +6,9 @@ import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
+import styles from './ItemTypeSelector.m.scss';
 import { itemIncludesCategories } from './filtering-utils';
 import { itemCategoryIcons } from './item-category-icons';
-import styles from './ItemTypeSelector.m.scss';
 
 /**
  * Each branch of the drilldown options is represented by a SelectionTreeNode
@@ -17,7 +17,7 @@ import styles from './ItemTypeSelector.m.scss';
  */
 export interface ItemCategoryTreeNode {
   id: string;
-  itemCategoryHash: ItemCategoryHashes;
+  itemCategoryHash: ItemCategoryHashes | 0;
   subCategories?: ItemCategoryTreeNode[];
   /** A terminal node can have items displayed for it. It may still have other drilldowns available. */
   terminal?: boolean;

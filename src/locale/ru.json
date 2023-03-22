@@ -526,6 +526,7 @@
       "None": "Все брони будут использовать свою текущую характеристику и иметь минимальный единиц энергии 7."
     },
     "AutoStatMods": "Автоматически добавлять моды характеристик",
+    "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
     "ChooseAlternateTitle": "Заменить",
     "CompareLoadout": "Сравнить Наборы",
     "ConfirmOverwrite": "Выбранные предметы заменят аналоги в Наборе \"{{name}}\". Продолжаем? ",

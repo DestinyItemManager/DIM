@@ -6,18 +6,17 @@ import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { getStatSortOrder, isAllowedStat } from 'app/inventory/store/stats';
 import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
-import { isPlugStatActive } from 'app/utils/item-utils';
-import { usePlugDescriptions } from 'app/utils/plug-descriptions';
+import { getDimPlugStats, getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { isEnhancedPerk, isModCostVisible } from 'app/utils/socket-utils';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DamageType,
+  DestinyClass,
   DestinyInventoryItemDefinition,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
@@ -25,30 +24,25 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { useCallback } from 'react';
-import { DimItem, DimPlug } from '../inventory/item-types';
+import { DimItem, DimPlug, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import './ItemSockets.scss';
 import styles from './PlugTooltip.m.scss';
 
-function isVisibleStat(item: DimItem, plug: DimPlug, statHash: number) {
-  return (
-    isAllowedStat(statHash) &&
-    // Stats are only shown if the item can actually benefit from them
-    item.stats?.some((stat) => stat.statHash === statHash) &&
-    isPlugStatActive(
-      item,
-      plug.plugDef,
-      statHash,
-      Boolean(
-        plug.plugDef.investmentStats.find((s) => s.statTypeHash === Number(statHash))
-          ?.isConditionallyActive
-      )
-    )
-  );
+interface PlugTooltipProps {
+  def: DestinyInventoryItemDefinition;
+  stats?: { statHash: number; value: number }[];
+  plugObjectives?: DestinyObjectiveProgress[];
+  enableFailReasons?: string;
+  cannotCurrentlyRoll?: boolean;
+  unreliablePerkOption?: boolean;
+  wishListTip?: string;
+  automaticallyPicked?: boolean;
+  hideRequirements?: boolean;
+  craftingData?: DestinyPlugItemCraftingRequirements;
 }
+
 // TODO: Connect this to redux
 export function DimPlugTooltip({
   item,
@@ -67,22 +61,7 @@ export function DimPlugTooltip({
     ? t('WishListRoll.BestRatedTip', { count: wishlistRoll.wishListPerks.size })
     : undefined;
 
-  const visibleStats = plug.stats
-    ? _.sortBy(
-        Object.keys(plug.stats)
-          .map((statHashStr) => parseInt(statHashStr, 10))
-          .filter((statHash) => isVisibleStat(item, plug, statHash)),
-        getStatSortOrder
-      )
-    : [];
-  const stats: { [statHash: string]: number } = {};
-
-  for (const statHash of visibleStats) {
-    const value = plug.stats?.[statHash];
-    if (value) {
-      stats[statHash] = value;
-    }
-  }
+  const stats = getDimPlugStats(item, plug);
 
   // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume
   // that an Exotic weapon can only be masterworked if its catalyst is complete.
@@ -105,16 +84,20 @@ export function DimPlugTooltip({
   );
 }
 
-export interface ExtraPlugTooltipInfo {
-  stats?: { [statHash: string]: number };
-  plugObjectives?: DestinyObjectiveProgress[];
-  enableFailReasons?: string;
-  cannotCurrentlyRoll?: boolean;
-  unreliablePerkOption?: boolean;
-  wishListTip?: string;
+/**
+ * Use this when all you have is a Definition. Otherwise use DimPlugTooltip
+ */
+export function PlugDefTooltip({
+  def,
+  classType,
+  automaticallyPicked,
+}: {
+  def: PluggableInventoryItemDefinition;
+  classType?: DestinyClass;
   automaticallyPicked?: boolean;
-  hideRequirements?: boolean;
-  craftingData?: DestinyPlugItemCraftingRequirements;
+}) {
+  const stats = getPlugDefStats(def, classType);
+  return <PlugTooltip def={def} stats={stats} automaticallyPicked={automaticallyPicked} />;
 }
 
 /**
@@ -122,11 +105,8 @@ export interface ExtraPlugTooltipInfo {
  *
  * It only relies on Bungie API entities, objects or primitives. This is so we can use it to render a
  * tooltip from either a DimPlug or a DestinyInventoryItemDefinition.
- *
- * Use this directly if you want to render a tooltip for a DestinyInventoryItemDefinition, only the def
- * prop is required.
  */
-export function PlugTooltip({
+function PlugTooltip({
   def,
   stats,
   plugObjectives,
@@ -137,30 +117,9 @@ export function PlugTooltip({
   automaticallyPicked,
   hideRequirements,
   craftingData,
-}: {
-  def: DestinyInventoryItemDefinition;
-} & ExtraPlugTooltipInfo) {
+}: PlugTooltipProps) {
   const defs = useD2Definitions();
-  const statsArray =
-    (stats &&
-      Object.entries(stats).map(([statHash, value]) => ({
-        value,
-        statHash: parseInt(statHash, 10),
-      }))) ||
-    [];
-
-  // HACK Loadout plugs operate on defs very often and they show their stats via perks,
-  // which are handled below. But the number of fragment slots is just a direct stat.
-  const aspectCapacityStat = def.investmentStats?.find(
-    (stat) => stat.statTypeHash === StatHashes.AspectEnergyCapacity
-  );
-  if (aspectCapacityStat) {
-    statsArray.push({
-      statHash: aspectCapacityStat.statTypeHash,
-      value: aspectCapacityStat.value,
-    });
-  }
-
+  const statsArray = stats || [];
   const plugDescriptions = usePlugDescriptions(def, statsArray);
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;

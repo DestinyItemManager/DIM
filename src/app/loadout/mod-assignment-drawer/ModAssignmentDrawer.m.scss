@@ -26,6 +26,7 @@
   .energyMeter {
     margin-top: 3px;
     padding: 3px 0;
+
     @include phone-portrait {
       padding: 3px 0 20px;
     }
@@ -38,7 +39,8 @@
 
 .headerInfo {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
+  row-gap: 4px;
   align-items: center;
 }
 

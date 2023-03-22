@@ -55,8 +55,6 @@ export interface MinimalStat {
 }
 type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
-const isTouch = 'ontouchstart' in window;
-
 // TODO: replace rows with Column from organizer
 // TODO: CSS grid-with-sticky layout
 // TODO: dropdowns for query buttons
@@ -180,7 +178,7 @@ export default function Compare({ session }: { session: CompareSession }) {
         items={sortedComparisonItems}
         allStats={allStats}
         remove={remove}
-        setHighlight={isTouch ? undefined : setHighlight}
+        setHighlight={setHighlight}
         onPlugClicked={onPlugClicked}
         doCompareBaseStats={doCompareBaseStats}
         initialItemId={session.initialItemId}
@@ -228,10 +226,7 @@ export default function Compare({ session }: { session: CompareSession }) {
   return (
     <Sheet onClose={cancel} header={header} allowClickThrough>
       <div className="loadout-drawer compare">
-        <div
-          className={styles.bucket}
-          onMouseLeave={isTouch ? undefined : () => setHighlight(undefined)}
-        >
+        <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
           <div className={clsx('compare-item', styles.fixedLeft)}>
             <div className={styles.spacer} />
             {allStats.map((stat) => (
@@ -240,7 +235,7 @@ export default function Compare({ session }: { session: CompareSession }) {
                 className={clsx(styles.statLabel, {
                   [styles.sorted]: stat.id === sortedHash,
                 })}
-                onMouseOver={isTouch ? undefined : () => setHighlight(stat.id)}
+                onPointerEnter={() => setHighlight(stat.id)}
                 onClick={() => changeSort(stat.id)}
               >
                 {stat.displayProperties.hasIcon && (
@@ -280,7 +275,7 @@ function CompareItems({
   items: DimItem[];
   allStats: StatInfo[];
   remove: (item: DimItem) => void;
-  setHighlight?: React.Dispatch<React.SetStateAction<string | number | undefined>>;
+  setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
   // This uses pointer events to directly set the scroll position based on

@@ -1,4 +1,5 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { useCallback } from 'react';
 import { groupModsByModType } from '../mod-utils';
 import styles from './PlugSection.m.scss';
@@ -11,14 +12,13 @@ import { PlugSet } from './types';
  */
 export default function PlugSection({
   plugSet,
-  displayedStatHashes,
+  classType,
   isPlugSelectable,
   onPlugSelected,
   onPlugRemoved,
 }: {
   plugSet: PlugSet;
-  /** A restricted list of stat hashes to display for each plug. If not specified, all stats will be shown. */
-  displayedStatHashes?: number[];
+  classType: DestinyClass;
   /** A function to determine if a given plug is currently selectable. */
   isPlugSelectable: (plug: PluggableInventoryItemDefinition) => boolean;
   onPlugSelected: (
@@ -73,7 +73,7 @@ export default function PlugSection({
                     key={plug.hash}
                     selected={isSelected}
                     plug={plug}
-                    displayedStatHashes={displayedStatHashes}
+                    classType={classType}
                     selectable={selectable}
                     selectionType={selectionType}
                     removable={multiSelect}
