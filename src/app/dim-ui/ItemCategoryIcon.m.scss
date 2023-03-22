@@ -1,5 +1,6 @@
 .itemCategoryIcon {
   width: auto;
+  filter: invert(1) !important;
 
   &.dontInvert {
     filter: none !important;
