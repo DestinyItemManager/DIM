@@ -27,9 +27,8 @@ function resolveIcon(props: BucketIconProps) {
     };
   } else if ('bucketHash' in props) {
     const { bucketHash, ...otherProps } = props;
-    const icon = getBucketSvgIcon(bucketHash);
     return {
-      icon,
+      icon: getBucketSvgIcon(bucketHash),
       otherProps,
     };
   } else {
