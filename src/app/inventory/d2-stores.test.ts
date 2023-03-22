@@ -78,4 +78,21 @@ describe('process stores', () => {
       }
     }
   });
+
+  // This relies on the sample profile having at least one item that has a plug
+  // that can no longer roll. I keep a Commemoration around for that.
+  it('item perks can be marked as cannotCurrentlyRoll', async () => {
+    for (const store of stores) {
+      for (const item of store.items) {
+        if (item.sockets) {
+          if (
+            item.sockets.allSockets.some((s) => s.plugOptions.some((p) => p.cannotCurrentlyRoll))
+          ) {
+            return; // All good, we found one!
+          }
+        }
+      }
+    }
+    throw new Error('Expected at least one item with a perk that cannot roll');
+  });
 });

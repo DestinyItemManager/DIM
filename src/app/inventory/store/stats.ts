@@ -16,6 +16,7 @@ import {
   DestinyStatGroupDefinition,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { Draft } from 'immer';
 import _ from 'lodash';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
 import { DimItem, DimPlug, DimSocket, DimStat } from '../item-types';
@@ -473,16 +474,14 @@ function attachPlugStats(
       activePlugStats[plugInvestmentStat.statTypeHash] = plugStatValue;
     }
 
-    // TODO (ryan) stop mutating sockets, we need to change the order of operation between
-    // item stat generation and socket generation.
-    socket.plugged = { ...activePlug, stats: activePlugStats };
+    // We can mutate the stats here, as the plug has just been freshly constructed. If that ever changes we will need
+    // to reconsider.
+    (activePlug as Draft<DimPlug>).stats = activePlugStats;
   }
 
-  const plugOptionsWithStats: DimPlug[] = [];
   for (const plug of socket.plugOptions) {
     // We already did this plug above and activePlug should be a reference to plug.
     if (plug.plugDef.hash === socket.plugged?.plugDef.hash) {
-      plugOptionsWithStats.push(socket.plugged);
       continue;
     }
 
@@ -524,12 +523,9 @@ function attachPlugStats(
       plugStats[plugInvestmentStat.statTypeHash] = plugStatValue;
     }
 
-    plugOptionsWithStats.push({ ...plug, stats: plugStats });
+    // Yes, we are mutating the stats in place! This relies on the plugs being built fresh every time.
+    (plug as Draft<DimPlug>).stats = plugStats;
   }
-
-  // TODO (ryan) stop mutating sockets, we need to change the order of operation between
-  // item stat generation and socket generation.
-  socket.plugOptions = plugOptionsWithStats;
 }
 
 /**

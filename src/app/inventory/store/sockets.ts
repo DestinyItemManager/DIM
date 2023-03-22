@@ -267,7 +267,7 @@ function buildDefinedSocket(
       const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
       if (plugSet) {
         for (const reusablePlug of plugSet.reusablePlugItems) {
-          const built = buildCachedDefinedPlug(
+          const built = buildDefinedPlug(
             defs,
             reusablePlug.plugItemHash,
             reusablePlug.currentlyCanRoll
@@ -303,7 +303,7 @@ function buildDefinedSocket(
         }
 
         for (const randomPlug of Object.values(plugs)) {
-          const built = buildCachedDefinedPlug(
+          const built = buildDefinedPlug(
             defs,
             randomPlug.plugItemHash,
             randomPlug.currentlyCanRoll
@@ -319,7 +319,7 @@ function buildDefinedSocket(
       }
     } else if (socketDef.reusablePlugItems) {
       for (const reusablePlug of socketDef.reusablePlugItems) {
-        const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
+        const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
         if (built) {
           reusablePlugs.push(built);
         }
@@ -331,7 +331,7 @@ function buildDefinedSocket(
     socketDef.singleInitialItemHash &&
     !reusablePlugs.find((rp) => rp.plugDef.hash === socketDef.singleInitialItemHash)
   ) {
-    const built = buildCachedDefinedPlug(defs, socketDef.singleInitialItemHash);
+    const built = buildDefinedPlug(defs, socketDef.singleInitialItemHash);
     if (built) {
       reusablePlugs.push({
         ...built,
@@ -451,7 +451,11 @@ function buildPlug(
   };
 }
 
-export function buildDefinedPlug(defs: D2ManifestDefinitions, plugHash: number): DimPlug | null {
+export function buildDefinedPlug(
+  defs: D2ManifestDefinitions,
+  plugHash: number,
+  currentlyCanRoll?: boolean
+): DimPlug | null {
   const plugDef = plugHash && defs.InventoryItem.get(plugHash);
   if (!plugDef || !isPluggableItem(plugDef)) {
     return null;
@@ -463,6 +467,7 @@ export function buildDefinedPlug(defs: D2ManifestDefinitions, plugHash: number):
     enableFailReasons: '',
     plugObjectives: emptyArray(),
     stats: null,
+    cannotCurrentlyRoll: currentlyCanRoll !== undefined && !currentlyCanRoll,
   };
 }
 
@@ -647,7 +652,7 @@ function buildSocket(
             plugOptions.push(plugged);
             foundPluggedInOptions = true;
           } else {
-            const built = buildCachedDefinedPlug(
+            const built = buildDefinedPlug(
               defs,
               reusablePlug.plugItemHash,
               reusablePlug.currentlyCanRoll
@@ -665,7 +670,7 @@ function buildSocket(
           plugOptions.push(plugged);
           foundPluggedInOptions = true;
         } else {
-          const built = buildCachedDefinedPlug(defs, reusablePlug.plugItemHash);
+          const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
           if (built && filterReusablePlug(built)) {
             plugOptions.push(built);
           }
@@ -700,10 +705,6 @@ function buildSocket(
 // item would have their own instances of shaders, which is 100's of plugs.
 const reusablePlugSetCache: { [plugSetHash: number]: DimPlugSet | undefined } = {};
 
-// This cache is used to reuse DimPlugs across items. There are a lot of plugs so this
-// reduces the number of identical plugs we have in memory.
-const definedPlugCache: { [plugHash: number]: DimPlug | undefined | null } = {};
-
 /**
  * This builds a DimPlugSet based off the lookup hash for a DestinyPlugSetDefinition.
  * We cache values so that any DimSocket referring to the same DestinyPlugSetDefinition,
@@ -721,7 +722,7 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
     // Deprecated mods should not actually be in any PlugSets, but here we are
     // https://github.com/Bungie-net/api/issues/1801
     if (!deprecatedMods.includes(plugEntry.plugItemHash)) {
-      const plug = buildCachedDefinedPlug(defs, plugEntry.plugItemHash, plugEntry.currentlyCanRoll);
+      const plug = buildDefinedPlug(defs, plugEntry.plugItemHash, plugEntry.currentlyCanRoll);
       if (plug) {
         plugs.push(plug);
       }
@@ -741,30 +742,6 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
   reusablePlugSetCache[plugSetHash] = dimPlugSet;
 
   return dimPlugSet;
-}
-
-/**
- * This builds DimPlugs and caches their values so we reduce the number of instances in memory.
- */
-function buildCachedDefinedPlug(
-  defs: D2ManifestDefinitions,
-  plugHash: number,
-  currentlyCanRoll?: boolean
-): DimPlug | null {
-  const cachedValue = definedPlugCache[plugHash];
-  // The result of buildDefinedPlug can be null, we still consider that a cached value.
-  if (cachedValue !== undefined) {
-    return cachedValue
-      ? currentlyCanRoll === false
-        ? { ...cachedValue, cannotCurrentlyRoll: true }
-        : cachedValue
-      : null;
-  }
-
-  const plug = buildDefinedPlug(defs, plugHash);
-  definedPlugCache[plugHash] = plug;
-
-  return plug ? (currentlyCanRoll === false ? { ...plug, cannotCurrentlyRoll: true } : plug) : null;
 }
 
 /**
