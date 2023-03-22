@@ -1,28 +1,15 @@
 import { d2MissingIcon } from 'app/search/d2-known-values';
 import clsx from 'clsx';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import BungieImage from '../BungieImage';
 import styles from './BucketIcon.m.scss';
-import { itemCategoryIcons } from './itemCategory';
-
-const bucketHashToItemCategoryHash = {
-  [BucketHashes.KineticWeapons]: ItemCategoryHashes.KineticWeapon,
-  [BucketHashes.EnergyWeapons]: ItemCategoryHashes.EnergyWeapon,
-  [BucketHashes.PowerWeapons]: ItemCategoryHashes.PowerWeapon,
-  [BucketHashes.Helmet]: ItemCategoryHashes.Helmets,
-  [BucketHashes.Gauntlets]: ItemCategoryHashes.Arms,
-  [BucketHashes.ChestArmor]: ItemCategoryHashes.Chest,
-  [BucketHashes.LegArmor]: ItemCategoryHashes.Legs,
-  [BucketHashes.ClassArmor]: ItemCategoryHashes.ClassItems,
-  [BucketHashes.Ghost]: ItemCategoryHashes.Ghost,
-  [BucketHashes.Vehicle]: ItemCategoryHashes.Sparrows,
-  [BucketHashes.Ships]: ItemCategoryHashes.Ships,
-  [BucketHashes.Emblems]: ItemCategoryHashes.Emblems,
-} as const;
+import { getBucketSvgIcon, ItemCategoryIcon, itemCategoryIcons } from './itemCategory';
 
 type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> &
   (
+    | {
+        icon: ItemCategoryIcon;
+      }
     | {
         bucketHash: number;
       }
@@ -32,20 +19,23 @@ type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> &
   );
 
 function resolveIcon(props: BucketIconProps) {
-  if ('bucketHash' in props) {
-    const { bucketHash, ...otherProps } = props;
-    const { svg, colorized } = itemCategoryIcons[bucketHashToItemCategoryHash[bucketHash]];
+  if ('icon' in props) {
+    const { icon, ...otherProps } = props;
     return {
-      svg,
-      colorized,
+      icon,
+      otherProps,
+    };
+  } else if ('bucketHash' in props) {
+    const { bucketHash, ...otherProps } = props;
+    const icon = getBucketSvgIcon(bucketHash);
+    return {
+      icon,
       otherProps,
     };
   } else {
     const { itemCategoryHash, ...otherProps } = props;
-    const { svg, colorized } = itemCategoryIcons[itemCategoryHash];
     return {
-      svg,
-      colorized,
+      icon: itemCategoryIcons[itemCategoryHash],
       otherProps,
     };
   }
@@ -53,17 +43,16 @@ function resolveIcon(props: BucketIconProps) {
 
 /** given an item, returns an img. ideally an svg img icon for the item's bucket */
 export default function BucketIcon(props: BucketIconProps) {
-  const icon = resolveIcon(props);
-  return icon.svg ? (
+  const resolved = resolveIcon(props);
+  return resolved.icon ? (
     <img
-      src={icon.svg}
-      {...icon.otherProps}
+      src={resolved.icon.svg}
+      {...resolved.otherProps}
       className={clsx(props.className, styles.icon, {
-        [styles.colorized]: icon.colorized,
-        ['colorized']: icon.colorized,
+        [styles.colorized]: resolved.icon.colorized,
       })}
     />
   ) : (
-    <BungieImage src={d2MissingIcon} {...icon.otherProps} />
+    <BungieImage src={d2MissingIcon} {...resolved.otherProps} />
   );
 }

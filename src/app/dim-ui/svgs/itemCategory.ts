@@ -1,5 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';
@@ -34,7 +34,7 @@ import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 import energyWeaponSlot from 'images/weapon-slot-energy.svg';
 import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
 
-interface ItemCategoryIcon {
+export interface ItemCategoryIcon {
   svg: string;
   colorized: boolean;
 }
@@ -99,6 +99,22 @@ export const itemCategoryIcons: { [itemCategoryHash: number]: ItemCategoryIcon }
   [ItemCategoryHashes.Warlock]: monochrome(warlock),
 } as const;
 
+/** A mapping from bucket hash to item category */
+const bucketHashToItemCategoryHash = {
+  [BucketHashes.KineticWeapons]: ItemCategoryHashes.KineticWeapon,
+  [BucketHashes.EnergyWeapons]: ItemCategoryHashes.EnergyWeapon,
+  [BucketHashes.PowerWeapons]: ItemCategoryHashes.PowerWeapon,
+  [BucketHashes.Helmet]: ItemCategoryHashes.Helmets,
+  [BucketHashes.Gauntlets]: ItemCategoryHashes.Arms,
+  [BucketHashes.ChestArmor]: ItemCategoryHashes.Chest,
+  [BucketHashes.LegArmor]: ItemCategoryHashes.Legs,
+  [BucketHashes.ClassArmor]: ItemCategoryHashes.ClassItems,
+  [BucketHashes.Ghost]: ItemCategoryHashes.Ghost,
+  [BucketHashes.Vehicle]: ItemCategoryHashes.Sparrows,
+  [BucketHashes.Ships]: ItemCategoryHashes.Ships,
+  [BucketHashes.Emblems]: ItemCategoryHashes.Emblems,
+} as const;
+
 /** an SVG of the weapon's type, if determinable */
 export function getWeaponTypeSvgIcon(item: DimItem): ItemCategoryIcon | undefined {
   // reverse through the ICHs because most specific is last,
@@ -129,4 +145,9 @@ export function getArmorSlotSvgIcon(item: DimItem): ItemCategoryIcon | undefined
       return icon;
     }
   }
+}
+
+/** an SVG of the bucket's icon, if determinable */
+export function getBucketSvgIcon(bucketHash: number): ItemCategoryIcon | undefined {
+  return itemCategoryIcons[bucketHashToItemCategoryHash[bucketHash]];
 }
