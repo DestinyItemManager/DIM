@@ -124,9 +124,7 @@
 .weaponSvg {
   // these have varying aspect ratios and are fill:black by default
   width: auto !important;
-  &:not(:global(.colorized)) {
-    filter: invert(1);
-  }
+  filter: invert(1);
 }
 
 .inlineIcon {

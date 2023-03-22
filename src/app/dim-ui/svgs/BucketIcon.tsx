@@ -15,6 +15,7 @@ import energyWeaponSlot from 'images/weapon-slot-energy.svg';
 import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
 import React from 'react';
 import BungieImage from '../BungieImage';
+import styles from './BucketIcon.m.scss';
 
 const bucketIcons = {
   [BucketHashes.KineticWeapons]: kineticWeaponSlot,
@@ -45,6 +46,7 @@ export default function BucketIcon(props: BucketIconProps) {
       src={svg}
       {...otherProps}
       className={clsx(props.className, {
+        [styles.colorized]: colorizedIcons.includes(svg),
         ['colorized']: colorizedIcons.includes(svg),
       })}
     />

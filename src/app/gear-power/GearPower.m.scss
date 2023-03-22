@@ -127,10 +127,7 @@
         width: 22px;
         margin-top: 2px;
         opacity: 0.6;
-
-        &:not(:global(.colorized)) {
-          filter: invert(1);
-        }
+        filter: invert(1);
       }
       .neutral {
         opacity: 0.3;
