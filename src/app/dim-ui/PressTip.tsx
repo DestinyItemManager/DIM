@@ -232,8 +232,8 @@ export const Tooltip = {
   },
 };
 
-const hoverable = window.matchMedia?.('(hover: hover)').matches;
-const hoverDelay = hoverable ? 100 : 300;
+const hoverTime = 100; // ms that the cursor can be over the target before the presstip shows
+const pressTime = 300; // ms that the element can be pressed before the presstip shows
 
 /**
  * A "press tip" is a tooltip that can be shown by pressing on an element, or via hover.
@@ -259,48 +259,96 @@ export function PressTip(props: Props) {
   const timer = useRef<number>(0);
   const touchStartTime = useRef<number>(0);
   const ref = useRef<HTMLDivElement>(null);
+  const startEvent = useRef<'pointerdown' | 'pointerenter'>();
+  const suppressClickUntil = useRef<number>(0);
   const [open, setOpen] = useState<boolean>(false);
 
-  const closeToolTip = useCallback(() => {
+  const closeToolTip = useCallback((e: React.PointerEvent) => {
+    if (e.type === 'pointerup') {
+      ref.current?.releasePointerCapture(e.pointerId);
+    }
+    // Ignore events that aren't paired up
+    if (
+      !startEvent.current ||
+      (e.type === 'pointerup' && startEvent.current === 'pointerenter') ||
+      (e.type === 'pointerleave' && startEvent.current === 'pointerdown')
+    ) {
+      return;
+    }
     setOpen(false);
+    // click fires after pointerup, but we want to suppress click if we'd shown the presstip
+    if (
+      startEvent.current === 'pointerdown' &&
+      performance.now() - touchStartTime.current > pressTime
+    ) {
+      suppressClickUntil.current = performance.now() + 100;
+    }
     clearTimeout(timer.current);
     timer.current = 0;
+    startEvent.current = undefined;
   }, []);
 
   const hover = useCallback((e: React.PointerEvent) => {
+    if (e.type === 'pointerdown') {
+      // Capture pointer so our pointermove absorber works
+      ref.current?.setPointerCapture(e.pointerId);
+    }
     e.preventDefault();
+    // If we're already hovering, don't start hovering again
+    if (
+      startEvent.current &&
+      // Safari, at least, fires both pointerenter and pointerdown at the same time. We want the pointerdown event.
+      !(startEvent.current === 'pointerenter' && performance.now() - touchStartTime.current < 10)
+    ) {
+      return;
+    }
+
     clearTimeout(timer.current);
+    // Save the event type that initiated the hover
+    startEvent.current = e.type as 'pointerenter' | 'pointerdown';
+
+    // Record the start timestamp of the gesture
+    touchStartTime.current = performance.now();
+    // Hover over should wait for a shorter delay than a press
+    const hoverDelay = e.type === 'pointerenter' ? hoverTime : pressTime;
+    // Start a timer to show the pressTip
     timer.current = window.setTimeout(() => {
       setOpen(true);
     }, hoverDelay);
-    touchStartTime.current = performance.now();
   }, []);
 
   // Stop the hover timer when the component unmounts
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  // Prevent clicks if the tooltip has been pressed long enough to show a tip
-  const absorbClick = useCallback(
-    (e: React.MouseEvent | React.TouchEvent | React.FocusEvent | React.PointerEvent) => {
-      if (performance.now() - touchStartTime.current > hoverDelay) {
+  // When the tooltip was opened by pressing (pointerdown), prevent the click event when
+  // we end the gesture. If the presstip was opened via hovering we want to allow clicks
+  // through.
+  const absorbClick = useCallback((e: React.MouseEvent) => {
+    if (performance.now() < suppressClickUntil.current) {
+      e.stopPropagation();
+    }
+  }, []);
+
+  // Prevent dragging from the long press
+  const absorbMove = useCallback(
+    (e: React.PointerEvent) => {
+      if (open) {
+        e.preventDefault();
         e.stopPropagation();
       }
     },
-    []
+    [open]
   );
 
-  const events = hoverable
-    ? {
-        onPointerEnter: hover,
-        onPointerLeave: closeToolTip,
-        onPointerCancel: closeToolTip,
-      }
-    : {
-        onPointerDown: hover,
-        onPointerUp: closeToolTip,
-        onPointerCancel: closeToolTip,
-        onClick: absorbClick,
-      };
+  const events = {
+    onPointerEnter: hover,
+    onPointerDown: hover,
+    onPointerLeave: closeToolTip,
+    onPointerMove: absorbMove,
+    onPointerUp: closeToolTip,
+    onPointerCancel: closeToolTip,
+    onClick: absorbClick,
+  };
 
   return <Control open={open} triggerRef={ref} {...events} {...props} />;
 }
