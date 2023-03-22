@@ -17,7 +17,7 @@ import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
 import { characterSortImportanceSelector, characterSortSelector } from '../settings/character-sort';
-import { getNotes, getTag, ItemInfos } from './dim-item-info';
+import { ItemInfos, getNotes, getTag } from './dim-item-info';
 import { DimItem } from './item-types';
 import { collectNotesHashtags } from './note-hashtags';
 import { ItemCreationContext } from './store/d2-item-factory';
@@ -247,7 +247,7 @@ export const ownedUncollectiblePlugsSelector = createSelector(
   profileResponseSelector,
   (defs, profileResponse) => {
     const accountWideOwned = new Set<number>();
-    const storeSpecificOwned = {};
+    const storeSpecificOwned: { [storeId: string]: Set<number> } = {};
 
     if (defs && profileResponse) {
       const processPlugSet = (

@@ -24,6 +24,7 @@ import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../proces
 import {
   ArmorEnergyRules,
   ArmorSet,
+  ArmorStatHashes,
   ArmorStats,
   artificeSocketReusablePlugSetHash,
   artificeStatBoost,
@@ -96,7 +97,7 @@ export function getTotalModStatChanges(
   for (const mod of lockedMods.concat(subclassPlugs)) {
     for (const stat of mod.investmentStats) {
       if (stat.statTypeHash in totals && isModStatActive(characterClass, mod.hash, stat)) {
-        totals[stat.statTypeHash] += stat.value;
+        totals[stat.statTypeHash as ArmorStatHashes] += stat.value;
       }
     }
   }

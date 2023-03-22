@@ -543,10 +543,10 @@ export function makeItem(
     ).displayProperties;
   }
 
-  if (extendedICH[createdItem.hash]) {
+  if (createdItem.hash in extendedICH) {
     createdItem.itemCategoryHashes = [
       ...createdItem.itemCategoryHashes,
-      extendedICH[createdItem.hash],
+      extendedICH[createdItem.hash]!,
     ];
     // Masks are helmets too
     if (extendedICH[createdItem.hash] === ItemCategoryHashes.Mask) {
@@ -671,8 +671,8 @@ export function makeItem(
     }
   }
 
-  if (extendedBreaker[createdItem.hash]) {
-    createdItem.breakerType = defs.BreakerType.get(extendedBreaker[createdItem.hash]);
+  if (createdItem.hash in extendedBreaker) {
+    createdItem.breakerType = defs.BreakerType.get(extendedBreaker[createdItem.hash]!);
   }
 
   // TODO: compute this on demand

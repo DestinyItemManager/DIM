@@ -13,6 +13,7 @@ import { addIcon, AppIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
+import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -25,7 +26,7 @@ import LoadoutParametersDisplay from '../loadout-ui/LoadoutParametersDisplay';
 import { OptimizerButton } from '../loadout-ui/OptimizerButton';
 import styles from './LoadoutEditBucket.m.scss';
 
-const categoryStyles = {
+const categoryStyles: LookupTable<D2BucketCategory, string> = {
   Weapons: styles.categoryWeapons,
   Armor: styles.categoryArmor,
   General: styles.categoryGeneral,

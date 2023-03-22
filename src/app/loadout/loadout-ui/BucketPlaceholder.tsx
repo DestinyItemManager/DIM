@@ -1,6 +1,7 @@
 import { bucketsSelector } from 'app/inventory/selectors';
 import { bucketHashToItemCategoryHash, itemCategoryIcons } from 'app/organizer/item-category-icons';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './BucketPlaceholder.m.scss';
@@ -9,7 +10,7 @@ export function BucketPlaceholder({
   bucketHash,
   onClick,
 }: {
-  bucketHash: number;
+  bucketHash: BucketHashes;
   onClick?: React.MouseEventHandler;
 }) {
   const buckets = useSelector(bucketsSelector)!;
@@ -28,7 +29,7 @@ export function BucketPlaceholder({
       {bucketHash in bucketHashToItemCategoryHash && (
         <img
           className={styles.placeholder}
-          src={itemCategoryIcons[bucketHashToItemCategoryHash[bucketHash]]}
+          src={itemCategoryIcons[bucketHashToItemCategoryHash[bucketHash]!]}
         />
       )}
     </Component>

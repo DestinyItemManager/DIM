@@ -22,10 +22,10 @@ import modSocketMetadata, {
   ModSocketMetadata,
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
-import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DamageType, DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
 import { objectifyArray } from './util';
@@ -35,7 +35,7 @@ import { objectifyArray } from './util';
 // mainly for css purposes and the "is:arc" style filter names
 
 export const getItemDamageShortName = (item: DimItem): string | undefined =>
-  damageNamesByEnum[item.element?.enumValue ?? -1];
+  damageNamesByEnum[item.element?.enumValue ?? DamageType.None];
 
 // these are helpers for identifying SpecialtySockets (combat style/raid mods). See specialty-modslots.ts
 
@@ -102,7 +102,7 @@ export const getInterestingSocketMetadatas = (item?: DimItem): ModSocketMetadata
  * returns mod type tag if the plugCategoryHash (from a mod definition's .plug) is known
  */
 export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): string | undefined =>
-  modTypeTagByPlugCategoryHash[plugCategoryHash];
+  modTypeTagByPlugCategoryHash[plugCategoryHash as PlugCategoryHashes];
 
 /** feed a **mod** definition into this */
 export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>

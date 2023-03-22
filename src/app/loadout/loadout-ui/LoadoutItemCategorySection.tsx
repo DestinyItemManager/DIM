@@ -12,6 +12,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
+import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
@@ -21,7 +22,7 @@ import styles from './LoadoutItemCategorySection.m.scss';
 import LoadoutParametersDisplay from './LoadoutParametersDisplay';
 import { OptimizerButton } from './OptimizerButton';
 
-const categoryStyles = {
+const categoryStyles: LookupTable<D2BucketCategory, string> = {
   Weapons: styles.categoryWeapons,
   Armor: styles.categoryArmor,
   General: styles.categoryGeneral,

@@ -8,7 +8,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
-import { DEFAULT_SHADER, armorStats } from '../d2-known-values';
+import { armorStats, DEFAULT_SHADER } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 
 const notableTags = ['favorite', 'keep'];

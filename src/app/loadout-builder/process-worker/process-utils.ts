@@ -40,7 +40,7 @@ export function precalculateStructures(
     totalModEnergyCost:
       _.sum(generalModCosts) + _.sumBy(activityMods, (act) => act.energy?.val ?? 0),
     activityModPermutations: generateProcessModPermutations(activityMods),
-    activityTagCounts: activityMods.reduce((acc, mod) => {
+    activityTagCounts: activityMods.reduce<{ [tag: string]: number }>((acc, mod) => {
       if (mod.tag) {
         acc[mod.tag] = (acc[mod.tag] || 0) + 1;
       }

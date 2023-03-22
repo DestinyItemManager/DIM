@@ -7,10 +7,11 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { t, tl } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
-import { armorStats, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
+import { TOTAL_STAT_HASH, armorStats } from 'app/search/d2-known-values';
 import { getColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { isPlugStatActive } from 'app/utils/item-utils';
+import { LookupTable } from 'app/utils/util-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -28,7 +29,7 @@ const modItemCategoryHashes = [
 ];
 
 // Some stat labels are long. This lets us replace them with i18n
-const statLabels: Record<number, string | undefined> = {
+const statLabels: LookupTable<StatHashes, string> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
 };
@@ -97,7 +98,9 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         aria-label={stat.displayProperties.name}
         title={stat.displayProperties.description}
       >
-        {stat.statHash in statLabels ? t(statLabels[stat.statHash]!) : stat.displayProperties.name}
+        {stat.statHash in statLabels
+          ? t(statLabels[stat.statHash as StatHashes]!)
+          : stat.displayProperties.name}
       </div>
 
       <div className={clsx(styles.value, optionalClasses)}>

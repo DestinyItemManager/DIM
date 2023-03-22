@@ -11,7 +11,6 @@ import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { ActivityModifier } from './ActivityModifier';
 import CompletionCheckbox from './CompletionCheckbox';
-import LoadoutRequirementModifier from './LoadoutRequirementModifier';
 
 interface Props {
   displayProperties: DestinyDisplayPropertiesDefinition;
@@ -70,10 +69,9 @@ export function RaidActivity({
         {activity.modifierHashes?.map(
           (modifierHash) =>
             modifierHash !== ARMSMASTER_ACTIVITY_MODIFIER && (
-              <ActivityModifier key={modifierHash} modifierHash={modifierHash} />
+              <ActivityModifier key={modifierHash} modifierHash={modifierHash} small />
             )
         )}
-        <LoadoutRequirementModifier activity={activity} />
       </div>
       {activity.phases && activity.phases.length > 0 && (
         <div className="quest-objectives">

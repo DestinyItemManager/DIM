@@ -1,5 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
 import { d2MissingIcon } from 'app/search/d2-known-values';
+import { LookupTable } from 'app/utils/util-types';
 import { BucketHashes } from 'data/d2/generated-enums';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
@@ -13,7 +14,7 @@ import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
 import React from 'react';
 import BungieImage from '../BungieImage';
 
-const bucketIcons = {
+const bucketIcons: LookupTable<BucketHashes, string> = {
   [BucketHashes.KineticWeapons]: dmgKinetic,
   [BucketHashes.EnergyWeapons]: energyWeapon,
   [BucketHashes.PowerWeapons]: powerWeapon,
@@ -32,7 +33,7 @@ type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> & {
 /** given an item, returns an img. ideally an svg img icon for the item's bucket */
 export default function BucketIcon(props: BucketIconProps) {
   const { item, ...otherProps } = props;
-  const svg = bucketIcons[item.bucket.hash];
+  const svg = bucketIcons[item.bucket.hash as BucketHashes];
   return svg ? (
     <img src={svg} {...otherProps} />
   ) : (

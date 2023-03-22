@@ -1,5 +1,4 @@
 import { tl } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
 import {
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
@@ -12,6 +11,7 @@ import {
   getSocketsByCategoryHash,
   matchesCuratedRoll,
 } from 'app/utils/socket-utils';
+import { StringLookup } from 'app/utils/util-types';
 import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import craftingMementos from 'data/d2/crafting-mementos.json';
 import {
@@ -36,7 +36,7 @@ export const modslotFilter: FilterDefinition = {
   destinyVersion: 2,
   filter:
     ({ filterValue }) =>
-    (item: DimItem) => {
+    (item) => {
       const metadatas =
         filterValue === 'activity'
           ? getInterestingSocketMetadatas(item)
@@ -65,7 +65,7 @@ const socketFilters: FilterDefinition[] = [
     keywords: 'randomroll',
     description: tl('Filter.RandomRoll'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) =>
+    filter: () => (item) =>
       Boolean(item.bucket.inArmor && item.energy) ||
       (!item.crafted &&
         item.sockets?.allSockets.some(
@@ -78,14 +78,14 @@ const socketFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter:
       ({ d2Definitions }) =>
-      (item: DimItem) =>
+      (item) =>
         matchesCuratedRoll(d2Definitions!, item),
   },
   {
     keywords: 'extraperk',
     description: tl('Filter.ExtraPerk'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) => {
+    filter: () => (item) => {
       if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
         return false;
       }
@@ -103,7 +103,7 @@ const socketFilters: FilterDefinition[] = [
     keywords: ['shaded', 'hasshader'],
     description: tl('Filter.HasShader'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) =>
+    filter: () => (item) =>
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
@@ -116,7 +116,7 @@ const socketFilters: FilterDefinition[] = [
     keywords: ['ornamented', 'hasornament'],
     description: tl('Filter.HasOrnament'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) =>
+    filter: () => (item) =>
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
@@ -136,7 +136,7 @@ const socketFilters: FilterDefinition[] = [
     keywords: 'hasmod',
     description: tl('Filter.Mods.Y2'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) =>
+    filter: () => (item) =>
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
@@ -156,7 +156,7 @@ const socketFilters: FilterDefinition[] = [
     keywords: 'modded',
     description: tl('Filter.Mods.Y3'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) =>
+    filter: () => (item) =>
       Boolean(item.energy) &&
       item.sockets &&
       item.sockets.allSockets.some((socket) =>
@@ -180,13 +180,13 @@ const socketFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: ({ filterValue, language }) => {
       if (filterValue === 'armorintrinsic') {
-        return (item: DimItem) => Boolean(!item.isExotic && getIntrinsicArmorPerkSocket(item));
+        return (item) => Boolean(!item.isExotic && getIntrinsicArmorPerkSocket(item));
       }
       if (filterValue === 'none') {
-        return (item: DimItem) =>
+        return (item) =>
           Boolean(!item.isExotic && item.bucket.inArmor && !getIntrinsicArmorPerkSocket(item));
       }
-      return (item: DimItem) => {
+      return (item) => {
         const intrinsic =
           getIntrinsicArmorPerkSocket(item)?.plugged?.plugDef.displayProperties.name;
         return Boolean(intrinsic && plainString(intrinsic, language).includes(filterValue));
@@ -201,7 +201,7 @@ const socketFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter:
       ({ filterValue }) =>
-      (item: DimItem) => {
+      (item) => {
         const compatibleModTags = getSpecialtySocketMetadatas(item)?.flatMap(
           (m) => m.compatibleModTags
         );
@@ -216,7 +216,7 @@ const socketFilters: FilterDefinition[] = [
     description: tl('Filter.Deepsight'),
     format: 'simple',
     destinyVersion: 2,
-    filter: () => (item: DimItem) => {
+    filter: () => (item) => {
       if (!item.deepsightInfo) {
         return false;
       }
@@ -233,8 +233,8 @@ const socketFilters: FilterDefinition[] = [
     destinyVersion: 2,
     suggestions: ['any', ...Object.keys(craftingMementos)],
     filter: ({ filterValue }) => {
-      const list: number[] | undefined = craftingMementos[filterValue];
-      return (item: DimItem) =>
+      const list = (craftingMementos as StringLookup<number[]>)[filterValue];
+      return (item) =>
         item.sockets?.allSockets.some(
           (s) =>
             s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos &&
@@ -250,7 +250,7 @@ const socketFilters: FilterDefinition[] = [
     suggestions: ['complete', 'incomplete', 'missing'],
     filter:
       ({ filterValue }) =>
-      (item: DimItem) => {
+      (item) => {
         if (!item.catalystInfo) {
           return false;
         }
@@ -274,14 +274,14 @@ const socketFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter:
       ({ compare }) =>
-      (item: DimItem) =>
+      (item) =>
         item.sockets && compare!(countEnhancedPerks(item.sockets)),
   },
   {
     keywords: 'retiredperk',
     description: tl('Filter.RetiredPerk'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) => {
+    filter: () => (item) => {
       if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
         return false;
       }

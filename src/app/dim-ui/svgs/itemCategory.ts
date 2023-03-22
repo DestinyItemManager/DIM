@@ -1,4 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
+import { LookupTable } from 'app/utils/util-types';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
@@ -27,7 +28,7 @@ import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
 import kineticSlot from 'images/kinetic-slot.svg';
 
-const weaponTypeSvgByCategoryHash = {
+const weaponTypeSvgByCategoryHash: LookupTable<ItemCategoryHashes, string> = {
   [ItemCategoryHashes.AutoRifle]: autoRifle,
   [ItemCategoryHashes.HandCannon]: handCannon,
   [ItemCategoryHashes.PulseRifle]: pulseRifle,
@@ -48,13 +49,13 @@ const weaponTypeSvgByCategoryHash = {
   [ItemCategoryHashes.Glaives]: glaive,
 };
 
-const weaponSlotSvgByCategoryHash = {
+const weaponSlotSvgByCategoryHash: LookupTable<ItemCategoryHashes, string> = {
   [ItemCategoryHashes.KineticWeapon]: kineticSlot,
   [ItemCategoryHashes.EnergyWeapon]: energyWeapon,
   [ItemCategoryHashes.PowerWeapon]: powerWeapon,
 };
 
-const armorSlotSvgByCategoryHash = {
+const armorSlotSvgByCategoryHash: LookupTable<ItemCategoryHashes, string> = {
   [ItemCategoryHashes.Helmets]: helmet,
   [ItemCategoryHashes.Arms]: gauntlets,
   [ItemCategoryHashes.Chest]: chest,
@@ -67,7 +68,7 @@ export function getWeaponTypeSvgIcon(item: DimItem) {
   // reverse through the ICHs because most specific is last,
   // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const svg: string = weaponTypeSvgByCategoryHash[ich];
+    const svg = weaponTypeSvgByCategoryHash[ich as ItemCategoryHashes];
     if (svg) {
       return svg;
     }
@@ -77,7 +78,7 @@ export function getWeaponTypeSvgIcon(item: DimItem) {
 /** an SVG of the weapon's slot, if possible */
 export function getWeaponSlotSvgIcon(item: DimItem) {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const svg: string = weaponSlotSvgByCategoryHash[ich];
+    const svg = weaponSlotSvgByCategoryHash[ich as ItemCategoryHashes];
     if (svg) {
       return svg;
     }
@@ -87,7 +88,7 @@ export function getWeaponSlotSvgIcon(item: DimItem) {
 /** an SVG of the armor's slot, if determinable */
 export function getArmorSlotSvgIcon(item: DimItem) {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const svg: string = armorSlotSvgByCategoryHash[ich];
+    const svg = armorSlotSvgByCategoryHash[ich as ItemCategoryHashes];
     if (svg) {
       return svg;
     }

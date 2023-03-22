@@ -219,7 +219,7 @@ export const dimApi = (
         profileLastLoaded: Date.now(),
         settings: {
           ...state.settings,
-          ...profileResponse.settings,
+          ...(profileResponse.settings as Settings),
         },
         itemHashTags: profileResponse.itemHashTags
           ? _.keyBy(profileResponse.itemHashTags, (t) => t.hash)
@@ -662,9 +662,10 @@ function compactUpdate(
 
         // Eliminate chains of settings that get back to the initial state
         for (const key in payload) {
-          if (payload[key] === before[key]) {
-            delete payload[key];
-            delete before[key];
+          const typedKey = key as keyof typeof payload;
+          if (payload[typedKey] === before[typedKey]) {
+            delete payload[typedKey];
+            delete before[typedKey];
           }
         }
         if (_.isEmpty(payload)) {
