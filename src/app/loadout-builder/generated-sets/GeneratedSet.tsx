@@ -86,6 +86,7 @@ function GeneratedSet({
     );
     const allMods = [...lockedMods, ...statMods];
     const { itemModAssignments, unassignedMods } = fitMostMods({
+      defs,
       items: displayedItems,
       plannedMods: allMods,
       armorEnergyRules,
@@ -103,7 +104,7 @@ function GeneratedSet({
     }
 
     return itemModAssignments;
-  }, [set.statMods, lockedMods, displayedItems, armorEnergyRules, defs.InventoryItem]);
+  }, [set.statMods, lockedMods, defs, displayedItems, armorEnergyRules]);
 
   // Distribute our automatically picked mods across the items so that item components
   // can highlight them

@@ -1,9 +1,14 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSockets, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { getEnergyUpgradePlugs } from 'app/inventory/store/energy';
 import { isArtifice } from 'app/item-triage/triage-utils';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import {
+  ItemTierName,
+  MAX_ARMOR_ENERGY_CAPACITY,
+  armor2PlugCategoryHashesByName,
+} from 'app/search/d2-known-values';
 import { ModSocketMetadata } from 'app/search/specialty-modslots';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
@@ -16,6 +21,7 @@ import {
 } from 'app/utils/socket-utils';
 import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
+import memoizeOne from 'memoize-one';
 import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
 import { activityModPlugCategoryHashes } from './known-values';
 import { generateModPermutations } from './mod-permutations';
@@ -122,15 +128,103 @@ export function categorizeArmorMods(
   };
 }
 
+const materialsByRarity = [
+  3159615086, // InventoryItem "Glimmer"
+  1022552290, // InventoryItem "Legendary Shards"
+  3853748946, // InventoryItem "Enhancement Core"
+  4257549984, // InventoryItem "Enhancement Prism"
+  4257549985, // InventoryItem "Ascendant Shard"
+];
+
+/**
+ * Upgrading the energy capacity of an item costs materials. However, exotics cost more than legendaries,
+ * and higher tiers cost more than lower tiers. So we want to find an assignment that minimizes the global
+ * costs across all items. This cost model defines a total order over the possible materials that could be spent.
+ *
+ * Currently this is a lexicographic comparison of material amounts by rarity: Something that costs
+ * two ascendant shards is always more costly than something that only costs one. If the ascendant shard cost
+ * is the same, then we count how many prisms are spent etc.
+ */
+function getUpgradeCost(
+  model: EnergyUpgradeCostModel,
+  item: ItemEnergy,
+  dimItem: DimItem,
+  newEnergy: number
+) {
+  if (!model.byRarity[item.rarity]) {
+    const plugs = getEnergyUpgradePlugs(dimItem);
+    const costsPerTier: number[][] = Array(MAX_ARMOR_ENERGY_CAPACITY);
+    for (let i = 0; i <= MAX_ARMOR_ENERGY_CAPACITY; i++) {
+      const previousTierCosts = costsPerTier[i - 1];
+      costsPerTier[i] = previousTierCosts
+        ? [...previousTierCosts]
+        : Array(materialsByRarity.length).fill(0);
+      const plug = plugs.find((plug) => plug.plug.energyCapacity!.capacityValue === i);
+      if (!plug) {
+        continue;
+      }
+      const materials = model.defs.MaterialRequirementSet.get(
+        plug.plug.insertionMaterialRequirementHash
+      );
+      for (const material of materials.materials) {
+        const idx = materialsByRarity.findIndex((mat) => mat === material.itemHash);
+        if (idx !== -1) {
+          costsPerTier[i][idx] += material.count;
+        }
+      }
+    }
+    model.byRarity[dimItem.tier] = costsPerTier;
+  }
+  const tierModel = model.byRarity[dimItem.tier]!;
+  const alreadyPaidCosts = tierModel[item.originalCapacity];
+  return tierModel[newEnergy].map((val, idx) => val - alreadyPaidCosts[idx]);
+}
+
+/**
+ * This upgrade cost model isn't exactly cheap to compute, so we'd rather do it only once.
+ * We know that all items of a given rarity have the same costs for the same capacity tier,
+ * so we just compute it on-demand, once.
+ */
+interface EnergyUpgradeCostModel {
+  defs: D2ManifestDefinitions;
+  /** Cumulative costs to reach the indexed capacity. Subtract the costs for current capacity. */
+  byRarity: { [rarity in ItemTierName]?: number[][] };
+}
+
+/**
+ * The memoization ensures that even as LO runs this for all rendered sets,
+ * we don't end up rediscovering all the costs.
+ */
+const createUpgradeCostModel = memoizeOne(
+  (defs: D2ManifestDefinitions): EnergyUpgradeCostModel => ({
+    defs,
+    byRarity: {},
+  })
+);
+
+/**
+ * Lexicographic array comparison.
+ */
+function compareCosts(a: number[], b: number[]) {
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] < b[i]) {
+      return -1;
+    } else if (a[i] > b[i]) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
 /**
  * Given a set of items and desired mods, this checks permutations to get as many assigned as possible.
  *
  * It considers item mods slots, item energy, and user willingness to upgrade,
- * and uses the idea of total energy spent and wasted to rank mod assignments.
+ * and uses the idea of total energy upgrade cost.
  *
  * To do this we create permutations of general, combat and activity mods and loop over each
  * set of permutations and validate the combination. Validate is done via a lower number of
- * unassigned mods or an equal amount of unassigned mods and a lower energy cost.
+ * unassigned mods or an equal amount of unassigned mods and a lower uprade cost.
  *
  * This returns a list of `unassignedMods` it was unable to find places for,
  * and `itemModAssignments`, an item ID-keyed dictionary of
@@ -138,10 +232,12 @@ export function categorizeArmorMods(
  * - bucket independent (intellect mod, charged w/ light, etc)
  */
 export function fitMostMods({
+  defs,
   items,
   plannedMods,
   armorEnergyRules,
 }: {
+  defs: D2ManifestDefinitions;
   /** a set (i.e. helmet, arms, etc) of items that we are trying to assign mods to */
   items: DimItem[];
   /** mods we are trying to place on the items */
@@ -157,13 +253,14 @@ export function fitMostMods({
   const bucketSpecificAssignments: ModAssignments = {};
 
   // just an arbitrarily large number
-  // The total cost to assign all the mods to a set
-  // this includes energy used to upgrade and energy wasted on changing elements
-  let assignmentEnergyCost = Number.MAX_SAFE_INTEGER;
+  // The total cost to upgrade armor to assign all the mods to a set
+  let assignmentUpgradeCost = Array(materialsByRarity.length).fill(Number.MAX_SAFE_INTEGER);
   // The total number of mods that couldn't be assigned to the items
   let assignmentUnassignedModCount = Number.MAX_SAFE_INTEGER;
   // The total number of bucket independent mods that are changed in the assignment
   let assignmentModChangeCount = Number.MAX_SAFE_INTEGER;
+
+  const upgradeCostModel = createUpgradeCostModel(defs);
 
   for (const item of items) {
     bucketSpecificAssignments[item.id] = { assigned: [], unassigned: [] };
@@ -272,16 +369,30 @@ export function fitMostMods({
         continue;
       }
 
-      let energyUsedAndWasted = 0;
-      for (const [itemId, { assigned }] of Object.entries(assignments)) {
-        energyUsedAndWasted += calculateEnergyChange(itemEnergies[itemId], assigned);
-      }
+      const energyUpgradeCost = items.reduce(
+        (existingCost: number[] | undefined, item: DimItem) => {
+          const itemEnergy = itemEnergies[item.id];
+          const assignedMods = assignments[item.id].assigned;
+          const totalModCost =
+            itemEnergy.used + _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
+          const newItemCapacity = Math.max(totalModCost, itemEnergy.originalCapacity);
+          const thisItemUpgradeCost = getUpgradeCost(
+            upgradeCostModel,
+            itemEnergy,
+            item,
+            newItemCapacity
+          );
+          return existingCost
+            ? existingCost.map((val, idx) => val + thisItemUpgradeCost[idx])
+            : thisItemUpgradeCost;
+        },
+        undefined
+      )!;
 
-      // Skip further checks if we are spending more energy that we were previously.
-      if (
-        unassignedModCount === assignmentUnassignedModCount &&
-        energyUsedAndWasted > assignmentEnergyCost
-      ) {
+      const upgradeCostsResult = compareCosts(energyUpgradeCost, assignmentUpgradeCost);
+
+      // Skip further checks if we are spending more materials that we were previously.
+      if (unassignedModCount === assignmentUnassignedModCount && upgradeCostsResult > 0) {
         continue;
       }
 
@@ -298,16 +409,15 @@ export function fitMostMods({
         // Less unassigned mods
         unassignedModCount < assignmentUnassignedModCount ||
         // The same amount of unassigned mods but the assignment is cheaper
-        (unassignedModCount === assignmentUnassignedModCount &&
-          energyUsedAndWasted < assignmentEnergyCost) ||
+        (unassignedModCount === assignmentUnassignedModCount && upgradeCostsResult < 0) ||
         // The assignment costs the same but we are changing fewer mods
         (unassignedModCount === assignmentUnassignedModCount &&
-          energyUsedAndWasted === assignmentEnergyCost &&
+          upgradeCostsResult === 0 &&
           modChangeCount < assignmentModChangeCount)
       ) {
         // We save this assignment and its metadata because it is determined to be better
         bucketIndependentAssignments = assignments;
-        assignmentEnergyCost = energyUsedAndWasted;
+        assignmentUpgradeCost = energyUpgradeCost;
         assignmentUnassignedModCount = unassignedModCount;
         assignmentModChangeCount = modChangeCount;
       }
@@ -615,20 +725,6 @@ function isActivityModValid(
   );
 }
 
-/**
- * A cost heuristic for upgrading armor.
- */
-function calculateEnergyChange(
-  itemEnergy: ItemEnergy,
-  assignedMods: PluggableInventoryItemDefinition[]
-) {
-  const modCost =
-    itemEnergy.used + _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
-
-  // Otherwise check how many levels of upgrade we need
-  return Math.max(0, modCost - itemEnergy.originalCapacity);
-}
-
 function buildItemEnergy({
   item,
   assignedMods,
@@ -643,6 +739,7 @@ function buildItemEnergy({
     originalCapacity: item.energy?.energyCapacity || 0,
     derivedCapacity: calculateAssumedItemEnergy(item, armorEnergyRules),
     isClassItem: item.bucket.hash === BucketHashes.ClassArmor,
+    rarity: item.tier,
   };
 }
 
@@ -651,6 +748,7 @@ interface ItemEnergy {
   originalCapacity: number;
   derivedCapacity: number;
   isClassItem: boolean;
+  rarity: ItemTierName;
 }
 /**
  * Validates whether a mod can be assigned to an item in the mod assignments algorithm.
