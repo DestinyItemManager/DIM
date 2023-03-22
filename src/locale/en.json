@@ -748,8 +748,12 @@
   "Milestone": {
     "Daily": "Daily Challenge",
     "OneTime": "One Time Challenge",
-    "SeasonEnds": "Season ends in ",
+    "PinnacleCap": "Pinnacle Cap",
+    "PowerFloor": "Power Floor",
+    "PowerfulCap": "Powerful Cap",
     "SeasonalRank": "Seasonal Rank {{rank}}",
+    "SeasonEnds": "Season ends in ",
+    "SoftCap": "Soft Cap",
     "Special": "Special Event Challenge",
     "Tutorial": "Tutorial Challenge",
     "Unknown": "Challenge",
