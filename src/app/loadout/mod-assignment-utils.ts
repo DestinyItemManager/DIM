@@ -781,6 +781,10 @@ function isModEnergyValid(
   modToAssign: PluggableInventoryItemDefinition,
   ...assignedMods: (PluggableInventoryItemDefinition | null)[]
 ) {
+  // Items with 0 energy are armor 1.0 / armor 1.5
+  if (itemEnergy.originalCapacity < 1) {
+    return false;
+  }
   const modToAssignCost = modToAssign.plug.energyCost?.energyCost || 0;
   const assignedModsCost = _.sumBy(assignedMods, (mod) => mod?.plug.energyCost?.energyCost || 0);
 
