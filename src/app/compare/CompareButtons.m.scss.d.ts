@@ -4,7 +4,6 @@ interface CssExports {
   'inlineImageIcon': string;
   'intrinsicIcon': string;
   'svgIcon': string;
-  'svgIconWrapper': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
