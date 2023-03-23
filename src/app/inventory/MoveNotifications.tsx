@@ -15,13 +15,14 @@ import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/sh
 import { DimError } from 'app/utils/dim-error';
 import { useThrottledSubscription } from 'app/utils/hooks';
 import { Observable } from 'app/utils/observable';
+import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
-import { DimItem } from './item-types';
 import ItemIcon, { DefItemIcon } from './ItemIcon';
 import styles from './MoveNotifications.m.scss';
+import { DimItem } from './item-types';
 import { DimStore } from './store-types';
 
 /** How long to leave the notification up after it's done. */
@@ -251,7 +252,7 @@ const enum MoveState {
   Succeeded,
 }
 
-const moveStateClasses = {
+const moveStateClasses: LookupTable<MoveState, string> = {
   [MoveState.Failed]: styles.failed,
   [MoveState.Succeeded]: styles.succeeded,
 };

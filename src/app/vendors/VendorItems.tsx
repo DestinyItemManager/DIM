@@ -165,8 +165,9 @@ export default function VendorItems({
             </div>
           </div>
         )}
-        {Object.entries(itemsByCategory).map(
-          ([categoryIndex, items]) =>
+        {Object.entries(itemsByCategory).map(([categoryIndexStr, items]) => {
+          const categoryIndex = parseInt(categoryIndexStr, 10);
+          return (
             vendor.def.displayCategories[categoryIndex] &&
             !ignoreCategories.includes(vendor.def.displayCategories[categoryIndex].identifier) && (
               <div className={styles.vendorRow} key={categoryIndex}>
@@ -196,7 +197,8 @@ export default function VendorItems({
                             owned={Boolean(
                               ownedItemHashes?.has(vendorItem.item.hash) ||
                                 vendorItem.owned ||
-                                ownedItemHashes?.has(focusingItemOutputs[vendorItem.item.hash])
+                                (vendorItem.item.hash in focusingItemOutputs &&
+                                  ownedItemHashes?.has(focusingItemOutputs[vendorItem.item.hash]!))
                             )}
                             characterId={characterId}
                           />
@@ -205,7 +207,8 @@ export default function VendorItems({
                 </div>
               </div>
             )
-        )}
+          );
+        })}
       </div>
     </div>
   );

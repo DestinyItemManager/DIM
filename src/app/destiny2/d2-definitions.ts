@@ -23,6 +23,7 @@ import {
   DestinyLoadoutConstantsDefinition,
   DestinyLoadoutIconDefinition,
   DestinyLoadoutNameDefinition,
+  DestinyManifestComponentName,
   DestinyMaterialRequirementSetDefinition,
   DestinyMetricDefinition,
   DestinyMilestoneDefinition,
@@ -50,7 +51,9 @@ import { setD2Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/manifest-service-json';
 import { HashLookupFailure, ManifestDefinitions } from './definitions';
 
-const lazyTables = [
+type ManifestTablesShort = Exclude<keyof D2ManifestDefinitions, 'isDestiny1' | 'isDestiny2'>;
+
+const lazyTables: ManifestTablesShort[] = [
   'InventoryItem',
   'Objective',
   'SandboxPerk',
@@ -85,7 +88,7 @@ const lazyTables = [
   'LoadoutColor',
 ];
 
-const eagerTables = [
+const eagerTables: ManifestTablesShort[] = [
   'InventoryBucket',
   'Class',
   'Gender',
@@ -178,13 +181,13 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
 
 export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
   enhanceDBWithFakeEntries(db);
-  const defs = {
+  const defs: any = {
     isDestiny1: () => false,
     isDestiny2: () => true,
   };
 
   for (const tableShort of lazyTables) {
-    const table = `Destiny${tableShort}Definition` as keyof AllDestinyManifestComponents;
+    const table = `Destiny${tableShort}Definition` as DestinyManifestComponentName;
     const dbTable = db[table];
     if (!dbTable) {
       throw new Error(`Table ${table} does not exist in the manifest`);
@@ -219,7 +222,7 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
   }
   // Resources that need to be fully loaded (because they're iterated over)
   for (const tableShort of eagerTables) {
-    const table = `Destiny${tableShort}Definition`;
+    const table = `Destiny${tableShort}Definition` as DestinyManifestComponentName;
     defs[tableShort] = db[table];
   }
 

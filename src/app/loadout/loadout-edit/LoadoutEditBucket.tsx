@@ -2,17 +2,18 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats, singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { addIcon, AppIcon, faTshirt } from 'app/shell/icons';
+import { AppIcon, addIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
+import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -25,7 +26,7 @@ import LoadoutParametersDisplay from '../loadout-ui/LoadoutParametersDisplay';
 import { OptimizerButton } from '../loadout-ui/OptimizerButton';
 import styles from './LoadoutEditBucket.m.scss';
 
-const categoryStyles = {
+const categoryStyles: LookupTable<D2BucketCategory, string> = {
   Weapons: styles.categoryWeapons,
   Armor: styles.categoryArmor,
   General: styles.categoryGeneral,

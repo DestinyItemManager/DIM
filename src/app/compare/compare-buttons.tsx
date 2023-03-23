@@ -214,7 +214,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
       ],
       query:
         '(' +
-        bucketToSearch[exampleItem.bucket.hash] +
+        bucketToSearch[exampleItem.bucket.hash as keyof typeof bucketToSearch] +
         ' ' +
         (exampleItem.destinyVersion === 2 && intrinsic
           ? // TODO: add a search by perk hash? It'd be slightly different than searching by name
@@ -239,7 +239,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
           wrapperClassName={styles.svgIconWrapper}
         />,
       ],
-      query: bucketToSearch[exampleItem.bucket.hash],
+      query: bucketToSearch[exampleItem.bucket.hash as keyof typeof bucketToSearch],
     },
 
     // same weapon type and also matching element (& usually same-slot because same element)

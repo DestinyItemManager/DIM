@@ -1,40 +1,32 @@
+import { DimLanguage } from 'app/i18n';
+
+export type DescriptionClassNames =
+  | 'background'
+  | 'blue'
+  | 'bold'
+  | 'breakSpaces'
+  | 'center'
+  | 'communityDescription'
+  | 'descriptionDivider'
+  | 'enhancedArrow'
+  | 'green'
+  | 'link'
+  | 'purple'
+  | 'pve'
+  | 'pvp'
+  | 'spacer'
+  | 'title'
+  | 'yellow';
+
 export interface LinesContent {
   text?: string;
-  classNames?: string[];
+  classNames?: DescriptionClassNames[];
   link?: string;
 }
 export interface Line {
   linesContent?: LinesContent[];
-  classNames?: string[];
+  classNames?: DescriptionClassNames[];
 }
-
-export type Languages =
-  /** English - English */
-  | 'en'
-  /** German - Deutsch */
-  | 'de'
-  /** French - Français */
-  | 'fr'
-  /** Italian - Italiano */
-  | 'it'
-  /** Polish - Polski */
-  | 'pl'
-  /** Russian - Русский */
-  | 'ru'
-  /** Spanish (Spain) - Español (España) */
-  | 'es'
-  /** Spanish (Mexico) - Español (México) */
-  | 'es-mx'
-  /** Korean - 한국어 */
-  | 'ko'
-  /** Portuguese (Brazil) - Português (Brasil) */
-  | 'pt-rb'
-  /** Japanese - 日本語 */
-  | 'ja'
-  /** Chinese (Traditional) - 繁體中文 */
-  | 'zh-cht'
-  /** Chinese (Simplified) - 简体中文 */
-  | 'zh-chs';
 
 /**
  * Clarity perk
@@ -59,7 +51,7 @@ export interface Perk {
   itemName?: string;
 
   descriptions: {
-    [key in Languages]?: Line[];
+    [key in DimLanguage]?: Line[];
   };
 }
 

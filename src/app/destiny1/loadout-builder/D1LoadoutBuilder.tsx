@@ -26,13 +26,13 @@ import { bucketsSelector, storesSelector } from '../../inventory/selectors';
 import { D1Store } from '../../inventory/store-types';
 import { AppIcon, refreshIcon } from '../../shell/icons';
 import { D1ManifestDefinitions } from '../d1-definitions';
-import { loadVendors, Vendor } from '../vendors/vendor.service';
-import { getSetBucketsStep } from './calculate';
+import { Vendor, loadVendors } from '../vendors/vendor.service';
 import ExcludeItemsDropTarget from './ExcludeItemsDropTarget';
 import GeneratedSet from './GeneratedSet';
-import './loadout-builder.scss';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import LoadoutBuilderLockPerk from './LoadoutBuilderLockPerk';
+import { getSetBucketsStep } from './calculate';
+import './loadout-builder.scss';
 import {
   ArmorTypes,
   ClassTypes,
@@ -562,12 +562,13 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
       // Build a map of perks
       for (const item of items) {
+        const itemType = item.type as ArmorTypes;
         if (item.classType === DestinyClass.Unknown) {
           for (const classType of allClassTypes) {
-            perks[classType][item.type] = filterPerks(perks[classType][item.type], item);
+            perks[classType][itemType] = filterPerks(perks[classType][itemType], item);
           }
-        } else {
-          perks[item.classType][item.type] = filterPerks(perks[item.classType][item.type], item);
+        } else if (item.classType !== DestinyClass.Classified) {
+          perks[item.classType][itemType] = filterPerks(perks[item.classType][itemType], item);
         }
       }
     }
@@ -587,16 +588,17 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
 
         // Build a map of perks
         for (const item of vendItems) {
+          const itemType = item.type as ArmorTypes;
           if (item.classType === DestinyClass.Unknown) {
             for (const classType of allClassTypes) {
-              vendorPerks[classType][item.type] = filterPerks(
-                vendorPerks[classType][item.type],
+              vendorPerks[classType][itemType] = filterPerks(
+                vendorPerks[classType][itemType],
                 item
               );
             }
-          } else {
-            vendorPerks[item.classType][item.type] = filterPerks(
-              vendorPerks[item.classType][item.type],
+          } else if (item.classType !== DestinyClass.Classified) {
+            vendorPerks[item.classType][itemType] = filterPerks(
+              vendorPerks[item.classType][itemType],
               item
             );
           }
@@ -604,18 +606,24 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       }
 
       // Remove overlapping perks in allPerks from vendorPerks
-      for (const [classType, perksWithType] of Object.entries(vendorPerks)) {
-        for (const [type, perkArr] of Object.entries(perksWithType)) {
+      for (const [classType, perksWithType] of Object.entries(vendorPerks) as unknown as [
+        ClassTypes,
+        PerkCombination
+      ][]) {
+        for (const [type, perkArr] of Object.entries(perksWithType) as unknown as [
+          ArmorTypes,
+          D1GridNode[]
+        ][]) {
           vendorPerks[classType][type] = _.reject(perkArr, (perk) =>
-            perks[classType][type].map((i: D1GridNode) => i.hash).includes(perk.hash)
+            perks[classType][type].map((i) => i.hash).includes(perk.hash)
           );
         }
       }
     }
 
     return getActiveBuckets<D1GridNode[]>(
-      perks[active.classType],
-      vendorPerks[active.classType],
+      perks[active.classType as ClassTypes],
+      vendorPerks[active.classType as ClassTypes],
       includeVendors
     );
   };

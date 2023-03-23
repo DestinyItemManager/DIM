@@ -1,4 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
+import { LookupTable } from 'app/utils/util-types';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
@@ -45,7 +46,7 @@ function colorized(svg: string): ItemCategoryIcon {
   return { svg, colorized: true };
 }
 
-const weaponTypeSvgByCategoryHash = {
+const weaponTypeSvgByCategoryHash: LookupTable<ItemCategoryHashes, ItemCategoryIcon> = {
   [ItemCategoryHashes.AutoRifle]: monochrome(autoRifle),
   [ItemCategoryHashes.HandCannon]: monochrome(handCannon),
   [ItemCategoryHashes.PulseRifle]: monochrome(pulseRifle),
@@ -66,13 +67,13 @@ const weaponTypeSvgByCategoryHash = {
   [ItemCategoryHashes.Glaives]: monochrome(glaive),
 };
 
-const weaponSlotSvgByCategoryHash = {
+const weaponSlotSvgByCategoryHash: LookupTable<ItemCategoryHashes, ItemCategoryIcon> = {
   [ItemCategoryHashes.KineticWeapon]: colorized(kineticWeaponSlot),
   [ItemCategoryHashes.EnergyWeapon]: colorized(energyWeaponSlot),
   [ItemCategoryHashes.PowerWeapon]: colorized(heavyAmmo),
 };
 
-const armorSlotSvgByCategoryHash = {
+const armorSlotSvgByCategoryHash: LookupTable<ItemCategoryHashes, ItemCategoryIcon> = {
   [ItemCategoryHashes.Helmets]: monochrome(helmet),
   [ItemCategoryHashes.Arms]: monochrome(gauntlets),
   [ItemCategoryHashes.Chest]: monochrome(chest),
@@ -83,7 +84,7 @@ const armorSlotSvgByCategoryHash = {
 /**
  * A mapping from known item category hashes to an appropriate icon
  */
-export const itemCategoryIcons: { [itemCategoryHash: number]: ItemCategoryIcon } = {
+export const itemCategoryIcons: LookupTable<ItemCategoryHashes, ItemCategoryIcon> = {
   ...armorSlotSvgByCategoryHash,
   ...weaponSlotSvgByCategoryHash,
   ...weaponTypeSvgByCategoryHash,
@@ -100,7 +101,7 @@ export const itemCategoryIcons: { [itemCategoryHash: number]: ItemCategoryIcon }
 } as const;
 
 /** A mapping from bucket hash to item category */
-const bucketHashToItemCategoryHash = {
+const bucketHashToItemCategoryHash: LookupTable<BucketHashes, ItemCategoryHashes> = {
   [BucketHashes.KineticWeapons]: ItemCategoryHashes.KineticWeapon,
   [BucketHashes.EnergyWeapons]: ItemCategoryHashes.EnergyWeapon,
   [BucketHashes.PowerWeapons]: ItemCategoryHashes.PowerWeapon,
@@ -120,7 +121,7 @@ export function getWeaponTypeSvgIcon(item: DimItem): ItemCategoryIcon | undefine
   // reverse through the ICHs because most specific is last,
   // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const icon = weaponTypeSvgByCategoryHash[ich];
+    const icon = weaponTypeSvgByCategoryHash[ich as ItemCategoryHashes];
     if (icon) {
       return icon;
     }
@@ -130,7 +131,7 @@ export function getWeaponTypeSvgIcon(item: DimItem): ItemCategoryIcon | undefine
 /** an SVG of the weapon's slot, if possible */
 export function getWeaponSlotSvgIcon(item: DimItem): ItemCategoryIcon | undefined {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const icon = weaponSlotSvgByCategoryHash[ich];
+    const icon = weaponSlotSvgByCategoryHash[ich as ItemCategoryHashes];
     if (icon) {
       return icon;
     }
@@ -140,7 +141,7 @@ export function getWeaponSlotSvgIcon(item: DimItem): ItemCategoryIcon | undefine
 /** an SVG of the armor's slot, if determinable */
 export function getArmorSlotSvgIcon(item: DimItem): ItemCategoryIcon | undefined {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const icon = armorSlotSvgByCategoryHash[ich];
+    const icon = armorSlotSvgByCategoryHash[ich as ItemCategoryHashes];
     if (icon) {
       return icon;
     }
@@ -148,6 +149,9 @@ export function getArmorSlotSvgIcon(item: DimItem): ItemCategoryIcon | undefined
 }
 
 /** an SVG of the bucket's icon, if determinable */
-export function getBucketSvgIcon(bucketHash: number): ItemCategoryIcon | undefined {
-  return itemCategoryIcons[bucketHashToItemCategoryHash[bucketHash]];
+export function getBucketSvgIcon(bucketHash: BucketHashes): ItemCategoryIcon | undefined {
+  const ich = bucketHashToItemCategoryHash[bucketHash];
+  if (ich) {
+    return itemCategoryIcons[ich];
+  }
 }

@@ -105,6 +105,7 @@ export default function getCaretCoordinates(
         style.lineHeight = computed.height;
       }
     } else {
+      // @ts-expect-error(7015)
       style[prop] = computed[prop];
     }
   });

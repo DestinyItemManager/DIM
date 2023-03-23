@@ -12,7 +12,7 @@ export function buildCatalystInfo(
   }
 
   const recordHash = exoticToCatalystRecordHash[itemHash];
-  const record = profileRecords?.records[recordHash];
+  const record = recordHash && profileRecords?.records[recordHash];
   if (!record) {
     return undefined;
   }

@@ -1,7 +1,7 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import _ from 'lodash';
 import { ArmorStatHashes, MinMaxIgnored } from '../types';
-import { AutoModsMap, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
+import { AutoModsMap, ModsPick, buildAutoModsMap, chooseAutoMods } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 /**
@@ -40,7 +40,7 @@ export function precalculateStructures(
     totalModEnergyCost:
       _.sum(generalModCosts) + _.sumBy(activityMods, (act) => act.energy?.val ?? 0),
     activityModPermutations: generateProcessModPermutations(activityMods),
-    activityTagCounts: activityMods.reduce((acc, mod) => {
+    activityTagCounts: activityMods.reduce<{ [tag: string]: number }>((acc, mod) => {
       if (mod.tag) {
         acc[mod.tag] = (acc[mod.tag] || 0) + 1;
       }

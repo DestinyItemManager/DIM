@@ -1,6 +1,7 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { BucketSortType } from 'app/inventory/inventory-buckets';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
@@ -29,6 +30,7 @@ import {
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { weakMemoize } from 'app/utils/util';
+import { HashLookup, LookupTable } from 'app/utils/util-types';
 import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -174,7 +176,7 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
     };
   }
   // Save "fashion" mods for equipped items
-  const modsByBucket = {};
+  const modsByBucket: { [bucketHash: number]: number[] } = {};
   for (const item of items.filter((i) => i.bucket.inArmor)) {
     const plugs = item.sockets
       ? _.compact(
@@ -207,7 +209,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
     const exactLight = _.sumBy(items, (i) => i.power) / items.length;
     return Math.floor(exactLight * 1000) / 1000;
   } else {
-    const itemWeight = {
+    const itemWeight: LookupTable<BucketSortType, number> = {
       Weapons: 6,
       Armor: 5,
       General: 4,
@@ -266,7 +268,8 @@ export function getLoadoutStats(
     const itemStats = _.groupBy(item.stats, (stat) => stat.statHash);
     const energySocket =
       item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
-    for (const [hash, stat] of Object.entries(stats)) {
+    for (const [hashStr, stat] of Object.entries(stats)) {
+      const hash = parseInt(hashStr, 10);
       stat.value += itemStats[hash]?.[0].base ?? 0;
       stat.value += energySocket?.plugged?.stats?.[hash] || 0;
     }
@@ -435,7 +438,7 @@ export function extractArmorModHashes(item: DimItem) {
  * true of the "Light 2.0" subclasses which are an entirely different item from
  * the old one. When loading loadouts we'd like to just use the new version.
  */
-const oldToNewItems = {
+const oldToNewItems: HashLookup<number> = {
   // Arcstrider
   1334959255: 2328211300,
   // Striker

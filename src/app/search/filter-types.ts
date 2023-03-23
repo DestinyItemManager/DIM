@@ -1,5 +1,6 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
@@ -32,7 +33,7 @@ export interface FilterContext {
   newItems: Set<string>;
   getTag: (item: DimItem) => TagValue | undefined;
   getNotes: (item: DimItem) => string | undefined;
-  language: string;
+  language: DimLanguage;
   customStats: Settings['customStats'];
   d2Definitions: D2ManifestDefinitions | undefined;
 }

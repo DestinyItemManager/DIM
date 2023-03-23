@@ -1,10 +1,12 @@
 import { defaultSettings, Settings as DimApiSettings } from '@destinyitemmanager/dim-api-types';
-import { defaultLanguage } from 'app/i18n';
+import { defaultLanguage, DimLanguage } from 'app/i18n';
 
 /**
  * We extend the settings interface so we can try out new settings before committing them to dim-api-types
  */
 export interface Settings extends DimApiSettings {
+  language: DimLanguage;
+
   /** supplements itemSortOrderCustom by allowing each sort to be reversed */
   itemSortReversals: string[];
 

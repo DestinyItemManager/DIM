@@ -21,6 +21,7 @@ import {
   ArmorSet,
   ItemGroup,
   ItemsByBucket,
+  LockableBucketHash,
   StatFilters,
   StatRanges,
 } from '../types';
@@ -141,7 +142,8 @@ export function useProcess({
     };
     const itemsById = new Map<string, ItemGroup>();
 
-    for (const [bucketHash, items] of Object.entries(filteredItems)) {
+    for (const [bucketHashStr, items] of Object.entries(filteredItems)) {
+      const bucketHash = parseInt(bucketHashStr, 10) as LockableBucketHash;
       processItems[bucketHash] = [];
 
       const groupedItems = mapItemsToGroups(

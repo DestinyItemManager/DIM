@@ -5,8 +5,8 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import SocketDetails from 'app/item-popup/SocketDetails';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
@@ -17,6 +17,7 @@ import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
+import { HashLookup } from 'app/utils/util-types';
 import {
   DestinyCollectibleDefinition,
   DestinyInventoryItemDefinition,
@@ -61,7 +62,7 @@ export default function FashionDrawer({
 
   const classType = loadout.classType;
 
-  const armorItemsByBucketHash: { [bucketHash: number]: ResolvedLoadoutItem | undefined } = _.keyBy(
+  const armorItemsByBucketHash: HashLookup<ResolvedLoadoutItem> = _.keyBy(
     armor,
     (li) => li.item.bucket.hash
   );

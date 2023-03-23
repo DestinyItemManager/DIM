@@ -7,6 +7,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { Reward } from 'app/progress/Reward';
 import { percent } from 'app/shell/formatters';
 import { RootState } from 'app/store/types';
+import { HashLookup } from 'app/utils/util-types';
 import {
   DestinyItemQuantity,
   DestinyObjectiveProgress,
@@ -25,8 +26,8 @@ import ishtarIcon from '../../images/ishtar-collective.svg';
 import BungieImage from '../dim-ui/BungieImage';
 import ExternalLink from '../dim-ui/ExternalLink';
 import Objective from '../progress/Objective';
-import { DimRecord } from './presentation-nodes';
 import styles from './Record.m.scss';
+import { DimRecord } from './presentation-nodes';
 
 interface Props {
   record: DimRecord;
@@ -43,7 +44,7 @@ interface RecordInterval {
   rewards: DestinyItemQuantity[];
 }
 
-const overrideIcons = Object.keys(catalystIcons).map(Number);
+const catalystIconsTable = catalystIcons as HashLookup<string>;
 
 export default function Record({
   record,
@@ -80,9 +81,10 @@ export default function Record({
     ? recordDef.stateInfo.obscuredString
     : recordDef.displayProperties.description;
 
-  const recordIcon = overrideIcons.includes(recordHash)
-    ? catalystIcons[recordHash]
-    : recordDef.displayProperties.icon;
+  const recordIcon =
+    recordHash in catalystIconsTable
+      ? catalystIconsTable[recordHash]
+      : recordDef.displayProperties.icon;
 
   if (completedRecordsHidden && acquired) {
     return null;

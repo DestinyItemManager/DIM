@@ -77,7 +77,7 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
     if (stores.length === 0) {
       return;
     }
-    const nameMap = {};
+    const nameMap: { [storeId: string]: string } = {};
     let allItems: DimItem[] = [];
     for (const store of stores) {
       allItems = allItems.concat(store.items);
@@ -173,7 +173,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
                 row.Tag = row.Tag.toLowerCase();
                 row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
                 return {
-                  tag: row.Tag in tagConfig ? tagConfig[row.Tag].type : undefined,
+                  tag: row.Tag in tagConfig ? tagConfig[row.Tag as TagValue].type : undefined,
                   itemId: row.Id,
                 };
               }
@@ -403,7 +403,7 @@ function downloadArmor(
     } else {
       const armorStats = Object.keys(dimArmorStatHashByName).map((statName) => ({
         name: statName,
-        stat: stats[dimArmorStatHashByName[statName]],
+        stat: stats[dimArmorStatHashByName[statName]!],
       }));
       for (const stat of armorStats) {
         row[capitalizeFirstLetter(stat.name)] = stat.stat?.value ?? 0;

@@ -9,8 +9,8 @@ import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { objectKeys } from 'app/utils/util-types';
 import _ from 'lodash';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -85,7 +85,7 @@ export default function Records({ account }: Props) {
 
   // We discover the rest of the root nodes from the Bungie.net core settings
   const otherHashes = destiny2CoreSettings
-    ? Object.keys(destiny2CoreSettings)
+    ? objectKeys(destiny2CoreSettings)
         .filter((k) => k.includes('RootNode') && k !== 'craftingRootNodeHash')
         .map((k) => destiny2CoreSettings[k] as number)
     : [];

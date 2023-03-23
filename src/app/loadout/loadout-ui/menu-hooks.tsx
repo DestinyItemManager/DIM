@@ -2,6 +2,7 @@ import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import FilterPills, { Option } from 'app/dim-ui/FilterPills';
+import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
@@ -173,7 +174,7 @@ export function useLoadoutFilterPills(
 export function searchAndSortLoadoutsByQuery(
   loadouts: (Loadout | InGameLoadout)[],
   query: string,
-  language: string,
+  language: DimLanguage,
   loadoutSort: LoadoutSort
 ) {
   const loadoutQueryPlain = plainString(query, language);
