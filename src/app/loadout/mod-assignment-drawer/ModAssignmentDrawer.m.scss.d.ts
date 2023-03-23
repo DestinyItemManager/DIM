@@ -9,6 +9,7 @@ interface CssExports {
   'headerInfo': string;
   'headerName': string;
   'headerStats': string;
+  'infoSectionHeader': string;
   'itemAndMods': string;
   'unassigned': string;
 }

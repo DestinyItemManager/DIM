@@ -124,7 +124,8 @@
   "EnergyMeter": {
     "Energy": "Energy",
     "Used": "Used",
-    "Unused": "Unused"
+    "Unused": "Unused",
+    "UpgradeNeeded": "This item's current energy capacity is {{energyCapacity}}. It needs to be upgraded to {{energyUsed}} to fit all mods."
   },
   "ErrorBoundary": {
     "Title": "Something went wrong"
@@ -654,7 +655,17 @@
     "MaximizeLight": "Max Light",
     "MaximizePower": "Max Power",
     "MaximizeStat": "Maximize Stat",
-    "ModPlacement": "Mod Placement",
+    "ModPlacement": {
+      "InvalidMods": "Invalid Mods",
+      "InvalidModsDesc": "1 mod cannot fit into any item.",
+      "InvalidModsDesc_plural": "{{count}} mods cannot fit into any item.",
+      "ModPlacement": "Mod Placement",
+      "UnassignedMods": "Unassigned Mods",
+      "UnassignedModsDesc": "1 mod did not fit due to insufficient energy capacity or mod slots.",
+      "UnassignedModsDesc_plural": "{{count}} mods did not fit due to insufficient energy capacity or mod slots.",
+      "UpgradeCosts": "Upgrade Costs",
+      "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:"
+    },
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
     "MissingItems": "Missing Items",
     "ModErrorSummary": "1 mod error:",
@@ -727,11 +738,9 @@
     "FillFromEquipped": "Fill in using equipped",
     "FillFromInventory": "Fill in using non-equipped",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
-    "UnassignedMods": "Unassigned Mods",
     "UnassignedModError": "Mod didn't fit on your current armor",
     "Undo": "Undo",
     "Unequipped": "Unequipped",
-    "UpgradeCosts": "Upgrade Costs",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
     "WeaponsOnly": "Weapons Only",
     "NotStarted": "Waiting for other actions to complete, or an inventory refresh to finish loading",

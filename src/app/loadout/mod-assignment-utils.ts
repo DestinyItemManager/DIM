@@ -247,7 +247,11 @@ export function fitMostMods({
   itemModAssignments: {
     [itemInstanceId: string]: PluggableInventoryItemDefinition[];
   };
+  resultingItemEnergies: {
+    [itemInstanceId: string]: { energyCapacity: number; energyUsed: number };
+  };
   unassignedMods: PluggableInventoryItemDefinition[];
+  invalidMods: PluggableInventoryItemDefinition[];
   upgradeCosts: { materialHash: number; amount: number }[];
 } {
   let bucketIndependentAssignments: ModAssignments = {};
@@ -279,8 +283,10 @@ export function fitMostMods({
 
   const {
     modMap: { activityMods, generalMods, artificeMods, bucketSpecificMods },
-    unassignedMods,
+    unassignedMods: invalidMods,
   } = categorizeArmorMods(plannedMods, items);
+
+  const unassignedMods: PluggableInventoryItemDefinition[] = [];
 
   for (const [bucketHash_, modsToAssign] of Object.entries(bucketSpecificMods)) {
     const bucketHash = Number(bucketHash_);
@@ -416,6 +422,9 @@ export function fitMostMods({
   const itemModAssignments: {
     [itemInstanceId: string]: PluggableInventoryItemDefinition[];
   } = {};
+  const resultingItemEnergies: {
+    [itemInstanceId: string]: { energyCapacity: number; energyUsed: number };
+  } = {};
 
   for (const item of items) {
     // accumulate all unassigned mods
@@ -429,12 +438,21 @@ export function fitMostMods({
     }
     const bucketIndependent = bucketIndependentAssignments[item.id].assigned;
     const bucketSpecific = bucketSpecificAssignments[item.id].assigned;
-    itemModAssignments[item.id] = [...bucketIndependent, ...bucketSpecific];
+    const modsForItem = [...bucketIndependent, ...bucketSpecific];
+    itemModAssignments[item.id] = modsForItem;
+    if (item.energy) {
+      resultingItemEnergies[item.id] = {
+        energyCapacity: itemEnergies[item.id].originalCapacity,
+        energyUsed: _.sumBy(modsForItem, (mod) => mod.plug.energyCost?.energyCost ?? 0),
+      };
+    }
   }
 
   return {
     itemModAssignments,
+    resultingItemEnergies,
     unassignedMods,
+    invalidMods,
     upgradeCosts: assignmentUpgradeCost
       .map((amount, idx) => ({
         amount,

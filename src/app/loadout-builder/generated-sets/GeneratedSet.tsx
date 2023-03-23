@@ -80,12 +80,12 @@ function GeneratedSet({
     }
   }
 
-  const itemModAssignments = useMemo(() => {
+  const [itemModAssignments, resultingItemEnergies] = useMemo(() => {
     const statMods = set.statMods.map(
       (d) => defs.InventoryItem.get(d) as PluggableInventoryItemDefinition
     );
     const allMods = [...lockedMods, ...statMods];
-    const { itemModAssignments, unassignedMods } = fitMostMods({
+    const { itemModAssignments, unassignedMods, invalidMods, resultingItemEnergies } = fitMostMods({
       defs,
       items: displayedItems,
       plannedMods: allMods,
@@ -95,15 +95,16 @@ function GeneratedSet({
     // Set rendering is a great place to verify that the worker process
     // and DIM's regular mod assignment algorithm agree with each other,
     // so do that here.
-    if (unassignedMods.length) {
+    if (unassignedMods.length || invalidMods.length) {
       errorLog(
         'loadout optimizer',
         'internal error: set rendering was unable to fit some mods that the worker thought were possible',
-        unassignedMods
+        unassignedMods,
+        invalidMods
       );
     }
 
-    return itemModAssignments;
+    return [itemModAssignments, resultingItemEnergies];
   }, [set.statMods, lockedMods, defs, displayedItems, armorEnergyRules]);
 
   // Distribute our automatically picked mods across the items so that item components
@@ -147,7 +148,7 @@ function GeneratedSet({
               lbDispatch={lbDispatch}
               assignedMods={itemModAssignments[item.id]}
               automaticallyPickedMods={autoModsPerItem[item.id]}
-              showEnergyChanges={Boolean(lockedMods.length || set.statMods.length)}
+              energy={resultingItemEnergies[item.id]}
             />
           ))}
         </div>

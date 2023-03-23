@@ -1,3 +1,4 @@
+import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
 import { t } from 'app/i18next-t';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
@@ -5,7 +6,6 @@ import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
@@ -15,17 +15,9 @@ import styles from './GeneratedSetItem.m.scss';
 /**
  * Shows how we recommend the energy of this armor be changed in order to fit its mods.
  */
-export function EnergySwap({
-  item,
-  assignedMods,
-}: {
-  item: DimItem;
-  assignedMods?: PluggableInventoryItemDefinition[];
-}) {
-  const armorEnergyCapacity = item.energy?.energyCapacity || 0;
-
-  const modCost = _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
-  const resultingEnergyCapacity = Math.max(armorEnergyCapacity, modCost);
+export function EnergySwap({ energy }: { energy: { energyCapacity: number; energyUsed: number } }) {
+  const armorEnergyCapacity = energy.energyCapacity;
+  const resultingEnergyCapacity = Math.max(energy.energyUsed, armorEnergyCapacity);
 
   const noEnergyChange = resultingEnergyCapacity === armorEnergyCapacity;
 
@@ -64,7 +56,7 @@ export default function GeneratedSetItem({
   itemOptions,
   assignedMods,
   automaticallyPickedMods,
-  showEnergyChanges,
+  energy,
   lbDispatch,
 }: {
   item: DimItem;
@@ -72,7 +64,7 @@ export default function GeneratedSetItem({
   itemOptions: DimItem[];
   assignedMods?: PluggableInventoryItemDefinition[];
   automaticallyPickedMods?: number[];
-  showEnergyChanges: boolean;
+  energy: { energyCapacity: number; energyUsed: number };
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const pinItem = (item: DimItem) => lbDispatch({ type: 'pinItem', item });
@@ -114,10 +106,10 @@ export default function GeneratedSetItem({
 
   return (
     <div>
-      {showEnergyChanges && <EnergySwap item={item} assignedMods={assignedMods} />}
       <div className={styles.item}>
         <div className={styles.swapButtonContainer}>
           <LoadoutBuilderItem item={item} onShiftClick={() => pinItem(item)} />
+          <EnergyIncrementsWithPresstip wrapperClass={styles.energyMeter} energy={energy} />
           {itemOptions.length > 1 ? (
             <button
               type="button"
