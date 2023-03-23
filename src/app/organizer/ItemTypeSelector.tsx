@@ -383,7 +383,9 @@ export default function ItemTypeSelector({
                       readOnly={true}
                       onClick={(_e) => handleSelection(depth, subCategory)}
                     />
-                    <BucketIcon itemCategoryHash={subCategory.itemCategoryHash} />
+                    {subCategory.itemCategoryHash !== 0 && (
+                      <BucketIcon itemCategoryHash={subCategory.itemCategoryHash} />
+                    )}
                     {'displayProperties' in itemCategory
                       ? itemCategory.displayProperties.name
                       : itemCategory.title}{' '}
