@@ -639,7 +639,7 @@
     "Loadouts": "Loadouts",
     "LoadoutParameters": "Loadout Optimizer settings",
     "LoadoutParametersExotic": "Loadout must include this exotic: {{exoticName}}",
-    "LoadoutParametersQuery": "Items must match this search query",
+    "LoadoutParametersQuery": "Items must match this search filter",
     "LoadoutParametersStats": "Stat priorities and minimum/maximum stat tiers",
     "MakeRoom": "Make Room for Postmaster",
     "MakeRoomDone": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",
