@@ -467,7 +467,7 @@ export function buildDefinedPlug(
     enableFailReasons: '',
     plugObjectives: emptyArray(),
     stats: null,
-    cannotCurrentlyRoll: currentlyCanRoll !== undefined && !currentlyCanRoll,
+    cannotCurrentlyRoll: currentlyCanRoll === false,
   };
 }
 
