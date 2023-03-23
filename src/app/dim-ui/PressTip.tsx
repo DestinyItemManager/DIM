@@ -264,9 +264,6 @@ export function PressTip(props: Props) {
   const [open, setOpen] = useState<boolean>(false);
 
   const closeToolTip = useCallback((e: React.PointerEvent) => {
-    if (e.type === 'pointerup') {
-      ref.current?.releasePointerCapture(e.pointerId);
-    }
     // Ignore events that aren't paired up
     if (
       !startEvent.current ||
@@ -289,10 +286,6 @@ export function PressTip(props: Props) {
   }, []);
 
   const hover = useCallback((e: React.PointerEvent) => {
-    if (e.type === 'pointerdown') {
-      // Capture pointer so our pointermove absorber works
-      ref.current?.setPointerCapture(e.pointerId);
-    }
     e.preventDefault();
     // If we're already hovering, don't start hovering again
     if (
@@ -329,22 +322,10 @@ export function PressTip(props: Props) {
     }
   }, []);
 
-  // Prevent dragging from the long press
-  const absorbMove = useCallback(
-    (e: React.PointerEvent) => {
-      if (open) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    },
-    [open]
-  );
-
   const events = {
     onPointerEnter: hover,
     onPointerDown: hover,
     onPointerLeave: closeToolTip,
-    onPointerMove: absorbMove,
     onPointerUp: closeToolTip,
     onPointerCancel: closeToolTip,
     onClick: absorbClick,
