@@ -372,26 +372,12 @@ export function fitMostMods({
         continue;
       }
 
-      const energyUpgradeCost = items.reduce(
-        (existingCost: number[] | undefined, item: DimItem) => {
-          const itemEnergy = itemEnergies[item.id];
-          const assignedMods = assignments[item.id].assigned;
-          const totalModCost =
-            itemEnergy.used + _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
-          const newItemCapacity = Math.max(totalModCost, itemEnergy.originalCapacity);
-          const thisItemUpgradeCost = getUpgradeCost(
-            upgradeCostModel,
-            itemEnergy,
-            item,
-            newItemCapacity
-          );
-          return existingCost
-            ? existingCost.map((val, idx) => val + thisItemUpgradeCost[idx])
-            : thisItemUpgradeCost;
-        },
-        undefined
-      )!;
-
+      const energyUpgradeCost = calculateUpgradeCost(
+        items,
+        itemEnergies,
+        assignments,
+        upgradeCostModel
+      );
       const upgradeCostsResult = compareCosts(energyUpgradeCost, assignmentUpgradeCost);
 
       // Skip further checks if we are spending more materials that we were previously.
@@ -736,6 +722,25 @@ function isActivityModValid(
     modTag &&
     itemSocketMetadata?.some((metadata) => metadata.compatibleModTags.includes(modTag))
   );
+}
+
+function calculateUpgradeCost(
+  items: DimItem[],
+  itemEnergies: { [itemId: string]: ItemEnergy },
+  assignments: ModAssignments,
+  upgradeCostModel: EnergyUpgradeCostModel
+) {
+  return items.reduce((existingCost: number[] | undefined, item: DimItem) => {
+    const itemEnergy = itemEnergies[item.id];
+    const assignedMods = assignments[item.id].assigned;
+    const totalModCost =
+      itemEnergy.used + _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
+    const newItemCapacity = Math.max(totalModCost, itemEnergy.originalCapacity);
+    const thisItemUpgradeCost = getUpgradeCost(upgradeCostModel, itemEnergy, item, newItemCapacity);
+    return existingCost
+      ? existingCost.map((val, idx) => val + thisItemUpgradeCost[idx])
+      : thisItemUpgradeCost;
+  }, undefined)!;
 }
 
 function buildItemEnergy({
