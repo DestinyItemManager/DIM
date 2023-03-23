@@ -226,14 +226,13 @@ function PillContent({
           {defs[type].get(value).displayProperties.name}
         </>
       );
-    case 'ItemCategory': {
+    case 'ItemCategory':
       return (
         <>
           <BucketIcon itemCategoryHash={value} height="16" />
           {defs.ItemCategory.get(value)?.displayProperties.name}
         </>
       );
-    }
     case 'KillType':
       return (
         <>

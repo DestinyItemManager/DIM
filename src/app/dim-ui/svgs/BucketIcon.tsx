@@ -41,7 +41,7 @@ function resolveIcon(props: BucketIconProps) {
   }
 }
 
-/** given an item, returns an img. ideally an svg img icon for the item's bucket */
+/** returns an img corresponding to the specified bucket or item category */
 export default function BucketIcon(props: BucketIconProps) {
   const resolved = resolveIcon(props);
   return resolved.icon ? (
