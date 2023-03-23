@@ -25,7 +25,7 @@ import memoizeOne from 'memoize-one';
 import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
 import { activityModPlugCategoryHashes } from './known-values';
 import { generateModPermutations } from './mod-permutations';
-import { plugCategoryHashToBucketHash } from './mod-utils';
+import { getModExclusionGroup, plugCategoryHashToBucketHash } from './mod-utils';
 
 /**
  * a temporary structure, keyed by item ID,
@@ -522,6 +522,10 @@ export function assignBucketSpecificMods({
   const assigned = [];
   const unassigned = [];
 
+  // Mutually exclusive armor mods are currently always bucket-specific mods,
+  // so doing it here to cover both single loadouts and LO item filtering
+  const exclusionGroups: string[] = [];
+
   for (const mod of orderedMods) {
     const socketIndex = orderedSockets.findIndex((socket) => plugFitsIntoSocket(socket, mod.hash));
     if (socketIndex === -1) {
@@ -539,9 +543,19 @@ export function assignBucketSpecificMods({
       continue;
     }
 
+    const exclusionGroup = getModExclusionGroup(mod);
+    if (exclusionGroup && exclusionGroups.includes(exclusionGroup)) {
+      // We already have a mod mutually exclusive with this one
+      unassigned.push(mod);
+      continue;
+    }
+
     assigned.push(mod);
     itemEnergyCapacity -= modCost;
     orderedSockets.splice(socketIndex, 1);
+    if (exclusionGroup) {
+      exclusionGroups.push(exclusionGroup);
+    }
   }
 
   return { assigned, unassigned };
@@ -632,44 +646,106 @@ export function pickPlugPositions(
  * For a given item, set of assignments (where to plug what),
  * this creates an ordered list of plugging actions, which:
  * - remove or swap in cheaper mods to free up enough armor energy, before applying mods which cost more
+ * - remove or swap mods that are mutually exclusive with the assigned mods
  * - mark mod removals as optional, if they aren't required to free up a slot or energy
- *
- * Artifice armor may not be accurate unless you pass in defs.
  *
  * THIS ASSUMES THE SUPPLIED ASSIGNMENTS ARE POSSIBLE,
  * on this item, with its specific mod slots, and will throw if they are not.
  * This consumes the output of `pickPlugPositions` and just orders & adds metadata
  */
-export function createPluggingStrategy(item: DimItem, assignments: Assignment[]): PluggingAction[] {
-  // stuff we need to apply, that frees up energy. we'll apply these first
+export function createPluggingStrategy(
+  defs: D2ManifestDefinitions,
+  item: DimItem,
+  assignments: Assignment[]
+): PluggingAction[] {
+  // stuff we need to apply, that only ever frees up energy and exclusion groups.
+  // can and will be unconditionally applied first, so must have no dependencies
   const requiredRegains: PluggingAction[] = [];
-  // stuff we need to apply, but it will cost us...
+  // stuff we need to apply, but it will cost us mod energy or add an exclusion group.
+  // can and will be applied last
   const requiredSpends: PluggingAction[] = [];
-  // stuff we MAY apply, if we need more energy freed up
+  // stuff we MAY apply, if we need more energy freed up while applying requiredSpends
   const optionalRegains: PluggingAction[] = [];
 
   if (!item.energy) {
     return emptyArray();
   }
 
+  const operationSet: PluggingAction[] = [];
+
   for (const assignment of assignments) {
     const destinationSocket = getSocketByIndex(item.sockets!, assignment.socketIndex)!;
-    const existingModCost = destinationSocket.plugged?.plugDef.plug.energyCost?.energyCost || 0;
+    const existingModCost = destinationSocket.plugged!.plugDef.plug.energyCost?.energyCost || 0;
     const plannedModCost = assignment.mod.plug.energyCost?.energyCost || 0;
     const energySpend = plannedModCost - existingModCost;
 
-    const pluggingAction = {
+    // Notes on mod exclusion groups (restrictions on similar mods already applied):
+    // If we replace a mod with mutual exclusion behavior with a new mod, we must split this action
+    // into two actions if there's a chance that this action cannot be performed unconditionally:
+    // * Replacing a mod with a different mod in the same exclusion group is not allowed by the API,
+    //   so we must unplug/replug in this socket.
+    // * An increase in energy or a new exclusion group can cause a cyclical dependency. Optional regains
+    //   always assign to empty, so they're fine, but a requiredSpend must not depend on another requiredSpend
+    //   that frees up an exclusion group, and a requiredRegain must not depend on another requiredRegain or
+    //   another requiredSpend that frees an exclusion group.
+    // See https://github.com/DestinyItemManager/DIM/issues/7465#issuecomment-1379112834 for a fun cyclical dependency.
+
+    const existingExclusionGroup = getModExclusionGroup(destinationSocket.plugged!.plugDef);
+    const assignmentExclusionGroup = getModExclusionGroup(assignment.mod);
+
+    const pluggingAction: PluggingAction = {
       ...assignment,
       energySpend,
       required: assignment.requested,
+      exclusionGroupAdded: assignmentExclusionGroup,
+      exclusionGroupReleased: existingExclusionGroup,
     };
 
-    if (pluggingAction.energySpend > 0) {
+    if (destinationSocket.plugged!.plugDef.hash === assignment.mod.hash) {
+      // this is an assignment to itself, which is a no-op, so we can just
+      // immediately perform it if needed
+      if (pluggingAction.required) {
+        operationSet.push(pluggingAction);
+      }
+    } else if (pluggingAction.energySpend > 0 && !existingExclusionGroup) {
+      // this spends energy and doesn't release an exclusion group,
+      // so nothing depends on this being applied
       requiredSpends.push(pluggingAction);
     } else if (!pluggingAction.required && isAssigningToDefault(item, assignment)) {
+      // assigningToDefault ensures this frees up energy and doesn't add an exclusion group,
+      // so requiredSpends can schedule these as needed to free up energy or release exclusion groups
       optionalRegains.push(pluggingAction);
-    } else {
+    } else if (pluggingAction.energySpend <= 0 && !assignmentExclusionGroup) {
+      // this frees up energy and doesn't add an exclusion group, so it doesn't
+      // depend on anything else being applied
       requiredRegains.push(pluggingAction);
+    } else {
+      // We have an action that's both depends on some things and can be a dependency for other things,
+      // so we must split this action, turning an assignment A->B into an A->EMPTY->...other actions->B
+
+      // Reset the socket to empty
+      requiredRegains.push({
+        energySpend: -existingModCost,
+        required: true,
+        exclusionGroupAdded: undefined,
+        // doesn't matter, since required regains are unconditionally performed first
+        // so it's as if this mod never existed
+        exclusionGroupReleased: existingExclusionGroup,
+        mod: defs.InventoryItem.get(
+          destinationSocket.emptyPlugItemHash!
+        ) as PluggableInventoryItemDefinition,
+        socketIndex: assignment.socketIndex,
+        requested: false,
+      });
+
+      // Perform the actual plug
+      requiredSpends.push({
+        ...assignment,
+        energySpend: plannedModCost,
+        exclusionGroupAdded: assignmentExclusionGroup,
+        exclusionGroupReleased: undefined,
+        required: true,
+      });
     }
   }
 
@@ -678,8 +754,6 @@ export function createPluggingStrategy(item: DimItem, assignments: Assignment[])
   optionalRegains.sort(
     compareBy((res) => (res.energySpend < 0 ? -res.energySpend : Number.MAX_VALUE))
   );
-
-  const operationSet: PluggingAction[] = [];
 
   const itemTotalEnergy = item.energy.energyCapacity;
   let itemCurrentUsedEnergy = item.energy.energyUsed;
@@ -693,7 +767,13 @@ export function createPluggingStrategy(item: DimItem, assignments: Assignment[])
   // keep looping til we have placed all desired mods
   for (const spendOperation of requiredSpends) {
     // while there's not enough energy for this mod,
-    while (itemCurrentUsedEnergy + spendOperation.energySpend > itemTotalEnergy) {
+    while (
+      itemCurrentUsedEnergy + spendOperation.energySpend > itemTotalEnergy ||
+      (spendOperation.exclusionGroupAdded &&
+        optionalRegains.some(
+          (regain) => regain.exclusionGroupReleased === spendOperation.exclusionGroupAdded
+        ))
+    ) {
       if (!optionalRegains.length) {
         throw new Error(
           `there's not enough energy to assign ${spendOperation.mod.displayProperties.name} to ${item.name}, but no more energy can be freed up`
@@ -704,7 +784,11 @@ export function createPluggingStrategy(item: DimItem, assignments: Assignment[])
       const extraEnergyNeeded = spendOperation.energySpend - itemCurrentFreeEnergy;
 
       const whichRegainToUse =
-        optionalRegains.find((r) => -r.energySpend >= extraEnergyNeeded) ?? optionalRegains[0];
+        (spendOperation.exclusionGroupAdded !== undefined &&
+          optionalRegains.find(
+            (regain) => regain.exclusionGroupReleased === spendOperation.exclusionGroupAdded
+          )) ||
+        (optionalRegains.find((r) => -r.energySpend >= extraEnergyNeeded) ?? optionalRegains[0]);
 
       // this is now required, because it helps place a required mod
       whichRegainToUse.required = true;
