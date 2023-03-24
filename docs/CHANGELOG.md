@@ -2,6 +2,7 @@
 
 * Items in the "Focused Decoding" and "Legacy Gear" screens within the Vendors page will now correctly show collection and inventory checkmarks.
 * Display the current and max Postmaster count at all times
+* Armor mods descriptions now include their stacking behavior.
 
 ## 7.61.0 <span class="changelog-date">(2023-03-19)</span>
 
