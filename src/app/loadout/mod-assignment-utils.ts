@@ -129,11 +129,11 @@ export function categorizeArmorMods(
 }
 
 const materialsInRarityOrder = [
-  3159615086, // InventoryItem "Glimmer"
-  1022552290, // InventoryItem "Legendary Shards"
-  3853748946, // InventoryItem "Enhancement Core"
-  4257549984, // InventoryItem "Enhancement Prism"
   4257549985, // InventoryItem "Ascendant Shard"
+  4257549984, // InventoryItem "Enhancement Prism"
+  3853748946, // InventoryItem "Enhancement Core"
+  1022552290, // InventoryItem "Legendary Shards"
+  3159615086, // InventoryItem "Glimmer"
 ];
 
 /**
@@ -224,7 +224,7 @@ function compareCosts(a: number[], b: number[]) {
  *
  * To do this we create permutations of general, combat and activity mods and loop over each
  * set of permutations and validate the combination. Validate is done via a lower number of
- * unassigned mods or an equal amount of unassigned mods and a lower uprade cost.
+ * unassigned mods or an equal amount of unassigned mods and a lower upgrade cost.
  *
  * This returns a list of `unassignedMods` it was unable to find places for,
  * and `itemModAssignments`, an item ID-keyed dictionary of
@@ -458,8 +458,7 @@ export function fitMostMods({
         amount,
         materialHash: materialsInRarityOrder[idx],
       }))
-      .filter(({ amount }) => amount > 0)
-      .reverse(),
+      .filter(({ amount }) => amount > 0),
   };
 }
 
