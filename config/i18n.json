@@ -125,7 +125,7 @@
     "Energy": "Energy",
     "Used": "Used",
     "Unused": "Unused",
-    "UpgradeNeeded": "This item's current energy capacity is {{energyCapacity}}. It needs to be upgraded to {{energyUsed}} to fit all mods."
+    "UpgradeNeeded": "This item's current energy capacity is {{energyCapacity}}. To fit the selected mods, its energy capacity must be {{energyUsed}}."
   },
   "ErrorBoundary": {
     "Title": "Something went wrong"
@@ -657,12 +657,12 @@
     "MaximizeStat": "Maximize Stat",
     "ModPlacement": {
       "InvalidMods": "Invalid Mods",
-      "InvalidModsDesc": "1 mod cannot fit into any item.",
-      "InvalidModsDesc_plural": "{{count}} mods cannot fit into any item.",
+      "InvalidModsDesc": "1 mod cannot fit into any armor piece.",
+      "InvalidModsDesc_plural": "{{count}} mods cannot fit into any armor piece.",
       "ModPlacement": "Mod Placement",
       "UnassignedMods": "Unassigned Mods",
-      "UnassignedModsDesc": "1 mod did not fit due to insufficient energy capacity or mod slots.",
-      "UnassignedModsDesc_plural": "{{count}} mods did not fit due to insufficient energy capacity or mod slots.",
+      "UnassignedModsDesc": "1 mod did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
+      "UnassignedModsDesc_plural": "{{count}} mods did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
       "UpgradeCosts": "Upgrade Costs",
       "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:"
     },
