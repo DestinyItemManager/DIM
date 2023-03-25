@@ -12,9 +12,9 @@ import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
 import { D1ItemCategoryHashes } from '../d1-known-values';
 import {
-  breakerTypes,
   D2ItemCategoryHashesByName,
   ItemTierName,
+  breakerTypes,
   pinnacleSources,
   powerfulSources,
 } from '../d2-known-values';

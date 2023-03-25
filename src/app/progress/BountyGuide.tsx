@@ -1,12 +1,12 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { itemCategoryIcons } from 'app/organizer/item-category-icons';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
@@ -229,9 +229,7 @@ function PillContent({
     case 'ItemCategory':
       return (
         <>
-          {value in itemCategoryIcons && (
-            <img className={styles.itemCategoryIcon} height="16" src={itemCategoryIcons[value]} />
-          )}
+          <BucketIcon itemCategoryHash={value} height="16" />
           {defs.ItemCategory.get(value)?.displayProperties.name}
         </>
       );
@@ -239,7 +237,7 @@ function PillContent({
       return (
         <>
           {isIn(value, killTypeIcons) && (
-            <img className={styles.itemCategoryIcon} height="16" src={killTypeIcons[value]} />
+            <img className={styles.invert} height="16" src={killTypeIcons[value]} />
           )}
           {KillType[value]}
         </>

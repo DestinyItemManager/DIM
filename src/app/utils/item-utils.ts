@@ -11,8 +11,8 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import {
-  armor2PlugCategoryHashes,
   EXOTIC_CATALYST_TRAIT,
+  armor2PlugCategoryHashes,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
   modsWithConditionalStats,

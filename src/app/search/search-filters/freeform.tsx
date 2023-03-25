@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimLanguage, DIM_LANG_INFOS } from 'app/i18n';
+import { DIM_LANG_INFOS, DimLanguage } from 'app/i18n';
 import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug } from 'app/inventory/item-types';
 import { isD1Item } from 'app/utils/item-utils';

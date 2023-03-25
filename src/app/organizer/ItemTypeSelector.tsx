@@ -1,4 +1,5 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useDefinitions } from 'app/manifest/selectors';
 import { filteredItemsSelector } from 'app/search/search-filter';
 import clsx from 'clsx';
@@ -7,7 +8,6 @@ import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './ItemTypeSelector.m.scss';
 import { itemIncludesCategories } from './filtering-utils';
-import { itemCategoryIcons } from './item-category-icons';
 
 /**
  * Each branch of the drilldown options is represented by a SelectionTreeNode
@@ -368,7 +368,6 @@ export default function ItemTypeSelector({
                 }
 
                 const itemCategory = defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash));
-
                 return (
                   <label
                     key={subCategory.itemCategoryHash}
@@ -384,8 +383,8 @@ export default function ItemTypeSelector({
                       readOnly={true}
                       onClick={(_e) => handleSelection(depth, subCategory)}
                     />
-                    {itemCategoryIcons[subCategory.itemCategoryHash] && (
-                      <img src={itemCategoryIcons[subCategory.itemCategoryHash]} />
+                    {subCategory.itemCategoryHash !== 0 && (
+                      <BucketIcon itemCategoryHash={subCategory.itemCategoryHash} />
                     )}
                     {'displayProperties' in itemCategory
                       ? itemCategory.displayProperties.name

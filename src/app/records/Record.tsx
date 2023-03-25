@@ -26,8 +26,8 @@ import ishtarIcon from '../../images/ishtar-collective.svg';
 import BungieImage from '../dim-ui/BungieImage';
 import ExternalLink from '../dim-ui/ExternalLink';
 import Objective from '../progress/Objective';
-import { DimRecord } from './presentation-nodes';
 import styles from './Record.m.scss';
+import { DimRecord } from './presentation-nodes';
 
 interface Props {
   record: DimRecord;

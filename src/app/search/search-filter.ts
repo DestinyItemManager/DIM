@@ -24,12 +24,12 @@ import { querySelector } from '../shell/selectors';
 import { wishListFunctionSelector, wishListsByHashSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import {
-  canonicalFilterFormats,
   FilterContext,
   FilterDefinition,
   ItemFilter,
+  canonicalFilterFormats,
 } from './filter-types';
-import { parseQuery, QueryAST } from './query-parser';
+import { QueryAST, parseQuery } from './query-parser';
 import { SearchConfig, searchConfigSelector } from './search-config';
 import { parseAndValidateQuery, rangeStringToComparator } from './search-utils';
 

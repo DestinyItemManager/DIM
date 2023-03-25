@@ -7,8 +7,8 @@ import {
   knownModPlugCategoryHashes,
 } from 'app/loadout/known-values';
 import {
-  armorStats,
   MAX_ARMOR_ENERGY_CAPACITY,
+  armorStats,
   modsWithConditionalStats,
 } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
@@ -26,11 +26,11 @@ import {
   ArmorSet,
   ArmorStatHashes,
   ArmorStats,
+  AutoModDefs,
+  ItemGroup,
   artificeSocketReusablePlugSetHash,
   artificeStatBoost,
-  AutoModDefs,
   generalSocketReusablePlugSetHash,
-  ItemGroup,
   majorStatBoost,
   minorStatBoost,
 } from '../types';

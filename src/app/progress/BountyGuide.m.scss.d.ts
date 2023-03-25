@@ -3,7 +3,7 @@
 interface CssExports {
   'count': string;
   'guide': string;
-  'itemCategoryIcon': string;
+  'invert': string;
   'pill': string;
   'pullItem': string;
   'selected': string;

@@ -1,7 +1,7 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import _ from 'lodash';
 import { ArmorStatHashes, MinMaxIgnored } from '../types';
-import { AutoModsMap, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
+import { AutoModsMap, ModsPick, buildAutoModsMap, chooseAutoMods } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 /**
