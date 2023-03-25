@@ -5,13 +5,10 @@ import { settingSelector } from 'app/dim-api/selectors';
 import { DimItem, DimPlug, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getStatSortOrder, isAllowedItemStat, isAllowedPlugStat } from 'app/inventory/store/stats';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
+import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
-import {
-  DestinyClass,
-  DestinyInventoryItemDefinition,
-  ItemPerkVisibility,
-} from 'bungie-api-ts/destiny2';
+import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
@@ -43,7 +40,7 @@ const statNameAliases: LookupTable<StatHashes, string[]> = {
 const enhancedPerkToRegularPerk = _.mapValues(_.invert(perkToEnhanced), Number);
 
 export function usePlugDescriptions(
-  plug?: DestinyInventoryItemDefinition,
+  plug?: PluggableInventoryItemDefinition,
   stats?: {
     value: number;
     statHash: number;
@@ -122,7 +119,7 @@ export function usePlugDescriptions(
 }
 
 function getPerkDescriptions(
-  plug: DestinyInventoryItemDefinition,
+  plug: PluggableInventoryItemDefinition,
   defs: D2ManifestDefinitions,
   usedStrings: Set<string>
 ): DimPlugPerkDescription[] {
@@ -172,7 +169,7 @@ function getPerkDescriptions(
   function addDescriptionAsRequirement() {
     if (plugDescription && !usedStrings.has(plugDescription)) {
       results.push({
-        perkHash: 0,
+        perkHash: -usedStrings.size,
         requirement: plugDescription,
       });
       usedStrings.add(plugDescription);
@@ -181,10 +178,22 @@ function getPerkDescriptions(
   function addDescriptionAsFunctionality() {
     if (plugDescription && !usedStrings.has(plugDescription)) {
       results.push({
-        perkHash: 0,
+        perkHash: -usedStrings.size,
         description: plugDescription,
       });
       usedStrings.add(plugDescription);
+    }
+  }
+  function addTooltipNotifsAsRequirement() {
+    const notifs = plug.tooltipNotifications
+      .map((notif) => notif.displayString)
+      .filter((str) => !usedStrings.has(str));
+    for (const notif of notifs) {
+      results.push({
+        perkHash: -usedStrings.size,
+        requirement: notif,
+      });
+      usedStrings.add(notif);
     }
   }
 
@@ -205,11 +214,12 @@ function getPerkDescriptions(
 
     // if we already have some displayable perks, this means the description is basically
     // a "requirements" string like "This mod's perks are only active" etc. (see Deep Stone Crypt raid mods)
-    if (results.length > 0) {
+    if (results.length > 0 && activityModPlugCategoryHashes.includes(plug.plug.plugCategoryHash)) {
       addDescriptionAsRequirement();
     } else {
       addDescriptionAsFunctionality();
     }
+    addTooltipNotifsAsRequirement();
   } else {
     if (plugDescription) {
       addDescriptionAsFunctionality();

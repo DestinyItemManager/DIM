@@ -104,6 +104,9 @@ export default function Developer(this: never) {
             </li>
             <li>Select "Confidential" OAuth type.</li>
             <li>
+              Select all scopes <i>except</i> for Administrate Groups/Clans
+            </li>
+            <li>
               After saving, copy the "API Key" here:
               <br />
               <input

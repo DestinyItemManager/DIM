@@ -1,8 +1,8 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import BungieImage from 'app/dim-ui/BungieImage';
-import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { isPluggableItem } from 'app/inventory/store/sockets';
@@ -17,7 +17,6 @@ import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DamageType,
   DestinyClass,
-  DestinyInventoryItemDefinition,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
   TierType,
@@ -31,7 +30,7 @@ import './ItemSockets.scss';
 import styles from './PlugTooltip.m.scss';
 
 interface PlugTooltipProps {
-  def: DestinyInventoryItemDefinition;
+  def: PluggableInventoryItemDefinition;
   stats?: { statHash: number; value: number }[];
   plugObjectives?: DestinyObjectiveProgress[];
   enableFailReasons?: string;
