@@ -1,3 +1,5 @@
+import { getCurrentHub } from '@sentry/browser';
+import { Span } from '@sentry/tracing';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import type { ItemTierName } from 'app/search/d2-known-values';
@@ -15,24 +17,24 @@ import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import {
-  equip as d1equip,
   equipItems as d1EquipItems,
   setItemState as d1SetItemState,
   transfer as d1Transfer,
+  equip as d1equip,
 } from '../bungie-api/destiny1-api';
 import {
-  equip as d2equip,
   equipItems as d2EquipItems,
   setLockState as d2SetLockState,
   setTrackedState as d2SetTrackedState,
   transfer as d2Transfer,
+  equip as d2equip,
 } from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { itemLockStateChanged, itemMoved } from './actions';
 import {
+  TagValue,
   characterDisplacePriority,
   equipReplacePriority,
-  TagValue,
   vaultDisplacePriority,
 } from './dim-item-info';
 import { DimItem } from './item-types';
@@ -152,6 +154,13 @@ function updateItemModel(
   amount: number = item.amount
 ): ThunkAction<DimItem, RootState, undefined, AnyAction> {
   return (dispatch, getState) => {
+    const transaction = getCurrentHub()?.getScope()?.getTransaction();
+    let span: Span | undefined;
+    if (transaction) {
+      span = transaction.startChild({
+        op: 'updateItemModel',
+      });
+    }
     const stopTimer = timer('itemMovedUpdate');
     try {
       dispatch(itemMoved({ item, source, target, equip, amount }));
@@ -159,6 +168,7 @@ function updateItemModel(
       return getItemAcrossStores(stores, item) || item;
     } finally {
       stopTimer();
+      span?.finish();
     }
   };
 }
