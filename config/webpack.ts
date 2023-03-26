@@ -119,6 +119,7 @@ export default (env: Env) => {
           liveReload: false,
           headers: {
             'Content-Security-Policy': contentSecurityPolicy,
+            // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
             'Cross-Origin-Embedder-Policy': 'credentialless',
             'Cross-Origin-Opener-Policy': 'same-origin',
           },
