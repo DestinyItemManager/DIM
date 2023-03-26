@@ -139,6 +139,12 @@ export default function LoadoutEdit({
   const handleClearArtifactUnlocks = withUpdater(clearArtifactUnlocks);
   const handleRemoveArtifactUnlock = withUpdater(removeArtifactUnlock);
 
+  const artifactTitle = loadout.parameters?.artifactUnlocks
+    ? t('Loadouts.ArtifactUnlocksWithSeason', {
+        seasonNumber: loadout.parameters?.artifactUnlocks?.seasonNumber,
+      })
+    : t('Loadouts.ArtifactUnlocks');
+
   // TODO: dedupe styles/code
   return (
     <div className={styles.contents}>
@@ -250,7 +256,7 @@ export default function LoadoutEdit({
           />
         </LoadoutEditSection>
         <LoadoutEditSection
-          title={t('Loadouts.ArtifactUnlocks')}
+          title={artifactTitle}
           titleInfo={t('Loadouts.ArtifactUnlocksDesc')}
           className={styles.mods}
           onClear={handleClearArtifactUnlocks}
@@ -260,6 +266,7 @@ export default function LoadoutEdit({
             loadout={loadout}
             storeId={store.id}
             onRemoveMod={handleRemoveArtifactUnlock}
+            onSyncFromEquipped={profileResponse ? handleSyncArtifactUnlocksFromEquipped : undefined}
           />
         </LoadoutEditSection>
       </div>

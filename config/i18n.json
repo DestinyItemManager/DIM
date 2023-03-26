@@ -608,6 +608,7 @@
     "AddUnequippedItems": "Add Unequipped",
     "Any": "Any class",
     "ArtifactUnlocks": "Artifact Unlocks",
+    "ArtifactUnlocksWithSeason": "Artifact Unlocks – S{{seasonNumber}}",
     "ArtifactUnlocksDesc": "Due to Bungie.net limitations, DIM cannot change your artifact unlocks. You need to unlock these in-game when applying the Loadout.",
     "Apply": "Apply",
     "ApplySearch": "Transfer search \"{{query}}\"",

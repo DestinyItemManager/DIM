@@ -381,7 +381,7 @@ export function setLoadoutSubclassFromEquipped(
 export function fillLoadoutFromEquipped(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore,
-  artifactUnlocks?: number[],
+  artifactUnlocks?: LoadoutParameters['artifactUnlocks'],
   /** Fill in from only this specific category */
   category?: D2BucketCategory
 ): LoadoutUpdateFunction {
@@ -418,7 +418,7 @@ export function fillLoadoutFromEquipped(
         mods,
       };
     }
-    if (artifactUnlocks?.length) {
+    if (artifactUnlocks?.unlockedItemHashes.length) {
       loadout.parameters = {
         ...loadout.parameters,
         artifactUnlocks,
@@ -588,7 +588,7 @@ export function syncArtifactUnlocksFromEquipped(
   store: DimStore,
   profileResponse: DestinyProfileResponse
 ): LoadoutUpdateFunction {
-  const artifactUnlocks = (profileResponse && getArtifactUnlocks(profileResponse, store.id)) ?? [];
+  const artifactUnlocks = profileResponse && getArtifactUnlocks(profileResponse, store.id);
 
   return setLoadoutParameters({
     artifactUnlocks,
@@ -610,9 +610,9 @@ export function clearArtifactUnlocks(): LoadoutUpdateFunction {
 export function removeArtifactUnlock(mod: number): LoadoutUpdateFunction {
   return produce((loadout) => {
     if (loadout.parameters?.artifactUnlocks) {
-      const index = loadout.parameters?.artifactUnlocks.indexOf(mod);
+      const index = loadout.parameters?.artifactUnlocks.unlockedItemHashes.indexOf(mod);
       if (index !== -1) {
-        loadout.parameters.artifactUnlocks.splice(index, 1);
+        loadout.parameters.artifactUnlocks.unlockedItemHashes.splice(index, 1);
       }
     }
   });

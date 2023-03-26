@@ -190,21 +190,24 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutMods({
   loadout,
   storeId,
   onRemoveMod,
+  onSyncFromEquipped,
 }: {
   loadout: Loadout;
   storeId: string;
   onRemoveMod?: (mod: number) => void;
+  onSyncFromEquipped?: () => void;
 }) {
   const defs = useD2Definitions()!;
   const profileResponse = useSelector(profileResponseSelector);
   const unlockedArtifactMods = useMemo(
-    () => (profileResponse && getArtifactUnlocks(profileResponse, storeId)) || [],
+    () =>
+      (profileResponse && getArtifactUnlocks(profileResponse, storeId)?.unlockedItemHashes) || [],
     [profileResponse, storeId]
   );
   const loadoutArtifactMods: ResolvedLoadoutMod[] = useMemo(
     () =>
-      loadout.parameters?.artifactUnlocks
-        ?.map((item) => defs.InventoryItem.get(item))
+      loadout.parameters?.artifactUnlocks?.unlockedItemHashes
+        .map((item) => defs.InventoryItem.get(item))
         .filter(isPluggableItem)
         .map((def) => ({ originalModHash: def.hash, resolvedMod: def })) ?? [],
     [defs.InventoryItem, loadout.parameters?.artifactUnlocks]
@@ -217,23 +220,31 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutMods({
 
   return (
     <div className={styles.mods}>
-      <div className={styles.modsGrid}>
-        {loadoutArtifactMods.map((mod) => {
-          const unlocked = unlockedArtifactMods.includes(mod.resolvedMod.hash);
-          return (
-            <LoadoutModMemo
-              key={mod.resolvedMod.hash}
-              mod={mod}
-              className={clsx({
-                [styles.artifactUnlock]: unlocked,
-                [styles.missingItem]: !unlocked,
-              })}
-              classType={loadout.classType}
-              onRemoveMod={onRemoveMod ? handleRemoveMod : undefined}
-            />
-          );
-        })}
-      </div>
+      {loadoutArtifactMods.length > 0 ? (
+        <div className={styles.modsGrid}>
+          {loadoutArtifactMods.map((mod) => {
+            const unlocked = unlockedArtifactMods.includes(mod.resolvedMod.hash);
+            return (
+              <LoadoutModMemo
+                key={mod.resolvedMod.hash}
+                mod={mod}
+                className={clsx({
+                  [styles.artifactUnlock]: unlocked,
+                  [styles.missingItem]: !unlocked,
+                })}
+                classType={loadout.classType}
+                onRemoveMod={onRemoveMod ? handleRemoveMod : undefined}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        onSyncFromEquipped && (
+          <button className="dim-button" type="button" onClick={onSyncFromEquipped}>
+            {t('Loadouts.SyncFromEquipped')}
+          </button>
+        )
+      )}
     </div>
   );
 });

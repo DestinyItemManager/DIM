@@ -1,4 +1,4 @@
-import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { ItemHashTag, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import {
   currentProfileSelector,
@@ -11,6 +11,7 @@ import { emptyObject, emptySet } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selector-utils';
 import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { resonantMaterialStringVarHashes } from 'data/d2/crafting-resonant-elements';
+import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
 import { createSelector } from 'reselect';
@@ -346,14 +347,24 @@ export const dynamicStringsSelector = (state: RootState) => {
 };
 
 /** A flat list of all currently active artifact unlocks. */
-export function getArtifactUnlocks(profileResponse: DestinyProfileResponse, characterId: string) {
+export function getArtifactUnlocks(
+  profileResponse: DestinyProfileResponse,
+  characterId: string
+): LoadoutParameters['artifactUnlocks'] {
   // Lots of optional chaining because apparently this can be missing sometimes?
-  return (
-    profileResponse?.characterProgressions.data?.[characterId]?.seasonalArtifact?.tiers
+  const artifactData = profileResponse?.characterProgressions.data?.[characterId]?.seasonalArtifact;
+  if (!artifactData?.tiers) {
+    return undefined;
+  }
+  const unlockedItemHashes =
+    artifactData.tiers
       ?.flatMap((tier) => tier.items)
       .filter((item) => item.isActive)
-      .map((item) => item.itemHash) || []
-  );
+      .map((item) => item.itemHash) || [];
+  return {
+    unlockedItemHashes,
+    seasonNumber: D2CalculatedSeason,
+  };
 }
 
 /** Item infos (tags/notes) */

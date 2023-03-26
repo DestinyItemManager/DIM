@@ -152,7 +152,9 @@ export default function LoadoutView({
                 storeId={store.id}
                 hideShowModPlacements={hideShowModPlacements}
                 missingSockets={missingSockets}
-                hasArtifactUnlocks={Boolean(loadout.parameters?.artifactUnlocks?.length)}
+                hasArtifactUnlocks={Boolean(
+                  loadout.parameters?.artifactUnlocks?.unlockedItemHashes.length
+                )}
               />
               <LoadoutArtifactUnlocks loadout={loadout} storeId={store.id} />
             </div>

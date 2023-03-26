@@ -1,3 +1,4 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
@@ -177,7 +178,7 @@ export function createSubclassDefaultSocketOverrides(item: DimItem) {
 export function newLoadoutFromEquipped(
   name: string,
   dimStore: DimStore,
-  artifactUnlocks: number[] | undefined
+  artifactUnlocks: LoadoutParameters['artifactUnlocks']
 ) {
   const items = dimStore.items.filter(
     (item) =>

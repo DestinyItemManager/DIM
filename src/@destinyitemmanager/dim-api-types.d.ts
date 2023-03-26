@@ -4,6 +4,9 @@ import '@destinyitemmanager/dim-api-types';
 declare module '@destinyitemmanager/dim-api-types' {
   export interface LoadoutParameters {
     /** The artifact unlocks relevant to this build. */
-    artifactUnlocks?: number[];
+    artifactUnlocks?: {
+      unlockedItemHashes: number[];
+      seasonNumber: number;
+    };
   }
 }
