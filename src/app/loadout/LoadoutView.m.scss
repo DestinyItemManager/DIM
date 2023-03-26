@@ -70,3 +70,10 @@
   white-space: pre-wrap;
   user-select: text;
 }
+
+.modsStack {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  flex: 0.5;
+}

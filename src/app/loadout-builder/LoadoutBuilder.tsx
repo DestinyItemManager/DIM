@@ -222,7 +222,8 @@ export default memo(function LoadoutBuilder({
   const loadouts = useMemo(() => {
     const equippedLoadout: Loadout | undefined = newLoadoutFromEquipped(
       t('Loadouts.CurrentlyEquipped'),
-      selectedStore
+      selectedStore,
+      undefined
     );
     const classLoadouts = allLoadouts.filter(
       (l) => l.classType === selectedStore.classType || l.classType === DestinyClass.Unknown

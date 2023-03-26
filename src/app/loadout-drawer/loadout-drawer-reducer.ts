@@ -6,6 +6,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { D1BucketCategory, D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
+import { getArtifactUnlocks } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
@@ -13,7 +14,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
-import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyProfileResponse, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
@@ -380,6 +381,7 @@ export function setLoadoutSubclassFromEquipped(
 export function fillLoadoutFromEquipped(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore,
+  artifactUnlocks?: number[],
   /** Fill in from only this specific category */
   category?: D2BucketCategory
 ): LoadoutUpdateFunction {
@@ -414,6 +416,12 @@ export function fillLoadoutFromEquipped(
       loadout.parameters = {
         ...loadout.parameters,
         mods,
+      };
+    }
+    if (artifactUnlocks?.length) {
+      loadout.parameters = {
+        ...loadout.parameters,
+        artifactUnlocks,
       };
     }
     // Save "fashion" mods for equipped items
@@ -570,5 +578,42 @@ export function updateModsByBucket(
 ): LoadoutUpdateFunction {
   return setLoadoutParameters({
     modsByBucket: _.isEmpty(modsByBucket) ? undefined : modsByBucket,
+  });
+}
+
+/**
+ * Replace the artifact unlocks with the currently equipped ones.
+ */
+export function syncArtifactUnlocksFromEquipped(
+  store: DimStore,
+  profileResponse: DestinyProfileResponse
+): LoadoutUpdateFunction {
+  const artifactUnlocks = (profileResponse && getArtifactUnlocks(profileResponse, store.id)) ?? [];
+
+  return setLoadoutParameters({
+    artifactUnlocks,
+  });
+}
+
+/**
+ * Clear the artifact unlocks.
+ */
+export function clearArtifactUnlocks(): LoadoutUpdateFunction {
+  return setLoadoutParameters({
+    artifactUnlocks: undefined,
+  });
+}
+
+/**
+ * Remove one artifact mod.
+ */
+export function removeArtifactUnlock(mod: number): LoadoutUpdateFunction {
+  return produce((loadout) => {
+    if (loadout.parameters?.artifactUnlocks) {
+      const index = loadout.parameters?.artifactUnlocks.indexOf(mod);
+      if (index !== -1) {
+        loadout.parameters.artifactUnlocks.splice(index, 1);
+      }
+    }
   });
 }

@@ -607,6 +607,8 @@
     "Apply": "Apply",
     "ApplyMods": "Applying mods",
     "ApplySearch": "Transfer search \"{{query}}\"",
+    "ArtifactUnlocks": "Artifact Unlocks",
+    "ArtifactUnlocksDesc": "Due to Bungie.net limitations, DIM cannot change your artifact unlocks. You need to unlock these in-game when applying the Loadout.",
     "BadLoadoutShare": "Unable to load shared loadout",
     "BadLoadoutShareBody": "The loadout you're trying to load is invalid: {{error}}",
     "Before": "Before '{{name}}'",

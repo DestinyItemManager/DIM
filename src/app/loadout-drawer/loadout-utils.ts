@@ -174,7 +174,11 @@ export function createSubclassDefaultSocketOverrides(item: DimItem) {
 /**
  * Create a new loadout that includes all the equipped items and mods on the character.
  */
-export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
+export function newLoadoutFromEquipped(
+  name: string,
+  dimStore: DimStore,
+  artifactUnlocks: number[] | undefined
+) {
   const items = dimStore.items.filter(
     (item) =>
       item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash)
@@ -191,6 +195,12 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
   if (mods.length) {
     loadout.parameters = {
       mods,
+    };
+  }
+  if (artifactUnlocks) {
+    loadout.parameters = {
+      ...loadout.parameters,
+      artifactUnlocks,
     };
   }
   // Save "fashion" mods for equipped items

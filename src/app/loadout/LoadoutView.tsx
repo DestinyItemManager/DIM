@@ -18,10 +18,10 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { ReactNode, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection';
-import LoadoutMods from './loadout-ui/LoadoutMods';
-import LoadoutSubclassSection from './loadout-ui/LoadoutSubclassSection';
 import styles from './LoadoutView.m.scss';
+import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection';
+import { LoadoutArtifactUnlocks, LoadoutMods } from './loadout-ui/LoadoutMods';
+import LoadoutSubclassSection from './loadout-ui/LoadoutSubclassSection';
 import { useLoadoutMods } from './mod-assignment-drawer/selectors';
 
 export function getItemsAndSubclassFromLoadout(
@@ -145,13 +145,17 @@ export default function LoadoutView({
                 hideOptimizeArmor={hideOptimizeArmor}
               />
             ))}
-            <LoadoutMods
-              loadout={loadout}
-              allMods={allMods}
-              storeId={store.id}
-              hideShowModPlacements={hideShowModPlacements}
-              missingSockets={missingSockets}
-            />
+            <div className={styles.modsStack}>
+              <LoadoutMods
+                loadout={loadout}
+                allMods={allMods}
+                storeId={store.id}
+                hideShowModPlacements={hideShowModPlacements}
+                missingSockets={missingSockets}
+                hasArtifactUnlocks={Boolean(loadout.parameters?.artifactUnlocks?.length)}
+              />
+              <LoadoutArtifactUnlocks loadout={loadout} storeId={store.id} />
+            </div>
           </>
         )}
       </div>

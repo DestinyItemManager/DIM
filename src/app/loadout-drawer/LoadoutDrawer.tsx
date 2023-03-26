@@ -28,7 +28,11 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
-import { storesSelector } from '../inventory/selectors';
+import {
+  getArtifactUnlocks,
+  profileResponseSelector,
+  storesSelector,
+} from '../inventory/selectors';
 import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
 import { deleteLoadout, updateLoadout } from './actions';
 import {
@@ -75,6 +79,7 @@ export default function LoadoutDrawer({
 }) {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
+  const profileResponse = useSelector(profileResponseSelector)!;
   const stores = useSelector(storesSelector);
   const [showingItemPicker, setShowingItemPicker] = useState(false);
   const {
@@ -217,10 +222,13 @@ export default function LoadoutDrawer({
     close();
   };
 
+  const artifactUnlocks = profileResponse && getArtifactUnlocks(profileResponse, storeId);
+
   const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
     setLoadout(setNotes(e.target.value));
   const handleNameChanged = withUpdater(setName);
-  const handleFillLoadoutFromEquipped = () => setLoadout(fillLoadoutFromEquipped(defs, store));
+  const handleFillLoadoutFromEquipped = () =>
+    setLoadout(fillLoadoutFromEquipped(defs, store, artifactUnlocks));
   const handleFillLoadoutFromUnequipped = () => setLoadout(fillLoadoutFromUnequipped(defs, store));
 
   const handleSetClearSpace = withUpdater(setClearSpace);
@@ -337,10 +345,15 @@ function filterLoadoutToAllowedItems(
 
     if (loadout.classType === DestinyClass.Unknown && loadout.parameters) {
       // Remove fashion and non-mod loadout parameters from Any Class loadouts
-      if (loadout.parameters.mods?.length || loadout.parameters.clearMods) {
+      if (
+        loadout.parameters.mods?.length ||
+        loadout.parameters.clearMods ||
+        loadout.parameters.artifactUnlocks
+      ) {
         loadout.parameters = {
           mods: loadout.parameters.mods,
           clearMods: loadout.parameters.clearMods,
+          artifactUnlocks: loadout.parameters.artifactUnlocks,
         };
       } else {
         delete loadout.parameters;
