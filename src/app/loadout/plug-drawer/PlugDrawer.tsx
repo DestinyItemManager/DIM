@@ -4,14 +4,13 @@ import ElementIcon from 'app/dim-ui/ElementIcon';
 import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { itemCategoryIcons } from 'app/organizer/item-category-icons';
-import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { SearchInput } from 'app/search/SearchInput';
+import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { Comparator } from 'app/utils/comparators';
-import { DamageType } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { HashLookup } from 'app/utils/util-types';
+import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
 import modsInfoFile from 'data/d2/mods.json';
 import { t } from 'i18next';
 import { produce } from 'immer';
@@ -31,8 +30,8 @@ interface Props {
    * drawer are the union of plugs from these plug sets.
    */
   plugSets: PlugSet[];
-  /** A restricted list of stat hashes to display for each plug. If not specified, no stats will be shown. */
-  displayedStatHashes?: number[];
+  /** The class type we're choosing mods for */
+  classType: DestinyClass;
   /** Title of the sheet, displayed in the header. */
   title: string;
   /** The placeholder text for the search bar. */
@@ -42,18 +41,18 @@ interface Props {
   /** The label for the "accept" button in the footer. */
   acceptButtonText: string;
   /** A function to determine if a given plug is currently selectable. */
-  isPlugSelectable(
+  isPlugSelectable: (
     plug: PluggableInventoryItemDefinition,
     selected: PluggableInventoryItemDefinition[]
-  ): boolean;
+  ) => boolean;
   /** How plug groups (e.g. PlugSets) should be sorted in the display. */
   sortPlugGroups?: Comparator<PlugSet>;
   /** How to sort plugs within a group (PlugSet) */
   sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
   /** Called with the full list of selected plugs when the user clicks the accept button. */
-  onAccept(selectedPlugs: PluggableInventoryItemDefinition[]): void;
+  onAccept: (selectedPlugs: PluggableInventoryItemDefinition[]) => void;
   /** Called when the user accepts the new plugset or closes the sheet. */
-  onClose(): void;
+  onClose: () => void;
 }
 
 /**
@@ -64,7 +63,7 @@ interface Props {
  */
 export default function PlugDrawer({
   plugSets,
-  displayedStatHashes,
+  classType,
   title,
   searchPlaceholder,
   initialQuery,
@@ -161,7 +160,7 @@ export default function PlugDrawer({
   /** Filter the plugs from each plugSet based on the query. This can leave plugSets with zero plugs */
   const queryFilteredPlugSets = useMemo(() => {
     if (!query.length) {
-      return internalPlugSets;
+      return Array.from(internalPlugSets);
     }
 
     const searchFilter = createPlugSearchPredicate(query, language, defs);
@@ -181,14 +180,20 @@ export default function PlugDrawer({
     [internalPlugSets, isPlugSelectable]
   );
 
-  const footer = ({ onClose }: { onClose(): void }) => (
+  const footer = ({ onClose }: { onClose: () => void }) => (
     <Footer
       plugSets={internalPlugSets}
+      classType={classType}
       isPhonePortrait={isPhonePortrait}
       acceptButtonText={acceptButtonText}
       onSubmit={(e) => onSubmit(e, onClose)}
       handlePlugSelected={handlePlugRemovedFromFooter}
     />
+  );
+
+  const [filterPillOptions, mapping] = useMemo(
+    () => modFilterPillOptions(defs, queryFilteredPlugSets),
+    [defs, queryFilteredPlugSets]
   );
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
@@ -205,12 +210,15 @@ export default function PlugDrawer({
           autoFocus={nativeAutoFocus}
         />
       </div>
+      {filterPillOptions.length > 0 && (
+        <FilterPills
+          darkBackground
+          options={filterPillOptions}
+          selectedOptions={selectedFilters}
+          onOptionsSelected={setSelectedFilters}
+        />
+      )}
     </div>
-  );
-
-  const [filterPillOptions, mapping] = useMemo(
-    () => modFilterPillOptions(defs, queryFilteredPlugSets),
-    [defs, queryFilteredPlugSets]
   );
 
   const finalFilteredPlugSets =
@@ -229,19 +237,11 @@ export default function PlugDrawer({
       sheetClassName="item-picker"
       freezeInitialHeight={true}
     >
-      {filterPillOptions.length > 0 && (
-        <FilterPills
-          darkBackground
-          options={filterPillOptions}
-          selectedOptions={selectedFilters}
-          onOptionsSelected={setSelectedFilters}
-        />
-      )}
       {finalFilteredPlugSets.map((plugSet) => (
         <PlugSection
           key={plugSet.plugSetHash}
           plugSet={plugSet}
-          displayedStatHashes={displayedStatHashes}
+          classType={classType}
           isPlugSelectable={handleIsPlugSelectable}
           onPlugSelected={handlePlugSelected}
           onPlugRemoved={handlePlugRemoved}
@@ -262,7 +262,10 @@ export enum ModEffect {
   Unflinching,
   Holster,
   Scavenger,
+  Siphon,
+  Scout,
   // More like effects that any mod can have
+  Stat,
   Resistance,
   Super,
   ClassAbility,
@@ -270,22 +273,13 @@ export enum ModEffect {
   Orbs,
   Finisher,
   Champion,
-  // These should be based on mod type, but they can also show up in the seasonal artifact
-  ChargedWithLight,
-  ElementalWell,
-  WarmindCell,
   ArmorCharge,
 }
 
 /** Interesting things about mods that we can't figure out from the translated defs */
 export interface ModInfo {
   effects?: ModEffect[];
-  weapon?: ItemCategoryHashes[]; // Should be ItemSubType?
-  element?: DamageType[]; // effects arc
-  // element cost
-  // modslot
-  // raid
-  // artifact mods
+  element?: DamageType[];
 }
 
 export type DefType = keyof ModInfo;
@@ -301,17 +295,18 @@ function modFilterPillOptions(
 ): [options: Option[], mapping: { [type in DefType]: { [key: number]: number[] } }] {
   const mapped: { [type in DefType]: { [key: number]: number[] } } = {
     effects: {},
-    weapon: {},
     element: {},
   };
 
   for (const plugSet of plugSets) {
     for (const plug of plugSet.plugs) {
-      const info = modsInfoFile[plug.hash];
+      const info = (modsInfoFile as unknown as HashLookup<{ [type in DefType]: number[] }>)[
+        plug.hash
+      ];
       if (info) {
         for (const key in info) {
-          for (const value of info[key]) {
-            (mapped[key][value] ??= []).push(plug.hash);
+          for (const value of info[key as 'effects' | 'element']) {
+            (mapped[key as 'effects' | 'element'][value] ??= []).push(plug.hash);
           }
         }
       }
@@ -344,14 +339,6 @@ function modFilterPillOptions(
         );
         break;
       }
-      case 'weapon':
-        content = (
-          <>
-            <img height="16" className={styles.itemCategoryIcon} src={itemCategoryIcons[value]} />
-            {defs.ItemCategory.get(value)?.displayProperties.name}
-          </>
-        );
-        break;
     }
 
     return {
@@ -371,8 +358,8 @@ function filterPlugsFromPills(
   let allHashes = new Set(plugs.map((p) => p.hash));
   for (const { key } of options) {
     const [type, value] = key.split('.');
-    const hashes = new Set(mapping[type][value] ?? []);
-    console.log({ type, value, result: mapping[type][value] });
+    const hashes = new Set(mapping[type as DefType][value as unknown as number] ?? []);
+    console.log({ type, value, result: mapping[type as DefType][value as unknown as number] });
     allHashes = new Set([...allHashes].filter((h) => hashes.has(h)));
   }
   return plugs.filter((p) => allHashes.has(p.hash));

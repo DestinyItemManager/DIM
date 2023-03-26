@@ -54,6 +54,9 @@ module.exports = {
         "Unflinching",
         "Holster",
         "Scavenger",
+        "Siphon",
+        "Scout",
+        "Stat",
         "Resistance",
         "Super",
         "ClassAbility",
@@ -61,9 +64,6 @@ module.exports = {
         "Orbs",
         "Finisher",
         "Champion",
-        "ChargedWithLight",
-        "ElementalWell",
-        "WarmindCell",
         "ArmorCharge",
       ]}
     };

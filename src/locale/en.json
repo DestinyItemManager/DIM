@@ -766,10 +766,8 @@
   "ModEffect": {
     "ArmorCharge": "Armor Charge",
     "Champion": "Champion",
-    "ChargedWithLight": "Charged with Light",
     "ClassAbility": "Class Ability",
     "Dexterity": "Dexterity",
-    "ElementalWell": "Elemental Well",
     "Finder": "Finder",
     "Finisher": "Finisher",
     "Grenade": "Grenade",
@@ -779,10 +777,12 @@
     "Reserves": "Reserves",
     "Resistance": "Resistance",
     "Scavenger": "Scavenger",
+    "Scout": "Scout",
+    "Siphon": "Siphon",
+    "Stat": "Stat",
     "Super": "Super",
     "Targeting": "Targeting",
-    "Unflinching": "Unflinching",
-    "WarmindCell": "Warmind Cell"
+    "Unflinching": "Unflinching"
   },
   "MoveAmount": {
     "Amount": "Amount:"

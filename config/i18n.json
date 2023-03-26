@@ -775,6 +775,9 @@
     "Unflinching": "Unflinching",
     "Holster": "Holster",
     "Scavenger": "Scavenger",
+    "Siphon": "Siphon",
+    "Scout": "Scout",
+    "Stat": "Stat",
     "Resistance": "Resistance",
     "Super": "Super",
     "ClassAbility": "Class Ability",
@@ -782,9 +785,6 @@
     "Orbs": "Orbs",
     "Finisher": "Finisher",
     "Champion": "Champion",
-    "ChargedWithLight": "Charged with Light",
-    "ElementalWell": "Elemental Well",
-    "WarmindCell": "Warmind Cell",
     "ArmorCharge": "Armor Charge"
   },
   "MoveAmount": {

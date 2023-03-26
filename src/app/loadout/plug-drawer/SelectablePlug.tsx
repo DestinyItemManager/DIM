@@ -80,6 +80,9 @@ function SelectablePlugDetails({
         {plugDescriptions.perks.map((perkDesc) => (
           <div className={styles.partialDescription} key={perkDesc.perkHash}>
             {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
+            {perkDesc.requirement && (
+              <div className={styles.requirement}>{perkDesc.requirement}</div>
+            )}
           </div>
         ))}
         {stats.length > 0 && (
