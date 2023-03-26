@@ -1,8 +1,14 @@
 ## Next
 
 * Items in the "Focused Decoding" and "Legacy Gear" screens within the Vendors page will now correctly show collection and inventory checkmarks.
-* Display the current and max Postmaster count at all times
+* The current power caps and power floor are now displayed on the Milestones section of the Progress screen.
+* Display the current and max Postmaster count at all times.
 * Armor mods descriptions now include their stacking behavior.
+* Added tooltips for the loadout optimizer settings shown on saved loadouts.
+* The "mod assignment" screen displays better on mobile.
+* The icons for weapon slots have been changed to reflect how they work in game. What was the "kinetic" slot now shows kinetic, stasis, and strand icons while the "energy" slot shows solar, arc, and void icons.
+* On mobile, you can no longer accidentally scroll the whole page while viewing search results.
+* Clicking "Manage Loadouts" from the character menu will bring you to the Loadouts screen for that character instead of your active character.
 
 ## 7.61.0 <span class="changelog-date">(2023-03-19)</span>
 
