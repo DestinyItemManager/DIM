@@ -166,6 +166,8 @@ function convertDestinyLoadoutComponentToInGameLoadout(
     return undefined;
   }
 
+  console.log(loadoutComponent.items);
+
   return {
     ...loadoutComponent,
     characterId,

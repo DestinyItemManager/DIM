@@ -4,10 +4,13 @@ interface CssExports {
   'button': string;
   'checked': string;
   'content': string;
+  'emptySlot': string;
   'header': string;
   'imageButton': string;
   'preview': string;
   'row': string;
+  'slotNum': string;
+  'slots': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

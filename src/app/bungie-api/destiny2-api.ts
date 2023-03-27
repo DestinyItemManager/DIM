@@ -298,6 +298,9 @@ export async function snapshotInGameLoadout(account: DestinyAccount, loadout: In
     loadoutIndex: loadout.index,
     characterId: loadout.characterId,
     membershipType: account.originalPlatformType,
+    colorHash: loadout.colorHash,
+    iconHash: loadout.iconHash,
+    nameHash: loadout.nameHash,
   });
   return result;
 }

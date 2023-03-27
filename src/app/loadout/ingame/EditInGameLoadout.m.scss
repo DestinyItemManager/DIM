@@ -24,10 +24,11 @@
 
 .button {
   composes: dim-button from global;
+  position: relative;
   > img {
     margin: 0 !important;
-    height: 32px;
-    width: 32px;
+    height: 48px;
+    width: 48px;
   }
   &:hover,
   &:active,
@@ -39,7 +40,7 @@
     }
   }
   &.imageButton {
-    padding: 4px;
+    padding: 2px;
   }
 }
 
@@ -47,4 +48,27 @@
   display: flex;
   flex-flow: row wrap;
   gap: 4px;
+}
+
+.slots {
+  composes: row;
+  margin-bottom: 8px;
+
+  > .button {
+    padding: 2px;
+  }
+}
+
+.emptySlot {
+  display: block;
+  height: 48px;
+  width: 48px;
+}
+
+.slotNum {
+  position: absolute;
+  font-weight: bold;
+  bottom: 3px;
+  right: 7px;
+  font-size: 14px;
 }
