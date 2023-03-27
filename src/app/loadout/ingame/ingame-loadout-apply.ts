@@ -1,8 +1,9 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { clearInGameLoadout, equipInGameLoadout } from 'app/bungie-api/destiny2-api';
+import { t } from 'app/i18next-t';
+import { inGameLoadoutNotification } from 'app/inventory/MoveNotifications';
 import { itemMoved } from 'app/inventory/actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
-import { inGameLoadoutNotification } from 'app/inventory/MoveNotifications';
 import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
@@ -14,6 +15,7 @@ import { DimError } from 'app/utils/dim-error';
 import { reportException } from 'app/utils/exceptions';
 import { errorLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
+import { inGameLoadoutDeleted } from './actions';
 import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
 
 /**
@@ -65,12 +67,15 @@ export function applyInGameLoadout(loadout: InGameLoadout): ThunkResult {
 }
 
 export function deleteInGameLoadout(loadout: InGameLoadout): ThunkResult {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
     await clearInGameLoadout(account, loadout);
 
-    showNotification({ title: 'Loadout deleted' });
+    showNotification({
+      title: t('InGameLoadout.Deleted'),
+      body: t('InGameLoadout.DeletedBody', { index: loadout.index }),
+    });
 
-    // TODO: I guess reload stores? Maybe we need a redux copy of the data
+    dispatch(inGameLoadoutDeleted(loadout));
   };
 }

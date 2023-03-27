@@ -396,7 +396,9 @@
   },
   "InGameLoadout": {
     "Applying": "Equipping loadout...",
-    "LoadoutSlotNum": "Slot {{index}}"
+    "LoadoutSlotNum": "Slot {{index}}",
+    "Deleted": "Loadout Deleted",
+    "DeletedBody": "Cleared the in-game loadout at slot {{index}}"
   },
   "Inventory": {
     "ClickToExpand": "(Click to expand)"

@@ -387,6 +387,8 @@
   },
   "InGameLoadout": {
     "Applying": "Equipping loadout...",
+    "Deleted": "Loadout Deleted",
+    "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
     "LoadoutSlotNum": "Slot {{index}}"
   },
   "Infusion": {

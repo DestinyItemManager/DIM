@@ -1,12 +1,13 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { clarity } from 'app/clarity/reducer';
+import { inGameLoadouts } from 'app/loadout/ingame/reducer';
 import { StreamDeckState } from 'app/stream-deck/interfaces';
 import { lazyStreamDeck, streamDeckInitialState } from 'app/stream-deck/stream-deck';
 import { vendors } from 'app/vendors/reducer';
-import { combineReducers, Reducer } from 'redux';
+import { Reducer, combineReducers } from 'redux';
 import { accounts } from '../accounts/reducer';
 import { compare } from '../compare/reducer';
-import { dimApi, DimApiState, initialState as dimApiInitialState } from '../dim-api/reducer';
+import { DimApiState, dimApi, initialState as dimApiInitialState } from '../dim-api/reducer';
 import { farming } from '../farming/reducer';
 import { inventory } from '../inventory/reducer';
 import { loadouts } from '../loadout-drawer/reducer';
@@ -27,6 +28,7 @@ const reducer: Reducer<RootState> = (state, action) => {
     vendors,
     compare,
     clarity,
+    inGameLoadouts,
     // Dummy reducer to get the types to work
     dimApi: (state: DimApiState = dimApiInitialState) => state,
     streamDeck: (state: StreamDeckState = streamDeckInitialState) => state,
