@@ -16,9 +16,8 @@ import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-c
 import { recentSearchComparator } from 'app/search/autocomplete';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { FilterContext } from 'app/search/filter-types';
-import { searchConfigSelector } from 'app/search/search-config';
+import { buildFiltersMap } from 'app/search/search-config';
 import { parseAndValidateQuery } from 'app/search/search-utils';
-import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
 import { count, uniqBy } from 'app/utils/util';
@@ -1123,25 +1122,13 @@ function trackTriumph(
   draft.updateQueue.push(updateAction);
 }
 
-// Real hack to fake out enough store to select out the search configs
-function stubSearchRootState(account: DestinyAccount) {
-  return {
-    accounts: {
-      accounts: [account],
-      currentAccount: 0,
-    },
-    inventory: { stores: [] },
-    dimApi: { profiles: {}, settings: { customStats: [], customTotalStatsByClass: {} } },
-    manifest: {},
-  } as any as RootState;
-}
-
 function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: string) {
   const destinyVersion = account.destinyVersion;
-  const searchConfigs = searchConfigSelector(stubSearchRootState(account));
+  // Note: memoized
+  const filtersMap = buildFiltersMap(destinyVersion);
 
   // Canonicalize the query so we always save it the same way
-  const { canonical, saveInHistory } = parseAndValidateQuery(query, searchConfigs, {
+  const { canonical, saveInHistory } = parseAndValidateQuery(query, filtersMap, {
     customStats: draft.settings.customStats ?? [],
   } as FilterContext);
   if (!saveInHistory) {
@@ -1198,13 +1185,14 @@ function saveSearch(
   saved: boolean
 ) {
   const destinyVersion = account.destinyVersion;
-  const searchConfigs = searchConfigSelector(stubSearchRootState(account));
+  // Note: memoized
+  const filtersMap = buildFiltersMap(destinyVersion);
 
   // Canonicalize the query so we always save it the same way
-  const { canonical, saveable } = parseAndValidateQuery(query, searchConfigs, {
+  const { canonical, saveable } = parseAndValidateQuery(query, filtersMap, {
     customStats: draft.settings.customStats ?? [],
   } as FilterContext);
-  if (!saveable && saved) {
+  if (!saveable) {
     errorLog('searchUsed', 'Query not eligible to be saved', query);
     return;
   }
@@ -1269,13 +1257,14 @@ function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccou
     return;
   }
 
-  const searchConfigs = searchConfigSelector(stubSearchRootState(account));
+  // Note: memoized
+  const filtersMap = buildFiltersMap(account.destinyVersion);
   for (const search of draft.searches[account.destinyVersion]) {
     if (search.saved || search.usageCount <= 0) {
       continue;
     }
 
-    const { saveInHistory } = parseAndValidateQuery(search.query, searchConfigs, {
+    const { saveInHistory } = parseAndValidateQuery(search.query, filtersMap, {
       customStats: draft.settings.customStats ?? [],
     } as FilterContext);
     if (!saveInHistory) {

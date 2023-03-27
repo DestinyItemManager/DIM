@@ -18,7 +18,7 @@ function keywordsString(keywords: string | string[]) {
 }
 
 export default function FilterHelp() {
-  const searchConfig = useSelector(searchConfigSelector);
+  const searchConfig = useSelector(searchConfigSelector).filtersMap;
   const [search, setSearch] = useState('');
 
   const searchLower = search.toLowerCase();
