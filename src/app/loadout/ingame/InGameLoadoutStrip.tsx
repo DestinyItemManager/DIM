@@ -16,6 +16,7 @@ import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useSavedLoadoutsForClassType } from '../loadout-ui/menu-hooks';
+import { showInGameLoadoutDetails } from './InGameLoadoutDetailsSheet';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
 import styles from './InGameLoadoutStrip.m.scss';
 import { applyInGameLoadout, deleteInGameLoadout } from './ingame-loadout-apply';
@@ -45,6 +46,7 @@ export function InGameLoadoutStrip({
   const defs = useD2Definitions()!;
   const dispatch = useThunkDispatch();
 
+  // TO-DO: THIS MUST USE availableLoadoutSlotsSelector ONCE IT IS MERGED
   return (
     <div className={styles.loadoutStrip}>
       {Array(10)
@@ -86,7 +88,7 @@ export function InGameLoadoutStrip({
             },
             {
               key: 'delete',
-              content: 'Delete',
+              content: 'Clear Slot ' + (loadoutIndex + 1),
               onSelected: () => dispatch(deleteInGameLoadout(loadout)),
             },
           ];
@@ -140,39 +142,40 @@ export function InGameLoadoutStrip({
               key={loadout.index}
               className={clsx(styles.inGameTileWrapper, isEquipped && styles.isEquipped)}
             >
-              <PressTip
-                tooltip={tooltipContent.length ? tooltipContent : null}
-                placement="bottom"
-                className={styles.inGameTile}
-              >
-                <div className={styles.igtIconHolder}>
-                  <InGameLoadoutIconWithIndex loadout={loadout} className={styles.igtIcon} />
-                </div>
-                {/* <ColorDestinySymbols text={loadout.name} className={styles.igtName} /> */}
-                {equippable ? (
-                  <AppIcon
-                    icon={faCheckCircle}
-                    className={clsx(styles.statusAppIcon, styles.equipOk)}
-                  />
-                ) : (
-                  <AppIcon
-                    icon={faExclamationCircle}
-                    className={clsx(styles.statusAppIcon, styles.equipNok)}
-                  />
-                )}
-                {matchingLoadouts.length > 0 && (
-                  <AppIcon icon={saveIcon} className={styles.statusAppIcon} />
-                )}
-                {/* {isEquipped && (
+              <PressTip tooltip={tooltipContent.length ? tooltipContent : null} placement="bottom">
+                <div
+                  className={styles.inGameTile}
+                  onClick={() => showInGameLoadoutDetails(loadout)}
+                >
+                  <div className={styles.igtIconHolder}>
+                    <InGameLoadoutIconWithIndex loadout={loadout} className={styles.igtIcon} />
+                  </div>
+                  {/* <ColorDestinySymbols text={loadout.name} className={styles.igtName} /> */}
+                  {equippable ? (
+                    <AppIcon
+                      icon={faCheckCircle}
+                      className={clsx(styles.statusAppIcon, styles.equipOk)}
+                    />
+                  ) : (
+                    <AppIcon
+                      icon={faExclamationCircle}
+                      className={clsx(styles.statusAppIcon, styles.equipNok)}
+                    />
+                  )}
+                  {matchingLoadouts.length > 0 && (
+                    <AppIcon icon={saveIcon} className={styles.statusAppIcon} />
+                  )}
+                  {/* {isEquipped && (
                   <img
                     src={helmetIcon}
                     className={clsx(styles.svgIcon, styles.statusIconSvg)}
                     alt="is currently equipped"
                   />
                 )} */}
-                {/* <div className={styles.igtProps}>
+                  {/* <div className={styles.igtProps}>
 
                 </div> */}
+                </div>
               </PressTip>
               <Dropdown kebab options={options} placement="bottom-end" className={styles.kebab} />
             </div>

@@ -22,8 +22,10 @@ import { Portal } from 'app/utils/temp-container';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
+import { useSubscription } from 'use-subscription';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
+import { InGameLoadoutDetails, showGameLoadoutDetails$ } from './ingame/InGameLoadoutDetailsSheet';
 import InGameLoadoutIcon from './ingame/InGameLoadoutIcon';
 import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
@@ -79,6 +81,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const language = useSelector(languageSelector);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
+  const gameLoadoutDetails = useSubscription(showGameLoadoutDetails$);
 
   const savedLoadouts = useSavedLoadoutsForClassType(classType);
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
@@ -191,6 +194,11 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             currentStoreId={selectedStoreId}
             onClose={() => setLoadoutImportOpen(false)}
           />
+        </Portal>
+      )}
+      {gameLoadoutDetails && (
+        <Portal>
+          <InGameLoadoutDetails loadout={gameLoadoutDetails} />
         </Portal>
       )}
     </PageWithMenu>

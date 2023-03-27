@@ -11,13 +11,15 @@ export default function Socket({
   socket,
   wishlistRoll,
   onClick,
+  pluggedOnly = false,
 }: {
   item: DimItem;
   socket: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
   onClick?: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
+  pluggedOnly?: boolean;
 }) {
-  const hasMenu = Boolean(!socket.isPerk && socket.socketDefinition.plugSources);
+  const hasMenu = Boolean(onClick && !socket.isPerk && socket.socketDefinition.plugSources);
   if (!socket.plugOptions.length) {
     return null;
   }
@@ -28,17 +30,19 @@ export default function Socket({
         hasMenu,
       })}
     >
-      {socket.plugOptions.map((plug) => (
-        <Plug
-          key={plug.plugDef.hash}
-          plug={plug}
-          item={item}
-          socketInfo={socket}
-          wishlistRoll={wishlistRoll}
-          hasMenu={hasMenu}
-          onClick={onClick && (() => onClick(item, socket, plug, hasMenu))}
-        />
-      ))}
+      {socket.plugOptions
+        .filter((plug) => !pluggedOnly || socket.plugged === plug)
+        .map((plug) => (
+          <Plug
+            key={plug.plugDef.hash}
+            plug={plug}
+            item={item}
+            socketInfo={socket}
+            wishlistRoll={wishlistRoll}
+            hasMenu={hasMenu}
+            onClick={onClick && (() => onClick(item, socket, plug, hasMenu))}
+          />
+        ))}
     </div>
   );
 }

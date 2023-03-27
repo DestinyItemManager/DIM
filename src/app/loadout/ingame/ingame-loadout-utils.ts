@@ -74,7 +74,7 @@ export function implementsDimLoadout(
 
   const gameLoadoutMods = inGameLoadout.items
     .flatMap((i) => i.plugItemHashes)
-    .filter((h) => h && h !== 2166136261); // a known invalid hash
+    .filter(isValidGameLoadoutPlug);
 
   const dimLoadoutMods = [
     ...(dimLoadout.parameters?.mods ?? []),
@@ -98,4 +98,9 @@ export function itemCouldBeEquipped(store: DimStore, item: DimItem, stores: DimS
   return (
     item.owner === store.id || (item.owner === 'vault' && spaceLeftForItem(store, item, stores) > 0)
   );
+}
+
+export function isValidGameLoadoutPlug(hash: number) {
+  // TO-DO: SHARE THIS VALUE ONCE 9306 IS MERGED
+  return hash && hash !== 2166136261;
 }

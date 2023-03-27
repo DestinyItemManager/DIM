@@ -40,8 +40,8 @@ export function applySocketOverrides(
     // stats and who knows, they could end up different than the original and we wouldn't want to
     // overwrite them.
     let plugOptions: DimPlug[] = s.plugOptions.map((p) => ({ ...p, stats: null }));
-
-    if (override && s.plugged?.plugDef.hash !== override) {
+    // TO-DO: SHARE THIS VALUE ONCE 9306 IS MERGED
+    if (override && override !== 2166136261 && s.plugged?.plugDef.hash !== override) {
       let newPlug, actuallyPlugged;
 
       if (s.isPerk) {

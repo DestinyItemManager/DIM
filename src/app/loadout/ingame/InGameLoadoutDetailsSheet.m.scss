@@ -1,0 +1,51 @@
+.sheet {
+  width: fit-content;
+  margin: auto;
+}
+
+.controls {
+  margin: 8px;
+  width: fit-content;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.loadoutGrid {
+  --sub-item-size: calc(var(--item-size) * 0.5);
+  display: grid;
+  width: min-content;
+  grid-auto-flow: row;
+  grid-template-columns: repeat(20, auto);
+  row-gap: 4px;
+  align-items: center;
+  margin: 8px;
+}
+
+.itemImage {
+  height: calc(var(--item-size) * 0.75);
+  width: calc(var(--item-size) * 0.75);
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  pointer-events: auto;
+  grid-column: 1;
+}
+
+.smallSockets {
+  --item-size: var(--sub-item-size);
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-auto-flow: column;
+  grid-column: span 5;
+  width: fit-content;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  h1 {
+    margin-bottom: 0 !important;
+  }
+}
