@@ -54,16 +54,19 @@ export function InGameLoadoutDetails({
     <Sheet onClose={reset} header={header} sheetClassName={styles.sheet}>
       <div className={styles.controls}>
         <button type="button" className="dim-button">
-          apply
+          Apply
         </button>
         <button type="button" className="dim-button">
-          delete
+          Prepare for Application
         </button>
         <button type="button" className="dim-button">
-          edit identifiers
+          Delete
         </button>
         <button type="button" className="dim-button">
-          save as DIM loadout
+          Edit Identifiers
+        </button>
+        <button type="button" className="dim-button">
+          Save as DIM Loadout
         </button>
       </div>
       <div className={styles.loadoutGrid}>

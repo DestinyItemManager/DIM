@@ -51,7 +51,7 @@ export function InGameLoadoutStrip({
     <div className={styles.loadoutStrip}>
       {Array(10)
         .fill(0)
-        .map((_, loadoutIndex) => {
+        .map((_x, loadoutIndex) => {
           const loadout = inGameLoadoutsDict[loadoutIndex];
           if (!loadout) {
             return (
@@ -80,18 +80,25 @@ export function InGameLoadoutStrip({
             (l) =>
               !isInGameLoadout(l) && l.items.length > 4 && implementsDimLoadout(loadout, l, defs)
           );
-          const options: Option[] = [
+          const options: Option[] = _.compact([
             {
               key: 'apply',
               content: 'Apply',
               onSelected: () => dispatch(applyInGameLoadout(loadout)),
+            },
+            !equippable && {
+              key: 'prep',
+              content: 'Prepare for Application',
+              onSelected: () => {
+                /* pretend we do something here */
+              },
             },
             {
               key: 'delete',
               content: 'Clear Slot ' + (loadoutIndex + 1),
               onSelected: () => dispatch(deleteInGameLoadout(loadout)),
             },
-          ];
+          ]);
 
           const tooltipContent: JSX.Element[] = [
             <Tooltip.Header key="header" text={loadout.name} />,
