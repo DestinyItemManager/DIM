@@ -9,8 +9,8 @@ import { ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import {
-  armor2PlugCategoryHashesByName,
   MAX_ARMOR_ENERGY_CAPACITY,
+  armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
@@ -30,7 +30,7 @@ import {
   knownModPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
 } from './known-values';
-import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
+import { isInsertableArmor2Mod, sortModGroups } from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
 import { PlugSet } from './plug-drawer/types';
 
@@ -294,7 +294,6 @@ function ModPicker({ plugSets, classType, lockedMods, initialQuery, onAccept, on
       classType={classType}
       isPlugSelectable={isModSelectable}
       sortPlugGroups={sortModPickerPlugGroups}
-      sortPlugs={sortMods}
       onAccept={onAcceptWithHiddenSelectedMods}
       onClose={onClose}
     />
