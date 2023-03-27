@@ -3,10 +3,13 @@
 interface CssExports {
   'assigned': string;
   'container': string;
+  'cost': string;
+  'costs': string;
   'energyMeter': string;
   'headerInfo': string;
   'headerName': string;
   'headerStats': string;
+  'infoSectionHeader': string;
   'itemAndMods': string;
   'unassigned': string;
 }

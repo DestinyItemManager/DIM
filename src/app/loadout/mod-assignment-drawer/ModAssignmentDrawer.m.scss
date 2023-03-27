@@ -37,6 +37,27 @@
   composes: sub-bucket from global;
 }
 
+.infoSectionHeader {
+  > h3 {
+    margin-bottom: 2px;
+  }
+  > span {
+    color: grey;
+    font-style: italic;
+  }
+  margin-bottom: 10px;
+}
+
+.costs {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+
+  .cost {
+    font-size: 12px !important;
+  }
+}
+
 .headerInfo {
   display: flex;
   flex-flow: row wrap;

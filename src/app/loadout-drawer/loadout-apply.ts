@@ -1126,6 +1126,7 @@ function applyLoadoutMods(
 
     // TODO: prefer equipping to armor that *is* part of the loadout
     const { itemModAssignments, unassignedMods } = fitMostMods({
+      defs,
       items: armor,
       plannedMods: mods,
       armorEnergyRules: inGameArmorEnergyRules,

@@ -2,7 +2,7 @@ import 'app/dim-ui/EnergyMeterIncrements.scss';
 import { t } from 'app/i18next-t';
 import { insertPlug } from 'app/inventory/advanced-write-actions';
 import { DimItem } from 'app/inventory/item-types';
-import { energyUpgrade, sumModCosts } from 'app/inventory/store/energy';
+import { getEnergyUpgradeHashes, sumModCosts } from 'app/inventory/store/energy';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, disabledIcon, enabledIcon } from 'app/shell/icons';
@@ -54,7 +54,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
       return;
     }
 
-    const upgradeMods = energyUpgrade(item, previewCapacity);
+    const upgradeMods = getEnergyUpgradeHashes(item, previewCapacity);
     const socket = getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier)!;
 
     try {
@@ -134,7 +134,7 @@ function EnergyUpgradePreview({
     return null;
   }
 
-  const energyModHashes = energyUpgrade(item, previewCapacity);
+  const energyModHashes = getEnergyUpgradeHashes(item, previewCapacity);
   const costs = sumModCosts(
     defs,
     energyModHashes.map((h) => defs.InventoryItem.get(h))

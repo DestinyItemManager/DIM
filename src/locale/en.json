@@ -124,6 +124,7 @@
   "EnergyMeter": {
     "Energy": "Energy",
     "Unused": "Unused",
+    "UpgradeNeeded": "This item's current energy capacity is {{energyCapacity}}. To fit the selected mods, its energy capacity must be {{energyUsed}}.",
     "Used": "Used"
   },
   "ErrorBoundary": {
@@ -665,7 +666,17 @@
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
     "ModErrorSummary": "1 mod error:",
     "ModErrorSummary_plural": "{{count}} mod errors:",
-    "ModPlacement": "Mod Placement",
+    "ModPlacement": {
+      "InvalidMods": "Invalid Mods",
+      "InvalidModsDesc": "1 mod cannot fit into any armor piece.",
+      "InvalidModsDesc_plural": "{{count}} mods cannot fit into any armor piece.",
+      "ModPlacement": "Mod Placement",
+      "UnassignedMods": "Unassigned Mods",
+      "UnassignedModsDesc": "1 mod did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
+      "UnassignedModsDesc_plural": "{{count}} mods did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
+      "UpgradeCosts": "Upgrade Costs",
+      "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:"
+    },
     "Mods": "Mods",
     "MoveItems": "Moving items",
     "NoEngrams": "No non-exotic engrams are available to transfer.",
@@ -735,7 +746,6 @@
     "SyncFromEquipped": "Sync from equipped",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedModError": "Mod didn't fit on your current armor",
-    "UnassignedMods": "Unassigned Mods",
     "Undo": "Undo",
     "Unequipped": "Unequipped",
     "Update": "Save Changes",

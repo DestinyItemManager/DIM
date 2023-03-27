@@ -1,6 +1,8 @@
 import 'app/dim-ui/EnergyMeterIncrements.scss';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { EnergySwap } from 'app/loadout-builder/generated-sets/GeneratedSetItem';
+import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import clsx from 'clsx';
 import { PressTip } from './PressTip';
 
@@ -19,7 +21,7 @@ function EnergyIncrements({
     }) {
   const { energyCapacity, energyUsed } = item?.energy ?? energy!;
   // layer in possible total slots, then earned slots, then currently used slots
-  const meterIncrements = Array<string>(10)
+  const meterIncrements = Array<string>(MAX_ARMOR_ENERGY_CAPACITY)
     .fill('unavailable')
     .fill('unused', 0, energyCapacity)
     .fill('used', 0, energyUsed);
@@ -33,23 +35,17 @@ function EnergyIncrements({
 }
 
 export function EnergyIncrementsWithPresstip({
-  item,
   energy,
   wrapperClass,
 }: {
-  item?: DimItem;
-  energy?: {
+  energy: {
     energyCapacity: number;
     energyUsed: number;
   };
   wrapperClass?: string | undefined;
 }) {
-  const energy_ = energy ?? item?.energy;
-  if (!energy_) {
-    return null;
-  }
-  const { energyCapacity, energyUsed } = energy_;
-  const energyUnused = energyCapacity - energyUsed;
+  const { energyCapacity, energyUsed } = energy;
+  const energyUnused = Math.max(energyCapacity - energyUsed, 0);
 
   return (
     <PressTip
@@ -60,6 +56,12 @@ export function EnergyIncrementsWithPresstip({
           {t('EnergyMeter.Used')}: {energyUsed}
           <br />
           {t('EnergyMeter.Unused')}: {energyUnused}
+          {energyUsed > energyCapacity && (
+            <>
+              <hr />
+              {t('EnergyMeter.UpgradeNeeded', energy)}
+            </>
+          )}
         </>
       }
       className={wrapperClass}
@@ -70,6 +72,7 @@ export function EnergyIncrementsWithPresstip({
           energyUsed,
         }}
       />
+      {energyUsed > energyCapacity && <EnergySwap energy={energy} />}
     </PressTip>
   );
 }
