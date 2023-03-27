@@ -25,7 +25,7 @@ import { Link, useLocation } from 'react-router-dom';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
 import InGameLoadoutIcon from './ingame/InGameLoadoutIcon';
-import InGameLoadoutRow from './ingame/InGameLoadoutRow';
+import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import {
@@ -160,11 +160,10 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
+        <InGameLoadoutStrip classType={classType} selectedStoreId={selectedStoreId} />
         {filterPills}
         {loadouts.map((loadout) =>
-          isInGameLoadout(loadout) ? (
-            <InGameLoadoutRow key={loadout.index} loadout={loadout} store={selectedStore} />
-          ) : (
+          isInGameLoadout(loadout) ? null : ( // <InGameLoadoutRow key={loadout.index} loadout={loadout} store={selectedStore} />
             <LoadoutRow
               key={loadout.id}
               loadout={loadout}

@@ -1,0 +1,13 @@
+.wrapper {
+  position: relative;
+  img {
+    display: block;
+  }
+}
+.index {
+  position: absolute;
+  bottom: -1px;
+  right: 1px;
+  font-weight: bold;
+  text-shadow: 0 0 5px #000;
+}

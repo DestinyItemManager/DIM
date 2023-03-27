@@ -1,8 +1,11 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { DimStore } from 'app/inventory/store-types';
+import { spaceLeftForItem } from 'app/inventory/stores-helpers';
+import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { potentialLoadoutItemsByItemId } from 'app/loadout-drawer/loadout-utils';
-import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
+import { DestinyItemType, DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -34,5 +37,65 @@ export function useItemsFromInGameLoadout(loadout: InGameLoadout) {
   return useMemo(
     () => getItemsFromInGameLoadout(loadout.items, allItems),
     [loadout.items, allItems]
+  );
+}
+
+/**
+ * does this game loadout, meet the requirements of this DIM loadout:
+ *
+ * does it include the items the DIM loadout would equip,
+ * and represent a full application of the DIM loadout's required mods?
+ */
+export function implementsDimLoadout(
+  inGameLoadout: InGameLoadout,
+  dimLoadout: Loadout,
+  defs: D2ManifestDefinitions
+) {
+  const equippedDimItems = dimLoadout.items
+    .filter((i) => {
+      if (!i.equip) {
+        return false;
+      }
+      const itemType = defs.InventoryItem.get(i.hash).itemType;
+      // only checking the items that game loadouts support
+      return (
+        itemType === DestinyItemType.Weapon ||
+        itemType === DestinyItemType.Armor ||
+        itemType === DestinyItemType.Subclass
+      );
+    })
+    .map((i) => i.id);
+  const equippedGameItems = inGameLoadout.items.map((i) => i.itemInstanceId);
+
+  // try the faster quit
+  if (!equippedDimItems.every((i) => equippedGameItems.includes(i))) {
+    return false;
+  }
+
+  const gameLoadoutMods = inGameLoadout.items
+    .flatMap((i) => i.plugItemHashes)
+    .filter((h) => h && h !== 2166136261); // a known invalid hash
+
+  const dimLoadoutMods = [
+    ...(dimLoadout.parameters?.mods ?? []),
+    ...(dimLoadout.autoStatMods ?? []),
+  ];
+  for (const requiredModHash of dimLoadoutMods) {
+    const pos = gameLoadoutMods.indexOf(requiredModHash);
+    if (pos === -1) {
+      return false;
+    }
+    gameLoadoutMods.splice(pos, 1);
+  }
+  return true;
+}
+
+/**
+ * to be equipped via in-game loadouts, an item must be on the char already,
+ * or in the vault, but with room in the character's pockets for a transfer
+ */
+export function itemCouldBeEquipped(store: DimStore, item: DimItem, stores: DimStore[]) {
+  return (
+    item.owner === store.id || (item.owner === 'vault' && spaceLeftForItem(store, item, stores) > 0)
   );
 }
