@@ -590,8 +590,16 @@ export function pickPlugPositions(
   for (const modToInsert of orderedMods) {
     // If this mod is already plugged somewhere, that's the slot we want to keep it in
     let destinationSocketIndex = orderedSockets.findIndex(
-      (socket) => socket.plugged?.plugDef.hash === modToInsert.hash
+      (socket) => socket.plugged!.plugDef.hash === modToInsert.hash
     );
+
+    // If what the game calls a "similar" mod is plugged somewhere, choose to replace that
+    if (destinationSocketIndex === -1) {
+      const toPlugExclusionGroup = getModExclusionGroup(modToInsert);
+      destinationSocketIndex = orderedSockets.findIndex(
+        (socket) => getModExclusionGroup(socket.plugged!.plugDef) === toPlugExclusionGroup
+      );
+    }
 
     // If it wasn't found already plugged, find the first socket with a matching PCH
     if (destinationSocketIndex === -1) {
@@ -707,7 +715,7 @@ export function createPluggingStrategy(
       if (pluggingAction.required) {
         operationSet.push(pluggingAction);
       }
-    } else if (pluggingAction.energySpend > 0 && !existingExclusionGroup) {
+    } else if (pluggingAction.energySpend > 0 && !pluggingAction.exclusionGroupReleased) {
       // this spends energy and doesn't release an exclusion group,
       // so nothing depends on this being applied
       requiredSpends.push(pluggingAction);
@@ -715,12 +723,12 @@ export function createPluggingStrategy(
       // assigningToDefault ensures this frees up energy and doesn't add an exclusion group,
       // so requiredSpends can schedule these as needed to free up energy or release exclusion groups
       optionalRegains.push(pluggingAction);
-    } else if (pluggingAction.energySpend <= 0 && !assignmentExclusionGroup) {
+    } else if (pluggingAction.energySpend <= 0 && !pluggingAction.exclusionGroupAdded) {
       // this frees up energy and doesn't add an exclusion group, so it doesn't
       // depend on anything else being applied
       requiredRegains.push(pluggingAction);
     } else {
-      // We have an action that's both depends on some things and can be a dependency for other things,
+      // We have an action that both depends on some things and can be a dependency for other things,
       // so we must split this action, turning an assignment A->B into an A->EMPTY->...other actions->B
 
       // Reset the socket to empty
