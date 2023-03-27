@@ -673,19 +673,19 @@ export function getModsFromLoadout(
   return resolveLoadoutModHashes(defs, internalModHashes, unlockedPlugs);
 }
 
-const oldToNewMod = {
-  '204137529': 1703647492, // InventoryItem "Minor Mobility Mod"
-  '3961599962': 4183296050, // InventoryItem "Mobility Mod"
-  '3682186345': 2532323436, // InventoryItem "Minor Resilience Mod"
-  '2850583378': 1180408010, // InventoryItem "Resilience Mod"
-  '555005975': 1237786518, // InventoryItem "Minor Recovery Mod"
-  '2645858828': 4204488676, // InventoryItem "Recovery Mod"
-  '2623485440': 4021790309, // InventoryItem "Minor Discipline Mod"
-  '4048838440': 1435557120, // InventoryItem "Discipline Mod"
-  '1227870362': 350061697, // InventoryItem "Minor Intellect Mod"
-  '3355995799': 2724608735, // InventoryItem "Intellect Mod"
-  '3699676109': 2639422088, // InventoryItem "Minor Strength Mod"
-  '3253038666': 4287799666, // InventoryItem "Strength Mod"
+const oldToNewMod: HashLookup<number> = {
+  204137529: 1703647492, // InventoryItem "Minor Mobility Mod"
+  3961599962: 4183296050, // InventoryItem "Mobility Mod"
+  3682186345: 2532323436, // InventoryItem "Minor Resilience Mod"
+  2850583378: 1180408010, // InventoryItem "Resilience Mod"
+  555005975: 1237786518, // InventoryItem "Minor Recovery Mod"
+  2645858828: 4204488676, // InventoryItem "Recovery Mod"
+  2623485440: 4021790309, // InventoryItem "Minor Discipline Mod"
+  4048838440: 1435557120, // InventoryItem "Discipline Mod"
+  1227870362: 350061697, // InventoryItem "Minor Intellect Mod"
+  3355995799: 2724608735, // InventoryItem "Intellect Mod"
+  3699676109: 2639422088, // InventoryItem "Minor Strength Mod"
+  3253038666: 4287799666, // InventoryItem "Strength Mod"
 };
 
 export function resolveLoadoutModHashes(
