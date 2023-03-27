@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { DimLanguage } from 'app/i18n';
 import { getSeason } from 'app/inventory/store/season';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
@@ -7,9 +8,12 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { ArmorySearchItem, SearchItemType } from './autocomplete';
+import { plainString } from './search-filters/freeform';
 
 export interface ArmoryEntry {
   name: string;
+  /** The plainString'd version (with diacritics removed, if applicable). */
+  plainName: string;
   icon: string;
   hash: number;
   seasonName: string | undefined;
@@ -17,7 +21,7 @@ export interface ArmoryEntry {
   year: number | undefined;
 }
 
-export const buildArmoryIndex = memoizeOne((defs: D2ManifestDefinitions) => {
+export const buildArmoryIndex = memoizeOne((defs: D2ManifestDefinitions, language: DimLanguage) => {
   const results: ArmoryEntry[] = [];
   const invItemTable = defs.InventoryItem.getAll();
   const seasons = Object.values(defs.Season.getAll());
@@ -45,6 +49,7 @@ export const buildArmoryIndex = memoizeOne((defs: D2ManifestDefinitions) => {
       results.push({
         hash: i.hash,
         name: i.displayProperties.name,
+        plainName: plainString(i.displayProperties.name, language),
         icon: i.displayProperties.icon,
         seasonName,
         season: season,
@@ -63,10 +68,13 @@ export const buildArmoryIndex = memoizeOne((defs: D2ManifestDefinitions) => {
 
 export function getArmorySuggestions(
   armoryIndex: ArmoryEntry[] | undefined,
-  query: string
+  query: string,
+  language: DimLanguage
 ): ArmorySearchItem[] {
   const armoryEntries = query.length
-    ? armoryIndex?.filter((armoryItem) => armoryItem.name.toLocaleLowerCase().includes(query))
+    ? armoryIndex?.filter((armoryItem) =>
+        armoryItem.plainName.includes(plainString(query, language))
+      )
     : undefined;
 
   if (!armoryEntries) {

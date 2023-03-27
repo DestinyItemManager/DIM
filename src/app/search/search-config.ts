@@ -1,13 +1,15 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
+import { languageSelector } from 'app/dim-api/selectors';
+import { DimLanguage } from 'app/i18n';
 import memoizeOne from 'memoize-one';
 import { createSelector } from 'reselect';
 import { ArmoryEntry, buildArmoryIndex } from './armory-search';
-import { canonicalFilterFormats, FilterDefinition, SuggestionsContext } from './filter-types';
+import { FilterDefinition, SuggestionsContext, canonicalFilterFormats } from './filter-types';
 import advancedFilters from './search-filters/advanced';
 import d1Filters from './search-filters/d1-filters';
 import dupeFilters from './search-filters/dupes';
-import freeformFilters from './search-filters/freeform';
+import freeformFilters, { plainString } from './search-filters/freeform';
 import itemInfosFilters from './search-filters/item-infos';
 import knownValuesFilters from './search-filters/known-values';
 import loadoutFilters from './search-filters/loadouts';
@@ -39,6 +41,7 @@ const allFilters = [
 
 export const searchConfigSelector = createSelector(
   destinyVersionSelector,
+  languageSelector,
   suggestionsContextSelector,
   buildSearchConfig
 );
@@ -55,9 +58,17 @@ export interface FiltersMap {
   kvFilters: Record<string, FilterDefinition>;
 }
 
+export interface Suggestion {
+  /** The original suggestion text. */
+  rawText: string;
+  /** The plainString'd version (with diacritics removed, if applicable). */
+  plainText: string;
+}
+
 export interface SearchConfig {
   filtersMap: FiltersMap;
-  suggestions: string[];
+  language: DimLanguage;
+  suggestions: Suggestion[];
   armorySuggestions?: ArmoryEntry[];
 }
 
@@ -104,6 +115,7 @@ export const buildFiltersMap = memoizeOne((destinyVersion: DestinyVersion): Filt
 /** Builds an object that describes the available search keywords and filter definitions. */
 export function buildSearchConfig(
   destinyVersion: DestinyVersion,
+  language: DimLanguage,
   suggestionsContext: SuggestionsContext = {}
 ): SearchConfig {
   const suggestions = new Set<string>();
@@ -118,11 +130,15 @@ export function buildSearchConfig(
   }
 
   const armorySuggestions =
-    suggestionsContext.d2Manifest && buildArmoryIndex(suggestionsContext.d2Manifest);
+    suggestionsContext.d2Manifest && buildArmoryIndex(suggestionsContext.d2Manifest, language);
 
   return {
     filtersMap,
-    suggestions: Array.from(suggestions),
+    suggestions: [...suggestions].map((rawText) => ({
+      rawText,
+      plainText: plainString(rawText, language),
+    })),
+    language,
     armorySuggestions,
   };
 }
