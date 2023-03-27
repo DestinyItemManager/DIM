@@ -1,5 +1,8 @@
 ## Next
 
+* The "Show Mod Placement" sheet will now show the required armor energy capacity upgrades to make all mods fit (and the total upgrade costs).
+* Loadout Optimizer sets will now show energy capacity bars below armor pieces, similar to the "Show Mod Placement" sheet.
+
 ## 7.62.0 <span class="changelog-date">(2023-03-26)</span>
 
 * Items in the "Focused Decoding" and "Legacy Gear" screens within the Vendors page will now correctly show collection and inventory checkmarks.
