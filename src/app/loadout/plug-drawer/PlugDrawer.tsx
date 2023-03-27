@@ -1,18 +1,25 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
+import ElementIcon from 'app/dim-ui/ElementIcon';
+import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { SearchInput } from 'app/search/SearchInput';
+import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { Comparator } from 'app/utils/comparators';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { HashLookup } from 'app/utils/util-types';
+import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
+import modsInfoFile from 'data/d2/mods.json';
+import { t } from 'i18next';
 import { produce } from 'immer';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import Footer from './Footer';
+import styles from './PlugDrawer.m.scss';
 import PlugSection from './PlugSection';
 import { PlugSet } from './types';
 
@@ -70,6 +77,7 @@ export default function PlugDrawer({
   const defs = useD2Definitions()!;
   const language = useSelector(languageSelector);
   const [query, setQuery] = useState(initialQuery || '');
+  const [selectedFilters, setSelectedFilters] = useState<Option[]>([]);
   const [internalPlugSets, setInternalPlugSets] = useState(() =>
     plugSets
       .map((plugSet) => ({ ...plugSet, plugs: Array.from(plugSet.plugs).sort(sortPlugs) }))
@@ -183,6 +191,11 @@ export default function PlugDrawer({
     />
   );
 
+  const [filterPillOptions, mapping] = useMemo(
+    () => modFilterPillOptions(defs, queryFilteredPlugSets),
+    [defs, queryFilteredPlugSets]
+  );
+
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
 
@@ -197,8 +210,24 @@ export default function PlugDrawer({
           autoFocus={nativeAutoFocus}
         />
       </div>
+      {filterPillOptions.length > 0 && (
+        <FilterPills
+          darkBackground
+          options={filterPillOptions}
+          selectedOptions={selectedFilters}
+          onOptionsSelected={setSelectedFilters}
+        />
+      )}
     </div>
   );
+
+  const finalFilteredPlugSets =
+    selectedFilters.length > 0
+      ? queryFilteredPlugSets.map((plugSet) => ({
+          ...plugSet,
+          plugs: filterPlugsFromPills(plugSet.plugs, selectedFilters, mapping),
+        }))
+      : queryFilteredPlugSets;
 
   return (
     <Sheet
@@ -208,7 +237,7 @@ export default function PlugDrawer({
       sheetClassName="item-picker"
       freezeInitialHeight={true}
     >
-      {queryFilteredPlugSets.map((plugSet) => (
+      {finalFilteredPlugSets.map((plugSet) => (
         <PlugSection
           key={plugSet.plugSetHash}
           plugSet={plugSet}
@@ -220,4 +249,118 @@ export default function PlugDrawer({
       ))}
     </Sheet>
   );
+}
+
+export enum ModEffect {
+  None = 0, // Reserve 0
+  // Standardized per-weapon mods
+  Finder,
+  Targeting,
+  Dexterity,
+  Loader,
+  Reserves,
+  Unflinching,
+  Holster,
+  Scavenger,
+  Siphon,
+  Scout,
+  // More like effects that any mod can have
+  Stat,
+  Resistance,
+  Super,
+  ClassAbility,
+  Grenade,
+  Orbs,
+  Finisher,
+  Champion,
+  ArmorCharge,
+}
+
+/** Interesting things about mods that we can't figure out from the translated defs */
+export interface ModInfo {
+  effects?: ModEffect[];
+  element?: DamageType[];
+}
+
+export type DefType = keyof ModInfo;
+
+export interface BountyFilter {
+  type: DefType;
+  hash: number;
+}
+
+function modFilterPillOptions(
+  defs: D2ManifestDefinitions,
+  plugSets: PlugSet[]
+): [options: Option[], mapping: { [type in DefType]: { [key: number]: number[] } }] {
+  const mapped: { [type in DefType]: { [key: number]: number[] } } = {
+    effects: {},
+    element: {},
+  };
+
+  for (const plugSet of plugSets) {
+    for (const plug of plugSet.plugs) {
+      const info = (modsInfoFile as unknown as HashLookup<{ [type in DefType]: number[] }>)[
+        plug.hash
+      ];
+      if (info) {
+        for (const key in info) {
+          for (const value of info[key as 'effects' | 'element']) {
+            (mapped[key as 'effects' | 'element'][value] ??= []).push(plug.hash);
+          }
+        }
+      }
+    }
+  }
+
+  const flattened = Object.entries(mapped).flatMap(([type, mapping]) =>
+    Object.entries(mapping).map(([value, plugHashes]) => ({
+      type: type as DefType,
+      value: parseInt(value, 10),
+      plugHashes,
+    }))
+  );
+
+  const options = flattened.map(({ type, value }) => {
+    let content: React.ReactNode;
+    switch (type) {
+      case 'effects':
+        content = t(`ModEffect.${ModEffect[value]}`, { metadata: { keys: 'modeffect' } });
+        break;
+      case 'element': {
+        const damageType = Object.values(defs.DamageType.getAll()).find(
+          (d) => d.enumValue === value
+        )!;
+        content = (
+          <>
+            <ElementIcon className={styles.elementIcon} element={damageType} />
+            {damageType.displayProperties.name}
+          </>
+        );
+        break;
+      }
+    }
+
+    return {
+      key: `${type}.${value}`,
+      content,
+    };
+  });
+
+  return [options, mapped];
+}
+
+function filterPlugsFromPills(
+  plugs: PluggableInventoryItemDefinition[],
+  options: Option[],
+  mapping: { [type in DefType]: { [key: number]: number[] } }
+) {
+  let allHashes = new Set(plugs.map((p) => p.hash));
+  for (const { key } of options) {
+    const [type, value] = key.split('.');
+    const hashes = new Set(mapping[type as DefType][value as unknown as number] ?? []);
+    console.log({ type, value, result: mapping[type as DefType][value as unknown as number] });
+    allHashes = new Set([...allHashes].filter((h) => hashes.has(h)));
+  }
+  return plugs.filter((p) => allHashes.has(p.hash));
 }

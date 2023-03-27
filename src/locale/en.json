@@ -773,6 +773,27 @@
     "Unknown": "Challenge",
     "Weekly": "Weekly Challenge"
   },
+  "ModEffect": {
+    "ArmorCharge": "Armor Charge",
+    "Champion": "Champion",
+    "ClassAbility": "Class Ability",
+    "Dexterity": "Dexterity",
+    "Finder": "Finder",
+    "Finisher": "Finisher",
+    "Grenade": "Grenade",
+    "Holster": "Holster",
+    "Loader": "Loader",
+    "Orbs": "Orbs",
+    "Reserves": "Reserves",
+    "Resistance": "Resistance",
+    "Scavenger": "Scavenger",
+    "Scout": "Scout",
+    "Siphon": "Siphon",
+    "Stat": "Stat",
+    "Super": "Super",
+    "Targeting": "Targeting",
+    "Unflinching": "Unflinching"
+  },
   "MoveAmount": {
     "Amount": "Amount:"
   },
