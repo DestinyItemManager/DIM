@@ -1,5 +1,9 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { clearInGameLoadout, equipInGameLoadout } from 'app/bungie-api/destiny2-api';
+import {
+  clearInGameLoadout,
+  editInGameLoadout as editInGameLoadoutApi,
+  equipInGameLoadout,
+} from 'app/bungie-api/destiny2-api';
 import { t } from 'app/i18next-t';
 import { inGameLoadoutNotification } from 'app/inventory/MoveNotifications';
 import { itemMoved } from 'app/inventory/actions';
@@ -15,7 +19,7 @@ import { DimError } from 'app/utils/dim-error';
 import { reportException } from 'app/utils/exceptions';
 import { errorLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import { inGameLoadoutDeleted } from './actions';
+import { inGameLoadoutDeleted, inGameLoadoutUpdated } from './actions';
 import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
 
 /**
@@ -69,13 +73,37 @@ export function applyInGameLoadout(loadout: InGameLoadout): ThunkResult {
 export function deleteInGameLoadout(loadout: InGameLoadout): ThunkResult {
   return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
-    await clearInGameLoadout(account, loadout);
+    try {
+      await clearInGameLoadout(account, loadout);
 
-    showNotification({
-      title: t('InGameLoadout.Deleted'),
-      body: t('InGameLoadout.DeletedBody', { index: loadout.index }),
-    });
+      showNotification({
+        title: t('InGameLoadout.Deleted'),
+        body: t('InGameLoadout.DeletedBody', { index: loadout.index }),
+      });
 
-    dispatch(inGameLoadoutDeleted(loadout));
+      dispatch(inGameLoadoutDeleted(loadout));
+    } catch (e) {
+      showNotification({
+        type: 'error',
+        title: t('InGameLoadout.DeleteFailed'),
+        body: e.message,
+      });
+    }
+  };
+}
+
+export function editInGameLoadout(loadout: InGameLoadout): ThunkResult {
+  return async (dispatch, getState) => {
+    const account = currentAccountSelector(getState())!;
+    try {
+      await editInGameLoadoutApi(account, loadout);
+      dispatch(inGameLoadoutUpdated(loadout));
+    } catch (e) {
+      showNotification({
+        type: 'error',
+        title: t('InGameLoadout.EditFailed'),
+        body: e.message,
+      });
+    }
   };
 }

@@ -387,9 +387,13 @@
   },
   "InGameLoadout": {
     "Applying": "Equipping loadout...",
+    "DeleteFailed": "Failed to delete loadout",
     "Deleted": "Loadout Deleted",
     "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
-    "LoadoutSlotNum": "Slot {{index}}"
+    "EditFailed": "Failed to update loadout",
+    "EditTitle": "Edit Loadout Name and Icon",
+    "LoadoutSlotNum": "Slot {{index}}",
+    "Save": "Update Loadout"
   },
   "Infusion": {
     "Filter": "Filter items",

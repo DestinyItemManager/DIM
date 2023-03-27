@@ -396,9 +396,13 @@
   },
   "InGameLoadout": {
     "Applying": "Equipping loadout...",
+    "EditTitle": "Edit Loadout Name and Icon",
+    "EditFailed": "Failed to update loadout",
     "LoadoutSlotNum": "Slot {{index}}",
     "Deleted": "Loadout Deleted",
-    "DeletedBody": "Cleared the in-game loadout at slot {{index}}"
+    "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
+    "DeleteFailed": "Failed to delete loadout",
+    "Save": "Update Loadout"
   },
   "Inventory": {
     "ClickToExpand": "(Click to expand)"
