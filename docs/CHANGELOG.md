@@ -1,5 +1,7 @@
 ## Next
 
+## 7.62.0 <span class="changelog-date">(2023-03-26)</span>
+
 * Items in the "Focused Decoding" and "Legacy Gear" screens within the Vendors page will now correctly show collection and inventory checkmarks.
 * The current power caps and power floor are now displayed on the Milestones section of the Progress screen.
 * Display the current and max Postmaster count at all times.
