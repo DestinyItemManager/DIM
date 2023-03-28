@@ -104,8 +104,6 @@ export default function EditInGameLoadout({
     </form>
   );
 
-  console.log({ numSlots });
-
   return (
     <Sheet
       onClose={onClose}
@@ -122,7 +120,14 @@ export default function EditInGameLoadout({
             {Array.from(new Array(numSlots), (_value, i) => {
               const loadout = loadouts.find((l) => l.index === i);
               return (
-                <RadioButton key={i} name="slot" option={i} value={slot} onSelected={setSlot}>
+                <RadioButton
+                  key={i}
+                  name="slot"
+                  option={i}
+                  value={slot}
+                  onSelected={setSlot}
+                  className={loadout ? styles.hasLoadout : undefined}
+                >
                   {loadout ? (
                     <InGameLoadoutIcon loadout={loadout} />
                   ) : (

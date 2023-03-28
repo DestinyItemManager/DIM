@@ -5,6 +5,7 @@ interface CssExports {
   'checked': string;
   'content': string;
   'emptySlot': string;
+  'hasLoadout': string;
   'header': string;
   'imageButton': string;
   'preview': string;

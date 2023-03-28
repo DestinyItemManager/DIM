@@ -42,6 +42,13 @@
   &.imageButton {
     padding: 2px;
   }
+  &.hasLoadout {
+    &:hover,
+    &:active,
+    &.checked {
+      color: white !important;
+    }
+  }
 }
 
 .row {
