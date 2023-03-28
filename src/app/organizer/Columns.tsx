@@ -632,7 +632,9 @@ function LoadoutsCell({
           ) : (
             <a
               data-perk-name={loadout.id}
-              onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
+              onClick={(e: React.MouseEvent) =>
+                !e.shiftKey && editLoadout(loadout, owner, { isNew: false })
+              }
             >
               {loadout.name}
             </a>
