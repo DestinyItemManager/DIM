@@ -71,10 +71,9 @@ export function getArmorySuggestions(
   query: string,
   language: DimLanguage
 ): ArmorySearchItem[] {
+  const plainQuery = plainString(query, language);
   const armoryEntries = query.length
-    ? armoryIndex?.filter((armoryItem) =>
-        armoryItem.plainName.includes(plainString(query, language))
-      )
+    ? armoryIndex?.filter((armoryItem) => armoryItem.plainName.includes(plainQuery))
     : undefined;
 
   if (!armoryEntries) {
@@ -82,10 +81,7 @@ export function getArmorySuggestions(
   }
 
   // Prefer suggestions that start with the query as opposed to those where it's in the middle
-  const sortedEntries = _.sortBy(
-    armoryEntries,
-    (entry) => !entry.name.toLocaleLowerCase().startsWith(query)
-  );
+  const sortedEntries = _.sortBy(armoryEntries, (entry) => !entry.plainName.startsWith(plainQuery));
 
   // If there are more than 10 entries, the user's query is probably not descriptive enough to show many items,
   // But if they've typed enough characters, maybe show some?

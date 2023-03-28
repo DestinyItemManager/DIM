@@ -4,6 +4,7 @@
 * Loadout Optimizer sets will now show energy capacity bars below armor pieces, similar to the "Show Mod Placement" sheet.
 * Loadouts created before Lightfall with deprecated stat mods now have their stat mods restored.
 * Mods in the loadout mods picker are now more logically ordered by matching the in-game order.
+* Autocompletion in the search bar now succeeds for terms with umlauts even if you didn't enter any (suggests "jötunn" when typing "jot...").
 
 ## 7.62.0 <span class="changelog-date">(2023-03-26)</span>
 
