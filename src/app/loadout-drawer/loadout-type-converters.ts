@@ -5,11 +5,13 @@ import {
   UpgradeSpendTier,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DestinyLoadoutComponent } from 'bungie-api-ts/destiny2';
+import { emptyObject } from 'app/utils/empty';
+import { DestinyLoadoutComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import {
-  InGameLoadout,
   Loadout as DimLoadout,
   LoadoutItem as DimLoadoutItem,
+  InGameLoadout,
 } from './loadout-types';
 
 /**
@@ -126,10 +128,27 @@ function convertDimApiLoadoutItemToLoadoutItem(
   };
 }
 
+export const processInGameLoadouts = (
+  profileResponse: DestinyProfileResponse,
+  defs: D2ManifestDefinitions
+): { [characterId: string]: InGameLoadout[] } => {
+  const characterLoadouts = profileResponse?.characterLoadouts?.data;
+  if (characterLoadouts) {
+    return _.mapValues(characterLoadouts, (c, characterId) =>
+      _.compact(
+        c.loadouts.map((l, i) =>
+          convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
+        )
+      )
+    );
+  }
+  return emptyObject();
+};
+
 /**
  * Given what the API returns for loadouts, return an enhanced object that tells us a little more about the loadout.
  */
-export function convertDestinyLoadoutComponentToInGameLoadout(
+function convertDestinyLoadoutComponentToInGameLoadout(
   loadoutComponent: DestinyLoadoutComponent,
   index: number,
   characterId: string,

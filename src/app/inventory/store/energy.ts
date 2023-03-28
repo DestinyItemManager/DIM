@@ -7,7 +7,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { DimItem } from '../item-types';
+import { DimItem, PluggableInventoryItemDefinition } from '../item-types';
 
 /**
  * OK, the rules are worse than this. An item gets a few options it can choose from -
@@ -15,7 +15,7 @@ import { DimItem } from '../item-types';
  * so you need to find the right mod from a set of possible identical copies. We can do this by looking at the socket's
  * reusablePlugSetHash.
  */
-export function energyUpgrade(item: DimItem, newEnergyCapacity: number) {
+export function getEnergyUpgradePlugs(item: DimItem) {
   const tierSocket =
     item.sockets &&
     (getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier) ||
@@ -25,10 +25,9 @@ export function energyUpgrade(item: DimItem, newEnergyCapacity: number) {
     return [];
   }
 
-  const oldEnergyCapacity = item.energy.energyCapacity ?? 1;
   const oldEnergyType = item.energy.energyType;
 
-  const energyMods: DestinyInventoryItemDefinition[] = [];
+  const energyMods: PluggableInventoryItemDefinition[] = [];
   for (const dimPlug of tierSocket.plugSet.plugs) {
     const capacity = dimPlug.plugDef.plug.energyCapacity;
     if (!capacity) {
@@ -42,15 +41,24 @@ export function energyUpgrade(item: DimItem, newEnergyCapacity: number) {
         PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance2 ||
         dimPlug.plugDef.plug.plugCategoryHash === PlugCategoryHashes.PlugsGhostsMasterworks) &&
       capacity.energyType === oldEnergyType &&
-      capacity.capacityValue > oldEnergyCapacity &&
-      capacity.capacityValue <= newEnergyCapacity &&
       plugAvailability === PlugAvailabilityMode.AvailableIfSocketContainsMatchingPlugCategory
     ) {
       energyMods.push(dimPlug.plugDef);
     }
   }
 
-  return _.sortBy(energyMods, (i) => i.plug!.energyCapacity!.capacityValue).map((i) => i.hash);
+  return _.sortBy(energyMods, (i) => i.plug.energyCapacity);
+}
+
+export function getEnergyUpgradeHashes(item: DimItem, newEnergyCapacity: number) {
+  const oldEnergyCapacity = item.energy?.energyCapacity ?? 1;
+  return getEnergyUpgradePlugs(item)
+    .filter(
+      (plug) =>
+        plug.plug.energyCapacity!.capacityValue <= newEnergyCapacity &&
+        plug.plug.energyCapacity!.capacityValue > oldEnergyCapacity
+    )
+    .map((p) => p.hash);
 }
 
 export function sumModCosts(

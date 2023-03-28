@@ -1,3 +1,4 @@
+import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { reportException } from 'app/utils/exceptions';
@@ -208,7 +209,7 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
             });
           } else {
             // an invalid hash that, in new loadouts, just means lookup should fail
-            if (id !== 2166136261) {
+            if (id !== UNSET_PLUG_HASH) {
               warnLogCollapsedStack('hashLookupFailure', `${table}[${id}]`, requestor);
             }
           }

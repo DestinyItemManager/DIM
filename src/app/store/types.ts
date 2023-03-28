@@ -9,6 +9,7 @@ import type { DimApiState } from '../dim-api/reducer';
 import type { FarmingState } from '../farming/reducer';
 import type { InventoryState } from '../inventory/reducer';
 import type { LoadoutsState } from '../loadout-drawer/reducer';
+import type { InGameLoadoutState } from '../loadout/ingame/reducer';
 import type { ManifestState } from '../manifest/reducer';
 import type { ShellState } from '../shell/reducer';
 import type { WishListsState } from '../wishlists/reducer';
@@ -28,6 +29,7 @@ export interface RootState {
   readonly streamDeck: StreamDeckState;
   readonly dimApi: DimApiState;
   readonly clarity: ClarityState;
+  readonly inGameLoadouts: InGameLoadoutState;
 }
 
 export type ThunkResult<R = void> = ThunkAction<Promise<R>, RootState, undefined, AnyAction>;

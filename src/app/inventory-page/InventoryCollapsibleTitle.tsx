@@ -66,15 +66,10 @@ export default function InventoryCollapsibleTitle({
             const postMasterSpaceUsed = postmasterSpaceUsed(store);
             const showPostmasterFull = checkPostmaster && storeIsDestiny2 && isPostmasterAlmostFull;
 
-            const data = {
-              number: postMasterSpaceUsed,
-              postmasterSize: POSTMASTER_SIZE,
-            };
-
             const text =
               postMasterSpaceUsed < POSTMASTER_SIZE
-                ? t('ItemService.PostmasterAlmostFull', data)
-                : t('ItemService.PostmasterFull', data);
+                ? t('ItemService.PostmasterAlmostFull')
+                : t('ItemService.PostmasterFull');
 
             return (
               <div

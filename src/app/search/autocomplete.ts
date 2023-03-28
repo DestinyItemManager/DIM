@@ -5,7 +5,7 @@ import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
 import { makeCommentString, parseQuery, traverseAST } from './query-parser';
-import { SearchConfig } from './search-config';
+import { FiltersMap, SearchConfig } from './search-config';
 import freeformFilters from './search-filters/freeform';
 
 /** The autocompleter/dropdown will suggest different types of searches */
@@ -323,7 +323,7 @@ export function autocompleteTermSuggestions(
 
   // new query is existing query minus match plus suggestion
   return candidates.map((word) => {
-    const filterDef = findFilter(word, searchConfig);
+    const filterDef = findFilter(word, searchConfig.filtersMap);
     const newQuery = base + word + query.slice(caretIndex);
     return {
       query: {
@@ -345,14 +345,12 @@ export function autocompleteTermSuggestions(
   });
 }
 
-function findFilter(term: string, searchConfig: SearchConfig) {
+function findFilter(term: string, filtersMap: FiltersMap) {
   const parts = term.split(':');
   const filterName = parts[0];
   const filterValue = parts[1];
   // "is:" filters are slightly special cased
-  return filterName === 'is'
-    ? searchConfig.isFilters[filterValue]
-    : searchConfig.kvFilters[filterName];
+  return filterName === 'is' ? filtersMap.isFilters[filterValue] : filtersMap.kvFilters[filterName];
 }
 
 // these filters might include quotes, so we search for two text segments to ignore quotes & colon

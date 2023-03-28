@@ -1,8 +1,21 @@
 ## Next
 
+* The "Show Mod Placement" sheet will now show the required armor energy capacity upgrades to make all mods fit (and the total upgrade costs).
+* Loadout Optimizer sets will now show energy capacity bars below armor pieces, similar to the "Show Mod Placement" sheet.
+* Loadouts created before Lightfall with deprecated stat mods now have their stat mods restored.
+* Mods in the loadout mods picker are now more logically ordered by matching the in-game order.
+
+## 7.62.0 <span class="changelog-date">(2023-03-26)</span>
+
 * Items in the "Focused Decoding" and "Legacy Gear" screens within the Vendors page will now correctly show collection and inventory checkmarks.
-* Display the current and max Postmaster count at all times
+* The current power caps and power floor are now displayed on the Milestones section of the Progress screen.
+* Display the current and max Postmaster count at all times.
 * Armor mods descriptions now include their stacking behavior.
+* Added tooltips for the loadout optimizer settings shown on saved loadouts.
+* The "mod assignment" screen displays better on mobile.
+* The icons for weapon slots have been changed to reflect how they work in game. What was the "kinetic" slot now shows kinetic, stasis, and strand icons while the "energy" slot shows solar, arc, and void icons.
+* On mobile, you can no longer accidentally scroll the whole page while viewing search results.
+* Clicking "Manage Loadouts" from the character menu will bring you to the Loadouts screen for that character instead of your active character.
 
 ## 7.61.0 <span class="changelog-date">(2023-03-19)</span>
 

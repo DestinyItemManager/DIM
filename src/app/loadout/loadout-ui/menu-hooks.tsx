@@ -193,6 +193,6 @@ export function searchAndSortLoadoutsByQuery(
     (l) => (isInGameLoadout(l) ? 0 : 1),
     loadoutSort === LoadoutSort.ByEditTime
       ? (l) => (isInGameLoadout(l) ? l.index : -(l.lastUpdatedAt ?? 0))
-      : (l) => l.name.toLocaleUpperCase()
+      : (l) => (isInGameLoadout(l) ? l.index : l.name.toLocaleUpperCase())
   );
 }

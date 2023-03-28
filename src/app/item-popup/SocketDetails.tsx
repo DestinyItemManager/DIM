@@ -5,8 +5,8 @@ import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import 'app/inventory-page/StoreBucket.scss';
-import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isValidMasterworkStat } from 'app/inventory/store/masterwork';
 import { isPluggableItem } from 'app/inventory/store/sockets';
@@ -14,9 +14,9 @@ import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { collectionsVisibleShadersSelector } from 'app/records/selectors';
+import { SearchInput } from 'app/search/SearchInput';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { createPlugSearchPredicate } from 'app/search/plug-search';
-import { SearchInput } from 'app/search/SearchInput';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
 import { DestinyProfileResponse, PlugUiStyles, SocketPlugSources } from 'bungie-api-ts/destiny2';
@@ -239,9 +239,16 @@ export default function SocketDetails({
       chainComparator(
         compareBy((i) => i.hash !== socket.emptyPlugItemHash),
         reverseComparator(compareBy((i) => unlocked(i.hash))),
-        compareBy((i) => i.plug?.energyCost?.energyCost),
         compareBy((i) => -i.inventory!.tierType),
-        compareBy((i) => i.displayProperties.name)
+        compareBy(
+          (i) =>
+            // subclass plugs in PlugSet order
+            item.bucket.hash === BucketHashes.Subclass ||
+            // mods that cost something in PlugSet order
+            (i.plug?.energyCost?.energyCost ?? 0) > 0 ||
+            // everything else by name
+            i.displayProperties.name
+        )
       )
     );
 

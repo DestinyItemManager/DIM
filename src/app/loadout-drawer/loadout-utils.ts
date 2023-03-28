@@ -6,9 +6,10 @@ import { allItemsSelector } from 'app/inventory/selectors';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { findItemsByBucket, getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
+import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import {
   isInsertableArmor2Mod,
   mapToAvailableModCostVariant,
@@ -31,7 +32,11 @@ import {
 } from 'app/utils/socket-utils';
 import { weakMemoize } from 'app/utils/util';
 import { HashLookup, LookupTable } from 'app/utils/util-types';
-import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import {
+  DestinyClass,
+  DestinyInventoryItemDefinition,
+  DestinyLoadoutItemComponent,
+} from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
@@ -56,6 +61,19 @@ export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Ships,
   BucketHashes.Vehicle,
   BucketHashes.Emblems,
+];
+
+// Bucket hashes, in order, that are contained within ingame loadouts
+export const inGameLoadoutBuckets: BucketHashes[] = [
+  BucketHashes.Subclass,
+  BucketHashes.KineticWeapons,
+  BucketHashes.EnergyWeapons,
+  BucketHashes.PowerWeapons,
+  BucketHashes.Helmet,
+  BucketHashes.Gauntlets,
+  BucketHashes.ChestArmor,
+  BucketHashes.LegArmor,
+  BucketHashes.ClassArmor,
 ];
 
 /**
@@ -196,6 +214,22 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
     };
   }
   return loadout;
+}
+
+/**
+ * Extract the equipped items into a list of ingame loadout item components. Basically newLoadoutFromEquipped
+ * but for creating ingame loadout state.
+ */
+export function inGameLoadoutItemsFromEquipped(store: DimStore): DestinyLoadoutItemComponent[] {
+  return inGameLoadoutBuckets.map((bucketHash) => {
+    const item = findItemsByBucket(store, bucketHash).find((i) => i.equipped);
+    const overrides = item && createSocketOverridesFromEquipped(item);
+    return {
+      itemInstanceId: item?.id ?? '0',
+      // Ingame loadouts always specify plug hashes for 16 socket indexes
+      plugItemHashes: Array.from(new Array(16), (_v, i) => overrides?.[i] ?? UNSET_PLUG_HASH),
+    };
+  });
 }
 
 /*
@@ -673,6 +707,21 @@ export function getModsFromLoadout(
   return resolveLoadoutModHashes(defs, internalModHashes, unlockedPlugs);
 }
 
+const oldToNewMod: HashLookup<number> = {
+  204137529: 1703647492, // InventoryItem "Minor Mobility Mod"
+  3961599962: 4183296050, // InventoryItem "Mobility Mod"
+  3682186345: 2532323436, // InventoryItem "Minor Resilience Mod"
+  2850583378: 1180408010, // InventoryItem "Resilience Mod"
+  555005975: 1237786518, // InventoryItem "Minor Recovery Mod"
+  2645858828: 4204488676, // InventoryItem "Recovery Mod"
+  2623485440: 4021790309, // InventoryItem "Minor Discipline Mod"
+  4048838440: 1435557120, // InventoryItem "Discipline Mod"
+  1227870362: 350061697, // InventoryItem "Minor Intellect Mod"
+  3355995799: 2724608735, // InventoryItem "Intellect Mod"
+  3699676109: 2639422088, // InventoryItem "Minor Strength Mod"
+  3253038666: 4287799666, // InventoryItem "Strength Mod"
+};
+
 export function resolveLoadoutModHashes(
   defs: D2ManifestDefinitions | undefined,
   modHashes: number[],
@@ -681,7 +730,8 @@ export function resolveLoadoutModHashes(
   const mods: ResolvedLoadoutMod[] = [];
   if (defs) {
     for (const originalModHash of modHashes) {
-      const resolvedModHash = mapToAvailableModCostVariant(originalModHash, unlockedPlugs);
+      const migratedModHash = oldToNewMod[originalModHash] ?? originalModHash;
+      const resolvedModHash = mapToAvailableModCostVariant(migratedModHash, unlockedPlugs);
       const item = defs.InventoryItem.get(resolvedModHash);
       if (isPluggableItem(item)) {
         mods.push({ originalModHash, resolvedMod: item });

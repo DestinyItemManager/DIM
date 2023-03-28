@@ -149,6 +149,15 @@ export const inGameArmorEnergyRules: ArmorEnergyRules = {
 };
 
 /**
+ * Armor energy rules that allow fully masterworking everything.
+ */
+export const permissiveArmorEnergyRules: ArmorEnergyRules = {
+  assumeArmorMasterwork: AssumeArmorMasterwork.All,
+  // implied to be 10 by the above
+  minItemEnergy: 1,
+};
+
+/**
  * Rules describing how armor can change energy type and capacity
  * to accommodate mods and hit optimal stats.
  */
