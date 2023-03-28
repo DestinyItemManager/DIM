@@ -388,7 +388,17 @@
   },
   "InGameLoadout": {
     "Applying": "Equipping loadout...",
-    "LoadoutSlotNum": "Slot {{index}}"
+    "Create": "Create Loadout",
+    "CreateTitle": "Create In-Game Loadout From Current Equipment",
+    "DeleteFailed": "Failed to delete loadout",
+    "Deleted": "Loadout Deleted",
+    "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
+    "EditFailed": "Failed to update loadout",
+    "EditTitle": "Edit Loadout Name and Icon",
+    "LoadoutSlotNum": "Slot {{index}}",
+    "Replace": "Replace Loadout",
+    "Save": "Update Loadout",
+    "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
   "Infusion": {
     "Filter": "Filter items",
@@ -737,6 +747,7 @@
     },
     "ShareLoadout": "Share Loadout",
     "ShowModPlacement": "Show Mod Placement",
+    "Snapshot": "Save As In-Game Loadout",
     "SocketOverrides": "Changing subclass options",
     "SortByEditTime": "Sort by last edited",
     "SortByName": "Sort by name",

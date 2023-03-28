@@ -396,8 +396,18 @@
     "TransferItems": "Transfer"
   },
   "InGameLoadout": {
+    "Create": "Create Loadout",
+    "CreateTitle": "Create In-Game Loadout From Current Equipment",
     "Applying": "Equipping loadout...",
-    "LoadoutSlotNum": "Slot {{index}}"
+    "EditTitle": "Edit Loadout Name and Icon",
+    "EditFailed": "Failed to update loadout",
+    "LoadoutSlotNum": "Slot {{index}}",
+    "Deleted": "Loadout Deleted",
+    "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
+    "DeleteFailed": "Failed to delete loadout",
+    "Save": "Update Loadout",
+    "Replace": "Replace Loadout",
+    "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
   "Inventory": {
     "ClickToExpand": "(Click to expand)"
@@ -711,6 +721,7 @@
       "Empty": "The loadout is empty.",
       "NoName": "The loadout needs a name."
     },
+    "Snapshot": "Save As In-Game Loadout",
     "SortByName": "Sort by name",
     "SortByEditTime": "Sort by last edited",
     "Share": {

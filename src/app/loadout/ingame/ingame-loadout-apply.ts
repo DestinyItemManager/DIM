@@ -1,11 +1,18 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { clearInGameLoadout, equipInGameLoadout } from 'app/bungie-api/destiny2-api';
+import {
+  clearInGameLoadout,
+  editInGameLoadout as editInGameLoadoutApi,
+  equipInGameLoadout,
+  snapshotInGameLoadout as snapshotInGameLoadoutApi,
+} from 'app/bungie-api/destiny2-api';
+import { t } from 'app/i18next-t';
+import { inGameLoadoutNotification } from 'app/inventory/MoveNotifications';
 import { itemMoved } from 'app/inventory/actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
-import { inGameLoadoutNotification } from 'app/inventory/MoveNotifications';
 import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { inGameLoadoutItemsFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
@@ -14,6 +21,7 @@ import { DimError } from 'app/utils/dim-error';
 import { reportException } from 'app/utils/exceptions';
 import { errorLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
+import { inGameLoadoutDeleted, inGameLoadoutUpdated } from './actions';
 import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
 
 /**
@@ -65,12 +73,57 @@ export function applyInGameLoadout(loadout: InGameLoadout): ThunkResult {
 }
 
 export function deleteInGameLoadout(loadout: InGameLoadout): ThunkResult {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
-    await clearInGameLoadout(account, loadout);
+    try {
+      await clearInGameLoadout(account, loadout);
 
-    showNotification({ title: 'Loadout deleted' });
+      showNotification({
+        title: t('InGameLoadout.Deleted'),
+        body: t('InGameLoadout.DeletedBody', { index: loadout.index }),
+      });
 
-    // TODO: I guess reload stores? Maybe we need a redux copy of the data
+      dispatch(inGameLoadoutDeleted(loadout));
+    } catch (e) {
+      showNotification({
+        type: 'error',
+        title: t('InGameLoadout.DeleteFailed'),
+        body: e.message,
+      });
+    }
+  };
+}
+
+export function editInGameLoadout(loadout: InGameLoadout): ThunkResult {
+  return async (dispatch, getState) => {
+    const account = currentAccountSelector(getState())!;
+    try {
+      await editInGameLoadoutApi(account, loadout);
+      dispatch(inGameLoadoutUpdated(loadout));
+    } catch (e) {
+      showNotification({
+        type: 'error',
+        title: t('InGameLoadout.EditFailed'),
+        body: e.message,
+      });
+    }
+  };
+}
+
+export function snapshotInGameLoadout(loadout: InGameLoadout): ThunkResult {
+  return async (dispatch, getState) => {
+    const account = currentAccountSelector(getState())!;
+    const store = getStore(storesSelector(getState()), loadout.characterId)!;
+    loadout = { ...loadout, items: inGameLoadoutItemsFromEquipped(store) };
+    try {
+      await snapshotInGameLoadoutApi(account, loadout);
+      dispatch(inGameLoadoutUpdated(loadout));
+    } catch (e) {
+      showNotification({
+        type: 'error',
+        title: t('InGameLoadout.SnapshotFailed'),
+        body: e.message,
+      });
+    }
   };
 }
