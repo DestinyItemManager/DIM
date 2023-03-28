@@ -15,7 +15,7 @@ import {
   newLoadoutFromEquipped,
   resolveLoadoutModHashes,
 } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';

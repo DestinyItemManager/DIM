@@ -7,7 +7,7 @@ import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItemsSelector } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { plainString } from 'app/search/search-filters/freeform';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';

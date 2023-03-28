@@ -46,26 +46,7 @@
 .isEquipped {
   outline: #ccc solid 2px;
 }
-.addLoadoutTileWrapper {
-  padding: 4px;
-  button {
-    display: block;
-    position: relative;
-    height: 34px;
-    width: 34px;
-    border: 1px solid #ddd;
-    border-radius: 0;
-    padding: 0;
-  }
-}
-.addLoadoutIndexNumber {
-  position: absolute;
-  bottom: -1px;
-  right: 1px;
-  font-weight: bold;
-  text-shadow: 0 0 5px #000;
-  font-size: 12px;
-}
+
 .kebab {
   background-color: black;
   button {

@@ -1,114 +1,18 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { currentProfileSelector } from 'app/dim-api/selectors';
-import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import {
-  allItemsSelector,
-  createItemContextSelector,
-  gatherUnlockedPlugSetItems,
-  profileResponseSelector,
-  storesSelector,
-} from 'app/inventory/selectors';
-import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
+import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
-import { filterLoadoutsToClass } from 'app/loadout/loadout-ui/menu-hooks';
-import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
+import { manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
-import { emptyArray } from 'app/utils/empty';
-import { currySelector } from 'app/utils/selector-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { getItemsFromLoadoutItems } from './loadout-item-conversion';
-import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
-import {
-  InGameLoadout,
-  Loadout,
-  LoadoutItem,
-  ResolvedLoadoutItem,
-  ResolvedLoadoutMod,
-} from './loadout-types';
+import { InGameLoadout, Loadout, LoadoutItem } from './loadout-types';
 import {
   getInstancedLoadoutItem,
-  getModsFromLoadout,
   getResolutionInfo,
   getUninstancedLoadoutItem,
-  newLoadoutFromEquipped,
 } from './loadout-utils';
-
-/** All loadouts relevant to the current account */
-export const loadoutsSelector = createSelector(
-  (state: RootState) => currentProfileSelector(state)?.loadouts,
-  (loadouts) =>
-    loadouts
-      ? Object.values(loadouts).map((loadout) => convertDimApiLoadoutToLoadout(loadout))
-      : emptyArray<Loadout>()
-);
-
-/** All loadouts relevant to a specific storeId, resolved to actual mods, and actual items */
-export const fullyResolvedLoadoutsSelector = currySelector(
-  createSelector(
-    (_state: RootState, storeId: string) => storeId,
-    storesSelector,
-    loadoutsSelector,
-    d2ManifestSelector,
-    profileResponseSelector,
-    createItemContextSelector,
-    allItemsSelector,
-    (storeId, stores, allLoadouts, defs, profileResponse, itemCreationContext, allItems) => {
-      const selectedStore = stores.find((s) => s.id === storeId)!;
-      const savedLoadouts = filterLoadoutsToClass(allLoadouts, selectedStore.classType);
-      const unlockedPlugs = gatherUnlockedPlugSetItems(storeId, profileResponse);
-
-      const loadouts = savedLoadouts
-        ? savedLoadouts.map((loadout) =>
-            fullyResolveLoadout(
-              storeId,
-              loadout,
-              defs,
-              unlockedPlugs,
-              itemCreationContext,
-              allItems
-            )
-          )
-        : emptyArray<{
-            loadout: Loadout;
-            resolvedMods: ResolvedLoadoutMod[];
-            resolvedLoadoutItems: ResolvedLoadoutItem[];
-            failedResolvedLoadoutItems: ResolvedLoadoutItem[];
-          }>();
-      const currentLoadout = fullyResolveLoadout(
-        storeId,
-        newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore),
-        defs,
-        unlockedPlugs,
-        itemCreationContext,
-        allItems
-      );
-      return { loadouts, currentLoadout };
-    }
-  )
-);
-
-function fullyResolveLoadout(
-  storeId: string,
-  loadout: Loadout,
-  defs: D2ManifestDefinitions | undefined,
-  unlockedPlugs: Set<number>,
-  itemCreationContext: ItemCreationContext,
-  allItems: DimItem[]
-) {
-  const resolvedMods = getModsFromLoadout(defs, loadout, unlockedPlugs);
-  const [resolvedLoadoutItems, failedResolvedLoadoutItems] = getItemsFromLoadoutItems(
-    itemCreationContext,
-    loadout.items,
-    storeId,
-    allItems
-  );
-
-  return { loadout, resolvedMods, resolvedLoadoutItems, failedResolvedLoadoutItems };
-}
+import { loadoutsSelector } from './loadouts-selector';
 
 export const loadoutsHashtagsSelector = createSelector(loadoutsSelector, (loadouts) => [
   ...new Set(
