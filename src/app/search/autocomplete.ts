@@ -5,8 +5,8 @@ import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
 import { makeCommentString, parseQuery, traverseAST } from './query-parser';
-import { FiltersMap, SearchConfig } from './search-config';
-import freeformFilters from './search-filters/freeform';
+import { FiltersMap, SearchConfig, Suggestion } from './search-config';
+import freeformFilters, { plainString } from './search-filters/freeform';
 
 /** The autocompleter/dropdown will suggest different types of searches */
 export const enum SearchItemType {
@@ -127,7 +127,7 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
     };
 
     const armorySuggestions = includeArmory
-      ? getArmorySuggestions(searchConfig.armorySuggestions, query)
+      ? getArmorySuggestions(searchConfig.armorySuggestions, query, searchConfig.language)
       : [];
 
     // mix them together
@@ -369,22 +369,24 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
       return [];
     }
 
-    let typedToLower = typed.toLowerCase();
+    const typedToLower = typed.toLowerCase();
+    let typedPlain = plainString(typedToLower, searchConfig.language);
 
     // because we are fighting against other elements for space in the suggestion dropdown,
     // we will entirely skip "not" and "<" and ">" and "<=" and ">=" suggestions,
     // unless the user seems to explicity be working toward them
-    const hasNotModifier = typedToLower.startsWith('not');
+    const hasNotModifier = typedPlain.startsWith('not');
     const includesAdvancedMath =
-      typedToLower.endsWith(':') || typedToLower.endsWith('<') || typedToLower.endsWith('<');
-    const filterLowPrioritySuggestions = (s: string) =>
-      (hasNotModifier || !s.startsWith('not:')) && (includesAdvancedMath || !/[<>]=?$/.test(s));
+      typedPlain.endsWith(':') || typedPlain.endsWith('<') || typedPlain.endsWith('<');
+    const filterLowPrioritySuggestions = (s: Suggestion) =>
+      (hasNotModifier || !s.plainText.startsWith('not:')) &&
+      (includesAdvancedMath || !/[<>]=?$/.test(s.plainText));
 
     let mustStartWith = '';
-    if (freeformTerms.some((t) => typedToLower.startsWith(t))) {
-      const typedSegments = typedToLower.split(':');
+    if (freeformTerms.some((t) => typedPlain.startsWith(t))) {
+      const typedSegments = typedPlain.split(':');
       mustStartWith = typedSegments.shift()!;
-      typedToLower = typedSegments.join(':');
+      typedPlain = typedSegments.join(':');
     }
 
     // for most searches (non-string-based), if there's already a colon typed,
@@ -393,10 +395,12 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
 
     // this way, "stat:" matches "stat:" but not "basestat:"
     // and "stat" matches "stat:" and "basestat:"
-    const matchType = !mustStartWith && typedToLower.includes(':') ? 'startsWith' : 'includes';
+    const matchType = !mustStartWith && typedPlain.includes(':') ? 'startsWith' : 'includes';
 
     let suggestions = searchConfig.suggestions
-      .filter((word) => word.startsWith(mustStartWith) && word[matchType](typedToLower))
+      .filter(
+        (word) => word.plainText.startsWith(mustStartWith) && word.plainText[matchType](typedPlain)
+      )
       .filter(filterLowPrioritySuggestions);
 
     // TODO: sort this first?? it depends on term in one place
@@ -414,10 +418,10 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
         // but only for top level stuff (we want examples like 'basestat:' before 'stat:rpm:')
         compareBy(
           (word) =>
-            colonCount(word) > 1
+            colonCount(word.plainText) > 1
               ? 1 // last if it's a big one like 'stat:rpm:'
-              : word.startsWith(typedToLower) ||
-                word.indexOf(typedToLower) === word.indexOf(':') + 1
+              : word.plainText.startsWith(typedPlain) ||
+                word.plainText.indexOf(typedPlain) === word.plainText.indexOf(':') + 1
               ? -1 // first if it's a term start or segment start
               : 0 // mid otherwise
         ),
@@ -428,8 +432,8 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
         // otherwise it prioritizes "dawn" over "redwar" after you type "season:"
         // which i am not into.
         compareBy((word) => {
-          if (word.startsWith('not:') || word.startsWith('is:')) {
-            return word.length - (typedToLower.length + word.indexOf(typedToLower));
+          if (word.plainText.startsWith('not:') || word.plainText.startsWith('is:')) {
+            return word.plainText.length - (typedPlain.length + word.plainText.indexOf(typedPlain));
           } else {
             return 0;
           }
@@ -441,34 +445,38 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
         // ---------------
 
         // tags are UGC and therefore important
-        compareBy((word) => !word.startsWith('tag:')),
+        compareBy((word) => !word.plainText.startsWith('tag:')),
 
         // sort incomplete terms (ending with ':') to the front
-        compareBy((word) => !word.endsWith(':')),
+        compareBy((word) => !word.plainText.endsWith(':')),
 
         // push "not" and "<=" and ">=" to the bottom if they are present
         // we discourage "not", and "<=" and ">=" are highly discoverable from "<" and ">"
         compareBy(
-          (word) => word.startsWith('not:') || word.includes(':<=') || word.includes(':>=')
+          (word) =>
+            word.plainText.startsWith('not:') ||
+            word.plainText.includes(':<=') ||
+            word.plainText.includes(':>=')
         ),
 
         // sort more-basic incomplete terms (fewer colons) to the front
         // i.e. suggest "stat:" before "stat:magazine:"
-        compareBy((word) => (word.startsWith('is:') ? 0 : colonCount(word))),
+        compareBy((word) => (word.plainText.startsWith('is:') ? 0 : colonCount(word.plainText))),
 
         // (within the math operators that weren't shoved to the far bottom,)
         // push math operators to the front for things like "masterwork:"
-        compareBy((word) => !mathCheck.test(word))
+        compareBy((word) => !mathCheck.test(word.plainText))
       )
     );
-    if (filterNames.includes(typedToLower.split(':')[0])) {
-      return suggestions;
+    if (filterNames.includes(typedPlain.split(':')[0])) {
+      return suggestions.map((suggestion) => suggestion.rawText);
     } else if (suggestions.length) {
       // we will always add in (later) a suggestion of "what you've already typed so far"
       // so prevent "what's been typed" from appearing in the returned suggestions from this function
-      const deDuped = new Set(suggestions);
+      const deDuped = new Set(suggestions.map((suggestion) => suggestion.rawText));
       deDuped.delete(typed);
       deDuped.delete(typedToLower);
+      deDuped.delete(typedPlain);
       return [...deDuped];
     }
     return [];

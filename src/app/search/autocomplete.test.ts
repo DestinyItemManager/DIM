@@ -21,7 +21,7 @@ function extractCaret(stringWithCaretPlaceholder: string): [caretIndex: number, 
 }
 
 describe('autocompleteTermSuggestions', () => {
-  const searchConfig = buildSearchConfig(2);
+  const searchConfig = buildSearchConfig(2, 'en');
   const filterComplete = makeFilterComplete(searchConfig);
 
   const cases: string[] = [
@@ -37,6 +37,22 @@ describe('autocompleteTermSuggestions', () => {
     const candidates = autocompleteTermSuggestions(query, caretIndex, filterComplete, searchConfig);
     expect(candidates).toMatchSnapshot();
   });
+
+  const plainStringCases: [query: string, mockCandidate: string][] = [['jotu', 'jötunn']];
+
+  test.each(plainStringCases)(
+    'autocomplete within query for plain string match {%s} - {%s}',
+    (queryWithCaret, mockCandidate) => {
+      const [caretIndex, query] = extractCaret(queryWithCaret);
+      const candidates = autocompleteTermSuggestions(
+        query,
+        caretIndex,
+        () => [`name:"${mockCandidate}"`],
+        searchConfig
+      );
+      expect(candidates).toMatchSnapshot();
+    }
+  );
 
   const multiWordCases: [query: string, mockCandidate: string][] = [
     ['arctic haz', 'arctic haze'],
@@ -146,7 +162,7 @@ describe('filterSortRecentSearches', () => {
 });
 
 describe('filterComplete', () => {
-  const searchConfig = buildSearchConfig(2);
+  const searchConfig = buildSearchConfig(2, 'en');
   const filterComplete = makeFilterComplete(searchConfig);
 
   const terms = [['is:b'], ['jun'], ['sni'], ['stat:mob'], ['stat'], ['stat:'], ['ote']];
