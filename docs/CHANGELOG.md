@@ -6,6 +6,7 @@
 * Mods in the loadout mods picker are now more logically ordered by matching the in-game order.
 * Autocompletion in the search bar now succeeds for terms with umlauts even if you didn't enter any (suggests "jötunn" when typing "jot...").
 * Fixed the `modslot:any`/`modslot:none` filters.
+* Added Community Insights (by Clarity) to the loadout mods and subclass picker when enabled in settings, and fixed descriptions missing entirely when hiding Bungie descriptions.
 
 ## 7.62.0 <span class="changelog-date">(2023-03-26)</span>
 

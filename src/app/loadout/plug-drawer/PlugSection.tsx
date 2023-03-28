@@ -59,7 +59,7 @@ export default function PlugSection({
         }
 
         return (
-          <div key={header} className={styles.bucket}>
+          <div key={header}>
             <div className={styles.header}>{header}</div>
             <div className={styles.items}>
               {plugs.map((plug) => {
