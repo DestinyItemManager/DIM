@@ -710,7 +710,7 @@
       "Empty": "The loadout is empty.",
       "NoName": "The loadout needs a name."
     },
-    "Snapshot": "Snapshot",
+    "Snapshot": "Save As In-Game Loadout",
     "SortByName": "Sort by name",
     "SortByEditTime": "Sort by last edited",
     "Share": {
