@@ -480,21 +480,23 @@ export default memo(function LoadoutBuilder({
             notes={notes}
           />
         ) : (
-          <NoBuildsFoundExplainer
-            defs={defs}
-            classType={classType}
-            dispatch={lbDispatch}
-            resolvedMods={resolvedMods}
-            lockedModMap={lockedModMap}
-            alwaysInvalidMods={unassignedMods}
-            autoAssignStatMods={autoStatMods}
-            armorEnergyRules={armorEnergyRules}
-            lockedExoticHash={lockedExoticHash}
-            statFilters={statFilters}
-            pinnedItems={pinnedItems}
-            filterInfo={filterInfo}
-            processInfo={result?.processInfo}
-          />
+          !processing && (
+            <NoBuildsFoundExplainer
+              defs={defs}
+              classType={classType}
+              dispatch={lbDispatch}
+              resolvedMods={resolvedMods}
+              lockedModMap={lockedModMap}
+              alwaysInvalidMods={unassignedMods}
+              autoAssignStatMods={autoStatMods}
+              armorEnergyRules={armorEnergyRules}
+              lockedExoticHash={lockedExoticHash}
+              statFilters={statFilters}
+              pinnedItems={pinnedItems}
+              filterInfo={filterInfo}
+              processInfo={result?.processInfo}
+            />
+          )
         )}
         {modPicker.open && (
           <Portal>
