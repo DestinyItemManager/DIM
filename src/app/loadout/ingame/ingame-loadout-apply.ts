@@ -80,7 +80,7 @@ export function deleteInGameLoadout(loadout: InGameLoadout): ThunkResult {
 
       showNotification({
         title: t('InGameLoadout.Deleted'),
-        body: t('InGameLoadout.DeletedBody', { index: loadout.index }),
+        body: t('InGameLoadout.DeletedBody', { index: loadout.index + 1 }),
       });
 
       dispatch(inGameLoadoutDeleted(loadout));
