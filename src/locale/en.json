@@ -388,7 +388,7 @@
   "InGameLoadout": {
     "Applying": "Equipping loadout...",
     "Create": "Create Loadout",
-    "CreateTitle": "Snapshot Equipped to Loadout",
+    "CreateTitle": "Create In-Game Loadout From Current Equipment",
     "DeleteFailed": "Failed to delete loadout",
     "Deleted": "Loadout Deleted",
     "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
