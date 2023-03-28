@@ -2,7 +2,10 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { getFirstSocketByCategoryHash, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { ItemCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
+import _ from 'lodash';
 import { DimItem, DimMasterwork, DimSockets } from '../item-types';
 
 /**
@@ -61,6 +64,12 @@ function buildMasterworkInfo(
 
   const stats: DimMasterwork['stats'] = [];
 
+  const primaryMWStatHash =
+    enhancedIntrinsics.has(masterworkPlug.plugDef.hash) ||
+    masterworksWithCondStats.includes(masterworkPlug.plugDef.hash)
+      ? _.maxBy(investmentStats, (stat) => stat.value)?.statTypeHash
+      : undefined;
+
   for (const stat of investmentStats) {
     if (
       !isPlugStatActive(
@@ -76,6 +85,7 @@ function buildMasterworkInfo(
       hash: stat.statTypeHash,
       name: defs.Stat.get(stat.statTypeHash).displayProperties.name,
       value: masterworkPlug.stats?.[stat.statTypeHash] || 0,
+      isPrimary: primaryMWStatHash === undefined || primaryMWStatHash === stat.statTypeHash,
     });
   }
 

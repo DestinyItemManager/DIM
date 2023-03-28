@@ -118,7 +118,8 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
 export function getMasterworkStatNames(mw: DimMasterwork | null) {
   return (
     mw?.stats
-      ?.map((stat) => stat.name)
+      ?.filter((stat) => stat.isPrimary)
+      .map((stat) => stat.name)
       .filter(Boolean)
       .join(', ') ?? ''
   );
