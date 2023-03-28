@@ -1,21 +1,18 @@
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
-import { t } from 'app/i18next-t';
+
 import { allItemsSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
-import { isInGameLoadout } from 'app/loadout-drawer/loadout-types';
-import { newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
-import { useD2Definitions } from 'app/manifest/selectors';
+import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
+import { fullyResolvedLoadoutsSelector } from 'app/loadout-drawer/selectors';
 import { AppIcon, addIcon, faCheckCircle, faExclamationCircle, saveIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { useSavedLoadoutsForClassType } from '../loadout-ui/menu-hooks';
 import { showInGameLoadoutDetails } from './InGameLoadoutDetailsSheet';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
 import styles from './InGameLoadoutStrip.m.scss';
@@ -23,37 +20,31 @@ import { applyInGameLoadout, deleteInGameLoadout } from './ingame-loadout-apply'
 import { implementsDimLoadout, itemCouldBeEquipped } from './ingame-loadout-utils';
 import { inGameLoadoutsForCharacterSelector } from './selectors';
 
-export function InGameLoadoutStrip({
-  classType,
-  selectedStoreId,
-}: {
-  classType: DestinyClass;
-  selectedStoreId: string;
-}) {
+export function InGameLoadoutStrip({ selectedStoreId }: { selectedStoreId: string }) {
   const stores = useSelector(sortedStoresSelector);
   const selectedStore = getStore(stores, selectedStoreId)!;
-  const currentLoadout = useMemo(
-    () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore),
-    [selectedStore]
+
+  const { currentLoadout, loadouts: savedLoadouts } = useSelector(
+    fullyResolvedLoadoutsSelector(selectedStoreId)
   );
-  const savedLoadouts = useSavedLoadoutsForClassType(classType);
   const inGameLoadouts = useSelector((state: RootState) =>
     inGameLoadoutsForCharacterSelector(state, selectedStoreId)
   );
   const inGameLoadoutsDict = _.keyBy(inGameLoadouts, (l) => l.index);
 
   const allItems = useSelector(allItemsSelector);
-  const defs = useD2Definitions()!;
-  const dispatch = useThunkDispatch();
 
+  const dispatch = useThunkDispatch();
+  getItemsFromLoadoutItems;
   // TO-DO: THIS MUST USE availableLoadoutSlotsSelector ONCE IT IS MERGED
   return (
     <div className={styles.loadoutStrip}>
       {Array(10)
         .fill(0)
         .map((_x, loadoutIndex) => {
-          const loadout = inGameLoadoutsDict[loadoutIndex];
-          if (!loadout) {
+          const gameLoadout = inGameLoadoutsDict[loadoutIndex];
+
+          if (!gameLoadout) {
             return (
               <div
                 key={`empty${loadoutIndex}`}
@@ -71,22 +62,33 @@ export function InGameLoadoutStrip({
               </div>
             );
           }
-          const equippable = loadout.items.every((li) => {
+          const isEquippable = gameLoadout.items.every((li) => {
             const liveItem = allItems.find((di) => di.id === li.itemInstanceId);
             return !liveItem || itemCouldBeEquipped(selectedStore, liveItem, stores);
           });
-          const isEquipped = implementsDimLoadout(loadout, currentLoadout, defs);
+
+          const isEquipped = implementsDimLoadout(
+            gameLoadout,
+            currentLoadout.resolvedLoadoutItems,
+            currentLoadout.resolvedMods
+          );
+
           const matchingLoadouts = savedLoadouts.filter(
-            (l) =>
-              !isInGameLoadout(l) && l.items.length > 4 && implementsDimLoadout(loadout, l, defs)
+            (dimLoadout) =>
+              dimLoadout.loadout.items.length > 4 &&
+              implementsDimLoadout(
+                gameLoadout,
+                dimLoadout.resolvedLoadoutItems,
+                dimLoadout.resolvedMods
+              )
           );
           const options: Option[] = _.compact([
             {
               key: 'apply',
               content: 'Apply',
-              onSelected: () => dispatch(applyInGameLoadout(loadout)),
+              onSelected: () => dispatch(applyInGameLoadout(gameLoadout)),
             },
-            !equippable && {
+            !isEquippable && {
               key: 'prep',
               content: 'Prepare for Application',
               onSelected: () => {
@@ -96,20 +98,20 @@ export function InGameLoadoutStrip({
             {
               key: 'delete',
               content: 'Clear Slot ' + (loadoutIndex + 1),
-              onSelected: () => dispatch(deleteInGameLoadout(loadout)),
+              onSelected: () => dispatch(deleteInGameLoadout(gameLoadout)),
             },
           ]);
 
           const tooltipContent: JSX.Element[] = [
-            <Tooltip.Header key="header" text={loadout.name} />,
+            <Tooltip.Header key="header" text={gameLoadout.name} />,
           ];
           if (matchingLoadouts.length) {
             tooltipContent.push(
               <React.Fragment key="matchingloadouts">
                 <AppIcon icon={saveIcon} /> Matching Loadouts:
                 {matchingLoadouts.map((l) => (
-                  <div key={l.id}>
-                    <ColorDestinySymbols text={l.name} />
+                  <div key={l.loadout.id}>
+                    <ColorDestinySymbols text={l.loadout.name} />
                   </div>
                 ))}
               </React.Fragment>
@@ -137,28 +139,28 @@ export function InGameLoadoutStrip({
                 icon={faCheckCircle}
                 className={clsx(
                   styles.statusAppIcon,
-                  equippable ? styles.equipOk : styles.equipNok
+                  isEquippable ? styles.equipOk : styles.equipNok
                 )}
               />
-              <span>{equippable ? 'In-Game Equip Ready' : 'In-Game Equip Not Ready'}</span>
+              <span>{isEquippable ? 'In-Game Equip Ready' : 'In-Game Equip Not Ready'}</span>
             </React.Fragment>
           );
 
           return (
             <div
-              key={loadout.index}
+              key={gameLoadout.index}
               className={clsx(styles.inGameTileWrapper, isEquipped && styles.isEquipped)}
             >
               <PressTip tooltip={tooltipContent.length ? tooltipContent : null} placement="bottom">
                 <div
                   className={styles.inGameTile}
-                  onClick={() => showInGameLoadoutDetails(loadout)}
+                  onClick={() => showInGameLoadoutDetails(gameLoadout)}
                 >
                   <div className={styles.igtIconHolder}>
-                    <InGameLoadoutIconWithIndex loadout={loadout} className={styles.igtIcon} />
+                    <InGameLoadoutIconWithIndex loadout={gameLoadout} className={styles.igtIcon} />
                   </div>
                   {/* <ColorDestinySymbols text={loadout.name} className={styles.igtName} /> */}
-                  {equippable ? (
+                  {isEquippable ? (
                     <AppIcon
                       icon={faCheckCircle}
                       className={clsx(styles.statusAppIcon, styles.equipOk)}

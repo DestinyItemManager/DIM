@@ -163,7 +163,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
-        <InGameLoadoutStrip classType={classType} selectedStoreId={selectedStoreId} />
+        <InGameLoadoutStrip selectedStoreId={selectedStoreId} />
         {filterPills}
         {loadouts.map((loadout) =>
           isInGameLoadout(loadout) ? null : ( // <InGameLoadoutRow key={loadout.index} loadout={loadout} store={selectedStore} />

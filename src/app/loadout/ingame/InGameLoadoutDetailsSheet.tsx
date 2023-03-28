@@ -1,11 +1,10 @@
-import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import Socket from 'app/item-popup/Socket';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { Observable } from 'app/utils/observable';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
-import { BucketHashes, ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -13,13 +12,11 @@ import Sheet from '../../dim-ui/Sheet';
 import { createItemContextSelector } from '../../inventory/selectors';
 import styles from './InGameLoadoutDetailsSheet.m.scss';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
-import { isValidGameLoadoutPlug, useItemsFromInGameLoadout } from './ingame-loadout-utils';
-
-const gameLoadoutCompatibleBuckets = [
-  BucketHashes.Subclass,
-  ...D2Categories.Weapons,
-  ...D2Categories.Armor,
-];
+import {
+  gameLoadoutCompatibleBuckets,
+  isValidGameLoadoutPlug,
+  useItemsFromInGameLoadout,
+} from './ingame-loadout-utils';
 
 export const showGameLoadoutDetails$ = new Observable<InGameLoadout | undefined>(undefined);
 
@@ -115,9 +112,8 @@ export function InGameLoadoutDetails({
                 ))
           );
           return (
-            <React.Fragment key={realItem.id}>
-              {/* <div className={styles.socketList} key={realItem.id}> */}
-              <BungieImage src={realItem.icon} className={styles.itemImage} />
+            <React.Fragment key={fakeItem.id}>
+              <BungieImage src={fakeItem.icon} className={styles.itemImage} />
               {bigSockets.map((socket) => (
                 <Socket key={socket.socketIndex} item={fakeItem} socket={socket} pluggedOnly />
               ))}
@@ -126,7 +122,6 @@ export function InGameLoadoutDetails({
                   <Socket key={socket.socketIndex} item={fakeItem} socket={socket} pluggedOnly />
                 ))}
               </div>
-              {/* </div> */}
             </React.Fragment>
           );
         })}

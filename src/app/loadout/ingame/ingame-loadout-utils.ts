@@ -1,11 +1,16 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { spaceLeftForItem } from 'app/inventory/stores-helpers';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import {
+  InGameLoadout,
+  ResolvedLoadoutItem,
+  ResolvedLoadoutMod,
+} from 'app/loadout-drawer/loadout-types';
 import { potentialLoadoutItemsByItemId } from 'app/loadout-drawer/loadout-utils';
-import { DestinyItemType, DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
+import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -40,6 +45,12 @@ export function useItemsFromInGameLoadout(loadout: InGameLoadout) {
   );
 }
 
+export const gameLoadoutCompatibleBuckets = [
+  BucketHashes.Subclass,
+  ...D2Categories.Weapons,
+  ...D2Categories.Armor,
+];
+
 /**
  * does this game loadout, meet the requirements of this DIM loadout:
  *
@@ -48,23 +59,18 @@ export function useItemsFromInGameLoadout(loadout: InGameLoadout) {
  */
 export function implementsDimLoadout(
   inGameLoadout: InGameLoadout,
-  dimLoadout: Loadout,
-  defs: D2ManifestDefinitions
+  dimResolvedLoadoutItems: ResolvedLoadoutItem[],
+  resolvedMods: ResolvedLoadoutMod[]
 ) {
-  const equippedDimItems = dimLoadout.items
-    .filter((i) => {
-      if (!i.equip) {
+  const equippedDimItems = dimResolvedLoadoutItems
+    .filter((rli) => {
+      if (!rli.loadoutItem.equip) {
         return false;
       }
-      const itemType = defs.InventoryItem.get(i.hash).itemType;
       // only checking the items that game loadouts support
-      return (
-        itemType === DestinyItemType.Weapon ||
-        itemType === DestinyItemType.Armor ||
-        itemType === DestinyItemType.Subclass
-      );
+      return gameLoadoutCompatibleBuckets.includes(rli.item.bucket.hash);
     })
-    .map((i) => i.id);
+    .map((i) => i.item.id);
   const equippedGameItems = inGameLoadout.items.map((i) => i.itemInstanceId);
 
   // try the faster quit
@@ -76,10 +82,7 @@ export function implementsDimLoadout(
     .flatMap((i) => i.plugItemHashes)
     .filter(isValidGameLoadoutPlug);
 
-  const dimLoadoutMods = [
-    ...(dimLoadout.parameters?.mods ?? []),
-    ...(dimLoadout.autoStatMods ?? []),
-  ];
+  const dimLoadoutMods = resolvedMods.map((m) => m.resolvedMod.hash);
   for (const requiredModHash of dimLoadoutMods) {
     const pos = gameLoadoutMods.indexOf(requiredModHash);
     if (pos === -1) {

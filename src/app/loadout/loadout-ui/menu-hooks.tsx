@@ -21,14 +21,17 @@ import { useSelector } from 'react-redux';
 export function useSavedLoadoutsForClassType(classType: DestinyClass) {
   const allSavedLoadouts = useSelector(loadoutsSelector);
   return useMemo(
-    () =>
-      allSavedLoadouts.filter(
-        (loadout) =>
-          classType === DestinyClass.Unknown ||
-          loadout.classType === DestinyClass.Unknown ||
-          loadout.classType === classType
-      ),
+    () => filterLoadoutsToClass(allSavedLoadouts, classType),
     [allSavedLoadouts, classType]
+  );
+}
+
+export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyClass) {
+  return loadouts.filter(
+    (loadout) =>
+      classType === DestinyClass.Unknown ||
+      loadout.classType === DestinyClass.Unknown ||
+      loadout.classType === classType
   );
 }
 
