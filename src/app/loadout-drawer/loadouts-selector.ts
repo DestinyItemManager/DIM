@@ -5,6 +5,8 @@ import { createSelector } from 'reselect';
 import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
 import { Loadout } from './loadout-types';
 
+// had to pull this out to another file because things got weird :(
+
 /** All loadouts relevant to the current account */
 export const loadoutsSelector = createSelector(
   (state: RootState) => currentProfileSelector(state)?.loadouts,

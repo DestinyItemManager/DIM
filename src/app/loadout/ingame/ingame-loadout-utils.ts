@@ -14,6 +14,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { UNSET_PLUG_HASH } from '../known-values';
 
 /**
  * Get all the real DimItems from ingame loadout items.
@@ -104,6 +105,5 @@ export function itemCouldBeEquipped(store: DimStore, item: DimItem, stores: DimS
 }
 
 export function isValidGameLoadoutPlug(hash: number) {
-  // TO-DO: SHARE THIS VALUE ONCE 9306 IS MERGED
-  return hash && hash !== 2166136261;
+  return hash && hash !== UNSET_PLUG_HASH;
 }

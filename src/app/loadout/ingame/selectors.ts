@@ -112,30 +112,45 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
   fullyResolvedLoadoutsSelector,
   allItemsSelector,
   storesSelector,
+  availableLoadoutSlotsSelector,
   (_state: RootState, storeId: string) => storeId,
-  (inGameLoadouts, { currentLoadout, loadouts: savedLoadouts }, allItems, stores, storeId) => {
+  (
+    inGameLoadouts,
+    { currentLoadout, loadouts: savedLoadouts },
+    allItems,
+    stores,
+    availableLoadoutSlots,
+    storeId
+  ) => {
     const selectedStore = getStore(stores, storeId)!;
-    return inGameLoadouts.map((gameLoadout) => {
-      const isEquippable = gameLoadout.items.every((li) => {
-        const liveItem = allItems.find((di) => di.id === li.itemInstanceId);
-        return !liveItem || itemCouldBeEquipped(selectedStore, liveItem, stores);
-      });
-      const isEquipped = implementsDimLoadout(
-        gameLoadout,
-        currentLoadout.resolvedLoadoutItems,
-        currentLoadout.resolvedMods
-      );
+    return (
+      inGameLoadouts
+        // seems unlikely the game would return valid, itemful loadouts for slot you havne't earned, but we respect this setting.
+        // inGameLoadoutsForCharacterSelector filters out empty loadouts, so we have to go by their self-stated index, not array length
+        .filter((gameLoadout) => gameLoadout.index < availableLoadoutSlots)
+        .map((gameLoadout) => {
+          const isEquippable = gameLoadout.items.every((li) => {
+            const liveItem = allItems.find((di) => di.id === li.itemInstanceId);
+            return !liveItem || itemCouldBeEquipped(selectedStore, liveItem, stores);
+          });
 
-      const matchingLoadouts = savedLoadouts.filter(
-        (dimLoadout) =>
-          dimLoadout.loadout.items.length > 4 &&
-          implementsDimLoadout(
+          const isEquipped = implementsDimLoadout(
             gameLoadout,
-            dimLoadout.resolvedLoadoutItems,
-            dimLoadout.resolvedMods
-          )
-      );
-      return { gameLoadout, isEquippable, isEquipped, matchingLoadouts };
-    });
+            currentLoadout.resolvedLoadoutItems,
+            currentLoadout.resolvedMods
+          );
+
+          const matchingLoadouts = savedLoadouts.filter(
+            (dimLoadout) =>
+              dimLoadout.loadout.items.length > 4 &&
+              implementsDimLoadout(
+                gameLoadout,
+                dimLoadout.resolvedLoadoutItems,
+                dimLoadout.resolvedMods
+              )
+          );
+          return { gameLoadout, isEquippable, isEquipped, matchingLoadouts };
+        })
+    );
   }
 );

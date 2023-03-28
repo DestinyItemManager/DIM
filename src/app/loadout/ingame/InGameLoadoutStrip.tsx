@@ -20,7 +20,7 @@ export function InGameLoadoutStrip({ selectedStoreId }: { selectedStoreId: strin
   );
 
   const dispatch = useThunkDispatch();
-  // TO-DO: THIS MUST USE availableLoadoutSlotsSelector ONCE IT IS MERGED
+
   return (
     <div className={styles.loadoutStrip}>
       {inGameLoadoutInfos.map(({ isEquippable, isEquipped, matchingLoadouts, gameLoadout }) => {

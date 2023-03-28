@@ -1,3 +1,4 @@
+import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
 import produce from 'immer';
@@ -40,8 +41,8 @@ export function applySocketOverrides(
     // stats and who knows, they could end up different than the original and we wouldn't want to
     // overwrite them.
     let plugOptions: DimPlug[] = s.plugOptions.map((p) => ({ ...p, stats: null }));
-    // TO-DO: SHARE THIS VALUE ONCE 9306 IS MERGED
-    if (override && override !== 2166136261 && s.plugged?.plugDef.hash !== override) {
+
+    if (override && override !== UNSET_PLUG_HASH && s.plugged?.plugDef.hash !== override) {
       let newPlug, actuallyPlugged;
 
       if (s.isPerk) {
