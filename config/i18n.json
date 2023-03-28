@@ -396,7 +396,7 @@
   },
   "InGameLoadout": {
     "Create": "Create Loadout",
-    "CreateTitle": "Snapshot Equipped to Loadout",
+    "CreateTitle": "Create In-Game Loadout From Current Equipment",
     "Applying": "Equipping loadout...",
     "EditTitle": "Edit Loadout Name and Icon",
     "EditFailed": "Failed to update loadout",
