@@ -100,6 +100,7 @@ const equivalentSearches = [
     'is:rocketlauncher (perk:"cluster" or perk:"tracking module")',
   ],
   ['is:blue (is:rocketlauncher', 'is:blue is:rocketlauncher'],
+  ['  is:blue  ', 'is:blue'],
 ];
 
 // Test what we generate as the canonical form of queries. The first is the input,

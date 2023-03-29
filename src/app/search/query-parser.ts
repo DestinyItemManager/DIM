@@ -344,7 +344,7 @@ export class QueryLexerOpenQuotesError extends QueryLexerError {
  * ["filter", "is", "blue"], ["implicit_and"], ["not"], ["filter", "is", "maxpower"]
  */
 export function* lexer(query: string): Generator<Token> {
-  query = query.trim().toLowerCase();
+  query = query.toLowerCase();
 
   // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
   query = query.replace(/[\u2018-\u201A]/g, "'");
@@ -508,7 +508,10 @@ export function* lexer(query: string): Generator<Token> {
         args: match,
       };
     } else if ((match = extract(whitespace)) !== undefined) {
-      yield { startIndex, length: i - startIndex, type: 'implicit_and' };
+      // Ignore whitespace at the beginning and end of the string
+      if (startIndex !== 0 && i !== query.length) {
+        yield { startIndex, length: i - startIndex, type: 'implicit_and' };
+      }
     } else {
       throw new QueryLexerError(
         'unrecognized tokens: |' + query.slice(i) + '| ' + i,
