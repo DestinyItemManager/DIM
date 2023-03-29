@@ -4,7 +4,8 @@ import { chainComparator, compareBy, reverseComparator } from 'app/utils/compara
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
-import { lexer, makeCommentString, parseQuery, QueryLexerOpenQuotesError } from './query-parser';
+import { canonicalFilterFormats } from './filter-types';
+import { QueryLexerOpenQuotesError, lexer, makeCommentString, parseQuery } from './query-parser';
 import { SearchConfig } from './search-config';
 import freeformFilters from './search-filters/freeform';
 
@@ -274,7 +275,9 @@ function findLastFilter(
             // Match either bare words ...
             (token.keyword === 'keyword' ||
               // ... or name:foo style keywords
-              (searchConfig.kvFilters[token.keyword]?.format === 'freeform' &&
+              (canonicalFilterFormats(searchConfig.kvFilters[token.keyword]?.format).includes(
+                'freeform'
+              ) &&
                 // Unless they already perfectly match a suggestion without quotes, e.g. name:heritage
                 !searchConfig.suggestions.includes(`${token.keyword}:${token.args}`)))
           ) {
