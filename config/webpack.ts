@@ -117,11 +117,21 @@ export default (env: Env) => {
           historyApiFallback: true,
           hot: 'only',
           liveReload: false,
-          headers: {
-            'Content-Security-Policy': contentSecurityPolicy,
-            // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
-            'Cross-Origin-Embedder-Policy': 'credentialless',
-            'Cross-Origin-Opener-Policy': 'same-origin',
+          headers: (req) => {
+            // This mirrors what's in .htaccess - headers for html paths, COEP for JS.
+            return req.baseUrl.match(/^[^.]+$/)
+              ? {
+                  'Content-Security-Policy': contentSecurityPolicy,
+                  // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
+                  'Cross-Origin-Embedder-Policy': 'credentialless',
+                  'Cross-Origin-Opener-Policy': 'same-origin',
+                }
+              : req.baseUrl.match(/\.js$/)
+              ? {
+                  // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
+                  'Cross-Origin-Embedder-Policy': 'require-corp',
+                }
+              : {};
           },
         }
       : undefined,
