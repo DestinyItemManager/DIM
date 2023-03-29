@@ -21,7 +21,7 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
       // For our inline styles
       "'unsafe-inline'",
       // Google Fonts
-      'https://fonts.googleapis.com/css',
+      'https://fonts.googleapis.com/',
       // Twitter Widget
       'https://platform.twitter.com/css/',
       'https://*.twimg.com/',
