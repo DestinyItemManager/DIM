@@ -8,6 +8,7 @@
 * Fixed the `modslot:any`/`modslot:none` filters.
 * Fixed an issue where some subclass fragments and armor mods would be missing descriptions in Loadout Optimizer and the Loadout editor.
 * The minor boosts to all stats that enhanced crafted and masterworked adept weapons have are now ignored in Organizer's "Masterwork Stat" column and by the `masterwork:statname` filter. Only the primary +10 boost is considered.
+* Sharing build settings directly from Loadout Optimizer will now also include subclass configuration.
 
 ## 7.62.0 <span class="changelog-date">(2023-03-26)</span>
 

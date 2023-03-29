@@ -291,6 +291,9 @@ export default memo(function LoadoutBuilder({
   const shareBuild = async (notes?: string) => {
     // TODO: replace this with a new share tool
     const loadout = newLoadout(t('LoadoutBuilder.ShareBuildTitle'), [], classType);
+    if (subclass) {
+      loadout.items = [subclass.loadoutItem];
+    }
     loadout.notes = notes;
     loadout.parameters = params;
     const shareUrl = await createLoadoutShare(
