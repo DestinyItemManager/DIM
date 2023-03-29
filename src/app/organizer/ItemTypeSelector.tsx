@@ -177,7 +177,7 @@ const d2SelectionTree: ItemCategoryTreeNode = {
         {
           id: 'glaive',
           itemCategoryHash: ItemCategoryHashes.Glaives,
-          subCategories: [energy],
+          subCategories: [energy, power],
           terminal: true,
         },
       ],
