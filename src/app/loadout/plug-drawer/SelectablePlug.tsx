@@ -69,7 +69,9 @@ function SelectablePlugDetails({
   classType: DestinyClass;
 }) {
   const stats = getPlugDefStats(plug, classType);
-  const plugDescriptions = usePlugDescriptions(plug, stats);
+
+  // We don't show Clarity descriptions here due to layout concerns, see #9318 / #8641
+  const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ true);
   return (
     <>
       <div className="item" title={plug.displayProperties.name}>
