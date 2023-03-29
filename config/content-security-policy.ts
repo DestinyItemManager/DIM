@@ -63,6 +63,7 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
     ],
     fontSrc: [
       SELF,
+      'data:',
       // Google Fonts
       'https://fonts.gstatic.com',
     ],

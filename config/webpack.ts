@@ -73,6 +73,8 @@ export default (env: Env) => {
 
   const buildTime = Date.now();
 
+  const contentSecurityPolicy = csp(env.name);
+
   const config: webpack.Configuration = {
     mode: env.dev ? ('development' as const) : ('production' as const),
 
@@ -115,6 +117,12 @@ export default (env: Env) => {
           historyApiFallback: true,
           hot: 'only',
           liveReload: false,
+          headers: {
+            'Content-Security-Policy': contentSecurityPolicy,
+            // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
+            'Cross-Origin-Embedder-Policy': 'credentialless',
+            'Cross-Origin-Opener-Policy': 'same-origin',
+          },
         }
       : undefined,
 
@@ -394,7 +402,7 @@ export default (env: Env) => {
       inject: false,
       minify: false,
       templateParameters: {
-        csp: csp(env.name),
+        csp: contentSecurityPolicy,
       },
     }),
 
