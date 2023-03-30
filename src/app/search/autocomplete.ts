@@ -4,7 +4,6 @@ import { chainComparator, compareBy, reverseComparator } from 'app/utils/compara
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
-import { canonicalFilterFormats } from './filter-types';
 import { QueryLexerOpenQuotesError, lexer, makeCommentString, parseQuery } from './query-parser';
 import { FiltersMap, SearchConfig, Suggestion } from './search-config';
 import freeformFilters, { plainString } from './search-filters/freeform';
@@ -236,8 +235,6 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
   });
 }
 
-// most times, insist on at least 3 typed characters, but for #, start suggesting immediately
-const lastWordRegex = /(\b[\w:"'<=>]{3,}|#\w*)$/;
 const caretEndRegex = /([\s)]|$)/;
 
 /**
@@ -247,55 +244,25 @@ const caretEndRegex = /([\s)]|$)/;
  * name:foo bar| baz
  * This should return { term: "bar", index: 9 }
  *
- * @returns the start index and term of the last complete filter
+ * @returns the start indexes of various points that could be incomplete filters
  */
-function findLastFilter(
-  query: string,
-  caretIndex: number,
-  searchConfig: SearchConfig
-):
-  | {
-      term: string;
-      index: number;
-    }[]
-  | null {
-  // TODO: move this out
-  // TODO: maybe include non-whitespace after the caret?
-  const queryUpToCaret = query.slice(0, caretIndex);
-
-  // Find the index where an incomplete filter starts. For example if the query is:
+function findLastFilter(queryUpToCaret: string): number[] | null {
+  // Find the indexes where any incomplete filter starts. For example if the query is:
   // name:"foo" bar baz
-  // then the open keywords are "bar baz"
-  let earliestIncompleteFilter = -1;
+  // then the open keywords are "bar baz" and "baz"
   let incompleteFilterIndices: number[] = [];
   try {
     // We can use the query lexer for this to scan through tokens in the query without parsing the whole AST.
     for (const token of lexer(queryUpToCaret)) {
       switch (token.type) {
+        // We're trying to complete any filter. Maybe it's actually complete, which is OK because we just won't return a suggestion
         case 'filter': {
           if (
             // Ignore complete quoted tokens, they're definitively finished.
-            !token.quoted &&
-            // Match either bare words ...
-            (token.keyword === 'keyword' ||
-              // ... or name:foo style keywords
-              (canonicalFilterFormats(
-                searchConfig.filtersMap.kvFilters[token.keyword]?.format
-              ).includes('freeform') &&
-                // TODO: can probably remove this?
-                // Unless they already perfectly match a suggestion without quotes, e.g. name:heritage
-                !searchConfig.suggestions.some(
-                  (s) => s.plainText === `${token.keyword}:${token.args}`
-                )))
+            !token.quoted
           ) {
-            // Only set the index for the first keyword (we're looking for the earliest)
-            if (earliestIncompleteFilter < 0) {
-              // Set it to the beginning of the whole token (including the keyword e.g. name:foo)
-              earliestIncompleteFilter = token.startIndex;
-            }
             incompleteFilterIndices.push(token.startIndex);
           } else {
-            earliestIncompleteFilter = -1;
             incompleteFilterIndices = [];
           }
           break;
@@ -307,7 +274,6 @@ function findLastFilter(
           break;
         default:
           // reset, we saw something that's definitely not part of a filter
-          earliestIncompleteFilter = -1;
           incompleteFilterIndices = [];
           break;
       }
@@ -315,25 +281,11 @@ function findLastFilter(
   } catch (e) {
     // If the lexer failed because of unmatched quotes, that's *definitely* something to autocomplete!
     if (e instanceof QueryLexerOpenQuotesError) {
-      earliestIncompleteFilter = e.startIndex; // + 1;
       incompleteFilterIndices = [e.startIndex];
     }
   }
 
-  if (earliestIncompleteFilter >= 0) {
-    return incompleteFilterIndices.map((index) => ({
-      index,
-      term: queryUpToCaret.substring(index),
-    }));
-  } else {
-    const execResult = lastWordRegex.exec(queryUpToCaret);
-    if (execResult) {
-      const [__, term] = execResult;
-      const { index } = execResult;
-      return [{ term, index }];
-    }
-  }
-  return null;
+  return incompleteFilterIndices;
 }
 
 /**
@@ -353,25 +305,22 @@ export function autocompleteTermSuggestions(
   // Seek to the end of the current part
   caretIndex = (caretEndRegex.exec(query.slice(caretIndex))?.index || 0) + caretIndex;
 
-  const lastFilters = findLastFilter(query, caretIndex, searchConfig);
+  const queryUpToCaret = query.slice(0, caretIndex);
+  const lastFilters = findLastFilter(queryUpToCaret);
   if (!lastFilters) {
     return [];
   }
 
-  console.log('lastFilters', { query, lastFilters });
-
-  // TODO: still need to filter this, e.g.
-  // name:heritage arctic name:"arctic haze"
-  for (const lastFilter of lastFilters) {
-    const base = query.slice(0, lastFilter.index);
-    const candidates = filterComplete(lastFilter.term);
-    console.log('candidates', { base, candidates });
+  // Find the first index that gives us suggestions and return those suggestions
+  for (const index of lastFilters) {
+    const base = query.slice(0, index);
+    const term = queryUpToCaret.substring(index);
+    const candidates = filterComplete(term);
 
     // new query is existing query minus match plus suggestion
     const result = candidates.map((word): SearchItem => {
       const filterDef = findFilter(word, searchConfig.filtersMap);
       const newQuery = base + word + query.slice(caretIndex);
-      console.log('candidate', { filterDef, newQuery });
       return {
         query: {
           fullText: newQuery,
@@ -386,7 +335,7 @@ export function autocompleteTermSuggestions(
         type: SearchItemType.Autocomplete,
         highlightRange: {
           section: 'body',
-          range: [lastFilter.index, lastFilter.index + word.length],
+          range: [index, index + word.length],
         },
       };
     });
