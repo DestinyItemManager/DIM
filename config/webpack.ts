@@ -125,12 +125,12 @@ export default (env: Env) => {
                   // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
                   // Disabled for now as it blocks Google fonts
                   //'Cross-Origin-Embedder-Policy': 'credentialless',
-                  'Cross-Origin-Opener-Policy': 'same-origin',
+                  //'Cross-Origin-Opener-Policy': 'same-origin',
                 }
               : req.baseUrl.match(/\.js$/)
               ? {
                   // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
-                  'Cross-Origin-Embedder-Policy': 'require-corp',
+                  //'Cross-Origin-Embedder-Policy': 'require-corp',
                 }
               : {};
           },
