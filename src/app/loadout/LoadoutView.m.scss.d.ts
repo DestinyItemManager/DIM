@@ -7,6 +7,7 @@ interface CssExports {
   'loadout': string;
   'loadoutNotes': string;
   'missingItems': string;
+  'modsStack': string;
   'title': string;
 }
 export const cssExports: CssExports;

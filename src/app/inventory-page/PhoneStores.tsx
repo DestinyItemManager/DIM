@@ -5,7 +5,7 @@ import { DimStore } from 'app/inventory/store-types';
 import StoreStats from 'app/store-stats/StoreStats';
 import { useEventBusListener } from 'app/utils/hooks';
 import { wrap } from 'app/utils/util';
-import { motion, PanInfo } from 'framer-motion';
+import { PanInfo, motion } from 'framer-motion';
 import { useCallback, useRef, useState } from 'react';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { getCurrentStore, getStore, getVault } from '../inventory/stores-helpers';

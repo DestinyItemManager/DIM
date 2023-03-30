@@ -8,7 +8,7 @@
 }
 
 .mods {
-  flex: 1;
+  width: 100%;
 }
 
 .buttons {
@@ -16,4 +16,23 @@
   flex-flow: row wrap;
   margin: 10px auto;
   gap: 4px;
+}
+
+.modsStack {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  flex: 1;
+}
+
+.section {
+  position: relative;
+  padding: 8px 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  max-width: calc(100% - 44px);
+
+  @include phone-portrait {
+    --item-margin: 4px;
+    flex: 1;
+  }
 }

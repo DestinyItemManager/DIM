@@ -93,6 +93,7 @@ function findLockableExotics(
  * Filter exotics by any search query and group them by bucket
  */
 function filterAndGroupExotics(
+  defs: D2ManifestDefinitions,
   query: string,
   language: DimLanguage,
   lockableExotics: LockedExoticWithPlugs[]
@@ -111,6 +112,11 @@ function filterAndGroupExotics(
             (exoticMod) =>
               regexp.test(exoticMod.displayProperties.name) ||
               regexp.test(exoticMod.displayProperties.description)
+          ) ||
+          exotic.exoticPerk?.perks.some(
+            (perk) =>
+              perk.perkHash &&
+              regexp.test(defs.SandboxPerk.get(perk.perkHash)?.displayProperties.description)
           )
       )
     : lockableExotics;
@@ -147,8 +153,8 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
   );
 
   const filteredOrderedAndGroupedExotics = useMemo(
-    () => filterAndGroupExotics(query, language, lockableExotics),
-    [language, query, lockableExotics]
+    () => filterAndGroupExotics(defs, query, language, lockableExotics),
+    [defs, query, language, lockableExotics]
   );
 
   return (

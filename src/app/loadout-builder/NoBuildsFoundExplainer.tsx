@@ -11,11 +11,11 @@ import { uniqBy } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Dispatch } from 'react';
+import styles from './NoBuildsFoundExplainer.m.scss';
 import ExoticArmorChoice from './filter/ExoticArmorChoice';
 import LockedItem from './filter/LockedItem';
 import { FilterInfo } from './item-filter';
 import { LoadoutBuilderAction } from './loadout-builder-reducer';
-import styles from './NoBuildsFoundExplainer.m.scss';
 import { ProcessStatistics, RejectionRate } from './process-worker/types';
 import { ArmorEnergyRules, LockableBucketHashes, PinnedItems, StatFilters } from './types';
 

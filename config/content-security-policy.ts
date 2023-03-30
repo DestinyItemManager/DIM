@@ -16,12 +16,13 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
       'https://cdn.syndication.twimg.com',
       'https://opencollective.com',
     ],
+    workerSrc: [SELF],
     styleSrc: [
       SELF,
       // For our inline styles
       "'unsafe-inline'",
       // Google Fonts
-      'https://fonts.googleapis.com/css',
+      'https://fonts.googleapis.com/',
       // Twitter Widget
       'https://platform.twitter.com/css/',
       'https://*.twimg.com/',
@@ -63,6 +64,7 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
     ],
     fontSrc: [
       SELF,
+      'data:',
       // Google Fonts
       'https://fonts.gstatic.com',
     ],

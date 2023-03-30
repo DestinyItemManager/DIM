@@ -8,8 +8,8 @@ import shapedIcon from 'images/shaped.png';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
 import styles from './BadgeInfo.m.scss';
-import { DimItem } from './item-types';
 import RatingIcon from './RatingIcon';
+import { DimItem } from './item-types';
 import { notesSelector } from './selectors';
 
 interface Props {

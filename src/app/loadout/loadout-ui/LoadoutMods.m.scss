@@ -26,6 +26,10 @@
   opacity: 0.3;
 }
 
+.artifactUnlock {
+  background-color: #0a3b40;
+}
+
 .pickModButton {
   composes: resetButton from '../../dim-ui/common.m.scss';
   color: #999;

@@ -13,6 +13,7 @@ import {
   getNotesSelector,
   getTagSelector,
 } from '../inventory/selectors';
+
 import { FilterDefinition, SuggestionsContext, canonicalFilterFormats } from './filter-types';
 
 //

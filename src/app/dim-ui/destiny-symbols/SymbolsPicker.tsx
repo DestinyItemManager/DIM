@@ -10,8 +10,8 @@ import ClickOutside from '../ClickOutside';
 import { PressTipRoot } from '../PressTip';
 import { usePopper } from '../usePopper';
 import ColorDestinySymbols from './ColorDestinySymbols';
-import { symbolsSelector } from './destiny-symbols';
 import styles from './SymbolsPicker.m.scss';
+import { symbolsSelector } from './destiny-symbols';
 
 const symbolsIcon = String.fromCodePoint(FontGlyphs.gilded_title);
 

@@ -44,11 +44,19 @@ export function usePlugDescriptions(
   stats?: {
     value: number;
     statHash: number;
-  }[]
+  }[],
+  /**
+   * If set, returns Bungie descriptions even when the descriptions setting is on Community only.
+   * Consumers set this if they can't display community descriptions.
+   */
+  forceUseBungieDescriptions?: boolean
 ): DimPlugDescriptions {
   const defs = useD2Definitions();
   const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
-  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
+  let descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
+  if (forceUseBungieDescriptions) {
+    descriptionsToDisplay = 'bungie';
+  }
 
   const result: DimPlugDescriptions = {
     perks: [],

@@ -251,11 +251,13 @@ export interface DimMasterwork {
   tier?: number;
   /** The stats that are enhanced by this masterwork. */
   stats?: {
-    hash?: number;
+    hash: number;
     /** The name of the stat enhanced by this masterwork. */
-    name?: string;
+    name: string;
     /** How much the stat is enhanced by this masterwork. */
-    value?: number;
+    value: number;
+    /** Is this a primary stat effect or secondary? Adept/crafted weapons can get a small +X to all stats; these are secondary */
+    isPrimary: boolean;
   }[];
 }
 

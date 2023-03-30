@@ -231,7 +231,9 @@ export function useProcess({
 }
 
 function createWorker() {
-  const instance = new Worker(new URL('../process-worker/ProcessWorker', import.meta.url));
+  const instance = new Worker(
+    /* webpackChunkName: "lo-worker" */ new URL('../process-worker/ProcessWorker', import.meta.url)
+  );
 
   const worker = wrap<import('../process-worker/ProcessWorker').ProcessWorker>(instance);
 

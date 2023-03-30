@@ -14,8 +14,8 @@ import {
 } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import {
-  generateProcessModPermutations,
   LoSessionInfo,
+  generateProcessModPermutations,
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
   precalculateStructures,
@@ -27,7 +27,7 @@ import {
   mapAutoMods,
   mapDimItemToProcessItem,
 } from './process/mappers';
-import { MinMaxIgnored, MIN_LO_ITEM_ENERGY } from './types';
+import { MIN_LO_ITEM_ENERGY, MinMaxIgnored } from './types';
 import { statTier } from './utils';
 
 // We don't really pay attention to this in the tests but the parameter is needed

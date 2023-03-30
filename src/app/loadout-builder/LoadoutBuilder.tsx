@@ -222,7 +222,8 @@ export default memo(function LoadoutBuilder({
   const loadouts = useMemo(() => {
     const equippedLoadout: Loadout | undefined = newLoadoutFromEquipped(
       t('Loadouts.CurrentlyEquipped'),
-      selectedStore
+      selectedStore,
+      undefined
     );
     const classLoadouts = allLoadouts.filter(
       (l) => l.classType === selectedStore.classType || l.classType === DestinyClass.Unknown
@@ -291,6 +292,9 @@ export default memo(function LoadoutBuilder({
   const shareBuild = async (notes?: string) => {
     // TODO: replace this with a new share tool
     const loadout = newLoadout(t('LoadoutBuilder.ShareBuildTitle'), [], classType);
+    if (subclass) {
+      loadout.items = [subclass.loadoutItem];
+    }
     loadout.notes = notes;
     loadout.parameters = params;
     const shareUrl = await createLoadoutShare(
@@ -480,21 +484,23 @@ export default memo(function LoadoutBuilder({
             notes={notes}
           />
         ) : (
-          <NoBuildsFoundExplainer
-            defs={defs}
-            classType={classType}
-            dispatch={lbDispatch}
-            resolvedMods={resolvedMods}
-            lockedModMap={lockedModMap}
-            alwaysInvalidMods={unassignedMods}
-            autoAssignStatMods={autoStatMods}
-            armorEnergyRules={armorEnergyRules}
-            lockedExoticHash={lockedExoticHash}
-            statFilters={statFilters}
-            pinnedItems={pinnedItems}
-            filterInfo={filterInfo}
-            processInfo={result?.processInfo}
-          />
+          !processing && (
+            <NoBuildsFoundExplainer
+              defs={defs}
+              classType={classType}
+              dispatch={lbDispatch}
+              resolvedMods={resolvedMods}
+              lockedModMap={lockedModMap}
+              alwaysInvalidMods={unassignedMods}
+              autoAssignStatMods={autoStatMods}
+              armorEnergyRules={armorEnergyRules}
+              lockedExoticHash={lockedExoticHash}
+              statFilters={statFilters}
+              pinnedItems={pinnedItems}
+              filterInfo={filterInfo}
+              processInfo={result?.processInfo}
+            />
+          )
         )}
         {modPicker.open && (
           <Portal>

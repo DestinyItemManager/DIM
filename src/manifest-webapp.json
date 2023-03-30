@@ -35,8 +35,8 @@
       "url": "/settings"
     }
   ],
-  "theme_color": "black",
-  "background_color": "black",
+  "theme_color": "#000000",
+  "background_color": "#000000",
   "display": "standalone",
   "categories": ["games", "entertainment", "productivity", "utilities"],
   "start_url": "/index.html?utm_source=homescreen",

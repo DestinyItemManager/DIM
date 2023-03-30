@@ -4,6 +4,12 @@
 * Loadout Optimizer sets will now show energy capacity bars below armor pieces, similar to the "Show Mod Placement" sheet.
 * Loadouts created before Lightfall with deprecated stat mods now have their stat mods restored.
 * Mods in the loadout mods picker are now more logically ordered by matching the in-game order.
+* Autocompletion in the search bar now succeeds for terms with umlauts even if you didn't enter any (suggests "jötunn" when typing "jot...").
+* Fixed the `modslot:any`/`modslot:none` filters.
+* Fixed an issue where some subclass fragments and armor mods would be missing descriptions in Loadout Optimizer and the Loadout editor.
+* The minor boosts to all stats that enhanced crafted and masterworked adept weapons have are now ignored in Organizer's "Masterwork Stat" column and by the `masterwork:statname` filter. Only the primary +10 boost is considered.
+* Sharing build settings directly from Loadout Optimizer will now also include subclass configuration.
+* DIM now saves Artifact configuration in Loadouts. Note that DIM cannot reconfigure your artifact automatically, but you can use this information to keep track of which artifact unlocks are important for a Loadout.
 
 ## 7.62.0 <span class="changelog-date">(2023-03-26)</span>
 
