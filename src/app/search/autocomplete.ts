@@ -358,13 +358,14 @@ export function autocompleteTermSuggestions(
     return [];
   }
 
-  console.log({ query, lastFilters });
+  console.log('lastFilters', { query, lastFilters });
 
   // TODO: still need to filter this, e.g.
   // name:heritage arctic name:"arctic haze"
-  return lastFilters.flatMap((lastFilter) => {
+  for (const lastFilter of lastFilters) {
     const base = query.slice(0, lastFilter.index);
     const candidates = filterComplete(lastFilter.term);
+    console.log('candidates', { base, candidates });
 
     // new query is existing query minus match plus suggestion
     const result = candidates.map((word): SearchItem => {
@@ -389,9 +390,11 @@ export function autocompleteTermSuggestions(
         },
       };
     });
-    console.log({ base, candidates, result });
-    return result;
-  });
+    if (result.length) {
+      return result;
+    }
+  }
+  return [];
 }
 
 function findFilter(term: string, filtersMap: FiltersMap) {
