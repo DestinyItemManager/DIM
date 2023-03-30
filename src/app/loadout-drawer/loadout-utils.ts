@@ -1,3 +1,4 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
@@ -174,7 +175,11 @@ export function createSubclassDefaultSocketOverrides(item: DimItem) {
 /**
  * Create a new loadout that includes all the equipped items and mods on the character.
  */
-export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
+export function newLoadoutFromEquipped(
+  name: string,
+  dimStore: DimStore,
+  artifactUnlocks: LoadoutParameters['artifactUnlocks']
+) {
   const items = dimStore.items.filter(
     (item) =>
       item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash)
@@ -191,6 +196,12 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
   if (mods.length) {
     loadout.parameters = {
       mods,
+    };
+  }
+  if (artifactUnlocks) {
+    loadout.parameters = {
+      ...loadout.parameters,
+      artifactUnlocks,
     };
   }
   // Save "fashion" mods for equipped items

@@ -3,11 +3,18 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  artifactUnlocksSelector,
+  createItemContextSelector,
+  profileResponseSelector,
+} from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import {
+  LoadoutUpdateFunction,
   applySocketOverrides,
   changeClearMods,
+  clearArtifactUnlocks,
   clearBucketCategory,
   clearLoadoutParameters,
   clearMods,
@@ -15,28 +22,30 @@ import {
   equipItem,
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
-  LoadoutUpdateFunction,
+  removeArtifactUnlock,
   removeItem,
   removeMod,
   setLoadoutSubclassFromEquipped,
+  syncArtifactUnlocksFromEquipped,
   syncModsFromEquipped,
   updateMods,
   updateModsByBucket,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getUnequippedItemsForLoadout } from 'app/loadout-drawer/loadout-utils';
-import LoadoutMods from 'app/loadout/loadout-ui/LoadoutMods';
 import { getItemsAndSubclassFromLoadout, loadoutPower } from 'app/loadout/LoadoutView';
+import { LoadoutArtifactUnlocks, LoadoutMods } from 'app/loadout/loadout-ui/LoadoutMods';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import SubclassPlugDrawer from '../SubclassPlugDrawer';
 import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisplay';
 import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
-import SubclassPlugDrawer from '../SubclassPlugDrawer';
 import styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
 import LoadoutEditBucketDropTarget from './LoadoutEditBucketDropTarget';
@@ -59,6 +68,7 @@ export default function LoadoutEdit({
   onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
 }) {
   const defs = useD2Definitions()!;
+  const profileResponse = useSelector(profileResponseSelector)!;
   const allItems = useSelector(allItemsSelector);
   const missingSockets = allItems.some((i) => i.missingSockets);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
@@ -81,6 +91,8 @@ export default function LoadoutEdit({
       ),
     [itemCreationContext, loadout.items, store, allItems, modsByBucket]
   );
+
+  const artifactUnlocks = useSelector(artifactUnlocksSelector(store.id));
 
   const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
   const clearUnsetMods = loadout.parameters?.clearMods;
@@ -122,12 +134,23 @@ export default function LoadoutEdit({
   const onRemoveItem = withDefsUpdater(removeItem);
   const handleClearSubclass = withDefsUpdater(clearSubclass);
   const handleSyncModsFromEquipped = () => setLoadout(syncModsFromEquipped(store));
+  const handleSyncArtifactUnlocksFromEquipped = () =>
+    setLoadout(syncArtifactUnlocksFromEquipped(store, profileResponse));
+  const handleClearArtifactUnlocks = withUpdater(clearArtifactUnlocks);
+  const handleRemoveArtifactUnlock = withUpdater(removeArtifactUnlock);
+
+  const artifactTitle = loadout.parameters?.artifactUnlocks
+    ? t('Loadouts.ArtifactUnlocksWithSeason', {
+        seasonNumber: loadout.parameters?.artifactUnlocks?.seasonNumber,
+      })
+    : t('Loadouts.ArtifactUnlocks');
 
   // TODO: dedupe styles/code
   return (
     <div className={styles.contents}>
       {!anyClass && (
         <LoadoutEditSection
+          className={styles.section}
           title={t('Bucket.Class')}
           onClear={handleClearSubclass}
           onFillFromEquipped={handleFillSubclassFromEquipped}
@@ -178,9 +201,10 @@ export default function LoadoutEdit({
       ).map((category) => (
         <LoadoutEditSection
           key={category}
+          className={styles.section}
           title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
           onClear={() => handleClearCategory(category)}
-          onFillFromEquipped={() => handleFillCategoryFromEquipped(category)}
+          onFillFromEquipped={() => handleFillCategoryFromEquipped(artifactUnlocks, category)}
           fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
           onFillFromInventory={() => handleFillCategoryFromUnequipped(category)}
           onClearLoadoutParameters={
@@ -214,22 +238,38 @@ export default function LoadoutEdit({
           </LoadoutEditBucketDropTarget>
         </LoadoutEditSection>
       ))}
-      <LoadoutEditSection
-        title={t('Loadouts.Mods')}
-        className={styles.mods}
-        onClear={handleClearMods}
-        onSyncFromEquipped={missingSockets ? undefined : handleSyncModsFromEquipped}
-      >
-        <LoadoutMods
-          loadout={loadout}
-          storeId={store.id}
-          allMods={allMods}
-          onUpdateMods={handleUpdateMods}
-          onRemoveMod={handleRemoveMod}
-          clearUnsetMods={clearUnsetMods}
-          onClearUnsetModsChanged={handleClearUnsetModsChanged}
-        />
-      </LoadoutEditSection>
+      <div className={clsx(styles.section, styles.modsStack)}>
+        <LoadoutEditSection
+          title={t('Loadouts.Mods')}
+          className={styles.mods}
+          onClear={handleClearMods}
+          onSyncFromEquipped={missingSockets ? undefined : handleSyncModsFromEquipped}
+        >
+          <LoadoutMods
+            loadout={loadout}
+            storeId={store.id}
+            allMods={allMods}
+            onUpdateMods={handleUpdateMods}
+            onRemoveMod={handleRemoveMod}
+            clearUnsetMods={clearUnsetMods}
+            onClearUnsetModsChanged={handleClearUnsetModsChanged}
+          />
+        </LoadoutEditSection>
+        <LoadoutEditSection
+          title={artifactTitle}
+          titleInfo={t('Loadouts.ArtifactUnlocksDesc')}
+          className={styles.mods}
+          onClear={handleClearArtifactUnlocks}
+          onSyncFromEquipped={profileResponse ? handleSyncArtifactUnlocksFromEquipped : undefined}
+        >
+          <LoadoutArtifactUnlocks
+            loadout={loadout}
+            storeId={store.id}
+            onRemoveMod={handleRemoveArtifactUnlock}
+            onSyncFromEquipped={profileResponse ? handleSyncArtifactUnlocksFromEquipped : undefined}
+          />
+        </LoadoutEditSection>
+      </div>
     </div>
   );
 }

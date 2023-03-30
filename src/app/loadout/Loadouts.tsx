@@ -7,7 +7,7 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t, tl } from 'app/i18next-t';
-import { sortedStoresSelector } from 'app/inventory/selectors';
+import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
@@ -87,9 +87,11 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     inGameLoadoutsForCharacterSelector(state, selectedStoreId)
   );
 
+  const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStoreId));
+
   const currentLoadout = useMemo(
-    () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore),
-    [selectedStore]
+    () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore, artifactUnlocks),
+    [artifactUnlocks, selectedStore]
   );
 
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
