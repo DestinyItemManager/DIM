@@ -35,7 +35,7 @@ module.exports = function (api) {
 
   if (isProduction) {
     plugins.push(
-      '@babel/plugin-transform-react-constant-elements',
+      //'@babel/plugin-transform-react-constant-elements',
       '@babel/plugin-transform-react-inline-elements'
     );
   } else {
