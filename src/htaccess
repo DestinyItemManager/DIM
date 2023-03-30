@@ -492,8 +492,8 @@ AddDefaultCharset utf-8
     </FilesMatch>
 
      <FilesMatch "\.(js)(\.(gz|br))?$">
-        Header unset Content-Security-Policy
-        Header unset Cross-Origin-Embedder-Policy
+        #Header unset Content-Security-Policy
+        #Header unset Cross-Origin-Embedder-Policy
         Header unset Cross-Origin-Opener-Policy
         # JavaScript files must set this cross-origin-embedder policy or we can't load web workers
         Header set Cross-Origin-Embedder-Policy "require-corp"

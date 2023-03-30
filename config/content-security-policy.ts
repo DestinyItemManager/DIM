@@ -16,6 +16,7 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
       'https://cdn.syndication.twimg.com',
       'https://opencollective.com',
     ],
+    workerSrc: [SELF],
     styleSrc: [
       SELF,
       // For our inline styles
