@@ -253,10 +253,13 @@ function findLastFilter(
   query: string,
   caretIndex: number,
   searchConfig: SearchConfig
-): {
-  term: string;
-  index: number;
-} | null {
+):
+  | {
+      term: string;
+      index: number;
+    }[]
+  | null {
+  // TODO: move this out
   // TODO: maybe include non-whitespace after the caret?
   const queryUpToCaret = query.slice(0, caretIndex);
 
@@ -264,6 +267,7 @@ function findLastFilter(
   // name:"foo" bar baz
   // then the open keywords are "bar baz"
   let earliestIncompleteFilter = -1;
+  let incompleteFilterIndices: number[] = [];
   try {
     // We can use the query lexer for this to scan through tokens in the query without parsing the whole AST.
     for (const token of lexer(queryUpToCaret)) {
@@ -278,6 +282,7 @@ function findLastFilter(
               (canonicalFilterFormats(
                 searchConfig.filtersMap.kvFilters[token.keyword]?.format
               ).includes('freeform') &&
+                // TODO: can probably remove this?
                 // Unless they already perfectly match a suggestion without quotes, e.g. name:heritage
                 !searchConfig.suggestions.some(
                   (s) => s.plainText === `${token.keyword}:${token.args}`
@@ -288,8 +293,10 @@ function findLastFilter(
               // Set it to the beginning of the whole token (including the keyword e.g. name:foo)
               earliestIncompleteFilter = token.startIndex;
             }
+            incompleteFilterIndices.push(token.startIndex);
           } else {
             earliestIncompleteFilter = -1;
+            incompleteFilterIndices = [];
           }
           break;
         }
@@ -301,6 +308,7 @@ function findLastFilter(
         default:
           // reset, we saw something that's definitely not part of a filter
           earliestIncompleteFilter = -1;
+          incompleteFilterIndices = [];
           break;
       }
     }
@@ -308,18 +316,21 @@ function findLastFilter(
     // If the lexer failed because of unmatched quotes, that's *definitely* something to autocomplete!
     if (e instanceof QueryLexerOpenQuotesError) {
       earliestIncompleteFilter = e.startIndex; // + 1;
+      incompleteFilterIndices = [e.startIndex];
     }
   }
 
   if (earliestIncompleteFilter >= 0) {
-    const term = queryUpToCaret.substring(earliestIncompleteFilter);
-    return { index: earliestIncompleteFilter, term };
+    return incompleteFilterIndices.map((index) => ({
+      index,
+      term: queryUpToCaret.substring(index),
+    }));
   } else {
     const execResult = lastWordRegex.exec(queryUpToCaret);
     if (execResult) {
       const [__, term] = execResult;
       const { index } = execResult;
-      return { term, index };
+      return [{ term, index }];
     }
   }
   return null;
@@ -342,35 +353,44 @@ export function autocompleteTermSuggestions(
   // Seek to the end of the current part
   caretIndex = (caretEndRegex.exec(query.slice(caretIndex))?.index || 0) + caretIndex;
 
-  const lastFilter = findLastFilter(query, caretIndex, searchConfig);
-  if (!lastFilter) {
+  const lastFilters = findLastFilter(query, caretIndex, searchConfig);
+  if (!lastFilters) {
     return [];
   }
 
-  const base = query.slice(0, lastFilter.index);
-  const candidates = filterComplete(lastFilter.term);
+  console.log({ query, lastFilters });
 
-  // new query is existing query minus match plus suggestion
-  return candidates.map((word) => {
-    const filterDef = findFilter(word, searchConfig.filtersMap);
-    const newQuery = base + word + query.slice(caretIndex);
-    return {
-      query: {
-        fullText: newQuery,
-        body: newQuery,
-        helpText: filterDef
-          ? (Array.isArray(filterDef.description)
-              ? t(...filterDef.description)
-              : t(filterDef.description)
-            )?.replace(/\.$/, '')
-          : undefined,
-      },
-      type: SearchItemType.Autocomplete,
-      highlightRange: {
-        section: 'body',
-        range: [lastFilter.index, lastFilter.index + word.length],
-      },
-    };
+  // TODO: still need to filter this, e.g.
+  // name:heritage arctic name:"arctic haze"
+  return lastFilters.flatMap((lastFilter) => {
+    const base = query.slice(0, lastFilter.index);
+    const candidates = filterComplete(lastFilter.term);
+
+    // new query is existing query minus match plus suggestion
+    const result = candidates.map((word): SearchItem => {
+      const filterDef = findFilter(word, searchConfig.filtersMap);
+      const newQuery = base + word + query.slice(caretIndex);
+      console.log('candidate', { filterDef, newQuery });
+      return {
+        query: {
+          fullText: newQuery,
+          body: newQuery,
+          helpText: filterDef
+            ? (Array.isArray(filterDef.description)
+                ? t(...filterDef.description)
+                : t(filterDef.description)
+              )?.replace(/\.$/, '')
+            : undefined,
+        },
+        type: SearchItemType.Autocomplete,
+        highlightRange: {
+          section: 'body',
+          range: [lastFilter.index, lastFilter.index + word.length],
+        },
+      };
+    });
+    console.log({ base, candidates, result });
+    return result;
   });
 }
 

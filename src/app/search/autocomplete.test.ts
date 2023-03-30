@@ -81,8 +81,9 @@ describe('autocompleteTermSuggestions', () => {
     ['perkname:"fate of', 'perkname:"fate of all fools"'],
     ['perkname:fate of', 'perkname:"fate of all fools"'],
     // Expected (or at least not yet supported) failures:
-    ['rare curio or arctic haz', 'No fake autocomplete for: rare curio or arctic haz'], // no way to know that isn't one name
-    ['name:heritage arctic haze', 'No fake autocomplete for: name:heritage arctic haze'], // this actually works in the app but relies on the full manifest
+    ['rare curio or arctic haz', 'rare curio or name:"arctic haze"'],
+    ['name:heritage arctic haze', 'name:heritage name:"arctic haze"'], // this actually works in the app but relies on the full manifest
+    ['adept pali', 'adept name:"the palindrome"'],
   ];
 
   // Item names the autocompleter should know about for the above multiWordCases to complete
@@ -98,6 +99,7 @@ describe('autocompleteTermSuggestions', () => {
     'toil and trouble',
     'not forgotten',
     'fate of all fools',
+    'the palindrome',
   ];
 
   // Mocked out filterComplete function that only knows a few tricks
@@ -116,10 +118,8 @@ describe('autocompleteTermSuggestions', () => {
     if (value.endsWith("'") || value.endsWith('"')) {
       value = value.slice(0, value.length - 1);
     }
-    const result = itemNames.find((i) => i.startsWith(value));
-    return result
-      ? [`${filter}:${quoteFilterString(result)}`]
-      : [`No fake autocomplete for: ${term}`];
+    const result = itemNames.find((i) => i.includes(value));
+    return result ? [`${filter}:${quoteFilterString(result)}`] : [];
   };
 
   test.each(multiWordCases)(
