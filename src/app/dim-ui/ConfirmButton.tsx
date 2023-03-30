@@ -62,7 +62,7 @@ export function ConfirmButton({
       })}
       ref={containerRef}
       onClick={onClickAction}
-      onMouseLeave={() => {
+      onPointerLeave={() => {
         setConfirmMode(false);
         setConfirmReady(false);
       }}

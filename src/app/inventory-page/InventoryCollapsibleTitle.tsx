@@ -2,9 +2,9 @@ import { collapsedSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import {
+  POSTMASTER_SIZE,
   postmasterAlmostFull,
   postmasterSpaceUsed,
-  POSTMASTER_SIZE,
 } from 'app/loadout-drawer/postmaster';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
@@ -66,15 +66,10 @@ export default function InventoryCollapsibleTitle({
             const postMasterSpaceUsed = postmasterSpaceUsed(store);
             const showPostmasterFull = checkPostmaster && storeIsDestiny2 && isPostmasterAlmostFull;
 
-            const data = {
-              number: postMasterSpaceUsed,
-              postmasterSize: POSTMASTER_SIZE,
-            };
-
             const text =
               postMasterSpaceUsed < POSTMASTER_SIZE
-                ? t('ItemService.PostmasterAlmostFull', data)
-                : t('ItemService.PostmasterFull', data);
+                ? t('ItemService.PostmasterAlmostFull')
+                : t('ItemService.PostmasterFull');
 
             return (
               <div
@@ -93,7 +88,7 @@ export default function InventoryCollapsibleTitle({
                     />{' '}
                     <span>
                       {showPostmasterFull ? text : title}
-                      {checkPostmaster && collapsed && (
+                      {checkPostmaster && (
                         <span className={styles.bucketSize}>
                           ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
                         </span>
@@ -106,7 +101,7 @@ export default function InventoryCollapsibleTitle({
                 ) : (
                   <>
                     {showPostmasterFull && text}
-                    {checkPostmaster && collapsed && (
+                    {checkPostmaster && (
                       <span className={styles.bucketSize}>
                         ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
                       </span>

@@ -11,8 +11,8 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import {
-  armor2PlugCategoryHashes,
   EXOTIC_CATALYST_TRAIT,
+  armor2PlugCategoryHashes,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
   modsWithConditionalStats,
@@ -22,10 +22,10 @@ import modSocketMetadata, {
   ModSocketMetadata,
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
-import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DamageType, DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
 import { objectifyArray } from './util';
@@ -35,7 +35,7 @@ import { objectifyArray } from './util';
 // mainly for css purposes and the "is:arc" style filter names
 
 export const getItemDamageShortName = (item: DimItem): string | undefined =>
-  damageNamesByEnum[item.element?.enumValue ?? -1];
+  damageNamesByEnum[item.element?.enumValue ?? DamageType.None];
 
 // these are helpers for identifying SpecialtySockets (combat style/raid mods). See specialty-modslots.ts
 
@@ -68,8 +68,10 @@ export const emptySpecialtySocketHashes = modSocketMetadata.map(
 /** verifies an item is d2 armor and has one or more specialty mod sockets, which are returned */
 const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
   if (item?.bucket.inArmor) {
-    const specialtySockets = item.sockets?.allSockets.filter((socket) =>
-      specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
+    const specialtySockets = item.sockets?.allSockets.filter(
+      (socket) =>
+        // check plugged -- non-artifice GoA armor still has the socket but nothing in it
+        socket.plugged && specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
     );
     if (specialtySockets?.length) {
       return specialtySockets;
@@ -78,12 +80,16 @@ const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
 };
 
 /** returns ModMetadatas if the item has one or more specialty mod slots */
-export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined =>
-  _.compact(
+export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
+  const metadatas = _.compact(
     getSpecialtySockets(item)?.map(
       (s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash]
     )
   );
+  if (metadatas?.length) {
+    return metadatas;
+  }
+};
 
 /**
  * combat and legacy slots are boring now. everything has them.
@@ -100,7 +106,7 @@ export const getInterestingSocketMetadatas = (item?: DimItem): ModSocketMetadata
  * returns mod type tag if the plugCategoryHash (from a mod definition's .plug) is known
  */
 export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): string | undefined =>
-  modTypeTagByPlugCategoryHash[plugCategoryHash];
+  modTypeTagByPlugCategoryHash[plugCategoryHash as PlugCategoryHashes];
 
 /** feed a **mod** definition into this */
 export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
@@ -112,7 +118,8 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
 export function getMasterworkStatNames(mw: DimMasterwork | null) {
   return (
     mw?.stats
-      ?.map((stat) => stat.name)
+      ?.filter((stat) => stat.isPrimary)
+      .map((stat) => stat.name)
       .filter(Boolean)
       .join(', ') ?? ''
   );
@@ -279,10 +286,8 @@ export function getItemYear(
 /**
  * This function indicates whether a mod's stat effect is active on the item.
  *
- * For example, powerful friends only gives its stat effect if another arc mod is
- * slotted or some other item has a charged with light arc mod slotted.
- * This will return true if another arc mod is slotted or if we can pass in the
- * other slotted mods via modsOnOtherItems, an arc charged with light mod is found.
+ * For example, some subclass plugs reduce a different stat per character class,
+ * which we identify using the passed subclass item.
  *
  * If the plugHash isn't recognized then the default is to return true.
  */
@@ -314,7 +319,6 @@ export function isPlugStatActive(
   }
 
   if (
-    plugHash === modsWithConditionalStats.chargeHarvester ||
     plugHash === modsWithConditionalStats.echoOfPersistence ||
     plugHash === modsWithConditionalStats.sparkOfFocus
   ) {

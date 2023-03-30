@@ -34,6 +34,24 @@ interface Navigator {
   clearAppBadge();
 }
 
+interface Performance {
+  measureUserAgentSpecificMemory(): Promise<MeasureMemoryResult>;
+}
+
+interface MeasureMemoryResult {
+  bytes: number;
+  breakdown: {
+    bytes: number;
+    attribution: [
+      {
+        url: string;
+        scope: string;
+      }
+    ];
+    types: string[];
+  }[];
+}
+
 /**
  * The BeforeInstallPromptEvent is fired at the Window.onbeforeinstallprompt handler
  * before a user is prompted to "install" a web site to a home screen on mobile.

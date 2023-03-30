@@ -4,6 +4,7 @@ module.exports = function (api) {
   const plugins = [
     'lodash',
     'babel-plugin-optimize-clsx',
+    'object-to-json-parse',
     [
       '@babel/plugin-transform-runtime',
       {
@@ -34,7 +35,7 @@ module.exports = function (api) {
 
   if (isProduction) {
     plugins.push(
-      '@babel/plugin-transform-react-constant-elements',
+      //'@babel/plugin-transform-react-constant-elements',
       '@babel/plugin-transform-react-inline-elements'
     );
   } else {

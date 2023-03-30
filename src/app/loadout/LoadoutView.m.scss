@@ -28,6 +28,7 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-flow: row wrap;
   gap: 4px;
+
   @include phone-portrait {
     margin-top: 16px;
     margin-bottom: 16px;
@@ -52,6 +53,7 @@
   margin-top: 10px;
   min-height: 16px;
   gap: 24px;
+
   @include phone-portrait {
     gap: 12px;
   }
@@ -66,7 +68,5 @@
 .loadoutNotes {
   margin: 4px 0;
   white-space: pre-wrap;
-  overflow-wrap: break-word;
-  word-break: break-word;
   user-select: text;
 }

@@ -1,12 +1,12 @@
 import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { tl } from 'app/i18next-t';
-import { RootState, ThunkResult } from 'app/store/types';
+import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
 import { setItemNote, setItemTag, tagCleanup } from './actions';
 import { DimItem } from './item-types';
-import { itemHashTagsSelector, itemInfosSelector } from './selectors';
+import { itemInfosSelector } from './selectors';
 import { DimStore } from './store-types';
 
 // sortOrder: orders items within a bucket, ascending
@@ -207,9 +207,3 @@ export function getNotes(
     ? (item.instanced ? itemInfos[item.id]?.notes : itemHashTags?.[item.hash]?.notes) || undefined
     : undefined;
 }
-
-/** given an item, returns a selector which monitors that item's notes */
-export const itemNoteSelector =
-  (item: DimItem) =>
-  (state: RootState): string | undefined =>
-    getNotes(item, itemInfosSelector(state), itemHashTagsSelector(state));

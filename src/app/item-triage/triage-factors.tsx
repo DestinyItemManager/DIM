@@ -1,11 +1,11 @@
 import { compareNameQuery } from 'app/compare/compare-buttons';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
+import { ArmorSlotIcon, WeaponTypeIcon } from 'app/dim-ui/ItemCategoryIcon';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
-import { getArmorSlotSvgIcon, getWeaponTypeSvgIcon } from 'app/dim-ui/svgs/itemCategory';
-import { DimItem } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { DimItem } from 'app/inventory/item-types';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { quoteFilterString } from 'app/search/query-parser';
 import {
@@ -75,16 +75,7 @@ const itemFactors: Record<string, Factor> = {
   weaponType: {
     id: 'weaponType',
     runIf: (item) => item.bucket.inWeapons,
-    render: (item) => {
-      const weaponIcon = getWeaponTypeSvgIcon(item);
-      return weaponIcon ? (
-        <PressTip minimal elementType="span" tooltip={item.typeName}>
-          <img className={clsx(styles.inlineIcon2, styles.weaponSvg)} src={weaponIcon} />
-        </PressTip>
-      ) : (
-        <>{item.typeName}</>
-      );
-    },
+    render: (item) => <WeaponTypeIcon item={item} className={styles.inlineIcon2} />,
     filter: itemCategoryFilter.fromItem!,
   },
   specialtySocket: {
@@ -137,12 +128,7 @@ const itemFactors: Record<string, Factor> = {
     id: 'armorSlot',
     runIf: (item) => item.bucket.inArmor,
     render: (item) => (
-      <PressTip minimal elementType="span" tooltip={item.typeName}>
-        <img
-          src={getArmorSlotSvgIcon(item)}
-          className={clsx(styles.inlineIcon2, styles.weaponSvg, styles.factorIcon)}
-        />
-      </PressTip>
+      <ArmorSlotIcon item={item} className={clsx(styles.inlineIcon2, styles.factorIcon)} />
     ),
     filter: itemTypeFilter.fromItem!,
   },

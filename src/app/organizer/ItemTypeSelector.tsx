@@ -1,13 +1,13 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useDefinitions } from 'app/manifest/selectors';
 import { filteredItemsSelector } from 'app/search/search-filter';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
-import { itemIncludesCategories } from './filtering-utils';
-import { itemCategoryIcons } from './item-category-icons';
 import styles from './ItemTypeSelector.m.scss';
+import { itemIncludesCategories } from './filtering-utils';
 
 /**
  * Each branch of the drilldown options is represented by a SelectionTreeNode
@@ -16,7 +16,7 @@ import styles from './ItemTypeSelector.m.scss';
  */
 export interface ItemCategoryTreeNode {
   id: string;
-  itemCategoryHash: ItemCategoryHashes;
+  itemCategoryHash: ItemCategoryHashes | 0;
   subCategories?: ItemCategoryTreeNode[];
   /** A terminal node can have items displayed for it. It may still have other drilldowns available. */
   terminal?: boolean;
@@ -177,7 +177,7 @@ const d2SelectionTree: ItemCategoryTreeNode = {
         {
           id: 'glaive',
           itemCategoryHash: ItemCategoryHashes.Glaives,
-          subCategories: [energy],
+          subCategories: [energy, power],
           terminal: true,
         },
       ],
@@ -368,7 +368,6 @@ export default function ItemTypeSelector({
                 }
 
                 const itemCategory = defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash));
-
                 return (
                   <label
                     key={subCategory.itemCategoryHash}
@@ -384,8 +383,8 @@ export default function ItemTypeSelector({
                       readOnly={true}
                       onClick={(_e) => handleSelection(depth, subCategory)}
                     />
-                    {itemCategoryIcons[subCategory.itemCategoryHash] && (
-                      <img src={itemCategoryIcons[subCategory.itemCategoryHash]} />
+                    {subCategory.itemCategoryHash !== 0 && (
+                      <BucketIcon itemCategoryHash={subCategory.itemCategoryHash} />
                     )}
                     {'displayProperties' in itemCategory
                       ? itemCategory.displayProperties.name

@@ -2,17 +2,17 @@ import CheckButton from 'app/dim-ui/CheckButton';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { getTag, TagValue } from 'app/inventory/dim-item-info';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
-import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { allItemsSelector, itemInfosSelector } from 'app/inventory/selectors';
+import { TagValue } from 'app/inventory/dim-item-info';
+import { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector, getTagSelector } from 'app/inventory/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { getItemRecencyKey, isNewerThan } from 'app/shell/item-comparators';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { AnimatePresence, motion, Spring } from 'framer-motion';
+import { AnimatePresence, Spring, motion } from 'framer-motion';
 import _ from 'lodash';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
@@ -81,12 +81,12 @@ export default function ItemFeed({
   resetItemCount: () => void;
 }) {
   const allItems = useSelector(filteredItemsSelector);
-  const itemInfos = useSelector(itemInfosSelector);
+  const getTag = useSelector(getTagSelector);
   const [hideTagged, setHideTagged] = useSetting('itemFeedHideTagged');
   const [itemFeedWatermark, setItemFeedWatermark] = useSetting('itemFeedWatermark');
 
   const untaggedItems = _.take(
-    allItems.filter((i) => !hideTagged || !getTag(i, itemInfos)),
+    hideTagged ? allItems.filter((i) => !hideTagged || !getTag(i)) : allItems,
     itemsToShow
   );
 
@@ -124,7 +124,7 @@ export default function ItemFeed({
       )}
       <AnimatePresence initial={false}>
         {items.map((item) => (
-          <Item key={item.index} item={item} tag={getTag(item, itemInfos)} />
+          <Item key={item.index} item={item} tag={getTag(item)} />
         ))}
       </AnimatePresence>
     </>

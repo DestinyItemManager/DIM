@@ -1,11 +1,12 @@
 import { languageSelector } from 'app/dim-api/selectors';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { SearchInput } from 'app/search/SearchInput';
+import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
-import { Comparator } from 'app/utils/comparators';
+import { Comparator, compareBy } from 'app/utils/comparators';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { produce } from 'immer';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -22,8 +23,8 @@ interface Props {
    * drawer are the union of plugs from these plug sets.
    */
   plugSets: PlugSet[];
-  /** A restricted list of stat hashes to display for each plug. If not specified, no stats will be shown. */
-  displayedStatHashes?: number[];
+  /** The class type we're choosing mods for */
+  classType: DestinyClass;
   /** Title of the sheet, displayed in the header. */
   title: string;
   /** The placeholder text for the search bar. */
@@ -39,8 +40,6 @@ interface Props {
   ) => boolean;
   /** How plug groups (e.g. PlugSets) should be sorted in the display. */
   sortPlugGroups?: Comparator<PlugSet>;
-  /** How to sort plugs within a group (PlugSet) */
-  sortPlugs?: Comparator<PluggableInventoryItemDefinition>;
   /** Called with the full list of selected plugs when the user clicks the accept button. */
   onAccept: (selectedPlugs: PluggableInventoryItemDefinition[]) => void;
   /** Called when the user accepts the new plugset or closes the sheet. */
@@ -55,14 +54,13 @@ interface Props {
  */
 export default function PlugDrawer({
   plugSets,
-  displayedStatHashes,
+  classType,
   title,
   searchPlaceholder,
   initialQuery,
   acceptButtonText,
   isPlugSelectable,
   sortPlugGroups,
-  sortPlugs,
   onAccept,
   onClose,
 }: Props) {
@@ -71,9 +69,13 @@ export default function PlugDrawer({
   const [query, setQuery] = useState(initialQuery || '');
   const [internalPlugSets, setInternalPlugSets] = useState(() =>
     plugSets
-      .map((plugSet) => ({ ...plugSet, plugs: Array.from(plugSet.plugs).sort(sortPlugs) }))
+      .map((plugSet) => ({ ...plugSet, plugs: Array.from(plugSet.plugs) }))
       .sort(sortPlugGroups)
   );
+  const plugSetSort = (set: PlugSet) =>
+    compareBy((plug: PluggableInventoryItemDefinition) =>
+      set.plugs.findIndex((p) => p.hash === plug.hash)
+    );
   const isPhonePortrait = useIsPhonePortrait();
 
   const handlePlugSelected = useCallback(
@@ -95,13 +97,11 @@ export default function PlugDrawer({
             draftPlugSet.selected.push(plug);
           }
 
-          if (sortPlugs) {
-            draftPlugSet.selected.sort(sortPlugs);
-          }
+          draftPlugSet.selected.sort(plugSetSort(draftPlugSet));
         })
       );
     },
-    [sortPlugs]
+    []
   );
 
   const handlePlugRemoved = useCallback(
@@ -174,6 +174,7 @@ export default function PlugDrawer({
   const footer = ({ onClose }: { onClose: () => void }) => (
     <Footer
       plugSets={internalPlugSets}
+      classType={classType}
       isPhonePortrait={isPhonePortrait}
       acceptButtonText={acceptButtonText}
       onSubmit={(e) => onSubmit(e, onClose)}
@@ -210,7 +211,7 @@ export default function PlugDrawer({
         <PlugSection
           key={plugSet.plugSetHash}
           plugSet={plugSet}
-          displayedStatHashes={displayedStatHashes}
+          classType={classType}
           isPlugSelectable={handleIsPlugSelectable}
           onPlugSelected={handlePlugSelected}
           onPlugRemoved={handlePlugRemoved}

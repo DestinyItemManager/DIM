@@ -2,6 +2,7 @@ import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import FilterPills, { Option } from 'app/dim-ui/FilterPills';
+import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
@@ -70,7 +71,7 @@ export function useLoadoutFilterPills(
         ...getHashtagsFromNote(loadout.notes),
       ];
       for (const hashtag of hashtags) {
-        (loadoutsByHashtag[hashtag] ??= []).push(loadout);
+        (loadoutsByHashtag[hashtag.replace('#', '')] ??= []).push(loadout);
       }
     }
     return loadoutsByHashtag;
@@ -173,7 +174,7 @@ export function useLoadoutFilterPills(
 export function searchAndSortLoadoutsByQuery(
   loadouts: (Loadout | InGameLoadout)[],
   query: string,
-  language: string,
+  language: DimLanguage,
   loadoutSort: LoadoutSort
 ) {
   const loadoutQueryPlain = plainString(query, language);
@@ -189,6 +190,6 @@ export function searchAndSortLoadoutsByQuery(
     (l) => (isInGameLoadout(l) ? 0 : 1),
     loadoutSort === LoadoutSort.ByEditTime
       ? (l) => (isInGameLoadout(l) ? l.index : -(l.lastUpdatedAt ?? 0))
-      : (l) => l.name.toLocaleUpperCase()
+      : (l) => (isInGameLoadout(l) ? l.index : l.name.toLocaleUpperCase())
   );
 }

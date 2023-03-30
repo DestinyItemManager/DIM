@@ -58,6 +58,9 @@
   .cannotRollSection {
     @include tooltip-section-color($red);
   }
+  .automaticallyPickedSection {
+    @include tooltip-section-color($orange);
+  }
 }
 .tooltipExotic {
   @include tooltip-ribbon-color($exotic);

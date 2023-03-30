@@ -7,23 +7,23 @@ import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t, tl } from 'app/i18next-t';
-import { getNotes, getTag, ItemInfos, tagConfig } from 'app/inventory/dim-item-info';
-import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
+import TagIcon from 'app/inventory/TagIcon';
+import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
+import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { source } from 'app/inventory/spreadsheets';
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import { getStatSortOrder } from 'app/inventory/store/stats';
 import { getStore } from 'app/inventory/stores-helpers';
-import TagIcon from 'app/inventory/TagIcon';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
 import NotesArea from 'app/item-popup/NotesArea';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { quoteFilterString } from 'app/search/query-parser';
@@ -56,8 +56,8 @@ import {
   isEmptyArmorModSocket,
   isUsedArmorModSocket,
 } from 'app/utils/socket-utils';
+import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -78,7 +78,7 @@ export function getColumnSelectionId(column: ColumnDefinition) {
 }
 
 // Some stat labels are long. This lets us replace them with i18n
-export const statLabels: Record<number, string | undefined> = {
+export const statLabels: LookupTable<StatHashes, string> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
   [StatHashes.ReloadSpeed]: tl('Organizer.Stats.Reload'),
   [StatHashes.AimAssistance]: tl('Organizer.Stats.Aim'),
@@ -98,8 +98,8 @@ export function getColumns(
   statHashes: {
     [statHash: number]: StatInfo;
   },
-  classType: DestinyClass,
-  itemInfos: ItemInfos,
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
   wishList: (item: DimItem) => InventoryWishListRoll | undefined,
   hasWishList: boolean,
   customStatDefs: CustomStatDef[],
@@ -126,7 +126,7 @@ export function getColumns(
   const statColumns: ColumnWithStat[] = _.sortBy(
     _.compact(
       Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat | undefined => {
-        const statHash = parseInt(statHashStr, 10);
+        const statHash = parseInt(statHashStr, 10) as StatHashes;
         if (customStatHashes.includes(statHash)) {
           // Exclude custom total, it has its own column
           return undefined;
@@ -242,7 +242,7 @@ export function getColumns(
     return columnDef;
   }
 
-  const customStats = createCustomStatColumns(customStatDefs, classType);
+  const customStats = createCustomStatColumns(customStatDefs);
 
   const columns: ColumnDefinition[] = _.compact([
     c({
@@ -317,7 +317,7 @@ export function getColumns(
     c({
       id: 'tag',
       header: t('Organizer.Columns.Tag'),
-      value: (item) => getTag(item, itemInfos) ?? '',
+      value: (item) => getTag(item) ?? '',
       cell: (value) => value && <TagIcon tag={value} />,
       sort: compareBy((tag) => (tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000)),
       filter: (value) => `tag:${value || 'none'}`,
@@ -594,7 +594,7 @@ export function getColumns(
     c({
       id: 'notes',
       header: t('Organizer.Columns.Notes'),
-      value: (item) => getNotes(item, itemInfos) ?? '',
+      value: (item) => getNotes(item) ?? '',
       cell: (_val, item) => <NotesArea item={item} minimal={true} />,
       gridWidth: 'minmax(200px, 1fr)',
       filter: (value) => `notes:${quoteFilterString(value)}`,
@@ -632,7 +632,9 @@ function LoadoutsCell({
           ) : (
             <a
               data-perk-name={loadout.id}
-              onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
+              onClick={(e: React.MouseEvent) =>
+                !e.shiftKey && editLoadout(loadout, owner, { isNew: false })
+              }
             >
               {loadout.name}
             </a>

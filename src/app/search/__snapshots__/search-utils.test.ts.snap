@@ -69,6 +69,14 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'range'
   "a:>=",
   "a:worthy",
   "a:arrivals",
+  "a:<worthy",
+  "a:<arrivals",
+  "a:>worthy",
+  "a:>arrivals",
+  "a:<=worthy",
+  "a:<=arrivals",
+  "a:>=worthy",
+  "a:>=arrivals",
 ]
 `;
 

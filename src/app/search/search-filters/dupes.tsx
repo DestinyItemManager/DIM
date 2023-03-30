@@ -1,14 +1,14 @@
-import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { tl } from 'app/i18next-t';
-import { getTag, ItemInfos } from 'app/inventory/dim-item-info';
+import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { isArtifice } from 'app/item-triage/triage-utils';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
-import { armorStats, DEFAULT_SHADER } from '../d2-known-values';
+import { DEFAULT_SHADER, armorStats } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 
 const notableTags = ['favorite', 'keep'];
@@ -30,10 +30,7 @@ const sortDupes = (
   dupes: {
     [dupeID: string]: DimItem[];
   },
-  itemInfos: ItemInfos,
-  itemHashTags?: {
-    [itemHash: string]: ItemHashTag;
-  }
+  getTag: (item: DimItem) => TagValue | undefined
 ) => {
   // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
   const dupeComparator = reverseComparator(
@@ -43,7 +40,7 @@ const sortDupes = (
       compareBy((item) => item.masterwork),
       compareBy((item) => item.locked),
       compareBy((item) => {
-        const tag = getTag(item, itemInfos, itemHashTags);
+        const tag = getTag(item);
         return Boolean(tag && notableTags.includes(tag));
       }),
       compareBy((i) => i.id) // tiebreak by ID
@@ -75,12 +72,12 @@ const computeDupesByIdFn = (allItems: DimItem[], makeDupeIdFn: (item: DimItem) =
 };
 
 /**
- * A memoized function to find a map of duplicate items using the makeDupeID function.
+ * Find a map of duplicate items using the makeDupeID function.
  */
 export const computeDupes = (allItems: DimItem[]) => computeDupesByIdFn(allItems, makeDupeID);
 
 /**
- * A memoized function to find a map of duplicate items using the makeSeasonalDupeID function.
+ * Find a map of duplicate items using the makeSeasonalDupeID function.
  */
 const computeSeasonalDupes = (allItems: DimItem[]) =>
   computeDupesByIdFn(allItems, makeSeasonalDupeID);
@@ -112,8 +109,8 @@ const dupeFilters: FilterDefinition[] = [
   {
     keywords: 'dupelower',
     description: tl('Filter.DupeLower'),
-    filter: ({ allItems, itemInfos, itemHashTags }) => {
-      const duplicates = sortDupes(computeDupes(allItems), itemInfos, itemHashTags);
+    filter: ({ allItems, getTag }) => {
+      const duplicates = sortDupes(computeDupes(allItems), getTag);
       return (item) => {
         if (
           !(
@@ -238,7 +235,7 @@ export function checkIfIsDupe(
 
 function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] = armorStats) {
   // disregard no-class armor
-  const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== -1);
+  const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== DestinyClass.Classified);
 
   // Group by class and armor type. Also, compare exotics with each other, not the general pool.
   const grouped = Object.values(

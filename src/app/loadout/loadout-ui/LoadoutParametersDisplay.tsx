@@ -1,7 +1,8 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import ExoticArmorChoice from 'app/loadout-builder/filter/ExoticArmorChoice';
+import ExoticArmorChoice, { getLockedExotic } from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, searchIcon } from 'app/shell/icons';
 import styles from './LoadoutParametersDisplay.m.scss';
@@ -22,22 +23,35 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
   if (!show) {
     return null;
   }
+  const lbParamDesc = (str: string) => t('Loadouts.LoadoutParameters') + ' – ' + str;
 
   return (
     <div className={styles.loParams}>
       {query && (
-        <div className={styles.loQuery}>
+        <PressTip
+          className={styles.loQuery}
+          tooltip={() => lbParamDesc(t('Loadouts.LoadoutParametersQuery'))}
+        >
           <AppIcon icon={searchIcon} />
           {query}
-        </div>
+        </PressTip>
       )}
       {exoticArmorHash !== undefined && (
-        <div className={styles.loExotic}>
+        <PressTip
+          className={styles.loExotic}
+          tooltip={() => {
+            const [, exoticName] = getLockedExotic(defs, exoticArmorHash);
+            return lbParamDesc(t('Loadouts.LoadoutParametersExotic', { exoticName }));
+          }}
+        >
           <ExoticArmorChoice lockedExoticHash={exoticArmorHash} />
-        </div>
+        </PressTip>
       )}
       {statConstraints && (
-        <div className={styles.loStats}>
+        <PressTip
+          className={styles.loStats}
+          tooltip={() => lbParamDesc(t('Loadouts.LoadoutParametersStats'))}
+        >
           {statConstraints.map((s) => (
             <div key={s.statHash} className={styles.loStat}>
               <BungieImage src={defs.Stat.get(s.statHash).displayProperties.icon} />
@@ -61,7 +75,7 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
               )}
             </div>
           ))}
-        </div>
+        </PressTip>
       )}
     </div>
   );

@@ -9,16 +9,17 @@ import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { classFilter } from 'app/search/search-filters/known-values';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
+import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import Sheet from '../dim-ui/Sheet';
 import { allItemsSelector, storesSelector } from '../inventory/selectors';
-import { showGearPower$ } from './gear-power';
 import styles from './GearPower.m.scss';
+import { showGearPower$ } from './gear-power';
 
-const bucketClassNames: Partial<Record<BucketHashes, string>> = {
+const bucketClassNames: LookupTable<BucketHashes, string> = {
   [BucketHashes.KineticWeapons]: styles.kinetic,
   [BucketHashes.EnergyWeapons]: styles.energy,
   [BucketHashes.PowerWeapons]: styles.power,
@@ -74,14 +75,17 @@ export default function GearPower() {
             const diffClass =
               powerDiff > 0 ? styles.positive : powerDiff < 0 ? styles.negative : styles.neutral;
             return (
-              <div key={i.id} className={clsx(bucketClassNames[i.bucket.hash], styles.gearItem)}>
+              <div
+                key={i.id}
+                className={clsx(bucketClassNames[i.bucket.hash as BucketHashes], styles.gearItem)}
+              >
                 <div onClick={() => locateItem(i)}>
                   <BungieImage src={i.icon} className={styles.itemImage} />
                 </div>
                 <div className={styles.gearItemInfo}>
                   <div className={styles.power}>{i.power}</div>
                   <div className={styles.statMeta}>
-                    <BucketIcon className={styles.bucketImage} item={i} />
+                    <BucketIcon className={styles.bucketImage} bucketHash={i.bucket.hash} />
                     <div className={diffClass}>
                       {diffSymbol}
                       {powerDiff}

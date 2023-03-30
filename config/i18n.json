@@ -124,7 +124,8 @@
   "EnergyMeter": {
     "Energy": "Energy",
     "Used": "Used",
-    "Unused": "Unused"
+    "Unused": "Unused",
+    "UpgradeNeeded": "This item's current energy capacity is {{energyCapacity}}. To fit the selected mods, its energy capacity must be {{energyUsed}}."
   },
   "ErrorBoundary": {
     "Title": "Something went wrong"
@@ -395,8 +396,18 @@
     "TransferItems": "Transfer"
   },
   "InGameLoadout": {
+    "Create": "Create Loadout",
+    "CreateTitle": "Create In-Game Loadout From Current Equipment",
     "Applying": "Equipping loadout...",
-    "LoadoutSlotNum": "Slot {{index}}"
+    "EditTitle": "Edit Loadout Name and Icon",
+    "EditFailed": "Failed to update loadout",
+    "LoadoutSlotNum": "Slot {{index}}",
+    "Deleted": "Loadout Deleted",
+    "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
+    "DeleteFailed": "Failed to delete loadout",
+    "Save": "Update Loadout",
+    "Replace": "Replace Loadout",
+    "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
   "Inventory": {
     "ClickToExpand": "(Click to expand)"
@@ -436,8 +447,8 @@
     "NotEnoughRoomGeneral": "There's not enough room to move this item.",
     "OnlyEquippedClassLevel": "This can only be equipped on a {{class}} at or above level {{level}}.",
     "OnlyEquippedLevel": "This can only be equipped on characters at or above level {{level}}.",
-    "PostmasterAlmostFull": "Almost full! ({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "Full! ({{number}}/{{postmasterSize}})",
+    "PostmasterAlmostFull": "Almost full!",
+    "PostmasterFull": "Full!",
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
@@ -523,6 +534,7 @@
     "ShareBuildTitle": "Loadout Optimizer Settings",
     "ShareBuildWithNotes": "Share With Notes",
     "AddHalfTierMods": "Add +5 Mods",
+    "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
     "AutoStatMods": "Automatically add stat mods",
     "All": "All",
     "AnyExotic": "Any Exotic",
@@ -636,6 +648,10 @@
     "ItemLeveling": "Item Leveling",
     "LoadoutName": "Loadout name",
     "Loadouts": "Loadouts",
+    "LoadoutParameters": "Loadout Optimizer settings",
+    "LoadoutParametersExotic": "Loadout must include this exotic: {{exoticName}}",
+    "LoadoutParametersQuery": "Items must match this search filter",
+    "LoadoutParametersStats": "Stat priorities and minimum/maximum stat tiers",
     "MakeRoom": "Make Room for Postmaster",
     "MakeRoomDone": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",
     "MakeRoomDone_female": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",
@@ -649,7 +665,17 @@
     "MaximizeLight": "Max Light",
     "MaximizePower": "Max Power",
     "MaximizeStat": "Maximize Stat",
-    "ModPlacement": "Mod Placement",
+    "ModPlacement": {
+      "InvalidMods": "Invalid Mods",
+      "InvalidModsDesc": "1 mod cannot fit into any armor piece.",
+      "InvalidModsDesc_plural": "{{count}} mods cannot fit into any armor piece.",
+      "ModPlacement": "Mod Placement",
+      "UnassignedMods": "Unassigned Mods",
+      "UnassignedModsDesc": "1 mod did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
+      "UnassignedModsDesc_plural": "{{count}} mods did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
+      "UpgradeCosts": "Upgrade Costs",
+      "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:"
+    },
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
     "MissingItems": "Missing Items",
     "ModErrorSummary": "1 mod error:",
@@ -695,6 +721,7 @@
       "Empty": "The loadout is empty.",
       "NoName": "The loadout needs a name."
     },
+    "Snapshot": "Save As In-Game Loadout",
     "SortByName": "Sort by name",
     "SortByEditTime": "Sort by last edited",
     "Share": {
@@ -722,7 +749,6 @@
     "FillFromEquipped": "Fill in using equipped",
     "FillFromInventory": "Fill in using non-equipped",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
-    "UnassignedMods": "Unassigned Mods",
     "UnassignedModError": "Mod didn't fit on your current armor",
     "Undo": "Undo",
     "Unequipped": "Unequipped",
@@ -750,8 +776,12 @@
   "Milestone": {
     "Daily": "Daily Challenge",
     "OneTime": "One Time Challenge",
+    "PinnacleCap": "Pinnacle Cap",
+    "PowerFloor": "Power Floor",
+    "PowerfulCap": "Powerful Cap",
     "SeasonalRank": "Seasonal Rank {{rank}}",
     "SeasonEnds": "Season ends in ",
+    "SoftCap": "Soft Cap",
     "Special": "Special Event Challenge",
     "Tutorial": "Tutorial Challenge",
     "Unknown": "Challenge",

@@ -7,15 +7,15 @@ import { compareBy } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React from 'react';
-import { getEngramPowerBonus } from './engrams';
-import { milestoneToItems } from './milestone-items';
 import styles from './Milestones.m.scss';
+import { PowerCaps } from './PowerCaps';
 import Pursuit from './Pursuit';
 import { sortPursuits } from './Pursuits';
 import SeasonalRank from './SeasonalRank';
-import { getCharacterProgressions } from './selectors';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
+import { getEngramPowerBonus } from './engrams';
+import { milestoneToItems } from './milestone-items';
+import { getCharacterProgressions } from './selectors';
 
 /**
  * The list of Milestones for a character. Milestones are different from pursuits and
@@ -77,6 +77,7 @@ export default function Milestones({
             season={season}
             seasonPass={seasonPass}
           />
+          <PowerCaps />
         </div>
       )}
       {Object.keys(milestonesByPower)

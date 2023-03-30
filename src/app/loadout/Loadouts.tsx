@@ -3,25 +3,27 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { apiPermissionGrantedSelector, languageSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
-import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t, tl } from 'app/i18next-t';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { inGameLoadoutsForCharacterSelector } from 'app/loadout/ingame/selectors';
 import { useSetting } from 'app/settings/hooks';
-import { addIcon, AppIcon, faCalculator, uploadIcon } from 'app/shell/icons';
+import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { Portal } from 'app/utils/temp-container';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import styles from './Loadouts.m.scss';
+import LoadoutRow from './LoadoutsRow';
 import InGameLoadoutIcon from './ingame/InGameLoadoutIcon';
 import InGameLoadoutRow from './ingame/InGameLoadoutRow';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
@@ -31,8 +33,6 @@ import {
   useLoadoutFilterPills,
   useSavedLoadoutsForClassType,
 } from './loadout-ui/menu-hooks';
-import styles from './Loadouts.m.scss';
-import LoadoutRow from './LoadoutsRow';
 
 const sortOptions = [
   {
@@ -63,9 +63,13 @@ export default function LoadoutsContainer({ account }: { account: DestinyAccount
 }
 
 function Loadouts({ account }: { account: DestinyAccount }) {
+  const location = useLocation();
+  const locationStoreId = (location.state as { storeId: string } | undefined)?.storeId;
   const stores = useSelector(sortedStoresSelector);
   const currentStore = getCurrentStore(stores)!;
-  const [selectedStoreId, setSelectedStoreId] = useState(currentStore.id);
+  const [selectedStoreId, setSelectedStoreId] = useState(
+    locationStoreId && locationStoreId !== 'vault' ? locationStoreId : currentStore.id
+  );
   const [sharedLoadout, setSharedLoadout] = useState<Loadout>();
   const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);
   const selectedStore = getStore(stores, selectedStoreId)!;
@@ -185,7 +189,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
       {loadoutImportOpen && (
         <Portal>
           <LoadoutImportSheet
-            currentStoreId={currentStore.id}
+            currentStoreId={selectedStoreId}
             onClose={() => setLoadoutImportOpen(false)}
           />
         </Portal>

@@ -1,4 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React from 'react';
 
 export const enum SortDirection {
@@ -48,6 +49,11 @@ export interface ColumnDefinition<V extends Value = Value> {
   filter?(value: V, item: DimItem): string | undefined;
   /** A custom sort function. Default: Something reasonable. */
   sort?(firstValue: V, secondValue: V): 0 | 1 | -1;
+  /**
+   * a column def needs to exist all the time, so enabledness setting is aware of it,
+   * but sometimes a custom stat should be limited to only displaying for a certain class
+   */
+  limitToClass?: DestinyClass;
 }
 
 export interface Row {

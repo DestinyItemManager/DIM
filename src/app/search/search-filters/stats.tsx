@@ -153,13 +153,14 @@ function statFilterFromString(
         .filter((s) => armorAnyStatHashes.includes(s.statHash))
         .map((s) => s[byWhichValue])
         .sort((a, b) => b - a);
-      return compare(sortedStats[est[statNames]]);
+      return compare(sortedStats[est[statNames as keyof typeof est]]);
     };
   } else if (weaponStatNames.includes(statNames)) {
     // return earlier for weapon stats. these shouldn't do addition/averaging.
+    const statHash = statHashByName[statNames];
     return (item) => {
       const statValuesByHash = getStatValuesByHash(item, byWhichValue);
-      return compare(statValuesByHash[statNames] || 0);
+      return compare(statValuesByHash[statHash] || 0);
     };
   }
   const statCombiner = createStatCombiner(statNames, byWhichValue, customStats);
@@ -190,7 +191,7 @@ function createStatCombiner(
             return 0;
           }
           const sortedStats = sortStats();
-          const statHash = sortedStats[est[statName]][0];
+          const statHash = sortedStats[est[statName as keyof typeof est]][0];
           if (!statHash) {
             throw new Error(`invalid stat name: "${statName}"`);
           }
@@ -327,7 +328,7 @@ function calculateMaxPowerPerBucket(allItems: DimItem[]) {
   return _.mapValues(
     _.groupBy(
       // disregard no-class armor
-      allItems.filter((i) => i.classType !== -1),
+      allItems.filter((i) => i.classType !== DestinyClass.Classified),
       (i) => maxPowerKey(i)
     ),
     (items) => _.maxBy(items, (i) => i.power)?.power ?? 0

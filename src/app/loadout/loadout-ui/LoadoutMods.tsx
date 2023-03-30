@@ -3,32 +3,42 @@ import { t } from 'app/i18next-t';
 import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
-import { addIcon, AppIcon } from 'app/shell/icons';
+import { AppIcon, addIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { Portal } from 'app/utils/temp-container';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { memo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import ModPicker from '../ModPicker';
 import ModAssignmentDrawer from '../mod-assignment-drawer/ModAssignmentDrawer';
 import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
 import { createGetModRenderKey } from '../mod-utils';
-import ModPicker from '../ModPicker';
 import styles from './LoadoutMods.m.scss';
 import PlugDef from './PlugDef';
 
 const LoadoutModMemo = memo(function LoadoutMod({
   mod,
   className,
+  classType,
   onRemoveMod,
 }: {
   mod: ResolvedLoadoutMod;
   className: string;
+  classType: DestinyClass;
   onRemoveMod?: (mod: ResolvedLoadoutMod) => void;
 }) {
   // We need this to be undefined if `onRemoveMod` is not present as the presence of the onClose
   // callback determines whether the close icon is displayed on hover
   const onClose = onRemoveMod && (() => onRemoveMod(mod));
-  return <PlugDef className={className} plug={mod.resolvedMod} onClose={onClose} />;
+  return (
+    <PlugDef
+      className={className}
+      plug={mod.resolvedMod}
+      forClassType={classType}
+      onClose={onClose}
+    />
+  );
 });
 
 /**
@@ -102,6 +112,7 @@ export default memo(function LoadoutMods({
             })}
             key={getModRenderKey(mod.resolvedMod)}
             mod={mod}
+            classType={loadout.classType}
             onRemoveMod={onRemoveMod}
           />
         ))}

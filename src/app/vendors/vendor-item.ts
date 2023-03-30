@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { VENDORS } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import {
@@ -11,6 +12,7 @@ import {
   DestinyVendorItemState,
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
+import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from '../inventory/store/d2-item-factory';
@@ -39,11 +41,20 @@ export interface VendorItem {
  * the selected character.
  */
 function getCollectibleState(
+  defs: D2ManifestDefinitions,
   inventoryItem: DestinyInventoryItemDefinition,
   profileResponse: DestinyProfileResponse | undefined,
   characterId: string
 ) {
-  const collectibleHash = inventoryItem.collectibleHash;
+  let collectibleHash = inventoryItem.collectibleHash;
+
+  if (!collectibleHash) {
+    // For fake focusing items, what we really care about is state of what the item produces
+    const focusedItem = focusingItemOutputs[inventoryItem.hash];
+    if (focusedItem) {
+      collectibleHash = defs.InventoryItem.get(focusedItem)?.collectibleHash;
+    }
+  }
   let collectibleState: DestinyCollectibleState | undefined;
   if (collectibleHash) {
     collectibleState =
@@ -83,7 +94,12 @@ function makeVendorItem(
     displayCategoryIndex: vendorItemDef ? vendorItemDef.displayCategoryIndex : undefined,
     costs: saleItem?.costs || [],
     previewVendorHash: inventoryItem.preview?.previewVendorHash,
-    collectibleState: getCollectibleState(inventoryItem, profileResponse, characterId),
+    collectibleState: getCollectibleState(
+      context.defs,
+      inventoryItem,
+      profileResponse,
+      characterId
+    ),
     item: makeFakeItem(
       context,
       itemHash,

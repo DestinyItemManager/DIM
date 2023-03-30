@@ -20,11 +20,25 @@ import D2Sources from 'data/d2/source-info';
 import _ from 'lodash';
 import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
-import { getNotes, getTag, ItemInfos, tagConfig } from './dim-item-info';
+import { TagValue, tagConfig } from './dim-item-info';
 import { D1GridNode, DimItem, DimSockets } from './item-types';
-import { itemInfosSelector, storesSelector } from './selectors';
-import { getClass } from './store/character-utils';
+import { getNotesSelector, getTagSelector, storesSelector } from './selectors';
 import { getEvent, getSeason } from './store/season';
+
+function getClass(type: DestinyClass) {
+  switch (type) {
+    case DestinyClass.Titan:
+      return 'titan';
+    case DestinyClass.Hunter:
+      return 'hunter';
+    case DestinyClass.Warlock:
+      return 'warlock';
+    case DestinyClass.Unknown:
+      return 'unknown';
+    case DestinyClass.Classified:
+      return 'classified';
+  }
+}
 
 // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
 const FILTER_NODE_NAMES = [
@@ -55,14 +69,15 @@ const sourceKeys = Object.keys(D2Sources).filter((k) => !['raid', 'calus'].inclu
 export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResult {
   return async (_dispatch, getState) => {
     const stores = storesSelector(getState());
-    const itemInfos = itemInfosSelector(getState());
+    const getTag = getTagSelector(getState());
+    const getNotes = getNotesSelector(getState());
     const loadoutsForItem = loadoutsByItemSelector(getState());
 
     // perhaps we're loading
     if (stores.length === 0) {
       return;
     }
-    const nameMap = {};
+    const nameMap: { [storeId: string]: string } = {};
     let allItems: DimItem[] = [];
     for (const store of stores) {
       allItems = allItems.concat(store.items);
@@ -94,13 +109,13 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
     }
     switch (type) {
       case 'Weapons':
-        downloadWeapons(items, nameMap, itemInfos, loadoutsForItem);
+        downloadWeapons(items, nameMap, getTag, getNotes, loadoutsForItem);
         break;
       case 'Armor':
-        downloadArmor(items, nameMap, itemInfos, loadoutsForItem);
+        downloadArmor(items, nameMap, getTag, getNotes, loadoutsForItem);
         break;
       case 'Ghost':
-        downloadGhost(items, nameMap, itemInfos, loadoutsForItem);
+        downloadGhost(items, nameMap, getTag, getNotes, loadoutsForItem);
         break;
     }
 
@@ -158,7 +173,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
                 row.Tag = row.Tag.toLowerCase();
                 row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
                 return {
-                  tag: row.Tag in tagConfig ? tagConfig[row.Tag].type : undefined,
+                  tag: row.Tag in tagConfig ? tagConfig[row.Tag as TagValue].type : undefined,
                   itemId: row.Id,
                 };
               }
@@ -260,7 +275,8 @@ function formatLoadouts(item: DimItem, loadouts: LoadoutsByItem) {
 function downloadGhost(
   items: DimItem[],
   nameMap: { [key: string]: string },
-  itemInfos: ItemInfos,
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
   loadouts: LoadoutsByItem
 ) {
   // We need to always emit enough columns for all perks
@@ -271,14 +287,14 @@ function downloadGhost(
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
-      Tag: getTag(item, itemInfos),
+      Tag: getTag(item),
       Tier: item.tier,
       Source: source(item),
       Owner: nameMap[item.owner],
       Locked: item.locked,
       Equipped: item.equipped,
       Loadouts: formatLoadouts(item, loadouts),
-      Notes: getNotes(item, itemInfos),
+      Notes: getNotes(item),
     };
 
     addPerks(row, item, maxPerks);
@@ -309,7 +325,8 @@ export function source(item: DimItem) {
 function downloadArmor(
   items: DimItem[],
   nameMap: { [key: string]: string },
-  itemInfos: ItemInfos,
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
   loadouts: LoadoutsByItem
 ) {
   // We need to always emit enough columns for all perks
@@ -323,7 +340,7 @@ function downloadArmor(
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
-      Tag: getTag(item, itemInfos),
+      Tag: getTag(item),
       Tier: item.tier,
       Type: item.typeName,
       Source: source(item),
@@ -386,7 +403,7 @@ function downloadArmor(
     } else {
       const armorStats = Object.keys(dimArmorStatHashByName).map((statName) => ({
         name: statName,
-        stat: stats[dimArmorStatHashByName[statName]],
+        stat: stats[dimArmorStatHashByName[statName]!],
       }));
       for (const stat of armorStats) {
         row[capitalizeFirstLetter(stat.name)] = stat.stat?.value ?? 0;
@@ -401,7 +418,7 @@ function downloadArmor(
     }
 
     row.Loadouts = formatLoadouts(item, loadouts);
-    row.Notes = getNotes(item, itemInfos);
+    row.Notes = getNotes(item);
 
     addPerks(row, item, maxPerks);
 
@@ -413,7 +430,8 @@ function downloadArmor(
 function downloadWeapons(
   items: DimItem[],
   nameMap: { [key: string]: string },
-  itemInfos: ItemInfos,
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
   loadouts: LoadoutsByItem
 ) {
   // We need to always emit enough columns for all perks
@@ -427,7 +445,7 @@ function downloadWeapons(
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
-      Tag: getTag(item, itemInfos),
+      Tag: getTag(item),
       Tier: item.tier,
       Type: item.typeName,
       Source: source(item),
@@ -595,7 +613,7 @@ function downloadWeapons(
     }
 
     row.Loadouts = formatLoadouts(item, loadouts);
-    row.Notes = getNotes(item, itemInfos);
+    row.Notes = getNotes(item);
 
     addPerks(row, item, maxPerks);
 

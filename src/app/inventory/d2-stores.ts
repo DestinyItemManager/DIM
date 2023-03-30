@@ -8,6 +8,8 @@ import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
 import { customStatsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
+import { processInGameLoadouts } from 'app/loadout-drawer/loadout-type-converters';
+import { inGameLoadoutLoaded } from 'app/loadout/ingame/actions';
 import { loadCoreSettings } from 'app/manifest/actions';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
@@ -32,6 +34,8 @@ import { getLight } from '../loadout-drawer/loadout-utils';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/exceptions';
+import { ArtifactXP } from './ArtifactXP';
+import { ItemPowerSet } from './ItemPowerSet';
 import {
   CharacterInfo,
   charactersUpdated,
@@ -41,10 +45,8 @@ import {
   profileLoaded,
   update,
 } from './actions';
-import { ArtifactXP } from './ArtifactXP';
 import { cleanInfos } from './dim-item-info';
 import { DimItem } from './item-types';
-import { ItemPowerSet } from './ItemPowerSet';
 import { d2BucketsSelector, storesLoadedSelector, storesSelector } from './selectors';
 import { DimCharacterStat, DimStore } from './store-types';
 import {
@@ -303,6 +305,8 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
         // TODO: we can start moving some of this stuff to selectors? characters too
         const currencies = processCurrencies(profileResponse, defs);
 
+        const loadouts = processInGameLoadouts(profileResponse, defs);
+
         stopTimer();
 
         const stateSpan = transaction?.startChild({
@@ -317,6 +321,7 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
 
         dispatch(cleanInfos(stores));
         dispatch(update({ stores, currencies }));
+        dispatch(inGameLoadoutLoaded(loadouts));
 
         stopStateTimer();
         stateSpan?.finish();

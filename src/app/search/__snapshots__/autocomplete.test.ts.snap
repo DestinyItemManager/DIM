@@ -1,5 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`autocompleteTermSuggestions autocomplete within query for plain string match {jotu} - {jötunn} 1`] = `
+[
+  {
+    "highlightRange": {
+      "range": [
+        0,
+        13,
+      ],
+      "section": "body",
+    },
+    "query": {
+      "body": "name:"jötunn"",
+      "fullText": "name:"jötunn"",
+      "helpText": undefined,
+    },
+    "type": 3,
+  },
+]
+`;
+
 exports[`filterComplete autocomplete terms for |is:b| 1`] = `
 [
   "is:bow",

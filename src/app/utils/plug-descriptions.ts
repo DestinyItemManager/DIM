@@ -2,13 +2,20 @@ import { Perk } from 'app/clarity/descriptions/descriptionInterface';
 import { clarityDescriptionsSelector } from 'app/clarity/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';
+import { DimItem, DimPlug, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { getStatSortOrder, isAllowedItemStat, isAllowedPlugStat } from 'app/inventory/store/stats';
+import { isModStatActive } from 'app/loadout-builder/process/mappers';
+import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { EXOTIC_CATALYST_TRAIT, modsWithConditionalStats } from 'app/search/d2-known-values';
-import { DestinyInventoryItemDefinition, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
+import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
+import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
+import { compareBy } from './comparators';
+import { isPlugStatActive } from './item-utils';
+import { LookupTable } from './util-types';
 
 interface DimPlugPerkDescription {
   perkHash: number;
@@ -23,7 +30,8 @@ interface DimPlugDescriptions {
 }
 
 // some stats are often referred to using different names
-const statNameAliases = {
+// TODO: these need to be localized?
+const statNameAliases: LookupTable<StatHashes, string[]> = {
   [StatHashes.AimAssistance]: ['Aim Assist'],
   [StatHashes.AmmoCapacity]: ['Magazine Stat'],
   [StatHashes.ReloadSpeed]: ['Reload'],
@@ -32,15 +40,23 @@ const statNameAliases = {
 const enhancedPerkToRegularPerk = _.mapValues(_.invert(perkToEnhanced), Number);
 
 export function usePlugDescriptions(
-  plug?: DestinyInventoryItemDefinition,
+  plug?: PluggableInventoryItemDefinition,
   stats?: {
     value: number;
     statHash: number;
-  }[]
+  }[],
+  /**
+   * If set, returns Bungie descriptions even when the descriptions setting is on Community only.
+   * Consumers set this if they can't display community descriptions.
+   */
+  forceUseBungieDescriptions?: boolean
 ): DimPlugDescriptions {
   const defs = useD2Definitions();
   const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
-  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
+  let descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
+  if (forceUseBungieDescriptions) {
+    descriptionsToDisplay = 'bungie';
+  }
 
   const result: DimPlugDescriptions = {
     perks: [],
@@ -66,7 +82,9 @@ export function usePlugDescriptions(
     for (const stat of stats) {
       const statDef = defs.Stat.get(stat.statHash);
       if (statDef) {
-        const statNames = [statDef.displayProperties.name].concat(statNameAliases[stat.statHash]);
+        const statNames = [statDef.displayProperties.name].concat(
+          statNameAliases[stat.statHash as StatHashes] ?? []
+        );
         for (const statName of statNames) {
           if (stat.value < 0) {
             statStrings.add(`${stat.value} ${statName}`);
@@ -109,7 +127,7 @@ export function usePlugDescriptions(
 }
 
 function getPerkDescriptions(
-  plug: DestinyInventoryItemDefinition,
+  plug: PluggableInventoryItemDefinition,
   defs: D2ManifestDefinitions,
   usedStrings: Set<string>
 ): DimPlugPerkDescription[] {
@@ -118,23 +136,8 @@ function getPerkDescriptions(
   const plugDescription = plug.displayProperties.description || undefined;
 
   function addPerkDescriptions() {
-    // Terrible hack here: Some subclass fragments behave like Charge Harvester, but use a number of hidden perks
-    // (which we can't associate with stats), But we also can't get the relevant classType in here,
-    // so just copy the "-10 to the stat that governs your class ability recharge rate" perk from Charge Harvester.
-    const perks = [...plug.perks];
-    if (
-      plug.hash === modsWithConditionalStats.echoOfPersistence ||
-      plug.hash === modsWithConditionalStats.sparkOfFocus
-    ) {
-      const chargeHarvesterDef = defs.InventoryItem.get(modsWithConditionalStats.chargeHarvester);
-      const perk = chargeHarvesterDef?.perks?.[1];
-      if (perk) {
-        perks.push(perk);
-      }
-    }
-
     // filter out things with no displayable text, or that are meant to be hidden
-    for (const perk of perks) {
+    for (const perk of plug.perks) {
       if (perk.perkVisibility === ItemPerkVisibility.Hidden) {
         continue;
       }
@@ -174,7 +177,7 @@ function getPerkDescriptions(
   function addDescriptionAsRequirement() {
     if (plugDescription && !usedStrings.has(plugDescription)) {
       results.push({
-        perkHash: 0,
+        perkHash: -usedStrings.size,
         requirement: plugDescription,
       });
       usedStrings.add(plugDescription);
@@ -183,10 +186,22 @@ function getPerkDescriptions(
   function addDescriptionAsFunctionality() {
     if (plugDescription && !usedStrings.has(plugDescription)) {
       results.push({
-        perkHash: 0,
+        perkHash: -usedStrings.size,
         description: plugDescription,
       });
       usedStrings.add(plugDescription);
+    }
+  }
+  function addTooltipNotifsAsRequirement() {
+    const notifs = plug.tooltipNotifications
+      .map((notif) => notif.displayString)
+      .filter((str) => !usedStrings.has(str));
+    for (const notif of notifs) {
+      results.push({
+        perkHash: -usedStrings.size,
+        requirement: notif,
+      });
+      usedStrings.add(notif);
     }
   }
 
@@ -207,11 +222,12 @@ function getPerkDescriptions(
 
     // if we already have some displayable perks, this means the description is basically
     // a "requirements" string like "This mod's perks are only active" etc. (see Deep Stone Crypt raid mods)
-    if (results.length > 0) {
+    if (results.length > 0 && activityModPlugCategoryHashes.includes(plug.plug.plugCategoryHash)) {
       addDescriptionAsRequirement();
     } else {
       addDescriptionAsFunctionality();
     }
+    addTooltipNotifsAsRequirement();
   } else {
     if (plugDescription) {
       addDescriptionAsFunctionality();
@@ -253,4 +269,48 @@ function getPerkDescriptions(
   }
 
   return results;
+}
+
+export function getPlugDefStats(
+  plugDef: PluggableInventoryItemDefinition,
+  classType: DestinyClass | undefined
+) {
+  return plugDef.investmentStats
+    .filter(
+      (stat) =>
+        (isAllowedItemStat(stat.statTypeHash) || isAllowedPlugStat(stat.statTypeHash)) &&
+        (classType === undefined || isModStatActive(classType, plugDef.hash, stat))
+    )
+    .map((stat) => ({
+      statHash: stat.statTypeHash,
+      value: stat.value,
+    }))
+    .sort(compareBy((stat) => getStatSortOrder(stat.statHash)));
+}
+
+export function getDimPlugStats(item: DimItem, plug: DimPlug) {
+  if (plug.stats) {
+    return Object.entries(plug.stats)
+      .map(([statHash, value]) => ({
+        statHash: parseInt(statHash, 10),
+        value,
+      }))
+      .filter(
+        (stat) =>
+          // Item stats are only shown if the item can actually benefit from them
+          ((isAllowedItemStat(stat.statHash) &&
+            item.stats?.some((itemStat) => itemStat.statHash === stat.statHash)) ||
+            isAllowedPlugStat(stat.statHash)) &&
+          isPlugStatActive(
+            item,
+            plug.plugDef,
+            stat.statHash,
+            Boolean(
+              plug.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statHash)
+                ?.isConditionallyActive
+            )
+          )
+      )
+      .sort(compareBy((stat) => getStatSortOrder(stat.statHash)));
+  }
 }

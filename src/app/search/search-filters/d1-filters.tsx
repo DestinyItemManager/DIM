@@ -209,15 +209,15 @@ const d1Filters: D1FilterDefinition[] = [
           return getItemYear(item) === 1;
         } else if (D1ActivityHashes.restricted[filterValue]) {
           return (
-            D1ActivityHashes.required[filterValue].some((sourceHash: number) =>
+            D1ActivityHashes.required[filterValue]?.some((sourceHash: number) =>
               item.sourceHashes.includes(sourceHash)
             ) &&
-            !D1ActivityHashes.restricted[filterValue].some((sourceHash: number) =>
+            !D1ActivityHashes.restricted[filterValue]?.some((sourceHash: number) =>
               item.sourceHashes.includes(sourceHash)
             )
           );
         } else {
-          return D1ActivityHashes.required[filterValue].some((sourceHash: number) =>
+          return D1ActivityHashes.required[filterValue]?.some((sourceHash: number) =>
             item.sourceHashes.includes(sourceHash)
           );
         }

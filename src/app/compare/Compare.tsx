@@ -27,11 +27,11 @@ import { Link } from 'react-router-dom';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
 import styles from './Compare.m.scss';
-import './compare.scss';
 import CompareItem from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
+import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
+import './compare.scss';
 import { CompareSession } from './reducer';
 import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
 
@@ -54,8 +54,6 @@ export interface MinimalStat {
   base?: number;
 }
 type StatGetter = (item: DimItem) => undefined | MinimalStat;
-
-const isTouch = 'ontouchstart' in window;
 
 // TODO: replace rows with Column from organizer
 // TODO: CSS grid-with-sticky layout
@@ -180,7 +178,7 @@ export default function Compare({ session }: { session: CompareSession }) {
         items={sortedComparisonItems}
         allStats={allStats}
         remove={remove}
-        setHighlight={isTouch ? undefined : setHighlight}
+        setHighlight={setHighlight}
         onPlugClicked={onPlugClicked}
         doCompareBaseStats={doCompareBaseStats}
         initialItemId={session.initialItemId}
@@ -228,10 +226,7 @@ export default function Compare({ session }: { session: CompareSession }) {
   return (
     <Sheet onClose={cancel} header={header} allowClickThrough>
       <div className="loadout-drawer compare">
-        <div
-          className={styles.bucket}
-          onMouseLeave={isTouch ? undefined : () => setHighlight(undefined)}
-        >
+        <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
           <div className={clsx('compare-item', styles.fixedLeft)}>
             <div className={styles.spacer} />
             {allStats.map((stat) => (
@@ -240,7 +235,7 @@ export default function Compare({ session }: { session: CompareSession }) {
                 className={clsx(styles.statLabel, {
                   [styles.sorted]: stat.id === sortedHash,
                 })}
-                onMouseOver={isTouch ? undefined : () => setHighlight(stat.id)}
+                onPointerEnter={() => setHighlight(stat.id)}
                 onClick={() => changeSort(stat.id)}
               >
                 {stat.displayProperties.hasIcon && (
@@ -248,7 +243,9 @@ export default function Compare({ session }: { session: CompareSession }) {
                     <BungieImage src={stat.displayProperties.icon} />
                   </span>
                 )}
-                {stat.id in statLabels ? t(statLabels[stat.id]) : stat.displayProperties.name}{' '}
+                {stat.id in statLabels
+                  ? t(statLabels[stat.id as StatHashes]!)
+                  : stat.displayProperties.name}{' '}
                 {stat.id === sortedHash && (
                   <AppIcon icon={sortBetterFirst ? faAngleRight : faAngleLeft} />
                 )}
@@ -262,6 +259,9 @@ export default function Compare({ session }: { session: CompareSession }) {
     </Sheet>
   );
 }
+
+// After this many pixels of dragging in either direction, we consider ourselves to be part of a scrolling gesture.
+const HORIZ_SCROLL_DRAG_THRESHOLD = 20;
 
 function CompareItems({
   items,
@@ -277,7 +277,7 @@ function CompareItems({
   items: DimItem[];
   allStats: StatInfo[];
   remove: (item: DimItem) => void;
-  setHighlight?: React.Dispatch<React.SetStateAction<string | number | undefined>>;
+  setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
   // This uses pointer events to directly set the scroll position based on
@@ -286,17 +286,26 @@ function CompareItems({
   // inertial animation after releasing.
 
   const ref = useRef<HTMLDivElement>(null);
-  const dragStateRef = useRef<{ scrollPosition: number; pointerDownPosition: number }>();
+  const dragStateRef = useRef<{
+    scrollPosition: number;
+    pointerDownPosition: number;
+    scrolling: boolean;
+  }>();
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     if (isEventFromFirefoxScrollbar(e)) {
+      return;
+    }
+
+    // Don't do any of this if the view isn't scrollable in the first place
+    if (ref.current!.scrollWidth <= ref.current!.clientWidth) {
       return;
     }
 
     dragStateRef.current = {
       pointerDownPosition: e.clientX,
       scrollPosition: ref.current!.scrollLeft,
+      scrolling: false,
     };
-    ref.current!.setPointerCapture(e.pointerId);
   }, []);
   const handlePointerUp = useCallback((e: React.PointerEvent) => {
     dragStateRef.current = undefined;
@@ -305,6 +314,19 @@ function CompareItems({
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (dragStateRef.current !== undefined) {
       const { scrollPosition, pointerDownPosition } = dragStateRef.current;
+      // Once we've moved HORIZ_SCROLL_DRAG_THRESHOLD in either direction,
+      // constrain to horizontal scrolling only
+      dragStateRef.current.scrolling ||=
+        Math.abs(e.clientX - pointerDownPosition) > HORIZ_SCROLL_DRAG_THRESHOLD;
+      if (dragStateRef.current.scrolling) {
+        // Only set the pointer capture once we've moved enough. This allows you
+        // to still keep scrolling even if the pointer leaves the scrollable
+        // area (which feels nice) but buttons still work. If we always capture
+        // in handlePointerDown, buttons won't work because all events get
+        // retargeted to the scroll area.
+        ref.current!.setPointerCapture(e.pointerId);
+        e.stopPropagation();
+      }
       ref.current!.scrollLeft = scrollPosition - (e.clientX - pointerDownPosition);
     }
   }, []);

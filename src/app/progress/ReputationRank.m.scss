@@ -58,9 +58,11 @@
 
 .winStreak {
   margin-top: 5px;
+  gap: 4px;
   & > :global(.objective-checkbox) {
     height: 14px;
     width: 14px;
+    margin: 0;
     &:global(.objective-complete) {
       opacity: 1;
       /* yellow for crucibles, green override for gambit */

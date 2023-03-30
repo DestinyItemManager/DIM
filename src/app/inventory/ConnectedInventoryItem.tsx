@@ -4,10 +4,9 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { queryValidSelector, searchFilterSelector } from '../search/search-filter';
 import { wishListSelector } from '../wishlists/selectors';
-import { getNotes, getTag } from './dim-item-info';
 import InventoryItem from './InventoryItem';
 import { DimItem } from './item-types';
-import { isNewSelector, itemHashTagsSelector, itemInfosSelector } from './selectors';
+import { hasNotesSelector, isNewSelector, tagSelector } from './selectors';
 
 const autoLockTaggedSelector = settingSelector('autoLockTagged');
 
@@ -35,16 +34,14 @@ export default function ConnectedInventoryItem({
   dimArchived?: boolean;
 }) {
   // TODO: maybe send these down via Context?
-  const itemInfos = useSelector(itemInfosSelector);
-  const itemHashTags = useSelector(itemHashTagsSelector);
-  const tag = getTag(item, itemInfos, itemHashTags);
+  const tag = useSelector(tagSelector(item));
   const currentFilter = useSelector(searchFilterSelector);
   const validQuery = useSelector(queryValidSelector);
   const autoLockTagged = useSelector(autoLockTaggedSelector);
   const defaultFilterActive = currentFilter === _.stubTrue;
 
   const isNew = useSelector(isNewSelector(item));
-  const notes = getNotes(item, itemInfos, itemHashTags) ? true : false;
+  const hasNotes = useSelector(hasNotesSelector(item));
   const wishlistRoll = useSelector(wishListSelector(item));
   const searchHidden =
     // dim this item if there's no search filter and it's archived
@@ -58,7 +55,7 @@ export default function ConnectedInventoryItem({
         item={item}
         isNew={isNew}
         tag={tag}
-        notes={notes}
+        hasNotes={hasNotes}
         wishlistRoll={wishlistRoll}
         onClick={onClick}
         onShiftClick={onShiftClick}
@@ -73,7 +70,7 @@ export default function ConnectedInventoryItem({
       innerRef,
       isNew,
       item,
-      notes,
+      hasNotes,
       onClick,
       onDoubleClick,
       onShiftClick,

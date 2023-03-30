@@ -2,7 +2,7 @@ import 'app/dim-ui/EnergyMeterIncrements.scss';
 import { t } from 'app/i18next-t';
 import { insertPlug } from 'app/inventory/advanced-write-actions';
 import { DimItem } from 'app/inventory/item-types';
-import { energyUpgrade, sumModCosts } from 'app/inventory/store/energy';
+import { getEnergyUpgradeHashes, sumModCosts } from 'app/inventory/store/energy';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, disabledIcon, enabledIcon } from 'app/shell/icons';
@@ -35,8 +35,8 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
     .fill('unused', 0, Math.max(minCapacity, hoverEnergyCapacity || previewCapacity || 0))
     .fill('used', 0, item.energy.energyUsed);
 
-  const onMouseOver = (i: number) => setHoverEnergyCapacity(i);
-  const onMouseOut = () => setHoverEnergyCapacity(0);
+  const handleHoverStart = (i: number) => setHoverEnergyCapacity(i);
+  const handleHoverEnd = () => setHoverEnergyCapacity(0);
   const previewUpgrade = (i: number) => setPreviewCapacity(Math.max(minCapacity, i));
   const resetPreview = () => setPreviewCapacity(energyCapacity);
 
@@ -54,7 +54,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
       return;
     }
 
-    const upgradeMods = energyUpgrade(item, previewCapacity);
+    const upgradeMods = getEnergyUpgradeHashes(item, previewCapacity);
     const socket = getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier)!;
 
     try {
@@ -83,8 +83,8 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
               className={clsx(incrementStyle, {
                 [styles.clickable]: i + 1 > energyCapacity,
               })}
-              onMouseOver={() => onMouseOver(i + 1)}
-              onMouseOut={onMouseOut}
+              onPointerEnter={() => handleHoverStart(i + 1)}
+              onPointerLeave={handleHoverEnd}
               onClick={() => previewUpgrade(i + 1)}
             />
           ))}
@@ -134,7 +134,7 @@ function EnergyUpgradePreview({
     return null;
   }
 
-  const energyModHashes = energyUpgrade(item, previewCapacity);
+  const energyModHashes = getEnergyUpgradeHashes(item, previewCapacity);
   const costs = sumModCosts(
     defs,
     energyModHashes.map((h) => defs.InventoryItem.get(h))

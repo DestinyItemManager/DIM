@@ -1,5 +1,6 @@
 import { D1ObjectiveDefinition } from 'app/destiny1/d1-manifest-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { HashLookup } from 'app/utils/util-types';
 import {
   DestinyInventoryItemDefinition,
   DestinyObjectiveDefinition,
@@ -90,14 +91,16 @@ export function isFlawlessPassage(objectives: DestinyObjectiveProgress[] | undef
   return objectives?.some((obj) => isFlawlessObjective(obj.objectiveHash) && obj.complete);
 }
 
+const trialsObjectives: HashLookup<string> = trialsHashes.objectives;
+
 export function isFlawlessObjective(objectiveHash: number) {
-  return trialsHashes.objectives[objectiveHash] === 'Flawless';
+  return trialsObjectives[objectiveHash] === 'Flawless';
 }
 
 export function isWinsObjective(objectiveHash: number) {
-  return trialsHashes.objectives[objectiveHash] === 'Wins';
+  return trialsObjectives[objectiveHash] === 'Wins';
 }
 
 export function isRoundsWonObjective(objectiveHash: number) {
-  return trialsHashes.objectives[objectiveHash] === 'Rounds Won';
+  return trialsObjectives[objectiveHash] === 'Rounds Won';
 }

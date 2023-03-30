@@ -1,20 +1,20 @@
-import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
+import { DimLanguage } from 'app/i18n';
+import { TagValue } from 'app/inventory/dim-item-info';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { errorLog } from 'app/utils/log';
 import { WishListRoll } from 'app/wishlists/types';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { ItemInfos } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
   allItemsSelector,
   currentStoreSelector,
   displayableBucketHashesSelector,
-  itemHashTagsSelector,
-  itemInfosSelector,
+  getNotesSelector,
+  getTagSelector,
   newItemsSelector,
   sortedStoresSelector,
 } from '../inventory/selectors';
@@ -24,12 +24,12 @@ import { querySelector } from '../shell/selectors';
 import { wishListFunctionSelector, wishListsByHashSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import {
-  canonicalFilterFormats,
   FilterContext,
   FilterDefinition,
   ItemFilter,
+  canonicalFilterFormats,
 } from './filter-types';
-import { parseQuery, QueryAST } from './query-parser';
+import { QueryAST, parseQuery } from './query-parser';
 import { SearchConfig, searchConfigSelector } from './search-config';
 import { parseAndValidateQuery, rangeStringToComparator } from './search-utils';
 
@@ -50,8 +50,8 @@ export const filterContextSelector = createSelector(
   wishListFunctionSelector,
   wishListsByHashSelector,
   newItemsSelector,
-  itemInfosSelector,
-  itemHashTagsSelector,
+  getTagSelector,
+  getNotesSelector,
   languageSelector,
   customStatsSelector,
   d2ManifestSelector,
@@ -66,11 +66,9 @@ function makeFilterContext(
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined,
   wishListsByHash: _.Dictionary<WishListRoll[]>,
   newItems: Set<string>,
-  itemInfos: ItemInfos,
-  itemHashTags: {
-    [itemHash: string]: ItemHashTag;
-  },
-  language: string,
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
+  language: DimLanguage,
   customStats: Settings['customStats'],
   d2Definitions: D2ManifestDefinitions | undefined
 ): FilterContext {
@@ -81,8 +79,8 @@ function makeFilterContext(
     loadoutsByItem,
     wishListFunction,
     newItems,
-    itemInfos,
-    itemHashTags,
+    getTag,
+    getNotes,
     language,
     customStats,
     wishListsByHash,
@@ -123,7 +121,7 @@ export const validateQuerySelector = createSelector(
   searchConfigSelector,
   filterContextSelector,
   (searchConfig, filterContext) => (query: string) =>
-    parseAndValidateQuery(query, searchConfig, filterContext)
+    parseAndValidateQuery(query, searchConfig.filtersMap, filterContext)
 );
 
 /** Whether the current search query is valid. */
@@ -134,7 +132,7 @@ export const queryValidSelector = createSelector(
 );
 
 function makeSearchFilterFactory(
-  { isFilters, kvFilters }: SearchConfig,
+  { filtersMap: { isFilters, kvFilters } }: SearchConfig,
   filterContext: FilterContext
 ) {
   return (query: string): ItemFilter => {

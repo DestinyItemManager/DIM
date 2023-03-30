@@ -5,16 +5,17 @@ import { VENDORS } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
+import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
 import { PressTip } from '../dim-ui/PressTip';
 import FactionIcon from '../progress/FactionIcon';
-import { D2Vendor } from './d2-vendors';
-import { VendorItem } from './vendor-item';
 import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
+import { D2Vendor } from './d2-vendors';
+import { VendorItem } from './vendor-item';
 
 function vendorItemIndex(item: VendorItem) {
   return item.key;
@@ -164,8 +165,9 @@ export default function VendorItems({
             </div>
           </div>
         )}
-        {Object.entries(itemsByCategory).map(
-          ([categoryIndex, items]) =>
+        {Object.entries(itemsByCategory).map(([categoryIndexStr, items]) => {
+          const categoryIndex = parseInt(categoryIndexStr, 10);
+          return (
             vendor.def.displayCategories[categoryIndex] &&
             !ignoreCategories.includes(vendor.def.displayCategories[categoryIndex].identifier) && (
               <div className={styles.vendorRow} key={categoryIndex}>
@@ -193,7 +195,10 @@ export default function VendorItems({
                             key={vendorItem.key}
                             item={vendorItem}
                             owned={Boolean(
-                              ownedItemHashes?.has(vendorItem.item.hash) || vendorItem.owned
+                              ownedItemHashes?.has(vendorItem.item.hash) ||
+                                vendorItem.owned ||
+                                (vendorItem.item.hash in focusingItemOutputs &&
+                                  ownedItemHashes?.has(focusingItemOutputs[vendorItem.item.hash]!))
                             )}
                             characterId={characterId}
                           />
@@ -202,7 +207,8 @@ export default function VendorItems({
                 </div>
               </div>
             )
-        )}
+          );
+        })}
       </div>
     </div>
   );

@@ -1,41 +1,58 @@
-import { DimItem } from 'app/inventory/item-types';
 import { d2MissingIcon } from 'app/search/d2-known-values';
-import { BucketHashes } from 'data/d2/generated-enums';
-import legs from 'destiny-icons/armor_types/boots.svg';
-import chest from 'destiny-icons/armor_types/chest.svg';
-import classItem from 'destiny-icons/armor_types/class.svg';
-import gauntlets from 'destiny-icons/armor_types/gloves.svg';
-import helmet from 'destiny-icons/armor_types/helmet.svg';
-import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
-import ghost from 'destiny-icons/general/ghost.svg';
-import powerWeapon from 'destiny-icons/general/power_weapon.svg';
-import dmgKinetic from 'destiny-icons/weapons/damage_kinetic.svg';
+import clsx from 'clsx';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import BungieImage from '../BungieImage';
+import styles from './BucketIcon.m.scss';
+import { ItemCategoryIcon, getBucketSvgIcon, itemCategoryIcons } from './itemCategory';
 
-const bucketIcons = {
-  [BucketHashes.KineticWeapons]: dmgKinetic,
-  [BucketHashes.EnergyWeapons]: energyWeapon,
-  [BucketHashes.PowerWeapons]: powerWeapon,
-  [BucketHashes.Helmet]: helmet,
-  [BucketHashes.Gauntlets]: gauntlets,
-  [BucketHashes.ChestArmor]: chest,
-  [BucketHashes.LegArmor]: legs,
-  [BucketHashes.ClassArmor]: classItem,
-  [BucketHashes.Ghost]: ghost,
-};
+type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> &
+  (
+    | {
+        icon: ItemCategoryIcon;
+      }
+    | {
+        bucketHash: BucketHashes;
+      }
+    | {
+        itemCategoryHash: ItemCategoryHashes;
+      }
+  );
 
-type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> & {
-  item: DimItem;
-};
+function resolveIcon(props: BucketIconProps) {
+  if ('icon' in props) {
+    const { icon, ...otherProps } = props;
+    return {
+      icon,
+      otherProps,
+    };
+  } else if ('bucketHash' in props) {
+    const { bucketHash, ...otherProps } = props;
+    return {
+      icon: getBucketSvgIcon(bucketHash),
+      otherProps,
+    };
+  } else {
+    const { itemCategoryHash, ...otherProps } = props;
+    return {
+      icon: itemCategoryIcons[itemCategoryHash],
+      otherProps,
+    };
+  }
+}
 
-/** given an item, returns an img. ideally an svg img icon for the item's bucket */
+/** returns an img corresponding to the specified bucket or item category */
 export default function BucketIcon(props: BucketIconProps) {
-  const { item, ...otherProps } = props;
-  const svg = bucketIcons[item.bucket.hash];
-  return svg ? (
-    <img src={svg} {...otherProps} />
+  const resolved = resolveIcon(props);
+  return resolved.icon ? (
+    <img
+      src={resolved.icon.svg}
+      {...resolved.otherProps}
+      className={clsx(props.className, styles.icon, {
+        [styles.colorized]: resolved.icon.colorized,
+      })}
+    />
   ) : (
-    <BungieImage src={d2MissingIcon} {...otherProps} />
+    <BungieImage src={d2MissingIcon} {...resolved.otherProps} />
   );
 }

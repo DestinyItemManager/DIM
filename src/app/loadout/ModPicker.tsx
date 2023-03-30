@@ -9,8 +9,8 @@ import { ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import {
-  armor2PlugCategoryHashesByName,
   MAX_ARMOR_ENERGY_CAPACITY,
+  armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
@@ -30,7 +30,7 @@ import {
   knownModPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
 } from './known-values';
-import { isInsertableArmor2Mod, sortModGroups, sortMods } from './mod-utils';
+import { isInsertableArmor2Mod, sortModGroups } from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
 import { PlugSet } from './plug-drawer/types';
 
@@ -43,11 +43,11 @@ interface ProvidedProps {
   /** An array of mods that are already selected by the user. */
   lockedMods: ResolvedLoadoutMod[];
   /** The character class we'll show unlocked mods for. */
-  classType?: DestinyClass;
+  classType: DestinyClass;
   /**
    * The store ID that we're picking mods for. Used to restrict mods to those unlocked by that store.
    */
-  owner?: string;
+  owner: string;
   /** A query string that is passed to the filtering logic to prefilter the available mods. */
   initialQuery?: string;
   /** Only show mods that are in these categories. No restriction if this is not provided. */
@@ -251,7 +251,7 @@ function mapStateToProps() {
  * chosen too many mods. It also can be filtered down to a specific set of mods
  * using plugCategoryHashWhitelist.
  */
-function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Props) {
+function ModPicker({ plugSets, classType, lockedMods, initialQuery, onAccept, onClose }: Props) {
   // Partition the locked (selected) mods into ones that will be shown in this
   // picker (based on plugCategoryHashWhitelist) and ones that will not. The
   // ones that won't (hidden mods) are still part of the locked mods set and
@@ -291,9 +291,9 @@ function ModPicker({ plugSets, lockedMods, initialQuery, onAccept, onClose }: Pr
       acceptButtonText={t('LB.SelectMods')}
       initialQuery={initialQuery}
       plugSets={plugSets}
+      classType={classType}
       isPlugSelectable={isModSelectable}
       sortPlugGroups={sortModPickerPlugGroups}
-      sortPlugs={sortMods}
       onAccept={onAcceptWithHiddenSelectedMods}
       onClose={onClose}
     />

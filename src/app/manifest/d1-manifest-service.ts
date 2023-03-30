@@ -5,6 +5,7 @@ import { del, get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
+import { AllDestinyManifestComponents } from 'bungie-api-ts/destiny2';
 import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
 import { reportException } from '../utils/exceptions';
@@ -20,15 +21,15 @@ const localStorageKey = 'd1-manifest-version';
 const idbKey = 'd1-manifest';
 let version: string | null = null;
 
-const getManifestAction: ThunkResult<object> = dedupePromise((dispatch) =>
+const getManifestAction: ThunkResult<AllDestinyManifestComponents> = dedupePromise((dispatch) =>
   dispatch(doGetManifest())
 );
 
-export function getManifest(): ThunkResult<object> {
+export function getManifest(): ThunkResult<AllDestinyManifestComponents> {
   return getManifestAction;
 }
 
-function doGetManifest(): ThunkResult<object> {
+function doGetManifest(): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Load')));
     try {

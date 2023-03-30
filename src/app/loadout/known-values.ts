@@ -27,3 +27,8 @@ export const knownModPlugCategoryHashes = [
   ...activityModPlugCategoryHashes,
   PlugCategoryHashes.EnhancementsArtifice,
 ];
+
+/**
+ * This hash is set for plugs that aren't included in an ingame loadout.
+ */
+export const UNSET_PLUG_HASH = 2166136261;

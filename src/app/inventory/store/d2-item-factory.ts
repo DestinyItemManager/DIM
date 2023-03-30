@@ -4,8 +4,8 @@ import { t } from 'app/i18next-t';
 import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
 import {
   D2ItemTiers,
-  d2MissingIcon,
   THE_FORBIDDEN_BUCKET,
+  d2MissingIcon,
   uniqueEquipBuckets,
 } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
@@ -430,7 +430,7 @@ export function makeItem(
         ? // equipped armor gets marked as that character's class
           owner.classType
         : // unequipped armor gets marked "no class"
-          -1
+          DestinyClass.Classified
       : // other items are marked "any class"
         DestinyClass.Unknown
     : itemDef.classType;
@@ -543,10 +543,10 @@ export function makeItem(
     ).displayProperties;
   }
 
-  if (extendedICH[createdItem.hash]) {
+  if (createdItem.hash in extendedICH) {
     createdItem.itemCategoryHashes = [
       ...createdItem.itemCategoryHashes,
-      extendedICH[createdItem.hash],
+      extendedICH[createdItem.hash]!,
     ];
     // Masks are helmets too
     if (extendedICH[createdItem.hash] === ItemCategoryHashes.Mask) {
@@ -671,8 +671,8 @@ export function makeItem(
     }
   }
 
-  if (extendedBreaker[createdItem.hash]) {
-    createdItem.breakerType = defs.BreakerType.get(extendedBreaker[createdItem.hash]);
+  if (createdItem.hash in extendedBreaker) {
+    createdItem.breakerType = defs.BreakerType.get(extendedBreaker[createdItem.hash]!);
   }
 
   // TODO: compute this on demand

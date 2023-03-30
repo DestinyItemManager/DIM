@@ -34,7 +34,11 @@ export default React.memo(function EnabledColumnsSelector({
     const dropdownLabel = column.columnGroup
       ? column.columnGroup.dropdownLabel
       : column.dropdownLabel;
-    if (id === 'selection' || column.noHide) {
+    if (
+      id === 'selection' ||
+      column.noHide ||
+      (column.limitToClass !== undefined && column.limitToClass !== forClass)
+    ) {
       continue;
     }
 

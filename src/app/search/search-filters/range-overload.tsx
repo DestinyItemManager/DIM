@@ -38,7 +38,7 @@ const overloadedRangeFilters: FilterDefinition[] = [
       return (item) =>
         Boolean(
           item.masterworkInfo?.stats?.some(
-            (s) => filterValue === 'any' || s.hash === searchedMasterworkStatHash
+            (s) => filterValue === 'any' || (s.isPrimary && s.hash === searchedMasterworkStatHash)
           )
         );
     },

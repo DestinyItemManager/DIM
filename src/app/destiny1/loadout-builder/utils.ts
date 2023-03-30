@@ -15,6 +15,11 @@ import {
   SetType,
 } from './types';
 
+export interface ItemWithBonus {
+  item: D1ItemWithNormalStats;
+  bonusType: string;
+}
+
 function getBonusType(armorpiece: D1ItemWithNormalStats): string {
   if (!armorpiece.normalStats) {
     return '';
@@ -32,7 +37,7 @@ function getBestItem(
   type: string,
   scaleTypeArg: 'base' | 'scaled',
   nonExotic = false
-) {
+): ItemWithBonus {
   // for specific armor (Helmet), look at stats (int/dis), return best one.
   return {
     item: _.maxBy(armor, (o) => {
@@ -56,10 +61,7 @@ function getBestItem(
 }
 
 export function calcArmorStats(
-  pieces: {
-    item: D1ItemWithNormalStats;
-    bonusType: string;
-  }[],
+  pieces: ItemWithBonus[],
   stats: ArmorSet['stats'],
   scaleTypeArg: 'base' | 'scaled'
 ) {
@@ -107,12 +109,7 @@ export function getBonusConfig(armor: ArmorSet['armor']): { [armorType in ArmorT
   };
 }
 
-export function genSetHash(
-  armorPieces: {
-    item: D1ItemWithNormalStats;
-    bonusType: string;
-  }[]
-) {
+export function genSetHash(armorPieces: ItemWithBonus[]) {
   let hash = '';
   for (const armorPiece of armorPieces) {
     hash += armorPiece.item.id;
@@ -138,7 +135,7 @@ export function getBestArmor(
     { stats: [1735777505], type: 'dis' },
     { stats: [4244567218], type: 'str' },
   ];
-  const armor = {};
+  const armor: Partial<Record<ArmorTypes, ItemWithBonus[]>> = {};
   let best: { item: D1ItemWithNormalStats; bonusType: string }[] = [];
   let curbest;
   let bestCombs: { item: D1ItemWithNormalStats; bonusType: string }[];
@@ -159,7 +156,7 @@ export function getBestArmor(
       let hasPerks: (item: D1Item) => boolean = (_i) => true;
 
       if (!_.isEmpty(lockedPerks[armortype])) {
-        const lockedPerkKeys = Object.keys(lockedPerks[armortype]);
+        const lockedPerkKeys = Object.keys(lockedPerks[armortype]).map((k) => parseInt(k, 10));
         const andPerkHashes = lockedPerkKeys
           .filter((perkHash) => lockedPerks[armortype][perkHash].lockType === 'and')
           .map(Number);
@@ -244,10 +241,10 @@ export function getActiveHighestSets(
 export function mergeBuckets<T extends any[]>(
   bucket1: { [armorType in ArmorTypes]: T },
   bucket2: { [armorType in ArmorTypes]: T }
-): { [armorType in ArmorTypes]: T } {
-  const merged = {};
+) {
+  const merged: Partial<{ [armorType in ArmorTypes]: T }> = {};
   for (const [type, bucket] of Object.entries(bucket1)) {
-    merged[type] = bucket.concat(bucket2[type]);
+    merged[type as ArmorTypes] = bucket.concat(bucket2[type as ArmorTypes]) as T;
   }
   return merged as { [armorType in ArmorTypes]: T };
 }

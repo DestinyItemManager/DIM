@@ -13,7 +13,7 @@ export function buildLoadoutParams(
   loadoutParameters: LoadoutParameters,
   searchQuery: string,
   statFilters: Readonly<{ [statType in ArmorStatHashes]: MinMaxIgnored }>,
-  statOrder: number[]
+  statOrder: ArmorStatHashes[]
 ): LoadoutParameters {
   const params: LoadoutParameters = {
     ...loadoutParameters,

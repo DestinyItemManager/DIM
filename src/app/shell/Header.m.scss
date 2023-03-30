@@ -99,7 +99,6 @@ $header-height: 44px;
 .menu {
   composes: resetButton from '../dim-ui/common.m.scss';
   position: relative;
-  margin-right: none !important;
   margin-left: 16px !important;
 }
 

@@ -22,8 +22,6 @@ import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-const DISPLAYED_PLUG_STATS = [StatHashes.AspectEnergyCapacity];
-
 type PlugSetWithDefaultPlug = PlugSet & { defaultPlug: PluggableInventoryItemDefinition };
 
 /**
@@ -43,7 +41,7 @@ export default function SubclassPlugDrawer({
   const defs = useD2Definitions()!;
   const profileResponse = useSelector(profileResponseSelector);
 
-  const { plugSets, aspects, fragments, sortPlugs, sortPlugGroups } = useMemo(() => {
+  const { plugSets, aspects, fragments, sortPlugGroups } = useMemo(() => {
     const initiallySelected = Object.values(socketOverrides)
       .map((hash) => defs.InventoryItem.get(hash))
       .filter(isPluggableItem);
@@ -58,9 +56,6 @@ export default function SubclassPlugDrawer({
     // A flat list of possible subclass plugs we use this to figure out how to sort plugs
     // and the different sections in the plug picker
     const flatPlugs = plugSets.flatMap((set) => set.plugs);
-    const sortPlugs = compareBy((plug: PluggableInventoryItemDefinition) =>
-      flatPlugs.indexOf(plug)
-    );
     // This ensures the plug groups are ordered by the socket order in the item def.
     // The order in the item def matches the order displayed in the game.
     const sortPlugGroups = compareBy(
@@ -70,7 +65,6 @@ export default function SubclassPlugDrawer({
       plugSets,
       aspects,
       fragments,
-      sortPlugs,
       sortPlugGroups,
     };
   }, [defs, profileResponse, socketOverrides, subclass]);
@@ -144,11 +138,10 @@ export default function SubclassPlugDrawer({
       searchPlaceholder={t('Loadouts.SubclassOptionsSearch', { subclass: subclass.name })}
       acceptButtonText={t('Loadouts.Apply')}
       plugSets={plugSets}
-      displayedStatHashes={DISPLAYED_PLUG_STATS}
+      classType={subclass.classType}
       onAccept={handleAccept}
       onClose={onClose}
       isPlugSelectable={isPlugSelectable}
-      sortPlugs={sortPlugs}
       sortPlugGroups={sortPlugGroups}
     />
   );

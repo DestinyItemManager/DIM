@@ -255,8 +255,8 @@ interface PerkMeta {
 export type PerkColumnsMeta = PerkMeta[][];
 
 function getBaseEnhancedPerkPair(perkHash: number) {
-  let base: number = enhancedToPerk[perkHash];
-  let enhanced: number = perkToEnhanced[perkHash];
+  let base = enhancedToPerk[perkHash];
+  let enhanced = perkToEnhanced[perkHash];
   if (!base && !enhanced) {
     return;
   }

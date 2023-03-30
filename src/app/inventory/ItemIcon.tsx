@@ -1,6 +1,7 @@
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
-import { d2MissingIcon } from 'app/search/d2-known-values';
+import { getBucketSvgIcon } from 'app/dim-ui/svgs/itemCategory';
+import { D2ItemTiers, d2MissingIcon, ItemTierName } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
 import { isModCostVisible } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -10,12 +11,14 @@ import pursuitComplete from 'images/highlightedObjective.svg';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
 
-const itemTierStyles = {
+const itemTierStyles: Record<ItemTierName, string> = {
   Legendary: styles.legendary,
   Exotic: styles.exotic,
   Common: styles.basic,
   Rare: styles.rare,
   Uncommon: styles.common,
+  Unknown: styles.common,
+  Currency: styles.common,
 };
 
 export function getItemImageStyles(item: DimItem, className?: string) {
@@ -25,13 +28,11 @@ export function getItemImageStyles(item: DimItem, className?: string) {
       (item.bucket.hash === BucketHashes.Subclass ||
         item.itemCategoryHashes.includes(ItemCategoryHashes.Packages))) ||
     item.isEngram;
-  const useClassifiedPlaceholder = item.icon === d2MissingIcon && item.classified;
   const itemImageStyles = clsx('item-img', className, {
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless,
     [styles.masterwork]: item.masterwork,
     [styles.deepsight]: item.deepsightInfo,
-    [styles.bucketIcon]: useClassifiedPlaceholder,
     [itemTierStyles[item.tier]]: !borderless && !item.plug,
   });
   return itemImageStyles;
@@ -45,13 +46,18 @@ export function getItemImageStyles(item: DimItem, className?: string) {
  * This renders just a fragment - it always needs to be rendered inside another div with class "item".
  */
 export default function ItemIcon({ item, className }: { item: DimItem; className?: string }) {
-  const useClassifiedPlaceholder = item.icon === d2MissingIcon && item.classified;
+  const classifiedPlaceholder =
+    item.icon === d2MissingIcon && item.classified && getBucketSvgIcon(item.bucket.hash);
   const itemImageStyles = getItemImageStyles(item, className);
-
   return (
     <>
-      {useClassifiedPlaceholder ? (
-        <BucketIcon item={item} className={itemImageStyles} />
+      {classifiedPlaceholder ? (
+        <BucketIcon
+          icon={classifiedPlaceholder}
+          className={clsx(itemImageStyles, {
+            [styles.inverted]: !classifiedPlaceholder.colorized,
+          })}
+        />
       ) : (
         <div style={bungieBackgroundStyle(item.icon)} className={itemImageStyles} />
       )}
@@ -114,7 +120,7 @@ export function DefItemIcon({
     },
     !borderless &&
       !itemDef.plug &&
-      itemDef.inventory && [itemTierStyles[itemDef.inventory.tierType]]
+      itemDef.inventory && [itemTierStyles[D2ItemTiers[itemDef.inventory.tierType]]]
   );
   const energyCost = getModCostInfo(itemDef);
 

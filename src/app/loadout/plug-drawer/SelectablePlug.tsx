@@ -1,9 +1,10 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { StatValue } from 'app/item-popup/PlugTooltip';
-import { usePlugDescriptions } from 'app/utils/plug-descriptions';
+import { getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { useCallback, useMemo } from 'react';
 import styles from './SelectablePlug.m.scss';
@@ -14,20 +15,20 @@ import styles from './SelectablePlug.m.scss';
  */
 export default function SelectablePlug({
   plug,
+  classType,
   selected,
   selectable,
   selectionType,
   removable,
-  displayedStatHashes,
   onPlugSelected,
   onPlugRemoved,
 }: {
   plug: PluggableInventoryItemDefinition;
+  classType: DestinyClass;
   selected: boolean;
   selectable: boolean;
   selectionType: 'multi' | 'single';
   removable: boolean;
-  displayedStatHashes?: number[];
   onPlugSelected: (plug: PluggableInventoryItemDefinition) => void;
   onPlugRemoved: (plug: PluggableInventoryItemDefinition) => void;
 }) {
@@ -39,8 +40,8 @@ export default function SelectablePlug({
 
   // Memoize the meat of the component as it doesn't need to re-render every time
   const plugDetails = useMemo(
-    () => <SelectablePlugDetails plug={plug} displayedStatHashes={displayedStatHashes} />,
-    [plug, displayedStatHashes]
+    () => <SelectablePlugDetails plug={plug} classType={classType} />,
+    [plug, classType]
   );
 
   return (
@@ -62,18 +63,15 @@ export default function SelectablePlug({
 
 function SelectablePlugDetails({
   plug,
-  displayedStatHashes,
+  classType,
 }: {
   plug: PluggableInventoryItemDefinition;
-  displayedStatHashes?: number[];
+  classType: DestinyClass;
 }) {
-  const displayedStats = plug.investmentStats.filter((stat) =>
-    displayedStatHashes?.includes(stat.statTypeHash)
-  );
-  const plugDescriptions = usePlugDescriptions(
-    plug,
-    displayedStats.map((stat) => ({ statHash: stat.statTypeHash, value: stat.value }))
-  );
+  const stats = getPlugDefStats(plug, classType);
+
+  // We don't show Clarity descriptions here due to layout concerns, see #9318 / #8641
+  const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ true);
   return (
     <>
       <div className="item" title={plug.displayProperties.name}>
@@ -89,10 +87,10 @@ function SelectablePlugDetails({
             )}
           </div>
         ))}
-        {displayedStats.length > 0 && (
+        {stats.length > 0 && (
           <div className="plug-stats">
-            {displayedStats.map((stat) => (
-              <StatValue key={stat.statTypeHash} statHash={stat.statTypeHash} value={stat.value} />
+            {stats.map((stat) => (
+              <StatValue key={stat.statHash} statHash={stat.statHash} value={stat.value} />
             ))}
           </div>
         )}

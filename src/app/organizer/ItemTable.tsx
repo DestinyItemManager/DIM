@@ -10,7 +10,8 @@ import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
   createItemContextSelector,
-  itemInfosSelector,
+  getNotesSelector,
+  getTagSelector,
   newItemsSelector,
   storesSelector,
 } from 'app/inventory/selectors';
@@ -34,6 +35,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
+import { LookupTable, StringLookup } from 'app/utils/util-types';
 import { hasWishListSelector, wishListFunctionSelector } from 'app/wishlists/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -52,10 +54,12 @@ import styles from './ItemTable.m.scss';
 import { armorTopLevelCatHashes, ItemCategoryTreeNode } from './ItemTypeSelector';
 import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
 
-const categoryToClass = {
-  23: DestinyClass.Hunter,
-  22: DestinyClass.Titan,
-  21: DestinyClass.Warlock,
+const possibleStyles = styles as unknown as StringLookup<string>;
+
+const categoryToClass: LookupTable<ItemCategoryHashes, DestinyClass> = {
+  [ItemCategoryHashes.Hunter]: DestinyClass.Hunter,
+  [ItemCategoryHashes.Titan]: DestinyClass.Titan,
+  [ItemCategoryHashes.Warlock]: DestinyClass.Warlock,
 };
 
 const downloadButtonSettings = [
@@ -104,7 +108,8 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
 
   const stores = useSelector(storesSelector);
-  const itemInfos = useSelector(itemInfosSelector);
+  const getTag = useSelector(getTagSelector);
+  const getNotes = useSelector(getNotesSelector);
   const wishList = useSelector(wishListFunctionSelector);
   const hasWishList = useSelector(hasWishListSelector);
   const enabledColumns = useSelector(settingSelector(columnSetting(itemType)));
@@ -116,9 +121,12 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
 
   const { customStats } = itemCreationContext;
 
-  const classCategoryHash =
-    categories.map((n) => n.itemCategoryHash).find((hash) => hash in categoryToClass) ?? 999;
-  const classIfAny: DestinyClass = categoryToClass[classCategoryHash] ?? DestinyClass.Unknown;
+  const classCategoryHash = categories
+    .map((n) => n.itemCategoryHash)
+    .find((hash) => hash in categoryToClass);
+  const classIfAny: DestinyClass = classCategoryHash
+    ? categoryToClass[classCategoryHash] ?? DestinyClass.Unknown
+    : DestinyClass.Unknown;
 
   // Calculate the true height of the table header, for sticky-ness
   const tableRef = useRef<HTMLDivElement>(null);
@@ -167,8 +175,8 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       getColumns(
         itemType,
         statHashes,
-        classIfAny,
-        itemInfos,
+        getTag,
+        getNotes,
         wishList,
         hasWishList,
         customStats,
@@ -182,9 +190,9 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       hasWishList,
       statHashes,
       itemType,
-      itemInfos,
+      getTag,
+      getNotes,
       customStats,
-      classIfAny,
       loadoutsByItem,
       newItems,
       destinyVersion,
@@ -197,10 +205,14 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     () =>
       _.compact(
         enabledColumns.flatMap((id) =>
-          columns.filter((column) => id === getColumnSelectionId(column))
+          columns.filter(
+            (column) =>
+              id === getColumnSelectionId(column) &&
+              (column.limitToClass === undefined || column.limitToClass === classIfAny)
+          )
         )
       ),
-    [columns, enabledColumns]
+    [columns, enabledColumns, classIfAny]
   );
 
   // process items into Rows
@@ -503,7 +515,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
           <div
             key={column.id}
             className={clsx(
-              styles[column.id],
+              possibleStyles[column.id],
               column.id.startsWith('customstat_') && styles.customstat,
               styles.header,
               {
@@ -646,7 +658,7 @@ function TableRow({
         <div
           key={column.id}
           onClick={onRowClick(row, column)}
-          className={clsx(styles[column.id], {
+          className={clsx(possibleStyles[column.id], {
             [styles.hasFilter]: column.filter,
             [styles.customstat]: column.id.startsWith('customstat_'),
           })}

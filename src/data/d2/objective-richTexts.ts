@@ -41,12 +41,12 @@ const richTextManifestSourceData = {
   '[Stasis: Glyph 2 Locked]': ['Objective', 1857129539],
   '[Stasis: Glyph 3 Locked]': ['Objective', 1481711502],
   '[Stasis]': ['Objective', 85761957],
+  '[Strand]': ['SandboxPerk', 501809574],
   '[Super]': ['SandboxPerk', 1330059512],
   '[Sword]': ['Objective', 1250089450],
   '[Trace Rifle]': ['Objective', 704693244],
   '[Void]': ['Objective', 33657378],
   '': ['Objective', 4231452845],
-  '': ['SandboxPerk', 501809574],
 } as const;
 
 export type StringsNeedingReplacement = keyof typeof richTextManifestSourceData;

@@ -3,16 +3,16 @@ import { collapsedSelector, settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
-import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { SetFilterButton } from 'app/dim-ui/SetFilterButton';
 import filterButtonStyles from 'app/dim-ui/SetFilterButton.m.scss';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t, tl } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
-import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemPopupTab } from 'app/item-popup/ItemPopupBody';
+import { hideItemPopup } from 'app/item-popup/item-popup';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
@@ -359,7 +359,11 @@ function ArmorStatsTriageSection({ item }: { item: DimItem }) {
           <div className={styles.header}>
             <div className={styles.statsHeaderLeft}>
               {t('Triage.YourBestItem')} (
-              <BucketIcon className={clsx(styles.inlineIcon, styles.weaponSvg)} item={item} />)
+              <BucketIcon
+                className={clsx(styles.inlineIcon, styles.weaponSvg)}
+                bucketHash={item.bucket.hash}
+              />
+              )
             </div>
             <div className={styles.statsHeaderRight}>{t('Triage.ThisItem')}</div>
           </div>

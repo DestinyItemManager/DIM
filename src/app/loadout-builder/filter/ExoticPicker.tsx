@@ -1,13 +1,14 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import Sheet from 'app/dim-ui/Sheet';
+import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { SearchInput } from 'app/search/SearchInput';
+import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { compareBy } from 'app/utils/comparators';
 import { socketContainsPlugWithCategory } from 'app/utils/socket-utils';
 import { uniqBy } from 'app/utils/util';
@@ -18,7 +19,7 @@ import noExoticIcon from 'images/noExotic.svg';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { LockableBucketHashes, LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC } from '../types';
+import { LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC, LockableBucketHashes } from '../types';
 import styles from './ExoticPicker.m.scss';
 import ExoticTile, { FakeExoticTile, LockedExoticWithPlugs } from './ExoticTile';
 
@@ -92,8 +93,9 @@ function findLockableExotics(
  * Filter exotics by any search query and group them by bucket
  */
 function filterAndGroupExotics(
+  defs: D2ManifestDefinitions,
   query: string,
-  language: string,
+  language: DimLanguage,
   lockableExotics: LockedExoticWithPlugs[]
 ) {
   const regexp = startWordRegexp(query, language);
@@ -110,6 +112,11 @@ function filterAndGroupExotics(
             (exoticMod) =>
               regexp.test(exoticMod.displayProperties.name) ||
               regexp.test(exoticMod.displayProperties.description)
+          ) ||
+          exotic.exoticPerk?.perks.some(
+            (perk) =>
+              perk.perkHash &&
+              regexp.test(defs.SandboxPerk.get(perk.perkHash)?.displayProperties.description)
           )
       )
     : lockableExotics;
@@ -146,8 +153,8 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
   );
 
   const filteredOrderedAndGroupedExotics = useMemo(
-    () => filterAndGroupExotics(query, language, lockableExotics),
-    [language, query, lockableExotics]
+    () => filterAndGroupExotics(defs, query, language, lockableExotics),
+    [defs, query, language, lockableExotics]
   );
 
   return (

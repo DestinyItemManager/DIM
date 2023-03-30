@@ -22,17 +22,32 @@ function extractCaret(stringWithCaretPlaceholder: string): [caretIndex: number, 
 }
 
 describe('autocompleteTermSuggestions', () => {
-  const searchConfig = buildSearchConfig(2);
+  const searchConfig = buildSearchConfig(2, 'en');
   const filterComplete = makeFilterComplete(searchConfig);
 
   const cases: [query: string, expected: string][] = [
     ['is:haspower is:b', 'is:haspower is:bow'],
     ['(is:blue ju|n)', '(is:blue tag:junk)'],
     ['is:bow is:v|oid', 'is:bow is:void'],
-    // TODO: range overloads should really work
-    ['season:>outl', 'Expected failure'],
+    ['season:>outl', 'season:>outlaw'],
     ['not(', 'Expected failure'],
   ];
+
+  const plainStringCases: [query: string, mockCandidate: string][] = [['jotu', 'jötunn']];
+
+  test.each(plainStringCases)(
+    'autocomplete within query for plain string match {%s} - {%s}',
+    (queryWithCaret, mockCandidate) => {
+      const [caretIndex, query] = extractCaret(queryWithCaret);
+      const candidates = autocompleteTermSuggestions(
+        query,
+        caretIndex,
+        () => [`name:"${mockCandidate}"`],
+        searchConfig
+      );
+      expect(candidates).toMatchSnapshot();
+    }
+  );
 
   test.each(cases)(
     'autocomplete within query for {%s}',
@@ -197,7 +212,7 @@ describe('filterSortRecentSearches', () => {
 });
 
 describe('filterComplete', () => {
-  const searchConfig = buildSearchConfig(2);
+  const searchConfig = buildSearchConfig(2, 'en');
   const filterComplete = makeFilterComplete(searchConfig);
 
   const terms = [['is:b'], ['jun'], ['sni'], ['stat:mob'], ['stat'], ['stat:'], ['ote']];

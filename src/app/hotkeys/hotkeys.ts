@@ -1,11 +1,12 @@
 import { t, tl } from 'app/i18next-t';
+import { StringLookup } from 'app/utils/util-types';
 import Mousetrap from 'mousetrap';
 
 // A unique ID generator
 let componentId = 0;
 export const getHotkeyId = () => componentId++;
 
-const map = {
+const map: StringLookup<string> = {
   command: '\u2318', // ⌘
   shift: '\u21E7', // ⇧
   left: '\u2190', // ←
@@ -16,7 +17,7 @@ const map = {
   backspace: '\u232B', // ⌫
 };
 
-const keyi18n = {
+const keyi18n: StringLookup<string> = {
   tab: tl('Hotkey.Tab'),
   enter: tl('Hotkey.Enter'),
 };
@@ -34,7 +35,7 @@ export function symbolize(combo: string) {
         part = window.navigator?.platform.includes('Mac') ? 'command' : 'ctrl';
       }
 
-      return keyi18n[part] ? t(keyi18n[part]) : map[part] || part;
+      return keyi18n[part] ? t(keyi18n[part]!) : map[part] || part;
     })
     .join(' + ');
 }

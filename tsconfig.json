@@ -5,7 +5,6 @@
     "esModuleInterop": true,
     "outDir": "./dist/",
     "sourceMap": true,
-    "suppressImplicitAnyIndexErrors": true,
     "module": "ESNext",
     "target": "ESNext",
     "jsx": "preserve",
@@ -28,10 +27,5 @@
       "*.css": ["config/css-stub.js"]
     }
   },
-  "include": ["./src/**/*", "config/feature-flags.ts"],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS"
-    }
-  }
+  "include": ["./src/**/*", "config/feature-flags.ts"]
 }

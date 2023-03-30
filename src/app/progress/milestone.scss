@@ -1,13 +1,7 @@
 @use '../variables.scss' as *;
 
-.milestone-quest {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  align-self: start;
-  transition: opacity 0.2s;
-
-  // copied from resetButton in common.m.scss:
+// copied from resetButton in common.m.scss:
+button.milestone-quest {
   color: inherit;
   text-align: left;
   appearance: none;
@@ -18,6 +12,15 @@
   cursor: pointer;
   font-size: inherit;
   font-family: inherit;
+}
+
+.milestone-quest {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  align-self: start;
+  transition: opacity 0.2s;
+  overflow: hidden;
 
   .complete {
     color: #a1a2a2;
@@ -50,7 +53,6 @@
 
   .milestone-name {
     font-size: 14px;
-    word-break: break-word;
   }
 
   .milestone-location {
@@ -68,6 +70,7 @@
 
   .milestone-info {
     flex: 1;
+    width: 0;
     display: flex;
     flex-direction: column;
 

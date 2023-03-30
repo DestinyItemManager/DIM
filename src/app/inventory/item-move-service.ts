@@ -1,4 +1,5 @@
-import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
+import { getCurrentHub } from '@sentry/browser';
+import { Span } from '@sentry/tracing';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import type { ItemTierName } from 'app/search/d2-known-values';
@@ -16,35 +17,29 @@ import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import {
-  equip as d1equip,
   equipItems as d1EquipItems,
   setItemState as d1SetItemState,
   transfer as d1Transfer,
+  equip as d1equip,
 } from '../bungie-api/destiny1-api';
 import {
-  equip as d2equip,
   equipItems as d2EquipItems,
   setLockState as d2SetLockState,
   setTrackedState as d2SetTrackedState,
   transfer as d2Transfer,
+  equip as d2equip,
 } from '../bungie-api/destiny2-api';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import { itemLockStateChanged, itemMoved } from './actions';
 import {
+  TagValue,
   characterDisplacePriority,
   equipReplacePriority,
-  getTag,
-  ItemInfos,
   vaultDisplacePriority,
 } from './dim-item-info';
 import { DimItem } from './item-types';
 import { getLastManuallyMoved } from './manual-moves';
-import {
-  currentStoreSelector,
-  itemHashTagsSelector,
-  itemInfosSelector,
-  storesSelector,
-} from './selectors';
+import { currentStoreSelector, getTagSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import {
   amountOfItem,
@@ -159,6 +154,13 @@ function updateItemModel(
   amount: number = item.amount
 ): ThunkAction<DimItem, RootState, undefined, AnyAction> {
   return (dispatch, getState) => {
+    const transaction = getCurrentHub()?.getScope()?.getTransaction();
+    let span: Span | undefined;
+    if (transaction) {
+      span = transaction.startChild({
+        op: 'updateItemModel',
+      });
+    }
     const stopTimer = timer('itemMovedUpdate');
     try {
       dispatch(itemMoved({ item, source, target, equip, amount }));
@@ -166,6 +168,7 @@ function updateItemModel(
       return getItemAcrossStores(stores, item) || item;
     } finally {
       stopTimer();
+      span?.finish();
     }
   };
 }
@@ -611,8 +614,7 @@ function chooseMoveAsideItem(
     };
   }
 
-  const itemInfos = itemInfosSelector(getState());
-  const itemHashTags = itemHashTagsSelector(getState());
+  const getTag = getTagSelector(getState());
 
   // A cached version of the space-left function
   const cachedSpaceLeft = _.memoize(
@@ -643,49 +645,44 @@ function chooseMoveAsideItem(
     otherStores.filter((s) => !s.isVault),
     (s) => s.lastPlayed.getTime()
   ).find((targetStore) =>
-    sortMoveAsideCandidatesForStore(
-      moveAsideCandidates,
-      target,
-      targetStore,
-      itemInfos,
-      itemHashTags,
-      item
-    ).find((candidate) => {
-      const spaceLeft = cachedSpaceLeft(targetStore, candidate);
+    sortMoveAsideCandidatesForStore(moveAsideCandidates, target, targetStore, getTag, item).find(
+      (candidate) => {
+        const spaceLeft = cachedSpaceLeft(targetStore, candidate);
 
-      if (target.isVault) {
-        // If we're moving from the vault
-        // If the target character has any space, put it there
-        if (candidate.amount <= spaceLeft) {
-          moveAsideCandidate = {
-            item: candidate,
-            target: targetStore,
-          };
-          return true;
+        if (target.isVault) {
+          // If we're moving from the vault
+          // If the target character has any space, put it there
+          if (candidate.amount <= spaceLeft) {
+            moveAsideCandidate = {
+              item: candidate,
+              target: targetStore,
+            };
+            return true;
+          }
+        } else {
+          // If we're moving from a character
+          // If there's exactly one *slot* left on the vault, and
+          // we're not moving the original item *from* the vault, put
+          // the candidate on another character in order to avoid
+          // gumming up the vault.
+          const openVaultAmount = cachedSpaceLeft(vault, candidate);
+          const openVaultSlotsBeforeMove = Math.floor(openVaultAmount / candidate.maxStackSize);
+          const openVaultSlotsAfterMove = Math.max(
+            0,
+            Math.floor((openVaultAmount - candidate.amount) / candidate.maxStackSize)
+          );
+          if (openVaultSlotsBeforeMove === 1 && openVaultSlotsAfterMove === 0 && spaceLeft) {
+            moveAsideCandidate = {
+              item: candidate,
+              target: targetStore,
+            };
+            return true;
+          }
         }
-      } else {
-        // If we're moving from a character
-        // If there's exactly one *slot* left on the vault, and
-        // we're not moving the original item *from* the vault, put
-        // the candidate on another character in order to avoid
-        // gumming up the vault.
-        const openVaultAmount = cachedSpaceLeft(vault, candidate);
-        const openVaultSlotsBeforeMove = Math.floor(openVaultAmount / candidate.maxStackSize);
-        const openVaultSlotsAfterMove = Math.max(
-          0,
-          Math.floor((openVaultAmount - candidate.amount) / candidate.maxStackSize)
-        );
-        if (openVaultSlotsBeforeMove === 1 && openVaultSlotsAfterMove === 0 && spaceLeft) {
-          moveAsideCandidate = {
-            item: candidate,
-            target: targetStore,
-          };
-          return true;
-        }
+
+        return false;
       }
-
-      return false;
-    })
+    )
   );
 
   // If we're moving off a character (into the vault) and we couldn't find a better match,
@@ -1077,10 +1074,7 @@ export function sortMoveAsideCandidatesForStore(
   moveAsideCandidates: DimItem[],
   fromStore: DimStore,
   targetStore: DimStore,
-  itemInfos: ItemInfos,
-  itemHashTags: {
-    [itemHash: string]: ItemHashTag;
-  },
+  getTag: (item: DimItem) => TagValue | undefined,
   /** The item we're trying to make space for. May be missing. */
   item?: DimItem
 ) {
@@ -1106,7 +1100,7 @@ export function sortMoveAsideCandidatesForStore(
       compareBy((i) => !fromStore.isVault && !itemCanBeEquippedBy(i, fromStore)),
       // Tagged items sort by orders defined in dim-item-info
       compareBy((i) => {
-        const tag = getTag(i, itemInfos, itemHashTags);
+        const tag = getTag(i);
         return -(fromStore.isVault ? vaultDisplacePriority : characterDisplacePriority).indexOf(
           tag || 'none'
         );
@@ -1158,8 +1152,7 @@ function searchForSimilarItem(
     return null;
   }
 
-  const itemInfos = itemInfosSelector(getState());
-  const itemHashTags = itemHashTagsSelector(getState());
+  const getTag = getTagSelector(getState());
 
   // A sort for items to use for ranking which item to use to replace the
   // already equipped item. The highest ranked items are the most likely to be
@@ -1173,7 +1166,7 @@ function searchForSimilarItem(
       // try to match type (e.g. scout rifle). TODO: look into using ItemSubType instead
       compareBy((i) => i.typeName === item.typeName),
       compareBy((i) => {
-        const tag = getTag(i, itemInfos, itemHashTags);
+        const tag = getTag(i);
         return -equipReplacePriority.indexOf(tag || 'none');
       }),
       // Prefer higher-tier items

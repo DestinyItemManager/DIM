@@ -15,7 +15,7 @@ import {
 } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
@@ -24,8 +24,8 @@ import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';
 import { filteredItemsSelector, searchFilterSelector } from 'app/search/search-filter';
 import {
-  addIcon,
   AppIcon,
+  addIcon,
   banIcon,
   editIcon,
   engramIcon,
@@ -49,8 +49,8 @@ import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { applyInGameLoadout } from '../ingame/ingame-loadout-apply';
 import InGameLoadoutIcon from '../ingame/InGameLoadoutIcon';
+import { applyInGameLoadout } from '../ingame/ingame-loadout-apply';
 import { inGameLoadoutsForCharacterSelector } from '../ingame/selectors';
 import {
   searchAndSortLoadoutsByQuery,
@@ -257,7 +257,7 @@ export default function LoadoutPopup({
 
         {!filteringLoadouts && dimStore.destinyVersion === 2 && (
           <li className={styles.menuItem}>
-            <Link to="../loadouts">
+            <Link to="../loadouts" state={{ storeId: dimStore.id }}>
               <AppIcon icon={faList} />
               <span>{t('Loadouts.ManageLoadouts')}</span>
             </Link>

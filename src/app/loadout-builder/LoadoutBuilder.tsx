@@ -1,18 +1,13 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createLoadoutShare } from 'app/dim-api/dim-api';
-import {
-  savedLoadoutParametersSelector,
-  savedLoStatConstraintsByClassSelector,
-} from 'app/dim-api/selectors';
+import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import usePrompt from 'app/dim-ui/usePrompt';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import usePrompt from 'app/dim-ui/usePrompt';
 import { t } from 'app/i18next-t';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import {
@@ -22,29 +17,28 @@ import {
 } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
-import { d2ManifestSelector, useD2Definitions } from 'app/manifest/selectors';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState } from 'app/store/types';
-import { compareBy } from 'app/utils/comparators';
-import { isArmor2Mod } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Draft } from 'immer';
 import _ from 'lodash';
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { createSelector } from 'reselect';
 import { allItemsSelector, unlockedPlugSetItemsSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
-import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import ModPicker from '../loadout/ModPicker';
+import { isLoadoutBuilderItem } from '../loadout/item-utils';
+import styles from './LoadoutBuilder.m.scss';
+import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import EnergyOptions from './filter/EnergyOptions';
 import LockArmorAndPerks from './filter/LockArmorAndPerks';
 import TierSelect from './filter/TierSelect';
@@ -54,64 +48,17 @@ import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
-import styles from './LoadoutBuilder.m.scss';
-import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
-import { useProcess } from './process/useProcess';
+import { useAutoMods, useProcess } from './process/useProcess';
 import {
   ArmorEnergyRules,
-  generalSocketReusablePlugSetHash,
   ItemsByBucket,
   LOCKED_EXOTIC_ANY_EXOTIC,
+  LockableBucketHash,
   loDefaultArmorEnergyRules,
 } from './types';
 
 /** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
 const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
-
-const statOrderSelector = (state: RootState) =>
-  savedLoadoutParametersSelector(state).statConstraints!.map((c) => c.statHash);
-
-/** A selector to pull out all half tier general mods so we can quick add them to sets. */
-const halfTierModsSelector = createSelector(
-  statOrderSelector,
-  d2ManifestSelector,
-  (statOrder, defs) => {
-    const halfTierMods: PluggableInventoryItemDefinition[] = [];
-
-    // Get all the item hashes for the general sockets whitelisted plugs.
-    const reusablePlugs =
-      defs?.PlugSet.get(generalSocketReusablePlugSetHash)?.reusablePlugItems.map(
-        (p) => p.plugItemHash
-      ) || [];
-
-    for (const plugHash of reusablePlugs) {
-      const plug = defs?.InventoryItem.get(plugHash);
-
-      // Pick out the plugs which have a +5 value for an armour stat. This has the potential to break
-      // if bungie adds more mods with these stats (this looks pretty unlikely as of March 2021).
-      if (
-        isPluggableItem(plug) &&
-        isArmor2Mod(plug) &&
-        plug.investmentStats.some(
-          (stat) => stat.value === 5 && armorStats.includes(stat.statTypeHash)
-        )
-      ) {
-        halfTierMods.push(plug);
-      }
-    }
-
-    // Sort the mods so they are in the same order as our stat filters. This ensures the desired stats
-    // will be enhanced first.
-    return halfTierMods.sort(
-      compareBy((mod) => {
-        const stat = mod.investmentStats.find(
-          (stat) => stat.value === 5 && armorStats.includes(stat.statTypeHash)
-        );
-        return statOrder.indexOf(stat!.statTypeHash);
-      })
-    );
-  }
-);
 
 /**
  * The Loadout Optimizer screen
@@ -136,14 +83,11 @@ export default memo(function LoadoutBuilder({
   const allItems = useSelector(allItemsSelector);
   const searchFilter = useSelector(searchFilterSelector);
   const searchQuery = useSelector(querySelector);
-  const halfTierMods = useSelector(halfTierModsSelector);
   const savedStatConstraintsByClass = useSelector(savedLoStatConstraintsByClassSelector);
 
   /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
   const items = useMemo(() => {
-    const items: {
-      [classType: number]: ItemsByBucket;
-    } = {};
+    const items: Partial<Record<DestinyClass, Draft<ItemsByBucket>>> = {};
     for (const item of allItems) {
       if (!item || !isLoadoutBuilderItem(item)) {
         continue;
@@ -155,9 +99,9 @@ export default memo(function LoadoutBuilder({
         [BucketHashes.ChestArmor]: [],
         [BucketHashes.LegArmor]: [],
         [BucketHashes.ClassArmor]: [],
-      })[bucket.hash].push(item);
+      })[bucket.hash as LockableBucketHash].push(item);
     }
-    return items;
+    return items as Partial<Record<DestinyClass, ItemsByBucket>>;
   }, [allItems]);
 
   const optimizingLoadoutId = preloadedLoadout?.id;
@@ -258,6 +202,21 @@ export default memo(function LoadoutBuilder({
   const enabledStats = useMemo(
     () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
     [statFilters]
+  );
+
+  const autoMods = useAutoMods(selectedStore.id);
+  // Half tier mods in stat order so that the quick-add button automatically adds them,
+  // but for stats we care about (and only if we're not adding mods ourselves)
+  const halfTierMods = useMemo(
+    () =>
+      (!loadoutParameters.autoStatMods &&
+        _.compact(
+          statOrder.map(
+            (statHash) => enabledStats.has(statHash) && autoMods.generalMods[statHash]?.minorMod
+          )
+        )) ||
+      [],
+    [autoMods.generalMods, enabledStats, loadoutParameters.autoStatMods, statOrder]
   );
 
   const loadouts = useMemo(() => {
@@ -521,20 +480,23 @@ export default memo(function LoadoutBuilder({
             notes={notes}
           />
         ) : (
-          <NoBuildsFoundExplainer
-            defs={defs}
-            dispatch={lbDispatch}
-            resolvedMods={resolvedMods}
-            lockedModMap={lockedModMap}
-            alwaysInvalidMods={unassignedMods}
-            autoAssignStatMods={autoStatMods}
-            armorEnergyRules={armorEnergyRules}
-            lockedExoticHash={lockedExoticHash}
-            statFilters={statFilters}
-            pinnedItems={pinnedItems}
-            filterInfo={filterInfo}
-            processInfo={result?.processInfo}
-          />
+          !processing && (
+            <NoBuildsFoundExplainer
+              defs={defs}
+              classType={classType}
+              dispatch={lbDispatch}
+              resolvedMods={resolvedMods}
+              lockedModMap={lockedModMap}
+              alwaysInvalidMods={unassignedMods}
+              autoAssignStatMods={autoStatMods}
+              armorEnergyRules={armorEnergyRules}
+              lockedExoticHash={lockedExoticHash}
+              statFilters={statFilters}
+              pinnedItems={pinnedItems}
+              filterInfo={filterInfo}
+              processInfo={result?.processInfo}
+            />
+          )
         )}
         {modPicker.open && (
           <Portal>
