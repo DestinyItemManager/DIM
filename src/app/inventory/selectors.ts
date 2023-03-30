@@ -346,6 +346,15 @@ export const dynamicStringsSelector = (state: RootState) => {
   }
 };
 
+export const artifactUnlocksSelector = currySelector(
+  createSelector(
+    profileResponseSelector,
+    (_state: RootState, characterId: string) => characterId,
+    (profileResponse: DestinyProfileResponse | undefined, characterId: string) =>
+      profileResponse && getArtifactUnlocks(profileResponse, characterId)
+  )
+);
+
 /** A flat list of all currently active artifact unlocks. */
 export function getArtifactUnlocks(
   profileResponse: DestinyProfileResponse,

@@ -28,11 +28,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
-import {
-  getArtifactUnlocks,
-  profileResponseSelector,
-  storesSelector,
-} from '../inventory/selectors';
+import { artifactUnlocksSelector, storesSelector } from '../inventory/selectors';
 import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
 import { deleteLoadout, updateLoadout } from './actions';
 import {
@@ -79,7 +75,6 @@ export default function LoadoutDrawer({
 }) {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
-  const profileResponse = useSelector(profileResponseSelector)!;
   const stores = useSelector(storesSelector);
   const [showingItemPicker, setShowingItemPicker] = useState(false);
   const {
@@ -161,6 +156,8 @@ export default function LoadoutDrawer({
   const tags = useSelector(loadoutsHashtagsSelector);
   useAutocomplete(ref, tags);
 
+  const artifactUnlocks = useSelector(artifactUnlocksSelector(storeId));
+
   if (!loadout || !store) {
     return null;
   }
@@ -221,8 +218,6 @@ export default function LoadoutDrawer({
     dispatch(deleteLoadout(loadout.id));
     close();
   };
-
-  const artifactUnlocks = profileResponse && getArtifactUnlocks(profileResponse, storeId);
 
   const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
     setLoadout(setNotes(e.target.value));

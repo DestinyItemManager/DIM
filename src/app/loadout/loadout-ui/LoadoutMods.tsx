@@ -1,10 +1,6 @@
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
-import {
-  getArtifactUnlocks,
-  profileResponseSelector,
-  unlockedPlugSetItemsSelector,
-} from 'app/inventory/selectors';
+import { artifactUnlocksSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -184,9 +180,9 @@ export const LoadoutMods = memo(function LoadoutMods({
 });
 
 /**
- * Shows saved mods in the loadout view.
+ * Shows artifact unlocks in the loadout view.
  */
-export const LoadoutArtifactUnlocks = memo(function LoadoutMods({
+export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
   loadout,
   storeId,
   onRemoveMod,
@@ -198,12 +194,8 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutMods({
   onSyncFromEquipped?: () => void;
 }) {
   const defs = useD2Definitions()!;
-  const profileResponse = useSelector(profileResponseSelector);
-  const unlockedArtifactMods = useMemo(
-    () =>
-      (profileResponse && getArtifactUnlocks(profileResponse, storeId)?.unlockedItemHashes) || [],
-    [profileResponse, storeId]
-  );
+  const unlockedArtifactMods = useSelector(artifactUnlocksSelector(storeId));
+
   const loadoutArtifactMods: ResolvedLoadoutMod[] = useMemo(
     () =>
       loadout.parameters?.artifactUnlocks?.unlockedItemHashes
@@ -223,7 +215,9 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutMods({
       {loadoutArtifactMods.length > 0 ? (
         <div className={styles.modsGrid}>
           {loadoutArtifactMods.map((mod) => {
-            const unlocked = unlockedArtifactMods.includes(mod.resolvedMod.hash);
+            const unlocked = unlockedArtifactMods?.unlockedItemHashes.includes(
+              mod.resolvedMod.hash
+            );
             return (
               <LoadoutModMemo
                 key={mod.resolvedMod.hash}
@@ -240,9 +234,11 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutMods({
         </div>
       ) : (
         onSyncFromEquipped && (
-          <button className="dim-button" type="button" onClick={onSyncFromEquipped}>
-            {t('Loadouts.SyncFromEquipped')}
-          </button>
+          <div className={styles.buttons}>
+            <button className="dim-button" type="button" onClick={onSyncFromEquipped}>
+              {t('Loadouts.SyncFromEquipped')}
+            </button>
+          </div>
         )
       )}
     </div>

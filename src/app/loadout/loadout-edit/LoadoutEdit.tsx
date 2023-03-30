@@ -5,8 +5,8 @@ import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
+  artifactUnlocksSelector,
   createItemContextSelector,
-  getArtifactUnlocks,
   profileResponseSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -92,7 +92,7 @@ export default function LoadoutEdit({
     [itemCreationContext, loadout.items, store, allItems, modsByBucket]
   );
 
-  const artifactUnlocks = profileResponse && getArtifactUnlocks(profileResponse, store.id);
+  const artifactUnlocks = useSelector(artifactUnlocksSelector(store.id));
 
   const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
   const clearUnsetMods = loadout.parameters?.clearMods;

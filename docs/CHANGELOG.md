@@ -9,6 +9,7 @@
 * Fixed an issue where some subclass fragments and armor mods would be missing descriptions in Loadout Optimizer and the Loadout editor.
 * The minor boosts to all stats that enhanced crafted and masterworked adept weapons have are now ignored in Organizer's "Masterwork Stat" column and by the `masterwork:statname` filter. Only the primary +10 boost is considered.
 * Sharing build settings directly from Loadout Optimizer will now also include subclass configuration.
+* DIM now saves Artifact configuration in Loadouts. Note that DIM cannot reconfigure your artifact automatically, but you can use this information to keep track of which artifact unlocks are important for a Loadout.
 
 ## 7.62.0 <span class="changelog-date">(2023-03-26)</span>
 
@@ -21,7 +22,6 @@
 * The icons for weapon slots have been changed to reflect how they work in game. What was the "kinetic" slot now shows kinetic, stasis, and strand icons while the "energy" slot shows solar, arc, and void icons.
 * On mobile, you can no longer accidentally scroll the whole page while viewing search results.
 * Clicking "Manage Loadouts" from the character menu will bring you to the Loadouts screen for that character instead of your active character.
-* DIM now saves Artifact configuration in Loadouts. Note that DIM cannot reconfigure your artifact automatically, but you can use this information to keep track of which artifact unlocks are important for a Loadout.
 
 ## 7.61.0 <span class="changelog-date">(2023-03-19)</span>
 
