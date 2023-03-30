@@ -4,10 +4,10 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DimStore } from 'app/inventory/store-types';
 import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
 import { ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
+import SubclassPlugDrawer from 'app/loadout/SubclassPlugDrawer';
 import { isLoadoutBuilderItem, pickSubclass } from 'app/loadout/item-utils';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { createGetModRenderKey } from 'app/loadout/mod-utils';
-import SubclassPlugDrawer from 'app/loadout/SubclassPlugDrawer';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
@@ -23,8 +23,8 @@ import {
 import { Portal } from 'app/utils/temp-container';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
 import ExoticArmorChoice from './ExoticArmorChoice';
 import ExoticPicker from './ExoticPicker';

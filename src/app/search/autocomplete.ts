@@ -4,7 +4,7 @@ import { chainComparator, compareBy, reverseComparator } from 'app/utils/compara
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
-import { makeCommentString, parseQuery, traverseAST } from './query-parser';
+import { QueryLexerOpenQuotesError, lexer, makeCommentString, parseQuery } from './query-parser';
 import { FiltersMap, SearchConfig, Suggestion } from './search-config';
 import freeformFilters, { plainString } from './search-filters/freeform';
 
@@ -237,62 +237,55 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
 
 const caretEndRegex = /([\s)]|$)/;
 
-// most times, insist on at least 3 typed characters, but for #, start suggesting immediately
-const lastWordRegex = /(\b[\w:"'<=>]{3,}|#\w*)$/;
-// matches a string that seems to end with a closing, not opening, quote
-const closingQuoteRegex = /\w["']$/;
-
 /**
- * Find the position of the last "complete" filter segment of the query before the caretIndex.
+ * Find the position of the last "incomplete" filter segment of the query before the caretIndex.
  *
  * For example, given the query (with the caret at |):
  * name:foo bar| baz
  * This should return { term: "bar", index: 9 }
  *
- * @returns the start index and term of the last complete filter
+ * @returns the start indexes of various points that could be incomplete filters
  */
-function findLastFilter(
-  query: string,
-  caretIndex: number
-): {
-  term: string;
-  index: number;
-} | null {
-  // TODO: maybe include non-whitespace after the caret?
-  const queryUpToCaret = query.slice(0, caretIndex);
-  const ast = parseQuery(queryUpToCaret);
-
-  // Find all the "bare" keywords at the end of the query. For example if the query is:
-  // name:foo bar baz
-  // then the trailingKeywordStrings are 'bar baz'
-  const trailingKeywordArgs: string[] = [];
-  traverseAST(
-    ast,
-    (filter) => {
-      if (filter.type === 'keyword' && !/\s+/.test(filter.args)) {
-        trailingKeywordArgs.push(filter.args);
-      } else {
-        return false;
+function findLastFilter(queryUpToCaret: string): number[] | null {
+  // Find the indexes where any incomplete filter starts. For example if the query is:
+  // name:"foo" bar baz
+  // then the open keywords are "bar baz" and "baz"
+  let incompleteFilterIndices: number[] = [];
+  try {
+    // We can use the query lexer for this to scan through tokens in the query without parsing the whole AST.
+    for (const token of lexer(queryUpToCaret)) {
+      switch (token.type) {
+        // We're trying to complete any filter. Maybe it's actually complete, which is OK because we just won't return a suggestion
+        case 'filter': {
+          if (
+            // Ignore complete quoted tokens, they're definitively finished.
+            !token.quoted
+          ) {
+            incompleteFilterIndices.push(token.startIndex);
+          } else {
+            incompleteFilterIndices = [];
+          }
+          break;
+        }
+        case 'and':
+        case 'or':
+        case 'implicit_and':
+          // ignore these - they neither start an incomplete filter section, nor end it
+          break;
+        default:
+          // reset, we saw something that's definitely not part of a filter
+          incompleteFilterIndices = [];
+          break;
       }
-    },
-    true // traverse in reverse
-  );
-  const trailingKeywordStrings = trailingKeywordArgs.reverse().join(' ');
-
-  // @TODO: This could be cleaner if the AST parser returned column locations; we wouldn't have to guess at indexes by doing space normalization
-  const spaceNormalizedQuery = queryUpToCaret.trim().replace(/\s+/, ' ');
-  const execResult = lastWordRegex.exec(queryUpToCaret);
-
-  if (trailingKeywordStrings && spaceNormalizedQuery.endsWith(trailingKeywordStrings)) {
-    const index = spaceNormalizedQuery.length - trailingKeywordStrings.length;
-    const term = spaceNormalizedQuery.substring(index);
-    return { term, index };
-  } else if (execResult) {
-    const [__, term] = execResult;
-    const { index } = execResult;
-    return { term, index };
+    }
+  } catch (e) {
+    // If the lexer failed because of unmatched quotes, that's *definitely* something to autocomplete!
+    if (e instanceof QueryLexerOpenQuotesError) {
+      incompleteFilterIndices = [e.startIndex];
+    }
   }
-  return null;
+
+  return incompleteFilterIndices;
 }
 
 /**
@@ -312,37 +305,45 @@ export function autocompleteTermSuggestions(
   // Seek to the end of the current part
   caretIndex = (caretEndRegex.exec(query.slice(caretIndex))?.index || 0) + caretIndex;
 
-  const lastFilter = findLastFilter(query, caretIndex);
-
-  if (!lastFilter || closingQuoteRegex.test(lastFilter.term)) {
+  const queryUpToCaret = query.slice(0, caretIndex);
+  const lastFilters = findLastFilter(queryUpToCaret);
+  if (!lastFilters) {
     return [];
   }
 
-  const base = query.slice(0, lastFilter.index);
-  const candidates = filterComplete(lastFilter.term);
+  // Find the first index that gives us suggestions and return those suggestions
+  for (const index of lastFilters) {
+    const base = query.slice(0, index);
+    const term = queryUpToCaret.substring(index);
+    const candidates = filterComplete(term);
 
-  // new query is existing query minus match plus suggestion
-  return candidates.map((word) => {
-    const filterDef = findFilter(word, searchConfig.filtersMap);
-    const newQuery = base + word + query.slice(caretIndex);
-    return {
-      query: {
-        fullText: newQuery,
-        body: newQuery,
-        helpText: filterDef
-          ? (Array.isArray(filterDef.description)
-              ? t(...filterDef.description)
-              : t(filterDef.description)
-            )?.replace(/\.$/, '')
-          : undefined,
-      },
-      type: SearchItemType.Autocomplete,
-      highlightRange: {
-        section: 'body',
-        range: [lastFilter.index, lastFilter.index + word.length],
-      },
-    };
-  });
+    // new query is existing query minus match plus suggestion
+    const result = candidates.map((word): SearchItem => {
+      const filterDef = findFilter(word, searchConfig.filtersMap);
+      const newQuery = base + word + query.slice(caretIndex);
+      return {
+        query: {
+          fullText: newQuery,
+          body: newQuery,
+          helpText: filterDef
+            ? (Array.isArray(filterDef.description)
+                ? t(...filterDef.description)
+                : t(filterDef.description)
+              )?.replace(/\.$/, '')
+            : undefined,
+        },
+        type: SearchItemType.Autocomplete,
+        highlightRange: {
+          section: 'body',
+          range: [index, index + word.length],
+        },
+      };
+    });
+    if (result.length) {
+      return result;
+    }
+  }
+  return [];
 }
 
 function findFilter(term: string, filtersMap: FiltersMap) {
@@ -363,7 +364,6 @@ const freeformTerms = freeformFilters.flatMap((f) => f.keywords).map((s) => `${s
  */
 export function makeFilterComplete(searchConfig: SearchConfig) {
   // TODO: also search filter descriptions
-  // TODO: also search individual items from the manifest???
   return (typed: string): string[] => {
     if (!typed) {
       return [];

@@ -17,8 +17,8 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { InventoryBucket } from '../inventory/inventory-buckets';
 import {
-  createMoveSession,
   MoveReservations,
+  createMoveSession,
   sortMoveAsideCandidatesForStore,
 } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
