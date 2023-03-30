@@ -123,7 +123,8 @@ export default (env: Env) => {
               ? {
                   'Content-Security-Policy': contentSecurityPolicy,
                   // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
-                  'Cross-Origin-Embedder-Policy': 'credentialless',
+                  // Disabled for now as it blocks Google fonts
+                  //'Cross-Origin-Embedder-Policy': 'credentialless',
                   'Cross-Origin-Opener-Policy': 'same-origin',
                 }
               : req.baseUrl.match(/\.js$/)
