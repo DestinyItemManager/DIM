@@ -97,7 +97,11 @@ export interface FilterArgs {
  * filter expression itself. We can also use it to drive filter help and filter
  * editor.
  */
-export interface FilterDefinition<I extends DimItem = DimItem> {
+export interface FilterDefinition<
+  I = DimItem,
+  FilterCtx = FilterContext,
+  SuggestionsCtx = SuggestionsContext
+> {
   /**
    * One or more keywords which trigger the filter when typed into search bar.
    * What this means depends on what "format" this filter is.
@@ -136,7 +140,7 @@ export interface FilterDefinition<I extends DimItem = DimItem> {
    * filter function will be generated once, at the point where the overall
    * query is parsed.
    */
-  filter: (args: FilterArgs & FilterContext) => ItemFilter<I>;
+  filter: (args: FilterArgs & FilterCtx) => ItemFilter<I>;
 
   /**
    * A list of suggested keywords, for `query` and `stat` formats.
@@ -151,18 +155,18 @@ export interface FilterDefinition<I extends DimItem = DimItem> {
   /**
    * For stat filters, check whether this is a valid stat name or combination.
    */
-  validateStat?: (filterContext?: FilterContext) => (stat: string) => boolean;
+  validateStat?: (filterContext?: FilterCtx) => (stat: string) => boolean;
 
   /**
    * A custom function used to generate (additional) suggestions.
    * This should only be necessary for freeform or custom formats.
    */
-  suggestionsGenerator?: (args: SuggestionsContext) => string[] | undefined;
+  suggestionsGenerator?: (args: SuggestionsCtx) => string[] | undefined;
 
   /**
    * given an item, this generates a filter that should match that item
    */
-  fromItem?: (item: DimItem) => string;
+  fromItem?: (item: I) => string;
 }
 
 export const enum FilterDeprecation {
