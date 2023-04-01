@@ -13,6 +13,7 @@
 * Search autocomplete should be smarter, with the ability to complete item and perk names even when you type multiple words.
 * In-game loadouts' icon, color, and name can now be changed through DIM.
 * You can create an in-game loadout from your currently equipped items through DIM.
+* Added quick clear buttons to each section of the loadout editor.
 
 ## 7.62.0 <span class="changelog-date">(2023-03-26)</span>
 
