@@ -8,7 +8,7 @@
 }
 
 .mods {
-  width: 100%;
+  flex: 1;
 }
 
 .buttons {
@@ -16,13 +16,6 @@
   flex-flow: row wrap;
   margin: 10px auto;
   gap: 4px;
-}
-
-.modsStack {
-  display: flex;
-  flex-direction: column;
-  row-gap: 20px;
-  flex: 1;
 }
 
 .section {

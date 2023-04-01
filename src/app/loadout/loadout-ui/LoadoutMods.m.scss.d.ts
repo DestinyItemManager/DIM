@@ -4,7 +4,6 @@ interface CssExports {
   'artifactUnlock': string;
   'buttons': string;
   'missingItem': string;
-  'mods': string;
   'modsGrid': string;
   'modsPlaceholder': string;
   'pickModButton': string;
