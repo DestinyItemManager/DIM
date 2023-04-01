@@ -20,3 +20,15 @@
     flex: 1;
   }
 }
+
+.clear {
+  composes: resetButton from 'app/dim-ui/common.m.scss';
+  color: #999;
+  padding: 4px;
+  transition: all 150ms ease-out;
+  &:active,
+  &:hover,
+  &:focus-visible {
+    color: white;
+  }
+}
