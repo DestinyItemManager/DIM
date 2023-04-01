@@ -2,6 +2,7 @@ import { getCurrentHub } from '@sentry/browser';
 import { Span } from '@sentry/tracing';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
+import { isInInGameLoadoutForSelector } from 'app/loadout-drawer/selectors';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
@@ -539,7 +540,7 @@ function chooseMoveAsideItem(
   target: DimStore;
 } {
   // Check whether an item cannot or should not be moved
-  function movable(otherItem: DimItem) {
+  function isMovable(otherItem: DimItem) {
     return (
       !otherItem.notransfer &&
       !moveContext.excludes.some((i) => i.id === otherItem.id && i.hash === otherItem.hash)
@@ -578,7 +579,7 @@ function chooseMoveAsideItem(
     }
     throw e;
   }
-  const moveAsideCandidates = allItems.filter(movable);
+  const moveAsideCandidates = allItems.filter(isMovable);
 
   // if there are no candidates at all, fail
   if (moveAsideCandidates.length === 0) {
@@ -615,6 +616,7 @@ function chooseMoveAsideItem(
   }
 
   const getTag = getTagSelector(getState());
+  const isInInGameLoadoutFor = isInInGameLoadoutForSelector(getState());
 
   // A cached version of the space-left function
   const cachedSpaceLeft = _.memoize(
@@ -645,44 +647,49 @@ function chooseMoveAsideItem(
     otherStores.filter((s) => !s.isVault),
     (s) => s.lastPlayed.getTime()
   ).find((targetStore) =>
-    sortMoveAsideCandidatesForStore(moveAsideCandidates, target, targetStore, getTag, item).find(
-      (candidate) => {
-        const spaceLeft = cachedSpaceLeft(targetStore, candidate);
+    sortMoveAsideCandidatesForStore(
+      moveAsideCandidates,
+      target,
+      targetStore,
+      getTag,
+      isInInGameLoadoutFor,
+      item
+    ).find((candidate) => {
+      const spaceLeft = cachedSpaceLeft(targetStore, candidate);
 
-        if (target.isVault) {
-          // If we're moving from the vault
-          // If the target character has any space, put it there
-          if (candidate.amount <= spaceLeft) {
-            moveAsideCandidate = {
-              item: candidate,
-              target: targetStore,
-            };
-            return true;
-          }
-        } else {
-          // If we're moving from a character
-          // If there's exactly one *slot* left on the vault, and
-          // we're not moving the original item *from* the vault, put
-          // the candidate on another character in order to avoid
-          // gumming up the vault.
-          const openVaultAmount = cachedSpaceLeft(vault, candidate);
-          const openVaultSlotsBeforeMove = Math.floor(openVaultAmount / candidate.maxStackSize);
-          const openVaultSlotsAfterMove = Math.max(
-            0,
-            Math.floor((openVaultAmount - candidate.amount) / candidate.maxStackSize)
-          );
-          if (openVaultSlotsBeforeMove === 1 && openVaultSlotsAfterMove === 0 && spaceLeft) {
-            moveAsideCandidate = {
-              item: candidate,
-              target: targetStore,
-            };
-            return true;
-          }
+      if (target.isVault) {
+        // If we're moving from the vault
+        // If the target character has any space, put it there
+        if (candidate.amount <= spaceLeft) {
+          moveAsideCandidate = {
+            item: candidate,
+            target: targetStore,
+          };
+          return true;
         }
-
-        return false;
+      } else {
+        // If we're moving from a character
+        // If there's exactly one *slot* left on the vault, and
+        // we're not moving the original item *from* the vault, put
+        // the candidate on another character in order to avoid
+        // gumming up the vault.
+        const openVaultAmount = cachedSpaceLeft(vault, candidate);
+        const openVaultSlotsBeforeMove = Math.floor(openVaultAmount / candidate.maxStackSize);
+        const openVaultSlotsAfterMove = Math.max(
+          0,
+          Math.floor((openVaultAmount - candidate.amount) / candidate.maxStackSize)
+        );
+        if (openVaultSlotsBeforeMove === 1 && openVaultSlotsAfterMove === 0 && spaceLeft) {
+          moveAsideCandidate = {
+            item: candidate,
+            target: targetStore,
+          };
+          return true;
+        }
       }
-    )
+
+      return false;
+    })
   );
 
   // If we're moving off a character (into the vault) and we couldn't find a better match,
@@ -1075,8 +1082,9 @@ export function sortMoveAsideCandidatesForStore(
   fromStore: DimStore,
   targetStore: DimStore,
   getTag: (item: DimItem) => TagValue | undefined,
+  isInInGameLoadoutFor: (item: DimItem, ownerId: string) => boolean,
   /** The item we're trying to make space for. May be missing. */
-  item?: DimItem
+  displacer?: DimItem
 ) {
   // A sort for items to use for ranking *which item to move*
   // aside. The highest ranked items are the most likely to be moved.
@@ -1084,23 +1092,43 @@ export function sortMoveAsideCandidatesForStore(
   // come first in the list.
   const itemValueComparator: (a: DimItem, b: DimItem) => number = reverseComparator(
     chainComparator(
+      // MECHANICAL CONSIDERATIONS RELATED TO MOVING ITEMS
+
       // Try our hardest never to unequip something
-      compareBy((i) => !i.equipped),
-      // prefer same bucket over everything
-      compareBy((i) => item && i.bucket.hash === item.bucket.hash),
-      // or at least same category (weapons, armor)
-      compareBy((i) => item && i.bucket.sort === item.bucket.sort),
-      // Always prefer keeping something that was manually moved where it is
-      compareBy((i) => -getLastManuallyMoved(i)),
+      compareBy((displaced) => !displaced.equipped),
+      // prefer same bucket over everything, because that makes space in the correct "pocket"
+      compareBy((displaced) => displacer && displaced.bucket.hash === displacer.bucket.hash),
+
+      // THIS SEEMS LIKE SOMETHING FROM D1
+
       // Engrams prefer to be in the vault, so not-engram is larger than engram
-      compareBy((i) => (fromStore.isVault ? !i.isEngram : i.isEngram)),
+      compareBy((displaced) => (fromStore.isVault ? !displaced.isEngram : displaced.isEngram)),
+
+      // DON'T ANNOY PEOPLE
+
+      // Always prefer keeping something that was manually moved where it is
+      compareBy((displaced) => -getLastManuallyMoved(displaced)),
+
+      // CONVENIENCES RELATED TO WHETHER ITEMS ARE USEFUL, AND TO WHICH CHARACTER
+
+      // Prefer displacing on-char items that AREN'T in their owner's in-game loadouts
+      compareBy(
+        (displaced) => !fromStore.isVault && !isInInGameLoadoutFor(displaced, fromStore.id)
+      ),
+      // prefer displacing a vaulted item to a char with the item in a loadout
+      compareBy(
+        (displaced) => !targetStore.isVault && isInInGameLoadoutFor(displaced, targetStore.id)
+      ),
+      // Prefer moving an item if the owner can't use it
+      compareBy((displaced) => !fromStore.isVault && !itemCanBeEquippedBy(displaced, fromStore)),
       // Prefer moving things the target store can use
-      compareBy((i) => !targetStore.isVault && itemCanBeEquippedBy(i, targetStore)),
-      // Prefer moving things this character can't use
-      compareBy((i) => !fromStore.isVault && !itemCanBeEquippedBy(i, fromStore)),
+      compareBy((displaced) => !targetStore.isVault && itemCanBeEquippedBy(displaced, targetStore)),
+
+      // TRYING TO ESTIMATE USER INTENTION AND ITEM VALUE
+
       // Tagged items sort by orders defined in dim-item-info
-      compareBy((i) => {
-        const tag = getTag(i);
+      compareBy((displaced) => {
+        const tag = getTag(displaced);
         return -(fromStore.isVault ? vaultDisplacePriority : characterDisplacePriority).indexOf(
           tag || 'none'
         );

@@ -52,7 +52,7 @@ export const fullyResolvedLoadoutsSelector = createSelector(
         }>();
     const currentLoadout = fullyResolveLoadout(
       storeId,
-      newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore),
+      newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore, undefined),
       defs,
       unlockedPlugs,
       itemCreationContext,

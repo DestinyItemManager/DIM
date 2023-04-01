@@ -13,11 +13,9 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
-import { inGameLoadoutsForCharacterSelector } from 'app/loadout/ingame/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState } from 'app/store/types';
 import { Portal } from 'app/utils/temp-container';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -86,10 +84,6 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const savedLoadouts = useSavedLoadoutsForClassType(classType);
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
-  const inGameLoadouts = useSelector((state: RootState) =>
-    inGameLoadoutsForCharacterSelector(state, selectedStoreId)
-  );
-
   const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStoreId));
 
   const currentLoadout = useMemo(
@@ -99,11 +93,12 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     savedLoadouts,
-    inGameLoadouts,
+    [],
     selectedStoreId,
     true,
-    undefined,
-    undefined,
+    styles.loadoutFilters,
+    true,
+    true,
     <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>
   );
 
@@ -165,7 +160,9 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
+        <h1>{t('Loadouts.InGameLoadouts')}</h1>
         <InGameLoadoutStrip selectedStoreId={selectedStoreId} />
+        <h1>{t('Loadouts.DimLoadouts')}</h1>
         {filterPills}
         {loadouts.map((loadout) =>
           isInGameLoadout(loadout) ? null : ( // <InGameLoadoutRow key={loadout.index} loadout={loadout} store={selectedStore} />

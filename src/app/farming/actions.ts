@@ -6,6 +6,7 @@ import {
   getVault,
   isD1Store,
 } from 'app/inventory/stores-helpers';
+import { isInInGameLoadoutForSelector } from 'app/loadout-drawer/selectors';
 import { D1BucketHashes, supplies } from 'app/search/d1-known-values';
 import { refresh } from 'app/shell/refresh-events';
 import { ThunkResult } from 'app/store/types';
@@ -162,6 +163,7 @@ function makeRoomForItemsInBuckets(
     // If any category is full, we'll move one aside
     const itemsToMove: DimItem[] = [];
     const getTag = getTagSelector(getState());
+    const isInInGameLoadoutFor = isInInGameLoadoutForSelector(getState());
     const inventoryClearSpaces = settingSelector('inventoryClearSpaces')(getState());
     for (const bucket of makeRoomBuckets) {
       const items = findItemsByBucket(store, bucket.hash);
@@ -174,7 +176,8 @@ function makeRoomForItemsInBuckets(
             moveAsideCandidates,
             store,
             getVault(stores)!,
-            getTag
+            getTag,
+            isInInGameLoadoutFor
           );
           // We'll move the first one to the vault
           const itemToMove = prioritizedMoveAsideCandidates[0];

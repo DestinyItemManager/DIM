@@ -1,3 +1,4 @@
+import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import React from 'react';
 import styles from './FilterPills.m.scss';
@@ -17,6 +18,7 @@ export default function FilterPills({
   onOptionsSelected,
   className,
   darkBackground,
+  includeLabel,
   extra,
 }: {
   options: readonly Option[];
@@ -24,6 +26,7 @@ export default function FilterPills({
   onOptionsSelected: (options: Option[]) => void;
   className?: string;
   darkBackground?: boolean;
+  includeLabel?: boolean;
   extra?: React.ReactNode;
 }) {
   const onClickPill = (e: React.MouseEvent, option: Option) => {
@@ -53,6 +56,7 @@ export default function FilterPills({
       className={clsx(styles.guide, className, { [styles.darkBackground]: darkBackground })}
       onClick={clearSelection}
     >
+      {includeLabel && <h3>{t('Loadouts.Filters')}</h3>}
       {options.map((o) => (
         <button
           type="button"

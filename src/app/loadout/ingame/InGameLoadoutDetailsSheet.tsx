@@ -1,7 +1,10 @@
 import BungieImage from 'app/dim-ui/BungieImage';
+import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
+import { t } from 'app/i18next-t';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import Socket from 'app/item-popup/Socket';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { Observable } from 'app/utils/observable';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -12,6 +15,7 @@ import Sheet from '../../dim-ui/Sheet';
 import { createItemContextSelector } from '../../inventory/selectors';
 import styles from './InGameLoadoutDetailsSheet.m.scss';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
+import { applyInGameLoadout, deleteInGameLoadout, prepInGameLoadout } from './ingame-loadout-apply';
 import {
   gameLoadoutCompatibleBuckets,
   isValidGameLoadoutPlug,
@@ -32,6 +36,7 @@ export function InGameLoadoutDetails({
   //   storeId: string;
   loadout: InGameLoadout;
 }) {
+  const dispatch = useThunkDispatch();
   const itemCreationContext = useSelector(createItemContextSelector);
   const defs = itemCreationContext.defs;
   const items = useItemsFromInGameLoadout(loadout);
@@ -50,21 +55,26 @@ export function InGameLoadoutDetails({
   return (
     <Sheet onClose={reset} header={header} sheetClassName={styles.sheet}>
       <div className={styles.controls}>
-        <button type="button" className="dim-button">
-          Apply
+        <button
+          type="button"
+          className="dim-button"
+          onClick={() => dispatch(applyInGameLoadout(loadout))}
+        >
+          {t('LoadoutBuilder.EquipItems')}
         </button>
-        <button type="button" className="dim-button">
-          Prepare for Application
+        <button
+          type="button"
+          className="dim-button"
+          onClick={() => dispatch(prepInGameLoadout(loadout))}
+        >
+          {t('InGameLoadout.PrepareEquip')}
         </button>
-        <button type="button" className="dim-button">
-          Delete
+        <button type="button" className="dim-button" onClick={undefined}>
+          {t('InGameLoadout.EditIdentifiers')}
         </button>
-        <button type="button" className="dim-button">
-          Edit Identifiers
-        </button>
-        <button type="button" className="dim-button">
-          Save as DIM Loadout
-        </button>
+        <ConfirmButton danger onClick={() => dispatch(deleteInGameLoadout(loadout))}>
+          {t('InGameLoadout.ClearSlot', { index: loadout.index + 1 })}
+        </ConfirmButton>
       </div>
       <div className={styles.loadoutGrid}>
         {gameLoadoutCompatibleBuckets.map((h) => {

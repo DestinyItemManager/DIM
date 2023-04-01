@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'blankBox': string;
+  'deleteDanger': string;
   'equipNok': string;
   'equipOk': string;
   'igtIcon': string;

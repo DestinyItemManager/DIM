@@ -11,6 +11,8 @@ import { itemMoved } from 'app/inventory/actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
 import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
+import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
+import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { inGameLoadoutItemsFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { showNotification } from 'app/notifications/notifications';
@@ -69,6 +71,21 @@ export function applyInGameLoadout(loadout: InGameLoadout): ThunkResult {
         reportException('inGameLoadout', e);
       }
     }
+  };
+}
+
+/**
+ * move a loadout's items to their character. maybe applyInGameLoadout should incorporate this behavior
+ */
+export function prepInGameLoadout(loadout: InGameLoadout): ThunkResult {
+  return async (dispatch, getState) => {
+    const stores = storesSelector(getState());
+    const targetStore = getStore(stores, loadout.characterId)!;
+    const allItems = allItemsSelector(getState());
+    const loadoutItems = getItemsFromInGameLoadout(loadout.items, allItems);
+
+    const moveLoadout = itemMoveLoadout(loadoutItems, targetStore);
+    dispatch(applyLoadout(targetStore, moveLoadout));
   };
 }
 

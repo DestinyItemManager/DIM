@@ -1,6 +1,7 @@
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
+import { t } from 'app/i18next-t';
 import { AppIcon, faCheckCircle, faExclamationCircle, saveIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -11,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { showInGameLoadoutDetails } from './InGameLoadoutDetailsSheet';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
 import styles from './InGameLoadoutStrip.m.scss';
-import { applyInGameLoadout, deleteInGameLoadout } from './ingame-loadout-apply';
+import { applyInGameLoadout, deleteInGameLoadout, prepInGameLoadout } from './ingame-loadout-apply';
 import { inGameLoadoutsWithMetadataSelector } from './selectors';
 
 export function InGameLoadoutStrip({ selectedStoreId }: { selectedStoreId: string }) {
@@ -26,20 +27,27 @@ export function InGameLoadoutStrip({ selectedStoreId }: { selectedStoreId: strin
       {inGameLoadoutInfos.map(({ isEquippable, isEquipped, matchingLoadouts, gameLoadout }) => {
         const options: Option[] = _.compact([
           {
+            key: 'details',
+            content: t('InGameLoadout.LoadoutDetails'),
+            onSelected: () => showInGameLoadoutDetails(gameLoadout),
+          },
+          {
             key: 'apply',
-            content: 'Apply',
+            content: t('LoadoutBuilder.EquipItems'),
             onSelected: () => dispatch(applyInGameLoadout(gameLoadout)),
           },
           !isEquippable && {
             key: 'prep',
-            content: 'Prepare for Application',
-            onSelected: () => {
-              /* pretend we do something here */
-            },
+            content: t('InGameLoadout.PrepareEquip'),
+            onSelected: () => dispatch(prepInGameLoadout(gameLoadout)),
           },
           {
             key: 'delete',
-            content: 'Clear Slot ' + (gameLoadout.index + 1),
+            content: (
+              <span className={styles.deleteDanger}>
+                {t('InGameLoadout.ClearSlot', { index: gameLoadout.index + 1 })}
+              </span>
+            ),
             onSelected: () => dispatch(deleteInGameLoadout(gameLoadout)),
           },
         ]);
@@ -78,7 +86,7 @@ export function InGameLoadoutStrip({ selectedStoreId }: { selectedStoreId: strin
           <React.Fragment key="equippable">
             {tooltipContent.length > 1 && <hr />}
             <AppIcon
-              icon={faCheckCircle}
+              icon={isEquippable ? faCheckCircle : faExclamationCircle}
               className={clsx(
                 styles.statusAppIcon,
                 isEquippable ? styles.equipOk : styles.equipNok
@@ -102,17 +110,13 @@ export function InGameLoadoutStrip({ selectedStoreId }: { selectedStoreId: strin
                   <InGameLoadoutIconWithIndex loadout={gameLoadout} className={styles.igtIcon} />
                 </div>
                 {/* <ColorDestinySymbols text={loadout.name} className={styles.igtName} /> */}
-                {isEquippable ? (
-                  <AppIcon
-                    icon={faCheckCircle}
-                    className={clsx(styles.statusAppIcon, styles.equipOk)}
-                  />
-                ) : (
-                  <AppIcon
-                    icon={faExclamationCircle}
-                    className={clsx(styles.statusAppIcon, styles.equipNok)}
-                  />
-                )}
+                <AppIcon
+                  icon={isEquippable ? faCheckCircle : faExclamationCircle}
+                  className={clsx(
+                    styles.statusAppIcon,
+                    isEquippable ? styles.equipOk : styles.equipNok
+                  )}
+                />
                 {matchingLoadouts.length > 0 && (
                   <AppIcon icon={saveIcon} className={styles.statusAppIcon} />
                 )}

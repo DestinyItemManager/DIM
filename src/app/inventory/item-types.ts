@@ -149,7 +149,11 @@ export interface DimItem {
 
   // "Mutable" data - this may be changed by moving the item around, lock/unlock, etc. Any place DIM updates its view of the world without a profile refresh. This info is always reset to server truth on a refresh.
 
-  /** The ID (long string of numbers, or 'vault') of the store that currently contains this item. */
+  /**
+   * The ID of the store that currently contains this item.
+   *
+   * This will be a Bungie character ID (long string of numbers) or the string 'vault'.
+   */
   owner: string;
   /** Is this item currently equipped? */
   equipped: boolean;

@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'hashtagTip': string;
+  'loadoutFilters': string;
   'menu': string;
   'menuButton': string;
   'menuButtons': string;
