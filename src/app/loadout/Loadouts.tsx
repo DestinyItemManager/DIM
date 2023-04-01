@@ -11,7 +11,7 @@ import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/sel
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { inGameLoadoutsForCharacterSelector } from 'app/loadout/ingame/selectors';
 import { useSetting } from 'app/settings/hooks';
@@ -19,11 +19,12 @@ import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { Portal } from 'app/utils/temp-container';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
+import EditInGameLoadout from './ingame/EditInGameLoadout';
 import InGameLoadoutIcon from './ingame/InGameLoadoutIcon';
 import InGameLoadoutRow from './ingame/InGameLoadoutRow';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
@@ -94,6 +95,13 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     [artifactUnlocks, selectedStore]
   );
 
+  const [showSnapshot, setShowSnapshot] = useState(false);
+  const handleSnapshot = useCallback(() => setShowSnapshot(true), []);
+  const handleSnapshotSheetClose = useCallback(() => setShowSnapshot(false), []);
+
+  const [editingInGameLoadout, setEditingInGameLoadout] = useState<InGameLoadout>();
+  const handleEditSheetClose = useCallback(() => setEditingInGameLoadout(undefined), []);
+
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     savedLoadouts,
     inGameLoadouts,
@@ -155,7 +163,6 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             </PageWithMenu.MenuButton>
           ))}
       </PageWithMenu.Menu>
-
       <PageWithMenu.Contents className={styles.page}>
         {$featureFlags.warnNoSync && !apiPermissionGranted && (
           <p>
@@ -165,7 +172,12 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         {filterPills}
         {loadouts.map((loadout) =>
           isInGameLoadout(loadout) ? (
-            <InGameLoadoutRow key={loadout.index} loadout={loadout} store={selectedStore} />
+            <InGameLoadoutRow
+              key={loadout.index}
+              loadout={loadout}
+              store={selectedStore}
+              onEdit={setEditingInGameLoadout}
+            />
           ) : (
             <LoadoutRow
               key={loadout.id}
@@ -174,6 +186,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
               saved={savedLoadoutIds.has(loadout.id)}
               equippable={loadout !== currentLoadout}
               onShare={setSharedLoadout}
+              onSnapshotInGameLoadout={handleSnapshot}
             />
           )
         )}
@@ -194,6 +207,16 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             currentStoreId={selectedStoreId}
             onClose={() => setLoadoutImportOpen(false)}
           />
+        </Portal>
+      )}
+      {showSnapshot && (
+        <Portal>
+          <EditInGameLoadout characterId={selectedStoreId} onClose={handleSnapshotSheetClose} />
+        </Portal>
+      )}
+      {editingInGameLoadout && (
+        <Portal key="editsheet">
+          <EditInGameLoadout loadout={editingInGameLoadout} onClose={handleEditSheetClose} />
         </Portal>
       )}
     </PageWithMenu>
