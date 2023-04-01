@@ -124,6 +124,7 @@
   "EnergyMeter": {
     "Energy": "Energía",
     "Unused": "Sin usar",
+    "UpgradeNeeded": "La capacidad de energía del objeto actual es {{energyCapacity}}. Para encajar los mods seleccionados, su capacidad de energía debe ser {{energyUsed}}.",
     "Used": "Usado"
   },
   "ErrorBoundary": {
@@ -387,7 +388,17 @@
   },
   "InGameLoadout": {
     "Applying": "Equipando equipamiento...",
-    "LoadoutSlotNum": "Ranura {{index}}"
+    "Create": "Crear equipamiento",
+    "CreateTitle": "Crear Equipamiento en el juego desde el equipo actual",
+    "DeleteFailed": "Error al borrar equipamiento",
+    "Deleted": "Equipamiento Eliminado",
+    "DeletedBody": "Se ha limpiado el equipamiento del juego en la ranura {{index}}",
+    "EditFailed": "Error al actualizar equipamiento",
+    "EditTitle": "Editar Nombre e Icono del Equipamiento",
+    "LoadoutSlotNum": "Ranura {{index}}",
+    "Replace": "Reemplazar Equipamiento",
+    "Save": "Actualizar Equipamiento",
+    "SnapshotFailed": "Error al capturar equipamiento equipado"
   },
   "Infusion": {
     "Filter": "Filtrar objetos",
@@ -437,8 +448,8 @@
     "NotEnoughRoomGeneral": "No hay suficiente espacio para mover este objeto.",
     "OnlyEquippedClassLevel": "Esto sólo puede equiparse en un {{class}} de nivel igual o superior a {{level}}.",
     "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {{level}}.",
-    "PostmasterAlmostFull": "¡Casi lleno! ({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "Lleno! ({{number}}/{{postmasterSize}})",
+    "PostmasterAlmostFull": "¡Casi lleno!",
+    "PostmasterFull": "¡Lleno!",
     "PreviewVendor": "Previsualizar {{type}} contenidos",
     "StackFull": "Ya tienes una pila completa de {{name}}",
     "StoreName": "{{genderRace}}{{className}}"
@@ -596,6 +607,9 @@
     "Apply": "Aplicar",
     "ApplyMods": "Aplicando mods",
     "ApplySearch": "Transferir búsqueda \"{{query}}\"",
+    "ArtifactUnlocks": "Desbloqueos de Artefacto",
+    "ArtifactUnlocksDesc": "Debido a limitaciones de Bungie.net, DIM no puede configurar automáticamente tu artefacto. Necesitas realizar estos desbloqueos en el juego antes de aplicar el Equipamiento.",
+    "ArtifactUnlocksWithSeason": "Desbloqueos de Artefacto - T{{seasonNumber}}",
     "BadLoadoutShare": "No se pudo cargar el equipamiento compartido",
     "BadLoadoutShareBody": "El equipamiento que estás intentando cargar es inválido: {{error}}",
     "Before": "Antes '{{name}}'",
@@ -665,7 +679,17 @@
     "MissingItemsWarning": "Algunos de los objetos en este equipamiento ya no están en tu inventario.",
     "ModErrorSummary": "1 mod con error:",
     "ModErrorSummary_plural": "{{count}} mods con errores:",
-    "ModPlacement": "Colocación de Mods",
+    "ModPlacement": {
+      "InvalidMods": "Mods no válidos",
+      "InvalidModsDesc": "1 mod no encaja en ninguna pieza de armadura.",
+      "InvalidModsDesc_plural": "{{count}} mods no caben en ninguna pieza de armadura.",
+      "ModPlacement": "Colocación de Mods",
+      "UnassignedMods": "Mods sin Asignar",
+      "UnassignedModsDesc": "1 mod no cupo debido a la insuficiente capacidad de energía o ranuras de mods. Las mejoras de energía a la armadura seleccionada no solucionarán el problema.",
+      "UnassignedModsDesc_plural": "{{count}} mods no cupieron debido a la insuficiente capacidad de energía o ranuras de mod. Las mejoras de energía a la armadura seleccionada no resolverán el problema.",
+      "UpgradeCosts": "Costes de Mejoras",
+      "UpgradeCostsDesc": "Algunas armaduras necesitan mejoras de capacidad de energía para encajar los mods solicitados. En total, estas mejoras cuestan:"
+    },
     "Mods": "Mods",
     "MoveItems": "Moviendo objetos",
     "NoEngrams": "No hay engramas no excepcionales disponibles para transferir.",
@@ -726,6 +750,7 @@
     },
     "ShareLoadout": "Compartir Equipamiento",
     "ShowModPlacement": "Mostrar Colocación de Mods",
+    "Snapshot": "Guardar como Equipamiento En El Juego",
     "SocketOverrides": "Cambiando opciones de subclase",
     "SortByEditTime": "Ordenar por última edición",
     "SortByName": "Ordenar por nombre",
@@ -735,7 +760,6 @@
     "SyncFromEquipped": "Sincronizar desde equipados",
     "TooManyRequested": "Tienes {{total}}{{itemname}} pero tu equipamiento pide por {{requested}}. Transferimos todo lo que tenías.",
     "UnassignedModError": "El mod no encajó en tu armadura actual",
-    "UnassignedMods": "Mods sin Asignar",
     "Undo": "Deshacer",
     "Unequipped": "Desequipado",
     "Update": "Guardar Cambios",
