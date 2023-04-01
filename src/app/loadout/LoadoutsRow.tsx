@@ -9,13 +9,11 @@ import { AppIcon, deleteIcon, faCheckCircle } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
 import { streamDeckSelectLoadout } from 'app/stream-deck/stream-deck';
-import { Portal } from 'app/utils/temp-container';
 import _ from 'lodash';
-import { ReactNode, memo, useMemo, useState } from 'react';
+import { ReactNode, memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import LoadoutView from './LoadoutView';
 import styles from './LoadoutsRow.m.scss';
-import EditInGameLoadout from './ingame/EditInGameLoadout';
 
 /**
  * A single row in the Loadouts page.
@@ -26,12 +24,14 @@ export default memo(function LoadoutRow({
   saved,
   equippable,
   onShare,
+  onSnapshotInGameLoadout,
 }: {
   loadout: Loadout;
   store: DimStore;
   saved: boolean;
   equippable: boolean;
   onShare: (loadout: Loadout) => void;
+  onSnapshotInGameLoadout: () => void;
 }) {
   const dispatch = useThunkDispatch();
 
@@ -39,8 +39,6 @@ export default memo(function LoadoutRow({
     ? // eslint-disable-next-line
       useSelector(streamDeckSelectionSelector)
     : null;
-
-  const [showSnapshot, setShowSnapshot] = useState(false);
 
   const actionButtons = useMemo(() => {
     const handleDeleteClick = () => dispatch(deleteLoadout(loadout.id));
@@ -50,9 +48,6 @@ export default memo(function LoadoutRow({
 
     const handleEdit = () => editLoadout(loadout, store.id, { isNew: !saved });
     const handleShare = () => onShare(loadout);
-
-    const handleSnapshot = () => setShowSnapshot(true);
-    const handleSnapshotSheetClose = () => setShowSnapshot(false);
 
     const actionButtons: ReactNode[] = [];
 
@@ -102,20 +97,28 @@ export default memo(function LoadoutRow({
       );
     } else {
       actionButtons.push(
-        <button key="snapshot" type="button" className="dim-button" onClick={handleSnapshot}>
+        <button
+          key="snapshot"
+          type="button"
+          className="dim-button"
+          onClick={onSnapshotInGameLoadout}
+        >
           {t('Loadouts.Snapshot')}
         </button>
       );
-      showSnapshot &&
-        actionButtons.push(
-          <Portal key="snapshotsheet">
-            <EditInGameLoadout characterId={store.id} onClose={handleSnapshotSheetClose} />
-          </Portal>
-        );
     }
 
     return actionButtons;
-  }, [dispatch, equippable, loadout, onShare, saved, store, streamDeckSelection, showSnapshot]);
+  }, [
+    dispatch,
+    equippable,
+    loadout,
+    onShare,
+    onSnapshotInGameLoadout,
+    saved,
+    store,
+    streamDeckSelection,
+  ]);
 
   return (
     <LoadoutView
