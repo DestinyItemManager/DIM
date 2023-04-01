@@ -11,6 +11,8 @@
 * Sharing build settings directly from Loadout Optimizer will now also include subclass configuration.
 * DIM now saves Artifact configuration in Loadouts. Note that DIM cannot reconfigure your artifact automatically, but you can use this information to keep track of which artifact unlocks are important for a Loadout.
 * Search autocomplete should be smarter, with the ability to complete item and perk names even when you type multiple words.
+* In-game loadouts' icon, color, and name can now be changed through DIM.
+* You can create an in-game loadout from your currently equipped items through DIM.
 
 ## 7.62.0 <span class="changelog-date">(2023-03-26)</span>
 
