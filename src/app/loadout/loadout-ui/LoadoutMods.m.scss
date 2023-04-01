@@ -1,9 +1,5 @@
 @use '../../variables.scss' as *;
 
-.mods {
-  flex: 1;
-}
-
 .modsGrid {
   --item-icon-size: calc(0.8 * var(--item-size));
   min-width: calc(5 * var(--item-icon-size) + 4 * var(--item-margin));
