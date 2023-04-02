@@ -37,7 +37,7 @@ export function symbolize(combo: string) {
 
       return keyi18n[part] ? t(keyi18n[part]!) : map[part] || part;
     })
-    .join(' + ');
+    .join(' ');
 }
 
 function format(hotkey: Hotkey) {
@@ -60,42 +60,48 @@ export interface Hotkey {
   callback: (event: KeyboardEvent) => void;
 }
 
-class HotkeyRegistry {
-  private hotkeys: { [componentId: number]: Hotkey[] } = {};
+/**
+ * A mapping from a unique identifier for a component (see getHotkeyId) to a
+ * list of hotkey definitions associated with that component.
+ */
+const hotkeysByComponent: { [componentId: number]: Hotkey[] } = {};
 
-  register(componentId: number, hotkeys: Hotkey[]) {
-    if (hotkeys?.length) {
-      for (const hotkey of hotkeys) {
-        installHotkey(hotkey);
-      }
-      this.hotkeys[componentId] = hotkeys;
+/**
+ * Add a new set of hotkeys. Returns an unregister function that
+ * can be used to remove these bindings.
+ */
+export function registerHotkeys(hotkeys: Hotkey[]) {
+  const componentId = getHotkeyId();
+  if (hotkeys?.length) {
+    for (const hotkey of hotkeys) {
+      installHotkey(hotkey);
     }
+    hotkeysByComponent[componentId] = hotkeys;
   }
+  return () => unregister(componentId);
+}
 
-  unregister(componentId: number) {
-    if (this.hotkeys[componentId]) {
-      for (const hotkey of this.hotkeys[componentId]) {
-        Mousetrap.unbind(hotkey.combo);
-      }
-      delete this.hotkeys[componentId];
+function unregister(componentId: number) {
+  if (hotkeysByComponent[componentId]) {
+    for (const hotkey of hotkeysByComponent[componentId]) {
+      Mousetrap.unbind(hotkey.combo);
     }
-  }
-
-  getAllHotkeys() {
-    const combos: { [combo: string]: string } = {};
-    for (const hotkeys of Object.values(this.hotkeys)) {
-      for (const hotkey of hotkeys) {
-        const combo = format(hotkey);
-        combos[combo] = hotkey.description;
-      }
-    }
-    return combos;
+    delete hotkeysByComponent[componentId];
   }
 }
 
-const hotkeys = new HotkeyRegistry();
-export default hotkeys;
+export function getAllHotkeys() {
+  const combos: { [combo: string]: string } = {};
+  for (const hotkeyList of Object.values(hotkeysByComponent)) {
+    for (const hotkey of hotkeyList) {
+      const combo = format(hotkey);
+      combos[combo] = hotkey.description;
+    }
+  }
+  return combos;
+}
 
+// Add the actual key handler via MouseTrap.
 function installHotkey(hotkey: Hotkey) {
   // these elements are prevented by the default Mousetrap.stopCallback():
   const preventIn = ['INPUT', 'SELECT', 'TEXTAREA'];

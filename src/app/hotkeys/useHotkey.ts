@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
-import hotkeys, { getHotkeyId, Hotkey } from './hotkeys';
+import { Hotkey, registerHotkeys } from './hotkeys';
 
 /**
  * A hook for registering a single global hotkey that will appear in the hotkey help screen.
  *
- * @param  {(string | string[])} handlerKey - A key, key combo or array of combos according to Mousetrap documentation.
- * @param  { function } handlerCallback - A function that is triggered on key combo catch. This doesn't need to be memoized - the most recent instance of it will be called when the hotkey is triggered.
- * @param  { string } evtType - A string that specifies the type of event to listen for. It can be 'keypress', 'keydown' or 'keyup'.
+ * @param  {(string | string[])} combo - A key, key combo or array of combos according to Mousetrap documentation.
+ * @param  { function } callback - A function that is triggered on key combo catch. This doesn't need to be memoized - the most recent instance of it will be called when the hotkey is triggered.
+ * @param  { string } action - A string that specifies the type of event to listen for. It can be 'keypress', 'keydown' or 'keyup'.
  */
 export function useHotkey(
   combo: string,
@@ -30,11 +30,7 @@ export function useHotkey(
         allowIn,
       },
     ];
-    const id = getHotkeyId();
-    hotkeys.register(id, keys);
-    return () => {
-      hotkeys.unregister(id);
-    };
+    return registerHotkeys(keys);
   }, [action, allowIn, combo, description]);
 }
 
@@ -44,9 +40,5 @@ export function useHotkey(
  * While you could memoize the list of hotkeys, you'll likely want to be able to update them when language changes.
  */
 export function useHotkeys(hotkeyDefs: Hotkey[]) {
-  useEffect(() => {
-    const id = getHotkeyId();
-    hotkeys.register(id, hotkeyDefs);
-    return () => hotkeys.unregister(id);
-  }, [hotkeyDefs]);
+  useEffect(() => registerHotkeys(hotkeyDefs), [hotkeyDefs]);
 }

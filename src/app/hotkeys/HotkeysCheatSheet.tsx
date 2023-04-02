@@ -3,8 +3,8 @@ import { t } from 'app/i18next-t';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import GlobalHotkeys from './GlobalHotkeys';
-import hotkeys from './hotkeys';
 import styles from './HotkeysCheatSheet.m.scss';
+import { getAllHotkeys } from './hotkeys';
 import { useHotkey } from './useHotkey';
 
 export default function HotkeysCheatSheet() {
@@ -15,12 +15,13 @@ export default function HotkeysCheatSheet() {
   const hide = () => setVisible(false);
 
   useHotkey('?', t('Hotkey.ShowHotkeys'), toggle);
+  useHotkey('esc', '', hide);
 
   if (!visible) {
     return null;
   }
 
-  const appKeyMap = hotkeys.getAllHotkeys();
+  const appKeyMap = getAllHotkeys();
 
   return (
     <div className={styles.container} onClick={hide}>
