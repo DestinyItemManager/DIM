@@ -9,7 +9,11 @@ import { t } from 'app/i18next-t';
 import { inGameLoadoutNotification } from 'app/inventory/MoveNotifications';
 import { itemMoved } from 'app/inventory/actions';
 import { updateCharacters } from 'app/inventory/d2-stores';
-import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  createItemContextSelector,
+  storesSelector,
+} from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { inGameLoadoutItemsFromEquipped } from 'app/loadout-drawer/loadout-utils';
@@ -21,6 +25,7 @@ import { DimError } from 'app/utils/dim-error';
 import { reportException } from 'app/utils/exceptions';
 import { errorLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
+import { useSelector } from 'react-redux';
 import { inGameLoadoutDeleted, inGameLoadoutUpdated } from './actions';
 import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
 
@@ -29,6 +34,7 @@ import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
  */
 export function applyInGameLoadout(loadout: InGameLoadout): ThunkResult {
   return async (dispatch, getState) => {
+    const itemCreationContext = useSelector(createItemContextSelector);
     const account = currentAccountSelector(getState())!;
     const stores = storesSelector(getState());
     const target = getStore(stores, loadout.characterId)!;
@@ -41,7 +47,11 @@ export function applyInGameLoadout(loadout: InGameLoadout): ThunkResult {
       await applyPromise;
 
       // Find each item, and update it to be equipped!
-      const items = getItemsFromInGameLoadout(loadout.items, allItemsSelector(getState()));
+      const items = getItemsFromInGameLoadout(
+        itemCreationContext,
+        loadout.items,
+        allItemsSelector(getState())
+      );
 
       for (const item of items) {
         // Update items to be equipped

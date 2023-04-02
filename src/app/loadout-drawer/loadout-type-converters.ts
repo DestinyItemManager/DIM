@@ -5,8 +5,11 @@ import {
   UpgradeSpendTier,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
+import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { emptyObject } from 'app/utils/empty';
 import { DestinyLoadoutComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import _ from 'lodash';
 import {
   Loadout as DimLoadout,
@@ -175,4 +178,21 @@ function convertDestinyLoadoutComponentToInGameLoadout(
     icon,
     id: `ingame-${characterId}-${index}`,
   };
+}
+
+/**
+ * In game loadouts' plug item hashes are a list of plug items, one per socket index. We strip
+ * out unset or empty plugs when converting to DIM's SocketOverrides, which are only set for sockets
+ * that should be modified.
+ */
+export function convertInGameLoadoutPlugItemHashesToSocketOverrides(
+  plugItemHashes: number[]
+): SocketOverrides {
+  return Object.fromEntries(
+    _.compact(
+      plugItemHashes.map((plugHash, i) =>
+        plugHash !== UNSET_PLUG_HASH && !emptyPlugHashes.has(plugHash) ? [i, plugHash] : undefined
+      )
+    )
+  );
 }
