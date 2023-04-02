@@ -108,10 +108,7 @@ $commonBg: #366f42;
 
 .energyCostOverlay {
   position: absolute;
-  top: $item-border-width;
-  bottom: $item-border-width;
-  right: $item-border-width;
-  left: $item-border-width;
+  inset: $item-border-width $item-border-width $item-border-width $item-border-width;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -120,10 +117,7 @@ $commonBg: #366f42;
 
 .energyCost {
   position: absolute;
-  top: $item-border-width;
-  bottom: $item-border-width;
-  right: $item-border-width;
-  left: $item-border-width;
+  inset: $item-border-width $item-border-width $item-border-width $item-border-width;
   pointer-events: none;
 
   > text {
@@ -144,4 +138,8 @@ $commonBg: #366f42;
 
 .inverted {
   border-color: #222;
+}
+
+.strandColorFix {
+  filter: hue-rotate(211deg) brightness(1.5);
 }
