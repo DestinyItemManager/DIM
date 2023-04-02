@@ -442,7 +442,7 @@ function processCharacter(
   const store = makeCharacter(defs, character, lastPlayedDate, profileRecords);
 
   // We work around the weird account-wide buckets by assigning them to the current character
-  const items = characterInventory.concat(characterEquipment.flat());
+  const items = characterInventory.concat(characterEquipment);
 
   if (store.current) {
     for (const i of profileInventory) {
