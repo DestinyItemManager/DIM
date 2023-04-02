@@ -406,7 +406,7 @@
     "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
     "DeleteFailed": "Failed to delete loadout",
     "Save": "Update Loadout",
-    "Replace": "Replace Loadout",
+    "Replace": "Replace Loadout  {{index}}",
     "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
   "Inventory": {

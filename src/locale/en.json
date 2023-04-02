@@ -396,7 +396,7 @@
     "EditFailed": "Failed to update loadout",
     "EditTitle": "Edit Loadout Name and Icon",
     "LoadoutSlotNum": "Slot {{index}}",
-    "Replace": "Replace Loadout",
+    "Replace": "Replace Loadout  {{index}}",
     "Save": "Update Loadout",
     "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
