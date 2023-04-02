@@ -177,6 +177,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
               loadout={loadout}
               store={selectedStore}
               onEdit={setEditingInGameLoadout}
+              onShare={setSharedLoadout}
             />
           ) : (
             <LoadoutRow

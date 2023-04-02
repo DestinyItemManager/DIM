@@ -1,7 +1,10 @@
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { convertInGameLoadoutToDimLoadout } from 'app/loadout-drawer/loadout-type-converters';
+import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import styles from 'app/loadout/LoadoutsRow.m.scss';
 import { AppIcon, deleteIcon, faCheckCircle } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -19,12 +22,15 @@ export default memo(function InGameLoadoutRow({
   loadout,
   store,
   onEdit,
+  onShare,
 }: {
   loadout: InGameLoadout;
   store: DimStore;
   onEdit: (loadout: InGameLoadout) => void;
+  onShare: (loadout: Loadout) => void;
 }) {
   const dispatch = useThunkDispatch();
+  const allItems = useSelector(allItemsSelector);
 
   const streamDeckSelection = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line
@@ -34,6 +40,15 @@ export default memo(function InGameLoadoutRow({
   const actionButtons = useMemo(() => {
     const handleApply = () => dispatch(applyInGameLoadout(loadout));
     const handleDelete = () => dispatch(deleteInGameLoadout(loadout));
+
+    const handleSaveAsDIM = () => {
+      const dimLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
+      editLoadout(dimLoadout, store.id, { isNew: true });
+    };
+    const handleShare = () => {
+      const dimLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
+      onShare(dimLoadout);
+    };
 
     if (streamDeckSelection === 'loadout') {
       const handleSelection = () =>
@@ -69,16 +84,21 @@ export default memo(function InGameLoadoutRow({
         {t('Loadouts.EditBrief')}
       </button>,
 
+      <button key="saveAs" type="button" className="dim-button" onClick={handleSaveAsDIM}>
+        {t('Loadouts.SaveAsDIM')}
+      </button>,
+
+      <button key="share" type="button" className="dim-button" onClick={handleShare}>
+        {t('Loadouts.ShareLoadout')}
+      </button>,
+
       <ConfirmButton key="delete" danger onClick={handleDelete}>
         <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
       </ConfirmButton>,
     ];
 
-    // TODO: add snapshotting loadouts - may need a dialog to select the loadout slot
-    // TODO: figure out whether this loadout is currently equippable (all items on character or in vault)
-
     return actionButtons;
-  }, [streamDeckSelection, dispatch, loadout, store, onEdit]);
+  }, [streamDeckSelection, dispatch, loadout, store, allItems, onShare, onEdit]);
 
   return <InGameLoadoutView loadout={loadout} store={store} actionButtons={actionButtons} />;
 });

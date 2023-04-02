@@ -3,7 +3,11 @@
 // serialize the data and send it if connected
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, currentStoreSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  createItemContextSelector,
+  currentStoreSelector,
+} from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
@@ -110,7 +114,8 @@ function findSubClass(items: LoadoutItem[], state: RootState) {
 
 function findSubClassInGame(items: DestinyLoadoutItemComponent[], state: RootState) {
   const allItems = allItemsSelector(state);
-  const mappedItems = getItemsFromInGameLoadout(items, allItems);
+  const itemCreationContext = createItemContextSelector(state);
+  const mappedItems = getItemsFromInGameLoadout(itemCreationContext, items, allItems);
   const categories = _.groupBy(mappedItems, (item) => item.bucket.sort);
   const subclassItem = categories['General']?.[0];
   return subclassItem?.icon;

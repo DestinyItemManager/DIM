@@ -717,6 +717,7 @@
     "RestoreAllItems": "All Items",
     "Save": "Save",
     "SaveLoadout": "Save Loadout",
+    "SaveAsDIM": "Save as DIM Loadout",
     "SaveAsNew": "Save as New",
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
     "SaveDisabled": {

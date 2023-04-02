@@ -723,6 +723,7 @@
     "Redo": "Redo",
     "RestoreAllItems": "All Items",
     "Save": "Save",
+    "SaveAsDIM": "Save as DIM Loadout",
     "SaveAsNew": "Save as New",
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
     "SaveDisabled": {
