@@ -111,7 +111,7 @@ function VaultButton({ store, handleMove }: { store: DimStore; handleMove: () =>
 
 function VaultActionButton({ vault, onClick }: { vault: DimStore; onClick: () => void }) {
   return (
-    <ActionButton onClick={onClick} title={t('MovePopup.Vault') + ' [V]'}>
+    <ActionButton onClick={onClick} hotkey="v" hotkeyDescription={t('Hotkey.Vault')}>
       <StoreIcon store={vault} /> <span className={styles.vaultLabel}>{t('MovePopup.Vault')}</span>
     </ActionButton>
   );
@@ -141,12 +141,16 @@ function MoveLocations({
 
   function moveLocation({ store, enabled }: StoreButtonInfo) {
     const handleMove = enabled ? () => submitMoveTo(store, equip) : _.noop;
+    const title =
+      type === 'equip'
+        ? t('MovePopup.EquipWithName', { character: store.name })
+        : t('MovePopup.StoreWithName', { character: store.name });
 
     const button = (
       <button
         type="button"
         className={styles.move}
-        title={`${label}${shortcutKey && store.current ? ` [${symbolize(shortcutKey)}]` : ''}`}
+        title={`${title}${shortcutKey && store.current ? ` [${symbolize(shortcutKey)}]` : ''}`}
         onClick={handleMove}
         aria-keyshortcuts={store.current ? shortcutKey : undefined}
         disabled={!enabled}

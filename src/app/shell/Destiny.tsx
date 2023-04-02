@@ -13,9 +13,9 @@ import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
+import SyncTagLock from 'app/inventory/SyncTagLock';
 import { blockingProfileErrorSelector, storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import SyncTagLock from 'app/inventory/SyncTagLock';
 import ItemFeedPage from 'app/item-feed/ItemFeedPage';
 import LoadoutDrawerContainer from 'app/loadout-drawer/LoadoutDrawerContainer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
@@ -149,6 +149,20 @@ export default function Destiny() {
     {
       combo: 'p',
       description: t('Hotkey.Pull'),
+      callback() {
+        // Empty
+      },
+    },
+    {
+      combo: 'i',
+      description: t('MovePopup.InfuseTitle'),
+      callback() {
+        // Empty
+      },
+    },
+    {
+      combo: 'a',
+      description: t('Hotkey.Armory'),
       callback() {
         // Empty
       },

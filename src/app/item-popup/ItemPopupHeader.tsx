@@ -2,6 +2,7 @@ import ArmorySheet from 'app/armory/ArmorySheet';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
@@ -34,6 +35,7 @@ export default function ItemPopupHeader({
   noLink?: boolean;
 }) {
   const [showArmory, setShowArmory] = useState(false);
+  useHotkey('a', t('Hotkey.Armory'), () => setShowArmory(true));
 
   const showElementIcon = Boolean(item.element);
 
@@ -47,6 +49,8 @@ export default function ItemPopupHeader({
         [styles.pursuit]: item.pursuit,
         [styles.armory]: linkToArmory,
       })}
+      title={linkToArmory ? `${t('Hotkey.Armory')} [A]` : undefined}
+      aria-keyshortcuts={linkToArmory ? 'a' : undefined}
       onClick={linkToArmory ? () => setShowArmory(true) : undefined}
     >
       {!linkToArmory ? (

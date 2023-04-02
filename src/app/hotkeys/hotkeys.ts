@@ -35,7 +35,7 @@ export function symbolize(combo: string) {
         part = window.navigator?.platform.includes('Mac') ? 'command' : 'ctrl';
       }
 
-      return keyi18n[part] ? t(keyi18n[part]!) : map[part] || part;
+      return keyi18n[part] ? t(keyi18n[part]!) : map[part] || part.toUpperCase();
     })
     .join(' + ');
 }
