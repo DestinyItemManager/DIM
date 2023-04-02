@@ -2,20 +2,29 @@ import {
   AssumeArmorMasterwork,
   Loadout,
   LoadoutItem,
+  LoadoutParameters,
   UpgradeSpendTier,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { DimItem } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { emptyObject } from 'app/utils/empty';
-import { DestinyLoadoutComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import {
+  DestinyClass,
+  DestinyLoadoutComponent,
+  DestinyProfileResponse,
+} from 'bungie-api-ts/destiny2';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import {
   Loadout as DimLoadout,
   LoadoutItem as DimLoadoutItem,
   InGameLoadout,
 } from './loadout-types';
+import { newLoadout, potentialLoadoutItemsByItemId } from './loadout-utils';
 
 /**
  * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. These functions convert
@@ -178,6 +187,74 @@ function convertDestinyLoadoutComponentToInGameLoadout(
     icon,
     id: `ingame-${characterId}-${index}`,
   };
+}
+
+export function convertInGameLoadoutToDimLoadout(
+  inGameLoadout: InGameLoadout,
+  classType: DestinyClass,
+  allItems: DimItem[]
+) {
+  const armorMods: number[] = [];
+  const modsByBucket: LoadoutParameters['modsByBucket'] = {};
+
+  const loadoutItems = _.compact(
+    inGameLoadout.items.map((inGameItem) => {
+      if (inGameItem.itemInstanceId === '0') {
+        return;
+      }
+
+      const matchingItem = potentialLoadoutItemsByItemId(allItems)[inGameItem.itemInstanceId];
+      if (!matchingItem) {
+        return;
+      }
+
+      if (matchingItem.bucket.inArmor) {
+        const armorModSockets = getSocketsByCategoryHash(
+          matchingItem.sockets,
+          SocketCategoryHashes.ArmorMods
+        );
+        const fashionModSockets = getSocketsByCategoryHash(
+          matchingItem.sockets,
+          SocketCategoryHashes.ArmorCosmetics
+        );
+        for (let i = 0; i < inGameItem.plugItemHashes.length; i++) {
+          const plugHash = inGameItem.plugItemHashes[i];
+          if (plugHash === UNSET_PLUG_HASH) {
+            continue;
+          }
+          if (!emptyPlugHashes.has(plugHash) && armorModSockets.some((s) => s.socketIndex === i)) {
+            armorMods.push(plugHash);
+          } else if (fashionModSockets.some((s) => s.socketIndex === i)) {
+            // For fashion, we do record the emply plug hashes
+            (modsByBucket[matchingItem.bucket.hash] ||= []).push(plugHash);
+          }
+        }
+      }
+
+      const socketOverrides =
+        // TODO: Pretty soon we can capture all the socket overrides, but for now only copy over subclass config.
+        matchingItem.bucket.hash === BucketHashes.Subclass
+          ? convertInGameLoadoutPlugItemHashesToSocketOverrides(inGameItem.plugItemHashes)
+          : undefined;
+
+      const loadoutItem: DimLoadoutItem = {
+        id: inGameItem.itemInstanceId,
+        hash: matchingItem.hash,
+        socketOverrides,
+        equip: true,
+        amount: 1,
+      };
+
+      return loadoutItem;
+    })
+  );
+
+  const loadout = newLoadout(inGameLoadout.name, loadoutItems, classType);
+  loadout.parameters = {
+    mods: armorMods,
+    modsByBucket,
+  };
+  return loadout;
 }
 
 /**
