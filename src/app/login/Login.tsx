@@ -3,6 +3,7 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import { exportBackupData, exportLocalData } from 'app/storage/export-data';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { isAppStoreVersion } from 'app/utils/browsers';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,10 +15,7 @@ const loginHelpLink = 'https://github.com/DestinyItemManager/DIM/wiki/Accounts-a
 
 export default function Login() {
   const dispatch = useThunkDispatch();
-  const authorizationState = useMemo(
-    () => (navigator.userAgent.includes('DIM AppStore') ? 'dimauth-' : '') + uuidv4(),
-    []
-  );
+  const authorizationState = useMemo(() => (isAppStoreVersion() ? 'dimauth-' : '') + uuidv4(), []);
   const clientId = oauthClientId();
   const { state } = useLocation();
   const previousPath = state?.path;

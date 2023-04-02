@@ -8,6 +8,7 @@ import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import DimApiWarningBanner from 'app/storage/DimApiWarningBanner';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { isiOSBrowser } from 'app/utils/browsers';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import { Portal } from 'app/utils/temp-container';
@@ -108,8 +109,7 @@ export default function Header() {
   const isStandalone =
     window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
 
-  const iosPwaAvailable =
-    /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream && !isStandalone;
+  const iosPwaAvailable = isiOSBrowser() && !isStandalone;
 
   const installable = installPromptEvent || iosPwaAvailable;
 

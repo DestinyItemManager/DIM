@@ -2,6 +2,7 @@ import { getToken } from 'app/bungie-api/oauth-tokens';
 import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
+import { isAppStoreVersion } from 'app/utils/browsers';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { UAParser } from 'ua-parser-js';
@@ -59,7 +60,7 @@ function getSystemInfo() {
 
 export default function About() {
   // The App Store version can't show donation links I guess?
-  const iOSApp = navigator.userAgent.includes('DIM AppStore');
+  const iOSApp = isAppStoreVersion();
 
   useEffect(() => {
     if (iOSApp) {
