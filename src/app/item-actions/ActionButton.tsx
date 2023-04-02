@@ -14,14 +14,14 @@ export default function ActionButton({
   onClick: (e: React.MouseEvent) => void;
 }) {
   return (
-    <div
-      className={clsx(styles.actionButton, { [styles.disabled]: disabled })}
-      onClick={disabled ? undefined : onClick}
+    <button
+      type="button"
+      className={clsx(styles.actionButton)}
+      onClick={onClick}
       title={title}
-      role="button"
-      tabIndex={-1}
+      disabled={disabled}
     >
       {children}
-    </div>
+    </button>
   );
 }

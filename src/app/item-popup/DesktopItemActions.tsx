@@ -16,8 +16,6 @@ import { useSelector } from 'react-redux';
 import styles from './DesktopItemActions.m.scss';
 import { ItemActionsModel } from './item-popup-actions';
 
-const sharedButtonProps = { role: 'button', tabIndex: -1 };
-
 export const menuClassName = styles.interaction;
 
 export default function DesktopItemActions({
@@ -56,14 +54,15 @@ export default function DesktopItemActions({
   return (
     <div className={clsx(styles.interaction, { [styles.collapsed]: sidecarCollapsed })}>
       {actionsModel.hasControls && (
-        <div
+        <button
+          type="button"
           className={styles.collapseButton}
           onClick={toggleSidecar}
           title={t('MovePopup.ToggleSidecar') + ' [K]'}
-          {...sharedButtonProps}
+          aria-keyshortcuts="k"
         >
           <AppIcon icon={sidecarCollapsed ? maximizeIcon : minimizeIcon} />
-        </div>
+        </button>
       )}
 
       <ItemAccessoryButtons

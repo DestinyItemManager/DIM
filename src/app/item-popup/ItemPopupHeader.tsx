@@ -40,7 +40,8 @@ export default function ItemPopupHeader({
   const linkToArmory = !noLink && item.destinyVersion === 2;
 
   return (
-    <div
+    <button
+      type="button"
       className={clsx(styles.header, tierClassName[item.tier], {
         [styles.masterwork]: item.masterwork,
         [styles.pursuit]: item.pursuit,
@@ -51,9 +52,9 @@ export default function ItemPopupHeader({
       {!linkToArmory ? (
         <span className={styles.title}>{item.name}</span>
       ) : (
-        <a className={styles.title}>
+        <h1 className={styles.title}>
           <RichDestinyText text={item.name} ownerId={item.owner} />
-        </a>
+        </h1>
       )}
 
       <div className={styles.subtitle}>
@@ -87,7 +88,7 @@ export default function ItemPopupHeader({
           <ArmorySheet onClose={() => setShowArmory(false)} item={item} />
         </Portal>
       )}
-    </div>
+    </button>
   );
 }
 

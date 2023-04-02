@@ -1,4 +1,5 @@
 import { StoreIcon } from 'app/character-tile/StoreIcon';
+import { symbolize } from 'app/hotkeys/hotkeys';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
@@ -6,9 +7,9 @@ import { sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { getStore, getVault } from 'app/inventory/stores-helpers';
 import ActionButton from 'app/item-actions/ActionButton';
+import ItemMoveAmount from 'app/item-popup/ItemMoveAmount';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemActionsModel, StoreButtonInfo } from 'app/item-popup/item-popup-actions';
-import ItemMoveAmount from 'app/item-popup/ItemMoveAmount';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -18,8 +19,6 @@ import { useSelector } from 'react-redux';
 import styles from './ItemMoveLocations.m.scss';
 
 type MoveSubmit = (store: DimStore, equip?: boolean, moveAmount?: number) => void;
-
-const sharedButtonProps = { role: 'button', tabIndex: -1 };
 
 export default function ItemMoveLocations({
   item,
@@ -77,7 +76,7 @@ export default function ItemMoveLocations({
             <div className={styles.moveWithVault}>
               <MoveLocations
                 label={t('MovePopup.Store')}
-                shortcutKey=" [P]"
+                shortcutKey="p"
                 actionsModel={actionsModel}
                 type="store"
                 defaultPadding={splitVault}
@@ -104,13 +103,9 @@ export default function ItemMoveLocations({
 
 function VaultButton({ store, handleMove }: { store: DimStore; handleMove: () => void }) {
   return (
-    <div
-      className={clsx(styles.move, styles.vaultButton)}
-      onClick={handleMove}
-      {...sharedButtonProps}
-    >
+    <button type="button" className={clsx(styles.move, styles.vaultButton)} onClick={handleMove}>
       <StoreIcon store={store} />
-    </div>
+    </button>
   );
 }
 
@@ -148,18 +143,16 @@ function MoveLocations({
     const handleMove = enabled ? () => submitMoveTo(store, equip) : _.noop;
 
     const button = (
-      <div
-        className={clsx({
-          [styles.equip]: equip,
-          [styles.move]: !equip,
-          [styles.disabled]: !enabled,
-        })}
-        title={`${label}${shortcutKey ? ' ' + shortcutKey : ''}`}
-        onClick={enabled ? handleMove : undefined}
-        {...sharedButtonProps}
+      <button
+        type="button"
+        className={styles.move}
+        title={`${label}${shortcutKey && store.current ? ` [${symbolize(shortcutKey)}]` : ''}`}
+        onClick={handleMove}
+        aria-keyshortcuts={store.current ? shortcutKey : undefined}
+        disabled={!enabled}
       >
         <StoreIcon store={store} useBackground={true} />
-      </div>
+      </button>
     );
 
     return <React.Fragment key={`${equip}-${store.id}`}>{button}</React.Fragment>;
@@ -205,42 +198,42 @@ function PullButtons({
       {t('MovePopup.PullPostmaster')}
       <div className={styles.moveLocationIcons}>
         {showAmounts && (
-          <div
+          <button
+            type="button"
             className={styles.move}
             onClick={() => submitMoveTo(itemOwner, false, 1)}
-            {...sharedButtonProps}
           >
             <StoreIcon store={itemOwner} useBackground={true} label="1" />
-          </div>
+          </button>
         )}
         {showAmounts ? (
           actionsModel.maximumMoveAmount !== 1 && (
-            <div
+            <button
+              type="button"
               className={styles.move}
               onClick={() => submitMoveTo(itemOwner, false, actionsModel.maximumMoveAmount)}
-              {...sharedButtonProps}
             >
               <StoreIcon store={itemOwner} useBackground={true} label={moveMaxLabel} />
-            </div>
+            </button>
           )
         ) : (
-          <div
+          <button
+            type="button"
             className={styles.move}
             onClick={() => submitMoveTo(itemOwner, false, item.amount)}
-            {...sharedButtonProps}
           >
             <StoreIcon store={itemOwner} useBackground={true} label={moveAllLabel} />
-          </div>
+          </button>
         )}
 
         {actionsModel.canVault && (
-          <div
+          <button
+            type="button"
             className={styles.move}
             onClick={() => submitMoveTo(vault!, false, item.amount)}
-            {...sharedButtonProps}
           >
             <StoreIcon store={vault!} label={moveAllLabel} />
-          </div>
+          </button>
         )}
       </div>
     </div>
