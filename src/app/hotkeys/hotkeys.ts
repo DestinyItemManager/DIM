@@ -65,6 +65,8 @@ export interface Hotkey {
  * list of hotkey definitions associated with that component.
  */
 const hotkeysByComponent: { [componentId: number]: Hotkey[] } = {};
+// Only the last hotkey for any combo is currently valid
+const hotkeysByCombo: { [combo: string]: Hotkey[] | undefined } = {};
 
 /**
  * Add a new set of hotkeys. Returns an unregister function that
@@ -84,7 +86,7 @@ export function registerHotkeys(hotkeys: Hotkey[]) {
 function unregister(componentId: number) {
   if (hotkeysByComponent[componentId]) {
     for (const hotkey of hotkeysByComponent[componentId]) {
-      Mousetrap.unbind(hotkey.combo);
+      uninstallHotkey(hotkey);
     }
     delete hotkeysByComponent[componentId];
   }
@@ -154,6 +156,17 @@ function installHotkey(hotkey: Hotkey) {
     }
   };
 
+  const existingHotkeysForCombo = (hotkeysByCombo[hotkey.combo] ??= []);
+  if (existingHotkeysForCombo.length) {
+    Mousetrap.unbind(hotkey.combo);
+  }
+  // Move it to the end of the list
+  const alreadyThereIndex = existingHotkeysForCombo.indexOf(hotkey);
+  if (alreadyThereIndex >= 0) {
+    existingHotkeysForCombo.splice(alreadyThereIndex, 1);
+  }
+  existingHotkeysForCombo.push(hotkey);
+
   if (hotkey.action) {
     Mousetrap.bind(hotkey.combo, callback, hotkey.action);
   } else {
@@ -161,3 +174,16 @@ function installHotkey(hotkey: Hotkey) {
   }
   return hotkey;
 }
+
+function uninstallHotkey(hotkey: Hotkey) {
+  Mousetrap.unbind(hotkey.combo);
+  const allHotkeysForCombo = hotkeysByCombo[hotkey.combo]!;
+  allHotkeysForCombo?.pop();
+  if (allHotkeysForCombo.length) {
+    installHotkey(allHotkeysForCombo[allHotkeysForCombo.length - 1]);
+  } else {
+    delete hotkeysByCombo[hotkey.combo];
+  }
+}
+
+// TODO: replace mousetrap?

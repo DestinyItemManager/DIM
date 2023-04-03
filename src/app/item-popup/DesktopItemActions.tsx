@@ -33,6 +33,8 @@ export default function DesktopItemActions({
 
   const toggleSidecar = () => setSidecarCollapsed(!sidecarCollapsed);
 
+  useHotkey('esc', t('Hotkey.ClearDialog'), () => hideItemPopup());
+
   useHotkey('k', t('MovePopup.ToggleSidecar'), toggleSidecar);
   useHotkey('p', t('Hotkey.Pull'), () => {
     // TODO: if movable

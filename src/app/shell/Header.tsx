@@ -16,7 +16,7 @@ import clsx from 'clsx';
 import logo from 'images/logo-type-right-light.svg';
 import _ from 'lodash';
 import Mousetrap from 'mousetrap';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
@@ -225,42 +225,45 @@ export default function Header() {
   // Links about the current Destiny version
   const destinyLinks = linkNodes;
 
-  const hotkeys: Hotkey[] = [
-    {
-      combo: 'm',
-      description: t('Hotkey.Menu'),
-      callback: toggleDropdown,
-    },
-    {
-      combo: 'f',
-      description: t('Hotkey.StartSearch'),
-      callback: (event) => {
-        if (searchFilter.current) {
-          searchFilter.current.focusFilterInput();
-          if (isPhonePortrait) {
-            setShowSearch(true);
-          }
-        }
-        event.preventDefault();
-        event.stopPropagation();
+  const hotkeys = useMemo(() => {
+    const hotkeys: Hotkey[] = [
+      {
+        combo: 'm',
+        description: t('Hotkey.Menu'),
+        callback: toggleDropdown,
       },
-    },
-    {
-      combo: 'shift+f',
-      description: t('Hotkey.StartSearchClear'),
-      callback: (event) => {
-        if (searchFilter.current) {
-          searchFilter.current.clearFilter();
-          searchFilter.current.focusFilterInput();
-          if (isPhonePortrait) {
-            setShowSearch(true);
+      {
+        combo: 'f',
+        description: t('Hotkey.StartSearch'),
+        callback: (event) => {
+          if (searchFilter.current) {
+            searchFilter.current.focusFilterInput();
+            if (isPhonePortrait) {
+              setShowSearch(true);
+            }
           }
-        }
-        event.preventDefault();
-        event.stopPropagation();
+          event.preventDefault();
+          event.stopPropagation();
+        },
       },
-    },
-  ];
+      {
+        combo: 'shift+f',
+        description: t('Hotkey.StartSearchClear'),
+        callback: (event) => {
+          if (searchFilter.current) {
+            searchFilter.current.clearFilter();
+            searchFilter.current.focusFilterInput();
+            if (isPhonePortrait) {
+              setShowSearch(true);
+            }
+          }
+          event.preventDefault();
+          event.stopPropagation();
+        },
+      },
+    ];
+    return hotkeys;
+  }, [isPhonePortrait, toggleDropdown]);
   useHotkeys(hotkeys);
 
   const showKeyboardHelp = (e: React.MouseEvent) => {

@@ -13,9 +13,9 @@ import Farming from 'app/farming/Farming';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
+import SyncTagLock from 'app/inventory/SyncTagLock';
 import { blockingProfileErrorSelector, storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import SyncTagLock from 'app/inventory/SyncTagLock';
 import ItemFeedPage from 'app/item-feed/ItemFeedPage';
 import LoadoutDrawerContainer from 'app/loadout-drawer/LoadoutDrawerContainer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
@@ -24,7 +24,7 @@ import { RootState } from 'app/store/types';
 import StripSockets from 'app/strip-sockets/StripSockets';
 import { setAppBadge } from 'app/utils/app-badge';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
@@ -116,65 +116,82 @@ export default function Destiny() {
 
   const { pathname, search } = useLocation();
 
-  // Define some hotkeys without implementation, so they show up in the help
-  const hotkeys: Hotkey[] = [
-    {
-      combo: 'c',
-      description: t('Compare.ButtonHelp'),
-      callback() {
-        // Empty
-      },
-    },
-    {
-      combo: 'l',
-      description: t('Hotkey.LockUnlock'),
-      callback() {
-        // Empty
-      },
-    },
-    {
-      combo: 'k',
-      description: t('MovePopup.ToggleSidecar'),
-      callback() {
-        // Empty
-      },
-    },
-    {
-      combo: 'v',
-      description: t('Hotkey.Vault'),
-      callback() {
-        // Empty
-      },
-    },
-    {
-      combo: 'p',
-      description: t('Hotkey.Pull'),
-      callback() {
-        // Empty
-      },
-    },
-    {
-      combo: 'shift+0',
-      description: t('Tags.ClearTag'),
-      callback() {
-        // Empty
-      },
-    },
-  ];
-
-  for (const tag of itemTagList) {
-    if (tag.hotkey) {
-      hotkeys.push({
-        combo: tag.hotkey,
-        description: t('Hotkey.MarkItemAs', {
-          tag: t(tag.label),
-        }),
+  const hotkeys = useMemo(() => {
+    // Define some hotkeys without implementation, so they show up in the help
+    const hotkeys: Hotkey[] = [
+      {
+        combo: 'c',
+        description: t('Compare.ButtonHelp'),
         callback() {
-          // Empty - this gets redefined in item-tag.component.ts
+          // Empty
         },
-      });
+      },
+      {
+        combo: 'l',
+        description: t('Hotkey.LockUnlock'),
+        callback() {
+          // Empty
+        },
+      },
+      {
+        combo: 'k',
+        description: t('MovePopup.ToggleSidecar'),
+        callback() {
+          // Empty
+        },
+      },
+      {
+        combo: 'v',
+        description: t('Hotkey.Vault'),
+        callback() {
+          // Empty
+        },
+      },
+      {
+        combo: 'p',
+        description: t('Hotkey.Pull'),
+        callback() {
+          // Empty
+        },
+      },
+      {
+        combo: 'i',
+        description: t('MovePopup.InfuseTitle'),
+        callback() {
+          // Empty
+        },
+      },
+      {
+        combo: 'a',
+        description: t('Hotkey.Armory'),
+        callback() {
+          // Empty
+        },
+      },
+      {
+        combo: 'shift+0',
+        description: t('Tags.ClearTag'),
+        callback() {
+          // Empty
+        },
+      },
+    ];
+
+    for (const tag of itemTagList) {
+      if (tag.hotkey) {
+        hotkeys.push({
+          combo: tag.hotkey,
+          description: t('Hotkey.MarkItemAs', {
+            tag: t(tag.label),
+          }),
+          callback() {
+            // Empty - this gets redefined in item-tag.component.ts
+          },
+        });
+      }
     }
-  }
+    return hotkeys;
+  }, []);
   useHotkeys(hotkeys);
 
   if (

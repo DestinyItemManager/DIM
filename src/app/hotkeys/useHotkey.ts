@@ -11,9 +11,7 @@ import { Hotkey, registerHotkeys } from './hotkeys';
 export function useHotkey(
   combo: string,
   description: string,
-  callback: (event: KeyboardEvent) => void,
-  action?: 'keypress' | 'keydown' | 'keyup',
-  allowIn?: string[]
+  callback: (event: KeyboardEvent) => void
 ) {
   const actionRef = useRef<(event: KeyboardEvent) => void>();
   actionRef.current = callback;
@@ -26,12 +24,10 @@ export function useHotkey(
         callback: (evt: KeyboardEvent) => {
           typeof actionRef.current === 'function' && actionRef.current(evt);
         },
-        action,
-        allowIn,
       },
     ];
     return registerHotkeys(keys);
-  }, [action, allowIn, combo, description]);
+  }, [combo, description]);
 }
 
 /**
