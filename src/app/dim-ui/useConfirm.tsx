@@ -1,4 +1,3 @@
-import { useHotkey } from 'app/hotkeys/useHotkey';
 import { isWindows } from 'app/utils/browsers';
 import { t } from 'i18next';
 import { useCallback } from 'react';
@@ -51,11 +50,8 @@ function ConfirmDialog({
   const cancel = useCallback(() => close(false), [close]);
   const ok = useCallback(() => close(true), [close]);
 
-  useHotkey('esc', (typeof cancelLabel === 'string' && cancelLabel) || t('Dialog.Cancel'), cancel);
-  useHotkey('enter', (typeof okLabel === 'string' && okLabel) || t('Dialog.OK'), ok);
-
   const okButton = (
-    <button className="dim-button dim-button-primary" type="button" onClick={ok}>
+    <button className="dim-button dim-button-primary" type="button" onClick={ok} autoFocus>
       {okLabel ?? t('Dialog.OK')}
     </button>
   );

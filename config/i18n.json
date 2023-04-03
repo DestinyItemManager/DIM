@@ -55,6 +55,12 @@
     "Vault": "Vault",
     "Weapons": "Weapons"
   },
+  "BulkNote": {
+    "Title": "Bulk modify item notes",
+    "Replace": "Replace note",
+    "Append": "Append note",
+    "Remove": "Remove note"
+  },
   "BungieAlert": {
     "Title": "A message from Bungie:"
   },

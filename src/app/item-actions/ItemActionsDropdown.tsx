@@ -1,7 +1,7 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { compareFilteredItems } from 'app/compare/actions';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
-import { PromptOpts } from 'app/dim-ui/usePrompt';
+import { BulkNoteResult } from 'app/dim-ui/useBulkNote';
 import { t } from 'app/i18next-t';
 import { setNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
@@ -16,7 +16,7 @@ import { stripSockets } from 'app/strip-sockets/strip-sockets-actions';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { itemTagSelectorList, TagCommand } from '../inventory/dim-item-info';
+import { TagCommand, itemTagSelectorList } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
   AppIcon,
@@ -35,7 +35,7 @@ interface Props {
   filteredItems: DimItem[];
   searchActive: boolean;
   fixed?: boolean;
-  prompt: (message: string, opts?: PromptOpts | undefined) => Promise<string | null>;
+  prompt: () => Promise<BulkNoteResult | null>;
 }
 
 /**
@@ -80,10 +80,10 @@ export default React.memo(function ItemActionsDropdown({
 
   // TODO: replace with rich-text dialog, and an "append" option
   const bulkNote = async () => {
-    const note = await prompt(t('Organizer.NotePrompt'));
+    const note = await prompt();
     if (note !== null && filteredItems.length) {
       for (const item of filteredItems) {
-        dispatch(setNote(item, note));
+        dispatch(setNote(item, note.note));
       }
     }
   };

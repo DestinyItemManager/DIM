@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { SymbolsMap, symbolsSelector } from '../destiny-symbols/destiny-symbols';
 
+import { tempContainer } from 'app/utils/temp-container';
 import styles from './text-complete.m.scss';
 
 function createTagsCompleter(
@@ -74,7 +75,8 @@ function createSymbolsAutocompleter(symbols: SymbolsMap): StrategyProps {
  */
 export function useAutocomplete(
   textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement>,
-  tags: string[]
+  tags: string[],
+  parent?: HTMLElement
 ) {
   const symbols = useSelector(symbolsSelector);
   useEffect(() => {
@@ -89,6 +91,7 @@ export function useAutocomplete(
         {
           dropdown: {
             className: clsx(styles.dropdownMenu, 'textcomplete-dropdown'),
+            parent: parent ?? tempContainer,
           },
         }
       );
@@ -96,5 +99,5 @@ export function useAutocomplete(
         textcomplete.destroy();
       };
     }
-  }, [symbols, tags, textArea]);
+  }, [parent, symbols, tags, textArea]);
 }

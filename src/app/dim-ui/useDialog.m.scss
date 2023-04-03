@@ -12,6 +12,7 @@
   padding: 0;
   width: 40em;
   box-sizing: border-box;
+  overflow: visible;
   cursor: default;
 
   @include phone-portrait {
