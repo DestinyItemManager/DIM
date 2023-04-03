@@ -1,5 +1,7 @@
 ## Next
 
+## 7.63.0 <span class="changelog-date">(2023-04-02)</span>
+
 * The "Show Mod Placement" sheet will now show the required armor energy capacity upgrades to make all mods fit (and the total upgrade costs).
 * Loadout Optimizer sets will now show energy capacity bars below armor pieces, similar to the "Show Mod Placement" sheet.
 * Loadouts created before Lightfall with deprecated stat mods now have their stat mods restored.
