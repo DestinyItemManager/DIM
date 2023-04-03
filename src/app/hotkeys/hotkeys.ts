@@ -1,6 +1,7 @@
 import { t, tl } from 'app/i18next-t';
+import { isMac } from 'app/utils/browsers';
+import { compareBy } from 'app/utils/comparators';
 import { StringLookup } from 'app/utils/util-types';
-import Mousetrap from 'mousetrap';
 
 // A unique ID generator
 let componentId = 0;
@@ -32,7 +33,7 @@ export function symbolize(combo: string) {
     .map((part) => {
       // try to resolve command / ctrl based on OS:
       if (part === 'mod') {
-        part = window.navigator?.platform.includes('Mac') ? 'command' : 'ctrl';
+        part = isMac() ? 'command' : 'ctrl';
       }
 
       return keyi18n[part] ? t(keyi18n[part]!) : map[part] || part;
@@ -55,8 +56,6 @@ function format(hotkey: Hotkey) {
 export interface Hotkey {
   combo: string;
   description: string;
-  action?: 'keypress' | 'keydown' | 'keyup';
-  allowIn?: string[];
   callback: (event: KeyboardEvent) => void;
 }
 
@@ -115,18 +114,6 @@ function installHotkey(hotkey: Hotkey) {
   // save the original callback
   const _callback = hotkey.callback;
 
-  // remove anything from preventIn that's present in allowIn
-  if (hotkey.allowIn) {
-    let index;
-    for (let i = 0; i < hotkey.allowIn.length; i++) {
-      hotkey.allowIn[i] = hotkey.allowIn[i].toUpperCase();
-      index = preventIn.indexOf(hotkey.allowIn[i]);
-      if (index !== -1) {
-        preventIn.splice(index, 1);
-      }
-    }
-  }
-
   // create the new wrapper callback
   const callback = (event: KeyboardEvent) => {
     let shouldExecute = true;
@@ -158,7 +145,7 @@ function installHotkey(hotkey: Hotkey) {
 
   const existingHotkeysForCombo = (hotkeysByCombo[hotkey.combo] ??= []);
   if (existingHotkeysForCombo.length) {
-    Mousetrap.unbind(hotkey.combo);
+    unbind(hotkey.combo);
   }
   // Move it to the end of the list
   const alreadyThereIndex = existingHotkeysForCombo.indexOf(hotkey);
@@ -167,16 +154,12 @@ function installHotkey(hotkey: Hotkey) {
   }
   existingHotkeysForCombo.push(hotkey);
 
-  if (hotkey.action) {
-    Mousetrap.bind(hotkey.combo, callback, hotkey.action);
-  } else {
-    Mousetrap.bind(hotkey.combo, callback);
-  }
+  bind(hotkey.combo, callback);
   return hotkey;
 }
 
 function uninstallHotkey(hotkey: Hotkey) {
-  Mousetrap.unbind(hotkey.combo);
+  unbind(hotkey.combo);
   const allHotkeysForCombo = hotkeysByCombo[hotkey.combo]!;
   allHotkeysForCombo?.pop();
   if (allHotkeysForCombo.length) {
@@ -187,3 +170,137 @@ function uninstallHotkey(hotkey: Hotkey) {
 }
 
 // TODO: replace mousetrap?
+
+const keyMap: { [combo: string]: ((e: KeyboardEvent) => void)[] } = {};
+const modifiers = ['ctrl', 'alt', 'shift', 'meta'];
+
+function bind(combo: string, callback: (e: KeyboardEvent) => void) {
+  const normalizedCombo = combo
+    .split('+')
+    .map((c) => (c === 'mod' ? (isMac() ? 'meta' : 'ctrl') : c))
+    .sort(compareBy((c) => modifiers.indexOf(c) + 1 || 999))
+    .join('+');
+  (keyMap[normalizedCombo] ??= []).push(callback);
+}
+
+function unbind(combo: string) {
+  delete keyMap[combo];
+}
+
+const _MAP: { [code: number]: string } = {
+  8: 'backspace',
+  9: 'tab',
+  13: 'enter',
+  16: 'shift',
+  17: 'ctrl',
+  18: 'alt',
+  20: 'capslock',
+  27: 'esc',
+  32: 'space',
+  33: 'pageup',
+  34: 'pagedown',
+  35: 'end',
+  36: 'home',
+  37: 'left',
+  38: 'up',
+  39: 'right',
+  40: 'down',
+  45: 'ins',
+  46: 'del',
+  91: 'meta',
+  93: 'meta',
+  224: 'meta',
+};
+
+/**
+ * loop through the f keys, f1 to f19 and add them to the map
+ * programatically
+ */
+for (let i = 1; i < 20; ++i) {
+  _MAP[111 + i] = 'f' + i;
+}
+
+/**
+ * loop through to map numbers on the numeric keypad
+ */
+for (let i = 0; i <= 9; ++i) {
+  // This needs to use a string cause otherwise since 0 is falsey
+  // mousetrap will never fire for numpad 0 pressed as part of a keydown
+  // event.
+  //
+  // @see https://github.com/ccampbell/mousetrap/pull/258
+  _MAP[i + 96] = i.toString();
+}
+
+/**
+ * mapping for special characters so they can support
+ *
+ * this dictionary is only used incase you want to bind a
+ * keyup or keydown event to one of these keys
+ *
+ * @type {Object}
+ */
+const _KEYCODE_MAP: { [code: number]: string } = {
+  106: '*',
+  107: '+',
+  109: '-',
+  110: '.',
+  111: '/',
+  186: ';',
+  187: '=',
+  188: ',',
+  189: '-',
+  190: '.',
+  191: '/',
+  192: '`',
+  219: '[',
+  220: '\\',
+  221: ']',
+  222: "'",
+};
+
+function handleKeyEvent(e: KeyboardEvent) {
+  if (
+    e.isComposing ||
+    e.repeat ||
+    (e.target instanceof HTMLElement &&
+      (e.target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)))
+  ) {
+    return;
+  }
+
+  const combo = new Set();
+  if (e.ctrlKey && e.key !== 'ctrl') {
+    combo.add('ctrl');
+  }
+  if (e.altKey && e.key !== 'alt') {
+    combo.add('alt');
+  }
+  if (e.shiftKey && e.key !== 'shift') {
+    combo.add('shift');
+  }
+  if (e.metaKey && e.key !== 'meta') {
+    combo.add('meta');
+  }
+
+  // Try the keycode version, which works for stuff like Shift+1
+  const character =
+    _MAP[e.which] ?? _KEYCODE_MAP[e.which] ?? String.fromCharCode(e.which).toLowerCase();
+  const comboStr = [...combo, character].join('+');
+  trigger(comboStr, e);
+
+  // Then try the resolved key which works for stuff like ?. We don't need modifiers for that one.
+  trigger(e.key, e);
+}
+
+export function trigger(comboStr: string, e: KeyboardEvent) {
+  const callbacks = keyMap[comboStr];
+  if (callbacks) {
+    for (const callback of callbacks) {
+      callback(e);
+    }
+  }
+}
+
+// document.addEventListener('keypress', handleKeyEvent);
+document.addEventListener('keydown', handleKeyEvent);

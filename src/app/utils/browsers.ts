@@ -23,6 +23,11 @@ export function isSteamBrowser() {
   return steam;
 }
 
+const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+export function isMac() {
+  return mac;
+}
+
 /**
  * Firefox makes the baffling decision to bubble clicks on its scrollbars down
  * to page contents. This is the only way I found to distinguish them.

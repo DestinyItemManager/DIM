@@ -1,7 +1,7 @@
 import MenuAccounts from 'app/accounts/MenuAccounts';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import Sheet from 'app/dim-ui/Sheet';
-import { Hotkey } from 'app/hotkeys/hotkeys';
+import { Hotkey, trigger } from 'app/hotkeys/hotkeys';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
@@ -15,7 +15,6 @@ import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import logo from 'images/logo-type-right-light.svg';
 import _ from 'lodash';
-import Mousetrap from 'mousetrap';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -269,7 +268,7 @@ export default function Header() {
   const showKeyboardHelp = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    Mousetrap.trigger('?');
+    trigger('shift+?', e);
     setDropdownOpen(false);
   };
 
