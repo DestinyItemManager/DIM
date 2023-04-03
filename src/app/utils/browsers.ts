@@ -11,6 +11,13 @@ export function isiOSBrowser() {
   return iOS;
 }
 
+const windows = navigator.platform.includes('Win');
+
+/** Is this a Windows machine? */
+export function isWindows() {
+  return windows;
+}
+
 /**
  * Firefox makes the baffling decision to bubble clicks on its scrollbars down
  * to page contents. This is the only way I found to distinguish them.

@@ -131,7 +131,8 @@ export default function LoadoutPopup({
           ? t('Loadouts.RandomizeWeapons')
           : query.length > 0
           ? t('Loadouts.RandomizeSearchPrompt', { query })
-          : t('Loadouts.RandomizePrompt')
+          : t('Loadouts.RandomizePrompt'),
+        { okLabel: t('Loadouts.Randomize') }
       ))
     ) {
       e.preventDefault();

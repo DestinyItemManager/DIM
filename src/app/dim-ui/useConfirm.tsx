@@ -1,5 +1,8 @@
+import { useHotkey } from 'app/hotkeys/useHotkey';
+import { isWindows } from 'app/utils/browsers';
 import { t } from 'i18next';
-import { Buttons, default as useDialog, Title } from './useDialog';
+import { useCallback } from 'react';
+import { Buttons, Title, default as useDialog } from './useDialog';
 
 export interface ConfirmOpts {
   okLabel?: React.ReactNode;
@@ -20,21 +23,65 @@ export default function useConfirm(): [
     },
     boolean
   >((args, close) => (
-    <>
-      <Title>{args.message}</Title>
-      <Buttons>
-        <button className="dim-button" type="button" onClick={() => close(true)}>
-          {args.okLabel ?? t('Dialog.OK')}
-        </button>
-        <button className="dim-button" type="button" onClick={() => close(false)}>
-          {args.cancelLabel ?? t('Dialog.Cancel')}
-        </button>
-      </Buttons>
-    </>
+    <ConfirmDialog
+      message={args.message}
+      okLabel={args.okLabel}
+      cancelLabel={args.cancelLabel}
+      close={close}
+    />
   ));
 
   const confirm = (message: React.ReactNode, opts?: ConfirmOpts) =>
     showDialog({ message, ...opts });
 
   return [dialog, confirm];
+}
+
+function ConfirmDialog({
+  message,
+  okLabel,
+  cancelLabel,
+  close,
+}: {
+  message: React.ReactNode;
+  okLabel?: React.ReactNode;
+  cancelLabel?: React.ReactNode;
+  close: (result: boolean) => void;
+}) {
+  const cancel = useCallback(() => close(false), [close]);
+  const ok = useCallback(() => close(true), [close]);
+
+  useHotkey('esc', (typeof cancelLabel === 'string' && cancelLabel) || t('Dialog.Cancel'), cancel);
+  useHotkey('enter', (typeof okLabel === 'string' && okLabel) || t('Dialog.OK'), ok);
+
+  const okButton = (
+    <button className="dim-button dim-button-primary" type="button" onClick={ok}>
+      {okLabel ?? t('Dialog.OK')}
+    </button>
+  );
+
+  const cancelButton = (
+    <button className="dim-button" type="button" onClick={cancel}>
+      {cancelLabel ?? t('Dialog.Cancel')}
+    </button>
+  );
+
+  return (
+    <>
+      <Title>{message}</Title>
+      <Buttons>
+        {isWindows() ? (
+          <>
+            {cancelButton}
+            {okButton}
+          </>
+        ) : (
+          <>
+            {okButton}
+            {cancelButton}
+          </>
+        )}
+      </Buttons>
+    </>
+  );
 }

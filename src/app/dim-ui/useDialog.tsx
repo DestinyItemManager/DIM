@@ -88,8 +88,15 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
     }
   }, [dialogRef]);
 
+  // We block click event propagation or else it'll trigger click handlers of the parent.
   return (
-    <dialog className={styles.dialog} ref={dialogRef} onClose={handleCloseEvent}>
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+    <dialog
+      className={styles.dialog}
+      ref={dialogRef}
+      onClose={handleCloseEvent}
+      onClick={(e) => e.stopPropagation()}
+    >
       {dialogState && children(dialogState.args, close)}
     </dialog>
   );
