@@ -10,7 +10,7 @@ import CompareContainer from 'app/compare/CompareContainer';
 import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
-import { useHotkeys } from 'app/hotkeys/useHotkey';
+import { useHotkey, useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
 import SyncTagLock from 'app/inventory/SyncTagLock';
@@ -24,6 +24,7 @@ import { RootState } from 'app/store/types';
 import StripSockets from 'app/strip-sockets/StripSockets';
 import { setAppBadge } from 'app/utils/app-badge';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
+import _ from 'lodash';
 import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
@@ -116,67 +117,18 @@ export default function Destiny() {
 
   const { pathname, search } = useLocation();
 
-  const hotkeys = useMemo(() => {
-    // Define some hotkeys without implementation, so they show up in the help
-    const hotkeys: Hotkey[] = [
-      {
-        combo: 'c',
-        description: t('Compare.ButtonHelp'),
-        callback() {
-          // Empty
-        },
-      },
-      {
-        combo: 'l',
-        description: t('Hotkey.LockUnlock'),
-        callback() {
-          // Empty
-        },
-      },
-      {
-        combo: 'k',
-        description: t('MovePopup.ToggleSidecar'),
-        callback() {
-          // Empty
-        },
-      },
-      {
-        combo: 'v',
-        description: t('Hotkey.Vault'),
-        callback() {
-          // Empty
-        },
-      },
-      {
-        combo: 'p',
-        description: t('Hotkey.Pull'),
-        callback() {
-          // Empty
-        },
-      },
-      {
-        combo: 'i',
-        description: t('MovePopup.InfuseTitle'),
-        callback() {
-          // Empty
-        },
-      },
-      {
-        combo: 'a',
-        description: t('Hotkey.Armory'),
-        callback() {
-          // Empty
-        },
-      },
-      {
-        combo: 'shift+0',
-        description: t('Tags.ClearTag'),
-        callback() {
-          // Empty
-        },
-      },
-    ];
+  // Define some hotkeys without implementation, so they show up in the help
+  useHotkey('c', t('Compare.ButtonHelp'), _.noop);
+  useHotkey('l', t('Hotkey.LockUnlock'), _.noop);
+  useHotkey('k', t('MovePopup.ToggleSidecar'), _.noop);
+  useHotkey('v', t('Hotkey.Vault'), _.noop);
+  useHotkey('p', t('Hotkey.Pull'), _.noop);
+  useHotkey('i', t('MovePopup.InfuseTitle'), _.noop);
+  useHotkey('a', t('Hotkey.Armory'), _.noop);
+  useHotkey('shift+0', t('Tags.ClearTag'), _.noop);
 
+  const hotkeys = useMemo(() => {
+    const hotkeys: Hotkey[] = [];
     for (const tag of itemTagList) {
       if (tag.hotkey) {
         hotkeys.push({

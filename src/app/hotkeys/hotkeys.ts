@@ -2,11 +2,9 @@ import { t, tl } from 'app/i18next-t';
 import { isMac } from 'app/utils/browsers';
 import { compareBy } from 'app/utils/comparators';
 import { StringLookup } from 'app/utils/util-types';
+import _ from 'lodash';
 
-// A unique ID generator
-let componentId = 0;
-export const getHotkeyId = () => componentId++;
-
+/** Mapping from key name to fun symbols */
 const map: StringLookup<string> = {
   command: '\u2318', // ⌘
   shift: '\u21E7', // ⇧
@@ -18,6 +16,7 @@ const map: StringLookup<string> = {
   backspace: '\u232B', // ⌫
 };
 
+/** We translate the keys that don't have fun symbols. */
 const keyi18n: StringLookup<string> = {
   tab: tl('Hotkey.Tab'),
   enter: tl('Hotkey.Enter'),
@@ -41,111 +40,67 @@ export function symbolize(combo: string) {
     .join(' ');
 }
 
-function format(hotkey: Hotkey) {
-  // Don't show all the possible key combos, just the first one.  Not sure
-  // of usecase here, so open a ticket if my assumptions are wrong
-  const combo = hotkey.combo;
-
-  const sequence = combo.split(/\s/);
-  for (let i = 0; i < sequence.length; i++) {
-    sequence[i] = symbolize(sequence[i]);
-  }
-  return sequence.join(' ');
-}
-
 export interface Hotkey {
   combo: string;
   description: string;
   callback: (event: KeyboardEvent) => void;
 }
 
-/**
- * A mapping from a unique identifier for a component (see getHotkeyId) to a
- * list of hotkey definitions associated with that component.
- */
-const hotkeysByComponent: { [componentId: number]: Hotkey[] } = {};
-// Only the last hotkey for any combo is currently valid
-const hotkeysByCombo: { [combo: string]: Hotkey[] | undefined } = {};
+// Each key combo can have many hotkey implementations bound to it, but only the
+// last one in the array gets triggered.
+const keyMap: { [combo: string]: Hotkey[] } = {};
 
 /**
- * Add a new set of hotkeys. Returns an unregister function that
- * can be used to remove these bindings.
+ * Add a new set of hotkeys. Returns an unregister function that can be used to
+ * remove these bindings.
  */
 export function registerHotkeys(hotkeys: Hotkey[]) {
-  const componentId = getHotkeyId();
-  if (hotkeys?.length) {
+  if (!hotkeys?.length) {
+    return _.noop;
+  }
+  for (const hotkey of hotkeys) {
+    bind(hotkey);
+  }
+  return () => {
     for (const hotkey of hotkeys) {
-      installHotkey(hotkey);
+      unbind(hotkey);
     }
-    hotkeysByComponent[componentId] = hotkeys;
-  }
-  return () => unregister(componentId);
-}
-
-function unregister(componentId: number) {
-  if (hotkeysByComponent[componentId]) {
-    for (const hotkey of hotkeysByComponent[componentId]) {
-      uninstallHotkey(hotkey);
-    }
-    delete hotkeysByComponent[componentId];
-  }
+  };
 }
 
 export function getAllHotkeys() {
   const combos: { [combo: string]: string } = {};
-  for (const hotkeyList of Object.values(hotkeysByComponent)) {
-    for (const hotkey of hotkeyList) {
-      const combo = format(hotkey);
-      combos[combo] = hotkey.description;
-    }
+  for (const hotkeyList of Object.values(keyMap)) {
+    const hotkey = hotkeyList[hotkeyList.length - 1];
+    const combo = symbolize(hotkey.combo);
+    combos[combo] = hotkey.description;
   }
   return combos;
 }
 
-// Add the actual key handler via MouseTrap.
-function installHotkey(hotkey: Hotkey) {
-  const callback = hotkey.callback;
-
-  const existingHotkeysForCombo = (hotkeysByCombo[hotkey.combo] ??= []);
-  if (existingHotkeysForCombo.length) {
-    unbind(hotkey.combo);
-  }
-  // Move it to the end of the list
-  const alreadyThereIndex = existingHotkeysForCombo.indexOf(hotkey);
-  if (alreadyThereIndex >= 0) {
-    existingHotkeysForCombo.splice(alreadyThereIndex, 1);
-  }
-  existingHotkeysForCombo.push(hotkey);
-
-  bind(hotkey.combo, callback);
-  return hotkey;
-}
-
-function uninstallHotkey(hotkey: Hotkey) {
-  unbind(hotkey.combo);
-  const allHotkeysForCombo = hotkeysByCombo[hotkey.combo]!;
-  allHotkeysForCombo?.pop();
-  if (allHotkeysForCombo.length) {
-    installHotkey(allHotkeysForCombo[allHotkeysForCombo.length - 1]);
-  } else {
-    delete hotkeysByCombo[hotkey.combo];
-  }
-}
-
-const keyMap: { [combo: string]: ((e: KeyboardEvent) => void)[] } = {};
 const modifiers = ['ctrl', 'alt', 'shift', 'meta'];
-
-function bind(combo: string, callback: (e: KeyboardEvent) => void) {
-  const normalizedCombo = combo
+function normalizeCombo(combo: string) {
+  return combo
     .split('+')
     .map((c) => (c === 'mod' ? (isMac() ? 'meta' : 'ctrl') : c))
     .sort(compareBy((c) => modifiers.indexOf(c) + 1 || 999))
     .join('+');
-  (keyMap[normalizedCombo] ??= []).push(callback);
 }
 
-function unbind(combo: string) {
-  delete keyMap[combo];
+function bind(hotkey: Hotkey) {
+  (keyMap[normalizeCombo(hotkey.combo)] ??= []).push(hotkey);
+}
+
+function unbind(hotkey: Hotkey) {
+  const normalizedCombo = normalizeCombo(hotkey.combo);
+  const hotkeysForCombo = keyMap[normalizedCombo];
+  const existingIndex = hotkeysForCombo.indexOf(hotkey);
+  if (existingIndex >= 0) {
+    hotkeysForCombo.splice(existingIndex, 1);
+  }
+  if (!hotkeysForCombo.length) {
+    delete keyMap[normalizedCombo];
+  }
 }
 
 const _MAP: { [code: number]: string } = {
@@ -241,7 +196,7 @@ function trigger(comboStr: string, e: KeyboardEvent) {
   const callbacks = keyMap[comboStr];
   if (callbacks) {
     // Only call the last callback registered for this combo.
-    callbacks[callbacks.length - 1](e);
+    callbacks[callbacks.length - 1].callback(e);
     return true;
   }
   return false;

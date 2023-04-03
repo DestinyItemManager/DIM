@@ -2,7 +2,7 @@ import KeyHelp from 'app/dim-ui/KeyHelp';
 import { t } from 'app/i18next-t';
 import { Observable } from 'app/utils/observable';
 import _ from 'lodash';
-import React from 'react';
+import React, { memo } from 'react';
 import { useSubscription } from 'use-subscription';
 import GlobalHotkeys from './GlobalHotkeys';
 import styles from './HotkeysCheatSheet.m.scss';
@@ -11,7 +11,7 @@ import { useHotkey } from './useHotkey';
 
 export const showCheatSheet$ = new Observable(false);
 
-export default function HotkeysCheatSheet() {
+export default memo(function HotkeysCheatSheet() {
   const visible = useSubscription(showCheatSheet$);
 
   const toggle = () => showCheatSheet$.next(!visible);
@@ -55,4 +55,4 @@ export default function HotkeysCheatSheet() {
       </div>
     </div>
   );
-}
+});

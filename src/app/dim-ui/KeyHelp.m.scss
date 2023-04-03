@@ -1,6 +1,7 @@
 @use '../variables.scss' as *;
 
 .keyHelp {
+  font-family: monospace;
   border-radius: 2px;
   display: inline-block;
   padding: 0 4px;
