@@ -4,7 +4,7 @@ import { infoLog } from './log';
 /**
  * A debugging hook that will print out what changed since the last render!
  *
- * Example:
+ * @example
  *
  * useWhatChanged('MyComponent', {prop1, prop2, state1, state2});
  */
