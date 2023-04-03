@@ -192,6 +192,8 @@ export function newLoadoutFromEquipped(
     return item;
   });
   const loadout = newLoadout(name, loadoutItems, dimStore.classType);
+  // Choose a stable ID
+  loadout.id = 'equipped';
   const mods = items.flatMap((i) => extractArmorModHashes(i));
   if (mods.length) {
     loadout.parameters = {
