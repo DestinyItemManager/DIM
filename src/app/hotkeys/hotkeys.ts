@@ -104,44 +104,7 @@ export function getAllHotkeys() {
 
 // Add the actual key handler via MouseTrap.
 function installHotkey(hotkey: Hotkey) {
-  // these elements are prevented by the default Mousetrap.stopCallback():
-  const preventIn = ['INPUT', 'SELECT', 'TEXTAREA'];
-
-  // if callback is defined, then wrap it in a function
-  // that checks if the event originated from a form element.
-  // the function blocks the callback from executing unless the element is specified
-  // in allowIn (emulates Mousetrap.stopCallback() on a per-key level)
-  // save the original callback
-  const _callback = hotkey.callback;
-
-  // create the new wrapper callback
-  const callback = (event: KeyboardEvent) => {
-    let shouldExecute = true;
-
-    // if the callback is executed directly `hotkey.get('w').callback()`
-    // there will be no event, so just execute the callback.
-    if (event) {
-      const target = (event.target || event.srcElement!) as Element | undefined; // srcElement is IE only
-      const nodeName = target?.nodeName.toUpperCase();
-
-      // check if the input has a mousetrap class, and skip checking preventIn if so
-      if (target?.classList.contains('mousetrap')) {
-        shouldExecute = true;
-      } else {
-        // don't execute callback if the event was fired from inside an element listed in preventIn
-        for (const prevent of preventIn) {
-          if (prevent === nodeName) {
-            shouldExecute = false;
-            break;
-          }
-        }
-      }
-    }
-
-    if (shouldExecute) {
-      _callback(event);
-    }
-  };
+  const callback = hotkey.callback;
 
   const existingHotkeysForCombo = (hotkeysByCombo[hotkey.combo] ??= []);
   if (existingHotkeysForCombo.length) {
@@ -168,8 +131,6 @@ function uninstallHotkey(hotkey: Hotkey) {
     delete hotkeysByCombo[hotkey.combo];
   }
 }
-
-// TODO: replace mousetrap?
 
 const keyMap: { [combo: string]: ((e: KeyboardEvent) => void)[] } = {};
 const modifiers = ['ctrl', 'alt', 'shift', 'meta'];
@@ -210,37 +171,6 @@ const _MAP: { [code: number]: string } = {
   91: 'meta',
   93: 'meta',
   224: 'meta',
-};
-
-/**
- * loop through the f keys, f1 to f19 and add them to the map
- * programatically
- */
-for (let i = 1; i < 20; ++i) {
-  _MAP[111 + i] = 'f' + i;
-}
-
-/**
- * loop through to map numbers on the numeric keypad
- */
-for (let i = 0; i <= 9; ++i) {
-  // This needs to use a string cause otherwise since 0 is falsey
-  // mousetrap will never fire for numpad 0 pressed as part of a keydown
-  // event.
-  //
-  // @see https://github.com/ccampbell/mousetrap/pull/258
-  _MAP[i + 96] = i.toString();
-}
-
-/**
- * mapping for special characters so they can support
- *
- * this dictionary is only used incase you want to bind a
- * keyup or keydown event to one of these keys
- *
- * @type {Object}
- */
-const _KEYCODE_MAP: { [code: number]: string } = {
   106: '*',
   107: '+',
   109: '-',
@@ -258,6 +188,15 @@ const _KEYCODE_MAP: { [code: number]: string } = {
   221: ']',
   222: "'",
 };
+// Add in the number keys
+for (let i = 0; i <= 9; ++i) {
+  // This needs to use a string cause otherwise since 0 is falsey
+  // mousetrap will never fire for numpad 0 pressed as part of a keydown
+  // event.
+  //
+  // @see https://github.com/ccampbell/mousetrap/pull/258
+  _MAP[i + 96] = i.toString();
+}
 
 function handleKeyEvent(e: KeyboardEvent) {
   if (
@@ -269,7 +208,7 @@ function handleKeyEvent(e: KeyboardEvent) {
     return;
   }
 
-  const combo = new Set();
+  const combo = new Set<string>();
   if (e.ctrlKey && e.key !== 'ctrl') {
     combo.add('ctrl');
   }
@@ -283,24 +222,29 @@ function handleKeyEvent(e: KeyboardEvent) {
     combo.add('meta');
   }
 
-  // Try the keycode version, which works for stuff like Shift+1
-  const character =
-    _MAP[e.which] ?? _KEYCODE_MAP[e.which] ?? String.fromCharCode(e.which).toLowerCase();
-  const comboStr = [...combo, character].join('+');
+  // This works for stuff like Shift+1
+  const character = _MAP[e.which] ?? String.fromCharCode(e.which).toLowerCase();
+  combo.add(character);
+  const comboStr = [...combo].join('+');
   trigger(comboStr, e);
 
+  /*
+  // TODO: we don't need this unless we want shortcuts like ? or @.
   // Then try the resolved key which works for stuff like ?. We don't need modifiers for that one.
-  trigger(e.key, e);
+  combo.delete('shift');
+  const comboStr2 = [...combo, e.key].join('+');
+  trigger(comboStr2, e);
+  */
 }
 
-export function trigger(comboStr: string, e: KeyboardEvent) {
+function trigger(comboStr: string, e: KeyboardEvent) {
   const callbacks = keyMap[comboStr];
   if (callbacks) {
-    for (const callback of callbacks) {
-      callback(e);
-    }
+    // Only call the last callback registered for this combo.
+    callbacks[callbacks.length - 1](e);
+    return true;
   }
+  return false;
 }
 
-// document.addEventListener('keypress', handleKeyEvent);
 document.addEventListener('keydown', handleKeyEvent);

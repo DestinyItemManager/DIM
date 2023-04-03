@@ -1,21 +1,24 @@
 import KeyHelp from 'app/dim-ui/KeyHelp';
 import { t } from 'app/i18next-t';
+import { Observable } from 'app/utils/observable';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React from 'react';
+import { useSubscription } from 'use-subscription';
 import GlobalHotkeys from './GlobalHotkeys';
 import styles from './HotkeysCheatSheet.m.scss';
 import { getAllHotkeys } from './hotkeys';
 import { useHotkey } from './useHotkey';
 
+export const showCheatSheet$ = new Observable(false);
+
 export default function HotkeysCheatSheet() {
-  const [visible, setVisible] = useState(false);
+  const visible = useSubscription(showCheatSheet$);
 
-  const toggle = () => setVisible((visible) => !visible);
+  const toggle = () => showCheatSheet$.next(!visible);
 
-  const hide = () => setVisible(false);
+  const hide = () => showCheatSheet$.next(false);
 
-  useHotkey('?', t('Hotkey.ShowHotkeys'), toggle);
-  useHotkey('esc', '', hide);
+  useHotkey('mod+/', t('Hotkey.ShowHotkeys'), toggle);
 
   if (!visible) {
     return null;

@@ -1,7 +1,8 @@
 import MenuAccounts from 'app/accounts/MenuAccounts';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import Sheet from 'app/dim-ui/Sheet';
-import { Hotkey, trigger } from 'app/hotkeys/hotkeys';
+import { showCheatSheet$ } from 'app/hotkeys/HotkeysCheatSheet';
+import { Hotkey } from 'app/hotkeys/hotkeys';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
@@ -268,7 +269,7 @@ export default function Header() {
   const showKeyboardHelp = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    trigger('shift+?', e);
+    showCheatSheet$.next(true);
     setDropdownOpen(false);
   };
 
