@@ -3,6 +3,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { buildDefinedPlug } from 'app/inventory/store/sockets';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
 import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
+import { plugFitsIntoSocket } from 'app/utils/socket-utils';
 import produce from 'immer';
 import {
   bulwarkFinishModHash,
@@ -25,6 +26,10 @@ function processAction(defs: D2ManifestDefinitions, originalItem: DimItem, actio
     // but they're required for UI progress reporting.
     if (targetedSocket.plugged!.plugDef.hash === action.mod.hash) {
       return;
+    }
+
+    if (!plugFitsIntoSocket(targetedSocket, action.mod.hash)) {
+      throw new Error('mod does not fit into this socket');
     }
 
     const existingExclusionGroup = getModExclusionGroup(targetedSocket.plugged!.plugDef);
