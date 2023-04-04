@@ -140,10 +140,11 @@ describe('mod-assignment-utils plugging strategy', () => {
   ) {
     const positions = pickPlugPositions(defs, item, mods);
     const strategy = createPluggingStrategy(defs, item, positions);
+    const newItem = processActions(defs, item, strategy);
     if (assertNumRequiredActions !== undefined) {
       checkNumRequiredActions(strategy, assertNumRequiredActions);
     }
-    return processActions(defs, item, strategy);
+    return newItem;
   }
 
   function checkNumRequiredActions(strategy: PluggingAction[], num: number) {
@@ -200,8 +201,8 @@ describe('mod-assignment-utils plugging strategy', () => {
     bulwarkPosition.socketIndex += 1;
     resetPosition.socketIndex -= 1;
     const strategy = createPluggingStrategy(defs, ourItem, positions);
-    checkNumRequiredActions(strategy, 2);
     const newItem = processActions(defs, ourItem, strategy);
+    checkNumRequiredActions(strategy, 2);
     expect(newItem.energy?.energyUsed).toBe(4);
   });
 
