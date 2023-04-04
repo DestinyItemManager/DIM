@@ -110,6 +110,11 @@ describe('mod-assignment-utils plugging strategy', () => {
       distributionModHash
     ) as PluggableInventoryItemDefinition;
 
+    const exclusionGroup1 = getModExclusionGroup(empoweringFinishMod);
+    const exclusionGroup2 = getModExclusionGroup(bulwarkFinishMod);
+    expect(exclusionGroup1).not.toBeUndefined();
+    expect(exclusionGroup1).toBe(exclusionGroup2);
+
     resetAssignments = pickPlugPositions(defs, classItem, [], true);
     const actions = createPluggingStrategy(defs, classItem, resetAssignments);
     classItem = processActions(defs, classItem, actions);
@@ -128,12 +133,21 @@ describe('mod-assignment-utils plugging strategy', () => {
     }
   });
 
-  function applyMods(item: DimItem, mods: PluggableInventoryItemDefinition[], log?: boolean) {
-    const strategy = createPluggingStrategy(defs, item, pickPlugPositions(defs, item, mods));
-    if (log) {
-      console.log(strategy);
+  function applyMods(
+    item: DimItem,
+    mods: PluggableInventoryItemDefinition[],
+    assertNumRequiredActions?: number
+  ) {
+    const positions = pickPlugPositions(defs, item, mods);
+    const strategy = createPluggingStrategy(defs, item, positions);
+    if (assertNumRequiredActions !== undefined) {
+      checkNumRequiredActions(strategy, assertNumRequiredActions);
     }
     return processActions(defs, item, strategy);
+  }
+
+  function checkNumRequiredActions(strategy: PluggingAction[], num: number) {
+    expect(strategy.filter((action) => action.required).length).toBe(num);
   }
 
   it('keeps existing mod in place if removal optional', () => {
@@ -142,7 +156,7 @@ describe('mod-assignment-utils plugging strategy', () => {
     expect(ourItem.energy?.energyUsed).toBe(4);
     expect(empoweringFinishMod.plug.energyCost!.energyCost).toBe(1);
     // Apply a 1-cost mod
-    const newItem = applyMods(ourItem, [empoweringFinishMod]);
+    const newItem = applyMods(ourItem, [empoweringFinishMod], 1);
     expect(newItem.energy?.energyUsed).toBe(5);
   });
 
@@ -150,16 +164,23 @@ describe('mod-assignment-utils plugging strategy', () => {
     // Now has 4 used, 1 left.
     const ourItem = applyMods(classItem, [recoveryMod]);
     // Apply a 3-cost mod
-    const newItem = applyMods(ourItem, [distributionMod]);
+    const newItem = applyMods(ourItem, [distributionMod], 2);
     expect(newItem.energy?.energyUsed).toBe(3);
   });
 
   it('prefers replacing mutual exclusion mod', () => {
     // 4 used, 1 left (w/ mutex)
     const ourItem = applyMods(classItem, [distributionMod, empoweringFinishMod]);
+    const empoweringIndex = ourItem.sockets!.allSockets.findIndex(
+      (socket) => socket.plugged?.plugDef.hash === empoweringFinishMod.hash
+    )!;
     expect(ourItem.energy?.energyUsed).toBe(4);
     // Apply a 1-cost mutex mod, this should replace the other 1-cost mod
-    const newItem = applyMods(ourItem, [bulwarkFinishMod], true);
+    const newItem = applyMods(ourItem, [bulwarkFinishMod], 2);
+    const bulwarkIndex = newItem.sockets!.allSockets.findIndex(
+      (socket) => socket.plugged?.plugDef.hash === bulwarkFinishMod.hash
+    )!;
+    expect(empoweringIndex).toBe(bulwarkIndex);
     expect(newItem.energy?.energyUsed).toBe(4);
   });
 
@@ -178,8 +199,9 @@ describe('mod-assignment-utils plugging strategy', () => {
     )!;
     bulwarkPosition.socketIndex += 1;
     resetPosition.socketIndex -= 1;
-
-    const newItem = processActions(defs, ourItem, createPluggingStrategy(defs, ourItem, positions));
+    const strategy = createPluggingStrategy(defs, ourItem, positions);
+    checkNumRequiredActions(strategy, 2);
+    const newItem = processActions(defs, ourItem, strategy);
     expect(newItem.energy?.energyUsed).toBe(4);
   });
 

@@ -597,7 +597,9 @@ export function pickPlugPositions(
     if (destinationSocketIndex === -1) {
       const toPlugExclusionGroup = getModExclusionGroup(modToInsert);
       destinationSocketIndex = orderedSockets.findIndex(
-        (socket) => getModExclusionGroup(socket.plugged!.plugDef) === toPlugExclusionGroup
+        (socket) =>
+          plugFitsIntoSocket(socket, modToInsert.hash) &&
+          getModExclusionGroup(socket.plugged!.plugDef) === toPlugExclusionGroup
       );
     }
 
