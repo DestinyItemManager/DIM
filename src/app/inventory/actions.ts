@@ -11,9 +11,11 @@ import {
   DestinyItemChangeResponse,
   DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import { createAction } from 'typesafe-actions';
 import { TagCommand, TagValue } from './dim-item-info';
 import { DimItem } from './item-types';
+import { notesSelector } from './selectors';
 import { AccountCurrency, DimCharacterStat, DimStore } from './store-types';
 import { ItemCreationContext } from './store/d2-item-factory';
 
@@ -198,6 +200,41 @@ export function setNote(item: DimItem, note: string | undefined): ThunkResult {
             note,
           })
     );
+  };
+}
+
+/**
+ * Append a note to the end of the existing notes for an item.
+ */
+export function appendNote(item: DimItem, note: string | undefined): ThunkResult {
+  return async (dispatch, getState) => {
+    if (!item.taggable || !note) {
+      return;
+    }
+
+    const existingNote = notesSelector(item)(getState());
+    dispatch(
+      setNote(
+        item,
+        _.compact([existingNote, note])
+          .map((s) => s.trim())
+          .join(' ')
+      )
+    );
+  };
+}
+
+/**
+ * Remove the provided text from an item's note. Most useful for deleting tags.
+ */
+export function removeFromNote(item: DimItem, note: string | undefined): ThunkResult {
+  return async (dispatch, getState) => {
+    if (!item.taggable || !note) {
+      return;
+    }
+
+    const existingNote = notesSelector(item)(getState());
+    dispatch(setNote(item, existingNote?.replace(note.trim(), '').trim()));
   };
 }
 

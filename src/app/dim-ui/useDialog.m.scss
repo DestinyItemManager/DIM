@@ -2,7 +2,7 @@
 
 .dialog {
   position: fixed;
-  background-color: black;
+  background-color: #08080f;
   color: white;
   top: 0;
   margin-top: 0;
@@ -24,21 +24,17 @@
 
   &::backdrop,
   & + :global(.backdrop) {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.6);
   }
 }
 
 .title {
-  background-color: #0a0a0f;
-  background-color: #151523;
-  padding: 6px 11px;
+  margin: 16px;
 
   h2 {
     font-size: 14px;
     margin: 0;
-    color: white;
-
-    @include destiny-header;
+    font-weight: 600;
   }
 }
 
@@ -46,11 +42,10 @@
   display: flex;
   flex-direction: row-reverse;
   gap: 8px;
-  background-color: #151523;
-  padding: 16px;
+  margin: 16px;
   align-items: center;
 }
 
 .body {
-  padding: 2em;
+  margin: 16px;
 }

@@ -1,9 +1,7 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { compareFilteredItems } from 'app/compare/actions';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
-import { BulkNoteResult } from 'app/dim-ui/useBulkNote';
 import { t } from 'app/i18next-t';
-import { setNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { storesSortedByImportanceSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -30,14 +28,6 @@ import {
 import { loadingTracker } from '../shell/loading-tracker';
 import styles from './ItemActionsDropdown.m.scss';
 
-interface Props {
-  searchQuery: string;
-  filteredItems: DimItem[];
-  searchActive: boolean;
-  fixed?: boolean;
-  prompt: () => Promise<BulkNoteResult | null>;
-}
-
 /**
  * Various actions that can be performed on an item
  */
@@ -46,8 +36,14 @@ export default React.memo(function ItemActionsDropdown({
   filteredItems,
   searchQuery,
   fixed,
-  prompt,
-}: Props) {
+  bulkNote,
+}: {
+  searchQuery: string;
+  filteredItems: DimItem[];
+  searchActive: boolean;
+  fixed?: boolean;
+  bulkNote: (items: DimItem[]) => Promise<void>;
+}) {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
   const stores = useSelector(storesSortedByImportanceSelector);
@@ -77,16 +73,6 @@ export default React.memo(function ItemActionsDropdown({
     const lockables = filteredItems.filter((i) => i.lockable);
     dispatch(bulkLockItems(lockables, state));
   });
-
-  // TODO: replace with rich-text dialog, and an "append" option
-  const bulkNote = async () => {
-    const note = await prompt();
-    if (note !== null && filteredItems.length) {
-      for (const item of filteredItems) {
-        dispatch(setNote(item, note.note));
-      }
-    }
-  };
 
   const compareMatching = () => {
     dispatch(compareFilteredItems(searchQuery, filteredItems));
@@ -143,7 +129,7 @@ export default React.memo(function ItemActionsDropdown({
     },
     {
       key: 'note',
-      onSelected: () => bulkNote(),
+      onSelected: () => bulkNote(filteredItems),
       disabled: !searchActive,
       content: (
         <>

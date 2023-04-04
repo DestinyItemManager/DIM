@@ -1,9 +1,13 @@
 import { calculateElementOffset } from '@textcomplete/utils';
 import { t } from 'app/i18next-t';
+import { appendNote, removeFromNote, setNote } from 'app/inventory/actions';
+import { DimItem } from 'app/inventory/item-types';
 import { allNotesHashtagsSelector } from 'app/inventory/selectors';
 import { maxLength } from 'app/item-popup/NotesArea';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isWindows, isiOSBrowser } from 'app/utils/browsers';
+import clsx from 'clsx';
 import { ChangeEvent, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -25,15 +29,38 @@ export interface BulkNoteResult {
 
 export default function useBulkNote(): [
   element: React.ReactNode,
-  prompt: () => Promise<BulkNoteResult | null>
+  bulkNote: (items: DimItem[]) => Promise<void>
 ] {
   const [dialog, showDialog] = useDialog<void, BulkNoteResult | null>((_args, close) => (
     <BulkNoteDialog close={close} />
   ));
 
-  const prompt = () => showDialog();
+  const dispatch = useThunkDispatch();
 
-  return [dialog, prompt];
+  const bulkNote = useCallback(
+    async (items: DimItem[]) => {
+      const note = await showDialog();
+      if (note !== null && items?.length) {
+        for (const item of items) {
+          switch (note.appendMode) {
+            case 'replace':
+              dispatch(setNote(item, note.note));
+              break;
+            case 'append': {
+              dispatch(appendNote(item, note.note));
+              break;
+            }
+            case 'remove':
+              dispatch(removeFromNote(item, note.note));
+              break;
+          }
+        }
+      }
+    },
+    [dispatch, showDialog]
+  );
+
+  return [dialog, bulkNote];
 }
 
 function BulkNoteDialog({ close }: { close: (result: BulkNoteResult | null) => void }) {
@@ -61,13 +88,16 @@ function BulkNoteDialog({ close }: { close: (result: BulkNoteResult | null) => v
     setAppendMods(e.currentTarget.value as BulkNoteResult['appendMode']);
 
   // TODO: better title style
+  // TODO: make a radio selector component from the EnergyOptions component, replace all radios with it
   return (
     <>
-      <Title>{t('BulkNote.Title')}</Title>
+      <Title>
+        <h2>{t('BulkNote.Title')}</h2>
+      </Title>
       <Body>
         <NotesEditor notes={note} onNotesChanged={setNote} />
-        <div>
-          <label>
+        <div className={styles.radios}>
+          <label className={clsx(styles.radio, { [styles.checked]: appendMode === 'replace' })}>
             <input
               type="radio"
               name="appendmode"
@@ -77,7 +107,7 @@ function BulkNoteDialog({ close }: { close: (result: BulkNoteResult | null) => v
             />
             {t('BulkNote.Replace')}
           </label>
-          <label>
+          <label className={clsx(styles.radio, { [styles.checked]: appendMode === 'append' })}>
             <input
               type="radio"
               name="appendmode"
@@ -87,7 +117,7 @@ function BulkNoteDialog({ close }: { close: (result: BulkNoteResult | null) => v
             />
             {t('BulkNote.Append')}
           </label>
-          <label>
+          <label className={clsx(styles.radio, { [styles.checked]: appendMode === 'remove' })}>
             <input
               type="radio"
               name="appendmode"
@@ -116,6 +146,7 @@ function BulkNoteDialog({ close }: { close: (result: BulkNoteResult | null) => v
   );
 }
 
+// TODO: Recombine with the one in NotesArea which has a lot of extra weird stuff
 function NotesEditor({
   notes,
   onNotesChanged,
@@ -159,6 +190,7 @@ function NotesEditor({
           <TextareaAutosize
             ref={textArea}
             name="data"
+            placeholder={t('Notes.Help')}
             autoFocus={nativeAutoFocus}
             maxLength={maxLength}
             value={notes}

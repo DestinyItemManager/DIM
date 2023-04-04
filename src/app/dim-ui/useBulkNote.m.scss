@@ -1,3 +1,24 @@
+@import '../variables';
+
 .form {
   position: relative;
+}
+
+.radios {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.radio {
+  composes: dim-button from global;
+  &:hover,
+  &:active,
+  &.checked {
+    background-color: $orange;
+    color: black;
+    > img {
+      filter: none !important;
+    }
+  }
 }

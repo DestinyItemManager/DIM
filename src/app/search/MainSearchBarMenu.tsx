@@ -17,7 +17,7 @@ export default function MainSearchBarMenu() {
   const filteredItems = useSelector(filteredItemsSelector);
   const onInventory = location.pathname.endsWith('inventory');
 
-  const [promptDialog, prompt] = useBulkNote();
+  const [promptDialog, bulkNote] = useBulkNote();
 
   const showSearchActions = onInventory;
   if (!showSearchActions) {
@@ -38,7 +38,7 @@ export default function MainSearchBarMenu() {
         searchActive={showSearchCount}
         searchQuery={searchQuery}
         fixed={true}
-        prompt={prompt}
+        bulkNote={bulkNote}
       />
     </motion.div>
   );
