@@ -59,7 +59,8 @@
     "Title": "Bulk modify item notes",
     "Replace": "Replace note",
     "Append": "Append note",
-    "Remove": "Remove note"
+    "Remove": "Remove note",
+    "Confirm": "Modify Notes"
   },
   "BungieAlert": {
     "Title": "A message from Bungie:"

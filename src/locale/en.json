@@ -56,6 +56,7 @@
   },
   "BulkNote": {
     "Append": "Append note",
+    "Confirm": "Modify Notes",
     "Remove": "Remove note",
     "Replace": "Replace note",
     "Title": "Bulk modify item notes"

@@ -2,6 +2,7 @@ import dialogPolyfill from 'dialog-polyfill';
 import 'dialog-polyfill/dist/dialog-polyfill.css';
 import styles from './useDialog.m.scss';
 
+import clsx from 'clsx';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 // Redecalare forwardRef
@@ -137,6 +138,6 @@ export function Buttons({ children }: { children: React.ReactNode }) {
 /**
  * A standardized body for the dialog.
  */
-export function Body({ children }: { children: React.ReactNode }) {
-  return <div className={styles.body}>{children}</div>;
+export function Body({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={clsx(styles.body, className)}>{children}</div>;
 }

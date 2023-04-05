@@ -1,4 +1,5 @@
 import { calculateElementOffset } from '@textcomplete/utils';
+import RadioButtons, { Option } from 'app/dim-ui/RadioButtons';
 import { t } from 'app/i18next-t';
 import { appendNote, removeFromNote, setNote } from 'app/inventory/actions';
 import { DimItem } from 'app/inventory/item-types';
@@ -7,8 +8,7 @@ import { maxLength } from 'app/item-popup/NotesArea';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isWindows, isiOSBrowser } from 'app/utils/browsers';
-import clsx from 'clsx';
-import { ChangeEvent, useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
 import { PressTipRoot } from './PressTip';
@@ -71,8 +71,8 @@ function BulkNoteDialog({ close }: { close: (result: BulkNoteResult | null) => v
   const ok = useCallback(() => close({ note, appendMode }), [appendMode, close, note]);
 
   const okButton = (
-    <button className="dim-button dim-button-primary" type="button" onClick={ok} autoFocus>
-      {t('Dialog.OK')}
+    <button className="dim-button dim-button-primary" type="button" onClick={ok}>
+      {t('BulkNote.Confirm')}
     </button>
   );
 
@@ -82,52 +82,29 @@ function BulkNoteDialog({ close }: { close: (result: BulkNoteResult | null) => v
     </button>
   );
 
-  // TODO: symbol picker, #tag
-  // TODO: use the note editor?
-  const handleRadioChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setAppendMods(e.currentTarget.value as BulkNoteResult['appendMode']);
+  const radioOptions: Option<BulkNoteResult['appendMode']>[] = [
+    {
+      value: 'replace',
+      label: t('BulkNote.Replace'),
+    },
+    {
+      value: 'append',
+      label: t('BulkNote.Append'),
+    },
+    {
+      value: 'remove',
+      label: t('BulkNote.Remove'),
+    },
+  ];
 
-  // TODO: better title style
-  // TODO: make a radio selector component from the EnergyOptions component, replace all radios with it
   return (
     <>
       <Title>
         <h2>{t('BulkNote.Title')}</h2>
       </Title>
-      <Body>
+      <Body className={styles.body}>
+        <RadioButtons options={radioOptions} value={appendMode} onChange={setAppendMods} />
         <NotesEditor notes={note} onNotesChanged={setNote} />
-        <div className={styles.radios}>
-          <label className={clsx(styles.radio, { [styles.checked]: appendMode === 'replace' })}>
-            <input
-              type="radio"
-              name="appendmode"
-              value="replace"
-              checked={appendMode === 'replace'}
-              onChange={handleRadioChange}
-            />
-            {t('BulkNote.Replace')}
-          </label>
-          <label className={clsx(styles.radio, { [styles.checked]: appendMode === 'append' })}>
-            <input
-              type="radio"
-              name="appendmode"
-              value="append"
-              checked={appendMode === 'append'}
-              onChange={handleRadioChange}
-            />
-            {t('BulkNote.Append')}
-          </label>
-          <label className={clsx(styles.radio, { [styles.checked]: appendMode === 'remove' })}>
-            <input
-              type="radio"
-              name="appendmode"
-              value="remove"
-              checked={appendMode === 'remove'}
-              onChange={handleRadioChange}
-            />
-            {t('BulkNote.Remove')}
-          </label>
-        </div>
       </Body>
       <Buttons>
         {isWindows() ? (
