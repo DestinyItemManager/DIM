@@ -814,6 +814,7 @@
       "Unfavorited": "Unfavorited"
     },
     "Infuse": "Infuse",
+    "InfuseTitle": "Open the infusion fuel finder",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
       "Unlock": "Unlock {{itemType}}",
