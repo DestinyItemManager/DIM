@@ -3,9 +3,9 @@ import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
   createItemContextSelector,
-  gatherUnlockedPlugSetItems,
   profileResponseSelector,
   storesSelector,
+  unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { getStore } from 'app/inventory/stores-helpers';
@@ -30,30 +30,32 @@ import { createSelector } from 'reselect';
 import { filterLoadoutsToClass } from '../loadout-ui/menu-hooks';
 import { implementsDimLoadout, itemCouldBeEquipped } from './ingame-loadout-utils';
 
+/** A DIM loadout with all of its parameters resolved to real inventory. */
+export interface FullyResolvedLoadout {
+  loadout: Loadout;
+  resolvedMods: ResolvedLoadoutMod[];
+  resolvedLoadoutItems: ResolvedLoadoutItem[];
+  failedResolvedLoadoutItems: ResolvedLoadoutItem[];
+}
+
 /** All loadouts relevant to a specific storeId, resolved to actual mods, and actual items */
 export const fullyResolvedLoadoutsSelector = createSelector(
   (_state: RootState, storeId: string) => storeId,
   storesSelector,
   loadoutsSelector,
   d2ManifestSelector,
-  profileResponseSelector,
   createItemContextSelector,
   allItemsSelector,
-  (storeId, stores, allLoadouts, defs, profileResponse, itemCreationContext, allItems) => {
+  unlockedPlugSetItemsSelector.selector,
+  (storeId, stores, allLoadouts, defs, itemCreationContext, allItems, unlockedPlugs) => {
     const selectedStore = stores.find((s) => s.id === storeId)!;
     const savedLoadouts = filterLoadoutsToClass(allLoadouts, selectedStore.classType);
-    const unlockedPlugs = gatherUnlockedPlugSetItems(storeId, profileResponse);
 
     const loadouts = savedLoadouts
       ? savedLoadouts.map((loadout) =>
           fullyResolveLoadout(storeId, loadout, defs, unlockedPlugs, itemCreationContext, allItems)
         )
-      : emptyArray<{
-          loadout: Loadout;
-          resolvedMods: ResolvedLoadoutMod[];
-          resolvedLoadoutItems: ResolvedLoadoutItem[];
-          failedResolvedLoadoutItems: ResolvedLoadoutItem[];
-        }>();
+      : emptyArray<FullyResolvedLoadout>();
     const currentLoadout = fullyResolveLoadout(
       storeId,
       newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore, undefined),
@@ -73,7 +75,7 @@ function fullyResolveLoadout(
   unlockedPlugs: Set<number>,
   itemCreationContext: ItemCreationContext,
   allItems: DimItem[]
-) {
+): FullyResolvedLoadout {
   const resolvedMods = getModsFromLoadout(defs, loadout, unlockedPlugs);
   const [resolvedLoadoutItems, failedResolvedLoadoutItems] = getItemsFromLoadoutItems(
     itemCreationContext,

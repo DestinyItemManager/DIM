@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
 import styles from './InGameLoadoutStrip.m.scss';
 import { applyInGameLoadout, deleteInGameLoadout, prepInGameLoadout } from './ingame-loadout-apply';
-import { fullyResolvedLoadoutsSelector, inGameLoadoutsWithMetadataSelector } from './selectors';
+import { FullyResolvedLoadout, inGameLoadoutsWithMetadataSelector } from './selectors';
 
 export function InGameLoadoutStrip({
   store,
@@ -68,7 +68,7 @@ function InGameLoadoutTile({
   gameLoadout: InGameLoadout;
   isEquippable: boolean;
   isEquipped: boolean;
-  matchingLoadouts: ReturnType<typeof fullyResolvedLoadoutsSelector>['loadouts'];
+  matchingLoadouts: FullyResolvedLoadout[];
   onEdit: (loadout: InGameLoadout) => void;
   onShare: (loadout: Loadout) => void;
   onShowDetails: (loadout: InGameLoadout) => void;
