@@ -1,6 +1,5 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
-import usePrompt from 'app/dim-ui/usePrompt';
 import { t } from 'app/i18next-t';
 import { itemTagList, TagCommand } from 'app/inventory/dim-item-info';
 import { DimStore } from 'app/inventory/store-types';
@@ -37,7 +36,7 @@ function ItemActions({
   stores: DimStore[];
   itemsAreSelected: boolean;
   onLock: (locked: boolean) => void;
-  onNote: (note?: string) => void;
+  onNote: () => void;
   onTagSelectedItems: (tagInfo: TagCommandInfo) => void;
   onMoveSelectedItems: (store: DimStore) => void;
 }) {
@@ -61,18 +60,8 @@ function ItemActions({
     onSelected: () => onMoveSelectedItems(store),
   }));
 
-  // TODO: replace with rich-text dialog, and an "append" option
-  const [promptDialog, prompt] = usePrompt();
-  const noted = async () => {
-    const note = await prompt(t('Organizer.NotePrompt'));
-    if (note !== null) {
-      onNote(note || undefined);
-    }
-  };
-
   return (
     <div className={styles.itemActions}>
-      {promptDialog}
       <button
         type="button"
         className={`dim-button ${styles.actionButton}`}
@@ -106,7 +95,7 @@ function ItemActions({
         className={`dim-button ${styles.actionButton}`}
         disabled={!itemsAreSelected}
         name="note"
-        onClick={noted}
+        onClick={onNote}
       >
         <AppIcon icon={stickyNoteIcon} />
         <span className={styles.label}>{t('Organizer.Note')}</span>

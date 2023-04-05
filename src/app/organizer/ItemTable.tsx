@@ -1,10 +1,10 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { StatInfo } from 'app/compare/Compare';
 import { settingSelector } from 'app/dim-api/selectors';
+import useBulkNote from 'app/dim-ui/useBulkNote';
 import useConfirm from 'app/dim-ui/useConfirm';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t, tl } from 'app/i18next-t';
-import { setNote } from 'app/inventory/actions';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { DimItem } from 'app/inventory/item-types';
 import {
@@ -258,16 +258,8 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     dispatch(bulkLockItems(selectedItems, lock));
   });
 
-  const onNote = (note?: string) => {
-    if (!note) {
-      note = undefined;
-    }
-    if (selectedItems.length) {
-      for (const item of selectedItems) {
-        dispatch(setNote(item, note));
-      }
-    }
-  };
+  const [bulkNoteDialog, bulkNote] = useBulkNote();
+  const onNote = () => bulkNote(selectedItems);
 
   /**
    * Handles Click Events for Table Rows
@@ -463,6 +455,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       ref={tableRef}
     >
       {confirmDialog}
+      {bulkNoteDialog}
       <div className={styles.toolbar} ref={toolbarRef}>
         <div>
           <ItemActions
