@@ -1,6 +1,7 @@
-import BungieImage from 'app/dim-ui/BungieImage';
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
+import ItemIcon from 'app/inventory/ItemIcon';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { DimStore } from 'app/inventory/store-types';
 import Socket from 'app/item-popup/Socket';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
@@ -53,7 +54,7 @@ export function InGameLoadoutDetails({
   );
 
   return (
-    <Sheet onClose={onClose} header={header} sheetClassName={styles.sheet}>
+    <Sheet onClose={onClose} header={header} sheetClassName={styles.sheet} allowClickThrough>
       <div className={styles.controls}>
         <button
           type="button"
@@ -135,7 +136,15 @@ function InGameLoadoutItemDetail({
   );
   return (
     <React.Fragment key={item.id}>
-      <BungieImage src={item.icon} className={styles.itemImage} />
+      <div className={styles.itemImage}>
+        <ItemPopupTrigger item={item}>
+          {(ref, onClick) => (
+            <div ref={ref} className="item" onClick={onClick}>
+              <ItemIcon item={item} />
+            </div>
+          )}
+        </ItemPopupTrigger>
+      </div>
       {bigSockets.map((socket) => (
         <Socket key={socket.socketIndex} item={item} socket={socket} pluggedOnly />
       ))}
