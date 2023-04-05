@@ -1,4 +1,4 @@
-import React from 'react';
+import { t } from 'app/i18next-t';
 import { AppIcon, helpIcon } from '../shell/icons';
 import ExternalLink from './ExternalLink';
 import styles from './HelpLink.m.scss';
@@ -9,7 +9,7 @@ export default function HelpLink({ helpLink }: { helpLink?: string }) {
   }
 
   return (
-    <ExternalLink className={styles.helpLink} aria-hidden="true" href={helpLink}>
+    <ExternalLink className={styles.helpLink} title={t('General.UserGuideLink')} href={helpLink}>
       <AppIcon icon={helpIcon} />
     </ExternalLink>
   );
