@@ -8,7 +8,6 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { convertInGameLoadoutToDimLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { Observable } from 'app/utils/observable';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -25,32 +24,24 @@ import {
   useItemsFromInGameLoadout,
 } from './ingame-loadout-utils';
 
-export const showGameLoadoutDetails$ = new Observable<InGameLoadout | undefined>(undefined);
-
-/** Show the gear power sheet */
-export function showInGameLoadoutDetails(loadout: InGameLoadout) {
-  showGameLoadoutDetails$.next(loadout);
-}
-
 export function InGameLoadoutDetails({
   store,
   loadout,
   onShare,
   onEdit,
+  onClose,
 }: {
   store: DimStore;
   loadout: InGameLoadout;
   onShare: (loadout: Loadout) => void;
   onEdit: (loadout: InGameLoadout) => void;
+  onClose: () => void;
 }) {
   const dispatch = useThunkDispatch();
   const itemCreationContext = useSelector(createItemContextSelector);
   const defs = itemCreationContext.defs;
   const items = useItemsFromInGameLoadout(loadout);
   const itemsByBucketHash = _.keyBy(items, (i) => i.bucket.hash);
-  const reset = () => {
-    showGameLoadoutDetails$.next(undefined);
-  };
   const allItems = useSelector(allItemsSelector);
   const handleSaveAsDIM = () => {
     const dimLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
@@ -69,7 +60,7 @@ export function InGameLoadoutDetails({
   );
 
   return (
-    <Sheet onClose={reset} header={header} sheetClassName={styles.sheet}>
+    <Sheet onClose={onClose} header={header} sheetClassName={styles.sheet}>
       <div className={styles.controls}>
         <button
           type="button"

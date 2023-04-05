@@ -14,7 +14,6 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { showInGameLoadoutDetails } from './InGameLoadoutDetailsSheet';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
 import styles from './InGameLoadoutStrip.m.scss';
 import { applyInGameLoadout, deleteInGameLoadout, prepInGameLoadout } from './ingame-loadout-apply';
@@ -24,10 +23,12 @@ export function InGameLoadoutStrip({
   store,
   onEdit,
   onShare,
+  onShowDetails,
 }: {
   store: DimStore;
   onEdit: (loadout: InGameLoadout) => void;
   onShare: (loadout: Loadout) => void;
+  onShowDetails: (loadout: InGameLoadout) => void;
 }) {
   const selectedStoreId = store.id;
   const inGameLoadoutInfos = useSelector((state: RootState) =>
@@ -46,6 +47,7 @@ export function InGameLoadoutStrip({
           matchingLoadouts={matchingLoadouts}
           onEdit={onEdit}
           onShare={onShare}
+          onShowDetails={onShowDetails}
         />
       ))}
     </div>
@@ -60,6 +62,7 @@ function InGameLoadoutTile({
   matchingLoadouts,
   onEdit,
   onShare,
+  onShowDetails,
 }: {
   store: DimStore;
   gameLoadout: InGameLoadout;
@@ -68,6 +71,7 @@ function InGameLoadoutTile({
   matchingLoadouts: ReturnType<typeof fullyResolvedLoadoutsSelector>['loadouts'];
   onEdit: (loadout: InGameLoadout) => void;
   onShare: (loadout: Loadout) => void;
+  onShowDetails: (loadout: InGameLoadout) => void;
 }) {
   const dispatch = useThunkDispatch();
   const allItems = useSelector(allItemsSelector);
@@ -85,7 +89,7 @@ function InGameLoadoutTile({
     {
       key: 'details',
       content: t('InGameLoadout.LoadoutDetails'),
-      onSelected: () => showInGameLoadoutDetails(gameLoadout),
+      onSelected: () => onShowDetails(gameLoadout),
     },
     {
       key: 'apply',
@@ -168,7 +172,7 @@ function InGameLoadoutTile({
       className={clsx(styles.inGameTileWrapper, isEquipped && styles.isEquipped)}
     >
       <PressTip tooltip={tooltipContent.length ? tooltipContent : null} placement="bottom">
-        <div className={styles.inGameTile} onClick={() => showInGameLoadoutDetails(gameLoadout)}>
+        <div className={styles.inGameTile} onClick={() => onShowDetails(gameLoadout)}>
           <div className={styles.igtIconHolder}>
             <InGameLoadoutIconWithIndex loadout={gameLoadout} className={styles.igtIcon} />
           </div>

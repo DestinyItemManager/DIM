@@ -20,11 +20,10 @@ import { Portal } from 'app/utils/temp-container';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
-import { useSubscription } from 'use-subscription';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
 import EditInGameLoadout from './ingame/EditInGameLoadout';
-import { InGameLoadoutDetails, showGameLoadoutDetails$ } from './ingame/InGameLoadoutDetailsSheet';
+import { InGameLoadoutDetails } from './ingame/InGameLoadoutDetailsSheet';
 import InGameLoadoutIcon from './ingame/InGameLoadoutIcon';
 import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
@@ -80,7 +79,6 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const language = useSelector(languageSelector);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
-  const gameLoadoutDetails = useSubscription(showGameLoadoutDetails$);
 
   const savedLoadouts = useSavedLoadoutsForClassType(classType);
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
@@ -98,6 +96,9 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const [editingInGameLoadout, setEditingInGameLoadout] = useState<InGameLoadout>();
   const handleEditSheetClose = useCallback(() => setEditingInGameLoadout(undefined), []);
+
+  const [viewingInGameLoadout, setViewingInGameLoadout] = useState<InGameLoadout>();
+  const handleViewingSheetClose = useCallback(() => setViewingInGameLoadout(undefined), []);
 
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     savedLoadouts,
@@ -171,6 +172,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           store={selectedStore}
           onEdit={setEditingInGameLoadout}
           onShare={setSharedLoadout}
+          onShowDetails={setViewingInGameLoadout}
         />
         <h1>{t('Loadouts.DimLoadouts')}</h1>
         {filterPills}
@@ -206,13 +208,14 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           />
         </Portal>
       )}
-      {gameLoadoutDetails && (
+      {viewingInGameLoadout && (
         <Portal>
           <InGameLoadoutDetails
             store={selectedStore}
-            loadout={gameLoadoutDetails}
+            loadout={viewingInGameLoadout}
             onEdit={setEditingInGameLoadout}
             onShare={setSharedLoadout}
+            onClose={handleViewingSheetClose}
           />
         </Portal>
       )}
