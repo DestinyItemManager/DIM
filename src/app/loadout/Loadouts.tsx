@@ -103,11 +103,10 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     savedLoadouts,
     [],
     selectedStoreId,
-    true,
-    styles.loadoutFilters,
-    true,
-    true,
-    <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>
+    {
+      includeWarningPills: true,
+      extra: <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>,
+    }
   );
 
   const loadouts = searchAndSortLoadoutsByQuery(filteredLoadouts, query, language, loadoutSort);

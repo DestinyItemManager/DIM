@@ -43,11 +43,17 @@ export function useLoadoutFilterPills(
   savedLoadouts: Loadout[],
   inGameLoadouts: InGameLoadout[] | undefined,
   selectedStoreId: string,
-  includeWarningPills: boolean,
-  className?: string,
-  darkBackground?: boolean,
-  includeLabel?: boolean,
-  extra?: React.ReactNode
+  {
+    includeWarningPills,
+    className,
+    darkBackground,
+    extra,
+  }: {
+    includeWarningPills?: boolean;
+    className?: string;
+    darkBackground?: boolean;
+    extra?: React.ReactNode;
+  } = {}
 ): [
   filteredLoadouts: (Loadout | InGameLoadout)[],
   filterPillsElement: React.ReactNode,
@@ -165,7 +171,6 @@ export function useLoadoutFilterPills(
         onOptionsSelected={setSelectedFilters}
         className={className}
         darkBackground={darkBackground}
-        includeLabel={includeLabel}
         extra={_.isEmpty(loadoutsByHashtag) ? extra : undefined}
       />
     ) : null,

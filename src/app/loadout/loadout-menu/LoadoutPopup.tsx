@@ -170,9 +170,7 @@ export default function LoadoutPopup({
     loadouts,
     inGameLoadouts,
     dimStore.id,
-    false,
-    styles.filterPills,
-    true
+    { className: styles.filterPills, darkBackground: true }
   );
   const filteredLoadouts = searchAndSortLoadoutsByQuery(
     pillFilteredLoadouts,
