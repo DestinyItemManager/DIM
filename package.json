@@ -86,6 +86,8 @@
     "@testing-library/react": "^14.0.0",
     "@types/body-scroll-lock": "^3.1.0",
     "@types/dialog-polyfill": "^0.5.2",
+    "@types/dom-chromium-installation-events": "^101.0.0",
+    "@types/dom-screen-wake-lock": "^1.0.1",
     "@types/generate-json-webpack-plugin": "^0.3.4",
     "@types/jest": "^29.0.0",
     "@types/lodash": "^4.14.0",

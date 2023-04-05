@@ -1862,6 +1862,16 @@
   dependencies:
     dialog-polyfill "*"
 
+"@types/dom-chromium-installation-events@^101.0.0":
+  version "101.0.0"
+  resolved "https://registry.yarnpkg.com/@types/dom-chromium-installation-events/-/dom-chromium-installation-events-101.0.0.tgz#3dc20e4a1b4f15f4f5d32881677ce24f1ea7d6eb"
+  integrity sha512-tHDvmXhv/UDE2r/LherlBe/sQ+cV53yG3vd5bY/7t3IsZYzP5Gy6SRFUoFgilR6/SvlFYa+WMJ07F8tettji6Q==
+
+"@types/dom-screen-wake-lock@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/dom-screen-wake-lock/-/dom-screen-wake-lock-1.0.1.tgz#8f125f91821d49f51feee95e6db128eb6974aea9"
+  integrity sha512-WJQas3OFGcC8AeMzaa7FwzzbNNfanuV2R12kQYNp4BkUMghsRz5JxJ5RgVhJifhw7t0s6LvRSWZArmKbMDZ+5g==
+
 "@types/eslint-scope@^3.7.3":
   version "3.7.4"
   resolved "https://registry.yarnpkg.com/@types/eslint-scope/-/eslint-scope-3.7.4.tgz#37fc1223f0786c39627068a12e94d6e6fc61de16"

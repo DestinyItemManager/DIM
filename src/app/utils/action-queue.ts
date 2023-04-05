@@ -1,3 +1,5 @@
+import { infoLog } from './log';
+
 const _queue: Promise<unknown>[] = [];
 
 // A global queue of functions that will execute one after the other. The function must return a promise.
@@ -6,23 +8,36 @@ export function queueAction<K>(fn: () => Promise<K>): Promise<K> {
   const headPromise: Promise<unknown> = _queue.length
     ? _queue[_queue.length - 1]
     : Promise.resolve();
+
+  // If available, run this task under a wake lock so the device doesn't sleep while the operation is running.
+  const runPromise = async () => {
+    let sentinel: WakeLockSentinel | undefined;
+    if ('wakeLock' in navigator) {
+      try {
+        sentinel = await navigator.wakeLock.request('screen');
+      } catch (e) {
+        infoLog('wakelock', 'Could not acquire screen wake lock', e);
+      }
+    }
+    try {
+      return await fn();
+    } finally {
+      await sentinel?.release();
+    }
+  };
+
   // Execute fn regardless of the result of the existing promise. We
   // don't use finally here because finally can't modify the return value.
-  const wrappedPromise = headPromise
-    .then(
-      (..._args) => fn(),
-      (..._args) => fn()
-    )
-    .then(
-      (value) => {
-        _queue.shift();
-        return value;
-      },
-      (e) => {
-        _queue.shift();
-        throw e;
-      }
-    );
+  const wrappedPromise = headPromise.then(runPromise, runPromise).then(
+    (value) => {
+      _queue.shift();
+      return value;
+    },
+    (e) => {
+      _queue.shift();
+      throw e;
+    }
+  );
   _queue.push(wrappedPromise);
 
   return wrappedPromise;
