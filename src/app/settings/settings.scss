@@ -83,9 +83,18 @@
 
   .radioOptions {
     margin: 8px 0 0 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     label {
-      display: block;
-      margin-bottom: 2px;
+      vertical-align: text-top;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.25em;
+    }
+    input {
+      margin: 0 4px 0 0;
     }
   }
 
