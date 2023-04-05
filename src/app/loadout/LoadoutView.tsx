@@ -156,7 +156,11 @@ export default function LoadoutView({
                   loadout.parameters?.artifactUnlocks?.unlockedItemHashes.length
                 )}
               />
-              <LoadoutArtifactUnlocks loadout={loadout} storeId={store.id} />
+              <LoadoutArtifactUnlocks
+                loadout={loadout}
+                storeId={store.id}
+                className={styles.artifactMods}
+              />
             </div>
           </>
         )}

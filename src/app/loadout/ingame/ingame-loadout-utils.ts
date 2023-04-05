@@ -1,8 +1,11 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
+import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import { spaceLeftForItem } from 'app/inventory/stores-helpers';
+import { convertInGameLoadoutPlugItemHashesToSocketOverrides } from 'app/loadout-drawer/loadout-type-converters';
 import {
   InGameLoadout,
   ResolvedLoadoutItem,
@@ -22,16 +25,26 @@ import { UNSET_PLUG_HASH } from '../known-values';
  * TODO: These aren't ResolvedLoadoutItems because we don't know how D2 will handle missing items yet.
  */
 export function getItemsFromInGameLoadout(
+  itemCreationContext: ItemCreationContext,
   loadoutItems: DestinyLoadoutItemComponent[],
   allItems: DimItem[]
 ): DimItem[] {
   // TODO: apply socket overrides once we know what those are?
   return _.compact(
-    loadoutItems.map((li) =>
-      li.itemInstanceId !== '0'
-        ? potentialLoadoutItemsByItemId(allItems)[li.itemInstanceId]
-        : undefined
-    )
+    loadoutItems.map((li) => {
+      const realItem =
+        li.itemInstanceId !== '0'
+          ? potentialLoadoutItemsByItemId(allItems)[li.itemInstanceId]
+          : undefined;
+      if (realItem) {
+        return applySocketOverrides(
+          itemCreationContext,
+          realItem,
+          convertInGameLoadoutPlugItemHashesToSocketOverrides(li.plugItemHashes)
+        );
+      }
+      return realItem;
+    })
   );
 }
 
@@ -40,9 +53,10 @@ export function getItemsFromInGameLoadout(
  */
 export function useItemsFromInGameLoadout(loadout: InGameLoadout) {
   const allItems = useSelector(allItemsSelector);
+  const itemCreationContext = useSelector(createItemContextSelector);
   return useMemo(
-    () => getItemsFromInGameLoadout(loadout.items, allItems),
-    [loadout.items, allItems]
+    () => getItemsFromInGameLoadout(itemCreationContext, loadout.items, allItems),
+    [itemCreationContext, loadout.items, allItems]
   );
 }
 

@@ -400,7 +400,7 @@
     "LoadoutDetails": "Loadout Details",
     "LoadoutSlotNum": "Slot {{index}}",
     "PrepareEquip": "Prepare Equip",
-    "Replace": "Replace Loadout",
+    "Replace": "Replace Loadout {{index}}",
     "Save": "Update Loadout",
     "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
@@ -730,6 +730,7 @@
     "Redo": "Redo",
     "RestoreAllItems": "All Items",
     "Save": "Save",
+    "SaveAsDIM": "Save as DIM Loadout",
     "SaveAsNew": "Save as New",
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
     "SaveDisabled": {

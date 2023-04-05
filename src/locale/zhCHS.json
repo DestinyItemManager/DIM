@@ -124,6 +124,7 @@
   "EnergyMeter": {
     "Energy": "能量",
     "Unused": "未使用",
+    "UpgradeNeeded": "此物品当前的能量容量为 {{energyCapacity}}。需要 {{energyUsed}} 容量才能装下所选的模组。",
     "Used": "已使用"
   },
   "ErrorBoundary": {
@@ -387,7 +388,17 @@
   },
   "InGameLoadout": {
     "Applying": "正在装备配装...",
-    "LoadoutSlotNum": "插槽 {{index}}"
+    "Create": "创建配装",
+    "CreateTitle": "从当前装备创建游戏内配装",
+    "DeleteFailed": "删除配装失败",
+    "Deleted": "配装已删除",
+    "DeletedBody": "已清除槽位 {{index}} 的游戏内配装",
+    "EditFailed": "更新配装失败",
+    "EditTitle": "编辑配装名字和图标",
+    "LoadoutSlotNum": "插槽 {{index}}",
+    "Replace": "替换配装",
+    "Save": "更新配装",
+    "SnapshotFailed": "为已装备的配装创建快照时失败"
   },
   "Infusion": {
     "Filter": "过滤物品",
@@ -437,8 +448,8 @@
     "NotEnoughRoomGeneral": "没有足够的空间来移动此物品。",
     "OnlyEquippedClassLevel": "该物品仅可以装备在{{class}} 上，且至少大于{{level}} 级。",
     "OnlyEquippedLevel": "该物品仅可以装备在至少{{level}} 级的角色上。",
-    "PostmasterAlmostFull": "接近全满了!({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "全满了!({{number}}/{{postmasterSize}})",
+    "PostmasterAlmostFull": "快要满了！",
+    "PostmasterFull": "已经满了！",
     "PreviewVendor": "预览 {{type}} 内容",
     "StackFull": "您已经达到 {{name}} 的堆叠上限",
     "StoreName": "{{genderRace}} {{className}} 角色"
@@ -596,6 +607,9 @@
     "Apply": "应用",
     "ApplyMods": "正在应用模组",
     "ApplySearch": "转移搜索 \"{{query}}\"",
+    "ArtifactUnlocks": "神器解锁",
+    "ArtifactUnlocksDesc": "由于 Bungie.net 的限制，DIM无法自动配置你的神器模组。你需要在游戏中进行解锁，然后再应用到配装。",
+    "ArtifactUnlocksWithSeason": "神器解锁 - 第 {{seasonNumber}} 赛季",
     "BadLoadoutShare": "无法载入共享配装",
     "BadLoadoutShareBody": "你试图载入的配装无效：{{error}}",
     "Before": "撤销 '{{name}}'",
@@ -665,7 +679,17 @@
     "MissingItemsWarning": "此配装里的一些物品不在库存里了。",
     "ModErrorSummary": "1 个模组出错：",
     "ModErrorSummary_plural": "{{count}} 个模组出错：",
-    "ModPlacement": "模组位置",
+    "ModPlacement": {
+      "InvalidMods": "无效模组",
+      "InvalidModsDesc": "1 个模组不能插入任何护甲。",
+      "InvalidModsDesc_plural": "{{count}} 个模组不能插入任何护甲。",
+      "ModPlacement": "模组位置",
+      "UnassignedMods": "未分配的模组",
+      "UnassignedModsDesc": "由于能量容量或模组插槽不足，一个模组无法安装。即便为所选护甲升级能量也是如此。",
+      "UnassignedModsDesc_plural": "由于能量容量或模组插槽不足，{{count}} 个模组无法安装。即便为所选护甲升级能量也是如此。",
+      "UpgradeCosts": "升级消耗成本",
+      "UpgradeCostsDesc": "有些护甲需要能量容量升级才能装下所选的模组。升级总共会花费："
+    },
     "Mods": "模组",
     "MoveItems": "正在移动物品",
     "NoEngrams": "没有非异域记忆水晶可以转移.",
@@ -726,6 +750,7 @@
     },
     "ShareLoadout": "分享配装",
     "ShowModPlacement": "显示模组位置",
+    "Snapshot": "作为游戏内配装保存",
     "SocketOverrides": "正在更改子职业选项",
     "SortByEditTime": "按最后编辑时间排序",
     "SortByName": "按名称排序",
@@ -735,7 +760,6 @@
     "SyncFromEquipped": "同步已装备物品",
     "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个. 我们已经处理所有已拥有的",
     "UnassignedModError": "模组不适合你当前的护甲",
-    "UnassignedMods": "未分配的模组",
     "Undo": "撤销",
     "Unequipped": "未装备",
     "Update": "保存更改",

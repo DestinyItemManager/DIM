@@ -124,6 +124,7 @@
   "EnergyMeter": {
     "Energy": "Energia",
     "Unused": "Não usado",
+    "UpgradeNeeded": "A capacidade atual de energia deste item é {{energyCapacity}}. Para se adequar aos mods selecionados, sua capacidade de energia deve ser {{energyUsed}}.",
     "Used": "Usado"
   },
   "ErrorBoundary": {
@@ -387,7 +388,17 @@
   },
   "InGameLoadout": {
     "Applying": "Equipando set...",
-    "LoadoutSlotNum": "Slot {{index}}"
+    "Create": "Criar Set",
+    "CreateTitle": "Criar Set no Jogo a partir do Equipamento Atual",
+    "DeleteFailed": "Falha ao excluir Set",
+    "Deleted": "Set Excluído",
+    "DeletedBody": "O Set no slot {{index}} foi limpo no jogo",
+    "EditFailed": "Falha ao atualizar o set",
+    "EditTitle": "Editar Nome e Ícone do Set",
+    "LoadoutSlotNum": "Slot {{index}}",
+    "Replace": "Substituir Set",
+    "Save": "Atualizar Set",
+    "SnapshotFailed": "Falha ao capturar o Set equipado"
   },
   "Infusion": {
     "Filter": "Filtrar itens",
@@ -437,8 +448,8 @@
     "NotEnoughRoomGeneral": "Não há espaço suficiente para mover este item.",
     "OnlyEquippedClassLevel": "Este item só pode ser equipado em um {{class}} igual ou acima do nível {{level}}.",
     "OnlyEquippedLevel": "Este item só pode ser equipado em personagens igual ou acima do nível {{level}}.",
-    "PostmasterAlmostFull": "Quase cheio! ({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "Lotado! ({{number}}/{{postmasterSize}})",
+    "PostmasterAlmostFull": "Quase cheio!",
+    "PostmasterFull": "Cheio!",
     "PreviewVendor": "Pré-visualizar conteúdo de {{type}}",
     "StackFull": "Você já tem uma pilha cheia de {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
@@ -596,6 +607,9 @@
     "Apply": "Aplicar",
     "ApplyMods": "Aplicando mods",
     "ApplySearch": "Transferir a busca \"{{query}}\"",
+    "ArtifactUnlocks": "Desbloqueado no Artefato",
+    "ArtifactUnlocksDesc": "Devido a limitações da Bungie.net, DIM não pode configurar automaticamente seu artefato. Você precisa executar estes desbloqueios no jogo antes de aplicar o Arsenal.",
+    "ArtifactUnlocksWithSeason": "Desbloqueado no Artefato – T{{seasonNumber}}",
     "BadLoadoutShare": "Não foi possível carregar este set compartilhado",
     "BadLoadoutShareBody": "O set que você está tentando carregar é inválido: {{error}}",
     "Before": "Antes de '{{name}}'",
@@ -665,7 +679,17 @@
     "MissingItemsWarning": "Alguns itens deste set não estão mais em seu inventário.",
     "ModErrorSummary": "1 erro no mod:",
     "ModErrorSummary_plural": "{{count}} erros no mod:",
-    "ModPlacement": "Localização do Mod",
+    "ModPlacement": {
+      "InvalidMods": "Mods Inválidos",
+      "InvalidModsDesc": "1 mod não cabe em nenhuma peça de armadura.",
+      "InvalidModsDesc_plural": "{{count}} mods não cabem em nenhuma peça de armadura.",
+      "ModPlacement": "Posicionamento de Mods",
+      "UnassignedMods": "Mods não Atribuídos",
+      "UnassignedModsDesc": "1 mod não coube devido à capacidade de energia insuficiente ou a falta de slots de mods. Aumento da energia na armadura selecionada não resolverá o problema.",
+      "UnassignedModsDesc_plural": "{{count}} não couberam devido à capacidade de energia insuficiente ou a falta de slots de mods. Aumento da energia na armadura selecionada não resolverá o problema.",
+      "UpgradeCosts": "Custo de Melhorias",
+      "UpgradeCostsDesc": "Algumas armaduras precisam de aumento da capacidade de energia para receber os mods solicitados. No total, estas melhorias custam:"
+    },
     "Mods": "Mods",
     "MoveItems": "Movendo itens",
     "NoEngrams": "Nenhum engrama não-exótico disponível para transferir.",
@@ -726,6 +750,7 @@
     },
     "ShareLoadout": "Compartilhar Set",
     "ShowModPlacement": "Exibir Localização do Mod",
+    "Snapshot": "Salvar como Set no jogo",
     "SocketOverrides": "Alterando opções de subclasse",
     "SortByEditTime": "Ordenar pela última alteração",
     "SortByName": "Ordenar por nome",
@@ -735,7 +760,6 @@
     "SyncFromEquipped": "Sincronizar a partir dos equipados",
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "UnassignedModError": "Mod incompatível com a armadura atual",
-    "UnassignedMods": "Mods não Atribuídos",
     "Undo": "Desfazer",
     "Unequipped": "Não Equipado",
     "Update": "Salvar Alterações",

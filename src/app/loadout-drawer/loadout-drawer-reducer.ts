@@ -40,7 +40,7 @@ import {
  * loadout must be a new instance (immutable updates). These functions can be
  * used in reducers or passed directly to a `setLoadout` function.
  *
- * Example:
+ * @example
  *
  * function addItem(defs, item): LoadoutUpdateFunction {
  *   return (loadout) => {

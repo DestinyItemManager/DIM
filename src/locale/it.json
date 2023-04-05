@@ -124,6 +124,7 @@
   "EnergyMeter": {
     "Energy": "Energia",
     "Unused": "Inutilizzata",
+    "UpgradeNeeded": "La capacità energetica di questo oggetto è {{energyCapacity}}. Per alloggiare la Modifica selezionata, la sua capacità energia deve essere {{energyUsed}}.",
     "Used": "Utilizzata"
   },
   "ErrorBoundary": {
@@ -387,7 +388,17 @@
   },
   "InGameLoadout": {
     "Applying": "Equipaggiamento dotazione...",
-    "LoadoutSlotNum": "Alloggiamento {{index}}"
+    "Create": "Crea Dotazione",
+    "CreateTitle": "Crea Dotazione in gioco dall'equipaggiamento attuale",
+    "DeleteFailed": "Eliminazione Dotazione non riuscita",
+    "Deleted": "Dotazione eliminata",
+    "DeletedBody": "Eliminata la Dotazione in gioco allo slot {{index}}",
+    "EditFailed": "Aggiornamento Dotazione non riuscito",
+    "EditTitle": "Modifica nome e icona Dotazione",
+    "LoadoutSlotNum": "Alloggiamento {{index}}",
+    "Replace": "Sovrascrivi Dotazione",
+    "Save": "Aggiorna Dotazione",
+    "SnapshotFailed": "Salvataggio equipaggiamento in uso non riuscito"
   },
   "Infusion": {
     "Filter": "Filtra oggetti",
@@ -437,8 +448,8 @@
     "NotEnoughRoomGeneral": "Non c'è abbastanza spazio per spostare questo oggetto.",
     "OnlyEquippedClassLevel": "Questo oggetto può essere equipaggiato solo su un {{class}} al livello {{level}} o superiore.",
     "OnlyEquippedLevel": "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
-    "PostmasterAlmostFull": "Quasi pieno! ({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "Pieno! ({{number}}/{{postmasterSize}})",
+    "PostmasterAlmostFull": "Quasi pieno!",
+    "PostmasterFull": "Pieno!",
     "PreviewVendor": "Anteprima contenuto {{type}}",
     "StackFull": "Hai già una pila piena di {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
@@ -596,6 +607,9 @@
     "Apply": "Applica",
     "ApplyMods": "Applicazione Modifiche",
     "ApplySearch": "Trasferisci la ricerca \"{{query}}\"",
+    "ArtifactUnlocks": "Sblocchi Artefatto",
+    "ArtifactUnlocksDesc": "A causa delle limitazioni di Bungie.net, DIM non può configurare automaticamente il tuo Artefatto. Devi eseguire questi sblocchi nel gioco prima di applicare la Dotazione.",
+    "ArtifactUnlocksWithSeason": "Sblocchi Artefatto – S{{seasonNumber}}",
     "BadLoadoutShare": "Impossibile caricare dotazione condivisa",
     "BadLoadoutShareBody": "La dotazione che stai cercando di caricare non è valida: {{error}}",
     "Before": "Prima '{{name}}'",
@@ -665,7 +679,17 @@
     "MissingItemsWarning": "Alcuni degli oggetti in questa dotazione non sono più nel tuo inventario.",
     "ModErrorSummary": "1 errore Modifica:",
     "ModErrorSummary_plural": "{{count}} errori Modifiche:",
-    "ModPlacement": "Posizionamento Modifiche",
+    "ModPlacement": {
+      "InvalidMods": "Modifica non valida",
+      "InvalidModsDesc": "1 Modifica non può essere alloggiata in nessun pezzo di armatura.",
+      "InvalidModsDesc_plural": "{{count}} Modifiche non possono essere alloggiate in nessun pezzo di armatura.",
+      "ModPlacement": "Posizionamento Modifiche",
+      "UnassignedMods": "Modifiche non assegnate",
+      "UnassignedModsDesc": "1 Modifica non può essere alloggiata per insufficienza di capacità energetica o di alloggiamenti Modifiche. Potenziare l'energia dell'armatura selezionata non risolverà il problema.",
+      "UnassignedModsDesc_plural": "{{count}} non possono essere alloggiate per insufficienza di capacità energetica o di alloggiamenti Modifiche. Potenziare l'energia dell'armatura selezionata non risolverà il problema.",
+      "UpgradeCosts": "Costi potenziamento",
+      "UpgradeCostsDesc": "Alcune armature necessitano di potenziamento alla capacità energetica per alloggiare le Modifiche richieste. In totale, questi sono i costi di potenziamento:"
+    },
     "Mods": "Modifiche",
     "MoveItems": "Spostando oggetti",
     "NoEngrams": "Non ci sono engrammi non-esotici da trasferire.",
@@ -726,6 +750,7 @@
     },
     "ShareLoadout": "Condividi dotazione",
     "ShowModPlacement": "Mostra posizionamento Modifiche",
+    "Snapshot": "Salva come Dotazione in gioco",
     "SocketOverrides": "Cambiamento opzioni sottoclasse",
     "SortByEditTime": "Ordina per ultima modifica",
     "SortByName": "Ordina per nome",
@@ -735,7 +760,6 @@
     "SyncFromEquipped": "Sincronizza da equipaggiati",
     "TooManyRequested": "Hai un totale di {{total}} {{itemname}} ma la tua dotazione ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
     "UnassignedModError": "La Modifica non è adatta alla tua armatura attuale",
-    "UnassignedMods": "Modifiche non assegnate",
     "Undo": "Annulla",
     "Unequipped": "Non equipaggiato",
     "Update": "Salva Cambiamenti",

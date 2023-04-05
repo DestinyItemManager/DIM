@@ -1,3 +1,6 @@
+// organize-imports-ignore
+// We want our main CSS to load before all other CSS.
+import './app/main.scss';
 import { saveAccountsToIndexedDB } from 'app/accounts/observers';
 import updateCSSVariables from 'app/css-variables';
 import { loadDimApiData } from 'app/dim-api/actions';
@@ -15,7 +18,6 @@ import Root from './app/Root';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
 import './app/google';
 import { initi18n } from './app/i18n';
-import './app/main.scss';
 import registerServiceWorker from './app/register-service-worker';
 import { safariTouchFix } from './app/safari-touch-fix';
 import { watchLanguageChanges } from './app/settings/observers';

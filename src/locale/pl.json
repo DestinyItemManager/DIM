@@ -124,6 +124,7 @@
   "EnergyMeter": {
     "Energy": "Energia",
     "Unused": "Nieużywane",
+    "UpgradeNeeded": "This item's current energy capacity is {{energyCapacity}}. To fit the selected mods, its energy capacity must be {{energyUsed}}.",
     "Used": "Używane"
   },
   "ErrorBoundary": {
@@ -387,7 +388,17 @@
   },
   "InGameLoadout": {
     "Applying": "Zakładnie Uzbrojenia...",
-    "LoadoutSlotNum": "Gniazdo {{index}}"
+    "Create": "Create Loadout",
+    "CreateTitle": "Create In-Game Loadout From Current Equipment",
+    "DeleteFailed": "Failed to delete loadout",
+    "Deleted": "Loadout Deleted",
+    "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
+    "EditFailed": "Failed to update loadout",
+    "EditTitle": "Edit Loadout Name and Icon",
+    "LoadoutSlotNum": "Gniazdo {{index}}",
+    "Replace": "Replace Loadout",
+    "Save": "Update Loadout",
+    "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
   "Infusion": {
     "Filter": "Filtruj przedmioty",
@@ -437,8 +448,8 @@
     "NotEnoughRoomGeneral": "Nie ma wystarczająco dużo miejsca, aby przenieść ten przedmiot.",
     "OnlyEquippedClassLevel": "To może być założone tylko na {{class}} na lub powyżej poziomu {{level}}.",
     "OnlyEquippedLevel": "To może być założone tylko na postaciach na lub powyżej poziomu {{level}}.",
-    "PostmasterAlmostFull": "Prawie pełny! ({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "Pełny! ({{number}}/{{postmasterSize}})",
+    "PostmasterAlmostFull": "Almost full!",
+    "PostmasterFull": "Full!",
     "PreviewVendor": "Podgląd zawartości {{type}}",
     "StackFull": "Masz już pełny stos {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
@@ -596,6 +607,9 @@
     "Apply": "Zatwierdź",
     "ApplyMods": "Aplikowanie modyfikacji",
     "ApplySearch": "Przenieś wyszukanie \"{{query}}\"",
+    "ArtifactUnlocks": "Artifact Unlocks",
+    "ArtifactUnlocksDesc": "Due to Bungie.net limitations, DIM cannot automatically configure your artifact. You need to perform these unlocks in-game before applying the Loadout.",
+    "ArtifactUnlocksWithSeason": "Artifact Unlocks – S{{seasonNumber}}",
     "BadLoadoutShare": "Nie można załadować udostępnionego Uzbrojenia",
     "BadLoadoutShareBody": "Uzbrojenie, które próbujesz załadować, jest nieprawidłowe: {{error}}",
     "Before": "Przed '{{name}}'",
@@ -665,7 +679,17 @@
     "MissingItemsWarning": "Niektóre elementy w tym uzbrojeniu już nie są w twoim ekwipunku.",
     "ModErrorSummary": "1 błąd modyfikacji:",
     "ModErrorSummary_plural": "{{count}} błędów modyfikacji:",
-    "ModPlacement": "Umieszczenie Modyfikacji",
+    "ModPlacement": {
+      "InvalidMods": "Invalid Mods",
+      "InvalidModsDesc": "1 mod cannot fit into any armor piece.",
+      "InvalidModsDesc_plural": "{{count}} mods cannot fit into any armor piece.",
+      "ModPlacement": "Mod Placement",
+      "UnassignedMods": "Unassigned Mods",
+      "UnassignedModsDesc": "1 mod did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
+      "UnassignedModsDesc_plural": "{{count}} mods did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
+      "UpgradeCosts": "Upgrade Costs",
+      "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:"
+    },
     "Mods": "Modyfikacje",
     "MoveItems": "Przenoszenie przedmiotów",
     "NoEngrams": "Brak nie egzotycznych engramów do przeniesienia.",
@@ -726,6 +750,7 @@
     },
     "ShareLoadout": "Udostępnij Uzbrojenie",
     "ShowModPlacement": "Pokaż Umieszczenie Modyfikacji",
+    "Snapshot": "Save As In-Game Loadout",
     "SocketOverrides": "Zmiana opcji podklasy",
     "SortByEditTime": "Sortuj według ostatniej modyfikacji",
     "SortByName": "Sortuj według nazwy",
@@ -735,7 +760,6 @@
     "SyncFromEquipped": "Synchronizuj z wyposażonych przedmiotów",
     "TooManyRequested": "Masz {{total}} {{itemname}}, ale Twoje wyposażenie wymaga {{requested}}. Przenieśliśmy wszystko, co miałeś.",
     "UnassignedModError": "Modyfikacja nie pasuję do twojej bieżącej zbroi",
-    "UnassignedMods": "Nieprzypisane Modyfikacje",
     "Undo": "Cofnij",
     "Unequipped": "Niewyposażone",
     "Update": "Zapisz zmiany",

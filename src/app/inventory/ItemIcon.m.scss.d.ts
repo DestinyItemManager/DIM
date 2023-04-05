@@ -19,6 +19,7 @@ interface CssExports {
   'legendaryMasterwork': string;
   'masterwork': string;
   'rare': string;
+  'strandColorFix': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

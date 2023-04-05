@@ -238,38 +238,36 @@ export default function LoadoutEdit({
           </LoadoutEditBucketDropTarget>
         </LoadoutEditSection>
       ))}
-      <div className={clsx(styles.section, styles.modsStack)}>
-        <LoadoutEditSection
-          title={t('Loadouts.Mods')}
-          className={styles.mods}
-          onClear={handleClearMods}
-          onSyncFromEquipped={missingSockets ? undefined : handleSyncModsFromEquipped}
-        >
-          <LoadoutMods
-            loadout={loadout}
-            storeId={store.id}
-            allMods={allMods}
-            onUpdateMods={handleUpdateMods}
-            onRemoveMod={handleRemoveMod}
-            clearUnsetMods={clearUnsetMods}
-            onClearUnsetModsChanged={handleClearUnsetModsChanged}
-          />
-        </LoadoutEditSection>
-        <LoadoutEditSection
-          title={artifactTitle}
-          titleInfo={t('Loadouts.ArtifactUnlocksDesc')}
-          className={styles.mods}
-          onClear={handleClearArtifactUnlocks}
+      <LoadoutEditSection
+        title={t('Loadouts.Mods')}
+        className={clsx(styles.section, styles.mods)}
+        onClear={handleClearMods}
+        onSyncFromEquipped={missingSockets ? undefined : handleSyncModsFromEquipped}
+      >
+        <LoadoutMods
+          loadout={loadout}
+          storeId={store.id}
+          allMods={allMods}
+          onUpdateMods={handleUpdateMods}
+          onRemoveMod={handleRemoveMod}
+          clearUnsetMods={clearUnsetMods}
+          onClearUnsetModsChanged={handleClearUnsetModsChanged}
+        />
+      </LoadoutEditSection>
+      <LoadoutEditSection
+        title={artifactTitle}
+        titleInfo={t('Loadouts.ArtifactUnlocksDesc')}
+        className={styles.section}
+        onClear={handleClearArtifactUnlocks}
+        onSyncFromEquipped={profileResponse ? handleSyncArtifactUnlocksFromEquipped : undefined}
+      >
+        <LoadoutArtifactUnlocks
+          loadout={loadout}
+          storeId={store.id}
+          onRemoveMod={handleRemoveArtifactUnlock}
           onSyncFromEquipped={profileResponse ? handleSyncArtifactUnlocksFromEquipped : undefined}
-        >
-          <LoadoutArtifactUnlocks
-            loadout={loadout}
-            storeId={store.id}
-            onRemoveMod={handleRemoveArtifactUnlock}
-            onSyncFromEquipped={profileResponse ? handleSyncArtifactUnlocksFromEquipped : undefined}
-          />
-        </LoadoutEditSection>
-      </div>
+        />
+      </LoadoutEditSection>
     </div>
   );
 }

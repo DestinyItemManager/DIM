@@ -21,6 +21,15 @@ const itemTierStyles: Record<ItemTierName, string> = {
   Currency: styles.common,
 };
 
+const strandWrongColorPlugCategoryHashes = [
+  PlugCategoryHashes.TitanStrandClassAbilities,
+  PlugCategoryHashes.HunterStrandClassAbilities,
+  PlugCategoryHashes.WarlockStrandClassAbilities,
+  PlugCategoryHashes.TitanStrandMovement,
+  PlugCategoryHashes.HunterStrandMovement,
+  PlugCategoryHashes.WarlockStrandMovement,
+];
+
 export function getItemImageStyles(item: DimItem, className?: string) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
   const borderless =
@@ -112,11 +121,15 @@ export function DefItemIcon({
     itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||
     itemCategoryHashes.includes(ItemCategoryHashes.Engrams);
 
+  const needsStrandColorFix =
+    itemDef.plug && strandWrongColorPlugCategoryHashes.includes(itemDef.plug.plugCategoryHash);
+
   const itemImageStyles = clsx(
     'item-img',
     className,
     {
       [styles.borderless]: borderless,
+      [styles.strandColorFix]: needsStrandColorFix,
     },
     !borderless &&
       !itemDef.plug &&

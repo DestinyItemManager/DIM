@@ -1,16 +1,17 @@
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { convertInGameLoadoutToDimLoadout } from 'app/loadout-drawer/loadout-type-converters';
+import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import styles from 'app/loadout/LoadoutsRow.m.scss';
 import { AppIcon, deleteIcon, faCheckCircle } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
 import { streamDeckSelectLoadout } from 'app/stream-deck/stream-deck';
-import { Portal } from 'app/utils/temp-container';
-import { ReactNode, memo, useMemo, useState } from 'react';
+import { ReactNode, memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import EditInGameLoadout from './EditInGameLoadout';
 import InGameLoadoutView from './InGameLoadoutView';
 import { applyInGameLoadout, deleteInGameLoadout } from './ingame-loadout-apply';
 
@@ -20,12 +21,16 @@ import { applyInGameLoadout, deleteInGameLoadout } from './ingame-loadout-apply'
 export default memo(function InGameLoadoutRow({
   loadout,
   store,
+  onEdit,
+  onShare,
 }: {
   loadout: InGameLoadout;
   store: DimStore;
+  onEdit: (loadout: InGameLoadout) => void;
+  onShare: (loadout: Loadout) => void;
 }) {
   const dispatch = useThunkDispatch();
-  const [editing, setEditing] = useState(false);
+  const allItems = useSelector(allItemsSelector);
 
   const streamDeckSelection = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line
@@ -35,8 +40,15 @@ export default memo(function InGameLoadoutRow({
   const actionButtons = useMemo(() => {
     const handleApply = () => dispatch(applyInGameLoadout(loadout));
     const handleDelete = () => dispatch(deleteInGameLoadout(loadout));
-    const handleEdit = () => setEditing(true);
-    const handleEditSheetClose = () => setEditing(false);
+
+    const handleSaveAsDIM = () => {
+      const dimLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
+      editLoadout(dimLoadout, store.id, { isNew: true });
+    };
+    const handleShare = () => {
+      const dimLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
+      onShare(dimLoadout);
+    };
 
     if (streamDeckSelection === 'loadout') {
       const handleSelection = () =>
@@ -68,26 +80,25 @@ export default memo(function InGameLoadoutRow({
         {t('Loadouts.Apply')}
       </button>,
 
-      <button key="edit" type="button" className="dim-button" onClick={handleEdit}>
+      <button key="edit" type="button" className="dim-button" onClick={() => onEdit(loadout)}>
         {t('Loadouts.EditBrief')}
+      </button>,
+
+      <button key="saveAs" type="button" className="dim-button" onClick={handleSaveAsDIM}>
+        {t('Loadouts.SaveAsDIM')}
+      </button>,
+
+      <button key="share" type="button" className="dim-button" onClick={handleShare}>
+        {t('Loadouts.ShareLoadout')}
       </button>,
 
       <ConfirmButton key="delete" danger onClick={handleDelete}>
         <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
       </ConfirmButton>,
-
-      editing && (
-        <Portal key="editsheet">
-          <EditInGameLoadout loadout={loadout} onClose={handleEditSheetClose} />
-        </Portal>
-      ),
     ];
 
-    // TODO: add snapshotting loadouts - may need a dialog to select the loadout slot
-    // TODO: figure out whether this loadout is currently equippable (all items on character or in vault)
-
     return actionButtons;
-  }, [dispatch, loadout, store, streamDeckSelection, editing]);
+  }, [streamDeckSelection, dispatch, loadout, store, allItems, onShare, onEdit]);
 
   return <InGameLoadoutView loadout={loadout} store={store} actionButtons={actionButtons} />;
 });

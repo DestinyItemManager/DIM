@@ -96,7 +96,7 @@ export function download(data: string, filename: string, type: string) {
  * Given an index into an array, which may exceed the bounds of the array in either direction,
  * return a new index that "wraps around".
  *
- * Example:
+ * @example
  * [0, 1][wrap(-1, 2)] === 1
  */
 export const wrap = (index: number, length: number) => {

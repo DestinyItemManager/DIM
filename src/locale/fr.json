@@ -124,6 +124,7 @@
   "EnergyMeter": {
     "Energy": "Énergie",
     "Unused": "Libre",
+    "UpgradeNeeded": "La capacité en énergie de cet objet est de {{energyCapacity}}. Pour placer les mods sélectionnés, sa capacité en énergie doit être de {{energyUsed}}.",
     "Used": "Utilisé"
   },
   "ErrorBoundary": {
@@ -387,7 +388,17 @@
   },
   "InGameLoadout": {
     "Applying": "Équipement de l'équipement...",
-    "LoadoutSlotNum": "Emplacement {{index}}"
+    "Create": "Create Loadout",
+    "CreateTitle": "Create In-Game Loadout From Current Equipment",
+    "DeleteFailed": "Failed to delete loadout",
+    "Deleted": "Loadout Deleted",
+    "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
+    "EditFailed": "Failed to update loadout",
+    "EditTitle": "Edit Loadout Name and Icon",
+    "LoadoutSlotNum": "Emplacement {{index}}",
+    "Replace": "Replace Loadout",
+    "Save": "Update Loadout",
+    "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
   "Infusion": {
     "Filter": "Filtrer les objets",
@@ -437,8 +448,8 @@
     "NotEnoughRoomGeneral": "Il n'y a pas assez de place pour déplacer cet objet.",
     "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un {{class}} de niveau {{level}} ou plus.",
     "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {{level}} ou plus.",
-    "PostmasterAlmostFull": "Presque plein ! ({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "Plein! ({{number}}/{{postmasterSize}})",
+    "PostmasterAlmostFull": "Presque plein !",
+    "PostmasterFull": "Plein !",
     "PreviewVendor": "Aperçu du contenu {{type}}",
     "StackFull": "Vous avez déjà une pile pleine de {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
@@ -596,6 +607,9 @@
     "Apply": "Appliquer",
     "ApplyMods": "Ajout des mods",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
+    "ArtifactUnlocks": "Artifact Unlocks",
+    "ArtifactUnlocksDesc": "Due to Bungie.net limitations, DIM cannot automatically configure your artifact. You need to perform these unlocks in-game before applying the Loadout.",
+    "ArtifactUnlocksWithSeason": "Artifact Unlocks – S{{seasonNumber}}",
     "BadLoadoutShare": "Impossible de charger l'équipement partagé",
     "BadLoadoutShareBody": "L'équipement que vous essayez de charger est invalide : {{error}}",
     "Before": "Annuler '{{name}}'",
@@ -665,7 +679,17 @@
     "MissingItemsWarning": "Certains des objets dans cet équipement ne sont plus dans votre inventaire.",
     "ModErrorSummary": "1 erreur de mod :",
     "ModErrorSummary_plural": "{{count}} erreurs de mod :",
-    "ModPlacement": "Placement des mods",
+    "ModPlacement": {
+      "InvalidMods": "Mods invalides",
+      "InvalidModsDesc": "1 mod ne peut pas être placé dans n'importe quelle pièce d'armure.",
+      "InvalidModsDesc_plural": "{{count}} mods ne peuvent pas être placés dans n'importe quelle pièce d'armure.",
+      "ModPlacement": "Placement des mods",
+      "UnassignedMods": "Mods non assignés",
+      "UnassignedModsDesc": "1 mod n'a pas pu être placé en raison d'un manque d'énergie ou d'emplacement de mod. L'amélioration de l'énergie de l'armure sélectionnée ne résoudra pas le problème.",
+      "UnassignedModsDesc_plural": "{{count}} mods n'ont pas pu être placés en raison d'un manque d'énergie ou d'emplacement de mod. L'amélioration de l'énergie de l'armure sélectionnée ne résoudra pas le problème.",
+      "UpgradeCosts": "Coûts d'amélioration",
+      "UpgradeCostsDesc": "Certaines armures ont besoin d'une amélioration d'énergie pour pouvoir accepter les mods demandés. Au total, ces améliorations coûtent :"
+    },
     "Mods": "Mods",
     "MoveItems": "Déplacement des objets",
     "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
@@ -726,6 +750,7 @@
     },
     "ShareLoadout": "Partager l'équipement",
     "ShowModPlacement": "Afficher le placement des mods",
+    "Snapshot": "Save As In-Game Loadout",
     "SocketOverrides": "Changement des options de doctrine",
     "SortByEditTime": "Trier par dernière modification",
     "SortByName": "Trier par nom",
@@ -735,7 +760,6 @@
     "SyncFromEquipped": "Synchroniser avec ceux équipés",
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre équipement demande {{requested}}. Nous avons transféré tous ceux que vous possédiez.",
     "UnassignedModError": "Le mot n'a pas pu être équipé sur votre armure actuelle",
-    "UnassignedMods": "Mods non assignés",
     "Undo": "Annuler",
     "Unequipped": "Non équipé",
     "Update": "Enregistrer les modifications",

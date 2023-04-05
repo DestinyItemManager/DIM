@@ -37,7 +37,7 @@ export default function ItemPopupHeader({
 
   const showElementIcon = Boolean(item.element);
 
-  const linkToArmory = item.destinyVersion === 2;
+  const linkToArmory = !noLink && item.destinyVersion === 2;
 
   return (
     <div
@@ -48,7 +48,7 @@ export default function ItemPopupHeader({
       })}
       onClick={linkToArmory ? () => setShowArmory(true) : undefined}
     >
-      {noLink || item.destinyVersion === 1 ? (
+      {!linkToArmory ? (
         <span className={styles.title}>{item.name}</span>
       ) : (
         <a className={styles.title}>
