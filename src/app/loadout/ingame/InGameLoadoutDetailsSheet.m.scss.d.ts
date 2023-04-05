@@ -3,6 +3,7 @@
 interface CssExports {
   'controls': string;
   'header': string;
+  'itemGroups': string;
   'itemImage': string;
   'loadoutGrid': string;
   'sheet': string;

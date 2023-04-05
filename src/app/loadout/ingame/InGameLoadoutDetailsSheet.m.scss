@@ -1,11 +1,10 @@
 .sheet {
-  width: min-content;
+  width: fit-content;
   margin: auto;
 }
 
 .controls {
   margin: 8px;
-  width: fit-content;
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
@@ -48,4 +47,10 @@
   h1 {
     margin-bottom: 0 !important;
   }
+}
+
+.itemGroups {
+  display: flex;
+  flex-flow: row wrap;
+  column-gap: 16px;
 }

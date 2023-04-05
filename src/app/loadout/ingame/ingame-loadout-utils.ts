@@ -29,7 +29,6 @@ export function getItemsFromInGameLoadout(
   loadoutItems: DestinyLoadoutItemComponent[],
   allItems: DimItem[]
 ): DimItem[] {
-  // TODO: apply socket overrides once we know what those are?
   return _.compact(
     loadoutItems.map((li) => {
       const realItem =
