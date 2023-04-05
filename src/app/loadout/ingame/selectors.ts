@@ -16,7 +16,11 @@ import {
   ResolvedLoadoutItem,
   ResolvedLoadoutMod,
 } from 'app/loadout-drawer/loadout-types';
-import { getModsFromLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import {
+  getModsFromLoadout,
+  newLoadoutFromEquipped,
+  potentialLoadoutItemsByItemId,
+} from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
@@ -130,7 +134,7 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
         .filter((gameLoadout) => gameLoadout.index < availableLoadoutSlots)
         .map((gameLoadout) => {
           const isEquippable = gameLoadout.items.every((li) => {
-            const liveItem = allItems.find((di) => di.id === li.itemInstanceId);
+            const liveItem = potentialLoadoutItemsByItemId(allItems)[li.itemInstanceId];
             return !liveItem || itemCouldBeEquipped(selectedStore, liveItem, stores);
           });
 

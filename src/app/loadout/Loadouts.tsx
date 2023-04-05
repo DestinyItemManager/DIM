@@ -169,7 +169,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         )}
         <h1>{t('Loadouts.InGameLoadouts')}</h1>
         <InGameLoadoutStrip
-          selectedStoreId={selectedStoreId}
+          store={selectedStore}
           onEdit={setEditingInGameLoadout}
           onShare={setSharedLoadout}
         />
