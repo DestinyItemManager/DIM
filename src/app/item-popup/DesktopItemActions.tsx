@@ -55,8 +55,9 @@ export default function DesktopItemActions({
       dispatch(addCompareItem(item));
     }
   });
-  useHotkey('i', t('MovePopup.InfuseTitle'), () => {
+  useHotkey('i', t('MovePopup.InfuseTitle'), (e: KeyboardEvent) => {
     if (item.infusable) {
+      e.preventDefault();
       showInfuse(item);
       hideItemPopup();
     }
