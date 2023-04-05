@@ -18,7 +18,7 @@ export default memo(function HotkeysCheatSheet() {
 
   const hide = () => showCheatSheet$.next(false);
 
-  useHotkey('mod+/', t('Hotkey.ShowHotkeys'), toggle);
+  useHotkey('?', t('Hotkey.ShowHotkeys'), toggle);
 
   if (!visible) {
     return null;

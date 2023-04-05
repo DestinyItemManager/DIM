@@ -181,15 +181,16 @@ function handleKeyEvent(e: KeyboardEvent) {
   const character = _MAP[e.which] ?? String.fromCharCode(e.which).toLowerCase();
   combo.add(character);
   const comboStr = [...combo].join('+');
-  trigger(comboStr, e);
+  if (trigger(comboStr, e)) {
+    return;
+  }
 
-  /*
-  // TODO: we don't need this unless we want shortcuts like ? or @.
   // Then try the resolved key which works for stuff like ?. We don't need modifiers for that one.
   combo.delete('shift');
-  const comboStr2 = [...combo, e.key].join('+');
+  combo.delete(character);
+  combo.add(e.key);
+  const comboStr2 = [...combo].join('+');
   trigger(comboStr2, e);
-  */
 }
 
 function trigger(comboStr: string, e: KeyboardEvent) {
