@@ -1097,7 +1097,13 @@ export function sortMoveAsideCandidatesForStore(
       // Try our hardest never to unequip something
       compareBy((displaced) => !displaced.equipped),
       // prefer same bucket over everything, because that makes space in the correct "pocket"
-      compareBy((displaced) => displacer && displaced.bucket.hash === displacer.bucket.hash),
+      compareBy(
+        (displaced) =>
+          !fromStore.isVault && displacer && displaced.bucket.hash === displacer.bucket.hash
+      ),
+
+      // TODO: Prefer moving from vault into Inventory (consumables)
+      // TODO: Prefer moving from vault into the bucket with the most free space
 
       // D1 HAD ENGRAMS MIXED IN WITH INVENTORY
 
