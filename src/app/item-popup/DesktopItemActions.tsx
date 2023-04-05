@@ -1,6 +1,7 @@
 import { addCompareItem } from 'app/compare/actions';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
+import { showInfuse } from 'app/infuse/infuse';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
@@ -52,6 +53,12 @@ export default function DesktopItemActions({
     if (item.comparable) {
       hideItemPopup();
       dispatch(addCompareItem(item));
+    }
+  });
+  useHotkey('i', t('MovePopup.InfuseTitle'), () => {
+    if (item.infusable) {
+      showInfuse(item);
+      hideItemPopup();
     }
   });
 
