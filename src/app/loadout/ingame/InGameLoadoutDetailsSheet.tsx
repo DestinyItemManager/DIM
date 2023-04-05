@@ -1,12 +1,11 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import Socket from 'app/item-popup/Socket';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { convertInGameLoadoutToDimLoadout } from 'app/loadout-drawer/loadout-type-converters';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getSocketsByCategoryHashes, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -18,11 +17,7 @@ import { allItemsSelector, bucketsSelector } from '../../inventory/selectors';
 import styles from './InGameLoadoutDetailsSheet.m.scss';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
 import { applyInGameLoadout, deleteInGameLoadout, prepInGameLoadout } from './ingame-loadout-apply';
-import {
-  gameLoadoutCompatibleBuckets,
-  isValidGameLoadoutPlug,
-  useItemsFromInGameLoadout,
-} from './ingame-loadout-utils';
+import { gameLoadoutCompatibleBuckets, useItemsFromInGameLoadout } from './ingame-loadout-utils';
 
 export function InGameLoadoutDetails({
   store,
@@ -39,8 +34,8 @@ export function InGameLoadoutDetails({
 }) {
   const dispatch = useThunkDispatch();
   const buckets = useSelector(bucketsSelector)!;
-  const items = useItemsFromInGameLoadout(loadout);
-  const itemsByBucketHash = _.keyBy(items, (i) => i.bucket.hash);
+  const resolvedItems = useItemsFromInGameLoadout(loadout);
+  const itemsByBucketHash = _.keyBy(resolvedItems, (i) => i.item.bucket.hash);
   const allItems = useSelector(allItemsSelector);
   const handleSaveAsDIM = () => {
     const dimLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
@@ -91,16 +86,17 @@ export function InGameLoadoutDetails({
         {_.partition(gameLoadoutCompatibleBuckets, (h) => buckets.byHash[h].sort !== 'Armor').map(
           (group) => (
             <div key={group[0]} className={styles.loadoutGrid}>
-              {group.map(
-                (h) =>
-                  itemsByBucketHash[h] && (
+              {group.map((h) => {
+                const resolvedItem = itemsByBucketHash[h];
+                return (
+                  resolvedItem && (
                     <InGameLoadoutItemDetail
-                      key={itemsByBucketHash[h].id}
-                      item={itemsByBucketHash[h]}
-                      loadout={loadout}
+                      key={resolvedItem.item.id}
+                      resolvedItem={resolvedItem}
                     />
                   )
-              )}
+                );
+              })}
             </div>
           )
         )}
@@ -110,20 +106,13 @@ export function InGameLoadoutDetails({
 }
 
 // Note that the item has already had socket overrides applied by useItemsFromInGameLoadout
-function InGameLoadoutItemDetail({ item, loadout }: { item: DimItem; loadout: InGameLoadout }) {
-  const loadoutItem = loadout.items.find((i) => i.itemInstanceId === item.id);
-  if (!loadoutItem) {
-    return null;
-  }
-
+function InGameLoadoutItemDetail({
+  resolvedItem: { item, loadoutItem },
+}: {
+  resolvedItem: ResolvedLoadoutItem;
+}) {
   // don't display any sockets the game loadout doesn't have data for
-  const validSocketIndexes: number[] = [];
-  for (let socketIndex = 0; socketIndex < loadoutItem.plugItemHashes.length; socketIndex++) {
-    const plugHash = loadoutItem.plugItemHashes[socketIndex];
-    if (isValidGameLoadoutPlug(plugHash)) {
-      validSocketIndexes.push(socketIndex);
-    }
-  }
+  const validSocketIndexes = Object.keys(loadoutItem.socketOverrides!).map((k) => parseInt(k, 10));
 
   const cosmeticSockets = getSocketsByCategoryHashes(item.sockets, [
     SocketCategoryHashes.ArmorCosmetics,

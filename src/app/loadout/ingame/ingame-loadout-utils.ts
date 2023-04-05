@@ -21,28 +21,36 @@ import { UNSET_PLUG_HASH } from '../known-values';
 
 /**
  * Get all the real DimItems from ingame loadout items.
- *
- * TODO: These aren't ResolvedLoadoutItems because we don't know how D2 will handle missing items yet.
  */
 export function getItemsFromInGameLoadout(
   itemCreationContext: ItemCreationContext,
   loadoutItems: DestinyLoadoutItemComponent[],
   allItems: DimItem[]
-): DimItem[] {
+): ResolvedLoadoutItem[] {
   return _.compact(
     loadoutItems.map((li) => {
       const realItem =
         li.itemInstanceId !== '0'
           ? potentialLoadoutItemsByItemId(allItems)[li.itemInstanceId]
           : undefined;
-      if (realItem) {
-        return applySocketOverrides(
-          itemCreationContext,
-          realItem,
-          convertInGameLoadoutPlugItemHashesToSocketOverrides(li.plugItemHashes)
-        );
+      if (!realItem) {
+        // We just skip missing items entirely - we can't find anything about them
+        return undefined;
       }
-      return realItem;
+      const socketOverrides = convertInGameLoadoutPlugItemHashesToSocketOverrides(
+        li.plugItemHashes
+      );
+      const item = applySocketOverrides(itemCreationContext, realItem, socketOverrides);
+      return {
+        item,
+        loadoutItem: {
+          socketOverrides,
+          hash: item.hash,
+          id: item.id,
+          equip: true,
+          amount: 1,
+        },
+      };
     })
   );
 }

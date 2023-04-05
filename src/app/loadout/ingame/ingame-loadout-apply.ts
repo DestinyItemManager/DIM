@@ -32,7 +32,7 @@ import { inGameLoadoutDeleted, inGameLoadoutUpdated } from './actions';
 import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
 
 /**
- * Ask the API to equip a loadout.
+ * Ask the API to equip an ingame loadout.
  */
 export function applyInGameLoadout(loadout: InGameLoadout): ThunkResult {
   return async (dispatch, getState) => {
@@ -53,7 +53,7 @@ export function applyInGameLoadout(loadout: InGameLoadout): ThunkResult {
         itemCreationContext,
         loadout.items,
         allItemsSelector(getState())
-      );
+      ).map((li) => li.item);
 
       for (const item of items) {
         // Update items to be equipped
@@ -93,7 +93,11 @@ export function prepInGameLoadout(loadout: InGameLoadout): ThunkResult {
     const targetStore = getStore(stores, loadout.characterId)!;
     const allItems = allItemsSelector(getState());
     const itemCreationContext = createItemContextSelector(getState());
-    const loadoutItems = getItemsFromInGameLoadout(itemCreationContext, loadout.items, allItems);
+    const loadoutItems = getItemsFromInGameLoadout(
+      itemCreationContext,
+      loadout.items,
+      allItems
+    ).map((li) => li.item);
 
     const moveLoadout = itemMoveLoadout(loadoutItems, targetStore);
     dispatch(applyLoadout(targetStore, moveLoadout));

@@ -33,7 +33,7 @@ export default function InGameLoadoutView({
   actionButtons: ReactNode[];
 }) {
   // Turn loadout items into real DimItems
-  const items = useItemsFromInGameLoadout(loadout);
+  const items = useItemsFromInGameLoadout(loadout).map((li) => li.item);
 
   const categories = _.groupBy(items, (item) => item.bucket.sort);
   const power = loadoutPower(store, categories);
