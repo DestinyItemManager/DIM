@@ -209,7 +209,12 @@ function Loadouts({ account }: { account: DestinyAccount }) {
       )}
       {gameLoadoutDetails && (
         <Portal>
-          <InGameLoadoutDetails loadout={gameLoadoutDetails} />
+          <InGameLoadoutDetails
+            store={selectedStore}
+            loadout={gameLoadoutDetails}
+            onEdit={setEditingInGameLoadout}
+            onShare={setSharedLoadout}
+          />
         </Portal>
       )}
       {showSnapshot && (

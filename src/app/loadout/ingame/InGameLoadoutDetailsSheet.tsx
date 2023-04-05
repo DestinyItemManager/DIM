@@ -1,9 +1,12 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
+import { DimStore } from 'app/inventory/store-types';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import Socket from 'app/item-popup/Socket';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { convertInGameLoadoutToDimLoadout } from 'app/loadout-drawer/loadout-type-converters';
+import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { Observable } from 'app/utils/observable';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
@@ -12,7 +15,7 @@ import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../../dim-ui/Sheet';
-import { createItemContextSelector } from '../../inventory/selectors';
+import { allItemsSelector, createItemContextSelector } from '../../inventory/selectors';
 import styles from './InGameLoadoutDetailsSheet.m.scss';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
 import { applyInGameLoadout, deleteInGameLoadout, prepInGameLoadout } from './ingame-loadout-apply';
@@ -30,11 +33,15 @@ export function showInGameLoadoutDetails(loadout: InGameLoadout) {
 }
 
 export function InGameLoadoutDetails({
-  // storeId,
+  store,
   loadout,
+  onShare,
+  onEdit,
 }: {
-  //   storeId: string;
+  store: DimStore;
   loadout: InGameLoadout;
+  onShare: (loadout: Loadout) => void;
+  onEdit: (loadout: InGameLoadout) => void;
 }) {
   const dispatch = useThunkDispatch();
   const itemCreationContext = useSelector(createItemContextSelector);
@@ -43,6 +50,15 @@ export function InGameLoadoutDetails({
   const itemsByBucketHash = _.keyBy(items, (i) => i.bucket.hash);
   const reset = () => {
     showGameLoadoutDetails$.next(undefined);
+  };
+  const allItems = useSelector(allItemsSelector);
+  const handleSaveAsDIM = () => {
+    const dimLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
+    editLoadout(dimLoadout, store.id, { isNew: true });
+  };
+  const handleShare = () => {
+    const dimLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
+    onShare(dimLoadout);
   };
 
   const header = (
@@ -69,8 +85,14 @@ export function InGameLoadoutDetails({
         >
           {t('InGameLoadout.PrepareEquip')}
         </button>
-        <button type="button" className="dim-button" onClick={undefined}>
+        <button type="button" className="dim-button" onClick={() => onEdit(loadout)}>
           {t('InGameLoadout.EditIdentifiers')}
+        </button>
+        <button type="button" className="dim-button" onClick={handleSaveAsDIM}>
+          {t('Loadouts.SaveAsDIM')}
+        </button>
+        <button type="button" className="dim-button" onClick={handleShare}>
+          {t('Loadouts.ShareLoadout')}
         </button>
         <ConfirmButton danger onClick={() => dispatch(deleteInGameLoadout(loadout))}>
           {t('InGameLoadout.ClearSlot', { index: loadout.index + 1 })}
