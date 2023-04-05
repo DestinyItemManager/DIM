@@ -92,7 +92,8 @@ export function prepInGameLoadout(loadout: InGameLoadout): ThunkResult {
     const stores = storesSelector(getState());
     const targetStore = getStore(stores, loadout.characterId)!;
     const allItems = allItemsSelector(getState());
-    const loadoutItems = getItemsFromInGameLoadout(loadout.items, allItems);
+    const itemCreationContext = createItemContextSelector(getState());
+    const loadoutItems = getItemsFromInGameLoadout(itemCreationContext, loadout.items, allItems);
 
     const moveLoadout = itemMoveLoadout(loadoutItems, targetStore);
     dispatch(applyLoadout(targetStore, moveLoadout));
