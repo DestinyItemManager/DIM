@@ -6,7 +6,9 @@
       "package_name": "com.destinyitemmanager.app",
       "sha256_cert_fingerprints": [
         "48:9B:BD:A6:8F:4C:DE:F3:35:83:2F:4B:3A:BC:85:0A:F1:D8:FE:6D:62:E7:53:83:B5:E1:86:11:89:50:E4:B6",
-        "E8:7B:18:E2:6E:24:12:1C:A3:D3:3D:1A:C2:7C:39:3A:D9:9B:33:95:8D:42:AD:79:B7:80:F5:24:05:69:F1:7D"
+        "E8:7B:18:E2:6E:24:12:1C:A3:D3:3D:1A:C2:7C:39:3A:D9:9B:33:95:8D:42:AD:79:B7:80:F5:24:05:69:F1:7D",
+        "1E:4C:58:AD:FF:D6:3A:E1:BD:89:C1:39:46:8C:1B:C0:06:19:0A:EE:67:0D:BB:85:F3:DE:1E:3D:6B:C6:DC:59",
+        "B6:43:A6:AD:81:A3:42:E0:F5:39:D2:C8:AF:79:08:1A:4D:80:B5:85:B1:A3:95:37:0F:37:42:FE:BD:AE:AE:4A"
       ]
     }
   }

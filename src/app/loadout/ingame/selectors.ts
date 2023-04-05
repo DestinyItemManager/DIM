@@ -1,39 +1,30 @@
 import { profileResponseSelector } from 'app/inventory/selectors';
-import { convertDestinyLoadoutComponentToInGameLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
-import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import _ from 'lodash';
 import { createSelector } from 'reselect';
+
+const inGameLoadoutsSelector = (state: RootState) => state.inGameLoadouts.loadouts;
+const characterLoadoutsSelector = (state: RootState) =>
+  profileResponseSelector(state)?.characterLoadouts?.data;
 
 /** All loadouts supported directly by D2 (post-Lightfall), on any character */
 export const allInGameLoadoutsSelector = createSelector(
-  d2ManifestSelector,
-  (state: RootState) => profileResponseSelector(state)?.characterLoadouts?.data,
-  (defs, loadouts): InGameLoadout[] =>
-    defs && loadouts
-      ? Object.entries(loadouts).flatMap(([characterId, c]) =>
-          _.compact(
-            c.loadouts.map((l, i) =>
-              convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
-            )
-          )
-        )
-      : emptyArray<InGameLoadout>()
+  inGameLoadoutsSelector,
+  (loadouts): InGameLoadout[] => Object.values(loadouts).flat()
 );
 
 /** Loadouts supported directly by D2 (post-Lightfall), for a specific character */
 export const inGameLoadoutsForCharacterSelector = createSelector(
-  d2ManifestSelector,
-  (state: RootState) => profileResponseSelector(state)?.characterLoadouts?.data,
+  inGameLoadoutsSelector,
   (_state: RootState, characterId: string) => characterId,
-  (defs, loadouts, characterId): InGameLoadout[] =>
-    (defs &&
-      _.compact(
-        loadouts?.[characterId]?.loadouts.map((l, i) =>
-          convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
-        )
-      )) ??
-    emptyArray<InGameLoadout>()
+  (loadouts, characterId): InGameLoadout[] => loadouts[characterId] ?? emptyArray<InGameLoadout>()
+);
+
+/**
+ * How many loadout slots has the user unlocked? We get this directly from the profile because we
+ * want to count all loadouts, even the empty ones.
+ */
+export const availableLoadoutSlotsSelector = createSelector(characterLoadoutsSelector, (loadouts) =>
+  loadouts ? Object.values(loadouts)[0]?.loadouts.length ?? 0 : 0
 );

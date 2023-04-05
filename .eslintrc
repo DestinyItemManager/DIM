@@ -186,6 +186,20 @@
     ],
     "react/iframe-missing-sandbox": "error",
     "react/jsx-key": ["error", { "checkFragmentShorthand": true, "warnOnDuplicates": true }],
+    "react/forbid-component-props": [
+      "error",
+      {
+        "forbid": [
+          "onMouseEnter",
+          "onMouseLeave",
+          "onMouseOver",
+          "onMouseOut",
+          "onTouchStart",
+          "onTouchEnd",
+          "onTouchCancel"
+        ]
+      }
+    ],
     "jsx-a11y/aria-props": "error",
     "jsx-a11y/aria-proptypes": "error",
     "jsx-a11y/aria-role": "error",

@@ -1,9 +1,9 @@
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
@@ -12,6 +12,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
+import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
@@ -21,7 +22,7 @@ import styles from './LoadoutItemCategorySection.m.scss';
 import LoadoutParametersDisplay from './LoadoutParametersDisplay';
 import { OptimizerButton } from './OptimizerButton';
 
-const categoryStyles = {
+const categoryStyles: LookupTable<D2BucketCategory, string> = {
   Weapons: styles.categoryWeapons,
   Armor: styles.categoryArmor,
   General: styles.categoryGeneral,

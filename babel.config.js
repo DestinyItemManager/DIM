@@ -4,6 +4,7 @@ module.exports = function (api) {
   const plugins = [
     'lodash',
     'babel-plugin-optimize-clsx',
+    'object-to-json-parse',
     [
       '@babel/plugin-transform-runtime',
       {

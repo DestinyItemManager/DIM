@@ -4,6 +4,7 @@ interface CssExports {
   'buttons': string;
   'contents': string;
   'mods': string;
+  'section': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -4,20 +4,21 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { inGameArmorEnergyRules } from 'app/loadout-builder/types';
+import { permissiveArmorEnergyRules } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { Portal } from 'app/utils/temp-container';
+import Cost from 'app/vendors/Cost';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
+import ModPicker from '../ModPicker';
 import PlugDef from '../loadout-ui/PlugDef';
 import Sockets from '../loadout-ui/Sockets';
 import { fitMostMods } from '../mod-assignment-utils';
 import { createGetModRenderKey } from '../mod-utils';
-import ModPicker from '../ModPicker';
 import styles from './ModAssignmentDrawer.m.scss';
 import { useEquippedLoadoutArmorAndSubclass, useLoadoutMods } from './selectors';
 
@@ -38,7 +39,7 @@ function Header({
 
   return (
     <div>
-      <h1>{t('Loadouts.ModPlacement')}</h1>
+      <h1>{t('Loadouts.ModPlacement.ModPlacement')}</h1>
       <div className={styles.headerInfo}>
         <div className={styles.headerName}>{loadout.name}</div>
         <div className={styles.headerStats}>
@@ -68,15 +69,19 @@ export default function ModAssignmentDrawer({
 
   const [resolvedMods, modDefinitions] = useLoadoutMods(loadout, storeId);
 
-  const [itemModAssignments, unassignedMods] = useMemo(() => {
-    const { itemModAssignments, unassignedMods } = fitMostMods({
-      items: armor,
-      plannedMods: modDefinitions,
-      armorEnergyRules: inGameArmorEnergyRules,
-    });
-
-    return [itemModAssignments, unassignedMods];
-  }, [armor, modDefinitions]);
+  const { itemModAssignments, resultingItemEnergies, unassignedMods, invalidMods, upgradeCosts } =
+    useMemo(
+      () =>
+        fitMostMods({
+          defs,
+          items: armor,
+          plannedMods: modDefinitions,
+          // assume everything is masterworked here -- fitMostMods will
+          // ensure to use as few materials as possible
+          armorEnergyRules: permissiveArmorEnergyRules,
+        }),
+      [armor, defs, modDefinitions]
+    );
 
   const onSocketClick = useCallback(
     (plugDef: PluggableInventoryItemDefinition, plugCategoryHashWhitelist: number[]) => {
@@ -118,20 +123,14 @@ export default function ModAssignmentDrawer({
         <div className={styles.container}>
           <div className={styles.assigned}>
             {armor.map((item) => {
-              const energyUsed = _.sumBy(
-                itemModAssignments[item.id],
-                (m) => m.plug.energyCost?.energyCost || 0
-              );
-
-              const adjustedEnergy = item.energy ? { ...item.energy, energyUsed } : null;
-
+              const energy = resultingItemEnergies[item.id];
               return (
                 <div key={item.id} className={styles.itemAndMods}>
                   <div>
                     <ConnectedInventoryItem item={item} />
-                    {adjustedEnergy && (
+                    {energy && (
                       <EnergyIncrementsWithPresstip
-                        energy={adjustedEnergy}
+                        energy={energy}
                         wrapperClass={styles.energyMeter}
                       />
                     )}
@@ -146,12 +145,54 @@ export default function ModAssignmentDrawer({
               );
             })}
           </div>
+          {upgradeCosts.length > 0 && (
+            <>
+              <div className={styles.infoSectionHeader}>
+                <h3>{t('Loadouts.ModPlacement.UpgradeCosts')}</h3>
+                <span>{t('Loadouts.ModPlacement.UpgradeCostsDesc')}</span>
+              </div>
+              <div className={styles.costs}>
+                {upgradeCosts.map((cost) => (
+                  <div key={cost.materialHash}>
+                    <Cost
+                      className={styles.cost}
+                      cost={{
+                        itemHash: cost.materialHash,
+                        quantity: cost.amount,
+                        hasConditionalVisibility: false,
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
           {unassignedMods.length > 0 && (
             <>
-              <h3>{t('Loadouts.UnassignedMods')}</h3>
+              <div className={styles.infoSectionHeader}>
+                <h3>{t('Loadouts.ModPlacement.UnassignedMods')}</h3>
+                <span>
+                  {t('Loadouts.ModPlacement.UnassignedModsDesc', { count: unassignedMods.length })}
+                </span>
+              </div>
               <div className={styles.unassigned}>
                 {unassignedMods.map((mod) => (
-                  <PlugDef key={getModRenderKey(mod)} plug={mod} />
+                  <PlugDef key={getModRenderKey(mod)} plug={mod} forClassType={loadout.classType} />
+                ))}
+              </div>
+            </>
+          )}
+          {invalidMods.length > 0 && (
+            <>
+              <div className={styles.infoSectionHeader}>
+                <h3>{t('Loadouts.ModPlacement.InvalidMods')}</h3>
+                <span>
+                  {t('Loadouts.ModPlacement.InvalidModsDesc', { count: invalidMods.length })}
+                </span>
+              </div>
+              <div className={styles.unassigned}>
+                {invalidMods.map((mod) => (
+                  <PlugDef key={getModRenderKey(mod)} plug={mod} forClassType={loadout.classType} />
                 ))}
               </div>
             </>

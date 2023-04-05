@@ -20,6 +20,7 @@ function Root() {
   const options: MultiBackendOptions = {
     backends: [
       { id: 'html5', backend: HTML5Backend, transition: MouseTransition },
+      // We can drop this after we only support iOS 15+ and Chrome 108+
       {
         id: 'touch',
         backend: TouchBackend,

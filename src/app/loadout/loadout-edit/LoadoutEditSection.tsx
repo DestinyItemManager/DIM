@@ -1,6 +1,7 @@
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { AppIcon, clearIcon, downloadIcon } from 'app/shell/icons';
+import { AppIcon, clearIcon, disabledIcon, downloadIcon, helpIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -8,6 +9,7 @@ import styles from './LoadoutEditSection.m.scss';
 
 export default function LoadoutEditSection({
   title,
+  titleInfo,
   children,
   className,
   onClear,
@@ -18,6 +20,7 @@ export default function LoadoutEditSection({
   onClearLoadoutParameters,
 }: {
   title: string;
+  titleInfo?: string;
   children: React.ReactNode;
   className?: string;
   onClear: () => void;
@@ -85,9 +88,26 @@ export default function LoadoutEditSection({
   ]);
 
   return (
-    <div className={clsx(styles.section, className)}>
+    <div className={clsx(className)}>
       <div className={styles.header}>
-        <h3>{title}</h3>
+        <div className={styles.title}>
+          <h3>{title}</h3>
+          {titleInfo !== undefined && (
+            <PressTip tooltip={titleInfo}>
+              <AppIcon icon={helpIcon} />
+            </PressTip>
+          )}
+        </div>
+        {onClear && (
+          <button
+            type="button"
+            className={styles.clear}
+            onClick={onClear}
+            title={t('Loadouts.ClearSection')}
+          >
+            <AppIcon icon={disabledIcon} />
+          </button>
+        )}
         <Dropdown kebab options={options} placement="bottom-end" />
       </div>
       {children}

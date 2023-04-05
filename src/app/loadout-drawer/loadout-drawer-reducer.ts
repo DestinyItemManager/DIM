@@ -4,8 +4,9 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { D2BucketCategory } from 'app/inventory/inventory-buckets';
+import { D1BucketCategory, D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
+import { getArtifactUnlocks } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
@@ -13,7 +14,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
-import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyProfileResponse, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import produce from 'immer';
 import _ from 'lodash';
@@ -39,7 +40,7 @@ import {
  * loadout must be a new instance (immutable updates). These functions can be
  * used in reducers or passed directly to a `setLoadout` function.
  *
- * Example:
+ * @example
  *
  * function addItem(defs, item): LoadoutUpdateFunction {
  *   return (loadout) => {
@@ -380,6 +381,7 @@ export function setLoadoutSubclassFromEquipped(
 export function fillLoadoutFromEquipped(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore,
+  artifactUnlocks?: LoadoutParameters['artifactUnlocks'],
   /** Fill in from only this specific category */
   category?: D2BucketCategory
 ): LoadoutUpdateFunction {
@@ -416,8 +418,14 @@ export function fillLoadoutFromEquipped(
         mods,
       };
     }
+    if (artifactUnlocks?.unlockedItemHashes.length) {
+      loadout.parameters = {
+        ...loadout.parameters,
+        artifactUnlocks,
+      };
+    }
     // Save "fashion" mods for equipped items
-    const modsByBucket = {};
+    const modsByBucket: { [bucketHash: number]: number[] } = {};
     for (const item of newEquippedItems.filter((i) => i.bucket.inArmor)) {
       const plugs = item.sockets
         ? _.compact(
@@ -513,9 +521,14 @@ export function syncModsFromEquipped(store: DimStore): LoadoutUpdateFunction {
 
 export function clearBucketCategory(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  category: string
+  category: D2BucketCategory | D1BucketCategory
 ) {
-  return clearBuckets(defs, defs.isDestiny2() ? D2Categories[category] : D1Categories[category]);
+  return clearBuckets(
+    defs,
+    defs.isDestiny2()
+      ? D2Categories[category as D2BucketCategory]
+      : D1Categories[category as D1BucketCategory]
+  );
 }
 
 /**
@@ -565,5 +578,42 @@ export function updateModsByBucket(
 ): LoadoutUpdateFunction {
   return setLoadoutParameters({
     modsByBucket: _.isEmpty(modsByBucket) ? undefined : modsByBucket,
+  });
+}
+
+/**
+ * Replace the artifact unlocks with the currently equipped ones.
+ */
+export function syncArtifactUnlocksFromEquipped(
+  store: DimStore,
+  profileResponse: DestinyProfileResponse
+): LoadoutUpdateFunction {
+  const artifactUnlocks = profileResponse && getArtifactUnlocks(profileResponse, store.id);
+
+  return setLoadoutParameters({
+    artifactUnlocks,
+  });
+}
+
+/**
+ * Clear the artifact unlocks.
+ */
+export function clearArtifactUnlocks(): LoadoutUpdateFunction {
+  return setLoadoutParameters({
+    artifactUnlocks: undefined,
+  });
+}
+
+/**
+ * Remove one artifact mod.
+ */
+export function removeArtifactUnlock(mod: number): LoadoutUpdateFunction {
+  return produce((loadout) => {
+    if (loadout.parameters?.artifactUnlocks) {
+      const index = loadout.parameters?.artifactUnlocks.unlockedItemHashes.indexOf(mod);
+      if (index !== -1) {
+        loadout.parameters.artifactUnlocks.unlockedItemHashes.splice(index, 1);
+      }
+    }
   });
 }

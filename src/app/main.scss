@@ -5,7 +5,7 @@
 //
 // Prefer CSS modules, or at least stylesheets that are imported directly by the components that need them, to putting things here.
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-@import 'variables.scss';
+@use 'variables.scss' as *;
 
 @font-face {
   font-family: 'Destiny Symbols';
@@ -266,90 +266,6 @@ select {
   }
 }
 
-/* Button */
-
-.dim-button {
-  cursor: pointer;
-  padding: 4px 10px;
-  display: inline-block;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  font-size: 12px;
-  line-height: calc(16 / 12);
-  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
-  border: 1px solid transparent;
-  transition: all 150ms ease-out;
-  box-sizing: border-box;
-  text-align: center;
-
-  @include phone-portrait {
-    font-size: 14px;
-    line-height: calc(18 / 14);
-    padding: 8px 16px;
-  }
-  img {
-    height: 1.3em;
-    width: auto;
-    vertical-align: bottom;
-    margin: 0 0.3em;
-    filter: drop-shadow(0 0 1px black);
-    transition: filter 150ms ease-out;
-  }
-
-  &:hover,
-  &:active,
-  &.selected {
-    background-color: $orange !important;
-    color: black !important;
-    img {
-      filter: invert(1) drop-shadow(0 0 1px black);
-    }
-  }
-  input {
-    display: none;
-  }
-
-  &[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-    &:hover,
-    &:active,
-    &.selected {
-      background-color: rgba(255, 255, 255, 0.2) !important;
-      color: white !important;
-      img {
-        filter: drop-shadow(0 0 1px black);
-      }
-    }
-  }
-  &.danger {
-    &:hover {
-      background-color: $red !important;
-    }
-  }
-  // Set focus styles
-  &:focus {
-    border-color: $orange;
-    outline: none;
-  }
-  // For browsers that support :focus-visible, remove focus styles when focus-visible would be unset
-  &:focus:not(:focus-visible) {
-    border-color: transparent;
-  }
-
-  & .app-icon {
-    margin-right: 4px;
-    &:only-child {
-      margin-right: unset;
-    }
-  }
-}
-
-a.dim-button {
-  text-decoration: none;
-}
-
 .horizontal-swipable {
   touch-action: pan-y;
 }
@@ -359,3 +275,6 @@ a.dim-button {
 .stat-icon {
   filter: drop-shadow(0 0 0 #fff);
 }
+
+/* stylelint-disable-next-line no-invalid-position-at-import-rule */
+@import 'app/dim-ui/dim-button.scss';

@@ -13,7 +13,7 @@ import {
   getTagSelector,
 } from '../inventory/selectors';
 import { loadoutsSelector } from '../loadout-drawer/selectors';
-import { canonicalFilterFormats, FilterDefinition, SuggestionsContext } from './filter-types';
+import { FilterDefinition, SuggestionsContext, canonicalFilterFormats } from './filter-types';
 
 //
 // Selectors

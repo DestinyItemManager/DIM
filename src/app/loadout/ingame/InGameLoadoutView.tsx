@@ -1,8 +1,9 @@
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
-import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { convertInGameLoadoutPlugItemHashesToSocketOverrides } from 'app/loadout-drawer/loadout-type-converters';
 import { InGameLoadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import clsx from 'clsx';
@@ -10,9 +11,9 @@ import { t } from 'i18next';
 import _ from 'lodash';
 import { ReactNode } from 'react';
 import LoadoutSubclassSection from '../loadout-ui/LoadoutSubclassSection';
-import { useItemsFromInGameLoadout } from './ingame-loadout-utils';
 import InGameLoadoutIcon from './InGameLoadoutIcon';
 import styles from './InGameLoadoutView.m.scss';
+import { useItemsFromInGameLoadout } from './ingame-loadout-utils';
 
 const categoryStyles = {
   Weapons: styles.categoryWeapons,
@@ -38,6 +39,7 @@ export default function InGameLoadoutView({
   const power = loadoutPower(store, categories);
 
   const subclassItem = categories['General']?.[0];
+  const subclassInGameLoadoutItem = loadout.items.find((i) => i.itemInstanceId === subclassItem.id);
   const subclass: ResolvedLoadoutItem | undefined = subclassItem && {
     item: subclassItem,
     loadoutItem: {
@@ -45,8 +47,11 @@ export default function InGameLoadoutView({
       id: subclassItem.id,
       amount: 1,
       equip: true,
-      socketOverrides: loadout.items.find((i) => i.itemInstanceId === subclassItem.id)
-        ?.plugItemHashes,
+      socketOverrides:
+        subclassInGameLoadoutItem &&
+        convertInGameLoadoutPlugItemHashesToSocketOverrides(
+          subclassInGameLoadoutItem.plugItemHashes
+        ),
     },
   };
 

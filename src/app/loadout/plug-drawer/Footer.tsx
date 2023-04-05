@@ -1,5 +1,6 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import PlugDef from '../loadout-ui/PlugDef';
 import { createGetModRenderKey } from '../mod-utils';
@@ -9,6 +10,7 @@ import { PlugSet } from './types';
 interface Props {
   isPhonePortrait: boolean;
   plugSets: PlugSet[];
+  classType: DestinyClass;
   acceptButtonText: string;
   onSubmit: (event: React.FormEvent | KeyboardEvent) => void;
   handlePlugSelected: (plug: PluggableInventoryItemDefinition) => void;
@@ -17,6 +19,7 @@ interface Props {
 export default function Footer({
   isPhonePortrait,
   plugSets,
+  classType,
   acceptButtonText,
   onSubmit,
   handlePlugSelected,
@@ -41,6 +44,7 @@ export default function Footer({
               onClose={
                 plugSet.selectionType === 'multi' ? () => handlePlugSelected(plug) : undefined
               }
+              forClassType={classType}
             />
           ))
         )}

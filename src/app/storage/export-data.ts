@@ -46,10 +46,11 @@ export function exportLocalData(): ThunkResult<ExportResponse> {
 
     exportResponse.itemHashTags = Object.values(dimApiState.itemHashTags);
 
-    for (const destinyVersion in dimApiState.searches) {
+    for (const destinyVersionStr in dimApiState.searches) {
+      const destinyVersion = parseInt(destinyVersionStr, 10) as DestinyVersion;
       for (const search of dimApiState.searches[destinyVersion]) {
         exportResponse.searches.push({
-          destinyVersion: parseInt(destinyVersion, 10) as DestinyVersion,
+          destinyVersion,
           search,
         });
       }

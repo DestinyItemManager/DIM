@@ -8,7 +8,8 @@ export const streamDeckEnabled = () => localStorage.getItem('stream-deck-enabled
 
 export const streamDeckToken = () => localStorage.getItem('stream-deck-authorization') ?? '';
 
-export const streamDeckFlowVersion = () => localStorage.getItem('stream-deck-flow-version') ?? 1;
+export const streamDeckFlowVersion = () =>
+  parseInt(localStorage.getItem('stream-deck-flow-version') ?? '1', 10);
 
 // Set  Functions
 

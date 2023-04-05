@@ -5,7 +5,7 @@ import { accountsSelector, currentAccountSelector } from 'app/accounts/selectors
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
-import { initialSettingsState, Settings } from 'app/settings/initial-settings';
+import { Settings, initialSettingsState } from 'app/settings/initial-settings';
 import { readyResolve } from 'app/settings/settings';
 import { refresh$ } from 'app/shell/refresh-events';
 import { get, set } from 'app/storage/idb-keyval';
@@ -27,15 +27,15 @@ import { observeStore } from '../utils/redux-utils';
 import { promptForApiPermission } from './api-permission-prompt';
 import { ProfileUpdateWithRollback } from './api-types';
 import {
+  ProfileIndexedDBState,
   allDataDeleted,
   finishedUpdates,
   flushUpdatesFailed,
   globalSettingsLoaded,
   prepareToFlushUpdates,
-  ProfileIndexedDBState,
+  profileLoadError,
   profileLoaded,
   profileLoadedFromIDB,
-  profileLoadError,
   setApiPermissionGranted,
 } from './basic-actions';
 import { DimApiState } from './reducer';

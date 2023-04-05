@@ -1,7 +1,7 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import _ from 'lodash';
 import { ArmorStatHashes, MinMaxIgnored } from '../types';
-import { AutoModsMap, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
+import { AutoModsMap, ModsPick, buildAutoModsMap, chooseAutoMods } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 /**
@@ -9,7 +9,6 @@ import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from '.
  */
 export interface LoSessionInfo {
   autoModOptions: AutoModsMap;
-  statOrder: ArmorStatHashes[];
   hasActivityMods: boolean;
   /** The total cost of all user-picked general and activity mods. */
   totalModEnergyCost: number;
@@ -34,15 +33,14 @@ export function precalculateStructures(
   const numAvailableGeneralMods = autoStatMods ? 5 - generalModCosts.length : 0;
 
   return {
-    autoModOptions: buildAutoModsMap(autoModOptions, numAvailableGeneralMods),
-    statOrder,
+    autoModOptions: buildAutoModsMap(autoModOptions, numAvailableGeneralMods, statOrder),
     hasActivityMods: activityMods.length > 0,
     generalModCosts,
     numAvailableGeneralMods,
     totalModEnergyCost:
       _.sum(generalModCosts) + _.sumBy(activityMods, (act) => act.energy?.val ?? 0),
     activityModPermutations: generateProcessModPermutations(activityMods),
-    activityTagCounts: activityMods.reduce((acc, mod) => {
+    activityTagCounts: activityMods.reduce<{ [tag: string]: number }>((acc, mod) => {
       if (mod.tag) {
         acc[mod.tag] = (acc[mod.tag] || 0) + 1;
       }
@@ -248,19 +246,24 @@ export function pickOptimalStatMods(
     0
   );
 
-  return (
-    bestBoosts && {
+  if (bestBoosts) {
+    const bonusStats = [0, 0, 0, 0, 0, 0];
+    for (const pick of bestBoosts.picks) {
+      bonusStats[pick.targetStatIndex] += pick.exactStatPoints;
+    }
+    return {
       mods: bestBoosts.picks.flatMap((pick) => pick.modHashes),
       numBonusTiers: bestBoosts.depth,
-      bonusStats: bestBoosts.bonusStats,
-    }
-  );
+      bonusStats,
+    };
+  } else {
+    return undefined;
+  }
 }
 
 interface SearchResult {
   picks: ModsPick[];
   depth: number;
-  bonusStats: number[];
 }
 
 /**
@@ -354,14 +357,13 @@ function exploreAutoModsSearchTree(
   let bestResult: SearchResult = {
     depth,
     picks,
-    bonusStats: explorationStats,
   };
 
   // The cost to get to the next tier has two dimensions:
   // * the cost of individual mods (via cheaperStatRelations)
   // * number of stat points missing to go to the next tier (`pointsMissing`)
   const previousCosts: {
-    statHash: number;
+    statIndex: number;
     pointsMissing: number;
   }[] = [];
 
@@ -371,7 +373,6 @@ function exploreAutoModsSearchTree(
     }
 
     const pointsMissing = explorationStats[statIndex] === 0 ? 10 - (setStats[statIndex] % 10) : 10;
-    const statHash = info.statOrder[statIndex];
 
     // Dominance check: If an earlier-explored (=higher-priority) branch needs fewer stat points
     // to the next tier AND doesn't have more expensive mods than this current one, we don't even need to
@@ -379,7 +380,7 @@ function exploreAutoModsSearchTree(
     if (
       previousCosts.some(
         (previousSubtree) =>
-          info.autoModOptions.cheaperStatRelations[statHash].includes(previousSubtree.statHash) &&
+          info.autoModOptions.cheaperStatRelations[statIndex].includes(previousSubtree.statIndex) &&
           previousSubtree.pointsMissing <= pointsMissing
       )
     ) {
@@ -408,7 +409,7 @@ function exploreAutoModsSearchTree(
     // Remember that we checked a stat like this so we can skip dominated branches in later iterations.
     previousCosts.push({
       pointsMissing,
-      statHash,
+      statIndex,
     });
   }
   return bestResult;

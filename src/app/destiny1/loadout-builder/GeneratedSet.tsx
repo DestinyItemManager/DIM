@@ -11,9 +11,9 @@ import { DimStore } from '../../inventory/store-types';
 import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
 import { convertToLoadoutItem, newLoadout } from '../../loadout-drawer/loadout-utils';
 import { AppIcon, faMinusSquare, faPlusSquare } from '../../shell/icons';
-import './loadout-builder.scss';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
-import { ArmorSet, SetType } from './types';
+import './loadout-builder.scss';
+import { ArmorSet, ArmorTypes, SetType } from './types';
 
 interface Props {
   store: DimStore;
@@ -77,11 +77,13 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
             </div>
             <div className="label">
               <small>
-                {setType.tiers[activesets].configs[0][armorpiece.item.type] === 'int'
+                {setType.tiers[activesets].configs[0][armorpiece.item.type as ArmorTypes] === 'int'
                   ? t('Stats.Intellect')
-                  : setType.tiers[activesets].configs[0][armorpiece.item.type] === 'dis'
+                  : setType.tiers[activesets].configs[0][armorpiece.item.type as ArmorTypes] ===
+                    'dis'
                   ? t('Stats.Discipline')
-                  : setType.tiers[activesets].configs[0][armorpiece.item.type] === 'str'
+                  : setType.tiers[activesets].configs[0][armorpiece.item.type as ArmorTypes] ===
+                    'str'
                   ? t('Stats.Strength')
                   : t('Stats.NoBonus')}
               </small>
@@ -92,11 +94,11 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
                 !collapsed && (
                   <div key={i} className="other-configs">
                     <small>
-                      {config[armorpiece.item.type] === 'int'
+                      {config[armorpiece.item.type as ArmorTypes] === 'int'
                         ? t('Stats.Intellect')
-                        : config[armorpiece.item.type] === 'dis'
+                        : config[armorpiece.item.type as ArmorTypes] === 'dis'
                         ? t('Stats.Discipline')
-                        : config[armorpiece.item.type] === 'str'
+                        : config[armorpiece.item.type as ArmorTypes] === 'str'
                         ? t('Stats.Strength')
                         : t('Stats.NoBonus')}
                     </small>

@@ -1,12 +1,19 @@
 import { DimItem } from 'app/inventory/item-types';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { LookupTable } from 'app/utils/util-types';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import legs from 'destiny-icons/armor_types/boots.svg';
 import chest from 'destiny-icons/armor_types/chest.svg';
 import classItem from 'destiny-icons/armor_types/class.svg';
 import gauntlets from 'destiny-icons/armor_types/gloves.svg';
 import helmet from 'destiny-icons/armor_types/helmet.svg';
-import energyWeapon from 'destiny-icons/general/energy_weapon.svg';
-import powerWeapon from 'destiny-icons/general/power_weapon.svg';
+import heavyAmmo from 'destiny-icons/general/ammo-heavy.svg';
+import hunter from 'destiny-icons/general/class_hunter.svg';
+import titan from 'destiny-icons/general/class_titan.svg';
+import warlock from 'destiny-icons/general/class_warlock.svg';
+import emblem from 'destiny-icons/general/emblem.svg';
+import ghost from 'destiny-icons/general/ghost.svg';
+import ship from 'destiny-icons/general/ship.svg';
+import sparrow from 'destiny-icons/general/sparrow.svg';
 import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
 import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
 import bow from 'destiny-icons/weapons/bow.svg';
@@ -25,49 +32,96 @@ import smg from 'destiny-icons/weapons/smg.svg';
 import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg';
 import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
-import kineticSlot from 'images/kinetic-slot.svg';
+import energyWeaponSlot from 'images/weapon-slot-energy.svg';
+import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
 
-const weaponTypeSvgByCategoryHash = {
-  [ItemCategoryHashes.AutoRifle]: autoRifle,
-  [ItemCategoryHashes.HandCannon]: handCannon,
-  [ItemCategoryHashes.PulseRifle]: pulseRifle,
-  [ItemCategoryHashes.ScoutRifle]: scoutRifle,
-  [ItemCategoryHashes.FusionRifle]: fusionRifle,
-  [ItemCategoryHashes.SniperRifle]: sniperRifle,
-  [ItemCategoryHashes.Shotgun]: shotgun,
-  [ItemCategoryHashes.MachineGun]: machinegun,
-  [ItemCategoryHashes.RocketLauncher]: rLauncher,
-  [ItemCategoryHashes.Sidearm]: sidearm,
-  [ItemCategoryHashes.Sword]: sword,
-  [ItemCategoryHashes.GrenadeLaunchers]: gLauncher,
-  [-ItemCategoryHashes.GrenadeLaunchers]: gLauncher_special,
-  [ItemCategoryHashes.TraceRifles]: traceRifle,
-  [ItemCategoryHashes.LinearFusionRifles]: lFusionRifle,
-  [ItemCategoryHashes.SubmachineGuns]: smg,
-  [ItemCategoryHashes.Bows]: bow,
-  [ItemCategoryHashes.Glaives]: glaive,
+export interface ItemCategoryIcon {
+  svg: string;
+  colorized: boolean;
+}
+function monochrome(svg: string): ItemCategoryIcon {
+  return { svg, colorized: false };
+}
+function colorized(svg: string): ItemCategoryIcon {
+  return { svg, colorized: true };
+}
+
+const weaponTypeSvgByCategoryHash: LookupTable<ItemCategoryHashes, ItemCategoryIcon> = {
+  [ItemCategoryHashes.AutoRifle]: monochrome(autoRifle),
+  [ItemCategoryHashes.HandCannon]: monochrome(handCannon),
+  [ItemCategoryHashes.PulseRifle]: monochrome(pulseRifle),
+  [ItemCategoryHashes.ScoutRifle]: monochrome(scoutRifle),
+  [ItemCategoryHashes.FusionRifle]: monochrome(fusionRifle),
+  [ItemCategoryHashes.SniperRifle]: monochrome(sniperRifle),
+  [ItemCategoryHashes.Shotgun]: monochrome(shotgun),
+  [ItemCategoryHashes.MachineGun]: monochrome(machinegun),
+  [ItemCategoryHashes.RocketLauncher]: monochrome(rLauncher),
+  [ItemCategoryHashes.Sidearm]: monochrome(sidearm),
+  [ItemCategoryHashes.Sword]: monochrome(sword),
+  [ItemCategoryHashes.GrenadeLaunchers]: monochrome(gLauncher),
+  [-ItemCategoryHashes.GrenadeLaunchers]: monochrome(gLauncher_special),
+  [ItemCategoryHashes.TraceRifles]: monochrome(traceRifle),
+  [ItemCategoryHashes.LinearFusionRifles]: monochrome(lFusionRifle),
+  [ItemCategoryHashes.SubmachineGuns]: monochrome(smg),
+  [ItemCategoryHashes.Bows]: monochrome(bow),
+  [ItemCategoryHashes.Glaives]: monochrome(glaive),
 };
 
-const weaponSlotSvgByCategoryHash = {
-  [ItemCategoryHashes.KineticWeapon]: kineticSlot,
-  [ItemCategoryHashes.EnergyWeapon]: energyWeapon,
-  [ItemCategoryHashes.PowerWeapon]: powerWeapon,
+const weaponSlotSvgByCategoryHash: LookupTable<ItemCategoryHashes, ItemCategoryIcon> = {
+  [ItemCategoryHashes.KineticWeapon]: colorized(kineticWeaponSlot),
+  [ItemCategoryHashes.EnergyWeapon]: colorized(energyWeaponSlot),
+  [ItemCategoryHashes.PowerWeapon]: colorized(heavyAmmo),
 };
 
-const armorSlotSvgByCategoryHash = {
-  [ItemCategoryHashes.Helmets]: helmet,
-  [ItemCategoryHashes.Arms]: gauntlets,
-  [ItemCategoryHashes.Chest]: chest,
-  [ItemCategoryHashes.Legs]: legs,
-  [ItemCategoryHashes.ClassItems]: classItem,
+const armorSlotSvgByCategoryHash: LookupTable<ItemCategoryHashes, ItemCategoryIcon> = {
+  [ItemCategoryHashes.Helmets]: monochrome(helmet),
+  [ItemCategoryHashes.Arms]: monochrome(gauntlets),
+  [ItemCategoryHashes.Chest]: monochrome(chest),
+  [ItemCategoryHashes.Legs]: monochrome(legs),
+  [ItemCategoryHashes.ClassItems]: monochrome(classItem),
 };
+
+/**
+ * A mapping from known item category hashes to an appropriate icon
+ */
+export const itemCategoryIcons: LookupTable<ItemCategoryHashes, ItemCategoryIcon> = {
+  ...armorSlotSvgByCategoryHash,
+  ...weaponSlotSvgByCategoryHash,
+  ...weaponTypeSvgByCategoryHash,
+
+  [ItemCategoryHashes.Weapon]: monochrome(handCannon),
+  [ItemCategoryHashes.Ghost]: monochrome(ghost),
+  [ItemCategoryHashes.Sparrows]: monochrome(sparrow),
+  [ItemCategoryHashes.Ships]: monochrome(ship),
+  [ItemCategoryHashes.Emblems]: monochrome(emblem),
+
+  [ItemCategoryHashes.Hunter]: monochrome(hunter),
+  [ItemCategoryHashes.Titan]: monochrome(titan),
+  [ItemCategoryHashes.Warlock]: monochrome(warlock),
+} as const;
+
+/** A mapping from bucket hash to item category */
+const bucketHashToItemCategoryHash: LookupTable<BucketHashes, ItemCategoryHashes> = {
+  [BucketHashes.KineticWeapons]: ItemCategoryHashes.KineticWeapon,
+  [BucketHashes.EnergyWeapons]: ItemCategoryHashes.EnergyWeapon,
+  [BucketHashes.PowerWeapons]: ItemCategoryHashes.PowerWeapon,
+  [BucketHashes.Helmet]: ItemCategoryHashes.Helmets,
+  [BucketHashes.Gauntlets]: ItemCategoryHashes.Arms,
+  [BucketHashes.ChestArmor]: ItemCategoryHashes.Chest,
+  [BucketHashes.LegArmor]: ItemCategoryHashes.Legs,
+  [BucketHashes.ClassArmor]: ItemCategoryHashes.ClassItems,
+  [BucketHashes.Ghost]: ItemCategoryHashes.Ghost,
+  [BucketHashes.Vehicle]: ItemCategoryHashes.Sparrows,
+  [BucketHashes.Ships]: ItemCategoryHashes.Ships,
+  [BucketHashes.Emblems]: ItemCategoryHashes.Emblems,
+} as const;
 
 /** an SVG of the weapon's type, if determinable */
 export function getWeaponTypeSvgIcon(item: DimItem) {
   // reverse through the ICHs because most specific is last,
   // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const svg: string = weaponTypeSvgByCategoryHash[ich];
+    const svg = weaponTypeSvgByCategoryHash[ich as ItemCategoryHashes];
     if (svg) {
       return svg;
     }
@@ -77,7 +131,7 @@ export function getWeaponTypeSvgIcon(item: DimItem) {
 /** an SVG of the weapon's slot, if possible */
 export function getWeaponSlotSvgIcon(item: DimItem) {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const svg: string = weaponSlotSvgByCategoryHash[ich];
+    const svg = weaponSlotSvgByCategoryHash[ich as ItemCategoryHashes];
     if (svg) {
       return svg;
     }
@@ -87,9 +141,17 @@ export function getWeaponSlotSvgIcon(item: DimItem) {
 /** an SVG of the armor's slot, if determinable */
 export function getArmorSlotSvgIcon(item: DimItem) {
   for (const ich of [...item.itemCategoryHashes].reverse()) {
-    const svg: string = armorSlotSvgByCategoryHash[ich];
+    const svg = armorSlotSvgByCategoryHash[ich as ItemCategoryHashes];
     if (svg) {
       return svg;
     }
+  }
+}
+
+/** an SVG of the bucket's icon, if determinable */
+export function getBucketSvgIcon(bucketHash: BucketHashes) {
+  const ich = bucketHashToItemCategoryHash[bucketHash];
+  if (ich) {
+    return itemCategoryIcons[ich];
   }
 }

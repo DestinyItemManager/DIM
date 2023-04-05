@@ -11,9 +11,6 @@
   img {
     height: 20px;
     width: 20px;
-    &.invert {
-      filter: invert(1);
-    }
   }
 
   .bucketName {

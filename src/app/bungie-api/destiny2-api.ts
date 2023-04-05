@@ -28,6 +28,7 @@ import {
   setQuestTrackedState,
   snapshotLoadout,
   transferItem,
+  updateLoadoutIdentifiers,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -297,6 +298,9 @@ export async function snapshotInGameLoadout(account: DestinyAccount, loadout: In
     loadoutIndex: loadout.index,
     characterId: loadout.characterId,
     membershipType: account.originalPlatformType,
+    colorHash: loadout.colorHash,
+    iconHash: loadout.iconHash,
+    nameHash: loadout.nameHash,
   });
   return result;
 }
@@ -306,6 +310,18 @@ export async function clearInGameLoadout(account: DestinyAccount, loadout: InGam
     loadoutIndex: loadout.index,
     characterId: loadout.characterId,
     membershipType: account.originalPlatformType,
+  });
+  return result;
+}
+
+export async function editInGameLoadout(account: DestinyAccount, loadout: InGameLoadout) {
+  const result = updateLoadoutIdentifiers(authenticatedHttpClient, {
+    loadoutIndex: loadout.index,
+    characterId: loadout.characterId,
+    membershipType: account.originalPlatformType,
+    colorHash: loadout.colorHash,
+    iconHash: loadout.iconHash,
+    nameHash: loadout.nameHash,
   });
   return result;
 }

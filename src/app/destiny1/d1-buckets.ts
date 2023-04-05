@@ -1,4 +1,5 @@
 import { D1BucketHashes } from 'app/search/d1-known-values';
+import { HashLookup, StringLookup } from 'app/utils/util-types';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -50,13 +51,13 @@ const bucketToType: {
   [hash: number]: DimBucketType | undefined;
 } = bucketToTypeRaw;
 
-export const vaultTypes = {
+export const vaultTypes: HashLookup<string> = {
   3003523923: 'Armor',
   4046403665: 'Weapons',
   138197802: 'General',
 };
 
-const sortToVault = {
+const sortToVault: StringLookup<number> = {
   Armor: 3003523923,
   Weapons: 4046403665,
   General: 138197802,
@@ -112,7 +113,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
   }
   for (const bucket of Object.values(buckets.byHash)) {
     if (bucket.sort && sortToVault[bucket.sort] && sortToVault[bucket.sort] !== bucket.hash) {
-      bucket.vaultBucket = buckets.byHash[sortToVault[bucket.sort]];
+      bucket.vaultBucket = buckets.byHash[sortToVault[bucket.sort]!];
     }
   }
   for (const [category, bucketHashes] of Object.entries(D1Categories)) {

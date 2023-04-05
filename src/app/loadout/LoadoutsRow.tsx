@@ -10,10 +10,10 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
 import { streamDeckSelectLoadout } from 'app/stream-deck/stream-deck';
 import _ from 'lodash';
-import { memo, ReactNode, useMemo } from 'react';
+import { ReactNode, memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './LoadoutsRow.m.scss';
 import LoadoutView from './LoadoutView';
+import styles from './LoadoutsRow.m.scss';
 
 /**
  * A single row in the Loadouts page.
@@ -24,12 +24,14 @@ export default memo(function LoadoutRow({
   saved,
   equippable,
   onShare,
+  onSnapshotInGameLoadout,
 }: {
   loadout: Loadout;
   store: DimStore;
   saved: boolean;
   equippable: boolean;
   onShare: (loadout: Loadout) => void;
+  onSnapshotInGameLoadout: () => void;
 }) {
   const dispatch = useThunkDispatch();
 
@@ -93,10 +95,30 @@ export default memo(function LoadoutRow({
           <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
         </ConfirmButton>
       );
+    } else {
+      actionButtons.push(
+        <button
+          key="snapshot"
+          type="button"
+          className="dim-button"
+          onClick={onSnapshotInGameLoadout}
+        >
+          {t('Loadouts.Snapshot')}
+        </button>
+      );
     }
 
     return actionButtons;
-  }, [dispatch, equippable, loadout, onShare, saved, store, streamDeckSelection]);
+  }, [
+    dispatch,
+    equippable,
+    loadout,
+    onShare,
+    onSnapshotInGameLoadout,
+    saved,
+    store,
+    streamDeckSelection,
+  ]);
 
   return (
     <LoadoutView

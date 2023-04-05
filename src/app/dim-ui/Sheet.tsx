@@ -2,9 +2,9 @@ import { isiOSBrowser } from 'app/utils/browsers';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import {
-  motion,
   PanInfo,
   Spring,
+  motion,
   useAnimation,
   useDragControls,
   useReducedMotion,

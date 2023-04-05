@@ -4,9 +4,9 @@ import { chainComparator, compareBy, reverseComparator } from 'app/utils/compara
 import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
-import { makeCommentString, parseQuery, traverseAST } from './query-parser';
-import { SearchConfig } from './search-config';
-import freeformFilters from './search-filters/freeform';
+import { QueryLexerOpenQuotesError, lexer, makeCommentString, parseQuery } from './query-parser';
+import { FiltersMap, SearchConfig, Suggestion } from './search-config';
+import freeformFilters, { plainString } from './search-filters/freeform';
 
 /** The autocompleter/dropdown will suggest different types of searches */
 export const enum SearchItemType {
@@ -127,7 +127,7 @@ export default function createAutocompleter(searchConfig: SearchConfig) {
     };
 
     const armorySuggestions = includeArmory
-      ? getArmorySuggestions(searchConfig.armorySuggestions, query)
+      ? getArmorySuggestions(searchConfig.armorySuggestions, query, searchConfig.language)
       : [];
 
     // mix them together
@@ -237,62 +237,55 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
 
 const caretEndRegex = /([\s)]|$)/;
 
-// most times, insist on at least 3 typed characters, but for #, start suggesting immediately
-const lastWordRegex = /(\b[\w:"'<=>]{3,}|#\w*)$/;
-// matches a string that seems to end with a closing, not opening, quote
-const closingQuoteRegex = /\w["']$/;
-
 /**
- * Find the position of the last "complete" filter segment of the query before the caretIndex.
+ * Find the position of the last "incomplete" filter segment of the query before the caretIndex.
  *
  * For example, given the query (with the caret at |):
  * name:foo bar| baz
  * This should return { term: "bar", index: 9 }
  *
- * @returns the start index and term of the last complete filter
+ * @returns the start indexes of various points that could be incomplete filters
  */
-function findLastFilter(
-  query: string,
-  caretIndex: number
-): {
-  term: string;
-  index: number;
-} | null {
-  // TODO: maybe include non-whitespace after the caret?
-  const queryUpToCaret = query.slice(0, caretIndex);
-  const ast = parseQuery(queryUpToCaret);
-
-  // Find all the "bare" keywords at the end of the query. For example if the query is:
-  // name:foo bar baz
-  // then the trailingKeywordStrings are 'bar baz'
-  const trailingKeywordArgs: string[] = [];
-  traverseAST(
-    ast,
-    (filter) => {
-      if (filter.type === 'keyword' && !/\s+/.test(filter.args)) {
-        trailingKeywordArgs.push(filter.args);
-      } else {
-        return false;
+function findLastFilter(queryUpToCaret: string): number[] | null {
+  // Find the indexes where any incomplete filter starts. For example if the query is:
+  // name:"foo" bar baz
+  // then the open keywords are "bar baz" and "baz"
+  let incompleteFilterIndices: number[] = [];
+  try {
+    // We can use the query lexer for this to scan through tokens in the query without parsing the whole AST.
+    for (const token of lexer(queryUpToCaret)) {
+      switch (token.type) {
+        // We're trying to complete any filter. Maybe it's actually complete, which is OK because we just won't return a suggestion
+        case 'filter': {
+          if (
+            // Ignore complete quoted tokens, they're definitively finished.
+            !token.quoted
+          ) {
+            incompleteFilterIndices.push(token.startIndex);
+          } else {
+            incompleteFilterIndices = [];
+          }
+          break;
+        }
+        case 'and':
+        case 'or':
+        case 'implicit_and':
+          // ignore these - they neither start an incomplete filter section, nor end it
+          break;
+        default:
+          // reset, we saw something that's definitely not part of a filter
+          incompleteFilterIndices = [];
+          break;
       }
-    },
-    true // traverse in reverse
-  );
-  const trailingKeywordStrings = trailingKeywordArgs.reverse().join(' ');
-
-  // @TODO: This could be cleaner if the AST parser returned column locations; we wouldn't have to guess at indexes by doing space normalization
-  const spaceNormalizedQuery = queryUpToCaret.trim().replace(/\s+/, ' ');
-  const execResult = lastWordRegex.exec(queryUpToCaret);
-
-  if (trailingKeywordStrings && spaceNormalizedQuery.endsWith(trailingKeywordStrings)) {
-    const index = spaceNormalizedQuery.length - trailingKeywordStrings.length;
-    const term = spaceNormalizedQuery.substring(index);
-    return { term, index };
-  } else if (execResult) {
-    const [__, term] = execResult;
-    const { index } = execResult;
-    return { term, index };
+    }
+  } catch (e) {
+    // If the lexer failed because of unmatched quotes, that's *definitely* something to autocomplete!
+    if (e instanceof QueryLexerOpenQuotesError) {
+      incompleteFilterIndices = [e.startIndex];
+    }
   }
-  return null;
+
+  return incompleteFilterIndices;
 }
 
 /**
@@ -312,47 +305,53 @@ export function autocompleteTermSuggestions(
   // Seek to the end of the current part
   caretIndex = (caretEndRegex.exec(query.slice(caretIndex))?.index || 0) + caretIndex;
 
-  const lastFilter = findLastFilter(query, caretIndex);
-
-  if (!lastFilter || closingQuoteRegex.test(lastFilter.term)) {
+  const queryUpToCaret = query.slice(0, caretIndex);
+  const lastFilters = findLastFilter(queryUpToCaret);
+  if (!lastFilters) {
     return [];
   }
 
-  const base = query.slice(0, lastFilter.index);
-  const candidates = filterComplete(lastFilter.term);
+  // Find the first index that gives us suggestions and return those suggestions
+  for (const index of lastFilters) {
+    const base = query.slice(0, index);
+    const term = queryUpToCaret.substring(index);
+    const candidates = filterComplete(term);
 
-  // new query is existing query minus match plus suggestion
-  return candidates.map((word) => {
-    const filterDef = findFilter(word, searchConfig);
-    const newQuery = base + word + query.slice(caretIndex);
-    return {
-      query: {
-        fullText: newQuery,
-        body: newQuery,
-        helpText: filterDef
-          ? (Array.isArray(filterDef.description)
-              ? t(...filterDef.description)
-              : t(filterDef.description)
-            )?.replace(/\.$/, '')
-          : undefined,
-      },
-      type: SearchItemType.Autocomplete,
-      highlightRange: {
-        section: 'body',
-        range: [lastFilter.index, lastFilter.index + word.length],
-      },
-    };
-  });
+    // new query is existing query minus match plus suggestion
+    const result = candidates.map((word): SearchItem => {
+      const filterDef = findFilter(word, searchConfig.filtersMap);
+      const newQuery = base + word + query.slice(caretIndex);
+      return {
+        query: {
+          fullText: newQuery,
+          body: newQuery,
+          helpText: filterDef
+            ? (Array.isArray(filterDef.description)
+                ? t(...filterDef.description)
+                : t(filterDef.description)
+              )?.replace(/\.$/, '')
+            : undefined,
+        },
+        type: SearchItemType.Autocomplete,
+        highlightRange: {
+          section: 'body',
+          range: [index, index + word.length],
+        },
+      };
+    });
+    if (result.length) {
+      return result;
+    }
+  }
+  return [];
 }
 
-function findFilter(term: string, searchConfig: SearchConfig) {
+function findFilter(term: string, filtersMap: FiltersMap) {
   const parts = term.split(':');
   const filterName = parts[0];
   const filterValue = parts[1];
   // "is:" filters are slightly special cased
-  return filterName === 'is'
-    ? searchConfig.isFilters[filterValue]
-    : searchConfig.kvFilters[filterName];
+  return filterName === 'is' ? filtersMap.isFilters[filterValue] : filtersMap.kvFilters[filterName];
 }
 
 // these filters might include quotes, so we search for two text segments to ignore quotes & colon
@@ -365,28 +364,29 @@ const freeformTerms = freeformFilters.flatMap((f) => f.keywords).map((s) => `${s
  */
 export function makeFilterComplete(searchConfig: SearchConfig) {
   // TODO: also search filter descriptions
-  // TODO: also search individual items from the manifest???
   return (typed: string): string[] => {
     if (!typed) {
       return [];
     }
 
-    let typedToLower = typed.toLowerCase();
+    const typedToLower = typed.toLowerCase();
+    let typedPlain = plainString(typedToLower, searchConfig.language);
 
     // because we are fighting against other elements for space in the suggestion dropdown,
     // we will entirely skip "not" and "<" and ">" and "<=" and ">=" suggestions,
     // unless the user seems to explicity be working toward them
-    const hasNotModifier = typedToLower.startsWith('not');
+    const hasNotModifier = typedPlain.startsWith('not');
     const includesAdvancedMath =
-      typedToLower.endsWith(':') || typedToLower.endsWith('<') || typedToLower.endsWith('<');
-    const filterLowPrioritySuggestions = (s: string) =>
-      (hasNotModifier || !s.startsWith('not:')) && (includesAdvancedMath || !/[<>]=?$/.test(s));
+      typedPlain.endsWith(':') || typedPlain.endsWith('<') || typedPlain.endsWith('<');
+    const filterLowPrioritySuggestions = (s: Suggestion) =>
+      (hasNotModifier || !s.plainText.startsWith('not:')) &&
+      (includesAdvancedMath || !/[<>]=?$/.test(s.plainText));
 
     let mustStartWith = '';
-    if (freeformTerms.some((t) => typedToLower.startsWith(t))) {
-      const typedSegments = typedToLower.split(':');
+    if (freeformTerms.some((t) => typedPlain.startsWith(t))) {
+      const typedSegments = typedPlain.split(':');
       mustStartWith = typedSegments.shift()!;
-      typedToLower = typedSegments.join(':');
+      typedPlain = typedSegments.join(':');
     }
 
     // for most searches (non-string-based), if there's already a colon typed,
@@ -395,10 +395,12 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
 
     // this way, "stat:" matches "stat:" but not "basestat:"
     // and "stat" matches "stat:" and "basestat:"
-    const matchType = !mustStartWith && typedToLower.includes(':') ? 'startsWith' : 'includes';
+    const matchType = !mustStartWith && typedPlain.includes(':') ? 'startsWith' : 'includes';
 
     let suggestions = searchConfig.suggestions
-      .filter((word) => word.startsWith(mustStartWith) && word[matchType](typedToLower))
+      .filter(
+        (word) => word.plainText.startsWith(mustStartWith) && word.plainText[matchType](typedPlain)
+      )
       .filter(filterLowPrioritySuggestions);
 
     // TODO: sort this first?? it depends on term in one place
@@ -416,10 +418,10 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
         // but only for top level stuff (we want examples like 'basestat:' before 'stat:rpm:')
         compareBy(
           (word) =>
-            colonCount(word) > 1
+            colonCount(word.plainText) > 1
               ? 1 // last if it's a big one like 'stat:rpm:'
-              : word.startsWith(typedToLower) ||
-                word.indexOf(typedToLower) === word.indexOf(':') + 1
+              : word.plainText.startsWith(typedPlain) ||
+                word.plainText.indexOf(typedPlain) === word.plainText.indexOf(':') + 1
               ? -1 // first if it's a term start or segment start
               : 0 // mid otherwise
         ),
@@ -430,8 +432,8 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
         // otherwise it prioritizes "dawn" over "redwar" after you type "season:"
         // which i am not into.
         compareBy((word) => {
-          if (word.startsWith('not:') || word.startsWith('is:')) {
-            return word.length - (typedToLower.length + word.indexOf(typedToLower));
+          if (word.plainText.startsWith('not:') || word.plainText.startsWith('is:')) {
+            return word.plainText.length - (typedPlain.length + word.plainText.indexOf(typedPlain));
           } else {
             return 0;
           }
@@ -443,34 +445,38 @@ export function makeFilterComplete(searchConfig: SearchConfig) {
         // ---------------
 
         // tags are UGC and therefore important
-        compareBy((word) => !word.startsWith('tag:')),
+        compareBy((word) => !word.plainText.startsWith('tag:')),
 
         // sort incomplete terms (ending with ':') to the front
-        compareBy((word) => !word.endsWith(':')),
+        compareBy((word) => !word.plainText.endsWith(':')),
 
         // push "not" and "<=" and ">=" to the bottom if they are present
         // we discourage "not", and "<=" and ">=" are highly discoverable from "<" and ">"
         compareBy(
-          (word) => word.startsWith('not:') || word.includes(':<=') || word.includes(':>=')
+          (word) =>
+            word.plainText.startsWith('not:') ||
+            word.plainText.includes(':<=') ||
+            word.plainText.includes(':>=')
         ),
 
         // sort more-basic incomplete terms (fewer colons) to the front
         // i.e. suggest "stat:" before "stat:magazine:"
-        compareBy((word) => (word.startsWith('is:') ? 0 : colonCount(word))),
+        compareBy((word) => (word.plainText.startsWith('is:') ? 0 : colonCount(word.plainText))),
 
         // (within the math operators that weren't shoved to the far bottom,)
         // push math operators to the front for things like "masterwork:"
-        compareBy((word) => !mathCheck.test(word))
+        compareBy((word) => !mathCheck.test(word.plainText))
       )
     );
-    if (filterNames.includes(typedToLower.split(':')[0])) {
-      return suggestions;
+    if (filterNames.includes(typedPlain.split(':')[0])) {
+      return suggestions.map((suggestion) => suggestion.rawText);
     } else if (suggestions.length) {
       // we will always add in (later) a suggestion of "what you've already typed so far"
       // so prevent "what's been typed" from appearing in the returned suggestions from this function
-      const deDuped = new Set(suggestions);
+      const deDuped = new Set(suggestions.map((suggestion) => suggestion.rawText));
       deDuped.delete(typed);
       deDuped.delete(typedToLower);
+      deDuped.delete(typedPlain);
       return [...deDuped];
     }
     return [];

@@ -4,10 +4,11 @@ import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { isArtifice } from 'app/item-triage/triage-utils';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
-import { armorStats, DEFAULT_SHADER } from '../d2-known-values';
+import { DEFAULT_SHADER, armorStats } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 
 const notableTags = ['favorite', 'keep'];
@@ -234,7 +235,7 @@ export function checkIfIsDupe(
 
 function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] = armorStats) {
   // disregard no-class armor
-  const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== -1);
+  const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== DestinyClass.Classified);
 
   // Group by class and armor type. Also, compare exotics with each other, not the general pool.
   const grouped = Object.values(

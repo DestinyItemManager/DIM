@@ -26,6 +26,7 @@
   .energyMeter {
     margin-top: 3px;
     padding: 3px 0;
+
     @include phone-portrait {
       padding: 3px 0 20px;
     }
@@ -36,9 +37,31 @@
   composes: sub-bucket from global;
 }
 
-.headerInfo {
+.infoSectionHeader {
+  > h3 {
+    margin-bottom: 2px;
+  }
+  > span {
+    color: grey;
+    font-style: italic;
+  }
+  margin-bottom: 10px;
+}
+
+.costs {
   display: flex;
   flex-direction: row;
+  gap: 6px;
+
+  .cost {
+    font-size: 12px !important;
+  }
+}
+
+.headerInfo {
+  display: flex;
+  flex-flow: row wrap;
+  row-gap: 4px;
   align-items: center;
 }
 

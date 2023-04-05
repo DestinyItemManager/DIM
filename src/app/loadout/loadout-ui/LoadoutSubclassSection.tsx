@@ -1,8 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -95,7 +95,11 @@ export default function LoadoutSubclassSection({
       {plugs.length ? (
         <div className={styles.subclassMods}>
           {plugs?.map((plug) => (
-            <PlugDef key={getModRenderKey(plug)} plug={plug} />
+            <PlugDef
+              key={getModRenderKey(plug)}
+              plug={plug}
+              forClassType={subclass?.item.classType}
+            />
           ))}
         </div>
       ) : (

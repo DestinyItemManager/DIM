@@ -1,16 +1,17 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { itemCategoryIcons } from 'app/organizer/item-category-icons';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { isIn, LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import grenade from 'destiny-icons/weapons/grenade.svg';
 import headshot from 'destiny-icons/weapons/headshot.svg';
@@ -28,14 +29,11 @@ enum KillType {
   Precision,
   ClassAbilities,
 }
-const killTypeIcons: { [key in KillType]: string | undefined } = {
+const killTypeIcons: LookupTable<KillType, string> = {
   [KillType.Melee]: melee,
-  [KillType.Super]: undefined,
   [KillType.Grenade]: grenade,
-  [KillType.Finisher]: undefined,
   [KillType.Precision]: headshot,
-  [KillType.ClassAbilities]: undefined,
-} as const;
+};
 
 export type DefType =
   | 'ActivityMode'
@@ -111,8 +109,12 @@ export default function BountyGuide({
       const info = pursuitsInfo[i.hash];
       if (info) {
         for (const key in info) {
-          for (const value of info[key]) {
-            (mapped[key][value] ??= []).push(i);
+          const infoKey = key as keyof typeof info;
+          const values = info[infoKey];
+          if (values) {
+            for (const value of values) {
+              (mapped[infoKey][value] ??= []).push(i);
+            }
           }
         }
         if (i.pursuit) {
@@ -227,17 +229,15 @@ function PillContent({
     case 'ItemCategory':
       return (
         <>
-          {value in itemCategoryIcons && (
-            <img className={styles.itemCategoryIcon} height="16" src={itemCategoryIcons[value]} />
-          )}
+          <BucketIcon itemCategoryHash={value} height="16" />
           {defs.ItemCategory.get(value)?.displayProperties.name}
         </>
       );
     case 'KillType':
       return (
         <>
-          {value in killTypeIcons && (
-            <img className={styles.itemCategoryIcon} height="16" src={killTypeIcons[value]} />
+          {isIn(value, killTypeIcons) && (
+            <img className={styles.invert} height="16" src={killTypeIcons[value]} />
           )}
           {KillType[value]}
         </>

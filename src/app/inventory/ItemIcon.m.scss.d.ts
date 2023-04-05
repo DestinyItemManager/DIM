@@ -4,7 +4,6 @@ interface CssExports {
   'backgroundOverlay': string;
   'basic': string;
   'borderless': string;
-  'bucketIcon': string;
   'common': string;
   'complete': string;
   'deepsight': string;
@@ -15,10 +14,12 @@ interface CssExports {
   'exoticMasterwork': string;
   'highlightedObjective': string;
   'iconOverlay': string;
+  'inverted': string;
   'legendary': string;
   'legendaryMasterwork': string;
   'masterwork': string;
   'rare': string;
+  'strandColorFix': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

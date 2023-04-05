@@ -1,3 +1,4 @@
+import { HashLookup } from 'app/utils/util-types';
 import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
 import _ from 'lodash';
 
@@ -12,7 +13,7 @@ const enum PowerCap {
   Powerful,
 }
 
-const engrams = {
+const engrams: HashLookup<{ cap: PowerCap; bonus: number }> = {
   // Pinnacle
   73143230: {
     cap: PowerCap.Pinnacle,
@@ -54,10 +55,7 @@ export function getEngramPowerBonus(itemHash: number, maxPower?: number, parentI
     itemHash = 73143230;
   }
 
-  const engramInfo: {
-    cap: PowerCap;
-    bonus: number;
-  } = engrams[itemHash];
+  const engramInfo = engrams[itemHash];
   if (!engramInfo) {
     return undefined;
   }

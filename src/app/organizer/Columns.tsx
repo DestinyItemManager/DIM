@@ -7,23 +7,23 @@ import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t, tl } from 'app/i18next-t';
-import { tagConfig, TagValue } from 'app/inventory/dim-item-info';
-import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
+import TagIcon from 'app/inventory/TagIcon';
+import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
+import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { source } from 'app/inventory/spreadsheets';
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import { getStatSortOrder } from 'app/inventory/store/stats';
 import { getStore } from 'app/inventory/stores-helpers';
-import TagIcon from 'app/inventory/TagIcon';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
 import NotesArea from 'app/item-popup/NotesArea';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { quoteFilterString } from 'app/search/query-parser';
@@ -56,6 +56,7 @@ import {
   isEmptyArmorModSocket,
   isUsedArmorModSocket,
 } from 'app/utils/socket-utils';
+import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
@@ -77,7 +78,7 @@ export function getColumnSelectionId(column: ColumnDefinition) {
 }
 
 // Some stat labels are long. This lets us replace them with i18n
-export const statLabels: Record<number, string | undefined> = {
+export const statLabels: LookupTable<StatHashes, string> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
   [StatHashes.ReloadSpeed]: tl('Organizer.Stats.Reload'),
   [StatHashes.AimAssistance]: tl('Organizer.Stats.Aim'),
@@ -125,7 +126,7 @@ export function getColumns(
   const statColumns: ColumnWithStat[] = _.sortBy(
     _.compact(
       Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat | undefined => {
-        const statHash = parseInt(statHashStr, 10);
+        const statHash = parseInt(statHashStr, 10) as StatHashes;
         if (customStatHashes.includes(statHash)) {
           // Exclude custom total, it has its own column
           return undefined;
@@ -631,7 +632,9 @@ function LoadoutsCell({
           ) : (
             <a
               data-perk-name={loadout.id}
-              onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
+              onClick={(e: React.MouseEvent) =>
+                !e.shiftKey && editLoadout(loadout, owner, { isNew: false })
+              }
             >
               {loadout.name}
             </a>

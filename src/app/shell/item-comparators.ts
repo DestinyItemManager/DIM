@@ -6,8 +6,8 @@ import { ItemSortSettings } from 'app/settings/item-sort';
 import { isD1Item, isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { tagConfig, TagValue } from '../inventory/dim-item-info';
-import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
+import { TagValue, tagConfig } from '../inventory/dim-item-info';
+import { Comparator, chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 
 const INSTANCEID_PADDING = 20;
 

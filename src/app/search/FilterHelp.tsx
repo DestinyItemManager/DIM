@@ -4,10 +4,10 @@ import { toggleSearchQueryComponent } from 'app/shell/actions';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FilterDefinition } from './filter-types';
 import styles from './FilterHelp.m.scss';
-import { searchConfigSelector } from './search-config';
 import { SearchInput } from './SearchInput';
+import { FilterDefinition } from './filter-types';
+import { searchConfigSelector } from './search-config';
 import { generateGroupedSuggestionsForFilter } from './suggestions-generation';
 
 function keywordsString(keywords: string | string[]) {
@@ -18,7 +18,7 @@ function keywordsString(keywords: string | string[]) {
 }
 
 export default function FilterHelp() {
-  const searchConfig = useSelector(searchConfigSelector);
+  const searchConfig = useSelector(searchConfigSelector).filtersMap;
   const [search, setSearch] = useState('');
 
   const searchLower = search.toLowerCase();

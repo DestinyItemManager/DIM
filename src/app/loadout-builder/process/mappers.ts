@@ -7,8 +7,8 @@ import {
   knownModPlugCategoryHashes,
 } from 'app/loadout/known-values';
 import {
-  armorStats,
   MAX_ARMOR_ENERGY_CAPACITY,
+  armorStats,
   modsWithConditionalStats,
 } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
@@ -24,12 +24,13 @@ import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../proces
 import {
   ArmorEnergyRules,
   ArmorSet,
+  ArmorStatHashes,
   ArmorStats,
+  AutoModDefs,
+  ItemGroup,
   artificeSocketReusablePlugSetHash,
   artificeStatBoost,
-  AutoModDefs,
   generalSocketReusablePlugSetHash,
-  ItemGroup,
   majorStatBoost,
   minorStatBoost,
 } from '../types';
@@ -60,7 +61,6 @@ export function isModStatActive(
   if (!stat.isConditionallyActive) {
     return true;
   } else if (
-    plugHash === modsWithConditionalStats.chargeHarvester ||
     plugHash === modsWithConditionalStats.echoOfPersistence ||
     plugHash === modsWithConditionalStats.sparkOfFocus
   ) {
@@ -97,7 +97,7 @@ export function getTotalModStatChanges(
   for (const mod of lockedMods.concat(subclassPlugs)) {
     for (const stat of mod.investmentStats) {
       if (stat.statTypeHash in totals && isModStatActive(characterClass, mod.hash, stat)) {
-        totals[stat.statTypeHash] += stat.value;
+        totals[stat.statTypeHash as ArmorStatHashes] += stat.value;
       }
     }
   }

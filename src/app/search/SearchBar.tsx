@@ -15,7 +15,7 @@ import { RootState, ThunkDispatchProp } from 'app/store/types';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift';
+import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, {
@@ -24,7 +24,6 @@ import React, {
   useDeferredValue,
   useEffect,
   useImperativeHandle,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -44,13 +43,13 @@ import {
   starOutlineIcon,
   unTrackedIcon,
 } from '../shell/icons';
-import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
 import HighlightedText from './HighlightedText';
+import styles from './SearchBar.m.scss';
+import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
 import { canonicalizeQuery, parseQuery } from './query-parser';
 import { searchConfigSelector } from './search-config';
 import { validateQuerySelector } from './search-filter';
 import './search-filter.scss';
-import styles from './SearchBar.m.scss';
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Recent]: faClock,
@@ -435,15 +434,6 @@ function SearchBar(
     [clearFilter]
   );
 
-  // Setting this ref's value allows us to set the cursor position to a specific index on the next render
-  const selectionRef = useRef<number>();
-  useLayoutEffect(() => {
-    if (selectionRef.current !== undefined && inputElement.current) {
-      inputElement.current.setSelectionRange(selectionRef.current, selectionRef.current);
-      selectionRef.current = undefined;
-    }
-  });
-
   // Implement tab completion on the tab key. If the highlighted item is an autocomplete suggestion,
   // accept it. Otherwise, we scan from the beginning to find the first autocomplete suggestion and
   // accept that. If there's nothing to accept, the tab key does its normal thing, which is to switch
@@ -455,9 +445,14 @@ function SearchBar(
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab' && !e.altKey && !e.ctrlKey && tabAutocompleteItem && isOpen) {
       e.preventDefault();
-      setInputValue(tabAutocompleteItem.query.fullText);
-      if (tabAutocompleteItem.highlightRange) {
-        selectionRef.current = tabAutocompleteItem.highlightRange[1];
+      if (inputElement.current) {
+        // Use execCommand to make the insertion as if the user typed it, so it can be undone with Ctrl-Z
+        inputElement.current.setSelectionRange(0, inputElement.current.value.length);
+        document.execCommand('insertText', false, tabAutocompleteItem.query.fullText);
+        if (tabAutocompleteItem.highlightRange) {
+          const cursorPos = tabAutocompleteItem.highlightRange.range[1];
+          inputElement.current.setSelectionRange(cursorPos, cursorPos);
+        }
       }
     } else if (e.key === 'Home' || e.key === 'End') {
       // Disable the use of Home/End to select items in the menu
@@ -551,7 +546,7 @@ function SearchBar(
           <AnimatePresence>
             {children}
 
-            {liveQuery.length > 0 && saveable && (
+            {liveQuery.length > 0 && (saveable || saved) && (
               <motion.button
                 layout
                 exit={{ scale: 0 }}

@@ -70,3 +70,18 @@
   white-space: pre-wrap;
   user-select: text;
 }
+
+.modsStack {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  flex: 1;
+
+  h3 {
+    margin: 0 0 4px 0;
+  }
+}
+
+.artifactMods {
+  --item-size: 40px;
+}

@@ -80,1226 +80,1730 @@ exports[`parse |  (
     -tag:keep -tag:archive -tag:favorite -tag:infuse -is:maxpower -power:>=1260 -is:inloadout -is:masterwork
     )|: ast 1`] = `
 {
+  "length": 3660,
   "op": "and",
   "operands": [
     {
+      "length": 3546,
       "op": "or",
       "operands": [
         {
+          "length": 58,
           "op": "and",
           "operands": [
             {
               "args": "weapon",
+              "length": 9,
               "op": "filter",
+              "startIndex": 15,
               "type": "is",
             },
             {
+              "length": 12,
               "op": "not",
               "operand": {
                 "args": "maxpower",
+                "length": 11,
                 "op": "filter",
+                "startIndex": 26,
                 "type": "is",
               },
+              "startIndex": 25,
             },
             {
+              "length": 34,
               "op": "or",
               "operands": [
                 {
                   "args": "1060",
+                  "length": 15,
                   "op": "filter",
+                  "startIndex": 38,
                   "type": "powerlimit",
                 },
                 {
                   "args": "junk",
+                  "length": 8,
                   "op": "filter",
+                  "startIndex": 57,
                   "type": "tag",
                 },
                 {
                   "args": "blue",
+                  "length": 7,
                   "op": "filter",
+                  "startIndex": 69,
                   "type": "is",
                 },
               ],
+              "startIndex": 38,
             },
           ],
+          "startIndex": 14,
         },
         {
+          "length": 3361,
           "op": "and",
           "operands": [
             {
               "args": "armor",
+              "length": 8,
               "op": "filter",
+              "startIndex": 96,
               "type": "is",
             },
             {
+              "length": 10,
               "op": "not",
               "operand": {
                 "args": "exotic",
+                "length": 9,
                 "op": "filter",
+                "startIndex": 106,
                 "type": "is",
               },
+              "startIndex": 105,
             },
             {
+              "length": 13,
               "op": "not",
               "operand": {
                 "args": "classitem",
+                "length": 12,
                 "op": "filter",
+                "startIndex": 117,
                 "type": "is",
               },
+              "startIndex": 116,
             },
             {
+              "length": 59,
               "op": "not",
               "operand": {
+                "length": 58,
                 "op": "and",
                 "operands": [
                   {
                     "args": "titan",
+                    "length": 8,
                     "op": "filter",
+                    "startIndex": 140,
                     "type": "is",
                   },
                   {
+                    "length": 47,
                     "op": "or",
                     "operands": [
                       {
                         "args": "recovery:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 150,
                         "type": "basestat",
                       },
                       {
                         "args": "total:>=63",
+                        "length": 19,
                         "op": "filter",
+                        "startIndex": 176,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 149,
                   },
                 ],
+                "startIndex": 139,
               },
+              "startIndex": 138,
             },
             {
+              "length": 106,
               "op": "not",
               "operand": {
+                "length": 105,
                 "op": "and",
                 "operands": [
                   {
                     "args": "hunter",
+                    "length": 9,
                     "op": "filter",
+                    "startIndex": 204,
                     "type": "is",
                   },
                   {
+                    "length": 93,
                     "op": "or",
                     "operands": [
                       {
+                        "length": 47,
                         "op": "and",
                         "operands": [
                           {
                             "args": "recovery:>=13",
+                            "length": 22,
                             "op": "filter",
+                            "startIndex": 216,
                             "type": "basestat",
                           },
                           {
                             "args": "mobility:>=18",
+                            "length": 22,
                             "op": "filter",
+                            "startIndex": 239,
                             "type": "basestat",
                           },
                         ],
+                        "startIndex": 215,
                       },
                       {
                         "args": "recovery:>15",
+                        "length": 21,
                         "op": "filter",
+                        "startIndex": 266,
                         "type": "basestat",
                       },
                       {
                         "args": "total:>=63",
+                        "length": 19,
                         "op": "filter",
+                        "startIndex": 291,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 214,
                   },
                 ],
+                "startIndex": 203,
               },
+              "startIndex": 202,
             },
             {
+              "length": 79,
               "op": "not",
               "operand": {
+                "length": 78,
                 "op": "and",
                 "operands": [
                   {
                     "args": "warlock",
+                    "length": 10,
                     "op": "filter",
+                    "startIndex": 319,
                     "type": "is",
                   },
                   {
+                    "length": 65,
                     "op": "or",
                     "operands": [
                       {
+                        "length": 40,
                         "op": "and",
                         "operands": [
                           {
                             "args": "recovery:>=18",
+                            "length": 22,
                             "op": "filter",
+                            "startIndex": 332,
                             "type": "basestat",
                           },
                           {
                             "args": ">=17",
+                            "length": 15,
                             "op": "filter",
+                            "startIndex": 355,
                             "type": "discipline",
                           },
                         ],
+                        "startIndex": 331,
                       },
                       {
                         "args": "total:>=63",
+                        "length": 19,
                         "op": "filter",
+                        "startIndex": 375,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 330,
                   },
                 ],
+                "startIndex": 318,
               },
+              "startIndex": 317,
             },
             {
+              "length": 1483,
               "op": "not",
               "operand": {
+                "length": 1482,
                 "op": "or",
                 "operands": [
                   {
+                    "length": 49,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 413,
                         "type": "basestat",
                       },
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 436,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 412,
                   },
                   {
+                    "length": 47,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 470,
                         "type": "basestat",
                       },
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 493,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 469,
                   },
                   {
+                    "length": 49,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 525,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 548,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 524,
                   },
                   {
+                    "length": 48,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 582,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 605,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 581,
                   },
                   {
+                    "length": 47,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 638,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 661,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 637,
                   },
                   {
+                    "length": 49,
                     "op": "and",
                     "operands": [
                       {
                         "args": "resilience:>=18",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 693,
                         "type": "basestat",
                       },
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 718,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 692,
                   },
                   {
+                    "length": 49,
                     "op": "and",
                     "operands": [
                       {
                         "args": "resilience:>=18",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 750,
                         "type": "basestat",
                       },
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 775,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 749,
                   },
                   {
+                    "length": 51,
                     "op": "and",
                     "operands": [
                       {
                         "args": "resilience:>=18",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 807,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 832,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 806,
                   },
                   {
+                    "length": 50,
                     "op": "and",
                     "operands": [
                       {
                         "args": "resilience:>=18",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 866,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 891,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 865,
                   },
                   {
+                    "length": 49,
                     "op": "and",
                     "operands": [
                       {
                         "args": "resilience:>=18",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 924,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 949,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 923,
                   },
                   {
+                    "length": 47,
                     "op": "and",
                     "operands": [
                       {
                         "args": "recovery:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 981,
                         "type": "basestat",
                       },
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1004,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 980,
                   },
                   {
+                    "length": 49,
                     "op": "and",
                     "operands": [
                       {
                         "args": "recovery:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1036,
                         "type": "basestat",
                       },
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 1059,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1035,
                   },
                   {
+                    "length": 49,
                     "op": "and",
                     "operands": [
                       {
                         "args": "recovery:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1093,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 1116,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1092,
                   },
                   {
+                    "length": 48,
                     "op": "and",
                     "operands": [
                       {
                         "args": "recovery:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1150,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 1173,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1149,
                   },
                   {
+                    "length": 47,
                     "op": "and",
                     "operands": [
                       {
                         "args": "recovery:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1206,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1229,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1205,
                   },
                   {
+                    "length": 49,
                     "op": "and",
                     "operands": [
                       {
                         "args": "discipline:>=18",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 1261,
                         "type": "basestat",
                       },
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1286,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1260,
                   },
                   {
+                    "length": 51,
                     "op": "and",
                     "operands": [
                       {
                         "args": "discipline:>=18",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 1318,
                         "type": "basestat",
                       },
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 1343,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1317,
                   },
                   {
+                    "length": 49,
                     "op": "and",
                     "operands": [
                       {
                         "args": "discipline:>=18",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 1377,
                         "type": "basestat",
                       },
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1402,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1376,
                   },
                   {
+                    "length": 50,
                     "op": "and",
                     "operands": [
                       {
                         "args": "discipline:>=18",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 1434,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 1459,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1433,
                   },
                   {
+                    "length": 49,
                     "op": "and",
                     "operands": [
                       {
                         "args": "discipline:>=18",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 1492,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1517,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1491,
                   },
                   {
+                    "length": 48,
                     "op": "and",
                     "operands": [
                       {
                         "args": "intellect:>=18",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 1549,
                         "type": "basestat",
                       },
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1573,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1548,
                   },
                   {
+                    "length": 50,
                     "op": "and",
                     "operands": [
                       {
                         "args": "intellect:>=18",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 1605,
                         "type": "basestat",
                       },
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 1629,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1604,
                   },
                   {
+                    "length": 48,
                     "op": "and",
                     "operands": [
                       {
                         "args": "intellect:>=18",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 1663,
                         "type": "basestat",
                       },
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1687,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1662,
                   },
                   {
+                    "length": 50,
                     "op": "and",
                     "operands": [
                       {
                         "args": "intellect:>=18",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 1719,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 1743,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1718,
                   },
                   {
+                    "length": 48,
                     "op": "and",
                     "operands": [
                       {
                         "args": "intellect:>=18",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 1777,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1801,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1776,
                   },
                   {
+                    "length": 47,
                     "op": "and",
                     "operands": [
                       {
                         "args": "strength:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1833,
                         "type": "basestat",
                       },
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1856,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1832,
                   },
                   {
+                    "length": 49,
                     "op": "and",
                     "operands": [
                       {
                         "args": "strength:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1888,
                         "type": "basestat",
                       },
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 1911,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1887,
                   },
                   {
+                    "length": 47,
                     "op": "and",
                     "operands": [
                       {
                         "args": "strength:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1945,
                         "type": "basestat",
                       },
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 1968,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1944,
                   },
                   {
+                    "length": 49,
                     "op": "and",
                     "operands": [
                       {
                         "args": "strength:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2000,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 2023,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 1999,
                   },
                   {
+                    "length": 48,
                     "op": "and",
                     "operands": [
                       {
                         "args": "strength:>=18",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2057,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 2080,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 2056,
                   },
                 ],
+                "startIndex": 405,
               },
+              "startIndex": 404,
             },
             {
+              "length": 1453,
               "op": "not",
               "operand": {
+                "length": 1452,
                 "op": "or",
                 "operands": [
                   {
+                    "length": 71,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2128,
                         "type": "basestat",
                       },
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 2151,
                         "type": "basestat",
                       },
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2176,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 2127,
                   },
                   {
+                    "length": 73,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2208,
                         "type": "basestat",
                       },
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 2231,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 2256,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 2207,
                   },
                   {
+                    "length": 72,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2290,
                         "type": "basestat",
                       },
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 2313,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 2338,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 2289,
                   },
                   {
+                    "length": 71,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2371,
                         "type": "basestat",
                       },
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 2394,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2419,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 2370,
                   },
                   {
+                    "length": 71,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2451,
                         "type": "basestat",
                       },
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2474,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 2497,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 2450,
                   },
                   {
+                    "length": 70,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2531,
                         "type": "basestat",
                       },
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2554,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 2577,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 2530,
                   },
                   {
+                    "length": 69,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2610,
                         "type": "basestat",
                       },
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2633,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2656,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 2609,
                   },
                   {
+                    "length": 72,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2688,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 2711,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 2736,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 2687,
                   },
                   {
+                    "length": 71,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2769,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 2792,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2817,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 2768,
                   },
                   {
+                    "length": 70,
                     "op": "and",
                     "operands": [
                       {
                         "args": "mobility:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2849,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 2872,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2896,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 2848,
                   },
                   {
+                    "length": 73,
                     "op": "and",
                     "operands": [
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 2928,
                         "type": "basestat",
                       },
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 2953,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 2976,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 2927,
                   },
                   {
+                    "length": 72,
                     "op": "and",
                     "operands": [
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 3010,
                         "type": "basestat",
                       },
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 3035,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 3058,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 3009,
                   },
                   {
+                    "length": 71,
                     "op": "and",
                     "operands": [
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 3091,
                         "type": "basestat",
                       },
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 3116,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 3139,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 3090,
                   },
                   {
+                    "length": 74,
                     "op": "and",
                     "operands": [
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 3171,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 3196,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 3221,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 3170,
                   },
                   {
+                    "length": 73,
                     "op": "and",
                     "operands": [
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 3254,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 3279,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 3304,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 3253,
                   },
                   {
+                    "length": 72,
                     "op": "and",
                     "operands": [
                       {
                         "args": "resilience:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 3336,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 3361,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 3385,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 3335,
                   },
                   {
+                    "length": 72,
                     "op": "and",
                     "operands": [
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 3417,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 3440,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 3465,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 3416,
                   },
                   {
+                    "length": 71,
                     "op": "and",
                     "operands": [
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 3498,
                         "type": "basestat",
                       },
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 3521,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 3546,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 3497,
                   },
                   {
+                    "length": 70,
                     "op": "and",
                     "operands": [
                       {
                         "args": "recovery:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 3578,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 3601,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 3625,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 3577,
                   },
                   {
+                    "length": 72,
                     "op": "and",
                     "operands": [
                       {
                         "args": "discipline:>=13",
+                        "length": 24,
                         "op": "filter",
+                        "startIndex": 3657,
                         "type": "basestat",
                       },
                       {
                         "args": "intellect:>=13",
+                        "length": 23,
                         "op": "filter",
+                        "startIndex": 3682,
                         "type": "basestat",
                       },
                       {
                         "args": "strength:>=13",
+                        "length": 22,
                         "op": "filter",
+                        "startIndex": 3706,
                         "type": "basestat",
                       },
                     ],
+                    "startIndex": 3656,
                   },
                 ],
+                "startIndex": 2120,
               },
+              "startIndex": 2119,
             },
             {
+              "length": 135,
               "op": "not",
               "operand": {
+                "length": 134,
                 "op": "and",
                 "operands": [
                   {
                     "args": "mobility:>=8",
+                    "length": 21,
                     "op": "filter",
+                    "startIndex": 3746,
                     "type": "basestat",
                   },
                   {
                     "args": "resilience:>=8",
+                    "length": 23,
                     "op": "filter",
+                    "startIndex": 3768,
                     "type": "basestat",
                   },
                   {
                     "args": "recovery:>=8",
+                    "length": 21,
                     "op": "filter",
+                    "startIndex": 3792,
                     "type": "basestat",
                   },
                   {
                     "args": "discipline:>=8",
+                    "length": 23,
                     "op": "filter",
+                    "startIndex": 3814,
                     "type": "basestat",
                   },
                   {
                     "args": "intellect:>=8",
+                    "length": 22,
                     "op": "filter",
+                    "startIndex": 3838,
                     "type": "basestat",
                   },
                   {
                     "args": "strength:>=8",
+                    "length": 21,
                     "op": "filter",
+                    "startIndex": 3861,
                     "type": "basestat",
                   },
                 ],
+                "startIndex": 3745,
               },
+              "startIndex": 3744,
             },
           ],
+          "startIndex": 89,
         },
         {
+          "length": 57,
           "op": "and",
           "operands": [
             {
               "args": "classitem",
+              "length": 12,
               "op": "filter",
+              "startIndex": 3905,
               "type": "is",
             },
             {
+              "length": 42,
               "op": "or",
               "operands": [
                 {
+                  "length": 25,
                   "op": "and",
                   "operands": [
                     {
                       "args": "dupelower",
+                      "length": 12,
                       "op": "filter",
+                      "startIndex": 3920,
                       "type": "is",
                     },
                     {
+                      "length": 10,
                       "op": "not",
                       "operand": {
                         "args": "modded",
+                        "length": 9,
                         "op": "filter",
+                        "startIndex": 3934,
                         "type": "is",
                       },
+                      "startIndex": 3933,
                     },
                   ],
+                  "startIndex": 3919,
                 },
                 {
                   "args": "sunset",
+                  "length": 11,
                   "op": "filter",
+                  "startIndex": 3948,
                   "type": "is",
                 },
               ],
+              "startIndex": 3918,
             },
           ],
+          "startIndex": 3904,
         },
         {
+          "length": 28,
           "op": "and",
           "operands": [
             {
               "args": "armor",
+              "length": 8,
               "op": "filter",
+              "startIndex": 3975,
               "type": "is",
             },
             {
+              "length": 17,
               "op": "not",
               "operand": {
                 "args": ">1060",
+                "length": 16,
                 "op": "filter",
+                "startIndex": 3985,
                 "type": "powerlimit",
               },
+              "startIndex": 3984,
             },
           ],
+          "startIndex": 3974,
         },
         {
+          "length": 18,
           "op": "and",
           "operands": [
             {
               "args": "armor",
+              "length": 8,
               "op": "filter",
+              "startIndex": 4016,
               "type": "is",
             },
             {
               "args": "blue",
+              "length": 7,
               "op": "filter",
+              "startIndex": 4025,
               "type": "is",
             },
           ],
+          "startIndex": 4015,
         },
       ],
+      "startIndex": 8,
     },
     {
+      "length": 9,
       "op": "not",
       "operand": {
         "args": "keep",
+        "length": 8,
         "op": "filter",
+        "startIndex": 4045,
         "type": "tag",
       },
+      "startIndex": 4044,
     },
     {
+      "length": 12,
       "op": "not",
       "operand": {
         "args": "archive",
+        "length": 11,
         "op": "filter",
+        "startIndex": 4055,
         "type": "tag",
       },
+      "startIndex": 4054,
     },
     {
+      "length": 13,
       "op": "not",
       "operand": {
         "args": "favorite",
+        "length": 12,
         "op": "filter",
+        "startIndex": 4068,
         "type": "tag",
       },
+      "startIndex": 4067,
     },
     {
+      "length": 11,
       "op": "not",
       "operand": {
         "args": "infuse",
+        "length": 10,
         "op": "filter",
+        "startIndex": 4082,
         "type": "tag",
       },
+      "startIndex": 4081,
     },
     {
+      "length": 12,
       "op": "not",
       "operand": {
         "args": "maxpower",
+        "length": 11,
         "op": "filter",
+        "startIndex": 4094,
         "type": "is",
       },
+      "startIndex": 4093,
     },
     {
+      "length": 13,
       "op": "not",
       "operand": {
         "args": ">=1260",
+        "length": 12,
         "op": "filter",
+        "startIndex": 4107,
         "type": "power",
       },
+      "startIndex": 4106,
     },
     {
+      "length": 13,
       "op": "not",
       "operand": {
         "args": "inloadout",
+        "length": 12,
         "op": "filter",
+        "startIndex": 4121,
         "type": "is",
       },
+      "startIndex": 4120,
     },
     {
+      "length": 14,
       "op": "not",
       "operand": {
         "args": "masterwork",
+        "length": 13,
         "op": "filter",
+        "startIndex": 4135,
         "type": "is",
       },
+      "startIndex": 4134,
     },
   ],
+  "startIndex": 2,
 }
 `;
 
@@ -3185,7 +3689,9 @@ exports[`parse |  /* My cool search */
 {
   "args": "armor",
   "comment": "my cool search",
+  "length": 8,
   "op": "filter",
+  "startIndex": 24,
   "type": "is",
 }
 `;
@@ -3208,7 +3714,9 @@ exports[`parse |  /* My cool search */
 exports[`parse |"grenade launcher reserves"|: ast 1`] = `
 {
   "args": "grenade launcher reserves",
+  "length": 27,
   "op": "filter",
+  "startIndex": 0,
   "type": "keyword",
 }
 `;
@@ -3226,7 +3734,9 @@ exports[`parse |"grenade launcher reserves"|: lexer 1`] = `
 exports[`parse |"수집가"|: ast 1`] = `
 {
   "args": "수집가",
+  "length": 5,
   "op": "filter",
+  "startIndex": 0,
   "type": "keyword",
 }
 `;
@@ -3243,22 +3753,30 @@ exports[`parse |"수집가"|: lexer 1`] = `
 
 exports[`parse |( power:>1000 and -modslot:arrival ) |: ast 1`] = `
 {
+  "length": 36,
   "op": "and",
   "operands": [
     {
       "args": ">1000",
+      "length": 11,
       "op": "filter",
+      "startIndex": 2,
       "type": "power",
     },
     {
+      "length": 16,
       "op": "not",
       "operand": {
         "args": "arrival",
+        "length": 15,
         "op": "filter",
+        "startIndex": 19,
         "type": "modslot",
       },
+      "startIndex": 18,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -3291,29 +3809,39 @@ exports[`parse |( power:>1000 and -modslot:arrival ) |: lexer 1`] = `
 
 exports[`parse |(("test" or "test") and "test")|: ast 1`] = `
 {
+  "length": 31,
   "op": "and",
   "operands": [
     {
+      "length": 18,
       "op": "or",
       "operands": [
         {
           "args": "test",
+          "length": 6,
           "op": "filter",
+          "startIndex": 2,
           "type": "keyword",
         },
         {
           "args": "test",
+          "length": 6,
           "op": "filter",
+          "startIndex": 12,
           "type": "keyword",
         },
       ],
+      "startIndex": 1,
     },
     {
       "args": "test",
+      "length": 6,
       "op": "filter",
+      "startIndex": 24,
       "type": "keyword",
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -3357,39 +3885,53 @@ exports[`parse |(("test" or "test") and "test")|: lexer 1`] = `
 
 exports[`parse |(is:hunter power:>=540) or (is:warlock power:>=560)|: ast 1`] = `
 {
+  "length": 51,
   "op": "or",
   "operands": [
     {
+      "length": 23,
       "op": "and",
       "operands": [
         {
           "args": "hunter",
+          "length": 9,
           "op": "filter",
+          "startIndex": 1,
           "type": "is",
         },
         {
           "args": ">=540",
+          "length": 11,
           "op": "filter",
+          "startIndex": 11,
           "type": "power",
         },
       ],
+      "startIndex": 0,
     },
     {
+      "length": 24,
       "op": "and",
       "operands": [
         {
           "args": "warlock",
+          "length": 10,
           "op": "filter",
+          "startIndex": 28,
           "type": "is",
         },
         {
           "args": ">=560",
+          "length": 11,
           "op": "filter",
+          "startIndex": 39,
           "type": "power",
         },
       ],
+      "startIndex": 27,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -3441,42 +3983,58 @@ exports[`parse |(is:hunter power:>=540) or (is:warlock power:>=560)|: lexer 1`] 
 
 exports[`parse |(is:weapon and is:sniperrifle) or not (is:armor and modslot:arrival)|: ast 1`] = `
 {
+  "length": 68,
   "op": "or",
   "operands": [
     {
+      "length": 30,
       "op": "and",
       "operands": [
         {
           "args": "weapon",
+          "length": 9,
           "op": "filter",
+          "startIndex": 1,
           "type": "is",
         },
         {
           "args": "sniperrifle",
+          "length": 14,
           "op": "filter",
+          "startIndex": 15,
           "type": "is",
         },
       ],
+      "startIndex": 0,
     },
     {
+      "length": 34,
       "op": "not",
       "operand": {
+        "length": 30,
         "op": "and",
         "operands": [
           {
             "args": "armor",
+            "length": 8,
             "op": "filter",
+            "startIndex": 39,
             "type": "is",
           },
           {
             "args": "arrival",
+            "length": 15,
             "op": "filter",
+            "startIndex": 52,
             "type": "modslot",
           },
         ],
+        "startIndex": 38,
       },
+      "startIndex": 34,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -3531,39 +4089,53 @@ exports[`parse |(is:weapon and is:sniperrifle) or not (is:armor and modslot:arri
 
 exports[`parse |(is:weapon is:sniperrifle) or (is:armor modslot:arrival)|: ast 1`] = `
 {
+  "length": 56,
   "op": "or",
   "operands": [
     {
+      "length": 26,
       "op": "and",
       "operands": [
         {
           "args": "weapon",
+          "length": 9,
           "op": "filter",
+          "startIndex": 1,
           "type": "is",
         },
         {
           "args": "sniperrifle",
+          "length": 14,
           "op": "filter",
+          "startIndex": 11,
           "type": "is",
         },
       ],
+      "startIndex": 0,
     },
     {
+      "length": 26,
       "op": "and",
       "operands": [
         {
           "args": "armor",
+          "length": 8,
           "op": "filter",
+          "startIndex": 31,
           "type": "is",
         },
         {
           "args": "arrival",
+          "length": 15,
           "op": "filter",
+          "startIndex": 40,
           "type": "modslot",
         },
       ],
+      "startIndex": 30,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -3616,40 +4188,54 @@ exports[`parse |(is:weapon is:sniperrifle) or (is:armor modslot:arrival)|: lexer
 exports[`parse |/* My cool search */ (/* armor */ is:armor and is:blue) or (/*weapons*/ is:weapon and perkname:"Kill Clip")|: ast 1`] = `
 {
   "comment": "my cool search",
+  "length": 86,
   "op": "or",
   "operands": [
     {
+      "length": 34,
       "op": "and",
       "operands": [
         {
           "args": "armor",
+          "length": 8,
           "op": "filter",
+          "startIndex": 34,
           "type": "is",
         },
         {
           "args": "blue",
+          "length": 7,
           "op": "filter",
+          "startIndex": 47,
           "type": "is",
         },
       ],
+      "startIndex": 21,
     },
     {
       "comment": "weapons",
+      "length": 48,
       "op": "and",
       "operands": [
         {
           "args": "weapon",
+          "length": 9,
           "op": "filter",
+          "startIndex": 72,
           "type": "is",
         },
         {
           "args": "kill clip",
+          "length": 20,
           "op": "filter",
+          "startIndex": 86,
           "type": "perkname",
         },
       ],
+      "startIndex": 59,
     },
   ],
+  "startIndex": 21,
 }
 `;
 
@@ -3715,7 +4301,9 @@ exports[`parse |/* My cool search */ is:armor|: ast 1`] = `
 {
   "args": "armor",
   "comment": "my cool search",
+  "length": 8,
   "op": "filter",
+  "startIndex": 21,
   "type": "is",
 }
 `;
@@ -3736,25 +4324,35 @@ exports[`parse |/* My cool search */ is:armor|: lexer 1`] = `
 
 exports[`parse |- is:exotic - (power:>1000)|: ast 1`] = `
 {
+  "length": 27,
   "op": "and",
   "operands": [
     {
+      "length": 11,
       "op": "not",
       "operand": {
         "args": "exotic",
+        "length": 9,
         "op": "filter",
+        "startIndex": 2,
         "type": "is",
       },
+      "startIndex": 0,
     },
     {
+      "length": 15,
       "op": "not",
       "operand": {
         "args": ">1000",
+        "length": 13,
         "op": "filter",
+        "startIndex": 14,
         "type": "power",
       },
+      "startIndex": 12,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -3790,25 +4388,35 @@ exports[`parse |- is:exotic - (power:>1000)|: lexer 1`] = `
 
 exports[`parse |-(power:>1000 and -modslot:arrival)|: ast 1`] = `
 {
+  "length": 35,
   "op": "not",
   "operand": {
+    "length": 34,
     "op": "and",
     "operands": [
       {
         "args": ">1000",
+        "length": 11,
         "op": "filter",
+        "startIndex": 2,
         "type": "power",
       },
       {
+        "length": 16,
         "op": "not",
         "operand": {
           "args": "arrival",
+          "length": 15,
           "op": "filter",
+          "startIndex": 19,
           "type": "modslot",
         },
+        "startIndex": 18,
       },
     ],
+    "startIndex": 1,
   },
+  "startIndex": 0,
 }
 `;
 
@@ -3844,27 +4452,37 @@ exports[`parse |-(power:>1000 and -modslot:arrival)|: lexer 1`] = `
 
 exports[`parse |-is:equipped is:haspower is:incurrentchar|: ast 1`] = `
 {
+  "length": 40,
   "op": "and",
   "operands": [
     {
+      "length": 12,
       "op": "not",
       "operand": {
         "args": "equipped",
+        "length": 11,
         "op": "filter",
+        "startIndex": 1,
         "type": "is",
       },
+      "startIndex": 0,
     },
     {
       "args": "haspower",
+      "length": 11,
       "op": "filter",
+      "startIndex": 13,
       "type": "is",
     },
     {
       "args": "incurrentchar",
+      "length": 16,
       "op": "filter",
+      "startIndex": 25,
       "type": "is",
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -3899,46 +4517,66 @@ exports[`parse |-is:equipped is:haspower is:incurrentchar|: lexer 1`] = `
 
 exports[`parse |-is:exotic -is:locked -is:maxpower -is:tagged stat:total:<55|: ast 1`] = `
 {
+  "length": 57,
   "op": "and",
   "operands": [
     {
+      "length": 10,
       "op": "not",
       "operand": {
         "args": "exotic",
+        "length": 9,
         "op": "filter",
+        "startIndex": 1,
         "type": "is",
       },
+      "startIndex": 0,
     },
     {
+      "length": 10,
       "op": "not",
       "operand": {
         "args": "locked",
+        "length": 9,
         "op": "filter",
+        "startIndex": 12,
         "type": "is",
       },
+      "startIndex": 11,
     },
     {
+      "length": 12,
       "op": "not",
       "operand": {
         "args": "maxpower",
+        "length": 11,
         "op": "filter",
+        "startIndex": 23,
         "type": "is",
       },
+      "startIndex": 22,
     },
     {
+      "length": 10,
       "op": "not",
       "operand": {
         "args": "tagged",
+        "length": 9,
         "op": "filter",
+        "startIndex": 36,
         "type": "is",
       },
+      "startIndex": 35,
     },
     {
       "args": "total:<55",
+      "length": 14,
       "op": "filter",
+      "startIndex": 46,
       "type": "stat",
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -3998,30 +4636,42 @@ exports[`parse |-is:exotic -is:locked -is:maxpower -is:tagged stat:total:<55|: l
 
 exports[`parse |-source:garden -source:lastwish sunsetsafter:arrival|: ast 1`] = `
 {
+  "length": 51,
   "op": "and",
   "operands": [
     {
+      "length": 14,
       "op": "not",
       "operand": {
         "args": "garden",
+        "length": 13,
         "op": "filter",
+        "startIndex": 1,
         "type": "source",
       },
+      "startIndex": 0,
     },
     {
+      "length": 16,
       "op": "not",
       "operand": {
         "args": "lastwish",
+        "length": 15,
         "op": "filter",
+        "startIndex": 16,
         "type": "source",
       },
+      "startIndex": 15,
     },
     {
       "args": "arrival",
+      "length": 20,
       "op": "filter",
+      "startIndex": 32,
       "type": "sunsetsafter",
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4059,12 +4709,16 @@ exports[`parse |-source:garden -source:lastwish sunsetsafter:arrival|: lexer 1`]
 
 exports[`parse |-witherhoard|: ast 1`] = `
 {
+  "length": 12,
   "op": "not",
   "operand": {
     "args": "witherhoard",
+    "length": 11,
     "op": "filter",
+    "startIndex": 1,
     "type": "keyword",
   },
+  "startIndex": 0,
 }
 `;
 
@@ -4083,19 +4737,25 @@ exports[`parse |-witherhoard|: lexer 1`] = `
 
 exports[`parse |cluster tracking|: ast 1`] = `
 {
+  "length": 16,
   "op": "and",
   "operands": [
     {
       "args": "cluster",
+      "length": 7,
       "op": "filter",
+      "startIndex": 0,
       "type": "keyword",
     },
     {
       "args": "tracking",
+      "length": 8,
       "op": "filter",
+      "startIndex": 8,
       "type": "keyword",
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4119,19 +4779,25 @@ exports[`parse |cluster tracking|: lexer 1`] = `
 
 exports[`parse |gnawing hunger|: ast 1`] = `
 {
+  "length": 14,
   "op": "and",
   "operands": [
     {
       "args": "gnawing",
+      "length": 7,
       "op": "filter",
+      "startIndex": 0,
       "type": "keyword",
     },
     {
       "args": "hunger",
+      "length": 6,
       "op": "filter",
+      "startIndex": 8,
       "type": "keyword",
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4156,7 +4822,9 @@ exports[`parse |gnawing hunger|: lexer 1`] = `
 exports[`parse |is:armor2.0|: ast 1`] = `
 {
   "args": "armor2.0",
+  "length": 11,
   "op": "filter",
+  "startIndex": 0,
   "type": "is",
 }
 `;
@@ -4173,27 +4841,37 @@ exports[`parse |is:armor2.0|: lexer 1`] = `
 
 exports[`parse |is:blue is:haspower -is:maxpower|: ast 1`] = `
 {
+  "length": 31,
   "op": "and",
   "operands": [
     {
       "args": "blue",
+      "length": 7,
       "op": "filter",
+      "startIndex": 0,
       "type": "is",
     },
     {
       "args": "haspower",
+      "length": 11,
       "op": "filter",
+      "startIndex": 8,
       "type": "is",
     },
     {
+      "length": 12,
       "op": "not",
       "operand": {
         "args": "maxpower",
+        "length": 11,
         "op": "filter",
+        "startIndex": 21,
         "type": "is",
       },
+      "startIndex": 20,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4228,27 +4906,37 @@ exports[`parse |is:blue is:haspower -is:maxpower|: lexer 1`] = `
 
 exports[`parse |is:blue is:haspower not:maxpower|: ast 1`] = `
 {
+  "length": 31,
   "op": "and",
   "operands": [
     {
       "args": "blue",
+      "length": 7,
       "op": "filter",
+      "startIndex": 0,
       "type": "is",
     },
     {
       "args": "haspower",
+      "length": 11,
       "op": "filter",
+      "startIndex": 8,
       "type": "is",
     },
     {
+      "length": 12,
       "op": "not",
       "operand": {
         "args": "maxpower",
+        "length": 12,
         "op": "filter",
+        "startIndex": 20,
         "type": "is",
       },
+      "startIndex": 20,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4280,37 +4968,51 @@ exports[`parse |is:blue is:haspower not:maxpower|: lexer 1`] = `
 
 exports[`parse |is:blue is:weapon or is:armor not:maxpower|: ast 1`] = `
 {
+  "length": 41,
   "op": "and",
   "operands": [
     {
       "args": "blue",
+      "length": 7,
       "op": "filter",
+      "startIndex": 0,
       "type": "is",
     },
     {
+      "length": 21,
       "op": "or",
       "operands": [
         {
           "args": "weapon",
+          "length": 9,
           "op": "filter",
+          "startIndex": 8,
           "type": "is",
         },
         {
           "args": "armor",
+          "length": 8,
           "op": "filter",
+          "startIndex": 21,
           "type": "is",
         },
       ],
+      "startIndex": 8,
     },
     {
+      "length": 12,
       "op": "not",
       "operand": {
         "args": "maxpower",
+        "length": 12,
         "op": "filter",
+        "startIndex": 30,
         "type": "is",
       },
+      "startIndex": 30,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4350,29 +5052,39 @@ exports[`parse |is:blue is:weapon or is:armor not:maxpower|: lexer 1`] = `
 
 exports[`parse |is:rocketlauncher (perk:"cluster" or perk:"tracking module")|: ast 1`] = `
 {
+  "length": 60,
   "op": "and",
   "operands": [
     {
       "args": "rocketlauncher",
+      "length": 17,
       "op": "filter",
+      "startIndex": 0,
       "type": "is",
     },
     {
+      "length": 42,
       "op": "or",
       "operands": [
         {
           "args": "cluster",
+          "length": 14,
           "op": "filter",
+          "startIndex": 19,
           "type": "perk",
         },
         {
           "args": "tracking module",
+          "length": 22,
           "op": "filter",
+          "startIndex": 37,
           "type": "perk",
         },
       ],
+      "startIndex": 18,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4410,30 +5122,42 @@ exports[`parse |is:rocketlauncher (perk:"cluster" or perk:"tracking module")|: l
 
 exports[`parse |is:rocketlauncher -"cluster" -"tracking module"|: ast 1`] = `
 {
+  "length": 46,
   "op": "and",
   "operands": [
     {
       "args": "rocketlauncher",
+      "length": 17,
       "op": "filter",
+      "startIndex": 0,
       "type": "is",
     },
     {
+      "length": 10,
       "op": "not",
       "operand": {
         "args": "cluster",
+        "length": 9,
         "op": "filter",
+        "startIndex": 19,
         "type": "keyword",
       },
+      "startIndex": 18,
     },
     {
+      "length": 18,
       "op": "not",
       "operand": {
         "args": "tracking module",
+        "length": 17,
         "op": "filter",
+        "startIndex": 30,
         "type": "keyword",
       },
+      "startIndex": 29,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4471,30 +5195,42 @@ exports[`parse |is:rocketlauncher -"cluster" -"tracking module"|: lexer 1`] = `
 
 exports[`parse |is:rocketlauncher -"cluster" -'tracking module'|: ast 1`] = `
 {
+  "length": 46,
   "op": "and",
   "operands": [
     {
       "args": "rocketlauncher",
+      "length": 17,
       "op": "filter",
+      "startIndex": 0,
       "type": "is",
     },
     {
+      "length": 10,
       "op": "not",
       "operand": {
         "args": "cluster",
+        "length": 9,
         "op": "filter",
+        "startIndex": 19,
         "type": "keyword",
       },
+      "startIndex": 18,
     },
     {
+      "length": 18,
       "op": "not",
       "operand": {
         "args": "tracking module",
+        "length": 17,
         "op": "filter",
+        "startIndex": 30,
         "type": "keyword",
       },
+      "startIndex": 29,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4532,39 +5268,53 @@ exports[`parse |is:rocketlauncher -"cluster" -'tracking module'|: lexer 1`] = `
 
 exports[`parse |is:weapon (is:sniperrifle or (is:armor and modslot:arrival))|: ast 1`] = `
 {
+  "length": 60,
   "op": "and",
   "operands": [
     {
       "args": "weapon",
+      "length": 9,
       "op": "filter",
+      "startIndex": 0,
       "type": "is",
     },
     {
+      "length": 50,
       "op": "or",
       "operands": [
         {
           "args": "sniperrifle",
+          "length": 14,
           "op": "filter",
+          "startIndex": 11,
           "type": "is",
         },
         {
+          "length": 30,
           "op": "and",
           "operands": [
             {
               "args": "armor",
+              "length": 8,
               "op": "filter",
+              "startIndex": 30,
               "type": "is",
             },
             {
               "args": "arrival",
+              "length": 15,
               "op": "filter",
+              "startIndex": 43,
               "type": "modslot",
             },
           ],
+          "startIndex": 29,
         },
       ],
+      "startIndex": 10,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4616,42 +5366,58 @@ exports[`parse |is:weapon (is:sniperrifle or (is:armor and modslot:arrival))|: l
 
 exports[`parse |is:weapon and is:sniperrifle or not is:armor and modslot:arrival|: ast 1`] = `
 {
+  "length": 64,
   "op": "or",
   "operands": [
     {
+      "length": 28,
       "op": "and",
       "operands": [
         {
           "args": "weapon",
+          "length": 9,
           "op": "filter",
+          "startIndex": 0,
           "type": "is",
         },
         {
           "args": "sniperrifle",
+          "length": 14,
           "op": "filter",
+          "startIndex": 14,
           "type": "is",
         },
       ],
+      "startIndex": 0,
     },
     {
+      "length": 32,
       "op": "and",
       "operands": [
         {
+          "length": 12,
           "op": "not",
           "operand": {
             "args": "armor",
+            "length": 8,
             "op": "filter",
+            "startIndex": 36,
             "type": "is",
           },
+          "startIndex": 32,
         },
         {
           "args": "arrival",
+          "length": 15,
           "op": "filter",
+          "startIndex": 49,
           "type": "modslot",
         },
       ],
+      "startIndex": 32,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4694,39 +5460,53 @@ exports[`parse |is:weapon and is:sniperrifle or not is:armor and modslot:arrival
 
 exports[`parse |is:weapon is:sniperrifle or is:armor and modslot:arrival|: ast 1`] = `
 {
+  "length": 56,
   "op": "and",
   "operands": [
     {
       "args": "weapon",
+      "length": 9,
       "op": "filter",
+      "startIndex": 0,
       "type": "is",
     },
     {
+      "length": 46,
       "op": "or",
       "operands": [
         {
           "args": "sniperrifle",
+          "length": 14,
           "op": "filter",
+          "startIndex": 10,
           "type": "is",
         },
         {
+          "length": 28,
           "op": "and",
           "operands": [
             {
               "args": "armor",
+              "length": 8,
               "op": "filter",
+              "startIndex": 28,
               "type": "is",
             },
             {
               "args": "arrival",
+              "length": 15,
               "op": "filter",
+              "startIndex": 41,
               "type": "modslot",
             },
           ],
+          "startIndex": 28,
         },
       ],
+      "startIndex": 10,
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4766,37 +5546,51 @@ exports[`parse |is:weapon is:sniperrifle or is:armor and modslot:arrival|: lexer
 
 exports[`parse |is:weapon is:sniperrifle or not is:armor modslot:arrival|: ast 1`] = `
 {
+  "length": 55,
   "op": "and",
   "operands": [
     {
       "args": "weapon",
+      "length": 9,
       "op": "filter",
+      "startIndex": 0,
       "type": "is",
     },
     {
+      "length": 30,
       "op": "or",
       "operands": [
         {
           "args": "sniperrifle",
+          "length": 14,
           "op": "filter",
+          "startIndex": 10,
           "type": "is",
         },
         {
+          "length": 12,
           "op": "not",
           "operand": {
             "args": "armor",
+            "length": 8,
             "op": "filter",
+            "startIndex": 32,
             "type": "is",
           },
+          "startIndex": 28,
         },
       ],
+      "startIndex": 10,
     },
     {
       "args": "arrival",
+      "length": 15,
       "op": "filter",
+      "startIndex": 41,
       "type": "modslot",
     },
   ],
+  "startIndex": 0,
 }
 `;
 
@@ -4840,7 +5634,9 @@ exports[`parse |is:weapon is:sniperrifle or not is:armor modslot:arrival|: lexer
 exports[`parse |name:"Gahlran's Right Hand"|: ast 1`] = `
 {
   "args": "gahlran's right hand",
+  "length": 27,
   "op": "filter",
+  "startIndex": 0,
   "type": "name",
 }
 `;
@@ -4858,7 +5654,9 @@ exports[`parse |name:"Gahlran's Right Hand"|: lexer 1`] = `
 exports[`parse |name:"Hard Light"|: ast 1`] = `
 {
   "args": "hard light",
+  "length": 17,
   "op": "filter",
+  "startIndex": 0,
   "type": "name",
 }
 `;
@@ -4876,7 +5674,9 @@ exports[`parse |name:"Hard Light"|: lexer 1`] = `
 exports[`parse |name:'Hard Light'|: ast 1`] = `
 {
   "args": "hard light",
+  "length": 17,
   "op": "filter",
+  "startIndex": 0,
   "type": "name",
 }
 `;
@@ -4893,12 +5693,16 @@ exports[`parse |name:'Hard Light'|: lexer 1`] = `
 
 exports[`parse |not "forgotten"|: ast 1`] = `
 {
+  "length": 15,
   "op": "not",
   "operand": {
     "args": "forgotten",
+    "length": 11,
     "op": "filter",
+    "startIndex": 4,
     "type": "keyword",
   },
+  "startIndex": 0,
 }
 `;
 
@@ -4917,12 +5721,16 @@ exports[`parse |not "forgotten"|: lexer 1`] = `
 
 exports[`parse |not (forgotten)|: ast 1`] = `
 {
+  "length": 15,
   "op": "not",
   "operand": {
     "args": "forgotten",
+    "length": 11,
     "op": "filter",
+    "startIndex": 4,
     "type": "keyword",
   },
+  "startIndex": 0,
 }
 `;
 
@@ -4947,18 +5755,26 @@ exports[`parse |not (forgotten)|: lexer 1`] = `
 
 exports[`parse |not -not:maxpower|: ast 1`] = `
 {
+  "length": 17,
   "op": "not",
   "operand": {
+    "length": 13,
     "op": "not",
     "operand": {
+      "length": 12,
       "op": "not",
       "operand": {
         "args": "maxpower",
+        "length": 12,
         "op": "filter",
+        "startIndex": 5,
         "type": "is",
       },
+      "startIndex": 5,
     },
+    "startIndex": 4,
   },
+  "startIndex": 0,
 }
 `;
 
@@ -4980,23 +5796,31 @@ exports[`parse |not -not:maxpower|: lexer 1`] = `
 
 exports[`parse |not forgotten|: ast 1`] = `
 {
+  "length": 13,
   "op": "not",
   "operand": {
     "args": "forgotten",
+    "length": 9,
     "op": "filter",
+    "startIndex": 4,
     "type": "keyword",
   },
+  "startIndex": 0,
 }
 `;
 
 exports[`parse |not forgotten|: ast 2`] = `
 {
+  "length": 13,
   "op": "not",
   "operand": {
     "args": "forgotten",
+    "length": 9,
     "op": "filter",
+    "startIndex": 4,
     "type": "keyword",
   },
+  "startIndex": 0,
 }
 `;
 
@@ -5028,18 +5852,26 @@ exports[`parse |not forgotten|: lexer 2`] = `
 
 exports[`parse |not not not:maxpower|: ast 1`] = `
 {
+  "length": 20,
   "op": "not",
   "operand": {
+    "length": 16,
     "op": "not",
     "operand": {
+      "length": 12,
       "op": "not",
       "operand": {
         "args": "maxpower",
+        "length": 12,
         "op": "filter",
+        "startIndex": 8,
         "type": "is",
       },
+      "startIndex": 8,
     },
+    "startIndex": 4,
   },
+  "startIndex": 0,
 }
 `;
 
@@ -5061,15 +5893,21 @@ exports[`parse |not not not:maxpower|: lexer 1`] = `
 
 exports[`parse |not not:maxpower|: ast 1`] = `
 {
+  "length": 16,
   "op": "not",
   "operand": {
+    "length": 12,
     "op": "not",
     "operand": {
       "args": "maxpower",
+      "length": 12,
       "op": "filter",
+      "startIndex": 4,
       "type": "is",
     },
+    "startIndex": 4,
   },
+  "startIndex": 0,
 }
 `;
 
@@ -5088,12 +5926,16 @@ exports[`parse |not not:maxpower|: lexer 1`] = `
 
 exports[`parse |not:maxpower|: ast 1`] = `
 {
+  "length": 12,
   "op": "not",
   "operand": {
     "args": "maxpower",
+    "length": 12,
     "op": "filter",
+    "startIndex": 0,
     "type": "is",
   },
+  "startIndex": 0,
 }
 `;
 
@@ -5110,7 +5952,9 @@ exports[`parse |not:maxpower|: lexer 1`] = `
 exports[`parse |perk:"수집가"|: ast 1`] = `
 {
   "args": "수집가",
+  "length": 10,
   "op": "filter",
+  "startIndex": 0,
   "type": "perk",
 }
 `;
@@ -5128,7 +5972,9 @@ exports[`parse |perk:"수집가"|: lexer 1`] = `
 exports[`parse |perk:수집가|: ast 1`] = `
 {
   "args": "수집가",
+  "length": 8,
   "op": "filter",
+  "startIndex": 0,
   "type": "perk",
 }
 `;
@@ -5146,7 +5992,9 @@ exports[`parse |perk:수집가|: lexer 1`] = `
 exports[`parse |‘grenade launcher reserves’|: ast 1`] = `
 {
   "args": "grenade launcher reserves",
+  "length": 27,
   "op": "filter",
+  "startIndex": 0,
   "type": "keyword",
 }
 `;
@@ -5164,7 +6012,9 @@ exports[`parse |‘grenade launcher reserves’|: lexer 1`] = `
 exports[`parse |“grenade launcher reserves”|: ast 1`] = `
 {
   "args": "grenade launcher reserves",
+  "length": 27,
   "op": "filter",
+  "startIndex": 0,
   "type": "keyword",
 }
 `;
@@ -5182,7 +6032,9 @@ exports[`parse |“grenade launcher reserves”|: lexer 1`] = `
 exports[`parse |수집가|: ast 1`] = `
 {
   "args": "수집가",
+  "length": 3,
   "op": "filter",
+  "startIndex": 0,
   "type": "keyword",
 }
 `;

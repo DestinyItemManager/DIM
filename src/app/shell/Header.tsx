@@ -25,14 +25,14 @@ import ClickOutside from '../dim-ui/ClickOutside';
 import ExternalLink from '../dim-ui/ExternalLink';
 import SearchFilter from '../search/SearchFilter';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
-import { setSearchQuery } from './actions';
-import { installPrompt$ } from './app-install';
 import AppInstallBanner from './AppInstallBanner';
 import styles from './Header.m.scss';
-import { AppIcon, faExternalLinkAlt, menuIcon, searchIcon, settingsIcon } from './icons';
 import MenuBadge from './MenuBadge';
 import PostmasterWarningBanner from './PostmasterWarningBanner';
 import RefreshButton from './RefreshButton';
+import { setSearchQuery } from './actions';
+import { installPrompt$ } from './app-install';
+import { AppIcon, faExternalLinkAlt, menuIcon, searchIcon, settingsIcon } from './icons';
 import { useIsPhonePortrait } from './selectors';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
@@ -41,6 +41,7 @@ const logoStyles = {
   beta: styles.beta,
   dev: styles.dev,
   release: undefined,
+  test: undefined,
 } as const;
 
 const transitionClasses = {

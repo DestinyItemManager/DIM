@@ -1,13 +1,16 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { BucketSortType } from 'app/inventory/inventory-buckets';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { findItemsByBucket, getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
+import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import {
   isInsertableArmor2Mod,
   mapToAvailableModCostVariant,
@@ -29,7 +32,12 @@ import {
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { weakMemoize } from 'app/utils/util';
-import { DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { HashLookup, LookupTable } from 'app/utils/util-types';
+import {
+  DestinyClass,
+  DestinyInventoryItemDefinition,
+  DestinyLoadoutItemComponent,
+} from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
@@ -56,6 +64,19 @@ export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Emblems,
 ];
 
+// Bucket hashes, in order, that are contained within ingame loadouts
+export const inGameLoadoutBuckets: BucketHashes[] = [
+  BucketHashes.Subclass,
+  BucketHashes.KineticWeapons,
+  BucketHashes.EnergyWeapons,
+  BucketHashes.PowerWeapons,
+  BucketHashes.Helmet,
+  BucketHashes.Gauntlets,
+  BucketHashes.ChestArmor,
+  BucketHashes.LegArmor,
+  BucketHashes.ClassArmor,
+];
+
 /**
  * Buckets where the item should be treated as "singular" in a loadout - where
  * it can only have a single item and that item must be equipped.
@@ -75,7 +96,10 @@ const gearSlotOrder: BucketHashes[] = [...D2Categories.Weapons, ...D2Categories.
 export function newLoadout(name: string, items: LoadoutItem[], classType?: DestinyClass): Loadout {
   return {
     id: uuidv4(),
-    classType: classType ?? DestinyClass.Unknown,
+    classType:
+      classType !== undefined && classType !== DestinyClass.Classified
+        ? classType
+        : DestinyClass.Unknown,
     name,
     items,
     clearSpace: false,
@@ -151,7 +175,11 @@ export function createSubclassDefaultSocketOverrides(item: DimItem) {
 /**
  * Create a new loadout that includes all the equipped items and mods on the character.
  */
-export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
+export function newLoadoutFromEquipped(
+  name: string,
+  dimStore: DimStore,
+  artifactUnlocks: LoadoutParameters['artifactUnlocks']
+) {
   const items = dimStore.items.filter(
     (item) =>
       item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash)
@@ -164,14 +192,22 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
     return item;
   });
   const loadout = newLoadout(name, loadoutItems, dimStore.classType);
+  // Choose a stable ID
+  loadout.id = 'equipped';
   const mods = items.flatMap((i) => extractArmorModHashes(i));
   if (mods.length) {
     loadout.parameters = {
       mods,
     };
   }
+  if (artifactUnlocks) {
+    loadout.parameters = {
+      ...loadout.parameters,
+      artifactUnlocks,
+    };
+  }
   // Save "fashion" mods for equipped items
-  const modsByBucket = {};
+  const modsByBucket: { [bucketHash: number]: number[] } = {};
   for (const item of items.filter((i) => i.bucket.inArmor)) {
     const plugs = item.sockets
       ? _.compact(
@@ -193,6 +229,22 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
   return loadout;
 }
 
+/**
+ * Extract the equipped items into a list of ingame loadout item components. Basically newLoadoutFromEquipped
+ * but for creating ingame loadout state.
+ */
+export function inGameLoadoutItemsFromEquipped(store: DimStore): DestinyLoadoutItemComponent[] {
+  return inGameLoadoutBuckets.map((bucketHash) => {
+    const item = findItemsByBucket(store, bucketHash).find((i) => i.equipped);
+    const overrides = item && createSocketOverridesFromEquipped(item);
+    return {
+      itemInstanceId: item?.id ?? '0',
+      // Ingame loadouts always specify plug hashes for 16 socket indexes
+      plugItemHashes: Array.from(new Array(16), (_v, i) => overrides?.[i] ?? UNSET_PLUG_HASH),
+    };
+  });
+}
+
 /*
  * Calculates the light level for a list of items, one per type of weapon and armor
  * or it won't be accurate. function properly supports guardians w/o artifacts
@@ -204,7 +256,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
     const exactLight = _.sumBy(items, (i) => i.power) / items.length;
     return Math.floor(exactLight * 1000) / 1000;
   } else {
-    const itemWeight = {
+    const itemWeight: LookupTable<BucketSortType, number> = {
       Weapons: 6,
       Armor: 5,
       General: 4,
@@ -263,7 +315,8 @@ export function getLoadoutStats(
     const itemStats = _.groupBy(item.stats, (stat) => stat.statHash);
     const energySocket =
       item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
-    for (const [hash, stat] of Object.entries(stats)) {
+    for (const [hashStr, stat] of Object.entries(stats)) {
+      const hash = parseInt(hashStr, 10);
       stat.value += itemStats[hash]?.[0].base ?? 0;
       stat.value += energySocket?.plugged?.stats?.[hash] || 0;
     }
@@ -432,7 +485,7 @@ export function extractArmorModHashes(item: DimItem) {
  * true of the "Light 2.0" subclasses which are an entirely different item from
  * the old one. When loading loadouts we'd like to just use the new version.
  */
-const oldToNewItems = {
+const oldToNewItems: HashLookup<number> = {
   // Arcstrider
   1334959255: 2328211300,
   // Striker
@@ -667,6 +720,21 @@ export function getModsFromLoadout(
   return resolveLoadoutModHashes(defs, internalModHashes, unlockedPlugs);
 }
 
+const oldToNewMod: HashLookup<number> = {
+  204137529: 1703647492, // InventoryItem "Minor Mobility Mod"
+  3961599962: 4183296050, // InventoryItem "Mobility Mod"
+  3682186345: 2532323436, // InventoryItem "Minor Resilience Mod"
+  2850583378: 1180408010, // InventoryItem "Resilience Mod"
+  555005975: 1237786518, // InventoryItem "Minor Recovery Mod"
+  2645858828: 4204488676, // InventoryItem "Recovery Mod"
+  2623485440: 4021790309, // InventoryItem "Minor Discipline Mod"
+  4048838440: 1435557120, // InventoryItem "Discipline Mod"
+  1227870362: 350061697, // InventoryItem "Minor Intellect Mod"
+  3355995799: 2724608735, // InventoryItem "Intellect Mod"
+  3699676109: 2639422088, // InventoryItem "Minor Strength Mod"
+  3253038666: 4287799666, // InventoryItem "Strength Mod"
+};
+
 export function resolveLoadoutModHashes(
   defs: D2ManifestDefinitions | undefined,
   modHashes: number[],
@@ -675,7 +743,8 @@ export function resolveLoadoutModHashes(
   const mods: ResolvedLoadoutMod[] = [];
   if (defs) {
     for (const originalModHash of modHashes) {
-      const resolvedModHash = mapToAvailableModCostVariant(originalModHash, unlockedPlugs);
+      const migratedModHash = oldToNewMod[originalModHash] ?? originalModHash;
+      const resolvedModHash = mapToAvailableModCostVariant(migratedModHash, unlockedPlugs);
       const item = defs.InventoryItem.get(resolvedModHash);
       if (isPluggableItem(item)) {
         mods.push({ originalModHash, resolvedMod: item });
@@ -723,6 +792,7 @@ export function pickBackingStore(
   preferredStoreId: string | undefined,
   classType: DestinyClass
 ) {
+  classType = classType === DestinyClass.Classified ? DestinyClass.Unknown : classType;
   const requestedStore =
     !preferredStoreId || preferredStoreId === 'vault'
       ? getCurrentStore(stores)

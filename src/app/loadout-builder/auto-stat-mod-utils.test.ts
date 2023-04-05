@@ -1,7 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptySet } from 'app/utils/empty';
-import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTestDefinitions } from 'testing/test-utils';
 import { precalculateStructures } from './process-worker/process-utils';
@@ -64,7 +63,7 @@ describe('process-utils auto mod structure', () => {
         armorStats
       );
       const waysOfHittingStat = _.mapValues(
-        sessionInfo.autoModOptions.statCaches[StatHashes.Recovery].statMap,
+        sessionInfo.autoModOptions.statCaches[3].statMap,
         (y) => y?.length
       );
       // Things to watch out for in the snapshot: Keys are contiguous, values first ascend

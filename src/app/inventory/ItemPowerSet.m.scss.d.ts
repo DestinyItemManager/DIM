@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'bucketName': string;
-  'invert': string;
   'itemPowerSet': string;
   'negative': string;
   'positive': string;

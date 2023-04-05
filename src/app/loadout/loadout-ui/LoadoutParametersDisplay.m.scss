@@ -27,6 +27,7 @@
 
 .loExotic {
   --item-size: 17px;
+  width: fit-content;
   span {
     margin-left: 4px;
   }
@@ -40,6 +41,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  width: fit-content;
 
   :global(.app-icon) {
     margin-left: 3px;
