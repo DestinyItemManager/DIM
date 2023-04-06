@@ -25,7 +25,6 @@ import { DimError } from 'app/utils/dim-error';
 import { reportException } from 'app/utils/exceptions';
 import { errorLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import { useSelector } from 'react-redux';
 import { inGameLoadoutDeleted, inGameLoadoutUpdated } from './actions';
 import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
 
@@ -34,7 +33,7 @@ import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
  */
 export function applyInGameLoadout(loadout: InGameLoadout): ThunkResult {
   return async (dispatch, getState) => {
-    const itemCreationContext = useSelector(createItemContextSelector);
+    const itemCreationContext = createItemContextSelector(getState());
     const account = currentAccountSelector(getState())!;
     const stores = storesSelector(getState());
     const target = getStore(stores, loadout.characterId)!;
