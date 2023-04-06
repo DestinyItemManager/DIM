@@ -112,7 +112,7 @@ function InGameLoadoutTile({
       onSelected: handleSaveAsDIM,
     },
     {
-      key: 'edit',
+      key: 'share',
       content: t('Loadouts.ShareLoadout'),
       onSelected: handleShare,
     },

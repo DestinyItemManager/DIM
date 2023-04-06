@@ -268,7 +268,7 @@ export function convertInGameLoadoutPlugItemHashesToSocketOverrides(
   return Object.fromEntries(
     _.compact(
       plugItemHashes.map((plugHash, i) =>
-        plugHash !== UNSET_PLUG_HASH && !emptyPlugHashes.has(plugHash) ? [i, plugHash] : undefined
+        plugHash !== UNSET_PLUG_HASH ? [i, plugHash] : undefined
       )
     )
   );
