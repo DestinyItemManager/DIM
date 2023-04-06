@@ -44,6 +44,7 @@ export default function ItemPopupHeader({
   return (
     <button
       type="button"
+      disabled={!linkToArmory}
       className={clsx(styles.header, tierClassName[item.tier], {
         [styles.masterwork]: item.masterwork,
         [styles.pursuit]: item.pursuit,
@@ -51,7 +52,7 @@ export default function ItemPopupHeader({
       })}
       title={linkToArmory ? `${t('Hotkey.Armory')} [A]` : undefined}
       aria-keyshortcuts={linkToArmory ? 'a' : undefined}
-      onClick={linkToArmory ? () => setShowArmory(true) : undefined}
+      onClick={() => setShowArmory(true)}
     >
       {!linkToArmory ? (
         <span className={styles.title}>{item.name}</span>
