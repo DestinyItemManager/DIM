@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed equipping in game loadouts
+* DIM now tries to keep your device from sleeping while an item is moving or a loadout is applying.
 
 ## 7.63.2 <span class="changelog-date">(2023-04-03)</span>
 
