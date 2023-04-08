@@ -1,3 +1,5 @@
+import { useHotkey } from 'app/hotkeys/useHotkey';
+import { t } from 'app/i18next-t';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
@@ -145,7 +147,7 @@ export default function Sheet({
    * passed to the onAnimationComplete motion prop
    */
   const triggerClose = useCallback(
-    (e?: React.MouseEvent) => {
+    (e?: React.MouseEvent | KeyboardEvent) => {
       if (disabled) {
         return;
       }
@@ -157,7 +159,7 @@ export default function Sheet({
   );
 
   // Handle global escape key
-  useGlobalEscapeKey(triggerClose);
+  useHotkey('esc', t('Hotkey.ClearDialog'), triggerClose);
 
   // We need to call the onClose callback when then close animation is complete so that
   // the calling component can unmount the sheet
@@ -285,24 +287,6 @@ export default function Sheet({
       </PressTipRoot.Provider>
     </SheetDisabledContext.Provider>
   );
-}
-
-/**
- * Fire a callback if the escape key is pressed.
- */
-function useGlobalEscapeKey(onEscapePressed: () => void) {
-  useEffect(() => {
-    const onKeyUp = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        e.stopPropagation();
-        onEscapePressed();
-        return false;
-      }
-    };
-    document.body.addEventListener('keyup', onKeyUp);
-    return () => document.body.removeEventListener('keyup', onKeyUp);
-  }, [onEscapePressed]);
 }
 
 /**

@@ -1,5 +1,3 @@
-import { useHotkey } from 'app/hotkeys/useHotkey';
-import { t } from 'app/i18next-t';
 import { createItemContextSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
@@ -33,8 +31,6 @@ export default function ItemPopupContainer({ boundarySelector }: Props) {
   useEffect(() => {
     onClose();
   }, [pathname]);
-
-  useHotkey('esc', t('Hotkey.ClearDialog'), onClose);
 
   // Try to find an updated version of the item!
   let item = currentItem?.item && maybeFindItem(currentItem.item, stores);
