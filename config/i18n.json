@@ -378,6 +378,7 @@
     "LockUnlock": "Lock or unlock an item",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "Menu": "Toggle menu",
+    "Note": "Enter notes",
     "Pull": "Pull item to active character",
     "RefreshInventory": "Refresh inventory",
     "ShowHotkeys": "Show keyboard shortcuts",

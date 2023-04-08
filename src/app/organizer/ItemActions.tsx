@@ -1,9 +1,12 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
+import KeyHelp from 'app/dim-ui/KeyHelp';
 import usePrompt from 'app/dim-ui/usePrompt';
+import { useHotkey, useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { itemTagList, TagCommand } from 'app/inventory/dim-item-info';
+import { TagCommand, itemTagList } from 'app/inventory/dim-item-info';
 import { DimStore } from 'app/inventory/store-types';
+import { getCurrentStore, getVault } from 'app/inventory/stores-helpers';
 import {
   AppIcon,
   lockIcon,
@@ -12,6 +15,8 @@ import {
   tagIcon,
   unlockedIcon,
 } from 'app/shell/icons';
+import { useIsPhonePortrait } from 'app/shell/selectors';
+import { useCallback, useMemo } from 'react';
 import styles from './ItemActions.m.scss';
 
 export interface TagCommandInfo {
@@ -24,7 +29,7 @@ export interface TagCommandInfo {
 }
 
 const bulkItemTags: TagCommandInfo[] = Array.from(itemTagList);
-bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag' });
+bulkItemTags.push({ type: 'clear', label: 'Tags.ClearTag', hotkey: 'shift+0' });
 
 function ItemActions({
   stores,
@@ -41,11 +46,17 @@ function ItemActions({
   onTagSelectedItems: (tagInfo: TagCommandInfo) => void;
   onMoveSelectedItems: (store: DimStore) => void;
 }) {
+  const isPhonePortrait = useIsPhonePortrait();
+  const currentStore = getCurrentStore(stores)!;
+  const vault = getVault(stores)!;
   const tagItems: Option[] = bulkItemTags.map((tagInfo) => ({
     key: tagInfo.label,
     content: (
       <>
         {tagInfo.icon && <AppIcon icon={tagInfo.icon} />} {t(tagInfo.label)}
+        {!isPhonePortrait && tagInfo.hotkey && (
+          <KeyHelp combo={tagInfo.hotkey} className={styles.keyHelp} />
+        )}
       </>
     ),
     onSelected: () => onTagSelectedItems(tagInfo),
@@ -55,20 +66,56 @@ function ItemActions({
     key: store.id,
     content: (
       <>
-        <img height="16" width="16" src={store.icon} /> {store.name}
+        <img height="16" width="16" src={store.icon} />{' '}
+        <span className={styles.storeName}>{store.name}</span>
+        {!isPhonePortrait &&
+          (store === vault ? (
+            <KeyHelp combo="V" className={styles.keyHelp} />
+          ) : store === currentStore ? (
+            <KeyHelp combo="P" className={styles.keyHelp} />
+          ) : null)}
       </>
     ),
     onSelected: () => onMoveSelectedItems(store),
   }));
 
+  const hotkeys = useMemo(() => {
+    const hotkeys = [];
+    for (const tag of bulkItemTags) {
+      if (tag.hotkey) {
+        hotkeys.push({
+          combo: tag.hotkey,
+          description: t('Hotkey.MarkItemAs', { tag: tag.type }),
+          callback: () => onTagSelectedItems(tag),
+        });
+      }
+    }
+    return hotkeys;
+  }, [onTagSelectedItems]);
+
+  useHotkeys(hotkeys);
+
   // TODO: replace with rich-text dialog, and an "append" option
   const [promptDialog, prompt] = usePrompt();
-  const noted = async () => {
+  const noted = useCallback(async () => {
     const note = await prompt(t('Organizer.NotePrompt'));
     if (note !== null) {
       onNote(note || undefined);
     }
-  };
+  }, [onNote, prompt]);
+
+  useHotkey('n', t('Hotkey.Note'), noted);
+
+  useHotkey(
+    'p',
+    t('Hotkey.Pull'),
+    useCallback(() => onMoveSelectedItems(currentStore), [currentStore, onMoveSelectedItems])
+  );
+  useHotkey(
+    'v',
+    t('Hotkey.Vault'),
+    useCallback(() => onMoveSelectedItems(vault), [vault, onMoveSelectedItems])
+  );
 
   return (
     <div className={styles.itemActions}>
@@ -107,6 +154,8 @@ function ItemActions({
         disabled={!itemsAreSelected}
         name="note"
         onClick={noted}
+        title={t('Organizer.Note') + ' [N]'}
+        aria-keyshortcuts="n"
       >
         <AppIcon icon={stickyNoteIcon} />
         <span className={styles.label}>{t('Organizer.Note')}</span>

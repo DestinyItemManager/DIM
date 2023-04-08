@@ -324,7 +324,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const onTagSelectedItems = (tagInfo: TagCommandInfo) => {
     if (tagInfo.type && selectedItemIds.length) {
       const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
-      dispatch(bulkTagItems(selectedItems, tagInfo.type, false));
+      dispatch(bulkTagItems(selectedItems, tagInfo.type, true));
     }
   };
 
