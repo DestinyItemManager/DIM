@@ -1,5 +1,5 @@
 import { calculateElementOffset } from '@textcomplete/utils';
-import RadioButtons, { Option } from 'app/dim-ui/RadioButtons';
+import { Option } from 'app/dim-ui/RadioButtons';
 import { t } from 'app/i18next-t';
 import { appendNote, removeFromNote, setNote } from 'app/inventory/actions';
 import { DimItem } from 'app/inventory/item-types';
@@ -31,15 +31,15 @@ export default function useBulkNote(): [
   element: React.ReactNode,
   bulkNote: (items: DimItem[]) => Promise<void>
 ] {
-  const [dialog, showDialog] = useDialog<void, BulkNoteResult | null>((_args, close) => (
-    <BulkNoteDialog close={close} />
+  const [dialog, showDialog] = useDialog<DimItem[], BulkNoteResult | null>((args, close) => (
+    <BulkNoteDialog close={close} items={args} />
   ));
 
   const dispatch = useThunkDispatch();
 
   const bulkNote = useCallback(
     async (items: DimItem[]) => {
-      const note = await showDialog();
+      const note = await showDialog(items);
       if (note !== null && items?.length) {
         for (const item of items) {
           switch (note.appendMode) {
@@ -63,7 +63,13 @@ export default function useBulkNote(): [
   return [dialog, bulkNote];
 }
 
-function BulkNoteDialog({ close }: { close: (result: BulkNoteResult | null) => void }) {
+function BulkNoteDialog({
+  close,
+  items,
+}: {
+  items: DimItem[];
+  close: (result: BulkNoteResult | null) => void;
+}) {
   const [note, setNote] = useState('');
   const [appendMode, setAppendMods] = useState<BulkNoteResult['appendMode']>('replace');
 
@@ -100,11 +106,23 @@ function BulkNoteDialog({ close }: { close: (result: BulkNoteResult | null) => v
   return (
     <>
       <Title>
-        <h2>{t('BulkNote.Title')}</h2>
+        <h2>{t('BulkNote.Title', { count: items.length })}</h2>
       </Title>
       <Body className={styles.body}>
-        <RadioButtons options={radioOptions} value={appendMode} onChange={setAppendMods} />
         <NotesEditor notes={note} onNotesChanged={setNote} />
+        <div className={styles.radios}>
+          {radioOptions.map((o) => (
+            <label key={o.value}>
+              <input
+                type="radio"
+                name="appendmode"
+                checked={appendMode === o.value}
+                onChange={() => setAppendMods(o.value)}
+              />
+              {o.label}
+            </label>
+          ))}
+        </div>
       </Body>
       <Buttons>
         {isWindows() ? (

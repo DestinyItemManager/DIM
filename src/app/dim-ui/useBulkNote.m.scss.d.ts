@@ -3,6 +3,7 @@
 interface CssExports {
   'body': string;
   'form': string;
+  'radios': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
