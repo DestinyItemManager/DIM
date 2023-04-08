@@ -48,7 +48,11 @@ export function CompareActionButton({ item, label }: ActionButtonProps) {
   );
 }
 
-export function LockActionButton({ item, label }: ActionButtonProps) {
+export function LockActionButton({
+  item,
+  label,
+  noHotkey,
+}: ActionButtonProps & { noHotkey?: boolean }) {
   const autoLockTagged = useSelector(settingSelector('autoLockTagged'));
   const tag = useSelector(tagSelector(item));
 
@@ -73,7 +77,7 @@ export function LockActionButton({ item, label }: ActionButtonProps) {
       : t('MovePopup.TrackUntrack.Untracked');
 
   return (
-    <LockButton item={item} type={type} disabled={disabled}>
+    <LockButton item={item} type={type} disabled={disabled} noHotkey={noHotkey}>
       {label && <span className={styles.label}>{title}</span>}
     </LockButton>
   );

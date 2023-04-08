@@ -24,11 +24,13 @@ export default function LockButton({
   type,
   item,
   disabled,
+  noHotkey,
   children,
 }: {
   item: DimItem;
   type: 'lock' | 'track';
   disabled?: boolean;
+  noHotkey?: boolean;
   children?: React.ReactNode;
 }) {
   const [locking, setLocking] = useState(false);
@@ -60,7 +62,7 @@ export default function LockButton({
     }
   };
 
-  useHotkey('l', t('Hotkey.LockUnlock'), lockUnlock);
+  useHotkey('l', t('Hotkey.LockUnlock'), lockUnlock, noHotkey);
 
   const title = lockButtonTitle(item, type);
 
