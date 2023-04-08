@@ -5,6 +5,9 @@
 * Added some extra information to the randomize popup to explain how to use it with searches.
 * Fixed the "L" hotkey inadvertantly working in Compare and when items should not be lockable.
 * Added new hotkeys for opening Armory (A) and Infusion Fuel Finder (I) from the item popup.
+* Added a "Compare" button to the Organizer to allow focused comparison of selected items.
+* Added hotkeys to organizer - bulk tag, note, compare, or move selected items easily.
+* Added a new "N" hotkey for editing notes on an item.
 
 
 ## 7.63.3 <span class="changelog-date">(2023-04-06)</span>
