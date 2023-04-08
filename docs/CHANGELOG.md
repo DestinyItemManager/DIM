@@ -1,5 +1,12 @@
 ## Next
 
+* Updated DIM's Smart Moves logic for how to choose which items to move when a bucket is full.
+* Undo and redo in loadout editor and loadout optimizer have the keyboard shortcuts you'd expect.
+* Added some extra information to the randomize popup to explain how to use it with searches.
+* Fixed the "L" hotkey inadvertantly working in Compare and when items should not be lockable.
+* Added new hotkeys for opening Armory (A) and Infusion Fuel Finder (I) from the item popup.
+
+
 ## 7.63.3 <span class="changelog-date">(2023-04-06)</span>
 
 * Fixed equipping in game loadouts
