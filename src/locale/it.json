@@ -388,16 +388,16 @@
   },
   "InGameLoadout": {
     "Applying": "Equipaggiamento dotazione...",
-    "Create": "Crea Dotazione",
-    "CreateTitle": "Crea Dotazione in gioco dall'equipaggiamento attuale",
-    "DeleteFailed": "Eliminazione Dotazione non riuscita",
+    "Create": "Crea dotazione",
+    "CreateTitle": "Crea dotazione in gioco dall'equipaggiamento attuale",
+    "DeleteFailed": "Eliminazione dotazione non riuscita",
     "Deleted": "Dotazione eliminata",
-    "DeletedBody": "Eliminata la Dotazione in gioco allo slot {{index}}",
-    "EditFailed": "Aggiornamento Dotazione non riuscito",
-    "EditTitle": "Modifica nome e icona Dotazione",
+    "DeletedBody": "Eliminata la dotazione in gioco allo slot {{index}}",
+    "EditFailed": "Aggiornamento dotazione non riuscito",
+    "EditTitle": "Modifica nome e icona dotazione",
     "LoadoutSlotNum": "Alloggiamento {{index}}",
-    "Replace": "Sovrascrivi Dotazione",
-    "Save": "Aggiorna Dotazione",
+    "Replace": "Sostituisci dotazione {{index}}",
+    "Save": "Aggiorna dotazione",
     "SnapshotFailed": "Salvataggio equipaggiamento in uso non riuscito"
   },
   "Infusion": {
@@ -723,6 +723,7 @@
     "Redo": "Ripeti",
     "RestoreAllItems": "Tutti gli Elementi",
     "Save": "Salva",
+    "SaveAsDIM": "Salva come Dotazione DIM",
     "SaveAsNew": "Salva come Nuovo",
     "SaveAsNewTooltip": "Mantieni la dotazione originale e salva questa come nuova dotazione",
     "SaveDisabled": {

@@ -15,7 +15,7 @@ export function useSetSetting() {
 /**
  * Used like useState, but loads and saves a value from DIM's Settings.
  *
- * Example:
+ * @example
  *
  * const [showNewItems, setShowNewItems] = useSetting('showNewItems');
  */

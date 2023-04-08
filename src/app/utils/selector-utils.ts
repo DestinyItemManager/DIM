@@ -8,7 +8,7 @@ import { RootState } from 'app/store/types';
  * other than state, into a function that produces a selector function based on that
  * input. This makes it nicer to use in useSelector.
  *
- * Example:
+ * @example
  *
  * const upperStoreIdSelector = createSelector(
  *   (state: RootState, storeId: string) => storeId,

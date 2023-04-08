@@ -396,7 +396,7 @@
     "EditFailed": "ロードアウトの更新に失敗",
     "EditTitle": "ロードアウト名とアイコンを編集",
     "LoadoutSlotNum": "スロット {{index}}",
-    "Replace": "ロードアウトを置き換え",
+    "Replace": "ロードアウト {{index}} を置き換え",
     "Save": "ロードアウトを更新",
     "SnapshotFailed": "装備したロードアウトのスナップショットに失敗"
   },
@@ -723,6 +723,7 @@
     "Redo": "やり直す",
     "RestoreAllItems": "全アイテム",
     "Save": "保存",
+    "SaveAsDIM": "DIM ロードアウトとして保存",
     "SaveAsNew": "新規保存",
     "SaveAsNewTooltip": "最初の装備を、新しいロードアウトとして保存",
     "SaveDisabled": {

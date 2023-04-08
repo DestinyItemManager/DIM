@@ -396,7 +396,7 @@
     "EditFailed": "로드아웃 업데이트 실패",
     "EditTitle": "로드아웃 이름 및 아이콘 수정",
     "LoadoutSlotNum": "슬롯 {{index}}",
-    "Replace": "로드아웃 교체",
+    "Replace": "로드아웃 {{index}} 교체",
     "Save": "로드아웃 업데이트",
     "SnapshotFailed": "장착된 로드아웃 스냅샷 실패"
   },
@@ -723,6 +723,7 @@
     "Redo": "다시 실행",
     "RestoreAllItems": "모든 아이템",
     "Save": "저장",
+    "SaveAsDIM": "DIM 로드아웃으로 저장",
     "SaveAsNew": "새로 저장",
     "SaveAsNewTooltip": "기존 로드아웃을 유지하고 새로운 로드아웃으로 저장",
     "SaveDisabled": {

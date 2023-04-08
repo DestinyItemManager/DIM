@@ -1,5 +1,14 @@
 ## Next
 
+## 7.63.3 <span class="changelog-date">(2023-04-06)</span>
+
+* Fixed equipping in game loadouts
+* DIM now tries to keep your device from sleeping while an item is moving or a loadout is applying.
+
+## 7.63.2 <span class="changelog-date">(2023-04-03)</span>
+
+## 7.63.1 <span class="changelog-date">(2023-04-03)</span>
+
 ## 7.63.0 <span class="changelog-date">(2023-04-02)</span>
 
 * The "Show Mod Placement" sheet will now show the required armor energy capacity upgrades to make all mods fit (and the total upgrade costs).

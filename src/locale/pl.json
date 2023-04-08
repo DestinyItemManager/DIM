@@ -396,7 +396,7 @@
     "EditFailed": "Failed to update loadout",
     "EditTitle": "Edit Loadout Name and Icon",
     "LoadoutSlotNum": "Gniazdo {{index}}",
-    "Replace": "Replace Loadout",
+    "Replace": "Replace Loadout {{index}}",
     "Save": "Update Loadout",
     "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
@@ -723,6 +723,7 @@
     "Redo": "Przywróć",
     "RestoreAllItems": "Wszystkie Przedmioty",
     "Save": "Zapisz",
+    "SaveAsDIM": "Save as DIM Loadout",
     "SaveAsNew": "Zapisz jako nowe",
     "SaveAsNewTooltip": "Zachowaj oryginalne Uzbrojenie i zapisz to jako nowe Uzbrojenie",
     "SaveDisabled": {

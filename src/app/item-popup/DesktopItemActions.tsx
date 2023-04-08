@@ -32,6 +32,8 @@ export default function DesktopItemActions({
 
   const toggleSidecar = () => setSidecarCollapsed(!sidecarCollapsed);
 
+  useHotkey('esc', t('Hotkey.ClearDialog'), () => hideItemPopup());
+
   useHotkey('k', t('MovePopup.ToggleSidecar'), toggleSidecar);
   useHotkey('p', t('Hotkey.Pull'), () => {
     // TODO: if movable
@@ -51,7 +53,7 @@ export default function DesktopItemActions({
       dispatch(addCompareItem(item));
     }
   });
-  useHotkey('i', t('MovePopup.InfuseTitle'), (e) => {
+  useHotkey('i', t('MovePopup.InfuseTitle'), (e: KeyboardEvent) => {
     if (item.infusable) {
       e.preventDefault();
       showInfuse(item);
