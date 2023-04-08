@@ -9,6 +9,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore, getVault } from 'app/inventory/stores-helpers';
 import {
   AppIcon,
+  compareIcon,
   lockIcon,
   moveIcon,
   stickyNoteIcon,
@@ -38,6 +39,7 @@ function ItemActions({
   onNote,
   onTagSelectedItems,
   onMoveSelectedItems,
+  onCompareSelectedItems,
 }: {
   stores: DimStore[];
   itemsAreSelected: boolean;
@@ -45,6 +47,7 @@ function ItemActions({
   onNote: (note?: string) => void;
   onTagSelectedItems: (tagInfo: TagCommandInfo) => void;
   onMoveSelectedItems: (store: DimStore) => void;
+  onCompareSelectedItems: () => void;
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   const currentStore = getCurrentStore(stores)!;
@@ -105,6 +108,7 @@ function ItemActions({
   }, [onNote, prompt]);
 
   useHotkey('n', t('Hotkey.Note'), noted);
+  useHotkey('c', t('Compare.ButtonHelp'), onCompareSelectedItems);
 
   useHotkey(
     'p',
@@ -159,6 +163,18 @@ function ItemActions({
       >
         <AppIcon icon={stickyNoteIcon} />
         <span className={styles.label}>{t('Organizer.Note')}</span>
+      </button>
+      <button
+        type="button"
+        className={`dim-button ${styles.actionButton}`}
+        disabled={!itemsAreSelected}
+        name="compare"
+        onClick={onCompareSelectedItems}
+        title={t('Compare.Button') + ' [C]'}
+        aria-keyshortcuts="c"
+      >
+        <AppIcon icon={compareIcon} />
+        <span className={styles.label}>{t('Compare.Button')}</span>
       </button>
       <span className={styles.tip}> {t('Organizer.ShiftTip')}</span>
     </div>
