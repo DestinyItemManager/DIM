@@ -35,7 +35,7 @@ export default function LockButton({
   const dispatch = useThunkDispatch();
 
   const lockUnlock = async () => {
-    if (locking) {
+    if (locking || disabled) {
       return;
     }
 
@@ -84,6 +84,8 @@ export default function LockButton({
       onClick={lockUnlock}
       title={disabled ? t('MovePopup.LockUnlock.AutoLock') : title}
       disabled={disabled}
+      hotkey="l"
+      hotkeyDescription={t('Hotkey.LockUnlock')}
     >
       {children ? (
         <>
@@ -98,17 +100,15 @@ export default function LockButton({
 
 function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
   const data = { itemType: item.typeName };
-  return (
-    (type === 'lock'
-      ? !item.locked
-        ? item.bucket.hash === BucketHashes.Finishers
-          ? t('MovePopup.FavoriteUnFavorite.Favorite', data)
-          : t('MovePopup.LockUnlock.Lock', data)
-        : item.bucket.hash === BucketHashes.Finishers
-        ? t('MovePopup.FavoriteUnFavorite.Unfavorite', data)
-        : t('MovePopup.LockUnlock.Unlock', data)
-      : !item.tracked
-      ? t('MovePopup.TrackUntrack.Track', data)
-      : t('MovePopup.TrackUntrack.Untrack', data)) + ' [L]'
-  );
+  return type === 'lock'
+    ? !item.locked
+      ? item.bucket.hash === BucketHashes.Finishers
+        ? t('MovePopup.FavoriteUnFavorite.Favorite', data)
+        : t('MovePopup.LockUnlock.Lock', data)
+      : item.bucket.hash === BucketHashes.Finishers
+      ? t('MovePopup.FavoriteUnFavorite.Unfavorite', data)
+      : t('MovePopup.LockUnlock.Unlock', data)
+    : !item.tracked
+    ? t('MovePopup.TrackUntrack.Track', data)
+    : t('MovePopup.TrackUntrack.Untrack', data);
 }

@@ -799,6 +799,7 @@
     "AcquiredMod": "This mod is unlocked in collections.",
     "AddNote": "Add a note",
     "AddToLoadout": "Loadout",
+    "AddToLoadoutTitle": "Add this to a loadout",
     "All": "All",
     "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
@@ -806,7 +807,8 @@
     "CommunityData": "Community Insight",
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
-    "Equip": "Equip",
+    "Equip": "Equip on:",
+    "EquipWithName": "Equip on {{character}}",
     "FavoriteUnFavorite": {
       "Favorite": "Favorite {{itemType}}",
       "Favorited": "Favorited",
@@ -833,8 +835,8 @@
     "ReadLoreLink": "Read lore",
     "Rewards": "Rewards:",
     "SendToVault": "Send to Vault",
-    "Store": "Store",
-    "StoreWithName": "Store on {{character}}",
+    "Store": "Pull to:",
+    "StoreWithName": "Pull to {{character}}",
     "Subtitle": {
       "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
