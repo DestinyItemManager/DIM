@@ -371,6 +371,7 @@
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
   },
   "Hotkey": {
+    "Armory": "Show Armory for an item",
     "CheatSheetTitle": "Keyboard Shortcuts:",
     "ClearDialog": "Dismiss dialog",
     "ClearNewItems": "Clear new items",
@@ -811,6 +812,7 @@
       "Unfavorited": "Unfavorited"
     },
     "Infuse": "Infuse",
+    "InfuseTitle": "Open the infusion fuel finder",
     "LockUnlock": {
       "AutoLock": "Lock state is synced to this item's tag",
       "Lock": "Lock {{itemType}}",

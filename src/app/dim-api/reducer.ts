@@ -863,6 +863,9 @@ function deleteLoadout(state: DimApiState, loadoutId: string) {
 }
 
 function updateLoadout(state: DimApiState, loadout: DimLoadout, account: DestinyAccount) {
+  if (loadout.id === 'equipped') {
+    throw new Error('You have to change the ID before saving the equipped loadout');
+  }
   return produce(state, (draft) => {
     const profileKey = makeProfileKey(account.membershipId, account.destinyVersion);
     const profile = ensureProfile(draft, profileKey);

@@ -1,4 +1,5 @@
 import { currentProfileSelector } from 'app/dim-api/selectors';
+import { DimItem } from 'app/inventory/item-types';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
@@ -9,7 +10,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
-import { InGameLoadout, Loadout, LoadoutItem } from './loadout-types';
+import { InGameLoadout, Loadout, LoadoutItem, isInGameLoadout } from './loadout-types';
 import {
   getInstancedLoadoutItem,
   getResolutionInfo,
@@ -113,6 +114,20 @@ export const loadoutsByItemSelector = createSelector(
 
     return loadoutsForItems;
   }
+);
+
+/**
+ * Returns a function that determines if an item is in an
+ * in-game loadout that belongs to a specific character
+ */
+export const isInInGameLoadoutForSelector = createSelector(
+  loadoutsByItemSelector,
+  (loadoutsByItem) => (item: DimItem, ownerId: string) =>
+    Boolean(
+      loadoutsByItem[item.id]?.some(
+        (l) => isInGameLoadout(l.loadout) && l.loadout.characterId === ownerId
+      )
+    )
 );
 
 export const previousLoadoutSelector =

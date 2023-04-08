@@ -64,7 +64,7 @@ const TooltipContext = createContext<React.Dispatch<
 /**
  * <PressTip.Control /> can be used to have a controlled version of the PressTip
  *
- * Example:
+ * @example
  *
  * const ref = useRef<HTMLDivElement>(null);
  * <PressTip.Control
@@ -244,7 +244,7 @@ const pressTime = 300; // ms that the element can be pressed before the presstip
  *
  * <PressTip /> wraps <PressTip.Control /> to give you a simpler API for rendering a basic tooltip.
  *
- * Example:
+ * @example
  *
  * <PressTip
  *   tooltip={() => (

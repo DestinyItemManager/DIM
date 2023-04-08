@@ -6,7 +6,7 @@ import store from '../store/store';
 const phoneWidthQuery =
   'matchMedia' in window ? window.matchMedia('(max-width: 540px)') : undefined;
 
-phoneWidthQuery?.addListener((e) => {
+phoneWidthQuery?.addEventListener('change', (e) => {
   store.dispatch(setPhonePortrait(e.matches));
 });
 

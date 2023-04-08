@@ -396,7 +396,7 @@
     "EditFailed": "Error al actualizar equipamiento",
     "EditTitle": "Editar Nombre e Icono del Equipamiento",
     "LoadoutSlotNum": "Ranura {{index}}",
-    "Replace": "Reemplazar Equipamiento",
+    "Replace": "Reemplazar equipamiento {{index}}",
     "Save": "Actualizar Equipamiento",
     "SnapshotFailed": "Error al capturar equipamiento equipado"
   },
@@ -723,6 +723,7 @@
     "Redo": "Rehacer",
     "RestoreAllItems": "Todos los objetos",
     "Save": "Guardar",
+    "SaveAsDIM": "Guardar como Equipamiento DIM",
     "SaveAsNew": "Guardar como Nuevo",
     "SaveAsNewTooltip": "Mantener el equipamiento original y guardar esta como una nueva",
     "SaveDisabled": {
