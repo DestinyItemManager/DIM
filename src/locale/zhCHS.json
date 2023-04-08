@@ -396,7 +396,7 @@
     "EditFailed": "更新配装失败",
     "EditTitle": "编辑配装名字和图标",
     "LoadoutSlotNum": "插槽 {{index}}",
-    "Replace": "替换配装",
+    "Replace": "替换配装槽位 {{index}}",
     "Save": "更新配装",
     "SnapshotFailed": "为已装备的配装创建快照时失败"
   },
@@ -723,6 +723,7 @@
     "Redo": "重做",
     "RestoreAllItems": "所有物品",
     "Save": "保存",
+    "SaveAsDIM": "保存为 DIM 配装",
     "SaveAsNew": "另存为",
     "SaveAsNewTooltip": "保留原始配装并将其保存为新配装",
     "SaveDisabled": {
