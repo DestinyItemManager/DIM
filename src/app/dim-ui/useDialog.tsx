@@ -2,6 +2,7 @@ import dialogPolyfill from 'dialog-polyfill';
 import 'dialog-polyfill/dist/dialog-polyfill.css';
 import styles from './useDialog.m.scss';
 
+import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
@@ -91,15 +92,17 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
 
   // We block click event propagation or else it'll trigger click handlers of the parent.
   return (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-    <dialog
-      className={styles.dialog}
-      ref={dialogRef}
-      onClose={handleCloseEvent}
-      onClick={(e) => e.stopPropagation()}
-    >
-      {dialogState && children(dialogState.args, close)}
-    </dialog>
+    <Portal>
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+      <dialog
+        className={styles.dialog}
+        ref={dialogRef}
+        onClose={handleCloseEvent}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {dialogState && children(dialogState.args, close)}
+      </dialog>
+    </Portal>
   );
 });
 
