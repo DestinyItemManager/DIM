@@ -237,7 +237,7 @@ function ItemBucket({
     <div className={clsx(styles.itemBucket)}>
       <div
         ref={equippedRef}
-        className={clsx(styles.dropTarget, {
+        className={clsx({
           [styles.canDrop]: canDropEquipped,
           [styles.isOver]: isOverEquipped,
         })}
@@ -259,7 +259,7 @@ function ItemBucket({
       </div>
       <div
         ref={unequippedRef}
-        className={clsx(styles.dropTarget, {
+        className={clsx({
           [styles.canDrop]: canDropUnequipped,
           [styles.isOver]: isOverUnequipped,
         })}

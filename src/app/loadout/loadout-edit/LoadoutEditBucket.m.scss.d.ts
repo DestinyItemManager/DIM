@@ -7,7 +7,6 @@ interface CssExports {
   'categoryArmor': string;
   'categoryGeneral': string;
   'categoryWeapons': string;
-  'dropTarget': string;
   'equipped': string;
   'isOver': string;
   'itemBucket': string;
