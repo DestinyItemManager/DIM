@@ -43,7 +43,6 @@ export default function LoadoutEditBucket({
   classType,
   storeId,
   items,
-  itemBehavior,
   modsByBucket,
   onClickPlaceholder,
   onClickWarnItem,
@@ -55,7 +54,6 @@ export default function LoadoutEditBucket({
   classType: DestinyClass;
   storeId: string;
   items?: ResolvedLoadoutItem[];
-  itemBehavior: 'static' | 'draggable';
   modsByBucket: {
     [bucketHash: number]: number[] | undefined;
   };
@@ -85,7 +83,6 @@ export default function LoadoutEditBucket({
             category={category}
             classType={classType}
             items={itemsByBucket[bucket.hash]}
-            itemBehavior={itemBehavior}
             onClickPlaceholder={onClickPlaceholder}
             onClickWarnItem={onClickWarnItem}
             onRemoveItem={onRemoveItem}
@@ -154,7 +151,6 @@ function ItemBucket({
   classType,
   category,
   items,
-  itemBehavior,
   equippedContent,
   onClickPlaceholder,
   onClickWarnItem,
@@ -165,7 +161,6 @@ function ItemBucket({
   classType: DestinyClass;
   category: EditableCategories;
   items: ResolvedLoadoutItem[];
-  itemBehavior: 'static' | 'draggable';
   equippedContent?: React.ReactNode;
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
   onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
@@ -228,24 +223,15 @@ function ItemBucket({
     </button>
   );
 
-  const renderItem = (li: ResolvedLoadoutItem) =>
-    itemBehavior === 'draggable' ? (
-      <DraggableItem
-        key={li.item.id}
-        resolvedLoadoutItem={li}
-        onClickWarnItem={() => onClickWarnItem(li)}
-        onRemoveItem={() => onRemoveItem(li)}
-        onToggleEquipped={() => onToggleEquipped(li)}
-      />
-    ) : (
-      <StaticItem
-        key={li.item.id}
-        resolvedLoadoutItem={li}
-        onClickWarnItem={() => onClickWarnItem(li)}
-        onRemoveItem={() => onRemoveItem(li)}
-        onToggleEquipped={() => onToggleEquipped(li)}
-      />
-    );
+  const renderItem = (li: ResolvedLoadoutItem) => (
+    <DraggableItem
+      key={li.item.id}
+      resolvedLoadoutItem={li}
+      onClickWarnItem={() => onClickWarnItem(li)}
+      onRemoveItem={() => onRemoveItem(li)}
+      onToggleEquipped={() => onToggleEquipped(li)}
+    />
+  );
 
   return (
     <div className={clsx(styles.itemBucket)}>
@@ -288,46 +274,6 @@ function ItemBucket({
         )}
       </div>
     </div>
-  );
-}
-
-function StaticItem({
-  resolvedLoadoutItem,
-  onClickWarnItem,
-  onRemoveItem,
-  onToggleEquipped,
-}: {
-  resolvedLoadoutItem: ResolvedLoadoutItem;
-  onClickWarnItem: () => void;
-  onRemoveItem: () => void;
-  onToggleEquipped: () => void;
-}) {
-  return (
-    <ClosableContainer
-      key={resolvedLoadoutItem.item.id}
-      onClose={onRemoveItem}
-      showCloseIconOnHover
-    >
-      <ItemPopupTrigger
-        item={resolvedLoadoutItem.item}
-        extraData={{ socketOverrides: resolvedLoadoutItem.loadoutItem.socketOverrides }}
-      >
-        {(ref, onClick) => (
-          <div
-            className={clsx({
-              [styles.missingItem]: resolvedLoadoutItem.missing,
-            })}
-          >
-            <ConnectedInventoryItem
-              item={resolvedLoadoutItem.item}
-              innerRef={ref}
-              onClick={resolvedLoadoutItem.missing ? onClickWarnItem : onClick}
-              onDoubleClick={onToggleEquipped}
-            />
-          </div>
-        )}
-      </ItemPopupTrigger>
-    </ClosableContainer>
   );
 }
 
