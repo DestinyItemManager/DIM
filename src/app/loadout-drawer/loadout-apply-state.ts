@@ -7,7 +7,7 @@ import produce from 'immer';
 /**
  * What part of the loadout application process are we currently in?
  */
-export enum LoadoutApplyPhase {
+export const enum LoadoutApplyPhase {
   NotStarted,
   /** De-equip loadout items from other characters so they can be moved */
   Deequip,
@@ -27,7 +27,7 @@ export enum LoadoutApplyPhase {
   Failed,
 }
 
-export enum LoadoutItemState {
+export const enum LoadoutItemState {
   Pending,
   /** A successful state (maybe we don't need to distinguish this) for items that didn't need to be moved. */
   AlreadyThere,
@@ -47,7 +47,7 @@ export interface LoadoutItemResult {
   readonly error?: Error;
 }
 
-export enum LoadoutModState {
+export const enum LoadoutModState {
   Pending,
   Unassigned,
   Applied,
@@ -60,7 +60,7 @@ export interface LoadoutModResult {
   readonly error?: Error;
 }
 
-export enum LoadoutSocketOverrideState {
+export const enum LoadoutSocketOverrideState {
   Pending,
   Applied,
   Failed,
