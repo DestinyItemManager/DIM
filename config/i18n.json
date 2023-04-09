@@ -59,8 +59,8 @@
     "Title": "Change notes for 1 item",
     "Title_plural": "Change notes for {{count}} items",
     "Replace": "Replace notes",
-    "Append": "Append to notes / add tags",
-    "Remove": "Remove from notes / remove tags",
+    "Append": "Append to notes / add #hashtags",
+    "Remove": "Remove from notes / remove #hashtags",
     "Confirm": "Update Notes"
   },
   "BungieAlert": {
