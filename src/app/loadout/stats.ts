@@ -5,8 +5,10 @@ import { DimCharacterStatSource } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ArmorStatHashes, ModStatChanges } from 'app/loadout-builder/types';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { modsWithConditionalStats } from 'app/search/d2-known-values';
+import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
+import { armorStats, modsWithConditionalStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
+import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass, DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -34,6 +36,56 @@ export function isModStatActive(
 }
 
 /**
+ * Font of X mods conditionally boost a single stat. This maps from
+ * mod hash to boosted stat hash.
+ */
+const fontModHashToStatHash = _.once(() => {
+  const baseFontModHashToStatHash: HashLookup<ArmorStatHashes> = {
+    4046357305: StatHashes.Mobility, // InventoryItem "Font of Agility"
+    686455429: StatHashes.Resilience, // InventoryItem "Font of Endurance"
+    1193713026: StatHashes.Recovery, // InventoryItem "Font of Restoration"
+    1781551382: StatHashes.Discipline, // InventoryItem "Font of Focus"
+    1130820873: StatHashes.Intellect, // InventoryItem "Font of Wisdom"
+    633101315: StatHashes.Strength, // InventoryItem "Font of Vigor"
+  };
+
+  return {
+    ...baseFontModHashToStatHash,
+    ..._.mapKeys(
+      baseFontModHashToStatHash,
+      (_val, hash) => mapToOtherModCostVariant(parseInt(hash, 10))!
+    ),
+  };
+});
+
+/** The boost for 0, 1, 2, 3 mods equipped. From Clarity data */
+const boostForNumFontStacks = [0, 30, 50, 60];
+
+type FontModStatBoosts = {
+  [statHash in ArmorStatHashes]?: {
+    statHash: ArmorStatHashes;
+    plugDef: PluggableInventoryItemDefinition;
+    count: number;
+    value: number;
+  };
+};
+
+function getFontMods(mods: PluggableInventoryItemDefinition[]) {
+  const boosts: FontModStatBoosts = {};
+  for (const mod of mods) {
+    const statHash = fontModHashToStatHash()[mod.hash];
+    if (statHash) {
+      (boosts[statHash] ??= { statHash, plugDef: mod, count: 0, value: 0 }).count += 1;
+    }
+  }
+
+  return _.mapValues(boosts, (boost) => ({
+    ...boost!,
+    value: boostForNumFontStacks[boost!.count] ?? _.last(boostForNumFontStacks),
+  }));
+}
+
+/**
  * This sums up the total stat contributions across mods passed in. These are then applied
  * to the loadouts after all the items base values have been summed. This mimics how mods
  * effect stat values in game and allows us to do some preprocessing.
@@ -42,7 +94,13 @@ export function getTotalModStatChanges(
   defs: D2ManifestDefinitions,
   lockedMods: PluggableInventoryItemDefinition[],
   subclass: ResolvedLoadoutItem | undefined,
-  characterClass: DestinyClass
+  characterClass: DestinyClass,
+  /**
+   * If set, this simulates the dynamically granted stat effects of certain mods
+   * that are active under specific conditions so that they don't have investmentStats,
+   * but are active often enough to be important for loadout building.
+   */
+  includeRuntimeStatBenefits: boolean
 ) {
   const subclassPlugs = subclass?.loadoutItem.socketOverrides
     ? Object.values(subclass.loadoutItem.socketOverrides)
@@ -86,6 +144,24 @@ export function getTotalModStatChanges(
 
   processPlugs(subclassPlugs, 'subclassPlug');
   processPlugs(lockedMods, 'armorPlug');
+
+  if (includeRuntimeStatBenefits) {
+    const fontCounts = getFontMods(lockedMods);
+    for (const statHash of armorStats) {
+      const fonts = fontCounts[statHash];
+      if (fonts) {
+        totals[statHash].value += fonts.value;
+        totals[statHash].breakdown!.push({
+          name: fonts.plugDef.displayProperties.name,
+          icon: bungieNetPath(fonts.plugDef.displayProperties.icon),
+          hash: fonts.plugDef.hash,
+          count: fonts.count,
+          source: 'runtimeEffect',
+          value: fonts.value,
+        });
+      }
+    }
+  }
 
   return totals;
 }

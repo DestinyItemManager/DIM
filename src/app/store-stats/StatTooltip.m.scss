@@ -11,9 +11,26 @@
   align-items: center;
 }
 
+.row {
+  display: contents;
+  &.boostedValue {
+    color: $blue;
+  }
+}
+
 .icon {
-  width: 16px;
-  height: 16px;
-  margin-left: 2px;
-  margin-right: 2px;
+  width: 14px;
+  height: 14px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.breakdown {
+  display: grid;
+  grid-template-columns: min-content min-content 1fr min-content;
+  grid-auto-rows: 1fr;
+}
+
+.breakdownValue {
+  justify-self: end;
 }

@@ -264,7 +264,7 @@ export default memo(function LoadoutBuilder({
   ]);
 
   const modStatChanges = useMemo(
-    () => getTotalModStatChanges(defs, modsToAssign, subclass, classType),
+    () => getTotalModStatChanges(defs, modsToAssign, subclass, classType, true),
     [classType, defs, modsToAssign, subclass]
   );
 

@@ -140,7 +140,8 @@ function GeneratedSet({
       defs,
       autoMods,
       /* subclass */ undefined,
-      selectedStore.classType
+      selectedStore.classType,
+      /* includeRuntimeStatBenefits */ true
     );
 
     // We have a bit of a problem where armor mods can come from both
@@ -206,6 +207,16 @@ function GeneratedSet({
     return totals;
   });
 
+  const boostedStats = useMemo(
+    () =>
+      new Set(
+        statOrder.filter((hash) =>
+          modStatChanges[hash].breakdown?.some((change) => change.source === 'runtimeEffect')
+        )
+      ),
+    [modStatChanges, statOrder]
+  );
+
   // Distribute our automatically picked mods across the items so that item components
   // can highlight them
   const assignAutoMods = set.statMods.slice();
@@ -235,6 +246,7 @@ function GeneratedSet({
             maxPower={getPower(displayedItems)}
             statOrder={statOrder}
             enabledStats={enabledStats}
+            boostedStats={boostedStats}
             existingLoadoutName={existingLoadout?.name}
           />
         </div>

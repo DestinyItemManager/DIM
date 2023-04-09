@@ -335,7 +335,13 @@ export function getLoadoutStats(
     });
   }
 
-  const modStats = getTotalModStatChanges(defs, mods, subclass, classType);
+  const modStats = getTotalModStatChanges(
+    defs,
+    mods,
+    subclass,
+    classType,
+    /* includeRuntimeStatBenefits */ true
+  );
 
   for (const [statHash, value] of Object.entries(modStats)) {
     stats[statHash].value += value.value;

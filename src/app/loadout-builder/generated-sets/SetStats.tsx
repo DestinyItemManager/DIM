@@ -17,6 +17,7 @@ interface Props {
   maxPower: number;
   statOrder: ArmorStatHashes[];
   enabledStats: Set<ArmorStatHashes>;
+  boostedStats: Set<ArmorStatHashes>;
   className?: string;
   existingLoadoutName?: string;
 }
@@ -30,6 +31,7 @@ function SetStats({
   maxPower,
   statOrder,
   enabledStats,
+  boostedStats,
   className,
   existingLoadoutName,
 }: Props) {
@@ -84,6 +86,7 @@ function SetStats({
           >
             <Stat
               isActive={enabledStats.has(statHash)}
+              isBoosted={boostedStats.has(statHash)}
               stat={statDefs[statHash]}
               value={stats[statHash]}
             />
@@ -97,10 +100,12 @@ function SetStats({
 function Stat({
   stat,
   isActive,
+  isBoosted,
   value,
 }: {
   stat: DestinyStatDefinition;
   isActive: boolean;
+  isBoosted: boolean;
   value: number;
 }) {
   const isHalfTier = isActive && remEuclid(value, 10) >= 5;
@@ -113,6 +118,7 @@ function Stat({
       <span
         className={clsx(styles.tier, {
           [styles.halfTierValue]: isHalfTier,
+          [styles.boostedValue]: !isHalfTier && isBoosted,
         })}
       >
         {t('LoadoutBuilder.TierNumber', {

@@ -88,11 +88,12 @@ export interface AccountCurrency {
   readonly quantity: number;
 }
 
-export type DimCharacterStatSource = 'armorStats' | 'armorPlug' | 'subclassPlug';
+export type DimCharacterStatSource = 'armorStats' | 'armorPlug' | 'subclassPlug' | 'runtimeEffect';
 export const statSourceOrder: DimCharacterStatSource[] = [
   'armorStats',
   'subclassPlug',
   'armorPlug',
+  'runtimeEffect',
 ];
 export interface DimCharacterStatChange {
   /** What contributed this stat. */

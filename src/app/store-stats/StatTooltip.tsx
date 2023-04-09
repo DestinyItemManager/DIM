@@ -2,6 +2,7 @@ import { Tooltip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimCharacterStatChange } from 'app/inventory/store-types';
 import { statTier } from 'app/loadout-builder/utils';
+import clsx from 'clsx';
 import styles from './StatTooltip.m.scss';
 
 interface Stat {
@@ -27,21 +28,30 @@ function StatTooltip({ stat }: { stat: Stat }) {
       {stat.breakdown?.some((contribution) => contribution.source !== 'armorStats') && (
         <>
           <hr />
-          {stat.breakdown.map((contribution) => (
-            <div key={contribution.hash} className={styles.values}>
-              <div className={styles.label}>
-                {contribution.source !== 'armorStats' &&
-                  contribution.source !== 'subclassPlug' &&
-                  `${contribution.count}x`}
-                {contribution.icon && <img className={styles.icon} src={contribution.icon} />}
-                {contribution.name}
+          <div className={styles.breakdown}>
+            {stat.breakdown.map((contribution) => (
+              <div
+                key={contribution.hash}
+                className={clsx(styles.row, {
+                  [styles.boostedValue]: contribution.source === 'runtimeEffect',
+                })}
+              >
+                <span>
+                  {contribution.source !== 'armorStats' &&
+                    contribution.source !== 'subclassPlug' &&
+                    `${contribution.count}x`}
+                </span>
+                <span>
+                  {contribution.icon && <img className={styles.icon} src={contribution.icon} />}
+                </span>
+                <span>{contribution.name}</span>
+                <span className={styles.breakdownValue}>
+                  {contribution.source !== 'armorStats' && contribution.value > 0 ? '+' : ''}
+                  {contribution.value}
+                </span>
               </div>
-              <div>
-                {contribution.source !== 'armorStats' && contribution.value > 0 ? '+' : ''}
-                {contribution.value}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </>
       )}
     </div>
