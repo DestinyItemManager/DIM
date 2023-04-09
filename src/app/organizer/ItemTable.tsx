@@ -51,6 +51,7 @@ import ItemActions, { TagCommandInfo } from './ItemActions';
 import { itemIncludesCategories } from './filtering-utils';
 
 import { compareSelectedItems } from 'app/compare/actions';
+// eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
 import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
