@@ -1,4 +1,4 @@
-import usePrompt from 'app/dim-ui/usePrompt';
+import useBulkNote from 'app/dim-ui/useBulkNote';
 import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
 import { querySelector } from 'app/shell/selectors';
 import { motion } from 'framer-motion';
@@ -17,7 +17,7 @@ export default function MainSearchBarMenu() {
   const filteredItems = useSelector(filteredItemsSelector);
   const onInventory = location.pathname.endsWith('inventory');
 
-  const [promptDialog, prompt] = usePrompt();
+  const [promptDialog, bulkNote] = useBulkNote();
 
   const showSearchActions = onInventory;
   if (!showSearchActions) {
@@ -38,7 +38,7 @@ export default function MainSearchBarMenu() {
         searchActive={showSearchCount}
         searchQuery={searchQuery}
         fixed={true}
-        prompt={prompt}
+        bulkNote={bulkNote}
       />
     </motion.div>
   );

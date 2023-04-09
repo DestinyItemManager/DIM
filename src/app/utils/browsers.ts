@@ -12,6 +12,13 @@ export function isiOSBrowser() {
   return iOS;
 }
 
+const windows = navigator.platform.includes('Win');
+
+/** Is this a Windows machine? */
+export function isWindows() {
+  return windows;
+}
+
 const appStoreVersion = navigator.userAgent.includes('DIM AppStore');
 /** Is this the App Store wrapper version of DIM? */
 export function isAppStoreVersion() {
