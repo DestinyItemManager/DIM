@@ -2,22 +2,26 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { bucketsSelector } from 'app/inventory/selectors';
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats, singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, addIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { LookupTable } from 'app/utils/util-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';
+import { DropTargetHookSpec, useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import FashionDrawer from '../fashion/FashionDrawer';
 import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
@@ -26,7 +30,9 @@ import LoadoutParametersDisplay from '../loadout-ui/LoadoutParametersDisplay';
 import { OptimizerButton } from '../loadout-ui/OptimizerButton';
 import styles from './LoadoutEditBucket.m.scss';
 
-const categoryStyles: LookupTable<D2BucketCategory, string> = {
+export type EditableCategories = 'Weapons' | 'Armor' | 'General';
+
+const categoryStyles: LookupTable<EditableCategories, string> = {
   Weapons: styles.categoryWeapons,
   Armor: styles.categoryArmor,
   General: styles.categoryGeneral,
@@ -34,8 +40,10 @@ const categoryStyles: LookupTable<D2BucketCategory, string> = {
 
 export default function LoadoutEditBucket({
   category,
+  classType,
   storeId,
   items,
+  itemBehavior,
   modsByBucket,
   onClickPlaceholder,
   onClickWarnItem,
@@ -43,9 +51,11 @@ export default function LoadoutEditBucket({
   onToggleEquipped,
   children,
 }: {
-  category: D2BucketCategory;
+  category: EditableCategories;
+  classType: DestinyClass;
   storeId: string;
   items?: ResolvedLoadoutItem[];
+  itemBehavior: 'static' | 'draggable';
   modsByBucket: {
     [bucketHash: number]: number[] | undefined;
   };
@@ -72,7 +82,10 @@ export default function LoadoutEditBucket({
           <ItemBucket
             key={bucket.hash}
             bucket={bucket}
+            category={category}
+            classType={classType}
             items={itemsByBucket[bucket.hash]}
+            itemBehavior={itemBehavior}
             onClickPlaceholder={onClickPlaceholder}
             onClickWarnItem={onClickWarnItem}
             onRemoveItem={onRemoveItem}
@@ -138,7 +151,10 @@ export function ArmorExtras({
 
 function ItemBucket({
   bucket,
+  classType,
+  category,
   items,
+  itemBehavior,
   equippedContent,
   onClickPlaceholder,
   onClickWarnItem,
@@ -146,7 +162,10 @@ function ItemBucket({
   onToggleEquipped,
 }: {
   bucket: InventoryBucket;
+  classType: DestinyClass;
+  category: EditableCategories;
   items: ResolvedLoadoutItem[];
+  itemBehavior: 'static' | 'draggable';
   equippedContent?: React.ReactNode;
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
   onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
@@ -155,6 +174,38 @@ function ItemBucket({
 }) {
   const bucketHash = bucket.hash;
   const [equipped, unequipped] = _.partition(items, (li) => li.loadoutItem.equip);
+
+  const stores = useSelector(storesSelector);
+  const buckets = useSelector(bucketsSelector)!;
+
+  const dropSpec =
+    (type: 'equipped' | 'unequipped') =>
+    (): DropTargetHookSpec<
+      DimItem,
+      { equipped: boolean },
+      { isOver: boolean; canDrop: boolean }
+    > => ({
+      accept: [bucket.hash.toString(), ...stores.flatMap((store) => `${store.id}-${bucket.hash}`)],
+      drop: () => ({ equipped: type === 'equipped' }),
+      canDrop: (i) =>
+        itemCanBeInLoadout(i) &&
+        (i.classType === DestinyClass.Unknown || classType === i.classType) &&
+        (type === 'equipped' || !singularBucketHashes.includes(i.bucket.hash)),
+      collect: (monitor) => ({
+        isOver: monitor.isOver() && monitor.canDrop(),
+        canDrop: monitor.canDrop(),
+      }),
+    });
+
+  const [{ isOver: isOverEquipped, canDrop: canDropEquipped }, equippedRef] = useDrop(
+    dropSpec('equipped'),
+    [category, stores, buckets]
+  );
+
+  const [{ isOver: isOverUnequipped, canDrop: canDropUnequipped }, unequippedRef] = useDrop(
+    dropSpec('unequipped'),
+    [category, stores, buckets]
+  );
 
   const handlePlaceholderClick = (equip: boolean) => onClickPlaceholder({ bucket, equip });
 
@@ -177,59 +228,148 @@ function ItemBucket({
     </button>
   );
 
+  const renderItem = (li: ResolvedLoadoutItem) =>
+    itemBehavior === 'draggable' ? (
+      <DraggableItem
+        key={li.item.id}
+        resolvedLoadoutItem={li}
+        onClickWarnItem={() => onClickWarnItem(li)}
+        onRemoveItem={() => onRemoveItem(li)}
+        onToggleEquipped={() => onToggleEquipped(li)}
+      />
+    ) : (
+      <StaticItem
+        key={li.item.id}
+        resolvedLoadoutItem={li}
+        onClickWarnItem={() => onClickWarnItem(li)}
+        onRemoveItem={() => onRemoveItem(li)}
+        onToggleEquipped={() => onToggleEquipped(li)}
+      />
+    );
+
   return (
     <div className={clsx(styles.itemBucket)}>
-      {[equipped, unequipped].map((items, index) =>
-        items.length > 0 ? (
-          <div
-            className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
-            key={index}
-          >
-            {items.map((li) => (
-              <ClosableContainer
-                key={li.item.id}
-                onClose={() => onRemoveItem(li)}
-                showCloseIconOnHover
-              >
-                <ItemPopupTrigger
-                  item={li.item}
-                  extraData={{ socketOverrides: li.loadoutItem.socketOverrides }}
-                >
-                  {(ref, onClick) => (
-                    <div
-                      className={clsx({
-                        [styles.missingItem]: li.missing,
-                      })}
-                    >
-                      <ConnectedInventoryItem
-                        item={li.item}
-                        innerRef={ref}
-                        onClick={li.missing ? () => onClickWarnItem(li) : onClick}
-                        onDoubleClick={() => onToggleEquipped(li)}
-                      />
-                    </div>
-                  )}
-                </ItemPopupTrigger>
-              </ClosableContainer>
-            ))}
-            {index === 0 ? equippedContent : addUnequipped}
+      <div
+        ref={equippedRef}
+        className={clsx(styles.dropTarget, {
+          [styles.canDrop]: canDropEquipped,
+          [styles.isOver]: isOverEquipped,
+        })}
+      >
+        {equipped.length > 0 ? (
+          <div className={clsx(styles.items, styles.equipped)}>
+            {equipped.map(renderItem)}
+            {equippedContent}
           </div>
-        ) : index === 0 ? (
-          <div
-            className={clsx(styles.items, index === 0 ? styles.equipped : styles.unequipped)}
-            key={index}
-          >
+        ) : (
+          <div className={clsx(styles.items, styles.equipped)}>
             <BucketPlaceholder
               bucketHash={bucketHash}
               onClick={() => handlePlaceholderClick(true)}
             />
             {equippedContent}
           </div>
+        )}
+      </div>
+      <div
+        ref={unequippedRef}
+        className={clsx(styles.dropTarget, {
+          [styles.canDrop]: canDropUnequipped,
+          [styles.isOver]: isOverUnequipped,
+        })}
+      >
+        {unequipped.length > 0 ? (
+          <div ref={unequippedRef} className={clsx(styles.items, styles.unequipped)}>
+            {unequipped.map(renderItem)}
+            {addUnequipped}
+          </div>
         ) : (
           addUnequipped
-        )
-      )}
+        )}
+      </div>
     </div>
+  );
+}
+
+function StaticItem({
+  resolvedLoadoutItem,
+  onClickWarnItem,
+  onRemoveItem,
+  onToggleEquipped,
+}: {
+  resolvedLoadoutItem: ResolvedLoadoutItem;
+  onClickWarnItem: () => void;
+  onRemoveItem: () => void;
+  onToggleEquipped: () => void;
+}) {
+  return (
+    <ClosableContainer
+      key={resolvedLoadoutItem.item.id}
+      onClose={onRemoveItem}
+      showCloseIconOnHover
+    >
+      <ItemPopupTrigger
+        item={resolvedLoadoutItem.item}
+        extraData={{ socketOverrides: resolvedLoadoutItem.loadoutItem.socketOverrides }}
+      >
+        {(ref, onClick) => (
+          <div
+            className={clsx({
+              [styles.missingItem]: resolvedLoadoutItem.missing,
+            })}
+          >
+            <ConnectedInventoryItem
+              item={resolvedLoadoutItem.item}
+              innerRef={ref}
+              onClick={resolvedLoadoutItem.missing ? onClickWarnItem : onClick}
+              onDoubleClick={onToggleEquipped}
+            />
+          </div>
+        )}
+      </ItemPopupTrigger>
+    </ClosableContainer>
+  );
+}
+
+function DraggableItem({
+  resolvedLoadoutItem,
+  onClickWarnItem,
+  onRemoveItem,
+  onToggleEquipped,
+}: {
+  resolvedLoadoutItem: ResolvedLoadoutItem;
+  onClickWarnItem: () => void;
+  onRemoveItem: () => void;
+  onToggleEquipped: () => void;
+}) {
+  return (
+    <ClosableContainer
+      key={resolvedLoadoutItem.item.id}
+      onClose={onRemoveItem}
+      showCloseIconOnHover
+    >
+      <DraggableInventoryItem item={resolvedLoadoutItem.item}>
+        <ItemPopupTrigger
+          item={resolvedLoadoutItem.item}
+          extraData={{ socketOverrides: resolvedLoadoutItem.loadoutItem.socketOverrides }}
+        >
+          {(ref, onClick) => (
+            <div
+              className={clsx({
+                [styles.missingItem]: resolvedLoadoutItem.missing,
+              })}
+            >
+              <ConnectedInventoryItem
+                item={resolvedLoadoutItem.item}
+                innerRef={ref}
+                onClick={resolvedLoadoutItem.missing ? onClickWarnItem : onClick}
+                onDoubleClick={onToggleEquipped}
+              />
+            </div>
+          )}
+        </ItemPopupTrigger>
+      </DraggableInventoryItem>
+    </ClosableContainer>
   );
 }
 
