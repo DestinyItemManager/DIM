@@ -6,14 +6,8 @@ import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
 } from 'app/loadout/known-values';
-import {
-  MAX_ARMOR_ENERGY_CAPACITY,
-  armorStats,
-  modsWithConditionalStats,
-} from 'app/search/d2-known-values';
+import { MAX_ARMOR_ENERGY_CAPACITY, armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
-import { DestinyClass, DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
-import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
@@ -24,8 +18,6 @@ import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../proces
 import {
   ArmorEnergyRules,
   ArmorSet,
-  ArmorStatHashes,
-  ArmorStats,
   AutoModDefs,
   ItemGroup,
   artificeSocketReusablePlugSetHash,
@@ -51,58 +43,6 @@ export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition):
   }
 
   return processMod;
-}
-
-export function isModStatActive(
-  characterClass: DestinyClass,
-  plugHash: number,
-  stat: DestinyItemInvestmentStatDefinition
-): boolean {
-  if (!stat.isConditionallyActive) {
-    return true;
-  } else if (
-    plugHash === modsWithConditionalStats.echoOfPersistence ||
-    plugHash === modsWithConditionalStats.sparkOfFocus
-  ) {
-    // "-10 to the stat that governs your class ability recharge"
-    return (
-      (characterClass === DestinyClass.Hunter && stat.statTypeHash === StatHashes.Mobility) ||
-      (characterClass === DestinyClass.Titan && stat.statTypeHash === StatHashes.Resilience) ||
-      (characterClass === DestinyClass.Warlock && stat.statTypeHash === StatHashes.Recovery)
-    );
-  } else {
-    return true;
-  }
-}
-
-/**
- * This sums up the total stat contributions across mods passed in. These are then applied
- * to the loadouts after all the items base values have been summed. This mimics how mods
- * effect stat values in game and allows us to do some preprocessing.
- */
-export function getTotalModStatChanges(
-  lockedMods: PluggableInventoryItemDefinition[],
-  subclassPlugs: PluggableInventoryItemDefinition[],
-  characterClass: DestinyClass
-) {
-  const totals: ArmorStats = {
-    [StatHashes.Mobility]: 0,
-    [StatHashes.Recovery]: 0,
-    [StatHashes.Resilience]: 0,
-    [StatHashes.Intellect]: 0,
-    [StatHashes.Discipline]: 0,
-    [StatHashes.Strength]: 0,
-  };
-
-  for (const mod of lockedMods.concat(subclassPlugs)) {
-    for (const stat of mod.investmentStats) {
-      if (stat.statTypeHash in totals && isModStatActive(characterClass, mod.hash, stat)) {
-        totals[stat.statTypeHash as ArmorStatHashes] += stat.value;
-      }
-    }
-  }
-
-  return totals;
 }
 
 /**
@@ -170,6 +110,7 @@ export function hydrateArmorSet(
   return {
     armor,
     stats: processed.stats,
+    armorStats: processed.armorStats,
     statMods: processed.statMods,
   };
 }

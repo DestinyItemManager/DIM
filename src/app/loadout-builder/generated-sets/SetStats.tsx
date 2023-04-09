@@ -6,13 +6,14 @@ import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { ArmorStatHashes, ArmorStats } from '../types';
+import { ArmorStatHashes, ArmorStats, ModStatChanges } from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 
 interface Props {
   stats: ArmorStats;
+  getStatsBreakdown: () => ModStatChanges;
   maxPower: number;
   statOrder: ArmorStatHashes[];
   enabledStats: Set<ArmorStatHashes>;
@@ -25,6 +26,7 @@ interface Props {
  */
 function SetStats({
   stats,
+  getStatsBreakdown,
   maxPower,
   statOrder,
   enabledStats,
@@ -75,6 +77,7 @@ function SetStats({
                   name: statDefs[statHash].displayProperties.name,
                   value: stats[statHash],
                   description: statDefs[statHash].displayProperties.description,
+                  breakdown: getStatsBreakdown()[statHash].breakdown,
                 }}
               />
             )}
@@ -100,6 +103,7 @@ function Stat({
   isActive: boolean;
   value: number;
 }) {
+  const isHalfTier = isActive && remEuclid(value, 10) >= 5;
   return (
     <span
       className={clsx(styles.statSegment, {
@@ -108,7 +112,7 @@ function Stat({
     >
       <span
         className={clsx(styles.tier, {
-          [styles.halfTierValue]: isActive && remEuclid(value, 10) >= 5,
+          [styles.halfTierValue]: isHalfTier,
         })}
       >
         {t('LoadoutBuilder.TierNumber', {

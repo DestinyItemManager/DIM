@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { Dispatch, memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { List, WindowScroller } from 'react-virtualized';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorEnergyRules, ArmorSet, PinnedItems } from '../types';
+import { ArmorEnergyRules, ArmorSet, ModStatChanges, PinnedItems } from '../types';
 import GeneratedSet from './GeneratedSet';
 import styles from './GeneratedSets.m.scss';
 
@@ -64,6 +64,7 @@ interface Props {
   pinnedItems: PinnedItems;
   statOrder: number[];
   enabledStats: Set<number>;
+  modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
@@ -83,6 +84,7 @@ export default memo(function GeneratedSets({
   subclass,
   statOrder,
   enabledStats,
+  modStatChanges,
   loadouts,
   lbDispatch,
   params,
@@ -143,6 +145,7 @@ export default memo(function GeneratedSets({
           lbDispatch={lbDispatch}
           statOrder={statOrder}
           enabledStats={enabledStats}
+          modStatChanges={modStatChanges}
           loadouts={loadouts}
           params={params}
           halfTierMods={halfTierMods}
@@ -174,6 +177,7 @@ export default memo(function GeneratedSets({
                     lbDispatch={lbDispatch}
                     statOrder={statOrder}
                     enabledStats={enabledStats}
+                    modStatChanges={modStatChanges}
                     loadouts={loadouts}
                     params={params}
                     halfTierMods={halfTierMods}

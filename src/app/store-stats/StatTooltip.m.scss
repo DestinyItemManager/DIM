@@ -1,3 +1,5 @@
+@import '../variables';
+
 .values {
   display: flex;
   justify-content: space-between;
@@ -5,4 +7,13 @@
 
 .label {
   margin-right: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+  margin-right: 2px;
 }

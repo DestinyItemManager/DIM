@@ -624,6 +624,7 @@
     "Apply": "Apply",
     "ApplyMods": "Applying mods",
     "ApplySearch": "Transfer search \"{{query}}\"",
+    "ArmorStats": "Armor Stats",
     "ArtifactUnlocks": "Artifact Unlocks",
     "ArtifactUnlocksDesc": "Due to Bungie.net limitations, DIM cannot automatically configure your artifact. You need to perform these unlocks in-game before applying the Loadout.",
     "ArtifactUnlocksWithSeason": "Artifact Unlocks – S{{seasonNumber}}",
