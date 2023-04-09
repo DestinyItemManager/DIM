@@ -11,10 +11,10 @@ import {
   DestinyItemChangeResponse,
   DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { createAction } from 'typesafe-actions';
 import { TagCommand, TagValue } from './dim-item-info';
 import { DimItem } from './item-types';
+import { appendedToNote, removedFromNote } from './note-hashtags';
 import { notesSelector } from './selectors';
 import { AccountCurrency, DimCharacterStat, DimStore } from './store-types';
 import { ItemCreationContext } from './store/d2-item-factory';
@@ -213,14 +213,7 @@ export function appendNote(item: DimItem, note: string | undefined): ThunkResult
     }
 
     const existingNote = notesSelector(item)(getState());
-    dispatch(
-      setNote(
-        item,
-        _.compact([existingNote, note])
-          .map((s) => s.trim())
-          .join(' ')
-      )
-    );
+    dispatch(setNote(item, appendedToNote(existingNote, note)));
   };
 }
 
@@ -234,7 +227,7 @@ export function removeFromNote(item: DimItem, note: string | undefined): ThunkRe
     }
 
     const existingNote = notesSelector(item)(getState());
-    dispatch(setNote(item, existingNote?.replace(note.trim(), '').trim()));
+    dispatch(setNote(item, removedFromNote(existingNote, note)));
   };
 }
 

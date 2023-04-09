@@ -13,3 +13,14 @@
   flex-direction: column;
   gap: 8px;
 }
+
+.preview {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  gap: 4px 8px;
+
+  > :nth-child(2n + 1) {
+    font-weight: bold;
+  }
+}

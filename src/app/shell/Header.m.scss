@@ -38,16 +38,19 @@ $header-height: 44px;
     background: #000;
   }
 
-  :global(.app-icon) {
-    font-size: 1.33em;
+  button,
+  a {
+    > :global(.app-icon) {
+      font-size: 1.33em;
 
-    @include phone-portrait {
-      font-size: 24px;
-    }
-    &:hover {
-      color: $orange;
-      cursor: pointer;
-      transition: color 0.2s linear;
+      @include phone-portrait {
+        font-size: 24px;
+      }
+      &:hover {
+        color: $orange;
+        cursor: pointer;
+        transition: color 0.2s linear;
+      }
     }
   }
 }

@@ -3,7 +3,8 @@ import { Option } from 'app/dim-ui/RadioButtons';
 import { t } from 'app/i18next-t';
 import { appendNote, removeFromNote, setNote } from 'app/inventory/actions';
 import { DimItem } from 'app/inventory/item-types';
-import { allNotesHashtagsSelector } from 'app/inventory/selectors';
+import { appendedToNote, removedFromNote } from 'app/inventory/note-hashtags';
+import { allNotesHashtagsSelector, getNotesSelector } from 'app/inventory/selectors';
 import { maxLength } from 'app/item-popup/NotesArea';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -103,6 +104,16 @@ function BulkNoteDialog({
     },
   ];
 
+  const getNote = useSelector(getNotesSelector);
+  const exemplar = items.find((i) => i.taggable && getNote(i)) ?? items.find((i) => i.taggable);
+  const originalNote = exemplar && getNote(exemplar);
+  const updatedNote =
+    appendMode === 'replace'
+      ? note
+      : appendMode === 'append'
+      ? appendedToNote(originalNote, note)
+      : removedFromNote(originalNote, note);
+
   return (
     <>
       <Title>
@@ -123,6 +134,14 @@ function BulkNoteDialog({
             </label>
           ))}
         </div>
+        {exemplar && (
+          <div className={styles.preview}>
+            <div>Before:</div>
+            <div>{originalNote}</div>
+            <div>After:</div>
+            <div>{updatedNote}</div>
+          </div>
+        )}
       </Body>
       <Buttons>
         {isWindows() ? (
