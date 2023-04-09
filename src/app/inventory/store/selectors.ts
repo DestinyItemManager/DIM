@@ -114,8 +114,5 @@ const allPowerLevelsSelector = createSelector(
   }
 );
 
-export const powerLevelSelector = createSelector(
-  allPowerLevelsSelector,
-  (_state: RootState, storeId?: string) => storeId,
-  (allPowerLevels, storeId) => (storeId !== undefined ? allPowerLevels?.[storeId] : undefined)
-);
+export const powerLevelSelector = (state: RootState, storeId: string | undefined) =>
+  storeId !== undefined ? allPowerLevelsSelector(state)[storeId] : undefined;
