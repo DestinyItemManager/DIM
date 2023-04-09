@@ -1,6 +1,7 @@
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import HelpLink from 'app/dim-ui/HelpLink';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import useConfirm from 'app/dim-ui/useConfirm';
 import { startFarming } from 'app/farming/actions';
@@ -127,12 +128,20 @@ export default function LoadoutPopup({
     e.stopPropagation();
     if (
       !(await confirm(
-        weaponsOnly
-          ? t('Loadouts.RandomizeWeapons')
-          : query.length > 0
-          ? t('Loadouts.RandomizeSearchPrompt', { query })
-          : t('Loadouts.RandomizePrompt'),
-        { okLabel: t('Loadouts.Randomize') }
+        weaponsOnly ? (
+          t('Loadouts.RandomizeWeapons')
+        ) : query.length > 0 ? (
+          t('Loadouts.RandomizeSearchPrompt', { query })
+        ) : (
+          <>
+            {t('Loadouts.RandomizePrompt')}
+            <p className={styles.hint}>
+              {t('Loadouts.RandomizeQueryHint')}{' '}
+              <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/wiki/Randomize-Loadout" />
+            </p>
+          </>
+        ),
+        { okLabel: t('Loadouts.RandomizeButton') }
       ))
     ) {
       e.preventDefault();

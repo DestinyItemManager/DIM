@@ -378,6 +378,7 @@
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
   },
   "Hotkey": {
+    "Armory": "Show Armory for an item",
     "CheatSheetTitle": "Keyboard Shortcuts:",
     "ClearDialog": "Dismiss dialog",
     "ClearNewItems": "Clear new items",
@@ -717,7 +718,9 @@
     "NoSpace": "You're out of space in the vault and any other characters.",
     "Random": "Random",
     "Randomize": "Randomize Loadout",
+    "RandomizeButton": "Randomize",
     "RandomizePrompt": "Randomize your equipped weapons, armor and ghost?",
+    "RandomizeQueryHint": "Tip: Search for items first to restrict what items can be randomly chosen.",
     "RandomizeSearch": "Randomize from Search",
     "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "Randomize your equipped weapons?",
@@ -806,6 +809,7 @@
     "Acquired": "This item is unlocked in collections.",
     "AcquiredMod": "This mod is unlocked in collections.",
     "AddToLoadout": "Loadout",
+    "AddToLoadoutTitle": "Add this to a loadout",
     "AddNote": "Add notes",
     "All": "All",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
@@ -814,7 +818,8 @@
     "Consolidate": "Consolidate",
     "CommunityData": "Community Insight",
     "DistributeEvenly": "Distribute Evenly",
-    "Equip": "Equip",
+    "Equip": "Equip on:",
+    "EquipWithName": "Equip on {{character}}",
     "FavoriteUnFavorite": {
       "Favorite": "Favorite {{itemType}}",
       "Unfavorite": "Unfavorite {{itemType}}",
@@ -822,6 +827,7 @@
       "Unfavorited": "Unfavorited"
     },
     "Infuse": "Infuse",
+    "InfuseTitle": "Open the infusion fuel finder",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
       "Unlock": "Unlock {{itemType}}",
@@ -840,8 +846,8 @@
     "ReadLoreLink": "Read lore",
     "Rewards": "Rewards:",
     "SendToVault": "Send to Vault",
-    "Store": "Store",
-    "StoreWithName": "Store on {{character}}",
+    "Store": "Pull to:",
+    "StoreWithName": "Pull to {{character}}",
     "Subtitle": {
       "Type": "{{classType}} {{typeName}}",
       "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}"

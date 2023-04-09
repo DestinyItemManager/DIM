@@ -396,7 +396,7 @@
     "EditFailed": "Fehler beim Aktualisieren des Loadouts",
     "EditTitle": "Bearbeite Loadout-Namen und -Symbol",
     "LoadoutSlotNum": "Platz {{index}}",
-    "Replace": "Ersetze Loadout",
+    "Replace": "Ersetze Loadout {{index}}",
     "Save": "Aktualisiere Loadout",
     "SnapshotFailed": "Fehler beim Speichern des ausgerüsteten Loadouts"
   },
@@ -723,6 +723,7 @@
     "Redo": "Wiederholen",
     "RestoreAllItems": "Alle Gegenstände",
     "Save": "Speichern",
+    "SaveAsDIM": "Als DIM-Loadout speichern",
     "SaveAsNew": "Als Neu speichern",
     "SaveAsNewTooltip": "Die ursprüngliche Ausrüstung behalten und dies als neue Ausrüstung speichern",
     "SaveDisabled": {

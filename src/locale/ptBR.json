@@ -396,7 +396,7 @@
     "EditFailed": "Falha ao atualizar o set",
     "EditTitle": "Editar Nome e Ícone do Set",
     "LoadoutSlotNum": "Slot {{index}}",
-    "Replace": "Substituir Set",
+    "Replace": "Substituir Set {{index}}",
     "Save": "Atualizar Set",
     "SnapshotFailed": "Falha ao capturar o Set equipado"
   },
@@ -723,6 +723,7 @@
     "Redo": "Refazer",
     "RestoreAllItems": "Todos os itens",
     "Save": "Salvar",
+    "SaveAsDIM": "Salvar como Set DIM",
     "SaveAsNew": "Salvar como Novo",
     "SaveAsNewTooltip": "Manter o set original e salvar este como novo",
     "SaveDisabled": {
