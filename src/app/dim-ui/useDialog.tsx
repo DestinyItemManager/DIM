@@ -46,6 +46,7 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
   const handleCloseEvent = () => {
     if (dialogState) {
       dialogState.reject(new DialogError('canceled'));
+      setDialogState(undefined);
     }
   };
 

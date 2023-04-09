@@ -55,9 +55,9 @@
     "Weapons": "Weapons"
   },
   "BulkNote": {
-    "Append": "Append to notes / add tags",
+    "Append": "Append to notes / add #hashtags",
     "Confirm": "Update Notes",
-    "Remove": "Remove from notes / remove tags",
+    "Remove": "Remove from notes / remove #hashtags",
     "Replace": "Replace notes",
     "Title": "Change notes for 1 item",
     "Title_plural": "Change notes for {{count}} items"
