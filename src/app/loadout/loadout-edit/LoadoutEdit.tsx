@@ -195,10 +195,7 @@ export default function LoadoutEdit({
           </LoadoutEditBucketDropTarget>
         </LoadoutEditSection>
       )}
-      {(anyClass
-        ? (['Weapons', 'General'] as const)
-        : (['Weapons', 'Armor', 'General'] as const)
-      ).map((category) => (
+      {(anyClass ? (['Weapons'] as const) : (['Weapons', 'Armor'] as const)).map((category) => (
         <LoadoutEditSection
           key={category}
           className={styles.section}
@@ -218,7 +215,7 @@ export default function LoadoutEdit({
             storeId={store.id}
             classType={loadout.classType}
             items={categories[category]}
-            itemBehavior={category === 'General' ? 'static' : 'draggable'}
+            itemBehavior="draggable"
             modsByBucket={modsByBucket}
             onClickPlaceholder={onClickPlaceholder}
             onClickWarnItem={onClickWarnItem}
@@ -238,6 +235,29 @@ export default function LoadoutEdit({
           </LoadoutEditBucket>
         </LoadoutEditSection>
       ))}
+      <LoadoutEditSection
+        className={styles.section}
+        title={t(`Bucket.General`, { metadata: { keys: 'buckets' } })}
+        onClear={() => handleClearCategory('General')}
+        onFillFromEquipped={() => handleFillCategoryFromEquipped(artifactUnlocks, 'General')}
+        fillFromInventoryCount={getUnequippedItemsForLoadout(store, 'General').length}
+        onFillFromInventory={() => handleFillCategoryFromUnequipped('General')}
+      >
+        <LoadoutEditBucketDropTarget category="General" classType={loadout.classType}>
+          <LoadoutEditBucket
+            category="General"
+            storeId={store.id}
+            classType={loadout.classType}
+            items={categories['General']}
+            itemBehavior="static"
+            modsByBucket={modsByBucket}
+            onClickPlaceholder={onClickPlaceholder}
+            onClickWarnItem={onClickWarnItem}
+            onRemoveItem={onRemoveItem}
+            onToggleEquipped={handleToggleEquipped}
+          />
+        </LoadoutEditBucketDropTarget>
+      </LoadoutEditSection>
       <LoadoutEditSection
         title={t('Loadouts.Mods')}
         className={clsx(styles.section, styles.mods)}
