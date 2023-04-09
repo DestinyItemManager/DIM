@@ -158,7 +158,9 @@ function handleKeyEvent(e: KeyboardEvent) {
     e.isComposing ||
     e.repeat ||
     (e.target instanceof HTMLElement &&
-      (e.target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)))
+      (e.target.isContentEditable ||
+        (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) &&
+          (e.target as HTMLInputElement).type !== 'checkbox')))
   ) {
     return;
   }
