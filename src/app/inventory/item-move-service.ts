@@ -414,14 +414,6 @@ function moveToStore(
       ) {
         await dispatch(dequipItem(item, session));
         await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
-      } else if (
-        e instanceof DimError &&
-        e.bungieErrorCode() === PlatformErrorCodes.DestinyItemNotFound
-      ) {
-        // If the item wasn't found, it's probably been moved or deleted in-game. We could try to
-        // reload the profile or load just that item, but API caching means we aren't guaranteed to
-        // get the current view. So instead, we just pretend the move succeeded.
-        warnLog('move', 'Item', item.name, 'was not found - pretending the move succeeded');
       } else {
         throw e;
       }

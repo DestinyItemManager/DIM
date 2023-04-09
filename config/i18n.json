@@ -765,6 +765,8 @@
     "Deequip": "De-equipping items from other characters",
     "MoveItems": "Moving items",
     "EquipItems": "Equipping items",
+    "EquipInGameLoadout": "Equipping in-game loadout",
+    "ApplyInGameLoadoutInGame": "Your loadout is ready to equip but since you're in an activity you need to equip it in-game.",
     "SocketOverrides": "Changing subclass options",
     "ApplyMods": "Applying mods",
     "ClearingSpace": "Moving other items away",

@@ -1,3 +1,5 @@
+import { currentAccountSelector } from 'app/accounts/selectors';
+import { equipInGameLoadout } from 'app/bungie-api/destiny2-api';
 import { D1Categories } from 'app/destiny1/d1-bucket-categories';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
@@ -31,6 +33,7 @@ import {
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
 import { LockableBucketHashes, inGameArmorEnergyRules } from 'app/loadout-builder/types';
+import { updateAfterInGameLoadoutApply } from 'app/loadout/ingame/ingame-loadout-apply';
 import {
   createPluggingStrategy,
   fitMostMods,
@@ -80,7 +83,7 @@ import {
   setModResult,
   setSocketOverrideResult,
 } from './loadout-apply-state';
-import { Assignment, Loadout, LoadoutItem } from './loadout-types';
+import { Assignment, InGameLoadout, Loadout, LoadoutItem } from './loadout-types';
 import { backupLoadout, findItemForLoadout, getModsFromLoadout } from './loadout-utils';
 
 // TODO: move this whole file to "loadouts" folder
@@ -116,10 +119,16 @@ export function applyLoadout(
   store: DimStore,
   loadout: Loadout,
   {
-    /** Add this to the stack of loadouts that you can undo */
     allowUndo = false,
-    /** Only apply items matching the class of the store we're applying to */
     onlyMatchingClass = false,
+    inGameLoadout,
+  }: {
+    /** Add this to the stack of loadouts that you can undo */
+    allowUndo?: boolean;
+    /** Only apply items matching the class of the store we're applying to */
+    onlyMatchingClass?: boolean;
+    /** Apply this ingame loadout at the end. This also replaces the name/icon of the notification. */
+    inGameLoadout?: InGameLoadout;
   } = {}
 ): ThunkResult {
   return async (dispatch) => {
@@ -146,14 +155,17 @@ export function applyLoadout(
           setLoadoutState,
           onlyMatchingClass,
           cancelToken,
-          allowUndo
+          allowUndo,
+          inGameLoadout
         )
       )
     );
     loadingTracker.addPromise(loadoutPromise);
 
     // Start a notification that will show as long as the loadout is equipping
-    showNotification(loadoutNotification(loadout, stateObservable, loadoutPromise, cancel));
+    showNotification(
+      loadoutNotification(inGameLoadout ?? loadout, stateObservable, loadoutPromise, cancel)
+    );
 
     try {
       await loadoutPromise;
@@ -177,7 +189,8 @@ function doApplyLoadout(
   setLoadoutState: LoadoutStateUpdater,
   onlyMatchingClass: boolean,
   cancelToken: CancelToken,
-  allowUndo = false
+  allowUndo = false,
+  inGameLoadout?: InGameLoadout
 ): ThunkResult {
   return async (dispatch, getState) => {
     const defs = manifestSelector(getState())!;
@@ -610,6 +623,27 @@ function doApplyLoadout(
             moveSession
           )
         );
+      }
+
+      if (inGameLoadout) {
+        setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.InGameLoadout));
+        try {
+          await equipInGameLoadout(currentAccountSelector(getState())!, inGameLoadout);
+          await dispatch(updateAfterInGameLoadoutApply(inGameLoadout));
+        } catch (e) {
+          if (
+            e instanceof DimError &&
+            e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation
+          ) {
+            setLoadoutState(
+              produce((state) => {
+                state.inGameLoadoutInActivity = true;
+              })
+            );
+          } else {
+            throw e;
+          }
+        }
       }
 
       if (anyActionFailed(getLoadoutState())) {
