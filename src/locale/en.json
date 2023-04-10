@@ -54,6 +54,14 @@
     "Vault": "Vault",
     "Weapons": "Weapons"
   },
+  "BulkNote": {
+    "Append": "Append to notes / add #hashtags",
+    "Confirm": "Update Notes",
+    "Remove": "Remove from notes / remove #hashtags",
+    "Replace": "Replace notes",
+    "Title": "Change notes for 1 item",
+    "Title_plural": "Change notes for {{count}} items"
+  },
   "BungieAlert": {
     "Title": "A message from Bungie:"
   },
@@ -457,6 +465,14 @@
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
+  "KillType": {
+    "ClassAbilities": "Class Ability",
+    "Finisher": "Finisher",
+    "Grenade": "Grenade",
+    "Melee": "Melee",
+    "Precision": "Precision",
+    "Super": "Super"
+  },
   "LB": {
     "AdvancedOptions": "Advanced Options",
     "ChooseAMod": "Choose your mods",
@@ -799,7 +815,7 @@
   "MovePopup": {
     "Acquired": "This item is unlocked in collections.",
     "AcquiredMod": "This mod is unlocked in collections.",
-    "AddNote": "Add a note",
+    "AddNote": "Add notes",
     "AddToLoadout": "Loadout",
     "AddToLoadoutTitle": "Add this to a loadout",
     "All": "All",
@@ -857,7 +873,7 @@
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
-    "Help": "Add notes to this item"
+    "Help": "Add notes, #hashtags, and :symbols:"
   },
   "Notification": {
     "Cancel": "Cancel",
@@ -913,8 +929,7 @@
     "Lock": "Lock",
     "NoItems": "No items selected",
     "NoMobile": "Turn your phone sideways to use the Organizer.",
-    "Note": "Set Note",
-    "NotePrompt": "Note:",
+    "Note": "Set Notes",
     "OpenIn": "Show in Organizer",
     "Organizer": "Organizer",
     "SelectAll": "Select All",
@@ -1110,7 +1125,7 @@
     "AutoBackup": "We've backed up your data to a file in your downloads folder called dim-data.json, just in case.",
     "BackUpFirst": "You MUST back up your data first, before you delete it all. Just in case.",
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
-    "DataIsLocal": "Tag and note data is local only",
+    "DataIsLocal": "Tag and notes data is local only",
     "DeleteAllData": "Delete ALL Data from DIM Sync Servers",
     "DeleteAllDataConfirm": "Are you sure you want to delete ALL your data, for all accounts, from DIM Sync? You can't undo this.",
     "DeleteAllDataLabel": "Wipe DIM Sync Data",

@@ -55,6 +55,14 @@
     "Vault": "Vault",
     "Weapons": "Weapons"
   },
+  "BulkNote": {
+    "Title": "Change notes for 1 item",
+    "Title_plural": "Change notes for {{count}} items",
+    "Replace": "Replace notes",
+    "Append": "Append to notes / add #hashtags",
+    "Remove": "Remove from notes / remove #hashtags",
+    "Confirm": "Update Notes"
+  },
   "BungieAlert": {
     "Title": "A message from Bungie:"
   },
@@ -455,6 +463,14 @@
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
+  "KillType": {
+    "Melee": "Melee",
+    "Super": "Super",
+    "Grenade": "Grenade",
+    "Finisher": "Finisher",
+    "Precision": "Precision",
+    "ClassAbilities": "Class Ability"
+  },
   "PostmasterWarningBanner": {
     "PostmasterAlmostFull": "The postmaster is almost full! ({{number}}/{{postmasterSize}})",
     "PostmasterFull": "The postmaster is full! ({{number}}/{{postmasterSize}})"
@@ -803,7 +819,7 @@
     "AcquiredMod": "This mod is unlocked in collections.",
     "AddToLoadout": "Loadout",
     "AddToLoadoutTitle": "Add this to a loadout",
-    "AddNote": "Add a note",
+    "AddNote": "Add notes",
     "All": "All",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
     "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
@@ -859,7 +875,7 @@
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
-    "Help": "Add notes to this item"
+    "Help": "Add notes, #hashtags, and :symbols:"
   },
   "Notification": {
     "Cancel": "Cancel",
@@ -883,8 +899,7 @@
     "ShiftTip": "Tip: Hold the Shift key and click on a cell to filter items",
     "NoMobile": "Turn your phone sideways to use the Organizer.",
     "NoItems": "No items selected",
-    "Note": "Set Note",
-    "NotePrompt": "Note:",
+    "Note": "Set Notes",
     "Columns": {
       "Stats": "Stats",
       "BaseStats": "Base Stats",
@@ -1110,7 +1125,7 @@
     "AutoBackup": "We've backed up your data to a file in your downloads folder called dim-data.json, just in case.",
     "BackUpFirst": "You MUST back up your data first, before you delete it all. Just in case.",
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
-    "DataIsLocal": "Tag and note data is local only",
+    "DataIsLocal": "Tag and notes data is local only",
     "DeleteAllData": "Delete ALL Data from DIM Sync Servers",
     "DeleteAllDataConfirm": "Are you sure you want to delete ALL your data, for all accounts, from DIM Sync? You can't undo this.",
     "DeleteAllDataLabel": "Wipe DIM Sync Data",

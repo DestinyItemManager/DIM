@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
 import styles from './NotesArea.m.scss';
 
-const maxLength = 120;
+export const maxLength = 120;
 
 export default function NotesArea({
   item,

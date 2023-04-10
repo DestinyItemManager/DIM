@@ -4,11 +4,11 @@ import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
+import NewItemIndicator from 'app/inventory/NewItemIndicator';
+import TagIcon from 'app/inventory/TagIcon';
 import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
-import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import TagIcon from 'app/inventory/TagIcon';
 import WishListSettings from 'app/settings/WishListSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
@@ -24,20 +24,20 @@ import { useSelector } from 'react-redux';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
-import { AppIcon, lockIcon, refreshIcon, unlockedIcon } from '../shell/icons';
-import { setCharacterOrder } from './actions';
+import { AppIcon, faGrid, faList, lockIcon, refreshIcon, unlockedIcon } from '../shell/icons';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
 import { CustomStatsSettings } from './CustomStatsSettings';
-import { useSetSetting } from './hooks';
-import { Settings } from './initial-settings';
-import { itemSortSettingsSelector } from './item-sort';
 import Select, { mapToOptions } from './Select';
-import './settings.scss';
 import styles from './SettingsPage.m.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
+import { setCharacterOrder } from './actions';
+import { useSetSetting } from './hooks';
+import { Settings } from './initial-settings';
+import { itemSortSettingsSelector } from './item-sort';
+import './settings.scss';
 
 const fakeWeapon = {
   icon: `~${exampleWeaponImage}`,
@@ -341,7 +341,7 @@ export default function SettingsPage() {
                     value="true"
                     onChange={onChangePerkList}
                   />
-                  <span>{t('Settings.PerkList')}</span>
+                  <AppIcon icon={faList} /> {t('Settings.PerkList')}
                 </label>
                 <label>
                   <input
@@ -351,7 +351,7 @@ export default function SettingsPage() {
                     value="false"
                     onChange={onChangePerkList}
                   />
-                  <span>{t('Settings.PerkGrid')}</span>
+                  <AppIcon icon={faGrid} /> {t('Settings.PerkGrid')}
                 </label>
               </div>
             </div>

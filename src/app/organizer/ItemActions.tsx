@@ -1,7 +1,6 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import KeyHelp from 'app/dim-ui/KeyHelp';
-import usePrompt from 'app/dim-ui/usePrompt';
 import { useHotkey, useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { TagCommand, itemTagList } from 'app/inventory/dim-item-info';
@@ -44,7 +43,7 @@ function ItemActions({
   stores: DimStore[];
   itemsAreSelected: boolean;
   onLock: (locked: boolean) => void;
-  onNote: (note?: string) => void;
+  onNote: () => void;
   onTagSelectedItems: (tagInfo: TagCommandInfo) => void;
   onMoveSelectedItems: (store: DimStore) => void;
   onCompareSelectedItems: () => void;
@@ -98,16 +97,7 @@ function ItemActions({
 
   useHotkeys(hotkeys);
 
-  // TODO: replace with rich-text dialog, and an "append" option
-  const [promptDialog, prompt] = usePrompt();
-  const noted = useCallback(async () => {
-    const note = await prompt(t('Organizer.NotePrompt'));
-    if (note !== null) {
-      onNote(note || undefined);
-    }
-  }, [onNote, prompt]);
-
-  useHotkey('n', t('Hotkey.Note'), noted);
+  useHotkey('n', t('Hotkey.Note'), onNote);
   useHotkey('c', t('Compare.ButtonHelp'), onCompareSelectedItems);
 
   useHotkey(
@@ -123,7 +113,6 @@ function ItemActions({
 
   return (
     <div className={styles.itemActions}>
-      {promptDialog}
       <button
         type="button"
         className={`dim-button ${styles.actionButton}`}
@@ -157,7 +146,7 @@ function ItemActions({
         className={`dim-button ${styles.actionButton}`}
         disabled={!itemsAreSelected}
         name="note"
-        onClick={noted}
+        onClick={onNote}
         title={t('Organizer.Note') + ' [N]'}
         aria-keyshortcuts="n"
       >
