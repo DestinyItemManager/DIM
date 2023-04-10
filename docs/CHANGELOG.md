@@ -1,5 +1,7 @@
 ## Next
 
+## 7.64.0 <span class="changelog-date">(2023-04-09)</span>
+
 * Updated DIM's Smart Moves logic for how to choose which items to move when a bucket is full.
 * The bulk note tool has gotten a major upgrade and now allows adding and removing to existing notes.
 * Undo and redo in loadout editor and loadout optimizer have the keyboard shortcuts you'd expect.
