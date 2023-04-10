@@ -353,11 +353,16 @@ function isInside(element: HTMLElement, className: string) {
 // After this many pixels of dragging in either direction, we consider ourselves to be part of a scrolling gesture.
 const HORIZ_SCROLL_DRAG_THRESHOLD = 20;
 
+/**
+ * We have issues on mobile where horizontal scrolling of flex components doesn't work for some unknown reason. This
+ * component is a workaround that captures pointer events when the pointer has been triggered via the down state and
+ * has also been moved by HORIZ_SCROLL_DRAG_THRESHOLD pixels. This ensures that button clicks in the component don't
+ * get interupted and work as expected.
+ */
 export function HorizontalScrollContainer({ children }: PropsWithChildren) {
-  // This uses pointer events to directly set the scroll position based on
-  // dragging the items. This works around an iOS bug around nested draggables,
-  // but also is kinda nice on desktop. I wasn't able to get it to do an
-  // inertial animation after releasing.
+  // This uses pointer events to directly set the scroll position based on dragging the items. This works around an
+  // iOS bug around nested draggables, but also is kinda nice on desktop. I wasn't able to get it to do an inertial
+  // animation after releasing.
 
   const ref = useRef<HTMLDivElement>(null);
   const dragStateRef = useRef<{
