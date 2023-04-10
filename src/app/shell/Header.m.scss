@@ -254,6 +254,7 @@ $header-height: 44px;
 }
 
 .searchButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
   display: none;
 
   @include phone-portrait {

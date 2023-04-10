@@ -361,9 +361,13 @@ export default function Header() {
               <AppIcon icon={settingsIcon} />
             </Link>
           )}
-          <span className={clsx(styles.menuItem, styles.searchButton)} onClick={toggleSearch}>
+          <button
+            type="button"
+            className={clsx(styles.menuItem, styles.searchButton)}
+            onClick={toggleSearch}
+          >
             <AppIcon icon={searchIcon} />
-          </span>
+          </button>
         </div>
       </div>
       {account && isPhonePortrait && showSearch && (
