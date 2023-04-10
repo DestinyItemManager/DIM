@@ -107,3 +107,17 @@
   opacity: 0.8;
   margin-left: 0.5em;
 }
+
+.modsGrid {
+  flex: 1;
+  --item-icon-size: calc(0.8 * var(--item-size));
+  min-width: calc(5 * var(--item-icon-size) + 4 * var(--item-margin));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-icon-size));
+  gap: 4px;
+  align-content: flex-start;
+  align-items: flex-start;
+  :global(.item) {
+    --item-size: var(--item-icon-size);
+  }
+}

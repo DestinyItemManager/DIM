@@ -1,16 +1,21 @@
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { convertInGameLoadoutPlugItemHashesToSocketOverrides } from 'app/loadout-drawer/loadout-type-converters';
 import { InGameLoadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
+import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { t } from 'i18next';
 import _ from 'lodash';
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 import LoadoutSubclassSection from '../loadout-ui/LoadoutSubclassSection';
+import PlugDef from '../loadout-ui/PlugDef';
+import { createGetModRenderKey, isInsertableArmor2Mod } from '../mod-utils';
 import InGameLoadoutIcon from './InGameLoadoutIcon';
 import styles from './InGameLoadoutView.m.scss';
 import { useItemsFromInGameLoadout } from './ingame-loadout-utils';
@@ -85,6 +90,7 @@ export default function InGameLoadoutView({
               )}
             </div>
           ))}
+        <InGameLoadoutMods items={items} classType={store.classType} />
       </div>
     </div>
   );
@@ -101,6 +107,33 @@ function InGameLoadoutItem({ item }: { item: DimItem }) {
           )}
         </ItemPopupTrigger>
       </DraggableInventoryItem>
+    </div>
+  );
+}
+
+function InGameLoadoutMods({ items, classType }: { items: DimItem[]; classType: DestinyClass }) {
+  const mods = useMemo(() => {
+    const mods: PluggableInventoryItemDefinition[] = [];
+
+    // I don't believe we need to handle mods that have been "upgraded" like DIM loadouts as these are
+    // pulled directly from the items themselves.
+    for (const item of items) {
+      for (const socket of getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorMods)) {
+        if (socket.plugged && isInsertableArmor2Mod(socket.plugged.plugDef)) {
+          mods.push(socket.plugged.plugDef);
+        }
+      }
+    }
+
+    return mods;
+  }, [items]);
+
+  const getModRenderKey = useMemo(() => createGetModRenderKey(), []);
+  return (
+    <div className={styles.modsGrid}>
+      {mods.map((mod) => (
+        <PlugDef key={getModRenderKey(mod)} plug={mod} forClassType={classType} />
+      ))}
     </div>
   );
 }

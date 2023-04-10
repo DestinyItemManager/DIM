@@ -10,6 +10,7 @@ interface CssExports {
   'itemsInCategory': string;
   'loadout': string;
   'loadoutSlot': string;
+  'modsGrid': string;
   'placeholder': string;
   'title': string;
 }
