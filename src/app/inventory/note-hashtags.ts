@@ -18,7 +18,7 @@ export function collectNotesHashtags(itemInfos: ItemInfos) {
   return uniqBy(hashTags, (t) => t.toLowerCase());
 }
 
-const hashtagRegex = /#[\p{L}\p{N}_\p{Private_Use}\p{Other_Symbol}]+/dgu;
+const hashtagRegex = /#[\p{L}\p{N}_\p{Private_Use}\p{Other_Symbol}]+/gu;
 
 export function getHashtagsFromNote(note?: string | null) {
   return Array.from(note?.matchAll(hashtagRegex) ?? [], (m) => m[0]);
